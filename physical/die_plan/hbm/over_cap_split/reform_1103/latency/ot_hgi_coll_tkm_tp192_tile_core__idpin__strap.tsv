@@ -1,0 +1,13 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hA)	tile_ins_v,tile_ins_b[343:0]	in	0	enters hA (top 32 entries) at the same edge as the uncut tile
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hA)	tile_clr	in	0	hA clr same edge; hB clr via hA.clr_o systolic (+3 inside pair)
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hB)	tile_clr_o	out	+3	clr_o leaves the pair 6 edges after clr (uncut 3): hA shell+flop+hB shell
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hB)	tile_conv	in	0	conv enters hB first (deep-first), hA gets hB.conv_o
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hA)	tile_conv_o	out	+2	conv -> conv_o 4 edges (uncut 2): HOP 2 per element, 2 elements
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hA)	tile_up_out[343:0] (on conv)	out	+2	hA shifts in hB.up_out one hop later; root timeline absorbs it (SETTLE/XL re-derived for NT=64)
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hA)	tile_up_out[343:0] (during insertion)	out	0	hA = uncut tile top half, cycle-identical
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hB)	tile_ovf_v,tile_ovf_b[343:0]	out	+5	ins->ovf 10 edges (uncut 5): overflow passes hA then hB (2 face-shelled chain elements)
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hB)	tile_up_in[343:0]	in	0	goes to hB.up_in (deepest element of the pair)
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hA)->ot_hgi_coll_tkm_tp192_htile_core(hB)	hA.ovf->hB.ins (345 b), hA.clr_o->hB.clr	seam	+2 per hop (internal)	face-to-face; counted in the rows above
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	ot_hgi_coll_tkm_tp192_htile_core(hB)->ot_hgi_coll_tkm_tp192_htile_core(hA)	hB.up_out->hA.up_in (344 b), hB.conv_o->hA.conv	seam	+2 per hop (internal)	face-to-face; counted in the rows above
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	(TKM root, ot_hgi_coll_tkm_m_tp192__root)	stat_cycles, done, w_* writes (whole TKM op)	out	+448	chain 32->64 elements of PT 32: SETTLE 145->305, XL 87->151; SHIFT=2*160+2*64=448 edges (~373 ns @1.2 GHz) per TKM op; root re-extracted with PTILE 32, ports unchanged

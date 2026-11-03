@@ -678,6 +678,20 @@ def variant_port_bits(ports, variant, params, mapping):
     return selected
 
 
+def _compose_rename(m, ca, cc):
+    """r8 table member m with composed member names replaced by the composite (port-level alias ca; cell-level cc for
+    INNER leaf-only sources); unchanged when nothing matches."""
+    m2, s = dict(m), m.get("source", "")
+    if (m.get("sink"), m.get("sink_port")) in ca:
+        m2["sink"], m2["sink_port"] = ca[(m["sink"], m["sink_port"])]
+    leaf, _, port = s.rpartition(".")
+    if leaf and (leaf, port) in ca:
+        m2["source"] = "%s.%s" % ca[(leaf, port)]
+    elif m.get("id", "").startswith("INNER:") and s in cc:
+        m2["source"] = cc[s]
+    return m2
+
+
 def core_reset_hierarchy_candidates(cells, members, target, modules):
     """Exact source hierarchy suffix inside one already-mapped partition.
 
@@ -692,7 +706,7 @@ def core_reset_hierarchy_candidates(cells, members, target, modules):
             (cells[ci].path == target["inst"] or cells[ci].path.endswith(suffix))]
 
 
-def wavefront_cells_text(driver=False):
+def wavefront_cells_text(driver=False, lockup=False):
     """Copy physical reset cells verbatim, including their synthesis attributes.
 
     Dropping module ``keep`` deleted unused, geometrically required tap chains
@@ -702,10 +716,12 @@ def wavefront_cells_text(driver=False):
     names = ["ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"]
     if driver:
         names += ["ot_dp_rrelay_drive", "ot_dp_rgate_drive"]
+    if lockup:
+        names += ["ot_dp_rrelay_nl"]
     out = []
     for name in names:
         m = re.search(r"((?:\(\*[^\n]*\*\)\n)*module " + re.escape(name) +
-                      r"\b.*?\nendmodule\n)", gen_rtl.CELLS, re.S)
+                      r"\b.*?\nendmodule\n)", gen_rtl.CELLS + gen_rtl.LOCKUP_CELLS, re.S)
         if not m:
             raise BindError(f"canonical reset cell {name} missing from gen_rtl.CELLS")
         out.append(m.group(1))
@@ -1984,6 +2000,12 @@ class Binder:
             extra_info.append(dict(table=str(xf), sha=hashlib.sha256(xf.read_bytes()).hexdigest()[:16],
                                    replaced=sum(i in ids for i in xm), added=sum(i not in ids for i in xm),
                                    inner=sum(1 for m in xj["members"] if m["id"].startswith("INNER:"))))
+        # DIE-KV-64 11-03: a table member written on the uncomposed bind that names a composed member leaf/port
+        # (asbuilt.compose, e.g. KV pv_pair slices) follows the composite through its whole bit-identical port map
+        ca, cc = getattr(self, "composition_alias", None) or {}, getattr(self, "composition_cells", None) or {}
+        if ca or cc:
+            js["members"] = [_compose_rename(m, ca, cc) for m in js["members"]]
+            inner = [_compose_rename(m, ca, cc) for m in inner]
         excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
         cidx = self.cell_index()
         st = self.pad_stats
@@ -2947,7 +2969,8 @@ class Binder:
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
-            cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")))
+            cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")),
+                                                 lockup=bool(P.reset.get("relay_lockup")))
             W = RT.wf_plan(P)
             missing = set(W["parts"]) - set(self.members)
             if missing:
@@ -3119,6 +3142,12 @@ class Binder:
                     for d in t.get("contents", []) + t.get("hard_cores", [])
                     for strap, native in (d.get("physical_id_alias") or {}).items()}
         id_ports = {}
+        tied_ids = set()
+        # DIE-KV-64 11-03 (OWNER gen rule "no leaked straps"; ID-strap rule B applied at the type = the core parent): a type
+        # in budgets.id_straps_in_type_types (or its unsplit base / split_of name) ties every plan-declared hard-core ID
+        # strap INSIDE the type when all die instances carry the plan value; the type then has no strap_* ID ports.
+        _tie = set((self.plan.get("budgets") or {}).get("id_straps_in_type_types") or [])
+        tie_in_type = bool(_tie) and (tn in _tie or tn.split("__")[0] in _tie or t.get("split_of") in _tie)
         invalid_id_leaves = set()
         # strap parameters: one per (leaf, port), the port width, constant bits in place
         straps = defaultdict(dict)
@@ -3163,11 +3192,21 @@ class Binder:
                     self._gap(f"parent ID {tn}.{r}.{pn}: {e}")
                     invalid_id_leaves.add(r)
                     continue
+                if tie_in_type:
+                    if any(len(set(vals)) != 1 for vals in bitsv.values()):
+                        self._gap(f"parent ID {tn}.{r}.{pn}: id_straps_in_type needs one value on every instance")
+                        invalid_id_leaves.add(r)
+                        continue
+                    nm = short_id(f"S_{r}__{pn}", 80)
+                    pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{format(expected, f'0{w}b')}")
+                    tied_ids.add((r, key))
+                    pnames[("strap", r, pn)] = (nm, w)
+                    continue
                 id_ports[nm] = dict(leaf=r, port=pn, width=w)
             else:
                 pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
             pnames[("strap", r, pn)] = (nm, w)
-        used_ids = {(x["leaf"], alias_of.get((x["leaf"], x["port"]), x["port"])) for x in id_ports.values()}
+        used_ids = {(x["leaf"], alias_of.get((x["leaf"], x["port"]), x["port"])) for x in id_ports.values()} | tied_ids
         missing_ids = {(r, pn) for r, ids in id_decls.items() for pn in ids} - used_ids
         if missing_ids:
             self._gap(f"parent ID {tn}: declarations do not match bound known strap inputs {sorted(missing_ids)}")
@@ -4713,6 +4752,26 @@ def kit_native_glue(tn, fl, out):
     return list(fl) + add, [p.stem for p in add]
 
 
+KIT_DEAD_METHOD = ("bind.py kit-rtl: plan bits beyond the bound payload width are not connected in the generated "
+                   "wrapper")
+_KIT_LAND_INST = re.compile(r"\b(ot_dp_clk_landing\w*)\s*(?:#\s*\((?:[^()]|\([^()]*\))*\)\s*)?(u_\w+)\s*\((.*?)\)\s*;", re.S)
+_KIT_LAND_D = re.compile(r"\.d\s*\(((?:[^()]|\([^()]*\))*)\)")
+
+
+def kit_landed_ports(btxt):
+    """DIE-S81-51/SPARE 11-03: identifiers read by the .d of a forwarded-clock landing ring (ot_dp_clk_landing*) in the
+    bound module text, plus <bus> of every ring instance named u_cland_<bus> -- the buses gen_phys declares as landing
+    (land_slots.json).  Over-approximate on purpose: a landed bus only loses the spare station chain."""
+    out = set()
+    for m in _KIT_LAND_INST.finditer(btxt):
+        if m.group(2).startswith("u_cland_"):
+            out.add(m.group(2)[len("u_cland_"):])
+        d = _KIT_LAND_D.search(m.group(3))
+        if d:
+            out |= set(re.findall(r"\b[A-Za-z_]\w*\b", re.sub(r"\[[^\]]*\]", "", d.group(1))))
+    return out
+
+
 def cmd_kit_rtl(a):
     """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
     The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
@@ -4824,12 +4883,20 @@ def cmd_kit_rtl(a):
             bwd = bmap[n][1] - 1 if ep else bmap[n][1]
             if bwd < Wd:
                 spare_in[n] = (bwd, Wd)
-    spare_pass = []
+    # DIE-S81-51/SPARE 11-03 (KW-FIX-4 face_guard class land_slot): the _i of an ft slot that feeds a forwarded-clock
+    # landing ring in the bound module is a declared LANDING bus (gen_phys land_slots.json: D ICG slot flops per bit).
+    # Its spare bits never reach the ring, so a station chain there reads as 1 load against D: they stay unread
+    # (declared dead below) and the _o spare bits stay tied 0 (spare_out_bits).  Other ft slots keep the chain.
+    landed = kit_landed_ports(btxt)
+    spare_pass, spare_landed = [], []
     for sl in t.get("ft_slots", []):
         ni, no = gen_rtl.sv_id(sl["name"] + "_i"), gen_rtl.sv_id(sl["name"] + "_o")
         k = max(1, int(sl.get("stations", 1)))
         so = next((x for x in spare if x["port"] == no), None)
         if ni not in spare_in or so is None:
+            continue
+        if ni in landed:
+            spare_landed.append(dict(slot=sl["name"], bits=spare_in[ni][1] - spare_in[ni][0]))
             continue
         lo, hi = spare_in[ni]
         if hi - lo != so["bits"]:
@@ -4854,6 +4921,12 @@ def cmd_kit_rtl(a):
         body[i:i + 1] = chain
         spare.remove(so)
         spare_pass.append(dict(slot=sl["name"], bits=wd, stations=k))
+    # DIE-S81-51/SPARE 11-03: the spare bits of a NARROW plan input (bound port narrower than the plan bus) that no
+    # spare station chain reads are structurally unconnected in this wrapper: declared proven-dead (kit dead_inputs.json
+    # via gen_phys, face_guard dead_declared = 0 loads + 0 drivers, any load still FAILs class dead).
+    chained = {gen_rtl.sv_id(x["slot"] + "_i") for x in spare_pass}
+    dead_in = [f"{x['port']}[{i}]" for x in narrow if x["port"] not in chained and bmap[x["port"]][0] == "input"
+               for i in range(x["bound"], x["plan"])]
     extra = []
     for d, w, n in bports:
         if n in seen:
@@ -4893,6 +4966,12 @@ def cmd_kit_rtl(a):
                                              enumerate(ports)) + "\n);\n" + "\n".join(body) + "\n" +
            f"    {bmod} {pset + ' ' if pset else ''}u_bound (\n        " + ",\n        ".join(conns) + "\n    );\nendmodule\n`default_nettype wire\n")
     (kd / f"{mod}.sv").write_text(txt)
+    dead_doc = None
+    if dead_in:
+        dead_doc = dict(schema="opentallas.kit_dead_inputs.v1", bits=dead_in, proof=dict(
+            verdict="PASS", method=KIT_DEAD_METHOD,
+            receipt=dict(wrapper=str(kd / f"{mod}.sv"), sha256=hashlib.sha256(txt.encode()).hexdigest(),
+                         narrow_buses=[x for x in narrow if bmap[x["port"]][0] == "input"])))
     if kit_core_clock_rows:
         (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0), indent=1) + "\n")
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
@@ -4906,7 +4985,7 @@ def cmd_kit_rtl(a):
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
     if spb_geometry:
         leafm = [name for name in leafm if name != 'ot_hbm_spb0_regs']
     picks = {}
@@ -4944,7 +5023,8 @@ def cmd_kit_rtl(a):
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
-               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
+               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
+               **({"dead_inputs": dead_doc} if dead_doc else {}),
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,

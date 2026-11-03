@@ -1,8 +1,10 @@
-"""lec.py lockup-latch abstraction (latch_to_wire, LEC-FPREG-3 2026-10-27): a transparent-low ASAP7 DLL latch
-between rising-edge flops is a wire in the cycle model.  ok: r0 -> DLL -> r1 is EQUIVALENT to the RTL r0 -> r1;
-mutants (the latch reads the input instead of r0, the latch dropped and r1 reads r0's input) are NOT EQUIVALENT;
-topologies outside the abstraction (transparent-high DHL, a latch clocked by an inverted clock or by a data input,
-Q to a falling-edge flop, Q to a module output) are UNPROVEN, never EQUIVALENT; OT_LEC_LATCH=0 refuses latches."""
+"""lec.py lockup-latch abstraction (latch_to_wire, LEC-FPREG-3 2026-10-27; phase-aware LATCH-FACE 11-03): a
+transparent-low (DLL) or transparent-high (DHL, or DLL on an inverted clock) ASAP7 latch between rising-edge flops
+is a wire in the cycle model.  ok / DHL / INV: r0 -> latch -> r1 is EQUIVALENT to the RTL r0 -> r1; mutants (the
+latch reads the input instead of r0, the latch dropped and r1 reads r0's input) are NOT EQUIVALENT; a latch Q
+to a module output is a port of phase 'low' (PO: also a different function -> NOT EQUIVALENT); topologies outside
+the abstraction (a latch clocked by a data input, Q to a falling-edge flop) are UNPROVEN, never EQUIVALENT;
+OT_LEC_LATCH=0 refuses latches.  Face latches (port phase): test_lec_latch_face.py."""
 import json
 import os
 import shutil
@@ -97,14 +99,17 @@ def _run(kit, **env):
 
 def test_lockup_cells():
     assert lec.LOCKUP_CELLS.match("DLLx1_ASAP7_75t_R") and lec.LOCKUP_CELLS.match("DLLx3_ASAP7_75t_SL")
-    assert not lec.LOCKUP_CELLS.match("DHLx1_ASAP7_75t_R") and lec.UNSUPPORTED_CELLS.match("DHLx1_ASAP7_75t_R")
+    assert lec.LOCKUP_CELLS.match("DHLx1_ASAP7_75t_R") and lec.UNSUPPORTED_CELLS.match("DHLx1_ASAP7_75t_R")
+    assert not lec.LOCKUP_CELLS.match("DHLx4_ASAP7_75t_R") and not lec.LOCKUP_CELLS.match("ICGx1_ASAP7_75t_R")
 
 
 @needs_image
-def test_lockup_latch_is_equivalent(tmp_path):
-    rc, r = _run(_kit(tmp_path, "ok"))
+@pytest.mark.parametrize("v,ph", [("ok", "low"), ("DHL", "high"), ("INV", "high")])
+def test_lockup_latch_is_equivalent(tmp_path, v, ph):
+    rc, r = _run(_kit(tmp_path, v))
     assert rc == 0 and r["verdict"] == "EQUIVALENT", r
     assert r["lockup_latches"]["gate"]["to_wire"] == 2 and r["lockup_latches"]["gold"]["latches"] == 0, r
+    assert r["lockup_latches"]["gate"]["phases"] == {ph: 2} and r["latch_phase"]["n_differ"] == 0, r
 
 
 @needs_image
@@ -115,12 +120,18 @@ def test_lockup_mutants_are_not_equivalent(tmp_path, mut):
 
 
 @needs_image
-@pytest.mark.parametrize("ref,why", [("DHL", "does not model"), ("INV", "transparent-low"),
-                                     ("DATACLK", "transparent-low"), ("NEG", "Q reaches"),
-                                     ("PO", "lec_po_y")])
+@pytest.mark.parametrize("ref,why", [("DATACLK", "transparent-low"), ("NEG", "Q reaches")])
 def test_latch_topologies_outside_the_model_are_refused(tmp_path, ref, why):
     rc, r = _run(_kit(tmp_path, ref))
     assert rc == 2 and r["verdict"] == "UNPROVEN" and why in r["reason"], r
+
+
+@needs_image
+def test_latch_to_port_is_a_low_phase_port(tmp_path):
+    # PO: y[1] = DLL(r0[1]) against the RTL r1[1]: a one-cycle-early function and a 'low' port against 'edge'
+    rc, r = _run(_kit(tmp_path, "PO"))
+    assert rc == 1 and r["verdict"] == "NOT EQUIVALENT" and "latch phase" in r["reason"], r
+    assert [e["gold"] + "/" + e["gate"] for e in r["latch_phase"]["differ"]] == ["edge/low"], r
 
 
 @needs_image
@@ -143,9 +154,11 @@ def test_rtl_lockup_latch_mutant_is_not_equivalent(tmp_path):
 
 
 @needs_image
-def test_rtl_transparent_high_latch_is_refused(tmp_path):
+def test_rtl_transparent_high_latch_between_flops_is_a_wire(tmp_path):
+    # between rising-edge flops either phase is a wire in the cycle model (hold / phase timing is STA's)
     rc, r = _run(_kit(tmp_path, "ok", RTL_LAT_HI))
-    assert rc == 2 and r["verdict"] == "UNPROVEN" and "transparent-low" in r["reason"], r
+    assert rc == 0 and r["verdict"] == "EQUIVALENT", r
+    assert r["lockup_latches"]["gold"]["phases"] == {"high": 2} and r["lockup_latches"]["gate"]["phases"] == {"low": 2}
 
 
 def _mux_json(path, a, b, mtype="$_MUX_"):
@@ -177,10 +190,15 @@ def test_constant_mux_inverted_clock_enable_is_a_lockup_latch(tmp_path, a, b, mt
     assert cells["lk"]["type"] == "$_BUF_" and cells["lk"]["connections"] == {"A": [10], "Y": [12]}
 
 
-@pytest.mark.parametrize("a,b,mtype", [("0", "1", "$_MUX_"), ("1", "0", "$_NMUX_"), ("1", "1", "$_MUX_"),
-                                       ("0", 3, "$_MUX_")])
+@pytest.mark.parametrize("a,b,mtype", [("0", "1", "$_MUX_"), ("1", "0", "$_NMUX_")])
+def test_constant_mux_clock_enable_is_a_transparent_high_latch(tmp_path, a, b, mtype):
+    st = lec.latch_to_wire(_mux_json(tmp_path / "s.json", a, b, mtype), tmp_path / "d.json", "gold")
+    assert st["to_wire"] == 1 and st["per_latch"]["lk"]["phase"] == "high", st
+
+
+@pytest.mark.parametrize("a,b,mtype", [("1", "1", "$_MUX_"), ("0", 3, "$_MUX_")])
 def test_constant_mux_enable_mutants_are_refused(tmp_path, a, b, mtype):
-    # transparent-high (MUX 0/1 = clk; NMUX 1/0 = clk), a constant enable, a data-dependent mux: never a wire
+    # a constant enable, a data-dependent mux: never a wire
     with pytest.raises(lec.Unproven):
         lec.latch_to_wire(_mux_json(tmp_path / "s.json", a, b, mtype), tmp_path / "d.json", "gold")
 

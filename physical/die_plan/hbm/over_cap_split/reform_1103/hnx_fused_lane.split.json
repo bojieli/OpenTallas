@@ -1,0 +1,128 @@
+{
+ "schema": "opentallas.hbm.reform_split.v1",
+ "core": "hnx_fused_lane",
+ "uncut_cells_census": 537474,
+ "instances": 32,
+ "types": [
+  "q_hub_ne",
+  "q_hub_nw"
+ ],
+ "status": "EQ-PASS",
+ "form": "lane control (+2 SRAM macros, chunk chain, output writer) + 4 IDENTICAL element-pair blocks (ot_hnx_fused_el2 x2 + their asb/op operand-register slice); asb/op moved into the pairs; element flags OR-ed in the pair",
+ "rtl": [
+  "rtl/hbm_accel/cores_split/reform_1103/hnx_fused_lane/hnx_fused_lane_split.sv",
+  "rtl/hbm_accel/cores_split/reform_1103/hnx_fused_lane/hnx_fused_lane__split.sv"
+ ],
+ "sub_blocks": [
+  {
+   "module": "hnx_fused_lane_c",
+   "per_core": 1,
+   "cells_est": 65328,
+   "cells_basis": "ORFS asap7lock synth of the face-shelled block (synth_stat; odb step failed only on the missing SRAM LEF)",
+   "macros": 2,
+   "clock": "clk",
+   "pins_in_bits": 1468,
+   "pins_out_bits": 1529
+  },
+  {
+   "module": "hnx_fused_lane_elp",
+   "per_core": 4,
+   "cells_est": 140270,
+   "cells_basis": "ORFS asap7lock synth of the face-shelled block; > 120k target, <= 150k (ORFS est ~+10% vs census per hcol calibration); fallback: 1 element per block (~70k, 8 replicas)",
+   "macros": 0,
+   "clock": "clk",
+   "pins_in_bits": 393,
+   "pins_out_bits": 258
+  }
+ ],
+ "crossings": [
+  {
+   "between": "ctl -> pair (all pair inputs: e_rd slice, asb/op strobes, valids, coefficients e_b 160, e_xo/e_wo slices, e_rh)",
+   "added_edges": 2,
+   "kind": "face->face (ctl out + pair in)",
+   "note": "uniform on every pair input: the pair runs the uncut columns' schedule 2 edges late"
+  },
+  {
+   "between": "pair -> ctl (e_hv, e_flag, e_ho, e_xl, e_sq, e_qq)",
+   "added_edges": 2,
+   "kind": "face->face",
+   "note": "ctl re-times its consumers by XS = 4: x_v (x store write, slot counters, chunk-chain valid) and y_v vlines 4 deeper"
+  }
+ ],
+ "eq": {
+  "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/fused_lane/run.sh (golden N-row records on ot_hnx_fused_top with face-shelled lanes; SHADOW = kit lane on lane 0's inputs, shift map below)",
+  "stages": {
+   "K": "kit lanes + shadow SH 0 (harness check)",
+   "S": "split lanes + shadow SH 4 (proof)",
+   "S1": "SMUT 1 must FAIL",
+   "S2": "SMUT 2 must FAIL"
+  },
+  "result": "epyc2 fused/out verdict.txt: K 6/6 golden PASS + shadow SH0 6/6 (harness); S 6/6 golden PASS (PRE+POST N 1,2,4) + shadow SH4 6/6 (rq/scalar +0, chunk-sum/wq/fin/flt +4 vs the kit lane on the same inputs, wq nonzero every write); S1 FAIL 3/3 PRE (mism 5117/10231/20464), S2 FAIL 3/3 PRE (mism 4862/9719/19441); POST cases unaffected by S1/S2 (by design). Record cycles split vs kit: POST +4 (196->200, 304->308, 510->514), PRE +8 (406->414, 488->496, 650->658)",
+  "mutants": {
+   "S3": "SMUT 3 (HC_POST: pairs hv one edge late vs ho) must FAIL"
+  },
+  "result_s3": "epyc4 fused/out2 (S re-run + S3, RTL with SMUT 3 added): S 6/6 golden PASS + shadow SH4 6/6; S3 FAIL all 3 POST cases (mism 20460/40848/81680), PRE unaffected (by design)",
+  "evidence": [
+   "bench/fused_lane/evidence/verdict_epyc2_K_S_S1_S2.txt",
+   "bench/fused_lane/evidence/verdict_epyc4_S_S3.txt"
+  ]
+ },
+ "latency": [
+  [
+   "hnx_fused_lane",
+   "hnx_fused_lane_c",
+   "rq_v/rq_s",
+   "out",
+   0,
+   "VM read issue unchanged"
+  ],
+  [
+   "hnx_fused_lane",
+   "hnx_fused_lane_c",
+   "up (up_t 0, scalar)",
+   "out",
+   0,
+   "prologue scalar returns unchanged"
+  ],
+  [
+   "hnx_fused_lane",
+   "hnx_fused_lane_c",
+   "up (up_t 1, chunk sum)",
+   "out",
+   4,
+   "x path through the pairs"
+  ],
+  [
+   "hnx_fused_lane",
+   "hnx_fused_lane_c",
+   "wq_v/wq_s/wq_d, fin (HC_POST)",
+   "out",
+   4,
+   "o writes; record +4 (measured)"
+  ],
+  [
+   "hnx_fused_lane",
+   "hnx_fused_lane_c",
+   "wq_v/wq_s/wq_d, fin (HC_PRE_NORM)",
+   "out",
+   8,
+   "+4 lane vs r arrival, r itself +4 (top rsqrt fed by chunk sums +4); record +8 (measured)"
+  ],
+  [
+   "hnx_fused_lane",
+   "hnx_fused_lane_c",
+   "flt (element flags)",
+   "out",
+   4,
+   "control-origin faults +0"
+  ],
+  [
+   "hnx_fused_lane",
+   "hnx_fused_lane_c",
+   "all inputs",
+   "in",
+   0,
+   "dn/r/rr/lid unchanged; top + tree valid-driven, no top change"
+  ]
+ ]
+}

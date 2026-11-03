@@ -1,0 +1,4 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hfd_coll_q3_body_core	all	all core pins	in/out	0	design intent; EQ NOT YET RUN (WIP)
+ot_hfd_coll_q3_body_core	CTL->QCOL4	ctl_sel_d2 (64b sink_select)	internal	0	seam 2 face flops replace the uncut slice sink_select_p/inst_d3 stage (WIP, unverified)
+ot_hfd_coll_q3_body_core	CTL->QCOL4	src payload (11 src x 32b x 4 slices)	internal	0	QCOL4 drops nothing; payload seam face flops = uncut capture+pin flops? UNVERIFIED (WIP)

@@ -1,0 +1,15 @@
+MISMATCH cyc=301 cs_out[18] ref=1 dut=0
+MISMATCH cyc=301 cs_out[19] ref=0 dut=1
+MISMATCH cyc=301 cs_out[20] ref=1 dut=0
+MISMATCH cyc=301 cs_out[21] ref=1 dut=0
+MISMATCH cyc=301 cs_out[22] ref=1 dut=0
+MISMATCH cyc=301 cs_out[23] ref=0 dut=1
+MISMATCH cyc=301 cs_out[24] ref=0 dut=1
+MISMATCH cyc=301 cs_out[25] ref=1 dut=0
+MISMATCH cyc=301 cs_out[26] ref=0 dut=1
+MISMATCH cyc=301 cs_out[28] ref=0 dut=1
+LOCKSTEP FAIL errs=34510 checks=17100 toggled_out_bits=33
+- /home/ubuntu/scratch-root/claude/die-hbm-61-split/bench/hcol_h0/tb_m1.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.361 s; speed 33.229 us/s
+- Verilator: cpu 0.361 s on 1 threads; allocated 9 MB

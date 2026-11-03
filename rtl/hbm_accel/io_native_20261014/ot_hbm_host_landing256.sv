@@ -44,9 +44,17 @@ module ot_hbm_host_landing256 #(parameter integer PINREG=1)(input wire clk,rst_n
  always @(posedge clk or negedge rst_n)if(!rst_n)pop_q<=0;else pop_q<=consume;
  assign pop=(PINREG!=0)?pop_q:consume;
  genvar b;generate for(b=0;b<2;b=b+1)begin:g_bank
+`ifdef OT_HBM_RW_MACROS
+ // DIE-HBM-61/MEM 11-03 RE-FORM (macro channels; HBM RE-FORM recipe define only, other builds unchanged): r0c0 master,
+ // one mask pin (all-ones mask, repair pins tied 0 before), same 1r1w cycle contract
+ // (tools/mem_compiler/build_hbm_rightwidth_1103.py).
+ ot_sram_1r1w_256x256_m2_r0c0_g256 u_mem(.clk(clk),.r_ce_in(read_en),.r_addr_in(read_addr),.rd_out(mem_data[b*256+:256]),
+ .w_ce_in(w_v&&(count!=256)),.w_addr_in(wp),.wd_in(w_d[b*256+:256]),.w_mask_in(1'b1));
+`else
  ot_sram_1r1w_256x256_m2_r2c2 u_mem(.clk(clk),.r_ce_in(read_en),.r_addr_in(read_addr),.rd_out(mem_data[b*256+:256]),
  .w_ce_in(w_v&&(count!=256)),.w_addr_in(wp),.wd_in(w_d[b*256+:256]),.w_mask_in({256{1'b1}}),
  .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
+`endif
  end endgenerate
  always @(posedge clk)if(pending)out_data<=mem_data;
  always @(posedge clk or negedge rst_n)begin

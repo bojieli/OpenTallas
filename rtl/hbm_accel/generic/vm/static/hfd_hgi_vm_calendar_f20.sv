@@ -9,6 +9,8 @@
 // on clk_cap = 2,031 sinks, TT insertion 266.5 / spread 94.6 ps). The target body (installed bitmap, scan, programme
 // outputs) has its own related phase-0 root clk_tgt (gate 07:30: body on clk = 2,045 sinks, TT 286.8 / spread 109.5 ps).
 // Cycle behaviour is exactly the two-tile composition (collar outputs are flops; no stage added or removed).
+// RE-FORM C3 11-03: FREE_PAYLOAD=1 (programme payload captured every edge, read only under program_cfg_we) and
+// SCAN_REP=16 (16 kept scan_row copies for the installed-row scan read); 0 cycles.
 module hfd_hgi_vm_calendar_f20 #(parameter integer RMUT=0) (
     input wire clk,clk_cap,clk_mem,clk_tgt,rst_n,
     input wire [7:0] tgt,
@@ -43,7 +45,7 @@ module hfd_hgi_vm_calendar_f20 #(parameter integer RMUT=0) (
     output wire [23:0] lg_local_write
 );
     wire p_we,p_sv; wire [9:0] p_wa,p_sb; wire [255:0] p_wd; wire [10:0] p_sl; wire [15:0] p_lp;
-    ot_static_program_target #(.TARGET(8'hff),.PCW(10),.TGT_PIN(1),.CAP_CLK(1)) u_target(
+    ot_static_program_target #(.TARGET(8'hff),.PCW(10),.TGT_PIN(1),.CAP_CLK(1),.FREE_PAYLOAD(1),.SCAN_REP(16)) u_target(
         .clk(clk_tgt),.clk_cap(clk_cap),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .program_active(active),.program_cfg_we(p_we),.program_cfg_addr(p_wa),.program_cfg_data(p_wd),

@@ -92,3 +92,24 @@ def test_cached_status_is_reused_without_another_solver(tmp_path, monkeypatch):
     lec.raw_constant_bases(L, tmp_path, 100, [])
     monkeypatch.setattr(lec, "prove", lambda *a, **k: (_ for _ in ()).throw(AssertionError("reproved")))
     lec.raw_constant_bases(L, tmp_path, 100, [])
+
+
+def test_raw_base_sweep_has_wall_and_timeout_proves_nothing(tmp_path, monkeypatch):
+    """FLOW-LATCH-1 11-03: the universal raw-D base sweep gets the OT_LEC_RAWPREFIX_S wall backstop; an overrun
+    (prove -> all undecided + SWEEP_TIMEOUT) establishes no base and is recorded in raw_prefix_bounded."""
+    monkeypatch.setenv("OT_LEC_RAWPREFIX_S", "7")
+    monkeypatch.setenv("OT_LEC_RAW_BASE_STEPS", "0")
+    L = _case(tmp_path)
+    walls = []
+
+    def overrun(m, *a, wall=None, tag="", **k):
+        walls.append((tag, wall))
+        st = {n: "undecided" for n in m.onames}
+        st[lec.SWEEP_TIMEOUT] = True
+        return st
+    monkeypatch.setattr(lec, "prove", overrun)
+    lec.noreset_filter(L, [], collections.Counter(), tmp_path, 100)
+    assert ("rawbase0_gold", 7.0) in walls, walls
+    assert L.raw_constant_status[("gold", "ff:u_dut.q", 0)] == "undecided"
+    assert ("gold", "ff:u_dut.q") not in L.hyp
+    assert any(b["tag"] == "rawbase0_gold" and b["why"] == "wall" for b in L.raw_prefix_bounded)

@@ -1226,6 +1226,48 @@ def single_root_sites(mode, v, outline):
                 sha256=sha(f), variant=doc.get("variant"))
 
 
+CLOCK_REGIONS_SCHEMA = "opentallas.hbm_core_clock_regions.v1"
+CLOCK_REGION_SINKS_MAX = 5000      # OWNER 11-03 RE-FORM: one clock entry per <= 5k sinks
+
+
+def clock_region_sites(path, module, outline, clocks):
+    """DIE-HBM-61/CLOCK (OWNER 11-03 RE-FORM; plan d44v core_clock_regions.json, DIE-HBM-61/PLAN): the plan's regional
+    clock entries of a module (> 5k sinks) -> planned clock anchors for the existing density CTS hook
+    (core_density_taps.tcl OT_DTAP_SITES: port -> CTS trunk -> one tap per anchor = one regional entry, its sink group =
+    the registers nearest that anchor, local CTS tree per tap, taps aligned by core_tap_align.tcl).  The plan grid puts
+    each entry at its region centre, so nearest-anchor grouping = the declared region rects.  Returns None when the
+    module has no regional entries (<= 5k sinks) or is a kept signed design; fails (ValueError) on a stale outline, a
+    multi-clock module (the hook taps one port) or a region over 5k sinks."""
+    doc = json.load(open(path))
+    if doc.get("schema") != CLOCK_REGIONS_SCHEMA:
+        raise ValueError(f"CLOCK_REGIONS {path}: schema {doc.get('schema')!r}")
+    r = (doc.get("modules") or {}).get(module)
+    if not r or int(r.get("entries", 1)) <= 1 or r.get("kept_signed"):
+        return None
+    if [round(x, 3) for x in r["outline_um"]] != [round(x, 3) for x in outline]:
+        raise ValueError(f"CLOCK_REGIONS {module}: plan outline {r['outline_um']} != view outline {list(outline)}")
+    if len(clocks) != 1:
+        raise ValueError(f"CLOCK_REGIONS {module}: {len(clocks)} clock ports; regional entries need one core clock")
+    if float(r.get("sinks_per_entry", 0)) > CLOCK_REGION_SINKS_MAX:
+        raise ValueError(f"CLOCK_REGIONS {module}: {r['sinks_per_entry']} sinks per entry > {CLOCK_REGION_SINKS_MAX}")
+    w, h = outline
+    # nearest 4.32-um PG lattice point inside the legal band [8.64, side - 8.64] (planned_clock_sites_text)
+    def snap(v_, hi):
+        k_ = int((hi - 8.64) / 4.32 + 1e-9)
+        while round(4.32 * k_, 4) > hi - 8.64:      # same float test as planned_clock_sites_text
+            k_ -= 1
+        return 4.32 * min(max(round(v_ / 4.32), 2), k_)
+    # a region the plan could not site (xy_um null: no legal logic area, e.g. macro-covered) has no anchor; its
+    # registers, if any, join the nearest anchor (recorded as unsited)
+    sited = [e for e in r["regional_entries"] if e.get("xy_um")]
+    sites = [[round(snap(e["xy_um"][0], w), 4), round(snap(e["xy_um"][1], h), 4)] for e in sited]
+    if len(r["regional_entries"]) != int(r["entries"]) or not sites or len({tuple(x) for x in sites}) != len(sites):
+        raise ValueError(f"CLOCK_REGIONS {module}: {len(sites)} distinct legal sites for {r['entries']} entries")
+    return dict(clock_sites_um=sites, entries=len(sites), unsited=len(r["regional_entries"]) - len(sited),
+                sinks=r.get("sinks"), sinks_per_entry=r.get("sinks_per_entry"),
+                file=str(Path(path).resolve()), sha256=sha(Path(path)))
+
+
 def planned_clock_sites_text(sites, outline):
     """Recipe-owned whitespace anchors consumed by the existing density CTS hook."""
     if not sites:
@@ -1332,6 +1374,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
                          "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
                          "that bus, recorded in face_shell.json out_extra_stages + freeze.json); default none = unchanged")
+    ap.add_argument("--face-reset-relay", type=int, default=0, metavar="N",
+                    help="DIE-HBM-61/RTL 11-03 (OWNER RE-FORM registered reset relay, opt-in, default 0 = off): every "
+                         "active-low reset input of the face shell goes through ot_hbm_face_rst_relay (async assert, "
+                         "release after N >= 2 edges); recorded in face_shell.json reset_relay + latency.reset_delay_cycles")
+    ap.add_argument("--face-lockup", action="append", default=[], metavar="BUSRE",
+                    help="opt-in (DIE-HBM-61/CLOCK, OWNER 11-03 RE-FORM hold-safe crossings; default for the HBM-RF1 "
+                         "recipe): every shell OUTPUT bus matching BUSRE ('.*' = all) gets a negative-edge lockup "
+                         "stage after its face flop that drives the port (hold +T/2 at the receiver, cycle count "
+                         "unchanged, face_guard registered); recorded in face_shell.json out_lockup + freeze.json")
     ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
                     help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
@@ -1349,6 +1400,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--single-root-taps", default="B",
                     help="DIE-HBM-57/TAPS: explicit far-column clock anchors for single-root views listed in the sidecar: "
                          "A (single_root_taps_A.json), B (default: denser, _B.json; hfd CTS 340 vs A 384 ps TT), a sidecar path, or off")
+    ap.add_argument("--clock-regions", default=None, metavar="CORE_CLOCK_REGIONS_JSON",
+                    help="opt-in (DIE-HBM-61/CLOCK, OWNER 11-03 RE-FORM, HBM-RF1 recipe): the plan's "
+                         "core_clock_regions.json; a module with > 5k sinks gets one planned clock entry (density tap) "
+                         "per declared region (<= 5k sinks, local CTS sink group per tap, taps aligned); modules "
+                         "without regional entries and kept signed designs are unchanged")
     ap.add_argument("--clock-density-contract", help="reviewed exact native multi-port density plan JSON; requires --clock-taps density")
     ap.add_argument("--prects-estimate", action="store_true",
                     help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
@@ -1438,6 +1494,24 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             raise SystemExit(f"WRAPPER_CONTRACT {a.view}: pinned wrapper absent or outside source")
         if candidate.is_file():
             a.wrapper = str(candidate)
+    creg, creg_skip = None, None
+    if a.clock_regions:
+        clk0_ = sorted(n for n in names if re.match(CLK_RE, re.sub(r"\[\d+\]$", "", n)))
+        if len(clk0_) > 1:
+            # native multi-port clocks already are several entries; the one-port density hook cannot regroup them
+            # (multi-port density contract / SPLIT own those forms): kit unchanged, recorded in freeze.json
+            creg_skip = f"{len(clk0_)} clock pins (native multi-port): plan regions not applied"
+            print(f"CLOCK_REGIONS {module}: {creg_skip}")
+        else:
+            try:
+                creg = clock_region_sites(a.clock_regions, module, (w, h), clk0_ or ["clk"])
+            except ValueError as e:
+                raise SystemExit(f"{e}")
+    if creg:
+        if rec.get("clock_sites_um"):
+            creg["replaced_recipe_sites"] = len(rec["clock_sites_um"])
+        rec["clock_sites_um"] = creg["clock_sites_um"]   # DIE-HBM-61/CLOCK: plan regional entries (opt-in) win
+        a.clock_tap_sinks = CLOCK_REGION_SINKS_MAX
     srt = single_root_sites(a.single_root_taps, v, (w, h)) if not rec.get("clock_sites_um") else None
     if srt:
         rec["clock_sites_um"] = srt["clock_sites_um"]   # DIE-HBM-57/TAPS: explicit far-column taps (recipe sites win)
@@ -1638,7 +1712,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
-                             stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None)
+                             stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None,
+                             lockup=a.face_lockup or None, reset_relay=a.face_reset_relay)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -1655,6 +1730,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             raise SystemExit(f"FACE_SHELL {a.view}: shell ports != pruned plan pins, e.g. {bad[:6]}")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
     clks = [n for n in names if re.match(clock_re, base(n))]
+    if creg and len(clks) != 1:
+        raise SystemExit(f"CLOCK_REGIONS {module}: {len(clks)} clock pins {clks[:4]}; regional entries need one core clock")
     rsts = [n for n in names if re.match(reset_re, base(n)) and n not in clks]
     if not clks:
         raise SystemExit(f"{a.view}: no clock pin")
@@ -2168,7 +2245,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
                                plan_pins=len(names) + len(shell["dropped"]),
-                               **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}))
+                               **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}),
+                               **({"out_lockup": shell["out_lockup"]} if shell.get("out_lockup") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
     if runtime_files:
@@ -2204,6 +2282,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             fz["clock_taps"].update(sites_file="clock_sites.tcl", sites_um=rec["clock_sites_um"])
         if srt:
             fz["clock_taps"]["single_root_taps"] = {k: srt[k] for k in ("file", "sha256", "variant")}
+        if creg:
+            fz["clock_taps"]["clock_regions"] = {k: creg[k] for k in creg if k != "clock_sites_um"}
+    if creg_skip:
+        fz["clock_regions_skipped"] = creg_skip
         if a.clock_taps_shallow:
             fz["clock_taps"]["shallow"] = True
     if ms is not None:

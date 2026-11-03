@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.provenance.v1",
+ "verdict": "SIGNED",
+ "core": "ot_s81_kp4_dchn",
+ "run": "/srv/opentallas-scratch2/claude/head-serdes-2/e13a/run",
+ "src_commit": "10f591c1ce19c8079133547d903b1bb8f4db6961",
+ "flow_tag": "flow-20261101-n-head",
+ "signoff": "/srv/opentallas-scratch2/claude/dh58/proto/src_kp4/signoff-sprint-19/kp4_e13a_n/signoff/signoff.json",
+ "resign_provenance": "/srv/opentallas-scratch2/claude/dh58/proto/src_kp4/signoff-sprint-19/kp4_e13a_n/PROVENANCE.json",
+ "lec_verdict": "EQUIVALENT",
+ "signoff_generated": "2026-11-01T17:10:13-08:00",
+ "kit": {
+  "pins_file": "core_pins/kp4_276x138_pins.json",
+  "pins_sha256": "fae3ce0106f097de8d03684d1b3744cd2733ffae2ae0ceb7396c7211bfd7e35f",
+  "pins_canon_sha256": "8040b0f01db63c32ec5a74b74222521e5a8b512bf4c11904faccc4c729838b1e",
+  "outline_um": [
+   276.48,
+   138.24
+  ],
+  "signed_lef_sha256": "16155b5365b05f92666d964fd5e3a05c26cc5855bcb6d6ce9207bc27b6974ddb"
+ },
+ "plan_pins": {
+  "file": "core_pins/kp4_276x138_pins.json",
+  "sha256": "5ac4cb260978d83696549431beb8e1b6c509cc135547b12752c4c476d09035a0",
+  "canon_sha256": "8040b0f01db63c32ec5a74b74222521e5a8b512bf4c11904faccc4c729838b1e",
+  "content_equal_signed_lef": true
+ },
+ "sha256": {
+  "ot_s81_kp4_dchn_tt.lib": "e240e3b283041ef69f5e21e3004f64375fc02131141dc1e0f629b6d906c8a8f2",
+  "ot_s81_kp4_dchn_ff.lib": "cc493b64ea7930488f525d9404aff9cacb6aa288593195823800fd0d59d76642",
+  "ot_s81_kp4_dchn.lef": "16155b5365b05f92666d964fd5e3a05c26cc5855bcb6d6ce9207bc27b6974ddb"
+ }
+}

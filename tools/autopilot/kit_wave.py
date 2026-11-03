@@ -73,10 +73,26 @@ IMPORTED_SCHEDULER_CODE = scheduler_code_id()
 
 
 def scheduler_current(AP):
-    if scheduler_code_id() == IMPORTED_SCHEDULER_CODE:
-        return True
-    AP.log("KIT-WAVE new launches deferred: scheduler files changed during this tick; next tick loads current code")
-    return False
+    """True when the scheduler files on disk are the code this process imported.  Stale code never creates an attempt
+    (launch() refuses); KW-FIX-4 11-03 (COORD 07:1x class fix): instead of deferring to the next tick, _step re-runs the
+    pass on the current code in the SAME tick (reload_step).  Merges every ~20 min had deferred 10 ticks on 11-03."""
+    return scheduler_code_id() == IMPORTED_SCHEDULER_CODE or os.environ.get("KW_RELOADED") == "1"
+
+
+def reload_step(AP, ap_dir):
+    """run this pass in a fresh process on the CURRENT scheduler code; the caller holds kit_wave.lock (KW_LOCK_HELD)
+    and has saved its state.  -> the state the reload pass wrote."""
+    ap_dir = ap_dir or AP.AP_DIR
+    env = dict(os.environ, KW_RELOADED="1", KW_LOCK_HELD="1", AP_DIR=str(ap_dir))
+    cmd = [sys.executable, str(Path(__file__).resolve()), "step"] + (["--dry-run"] if getattr(AP, "DRY", False) is True else [])
+    AP.log("KIT-WAVE scheduler files changed: re-running this pass on the current code (same tick, no deferral)")
+    try:
+        p = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=int(os.environ.get("KW_RELOAD_S", "3000")))
+        if p.returncode:
+            AP.log(f"KIT-WAVE failed: reload pass rc {p.returncode}: {(p.stderr or p.stdout)[-300:]}")
+    except subprocess.TimeoutExpired:
+        AP.log("KIT-WAVE failed: reload pass timed out")
+    return load_state(ap_dir)
 
 
 HOME = Path.home()
@@ -118,13 +134,18 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # one-block geom fixes in 4 types (COORD 11-01 09:2x plan event, APPROVED 14:0x, merged 854277ebaaf);
                # l48h0 = DIE-HEAD-55 prepared_l48h0 on src claude/dh55-headsrc-1102@69e06c8b9 (COORD 11-03 00:2x (a) APPROVED)
                # l48h1 = DIE-HEAD-56 prep_v3 (plan 8e8ce514127b: l48h0 + hd_ctl_e/hd_ctl_n/hd_host_n cland republish), DIE-HEAD-56 RULING 11-03 04:5x
+               # l48rf = DH58-RFPLAN RE-FORM plan event on l48h1 (head_rf_plan_delta.py 9bb4620c625, plan a09cd3ac1180), COORD 11-03 09:0x/09:20
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
+# SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
+# right after gen: a registered relay at every <=300-um hop, extra cycles declared, per-hop table >= +10% of the period
+# or FAIL_PREBUILD before route.  Class default ON; a die opts out with "relay_bay_re": "".
+RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
-            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
+            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2", "epyc4"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
             # KW-RESUME-1 (OWNER 11-01 19:5x / COORD 20:0x default-on): a relaunch reuses the previous attempt's ORFS
             # steps up to the first step whose input fingerprint changed (kit_resume.py); die/global false opts out
@@ -267,7 +288,76 @@ def plan_entry_block(d, item):
         return None
     if f == "planned" and d.get("planned_core_flat"):
         return None
-    return PLAN_BLOCK.get(f)
+    if PLAN_BLOCK.get(f):
+        return PLAN_BLOCK[f]
+    li = (d.get("_lint") or {}).get(item)
+    # OWNER 11-03 07:0x: the gen-time lint is an ADVISORY report; it never blocks a launch.  The only blocking case,
+    # a missing planned core view, is the probe's planned/noview flag above (WAIT-DEP).  die prelint_block true opts
+    # a die back into blocking on lint hits (default off).
+    if li and d.get("prelint", True) is not False and d.get("prelint_block"):
+        return lint_reason(li)
+    return None
+
+
+# ------------------------------------------------------------------------------------------------ KW-FIX-4 gen-time lint
+# OWNER 11-03 (COORD 06:11 RE-FORM template, GEN rules): before any kit launches, a lint fails the type on
+#   cells   estimated flat std cells > 150k (plan probe; die prelint_cells_max overrides);
+#   memory  a memory over SYNTH_MEMORY_MAX_BITS that is not a macro (the type's GEN_LINT memory_bits verdict on this
+#           same plan block; a block change, or a retry row whose fix is named in retry_fix, clears it);
+#   view    a planned hard core without a signed view (probe flags planned / noview: these already wait as WAIT-DEP);
+#   strap   leaked strap ports (strap_* type ports not declared id_straps/count_straps, duplicate declared names, or the
+#           type's gen verdict 'undeclared top-level ID' / 'straps: duplicate names' on this same block).
+# OWNER 11-03 07:0x: ADVISORY. A hit is reported as one LINT row (stage prelint, status LINT-ADVISORY) in
+# kit_wave_stages.tsv and in the skip-free launch path; it never blocks a launch except a missing planned core view
+# (planned/noview flags = WAIT-DEP).  dies.<die>.prelint false: no report; dies.<die>.prelint_block true: block.
+PRELINT_HISTORY = (
+    ("memory", re.compile(r"memory_bits|SYNTH_MEMORY_MAX_BITS"),
+     "memory over SYNTH_MEMORY_MAX_BITS is not a macro (GEN_LINT memory_bits on this block): make it a generated memory macro"),
+    ("strap", re.compile(r"undeclared top-level ID|straps: duplicate names"),
+     "leaked / duplicate strap ports (gen verdict on this block): declare them in the plan (parent_id_straps)"),
+)
+
+
+def lint_reason(issues):
+    kinds = sorted({str(i).split(":", 1)[0] for i in issues})
+    return f"LINT {'+'.join(kinds)}: gen-time lint before launch (no build), see kit_wave_stages.tsv LINT rows"
+
+
+def prelint(d, die, names, state):
+    """-> {item: [issue, ...]} for the current plan of record: probe (plan-static) issues + verdict history on the SAME
+    plan block (key) that no named fix released.  names: {type: block_sha} (or a set)."""
+    out = {t: list(v) for t, v in (d.get("_plan_lint") or {}).items()}
+    for t, f in (d.get("_plan_flags") or {}).items():
+        if f in ("planned", "noview") and not (f == "planned" and d.get("planned_core_flat")):
+            out.setdefault(t, []).append(f"view: planned hard core without a signed view: "
+                                         f"{','.join((d.get('_plan_deps') or {}).get(t, [])[:4])} (waits, WAIT-DEP)")
+    fixed = set((d.get("retry_fix") or {}).keys()) if isinstance(d.get("retry_fix"), dict) else set()
+    items = (state or {}).get("items") or {}
+    blocks = names if isinstance(names, dict) else {}
+    for t in (names or ()):
+        rec = items.get(item_key(die, d.get("event"), t, blocks.get(t)))
+        if not rec or rec.get("status") not in ("FAIL", "CANCELLED") or f"{t}@{rec.get('attempt')}" in fixed:
+            continue
+        txt = f"{rec.get('reason') or ''}\n{rec.get('errors') or ''}"
+        for kind, rx, msg in PRELINT_HISTORY:
+            if rx.search(txt):
+                out.setdefault(t, []).append(f"{kind}: {msg} (attempt {rec.get('attempt')})")
+    return {t: v for t, v in out.items() if v and (not names or t in names)}
+
+
+def record_lint(st, cfg, die, lint):
+    """replace the die's LINT rows (st['lint']) with this tick's verdict"""
+    d = cfg["dies"][die]
+    L = st.setdefault("lint", {})
+    for k in [k for k, v in L.items() if v.get("die") == die]:
+        del L[k]
+    if d.get("prelint", True) is False:
+        return
+    blocks = d.get("_lint_blocks") or {}
+    for t, issues in lint.items():
+        L[f"{die}|{t}"] = dict(die=die, item=t, event=d.get("event"), plan_sha=d.get("_plan_sha"),
+                               block_sha=blocks.get(t) if isinstance(blocks, dict) else None,
+                               issues=issues, evidence=d.get("plan", ""), updated=time.time())
 
 
 def _own_wave_unit(r):
@@ -480,6 +570,10 @@ def parse_otrun_status(text):
         if m:
             out[m.group(1)] = {"admit": int(m.group(2)), "load": float(m.group(3)), "cores": int(m.group(4)),
                                "run": int(m.group(5))}
+            # KW-FIX-4 11-03 (COORD 12:1x FLEET): the queued demand 'waiters N:G GB' -> wait_n / wait_gb
+            w = re.search(r"\bwaiters (\d+):(\d+) GB", part)
+            if w:
+                out[m.group(1)].update(wait_n=int(w.group(1)), wait_gb=int(w.group(2)))
     return out
 
 
@@ -575,6 +669,8 @@ RULES = [
     # (undriven wires) reported only as 'FAIL_PREFLOOR rtl_lint' fell through to 'unclassified'
     ("RTL", None, r"is used but has no driver|Found \d+ problems in 'check -assert'|FAIL_PREFLOOR rtl_lint",
      "RTL lint at preflight (undriven / check -assert)"),
+    # SAFE-STATION-1 11-03: a relay-bay hop below +10% of the period = the station plan (bays / lane length), not the flow
+    ("PLAN", None, r"FAIL_PREBUILD relay_bay", "relay-bay pre-build hop table below +10% (station lane plan)"),
     ("PLAN", None, r"FACE_GUARD FAIL|face_guard[^\n]*FAIL|FAIL_PREFLOOR face_guard", "face guard (plan pins / landing)"),
     ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL|FAIL_PREFLOOR port_bind", "port bind (plan pins)"),
     ("PLAN", None, r"LEF master \S+ not found|ORD-2013", "macro not declared in the plan type"),
@@ -784,6 +880,22 @@ def geom_verdict(line, waived=None, standing=True):
     return "FAIL", failing, ""
 
 
+GEOM_ADVISORY_REF = "OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory)"
+
+
+def geom_gate(line, waived=None, advisory=True):
+    """KW-FIX-4 11-03: the wave's AUTO-GEOM gate.  geom_verdict() still judges the line; with advisory on (default,
+    die opt geom_advisory false = the old hard gate) a FAIL with a verdict line passes as PASS-COND tagged
+    'GEOM-ADVISORY <rules>' so the kit goes on to sign-off, which is the only blocking gate.  A missing verdict line
+    stays FAIL (geom did not run)."""
+    v, failing, tag = geom_verdict(line, waived)
+    if v == "FAIL" and advisory and re.search(r"AUTO-GEOM (PASS|FAIL)\b", line or ""):
+        na = sorted(set(re.findall(r"(?:^|\s)([A-Za-z0-9_]+)=NA\(", line)) - set(failing))
+        return "PASS-COND", failing, ("GEOM-ADVISORY " + ",".join(failing + [f"{r}(NA)" for r in na]) + ": "
+                                      + GEOM_ADVISORY_REF)
+    return v, failing, tag
+
+
 def geom_waivers(d, item, parent=None):
     """die config geom_exceptions [{rules: [...], items: [glob ...] (default all), ref: 'COORD ruling', max: {rule: limit}
     (optional value bound)}] -> {rule: ref | (ref, limit)}
@@ -900,7 +1012,8 @@ def core_kit_cmds(ck, src, plan, root, work, item):
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
-    return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"], "gen_host": d["gen_host"],
+    return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"],
+            "gen_host": pick_gen_host(cfg, die, take=int(opt(cfg, die, "place_mem_gb"))),
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
             # AUTOBUILD-PIPE-2: per-die hard-core generator (HBM gen_core_kit_hbm.py); kind=core items use it instead
@@ -922,8 +1035,204 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
+            "geom_advisory": opt(cfg, die, "geom_advisory") is not False,
+            "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
+            "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN,
             "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))}
+
+
+def host_score(v):
+    """ot-run --status row -> preference (higher first): free admits MINUS the GB already waiting there (KW-FIX-4 11-03,
+    COORD 12:1x FLEET: raw admits sent every burst to epyc4 while 131 waiters / 1359 GB queued there and intel1 had 0),
+    a positive score discounted 4x on a host already >= 0.9 x cores"""
+    if not v:
+        return -1e9
+    busy = float(v.get("load", 0)) >= 0.9 * max(1, int(v.get("cores") or 1))
+    s = float(v.get("admit", 0)) - float(v.get("wait_gb", 0))
+    return s * 0.25 if (busy and s > 0) else s
+
+
+def gen_hosts(cfg, die):
+    """KW-FIX-4 11-03 (COORD epyc4 fill): die option gen_hosts = hosts that hold the die's src/plan/kit_rtl inputs at
+    the SAME paths; a new attempt generates, stages and (async) PLACEs on the one with the most free ot-run admits, so
+    a fresh host fills instead of every kit pinning to the one configured gen host.  Default: [gen_host] (unchanged)."""
+    d = cfg["dies"][die]
+    hs = [h for h in (d.get("gen_hosts") or []) if h]
+    return hs if d.get("gen_host") in hs else [d["gen_host"]] + hs
+
+
+def pick_gen_host(cfg, die, take=0):
+    """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
+    GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used"""
+    hs, stt, hub = gen_hosts(cfg, die), cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    if len(hs) < 2 or not stt:
+        return cfg["dies"][die]["gen_host"]
+    key = lambda h: stt.get("localhost" if h == hub else h)
+    best = max(hs, key=lambda h: (host_score(key(h)), -hs.index(h)))
+    if key(best) is not None and take:
+        charge(key(best), take)
+    return best
+
+
+def charge(v, gb):
+    """book gb of new demand on a cached ot-run status row: it admits now if it fits, else it waits there"""
+    if int(v.get("admit", 0)) >= gb:
+        v["admit"] = int(v.get("admit", 0)) - gb
+    else:
+        v["wait_n"], v["wait_gb"] = int(v.get("wait_n", 0)) + 1, int(v.get("wait_gb", 0)) + gb
+
+
+def wsize(v, mem):
+    """GB one queued waiter books on a status row: its mean waiter size (most waiters are 10 GB gen/lint stages
+    waiting for short slots, not 48 GB PLACE), else the die's place_mem_gb"""
+    v = v or {}
+    return max(1, round(int(v.get("wait_gb", 0)) / int(v["wait_n"]))) if int(v.get("wait_n", 0)) > 0 else mem
+
+
+def uncharge(v, gb):
+    """a waiter moved off a host: its queued GB leaves the cached status row"""
+    if int(v.get("wait_n", 0)) > 0:
+        v["wait_n"], v["wait_gb"] = int(v["wait_n"]) - 1, max(0, int(v.get("wait_gb", 0)) - gb)
+
+
+def restage_waiters(AP, cfg, st, notices):
+    """KW-FIX-4 11-03 (COORD: not-yet-started waiters may be restaged): a RUNNING attempt of a die with gen_hosts whose
+    current ot-run stage still WAITS for admission (volume_started False) on a gen host other than the best one is
+    stopped (unit + detached PLACE client, exact unit names) and marked RETRY-INFRA: the INFRA relaunch path starts it
+    again this tick on the best host.  Also an async PLACE client started PINNED (--hosts G, before place_spill) that
+    still waits: relaunched it can SPILL.  At most restage_max_per_tick (60); die restage_waiters false opts out.
+    COORD 12:1x FLEET class fix: (1) 'best' = the most admits MINUS queued waiter GB (host_score); a waiter moves when
+    the best host's score beats its own host's by >= place_mem_gb -- no load hold (owner: NO LOAD HOLD), so 131
+    waiters on epyc4 move to an intel1 with 0; (2) a never-admitted wait is an infra move, not an attempt: it moves
+    even when the infra retry budget is used, and the move itself is not charged (infra_base + 1)."""
+    stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    cap, n = int(cfg.get("restage_max_per_tick", 60)), 0
+    row = lambda h: stt.get("localhost" if h == hub else h)
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or d.get("restage_waiters") is False:
+            continue
+        multi = len(gen_hosts(cfg, die)) >= 2 and bool(stt)
+        spill = opt(cfg, die, "place_spill") is not False
+        mem = int(opt(cfg, die, "place_mem_gb"))
+        for r in (st.get("items") or {}).values():
+            if n >= cap:
+                return n
+            if r.get("die") != die or r.get("status") != "RUNNING" or not r.get("unit"):
+                continue
+            # only an attempt the INFRA path WILL relaunch this tick (raw block identity, die not stopped)
+            if (d.get("block_identity", "raw") != "raw") or stop_reason(cfg, die, cfg.get("_ap_dir")):
+                continue
+            try:
+                g = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("gen_host")
+            except (OSError, ValueError, KeyError):
+                continue
+            try:
+                svc0 = json.loads((Path(r["dir"]) / "place_service.json").read_text())
+            except (OSError, ValueError):
+                svc0 = {}
+            why, best, v = "", g, {}
+            if multi:
+                best = pick_gen_host(cfg, die)
+                v = row(best) or {}
+                if best != g and host_score(v) - host_score(row(g)) >= wsize(row(g), mem):
+                    why = f"{g} -> {best}"
+            # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
+            if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
+                why, best = f"pinned async PLACE waiter on {g} -> spillable PLACE", g
+            if not why or volume_started(r):
+                continue
+            if not AP.DRY:
+                AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
+                try:
+                    svc = json.loads((Path(r["dir"]) / "place_service.json").read_text())
+                    AP.sh(["systemctl", "--user", "stop", svc["unit"]], timeout=180)
+                except (OSError, ValueError, KeyError):
+                    pass
+            gb = wsize(row(g), mem)
+            if v:
+                charge(v, gb)
+            if row(g):
+                uncharge(row(g), gb)
+            # the move is not an attempt: keep the infra budget where it was (and give a spent one its move)
+            # (+1: the relaunch's attempt number +1 is not charged; a spent budget is lifted to exactly one relaunch)
+            r["infra_base"] = int(r.get("infra_base") or 0) + max(1, infra_used(r) - infra_attempts(cfg, die) + 1)
+            r.update(status="RETRY-INFRA", **{"class": "INFRA"}, updated=time.time(),
+                     reason=f"restaged: unstarted ot-run waiter ({why}) (KW-FIX-4)")
+            notices.setdefault(die, []).append(f"{r['item']} unstarted waiter RESTAGED ({why})")
+            AP.log(f"KIT-WAVE RESTAGE {die}/{r['item']} unit {r['unit']} ({why})")
+            n += 1
+    return n
+
+
+OT_TAG_RE = re.compile(r"--tag (otrun-(\S+)-(\d+)-\d+)\s")
+
+
+def orphan_waiters(ps_text, node, live_pids, roots=("/kit-wave/",)):
+    """remote `ps -eo pid=,ppid=,args=` -> {tag: [pids]} of ot-heavy WAITERS whose hub ot-run client (pid in the tag,
+    tag made on hub `node`) is gone and that never started (no ot-heavy-exit / systemd-run child), limited to kit-wave
+    item dirs (roots).  The bash -c wrapper carrying the same tag is listed too (ot-run's own cancel = pkill by tag)."""
+    rows = []
+    for ln in (ps_text or "").splitlines():
+        p = ln.split(None, 2)
+        if len(p) == 3 and p[0].isdigit() and p[1].isdigit():
+            rows.append((int(p[0]), int(p[1]), p[2]))
+    kids = {}
+    for pid, ppid, a in rows:
+        kids.setdefault(ppid, []).append(a)
+    tags, started = {}, set()
+    for pid, ppid, a in rows:
+        m = OT_TAG_RE.search(a + " ")
+        if not m or m.group(2) != node or int(m.group(3)) in live_pids or not any(r in a for r in roots):
+            continue
+        tags.setdefault(m.group(1), []).append(pid)
+        if "ot-heavy --mem" in a and any(("ot-heavy-exit" in k or "systemd-run" in k) for k in kids.get(pid, [])):
+            started.add(m.group(1))
+    return {t: sorted(v) for t, v in tags.items() if t not in started}
+
+
+def local_otrun_pids():
+    out = set()
+    for p in os.listdir("/proc"):
+        if p.isdigit():
+            try:
+                if b"ot-run" in Path(f"/proc/{p}/cmdline").read_bytes():
+                    out.add(int(p))
+            except OSError:
+                pass
+    return out
+
+
+def reap_orphan_waiters(AP, cfg):
+    """KW-FIX-4 11-03 (COORD 12:1x FLEET): a stopped kit-wave unit's ot-run client cancels its remote waiter with one
+    `ssh host pkill --tag` from its signal handler; under a 70-unit stop burst (11:26) those ssh calls were lost and
+    35 waiters stayed queued on epyc4 with no client (20 of them for attempt dirs already deleted): they inflate the
+    host's waiter count and would start with nobody listening.  Each tick, per remote gen/place host, one ssh lists the
+    ot-heavy waiters tagged by THIS hub whose client pid is dead and which never started (kit-wave dirs only) and
+    TERMs exactly those pids.  cfg reap_orphan_waiters false opts out."""
+    if cfg.get("reap_orphan_waiters") is False:
+        return 0
+    hub, node = AP.HUB_NAME, os.uname().nodename
+    hosts = set()
+    for die, d in (cfg.get("dies") or {}).items():
+        if isinstance(d, dict):
+            hosts |= set(gen_hosts(cfg, die)) | set(d.get("hosts") or [])
+    n = 0
+    for h in sorted(x for x in hosts if x and x not in ("localhost", hub)):
+        live = local_otrun_pids()
+        rc, out, _ = AP.sh(_ssh(h, hub) + ["ps -eo pid=,ppid=,args="], timeout=60)
+        if rc != 0:
+            continue
+        orph = orphan_waiters(out, node, live | local_otrun_pids())
+        pids = sorted(p for v in orph.values() for p in v)
+        if not pids or AP.DRY:
+            n += len(orph)
+            continue
+        AP.sh(_ssh(h, hub) + ["kill -TERM " + " ".join(map(str, pids)) + " 2>/dev/null; true"], timeout=60)
+        AP.log(f"KIT-WAVE REAP {h}: {len(orph)} orphan waiter(s) (hub client gone, never started): "
+               + " ".join(sorted(orph))[:600])
+        n += len(orph)
+    return n
 
 
 def near_count_hit(near, die, *names):
@@ -1096,7 +1405,7 @@ def run_item(spec_path):
         if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
             # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
             return fail("geom_run", txt[-3000:], f"{G}:{gd}")
-        v, failing, tag = geom_verdict(line, sp.get("geom_waivers"))
+        v, failing, tag = geom_gate(line, sp.get("geom_waivers"), sp.get("geom_advisory", True))
         if v not in ("PASS", "PASS-COND"):
             return fail("geom", line, f"{G}:{gd}/auto_geom.json")
         res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
@@ -1158,7 +1467,17 @@ def run_item(spec_path):
         """launch (once per attempt: the descriptor is saved before systemd-run) and wait"""
         if svc_file.exists():
             return place_wait(json.loads(svc_file.read_text()))
-        argv = otrun(m, t, K, f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}", [G])
+        cmd = f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}"
+        if sp.get("place_spill", True):
+            # KW-FIX-4 11-03 (ONBOARD-1 ask, COORD approved): no --hosts pin (a pin disables ot-run SPILL / LOAD SPILL /
+            # RE-PLACE); --stage = the kit dir + its runner, so a waiter the gen host cannot admit (or that would
+            # overload it) is copied to a host that admits it NOW (epyc4), runs there and copies every written file
+            # back before the client exits.  The receipt then appears on G only at the client's end (KW_PLACE_RC
+            # wins), so the kit on G stays the one authoritative copy.  Die option place_spill false = the old pin.
+            argv = ([sp["ot_run"], "--mem", str(m), "--threads", str(t), "--dir", K, "--stage", K, "--stage", prun]
+                    + crit_args(sp) + ["--", "bash", "-c", cmd])
+        else:
+            argv = otrun(m, t, K, cmd, [G])
         unit = "kwp-" + hashlib.sha256(str(out.resolve()).encode()).hexdigest()[:20]
         svc = {"schema": "opentallas.kw_place_service.v1", "unit": unit, "argv": argv, "kit": K, "host": G,
                "started": time.time(), "log": str(out / "place.live.log"), "launch": "prepared"}
@@ -1265,6 +1584,26 @@ def run_item(spec_path):
         rc, _ = run("gen_kit", idempotent=True, argv=remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
         if rc:
             return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
+    # SAFE-STATION-1 11-03: relay-bay station form on wire-only station kits (class default, see RELAY_BAY_RE).  The tool
+    # and its computed hop rows come from the scheduler checkout (the wave src is pinned and may predate them), staged
+    # into W/relay_bay; it rewrites K in place (extra relays, plan bays, repeater pitch, declared_cycles.json) or fails
+    # closed with FAIL_PREBUILD relay_bay before any gate / build.  Before resume_inputs, so a resume fingerprints it.
+    rbre = sp.get("relay_bay_re") or ""
+    if not core and rbre and re.search(rbre, T):
+        rbd = Path(__file__).resolve().parents[1] / "die_plan"
+        staged = f"{W}/relay_bay"
+        rc, txt = run("relay_bay_dir", remote(f"mkdir -p {q(staged)}"), idempotent=True)
+        if rc:
+            return fail("relay_bay", txt)
+        dest = staged + "/" if G in ("localhost", hub) else f"{G}:{staged}/"
+        rc, txt = run("relay_bay_copy", ["rsync", "-a", "-e", "ssh -o BatchMode=yes -o ControlPath=none",
+            str(rbd / "relay_bay.py"), str(rbd / "relay_bay_hop_rows.json"), dest], idempotent=True)
+        if rc:
+            return fail("relay_bay", txt)
+        rc, txt = run("relay_bay", remote(f"python3 -I {q(staged)}/relay_bay.py {q(K)} --rows {q(staged)}/relay_bay_hop_rows.json"))
+        if rc:
+            return fail("relay_bay", txt, f"{G}:{K}/relay_bay_table.tsv")
+        res["relay_bay"] = (txt.strip().splitlines() or [""])[-1][:300]
     # New-attempt tool update only, before any physical/proof work or resume copy.
     # The generator source stays pinned; record the independent scheduler LEC snapshot.
     lt = sp.get("future_lec")
@@ -1511,9 +1850,9 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 2   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run)
+PROBE_V = 3   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
-import hashlib, json, os, sys
+import hashlib, json, os, re, sys
 a = json.loads(sys.argv[1]); out = {}
 H = lambda o: hashlib.sha256(json.dumps(o, sort_keys=True, default=str).encode()).hexdigest()
 try:
@@ -1526,10 +1865,31 @@ try:
     if mode != "raw" and a.get("identity_baseline_plan"):
         baseline_path = a["identity_baseline_plan"]
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
-    flags, deps = {}, {}
+    flags, deps, lint = {}, {}, {}
+    cmax = int(a.get("cells_max") or 150000)
     for t, v in pt.items():
         if not isinstance(v, dict):
             continue
+        # KW-FIX-4 11-03 (OWNER gen-time lint): plan-static checks, no build.  cells: plan type.cells, else the sum of
+        # contents[].cells when every content carries one; a type with hard_cores[] is skipped (its estimate may
+        # include the cores, which the type kit does not build flat)
+        li = []
+        nc = v.get("cells")
+        if not isinstance(nc, (int, float)) or isinstance(nc, bool):
+            cc = [c.get("cells") for c in (v.get("contents") or []) if isinstance(c, dict)]
+            nc = sum(cc) if cc and all(isinstance(x, (int, float)) for x in cc) else None
+        if nc is not None and nc > cmax and not v.get("hard_cores") and not v.get("hard"):
+            li.append(f"cells: est {int(nc)} flat std cells > {cmax} (plan estimate): re-form into hard cores / a smaller slot")
+        decl = [r.get("name") for r in (v.get("id_straps") or []) + (v.get("count_straps") or []) if isinstance(r, dict)]
+        dup = sorted({n for n in decl if decl.count(n) > 1})
+        if dup:
+            li.append("strap: duplicate declared strap names " + ",".join(map(str, dup[:4])))
+        leak = sorted({str(b.get("name")) for b in (v.get("buses") or []) if isinstance(b, dict)
+                       and re.match(r"strap_", str(b.get("name") or "")) and b.get("name") not in decl})
+        if leak:
+            li.append("strap: leaked strap ports on the type boundary, not declared id_straps/count_straps: " + ",".join(leak[:4]))
+        if li:
+            lint[t] = li
         ck = v.get("clock") or {}
         taps = [tp for tp in ck.get("taps") or [] if isinstance(tp, dict) and tp.get("kind") == "core"]
         signed = bool(taps and v.get("hard_cores") and all("insertion_ff_ps" in tp and
@@ -1553,7 +1913,7 @@ try:
             # DIE-KV-60/taps 11-01: = gen_phys.internal_core_taps_estimate (unsigned internal taps -> estimate form)
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
-           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "probe_v": PROBE_V}
+           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "lint": lint, "probe_v": PROBE_V}
     if a.get("core_views"):
         # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
         cv = {}
@@ -1579,7 +1939,7 @@ def plan_names(AP, st, d):
     mode = d.get("block_identity", "raw")
     if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit"))}
+    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": d.get("prelint_cells_max")}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
     p = AP.rpy(d["gen_host"], PROBE_PLAN, args, timeout=600)
@@ -1624,6 +1984,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
                     d["_plan_deps"] = pn.get("deps") or {}
+                    d["_plan_lint"] = pn.get("lint") or {}
                     names = core_view_names(names, pn.get("core_views"))
                     d["_identity_holds"] = {}
                     if d.get("block_identity", "raw") != "raw":
@@ -1631,6 +1992,10 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                             names, pn["identities"], pn.get("baseline_identities"),
                             st.get("items") or {}, die=die, event=d["event"],
                             receipts=d.get("identity_reuse_receipts"))
+                    # KW-FIX-4 11-03 OWNER gen-time lint: LINT rows before any launch (plan_entry_block refuses them)
+                    d["_lint_blocks"] = names if isinstance(names, dict) else {}
+                    d["_lint"] = prelint(d, die, names, st)
+                    record_lint(st, cfg, die, d["_lint"])
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
                 n = capacity(cfg, die, st, status, hub)      # per-die share; the global caps apply below
@@ -2107,6 +2472,8 @@ def step(AP, ap_dir=None):
     """one wave pass; a non-blocking lock keeps two passes (tick + CLI step) from double-launching"""
     import fcntl
     ap_dir = ap_dir or AP.AP_DIR
+    if os.environ.get("KW_LOCK_HELD") == "1":           # reload_step child: the parent pass holds kit_wave.lock
+        return _step(AP, ap_dir)
     lk = open(Path(ap_dir) / "kit_wave.lock", "w")
     try:
         fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -2122,7 +2489,7 @@ def step(AP, ap_dir=None):
 
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
-        return None
+        return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
@@ -2140,8 +2507,21 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
+    status = parse_otrun_status(out if rc == 0 else "")
+    cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
+    restage_waiters(AP, cfg, st, notices)
+    try:
+        reap_orphan_waiters(AP, cfg)
+    except Exception as e:                      # a diagnostic sweep never stops the tick
+        AP.log(f"KIT-WAVE REAP skipped: {e}")
     stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
     nl = 0                                               # items launched this tick: start delay nl * stagger
+    if not scheduler_current(AP):                        # code changed during collect: launch on the current code now
+        if not AP.DRY:
+            save_state(st, ap_dir)
+            write_stages(st, ap_dir, cfg)
+        return reload_step(AP, ap_dir)
     for key, rec in list(st["items"].items()):           # INFRA relaunch (up to infra_attempts)
         # Semantic adoption requires a fresh profile proof. Never launch an
         # old pending retry before plan_dies has had a chance to hold it.
@@ -2153,8 +2533,6 @@ def _step(AP, ap_dir):
                                               "replicas": rec.get("replicas")}, AP.HUB_NAME, delay_s=nl * stagger)
             nl += 1
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
-    rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
-    status = parse_otrun_status(out if rc == 0 else "")
     _, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
     for die, r in todo:
         rec = launch(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)
@@ -2290,6 +2668,13 @@ def write_stages(st, ap_dir, cfg=None):
             v.update(stage=r["q_stage"], status=r.get("q_status") or "", **{"class": r.get("q_class") or ""},
                      reason=(r.get("q_reason") or "")[:240],
                      evidence=f"autopilot job {r.get('q_id', '')} | {r.get('evidence') or ''}")
+        rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
+    # KW-FIX-4 11-03: gen-time lint verdicts of the current plans (never launched, no build cost)
+    for r in sorted((st.get("lint") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
+        v = dict(r, plan_sha=(r.get("plan_sha") or "")[:12], block_sha=(r.get("block_sha") or "")[:12], stage="prelint",
+                 status="LINT-ADVISORY", plan_current="yes", **{"class": "LINT"},
+                 updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)),
+                 reason="; ".join(r.get("issues") or [])[:240])
         rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
     tmp = Path(ap_dir) / (STAGES_FILE + ".tmp")
     tmp.write_text("\n".join(rows) + "\n")
@@ -2486,9 +2871,10 @@ def rejudge_rows(cfg, st, probe):
         if g.get("stage") == "placed" and g.get("clk_fixed") == 0 and "clock_reach=FAIL(" in line2:
             line2 = prects_clock_info(line2)
             note = (note + "; " if note else "") + "clock_reach INFO (3_place, 0 fixed clock cells; COORD 11-01 04:4x)"
-        v, failing, tag = geom_verdict(line2, w)
+        adv = opt(cfg, r["die"], "geom_advisory") is not False
+        v, failing, tag = geom_gate(line2, w, adv)
         row.update(old=old, new=v, failing=failing, tag=tag, note=note, line=line2,
-                   whatif=geom_verdict(prects_clock_info(line2), w)[0])
+                   whatif=geom_gate(prects_clock_info(line2), w, adv)[0])
         rows.append(row)
     return rows
 

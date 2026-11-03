@@ -1,0 +1,1423 @@
+{
+ "d": {
+  "partition_types": 81,
+  "partitions": 90,
+  "singleton_types": 72,
+  "near_duplicate_groups": [
+   [
+    "q_b012",
+    "q_b012__physical_v1"
+   ],
+   [
+    "q_b013",
+    "q_b013__physical_v1"
+   ],
+   [
+    "q_b110",
+    "q_b110__physical_v1"
+   ],
+   [
+    "q_b111",
+    "q_b111__physical_v1"
+   ],
+   [
+    "q_b113",
+    "q_b113__physical_v1"
+   ],
+   [
+    "NE_io",
+    "NW_io"
+   ],
+   [
+    "q_spb0",
+    "q_spb0__physical_v1"
+   ],
+   [
+    "q_spb2",
+    "q_spb2__physical_v1"
+   ],
+   [
+    "q_spt0",
+    "q_spt0__physical_v1"
+   ],
+   [
+    "q_spt1",
+    "q_spt2"
+   ],
+   [
+    "q_spu1",
+    "q_spu1__physical_v1"
+   ],
+   [
+    "vsN5",
+    "vsN6"
+   ]
+  ],
+  "near_duplicate_types": 24,
+  "types_cut_if_merged": 12,
+  "hard_core_modules": 74,
+  "hard_core_unique_designs": 106,
+  "hard_core_instances": 1156,
+  "modules_with_variants": [
+   [
+    "hnx_vms_bank_q0_faces__vecd4ae",
+    8,
+    32
+   ],
+   [
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+    5,
+    31
+   ],
+   [
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+    5,
+    32
+   ],
+   [
+    "ot_hnx_idxn_keybuf_slice",
+    4,
+    16
+   ],
+   [
+    "hnx_fused_lane",
+    3,
+    32
+   ],
+   [
+    "ot_hgi_coll_gq_land",
+    3,
+    4
+   ],
+   [
+    "ot_hbm_hc_bank128_pair_core",
+    2,
+    112
+   ],
+   [
+    "ot_hbm_idx_tail_native",
+    2,
+    8
+   ],
+   [
+    "ot_hbm_svc_sm_group_rel_id",
+    2,
+    8
+   ],
+   [
+    "ot_hgi_sm_xload_cl2_bfqg",
+    2,
+    16
+   ],
+   [
+    "ot_hnx_fused_tnode",
+    2,
+    30
+   ],
+   [
+    "hfd_hgi_vm_calendar_f20",
+    2,
+    4
+   ],
+   [
+    "ot_hbm_su_programme_pslice_c5",
+    2,
+    4
+   ],
+   [
+    "ot_hfd_coll_q2_hard_v8g__reduce",
+    2,
+    2
+   ],
+   [
+    "ot_hgi_coll_gq_issue",
+    2,
+    4
+   ],
+   [
+    "ot_hgi_coll_inj_idx_join_rg",
+    2,
+    4
+   ]
+  ],
+  "designs_cut_if_variants_unified": 32
+ },
+ "c": {
+  "crossings": 21132,
+  "by_kind": {
+   "die_lane": 357,
+   "type_internal": 20743,
+   "core_internal": 32
+  },
+  "hard_core_face_crossings_instances": 1156,
+  "die_lane_cycles_total": 4035,
+  "type_internal_cycles_total": 91793,
+  "added_plan_cycles_total": 44,
+  "lanes_with_added_plan_cycles": [
+   "L12",
+   "L12s",
+   "L34",
+   "L34m",
+   "L35",
+   "L35m",
+   "L5",
+   "L5m",
+   "L6",
+   "L6b",
+   "L6bm",
+   "L6c",
+   "L6cm",
+   "L6m",
+   "L701",
+   "L730",
+   "L730m",
+   "L736",
+   "L736m",
+   "L96",
+   "q_b102#u_hb_idx__s_Q_r1c0_k0h0.key|u_hb_idx__s_Q_r1c0_k2h1#1372",
+   "q_b102#u_hb_idx__s_Q_r1c0_k2h1.key|u_hb_idx__s_Q_r1c0_k0h0#428",
+   "q_b102__physical_v1#u_hb_idx__s_Q_r1c0_k0h0.key|u_hb_idx__s_Q_r1c0_k2h1#1372",
+   "q_b102__physical_v1#u_hb_idx__s_Q_r1c0_k2h1.key|u_hb_idx__s_Q_r1c0_k0h0#428"
+  ],
+  "added_rtl_cycles_total": 16,
+  "lockup_relay_crossings": 4,
+  "core_internal_rows": 32,
+  "core_internal_added_port_cycles": {
+   "hfd_ep_static": 0,
+   "ot_hbm_host_cp_rxs": 0,
+   "ot_hbm_idx_score_hcol_h0": 0,
+   "ot_hbm_sm_vm_wr_q_t_lanes4": 0,
+   "ot_hbm_su_programme_pslice_c5": 0,
+   "ot_hbm_su_static_pgslice_lg__lanes8_11": 0,
+   "ot_hbm_su_static_sfustore_hw": 0,
+   "ot_hfd_coll_q3_edge_core": 0,
+   "ot_hgi_sfu_split3_lane_core__idpin": 4,
+   "ot_hnx_idxn_keybuf_slice": 0
+  },
+  "core_face_lockup_rule": "every core-face crossing without a count-aligned station: face reg + negedge lockup + 1 parent-face relay register (+1 declared cycle); crossings with stations: no lockup",
+  "latency_groups": [
+   [
+    "EP_FLIT_NE_spb0_TO_NE_hub",
+    2,
+    38
+   ],
+   [
+    "EP_FLIT_NW_spb0_TO_NW_hub",
+    2,
+    38
+   ],
+   [
+    "L12_word",
+    2,
+    28
+   ],
+   [
+    "L12m_word",
+    2,
+    28
+   ],
+   [
+    "L6_word",
+    3,
+    30
+   ],
+   [
+    "L6m_word",
+    3,
+    30
+   ],
+   [
+    "SOUTHERN_VMS_NE_hub",
+    2,
+    36
+   ],
+   [
+    "SOUTHERN_VMS_NW_hub",
+    2,
+    44
+   ]
+  ],
+  "lanes_missing_latency": []
+ },
+ "b": {
+  "die_lanes": 357,
+  "die_lanes_gt400": 203,
+  "die_lanes_gt400_ok": 203,
+  "die_lanes_gt400_bad": 0,
+  "die_lanes_bad_worst": [],
+  "internal_stations_gt400": 20045,
+  "internal_ok": 20045,
+  "internal_bad": 0,
+  "internal_bad_worst": [],
+  "ft_slots": 520,
+  "ft_slots_bad_station_gap": 0,
+  "ft_bad_worst": [],
+  "hot_tagged": {
+   "internal": [
+    [
+     "q_b003",
+     "bus:L10_i",
+     2198.5,
+     349.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1702.1,
+     356.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1702.5,
+     356.8,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1701.6,
+     356.0,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1701.3,
+     355.6,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1700.9,
+     355.2,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1700.5,
+     354.9,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1700.1,
+     354.5,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1330.6,
+     356.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1334.3,
+     349.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1330.9,
+     356.8,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1747.4,
+     351.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1342.2,
+     349.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1330.1,
+     356.0,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1329.7,
+     355.6,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1329.4,
+     355.2,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1346.1,
+     349.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1455.4,
+     297.0,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1338.8,
+     349.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1329.0,
+     354.9,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1328.6,
+     354.5,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     959.0,
+     356.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     962.8,
+     346.5,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     959.4,
+     356.8,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1375.9,
+     347.1,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L16_o",
+     848.5,
+     349.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     970.6,
+     346.5,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     958.6,
+     356.0,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     958.2,
+     355.6,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     957.8,
+     355.2,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     974.6,
+     346.5,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     1083.9,
+     288.7,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     967.3,
+     346.5,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     957.5,
+     354.9,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L10_i",
+     957.1,
+     354.5,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "bus:L16_o",
+     891.8,
+     352.4,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b010",
+     "bus:L11_i",
+     536.0,
+     380.2,
+     [
+      "L168m 49k/22k (FAIL)"
+     ]
+    ],
+    [
+     "q_b011",
+     "bus:L11_o",
+     1306.1,
+     349.9,
+     [
+      "L15 M7 545-1027 (FAIL)"
+     ]
+    ],
+    [
+     "q_b011",
+     "bus:L11_o",
+     1038.3,
+     355.7,
+     [
+      "L15 M7 545-1027 (FAIL)"
+     ]
+    ],
+    [
+     "q_b011",
+     "bus:L11_o",
+     882.9,
+     401.8,
+     [
+      "L15 M7 545-1027 (FAIL)"
+     ]
+    ]
+   ],
+   "ft": [
+    [
+     "q_b000",
+     "L28x1",
+     297.5,
+     [
+      "L28/L36 4348 (FAIL)"
+     ]
+    ],
+    [
+     "q_b003",
+     "L18x1",
+     349.6,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "L52x2",
+     350.3,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "L126x2",
+     350.2,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003",
+     "L734x1",
+     358.7,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b101",
+     "L203mx1",
+     243.3,
+     [
+      "L12x macro col3 374/278 (FAIL)"
+     ]
+    ],
+    [
+     "q_su10",
+     "L0x1",
+     176.9,
+     [
+      "L0x/L730 1416 (FAIL)"
+     ]
+    ],
+    [
+     "q_su10",
+     "L68x1",
+     342.0,
+     [
+      "L0x/L730 1416 (FAIL)"
+     ]
+    ],
+    [
+     "q_su10",
+     "L121x1",
+     350.8,
+     [
+      "L0x/L730 1416 (FAIL)"
+     ]
+    ],
+    [
+     "q_su20",
+     "L48x4",
+     319.7,
+     [
+      "L48/L53 3 (NEAR d44c)"
+     ]
+    ],
+    [
+     "q_su20",
+     "L53x8",
+     319.7,
+     [
+      "L48/L53 3 (NEAR d44c)"
+     ]
+    ],
+    [
+     "q_su30",
+     "L48x7",
+     346.1,
+     [
+      "L53/L48/L181r 155/88 (FAIL)"
+     ]
+    ],
+    [
+     "q_b000__physical_v1",
+     "L28x1",
+     297.5,
+     [
+      "L28/L36 4348 (FAIL)"
+     ]
+    ],
+    [
+     "q_b003__physical_v1",
+     "L18x1",
+     349.6,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003__physical_v1",
+     "L52x2",
+     350.3,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003__physical_v1",
+     "L126x2",
+     350.2,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_b003__physical_v1",
+     "L734x1",
+     358.7,
+     [
+      "L18x 22.6k (FAIL d44c)"
+     ]
+    ],
+    [
+     "q_su10__physical_v1",
+     "L0x1",
+     176.9,
+     [
+      "L0x/L730 1416 (FAIL)"
+     ]
+    ],
+    [
+     "q_su10__physical_v1",
+     "L68x1",
+     342.0,
+     [
+      "L0x/L730 1416 (FAIL)"
+     ]
+    ],
+    [
+     "q_su10__physical_v1",
+     "L121x1",
+     350.8,
+     [
+      "L0x/L730 1416 (FAIL)"
+     ]
+    ],
+    [
+     "q_su20__physical_v1",
+     "L48x4",
+     319.7,
+     [
+      "L48/L53 3 (NEAR d44c)"
+     ]
+    ],
+    [
+     "q_su20__physical_v1",
+     "L53x8",
+     319.7,
+     [
+      "L48/L53 3 (NEAR d44c)"
+     ]
+    ],
+    [
+     "q_su30__physical_v1",
+     "L48x7",
+     346.1,
+     [
+      "L53/L48/L181r 155/88 (FAIL)"
+     ]
+    ]
+   ],
+   "no_xy": [
+    [
+     "q_b110",
+     "L6br 6.5k (FAIL d44c, no xy)"
+    ]
+   ]
+  },
+  "g0c_errors": {
+   "hops": 2,
+   "stations": 3,
+   "reach": 9,
+   "street_die_leg": 2
+  },
+  "g0c_error_msgs": {
+   "hops": [
+    "lane L700: normal FT NW_b112.L700x3 real input bit 2807 S0->S1 is 622 um > reach 405; regs_um[0] is not a native placement",
+    "lane L701: normal FT NE_b112.L701x3 real input bit 2762 S0->S1 is 622 um > reach 405; regs_um[0] is not a native placement"
+   ],
+   "stations": [
+    "type q_b112__physical_v1 slot L700x1: real normal input S0->S1 = 602 um > ft_station_max_um 405",
+    "type q_b112 slot L700x3: real normal input S0->S1 = 622 um > ft_station_max_um 405",
+    "type q_b112__physical_v1 slot L701x3: real normal input S0->S1 = 622 um > ft_station_max_um 405"
+   ],
+   "reach": [
+    "lane L31m: hop 1 is 397 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_su11)",
+    "lane L204: hop 8 is 377 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_b011)",
+    "lane L204m: hop 8 is 377 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_b011)",
+    "lane L700: hop 11 is 388 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_b112)",
+    "lane L701: hop 14 is 392 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_b112)",
+    "lane L732: hop 1 is 385 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_b011)",
+    "lane L734: hop 8 is 371 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_b011)",
+    "lane L732m: hop 1 is 385 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_b011)",
+    "lane L734m: hop 8 is 371 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_b011)"
+   ],
+   "street_die_leg": [
+    "lane_station L48#1 at (590.1, 6064.3) inside hard core NW_b102/clock_keepout_0 (12.10c: on a street)",
+    "lane_station L48m#1 at (27809.6, 6064.3) inside hard core NE_b102/clock_keepout_0 (12.10c: on a street)"
+   ]
+  },
+  "declared_capacity": {
+   "types": 81,
+   "face_layers": 81,
+   "ft_slots_types": 68,
+   "die_ft_bands_types": 53,
+   "m6m7_on_faces": 81,
+   "channels_types": 6,
+   "ft_budget_over": 0,
+   "ft_budget_worst": [
+    {
+     "type": "q_spu1",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 4259,
+      "reserved": 12825,
+      "ratio": 0.3321
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 7723,
+      "reserved": 11900,
+      "ratio": 0.649
+     }
+    },
+    {
+     "type": "q_spu1__physical_v1",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 4259,
+      "reserved": 12825,
+      "ratio": 0.3321
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 7723,
+      "reserved": 11900,
+      "ratio": 0.649
+     }
+    },
+    {
+     "type": "q_spu0",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 4690,
+      "reserved": 12967,
+      "ratio": 0.3617
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 8279,
+      "reserved": 13650,
+      "ratio": 0.6065
+     }
+    }
+   ]
+  }
+ },
+ "a": {
+  "types": 81,
+  "types_all3": 81,
+  "types_missing": {},
+  "types_missing_list": {},
+  "types_tap_sinks_over_1500": [
+   "NW_io",
+   "q_b000",
+   "q_b000__physical_v1",
+   "q_b001",
+   "q_b001__physical_v1",
+   "q_b002",
+   "q_b002__physical_v1",
+   "q_b003",
+   "q_b003__physical_v1",
+   "q_b010",
+   "q_b010__physical_v1",
+   "q_b011",
+   "q_b011__physical_v1",
+   "q_b012",
+   "q_b012__physical_v1",
+   "q_b013",
+   "q_b013__physical_v1",
+   "q_b100",
+   "q_b100__physical_v1",
+   "q_b101",
+   "q_b101_nw",
+   "q_b102",
+   "q_b102__physical_v1",
+   "q_b103",
+   "q_b103__physical_v1",
+   "q_b110",
+   "q_b110__physical_v1",
+   "q_b111",
+   "q_b111__physical_v1",
+   "q_b112",
+   "q_b112__physical_v1",
+   "q_b113",
+   "q_b113__physical_v1",
+   "q_hub_ne",
+   "q_hub_nw",
+   "q_mcb",
+   "q_spb2",
+   "q_spb2__physical_v1",
+   "q_spt0",
+   "q_spt0__physical_v1",
+   "q_spt1",
+   "q_spt2",
+   "q_spu0",
+   "q_spu0__physical_v1",
+   "q_spu1",
+   "q_spu1__physical_v1",
+   "q_su00",
+   "q_su00__physical_v1",
+   "q_su01",
+   "q_su01__physical_v1",
+   "q_su10",
+   "q_su10__physical_v1",
+   "q_su11",
+   "q_su11__physical_v1",
+   "q_su20",
+   "q_su20__physical_v1",
+   "q_su21",
+   "q_su21__physical_v1",
+   "q_su30",
+   "q_su30__physical_v1",
+   "q_su31",
+   "q_su31__physical_v1",
+   "root",
+   "vsN1",
+   "vsN2",
+   "vsN4",
+   "vsN5",
+   "vsN6"
+  ],
+  "core_slots": 1028,
+  "core_slots_all3": 379,
+  "core_slots_missing": {
+   "reset_relay": 133,
+   "entries>5k_sinks": 576,
+   "clock_entry": 132
+  },
+  "core_slots_pg": {
+   "kit_pdn(unverified at plan)": 919,
+   "lef_pg": 109
+  },
+  "core_modules_over_5k_sinks": [
+   [
+    "hfd_ep_static",
+    9981,
+    2
+   ],
+   [
+    "hnx_fused_lane",
+    79292,
+    16
+   ],
+   [
+    "hnx_rp3lp3h_n",
+    162477,
+    33
+   ],
+   [
+    "hnx_rp3lp3h_s",
+    151982,
+    31
+   ],
+   [
+    "ot_hbm_hc_bank128_pair_first_core",
+    16743,
+    4
+   ],
+   [
+    "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+    15174,
+    4
+   ],
+   [
+    "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+    15174,
+    4
+   ],
+   [
+    "ot_hbm_hc_subtree32_core",
+    18356,
+    4
+   ],
+   [
+    "ot_hbm_host_cp_rxs",
+    7654,
+    2
+   ],
+   [
+    "ot_hbm_idx_query_static",
+    16331,
+    4
+   ],
+   [
+    "ot_hbm_idx_rootctl_static_am",
+    21642,
+    5
+   ],
+   [
+    "ot_hbm_idx_score_hcol_h0",
+    25078,
+    6
+   ],
+   [
+    "ot_hbm_idx_vm_query_static_n12",
+    26328,
+    6
+   ],
+   [
+    "ot_hbm_sm_vm_wr_q_t_lanes4",
+    12383,
+    3
+   ],
+   [
+    "ot_hbm_su_programme_pslice_c5",
+    23473,
+    5
+   ],
+   [
+    "ot_hbm_su_static_cxport_ij_q",
+    13217,
+    3
+   ],
+   [
+    "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+    34625,
+    7
+   ],
+   [
+    "ot_hbm_su_static_pgslice_lg__lanes8_11",
+    38590,
+    8
+   ],
+   [
+    "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+    41033,
+    9
+   ],
+   [
+    "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+    41065,
+    9
+   ],
+   [
+    "ot_hbm_su_static_qcore_r13",
+    26208,
+    6
+   ],
+   [
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+    11267,
+    3
+   ],
+   [
+    "ot_hfd_coll_q2_hard_v8g__reduce",
+    22920,
+    5
+   ],
+   [
+    "ot_hfd_coll_q2n2_vm_core",
+    23943,
+    5
+   ],
+   [
+    "ot_hfd_coll_q3_body_core",
+    66247,
+    14
+   ],
+   [
+    "ot_hfd_coll_q3_edge_core",
+    29291,
+    6
+   ],
+   [
+    "ot_hfd_coll_q3_vm_core",
+    22746,
+    5
+   ],
+   [
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+    13726,
+    3
+   ],
+   [
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+    11999,
+    3
+   ],
+   [
+    "ot_hgi_qw_dec",
+    37348,
+    8
+   ],
+   [
+    "ot_hgi_sfu_split3_lane_core__idpin",
+    51400,
+    11
+   ],
+   [
+    "ot_hgi_sm_xload_cl2_bdring",
+    13885,
+    3
+   ],
+   [
+    "ot_hgi_sm_xload_cl2_bfqg",
+    5217,
+    2
+   ]
+  ],
+  "core_modules_sinks_unknown": 35,
+  "core_no_entry": [
+   "ot_hbm_idx_score_hcol_h0",
+   "ot_hbm_idx_score_hcol_h1",
+   "ot_hbm_idx_tail_native"
+  ],
+  "core_reset_missing": [
+   [
+    "NE_io",
+    "u_lk_N2"
+   ],
+   [
+    "NW_io",
+    "u_lk_N0"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t00_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t00_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t01_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t01_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t02_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t02_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t03_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t03_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t04_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t04_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t05_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t05_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t06_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t06_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t07_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t07_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t10_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t10_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t11_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t11_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t12_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t12_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t13_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t13_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t14_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t14_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t15_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t15_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t16_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t16_s"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t17_n"
+   ],
+   [
+    "q_sm0",
+    "u_sm_t17_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t00_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t00_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t01_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t01_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t02_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t02_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t03_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t03_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t04_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t04_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t05_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t05_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t06_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t06_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t07_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t07_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t10_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t10_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t11_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t11_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t12_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t12_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t13_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t13_s"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t14_n"
+   ],
+   [
+    "q_sm1",
+    "u_sm_t14_s"
+   ]
+  ]
+ }
+}

@@ -1,0 +1,52 @@
+DIE-S81-51/RF-D 11-03 S81-RF1 RE-FORM benches (epyc2, Verilator 5.050; outputs /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench)
+S81-062 dsdv_bk_g RF 1 (vstop FPIPE + negedge in/out faces):
+  rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_g_rf.sh  lockstep RF0 vs RF1 (vo +1 edge, ln equal, fault sticky within 1 edge)
+    seed 1: BKG_RF PASS cycles=200000 compared=199967 fwd_beats=160948 lane_words=53897 errors=0
+    seed 7: BKG_RF PASS cycles=200000 compared=199967 fwd_beats=160387 lane_words=53981 errors=0
+    mut (OT_RFD_MUT_BKG): BKG_RF FAIL errors=121304 (caught)
+  rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh sel (dsdv_bk_sel vs native selector, rung model RL):
+    RF1 (RL 2 = relay + FPIPE): DSDV_BK_SEL PASS mut=0 (base thru mir thrumir odd thruodd, wrap errors 0)
+    RF0 (+define+OT_DSDV_BKG_RF0, RL 1): DSDV_BK_SEL PASS mut=0
+    mut (OT_RFD_MUT_BKG): base PASS, thru FAIL (WRAP_ERR forward, 198669 errors) -> DSDV_BK_SEL FAIL (caught)
+  run_vstop_bench.sh (FPIPE 0 default, other units): VSTOP_GATE PASS (40 golden runs, 3/3 mutants)
+  Parent contract: sel rung transit 3 -> 4 (dv_layer_compile BKSEL_TRANSIT 4, lower_bk FWD 3, norm_q_report u_bk_sel 4).
+S81-064 dsdv_gunit_l0r RF 1 (registered one-hot write slots + go +1):
+  results/rfd_1103/l0r/run.sh lockstep RF0 vs RF1 (every output +1 edge):
+    mode 0 (L0 contract) seed 1: L0R_RF PASS cycles=200000 stream_edges=118825 gos=7428 errors=0
+    mode 1 (random) seed 5: L0R_RF PASS stream_edges=168453 errors=0
+    mut (OT_RFD_MUT_L0R, go not delayed): L0R_RF FAIL errors=199925 (caught)
+  run_gunit_bench.sh 8 cases vs tools/hdc_golden_v41:
+    RF1: MUT=0 GUNIT PASS router_lat=39 (51) hc_lat=1008 (1020 at unit pins)
+    RF0 (-DOT_GUNIT_L0R_RF0): MUT=0 GUNIT PASS router_lat=39 (51) hc_lat=1007 (1019)
+  Parent contract: HC latency +1 (lower_gu HC_LAT_N/S 1018/1016 -> 1019/1017).
+Kits (plan_h2_2249, outline/pins unchanged, recipes_rfd_1103.json): GEN_LINT PASS issues 0, KIT_PREFLIGHT PASS issues 0 (both).
+
+FORM 2 (11-03, after build 1: bk_g oth-ubuntu-1507608 EXIT 2 = GRT-0116 ov 227 at the SRAM channel mouths + CTS TT -152.5
+u_vs.dl_n -> vin lane decode; l0r oth-ubuntu-1507612 EXIT 2 = OT_HOLD_STRUCTURAL GRT FF hold -154.31 / 408 ep on the
+input faces, setup met SS +168.5).  Outputs /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench2.
+S81-062 dsdv_bk_g RF 2 = RF 1 + dsdv_bk_vin LPIPE (registered beats + one-hot lane hits; ln* +1 edge, vo / drain unchanged)
+  + kit-local SRAM sites (recipes_rfd_1103 _rfd2: interior channel 10.824 -> 34.584 um, outline / pins unchanged):
+  run_bk_g_rf.sh lockstep RA 1 / RB 2 (vo equal, ln +1): seed 1 PASS errors=0, seed 7 PASS errors=0
+               RA 0 / RB 2 (vo +1, ln +1): seed 3 PASS errors=0;  RA 0 / RB 1 (form 1 record) seed 1 PASS
+               mut 2 (OT_RFD_MUT_VIN, beat data bypass the stage): FAIL errors=66103 (caught)
+  run_bk_bench.sh sel RF 2 (default): DSDV_BK_SEL PASS mut=0, all 6 variants (wrap errors 0; selector tail inside TAIL_BUDGET)
+               RF 1 (+define+OT_DSDV_BKG_RF1) base thru: PASS
+  run_vstop_bench.sh: VSTOP_GATE PASS (40 golden runs, 3/3 mutants)
+  Parent contract: unchanged vs form 1 (rung transit 4; lane words are internal to dsdv_bk_sel).
+S81-064 dsdv_gunit_l0r RF 2 = RF 1 + negedge in-face (all inputs incl. rst_n, 0 cycles):
+  results/rfd_1103/l0r/run.sh lockstep RA 1 / RB 2 (equal every edge): mode 0 seed 1 PASS, mode 1 seed 5 PASS
+               RA 0 / RB 2 (+1): mode 0 seed 3 PASS;  RA 0 / RB 1 seed 1 PASS (form 1 record)
+               mut 2 (OT_RFD_MUT_L0R2, posedge in-face): FAIL errors=199929 (caught)
+  run_gunit_bench.sh 8 cases: RF 2 MUT=0 GUNIT PASS router_lat=39 (51) hc_lat=1008 (1020), = RF 1 (contract unchanged)
+Kits rfd2 (plan_h2_2249): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0 (both).
+
+FORM 3 / 2b (11-03, after form 2 builds: bk_g rfd2 oth-ubuntu-3049984 GRT-0116 ov 2418 (34.6-um channel, demand +11%,
+hotspots along both macro pin faces); l0r rfd2 oth-ubuntu-3202643 NOT SIGNED TT -21.68 / 25 ep (g_w1.ga2 -> ~1,500-load
+go tree -> g_sel[*].oh), FF hold -1.44 / 1 ep).  Outputs /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench3.
+S81-064 l0r form 2b (RF >= 1: per-select-copy go flops gac / gbc, 0 cycles):
+  lockstep RA 1 / RB 2: mode 0 seed 1 PASS, mode 1 seed 5 PASS; RA 0 / RB 2 (+1): mode 0 seed 3 PASS, mode 1 seed 7 PASS
+  mut 3 (OT_RFD_MUT_L0R3, copy takes the undelayed go) RA 0 / RB 2: FAIL errors=199923 (caught); mut 2: FAIL 199929 (caught)
+  run_gunit_bench.sh 8 cases: GUNIT PASS router_lat=39 hc_lat=1008 (unchanged)
+S81-062 bk_g form 3 (kit-only, RF 2 RTL unchanged): recipes_rfd3a_1103 (10.824-um plan sites, both R0) and
+  recipes_rfd3b_1103 (same sites, upper SRAM MY: one read port per macro face), two parallel variants.
+Kits rfd3a / rfd3b / l0r rfd3: GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.

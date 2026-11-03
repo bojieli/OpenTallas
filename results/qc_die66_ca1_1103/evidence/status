@@ -1,0 +1,15 @@
+START tree f31a5bdcd7 plan d1469f690993 base 6331b0559332 Tue Nov  3 09:00:08 PST 2026
+S SIDECAR rc=0 sidecar ports changed 30 Tue Nov  3 09:00:09 PST 2026
+E ELAB rc=0 Tue Nov  3 09:02:20 PST 2026
+B0 BASE-OF-RECORD strict rc=1  Tue Nov  3 09:12:06 PST 2026
+BIND probe  rc=0 {"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0} Tue Nov  3 09:21:58 PST 2026
+2 R8 rc=0 R8 landing -> results/qc_die66_ca1_1103/bind/r8/qwen_compute_r8_landing.json: {"members": 9050, "classes": 1491, "replica_links": 609, "padded_members": 2225, "padded_bits": 142176, "pad_flops": 933020, "max_pad": 23, "max_depth_before": 51, "max_depth_after": 51, "max_offset_before": 28, "max_offse Tue Nov  3 09:22:02 PST 2026
+BIND base  rc=0 {"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0} Tue Nov  3 09:31:39 PST 2026
+4 CB16 rc=0 {"members": 342, "inner": 224, "clusters": 48, "pad_flops": 842960, "sites": {"u_t_0_0.n_a": [11, 12, 13], "u_t_0_1.n_a": [2, 3, 4, 5], "u_t_0_2.n_a": [2, 3, 4, 5], "u_t_0_3.n_a": [2, 3, 4, 5], "u_t_1_0.n_a": [2, 3, 4, 5], "u_t_1_2.n_b": [6, 7, 8, 9], "u_t_2_0.n_a": [1], "u_t_2_0.n_b": [2, 3, 4], "u Tue Nov  3 09:34:37 PST 2026
+BIND final --strict rc=1 {"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0} Tue Nov  3 09:41:08 PST 2026
+G G0C base rc=1  Tue Nov  3 09:47:53 PST 2026
+G G0C new rc=1 G0C FAIL: 9 errors, 0 pending-view, 601 warnings; 119 types / 377 partitions (93 in near-duplicate groups); worst cut {'ratio': 0.2126, 'at': 'horizontal@11750'}, worst partition segment {'ratio': 0.5 Tue Nov  3 09:56:06 PST 2026
+DONE Tue Nov  3 09:56:06 PST 2026
+B0 BASE-OF-RECORD strict rc=1 {"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0} Tue Nov  3 10:02:08 PST 2026
+G G0C base rc=1 G0C FAIL: 9 errors, 0 pending-view, 601 warnings; 119 types / 377 partitions (93 in near-duplicate groups); worst cut {'ratio': 0.2126, 'at': 'horizontal@11750'}, worst partition segment {'ratio': 0.5 Tue Nov  3 10:13:14 PST 2026
+BASEDONE Tue Nov  3 10:13:14 PST 2026

@@ -1,0 +1,36 @@
+{
+ "module": "ot_s81_kp4_dchn",
+ "clock_pin": "clk",
+ "clock_latency_measured": {
+  "contract": {
+   "kind": "hard_core_latency",
+   "clock_port": "clk",
+   "basis": "publish measured routed core insertion (signed signoff.json corners.<c>.insertion_pinflops); common latency is a design target"
+  },
+  "measured": {
+   "tt": {
+    "n": 1253,
+    "min": 276.51,
+    "mean": 288.49,
+    "max": 314.93,
+    "spread": 38.42
+   },
+   "ff": {
+    "n": 1253,
+    "min": 217.24,
+    "mean": 229.73,
+    "max": 255.26,
+    "spread": 38.02
+   }
+  }
+ },
+ "signed": {
+  "setup_tt_wns_ps": 2.48,
+  "hold_ff_wns_ps": 11.85
+ },
+ "libs": {
+  "TT": "ot_s81_kp4_dchn_tt.lib <- ot_s81_kp4_dchn_tc.lib",
+  "FF": "ot_s81_kp4_dchn_ff.lib <- ot_s81_kp4_dchn_BC.lib"
+ },
+ "note": "DH58-PROTO mk_typed_view.py: values copied from the signed signoff.json; no number derived here"
+}

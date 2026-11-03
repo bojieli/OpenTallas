@@ -1,0 +1,2066 @@
+[
+ {
+  "module": "hfd_ep_static",
+  "n_inst": 6,
+  "types": [
+   "NE_io",
+   "NW_io",
+   "q_spb0",
+   "q_spb0__physical_v1",
+   "vsN0"
+  ],
+  "old": [
+   427.68,
+   246.24
+  ],
+  "old_aspect": 1.74,
+  "old_fill": 0.0915,
+  "cells": 32586,
+  "sinks": 9981,
+  "macros": 4,
+  "macro_area": 53294,
+  "cell_area": 4760,
+  "pins": {
+   "N": {
+    "M5": 13
+   },
+   "S": {
+    "M5": 1050
+   },
+   "W": {
+    "M4": 612
+   },
+   "E": {
+    "M4": 612
+   },
+   "in": {
+    "M5": 1
+   }
+  },
+  "pin_need_wh": [
+   210.0,
+   122.4
+  ],
+  "macro_bbox": [
+   393.1,
+   177.1
+  ],
+  "room_xy": [
+   90.72,
+   164.16
+  ],
+  "clock_regions": 2,
+  "flags": [],
+  "new": [
+   406.08,
+   207.36
+  ],
+  "new_aspect": 1.96,
+  "new_fill": 0.154,
+  "grow_xy": [
+   -10.8,
+   -19.44
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+  "n_inst": 1,
+  "types": [
+   "root"
+  ],
+  "old": [
+   319.68,
+   345.6
+  ],
+  "old_aspect": 1.08,
+  "old_fill": 0.1882,
+  "cells": 172384,
+  "sinks": 11999,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 20793,
+  "pins": {
+   "S": {
+    "M5": 346,
+    "M3": 345
+   },
+   "N": {
+    "M5": 1,
+    "M3": 1
+   },
+   "in": {
+    "M5": 1
+   },
+   "W": {},
+   "E": {}
+  },
+  "pin_need_wh": [
+   69.1,
+   0.0
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   12.96,
+   4.32
+  ],
+  "clock_regions": 3,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=2"
+  ],
+  "new": [
+   216.0,
+   241.92
+  ],
+  "new_aspect": 1.12,
+  "new_fill": 0.398,
+  "grow_xy": [
+   -51.84,
+   -51.84
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+  "n_inst": 31,
+  "types": [
+   "root"
+  ],
+  "old": [
+   319.68,
+   345.5999999999999
+  ],
+  "old_aspect": 1.08,
+  "old_fill": 0.1941,
+  "cells": 175683,
+  "sinks": 13726,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 21444,
+  "pins": {
+   "S": {
+    "M5": 346,
+    "M3": 345
+   },
+   "N": {
+    "M5": 346,
+    "M3": 345
+   },
+   "in": {
+    "M5": 1
+   },
+   "W": {},
+   "E": {}
+  },
+  "pin_need_wh": [
+   69.1,
+   0.0
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   12.96,
+   3.46
+  ],
+  "clock_regions": 3,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=2"
+  ],
+  "new": [
+   207.36,
+   259.2
+  ],
+  "new_aspect": 1.25,
+  "new_fill": 0.399,
+  "grow_xy": [
+   -56.16,
+   -43.2
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+  "n_inst": 2,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   233.28000000000003,
+   233.27999999999997
+  ],
+  "old_aspect": 1.0,
+  "old_fill": 0.2909,
+  "cells": 109624,
+  "sinks": 22920,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 15831,
+  "pins": {
+   "N": {
+    "M5": 5
+   },
+   "S": {
+    "M5": 45
+   },
+   "E": {
+    "M4": 547
+   },
+   "W": {
+    "M4": 546
+   }
+  },
+  "pin_need_wh": [
+   9.0,
+   109.4
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   21.6,
+   21.6
+  ],
+  "clock_regions": 5,
+  "flags": [],
+  "new": [
+   241.92,
+   164.16
+  ],
+  "new_aspect": 1.47,
+  "new_fill": 0.399,
+  "grow_xy": [
+   4.32,
+   -34.56
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_su_static_qcore_r13",
+  "n_inst": 2,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   267.84,
+   250.56
+  ],
+  "old_aspect": 1.07,
+  "old_fill": 0.332,
+  "cells": 144660,
+  "sinks": 26208,
+  "macros": 2,
+  "macro_area": 7788,
+  "cell_area": 19695,
+  "pins": {
+   "S": {
+    "M5": 526
+   },
+   "N": {
+    "M5": 946
+   },
+   "W": {
+    "M4": 1
+   },
+   "E": {}
+  },
+  "pin_need_wh": [
+   189.2,
+   0.2
+  ],
+  "macro_bbox": [
+   94.8,
+   192.1
+  ],
+  "room_xy": [
+   168.48,
+   38.88
+  ],
+  "clock_regions": 6,
+  "flags": [],
+  "new": [
+   259.2,
+   224.64
+  ],
+  "new_aspect": 1.15,
+  "new_fill": 0.39,
+  "grow_xy": [
+   -4.32,
+   -12.96
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_idx_vm_query_static_n12",
+  "n_inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   216.0,
+   138.24
+  ],
+  "old_aspect": 1.56,
+  "old_fill": 0.383,
+  "cells": 77156,
+  "sinks": 26328,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 11436,
+  "pins": {
+   "N": {
+    "M5": 2057
+   },
+   "W": {
+    "M4": 3
+   },
+   "E": {
+    "M4": 1048
+   },
+   "S": {
+    "M5": 178
+   }
+  },
+  "pin_need_wh": [
+   411.4,
+   209.6
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   4.32,
+   4.32
+  ],
+  "clock_regions": 6,
+  "flags": [],
+  "new": [
+   414.72,
+   216.0
+  ],
+  "new_aspect": 1.92,
+  "new_fill": 0.128,
+  "grow_xy": [
+   99.36,
+   38.88
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "KEEP (in band)"
+ },
+ {
+  "module": "ot_hbm_xp_aq_tree13_fmt",
+  "n_inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   183.6,
+   108.0
+  ],
+  "old_aspect": 1.7,
+  "old_fill": null,
+  "cells": null,
+  "sinks": null,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": null,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "S": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 778
+   },
+   "E": {
+    "M4": 1027
+   },
+   "N": {}
+  },
+  "pin_need_wh": [
+   0.2,
+   205.4
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   28.08,
+   99.36
+  ],
+  "clock_regions": null,
+  "flags": [],
+  "decision": "NO_GEOM_DATA"
+ },
+ {
+  "module": "ot_hbm_idx_score_hcol_h0",
+  "n_inst": 128,
+  "types": [
+   "q_b000",
+   "q_b000__physical_v1",
+   "q_b001",
+   "q_b001__physical_v1",
+   "q_b010",
+   "q_b010__physical_v1",
+   "q_b011",
+   "q_b011__physical_v1",
+   "q_b100",
+   "q_b100__physical_v1",
+   "q_b101",
+   "q_b101_nw",
+   "q_b102",
+   "q_b102__physical_v1",
+   "q_b103",
+   "q_b103__physical_v1"
+  ],
+  "old": [
+   218.592,
+   187.488
+  ],
+  "old_aspect": 1.17,
+  "old_fill": 0.5362,
+  "cells": 180462,
+  "sinks": 25078,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 21975,
+  "pins": {
+   "N": {
+    "M5": 1180
+   },
+   "in": {
+    "M5": 1
+   },
+   "E": {
+    "M4": 35
+   },
+   "S": {},
+   "W": {}
+  },
+  "pin_need_wh": [
+   236.0,
+   7.0
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   1.73,
+   -1.73
+  ],
+  "clock_regions": 6,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=2"
+  ],
+  "new": [
+   276.48,
+   198.72
+  ],
+  "new_aspect": 1.39,
+  "new_fill": 0.4,
+  "grow_xy": [
+   28.94,
+   5.62
+  ],
+  "bound": "fill",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+  "n_inst": 1,
+  "types": [
+   "root"
+  ],
+  "old": [
+   182.304,
+   201.312
+  ],
+  "old_aspect": 1.1,
+  "old_fill": 0.3497,
+  "cells": 105441,
+  "sinks": 15174,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 12834,
+  "pins": {
+   "S": {
+    "M5": 904
+   },
+   "N": {
+    "M5": 906
+   },
+   "E": {
+    "M4": 1009
+   },
+   "W": {
+    "M4": 614,
+    "M5": 1
+   }
+  },
+  "pin_need_wh": [
+   181.2,
+   201.8
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   12.1,
+   148.61
+  ],
+  "clock_regions": 4,
+  "flags": [],
+  "new": [
+   181.44,
+   207.36
+  ],
+  "new_aspect": 1.14,
+  "new_fill": 0.341,
+  "grow_xy": [
+   -0.43,
+   3.02
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+  "n_inst": 1,
+  "types": [
+   "root"
+  ],
+  "old": [
+   182.304,
+   201.312
+  ],
+  "old_aspect": 1.1,
+  "old_fill": 0.3495,
+  "cells": 105359,
+  "sinks": 15174,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 12827,
+  "pins": {
+   "S": {
+    "M5": 905
+   },
+   "N": {
+    "M5": 906
+   },
+   "E": {
+    "M4": 1009
+   },
+   "W": {
+    "M4": 613,
+    "M5": 1
+   }
+  },
+  "pin_need_wh": [
+   181.2,
+   201.8
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   3.46,
+   75.6
+  ],
+  "clock_regions": 4,
+  "flags": [],
+  "new": [
+   181.44,
+   207.36
+  ],
+  "new_aspect": 1.14,
+  "new_fill": 0.341,
+  "grow_xy": [
+   -0.43,
+   3.02
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_hc_subtree32_core",
+  "n_inst": 8,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   220.32,
+   220.32
+  ],
+  "old_aspect": 1.0,
+  "old_fill": 0.2328,
+  "cells": 83386,
+  "sinks": 18356,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 11300,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "N": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 1024
+   },
+   "E": {
+    "M4": 1
+   },
+   "S": {
+    "M5": 64
+   }
+  },
+  "pin_need_wh": [
+   12.8,
+   204.8
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   17.28,
+   21.6
+  ],
+  "clock_regions": 4,
+  "flags": [],
+  "new": [
+   138.24,
+   207.36
+  ],
+  "new_aspect": 1.5,
+  "new_fill": 0.394,
+  "grow_xy": [
+   -41.04,
+   -6.48
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hgi_sm_xload_cl2_bdring",
+  "n_inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   120.96,
+   216.0
+  ],
+  "old_aspect": 1.79,
+  "old_fill": 0.4113,
+  "cells": 77214,
+  "sinks": 13885,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 10746,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "S": {
+    "M5": 2048
+   },
+   "E": {
+    "M4": 640
+   },
+   "N": {},
+   "W": {}
+  },
+  "pin_need_wh": [
+   409.6,
+   128.0
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   4.32,
+   7.78
+  ],
+  "clock_regions": 3,
+  "flags": [],
+  "new": [
+   414.72,
+   207.36
+  ],
+  "new_aspect": 2.0,
+  "new_fill": 0.125,
+  "grow_xy": [
+   146.88,
+   -4.32
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "KEEP (in band)"
+ },
+ {
+  "module": "hfd_hgi_vm_calendar_f20",
+  "n_inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   241.92,
+   116.64
+  ],
+  "old_aspect": 2.07,
+  "old_fill": 0.1299,
+  "cells": 14901,
+  "sinks": 3234,
+  "macros": 1,
+  "macro_area": 12317,
+  "cell_area": 2065,
+  "pins": {
+   "S": {
+    "M5": 113
+   },
+   "W": {
+    "M4": 73
+   },
+   "N": {
+    "M5": 372
+   },
+   "E": {}
+  },
+  "pin_need_wh": [
+   74.4,
+   14.6
+  ],
+  "macro_bbox": [
+   174.7,
+   70.5
+  ],
+  "room_xy": [
+   -0.0,
+   -3.24
+  ],
+  "clock_regions": 1,
+  "flags": [],
+  "new": [
+   190.08,
+   103.68
+  ],
+  "new_aspect": 1.83,
+  "new_fill": 0.279,
+  "grow_xy": [
+   -25.92,
+   -6.48
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_svc_vmdel_lane_n",
+  "n_inst": 16,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   142.56,
+   116.64
+  ],
+  "old_aspect": 1.22,
+  "old_fill": 0.1177,
+  "cells": 7720,
+  "sinks": 2203,
+  "macros": 2,
+  "macro_area": 7788,
+  "cell_area": 1041,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "S": {
+    "M5": 364
+   },
+   "W": {
+    "M4": 564
+   },
+   "N": {},
+   "E": {}
+  },
+  "pin_need_wh": [
+   72.8,
+   112.8
+  ],
+  "macro_bbox": [
+   94.8,
+   95.0
+  ],
+  "room_xy": [
+   103.68,
+   0.0
+  ],
+  "clock_regions": 1,
+  "flags": [],
+  "new": [
+   103.68,
+   120.96
+  ],
+  "new_aspect": 1.17,
+  "new_fill": 0.219,
+  "grow_xy": [
+   -19.44,
+   2.16
+  ],
+  "bound": "fill",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "n_inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   142.56,
+   216.0
+  ],
+  "old_aspect": 1.52,
+  "old_fill": 0.2339,
+  "cells": 44345,
+  "sinks": 12383,
+  "macros": 1,
+  "macro_area": 3894,
+  "cell_area": 6292,
+  "pins": {
+   "N": {
+    "M5": 839
+   },
+   "E": {
+    "M4": 1116
+   },
+   "W": {
+    "M4": 562
+   },
+   "S": {
+    "M5": 1156
+   }
+  },
+  "pin_need_wh": [
+   231.2,
+   223.2
+  ],
+  "macro_bbox": [
+   94.8,
+   41.1
+  ],
+  "room_xy": [
+   -0.0,
+   142.56
+  ],
+  "clock_regions": 3,
+  "flags": [],
+  "new": [
+   233.28,
+   224.64
+  ],
+  "new_aspect": 1.04,
+  "new_fill": 0.13,
+  "grow_xy": [
+   45.36,
+   4.32
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "n_inst": 32,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   177.98399999999992,
+   177.98399999999992
+  ],
+  "old_aspect": 1.0,
+  "old_fill": 0.3204,
+  "cells": 57393,
+  "sinks": 11267,
+  "macros": 2,
+  "macro_area": 7788,
+  "cell_area": 7655,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 606
+   },
+   "S": {
+    "M5": 622
+   },
+   "N": {},
+   "E": {}
+  },
+  "pin_need_wh": [
+   124.4,
+   121.2
+  ],
+  "macro_bbox": [
+   94.8,
+   99.5
+  ],
+  "room_xy": [
+   -0.86,
+   -0.86
+  ],
+  "clock_regions": 3,
+  "flags": [],
+  "new": [
+   155.52,
+   181.44
+  ],
+  "new_aspect": 1.17,
+  "new_fill": 0.375,
+  "grow_xy": [
+   -11.23,
+   1.73
+  ],
+  "bound": "fill",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "ot_hgi_qw_dec",
+  "n_inst": 2,
+  "types": [
+   "q_hub_nw"
+  ],
+  "old": [
+   260.0,
+   260.0
+  ],
+  "old_aspect": 1.0,
+  "old_fill": 0.2661,
+  "cells": 125707,
+  "sinks": 37348,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 17988,
+  "pins": {
+   "S": {
+    "M5": 1026
+   },
+   "E": {
+    "M4": 644
+   },
+   "N": {},
+   "W": {}
+  },
+  "pin_need_wh": [
+   205.2,
+   128.8
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   29.44,
+   29.44
+  ],
+  "clock_regions": 8,
+  "flags": [],
+  "new": [
+   276.48,
+   164.16
+  ],
+  "new_aspect": 1.68,
+  "new_fill": 0.396,
+  "grow_xy": [
+   8.24,
+   -47.92
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_host_cp_rxs",
+  "n_inst": 1,
+  "types": [
+   "root"
+  ],
+  "old": [
+   434.808,
+   480.0
+  ],
+  "old_aspect": 1.1,
+  "old_fill": 0.0352,
+  "cells": 35718,
+  "sinks": 7654,
+  "macros": 6,
+  "macro_area": 67488,
+  "cell_area": 4971,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 9
+   },
+   "E": {
+    "M4": 110
+   },
+   "N": {
+    "M5": 1248
+   },
+   "S": {}
+  },
+  "pin_need_wh": [
+   249.6,
+   22.0
+  ],
+  "macro_bbox": [
+   404.6,
+   218.2
+  ],
+  "room_xy": [
+   10.15,
+   -3.24
+  ],
+  "clock_regions": 2,
+  "flags": [],
+  "new": [
+   414.72,
+   233.28
+  ],
+  "new_aspect": 1.78,
+  "new_fill": 0.17,
+  "grow_xy": [
+   -10.04,
+   -123.36
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_su_programme_pslice_c5",
+  "n_inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   939.6,
+   760.32
+  ],
+  "old_aspect": 1.24,
+  "old_fill": 0.0544,
+  "cells": 139036,
+  "sinks": 23473,
+  "macros": 100,
+  "macro_area": 389385,
+  "cell_area": 17681,
+  "pins": {
+   "S": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 302
+   },
+   "E": {
+    "M4": 16
+   },
+   "N": {
+    "M5": 2470
+   }
+  },
+  "pin_need_wh": [
+   494.0,
+   60.4
+  ],
+  "macro_bbox": [
+   909.0,
+   599.2
+  ],
+  "room_xy": [
+   21.6,
+   0.0
+  ],
+  "clock_regions": 5,
+  "flags": [],
+  "new": [
+   924.48,
+   613.44
+  ],
+  "new_aspect": 1.51,
+  "new_fill": 0.099,
+  "grow_xy": [
+   -7.56,
+   -73.44
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hfd_coll_q3_edge_core",
+  "n_inst": 1,
+  "types": [
+   "q_hub_nw"
+  ],
+  "old": [
+   216.0,
+   1054.08
+  ],
+  "old_aspect": 4.88,
+  "old_fill": 0.3497,
+  "cells": 157302,
+  "sinks": 29291,
+  "macros": 12,
+  "macro_area": 159882,
+  "cell_area": 23710,
+  "pins": {
+   "E": {
+    "M4": 4442
+   },
+   "W": {
+    "M4": 3681
+   },
+   "N": {
+    "M5": 1
+   },
+   "S": {}
+  },
+  "pin_need_wh": [
+   0.2,
+   888.4
+  ],
+  "macro_bbox": [
+   171.3,
+   994.6
+  ],
+  "room_xy": [
+   64.8,
+   34.56
+  ],
+  "clock_regions": 6,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=2"
+  ],
+  "new": [
+   509.76,
+   1010.88
+  ],
+  "new_aspect": 1.98,
+  "new_fill": 0.067,
+  "grow_xy": [
+   146.88,
+   -21.6
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "ot_hfd_coll_q3_vm_core",
+  "n_inst": 1,
+  "types": [
+   "q_hub_nw"
+  ],
+  "old": [
+   328.32,
+   717.12
+  ],
+  "old_aspect": 2.18,
+  "old_fill": 0.0651,
+  "cells": 104353,
+  "sinks": 22746,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 15327,
+  "pins": {
+   "S": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 4334
+   },
+   "E": {
+    "M4": 569
+   },
+   "N": {
+    "M5": 4296
+   }
+  },
+  "pin_need_wh": [
+   859.2,
+   866.8
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   90.72,
+   34.56
+  ],
+  "clock_regions": 5,
+  "flags": [],
+  "new": [
+   864.0,
+   872.64
+  ],
+  "new_aspect": 1.01,
+  "new_fill": 0.02,
+  "grow_xy": [
+   267.84,
+   77.76
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "ot_hfd_coll_q3_body_core",
+  "n_inst": 1,
+  "types": [
+   "q_hub_nw"
+  ],
+  "old": [
+   578.8799999999999,
+   1054.08
+  ],
+  "old_aspect": 1.82,
+  "old_fill": 0.0723,
+  "cells": 280175,
+  "sinks": 66247,
+  "macros": 11,
+  "macro_area": 48493,
+  "cell_area": 40610,
+  "pins": {
+   "S": {
+    "M5": 2965
+   },
+   "W": {
+    "M4": 2544
+   },
+   "E": {
+    "M4": 4683
+   },
+   "N": {
+    "M5": 5792
+   }
+  },
+  "pin_need_wh": [
+   1158.4,
+   936.6
+  ],
+  "macro_bbox": [
+   172.8,
+   353.5
+  ],
+  "room_xy": [
+   64.8,
+   34.56
+  ],
+  "clock_regions": 14,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=2"
+  ],
+  "new": [
+   1166.4,
+   941.76
+  ],
+  "new_aspect": 1.24,
+  "new_fill": 0.039,
+  "grow_xy": [
+   293.76,
+   -56.16
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "n_inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   362.88,
+   388.8
+  ],
+  "old_aspect": 1.07,
+  "old_fill": 0.0318,
+  "cells": 20344,
+  "sinks": 4254,
+  "macros": 16,
+  "macro_area": 62302,
+  "cell_area": 2505,
+  "pins": {
+   "S": {
+    "M5": 1828
+   },
+   "E": {
+    "M4": 1
+   },
+   "N": {},
+   "W": {}
+  },
+  "pin_need_wh": [
+   365.6,
+   0.2
+  ],
+  "macro_bbox": [
+   332.6,
+   354.4
+  ],
+  "room_xy": [
+   4.32,
+   0.0
+  ],
+  "clock_regions": 1,
+  "flags": [],
+  "new": [
+   371.52,
+   371.52
+  ],
+  "new_aspect": 1.0,
+  "new_fill": 0.033,
+  "grow_xy": [
+   4.32,
+   -8.64
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "n_inst": 4,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   250.56,
+   414.72
+  ],
+  "old_aspect": 1.66,
+  "old_fill": 0.0613,
+  "cells": 46676,
+  "sinks": 13217,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 6370,
+  "pins": {
+   "N": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 2049
+   },
+   "E": {
+    "M4": 2048
+   },
+   "S": {
+    "M5": 2115
+   }
+  },
+  "pin_need_wh": [
+   423.0,
+   409.8
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   38.88,
+   38.88
+  ],
+  "clock_regions": 3,
+  "flags": [],
+  "new": [
+   423.36,
+   414.72
+  ],
+  "new_aspect": 1.02,
+  "new_fill": 0.036,
+  "grow_xy": [
+   86.4,
+   0.0
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+  "n_inst": 4,
+  "types": [
+   "q_su20",
+   "q_su20__physical_v1",
+   "q_su30",
+   "q_su30__physical_v1"
+  ],
+  "old": [
+   760.32,
+   311.04
+  ],
+  "old_aspect": 2.44,
+  "old_fill": 0.0641,
+  "cells": 244361,
+  "sinks": 38590,
+  "macros": 24,
+  "macro_area": 93452,
+  "cell_area": 9169,
+  "pins": {
+   "S": {
+    "M5": 589
+   },
+   "W": {
+    "M4": 1168
+   },
+   "E": {
+    "M4": 1448
+   },
+   "N": {
+    "M5": 584
+   }
+  },
+  "pin_need_wh": [
+   117.8,
+   289.6
+  ],
+  "macro_bbox": [
+   634.8,
+   188.3
+  ],
+  "room_xy": [
+   4.32,
+   216.0
+  ],
+  "clock_regions": 8,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=2"
+  ],
+  "new": [
+   648.0,
+   328.32
+  ],
+  "new_aspect": 1.97,
+  "new_fill": 0.077,
+  "grow_xy": [
+   -56.16,
+   8.64
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hgi_sm_xload_cl2_bfqg",
+  "n_inst": 16,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   302.4,
+   298.08
+  ],
+  "old_aspect": 1.01,
+  "old_fill": 0.0368,
+  "cells": 14002,
+  "sinks": 5217,
+  "macros": 8,
+  "macro_area": 31151,
+  "cell_area": 2171,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "S": {
+    "M5": 1083
+   },
+   "W": {
+    "M4": 256
+   },
+   "N": {},
+   "E": {}
+  },
+  "pin_need_wh": [
+   216.6,
+   51.2
+  ],
+  "macro_bbox": [
+   200.5,
+   276.4
+  ],
+  "room_xy": [
+   21.6,
+   25.92
+  ],
+  "clock_regions": 2,
+  "flags": [],
+  "new": [
+   224.64,
+   285.12
+  ],
+  "new_aspect": 1.27,
+  "new_fill": 0.066,
+  "grow_xy": [
+   -38.88,
+   -6.48
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hgi_sfu_split3_lane_core__idpin",
+  "n_inst": 32,
+  "types": [
+   "q_b110",
+   "q_b110__physical_v1",
+   "q_b111",
+   "q_b111__physical_v1",
+   "q_b112",
+   "q_b112__physical_v1",
+   "q_b113",
+   "q_b113__physical_v1"
+  ],
+  "old": [
+   388.8,
+   345.6
+  ],
+  "old_aspect": 1.12,
+  "old_fill": 0.2494,
+  "cells": 253074,
+  "sinks": 51400,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 33512,
+  "pins": {
+   "N": {
+    "M5": 613
+   },
+   "in": {
+    "M5": 1
+   },
+   "S": {
+    "M5": 658
+   },
+   "W": {
+    "M4": 200
+   },
+   "E": {}
+  },
+  "pin_need_wh": [
+   131.6,
+   40.0
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   0.0,
+   4.32
+  ],
+  "clock_regions": 11,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=2"
+  ],
+  "new": [
+   388.8,
+   216.0
+  ],
+  "new_aspect": 1.8,
+  "new_fill": 0.399,
+  "grow_xy": [
+   0.0,
+   -64.8
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hnx_idxn_keybuf_slice",
+  "n_inst": 16,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   241.92,
+   293.76
+  ],
+  "old_aspect": 1.21,
+  "old_fill": 0.0401,
+  "cells": 12628,
+  "sinks": 2416,
+  "macros": 5,
+  "macro_area": 35484,
+  "cell_area": 1427,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 2231
+   },
+   "N": {},
+   "S": {},
+   "E": {}
+  },
+  "pin_need_wh": [
+   0.0,
+   446.2
+  ],
+  "macro_bbox": [
+   172.8,
+   248.6
+  ],
+  "room_xy": [
+   4.32,
+   4.32
+  ],
+  "clock_regions": 1,
+  "flags": [],
+  "new": [
+   224.64,
+   449.28
+  ],
+  "new_aspect": 2.0,
+  "new_fill": 0.022,
+  "grow_xy": [
+   -8.64,
+   77.76
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ },
+ {
+  "module": "hnx_fused_lane",
+  "n_inst": 32,
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "old": [
+   345.5999999999999,
+   518.4
+  ],
+  "old_aspect": 1.5,
+  "old_fill": 0.3811,
+  "cells": 537474,
+  "sinks": 79292,
+  "macros": 2,
+  "macro_area": 7788,
+  "cell_area": 65310,
+  "pins": {
+   "W": {
+    "M4": 687
+   },
+   "E": {
+    "M4": 268
+   },
+   "N": {
+    "M5": 41
+   },
+   "in": {
+    "M5": 1
+   },
+   "S": {}
+  },
+  "pin_need_wh": [
+   8.2,
+   137.4
+  ],
+  "macro_bbox": [
+   94.8,
+   103.8
+  ],
+  "room_xy": [
+   -4.32,
+   4.32
+  ],
+  "clock_regions": 16,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=4"
+  ],
+  "new": [
+   362.88,
+   475.2
+  ],
+  "new_aspect": 1.31,
+  "new_fill": 0.397,
+  "grow_xy": [
+   8.64,
+   -21.6
+  ],
+  "bound": "fill",
+  "fits_parent": false,
+  "decision": "KEEP (in band)"
+ },
+ {
+  "module": "hnx_rp3lp3h_n",
+  "n_inst": 64,
+  "types": [
+   "q_sm0",
+   "q_sm1",
+   "q_sm2",
+   "q_sm3"
+  ],
+  "old": [
+   630.72,
+   1209.6
+  ],
+  "old_aspect": 1.92,
+  "old_fill": 0.127,
+  "cells": 679904,
+  "sinks": 162477,
+  "macros": 15,
+  "macro_area": 305360,
+  "cell_area": 58110,
+  "pins": {
+   "W": {
+    "M4": 2887
+   },
+   "E": {
+    "M4": 2887
+   },
+   "S": {
+    "M5": 604
+   },
+   "N": {
+    "M5": 127
+   },
+   "in": {
+    "M5": 1
+   }
+  },
+  "pin_need_wh": [
+   120.8,
+   577.4
+  ],
+  "macro_bbox": [
+   613.4,
+   1192.3
+  ],
+  "room_xy": [
+   0.0,
+   -4.32
+  ],
+  "clock_regions": 33,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=5"
+  ],
+  "new": [
+   622.08,
+   1200.96
+  ],
+  "new_aspect": 1.93,
+  "new_fill": 0.132,
+  "grow_xy": [
+   -4.32,
+   -4.32
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "hnx_rp3lp3h_s",
+  "n_inst": 64,
+  "types": [
+   "q_sm0",
+   "q_sm1",
+   "q_sm2",
+   "q_sm3"
+  ],
+  "old": [
+   630.72,
+   1036.8
+  ],
+  "old_aspect": 1.64,
+  "old_fill": 0.1452,
+  "cells": 657997,
+  "sinks": 151982,
+  "macros": 15,
+  "macro_area": 305360,
+  "cell_area": 50612,
+  "pins": {
+   "W": {
+    "M4": 2887
+   },
+   "E": {
+    "M4": 818
+   },
+   "N": {
+    "M5": 604
+   },
+   "S": {
+    "M5": 227
+   },
+   "in": {
+    "M5": 1
+   }
+  },
+  "pin_need_wh": [
+   120.8,
+   577.4
+  ],
+  "macro_bbox": [
+   613.4,
+   1019.5
+  ],
+  "room_xy": [
+   0.0,
+   -4.32
+  ],
+  "clock_regions": 31,
+  "flags": [
+   "CELLS>150k: SPLIT (source event) n=5"
+  ],
+  "new": [
+   622.08,
+   1028.16
+  ],
+  "new_aspect": 1.65,
+  "new_fill": 0.151,
+  "grow_xy": [
+   -4.32,
+   -4.32
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_hc_bank128_pair_first_core",
+  "n_inst": 16,
+  "types": [
+   "q_b000",
+   "q_b000__physical_v1"
+  ],
+  "old": [
+   250.56,
+   267.84
+  ],
+  "old_aspect": 1.07,
+  "old_fill": 0.2433,
+  "cells": 70485,
+  "sinks": 16743,
+  "macros": 3,
+  "macro_area": 28529,
+  "cell_area": 9387,
+  "pins": {
+   "E": {
+    "M4": 512
+   },
+   "N": {
+    "M5": 563
+   },
+   "in": {
+    "M5": 1
+   },
+   "S": {
+    "M5": 2
+   },
+   "W": {}
+  },
+  "pin_need_wh": [
+   112.6,
+   102.4
+  ],
+  "macro_bbox": [
+   174.7,
+   245.4
+  ],
+  "room_xy": [
+   25.92,
+   12.96
+  ],
+  "clock_regions": 4,
+  "flags": [],
+  "new": [
+   198.72,
+   285.12
+  ],
+  "new_aspect": 1.43,
+  "new_fill": 0.334,
+  "grow_xy": [
+   -25.92,
+   8.64
+  ],
+  "bound": "fill",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hbm_idx_rootctl_static_am",
+  "n_inst": 1,
+  "types": [
+   "root"
+  ],
+  "old": [
+   475.19999999999993,
+   259.19999999999993
+  ],
+  "old_aspect": 1.83,
+  "old_fill": 0.1101,
+  "cells": 94367,
+  "sinks": 21642,
+  "macros": 1,
+  "macro_area": 7097,
+  "cell_area": 12780,
+  "pins": {
+   "in": {
+    "M5": 1
+   },
+   "W": {
+    "M4": 885
+   },
+   "E": {
+    "M4": 447
+   },
+   "S": {
+    "M5": 2460
+   },
+   "N": {
+    "M5": 2084
+   }
+  },
+  "pin_need_wh": [
+   492.0,
+   177.0
+  ],
+  "macro_bbox": [
+   172.8,
+   41.1
+  ],
+  "room_xy": [
+   10.15,
+   4.32
+  ],
+  "clock_regions": 5,
+  "flags": [],
+  "new": [
+   492.48,
+   250.56
+  ],
+  "new_aspect": 1.97,
+  "new_fill": 0.11,
+  "grow_xy": [
+   8.64,
+   -4.32
+  ],
+  "bound": "pins",
+  "fits_parent": true,
+  "decision": "RESHAPE"
+ },
+ {
+  "module": "ot_hfd_coll_q2n2_vm_core",
+  "n_inst": 1,
+  "types": [
+   "q_hub_ne"
+  ],
+  "old": [
+   924.48,
+   509.76
+  ],
+  "old_aspect": 1.81,
+  "old_fill": 0.0328,
+  "cells": 107650,
+  "sinks": 23943,
+  "macros": 0,
+  "macro_area": 0,
+  "cell_area": 15457,
+  "pins": {
+   "W": {
+    "M4": 2677
+   },
+   "N": {
+    "M5": 5984
+   },
+   "S": {},
+   "E": {}
+  },
+  "pin_need_wh": [
+   1196.8,
+   535.4
+  ],
+  "macro_bbox": [
+   0,
+   0
+  ],
+  "room_xy": [
+   12.96,
+   129.6
+  ],
+  "clock_regions": 5,
+  "flags": [],
+  "new": [
+   1200.96,
+   604.8
+  ],
+  "new_aspect": 1.99,
+  "new_fill": 0.021,
+  "grow_xy": [
+   138.24,
+   47.52
+  ],
+  "bound": "pins",
+  "fits_parent": false,
+  "decision": "RESHAPE-NOFIT"
+ }
+]

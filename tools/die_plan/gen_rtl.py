@@ -83,6 +83,20 @@ module ot_dp_ste #(parameter integer W = 1) (
     always @(posedge clk) q <= d;
     ot_dp_ep u_ep (.clk(clk), .rst_n(rst_n), .ea(ea), .eq(eq));
 endmodule
+// ot_dp_lk: negative-level LOCKUP LATCH on a TX face into a modelled hard PHY (XCHECK-1 11-03, safe form: hold by
+// construction).  Transparent while clk is low: the out-bus boundary flop's q reaches the PHY pin after the falling
+// edge (T/2 + latch D->Q), so the PHY still captures it at the next rising edge (no added cycle, schedule unchanged)
+// and the FF hold check at the PHY's registered input (abstract hold 27-65 ps) gains ~T/2.  OpenSTA (ASAP7 RVT,
+// unc 60/25, derate 1.10/1.05): FF hold -11.4 -> +390.5 ps (ot_hbm3e_phy_rc_e8p5), TT setup +605.6 -> +208.5 ps.
+// LEC: tools/die_plan/lec.py latch_to_wire (DLLx lockup cells).
+(* keep_hierarchy, keep *)
+module ot_dp_lk #(parameter integer W = 1) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output reg  [W-1:0] q
+);
+    always @(*) if (!clk) q = d;  // Verilog-2001 latch (read_verilog without -sv; yosys infers $dlatch)
+endmodule
 // ot_dp_rsync_s<N>: one LOCAL reset synchroniser per clock tap region (KV-P5 10-23, COORD R4: the release of a tap
 // region's flops is timed from a synchroniser on the SAME tap, not across the tap-to-tap skew).  keep_hierarchy: the
 // per-tap copies have identical inputs and would otherwise be merged back into one (Yosys opt_merge).
@@ -175,6 +189,27 @@ endmodule
 `default_nettype wire
 """
 
+# CLK FORM #7 (DIE-S81-51/PLAN 11-03, opt-in reset.relay_lockup): the negative-edge lockup relay.  One relay = one
+# clock cycle (posedge state flop, exactly like ot_dp_rrelay), but q is re-launched on the FALLING edge by a second
+# flop (DFFLQN class, not a latch).  The next relay captures on the following rising edge, so every internal
+# relay->relay hop has T/2 hold margin by construction whatever clock taps the two relays land on (the kit's
+# nearest-tap/capacity assignment makes "same tap" unprovable at plan time) and T/2 setup for the <= reach hop.
+# reset_tree.relay_cell uses it ONLY for internal relays (q = rst_rl_*): leaf taps rst_n_t<k>, out relays,
+# entry pin registers and START-gated relays stay ot_dp_rrelay / ot_dp_rgate (consumer recovery keeps a full cycle).
+# Kept out of CELLS: only plans that opt in emit it, so every other kit's cell file is byte-identical.
+LOCKUP_CELLS = """(* keep_hierarchy, keep *)
+module ot_dp_rrelay_nl (input wire clk, input wire d, output reg q);
+    (* keep *) reg state;
+    always @(posedge clk) state <= d;
+    always @(negedge clk) q <= state;
+endmodule
+"""
+
+
+def uses_relay_lockup(raw):
+    return bool((raw.get("reset") or {}).get("relay_lockup"))
+
+
 
 class GenError(Exception):
     pass
@@ -253,6 +288,33 @@ def leaf_headers(t, root):
             raise GenError(f"source {f} not found under {root}")
         texts.append(p.read_text(errors="replace"))
     return "\n".join(texts)
+
+
+PHY_MODEL_RE = re.compile(r"phy|serdes|ucie|pma", re.I)
+
+
+def phy_tx_buses(P, tn):
+    """out buses of type tn whose die port lands on a HARD PHY-model partition (a hard type whose contents name a PHY /
+    SerDes / UCIe / PMA model): each gets the ot_dp_lk TX-face lockup latch after its boundary flop (XCHECK-1 11-03,
+    default ON; type flag "tx_lockup": false opts a type out).  One netlist per type: any instance of the type that
+    lands on a PHY latches the bus for the type."""
+    if P.types[tn].get("tx_lockup", True) is False:
+        return set()
+    hard_phy = set()
+    for pn, part in P.parts.items():
+        t = P.types.get(part["type"], {})
+        if t.get("hard") and any(isinstance(c, dict) and PHY_MODEL_RE.search(c.get("module", ""))
+                                 for c in t.get("contents", [])):
+            hard_phy.add(pn)
+    if not hard_phy:
+        return set()
+    mine = {pn for pn, part in P.parts.items() if part["type"] == tn}
+    out = set()
+    for pr in P.raw.get("ports", []):
+        src, dst = pr.get("src") or {}, pr.get("dst") or {}
+        if src.get("part") in mine and dst.get("part") in hard_phy:
+            out.add(src.get("bus"))
+    return out
 
 
 def wrapper(P, tn, epochs, rtl_root=None):
@@ -379,6 +441,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
         return "ot_dp_ste" if re.fullmatch(r"rst_n(_t\d+)?", ea) else "ot_dp_st"
 
     sig = {}          # bind keyword -> expression
+    txlk = phy_tx_buses(P, tn)
     need_rst = False
     pads, bad = P.bus_pads()
     if bad:
@@ -412,8 +475,14 @@ def wrapper(P, tn, epochs, rtl_root=None):
                 body.append(f"    {st(ea)} #(.W({W})) u_bout_{n}_pad{j} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
                             f".q({n}_p{j}_q), .eq({n}_p{j}_eq));")
                 d, ea = f"{n}_p{j}_q", f"{n}_p{j}_eq"
-            body.append(f"    {st(ea)} #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
-                        f".q({n}[{W - 1}:0]), .eq({eq}));")
+            if b["name"] in txlk:      # TX face into a hard PHY model: flop -> negative-level lockup latch -> pin
+                decl.append(f"    wire [{W - 1}:0] {n}_fq;  // TX-face flop q before the ot_dp_lk lockup latch")
+                body.append(f"    {st(ea)} #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
+                            f".q({n}_fq), .eq({eq}));")
+                body.append(f"    ot_dp_lk #(.W({W})) u_blk_{n} (.clk(clk), .d({n}_fq), .q({n}[{W - 1}:0]));")
+            else:
+                body.append(f"    {st(ea)} #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
+                            f".q({n}[{W - 1}:0]), .eq({eq}));")
             sig[f"bus:{b['name']}"] = f"{n}_d"
     for s in slots:
         n, W, k = sv_id(s["name"]), s["width"], int(s.get("stations", 1))
@@ -652,7 +721,7 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
                 L.validate_observer_native(lambda tn: leaf_headers(P.types[tn], rtl_root), parse_leaf_ports)
         except CL.LandingError as e:
             raise GenError(f"clock landing: {e}") from e
-    (out / "ot_dp_cells.sv").write_text(CELLS)
+    (out / "ot_dp_cells.sv").write_text(CELLS + (LOCKUP_CELLS if P.reset.get("relay_lockup") else ""))
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):

@@ -925,7 +925,12 @@ SCHEMA = {
                            "properties": {"window_ps": _nonneg, "note": {"type": "string"},
                                           # DIE-S81-41 (COORD 2026-10-31 05:2x): per-type W override (measured
                                           # related-pair damage of the type's regions); unlisted types keep window_ps
-                                          "per_type_ps": {"type": "object", "additionalProperties": _nonneg}}},
+                                          "per_type_ps": {"type": "object", "additionalProperties": _nonneg},
+                                          # KW-FIX-4-SDC (COORD 11-03 10:49): measured per-port window {type: {kit
+                                          # clock port: D_p}} (die_sta_related --kit-window-out); gen_phys
+                                          # .tap_window_port_table; unlisted types / ports keep the flat W
+                                          "per_port_ps": {"type": "object", "additionalProperties": {
+                                              "type": "object", "additionalProperties": _nonneg}}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
@@ -976,6 +981,12 @@ SCHEMA = {
             # ft seam budget split (COORD RULING 2026-10-24 12:37, S81): receiver share of T at the ft face (input delay
             # max (1 - share) T on ft_i, output delay max share T on ft_o); default gen_phys.FT_HOP_IN_SHARE (0.08)
             "ft_hop_in_share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 0.5},
+            # plain-lane input budget event (DIE-S81-51 11-03, COORD 10:49; gen_phys.plain_seam_split): plain ft-lane
+            # receiver input max <= rx_in_max_ps written (raw <= rx_in_raw_max_ps), cut taken from registered senders
+            "plain_seam_split": {"type": "object", "additionalProperties": False, "required": ["rx_in_max_ps"],
+                                 "properties": {"rx_in_max_ps": {"type": "number", "exclusiveMinimum": 0},
+                                                "rx_in_raw_max_ps": {"type": "number", "exclusiveMinimum": 0},
+                                                "note": {"type": "string"}}},
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,
@@ -1009,6 +1020,11 @@ SCHEMA = {
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
+            # CLK FORM #7 (DIE-S81-51 11-03, opt-in; reset_tree.relay_lockup): internal relay->relay hops of the named
+            # types use ot_dp_rrelay_nl (posedge state flop + negedge re-launch, 1 cycle); absent = byte-identical
+            "relay_lockup": {"type": "object", "additionalProperties": False, "required": ["form", "types"],
+                             "properties": {"form": {"enum": ["negedge"]}, "types": {"type": "array", "items": _name},
+                                            "note": {"type": "string"}}},
             # KV-PLAN2 10-25 (opt-in, default false = main wall-only rule): every relay hop keeps one L route outside
             # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
             # through kvpc0 gave 1272 M3 overflow)
@@ -1069,7 +1085,10 @@ SCHEMA = {
             cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name},
             # DIE-KV-62/stations 11-02 opt-in: these types (or unsplit base names) export OT_CLAND_PINSLOT_DENSE=1 (y-column
             # pinslot rows pack the ring slot flops body to body); absent/empty = unchanged kits
-            cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-KV-64 11-03 opt-in: these types (or unsplit base names) tie their plan-declared hard-core ID straps
+            # inside the type (bind.emit_type; one value on every instance, else a bind gap); absent/empty = unchanged
+            id_straps_in_type_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 

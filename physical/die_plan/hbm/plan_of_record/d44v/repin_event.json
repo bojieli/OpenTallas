@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "d44v-p2-repin",
+ "tables": [
+  {
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "new_pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial__p2pin.json",
+   "outline": [
+    142.56,
+    216.0
+   ],
+   "pins": 3673,
+   "faces_old": {
+    "N": 839,
+    "E": 1116,
+    "W": 562,
+    "S": 1156
+   },
+   "faces_new": {
+    "N": 746,
+    "E": 1122,
+    "W": 1059,
+    "S": 746
+   },
+   "capacity": {
+    "N": 746,
+    "S": 746,
+    "E": 1183,
+    "W": 1183
+   }
+  },
+  {
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "pins_file": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__spread.json",
+   "new_pins_file": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__spread__p2pin.json",
+   "outline": [
+    241.92,
+    293.76
+   ],
+   "pins": 2232,
+   "faces_old": {
+    "W": 2231
+   },
+   "faces_new": {
+    "W": 1132,
+    "E": 1099
+   },
+   "capacity": {
+    "N": 1171,
+    "S": 1171,
+    "E": 1441,
+    "W": 1441
+   }
+  }
+ ]
+}

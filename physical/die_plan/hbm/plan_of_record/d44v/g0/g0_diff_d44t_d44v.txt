@@ -1,0 +1,45 @@
+by check: {'core_faces': (8, 8), 'geometry': (4, 0), 'hops': (16, 2), 'reach': (22, 9), 'stations': (22, 3), 'street_die_leg': (2, 2)}
+gone 53 new 3
+NEW core_faces type q_hub_nw core u_vmb_Q6_mu1 port dq: 281 pins on face E face away from its partner(s) u_vmdel_Q6: mean cos -0.53, 281 pins on the far side (re-pin to face N)
+NEW core_faces type q_hub_nw core u_vmb_Q7_mu1 port dq: 281 pins on face E face away from its partner(s) u_vmdel_Q7: mean cos -0.98, 281 pins on the far side (re-pin to face W)
+NEW reach lane L701: hop 14 is 392 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_b112)
+GONE core_faces type q_hub_nw core u_vmb_Q6_mu1 port dq: 282 pins on face E face away from its partner(s) u_vmdel_Q6: mean cos -0.53, 282 pins on the far side (re-pin to face N)
+GONE core_faces type q_hub_nw core u_vmb_Q7_mu1 port dq: 282 pins on face E face away from its partner(s) u_vmdel_Q7: mean cos -0.98, 282 pins on the far side (re-pin to face W)
+GONE geometry type q_su11 slot L30x1: 726 actual-bit station cells/sites intersect physical macros (stage 4, bit 0, macro u_cxdl_Q1_s)
+GONE geometry type q_su11 slot L31x1: 597 actual-bit station cells/sites intersect physical macros (stage 4, bit 0, macro u_cxdl_Q1_q)
+GONE geometry type q_su11__physical_v1 slot L30x1: 726 actual-bit station cells/sites intersect physical macros (stage 4, bit 0, macro u_cxdl_Q1_s)
+GONE geometry type q_su11__physical_v1 slot L31x1: 597 actual-bit station cells/sites intersect physical macros (stage 4, bit 0, macro u_cxdl_Q1_q)
+GONE hops lane L4: normal FT root.L4x1 real input bit 2784 S0->S1 is 504 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L5: normal FT NW_su31.L5r0_1 real input bit 1 S0->S1 is 953 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L5m: normal FT NE_su31.L5r0_1 real input bit 2725 S0->S1 is 953 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L12: normal FT NW_b101.L12x1 real input bit 0 S0->S1 is 540 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L34: normal FT NW_su31.L34r0_1 real input bit 1614 S0->S1 is 860 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L34m: normal FT NE_su31.L34r0_1 real input bit 0 S0->S1 is 860 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L35: normal FT NW_su31.L35r0_1 real input bit 1615 S0->S1 is 824 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L35m: normal FT NE_su31.L35r0_1 real input bit 1 S0->S1 is 824 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L6b: normal FT NW_su31.L6br0_1 real input bit 0 S0->S1 is 532 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L6bm: normal FT NE_su31.L6br0_1 real input bit 828 S0->S1 is 532 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L730: normal FT NW_su00.L730x1 real input bit 1661 S0->S1 is 863 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L736: normal FT NW_su30.L736x3 real input bit 1 S0->S1 is 716 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L730m: normal FT NE_su00.L730x1 real input bit 1661 S0->S1 is 863 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L736m: normal FT NE_su30.L736x3 real input bit 1 S0->S1 is 716 um > reach 405; regs_um[0] is not a native placement
+GONE stations type root slot L4x1: real normal input S0->S1 = 504 um > ft_station_max_um 405
+GONE stations type q_su31__physical_v1 slot L5r0_1: real normal input S0->S1 = 953 um > ft_station_max_um 405
+GONE stations type q_su31 slot L5r0_1: real normal input S0->S1 = 953 um > ft_station_max_um 405
+GONE stations type q_b101_nw slot L12x1: real normal input S0->S1 = 540 um > ft_station_max_um 405
+GONE stations type q_su31__physical_v1 slot L34r0_1: real normal input S0->S1 = 860 um > ft_station_max_um 405
+GONE stations type q_su31 slot L34r0_1: real normal input S0->S1 = 860 um > ft_station_max_um 405
+GONE stations type q_su31__physical_v1 slot L35r0_1: real normal input S0->S1 = 824 um > ft_station_max_um 405
+GONE stations type q_su31 slot L35r0_1: real normal input S0->S1 = 824 um > ft_station_max_um 405
+GONE stations type q_su31__physical_v1 slot L6br0_1: real normal input S0->S1 = 532 um > ft_station_max_um 405
+GONE stations type q_su31 slot L6br0_1: real normal input S0->S1 = 532 um > ft_station_max_um 405
+GONE stations type q_b112 slot L701x1: real normal input S0->S1 = 526 um > ft_station_max_um 405
+GONE stations type q_su00__physical_v1 slot L730x1: real normal input S0->S1 = 863 um > ft_station_max_um 405
+GONE stations type q_su01 slot L730x4: real normal input S0->S1 = 734 um > ft_station_max_um 405
+GONE stations type q_su10 slot L730x6: real normal input S0->S1 = 716 um > ft_station_max_um 405
+GONE stations type q_su30 slot L736x3: real normal input S0->S1 = 716 um > ft_station_max_um 405
+GONE stations type q_su00 slot L730x1: real normal input S0->S1 = 863 um > ft_station_max_um 405
+GONE stations type q_su01__physical_v1 slot L730x4: real normal input S0->S1 = 734 um > ft_station_max_um 405
+GONE stations type q_su10__physical_v1 slot L730x6: real normal input S0->S1 = 716 um > ft_station_max_um 405
+GONE stations type q_su30__physical_v1 slot L736x3: real normal input S0->S1 = 716 um > ft_station_max_um 405
+GONE reach lane L5: hop 1 is 726 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_su31)

@@ -1,0 +1,115 @@
+{
+ "core": "hnx_rp3lp3h_n",
+ "status": "EQ-PASS (nx N+S pair MUT0 PASS; MUT1/2/3 FAIL)",
+ "form": "leaf cut: x store / 6 BF16 column halves / 3 lane cores / glue (5 masters for n+s, 3 leaf masters shared)",
+ "uncut_cells_orfs": 806841,
+ "census_cells": 679904,
+ "sub_blocks": [
+  {
+   "module": "hnx_rp3h_xs",
+   "per_core": 1,
+   "cells_est": 103494,
+   "macros": 12,
+   "clock": "clk",
+   "pins_in": 2913,
+   "pins_out": 4857,
+   "note": "lfx lane front + hnx_xs3 (12 x ot_sram_1r1w_128x256_m1_r2c2), per-consumer operand buses; shared n/s"
+  },
+  {
+   "module": "hnx_rp3h_tl",
+   "per_core": 6,
+   "cells_est": 49889,
+   "macros": 0,
+   "clock": "clk",
+   "pins_in": 258,
+   "pins_out": 257,
+   "note": "ot_hbm_accel_smh_tcl verbatim (BF16 column half); shared n/s"
+  },
+  {
+   "module": "hnx_rp3h_lc",
+   "per_core": 3,
+   "cells_est": 132497,
+   "macros": 0,
+   "clock": "clk",
+   "pins_in": 1616,
+   "pins_out": 50,
+   "note": "XREL stations + ot_hbm_accel_smh_bdc + ot_hbm_accel_smh_tct + G1; shared n/s; > 120k target, <= 150k"
+  },
+  {
+   "module": "hnx_rp3h_gn",
+   "per_core": 1,
+   "cells_est": 60543,
+   "macros": 0,
+   "clock": "ck_n",
+   "pins_in": 3245,
+   "pins_out": 6404,
+   "note": "n fcore without u_lf0 + hnx_rp4lp4_pub + act delay 3"
+  }
+ ],
+ "split_total_cells_est": 860862,
+ "rtl": [
+  "rtl/hbm_accel/cores_split/reform_1103/hnx_rp3lp3h/hnx_rp3h_split.sv",
+  "rtl/hbm_accel/cores_split/reform_1103/hnx_rp3lp3h/hnx_rp3lp3h_n__split.sv"
+ ],
+ "crossings": [
+  {
+   "between": "glue -> xs",
+   "bits": 2913,
+   "kind": "REG->REG (+2 face)",
+   "note": "strap, rl1 (row_w first), bk1 (land)"
+  },
+  {
+   "between": "xs -> tl (x6)",
+   "bits": 258,
+   "kind": "REG->REG (+1: tl input face replaces xf station)",
+   "note": "{v, first, w128, x128}"
+  },
+  {
+   "between": "tl -> lc",
+   "bits": 257,
+   "kind": "REG->REG (+2)",
+   "note": "sum_o 256 + sticky lfault"
+  },
+  {
+   "between": "xs -> lc (x3)",
+   "bits": 1102,
+   "kind": "REG->REG (+2, stations kept)",
+   "note": "block-dot ops + BF16 tree control"
+  },
+  {
+   "between": "lc -> glue (x3)",
+   "bits": 50,
+   "kind": "REG->REG (+2)",
+   "note": "gather word"
+  },
+  {
+   "between": "xs -> glue",
+   "bits": 3,
+   "kind": "REG->REG (+2) + 3 pure delay in glue",
+   "note": "act mask"
+  },
+  {
+   "between": "xs -> tl/lc resets",
+   "bits": 13,
+   "kind": "reset copies rr (passthrough pins)",
+   "note": ""
+  }
+ ],
+ "latency_added": {
+  "leaf result (n sb_bank leaf-0 lane / s gout[49:0])": 7,
+  "rout/bout/pass lanes/sb_vld": 0
+ },
+ "latency_tsv": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/hnx_rp3lp3h_n.tsv",
+ "eq": {
+  "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/rp3lp3h_n/run.sh (mode nx: N+S pair)",
+  "kit_ref": "intel2 kit-wave d44o items hnx_rp3lp3h_n attempt_6",
+  "results": {
+   "nx MUT0": "LOCKSTEP PASS checks=22000 toggled_out_bits=3905",
+   "nx MUT1": "LOCKSTEP FAIL errs=39994 (expected)",
+   "nx MUT2": "LOCKSTEP FAIL errs=46116 (expected)",
+   "nx MUT3": "LOCKSTEP FAIL errs=570 (expected)"
+  },
+  "remains": "none"
+ },
+ "gate_tool": "not run (DIE-HBM-61/RTL prebuild gate not yet available to this helper)"
+}

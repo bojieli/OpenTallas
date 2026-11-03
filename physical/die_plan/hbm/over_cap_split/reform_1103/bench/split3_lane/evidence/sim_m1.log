@@ -1,0 +1,15 @@
+MISMATCH cyc=801 sfu_kv_wdata[16] ref=1 dut=0
+MISMATCH cyc=801 sfu_kv_wdata[18] ref=1 dut=0
+MISMATCH cyc=801 sfu_kv_wdata[21] ref=1 dut=0
+MISMATCH cyc=801 sfu_kv_wdata[22] ref=1 dut=0
+MISMATCH cyc=801 sfu_kv_wdata[24] ref=0 dut=1
+MISMATCH cyc=801 sfu_kv_wdata[25] ref=1 dut=0
+MISMATCH cyc=801 sfu_kv_wdata[26] ref=1 dut=0
+MISMATCH cyc=801 sfu_kv_wdata[27] ref=1 dut=0
+MISMATCH cyc=801 sfu_kv_wdata[29] ref=0 dut=1
+MISMATCH cyc=801 sfu_kv_wdata[30] ref=1 dut=0
+LOCKSTEP FAIL errs=511002 checks=168000 toggled_out_bits=266
+- /home/ubuntu/scratch-root/claude/die-hbm-61-split/bench/split3_lane_m/tb_m1.sv:205: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 2.976 s; speed 8.066 us/s
+- Verilator: cpu 2.975 s on 1 threads; allocated 12 MB

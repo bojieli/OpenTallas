@@ -1,0 +1,14 @@
+[
+ {"core": "ot_hbm_idx_score_hcol_h0", "sha": "c4237519789", "composition": "ot_hbm_idx_score_hcol_h0__split",
+  "subs": [{"module": "ot_hbm_idx_score_hcol_h0_ra", "count": 1, "cells": 97320, "pins": 1163, "clock": "clk_pair[0]"},
+           {"module": "ot_hbm_idx_score_hcol_h0_rb", "count": 1, "cells": 103151, "pins": 1196, "clock": "clk_pair[1]"}],
+  "added_cycles": 0, "note": "seam ra.cs_out/cf_out -> rb.cs_in/cf_in 33 b reg->reg, +2 edges paid back inside ra"},
+ {"core": "ot_hgi_sfu_split3_lane_core__idpin", "sha": "273120b2730", "composition": "ot_hgi_sfu_split3_lane_core__idpin__split",
+  "subs": [{"module": "ot_hgi_sfu_split3_lane_core_fr", "count": 1, "cells": 84149, "pins": 1556, "clock": "map_clk + sfu_clk"},
+           {"module": "ot_hgi_sfu_split3_lane_core_ex", "count": 1, "cells": 63917, "pins": 66, "clock": "sfu_clk"},
+           {"module": "ot_hgi_sfu_split3_lane_core_bk", "count": 1, "cells": 107079, "pins": 383, "clock": "sfu_clk"}],
+  "added_cycles": 4, "note": "+4 on sfu_vm_*, sfu_kv_*, sfu_ro_*, sfu_fault, sfu_coll (latency/ot_hgi_sfu_split3_lane_core__idpin.tsv); fr->ex->bk tile order keeps the 33-b exp seams adjacent"},
+ {"core": "ot_hbm_su_static_pgslice_lg__lanes8_11", "sha": "8dd205e8bcc", "composition": "4 x ot_hbm_su_pg_lane1_core (replica_map in split.json)",
+  "subs": [{"module": "ot_hbm_su_pg_lane1_core", "count": 4, "cells": 65697, "pins": 2014, "clock": "19 regional clock pins"}],
+  "added_cycles": 0, "note": "6 SRAM macros per sub; 1414-b broadcast lands on all 4 subs (pins_fit reported); lane_id -> strap_* tied at parent"}
+]

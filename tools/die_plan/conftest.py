@@ -27,3 +27,11 @@ def pytest_sessionstart(session):
         raise pytest.UsageError(
             f"tools/die_plan tests need {missing} in the checkout at {ROOT} (sparse checkout too narrow?); "
             "use `git -C <wt> sparse-checkout set --cone tools physical rtl`")
+
+
+@pytest.fixture(autouse=True)
+def _lec_rawprefix_wall_off(monkeypatch):
+    """LEC-RAWPREFIX-BOUND (DIE-HBM-61/LEC 11-03): the raw prefix sweep's wall-clock backstop is off in tests
+    (OT_LEC_RAWPREFIX_S=0), so no test result depends on host load; the deterministic AND-node cap stays at its
+    default.  A test that checks the wall bound sets or deletes the variable itself."""
+    monkeypatch.setenv("OT_LEC_RAWPREFIX_S", "0")

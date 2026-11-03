@@ -1541,6 +1541,10 @@ def macro_instances(kd):
 CHECKS = ("corner_modes", "ff_binding", "clock_pin_geometry", "rc_calibration", "duplicate_modules", "keep_hook",
           "pins_canonical", "mesh_vias", "macro_channels", "clock_entry_clear", "island_macro_clear", "macro_pin_grid",
           "macro_instances")
+# OWNER 11-03 07:0x (KW-FIX-4): the only contract checks that block a kit (kit_preflight) are certain tool failures:
+# duplicate_modules = Yosys "Re-definition of module"; macro_instances = place_macro / MACRO_PLACEMENT_TCL on an instance
+# the netlist does not have (OpenROAD error).  Every other check is a design target, reported as contract_advisory.
+TOOL_FAIL_CHECKS = ("duplicate_modules", "macro_instances")
 
 
 def is_core_kit(kd):

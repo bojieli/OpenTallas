@@ -1,0 +1,97 @@
+{
+ "schema": "opentallas.prebuild_gate.v1",
+ "kit": "/home/ubuntu/scratch-root/claude/die-hbm-61-gate/kits/ot_hbm_hc_root_static__tailx_rest__v4f4566",
+ "design": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+ "flow_status": [
+  "GATE_FLOW",
+  "stop=ok",
+  "GATE_STAGE",
+  "place_resized",
+  "GATE_STA",
+  "rc=0"
+ ],
+ "cells": 109012,
+ "macros": 0,
+ "stdcell_area_um2": 12937.0,
+ "sta_stage": "place_resized",
+ "period": 833.0,
+ "groups": {
+  "r2r": {
+   "slack": -608.4,
+   "start": "u_fcore.u_core.u_tail.age[2]$_DFFE_PN0P_/QN",
+   "end": "u_fcore.u_core.u_tail.add.s1_small[0]$_DFF_P_/D"
+  },
+  "in2reg": {
+   "slack": 416.8,
+   "start": "x_g_tail_0_u_t_rst_n",
+   "end": "u_fcore.u_core.u_tail.exp_.g_h[1].u_a.g_fast.u.y[13]$_DFF_PN0_/RESETN"
+  },
+  "reg2out": {
+   "slack": 580.5,
+   "start": "u_bout_x_g_tail_1_u_t_u_tail_sk_en_sk/q$_DFF_P_/QN",
+   "end": "x_g_tail_1_u_t_u_tail_sk_en_sk"
+  },
+  "in2out": null
+ },
+ "wns": -608.4,
+ "r2r_endpoints_stage_over_583": 5930,
+ "stage_ps": 1441.4,
+ "stage_limit_ps": 583.1,
+ "setup_limit_ps": 83.3,
+ "checks": {
+  "timing": {
+   "ok": false,
+   "wns": -608.4,
+   "sta_stage": "place_resized"
+  },
+  "cells": {
+   "ok": true,
+   "cells": 109012
+  },
+  "memory": {
+   "ok": true,
+   "max_bits": 16384,
+   "largest": 0,
+   "over": []
+  },
+  "face": {
+   "ok": true,
+   "pin_unreg": 0,
+   "pins_registered": 3433,
+   "pins_to_macro": 0,
+   "unreg_head": [],
+   "unreg_buses": [],
+   "definition": "geom_rules.pin_reg_metrics (flop reachable through BUF/INV)",
+   "strict_face_guard": {
+    "fails": 0,
+    "fail_counts": {},
+    "fails_head": {}
+   }
+  },
+  "straps": {
+   "ok": true,
+   "strap_ports": [],
+   "leaked": []
+  },
+  "reset": {
+   "ok": false,
+   "resets": [
+    "x_g_tail_0_u_t_rst_n"
+   ],
+   "landing_pins": {
+    "x_g_tail_0_u_t_rst_n": 696
+   },
+   "unregistered": [
+    "x_g_tail_0_u_t_rst_n"
+   ],
+   "max": 8
+  }
+ },
+ "advisory": true,
+ "verdict": "FAIL",
+ "fails": [
+  "timing",
+  "reset"
+ ],
+ "needs_stage_cut": true
+}

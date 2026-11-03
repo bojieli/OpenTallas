@@ -81,7 +81,7 @@ def localize(text, declarations, tree, native_roles=None):
             visited.add(net)
             r = published[net]
             c = calls.get(r.get('name'))
-            if not c or c['module'] != 'ot_dp_rrelay':
+            if not c or c['module'] not in ('ot_dp_rrelay', 'ot_dp_rrelay_nl'):
                 raise ResetConsumerError(f'{net}: not an actual registered reset relay')
             ps = c['ports']
             if any(k not in ps for k in ('clk', 'd', 'q')) or ps['clk'][0] != clock:

@@ -1,0 +1,444 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "d44v-reform",
+ "decisions": [
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+   "old": [
+    319.68,
+    345.6
+   ],
+   "old_fill": 0.1882,
+   "old_aspect": 1.08,
+   "decision": "UNCHANGED: SPLIT source event (172384 cells > 150k)"
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   "old": [
+    319.68,
+    345.5999999999999
+   ],
+   "old_fill": 0.1941,
+   "old_aspect": 1.08,
+   "decision": "UNCHANGED: SPLIT source event (175683 cells > 150k)"
+  },
+  {
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "old": [
+    233.28000000000003,
+    233.27999999999997
+   ],
+   "old_fill": 0.2909,
+   "old_aspect": 1.0,
+   "decision": "UNCHANGED: the shrink adds 1 station register on 13 u_hcollgi_Q -> u_hb_coll_Q_reduce crossings (last hop 358.6 -> 384-393 um > 360 with the old sites); fill 0.29 kept, RE-FORM = 5 clock regions"
+  },
+  {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "old": [
+    267.84,
+    250.56
+   ],
+   "old_fill": 0.332,
+   "old_aspect": 1.07,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 0
+  },
+  {
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "old": [
+    216.0,
+    138.24
+   ],
+   "old_fill": 0.383,
+   "old_aspect": 1.56,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels"
+  },
+  {
+   "module": "ot_hbm_xp_aq_tree13_fmt",
+   "old": [
+    183.6,
+    108.0
+   ],
+   "old_fill": null,
+   "old_aspect": 1.7,
+   "decision": "UNCHANGED: no AUTO-GEOM cell-area data"
+  },
+  {
+   "module": "ot_hbm_idx_score_hcol_h0",
+   "old": [
+    218.592,
+    187.488
+   ],
+   "old_fill": 0.5362,
+   "old_aspect": 1.17,
+   "decision": "UNCHANGED: SPLIT source event (180462 cells > 150k)"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+   "old": [
+    182.304,
+    201.312
+   ],
+   "old_fill": 0.3497,
+   "old_aspect": 1.1,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+   "old": [
+    182.304,
+    201.312
+   ],
+   "old_fill": 0.3495,
+   "old_aspect": 1.1,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels"
+  },
+  {
+   "module": "ot_hbm_hc_subtree32_core",
+   "old": [
+    220.32,
+    220.32
+   ],
+   "old_fill": 0.2328,
+   "old_aspect": 1.0,
+   "decision": "UNCHANGED: the shrink adds 1 station register on bus L43_o (u_hc_Q.u_cen.subtree32_3 glue, hop 371.5 -> 397.4 with the old sites); fill 0.23 kept, RE-FORM = registered face (pin_unreg 63, DIE-HBM-61/RTL)"
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bdring",
+   "old": [
+    120.96,
+    216.0
+   ],
+   "old_fill": 0.4113,
+   "old_aspect": 1.79,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels"
+  },
+  {
+   "module": "hfd_hgi_vm_calendar_f20",
+   "old": [
+    241.92,
+    116.64
+   ],
+   "old_fill": 0.1299,
+   "old_aspect": 2.07,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 0
+  },
+  {
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "old": [
+    142.56,
+    116.64
+   ],
+   "old_fill": 0.1177,
+   "old_aspect": 1.22,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 0
+  },
+  {
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "old": [
+    142.56,
+    216.0
+   ],
+   "old_fill": 0.2339,
+   "old_aspect": 1.52,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 0
+  },
+  {
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "old": [
+    177.98399999999992,
+    177.98399999999992
+   ],
+   "old_fill": 0.3204,
+   "old_aspect": 1.0,
+   "decision": "UNCHANGED: the 160.7 shrink adds 1 station register on q_hub_ne u_ctl_Q_p01.kr_data -> u_vmks_Q0 (hop 402.2 -> 406.0) and the odd-k 152.1 form put 32 origins off the 8.64 lattice + 8 core_faces; fill 0.32 kept"
+  },
+  {
+   "module": "ot_hgi_qw_dec",
+   "old": [
+    260.0,
+    260.0
+   ],
+   "old_fill": 0.2661,
+   "old_aspect": 1.0,
+   "decision": "RESHAPE",
+   "new": [
+    260.0,
+    173.6
+   ],
+   "new_fill": 0.399,
+   "new_aspect": 1.5,
+   "clock_regions": 8
+  },
+  {
+   "module": "ot_hbm_su_programme_pslice_c5",
+   "old": [
+    939.6,
+    760.32
+   ],
+   "old_fill": 0.0544,
+   "old_aspect": 1.24,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 0
+  },
+  {
+   "module": "ot_hfd_coll_q3_edge_core",
+   "old": [
+    216.0,
+    1054.08
+   ],
+   "old_fill": 0.3497,
+   "old_aspect": 4.88,
+   "decision": "UNCHANGED: SPLIT source event (157302 cells > 150k)"
+  },
+  {
+   "module": "ot_hfd_coll_q3_vm_core",
+   "old": [
+    328.32,
+    717.12
+   ],
+   "old_fill": 0.0651,
+   "old_aspect": 2.18,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels"
+  },
+  {
+   "module": "ot_hfd_coll_q3_body_core",
+   "old": [
+    578.8799999999999,
+    1054.08
+   ],
+   "old_fill": 0.0723,
+   "old_aspect": 1.82,
+   "decision": "UNCHANGED: SPLIT source event (280175 cells > 150k)"
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "old": [
+    362.88,
+    388.8
+   ],
+   "old_fill": 0.0318,
+   "old_aspect": 1.07,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 10
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "old": [
+    250.56,
+    414.72
+   ],
+   "old_fill": 0.0613,
+   "old_aspect": 1.66,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+   "old": [
+    760.32,
+    311.04
+   ],
+   "old_fill": 0.0641,
+   "old_aspect": 2.44,
+   "decision": "UNCHANGED: SPLIT source event (244361 cells > 150k)"
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bfqg",
+   "old": [
+    302.4,
+    298.08
+   ],
+   "old_fill": 0.0368,
+   "old_aspect": 1.01,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 4
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core__idpin",
+   "old": [
+    388.8,
+    345.6
+   ],
+   "old_fill": 0.2494,
+   "old_aspect": 1.12,
+   "decision": "UNCHANGED: SPLIT source event (253074 cells > 150k)"
+  },
+  {
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "old": [
+    241.92,
+    293.76
+   ],
+   "old_fill": 0.0401,
+   "old_aspect": 1.21,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 0
+  },
+  {
+   "module": "hnx_fused_lane",
+   "old": [
+    345.5999999999999,
+    518.4
+   ],
+   "old_fill": 0.3811,
+   "old_aspect": 1.5,
+   "decision": "UNCHANGED: SPLIT source event (537474 cells > 150k)"
+  },
+  {
+   "module": "hnx_rp3lp3h_n",
+   "old": [
+    630.72,
+    1209.6
+   ],
+   "old_fill": 0.127,
+   "old_aspect": 1.92,
+   "decision": "UNCHANGED: SPLIT source event (679904 cells > 150k)"
+  },
+  {
+   "module": "hnx_rp3lp3h_s",
+   "old": [
+    630.72,
+    1036.8
+   ],
+   "old_fill": 0.1452,
+   "old_aspect": 1.64,
+   "decision": "UNCHANGED: SPLIT source event (657997 cells > 150k)"
+  },
+  {
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "old": [
+    250.56,
+    267.84
+   ],
+   "old_fill": 0.2433,
+   "old_aspect": 1.07,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 0
+  },
+  {
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "old": [
+    475.19999999999993,
+    259.19999999999993
+   ],
+   "old_fill": 0.1101,
+   "old_aspect": 1.83,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "macro_pin_channel_errors_old": 0
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_vm_core",
+   "old": [
+    924.48,
+    509.76
+   ],
+   "old_fill": 0.0328,
+   "old_aspect": 1.81,
+   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels"
+  },
+  {
+   "module": "hfd_ep_static",
+   "old": [
+    427.68,
+    246.24
+   ],
+   "decision": "RESHAPE (part 2: DIE-HBM-61/MEM 55c4a61894a right-width SRAM (4x 64x306): slot kept (channel_fit 250.56x146.88 fits, but any shrink adds 1 register on vsN0 u_lk_S1->u_ep_S1 / NW_io u_ep_N0->u_lk_N0 stations, hop 366-392 > 360))",
+   "new": [
+    427.68,
+    246.24
+   ],
+   "new_aspect": 1.74,
+   "new_fill": 0.0519
+  },
+  {
+   "module": "ot_hbm_host_cp_rxs",
+   "old": [
+    434.808,
+    480.0
+   ],
+   "decision": "RESHAPE (part 2: DIE-HBM-61/MEM 55c4a61894a right-width SRAM (4x 64x141 + 2x 256x256) channel_fit 397.44x138.24 snapped up to the 17.28 centre-kept step)",
+   "new": [
+    400.248,
+    151.68
+   ],
+   "new_aspect": 2.64,
+   "new_fill": 0.1071
+  }
+ ],
+ "stations_old_sites_kept": [],
+ "clock_entries_moved": 9,
+ "lef_dropped": [
+  {
+   "type": "NW_io",
+   "inst": "u_ep_N0",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "NW_io",
+   "inst": "u_host_ep",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "q_spb0",
+   "inst": "u_ep_S0",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "vsN0",
+   "inst": "u_ep_S1",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "NE_io",
+   "inst": "u_ep_N2",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "q_spb0__physical_v1",
+   "inst": "u_ep_S0",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  }
+ ],
+ "stations_latency_up": [],
+ "stations_failed": {},
+ "hub_repack": {
+  "shrinks": [
+   {
+    "module": "ot_hgi_qw_dec",
+    "outline_um": [
+     260.0,
+     173.6
+    ],
+    "est_fill": 0.3985,
+    "macro_fit": true,
+    "accepted": true,
+    "reason": "macros fit, fill <= 0.60"
+   },
+   {
+    "module": "ot_hbm_host_cp_rxs",
+    "outline_um": [
+     400.248,
+     151.68
+    ],
+    "est_fill": 0.1071,
+    "macro_fit": true,
+    "accepted": true,
+    "reason": "macros fit, fill <= 0.60"
+   }
+  ],
+  "new_pin_files": [
+   "cores/ot_hbm_host_cp_rxs__400.248x151.68__c25b.json",
+   "cores/ot_hgi_qw_dec__260x173.6__c25c__codex_g21.json"
+  ],
+  "plan_sha256": "e853be3116458f33c7a16d59ec83539c23d34a1592a955f50f6cdd5a75d11b22"
+ }
+}
