@@ -154,3 +154,36 @@ def test_orphan_waiters():
     # 1: dead client, waiting -> both tagged pids; 2: started; 3: client alive; 4: not kit-wave; 5: other hub
     assert o == {"otrun-hub-1-11": [100, 101]}
     assert K.orphan_waiters(PS, "hub", live_pids={1, 3}) == {}
+
+
+def test_spill_marked_host_is_no_gen_host():
+    """COORD 14:2x INFRA class 2: an ot-run SPILL marker on the die lane root of a gen host -> ot-run NODIR for every
+    attempt dir there; gen_hosts drops that host (the configured gen_host stays), other dies keep it"""
+    cfg = {"work_root": "/srv/opentallas-scratch2/claude/kit-wave",
+           "dies": {"s81_head": {"gen_host": "intel2", "gen_hosts": ["epyc4", "intel2"],
+                                 "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave"},
+                    "hbm": {"gen_host": "intel2", "gen_hosts": ["intel2", "epyc4"]}}}
+    assert K.gen_hosts(cfg, "s81_head") == ["epyc4", "intel2"]
+    cfg["_spill_marked"] = {"epyc4": {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"}}
+    assert K.gen_hosts(cfg, "s81_head") == ["intel2"]
+    assert K.gen_hosts(cfg, "hbm") == ["intel2", "epyc4"]
+    cfg["_spill_marked"] = {"intel2": {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"}}
+    assert K.gen_hosts(cfg, "s81_head") == ["epyc4", "intel2"]          # the configured gen_host never drops
+
+
+def test_spill_marked_probe():
+    calls = []
+
+    class AP:
+        @staticmethod
+        def sh(cmd, timeout=0):
+            calls.append(cmd)
+            return 0, "/srv/opentallas-scratch2/claude/codex-head-wave-1131\n", ""
+    cfg = {"_hub": "intel2", "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
+           "dies": {"s81_head": {"gen_host": "intel2", "gen_hosts": ["epyc4", "intel2"],
+                                 "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave"},
+                    "hbm": {"gen_host": "intel2", "gen_hosts": ["intel2", "epyc4"]}}}
+    got = K.spill_marked(AP, cfg)
+    assert got == {"epyc4": {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"}}
+    assert len(calls) == 1 and calls[0][-2] == "epyc4" and ".ot-run-spill-copy" in calls[0][-1]
+    assert K.lane_root("/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v") == "/srv/opentallas-scratch2/claude/kit-wave"

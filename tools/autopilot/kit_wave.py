@@ -1059,7 +1059,43 @@ def gen_hosts(cfg, die):
     a fresh host fills instead of every kit pinning to the one configured gen host.  Default: [gen_host] (unchanged)."""
     d = cfg["dies"][die]
     hs = [h for h in (d.get("gen_hosts") or []) if h]
-    return hs if d.get("gen_host") in hs else [d["gen_host"]] + hs
+    hs = hs if d.get("gen_host") in hs else [d["gen_host"]] + hs
+    # KW-FIX-4 11-03 (COORD 14:2x INFRA class 2): a host whose die lane root carries an ot-run SPILL marker treats
+    # every --dir under it as a stale copy (ot-run probe NODIR -> "NOT RUN: no host qualifies"), although the wave's
+    # mkdir made the attempt dir there: such a host is no gen host for the die (the configured gen_host always stays)
+    marked = cfg.get("_spill_marked") or {}
+    lane = lane_root(opt(cfg, die, "work_root"))
+    return [h for h in hs if h == d["gen_host"] or lane not in marked.get(h, ())]
+
+
+SPILL_MARK = ".ot-run-spill-copy"                  # ot-run SPILL copy marker (ot-run v14 mark_ancestors)
+LANE_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
+
+
+def lane_root(path):
+    """ot-run lane root of a scratch path (/srv/opentallas-scratch*/claude/<lane>), else the path itself"""
+    m = LANE_RE.match(os.path.normpath(str(path or "")))
+    return m.group(1) if m else os.path.normpath(str(path or ""))
+
+
+def spill_marked(AP, cfg):
+    """{host: {lane roots carrying the ot-run SPILL marker}} for every non-hub gen host of an enabled die (one ssh
+    per host; an unreachable host is left out = unknown, never marked)"""
+    hub, roots = cfg.get("_hub") or "", {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        for h in d.get("gen_hosts") or []:
+            if h and h not in (hub, "localhost", d.get("gen_host")):
+                roots.setdefault(h, set()).add(lane_root(opt(cfg, die, "work_root")))
+    out = {}
+    for h, rs in sorted(roots.items()):
+        cmd = "; ".join(f"test -e {shlex.quote(r + '/' + SPILL_MARK)} && echo {shlex.quote(r)}" for r in sorted(rs)) + "; true"
+        rc, o, _ = AP.sh(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, cmd],
+                         timeout=60)
+        if rc == 0:
+            out[h] = {x for x in o.split() if x in rs}
+    return out
 
 
 def pick_gen_host(cfg, die, take=0):
@@ -2510,6 +2546,14 @@ def _step(AP, ap_dir):
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
+    try:
+        cfg["_spill_marked"] = spill_marked(AP, cfg)
+        for h, rs in cfg["_spill_marked"].items():
+            if rs:
+                AP.log(f"KIT-WAVE SPILL-MARKED {h}: {' '.join(sorted(rs))} (ot-run treats dirs there as stale copies; "
+                       "not a gen host for those dies)")
+    except Exception as e:                      # a diagnostic probe never stops the tick
+        AP.log(f"KIT-WAVE spill-mark probe skipped: {e}")
     restage_waiters(AP, cfg, st, notices)
     try:
         reap_orphan_waiters(AP, cfg)
