@@ -1,0 +1,211 @@
+{
+ "scope": "DIE-KV-61/hroot 11-02 inputs: FIRM sites (sites.py grid solve on die-kv-59/geom2 placement, planned max hop 333 um), nearest equal-depth tap per localized reset consumer, kvs_ctl bin q moves (binq.py, old max > 400)",
+ "E": [
+  1330,
+  330
+ ],
+ "F": [
+  1612.3,
+  281.45
+ ],
+ "relay_sites": {
+  "u_bin_i_fch_pc_Q_N_q/eq": [
+   1025.73,
+   128.47
+  ],
+  "u_u_eqp_fch_pc.q": [
+   1177.87,
+   229.23
+  ],
+  "u_bin_i_kvpc_Q_N_pc__fo/eq": [
+   1032.93,
+   128.47
+  ],
+  "u_u_eqp_kvpc_fo.q": [
+   1181.47,
+   229.23
+  ],
+  "u_bin_i_slg_Q_N_o_ctl/eq": [
+   1123.33,
+   139.33
+  ],
+  "u_u_eqp_slg.q": [
+   1226.67,
+   234.67
+  ],
+  "u_bin_i_kvpc_Q_N_o_next/eq": [
+   1356.27,
+   179.13
+  ],
+  "u_u_eqp_kvpc_next.q": [
+   1343.13,
+   254.57
+  ],
+  "u_bin_i_host_die_rst_n/eq": [
+   1645.33,
+   315.33
+  ],
+  "u_u_eqp_host_die.q": [
+   1487.67,
+   322.67
+  ],
+  "u_bin_i_host_hbm_rst_n/eq": [
+   1643.33,
+   322.0
+  ],
+  "u_u_eqp_host_hbm.q": [
+   1486.67,
+   326.0
+  ],
+  "u_bin_i_idsrc_Q_y/eq": [
+   1654.93,
+   402.6
+  ],
+  "u_u_eqp_idsrc.q": [
+   1492.47,
+   366.3
+  ],
+  "u_bin_i_kvs_ctl_o_hroot_Q/eq": [
+   1695.47,
+   453.2
+  ],
+  "u_u_eqp_kvs_ctl.q": [
+   1512.73,
+   391.6
+  ],
+  "u_bin_i_seq__g_fan_N__u_fan_kc/eq": [
+   1677.4,
+   648.47
+  ],
+  "u_u_eqp_fan_kc.q": [
+   1503.7,
+   489.23
+  ],
+  "u_bin_i_fch_pc_Q_N_q/q": [
+   1118.1,
+   112.48
+  ],
+  "u_u_fchp.q": [
+   1365.2,
+   196.97
+  ],
+  "u_u_fch.q": [
+   1612.3,
+   281.45
+  ],
+  "u_u_efault.fault": [
+   1330.0,
+   330.0
+  ],
+  "u_u_efault.cnt[0]": [
+   1330.0,
+   330.0
+  ],
+  "u_u_efault.cnt[1]": [
+   1330.0,
+   330.0
+  ],
+  "u_u_efault.cnt[2]": [
+   1330.0,
+   330.0
+  ],
+  "u_u_efault.cnt[3]": [
+   1330.0,
+   330.0
+  ],
+  "u_u_efault.cnt[4]": [
+   1330.0,
+   330.0
+  ],
+  "u_u_efault.cnt[5]": [
+   1330.0,
+   330.0
+  ],
+  "u_bin_i_kvs_ctl_o_hroot_Q/q[1044]": [
+   1640.0,
+   461.0
+  ],
+  "u_bin_i_kvs_ctl_o_hroot_Q/q[804]": [
+   1622.0,
+   460.0
+  ],
+  "u_bin_i_kvs_ctl_o_hroot_Q/q[907]": [
+   1632.0,
+   461.0
+  ],
+  "u_bin_i_kvs_ctl_o_hroot_Q/q[941]": [
+   1634.0,
+   461.0
+  ]
+ },
+ "reset_localization": {
+  "u_bin_i_fch_pc_Q_N_q": "rst_n_t2",
+  "u_bin_i_kvpc_Q_N_pc__fo": "rst_n_t2",
+  "u_bin_i_slg_Q_N_o_ctl": "rst_n_t28",
+  "u_bin_i_kvpc_Q_N_o_next": "rst_n_t36",
+  "u_bin_i_host_die_rst_n": "rst_n_t45",
+  "u_bin_i_host_hbm_rst_n": "rst_n_t45",
+  "u_bin_i_idsrc_Q_y": "rst_n_t45",
+  "u_bin_i_kvs_ctl_o_hroot_Q": "rst_n_t35",
+  "u_bin_i_seq__g_fan_N__u_fan_kc": "rst_n_t41",
+  "u_u_efault": "rst_n_t10"
+ },
+ "kvs_ctl_q_moves": {
+  "u_bin_i_kvs_ctl_o_hroot_Q/q[1044]": {
+   "old": [
+    1573.45,
+    567.57
+   ],
+   "new": [
+    1640.0,
+    461.0
+   ],
+   "old_max": 405.8,
+   "new_max": 236.5,
+   "n_from": 1,
+   "n_to": 1
+  },
+  "u_bin_i_kvs_ctl_o_hroot_Q/q[804]": {
+   "old": [
+    1547.07,
+    584.55
+   ],
+   "new": [
+    1622.0,
+    460.0
+   ],
+   "old_max": 441.9,
+   "new_max": 246.1,
+   "n_from": 1,
+   "n_to": 1
+  },
+  "u_bin_i_kvs_ctl_o_hroot_Q/q[907]": {
+   "old": [
+    1557.06,
+    578.12
+   ],
+   "new": [
+    1632.0,
+    461.0
+   ],
+   "old_max": 429.0,
+   "new_max": 240.5,
+   "n_from": 1,
+   "n_to": 1
+  },
+  "u_bin_i_kvs_ctl_o_hroot_Q/q[941]": {
+   "old": [
+    1561.49,
+    575.96
+   ],
+   "new": [
+    1634.0,
+    461.0
+   ],
+   "old_max": 422.5,
+   "new_max": 238.9,
+   "n_from": 1,
+   "n_to": 1
+  }
+ }
+}

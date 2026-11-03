@@ -9,6 +9,10 @@ import re
 class ResetConsumerError(ValueError):
     pass
 
+# Generator-emitted cells whose rst_n is a pure control reset clocked by clk (DIE-KV-61/hroot 11-02 adds the
+# ot_dp_efault landing check, a plan cell the binder emits; its rst_n clears only its age counter and sticky fault).
+GENERATED_CONTROL_RESET = ('ot_dp_st', 'ot_dp_efault')
+
 _ID = re.compile(r'^[A-Za-z_][A-Za-z_0-9]*$')
 _CALL = re.compile(r'(?m)^[ \t]*([A-Za-z_$][\w$]*)(?:[ \t]+#\([^\n]*\))?[ \t]+([A-Za-z_][\w]*)[ \t]*\(')
 
@@ -44,7 +48,8 @@ def localize(text, declarations, tree, native_roles=None):
 
     Each row is {instance,pin,old_reset,new_reset,clock_net}. Native roles are
     {"instance.pin": {"kind":"control", "clocks": {clock_pin: emitted_net}}}.
-    ot_dp_st.rst_n is the generator's known epoch-control pin, never its data/ea.
+    ot_dp_st.rst_n is the generator's known epoch-control pin, never its data/ea; ot_dp_efault.rst_n
+    (the plan landing-check cell: async clear of its age counter and sticky fault only) is the same kind.
     """
     if not declarations:
         return text, []
@@ -114,7 +119,7 @@ def localize(text, declarations, tree, native_roles=None):
             raise ResetConsumerError(f'missing consumer {key}')
         if c['ports'][pin][0] != old:
             raise ResetConsumerError(f'{key}: old reset does not match emitted connection')
-        if c['module'] == 'ot_dp_st' and pin == 'rst_n':
+        if c['module'] in GENERATED_CONTROL_RESET and pin == 'rst_n':
             clocks = {'clk': clock}
         else:
             role = roles.get(key, {})
