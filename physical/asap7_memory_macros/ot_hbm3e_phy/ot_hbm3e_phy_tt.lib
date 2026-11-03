@@ -135,7 +135,7 @@ library (ot_hbm3e_phy_tt) {
       capacitance : 50.0000;
       related_power_pin : VDD;
       related_ground_pin : VSS;
-      min_period : 1000.000;
+      min_period : 833.000;
       min_pulse_width_high : 400.000;
       min_pulse_width_low : 400.000;
       internal_power () {
