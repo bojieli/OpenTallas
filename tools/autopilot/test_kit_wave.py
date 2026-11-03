@@ -155,6 +155,41 @@ class Select(unittest.TestCase):
         self.assertEqual(skip["not in plan of record"], ["kv3_gone"])
         self.assertNotIn("kv3_hroot", [p["item"] for p in picks])          # KIT-PLACED not in take_states
 
+    def test_own_wave_unit_on_parent_is_not_a_claim(self):
+        # DIE-QC-63/KITS 11-02: overlay_owners puts a sibling class's own wave unit on the parent row; the other
+        # classes (new or released retries) must still launch, the in-flight class must not relaunch
+        own = OWN + ("qwen_kvsys\tkv3_st\ttype\tNEEDS-KIT\tKIT-WAVE-1\tkit-wave unit kw-x-1 (geom)\t0m\tKIT-WAVE in flight"
+                     "\t\tKV-PLAN\t3\t\n")
+        rows = KW.parse_owners(own)
+        plan = {t: "b" + t[-1] * 12 for t in ("kv3_st__cla", "kv3_st__clb", "kv3_st__clc")}
+        st = {"items": {
+            KW.item_key("qwen_kvsys", "event28w_c", "kv3_st__cla", plan["kv3_st__cla"]):
+                {"status": "RUNNING", "attempt": 1, "item": "kv3_st__cla", "die": "qwen_kvsys"},
+            KW.item_key("qwen_kvsys", "event28w_c", "kv3_st__clb", plan["kv3_st__clb"]):
+                {"status": "FAIL", "attempt": 1, "item": "kv3_st__clb", "die": "qwen_kvsys"}}}
+        c = cfg(pilot_gate=False, retry=["kv3_st__clb@1"])
+        picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
+        got = sorted(p["item"] for p in picks if p["item"].startswith("kv3_st"))
+        self.assertEqual(got, ["kv3_st__clb", "kv3_st__clc"])
+        self.assertNotIn("kv3_st", skip.get("live job (another lane)", []))
+        # ownership.py 'ot-run pid' form of the wave's own job (last 70 chars of the kit dir) is not a claim either
+        for lj in ("ot-run pid 3472946 _st__cla/gen/kv3_st__cla", "ot-run pid 1069 9da87/items/kv3_st__cla/attempt_4"):
+            rows = KW.parse_owners(own.replace("kit-wave unit kw-x-1 (geom)", lj))
+            picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
+            self.assertNotIn("kv3_st", skip.get("live job (another lane)", []), lj)
+        rows = KW.parse_owners(own.replace("kit-wave unit kw-x-1 (geom)", "ot-run pid 9 /srv/other/kv3_pc/run"))
+        picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
+        self.assertIn("kv3_st", skip["live job (another lane)"])
+        # a die-owned hold naming one plan class holds that class (not only the parent row)
+        picks, skip = KW.select(KW.parse_owners(own), dict(c, dies={"qwen_kvsys": dict(c["dies"]["qwen_kvsys"],
+                                hold_items={"kv3_st__clc": "held"})}), "qwen_kvsys", st, plan)
+        self.assertEqual(sorted(p["item"] for p in picks if p["item"].startswith("kv3_st")), ["kv3_st__clb"])
+        self.assertEqual(skip["die-owned hold: held"], ["kv3_st__clc"])
+        # a foreign lane's live job still blocks
+        rows = KW.parse_owners(own.replace("KIT-WAVE-1\tkit-wave unit", "KV-KITS\tot-run pid 7"))
+        picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
+        self.assertIn("kv3_st", skip["live job (another lane)"])
+
     def test_wave_runner_lane_lines_are_not_claims(self):
         rows = KW.parse_owners(OWN.replace("kv3_pc\ttype\tNEEDS-KIT\tKV-KITS-W", "kv3_pc\ttype\tNEEDS-KIT\tKIT-WAVE-2"))
         picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)

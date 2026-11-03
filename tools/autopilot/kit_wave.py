@@ -258,6 +258,26 @@ def plan_entry_block(d, item):
     return PLAN_BLOCK.get(f)
 
 
+def _own_wave_unit(r):
+    """DIE-QC-63/KITS 11-02: overlay_owners writes the wave's OWN in-flight unit into the parent OWNERS row
+    (owner KIT-WAVE-*, live_job 'kit-wave unit ...', newest record of ANY class of that parent).  That is not
+    another lane's claim: per-class records already gate in-flight classes ('wave item in flight' / 'all plan
+    classes already in the wave').  Treating it as one blocked every sibling class and every released retry of
+    the parent while one sibling ran (QC 11-02: 18 parents; GPL-0305 retries x3, slw_stm_v1__cle34a73c3 never
+    launched)."""
+    if not str(r.get("owner", "")).startswith("KIT-WAVE"):
+        return False
+    lj = str(r.get("live_job", ""))
+    if lj.startswith("kit-wave unit"):
+        return True
+    # ownership.py form 'ot-run pid N <last 70 chars of the job dir>': the wave's own place/geom job of this item or
+    # one of its classes (wave kit dirs end .../items/<class>/[attempt_n/]gen/<class>)
+    if not lj.startswith("ot-run pid"):
+        return False
+    segs = re.split(r"[/\s]+", lj.split(None, 3)[-1]) if len(lj.split(None, 3)) == 4 else []
+    return ("gen" in segs or "items" in segs) and any(x == r["item"] or x.startswith(r["item"] + "__") for x in segs)
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -315,7 +335,7 @@ def select(rows, cfg, die, state, plan_types=None):
             pass        # queued volume cancelled by a failed pilot: class now proven, or no class FAIL stands any more
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
-        elif r["live_job"] not in ("", "none"):
+        elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
                 and not str(r["owner"]).startswith("KIT-WAVE"):
@@ -334,6 +354,11 @@ def select(rows, cfg, die, state, plan_types=None):
             blocked = [c for c in cls if plan_entry_block(d, c)]
             for c in blocked:
                 skip.setdefault(plan_entry_block(d, c), []).append(c)
+            for c in cls:                    # DIE-QC-63/KITS 11-02: hold_items naming a class hold that class
+                hc = next((w for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(c, pat)), None)
+                if hc and c not in blocked:
+                    skip.setdefault("die-owned hold: " + hc, []).append(c)
+                    blocked.append(c)
             cls = [c for c in cls if c not in blocked]
             todo = [c for c in cls if not its.get(item_key(die, ev, c, blk(c)))
                     or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry]
