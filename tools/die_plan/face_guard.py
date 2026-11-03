@@ -38,6 +38,16 @@ def is_ff(master):
     return "DFF" in master.upper()
 
 
+# S81-RF1 face lockup (DIE-S81-51/CLK crossing table row 1, 11-03): a registered output may leave its flop through ONE
+# latch transparent while clk is LOW (ASAP7 DLLx*, Yosys $_DLATCH_N_), no logic, no fan-out: flop -> latch -> port.
+# The flop stays the face register (the latch only moves the port change to the falling edge, 0 cycles).
+LATCH_LOW_RE = re.compile(r"^(DLLx\d+_ASAP7_75t_[RLS]|\$_DLATCH_N_)$")
+
+
+def is_latch_low(master):
+    return bool(LATCH_LOW_RE.match(master))
+
+
 ASYNC_RESET_PINS = {"RESETN", "SETN", "R", "S"}   # ASAP7 DFFASRHQN async pins; Yosys $_DFF_P[NP][01]_ R / $_DFFSR_ S
 
 
@@ -1492,6 +1502,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 cur, chain, ff = r, [], None
                 ok = True
                 seen = set()
+                lat = None
                 while True:
                     if cur in seen:
                         fail("unregistered", b, "buffer/inverter cycle before boundary flop")
@@ -1512,6 +1523,17 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     if is_ff(m):
                         ff = (ci, path)
                         break
+                    if lat is None and is_latch_low(m) and pin == "Q" and pp.get("D", ("", []))[0] == "in" \
+                            and len(pp["D"][1]) == 1:
+                        lat = path                     # the one face lockup latch: trace on through its D
+                        chain.append(path)
+                        res.setdefault("face_lockup", []).append(b)
+                        cur = F.find(pp["D"][1][0])
+                        if cur in roots_ports:
+                            fail("feedthrough", b, f"latched from port {roots_ports[cur][0]}")
+                            ok = False
+                            break
+                        continue
                     if not is_buf(m):
                         fail("const" if m.upper().startswith("TIE") else "unregistered", b, f"driven by {m} {path}")
                         ok = False
