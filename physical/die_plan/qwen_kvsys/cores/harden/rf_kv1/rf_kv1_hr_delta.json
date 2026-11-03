@@ -1,0 +1,119 @@
+{
+ "schema": "opentallas.kv.rf_kv1_hr_delta.v1",
+ "lane": "DIE-KV-64/RF-C",
+ "plan_base": "plan_of_record/plan_c.json@d7fa5a6920b",
+ "slots": {
+  "kv3_hub_Wi.host__qkd_hr_cdc_pc": {
+   "module": "qkd_hr_cdc_pc",
+   "origin_um": [
+    25.92,
+    855.36
+   ],
+   "outline_old": [
+    319.68,
+    319.68
+   ],
+   "outline_new": [
+    181.44,
+    181.44
+   ],
+   "pins_old": "physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_cdc_pc_pins_r26q9.json",
+   "pins_new": "physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_cdc_pc_pins_rfkv1.json",
+   "pins": 2165,
+   "area_old_um2": 102195.3,
+   "area_new_um2": 32920.47,
+   "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
+   "rtl_delta": "reset release +1 edge on every reset port"
+  },
+  "kv3_hub_Wi.host__qkd_hr_core_guard": {
+   "module": "qkd_hr_core_guard",
+   "origin_um": [
+    25.92,
+    362.88
+   ],
+   "outline_old": [
+    259.2,
+    250.56
+   ],
+   "outline_new": [
+    120.96,
+    120.96
+   ],
+   "pins_old": "physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_guard_pins_r26q5.json",
+   "pins_new": "physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_core_guard_pins_rfkv1.json",
+   "pins": 1175,
+   "area_old_um2": 64945.15,
+   "area_new_um2": 14631.32,
+   "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
+   "rtl_delta": "reset release +1 edge on every reset port"
+  },
+  "kv3_hub_Wi.host__qkd_hr_core_queue": {
+   "module": "qkd_hr_core_queue",
+   "origin_um": [
+    881.28,
+    371.52
+   ],
+   "outline_old": [
+    241.92,
+    241.92
+   ],
+   "outline_new": [
+    138.24,
+    138.24
+   ],
+   "pins_old": "physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_queue_pins_r26q5.json",
+   "pins_new": "physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_core_queue_pins_rfkv1.json",
+   "pins": 1470,
+   "area_old_um2": 58525.29,
+   "area_new_um2": 19110.3,
+   "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
+   "rtl_delta": "reset release +1 edge on every reset port"
+  },
+  "kv3_hub_Wi.host__qkd_hr_cdc_hi": {
+   "module": "qkd_hr_cdc_hi",
+   "origin_um": [
+    907.2,
+    120.96
+   ],
+   "outline_old": [
+    224.64,
+    224.64
+   ],
+   "outline_new": [
+    138.24,
+    138.24
+   ],
+   "pins_old": "physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_cdc_hi_pins_r26q5.json",
+   "pins_new": "physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_cdc_hi_pins_rfkv1.json",
+   "pins": 1174,
+   "area_old_um2": 50463.13,
+   "area_new_um2": 19110.3,
+   "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
+   "rtl_delta": "reset release +1 edge on every reset port; FWFT rdata/rempty +1 read cycle"
+  },
+  "kv3_hub_Wi.host__qkd_hr_cdc_ci": {
+   "module": "qkd_hr_cdc_ci",
+   "origin_um": [
+    665.28,
+    120.96
+   ],
+   "outline_old": [
+    224.64,
+    216.0
+   ],
+   "outline_new": [
+    129.6,
+    129.6
+   ],
+   "pins_old": "physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_cdc_ci_pins_r26q5.json",
+   "pins_new": "physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_cdc_ci_pins_rfkv1.json",
+   "pins": 1103,
+   "area_old_um2": 48522.24,
+   "area_new_um2": 16796.16,
+   "origin_note": "origin kept (lower-left); the freed slot area returns to hub_Wi glue",
+   "rtl_delta": "reset release +1 edge on every reset port; FWFT rdata/rempty +1 read cycle"
+  }
+ },
+ "recipe": "physical/die_plan/qwen_kvsys/cores/harden/rf_kv1/recipes_rf_kv1.json",
+ "macro_plan_core_guard": "physical/die_plan/qwen_kvsys/cores/harden/rf_kv1/qkd_hr_core_guard_macro_plan_rfkv1.json"
+}
