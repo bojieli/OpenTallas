@@ -1,0 +1,110 @@
+{
+ "event": {
+  "id": "DIE-QC-63/RED-1102",
+  "variant": "qfd_dv_s5_red2p1_leaf",
+  "core": "u_red_u_core",
+  "core_module": "qfd_dv_s5_red2_leaf",
+  "core_params": {
+   "HARD_PINREG": 1
+  },
+  "in_stages": 2,
+  "out_stages": 3,
+  "latency_cycles": {
+   "red_we": 5,
+   "red_addr": 5,
+   "red_data": 5,
+   "fault": 2,
+   "rd_v": 0,
+   "busy_stretch_max": 5
+  },
+  "residual": "red_* fanout to x_ctl_o (x~100) and x_sc_o (x~1000) N-face stations: last branch ~485 um from one driver (> 405 plan hop, 1 repeater/branch <= 450 um)",
+  "equivalence": "results/qc_die63_red_1102/tb_red_event.sv (iverilog, as-built leaf vs variant)"
+ },
+ "types": {
+  "sle_su_c": {
+   "hard_core": {
+    "inst": "u_red_u_core",
+    "origin_um": [
+     743.04,
+     561.6
+    ]
+   },
+   "core_tap": [
+    881.304,
+    699.852
+   ],
+   "reset_tree_moved": false
+  },
+  "slw_su_c__cl92142dac": {
+   "hard_core": {
+    "inst": "u_red_u_core",
+    "origin_um": [
+     743.04,
+     561.6
+    ]
+   },
+   "core_tap": [
+    881.304,
+    699.852
+   ],
+   "reset_tree_moved": true
+  },
+  "slw_su_c__cl19bb38ef": {
+   "hard_core": {
+    "inst": "u_red_u_core",
+    "origin_um": [
+     743.04,
+     561.6
+    ]
+   },
+   "core_tap": [
+    881.304,
+    699.852
+   ],
+   "reset_tree_moved": true
+  }
+ },
+ "reset_tree_moved": {
+  "slw_su_c__cl92142dac": {
+   "old": {
+    "depth": 6,
+    "relays": 107
+   },
+   "new": {
+    "depth": 6,
+    "relays": 107
+   },
+   "stored_equal_input": false
+  },
+  "slw_su_c__cl19bb38ef": {
+   "old": {
+    "depth": 6,
+    "relays": 103
+   },
+   "new": {
+    "depth": 6,
+    "relays": 103
+   },
+   "stored_equal_input": false
+  }
+ },
+ "src_sha256": "b516dbf38a113bc9f2f3defc4c6593eb93ce60c057045a3cc66041aa203f13e2",
+ "dst_sha256": "91ece1ff06b05141e6fdb75bb5d2dcb8a8ff817f3ef8f922e3bb5e726a46e3ee",
+ "sidecar": {
+  "src_sha256": "5f5a7d3d0d6d8a2b1446ef66cb7ca6acb90deb56c0e9f519923bae645edb2c7a",
+  "dst_sha256": "0342a0b6dcd2b5fca987361137f879ab4f4a96837c4a2ebe228766dec45b1693",
+  "changed_types": [
+   "slw_su_c__cl92142dac",
+   "slw_su_c__cl19bb38ef"
+  ]
+ },
+ "asbuilt": {
+  "src_sha256": "d1732741a668c2fadccdd42f64b1ef80db4475a371a11b493a2b92c86d3e4f7c",
+  "dst_sha256": "81efdc6e2ba0000bdd24a211d02bca585e13ec4351198cfb963d094f791b7b3f",
+  "substitute_inst": {
+   "inst": "(?:.*\\.)?u_sub\\.u_red",
+   "module": "qfd_dv_s5_red2p1_leaf",
+   "reason": "DIE-QC-63/RED 11-02 OWNER-adopted RED source/parent event: relay glue (IN 2 / OUT 3) + exact rd_v + covering busy around the H1 hard core u_core (plan hard_cores u_red_u_core); sim-equivalent to the as-built leaf with red_* +5, fault +2 (results/qc_die63_red_1102)"
+  }
+ }
+}
