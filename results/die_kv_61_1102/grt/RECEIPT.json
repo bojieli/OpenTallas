@@ -1,0 +1,188 @@
+{
+ "main_pad_kv20": {
+  "TT": {
+   "exit": "0",
+   "usage_pct": 2.44,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0,
+   "wirelength_um": 282598567,
+   "congestion_iterations": 50
+  },
+  "FF": {
+   "exit": "0",
+   "usage_pct": 2.44,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0,
+   "wirelength_um": 282598567,
+   "congestion_iterations": 50
+  },
+  "die_sta": {
+   "tt_setup_ps": 399.7,
+   "ff_hold_ps": null,
+   "hold_min_ps": 0.0,
+   "contract_violations": 42,
+   "skew_max_ps": 1062.2,
+   "reasons": [
+    "42 block arrival-contract violation(s)"
+   ],
+   "verdict": "FAIL",
+   "intra_kit_contract": {
+    "launch": "t_phy_EN_4__clk_t7",
+    "capture": "t_phy_EN_4__clk",
+    "where": "phy_EN_4",
+    "damage_ps": 105.68
+   },
+   "intra_need_ps": 105.68,
+   "seam_need_ps": 87.53,
+   "count_aligned": {
+    "FF": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 3595,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    },
+    "TT": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 3595,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    }
+   }
+  },
+  "tree_sha16": "6fbf2a187a7340f1"
+ },
+ "vB_phy_region_pad": {
+  "TT": {
+   "exit": "0",
+   "usage_pct": 2.44,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0,
+   "wirelength_um": 282598567,
+   "congestion_iterations": 50
+  },
+  "FF": {
+   "exit": "0",
+   "usage_pct": 2.44,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0,
+   "wirelength_um": 282598567,
+   "congestion_iterations": 50
+  },
+  "die_sta": {
+   "tt_setup_ps": 399.7,
+   "ff_hold_ps": null,
+   "hold_min_ps": 0.0,
+   "contract_violations": 0,
+   "skew_max_ps": 1062.2,
+   "reasons": [
+    "47006 hold pairs without signed real views (OWNER 12.19)"
+   ],
+   "verdict": "BLOCKED(kits)",
+   "intra_kit_contract": {
+    "launch": "t_io_W2__clk_t1",
+    "capture": "t_io_W2__clk_t25",
+    "where": "io_W2",
+    "damage_ps": 65.43
+   },
+   "intra_need_ps": 65.43,
+   "seam_need_ps": 91.69,
+   "count_aligned": {
+    "FF": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 3595,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    },
+    "TT": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 3595,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    }
+   }
+  },
+  "tree_sha16": "e955c72d119ea493"
+ },
+ "kit": {
+  "plan_sha256_main": "5fe0aa1743b8ce234b57c81455b948f8edd406ec4395d8e9d0a3ce091bfbf3e2",
+  "main": "a8b1824c67c",
+  "partitions": 160,
+  "types": 56,
+  "abstracts": "plan abstract (56/56)",
+  "route_v": {
+   "ft_nets": 1511,
+   "ft_bits": 170209,
+   "other_ports": [
+    "rst_n"
+   ]
+  },
+  "abutted_seam_bits": 603026,
+  "abutted_pin_check": "PASS 0 bad",
+  "clock_taps": 2395,
+  "clock_cells_main": 17488,
+  "start_stages": 1528,
+  "start_flops": 10530,
+  "rtobs_54c3c7c9f_plan_42b00c722765": "kit byte-identical (clock/*, grt/*, abstracts/); only kit.json differs"
+ },
+ "vA_no_tap_pad": {
+  "TT": {
+   "exit": "0",
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0,
+   "wirelength_um": 282598567,
+   "congestion_iterations": 50
+  },
+  "FF": {
+   "exit": "0",
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0,
+   "wirelength_um": 282598567,
+   "congestion_iterations": 50
+  },
+  "die_sta": {
+   "tt_setup_ps": 399.7,
+   "ff_hold_ps": null,
+   "hold_min_ps": 0.0,
+   "contract_violations": 0,
+   "skew_max_ps": 1062.2,
+   "reasons": [
+    "47006 hold pairs without signed real views (OWNER 12.19)"
+   ],
+   "verdict": "BLOCKED(kits)",
+   "intra_need_ps": 65.43,
+   "seam_need_ps": 84.01,
+   "count_aligned": {
+    "FF": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 3595,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    },
+    "TT": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 3595,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    }
+   }
+  }
+ }
+}
