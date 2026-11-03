@@ -38,6 +38,12 @@ proc ff_slot_of {nm sfx} {
 # column pitch along the depth of an E/W band and along an N/S face (a DFFHQNx1 is 20 sites wide; the rest is room for its INV / port buffer)
 set ff_cpitch [expr {$ff_sw * 40}]
 proc ff_is_ff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
+# LATCH-FACE 11-03 (CLK table row 1): an out-face lockup latch (ASAP7 DLL / DHL) between the face flop and its port
+# is part of the face chain: the output walker passes it through its D pin (never CLK) to the flop behind it.
+proc ff_is_latch {inst} {
+  set m [[$inst getMaster] getName]
+  return [expr {[string match "DLLx*" $m] || [string match "DHLx*" $m]}]
+}
 proc ff_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "HB*" $m]}]
@@ -87,8 +93,10 @@ proc ff_chain_out {net depth} {
       set i [$it getInst]
       set next [linsert $chain end $i]
       if {[ff_is_ff $i]} { return $next }
-      if {![ff_is_buf $i]} continue
+      set lat [ff_is_latch $i]
+      if {!$lat && ![ff_is_buf $i]} continue
       foreach n [ff_sig_iterms $i in] {
+        if {$lat && [[$n getMTerm] getName] ne "D"} continue
         if {[[$n getMTerm] getSigType] ne "CLOCK"} {lappend todo [list [$n getNet] $next]}
       }
     }
@@ -115,7 +123,8 @@ proc ff_clone_for {bt chain} {
       if {[$mt getSigType] in {POWER GROUND}} continue
       set ct [$c findITerm [$mt getName]]
       if {[$mt getIoType] eq "INPUT"} {
-        if {$prev ne "" && ![ff_is_ff $i]} { $ct connect $prev } elseif {[$it getNet] ne "NULL"} { $ct connect [$it getNet] }
+        # a face latch copy takes the chain on D only; its CLK stays on the original clock net
+        if {$prev ne "" && ![ff_is_ff $i] && !([ff_is_latch $i] && [$mt getName] ne "D")} { $ct connect $prev } elseif {[$it getNet] ne "NULL"} { $ct connect [$it getNet] }
       } elseif {[$mt getIoType] eq "OUTPUT"} {
         # the signal output of the chain (a flop has QN only in this library)
         if {[$it getNet] ne "NULL"} { $ct connect $onet }

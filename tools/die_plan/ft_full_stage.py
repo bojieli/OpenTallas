@@ -114,7 +114,7 @@ def validation_bootstrap(face_text):
     Reuse the generated kit's exact traversal definitions; do not source its
     mutating face-placement hook to obtain these helpers.
     """
-    names = ('ff_slot_of', 'ff_is_ff', 'ff_is_buf', 'ff_sig_iterms',
+    names = ('ff_slot_of', 'ff_is_ff', 'ff_is_latch', 'ff_is_buf', 'ff_sig_iterms',
              'ff_from_in', 'ff_chain_out', 'ff_from_out', 'ff_in_ring',
              'ff_lands_ring', 'ff_d_driver', 'ff_landed_stations')
     start = face_text.find('set ff_blk [ord::get_db_block]')

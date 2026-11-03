@@ -1042,3 +1042,25 @@ def test_declared_timed_face_buses(tmp_path):
     (tmp_path / "timed_face.json").write_text(json.dumps(doc))
     assert face_guard.kit_timed_list(tmp_path) == ["o"]
     assert face_guard.kit_timed_list(tmp_path / "none") == []
+
+
+def test_face_lockup_latch_flop_latch_port():
+    """S81-RF1 (DIE-S81-51/CLK 11-03): flop -> ONE transparent-low latch (DLLx1 / $_DLATCH_N_) -> port is a registered
+    face; a second latch, a high-transparent latch or a latch with fan-out is not."""
+    lat = NET_OK.replace("INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));",
+                         "DLLx1_ASAP7_75t_R \\u_l.o_l[0]$_DLATCH_N_  (.CLK(clk), .D(_0_), .Q(o[0]));")
+    pins = [dict(bus="a", bit=0), dict(bus="a", bit=1), dict(bus="o", bit=0), dict(bus="o", bit=1)]
+    r = face_guard.guard(lat, pins=pins)
+    assert r["verdict"] == "PASS" and r["ok"] == 4 and r["face_lockup"] == ["o[0]"], r
+    yl = lat.replace("DLLx1_ASAP7_75t_R \\u_l.o_l[0]$_DLATCH_N_  (.CLK(clk), .D(_0_), .Q(o[0]));",
+                     "\\$_DLATCH_N_ \\u_l.o_l[0]  (.E(clk), .D(_0_), .Q(o[0]));")
+    assert face_guard.guard(yl, pins=pins)["verdict"] == "PASS"
+    hi = lat.replace("DLLx1_ASAP7_75t_R", "DHLx1_ASAP7_75t_R")
+    assert "unregistered" in face_guard.guard(hi, pins=pins)["fail_counts"]
+    two = lat.replace(".D(_0_), .Q(o[0]));", ".D(_9_), .Q(o[0]));\n  DLLx1_ASAP7_75t_R \\u_l2  (.CLK(clk), .D(_0_), .Q(_9_));") \
+        .replace("wire _0_;", "wire _0_; wire _9_;")
+    assert "unregistered" in face_guard.guard(two, pins=pins)["fail_counts"]
+    fan = lat.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));",
+                      "INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));\n  INVx1_ASAP7_75t_R _4_ (.A(o[0]), .Y(_8_));") \
+        .replace("wire _0_;", "wire _0_; wire _8_;")
+    assert face_guard.guard(fan, pins=pins)["verdict"] != "PASS"

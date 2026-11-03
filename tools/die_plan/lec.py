@@ -97,8 +97,10 @@ UNSUPPORTED_CELLS = re.compile(r"^(ICG|DHL|DLL|SDF|SDFH|SDFL)")   # clock gates,
 # latch-based integrated clock gates modelled by the clock-gate -> enable abstraction (icg_to_enable); every ASAP7
 # ICG drive strength has the same statetable: IQ = ENA | SE while CLK is low, held while high; GCLK = CLK & IQ
 ICG_CELLS = re.compile(r"^ICGx(1|2|2p67DC|3|4|4DC|5|5p33DC|6p67DC|8DC)_ASAP7_75t_(R|L|SL)$")
-# transparent-low latches (lockup latches, latch : enable "!CLK"): modelled by latch_to_wire (OT_LEC_LATCH=0 refuses)
-LOCKUP_CELLS = re.compile(r"^DLLx(1|2|3)_ASAP7_75t_(R|L|SL)$")
+# transparent-low (DLL, latch : enable "!CLK") and transparent-high (DHL, enable "CLK") latches: lockup / face
+# latches, modelled phase-aware by latch_to_wire + latch_phase_diff (OT_LEC_LATCH=0 refuses)
+LOCKUP_CELLS = re.compile(r"^D[LH]Lx(1|2|3)_ASAP7_75t_(R|L|SL)$")
+RTL_LATCH = re.compile(r"\balways_latch\b|\bD[LH]Lx[123]_ASAP7_75t_")   # gold latches: latch mode on both sides
 TYPE_SFX = re.compile(r"\$_[A-Z]+(?:_[A-Z0-9]+)?_$")
 IDX = re.compile(r"^(.*?)((?:\[\d+\])+)$")
 GENBLK = re.compile(r"(?<![^.])genblk\d+\.")
@@ -769,16 +771,30 @@ def icg_to_enable(src, dst, side):
 
 
 def latch_to_wire(src, dst, side):
-    """Lockup-latch abstraction (JSON src -> dst, both sides): a transparent-low latch ($_DLATCH_N_ with E = a
-    primary-input clock, or $_DLATCH_P_ with E = NOT(that clock): the ASAP7 DLL liberty model) whose data cone
-    holds only primary inputs, constants and rising-edge flops on primary-input clocks, and whose Q reaches (through
-    combinational logic only) nothing but synchronous pins (D / E / sync R) of rising-edge flops on primary-input
-    clocks, is a wire in the cycle model: its sources change only at rising edges, it is transparent for the low
-    phase before the next rising edge, and its readers sample only at that edge -> they see D of the same cycle.
-    The high-phase hold value is never sampled (hold / phase timing is STA's).  Refused (Unproven), never
-    approximated: transparent-high latches, an enable that is not a (buffered / inverted) primary input, a data
-    source that is a latch / falling-edge flop / clock net / unknown cell / LEC stub, a Q load that is a clock or
-    async pin, a falling-edge flop, a latch, a module output, a black-box compare pin, memory or unknown cell."""
+    """Latch abstraction (JSON src -> dst, both sides), phase-aware (LATCH-FACE, COORD 11-03 08:25).
+
+    A latch on a primary-input clock (that also clocks a flop) is transparent-low ($_DLATCH_N_ on clk, or
+    $_DLATCH_P_ on NOT(clk): the ASAP7 DLL liberty model) or transparent-high ($_DLATCH_P_ on clk / $_DLATCH_N_ on
+    NOT(clk): DHL, or a DLL on an inverted clock).  When its data cone holds only primary inputs, constants and
+    rising-edge flops on primary-input clocks (a transparent-low latch also other transparent-low latches: a chain),
+    and its Q reaches (through combinational logic only) nothing but synchronous pins (D / E / sync R) of
+    rising-edge flops on primary-input clocks or an output port (the wrapper's lec_po_ capture flop), it is a wire
+    in the cycle model: its sources change only at rising edges and every rising-edge reader sees D of the same
+    cycle (the hold value is never sampled at that edge: hold / phase timing is STA's).
+
+    Phase at the ports (the out-face lockup latch, CLK table row 1): a port bit is 'low' when every path from a
+    source reaches it through a transparent-low latch (the port changes at the falling edge and holds in the high
+    phase), 'edge' when no path does (it changes at the rising edge; a transparent-high latch is transparent while
+    its rising-edge sources change, so it keeps the class), 'const' without sources; a port that mixes 'low' and
+    'edge' paths has a high-phase value no cycle model holds -> Unproven.  Within one class the high-phase value
+    is a function of the same cycle-model values ('low': the previous cycle's port value, 'edge': this cycle's),
+    so cycle equivalence plus equal port classes (check(): latch_phase) is phase equivalence: a dropped, added or
+    wrong-phase face latch is NOT EQUIVALENT.  st['port_phase'] = {lec_po cell: class} for every non-'edge' port.
+
+    Refused (Unproven), never approximated: an enable that is not a (buffered / inverted) primary-input flop clock,
+    a transparent-high latch in a latch chain, a data source that is a falling-edge flop / clock net / unknown cell
+    / LEC stub, a Q load that is a clock or async pin, a falling-edge flop, a black-box compare pin, memory or
+    unknown cell, a latch loop."""
     d = json.loads(Path(src).read_text())
     tops = [k for k, v in d["modules"].items() if str(v.get("attributes", {}).get("top", "0")).strip("0") != ""]
     if len(tops) != 1:
@@ -804,9 +820,6 @@ def latch_to_wire(src, dst, side):
                         loads[b].append((cn, p, i))
     lats = {cn: c for cn, c in cells.items() if LATCH_TYPE.match(c["type"])}
     st = dict(latches=len(lats), to_wire=0, per_latch={})
-    if not lats:
-        Path(dst).write_text(json.dumps(d))
-        return st
 
     def one(cn, p):
         b = cells[cn]["connections"].get(p, ["x"])
@@ -842,6 +855,11 @@ def latch_to_wire(src, dst, side):
         return b, neg
 
     stub = re.compile(r"(^|\.)lec_(bbo|bbi|po)_")
+    po_re = re.compile(r"(^|\.)lec_po_")
+
+    def po_ff(cn):                        # the wrapper's output-port capture flop (lec_po_<port>[i])
+        return bool(FF_TYPE.match(cells[cn]["type"])) and \
+            bool(po_re.search(str(name_of.get(cells[cn]["connections"].get("Q", [None])[0], ""))))
 
     def rise_ff(cn):
         """a rising-edge flop on a primary-input clock (no LEC stub / wrapper flop) -> its FF_TYPE match, else None."""
@@ -854,6 +872,7 @@ def latch_to_wire(src, dst, side):
             return None
         return f
 
+    comb = re.compile(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$")
     clock_bits = set()
     for cn, c in cells.items():
         if FF_TYPE.match(c["type"]):
@@ -862,6 +881,14 @@ def latch_to_wire(src, dst, side):
     for cn in lats:
         clock_bits.add(through(one(cn, "E"), True)[0])
 
+    phase = {}                           # latch -> "low" (transparent while its clock is 0) / "high"
+    for cn in sorted(lats):
+        t = cells[cn]["type"]
+        e, neg = through(one(cn, "E"), True)
+        if t not in ("$_DLATCH_N_", "$_DLATCH_P_") or e not in pis or e not in ff_clocks:
+            raise Unproven(f"latch {side}: {t} {cn} is not a transparent-low / transparent-high latch on a "
+                           f"primary-input clock")
+        phase[cn] = "low" if (t == "$_DLATCH_P_") == neg else "high"
     # The RTL frontend writes always_latch if (!clk) q = d as D = $_MUX_(S = clk, A = d, B = x / q): a latch only
     # reads D while transparent, so the branch S selects in the transparent phase IS the latch data (S81 R21b
     # u_view c_lk, LEC-FPREG-4 10-27).  Only a $_MUX_ driving D directly whose select is this latch's own enable
@@ -872,20 +899,22 @@ def latch_to_wire(src, dst, side):
         if isinstance(d_in, int) and d_in in drv and cells[drv[d_in][0]]["type"] == "$_MUX_":
             mc = cells[drv[d_in][0]]["connections"]
             sb, sneg = through(mc["S"][0], True)
-            if sb == through(one(cn, "E"), True)[0]:   # transparent while E's clock = 0: S = sneg -> B (1) / A (0)
-                dsel[cn] = mc["B" if sneg else "A"][0]
+            if sb == through(one(cn, "E"), True)[0]:
+                # transparent phase: clock = 0 (low) / 1 (high) -> S = sneg / NOT sneg -> B (1) / A (0)
+                s_val = sneg if phase[cn] == "low" else not sneg
+                dsel[cn] = mc["B" if s_val else "A"][0]
     # Latch chains (S81 R21b: io_clk go lockup latch -> core logic -> ck seam lockup latch, LEC-FPREG-4 10-27): every
-    # latch here is transparent-low on a primary-input clock (each is checked in its own iteration, and any failure
-    # refuses the whole netlist), so in the low phase of one cycle the data of a rising-edge flop passes the whole
-    # chain and the rising-edge readers sample it: the chain is a wire like one latch.  The data cone therefore
-    # passes through another latch to its (phase-resolved) D, the Q fan-out through another latch's D to its Q; a
-    # chain that returns to the latch itself is a combinational loop after the abstraction -> Unproven.
+    # latch in a chain is transparent-low on a primary-input clock, so in the low phase of one cycle the data of a
+    # rising-edge flop passes the whole chain and the rising-edge readers sample it: the chain is a wire like one
+    # latch.  A transparent-high latch next to another latch (high -> low is a master-slave flop, low -> high a
+    # one-cycle delay) is refused.  The data cone therefore passes through another latch to its (phase-resolved) D,
+    # the Q fan-out through another latch's D to its Q; a chain that returns to the latch itself is a
+    # combinational loop after the abstraction -> Unproven.
+    po_sinks = collections.Counter()
     for cn in sorted(lats):
         c = cells[cn]
         t = c["type"]
         e, neg = through(one(cn, "E"), True)
-        if t not in ("$_DLATCH_N_", "$_DLATCH_P_") or e not in pis or e not in ff_clocks or (t == "$_DLATCH_P_") != neg:
-            raise Unproven(f"latch {side}: {t} {cn} is not a transparent-low latch on a primary-input clock")
         d_in = dsel.get(cn, one(cn, "D"))
         seen, todo, srcs = set(), [d_in], 0
         while todo:                        # data cone
@@ -902,6 +931,9 @@ def latch_to_wire(src, dst, side):
             if dn in lats:                 # chained latch: its own transparent-phase data
                 if dn == cn:
                     raise Unproven(f"latch {side}: {cn} data reaches its own Q (latch loop)")
+                if phase[cn] != "low" or phase[dn] != "low":
+                    raise Unproven(f"latch {side}: {cn} ({phase[cn]}) data reads latch {dn} ({phase[dn]}): only "
+                                   f"transparent-low latch chains are modelled")
                 todo.append(dsel.get(dn, one(dn, "D")))
                 continue
             if FF_TYPE.match(cells[dn]["type"]):
@@ -910,13 +942,12 @@ def latch_to_wire(src, dst, side):
                                    f"on a primary-input clock)")
                 srcs += 1
                 continue
-            if not re.match(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$",
-                            cells[dn]["type"]):
+            if not comb.match(cells[dn]["type"]):
                 raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn}: not modelled")
             todo += [x for p, bits in cells[dn]["connections"].items()
                      if cells[dn].get("port_directions", {}).get(p) != "output" for x in bits]
         q = one(cn, "Q")
-        seen2, todo, sinks = set(), [q], 0
+        seen2, todo, sinks, ports = set(), [q], 0, 0
         while todo:                        # Q fan-out
             b = todo.pop()
             if not isinstance(b, int) or b in seen2:
@@ -929,26 +960,81 @@ def latch_to_wire(src, dst, side):
                 if ln in lats and lp == "D":   # chained latch: continue from its Q
                     if ln == cn:
                         raise Unproven(f"latch {side}: {cn} Q reaches its own D (latch loop)")
+                    if phase[cn] != "low" or phase[ln] != "low":
+                        raise Unproven(f"latch {side}: {cn} ({phase[cn]}) Q reaches latch {ln} ({phase[ln]}): only "
+                                       f"transparent-low latch chains are modelled")
                     todo.append(one(ln, "Q"))
                     continue
                 f = FF_TYPE.match(lt)
+                if f and lp == "D" and po_ff(ln):  # an output port (the wrapper's capture flop): phase class below
+                    ports += 1
+                    po_sinks[ln] += 1
+                    continue
                 if f:
                     ok = rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))
                     if not ok:
                         raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp} (only D / E / sync R of "
-                                       f"rising-edge flops on primary-input clocks are modelled)")
+                                       f"rising-edge flops on primary-input clocks and output ports are modelled)")
                     sinks += 1
                     continue
-                if not re.match(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$",
-                                lt):
+                if not comb.match(lt):
                     raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp}: not modelled")
                 todo += [x for p, bits in cells[ln]["connections"].items()
                          if cells[ln].get("port_directions", {}).get(p) == "output" for x in bits]
         if q in clock_bits:
             raise Unproven(f"latch {side}: {cn} Q is a clock net")
-        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), data_sources=srcs, sinks=sinks,
-                                   phase_mux=cn in dsel)
+        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), phase=phase[cn], data_sources=srcs,
+                                   sinks=sinks, ports=ports, phase_mux=cn in dsel)
     st["phase_mux"] = len(dsel)
+    st["phases"] = dict(collections.Counter(phase.values()))
+
+    # port phase classes: every lec_po capture flop, memoised over the combinational cone (iterative post-order)
+    memo = {}
+
+    def tags(b0):
+        stack = [(b0, False)]
+        while stack:
+            b, done = stack.pop()
+            if not isinstance(b, int) or b in memo and not done:
+                continue
+            if b in pis or b not in drv:
+                memo[b] = frozenset({"E"}) if b in pis else frozenset()
+                continue
+            dn = drv[b][0]
+            ct = cells[dn]["type"]
+            if dn in lats and phase[dn] == "low":
+                memo[b] = frozenset({"L"})
+                continue
+            if dn in lats:                 # transparent-high: transparent while its sources change -> its data
+                ins = [dsel.get(dn, one(dn, "D"))]
+            elif comb.match(ct):
+                ins = [x for p, bits in cells[dn]["connections"].items()
+                       if cells[dn].get("port_directions", {}).get(p) != "output" for x in bits]
+            else:                          # flop / stub / memory / unknown cell: changes at the rising edge
+                memo[b] = frozenset({"E"})
+                continue
+            ins = [x for x in ins if isinstance(x, int)]
+            if done:
+                memo[b] = frozenset().union(*(memo.get(x, frozenset()) for x in ins))
+                continue
+            memo[b] = frozenset()          # cycle guard (a combinational loop adds nothing)
+            stack.append((b, True))
+            stack += [(x, False) for x in ins if x not in memo]
+        return memo[b0]
+
+    pp, cnt = {}, collections.Counter()
+    for cn in sorted(cells):
+        if not po_ff(cn):
+            continue
+        tg = tags(one(cn, "D"))
+        cls = "mixed" if tg == {"L", "E"} else "low" if tg == {"L"} else "edge" if tg == {"E"} else "const"
+        if cls == "mixed":
+            raise Unproven(f"latch {side}: output {cn} mixes transparent-low latch and rising-edge paths (its "
+                           f"high-phase value is in no cycle model)")
+        cnt[cls] += 1
+        if cls != "edge":
+            pp[cn] = cls
+    st["port_phase"], st["port_phase_counts"] = pp, dict(cnt)
     for cn in sorted(lats):               # all checked first: then each latch -> $_BUF_ D -> Q
         c = cells[cn]
         cells[cn] = {"hide_name": c.get("hide_name", 1), "type": "$_BUF_", "parameters": {}, "attributes": {},
@@ -957,6 +1043,18 @@ def latch_to_wire(src, dst, side):
         st["to_wire"] += 1
     Path(dst).write_text(json.dumps(d))
     return st
+
+
+def latch_phase_diff(lk):
+    """gold / gate latch_to_wire records -> [(lec_po cell, gold class, gate class)] for every output bit whose phase
+    class differs ('const' matches any class: a constant port has one value in both phases)."""
+    g, t = (lk.get(s, {}).get("port_phase", {}) for s in ("gold", "gate"))
+    out = []
+    for k in sorted(set(g) | set(t)):
+        a, b = g.get(k, "edge"), t.get(k, "edge")
+        if a != b and "const" not in (a, b):
+            out.append((k, a, b))
+    return out
 
 
 IMPLICIT_NET = re.compile(r"^(\S+?):(\d+):\d+: warning: implicit net '([^']+)' created \[-Wimplicit-net\]")
@@ -6401,7 +6499,10 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         for f in env["VERILOG_FILES"].split():
             srcmods |= set(src_modules(kpath(kit, f)))
             try:
-                rtl_cells |= set(re.findall(r"\bICG\w+_ASAP7_75t_[RLS]+\b", Path(kpath(kit, f)).read_text(errors="replace")))
+                txt = Path(kpath(kit, f)).read_text(errors="replace")
+                rtl_cells |= set(re.findall(r"\bICG\w+_ASAP7_75t_[RLS]+\b", txt))
+                if latch_ok and RTL_LATCH.search(txt):   # a latch only in the gold (dropped by the netlist) is
+                    env["_LEC_LATCH"] = "1"              # still modelled, so its port phase is compared
             except OSError:
                 pass
         icg = sorted({c for c in types if ICG_CELLS.match(c)} | (rtl_cells - srcmods))
@@ -6467,6 +6568,11 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                 fg.result()
                 ft.result()
         rec["t_aig_s"] = round(time.time() - t1, 1)
+        # latch phase at the output ports (LATCH-FACE 11-03): cycle equivalence + equal port phase classes
+        phase_diff = latch_phase_diff(rec["lockup_latches"]) if rec.get("lockup_latches") else []
+        if rec.get("lockup_latches"):
+            rec["latch_phase"] = dict(n_differ=len(phase_diff),
+                                      differ=[dict(point=k, gold=a, gate=b) for k, a, b in phase_diff[:500]])
         # 3. key points, register correspondence, miter
         t1 = time.time()
         L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
@@ -6589,10 +6695,14 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                              + ", ".join(kmiss[:6]) + ")")
             if hard:
                 rec["reason"] += f"; also {len(hard)} compare points differ"
-        elif hard:
+        elif hard or phase_diff:
             rec["verdict"] = "NOT EQUIVALENT"
-            rec["reason"] = f"{len(hard)} compare points differ (first: " + \
-                ", ".join(e["point"] for e in hard[:8]) + ")"
+            rec["reason"] = (f"{len(hard)} compare points differ (first: " + ", ".join(e["point"] for e in hard[:8])
+                             + ")") if hard else ""
+            if phase_diff:
+                rec["reason"] += ("; " if hard else "") + (
+                    f"{len(phase_diff)} output bits differ in latch phase (first: " +
+                    ", ".join(f"{k} gold {a} / gate {b}" for k, a, b in phase_diff[:6]) + ")")
             rm = sorted({k for e in hard for k in e["cone_unmatched_keys"] if k.startswith("ff:")})
             if rm:
                 rec["reason"] += "; RTL registers removed by synthesis although not constant: " + ", ".join(rm[:8])
