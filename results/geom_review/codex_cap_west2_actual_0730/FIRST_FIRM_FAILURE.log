@@ -1,0 +1,105 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ORD-0030] Using 1 thread(s).
+[ERROR ODB-0359] Attempt to change the origin of FIRM instance _27646_
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  ODB-0359
+Signal 6 received
+Stack trace:
+ 0# 0x0000000000F1C787 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# pthread_kill in /lib/x86_64-linux-gnu/libc.so.6
+ 3# raise in /lib/x86_64-linux-gnu/libc.so.6
+ 4# abort in /lib/x86_64-linux-gnu/libc.so.6
+ 5# 0x00000000000A2B9E in /lib/x86_64-linux-gnu/libstdc++.so.6
+ 6# 0x00000000000AE20C in /lib/x86_64-linux-gnu/libstdc++.so.6
+ 7# 0x00000000000AE277 in /lib/x86_64-linux-gnu/libstdc++.so.6
+ 8# 0x00000000000AE4D8 in /lib/x86_64-linux-gnu/libstdc++.so.6
+ 9# 0x0000000000B06A58 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+10# odb::dbInst::setOrigin(int, int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+11# odb::dbInst::setLocation(int, int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+12# 0x0000000002900A15 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+13# 0x0000000000128018 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+14# _PyObject_MakeTpCall in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+15# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+16# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+17# 0x00000000000E2368 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+18# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+19# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+20# PyEval_EvalCode in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+21# 0x00000000001BDA9D in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+22# 0x00000000001287C3 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+23# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+24# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+25# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+26# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+27# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+28# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+29# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+30# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+31# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+32# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+33# 0x00000000000E1404 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+34# _PyObject_CallMethodIdObjArgs in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+35# PyImport_ImportModuleLevelObject in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+36# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+37# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+38# PyEval_EvalCode in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+39# 0x000000000020C5FD in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+40# _PyRun_SimpleFileObject in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+41# _PyRun_AnyFileObject in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+42# Py_RunMain in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+43# main in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+44# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+45# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+46# _start in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+Signal 11 received
+Stack trace:
+ 0# 0x0000000000F1C787 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# abort in /lib/x86_64-linux-gnu/libc.so.6
+ 3# 0x00000000000A2B9E in /lib/x86_64-linux-gnu/libstdc++.so.6
+ 4# 0x00000000000AE20C in /lib/x86_64-linux-gnu/libstdc++.so.6
+ 5# 0x00000000000AE277 in /lib/x86_64-linux-gnu/libstdc++.so.6
+ 6# 0x00000000000AE4D8 in /lib/x86_64-linux-gnu/libstdc++.so.6
+ 7# 0x0000000000B06A58 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 8# odb::dbInst::setOrigin(int, int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 9# odb::dbInst::setLocation(int, int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+10# 0x0000000002900A15 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+11# 0x0000000000128018 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+12# _PyObject_MakeTpCall in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+13# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+14# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+15# 0x00000000000E2368 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+16# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+17# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+18# PyEval_EvalCode in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+19# 0x00000000001BDA9D in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+20# 0x00000000001287C3 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+21# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+22# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+23# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+24# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+25# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+26# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+27# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+28# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+29# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+30# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+31# 0x00000000000E1404 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+32# _PyObject_CallMethodIdObjArgs in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+33# PyImport_ImportModuleLevelObject in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+34# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+35# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+36# PyEval_EvalCode in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+37# 0x000000000020C5FD in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+38# _PyRun_SimpleFileObject in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+39# _PyRun_AnyFileObject in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+40# Py_RunMain in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+41# main in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+42# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+43# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+44# _start in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad

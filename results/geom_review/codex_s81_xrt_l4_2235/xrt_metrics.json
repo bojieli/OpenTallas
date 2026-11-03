@@ -1,0 +1,43 @@
+{
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 683.29,
+  "r2r_captures_gt405": 1152,
+  "r2r_captures": 19224,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u.egd_c\\[22\\]$_DFF_P_ -> u.g_d\\[22\\]$_DFF_P_",
+  "outline": [
+    0.0,
+    0.0,
+    311.04,
+    395.28
+  ],
+  "macros": 0,
+  "clock": {
+    "taps": 1,
+    "grid_taps": 1,
+    "tap_mode": "tree",
+    "clock_sinks": 23665,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": 23665,
+    "grid_tap_sinks_max": 23665,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk": 23665
+    },
+    "tap_set": [
+      [
+        "clk",
+        "E"
+      ]
+    ],
+    "clock_cells": 1214,
+    "clock_depth_max": 10,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": 24.0,
+    "leaf_sinks_max": 24,
+    "clock_net_hpwl_max": 155.86,
+    "clock_net_hpwl_p90": 45.42,
+    "stage": "cts"
+  }
+}

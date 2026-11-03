@@ -1,0 +1,14 @@
+{
+ "module": "ot_s81sl_xrt1",
+ "plan_type": "dsdv_slice_lepw_mus_C__t1",
+ "boundary_role": {
+  "clk": "clk",
+  "rst_n": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ }
+}

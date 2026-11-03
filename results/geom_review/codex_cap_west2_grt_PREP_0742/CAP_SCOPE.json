@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.cap_west2_grt_scope.v1",
+  "enabled": false,
+  "source_tools": "9db068b5458b7a20a548ab165aabc8dc6c077a30",
+  "input_original_odb_sha256": "b317b6613ccf8d6d72cadd2937bf1fd84d4c42f5f255405d6c3586e5969c4e86",
+  "input_original_final_sdc_sha256": "b66e1a86ee40784db5f7a54d620bb3bfe45ca6a8b798c1db6a2fcb0658cd5337",
+  "reviewed_geometry_output": "e6b6b31ab2101c2dbd010ef60b2e8c98ceeacae75d9c52727e50b2f16aa0e845",
+  "scope": "exact2 DATApose moves inside normalGRT journal, exact3 PGonlyspacerdeletions, exact6 DATA nets; no resizer/masters/RTL/clock/reset/cycles/constraints change",
+  "route_api": "standard prd_route_keep explicit immutableoldreference, end_incremental, restore; no invented dirty API",
+  "stage": "GRT only; no DRT/fill/finish",
+  "RC": "fresh GRT estimate only after actual6net reroute; no read_spef/oldRC rearm",
+  "PG": "qualifiede19/8c9 initialPG0+wholebody+creates0/swaps0+independentsavedPG0",
+  "limits": "proposed16GB4T normalot-run throughsshIntel2, subsequent8GB1T independent savedreader within sameadmission",
+  "source_only_review_pending": true,
+  "antenna_policy": "Original normal resolved skip=false and iterations>0 asserted beforebegin/analysis; reviewed finite39 helper inventories every loaded dbLib/master and refuses unknown/CORE ANTENNACELL; full inventory saved+before-save equality",
+  "stage_claim": "PRIVATE geometry/routing diagnostic, no standardstage/signoffclaim; inherited PRE/POSTresizers excluded explicitly",
+  "antenna_inventory_helper_sha256": "09e06585d7e526c51316dd66f54b9754f816d16d94fc554dfd9dcb12508112e2"
+}

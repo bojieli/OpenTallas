@@ -1,0 +1,63 @@
+{
+  "kind": "diagnostic_only",
+  "policy": {
+    "period_ps": 833,
+    "setup_unc_ps": 0,
+    "hold_unc_ps": 25
+  },
+  "ODB_sha256": "08123e5d36947e2bf80e7b941fc8cb0a3ae763a5250bcdbbc71639c729ec7828",
+  "actual_SDC_sha256": "363cedec85ad06c3208485cdfce066ddc1e167726b344e6e93f9280ff823e79e",
+  "actual_uncertainty_lines": [
+    "set_clock_uncertainty 0.0000 -setup [all_clocks]",
+    "set_clock_uncertainty 25.0000 -hold [all_clocks]",
+    "set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup 0.0000",
+    "set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup 0.0000",
+    "set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold 12.5000",
+    "set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold 12.5000"
+  ],
+  "corners": {
+    "TT": {
+      "exit": 1,
+      "queries_complete": false,
+      "loaded_clock_gate": {
+        "corner": "TT",
+        "pinreg_n": 768,
+        "pinreg_mean_ps": 326.23,
+        "pinreg_min_ps": 288.54,
+        "pinreg_max_ps": 407.46,
+        "bound_ps": 316.5,
+        "dev_ps": 9.73,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": -11.47,
+        "hold_wns_est_ps": 25.23,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "PASS",
+        "band_policy": "info",
+        "band_verdict": "PASS"
+      }
+    },
+    "FF": {
+      "exit": 1,
+      "queries_complete": false,
+      "loaded_clock_gate": {
+        "corner": "FF",
+        "pinreg_n": 768,
+        "pinreg_mean_ps": 262.09,
+        "pinreg_min_ps": 227.73,
+        "pinreg_max_ps": 336.12,
+        "bound_ps": 253.6,
+        "dev_ps": 8.49,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 167.19,
+        "hold_wns_est_ps": 10.0,
+        "rc": "/work/setRC_rcx.tcl",
+        "parasitics": "global_routing",
+        "verdict": "PASS",
+        "band_policy": "info",
+        "band_verdict": "PASS"
+      }
+    }
+  },
+  "scope": "fresh nativeGRT estimates, noDUTedit/no routedRC/SIGNED/adoption/count credit"
+}

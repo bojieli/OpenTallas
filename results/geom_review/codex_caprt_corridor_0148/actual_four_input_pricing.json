@@ -1,0 +1,379 @@
+{
+  "schema": "opentallas.caprt_actual_four_input_pricing.v1",
+  "source": "immutable actualA routedDB/SPEF/kitSDC/current051 exactcorner initialization",
+  "units": {
+    "tt": "oth-ubuntu-3237246-1793614854",
+    "ff": "oth-ubuntu-3313423-1793615054"
+  },
+  "first_tt_postquery_metadata_failure_preserved": true,
+  "physical_changes": 0,
+  "input_hashes_unchanged": true,
+  "arrivals": {
+    "tt": {
+      "A1": {
+        "max": {
+          "slack_ps": 62.617577,
+          "launch": "la_gs[2]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/A1": 622.225586,
+            "_27646_/Y": 703.074341,
+            "wire17963/A": 725.660095,
+            "wire17963/Y": 778.250427,
+            "lweco_219418/A": 839.379089,
+            "lweco_219418/Y": 887.672852
+          }
+        },
+        "min": {
+          "slack_ps": 591.381287,
+          "launch": "la_gs[2]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/A1": 574.671021,
+            "_27646_/Y": 649.097473,
+            "wire17963/A": 670.845886,
+            "wire17963/Y": 717.061157,
+            "lweco_219418/A": 776.28949,
+            "lweco_219418/Y": 816.838867
+          }
+        }
+      },
+      "A2": {
+        "max": {
+          "slack_ps": 36.70808,
+          "launch": "g_st[7].u_g/la_sl[1]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/A2": 684.252258,
+            "_27646_/Y": 728.983887,
+            "wire17963/A": 751.569641,
+            "wire17963/Y": 804.159973,
+            "lweco_219418/A": 865.288635,
+            "lweco_219418/Y": 913.582397
+          }
+        },
+        "min": {
+          "slack_ps": 467.487946,
+          "launch": "g_st[7].u_g/key_g[4][19]$_DFFE_PP_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/A2": 484.345123,
+            "_27646_/Y": 525.204102,
+            "wire17963/A": 546.952515,
+            "wire17963/Y": 593.167725,
+            "lweco_219418/A": 652.396057,
+            "lweco_219418/Y": 692.945496
+          }
+        }
+      },
+      "B": {
+        "max": {
+          "slack_ps": 36.948666,
+          "launch": "g_st[3].u_g/la_sl[1]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/B": 673.668152,
+            "_27646_/Y": 728.743225,
+            "wire17963/A": 751.328979,
+            "wire17963/Y": 803.919312,
+            "lweco_219418/A": 865.047974,
+            "lweco_219418/Y": 913.341736
+          }
+        },
+        "min": {
+          "slack_ps": 463.997803,
+          "launch": "g_st[3].u_g/key_g[4][19]$_DFFE_PP_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/B": 482.945282,
+            "_27646_/Y": 521.713928,
+            "wire17963/A": 543.462341,
+            "wire17963/Y": 589.677612,
+            "lweco_219418/A": 648.905945,
+            "lweco_219418/Y": 689.455322
+          }
+        }
+      },
+      "C": {
+        "max": {
+          "slack_ps": -108.976715,
+          "launch": "la_gs[1]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/C": 741.962524,
+            "_27646_/Y": 874.668518,
+            "wire17963/A": 897.254272,
+            "wire17963/Y": 949.844666,
+            "lweco_219418/A": 1010.973328,
+            "lweco_219418/Y": 1059.26709
+          }
+        },
+        "min": {
+          "slack_ps": 720.045776,
+          "launch": "la_gs[1]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/C": 710.719604,
+            "_27646_/Y": 777.762024,
+            "wire17963/A": 799.510376,
+            "wire17963/Y": 845.725647,
+            "lweco_219418/A": 904.953979,
+            "lweco_219418/Y": 945.503357
+          }
+        }
+      }
+    },
+    "ff": {
+      "A1": {
+        "max": {
+          "slack_ps": 226.453354,
+          "launch": "la_gs[2]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/A1": 492.17041,
+            "_27646_/Y": 551.31958,
+            "wire17963/A": 573.842773,
+            "wire17963/Y": 612.095825,
+            "lweco_219418/A": 673.454956,
+            "lweco_219418/Y": 710.75238
+          }
+        },
+        "min": {
+          "slack_ps": 459.410919,
+          "launch": "la_gs[2]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/A1": 459.290039,
+            "_27646_/Y": 511.459869,
+            "wire17963/A": 532.941223,
+            "wire17963/Y": 565.99823,
+            "lweco_219418/A": 625.306641,
+            "lweco_219418/Y": 653.994995
+          }
+        }
+      },
+      "A2": {
+        "max": {
+          "slack_ps": 221.98848,
+          "launch": "g_st[7].u_g/la_sl[1]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/A2": 526.90509,
+            "_27646_/Y": 555.784546,
+            "wire17963/A": 578.307678,
+            "wire17963/Y": 616.56073,
+            "lweco_219418/A": 677.919861,
+            "lweco_219418/Y": 715.217346
+          }
+        },
+        "min": {
+          "slack_ps": 353.955841,
+          "launch": "g_st[7].u_g/key_g[4][19]$_DFFE_PP_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/A2": 379.79306,
+            "_27646_/Y": 406.004791,
+            "wire17963/A": 427.486145,
+            "wire17963/Y": 460.543152,
+            "lweco_219418/A": 519.851562,
+            "lweco_219418/Y": 548.539856
+          }
+        }
+      },
+      "B": {
+        "max": {
+          "slack_ps": 223.014664,
+          "launch": "g_st[3].u_g/la_sl[1]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/B": 515.931213,
+            "_27646_/Y": 554.758362,
+            "wire17963/A": 577.281494,
+            "wire17963/Y": 615.534546,
+            "lweco_219418/A": 676.893738,
+            "lweco_219418/Y": 714.191162
+          }
+        },
+        "min": {
+          "slack_ps": 350.790649,
+          "launch": "g_st[3].u_g/key_g[4][19]$_DFFE_PP_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/B": 378.163696,
+            "_27646_/Y": 402.83963,
+            "wire17963/A": 424.320984,
+            "wire17963/Y": 457.377991,
+            "lweco_219418/A": 516.68634,
+            "lweco_219418/Y": 545.374695
+          }
+        }
+      },
+      "C": {
+        "max": {
+          "slack_ps": 88.723587,
+          "launch": "la_gs[1]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/C": 585.742188,
+            "_27646_/Y": 689.049255,
+            "wire17963/A": 711.572388,
+            "wire17963/Y": 749.8255,
+            "lweco_219418/A": 811.184631,
+            "lweco_219418/Y": 848.482056
+          }
+        },
+        "min": {
+          "slack_ps": 546.896667,
+          "launch": "la_gs[1]$_DFF_P_/QN",
+          "receiver": "fa_kh$_DFF_P_/D",
+          "arrival_ps": {
+            "_27646_/C": 559.056335,
+            "_27646_/Y": 598.945557,
+            "wire17963/A": 620.42688,
+            "wire17963/Y": 653.483948,
+            "lweco_219418/A": 712.792358,
+            "lweco_219418/Y": 741.480652
+          }
+        }
+      }
+    }
+  },
+  "receiver_loads": {
+    "_27646_/A1": {
+      "net": "net19290",
+      "count": 20,
+      "pins": [
+        "_27294_/A",
+        "_27398_/A",
+        "_27420_/A",
+        "_27421_/A1",
+        "_27437_/A",
+        "_27438_/A1",
+        "_27468_/A",
+        "_27485_/A",
+        "_27486_/A1",
+        "_27499_/A",
+        "_27538_/A",
+        "_27539_/A1",
+        "_27567_/A",
+        "_27568_/A1",
+        "_27578_/A",
+        "_27588_/A",
+        "_27611_/A",
+        "_27612_/A1",
+        "_27645_/A",
+        "_27646_/A1"
+      ]
+    },
+    "_27646_/A2": {
+      "net": "_14198_",
+      "count": 1,
+      "pins": [
+        "_27646_/A2"
+      ]
+    },
+    "_27646_/B": {
+      "net": "_14199_",
+      "count": 1,
+      "pins": [
+        "_27646_/B"
+      ]
+    },
+    "_27646_/C": {
+      "net": "net19400",
+      "count": 7,
+      "pins": [
+        "_27421_/C",
+        "_27438_/C",
+        "_27486_/C",
+        "_27539_/C",
+        "_27568_/B",
+        "_27612_/C",
+        "_27646_/C"
+      ]
+    },
+    "_27646_/Y": {
+      "net": "_14200_",
+      "count": 1,
+      "pins": [
+        "wire17963/A"
+      ]
+    },
+    "wire17963/A": {
+      "net": "_14200_",
+      "count": 1,
+      "pins": [
+        "wire17963/A"
+      ]
+    },
+    "wire17963/Y": {
+      "net": "net17964",
+      "count": 1,
+      "pins": [
+        "lweco_219418/A"
+      ]
+    },
+    "lweco_219418/A": {
+      "net": "net17964",
+      "count": 1,
+      "pins": [
+        "lweco_219418/A"
+      ]
+    },
+    "lweco_219418/Y": {
+      "net": "lweco_2_n19419",
+      "count": 1,
+      "pins": [
+        "_27650_/B"
+      ]
+    }
+  },
+  "actual_pin_avgxy_native_dbu": {
+    "_27646_/A1": [
+      1,
+      99225,
+      37953
+    ],
+    "_27646_/A2": [
+      1,
+      99130,
+      37935
+    ],
+    "_27646_/B": [
+      1,
+      99279,
+      37953
+    ],
+    "_27646_/C": [
+      1,
+      99333,
+      37935
+    ],
+    "_27646_/Y": [
+      1,
+      99460,
+      37935
+    ],
+    "wire17963/A": [
+      1,
+      32221,
+      36315
+    ],
+    "wire17963/Y": [
+      1,
+      32811,
+      36315
+    ],
+    "lweco_219418/A": [
+      1,
+      105498,
+      87615
+    ],
+    "lweco_219418/Y": [
+      1,
+      106198,
+      87615
+    ]
+  },
+  "decision": "HOLD north two-cell candidate: A2/B only36.71/36.95ps currentTT slack, despite C -108.98; north relocation adds about170um to weak INVx1/NAND2x1 inputs. No postmoveRC/timing predicted as fact. FF path-specific hold margins are measured, not whole-design closure; baselineFF -15.85 remains."
+}

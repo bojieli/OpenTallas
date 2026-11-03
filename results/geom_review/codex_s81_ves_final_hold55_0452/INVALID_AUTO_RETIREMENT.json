@@ -1,0 +1,22 @@
+{
+  "kind": "OWNED_UNQUALIFIED_AUTOMATIC_ECO_RETIREMENT",
+  "container": "8e7eaee966829e8bf2ea69dc8142cfe539fc003cf6880515b88cb3551896fbc8",
+  "native_init_pid": 444654,
+  "mount": "/srv/opentallas-scratch2/claude/codex-s81-ves-2042/kit/eco_20261102_044346_1047889/i1",
+  "original_controller": 1047889,
+  "reasons": [
+    "Frozen pre-b3 automatic eco_post sources raw originalgrt_post_core after bounded hook",
+    "No nativePG-at-birth wrapper/strict1",
+    "m10 setup10 andHOLD_ALLOW_SETUP1 differ reviewed next hold12/allow_setup0 scope"
+  ],
+  "baseline_preserved": "/srv/opentallas-scratch2/claude/codex-s81-ves-2042/kit",
+  "when_before": "2026-11-02T05:11:00.130036",
+  "source_hashes": {
+    "/srv/opentallas-scratch2/claude/codex-s81-ves-2042/kit/signoff/signoff.json": "930fc7f454038679773e8698f6b5a1df303cf56027ccc5b8494e795c966a8861",
+    "/srv/opentallas-scratch2/claude/codex-s81-ves-2042/kit/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base/6_final.odb": "4f29f4cbd33239a453376ec31c128699df4443495aac5284247a640e9ad75e5f",
+    "/srv/opentallas-scratch2/claude/codex-s81-ves-2042/kit/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base/6_final.v": "da8e4de4dd7bab9d6607d617094cb149b6eadb8f096b5ec0bbaa3ae5ecbda0de",
+    "/srv/opentallas-scratch2/claude/codex-s81-ves-2042/kit/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base/6_final.spef": "399a39621834b01051cb825b043330b6abc3a53335270fb9dce040af1fadc02f"
+  },
+  "stop_output": "Flag --time has been deprecated, use --timeout instead\n8e7eaee966829e8bf2ea69dc8142cfe539fc003cf6880515b88cb3551896fbc8",
+  "when_after": "2026-11-02T05:11:07.978775"
+}

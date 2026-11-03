@@ -1,0 +1,8 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-ves-final-look-0452
+ot-run: intel1         admits    96 GB (avail 277, reserve 0, fresh 7.9, peak 109.1, headroom 0, waiters 31/1546 GB) load 169/112 running 67 disk 321 GB 
+ot-run: localhost      admits   191 GB (avail 314, reserve 0, fresh 0, peak 58.4, headroom 0, waiters 1/360 GB) load 123/112 running 55 disk 115 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2391281-1793624399 after 1 s
+input.odb: OK
+input.odb: OK
+ot-run: RAN on localhost (unit oth-ubuntu-2391281-1793624399): exit 0

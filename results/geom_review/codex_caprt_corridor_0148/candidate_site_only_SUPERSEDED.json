@@ -1,0 +1,80 @@
+{
+  "verdict": "SUPERSEDED_SITE_ONLY_CANDIDATE_REJECTED_AFTER_ACTUAL_PG_INVENTORY",
+  "native_DEF": "/srv/opentallas-scratch2/claude/s81ck12/k13/peco_caprt_B1440__LWA/out/6_final.def",
+  "placement_check": "exact native row/site/orient and all4000actual region instances inventoried; actual CORE SPACER DECAP omitted only under standard remove_fillers, TAP/clock/FF retained; no collisions; macrohalo outsidecandidate",
+  "master_dims_basis": "actual same-platform BclassF_final_geom.tsv master bounds; currentDEF exact master identities",
+  "unknown_masters": [],
+  "candidate": {
+    "_27646_": {
+      "origin_um": [
+        102.978,
+        83.7
+      ],
+      "orient": "N",
+      "bbox_um": [
+        102.978,
+        83.7,
+        103.41,
+        83.97
+      ],
+      "master": "OA211x2_ASAP7_75t_R",
+      "size_um": [
+        0.432,
+        0.27
+      ]
+    },
+    "wire17963": {
+      "origin_um": [
+        104.976,
+        87.21
+      ],
+      "orient": "FS",
+      "bbox_um": [
+        104.976,
+        87.21,
+        105.84,
+        87.48
+      ],
+      "master": "BUFx12_ASAP7_75t_R",
+      "size_um": [
+        0.864,
+        0.27
+      ]
+    }
+  },
+  "OA_input_prices": [
+    {
+      "pin": "A1",
+      "driver": "wire19289",
+      "old_corridor_lower_bound_um": 120.18,
+      "new_corridor_lower_bound_um": 49.788,
+      "actual_current_A_input_arrival_ps": "MISSING: existing reports contain only worst C path, no new STA authorized"
+    },
+    {
+      "pin": "A2",
+      "driver": "_27644_",
+      "old_corridor_lower_bound_um": 0.594,
+      "new_corridor_lower_bound_um": 170.454,
+      "actual_current_A_input_arrival_ps": "MISSING: existing reports contain only worst C path, no new STA authorized"
+    },
+    {
+      "pin": "B",
+      "driver": "_27645_",
+      "old_corridor_lower_bound_um": 0.324,
+      "new_corridor_lower_bound_um": 169.644,
+      "actual_current_A_input_arrival_ps": "MISSING: existing reports contain only worst C path, no new STA authorized"
+    },
+    {
+      "pin": "C",
+      "driver": "wire19399",
+      "old_corridor_lower_bound_um": 153.066,
+      "new_corridor_lower_bound_um": 16.902,
+      "actual_current_A_input_arrival_ps": "MISSING: existing reports contain only worst C path, no new STA authorized"
+    }
+  ],
+  "output_chain_old_lower_bound_um": 193.104,
+  "output_chain_new_lower_bound_um": 6.264,
+  "PG_gate": "FAILED: first site-only candidate overlaps4 actual DEF-derived M4/M5 power envelopes, including VSS M5 stripe x105.684..105.804; replaced by final104.706x origin plus0.096um PG keepout",
+  "bay_gate": "PASS complete actual saved6_final.DEF emits no BLOCKAGES section; actual macro halo and all fixed/TAP/functional region poses included",
+  "scope": "same2cells/masters, all other cells/clock/reset/RTL/cycles unchanged; NO CAD dispatched"
+}

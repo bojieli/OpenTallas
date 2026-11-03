@@ -1,0 +1,76 @@
+{
+  "pins_per_face": {
+    "W": 2070,
+    "N": 1678,
+    "E": 2156,
+    "S": 1658,
+    "area": 1
+  },
+  "pin_peak_per_um_10um": {
+    "W": 11.3,
+    "N": 8.5,
+    "E": 11.7,
+    "S": 8.4
+  },
+  "pin_peak_layer": {
+    "W/M4": 5.6,
+    "W/M2": 5.7,
+    "N/M3": 4.3,
+    "N/M5": 4.3,
+    "E/M4": 5.9,
+    "E/M2": 5.9,
+    "S/M3": 4.5,
+    "S/M5": 4.2
+  },
+  "pin_peak_layer_win": {
+    "W/M4": [
+      "y",
+      4.38,
+      14.38
+    ],
+    "W/M2": [
+      "y",
+      10.21,
+      20.21
+    ],
+    "N/M3": [
+      "x",
+      4.37,
+      14.37
+    ],
+    "N/M5": [
+      "x",
+      4.48,
+      14.48
+    ],
+    "E/M4": [
+      "y",
+      4.38,
+      14.38
+    ],
+    "E/M2": [
+      "y",
+      4.44,
+      14.44
+    ],
+    "S/M3": [
+      "x",
+      185.12,
+      195.12
+    ],
+    "S/M5": [
+      "x",
+      4.48,
+      14.48
+    ]
+  },
+  "pin_peak_layer_max": 5.9,
+  "face_span": {
+    "W": 0.955,
+    "N": 0.958,
+    "E": 0.955,
+    "S": 0.958
+  },
+  "planned_pin_table_sha256": "e1688b54db339ca3408958202d564b7ba7e56fb060b71846a9f5ed56e5026b90",
+  "scope": "DISABLED proposed geometry; same native metric on planned pin table, no actual newFP/route qualification"
+}

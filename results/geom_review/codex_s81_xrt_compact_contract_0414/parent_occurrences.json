@@ -1,0 +1,1080 @@
+[
+  {
+    "type": "dsdv_slice_lepw_mus_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_0S_C",
+        "type": "dsdv_slice_lepw_mus_C__t1",
+        "origin_um": [
+          10203.84,
+          9918.72
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_lepw_mu_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_0N_C",
+        "type": "dsdv_slice_lepw_mu_C__t1",
+        "origin_um": [
+          10203.84,
+          17280.0
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_1S_C",
+        "type": "dsdv_slice_c1x_C__t1",
+        "origin_um": [
+          11646.72,
+          9918.72
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t10",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_1N_C",
+        "type": "dsdv_slice_c1x_C__t10",
+        "origin_um": [
+          11646.72,
+          17280.0
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t3",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_2S_C",
+        "type": "dsdv_slice_c1x_C__t3",
+        "origin_um": [
+          13089.6,
+          9918.72
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t4",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_2N_C",
+        "type": "dsdv_slice_c1x_C__t4",
+        "origin_um": [
+          13089.6,
+          17280.0
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
+    ]
+  },
+  {
+    "type": "dsdv_slice_kv512_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_3N_C",
+        "type": "dsdv_slice_kv512_C__t1",
+        "origin_um": [
+          14532.48,
+          17280.0
+        ],
+        "orient": "R0"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t5",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_4N_C",
+        "type": "dsdv_slice_c1x_C__t5",
+        "origin_um": [
+          15975.36,
+          17280.0
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t6",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_5S_C",
+        "type": "dsdv_slice_c1x_C__t6",
+        "origin_um": [
+          17418.24,
+          9918.72
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t7",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_5N_C",
+        "type": "dsdv_slice_c1x_C__t7",
+        "origin_um": [
+          17418.24,
+          17280.0
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t8",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_6S_C",
+        "type": "dsdv_slice_c1x_C__t8",
+        "origin_um": [
+          18861.12,
+          9918.72
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_c1x_C__t9",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_6N_C",
+        "type": "dsdv_slice_c1x_C__t9",
+        "origin_um": [
+          18861.12,
+          17280.0
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_lepe_nh_mus_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        34.56
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_7S_C",
+        "type": "dsdv_slice_lepe_nh_mus_C__t1",
+        "origin_um": [
+          20304.0,
+          9918.72
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        146.88
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      231.144
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      233.292
+    ]
+  },
+  {
+    "type": "dsdv_slice_lepe_mu_C__t1",
+    "parent_outline_um": [
+      1442.88,
+      1226.88
+    ],
+    "hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        388.8,
+        794.88
+      ],
+      "outline_um": [
+        311.04,
+        395.28
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"
+    },
+    "die_occurrences": [
+      {
+        "name": "s_7N_C",
+        "type": "dsdv_slice_lepe_mu_C__t1",
+        "origin_um": [
+          20304.0,
+          17280.0
+        ],
+        "orient": "MY"
+      }
+    ],
+    "core_conn_references": {},
+    "required_future_event": [
+      "child outline and pins_file replacement",
+      "all parent child-pin coordinates / M5 interior clock target regenerated from same table",
+      "real child view and measured parent timing/clock contract refreshed",
+      "hard-core bounding-box/residual-space/clock/reset/PG gates rerun; no old proof or latency transfer"
+    ],
+    "disabled_proposed_hard_core": {
+      "inst": "u_c.u_xr",
+      "module": "ot_s81sl_xrt1",
+      "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+      "origin_um": [
+        436.32,
+        907.2
+      ],
+      "outline_um": [
+        216,
+        172.8
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json",
+      "obs_max": "M5",
+      "lib": "physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib",
+      "activation": false
+    },
+    "origin_rule": "Retain new child inside old bounding rectangle and near its centre: +47.52,+112.32 are exact4.32um multiples preserving parent/child M3/M4/M5 track and M5 PG phase. Side gaps47.52/47.52/112.32/110.16um. Existing orient+track_offset unchanged; all pin/tap/reset budgets require coherent future refresh.",
+    "old_parent_type_clock_entry_um": [
+      699.906,
+      993.624
+    ],
+    "proposed_parent_type_clock_entry_um": [
+      544.44,
+      993.636
+    ]
+  }
+]

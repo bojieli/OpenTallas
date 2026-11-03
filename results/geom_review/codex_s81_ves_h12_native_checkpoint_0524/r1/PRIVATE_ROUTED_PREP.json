@@ -1,0 +1,33 @@
+{
+  "scope": "OWN_TYPED_ROUTED_GRT_PREP_ONLY",
+  "changes": {
+    "prd_route_keep.tcl": [
+      {
+        "before": "31a2de98cd1abde0a30dc7de73675b98ddd7b827a2ad71f37ed9d2ce0c5edacc",
+        "after": "be50ec117c1a7b65182470e5cbe1aefb49867552b6b28259ce122ed65127120f",
+        "old": "set ref_odb $::env(RESULTS_DIR)/4_cts.odb",
+        "new": "set ref_odb /work/baseline/6_final.odb"
+      },
+      {
+        "before": "be50ec117c1a7b65182470e5cbe1aefb49867552b6b28259ce122ed65127120f",
+        "after": "aeb780ef0278d6c40114c0006f37a42e38d7db3d12abc03af77181e2683464c3",
+        "old": "  set clk [dict create]",
+        "new": "  foreach name [dict get $sel rip] {if {[info exists ::ves_reset_preserve] && $name in $::ves_reset_preserve} {error \"VES_RESET_DIRTY_FORBIDDEN $name\"}}\n  set clk [dict create]"
+      }
+    ],
+    "prd_hook.tcl": [
+      {
+        "before": "c8b01c9b68945644fed725ed5ba4030d95c378774bbbfba0f5a722b16044577e",
+        "after": "424a2a1707b8edc6d23ceb9cfe93f74004690224e0e1d3d1ab97010e491f18bc",
+        "old": "# A measured OpenROAD route-tree defect may require preserving a specific data",
+        "new": "source /work/reset_freeze.tcl\n# A measured OpenROAD route-tree defect may require preserving a specific data"
+      }
+    ]
+  },
+  "prior_canonical_route_to_cts_alias_sha256": "b6e14bb059f5359f7de35d60237a968f524b792abb0112592646280521e9c563",
+  "baseline_ODB_sha256": "4f29f4cbd33239a453376ec31c128699df4443495aac5284247a640e9ad75e5f",
+  "original_CTS_ODB_sha256": "b04a34ecc5b6f004e24f95aca2eac9f5b4e828b81b37d6bf69debbadd1ca5dba",
+  "original_CTS_SDC_sha256": "8c9c4813cae19906fee7880a5ca7b74316b0ea4300699eeee22eea7bf0238c03",
+  "stage5_outputs": [],
+  "routed_seed_alias_present": false
+}

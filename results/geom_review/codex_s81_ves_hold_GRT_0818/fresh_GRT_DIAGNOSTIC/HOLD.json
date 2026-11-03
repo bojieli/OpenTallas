@@ -1,0 +1,24 @@
+{
+  "kind": "DIAGNOSTIC_ONLY_NOT_ORIGINAL_CLOCK_RC",
+  "producer": "Intel2 unit1377877-1793636825",
+  "TT_setup_ps": -5.16,
+  "TT_endpoints": 1,
+  "FF_hold_ps": 8.07,
+  "clockmeans_fresh_GRT": {
+    "TT": 251.74,
+    "FF": 204.91
+  },
+  "clockmeans_original_physical": {
+    "TT": 251.26,
+    "FF": 205.65
+  },
+  "FF_pair_count": 479454,
+  "FF_pairmax_ps": 30.48,
+  "TT_pair": "NOT RUN canonicalnegativeTT earlystop",
+  "original_clock_RC_restored": false,
+  "protocol_holds": [
+    "22unchangedzero-wirebranchYspurs unsupported bycurrentPORT-onlyguard",
+    "canonicalfrozenmodeintegration pendingFLOW"
+  ],
+  "gate": "DRT_FILL_FINISH_SOURCEPROOF_PUBLICATION_COUNT_HELD"
+}

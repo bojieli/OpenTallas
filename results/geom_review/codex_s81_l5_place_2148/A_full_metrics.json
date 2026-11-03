@@ -1,0 +1,43 @@
+{
+  "r2r_memory_instances": 12,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 566.0,
+  "r2r_captures_gt405": 246,
+  "r2r_captures": 36343,
+  "comb_loop_cells": 0,
+  "r2r_worst": "wa\\[3\\]$_DFF_P_ -> g_tbl_safe.g_bank\\[9\\].u_m",
+  "clock": {
+    "taps": 1,
+    "grid_taps": 1,
+    "tap_mode": "tree",
+    "clock_sinks": 37362,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": 37350,
+    "grid_tap_sinks_max": 37350,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk": 37350
+    },
+    "tap_set": [
+      [
+        "clk",
+        "W"
+      ]
+    ],
+    "clock_cells": 0,
+    "clock_depth_max": 0,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": null,
+    "leaf_sinks_max": null,
+    "clock_net_hpwl_max": 634.08,
+    "clock_net_hpwl_p90": 634.08,
+    "stage": "placed"
+  },
+  "macro_geometry": {
+    "cells_on_macros": 0,
+    "cells_on_macros_sample": [],
+    "macro_off_grid": 0,
+    "macro_off_lattice": 0,
+    "macro_lattice_resid_max": 0.0
+  }
+}

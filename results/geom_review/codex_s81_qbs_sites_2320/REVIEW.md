@@ -1,0 +1,13 @@
+# QBS source-stage row / PG legalization, actual gen3 hardware inventory
+
+Read-only4GB2T normal ot-run Epyc2 unit3215957-1793604327, no host pin/no duplicate CAD. Native gen3 LLfu/LLfd/NNfu 3_place ODBs opened once; each completed23:25:31/35/38PST. Native source untouched. These are source-planning results, not installed clock/physical closure.
+
+Exact native: site.054×.270µm,256alternatingR0/MXrows,641fixedTAPCELLs/type. BUF2=.270×.270,BUF12=.864×.270,BUF16f=1.188×.270. Actual PG includes16M5SWirestraps plus2056M5via-enclosures and4112M4via-enclosures; M4straightSWires=0. All actual M4 geometry retained; no emptyPG or nominal row-band substitute. Native first boundary register sets194/194/200 from actual connected pin/buffer/INV graph retained as obstacles.
+
+Exact source-owned old centre bay hard blockage ID1 [20.532,37.692,22.692,40.032] recorded explicitly. Existing12.2a1 fresh preGPL path suppresses that obsolete blanket reservation and replaces it with actual fixed planned cells before ordinary placement; parent authorized this precise source-owned replacement. All641actual TAPs and every other actual fixed/face/blockage/PG obstacle retained. No oldPLACE reuse or generic obstacle omission.
+
+Parent's updated0psnativeSDCinput model selects6entrycells,13total. Canonical CP deterministic plan legalizer gives0cell/obstacleoverlap;6entrycells unchanged,7nodes move at most.147µm. Rootcentre21.600,39.015;S/N21.600,21.465/56.025;regionalleaves x12.960/30.240 with y21.465/56.025. Exact row origins/orientations stored; touching edges allowed, no overlap. Core-tree xy and frozen cell centres both updated before PG/model evaluation. Actual M4/M5 trunk gate PASS13edges/0blocked for each type.
+
+Repriced existing CP a priori model with actual placed sink positions, existing exact NLDM export, source input_slew_ps=0 (helper40default not used): LLfu TT244.439/FF187.162,LLfd244.181/186.952,NNfu244.645/187.330ps. All VALID/in calibration. No measured clock trim or new functional edge. Final source/model choice and GEN/PLACE remain parent's responsibility.
+
+All three actual-PG/planned-cell images personally viewed: useful continuous body, native boundary strips preserved, centred compact entry trunk, balanced four-region topology, no TAP/face intrusion, no macro wall or sliver; native PG continuity retained and rectilinear trunks avoid actual PG shapes. Verdict PASS-COND for fresh normal preGPL+PLACE source generation. Actual installed13cell identity/master/origin/orient/connectivity, TAP identity and PG/clock/data gates must be collected after PLACE/CTS. No standalone core SIGNED, no parent clock qualification or count/adoption credit.

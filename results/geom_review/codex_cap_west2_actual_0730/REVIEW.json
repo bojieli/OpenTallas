@@ -1,0 +1,13 @@
+{
+  "verdict": "READY_FOR_GEOMETRY_LOOK_ONLY",
+  "input": "Intel2 codex-cap-west2-0730-r1/input.odb",
+  "output": "Intel2 /srv/opentallas-scratch2/claude/codex-cap-west2-0730-r1/WEST2_geometry_ONLY.odb",
+  "unit": "oth-ubuntu-420976-1793633384",
+  "limits": "8GB1T normal ot-run through sshIntel2",
+  "scope": "two DATA pose moves, N orientations+masters/status/DNT retained; three exact PG-only spacer removals; independent saved full non-target snapshot and full masked DEF identical",
+  "timing_credit": false,
+  "routing_credit": false,
+  "next_gate": "ROOT/parent actual geometry LOOK before any bounded native dirty-net route scope; A2/B actual37ps setupheadroom remains risk",
+  "first_failure": "ODB0359 FIRM target origin cannotchange; no savedoutput; freshsame-sourceR1 temporarilyPLACED onlytwo targets thenrestoredexactsourceFIRM; entry renamed to avoid stdlibcopy shadow",
+  "personal_image_review": "PASS-COND_GEOMETRY_ONLY; actualsavedDEF rendered, oldwires stale for movedDATAendpoints"
+}

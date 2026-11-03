@@ -1,0 +1,212 @@
+{
+  "native_rooted_FF": 30810,
+  "functional_clock_ancestry": 2586,
+  "all_clock_input_load_cells": 2611,
+  "extra_no_register_descendants": 25,
+  "extra": [
+    {
+      "name": "mp_ck_T12323_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12322_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12233_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12232_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12223_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12222_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12221_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12220_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12203_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12202_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12201_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12200_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12023_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12022_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12021_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12020_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12003_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12002_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T12000_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T10000_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T00222_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T00202_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": []
+    },
+    {
+      "name": "mp_ck_T1222_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": [
+        {
+          "net": "CLOCK",
+          "sinks": [
+            [
+              "i",
+              177651,
+              false
+            ],
+            [
+              "i",
+              177656,
+              false
+            ],
+            [
+              "i",
+              177661,
+              false
+            ],
+            [
+              "i",
+              177674,
+              false
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "mp_ck_T1220_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": [
+        {
+          "net": "CLOCK",
+          "sinks": [
+            [
+              "i",
+              177722,
+              false
+            ],
+            [
+              "i",
+              177731,
+              false
+            ],
+            [
+              "i",
+              177736,
+              false
+            ],
+            [
+              "i",
+              177741,
+              false
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "mp_ck_T1202_br",
+      "master": "BUFx24_ASAP7_75t_R",
+      "outputs": [
+        {
+          "net": "CLOCK",
+          "sinks": [
+            [
+              "i",
+              179368,
+              false
+            ],
+            [
+              "i",
+              179375,
+              false
+            ],
+            [
+              "i",
+              179376,
+              false
+            ],
+            [
+              "i",
+              179377,
+              false
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "unexpected_children": []
+}

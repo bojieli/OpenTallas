@@ -1,0 +1,16 @@
+{
+  "tool": "post_route_drv",
+  "variant": "m12",
+  "from": "route",
+  "source_kit": "tolerant-swine:/srv/opentallas-scratch2/claude/codex-ves-h12-prep-0524/base",
+  "source_route": "/srv/opentallas-scratch2/claude/codex-ves-h12-prep-0524/pass_m12_r1/baseline/6_final.odb",
+  "parasitics": "/srv/opentallas-scratch2/claude/codex-ves-h12-prep-0524/base/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base/6_final.spef",
+  "signoff_tools": "/srv/opentallas-scratch2/claude/codex-ves-h12-prep-0524/so",
+  "original_source": "intel1:/srv/opentallas-scratch2/claude/codex-s81-ves-2042/kit",
+  "source_seed_kind": "REAL_ROUTED_6_FINAL",
+  "original_cts_kept": true,
+  "cts_credit": false,
+  "GRT_only": true,
+  "later_DRT_fill_finish_held": true,
+  "loader_reference": "INPUT_ROUTED/6_final.odb"
+}

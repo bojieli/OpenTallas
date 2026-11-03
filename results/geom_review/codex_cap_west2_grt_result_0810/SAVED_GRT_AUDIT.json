@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS_GRT_ONLY",
+  "source_expected_sha256": "e6b6b31ab2101c2dbd010ef60b2e8c98ceeacae75d9c52727e50b2f16aa0e845",
+  "output_sha256": "08123e5d36947e2bf80e7b941fc8cb0a3ae763a5250bcdbbc71639c729ec7828",
+  "all_master_pg_terms": 377728,
+  "PG_open": 0,
+  "wrong_domain": 0,
+  "reviewed_all_state_digest": "86c385c93dfebfb2d513b2beb03c74c7775855bb774125ff1414377ac293649b",
+  "saved_all_state_digest": "86c385c93dfebfb2d513b2beb03c74c7775855bb774125ff1414377ac293649b",
+  "dirty_DATA_nets": [
+    "net19290",
+    "_14198_",
+    "_14199_",
+    "net19400",
+    "_14200_",
+    "net17964"
+  ],
+  "claim": "GRT CHECKPOINT ONLY; old routed RC not reused; no DRT/fill/finish/SIGNED/proof credit"
+}
