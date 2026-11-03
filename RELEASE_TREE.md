@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 06:34 PST:** count 61 (HEAD first type signed 1/25; S81 28/54, HEAD 4/4, QC 5/16, KV 17/35, HBM 6/84 cores). OWNER 11-03: TWO-STRIKES -> RE-FORM (conservative OpenROAD form, 1.2 GHz kept, extra pipeline cycles), one batch per die, released per type (never waits on the whole batch); plan freeze on batch GEOM pass; cores first; token/cross-die/PG/area checks run in parallel, never block. F12 (17 class fixes) landed 06:20 main 08542fa9d7d. Kit FAIL 141 / RUNNING 155. Open: S81 macro_channels (plan 8.64 um vs rule 10.8 um, 76 kits) plan fix in progress.
+**Status 2026-11-03 07:33 PST:** count 62 (S81 28/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 17/35, HBM 7/84). OWNER 11-03: rules = design targets, only sign-off blocks (kit_contract/lint advisory, merged G3 31d4c8daaf4); TWO-STRIKES -> RE-FORM batches per die, released per type, 1.2 GHz kept. epyc4 (EPYC 9754, 256T/768G/7 TB) LIVE but underfilled. XCHECK: QC outline 26.27 mm > 26 mm reticle (shrink in RE-FORM); PHY TX hold -11..-30 ps -> TX-face lockup latch class fix; HBM3e PHY model 900 ps min period -> regen. Kit FAIL 163 / RUNNING 127.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
