@@ -30,3 +30,5 @@ The v1 children were gated against the native T7 bound (LAND/PMEM/PVQ cuts, STAG
 - 4 x 32x64 in `dsdv_sm_so_target`, 2,210 um2.
 
 None of them can merge: each is its own 1R1W stream with concurrent read and write addresses, or a separate clock crossing, so merging would need more ports. Only the idx set can be right-sized: 256x256_m1 x2, 768x256_m2 x8, 512x36_m2, 256x40, 128x24 = 87.3k um2 (-72.8k). That is a separate EQ-gated source event in `dsdv_idx_rg3_nq_native` (the h-row and mq-ring bounds need proof) and is not done here.
+
+**Pilots** (`pilot.sh`, intel1): `svc_hi_dsdv_svc_rs__t1` (rs class, 13 types) and `svc_hi_dsdv_svc_pvso_entry__t1` (pvso class, 2 types). Both pass GEN_LINT (rtl_check, memory_bits and pins_vs_plan all PASS) and KIT_PREFLIGHT, with SYNTH_MEMORY_MAX_BITS 16384. Receipts are in `pilot/`.

@@ -1,0 +1,1065 @@
+{
+ "schema": "opentallas.kit_preflight.v2",
+ "kit": "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_v2/svc_hi_dsdv_svc_rs__t1/gen/svc_hi_dsdv_svc_rs__t1",
+ "contract": [
+  "corner_modes",
+  "ff_binding",
+  "clock_pin_geometry",
+  "rc_calibration",
+  "duplicate_modules",
+  "keep_hook",
+  "pins_canonical",
+  "mesh_vias",
+  "macro_channels",
+  "clock_entry_clear",
+  "island_macro_clear",
+  "macro_pin_grid",
+  "macro_instances"
+ ],
+ "contract_binding": false,
+ "contract_advisory": {
+  "corner_modes": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "corners": [],
+    "per_mode": false,
+    "hooks": [
+     "clock_taps.tcl",
+     "constraint.sdc",
+     "cts_post.tcl",
+     "cts_repair_protect.tcl",
+     "face_flops.tcl",
+     "face_flops_release.tcl",
+     "face_keep.tcl",
+     "face_keep_release.tcl",
+     "ft_bit_sites.tcl",
+     "grt_maxwire.tcl",
+     "grt_post.tcl",
+     "grt_pre.tcl",
+     "hold_guard_grt.tcl",
+     "hold_pad_hb4.tcl",
+     "hold_repair_pre.tcl",
+     "landing_exports.tcl",
+     "landing_placement.tcl",
+     "leaf_affinity.tcl",
+     "macro_place.tcl",
+     "native_cell_cap.tcl",
+     "ot_keep_regs.tcl",
+     "ot_pin_regs.tcl",
+     "ot_rst_copies.tcl",
+     "pdn.tcl",
+     "pg_connect.tcl",
+     "pre_cts.tcl",
+     "pre_floorplan_type.tcl",
+     "prects_estimate.tcl",
+     "relay_mid.tcl",
+     "reset_taps.tcl",
+     "reset_tree.tcl",
+     "setRC_rcx.tcl",
+     "tap_balance.tcl",
+     "vclk_corner.tcl"
+    ]
+   }
+  },
+  "ff_binding": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "values": {
+     "OT_VCLK_TT": 250.0,
+     "OT_VCLK_FF": 202.5,
+     "sdc_lint_insertion_ps": 250.0,
+     "sdc_lint_insertion_ff_ps": 202.5,
+     "clock_binding_tt": 250.0,
+     "clock_binding_ff": 202.5
+    }
+   }
+  },
+  "clock_pin_geometry": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "kind": "partition",
+    "clock_ports": [
+     "clk",
+     "clk_c0",
+     "clk_c1",
+     "clk_c10",
+     "clk_c11",
+     "clk_c12",
+     "clk_c13",
+     "clk_c14",
+     "clk_c15",
+     "clk_c16",
+     "clk_c17",
+     "clk_c18",
+     "clk_c19",
+     "clk_c2",
+     "clk_c20",
+     "clk_c21",
+     "clk_c22",
+     "clk_c23",
+     "clk_c24",
+     "clk_c25",
+     "clk_c26",
+     "clk_c27",
+     "clk_c28",
+     "clk_c29",
+     "clk_c3",
+     "clk_c30",
+     "clk_c31",
+     "clk_c32",
+     "clk_c33",
+     "clk_c34",
+     "clk_c35",
+     "clk_c36",
+     "clk_c37",
+     "clk_c38",
+     "clk_c39",
+     "clk_c4",
+     "clk_c40",
+     "clk_c41",
+     "clk_c42",
+     "clk_c43",
+     "clk_c44",
+     "clk_c45",
+     "clk_c46",
+     "clk_c47",
+     "clk_c48",
+     "clk_c49",
+     "clk_c5",
+     "clk_c50",
+     "clk_c51",
+     "clk_c52",
+     "clk_c53",
+     "clk_c54",
+     "clk_c55",
+     "clk_c56",
+     "clk_c57",
+     "clk_c58",
+     "clk_c59",
+     "clk_c6",
+     "clk_c60",
+     "clk_c61",
+     "clk_c62",
+     "clk_c63",
+     "clk_c7",
+     "clk_c8",
+     "clk_c9",
+     "clk_t1",
+     "clk_t10",
+     "clk_t11",
+     "clk_t12",
+     "clk_t13",
+     "clk_t14",
+     "clk_t15",
+     "clk_t16",
+     "clk_t17",
+     "clk_t18",
+     "clk_t19",
+     "clk_t2",
+     "clk_t20",
+     "clk_t21",
+     "clk_t22",
+     "clk_t23",
+     "clk_t24",
+     "clk_t25",
+     "clk_t26",
+     "clk_t27",
+     "clk_t3",
+     "clk_t4",
+     "clk_t5",
+     "clk_t6",
+     "clk_t7",
+     "clk_t8",
+     "clk_t9",
+     "fclk_in_attn_i1",
+     "fclk_in_attnh_i0",
+     "fclk_in_cland_dn_0",
+     "fclk_in_ft4_i",
+     "fclk_in_ft5_i",
+     "fclk_in_ft6_i",
+     "fclk_in_ft7_i",
+     "fclk_in_ft8_i",
+     "fclk_in_ft9_i",
+     "fclk_in_hbm_i0",
+     "fclk_in_rsv_i0"
+    ],
+    "placements": {
+     "clk": 1,
+     "clk_t1": 1,
+     "clk_t2": 1,
+     "clk_t3": 1,
+     "clk_t4": 1,
+     "clk_t5": 1,
+     "clk_t6": 1,
+     "clk_t7": 1,
+     "clk_t8": 1,
+     "clk_t9": 1,
+     "clk_t10": 1,
+     "clk_t11": 1,
+     "clk_t12": 1,
+     "clk_t13": 1,
+     "clk_t14": 1,
+     "clk_t15": 1,
+     "clk_t16": 1,
+     "clk_t17": 1,
+     "clk_t18": 1,
+     "clk_t19": 1,
+     "clk_t20": 1,
+     "clk_t21": 1,
+     "clk_t22": 1,
+     "clk_t23": 1,
+     "clk_t24": 1,
+     "clk_t25": 1,
+     "clk_t26": 1,
+     "clk_t27": 1,
+     "clk_c0": 1,
+     "clk_c1": 1,
+     "clk_c2": 1,
+     "clk_c3": 1,
+     "clk_c4": 1,
+     "clk_c5": 1,
+     "clk_c6": 1,
+     "clk_c7": 1,
+     "clk_c8": 1,
+     "clk_c9": 1,
+     "clk_c10": 1,
+     "clk_c11": 1,
+     "clk_c12": 1,
+     "clk_c13": 1,
+     "clk_c14": 1,
+     "clk_c15": 1,
+     "clk_c16": 1,
+     "clk_c17": 1,
+     "clk_c18": 1,
+     "clk_c19": 1,
+     "clk_c20": 1,
+     "clk_c21": 1,
+     "clk_c22": 1,
+     "clk_c23": 1,
+     "clk_c24": 1,
+     "clk_c25": 1,
+     "clk_c26": 1,
+     "clk_c27": 1,
+     "clk_c28": 1,
+     "clk_c29": 1,
+     "clk_c30": 1,
+     "clk_c31": 1,
+     "clk_c32": 1,
+     "clk_c33": 1,
+     "clk_c34": 1,
+     "clk_c35": 1,
+     "clk_c36": 1,
+     "clk_c37": 1,
+     "clk_c38": 1,
+     "clk_c39": 1,
+     "clk_c40": 1,
+     "clk_c41": 1,
+     "clk_c42": 1,
+     "clk_c43": 1,
+     "clk_c44": 1,
+     "clk_c45": 1,
+     "clk_c46": 1,
+     "clk_c47": 1,
+     "clk_c48": 1,
+     "clk_c49": 1,
+     "clk_c50": 1,
+     "clk_c51": 1,
+     "clk_c52": 1,
+     "clk_c53": 1,
+     "clk_c54": 1,
+     "clk_c55": 1,
+     "clk_c56": 1,
+     "clk_c57": 1,
+     "clk_c58": 1,
+     "clk_c59": 1,
+     "clk_c60": 1,
+     "clk_c61": 1,
+     "clk_c62": 1,
+     "clk_c63": 1,
+     "fclk_in_attn_i1": 1,
+     "fclk_in_attnh_i0": 1,
+     "fclk_in_ft4_i": 1,
+     "fclk_in_ft5_i": 1,
+     "fclk_in_ft6_i": 1,
+     "fclk_in_ft7_i": 1,
+     "fclk_in_ft8_i": 1,
+     "fclk_in_ft9_i": 1,
+     "fclk_in_hbm_i0": 1,
+     "fclk_in_rsv_i0": 1,
+     "fclk_in_cland_dn_0": 1
+    },
+    "entries": [
+     [
+      "io.tcl",
+      "clk",
+      180.384,
+      24.288
+     ],
+     [
+      "io.tcl",
+      "clk_t1",
+      541.088,
+      24.288
+     ],
+     [
+      "io.tcl",
+      "clk_t2",
+      901.792,
+      24.288
+     ],
+     [
+      "io.tcl",
+      "clk_t3",
+      1411.552,
+      175.456
+     ],
+     [
+      "io.tcl",
+      "clk_t4",
+      24.864,
+      525.792
+     ],
+     [
+      "io.tcl",
+      "clk_t5",
+      551.904,
+      24.672
+     ],
+     [
+      "io.tcl",
+      "clk_t6",
+      910.432,
+      24.672
+     ],
+     [
+      "io.tcl",
+      "clk_t7",
+      1411.552,
+      525.792
+     ],
+     [
+      "io.tcl",
+      "clk_t8",
+      24.864,
+      876.32
+     ],
+     [
+      "io.tcl",
+      "clk_t9",
+      541.088,
+      1133.408
+     ],
+     [
+      "io.tcl",
+      "clk_t10",
+      897.504,
+      1133.408
+     ],
+     [
+      "io.tcl",
+      "clk_t11",
+      1411.552,
+      876.32
+     ],
+     [
+      "io.tcl",
+      "clk_t12",
+      182.496,
+      1226.912
+     ],
+     [
+      "io.tcl",
+      "clk_t13",
+      541.088,
+      1226.912
+     ],
+     [
+      "io.tcl",
+      "clk_t14",
+      897.504,
+      1226.912
+     ],
+     [
+      "io.tcl",
+      "clk_t15",
+      1243.104,
+      1226.912
+     ],
+     [
+      "io.tcl",
+      "clk_t16",
+      24.864,
+      1577.44
+     ],
+     [
+      "io.tcl",
+      "clk_t17",
+      541.088,
+      1311.712
+     ],
+     [
+      "io.tcl",
+      "clk_t18",
+      897.504,
+      1311.712
+     ],
+     [
+      "io.tcl",
+      "clk_t19",
+      1411.552,
+      1577.44
+     ],
+     [
+      "io.tcl",
+      "clk_t20",
+      24.864,
+      1927.968
+     ],
+     [
+      "io.tcl",
+      "clk_t21",
+      541.088,
+      2420.448
+     ],
+     [
+      "io.tcl",
+      "clk_t22",
+      901.792,
+      2420.448
+     ],
+     [
+      "io.tcl",
+      "clk_t23",
+      1411.552,
+      1927.968
+     ],
+     [
+      "io.tcl",
+      "clk_t24",
+      180.384,
+      2420.832
+     ],
+     [
+      "io.tcl",
+      "clk_t25",
+      551.904,
+      2420.832
+     ],
+     [
+      "io.tcl",
+      "clk_t26",
+      910.432,
+      2420.832
+     ],
+     [
+      "io.tcl",
+      "clk_t27",
+      1262.496,
+      2420.832
+     ],
+     [
+      "io.tcl",
+      "clk_c0",
+      113.376,
+      34.784
+     ],
+     [
+      "io.tcl",
+      "clk_c1",
+      458.976,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "clk_c2",
+      631.776,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "clk_c3",
+      804.576,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "clk_c4",
+      977.376,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "clk_c5",
+      1150.176,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "clk_c6",
+      1322.976,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "clk_c7",
+      286.176,
+      34.784
+     ],
+     [
+      "io.tcl",
+      "clk_c8",
+      458.976,
+      34.784
+     ],
+     [
+      "io.tcl",
+      "clk_c9",
+      631.776,
+      34.784
+     ],
+     [
+      "io.tcl",
+      "clk_c10",
+      804.576,
+      34.784
+     ],
+     [
+      "io.tcl",
+      "clk_c11",
+      977.376,
+      34.784
+     ],
+     [
+      "io.tcl",
+      "clk_c12",
+      1150.176,
+      34.784
+     ],
+     [
+      "io.tcl",
+      "clk_c13",
+      1322.976,
+      34.784
+     ],
+     [
+      "io.tcl",
+      "clk_c14",
+      113.376,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "clk_c15",
+      286.176,
+      311.264
+     ],
+     [
+      "io.tcl",
+      "clk_c16",
+      113.376,
+      587.744
+     ],
+     [
+      "io.tcl",
+      "clk_c17",
+      458.976,
+      864.224
+     ],
+     [
+      "io.tcl",
+      "clk_c18",
+      631.776,
+      864.224
+     ],
+     [
+      "io.tcl",
+      "clk_c19",
+      804.576,
+      864.224
+     ],
+     [
+      "io.tcl",
+      "clk_c20",
+      977.376,
+      864.224
+     ],
+     [
+      "io.tcl",
+      "clk_c21",
+      1150.176,
+      864.224
+     ],
+     [
+      "io.tcl",
+      "clk_c22",
+      1322.976,
+      864.224
+     ],
+     [
+      "io.tcl",
+      "clk_c23",
+      286.176,
+      587.744
+     ],
+     [
+      "io.tcl",
+      "clk_c24",
+      458.976,
+      587.744
+     ],
+     [
+      "io.tcl",
+      "clk_c25",
+      631.776,
+      587.744
+     ],
+     [
+      "io.tcl",
+      "clk_c26",
+      804.576,
+      587.744
+     ],
+     [
+      "io.tcl",
+      "clk_c27",
+      977.376,
+      587.744
+     ],
+     [
+      "io.tcl",
+      "clk_c28",
+      1150.176,
+      587.744
+     ],
+     [
+      "io.tcl",
+      "clk_c29",
+      1322.976,
+      587.744
+     ],
+     [
+      "io.tcl",
+      "clk_c30",
+      113.376,
+      864.224
+     ],
+     [
+      "io.tcl",
+      "clk_c31",
+      286.176,
+      864.224
+     ],
+     [
+      "io.tcl",
+      "clk_c32",
+      113.376,
+      1322.144
+     ],
+     [
+      "io.tcl",
+      "clk_c33",
+      458.976,
+      1598.624
+     ],
+     [
+      "io.tcl",
+      "clk_c34",
+      631.776,
+      1598.624
+     ],
+     [
+      "io.tcl",
+      "clk_c35",
+      804.576,
+      1598.624
+     ],
+     [
+      "io.tcl",
+      "clk_c36",
+      977.376,
+      1598.624
+     ],
+     [
+      "io.tcl",
+      "clk_c37",
+      1150.176,
+      1598.624
+     ],
+     [
+      "io.tcl",
+      "clk_c38",
+      1322.976,
+      1598.624
+     ],
+     [
+      "io.tcl",
+      "clk_c39",
+      286.176,
+      1322.144
+     ],
+     [
+      "io.tcl",
+      "clk_c40",
+      458.976,
+      1322.144
+     ],
+     [
+      "io.tcl",
+      "clk_c41",
+      631.776,
+      1322.144
+     ],
+     [
+      "io.tcl",
+      "clk_c42",
+      804.576,
+      1322.144
+     ],
+     [
+      "io.tcl",
+      "clk_c43",
+      977.376,
+      1322.144
+     ],
+     [
+      "io.tcl",
+      "clk_c44",
+      1150.176,
+      1322.144
+     ],
+     [
+      "io.tcl",
+      "clk_c45",
+      1322.976,
+      1322.144
+     ],
+     [
+      "io.tcl",
+      "clk_c46",
+      113.376,
+      1598.624
+     ],
+     [
+      "io.tcl",
+      "clk_c47",
+      286.176,
+      1598.624
+     ],
+     [
+      "io.tcl",
+      "clk_c48",
+      113.376,
+      1875.104
+     ],
+     [
+      "io.tcl",
+      "clk_c49",
+      458.976,
+      2151.584
+     ],
+     [
+      "io.tcl",
+      "clk_c50",
+      631.776,
+      2151.584
+     ],
+     [
+      "io.tcl",
+      "clk_c51",
+      804.576,
+      2151.584
+     ],
+     [
+      "io.tcl",
+      "clk_c52",
+      977.376,
+      2151.584
+     ],
+     [
+      "io.tcl",
+      "clk_c53",
+      1150.176,
+      2151.584
+     ],
+     [
+      "io.tcl",
+      "clk_c54",
+      1322.976,
+      2151.584
+     ],
+     [
+      "io.tcl",
+      "clk_c55",
+      286.176,
+      1875.104
+     ],
+     [
+      "io.tcl",
+      "clk_c56",
+      458.976,
+      1875.104
+     ],
+     [
+      "io.tcl",
+      "clk_c57",
+      631.776,
+      1875.104
+     ],
+     [
+      "io.tcl",
+      "clk_c58",
+      804.576,
+      1875.104
+     ],
+     [
+      "io.tcl",
+      "clk_c59",
+      977.376,
+      1875.104
+     ],
+     [
+      "io.tcl",
+      "clk_c60",
+      1150.176,
+      1875.104
+     ],
+     [
+      "io.tcl",
+      "clk_c61",
+      1322.976,
+      1875.104
+     ],
+     [
+      "io.tcl",
+      "clk_c62",
+      113.376,
+      2151.584
+     ],
+     [
+      "io.tcl",
+      "clk_c63",
+      286.176,
+      2151.584
+     ],
+     [
+      "io.tcl",
+      "fclk_in_attn_i1",
+      1358.88,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_attnh_i0",
+      1068.96,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft4_i",
+      2.144,
+      1120.544
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft5_i",
+      2.144,
+      1138.976
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft6_i",
+      2.144,
+      1157.536
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft7_i",
+      2.144,
+      1175.712
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft8_i",
+      2.144,
+      1193.824
+     ],
+     [
+      "io.tcl",
+      "fclk_in_ft9_i",
+      2.144,
+      1212.256
+     ],
+     [
+      "io.tcl",
+      "fclk_in_hbm_i0",
+      766.176,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_rsv_i0",
+      569.568,
+      2.656
+     ],
+     [
+      "io.tcl",
+      "fclk_in_cland_dn_0",
+      182.496,
+      2.656
+     ]
+    ],
+    "rule": "12.7 M7 on-ramp at plan tap"
+   }
+  },
+  "rc_calibration": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "files": [
+     "setRC_rcx.tcl"
+    ],
+    "records": {
+     "setRC_rcx.tcl": {
+      "signal": "set_wire_rc -signal = RCX unit R/C fit on SIGNAL nets >= 5 um, 4 designs (FLOW-RC-1 2026-10-27); GRT basis shares the per-layer table",
+      "clock": "set_layer_rc per layer = clock-sink arrival fit (FLOW 2026-10-25, rc_calib.json); set_wire_rc -clock unchanged"
+     }
+    }
+   }
+  },
+  "duplicate_modules": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "modules": 258,
+    "files": 134
+   }
+  },
+  "keep_hook": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "keep_attrs": 18,
+    "named_keep_modules": [],
+    "paramod_renamed": []
+   }
+  },
+  "pins_canonical": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "kit_canon": "38ed7813d8b8fdde061736b7e8108255c488d5f597c6df989d6cc1fcae4e63f9",
+    "recorded": "38ed7813d8b8fdde061736b7e8108255c488d5f597c6df989d6cc1fcae4e63f9",
+    "plan_file": "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_v2/svc_hi_dsdv_svc_rs__t1/gen/svc_hi_dsdv_svc_rs__t1/plan_pins.json",
+    "plan_canon": "38ed7813d8b8fdde061736b7e8108255c488d5f597c6df989d6cc1fcae4e63f9",
+    "slice": false,
+    "plan_place_canon": "38ed7813d8b8fdde061736b7e8108255c488d5f597c6df989d6cc1fcae4e63f9"
+   }
+  },
+  "mesh_vias": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no clock-mesh inputs in the kit"
+   }
+  },
+  "macro_channels": {
+   "verdict": "FAIL",
+   "errors": [
+    "place_macro u_bound.u_u_rsv_01_u_u_att_u_eng_g_t_0_g_ts_u_t_u_hc_g_h_0_u_c: not a contents macro of this type in the plan"
+   ],
+   "n_errors": 1,
+   "info": {
+    "applies": true
+   }
+  },
+  "clock_entry_clear": {
+   "verdict": "FAIL",
+   "errors": [
+    "place_macro u_bound.u_u_rsv_01_u_u_att_u_eng_g_t_0_g_ts_u_t_u_hc_g_h_0_u_c: not a contents macro of this type in the plan"
+   ],
+   "n_errors": 1,
+   "info": {
+    "applies": true
+   }
+  },
+  "island_macro_clear": {
+   "verdict": "NA",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": false,
+    "reason": "no island reservations"
+   }
+  },
+  "macro_pin_grid": {
+   "verdict": "FAIL",
+   "errors": [
+    "place_macro u_bound.u_u_rsv_01_u_u_att_u_eng_g_t_0_g_ts_u_t_u_hc_g_h_0_u_c: not a contents macro of this type in the plan"
+   ],
+   "n_errors": 1,
+   "info": {
+    "applies": true
+   }
+  },
+  "macro_instances": {
+   "verdict": "PASS",
+   "errors": [],
+   "n_errors": 0,
+   "info": {
+    "applies": true,
+    "placed": 72,
+    "resolved": 72
+   }
+  }
+ },
+ "verdict": "PASS",
+ "checks": {
+  "staged_tools": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "staged_inputs": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "sdc_and_ff_binding": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "yosys_cast_forms": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "module_closure": {
+   "verdict": "PASS",
+   "errors": []
+  }
+ },
+ "issues": [],
+ "deferred": [
+  "RTL elaboration/SELRANGE",
+  "synthesis face/fanout/port binding/LEC",
+  "placed and routed PG",
+  "TT setup / FF hold",
+  "routed LEC"
+ ]
+}
