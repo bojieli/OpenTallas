@@ -21,6 +21,7 @@ no standard cells besides the die top's own (none), PDN = die.pg grid on M8/M9 s
 routing of the clock spine and the abutment nets only, then a die STA script over the partitions' routed netlists +
 SPEF (sta_die.tcl): timing paths through the face boundary flops.
 """
+import hashlib as _hashlib
 import json
 import math
 import re
@@ -2582,7 +2583,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=(), spare_out=(), private_clock_mesh=None):
+                   cland_pinslot=(), spare_out=(), private_clock_mesh=None, region_guide=None):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -3036,6 +3037,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             f.write("\nsource /work/reset_physical_stages.tcl\n")
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
+    if region_guide:
+        # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D, opt-in gen phys --region-guide TYPE=SPEC): soft GPL region
+        # guides per failing r2r bit slice (tools/die_plan/region_guide.py plan of the kit's last AUTO-GEOM), sourced
+        # LAST in face_flops.tcl, released at the end of face_flops_release.tcl (before DPL); no spec = kit unchanged.
+        import region_guide as RG
+        RG.install(kd, json.loads(Path(region_guide).read_text()), outline=(w, h),
+                   src=dict(file=str(region_guide), sha256=_hashlib.sha256(Path(region_guide).read_bytes()).hexdigest()))
     if rc_cal:
         import core_flow   # FLOW-RC-1: fail-closed per-class (signal + clock) RC calibration guard
         core_flow.install_rc(kd, Path(__file__).with_name(RC_CAL_FILE))
@@ -3682,7 +3690,8 @@ def bound_parent_id_plan(raw, kit_rtl):
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None):
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None,
+               region_guide=None):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
     The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
@@ -3798,6 +3807,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    plain_rings=bool(kit_rtl and tn in kit_rtl),
                                    kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
                                    cland_pinslot=tuple(cland_pinslot or ()),
+                                   region_guide=(region_guide or {}).get(tn),
                                    spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else (),
                                    private_clock_mesh=(private_clock_mesh or {}).get(tn)))
     (out / "run_kit.sh").write_text(RUN_KIT)
