@@ -1,0 +1,38 @@
+{
+  "top": "ot_hnx_sfu_store_a__da81d76763c9",
+  "source13_frozen_native": true,
+  "files": [
+    {
+      "file": "results/hbm_storeA_sourceproof_intake_0030/native/ot_hgi_su_lbank.sv",
+      "sha256": "bddfeb6efcafa10a98b1ccce33f005419155e89d96a9f3343b5caee0c845f64f"
+    },
+    {
+      "file": "results/hbm_storeA_sourceproof_intake_0030/native/ot_hgi_su_lgroup2.sv",
+      "sha256": "55e584eeb52f93907ba85f375da2d5efb92f22355a2ca2e94303fd8da17f8397"
+    },
+    {
+      "file": "results/hbm_storeA_sourceproof_intake_0030/native/ot_hnx_sfu_store_a__da81d76763c9.sv",
+      "sha256": "f1eed9e84c43aed147d0e2a4a6ae58f10cdf13c09a3c3303c5a8c2c26b8e8461"
+    },
+    {
+      "file": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+      "sha256": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f"
+    }
+  ],
+  "clock_ports": [
+    "store0_clk"
+  ],
+  "reset_ports": [
+    "store0_rst_n"
+  ],
+  "source_phase_contract": "provider input store0_rst_n derives from ctl rst_n_t22 then actual3-edge internal relay; no historical64 receipt",
+  "conditional_formal_reset_edges": 4,
+  "upstream_66START_phase_join": "HELD",
+  "native_capacity": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 32
+  },
+  "view": "ot_hnx_sfu_store_a__da81d76763c9@4b48edda3499",
+  "pins_sha256": "4b48edda34991bb6684f72af64a27ae82605150c0d3569aeb0f5a88959b3411b",
+  "plan_sha256": "6d20bdf39e34c38478e4e1a1d6fa9321cb4e40c00803fecaf42258a51af8db11",
+  "planned_core_macros_sha256": "50c3e773b56e3369127632be5f7fae0b4d2e001c68be2d68afcd738482f4714a"
+}

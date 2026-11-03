@@ -1,0 +1,9 @@
+{
+  "status": "FAIL_NORMAL_GEN_PREFLIGHT",
+  "unit": "oth-ubuntu-2107691-1793623303",
+  "worker_source": "cfee74ae8",
+  "exit": 1,
+  "error": "profile interface inventory cannot override parameters",
+  "cause": "Explicit recipe PAGE_AW1 redundantly overrides exactselected PAGE_AW1 default, which profile staticinventory forbids.",
+  "repair": "Retain exact native source, guard PAGE_AW1/AW11 default and initialrejectotherPAGE_AW; recipe params empty, effectiveparams recorded. No RTL/ABI/body change."
+}

@@ -6495,6 +6495,30 @@ def _kit_input_identity(kit):
     if not rtl:
         raise ValueError("kit has no staged RTL inputs")
     paths += rtl
+    # Optional source-pinned GEN runtime assets (placement Tcl/CSV), never RTL
+    # or proof exemptions. Inline validation keeps standalone /lec.py complete.
+    freeze = json.loads((kit / "freeze.json").read_text())
+    runtime_seen = set()
+    runtime_files = freeze.get("runtime_files", [])
+    if not isinstance(runtime_files, list):
+        raise ValueError("runtime_files must be a list")
+    for row in runtime_files:
+        if not isinstance(row, dict):
+            raise ValueError("runtime asset identity must be an object")
+        dest = row.get("destination")
+        if (not isinstance(dest, str) or "\\" in dest or
+                any(x in ("", ".", "..") for x in dest.split("/")) or
+                not dest.startswith("runtime/") or dest in runtime_seen or
+                Path(dest).name == "freeze.json" or Path(dest).name.startswith("run_")):
+            raise ValueError("invalid runtime asset destination")
+        p = kit / dest
+        p.resolve(strict=True).relative_to(kit)
+        if p.is_symlink() or not re.fullmatch(r"[0-9a-f]{64}", row.get("sha256") or ""):
+            raise ValueError("invalid runtime asset identity")
+        if hashlib.sha256(p.read_bytes()).hexdigest() != row["sha256"]:
+            raise ValueError("runtime asset bytes differ from GEN readset")
+        runtime_seen.add(dest)
+        paths.append(p)
     result = {}
     for p in paths:
         p.resolve().relative_to(kit)  # no source outside the staged kit

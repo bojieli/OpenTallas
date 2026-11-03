@@ -1,0 +1,10 @@
+{
+  "status": "REUSE_EXISTING_BITWISE_NATIVE_MECHANISM_PROOFS_NOT_NEW_RECEIPT",
+  "selected_body_normalized_sha256": "89504e197dd1ba8b47f66bcf8f3858074c515fdef3b6d2e54bac6e25c85b10e6",
+  "selected_equals_frozen_miter_body": true,
+  "data_equation": "q[bit] <= d[bit], independent for everybit; no width-specific branch/interbit logic",
+  "epoch_equation": "asyncassert0; peredgeeq<=ea, independentofW",
+  "reuse": "Alreadychecked1662/2725bit native+1chain withmutants includes first128/596 independentdata bits; appendingone exact ot_dp_st gives+1 forarbitraryoldlaststage waveform, independentofoldchainlength.",
+  "new_proof_run": false,
+  "physical_claim": false
+}
