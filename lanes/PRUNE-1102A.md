@@ -97,3 +97,10 @@ Lane brief (COORD 11-02): intel2 scratch2 96%, epyc2 93%, intel1 92%; target <=8
 | 0.91 | 2026-10-27 16:43 | /srv/opentallas-scratch2/claude/qk-cores-6/ingest |
 | 0.74 | 2026-10-29 19:17 | /srv/opentallas-scratch2/claude/s81-kits-a/plan2 |
 | 10.95 | 2026-10-31 12:45 | /srv/opentallas-scratch2/claude/s81ck10/probe_l3 |
+
+## intel2 URGENT additions (2026-11-02 19:21 PST)
+- Removed worktree wt/codex-s81-cohort-1101 (19 GB; HEAD 82aa68ac2 in origin/codex/s81-cohort-1101; idle, no process; dirty diff saved
+  intel2:/srv/opentallas-scratch2/claude/prune-1102a/wt-patches/codex-s81-cohort-1101.{info,patch,untracked} + the 1 untracked recipe json; reaper rescue patch also exists).
+- wt/codex-qc-suc.partial_checkout (not a git worktree, Codex 11-01 07:25, no external refs): removed tracked-content copies physical/ rtl/ runtime/ schemas/ site/ spec/ (24.9 GB); results/ (with .keep) and reports/ kept.
+- Untagged flow-canary runs, idle >24 h, no external ref (prune-1101b manifests ignored as referrers), not live: 479 runs eligible; deleting
+  generated files >1 MB except *.json/*.log/*.rpt (67.7 GB, 1653 files; receipts/logs kept). Per-file list intel2:.../prune-1102a/i2_canary_big.tsv.
