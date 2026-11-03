@@ -23,6 +23,7 @@ ap.add_argument('--rst-re', default=r'^(rst|rst_n|rst_col|rstn|rst_ni)$|^rst_')
 ap.add_argument('--param', action='append', default=[], help='K=V chparam on the top')
 ap.add_argument('-D', action='append', default=[])
 ap.add_argument('--pass-param', action='append', default=[], help='integer parameter of the shell passed to the core (bench mutants)')
+ap.add_argument('--no-hier', action='store_true', help='no hierarchy pass (only the top is read for its ports)')
 ap.add_argument('files', nargs='+')
 a = ap.parse_args()
 
@@ -30,7 +31,10 @@ with tempfile.TemporaryDirectory() as td:
     js = os.path.join(td, 'p.json')
     defs = ' '.join('-D' + d for d in a.D)
     ch = ' '.join(f'-chparam {p.split("=")[0]} {p.split("=")[1]}' for p in a.param)
-    scr = f"read_verilog -sv {defs} {' '.join(a.files)}; hierarchy -top {a.top} {ch}; select {a.top}; write_json -selected -noscopeinfo {js}"
+    # `proc {top}`: a top with its own always blocks fails write_json ("contains processes") without it (11-03 fused_lane_elp,
+    # tkm htile, rp3 tops); --no-hier: read only the given files (children may be missing / black boxes)
+    hier = '' if a.no_hier else f'hierarchy -top {a.top} {ch}; '
+    scr = f"read_verilog -sv {defs} {' '.join(a.files)}; {hier}select {a.top}; proc {a.top}; write_json -selected -noscopeinfo {js}"
     r = subprocess.run([a.yosys, '-q', '-p', scr], capture_output=True, text=True)
     if r.returncode:
         sys.exit(r.stderr[-2000:])

@@ -1,0 +1,155 @@
+#!/usr/bin/env python3
+"""DIE-HBM-61/SPLIT 11-03: RE-FORM split of ot_hfd_coll_q3_body_core (280k cells, > 150k) -> CTL + 4 x QCOL4.
+
+    gen_q3_body_split.py KIT_RTL_DIR OUT_DIR
+
+Input : the as-built kit RTL of ot_hfd_coll_q3_body_core (kit-wave d44o attempt_5): ot_hfd_coll_q3_body_core.sv
+        (module ot_hfd_coll_q3_body_core_x = rest_extract netlist of ot_hfd_coll_q3_hard_v8x_s u_body minus members,
+        + ot_hfd_coll_q3_body_core__mc), ot_hfd_coll_q3_body_core__wrap.sv (__fcore, plan pins).
+Output: ot_hfd_coll_q3_body_ctl.sv   CTL sub-block (= the body minus the 16 32-bit data columns of the q-slot switch)
+        ot_hfd_coll_q3_body_core__split.sv  composition (CTL__fs + 4 x QCOL4__fs), same ports as the kit core
+        (ot_hfd_coll_q3_qcol4.sv is hand RTL in the same directory.)
+
+Cut (natural RTL boundary: the bit-sliced q-slot switch, rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv):
+  slices k = 0..15 of g_qout (each ot_hgi_coll_qso_q3_b32 = ot_hgi_coll_qslots_output NS 11 ND 16 PWT 32) carry payload
+  bits [32k +: 32] of all 11 sources; their payload path (capture leaf data flop -> captured_p -> dst_d) depends only on
+  body INPUT pins (inj_d, link/reduce src_d, vm_as_il, arg_out_data bits 0..511) and on sink_select (ISA word bits
+  26..89).  They move to QCOL4 sub-blocks (4 slices each, 4 identical replicas).  Slices 16/17 (meta bits 512..544,
+  meta comes from the protocol leaf) and every control flop stay in CTL.
+Cycle budget (kit face shell = +1 in / +1 out on every sub-block pin):
+  payload : pin -> face -> capture flop -> captured_p -> dst_d -> face -> pin   (same 4 flops as the uncut core): 0
+  select  : the uncut slice uses sink_select_p = flop(inst_d3[26+:64]) = inst_d2 two edges back.  CTL exports
+            inst_d2[26+:64] (uop pipe slice 0 d2 flops, a pure delay line) -> CTL out face -> QCOL in face = exactly
+            sink_select_p; QCOL drops its own sink_select_p flop.  0 added cycles.
+  dest_v / select_fault / unavailable_fault: identical in every slice (functions of sink_slot / sink_select /
+            captured_slot only); slice 0 keeps its control flops in CTL, and the fault join reads slice 0's faults in
+            place of slices 1..15 (OR-reduced there: |sel_q, |unav_q): exact.
+Result: the composition is cycle-exact with the uncut core on every pin (0 added cycles).
+"""
+import os, re, sys
+
+KR, OUT = sys.argv[1], sys.argv[2]
+os.makedirs(OUT, exist_ok=True)
+src = open(os.path.join(KR, 'ot_hfd_coll_q3_body_core.sv')).read()
+wrap = open(os.path.join(KR, 'ot_hfd_coll_q3_body_core__wrap.sv')).read()
+NCOL, SPC = 4, 4                     # QCOL4 blocks, slices per block (slices 0..15)
+NS, ND = 11, 16
+
+# ---------------------------------------------------------------- CTL netlist (_x) + __mc
+i_mc = src.index('module ot_hfd_coll_q3_body_core__mc')
+x, mc = src[:i_mc], src[i_mc:]
+x = x.replace('module ot_hfd_coll_q3_body_core_x(', 'module ot_hfd_coll_q3_body_ctl_x(ctl_sel_d2, ', 1)
+# fault join: slices 1..15 faults -> slice 0's (identical signals; consumer lines only, never the slice's own flop)
+pat = re.compile(r'\\u_body\.g_qout\[(\d+)\]\.g3\.w\.o\.u_out\.u\.(select_fault|unavailable_fault) ')
+nrew = 0
+L = x.split('\n')
+for n, l in enumerate(L):
+    ks = {int(m.group(1)) for m in pat.finditer(l)}
+    if len(ks) > 1:                  # a consumer concatenation (fj sel_q / unav_q capture)
+        L[n] = pat.sub(lambda m: (f'\\u_body.g_qout[0].g3.w.o.u_out.u.{m.group(2)} ' if 1 <= int(m.group(1)) <= 15
+                                  else m.group(0)), l)
+        nrew += 1
+assert nrew == 2, f'expected 2 fault-join consumer lines, got {nrew}'
+x = '\n'.join(L)
+d2 = ', '.join(f'\\u_body.u_upipe.SL[0].u.d2[{b}] ' for b in range(89, 25, -1))
+for b in range(26, 90):
+    assert f'\\u_body.u_upipe.SL[0].u.d2[{b}] ' in x, b
+x = x.replace('  input clk_control;', f'  output [63:0] ctl_sel_d2;\n  assign ctl_sel_d2 = {{ {d2} }};\n  input clk_control;', 1)
+assert 'output [63:0] ctl_sel_d2' in x
+mc = mc.replace('module ot_hfd_coll_q3_body_core__mc (', 'module ot_hfd_coll_q3_body_ctl__mc (\n    output wire [63:0] ctl_sel_d2,', 1)
+mc = mc.replace('ot_hfd_coll_q3_body_core_x u_x (', 'ot_hfd_coll_q3_body_ctl_x u_x (\n        .ctl_sel_d2(ctl_sel_d2),', 1)
+
+# ---------------------------------------------------------------- CTL top (plan-pin level, from __fcore)
+ports = re.findall(r'^\s*(input|output) wire (?:\[(\d+):(\d+)\] )?(\w+),?$', wrap[wrap.index('module '):].split(');')[0], re.M)
+P = {n: (d, int(h) + 1 if h else 1) for d, h, l_, n in ports}
+moved_out = [f'u_body_g_qout_{k}_g3_w_o_u_out_u_dst_d' for k in range(16)]
+srcs = ['u_body_g_qcap_2_u_cap_src_d', 'u_body_g_qcap_3_u_cap_src_d', 'u_body_g_qcap_4_u_cap_src_d',
+        'u_body_g_qcap_9_u_cap_src_d', 'u_body_g_q3_arg_out_data']
+dropped_in = ['inj_d', 'u_body_vm_as_il']
+for n in moved_out + srcs + dropped_in:
+    assert n in P, n
+top = ['// GENERATED by reform_1103/bench/q3_body/gen_q3_body_split.py (DIE-HBM-61/SPLIT 11-03).  Do not edit.',
+       '// CTL sub-block of the q3_body RE-FORM split: the uncut core minus the 16 payload columns of the q-slot switch',
+       '// (QCOL4 x 4).  Same pins as ot_hfd_coll_q3_body_core__fcore except: dst_d of slices 0..15 (now QCOL4 pins), inj_d and',
+       '// vm_as_il (payload only), src_d / arg_out_data narrowed to the meta bits [544:512]; + ctl_sel_d2 (ISA sink_select at',
+       '// d2 for the QCOL4 faces).', '`default_nettype none', 'module ot_hfd_coll_q3_body_ctl (']
+pl = []
+for n, (d, w) in P.items():
+    if n in moved_out or n in dropped_in:
+        continue
+    if n in srcs:
+        pl.append(f'    input wire [544:512] {n}')
+    else:
+        pl.append(f"    {d} wire {f'[{w-1}:0] ' if w > 1 and not (n == 'clk') else ''}{n}")
+pl.append('    output wire [63:0] ctl_sel_d2')
+top.append(',\n'.join(pl) + '\n);')
+inst = wrap[wrap.index('ot_hfd_coll_q3_body_core__mc u_core ('):wrap.rindex('endmodule')]
+inst = inst.replace('ot_hfd_coll_q3_body_core__mc u_core (', 'ot_hfd_coll_q3_body_ctl__mc u_core (\n        .ctl_sel_d2(ctl_sel_d2),', 1)
+for n in moved_out:
+    inst = re.sub(r'\.' + n + r'\(' + n + r'\)', f'.{n}()', inst)
+for n in srcs:
+    inst = re.sub(r'\.' + n + r'\(' + n + r'\)', f'.{n}({{{n}, 512\'d0}})', inst)
+inst = re.sub(r'\.inj_d\(inj_d\)', ".inj_d(1024'd0)", inst)
+inst = re.sub(r'\.u_body_vm_as_il\(u_body_vm_as_il\)', ".u_body_vm_as_il(2048'd0)", inst)
+top.append('    ' + inst.strip())
+top.append('endmodule\n`default_nettype wire\n')
+with open(os.path.join(OUT, 'ot_hfd_coll_q3_body_ctl.sv'), 'w') as f:
+    f.write('// GENERATED by reform_1103/bench/q3_body/gen_q3_body_split.py from the kit netlist (fault join slices 1..15 -> slice 0,\n'
+            '// + ctl_sel_d2 = uop pipe slice 0 d2[89:26]).  Do not edit.\n')
+    f.write(x)
+    f.write(mc)
+    f.write('\n'.join(top))
+
+# ---------------------------------------------------------------- composition (kit-core pins, face-shelled sub-blocks)
+fs = os.path.join(KR, 'ot_hfd_coll_q3_body_core__fshell.sv')
+fsh = open(fs).read()
+fports = re.findall(r'^\s*(input|output) wire (?:\[(\d+):(\d+)\] )?(\w+),?$', fsh[fsh.index('module '):].split(');')[0], re.M)
+FP = {n: (d, int(h) + 1 if h else 1) for d, h, l_, n in fports}
+assert set(FP) == set(P), set(FP) ^ set(P)
+
+
+def src_bit(s, i):
+    """payload bit i (0..511) of capture source s, as a kit-core pin expression"""
+    if s in (0, 1):
+        return f'inj_d[{s*512+i}]'
+    if s in (2, 3, 4):
+        return f'u_body_g_qcap_{s}_u_cap_src_d[{i}]'
+    if 5 <= s <= 8:
+        j = s - 5
+        return f'u_body_vm_as_il[{(i % 256)*8 + 2*j + (i // 256)}]'
+    if s == 9:
+        return f'u_body_g_qcap_9_u_cap_src_d[{i}]'
+    if s == 10:
+        return f'u_body_g_q3_arg_out_data[{i}]'
+    raise ValueError(s)
+
+
+C = ['// GENERATED by reform_1103/bench/q3_body/gen_q3_body_split.py (DIE-HBM-61/SPLIT 11-03).  Do not edit.',
+     '// Split composition of ot_hfd_coll_q3_body_core: CTL + 4 x QCOL4 (slices 4c..4c+3), sub-blocks in their face-shelled',
+     '// form (<sub>__fs = facewrap.py model of the kit face shell).  Same pins as the kit core; cycle-exact (0 added cycles).',
+     '`default_nettype none', '(* keep_hierarchy *)', 'module ot_hfd_coll_q3_body_core__split #(parameter integer MUT = 0) (']
+C.append(',\n'.join(f"    {d} wire {f'[{w-1}:0] ' if w > 1 else ''}{n}" for n, (d, w) in FP.items()) + '\n);')
+C.append('    wire [63:0] sel_d2;')
+conn = []
+for n, (d, w) in P.items():
+    if n in moved_out or n in dropped_in:
+        continue
+    conn.append(f'.{n}({n}[544:512])' if n in srcs else f'.{n}({n})')
+conn.append('.ctl_sel_d2(sel_d2)')
+C.append('    ot_hfd_coll_q3_body_ctl__fs u_ctl (' + ', '.join(conn) + ');')
+for c in range(NCOL):
+    sb, db = [], []
+    for t in range(SPC):
+        k = SPC * c + t
+        for s in range(NS):
+            for b in range(32):
+                sb.append(src_bit(s, 32 * k + b))
+        for d in range(ND):
+            for b in range(32):
+                db.append(f'u_body_g_qout_{k}_g3_w_o_u_out_u_dst_d[{d*32+b}]')
+    C.append(f"    ot_hfd_coll_q3_qcol4__fs #(.MUT({'MUT' if c == 0 else '0'})) u_col{c} (.clk(clk), .sel(sel_d2),")
+    C.append('        .src({' + ', '.join(reversed(sb)) + '}),')
+    C.append('        .dst({' + ', '.join(reversed(db)) + '}));')
+C.append('endmodule\n`default_nettype wire\n')
+open(os.path.join(OUT, 'ot_hfd_coll_q3_body_core__split.sv'), 'w').write('\n'.join(C))
+print('gen ok: fault-join lines', nrew)
