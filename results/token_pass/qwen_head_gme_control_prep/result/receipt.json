@@ -1,0 +1,46 @@
+{
+  "verdict": "PASS_CONTROL_COMPONENT",
+  "cases": 11,
+  "host": "epyc2/dear-crayfish",
+  "unit": "oth-ubuntu-814367-1793611796",
+  "path": "/srv/opentallas-scratch2/claude/codex-head-gme-control-input4",
+  "method": "input-only replay of three exact completed gate3 binaries; no RTL/source rebuild",
+  "runtime_s": 19.67,
+  "peak_RSS_KB": 14540,
+  "build": {
+    "actual_mapped_seconds": 132.65,
+    "default_seconds": 57.73,
+    "optin_seconds": 51.79,
+    "peak_RSS_KB": 704544
+  },
+  "original_failure": {
+    "unit": "oth-ubuntu-724910-1793611310",
+    "path": "/srv/opentallas-scratch2/claude/codex-head-gme-control-packet3",
+    "preserved": true,
+    "causes": [
+      "fixture CALGstop5200 differed from terminal END5120; static calendar requires equality",
+      "fixture expected producer suppression after dependency fault, whereas actual static issue intentionally continues"
+    ]
+  },
+  "causal_controls": {
+    "native_observer_count": 12,
+    "observed_GME_PCs": [
+      28,
+      29,
+      30,
+      31
+    ],
+    "checked_descriptors": 4,
+    "old_native_fault_first_GO": 2198,
+    "old_NOCHASE_fault_second_GO": 3222,
+    "NOCHASE_all_GO_continue": true,
+    "optin_NOCHASE_fault": false,
+    "optin_native_fault": false,
+    "old6_descriptor_error_caught": true,
+    "own_busy_fault_first_GO": 2198
+  },
+  "scope": "actual selected mapped u_hr and distinct default-off functional successor control/calendar/SRAM, real typed SU observer; explicit ready/idle and progress fixture, no matrix results, current fullQC/PHY/globalprogramme/numerical/physical/rate qualification",
+  "enabled_by_default": false,
+  "added_state": 0,
+  "added_pipeline_edges": 0
+}

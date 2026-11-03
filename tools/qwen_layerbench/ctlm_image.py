@@ -527,7 +527,9 @@ def digest(words):
 
 # ------------------------------------------------------------------------------------------------ LM head (QLB-C4b)
 def lm_head_programme(plan_path: Path):
-    """The DV (TP8) LM-head ME programme: final RMSNorm (sum of squares, rsqrt, gain apply -> VM 8192, the head
+    """LEGACY whole-head DV programme, unsupported by <=8-round native executors.
+
+    Final RMSNorm (sum of squares, rsqrt, gain apply -> VM 8192, the head
     profile's three SU ops) -> ONE AMAX matvec over the die's head rows (head_geometry: rows, tiles a round, rounds;
     the profile's chunk-0 matvec fields with the DV geometry: no chunking, the 25-round DV schedule streams them) -> END.
     Source: token_source_plan head_geometry + head_profiles[0] (the die-0 ISA profile)."""
@@ -538,7 +540,7 @@ def lm_head_programme(plan_path: Path):
     if [o['unit'] for o in ops[:4]] != [2, 2, 2, 1] or not ops[3]['me_amax'] or ops[-1]['unit'] != 0:
         raise CompileError('head profile is not norm (3 SU) + AMAX matvec ... END')
     me = dict(ops[3])
-    me.update(me_nout=geo['rows'], me_tiles=geo['tiles_per_round'], me_wbase=0, me_wcs=0, me_obase=0, me_row0=0,
+    me.update(me_nout=geo['rows'], me_tiles=geo['rounds'], me_wbase=0, me_wcs=0, me_obase=0, me_row0=0,
               me_amc=0)
     if (geo['rows'] + geo['tiles_per_round'] * geo['rounds'] - 1) // (geo['tiles_per_round'] * geo['rounds']) > 128:
         raise CompileError('head rows exceed tiles x rounds x 128')
@@ -549,7 +551,9 @@ def lm_head_programme(plan_path: Path):
         if any(g[k] != f[k] for k in f):
             raise CompileError('head instruction does not round-trip')
     return words, [ISA.decode_instruction(w) for w in words], dict(geometry=geo, profile=prof['schema'],
-                                                                     profile_die=prof['die'])
+                                                                     profile_die=prof['die'],
+        execution_contract='LEGACY_WHOLE_HEAD_UNQUALIFIED', native_executor_supported=False,
+        native_replacement='native_head_gme_object.py four genuine chunks8+8+8+1 plus native H producer; source leases required')
 
 
 def compile_head(a, C, R, dec_words, stage, xpf_edges):

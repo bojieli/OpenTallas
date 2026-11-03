@@ -70,10 +70,12 @@ def allocation(reports, monitor_indices=(12,13,14,15)):
                             pidx=u*128+pidx,vm_x_first=u*4096,vm_x_end=u*4096+384,vm_rstd=u*4096+400) for u in range(4)])
 
 
-def link_stage(obj, btab, alloc):
+def link_stage(obj, btab, alloc, *, monitor_slice=None):
     """Emit actual stage37 table records; keep every executable date unselected."""
     if obj['status']!='UNLINKED_SOURCE_OBJECT' or obj['gain_elements']!=4096:
         raise ValueError('qualified recovered-gain source object required')
+    if monitor_slice is not None and (type(monitor_slice)is not int or not 0<=monitor_slice<12):
+        raise ValueError('explicit native HEAD monitor slice must be0..11')
     base,pidx=alloc['gain_base'],alloc['apply_pidx']
     if pidx%2:raise ValueError('native HEAD pair must start at an even pidx')
     slices=[]
@@ -85,7 +87,10 @@ def link_stage(obj, btab, alloc):
         w|=base<<reloc[0]['bit']
         f=D.su_unpack(w)
         if f['c']+len(sl['blocks'])*128>2048:raise ValueError('HEAD gain crosses user CROM partition')
-        prog=L.prog_users([dict(eaddr=pidx//2,payload=f'{w:0256x}')],head=True)
+        # One real monitored copy uses the existing pair's unused upper half.
+        # It is selected only by the future source linker, never by default.
+        payload=w|((w<<512)if sid==monitor_slice else 0)
+        prog=L.prog_users([dict(eaddr=pidx//2,payload=f'{payload:0256x}')],head=True)
         bt=[]
         for r in btab:
             if r['slice']!=sid:continue
@@ -97,7 +102,10 @@ def link_stage(obj, btab, alloc):
         if len(bt)!=P.HEAD_BTAB_COUNTS[sid] or len(cr)!=P.HEAD_CROM_COUNTS[sid]:
             raise ValueError('HEAD genuine BTAB/gain shape differs')
         slices.append(dict(slice=sid,prog_users=prog,btab=bt,crom=cr))
-    return dict(stage=37,slices=slices)
+    result=dict(stage=37,slices=slices)
+    if monitor_slice is not None:
+        result['native_head_monitor']=dict(slice=monitor_slice,apply_pidx=pidx,monitor_pidx=pidx+1,extra_pairs=0,extra_cycles=0)
+    return result
 
 
 def assemble_manifest(base_manifest, stage37, alloc, *, parent_manifest_sha256, lowering_commit):

@@ -1,0 +1,31 @@
+{
+  "verdict": "PASS_COMPONENT",
+  "case_count": 49,
+  "host": "epyc2/dear-crayfish",
+  "unit": "oth-ubuntu-4020491-1793609695",
+  "path": "/srv/opentallas-scratch2/claude/codex-wtn-head37-input2",
+  "method": "input-only replay of exact four completed binaries; no RTL/tool rebuild",
+  "source_commit": "10166fb77",
+  "initial_failure": {
+    "unit": "oth-ubuntu-3962075-1793609342",
+    "path": "/srv/opentallas-scratch/claude/codex-wtn-head37-packet1",
+    "cause": "duplicate stimulus at1301 collided with u2/slice4 on single observer port; bench overwrote duplicate",
+    "preserved": true
+  },
+  "fix": "duplicate at1286; generator refuses all same-edge SU issue collisions",
+  "build": {
+    "legacy_seconds": 20.24,
+    "plain_seconds": 3.25,
+    "select_seconds": 15.77,
+    "phys_seconds": 17.25,
+    "max_RSS_KB": 346328
+  },
+  "scope": "actual typed observer and distinct default-off HEAD37 witness controller. 2ns functional fixture; no HEAD production dates, physical, transport, or GME readiness qualification",
+  "cases": [
+    "legacy original/default0 BASE every-edge lockstep 7cases",
+    "enabled canonical BASE 7cases per plain/select/phys",
+    "HEAD nominal+wrongpc/missing/late/duplicate/old_digest/stage 7cases per plain/select/phys"
+  ],
+  "profile_digest": "d24441af3d8d3139",
+  "epoch": 8
+}
