@@ -59,7 +59,7 @@ LINT_RC = 8
 # several die generators).  A lane may raise it to 15 where a measured GRT->final RC hold loss > 10 ps is documented
 # (QC btab, HBM ring).  Already SIGNED views stay valid (new builds only).  gen_phys / gen.py / the die core generators
 # take this constant as their default.
-HOLD_FF_MARGIN_DEFAULT = 10.0
+HOLD_FF_MARGIN_DEFAULT = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
 
 # first step inside the docker bash -lc string (rc starts at 0 before it)
 LINT_STEP = ("python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1; rc=\\$?; "

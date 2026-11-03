@@ -1782,13 +1782,13 @@ def verdict(res):
     elif not {"TT", "FF"} <= ran:
         v["status"] = "NOT RUN (signoff needs TT setup + FF hold)"
     else:
-        # OWNER 12.25: the gate is pair SLACK (TT setup >= 0, FF hold >= +10 ps); related-pair skew is a target (WARN)
+        # OWNER 12.25: the gate is pair SLACK (TT setup >= 0, FF hold >= HOLD_MIN_PS = 0 ps, OWNER 11-02); related-pair skew is a target (WARN)
         import pair_slack_gate as PSG
         ok = v.get("setup_TT", -1) >= 0 and v.get("hold_FF", -1) >= PSG.HOLD_MIN_PS
         v["warnings"] = [f"pairskew_{c} {v[f'pairskew_{c}']} ps > target {PSG.SKEW_TARGET_PS:g} ps (WARN only)"
                          for c in ("TT", "FF") if v.get(f"pairskew_{c}", 0) > PSG.SKEW_TARGET_PS]
         v["status"] = "PASS" if ok else "FAIL"
-    v["gate"] = (f"OWNER 12.25: setup_TT >= 0, hold_FF >= +10 ps; related pair skew (CPPR) is a TARGET (WARN only, "
+    v["gate"] = (f"OWNER 12.25: setup_TT >= 0, hold_FF >= 0 ps (OWNER 11-02); related pair skew (CPPR) is a TARGET (WARN only, "
                  f"pairskew_*_over counts pairs > {SKEW_PS:g} ps as INFO); expanded endpoint coverage for marked child "
                  "ETMs; ffspread_*_info is INFO")
     return v

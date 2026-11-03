@@ -1,0 +1,13 @@
+{
+  "status": "PASS_COMPONENT",
+  "what": "actual CTLM37 CALR/CTLM gate rerun at the adopted nent1021 layout (HEAD476/326, later ranges +8, stage LOCAL4 876+4*(s-1), LOCAL37 1020/count1)",
+  "base_packet": "epyc2:/srv/opentallas-scratch2/claude/codex-head-ctlm37-native-1101/gate1 (Codex e0ae07be2, nent1013 PASS)",
+  "image": "mk1021.py derives the nent1021 calendar ROM from the nent1013 gate ROM; decode(re-encode) round-trip asserted; dw nent 0x3fd, HEAD 0x1dc0146, OPSEG 0x3240001",
+  "rtl_sources": "unchanged (same 9 files: actual original + qfd_dv_cmd_cal_mu_head37 successor); TB only moves first indices (tb_delta.diff)",
+  "host": "epyc2/dear-crayfish", "unit": "oth-ubuntu-38358-1793676351", "admission": {"mem_gb":2,"threads":1,"disk_gb":2,"critical":true},
+  "build": {"exit":0,"wall":"2:01.30","peak_rss_kb":363760},
+  "nominal": {"exit":0,"cycles":10844,"existing_stage_user_loads":144,"new_head_user_loads":4,"nent":1021,"shared_head_range":[1020,1],"defaultoff_reject":true},
+  "controls": {"MUT_USER": {"exit":1,"assertion":"CTLM_WRONG_REQUEST stage37/37 user0/1"}},
+  "boundary": "CALR/CTLM range/user request only. HEAD entries 796..803 in this test image are alignment padding, not the 12 apply + GME + clear commands; no executable HEAD calendar, issue dates, table payload, ROOT lease or token claim",
+  "clock": "833 ps (half 0.4165 ns), 1 fs precision"
+}

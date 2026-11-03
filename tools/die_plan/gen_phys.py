@@ -1498,7 +1498,7 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10 ps for NEW kits (the shared core_flow.HOLD_FF_MARGIN_DEFAULT; 15 where a measured
 # GRT->final RC hold loss > 10 ps is documented); signed views stay valid.
-HOLD_FF_MARGIN_DEFAULT = 10.0
+HOLD_FF_MARGIN_DEFAULT = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
 # HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
 HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"
@@ -2235,6 +2235,10 @@ def declared_rom_bits(rtl_dir):
 DECLARED_FLOP_MEMORIES = {
     # KV kv3_hub_Eo / kv3_hub_Wo qkd_seq_xs_s u_q: 40 x 128 Q store FIFO (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv)
     "ot_qkvd_seq_m_sfifo": 40 * 128,
+    # S81 T7 svc_lo_dsdv_svc_rs__t7 u_att.sw (TOK-DS-3 11-02): 32 x 512 score-window FIFO, bound native glue of
+    # dsdv_svc_att.sv sw[]; the head row is read asynchronously at sw_r into the same-cycle consumer (bound 191_Y), so a
+    # synchronous macro would add a read cycle.  Content-hashed glue name: a re-bind with other content no longer matches.
+    "ot_bind_native_bfac540d36e9ad5c410d0d97": 32 * 512,
 }
 
 

@@ -430,7 +430,102 @@ def clock_model_coverage(library_files, instantiated_masters, expected_sha256=No
     return result
 
 
-def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0):
+# COORD ruling 11-02 19:2x (d) (FLOW-22): a composed-child parent counts the child endpoints through the child's SIGNED
+# ETM clock arrival (block arrival contract, OWNER 12.25; standard hierarchical STA) -- default-on.  A model is covered
+# only when ALL of this holds, else the coverage stays UNEXPANDED_CHILD_ETM / NOT RUN (fail closed):
+#   * the consumed Liberty sits next to the child's signed-view provenance (tools/autopilot/export_view.py):
+#     <libdir>/<master>.provenance.json, <libdir>/<master>/provenance.json or <libdir>/provenance.json (type = master;
+#     the Liberty's real path is searched too, so a kit symlink into the view dir works);
+#   * that provenance is a complete signed view (views_status 'signoff') whose files_sha256[<lib name>] is the sha256
+#     of the consumed Liberty (the ETM is the one exported from that child's sign-off);
+#   * its signoff.json exists, has the recorded sha256 and verdict SIGNED;
+#   * the child is signed at the SAME flow tag as this sign-off (OT_FLOW_TAG / --flow-tag, set by resign.py): the
+#     child's kind:resign PROVENANCE.json next to its signoff/ dir (else the view's own flow_tag), and its post-route
+#     LEC is EQUIVALENT.
+FLOW_TAG_ENV = 'OT_FLOW_TAG'
+
+
+def _sha_file(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as stream:
+        for chunk in iter(lambda: stream.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _child_view_provenance(liberty, master):
+    seen = []
+    for d in dict.fromkeys([Path(liberty).parent, Path(os.path.realpath(liberty)).parent]):
+        for f in (d / f'{master}.provenance.json', d / master / 'provenance.json', d / 'provenance.json'):
+            if f in seen or not f.is_file():
+                continue
+            seen.append(f)
+            x = json.loads(f.read_text())
+            if f.name == 'provenance.json' and f.parent == d and (x.get('type') or (x.get('kit') or {}).get('module')
+                                                                  or master) != master:
+                continue
+            return f, x
+    raise ValueError(f'no signed child view provenance next to {liberty}')
+
+
+def signed_child_etm(model, flow_tag):
+    """Evidence that one unexpanded child ETM is its SIGNED child's own export at this flow tag; raises ValueError."""
+    master, lib = model['master'], Path(model['liberty'])
+    if not flow_tag:
+        raise ValueError(f'parent flow tag unknown ({FLOW_TAG_ENV} / --flow-tag unset)')
+    pf, prov = _child_view_provenance(lib, master)
+    if prov.get('views_status') != 'signoff':
+        raise ValueError(f'{pf}: view status {prov.get("views_status")!r}, not a complete signed view')
+    ex = prov.get('export') or {}
+    files = ex.get('files_sha256') or prov.get('files_sha256') or {}
+    names = [k for k in files if Path(k).name == lib.name]
+    if not names or files[names[0]] != model['liberty_sha256']:
+        raise ValueError(f'{lib.name}: sha256 differs from the signed view export {pf}')
+    so = ex.get('signoff')
+    if not so or not Path(so).is_file():
+        raise ValueError(f'{pf}: child signoff.json {so} unavailable')
+    if ex.get('signoff_sha256') and _sha_file(so) != ex['signoff_sha256']:
+        raise ValueError(f'{so}: sha256 differs from the view export record')
+    sd = json.loads(Path(so).read_text())
+    if sd.get('verdict') != 'SIGNED':
+        raise ValueError(f'{so}: child verdict {sd.get("verdict")!r}')
+    rp = Path(so).parent.parent / 'PROVENANCE.json'
+    rec = json.loads(rp.read_text()) if rp.is_file() else {}
+    if rec.get('kind') == 'resign' and rec.get('verdict') in (None, 'SIGNED'):
+        tag, lec = rec.get('flow_tag'), rec.get('lec')
+        lec = lec if not lec or os.path.isabs(lec) else str(rp.parent / lec)
+        lv = json.loads(Path(lec).read_text()).get('verdict') if lec and Path(lec).is_file() else rec.get('lec_verdict')
+        basis = str(rp)
+    else:
+        tag, lv, basis = prov.get('flow_tag') or sd.get('flow_tag'), (prov.get('chain') or {}).get('lec_verdict'), str(pf)
+    if tag != flow_tag:
+        raise ValueError(f'child signed at flow tag {tag!r}, this sign-off at {flow_tag!r}')
+    if lv != 'EQUIVALENT':
+        raise ValueError(f'child post-route LEC {lv!r}')
+    return dict(view_provenance=str(pf), signoff=str(so), flow_tag=tag, flow_basis=basis, lec_verdict=lv)
+
+
+def apply_signed_child_etms(result, flow_tag):
+    """UNEXPANDED_CHILD_ETM -> SIGNED_CHILD_ETM (PASS) when every model is a signed child ETM at this flow tag."""
+    if result.get('status') != 'UNEXPANDED_CHILD_ETM':
+        return result
+    misses = []
+    for model in result['models']:
+        try:
+            model['signed_child_etm'] = signed_child_etm(model, flow_tag)
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            model['signed_child_etm_miss'] = str(error)
+            misses.append(f"{model.get('master')}: {error}")
+    result['signed_child_etm_rule'] = 'COORD 11-02 19:2x (d): child endpoints via the SIGNED child ETM at the same flow tag'
+    if misses:
+        result['signed_child_etm_misses'] = misses
+        return result
+    result.update(status='SIGNED_CHILD_ETM', verdict='PASS', flow_tag=flow_tag,
+                  expanded_child_flop_pairs='BLOCK_ARRIVAL_CONTRACT (signed child ETM)')
+    return result
+
+
+def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0, flow_tag=None):
     """Map exact container-library receipt paths to their immutable host inputs."""
     try:
         if mapping_errors != 0:
@@ -453,7 +548,7 @@ def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0)
         for model in result['models']:
             model['consumed_liberty'] = consumed[model['liberty']]
         result['library_receipt'] = str(receipt_path)
-        return result
+        return apply_signed_child_etms(result, os.environ.get(FLOW_TAG_ENV) if flow_tag is None else flow_tag)
     except (OSError, ValueError, TypeError, KeyError) as error:
         return dict(schema='opentallas.clock_endpoint_coverage.v1', status='UNAVAILABLE', verdict='NOT RUN',
                     raw_pair_basis='visible_clock_pins', expanded_child_flop_pairs='NOT RUN', models=[], reason=str(error))
@@ -2125,6 +2220,8 @@ def main(argv=None):
     r.add_argument("--retain-child-clock-witness", action="store_true",
                    help="Passively retain native TT/FF clock graph in these existing sessions; no coverage waiver")
     r.add_argument("--dry", action="store_true")
+    r.add_argument("--flow-tag", help="released flow tag of this sign-off (default $OT_FLOW_TAG; resign.py sets it): "
+                   "unexpanded child ETMs count when each is its signed child's export at the same tag")
     r.add_argument("--margin-policy", choices=_SL.MARGIN_POLICIES, default=None,
                    help="sign-off margin policy: nominal (default, OWNER 12.24b/c: setup clock uncertainty 0 applied "
                         "in-session, hold 25 unchanged) | legacy (SDC setup 60 / hold 25 as written; A/B and margin "
@@ -2153,6 +2250,8 @@ def main(argv=None):
     if a.cmd == "bundle":
         print("SIGNOFF_BUNDLE " + " ".join(copy_signoff_bundle(a.out, extra=a.extra)))
         return 0
+    if a.cmd == "run" and a.flow_tag:
+        os.environ[FLOW_TAG_ENV] = a.flow_tag
     if a.cmd == "run" and a.ff_bound_ps is not None and a.ff_vclk != "bound-ff":
         ap.error("--ff-bound-ps requires --ff-vclk bound-ff")
     if a.cmd == "run" and a.ff_bound_ps is not None and not (a.ff_vclk_contract or "").strip():

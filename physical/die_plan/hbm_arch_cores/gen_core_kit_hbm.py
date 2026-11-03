@@ -1110,7 +1110,7 @@ def drv_fanout(a):
 
 
 def hold_ff_margin(a):
-    """FLOW-HOLD-1 (OWNER 12.19): OT_HOLD_FF_MARGIN = --hold-ff-margin, else max(--hold-margin, shared default 10)."""
+    """FLOW-HOLD-1 (OWNER 12.19): OT_HOLD_FF_MARGIN = --hold-ff-margin, else max(--hold-margin, shared default 0 since OWNER 11-02)."""
     if a.hold_ff_margin is not None:
         return a.hold_ff_margin
     sys.path.insert(0, str(TOOL))
@@ -1224,7 +1224,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # band (sfu lane14 4_cts FF: 1467 endpoints < 0, 37822 < 30) at ~20 iterations/min -> 57 + 16 non-convergent runs.
     ap.add_argument("--hold-margin", type=float, default=0.0, help="HOLD_SLACK_MARGIN ps at the flow corner (extra over the SDC 25 ps hold uncertainty)")
     # FLOW-HOLD-1 (OWNER 12.19): the FF GRT hold repair margin (OT_HOLD_FF_MARGIN, run_kit_hbm.sh grt HOLD_SLACK_MARGIN=)
-    # is its own knob now: default max(--hold-margin, tools/die_plan/core_flow.HOLD_FF_MARGIN_DEFAULT = 10); 15 where a
+    # is its own knob now: default max(--hold-margin, tools/die_plan/core_flow.HOLD_FF_MARGIN_DEFAULT = 0, OWNER 11-02); 15 where a
     # measured GRT->final RC hold loss > 10 ps is documented (ring).  HOLD_SLACK_MARGIN (other steps) stays --hold-margin.
     ap.add_argument("--hold-ff-margin", type=float, default=None, help="OT_HOLD_FF_MARGIN ps (FF GRT hold repair)")
     # HBM-CORES-KITS-20: shared core-flow DRV basis (KV/S81/QC); 0 disables either knob

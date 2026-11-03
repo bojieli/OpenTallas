@@ -597,7 +597,7 @@ proc ot_io_hold_pad {} {
 }
 # COORD 11-01 05:1x / OWNER 12.28b (closure first): the post-CTS / pre-repair FF hold check is INFO; the one hard stop
 # is FF hold WNS worse than OT_HOLD_STOP_PS = -150 ps (structural, not repairable by hold padding).  Hold is judged
-# at the routed sign-off (FF hold >= +10 ps on real views), unchanged.  Same constant in tools/die_plan/hold_gate.tcl,
+# at the routed sign-off (FF hold >= 0 ps on real views, OWNER 11-02).  Same constant in tools/die_plan/hold_gate.tcl,
 # tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
 set ::OT_HOLD_STOP_PS -150.0
 proc ot_hold_structural_gate {} {

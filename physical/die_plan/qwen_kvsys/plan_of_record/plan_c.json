@@ -2441365,6 +2441365,117 @@
     ],
     "open": []
    }
+  },
+  "cohort": {
+   "id": "tree_kv58",
+   "authority": "COORD RULING 2026-11-02 (DIE-KV-61/pc): the authoritative KV die clock cohort is the CURRENT DIE-KV-58 regional INV tree; clock.mesh (d25 sites + m25c graph, D-KV-CLK-R22+D-KV-ISL-FT-R25) is retained as HISTORICAL metadata only and is NOT the producer of the current die clock (0 ck_mesh / ckm_n10 references in tree_kv58)",
+   "form": "link_htree + regional DME (pv_S_6, pv_S_7, sys_SW, sys_SE), inverter stages, site-legal",
+   "tool": "ot_clk (kv58.yaml: schema ot_clk_config/1, event kv58_main2160_geom93)",
+   "source": "intel1:/srv/opentallas-scratch2/claude/die-kv-58/clk/tree_kv58/kit/clock",
+   "tree_sha256": "7834cf95b1929f67c0036e4a20452650cb7970a12c322ec43a06bc08c1c70d83",
+   "ctree_sha256": "054eee9a63a20501192f1766e3d910f9e846364aafdf1030596cb124c897c0c8",
+   "taps": 2114,
+   "cells": 15938,
+   "mesh_status": "historical",
+   "island_ft": {
+    "scope": "HHP types kv3_pc__cl5a95b461 / kv3_pc__cl254f2e73 (parts below); island ft arcs of every other type are unchanged by this event",
+    "role": "declared_tie_dead_output",
+    "rule": "tree_kv58 has no node, mesh driver or strap at any HHP child-core island (nearest tree cell 103.8-177.3 um, Codex 06e44f167 CURRENT_BOUNDARY_JOIN.json), so every island ft arc of the HHP child cores carries no die clock: its ft input is a DECLARED TIE (TIELO at the parent, same form as master_rulings.island_ft_inputs declared_tie_dead_output, INFRA-FIRST-HEAD-4) and its ft output has no die-level load; the cores' functional clock is the tree_kv58 core tap ck[0] (partition_types.<type>.clock.taps). No ft port is removed, renamed or tied to clk; the hard-core views (island cells fixed, dont_touch) are unchanged.",
+    "modules": {
+     "qkd_kvs_pc": {
+      "instances_per_core": 4
+     },
+     "qkd_kvs_pc_h_head_p": {
+      "instances_per_core": 4
+     }
+    },
+    "parts": {
+     "pc_EN_0": {
+      "type": "kv3_pc__cl5a95b461",
+      "cores": [
+       {
+        "inst": "kvpc0",
+        "module": "qkd_kvs_pc_h_head_p"
+       },
+       {
+        "inst": "kvpc1",
+        "module": "qkd_kvs_pc"
+       },
+       {
+        "inst": "kvpc2",
+        "module": "qkd_kvs_pc"
+       },
+       {
+        "inst": "kvpc3",
+        "module": "qkd_kvs_pc"
+       }
+      ]
+     },
+     "pc_ES_0": {
+      "type": "kv3_pc__cl254f2e73",
+      "cores": [
+       {
+        "inst": "kvpc0",
+        "module": "qkd_kvs_pc_h_head_p"
+       },
+       {
+        "inst": "kvpc1",
+        "module": "qkd_kvs_pc"
+       },
+       {
+        "inst": "kvpc2",
+        "module": "qkd_kvs_pc"
+       },
+       {
+        "inst": "kvpc3",
+        "module": "qkd_kvs_pc"
+       }
+      ]
+     },
+     "pc_WN_0": {
+      "type": "kv3_pc__cl5a95b461",
+      "cores": [
+       {
+        "inst": "kvpc0",
+        "module": "qkd_kvs_pc_h_head_p"
+       },
+       {
+        "inst": "kvpc1",
+        "module": "qkd_kvs_pc"
+       },
+       {
+        "inst": "kvpc2",
+        "module": "qkd_kvs_pc"
+       },
+       {
+        "inst": "kvpc3",
+        "module": "qkd_kvs_pc"
+       }
+      ]
+     },
+     "pc_WS_0": {
+      "type": "kv3_pc__cl254f2e73",
+      "cores": [
+       {
+        "inst": "kvpc0",
+        "module": "qkd_kvs_pc_h_head_p"
+       },
+       {
+        "inst": "kvpc1",
+        "module": "qkd_kvs_pc"
+       },
+       {
+        "inst": "kvpc2",
+        "module": "qkd_kvs_pc"
+       },
+       {
+        "inst": "kvpc3",
+        "module": "qkd_kvs_pc"
+       }
+      ]
+     }
+    }
+   }
   }
  },
  "reset": {

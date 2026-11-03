@@ -102,7 +102,7 @@ def test_pass_on_second_iteration(tmp_path):
     assert all(it["commands"] for it in r["iterations"])
     # iteration 2 starts from iteration 1's routed dir; the superseded iteration 1 run data is pruned, best kept
     mk2 = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")][1]
-    assert mk2[2] == r["iterations"][0]["dir"] and mk2[4] == "m10"
+    assert mk2[2] == r["iterations"][0]["dir"] and mk2[4] == "m0"
     assert not (Path(r["iterations"][0]["dir"]) / "run/results").exists()
     assert (Path(r["best"]["dir"]) / "run/results").exists()
     # sign-off on the kit's own config.mk (ECO overrides kept aside as config_eco.mk)
@@ -122,7 +122,7 @@ def test_no_improvement_stops_and_keeps_best(tmp_path):
     r = E.run_loop(k, b, run=f, mem=8, cpus=2)
     assert r["verdict"] == "EXHAUSTED" and len(r["iterations"]) == 2 and "no improvement" in r["reason"]
     assert r["best"]["n"] == 2                                                 # -2.6 is better than -3
-    assert r["iterations"][0]["variant"] == "t10+b10"                        # TT slew + FF hold: both passes
+    assert r["iterations"][0]["variant"] == "t0+b0"                          # TT slew + FF hold: both passes
     s = E.summary(r)
     assert s.startswith("late-ECO exhausted (2 it") and "FF -8->-2.6" in s
 
@@ -203,7 +203,7 @@ def test_t_then_b_chain(tmp_path):
     assert r["verdict"] == "PASS"
     it = r["iterations"][0]
     mk = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")]
-    assert [c[4] for c in mk] == ["t10", "b10"]
+    assert [c[4] for c in mk] == ["t0", "b0"]
     assert mk[0][3].endswith("/i1t") and mk[1][2] == mk[0][3] and mk[1][3] == it["dir"]
     envs = [e for c, e in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")]
     assert envs[1]["OT_PRD_FROM"] == "route"

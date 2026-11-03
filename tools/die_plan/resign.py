@@ -255,7 +255,8 @@ def main(argv=None):
                                a.lec_netlist)
             if a.dry_run:
                 print(' '.join(so)); print(' '.join(lec)); return 0
-            env = dict(os.environ, SIGNOFF_DOCKER=os.environ.get('SIGNOFF_DOCKER', 'docker'))
+            env = dict(os.environ, SIGNOFF_DOCKER=os.environ.get('SIGNOFF_DOCKER', 'docker'),
+                       OT_FLOW_TAG=a.tag)   # COORD 11-02 (d): signed child ETMs count at the same flow tag
             for n, cmd in (('signoff', so), ('lec', lec)):
                 with open(os.path.join(a.out, n + '.log'), 'w') as log:
                     rc = subprocess.call(cmd, stdout=log, stderr=subprocess.STDOUT, env=env)

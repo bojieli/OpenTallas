@@ -3008,7 +3008,7 @@ def main(argv=None):
             gate[k]["kit_contract_role"] = "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)"
             if kc["neg_pairs"]:
                 gate[k]["verdict"] = "FAIL"
-    for k in ("intra", "seam"):       # OWNER 12.25: FF hold >= +10 ps on the measured pairs
+    for k in ("intra", "seam"):       # OWNER 12.25/11-02: FF hold >= HOLD_MIN_PS (0) on the measured pairs
         hmar = gate[k].get("ff_hold_margin_ps")
         if isinstance(hmar, (int, float)) and hmar < PSG.HOLD_MIN_PS:
             gate[k]["verdict"] = "FAIL"
