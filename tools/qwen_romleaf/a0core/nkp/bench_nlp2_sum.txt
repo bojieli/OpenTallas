@@ -1,0 +1,8 @@
+BUILD_OK
+NKP_COUNTS MUT=0 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_PASS MUT=0 checks=14000 strict_out=0 engine_state=0
+NKP_COUNTS MUT=3 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=3 strict_out_errors=3399 first=1351 engine_state_errors=0 first=-1 checks=14000
+NKP_COUNTS MUT=7 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=7 strict_out_errors=3399 first=1351 engine_state_errors=0 first=-1 checks=14000
+LEC (flow-20261103-s-qc lec.py, kit_nlp2 1_2_yosys.v): EQUIVALENT cp=43445 proved=43445; NKP=0 synth 1_synth.v sha256 9d42d494... (= DIE-QC-65 NL kit)

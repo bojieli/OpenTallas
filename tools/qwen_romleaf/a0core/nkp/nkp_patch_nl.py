@@ -8,9 +8,56 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from nkp_patch import rep, plumb_hdr, matvec, NKPDOC
 
+# NL v2 (DIE-QC-66 ruling 11-03): LEC class fix.  NKP != 0 only (NKP = 0 elaborates the original text):
+#  * g_terms7 is taken only for NKP == 0; NKP = 2 uses g_terms7p (same row expressions) whose g_ts0 tsh / osh rows
+#    are async-reset (reset-constant, so their structurally-zero bits are proved from reset, like NK g_ts1)
+#  * g_kv_addr_prep r_part and g_cs_reg cs_s_q / cs_c_q async-reset for NKP != 0
+TS0_OLD = ("        end else begin : g_ts0\n"
+           "            always @(posedge clk) begin : p_terms_nkp\n"
+           "                integer b2;\n"
+           "                for (b2 = 0; b2 < NB_GT; b2 = b2 + 1) begin tsh[b2] <= trow[b2]; osh[b2] <= orow[b2]; end\n"
+           "            end\n")
+TS0_NEW = ("        end else begin : g_ts0\n"
+           "            //: NL v2: async-reset rows (reset-constant structurally-zero bits; LEC)\n"
+           "            always @(posedge clk or negedge rst_n) begin : p_terms_nkp\n"
+           "                integer b2;\n"
+           "                if (!rst_n) for (b2 = 0; b2 < NB_GT; b2 = b2 + 1) begin tsh[b2] <= {(AW+PRW){1'b0}}; osh[b2] <= {(AW+PRW){1'b0}}; end\n"
+           "                else for (b2 = 0; b2 < NB_GT; b2 = b2 + 1) begin tsh[b2] <= trow[b2]; osh[b2] <= orow[b2]; end\n"
+           "            end\n")
+CS_OLD = "                always @(posedge clk) begin cs_s_q <= cs_s; cs_c_q <= cs_c; end\n"
+CS_NEW = ("                if (NKP == 0) begin : g_csn\n"
+          "                always @(posedge clk) begin cs_s_q <= cs_s; cs_c_q <= cs_c; end\n"
+          "                end else begin : g_csr   //: NL v2: async-reset carry-save rows (LEC)\n"
+          "                always @(posedge clk or negedge rst_n) if (!rst_n) begin cs_s_q <= {AW{1'b0}}; cs_c_q <= {AW{1'b0}}; end\n"
+          "                    else begin cs_s_q <= cs_s; cs_c_q <= cs_c; end\n"
+          "                end\n")
+RP_OLD = ("            always @(posedge clk) begin\n"
+          "                q_p[gq] <= qv[QW-1:0];\n"
+          "                c_p[gq] <= cv[CW-1:0];\n"
+          "                r_part <= part;\n"
+          "                off[gq] <= osum;\n"
+          "            end\n")
+RP_NEW = ("            if (NKP == 0) begin : g_rpn\n" + RP_OLD +
+          "            end else begin : g_rpr   //: NL v2: r_part async-reset (LEC)\n"
+          "            always @(posedge clk) begin\n"
+          "                q_p[gq] <= qv[QW-1:0];\n"
+          "                c_p[gq] <= cv[CW-1:0];\n"
+          "                off[gq] <= osum;\n"
+          "            end\n"
+          "            always @(posedge clk or negedge rst_n) if (!rst_n) r_part <= {(8*AW){1'b0}}; else r_part <= part;\n"
+          "            end\n")
+
+def nlrst(t):
+    t = rep(t, "    end else if ((NKP & 5) == 0) begin : g_terms7\n", "    end else if (NKP == 0) begin : g_terms7\n")
+    t = rep(t, TS0_OLD, TS0_NEW)
+    t = rep(t, CS_OLD, CS_NEW)
+    t = rep(t, RP_OLD, RP_NEW)
+    return t
+
+
 def patch(d):
     d = Path(d)
-    f = d / "ot_qwen_w12_matvec_land32.sv"; f.write_text(matvec(f.read_text()))
+    f = d / "ot_qwen_w12_matvec_land32.sv"; f.write_text(nlrst(matvec(f.read_text())))
     f = d / "ot_qwen_rom_tile_w12_land32.sv"; t = f.read_text()
     t = plumb_hdr(t, "ot_qwen_rom_tile_logic_w12",
                   "    parameter integer GLOBAL_KV_CONST0 = 0 // opt-in ROM-only global KV port is already hardwired zero\n) (",
