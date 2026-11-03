@@ -18,6 +18,10 @@ module <mod> with the identical port list wraps it:
   * bank split (spec key "bank_split": {"mem", "data", "en", "wa"}): a 2-bank flop memory (reads q[{b, a}]) is
     written from one kept negedge copy of the write-data face register per bank (cycle exact): each copy drives
     one bank's rows, so the face register Q drives 2 loads instead of every row (bounded fanout, no slew class).
+  * queue slices (spec key "queue_slices"): a 2-bank flop queue (q[{b, rp[2:0]}] -> r0/r1 on issue, out = bank ? r1 : r0)
+    is cut into B-bit column slices; each slice owns kept copies of every control it uses (wp/rp/bank copies loaded
+    with the same next state, negedge copies of take/issue and of the write data per bank), so no control or data
+    net fans out past one slice (bounded fanout by construction, cycle exact).
 All other ports pass through unchanged.
 """
 import json
@@ -132,6 +136,62 @@ def bank_split(body, sp, ck="ck"):
                       form="per-bank negedge write-data copy, cycle exact")
 
 
+def _cut(body, txt, what):
+    if body.count(txt) != 1:
+        raise SystemExit(f"rf_wrap queue_slices: {what} found {body.count(txt)}x")
+    return body.replace(txt, "")
+
+
+def queue_slices(body, sp, ck="ck"):
+    mem, data, take, wp, rp, issue = sp["mem"], sp["data"], sp["en"], sp["wa"], sp["ra"], sp["rd_en"]
+    r0, r1, bank, osel, wpn, rpn, rst = sp["r0"], sp["r1"], sp["bank"], sp["out_sel"], sp["wa_next"], sp["ra_next"], sp["rst"]
+    B = int(sp.get("slice_bits", 32))
+    d = re.search(r"^(?:  \(\*[^\n]*\*\)\n)?  reg \[(\d+):0\] " + re.escape(mem) + r" \[15:0\];\n", body, re.M)
+    if not d:
+        raise SystemExit("rf_wrap queue_slices: memory declaration not found")
+    w = int(d.group(1)) + 1
+    blk = re.compile(r"^  always @\(posedge " + ck + r"\) begin\n(?:    if \(\w+\[\d+\]\)\n      " + re.escape(mem) +
+                     r"\[\w+\]\[\d+:\d+\] <= \w+\[\d+\];\n)+  end\n", re.M)
+    b = blk.search(body, d.end())
+    if not b or b.start() != d.end() or b.group(0).count(" <= ") != w:
+        raise SystemExit("rf_wrap queue_slices: per-bit write block not found right after the declaration")
+    body = body[:d.start()] + body[b.end():]
+    rd = {}
+    for k in (0, 1):
+        m = re.search(r"^  assign (\w+) = " + re.escape(mem) + r"\[\{ 1'h" + str(k) + r", " + re.escape(rp) + r"\[2:0\] \}\];\n", body, re.M)
+        if not m:
+            raise SystemExit(f"rf_wrap queue_slices: bank {k} read not found")
+        rd[k] = m.group(1); body = _cut(body, m.group(0), f"bank {k} read")
+    for k, r in ((0, r0), (1, r1)):
+        m = re.search(r"^  assign (\w+) = " + re.escape(issue) + r" \? " + rd[k] + " : " + re.escape(r) + r";\n", body, re.M)
+        if not m:
+            raise SystemExit(f"rf_wrap queue_slices: {r} load mux not found")
+        body = _cut(body, m.group(0), f"{r} mux")
+        body = _cut(body, f"  always @(posedge {ck})\n    {r} <= {m.group(1)};\n", f"{r} register")
+    body = _cut(body, f"  assign {osel}[{w-1}:0] = {bank} ? {r1} : {r0};\n", "output select")
+    if re.search(re.escape(mem) + r"\[", body):
+        raise SystemExit("rf_wrap queue_slices: stray access to the old memory left")
+    base = mem.rstrip(); L = []
+    ns = -(-w // B)
+    for c in range(ns):
+        lo, hi = c * B, min(w, (c + 1) * B) - 1; n = hi - lo + 1; t = f"{base}.rf_s{c}_"
+        L += [f"  (* keep = 1 *) reg [3:0] {t}wp ;", f"  (* keep = 1 *) reg [2:0] {t}rp ;", f"  (* keep = 1 *) reg {t}bk ;",
+              f"  always @(posedge {ck}, negedge {rst}) if (!{rst}) begin {t}wp  <= 4'h0; {t}rp  <= 3'h0; {t}bk  <= 1'h0; end",
+              f"    else begin {t}wp  <= {wpn}; {t}rp  <= {rpn}[2:0]; {t}bk  <= {rp}[3]; end",
+              f"  (* keep = 1 *) reg {t}tk ;", f"  (* keep = 1 *) reg {t}is ;",
+              f"  (* keep = 1 *) reg [{n-1}:0] {t}wd0 ;", f"  (* keep = 1 *) reg [{n-1}:0] {t}wd1 ;",
+              f"  always @(negedge {ck}) begin {t}tk  <= {take}; {t}is  <= {issue}; {t}wd0  <= {data}[{hi}:{lo}]; {t}wd1  <= {data}[{hi}:{lo}]; end",
+              f"  reg [{n-1}:0] {t}m0  [7:0];", f"  reg [{n-1}:0] {t}m1  [7:0];",
+              f"  always @(posedge {ck}) if ({t}tk  && {rst} && !{t}wp [3]) {t}m0 [{t}wp [2:0]] <= {t}wd0 ;",
+              f"  always @(posedge {ck}) if ({t}tk  && {rst} && {t}wp [3]) {t}m1 [{t}wp [2:0]] <= {t}wd1 ;",
+              f"  always @(posedge {ck}) if ({t}is  && {rst}) begin {r0}[{hi}:{lo}] <= {t}m0 [{t}rp ]; {r1}[{hi}:{lo}] <= {t}m1 [{t}rp ]; end",
+              f"  assign {osel}[{hi}:{lo}] = {t}bk  ? {r1}[{hi}:{lo}] : {r0}[{hi}:{lo}];"]
+    body = body.rstrip(); assert body.endswith("endmodule")
+    body = body[:-len("endmodule")] + "\n".join(L) + "\nendmodule\n"
+    return body, dict(mem=mem, width=w, slices=ns, slice_bits=B, added_flops=ns * (3 + 3 + 1 + 2) + 2 * w,
+                      form="column slices with per-slice kept control copies, negedge take/issue/write-data copies")
+
+
 def transform(text, mod, spec):
     order, decl, at = ports(text, mod)
     clk = "ck" if "ck" in decl else None
@@ -153,6 +213,8 @@ def transform(text, mod, spec):
     nmr, bsr = [], None
     if spec.get("negmid"):
         body, nmr = negmid(body, spec["negmid"])
+    if spec.get("queue_slices"):
+        body, bsr = queue_slices(body, spec["queue_slices"])
     if spec.get("bank_split"):
         body, bsr = bank_split(body, spec["bank_split"])
     new = head + body

@@ -105,11 +105,21 @@
     "u_marker_consumer__rst_n",
     "u_bootbarrier__rst_n"
    ],
-   "bank_split": {
+   "queue_slices": {
     "mem": "\\u_queue.q ",
     "data": "\\u_queue.dq ",
     "en": "\\u_queue.take ",
-    "wa": "\\u_queue.wp "
+    "wa": "\\u_queue.wp ",
+    "ra": "\\u_queue.rp ",
+    "rd_en": "\\u_queue.issue ",
+    "r0": "\\u_queue.r0 ",
+    "r1": "\\u_queue.r1 ",
+    "bank": "\\u_queue.bank ",
+    "out_sel": "_070_",
+    "wa_next": "_075_",
+    "ra_next": "_074_",
+    "rst": "u_queue__rst_n",
+    "slice_bits": 32
    }
   }
  },
