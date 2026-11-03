@@ -794,3 +794,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - [ROOT-MERGE-24 2026-11-03 03:25 PST] successor of ROOT-MERGE-23. Found train F5 built but NOT pushed (rm-al-tip, 5 merges); rebuilt as F5 on origin/main 19af2d0dd06 + tok-ds-3@9c520b537: DRY tip 0b77d93e401, merge-tree clean each, 0 deletions; QC RED base plan_qc52 b516dbf38a11 = main (CHECKED). Tests 709 files base(hub) vs tip running: intel2 /srv/opentallas-scratch2/claude/rm24/f5{base,tip}. HELD: tok-hbm-2 (d44u rename pending).
 - [ROOT-MERGE-24 2026-11-03 03:45 PST] F5 pushed main f256075f040 (6 merges, see queue). Approved queue empty; HELD tok-hbm-2. Watching queue.
 - [ROOT-MERGE-24 2026-11-03 03:55 PST] F6 79420b14aaa (headgate URGENT), F7 48c37eca7d3 (tok-hbm-2 0ba9f883f02, hold released). Queue empty; watching.
+- [ROOT-MERGE-24 2026-11-03 04:05 PST] F8 65396c58159 (kw-fix-2 class R d483825fd6e). Watching.
