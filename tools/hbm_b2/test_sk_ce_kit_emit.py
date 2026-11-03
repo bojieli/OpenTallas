@@ -1,5 +1,5 @@
 """DIE-HBM-61/RTL-TAILX 11-03: sk_ce_kit.py --emit-rest must reproduce the committed tail rest RTL byte for byte,
-and the RE-FORM form (REFORM=1 default: operand register, two-stage max4, registered phase/index) must be present."""
+and the RE-FORM form (REFORM=1 default: operand register, two-stage max4, registered phase/index, c12 LAT-6 units, SKL sink launch) must be present."""
 import subprocess, sys
 from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
@@ -13,5 +13,16 @@ def test_emit_rest_matches_committed():
 def test_reform_default_on():
     t = RTL.read_text()
     assert "parameter integer REFORM=1," in t and "parameter integer REFORM = 1," in t
-    assert "g_operand_q" in t and "MAX=55+REFORM,P3=56+2*REFORM," in t and "age==MAX+1)for" in t
-    assert "D(3+OPQ)) mt" in t and "D(49+OPQ)) et" in t and "D(19+OPQ)) dt" in t
+    assert "g_operand_q" in t and "g_c12" in t and "P3=MAX+1+MXS," in t and "age==MAX+1)for" in t
+    assert "D(LMU+OPQ)) mt" in t and "D(LEU+OPQ)) et" in t and "D(LDU+OPQ)) dt" in t
+    assert "age >= 10'(SKL) && wrap" in t and "parameter integer L = SKL + SDIV + CAP + 2" in t
+
+def test_recipes_carry_c12_files():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("sk_ce_kit", REPO / "tools/hbm_b2/sk_ce_kit.py")
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    r = m.recipes("land1-cap3")
+    for core in ("ot_hbm_hc_root_static__tailx_rest__v4f4566", "ot_hbm_hc_root_static__tailx_rest__v6bc7f2"):
+        files = r[core]["files"]
+        for f in m.C12_FILES:
+            assert (m.C12 + f) in files and (REPO / m.C12 / f).is_file()

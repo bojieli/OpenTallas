@@ -10,6 +10,11 @@ import importlib.util, json, re, sys
 REPO=Path(__file__).resolve().parents[2]
 HERE=REPO/"physical/die_plan/hbm_arch_cores"
 CE=REPO/"rtl/hbm_accel/cores_split/sk_en_q4"
+# RE-FORM 11-03: the rest core (REFORM=1) launches its sink and returns 70 edges later (SKL 268 vs 198).
+REFORM_SHIFT=70
+C12="rtl/hbm_accel/integrated_20261006/sfu_c12_selected/"
+C12_FILES=("00_ot_hdc_fastfp_lat_c12.sv","01_ot_hdc_fp32_f12.sv","02_ot_hdc_prefix.sv","03_ot_dsrom_su_add6.sv","04_ot_dsrom_su_f12.sv",
+           "05_ot_hdc_fsqrt_c12.sv","06_ot_hdc_v41x_sfu_c12.sv","08_ot_hdc_delay.sv","09_ot_hdc_sfu.sv","14_ot_hdc_fastfp.sv")
 
 def must(text,old,new):
     if text.count(old)!=1: raise ValueError((old,text.count(old)))
@@ -63,16 +68,24 @@ def rest_source():
     # RE-FORM 11-03 (OWNER TWO-STRIKES, DIE-HBM-61/RTL-TAILX): registered phase
     # flags + index (next-age predecode), an operand capture register between the
     # 24:1 operand select and every arithmetic front end, and a two-stage max4.
-    # Internal re-timing only: MAX +2 issue edges, P3 +2; every external port
-    # keeps its cycle (results/hbm_reform_tailx_1103, cycles table d44v).
-    a=must(a,"    parameter integer PREDECODE_INDEX=0,\n","    parameter integer PREDECODE_INDEX=0,\n    parameter integer REFORM=1,       // 0 = pre-RE-FORM single-stage form (bench gold only)\n")
-    a=must(a,"MAX=55,P3=56,","MAX=55+REFORM,P3=56+2*REFORM,")
+    # The deeper units lengthen the tail; the core's sink launch moves by a
+    # whole number of SDIV periods (SKL), so every port shifts by one declared
+    # amount (physical/die_plan/hbm/reform_1103/cycles/tailx_rest.tsv).
+    a=must(a,"    parameter integer PREDECODE_INDEX=0,\n","    parameter integer PREDECODE_INDEX=0,\n    parameter integer REFORM=1,       // 0 = pre-RE-FORM single-stage form (bench gold only)\n    parameter integer REFORM_COMB=0,  // bench only: 1 = combinational phase/index (reference for the predecode)\n")
+    a=must(a,"    localparam integer P1=1,P2=28,MAX=55,P3=56,P4=75,P5=148,P6=159,P7=186,EREADY=197;\n",
+"""    // Unit latencies (RE-FORM: the c12 1.2 GHz library at LAT 6) and the operand register OPQ; every phase
+    // starts when the previous one has written back (the original constants are this formula at 3/3/49/19/0).
+    localparam integer OPQ=(REFORM!=0)?1:0, MXS=OPQ;
+    localparam integer LMU=(REFORM!=0)?6:3, LAU=(REFORM!=0)?6:3, LEU=7*LMU+8*LAU+4, LDU=19;
+    localparam integer P1=1, P2=P1+24+LMU+OPQ, MAX=P2+24+LAU+OPQ, P3=MAX+1+MXS, P4=P3+16+LAU+OPQ,
+        P5=P4+24+LEU+OPQ, P6=P5+8+LAU+OPQ, P7=P6+8+LDU+OPQ, EREADY=P7+8+((LAU>LMU)?LAU:LMU)+OPQ;
+""")
     a=must(a,"reg [31:0] t[0:23],b[0:23],s[0:2],mx[0:3];","reg [31:0] t[0:23],b[0:23],s[0:2],mx[0:3],mlo[0:3],mhi[0:3];")
     old_p="".join(f"    wire p{k}=active&&age>=P{k}&&age<P{k}+{n};\n" for k,n in ((1,24),(2,24),(3,16),(4,24),(5,8),(6,8),(7,8)))
     new_p=old_p.replace("    wire p","    wire p").replace("=active","_c=active").replace("wire p1_c","wire p1_c")
     new_p=new_p.replace("wire p1=","wire p1_c=")
     new_p+="""    wire p1,p2,p3,p4,p5,p6,p7;
-    generate if (PREDECODE_INDEX >= 2 || REFORM != 0) begin:g_predecode_phase
+    generate if (PREDECODE_INDEX >= 2 || (REFORM != 0 && REFORM_COMB == 0)) begin:g_predecode_phase
         // Phase flags registered from the next age (same priority as the
         // control block below), so no age compare sits in front of the select.
         wire [8:0] age_nx=launch?9'd1:
@@ -93,7 +106,7 @@ def rest_source():
     a=must(a,old_p,new_p)
     a=must(a,"    wire [4:0] i_comb=p1?5'(age-P1):p2?5'(age-P2):p3?5'(age-P3+8):\n        p4?5'(age-P4):p5?5'(age-P5):p6?5'(age-P6):5'(age-P7);",
              "    wire [4:0] i_comb=p1_c?5'(age-P1):p2_c?5'(age-P2):p3_c?5'(age-P3+8):\n        p4_c?5'(age-P4):p5_c?5'(age-P5):p6_c?5'(age-P6):5'(age-P7);")
-    a=must(a,"generate if (PREDECODE_INDEX != 0) begin:g_predecode_index","generate if (PREDECODE_INDEX != 0 || REFORM != 0) begin:g_predecode_index")
+    a=must(a,"generate if (PREDECODE_INDEX != 0) begin:g_predecode_index","generate if (PREDECODE_INDEX != 0 || (REFORM != 0 && REFORM_COMB == 0)) begin:g_predecode_index")
     i=a.index("    wire [31:0] ma=t[i],mb=");j=a.index("    function automatic greater")
     a=a[:i]+"""    wire [31:0] mb=p1?s[(i<4)?0:(i<8)?1:2]:32'h40000000;
     wire [31:0] ab=p2?b[i]:p3?(mx[(i-8)>>2]^32'h80000000):
@@ -103,7 +116,6 @@ def rest_source():
     // second operands are captured with it. Every unit issues one edge later
     // and its index delay line is one edge longer, so write-back slots move by
     // exactly one edge; the schedule constants above absorb the MAX/P3 shift.
-    localparam integer OPQ=(REFORM!=0)?1:0;
     wire mv_u,av_u,ev_u,dv_u,neg_u;
     wire [31:0] ti_u,mb_u,ab_u;
     generate if (OPQ != 0) begin:g_operand_q
@@ -120,18 +132,34 @@ def rest_source():
         assign ti_u=t[i]; assign mb_u=mb; assign ab_u=ab;
     end endgenerate
     wire [31:0] ey,dy,my,ay;
-    wire mo,ao,eo,do_,ef,df;
-    wire [1:0] me,ae;
+    wire mo,ao,eo,do_,ef,df,mf,af;
     wire [4:0] mi,ai,ei,di;
-    ot_hdc_fp32_mul_fast mul(.clk(clk),.rst_n(rst_n),.valid_in(mv_u),.a(ti_u),.b(mb_u),.y(my),.err(me),.valid_out(mo));
-    ot_hdc_fp32_add_fast add(.clk(clk),.rst_n(rst_n),.valid_in(av_u),.a(ti_u),.b(ab_u),.y(ay),.err(ae),.valid_out(ao));
-    ot_hdc_v41x_exp #(.LM(3),.LA(3)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
-        .x({ti_u[31]^neg_u,ti_u[30:0]}),.y(ey),.vo(eo),.fault(ef));
-    ot_hdc_v41x_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv_u),.a(32'h3f800000),.b(ti_u),.y(dy),.vo(do_),.fault(df));
-    ot_hdc_delay #(.W(5),.D(3+OPQ)) mt(clk,rst_n,i,mi);
-    ot_hdc_delay #(.W(5),.D(3+OPQ)) at(clk,rst_n,i,ai);
-    ot_hdc_delay #(.W(5),.D(49+OPQ)) et(clk,rst_n,i,ei);
-    ot_hdc_delay #(.W(5),.D(19+OPQ)) dt(clk,rst_n,i,di);
+    generate if (REFORM != 0) begin:g_c12
+        // RE-FORM units: the namespaced 1.2 GHz c12 library (rtl/hbm_accel/integrated_20261006/sfu_c12_selected;
+        // bit-identical to the fast units, closed at SS in the routed SU/SFU lanes): mul/add LAT 6, exp LM 6/LA 6.
+        reg [LMU:1] mvl; reg [LAU:1] avl;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin mvl<={LMU{1'b0}};avl<={LAU{1'b0}};end
+            else begin mvl<={mvl[LMU-1:1],mv_u};avl<={avl[LAU-1:1],av_u};end
+        assign mo=mvl[LMU]; assign ao=avl[LAU];
+        ot_hbm_selected_c12__ot_hdc_qmul_lat #(.LAT(LMU)) mul(clk,rst_n,mv_u,ti_u,mb_u,my,mf);
+        ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP(1),.LAT(LAU)) add(clk,rst_n,av_u,ti_u,ab_u,ay,af);
+        ot_hbm_selected_c12__ot_hdc_v41x_exp #(.LM(LMU),.LA(LAU)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
+            .x({ti_u[31]^neg_u,ti_u[30:0]}),.y(ey),.vo(eo),.fault(ef));
+        ot_hbm_selected_c12__ot_hdc_v41x_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv_u),.a(32'h3f800000),.b(ti_u),.y(dy),.vo(do_),.fault(df));
+    end else begin:g_fast
+        wire [1:0] me,ae;
+        ot_hdc_fp32_mul_fast mul(.clk(clk),.rst_n(rst_n),.valid_in(mv_u),.a(ti_u),.b(mb_u),.y(my),.err(me),.valid_out(mo));
+        ot_hdc_fp32_add_fast add(.clk(clk),.rst_n(rst_n),.valid_in(av_u),.a(ti_u),.b(ab_u),.y(ay),.err(ae),.valid_out(ao));
+        assign mf=mo&&(|me); assign af=ao&&(|ae);
+        ot_hdc_v41x_exp #(.LM(3),.LA(3)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
+            .x({ti_u[31]^neg_u,ti_u[30:0]}),.y(ey),.vo(eo),.fault(ef));
+        ot_hdc_v41x_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv_u),.a(32'h3f800000),.b(ti_u),.y(dy),.vo(do_),.fault(df));
+    end endgenerate
+    ot_hdc_delay #(.W(5),.D(LMU+OPQ)) mt(clk,rst_n,i,mi);
+    ot_hdc_delay #(.W(5),.D(LAU+OPQ)) at(clk,rst_n,i,ai);
+    ot_hdc_delay #(.W(5),.D(LEU+OPQ)) et(clk,rst_n,i,ei);
+    ot_hdc_delay #(.W(5),.D(LDU+OPQ)) dt(clk,rst_n,i,di);
 """+a[j:]
     old_max="""        if(active&&age==MAX)for(integer r=0;r<4;r=r+1)begin:maximum
             reg [31:0] v;
@@ -151,9 +179,15 @@ def rest_source():
             mx[r]<=greater(mhi[r],mlo[r])?mhi[r]:mlo[r];
 """
     a=must(a,old_max,new_max)
+    a=must(a,"if((mo&&(|me))||(ao&&(|ae))||(eo&&ef)||(do_&&df)||sink_fault)fault<=1;","if(mf||af||(eo&&ef)||(do_&&df)||sink_fault)fault<=1;")
     b=must(b,"    parameter integer NSTA = 0,", "    parameter integer PREDECODE_INDEX = 0,\n    parameter integer NSTA = 0,")
-    b=must(b,".NSTA(NSTA)) u_tail", ".NSTA(NSTA), .PREDECODE_INDEX(PREDECODE_INDEX), .REFORM(REFORM)) u_tail")
-    b=must(b,"    parameter integer PREDECODE_INDEX = 0,\n", "    parameter integer PREDECODE_INDEX = 0,\n    parameter integer REFORM = 1,     // RE-FORM 11-03 (0 = bench gold only)\n")
+    b=must(b,".NSTA(NSTA)) u_tail", ".NSTA(NSTA), .PREDECODE_INDEX(PREDECODE_INDEX), .REFORM(REFORM), .REFORM_COMB(REFORM_COMB)) u_tail")
+    b=must(b,"    parameter integer PREDECODE_INDEX = 0,\n", "    parameter integer PREDECODE_INDEX = 0,\n    parameter integer REFORM = 1,     // RE-FORM 11-03 (0 = bench gold only)\n    parameter integer REFORM_COMB = 0, // bench only (u_tail REFORM_COMB)\n"
+        "    parameter integer TE = (REFORM != 0) ? 265 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)\n"
+        "    parameter integer SKL = 198 + SDIV * ((TE + 1 - 198 + SDIV - 1) / SDIV),   // sink launch age: whole SDIV periods later\n")
+    b=must(b,"    parameter integer L = 198 + SDIV + CAP + 2", "    parameter integer L = SKL + SDIV + CAP + 2")
+    b=must(b,"age >= 10'd198 && wrap","age >= 10'(SKL) && wrap")
+    b=must(b,"first wrap edge at age >= 198,","first wrap edge at age >= SKL,")
     return "// GENERATED by tools/hbm_b2/sk_ce_kit.py: QUAD5 CE remainder, Sinkhorn cut only.\n`timescale 1ns/1ps\n`default_nettype none\n"+a+"\n\n"+b+"\n`default_nettype wire\n"
 
 def rest_wrapper(module, tail, contract):
@@ -187,6 +221,8 @@ def recipes(contract):
         r=dict(base[f"ot_hbm_hc_root_static__tail{tail}_rest__155.52x172.8"])
         r["top"]="ot_hbm_hc_tail_rest_core_ce"
         r["files"]=[x if not x.endswith("/ot_hbm_hc_tail_rest_core.sv") else "rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv" for x in r["files"]]
+        # RE-FORM 11-03: the REFORM=1 tail units come from the namespaced c12 1.2 GHz library.
+        r["files"]=r["files"]+[C12+f for f in C12_FILES if C12+f not in r["files"]]
         out[module]=r
     return out
 
@@ -213,6 +249,6 @@ def main():
     out=Path(sys.argv[sys.argv.index("--out")+1]);view=sys.argv[sys.argv.index("--view")+1]
     tag=sys.argv[sys.argv.index("--tag")+1] if "--tag" in sys.argv else ""
     kit=out/(re.sub(r"[^A-Za-z0-9_.-]","_",view)+("-"+tag if tag else ""))
-    json.dump(dict(schema="opentallas.hbm.ce_phase_contract.v1",contract=contract,core=module,period_ps=833,enable_period_edges=7,step0_phase_after_steady_edges=2 if contract!="native-trial" else 0,native_tail_latency_edges=503,physical_tail_latency_edges=508 if contract=="land1-cap3" else None,status="FUNCTIONAL_PASS" if contract!="native-trial" else "TRIAL_ONLY_PHYSICAL_PHASE_FAIL",route_hold="CE timing contract awaiting OWNER; no multicycle exception applied"),open(kit/"ce_phase_contract.json","w"),indent=2)
+    json.dump(dict(schema="opentallas.hbm.ce_phase_contract.v1",contract=contract,core=module,period_ps=833,enable_period_edges=7,step0_phase_after_steady_edges=2 if contract!="native-trial" else 0,native_tail_latency_edges=503+REFORM_SHIFT,physical_tail_latency_edges=508+REFORM_SHIFT if contract=="land1-cap3" else None,reform_shift_edges=REFORM_SHIFT,status="FUNCTIONAL_PASS" if contract!="native-trial" else "TRIAL_ONLY_PHYSICAL_PHASE_FAIL",route_hold="CE timing contract awaiting OWNER; no multicycle exception applied"),open(kit/"ce_phase_contract.json","w"),indent=2)
 
 if __name__=="__main__":main()
