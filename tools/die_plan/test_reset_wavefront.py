@@ -268,6 +268,46 @@ set rtr_ci {}
     assert out.stdout.strip() == "i1 i2"
 
 
+def test_core_reset_keeps_rtl_reset_when_not_an_equal_depth_copy(tmp_path):
+    """CLASS RESET-CORE 11-03: a core reset that is not an equal-depth relay copy (frame reset-forest leaf, private
+    pipeline, lane-carried reset bit) keeps its RTL driver: no rewire, OT_RESET_CORE_KEPT + ot_reset_core_kept.txt;
+    an equal-depth copy is still re-targeted.  Mutant guard: the old hard error must not come back."""
+    raw = wave(TINY)
+    raw["partition_types"]["src"]["hard_cores"] = [dict(
+        inst="u_core.g_h[0].u_hc", module="core", origin_um=[50, 50], outline_um=[200, 300],
+        orient="MY", track_offset_um=[0.108, 0.012],
+        pins=[dict(name="rst_n", layer="M4", xy=[0, 150])])]
+    T = RT.for_type(schema.Plan(raw), "src")
+    text = RT.tcl_text(T)
+    assert "existing reset is not an equal-depth relay copy; preserve" not in text
+    lines = text.splitlines()
+    i = next(k for k, l in enumerate(lines) if l.startswith("if {![rtr_reset_equiv [$rtr_it getNet]"))
+    j = next(k for k in range(i, len(lines)) if lines[k] == "}")
+    block = "\n".join(lines[i:j + 1])
+    for eq, want_kept in ((0, True), (1, False)):
+        stub = f"""
+set ::env(RESULTS_DIR) {tmp_path}
+set ff_dbu 1000
+set rtr_at {{}}
+set rtr_cn {{tapnet}}
+set ::rewired 0
+proc rtr_reset_equiv {{net parity seen}} {{ return {eq} }}
+proc rtl_it {{m args}} {{ if {{$m eq "getNet"}} {{return oldnet}}; if {{$m eq "connect"}} {{set ::rewired 1}}; return {{}} }}
+set rtr_it rtl_it
+"""
+        out = subprocess.run(["tclsh"], input=stub + block + "\nputs REWIRED=$::rewired\n", text=True,
+                             capture_output=True)
+        assert out.returncode == 0, out.stderr
+        kept = tmp_path / "ot_reset_core_kept.txt"
+        if want_kept:
+            assert "OT_RESET_CORE_KEPT u_core.g_h[0].u_hc.rst_n" in out.stdout and "REWIRED=0" in out.stdout
+            assert kept.read_text().split() == ["u_core.g_h[0].u_hc.rst_n"]
+            kept.unlink()
+        else:
+            assert "REWIRED=1" in out.stdout and "OT_RESET_CORE u_core.g_h[0].u_hc.rst_n <- " in out.stdout
+            assert not kept.exists()
+
+
 def test_core_reset_rewire_refuses_a_private_pipeline_register():
     stub = '''
 set rtr_terminal_qnets {terminal q}
