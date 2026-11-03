@@ -1164,6 +1164,10 @@ def main():
                          "constants -> input strap_bsel[1:0] (head_strap_odd.py; plan g3/head_master_odd_tr2.py ties e1 00 / "
                          "e3 01 / e5 10 / e7 11); false path from strap_bsel, 0 cycles")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
+    ap.add_argument("--astk-native-faces", action="store_true",
+                    help="DIE-KV-61 11-02: native strap master kv3_astk (plan_c, kv_core_rtl wrapper of kv3_astk__leaf): "
+                         "ctl PORT_REGS qo face bank + fault-b landing (+1 external-fault edge, 0 command cycles) + the "
+                         "stale_in tc plan pins declared dead (astk_native_faces.py; the 0828 kit recut)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--astk-rep-split", action="store_true",
                     help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
@@ -1396,6 +1400,9 @@ def main():
     if a.kvspc_core_clock:
         import kvspc_core_clock
         kvspc_core_clock.apply_kit(kd)
+    if a.astk_native_faces:
+        import astk_native_faces
+        astk_native_faces.apply_kit(kd, mod, cj, a.core_json)
     if a.astk_timing_regs:
         if not mod.startswith("kv3_astk_"):
             raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
