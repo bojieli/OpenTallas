@@ -279,11 +279,16 @@ module ot_s81dv_eng_finish #(
     always @(posedge clk or negedge rst_n) if (!rst_n) rsr <= {NRS{1'b0}}; else rsr <= {NRS{rs[0]}};
     reg go_t;
     always @(posedge clk or negedge rstn) if (!rstn) go_t <= 1'b0; else go_t <= go;
-    reg [P-1:0] iv; reg [P*2-1:0] it; reg [P*8-1:0] ib; reg [P*K*32-1:0] id;
-    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t ? {P{1'b0}} : f_v;
+    // S81-CORES-KITS-9 10-31 (hard child face rule, raw face_guard): f_v lands RAW in its face flop iv_r; the go clear
+    // is applied after the flop with go_t delayed by the same edge (iv = iv_r & ~go_q == old go_t ? 0 : f_v register,
+    // cycle-exact, both reset 0 under rstn).
+    reg [P-1:0] iv_r; reg go_q; reg [P*2-1:0] it; reg [P*8-1:0] ib; reg [P*K*32-1:0] id;
+    always @(posedge clk or negedge rstn) if (!rstn) begin iv_r <= {P{1'b0}}; go_q <= 1'b0; end
+                                         else begin iv_r <= f_v; go_q <= go_t; end
+    wire [P-1:0] iv = iv_r & {P{~go_q}};
     always @(posedge clk) begin it <= f_t; ib <= f_base; id <= f_d; end
-    wire        wr_v;
-    wire [CW-1:0] wr_n;
+    wire        wr_v, wr_v1;
+    wire [CW-1:0] wr_n, wr_n1;
     wire [31:0] wr_d;
     wire [NC-1:0] rdy, iss_v, win;
     wire [T*NVP-1:0] dup;
@@ -324,10 +329,21 @@ module ot_s81dv_eng_finish #(
         for (n = 1; n < NVP; n = n + 1) begin : g_node
             if (isadd(n)) begin : g_add
                 reg [31:0] val; reg vld;
+                // RF-B 11-03 (S81-RF1 RE-FORM, xfin): the node write enable is a registered one-hot bit pre-decoded one
+                // stage early from the tag line (was: the 9-bit wr_n compare fanned out to all 237 nodes x 32 enables in
+                // one cycle, routed -105 ps).  we_r == (wr_v && wr_n == C) every cycle: cycle-exact, no port change.
+`ifdef OT_S81DV_EF_NOPREDEC
+                wire we_n = wr_v && wr_n == t * NVP + n;
+`else
+                reg we_r;
+                always @(posedge clk or negedge rsr[n % NRS])
+                    if (!rsr[n % NRS]) we_r <= 1'b0; else we_r <= wr_v1 && wr_n1 == t * NVP + n;
+                wire we_n = we_r;
+`endif
                 always @(posedge clk or negedge rsr[n % NRS])
                     if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0;
-                    else if (wr_v && wr_n == t * NVP + n) vld <= 1'b1;
-                always @(posedge clk) if (wr_v && wr_n == t * NVP + n) val <= wr_d;
+                    else if (we_n) vld <= 1'b1;
+                always @(posedge clk) if (we_n) val <= wr_d;
                 assign V[t][n] = val; assign VD[t][n] = vld;
             end else begin : g_pass
                 assign V[t][n] = V[t][2 * n]; assign VD[t][n] = VD[t][2 * n];
@@ -384,30 +400,57 @@ module ot_s81dv_eng_finish #(
     wire [LAV:0] av; wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rstn), .v(f_q), .vd(av));
     ot_dsrom_qadd #(.LAT(LAV)) u_a (clk, rstn, f_q, a_q, b_q, wr_d, f_add);
-    ot_hdc_delay #(.W(CW), .D(LAV)) u_t (.clk(clk), .rst_n(rstn), .d(t_q), .q(wr_n));
+    // tag line split LAV-1 + 1 (same LAV flops): wr_n1 / wr_v1 = the tag one stage before the adder result
+    ot_hdc_delay #(.W(CW), .D(LAV - 1)) u_t (.clk(clk), .rst_n(rstn), .d(t_q), .q(wr_n1));
+    ot_hdc_delay #(.W(CW), .D(1)) u_t1 (.clk(clk), .rst_n(rstn), .d(wr_n1), .q(wr_n));
+    assign wr_v1 = av[LAV - 1];
     assign wr_v = av[LAV];
     // roots: node 1 of each tree
-    reg [T-1:0] dn; reg flt;
+    reg [T-1:0] dn; (* keep = "true" *) reg flt;
+    reg r_v_q; reg [31:0] r_hh_q, r_kk_q, r_dd_q;   // RF-B: the face flops (ports = their lockup latches)
     always @(posedge clk or negedge rstn)
-        if (!rstn) begin dn <= {T{1'b0}}; r_v <= 1'b0; flt <= 1'b0; end
+        if (!rstn) begin dn <= {T{1'b0}}; r_v_q <= 1'b0; flt <= 1'b0; end
         else begin
-            r_v <= 1'b0;
+            r_v_q <= 1'b0;
             if (go_t) begin dn <= {T{1'b0}}; flt <= 1'b0; end
             else begin
                 if (wr_v && wr_n == 1 * 1)           dn[0] <= 1'b1;
                 if (wr_v && wr_n == NVP + 1)         dn[1] <= 1'b1;
                 if (wr_v && wr_n == 2 * NVP + 1)     dn[2] <= 1'b1;
                 if (dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
-                    == {T{1'b1}}) r_v <= 1'b1;
+                    == {T{1'b1}}) r_v_q <= 1'b1;
                 if (f_add || (|dup)) flt <= 1'b1;
             end
         end
+    // S81-CORES-KITS-9 10-31 (hard child face rule: no output pin flop reads itself): the root values are held in
+    // internal registers *_s; the r_* pin flops load the root value on the r_v edge and ZERO otherwise, so r_* equal
+    // the old held r_* whenever r_v = 1 (the only cycle ot_s81dv_xfin reads them: ehh/ekk/edd and e_* load under cr_v).
+    // fault = its own pin flop loading the next state of the kept sticky flt (same value every cycle, as xfin's fault).
+    wire w_hh = wr_v && wr_n == 1, w_kk = wr_v && wr_n == NVP + 1, w_dd = wr_v && wr_n == 2 * NVP + 1;
+    wire fin = !go_t && dn != {T{1'b1}} && (dn | {w_dd, w_kk, w_hh}) == {T{1'b1}};   // = the r_v set condition
+    reg [31:0] hh_s, kk_s, dd_s;
     always @(posedge clk) begin
-        if (wr_v && wr_n == 1)           r_hh <= wr_d;
-        if (wr_v && wr_n == NVP + 1)     r_kk <= wr_d;
-        if (wr_v && wr_n == 2 * NVP + 1) r_dd <= wr_d;
+        if (w_hh) hh_s <= wr_d;
+        if (w_kk) kk_s <= wr_d;
+        if (w_dd) dd_s <= wr_d;
+        r_hh_q <= fin ? (w_hh ? wr_d : hh_s) : 32'd0;
+        r_kk_q <= fin ? (w_kk ? wr_d : kk_s) : 32'd0;
+        r_dd_q <= fin ? (w_dd ? wr_d : dd_s) : 32'd0;
     end
-    assign fault = flt;
+    reg flt_o;
+    always @(posedge clk or negedge rstn)
+        if (!rstn) flt_o <= 1'b0; else flt_o <= go_t ? 1'b0 : (flt | f_add | (|dup));
+    // RF-B 11-03 (S81-RF1 RE-FORM, DIE-S81-51/CLK crossing table row 1): every output face = face flop -> negative-level
+    // lockup latch -> port, no logic between (core-owned hold-safe face: the port moves at the falling edge, half a
+    // period after the flop; a transparent-low latch between rising-edge flops is a wire in the cycle model).
+`ifdef OT_S81DV_EF_NOLATCH
+    always @* begin r_v = r_v_q; r_hh = r_hh_q; r_kk = r_kk_q; r_dd = r_dd_q; end
+    assign fault = flt_o;
+`else
+    reg flt_l;
+    always @* if (!clk) begin r_v = r_v_q; r_hh = r_hh_q; r_kk = r_kk_q; r_dd = r_dd_q; flt_l = flt_o; end
+    assign fault = flt_l;
+`endif
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------

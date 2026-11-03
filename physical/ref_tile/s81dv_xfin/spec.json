@@ -166,9 +166,46 @@
  },
  "util": 0.52,
  "hold_budget": "die",
- "outline_note": "ENG mode (RTL-BUILD-S81 10-18) adds 4 eng_finish (3 x 80-leaf trees each) + the 12-vector collector: std area re-measured by the remote gate",
+ "outline_note": "RF-B 11-03 S81-RF1 RE-FORM (PLAN delta, proposed): parent 414.72 x 449.28 (was 362.88 sq) holding four 181.44 x 190.08 ot_s81dv_eng_finish hard children (fill 0.40) at x 8.64/224.64, y 8.64/241.92 (43.2-um parent band between the rows); parent glue std ~16.1k um2 / residual 48.6k um2 = 0.33 (glue <= 0.35). Earlier: ENG mode (RTL-BUILD-S81 10-18) adds 4 eng_finish + the 12-vector collector.",
  "std_area_um2": 60000,
- "children": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/s81dv_eng_finish/views/ot_s81dv_eng_finish",
+   "count": 1,
+   "inst": "g_cp[0].u_e",
+   "at": [
+    8.64,
+    8.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_eng_finish/views/ot_s81dv_eng_finish",
+   "count": 1,
+   "inst": "g_cp[1].u_e",
+   "at": [
+    224.64,
+    8.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_eng_finish/views/ot_s81dv_eng_finish",
+   "count": 1,
+   "inst": "g_cp[2].u_e",
+   "at": [
+    8.64,
+    241.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_eng_finish/views/ot_s81dv_eng_finish",
+   "count": 1,
+   "inst": "g_cp[3].u_e",
+   "at": [
+    224.64,
+    241.92
+   ]
+  }
+ ],
  "inter": [],
  "inhold": false,
  "outhold": false,
