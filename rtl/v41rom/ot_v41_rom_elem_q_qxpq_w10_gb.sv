@@ -48,6 +48,8 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
     parameter integer GO_BOUNDARY = 1, // strict go/tag pin capture: +1 issue edge; defaults unchanged
     parameter integer RSTP = 0,        // 1 = synchronous reset relay flop at the rst_n pin (+1 reset edge, 0 data cycles)
     parameter integer CGR = 0,         // 8 = one clock-gate copy per in-core region (S81-CORE-LAT 2026-10-26; 0 cycles, see qx_pq)
+    parameter integer OLAT = 0,        // S81-RF1 (DIE-S81-51/RF-A 2026-11-03): 1 = negative-edge lockup flop after every
+                                       // registered output face bit (hold-safe core->parent crossing, 0 cycles; see g_olat)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -113,11 +115,37 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
         assign go_e_in = go;
         assign go_tag_e_in = go_tag;
     end
+    // S81-RF1 OLAT (DIE-S81-51/CLK crossing table class 1, core->parent face, zero-logic hold -96..-228 FF): the
+    // element's registered output faces leave through one negative-EDGE flop per bit (DFFLQN, the HBM face-lockup form:
+    // same T/2 window as a negative-level lockup latch, but the port stays flop-driven so face_guard sees a register):
+    // the pin changes half a cycle after the launching edge, so the parent capture at the same edge sees the old value
+    // (hold +T/2 - skew: >= +179 FF near) and the next edge sees the new one (setup T/2 less: >= +35 TT near).  Same
+    // cycle at every receiver edge (0 added cycles; bench tb_qxpq_go_boundary +define+TB_DUT_OLAT=1).  OLAT = 0: wires.
+    localparam integer OW = 5 + NB * (1 + 32 + 16 + 5 + 5 + 1 + 3);
+    wire o_walking, o_bank_free, o_sh_free, o_busy, o_fault;
+    wire [NB-1:0] o_pv, o_perr; wire [32*NB-1:0] o_pval; wire [16*NB-1:0] o_prow; wire [5*NB-1:0] o_pseg, o_pnseg;
+    wire [3*NB-1:0] o_ppos;
+    wire [OW-1:0] o_face = {o_walking, o_bank_free, o_sh_free, o_pv, o_pval, o_prow, o_pseg, o_pnseg, o_perr, o_ppos, o_busy, o_fault};
+    wire [OW-1:0] p_face;
+    if (OLAT != 0) begin : g_olat
+        for (genvar ob = 0; ob < OW; ob = ob + 1) begin : g_bit
+            (* keep, dont_touch = "true" *) reg q;
+`ifdef OT_QXPQ_OLAT_MUT_POS
+            always @(posedge clk) q <= o_face[ob];    // MUTANT: rising-edge copy = one extra cycle (the bench must catch it)
+`else
+            always @(negedge clk) q <= o_face[ob];
+`endif
+            assign p_face[ob] = q;
+        end
+    end else begin : g_nolat
+        assign p_face = o_face;
+    end
+    assign {walking, bank_free, sh_free, pv, pval, prow, pseg, pnseg, perr, ppos, busy, fault} = p_face;
     /* verilator lint_off PINCONNECTEMPTY */
     ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .CGR(CGR), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
-        .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go_e_in), .go_bf_pin(1'b0), .go_tag_pin(go_tag_e_in), .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
+        .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go_e_in), .go_bf_pin(1'b0), .go_tag_pin(go_tag_e_in), .walking(o_walking), .bank_free(o_bank_free), .sh_free(o_sh_free),
         .xs_v_pin(xs_v), .xs_p_pin(xs_p), .xs_b_pin(xs_b), .xs_sv_pin(), .xs_q0_pin(xs_q0), .xs_e0_pin(xs_e0), .xs_q1_pin(xs_q1),
-        .xs_e1_pin(xs_e1), .xs_pos_pin(xs_pos), .xb_pos_pin(3'd0), .ppos(ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),
+        .xs_e1_pin(xs_e1), .xs_pos_pin(xs_pos), .xb_pos_pin(3'd0), .ppos(o_ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),
         .xb_u_pin(32'd0), .xb_d_pin(1024'd0),
-        .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr), .busy(busy), .fault(fault));
+        .pv(o_pv), .pval(o_pval), .prow(o_prow), .pseg(o_pseg), .pnseg(o_pnseg), .perr(o_perr), .busy(o_busy), .fault(o_fault));
 endmodule

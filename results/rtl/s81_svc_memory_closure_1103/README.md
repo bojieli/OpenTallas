@@ -41,3 +41,7 @@
 **Held.**
 - Plan placement of the +66 macros and the 25 pre-existing glue macros is not done. All 15 types share T7's 1442.88 x 2453.76 form, which does not fit (DIE-S81-50/t7 ESTIMATE). That work is DIE-S81-51/PLAN's, under S81-RF1.
 - 833 ps timing of the 256x256 read cone is unchecked (clk->Q 405-441 ps TT).
+
+**Pilots** (`pilot.sh` = the T7 canary3 recipe: gen phys plan_h2_2249 + kit_gen_lint + kit_preflight with main 08542fa9d7d tools; evidence in `pilot/`):
+- svc rs class: svc_hi_dsdv_svc_rs__t1 with its closed bound = GEN_LINT PASS, 5/5 checks with memory_bits 9 -> 0; KIT_PREFLIGHT PASS. SYNTH_MEMORY_MAX_BITS 16384 is the declared exp/sw size, not a raise for the macro memories.
+- kv_leaf class: ot_s81sl_kv_leaf__t2 with no source change = GEN_LINT PASS and KIT_PREFLIGHT PASS. Its two exp tables are declared logic on main.
