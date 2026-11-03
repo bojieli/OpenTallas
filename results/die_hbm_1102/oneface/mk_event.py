@@ -10,6 +10,7 @@ pins files in OUT_DIR/cores/ and OUT_DIR/oneface_event.json; every other sidecar
       clk + fault kept: fault's partner u_hleaf_Q is on the E side).
   (2) ot_hnx_idxn_keybuf_slice: its 2231 W/M4 pins spread over the whole W face (10.4 -> 7.7 pins/um; order kept) and
       the 5-SRAM stack stays (a shift to the E bound put the clock entry island over gm[2]: G0C clock_entry_macro).
+  (2b) ot_hgi_coll_gq_land: its 2775 W/M4 pins spread over the whole W face (3 pins-file variants).
   (3) PLAN_CORE_MACROS 'no KNOWN macro rects' (gen_core_kit_hbm core_macros_placement needs status KNOWN): static
       KNOWN sites through core_macros_fix.fix (outline inset, no overlap, LEF size, 10.8-um channel arithmetic):
       selector_static_sel = the 12 sites of the placed kits-26 kit at the same outline (selector_k26a_macro_placement.tcl);
@@ -75,6 +76,21 @@ subprocess.run([sys.executable, LPA, str(side / hc['pins_file']), str(side / 'co
                 str(out / 'cores' / new), '--mode', 'spread', '--face', 'W', '--layer', 'M4'], check=True)
 ev['changes'].append(dict(module=m, pins_from=hc['pins_file'], pins_to='cores/' + new,
                           instances=repoint(m, new, 'DIE-HBM-59 ONEFACE-1: W pins spread over the face')))
+# (2b) gq_land: 2775 W/M4 pins on 2.3-164.5 of the 207.36 face (partial_face / col_v, COORD GEOM): spread over the
+# whole W face, order kept, in each of its three pins-file variants (R0 / MX / canon).
+m = 'ot_hgi_coll_gq_land'
+done = {}
+for tn, hc in hc_of(m):
+    pf = hc['pins_file']
+    if pf not in done:
+        W, H = hc['outline_um']
+        new = Path(pf).name.replace('.json', '__wspread.json')
+        subprocess.run([sys.executable, LPA, str(side / pf), str(side / 'core_macros.json'), m, str(W), str(H),
+                        str(out / 'cores' / new), '--mode', 'spread', '--face', 'W', '--layer', 'M4'], check=True)
+        done[pf] = new
+    hc['pins_file'] = 'cores/' + done[pf]
+    hc['note'] = (hc.get('note') or '') + ' | DIE-HBM-59 ONEFACE-1: W pins spread over the face'
+ev['changes'].append(dict(module=m, pins_files=done, instances=len(hc_of(m))))
 # (3) PLAN_CORE_MACROS static sites
 import re
 sys.path.insert(0, str(tools.parent.parent / 'physical' / 'die_plan' / 'hbm'))
