@@ -549553,7 +549553,7 @@
     838.08
    ],
    "hard": false,
-   "note": "KV plan v3.1 hroot; representative hroot_WS (R0); L1 est. 0.09 M std cells flattened (0.00 M in replicated datapath leaves)",
+   "note": "KV plan v3.1 hroot; representative hroot_WS (R0); L1 est. 0.09 M std cells flattened (0.00 M in replicated datapath leaves) | DIE-KV-61/hroot 11-02 (OWNER/COORD retiming ruling, one-block): +1 eq stage per landing-check epoch (u_eqp_*, efault AGE 36) + u_fchp; reset consumers localized to equal-depth taps; relay_sites for the efault/fch cone + 4 kvs_ctl bin q; kvpc_o_next FF-only band (hroot_pipe_1102/)",
    "buses": [
     {
      "name": "o_fch_hroot_Q_q",
@@ -558841,10 +558841,10 @@
       },
       "i_kvpc_Q_N_o_next": {
        "rect_um": [
-        1352.0957,
-        17.28,
-        1380.6717,
-        110.16
+        1326.24,
+        86.4,
+        1412.64,
+        120.96
        ],
        "width": 299,
        "ring_width": 320,
@@ -558854,17 +558854,13 @@
         "forwarded_write_flops": 1280,
         "local_read_flops": 320
        },
-       "max_pin_to_band_hop_um": 124.448,
-       "area_reserve_um2": 2617.781,
-       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "area_reserve_um2": 2985.984,
+       "placement": "DIE-KV-61/hroot 11-02: Codex band PREP codex/geom-1101@0a7ea64e1 (FF-only, 1585 ring FF, comb to GPL, bit storage reach 140.343 < 150, 0 new r2r) vs GRT50 overflow window x1350..1400/y0..50; was rect [1352.0957, 17.28, 1380.6717, 110.16] ring_place all",
        "instance": "u_cland_i_kvpc_Q_N_o_next",
-       "resized_from_um": [
-        1352.0957,
-        17.28,
-        1380.6717,
-        71.28
-       ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "ring_place": "ff",
+       "fill_axis": "x",
+       "spread": 1.0,
+       "witness_correct_bit_storage_reach_um": 140.343
       },
       "i_kvpc_Q_N_pc__fo": {
        "rect_um": [
@@ -565608,7 +565604,79 @@
       336.96
      ]
     ],
-    "obstacle_model": "lef_origin"
+    "obstacle_model": "lef_origin",
+    "consumer_localization": [
+     {
+      "instance": "u_bin_i_fch_pc_Q_N_q",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t2",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_bin_i_host_die_rst_n",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t45",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_bin_i_host_hbm_rst_n",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t45",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_bin_i_idsrc_Q_y",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t45",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_bin_i_kvpc_Q_N_o_next",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t36",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_bin_i_kvpc_Q_N_pc__fo",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t2",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_bin_i_kvs_ctl_o_hroot_Q",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t35",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_bin_i_seq__g_fan_N__u_fan_kc",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t41",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_bin_i_slg_Q_N_o_ctl",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t28",
+      "clock_net": "clk"
+     },
+     {
+      "instance": "u_u_efault",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t10",
+      "clock_net": "clk"
+     }
+    ]
    },
    "contents": [
     {
@@ -567919,8 +567987,8 @@
      559.98
     ],
     "u_bin_i_kvs_ctl_o_hroot_Q/q[1044]": [
-     1573.45,
-     567.57
+     1640.0,
+     461.0
     ],
     "u_bin_i_kvs_ctl_o_hroot_Q/q[1045]": [
      1504.18,
@@ -571323,8 +571391,8 @@
      579.31
     ],
     "u_bin_i_kvs_ctl_o_hroot_Q/q[804]": [
-     1547.07,
-     584.55
+     1622.0,
+     460.0
     ],
     "u_bin_i_kvs_ctl_o_hroot_Q/q[805]": [
      1486.29,
@@ -571779,8 +571847,8 @@
      569.54
     ],
     "u_bin_i_kvs_ctl_o_hroot_Q/q[907]": [
-     1557.06,
-     578.12
+     1632.0,
+     461.0
     ],
     "u_bin_i_kvs_ctl_o_hroot_Q/q[908]": [
      1491.02,
@@ -571931,8 +571999,8 @@
      568.05
     ],
     "u_bin_i_kvs_ctl_o_hroot_Q/q[941]": [
-     1561.49,
-     575.96
+     1634.0,
+     461.0
     ],
     "u_bin_i_kvs_ctl_o_hroot_Q/q[942]": [
      1495.97,
@@ -583697,6 +583765,118 @@
     "u_kvs_hroot.u_rly.r_c[9]": [
      1489.27,
      397.85
+    ],
+    "u_bin_i_fch_pc_Q_N_q/eq": [
+     1025.73,
+     128.47
+    ],
+    "u_u_eqp_fch_pc.q": [
+     1177.87,
+     229.23
+    ],
+    "u_bin_i_kvpc_Q_N_pc__fo/eq": [
+     1032.93,
+     128.47
+    ],
+    "u_u_eqp_kvpc_fo.q": [
+     1181.47,
+     229.23
+    ],
+    "u_bin_i_slg_Q_N_o_ctl/eq": [
+     1123.33,
+     139.33
+    ],
+    "u_u_eqp_slg.q": [
+     1226.67,
+     234.67
+    ],
+    "u_bin_i_kvpc_Q_N_o_next/eq": [
+     1356.27,
+     179.13
+    ],
+    "u_u_eqp_kvpc_next.q": [
+     1343.13,
+     254.57
+    ],
+    "u_bin_i_host_die_rst_n/eq": [
+     1645.33,
+     315.33
+    ],
+    "u_u_eqp_host_die.q": [
+     1487.67,
+     322.67
+    ],
+    "u_bin_i_host_hbm_rst_n/eq": [
+     1643.33,
+     322.0
+    ],
+    "u_u_eqp_host_hbm.q": [
+     1486.67,
+     326.0
+    ],
+    "u_bin_i_idsrc_Q_y/eq": [
+     1654.93,
+     402.6
+    ],
+    "u_u_eqp_idsrc.q": [
+     1492.47,
+     366.3
+    ],
+    "u_bin_i_kvs_ctl_o_hroot_Q/eq": [
+     1695.47,
+     453.2
+    ],
+    "u_u_eqp_kvs_ctl.q": [
+     1512.73,
+     391.6
+    ],
+    "u_bin_i_seq__g_fan_N__u_fan_kc/eq": [
+     1677.4,
+     648.47
+    ],
+    "u_u_eqp_fan_kc.q": [
+     1503.7,
+     489.23
+    ],
+    "u_bin_i_fch_pc_Q_N_q/q": [
+     1118.1,
+     112.48
+    ],
+    "u_u_fchp.q": [
+     1365.2,
+     196.97
+    ],
+    "u_u_fch.q": [
+     1612.3,
+     281.45
+    ],
+    "u_u_efault.fault": [
+     1330.0,
+     330.0
+    ],
+    "u_u_efault.cnt[0]": [
+     1330.0,
+     330.0
+    ],
+    "u_u_efault.cnt[1]": [
+     1330.0,
+     330.0
+    ],
+    "u_u_efault.cnt[2]": [
+     1330.0,
+     330.0
+    ],
+    "u_u_efault.cnt[3]": [
+     1330.0,
+     330.0
+    ],
+    "u_u_efault.cnt[4]": [
+     1330.0,
+     330.0
+    ],
+    "u_u_efault.cnt[5]": [
+     1330.0,
+     330.0
     ]
    }
   },
