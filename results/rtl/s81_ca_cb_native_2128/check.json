@@ -1,0 +1,155 @@
+{
+  "status": "PASS_SELECTED_NATIVE_CA_CB_DIAGNOSTIC",
+  "unit": "intel1:oth-ubuntu-3941088-1793595894",
+  "clock_ps": 833,
+  "cases": {
+    "equal_adjacent": {
+      "result": {
+        "gap": 1,
+        "equal": 1,
+        "mutantdate": 0,
+        "fault": 0,
+        "collisions": 0,
+        "outputs": 2,
+        "errors": 0
+      },
+      "pins": [
+        {
+          "port": "A",
+          "edge": 101,
+          "data": "000000000000000000000000000000000000000000000000000000001422bdda00029"
+        },
+        {
+          "port": "B",
+          "edge": 102,
+          "data": "000000000000000000000000000000000000000000000000000000001644bdda00039"
+        }
+      ],
+      "outputs": [
+        {
+          "edge": 102,
+          "data": "000000000000000000000000000000000000000000000000000000001422bdda00029"
+        },
+        {
+          "edge": 103,
+          "data": "000000000000000000000000000000000000000000000000000000001644bdda00039"
+        }
+      ]
+    },
+    "independent": {
+      "result": {
+        "gap": 2,
+        "equal": 0,
+        "mutantdate": 0,
+        "fault": 0,
+        "collisions": 0,
+        "outputs": 2,
+        "errors": 0
+      },
+      "pins": [
+        {
+          "port": "A",
+          "edge": 101,
+          "data": "000000000000000000000000000000000000000000000000000000001422bdda00029"
+        },
+        {
+          "port": "B",
+          "edge": 102,
+          "data": "000000000000000000000000000000000000000000000000000000001644bdda00039"
+        }
+      ],
+      "outputs": [
+        {
+          "edge": 102,
+          "data": "000000000000000000000000000000000000000000000000000000001422bdda00029"
+        },
+        {
+          "edge": 103,
+          "data": "000000000000000000000000000000000000000000000000000000001644bdda00039"
+        }
+      ]
+    },
+    "native_adjacent": {
+      "result": {
+        "gap": 1,
+        "equal": 0,
+        "mutantdate": 0,
+        "fault": 1,
+        "collisions": 1,
+        "outputs": 1,
+        "errors": 0
+      },
+      "pins": [
+        {
+          "port": "A",
+          "edge": 101,
+          "data": "000000000000000000000000000000000000000000000000000000001422bdda00029"
+        },
+        {
+          "port": "B",
+          "edge": 101,
+          "data": "000000000000000000000000000000000000000000000000000000001644bdda00039"
+        }
+      ],
+      "outputs": [
+        {
+          "edge": 102,
+          "data": "000000000000000000000000000000000000000000000000000000001666bdda00039"
+        }
+      ]
+    },
+    "wrong_date": {
+      "result": {
+        "gap": 2,
+        "equal": 0,
+        "mutantdate": 1,
+        "fault": 1,
+        "collisions": 1,
+        "outputs": 1,
+        "errors": 0
+      },
+      "pins": [
+        {
+          "port": "A",
+          "edge": 101,
+          "data": "000000000000000000000000000000000000000000000000000000001422bdda00029"
+        },
+        {
+          "port": "B",
+          "edge": 101,
+          "data": "000000000000000000000000000000000000000000000000000000001644bdda00039"
+        }
+      ],
+      "outputs": [
+        {
+          "edge": 102,
+          "data": "000000000000000000000000000000000000000000000000000000001666bdda00039"
+        }
+      ]
+    }
+  },
+  "actual_selected_source_RX_demux": true,
+  "actual_selected_consumer_vmux6": true,
+  "whole_route_or_clock_landing_simulated": false,
+  "lane_depths": {
+    "ca": 59,
+    "cb": 58
+  },
+  "independent_packet_interfaces": true,
+  "per_packet_data_valid_split_observed": false,
+  "adjacent_source_epoch_counterexample": true,
+  "wrong_date_control_caught": true,
+  "production_mission_failure_proven": false,
+  "production_mission_qualified": false,
+  "plan_RTL_or_cycles_changed": false,
+  "remedy_candidate": {
+    "status": "UNAPPLIED",
+    "part": "s_4N_x06",
+    "type": "slice_station__t48",
+    "slot": "ft1",
+    "old_stations": 6,
+    "candidate_stations": 7,
+    "CB_cycle_delta": 1,
+    "requires": "die-owner batched plan/clock-count impact + GEN/LOOK/rekit + model pricing"
+  }
+}

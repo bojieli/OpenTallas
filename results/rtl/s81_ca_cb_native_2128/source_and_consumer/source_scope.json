@@ -1,0 +1,26 @@
+{
+  "extracted_native_RX_demux": "/home/ubuntu/OpenTallas/physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv",
+  "sha256": "429141a0ee0f3d1f5c021b395e284e6b345c78e57b1edd80cbbbb026a83f6bd8",
+  "blocks": [
+    "g_irx",
+    "ot_s81sl_lep_idx_sel"
+  ],
+  "parameters": {
+    "IDX_EN": 1,
+    "IDX_MRG": 1,
+    "IDX_TP": 0
+  },
+  "native_consumer": "portfix178 dsdv_idx_vmux6(V276,MUT0)",
+  "protocol": {
+    "frame_type": 5,
+    "payload_valid": true,
+    "pairB_to_ca_lane": 2,
+    "pairA_to_cb_lane": 3,
+    "tm_idle": true
+  },
+  "complete_FIFO_PHY_or_mission_tested": false,
+  "lane_depths": {
+    "ca": 59,
+    "cb": 58
+  }
+}
