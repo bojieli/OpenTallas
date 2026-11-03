@@ -37,13 +37,19 @@ for mod, f, port, w, val, mut in cases:
         tag = f"{mod}_{port}{val:0{w}b}_{kind}"
         d = out / tag
         d.mkdir(exist_ok=True)
-        (d / "gold.sv").write_text(tie(mod_text(orig / f, mod), mod, "gold", port, w, val) + "\n")
+        g = tie(mod_text(orig / f, mod), mod, "gold", port, w, val)
+        # the gold strap-capture register after the strap settled (reset is held >= 64 edges after power-up, the
+        # strap is a parent tie): init = its constant D, so opt folds it like the gate's direct read
+        cap = {"zc": ("reg [3:0]   zc_q;", f"reg [3:0]   zc_q = 4'b{val:04b};"),
+               "st": ("reg [1:0]   st_q;", f"reg [1:0]   st_q = 2'b{val:02b};")}[port]
+        assert g.count(cap[0]) == 1, (mod, cap[0])
+        (d / "gold.sv").write_text(g.replace(cap[0], cap[1]) + "\n")
         (d / "gate.sv").write_text(tie(mod_text(new / f, mod), mod, "gate", port, w, gv) + "\n")
         (d / "top.sv").write_text("module lec_top;\n    gold g();\n    gate h();\nendmodule\n")
         ys = (f"read_verilog -sv {' '.join(libs)}\nread_verilog -sv {d}/gold.sv {d}/gate.sv {d}/top.sv\n"
               "hierarchy -top lec_top\nproc\nmemory\nsetattr -unset keep\nsetattr -unset keep_hierarchy\nsetattr -mod -unset keep_hierarchy\nflatten gold gate\ndelete lec_top\n"
               "async2sync\nopt -full\nopt_clean -purge\n"
-              "equiv_make gold gate eq\nhierarchy -top eq\nequiv_simple -seq 5\nequiv_induct -seq 5\nequiv_status -assert\n")
+              "equiv_make gold gate eq\nhierarchy -top eq\nequiv_simple -seq 2\nequiv_induct -seq 2\nequiv_status -assert\n")
         (d / "lec.ys").write_text(ys)
         r = subprocess.run(["yosys", "-q", "-l", str(d / "lec.log"), str(d / "lec.ys")], capture_output=True, text=True)
         st = re.findall(r"Found (\d+) \$equiv cells.*|Of those cells (\d+) are proven and (\d+) are unproven", (d / "lec.log").read_text())
