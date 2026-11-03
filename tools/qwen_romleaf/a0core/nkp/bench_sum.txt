@@ -1,0 +1,18 @@
+BUILD_OK
+NKP_COUNTS MUT=0 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_PASS MUT=0 checks=14000 strict_out=0 engine_state=0
+NKP_IMISMATCH cyc915 engine state differs (e_gm k0 1111 k1 1110 cur k0 000209 k1 000209)
+NKP_IMISMATCH cyc916 engine state differs (e_gm k0 1111 k1 1110 cur k0 00020a k1 00020a)
+NKP_IMISMATCH cyc917 engine state differs (e_gm k0 1111 k1 1110 cur k0 00020b k1 00020b)
+NKP_COUNTS MUT=1 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=1 strict_out_errors=0 first=-1 engine_state_errors=288 first=915 checks=14000
+NKP_IMISMATCH cyc930 engine state differs (e_gm k0 0000 k1 0000 cur k0 000278 k1 000200)
+NKP_IMISMATCH cyc931 engine state differs (e_gm k0 1111 k1 1111 cur k0 000279 k1 000201)
+NKP_IMISMATCH cyc932 engine state differs (e_gm k0 1111 k1 1111 cur k0 00027a k1 000202)
+NKP_COUNTS MUT=2 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=2 strict_out_errors=0 first=-1 engine_state_errors=5923 first=930 checks=14000
+NKP_SMISMATCH cyc1351 t_out 11 bits ([513:512] k0 01 k1 01) n_y 0 bits
+NKP_SMISMATCH cyc1352 t_out 11 bits ([513:512] k0 01 k1 01) n_y 0 bits
+NKP_SMISMATCH cyc1353 t_out 10 bits ([513:512] k0 01 k1 01) n_y 0 bits
+NKP_COUNTS MUT=3 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=3 strict_out_errors=4108 first=1351 engine_state_errors=0 first=-1 checks=14000

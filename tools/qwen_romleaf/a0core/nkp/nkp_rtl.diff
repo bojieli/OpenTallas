@@ -1,0 +1,281 @@
+diff -ru kit_base/rtl/ot_qwen_rom_tile_nk.sv rtl_nkp/ot_qwen_rom_tile_nk.sv
+--- kit_base/rtl/ot_qwen_rom_tile_nk.sv	2026-11-01 09:13:10.000000000 -0800
++++ rtl_nkp/ot_qwen_rom_tile_nk.sv	2026-11-03 08:10:22.690103553 -0800
+@@ -48,7 +48,10 @@
+     parameter integer CHILD_CLOCKS = 0,
+     parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
+     parameter integer NODE = 1,           // q14 r9: 0 = node-less tile (ot_qwen_rom_tile_w12 NODE)
+-    parameter integer IRCK = 0            // DIE-QC-58B (opt-in): ot_qwen_rom_tile_w12 IRCK, IREG stage on ck_ireg
++    parameter integer IRCK = 0,           // DIE-QC-58B (opt-in): ot_qwen_rom_tile_w12 IRCK, IREG stage on ck_ireg
++    // NKP (DIE-QC-66 11-03, opt-in, default 0 = unchanged): ot_qwen_w12_matvec_part logic-depth cuts (bit0 K-limit
++    // prep, bit1 raw XTX rung 0 + per-leaf round, bit2 round-step sum); 0 visible cycles (see the engine)
++    parameter integer NKP = 0
+ ) (
+     input wire [CODE_BANKS-1:0] ck_rpair,
+     input wire [CODE_BANKS-1:0] ck_pair1,
+@@ -84,7 +87,7 @@
+ `endif
+         .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
+-        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT), .KV_SLICE(0), .IRCK(IRCK)) u_tile (
++        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT), .KV_SLICE(0), .IRCK(IRCK), .NKP(NKP)) u_tile (
+         .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_rqre(ck_rqre), .ck_tx(ck_tx), .ck_reg(ck_reg), .ck_rom(ck_rom), .ck_lsl(ck_lsl), .ck_node(ck_node), .ck_ireg(ck_ireg),
+         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .t_out(t_out), .t_vout(t_vout),
+         .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(tile_fault),
+diff -ru kit_base/rtl/ot_qwen_rom_tile_w12_land32.sv rtl_nkp/ot_qwen_rom_tile_w12_land32.sv
+--- kit_base/rtl/ot_qwen_rom_tile_w12_land32.sv	2026-11-01 09:13:10.000000000 -0800
++++ rtl_nkp/ot_qwen_rom_tile_w12_land32.sv	2026-11-03 08:10:22.689778074 -0800
+@@ -145,7 +145,10 @@
+     parameter integer GLOBAL_KV_CONST0 = 0, // opt-in ROM-only global KV port is already hardwired zero
+     // DIE-QC-58B form (1) (opt-in, default 0 = unchanged): 1 = the IREG input stage (go_q, its kept go_cp copies, ib_q,
+     // xl_q, the split copy) on ck_ireg instead of clk, so a parent clock gate on clk sees one more cycle of lead
+-    parameter integer IRCK = 0
++    parameter integer IRCK = 0,
++    // NKP (DIE-QC-66 11-03, opt-in, default 0 = unchanged): ot_qwen_w12_matvec_part logic-depth cuts (bit0 K-limit
++    // prep, bit1 raw XTX rung 0 + per-leaf round, bit2 round-step sum); 0 visible cycles (see the engine)
++    parameter integer NKP = 0
+ ) (
+     input wire [CODE_BANKS-1:0] ck_rpair,
+     input wire [CODE_BANKS-1:0] ck_pair1,
+@@ -276,7 +279,7 @@
+     end endgenerate
+     ot_qwen_w12_matvec_part #(.SPLIT_CP(REGROOT >= 9 && IREG != 0), .W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
+         .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
+-        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
++        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .NKP(NKP)) u_me (
+         .ck_lsl(ck_lsl), .ck_tx(ck_tx), .ck_reg(ck_reg),
+         .clk(clk), .rst_n(rst_n), .go(go_i), .go_cp(go_cp), .ready(), .idle(idle),
+         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
+@@ -889,7 +892,10 @@
+     parameter integer LOCAL_ROOTS = 0, // opt-in localized soft roots, no data latency change
+     parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
+     parameter integer CHILD_CLOCKS = 0,
+-    parameter integer IRCK = 0         // DIE-QC-58B: ot_qwen_rom_tile_logic_w12 IRCK (IREG stage on ck_ireg)
++    parameter integer IRCK = 0,        // DIE-QC-58B: ot_qwen_rom_tile_logic_w12 IRCK (IREG stage on ck_ireg)
++    // NKP (DIE-QC-66 11-03, opt-in, default 0 = unchanged): ot_qwen_w12_matvec_part logic-depth cuts (bit0 K-limit
++    // prep, bit1 raw XTX rung 0 + per-leaf round, bit2 round-step sum); 0 visible cycles (see the engine)
++    parameter integer NKP = 0
+ ) (
+     input wire [CODE_BANKS-1:0] ck_rpair,
+     input wire [CODE_BANKS-1:0] ck_pair1,
+@@ -941,7 +947,7 @@
+         .GLOBAL_KV_CONST0(1),
+ `endif
+         .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
+-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT), .IRCK(IRCK)) u_logic (
++        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT), .IRCK(IRCK), .NKP(NKP)) u_logic (
+         .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_rqre(ck_rqre), .ck_tx(ck_tx), .ck_reg(ck_reg), .ck_lsl(ck_lsl), .ck_node(ck_node), .ck_ireg(ck_ireg),
+         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
+         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
+diff -ru kit_base/rtl/ot_qwen_w12_matvec_land32.sv rtl_nkp/ot_qwen_w12_matvec_land32.sv
+--- kit_base/rtl/ot_qwen_w12_matvec_land32.sv	2026-10-29 08:35:21.000000000 -0700
++++ rtl_nkp/ot_qwen_w12_matvec_land32.sv	2026-11-03 08:10:22.688792425 -0800
+@@ -171,6 +171,9 @@
+ endmodule
+ 
+ module ot_qwen_w12_matvec_part #(
++    // NKP (DIE-QC-66 11-03, opt-in, default 0 = unchanged): ot_qwen_w12_matvec_part logic-depth cuts (bit0 K-limit
++    // prep, bit1 raw XTX rung 0 + per-leaf round, bit2 round-step sum); 0 visible cycles (see the engine)
++    parameter integer NKP = 0,
+     parameter integer SPLIT_CP = 0,
+     parameter integer W  = 16,
+     parameter integer G  = 4,
+@@ -655,7 +658,7 @@
+             //: (1 << S) - 1 as two halves from copy 35 and its twin
+             kpad_a <= {1'b0, ktc[0 +: NW]} + msk2(spc[4*35 +: 4], spc[4*(35+SPB) +: 4], {(NW+1)/2{1'b1}});
+         end
+-    end else begin : g_terms7
++    end else if ((NKP & 5) == 0) begin : g_terms7
+         always @(posedge clk) begin : p_terms
+             integer b;
+             for (b = 0; b < NB_GT; b = b + 1) begin
+@@ -671,6 +674,65 @@
+             pr_a <= GT >> spc[4*8 +: 4];
+             kpad_a <= {1'b0, ktc[0 +: NW]} + ((1 << spc[4*((REGROOT >= 7) ? 35 : 8) +: 4]) - 1);
+         end
++    end else begin : g_terms7p
++        //: NKP (DIE-QC-66 11-03): the g_terms7 shifter terms (same expressions) as combinational rows, then
++        //: bit0: (1 << S) - 1 registered one edge before the kpad_a add (kpad_a edge 2, kc_a 3, k_r 4 < the
++        //:       first K boundary at edge >= KV_PREP + IL).
++        //: bit2: rows -> carry-save pair REGISTERED (edge 1) -> prefix add into tsh[0] / osh[0] (edge 2; tsh[1..]
++        //:       = 0), so u_ts / u_os see one non-zero row (tsum = tsh[0], no logic): tsg_a edge 3, tstep_r /
++        //:       ot_step edge 4 (was 3), first read at the first round boundary (edge >= IL).  Values unchanged.
++        reg [AW+PRW-1:0] trow [0:NB_GT-1];
++        reg [AW+PRW-1:0] orow [0:NB_GT-1];
++        always @(*) begin : p_rows_nkp
++            integer b;
++            for (b = 0; b < NB_GT; b = b + 1) begin
++                trow[b] = (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q0)
++                        | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 27+2*(b%2) : 2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(((REGROOT >= 7) ? 27+2*(b%2) : 2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q1)
++                        | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(2*(b%2)+1) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(2*(b%2)+1) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q2)
++                        | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 28+2*(b%2) : 2*(b%2)+1)) +: 4]) ? ({{PRW{1'b0}}, ts_r} << (b - spc[4*(((REGROOT >= 7) ? 28+2*(b%2) : 2*(b%2)+1)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q3);
++                orow[b] = (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(4+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(4+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q0)
++                        | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 31+2*(b%2) : 4+2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(((REGROOT >= 7) ? 31+2*(b%2) : 4+2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q1)
++                        | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(5+2*(b%2)) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(5+2*(b%2)) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q2)
++                        | (((((GT_TS >> b) & 1) != 0 && b >= spc[4*(((REGROOT >= 7) ? 32+2*(b%2) : 5+2*(b%2))) +: 4]) ? ({{PRW{1'b0}}, ots_r} << (b - spc[4*(((REGROOT >= 7) ? 32+2*(b%2) : 5+2*(b%2))) +: 4])) : {(AW+PRW){1'b0}}) & SH_Q3);
++            end
++        end
++        always @(posedge clk) pr_a <= GT >> spc[4*8 +: 4];
++        if ((NKP & 1) != 0) begin : g_kp1
++            reg [NW:0] kpm_q;
++            always @(posedge clk) begin
++                kpm_q <= ((1 << spc[4*((REGROOT >= 7) ? 35 : 8) +: 4]) - 1);
++                kpad_a <= {1'b0, ktc[0 +: NW]} + kpm_q;
++            end
++        end else begin : g_kp0
++            always @(posedge clk) kpad_a <= {1'b0, ktc[0 +: NW]} + ((1 << spc[4*((REGROOT >= 7) ? 35 : 8) +: 4]) - 1);
++        end
++        if ((NKP & 4) != 0) begin : g_ts1
++            wire [NB_GT*(AW+PRW)-1:0] trf, orf;
++            genvar t7;
++            for (t7 = 0; t7 < NB_GT; t7 = t7 + 1) begin : g_rf
++                assign trf[t7*(AW+PRW) +: AW+PRW] = trow[t7];
++                assign orf[t7*(AW+PRW) +: AW+PRW] = orow[t7];
++            end
++            wire [AW+PRW-1:0] ts_s, ts_c, os_s, os_c, ts_a, os_a;
++            reg  [AW+PRW-1:0] ts_sq, ts_cq, os_sq, os_cq;
++            ot_qwen_w12_csa_tree #(.W(AW+PRW), .N(NB_GT)) u_tc (.rows(trf), .s(ts_s), .c(ts_c));
++            ot_qwen_w12_csa_tree #(.W(AW+PRW), .N(NB_GT)) u_oc (.rows(orf), .s(os_s), .c(os_c));
++            ot_qwen_w12_kadd #(.W(AW+PRW)) u_tk (.a(ts_sq), .b(ts_cq), .s(ts_a));
++            ot_qwen_w12_kadd #(.W(AW+PRW)) u_ok (.a(os_sq), .b(os_cq), .s(os_a));
++            always @(posedge clk) begin : p_sum_nkp
++                integer b2;
++                ts_sq <= ts_s; ts_cq <= ts_c; os_sq <= os_s; os_cq <= os_c;
++                for (b2 = 0; b2 < NB_GT; b2 = b2 + 1) begin
++                    tsh[b2] <= (b2 == 0) ? ts_a : {(AW+PRW){1'b0}};
++                    osh[b2] <= (b2 == 0) ? os_a : {(AW+PRW){1'b0}};
++                end
++            end
++        end else begin : g_ts0
++            always @(posedge clk) begin : p_terms_nkp
++                integer b2;
++                for (b2 = 0; b2 < NB_GT; b2 = b2 + 1) begin tsh[b2] <= trow[b2]; osh[b2] <= orow[b2]; end
++            end
++        end
+     end
+     wire [AW+PRW-1:0] tsum, osum;
+     wire [NB_GT*(AW+PRW)-1:0] tsh_flat, osh_flat;
+@@ -1252,13 +1314,28 @@
+                     klim[gk] <= kls[NW:0];
+                     e_gm[gk] <= (gsh < tsh_gt) && (!wsc[2] || ({1'b0, k} < klim[gk]));
+                 end
+-            end else begin : g_k7
++            end else if ((NKP & 1) == 0) begin : g_k7
+             wire [31:0] c32 = (gb + gk) & ((1 << sa) - 1);
+             always @(posedge clk) begin
+                 kdif[gk] <= ({{(32-NW){1'b0}}, kt} > c32) ? (kt - c32[NW:0] + ((1 << sd) - 1)) : {(NW+1){1'b0}};
+                 klim[gk] <= kdif[gk] >> sb;
+                 e_gm[gk] <= (((gb + gk) >> sc) < (GT >> sc)) && (!wsc[2] || ({1'b0, k} < klim[gk]));
+             end
++            end else begin : g_k7p
++            //: NKP bit0: the masked chunk index c32 and the pad mask (1 << S) - 1 registered (edge 1), then the
++            //: compare / subtract / add (kdif edge 2) and the shift (klim edge 3 <= KV_PREP: the first KV element
++            //: reads klim at edge KV_PREP + 1).  Values unchanged (kdif is NW+1 bits: the mask's low bits suffice).
++            reg [31:0] c32_q;
++            reg [NW:0] kdm_q;
++            always @(posedge clk) begin
++                c32_q <= (gb + gk) & ((1 << sa) - 1);
++                kdm_q <= (1 << sd) - 1;
++            end
++            always @(posedge clk) begin
++                kdif[gk] <= ({{(32-NW){1'b0}}, kt} > c32_q) ? (kt - c32_q[NW:0] + kdm_q) : {(NW+1){1'b0}};
++                klim[gk] <= kdif[gk] >> sb;
++                e_gm[gk] <= (((gb + gk) >> sc) < (GT >> sc)) && (!wsc[2] || ({1'b0, k} < klim[gk]));
++            end
+             end
+         end
+     end else if (LANES) begin : g_gm
+@@ -1313,7 +1390,7 @@
+     wire [GL*32-1:0] x_rnd;
+     genvar xr;
+     generate for (xr = 0; xr < GL; xr = xr + 1) begin : g_xrnd
+-        if (FAST_ISSUE != 0 && !(REGROOT >= 8 && HIER > 0 && HIER_HARD != 0 && XTX >= 2)) begin : g_keep_round
++        if (FAST_ISSUE != 0 && !((REGROOT >= 8 || (NKP & 2) != 0) && HIER > 0 && HIER_HARD != 0 && XTX >= 2)) begin : g_keep_round
+             ot_qwen_w12_kadd #(.W(32)) u_r (.a(s2_x[32*xr +: 32]), .b(32'h7FFF + {31'd0, s2_x[32*xr + 16]}), .s(x_rnd[32*xr +: 32]));
+         end else begin : g_legacy_round
+             assign x_rnd[32*xr +: 32] = s2_x[32*xr +: 32] + 32'h7FFF + {31'd0, s2_x[32*xr + 16]};
+@@ -1558,9 +1635,9 @@
+                 //: and rung 1 (both ck_tx[g]): same values on the same edges, 0 cycles.  The round is the exact identity
+                 //: hi(x + 0x7FFF + x[16]) = x[31:16] + (x[15] & (x[16] | |x[14:0])); the mask / round selects arrive
+                 //: as two copies per group (one per 16-bit half).
+-                localparam integer XW0 = (REGROOT >= 8 && XTX >= 2) ? 1 + 1 + 4 + G * HIER * 32 + G * 32 + 4 * G : XW;
++                localparam integer XW0 = ((REGROOT >= 8 || (NKP & 2) != 0) && XTX >= 2) ? 1 + 1 + 4 + G * HIER * 32 + G * 32 + 4 * G : XW;
+                 wire [XW0-1:0] tx_d0;
+-                if (REGROOT >= 8 && XTX >= 2) begin : g_raw
++                if ((REGROOT >= 8 || (NKP & 2) != 0) && XTX >= 2) begin : g_raw
+                     wire [4*G-1:0] sel;
+                     for (gl = 0; gl < G; gl = gl + 1) begin : g_s
+                         assign sel[4*gl +: 4] = {round_local[2*gl+1], round_local[2*gl], s2_gm[gl], s2_gm[gl]};
+@@ -1623,7 +1700,7 @@
+                             assign tc[XW*(rr+1) +: XW] = qo;
+                         end
+                     end
+-                    if (REGROOT >= 8 && XTX >= 2) begin : g_lx
++                    if ((REGROOT >= 8 || (NKP & 2) != 0) && XTX >= 2) begin : g_lx
+                         //: the leaf's round + mask on its rung-0 copy (ck_tx[g])
+                         wire [G*32-1:0] xr = r0q[G*32-1:0];
+                         wire [4*G-1:0]  sr = r0q[G*32 +: 4*G];
+@@ -2166,6 +2243,12 @@
+         if (!rst_n) idle <= 1'b1;
+         else idle <= idle_c && !(go && ready);
+     end
++    //: NKP (DIE-QC-66 11-03): the cuts' timing arguments hold only in this form (last construct: no renumbering)
++    generate if (NKP != 0) begin : g_nkp_chk
++        initial if (FAST_ISSUE == 0 || !LANES || REGROOT >= 8 || KV_PREP < 3 || IL < 6 || NKP > 7 ||
++                    ((NKP & 2) != 0 && !(HIER > 0 && HIER_HARD != 0 && XTX >= 2 && L9 == 0)))
++            $fatal(1, "ot_qwen_w12_matvec_part NKP needs FAST_ISSUE, LANES, REGROOT < 8, KV_PREP >= 3, IL >= 6 (bit1: HIER_HARD, XTX >= 2, no L9)");
++    end endgenerate
+ endmodule
+ 
+ 
+diff -ru kit_base/rtl/qfd_tile_nk_a0c.sv rtl_nkp/qfd_tile_nk_a0c.sv
+--- kit_base/rtl/qfd_tile_nk_a0c.sv	2026-11-01 09:13:10.000000000 -0800
++++ rtl_nkp/qfd_tile_nk_a0c.sv	2026-11-03 08:10:22.690613739 -0800
+@@ -43,7 +43,10 @@
+     parameter integer ICG_K_LSL = 2,
+     parameter integer ICG_K_FA2 = 0,
+     parameter integer ICG_K_FA3 = 0,
+-    parameter integer ICG_K_NODE = 0
++    parameter integer ICG_K_NODE = 0,
++    // NKP (DIE-QC-66 11-03, opt-in, default 0 = unchanged): ot_qwen_w12_matvec_part logic-depth cuts (bit0 K-limit
++    // prep, bit1 raw XTX rung 0 + per-leaf round, bit2 round-step sum); 0 visible cycles (see the engine)
++    parameter integer NKP = 0
+ `ifndef SYNTHESIS
+   , parameter integer ROM_TILE = -1
+ `endif
+@@ -358,9 +361,9 @@
+         initial if (ICG_IREG != 0 && (ICG != 1 || ICG_EREG == 0)) $fatal(1, "a0c ICG_IREG needs ICG = 1 and ICG_EREG = 1");
+     end endgenerate
+ `ifndef SYNTHESIS
+-    qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE),.IRCK((ICG == 1 && ICG_IREG != 0) ? 1 : 0)) u_g (
++    qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE),.IRCK((ICG == 1 && ICG_IREG != 0) ? 1 : 0),.NKP(NKP)) u_g (
+ `else
+-    qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(REGROOT_MODE),.IRCK((ICG == 1 && ICG_IREG != 0) ? 1 : 0)) u_g (
++    qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(REGROOT_MODE),.IRCK((ICG == 1 && ICG_IREG != 0) ? 1 : 0),.NKP(NKP)) u_g (
+ `endif
+         .ck(ck_g),
+         .me_idle(me_idle),
+diff -ru kit_base/rtl/qfd_tile_nk_rp2_45.sv rtl_nkp/qfd_tile_nk_rp2_45.sv
+--- kit_base/rtl/qfd_tile_nk_rp2_45.sv	2026-11-01 09:13:10.000000000 -0800
++++ rtl_nkp/qfd_tile_nk_rp2_45.sv	2026-11-03 08:10:22.690343758 -0800
+@@ -55,7 +55,10 @@
+     // DIE-QC-58B form (1) (opt-in, default 0 = unchanged): 1 = the first stage after the input faces runs on ck_ireg
+     // (the u_tile IREG stage go_q / go_cp / ib_q / xl_q, and the node-port alignment / fault registers mis_q / fy_q)
+     // instead of ck / ck_fa3, so a parent clock gate on ck sees one more cycle of lead.  Same values on the same edges.
+-    parameter integer IRCK = 0
++    parameter integer IRCK = 0,
++    // NKP (DIE-QC-66 11-03, opt-in, default 0 = unchanged): ot_qwen_w12_matvec_part logic-depth cuts (bit0 K-limit
++    // prep, bit1 raw XTX rung 0 + per-leaf round, bit2 round-step sum); 0 visible cycles (see the engine)
++    parameter integer NKP = 0
+ ) (
+     input  wire          ck,
+     input wire ck_rp0,
+@@ -171,7 +174,7 @@
+         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
+         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX),
+         .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR),
+-        .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .NDH(NDH), .IRCK(IRCK)) u_tile (
++        .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .NDH(NDH), .IRCK(IRCK), .NKP(NKP)) u_tile (
+         .ck_pair1({ck_rp9,ck_rp8,ck_rp7,ck_rp6,ck_rp5}), .ck_rqr({ck_rqr1,ck_rqr0}), .ck_rqre({ck_rqr3,ck_rqr2}),
+         .ck_tx({ck_tx7,ck_tx6,ck_tx5,ck_tx4,ck_tx3,ck_tx2,ck_tx1,ck_tx0}),
+         .ck_reg({ck_de,ck_dw,ck_rnw,ck_rsw}),
