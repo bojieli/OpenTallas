@@ -1,0 +1,179 @@
+{
+ "summary": {
+  "intra": {
+   "tt_setup_ps": 255.27,
+   "ff_hold_margin_ps": null,
+   "hold_pairs_measured": 0,
+   "hold_pairs_unmeasured": 546162,
+   "missing_views": [
+    "type:hd_ctl",
+    "type:hd_ctl_e",
+    "type:hd_ctl_n",
+    "type:hd_host",
+    "type:hd_host_n",
+    "type:hd_lep0N",
+    "type:hd_mesh",
+    "type:hd_mesh_e",
+    "type:hd_spn",
+    "type:hd_spn_end",
+    "type:hd_spn_eshim_rx",
+    "type:hd_spn_eshim_tx",
+    "type:hd_spn_wshim_rx",
+    "type:hd_spn_wshim_tx",
+    "type:hd_st_k5",
+    "type:hd_st_m",
+    "type:hd_st_n3_transit",
+    "type:hd_st_n3_turn",
+    "type:hd_st_n4",
+    "type:hd_st_str",
+    "type:hd_st_turn",
+    "type:hd_tile",
+    "type:hd_turn_a",
+    "type:hd_turn_b"
+   ],
+   "hold_status": "BLOCKED(kits)",
+   "ff_hold_all_pairs_diag_ps": -213.07,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": -210.61,
+   "kit_contract_window_ps": 0.0,
+   "kit_contract_window_needed_ps": 210.61,
+   "kit_contract_verdict": "FAIL",
+   "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)",
+   "hb4": {
+    "cells": 2372356,
+    "delay_model": "plan",
+    "tt_setup_ps": 255.27,
+    "ff_hold_ps": 0.0,
+    "real_tt_setup_ps": 255.27,
+    "real_ff_hold_ps": 0.0,
+    "setup_neg_pairs": 0,
+    "pairs_needing_hb": 338596
+   },
+   "real_view": {
+    "pairs": "108240/546162",
+    "tt_setup_ps": 255.27,
+    "ff_hold_ps": -203.49
+   }
+  },
+  "seam": {
+   "tt_setup_ps": 651.26,
+   "ff_hold_margin_ps": null,
+   "hold_pairs_measured": 0,
+   "hold_pairs_unmeasured": 18118,
+   "missing_views": [
+    "type:hd_ctl",
+    "type:hd_ctl_e",
+    "type:hd_ctl_n",
+    "type:hd_host",
+    "type:hd_host_n",
+    "type:hd_mesh",
+    "type:hd_mesh_e",
+    "type:hd_spn",
+    "type:hd_spn_end",
+    "type:hd_spn_eshim_rx",
+    "type:hd_spn_eshim_tx",
+    "type:hd_spn_wshim_rx",
+    "type:hd_spn_wshim_tx"
+   ],
+   "hold_status": "BLOCKED(kits)",
+   "ff_hold_all_pairs_diag_ps": -71.92,
+   "verdict": "BLOCKED(kits)",
+   "ff_hold_kit_contract_ps": 20.54,
+   "kit_contract_window_ps": 90.0,
+   "kit_contract_window_needed_ps": 69.46,
+   "kit_contract_verdict": "PASS",
+   "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)",
+   "hb4": {
+    "cells": 7899,
+    "delay_model": "plan",
+    "tt_setup_ps": 600.53,
+    "ff_hold_ps": 0.0,
+    "real_tt_setup_ps": null,
+    "real_ff_hold_ps": null,
+    "setup_neg_pairs": 0,
+    "pairs_needing_hb": 9294
+   },
+   "real_view": {
+    "pairs": "0/18118",
+    "tt_setup_ps": null,
+    "ff_hold_ps": null
+   }
+  },
+  "landed": {
+   "form": "count_aligned",
+   "bind": "/srv/opentallas-scratch2/claude/dh58/proto/bind_l48rf_k.json",
+   "worst_margin_lo_ps": {
+    "TT": 208.4,
+    "FF": 224.3
+   },
+   "worst_margin_hi_ps": {
+    "TT": 316.4,
+    "FF": 397.9
+   },
+   "half_period_INFO": {
+    "tt_setup_margin_ps": -898.45,
+    "ff_hold_margin_ps": -779.79,
+    "verdict": "FAIL"
+   },
+   "ss_INFO": {
+    "SS": "FAIL"
+   },
+   "clock_variation": {
+    "TT": "none",
+    "FF": "none"
+   },
+   "verdict": "PASS"
+  },
+  "die_clock_gate": {
+   "rule": "OWNER 12.25/11-02: TT setup >= 0, FF hold >= 0 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only",
+   "tt_setup_ps": 255.27,
+   "ff_hold_ps": null,
+   "hold_min_ps": 0.0,
+   "contract_violations": 789,
+   "skew_max_ps": 1314.95,
+   "skew_target_ps": 150.0,
+   "skew_role": "TARGET (WARN only, never FAIL)",
+   "reasons": [
+    "789 block arrival-contract violation(s)"
+   ],
+   "warnings": [
+    "related-pair skew 1314.95 ps > target 150 ps (WARN only)"
+   ],
+   "verdict": "FAIL",
+   "count_aligned": {
+    "FF": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 427,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    },
+    "TT": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 427,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    }
+   }
+  },
+  "period_policy": {
+   "period_ps": 833.0,
+   "required_period_ps": 833.0,
+   "verdict": "PASS",
+   "role": "canonical timing"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "real-view (3 core views, 0 kits) + declared-budget rest",
+  "margin_policy": {
+   "policy": "nominal",
+   "rule": "OWNER 12.24b",
+   "overridden": {}
+  },
+  "nominal_arrival": "single"
+ },
+ "ca_TT": null,
+ "ca_FF": null
+}

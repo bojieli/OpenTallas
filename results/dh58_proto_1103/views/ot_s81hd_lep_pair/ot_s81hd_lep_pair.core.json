@@ -1,0 +1,36 @@
+{
+ "module": "ot_s81hd_lep_pair",
+ "clock_pin": "clk",
+ "clock_latency_measured": {
+  "contract": {
+   "kind": "hard_core_latency",
+   "clock_port": "clk",
+   "basis": "publish measured routed core insertion (signed signoff.json corners.<c>.insertion_pinflops); common latency is a design target"
+  },
+  "measured": {
+   "tt": {
+    "n": 3812,
+    "min": 435.56,
+    "mean": 452.9,
+    "max": 487.24,
+    "spread": 51.68
+   },
+   "ff": {
+    "n": 3812,
+    "min": 350.24,
+    "mean": 366.27,
+    "max": 396.63,
+    "spread": 46.39
+   }
+  }
+ },
+ "signed": {
+  "setup_tt_wns_ps": 9.29,
+  "hold_ff_wns_ps": 3.92
+ },
+ "libs": {
+  "TT": "ot_s81hd_lep_pair_tt.lib <- ot_s81hd_lep_pair_tt.lib",
+  "FF": "ot_s81hd_lep_pair_ff.lib <- ot_s81hd_lep_pair_ff.lib"
+ },
+ "note": "DH58-PROTO mk_typed_view.py: values copied from the signed signoff.json; no number derived here"
+}
