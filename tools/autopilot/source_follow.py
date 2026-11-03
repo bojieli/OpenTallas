@@ -418,9 +418,16 @@ if blocked & (libraries-full):
   if same_library_interface(interface_parser,old_text,new_text,scratch):
    blocked.remove(rel)
    print("SOURCE-FOLLOW opaque library interface unchanged: "+rel,flush=True)
-if blocked:
+# A changed elaborated source needs a fresh die elaboration (bind.py elab) in this snapshot instead of the cached
+# graph (KW-FIX-1 11-02, default-on; src_follow.fresh_elab false restores the hold).
+fresh_elab=bool(blocked) and opts.get("fresh_elab",True) is not False
+if blocked and not fresh_elab:
  raise RuntimeError("cached elaboration source changed; fresh die elaboration required: "+", ".join(sorted(blocked)))
-if not bind.exists(): run(["cp","-a","--reflink=auto",oldbind,str(bind)])
+if fresh_elab:
+ print("SOURCE-FOLLOW fresh die elaboration: changed elaborated sources "+", ".join(sorted(blocked)),flush=True)
+ if bind.exists() and not (bind/"asbuilt.json").exists(): shutil.rmtree(bind)
+ bind.mkdir(parents=True,exist_ok=True)
+elif not bind.exists(): run(["cp","-a","--reflink=auto",oldbind,str(bind)])
 # Rebase both compiled structural files and canonical repository sources.
 old_struct=set()
 for f in sources:
@@ -474,6 +481,8 @@ for name in ("bind.f","asbuilt_sources.json","provenance_elab.json"):
 plan=pathlib.Path(str(d["plan"]).replace(oldsrc,str(src)))
 print("SOURCE_FOLLOW untracked inputs copied:",copy_untracked_inputs(oldsrc,src),flush=True)
 materialize_clock_mesh(src,plan,lambda obj: subprocess.check_output(["git","-C",str(repo),"show",obj]))
+if fresh_elab and not (bind/"asbuilt.json").exists():
+ run([sys.executable,"tools/die_plan/bind.py","elab",str(plan),"--out",str(bind),"--asbuilt",str(recipe),"--mem",str(int(opts.get("elab_mem_gb",12)))],cwd=src)
 run([sys.executable,"tools/die_plan/bind.py","bind",str(plan),"--out",str(bind),"--asbuilt",str(recipe),"--strict"],cwd=src)
 r=json.load(open(bind/"bind_report.json")); errors=r.get("errors")
 if errors: raise RuntimeError("strict bind errors: "+str(errors)[:500])
@@ -491,6 +500,7 @@ else:
  kit.write_text("#!/bin/bash\nset -euo pipefail\npython3 -I tools/die_plan/bind.py kit-rtl \"$PLAN\" --out "+shlex.quote(str(bind))+" --asbuilt "+shlex.quote(str(recipe))+" --type \"$TYPE\" --kit \"$OUT\"\n")
 override={"src":str(src),"src_sha":tip,"plan":str(plan),"event":tip if s["die"]=="s81" else d["event"],"kit_rtl":dict(d["kit_rtl"],mode="script",script=str(kit))}
 override["src_follow"]=dict(opts,snapshot_kind=mode,snapshot_bind=str(bind),snapshot_asbuilt=str(recipe))
+if fresh_elab: override["src_follow"]["fresh_elaboration"]=tip
 # Retention (default-on): newest 2 + this one + every snapshot a live record or the config names.
 if opts.get("retention",True):
  try: prune_snapshots(repo,root.parent,s.get("keep_refs"),root,int(opts.get("keep_newest",2)),log=lambda m: print(m,flush=True))
