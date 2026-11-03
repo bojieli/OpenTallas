@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-_Updated 2026-11-01 20:24 PST by COORD: count 49 (S81 23, HEAD 3+e13a pending reader, QC 5, KV 13, HBM 5); 1.2 GHz kept; late-stage iteration (resume + auto ECO) building; short-job slot pool ruled._
+_Updated 2026-11-02 18:4x PST by COORD: count 53 (S81 26, HEAD 4, QC 5, KV 13, HBM 5); kit-wave crash fixed 17:44 (was down 20 h); OWNER 11-02: SerDes reset sequencer, QC SC/RED/GLUE + KV HROOT adopted (EQ-gated), HEAD publisher A, QUERY shared, HBM UNFROZEN (die first, no type pilots), Qwen stage37 Codex design adopted; no die has whole-die GRT/STA PASS yet._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -39,10 +39,10 @@ _Updated 2026-11-01 20:24 PST by COORD: count 49 (S81 23, HEAD 3+e13a pending re
 - [ ] QC.GRT Whole-die signal+clock global routing · QC / DIE-QC-59 · BLOCKED · no current whole-die GRT pass → QC.TILES → QC.GLUE → QC.CLK
 - [ ] QC.STA Propagated whole-die TT setup / FF hold · QC / DIE-QC-59 · BLOCKED · no complete current parent STA; count-alignment or child timing is not die timing → QC.GRT → QC.TILES
 - [ ] QC.TILES Qualified partitions and capacity · QC / KIT-WAVE · RUNNING · Q4 official177206EQ complete; all8SU pre-routeEQ complete; L1 finalGRT TT-14.64 FF-2.52, three-edit PLACE coupon pending; required unsigned views remain
-- [ ] QC.SC SC source+clock-count event and first physical closure · QC · OWNER · actual336662std / wholeEQ55664; sharing changes default-mode FF43058→42671, so not dormant; corrected572bit legal-trackGEN+LOOK passes, first PLACE awaits review; chain-end variants require separate handling → OWNER.SOURCE
+- [ ] QC.SC SC source+clock-count event and first physical closure · QC / DIE-QC-63 · RUNNING · OWNER 11-02 ADOPTED (EQ/sim-gated; 8 SC types >400k cells need CORE-KS split); actual336662std / wholeEQ55664; sharing changes default-mode FF43058→42671, so not dormant; corrected572bit legal-trackGEN+LOOK passes, first PLACE awaits review; chain-end variants require separate handling → OWNER.SOURCE
 - [ ] QC.RED RED source/parent event and clock implementation · QC · BLOCKED · actualPLACE225665std/34225FF/40.268%fill; same8269node sink rebind max15.77um is planning only; root/common-frame and parent+1 event unqualified → OWNER.SOURCE
 - [ ] QC.STM Current native STM qualification · QC · RUNNING · corrected slw_v3 GEN17874contactsPASS, ordinarySYNTH→PLACE queued; two additional exact source/count matches224247/222702std, other distinct types still incomplete
-- [ ] QC.GLUE Joint parent/interface geometry event · QC · OWNER · coordinate coupon legal but5306long reaches remain; fixedSTART1838um exceeds1110um reach budget; compact proposal leaves1088.64um parent gap and missing west peers → OWNER.SOURCE
+- [ ] QC.GLUE Joint parent/interface geometry event · QC / DIE-QC-63 · RUNNING · OWNER 11-02 ADOPTED (EQ-gated; pipeline stages for 1838>1110 um reach); coordinate coupon legal but5306long reaches remain; fixedSTART1838um exceeds1110um reach budget; compact proposal leaves1088.64um parent gap and missing west peers → OWNER.SOURCE
 - [ ] QC.NL Corrected clock-inclusive GRT probe · QC · WAITS · prior attempt failed MM context before FF; same-byte4_cts alias+configuredmargin10 fixture passes, one bounded retry awaits root → INFRA.REVIEW
 
 ## DIE qwen_kvsys · KV · rev current plan_c cohort · HARD FROZEN 12.20
@@ -52,7 +52,7 @@ _Updated 2026-11-01 20:24 PST by COORD: count 49 (S81 23, HEAD 3+e13a pending re
 - [ ] KV.STA Current whole-die propagated TT/FF · KV / DIE-KV-60 · BLOCKED · no complete routed current-die timing receipt → KV.GRT → KV.CLK
 - [ ] KV.TILES Required hard-child and partition closure · KV / KIT-WAVE · RUNNING · EX70 SIGNED+own20490EQ publishedHG-only; PCfMX GRT0 now timing/repair, AHUB/PV/PHY and HR source-follow work remain
 - [ ] KV.HG HG native9-child qualification and parent geometry · KV · RUNNING · parentSYNTH189754std+30macros; q1 currentgold→actualfinal proof admitted normally; six current views need reconstruction,1057bit corridor still needs placed endpoints/shared-demand reservations → KV.TILES
-- [ ] KV.HROOT Parent geometry/reset source event · KV · OWNER · fixed separation2192.120um exceeds1920um bound by272.120; reset repoint has real observer counterexample; local placement cannot close → OWNER.SOURCE
+- [ ] KV.HROOT Parent geometry/reset source event · KV / DIE-KV-61 · RUNNING · OWNER 11-02 ADOPTED (EQ-gated; retiming/pipeline for 2192>1920 um); fixed separation2192.120um exceeds1920um bound by272.120; reset repoint has real observer counterexample; local placement cannot close → OWNER.SOURCE
 - [ ] KV.FORMAL CTL/HHP/RX native closure · KV · RUNNING · CTL123diff, HHP5persistent enabled/unreset-state failures; RX native+emitted17769EQ, mapped gate pending; complete new proof-helper bundle waits publication → INFRA.MERGE
 - [ ] KV.RECIP Compact RECIP and ZH physical qualification · KV · WAITS · RECIP GRT TT+161.66 FF+9.67 but actualfill15.27/empty68.78 FAIL; ZH actualfill45.589 and independentLOOK supports one PLACE diagnostic → INFRA.REVIEW
 - [ ] KV.FN Production token execution · KV / TOK · RUNNING · sole correctGEN1 probe fault0, nofirstcal; observed~2.3cycles/s implies~35h for290307-cycle window at that rate, not measured token throughput → TOK.QW
@@ -89,8 +89,8 @@ _Updated 2026-11-01 20:24 PST by COORD: count 49 (S81 23, HEAD 3+e13a pending re
 - [ ] INFRA.LOAD Queue/build turnaround · KITS_FLOW / TOK · RUNNING · onlyepyc2/intel1/intel2 active; conserve progressing jobs, no duplicate proof/build; whole-hierarchy OOM and serial simulation are real schedule risks
 
 ## OWNER · Explicit contract decisions
-- [ ] OWNER.RESET Resolve soft SerDes reset authority · OWNER · OWNER · running-clock guarantee or priced safe local sequencer; no blanket reset extension; plain question logged, other work continues
-- [ ] OWNER.SOURCE Price coupled source/clock/count/parent changes · OWNER / ROOT · OWNER · SC default-mode sink change, RED parent event, GLUE/Hroot repack and compact native events require explicit adoption; no silent plan activation
+- [x] OWNER.RESET Resolve soft SerDes reset authority · OWNER · DONE · OWNER 11-02: local >=64-edge reset sequencer; running-clock guarantee or priced safe local sequencer; no blanket reset extension; plain question logged, other work continues
+- [x] OWNER.SOURCE Price coupled source/clock/count/parent changes · OWNER / ROOT · DONE · OWNER 11-02: SC/RED/GLUE/HROOT + compact native events adopted as explicit EQ-gated plan events; HBM unfrozen; Qwen stage37 adopted; SC default-mode sink change, RED parent event, GLUE/Hroot repack and compact native events require explicit adoption; no silent plan activation
 
 ## WAITS · who
 ### Waiting on the owner
