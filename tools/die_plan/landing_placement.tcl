@@ -783,8 +783,14 @@ proc cland_place_ff {prefix rect tag} {
    lassign $pinx na nr how
    puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, +ff band as +x, spread [format %.4f $psp]), $nr by the band cursor"
   } else {
-  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $psp] na nr how
-  puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $psp]), $nr by the band cursor"
+  # DIE-KV-62/stations 11-02 opt-in OT_CLAND_PINSLOT_DENSE=1 (plan budgets.cland_pinslot_dense_types): the y-column
+  # rows reserve only each flop's own body (spread 0.4 = w/0.4*0.4), so the 5+ slot flops of a bit sit side by side
+  # from the pin-side edge instead of 2.5 bodies apart (KV kv3_io_ft_v1 E/W 523-bit rings, 8.4 flops per row: strip
+  # 22.7 -> 9 um, farthest-slot pin_reg p90 39.6 -> 27.3 um, wave synth+floorplan probe).  The widest-drive fit
+  # (cland_pinslot_fit) still keeps every in-place GPL upsize legal; the ring logic stays with GPL.  Unset = unchanged.
+  set ypsp [expr {[info exists ::env(OT_CLAND_PINSLOT_DENSE)] && $::env(OT_CLAND_PINSLOT_DENSE) eq "1" ? 0.4 : $psp}]
+  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $ypsp] na nr how
+  puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $ypsp]), $nr by the band cursor"
   }
  } else {
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}

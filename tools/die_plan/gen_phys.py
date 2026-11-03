@@ -58,6 +58,14 @@ def _cland_pinslot(budgets, tn, extra=()):
     return True
 
 
+
+def _cland_pinslot_dense(budgets, tn):
+    """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
+    y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
+    absent/empty = unchanged kits."""
+    on = list(budgets.get("cland_pinslot_dense_types") or [])
+    return tn in on or tn.split("__")[0] in on
+
 def _cland_fit_mode(budgets, tn=None):
     """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
     DEFAULT 'resize' since AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): FLOW-6 widest-drive-variant footprint, so an in-place
@@ -2773,6 +2781,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
+           # DIE-KV-62/stations 11-02 opt-in budgets.cland_pinslot_dense_types: y-column pinslot rows body to body
+           *(["export OT_CLAND_PINSLOT_DENSE = 1"] if _cland_pinslot_dense(P.budgets, tn) else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
