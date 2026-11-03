@@ -1,0 +1,72 @@
+{
+  "status": "PASS_DISABLED_NATIVE_BF_NONZERO_ROW_LABEL_WITNESS",
+  "phase": 110,
+  "rows": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "returns": 6,
+  "baseline_fault": 0,
+  "candidate_fault": 0,
+  "dates_payloads_controls_and_descriptors_unchanged": true,
+  "wrong_row_control_caught": true,
+  "expected": [
+    [
+      412,
+      "1783787b80001c009"
+    ],
+    [
+      415,
+      "17a1f68a600018009"
+    ],
+    [
+      424,
+      "179a0de9e00024009"
+    ],
+    [
+      427,
+      "1798ace8c00020009"
+    ],
+    [
+      428,
+      "17917d0980002c009"
+    ],
+    [
+      436,
+      "178f2a2cc00028009"
+    ]
+  ],
+  "native": [
+    [
+      412,
+      "1783787b80001c009"
+    ],
+    [
+      415,
+      "17a1f68a600018009"
+    ],
+    [
+      424,
+      "179a0de9e00024009"
+    ],
+    [
+      427,
+      "1798ace8c00020009"
+    ],
+    [
+      428,
+      "17917d0980002c009"
+    ],
+    [
+      436,
+      "178f2a2cc00028009"
+    ]
+  ],
+  "production_enabled": false,
+  "added_cycles": 0,
+  "scope": "Exact retained BF-active/Q-idle source, single actual CAP-safe WOA phase; consuming capture contract/global mission unqualified"
+}

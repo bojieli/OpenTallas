@@ -1,0 +1,215 @@
+{
+  "frame": "u_f_0L01",
+  "master": "col_h10_l4_lp_asb_x",
+  "source": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/down_cap_safe_fields_1131/u_f_0L01",
+  "phase": {
+    "phase": 110,
+    "op": "attn.wo_a",
+    "mat": "wo_a",
+    "fmt": "bf16",
+    "K": 4096,
+    "k_pad": 0,
+    "kseg": [
+      0,
+      1024
+    ],
+    "xbase": 0,
+    "chunk": 1,
+    "seg": 0,
+    "nseg": 4,
+    "rows": 6,
+    "row_index": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "tie": [
+      [
+        "attn.wo_a",
+        6
+      ],
+      [
+        "attn.wo_a",
+        7
+      ],
+      [
+        "attn.wo_a",
+        8
+      ],
+      [
+        "attn.wo_a",
+        9
+      ],
+      [
+        "attn.wo_a",
+        10
+      ],
+      [
+        "attn.wo_a",
+        11
+      ]
+    ],
+    "tie_kind": "bf16",
+    "rows_per_phase": 6,
+    "nbeat": 64,
+    "sbase": 7728,
+    "faults": 0,
+    "ret_words": 0,
+    "calendar": "calendar_unmeasured",
+    "elem_class": [
+      "bf16",
+      1024
+    ],
+    "ret": [],
+    "shape": "col_h10_asb_x|E2|bseg1024",
+    "bf_pairs": [
+      1,
+      5,
+      10
+    ],
+    "assign": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "desc": {},
+    "plan": {
+      "assign": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "pairs": [
+        1,
+        5,
+        10
+      ],
+      "seg": 0,
+      "nseg": 4,
+      "desc": {},
+      "ret": [],
+      "faults": 0,
+      "ret_words": 0,
+      "calendar": "calendar_unmeasured",
+      "rows_vals": {
+        "0": [
+          3171923027,
+          3141599488,
+          3162590278,
+          1017076175
+        ],
+        "1": [
+          3155936220,
+          1018898995,
+          1018789157,
+          1001193289
+        ],
+        "2": [
+          3167053638,
+          3153058794,
+          3146982320,
+          1014384802
+        ],
+        "3": [
+          3167776591,
+          1011025739,
+          1007814640,
+          3155646915
+        ],
+        "4": [
+          3162067302,
+          1014210544,
+          1008657881,
+          3138256644
+        ],
+        "5": [
+          3163285580,
+          3151991296,
+          1002843416,
+          3163883116
+        ]
+      },
+      "acc": [
+        3171728798,
+        1026097822,
+        3165323995,
+        3160615206,
+        1005283652,
+        3172180985
+      ],
+      "bf16": [
+        48397,
+        15657,
+        48299,
+        48227,
+        15339,
+        48404
+      ]
+    },
+    "sel": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "gi": 0
+  },
+  "images_sha256": {
+    "u_f_0L01_e1w_0.viamap.hex": "18165084aa9f2c1d1345d399f0ea3394420b95c047c440dc8360584f159efd29",
+    "u_f_0L01_e1w_1.viamap.hex": "08af98434ac82526cc729f706a27ea9f86d44e379762c94226d38de7e0d4e30a",
+    "u_f_0L01_e1e_0.viamap.hex": "95177b65b93467c9d7cf71802948c8dd8f2dc009aa5b5aaa2dfe991e4d56acf7",
+    "u_f_0L01_e1e_1.viamap.hex": "9e00d1389c04f6ef0d0186c6b1ae6f0f85c52170aaef43f90b06392318aa05ae",
+    "u_f_0L01_c1_0.viamap.hex": "1953b394ce2b858a8593973d1a54dfb694616759b09787f39f488a02bd22c51d",
+    "u_f_0L01_c1_1.viamap.hex": "f4548d2d5cf18dd15ff0955f38d248dfae6f084e2373f929460ccc9fb4ab9c12",
+    "u_f_0L01_c1_2.viamap.hex": "0fd63ae2a2f0ee134a99e1f2683549fdad4052cf7355d3bba38f801d1018b006",
+    "u_f_0L01_c1_3.viamap.hex": "441aebbd0076215e61618b6f1c54c65031e0af53600aaa8f5afaabdd09e994e1",
+    "u_f_0L01_c1_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+    "u_f_0L01_c1_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+    "u_f_0L01_c1_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+    "u_f_0L01_e5w_0.viamap.hex": "5d2e7c760afc9930f73b42cf1b8dd62f052103ad6b6a2efcf8363a0f40ff8a42",
+    "u_f_0L01_e5w_1.viamap.hex": "e5cff805cb6ffcb288728fa9763531d3aff934df44c361cb4e648aa40e50b107",
+    "u_f_0L01_e5e_0.viamap.hex": "7f892d6a3288736d11838f54f9db74de1058d5a49349863c74b61278c9a5ec61",
+    "u_f_0L01_e5e_1.viamap.hex": "60eb3644a55fcf6e90e37e3e5a78b9554b27061d4a73b6a7575783a9160133f4",
+    "u_f_0L01_c5_0.viamap.hex": "7f3891d9261889f0dca0e3f6f9c57fca99b5d6d252d8f9dd10b5c1ef9b7c1362",
+    "u_f_0L01_c5_1.viamap.hex": "33c971af136c84c3b4fb5d8675bf1a42a0e24691e8e5cfaebeeb264c95b6fe37",
+    "u_f_0L01_c5_2.viamap.hex": "cf3389f0cd0f33dcae9f84665bcbd0d71b79bfb92a8fac116d44b7cb568f2e38",
+    "u_f_0L01_c5_3.viamap.hex": "0a019360c51d81dd47a9f65a84dd0852e56106d03bde4aa316b288144710050b",
+    "u_f_0L01_c5_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+    "u_f_0L01_c5_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+    "u_f_0L01_c5_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+    "u_f_0L01_e10w_0.viamap.hex": "dc14e5bba2196ff82c5e5ddae5d1e59f5b7f572084a8d3211033f7750e6977a0",
+    "u_f_0L01_e10w_1.viamap.hex": "20a0fee094e9869e02ed9ff0bad1429f812746035ceb91aa82770d731caa0759",
+    "u_f_0L01_e10e_0.viamap.hex": "bf49dde09af54cc8da4729e61676b190c8587ba39d67a351e063433c5f68f42c",
+    "u_f_0L01_e10e_1.viamap.hex": "297074de6963753f1855199ae1c7e7bab7f8334e1b097774566f0188c662cf47",
+    "u_f_0L01_c10_0.viamap.hex": "ee3b35b4ce1728194a3eabf41c366dee662da6445e55ac181020989b03ab772f",
+    "u_f_0L01_c10_1.viamap.hex": "33c971af136c84c3b4fb5d8675bf1a42a0e24691e8e5cfaebeeb264c95b6fe37",
+    "u_f_0L01_c10_2.viamap.hex": "cf3389f0cd0f33dcae9f84665bcbd0d71b79bfb92a8fac116d44b7cb568f2e38",
+    "u_f_0L01_c10_3.viamap.hex": "bfc39a9f9595a804451bc53ff53641532b3a569470a40c0e362e683dd78e0489",
+    "u_f_0L01_c10_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+    "u_f_0L01_c10_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+    "u_f_0L01_c10_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+  }
+}
