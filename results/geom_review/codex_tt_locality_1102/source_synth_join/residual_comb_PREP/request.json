@@ -1,0 +1,24 @@
+{
+ "status": "PREP_NOT_RUN",
+ "scope": "ONE actual old50820/new50942 D-function combinational miter",
+ "free_boundary_bits": 133,
+ "combinational_nodes": 554,
+ "miter_sha256": "10643b2f55d40d4de49766fac480759da91ac3514630600519d182970e89887d",
+ "source_cone_sha256": "0e8ad93506b1ddc21cbe09c30073da3b3f867f0c0e8ca5db92861f05cb1647b6",
+ "leaf_join_sha256": "44b368d6793e7279dd727f25ede5952e1fe4f609f46a6ec3cfeda0632e6a2fda",
+ "proposed_resource": {
+  "mem_gb": 2,
+  "threads": 2
+ },
+ "proposed_commands": [
+  "read_verilog miter.v; prep -top tt_residual_anon_d_comb; sat -verify -prove mismatch 0 -show-inputs",
+  "read_verilog miter.v; prep -top tt_residual_anon_d_comb; sat -verify -prove mutant_mismatch 0 -show-inputs"
+ ],
+ "mutant_expectation": "FAIL_WITH_COUNTEREXAMPLE",
+ "initial_state_or_reset_constraints": [],
+ "native_base_proved": false,
+ "aliases_accepted": false,
+ "full_source_credit": false,
+ "physical_release": false,
+ "required_parent_decision": "Authorize bounded combinational-only solver after reviewing exact leaf join; no new source/RTL SYNTH/full LEC/CAD"
+}

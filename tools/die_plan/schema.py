@@ -1171,6 +1171,16 @@ _CKPROPS["landing_raw_branches"] = {
                           "items": {"type": "string", "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+)$"}}
         }}}
 
+# Default-OFF TT_C source-event PREP. This pointer is admitted only with exact
+# source/model identity; global source/slot/reset/clock consumers still gate it.
+_CKPROPS["landing_regional_origin"] = {
+    "type": "object", "additionalProperties": False,
+    "required": ["enabled", "model_file", "model_sha256"],
+    "properties": {
+        "enabled": {"type": "boolean", "default": False},
+        "model_file": {"type": "string", "pattern": "^/", "minLength": 2},
+        "model_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
+
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)

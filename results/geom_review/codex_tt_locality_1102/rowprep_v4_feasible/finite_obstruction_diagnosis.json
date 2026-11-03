@@ -1,0 +1,1963 @@
+{
+ "status": "FINITE_OBSTRUCTION_CAUSE_JOIN_ONLY",
+ "variables": 87,
+ "typed_incident_edges": 3481,
+ "cut_count": 290,
+ "cut_kind_counts": {
+  "F": 36,
+  "J": 210,
+  "M": 44
+ },
+ "actual_fixed_ff_blockers": [
+  {
+   "id": 29149,
+   "name": "u_bound.u_bout_tl/q\\[364\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    771.822,
+    363.42,
+    772.902,
+    363.69
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29153,
+   "name": "u_bound.u_bout_tl/q\\[368\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    772.092,
+    363.69,
+    773.172,
+    363.96
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29154,
+   "name": "u_bound.u_bout_tl/q\\[369\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    771.768,
+    364.23,
+    772.848,
+    364.5
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29171,
+   "name": "u_bound.u_bout_tl/q\\[384\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    770.958,
+    367.47,
+    772.038,
+    367.74
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29180,
+   "name": "u_bound.u_bout_tl/q\\[392\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    771.282,
+    368.82,
+    772.362,
+    369.09
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 133939,
+   "name": "u_bound.u_core.u_53990/Q$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    206.118,
+    316.17,
+    207.19800000000004,
+    316.44
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t53",
+   "other_clock_root": null
+  },
+  {
+   "id": 133944,
+   "name": "u_bound.u_core.u_53992/Q$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    206.118,
+    316.98,
+    207.19799999999998,
+    317.25
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t53",
+   "other_clock_root": null
+  },
+  {
+   "id": 184895,
+   "name": "u_bound.u_core.u_8154/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    403.43399999999997,
+    328.05,
+    404.83799999999997,
+    328.32
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 184904,
+   "name": "u_bound.u_core.u_8157/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    402.03,
+    328.05,
+    403.43399999999997,
+    328.32
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 184910,
+   "name": "u_bound.u_core.u_8159/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    403.92,
+    327.78,
+    405.324,
+    328.05000000000007
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185191,
+   "name": "u_bound.u_core.u_8243/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    421.686,
+    328.05,
+    423.09,
+    328.32
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185236,
+   "name": "u_bound.u_core.u_8257/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.062,
+    328.05,
+    425.466,
+    328.32
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185257,
+   "name": "u_bound.u_core.u_8263/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    425.466,
+    328.05,
+    426.87,
+    328.32
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  }
+ ],
+ "fresh_shrinking_variable_cells": [],
+ "fresh_shrinking_fixed_reach_anchors": [],
+ "fresh_shrinking_fixed_obstacle_count": 0,
+ "source_slot_obstacles": [],
+ "dead_PD3_obstacle_involved": false,
+ "actual_fixed_macros": [
+  {
+   "id": 190507,
+   "name": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
+   "kind": "M",
+   "master": "ot_rom_4096x72_m8",
+   "box": [
+    423.36,
+    181.452,
+    461.4,
+    244.404
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": null,
+   "other_clock_root": null
+  },
+  {
+   "id": 190508,
+   "name": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+   "kind": "M",
+   "master": "ot_rom_4096x72_m8",
+   "box": [
+    483.84,
+    181.452,
+    521.88,
+    244.404
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": null,
+   "other_clock_root": null
+  },
+  {
+   "id": 195626,
+   "name": "u_bound.u_core.u_gi.u_cal.g_fifo\\[0\\].u_fifo",
+   "kind": "M",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "box": [
+    17.28,
+    86.412,
+    188.568,
+    164.196
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": null,
+   "other_clock_root": null
+  },
+  {
+   "id": 195628,
+   "name": "u_bound.u_core.u_gi.u_cal.g_fifo\\[2\\].u_fifo",
+   "kind": "M",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "box": [
+    17.28,
+    181.452,
+    188.568,
+    259.236
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": null,
+   "other_clock_root": null
+  },
+  {
+   "id": 195629,
+   "name": "u_bound.u_core.u_gi.u_cal.g_fifo\\[3\\].u_fifo",
+   "kind": "M",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "box": [
+    207.36,
+    233.292,
+    378.648,
+    311.076
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": null,
+   "other_clock_root": null
+  },
+  {
+   "id": 195631,
+   "name": "u_bound.u_core.u_gi.u_cal.g_m\\[1\\].u_pm",
+   "kind": "M",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "box": [
+    267.84,
+    328.332,
+    439.128,
+    406.116
+   ],
+   "was_moved_guide": false,
+   "fresh_change": null,
+   "clock_parent": null,
+   "other_clock_root": null
+  }
+ ],
+ "all_joint_cells": [
+  {
+   "id": 29281,
+   "name": "u_bound.u_bout_tl/q\\[483\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    770.04,
+    388.53000000000003,
+    771.1199999999999,
+    388.8
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29282,
+   "name": "u_bound.u_bout_tl/q\\[484\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    770.742,
+    387.72,
+    771.8219999999999,
+    387.99
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29283,
+   "name": "u_bound.u_bout_tl/q\\[485\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    770.1479999999999,
+    387.99,
+    771.2280000000001,
+    388.26
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29285,
+   "name": "u_bound.u_bout_tl/q\\[487\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    769.662,
+    388.26,
+    770.742,
+    388.5300000000001
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29286,
+   "name": "u_bound.u_bout_tl/q\\[488\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    772.0919999999999,
+    385.83000000000004,
+    773.172,
+    386.1
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29287,
+   "name": "u_bound.u_bout_tl/q\\[489\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    770.04,
+    387.18,
+    771.1199999999999,
+    387.45
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29289,
+   "name": "u_bound.u_bout_tl/q\\[490\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    767.7719999999999,
+    390.15,
+    768.8520000000001,
+    390.4200000000001
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29290,
+   "name": "u_bound.u_bout_tl/q\\[491\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    769.0139999999999,
+    388.8,
+    770.094,
+    389.07
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29291,
+   "name": "u_bound.u_bout_tl/q\\[492\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    768.096,
+    389.61,
+    769.1760000000002,
+    389.88
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29292,
+   "name": "u_bound.u_bout_tl/q\\[493\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    772.0919999999999,
+    384.75,
+    773.172,
+    385.02
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29293,
+   "name": "u_bound.u_bout_tl/q\\[494\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    768.96,
+    388.53000000000003,
+    770.04,
+    388.8
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29294,
+   "name": "u_bound.u_bout_tl/q\\[495\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    767.016,
+    389.88000000000005,
+    768.0959999999999,
+    390.15000000000003
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29295,
+   "name": "u_bound.u_bout_tl/q\\[496\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    766.638,
+    390.15000000000003,
+    767.718,
+    390.42
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29296,
+   "name": "u_bound.u_bout_tl/q\\[497\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    771.012,
+    385.56,
+    772.0919999999999,
+    385.83
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29297,
+   "name": "u_bound.u_bout_tl/q\\[498\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    766.422,
+    390.69,
+    767.502,
+    390.96
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29298,
+   "name": "u_bound.u_bout_tl/q\\[499\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    771.768,
+    385.02,
+    772.848,
+    385.2900000000001
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29301,
+   "name": "u_bound.u_bout_tl/q\\[500\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    770.31,
+    386.64000000000004,
+    771.3899999999999,
+    386.91
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29302,
+   "name": "u_bound.u_bout_tl/q\\[501\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    771.498,
+    385.29,
+    772.578,
+    385.56
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29303,
+   "name": "u_bound.u_bout_tl/q\\[502\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    764.208,
+    392.03999999999996,
+    765.2879999999999,
+    392.31000000000006
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29304,
+   "name": "u_bound.u_bout_tl/q\\[503\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    769.1219999999998,
+    387.45000000000005,
+    770.202,
+    387.72
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29305,
+   "name": "u_bound.u_bout_tl/q\\[504\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    764.262,
+    392.31,
+    765.3419999999999,
+    392.58
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29306,
+   "name": "u_bound.u_bout_tl/q\\[505\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    769.662,
+    386.37,
+    770.742,
+    386.64
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29307,
+   "name": "u_bound.u_bout_tl/q\\[506\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    763.776,
+    392.58000000000004,
+    764.8559999999999,
+    392.85
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29308,
+   "name": "u_bound.u_bout_tl/q\\[507\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    771.336,
+    384.21000000000004,
+    772.4159999999999,
+    384.48
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29309,
+   "name": "u_bound.u_bout_tl/q\\[508\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    763.344,
+    392.85,
+    764.424,
+    393.12
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29310,
+   "name": "u_bound.u_bout_tl/q\\[509\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    762.6960000000001,
+    393.39,
+    763.7760000000001,
+    393.6600000000001
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29312,
+   "name": "u_bound.u_bout_tl/q\\[510\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    762.1019999999999,
+    393.66,
+    763.182,
+    393.93
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 29313,
+   "name": "u_bound.u_bout_tl/q\\[511\\]$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    761.9399999999999,
+    393.93,
+    763.0199999999999,
+    394.2
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t57",
+   "other_clock_root": null
+  },
+  {
+   "id": 185260,
+   "name": "u_bound.u_core.u_8264/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    425.2305,
+    327.52959999999996,
+    426.6345,
+    327.79959999999994
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185263,
+   "name": "u_bound.u_core.u_8265/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    425.3715000000001,
+    327.76660000000004,
+    426.7755000000001,
+    328.0366
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185266,
+   "name": "u_bound.u_core.u_8266/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    425.3235,
+    327.8146,
+    426.7275,
+    328.08459999999997
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185269,
+   "name": "u_bound.u_core.u_8267/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.58100000000013,
+    327.39699999999993,
+    424.9850000000001,
+    327.6669999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185272,
+   "name": "u_bound.u_core.u_8268/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    425.37879999999996,
+    328.0618999999999,
+    426.78279999999995,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185275,
+   "name": "u_bound.u_core.u_8269/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    425.28279999999995,
+    328.0618999999999,
+    426.68679999999995,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185281,
+   "name": "u_bound.u_core.u_8270/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    425.18679999999995,
+    328.0618999999999,
+    426.59079999999994,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185284,
+   "name": "u_bound.u_core.u_8271/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.28300000000013,
+    327.39699999999993,
+    425.6870000000001,
+    327.6669999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185287,
+   "name": "u_bound.u_core.u_8272/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.99479999999994,
+    328.0618999999999,
+    426.39879999999994,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185290,
+   "name": "u_bound.u_core.u_8273/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.89879999999994,
+    328.0618999999999,
+    426.30279999999993,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185293,
+   "name": "u_bound.u_core.u_8274/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.80279999999993,
+    328.0618999999999,
+    426.20679999999993,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185296,
+   "name": "u_bound.u_core.u_8275/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.70679999999993,
+    328.0618999999999,
+    426.1107999999999,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185299,
+   "name": "u_bound.u_core.u_8276/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.6108,
+    328.0618999999999,
+    426.0148,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185302,
+   "name": "u_bound.u_core.u_8277/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.5148,
+    328.0618999999999,
+    425.9188,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185305,
+   "name": "u_bound.u_core.u_8278/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.4188,
+    328.0618999999999,
+    425.8228,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185308,
+   "name": "u_bound.u_core.u_8279/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.3228,
+    328.0618999999999,
+    425.72679999999997,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185314,
+   "name": "u_bound.u_core.u_8280/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.22679999999997,
+    328.0618999999999,
+    425.63079999999997,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185317,
+   "name": "u_bound.u_core.u_8281/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.13079999999997,
+    328.0618999999999,
+    425.53479999999996,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185320,
+   "name": "u_bound.u_core.u_8282/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    424.03479999999996,
+    328.0618999999999,
+    425.43879999999996,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185323,
+   "name": "u_bound.u_core.u_8283/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.93879999999996,
+    328.0618999999999,
+    425.34279999999995,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185326,
+   "name": "u_bound.u_core.u_8284/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.84279999999995,
+    328.0618999999999,
+    425.24679999999995,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185329,
+   "name": "u_bound.u_core.u_8285/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.74679999999995,
+    328.0618999999999,
+    425.15079999999995,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185332,
+   "name": "u_bound.u_core.u_8286/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.65079999999995,
+    328.0618999999999,
+    425.05479999999994,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185335,
+   "name": "u_bound.u_core.u_8287/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.55479999999994,
+    328.0618999999999,
+    424.95879999999994,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185338,
+   "name": "u_bound.u_core.u_8288/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.45879999999994,
+    328.0618999999999,
+    424.86279999999994,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185341,
+   "name": "u_bound.u_core.u_8289/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.36279999999994,
+    328.0618999999999,
+    424.76679999999993,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185347,
+   "name": "u_bound.u_core.u_8290/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.26679999999993,
+    328.0618999999999,
+    424.67079999999993,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185350,
+   "name": "u_bound.u_core.u_8291/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.1708,
+    328.0618999999999,
+    424.5748,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185353,
+   "name": "u_bound.u_core.u_8292/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    423.0748,
+    328.0618999999999,
+    424.4788,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185356,
+   "name": "u_bound.u_core.u_8293/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    422.9788,
+    328.0618999999999,
+    424.3828,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185359,
+   "name": "u_bound.u_core.u_8294/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    422.8828,
+    328.0618999999999,
+    424.28679999999997,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185362,
+   "name": "u_bound.u_core.u_8295/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    422.78679999999997,
+    328.0618999999999,
+    424.19079999999997,
+    328.3318999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 185365,
+   "name": "u_bound.u_core.u_8296/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    422.69080000000037,
+    328.061899999999,
+    424.09480000000036,
+    328.331899999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 211666,
+   "name": "u_bound.u_core.u_hr.u_18858/Q$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    605.1780000000001,
+    233.55,
+    606.258,
+    233.82
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t39",
+   "other_clock_root": null
+  },
+  {
+   "id": 211825,
+   "name": "u_bound.u_core.u_hr.u_18928/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    521.424,
+    250.82999999999998,
+    522.828,
+    251.10000000000002
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t44",
+   "other_clock_root": null
+  },
+  {
+   "id": 214788,
+   "name": "u_bound.u_core.u_hr.u_20240/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    366.12,
+    327.78,
+    367.524,
+    328.05000000000007
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 214791,
+   "name": "u_bound.u_core.u_hr.u_20241/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    365.634,
+    326.97,
+    367.038,
+    327.24
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 214794,
+   "name": "u_bound.u_core.u_hr.u_20242/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    366.12,
+    328.05,
+    367.524,
+    328.32
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 214809,
+   "name": "u_bound.u_core.u_hr.u_20247/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    351.486,
+    164.70000000000002,
+    352.89,
+    164.97
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t28",
+   "other_clock_root": null
+  },
+  {
+   "id": 215166,
+   "name": "u_bound.u_core.u_hr.u_20378/Q$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    412.53599999999994,
+    445.80899999999997,
+    413.616,
+    446.07900000000006
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t59",
+   "other_clock_root": null
+  },
+  {
+   "id": 219014,
+   "name": "u_bound.u_core.u_hr.u_22061/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    368.07399999999996,
+    327.39699999999993,
+    369.47799999999995,
+    327.6669999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 219017,
+   "name": "u_bound.u_core.u_hr.u_22062/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    368.07399999999996,
+    327.39699999999993,
+    369.47799999999995,
+    327.6669999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 219020,
+   "name": "u_bound.u_core.u_hr.u_22063/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    367.524,
+    327.51000000000005,
+    368.928,
+    327.78000000000003
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 219023,
+   "name": "u_bound.u_core.u_hr.u_22064/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    367.308,
+    327.24,
+    368.712,
+    327.51
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 219026,
+   "name": "u_bound.u_core.u_hr.u_22065/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    367.524,
+    327.78000000000003,
+    368.928,
+    328.05
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 219029,
+   "name": "u_bound.u_core.u_hr.u_22066/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    367.524,
+    328.05,
+    368.928,
+    328.32
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 219032,
+   "name": "u_bound.u_core.u_hr.u_22067/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    367.038,
+    326.97,
+    368.442,
+    327.24
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 219035,
+   "name": "u_bound.u_core.u_hr.u_22068/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    366.768,
+    326.70000000000005,
+    368.17199999999997,
+    326.97
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 219110,
+   "name": "u_bound.u_core.u_hr.u_22093/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    343.386,
+    24.03,
+    344.79,
+    24.299999999999997
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t5",
+   "other_clock_root": null
+  },
+  {
+   "id": 219341,
+   "name": "u_bound.u_core.u_hr.u_22185/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    392.472,
+    212.76000000000005,
+    393.876,
+    213.03000000000003
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t36",
+   "other_clock_root": null
+  },
+  {
+   "id": 219344,
+   "name": "u_bound.u_core.u_hr.u_22186/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    394.578,
+    207.9,
+    395.98199999999997,
+    208.17000000000004
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t36",
+   "other_clock_root": null
+  },
+  {
+   "id": 219347,
+   "name": "u_bound.u_core.u_hr.u_22187/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    395.766,
+    209.52,
+    397.17,
+    209.79000000000005
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t36",
+   "other_clock_root": null
+  },
+  {
+   "id": 221233,
+   "name": "u_bound.u_core.u_hr.u_23045/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    368.07399999999996,
+    327.39699999999993,
+    369.47799999999995,
+    327.6669999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 221236,
+   "name": "u_bound.u_core.u_hr.u_23046/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    368.07399999999996,
+    327.39699999999993,
+    369.47799999999995,
+    327.6669999999999
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 223505,
+   "name": "u_bound.u_core.u_hr.u_23996/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    367.092,
+    326.43,
+    368.496,
+    326.7
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 223508,
+   "name": "u_bound.u_core.u_hr.u_23997/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    366.12,
+    327.51,
+    367.524,
+    327.7800000000001
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 223511,
+   "name": "u_bound.u_core.u_hr.u_23998/Q$_DFF_PN0_",
+   "kind": "S",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "box": [
+    365.904,
+    327.24,
+    367.308,
+    327.51
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t50",
+   "other_clock_root": null
+  },
+  {
+   "id": 223695,
+   "name": "u_bound.u_core.u_hr.u_24079/Q$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    658.8,
+    213.03,
+    659.8800000000001,
+    213.29999999999998
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t34",
+   "other_clock_root": null
+  },
+  {
+   "id": 225373,
+   "name": "u_bound.u_core.u_hr.u_24785/Q$_DFF_P_",
+   "kind": "S",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "box": [
+    659.934,
+    214.11,
+    661.0139999999999,
+    214.38
+   ],
+   "was_moved_guide": true,
+   "fresh_change": null,
+   "clock_parent": "clk_t34",
+   "other_clock_root": null
+  }
+ ],
+ "actual_live_source_extra_ff": 12,
+ "declared_source_extra_ff": 13,
+ "geometry_global_infeasibility_claim": false,
+ "native_correspondence": "HELD",
+ "physical_release": false,
+ "targeted_expansion": {
+  "variable_count": 100,
+  "added_actual_ff": [
+   {
+    "id": 29149,
+    "name": "u_bound.u_bout_tl/q\\[364\\]$_DFF_P_",
+    "kind": "S",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     771.822,
+     363.42,
+     772.902,
+     363.69
+    ],
+    "was_moved_guide": false,
+    "fresh_change": null,
+    "clock_parent": "clk_t57",
+    "other_clock_root": null
+   },
+   {
+    "id": 29153,
+    "name": "u_bound.u_bout_tl/q\\[368\\]$_DFF_P_",
+    "kind": "S",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     772.092,
+     363.69,
+     773.172,
+     363.96
+    ],
+    "was_moved_guide": false,
+    "fresh_change": null,
+    "clock_parent": "clk_t57",
+    "other_clock_root": null
+   },
+   {
+    "id": 29154,
+    "name": "u_bound.u_bout_tl/q\\[369\\]$_DFF_P_",
+    "kind": "S",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     771.768,
+     364.23,
+     772.848,
+     364.5
+    ],
+    "was_moved_guide": false,
+    "fresh_change": null,
+    "clock_parent": "clk_t57",
+    "other_clock_root": null
+   },
+   {
+    "id": 29171,
+    "name": "u_bound.u_bout_tl/q\\[384\\]$_DFF_P_",
+    "kind": "S",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     770.958,
+     367.47,
+     772.038,
+     367.74
+    ],
+    "was_moved_guide": false,
+    "fresh_change": null,
+    "clock_parent": "clk_t57",
+    "other_clock_root": null
+   },
+   {
+    "id": 29180,
+    "name": "u_bound.u_bout_tl/q\\[392\\]$_DFF_P_",
+    "kind": "S",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     771.282,
+     368.82,
+     772.362,
+     369.09
+    ],
+    "was_moved_guide": false,
+    "fresh_change": null,
+    "clock_parent": "clk_t57",
+    "other_clock_root": null
+   },
+   {
+    "id": 133939,
+    "name": "u_bound.u_core.u_53990/Q$_DFF_P_",
+    "kind": "S",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     206.118,
+     316.17,
+     207.19800000000004,
+     316.44
+    ],
+    "was_moved_guide": true,
+    "fresh_change": null,
+    "clock_parent": "clk_t53",
+    "other_clock_root": null
+   },
+   {
+    "id": 133944,
+    "name": "u_bound.u_core.u_53992/Q$_DFF_P_",
+    "kind": "S",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "box": [
+     206.118,
+     316.98,
+     207.19799999999998,
+     317.25
+    ],
+    "was_moved_guide": true,
+    "fresh_change": null,
+    "clock_parent": "clk_t53",
+    "other_clock_root": null
+   },
+   {
+    "id": 184895,
+    "name": "u_bound.u_core.u_8154/Q$_DFF_PN0_",
+    "kind": "S",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "box": [
+     403.43399999999997,
+     328.05,
+     404.83799999999997,
+     328.32
+    ],
+    "was_moved_guide": true,
+    "fresh_change": null,
+    "clock_parent": "clk_t50",
+    "other_clock_root": null
+   },
+   {
+    "id": 184904,
+    "name": "u_bound.u_core.u_8157/Q$_DFF_PN0_",
+    "kind": "S",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "box": [
+     402.03,
+     328.05,
+     403.43399999999997,
+     328.32
+    ],
+    "was_moved_guide": true,
+    "fresh_change": null,
+    "clock_parent": "clk_t50",
+    "other_clock_root": null
+   },
+   {
+    "id": 184910,
+    "name": "u_bound.u_core.u_8159/Q$_DFF_PN0_",
+    "kind": "S",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "box": [
+     403.92,
+     327.78,
+     405.324,
+     328.05000000000007
+    ],
+    "was_moved_guide": true,
+    "fresh_change": null,
+    "clock_parent": "clk_t50",
+    "other_clock_root": null
+   },
+   {
+    "id": 185191,
+    "name": "u_bound.u_core.u_8243/Q$_DFF_PN0_",
+    "kind": "S",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "box": [
+     421.686,
+     328.05,
+     423.09,
+     328.32
+    ],
+    "was_moved_guide": true,
+    "fresh_change": null,
+    "clock_parent": "clk_t50",
+    "other_clock_root": null
+   },
+   {
+    "id": 185236,
+    "name": "u_bound.u_core.u_8257/Q$_DFF_PN0_",
+    "kind": "S",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "box": [
+     424.062,
+     328.05,
+     425.466,
+     328.32
+    ],
+    "was_moved_guide": true,
+    "fresh_change": null,
+    "clock_parent": "clk_t50",
+    "other_clock_root": null
+   },
+   {
+    "id": 185257,
+    "name": "u_bound.u_core.u_8263/Q$_DFF_PN0_",
+    "kind": "S",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "box": [
+     425.466,
+     328.05,
+     426.87,
+     328.32
+    ],
+    "was_moved_guide": true,
+    "fresh_change": null,
+    "clock_parent": "clk_t50",
+    "other_clock_root": null
+   }
+  ],
+  "typed_edges": 3581,
+  "fresh_shrinking_variable_cells": [],
+  "fresh_shrinking_fixed_reach_anchors": [],
+  "new_TL_pin_bits": [
+   364,
+   368,
+   369,
+   384,
+   392
+  ],
+  "all_added_ff_clock_roots": [
+   "clk_t57",
+   "clk_t57",
+   "clk_t57",
+   "clk_t57",
+   "clk_t57",
+   "clk_t53",
+   "clk_t53",
+   "clk_t50",
+   "clk_t50",
+   "clk_t50",
+   "clk_t50",
+   "clk_t50",
+   "clk_t50"
+  ],
+  "no_macro_or_tap_or_cycle_change": true,
+  "solver_run": false
+ }
+}

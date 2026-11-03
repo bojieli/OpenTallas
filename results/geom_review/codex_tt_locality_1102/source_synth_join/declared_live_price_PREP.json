@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.tt_declared_and_live_source_price.v1",
+ "status": "PREP_DECLARED_LIVE_DISTINCTION",
+ "declared_net_ff_added": 13,
+ "actual_mapped_net_ff_added": 12,
+ "declared_full_ff_count": 38244,
+ "actual_mapped_full_ff_count": 38243,
+ "declared_extra_posedge_clock_loads": 13,
+ "actual_extra_posedge_clock_loads": 12,
+ "declared_extra_reset_consumers": 9,
+ "actual_extra_reset_consumers": 8,
+ "new_raw_leaf_upstream_data_loads": 4,
+ "added_boot_cycles": 0,
+ "added_mission_cycles": 0,
+ "dead_state": "u_bound.u_cland_origin.g_on.g_region[3].pd[0]",
+ "padw": 1,
+ "region3_receivers": [
+  "u_bound.u_cland_fstart_table_req",
+  "u_bound.u_cland_fstart_tl"
+ ],
+ "region3_receiver_signal": "start_d_r[3]",
+ "start_d_padw1": "strap_pad ? s2 : s1",
+ "dead_state_required_abi": false,
+ "dead_state_keep_added": false,
+ "helper_source_changed": false,
+ "original37_receiver_behaviour_changed": false,
+ "source_model_live_count_update": "PENDING_COHERENT_BATCH",
+ "physical_release": false,
+ "global_source_credit": false
+}
