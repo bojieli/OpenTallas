@@ -1,0 +1,120 @@
+{
+ "schema": "opentallas.hub_repack.v1",
+ "source_plan_sha256": "1d6c0fa45449e42865e9dd31294a6b5bbada3de0c602f72f5c9bb5219f1e6748",
+ "reach_um": 360.0,
+ "shrinks": [
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+   "outline_um": [
+    760.32,
+    311.04
+   ],
+   "est_fill": 0.1496,
+   "macro_fit": true,
+   "accepted": true,
+   "reason": "macros fit, fill <= 0.60"
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "outline_um": [
+    250.56,
+    414.72
+   ],
+   "est_fill": 0.0663,
+   "macro_fit": true,
+   "accepted": true,
+   "reason": "macros fit, fill <= 0.60"
+  }
+ ],
+ "hubs": {},
+ "stations": {
+  "q_hub_ne": {
+   "stations": 2886,
+   "regenerated": 6,
+   "kept": 2880,
+   "regs_old": 29271,
+   "regs_new": 29271,
+   "latency_up": [],
+   "padded_short": [],
+   "failed": [],
+   "kinds": {
+    "HV": 5,
+    "astar": 1
+   }
+  },
+  "q_hub_nw": {
+   "stations": 2940,
+   "regenerated": 8,
+   "kept": 2932,
+   "regs_old": 29210,
+   "regs_new": 29210,
+   "latency_up": [],
+   "padded_short": [],
+   "failed": [],
+   "kinds": {
+    "HV": 4,
+    "VH": 1,
+    "astar": 3
+   }
+  },
+  "q_su20": {
+   "stations": 20,
+   "regenerated": 4,
+   "kept": 16,
+   "regs_old": 107,
+   "regs_new": 107,
+   "latency_up": [],
+   "padded_short": [],
+   "failed": [],
+   "kinds": {
+    "astar": 3,
+    "HV": 1
+   }
+  },
+  "q_su20__physical_v1": {
+   "stations": 20,
+   "regenerated": 4,
+   "kept": 16,
+   "regs_old": 107,
+   "regs_new": 107,
+   "latency_up": [],
+   "padded_short": [],
+   "failed": [],
+   "kinds": {
+    "astar": 3,
+    "HV": 1
+   }
+  },
+  "q_su30": {
+   "stations": 15,
+   "regenerated": 3,
+   "kept": 12,
+   "regs_old": 65,
+   "regs_new": 65,
+   "latency_up": [],
+   "padded_short": [],
+   "failed": [],
+   "kinds": {
+    "HV": 3
+   }
+  },
+  "q_su30__physical_v1": {
+   "stations": 15,
+   "regenerated": 3,
+   "kept": 12,
+   "regs_old": 65,
+   "regs_new": 65,
+   "latency_up": [],
+   "padded_short": [],
+   "failed": [],
+   "kinds": {
+    "HV": 3
+   }
+  }
+ },
+ "plan_sha256": "070eb0cd6b298d2a16499bdc05ec05785a4b71fcb87c7f3cd4e0a2165dc2cd34",
+ "new_pin_files": [
+  "cores/ot_hbm_su_static_cxport_ij_q__250.56x414.72__canon__codex_g21.json",
+  "cores/ot_hbm_su_static_pgslice_lg__lanes8_11__760.32x311.04__canon__d16f__codex_g21.json"
+ ]
+}
