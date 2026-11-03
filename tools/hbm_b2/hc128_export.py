@@ -68,6 +68,7 @@ def main():
     ap.add_argument("--netlist", type=Path, required=True); ap.add_argument("--master", required=True)
     ap.add_argument("--out", type=Path, required=True); ap.add_argument("--source-commit", required=True)
     ap.add_argument("--blackbox", action="append", default=[])
+    ap.add_argument("--added-cycles", type=int, default=0)   # declared master latency change (DIE-HBM-61 SFR: 2)
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     j = json.loads(a.netlist.read_text()); mods = j["modules"]
     for n in a.blackbox:
@@ -88,7 +89,7 @@ def main():
     receipt = dict(source_commit=a.source_commit, input_sha256=hashlib.sha256(a.netlist.read_bytes()).hexdigest(),
                    master=a.master, ports={n: (p["direction"], len(p["bits"])) for n, p in mods[a.master]["ports"].items()},
                    closure_modules=sorted(seen), verilog_sha256=hashlib.sha256(sv.read_bytes()).hexdigest(),
-                   qualification="EXACT_CUT_NOT_ROUTED", added_cycles=0, boundary_masters=a.blackbox,
+                   qualification="EXACT_CUT_NOT_ROUTED", added_cycles=a.added_cycles, boundary_masters=a.blackbox,
                    instance_names="PLAIN_IDENTIFIERS", instance_renames=renames)
     (a.out / (a.master + "_receipt.json")).write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({k: v for k, v in receipt.items() if k not in ("closure_modules", "instance_renames")}

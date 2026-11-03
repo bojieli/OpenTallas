@@ -153,10 +153,11 @@ module ot_hbm_hc_qcen_static #(
     wire [(W-1)*32-1:0] nd; wire [W-2:0] nv, ne;
     // SFR face registers (names g_sf[k].u_fi / u_fo / u_ff are what hc128_qhub_cut.py selects into subtree k)
     localparam integer SFD = (SFR != 0) ? 2 : 0;
-    wire [W*32-1:0] lv_f; wire [3:0] lv_vf;           // subtree input face: leaves + leaf valid
-    wire [4*32-1:0] nd_f; wire [3:0] nv_f;            // subtree output face: level-5 sum + valid
-    wire [W-2:0] ne_f;                                 // subtree output face: node faults (levels 1..5)
+    wire ne_or;                                        // ps_f's node-fault OR (registered subtree faults when SFR)
     if (SFR != 0) begin : g_sfr
+        wire [W*32-1:0] lv_f; wire [3:0] lv_vf;           // subtree input face: leaves + leaf valid
+        wire [4*32-1:0] nd_f; wire [3:0] nv_f;            // subtree output face: level-5 sum + valid
+        wire [W-2:0] ne_f;                                 // subtree output face: node faults (levels 1..5)
         for (genvar k = 0; k < 4; k = k + 1) begin : g_sf
             ot_hbm_hc_sfr_reg #(.W(1 + 1024)) u_fi (.clk(clk), .rst_n(rc),
                 .d({leaf_v, lv0[k*1024 +: 1024]}), .q({lv_vf[k], lv_f[k*1024 +: 1024]}));
@@ -172,9 +173,9 @@ module ot_hbm_hc_qcen_static #(
             ot_hbm_hc_sfr_reg #(.W(31), .VB(-2)) u_ff (.clk(clk), .rst_n(rc), .d(ned), .q(neq));
         end
         assign ne_f[W-2:124] = ne[W-2:124];            // levels 6, 7 (nodes 124..126) stay in the parent, unregistered
-    end else begin : g_nosfr
-        assign lv_f = lv0; assign lv_vf = {4{leaf_v}}; assign nd_f = nd[120*32 +: 4*32]; assign nv_f = nv[123:120];
-        assign ne_f = ne;
+        assign ne_or = |ne_f;
+    end else begin : g_nosfr                           // SFR 0: no alias nets, so the 10-31 cut is reproduced bit for bit
+        assign ne_or = |ne;
     end
     for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
         localparam integer N = W >> l, OFF = W - ((2*W) >> l), POFF = W - ((4*W) >> l);
@@ -182,12 +183,12 @@ module ot_hbm_hc_qcen_static #(
             wire [31:0] a, b; wire va; wire [1:0] e;
             if (l == 1) begin : g_leaf
                 if (SFR != 0) begin : g_f
-                    assign a = lv_f[(2*i)*32 +: 32]; assign b = lv_f[(2*i+1)*32 +: 32]; assign va = lv_vf[i / 16];
+                    assign a = g_sfr.lv_f[(2*i)*32 +: 32]; assign b = g_sfr.lv_f[(2*i+1)*32 +: 32]; assign va = g_sfr.lv_vf[i / 16];
                 end else begin : g_r
                     assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
                 end
             end else if (SFR != 0 && l == 6) begin : g_up6
-                assign a = nd_f[(2*i)*32 +: 32]; assign b = nd_f[(2*i + 1)*32 +: 32]; assign va = nv_f[2*i];
+                assign a = g_sfr.nd_f[(2*i)*32 +: 32]; assign b = g_sfr.nd_f[(2*i + 1)*32 +: 32]; assign va = g_sfr.nv_f[2*i];
             end else begin : g_up
                 assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
             end
@@ -203,7 +204,7 @@ module ot_hbm_hc_qcen_static #(
         if (!rc) begin ps_v <= 1'b0; ps_f <= 1'b0; fault <= 1'b0; end
         else begin
             ps_v <= nv[RT];
-            ps_f <= lfd[LT*TLA+SFD-1] || (|ne_f);
+            ps_f <= lfd[LT*TLA+SFD-1] || ne_or;
             if (ing_fault || rx_fault || (|wf_q)) fault <= 1'b1;
         end
     end

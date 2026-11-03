@@ -43,6 +43,6 @@ python3 -I "$T/hc128_qhub_cut.py" --source-commit "$SHA" "$OUT/qhub128.json" --o
 yosys -Q -s "$OUT/cut/cut.ys" > "$OUT/submod.log" 2>&1
 python3 -I "$T/hc128_qhub_compact.py" "$OUT/cut/qhub_split128.json" --out "$OUT/compact" > "$OUT/compact.log" 2>&1
 python3 -I "$T/hc128_export.py" --netlist "$OUT/compact/qhub_compact128.json" --master ot_hbm_hc_subtree32_core \
-  --out "$OUT/master" --source-commit "$SHA" > "$OUT/export.log" 2>&1
+  --out "$OUT/master" --source-commit "$SHA" --added-cycles $((SFR ? 2 : 0)) > "$OUT/export.log" 2>&1
 rm -f "$OUT/qhub128.json" "$OUT/cut/qhub_split128.json" "$OUT/cut/qhub_split128.v"     # >300 MB intermediates
 sha256sum "$OUT/master/ot_hbm_hc_subtree32_core.sv"
