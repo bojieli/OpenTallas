@@ -245,6 +245,14 @@ PLAN_BLOCK = {
     # AUTOBUILD-PIPE-1 10-30: not launched (gen would fail 'macros have LEF but no timing liberty'); no FAIL record, so
     # the type launches on its own once the plan of record carries the child's signed lib (die owner / core sign-off)
     "noview": "WAIT-DEP: a child hard core / ROM view in the plan has a lef but no lib (child not signed yet)",
+    # DIE-KV-62/types 11-02 (class A, KV 21 rows 'macro not declared in the plan type' ORD-2013): a hard_cores[] entry
+    # with no lef is a PLANNED core whose view the plan does not bind yet.  gen_phys.type_macros skips it, so kit-rtl
+    # inlines the child's soft RTL (kv3_pv_pair -> its ot_sram_1r1w_32x128_m1 leaves; HR cores -> their SRAMs) and the
+    # flat kit stops at synth_odb ORD-2013 (macros the type does not place) or runs far over the 400k cell cap.  Not a
+    # failure: the type waits (PENDING-DEP) until the plan binds the child's signed lef/lib.  Die opt-out:
+    # kit_wave.json dies.<die>.planned_core_flat true (old behaviour: build the type flat with the child inlined).
+    "planned": "WAIT-DEP: a child hard core has no view bound in the plan (PLANNED core, no lef/lib): the type kit would "
+               "inline the child RTL; waits for the plan to bind the signed child view",
 }
 
 
@@ -254,6 +262,8 @@ def plan_entry_block(d, item):
         return "plan block identity held: " + d["_identity_holds"][item]
     f = (d.get("_plan_flags") or {}).get(item)
     if f == "hard" and item in (d.get("hard_wrappers") or []):
+        return None
+    if f == "planned" and d.get("planned_core_flat"):
         return None
     return PLAN_BLOCK.get(f)
 
@@ -1468,7 +1478,8 @@ def _descends(AP):
     return f
 
 
-PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + r'''
+PROBE_V = 2   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run)
+PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
 import hashlib, json, os, sys
 a = json.loads(sys.argv[1]); out = {}
 H = lambda o: hashlib.sha256(json.dumps(o, sort_keys=True, default=str).encode()).hexdigest()
@@ -1493,17 +1504,23 @@ try:
         # gen_phys.type_macros + write_type_kit: a hard core / content with a lef but no lib fails gen at once
         noview = sorted({str(c.get("module") or c.get("inst")) for c in (v.get("hard_cores") or []) + (v.get("contents") or [])
                          if isinstance(c, dict) and c.get("lef") and not c.get("lib")})
+        # DIE-KV-62/types 11-02: hard_cores[] without a lef = PLANNED core (view not bound in the plan yet)
+        planned = sorted({str(c.get("module") or c.get("inst")) for c in (v.get("hard_cores") or [])
+                          if isinstance(c, dict) and not c.get("lef")})
         if v.get("hard"):
             flags[t] = "hard"
         elif noview:
             flags[t] = "noview"
             deps[t] = noview
+        elif planned:
+            flags[t] = "planned"
+            deps[t] = planned
         elif ck.get("core_taps") == "internal" and not signed and any(
                 str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps):
             # DIE-KV-60/taps 11-01: = gen_phys.internal_core_taps_estimate (unsigned internal taps -> estimate form)
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
-           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps}
+           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "probe_v": PROBE_V}
     if a.get("core_views"):
         # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
         cv = {}
@@ -1527,7 +1544,7 @@ def plan_names(AP, st, d):
     key = f"{d['gen_host']}:{d['plan']}|{d['event']}"
     c = (st.get("plans") or {}).get(key)
     mode = d.get("block_identity", "raw")
-    if mode == "raw" and c and c.get("blocks") and time.time() - c.get("t", 0) < 6 * 3600:
+    if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
     args = {"plan": d["plan"], "core_views": bool(d.get("core_kit"))}
     if mode != "raw":
