@@ -1382,6 +1382,15 @@ def input_hold_min(P, tn, structural=False):
     return out
 
 
+def ring_hold_obligation(P, tn):
+    """True when plan clock.ring_hold gives type tn's forwarded ring inputs the measured sender min (the ports
+    sdc_lint._io_hold_ctx adds to hold_in_min_ports_ps): an option-A style parent obligation without io_hold.tcl."""
+    if P.clock.get("ring_hold") is None:
+        return False
+    import landing_contract as LC
+    return any(sel for _ck, sel in LC.ring_input_ports(P, tn))
+
+
 def io_hold_tcl(P, tn):
     """kit io_hold.tcl (sender_min / plan_demand kits only): proc ot_io_hold_apply {vclk} re-applies the per-port min
     input delays of input_hold_min after a tool overlay set the fallback on every input (hold_gate.tcl; signoff.py
@@ -3112,10 +3121,15 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     _ec = edge_clock_pins(P, tn)
     if _ec:
         bud["clock"]["edge_clocks"] = [dict(name=n, xy=[x, y], period_mult=m) for n, x, y, m in _ec]
-    if ioh:
+    # DH56-IOHP 11-03: a plan clock.ring_hold kit takes the measured sender min on its forwarded ring inputs
+    # (sdc_lint._io_hold_ctx hold_in_min_ports_ps), so signoff.py applies the same parent obligation; without the plan
+    # digest here that obligation could never be met (io_hold_qualification: 'parent plan differs').
+    ring_a = ring_hold_obligation(P, tn)
+    if ioh or ring_a:
         from io_hold_qualification import plan_digest
-        bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
-        if io_hold_mode(P, tn) == 'plan_demand':
+        bud['io_hold'] = dict(mode='sender_min' if ioh else 'ring_hold',plan_sha256=plan_digest(P.raw),
+                              requires_parent=True)
+        if ioh and io_hold_mode(P, tn) == 'plan_demand':
             hd = P.clock['hold_demand']
             bud['io_hold'].update(mode='plan_demand', hold_demand=dict(
                 derate=hd.get('derate'), cell=hd.get('cell'), windows_ps=hd.get('windows_ps'),
