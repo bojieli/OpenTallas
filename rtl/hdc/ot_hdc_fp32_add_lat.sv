@@ -130,21 +130,28 @@ module ot_hdc_fp32_add_lat #(
     end
 
     generate if (XC_E != 0) begin : g_xe
-        // A2a: the smaller operand is the one jammed (jam28(a, dba) when swapped, else jam28(b, dab))
-        wire [23:0] sm = x_swap ? x_aman : x_bman;
-        wire [7:0]  sd = x_swap ? x_dba : x_dab;
-        wire [27:0] val = {1'b0, sm, 3'b000};
-        wire [27:0] shf = val >> sd[4:0];
-        wire [27:0] lost = val & ~({28{1'b1}} << sd[4:0]);
-        localparam integer WE = 1 + 1 + 2 + 32 + 1 + 1 + 8 + 24 + 28 + 28 + 1 + 1;
+        // A2a: both jam shifts in parallel (no swap select in front of the shifters), sticky ORs before the cut
+        wire [27:0] va = {1'b0, x_aman, 3'b000};
+        wire [27:0] vb = {1'b0, x_bman, 3'b000};
+        wire [27:0] shf_a = va >> x_dba[4:0];
+        wire [27:0] shf_b = vb >> x_dab[4:0];
+        wire stk_a = |(va & ~({28{1'b1}} << x_dba[4:0]));
+        wire stk_b = |(vb & ~({28{1'b1}} << x_dab[4:0]));
+        localparam integer WE = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 28 + 28 + 6;
         wire [WE-1:0] e_q;
         ot_hdc_w11_cut #(.W(WE), .CUT(1), .VB(DRST ? -1 : WE - 1)) u_ce (.clk(clk), .rst_n(rst_n),
-            .d({x_v, x_byp, x_err, x_code, x_sub, x_swap ? x_bs : x_as, x_swap ? x_bexp : x_aexp,
-                x_swap ? x_bman : x_aman, shf, lost, sd >= 8'd28, |val}), .q(e_q));
-        // A2b: sticky OR and the d >= 28 pick
-        wire [27:0] e_shf, e_lost; wire e_ge, e_any;
-        assign {xe_v, xe_byp, xe_err, xe_code, xe_sub, xe_sign, xe_exp, xe_big, e_shf, e_lost, e_ge, e_any} = e_q;
-        assign xe_small = e_ge ? {27'd0, e_any} : (e_shf | {27'd0, |e_lost});
+            .d({x_v, x_byp, x_err, x_code, x_sub, x_swap, x_as, x_bs, x_aexp, x_bexp, x_aman, x_bman, shf_a, shf_b,
+                stk_a, stk_b, x_dba >= 8'd28, x_dab >= 8'd28, |va, |vb}), .q(e_q));
+        // A2b: swap pick (smaller operand = jam28(a, dba) when swapped, else jam28(b, dab)) and the d >= 28 pick
+        wire e_swap, e_as, e_bs, e_sa, e_sb, e_gea, e_geb, e_anya, e_anyb;
+        wire [7:0] e_aexp, e_bexp; wire [23:0] e_aman, e_bman; wire [27:0] e_shfa, e_shfb;
+        assign {xe_v, xe_byp, xe_err, xe_code, xe_sub, e_swap, e_as, e_bs, e_aexp, e_bexp, e_aman, e_bman, e_shfa, e_shfb,
+                e_sa, e_sb, e_gea, e_geb, e_anya, e_anyb} = e_q;
+        assign xe_sign = e_swap ? e_bs : e_as;
+        assign xe_exp = e_swap ? e_bexp : e_aexp;
+        assign xe_big = e_swap ? e_bman : e_aman;
+        assign xe_small = e_swap ? (e_gea ? {27'd0, e_anya} : (e_shfa | {27'd0, e_sa}))
+                                 : (e_geb ? {27'd0, e_anyb} : (e_shfb | {27'd0, e_sb}));
     end endgenerate
 
     // ---- B1 ----------------------------------------------------------------------------------------
