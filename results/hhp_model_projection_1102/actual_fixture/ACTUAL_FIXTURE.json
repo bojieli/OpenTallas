@@ -1,0 +1,166 @@
+{
+  "status": "PREP_NOT_ADOPTED",
+  "qualified": false,
+  "fixture_source_stage": "BEFORE_FULL_SOURCE_OVERLAY; public headers and parent topology preserved by ea246; NOT a current full-event GEN receipt",
+  "normal_API": "Bound/build_core/emit_core(raw copies), wrapper ONLY, emit_split(projected copies)",
+  "port_direction_parser": "normal ANSI-header fallback; no Yosys/GEN/elaboration",
+  "raw_models_unchanged": true,
+  "actual_head_instances": [
+    "u_kvpc0"
+  ],
+  "head_original_block_exact": true,
+  "no_new_ft_bindings": true,
+  "holds": [
+    "full programme/ownership/token dates",
+    "physical four-FT parent roles",
+    "head_p physical/source closure",
+    "normal view/GEN/qualification"
+  ],
+  "readset": {
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/kv3_pc__cl5a95b461.sv": "f34f30b1208cf863ccc2d0f660d6132e0c3e40e0864f3d3e34bef6834551fdc5",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/kv3_pc__cl5a95b461_bound.sv": "83bbefa03ce63fafad378006ec80c7051f55c8134cd8cfdf216aca084a4dfad4",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_kvs_pc_h_head_p.sv": "ba00ac889056a2efb7990d523d569b4c8f0b83ab73bb102602fbd041cfa5f8cf",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_pc_path_fan_nc_b_head_p.sv": "a7d864162ed1c406fd4da97778abd6b9f09defc8ff49cb7b6cddc75c131d6e21",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_pc_path_fan_nc_b.sv": "de4f16218945f60750fbd64bc5e16b9835fa75f81ea0839a82727f7836599d79",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_pc_path_nc.sv": "fbbc938cee0cb1ce7c3e658cb0ba1fb09d199535c6e4a453a3ee27c8be789941",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_return_slots_mc.sv": "10ab85b1ad30ed29941a8c28e17f61c7acef9cb3e8bd9a966ca33c727a817d48",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_kv_hbm_elastic_front_mc.sv": "f2e0c196a67d053ebf125d20b98d274b59ccbebdc1a3cbd92b30faa551671197",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_ctrl_pc_nc.sv": "e5e34261eba800bc618a58d2352333b3be141bfe0d343d8e87b6f55a5db5ac63",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_qkvd_kcmd_tap.sv": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_qkd_static_ctrl_pc_emb.sv": "9c785288c6af0374ffa72b6dfc56f80a1bd3adf4254768b911887a959d2db193",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_qkd_static_kv_timing.sv": "b1dfa89091e4ed22ba65b8ffd19defdbb968f0fe8e764158c36d737099f74522",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_ctrl_pc_host_static_core.sv": "f9c488f04c142ba00152c1d3cac3210d07f5bbe4a8ea6ee6171d7f61f81a1f84",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_write_observer.sv": "b86f14f5e7e007e5e07b3d80ebd3787f5cbae669e94b984f887d4bef29cd06ca",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_ctrl_pc_children.sv": "7b857785e3b64469b3d6fa74f72c303960b56c6277344fddf530181cd982b78b",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_qfd_kv_landing_ecc.sv": "13c418c84138997b139dcb98ebd8ec3e93d1c6961d9e41a49ddb92ebf01bc851",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_host_static_pc.sv": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_async_fifo.sv": "7a3df9c5491bddcdef321105b931c4d0e2f5c973b3ea01c3ba50ff350bc784da",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_qkd_static_emb_cdc.sv": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_controller_hbm_calendar.sv": "e03edfed2e9c4fb48ae2e49471a0f1693e3ecd56923f5376e8cc4791eda860f9",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_return_calendar.sv": "c4fbd6573eec330725810a01f354e60fff68bdb21f8daddb76d627aa088041d4",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_pc_es_merge_b.sv": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_pc_es_merge.sv": "e10ff78a43fdcd55594163f251ea78b1c9a3cdc5cd6b0a99e38eb438da18530b",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_embedding_static_map.sv": "b493741925fa2d36dd5172fbc9ec40e174b995a7b319cddf829f3639bf25e4ef",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_kv_pc_chain_station_b_p.sv": "47755f7d74935d7ea8740138ca70ccca5ebd817545797ae2f0994c7926262cd3",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_embedding_static_return_head.sv": "ff824c5232e654f5af107c54416778a79481c30e420d8934801c3800033e61ea",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv": "e38a80024ea26b60f8bdbc2619a202dc689bfd8881f028ca711021d0275c8497",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_kv_pc_chain_station_b.sv": "48a79c1749349f5770224996c07dfae6d7685eff6f51e3a60b2eb7458ad62eb4",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_embedding_static_return_hop.sv": "c6031bb92dce5c170894b53f4933ff151f5b35c8b5c3fb880a10733c5425916c",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/group_r2c_native.sv": "6f88eccea7f32385fc8d91389ab3039751d0593288aa21d58f44787688e7f6b3",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_phase_launch.sv": "500cff106932b3116332bd79b66126e4793285664772c6c7895193801076fb98",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_landing_seg.sv": "2e0c93c17c26418d1f0be1c2afe089d29a5ce332bd3807295ff128e0c8f62ce2",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_landing.sv": "54e52aa0e901080a940eb4911b86baa70821c69bdae7982d7e4ebbc30ed1ae41",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_hop.sv": "d296cd7517d602033da253e158827035506e7b9abf4fd103bbb83586553127d9",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_ownership.sv": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_kv_boot_cdc.sv": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_kv_landing_cal.sv": "85154ade4feab9a920cee09490a4d922d62b82a146d378d728bec7c0cb922091",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_kv_front_cal.sv": "ffe9e0047f35e66e750dc91648089be1ba2d1c31043fd50a214387a1acd4be15",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_kv_cfault_tree.sv": "36b8433daf480bcaaacce9b36c56afbc09974dbdf449f4fbc2e8fe9ee0968efb",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_hp_or2.sv": "f198c3fcd26190bcc62aed97b6a64a50978f75940f5573cf2d46bc41d0cc2508",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_host_pc_slice_die_head.sv": "6c0f552f197c1c4145fbc80be4ba5fbcad49ca402a4f56e5c89d59069fe8d0e9",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_host_pc_slice.sv": "5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_host_static_pc_emback.sv": "c9c6208fb9219217d8900ee1e8a8de0c6390fe8e6300fd1153d3e2c4ea79866c",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_host_ingest_station.sv": "28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_hbm_boot_static_completion.sv": "fd4d71c80b86adb7ccbea8aac2d1060c3f1b02eeff6198af5ed3fcdbdb0b8612",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_static_completion_ownerdemux.sv": "922105c31c62edb779b914b724d068af59f020c485af548a01d4c153a92fcf9c",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_hbm_boot_static.sv": "2dfe24158efe1d80c724a0fdfdfab6f96540c93a80c45c4474bf8a67a866963b",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_hbm_boot_pc.sv": "445921e88b5177bc3527fc2a4659e36af08d4c5660c80e3e52d6720267d58067",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/qkd_host_pc_slice_die.sv": "b2b1d1e72368059e32aedc071824779dcc68425284b53122fde623dae604511c",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_dp_clk_landing_ca.sv": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_dp_id.sv": "9ddf1e22d339f04091f0d3da62c3fe0e69a9421902e72b28dc27f4a690792610",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_dp_efault.sv": "1669eae2f0c5d69e1e05fc4c576fb5f3bafd5f6fbe743381006c397a3c24b649",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_dp_dly_cnt.sv": "401053e321710551d0debfa2d6dfeecfe0880cc4872c2b81accefcf94e096e62",
+    "/srv/opentallas-scratch2/claude/codex-kv-hhp-macro-trial-2340/kit_rtl/kv3_pc__cl5a95b461/ot_meso_fifo.sv": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+  },
+  "source_bound_sha256": "83bbefa03ce63fafad378006ec80c7051f55c8134cd8cfdf216aca084a4dfad4",
+  "source_plan_sha256": "5fe0aa1743b8ce234b57c81455b948f8edd406ec4395d8e9d0a3ce091bfbf3e2",
+  "source_guard_event": "eb478377b71c74867a4a657c0c5939473bee51271634d96d20d283b2863c8083",
+  "helper_sha256": {
+    "model_projection": "dbca98bae3a731ec867133397eac1c1308c78306a6964dc53cf2e6be6246d042",
+    "normal_core": "5ccb98a2441bd130edbf30ab8480654b73e7dadd845529bb7436a2391fa02ac1"
+  },
+  "models": {
+    "kvpc1": {
+      "raw_ports": 27,
+      "projected_ports": 25,
+      "raw_bits": 4397,
+      "projected_bits": 4129,
+      "land_high_raw": {
+        "259": [
+          "w_hsl1_land_er",
+          259
+        ],
+        "260": [
+          "w_hsl1_land_er",
+          260
+        ]
+      },
+      "land_high_projected": {
+        "259": [
+          "w_hsl1_land_er",
+          259
+        ],
+        "260": [
+          "w_hsl1_land_er",
+          260
+        ]
+      }
+    },
+    "kvpc2": {
+      "raw_ports": 27,
+      "projected_ports": 25,
+      "raw_bits": 4397,
+      "projected_bits": 4129,
+      "land_high_raw": {
+        "259": [
+          "w_hsl2_land_er",
+          259
+        ],
+        "260": [
+          "w_hsl2_land_er",
+          260
+        ]
+      },
+      "land_high_projected": {
+        "259": [
+          "w_hsl2_land_er",
+          259
+        ],
+        "260": [
+          "w_hsl2_land_er",
+          260
+        ]
+      }
+    },
+    "kvpc3": {
+      "raw_ports": 27,
+      "projected_ports": 25,
+      "raw_bits": 4397,
+      "projected_bits": 4129,
+      "land_high_raw": {
+        "259": [
+          "w_hsl3_land_er",
+          259
+        ],
+        "260": [
+          "w_hsl3_land_er",
+          260
+        ]
+      },
+      "land_high_projected": {
+        "259": [
+          "w_hsl3_land_er",
+          259
+        ],
+        "260": [
+          "w_hsl3_land_er",
+          260
+        ]
+      }
+    }
+  }
+}
