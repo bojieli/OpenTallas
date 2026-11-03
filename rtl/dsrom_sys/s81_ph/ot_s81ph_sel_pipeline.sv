@@ -11,7 +11,10 @@ module ot_s81ph_sel_su_pipe #(
     parameter integer Q  = 4,
     parameter integer CB = 11,
     parameter integer QW = 11,                      // quota width
-    parameter integer XR = 0                        // CLAUDE S81-PH tiles: extra edges in the slice round trip (default 0)
+    parameter integer XR = 0,                       // CLAUDE S81-PH tiles: extra edges in the slice round trip (default 0)
+    parameter integer SELOH = 0                     // DIE-S81-51 11-03: 1 = one-hot highest-group select for acca / aboveb
+                                                    // (no index encode + adder + 16:1 binary mux on the res_above path;
+                                                    // same function, same edges; default 0 = the old netlist)
 ) (
     input  wire                  clk,
     input  wire [Q*16*(CB+4)-1:0] gs,
@@ -79,9 +82,21 @@ module ot_s81ph_sel_su_pipe #(
             if (gea[i]) ga = i[3:0];
         acca = (ga == 4'd15) ? {XW{1'b0}} : s4_r[XW*(ga + 4'd1) +: XW];
     end
+    // SELOH: hot[j] = j is the highest set gea (j = 0 also when none is set: ga = 0 there), selects s4_r[j+1] (0 for j = 15)
+    reg [XW-1:0] acca_s;
+    generate if (SELOH != 0) begin : g_aoh
+        reg [15:0] hot; integer ja;
+        always @(*) begin
+            for (ja = 0; ja < 16; ja = ja + 1) hot[ja] = ((ja == 0) ? 1'b1 : gea[ja]) & ~(|(gea >> (ja + 1)));
+            acca_s = {XW{1'b0}};
+            for (ja = 0; ja < 15; ja = ja + 1) acca_s = acca_s | ({XW{hot[ja]}} & s4_r[XW*(ja + 1) +: XW]);
+        end
+    end else begin : g_abin
+        always @(*) acca_s = acca;
+    end endgenerate
     reg [XW-1:0] acc_a;
     reg [QW-1:0] qa;
-    always @(posedge clk) begin g_out <= ga; acc_a <= acca; qa <= q4; end
+    always @(posedge clk) begin g_out <= ga; acc_a <= acca_s; qa <= q4; end
 
     // -- 3-edge round trip through the slices, then step B over the hbin of G ----------------
     reg [XW-1:0] acc_d1, acc_d2, acc_d3, acc_b1, acc_b2, acc_b3;
@@ -156,8 +171,20 @@ module ot_s81ph_sel_su_pipe #(
             if (geb[i]) begin bb = i[3:0]; okb = 1'b1; end
         aboveb = (bb == 4'd15) ? acc_b4 : u4_r[XW*(bb + 4'd1) +: XW];
     end
+    // SELOH: hot[j] = j is the highest set geb (j = 0 also when none is set: bb = 0 there), selects u4_r[j+1] (acc_b4 for j = 15)
+    reg [XW-1:0] aboveb_s;
+    generate if (SELOH != 0) begin : g_boh
+        reg [15:0] hot; integer jb;
+        always @(*) begin
+            for (jb = 0; jb < 16; jb = jb + 1) hot[jb] = ((jb == 0) ? 1'b1 : geb[jb]) & ~(|(geb >> (jb + 1)));
+            aboveb_s = {XW{hot[15]}} & acc_b4;
+            for (jb = 0; jb < 15; jb = jb + 1) aboveb_s = aboveb_s | ({XW{hot[jb]}} & u4_r[XW*(jb + 1) +: XW]);
+        end
+    end else begin : g_bbin
+        always @(*) aboveb_s = aboveb;
+    end endgenerate
     always @(posedge clk) begin
-        res_b <= {g_b4, bb}; res_ok <= okb; res_above <= aboveb;
+        res_b <= {g_b4, bb}; res_ok <= okb; res_above <= aboveb_s;
         for (s = 0; s < Q; s = s + 1)                // one edge after res_b (static counts only)
             res_eq[CB*s +: CB] <= bs_r[CB*(16*s + res_b[3:0]) +: CB];
     end
@@ -175,7 +202,8 @@ module ot_s81ph_sel_ctl_pipe #(
     parameter integer XD   = 0,
     parameter integer PERM = 0,
     parameter integer RQPIPE = 0,                   // 1: tie quotas from registered prefix sums (C_R2, +1 edge)
-    parameter integer SLAT = 0                      // extra edges of slice status latency (waits / holds only)
+    parameter integer SLAT = 0,                     // extra edges of slice status latency (waits / holds only)
+    parameter integer SELOH = 0                     // DIE-S81-51 11-03: one-hot group select in u_cs / u_fs (ot_s81ph_sel_su_pipe)
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -238,10 +266,10 @@ module ot_s81ph_sel_ctl_pipe #(
     wire [XW-1:0] cres_above, fres_above;
     wire          cres_ok, fres_ok;
     wire [Q*CB-1:0] cres_eq, fres_eq;
-    ot_s81ph_sel_su_pipe #(.Q(Q), .CB(CB), .QW(QC), .XR(XR)) u_cs (
+    ot_s81ph_sel_su_pipe #(.Q(Q), .CB(CB), .QW(QC), .XR(XR), .SELOH(SELOH)) u_cs (
         .clk(clk), .gs(s_gc), .bs(s_bc), .q(kq), .g_out(c_cg),
         .res_b(cres_b), .res_above(cres_above), .res_ok(cres_ok), .res_eq(cres_eq));
-    ot_s81ph_sel_su_pipe #(.Q(Q), .CB(CB), .QW(XW), .XR(XR)) u_fs (
+    ot_s81ph_sel_su_pipe #(.Q(Q), .CB(CB), .QW(XW), .XR(XR), .SELOH(SELOH)) u_fs (
         .clk(clk), .gs(s_gf), .bs(s_bf), .q(qf), .g_out(c_fg),
         .res_b(fres_b), .res_above(fres_above), .res_ok(fres_ok), .res_eq(fres_eq));
 
