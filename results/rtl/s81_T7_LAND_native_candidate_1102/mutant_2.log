@@ -1,0 +1,5 @@
+LAND_NATIVE_FAIL mutant=2 edge=257 rc=44 tjob=640 wcount=220
+  lane3 gold=0bc0000000000000000000000000000bf22dda894f9bb2e315b8e2498a36527ec99 obs=0bc0000000000000000000000000000e1a3eb78e25ab73582aaa000c3d7d0320df1
+[215332] %Fatal: tb.sv:145: Assertion failed in tb
+%Error: tb.sv:145: Verilog $stop
+Aborting...
