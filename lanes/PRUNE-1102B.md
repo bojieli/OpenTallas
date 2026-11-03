@@ -62,3 +62,7 @@
 
 ## intel1 manifest I (2026-11-02 23:32 PST): flow-canary DBs (superseded-tag per COORD ruling item 1 + untagged idle; newest-2 tag shas kept)
 - 33 runs, 10.83 GB of *.odb/*.spef/*.def/*.gds. Manifest intel1:.../prune-1102a/intel1_can_db_1102b.tsv; verdicts intel1_can_runs_1102b.tsv.
+
+## manifest H/I results (2026-11-02 23:41 PST)
+- H: 29/42 superseded attempts removed (14.92 GB); 13 skipped (path overlaps a protect.d entry). I: 98 canary DB files, 10.84 GB.
+- <=85% is NOT reachable within the exclusions. intel1's big non-.keep holdings are wt/ (709 GB: kit-wave-{9,10,12b,12c,12d,12e,13}-* + codex-s81-{cuttrial-1101,a2-1131} clean pushed worktrees, ~300 GB, but each is referenced by 77-3364 host files, i.e. kit sources), kit-wave/ (391), source-follow/ (263), codex-s81/ (116). intel2's are .keep dirs (die-head-48 remainder, hbm-cores-kits-40/wt_d44q, codex-token-1101, codex-qwen-images-1101, kit-wave). Going further needs owner releases or re-pointed kit sources.
