@@ -326,5 +326,6 @@
   "defines": [
    "OT_S81_CAP_ED_FACE_DELAYED_FAULT"
   ]
- }
+ },
+ "ot_s81sl_cap_rt": {"child_of": "ot_s81sl_capc5r", "ref_tile": "physical/ref_tile/s81sl_cap_rt_rf1", "lef_contract": "physical/ref_tile/s81sl_cap_rt_rf1/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt.lef", "multi_master": true, "multi_root": true, "suffix": "rf1", "macro_sites": {"ot_sram_1r1w_512x128_m4_r2c2": [[34.56, 4.368, "R0"]]}, "why": "S81-RF1 RE-FORM (DIE-S81-51/RF-B 11-03): hard child of ot_s81sl_capc5r, two strikes (cap_rt LS TT -94, caprt ECO TT -122 / pair skew 151). SRAM on the S edge, 3 clock entries <= 5k sinks (declared multi-root, same root ck_rt), group-local key compare, out-face lockup latch. Defines in spec.json."}
 }
