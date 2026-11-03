@@ -1,0 +1,15 @@
+ot-run: intel2         admits   324 GB (avail 438, reserve 0, fresh 0, peak 49.6, headroom 0, waiters 1/360 GB) load 85/112 running 48 disk 99 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3747285-1793629934 after 1 s
+PASS exact89inputs/genuineSYNTH/noCADoutputs; no execution authorization
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 1  /OpenROAD-flow-scripts/flow/scripts/noop.tcl
+mkdir -p /work/run/objects/asap7/hc_ot_nhb_zh__151_2x151_2/base
+touch /work/run/objects/asap7/hc_ot_nhb_zh__151_2x151_2/base/copyright.txt
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_3_floorplan_tapcell tapcell
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+cp /work/run/results/asap7/hc_ot_nhb_zh__151_2x151_2/base/2_4_floorplan_pdn.odb /work/run/results/asap7/hc_ot_nhb_zh__151_2x151_2/base/2_floorplan.odb
+cp /work/run/results/asap7/hc_ot_nhb_zh__151_2x151_2/base/2_1_floorplan.sdc /work/run/results/asap7/hc_ot_nhb_zh__151_2x151_2/base/2_floorplan.sdc
+PASS exact89inputs/genuineSYNTH/noCADoutputs; no execution authorization
+ot-run: RAN on intel2 (unit oth-ubuntu-3747285-1793629934): exit 0
