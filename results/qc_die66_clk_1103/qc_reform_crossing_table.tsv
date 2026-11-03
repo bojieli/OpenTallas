@@ -1,0 +1,7 @@
+class	crossings	bits	skew_bound_ps	form	TT_setup_ps	FF_hold_ps	plain_TT_setup	plain_FF_hold	hold_safe
+slot<->slot seam (die clock, abutted faces)	468	217343	110.0	face register + lockup latch (DLL, launch side, same leaf as launch face reg)	216.76	317.03	613.84	-109.29	True
+region<->region inside a slot (new <=5k entries; intra-block unless the region edge is a block face)	9874	None	150	intra-block: block STA + kit hold repair within W_t (standard flow); if the region edge is a RE-FORM block face -> face register + lockup latch (DLL, launch side, same leaf as launch face reg)	176.76	277.03	573.84	-149.29	True
+core<->parent, SIGNED cores	108	None	160	face register + lockup latch (DLL, launch side, same leaf as launch face reg)	166.76	267.03	563.84	-159.29	True
+core<->parent, RE-FORM cores (estimated contract)	864	None	190.0	face register + lockup latch (DLL, launch side, same leaf as launch face reg)	136.76	237.03	533.84	-189.29	True
+count-aligned START/ctl edges (registered both ends)	3317	3317	110.0	face register + lockup latch (DLL, launch side, same leaf as launch face reg)	216.76	317.03	613.84	-109.29	True
+landed (source-forwarded clock, ring/edge)	2525	1060143	None	fixed latency contract: count-aligned (plan count_aligned_cycles, root_settle 64), face regs both ends	None	None	None	None	True

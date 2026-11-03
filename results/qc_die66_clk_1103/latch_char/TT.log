@@ -1,0 +1,125 @@
+OpenSTA 3.1.0  Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+LATCHCHAR max
+Startpoint: L (negative level-sensitive latch clocked by clk)
+Endpoint: b (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+          144.000  416.500  416.500   clock clk (fall edge)
+                     0.000  416.500   clock network delay (ideal)
+          144.000    0.000  416.500 v L/CLK (DLLx1_ASAP7_75t_R)
+   6.559   62.218   82.813  499.313 ^ L/Q (DLLx1_ASAP7_75t_R)
+           62.218    0.000  499.313 ^ b/D (DFFHQNx1_ASAP7_75t_R)
+                            499.313   data arrival time
+
+          144.000  833.000  833.000   clock clk (rise edge)
+                     0.000  833.000   clock network delay (ideal)
+                     0.000  833.000   clock reconvergence pessimism
+                            833.000 ^ b/CLK (DFFHQNx1_ASAP7_75t_R)
+                    -6.648  826.352   library setup time
+                            826.352   data required time
+---------------------------------------------------------------------------
+                            826.352   data required time
+                           -499.313   data arrival time
+---------------------------------------------------------------------------
+                            327.039   slack (MET)
+
+
+Startpoint: a (rising edge-triggered flip-flop clocked by clk)
+Endpoint: L (negative level-sensitive latch clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ a/CLK (DFFHQNx1_ASAP7_75t_R)
+  71.753   71.753 ^ a/QN (DFFHQNx1_ASAP7_75t_R)
+   0.000   71.753 ^ L/D (DLLx1_ASAP7_75t_R)
+           71.753   data arrival time
+
+ 416.500  416.500   clock clk (fall edge)
+   0.000  416.500   clock network delay (ideal)
+   0.000  416.500   clock reconvergence pessimism
+          416.500 v L/CLK (DLLx1_ASAP7_75t_R)
+   0.000  416.500   time borrowed from endpoint
+          416.500   data required time
+-----------------------------------------------------------
+          416.500   data required time
+          -71.753   data arrival time
+-----------------------------------------------------------
+          344.747   slack (MET)
+
+Time Borrowing Information
+---------------------------------------------
+clk pulse width                       416.500
+library setup time                    -16.821
+---------------------------------------------
+max time borrow                       399.679
+actual time borrow                      0.000
+---------------------------------------------
+
+
+LATCHCHAR min
+Startpoint: L (negative level-sensitive latch clocked by clk)
+Endpoint: b (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+          144.000  416.500  416.500   clock clk (fall edge)
+                     0.000  416.500   clock network delay (ideal)
+          144.000    0.000  416.500 v L/CLK (DLLx1_ASAP7_75t_R)
+   6.485   48.363   91.684  508.184 v L/Q (DLLx1_ASAP7_75t_R)
+           48.363    0.000  508.184 v b/D (DFFHQNx1_ASAP7_75t_R)
+                            508.184   data arrival time
+
+          144.000    0.000    0.000   clock clk (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+                     0.000    0.000   clock reconvergence pessimism
+                              0.000 ^ b/CLK (DFFHQNx1_ASAP7_75t_R)
+                    31.113   31.113   library hold time
+                             31.113   data required time
+---------------------------------------------------------------------------
+                             31.113   data required time
+                           -508.184   data arrival time
+---------------------------------------------------------------------------
+                            477.071   slack (MET)
+
+
+Startpoint: a (rising edge-triggered flip-flop clocked by clk)
+Endpoint: L (negative level-sensitive latch clocked by clk)
+Path Group: clk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ a/CLK (DFFHQNx1_ASAP7_75t_R)
+  70.090   70.090 v a/QN (DFFHQNx1_ASAP7_75t_R)
+   0.000   70.090 v L/D (DLLx1_ASAP7_75t_R)
+           70.090   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000   clock reconvergence pessimism
+            0.000 ^ L/CLK (DLLx1_ASAP7_75t_R)
+  20.823   20.823   library hold time
+           20.823   data required time
+-----------------------------------------------------------
+           20.823   data required time
+          -70.090   data arrival time
+-----------------------------------------------------------
+           49.268   slack (MET)
+
+
