@@ -1,0 +1,303 @@
+{
+ "schema": "opentallas.plan_geom.v1",
+ "plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+ "types": [
+  {
+   "type": "sle_su_c",
+   "verdict": "FAIL",
+   "metrics": {
+    "type": "sle_su_c",
+    "outline": [
+     1226.88,
+     1339.2
+    ],
+    "aspect": 1.092,
+    "notes": [],
+    "clock_entries": 58,
+    "clock_reach_max": 377.47,
+    "clock_reach_far": "relay:u_rrl_93 (385.6, 837.0)",
+    "grid_taps": 32,
+    "grid_tap_sinks_max": 2093.0,
+    "grid_tap_sinks_worst": "clk_t31",
+    "pin_reg_p90": 118.81,
+    "pin_reg_max": 276.22,
+    "pin_reg_worst": [
+     "276.2 x_su_l0_i[1]",
+     "276.2 x_su_l0_i[0]"
+    ],
+    "reset_leaf_max": 196.62,
+    "reset_leaf_worst": "reset leaf u_rrl_6->sink (2.0, 553.3) of clk_t9",
+    "r2r_max": 421.82,
+    "r2r_worst": "ft cws1 ring->s1",
+    "r2r_gt405": 1,
+    "partial_faces": 2,
+    "partial_face_detail": [
+     "S:1034 pins on 16% of face at 5.2/um",
+     "E:2927 pins on 49% of face at 4.5/um"
+    ],
+    "partial_face_worst": [
+     "S",
+     0.163,
+     5.17,
+     1034
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "PASS",
+     "value": 1.092,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": ""
+    },
+    {
+     "rule": "clock_reach",
+     "status": "FAIL",
+     "value": 377.47,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far relay:u_rrl_93 (385.6, 837.0)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "FAIL",
+     "value": 2093.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk_t31"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "FAIL",
+     "value": 118.81,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "276.2 x_su_l0_i[1], 276.2 x_su_l0_i[0]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "FAIL",
+     "value": 276.22,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "276.2 x_su_l0_i[1]"
+    },
+    {
+     "rule": "r2r",
+     "status": "FAIL",
+     "value": 421.82,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "1 plan stages > 405; worst ft cws1 ring->s1"
+    },
+    {
+     "rule": "partial_face",
+     "status": "FAIL",
+     "value": 2,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": "S:1034 pins on 16% of face at 5.2/um; E:2927 pins on 49% of face at 4.5/um"
+    }
+   ]
+  },
+  {
+   "type": "slw_su_c__cl19bb38ef",
+   "verdict": "FAIL",
+   "metrics": {
+    "type": "slw_su_c__cl19bb38ef",
+    "outline": [
+     1226.88,
+     1339.2
+    ],
+    "aspect": 1.092,
+    "notes": [],
+    "clock_entries": 53,
+    "clock_reach_max": 473.15,
+    "clock_reach_far": "reset_root (1217.8, 837.0)",
+    "grid_taps": 30,
+    "grid_tap_sinks_max": 2090.0,
+    "grid_tap_sinks_worst": "clk_t29",
+    "pin_reg_p90": 90.72,
+    "pin_reg_max": 237.09,
+    "pin_reg_worst": [
+     "237.1 x_su_l1_p1_i[0]",
+     "237.1 x_su_l1_p1_i[1]"
+    ],
+    "reset_leaf_max": 196.63,
+    "reset_leaf_worst": "reset leaf u_rrl_61->sink (2.0, 553.3) of clk_t10",
+    "r2r_max": 419.66,
+    "r2r_worst": "ft cws1 ring->s1",
+    "r2r_gt405": 1,
+    "partial_faces": 2,
+    "partial_face_detail": [
+     "S:1034 pins on 16% of face at 5.2/um",
+     "E:2668 pins on 43% of face at 4.6/um"
+    ],
+    "partial_face_worst": [
+     "S",
+     0.163,
+     5.17,
+     1034
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "PASS",
+     "value": 1.092,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": ""
+    },
+    {
+     "rule": "clock_reach",
+     "status": "FAIL",
+     "value": 473.15,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far reset_root (1217.8, 837.0)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "FAIL",
+     "value": 2090.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk_t29"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "FAIL",
+     "value": 90.72,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "237.1 x_su_l1_p1_i[0], 237.1 x_su_l1_p1_i[1]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "FAIL",
+     "value": 237.09,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "237.1 x_su_l1_p1_i[0]"
+    },
+    {
+     "rule": "r2r",
+     "status": "FAIL",
+     "value": 419.66,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "1 plan stages > 405; worst ft cws1 ring->s1"
+    },
+    {
+     "rule": "partial_face",
+     "status": "FAIL",
+     "value": 2,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": "S:1034 pins on 16% of face at 5.2/um; E:2668 pins on 43% of face at 4.6/um"
+    }
+   ]
+  },
+  {
+   "type": "slw_su_c__cl92142dac",
+   "verdict": "FAIL",
+   "metrics": {
+    "type": "slw_su_c__cl92142dac",
+    "outline": [
+     1226.88,
+     1339.2
+    ],
+    "aspect": 1.092,
+    "notes": [],
+    "clock_entries": 55,
+    "clock_reach_max": 306.75,
+    "clock_reach_far": "landing:u_cland_collect_rst_rl_21 (985.6, 911.6)",
+    "grid_taps": 30,
+    "grid_tap_sinks_max": 2090.0,
+    "grid_tap_sinks_worst": "clk_t29",
+    "pin_reg_p90": 90.72,
+    "pin_reg_max": 237.09,
+    "pin_reg_worst": [
+     "237.1 x_su_l1_p1_i[0]",
+     "237.1 x_su_l1_p1_i[1]"
+    ],
+    "reset_leaf_max": 196.63,
+    "reset_leaf_worst": "reset leaf u_rrl_65->sink (2.0, 553.3) of clk_t10",
+    "r2r_max": 419.66,
+    "r2r_worst": "ft cws1 ring->s1",
+    "r2r_gt405": 1,
+    "partial_faces": 2,
+    "partial_face_detail": [
+     "S:1034 pins on 16% of face at 5.2/um",
+     "E:2668 pins on 43% of face at 4.6/um"
+    ],
+    "partial_face_worst": [
+     "S",
+     0.163,
+     5.17,
+     1034
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "PASS",
+     "value": 1.092,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": ""
+    },
+    {
+     "rule": "clock_reach",
+     "status": "FAIL",
+     "value": 306.75,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far landing:u_cland_collect_rst_rl_21 (985.6, 911.6)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "FAIL",
+     "value": 2090.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk_t29"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "FAIL",
+     "value": 90.72,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "237.1 x_su_l1_p1_i[0], 237.1 x_su_l1_p1_i[1]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "FAIL",
+     "value": 237.09,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "237.1 x_su_l1_p1_i[0]"
+    },
+    {
+     "rule": "r2r",
+     "status": "FAIL",
+     "value": 419.66,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "1 plan stages > 405; worst ft cws1 ring->s1"
+    },
+    {
+     "rule": "partial_face",
+     "status": "FAIL",
+     "value": 2,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": "S:1034 pins on 16% of face at 5.2/um; E:2668 pins on 43% of face at 4.6/um"
+    }
+   ]
+  }
+ ]
+}
