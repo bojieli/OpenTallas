@@ -19,21 +19,21 @@
         "clock": "PASS",
         "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
       },
-      "plan": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+      "plan": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/src/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
       "gen_host": "intel1",
-      "src": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src",
-      "src_sha": "efa6a9b9fff9d57459077e11cdfb1a6266deed04",
+      "src": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/src",
+      "src_sha": "54c3c7c9fe7af23ff4561611d44f45cf62601ede",
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/asbuilt.json",
-        "note": "CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
-        "bind_out": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/bind"
+        "asbuilt": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/asbuilt.json",
+        "note": "DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/bind"
       },
       "gen_args": [
         "--hold-ff-margin",
-        "10",
+        "0",
         "--clock-landing",
-        "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+        "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/src/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
       ],
       "type_args": {
         "kv3_hub_Ei": [
@@ -57,9 +57,9 @@
           "kv3_hroot"
         ]
       },
-      "owner_lane": "DIE-KV-58",
+      "owner_lane": "DIE-KV-61",
       "lane": "KIT-WAVE-1",
-      "plan_note": "CODEX1131 adopt efa macro/G0C/PG/PHY/HP/recipe source after actual fresh strict0 and full117-path closure. HG8 overcap/EX-cut hold and PC6 unsigned-child holds remain; HGI normal gates proceed. hub_C actual flat16GB OOM held pending typed AHUB/CTL closure.",
+      "plan_note": "DIE-KV-61 11-02: source 54c3c7c9f (main 1770163a8 + rtobs). OWNER 11-02: hold gate FF>=0, --hold-ff-margin 0. CODEX1131 adopt efa macro/G0C/PG/PHY/HP/recipe source after actual fresh strict0 and full117-path closure. HG8 overcap/EX-cut hold and PC6 unsigned-child holds remain; HGI normal gates proceed. hub_C actual flat16GB OOM held pending typed AHUB/CTL closure.",
       "retry": [
         "qkd_hr_cdc_hi@1",
         "kv3_hub_Ei@1",
@@ -139,10 +139,10 @@
       "src_follow": {
         "enabled": true,
         "root": "/srv/opentallas-scratch2/claude/source-follow",
-        "note": "Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
+        "note": "DIE-KV-61 fresh ELAB+strict0 at 54c3c7c9f adopted (cached efa elab refused: group_r2c_native.sv changed). Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
         "snapshot_kind": "bind",
-        "snapshot_bind": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/bind",
-        "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/asbuilt.json",
+        "snapshot_bind": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/bind",
+        "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/asbuilt.json",
         "critical": true
       },
       "hold_items": {
@@ -150,7 +150,13 @@
         "kv3_hg_v*": "HG8 measured559585 parent cells exceeds400k; EX hard cut owned KV physical",
         "kv3_pc": "PC6 unsigned child closure owned kv_pc_cores; release after real child views",
         "kv3_pc_v*": "PC6 unsigned child closure owned kv_pc_cores; release after real child views",
-        "kv3_hub_C": "Known actual GEN_LINT OOM at8GB and measured16GB (rc137,16,726,636KiB); typed AHUB/CTL hard-child closure required, no blind memory escalation or same-flat-source retry."
+        "kv3_hub_C": "Known actual GEN_LINT OOM at8GB and measured16GB (rc137,16,726,636KiB); typed AHUB/CTL hard-child closure required, no blind memory escalation or same-flat-source retry.",
+        "qkd_hr_cdc_ci": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+        "qkd_hr_cdc_hi": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+        "qkd_hr_cdc_pc": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+        "qkd_hr_core_queue": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+        "qkd_hr_ingest_eng": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+        "qkd_hr_core_guard": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch"
       },
       "work_root": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave"
     },
@@ -632,7 +638,7 @@
         "--clock-landing",
         "/srv/opentallas-scratch2/claude/codex-head-collect-1101/prepared_mesh_y864/source_sidecar.json",
         "--hold-ff-margin",
-        "10"
+        "0"
       ],
       "preflight_args": [],
       "only_items": [
@@ -660,7 +666,7 @@
         "hd_lep0N"
       ],
       "die_max_inflight": 60,
-      "owner_lane": "DIE-HEAD-53",
+      "owner_lane": "DIE-HEAD-54",
       "lane": "KIT-WAVE-5",
       "note": "KIT-WAVE-9 20:0x: HEAD l47k -> l48x (COORD 19:03 (1)/(3)); src NEW locked sparse wt intel2 wt/kit-wave-9-head @f3e4659f554 (holdlim + l48x gate event); all l48x blocks are new items; lane claims (<3 h) keep hd_st_turn/k5/n4/hd_st_m/hd_tile (DIE-HEAD-52) and hd_turn_a (HEAD-RINGHOLD-2). | KIT-WAVE-2 10-30 20:5x: HEAD on l45. Needs ROOT-MERGE of claude/kit-wave-2-1030 (gate allows l44/l45; explicit [] preflight_args) -- until merged the hub gate keeps HEAD off (event 'l45' not in main GATE_EVENTS). 1-item canary hd_mesh first (hd_host = DIE-HEAD claim <3 h). src = KIT-WAVE-2 sparse worktree intel2 wt/kit-wave-2-head (main 335447a59d0, 3.3 GB); remove both when HEAD wave is retired. | KIT-WAVE-2 21:4x: l45 -> l46 (gate l46 merged with claude/kit-wave-2b-1030@b8944f24e); src wt/kit-wave-2-head at main 7e2d2c4175c. | KIT-WAVE-2 22:5x (COORD 22:3x free slots -> HEAD l46): prepared2 (eligible hd_mesh,hd_host,hd_st_m,hd_turn_a,hd_turn_b,hd_st_str; hd_mesh/hd_host entries identical to prepared, so the running hd_mesh record keeps its key); manual kit_rtl export PASS st_m/turn_a/turn_b/st_str; take_states NEEDS-KIT,FIX; lane claims (<3 h) still protect types a HEAD lane is working. | 23:4x: src worktree intel2 wt/kit-wave-2-head was deleted by someone (not me) at ~23:2x; recreated sparse at main d518d908345 (same path, 3.3 GB). The 4 kit_rtl fails were 'cd: No such file' -> retry @1. | KIT-WAVE-3 02:2x: l46 -> l47 (COORD 01:43; DIE-HEAD-47 'KIT-WAVE re-kits the 21 types'); src wt/kit-wave-2-head -> main 1a34525e751; prepared intel2 kit-wave/s81_head/l47/prepared; only_items 20 types (hd_lep0N excluded: ECO7 LEC running); take_states NEEDS-KIT,FIX; die cap 12; lane claims <3 h still protect types a HEAD lane is working. take_states += KIT-PLACED (l46-era placed kits of hd_tile/spn/spn_end/st_k5/st_turn/st_n4 are stale under the l47 insertion_ff_ps change).",
       "take_states": [
@@ -673,7 +679,11 @@
         "hd_spn_end@2",
         "hd_ctl_e@1",
         "hd_host_n@1",
-        "hd_st_turn@1"
+        "hd_st_turn@1",
+        "hd_turn_b@1",
+        "hd_st_str@1",
+        "hd_spn_eshim_rx@1",
+        "hd_spn_wshim_rx@1"
       ],
       "pilot_max": 2,
       "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
