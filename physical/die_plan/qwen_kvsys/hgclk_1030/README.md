@@ -30,3 +30,14 @@ new 20 SIGNED rows + M5->M6 core PG grid.
 Kit wave: its plan copy (intel1 wt/kit-wave-1030/kv40/event28w/plan_c.json) is not main. Refresh it, or transplant with
 `apply_hgclk.py COPY VIEWS_ROOT OUT` (absolute views on the gen host). Note: that copy's kv3_hg_v1
 `clock.landing_contract` already differs from main (main has the DIE-KV-28 event27 native START pin sites).
+
+## DIE-KV-63/types 11-03: detailed abstracts (class C, PDN-0006)
+
+The five head_eighth LEFs were ORFS generate_abstract exports (write_abstract_lef -bloat_occupied_layers): blanket OBS
+M1-M7 over 216x216 with PG pins on M5 only, so every kv3_hg*/kv3_hgi* kit stopped at pdngen with PDN-0006 (no parent
+M6 strap can reach the M5 PG pins). They are now re-exported by tools/die_plan/detailed_abstract.py from the SAME
+signed routed 6_final.odb (sha256 in each <module>.detailed_abstract.json; no re-route, libs / netlist / signoff.json
+unchanged): write_abstract_lef without bloat (real OBS shapes) + PG access trim 0.9 (e0 3+3, e1 1+1, e5 1+1, e6 2+2
+M5 PG boxes that the OpenROAD summed-overlap checker counts >= 90 % blocked move from the PIN to M5 OBS; e2 none).
+Pins, outline, directions and every signal pin shape are identical (fail-closed check). Probe: the kv3_hgi_v4 kit
+pdn.tcl over all 16 macros -> pdngen PASS (old LEFs: PDN-0006), 407-774 M5-M6 vias per macro per net.

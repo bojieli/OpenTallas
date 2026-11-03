@@ -1,0 +1,110 @@
+{
+ "schema": "opentallas.detailed_abstract.v1",
+ "macro": "kv3_head_eighth_e0",
+ "routed_db": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/6_final.odb",
+ "routed_db_sha256": "77bf22569002fa5bcccceb030dafd6e65f53840b0eda3065e386ed66601a7914",
+ "signed_lef": "/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/views/kv3_head_eighth_e0.lef",
+ "signed_lef_sha256": "12c7da2f8ba31365f8b3a234523690a8a6c66acc7c8fe7803b825a78c4c07e51",
+ "new_lef_sha256": "5684cf2cd3fbc783ea63ad558d97d2a37ee154fa58515ae95bdc067b3bc9dbc7",
+ "image": "openroad/orfs:latest",
+ "command": "read_db + write_abstract_lef (no -bloat_occupied_layers); no re-route / re-place / ECO",
+ "raw_abstract_sha256": "2fa8cf94890414a163011b1129ca17d0566b97ecf48dc91ea6b5f329101f03ed",
+ "pg_trim_threshold": 0.9,
+ "pg_access_trimmed": [
+  {
+   "pin": "VSS",
+   "layer": "M5",
+   "rect": [
+    49.524,
+    4.297,
+    49.644,
+    211.703
+   ],
+   "pdn_summed_overlap": 0.9667
+  },
+  {
+   "pin": "VSS",
+   "layer": "M5",
+   "rect": [
+    45.204,
+    4.297,
+    45.324,
+    211.703
+   ],
+   "pdn_summed_overlap": 0.9769
+  },
+  {
+   "pin": "VSS",
+   "layer": "M5",
+   "rect": [
+    40.884,
+    4.297,
+    41.004,
+    211.703
+   ],
+   "pdn_summed_overlap": 0.9828
+  },
+  {
+   "pin": "VDD",
+   "layer": "M5",
+   "rect": [
+    49.716,
+    4.311,
+    49.836,
+    211.689
+   ],
+   "pdn_summed_overlap": 0.9651
+  },
+  {
+   "pin": "VDD",
+   "layer": "M5",
+   "rect": [
+    45.396,
+    4.311,
+    45.516,
+    211.689
+   ],
+   "pdn_summed_overlap": 0.9362
+  },
+  {
+   "pin": "VDD",
+   "layer": "M5",
+   "rect": [
+    41.076,
+    4.311,
+    41.196,
+    211.689
+   ],
+   "pdn_summed_overlap": 0.9497
+  }
+ ],
+ "invariants": "PASS",
+ "violations": [],
+ "obs_shapes_signed": {
+  "M1": 1,
+  "M2": 1,
+  "M3": 1,
+  "M4": 1,
+  "M5": 1,
+  "M6": 1,
+  "M7": 1,
+  "RVTN": 1,
+  "RVTP": 1
+ },
+ "obs_shapes_new": {
+  "M1": 1,
+  "M2": 429,
+  "M3": 2871,
+  "M4": 19137,
+  "M5": 18412,
+  "M6": 12208,
+  "M7": 5501,
+  "RVTN": 421,
+  "RVTP": 416
+ },
+ "pg_pin_layers": [
+  "M5"
+ ],
+ "note": "view export of the SAME signed routed DB; timing libs / netlist / sign-off record unchanged",
+ "signed_lef_repo_before": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0.lef (blanket -bloat_occupied_layers, sha256 12c7da2f8ba31365f8b3a234523690a8a6c66acc7c8fe7803b825a78c4c07e51)"
+}

@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.detailed_abstract.v1",
+ "macro": "kv3_head_eighth_e5",
+ "routed_db": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216/base/6_final.odb",
+ "routed_db_sha256": "843902bc42bf1a7d955fa3d4e64bb0f91887e38ce761c30c5c71b6f48511fcce",
+ "signed_lef": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216/kit/views/kv3_head_eighth_e5.lef",
+ "signed_lef_sha256": "7ad48d9a07fda39a1ddd5867709762facdb00bd7c071972a68f2af89801a5a22",
+ "new_lef_sha256": "400d58936e91d22ad345d96f18d5346aed48bea61c0bfd1c24b3fbf34b0bd93b",
+ "image": "openroad/orfs:latest",
+ "command": "read_db + write_abstract_lef (no -bloat_occupied_layers); no re-route / re-place / ECO",
+ "raw_abstract_sha256": "6c30e56f283e4358f804580772c99b680943bf78aa44ca2630a8ce072f0ba531",
+ "pg_trim_threshold": 0.9,
+ "pg_access_trimmed": [
+  {
+   "pin": "VSS",
+   "layer": "M5",
+   "rect": [
+    6.324,
+    4.297,
+    6.444,
+    211.703
+   ],
+   "pdn_summed_overlap": 1.5085
+  },
+  {
+   "pin": "VDD",
+   "layer": "M5",
+   "rect": [
+    6.516,
+    4.311,
+    6.636,
+    211.689
+   ],
+   "pdn_summed_overlap": 1.506
+  }
+ ],
+ "invariants": "PASS",
+ "violations": [],
+ "obs_shapes_signed": {
+  "M1": 1,
+  "M2": 1,
+  "M3": 1,
+  "M4": 1,
+  "M5": 1,
+  "M6": 1,
+  "M7": 1,
+  "RVTN": 1,
+  "RVTP": 1
+ },
+ "obs_shapes_new": {
+  "M1": 1,
+  "M2": 87,
+  "M3": 11365,
+  "M4": 19166,
+  "M5": 17086,
+  "M6": 9596,
+  "M7": 4345,
+  "RVTN": 421,
+  "RVTP": 416
+ },
+ "pg_pin_layers": [
+  "M5"
+ ],
+ "note": "view export of the SAME signed routed DB; timing libs / netlist / sign-off record unchanged",
+ "signed_lef_repo_before": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef (blanket -bloat_occupied_layers, sha256 7ad48d9a07fda39a1ddd5867709762facdb00bd7c071972a68f2af89801a5a22)"
+}

@@ -1,0 +1,88 @@
+{
+ "schema": "opentallas.detailed_abstract.v1",
+ "macro": "kv3_head_eighth_e6",
+ "routed_db": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216/base/6_final.odb",
+ "routed_db_sha256": "245d8b41437500023a67ef927c7cad01df1b2988842ccd62df892bd4265b4e8f",
+ "signed_lef": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216/kit/views/kv3_head_eighth_e6.lef",
+ "signed_lef_sha256": "38e83fb894160ffbe7662519688fcc064071ff4da3806f66d8bf0eea00b0a55b",
+ "new_lef_sha256": "a5fc6ab499f5cb0e686d5831ff3dead5e49ad5619f351750bfa75633676ff6e5",
+ "image": "openroad/orfs:latest",
+ "command": "read_db + write_abstract_lef (no -bloat_occupied_layers); no re-route / re-place / ECO",
+ "raw_abstract_sha256": "55e6a5be6d1d1ab97b1ac02eed884e8e68a3f0108c3b56791fce7575feebfcb9",
+ "pg_trim_threshold": 0.9,
+ "pg_access_trimmed": [
+  {
+   "pin": "VSS",
+   "layer": "M5",
+   "rect": [
+    187.764,
+    4.297,
+    187.884,
+    211.703
+   ],
+   "pdn_summed_overlap": 1.1851
+  },
+  {
+   "pin": "VSS",
+   "layer": "M5",
+   "rect": [
+    183.444,
+    4.297,
+    183.564,
+    211.703
+   ],
+   "pdn_summed_overlap": 1.1339
+  },
+  {
+   "pin": "VDD",
+   "layer": "M5",
+   "rect": [
+    187.956,
+    4.311,
+    188.076,
+    211.689
+   ],
+   "pdn_summed_overlap": 1.186
+  },
+  {
+   "pin": "VDD",
+   "layer": "M5",
+   "rect": [
+    183.636,
+    4.311,
+    183.756,
+    211.689
+   ],
+   "pdn_summed_overlap": 1.129
+  }
+ ],
+ "invariants": "PASS",
+ "violations": [],
+ "obs_shapes_signed": {
+  "M1": 1,
+  "M2": 1,
+  "M3": 1,
+  "M4": 1,
+  "M5": 1,
+  "M6": 1,
+  "M7": 1,
+  "RVTN": 1,
+  "RVTP": 1
+ },
+ "obs_shapes_new": {
+  "M1": 1,
+  "M2": 355,
+  "M3": 5996,
+  "M4": 16995,
+  "M5": 14151,
+  "M6": 8549,
+  "M7": 3634,
+  "RVTN": 421,
+  "RVTP": 416
+ },
+ "pg_pin_layers": [
+  "M5"
+ ],
+ "note": "view export of the SAME signed routed DB; timing libs / netlist / sign-off record unchanged",
+ "signed_lef_repo_before": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef (blanket -bloat_occupied_layers, sha256 38e83fb894160ffbe7662519688fcc064071ff4da3806f66d8bf0eea00b0a55b)"
+}
