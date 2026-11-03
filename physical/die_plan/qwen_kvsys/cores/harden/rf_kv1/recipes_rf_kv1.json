@@ -289,7 +289,8 @@
      "add": "  wire \\u_guard.g_mu.rf_bad_na  = \\u_guard.g_mu.protocol_fault  || \\u_guard.g_mu.protocol_pin_q  || (\\u_guard.g_mu.dc  != 4'h0 && \\u_guard.g_mu.fc  == 8'h00) || (\\u_guard.g_mu.bc  != 4'h0 && \\u_guard.g_mu.mc  == 8'h00) || (\\u_guard.g_mu.role_valid  && \\u_guard.g_mu.role_q  != \\u_guard.g_mu.role ) || (| \\u_guard.g_mu.next_sticky );\n  wire \\u_guard.g_mu.rf_sr_n  = \\u_guard.g_mu.clean  && !\\u_guard.g_mu.activity  && !\\u_guard.g_mu.rf_bad_na  && !\\u_guard.g_mu.wait_advert  && (\\u_guard.g_mu.quiet  >= 8'd4);\n",
      "why": "qkd_host_service_guard.sv:93 service_ready <= clean&&!activity&&!bad&&!wait_advert&&quiet>=SETTLE (SETTLE=4, MUT!=2): every internal_bad term except protocol_pin_q, (dc!=0&&fc==0&&!fp), (bc!=0&&mc==0&&!mp) and the role term needs iv/dv/bv/ev/dt/mb (fo=fp&&.., mo=mp&&.., fp/mp/np need iv), i.e. activity=1, so under !activity bad == bad_na; removes the ingest-decode -> internal_bad OR tree from the service_ready cone"
     }
-   ]
+   ],
+   "inline_alias": true
   }
  },
  "qkd_hr_core_order": {

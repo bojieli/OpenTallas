@@ -248,6 +248,20 @@ def skid_slices(body, sp, ck="ck"):
                         form="column slices with per-slice kept write-address/valid and read-pointer copies"))
     return body, rep
 
+
+def inline_alias(body):
+    """replace every whole-vector alias wire `wire [n:0] _N_ = \\reg ;` by the reg itself (pure rename): yosys
+    otherwise names the flop after the alias and LEC cannot pair it with the gold register"""
+    rep = []
+    for m in list(re.finditer(r"^  wire \[(\d+):0\] (_\d+_) = (\\\S+ );\n", body, re.M)):
+        a, r = m.group(2), m.group(3)
+        if not re.search(r"^  reg \[" + m.group(1) + r":0\] " + re.escape(r) + r";", body, re.M):
+            continue
+        body = body.replace(m.group(0), "", 1)
+        body, n = re.subn(r"(?<![\w\\$])" + re.escape(a) + r"(?!\w)", lambda _m: r, body)
+        rep.append(dict(alias=a, reg=r.strip(), uses=n))
+    return body, rep
+
 def rewrite(body, items):
     rep = []
     for it in items:
@@ -275,6 +289,9 @@ def transform(text, mod, spec):
     # (face_guard 'shared'); the port flops keep their own (* keep *) on the reg cells
     body, nk = re.subn(r"^[ \t]*\(\*\s*keep\s*=\s*32'd1\s*\*\)[ \t]*\n(?=[ \t]*(?:input|output)\b)", "", body,
                        flags=re.M)
+    iar = []
+    if spec.get("inline_alias"):
+        body, iar = inline_alias(body)
     rc = []
     if spec.get("rcopy_bits"):
         body, rc = rcopy(body, int(spec["rcopy_bits"]))
@@ -332,7 +349,7 @@ def transform(text, mod, spec):
     hdr += [f"  {decl[p][0]} {decl[p][1]+' ' if decl[p][1] else ''}{p};" for p in order]
     inst = [f"  {inner} u_rf_core (" + ",\n    ".join(f".{p}({conn[p]})" for p in order) + ");", "endmodule", ""]
     rep["inner_port_keeps_dropped"] = nk
-    rep["rewrite"] = rwr; rep["negmid"] = nmr; rep["bank_split"] = bsr; rep["skid_slices"] = ssr
+    rep["rewrite"] = rwr; rep["negmid"] = nmr; rep["bank_split"] = bsr; rep["skid_slices"] = ssr; rep["inline_alias"] = iar
     rep["added_flops"] += sum(r["added_flops"] for r in ssr)
     rep["added_flops"] += sum(r["added_flops"] for r in nmr) + (bsr["added_flops"] if bsr else 0)
     rep["rcopy"] = rc; rep["added_flops"] += sum(r["added_flops"] for r in rc)
