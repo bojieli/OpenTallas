@@ -1599,7 +1599,9 @@
     "hd_turn_a@1",
     "hd_spn_end@1",
     "hd_ctl_n@6",
-    "hd_host_n@6"
+    "hd_host_n@6",
+    "hd_ctl_e@7",
+    "hd_spn_eshim_tx@8"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -1673,7 +1675,9 @@
     "hd_turn_a@1": "DIE-HEAD-58 12:0x release hd_spn*/hd_turn_* on l48rf (prepared l48rf plan + src fl-head2 e20aedb65fe); KW-FIX-4 13:2x",
     "hd_spn_end@1": "DIE-HEAD-58 12:0x release hd_spn*/hd_turn_* on l48rf (prepared l48rf plan + src fl-head2 e20aedb65fe); KW-FIX-4 13:2x",
     "hd_ctl_n@6": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)",
-    "hd_host_n@6": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)"
+    "hd_host_n@6": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)",
+    "hd_ctl_e@7": "INFRA class: epyc4 gen host under an ot-run spill-copy marker (launched 14:48 before the intel2-only gen_hosts reached the hub) -> relaunch on intel2; class fix claude/kw-fix-4-spillmark-1103@2ff7575ee42 (KW-FIX-4 15:2x)",
+    "hd_spn_eshim_tx@8": "INFRA class: epyc4 gen host under an ot-run spill-copy marker (launched 14:48 before the intel2-only gen_hosts reached the hub) -> relaunch on intel2; class fix claude/kw-fix-4-spillmark-1103@2ff7575ee42 (KW-FIX-4 15:2x)"
    },
    "gen_hosts": [
     "intel2"
