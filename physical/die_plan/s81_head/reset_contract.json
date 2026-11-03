@@ -43,5 +43,23 @@
  "sinks": "every HEAD partition takes a SYNCHRONOUS registered reset from its neighbour (pin register ot_dp_rrelay on arst_n) and re-drives ot_dp_rrelay relays to its taps and rst_o (width-preserving: width out = width in at any depth; latest release 107 clocks), or START-gated consumer taps ot_dp_rgate (q <= d & run: release no earlier than the relay); the hard cores inside a partition (lep_pair, kp4_dchn SerDes) take their reset from those taps; no extra per-core reset stages",
  "modules_basis": "the 25 partition-type modules of HEAD plan l43 (head_source_l43, s81_head_top instance census) + the routed HEAD hard-core tops ot_s81hd_lep_pair and ot_s81_kp4_dchn (SerDes ECO1B kit); SRAM macros excluded (no LEC)",
  "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative), or set OT_LEC_RESET_CONTRACT to this file; a kit LEC may use OT_LEC_RESET_CYCLES <= 64",
- "scope": "boot reset only (owner contract on the external rst_n); a mid-run rst_n pulse shorter than 64 clocks is outside this contract"
+ "scope": "boot reset only (owner contract on the external rst_n); a mid-run rst_n pulse shorter than 64 clocks is outside this contract",
+ "serdes_warm_reset": {
+  "decision": "OWNER 2026-11-02 17:55 (final): SerDes soft warm reset = a local reset sequencer holding reset >= 64 edges after the PMA clock restarts",
+  "type": "hd_serdes",
+  "inst": "u_phy (ot_s81hd_serdes_link_ls LOCKSAFE=1 HOLD_EDGES=64)",
+  "mechanism": "shared ot_pdie_pma_reset_hold (rtl/dsrom_sys/s81_link/ot_pdie_serdes_locksafe.sv): async assert on rst_n low or pma_lock low; 2 recovered-clock (pma_rck) synchronizer edges + 64 recovered edges before ot_pdie_serdes reset release",
+  "new_pad": "pma_lock (in, 1 bit) per SerDes partition = PMA lock authority",
+  "release_rck_edges": {
+   "guard": 66,
+   "native_recovered_reset": 68
+  },
+  "cost": {
+   "ff_per_link": 9,
+   "mission_cycles": 0
+  },
+  "untouched": "counted hard child u_phy.u_link.u_dec.u_chn (ot_s81_kp4_dchn) keeps its path; ot_s81hd_serdes_link byte-identical",
+  "plan_delta": "tools/s81_head/head_serdes_locksafe_delta.py",
+  "proof": "results/head_serdes_ls_1102/ (run_gate.sh: tb_s81hd_serdes_link_ls lockstep vs the gated shared mechanism + released adapter, 3 epochs, mutants HOLD63/IGNORE_LOCK/DMUT)"
+ }
 }
