@@ -376,7 +376,6 @@ def ring_input_sdc(P,tn):
     A=G.input_hold_min(P,tn)
     dd=G.die_sta_hold_demand(P,tn) or {}
     rh=P.clock.get("ring_hold")   # opt-in measured sender data-vs-fclk min at the sender port (S81-RINGHOLD-3)
-    fall=ring_fall_clocks(P,tn)   # S81-RINGHOLD-4 (a): plain rings write on the falling fclk edge
     out=[]
     for ck,sel in rows:
         if any(s.split("[")[0] in (dd.get("inputs") or {}) for s in sel):
@@ -387,7 +386,10 @@ def ring_input_sdc(P,tn):
             bus=s.split("[")[0]
             # no tap-window shift: the ring write clock carries no window (gen_phys.tap_window_ports, S81-RINGHOLD-3)
             mx=(1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per
-            if ck in fall:mx-=per/2   # (a) falling-edge write: capture T/2 after the launch edge, same setup slack
+            # DH56-IOHP 11-03: NO T/2 shift for a falling-edge writer.  The sender launches on the forwarded RISE and
+            # STA already captures at the fall T/2 later, so the max stays the IO budget (real internal budget T/2 -
+            # budget).  The old 'mx -= T/2' restored full-cycle slack: HEAD hd_turn_a kit fstart -max -249.9 passed
+            # locally while the real parent (tile_p tW0o10 -> turn_a) measured TT -55.8 (kit at +166.6: ~-50).
             mn=A[bus]["in_min_ps"] if bus in A else G.hold_in_min_ps(P)
             if rh is not None:mn=float(rh["sender_ps"])   # one measured class value (sender guarantee, all ring ports)
             out.append(f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{s}}}]")
