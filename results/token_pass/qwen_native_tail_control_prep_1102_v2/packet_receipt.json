@@ -1,5 +1,5 @@
 {
-  "status": "SOURCE_PREP_RUNTIME_DISPATCHED_NOT_READY",
+  "status": "RUNTIME_COMPLETE_PASS_COMPONENT_ONLY",
   "packet": "/home/ubuntu/coord/tmp/codex-native-tail-control-packet1",
   "packet_manifest_sha256": "6a6010bd7066978be277a280857973a697df1147d7cf759feb4afd4ffc220a7d",
   "controller": "codex-native-tail-control-1102-controller.service",
@@ -9,5 +9,6 @@
     "threads": 1,
     "disk_GB": 2
   },
-  "scope": "intrinsic actual station counter/CFG witness and external contract model only; no implemented producer/controller repair or L6 numeric claim"
+  "scope": "intrinsic actual station counter/CFG witness and external contract model only; no implemented producer/controller repair or L6 numeric claim",
+  "result": "gate1/result.json"
 }

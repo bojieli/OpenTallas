@@ -1,0 +1,60 @@
+TAIL_SELECTED case=round16 ordinal=56 cycle=72
+TAIL_SELECTED case=round16 ordinal=57 cycle=73
+TAIL_SELECTED case=round16 ordinal=58 cycle=74
+TAIL_SELECTED case=round16 ordinal=59 cycle=75
+TAIL_SELECTED case=round16 ordinal=60 cycle=76
+TAIL_SELECTED case=round16 ordinal=61 cycle=77
+TAIL_SELECTED case=round16 ordinal=62 cycle=78
+TAIL_SELECTED case=round16 ordinal=63 cycle=79
+HEAD_ROW_MODEL idx=0 linear=0 stride768=0
+HEAD_ROW_MODEL idx=1 linear=16 stride768=16
+HEAD_ROW_MODEL idx=2 linear=32 stride768=32
+HEAD_ROW_MODEL idx=3 linear=48 stride768=48
+HEAD_ROW_MODEL idx=4 linear=64 stride768=64
+HEAD_ROW_MODEL idx=5 linear=80 stride768=80
+HEAD_ROW_MODEL idx=6 linear=96 stride768=96
+HEAD_ROW_MODEL idx=7 linear=112 stride768=112
+TAIL_SELECTED case=round16 ordinal=120 cycle=136
+TAIL_SELECTED case=round16 ordinal=121 cycle=137
+TAIL_SELECTED case=round16 ordinal=122 cycle=138
+TAIL_SELECTED case=round16 ordinal=123 cycle=139
+TAIL_SELECTED case=round16 ordinal=124 cycle=140
+TAIL_SELECTED case=round16 ordinal=125 cycle=141
+TAIL_SELECTED case=round16 ordinal=126 cycle=142
+TAIL_SELECTED case=round16 ordinal=127 cycle=143
+HEAD_ROW_MODEL idx=8 linear=128 stride768=768
+HEAD_ROW_MODEL idx=9 linear=144 stride768=784
+HEAD_ROW_MODEL idx=10 linear=160 stride768=800
+HEAD_ROW_MODEL idx=11 linear=176 stride768=816
+HEAD_ROW_MODEL idx=12 linear=192 stride768=832
+HEAD_ROW_MODEL idx=13 linear=208 stride768=848
+HEAD_ROW_MODEL idx=14 linear=224 stride768=864
+HEAD_ROW_MODEL idx=15 linear=240 stride768=880
+PASS_NATIVE_TAIL_CONTROL case=round16 accepted=128 selected=16 outputs=16 result_age=106..177 nominal833ps CONTROL_REPLAY_NOT_L6
+- rtl/test/qwen_dv/tb_qwen_native_head_tail_control.sv:112: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 218ns; walltime 0.282 s; speed 773.473 ns/s
+- Verilator: cpu 0.282 s on 1 threads; allocated 23 MB
+	Command being timed: "./obj/Vtb_qwen_native_head_tail_control +INPUT=inputs +CASE=round16"
+	User time (seconds): 0.28
+	System time (seconds): 0.00
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.29
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 19696
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 401
+	Voluntary context switches: 1
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
