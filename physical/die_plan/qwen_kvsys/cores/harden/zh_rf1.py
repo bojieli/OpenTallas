@@ -97,7 +97,8 @@ SKIP_DIRS = {"run", "signoff", "lec", "lec_async.runs", "views", "physical_compl
 SKIP_FILES = {"1_synth_odb.v", "pin_audit.json", "status", "status.grt_est0104", "lec_async.done", "lec_async.identity",
               "lec_async.lock", "lec_async.owner", "lec_async.pid", "lec_async.rc", "lec_async.ready",
               "lec_async.source_identity", "face_guard_synth_model.json", "face_guard_odb.json", "face_guard.json",
-              "synth_area_model.json", "rtl_lint.json", "sdc_lint.json", "selrange.json"}
+              "synth_area_model.json", "rtl_lint.json", "selrange.json"}
+# sdc_lint.json is NOT an output: gen_core_kit_kv.py writes it as the sdc_lint gate context (run_kit_kv.sh reads it)
 
 
 def derive(src, out, repo, maxwire_um=60, hold_ff_margin=10):
