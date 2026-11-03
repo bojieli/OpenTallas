@@ -23,6 +23,10 @@ declared_cycles.json of this form is re-checked only.  --check writes nothing bu
 import argparse, json, math, os, re, sys
 
 FORM = "relay_bay_300"
+# DIE-S81-51 11-03 (COORD t30 pilot: plain-lane in-face TT -46 = 599.7 budget + 2 HB4 pads 136 + early tap -100):
+# hold repair on a relay-bay kit keeps >= one HB4 pad (70 ps) of TT setup (ORFS SETUP_SLACK_MARGIN for the CTS/GRT
+# repair_timing_helper, OT_HOLD_SETUP_MARGIN for final_ff_hold.tcl); the plain-lane in-budget event gives the room.
+HOLD_SETUP_MARGIN_PS = 70
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -79,6 +83,15 @@ def path_points(a, b, fin, frac):
 def dist(p, q):
     return abs(p[0] - q[0]) + abs(p[1] - q[1])
 
+
+
+def set_hold_setup_margin(t, ps=HOLD_SETUP_MARGIN_PS):
+    """config.mk text with SETUP_SLACK_MARGIN and OT_HOLD_SETUP_MARGIN = ps (replaced when present, else appended)."""
+    for k in ("SETUP_SLACK_MARGIN", "OT_HOLD_SETUP_MARGIN"):
+        t, n = re.subn(rf"^export {k} = \S+$", f"export {k} = {ps}", t, flags=re.M)
+        if n == 0:
+            t = t + ("" if t.endswith("\n") or not t else "\n") + f"export {k} = {ps}\n"
+    return t
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -226,6 +239,7 @@ def main(argv=None):
         t2, nn = re.subn(r"^export OT_MAXWIRE_UM = \d+$", f"export OT_MAXWIRE_UM = {pitch}", t, flags=re.M)
         if nn != 1:
             print(f"FAIL_PREBUILD relay_bay: {T}: config.mk has no single OT_MAXWIRE_UM line"); return 2
+        t2 = set_hold_setup_margin(t2)
         open(cm, "w").write(t2)
     json.dump(dict(schema="opentallas.declared_cycles.v1", form=FORM, owner_rule="TWO-STRIKES 11-03", kit=T,
                    max_hop_um=a.max_hop, repeater_pitch_um=pitch, lanes=decl), open(f"{K}/declared_cycles.json", "w"), indent=1)

@@ -58,6 +58,8 @@ class RelayBay(unittest.TestCase):
             self.assertEqual(len(hops), 4 + 4)
             self.assertTrue(all(float(h[3]) <= 300.0 and float(h[7]) >= 83.3 and float(h[8]) >= 83.3 for h in hops))
             self.assertRegex(open(K + "/config.mk").read(), r"OT_MAXWIRE_UM = (50|62|75|100)\n")
+            self.assertIn("export SETUP_SLACK_MARGIN = 70\n", open(K + "/config.mk").read())
+            self.assertIn("export OT_HOLD_SETUP_MARGIN = 70\n", open(K + "/config.mk").read())
             # idempotent: a second run re-checks only
             self.assertEqual(RB.main([K]), 0)
             self.assertEqual(len(re.findall(r"u_ft_fb_o_\d", open(K + "/rtl/t_bound.sv").read())), 5)
@@ -104,3 +106,12 @@ class RelayBay(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HoldSetupMargin(unittest.TestCase):
+    def test_replace_and_append(self):
+        t = RB.set_hold_setup_margin("export SETUP_SLACK_MARGIN = 0\nexport X = 1\n")
+        self.assertEqual(t.count("SETUP_SLACK_MARGIN"), 1)
+        self.assertIn("export SETUP_SLACK_MARGIN = 70\n", t)
+        self.assertIn("export OT_HOLD_SETUP_MARGIN = 70\n", t)
+        self.assertEqual(RB.set_hold_setup_margin(t), t)

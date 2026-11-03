@@ -25,6 +25,13 @@ proc ot_final_ff_hold {} {
       set hm $::env($k); break
     }
   }
+  # DIE-S81-51 11-03 (COORD t30 relay-bay class): OT_HOLD_SETUP_MARGIN > 0 = hold buffers may not take the TT setup
+  # slack below that margin (relay-bay face inputs keep one HB4 pad, 70 ps); absent/0 = the old call, unchanged.
+  set hsm {}
+  if {[info exists ::env(OT_HOLD_SETUP_MARGIN)] && [string is double -strict $::env(OT_HOLD_SETUP_MARGIN)] &&
+      $::env(OT_HOLD_SETUP_MARGIN) > 0} {
+    set hsm [list -setup_margin $::env(OT_HOLD_SETUP_MARGIN)]
+  }
   set d [file join $::env(RESULTS_DIR) final_ff_[clock microseconds]]
   file mkdir $d
   ot_mm_unsync
@@ -47,7 +54,7 @@ proc ot_final_ff_hold {} {
     global_route -start_incremental
     # Both scenes are active: hold buffers must retain the real TT setup guard.
     # No clock sizing/latency change and no new repair margin is introduced.
-    repair_timing -hold -hold_margin $hm -max_buffer_percent 100
+    repair_timing -hold -hold_margin $hm -max_buffer_percent 100 {*}$hsm
     detailed_placement
     check_placement -verbose
     global_route -end_incremental
@@ -121,6 +128,13 @@ proc ot_final_ff_converge {} {
       set hm $::env($k); break
     }
   }
+  # DIE-S81-51 11-03 (COORD t30 relay-bay class): OT_HOLD_SETUP_MARGIN > 0 = hold buffers may not take the TT setup
+  # slack below that margin (relay-bay face inputs keep one HB4 pad, 70 ps); absent/0 = the old call, unchanged.
+  set hsm {}
+  if {[info exists ::env(OT_HOLD_SETUP_MARGIN)] && [string is double -strict $::env(OT_HOLD_SETUP_MARGIN)] &&
+      $::env(OT_HOLD_SETUP_MARGIN) > 0} {
+    set hsm [list -setup_margin $::env(OT_HOLD_SETUP_MARGIN)]
+  }
   set d [file join $::env(RESULTS_DIR) final_converge_[clock microseconds]]
   file mkdir $d
   set seen [dict create]
@@ -163,7 +177,7 @@ proc ot_final_ff_converge {} {
         repair_design_helper
         # Legalize and route these changed loads before the next hold check.
       } elseif {$ff < 0} {
-        repair_timing -hold -hold_margin $hm -max_buffer_percent 100
+        repair_timing -hold -hold_margin $hm -max_buffer_percent 100 {*}$hsm
       }
       detailed_placement
       check_placement -verbose
