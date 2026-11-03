@@ -1,0 +1,19 @@
+MARGIN POLICY nominal (OWNER 12.24b): no margin flags given -> nominal routed arrivals with CPPR
+COUNT-ALIGN TT: nominal CA interval (routed arrivals + CPPR, no AOCV/droop term, OWNER 12.24b)
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -1214.4 hi -368.6 fail 207 slot_read fail 156 guard fail 21 start-skew fail 147/148 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 773 (sta 773, tree 0, no taps 0, key part unbound 0) worst lo 109.3 hi 515.6 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/148 <100 0 ocv none max lo/hi None/None PASS
+COUNT-ALIGN FF: nominal CA interval (routed arrivals + CPPR, no AOCV/droop term, OWNER 12.24b)
+COUNT-ALIGN FF crossings 773 (sta 773, tree 0, no taps 0, key part unbound 0) worst lo 144.2 hi 358.4 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/148 <100 0 ocv none max lo/hi None/None PASS
+proof TT intra              pairs  376206 setup    93.69 (neg 0) hold  -604.30 (neg 122858) skew  170.83
+proof TT seam               pairs   19976 setup   526.35 (neg 0) hold  -171.64 (neg 7779) skew  169.61
+proof TT landed             pairs  845918 setup -5162.45 (neg 372868) hold -5860.44 (neg 432110) skew 5614.27 landing {'window_ps': 416.5, 'setup_margin_ps': -5458.02, 'hold_margin_ps': -5458.02, 'damage_max_ps': 5874.52, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs'}
+proof TT seam_nearest_INFO  pairs     190 setup   592.62 (neg 0) hold  -105.37 (neg 76) skew  119.46
+proof TT landed_nearest_INFO pairs    1425 setup -4830.75 (neg 368) hold -5536.60 (neg 718) skew 5583.79 landing {'window_ps': 416.5, 'setup_margin_ps': -5126.33, 'hold_margin_ps': -5134.19, 'damage_max_ps': 5550.69, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs'}
+proof FF intra              pairs  376206 setup   206.92 (neg 0) hold  -539.23 (neg 164878) skew  155.24 kit-contract hold 4.76 (W 160, need 155.24, neg 0) | MEASURED-HOLD 0 measured / 376206 unmeasured margin None BLOCKED(kits)
+proof FF seam               pairs   19976 setup   590.45 (neg 0) hold  -155.70 (neg 9308) skew  155.63 kit-contract hold 4.37 (W 160, need 155.63, neg 0) | MEASURED-HOLD 0 measured / 19976 unmeasured margin None BLOCKED(kits)
+proof FF landed             pairs  845918 setup -4270.51 (neg 367558) hold -5016.67 (neg 432500) skew 4798.32 landing {'window_ps': 416.5, 'setup_margin_ps': -4604.1, 'hold_margin_ps': -4604.1, 'damage_max_ps': 5020.6, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs'} | MEASURED-HOLD 0 measured / 845918 unmeasured margin None BLOCKED(kits)
+proof FF seam_nearest_INFO  pairs     190 setup   639.87 (neg 0) hold  -106.29 (neg 92) skew  110.22 kit-contract hold 49.78 (W 160, need 110.22, neg 0) | MEASURED-HOLD 0 measured / 190 unmeasured margin None BLOCKED(kits)
+proof FF landed_nearest_INFO pairs    1425 setup -3991.17 (neg 342) hold -4744.19 (neg 718) skew 4770.48 landing {'window_ps': 416.5, 'setup_margin_ps': -4324.76, 'hold_margin_ps': -4331.63, 'damage_max_ps': 4748.13, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs'} | MEASURED-HOLD 0 measured / 1425 unmeasured margin None BLOCKED(kits)
+/home/ubuntu/scratch-root/claude/die-hbm-58-clk/gate_A_main {'tt_setup_ps': 93.69, 'ff_hold_ps': None, 'contract_violations': 0, 'verdict': 'BLOCKED(kits)', 'reasons': ['396182 hold pairs without signed real views (OWNER 12.19)'], 'skew_max_ps': 5614.27} landed PASS {'TT': 109.3, 'FF': 144.2}
+   intra 155.24 PASS 164877
+   seam 155.63 PASS 9308

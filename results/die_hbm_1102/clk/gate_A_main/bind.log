@@ -1,0 +1,51 @@
+MARGIN POLICY nominal (OWNER 12.24b): no margin flags given -> nominal routed arrivals with CPPR
+{
+ "verify": {
+  "identity_and_loop_errors": [],
+  "fundamental_cycles": 773,
+  "samples": 2000,
+  "sim_window_violations": 0,
+  "sim_min_margin_low_ps": 109.3,
+  "sim_min_margin_high_ps": 122.3,
+  "sim_worst_ports": {
+   "lo": "L734_0",
+   "hi": "L63m_4"
+  },
+  "sim_below_need": false,
+  "note": "margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 sync physics with metastable resolution both ways"
+ },
+ "sched_lat_hist": {
+  "-1": 19,
+  "0": 8,
+  "1": 86,
+  "2": 270,
+  "3": 207,
+  "4": 49,
+  "5": 33,
+  "6": 62,
+  "7": 28,
+  "9": 2,
+  "10": 9
+ },
+ "sched_lat_total": 2265,
+ "tree_sched_lat_total": 0,
+ "old_ring_total": 2319,
+ "depth_hist": {
+  "4": 534,
+  "8": 239,
+  "16": 0
+ },
+ "K_range": [
+  -8,
+  13
+ ],
+ "start_tree_depth": 9,
+ "tree_edges_fall": 76,
+ "max_origin_cycles": 18,
+ "plan_source": "/home/ubuntu/scratch-root/claude/die-hbm-58-clk/gate_A_main/plan.json",
+ "margin_policy": {
+  "policy": "nominal",
+  "rule": "OWNER 12.24b",
+  "overridden": {}
+ }
+}
