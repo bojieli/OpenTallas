@@ -27,3 +27,23 @@ def test_gz_and_plain(tmp_path, monkeypatch):
     (tmp_path / "p.json").write_text(json.dumps({"p": 1}))
     bc.apply(_B(tmp_path), "p.json")
     assert seen[-1] == {"p": 1}
+
+
+def test_existing_read_only_outputs_not_rewritten(tmp_path, monkeypatch):
+    # KW-FIX-1 11-02: source-follow delta snapshots hard-link composed_rtl read-only; re-binding must not rewrite them
+    import hashlib
+    rtl = "module m; endmodule\n"
+    monkeypatch.setattr(bc, "compose", lambda F, R, spec, Cell: ([("m", rtl)], {"ok": 1}))
+    monkeypatch.setitem(sys.modules, "bind_elab", type(sys)("bind_elab"))
+    sys.modules["bind_elab"].Cell = None
+    (tmp_path / "p.json").write_text("{}")
+    bc.apply(_B(tmp_path), "p.json")
+    out = tmp_path / "composed_rtl"
+    for f in out.iterdir():
+        f.chmod(0o444)
+    b = _B(tmp_path)
+    bc.apply(b, "p.json")
+    assert b.extra_lib == [str(out / (hashlib.sha256(rtl.encode()).hexdigest() + ".sv"))]
+    monkeypatch.setattr(bc, "compose", lambda F, R, spec, Cell: ([("m", rtl)], {"ok": 2}))
+    bc.apply(_B(tmp_path), "p.json")
+    assert json.loads((out / "receipt.json").read_text()) == {"ok": 2}
