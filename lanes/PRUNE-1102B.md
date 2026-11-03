@@ -44,3 +44,9 @@
 
 ## intel2 manifest F (2026-11-02 23:12 PST): DIE-HBM-59 RELEASE 22:44
 - hbm-cores-kits-40/wt (47.37 GB, worktree claude/hbm-cores-kits-40-hb4-1101@b26a827db, clean, only __pycache__ ignored) and wt_tm (32.59 GB, detached e5b857a7e, clean). Removed via git worktree remove --force from the central repo (registered worktrees wt3/wt_tm). Kept: tailmax, wt_d44q, nk, hold, hfdep, tnode, lecc, resign.
+
+## manifest E/F results (2026-11-02 23:18 PST)
+- E: removed 96/96 entries, 89.15 GB (i2_head_rel_1102b_result.tsv). F: git worktree remove --force wt + wt_tm (79.95 GB). intel2 -> 264 GB free.
+
+## intel2 manifest G (2026-11-02 23:18 PST): FLOW-23 RELEASE 23:10
+- flow-21/kcc/base/tree/physical (31.41 GB, newest 2026-11-01 14:43) and flow-21/kcc/tip/tree/physical (31.41 GB); plain repo copies, no PROTECTED path inside (results/ kept). Manifest intel2:.../prune-1102a/i2_flow21_rel_1102b.tsv.
