@@ -39,3 +39,16 @@
 - Macro delta for T7: +16 + 12 + 4 x 256x256 and +34 x 32x64. All of these macro types are already in the T7 kit_rtl.json `hard_macros`.
 
 **Full-T7 elaboration of the closure bound** (`ELAB_closure.txt`): Verilator 5.050 `--lint-only` of the whole T7 with 12605dc2 and the three children exits 0 with 0 errors. The 6 warnings are the same pre-existing set seen in the LAND runs. Peak RSS was 36.6 GB.
+
+**T7 canary3 (opt-in GEN/LINT/preflight, `canary3/`).** Same inputs and commands as Codex t7_current_canary2 (bound 61c902f1, which failed `memory_bits` with 9 items), with four changes:
+- the bound is replaced by the closure bound 12605dc2;
+- the three children are added;
+- gen tools are kit-wave-15-s81b plus `tokds4_tools.patch` (this branch's gen_phys/rom_declared_logic);
+- `--hold-ff-margin 0` (OWNER 11-02).
+
+The run used intel1 systemd --user unit `tokds4-t7canary3`: gen 23:14, lint done 00:24 (lint docker capped at 8 GB).
+
+**Result:**
+- GEN_LINT PASS with 0 issues: pins_vs_plan, clock_export_form, macro_tcl, rtl_check and memory_bits all PASS.
+- KIT_PREFLIGHT PASS: staged_tools, staged_inputs, sdc_and_ff_binding, yosys_cast_forms and module_closure.
+- Still deferred by preflight: elaboration/SELRANGE, synthesis/LEC, PG, timing and routed LEC. Placing the new T7 macros in the plan is not checked here.
