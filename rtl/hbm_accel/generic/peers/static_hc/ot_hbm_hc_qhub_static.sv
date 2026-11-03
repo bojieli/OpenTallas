@@ -22,6 +22,7 @@ module ot_hbm_hc_qhub_static #(
     parameter integer DONE_LAT = 19,
     parameter integer W = 64,        // 64 (quarter hub) or 128 (B2 half hub)
     parameter integer MUT = 0,       // bench: passed to the centre (ot_hbm_hc_qcen_static MUT)
+    parameter integer SFR = 0,       // DIE-HBM-61 11-03: subtree32 face registers (ot_hbm_hc_qcen_static SFR; ps_* +2 edges)
     // derived (do not override)
     parameter integer NVW = (W == 128) ? 8 : 7,
     parameter integer IWW = (W == 128) ? 6 : 5,
@@ -72,7 +73,7 @@ module ot_hbm_hc_qhub_static #(
         .gathered_mix_data(gathered_mix_data), .gather_done(gather_done), .result_v(result_v),
         .result_position(result_position), .result(result), .program_active(program_active),
         .program_done(program_done), .fault(hcq_fault));
-    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .MUT(MUT), .W(W)) u_cen (
+    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .MUT(MUT), .W(W), .SFR(SFR)) u_cen (
         .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(xv), .x_beat(xbt), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),

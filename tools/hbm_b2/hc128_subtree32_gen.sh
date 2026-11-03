@@ -8,11 +8,14 @@
 #   2 cut    hc128_qhub_cut.py -> yosys submod of four exact 32-input / 5-level adder subtrees (0 added/removed levels)
 #   3 compact hc128_qhub_compact.py -> one reusable master (unread input bits dropped)
 #   4 export hc128_export.py -> OUT/ot_hbm_hc_subtree32_core.sv + _receipt.json (plain instance identifiers, ruling 5)
+# SFR (env, default 1 = DIE-HBM-61 RE-FORM 11-03 committed form): ot_hbm_hc_qcen_static SFR, the subtree face registers
+# (every master port on its own flop; tree +2 edges, declared in physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv).
+# SFR=0 reproduces the 10-31 master (sha256 f1971bc0...cfb138) bit for bit.
 # Sources are taken from git SRC_COMMIT (default HEAD) with `git show`, so OUT is a function of the commit alone.
 # Needs ~/.local/opentallas-tools/bin/yosys (slang plugin); ~8 GB, ~5 min.  Committed output:
 #   rtl/hbm_accel/cores_split/ot_hbm_hc_subtree32/ot_hbm_hc_subtree32_core.sv (+ _receipt.json)
 set -euo pipefail
-OUT=$(mkdir -p "$1" && cd "$1" && pwd); C=${2:-HEAD}
+OUT=$(mkdir -p "$1" && cd "$1" && pwd); C=${2:-HEAD}; SFR=${SFR:-1}
 R=$(git -C "$(dirname "$0")" rev-parse --show-toplevel); SHA=$(git -C "$R" rev-parse --short=10 "$C")
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 mkdir -p "$OUT/src"
@@ -23,9 +26,9 @@ for f in rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv rtl/hbm_
 done
 S=$OUT/src
 cat > "$OUT/elab.ys" <<YS
-read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top ot_hbm_hc_qhub_static -G W=128 -G DRLY=2 -G CHX=11 -G RD_CAPTURE=51 -G GATHER_PHASE=51 -G DONE_LAT=47 $S/ot_hbm_hc_q_static_bb.v $S/ot_hbm_hc_qcen_static.sv $S/ot_hbm_hc_qhub_static.sv $S/ot_hdc_fastfp.sv $S/ot_hdc_fastfp_lat.sv $S/ot_hdc_fp32_add_lat.sv $S/ot_hdc_prefix.sv $S/ot_rst_relay.sv
+read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top ot_hbm_hc_qhub_static -G W=128 -G DRLY=2 -G CHX=11 -G RD_CAPTURE=51 -G GATHER_PHASE=51 -G DONE_LAT=47 -G SFR=$SFR $S/ot_hbm_hc_q_static_bb.v $S/ot_hbm_hc_qcen_static.sv $S/ot_hbm_hc_qhub_static.sv $S/ot_hdc_fastfp.sv $S/ot_hdc_fastfp_lat.sv $S/ot_hdc_fp32_add_lat.sv $S/ot_hdc_prefix.sv $S/ot_rst_relay.sv
 setattr -mod -unset keep_hierarchy
-setattr -set keep_hierarchy 1 t:ot_hdc_fp32_add_lat* t:ot_hbm_hc_qcen_static*
+setattr -set keep_hierarchy 1 t:ot_hdc_fp32_add_lat* t:ot_hbm_hc_qcen_static* t:ot_hbm_hc_sfr_reg*
 proc
 flatten
 memory -nomap
