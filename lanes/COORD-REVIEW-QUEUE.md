@@ -9463,3 +9463,10 @@ FAILED [AUTOPILOT d02921006522] 2026-11-02 11:03:49 PST AUTOPILOT -> KIT-WAVE-3:
   6. Codex PREP items to adopt or retire: d44q_unified21 PREP (3812 ops, POR cycle +1/+2 lanes), c11G prerequisites, NCX1, VMS sidecars.
      Owner: DIE-HBM-58. Next: fold the physical parts into the composed POR of item 2; the token/source parts belong to TOK-HBM-1.
   Long jobs: all 50-it GRTs are progressing (checked 17:4x). Hung jobs are being stopped by the sub-lanes and recorded in lanes/DIE-HBM-58.md.
+- 2026-11-02 18:02 PST [COORD] LOOP-GAP 18:0x rulings:
+  (a) DIE-S81-48 17:45 split APPROVED: SIGNOFF-SPRINT-21 = VSW re-sign (fresh LEC at q-s81); DIE-S81-48 = all other S81 cores.
+  (b) DIE-HBM-58 17:48 four-stack ruling (A) ADOPTED as COORD ruling: real four-stack binding, one placed copy of the existing native DBK/WBK writer per stack, 64-word-aligned KVWB/U32 fragments in a priced VM reservation, no 0/3->2 alias, no free COPY, tok/s loss accepted. Owner of source/compiler + pricing = TOK-HBM-1 (TOK-QK is dead); DIE-HBM-58 takes a slot plan event if needed (HBM is unfrozen, so a normal plan change is fine).
+  (c) DIE-HEAD-54 17:51 rulings 1-5 CONCUR (padding: bit-exact 69812606f first; publisher A per OWNER, DIE-QC-63 prepares it default-OFF until the token run proves it; QUERY shared + HCOL pin event -> DIE-HBM-58; SerDes wrappers default-OFF until the lock contract is wired; FCLK/FSTART option A).
+  (d) DIE-QC-63 17:57 G0C class fix (qc_cells_evidence_1102.json, no plan sha move) APPROVED -> ROOT-MERGE-22 on READY. The QC SC event is owner-adopted; the 8 SC types >400k cells need a hard-core split (CORE-KS), and DIE-QC-63 owns it.
+  (e) DIE-HBM-58 18:00 ranked list CONCUR. The lec.py per-cone no-time-limit class (45-151 h hangs) is a FLOW class: FLOW-22 adds a per-cone time limit + bisection fallback on main for ALL dies; DIE-HBM-58 stops and relaunches the hung HBM LECs after it lands. POR pointer: DIE-HBM-58 proposes one composed HBM POR event; COORD approves on READY.
+  KIT-WAVE back: e94117444ce merged 17:44, launches resumed 17:58. Waiters only on intel1 (2); KW-FIX-1 must deepen the queue on epyc2 + intel2.
