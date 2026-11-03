@@ -10,7 +10,8 @@ sign-off of a new routed DB.
 One iteration (at most MAX_ITER = 3), from the previous iteration's routed DB (iteration 1: the kit's):
   1. prd_mk.sh SRC D <m|b|t><hold margin> SO   (tools/die_plan/post_route_drv; two-mode kit: m<N>; single-mode kit:
      t<N> (TT setup + DRV, no hold) when TT fails, then b<N> (FF hold + DRV) from it when FF fails; OT_PRD_FROM=route when the DB has no DRC,
-     else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts)
+     else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts;
+     final = route from the kit's signed 6_final.odb, retried once when the routed seed does not match the SPEF)
   2. prd_run.sh D CPUS MEM 1 with OT_PRD_POST=0: the ECO hook prd_hook.tcl on the routed RCX SPEF (= measured arrivals)
        repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 0 ps
        (OWNER 11-02; was 12.19 measured arrivals + 10 ps) -> detailed_placement (legalises only what moved) ->
@@ -286,6 +287,16 @@ def flexpa_sig11(pd):
     return "Signal 11 received" in t and "drt::FlexPA" in t
 
 
+def stage_mismatch(pd):
+    """the ECO hook found SPEF instances missing from the seed DB (prd_hook.tcl OT_PRD STAGE_MISMATCH): the kit's
+    6_final is a post-route ECO of its 5_2_route.odb (DIE-S81-50 11-03, S81 l4) -> seed with OT_PRD_FROM=final"""
+    try:
+        t = (Path(pd) / "run_prd.log").read_text(errors="replace")
+    except OSError:
+        return False
+    return "OT_PRD STAGE_MISMATCH" in t
+
+
 def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc=""):
     """one ECO iteration from routed dir src into root/i<n><tag> (a single-mode kit's t<N> pass first into
     root/i<n><tag>t); repair_rc 'placement' = OT_PRD_REPAIR_RC (FlexPA SIG11 class); -> iteration record (metrics None
@@ -327,6 +338,9 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             hit = oom(rc, f"ECO {v} session", pd / "run_prd.log", pd / "run_prd_finish.log")
             if hit:
                 return hit
+            if stage_mismatch(pd):
+                it["stage_mismatch"] = True
+                return end("ERROR", f"ECO {v} seed DB does not match the SPEF (OT_PRD STAGE_MISMATCH, run_prd.log)")
             if flexpa_sig11(pd):
                 it["flexpa_sig11"] = True
                 return end("ERROR", f"ECO {v} session SIGSEGV in DRT pin access (FlexPA SIG11 class, run_prd.log)")
@@ -421,6 +435,12 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
             res["repair_rc_retry"] = f"iteration {n}: FlexPA SIG11 -> OT_PRD_REPAIR_RC=placement"
             it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                          tag="r", repair_rc=repair_rc)
+            res["iterations"].append(it)
+        if it.get("stage_mismatch") and n == 1 and mode == "route":
+            # class retry: the kit's routed seed predates its signed 6_final (post-route ECO kit) -> seed with 6_final
+            res["stage_retry"] = "iteration 1: OT_PRD STAGE_MISMATCH -> OT_PRD_FROM=final"
+            it = iterate(n, src, root, kit, runner, so, "final", hold_margin, mem, cpus, run, image, prev=prev,
+                         tag="f", repair_rc=repair_rc)
             res["iterations"].append(it)
         m = it.get("metrics")
         if not m:
