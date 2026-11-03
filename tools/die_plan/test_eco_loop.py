@@ -237,3 +237,60 @@ def test_postroute_lec_uses_actual_capsule_and_fresh_receipt(tmp_path):
     assert E.run_lec(k, res, 8, 2, run=passed)
     assert res["lec"]["record"] != oldout
     assert json.loads((d / "lec/lec.json").read_text())["verdict"] == "EQUIVALENT"
+
+
+class OomFake(Fake):
+    """prd_run.sh killed by the docker memory cap (rc 137), as VEs autopilot 246986099dc1"""
+
+    def __init__(self, rc=137, log=None):
+        super().__init__([None])
+        self.rc, self.log = rc, log
+
+    def __call__(self, cmd, **kw):
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh"):
+            self.calls.append((cmd, kw.get("env") or {}))
+            if self.log is not None:
+                (Path(cmd[2]) / "run_prd.log").write_text(self.log)
+            return self.rc
+        return super().__call__(cmd, **kw)
+
+
+def test_prd_run_rc137_is_eco_oom(tmp_path):
+    k = kit(tmp_path)
+    b = base_rec(k, rec(41.71, -9.29))
+    r = E.run_loop(k, b, run=OomFake(137), mem=24, cpus=2)
+    it = r["iterations"][0]
+    assert r["verdict"] == "ECO_OOM" and it["status"] == "ECO_OOM"
+    assert "OOM-killed at 24 GB docker cap (rc 137)" in it["reason"]
+    assert E.summary(r).startswith("late-ECO OOM")
+    assert json.loads((Path(r["root"]) / "eco_loop.json").read_text())["verdict"] == "ECO_OOM"
+
+
+def test_kill_text_is_eco_oom_and_other_rc_is_error(tmp_path):
+    k = kit(tmp_path)
+    b = base_rec(k, rec(5, -3))
+    r = E.run_loop(k, b, run=OomFake(2, log="make: *** [do-route] Killed\n"), mem=8, cpus=2)
+    assert r["verdict"] == "ECO_OOM"
+    k2 = kit(tmp_path / "b")
+    b2 = base_rec(k2, rec(5, -3))
+    r2 = E.run_loop(k2, b2, run=OomFake(245, log="Signal 11 received\n"), mem=8, cpus=2)
+    assert r2["verdict"] == "ERROR" and "route / clock-freeze check / finish failed" in r2["iterations"][0]["reason"]
+    assert E.summary(r2).startswith("late-ECO exhausted")
+
+
+def test_measured_peak_floors_eco_mem(tmp_path):
+    k = kit(tmp_path)
+    (k / "run_finish.fromcts.log").write_text("[INFO DRT-0267] cpu time = 1, memory = 21013.48 (MB), peak = 22301.00 (MB)\n")
+    lg = k / "run/logs/asap7/n/base"
+    lg.mkdir(parents=True)
+    (lg / "3_3_place_gp.log").write_text("Elapsed time: 0:10. Peak memory: 1957844KB.\nMEM: 807.23 MB peak\n")
+    assert E.measured_peak_gb(k) == pytest.approx(21.78, abs=0.01)
+    assert E.eco_mem(k, 24) == (33, pytest.approx(21.78, abs=0.01))
+    assert E.eco_mem(k, 64)[0] == 64                                          # never below the request
+    assert E.eco_mem(kit(tmp_path / "e"), 24) == (24, 0.0)                    # no logs: request unchanged
+    b = base_rec(k, rec(41.71, -9.29))
+    f = OomFake(137)
+    r = E.run_loop(k, b, run=f, mem=24, cpus=2)
+    prd = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")][0]
+    assert prd[4] == "33" and r["mem_gb"] == 33 and r["mem_requested_gb"] == 24 and r["kit_peak_gb"] > 21
+    assert "at 33 GB docker cap" in r["iterations"][0]["reason"]

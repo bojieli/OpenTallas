@@ -30,9 +30,13 @@ DB, iterations [commands, metrics, wall], best, flow sha}.
     eco_loop.py run --kit K [--runner R] [--out ROOT] [--max-iter 3] [--hold-margin 10] [--mem 48] [--cpus 8] [--lec]
     eco_loop.py check SIGNOFF.json        eligibility of a sign-off record (prints the class decision)
 Heavy: run through ot-run (--mem = honest peak, the ECO session + DRT + sign-off STA), never on localhost.
+    The ECO docker cap is max(--mem, ceil(1.5 x the kit's measured OpenROAD peak)) (ECO-OOM-1); a step killed for memory
+    (rc 137 / -9 / kill text) ends the loop as verdict ECO_OOM ("late-ECO OOM ... at <cap> GB"), re-run at a larger --mem.
 """
 import argparse
 import hashlib
+import math
+import re
 import tempfile
 import json
 import os
@@ -59,6 +63,57 @@ FLOW_FILES = ("post_route_drv/prd_mk.sh", "post_route_drv/prd_run.sh", "post_rou
               "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl",
               "post_route_drv/prd_count.tcl", "post_route_drv/post_grt_chain.py", "eco_loop.py") + ECO_TOOL_FILES
 POST_RUNNERS = ("run_kit_hbm.sh", "run_kit_kv.sh", "run_kit.sh")
+# ECO-OOM-1 (DIE-S81-48 11-02, VEs autopilot 246986099dc1): the late ECO inherited the kit runner's ot-run memory (24 GB)
+# as its docker cap, but the ECO session holds the routed DB + the routed SPEF in TWO scenes + repair + DRT on top of what
+# the kit's own DRT needed (22.3 GB peak) -> docker SIGKILL rc 137 inside the first read_spef, reported as the generic
+# "route / clock-freeze check / finish failed".  Now: (1) the ECO docker cap is floored at ECO_MEM_FACTOR x the kit's
+# measured OpenROAD peak, (2) rc 137 / -9 or kill evidence in the step log = status ECO_OOM naming the cap.
+ECO_MEM_FACTOR = 1.5
+OOM_RCS = {137, -9}
+OOM_TEXT = re.compile(r"\bKilled\b|out of memory|OOMKilled|Cannot allocate memory|std::bad_alloc", re.I)
+PEAK_RES = (re.compile(r"peak = ([0-9.]+) \(MB\)"), 1.0 / 1024,
+            re.compile(r"Peak memory: ([0-9.]+)KB"), 1.0 / (1024 * 1024),
+            re.compile(r"MEM: ([0-9.]+) MB peak"), 1.0 / 1024)
+
+
+def measured_peak_gb(kit):
+    """max OpenROAD peak memory (GB) in the kit's own logs (run/logs/**/*.log + KIT/*.log); 0.0 when none"""
+    kit = Path(kit)
+    logs = list(kit.glob("*.log")) + list((kit / "run" / "logs").rglob("*.log"))
+    pats = [(PEAK_RES[i], PEAK_RES[i + 1]) for i in range(0, len(PEAK_RES), 2)]
+    peak = 0.0
+    for p in logs:
+        try:
+            t = p.read_text(errors="replace")
+        except OSError:
+            continue
+        for rx, scale in pats:
+            for m in rx.finditer(t):
+                try:
+                    peak = max(peak, float(m.group(1)) * scale)
+                except ValueError:
+                    pass
+    return round(peak, 2)
+
+
+def eco_mem(kit, mem):
+    """-> (docker cap GB for every ECO step, measured kit peak GB): max(mem, ceil(ECO_MEM_FACTOR x measured peak))"""
+    peak = measured_peak_gb(kit)
+    return max(int(mem), int(math.ceil(ECO_MEM_FACTOR * peak))), peak
+
+
+def oom_evidence(rc, *logs):
+    """True when a step was killed for memory: rc 137 / -9, or kill / OOM text in its log tail"""
+    if rc in OOM_RCS:
+        return True
+    for p in logs:
+        try:
+            t = Path(p).read_text(errors="replace")[-20000:]
+        except OSError:
+            continue
+        if OOM_TEXT.search(t):
+            return True
+    return False
 
 
 def load(p):
@@ -241,6 +296,11 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         it.update(status=status, reason=reason, finished=time.time(), wall_s=round(time.time() - t0, 1))
         return it
 
+    def oom(rc, what, *logs):
+        if rc and oom_evidence(rc, *logs):
+            return end("ECO_OOM", f"{what} OOM-killed at {mem} GB docker cap (rc {rc})")
+        return None
+
     s = src
     for i, v in enumerate(vs):
         pd = d if i == len(vs) - 1 else Path(root) / f"i{n}{v[0]}"
@@ -250,7 +310,11 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         tag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + tag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
             return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
-        if step("prd_run" + tag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env):
+        rc = step("prd_run" + tag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
+        if rc:
+            hit = oom(rc, f"ECO {v} session", pd / "run_prd.log", pd / "run_prd_finish.log")
+            if hit:
+                return hit
             return end("ERROR", f"ECO {v} route / clock-freeze check / finish failed (prd_result.json)")
         # the ECO overrides steer only the ECO route: the next pass and the sign-off start from the kit's own config
         if (pd / "config.mk").is_file():
@@ -262,14 +326,21 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     if pr:
         step("signoff", ["bash", pr, d, "post", mem, cpus])
     else:
-        if step("abstract", ["bash", "-c", ABSTRACT_SH, "eco_abstract", d, cpus, mem, image, docker(),
-                             "1" if hold_mm(kit) else "0"]):
+        rc = step("abstract", ["bash", "-c", ABSTRACT_SH, "eco_abstract", d, cpus, mem, image, docker(),
+                               "1" if hold_mm(kit) else "0"])
+        if rc:
+            hit = oom(rc, "ECO abstract", d / "run_eco_abstract.log")
+            if hit:
+                return hit
             return end("ERROR", "do-generate_abstract failed (run_eco_abstract.log)")
         step("signoff", [sys.executable, "-I", d / "signoff.py", "run", "--run-dir", d / "run", "--kit", d,
                          "--out", d / "signoff", "--image", image, "--corners", "tt,ff"],
              env=dict(os.environ, SIGNOFF_DOCKER=os.environ.get("SIGNOFF_DOCKER", "docker")))
     so_rec = newest_signoff(d, ts - 1)
     if not so_rec:
+        hit = oom(it["rc"].get("signoff"), "ECO sign-off")
+        if hit:
+            return hit
         return end("ERROR", "sign-off wrote no record")
     it["signoff"] = str(so_rec)
     rec = load(so_rec)
@@ -301,7 +372,10 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     t0 = time.time()
     base_rec = load(base_signoff)
     root = Path(root or kit / ("eco_" + time.strftime("%Y%m%d_%H%M%S") + "_" + str(os.getpid())))
+    mem_in = mem
+    mem, peak = eco_mem(kit, mem)
     res = dict(schema=SCHEMA, kind="eco", tool="tools/die_plan/eco_loop.py", kit=str(kit), root=str(root),
+               mem_requested_gb=mem_in, mem_gb=mem, kit_peak_gb=peak, mem_factor=ECO_MEM_FACTOR,
                base_signoff=str(base_signoff), base_routed_db=(base_rec.get("inputs") or {}).get("odb"),
                base_metrics=metrics(base_rec) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
                started=t0, iterations=[], flow=flow_sha(tools), host=os.uname().nodename)
@@ -328,6 +402,8 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         m = it.get("metrics")
         if not m:
             stop = f"iteration {n}: {it.get('reason')}"
+            if it.get("status") == "ECO_OOM":
+                verdict = "ECO_OOM"
             break
         if best is None or better(m, best["metrics"]):
             best = it
@@ -339,7 +415,8 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
             break
         src, prev = Path(it["dir"]), m
     if best is None:
-        verdict = "ERROR"
+        if verdict != "ECO_OOM":
+            verdict = "ERROR"
     else:
         res["best"] = dict(n=best["n"], dir=best["dir"], signoff=best["signoff"], base=best["base"],
                            metrics=best["metrics"])
@@ -358,7 +435,7 @@ def summary(res):
     its = len(res.get("iterations") or [])
     if res.get("verdict") == "NOT_ELIGIBLE":
         return f"late-ECO not eligible: {res.get('reason')}"
-    tag = "late-ECO PASS" if res.get("verdict") == "PASS" else "late-ECO exhausted"
+    tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM"}.get(res.get("verdict"), "late-ECO exhausted")
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
             f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
 
