@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.hbm.reform_split.v1",
+ "lane": "DIE-HBM-61/SPLIT 2026-11-03",
+ "core": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+ "census": {
+  "cells": 176000,
+  "instances": 31
+ },
+ "status": "WIP (EQ bench building; stopped by COORD helper cap)",
+ "form": "half-tile chain: each tile slot = 2 identical face-shelled chain elements (ot_hgi_coll_tkm_tile_rg PT 32, verbatim), wired like 2 consecutive tiles (clr systolic hA->hB, conv deep-first hB->hA, ovf hA->hB.ins, up hB.up_out->hA.up_in). No R2R cut exists inside the insertion array (X[q-4..q] same-edge reads), so the only seam is the chain-element boundary. Chain 32x64 -> 64x32 entries (KMAX 2048 unchanged).",
+ "rtl": [
+  "rtl/hbm_accel/cores_split/reform_1103/tkm_tile/ot_hgi_coll_tkm_tp192_htile_core.sv",
+  "rtl/hbm_accel/cores_split/reform_1103/tkm_tile/ot_hgi_coll_tkm_tp192_tile_core__split.sv",
+  "rtl/hbm_accel/cores_split/reform_1103/tkm_tile/ot_hgi_coll_tkm_static_pdh.sv (root twin, PTILE/EXT/NTT params)"
+ ],
+ "sub_blocks": [
+  {
+   "module": "ot_hgi_coll_tkm_tp192_htile_core",
+   "per_core": 2,
+   "unique_masters": 1,
+   "cells_est_orfs": 137216,
+   "cells_est_census_equiv": 94000,
+   "flops": 5301,
+   "macros": 0,
+   "clock": "tile_clk (~6.4k sinks per half vs 12.8k)"
+  }
+ ],
+ "cells_basis": "ORFS asap7lock flat synth of htile__fs (face-shelled) = 137216; calibration uncut idpin kit top = 256904 vs census ~176k (x1.46) => ~94k census-equiv per half",
+ "crossings": [
+  {
+   "between": "hA.ovf -> hB.ins",
+   "bits": 345,
+   "edges": 2
+  },
+  {
+   "between": "hA.clr_o -> hB.clr",
+   "bits": 1,
+   "edges": 2
+  },
+  {
+   "between": "hB.up_out -> hA.up_in",
+   "bits": 344,
+   "edges": 2
+  },
+  {
+   "between": "hB.conv_o -> hA.conv",
+   "bits": 1,
+   "edges": 2
+  }
+ ],
+ "latency": "latency/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap.tsv (down +5, clr_o +3, conv_o +2, up_out +2 on conv; TKM op +448 edges)",
+ "root_dependency": "ot_hgi_coll_tkm_m_tp192__root must be re-extracted with PTILE 32 (NT 64: SETTLE 145->305, XL 87->151, +448 edges/op); root ports unchanged",
+ "eq": {
+  "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/tkm_idpin/run.sh (covers idpin+terminal: full chain REF PTILE64 kit cores vs SPLIT PTILE32 pairs, golden O/R + timeline + lockstep SHIFT 448)",
+  "result": "PENDING: verilator hier builds pos/mutp1/mutp2 running on epyc2 ($E/tkm/b1, log $E/tkm/b1.log); mutn build killed by external SIGTERM -> rebuild needed",
+  "remaining": [
+   "pos PASS full2048+part700",
+   "mutn/mutp1/mutp2 FAIL",
+   "rm -rf $E/tkm/b1/obj_mutn; re-run run.sh (skips built objs)"
+  ]
+ },
+ "host": "epyc2, E=/home/ubuntu/scratch-root/claude/die-hbm-61-split"
+}
