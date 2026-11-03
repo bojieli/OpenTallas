@@ -38,14 +38,36 @@ def is_ff(master):
     return "DFF" in master.upper()
 
 
-# S81-RF1 face lockup (DIE-S81-51/CLK crossing table row 1, 11-03): a registered output may leave its flop through ONE
-# latch transparent while clk is LOW (ASAP7 DLLx*, Yosys $_DLATCH_N_), no logic, no fan-out: flop -> latch -> port.
-# The flop stays the face register (the latch only moves the port change to the falling edge, 0 cycles).
-LATCH_LOW_RE = re.compile(r"^(DLLx\d+_ASAP7_75t_[RLS]|\$_DLATCH_N_)$")
+# S81-RF1 face lockup (DIE-S81-51/CLK crossing table row 1, 11-03; FLOW-LATCH-1): a registered output may leave its
+# flop through ONE negative-level latch (transparent while clk is LOW), no logic, no fan-out: flop -> latch -> port.
+# The flop stays the face register (the latch only moves the port change to the falling edge, 0 cycles).  Accepted
+# only when the latch is transparent-low w.r.t. the face flop's own clock: a DLLx* / $_DLATCH_N_ whose CLK / E is the
+# flop's clock net (through buffers, same inversion parity), or a DHLx* / $_DLATCH_P_ on the INVERTED flop clock
+# (synthesis may fold `if (!clk)` that way), and the face flop is rising-edge.  Any other latch stays unregistered.
+LATCH_LOW_RE = re.compile(r"^(DLLx\d+_ASAP7_75t_[RLS]+|\$_DLATCH_N_)$")
+LATCH_HIGH_RE = re.compile(r"^(DHLx\d+_ASAP7_75t_[RLS]+|\$_DLATCH_P_)$")
+RISE_FF_RE = re.compile(r"^(S?DFFH|DFFASRH|\$_(?:S?DFFC?E?|DFFSRE?|ALDFFE?)_P)")
 
 
 def is_latch_low(master):
     return bool(LATCH_LOW_RE.match(master))
+
+
+def latch_level(master):
+    """'low' / 'high' (the level at which the latch cell is transparent on its own enable pin) or None."""
+    return "low" if LATCH_LOW_RE.match(master) else "high" if LATCH_HIGH_RE.match(master) else None
+
+
+def is_rise_ff(master):
+    return bool(RISE_FF_RE.match(master))
+
+
+def clk_pin(pp):
+    """the clock / enable pin of a flop or latch: ASAP7 CLK, Yosys C (flops) / E (latches)."""
+    for k in ("CLK", "C", "E"):
+        if k in pp and pp[k][0] == "in" and len(pp[k][1]) == 1:
+            return pp[k][1][0]
+    return None
 
 
 ASYNC_RESET_PINS = {"RESETN", "SETN", "R", "S"}   # ASAP7 DFFASRHQN async pins; Yosys $_DFF_P[NP][01]_ R / $_DFFSR_ S
@@ -799,6 +821,38 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     for p in T.ports:
         for b in _bits_of(T, p):
             port_root[b] = F.find(b)
+    def clk_root(bit):
+        """a clock net bit -> (root net, inversion parity) through single-driver BUF/INV/HB cells."""
+        cur, par, seen = F.find(bit), 0, set()
+        while cur not in seen and len(drv[cur]) == 1:
+            seen.add(cur)
+            ci, _ = drv[cur][0]
+            m, _, pp = F.cells[ci]
+            ins = [v for k, (dd, v) in pp.items() if dd == "in"]
+            if not is_buf(m) or len(ins) != 1 or len(ins[0]) != 1:
+                break
+            if m.upper().startswith(("INV", "$_NOT_")):
+                par ^= 1
+            cur = F.find(ins[0][0])
+        return cur, par
+
+    def face_lockup_why(lci, fci):
+        """'' when latch lci is transparent-low on the clock of the rising-edge face flop fci, else the reason."""
+        lm, _, lpp = F.cells[lci]
+        fm, fpath, fpp = F.cells[fci]
+        if not is_rise_ff(fm):
+            return f"face flop {fpath} ({fm}) is not rising-edge"
+        lc, fc = clk_pin(lpp), clk_pin(fpp)
+        if lc is None or fc is None:
+            return "latch / flop clock pin not found"
+        (lr, lp), (fr, fp) = clk_root(lc), clk_root(fc)
+        if lr != fr:
+            return f"latch enable {lr} is not the face flop clock {fr}"
+        level = latch_level(lm)
+        if (level == "low") != (lp == fp):
+            return f"{lm} on {'inverted ' if lp != fp else ''}clock is transparent-high (want negative-level)"
+        return ""
+
     roots_ports = defaultdict(list)
     for b, r in port_root.items():
         roots_ports[r].append(b)
@@ -1522,12 +1576,18 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     m, path, pp = F.cells[ci]
                     if is_ff(m):
                         ff = (ci, path)
+                        if lat is not None:
+                            why = face_lockup_why(lat[0], ci)
+                            if why:
+                                fail("unregistered", b, f"face latch {lat[1]}: {why}")
+                                ok = False
+                                break
+                            res.setdefault("face_lockup", []).append(b)
                         break
-                    if lat is None and is_latch_low(m) and pin == "Q" and pp.get("D", ("", []))[0] == "in" \
+                    if lat is None and latch_level(m) and pin == "Q" and pp.get("D", ("", []))[0] == "in" \
                             and len(pp["D"][1]) == 1:
-                        lat = path                     # the one face lockup latch: trace on through its D
+                        lat = (ci, path)               # the one face lockup latch: trace on through its D
                         chain.append(path)
-                        res.setdefault("face_lockup", []).append(b)
                         cur = F.find(pp["D"][1][0])
                         if cur in roots_ports:
                             fail("feedthrough", b, f"latched from port {roots_ports[cur][0]}")

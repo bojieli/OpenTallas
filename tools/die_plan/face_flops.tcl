@@ -38,11 +38,44 @@ proc ff_slot_of {nm sfx} {
 # column pitch along the depth of an E/W band and along an N/S face (a DFFHQNx1 is 20 sites wide; the rest is room for its INV / port buffer)
 set ff_cpitch [expr {$ff_sw * 40}]
 proc ff_is_ff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
-# LATCH-FACE 11-03 (CLK table row 1): an out-face lockup latch (ASAP7 DLL / DHL) between the face flop and its port
-# is part of the face chain: the output walker passes it through its D pin (never CLK) to the flop behind it.
+# LATCH-FACE 11-03 (CLK table row 1; FLOW-LATCH-1): an out-face lockup latch (ASAP7 DLL / DHL) between the face flop
+# and its port is part of the face chain: the output walker passes ONE latch through its D pin (never CLK) to the
+# flop behind it, and accepts the chain only when the latch is negative-level on that flop's own clock (DLL on the
+# flop clock, or DHL on the inverted flop clock, through BUF/INV) and the flop is rising-edge (ff_latch_ok).
 proc ff_is_latch {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "DLLx*" $m] || [string match "DHLx*" $m]}]
+}
+proc ff_pin_net {inst pin} {
+  foreach it [$inst getITerms] { if {[[$it getMTerm] getName] eq $pin} { return [$it getNet] } }
+  return "NULL"
+}
+# clock net -> {root net, inversion parity} back through single BUF / INV / HB drivers
+proc ff_clk_root {net} {
+  set par 0
+  set seen {}
+  while {$net ne "NULL" && $net ne "" && ![dict exists $seen $net]} {
+    dict set seen $net 1
+    set d ""
+    foreach it [$net getITerms] {
+      if {[[$it getMTerm] getIoType] eq "OUTPUT"} { if {$d ne ""} { return [list $net $par] }; set d [$it getInst] }
+    }
+    if {$d eq "" || ![ff_is_buf $d]} break
+    set ins [ff_sig_iterms $d in]
+    if {[llength $ins] != 1} break
+    if {[string match "INV*" [[$d getMaster] getName]]} { set par [expr {1 - $par}] }
+    set net [[lindex $ins 0] getNet]
+  }
+  return [list $net $par]
+}
+proc ff_latch_ok {lat ff} {
+  set fm [[$ff getMaster] getName]
+  if {![string match "DFFH*" $fm] && ![string match "DFFASRH*" $fm] && ![string match "SDFH*" $fm]} { return 0 }
+  lassign [ff_clk_root [ff_pin_net $lat CLK]] lr lp
+  lassign [ff_clk_root [ff_pin_net $ff CLK]] fr fp
+  if {$lr eq "NULL" || $lr ne $fr} { return 0 }
+  set low [string match "DLLx*" [[$lat getMaster] getName]]
+  return [expr {$low ? $lp == $fp : $lp != $fp}]
 }
 proc ff_is_buf {inst} {
   set m [[$inst getMaster] getName]
@@ -92,8 +125,14 @@ proc ff_chain_out {net depth} {
       if {[$mt getIoType] ne "OUTPUT" || [$mt getSigType] eq "CLOCK"} continue
       set i [$it getInst]
       set next [linsert $chain end $i]
-      if {[ff_is_ff $i]} { return $next }
+      set lats {}
+      foreach c $chain { if {[ff_is_latch $c]} { lappend lats $c } }
+      if {[ff_is_ff $i]} {
+        if {[llength $lats] == 0 || [ff_latch_ok [lindex $lats 0] $i]} { return $next }
+        continue
+      }
       set lat [ff_is_latch $i]
+      if {$lat && [llength $lats]} continue
       if {!$lat && ![ff_is_buf $i]} continue
       foreach n [ff_sig_iterms $i in] {
         if {$lat && [[$n getMTerm] getName] ne "D"} continue

@@ -30,6 +30,16 @@ RTL = """module lec_fl_t (input clk, input [1:0] a, output [1:0] y);
 endmodule
 """
 RTL_HI = RTL.replace("if (!clk)", "if (clk)")
+# the gen_rtl TX-face ot_dp_lk form (Verilog-2001, ROOT-MERGE 867e693fa67): `always @(*) if (!clk) q = d;` in a module
+RTL_DPLK = """module ot_dp_lk #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+  always @(*) if (!clk) q = d;
+endmodule
+module lec_fl_t (input clk, input [1:0] a, output [1:0] y);
+  reg [1:0] r;
+  always @(posedge clk) r <= a;
+  ot_dp_lk #(.W(2)) u_blk_y (.clk(clk), .d(r), .q(y));
+endmodule
+"""
 
 
 def _have_image():
@@ -150,3 +160,24 @@ def test_latch_phase_diff_const_matches_any():
     lk = {"gold": {"port_phase": {"p0": "low", "p1": "low", "p2": "const"}},
           "gate": {"port_phase": {"p0": "low", "p2": "low", "p3": "low"}}}
     assert lec.latch_phase_diff(lk) == [("p1", "low", "edge"), ("p3", "edge", "low")]
+
+
+def test_rtl_latch_detects_verilog2001_and_ot_dp_lk_forms():
+    assert lec.RTL_LATCH.search(RTL_DPLK) and lec.RTL_LATCH.search("always @* if (!clk) q = d;")
+    assert lec.RTL_LATCH.search("ot_dp_lk #(.W(4)) u (.clk(clk), .d(x), .q(y));")
+    assert not lec.RTL_LATCH.search("always @(posedge clk) r <= a;")
+
+
+@needs_image
+def test_ot_dp_lk_gold_against_dll_gate_is_equivalent(tmp_path):
+    """FLOW-LATCH-1: the merged xcheck TX-face wrapper form (ot_dp_lk, Verilog-2001 latch) against its DLL netlist."""
+    rc, r = _run(_kit(tmp_path, "ok", RTL_DPLK))
+    assert rc == 0 and r["verdict"] == "EQUIVALENT", r
+    assert r["lockup_latches"]["gold"]["port_phase_counts"] == {"low": 2}, r
+
+
+@needs_image
+def test_ot_dp_lk_gold_against_missing_latch_is_not_equivalent(tmp_path):
+    """MISSING LATCH: the golden has the ot_dp_lk latch, the netlist has a buffer -> NOT EQUIVALENT (not UNPROVEN)."""
+    rc, r = _run(_kit(tmp_path, "DROP", RTL_DPLK))
+    assert rc == 1 and r["verdict"] == "NOT EQUIVALENT" and "latch phase" in r["reason"], r

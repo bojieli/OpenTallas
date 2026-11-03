@@ -114,9 +114,11 @@ def validation_bootstrap(face_text):
     Reuse the generated kit's exact traversal definitions; do not source its
     mutating face-placement hook to obtain these helpers.
     """
-    names = ('ff_slot_of', 'ff_is_ff', 'ff_is_latch', 'ff_is_buf', 'ff_sig_iterms',
-             'ff_from_in', 'ff_chain_out', 'ff_from_out', 'ff_in_ring',
-             'ff_lands_ring', 'ff_d_driver', 'ff_landed_stations')
+    # face-latch helpers (LATCH-FACE / FLOW-LATCH-1) exist only in kits generated after 11-03: copied when present
+    latch = ('ff_is_latch', 'ff_pin_net', 'ff_clk_root', 'ff_latch_ok')
+    names = ('ff_slot_of', 'ff_is_ff') + tuple(n for n in latch if re.search(r'^proc ' + n + r'\s', face_text, re.M)) + \
+        ('ff_is_buf', 'ff_sig_iterms', 'ff_from_in', 'ff_chain_out', 'ff_from_out', 'ff_in_ring',
+         'ff_lands_ring', 'ff_d_driver', 'ff_landed_stations')
     start = face_text.find('set ff_blk [ord::get_db_block]')
     end = face_text.find('proc ff_slot_of ')
     if start < 0 or end <= start:

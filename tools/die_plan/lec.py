@@ -100,7 +100,10 @@ ICG_CELLS = re.compile(r"^ICGx(1|2|2p67DC|3|4|4DC|5|5p33DC|6p67DC|8DC)_ASAP7_75t
 # transparent-low (DLL, latch : enable "!CLK") and transparent-high (DHL, enable "CLK") latches: lockup / face
 # latches, modelled phase-aware by latch_to_wire + latch_phase_diff (OT_LEC_LATCH=0 refuses)
 LOCKUP_CELLS = re.compile(r"^D[LH]Lx(1|2|3)_ASAP7_75t_(R|L|SL)$")
-RTL_LATCH = re.compile(r"\balways_latch\b|\bD[LH]Lx[123]_ASAP7_75t_")   # gold latches: latch mode on both sides
+# gold latches (latch mode on both sides): always_latch, ASAP7 latch cells, the gen_rtl TX-face ot_dp_lk and the
+# Verilog-2001 form `always @(*) if (!clk) q = d;` (FLOW-LATCH-1: ot_dp_lk is written that way since 867e693fa67)
+RTL_LATCH = re.compile(r"\balways_latch\b|\bD[LH]Lx[123]_ASAP7_75t_|\bot_dp_lk\b"
+                       r"|\balways\s*@\s*(?:\*|\(\s*\*\s*\))\s*if\s*\(\s*!?\s*\w*clk\w*\s*\)")
 TYPE_SFX = re.compile(r"\$_[A-Z]+(?:_[A-Z0-9]+)?_$")
 IDX = re.compile(r"^(.*?)((?:\[\d+\])+)$")
 GENBLK = re.compile(r"(?<![^.])genblk\d+\.")
