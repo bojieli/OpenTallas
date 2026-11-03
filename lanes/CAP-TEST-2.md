@@ -1,0 +1,4 @@
+# CAP-TEST-2 (fresh successor of CAP-TEST-1, COORD 11-03 03:2x)
+2026-11-03 03:28 PST START. Collected CAP-TEST-1 units: (A) intel1 /srv/opentallas-scratch2/claude/cap-test-1 baseline probe (admitted 00:47, container cap-test-1-217447) LIVE; (B) epyc2 /home/ubuntu/scratch-root/claude/cap-test-1 duplicate baseline (admitted 03:18).
+  Finding 1: baseline sits in 2_1_floorplan repair_timing (WLM, no parasitics; kit TNS_END_PERCENT=100, 2326 violating endpoints, WNS stuck -365 ps): ~680 iterations in 2.6 h, ~14 s/iter, extrapolates ~9 h for the floorplan stage alone. Peak RSS ~2.9 GB. So the first wall at 578k is runtime of the TNS-100 floorplan repair, not memory.
+  Changed: stopped my own duplicate B (6 min in, floorplan); relaunched B as variant probe_b.sh = same flow but floorplan TNS_END_PERCENT=5 (all later stages unchanged) to measure place/CTS/GRT/route at 578k. Waiting on epyc2 load cap (244/192). A kept as baseline.
