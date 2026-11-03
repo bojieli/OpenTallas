@@ -123,3 +123,13 @@ Elapsed time: 9:18.40[h:]min:sec. CPU time: user 1246.29 sys 6.36 (224%). Peak m
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hbm_su_static_sfustore_hw/base/5_1_grt.odb] Error 2
  | kit localhost:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_su_static_sfustore_hw/attempt_5/gen/ot_hbm_su_static_sfustore_hw_f1be0a26f8e1 src claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-03 10:32:43 PST AUTOPILOT -> KIT-WAVE-3: FAILED 642a6e29bd87 hbm/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap (CRASH/flow-error): x the clock, not the hold)
+Elapsed time: 13:30.85[h:]min:sec. CPU time: user 2947.14 sys 40.64 (368%). Peak memory: 4742432KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__idpin__strap/base/5_1_grt.odb] Error 2
+ | kit epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap/attempt_2/gen/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_b05ff385dffe src claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-03 10:32:46 PST AUTOPILOT -> KIT-WAVE-3: FAILED eb967cc6fcd6 hbm/ot_hbm_su_static_cxport_ij_q (CRASH/flow-error): off band FAIL; fix the clock, not the hold)
+Elapsed time: 21:54.91[h:]min:sec. CPU time: user 3424.11 sys 29.38 (262%). Peak memory: 2530148KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hbm_su_static_cxport_ij_q/base/5_1_grt.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_su_static_cxport_ij_q/attempt_3/gen/ot_hbm_su_static_cxport_ij_q_2430134e0693 src claude/kit-wave-15-hbmtaps-rfh-1102@53d3ca14368 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
