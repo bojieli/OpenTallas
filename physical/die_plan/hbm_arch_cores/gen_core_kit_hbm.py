@@ -697,6 +697,24 @@ HARD_CORE_LATENCY_CONTRACT = dict(
     measured_in="KIT/signoff/signoff.json core_latency; views <module>.core.json; <module>_tt.lib max_clock_tree_path")
 
 
+MEASURED_HOLD_FLAG = "override export OT_MM_MEASURED_HOLD = 1"   # tools/die_plan/kit_modes.MEASURED_FLAG
+
+
+def drop_measured_hold(kd):
+    """hard_core_latency kits use the 'bound-ff' FF reference (vclk_ref), and the measured-FF two-mode hold reference is
+    for 'rebind' kits only (kit_modes.stage_measured_hold; sdc_lint.measured_frame_errors fails closed otherwise).  The
+    two-mode staging runs before core.json is written, so remove the opt-in line it added -> the kit keeps the bound-ff
+    hold reference, as KV/S81 contract kits do.  Returns True when the line was present."""
+    cfg = Path(kd) / "config.mk"
+    if not cfg.is_file():
+        return False
+    lines = cfg.read_text().splitlines(keepends=True)
+    keep = [ln for ln in lines if ln.strip() != MEASURED_HOLD_FLAG]
+    if len(keep) != len(lines):
+        cfg.write_text("".join(keep))
+    return len(keep) != len(lines)
+
+
 def write_boundary_context(kd, clks, rsts, hard_core_latency=False):
     """COORD 10-30 15:27 (HBM-CORES-KITS-28 ASK rst_col, default A): the typed boundary control declaration every
     other core generator writes (KV gen_core_kit_kv.write_core_contract form): KIT/core.json boundary_role
@@ -731,9 +749,10 @@ def retrofit_boundary_context(kd, hard_core_latency=False):
         raise SystemExit(f"{kd}: not an HBM core kit freeze.json")
     rep = write_boundary_context(kd, fz.get("clocks") or [], fz.get("resets") or [], hard_core_latency)
     if hard_core_latency:   # ledger (KV retrofit_contract.py form): declaration only, no RTL/SDC/netlist change
+        rep["measured_hold_dropped"] = drop_measured_hold(kd)
         (Path(kd) / "contract_retrofit.json").write_text(json.dumps(dict(
             tool="gen_core_kit_hbm --retrofit-boundary --hard-core-latency (DIE-HBM-60/CORES CLK-BAND)",
-            clock_contract=HARD_CORE_LATENCY_CONTRACT, **rep), indent=1) + "\n")
+            clock_contract=HARD_CORE_LATENCY_CONTRACT, hold_reference="bound-ff", **rep), indent=1) + "\n")
     return rep
 
 
@@ -2122,6 +2141,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     from kit_runtime_assets import stage as stage_runtime_assets
     runtime_files = stage_runtime_assets(kd, REPO, rec.get("runtime_files"))
     write_boundary_context(kd, clks, rsts, a.hard_core_latency)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
+    if a.hard_core_latency:
+        flow["timing_modes"]["measured_hold_dropped"] = drop_measured_hold(kd)   # bound-ff kit (see drop_measured_hold)
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               canonical_type=v.get("canonical_type"), wrapper=wrap_rep, outline_um=[w, h],

@@ -51,3 +51,16 @@ def test_retrofit_ledger(tmp_path):
     led = json.loads((kd / "contract_retrofit.json").read_text())
     assert led["clock_contract"]["kind"] == "hard_core_latency" and led["clock_ports"] == ["clk"]
     assert json.loads((kd / "core.json").read_text())["clock_contract"] == led["clock_contract"]
+
+
+def test_retrofit_drops_measured_hold(tmp_path):
+    kd = tmp_path / "d"
+    kd.mkdir()
+    (kd / "freeze.json").write_text(json.dumps(dict(schema="opentallas.hbm_arch.core_freeze.v1", clocks=["clk"],
+                                                     resets=["rst_n"])))
+    (kd / "config.mk").write_text("export A = 1\n" + coregen.MEASURED_HOLD_FLAG + "\nexport B = 2\n")
+    rep = coregen.retrofit_boundary_context(kd, True)
+    assert rep["measured_hold_dropped"] and "OT_MM_MEASURED_HOLD" not in (kd / "config.mk").read_text()
+    assert (kd / "config.mk").read_text() == "export A = 1\nexport B = 2\n"
+    led = json.loads((kd / "contract_retrofit.json").read_text())
+    assert led["hold_reference"] == "bound-ff" and led["measured_hold_dropped"] is True
