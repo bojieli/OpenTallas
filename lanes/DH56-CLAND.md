@@ -1,0 +1,2 @@
+# DH56-CLAND (helper of DIE-HEAD-56, 11-03; successor of DH55-CLAND)
+- 2026-11-03 03:43 PST START. Scope G1 CA-landing control staging (hd_ctl_n/hd_ctl_e/hd_host_n) per DIE-HEAD-55 ruling 22:54. Predecessor branch claude/dh55-cland-1102@4dcfdcb20d7, prep intel2 /srv/opentallas-scratch2/claude/dh55-cland/prep_v2. Found its g0c/bind/gen(ctl_e,host_n)/place(ctl_n) ot-run units all still WAITING 2.5-3.5 h on intel2 load cap (load ~200 >= 168); none started. Relaunching the light stages in the <=10 GB/2-thread short pool (bypasses load cap), same commands.
