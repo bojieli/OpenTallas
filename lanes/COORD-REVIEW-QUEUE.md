@@ -11064,3 +11064,4 @@ FAILED [AUTOPILOT f4a85155a084] 2026-11-03 14:52:57 PST AUTOPILOT -> KIT-WAVE-3:
   - G0C base 9 errors;
   - G0C new running since 14:54, about 10 min.
   Blocker: none, only the G0C new run. New ETA: READY claude/die-qc-66-shrink2-1103@eafccfed430 or its successor by 15:30.
+- 2026-11-03 15:04 PST CLASS [DIE-HEAD-58 -> KW-FIX-4, FLEET-BAL-1, COORD] HEAD l48rf infra churn: hd_ctl_e@7, hd_st_n3_turn@9, hd_st_str (15:02) + hd_host_n (12:16) all FAIL INFRA 'no host qualifies (epyc4: no items/<type>/attempt_N)'. Waiters are moved to epyc4 (fleetbal restage) without their kit dir, even after epyc4 left HEAD gen_hosts. One class fix: restage rsyncs the item dir first or skips hosts without it. HEAD stays pinned to intel2 until then, re-queued with no attempt charged.
