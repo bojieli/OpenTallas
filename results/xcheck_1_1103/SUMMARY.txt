@@ -1,0 +1,18 @@
+XCHECK-1 11-03 (report only, OWNER: never blocks). main 08542fa9d7d. Tools: OpenSTA 3.1 in openroad/orfs:asap7lock (epyc2 docker, 4g cap).
+(1) Registered-face link probe: face DFFHQNx1 RVT -> PHY lib pin (TX), PHY out -> face DFF (RX); TT setup L=30um, FF hold L=3um;
+    setup unc 60, hold unc 25, late data derate cell 1.10 / net 1.05, ideal common clock. Off-die part lives inside the PHY model.
+    setup: all PHYs +605..+687 ps. FF hold TX->PHY: assumed-boundary PHYs (hbm3e rc/v41x, qfd serdes/ucie, qkvd ucie, ucie pma) -11.4 ps;
+    ot_pdie_serdes (S81 serdes__t*, HEAD hd_serdes via ot_s81hd_serdes_link, HBM *_io) -30.1 ps (lib hold 65 ps FF). RX side +58/+136 ps.
+    Safe form: negative-level lockup latch (DLLx1) at the TX face: FF hold +372 (pdie_serdes) / +390 (hbm3e), TT setup +233 / +208.
+    min_period: ot_hbm3e_phy_* abstracts carry min_period 900 ps (hbm_phy_gen.py the die clock 1087 MHz) vs 833 -> -67 ps VIOLATED on
+    u_phy/clk (S81 phy__t1 v41x_aw30_e8p5; HBM PHY_NW/NC/NE rc_e8p5 slices; KV qkd_hbm3e_phy_pc4 if same generator). UCIe/serdes 800/666.7 OK.
+(2) PG: infra_pg.py size at 1 W/mm2 core, 150-um bumps: core IR KV 106.6, S81 102.8, QC 99.4, HBM 57.9, HEAD 50.5 mV per W/mm2 (densest grid,
+    so headroom below is an upper bound). Headroom to 35 mV from measured IR (HEAD 28.2, S81 21.2, KV 32.5, HBM 17.6, QC 32.24):
+    S81 0.134, HEAD 0.135, KV 0.023, QC 0.028, HBM 0.30 W/mm2. Face bit (flop+latch+clock share) ~3.75 uW at 1.2 GHz (flop 1.52, latch 0.73 uW TT a=0.1).
+    HBM RF1 (reform_v4, 34 cores): <=1.31M face bits (+4.4% of 29.9M sinks) -> ~4.9 W, +0.0093 W/mm2, ~+0.5 mV uniform: PASS.
+(3) Area (slot / bay / channel vs outline; bay = station-like types by name):
+{"die": "hbm_arch_B2o", "outline_um": [28399.68, 18541.44], "die_mm2": 526.57, "slot_mm2": 526.57, "bay_mm2": 0.0, "chan_mm2": 0.0, "slot_pct": 100.0, "bay_pct": 0.0, "chan_pct": 0.0, "core_slot_mm2": 277.3, "n": {"slot": 90}, "bbox_inside": true, "reticle_858_margin_mm2": 331.4, "reform": {"rows": 34, "core_slot_delta_mm2": -2.
+{"die": "s81", "outline_um": [31950.72, 24744.96], "die_mm2": 790.62, "slot_mm2": 690.39, "bay_mm2": 81.43, "chan_mm2": 18.79, "slot_pct": 87.3, "bay_pct": 10.3, "chan_pct": 2.4, "core_slot_mm2": 276.75, "n": {"slot": 352, "bay": 46}, "bbox_inside": true, "reticle_858_margin_mm2": 67.4}
+{"die": "s81_head", "outline_um": [17521.92, 17556.48], "die_mm2": 307.62, "slot_mm2": 269.54, "bay_mm2": 23.77, "chan_mm2": 14.31, "slot_pct": 87.6, "bay_pct": 7.7, "chan_pct": 4.7, "core_slot_mm2": 130.05, "n": {"slot": 291, "bay": 35}, "bbox_inside": true, "reticle_858_margin_mm2": 550.4}
+{"die": "qwen_compute", "outline_um": [31216.32, 26265.6], "die_mm2": 819.92, "slot_mm2": 771.08, "bay_mm2": 29.85, "chan_mm2": 18.98, "slot_pct": 94.0, "bay_pct": 3.6, "chan_pct": 2.3, "core_slot_mm2": 424.6, "n": {"slot": 341, "bay": 36}, "bbox_inside": true, "reticle_858_margin_mm2": 38.1}
+{"die": "qwen_kvsys", "outline_um": [11076.48, 27043.2], "die_mm2": 299.54, "slot_mm2": 299.54, "bay_mm2": 0.0, "chan_mm2": 0.0, "slot_pct": 100.0, "bay_pct": 0.0, "chan_pct": 0.0, "core_slot_mm2": 93.03, "n": {"slot": 160}, "bbox_inside": true, "reticle_858_margin_mm2": 558.5}
