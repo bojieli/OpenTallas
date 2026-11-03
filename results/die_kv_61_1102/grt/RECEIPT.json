@@ -135,5 +135,54 @@
   "start_stages": 1528,
   "start_flops": 10530,
   "rtobs_54c3c7c9f_plan_42b00c722765": "kit byte-identical (clock/*, grt/*, abstracts/); only kit.json differs"
+ },
+ "vA_no_tap_pad": {
+  "TT": {
+   "exit": "0",
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0,
+   "wirelength_um": 282598567,
+   "congestion_iterations": 50
+  },
+  "FF": {
+   "exit": "0",
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0,
+   "wirelength_um": 282598567,
+   "congestion_iterations": 50
+  },
+  "die_sta": {
+   "tt_setup_ps": 399.7,
+   "ff_hold_ps": null,
+   "hold_min_ps": 0.0,
+   "contract_violations": 0,
+   "skew_max_ps": 1062.2,
+   "reasons": [
+    "47006 hold pairs without signed real views (OWNER 12.19)"
+   ],
+   "verdict": "BLOCKED(kits)",
+   "intra_need_ps": 65.43,
+   "seam_need_ps": 84.01,
+   "count_aligned": {
+    "FF": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 3595,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    },
+    "TT": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 3595,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    }
+   }
+  }
  }
 }
