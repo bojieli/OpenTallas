@@ -144,7 +144,7 @@ GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be P
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
-            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
+            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2", "epyc4"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
             # KW-RESUME-1 (OWNER 11-01 19:5x / COORD 20:0x default-on): a relaunch reuses the previous attempt's ORFS
             # steps up to the first step whose input fingerprint changed (kit_resume.py); die/global false opts out
@@ -991,7 +991,8 @@ def core_kit_cmds(ck, src, plan, root, work, item):
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
-    return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"], "gen_host": d["gen_host"],
+    return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"],
+            "gen_host": pick_gen_host(cfg, die, take=int(opt(cfg, die, "place_mem_gb"))),
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
             # AUTOBUILD-PIPE-2: per-die hard-core generator (HBM gen_core_kit_hbm.py); kind=core items use it instead
@@ -1013,9 +1014,102 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
+            "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN,
             "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))}
+
+
+def host_score(v):
+    """ot-run --status row -> preference (higher first): free admits, discounted 4x on a host already >= 0.9 x cores"""
+    if not v:
+        return -1e9
+    busy = float(v.get("load", 0)) >= 0.9 * max(1, int(v.get("cores") or 1))
+    return float(v.get("admit", 0)) * (0.25 if busy else 1.0)
+
+
+def gen_hosts(cfg, die):
+    """KW-FIX-4 11-03 (COORD epyc4 fill): die option gen_hosts = hosts that hold the die's src/plan/kit_rtl inputs at
+    the SAME paths; a new attempt generates, stages and (async) PLACEs on the one with the most free ot-run admits, so
+    a fresh host fills instead of every kit pinning to the one configured gen host.  Default: [gen_host] (unchanged)."""
+    d = cfg["dies"][die]
+    hs = [h for h in (d.get("gen_hosts") or []) if h]
+    return hs if d.get("gen_host") in hs else [d["gen_host"]] + hs
+
+
+def pick_gen_host(cfg, die, take=0):
+    """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
+    GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used"""
+    hs, stt, hub = gen_hosts(cfg, die), cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    if len(hs) < 2 or not stt:
+        return cfg["dies"][die]["gen_host"]
+    key = lambda h: stt.get("localhost" if h == hub else h)
+    best = max(hs, key=lambda h: (host_score(key(h)), -hs.index(h)))
+    if key(best) is not None and take:
+        key(best)["admit"] = key(best).get("admit", 0) - take
+    return best
+
+
+def restage_waiters(AP, cfg, st, notices):
+    """KW-FIX-4 11-03 (COORD: not-yet-started waiters may be restaged to epyc4): a RUNNING attempt of a die with
+    gen_hosts whose current ot-run stage still WAITS for admission (volume_started False) on a gen host other than the
+    best one, while the best host admits >= 2 x place_mem_gb at load < 0.7 x cores, is stopped (unit + detached PLACE
+    client, exact unit names) and marked RETRY-INFRA: the INFRA relaunch path starts it again this tick on the best
+    host (a never-admitted wait is not a design result).  Also an async PLACE client started PINNED (--hosts G, before
+    place_spill) that still waits: relaunched it can SPILL.  At most restage_max_per_tick (60); die restage_waiters
+    false opts out."""
+    stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    cap, n = int(cfg.get("restage_max_per_tick", 60)), 0
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or d.get("restage_waiters") is False:
+            continue
+        multi = len(gen_hosts(cfg, die)) >= 2 and bool(stt)
+        spill = opt(cfg, die, "place_spill") is not False
+        mem = int(opt(cfg, die, "place_mem_gb"))
+        for r in (st.get("items") or {}).values():
+            if n >= cap:
+                return n
+            if r.get("die") != die or r.get("status") != "RUNNING" or not r.get("unit"):
+                continue
+            # only an attempt the INFRA path WILL relaunch this tick (budget left, raw block identity)
+            if (infra_used(r) >= infra_attempts(cfg, die) or (d.get("block_identity", "raw") != "raw")
+                    or stop_reason(cfg, die, cfg.get("_ap_dir"))):
+                continue
+            try:
+                g = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("gen_host")
+            except (OSError, ValueError, KeyError):
+                continue
+            try:
+                svc0 = json.loads((Path(r["dir"]) / "place_service.json").read_text())
+            except (OSError, ValueError):
+                svc0 = {}
+            why, best, v = "", g, {}
+            if multi:
+                best = pick_gen_host(cfg, die)
+                v = stt.get("localhost" if best == hub else best) or {}
+                if not (best == g or v.get("admit", 0) < 2 * mem
+                        or float(v.get("load", 0)) >= 0.7 * max(1, int(v.get("cores") or 1))):
+                    why = f"{g} -> {best}"
+            # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
+            if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
+                why, best = f"pinned async PLACE waiter on {g} -> spillable PLACE", g
+            if not why or volume_started(r):
+                continue
+            if not AP.DRY:
+                AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
+                try:
+                    svc = json.loads((Path(r["dir"]) / "place_service.json").read_text())
+                    AP.sh(["systemctl", "--user", "stop", svc["unit"]], timeout=180)
+                except (OSError, ValueError, KeyError):
+                    pass
+            if v:
+                v["admit"] = v.get("admit", 0) - mem
+            r.update(status="RETRY-INFRA", **{"class": "INFRA"}, updated=time.time(),
+                     reason=f"restaged: unstarted ot-run waiter ({why}) (KW-FIX-4)")
+            notices.setdefault(die, []).append(f"{r['item']} unstarted waiter RESTAGED ({why})")
+            AP.log(f"KIT-WAVE RESTAGE {die}/{r['item']} unit {r['unit']} ({why})")
+            n += 1
+    return n
 
 
 def near_count_hit(near, die, *names):
@@ -1250,7 +1344,17 @@ def run_item(spec_path):
         """launch (once per attempt: the descriptor is saved before systemd-run) and wait"""
         if svc_file.exists():
             return place_wait(json.loads(svc_file.read_text()))
-        argv = otrun(m, t, K, f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}", [G])
+        cmd = f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}"
+        if sp.get("place_spill", True):
+            # KW-FIX-4 11-03 (ONBOARD-1 ask, COORD approved): no --hosts pin (a pin disables ot-run SPILL / LOAD SPILL /
+            # RE-PLACE); --stage = the kit dir + its runner, so a waiter the gen host cannot admit (or that would
+            # overload it) is copied to a host that admits it NOW (epyc4), runs there and copies every written file
+            # back before the client exits.  The receipt then appears on G only at the client's end (KW_PLACE_RC
+            # wins), so the kit on G stays the one authoritative copy.  Die option place_spill false = the old pin.
+            argv = ([sp["ot_run"], "--mem", str(m), "--threads", str(t), "--dir", K, "--stage", K, "--stage", prun]
+                    + crit_args(sp) + ["--", "bash", "-c", cmd])
+        else:
+            argv = otrun(m, t, K, cmd, [G])
         unit = "kwp-" + hashlib.sha256(str(out.resolve()).encode()).hexdigest()[:20]
         svc = {"schema": "opentallas.kw_place_service.v1", "unit": unit, "argv": argv, "kit": K, "host": G,
                "started": time.time(), "log": str(out / "place.live.log"), "launch": "prepared"}
@@ -2280,6 +2384,10 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
+    status = parse_otrun_status(out if rc == 0 else "")
+    cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
+    restage_waiters(AP, cfg, st, notices)
     stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
     nl = 0                                               # items launched this tick: start delay nl * stagger
     if not scheduler_current(AP):                        # code changed during collect: launch on the current code now
@@ -2298,8 +2406,6 @@ def _step(AP, ap_dir):
                                               "replicas": rec.get("replicas")}, AP.HUB_NAME, delay_s=nl * stagger)
             nl += 1
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
-    rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
-    status = parse_otrun_status(out if rc == 0 else "")
     _, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
     for die, r in todo:
         rec = launch(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)
