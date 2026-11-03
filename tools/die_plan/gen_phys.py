@@ -3571,6 +3571,10 @@ RUN_KIT = r"""#!/bin/bash
 # Gate exit codes (classify by the FAIL_PREFLOOR / FAIL_POSTCTS marker text): 3 selrange, 4 FF structural hold gate,
 # 5 LEC NOT EQUIVALENT, 6 pre-route insertion gate (FLOW 10-25), 7 reg_fanout (FLOW-CANARY 10-25: register > 64 data
 # loads on the Yosys netlist = replicas merged by Yosys); other non-zero = sdc_lint / face_guard / flow step rc.
+# KW-FIX-4 11-03 (COORD 12:01): an OpenROAD crash in the GRT-RC tap pre-pass (tapbal_grt.tcl; 'Signal N received', e.g.
+# the SIGABRT in sta::RequiredCmp::requiredSet on HEAD hd_st_str / hd_st_n3_transit) is a tool failure, not a design
+# verdict: 4_cts.odb is restored from the pre-pass copy and the kit takes the plain GRT path (OT_TAPBAL_FALLBACK line,
+# tapbal_fallback.log).  'export OT_TAPBAL_FALLBACK = 0' in config.mk keeps the old FAIL_POSTCTS stop.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
 if [ -f "$K/signed_parent_source.json" ]; then
@@ -3687,7 +3691,12 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
-    if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
+    if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then TB=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); [ -z \"\$TB\" ] || cp -p \"\$TB\" /work/4_cts_pretapbal.odb; \
+      \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
+      TL=\$(ls /work/run/logs/asap7/*/base/4_2_tapbal_grt.log 2>/dev/null | head -1); \
+      if [ \$rc != 0 ] && [ -n \"\$TB\" ] && [ -f /work/4_cts_pretapbal.odb ] && [ -n \"\$TL\" ] && ! grep -q '^export OT_TAPBAL_FALLBACK = 0' /work/config.mk && grep -Eq 'Signal [0-9]+ received' \"\$TL\"; then \
+        mv -f /work/4_cts_pretapbal.odb \"\$TB\"; echo \"OT_TAPBAL_FALLBACK tapbal_grt.tcl tool crash (rc \$rc: \$(grep -Em1 'Signal [0-9]+ received' \"\$TL\"); \$(grep -Eom1 'sta::[A-Za-z_]+::[A-Za-z_]+' \"\$TL\" | head -1)): 4_cts.odb restored to the CTS result, plain GRT path (no GRT-RC tap pre-pass; crash log kept as /work/4_2_tapbal_grt_crash.log)\" | tee -a /work/tapbal_fallback.log; mv -f \"\$TL\" /work/4_2_tapbal_grt_crash.log; rc=0; fi; \
+      rm -f /work/4_cts_pretapbal.odb; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
