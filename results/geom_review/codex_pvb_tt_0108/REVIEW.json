@@ -1,0 +1,14 @@
+{
+  "review": "LOOKED",
+  "source": "intel2:/srv/opentallas-scratch2/claude/die-kv-60/pvq/pvB_p3W",
+  "proposal": "ONE normal t10 targeted TT data repair, from route; no hold repair, fanout target0, one pass",
+  "images": {
+    "final_placement.webp": "f07bf8d8325c07c0021a20399b182cf119d14fe58d156fd7c04ccc72086a11ee",
+    "final_worst_path.webp": "0e300057aceea0c91e7f18a2ef10af2d886bec00e4c84c3a459b44445812b378",
+    "final_routing.webp": "36d083a335be09f8c74ccfbbbedd9fd63fc258c3f639d6d25005678920ba17a9"
+  },
+  "findings": "Actual placement/routing/worst path reviewed. Dense interior and edge face flops, no macros, open NE/SE bays for small buffer/resize changes. No outline or pin move. Original DRC0; old NOTSIGNED retained.",
+  "source_flow": "d0418b5a0",
+  "limits": "16GB8T admitted; count16GB4T; disk10GB",
+  "image_root": "/home/ubuntu/coord/tmp/codex-pvb-tt-0108"
+}

@@ -1,0 +1,114 @@
+{
+ "kit": {
+  "schema": "opentallas.kv.core_freeze.v1",
+  "type": "ot_qwen_tp8_pv_join_t__172.8x172.8",
+  "module": "ot_qwen_tp8_pv_join_t",
+  "outline_um": [
+   172.8,
+   172.8
+  ],
+  "plan_sha256": "8c8536a8adeb65eca25354efbb1b67fa1155977b1f9a5cc43444e7193daf9867",
+  "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
+  "pins_sha256": "5ebb1b850396674a30f209573071613aed5fd5083b8c65598f254f9adcc6ea7f",
+  "core_json_sha256": "a793002ea6f2df0452c10c88e841ac31d8863b34a02c8f09b9d2d75de8f40608",
+  "pins": 4621,
+  "plan_pins": 4621,
+  "added_pins": 0,
+  "clocks": [
+   "clk"
+  ],
+  "clock_nets": {
+   "clk": "clk[0]"
+  },
+  "clock_rebind": null,
+  "resets": [
+   "rst_n"
+  ],
+  "recipe": {
+   "util": 0.6,
+   "sigmax": "M5",
+   "face_flops": true
+  },
+  "sdc_lint": "PASS (gen)",
+  "period_ps": 833.0,
+  "insertion_budget_ps": 250.0,
+  "macros": [],
+  "signal_max": "M5",
+  "flow_basis": "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20 + mcmm tc/bc",
+  "head_lane_taps": false,
+  "head_strap_master": false,
+  "head_lane_s3copy": false,
+  "plan_inst": "kv3_pv.pv__u_g0_j",
+  "island_ft": [],
+  "kit_hash": "0bfead9a104a4bb2",
+  "pins_canon_sha256": "198171b2ba27503c93336c297b7292122d3871ce3a43191e955479d851b40727",
+  "source_commit": "e8cbe5f6c704931d26fe9a4c547aa93a74977981",
+  "reset_contract": {
+   "edges": 16,
+   "module": "ot_qwen_tp8_pv_join_t",
+   "die": "kv",
+   "contract": "/srv/opentallas-scratch2/claude/wt/kit-wave-12e-kv/physical/die_plan/qwen_kvsys/reset_contract.json",
+   "contract_sha256": "bd85f6760caf51077074c898907926d12273a6c3152a5dfe4a5ee628cb12acc6",
+   "receipt_sha256": "d7e6ead61764cba9357e416dbd370f6681feaae1dfa07ea670c76c0d0e026001"
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80",
+ "src_commit": "e8cbe5f6c704931d26fe9a4c547aa93a74977981",
+ "flow_tag": null,
+ "autopilot_id": null,
+ "child_clock_witness": {
+  "status": "RETAINED",
+  "path": "child_clock_witness.json",
+  "sha256": "d5574c23667c13385baf30edbdb4b33596c67102d36d14e4901e712db8482b9c",
+  "qualification": "NOT_ASSERTED",
+  "hierarchical_expansion": "NOT_ASSERTED",
+  "view_lib_sha256": {
+   "tt": "181587882b5c130b04d71077d821d899f8b777ead1c5b4a988c8160235a433a4",
+   "ff": "eecfca9d0c6938f2ed9d4b73bca62dba49c4891844d6bc4f415bb73cb2651dd8"
+  }
+ },
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-02T03:51:55-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80",
+  "base": "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80/run/results/asap7/hc_ot_qwen_tp8_pv_join_t__172_8x172_8/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80/clock_witness_signoff/signoff.json",
+  "signoff_sha256": "88c72f6f00d7f1deac6da4c017032959a7d69272e10db914da6a43614597aadf",
+  "signoff_generated": "2026-11-02T03:43:28-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80/run/results/asap7/hc_ot_qwen_tp8_pv_join_t__172_8x172_8/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80/lec_own_final_w80/lec.json",
+  "note": "Actual w80 final mapped proof and exact separately measured native clock witness; common A/B core source; no parent expansion or flow release tag asserted",
+  "lib_basis": null,
+  "files_sha256": {
+   "child_clock_witness.json": "d5574c23667c13385baf30edbdb4b33596c67102d36d14e4901e712db8482b9c",
+   "ff/child_clock_ff_clocks.tsv": "df496c424ae420091deebf716ce69a25ead9245823fa0ce4621515a95e789e0a",
+   "ff/child_clock_ff_counts.tsv": "9e0c0c1ec7190bb001f47af469b1dc40078e0af9e34b58443b13e7c0002516bf",
+   "ff/child_clock_ff_endpoints.tsv": "afeae60169a3c6e768809d9a1693019442da2e67b79d240cbc6cc38b3a85651f",
+   "ff/child_clock_ff_inputs.tsv": "4a427b9c62b707b120529ee8371f15a1124eb522e7e523316ce1f002f9cbcb78",
+   "ff/child_clock_ff_masters.tsv": "109dc50ea18a2ccbc178f5de2b2a2572c6ddd1ed6530e1b43846f8cd31a2c29b",
+   "ff/child_clock_ff_pairs.tsv": "e3640798040689e1c77a0157e29ae81ab960a3ea001a7a314f2579cfc9552968",
+   "ff/child_clock_ff_roots.tsv": "dedeaea817045a8fa0acf32a5886f801b20cf72d635728ae3f8b6de0f38cf3cf",
+   "ff/libraries.json": "467e7afbfcfbb5377dbde709688331c7cbfff111b0211c29f8f67ce76e0020f0",
+   "ff/sdcdir/golden.sdc": "975c9cd133bd3f980ff6d20703f504758bebbc5bced9d3f2b9b4293d017fcdfd",
+   "ff/session.tcl": "7b9772829f53e6f088e6246a708d13a01e8341407d6019eeea6d1821b74485c1",
+   "ot_qwen_tp8_pv_join_t.lef": "b06197b3422969cc396b4d00ba2b9bfd24da51938b0cf6e629a3b90a098d9072",
+   "ot_qwen_tp8_pv_join_t_ff.lib": "eecfca9d0c6938f2ed9d4b73bca62dba49c4891844d6bc4f415bb73cb2651dd8",
+   "ot_qwen_tp8_pv_join_t_tt.lib": "181587882b5c130b04d71077d821d899f8b777ead1c5b4a988c8160235a433a4",
+   "pins.json": "a8e7071cf38dac446ea1fed6f75d081378b3244693e9a565bdb46b6f6e5b6359",
+   "tt/child_clock_tt_clocks.tsv": "df496c424ae420091deebf716ce69a25ead9245823fa0ce4621515a95e789e0a",
+   "tt/child_clock_tt_counts.tsv": "9e0c0c1ec7190bb001f47af469b1dc40078e0af9e34b58443b13e7c0002516bf",
+   "tt/child_clock_tt_endpoints.tsv": "ff95953c46f72475ae0d51f2441d3becb8aef92a60a51a7c4d32a5fd1e730dc6",
+   "tt/child_clock_tt_inputs.tsv": "6604ca1ada25718360a27d9b03abe8aacbc40a83869c85e828ea58298165e191",
+   "tt/child_clock_tt_masters.tsv": "109dc50ea18a2ccbc178f5de2b2a2572c6ddd1ed6530e1b43846f8cd31a2c29b",
+   "tt/child_clock_tt_pairs.tsv": "7c8b5572617dc8d635b7d9884f20353b7f715eefa31cc4ae871063d9c23a62c9",
+   "tt/child_clock_tt_roots.tsv": "dedeaea817045a8fa0acf32a5886f801b20cf72d635728ae3f8b6de0f38cf3cf",
+   "tt/libraries.json": "ac3e9cbcd3e3b911767eb075c9d84837fe6a57d7443b023c261e5751aa132b43",
+   "tt/sdcdir/golden.sdc": "975c9cd133bd3f980ff6d20703f504758bebbc5bced9d3f2b9b4293d017fcdfd",
+   "tt/session.tcl": "2d0fd7fab3b5ba80b82c042711395bd72b25387fc9adb71335955a803689064c"
+  }
+ }
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "mem": 8,
+    "threads": 2,
+    "count_mem": "8",
+    "count_threads": "2",
+    "verdict": "PASS"
+  },
+  {
+    "mem": 16,
+    "threads": 8,
+    "count_mem": "16",
+    "count_threads": "4",
+    "verdict": "PASS"
+  },
+  {
+    "mem": 32,
+    "threads": 16,
+    "count_mem": "24",
+    "count_threads": "4",
+    "verdict": "PASS"
+  },
+  {
+    "mem": 16.5,
+    "threads": 8,
+    "count_mem": "16.5",
+    "count_threads": "4",
+    "verdict": "PASS"
+  }
+]

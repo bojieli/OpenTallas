@@ -1,0 +1,31 @@
+{
+  "verdict": "LOOKED_PASS_FOR_ONE_WIRE_SEGMENTATION_CASE",
+  "actual_geometry_image": "results/geom_review/codex_pvb_tt_residual_0210/actual_six_net_routes.png",
+  "source": "epyc2:/srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10",
+  "source_result": "NOTSIGNED TT+51.18 FF+10.39 slew6/2 cap0 DRC0 clock geometry unchanged",
+  "measured_route_lengths_um": [
+    198.276,
+    171.363,
+    204.78,
+    131.316,
+    123.282,
+    179.262
+  ],
+  "review": "Personally LOOKED actual final DEF six-net routes. Each residual is a long data route across the172.8um square. Two max-size BUFx16f single-load nets remain198/205um. Apply normal resizer wire segmentation at80um to the targeted TT failing nets; native resizer/legalizer selects legal sites, retain all clock freeze and sink-master guards. No predetermined invented sites. This changes the cause measured in geometry rather than slew-margin settings.",
+  "typed_mode": {
+    "variant": "t10",
+    "from": "route",
+    "targeted": 1,
+    "max_wire_length_um": 80,
+    "max_fanout": 0,
+    "hold_repair": false,
+    "max_pass": 1
+  },
+  "invariants": [
+    "RTL/pins/clock/cycles/constraints unchanged",
+    "no FF resizing",
+    "normal PG/stale-access/clock/DRV/DRC/TTFF gates"
+  ],
+  "source_flow_commit": "d0418b5a0",
+  "resources": "16GB8T/disk10; same-case first nativeDRT peak15398MB, cap unchanged"
+}

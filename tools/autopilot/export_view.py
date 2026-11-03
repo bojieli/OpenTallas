@@ -82,6 +82,14 @@ def so_record(signoff):
                    ff_wns=wns("ff", "std_wns_min"), core_latency=d.get("core_latency"))
 
 
+def lec_all_shown(lec_doc):
+    """Read canonical superset coverage, falling back only for legacy records."""
+    superset = lec_doc.get("superset_vec")
+    if isinstance(superset, dict) and "all_shown" in superset:
+        return superset["all_shown"]
+    return lec_doc.get("all_shown")
+
+
 def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, flow_tag=None, note=None, clock_witness_dir=None):
     kit = os.path.realpath(kit)
     sdoc, so = so_record(signoff)
@@ -97,7 +105,7 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
     lec_v = lec_doc.get("verdict") or lec_doc.get("result")
     j = dict(id="export-view:" + sha256(signoff)[:12], die=die, type=r.get("module") or "?", src=kit,
              geom="n/a (view export of a signed run; geometry was reviewed at sign-off)",
-             chain=dict(lec_verdict=lec_v, lec=lec, lec_all_shown=lec_doc.get("all_shown")),
+             chain=dict(lec_verdict=lec_v, lec=lec, lec_all_shown=lec_all_shown(lec_doc)),
              src_commit=src_commit or sdoc.get("src_commit"), flow_tag=flow_tag or sdoc.get("flow_tag"))
     mod = r.get("module")
     lib_basis = {}
