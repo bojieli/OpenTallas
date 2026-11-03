@@ -23,11 +23,18 @@ SJ=$K/signoff/signoff.json
 if [ ! -f "$SJ" ]; then echo "HOLD_STEP SKIP: no $SJ (route/sign-off did not complete)"; rec SKIP 0 "no plain sign-off" ""; exit 0; fi
 W=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["checks"]["hold_ff"]["wns_ps"])' "$SJ" 2>/dev/null)
 if [ -z "$W" ] || [ "$W" = None ]; then echo "HOLD_STEP SKIP: no FF hold WNS in $SJ"; rec SKIP 0 "no FF hold WNS" ""; exit 0; fi
-if ! python3 -I -c 'import sys; sys.exit(0 if float(sys.argv[1]) < 0 else 1)' "$W"; then
-  echo "HOLD_STEP NOT NEEDED: FF hold WNS $W ps >= 0"; rec NOT_NEEDED 0 "" ""; exit 0; fi
+# FLOW-23 2026-11-02 (KV core canary DRV 0 -> 13 after REMOVE_ABC_BUFFERS 370c7b12f): sign-off DRV (slew / cap) is a
+# routed-RC result the pre-route repair_design never saw (e1 net5211: BUFx6f -> 42 loads, GRT-estimated slew under the
+# 256 ps repair target, routed FF 323.8 / 320 ps).  The same step runs when the plain sign-off has DRV violations: the
+# b<MARGIN> ECO repairs DRV first on the routed SPEF (eco_route.tcl repair_design, slew/cap margin 20 %), then hold.
+# Limits, margins and checks unchanged; OT_HOLD_STEP_DRV=0 = hold-only trigger (old behaviour).
+DRV=$(python3 -I -c 'import json,sys; c=json.load(open(sys.argv[1]))["checks"].get("drv") or {}; print(int(sum(v.get("slew", 0) + v.get("cap", 0) for v in (c.get("by_corner") or {}).values())))' "$SJ" 2>/dev/null)
+[ "${OT_HOLD_STEP_DRV:-1}" = 0 ] && DRV=0
+if ! python3 -I -c 'import sys; sys.exit(0 if float(sys.argv[1]) < 0 else 1)' "$W" && [ "${DRV:-0}" = 0 ]; then
+  echo "HOLD_STEP NOT NEEDED: FF hold WNS $W ps >= 0, sign-off DRV ${DRV:-0}"; rec NOT_NEEDED 0 "" ""; exit 0; fi
 FO=$(sed -n 's/^set_max_fanout \([0-9][0-9]*\).*/\1/p' "$K/max_fanout.tcl" 2>/dev/null | head -n 1)
 D=${K}_holdeco
-echo "HOLD_STEP FF hold WNS $W ps < 0: ECO b$HM form $FORM fanout cap ${FO:-0} -> $D"
+echo "HOLD_STEP FF hold WNS $W ps, sign-off DRV ${DRV:-0}: ECO b$HM form $FORM fanout cap ${FO:-0} -> $D"
 rm -rf "$K/signoff_hold"
 OT_ECO_FROM=$ECO_FROM bash "$HERE/mk_eco.sh" "$K" "$D" "b$HM" "$SO" || { echo "HOLD_STEP FAILED: mk_eco"; rec FAILED 1 "mk_eco failed" "$D"; exit 1; }
 sed -i "s/^OT_MAX_FANOUT=.*/OT_MAX_FANOUT=${FO:-0}/" "$D/variant.env"

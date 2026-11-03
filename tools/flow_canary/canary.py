@@ -56,6 +56,10 @@ STRUCTURAL_HOLD_RE = re.compile(r"^" + STRUCTURAL_HOLD + r"$", re.M)
 MEASURED_BAND = (r"OT_VCLK_MEASURED_HOLD: FF pin-register mean -?[0-9.]+ outside bound -?[0-9.]+ \+- [0-9.]+ "
                  r"\(sign-off band FAIL; fix the clock, not the hold\)")
 MEASURED_BAND_RE = re.compile(MEASURED_BAND)
+# FLOW-24 11-03: HOLD-GUARD-GRT ends each buffer-capped hold chunk on a caught RSZ-0060 (OpenROAD still logs it as
+# [ERROR RSZ-0060]); the guard prints its "OT_HOLD_GUARD_GRT chunk N" line right after and continues.  That caught
+# cap is not a crash; an RSZ-0060 the guard did not catch has no chunk line after it and still counts.
+HOLD_GUARD_CAP_RE = re.compile(r"^\[ERROR RSZ-0060\][^\n]*\n(?=(?:[^\n]*\n){0,4}OT_HOLD_GUARD_GRT chunk \d+:)", re.M)
 GATE_ERR_RE = re.compile(r"Error: hold_gate\.tcl, \d+ structural FF hold failure|"
                          r"Error: [^\n]*\.tcl, \d+ " + STRUCTURAL_HOLD + r"$|"
                          r"Error: [^\n]*\.tcl, \d+ " + MEASURED_BAND + r"$")
@@ -517,9 +521,10 @@ def check_run(run, spec=None, die_plan_dir=None):
     # No module named core_clock_band') wrote 'OT_POSTCTS_GATE TT no result FAIL' and was judged a design stop.
     gate_logs = ("hold_gate.log", "synth_odb_v.log", "postcts_gate_TT.log", "postcts_gate_FF.log")
     for l in step_logs + [str(kit / f) for f in gate_logs] + sorted(glob.glob(f"{kit}/run_*.log")):
-        for m in TCL_ERR_RE.finditer(read(l)):
+        txt = HOLD_GUARD_CAP_RE.sub("", read(l))
+        for m in TCL_ERR_RE.finditer(txt):
             # a gate's deliberate 'error' (hold_gate.tcl structural FAIL) is a verdict, reported by grt_gate, not a crash
-            line = read(l)[m.start():].split("\n", 1)[0]
+            line = txt[m.start():].split("\n", 1)[0]
             if GATE_ERR_RE.search(line):
                 continue
             errs.append(f"{Path(l).name}: {m.group(0)[:120]}")
