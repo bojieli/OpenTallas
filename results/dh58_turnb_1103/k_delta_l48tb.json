@@ -1,10 +1,10 @@
 {
  "event": "l48tb",
- "rule": "WREG-1 strap K+1 (landing_writer_start W=1), data cycles 0",
+ "rule": "WREG-1 strap K+1 (writer start W=1, 0 data cycles) both types; FREG-1 hd_turn_a strap K+1 more (+1 data cycle on its t_i crossings)",
  "diffs": {
   "turnE0a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnE0b.strap_ca_k_t_i": [
    59,
@@ -12,7 +12,7 @@
   ],
   "turnE1a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnE1b.strap_ca_k_t_i": [
    59,
@@ -20,7 +20,7 @@
   ],
   "turnE2a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnE2b.strap_ca_k_t_i": [
    59,
@@ -28,7 +28,7 @@
   ],
   "turnE3a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnE3b.strap_ca_k_t_i": [
    59,
@@ -36,7 +36,7 @@
   ],
   "turnE4a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnE4b.strap_ca_k_t_i": [
    59,
@@ -44,7 +44,7 @@
   ],
   "turnE5a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnE5b.strap_ca_k_t_i": [
    59,
@@ -52,7 +52,7 @@
   ],
   "turnW0a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnW0b.strap_ca_k_t_i": [
    59,
@@ -60,7 +60,7 @@
   ],
   "turnW1a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnW1b.strap_ca_k_t_i": [
    59,
@@ -68,7 +68,7 @@
   ],
   "turnW2a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnW2b.strap_ca_k_t_i": [
    59,
@@ -76,7 +76,7 @@
   ],
   "turnW3a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnW3b.strap_ca_k_t_i": [
    59,
@@ -84,7 +84,7 @@
   ],
   "turnW4a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnW4b.strap_ca_k_t_i": [
    59,
@@ -92,7 +92,7 @@
   ],
   "turnW5a.strap_ca_k_t_i": [
    60,
-   61
+   62
   ],
   "turnW5b.strap_ca_k_t_i": [
    59,

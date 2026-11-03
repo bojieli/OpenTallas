@@ -1,0 +1,16 @@
+worst slack max 112.6
+worst slack min -109.7
+QC fstart max slack 759.271973 end u_cland_t_i/g_freg.u_face/q[568]$_DFF_P_/D
+QC fstart min slack -88.598328 end u_cland_t_i/g_freg.u_face/q[568]$_DFF_P_/D
+QC t_i max slack 156.512802 end u_cland_t_i/g_freg.u_face/q[0]$_DFF_P_/D
+QC t_i min slack -102.043022 end u_cland_t_i/g_freg.u_face/q[286]$_DFF_P_/D
+QC worst max slack 691.290039 start u_rrl_6/q$_DFF_P_/QN end u_ft_t_s0/eq$_DFF_PN0_/RESETN
+QC worst max slack 157.161835 start u_cland_t_i/u_ring.ctl_w[2]$_SDFF_NN0_/QN end u_cland_t_i/lap_ok$_DFF_P_/D
+QC worst max slack 112.595764 start cland_tstart_in end u_cland_origin/sf$_DFF_N_/D
+QC worst max slack 113.255127 start u_cland_t_i/g_freg.u_face/q[7]$_DFF_P_/QN end u_cland_t_i/u_ring.s_d[1][7]$_DFFE_NP_/D
+QC worst max slack 584.234253 start u_srl_12/q$_DFF_P_/QN end start_o_0
+QC worst min slack 3.665318 start u_rrl_2/q$_DFF_P_/QN end u_ft_t_s2/eq$_DFF_PN0_/RESETN
+QC worst min slack 58.597126 start u_cland_t_i/u_ring.s_d[3][10]$_DFFE_NP_/QN end u_cland_t_i/u_ring.dch[0].u_dsel/y[10]$_DFF_P_/D
+QC worst min slack -109.693863 start arst_n end u_rst_in/q$_DFF_P_/D
+QC worst min slack -102.043022 start t_i[286] end u_cland_t_i/g_freg.u_face/q[286]$_DFF_P_/D
+QC worst min slack -93.048904 start u_rrl_8/q$_DFF_P_/QN end rst_start_raw_0

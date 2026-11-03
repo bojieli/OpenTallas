@@ -49,7 +49,13 @@ def ring_write_reg(plan, tn, bus):
     dsrep = cfg.get("dsrep", 1)
     if isinstance(dsrep, bool) or not isinstance(dsrep, int) or dsrep < 1 or 64 % dsrep:
         raise ValueError(f"{tn}: landing_ring_wreg.dsrep must divide 64")
-    return dict(depth=1, dsrep=dsrep)
+    # FREG-1 (DIE-HEAD-58 ruling 11-03): "freg": true adds the rising-fclk face register on d + t_rst_n (cas FREG=1):
+    # data and writer start one cycle later together -> one more K at bind (keeps the ring window) = ONE added data
+    # cycle on that crossing (q one clk later; TB_FREG bench)
+    freg = cfg.get("freg", False)
+    if not isinstance(freg, bool):
+        raise ValueError(f"{tn}: landing_ring_wreg.freg must be a boolean")
+    return dict(depth=1 + int(freg), dsrep=dsrep, freg=freg)
 
 
 def ring_taps(plan, tn):
@@ -1072,8 +1078,9 @@ class Landings:
                 if wreg:
                     if not cat.get("straps"):
                         raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
-                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']}))"
-                    self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], strap_k_delta=1)
+                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (", .FREG(1))" if wreg["freg"] else ")")
+                    self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]),
+                                                        strap_k_delta=wreg["depth"])
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring

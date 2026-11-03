@@ -47,3 +47,22 @@ def test_bad_config_and_parameter_form():
     _wreg(p)
     with pytest.raises(LandingError):
         Landings(p, t).type_rtl("B", B_BODY)
+
+
+def test_freg_face_register_k_plus_two():
+    """FREG-1 (DIE-HEAD-58 ruling 11-03): "freg": true -> .FREG(1) and one more K (data + start one more cycle)."""
+    p, t = strap_vehicle()
+    base = CAB.strap_ties(t["count_aligned"], p)
+    rtl0 = Landings(p, t).type_rtl("B", B_BODY)
+    _wreg(p)
+    p["partition_types"]["B"]["clock"]["landing_ring_wreg"]["freg"] = True
+    st = CAB.strap_ties(t["count_aligned"], p)
+    for inst in ("b", "c"):
+        assert st["instances"][inst]["values"]["strap_ca_k_y"] == \
+            (base["instances"][inst]["values"]["strap_ca_k_y"] + 2) % 64
+    bb = Landings(p, t).type_rtl("B", B_BODY)
+    assert "ot_dp_clk_landing_cas #(.W(5), .DEPTH(4), .WREG(1), .DSREP(4), .FREG(1)) u_cland_y" in bb
+    assert bb.replace(", .WREG(1), .DSREP(4), .FREG(1)", "") == rtl0
+    p["partition_types"]["B"]["clock"]["landing_ring_wreg"]["freg"] = 1
+    with pytest.raises(ValueError, match="freg"):
+        ring_write_reg(p, "B", "y")

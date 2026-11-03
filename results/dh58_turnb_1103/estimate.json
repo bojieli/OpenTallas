@@ -31,7 +31,7 @@
  "routed_estimate_tt_ps": "worst ~ +71 (t_i contract path, routed today +71.3, unchanged by the form); fstart broadcast class removed (>= +400)",
  "geom": "plan_geom l48tb hd_turn_b: aspect FAIL 4.05 (advisory, unchanged vs l48rf), clock_reach/tap_sinks/pin_reg/r2r/partial_face PASS",
  "hd_turn_a": {
-  "form": "WFALL(1)+WREG(1)+DSREP(4) on u_cland_t_i (W=568,DEPTH=4); strap_ca_k_t_i 60->61 x12",
+  "form": "WFALL(1)+WREG(1)+DSREP(4)+FREG(1) on u_cland_t_i (W=568,DEPTH=4); strap_ca_k_t_i 60->62 x12; +1 data cycle on the 12 turn_a t_i crossings",
   "quick_place_kit_sdc_headsrc": {
    "old_wfall_only": {
     "worst": 44.8,
@@ -60,6 +60,24 @@
   },
   "note": "IOHP (main landing_contract, no T/2 shift) puts the ft bus t_i max at 699.72 vs the T/2 fall capture: -354 by construction, independent of WREG; kit src 69e06c8b939 still emits t_i 283.22/fstart -249.9 (T/2-optimistic)",
   "geom": "aspect FAIL 6.0 (advisory, outline unchanged), all else PASS",
-  "sim": "WFALL seeds 7,23 n=400 PASS; WFALL mutant FAIL (21614 errors)"
+  "sim": "FREG: seeds 7,23 n=400 PASS (A==B exact, q(A,K+2)==q(C,K) one clk later); mutants FREG/WREG caught; WFALL-only regression PASS",
+  "freg_main_contract": {
+   "sdc": "kit SDC from hsrc = 69e06c8b939 + IOHP (t_i -max 699.72, fstart 166.6)",
+   "place_ideal": {
+    "worst_setup": 0.8,
+    "t_i": 0.8,
+    "fstart": 620.0,
+    "dn_ready": 615.8,
+    "note": "t_i path = port + 1 input BUF + face DFF setup: 699.72 + 102.4 + 30.1 setup vs 833; the receiver share (133 ps) caps any form near +100"
+   },
+   "cts_propagated": {
+    "worst_setup": 112.6,
+    "t_i_setup": 156.5,
+    "face_to_ring_setup": 113.3,
+    "t_i_hold": -102.0,
+    "fstart_hold": -88.6,
+    "note": "rising face capture brings back the same-edge ring hold (min 80 vs fclk insertion); kit FF hold repair must add ~100 ps on 569 face inputs, leaving ~+55 TT setup on t_i"
+   }
+  }
  }
 }
