@@ -36,4 +36,4 @@ def test_opt_out_and_non_phy_targets():
 
 def test_cell_is_negative_level_latch():
     c = gen_rtl.CELLS
-    assert "module ot_dp_lk" in c and "always_latch if (!clk) q = d;" in c
+    assert "module ot_dp_lk" in c and "always @(*) if (!clk) q = d;" in c

@@ -95,7 +95,7 @@ module ot_dp_lk #(parameter integer W = 1) (
     input  wire [W-1:0] d,
     output reg  [W-1:0] q
 );
-    always_latch if (!clk) q = d;
+    always @(*) if (!clk) q = d;  // Verilog-2001 latch (read_verilog without -sv; yosys infers $dlatch)
 endmodule
 // ot_dp_rsync_s<N>: one LOCAL reset synchroniser per clock tap region (KV-P5 10-23, COORD R4: the release of a tap
 // region's flops is timed from a synchroniser on the SAME tap, not across the tap-to-tap skew).  keep_hierarchy: the
