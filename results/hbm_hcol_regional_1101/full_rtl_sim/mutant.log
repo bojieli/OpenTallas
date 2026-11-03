@@ -1,0 +1,7 @@
+MISMATCH cycle=221 gold=4214a000/0/11 gate=42322000/0/11
+MISMATCH cycle=222 gold=415c0000/0/11 gate=41e20000/0/11
+MISMATCH cycle=223 gold=411e0000/0/11 gate=40e70000/0/11
+HCOL_REGIONAL_EQ checks=1404 errors=1116 nonzero=1385 mutant=1
+[16250000] %Fatal: tb_hcol_regional_equiv.sv:32: Assertion failed in tb_hcol_regional_equiv: HCOL_REGIONAL_EQ FAIL
+%Error: rtl/test/hbm_idx_static/tb_hcol_regional_equiv.sv:32: Verilog $stop
+Aborting...
