@@ -12,8 +12,9 @@ shapes).  Lower layers stay blanket (the parent never routes there over the core
 pins and lower OBS are unchanged by construction; ``check`` proves it and that the detailed export saw the same
 pins (same ODB).
 
-  python3 -I abstract_detail.py tcl --odb /src/6_final.odb --out /out/detail.lef [--bloat-factor 0]
-      -> OpenROAD Tcl for the detailed export (run it in the ORFS image, memory-capped)
+  python3 -I abstract_detail.py tcl --odb /src/6_final.odb --out /out/detail.lef [--bloat-factor 1]
+      -> OpenROAD Tcl for the detailed export (run it in the ORFS image, memory-capped); default 1 = one pitch
+         merge (fewer parent slivers; same PG access as 0 on HEAD lep_pair)
   python3 -I abstract_detail.py splice --base signed.lef --detail detail.lef --out new.lef [--layers M6,M7]
       -> new.lef + JSON report on stdout (layers default: OBS layers above the highest PG pin layer)
   python3 -I abstract_detail.py check --base signed.lef --new new.lef
@@ -186,7 +187,7 @@ def main(argv=None):
     t = sub.add_parser("tcl")
     t.add_argument("--odb", required=True)
     t.add_argument("--out", required=True)
-    t.add_argument("--bloat-factor", type=int, default=0)
+    t.add_argument("--bloat-factor", type=int, default=1)
     s = sub.add_parser("splice")
     s.add_argument("--base", required=True)
     s.add_argument("--detail", required=True)
