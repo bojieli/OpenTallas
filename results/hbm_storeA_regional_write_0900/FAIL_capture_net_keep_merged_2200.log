@@ -1,0 +1,538 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+
+-- Running command `read_verilog -sv ot_hgi_sfu_store_a_regional_capture.sv; hierarchy -top ot_hgi_sfu_store_a_regional_capture; proc; opt; stat; write_json capture_mapped.json' --
+
+1. Executing Verilog-2005 frontend: ot_hgi_sfu_store_a_regional_capture.sv
+Parsing SystemVerilog input from `ot_hgi_sfu_store_a_regional_capture.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_sfu_store_a_regional_capture'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_sfu_store_a_regional_capture
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_hgi_sfu_store_a_regional_capture
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$ot_hgi_sfu_store_a_regional_capture.sv:20$59 in module ot_hgi_sfu_store_a_regional_capture.
+Marked 1 switch rules as full_case in process $proc$ot_hgi_sfu_store_a_regional_capture.sv:17$55 in module ot_hgi_sfu_store_a_regional_capture.
+Marked 1 switch rules as full_case in process $proc$ot_hgi_sfu_store_a_regional_capture.sv:20$43 in module ot_hgi_sfu_store_a_regional_capture.
+Marked 1 switch rules as full_case in process $proc$ot_hgi_sfu_store_a_regional_capture.sv:17$39 in module ot_hgi_sfu_store_a_regional_capture.
+Marked 1 switch rules as full_case in process $proc$ot_hgi_sfu_store_a_regional_capture.sv:20$27 in module ot_hgi_sfu_store_a_regional_capture.
+Marked 1 switch rules as full_case in process $proc$ot_hgi_sfu_store_a_regional_capture.sv:17$23 in module ot_hgi_sfu_store_a_regional_capture.
+Marked 1 switch rules as full_case in process $proc$ot_hgi_sfu_store_a_regional_capture.sv:20$11 in module ot_hgi_sfu_store_a_regional_capture.
+Marked 1 switch rules as full_case in process $proc$ot_hgi_sfu_store_a_regional_capture.sv:17$7 in module ot_hgi_sfu_store_a_regional_capture.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 8 redundant assignments.
+Promoted 8 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \meta_reset_n in `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$59'.
+Found async reset \ctl_reset_n in `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$55'.
+Found async reset \meta_reset_n in `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$43'.
+Found async reset \ctl_reset_n in `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$39'.
+Found async reset \meta_reset_n in `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$27'.
+Found async reset \ctl_reset_n in `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$23'.
+Found async reset \meta_reset_n in `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$11'.
+Found async reset \ctl_reset_n in `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$7'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$59'.
+     1/5: $1\g_region[3].$fordecl_block$3.g[31:0]$62
+     2/5: $0\g_region[3].meta_q[151:0] [151:114]
+     3/5: $0\g_region[3].meta_q[151:0] [113:76]
+     4/5: $0\g_region[3].meta_q[151:0] [75:38]
+     5/5: $0\g_region[3].meta_q[151:0] [37:0]
+Creating decoders for process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$55'.
+     1/9: $1\g_region[3].$fordecl_block$1.b[31:0]$58
+     2/9: $0\g_region[3].data_q[2047:0] [2047:1792]
+     3/9: $0\g_region[3].data_q[2047:0] [1791:1536]
+     4/9: $0\g_region[3].data_q[2047:0] [1535:1280]
+     5/9: $0\g_region[3].data_q[2047:0] [1279:1024]
+     6/9: $0\g_region[3].data_q[2047:0] [1023:768]
+     7/9: $0\g_region[3].data_q[2047:0] [767:512]
+     8/9: $0\g_region[3].data_q[2047:0] [511:256]
+     9/9: $0\g_region[3].data_q[2047:0] [255:0]
+Creating decoders for process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$43'.
+     1/5: $1\g_region[2].$fordecl_block$3.g[31:0]$46
+     2/5: $0\g_region[2].meta_q[151:0] [151:114]
+     3/5: $0\g_region[2].meta_q[151:0] [113:76]
+     4/5: $0\g_region[2].meta_q[151:0] [75:38]
+     5/5: $0\g_region[2].meta_q[151:0] [37:0]
+Creating decoders for process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$39'.
+     1/9: $1\g_region[2].$fordecl_block$1.b[31:0]$42
+     2/9: $0\g_region[2].data_q[2047:0] [2047:1792]
+     3/9: $0\g_region[2].data_q[2047:0] [1791:1536]
+     4/9: $0\g_region[2].data_q[2047:0] [1535:1280]
+     5/9: $0\g_region[2].data_q[2047:0] [1279:1024]
+     6/9: $0\g_region[2].data_q[2047:0] [1023:768]
+     7/9: $0\g_region[2].data_q[2047:0] [767:512]
+     8/9: $0\g_region[2].data_q[2047:0] [511:256]
+     9/9: $0\g_region[2].data_q[2047:0] [255:0]
+Creating decoders for process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$27'.
+     1/5: $1\g_region[1].$fordecl_block$3.g[31:0]$30
+     2/5: $0\g_region[1].meta_q[151:0] [151:114]
+     3/5: $0\g_region[1].meta_q[151:0] [113:76]
+     4/5: $0\g_region[1].meta_q[151:0] [75:38]
+     5/5: $0\g_region[1].meta_q[151:0] [37:0]
+Creating decoders for process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$23'.
+     1/9: $1\g_region[1].$fordecl_block$1.b[31:0]$26
+     2/9: $0\g_region[1].data_q[2047:0] [2047:1792]
+     3/9: $0\g_region[1].data_q[2047:0] [1791:1536]
+     4/9: $0\g_region[1].data_q[2047:0] [1535:1280]
+     5/9: $0\g_region[1].data_q[2047:0] [1279:1024]
+     6/9: $0\g_region[1].data_q[2047:0] [1023:768]
+     7/9: $0\g_region[1].data_q[2047:0] [767:512]
+     8/9: $0\g_region[1].data_q[2047:0] [511:256]
+     9/9: $0\g_region[1].data_q[2047:0] [255:0]
+Creating decoders for process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$11'.
+     1/5: $1\g_region[0].$fordecl_block$3.g[31:0]$14
+     2/5: $0\g_region[0].meta_q[151:0] [151:114]
+     3/5: $0\g_region[0].meta_q[151:0] [113:76]
+     4/5: $0\g_region[0].meta_q[151:0] [75:38]
+     5/5: $0\g_region[0].meta_q[151:0] [37:0]
+Creating decoders for process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$7'.
+     1/9: $1\g_region[0].$fordecl_block$1.b[31:0]$10
+     2/9: $0\g_region[0].data_q[2047:0] [2047:1792]
+     3/9: $0\g_region[0].data_q[2047:0] [1791:1536]
+     4/9: $0\g_region[0].data_q[2047:0] [1535:1280]
+     5/9: $0\g_region[0].data_q[2047:0] [1279:1024]
+     6/9: $0\g_region[0].data_q[2047:0] [1023:768]
+     7/9: $0\g_region[0].data_q[2047:0] [767:512]
+     8/9: $0\g_region[0].data_q[2047:0] [511:256]
+     9/9: $0\g_region[0].data_q[2047:0] [255:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[3].meta_q' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$59'.
+  created $adff cell `$procdff$75' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[3].$fordecl_block$3.g' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$59'.
+  created $dff cell `$procdff$82' with positive edge clock.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[3].data_q' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$55'.
+  created $adff cell `$procdff$87' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[3].$fordecl_block$1.b' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$55'.
+  created $dff cell `$procdff$94' with positive edge clock.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[2].meta_q' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$43'.
+  created $adff cell `$procdff$99' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[2].$fordecl_block$3.g' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$43'.
+  created $dff cell `$procdff$106' with positive edge clock.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[2].data_q' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$39'.
+  created $adff cell `$procdff$111' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[2].$fordecl_block$1.b' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$39'.
+  created $dff cell `$procdff$118' with positive edge clock.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[1].meta_q' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$27'.
+  created $adff cell `$procdff$123' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[1].$fordecl_block$3.g' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$27'.
+  created $dff cell `$procdff$130' with positive edge clock.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[1].data_q' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$23'.
+  created $adff cell `$procdff$135' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[1].$fordecl_block$1.b' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$23'.
+  created $dff cell `$procdff$142' with positive edge clock.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[0].meta_q' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$11'.
+  created $adff cell `$procdff$147' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[0].$fordecl_block$3.g' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$11'.
+  created $dff cell `$procdff$154' with positive edge clock.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[0].data_q' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$7'.
+  created $adff cell `$procdff$159' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_sfu_store_a_regional_capture.\g_region[0].$fordecl_block$1.b' using process `\ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$7'.
+  created $dff cell `$procdff$166' with positive edge clock.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$59'.
+Removing empty process `ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$55'.
+Removing empty process `ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$43'.
+Removing empty process `ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$39'.
+Removing empty process `ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$27'.
+Removing empty process `ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$23'.
+Removing empty process `ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:20$11'.
+Removing empty process `ot_hgi_sfu_store_a_regional_capture.$proc$ot_hgi_sfu_store_a_regional_capture.sv:17$7'.
+Cleaned up 0 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_sfu_store_a_regional_capture.
+<suppressed ~32 debug messages>
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_sfu_store_a_regional_capture.
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_sfu_store_a_regional_capture'.
+Computing hashes of 80 cells of `\ot_hgi_sfu_store_a_regional_capture'.
+Finding duplicate cells in `\ot_hgi_sfu_store_a_regional_capture'.
+Computing hashes of 54 cells of `\ot_hgi_sfu_store_a_regional_capture'.
+Finding duplicate cells in `\ot_hgi_sfu_store_a_regional_capture'.
+Computing hashes of 42 cells of `\ot_hgi_sfu_store_a_regional_capture'.
+Finding duplicate cells in `\ot_hgi_sfu_store_a_regional_capture'.
+Computing hashes of 30 cells of `\ot_hgi_sfu_store_a_regional_capture'.
+Finding duplicate cells in `\ot_hgi_sfu_store_a_regional_capture'.
+<suppressed ~150 debug messages>
+Removed a total of 50 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_sfu_store_a_regional_capture..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~16 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_sfu_store_a_regional_capture.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_sfu_store_a_regional_capture'.
+Computing hashes of 30 cells of `\ot_hgi_sfu_store_a_regional_capture'.
+Finding duplicate cells in `\ot_hgi_sfu_store_a_regional_capture'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$154 ($dff) from module ot_hgi_sfu_store_a_regional_capture (D = 4, Q = \g_region[0].$fordecl_block$3.g).
+Adding EN signal on $procdff$166 ($dff) from module ot_hgi_sfu_store_a_regional_capture (D = 8, Q = \g_region[0].$fordecl_block$1.b).
+Adding EN signal on $procdff$142 ($dff) from module ot_hgi_sfu_store_a_regional_capture (D = 8, Q = \g_region[1].$fordecl_block$1.b).
+Adding EN signal on $procdff$82 ($dff) from module ot_hgi_sfu_store_a_regional_capture (D = 4, Q = \g_region[3].$fordecl_block$3.g).
+Adding EN signal on $procdff$130 ($dff) from module ot_hgi_sfu_store_a_regional_capture (D = 4, Q = \g_region[1].$fordecl_block$3.g).
+Adding EN signal on $procdff$118 ($dff) from module ot_hgi_sfu_store_a_regional_capture (D = 8, Q = \g_region[2].$fordecl_block$1.b).
+Adding EN signal on $procdff$106 ($dff) from module ot_hgi_sfu_store_a_regional_capture (D = 4, Q = \g_region[2].$fordecl_block$3.g).
+Adding EN signal on $procdff$94 ($dff) from module ot_hgi_sfu_store_a_regional_capture (D = 8, Q = \g_region[3].$fordecl_block$1.b).
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 1-bit at position 3 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$174 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$173 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 1-bit at position 3 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$172 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$171 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$170 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 1-bit at position 3 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$169 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 1-bit at position 3 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$168 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 1-bit at position 2 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$167 ($dffe) from module ot_hgi_sfu_store_a_regional_capture.
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_sfu_store_a_regional_capture..
+Removed 12 unused cells and 108 unused wires.
+<suppressed ~13 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_sfu_store_a_regional_capture.
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_sfu_store_a_regional_capture..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_sfu_store_a_regional_capture.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_sfu_store_a_regional_capture'.
+Computing hashes of 10 cells of `\ot_hgi_sfu_store_a_regional_capture'.
+Finding duplicate cells in `\ot_hgi_sfu_store_a_regional_capture'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_sfu_store_a_regional_capture..
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_sfu_store_a_regional_capture.
+
+4.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Printing statistics.
+
+=== ot_hgi_sfu_store_a_regional_capture ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       21 wires
+    19811 wire bits
+       17 public wires
+    19803 public wire bits
+        9 ports
+    11003 port bits
+       10 cells
+        2   $adff
+        4   $and
+        4   $not
+
+6. Executing JSON backend.
+
+End of script. Logfile hash: a265869690, time: 0.18s, user: 0.17s, system: 0.01s, MEM: 25.73 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 28% 2x opt_clean (0 sec), 17% 2x read_verilog (0 sec), ...

@@ -1,0 +1,7 @@
+RETURN q=1 cycle=48 launch=21 delta=27
+RETURN q=3 cycle=48 launch=21 delta=27
+RETURN q=0 cycle=58 launch=21 delta=37
+RETURN q=2 cycle=67 launch=21 delta=46
+META cycle=109 launch=21 delta=88 stage=ff
+END PAD=0 diagnostic_bridge_fault=1
+tb.sv:54: $finish called at 117594 (1ps)

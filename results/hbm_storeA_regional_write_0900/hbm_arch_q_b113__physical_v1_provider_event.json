@@ -1,0 +1,31 @@
+{
+ "status": "DISABLED_EXACT_NATIVE_CALLER_PROPOSAL",
+ "source_caller": "/srv/opentallas-scratch/claude/codex-hbm-programme-move-0216/input/hbm_arch_q_b113__physical_v1.sv",
+ "source_sha256": "b34269bc2675ef9315ec37db28fedf678315dcb4222a0f3aa9716fb387642ebd",
+ "new_CTL_ABI_bits": 11963,
+ "extra_CTL_outputs": [
+  "storeA_meta87_D[151:0]",
+  "storeA_ctl_reset_n"
+ ],
+ "bridge_export": "real declared m56 port assigned from each g_lg[g].meta[87]; no hierarchy reference from caller",
+ "data_D": "same existing actual CTL u_core_procdff_66926__D parent expression",
+ "metadata_reset": "rst_n_t22",
+ "data_reset": "actual CTL n6 exported, not metadata reset alias",
+ "clock": "clk",
+ "mask_binding": "verified actual selected64ones",
+ "new_StoreA_ABI_bits": 5986,
+ "added_capture_FF": 8800,
+ "existing_originals_retained": true,
+ "cycles_added": 0,
+ "physical_and_full_parent_proof": "NOT_RUN",
+ "internal_region_ABI_bits": 12552,
+ "physical_master": "ot_hnx_sfu_store_a_regional4_captured",
+ "capture_location": "INSIDE native32SRAM capsule, not parent soft FF hidden under hardbody",
+ "capture_payload_inputs": 2048,
+ "capture_metadata_inputs": 152,
+ "native_reset_inputs": [
+  "store0_rst_n",
+  "capture_ctl_reset_n",
+  "capture_meta_reset_n"
+ ]
+}

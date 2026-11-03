@@ -1,0 +1,19 @@
+Selected VM calendar and source-stage date diagnostic
+
+The exact selected CTL native bridge uses READ_RETURN88 / WRITE_RETURN85 at m56. Its metadata and scalar-address path have 89 stages, with the launch edge as stage0; read metadata appears88 edges after the sampled prefetch. Selected CTL native source EQ41377 does not prove that an external response arrives on that date.
+
+This smallest timing vehicle extracts unchanged selected bridge, tap/leaf, static-bank and delay modules. It projects only the mechanically inventoried source wrapper captures: CTL m21 + B113 output capture + destination input capture; Q2 has another6 B012 and9 B002 feedthrough captures. Return projection is native leaf→source output capture→B113 input capture→CTL m23. Q0 split L54/L127 return is restored to its514 logical bits before this projection. These are cycle projections, not placed FF homes, provider qualification or a replay of the entire source programme. Both NE/NW selected request/return stage inventories have the same counts. See clock-owner request_lineage/source_lineage receipts at coord/tmp and codex-storeA-source-lineage-0550.
+
+The near-response environment is explicitly ideal: local_read/write=11, no far traffic, no writes; it returns valid at the configured native tap date and constant distinguishable data. Native tap faults remain0. This environment verifies the request/return date mechanism; it does not model actual VMS data, command programming, memory/reset release or whole-source numerical execution.
+
+Actual unit intel2:oth-ubuntu-728617-1793634567 exit0:
+- Q0 read response arrives37 edges after prefetch; Q1 27; Q2 46; Q3 27. Source native tap READ_RETURN values29/19/23/19 are preserved.
+- Bridge metadata arrives88. With projected source paths, its real sticky fault asserts on the mismatch.
+- A control that adds response-only diagnostic padding51/61/42/61 brings every response to88 and leaves bridge fault0. This is a control, not a selected architecture or committed production RTL change. Such full514-bit quarter padding would declare110510FF/CTL before optimization; no source/area budget assumes that construction.
+- Request +1edge mutant is caught by the date check. Original unpadded and padded logs remain distinct.
+
+The diagnostic exposes an unresolved date contract between the source paths and the common VM calendar under this explicit local-read scenario. It is not a full SOURCE13 functional failure verdict. A production source event must establish the selected schedule/local-read controls and exact current request/response paths, then align each response and metadata date. Physical source transport can consume existing88-edge budget; adding distance-derived link counts blindly to88 would double-price existing allowance. If the final common read date exceeds88, the calendar and scalar-address metadata must change together; writes need their separate roundtrip and WRITE_RETURN85 join. No old 3:4 clock conversion applies: these selected paths all use clk_stream.
+
+calendar_cost.py prices the exact selected declarations: VM_FF =272*(R+1)+8*(W+2)+2397 =27301 at88/85; CTL direct8933 + relay6 =>36240 declared FF. Delta perCTL=272*deltaR+8*deltaW; two CTLs double it. Values are declared source state, not mapped cell counts (actual CTL mapped34563). The script accepts proposed dates without selecting them. No production RTL, canonical plan, new reset/START offsets, token pricing or physical gates are activated here.
+
+Run on a scratch host through ot-run: bash run.sh. Modules and testbench are self-contained. prepare.py records exact source extraction hashes; regenerating it requires the frozen SOURCE13 pp and CTL closure listed therein. Initial localhost attempt was NOT RUN (SSH auth), then Intel2 ordinary1GB1T/disk1 admission succeeded; no progressing job was duplicated.

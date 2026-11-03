@@ -1,0 +1,286 @@
+{
+ "top": "ot_hnx_sfu_store_a_regional4",
+ "ABI_bits": 12552,
+ "old_ABI": 6040,
+ "removed_shared_bits": 2256,
+ "added_regional_bits": 8768,
+ "ports": [
+  {
+   "direction": "input",
+   "bus": "store0_clk",
+   "width": 1
+  },
+  {
+   "direction": "input",
+   "bus": "region_data",
+   "width": 8192
+  },
+  {
+   "direction": "input",
+   "bus": "region_addr",
+   "width": 480
+  },
+  {
+   "direction": "input",
+   "bus": "region_group",
+   "width": 64
+  },
+  {
+   "direction": "input",
+   "bus": "region_stage_v",
+   "width": 32
+  },
+  {
+   "direction": "output",
+   "bus": "store0_flt",
+   "width": 1
+  },
+  {
+   "direction": "input",
+   "bus": "store0_rst_n",
+   "width": 1
+  },
+  {
+   "direction": "output",
+   "bus": "store1_flt",
+   "width": 1
+  },
+  {
+   "direction": "output",
+   "bus": "cmd0_Q",
+   "width": 1024
+  },
+  {
+   "direction": "input",
+   "bus": "cmd1_D",
+   "width": 768
+  },
+  {
+   "direction": "output",
+   "bus": "cmd1_Q",
+   "width": 768
+  },
+  {
+   "direction": "input",
+   "bus": "cmd2_D",
+   "width": 64
+  },
+  {
+   "direction": "output",
+   "bus": "cmd2_Q",
+   "width": 64
+  },
+  {
+   "direction": "input",
+   "bus": "cmd3_D",
+   "width": 32
+  },
+  {
+   "direction": "output",
+   "bus": "cmd3_Q",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb48_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb48_S",
+   "width": 1
+  },
+  {
+   "direction": "input",
+   "bus": "comb49_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb50_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb51_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb52_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb53_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb54_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb55_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb56_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb57_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb58_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb59_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb60_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb61_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb62_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb63_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb64_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb64_S",
+   "width": 1
+  },
+  {
+   "direction": "input",
+   "bus": "comb65_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb66_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb67_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb68_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb69_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb70_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb71_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb72_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb73_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb74_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb75_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb76_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb77_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb78_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb79_B",
+   "width": 32
+  },
+  {
+   "direction": "input",
+   "bus": "comb128_A",
+   "width": 1
+  },
+  {
+   "direction": "input",
+   "bus": "comb144_A",
+   "width": 1
+  }
+ ],
+ "selected_mask_ones": true,
+ "changed_writer_instances": [
+  {
+   "instance": "m0",
+   "original_sha256": "a76d1e59bae6145ac983f437192e84926500b49054611083a0b30af4a9989de7",
+   "regional_sha256": "a6cb844cc36b901030ffe685f03e853e1f4a0ebc9fc767fe17dd741b86d32b3c",
+   "bank_regions": [
+    0,
+    1
+   ]
+  },
+  {
+   "instance": "m1",
+   "original_sha256": "f1c7c8eb978da78f74e083d90e90a218f444dc45a7a38a85f5d95fa064a6f814",
+   "regional_sha256": "5b24c9a58dae029120a5ac22b233164c1ecb9f1f5cbafac7e9df0e65e33541d7",
+   "bank_regions": [
+    2,
+    3
+   ]
+  }
+ ],
+ "no_parent_caller_activation": true
+}

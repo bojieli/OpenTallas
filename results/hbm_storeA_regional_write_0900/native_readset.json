@@ -1,0 +1,37 @@
+{
+ "top": "ot_hnx_sfu_store_a_regional4_captured",
+ "files": [
+  {
+   "file": "results/hbm_storeA_regional_write_0900/ot_hnx_sfu_store_a_regional4_captured.sv",
+   "sha256": "9a5821f0c98770c788d238cbfd22e273817681b6036a4998b60ee13362f3aadc"
+  },
+  {
+   "file": "results/hbm_storeA_regional_write_0900/ot_hnx_sfu_store_a_regional4.sv",
+   "sha256": "2658c09d6ee6ea613cbef5b0c56d75e22fb3a307dc3cf9fe9b236b6fa8aebe7e"
+  },
+  {
+   "file": "results/hbm_storeA_regional_write_0900/ot_hgi_sfu_store_a_regional_capture.sv",
+   "sha256": "69a74acfda9fda6738dcdbccfff43c8fc42f7c51bdd009902ce233e42d43caa9"
+  },
+  {
+   "file": "results/hbm_storeA_regional_write_0900/ot_hgi_su_lgroup2_regional_write.sv",
+   "sha256": "62ff8bc2270e280824e63b71bc72ce44abe1205469f2b1d6f0e9406fa1432fcb"
+  },
+  {
+   "file": "results/hbm_storeA_regional_write_0900/ot_hgi_su_lbank.sv",
+   "sha256": "bddfeb6efcafa10a98b1ccce33f005419155e89d96a9f3343b5caee0c845f64f"
+  },
+  {
+   "file": "results/hbm_storeA_regional_write_0900/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+   "sha256": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f"
+  }
+ ],
+ "pins_sha256": "4ca014c4e4e4dd42c0489d7cc8ee96d4d9d3542f212fda20d4d5f1cd5dab954d",
+ "plan_sha256": "2f791468baadb9e7145422575131ed13978319836af7721363d0eeeafc59aa99",
+ "core_macros_sha256": "86818c74b5d196ba65769fe27cb858fd24c02914fdfc7436b4653aeb3eef8113",
+ "ABI": 5986,
+ "native_SRAMs": 32,
+ "source_only": true,
+ "component_reset_cycles": 4,
+ "physical_release": false
+}
