@@ -678,6 +678,20 @@ def variant_port_bits(ports, variant, params, mapping):
     return selected
 
 
+def _compose_rename(m, ca, cc):
+    """r8 table member m with composed member names replaced by the composite (port-level alias ca; cell-level cc for
+    INNER leaf-only sources); unchanged when nothing matches."""
+    m2, s = dict(m), m.get("source", "")
+    if (m.get("sink"), m.get("sink_port")) in ca:
+        m2["sink"], m2["sink_port"] = ca[(m["sink"], m["sink_port"])]
+    leaf, _, port = s.rpartition(".")
+    if leaf and (leaf, port) in ca:
+        m2["source"] = "%s.%s" % ca[(leaf, port)]
+    elif m.get("id", "").startswith("INNER:") and s in cc:
+        m2["source"] = cc[s]
+    return m2
+
+
 def core_reset_hierarchy_candidates(cells, members, target, modules):
     """Exact source hierarchy suffix inside one already-mapped partition.
 
@@ -1986,6 +2000,12 @@ class Binder:
             extra_info.append(dict(table=str(xf), sha=hashlib.sha256(xf.read_bytes()).hexdigest()[:16],
                                    replaced=sum(i in ids for i in xm), added=sum(i not in ids for i in xm),
                                    inner=sum(1 for m in xj["members"] if m["id"].startswith("INNER:"))))
+        # DIE-KV-64 11-03: a table member written on the uncomposed bind that names a composed member leaf/port
+        # (asbuilt.compose, e.g. KV pv_pair slices) follows the composite through its whole bit-identical port map
+        ca, cc = getattr(self, "composition_alias", None) or {}, getattr(self, "composition_cells", None) or {}
+        if ca or cc:
+            js["members"] = [_compose_rename(m, ca, cc) for m in js["members"]]
+            inner = [_compose_rename(m, ca, cc) for m in inner]
         excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
         cidx = self.cell_index()
         st = self.pad_stats
