@@ -48,6 +48,38 @@ endmodule
 """
 
 
+ZY_OLD_DECL = "    reg [ZW*32-1:0] zy_r;\n"
+ZY_OLD_REG = "    always @(posedge clk) zy_r <= zy;\n"
+ZY_OLD_USE = "if (zw_oh[z_][e_]) zm[32*e_ +: 32] <= zy_r[32*z_ +: 32];"
+ZY_NEW_USE = "if (zw_oh[z_][e_]) zm[32*e_ +: 32] <= zy_rr[e_ / ZY_SPAN][32*z_ +: 32];"
+ZY_MOD = """
+(* keep_hierarchy *) module ot_nhb_rf1_zy (input wire clk, input wire [127:0] d, output reg [127:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+"""
+
+
+def transform_zy(text, reps=8):
+    """RF-KV1b: the adder result register zy_r (128 b, each bit -> the zm write mux of all 128 entries) becomes
+    `reps` kept identical replicas, replica k feeding entries [k*128/reps, (k+1)*128/reps): <= 128/reps write loads
+    per bit, 0 cycles, exact (every replica captures the same zy on the same edge, no reset, like zy_r)."""
+    if 128 % reps or reps < 2:
+        raise ValueError("zh_rf1: zy replicas must divide 128")
+    for s in (ZY_OLD_DECL, ZY_OLD_REG, ZY_OLD_USE):
+        if text.count(s) != 1:
+            raise ValueError(f"zh_rf1: zy_r form not as expected: {s.strip()}")
+    if len(re.findall(r"\bzy_r\b", text)) != 3:
+        raise ValueError("zh_rf1: zy_r has uses beyond the zm write")
+    new_decl = (f"    // RF-KV1b (DIE-KV-64/RF-E 11-03): {reps} kept zy_r replicas, <= {128 // reps} zm write loads per bit\n"
+                f"    localparam integer ZY_REPS = {reps}, ZY_SPAN = 128 / ZY_REPS;\n"
+                "    wire [ZW*32-1:0] zy_rr [0:ZY_REPS-1];\n")
+    new_reg = ("    genvar zyk;\n    generate for (zyk = 0; zyk < ZY_REPS; zyk = zyk + 1) begin : g_zy\n"
+               "        (* keep_hierarchy *) ot_nhb_rf1_zy u_zy (.clk(clk), .d(zy), .q(zy_rr[zyk]));\n"
+               "    end endgenerate\n")
+    text = text.replace(ZY_OLD_DECL, new_decl, 1).replace(ZY_OLD_REG, new_reg, 1).replace(ZY_OLD_USE, ZY_NEW_USE, 1)
+    return text + ZY_MOD
+
+
 def transform(text):
     """-> rewritten ot_nhb_tiles.sv text; fail-closed on any unexpected shape"""
     if len(re.findall(rf"^module {MOD}\b", text, re.M)) != 1:
@@ -67,7 +99,7 @@ def transform(text):
     return text + MODS
 
 
-def apply_kit(kd, mod):
+def apply_kit(kd, mod, zy_reps=0):
     kd = Path(kd)
     if mod != MOD:
         raise SystemExit(f"--zh-rf1 only applies to {MOD}")
@@ -77,13 +109,19 @@ def apply_kit(kd, mod):
     p = srcs[0]
     before = hashlib.sha256(p.read_bytes()).hexdigest()
     try:
-        p.write_text(transform(p.read_text()))
+        t = transform(p.read_text())
+        if zy_reps:
+            t = transform_zy(t, zy_reps)
+        p.write_text(t)
     except ValueError as e:
         raise SystemExit(str(e))
     delta = dict(transform="physical/die_plan/qwen_kvsys/cores/harden/zh_rf1.py", file=p.name,
                  sha256_before=before, sha256_after=hashlib.sha256(p.read_bytes()).hexdigest(),
-                 command_cycles=0, nominal_token_cycles=0, added_ff=16 * (16 - 6), max_select_loads=16,
-                 form="pre-decoded registered ZH read address (RF-KV1)")
+                 command_cycles=0, nominal_token_cycles=0,
+                 added_ff=16 * (16 - 6) + (128 * (zy_reps - 1) if zy_reps else 0), max_select_loads=16,
+                 zy_replicas=zy_reps or 1,
+                 form="pre-decoded registered ZH read address (RF-KV1)"
+                      + (f" + {zy_reps} zy_r write replicas (RF-KV1b)" if zy_reps else ""))
     (kd / "zh_rf1_delta.json").write_text(json.dumps(delta, indent=1) + "\n")
     return delta
 
@@ -101,7 +139,7 @@ SKIP_FILES = {"1_synth_odb.v", "pin_audit.json", "status", "status.grt_est0104",
 # sdc_lint.json is NOT an output: gen_core_kit_kv.py writes it as the sdc_lint gate context (run_kit_kv.sh reads it)
 
 
-def derive(src, out, repo, maxwire_um=60, hold_ff_margin=10):
+def derive(src, out, repo, maxwire_um=60, hold_ff_margin=10, zy_reps=0, io_hold_pad_margin=None):
     import re as _re
     import shutil
     import sys
@@ -123,12 +161,19 @@ def derive(src, out, repo, maxwire_um=60, hold_ff_margin=10):
                 shutil.copytree(p, kd / p.name)
         elif p.name not in SKIP_FILES and not p.name.endswith(".log") and not p.name.startswith("cont."):
             shutil.copy2(p, kd / p.name)
-    delta = apply_kit(kd, MOD)
+    delta = apply_kit(kd, MOD, zy_reps)
     cfg = (kd / "config.mk").read_text()
     cfg, n = _re.subn(r"^export OT_HOLD_FF_MARGIN = .*$", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}", cfg, flags=_re.M)
-    if n != 1 or "OT_MAXWIRE_UM" in cfg:
-        raise SystemExit("zh_rf1 derive: config.mk OT_HOLD_FF_MARGIN / OT_MAXWIRE_UM not in the expected form")
+    if n != 1 or "OT_MAXWIRE_UM" in cfg or "OT_IO_HOLD_PAD" in cfg:
+        raise SystemExit("zh_rf1 derive: config.mk OT_HOLD_FF_MARGIN / OT_MAXWIRE_UM / OT_IO_HOLD_PAD not in the expected form")
     cfg += f"export OT_MAXWIRE_UM = {maxwire_um:g}\n"
+    if io_hold_pad_margin is not None:
+        # IO-HOLD-PAD (tools/orfs_hold_mm.tcl, COORD 10-27 (d), METHODOLOGY 12.8): the kit's input-port -> face-register
+        # hold contract padded per bit with HB4 in the GRT step (KV kits repair FF hold first at GRT).  RF-E zh rfA2:
+        # in-flow GRT hold +10.0 ps -> routed sign-off FF -15.73 ps on 70 input-face endpoints (sid_q / zs_we_q).
+        cfg += ("export OT_IO_HOLD_PAD = 1\nexport OT_IO_HOLD_PAD_STAGE = grt\n"
+                f"export OT_IO_HOLD_PAD_MARGIN_PS = {io_hold_pad_margin:g}\n")
+        delta["io_hold_pad_margin_ps"] = io_hold_pad_margin
     (kd / "config.mk").write_text(cfg)
     shutil.copyfile(repo / "tools/die_plan/grt_maxwire.tcl", kd / "grt_maxwire.tcl")
     prov = LEC._repo_provenance(repo)
@@ -148,5 +193,7 @@ if __name__ == "__main__":
     ap.add_argument("--repo", default=str(Path(__file__).resolve().parents[5]))
     ap.add_argument("--maxwire-um", type=float, default=60)
     ap.add_argument("--hold-ff-margin", type=float, default=10)
+    ap.add_argument("--zy-reps", type=int, default=0, help="RF-KV1b: kept zy_r write replicas (0 = RF-KV1 only)")
+    ap.add_argument("--io-hold-pad-margin", type=float, default=None, help="enable IO-HOLD-PAD at GRT with this margin")
     a = ap.parse_args()
-    print(derive(a.src, a.out, a.repo, a.maxwire_um, a.hold_ff_margin))
+    print(derive(a.src, a.out, a.repo, a.maxwire_um, a.hold_ff_margin, a.zy_reps, a.io_hold_pad_margin))
