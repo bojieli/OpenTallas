@@ -76,7 +76,7 @@ class Gate(unittest.TestCase):
         for ev in ("l47k", "l47t"):                            # COORD 10-31 04:4x: l47k now, l47t after merge
             c["dies"]["s81_head"]["event"] = ev
             self.assertTrue(KW.gate(c, "s81_head")[0])
-        for ev in ("l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1"):   # l48h0 COORD 11-03 00:2x (a); l48h1 DIE-HEAD-56 11-03 04:5x            # COORD 10-31 16:2x l48w; l48x pin fixes; l48y COORD 11-01 01:0x; l48z 11-01 14:0x
+        for ev in ("l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf"):   # l48h0 COORD 11-03 00:2x (a); l48h1 DIE-HEAD-56 11-03 04:5x            # COORD 10-31 16:2x l48w; l48x pin fixes; l48y COORD 11-01 01:0x; l48z 11-01 14:0x
             c["dies"]["s81_head"]["event"] = ev
             self.assertTrue(KW.gate(c, "s81_head")[0])
         for ev in ("l48", "l48q"):
