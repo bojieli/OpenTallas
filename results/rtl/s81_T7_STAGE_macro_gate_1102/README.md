@@ -37,3 +37,5 @@
 - Add three children right after the bound in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json `files`: `ot_t7_pmem_capture_candidate.sv` 3d7ab5aa, `ot_t7_pvq_capture_candidate.sv` 80367218 and `ot_t7_land_capture_candidate.sv` 64e23cf3.
 - Use gen_phys with the claude/tok-ds-3-1102 DECLARED_FLOP_MEMORIES/elab_width entries.
 - Macro delta for T7: +16 + 12 + 4 x 256x256 and +34 x 32x64. All of these macro types are already in the T7 kit_rtl.json `hard_macros`.
+
+**Full-T7 elaboration of the closure bound** (`ELAB_closure.txt`): Verilator 5.050 `--lint-only` of the whole T7 with 12605dc2 and the three children exits 0 with 0 errors. The 6 warnings are the same pre-existing set seen in the LAND runs. Peak RSS was 36.6 GB.
