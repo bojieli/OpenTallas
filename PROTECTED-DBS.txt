@@ -38,3 +38,6 @@ intel2 /srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1 DIE-S81-48/nnfu S81 ds
 intel1 /srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80 DIE-KV-61/drv KV ot_qwen_tp8_pv_join_t fR180 (a837e3a580a0cb97) routed DB 6_final.odb sha 7a4a8aea (counted via m-kv re-sign)
 intel1 /srv/opentallas-scratch2/claude/dkv61/pvjoin/fR180_w80_mkv DIE-KV-61/drv m-kv re-sign dir of pv_join_t fR180 (SIGNED TT +51.16/FF +10.36, LEC EQ 18181, PROVENANCE kind resign)
 intel1 /srv/opentallas-scratch2/claude/dkv61/tools_mkv DIE-KV-61/drv m-kv tag tools for the pv_join_t re-sign
+epyc2 /home/ubuntu/scratch-root/claude/die-kv-61/q2/q2r_c DIE-KV-62/q2e6 KV qkd_ectlk_q2 routed DB (run/results/asap7/hc_qkd_ectlk_q2__233_28x172_8/base/6_final.odb sha fbdad447) + kit; preserve (count)
+epyc2 /home/ubuntu/scratch-root/claude/die-kv-61/q2/q2r_c_flow-20261102-q-kv DIE-KV-62/q2e6 q-kv re-sign dir of qkd_ectlk_q2 (SIGNED TT +173.08/FF +11.81, LEC EQ 10471, PROVENANCE kind resign)
+epyc2 /home/ubuntu/scratch-root/claude/die-kv-61/repo_qkv DIE-KV-62/q2e6 flow-20261102-q-kv tag tools for the q2 re-sign
