@@ -29,3 +29,5 @@
 - Not applied to a manifest, kit or recipe.
 - Physical: the T7 plan must place 16 + 12 + 4 + 34 new macros. Fit, macro clock and 833 ps timing are not qualified.
 - 2-state zero-start only.
+
+**Yosys elaboration** (`yosys_stat.txt`, ORFS asap7lock image): the unchanged module with `chparam SRAM_MACRO=1 D=32 NL=4 TROWS=640` plus the 256x256 `_bb.v` gives `hierarchy; proc; memory -nomap; stat` = 8 cells, all `ot_sram_1r1w_256x256_m2_r2c2`, and 0 memories. The `{{(8-AW){1'b0}}, ...}` zero-width pad (AW=8) is accepted.
