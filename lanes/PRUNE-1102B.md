@@ -50,3 +50,15 @@
 
 ## intel2 manifest G (2026-11-02 23:18 PST): FLOW-23 RELEASE 23:10
 - flow-21/kcc/base/tree/physical (31.41 GB, newest 2026-11-01 14:43) and flow-21/kcc/tip/tree/physical (31.41 GB); plain repo copies, no PROTECTED path inside (results/ kept). Manifest intel2:.../prune-1102a/i2_flow21_rel_1102b.tsv.
+
+## manifest G result + COORD hourly target <=85% (2026-11-02 23:32 PST)
+- G: removed both flow-21 physical copies, 62.83 GB. intel2 322 GB free at 23:2x, 294 GB/92% now (other jobs keep writing).
+- COORD hourly: intel1+intel2 to <=85% (~528 GB free each), superseded failed kit attempts first, same exclusions.
+
+## intel1 manifest H (2026-11-02 23:32 PST): superseded kit-wave attempts (attempts.py: not latest attempt of item, newest >24 h, no .keep/PROVENANCE/SIGNED inside)
+- Roots without a .keep ancestor: kit-wave, codex-{head-lep-wave-1101,head-wave-1101,qc-wave-1101,s81-wave-1345}/kit-wave. 42 attempt dirs, 15.03 GB; all prot=0, live=0, ref=0.
+  Manifest intel1:.../prune-1102a/i1_att_rm_1102b.tsv (bytes, mtime, path); checks i1_att_chk_1102b.tsv.
+- intel2: every kit-wave root with attempts is under a .keep (kit-wave/.keep 11-01 22:00, codex-head-*-wave, codex-s81-wave-1345); the 3 non-.keep roots have 0 GB of superseded attempts.
+
+## intel1 manifest I (2026-11-02 23:32 PST): flow-canary DBs (superseded-tag per COORD ruling item 1 + untagged idle; newest-2 tag shas kept)
+- 33 runs, 10.83 GB of *.odb/*.spef/*.def/*.gds. Manifest intel1:.../prune-1102a/intel1_can_db_1102b.tsv; verdicts intel1_can_runs_1102b.tsv.
