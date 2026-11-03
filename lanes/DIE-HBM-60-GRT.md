@@ -1,0 +1,2 @@
+# DIE-HBM-60/GRT (helper of DIE-HBM-60: HBM die-level GRT + die clock gate; successor of DIE-HBM-59 clock part)
+- 2026-11-03 03:42 PST CLAIM [DIE-HBM-60/GRT] (1) collect the 23 partition GRT50 runs (dhbm57-s11_*/c11*_i50, dhbm44-g50-*; intel1/intel2/epyc2), stop only hung (>2 h no log + no CPU) by exact name; per-type GRT table -> /PLAN; (2) die clock gate port d44g/C12e -> d44s (main) then d44v; (3) whole-die signal+clock GRT50 plan + launch via ot-run on d44v (d44t if d44v not ready by ~05:15).
