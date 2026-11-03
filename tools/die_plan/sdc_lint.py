@@ -949,12 +949,13 @@ def kit_context(P, tn):
         n = gen_rtl.sv_id(b["name"])
         (ins if b["dir"] == "in" else outs).append(n)
         floor[n] = gen_phys.IO_BUDGET * per
+    spl = gen_phys.plain_seam_split(P)      # plain-lane input budget event (opt-in clock.plain_seam_split)
     for s in t.get("ft_slots", []):
         ni, no = gen_rtl.sv_id(s["name"] + "_i"), gen_rtl.sv_id(s["name"] + "_o")
         ins.append(ni)
         outs.append(no)
-        floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
-        floor[no] = gen_phys.ft_hop_in_share(P) * per
+        floor[ni] = spl["in"].get(tn, {}).get(ni, (1 - gen_phys.ft_hop_in_share(P)) * per)
+        floor[no] = spl["out"].get(tn, {}).get(no, gen_phys.ft_hop_in_share(P) * per)
     floor["arst_n"] = gen_phys.IO_BUDGET * per
     ids = [sp["name"] for sp in t.get("id_straps", []) + t.get("count_straps", [])]      # HEAD-BIND-4: partition ID straps (OWNER 10-25 B)
     for n in ids:

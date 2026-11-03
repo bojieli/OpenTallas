@@ -1194,6 +1194,69 @@ def ft_hop_in_share(P):
     return float(P.clock.get("ft_hop_in_share", FT_HOP_IN_SHARE))
 
 
+def plain_seam_split(P):
+    """Plain-lane input budget event (COORD 11-03 10:49 plain-seam input-face class part 2, DIE-S81-51/PLAN): opt-in
+    plan clock.plain_seam_split {rx_in_max_ps, rx_in_raw_max_ps}; absent = {} (kit SDC byte-identical).
+
+    A plain lane is a die port whose receiver bus is an ft slot input that is not a landing-ring input
+    (landing_contract.ring_input_ports): station 0 is the in-face register, timed on vclk.  Its receiver input max
+    before the tap-window shift becomes min((1 - sh) T, rx_in_raw_max_ps, rx_in_max_ps + window shift), so the written
+    external in-budget is <= rx_in_max_ps and the in-face path keeps the freed setup for its hold pads (the window shift
+    cancels against the early capture tap, so the raw cap is what the face path gains).  The cut is taken from the
+    sender only where the sender bus is an ft slot output (registered: its last station) and every die port of that
+    sender type bus is a plain lane: output max = T - the largest receiver input max of those ports.  Any other sender
+    keeps its budget, so O + I <= T holds on every seam.  -> {"in": {type: {port: ps}}, "out": {type: {port: ps}}}."""
+    cfg = P.clock.get("plain_seam_split")
+    if not cfg:
+        return {"in": {}, "out": {}}
+    got = getattr(P, "_plain_seam_split", None)
+    if got is not None:
+        return got
+    import landing_contract as LC
+    T, sh = float(P.die["period_ps"]), ft_hop_in_share(P)
+    full = (1 - sh) * T
+    cap_w, cap_r = float(cfg["rx_in_max_ps"]), float(cfg.get("rx_in_raw_max_ps", full))
+    slots = {tn: {s["name"] for s in t.get("ft_slots", [])} for tn, t in P.types.items()}
+    ring = {}
+    rin, src = {}, {}
+    for pr in P.ports.values():
+        s, d = pr["src"], pr["dst"]
+        if DIE_PART in (s["part"], d["part"]):
+            continue
+        rt, st = P.parts[d["part"]]["type"], P.parts[s["part"]]["type"]
+        db, sb = d["bus"], s["bus"]
+        if rt not in ring:
+            ring[rt] = {x.split("[")[0] for _c, sel in LC.ring_input_ports(P, rt) for x in sel}
+        plain = db.endswith("_i") and db[:-2] in slots[rt] and db not in ring[rt]
+        if plain:
+            v = round(min(full, cap_r, cap_w - tap_window_io_shift(P, rt)[0]), 4)
+            if v < full - 1e-6:
+                rin.setdefault(rt, {})[db] = v
+        if sb.endswith("_o") and sb[:-2] in slots[st]:
+            src.setdefault((st, sb), []).append((rt, db, plain))
+    rout = {}
+    for (st, sb), rx in sorted(src.items()):
+        if all(p for _r, _b, p in rx):
+            v = round(T - max(rin.get(r, {}).get(b, full) for r, b, _p in rx), 4)
+            if v > sh * T + 1e-6:
+                rout.setdefault(st, {})[sb] = v
+    P._plain_seam_split = {"in": rin, "out": rout}
+    return P._plain_seam_split
+
+
+def _ft_delay_lines(kind, ports, base, spl, fmt):
+    """ft slot IO delay lines: the base value on the ports the plain-lane split leaves alone, one line per split value."""
+    grp = {}
+    for p in ports:
+        grp.setdefault(spl.get(p), []).append(p)
+    out = ""
+    for v in [None] + sorted(k for k in grp if k is not None):
+        if v in grp:
+            out += (f"set_{kind}_delay -max {fmt(base if v is None else v)} -clock vclk "
+                    f"[get_ports {{{' '.join(p + '[*]' for p in grp[v])}}}]\n")
+    return out
+
+
 # CLOCK-RESET IO-HOLD 10-25 (opt-in plan clock.seam_hold {sender_ps, seam_ps}; absent = the legacy contract above).
 # Seam hold composes from the two kit checks: the sender's output hold (set_output_delay -min -sender_ps, its half
 # uncertainty 12.5) guarantees port data >= vclk + 12.5 + sender_ps in its own propagated frame; the receiver's input
@@ -1919,9 +1982,20 @@ def sdc(P, tn, pins):
                 "late keeps the tap's own early latency\n" + core_tap_window_tcl(P, tn))
     if slots:
         sh = ft_hop_in_share(P)
-        out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
-                f"set_input_delay -max {(1 - sh) * per + t_lib(tw_in):.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
-                f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+        spl = plain_seam_split(P)
+        s_in, s_out = spl["in"].get(tn, {}), spl["out"].get(tn, {})
+        if not s_in and not s_out:
+            out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
+                    f"set_input_delay -max {(1 - sh) * per + t_lib(tw_in):.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
+                    f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+        else:
+            out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment; plan "
+                    f"clock.plain_seam_split (plain-lane input budget event): plain-lane inputs "
+                    f"{len(s_in)}, registered plain-lane senders {len(s_out)}\n"
+                    + _ft_delay_lines("input", [f"{n}_i" for n in slots], (1 - sh) * per,
+                                      {k: t_lib(v) for k, v in s_in.items()}, lambda v: f"{v + t_lib(tw_in):.4f}")
+                    + _ft_delay_lines("output", [f"{n}_o" for n in slots], sh * per,
+                                      {k: t_lib(v) for k, v in s_out.items()}, lambda v: f"{v:.4f}"))
     # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
     # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
