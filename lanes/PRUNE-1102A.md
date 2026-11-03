@@ -104,3 +104,71 @@ Lane brief (COORD 11-02): intel2 scratch2 96%, epyc2 93%, intel1 92%; target <=8
 - wt/codex-qc-suc.partial_checkout (not a git worktree, Codex 11-01 07:25, no external refs): removed tracked-content copies physical/ rtl/ runtime/ schemas/ site/ spec/ (24.9 GB); results/ (with .keep) and reports/ kept.
 - Untagged flow-canary runs, idle >24 h, no external ref (prune-1101b manifests ignored as referrers), not live: 479 runs eligible; deleting
   generated files >1 MB except *.json/*.log/*.rpt (67.7 GB, 1653 files; receipts/logs kept). Per-file list intel2:.../prune-1102a/i2_canary_big.tsv.
+
+## intel1 manifest (2026-11-02 19:29 PST) — delete whole eligible units (same rules; fixed live check; prune manifests not counted as referrers)
+| GB | newest | path |
+|---|---|---|
+| 1.26 | 2026-11-01 15:34 | /srv/opentallas-scratch2/claude/codex-bksel-r2-correct-1531 |
+| 0.73 | 2026-11-01 11:42 | /srv/opentallas-scratch2/claude/codex-caprt-1101/A40R |
+| 0.66 | 2026-11-01 11:42 | /srv/opentallas-scratch2/claude/codex-caprt-1101/B25rR |
+| 0.44 | 2026-11-01 07:15 | /srv/opentallas-scratch2/claude/codex-hbm-clock/calib |
+| 0.27 | 2026-11-01 07:39 | /srv/opentallas-scratch2/claude/codex-hbm-clock/physical_ca_A |
+| 0.32 | 2026-10-30 04:18 | /srv/opentallas-scratch2/claude/codex-hbm-cores-1030/query |
+| 0.24 | 2026-10-30 08:53 | /srv/opentallas-scratch2/claude/codex-hbm-cores-1030/retired |
+| 0.20 | 2026-11-01 07:46 | /srv/opentallas-scratch2/claude/codex-hbm-finalstations-n1-1101 |
+| 0.30 | 2026-11-01 13:59 | /srv/opentallas-scratch2/claude/codex-hbm-pslice-coldreset-1400/plan |
+| 0.27 | 2026-10-30 08:33 | /srv/opentallas-scratch2/claude/codex-hbm-selector-1030/native_verilog |
+| 0.22 | 2026-08-27 07:21 | /srv/opentallas-scratch2/claude/codex-head-padkeep-source-1102/lib |
+| 1.14 | 2026-10-29 01:59 | /srv/opentallas-scratch2/claude/codex-kv-1028/event24_bind |
+| 0.26 | 2026-10-30 03:51 | /srv/opentallas-scratch2/claude/codex-kv-1030/bind_e0_import_FAIL |
+| 0.67 | 2026-10-30 09:47 | /srv/opentallas-scratch2/claude/codex-kv-1030/count_batch3 |
+| 2.12 | 2026-10-30 06:46 | /srv/opentallas-scratch2/claude/codex-kv-1030/hroot_current_gplplain2 |
+| 0.22 | 2026-11-01 18:10 | /srv/opentallas-scratch2/claude/codex-kv-hroot-reset-preserve-1131 |
+| 0.42 | 2026-11-01 09:04 | /srv/opentallas-scratch2/claude/codex-qc-count-wave-1030 |
+| 0.31 | 2026-11-01 12:45 | /srv/opentallas-scratch2/claude/codex-qc-su-trials/l4_reset_face_stage1131 |
+| 0.78 | 2026-11-01 07:26 | /srv/opentallas-scratch2/claude/codex-qca0 |
+| 0.32 | 2026-11-01 18:21 | /srv/opentallas-scratch2/claude/codex-s81-l2gate-1445/slew1_transport |
+| 0.69 | 2026-10-30 05:08 | /srv/opentallas-scratch2/claude/codex-s81types-1030/kvt2_noshare_v2 |
+| 0.49 | 2026-11-01 04:13 | /srv/opentallas-scratch2/claude/die-qc-59/lec_stb64 |
+| 1.64 | 2026-11-01 08:27 | /srv/opentallas-scratch2/claude/die-qc-59/lec_stbC |
+| 0.48 | 2026-11-01 17:27 | /srv/opentallas-scratch2/claude/die-s81-47/rg3eq |
+| 2.32 | 2026-11-01 06:15 | /srv/opentallas-scratch2/claude/flow-canary/runs/hbm_2e8f53639_1101_053753_069801 |
+| 2.32 | 2026-10-31 16:54 | /srv/opentallas-scratch2/claude/flow-canary/runs/hbm_4453cc5b5_1031_165312_787528 |
+| 2.16 | 2026-10-31 14:40 | /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_c96881d10_1031_143757_540145 |
+| 3.62 | 2026-10-31 15:13 | /srv/opentallas-scratch2/claude/flow-canary/runs/s81_c96881d10_1031_150719_587034 |
+| 0.42 | 2026-11-01 16:46 | /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_951cc6273_1101_163639_593697 |
+| 0.47 | 2026-11-01 07:04 | /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_cl_03e957472_1101_065232_569024 |
+| 0.47 | 2026-11-01 16:44 | /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_cl_951cc6273_1101_163639_593697 |
+| 0.88 | 2026-10-31 16:48 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C10d |
+| 0.89 | 2026-10-31 17:18 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C10h |
+| 0.89 | 2026-10-31 18:44 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11b |
+| 0.89 | 2026-10-31 18:44 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11c |
+| 0.91 | 2026-10-31 19:02 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11d |
+| 0.91 | 2026-10-31 19:02 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11e |
+| 0.91 | 2026-10-31 19:34 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11f |
+| 0.91 | 2026-10-31 19:33 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11g |
+| 0.91 | 2026-10-31 20:05 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11h |
+| 0.91 | 2026-10-31 20:06 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11i |
+| 0.91 | 2026-10-31 20:37 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11j |
+| 0.91 | 2026-10-31 20:37 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11k |
+| 0.91 | 2026-10-31 21:09 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11l |
+| 1.30 | 2026-11-01 03:43 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C11m |
+| 0.95 | 2026-11-01 03:24 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C12a |
+| 0.91 | 2026-10-31 21:47 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C12c |
+| 0.91 | 2026-11-01 03:50 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C12d |
+| 1.16 | 2026-10-31 13:59 | /srv/opentallas-scratch2/claude/hbm-clkloc-1/C7 |
+| 2.13 | 2026-11-01 04:45 | /srv/opentallas-scratch2/claude/kit-triage-1/lec_canary |
+| 2.74 | 2026-10-31 18:05 | /srv/opentallas-scratch2/claude/kit-wave/s81/e6e75a4ea7e/items/slice_station__t24__cl66b71008 |
+| 1.17 | 2026-10-24 22:08 | /srv/opentallas-scratch2/claude/s81-head/bench_pipe |
+| 0.46 | 2026-10-24 21:39 | /srv/opentallas-scratch2/claude/s81-head/tile_prev2 |
+| 0.47 | 2026-10-24 22:09 | /srv/opentallas-scratch2/claude/s81-head/tile_prev3 |
+| 0.47 | 2026-10-24 22:09 | /srv/opentallas-scratch2/claude/s81-head/tile_prev4 |
+| 0.47 | 2026-10-24 22:44 | /srv/opentallas-scratch2/claude/s81-head/tile_prev5 |
+| 0.70 | 2026-10-31 09:01 | /srv/opentallas-scratch2/claude/s81-ringhold-4/pilot_t24 |
+| 0.85 | 2026-10-31 15:20 | /srv/opentallas-scratch2/claude/s81-serdes-phy-3/pilot5_serdes__t14 |
+| 0.91 | 2026-10-31 15:21 | /srv/opentallas-scratch2/claude/s81-serdes-phy-3/pilot5_serdes__t16 |
+| 0.91 | 2026-10-31 15:21 | /srv/opentallas-scratch2/claude/s81-serdes-phy-3/pilot5_serdes__t1__clb45db5be |
+| 1.95 | 2026-10-31 07:04 | /srv/opentallas-scratch2/claude/s81ck9/ef_bench |
+| 0.66 | 2026-10-24 06:59 | /srv/opentallas-scratch2/qc-tok |
+
+epyc2 results: deleted 10.51 GB canary DBs; moved (symlinked) die-s81-46, die-kv-50, head-serdes-1, die-s81-45, codex-hbm-multitap-1101, codex-hbm-bind-restore-1101, codex-qc-slw-count-1101, dh53-hostlec, codex-head-serdes-repair-1101, codex-kv-hg-ex-recovery-1101, codex-qca0 to /home/ubuntu/scratch-root/claude (~50 GB). Skipped codex-qc-cores-0815 and die-kv-51 (autopilot signoff dirs). epyc2 93% -> 87%.
