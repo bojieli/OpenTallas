@@ -16,6 +16,7 @@ ap.add_argument('--repo', default='/home/ubuntu/scratch-root/claude/die-hbm-60-p
 ap.add_argument('--g0'); ap.add_argument('--geomcoll'); ap.add_argument('--rtl-add')
 ap.add_argument('--latency-changes'); ap.add_argument('--jobs', type=int, default=8)
 ap.add_argument('--skip-reset', action='store_true')
+ap.add_argument('--core-lat', nargs='*', default=[], help='SPLIT/MEM/RTL core latency TSVs (core, [sub_block,] port_or_bus, [dir,] added_cycles, ...)')
 a = ap.parse_args()
 PD = Path(a.plan_dir).resolve(); OUT = Path(a.out); OUT.mkdir(parents=True, exist_ok=True)
 sys.path.insert(0, a.repo + '/tools/die_plan')
@@ -219,13 +220,32 @@ def item_c():
                          seams=len(ports), cycles=d.get('cycles'), stations=d.get('stations'), boundary=d.get('boundary'),
                          faces=d.get('faces'), fixed=d.get('fixed'), pad=d.get('pad'), param=d.get('param'),
                          added_plan_cycles=add_plan, added_rtl_cycles=int(rtl.get(lid, 0)), note=ln.get('note')))
+    hci = {tn: {h['inst'] for h in t.get('hard_cores') or []} for tn, t in T.items()}
     for tn, t in T.items():
         for k, st in enumerate(t.get('internal_stations') or []):
             n = len(st.get('regs_um') or [])
             key = f'{tn}#{st.get("conn")}#{k}'
+            # CLOCK ruling 11-03 (DIE-HBM-61): a core-face crossing with NO count-aligned station uses the face register +
+            # negedge lockup -> +1 declared cycle (relay register at the parent face): hold by construction, full-period setup
+            core_end = any(str(st.get(e) or '').split('.')[0] in hci[tn] for e in ('launch', 'capture')) or \
+                any(x.split('.')[0] in hci[tn] for x in str(st.get('conn') or '').split('|'))
+            lk = 1 if (n == 0 and core_end) else 0
             rows.append(dict(kind='type_internal', id=key, type=tn, instances=inst_n[tn], conn=st.get('conn'),
                              launch=st.get('launch'), capture=st.get('capture'), bits=st.get('bits'),
-                             cycles=n, stations=n, added_plan_cycles=0, added_rtl_cycles=int(rtl.get(key, 0))))
+                             cycles=n + lk, stations=n, lockup_relay_cycles=lk, added_plan_cycles=lk,
+                             added_rtl_cycles=int(rtl.get(key, 0))))
+    for f in a.core_lat:                       # core-internal latency tables of the RE-FORM lanes (SPLIT / MEM / RTL)
+        lines = [l.rstrip('\n').split('\t') for l in open(f) if l.strip()]
+        hdr = lines[0]
+        for k, l in enumerate(lines[1:]):
+            r = dict(zip(hdr, l))
+            ac = str(r.get('added_cycles') or '0'); mm = re.match(r'\s*([+-]?\d+)', ac)
+            cyc = int(mm.group(1)) if mm else 0
+            internal = r.get('dir') in ('cut', 'seam') or 'compensated' in ac     # inside the core, not at its ports
+            rows.append(dict(kind='core_internal', id=f"{r.get('core')}#{k}", core=r.get('core'), sub_block=r.get('sub_block'),
+                             port=r.get('port_or_bus'), dir=r.get('dir'), cycles=cyc, stations=0, added_plan_cycles=0,
+                             added_rtl_cycles=0 if internal else cyc, internal_cut_cycles=cyc if internal else 0,
+                             source=Path(f).name, note=r.get('note')))
     # partition <-> hard-core crossings: core face = registered by contract (0 added cycles); counted, not listed per pin
     hc = sum(len(t.get('hard_cores') or []) * max(inst_n[tn], 1) for tn, t in T.items())
     by = collections.Counter(r['kind'] for r in rows)
@@ -239,6 +259,12 @@ def item_c():
               added_plan_cycles_total=sum(r['added_plan_cycles'] for r in rows),
               lanes_with_added_plan_cycles=sorted(r['id'] for r in rows if r['added_plan_cycles']),
               added_rtl_cycles_total=sum(r['added_rtl_cycles'] for r in rows),
+              lockup_relay_crossings=sum(1 for r in rows if r.get('lockup_relay_cycles')),
+              core_internal_rows=sum(1 for r in rows if r['kind'] == 'core_internal'),
+              core_internal_added_port_cycles={c: max(r['added_rtl_cycles'] for r in rows if r.get('core') == c)
+                                               for c in sorted({r['core'] for r in rows if r['kind'] == 'core_internal'})},
+              core_face_lockup_rule='every core-face crossing without a count-aligned station: face reg + negedge lockup + '
+                                    '1 parent-face relay register (+1 declared cycle); crossings with stations: no lockup',
               latency_groups=[(k, v[0], v[1]) for k, v in sorted(grp_c.items()) if k != '-'],
               lanes_missing_latency=sorted(l for l in P.lanes if l not in lat))
     doc = dict(schema='opentallas.hbm_crossing_latency.v1', plan=str(PD / 'die_plan.json'),

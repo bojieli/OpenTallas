@@ -1,0 +1,29 @@
+by check: {'clock_entry_macro': (1, 0), 'core_faces': (8, 8), 'hops': (10, 2), 'reach': (17, 9), 'stations': (13, 3), 'street_die_leg': (2, 2)}
+gone 27 new 0
+GONE clock_entry_macro type q_su00 core u_su_Q0_lanes_plain0_3 (ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526): clock entry [220.296, 228.96] / island [216.0, 224.64, 224.64, 233.28] over macro(s) ['u_fcore.u_core.u_bank1.u_data.g_read\\[1\\].u_m'] (+halo 0): move the entry to a std-cell region at the core's cloc
+GONE hops lane L5: normal FT NW_su31.L5r0_1 real input bit 1 S0->S1 is 953 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L5m: normal FT NE_su31.L5r0_1 real input bit 2725 S0->S1 is 953 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L34: normal FT NW_su31.L34r0_1 real input bit 1614 S0->S1 is 860 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L34m: normal FT NE_su31.L34r0_1 real input bit 0 S0->S1 is 860 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L6b: normal FT NW_su31.L6br0_1 real input bit 0 S0->S1 is 532 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L6bm: normal FT NE_su31.L6br0_1 real input bit 828 S0->S1 is 532 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L730: normal FT NW_su00.L730x1 real input bit 1661 S0->S1 is 863 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L730m: normal FT NE_su00.L730x1 real input bit 1661 S0->S1 is 863 um > reach 405; regs_um[0] is not a native placement
+GONE stations type q_su31__physical_v1 slot L5r0_1: real normal input S0->S1 = 953 um > ft_station_max_um 405
+GONE stations type q_su31 slot L5r0_1: real normal input S0->S1 = 953 um > ft_station_max_um 405
+GONE stations type q_su31__physical_v1 slot L34r0_1: real normal input S0->S1 = 860 um > ft_station_max_um 405
+GONE stations type q_su31 slot L34r0_1: real normal input S0->S1 = 860 um > ft_station_max_um 405
+GONE stations type q_su31__physical_v1 slot L6br0_1: real normal input S0->S1 = 532 um > ft_station_max_um 405
+GONE stations type q_su31 slot L6br0_1: real normal input S0->S1 = 532 um > ft_station_max_um 405
+GONE stations type q_su00__physical_v1 slot L730x1: real normal input S0->S1 = 863 um > ft_station_max_um 405
+GONE stations type q_su01 slot L730x4: real normal input S0->S1 = 734 um > ft_station_max_um 405
+GONE stations type q_su00 slot L730x1: real normal input S0->S1 = 863 um > ft_station_max_um 405
+GONE stations type q_su01__physical_v1 slot L730x4: real normal input S0->S1 = 734 um > ft_station_max_um 405
+GONE reach lane L5: hop 1 is 726 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_su31)
+GONE reach lane L5m: hop 1 is 726 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_su31)
+GONE reach lane L34: hop 1 is 725 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_su31)
+GONE reach lane L34m: hop 1 is 725 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_su31)
+GONE reach lane L6b: hop 1 is 464 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_su31)
+GONE reach lane L6bm: hop 1 is 463 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_su31)
+GONE reach lane L730: hop 1 is 725 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NW_su00)
+GONE reach lane L730m: hop 1 is 725 um > 0.9 x reach 405 (M4/M5/M6/M7, reach.py) = 364; need 2 hop(s) there (in NE_su00)

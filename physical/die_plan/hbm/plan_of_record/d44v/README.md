@@ -1,4 +1,4 @@
-# HBM plan event d44v = the HBM RE-FORM batch plan event, part 1 (DIE-HBM-61/PLAN, 2026-11-03)
+# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1 + 2 (DIE-HBM-61/PLAN, 2026-11-03)
 
 OWNER 11-03: TWO-STRIKES -> RE-FORM, ONE batch per die. Rules are design targets: plan GEOM, fill, aspect and channels
 are ADVISORY. Only sign-off blocks.
@@ -40,35 +40,124 @@ Builder: `results/die_hbm_1103/reform/build_d44v.sh WORK OUT`, steps in order:
 
 Proof: see the "Checks" section, appended by the builder run.
 
-## Checks (epyc2 die-hbm-60-plan, same tools for every plan: this branch = main 08542fa9d7d + d44v tools)
+## Part 2 (builder steps between 3 and 4; the centre clock-entry pins stay LAST)
+
+All numbers are advisory (OWNER 11-03). Each step writes an event file into this dir.
+
+- **2b. Part-2 lane outlines** (`mk_reform.py` + `p2_outlines.json`), from DIE-HBM-61/MEM 55c4a61894a `channel_fit.json`:
+  - ot_hbm_host_cp_rxs: 434.808x480 -> **400.248x151.68**. Fill goes 0.035 -> 0.107 and aspect 1.10 -> 2.64. The
+    station count is unchanged.
+  - hfd_ep_static: the slot is **kept** at 427.68x246.24. channel_fit's 250.56x146.88 fits, but every shrink tried
+    (H 159.84-211) adds 1 register on the vsN0 u_lk_S1->u_ep_S1 and NW_io u_ep_N0->u_lk_N0 stations.
+  - Both get core_macros status UNKNOWN (old entry under `macros_r2c2_old`) until the RE-FORM kit runs.
+  - The MEM recipe (OT_HBM_RW_MACROS define + instance renames) is in `mem_recipe_delta.json`, copied verbatim.
+- **2c. Pin moves** (`mk_repin.py`, `repin_event.json`, new tables `cores/*__p2pin.json`):
+  - keybuf_slice: key_out goes W -> E, giving W 1132 / E 1099. That is 5.2 pins/um at a 0.192 pitch.
+  - vm_wr_q_t_lanes4: the outline is kept (a 259-um-tall slot breaks 22 q_hub stations). The faces go from
+    N 839 / E 1116 / W 562 / S 1156 to **N 746 / E 1122 / W 1059 / S 746**, at a 0.168 mean pitch (5.95 pins/um).
+    - The move is bit-level and minimal. It uses the check.py core_faces score per instance, so no port mean drops
+      below -0.09. Result: 0 new core_faces FAIL.
+- **2d. keybuf macro sites** (`mk_kbmac.py`, written into `core_macros.json`): 4x ot_sram_1r1w_256x256_m2_r0c0_g256
+  (169.368x28.392) + 1x ot_sram_1r1w_256x64_m2_r0c0_g64.
+  - One column at x 31.32-200.688, orient **MY**: the write port (wd_in) faces W = key_in, and the read port (rd_out)
+    faces E = key_out.
+  - Channels:
+    - W logic channel **31.32 um**. Need: 1132 pins x 0.048 / 2 vertical layers = 27.2 um.
+    - E channel **41.23 um**. It holds the clock island [203.04,142.56,211.68,151.2].
+    - 6 row gaps of 25.0-25.4 um carry the key_in -> key_out bypass mux wires (1099 bits on M4/M6, about 31 um of the
+      151 um available).
+  - No route crosses a SRAM.
+- **2e. Clock entry over a macro** (`mk_cefix.py`, `cefix_event.json`): q_su00 lanes_plain__canon_663526. The entry
+  moves to the nearest free same-phase lattice point, [168.456, 228.96]. All 16 entries of that table are updated,
+  and so are the type clock taps.
+- **2f. Hard-core reset trees for q_sm0-3** (`mk_smrst.py`, `hard_reset_trees.json`). These are the 128 rp3lp3h core
+  resets that had no tree.
+  - The tree is the generator's reset topology (relay reach, blockages, walls), sized as below. `reset.depth` is set
+    to the tree depth.
+
+    | type | depth | relays |
+    |---|---|---|
+    | q_sm0 | 20 | 376 |
+    | q_sm1 | 19 | 307 |
+    | q_sm2 | 20 | 340 |
+    | q_sm3 | 19 | 325 |
+
+  - Open: on q_sm1 and q_sm3, the u_sm_t00_s last mile is 439 um (the pin is behind its core). That one is for the
+    kit's in-core relay.
+- **2g. Relay bays on first FT hops over 405 um** (`mk_bays.py`, `bays_event.json`). Each bay sits on the in-face
+  strip and then the free L path, or the free 4.32-grid point nearest S1, clear of hard cores and of the check.py
+  geometry macros. The station counts change as follows:
+
+  | slot (type and __physical_v1) | stations |
+  |---|---|
+  | q_su31 L5r0_1 | 7 -> 9 |
+  | q_su31 L34r0_1 | 6 -> 8 |
+  | q_su31 L6br0_1 | 4 -> 5 |
+  | q_su00 L730x1 | 7 -> 9 |
+  | q_su01 L730x4 | 7 -> 9 |
+
+  - All first hops are now <= 357 um.
+  - `gen.py latency --inplace` regenerates latency.lanes, and `latency_changes_d44v.json` holds the part-1 and
+    part-2 changes. Part-2 cycle changes:
+
+    | lanes | cycles |
+    |---|---|
+    | L5, L5m, L34, L34m | +2 |
+    | L6b, L6bm, L6, L6m, L6c, L6cm | +1 (latency group) |
+    | L730, L730m | 44 -> 51 |
+
+    - L730's +7 is +4 from bays. The other +3 is a stale part-1 latency record, now regenerated (sum of stations 49).
+- **Sidecars**:
+  - `split_slots.json` (`mk_split_slots.py`, `split_spec.json`): the SPLIT READY sub-block slots inside the parent
+    slot (8.64 street, 8.64 lattice, per-sub centre clock entry).
+
+    | parent | SPLIT ref | sub-block slots |
+    |---|---|---|
+    | hcol_h0 | c4237519789 | ra 103.68 + rb 106.272 x 187.488 |
+    | split3_lane | 273120b2730 | fr 120.96 / ex 95.04 / bk 155.52 x 345.6 |
+    | lanes8_11 | 8dd205e8bcc | 3x 181.44 + 190.08 x 311.04 |
+
+    - The hard_cores swap waits until the composition RTL lands.
+    - q3_edge (WIP d764970683d), rp3lp3h_n/s (WIP), q3_body, tkm and fused_lane stay placeholders.
+  - `core_clock_regions.json`: the one unsited hnx_rp3lp3h_n region now has a site (nearest free lattice point).
+  - `corelat/*.tsv`: the SPLIT and MEM latency tables, folded into ext/crossing_latency.json.
+- **Crossing latency** (`ext/crossing_latency.json`, CLOCK ruling 11-03):
+  - Every core-face crossing without a count-aligned station gets face reg + negedge lockup + 1 parent-face relay
+    register, which is **+1 declared cycle**. There are 4 such crossings in this plan.
+  - Crossings that have stations get no lockup.
+  - Core-internal rows: 32.
+    - split3_lane: +4 on write/reducer/status.
+    - hcol_h0: the ra->rb seam is +2, internal and compensated (0 at the ports).
+    - MEM: +0.
+
+## Checks (epyc2 die-hbm-60-plan, same tools for every plan: main 08542fa9d7d + d44v tools)
+
 - **G0+G0C** (`tools/die_plan/check.py --completeness`):
-  - d44t: 74 ERROR / 128 pending-view.
-  - d44v: **51 ERROR** / 128 pending-view. That is 27 gone and 4 new.
-  - Of the 4 new, 3 are pre-existing items under a new message:
-    - u_vmb_Q6/Q7_mu1 dq core_faces: the mu1s3 pin count changes 282 -> 281.
-    - L701 reach: the hop index shifts, still 392 um.
-  - The one real new item is the q_su00 lanes_plain__canon_663526 clock entry over a macro. It comes from the v4 sliver
-    re-row and is listed for part 2.
-  - The 8 core_faces vms_bank errors that the v4 per-hub repins had fixed are back, because of the template rule.
-  - Diff: g0/g0_diff_d44t_d44v.txt.
-- **Plan-time GEOM** (`tools/die_plan/plan_geom.py`, 74 types):
-  - **new FAIL = 0**, gone 0. FAIL count is 225 -> 225 (advisory: every HBM type already fails clock_tap_sinks or
-    clock_reach at d44t).
-  - Values worse on already-failing rules: clock_tap_sinks on q_su11pv1 (5654 -> 6403), q_su31 (7073 -> 7798) and
-    q_su20 (+1).
-  - Values better: q_b101_nw (8491 -> 4821), q_b112, root and q_su30.
+
+  | plan | ERROR | pending-view |
+  |---|---|---|
+  | d44t | 74 | 128 |
+  | d44v part 1 | 51 | 128 |
+  | **d44v part 2** | **24** | 128 |
+
+  - Against part 1, 27 are gone and **0 are new**.
+  - Against d44t, the 3 "new" are pre-existing items under a new message:
+    - u_vmb_Q6/Q7_mu1 dq core_faces: mu1s3 282 -> 281 pins.
+    - L701 reach: hop index shift, still 392 um.
+  - Diffs: g0/g0_diff_d44t_d44v.txt and g0/g0_diff_d44v_p1_p2.txt.
+- **Plan-time GEOM** (`plan_geom.py`, 74 types): **new FAIL = 0**, and the FAIL count is 225 -> 225. All of these
+  are advisory, and every type already fails clock_tap_sinks or clock_reach.
+  - Values worse on rules that already fail (clock_tap_sinks):
+    - q_su31: 7073 -> 13386 (bays: the L5/L34/L6b stations sit on the q_su31 tap);
+    - q_su11pv1: 5654 -> 6403;
+    - q_su01: 8890 -> 9194;
+    - q_su20: +1.
   - Diff: geom/geom_diff_d44t_d44v.txt.
-- **Count** (release_tree_plan.plan_designs vs the d44c count POR): 84 -> 84 designs. The 6 signed cores keep their
-  design key (qctl, tail_native x2, collar_idx256r, ring_ag, fused_tnode). See g0/count_check.txt.
-- **Census (a)-(d)** (ext/census_summary.json):
-  - (a) 76/81 types carry PG + clock tap + reset relays. The 5 missing PG are io/spb0/vsN0, all PHY-domain.
-    379/1028 core slots are complete. Gaps: 133 reset relays, of which 128 are rp3lp3h in q_sm (SPLIT); 132 have no
-    clock entry (hcol_h0/h1 merged view pending, tail_native kept). 576 slots are over 5k sinks; they are covered by
-    core_clock_regions.json, which is declared but has no kit support yet.
-  - (b) 203/357 die lanes are > 400 um and 195 are hop-compliant. 8 are not: L5/L5m, L34/L34m, L730/L730m and
-    L6b/L6bm, with first FT hop 463-726 um. Type-internal stations > 400 um: 20,045, all hops <= 405. FT slots 520,
-    0 over.
-  - (c) ONE crossing latency table, ext/crossing_latency.json.gz: 21,100 crossings (357 die lanes = 4,013 cycles,
-    20,743 internal = 91,789 regs) and 1,156 registered hard-core faces. Added plan cycles: 18. RTL/SPLIT/MEM hook: 0.
-  - (d) 81 types, of which 12 near-duplicate pairs would cut 12 types. Hard cores: 74 modules, 106 designs,
-    1,156 instances. Unifying variants would cut 32 designs.
+- **Count**: 84 -> 84 designs, and the 6 signed cores keep their design key. See g0/count_check.txt.
+- **Census** (ext/census_summary.json):
+  - (a) 81/81 types carry PG + clock tap + reset relays.
+    - 379/1028 core slots are complete.
+    - The 133 reset gaps include the 128 q_sm rp3lp3h. Those are now covered by hard_reset_trees.json, which the
+      census does not read.
+  - (b) 203/203 die lanes over 400 um are hop-compliant (part 1: 195/203). FT slots: 520, 0 over.
+  - (c) 21,132 crossings; plan cycles +44 over d44t; RTL/SPLIT cycles +16 (split3 4 ports x 4).

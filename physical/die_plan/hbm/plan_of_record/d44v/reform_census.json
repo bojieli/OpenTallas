@@ -6,18 +6,22 @@
  "cores": [
   {
    "module": "hfd_ep_static",
-   "cls": "MACRO-CHANNEL placeholder (class 4)",
-   "owner": "DIE-HBM-61/MEM",
-   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "cls": "RESHAPED (part 2 lane outline)",
+   "owner": "DIE-HBM-61/PLAN d44v",
+   "part2": "MEM READY 55c4a61894a: right-width SRAM 4x 64x306 (mem_recipe_delta.json); slot kept (any shrink +1 reg on vsN0/NW_io link stations); macros UNKNOWN until the RE-FORM kit",
+   "decision": "RESHAPE (part 2: DIE-HBM-61/MEM 55c4a61894a right-width SRAM (4x 64x306): slot kept (channel_fit 250.56x146.88 fits, but any shrink adds 1 register on vsN0 u_lk_S1->u_ep_S1 / NW_io u_ep_N0->u_lk_N0 stations, hop 366-392 > 360))",
    "old": [
     427.68,
     246.24
    ],
-   "new": null,
+   "new": [
+    427.68,
+    246.24
+   ],
    "old_fill": 0.0915,
-   "new_fill": null,
+   "new_fill": 0.0519,
    "old_aspect": 1.74,
-   "new_aspect": null,
+   "new_aspect": 1.74,
    "cells": 32586,
    "sinks": 9981,
    "clock_regions_5k": 2,
@@ -60,6 +64,7 @@
    "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
    "cls": "SPLIT placeholder (class 1, 172384 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": null,
    "decision": "UNCHANGED: SPLIT source event (172384 cells > 150k)",
    "old": [
     319.68,
@@ -106,6 +111,7 @@
    "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
    "cls": "SPLIT placeholder (class 1, 175683 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": null,
    "decision": "UNCHANGED: SPLIT source event (175683 cells > 150k)",
    "old": [
     319.68,
@@ -152,6 +158,7 @@
    "module": "ot_hfd_coll_q2_hard_v8g__reduce",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": null,
    "decision": "UNCHANGED: the shrink adds 1 station register on 13 u_hcollgi_Q -> u_hb_coll_Q_reduce crossings (last hop 358.6 -> 384-393 um > 360 with the old sites); fill 0.29 kept, RE-FORM = 5 clock regions",
    "old": [
     233.28000000000003,
@@ -198,6 +205,7 @@
    "module": "ot_hbm_su_static_qcore_r13",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     267.84,
@@ -242,6 +250,7 @@
    "module": "ot_hbm_idx_vm_query_static_n12",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     216.0,
@@ -288,6 +297,7 @@
    "module": "ot_hbm_xp_aq_tree13_fmt",
    "cls": "NO PLAN DATA (no AUTO-GEOM attempt)",
    "owner": "DIE-HBM-61",
+   "part2": null,
    "decision": "UNCHANGED: no AUTO-GEOM cell-area data",
    "old": [
     183.6,
@@ -335,6 +345,7 @@
    "module": "ot_hbm_idx_score_hcol_h0",
    "cls": "SPLIT placeholder (class 1, 180462 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": "SPLIT READY c4237519789: 2 sub slots ra/rb inside the parent slot (split_slots.json), 0 cycles; parent re-shape not needed",
    "decision": "UNCHANGED: SPLIT source event (180462 cells > 150k)",
    "old": [
     218.592,
@@ -394,6 +405,7 @@
    "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     182.304,
@@ -440,6 +452,7 @@
    "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     182.304,
@@ -486,6 +499,7 @@
    "module": "ot_hbm_hc_subtree32_core",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": null,
    "decision": "UNCHANGED: the shrink adds 1 station register on bus L43_o (u_hc_Q.u_cen.subtree32_3 glue, hop 371.5 -> 397.4 with the old sites); fill 0.23 kept, RE-FORM = registered face (pin_unreg 63, DIE-HBM-61/RTL)",
    "old": [
     220.32,
@@ -535,6 +549,7 @@
    "module": "ot_hgi_sm_xload_cl2_bdring",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     120.96,
@@ -580,6 +595,7 @@
    "module": "hfd_hgi_vm_calendar_f20",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     241.92,
@@ -624,6 +640,7 @@
    "module": "ot_hbm_svc_vmdel_lane_n",
    "cls": "MACRO-CHANNEL placeholder (class 4)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": "placeholder: census shrink W / grow H 4.32 with room 0 -> kept",
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     142.56,
@@ -669,6 +686,7 @@
    "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
    "cls": "PIN-BOUND placeholder (class 3)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": "MEM: pins over all 4 faces at 0.168 mean pitch inside the 142.56x216 slot (a taller slot breaks 22 q_hub stations); no parent re-shape",
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     142.56,
@@ -715,6 +733,7 @@
    "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
    "cls": "KEEP slot (class 5; RE-FORM is RTL/clock)",
    "owner": "DIE-HBM-61/RTL",
+   "part2": "UNCHANGED (ruling: fine to leave)",
    "decision": "UNCHANGED: the 160.7 shrink adds 1 station register on q_hub_ne u_ctl_Q_p01.kr_data -> u_vmks_Q0 (hop 402.2 -> 406.0) and the odd-k 152.1 form put 32 origins off the 8.64 lattice + 8 core_faces; fill 0.32 kept",
    "old": [
     177.98399999999992,
@@ -760,6 +779,7 @@
    "module": "ot_hgi_qw_dec",
    "cls": "RESHAPED (class 2)",
    "owner": "DIE-HBM-61/PLAN d44v",
+   "part2": null,
    "decision": "RESHAPE",
    "old": [
     260.0,
@@ -802,18 +822,22 @@
   },
   {
    "module": "ot_hbm_host_cp_rxs",
-   "cls": "MACRO-CHANNEL placeholder (class 4)",
-   "owner": "DIE-HBM-61/MEM",
-   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
+   "cls": "RESHAPED (part 2 lane outline)",
+   "owner": "DIE-HBM-61/PLAN d44v",
+   "part2": "MEM READY 55c4a61894a: right-width SRAMs; slot 434.808x480 -> 400.248x151.68 (channel_fit, 17.28 step); macros UNKNOWN until the RE-FORM kit",
+   "decision": "RESHAPE (part 2: DIE-HBM-61/MEM 55c4a61894a right-width SRAM (4x 64x141 + 2x 256x256) channel_fit 397.44x138.24 snapped up to the 17.28 centre-kept step)",
    "old": [
     434.808,
     480.0
    ],
-   "new": null,
+   "new": [
+    400.248,
+    151.68
+   ],
    "old_fill": 0.0352,
-   "new_fill": null,
+   "new_fill": 0.1071,
    "old_aspect": 1.1,
-   "new_aspect": null,
+   "new_aspect": 2.64,
    "cells": 35718,
    "sinks": 7654,
    "clock_regions_5k": 2,
@@ -850,6 +874,7 @@
    "module": "ot_hbm_su_programme_pslice_c5",
    "cls": "MACRO-CHANNEL placeholder (class 4)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     939.6,
@@ -896,6 +921,7 @@
    "module": "ot_hfd_coll_q3_edge_core",
    "cls": "SPLIT placeholder (class 1, 157302 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": "placeholder: SPLIT WIP d764970683d (3 LINK + ARG) / MEM right-width only if the current-kit run fails",
    "decision": "UNCHANGED: SPLIT source event (157302 cells > 150k)",
    "old": [
     216.0,
@@ -939,6 +965,7 @@
    "module": "ot_hfd_coll_q3_vm_core",
    "cls": "PIN-BOUND placeholder (class 3)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": "placeholder: PIN-BOUND, RTL (serialised face) owed; census slot 864x872.6 does not fit the hub room (+90.7/+34.6)",
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     328.32,
@@ -984,6 +1011,7 @@
    "module": "ot_hfd_coll_q3_body_core",
    "cls": "SPLIT placeholder (class 1, 280175 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": "placeholder: SPLIT WIP (CTL + 4 QCOL4)",
    "decision": "UNCHANGED: SPLIT source event (280175 cells > 150k)",
    "old": [
     578.8799999999999,
@@ -1029,6 +1057,7 @@
    "module": "ot_hbm_su_static_sfustore_hw",
    "cls": "PIN-BOUND placeholder (class 3)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     362.88,
@@ -1071,6 +1100,7 @@
    "module": "ot_hbm_su_static_cxport_ij_q",
    "cls": "PIN-BOUND placeholder (class 3)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": "placeholder: PIN-BOUND, RTL owed; census grow +86.4 x vs room 38.9",
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     250.56,
@@ -1117,6 +1147,7 @@
    "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
    "cls": "SPLIT placeholder (class 1, 244361 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": "SPLIT READY 8dd205e8bcc: 4 identical sub slots (split_slots.json), 0 cycles",
    "decision": "UNCHANGED: SPLIT source event (244361 cells > 150k)",
    "old": [
     760.32,
@@ -1165,6 +1196,7 @@
    "module": "ot_hgi_sm_xload_cl2_bfqg",
    "cls": "MACRO-CHANNEL placeholder (class 4)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     302.4,
@@ -1210,6 +1242,7 @@
    "module": "ot_hgi_sfu_split3_lane_core__idpin",
    "cls": "SPLIT placeholder (class 1, 253074 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": "SPLIT READY 273120b2730: 3 sub slots fr/ex/bk (split_slots.json), +4 on write/reducer/status (crossing_latency core_internal)",
    "decision": "UNCHANGED: SPLIT source event (253074 cells > 150k)",
    "old": [
     388.8,
@@ -1263,6 +1296,7 @@
    "module": "ot_hnx_idxn_keybuf_slice",
    "cls": "PIN-BOUND placeholder (class 3)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": "MEM READY 55c4a61894a: right-width SRAMs + plan pin move key_out -> E (W 1132 / E 1099 pins); slot kept, no parent re-shape",
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     241.92,
@@ -1306,6 +1340,7 @@
    "module": "hnx_fused_lane",
    "cls": "SPLIT placeholder (class 1, 537474 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": null,
    "decision": "UNCHANGED: SPLIT source event (537474 cells > 150k)",
    "old": [
     345.5999999999999,
@@ -1353,6 +1388,7 @@
    "module": "hnx_rp3lp3h_n",
    "cls": "SPLIT placeholder (class 1, 679904 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": null,
    "decision": "UNCHANGED: SPLIT source event (679904 cells > 150k)",
    "old": [
     630.72,
@@ -1404,6 +1440,7 @@
    "module": "hnx_rp3lp3h_s",
    "cls": "SPLIT placeholder (class 1, 657997 cells)",
    "owner": "DIE-HBM-61/SPLIT",
+   "part2": null,
    "decision": "UNCHANGED: SPLIT source event (657997 cells > 150k)",
    "old": [
     630.72,
@@ -1455,6 +1492,7 @@
    "module": "ot_hbm_hc_bank128_pair_first_core",
    "cls": "MACRO-CHANNEL placeholder (class 4)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     250.56,
@@ -1502,6 +1540,7 @@
    "module": "ot_hbm_idx_rootctl_static_am",
    "cls": "PIN-BOUND placeholder (class 3)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": null,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     475.19999999999993,
@@ -1550,6 +1589,7 @@
    "module": "ot_hfd_coll_q2n2_vm_core",
    "cls": "PIN-BOUND placeholder (class 3)",
    "owner": "DIE-HBM-61/MEM",
+   "part2": "placeholder: PIN-BOUND, RTL owed; census slot 1201x604.8 vs room +13/+130",
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
    "old": [
     924.48,
