@@ -1,0 +1,43 @@
+ot-run: intel2         admits   310 GB (avail 422, reserve 0, fresh 0, peak 47, headroom 0, waiters 1/360 GB) load 88/112 running 50 disk 96 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-614166-1793634115 after 0 s
+PASS_PRIVATE_CANARY_INPUTS run original94+instrumentation pinned; no stage4+
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 1  -no_splash /case/audit_saved.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+OT_MACRO_CTS unavailable: /src/physical/common_flow/macro_cts_cluster.tcl missing
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.odb
+read_sdc -mode ss /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.sdc
+read_sdc -mode ff /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.sdc
+source /work/setRC_rcx.tcl
+OT_PG_FINAL_PASS native_pg_terminals=106210
+INDEPENDENT_SAVED_PLACE_PG_PASS checked=106210 repair=0 STA=0
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+SYNTH {"instances": 48515, "master_types": 58, "placement_status": {"NONE": 48515}, "sequential_candidates": 8994, "rows": 0, "signal_pin_bits": 0, "signal_pin_shapes": 0}
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+FP {"instances": 52477, "master_types": 54, "placement_status": {"NONE": 46124, "LOCKED": 2984, "UNPLACED": 3369}, "sequential_candidates": 8994, "rows": 496, "signal_pin_bits": 69, "signal_pin_shapes": 70}
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+PLACE {"instances": 53105, "master_types": 63, "placement_status": {"PLACED": 50121, "LOCKED": 2984}, "sequential_candidates": 8994, "rows": 496, "signal_pin_bits": 69, "signal_pin_shapes": 70}
+ot-run: RAN on intel2 (unit oth-ubuntu-614166-1793634115): exit 0

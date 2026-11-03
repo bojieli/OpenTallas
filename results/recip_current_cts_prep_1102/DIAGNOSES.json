@@ -1,0 +1,16 @@
+{
+  "invalid_dry_target": {
+    "unit": "oth-ubuntu-1036954-1793635613",
+    "verdict": "FAIL_STATIC_PREP_ONLY",
+    "reason": "do-4_cts.sdc does not exist; stock CTS entry writes SDC directly",
+    "correction": "do-4_1_cts and do-4_cts only",
+    "corrected_static_unit": "oth-ubuntu-1082332-1793635778",
+    "CTS_executed": false
+  },
+  "preliminary_typed_PG_ports": {
+    "reason": "VDD/VSS physical POWER/GROUND BTerms were initially included as data boundary pins",
+    "preserved_file": "TYPED_GEOMETRY_UNFILTERED_PG_PRESERVED.json",
+    "correction": "Exclude physical PG roles, retaining every one of the 67 actual RTL data bits; no data exemption or source change",
+    "actual_boundary_failures": 0
+  }
+}

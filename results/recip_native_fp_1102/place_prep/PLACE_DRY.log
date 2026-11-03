@@ -1,0 +1,9 @@
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 1  /OpenROAD-flow-scripts/flow/scripts/noop.tcl
+mkdir -p /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base
+touch /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base/copyright.txt
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_1_place_gp_skip_io global_place_skip_io
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+cp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_5_place_dp.odb /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/3_place.odb

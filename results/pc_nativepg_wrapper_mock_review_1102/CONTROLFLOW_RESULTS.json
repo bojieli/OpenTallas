@@ -1,0 +1,48 @@
+{
+  "scope": "Tcl controlflow mocks only; no nativePG qualification",
+  "reviewed_patch_sha256": "a6f76eae45dd5a8760485c6bf36ecd7aa8657f3e8498c687a16b3bdd4e5001e0",
+  "cases": [
+    {
+      "case": "typed_checkpoint",
+      "output": "PC_NATIVE_PROTECTED_REPAIR_CHECKPOINT_READY active=0\nREVIEW 0 1 1 0\n",
+      "stderr": "",
+      "process_exit": 0
+    },
+    {
+      "case": "generic_error",
+      "output": "REVIEW 1 generic 0 0\n",
+      "stderr": "",
+      "process_exit": 0
+    },
+    {
+      "case": "normal_early_return",
+      "output": "REVIEW 1 PC_NATIVE_REPAIR_CHECKPOINT_NOT_REACHED 0 0\n",
+      "stderr": "",
+      "process_exit": 0
+    },
+    {
+      "case": "cleanup_failure",
+      "output": "REVIEW 1 cleanup_failed 0 0\n",
+      "stderr": "PC_NATIVE_BODY_COMPLETION code=1 result=stop\n",
+      "process_exit": 0
+    },
+    {
+      "case": "nonlocal_early_return",
+      "output": "REVIEW 1 {PC_NATIVE_NONLOCAL_BODY_REFUSED code=2 result=escaped} 0 0\n",
+      "stderr": "",
+      "process_exit": 0
+    },
+    {
+      "case": "cleanup_nonlocal_return",
+      "output": "REVIEW 1 {PC_NATIVE_NONLOCAL_CLEANUP_REFUSED code=2 result=cleanup_escaped} 0 0\n",
+      "stderr": "PC_NATIVE_BODY_COMPLETION code=1 result=stop\n",
+      "process_exit": 0
+    },
+    {
+      "case": "body_break",
+      "output": "REVIEW 1 {PC_NATIVE_NONLOCAL_BODY_REFUSED code=3 result=} 0 0\n",
+      "stderr": "",
+      "process_exit": 0
+    }
+  ]
+}

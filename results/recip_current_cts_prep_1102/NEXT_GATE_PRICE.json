@@ -1,0 +1,14 @@
+{
+  "status": "PRICE_ONLY_NO_CTS_RELEASE",
+  "mem_GB": 4,
+  "threads": 1,
+  "disk_GB": 2,
+  "measured_same_source_same8994sink_old_geometry_CTS": {
+    "path": "/srv/opentallas-scratch2/claude/codex-kv-ahub-1131/kits/recip_native216/run/logs/asap7/hc_ot_qkh_recip_leaf__216x216/base/4_1_cts.log",
+    "elapsed": "3:13.09",
+    "peak_KB": 1071268,
+    "sha256": "3f10b7842312b381452560425ad4c4cbc20907c93f440b727cb1a5d52e0cfee9"
+  },
+  "old_graph_or_clustering_reused": false,
+  "reason": "Use original only for capacity sizing. Current placed sink positions and master caps are separately inventoried; actual tree must regenerate."
+}

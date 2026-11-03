@@ -1,0 +1,21 @@
+{
+  "status": "SOURCE_ONLY_CTS_PROPOSAL_NOT_RELEASED",
+  "files": {
+    "CTS_SOURCE_INPUTS.json": "89ffc5d1bb6fa697c39b383ead01b1110551600daae9298a14a9424c7795113c",
+    "NORMAL_SCRIPT_READSET.json": "706483ca3285df6fab6e47b9570a8071a6570d0baee2255d0ca0c2a968c31b75",
+    "patch_cts_entry.py": "4ea33250a890534d3c0a1d01ca53fc37db9c800b963f935547316a72044ecc80",
+    "inside_cts_proposal.sh": "2da2d2d8836c0c7c5e3a5bb9ae99635f1cd98fb5703d87f6f1e045f97ded96a3",
+    "run_cts_proposal.sh": "17230f31679a7286b4f889425059ca5eb0fac002d42c8cd6eef24dbf5366e2e4",
+    "guard_cts.py": "28c84e16778b978d6794cbdd5a9541aa87e57e407f0a3acf208aec4ee4a486d3",
+    "kit/pg_cts_canary.tcl": "5ffb56fadbac7ab3c13677488a67d0e50124e3136e4ae401a1e8cc7e2c097311",
+    "kit/pg_native_qualified_562.tcl": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+    "kit/pg_native_8c9.so": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+    "source/tools/orfs_hold_mm.tcl": "45e004f796e67435f9539914dcc3594e2267e8a0616c8d59623d290cad983ab1",
+    "CURRENT_CLOCK_CAPS.json": "2bb3dccaae67622577ab7ad8529c20a86142e82f1b349976460439ebed393d1c",
+    "CTS_GENERATION_DESCRIPTOR.json": "05c11bc312a96c02c0acba2f22ee34948371820df5dca4fd03ee588a0c8c6d11",
+    "SOURCE_PROOF_JOIN.json": "119233e0edc3919c24beb55bc20fa43a0e118926e6d6dbf2aaba8cf766126e63"
+  },
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "native_CTS_or_solver_launched": false,
+  "strict_production_CTS_support": "UNCHANGED_UNSUPPORTED"
+}

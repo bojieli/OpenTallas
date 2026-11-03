@@ -1,0 +1,34 @@
+{
+  "status": "PASS_PRIVATE_CANARY_MAKE_N_ONLY",
+  "unit": "oth-ubuntu-306392-1793632926",
+  "steps": [
+    [
+      "3_1_place_gp_skip_io",
+      "global_place_skip_io"
+    ],
+    [
+      "3_2_place_iop",
+      "io_placement"
+    ],
+    [
+      "3_3_place_gp",
+      "global_place"
+    ],
+    [
+      "3_4_place_resized",
+      "resize"
+    ],
+    [
+      "3_5_place_dp",
+      "detail_place"
+    ]
+  ],
+  "whole_original_stage_bytes_preserved": true,
+  "local_source_reproduction_matches_disposable_image": true,
+  "original94_plus_instrumentation_inputs_unchanged": true,
+  "no_CAD_or_stage3_outputs": true,
+  "no_native_GPL_qualification": true,
+  "global_strict_GPL_support": "UNCHANGED_UNSUPPORTED",
+  "helper_sha256": "8501261ee6807f47a9ec5178951b18eb270b7fdf6aea3c690ab1513bd4bae914",
+  "source_only_controls": 7
+}

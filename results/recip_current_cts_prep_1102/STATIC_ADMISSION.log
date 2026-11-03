@@ -1,0 +1,6 @@
+ot-run: intel2         admits   307 GB (avail 423, reserve 0, fresh 9.8, peak 41.7, headroom 0, waiters 1/360 GB) load 88/112 running 50 disk 108 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1036954-1793635613 after 1 s
+PASS_PRIVATE_CANARY_INPUTS run original94+instrumentation pinned; no stage4+
+make: *** No rule to make target 'do-4_cts.sdc'.  Stop.
+ot-run: RAN on intel2 (unit oth-ubuntu-1036954-1793635613): exit 2

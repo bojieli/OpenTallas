@@ -1,0 +1,12 @@
+{
+  "status": "SOURCE_ONLY_NO_CTS_RELEASE",
+  "original_entry_sha256": "1831283f0c9fd1aa51dc3eb5432534ce4905daf9668535829bb7d6ae9f13fa48",
+  "whole_original_entry_body_preserved": true,
+  "body_sha256": "ce205999638b52c3e79bd9f746c1bf9e525b30aa3e0815b827dc43702fe31fa9",
+  "outer_wrapper_sha256": "7dd7a90935469784d2e180d3eb1cf04e665898f269b28b410f9ef2a327626cad",
+  "begin": "after actual load before entire PRE",
+  "after_pre": "after complete original PRE before inverter repair",
+  "before_post": "before entire original POST",
+  "finish": "after entire original POST before primary save, and idempotent outer cleanup on every completion",
+  "flags_source_geometry_modified": false
+}
