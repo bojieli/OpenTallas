@@ -3127,8 +3127,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     ring_a = ring_hold_obligation(P, tn)
     if ioh or ring_a:
         from io_hold_qualification import plan_digest
-        bud['io_hold'] = dict(mode='sender_min' if ioh else 'ring_hold',plan_sha256=plan_digest(P.raw),
-                              requires_parent=True)
+        bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
+        if not ioh:
+            bud['io_hold']['kind'] = 'ring_hold'
         if ioh and io_hold_mode(P, tn) == 'plan_demand':
             hd = P.clock['hold_demand']
             bud['io_hold'].update(mode='plan_demand', hold_demand=dict(

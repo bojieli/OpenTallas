@@ -6,7 +6,7 @@
 Before gen_phys.ring_hold_obligation, a plan clock.ring_hold kit got hold_in_min_ports_ps on its forwarded ring inputs
 (sdc_lint._io_hold_ctx), so signoff.py applied the IO-HOLD parent obligation, but budget.json carried no io_hold plan
 digest and io_hold_qualification.apply_obligation could never accept any receipt ('parent plan differs').  This tool
-adds exactly the block the fixed generator writes, budget.json io_hold = {mode: ring_hold, plan_sha256, requires_parent},
+adds exactly the block the fixed generator writes, budget.json io_hold = {mode: sender_min, kind: ring_hold, plan_sha256, requires_parent},
 and only when the kit's obligation is provably this plan's:
   * budget.json die / type are the plan's die / a plan type, and budget.json has no io_hold yet;
   * the plan has clock.ring_hold and forwarded ring inputs for the type, and no sender_min io_hold.tcl (an A kit
@@ -58,7 +58,7 @@ def check(plan_path, kit, gen_tools=None):
         ring = LC.ring_input_sdc(P, tn).strip()
         if not ring or ring not in (kd / 'constraint.sdc').read_text():
             why.append('constraint.sdc ring inputs differ from the plan ring_input_sdc')
-    block = dict(mode='ring_hold', plan_sha256=plan_digest(raw), requires_parent=True)
+    block = dict(mode='sender_min', kind='ring_hold', plan_sha256=plan_digest(raw), requires_parent=True)
     block['bind'] = dict(tool='io_hold_kit_bind.py', gen_tools=str(gen_tools) if gen_tools else str(HERE))
     return dict(kit=str(kd), type=tn, plan=str(plan_path), io_hold=block, ok=not why, problems=why)
 

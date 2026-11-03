@@ -88,8 +88,38 @@ def test_io_hold_kit_bind_refuses_mismatch(tmp_path):
     (kd / 'constraint.sdc').write_text('x\n' + LC.ring_input_sdc(P, tn))
     assert B.main([str(tmp_path / 'plan.json'), str(kd), '--write']) == 0
     bud = json.loads((kd / 'budget.json').read_text())
-    assert bud['io_hold']['mode'] == 'ring_hold' and len(bud['io_hold']['plan_sha256']) == 64
+    assert bud['io_hold']['mode'] == 'sender_min' and bud['io_hold']['kind'] == 'ring_hold' and len(bud['io_hold']['plan_sha256']) == 64
     assert B.main([str(tmp_path / 'plan.json'), str(kd)]) == 1          # already bound
     (kd / 'budget.json').write_text(json.dumps(dict(die=P.name, type=tn)))
     (kd / 'sdc_lint.json').write_text(json.dumps(dict(hold_in_min_ports_ps={'other': 1.0})))
     assert B.main([str(tmp_path / 'plan.json'), str(kd)]) == 1          # obligation differs
+
+
+def _ring_record(tmp_path, receipt=None):
+    import json
+    import io_hold_qualification as Q
+    kd = tmp_path / 'kit'
+    kd.mkdir(exist_ok=True)
+    v, sp = tmp_path / '6_final.v', tmp_path / '6_final.spef'
+    v.write_text('module m; endmodule\n'); sp.write_text('*SPEF\n')
+    (kd / 'budget.json').write_text(json.dumps(dict(die='d', type='hd_r', io_hold=dict(
+        mode='sender_min', kind='ring_hold', plan_sha256='p' * 64, requires_parent=True))))
+    (kd / 'sdc_lint.json').write_text(json.dumps(dict(hold_in_min_ports_ps={'rx_i': 80.0, 'cland_dn_ready_rx_i': 80.0})))
+    if receipt:
+        rows = [dict(dst_type='hd_r', sv_bus=b, status='PASS', setup_tt_ps=10.0, setup_neg=0,
+                     receiver_netlist_sha256=Q.digest(v), receiver_spef_sha256=Q.digest(sp))
+                for b in ('rx_i', 'cland_dn_ready_rx_i')]
+        (kd / 'io_hold_parent.json').write_text(json.dumps(dict(
+            schema='opentallas.io_hold_parent.v2', verdict='PASS', qualification=dict(complete=True),
+            plan='d', plan_sha256='p' * 64, ports=rows)))
+    return dict(verdict='SIGNED', reasons=[], checks={}, inputs=dict(
+        kit=str(kd), sdc_lint_ctx=str(kd / 'sdc_lint.json'), final_v=str(v), spef=str(sp)))
+
+
+def test_ring_only_kit_signs_with_matching_receipt_and_waits_without(tmp_path):
+    import io_hold_qualification as Q
+    r = Q.apply_obligation(_ring_record(tmp_path / 'a' if (tmp_path / 'a').mkdir() is None else None, receipt=True))
+    assert r['verdict'] == 'SIGNED' and r['parent_qualification']['status'] == 'PASS', r['reasons']
+    (tmp_path / 'b').mkdir()
+    r = Q.apply_obligation(_ring_record(tmp_path / 'b'))
+    assert r['verdict'] == 'LOCAL_PASS_NEEDS_PARENT' and r['parent_qualification']['status'] == 'NEEDS_PARENT'
