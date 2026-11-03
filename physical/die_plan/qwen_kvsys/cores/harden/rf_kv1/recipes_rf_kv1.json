@@ -236,7 +236,14 @@
     "u_rx__rrst_n",
     "u_tx__wrst_n",
     "u_tx__rrst_n"
-   ]
+   ],
+   "skid_slices": {
+    "fifos": [
+     "u_rx.g_sf.u_sf",
+     "u_tx.g_sf.u_sf"
+    ],
+    "slice_bits": 64
+   }
   }
  },
  "qkd_hr_core_guard": {

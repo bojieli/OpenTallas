@@ -194,6 +194,60 @@ def queue_slices(body, sp, ck="ck"):
                       form="column slices with per-slice kept control copies, negedge take/issue/write-data copies")
 
 
+
+def skid_slices(body, sp, ck="ck"):
+    """column-slice each skid FIFO memory sm[D][W] with per-slice kept copies of its write address/valid and read
+    pointer (equivalent: every copy has the source reg's reset and next state; write = swv ? sm[swa] <= swd)"""
+    B = int(sp.get("slice_bits", 64)); rep = []
+    for i in sp["fifos"]:
+        ie = re.escape(i)
+        d = re.search(r"^(?:  \(\*[^\n]*\*\)\n)?  reg \[(\d+):0\] \\" + ie + r"\.sm  \[(\d+):0\];\n", body, re.M)
+        if not d:
+            raise SystemExit(f"rf_wrap skid_slices: {i}.sm decl not found")
+        w, dp = int(d.group(1)) + 1, int(d.group(2)) + 1
+        blk = re.compile(r"  always @\(posedge " + re.escape(ck) + r"\) begin\n(?:    if \((\w+)\[(\d+)\]\)\n      \\" + ie +
+                         r"\.sm \[(\w+)\]\[\2:\2\] <= (\w+)\[\2\];\n)+  end\n")
+        b = blk.match(body, d.end())
+        if not b or b.group(0).count(" <= ") != w:
+            raise SystemExit(f"rf_wrap skid_slices: {i}.sm per-bit write block not found")
+        en, ad, dat = b.group(1), b.group(3), b.group(4)
+        for sig, src in ((ad, "swa"), (dat, "swd"), (en, None)):
+            m = re.search(r"^  assign " + sig + r" = \\" + ie + r"\.swv  \? \(\* full_case = 32'd1 \*\) (\S+(?: )?) : (\S+);\n", body, re.M)
+            if not m:
+                raise SystemExit(f"rf_wrap skid_slices: {sig} not swv-gated")
+            if src and m.group(1).strip() != f"\\{i}.{src}":
+                raise SystemExit(f"rf_wrap skid_slices: {sig} = {m.group(1)} not {src}")
+            if src is None and (set(m.group(1).split("'h")[1]) - set("3f") or set(m.group(2).split("'h")[1]) != {"0"}):
+                raise SystemExit(f"rf_wrap skid_slices: {sig} not ones/zeros")
+        rd = re.search(r"^  assign (\S+) = \\" + ie + r"\.sm \[\\" + ie + r"\.srp \[(\d+):0\]\];\n", body, re.M)
+        if not rd:
+            raise SystemExit(f"rf_wrap skid_slices: {i}.sm read not found")
+        x, ra = rd.group(1), int(rd.group(2)) + 1
+        def nxt(r):
+            m = re.search(r"  always @\(posedge " + re.escape(ck) + r", negedge ([^)]+)\)\n\s*if \(!\1\) \\" + ie + r"\." + r +
+                          r"  <= \S+;\n\s*else \\" + ie + r"\." + r + r"  <= (\S+(?: )?);\n", body)
+            if not m:
+                raise SystemExit(f"rf_wrap skid_slices: {i}.{r} reset/next block not found")
+            return m.group(1), m.group(2)
+        (rst, wan), (_, wvn), (_, rpn) = nxt("swa"), nxt("swv"), nxt("srp")
+        wa = re.search(r"reg \[(\d+):0\] \\" + ie + r"\.swa ;", body); aw = int(wa.group(1)) + 1
+        body = body[:d.start()] + body[b.end():]
+        body = body.replace(rd.group(0), "", 1)
+        L = []; ns = -(-w // B)
+        for c in range(ns):
+            lo, hi = c * B, min(w, (c + 1) * B) - 1; n = hi - lo + 1; t = f"\\{i}.rf_k{c}_"
+            L += [f"  (* keep = 1 *) reg [{aw-1}:0] {t}wa ;", f"  (* keep = 1 *) reg {t}wv ;", f"  (* keep = 1 *) reg [{ra-1}:0] {t}rp ;",
+                  f"  always @(posedge {ck}, negedge {rst}) if (!{rst}) begin {t}wa  <= {aw}'h0; {t}wv  <= 1'h0; {t}rp  <= {ra}'h0; end",
+                  f"    else begin {t}wa  <= {wan}; {t}wv  <= {wvn}; {t}rp  <= {rpn}[{ra-1}:0]; end",
+                  f"  reg [{n-1}:0] {t}m  [{dp-1}:0];",
+                  f"  always @(posedge {ck}) if ({t}wv ) {t}m [{t}wa ] <= \\{i}.swd [{hi}:{lo}];",
+                  f"  assign {x}[{hi}:{lo}] = {t}m [{t}rp ];"]
+        body = body.rstrip(); assert body.endswith("endmodule")
+        body = body[:-len("endmodule")] + "\n".join(L) + "\nendmodule\n"
+        rep.append(dict(fifo=i, width=w, depth=dp, slices=ns, slice_bits=B, added_flops=ns * (aw + 1 + ra),
+                        form="column slices with per-slice kept write-address/valid and read-pointer copies"))
+    return body, rep
+
 def rewrite(body, items):
     rep = []
     for it in items:
@@ -234,6 +288,9 @@ def transform(text, mod, spec):
         body, bsr = queue_slices(body, spec["queue_slices"])
     if spec.get("bank_split"):
         body, bsr = bank_split(body, spec["bank_split"])
+    ssr = []
+    if spec.get("skid_slices"):
+        body, ssr = skid_slices(body, spec["skid_slices"])
     new = head + body
     conn = {p: p for p in order}
     lines, rep = [], dict(resets=[], fwft_reads=[], added_flops=0)
@@ -275,7 +332,8 @@ def transform(text, mod, spec):
     hdr += [f"  {decl[p][0]} {decl[p][1]+' ' if decl[p][1] else ''}{p};" for p in order]
     inst = [f"  {inner} u_rf_core (" + ",\n    ".join(f".{p}({conn[p]})" for p in order) + ");", "endmodule", ""]
     rep["inner_port_keeps_dropped"] = nk
-    rep["rewrite"] = rwr; rep["negmid"] = nmr; rep["bank_split"] = bsr
+    rep["rewrite"] = rwr; rep["negmid"] = nmr; rep["bank_split"] = bsr; rep["skid_slices"] = ssr
+    rep["added_flops"] += sum(r["added_flops"] for r in ssr)
     rep["added_flops"] += sum(r["added_flops"] for r in nmr) + (bsr["added_flops"] if bsr else 0)
     rep["rcopy"] = rc; rep["added_flops"] += sum(r["added_flops"] for r in rc)
     return new.rstrip() + "\n\n" + "\n".join(hdr + lines + inst), rep
