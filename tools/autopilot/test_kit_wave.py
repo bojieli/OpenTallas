@@ -738,7 +738,8 @@ class RejudgeGeom(unittest.TestCase):
         self.assertEqual(KW.geom_verdict(KW.prects_clock_info("AUTO-GEOM FAIL x 3_place clock_reach=FAIL(300)"))[0], "PASS")
 
     def test_rows(self):
-        cfg = {"dies": {"d": {"gen_host": "h", "plan": "/p.json", "event": "e2"}}}
+        # hard-gate semantics (die opt geom_advisory false); the advisory default is test_kit_wave_geomadv.py
+        cfg = {"dies": {"d": {"gen_host": "h", "plan": "/p.json", "event": "e2", "geom_advisory": False}}}
         st = {"plans": {"h:/p.json|e2": {"blocks": {"a": "a" * 64, "b": "b" * 64, "c": "c" * 64}}}, "items": {}}
 
         def rec(item, blk, ev="e2", **kw):
