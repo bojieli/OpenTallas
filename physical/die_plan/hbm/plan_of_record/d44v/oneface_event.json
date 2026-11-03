@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "oneface1",
+ "base": "p/d44t/die_plan.json",
+ "changes": [
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "pins_from": "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17.json",
+   "pins_to": "cores/ot_hbm_su_static_sfustore_hw__362.88x388.8__lanealign.json",
+   "fault_y": [
+    257.544,
+    10.008
+   ],
+   "instances": 4
+  },
+  {
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "pins_from": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__canon__codex_entry.json",
+   "pins_to": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__spread.json",
+   "instances": 16
+  },
+  {
+   "module": "ot_hgi_coll_gq_land",
+   "pins_files": {
+    "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15__codex_g21.json": "ot_hgi_coll_gq_land__142.56x207.36__canon__fr15__codex_g21__wspread.json",
+    "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15__o_R0__codex_g21.json": "ot_hgi_coll_gq_land__142.56x207.36__canon__fr15__o_R0__codex_g21__wspread.json",
+    "cores/ot_hgi_coll_gq_land__142.56x207.36__canon__fr15__o_MX__codex_g21.json": "ot_hgi_coll_gq_land__142.56x207.36__canon__fr15__o_MX__codex_g21__wspread.json"
+   },
+   "instances": 4
+  },
+  {
+   "class_": "PLAN_CORE_MACROS",
+   "static": {
+    "ot_hbm_idx_selector_static_sel": {
+     "macros": 12,
+     "columns": 2,
+     "masters": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+     ]
+    },
+    "ot_hgi_dma_back_static_vp4_banks_cp": {
+     "macros": 10,
+     "columns": 2,
+     "masters": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+     ]
+    },
+    "ot_hbm_svc_wb_kport_q": {
+     "macros": 32,
+     "columns": 4,
+     "masters": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+     ]
+    }
+   }
+  }
+ ]
+}
