@@ -268,7 +268,10 @@ def plan_entry_block(d, item):
     if PLAN_BLOCK.get(f):
         return PLAN_BLOCK[f]
     li = (d.get("_lint") or {}).get(item)
-    if li and d.get("prelint", True) is not False:
+    # OWNER 11-03 07:0x: the gen-time lint is an ADVISORY report; it never blocks a launch.  The only blocking case,
+    # a missing planned core view, is the probe's planned/noview flag above (WAIT-DEP).  die prelint_block true opts
+    # a die back into blocking on lint hits (default off).
+    if li and d.get("prelint", True) is not False and d.get("prelint_block"):
         return lint_reason(li)
     return None
 
@@ -281,8 +284,9 @@ def plan_entry_block(d, item):
 #   view    a planned hard core without a signed view (probe flags planned / noview: these already wait as WAIT-DEP);
 #   strap   leaked strap ports (strap_* type ports not declared id_straps/count_straps, duplicate declared names, or the
 #           type's gen verdict 'undeclared top-level ID' / 'straps: duplicate names' on this same block).
-# A hit is never launched and costs no build: it shows as one LINT row (stage prelint) in kit_wave_stages.tsv.
-# Die opt-out: dies.<die>.prelint false.
+# OWNER 11-03 07:0x: ADVISORY. A hit is reported as one LINT row (stage prelint, status LINT-ADVISORY) in
+# kit_wave_stages.tsv and in the skip-free launch path; it never blocks a launch except a missing planned core view
+# (planned/noview flags = WAIT-DEP).  dies.<die>.prelint false: no report; dies.<die>.prelint_block true: block.
 PRELINT_HISTORY = (
     ("memory", re.compile(r"memory_bits|SYNTH_MEMORY_MAX_BITS"),
      "memory over SYNTH_MEMORY_MAX_BITS is not a macro (GEN_LINT memory_bits on this block): make it a generated memory macro"),
@@ -2346,7 +2350,7 @@ def write_stages(st, ap_dir, cfg=None):
     # KW-FIX-4 11-03: gen-time lint verdicts of the current plans (never launched, no build cost)
     for r in sorted((st.get("lint") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
         v = dict(r, plan_sha=(r.get("plan_sha") or "")[:12], block_sha=(r.get("block_sha") or "")[:12], stage="prelint",
-                 status="LINT", plan_current="yes", **{"class": "LINT"},
+                 status="LINT-ADVISORY", plan_current="yes", **{"class": "LINT"},
                  updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)),
                  reason="; ".join(r.get("issues") or [])[:240])
         rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))

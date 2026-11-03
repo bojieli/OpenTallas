@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""KW-FIX-4 11-03 (OWNER gen-time lint): before any kit launches, plan-static + same-block verdict checks turn a type
-into a LINT row (stage prelint) instead of a build: cells > 150k, memory over SYNTH_MEMORY_MAX_BITS not a macro,
+"""KW-FIX-4 11-03 (OWNER gen-time lint, ADVISORY per OWNER 07:0x): plan-static + same-block verdict checks report a
+type as a LINT-ADVISORY row (stage prelint); they never block a launch except a missing planned core view: cells > 150k, memory over SYNTH_MEMORY_MAX_BITS not a macro,
 planned core without a signed view, leaked strap ports."""
 import json
 import subprocess
@@ -50,15 +50,19 @@ class Probe(unittest.TestCase):
         d = {"event": "e", "_plan_flags": res["flags"], "_plan_deps": res["deps"], "_plan_lint": res["lint"]}
         names = {t: f"b_{t}" for t in PLAN["partition_types"]}
         d["_lint"] = KW.prelint(d, "die", names, {"items": {}})
-        self.assertTrue(KW.plan_entry_block(d, "big").startswith("LINT cells"))
-        self.assertTrue(KW.plan_entry_block(d, "leak").startswith("LINT strap"))
+        # OWNER 07:0x advisory: lint hits never block; only a missing planned core view does (WAIT-DEP)
+        self.assertIsNone(KW.plan_entry_block(d, "big"))
+        self.assertIsNone(KW.plan_entry_block(d, "leak"))
+        self.assertIn("big", d["_lint"])
+        self.assertTrue(KW.plan_entry_block(dict(d, prelint_block=True), "big").startswith("LINT cells"))
+        self.assertTrue(KW.plan_entry_block(dict(d, prelint_block=True), "leak").startswith("LINT strap"))
         self.assertIsNone(KW.plan_entry_block(d, "small"))
         self.assertIsNone(KW.plan_entry_block(d, "cored"))
         self.assertIsNone(KW.plan_entry_block(d, "ok_strap"))
         # planned core: keeps its WAIT-DEP launch hold, and also shows as a LINT 'view' row
         self.assertTrue(KW.plan_entry_block(d, "pv").startswith("WAIT-DEP"))
         self.assertTrue(d["_lint"]["pv"][0].startswith("view: planned hard core"))
-        self.assertIsNone(KW.plan_entry_block(dict(d, prelint=False), "big"))
+        self.assertIsNone(KW.plan_entry_block(dict(d, prelint=False, prelint_block=True), "big"))
 
 
 class History(unittest.TestCase):
@@ -74,7 +78,8 @@ class History(unittest.TestCase):
         self.assertEqual(list(lint), ["svc"])
         self.assertTrue(lint["svc"][0].startswith("memory:"))
         self.d["_lint"] = lint
-        self.assertTrue(KW.plan_entry_block(self.d, "svc").startswith("LINT memory"))
+        self.assertIsNone(KW.plan_entry_block(self.d, "svc"))                      # advisory
+        self.assertTrue(KW.plan_entry_block(dict(self.d, prelint_block=True), "svc").startswith("LINT memory"))
 
     def test_named_fix_or_new_block_clears(self):
         self.assertEqual(KW.prelint(dict(self.d, retry_fix={"svc@2": "abc123 memory macros"}), "s81", self.names,
@@ -88,7 +93,7 @@ class History(unittest.TestCase):
             KW.write_stages(self.st, ap, cfg)
             rows = [r.split("\t") for r in (Path(ap) / KW.STAGES_FILE).read_text().splitlines()]
         col = {c: i for i, c in enumerate(rows[0])}
-        lint = [r for r in rows[1:] if r[col["status"]] == "LINT"]
+        lint = [r for r in rows[1:] if r[col["status"]] == "LINT-ADVISORY"]
         self.assertEqual(len(lint), 1)
         r = lint[0]
         self.assertEqual((r[col["item"]], r[col["stage"]], r[col["class"]], r[col["block_sha"]]),
