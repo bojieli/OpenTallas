@@ -113,5 +113,66 @@ class SignedParamSerialize(unittest.TestCase):
             native_bb.patch_physical(t)
 
 
+CRS4 = """module dsfd_cfifo_crs4 #(
+`ifdef DSFD_CRS4_LGATE
+    parameter integer LGATE = 1
+`else
+    parameter integer LGATE = 0
+`endif
+) (input wire clk, output wire q);
+endmodule
+"""
+ELEM = 'module ot_v41_rom_elem_q_qxpq_w10_gb (clk, q);\n  parameter INSTANCE = "";\n  parameter integer W = 10;\n  input clk; output q;\nendmodule\n'
+
+
+class HeaderPreprocessAndLabels(unittest.TestCase):
+    """KW-FIX-4 11-03 S81 col classes: `ifdef parameter defaults; ROM-element INSTANCE labels"""
+
+    def test_ifdef_default_follows_kit_defines(self):
+        self.assertEqual(native_bb.header_params(CRS4, defines={"SYNTHESIS"})["dsfd_cfifo_crs4"]["LGATE"], ("int", 0))
+        self.assertEqual(native_bb.header_params(CRS4, defines={"DSFD_CRS4_LGATE"})["dsfd_cfifo_crs4"]["LGATE"], ("int", 1))
+        rows = [("dsfd_cfifo_crs4", "top", "u_cf", "LGATE", "1", "0" * 32)]
+        with tempfile.TemporaryDirectory() as d:
+            h = Path(d) / "dsfd_cfifo_crs4_bb.v"; h.write_text(CRS4)
+            old = native_bb.os.environ.get("VERILOG_DEFINES")
+            native_bb.os.environ["VERILOG_DEFINES"] = "-DSYNTHESIS"
+            try:
+                ys, rep, err = native_bb.plan(rows, native_bb.headers_params([h]))
+            finally:
+                if old is None:
+                    native_bb.os.environ.pop("VERILOG_DEFINES")
+                else:
+                    native_bb.os.environ["VERILOG_DEFINES"] = old
+        self.assertEqual((ys, err), (["setparam -unset LGATE t:dsfd_cfifo_crs4"], []))
+
+    def test_preprocess_nesting_elsif_define(self):
+        t = "`define A\n`ifdef A\nx1\n`ifndef B\nx2\n`else\nx3\n`endif\n`elsif C\nx4\n`else\nx5\n`endif\n"
+        kept = [ln for ln in native_bb.preprocess(t).splitlines() if ln.strip()]
+        self.assertEqual(kept, ["x1", "x2"])
+        kept = [ln for ln in native_bb.preprocess(t.replace("`define A\n", ""), {"C"}).splitlines() if ln.strip()]
+        self.assertEqual(kept, ["x4"])
+
+    def test_env_defines(self):
+        self.assertEqual(native_bb.env_defines({"VERILOG_DEFINES": "-DSYNTHESIS -D X -DY=3"}), {"SYNTHESIS", "X", "Y"})
+        self.assertEqual(native_bb.env_defines({}), set())
+
+    def test_label_types_cover_rom_elements_not_numeric(self):
+        with tempfile.TemporaryDirectory() as d:
+            hs = []
+            for n, t in (("e_bb.v", ELEM), ("r_bb.v", ROM), ("v_bb.v", VMR)):
+                (Path(d) / n).write_text(t); hs.append(Path(d) / n)
+            self.assertEqual(native_bb.label_types(hs),
+                             "ot_rom_64x32_m2 {INSTANCE VIAMAP} ot_v41_rom_elem_q_qxpq_w10_gb {INSTANCE}")
+
+    def test_physical_patch_unsets_labels_before_plan(self):
+        with tempfile.TemporaryDirectory() as d:
+            t = Path(d) / "synth.tcl"
+            t.write_text(native_bb.PHYS_OLD + "\n")
+            native_bb.patch_physical(t, self_path="/work/native_bb.py")
+            txt = t.read_text()
+            self.assertIn("python3 -I /work/native_bb.py labels", txt)
+            self.assertLess(txt.index(" labels "), txt.index(" plan "))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
