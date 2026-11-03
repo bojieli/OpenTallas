@@ -2235,6 +2235,10 @@ def declared_rom_bits(rtl_dir):
 DECLARED_FLOP_MEMORIES = {
     # KV kv3_hub_Eo / kv3_hub_Wo qkd_seq_xs_s u_q: 40 x 128 Q store FIFO (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv)
     "ot_qkvd_seq_m_sfifo": 40 * 128,
+    # S81 T7 svc_lo_dsdv_svc_rs__t7 u_att.sw (TOK-DS-3 11-02): 32 x 512 score-window FIFO, bound native glue of
+    # dsdv_svc_att.sv sw[]; the head row is read asynchronously at sw_r into the same-cycle consumer (bound 191_Y), so a
+    # synchronous macro would add a read cycle.  Content-hashed glue name: a re-bind with other content no longer matches.
+    "ot_bind_native_bfac540d36e9ad5c410d0d97": 32 * 512,
 }
 
 
