@@ -22,3 +22,13 @@
   map) until verdict != FAIL_CLOSED; (c) binder wires hb_idx__kbc_<q> from idx_kb_ctl_bind.json; (d) 52 rst_n from the
   C25b reset table; (e) strict bind -> programme -> epyc2 build via ot-run. Worktree intel2:/srv/opentallas-scratch2/claude/wt/tok-hbm-2
   (branch claude/tok-hbm-3-1028, sparse); scratch /srv/opentallas-scratch2/claude/tok-hbm-3. No live jobs.
+
+## 2026-11-03 04:43 PST START (TOK-HBM-3 slice 11-03, fresh successor of TOK-HBM-2 which died ~00:40 11-03)
+- Collected: (1) the d44s -> d44u rename WAS finished: claude/tok-hbm-2-1102@0ba9f883f02 (READY-UPDATE 00:26, COORD-approved, NOT in train F4; merges clean with main 19af2d0dd06). (2) SOURCE13 resume (intel2 oth-ubuntu-2301452-1793692018) was OOM-killed at its 64 GB cap at 00:01 (exit 143) during the top verilation, so nothing is left running. I re-queued it with --mem 220 --crit on intel2 (resume13b.otrun.log); it is waiting for memory. (3) TOK-HBM-2's d44t lane diff (tokhbm2_latdiff.json, 34 lanes) was reproduced.
+- Work dirs: intel1:/srv/opentallas-scratch2/claude/tok-hbm-3-1103 (wt = branch claude/tok-hbm-3-1103 on die-hbm-59-g0c-1102@153b0e45bd, sparse); epyc2:/home/ubuntu/scratch-root/claude/tok-hbm-3-1103 (G0 checks); intel2:/srv/opentallas-scratch2/claude/tok-hbm-3-1103 (pricing).
+
+## 2026-11-03 04:51 PST RESULT (slice 11-03)
+- (1) d44u rename: claude/tok-hbm-2-1102@0ba9f883f02, merges clean, READY-UPDATE re-posted to ROOT-MERGE-24.
+- (2) lat_pkg/schedule for d44t: claude/tok-hbm-3-1103@029d548feed READY. Includes the d44x plan event (R8 fix for the hcb word split; 0 new misaligned, G0C identical to d44t). Price: 1676.95 -> 1667.99 (d44t) / 1666.26 (d44x bound), -0.64 % worst.
+- (3) SOURCE13: re-queued at 220 GB --crit on intel2 (waiting for memory). If it fails again, split the top into hier blocks.
+- Next: DIE-HBM-59 composes d44u+d44x into the POR. A fresh bind then confirms the landing (the lane-to-bit map is from the 11-01 out_s11 bind).
