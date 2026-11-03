@@ -1345,7 +1345,8 @@
    "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave",
    "hold_items": {
     "hd_st_str": "DIE-HEAD-58 12:0x: FLOW class OpenROAD SIGABRT sta::RequiredCmp::requiredSet in tapbal_grt.tcl pre-pass (KW-FIX-4 flowfix, COORD 12:0x) -> relaunch as one batch after merge",
-    "hd_st_n3_*": "DIE-HEAD-58 12:0x: FLOW class OpenROAD SIGABRT sta::RequiredCmp::requiredSet in tapbal_grt.tcl pre-pass (KW-FIX-4 flowfix, COORD 12:0x) -> relaunch as one batch after merge"
+    "hd_st_n3_*": "DIE-HEAD-58 12:0x: FLOW class OpenROAD SIGABRT sta::RequiredCmp::requiredSet in tapbal_grt.tcl pre-pass (KW-FIX-4 flowfix, COORD 12:0x) -> relaunch as one batch after merge",
+    "hd_spn_eshim_tx": "DIE-HEAD-58 12:3x: DH58-TAPBAL tapbal pre-pass SIGABRT class (fix claude/dh58-tapbal-1103@6bd4a7b2e51 pending COORD) -> batch relaunch with hd_st_str/hd_st_n3_* after merge; a live run continues"
    },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
