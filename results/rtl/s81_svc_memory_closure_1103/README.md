@@ -45,3 +45,4 @@
 **Pilots** (`pilot.sh` = the T7 canary3 recipe: gen phys plan_h2_2249 + kit_gen_lint + kit_preflight with main 08542fa9d7d tools; evidence in `pilot/`):
 - svc rs class: svc_hi_dsdv_svc_rs__t1 with its closed bound = GEN_LINT PASS, 5/5 checks with memory_bits 9 -> 0; KIT_PREFLIGHT PASS. SYNTH_MEMORY_MAX_BITS 16384 is the declared exp/sw size, not a raise for the macro memories.
 - kv_leaf class: ot_s81sl_kv_leaf__t2 with no source change = GEN_LINT PASS and KIT_PREFLIGHT PASS. Its two exp tables are declared logic on main.
+- pvso_entry class: svc_hi_dsdv_svc_pvso_entry__t1 with its closed bound (wrapper head u_rsv_05_u_) = GEN_LINT PASS 5/5 (memory_bits 9 -> 0) + KIT_PREFLIGHT PASS.
