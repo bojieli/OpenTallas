@@ -156,7 +156,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import face_guard as G
 net, top, skip, pins, out = sys.argv[1:6]
 _ftf = Path(__file__).resolve().parent / "ft_stations.txt"
-r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())
+r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),
+            dead=G.kit_dead_list(_ftf.parent), spare=G.kit_spare_list(_ftf.parent))
 want = {(p["bus"] if p.get("bit") is None else f"{p['bus']}[{p['bit']}]") for p in json.load(open(pins))
         if not re.match(skip, p["bus"])}
 T = G.parse(Path(net).read_text())[top]
@@ -345,12 +346,14 @@ def land_slot_contract(rec,buses_in):
                  buses={b:land[b] if isinstance(land[b],dict) else int(land[b]) for b in sorted(land)},
                  why=rec.get("why_land_slots",""))
     fgc=FACE_GUARD_CORE.replace(
-        "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
+        "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),\n"
+        "            dead=G.kit_dead_list(_ftf.parent), spare=G.kit_spare_list(_ftf.parent))",
         "_lf = Path(__file__).resolve().parent / \"land_slots.json\"\n"
         "_raw = Path(net).with_name(\"1_2_yosys.v\")\n"
         "_types = G.hier_module_types(_raw.read_text(), top) if _raw.is_file() else None\n"
         "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),\n"
-        "            land=G.kit_land(_lf) if _lf.is_file() else None, types=_types)")
+        "            land=G.kit_land(_lf) if _lf.is_file() else None, types=_types,\n"
+        "            dead=G.kit_dead_list(_ftf.parent), spare=G.kit_spare_list(_ftf.parent))")
     assert fgc!=FACE_GUARD_CORE,"FACE_GUARD_CORE guard call anchor changed"
     return payload,fgc
 
@@ -1519,6 +1522,18 @@ def main():
         (kd / "face_guard_core.py").write_text(fgc)
     else:
         (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
+    # DIE-S81-51/RF-C 11-03: recipe-declared proven-dead input bits (QK-CORES-5: proof receipt required) and spare
+    # (constant) output bits -> kit dead_inputs.json / spare_out.json, read by face_guard_core.py and signoff.py alike.
+    if rec.get("dead_inputs") or rec.get("spare_out"):
+        import face_guard as G
+    if rec.get("dead_inputs"):
+        _dd = dict(schema=G.DEAD_SCHEMA, **rec["dead_inputs"])
+        G.dead_input_list(_dd)
+        (kd / "dead_inputs.json").write_text(json.dumps(_dd, indent=1) + "\n")
+    if rec.get("spare_out"):
+        _sp = dict(schema=G.SPARE_SCHEMA, bits=list(rec["spare_out"]["bits"]), why=rec["spare_out"].get("why", ""))
+        G.spare_out_list(_sp)
+        (kd / "spare_out.json").write_text(json.dumps(_sp, indent=1) + "\n")
     # one-station bus pairs of the core's RTL contract (reviewed per recipe; face_guard / signoff read ft_stations.txt)
     pairs = rec.get("ft1_pairs", [])
     for i_, o_ in pairs:
