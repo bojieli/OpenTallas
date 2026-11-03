@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-COND one native repair-checkpoint/fresh-process finalization case",
+  "pictures": [
+    "/home/ubuntu/coord/tmp/codex-pc-post-2115/images/r27c_placement.webp",
+    "/home/ubuntu/coord/tmp/codex-pc-post-2115/images/r27c_worst.webp"
+  ],
+  "review": "Actual routed PC geometry previously personally viewed; standard-cell control clusters have open buffer space, no macro walls; prior native ECO DPL converged0viol and maxdisp3.5um. No outline/pin/RTL/clock-policy change.",
+  "failure": "Signal11 immediately after successful DPL during incremental GRT finalization; peak7.65GB, not OOM; old15:28 checkpoint is stale and excluded.",
+  "phase1": "Exact same guarded repairs; save native repaired DB+clock dump before DPL, native clock invariant and PG binding gates, exit do-5_1_grt-only as explicitly UNQUALIFIED_GRT.",
+  "phase2": "Fresh process applies standard mixed-pin-access cleanup BEFORE DPL, retains original routed reference separately for dirty-net selection, no second repair; dataGRT/DRT+normal final gates with immutable source/SDC/MM and blocking original-wire clockfreeze.",
+  "resource": {
+    "phase1_mem_gb": 16,
+    "threads": 8,
+    "disk_gb": 6,
+    "observed_same_full_repair_peak_KB": 7648680,
+    "prior_original_route_peak_KB": 25647600,
+    "phase2_mem_required_gb": 32
+  }
+}

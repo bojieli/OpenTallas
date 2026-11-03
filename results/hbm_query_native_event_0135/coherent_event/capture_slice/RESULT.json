@@ -1,0 +1,11 @@
+{
+ "verdict": "FINITE_PARENT_CAPTURE_EQ_AND_MUTANT_PASS",
+ "checks": 6144,
+ "diff": 0,
+ "cycles": 64,
+ "exact_b102_capture_blocks": 16,
+ "other_physical_definition_blocks_byteidentical": true,
+ "mutant_diff": 64,
+ "scope": "actual old D versus new private same-edge captures only; head upper3 zero prerequisite from prior projection; no fullparent/nativephysical/clock qualification",
+ "formal_credit": false
+}

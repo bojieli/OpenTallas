@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-02T12:49:06+0000",
+ "verdict": "UNPROVEN",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_hgi_sfu_programme_store_r10",
+ "netlist": "/work/run/results/asap7/hbc_ot_hgi_sfu_programme_store_r10/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "reason": "yosys lint.ys failed: ",
+ "t_total_s": 499.8,
+ "provenance": {
+  "commit": "63eef4b8a5f43cf69152650bbb2c80a0f437387d",
+  "dirty": false,
+  "source": "validated kit PROVENANCE.json",
+  "tool_update": null
+ }
+}

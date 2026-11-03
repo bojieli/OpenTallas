@@ -1,0 +1,934 @@
+{
+  "status": "PASSIVE_NATIVE_EXTRACTION",
+  "source": "/srv/opentallas-scratch2/claude/codex-pc-post-0355",
+  "selected_cells": {
+    "_217823_": {
+      "master": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": "net41987",
+        "Y": "_168484_"
+      }
+    },
+    "_217824_": {
+      "master": "NAND2x2_ASAP7_75t_R",
+      "pins": {
+        "A": "_037050_",
+        "B": "_168484_",
+        "Y": "_168485_"
+      }
+    },
+    "_218317_": {
+      "master": "OAI22x1_ASAP7_75t_R",
+      "pins": {
+        "A1": "net25723",
+        "A2": "net39928",
+        "B1": "net25488",
+        "B2": "net40105",
+        "Y": "_073262_"
+      }
+    },
+    "_237314_": {
+      "master": "OAI22x1_ASAP7_75t_R",
+      "pins": {
+        "A1": "net25727",
+        "A2": "net39928",
+        "B1": "net25492",
+        "B2": "net40105",
+        "Y": "_073258_"
+      }
+    },
+    "_242024_": {
+      "master": "OAI22x1_ASAP7_75t_R",
+      "pins": {
+        "A1": "net25725",
+        "A2": "net27021",
+        "B1": "net25490",
+        "B2": "net40105",
+        "Y": "_073260_"
+      }
+    },
+    "_265548_": {
+      "master": "OR4x2_ASAP7_75t_R",
+      "pins": {
+        "A": "_042231_",
+        "B": "_105278_",
+        "C": "_105293_",
+        "D": "_105304_",
+        "Y": "_105305_"
+      }
+    },
+    "_297796_": {
+      "master": "OA22x2_ASAP7_75t_R",
+      "pins": {
+        "A1": "net24682",
+        "A2": "net38366",
+        "B1": "net38499",
+        "B2": "net24646",
+        "Y": "_126906_"
+      }
+    },
+    "_297797_": {
+      "master": "OA211x2_ASAP7_75t_R",
+      "pins": {
+        "A1": "_042308_",
+        "A2": "_042309_",
+        "B": "_126905_",
+        "C": "_126906_",
+        "Y": "_126907_"
+      }
+    },
+    "_297798_": {
+      "master": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": "_126907_",
+        "Y": "_053064_"
+      }
+    },
+    "_307349_": {
+      "master": "OAI22x1_ASAP7_75t_R",
+      "pins": {
+        "A1": "net25733",
+        "A2": "net25749",
+        "B1": "net25528",
+        "B2": "net40105",
+        "Y": "_073213_"
+      }
+    },
+    "fanout38367": {
+      "master": "BUFx3_ASAP7_75t_R",
+      "pins": {
+        "A": "net20827",
+        "Y": "net38366"
+      }
+    },
+    "fanout40106": {
+      "master": "BUFx3_ASAP7_75t_R",
+      "pins": {
+        "A": "net40106",
+        "Y": "net40105"
+      }
+    },
+    "fanout40107": {
+      "master": "BUFx2_ASAP7_75t_R",
+      "pins": {
+        "A": "net22724",
+        "Y": "net40106"
+      }
+    },
+    "fanout41133": {
+      "master": "BUFx2_ASAP7_75t_R",
+      "pins": {
+        "A": "_168485_",
+        "Y": "net41132"
+      }
+    },
+    "place20828": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pins": {
+        "A": "_105305_",
+        "Y": "net20827"
+      }
+    },
+    "place22725": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pins": {
+        "A": "net41132",
+        "Y": "net22724"
+      }
+    },
+    "place25707": {
+      "master": "BUFx3_ASAP7_75t_R",
+      "pins": {
+        "A": "_037067_",
+        "Y": "net25706"
+      }
+    },
+    "wire41988": {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "pins": {
+        "A": "net25706",
+        "Y": "net41987"
+      }
+    }
+  },
+  "nets": {
+    "_073262_": [
+      {
+        "instance": "_218317_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "u_leaf.u_pc.u_pce.u_esm.es[36]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D"
+      }
+    ],
+    "net41132": [
+      {
+        "instance": "_211229_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_211262_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_218265_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_235431_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_239816_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_241197_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_241310_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_248452_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_248731_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_250102_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_250287_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_250309_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_250996_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_306884_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_307000_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_307293_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "fanout41133",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "place22722",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place22723",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place22724",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place22725",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place22726",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place22727",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place22728",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place22729",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ],
+    "_126907_": [
+      {
+        "instance": "_297797_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "_297798_",
+        "master": "INVx1_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ],
+    "net20827": [
+      {
+        "instance": "fanout38367",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place20826",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place20828",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "Y"
+      }
+    ],
+    "_126906_": [
+      {
+        "instance": "_213215_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "_297796_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "_297797_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "C"
+      },
+      {
+        "instance": "_297800_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ],
+    "_168485_": [
+      {
+        "instance": "_217824_",
+        "master": "NAND2x2_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "_241764_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "fanout41133",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ],
+    "net38366": [
+      {
+        "instance": "_265557_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_265565_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_265577_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_265585_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_265653_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_278382_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_295238_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_295384_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_296809_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_297532_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_297667_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_297796_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_297920_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_301079_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_301735_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_304522_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_304785_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A3"
+      },
+      {
+        "instance": "_306419_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_306444_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_306450_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "fanout38367",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "place20822",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place20823",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place20824",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place20827",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ],
+    "net25706": [
+      {
+        "instance": "place25707",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "wire41988",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ],
+    "_073260_": [
+      {
+        "instance": "_242024_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "u_leaf.u_pc.u_pce.u_esm.es[34]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D"
+      }
+    ],
+    "net40106": [
+      {
+        "instance": "_211280_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_233547_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_235692_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_236147_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_237084_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_237228_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_240557_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_240910_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_241796_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_248220_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_248331_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_248412_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_248873_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_249686_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_249980_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_250107_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_250200_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_250312_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_250497_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_251277_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_306968_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_307609_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "fanout40106",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "fanout40107",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "Y"
+      }
+    ],
+    "_073258_": [
+      {
+        "instance": "_237314_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "u_leaf.u_pc.u_pce.u_esm.es[32]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D"
+      }
+    ],
+    "_053064_": [
+      {
+        "instance": "_297798_",
+        "master": "INVx1_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.bank[19].rtp[1]$_DFFE_PN0P_",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "D"
+      }
+    ],
+    "net40105": [
+      {
+        "instance": "_208215_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_211200_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_218317_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_236908_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_236953_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_237147_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_237269_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_237314_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_240037_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_240052_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_241372_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_241435_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_241527_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B1"
+      },
+      {
+        "instance": "_241528_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_241811_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_241969_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_242024_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_249507_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_249745_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_249749_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_252332_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_307349_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_307351_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "_307585_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "B2"
+      },
+      {
+        "instance": "fanout40106",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "Y"
+      }
+    ],
+    "net22724": [
+      {
+        "instance": "fanout40107",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place22725",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "Y"
+      }
+    ],
+    "_073213_": [
+      {
+        "instance": "_307349_",
+        "master": "OAI22x1_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "u_leaf.u_pc.u_pce.u_esm.es[25]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D"
+      }
+    ],
+    "_168484_": [
+      {
+        "instance": "_217823_",
+        "master": "INVx1_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "_217824_",
+        "master": "NAND2x2_ASAP7_75t_R",
+        "pin": "B"
+      },
+      {
+        "instance": "_237067_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B"
+      }
+    ],
+    "net41987": [
+      {
+        "instance": "_206161_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B"
+      },
+      {
+        "instance": "_217823_",
+        "master": "INVx1_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place25706",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "wire41988",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "pin": "Y"
+      }
+    ],
+    "_105305_": [
+      {
+        "instance": "_265548_",
+        "master": "OR4x2_ASAP7_75t_R",
+        "pin": "Y"
+      },
+      {
+        "instance": "_300669_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1"
+      },
+      {
+        "instance": "_300678_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1"
+      },
+      {
+        "instance": "_300681_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1"
+      },
+      {
+        "instance": "_300684_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1"
+      },
+      {
+        "instance": "_301498_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_304769_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A3"
+      },
+      {
+        "instance": "_304790_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A3"
+      },
+      {
+        "instance": "_304792_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A3"
+      },
+      {
+        "instance": "place20821",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "place20828",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ]
+  },
+  "positions": {},
+  "DEF_units": 1000,
+  "SPEF_sections": [
+    "_053064_",
+    "_073213_",
+    "_073258_",
+    "_073260_",
+    "_073262_",
+    "_105305_",
+    "_126906_",
+    "_126907_",
+    "_168484_",
+    "_168485_",
+    "net20827",
+    "net22724",
+    "net25706",
+    "net38366",
+    "net40105",
+    "net40106",
+    "net41132",
+    "net41987"
+  ],
+  "input_sha256": {
+    "6_final.v": "36bb1d1537d4dc2ea79fc31edffd79f770d5e8f6cb275ae10823107b04ff786c",
+    "6_final.def": "0666fa2c890119d94b0d7490ecc421142b3b4390f2847fd5ee0fe8ccd2a1bbfa",
+    "6_final.spef": "c10a0e35d0b92e426116d912895a256eb86ab775ef2afe4bdaeb64672f7201ba"
+  }
+}

@@ -1,0 +1,28 @@
+{
+ "status": "FINITE_COMPONENT_INFEASIBLE",
+ "solver_status": 2,
+ "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+ "variables": 87,
+ "history": [
+  {
+   "iteration": 0,
+   "cuts": 0,
+   "collisions": 123,
+   "objective_value": 0.0,
+   "actual_L1_movement_um": 10152.522900000002,
+   "elapsed_s": 6.479107688064687,
+   "solver_status": 0
+  },
+  {
+   "iteration": 1,
+   "cuts": 123,
+   "collisions": 167,
+   "objective_value": 0.0,
+   "actual_L1_movement_um": 7001.7337,
+   "elapsed_s": 8.417685472057201,
+   "solver_status": 0
+  }
+ ],
+ "global_infeasibility_claim": false,
+ "source_correspondence": "HELD"
+}

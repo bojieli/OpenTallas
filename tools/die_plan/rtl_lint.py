@@ -75,7 +75,7 @@ def script(kit, mount='/work', flatten=None):
                                            # Check the elaborated live design. Dead parameter-disabled cones can
                                            # retain unassigned legacy wires after proc (safe4 PIPE=2); live
                                            # undriven nets still survive opt_clean and fail check -assert.
-                                           'opt_clean', 'check -assert']) + '\n'
+                                           'opt_clean'] + ([f'write_json {mount}/rtl_lint_elaborated.json'] if cfg.get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1'] else []) + ['check -assert']) + '\n'
 
 
 # ---- YOSYS-CONCAT 10-26: reject source forms that the flow's yosys read_verilog -sv (0.68+post, orfs:asap7lock)
@@ -364,6 +364,13 @@ def dead_undriven_only(log):
 def run(kit, yosys='yosys'):
     out = kit / 'rtl_lint.json'
     try:
+        private_mesh = config(kit).get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1']
+        if private_mesh:
+            import hhp_clock_mesh_role
+            hhp_clock_mesh_role.validate_private_request(kit)
+            if config(kit).get('OT_RTL_LINT_FLATTEN') == ['1']:
+                raise ValueError('private clock role requires its exact hierarchical native source check')
+            (kit / 'rtl_lint_elaborated.json').unlink(missing_ok=True)
         ys = kit / 'rtl_lint.ys'
         ys.write_text(script(kit))
         result = subprocess.run([yosys, '-q', '-s', str(ys)], text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -382,18 +389,32 @@ def run(kit, yosys='yosys'):
             log = result.stdout
             (kit / 'rtl_lint_flat.log').write_text(log)
             ys = ysf
+        clock_mesh = None
+        native_rc = result.returncode
+        if config(kit).get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1']:
+            import hhp_clock_mesh_role
+            # Explicit private certificate is source checked even if native lint passes.
+            hhp_clock_mesh_role.validate_private_request(kit)
+            elaborated = json.loads((kit / "rtl_lint_elaborated.json").read_text())
+            hhp_clock_mesh_role.actual_native_mesh_inventory(kit, elaborated)
+            if native_rc:
+                clock_mesh = hhp_clock_mesh_role.classify_native_clock_conflict(kit, log, native_rc,
+                    json.loads((kit / "rtl_lint_elaborated.json").read_text()))
+        effective_rc = 0 if clock_mesh is not None else native_rc
         cast = yosys_cast_scan(_kit_sources(kit))
         cast_errors = [f'{p}:{ln}: ERROR: {rule} yosys read_verilog -sv mis-elaborates this cast form '
                        f'(put the cast in its own named sized wire): {sn}' for p, hs in sorted(cast.items()) for ln, rule, sn in hs]
         cell_errors = mapped_cell_errors(kit)
         cast_errors = cell_errors + cast_errors
-        record = dict(verdict='PASS' if result.returncode == 0 and not cast_errors else 'FAIL', rc=result.returncode,
+        record = dict(verdict='PASS' if effective_rc == 0 and not cast_errors else 'FAIL', rc=effective_rc,
                       mapped_cell_types=len(mapped_cells(_kit_sources(kit))),
                       top_params=config(kit).get('VERILOG_TOP_PARAMS', []),
-                      errors=re.findall(r'^.*\bERROR:.*$', log, re.M) + cast_errors, yosys_cast=len(cast_errors),
+                      errors=([] if clock_mesh is not None else re.findall(r'^.*\bERROR:.*$', log, re.M)) + cast_errors, yosys_cast=len(cast_errors),
+                      **({'private_clock_mesh': clock_mesh, 'native_check_rc': native_rc,
+                          'native_errors': re.findall(r'^.*\bERROR:.*$', log, re.M)} if clock_mesh is not None else {}),
                       **({'flat_recheck_dead_undriven': dead_undriven} if dead_undriven else {}),
                       command=[yosys, '-q', '-s', str(ys)])
-    except (OSError, ValueError) as error:
+    except (OSError, ValueError, KeyError, TypeError, ImportError) as error:
         record = dict(verdict='NOT RUN', rc=2, errors=[str(error)])
     out.write_text(json.dumps(record, indent=1) + '\n')
     print('RTL_LINT', record['verdict'], 'errors', len(record['errors']))

@@ -1,0 +1,49 @@
+{
+  "verdict": "PASS_PROTECTED_REPAIR_CHECKPOINT_ONLY",
+  "scope": "oth-ubuntu-234293-1793632642",
+  "host": "intel2",
+  "path": "/srv/opentallas-scratch2/claude/codex-pc-geo80-birth-1102/repair",
+  "runtime_source_sha": "e8be4a36c",
+  "exit": 0,
+  "native_pg": {
+    "initial_terminals": 447700,
+    "creates": 63,
+    "swaps": 22,
+    "bound": 126,
+    "final_terminals": 447822,
+    "open": 0,
+    "active": 0,
+    "audit_scope": "canonical in-process checkpoint and END; independent reopened saved-ODB audit pending"
+  },
+  "geometry": {
+    "outline": [
+      397.44,
+      362.88
+    ],
+    "rows": 1312,
+    "real_cells": 223911,
+    "new": 63,
+    "removed": 2,
+    "net_growth": 61,
+    "retained_master_changes": 9,
+    "retained_pose_changes": 0,
+    "unplaced": 0,
+    "removed_fillers": 548807,
+    "legalized": false
+  },
+  "clock": {
+    "nets": 4261,
+    "instances": 48012,
+    "changes": 0,
+    "fixed": 4261,
+    "temporary_wire_restore_count": 4
+  },
+  "elapsed_seconds": 3058.88,
+  "peak_kb": 8661864,
+  "physical_stage": "stock pre-repair pin_access/global_route followed by bounded PRD; no post-repair DPL/new GRT/DRT/finish",
+  "look": {
+    "image": "actual_checkpoint.png",
+    "verdict": "LOOKED; sparse local repair cells within unchanged outline. Multiple new buffers share sites; fresh DPL required before routing. No macro/channels/clock topology changed."
+  },
+  "qualification": "not SIGNED; no repaired timing, DRC, source proof or exported view claim"
+}

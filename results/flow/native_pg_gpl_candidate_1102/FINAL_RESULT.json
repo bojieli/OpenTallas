@@ -1,0 +1,167 @@
+{
+  "status": "PASS_PRIVATE_PLACE_AND_INDEPENDENT_SAVED_PG_READ_WITH_RECORDED_MASTER_CHANGES",
+  "PLACE_unit": "oth-ubuntu-413122-1793633354",
+  "independent_read_unit": "oth-ubuntu-614166-1793634115",
+  "PLACE_ODB_sha256": "9ba70335e4f85dc5bd467e67629ab9a1db18143f8c319ea86656e531d3f9586f",
+  "PG": {
+    "checked": 106210,
+    "failures": 0,
+    "persisted_rules": [
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VDD$",
+        "net": "VDD",
+        "role": "POWER",
+        "region": ""
+      },
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VDDCE$",
+        "net": "VDD",
+        "role": "POWER",
+        "region": ""
+      },
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VDDPE$",
+        "net": "VDD",
+        "role": "POWER",
+        "region": ""
+      },
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VSS$",
+        "net": "VSS",
+        "role": "GROUND",
+        "region": ""
+      },
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VSSE$",
+        "net": "VSS",
+        "role": "GROUND",
+        "region": ""
+      }
+    ],
+    "native_snapshot_sha256": "6e6f2b579eb39fe89c9993f1d6038ad23f81eb2f8975f57791e7f8389751abb2"
+  },
+  "source_guard": "All original94 inputs including RTL/SDCs/config and genuine SYNTH/FP hashes unchanged",
+  "summaries": {
+    "SYNTH": {
+      "instances": 48515,
+      "master_types": 58,
+      "placement_status": {
+        "NONE": 48515
+      },
+      "sequential_candidates": 8994,
+      "rows": 0,
+      "signal_pin_bits": 0,
+      "signal_pin_shapes": 0
+    },
+    "FP": {
+      "instances": 52477,
+      "master_types": 54,
+      "placement_status": {
+        "NONE": 46124,
+        "LOCKED": 2984,
+        "UNPLACED": 3369
+      },
+      "sequential_candidates": 8994,
+      "rows": 496,
+      "signal_pin_bits": 69,
+      "signal_pin_shapes": 70
+    },
+    "PLACE": {
+      "instances": 53105,
+      "master_types": 63,
+      "placement_status": {
+        "PLACED": 50121,
+        "LOCKED": 2984
+      },
+      "sequential_candidates": 8994,
+      "rows": 496,
+      "signal_pin_bits": 69,
+      "signal_pin_shapes": 70
+    }
+  },
+  "retained_FP_to_PLACE": {
+    "added": 628,
+    "removed": 0,
+    "net_delta": 628,
+    "master_changed": 23,
+    "added_by_master": {
+      "BUFx3_ASAP7_75t_R": 450,
+      "BUFx2_ASAP7_75t_R": 78,
+      "BUFx6f_ASAP7_75t_R": 85,
+      "BUFx4f_ASAP7_75t_R": 1,
+      "BUFx16f_ASAP7_75t_R": 3,
+      "BUFx12f_ASAP7_75t_R": 1,
+      "BUFx10_ASAP7_75t_R": 10
+    },
+    "removed_by_master": {},
+    "sequential_master_changed": 9
+  },
+  "SYNTH_to_PLACE_sequential_guard": {
+    "method": "Conservative clock-MTerm or CLK/CK/CP pin / DFF-SDFF-LATCH master-name census; inventory only, not LEC",
+    "count": 8994,
+    "diff": {
+      "missing": [],
+      "extra": [],
+      "master_changes": [
+        {
+          "instance": "u_core.g_nr\\[0\\].m_m.u.s2_sh\\[0\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx3_ASAP7_75t_R"
+        },
+        {
+          "instance": "u_core.g_nr\\[0\\].m_y.u.s2_sh\\[0\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx3_ASAP7_75t_R"
+        },
+        {
+          "instance": "u_core.g_nr\\[1\\].m_m.u.s2_prod\\[47\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx2_ASAP7_75t_R"
+        },
+        {
+          "instance": "u_core.g_nr\\[1\\].m_m.u.s2_sh\\[0\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx3_ASAP7_75t_R"
+        },
+        {
+          "instance": "u_core.g_nr\\[1\\].m_y.u.s2_prod\\[47\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx2_ASAP7_75t_R"
+        },
+        {
+          "instance": "u_core.g_nr\\[1\\].m_y.u.s2_sh\\[0\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx3_ASAP7_75t_R"
+        },
+        {
+          "instance": "u_core.g_nr\\[2\\].m_m.u.s2_prod\\[47\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx2_ASAP7_75t_R"
+        },
+        {
+          "instance": "u_core.g_nr\\[2\\].m_m.u.s2_sh\\[0\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx3_ASAP7_75t_R"
+        },
+        {
+          "instance": "u_core.g_nr\\[2\\].m_y.u.s2_sh\\[0\\]$_DFF_P_",
+          "before": "DFFHQNx1_ASAP7_75t_R",
+          "after": "DFFHQNx3_ASAP7_75t_R"
+        }
+      ],
+      "clock_iterm_changes": []
+    },
+    "clock_input_loads": "Nine FF strength masters changed; retain actual models for later clock qualification, do not claim sink-master identity"
+  },
+  "outline_and_rows_unchanged": true,
+  "signal_pin_metal_exactly_matches_reviewed_FP": true,
+  "no_CTS_GRT_route_or_independent_timing_analysis": true,
+  "production_GPL_admission_changed": false,
+  "normal_LEC_or_SIGNED_claim": false,
+  "remaining_holds": "Parent review of actual geometry, clock sink-master changes, ordinary functional/final proof and later physical closure; no automatic successor"
+}

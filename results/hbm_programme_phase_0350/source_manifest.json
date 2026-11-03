@@ -1,0 +1,58 @@
+{
+  "source_commit": "51cf1d01c",
+  "scope": "Same actual source/native phase vehicle; Icarus0320 failedelaboration ongenvar arrayports, noRTLchanges",
+  "files": [
+    {
+      "name": "ot_sram_1r1w_512x256_m1_r2c2.sv",
+      "sha256": "bcdf01881ee0132395188c1d1dd3d5b822fdf01dcef97192e1a9b951951f26b7"
+    },
+    {
+      "name": "ot_hgi_sfu_store_stripe_leaf_r10.sv",
+      "sha256": "2889a6da816b04f32ce9fa9c445977d16bb353c5b3f7d61a59677ad661b0dfce"
+    },
+    {
+      "name": "ctl.mem",
+      "sha256": "4bd3a0a63a7a10ba0e0476f46a817ea55652b731f18c4b4858e8c9dcb1105d22"
+    },
+    {
+      "name": "phase_units.sv",
+      "sha256": "7353d15b104796256aaf771bcbf94621c25f2a6e9d1453fb4983b9aeb59adcdc"
+    },
+    {
+      "name": "ot_hgi_sfu_programme_store_r10.sv",
+      "sha256": "6260a442a066ad4c57ad65cf2d56d53705f84be989994c459e7e49cc37ce9487"
+    },
+    {
+      "name": "tb_programme_phase.sv",
+      "sha256": "da3dd5de2029d5d4bd0f4852d54c1e4924c4d0884070343d7ce38455f21f8d50"
+    },
+    {
+      "name": "io.mem",
+      "sha256": "08bba011ba25c3455a4966141613ea94c67ab45437587f2f73db4fee2884d8a4"
+    },
+    {
+      "name": "fixture.json",
+      "sha256": "f2150b8c7da5eb739ae52284a8fa3586a1d7034b82b4a0772282e89eed8ad535"
+    },
+    {
+      "name": "ot_hbm_static_cfg_collar.sv",
+      "sha256": "e9f519d3848ae6e0eb01c9d5e4ca3a4bd0b3945d1d9a57ddeb61b3e2474d7055"
+    },
+    {
+      "name": "ot_dp_st.sv",
+      "sha256": "d3d3f04be300eebdf3a00476647c86a0181bbb6a9a77ef238d5a348c18bffba2"
+    },
+    {
+      "name": "frames.mem",
+      "sha256": "69405116bcb0eb21f5c9394211232009dc512aadbcc9899f055de40052a47fd5"
+    },
+    {
+      "name": "fixture.vh",
+      "sha256": "e97e25b867a1f097a95bea9f03707180f451e069cfbe7ee9de7fd903e8561fc8"
+    },
+    {
+      "name": "run.sh",
+      "sha256": "28709d33766de9cdfd72ae8d397d3c19868757aad875d9f770d87aa909c7f6a3"
+    }
+  ]
+}

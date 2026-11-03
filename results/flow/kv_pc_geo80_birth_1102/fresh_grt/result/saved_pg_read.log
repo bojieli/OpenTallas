@@ -1,0 +1,20 @@
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 1  -no_splash /work/audit_saved.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.odb
+Took 6 seconds: read_db /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.odb
+read_sdc -mode ss /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.sdc
+read_sdc -mode ff /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.sdc
+source /work/setRC_rcx.tcl
+OT_PG_FINAL_PASS native_pg_terminals=447822
+INDEPENDENT_SAVED_GRT_PG_PASS checked=447822 repair=0 STA=0

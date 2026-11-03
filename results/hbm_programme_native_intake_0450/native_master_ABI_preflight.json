@@ -1,0 +1,41 @@
+{
+  "status": "PASS_EXACT_SELECTED_NATIVE_MASTER_ABI",
+  "master": "ot_sram_1r1w_512x256_m1_r2c2",
+  "selected_signal_bits": 827,
+  "counts": {
+    "BB": 827,
+    "LEF": 829,
+    "TT": 827,
+    "FF": 827
+  },
+  "errors": {
+    "BB": {
+      "missing": [],
+      "extra": [],
+      "direction": []
+    },
+    "LEF": {
+      "missing": [],
+      "extra": [],
+      "direction": []
+    },
+    "TT": {
+      "missing": [],
+      "extra": [],
+      "direction": []
+    },
+    "FF": {
+      "missing": [],
+      "extra": [],
+      "direction": []
+    }
+  },
+  "scope": "Names/width/direction contract only; source-behavior/mapped equivalence and transistor semantics not transferred",
+  "hashes": {
+    "ot_sram_1r1w_512x256_m1_r2c2.sv": "bcdf01881ee0132395188c1d1dd3d5b822fdf01dcef97192e1a9b951951f26b7",
+    "ot_sram_1r1w_512x256_m1_r2c2_bb.v": "38f4ed47460d5f10b471e9325b5c0f67e477fbffcd9b64fbe2779b5e66b8b40c",
+    "ot_sram_1r1w_512x256_m1_r2c2.lef": "6762ba9ac612990803670c949413ddeabd589e9fab87fa9c2352d6d387911a3a",
+    "ot_sram_1r1w_512x256_m1_r2c2_tt.lib": "885987c2adf57d9b68c8fb3d7126eed1052e8d159a93a50e87c0fbfca69ae0fd",
+    "ot_sram_1r1w_512x256_m1_r2c2_ff.lib": "2d8eb97369a36fb043077b0bd51bb78aefa3f04d52c76db0e9931f4048e94d6b"
+  }
+}

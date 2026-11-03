@@ -1164,6 +1164,10 @@ def main():
                          "constants -> input strap_bsel[1:0] (head_strap_odd.py; plan g3/head_master_odd_tr2.py ties e1 00 / "
                          "e3 01 / e5 10 / e7 11); false path from strap_bsel, 0 cycles")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
+    ap.add_argument("--astk-native-faces", action="store_true",
+                    help="DIE-KV-61 11-02: native strap master kv3_astk (plan_c, kv_core_rtl wrapper of kv3_astk__leaf): "
+                         "ctl PORT_REGS qo face bank + fault-b landing (+1 external-fault edge, 0 command cycles) + the "
+                         "stale_in tc plan pins declared dead (astk_native_faces.py; the 0828 kit recut)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--astk-rep-split", action="store_true",
                     help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
@@ -1388,6 +1392,18 @@ def main():
             if text.count(old) != 1:
                 raise SystemExit("ECTLK requires exactly one collapsed three-clock leaf binding")
             dst.write_text(text.replace(old, ".ck(ck[2:0])"))
+        if rec.get("ft_face_regs") and dst.stem == mod:
+            import hr_ft_regs    # DIE-KV-62/hr 11-02: recipe-declared wire feed-through -> face register (+1 edge)
+            text, ftr = hr_ft_regs.transform(dst.read_text(), rec["ft_face_regs"])
+            dst.write_text(text)
+            hr_ft_regs.write_report(kd, ftr, rec["ft_face_regs"])
+        if rec.get("spare_out_tie") and dst.stem == mod:
+            import hr_spare_tie  # DIE-KV-62/hr 11-02: declared spare outputs = 0 in kit RTL (X refinement, LEC)
+            text, stie = hr_spare_tie.transform(dst.read_text(), rec["spare_out_bits"])
+            dst.write_text(text)
+            (kd / "hr_spare_tie.json").write_text(json.dumps(dict(schema="opentallas.kit_hr_spare_tie.v1", ties=stie,
+                note="declared spare_out bits driven 0 from the first edge (refines the native X-until-written)"),
+                indent=1) + "\n")
         preserve_head_relays(dst)
         # std-cell simulation models (asap7sc7p5t_*.v, for leaves that instantiate cells): yosys takes the cells
         # from the liberty, the models are not synthesisable input
@@ -1396,6 +1412,9 @@ def main():
     if a.kvspc_core_clock:
         import kvspc_core_clock
         kvspc_core_clock.apply_kit(kd)
+    if a.astk_native_faces:
+        import astk_native_faces
+        astk_native_faces.apply_kit(kd, mod, cj, a.core_json)
     if a.astk_timing_regs:
         if not mod.startswith("kv3_astk_"):
             raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
@@ -1579,6 +1598,11 @@ def main():
                    "$i setPlacementStatus FIRM",
                    f"puts \"hard child {b['inst']} -> [$i getName] {b['orient']} at {b['x']} {b['y']}\""]
         (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
+        if hard_children.get("pg_pin_layer", "M5") == "M4":
+            # DIE-KV-62/hr 11-02: native SRAM signal pins on preferred M4/M5 tracks at the planned orient + site
+            # (qkd_hr_phy_adp R270 at y 17.28: 437 pins off-track -> DRT-0073 at GRT pin access)
+            import macro_pin_tracks
+            macro_pin_tracks.check(hard_children["blocks"], lambda m: (kd / "macros" / f"{m}.lef").read_text())
         if hard_children.get("static_rows"):
             from macro_sites import static_placement_tcl
             (kd / "macro_place.tcl").write_text(static_placement_tcl(hard_children["blocks"]))
@@ -1757,8 +1781,10 @@ def main():
                                        PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
+    from common_flow_src import common_flow_file    # tools/die_plan on sys.path (_policy_unc)
     for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):
-        shutil.copyfile(REPO / "physical/common_flow" / name, kd / name)
+        # DIE-KV-62 11-02: a sparse checkout without physical/common_flow reads it from git HEAD (killed q2/astk/e6 gens)
+        shutil.copyfile(common_flow_file(name, REPO), kd / name)
     for name in ("face_keep.tcl", "face_keep_release.tcl"):
         text = (tool / name).read_text()
         text = text.replace("u_(bin|bout|ft)_[^/]*[/.]", "(u_(bin|bout|ft)_[^/]*[/.]|u_ric[/.])")

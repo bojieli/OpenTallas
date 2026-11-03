@@ -2082,6 +2082,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             physical_reset_qualification=False, die_contract_staged=False), indent=1) + "\n")
     else:
         reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"])
+    # Optional source-pinned placement/model assets are assembled before the
+    # normal kit hash and generation provenance; never retrofit a built kit.
+    from kit_runtime_assets import stage as stage_runtime_assets
+    runtime_files = stage_runtime_assets(kd, REPO, rec.get("runtime_files"))
     write_boundary_context(kd, clks, rsts)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
@@ -2099,6 +2103,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    if runtime_files:
+        fz["runtime_files"] = runtime_files
     if not source_profile:
         fz.update(plan_pins_source=v["pins_file"], plan_pins_source_sha256=v["pins_sha256"],
                   plan_pins_source_canon_sha256=pins_canon, pins_file="plan_pins.json",

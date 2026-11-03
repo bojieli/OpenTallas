@@ -1,0 +1,16 @@
+{
+ "purpose": "negative-only actual old TT_C reference; not the regional source event",
+ "netlist": "/srv/opentallas-scratch2/claude/codex-tt-locality-1102/native_inventory_readonly/actual_old_1_2_yosys.v",
+ "sdc": "/srv/opentallas-scratch2/claude/codex-tt-locality-1102/frozen_constraint.sdc",
+ "libs": [
+  "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+  "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+  "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+  "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+  "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+  "/srv/opentallas-scratch2/claude/codex-tt-locality-1102/macros/ot_rom_4096x266_m8_tt.lib",
+  "/srv/opentallas-scratch2/claude/codex-tt-locality-1102/macros/ot_rom_4096x72_m8_tt.lib",
+  "/srv/opentallas-scratch2/claude/codex-tt-locality-1102/macros/ot_sram_1r1w_32x128_m1_tt.lib",
+  "/srv/opentallas-scratch2/claude/codex-tt-locality-1102/macros/ot_sram_1r1w_64x512_m1_r2c2_tt.lib"
+ ]
+}

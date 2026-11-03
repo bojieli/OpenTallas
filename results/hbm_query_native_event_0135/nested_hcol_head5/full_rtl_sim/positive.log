@@ -1,0 +1,6 @@
+HCOL_REGIONAL_EQ checks=1404 errors=0 nonzero=1385 mutant=0
+HCOL_REGIONAL_EQ PASS
+- tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.102 s; speed 159.208 us/s
+- Verilator: cpu 0.102 s on 1 threads; allocated 9 MB

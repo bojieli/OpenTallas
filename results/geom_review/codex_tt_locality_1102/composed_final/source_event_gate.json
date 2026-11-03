@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.tt_composed_event_gate.v1",
+ "enabled": false,
+ "targeted_source_model": "PASS",
+ "ordinary_ff_guides": 2978,
+ "source_slots": 16,
+ "old_source_ff_removed": 3,
+ "net_ff_added": 13,
+ "cycles_added": 0,
+ "typed_capture_endpoints": 45301,
+ "max_reach_um": 405.0,
+ "reach_fail": 0,
+ "ff_macro_body_fail": 0,
+ "clock_ports": 63,
+ "clock_period_ps": 833,
+ "clock_max_reach_um": 189.083,
+ "clock_sink_cap": 1200,
+ "clock_nearest_peak": 1251,
+ "clock_reassociations": 51,
+ "native_clock_assignment_applied": false,
+ "native_placement": false,
+ "geometry_only": "ordinary FF points are source homes/guides, not a legalized placement",
+ "macro_masters": 19,
+ "macro_homes_changed": 3,
+ "physical_release": "HELD",
+ "baseline_other_gates": [
+  "fill0.1242/empty0.5174 not cleared",
+  "pin_reg_p9081.23/max257.92 not cleared by targeted r2r model",
+  "channel/collapse/partial-face findings not signed off",
+  "whole-part nativeLEC UNPROVEN145 retained",
+  "all parent/source clock/IO/TTFF/corner gates retained"
+ ],
+ "required_before_physical": [
+  "central source-event approval and exact paired source+plan+sidecar/global-reset tree derive",
+  "native source/count/KEEP/ABI and actual-name join",
+  "G0C0new + strictbind0 + actual geometry review",
+  "explicit phase-preserving 51-sink same-clock rebind before CTS (no old999 credit)",
+  "source/pin/parent/corner gates; no partial45-only trial"
+ ]
+}

@@ -32,9 +32,12 @@ def test_hung_cone_bisected_to_undecided(tmp_path):
     res = lec.cone_batch("abc", tmp_path / "s.aig", tmp_path, "t", ids, "-m", 100, log, limit=5,
                          runner=fake_runner(hung, calls))
     assert res == expect(ids, hung)
-    assert any(c == ([13], 5 + lec.CONE_BUDGET_S) for c in calls)          # the hung cone ran alone, then gave up
+    assert any(c == ([13], 5) for c in calls)                              # the hung cone ran alone, then gave up
     assert any("LEC CONE TIMEOUT t output 13" in x for x in log)
-    assert len(calls) <= 2 * 5 + 1                                          # log2 bisection, not one run per cone
+    # LEC-CONE-BOUND (DIE-HBM-59): after an overrun the rest runs one cone per call with the bare limit, so the
+    # wall spent is one batch wall + hung x limit (bisection paid a full wall per tree node holding a hung cone)
+    assert len(calls) == 1 + len(ids)
+    assert [c[1] for c in calls[1:]] == [5] * len(ids)
 
 
 def test_partial_output_kept_and_two_hung_cones(tmp_path):
@@ -42,7 +45,8 @@ def test_partial_output_kept_and_two_hung_cones(tmp_path):
     res = lec.cone_batch("abc", tmp_path / "s.aig", tmp_path, "t", ids, "-n -m", 10, [], limit=1,
                          runner=fake_runner(hung, calls, flush=True))
     assert res == expect(ids, hung)
-    assert calls[1][0] == ids[2:6]                                         # 0, 1 answered before the hang: kept
+    assert calls[1][0] == [2]                                              # 0, 1 answered before the hang: kept
+    assert [c[0] for c in calls[1:]] == [[i] for i in ids[2:]]             # the rest one cone per call
 
 
 def test_no_limit_is_old_behaviour(tmp_path):

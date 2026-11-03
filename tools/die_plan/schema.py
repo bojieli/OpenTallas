@@ -523,6 +523,10 @@ SCHEMA = {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # Native START capture location used by physical source planning.
                         "start_capture_um": _xy,
+                        # FLOW-CANARY 10-25 opt-in GRT-RC tap pre-pass + pin-register pad (gen_phys._tap_grt_pre: type
+                        # clock.tap_grt_pre > plan clock.tap_grt_pre > OT_GEN_TAP_GRT_PRE > default off); DIE-HEAD-55
+                        # 11-02: the knob was read by gen_phys but refused here, so it could not be set from a plan
+                        "tap_grt_pre": {"type": "boolean"},
                         "landing_origin_clock_port": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                         "tap_pin_heights_um": {"type": "object", "additionalProperties": {
                             "type": "number", "minimum": 0.768}},
@@ -912,6 +916,7 @@ SCHEMA = {
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
+            "tap_grt_pre": {"type": "boolean"},   # die default of the type knob above (gen_phys._tap_grt_pre)
             # INFRA-FIRST-R4 kit hold window (COORD 10-26 11:24 ruling, opt-in, gen_phys.tap_window_ps): the die
             # delivers every grid tap of one partition within window_ps of each other ([-W, 0] source latency on each
             # real clock port in the kit SDC, CRPR credits same-tap); absent = all taps on one ideal clock (feature off).
@@ -1170,6 +1175,16 @@ _CKPROPS["landing_raw_branches"] = {
             "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
                           "items": {"type": "string", "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+)$"}}
         }}}
+
+# Default-OFF TT_C source-event PREP. This pointer is admitted only with exact
+# source/model identity; global source/slot/reset/clock consumers still gate it.
+_CKPROPS["landing_regional_origin"] = {
+    "type": "object", "additionalProperties": False,
+    "required": ["enabled", "model_file", "model_sha256"],
+    "properties": {
+        "enabled": {"type": "boolean", "default": False},
+        "model_file": {"type": "string", "pattern": "^/", "minLength": 2},
+        "model_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
 
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
