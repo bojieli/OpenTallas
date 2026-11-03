@@ -73,10 +73,26 @@ IMPORTED_SCHEDULER_CODE = scheduler_code_id()
 
 
 def scheduler_current(AP):
-    if scheduler_code_id() == IMPORTED_SCHEDULER_CODE:
-        return True
-    AP.log("KIT-WAVE new launches deferred: scheduler files changed during this tick; next tick loads current code")
-    return False
+    """True when the scheduler files on disk are the code this process imported.  Stale code never creates an attempt
+    (launch() refuses); KW-FIX-4 11-03 (COORD 07:1x class fix): instead of deferring to the next tick, _step re-runs the
+    pass on the current code in the SAME tick (reload_step).  Merges every ~20 min had deferred 10 ticks on 11-03."""
+    return scheduler_code_id() == IMPORTED_SCHEDULER_CODE or os.environ.get("KW_RELOADED") == "1"
+
+
+def reload_step(AP, ap_dir):
+    """run this pass in a fresh process on the CURRENT scheduler code; the caller holds kit_wave.lock (KW_LOCK_HELD)
+    and has saved its state.  -> the state the reload pass wrote."""
+    ap_dir = ap_dir or AP.AP_DIR
+    env = dict(os.environ, KW_RELOADED="1", KW_LOCK_HELD="1", AP_DIR=str(ap_dir))
+    cmd = [sys.executable, str(Path(__file__).resolve()), "step"] + (["--dry-run"] if getattr(AP, "DRY", False) is True else [])
+    AP.log("KIT-WAVE scheduler files changed: re-running this pass on the current code (same tick, no deferral)")
+    try:
+        p = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=int(os.environ.get("KW_RELOAD_S", "3000")))
+        if p.returncode:
+            AP.log(f"KIT-WAVE failed: reload pass rc {p.returncode}: {(p.stderr or p.stdout)[-300:]}")
+    except subprocess.TimeoutExpired:
+        AP.log("KIT-WAVE failed: reload pass timed out")
+    return load_state(ap_dir)
 
 
 HOME = Path.home()
@@ -2134,6 +2150,8 @@ def step(AP, ap_dir=None):
     """one wave pass; a non-blocking lock keeps two passes (tick + CLI step) from double-launching"""
     import fcntl
     ap_dir = ap_dir or AP.AP_DIR
+    if os.environ.get("KW_LOCK_HELD") == "1":           # reload_step child: the parent pass holds kit_wave.lock
+        return _step(AP, ap_dir)
     lk = open(Path(ap_dir) / "kit_wave.lock", "w")
     try:
         fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -2149,7 +2167,7 @@ def step(AP, ap_dir=None):
 
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
-        return None
+        return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
@@ -2169,6 +2187,11 @@ def _step(AP, ap_dir):
     cancel_superseded(AP, cfg, st, notices, ap_dir)
     stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
     nl = 0                                               # items launched this tick: start delay nl * stagger
+    if not scheduler_current(AP):                        # code changed during collect: launch on the current code now
+        if not AP.DRY:
+            save_state(st, ap_dir)
+            write_stages(st, ap_dir, cfg)
+        return reload_step(AP, ap_dir)
     for key, rec in list(st["items"].items()):           # INFRA relaunch (up to infra_attempts)
         # Semantic adoption requires a fresh profile proof. Never launch an
         # old pending retry before plan_dies has had a chance to hold it.
