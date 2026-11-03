@@ -4780,6 +4780,16 @@
         "type": "number",
         "minimum": 0
        }
+      },
+      "per_port_ps": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
       }
      }
     },
