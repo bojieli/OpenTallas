@@ -1,0 +1,13 @@
+BUILD_OK
+NKP_COUNTS MUT=0 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_PASS MUT=0 checks=14000 strict_out=0 engine_state=0
+NKP_SMISMATCH cyc1351 t_out 11 bits ([513:512] k0 01 k1 01)
+NKP_SMISMATCH cyc1352 t_out 11 bits ([513:512] k0 01 k1 01)
+NKP_SMISMATCH cyc1353 t_out 10 bits ([513:512] k0 01 k1 01)
+NKP_COUNTS MUT=3 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=3 strict_out_errors=3399 first=1351 engine_state_errors=0 first=-1 checks=14000
+NKP_SMISMATCH cyc1351 t_out 11 bits ([513:512] k0 01 k1 01)
+NKP_SMISMATCH cyc1352 t_out 12 bits ([513:512] k0 01 k1 01)
+NKP_SMISMATCH cyc1353 t_out 9 bits ([513:512] k0 01 k1 01)
+NKP_COUNTS MUT=7 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=7 strict_out_errors=3399 first=1351 engine_state_errors=0 first=-1 checks=14000
