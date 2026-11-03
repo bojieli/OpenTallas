@@ -50,3 +50,7 @@ epyc2 /home/ubuntu/scratch-root/claude/dkv61/pvjoin/R0_B/prd_w80_p2 DIE-KV-63/pv
 epyc2 /home/ubuntu/scratch-root/claude/dkv61/pvjoin/R0_B/prd_w80.resign_rkv.resign_rkv DIE-KV-63/pv r-kv re-sign dir of pv_join_t R0 (SIGNED TT +96.89/FF +5.03, LEC EQ 18181, PROVENANCE kind resign)
 epyc2 /home/ubuntu/scratch-root/claude/dkv61/pvjoin/fMX_B/prd_w60_p2 DIE-KV-63/pv KV ot_qwen_tp8_pv_join_t fMX (pins 9d707d929550) routed DB 6_final.odb sha 4899e023cb99de87 (PRD w60 p2, counted via r-kv re-sign)
 epyc2 /home/ubuntu/scratch-root/claude/dkv61/pvjoin/fMX_B/prd_w60.resign_rkv.resign_rkv DIE-KV-63/pv r-kv re-sign dir of pv_join_t fMX (SIGNED TT +59.17/FF +5.03, LEC EQ 18181, PROVENANCE kind resign)
+intel1	/srv/opentallas-scratch2/claude/die-s81-50/nparent/qbank_S/eco_m0b/i1	S81 dsfd_qbank_S QBS20 legacy-IO ECO routed DB (DIE-S81-50/nparent, r-s81 re-sign)
+intel1	/srv/opentallas-scratch2/claude/die-s81-50/nparent/qbank_S/sign_r-s81_eco_m0b	S81 dsfd_qbank_S r-s81 re-sign + LEC (PROVENANCE)
+intel1	/srv/opentallas-scratch2/claude/die-s81-50/nparent/qbank_S/kitL	S81 dsfd_qbank_S legacy-IO kit copy (base of the ECO chain)
+intel1	/srv/opentallas-scratch2/claude/die-s81-50/nparent/qbank_S/eco_m0	S81 dsfd_qbank_S ECO chain i1-i3 (source of eco_m0b)
