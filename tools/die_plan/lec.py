@@ -72,6 +72,8 @@ PROVE_JOBS = 1
 # 'undecided' (UNRESOLVED, never EQ).  OT_LEC_CONE_S = seconds per hung cone (0 = no limit, the old behaviour).
 CONE_S_DEFAULT = 600
 CONE_BUDGET_S = 2.0          # + this much wall per cone in a batch (normal cones close in ~1 s)
+# LEC-RAWPREFIX-BOUND: wall limit of the first sweep of a universal raw prefix miter (0 = no limit, the old behaviour)
+RAWPREFIX_S_DEFAULT = 900
 
 
 def cone_limit_s():
@@ -2069,21 +2071,35 @@ def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runn
                    for i in rest]
 
 
-def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
+def raw_prefix_limit_s():
+    """wall seconds for the sweep of one universal raw prefix miter (LEC-RAWPREFIX-BOUND, DIE-HBM-60/LEC 11-03)."""
+    try:
+        return max(0.0, float(os.environ.get("OT_LEC_RAWPREFIX_S", RAWPREFIX_S_DEFAULT)))
+    except ValueError:
+        return float(RAWPREFIX_S_DEFAULT)
+
+
+def prove(m, work, conflicts, log, tag="miter", single_cap=2000, wall=None):
     """per-output status {name: 'proved' | 'differs' | 'undecided'} of the miter outputs of builder m.
     ABC: &fraig (simulation + SAT sweeping of the shared gold / gate structure; proved outputs collapse to 0), then
     &sat -a -z on what is left (each output: UNSAT -> const 0, SAT -> counterexample kept).  When &sat leaves undefined
     outputs, random simulation marks the SAT ones and the rest are re-checked one cone at a time (&cone -O i;
-    &cec -n -m) with 10x the conflicts on the cone query (no recursive per-node proof expansion)."""
+    &cec -n -m) with 10x the conflicts on the cone query (no recursive per-node proof expansion).
+    wall: optional wall limit (s) on that first sweep; on an overrun every output is 'undecided' (never proved)."""
     if not m.outs:
         return {}
     work = Path(work)
     miter, swept = work / f"{tag}.aig", work / f"{tag}_swept.aig"
     m.write(miter)
     abc = abc_bin()
-    r = subprocess.run([abc, "-c", f"&r {miter}; &ps; &fraig -C {conflicts}; &ps; "
-                                   f"&sat -a -z -v -C {conflicts * 10}; &ps; &w {swept}"],
-                       capture_output=True, text=True)
+    try:
+        r = subprocess.run([abc, "-c", f"&r {miter}; &ps; &fraig -C {conflicts}; &ps; "
+                                       f"&sat -a -z -v -C {conflicts * 10}; &ps; &w {swept}"],
+                           capture_output=True, text=True, timeout=wall or None)
+    except subprocess.TimeoutExpired:
+        log.append(f"==== {tag}\nLEC SWEEP TIMEOUT {tag}: no answer within {wall:.0f} s -> "
+                   f"{len(m.outs)} outputs undecided")
+        return {n: "undecided" for n in m.onames}
     txt = r.stdout + r.stderr
     log.append(f"==== {tag}\n{txt}")
     if not swept.is_file():
@@ -3992,7 +4008,10 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
         m.outs = [lit ^ c for lit, (k, c) in zip(m.outs, todo)]
         m.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in todo]
         batch = L.__dict__.get("_raw_prefix_batch", 0)
-        status = prove(m, work, conflicts, log, tag=f"rawprefix{batch}_{side}_{steps}")
+        # LEC-RAWPREFIX-BOUND (DIE-HBM-60/LEC 11-03): a 16/64-edge unroll of a large cone (HBM vm_calendar, KV
+        # head_eighth, kshare: 1.5-3.7 h in one &fraig/&sat, FLOW canaries of 19af2d0dd) has a wall limit; on an
+        # overrun no base is proved, i.e. the pre-C4 behaviour for those constants (dropped, never assumed)
+        status = prove(m, work, conflicts, log, tag=f"rawprefix{batch}_{side}_{steps}", wall=raw_prefix_limit_s())
         L._raw_prefix_batch = batch + 1
         for (k, c), name in zip(todo, m.onames):
             result = status.get(name, "undecided")
@@ -4112,6 +4131,7 @@ def noreset_report(L):
                 universal_raw_D=[e for e in kept if e["basis"] == "universal_raw_D"][:500],
                 raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS",
                                                   os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT)))),
+                raw_prefix_wall_s=raw_prefix_limit_s(),
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
                 universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
@@ -6549,6 +6569,8 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_EARLY_COMPARE=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
+    if "OT_LEC_RAWPREFIX_S" in os.environ:
+        cmd += ["-e", f"OT_LEC_RAWPREFIX_S={os.environ['OT_LEC_RAWPREFIX_S']}"]
     for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
         if os.environ.get(k):
             cmd += ["-e", f"{k}={os.environ[k]}"]
