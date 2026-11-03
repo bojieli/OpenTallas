@@ -1042,3 +1042,69 @@ def test_declared_timed_face_buses(tmp_path):
     (tmp_path / "timed_face.json").write_text(json.dumps(doc))
     assert face_guard.kit_timed_list(tmp_path) == ["o"]
     assert face_guard.kit_timed_list(tmp_path / "none") == []
+
+
+def test_face_lockup_latch_flop_latch_port():
+    """S81-RF1 (DIE-S81-51/CLK 11-03): flop -> ONE transparent-low latch (DLLx1 / $_DLATCH_N_) -> port is a registered
+    face; a second latch, a high-transparent latch or a latch with fan-out is not."""
+    lat = NET_OK.replace("INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));",
+                         "DLLx1_ASAP7_75t_R \\u_l.o_l[0]$_DLATCH_N_  (.CLK(clk), .D(_0_), .Q(o[0]));")
+    pins = [dict(bus="a", bit=0), dict(bus="a", bit=1), dict(bus="o", bit=0), dict(bus="o", bit=1)]
+    r = face_guard.guard(lat, pins=pins)
+    assert r["verdict"] == "PASS" and r["ok"] == 4 and r["face_lockup"] == ["o[0]"], r
+    yl = lat.replace("DLLx1_ASAP7_75t_R \\u_l.o_l[0]$_DLATCH_N_  (.CLK(clk), .D(_0_), .Q(o[0]));",
+                     "\\$_DLATCH_N_ \\u_l.o_l[0]  (.E(clk), .D(_0_), .Q(o[0]));")
+    assert face_guard.guard(yl, pins=pins)["verdict"] == "PASS"
+    hi = lat.replace("DLLx1_ASAP7_75t_R", "DHLx1_ASAP7_75t_R")
+    assert "unregistered" in face_guard.guard(hi, pins=pins)["fail_counts"]
+    two = lat.replace(".D(_0_), .Q(o[0]));", ".D(_9_), .Q(o[0]));\n  DLLx1_ASAP7_75t_R \\u_l2  (.CLK(clk), .D(_0_), .Q(_9_));") \
+        .replace("wire _0_;", "wire _0_; wire _9_;")
+    assert "unregistered" in face_guard.guard(two, pins=pins)["fail_counts"]
+    fan = lat.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));",
+                      "INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));\n  INVx1_ASAP7_75t_R _4_ (.A(o[0]), .Y(_8_));") \
+        .replace("wire _0_;", "wire _0_; wire _8_;")
+    assert face_guard.guard(fan, pins=pins)["verdict"] != "PASS"
+
+
+def test_face_lockup_latch_polarity_clock_and_logic_mutants():
+    """FLOW-LATCH-1 (11-03): the face lockup latch is accepted only transparent-low on the face flop's own clock
+    (DLL on clk, or DHL on INV(clk)); wrong polarity, another clock, a falling-edge face flop or logic between the
+    face flop and the latch are each unregistered."""
+    lat = NET_OK.replace("INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));",
+                         "DLLx1_ASAP7_75t_R \\u_l.o_l[0]  (.CLK(clk), .D(_0_), .Q(o[0]));")
+    pins = [dict(bus="a", bit=0), dict(bus="a", bit=1), dict(bus="o", bit=0), dict(bus="o", bit=1)]
+
+    def fails(net):
+        r = face_guard.guard(net, pins=pins)
+        return r["verdict"], [x for x in r["fails"].get("unregistered", []) if x.startswith("o[0]")]
+
+    assert fails(lat) == ("PASS", [])
+    # negative-level via a DHL on the inverted, buffered clock (how synthesis may fold `if (!clk)`)
+    inv = lat.replace("DLLx1_ASAP7_75t_R \\u_l.o_l[0]  (.CLK(clk),",
+                      "INVx1_ASAP7_75t_R ick (.A(clk), .Y(clk_n));\n  BUFx2_ASAP7_75t_R bck (.A(clk_n), .Y(clk_nb));\n"
+                      "  DHLx1_ASAP7_75t_R \\u_l.o_l[0]  (.CLK(clk_nb),").replace("wire _0_;", "wire _0_; wire clk_n, clk_nb;")
+    assert fails(inv) == ("PASS", []), face_guard.guard(inv, pins=pins)["fails"]
+    # WRONG POLARITY: DLL on the inverted clock = transparent while clk is high
+    wp = inv.replace("DHLx1_ASAP7_75t_R \\u_l.o_l[0]", "DLLx1_ASAP7_75t_R \\u_l.o_l[0]")
+    v, f = fails(wp)
+    assert v == "FAIL" and f and "transparent-high" in f[0], f
+    # WRONG POLARITY: DHL / $_DLATCH_P_ on clk
+    for hi in (lat.replace("DLLx1_ASAP7_75t_R", "DHLx1_ASAP7_75t_R"),
+               lat.replace("DLLx1_ASAP7_75t_R \\u_l.o_l[0]  (.CLK(clk),", "\\$_DLATCH_P_ \\u_l.o_l[0]  (.E(clk),")):
+        v, f = fails(hi)
+        assert v == "FAIL" and f and "transparent-high" in f[0], f
+    # ANOTHER CLOCK: latch enable is not the face flop clock
+    oc = lat.replace("input clk;", "input clk; input clk2;").replace("module top(clk, a, o);", "module top(clk, clk2, a, o);") \
+        .replace("(.CLK(clk), .D(_0_), .Q(o[0]))", "(.CLK(clk2), .D(_0_), .Q(o[0]))")
+    v, f = fails(oc)
+    assert v == "FAIL" and f and "not the face flop clock" in f[0], f
+    # FALLING-EDGE face flop behind the latch
+    fe = lat.replace("DFFHQNx1_ASAP7_75t_R \\u_bout_o.q[0]$_DFF_P_ ", "DFFLQNx1_ASAP7_75t_R \\u_bout_o.q[0]$_DFF_N_ ")
+    v, f = fails(fe)
+    assert v == "FAIL" and f and "not rising-edge" in f[0], f
+    # COMBINATIONAL LOGIC feeding the latch (flop -> AND -> latch -> port)
+    cl = lat.replace("(.CLK(clk), .D(_0_), .Q(o[0]))", "(.CLK(clk), .D(_7_), .Q(o[0]))") \
+        .replace("wire _0_;", "wire _0_; wire _7_;") \
+        .replace("endmodule", "  AND2x2_ASAP7_75t_R g7 (.A(_0_), .B(a[1]), .Y(_7_));\nendmodule")
+    v, f = fails(cl)
+    assert v == "FAIL" and f and "driven by AND2x2" in f[0], f
