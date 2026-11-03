@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 12:34 PST:** count 64 flat (S81 31/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 16/32, HBM 8/84); next QC su_lane l6 (SIGNED, routed LEC running). Merged H8/H9 (main e326462580e): S81 measured SDC tap window, S81-RF1 batch -> S81 FROZEN, QC reticle y-shrink 25643.52, HBM MEM wrapper; HBM d44v FROZEN. Approved: S81 plain-seam input budget (pse, +1..+11 cycles on 170 lanes, TOK re-price), S81 RF-D form 2, HEAD l48rf pair. Classes open: KV pv macro paths + CLAND (DIE-KV-64), HEAD tapbal SIGABRT fallback + pinreg gate advisory (KW-FIX-4), kit-wave host pick admit-minus-waiting (KW-FIX-4). Fleet full: epyc4 97 / intel2 89 waiters.
+**Status 2026-11-03 13:34 PST:** count 64 flat 2 h (S81 31/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 16/32, HBM 8/84). Next counts: QC su_lane l6 + S81 ve_s once LEC-KEEP-1 (lec.py merged-twin proof, 6463f0643747) re-LEC passes. Merged H15/H16 (main 4b0a73deb5f): kit-wave host score, HEAD tapbal root cause + crash fallback, POSTCTS pinreg advisory, KV pv bind + CLAND budgets, HBM d44v part 4, S81 RF-D form 3. Relaunch batches: HEAD station/ft (l48rf), KV pv* + hgi + io_cor. Open classes: S81 OT_RESET_CORE (9 col_h9/h10, DIE-S81-51). Disk recovered (epyc2 266 GB, intel2 271 GB). Fleet: intel2 53 / intel1 32 waiters.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -58,7 +58,7 @@
 - [ ] KV.RECIP Compact RECIP and ZH physical qualification · KV · WAITS · RECIP GRT TT+161.66 FF+9.67 but actualfill15.27/empty68.78 FAIL; ZH actualfill45.589 and independentLOOK supports one PLACE diagnostic → INFRA.REVIEW
 - [ ] KV.FN Production token execution · KV / TOK · RUNNING · sole correctGEN1 probe fault0, nofirstcal; observed~2.3cycles/s implies~35h for290307-cycle window at that rate, not measured token throughput → TOK.QW
 
-## DIE hbm · HBM · rev d44v (parts 1-3 merged 5ef0158c8fa) -> PLANS d44v_por + FREEZE after merge · TKM per-half lockstep bench · owner DIE-HBM-61
+## DIE hbm · HBM · rev d44v_por (parts 1-4, main 4b0a73deb5f) · FROZEN (one-block fixes) · RE-FORM kits on d44v · owner DIE-HBM-61
 - [ ] HBM.BIND Qualified current native production composition · HBM / DIE-HBM-60 · BLOCKED · native source/pin/profile and clock/START joins incomplete; historical wrapped bindings do not qualify current production → HBM.CLK → HBM.TILES
 - [ ] HBM.HUBMESH Hub mesh / production clock integration · HBM / DIE-HBM-60 · STRUCTURAL PASS, BLOCKED(kits) · hub mesh a3e6s, NE_v2, die TT +93.69, CA 773/773 (hold margin 0); next: plan event d44v (q3_edge single-column slot, pslice_c5 2.6-um macro channels, xload ctlx, hnx fused) -> kits -> real-view hold
 - [ ] HBM.CLK Native clock/source/PG composition · HBM / DIE-HBM-60 · BLOCKED · 21 station types planned3077ports pass consumer/S0parity;283plannedhomes,260sourcehomes(16mismatch),23missing; active-role/native pin/net/START joins remain unqualified
