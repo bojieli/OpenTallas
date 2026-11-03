@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.hbm.reform_eq.v1",
+ "lane": "DIE-HBM-61/RTL-ST32",
+ "date": "2026-11-03",
+ "master": "ot_hbm_hc_subtree32_core",
+ "form": "SFR=1 face registers (input/output/node-fault) + subtree reset relay",
+ "generator": "SFR=1 tools/hbm_b2/hc128_subtree32_gen.sh OUT HEAD (src a581d69118) -> sha256 d5c41a4c43a0... == committed",
+ "generator_sfr0": "SFR=0 -> sha256 f1971bc0c0e2... == the 10-31 master bit for bit (default off unchanged)",
+ "shift_map": {
+  "sum": 2,
+  "valid_out": 2,
+  "node_fault": 2,
+  "rst_n_release": 3
+ },
+ "master_lockstep_vs_1031": [
+  "mut_nf_nodelay expect=fail rc=1: ST32_LOCKSTEP SH=2 checks=6055 errors=1184 valid=2647 fault_cycles=656 FAIL",
+  "mut_word_swap expect=fail rc=1: ST32_LOCKSTEP SH=2 checks=6055 errors=141 valid=2647 fault_cycles=656 FAIL",
+  "mut_fi_bypass expect=fail rc=1: ST32_LOCKSTEP SH=2 checks=6055 errors=3771 valid=2647 fault_cycles=656 FAIL",
+  "new expect=pass rc=0: ST32_LOCKSTEP SH=2 checks=6055 errors=0 valid=2647 fault_cycles=656 PASS",
+  "mut_nf_order expect=fail rc=1: ST32_LOCKSTEP SH=2 checks=6055 errors=43 valid=2647 fault_cycles=656 FAIL"
+ ],
+ "qcen_lockstep_sfr0_vs_sfr1": [
+  "base: QCEN_LOCKSTEP SH=2 checks=4115 errors=0 ps_valid=989 ps_f=374 PASS",
+  "sh1: QCEN_LOCKSTEP SH=1 checks=4116 errors=2123 ps_valid=989 ps_f=374 FAIL",
+  "sh3: QCEN_LOCKSTEP SH=3 checks=4114 errors=2123 ps_valid=989 ps_f=374 FAIL",
+  "mut_lfd: QCEN_LOCKSTEP SH=2 checks=4115 errors=6 ps_valid=989 ps_f=374 FAIL"
+ ],
+ "sim": "verilator 5.050 epyc2, memory-capped scopes; tests/hbm_b2/st32_sfr"
+}

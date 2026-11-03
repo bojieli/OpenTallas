@@ -1,0 +1,9 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_hc_subtree32_core	sum	2	SFR=1 face registers: input reg on data/valid_in (+1) + output reg (+1); subtree 35 -> 37 edges
+ot_hbm_hc_subtree32_core	valid_out	2	same shift as sum
+ot_hbm_hc_subtree32_core	node_fault	2	new(t)=old(t-2); fault flags only (CAP_ED precedent)
+ot_hbm_hc_subtree32_core	data,valid_in,clk,rst_n	0	inputs: no change at the port; registered at the face
+ot_hbm_hc_qcen_static(SFR=1)	ps_v,ps,ps_f	2	parent centre: tree +2, lfd +2 keeps ps_f aligned; all other outputs 0
+ot_hbm_hc_qhub_static(SFR=1)	ps_v,ps,ps_f	2	pass-through param SFR; qhub parent types must elaborate SFR=1
+ot_hbm_hc_root_static	qps_v/qps/qps_f due edge	2	root absorbs as XRU+2 (subtree sums due SYS_LAT +2); die schedule/tok re-baseline in the batch
+ot_hbm_hc_subtree32_core	rst_n (release)	3	SFR=1 own reset relay at the face (ot_rst_relay 2 sync + 1 relay); assert async unchanged; no valid in flight that early

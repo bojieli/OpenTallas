@@ -1,6 +1,6 @@
 {
-  "source_commit": "fc7c66b760",
-  "input_sha256": "f54d1d4021709c4881903ee7f4e6f36989e5fba3d9a2d67eb59dc0b0491cb2be",
+  "source_commit": "a581d69118",
+  "input_sha256": "5833517d9ca6357e0668822b95d0b2a6e13fc9fa9401acc8047e383f73158f8e",
   "master": "ot_hbm_hc_subtree32_core",
   "ports": {
     "clk": [
@@ -33,6 +33,10 @@
     ]
   },
   "closure_modules": [
+    "ot_hbm_hc_sfr_reg$ot_hbm_hc_qhub_static.u_cen.g_sfr.g_sf[0].u_ff",
+    "ot_hbm_hc_sfr_reg$ot_hbm_hc_qhub_static.u_cen.g_sfr.g_sf[0].u_fi",
+    "ot_hbm_hc_sfr_reg$ot_hbm_hc_qhub_static.u_cen.g_sfr.g_sf[0].u_fo",
+    "ot_hbm_hc_sfr_rst$ot_hbm_hc_qhub_static.u_cen.g_sfr.g_sf[0].u_rr",
     "ot_hbm_hc_subtree32_core",
     "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[0].u_a",
     "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[10].u_a",
@@ -66,9 +70,9 @@
     "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[4].g_n[1].u_a",
     "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[5].g_n[0].u_a"
   ],
-  "verilog_sha256": "f1971bc0c0e28e88ce80ab0ced82eb88c23ecad41341a65c1bca0cbd77cfb138",
+  "verilog_sha256": "d5c41a4c43a013ded86f2c78da933c28e27ff5d7f1a8dadc7070998459fa788e",
   "qualification": "EXACT_CUT_NOT_ROUTED",
-  "added_cycles": 0,
+  "added_cycles": 2,
   "boundary_masters": [],
   "instance_names": "PLAIN_IDENTIFIERS",
   "instance_renames": {
@@ -103,7 +107,11 @@
       "g_lvl[3].g_n[3].u_a": "g_lvl_3__g_n_3__u_a",
       "g_lvl[4].g_n[0].u_a": "g_lvl_4__g_n_0__u_a",
       "g_lvl[4].g_n[1].u_a": "g_lvl_4__g_n_1__u_a",
-      "g_lvl[5].g_n[0].u_a": "g_lvl_5__g_n_0__u_a"
+      "g_lvl[5].g_n[0].u_a": "g_lvl_5__g_n_0__u_a",
+      "g_sfr.g_sf[0].u_ff": "g_sfr_g_sf_0__u_ff",
+      "g_sfr.g_sf[0].u_fi": "g_sfr_g_sf_0__u_fi",
+      "g_sfr.g_sf[0].u_fo": "g_sfr_g_sf_0__u_fo",
+      "g_sfr.g_sf[0].u_rr": "g_sfr_g_sf_0__u_rr"
     }
   }
 }
