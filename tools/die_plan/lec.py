@@ -4030,7 +4030,15 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     eq_const_resolve(L, log)
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
-        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0"))
+        # DIE-HBM-59/LEC C4 (HBM n4ext / fused_lane 11-02): default-on at the reset window itself (OT_LEC_RESET_CYCLES,
+        # the declared die reset length or the default 4, set by reset_contract_gate): a no-reset register that is c
+        # after that many edges from ANY state with fresh free inputs at every edge (x*x products: s2_mr odd bits,
+        # sign y[31]) is c at the end of reset; pure ternary constant propagation calls it X and the constant was
+        # dropped (78 in n4ext, KIT-WAVE-16 loaded proposals need a guard register these pipelines do not have).
+        # No edge beyond the window is used, so no reset-length assumption is added; OT_LEC_RAW_BASE_STEPS stays the
+        # debug override (0 = off).  The final induction still proves every kept constant.
+        dflt = os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT))
+        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", dflt))
         if steps > 1:
             ok = noreset_sound(L)
             candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
@@ -4082,7 +4090,8 @@ def noreset_report(L):
                 release=[e for e in kept if e["basis"] == "release"][:500],
                 n_universal_raw_D=sum(1 for e in kept if e["basis"] == "universal_raw_D"),
                 universal_raw_D=[e for e in kept if e["basis"] == "universal_raw_D"][:500],
-                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0")),
+                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS",
+                                                  os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT)))),
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
                 universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
@@ -4836,6 +4845,35 @@ def merged_proposals(L, log, cap=4096):
     # differ).  Pick, per gold-only register, the first candidate whose next state simulates equal to it with the
     # pair's state bound together (a hold path then reads one value, so only the load condition / data decide);
     # the chosen relation is still proved inductively with all the others, a wrong one is dropped, never assumed.
+    # A twin that READS the merged register (HBM kshare 11-02, DIE-HBM-59/LEC C3): an async FIFO's rd_bin[MSB] holds
+    # itself (rd_bin[MSB] ^ carry) while rd_gray[MSB] loads the same rd_next[MSB] from rd_bin[MSB], never from itself;
+    # synthesis merges rd_bin[MSB] into rd_gray[MSB].  With only each flop's OWN state as SELF the two fingerprints
+    # differ, so rd_bin[MSB] stayed free.  A matched c whose support holds gold-only k (or whose k's support holds c)
+    # is a candidate when the two supports agree with BOTH read as SELF; proposed after the same-support candidates,
+    # bound-state simulation chooses, the induction proves (a wrong one is dropped, never assumed).
+    gset = set(gonly)
+    for c in L.matched:
+        if not c.startswith("ff:") or c not in L.gc:
+            continue
+        s_c = support(L.gc[c])
+        for k in [x for x in s_c if x in gset]:
+            if ("gold", k) in L.hyp or c in cands.get(k, ()):
+                continue
+            two = (k, c)
+            if frozenset("SELF" if x in two else x for x in s_c) == \
+                    frozenset("SELF" if x in two else x for x in support(L.gc[k])):
+                cands[k].append(c)
+    for k in gonly:
+        if ("gold", k) in L.hyp:
+            continue
+        s_k = support(L.gc[k])
+        for c in [x for x in s_k if isinstance(x, str) and x in L.matched and x.startswith("ff:") and x in L.gc]:
+            if c in cands.get(k, ()):
+                continue
+            two = (k, c)
+            if frozenset("SELF" if x in two else x for x in s_k) == \
+                    frozenset("SELF" if x in two else x for x in support(L.gc[c])):
+                cands[k].append(c)
     choice = {k: cs[0] for k, cs in cands.items()}
     pending = {k: list(cs) for k, cs in cands.items() if len(cs) > 1}
     rounds = 0
