@@ -1288358,10 +1288358,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1288418,10 +1288418,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1293774,13 +1293774,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1293877,13 +1293879,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1350841,10 +1350845,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1350901,10 +1350905,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1359026,13 +1359030,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1359129,13 +1359135,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1418147,10 +1418155,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1418207,10 +1418215,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1428070,13 +1428078,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1428173,13 +1428183,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1493297,10 +1493309,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1493357,10 +1493369,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1504938,13 +1504950,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1505041,13 +1505055,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1512883,10 +1512899,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1512943,10 +1512959,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1524717,13 +1524733,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1524820,13 +1524838,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1578006,10 +1578026,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1578066,10 +1578086,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1583458,13 +1583478,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1583561,13 +1583583,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1600990,10 +1601014,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1601050,10 +1601074,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1613071,13 +1613095,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1613174,13 +1613200,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1666664,10 +1666692,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1666724,10 +1666752,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1673671,13 +1673699,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1673774,13 +1673804,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1677136,10 +1677168,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1677196,10 +1677228,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1685953,13 +1685985,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1686056,13 +1686090,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
@@ -1692152,10 +1692188,10 @@
        188.808,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [188.808, 691.2] -> [188.808, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg1_p0.s1__clk[0]",
@@ -1692212,10 +1692248,10 @@
        794.904,
        691.2
       ],
-      "insertion_ps": 260.5,
-      "budget_owner": "ot_qwen_tp8_pv_join_t",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 219.3
+      "insertion_ps": 209.89,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/signoff.json",
+      "note": "DIE-KV-64 RF-KV1 11-03 form B: R0 view at R0 replaces fR180 table at MX (x flip dropped; tap [794.904, 691.2] -> [794.904, 691.2]); SIGNED TT/FF 209.89/169.61 ps on clk; was 260.5/219.3 owner ot_qwen_tp8_pv_join_t | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin clk | DIE-KV-6 q9d early tap: insertion 260.5/219.3 TT/FF from REUSE-CLOSED view ETM (qkd_pv_join r4) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 169.61
      },
      {
       "name": "pvg2_p0.s1__clk[0]",
@@ -1702761,13 +1702797,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       -1.296,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg1_p0",
@@ -1702864,13 +1702902,15 @@
       172.8,
       172.8
      ],
-     "orient": "MX",
+     "orient": "R0",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/pv_join_pins_fR180_r26q5c.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "pins/pv_join_pins_r26q5c.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)",
+     "lef": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
+     "lib": "physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib"
     },
     {
      "inst": "pvg2_p0",
