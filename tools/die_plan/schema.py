@@ -713,6 +713,9 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
+                        # reset relay obstacle model (reset_tree.blockages): default canonical placed union;
+                        # "lef_origin" = the frozen pre-11-02 model a published relay graph was solved with
+                        "obstacle_model": {"enum": ["canonical", "lef_origin"]},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
                         # Type-local control reset copies: emitted old net, equal published depth and core clock.

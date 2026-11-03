@@ -244,14 +244,34 @@ def _lpath(a, b, n):
     return pts
 
 
+def _lef_origin_boxes(t, clear=CLEAR_UM):
+    """Pre-74080dbb8 reset obstacle model (hard cores + LEF'd contents at their raw plan origin).
+
+    Opt-in per type (`reset.obstacle_model: "lef_origin"`) for frozen plans whose published reset
+    relay graphs / landing collector_tree snapshots were solved with it (KV plan_c, DIE-KV-61 11-02):
+    reproduces the as-planned relay graph exactly instead of re-solving it under a frozen plan."""
+    out = []
+    for c in list(t.get("hard_cores", []) or []) + [c for c in t.get("contents", []) or [] if c.get("lef")]:
+        if "origin_um" not in c or "outline_um" not in c:
+            continue
+        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
+        if c.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
+            cw, ch = ch, cw
+        out.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+    return out
+
+
 def blockages(t, clear=CLEAR_UM):
     """Canonical placed obstacle union with the unchanged reset clearance.
 
     Match clock / G0 / physical placement: apply core track offsets once,
     retain reuse leaves without LEFs, and keep split-container streets open.
     """
-    from placement_obstacles import placement_boxes
-    out = list(placement_boxes(t, halo=clear).values())
+    if ((t.get("reset") or {}).get("obstacle_model")) == "lef_origin":
+        out = _lef_origin_boxes(t, clear)
+    else:
+        from placement_obstacles import placement_boxes
+        out = list(placement_boxes(t, halo=clear).values())
     # Analog/isolated-PG keepouts are uniform per type, shared with the clock
     # planner. Reset relay cells and wavefront port sites must not reoccupy a
     # domain from which the plan has removed clock taps.
