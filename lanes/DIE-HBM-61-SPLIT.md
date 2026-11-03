@@ -6,3 +6,4 @@ Groups (helpers): hcol_h0 (me), split3_lane, lanes8_11, rp3lp3h_n/s, fused_lane,
 ## Status
 - 07:05 hcol_h0: 2 sub-blocks (region 0 heads 0-1 / region 1 heads 2-3, one clock each), 0 added cycles (ra seed + head-1 term delay -2 pays the seam), lock-step PASS 17100 checks, mutants MUT1/MUT2 FAIL. Synth estimate running.
 - 07:59 STOPPED on COORD cap; see queue PROGRESS; WIP @f12af1a5d97
+- 2026-11-03 09:38 PST rp3lp3h_n/s EQ-PASS @cc484e24be5 READY posted; tkm flat -O0 OOM at 250G, probing
