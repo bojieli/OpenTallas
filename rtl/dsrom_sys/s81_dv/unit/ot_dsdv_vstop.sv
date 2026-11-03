@@ -32,7 +32,14 @@ module ot_dsdv_vstop #(
     // CTL rows), so the stop uses them as its inject flops: identical cycle behaviour, no second edge.
     parameter integer JREG = 1,
     // Opt-in BK drain namespace: consume only the uniquely addressed accepted command.
-    parameter integer BK_DRAIN_SINK = 0
+    parameter integer BK_DRAIN_SINK = 0,
+    // FPIPE (DIE-S81-51/RF-D 11-03, S81-RF1 TWO-STRIKES RE-FORM of dsdv_bk_g, S81-062): 1 = the forward decision
+    // (continuation / kind / sink / addressed-drain uid compare -> slot occupied) is REGISTERED (on_q / os_q) with a copy
+    // of the arrival (is2 / in2), and the inject flops get one more stage (jn_q2 ...), so the 276-b forward mux select is
+    // a flop (routed TT -197 ps: bk_uid_c -> 8-b compare -> sink cross term -> 276-load select).  Forward vi -> vo and
+    // inject in -> vo are 3 edges (was 2), their relative slot alignment is unchanged; deliver (dl_*, dk_*, ra_*) is
+    // unchanged (2 edges); fault (sticky) is one edge later.  0 = the 2-edge stop (every other unit).
+    parameter integer FPIPE = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -73,7 +80,14 @@ module ot_dsdv_vstop #(
             reg [V-1:0] jn_q, js_q; reg jnv_q, jsv_q;
             always @(posedge clk) begin jn_q <= in_n; js_q <= in_s; end
             always @(posedge clk or negedge rst_n) if (!rst_n) begin jnv_q <= 1'b0; jsv_q <= 1'b0; end else begin jnv_q <= in_nv; jsv_q <= in_sv; end
-            assign jn = jn_q; assign js = js_q; assign jnv = jnv_q; assign jsv = jsv_q;
+            if (FPIPE != 0) begin : g_jp2                 // FPIPE: one more inject stage (slot alignment kept)
+                reg [V-1:0] jn_q2, js_q2; reg jnv_q2, jsv_q2;
+                always @(posedge clk) begin jn_q2 <= jn_q; js_q2 <= js_q; end
+                always @(posedge clk or negedge rst_n) if (!rst_n) begin jnv_q2 <= 1'b0; jsv_q2 <= 1'b0; end else begin jnv_q2 <= jnv_q; jsv_q2 <= jsv_q; end
+                assign jn = jn_q2; assign js = js_q2; assign jnv = jnv_q2; assign jsv = jsv_q2;
+            end else begin : g_jp1
+                assign jn = jn_q; assign js = js_q; assign jnv = jnv_q; assign jsv = jsv_q;
+            end
         end else begin : g_jpin
             assign jn = in_n; assign js = in_s; assign jnv = in_nv; assign jsv = in_sv;
         end
@@ -91,7 +105,22 @@ module ot_dsdv_vstop #(
     wire sn = hn && !xn && (sink_c[kn] || (bk_n && !bk_s)) && MUT != 3;
     wire ss = hs && !xs && (sink_c[ks] || (bk_s && !bk_n)) && MUT != 3;
     wire tn = hn && !xn && (tap_c[kn] || sink_c[kn]), ts = hs && !xs && (tap_c[ks] || sink_c[ks]);
-    wire on = (fr_n != 2'd0) || (hn && !sn), os = (fr_s != 2'd0) || (hs && !ss);   // forwarded slot occupied
+    wire on_c = (fr_n != 2'd0) || (hn && !sn), os_c = (fr_s != 2'd0) || (hs && !ss);   // forwarded slot occupied
+    // FPIPE: the decision and the arrival are registered once more; the output stage only muxes flops
+    wire on, os; wire [V-1:0] fn, fs_;
+    generate if (FPIPE != 0) begin : g_fp
+        reg on_q, os_q; reg [V-1:0] is2, in2;
+        always @(posedge clk) begin is2 <= is_; in2 <= in_; end
+        always @(posedge clk or negedge rst_n) if (!rst_n) begin on_q <= 1'b0; os_q <= 1'b0; end else begin on_q <= on_c; os_q <= os_c; end
+`ifdef OT_RFD_MUT_BKG   // RF-D bench mutant: the registered decision muxes the UNdelayed arrival (one slot early)
+        assign fn = is_; assign fs_ = in_;
+`else
+        assign fn = is2; assign fs_ = in2;
+`endif
+        assign on = on_q; assign os = os_q;
+    end else begin : g_f1
+        assign on = on_c; assign os = os_c; assign fn = is_; assign fs_ = in_;
+    end endgenerate
     wire jxn = jn[0] && (jn[3:1] == K_XQ || jn[3:1] == K_XB) && ij_n == 2'd0;
     wire jxs = js[0] && (js[3:1] == K_XQ || js[3:1] == K_XB) && ij_s == 2'd0;
     always @(posedge clk or negedge rst_n)
@@ -103,8 +132,8 @@ module ot_dsdv_vstop #(
             fr_s <= (fr_s != 2'd0) ? fr_s - 2'd1 : (hs && xs) ? 2'd3 : 2'd0;
             ij_n <= (ij_n != 2'd0) ? ij_n - 2'd1 : (jnv && jxn) ? 2'd3 : 2'd0;
             ij_s <= (ij_s != 2'd0) ? ij_s - 2'd1 : (jsv && jxs) ? 2'd3 : 2'd0;
-            vo_n <= jnv ? jn : on ? is_ : {V{1'b0}};
-            vo_s <= jsv ? js : os ? in_ : {V{1'b0}};
+            vo_n <= jnv ? jn : on ? fn : {V{1'b0}};
+            vo_s <= jsv ? js : os ? fs_ : {V{1'b0}};
             if (MUT == 2) begin
                 if ((ij_n != 2'd0 && !jnv) || (ij_s != 2'd0 && !jsv)) fault <= 1'b1;
             end else if ((jnv && on) || (jsv && os) || (ij_n != 2'd0 && !jnv) || (ij_s != 2'd0 && !jsv)) fault <= 1'b1;

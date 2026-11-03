@@ -38,7 +38,11 @@ module tb_dsdv_bk_wrap #(
     // the relay's +1); the whole core calendar (glue, quarters, control) moves +3 with the rung, so RL = 1 + 3
     localparam integer RL = (UNIT == 0) ? 4 : 0;
 `else
+`ifdef OT_DSDV_BKG_RF0
     localparam integer RL = (UNIT == 0) ? 1 : 0;
+`else   // DIE-S81-51/RF-D 11-03: dsdv_bk_sel's glue leaf dsdv_bk_g RF 1 (vstop FPIPE) adds +1 to the sel rung transit
+    localparam integer RL = (UNIT == 0) ? 2 : 0;
+`endif
 `endif   // S81-TILES8/bk 10-18: dsdv_bk_sel rung relays u_rs / u_rn = +1 rung
                                                    // cycle per direction (through beats and the drain CTL alike)
     localparam [2:0] IK = 3'd4, EK = 3'd5;
