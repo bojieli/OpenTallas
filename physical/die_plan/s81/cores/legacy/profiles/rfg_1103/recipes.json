@@ -1,0 +1,104 @@
+{
+ "_doc": "DIE-S81-51/RF-G 11-03 RE-FORM (OWNER TWO-STRIKES / SAFE FORMS) of dsdv_eng_rr_e (S81-063, eng__t1, plan_h2_2249 unchanged: outline 410.4x466.56, pins clkm5_1101). (1) hx_res half-cycle seam (sender = dsdv_eng_rr_h0/h1 column negedge res_n face flops; contract half_cycle_inputs max (1-0.2)T = 666.4, min 0.5T-tol = 376.5): the 64x512 SRAM column sat on the S face over hx_res pins x 211.7-341 (~440 bits, pin->res_c ~88 um around the macro, 350 ps); the SRAM/row column moves up (5 gaps 10.824 -> 8.664, the u_wl -> u_h channel kept at 10.824, row_o fixed) so a 10.8-um S band is free and every res_c face flop sits at its pin; HXL=1 landing stage res_c -> res_c2 (full-cycle hop to the strap muxes, +1 ck on hres inside the hdone hold window, 0 cycles at ports). (2) u_xq fck -> vo_a/vo_b (fanout chain + 276*f offset shifter, -176 ps): OT_S81ENG_XQ_OHSEL registered one-hot rung select (PATH-S81/ENG2 10-25 miter, 0 cycles). util 0.45, regional taps 2x2 (~4.2k sinks / entry).",
+ "dsdv_eng_rr_e": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/dsdv_eng_rr_e",
+  "defines": [
+   "OT_S81ENG_HXL",
+   "OT_S81ENG_XQ_OHSEL"
+  ],
+  "util": 0.45,
+  "half_cycle_inputs": [
+   "hx_res"
+  ],
+  "suffix": "rfg",
+  "regional_taps": {
+   "nx": 2,
+   "ny": 2
+  },
+  "macro_sites": {
+   "ot_rom_4096x72_m8": [
+    [
+     17.28,
+     86.4,
+     "R0"
+    ],
+    [
+     17.28,
+     162.0,
+     "R0"
+    ],
+    [
+     17.28,
+     237.6,
+     "R0"
+    ],
+    [
+     17.28,
+     313.2,
+     "R0"
+    ],
+    [
+     86.4,
+     86.4,
+     "R0"
+    ],
+    [
+     86.4,
+     162.0,
+     "R0"
+    ],
+    [
+     86.4,
+     237.6,
+     "R0"
+    ],
+    [
+     86.4,
+     313.2,
+     "R0"
+    ]
+   ],
+   "ot_sram_1r1w_64x512_m1_r0c0_pc": [
+    [
+     211.68,
+     15.12,
+     "R0"
+    ],
+    [
+     211.68,
+     101.568,
+     "R0"
+    ],
+    [
+     211.68,
+     188.016,
+     "R0"
+    ]
+   ],
+   "ot_sram_1r1w_512x128_m4_r0c0_pc": [
+    [
+     211.68,
+     276.624,
+     "R0"
+    ]
+   ],
+   "ot_sram_1r1w_128x256_m1_r0c0_pc": [
+    [
+     211.68,
+     315.024,
+     "R0"
+    ],
+    [
+     211.68,
+     364.752,
+     "R0"
+    ],
+    [
+     211.68,
+     414.48,
+     "R0"
+    ]
+   ]
+  }
+ }
+}
