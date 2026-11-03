@@ -3763,7 +3763,7 @@ def install_bound_native_reset(P, tn, rtl_files):
         if gated:
             ports["run"] = r["run"]
         check(r["name"], RT.relay_cell(tree, r, gated=gated), ports)
-    actual_nodes = set(re.findall(r"\bot_dp_r(?:relay|gate)(?:_drive)?\s+(u_[rs]rl_\w+)\s*\(", body))
+    actual_nodes = set(re.findall(r"\bot_dp_r(?:relay|gate)(?:_drive|_nl)?\s+(u_[rs]rl_\w+)\s*\(", body))
     if actual_nodes != {r["name"] for r in expanded}:
         raise gen_rtl.GenError(f"type {tn}: native reset has undeclared or missing relay nodes")
     entries = set(re.findall(r"\bot_dp_r\w+\s+(u_(?:rst|run)_(?:in|root))\s*\(", body))

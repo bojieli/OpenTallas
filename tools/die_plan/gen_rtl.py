@@ -189,6 +189,27 @@ endmodule
 `default_nettype wire
 """
 
+# CLK FORM #7 (DIE-S81-51/PLAN 11-03, opt-in reset.relay_lockup): the negative-edge lockup relay.  One relay = one
+# clock cycle (posedge state flop, exactly like ot_dp_rrelay), but q is re-launched on the FALLING edge by a second
+# flop (DFFLQN class, not a latch).  The next relay captures on the following rising edge, so every internal
+# relay->relay hop has T/2 hold margin by construction whatever clock taps the two relays land on (the kit's
+# nearest-tap/capacity assignment makes "same tap" unprovable at plan time) and T/2 setup for the <= reach hop.
+# reset_tree.relay_cell uses it ONLY for internal relays (q = rst_rl_*): leaf taps rst_n_t<k>, out relays,
+# entry pin registers and START-gated relays stay ot_dp_rrelay / ot_dp_rgate (consumer recovery keeps a full cycle).
+# Kept out of CELLS: only plans that opt in emit it, so every other kit's cell file is byte-identical.
+LOCKUP_CELLS = """(* keep_hierarchy, keep *)
+module ot_dp_rrelay_nl (input wire clk, input wire d, output reg q);
+    (* keep *) reg state;
+    always @(posedge clk) state <= d;
+    always @(negedge clk) q <= state;
+endmodule
+"""
+
+
+def uses_relay_lockup(raw):
+    return bool((raw.get("reset") or {}).get("relay_lockup"))
+
+
 
 class GenError(Exception):
     pass
@@ -700,7 +721,7 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
                 L.validate_observer_native(lambda tn: leaf_headers(P.types[tn], rtl_root), parse_leaf_ports)
         except CL.LandingError as e:
             raise GenError(f"clock landing: {e}") from e
-    (out / "ot_dp_cells.sv").write_text(CELLS)
+    (out / "ot_dp_cells.sv").write_text(CELLS + (LOCKUP_CELLS if P.reset.get("relay_lockup") else ""))
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):

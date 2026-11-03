@@ -549,7 +549,7 @@ class Landings:
         taps = ring_taps(self.plan, key)
         tap = min(range(len(taps)), key=lambda i: abs(taps[i][0]-xy[0]) + abs(taps[i][1]-xy[1])) if taps else 0
         reset = f"rst_n_t{tap}"
-        relay = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
+        relay = re.search(r"ot_dp_r(gate|relay)(?:_nl)?\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
         if relay is None:
             raise LandingError(f"{tn}: timed local wavefront reset relay {reset} not found (region monitor)")
         if relay.group(1) == "gate":
@@ -736,7 +736,7 @@ class Landings:
                               r"\s*\)[^;]*?\.export_q\(\s*(" + re.escape(raw) + r"_reader_raw)\s*\)\s*\);", body, re.S)
             done = None if prior is None else dict(net=prior.group(2), instance=prior.group(1), port_net=raw,
                                                     added_flops=1, added_cycles=0)
-            registered = done is not None or re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
+            registered = done is not None or re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" +
                                    re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
             if not registered:
                 raise LandingError(f"{tn}.{bus}: reader START raw reset {raw} has no registered wavefront driver")
@@ -803,7 +803,7 @@ class Landings:
                 raise LandingError(f"{tn}.{bus}: writer START stage {i} needs finite xy_um")
             if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
                 raise LandingError(f"{tn}.{bus}: writer START stage {i} needs a local registered raw reset")
-            registered = re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
+            registered = re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" +
                                    re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
             if not registered:
                 raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} has no registered wavefront driver")
@@ -1500,7 +1500,7 @@ class Landings:
             if (not isinstance(xy, list) or len(xy) != 2 or
                     any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)):
                 raise LandingError(f"{tn}: landing_local_resets.{name} needs finite xy_um")
-            if not isinstance(raw, str) or not re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
+            if not isinstance(raw, str) or not re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
                                                           r"\s*\)[^;]*?\);", allrtl, re.S):
                 raise LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver")
             net, inst = f"cland_lrst_{name}", f"u_cland_lrst_{name}"
