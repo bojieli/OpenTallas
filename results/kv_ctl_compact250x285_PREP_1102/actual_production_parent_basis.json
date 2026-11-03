@@ -1,0 +1,25 @@
+{
+  "plan_path": "/srv/opentallas-scratch2/claude/codex-kv-ctl-production-1131/plan.json",
+  "plan_sha256": "245ed86e0f1d3c5d6a7784d9ee48b32d5b79d55bd1d4ef401ecad69cc3b2af00",
+  "core": {
+    "inst": "kvs_ctl",
+    "module": "qkd_kvs_ctl",
+    "origin_um": [
+      898.56,
+      138.24
+    ],
+    "outline_um": [
+      371.52,
+      371.52
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+      0.0,
+      0.0
+    ],
+    "pins_file": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/buildC/kvs_ctl_pins.json",
+    "note": "unsigned current6849-pin profile + DIE-KV-60 ctlin class fix; synthesis/boundary measurement only"
+  },
+  "source_inputs": "HELD",
+  "profile": "ctlin_C boot2 mission0"
+}

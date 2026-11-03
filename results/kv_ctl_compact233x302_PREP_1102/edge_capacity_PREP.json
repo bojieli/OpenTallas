@@ -1,0 +1,460 @@
+{
+  "status": "PHASE_DERIVED_PG_EDGE_PRICE_NOT_NEW_NATIVE_PG_OR_ROUTE",
+  "actual_sample_um": [
+    4.32,
+    12.96
+  ],
+  "new_added_macro_free_street_height_um": 17.28,
+  "native_sample_raw_tracks": {
+    "M2": 224,
+    "M4": 180
+  },
+  "native_obstacle_rectangles": 5552,
+  "actual_same_phase_added_tracks_range": [
+    444.0,
+    558.0
+  ],
+  "worst_same_netbox_whole_cut_ratio": 0.5722453440955143,
+  "cuts": [
+    {
+      "original_local_cut_um": 7.5,
+      "new_same_global_cut_um": -1.14,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2968,
+      "same_netbox_capacity_ratio": 0.30324393358876117
+    },
+    {
+      "original_local_cut_um": 12.5,
+      "new_same_global_cut_um": 3.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 3203,
+      "same_netbox_capacity_ratio": 0.3272541507024266
+    },
+    {
+      "original_local_cut_um": 17.5,
+      "new_same_global_cut_um": 8.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2530,
+      "same_netbox_capacity_ratio": 0.25849297573435503
+    },
+    {
+      "original_local_cut_um": 22.5,
+      "new_same_global_cut_um": 13.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2321,
+      "same_netbox_capacity_ratio": 0.23713920817369094
+    },
+    {
+      "original_local_cut_um": 27.5,
+      "new_same_global_cut_um": 18.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 1654,
+      "same_netbox_capacity_ratio": 0.1689910600255428
+    },
+    {
+      "original_local_cut_um": 32.5,
+      "new_same_global_cut_um": 23.86,
+      "original_native_derated_tracks": 8269.5,
+      "predicted_added_17p28um_tracks": 498.0,
+      "predicted_total_derated_tracks": 8767.5,
+      "original_model_net_boxes": 1619,
+      "same_netbox_capacity_ratio": 0.18465925292272597
+    },
+    {
+      "original_local_cut_um": 37.5,
+      "new_same_global_cut_um": 28.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 1917,
+      "same_netbox_capacity_ratio": 0.19586206896551725
+    },
+    {
+      "original_local_cut_um": 42.5,
+      "new_same_global_cut_um": 33.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2172,
+      "same_netbox_capacity_ratio": 0.22191570881226053
+    },
+    {
+      "original_local_cut_um": 47.5,
+      "new_same_global_cut_um": 38.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2973,
+      "same_netbox_capacity_ratio": 0.30375478927203065
+    },
+    {
+      "original_local_cut_um": 52.5,
+      "new_same_global_cut_um": 43.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 2776,
+      "same_netbox_capacity_ratio": 0.46680960188338166
+    },
+    {
+      "original_local_cut_um": 57.5,
+      "new_same_global_cut_um": 48.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 2821,
+      "same_netbox_capacity_ratio": 0.4743767604153529
+    },
+    {
+      "original_local_cut_um": 62.5,
+      "new_same_global_cut_um": 53.86,
+      "original_native_derated_tracks": 4932.75,
+      "predicted_added_17p28um_tracks": 504.0,
+      "predicted_total_derated_tracks": 5436.75,
+      "original_model_net_boxes": 2927,
+      "same_netbox_capacity_ratio": 0.5383731089345657
+    },
+    {
+      "original_local_cut_um": 67.5,
+      "new_same_global_cut_um": 58.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 2907,
+      "same_netbox_capacity_ratio": 0.4888384411653424
+    },
+    {
+      "original_local_cut_um": 72.5,
+      "new_same_global_cut_um": 63.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 2891,
+      "same_netbox_capacity_ratio": 0.4861478959095304
+    },
+    {
+      "original_local_cut_um": 77.5,
+      "new_same_global_cut_um": 68.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 2772,
+      "same_netbox_capacity_ratio": 0.4661369655694287
+    },
+    {
+      "original_local_cut_um": 82.5,
+      "new_same_global_cut_um": 73.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 3010,
+      "same_netbox_capacity_ratio": 0.5061588262496322
+    },
+    {
+      "original_local_cut_um": 87.5,
+      "new_same_global_cut_um": 78.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 3200,
+      "same_netbox_capacity_ratio": 0.5381090511623996
+    },
+    {
+      "original_local_cut_um": 92.5,
+      "new_same_global_cut_um": 83.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 3257,
+      "same_netbox_capacity_ratio": 0.5476941186362299
+    },
+    {
+      "original_local_cut_um": 97.5,
+      "new_same_global_cut_um": 88.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 3244,
+      "same_netbox_capacity_ratio": 0.5455080506158826
+    },
+    {
+      "original_local_cut_um": 102.5,
+      "new_same_global_cut_um": 93.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 3403,
+      "same_netbox_capacity_ratio": 0.5722453440955143
+    },
+    {
+      "original_local_cut_um": 107.5,
+      "new_same_global_cut_um": 98.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 3658,
+      "same_netbox_capacity_ratio": 0.37374201787994893
+    },
+    {
+      "original_local_cut_um": 112.5,
+      "new_same_global_cut_um": 103.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 3964,
+      "same_netbox_capacity_ratio": 0.40500638569604086
+    },
+    {
+      "original_local_cut_um": 117.5,
+      "new_same_global_cut_um": 108.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 3943,
+      "same_netbox_capacity_ratio": 0.4028607918263091
+    },
+    {
+      "original_local_cut_um": 122.5,
+      "new_same_global_cut_um": 113.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 4069,
+      "same_netbox_capacity_ratio": 0.41573435504469985
+    },
+    {
+      "original_local_cut_um": 127.5,
+      "new_same_global_cut_um": 118.86,
+      "original_native_derated_tracks": 8269.5,
+      "predicted_added_17p28um_tracks": 498.0,
+      "predicted_total_derated_tracks": 8767.5,
+      "original_model_net_boxes": 3980,
+      "same_netbox_capacity_ratio": 0.45394924436840606
+    },
+    {
+      "original_local_cut_um": 132.5,
+      "new_same_global_cut_um": 123.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 3420,
+      "same_netbox_capacity_ratio": 0.34942528735632183
+    },
+    {
+      "original_local_cut_um": 137.5,
+      "new_same_global_cut_um": 128.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2966,
+      "same_netbox_capacity_ratio": 0.3030395913154534
+    },
+    {
+      "original_local_cut_um": 142.5,
+      "new_same_global_cut_um": 133.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2674,
+      "same_netbox_capacity_ratio": 0.273205619412516
+    },
+    {
+      "original_local_cut_um": 147.5,
+      "new_same_global_cut_um": 138.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 2114,
+      "same_netbox_capacity_ratio": 0.35548829192416026
+    },
+    {
+      "original_local_cut_um": 152.5,
+      "new_same_global_cut_um": 143.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1978,
+      "same_netbox_capacity_ratio": 0.33261865724975825
+    },
+    {
+      "original_local_cut_um": 157.5,
+      "new_same_global_cut_um": 148.86,
+      "original_native_derated_tracks": 4932.75,
+      "predicted_added_17p28um_tracks": 504.0,
+      "predicted_total_derated_tracks": 5436.75,
+      "original_model_net_boxes": 1879,
+      "same_netbox_capacity_ratio": 0.3456108888582333
+    },
+    {
+      "original_local_cut_um": 162.5,
+      "new_same_global_cut_um": 153.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1728,
+      "same_netbox_capacity_ratio": 0.2905788876276958
+    },
+    {
+      "original_local_cut_um": 167.5,
+      "new_same_global_cut_um": 158.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1683,
+      "same_netbox_capacity_ratio": 0.28301172909572453
+    },
+    {
+      "original_local_cut_um": 172.5,
+      "new_same_global_cut_um": 163.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1637,
+      "same_netbox_capacity_ratio": 0.27527641148526505
+    },
+    {
+      "original_local_cut_um": 177.5,
+      "new_same_global_cut_um": 168.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1626,
+      "same_netbox_capacity_ratio": 0.27342666162189433
+    },
+    {
+      "original_local_cut_um": 182.5,
+      "new_same_global_cut_um": 173.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1590,
+      "same_netbox_capacity_ratio": 0.2673729347963173
+    },
+    {
+      "original_local_cut_um": 187.5,
+      "new_same_global_cut_um": 178.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1594,
+      "same_netbox_capacity_ratio": 0.26804557111027033
+    },
+    {
+      "original_local_cut_um": 192.5,
+      "new_same_global_cut_um": 183.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1500,
+      "same_netbox_capacity_ratio": 0.2522386177323748
+    },
+    {
+      "original_local_cut_um": 197.5,
+      "new_same_global_cut_um": 188.86,
+      "original_native_derated_tracks": 5388.75,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 5946.75,
+      "original_model_net_boxes": 1495,
+      "same_netbox_capacity_ratio": 0.2513978223399336
+    },
+    {
+      "original_local_cut_um": 202.5,
+      "new_same_global_cut_um": 193.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 1461,
+      "same_netbox_capacity_ratio": 0.149272030651341
+    },
+    {
+      "original_local_cut_um": 207.5,
+      "new_same_global_cut_um": 198.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 1578,
+      "same_netbox_capacity_ratio": 0.16122605363984674
+    },
+    {
+      "original_local_cut_um": 212.5,
+      "new_same_global_cut_um": 203.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 1641,
+      "same_netbox_capacity_ratio": 0.16766283524904216
+    },
+    {
+      "original_local_cut_um": 217.5,
+      "new_same_global_cut_um": 208.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 1687,
+      "same_netbox_capacity_ratio": 0.17236270753512134
+    },
+    {
+      "original_local_cut_um": 222.5,
+      "new_same_global_cut_um": 213.86,
+      "original_native_derated_tracks": 8269.5,
+      "predicted_added_17p28um_tracks": 498.0,
+      "predicted_total_derated_tracks": 8767.5,
+      "original_model_net_boxes": 1668,
+      "same_netbox_capacity_ratio": 0.1902480752780154
+    },
+    {
+      "original_local_cut_um": 227.5,
+      "new_same_global_cut_um": 218.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2270,
+      "same_netbox_capacity_ratio": 0.23192848020434229
+    },
+    {
+      "original_local_cut_um": 232.5,
+      "new_same_global_cut_um": 223.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2657,
+      "same_netbox_capacity_ratio": 0.27146871008939977
+    },
+    {
+      "original_local_cut_um": 237.5,
+      "new_same_global_cut_um": 228.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 2736,
+      "same_netbox_capacity_ratio": 0.27954022988505745
+    },
+    {
+      "original_local_cut_um": 242.5,
+      "new_same_global_cut_um": 233.86,
+      "original_native_derated_tracks": 9229.5,
+      "predicted_added_17p28um_tracks": 558.0,
+      "predicted_total_derated_tracks": 9787.5,
+      "original_model_net_boxes": 3065,
+      "same_netbox_capacity_ratio": 0.313154533844189
+    }
+  ],
+  "PG_readset_sha256": "c57731bd289fdc457e76f37fcc246c3da67b9d45ff6757e3811ff890cc6ab2f8",
+  "track_readset_sha256": "494100bd4e4bcd835d65c808ada890021a15e432ec48575c9710ff25bf9fb9c5",
+  "limits": [
+    "Uses actual macro-free PG strip at exact 8.64um phase; expected repeated row PG in enlarged inter-SRAM streets, not new native PG",
+    "Keeps original net boxes to isolate capacity; new pin/cone placement can change demand",
+    "New macro PG connections, rows/TAP inventory and signal/clock via coupling require normal native FP and actual placement",
+    "No floorplan/placement/signoff permission or source/parent adoption"
+  ]
+}

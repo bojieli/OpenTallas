@@ -1,0 +1,130 @@
+{
+  "status": "FINITE_SAME_SOURCE_GPL_COMB_ROAD_PREP_NOT_NATIVE_PLACE",
+  "cells": 2212,
+  "functional_cell_area_um2": 204.1491599999992,
+  "measured_buffer_cell_area_um2": 470.71530000000007,
+  "measured_buffer_space_reserve_um2": 784.5255000000002,
+  "buffer_insertions": 0,
+  "FF_moves": 0,
+  "FF_master_changes": 0,
+  "clock_moves": 0,
+  "RTL_changes": 0,
+  "cycles_added": 0,
+  "source_hotspot_coverage": {
+    "H": {
+      "selected_cells": 794,
+      "old_hot_window_share_covered": 417.64275191916596,
+      "old_hot_window_residual": 137.9828636059908
+    },
+    "V": {
+      "selected_cells": 1418,
+      "old_hot_window_share_covered": 533.7214518609046,
+      "old_hot_window_residual": 65.94016852850325
+    }
+  },
+  "zones": [
+    {
+      "name": "H0",
+      "direction": "H",
+      "bbox_um": [
+        4.32,
+        269.73,
+        228.96,
+        279.18
+      ],
+      "cells": 201,
+      "functional_cell_area_um2": 16.72325999999997,
+      "fixed_FF_area_um2": 482.4667799999999,
+      "measured_normal_buffer_space_reserve_um2": 64.2658726253394,
+      "space_budget_fraction": 0.27067635206352025,
+      "old_hot_window_crossing_share": 139.58599956929308
+    },
+    {
+      "name": "H1",
+      "direction": "H",
+      "bbox_um": [
+        4.32,
+        279.18,
+        228.96,
+        288.63
+      ],
+      "cells": 290,
+      "functional_cell_area_um2": 25.894079999999942,
+      "fixed_FF_area_um2": 568.0951199999936,
+      "measured_normal_buffer_space_reserve_um2": 99.50844793600933,
+      "space_budget_fraction": 0.3348145359140191,
+      "old_hot_window_crossing_share": 138.92907396994093
+    },
+    {
+      "name": "H2",
+      "direction": "H",
+      "bbox_um": [
+        4.32,
+        288.63,
+        228.96,
+        298.08
+      ],
+      "cells": 303,
+      "functional_cell_area_um2": 25.73369999999997,
+      "fixed_FF_area_um2": 34.70040000000008,
+      "measured_normal_buffer_space_reserve_um2": 98.89212308955894,
+      "space_budget_fraction": 0.08313455465938172,
+      "old_hot_window_crossing_share": 139.127678379932
+    },
+    {
+      "name": "V0",
+      "direction": "V",
+      "bbox_um": [
+        82.566,
+        50.22,
+        97.2,
+        250.02
+      ],
+      "cells": 541,
+      "functional_cell_area_um2": 51.802739999999716,
+      "fixed_FF_area_um2": 159.76764000000088,
+      "measured_normal_buffer_space_reserve_um2": 199.0729254035135,
+      "space_budget_fraction": 0.15225641980764207,
+      "old_hot_window_crossing_share": 195.21375356873708
+    },
+    {
+      "name": "V1",
+      "direction": "V",
+      "bbox_um": [
+        97.2,
+        50.22,
+        108.0,
+        250.02
+      ],
+      "cells": 326,
+      "functional_cell_area_um2": 30.282659999999947,
+      "fixed_FF_area_um2": 493.0372799999992,
+      "measured_normal_buffer_space_reserve_um2": 116.37333691615511,
+      "space_budget_fraction": 0.30580660147006,
+      "old_hot_window_crossing_share": 143.23226125067424
+    },
+    {
+      "name": "V2",
+      "direction": "V",
+      "bbox_um": [
+        123.12,
+        50.22,
+        151.2,
+        250.02
+      ],
+      "cells": 551,
+      "functional_cell_area_um2": 53.712719999999955,
+      "fixed_FF_area_um2": 604.5305400000041,
+      "measured_normal_buffer_space_reserve_um2": 206.41279402942507,
+      "space_budget_fraction": 0.1604996260557975,
+      "old_hot_window_crossing_share": 195.27543704149784
+    }
+  ],
+  "maximum_modeled_cell_move_L1_um": 44.15884255164113,
+  "limits": [
+    "Model comb sites use expected source-phase rows and translated prior TAP obstacles, not a new native floorplan",
+    "Runtime mechanism is normal INCLUSIVE GPL regions, released before DPL/repair; no selected cell is FIRM or DONT_TOUCH",
+    "Known normal buffer footprint is space reserve only; no BUF inserted or route capacity claimed",
+    "Actual new ROW/TAP/PG, ordinary buffer counts, timing and resulting local geometry remain required"
+  ]
+}

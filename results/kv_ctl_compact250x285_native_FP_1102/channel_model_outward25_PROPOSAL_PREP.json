@@ -1,0 +1,877 @@
+{
+  "status": "PREP_ESTIMATE_NOT_PLACE_NOT_ROUTE",
+  "macro_layout": "outward",
+  "combinational_model": "Prior actual DPL scaled seed,100 source-net barycentric relaxations,macro halo projection; no detailed legalization or routing",
+  "density_weight": 0.0,
+  "moving_comb_cells": 46230,
+  "signal_net_edges": 141006,
+  "R2R": {
+    "r2r_memory_instances": 6,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 392.74,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 16868,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_leaf.u_oobs.dr_q\\[0\\]$_DFF_P_ -> oobs__kv_drained_local$_DFF_PN0_"
+  },
+  "pins": {
+    "pins_registered": 6848,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "pins_land_ring": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 17.05,
+    "pin_reg_p90": 25.86,
+    "pin_reg_max": 145.0,
+    "pin_reg_worst": [
+      "145.0 d2d__svc_74[8]",
+      "145.0 d2d__svc_92[17]",
+      "145.0 d2d__svc_74[4]",
+      "145.0 d2d__svc_74[13]",
+      "145.0 d2d__svc_74[6]"
+    ]
+  },
+  "base_proxy": {
+    "channel_v_max": 1.531,
+    "channel_v_at": [
+      109.0,
+      119.0,
+      137.5
+    ],
+    "blocked_v": 0,
+    "detour_v": 0,
+    "detour_v_extension_max_um": 0.0,
+    "detour_v_extent_at": null,
+    "col_v_max": 1.457,
+    "col_v_at": [
+      110.0,
+      137.5
+    ],
+    "tracks_v_per_um": 36.46,
+    "channel_h_max": 1.301,
+    "channel_h_at": [
+      84.0,
+      94.0,
+      67.5
+    ],
+    "blocked_h": 0,
+    "detour_h": 466,
+    "detour_h_extension_max_um": 73.0,
+    "detour_h_extent_at": {
+      "cut_um": 27.5,
+      "original_um": [
+        122.0,
+        125.0
+      ],
+      "allocated_um": [
+        84.0,
+        198.0
+      ]
+    },
+    "tracks_h_per_um": 36.46,
+    "demand_layers": "M2-M5"
+  },
+  "actual_track_PG_via_clipped_model": {
+    "channel_v_max": 1.601,
+    "channel_v_at": [
+      109.0,
+      119.0,
+      137.5
+    ],
+    "blocked_v": 0,
+    "detour_v": 0,
+    "detour_v_extension_max_um": 0.0,
+    "detour_v_extent_at": null,
+    "col_v_max": 1.519,
+    "col_v_at": [
+      110.0,
+      137.5
+    ],
+    "tracks_v_per_um": 36.46,
+    "channel_h_max": 1.457,
+    "channel_h_at": [
+      84.0,
+      94.0,
+      67.5
+    ],
+    "blocked_h": 0,
+    "detour_h": 466,
+    "detour_h_extension_max_um": 73.0,
+    "detour_h_extent_at": {
+      "cut_um": 27.5,
+      "original_um": [
+        122.0,
+        125.0
+      ],
+      "allocated_um": [
+        84.0,
+        198.0
+      ]
+    },
+    "tracks_h_per_um": 36.46,
+    "demand_layers": "M2-M5"
+  },
+  "capacity_cuts": [
+    {
+      "direction": "V",
+      "cut_um": 2.5,
+      "remaining_derated_tracks": 9135.0,
+      "net_box_crossings": 402,
+      "whole_cut_ratio": 0.044
+    },
+    {
+      "direction": "V",
+      "cut_um": 7.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 820,
+      "whole_cut_ratio": 0.0932
+    },
+    {
+      "direction": "V",
+      "cut_um": 12.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 1080,
+      "whole_cut_ratio": 0.1227
+    },
+    {
+      "direction": "V",
+      "cut_um": 17.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 888,
+      "whole_cut_ratio": 0.1009
+    },
+    {
+      "direction": "V",
+      "cut_um": 22.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 804,
+      "whole_cut_ratio": 0.0914
+    },
+    {
+      "direction": "V",
+      "cut_um": 27.5,
+      "remaining_derated_tracks": 8589.0,
+      "net_box_crossings": 841,
+      "whole_cut_ratio": 0.0979
+    },
+    {
+      "direction": "V",
+      "cut_um": 32.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 1107,
+      "whole_cut_ratio": 0.1258
+    },
+    {
+      "direction": "V",
+      "cut_um": 37.5,
+      "remaining_derated_tracks": 8631.0,
+      "net_box_crossings": 1546,
+      "whole_cut_ratio": 0.1791
+    },
+    {
+      "direction": "V",
+      "cut_um": 42.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 1579,
+      "whole_cut_ratio": 0.1795
+    },
+    {
+      "direction": "V",
+      "cut_um": 47.5,
+      "remaining_derated_tracks": 6548.25,
+      "net_box_crossings": 1399,
+      "whole_cut_ratio": 0.2136
+    },
+    {
+      "direction": "V",
+      "cut_um": 52.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 1328,
+      "whole_cut_ratio": 0.2006
+    },
+    {
+      "direction": "V",
+      "cut_um": 57.5,
+      "remaining_derated_tracks": 6562.5,
+      "net_box_crossings": 1278,
+      "whole_cut_ratio": 0.1947
+    },
+    {
+      "direction": "V",
+      "cut_um": 62.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 1215,
+      "whole_cut_ratio": 0.1835
+    },
+    {
+      "direction": "V",
+      "cut_um": 67.5,
+      "remaining_derated_tracks": 6548.25,
+      "net_box_crossings": 1194,
+      "whole_cut_ratio": 0.1823
+    },
+    {
+      "direction": "V",
+      "cut_um": 72.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 1124,
+      "whole_cut_ratio": 0.1698
+    },
+    {
+      "direction": "V",
+      "cut_um": 77.5,
+      "remaining_derated_tracks": 6562.5,
+      "net_box_crossings": 1166,
+      "whole_cut_ratio": 0.1777
+    },
+    {
+      "direction": "V",
+      "cut_um": 82.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 1223,
+      "whole_cut_ratio": 0.1848
+    },
+    {
+      "direction": "V",
+      "cut_um": 87.5,
+      "remaining_derated_tracks": 8589.0,
+      "net_box_crossings": 1994,
+      "whole_cut_ratio": 0.2322
+    },
+    {
+      "direction": "V",
+      "cut_um": 92.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 1576,
+      "whole_cut_ratio": 0.1791
+    },
+    {
+      "direction": "V",
+      "cut_um": 97.5,
+      "remaining_derated_tracks": 8631.0,
+      "net_box_crossings": 1488,
+      "whole_cut_ratio": 0.1724
+    },
+    {
+      "direction": "V",
+      "cut_um": 102.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 1541,
+      "whole_cut_ratio": 0.1751
+    },
+    {
+      "direction": "V",
+      "cut_um": 107.5,
+      "remaining_derated_tracks": 8589.0,
+      "net_box_crossings": 1591,
+      "whole_cut_ratio": 0.1852
+    },
+    {
+      "direction": "V",
+      "cut_um": 112.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 1665,
+      "whole_cut_ratio": 0.1892
+    },
+    {
+      "direction": "V",
+      "cut_um": 117.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 1946,
+      "whole_cut_ratio": 0.2212
+    },
+    {
+      "direction": "V",
+      "cut_um": 122.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 1855,
+      "whole_cut_ratio": 0.2802
+    },
+    {
+      "direction": "V",
+      "cut_um": 127.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2018,
+      "whole_cut_ratio": 0.3049
+    },
+    {
+      "direction": "V",
+      "cut_um": 132.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2137,
+      "whole_cut_ratio": 0.3228
+    },
+    {
+      "direction": "V",
+      "cut_um": 137.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2192,
+      "whole_cut_ratio": 0.3311
+    },
+    {
+      "direction": "V",
+      "cut_um": 142.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2151,
+      "whole_cut_ratio": 0.3249
+    },
+    {
+      "direction": "V",
+      "cut_um": 147.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2172,
+      "whole_cut_ratio": 0.3281
+    },
+    {
+      "direction": "V",
+      "cut_um": 152.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2303,
+      "whole_cut_ratio": 0.3479
+    },
+    {
+      "direction": "V",
+      "cut_um": 157.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2441,
+      "whole_cut_ratio": 0.3688
+    },
+    {
+      "direction": "V",
+      "cut_um": 162.5,
+      "remaining_derated_tracks": 8686.5,
+      "net_box_crossings": 2631,
+      "whole_cut_ratio": 0.3029
+    },
+    {
+      "direction": "V",
+      "cut_um": 167.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2727,
+      "whole_cut_ratio": 0.3099
+    },
+    {
+      "direction": "V",
+      "cut_um": 172.5,
+      "remaining_derated_tracks": 8631.0,
+      "net_box_crossings": 2592,
+      "whole_cut_ratio": 0.3003
+    },
+    {
+      "direction": "V",
+      "cut_um": 177.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2639,
+      "whole_cut_ratio": 0.2999
+    },
+    {
+      "direction": "V",
+      "cut_um": 182.5,
+      "remaining_derated_tracks": 8589.0,
+      "net_box_crossings": 2601,
+      "whole_cut_ratio": 0.3028
+    },
+    {
+      "direction": "V",
+      "cut_um": 187.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2658,
+      "whole_cut_ratio": 0.3021
+    },
+    {
+      "direction": "V",
+      "cut_um": 192.5,
+      "remaining_derated_tracks": 8631.0,
+      "net_box_crossings": 2866,
+      "whole_cut_ratio": 0.3321
+    },
+    {
+      "direction": "V",
+      "cut_um": 197.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2691,
+      "whole_cut_ratio": 0.3058
+    },
+    {
+      "direction": "V",
+      "cut_um": 202.5,
+      "remaining_derated_tracks": 6548.25,
+      "net_box_crossings": 2444,
+      "whole_cut_ratio": 0.3732
+    },
+    {
+      "direction": "V",
+      "cut_um": 207.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2260,
+      "whole_cut_ratio": 0.3414
+    },
+    {
+      "direction": "V",
+      "cut_um": 212.5,
+      "remaining_derated_tracks": 6562.5,
+      "net_box_crossings": 2253,
+      "whole_cut_ratio": 0.3433
+    },
+    {
+      "direction": "V",
+      "cut_um": 217.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2308,
+      "whole_cut_ratio": 0.3487
+    },
+    {
+      "direction": "V",
+      "cut_um": 222.5,
+      "remaining_derated_tracks": 6548.25,
+      "net_box_crossings": 2349,
+      "whole_cut_ratio": 0.3587
+    },
+    {
+      "direction": "V",
+      "cut_um": 227.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2363,
+      "whole_cut_ratio": 0.357
+    },
+    {
+      "direction": "V",
+      "cut_um": 232.5,
+      "remaining_derated_tracks": 6562.5,
+      "net_box_crossings": 2654,
+      "whole_cut_ratio": 0.4044
+    },
+    {
+      "direction": "V",
+      "cut_um": 237.5,
+      "remaining_derated_tracks": 6619.5,
+      "net_box_crossings": 2731,
+      "whole_cut_ratio": 0.4126
+    },
+    {
+      "direction": "V",
+      "cut_um": 242.5,
+      "remaining_derated_tracks": 8589.0,
+      "net_box_crossings": 2923,
+      "whole_cut_ratio": 0.3403
+    },
+    {
+      "direction": "V",
+      "cut_um": 247.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2874,
+      "whole_cut_ratio": 0.3266
+    },
+    {
+      "direction": "V",
+      "cut_um": 252.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2651,
+      "whole_cut_ratio": 0.3013
+    },
+    {
+      "direction": "V",
+      "cut_um": 257.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2485,
+      "whole_cut_ratio": 0.2824
+    },
+    {
+      "direction": "V",
+      "cut_um": 262.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2714,
+      "whole_cut_ratio": 0.3084
+    },
+    {
+      "direction": "V",
+      "cut_um": 267.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2835,
+      "whole_cut_ratio": 0.3222
+    },
+    {
+      "direction": "V",
+      "cut_um": 272.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 2638,
+      "whole_cut_ratio": 0.2998
+    },
+    {
+      "direction": "V",
+      "cut_um": 277.5,
+      "remaining_derated_tracks": 8799.0,
+      "net_box_crossings": 1918,
+      "whole_cut_ratio": 0.218
+    },
+    {
+      "direction": "V",
+      "cut_um": 282.5,
+      "remaining_derated_tracks": 9135.0,
+      "net_box_crossings": 1397,
+      "whole_cut_ratio": 0.1529
+    },
+    {
+      "direction": "H",
+      "cut_um": 2.5,
+      "remaining_derated_tracks": 9998.25,
+      "net_box_crossings": 2524,
+      "whole_cut_ratio": 0.2524
+    },
+    {
+      "direction": "H",
+      "cut_um": 7.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 2969,
+      "whole_cut_ratio": 0.3217
+    },
+    {
+      "direction": "H",
+      "cut_um": 12.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 3196,
+      "whole_cut_ratio": 0.3463
+    },
+    {
+      "direction": "H",
+      "cut_um": 17.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 2541,
+      "whole_cut_ratio": 0.2753
+    },
+    {
+      "direction": "H",
+      "cut_um": 22.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 1881,
+      "whole_cut_ratio": 0.2038
+    },
+    {
+      "direction": "H",
+      "cut_um": 27.5,
+      "remaining_derated_tracks": 5357.25,
+      "net_box_crossings": 1542,
+      "whole_cut_ratio": 0.2878
+    },
+    {
+      "direction": "H",
+      "cut_um": 32.5,
+      "remaining_derated_tracks": 4813.5,
+      "net_box_crossings": 1531,
+      "whole_cut_ratio": 0.3181
+    },
+    {
+      "direction": "H",
+      "cut_um": 37.5,
+      "remaining_derated_tracks": 5357.25,
+      "net_box_crossings": 1680,
+      "whole_cut_ratio": 0.3136
+    },
+    {
+      "direction": "H",
+      "cut_um": 42.5,
+      "remaining_derated_tracks": 5357.25,
+      "net_box_crossings": 1825,
+      "whole_cut_ratio": 0.3407
+    },
+    {
+      "direction": "H",
+      "cut_um": 47.5,
+      "remaining_derated_tracks": 5357.25,
+      "net_box_crossings": 1923,
+      "whole_cut_ratio": 0.359
+    },
+    {
+      "direction": "H",
+      "cut_um": 52.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 2177,
+      "whole_cut_ratio": 0.404
+    },
+    {
+      "direction": "H",
+      "cut_um": 57.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 2401,
+      "whole_cut_ratio": 0.4456
+    },
+    {
+      "direction": "H",
+      "cut_um": 62.5,
+      "remaining_derated_tracks": 4932.75,
+      "net_box_crossings": 2865,
+      "whole_cut_ratio": 0.5808
+    },
+    {
+      "direction": "H",
+      "cut_um": 67.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 3192,
+      "whole_cut_ratio": 0.5923
+    },
+    {
+      "direction": "H",
+      "cut_um": 72.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 3244,
+      "whole_cut_ratio": 0.602
+    },
+    {
+      "direction": "H",
+      "cut_um": 77.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 3240,
+      "whole_cut_ratio": 0.6013
+    },
+    {
+      "direction": "H",
+      "cut_um": 82.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 3735,
+      "whole_cut_ratio": 0.3892
+    },
+    {
+      "direction": "H",
+      "cut_um": 87.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 3342,
+      "whole_cut_ratio": 0.3483
+    },
+    {
+      "direction": "H",
+      "cut_um": 92.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 3342,
+      "whole_cut_ratio": 0.3483
+    },
+    {
+      "direction": "H",
+      "cut_um": 97.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 3392,
+      "whole_cut_ratio": 0.3535
+    },
+    {
+      "direction": "H",
+      "cut_um": 102.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 3479,
+      "whole_cut_ratio": 0.3625
+    },
+    {
+      "direction": "H",
+      "cut_um": 107.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 3854,
+      "whole_cut_ratio": 0.4176
+    },
+    {
+      "direction": "H",
+      "cut_um": 112.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 3931,
+      "whole_cut_ratio": 0.4259
+    },
+    {
+      "direction": "H",
+      "cut_um": 117.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 3942,
+      "whole_cut_ratio": 0.4271
+    },
+    {
+      "direction": "H",
+      "cut_um": 122.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 4145,
+      "whole_cut_ratio": 0.4491
+    },
+    {
+      "direction": "H",
+      "cut_um": 127.5,
+      "remaining_derated_tracks": 8269.5,
+      "net_box_crossings": 4093,
+      "whole_cut_ratio": 0.495
+    },
+    {
+      "direction": "H",
+      "cut_um": 132.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 3625,
+      "whole_cut_ratio": 0.3928
+    },
+    {
+      "direction": "H",
+      "cut_um": 137.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 3241,
+      "whole_cut_ratio": 0.3512
+    },
+    {
+      "direction": "H",
+      "cut_um": 142.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 2962,
+      "whole_cut_ratio": 0.3209
+    },
+    {
+      "direction": "H",
+      "cut_um": 147.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 2632,
+      "whole_cut_ratio": 0.2743
+    },
+    {
+      "direction": "H",
+      "cut_um": 152.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 2459,
+      "whole_cut_ratio": 0.2562
+    },
+    {
+      "direction": "H",
+      "cut_um": 157.5,
+      "remaining_derated_tracks": 8910.75,
+      "net_box_crossings": 2273,
+      "whole_cut_ratio": 0.2551
+    },
+    {
+      "direction": "H",
+      "cut_um": 162.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 2113,
+      "whole_cut_ratio": 0.2202
+    },
+    {
+      "direction": "H",
+      "cut_um": 167.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 2003,
+      "whole_cut_ratio": 0.2087
+    },
+    {
+      "direction": "H",
+      "cut_um": 172.5,
+      "remaining_derated_tracks": 9596.25,
+      "net_box_crossings": 2038,
+      "whole_cut_ratio": 0.2124
+    },
+    {
+      "direction": "H",
+      "cut_um": 177.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 1635,
+      "whole_cut_ratio": 0.3034
+    },
+    {
+      "direction": "H",
+      "cut_um": 182.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 1592,
+      "whole_cut_ratio": 0.2954
+    },
+    {
+      "direction": "H",
+      "cut_um": 187.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 1597,
+      "whole_cut_ratio": 0.2964
+    },
+    {
+      "direction": "H",
+      "cut_um": 192.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 1495,
+      "whole_cut_ratio": 0.2774
+    },
+    {
+      "direction": "H",
+      "cut_um": 197.5,
+      "remaining_derated_tracks": 5388.75,
+      "net_box_crossings": 1508,
+      "whole_cut_ratio": 0.2798
+    },
+    {
+      "direction": "H",
+      "cut_um": 202.5,
+      "remaining_derated_tracks": 5357.25,
+      "net_box_crossings": 1522,
+      "whole_cut_ratio": 0.2841
+    },
+    {
+      "direction": "H",
+      "cut_um": 207.5,
+      "remaining_derated_tracks": 5357.25,
+      "net_box_crossings": 1555,
+      "whole_cut_ratio": 0.2903
+    },
+    {
+      "direction": "H",
+      "cut_um": 212.5,
+      "remaining_derated_tracks": 5357.25,
+      "net_box_crossings": 1602,
+      "whole_cut_ratio": 0.299
+    },
+    {
+      "direction": "H",
+      "cut_um": 217.5,
+      "remaining_derated_tracks": 5357.25,
+      "net_box_crossings": 1633,
+      "whole_cut_ratio": 0.3048
+    },
+    {
+      "direction": "H",
+      "cut_um": 222.5,
+      "remaining_derated_tracks": 4813.5,
+      "net_box_crossings": 1627,
+      "whole_cut_ratio": 0.338
+    },
+    {
+      "direction": "H",
+      "cut_um": 227.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 1962,
+      "whole_cut_ratio": 0.2126
+    },
+    {
+      "direction": "H",
+      "cut_um": 232.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 2655,
+      "whole_cut_ratio": 0.2877
+    },
+    {
+      "direction": "H",
+      "cut_um": 237.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 2739,
+      "whole_cut_ratio": 0.2968
+    },
+    {
+      "direction": "H",
+      "cut_um": 242.5,
+      "remaining_derated_tracks": 9229.5,
+      "net_box_crossings": 3088,
+      "whole_cut_ratio": 0.3346
+    },
+    {
+      "direction": "H",
+      "cut_um": 247.5,
+      "remaining_derated_tracks": 9998.25,
+      "net_box_crossings": 2524,
+      "whole_cut_ratio": 0.2524
+    }
+  ],
+  "obstacle_margin_dbu": {
+    "M2": 27,
+    "M3": 27,
+    "M4": 36,
+    "M5": 36
+  },
+  "limitations": [
+    "Net-box placement estimate only; no capacity PASS from unplaced native cells",
+    "Conservative PG via rectangles priced on both connected layers",
+    "Signal-signal via/pin access and detail-routing cost still unmeasured"
+  ]
+}

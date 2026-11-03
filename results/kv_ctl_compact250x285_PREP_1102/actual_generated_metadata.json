@@ -1,0 +1,56 @@
+{
+  "status": "METADATA_GEN_ONLY",
+  "kit_hash": "44814db643382e7c",
+  "outline": [
+    250.56,
+    285.12
+  ],
+  "pin_bits": 6849,
+  "added_pins": 0,
+  "actual_IO_locations": 6849,
+  "IO_locations_outside": 0,
+  "actual_interior_pins": [
+    {
+      "bus": "ck",
+      "bit": null,
+      "layer": "M5",
+      "x": 125.256,
+      "y": 142.56,
+      "face": "interior",
+      "size": [
+        0.048,
+        0.48
+      ],
+      "clock": true
+    },
+    {
+      "bus": "rst_n",
+      "bit": null,
+      "layer": "M5",
+      "x": 125.64,
+      "y": 142.56,
+      "face": "interior",
+      "size": [
+        0.024,
+        0.192
+      ],
+      "clock": false
+    }
+  ],
+  "clock_binding": {
+    "type": "qkd_kvs_ctl",
+    "insertion_ps": {
+      "tt": 250.0,
+      "ff": 202.5
+    },
+    "insertion_tol_ps": 40.0,
+    "basis": {
+      "tt": "plan clock common latency",
+      "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+    },
+    "rc": "calibrated setRC_rcx_asap7.tcl",
+    "rule": "METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25; FLOW-FIX core generators"
+  },
+  "same_pins_as_proposal": true,
+  "note": "Source-matched six retained SYNTH SRAM placements are still a SPEC; no FP/PG/ROW/TAP/FF placement executed or copied. Fresh make_tracks source uses new DIE/CORE bounds at runtime."
+}

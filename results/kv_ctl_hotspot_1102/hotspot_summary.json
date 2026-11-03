@@ -1,0 +1,56 @@
+{
+  "status": "EXACT_SOURCE_NET_HOTSPOT_TRACE_PREP_NOT_ROUTE",
+  "native_nets_joined": 64874,
+  "source_net_pin_reader": "/srv/opentallas-scratch/claude/codex-kv-ctl-netpin-reader-0700",
+  "missing_real_pin_shapes": [],
+  "limits": [
+    "Movable combinational centers are analytical estimates",
+    "Real macro port rectangles are native master geometry transformedR0 into proposed coordinates",
+    "PG path capacities are the source-phase prediction; no new native233floorplan or route",
+    "This does not waive the normal checker or qualify a route"
+  ],
+  "windows": [
+    {
+      "direction": "H",
+      "cut_um": 77.5,
+      "window_um": [
+        256.0,
+        266.0
+      ],
+      "derated_window_tracks": 324.0,
+      "proxy_ratio": 1.7148938750776386,
+      "source_nets": 974,
+      "crossing_share": 555.6256155251549,
+      "macro_net_count": 1,
+      "macro_share": 0.06389587339151014,
+      "real_pin_not_forced_count": 18,
+      "real_pin_not_forced_share": 16.249215679563747,
+      "all_comb_count": 379,
+      "all_comb_share": 327.1315584812993,
+      "no_movable_count": 38,
+      "no_movable_share": 6.326405944793351,
+      "unique_movable_comb_cells": 1831
+    },
+    {
+      "direction": "V",
+      "cut_um": 147.5,
+      "window_um": [
+        99.0,
+        109.0
+      ],
+      "derated_window_tracks": 353.25,
+      "proxy_ratio": 1.6975558963606647,
+      "source_nets": 1570,
+      "crossing_share": 599.6616203894048,
+      "macro_net_count": 1,
+      "macro_share": 0.06185973207249803,
+      "real_pin_not_forced_count": 13,
+      "real_pin_not_forced_share": 11.33431827263578,
+      "all_comb_count": 442,
+      "all_comb_share": 236.5314334147846,
+      "no_movable_count": 3,
+      "no_movable_share": 0.1863805516362786,
+      "unique_movable_comb_cells": 3463
+    }
+  ]
+}

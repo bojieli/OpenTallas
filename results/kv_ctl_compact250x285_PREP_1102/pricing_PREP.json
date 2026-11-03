@@ -1,0 +1,232 @@
+{
+  "status": "PREP_NOT_PHYSICAL_QUALIFICATION",
+  "parent_basis": {
+    "plan_path": "/srv/opentallas-scratch2/claude/codex-kv-ctl-production-1131/plan.json",
+    "plan_sha256": "245ed86e0f1d3c5d6a7784d9ee48b32d5b79d55bd1d4ef401ecad69cc3b2af00",
+    "core": {
+      "inst": "kvs_ctl",
+      "module": "qkd_kvs_ctl",
+      "origin_um": [
+        898.56,
+        138.24
+      ],
+      "outline_um": [
+        371.52,
+        371.52
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.0,
+        0.0
+      ],
+      "pins_file": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/buildC/kvs_ctl_pins.json",
+      "note": "unsigned current6849-pin profile + DIE-KV-60 ctlin class fix; synthesis/boundary measurement only"
+    },
+    "source_inputs": "HELD",
+    "profile": "ctlin_C boot2 mission0"
+  },
+  "source_module": "qkd_kvs_ctl",
+  "source_native_synth_odb_sha256": "8eff1352d89bc789d48451ba66c5cfa16abce1a3b3088c765c09fbaa250a9234",
+  "source_native_synth_export_sha256": "1a2aa0282fe330b941099e6e5656a3041c10dd1e1bf04edc317c53b1c72fd0f6",
+  "source_standard_instances": 54680,
+  "source_FFs": 18768,
+  "master_types_joined": 45,
+  "source_logic_area_um2": 9589.440959999998,
+  "fixed_macro_area_um2": 12538.48896,
+  "outline_prices": [
+    {
+      "outline_um": [
+        371.52,
+        371.52
+      ],
+      "native_SYNTH_logic_area_um2": 9589.440959999998,
+      "native_fixed_macro_area_um2": 12538.48896,
+      "logic_only_fill": 0.07641681652057201
+    },
+    {
+      "outline_um": [
+        293.76,
+        293.76
+      ],
+      "native_SYNTH_logic_area_um2": 9589.440959999998,
+      "native_fixed_macro_area_um2": 12538.48896,
+      "logic_only_fill": 0.130014949700268
+    },
+    {
+      "outline_um": [
+        276.48,
+        276.48
+      ],
+      "native_SYNTH_logic_area_um2": 9589.440959999998,
+      "native_fixed_macro_area_um2": 12538.48896,
+      "logic_only_fill": 0.15006315451317478
+    },
+    {
+      "outline_um": [
+        267.84,
+        267.84
+      ],
+      "native_SYNTH_logic_area_um2": 9589.440959999998,
+      "native_fixed_macro_area_um2": 12538.48896,
+      "logic_only_fill": 0.16198441116280538
+    },
+    {
+      "outline_um": [
+        250.56,
+        285.12
+      ],
+      "native_SYNTH_logic_area_um2": 9589.440959999998,
+      "native_fixed_macro_area_um2": 12538.48896,
+      "logic_only_fill": 0.1628055880465864
+    },
+    {
+      "outline_um": [
+        233.28,
+        371.52
+      ],
+      "native_SYNTH_logic_area_um2": 9589.440959999998,
+      "native_fixed_macro_area_um2": 12538.48896,
+      "logic_only_fill": 0.12936031569870995
+    }
+  ],
+  "chosen_outline_um": [
+    250.56,
+    285.12
+  ],
+  "parent_old_origin_um": [
+    898.56,
+    138.24
+  ],
+  "parent_new_origin_um": [
+    959.04,
+    181.44
+  ],
+  "parent_8p64_grid": true,
+  "parent_clock_reset_global_unchanged": [
+    {
+      "name": "ck",
+      "old_local": [
+        185.736,
+        185.76
+      ],
+      "new_local": [
+        125.256,
+        142.56
+      ],
+      "global_unchanged": [
+        1084.296,
+        324.0
+      ]
+    },
+    {
+      "name": "rst_n",
+      "old_local": [
+        186.12,
+        185.76
+      ],
+      "new_local": [
+        125.64,
+        142.56
+      ],
+      "global_unchanged": [
+        1084.68,
+        324.0
+      ]
+    }
+  ],
+  "macro_inventory": [
+    {
+      "name": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 51.84,
+      "y": 43.2,
+      "orient": "R0",
+      "width": 52.296,
+      "height": 39.96,
+      "model_halo_um": 4.32
+    },
+    {
+      "name": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 146.88,
+      "y": 43.2,
+      "orient": "R0",
+      "width": 52.296,
+      "height": 39.96,
+      "model_halo_um": 4.32
+    },
+    {
+      "name": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 51.84,
+      "y": 120.96,
+      "orient": "R0",
+      "width": 52.296,
+      "height": 39.96,
+      "model_halo_um": 4.32
+    },
+    {
+      "name": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 146.88,
+      "y": 120.96,
+      "orient": "R0",
+      "width": 52.296,
+      "height": 39.96,
+      "model_halo_um": 4.32
+    },
+    {
+      "name": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 51.84,
+      "y": 198.72,
+      "orient": "R0",
+      "width": 52.296,
+      "height": 39.96,
+      "model_halo_um": 4.32
+    },
+    {
+      "name": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 146.88,
+      "y": 198.72,
+      "orient": "R0",
+      "width": 52.296,
+      "height": 39.96,
+      "model_halo_um": 4.32
+    }
+  ],
+  "pin_inventory": 6849,
+  "face_counts": {
+    "W": 2524,
+    "E": 2524,
+    "N": 1397,
+    "S": 402,
+    "interior": 2
+  },
+  "candidate_peak_pins_per_um_10um": {
+    "W/M4": 9.2,
+    "E/M4": 9.2,
+    "N/M5": 5.8,
+    "S/M5": 1.7
+  },
+  "minimum_same_face_layer_center_spacing_um": {
+    "W/M4": 0.096,
+    "E/M4": 0.096,
+    "N/M5": 0.144,
+    "S/M5": 0.576
+  },
+  "pin_budget_per_um_unchanged": 6.0,
+  "signal_ceiling_unchanged": "M5",
+  "candidate_pin_file_sha256": "04a463aeabdbf276a4a2edbe26c6be891f1e3b17a7a5f6c7404d2e34aed8f07c",
+  "PG_phase": "parent and all six SRAM global moves are integer8.64um; current4.32/8.64 PG phases preserved geometrically, not actual PG qualification",
+  "OPEN": [
+    "native floorplan rows/taps/PG and pinaccess qualification",
+    "deliberate18768FF site assignment including unchanged54 physical master choices",
+    "actual fullgraph405/public150 and p90<=30; no more than10percent publicpins beyond30",
+    "actual empty-bin<=.5 using existing functional cells only",
+    "local M2-M5 channel capacity and actual>=50iteration GRT0 if proxy>.6",
+    "parent new publicpin correspondence/routes/clock model and current-source native views",
+    "no CTS/PLACE permission from this PREP; root picture review required"
+  ]
+}

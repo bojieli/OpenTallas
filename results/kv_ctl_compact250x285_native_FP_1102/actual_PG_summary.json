@@ -1,0 +1,150 @@
+{
+  "scope": "Actual native FP only; FF site/PG route qualification OPEN",
+  "dbu": 1000,
+  "rows": 2008,
+  "instances": {
+    "ff": 18768,
+    "std": 46230,
+    "tap": 7184,
+    "macro": 6
+  },
+  "macros": [
+    {
+      "name": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "bbox_dbu": [
+        51840,
+        43200,
+        104136,
+        83160
+      ],
+      "orient": "R0",
+      "status": "LOCKED"
+    },
+    {
+      "name": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "bbox_dbu": [
+        146880,
+        43200,
+        199176,
+        83160
+      ],
+      "orient": "R0",
+      "status": "LOCKED"
+    },
+    {
+      "name": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "bbox_dbu": [
+        51840,
+        120960,
+        104136,
+        160920
+      ],
+      "orient": "R0",
+      "status": "LOCKED"
+    },
+    {
+      "name": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "bbox_dbu": [
+        146880,
+        120960,
+        199176,
+        160920
+      ],
+      "orient": "R0",
+      "status": "LOCKED"
+    },
+    {
+      "name": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "bbox_dbu": [
+        51840,
+        198720,
+        104136,
+        238680
+      ],
+      "orient": "R0",
+      "status": "LOCKED"
+    },
+    {
+      "name": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "bbox_dbu": [
+        146880,
+        198720,
+        199176,
+        238680
+      ],
+      "orient": "R0",
+      "status": "LOCKED"
+    }
+  ],
+  "PG_counts": [
+    {
+      "net": "VDD",
+      "kind": "metal",
+      "layer": "M1",
+      "count": 1004
+    },
+    {
+      "net": "VDD",
+      "kind": "metal",
+      "layer": "M2",
+      "count": 1004
+    },
+    {
+      "net": "VDD",
+      "kind": "metal",
+      "layer": "M3",
+      "count": 22054
+    },
+    {
+      "net": "VDD",
+      "kind": "metal",
+      "layer": "M5",
+      "count": 56
+    },
+    {
+      "net": "VDD",
+      "kind": "via",
+      "layer": "*",
+      "count": 70910
+    },
+    {
+      "net": "VSS",
+      "kind": "metal",
+      "layer": "M1",
+      "count": 999
+    },
+    {
+      "net": "VSS",
+      "kind": "metal",
+      "layer": "M2",
+      "count": 999
+    },
+    {
+      "net": "VSS",
+      "kind": "metal",
+      "layer": "M3",
+      "count": 22410
+    },
+    {
+      "net": "VSS",
+      "kind": "metal",
+      "layer": "M5",
+      "count": 56
+    },
+    {
+      "net": "VSS",
+      "kind": "via",
+      "layer": "*",
+      "count": 71901
+    }
+  ],
+  "PG_extract_errors": [],
+  "PG_error_count": 0,
+  "track_layers": 7
+}

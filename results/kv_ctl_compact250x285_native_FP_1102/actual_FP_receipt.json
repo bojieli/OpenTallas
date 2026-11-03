@@ -1,0 +1,40 @@
+{
+  "status": "FLOORPLAN_PASS_PLACEMENT_HELD",
+  "host": "intel1",
+  "kit": "/srv/opentallas-scratch2/claude/codex-kv-ctl-compact250-0430/fp2/kit",
+  "unit": "oth-ubuntu-754784-1793624317",
+  "exit": 0,
+  "source_guards": 24,
+  "native_rows": 2008,
+  "native_taps": 7184,
+  "macros": 6,
+  "FFs": 18768,
+  "PDN_stage_seconds": 4.4,
+  "final_stage_seconds": 16.23,
+  "final_stage_RSS_KB": 467856,
+  "read_only_collector": "/srv/opentallas-scratch/claude/codex-kv-ctl-compact250-0430/collector",
+  "readset": {
+    "rows.json": "f0d2881d84feff2353f1eb80e5c971c67b358d306571744adedf45917fc8ef6b",
+    "instances.csv": "3721b9bcfc0c1121aed7f8b5b77ec7de614109c42a3c7a535895f593ea3faa81",
+    "geom.tsv": "85ab6881bf6d6c1b7ce5c4bbb7c471e349dad2847ed68af4ca23f802c6c0c654",
+    "tracks.json": "494100bd4e4bcd835d65c808ada890021a15e432ec48575c9710ff25bf9fb9c5",
+    "pg_boxes.csv": "c57731bd289fdc457e76f37fcc246c3da67b9d45ff6757e3811ff890cc6ab2f8"
+  },
+  "holds": [
+    "No PLACE/CTS/GRT released",
+    "Parent 6849 source namespace remains HELD; no7076 POR adoption",
+    "Channel net-box estimates do not pass; source-cone and actual PG/via budget remain OPEN"
+  ],
+  "failures_preserved": [
+    {
+      "scope": "605714-1793623870",
+      "cause": "dry-target parser expected flow.sh; actual six ordinary 2_* native targets; no floorplan executed",
+      "repair": "exact six allowed target names, no broader stage release"
+    },
+    {
+      "scope": "1098511-1793625302",
+      "cause": "read-only collector dbSBox.getBox SWIG overload",
+      "repair": "direct rectangle coordinate access; separate1173075-1793625540 collector PASS"
+    }
+  ]
+}

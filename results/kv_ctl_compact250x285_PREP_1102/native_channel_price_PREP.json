@@ -1,0 +1,106 @@
+{
+  "status": "GEOMETRIC_SOURCE_PRICE_NOT_ACTUAL_CHANNEL_PASS",
+  "native_SRAM_OBS": {
+    "M1": "full52.296x39.960",
+    "M2": "full52.296x39.960",
+    "M3": "full52.296x39.960",
+    "M4": "x0.072..52.224,y0..39.960",
+    "M5": "no macro body OBS; native core PDN still consumes tracks"
+  },
+  "routing_pitch_um": {
+    "M2": 0.036,
+    "M3": 0.036,
+    "M4": 0.048,
+    "M5": 0.048
+  },
+  "current_native_PDN": {
+    "M1_followpins": {
+      "width": 0.018,
+      "pitch": 0.54
+    },
+    "M2_followpins": {
+      "width": 0.018,
+      "pitch": 0.54
+    },
+    "M5": {
+      "width": 0.12,
+      "spacing": 0.072,
+      "pitch": 4.32,
+      "offset": 2.064
+    },
+    "macro_grid_halo_um": 2.0,
+    "connects": [
+      "M1-M2",
+      "M2-M5",
+      "macro M4-M5"
+    ]
+  },
+  "cuts": [
+    {
+      "candidate": "current371.52",
+      "outline_um": [
+        371.52,
+        371.52
+      ],
+      "macro_grid": [
+        2,
+        3
+      ],
+      "M3_macrofree_straight_cut_um": 266.928,
+      "M5_before_PG_straight_cut_um": 371.52,
+      "M2_M4_macrofree_straight_cut_um": 251.64,
+      "vertical_pitch_equivalent_tracks_before_PG": 15154.666666666666,
+      "horizontal_pitch_equivalent_tracks_before_PG": 12232.5
+    },
+    {
+      "candidate": "square267.84",
+      "outline_um": [
+        267.84,
+        267.84
+      ],
+      "macro_grid": [
+        2,
+        3
+      ],
+      "M3_macrofree_straight_cut_um": 163.248,
+      "M5_before_PG_straight_cut_um": 267.84,
+      "M2_M4_macrofree_straight_cut_um": 147.95999999999998,
+      "vertical_pitch_equivalent_tracks_before_PG": 10114.666666666666,
+      "horizontal_pitch_equivalent_tracks_before_PG": 7192.5
+    },
+    {
+      "candidate": "balanced250.56x285.12",
+      "outline_um": [
+        250.56,
+        285.12
+      ],
+      "macro_grid": [
+        2,
+        3
+      ],
+      "M3_macrofree_straight_cut_um": 145.96800000000002,
+      "M5_before_PG_straight_cut_um": 250.56,
+      "M2_M4_macrofree_straight_cut_um": 165.24,
+      "vertical_pitch_equivalent_tracks_before_PG": 9274.666666666668,
+      "horizontal_pitch_equivalent_tracks_before_PG": 8032.500000000001
+    },
+    {
+      "candidate": "three-column267.84",
+      "outline_um": [
+        267.84,
+        267.84
+      ],
+      "macro_grid": [
+        3,
+        2
+      ],
+      "M3_macrofree_straight_cut_um": 110.95199999999997,
+      "M5_before_PG_straight_cut_um": 267.84,
+      "M2_M4_macrofree_straight_cut_um": 187.91999999999996,
+      "vertical_pitch_equivalent_tracks_before_PG": 8661.999999999998,
+      "horizontal_pitch_equivalent_tracks_before_PG": 9134.999999999998
+    }
+  ],
+  "model_warning": "These are straight interior macro cuts before exact track phase, PG metal/spacing/vias, local partition routing and net demand. They do not waive the current0.742/0.677/0.704 proxies, prove GRT0, or assign any signal layer aboveM5.",
+  "recommendation": "Balanced250.56x285.12 retains same GLOBAL six SRAM poses and clock/reset as square267, increases horizontal raw cut aperture by17.28um with smaller vertical aperture, lowers heavy E/W pinpeak9.8->9.2, and gives16.28percent bare-SYNTHfill. Actual demand and local native PG need normalFP/placement before qualification."
+}
