@@ -1,0 +1,40 @@
+{
+  "status": "SOURCE_ONLY_INTAKE_MODEL_NO_PHYSICAL_RELEASE",
+  "source": {
+    "VM_READ_RETURN": 88,
+    "VM_WRITE_RETURN": 85,
+    "VM_bridge_declared_FF": 27301,
+    "reset_relay_FF": 6,
+    "total_declared_preopt_FF": 36240,
+    "native_SRAMs": 0,
+    "clock_fanout_status": "36240 source state bits on one exported clk; actual mapped sinks/tree unknown, clock decomposition/profile is a next gate"
+  },
+  "ABI": {
+    "ports": 34,
+    "bits": 11810,
+    "inputs": 5354,
+    "outputs": 6456
+  },
+  "planning_outline_um": [
+    669.6,
+    626.4
+  ],
+  "outline_authority": "Historical declared allocation; mapped area/fill and legal placement unmeasured.",
+  "microarchitecture": "Exact CTL logic/VM READ_RETURN88/WRITE_RETURN85. No RTL, replication or cycle changes.",
+  "added_cycles": 0,
+  "pin_capacity": {
+    "nominal_pitch_um": 0.192,
+    "pins_per_um": 5.208333333333333,
+    "names_unique": true,
+    "all_inside": true,
+    "credit": "GEN inventory only; no native parent-body pin/reach qualification."
+  },
+  "physical_holds": [
+    "Mapped area/fill/clock sinks unmeasured",
+    "Clock decomposition/native pin access/PG unavailable",
+    "Exact native reset/66START physical phase unqualified",
+    "Parent L730/programme provider placement unjoined",
+    "SOURCE13/default activation held"
+  ],
+  "requested_scope": "GEN/SYNTH then official component source proof. No PLACE/CTS/GRT/STA."
+}

@@ -1,0 +1,15 @@
+{
+  "status": "PASS_GEN_SOURCE_ONLY_UNQUALIFIED_CHECKOUT",
+  "pins": 11810,
+  "face_shell": false,
+  "native_reset_profile": {
+    "cycles": 4,
+    "scope": "SOURCE_PROOF_ONLY",
+    "release_eligible": false,
+    "physical_reset_qualification": false,
+    "die_contract_staged": false
+  },
+  "historical_reset_contract": false,
+  "required_replay": "Clean pinned worker normal GEN; no synthesis or source proof run locally.",
+  "reviewed_selector_dependency": "43b3032d3 exact backend15line component profile slice"
+}

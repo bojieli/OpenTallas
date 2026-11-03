@@ -1,0 +1,6 @@
+{
+  "status": "GEN_FAIL_PRESERVED_NO_SYNTH",
+  "cause": "Initial pins used zero track offset; normal generator M4/M5 inventory requires0.024+0.048k. Native IO rectangle routine alone did not check this earlier inventory gate.",
+  "off_pins": 11810,
+  "fix": "Regenerate exactsame names on normal plan0.024offset; source unchanged."
+}
