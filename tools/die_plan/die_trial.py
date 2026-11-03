@@ -680,9 +680,11 @@ def legal_detour(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
     memo = getattr(site, "_legal_detour_memo", None)
     if memo is None:
         memo = site._legal_detour_memo = {}
+    _dme_beat("detours")
     if key in memo:
         r = memo[key]
         return list(r) if r is not None else None
+    _dme_beat("astar")
     route = legal_detour_astar(site, a, b, step=step, margin=margin, turn_um=turn_um)
     if route is None and DETOUR_ADAPTIVE:
         route = _detour_wall(site, a, b, step, margin, turn_um)
@@ -1600,15 +1602,49 @@ DME_WORKERS = 1     # DIE-QC-20 opt-in --region-dme-workers: region DME trees co
 _DME_POOL_JOBS = None
 
 
+def dme_log_on():
+    """DIE-QC-63/CLK: DME progress log is default ON (stderr only; trees unchanged).  OT_CLK_DME_LOG=0 turns it off.
+    The QC source kit4 ran 13 h with an empty kit.log (log was opt-in), so a slow kit could not be told from a hung one."""
+    return os.environ.get("OT_CLK_DME_LOG", "1") not in ("0", "")
+
+
+DME_HEARTBEAT_S = float(os.environ.get("OT_CLK_DME_HEARTBEAT_S", "60") or 60)
+_DME_HB = dict(region=None, t0=0.0, last=0.0, merges=0, joins=0, detours=0, astar=0, fallbacks=0, bounded=0)
+
+
+def _dme_beat(kind):
+    """DIE-QC-63/CLK heartbeat: count DME work items and print one progress line per DME_HEARTBEAT_S seconds while a
+    region tree is being built (log only: no value used by the tree is read or written here)"""
+    hb = _DME_HB
+    hb[kind] += 1
+    if hb["region"] is None:
+        return
+    now = time.time()
+    if now - hb["last"] >= DME_HEARTBEAT_S:
+        hb["last"] = now
+        print(f"[dme] progress region={hb['region']} sec={now - hb['t0']:.0f} merges={hb['merges']} "
+              f"joins={hb['joins']} detours={hb['detours']} astar={hb['astar']} fallbacks={hb['fallbacks']} "
+              f"bounded={hb['bounded']} pid={os.getpid()}",
+              file=sys.stderr, flush=True)
+
+
 def _dme_timed(site, tl, kw, rn=None):
-    """dme_region_tree; HBM-CLKLOC-3 opt-in env OT_CLK_DME_LOG=1: one stderr line per region (name, taps, seconds),
+    """dme_region_tree; HBM-CLKLOC-3 env OT_CLK_DME_LOG (default on since DIE-QC-63/CLK, =0 off): one stderr line
+    per region start/done (name, taps, seconds) plus a heartbeat line every DME_HEARTBEAT_S seconds inside a region,
     so slow regions can be named while a kit runs (log only; the tree is unchanged)"""
-    if not os.environ.get("OT_CLK_DME_LOG"):
+    if not dme_log_on():
         return dme_region_tree(site, tl, **kw)
     t0 = time.time()
+    _DME_HB.update(region=rn, t0=t0, last=t0, merges=0, joins=0, detours=0, astar=0, fallbacks=0, bounded=0)
     print(f"[dme] start region={rn} taps={len(tl)} pid={os.getpid()}", file=sys.stderr, flush=True)
-    res = dme_region_tree(site, tl, **kw)
-    print(f"[dme] done region={rn} taps={len(tl)} sec={time.time() - t0:.1f}", file=sys.stderr, flush=True)
+    try:
+        res = dme_region_tree(site, tl, **kw)
+    finally:
+        hb = dict(_DME_HB)
+        _DME_HB["region"] = None
+    print(f"[dme] done region={rn} taps={len(tl)} sec={time.time() - t0:.1f} merges={hb['merges']} "
+          f"joins={hb['joins']} detours={hb['detours']} astar={hb['astar']} fallbacks={hb['fallbacks']} "
+          f"bounded={hb['bounded']}", file=sys.stderr, flush=True)
     return res
 
 
@@ -1705,7 +1741,14 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         _DME_POOL_JOBS = [(site, rt[rn], kw, rn) for _, rn, _, kw in jobs]
         try:
             with mp.get_context("fork").Pool(min(DME_WORKERS, len(jobs))) as pool:
-                trees = pool.map(_dme_pool_job, range(len(jobs)), chunksize=1)
+                # DIE-QC-63/CLK: imap (ordered, chunksize 1) = the same list as pool.map, with one line per collected tree
+                trees = []
+                t0 = time.time()
+                for tr in pool.imap(_dme_pool_job, range(len(jobs)), chunksize=1):
+                    trees.append(tr)
+                    if dme_log_on():
+                        print(f"[dme] collected {len(trees)}/{len(jobs)} sec={time.time() - t0:.0f}",
+                              file=sys.stderr, flush=True)
         finally:
             _DME_POOL_JOBS = None
     else:
@@ -2242,7 +2285,13 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
 
 
 DME_PHYS_FALLBACK_CHUNK = None   # HBM-CLKLOC-5 opt-in --region-dme-physical-fallback K (None = full rest pool)
-DME_JOIN_BUDGET = 4096  # DIE-S81-16: join() calls per top-level merge before the bounded monotone join-down takes over
+DME_JOIN_BUDGET = int(os.environ.get("OT_CLK_DME_JOIN_BUDGET", "4096") or 4096)  # DIE-S81-16: join() calls per top-level
+# merge before the bounded monotone join-down takes over (DIE-QC-64/CLK: env override, default 4096 = unchanged)
+# DIE-QC-64/CLK opt-in wall bound per region tree (env OT_CLK_DME_REGION_MAX_S, default 0 = off = byte-identical): once a
+# region has run longer than this, every further top-level join of that region goes straight to the bounded join_mono()
+# (the same fallback the join budget uses), so a region can no longer spend hours in join ping-pong.  Logged per region
+# ([dme] done ... bounded=N) and in stats join_bounded.
+DME_REGION_MAX_S = float(os.environ.get("OT_CLK_DME_REGION_MAX_S", "0") or 0)
 SNAKE_TOL_PS = 1.0      # DIE-QC-9 --region-dme-snake: a delay-mode merge imbalanced by more than this is elongated
 # DIE-QC-23 opt-in --region-dme-snake-cap UM (COORD 10-28 19:26, structural long-snake fix; default None = byte-identical).
 # In early-mode 'merge' regions with --region-dme-snake, a core tap's declared early is a deep DME sink; the stock build
@@ -2448,6 +2497,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         return len(out) - 1
 
     def merge(a, b, force_P=None):
+        _dme_beat("merges")
         A, B = out[a], out[b]
         rad = min(max(radius_um, _man((A["x"], A["y"]), (B["x"], B["y"])) / 2), 4000.0)
         alt = {}
@@ -2521,7 +2571,8 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     class _JoinBudget(Exception):
         pass
 
-    jcalls, jfall = [0], []
+    jcalls, jfall, jbound = [0], [], []
+    t_region = time.time()
 
     def join(a, b, depth=0):
         """merge a and b; when no snake-free zero-skew point exists (|S_a - S_b| > |a - b|), the shallow subtree is
@@ -2532,12 +2583,18 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         go14 merge mode spent >2 h here).  Calls are counted per top-level join; one that needs more than
         DME_JOIN_BUDGET calls is discarded and redone by join_mono() (bounded, logged in stats join_fallbacks).  Any
         join that finishes within the budget is unchanged (same nodes, same ids: the whole output is byte-identical)."""
+        _dme_beat("joins")
         if depth:
             jcalls[0] += 1
             if jcalls[0] > DME_JOIN_BUDGET:
                 raise _JoinBudget
             return join_down(a, b, depth)
         jcalls[0] = 0
+        if DME_REGION_MAX_S > 0 and time.time() - t_region > DME_REGION_MAX_S:
+            # DIE-QC-64/CLK opt-in wall bound: this region is over its time, so the bounded join-down is used directly
+            jbound.append(1)
+            _DME_HB["bounded"] += 1
+            return join_mono(a, b)
         n0 = len(out)
         try:
             return join_down(a, b, 0)
@@ -2546,6 +2603,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             gap = abs(out[a]["S"] - out[b]["S"])
             r = join_mono(a, b)
             jfall.append((round(gap, 1), round(out[r].get("imb", 0.0), 1)))
+            _DME_HB["fallbacks"] += 1
             return r
 
     def join_down(a, b, depth):
@@ -2793,6 +2851,8 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         st.update(snake_cap_um=float(DME_SNAKE_CAP_UM), snake_max_leg_um=round(max(legs, default=0.0), 1),
                   snake_legs_over_cap=sum(1 for x in legs if x > DME_SNAKE_CAP_UM + 1e-6),
                   snake_cap_rebuilt=len(cap_rebuilt))
+    if jbound:      # DIE-QC-64/CLK: top-level joins sent to join_mono by the opt-in region wall bound
+        st["join_bounded"] = len(jbound)
     if jfall:       # DIE-S81-16: top-level joins redone by join_mono (only present when it happened)
         st["join_fallbacks"] = len(jfall)
         st["join_fallback_worst_gap_ps"] = max(g for g, _ in jfall)
@@ -4764,12 +4824,14 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
               cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False):
+    _kit_stage("plan load")
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     landing = None
     if landing_infra:
         import landing_route
         landing = landing_route.network(P)
+    _kit_stage("abstracts")
     plan_dir = Path(plan_path).parent
     out = Path(out)
     for d in ("abstracts", "grt", "clock", "psm", "sta/parts"):
@@ -4839,6 +4901,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["die_io"] = [dict(name=w["name"], part=w.get("part"), iface=w.get("iface"), rect_um=w["rect_um"],
                            sites=w.get("sites"), signals=w.get("signals"), host=w.get("host", False)) for w in io]
     # clock
+    _kit_stage("clock tree")
     nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
                                            tree_form=tree_form, tree_opts=tree_opts, slice_spine=slice_spine,
@@ -4857,6 +4920,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
     # grt
+    _kit_stage("grt netlist")
     rv, nft = route_netlist(P, type_bits, landing_infra=landing_infra, reset_infra=reset_infra)
     if reset_infra:
         import reset_route
@@ -4913,6 +4977,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                          f"/work/clock/ctree_{c}.log") for c in ("TT", "FF")])
     (out / "run_clock.sh").write_text(run_sh("clock", 32, 4, ck).replace("-v $D:/work", "-v $D:/work"))
     # psm
+    _kit_stage("psm")
     power = part_power(P, plan_dir, density)
     pv = [f"module {sv(P.name)}_psm ();"] + [f"  {smod[p['type']]} {sv(n)} ();" for n, p in sorted(P.parts.items())] + ["endmodule"]
     (out / "psm" / "psm.v").write_text("\n".join(pv) + "\n")
@@ -4931,6 +4996,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     (out / "run_psm.sh").write_text(run_sh("psm", 256, 16, "/usr/bin/time -v openroad -no_init -threads 16 -exit "
                                                          "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     # sta stand-ins
+    _kit_stage("sta stand-ins")
     nff = 0
     for tn, t in sorted(P.types.items()):
         d = out / "sta" / "parts" / smod[tn]
@@ -4951,7 +5017,21 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     for x in ("run_grt.sh", "run_clock.sh", "run_psm.sh"):
         os.chmod(out / x, 0o755)
     (out / "kit.json").write_text(json.dumps(meta, indent=1) + "\n")
+    _kit_stage("done")
     return meta
+
+
+_KIT_T0 = []
+
+
+def _kit_stage(name):
+    """DIE-QC-63/CLK: one flushed stderr line per write_kit stage (log only; OT_CLK_DME_LOG=0 turns it off)"""
+    if not dme_log_on():
+        return
+    now = time.time()
+    if not _KIT_T0:
+        _KIT_T0.append(now)
+    print(f"[kit] {time.strftime('%F %T')} +{now - _KIT_T0[0]:.0f}s stage {name}", file=sys.stderr, flush=True)
 
 
 # ---------------------------------------------------------------------------------------------------------- reports
