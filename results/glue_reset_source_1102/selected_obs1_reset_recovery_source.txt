@@ -1,0 +1,24 @@
+    localparam integer NRST = 39, NEB = 25;
+    wire [NRST-1:0] lr;
+    wire [0:0] local_por_n;
+    ot_d2d_rst_tree_s7 #(.NR(NRST)) u_reset_regions (.clk(ck), .rst_n_in(rst_n), .rst_n(lr));
+    ot_rst_pipe #(.REGIONS(1), .STAGES(2)) u_por_region (.clk(ck), .rst_n_in(por_n), .rst_n(local_por_n));
+    localparam integer FW = 548;
+    wire [3:0] txs, rxe, rxs; wire [3:0] tk, rk; wire [4:0] tb, rb; wire [FW-1:0] rxp;
+    wire [3:0] tv; wire [4*FW-1:0] tp;
+    wire eb, ab, endf, own_rst_n, rec; wire [7:0] ep, fc;
+    wire st_f, kvn_f;
+    wire status_event_valid, status_port_match;
+    ot_qwen_d2d_recovery #(.MASTER(0)) u_rec (.ck(ck), .por_n(local_por_n[0]), .rst_n(lr[0]), .abort(ab | endf),
+        .fault_cause(fc), .end_fault(endf), .p_tx_up(fdi_tx_up), .p_tx_v(fdi_tx_v), .p_rx_v(fdi_rx_v),
+        .reset_req(1'b0), .recovery_clear(1'b0), .boot_begin(1'b0), .fwd_epoch_i(fwd_epoch), .fwd_epoch_o(),
+        .fwd_link_rst_n(), .phy_rst_n(own_rst_n), .epoch_begin(eb), .epoch(ep), .link_up(), .links_drained(),
+        .link_reset_seen(), .retrained(), .transport_fault(transport_fault), .recovering(rec), .recovery_cycles());
+    // epoch_begin copies: copy of the follower strobe capture chain (same D / reset depth as u_rec.fq) and KEPT copies
+    reg [2:0] fq_c;
+    always @(posedge ck or negedge lr[1]) if (!lr[1]) fq_c <= 3'd0; else fq_c <= {fq_c[1:0], fwd_epoch};
+    wire [NEB-1:0] eb_k;
+    genvar e;
+    for (e = 0; e < NEB; e = e + 1) begin : g_eb
+        ot_d2d_kffr u_eb (.ck(ck), .rst_n(lr[1]), .d(fq_c[2]), .q(eb_k[e]));
+    end

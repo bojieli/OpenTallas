@@ -1,0 +1,39 @@
+{
+ "classification": "TWO_LVT_CELLS_LOCAL_STATIC_LEAKAGE_INCREASE",
+ "measured_total_power": "NOT_MEASURED",
+ "switching_power": "NOT_MEASURED",
+ "cells": {
+  "OR4x1": {
+   "RVT": {
+    "TT_leakage_pW_min_max": [
+     65.4137,
+     262.298
+    ],
+    "records_including_default": 17
+   },
+   "LVT": {
+    "TT_leakage_pW_min_max": [
+     587.69,
+     2567.91
+    ],
+    "records_including_default": 17
+   }
+  },
+  "XNOR2x2": {
+   "RVT": {
+    "TT_leakage_pW_min_max": [
+     215.107,
+     252.687
+    ],
+    "records_including_default": 5
+   },
+   "LVT": {
+    "TT_leakage_pW_min_max": [
+     2097.36,
+     2484.41
+    ],
+    "records_including_default": 5
+   }
+  }
+ }
+}

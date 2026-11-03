@@ -1,0 +1,53 @@
+{
+ "phase": "PLACE_ONLY",
+ "cells": {
+  "New BUF": {
+   "name": "codex_l1_exp_tail_buf",
+   "master": "BUFx6f_ASAP7_75t_R",
+   "box_um": [
+    106.758,
+    190.35,
+    107.298,
+    190.62
+   ],
+   "center_um": [
+    107.02799999999999,
+    190.485
+   ]
+  },
+  "XNOR driver": {
+   "name": "_279616_",
+   "master": "XNOR2x2_ASAP7_75t_R",
+   "box_um": [
+    106.704,
+    199.8,
+    107.298,
+    200.07
+   ],
+   "center_um": [
+    107.001,
+    199.935
+   ]
+  },
+  "Capture FF": {
+   "name": "u_u_exp1.u_exp.nint[6]$_DFF_P_",
+   "master": "DFFHQNx3_ASAP7_75t_R",
+   "box_um": [
+    106.272,
+    100.98,
+    107.46,
+    101.25
+   ],
+   "center_um": [
+    106.866,
+    101.11500000000001
+   ]
+  }
+ },
+ "cell_center_L1_segments_um": [
+  9.476999999999975,
+  89.532
+ ],
+ "original_master_pose_clock_guards": "PASS via L1_TAIL_PLACE_COMPLETE",
+ "timing": "NOT RUN"
+}

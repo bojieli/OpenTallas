@@ -1,0 +1,9 @@
+{
+  "baseline_sha256": "118c7d4f159ecf94bd1c71b51dc174a5591811b7e28c2718f7221c465d66734b",
+  "after_sha256": "f9d3e56a2ea1345bae5483771bc3d38900e1711edce41ab10b79ef7d26d7ab2c",
+  "changes": [
+    "override export TC_LIB_FILES = /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz /work/macros/ot_sram_1r1w2c_128x64_m1_tt.lib /work/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz",
+    "override export BC_LIB_FILES = /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib /work/macros/ot_sram_1r1w2c_128x64_m1_ff.lib /work/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz"
+  ],
+  "no_SDC_RC_gate_or_clock_changes": true
+}

@@ -1,0 +1,42 @@
+{
+  "scope": "ROOT-authorized ONE ordinary route/signoff diagnostic; no auto publication",
+  "runtime": "epyc2:/srv/opentallas-scratch2/claude/codex-qc-l1-lvt-route2-0015",
+  "unit": "oth-ubuntu-3747083-1793607615",
+  "resource_caps": {
+    "memory_GB": 32,
+    "threads": 4,
+    "disk_GB": 6
+  },
+  "native_targets": [
+    "do-5_2_route",
+    "do-5_3_fillcell",
+    "do-5_route",
+    "do-5_route.sdc",
+    "do-finish"
+  ],
+  "input": "Actual lvt_grt.odb/sdc from successful incremental two-LVT trial",
+  "changes": "Private input-path/SDC producer adapter + explicit selected LVT TT/FF/LEF + original-source/CLOCK/PG guards only",
+  "source_clock_cycle_changes": 0,
+  "retained_flags": [
+    "partial_face2 FAIL: narrowly scoped frozen-contract diagnostic",
+    "incremental GRT-NA: no fresh full-overflow/GRT0 assertion"
+  ],
+  "failure_preserved": {
+    "runtime": "codex-qc-l1-lvt-route-0005",
+    "exit": 2,
+    "phase": "BEFORE read_db",
+    "cause": "Native load_design prefixes RESULTS_DIR even for absolute path; fixed actual relative input path, no aliases"
+  },
+  "signoff_follower": {
+    "unit": "codex-qc-l1-lvt-signoff-follow-1102.service",
+    "condition": "Only route+native finish exit0 and real6_final ODB/SPEF/SDC",
+    "tag": "flow-20261101-p-qc",
+    "commit": "99172ad794660cbccae4104f662bb02115afcb7a",
+    "bundle_members": 11,
+    "packager": "approved copy_signoff_bundle(source=complete frozen tag tools/die_plan, same tag physical/common_flow)",
+    "caps": "outer32GB4T, each parallel STA container16GB2T",
+    "policy": "TT setup0 / FF hold25 / period833",
+    "auto_publication": false
+  },
+  "current_result": "NATIVE_PIN_ACCESS_PASSED; DRT_GUIDE_INPUT_PROGRESSING; NO_DRT_OR_SIGNOFF_PASS_CLAIM"
+}

@@ -1,0 +1,115 @@
+{
+ "source": "pinned openroad/orfs:asap7lock SIMPLE Liberty, fixed actual TT path slew/load",
+ "timing": "STATIC_TABLE_MODEL_ONLY_NOT_STA",
+ "cells": [
+  {
+   "cell": "OR4x1",
+   "related_pin": "D",
+   "input_slew_ps": 10.67,
+   "output_load_ff": 1.76,
+   "corners": {
+    "TT": {
+     "RVT": {
+      "function": "(A) + (B) + (C) + (D)",
+      "area_um2": 0.10206,
+      "fixed_input_cell_fall_ps": 43.335304677777785,
+      "arcs": 1
+     },
+     "LVT": {
+      "function": "(A) + (B) + (C) + (D)",
+      "area_um2": 0.10206,
+      "fixed_input_cell_fall_ps": 33.03845087777778,
+      "arcs": 1
+     },
+     "gain_ps": 10.296853800000008
+    },
+    "FF": {
+     "RVT": {
+      "function": "(A) + (B) + (C) + (D)",
+      "area_um2": 0.10206,
+      "fixed_input_cell_fall_ps": 30.29433061111111,
+      "arcs": 1
+     },
+     "LVT": {
+      "function": "(A) + (B) + (C) + (D)",
+      "area_um2": 0.10206,
+      "fixed_input_cell_fall_ps": 24.177885955555556,
+      "arcs": 1
+     },
+     "gain_ps": 6.116444655555554
+    }
+   },
+   "lef_R_size_um": [
+    0.378,
+    0.27
+   ],
+   "lef_L_size_um": [
+    0.378,
+    0.27
+   ],
+   "routing_lef_geometry_pin_shapes_identical": true,
+   "intentional_nonrouting_vt_marker_change": [
+    "RVTN\u2192LVTN",
+    "RVTP\u2192LVTP"
+   ]
+  },
+  {
+   "cell": "XNOR2x2",
+   "related_pin": "B",
+   "input_slew_ps": 22.01,
+   "output_load_ff": 10.48,
+   "corners": {
+    "TT": {
+     "RVT": {
+      "function": "(A * B) + (!A * !B)",
+      "area_um2": 0.16038,
+      "fixed_input_cell_fall_ps": 56.64391196805556,
+      "arcs": 2
+     },
+     "LVT": {
+      "function": "(A * B) + (!A * !B)",
+      "area_um2": 0.16038,
+      "fixed_input_cell_fall_ps": 44.824412093750006,
+      "arcs": 2
+     },
+     "gain_ps": 11.819499874305556
+    },
+    "FF": {
+     "RVT": {
+      "function": "(A * B) + (!A * !B)",
+      "area_um2": 0.16038,
+      "fixed_input_cell_fall_ps": 40.843629461111114,
+      "arcs": 3
+     },
+     "LVT": {
+      "function": "(A * B) + (!A * !B)",
+      "area_um2": 0.16038,
+      "fixed_input_cell_fall_ps": 33.62892867708334,
+      "arcs": 2
+     },
+     "gain_ps": 7.214700784027777
+    }
+   },
+   "lef_R_size_um": [
+    0.594,
+    0.27
+   ],
+   "lef_L_size_um": [
+    0.594,
+    0.27
+   ],
+   "routing_lef_geometry_pin_shapes_identical": true,
+   "intentional_nonrouting_vt_marker_change": [
+    "RVTN\u2192LVTN",
+    "RVTP\u2192LVTP"
+   ]
+  }
+ ],
+ "sum_fixed_input_gain_ps": {
+  "TT": 22.116353674305564,
+  "FF": 13.33114543958333
+ },
+ "area_delta_um2": 0,
+ "sequential_cycles_added": 0,
+ "fraction_of_cells_percent": 0.0007328181621653311
+}

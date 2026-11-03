@@ -1,0 +1,14 @@
+{
+  "verdict": "REJECT_WORSE_TT",
+  "runtime": "epyc2:/srv/opentallas-scratch2/claude/codex-qc-l1-tail-grt2-2120",
+  "TT_setup_ps": -15.605073,
+  "FF_hold_ps": 5.851819,
+  "baseline_TT_setup_ps": -11.755041,
+  "TT_delta_ps": -3.850032,
+  "uncertainty_setup_hold_ps": [
+    0,
+    25
+  ],
+  "DRT_authorized": false,
+  "next": "Finite two-DATA-master same-function same-geometry LVT trial; geometry-only import capsule first"
+}

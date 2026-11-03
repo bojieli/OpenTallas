@@ -1,0 +1,7 @@
+ot-run: intel1         admits    10 GB (avail 219, reserve 0, fresh 5, peak 138.9, headroom 0, waiters 41/2070 GB) load 172/112 running 71 disk 363 GB 
+ot-run: epyc2          admits   139 GB (avail 301, reserve 0, fresh 0, peak 97.1, headroom 0, waiters 0/0 GB) load 101/128 running 38 disk 48 GB scratch disk /srv/opentallas-scratch2 has 48 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)
+ot-run: -> intel1 (will queue: admits 10 GB < 16 GB)
+ot-heavy: request 16G is charged 10G (class 'run_census.sh' measured peak 1.5G, n=1+0 proved); the cap stays 16G
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 10 = 7 GB, admissible 9 GB: available 217 GB, growth charged 5 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 5 GB at x1), young 4 GB, floor 50 GB; invariant: committed 934 GB (in use 790, other 98, units max(now, peak) 831, + reserve 0 + fresh 5) vs physical - 64 = 943 GB -> headroom 9 GB; class 'run_census.sh' measured peak 1.5G, n=1+0 proved
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3559672-1793619990 after 65 s
+ot-run: RAN on intel1 (unit oth-ubuntu-3559672-1793619990): exit 125
