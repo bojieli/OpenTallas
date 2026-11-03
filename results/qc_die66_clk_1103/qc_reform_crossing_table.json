@@ -2,7 +2,7 @@
  "schema": "qc_reform_clock_regions.v1",
  "lane": "DIE-QC-66/CLK",
  "kind": "ESTIMATE (pre-build, computed)",
- "plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+ "plan": "/home/ubuntu/scratch-root/claude/die-qc-66-clk/wt/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
  "entry_max_sinks": 5000,
  "flop_ratio": {
   "station": 0.34152413672915577,
@@ -188,7 +188,7 @@
   }
  ],
  "measured_xcheck": {
-  "v2w_preRED": {
+  "v3_postRED": {
    "intra": {
     "S_TT": 151.0,
     "S_FF": 129.99,
@@ -205,13 +205,13 @@
    },
    "landed": {
     "S_TT": 2013.45,
-    "S_FF": 1805.75,
-    "plain_ff_hold": -1805.04,
-    "latch_ff_hold": -1378.72,
+    "S_FF": 1796.57,
+    "plain_ff_hold": -1795.86,
+    "latch_ff_hold": -1369.54,
     "latch_tt_setup": -1686.69
    },
    "die_clock_gate": "FAIL",
-   "kit_contract_need_ps": 49.78
+   "kit_contract_need_ps": 60.87
   }
  }
 }
