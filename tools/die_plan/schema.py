@@ -1068,7 +1068,10 @@ SCHEMA = {
             cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name},
             # DIE-KV-62/stations 11-02 opt-in: these types (or unsplit base names) export OT_CLAND_PINSLOT_DENSE=1 (y-column
             # pinslot rows pack the ring slot flops body to body); absent/empty = unchanged kits
-            cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-KV-64 11-03 opt-in: these types (or unsplit base names) tie their plan-declared hard-core ID straps
+            # inside the type (bind.emit_type; one value on every instance, else a bind gap); absent/empty = unchanged
+            id_straps_in_type_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 
