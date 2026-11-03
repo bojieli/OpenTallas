@@ -290,7 +290,7 @@ KIT_TOOL_DEPENDENCIES = {
     "hold_gate.tcl": ("vclk_corner.tcl",),
     "face_guard_core.py": ("face_guard.py",),
     "core_preflight.py": ("signoff.py", "face_guard.py"),
-    "kit_contract.py": ("core_io_reference.py",),
+    "kit_contract.py": ("core_io_reference.py", "bound_macro_paths.py"),
 }
 
 
