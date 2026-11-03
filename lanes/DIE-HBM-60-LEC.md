@@ -1,0 +1,2 @@
+# DIE-HBM-60/LEC (HBM LEC class; successor of DIE-HBM-59/LEC; reports to DIE-HBM-60)
+- 2026-11-03 03:38 PST CLAIM [DIE-HBM-60/LEC] collect hbm59lec-{kshare,n4ext,pgslice,tailx0} + hbm58lec-{kit-steady-r2,ne-e,ne-c} on intel2; release kit_wave HBM hold '*tailx_sk_step0/_steady' (lecbound merged F3); C6 RTL class fix (sk_en landing reset) on claude/die-hbm-60-lec-1103; classify remaining NOT EQ (topk_link).
