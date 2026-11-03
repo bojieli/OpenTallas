@@ -1,0 +1,7 @@
+# Superseding scope correction for 52ce95d3d
+
+HELD diagnostic evidence only. The original lower-window source-only PREP was reviewed against an incomplete hard-core body census. Canonical `check_ft_macro_sites` also includes `probe_blockages` for reuse leaves lacking LEFs; it exposes 2,848 new actual FF body collisions (1,424 per SU00 type). The original FAIL is preserved here. No P&R was launched.
+
+A union-aware replacement and density regeneration clears the canonical actual-body checks across the six touched types, retains station/cycle counts, and matches production clock input generation. Its image was personally viewed and independently reviewed PASS-COND for static geometry only. Global source/current-native/reset/START joins are held. The lower paired B113 window exposes a genuine SOURCE13 producer minimum of three additional aligned cycles, so this replacement is not an adoption candidate. The upper-window gutter alternative in `codex/ft-obstacle-union-2149@50624739d` retains the original paired B113 window and only the original producer minimum of two cycles; it supersedes this lower-window direction for further composition. Actual producer pin vectors still require native provider qualification.
+
+The B001 L730x2 two-bank repair remains useful with the upper-window alternative because its pins and source are unchanged. Its clock-tap companion is 6c0e7a012. Full candidate JSON remains at `/home/ubuntu/coord/tmp/codex-hbm-d44r-2039/entryO_union_clock.json`; reports are scoped static PREP, never a full coherent freeze or signoff claim.

@@ -1,0 +1,162 @@
+{
+  "q_su00": {
+    "verdict": "PASS",
+    "local_clock_inputs": 61,
+    "max_load": 1500.0,
+    "max_radius": 211.99199999999996,
+    "canonical_obstacles": 16,
+    "clock_union_halo_hits": [],
+    "actual_reset_control_sites": [
+      [
+        "arst_n",
+        2099.04,
+        786.208
+      ],
+      [
+        "rst_o_0",
+        175.648,
+        8.608
+      ],
+      [
+        "rst_o_1",
+        526.56,
+        8.608
+      ],
+      [
+        "rst_o_2",
+        878.368,
+        8.608
+      ],
+      [
+        "rst_o_3",
+        4.832,
+        471.776
+      ]
+    ],
+    "native_clock_pin_identity": true
+  },
+  "q_su00__physical_v1": {
+    "verdict": "PASS",
+    "local_clock_inputs": 61,
+    "max_load": 1500.0,
+    "max_radius": 211.99199999999996,
+    "canonical_obstacles": 16,
+    "clock_union_halo_hits": [],
+    "actual_reset_control_sites": [
+      [
+        "arst_n",
+        2099.04,
+        786.208
+      ],
+      [
+        "rst_o_0",
+        175.648,
+        8.608
+      ],
+      [
+        "rst_o_1",
+        526.56,
+        8.608
+      ],
+      [
+        "rst_o_2",
+        878.368,
+        8.608
+      ],
+      [
+        "rst_o_3",
+        4.832,
+        471.776
+      ]
+    ],
+    "native_clock_pin_identity": true
+  },
+  "q_b001": {
+    "verdict": "PASS",
+    "local_clock_inputs": 240,
+    "max_load": 1500.0,
+    "max_radius": 215.87299999999965,
+    "canonical_obstacles": 35,
+    "clock_union_halo_hits": [],
+    "actual_reset_control_sites": [
+      [
+        "arst_n",
+        778.08,
+        4311.328
+      ]
+    ],
+    "native_clock_pin_identity": true
+  },
+  "q_b001__physical_v1": {
+    "verdict": "PASS",
+    "local_clock_inputs": 240,
+    "max_load": 1500.0,
+    "max_radius": 215.87299999999965,
+    "canonical_obstacles": 35,
+    "clock_union_halo_hits": [],
+    "actual_reset_control_sites": [
+      [
+        "arst_n",
+        778.08,
+        4311.328
+      ]
+    ],
+    "native_clock_pin_identity": true
+  },
+  "q_b113": {
+    "verdict": "PASS",
+    "local_clock_inputs": 20,
+    "max_load": 285.0,
+    "max_radius": 148.41599999999994,
+    "canonical_obstacles": 5,
+    "clock_union_halo_hits": [],
+    "actual_reset_control_sites": [
+      [
+        "arst_n",
+        1848.48,
+        786.208
+      ],
+      [
+        "rst_o_0",
+        193.888,
+        8.608
+      ],
+      [
+        "rst_o_1",
+        1299.808,
+        8.608
+      ]
+    ],
+    "native_clock_pin_identity": true
+  },
+  "q_b113__physical_v1": {
+    "verdict": "PASS",
+    "local_clock_inputs": 20,
+    "max_load": 285.0,
+    "max_radius": 148.41599999999994,
+    "canonical_obstacles": 5,
+    "clock_union_halo_hits": [],
+    "actual_reset_control_sites": [
+      [
+        "arst_n",
+        1848.48,
+        786.208
+      ],
+      [
+        "rst_o_0",
+        193.888,
+        8.608
+      ],
+      [
+        "rst_o_1",
+        1299.808,
+        8.608
+      ]
+    ],
+    "native_clock_pin_identity": true
+  },
+  "canonical_ft": {
+    "count": 0,
+    "findings": []
+  }
+}
