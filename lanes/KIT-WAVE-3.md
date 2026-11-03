@@ -86,3 +86,8 @@ Elapsed time: 42:54.63[h:]min:sec. CPU time: user 6204.26 sys 28.80 (242%). Peak
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap/base/5_1_grt.odb] Error 2
  | kit localhost:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap/attempt_2/gen/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap_a83e190d54f7 src claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-02 21:22:50 PST AUTOPILOT -> KIT-WAVE-3: FAILED 08b957fc7e13 hbm/ot_hfd_coll_q2_hard_v8g__reduce (CRASH/flow-error):  band FAIL; fix the clock, not the hold)
+Elapsed time: 28:22.97[h:]min:sec. CPU time: user 5441.79 sys 30.24 (321%). Peak memory: 3037572KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hfd_coll_q2_hard_v8g__reduce/base/5_1_grt.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hfd_coll_q2_hard_v8g__reduce/attempt_2/gen/ot_hfd_coll_q2_hard_v8g__reduce_07982cfbef37 src claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
