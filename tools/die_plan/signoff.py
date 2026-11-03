@@ -1560,13 +1560,16 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         sl = face_guard.kit_strap_list(disc["kit"]) if disc.get("kit") else []
         # QK-CORES-5 10-27: declared proven-dead inputs (kit dead_inputs.json + proof receipt), verified unloaded
         dl = face_guard.kit_dead_list(disc["kit"]) if disc.get("kit") else []
+        # DIE-S81-46 spare (tied) outputs + DIE-KV-61/hr declared timed-face buses, as the face_guard CLI reads them
+        spl = face_guard.kit_spare_list(disc["kit"]) if disc.get("kit") else []
+        tml = face_guard.kit_timed_list(disc["kit"]) if disc.get("kit") else []
         # S81-CORE-LAT-R21: declared landing-ring slots (kit land_slots.json), as the kit face_guard_core / CLI pass them
         lf = Path(disc["kit"]) / "land_slots.json" if disc.get("kit") else None
         land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
         pad_clocks, native_clock_pins = face_guard.kit_pad_clocks(disc['kit'], library_receipt) if disc.get('kit') else ([], set())
         exports = face_guard.sdc_clock_exports(Path(disc['sdc']).read_text()) if pad_clocks else []
         r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1,
-                             straps=sl, dead=dl, land=land, exports=exports,
+                             straps=sl, dead=dl, land=land, exports=exports, spare=spl, timed=tml,
                              pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
                              clocks=[p['name'] for p in pad_clocks if p['dir'] == 'in'])
     except Exception as e:
@@ -1574,6 +1577,9 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),
                 fail_counts=r.get("fail_counts"), fails={k: v[:5] for k, v in (r.get("fails") or {}).items()},
                 dead_declared=r.get("dead_declared", []),
+                **({"spare_declared": len(r.get("spare_declared", []))} if spl else {}),
+                **({"timed_buses": tml, "timed_declared": len(r.get("timed_declared", [])),
+                    "timed_first": r.get("timed_declared", [])[:5]} if tml else {}),
                 netlist=disc["synth"], pins=disc.get("pins"), boundary_context=context,
                 one_station_ft_slots=sorted(ft1))
 
