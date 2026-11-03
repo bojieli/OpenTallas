@@ -21,6 +21,7 @@ proc read_db {args} {}
 proc read_sdc {args} {}
 proc all_clocks {} { return {clk vclk} }
 proc get_clocks {args} { return [lindex $args end] }
+proc get_full_name {o} { return $o }
 proc set_clock_latency {args} { set ::ot_test_latency [lrange $args 1 end] }
 proc set_propagated_clock {args} {}
 proc estimate_parasitics {args} {}
@@ -46,18 +47,24 @@ def _mock(text, work):
     return STUBS + "\n".join(lines).replace("/work", str(work)) + "\n"
 
 
-def _run(text, tmp_path, corner, policy=None, pinreg=PINREG):
+def _run(text, tmp_path, corner, policy=None, pinreg=PINREG, extra_env=None):
     work = tmp_path / "work"
     work.mkdir(exist_ok=True)
     (work / "constraint.sdc").write_text("")
     (work / "rc.tcl").write_text(RC)
     (work / "pinreg_measure.tcl").write_text(pinreg)
+    # band_policy() runs from /work as in the kit (gen_phys copies core_clock_band.py); signoff is stubbed to a kit
+    # without a hard-core latency contract (its own import chain is covered by the signoff tests)
+    if (HERE / "core_clock_band.py").exists():   # HEAD src (older) has no core_clock_band.py
+        shutil.copyfile(HERE / "core_clock_band.py", work / "core_clock_band.py")
+    (work / "signoff.py").write_text("def hard_core_latency_contract(_kit):\n    return False\n")
     if policy is not None:
         (work / "master_slice.json").write_text(json.dumps({"core_tree": {"model_qualification": {"band_policy": policy}}}))
     script = tmp_path / "gate.tcl"
     script.write_text(_mock(text, work))
     env = {"PATH": "/usr/bin:/bin", "OT_CORNER": corner, "OT_VCLK_TT": "250", "OT_VCLK_FF": "202.5",
            "ODB": "x.odb", "LAYER_PARASITICS_FILE": str(work / "rc.tcl")}
+    env.update(extra_env or {})
     return subprocess.run(["tclsh", str(script)], text=True, capture_output=True, env=env, cwd=tmp_path), work
 
 
@@ -96,13 +103,31 @@ def test_pre_fix_script_loses_tt_evidence(tmp_path):
     assert len(list(work.glob("postcts_gate_1.6*.json"))) == 1
 
 
-@pytest.mark.parametrize("policy,verdict,band", [(None,"FAIL","FAIL"),("gate","FAIL","FAIL"),("info","PASS","INFO")])
-def test_explicit_target_policy_preserves_measured_miss(tmp_path, policy, verdict, band):
-    r, work = _run(GATE.read_text(), tmp_path, "TT", policy, PINREG.replace("251.0", "196.56"))
+# KW-FIX-4 / OWNER 11-03 (only sign-off blocks): a measured band miss under the "gate" policy is ADVISORY (verdict PASS,
+# named in the log line); OT_POSTCTS_BAND_GATE=1 restores the blocking FAIL.
+@pytest.mark.parametrize("policy,band_gate,verdict,band", [(None,None,"PASS","ADVISORY"),("gate",None,"PASS","ADVISORY"),
+                                                           ("info",None,"PASS","INFO"),(None,"1","FAIL","FAIL"),
+                                                           ("gate","1","FAIL","FAIL"),("info","1","PASS","INFO")])
+def test_explicit_target_policy_preserves_measured_miss(tmp_path, policy, band_gate, verdict, band):
+    extra = {} if band_gate is None else {"OT_POSTCTS_BAND_GATE": band_gate}
+    r, work = _run(GATE.read_text(), tmp_path, "TT", policy, PINREG.replace("251.0", "196.56"), extra)
     assert r.returncode == 0, r.stderr
     d = json.loads((work / "postcts_gate_tt.json").read_text())
     assert d["verdict"] == verdict and d["band_verdict"] == band
     assert d["pinreg_mean_ps"] == 196.56 and d["dev_ps"] == 53.44
+    line = [l for l in r.stdout.splitlines() if l.startswith("OT_POSTCTS_GATE ")][-1]
+    assert line.endswith(" " + verdict) and ("ADVISORY band dev > tol" in line) == (band == "ADVISORY")
+    assert ("FAIL" in line) == (verdict == "FAIL")  # run_kit.sh stops on 'OT_POSTCTS_GATE.*FAIL'
+
+
+def test_advisory_line_still_parsed_by_canary_baseline(tmp_path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("canary_baseline", HERE.parent / "flow_canary/baseline.py")
+    if spec is None or not (HERE.parent / "flow_canary/baseline.py").is_file():
+        pytest.skip("flow_canary not checked out")
+    bl = importlib.util.module_from_spec(spec); spec.loader.exec_module(bl)
+    r, _ = _run(GATE.read_text(), tmp_path, "TT", None, PINREG.replace("251.0", "196.56"))
+    assert bl.GATE_RE.findall(r.stdout) == [("TT", "196.56", "250.00", "PASS")]
 
 
 def test_info_cannot_accept_empty_pinregister_set(tmp_path):

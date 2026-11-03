@@ -35,7 +35,11 @@ proc tb_end {placed} {
   global tb_grt
   if {$placed} { detailed_placement }
   # -resistance_aware as ORFS global_route.tcl when tapbal_grt.tcl set it (same clock-net layers as the GRT step)
-  if {$tb_grt} { global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}] }
+  # DH58-TAPBAL 11-03: after the raw odb clock edits above, the -resistance_aware slack query ran OpenSTA's incremental
+  # required pass on stale tag groups and aborted in sta::RequiredCmp::requiredSet (vector index assert; HEAD l48h0
+  # hd_st_str, hd_st_n3_*, hd_spn_eshim_tx; deterministic on 4_cts.odb).  Invalidating arrivals makes that query a full,
+  # consistent search: hd_st_str repro passes with the same tap/pinreg result as the non-resistance-aware control.
+  if {$tb_grt} { sta::arrivals_invalid; global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}] }
 }
 set tb_pitch [expr {[info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0}]
 set tb_cell [expr {[info exists ::env(OT_TAP_DELAY_CELL)] ? $::env(OT_TAP_DELAY_CELL) : "BUFx4_ASAP7_75t_R"}]
