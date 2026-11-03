@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# DIE-HBM-61/SPLIT TKM tile RE-FORM chain proof (Verilator 5 hierarchical; fleet host).  run.sh REPO KIT_IDPIN_RTL KIT_TERM_RTL VECDIR OUT
+# DIE-HBM-61/SPLIT TKM tile RE-FORM chain proof (Verilator 5 hierarchical, or FLAT=1 flat -O0; fleet host).  run.sh REPO KIT_IDPIN_RTL KIT_TERM_RTL VECDIR OUT
 #   REPO = checkout with rtl/hbm_accel/{generic/collective/tkm,cores_split/reform_1103/tkm_tile}, rtl/lib,
 #          physical/asap7_memory_macros (or a dir holding ot_rst_relay.sv + the SRAM model as $LIBDIR)
 #   VECDIR = tkm_split_vectors.py output.  Positive (MUTN 0 MUTP 0) must PASS every case; MUTN 1, MUTP 1, MUTP 2 FAIL.
@@ -22,6 +22,12 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/bin/verilator}
 build(){ # tag -G...
   local tag=$1; shift
   [ -x "$O/obj_$tag/Vtb" ] && return 0
+  if [ "${FLAT:-0}" = 1 ]; then # cheaper receipt: flat model, -O0 (hierarchical top verilation hit 292 GB on epyc4 11-03)
+    { "$V" --cc --exe --main --timing -O0 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
+        --top-module tb -Mdir "$O/obj_$tag" "$@" "${SRC[@]}" && make -C "$O/obj_$tag" -f Vtb.mk -j${JOBS:-8} OPT_FAST=-O0 OPT_SLOW=-O0 Vtb; } \
+      > "$O/build_$tag.log" 2>&1 || { echo "BUILD FAIL $tag"; tail -8 "$O/build_$tag.log"; return 2; }
+    return 0
+  fi
   { "$V" --cc --exe --main --timing --hierarchical -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN       --top-module tb -Mdir "$O/obj_$tag" "$@" "$H/tkm_split_hier.vlt" "${SRC[@]}" &&
     make -C "$O/obj_$tag" -f Vtb_hier.mk -j1 hier_verilation && make -C "$O/obj_$tag" -f Vtb_hier.mk -j${JOBS:-8} hier_build; } > "$O/build_$tag.log" 2>&1     || { echo "BUILD FAIL $tag"; tail -8 "$O/build_$tag.log"; return 2; }
 }
