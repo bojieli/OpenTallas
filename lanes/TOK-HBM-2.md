@@ -30,3 +30,12 @@
   from the plan legs (templates = s_role_fold_census.json), fail closed on svg until its provider is named; (c) 52 rst_n from
   the C25b reset table; (d) idx stream provider per the queue ASK; (e) strict bind -> item 4 on epyc2 via ot-run.
   Worktree intel2:/srv/opentallas-scratch2/claude/wt/tok-hbm-2 (sparse, 119 MB); bench scratch /srv/opentallas-scratch2/claude/tok-hbm-2.
+
+## 2026-11-02 23:16 PST START (TOK-HBM-2 slice 2, fresh successor of TOK-HBM-1 which died ~19:5x; branch claude/tok-hbm-2-1102 on main 7cf44d5c0)
+- Scope: (1) land OWNER 11-02 19:19 mu1 = 3-SRAM as plan event (d44q -> d44s), G0/G0C delta, READY ROOT-MERGE-23, tell DIE-HBM-59 + kit lanes; (2) vm_canonical_stream spill allocation (64-word VM/HBM congruence).
+- Collected: TOK-HBM-1 mu1 event ot-run waiter (intel1, queued 3 h, never ran) CANCELLED by exact PID (107963/107757) and rerun by me (docker/systemd caps). SOURCE13 cold hierarchical Verilator build (intel2 oth-ubuntu-1380825-1793672208) FAILED: oom-kill at 128 GB after 2h23m (20:39). Spill align work on epyc2 (patch + a8/a64 runs) adopted.
+
+## 2026-11-03 00:00 PST PROGRESS
+- DONE mu1-3sram plan event d44s (die_plan 68367329790d) READY @701659111b5 -> now @d6be5e20eac; handoff to DIE-HBM-59 / kit lanes posted (vecd4ae recipe only, 2 mu1 designs, retire vec6293 rows).
+- DONE spill align: expert regions congruent + row-sibling hint; staged 33,348/13.96M -> 7,287/0.96M (heads only), check PASS, default byte-identical.
+- RUNNING SOURCE13 resume (intel2 ot-run oth-ubuntu-2301452-1793692018, --crit 64 GB): 86/87 hier children were already built before the 20:39 OOM; only the top verilation + C++ build + smoke are left (resume13.sh in tok-hbm-1-1102/source13).
