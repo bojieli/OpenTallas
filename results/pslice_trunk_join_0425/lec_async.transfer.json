@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.lec_completed_transfer.v1",
+ "original": "/srv/opentallas-scratch2/claude/codex-pslice-tx3-place-retry-0400/kit",
+ "copied": "/srv/opentallas-scratch2/claude/codex-pslice-trunk-join-0425/kit",
+ "historical_provenance": {
+  "commit": "622cfa83e9d2b7cb2b4df40e7156dbd2c108970b",
+  "dirty": false,
+  "source": "validated kit PROVENANCE.json"
+ },
+ "historical_identity_available": false,
+ "limitation": "Hashes are measured at transfer time, not at historical proof time. Physical continuation only; no source qualification or replacement for actual post-route EQ.",
+ "current_files_sha256": {
+  "PROVENANCE.json": "b466dc5fb7f48fa3d0e5ee28d8ccf56372b464b2d18ad8419bf6cff5a24c9f7f",
+  "config.mk": "c0d0094bdd398b10bfe1829cbe4ba2ad1bcab29a3ad95577ffab0af56cc6caee",
+  "core.json": "5f7544fc95277334510f24b290c4e9cbc4c7bda4a0233ef932b8b3cadbb08c89",
+  "freeze.json": "9fd17a731d5ae82863d7cea7d708bc3144fb93e30da3ec36fc052d2ea71dab22",
+  "lec.py": "2d45c7d81e77b24362dd5f535b46131e806ce0cce2aa402c3262e1bd879924e6",
+  "pins.json": "1d98e7097ba9446e5f5bc918828be1f3d8ce1145ce513a46c2b544132e90387b",
+  "reset_contract.json": "df3508496db4614c7f07b7e13e9f557ab5263edbbbad7807e93ea9b2584c0418",
+  "reset_contract/receipt.txt": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a",
+  "rtl/ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+  "rtl/ot_hbm_su_programme.sv": "94408bc7913478d9818b4bd5ab630d8e5795052cb6daf4544f5a258189e24fcc",
+  "rtl/ot_hbm_su_programme_pgcol.sv": "b1bbc6852ec54c02dc2bc82d17421f77e65a04bf09703cdf0a315dc57d74f975",
+  "rtl/ot_hbm_su_programme_pslice_c5__fshell.sv": "a5c873732f22be4564ab07e608941dc6831676fa3ff2f4f00b29bc827d2debad",
+  "rtl/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/portlist.txt": "8c8c1296329e55f85430a5862dbe66b07f226aaa8a949c603128a76fdde36e11",
+  "run/results/asap7/hbc_ot_hbm_su_programme_pslice_c5/base/1_2_yosys.v": "cdf1ec528e694cd00b76e3a036b14764010188b8ead10e65cbca8546e2d81ce3"
+ },
+ "counts": {
+  "compare_points": 107482,
+  "proved": 107482,
+  "differs": 0,
+  "undecided": 0
+ },
+ "source_qualified": false,
+ "kind": "completed_async_proof_independent_of_physical_result",
+ "physical_success_claimed": false,
+ "historical_async_lease": false,
+ "ready_sha256": "cde3c0393add4e0ccb303b07c73194da6d59488c879bd9162bd4b5300a575193",
+ "report_sha256": "09504334f7ea68fcba9de957ca4036174d7449c94773e88721ec10ab1f05a16f"
+}
