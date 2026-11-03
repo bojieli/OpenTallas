@@ -89,7 +89,13 @@ module ot_s81sl_cap_rt #(
     // edge, so the zero-logic face into the parent landing writers is hold-safe by construction; 0 cycles added.
     wire [450:0] o_l;
     wire [450:0] o_f = {fault_p, cw_d_p, cw_a_p, cw_v};
-    generate if (RF1 != 0) begin : g_olat
+    // variant B (OT_S81_CAP_RT_RF1_NOLAT): face flops drive the pins directly, while face_guard has no latch class
+`ifdef OT_S81_CAP_RT_RF1_NOLAT
+    localparam integer OLAT = 0;
+`else
+    localparam integer OLAT = 1;
+`endif
+    generate if (RF1 != 0 && OLAT != 0) begin : g_olat
         ot_s81sl_cap_rt_olat #(.W(451)) u_olat (.ck(clk), .d(o_f), .q(o_l));
     end else begin : g_onolat
         assign o_l = o_f;
