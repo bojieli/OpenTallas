@@ -875,6 +875,22 @@ def geom_verdict(line, waived=None, standing=True):
     return "FAIL", failing, ""
 
 
+GEOM_ADVISORY_REF = "OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory)"
+
+
+def geom_gate(line, waived=None, advisory=True):
+    """KW-FIX-4 11-03: the wave's AUTO-GEOM gate.  geom_verdict() still judges the line; with advisory on (default,
+    die opt geom_advisory false = the old hard gate) a FAIL with a verdict line passes as PASS-COND tagged
+    'GEOM-ADVISORY <rules>' so the kit goes on to sign-off, which is the only blocking gate.  A missing verdict line
+    stays FAIL (geom did not run)."""
+    v, failing, tag = geom_verdict(line, waived)
+    if v == "FAIL" and advisory and re.search(r"AUTO-GEOM (PASS|FAIL)\b", line or ""):
+        na = sorted(set(re.findall(r"(?:^|\s)([A-Za-z0-9_]+)=NA\(", line)) - set(failing))
+        return "PASS-COND", failing, ("GEOM-ADVISORY " + ",".join(failing + [f"{r}(NA)" for r in na]) + ": "
+                                      + GEOM_ADVISORY_REF)
+    return v, failing, tag
+
+
 def geom_waivers(d, item, parent=None):
     """die config geom_exceptions [{rules: [...], items: [glob ...] (default all), ref: 'COORD ruling', max: {rule: limit}
     (optional value bound)}] -> {rule: ref | (ref, limit)}
@@ -1014,6 +1030,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
+            "geom_advisory": opt(cfg, die, "geom_advisory") is not False,
             "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN,
@@ -1282,7 +1299,7 @@ def run_item(spec_path):
         if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
             # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
             return fail("geom_run", txt[-3000:], f"{G}:{gd}")
-        v, failing, tag = geom_verdict(line, sp.get("geom_waivers"))
+        v, failing, tag = geom_gate(line, sp.get("geom_waivers"), sp.get("geom_advisory", True))
         if v not in ("PASS", "PASS-COND"):
             return fail("geom", line, f"{G}:{gd}/auto_geom.json")
         res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
@@ -2744,9 +2761,10 @@ def rejudge_rows(cfg, st, probe):
         if g.get("stage") == "placed" and g.get("clk_fixed") == 0 and "clock_reach=FAIL(" in line2:
             line2 = prects_clock_info(line2)
             note = (note + "; " if note else "") + "clock_reach INFO (3_place, 0 fixed clock cells; COORD 11-01 04:4x)"
-        v, failing, tag = geom_verdict(line2, w)
+        adv = opt(cfg, r["die"], "geom_advisory") is not False
+        v, failing, tag = geom_gate(line2, w, adv)
         row.update(old=old, new=v, failing=failing, tag=tag, note=note, line=line2,
-                   whatif=geom_verdict(prects_clock_info(line2), w)[0])
+                   whatif=geom_gate(prects_clock_info(line2), w, adv)[0])
         rows.append(row)
     return rows
 
