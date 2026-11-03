@@ -21,3 +21,10 @@
 - Manifest epyc2:.../prune-1103a/e2_mvC.txt, result e2_mvC_result.tsv.
 - C result: 29/30 MOVED (90.07 GB); signoff-sprint-19/hcol skipped (live).
 - epyc2 TOTAL 03:58: moved 41 dirs, 213 GB, to /home/ubuntu/scratch-root/claude with symlinks (bytes+count verified, nothing deleted). scratch2 137 -> 327 GB free. TARGET MET.
+
+## intel2 manifests (2026-11-03 04:10 PST) per COORD LOOP-GAP 04:0x RELEASE (a)/(b); intel2 55 GB free
+- (a) 19 non-latest kit-wave attempts idle >24 h (latest attempt per item kept): intel2:/srv/opentallas-scratch2/claude/prune-1103a/i2_att_rel.tsv (bytes, mtime, path). p3a_rm.py rechecks PROTECTED/live/recent.
+- (b) 4 superseded flow-canary/sources idle >24 h, not on any flow-* tag (51 tag shas kept) nor 9db068b5458b/bdf7be91c845/9e74a778c: 54c62d41b5b3, 951cc627353e, b1a2125433d0, efa6a9b9fff9 (11.1 GB): .../prune-1103a/i2_src_rel.tsv.
+- (a)+(b) RESULT 04:15: 23/23 removed, 29.33 GB (18.19 attempts + 11.14 sources). intel2 55 -> 81 GB free. Only 4 sources were eligible: 28 of 32 exports are on a flow-* tag sha or <24 h idle (kept per ruling).
+- (e) MOVE intel2 -> epyc2:/home/ubuntu/scratch-root/claude/moved-intel2-1103/<name> (xmv.sh: live/recent/PROTECTED check, rsync -aH, apparent bytes + file count verify, remove intel2 copy, leave dir with MOVED.txt + .keep): codex-qwen-images-1101 (70), codex-hbm-whole-1101 (50), codex-head-wave-1101 (33), codex-s81-wave-1131 (26.5) RUNNING.
+  NOT moved: codex-flow-s81-source-2055 (written <24 h: src/tools/die_plan/__pycache__ by a root process = someone imports from it); codex-head-event-1030 (holds the PROTECTED HEAD signed records elemA_signed/elemB_signed in kit_root_ab574 = 34.7 GB of its 38.5; rest <3 GB).
