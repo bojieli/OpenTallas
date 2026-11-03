@@ -1,0 +1,507 @@
+{
+  "status": "PREP_ONLY_NOT_COMPILED",
+  "source_files": [
+    {
+      "module": "native_root_component",
+      "bytes": 2622,
+      "origin": "fixture adapter",
+      "origin_sha256": null,
+      "module_sha256": "1e68aedf0f81454c97a72f5b1f2e444d6a587aae229c0dc6708eb0a50f48074b",
+      "original_timescale": null
+    },
+    {
+      "module": "ot_sram_1r1w_64x512_m1_r2c2",
+      "bytes": 6332,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/47_ot_sram_1r1w_64x512_m1_r2c2.v",
+      "origin_sha256": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+      "module_sha256": "efe4941a2c181528c2491b0f72a931ef9ad30287b51f17cdd5ce62f2b707f950",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_bmath_and",
+      "bytes": 151,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "cfd18b14ac0ee716679df748855878fa00ec9531b8b3d320e25a0d6839de32f0",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_bmath_ao21",
+      "bytes": 174,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "be733bcc732bf5e4e5ddcf95be018f2cfaa0f9cf142899d6193d1bc9af817999",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_bmath_dff_p",
+      "bytes": 162,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "f88d37c4ccddaa60392f141e0d87bd1f51fd7b7bdd858ad9cd14d3b57ab076ba",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_bmath_dff_pn0",
+      "bytes": 213,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "cb0a3c4e62fe5657bdb822f2cc94a6e783c208afff1c47d9148ac9c9b139c7aa",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_bmath_mux",
+      "bytes": 171,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "ed52e7ecdabd4edcfc43e3faa06a38d99c162a24c525364e70833880a4ab80a0",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_bmath_not",
+      "bytes": 132,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "87a4f211f8303e0fe1604d7be6bb5dd2a58b296f6b4384f9e2e864b65ab021fa",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_bmath_oa21",
+      "bytes": 174,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "8373bc6b18345c7b872ebd70e37f69246a313b9eb1777ea586bda60da3edc805",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_bmath_or",
+      "bytes": 150,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "96146f829733022ab5b85cedec4e4b995c12f44621a0b611f75d51071d0df2ea",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_bmath_xor",
+      "bytes": 151,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/40_qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "origin_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+      "module_sha256": "bf5c825481826fb4c0263a1e1ee0ca0e08d69725c2e09e37c047e7c70f0a22dc",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_dv_amax_mu",
+      "bytes": 5802,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/21_qfd_dv_amax_mu.sv",
+      "origin_sha256": "cc7c0e78e337420b0e4871302619569c90dcaec25bd91c49e52d17f0f81fe1ca",
+      "module_sha256": "f184594e1691079dac4ab36063a51cee35f41fa00bd9a1f702b1f10d41176ff6",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_dv_cmd_cal_mu",
+      "bytes": 22362,
+      "origin": "/srv/opentallas-scratch2/claude/codex-monitor-native-1101/replay1/portable/48_qfd_dv_cmd_cal_mu.sv",
+      "origin_sha256": "473075c12d271156c2861819d0db6f69d919b1c94e474cbd165a90da2a510247",
+      "module_sha256": "f136cb571a6b2c4f89349dca86fcb3726022196d365a5b5f114873a3ed507712",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_dv_s5_ctl",
+      "bytes": 13698,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/0_qfd_dv_s5_leaves.sv",
+      "origin_sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+      "module_sha256": "33b13744e1671a8182f198cfeb85a3d8066b53baa212cd9886a2bfd929c82cdd",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_dv_s5_ctl_repair4",
+      "bytes": 2531956,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/45_qfd_dv_s5_ctl_repair4.sv",
+      "origin_sha256": "eee27f3def670be904a761b5b73a7c714582da7c5d35c8b2503a0543f7499db8",
+      "module_sha256": "064a8816fff1b8b19f5b06363a07f30971af4525d72a6561dbb72fc910958c2a",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_dv_s5_ctl_repair4_leaf",
+      "bytes": 5256,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/44_qfd_dv_s5_ctl_repair4_leaf.sv",
+      "origin_sha256": "43e4fdb1799703b377cc2bf1af9531b6d1af9405b60d97175f1fb28138181f6e",
+      "module_sha256": "43e4fdb1799703b377cc2bf1af9531b6d1af9405b60d97175f1fb28138181f6e",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_dv_s5_rst2",
+      "bytes": 289,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/0_qfd_dv_s5_leaves.sv",
+      "origin_sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+      "module_sha256": "1d37b663e591bbf432517000c8c0c16124952d26ee2e6bca6a51f5f14db783ba",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_dv_s5_sc2_k79",
+      "bytes": 21201326,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_k79.sv",
+      "origin_sha256": "af467263c9a76c2b77fe629773538f4a7aea779f108bfa3a25c8af94dda3bfd3",
+      "module_sha256": "a6546616a2dea465e4ae2acb2df825eabbf80a96f300d938eb9bc8774eb91653",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_dv_s5_sc2_leaf",
+      "bytes": 1549,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_leaf.sv",
+      "origin_sha256": "efb1f3e68eca4b82e9daef83754187d6a4ec36dd53567e850c25073af1f4588b",
+      "module_sha256": "b99d6f33f5b632d095bb39ff44bb4bb2e27bdd539682d8a8c278cb3b0f26bcbc",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_dv_s6_rk",
+      "bytes": 190,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/31_qfd_dv_s6_leaves.sv",
+      "origin_sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+      "module_sha256": "df3b82011a635a091016446637c45a8c65ccbbf26ac9a65f8e9c6a0a2f5eb714",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_dv_s6_rst2x4",
+      "bytes": 485,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/31_qfd_dv_s6_leaves.sv",
+      "origin_sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+      "module_sha256": "3b489602695a7f11087e8a82765b78ef328cfcee338b15a8903bfa5f8c78d630",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_dv_s8_fdn_arf1",
+      "bytes": 6256,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/46_qfd_dv_s8_fdn_arf1.sv",
+      "origin_sha256": "bad64d67691f2bca53804b884d5da41b4900e4801db53da3c6e352b1796395a9",
+      "module_sha256": "623e41fbaa1280d98a7b9d13eeca8437d271d897af7cde24fb4c103dbe0c6893",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_dv_s8_rp1",
+      "bytes": 2466,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/42_qfd_dv_s8_rp1.sv",
+      "origin_sha256": "bffc7f9b702e3ac3cf8f44d66d11863db0a7611f122154554a361587480dcbdc",
+      "module_sha256": "69fd704f75842067b0591573af1a0ff6d3e9040b2bf26303903366120a2bde8e",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_s2_bmath_and",
+      "bytes": 154,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_k79_helpers.sv",
+      "origin_sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+      "module_sha256": "0edf2a36cf0a387d733fc4432344d1dce942191a319f157966542d7d6706d00e",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_s2_bmath_dff_p",
+      "bytes": 165,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_k79_helpers.sv",
+      "origin_sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+      "module_sha256": "40acc3c3c4d5fb23ba28e092788571c7e59182cdbadbdc69a3e96a1d4822a04d",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_s2_bmath_dff_pn0",
+      "bytes": 216,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_k79_helpers.sv",
+      "origin_sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+      "module_sha256": "d3bc5c633a0796a633fb678cbd39442b05ab4d22ade4e3bad403364b7157ac7d",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_s2_bmath_mux",
+      "bytes": 174,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_k79_helpers.sv",
+      "origin_sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+      "module_sha256": "05a906666c68a05dffc03014adf7b338e2122f76b1f9c5830262b1f9b8c999d8",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_s2_bmath_not",
+      "bytes": 135,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_k79_helpers.sv",
+      "origin_sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+      "module_sha256": "dbb8aeb21bbac6c039f7515e345d6ce6dcb1f9ae59e207458fe53e97538fc260",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_s2_bmath_or",
+      "bytes": 153,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_k79_helpers.sv",
+      "origin_sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+      "module_sha256": "ffa1be86b8dafdba07e6a6c74f2f924e414332b671de2842a1aca4f112dcd7aa",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_s2_bmath_xor",
+      "bytes": 154,
+      "origin": "/srv/opentallas-scratch2/claude/codex-qwen-root-native-1101/readset/qfd_dv_s5_sc2_k79_helpers.sv",
+      "origin_sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+      "module_sha256": "cc3febbaeb1d5d071db8c9349fef228ee6d1b793c7feb854b5362ba65b2d8bb6",
+      "original_timescale": ""
+    },
+    {
+      "module": "qfd_s8k_and2",
+      "bytes": 135,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/43_qfd_dv_s8_kept.sv",
+      "origin_sha256": "83e3cfce9b34ca10eac629ea2e093f4c2571c2c5a71b2e9c49ac944c0e2c1dfc",
+      "module_sha256": "7035fcb7c2a2d4b6fd1179980896a13c467657c73a40274fd7bad8e0b919fe8a",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_s8k_arf_dec",
+      "bytes": 341,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/43_qfd_dv_s8_kept.sv",
+      "origin_sha256": "83e3cfce9b34ca10eac629ea2e093f4c2571c2c5a71b2e9c49ac944c0e2c1dfc",
+      "module_sha256": "a6c0e6c8fc9f2ba183670bbecc487111b68b7d18bef5c5b1be04a7d9fed7d3a5",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_s8k_rp_wbit",
+      "bytes": 273,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/43_qfd_dv_s8_kept.sv",
+      "origin_sha256": "83e3cfce9b34ca10eac629ea2e093f4c2571c2c5a71b2e9c49ac944c0e2c1dfc",
+      "module_sha256": "bb450076a860bede225781e9cb925b9fd31b9bd653b6e6049b5c5dbbd4182c6e",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qfd_s8k_rp_wgrp",
+      "bytes": 638,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/43_qfd_dv_s8_kept.sv",
+      "origin_sha256": "83e3cfce9b34ca10eac629ea2e093f4c2571c2c5a71b2e9c49ac944c0e2c1dfc",
+      "module_sha256": "e453040a06a5d057aeb54e9bf1d423f407759c2d9671f67ad4859e242f70a8ff",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "qkd_program_pw_observer",
+      "bytes": 802,
+      "origin": "/srv/opentallas-scratch2/claude/codex-token-1101/mu_calendar1340/portable/49_qkd_program_commit.sv",
+      "origin_sha256": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+      "module_sha256": "bd1f00fc260b01cf50a90501cf2a964a09e2f4a6331f37cf8952184c7a5e8bcf",
+      "original_timescale": "`timescale 1ns/1ps"
+    },
+    {
+      "module": "tb_native_root",
+      "bytes": 4175,
+      "origin": "fixture adapter",
+      "origin_sha256": null,
+      "module_sha256": "b0adc3e92e893af920e283c4492ef181e44d8ec7ac2510cfff7d23f42dc54af8",
+      "original_timescale": null
+    }
+  ],
+  "source_bytes": 23809582,
+  "selected_modules": 36,
+  "native_scalar": "qfd_dv_s5_sc2_leaf -> qfd_dv_s5_sc2_k79",
+  "scalar_latencies": {
+    "LA": 7,
+    "LM": 9
+  },
+  "clock_ps": 833,
+  "global_timeprecision_fs": 1,
+  "original_module_timescales_preserved": true,
+  "native_scalar_primitive_counts": {
+    "qfd_s2_bmath_dff_p": 42429,
+    "qfd_s2_bmath_dff_pn0": 629,
+    "qfd_s2_bmath_mux": 53229,
+    "qfd_s2_bmath_not": 1210,
+    "qfd_s2_bmath_and": 17784,
+    "qfd_s2_bmath_xor": 3969,
+    "qfd_s2_bmath_or": 12501
+  },
+  "native_scalar_primitive_instances": 131751,
+  "native_scalar_FF_primitives": 43058,
+  "build_proposal": {
+    "hierarchical": false,
+    "output_split": 10000,
+    "output_split_cfuncs": 1000,
+    "compile_jobs": 1,
+    "admission_ram_gb": null,
+    "qualification": "source/codegen split proposal only; RAM not inferred from XA; no compile submitted"
+  },
+  "defines_sha256": "264b44272fb9c8a61bf78a8f3669629cb36a1f82cf4d6b6b492b0361824de039",
+  "fixture": "live calendar/native FDN/RP/CTL/native k79, fixture PSUM inputs, actual native writes checked",
+  "cases": [
+    {
+      "user": 0,
+      "ss": 384,
+      "rx": 400,
+      "psum_external_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "total_bits": 1159102464,
+      "rstd_bits": 1067905211
+    },
+    {
+      "user": 1,
+      "ss": 4480,
+      "rx": 4496,
+      "psum_external_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "total_bits": 1163296768,
+      "rstd_bits": 1066128838
+    },
+    {
+      "user": 2,
+      "ss": 8576,
+      "rx": 8592,
+      "psum_external_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "total_bits": 1166753792,
+      "rstd_bits": 1064661223
+    },
+    {
+      "user": 3,
+      "ss": 12672,
+      "rx": 12688,
+      "psum_external_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "total_bits": 1168850944,
+      "rstd_bits": 1063080722
+    }
+  ],
+  "hazard": [
+    "COLLECT_CFG clears shared partial slots before trig while busy may still be0",
+    "LATE_CFG changes RX while arithmetic busy; native source has no cfg&&busy fault guard"
+  ],
+  "lease": "Begins at ROOT cfg/firstPSUM and ends only after fused publication/drain; busy0 during collection does not release slots",
+  "held": [
+    "syntax/elaboration/runtime gate",
+    "native result timing measurement",
+    "production ROOT leases/TREQ",
+    "HEAD normalized input/installation",
+    "physical/canonical adoption"
+  ],
+  "golden_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "vectors_sha256": {
+    "psum.hex": "a1f0f983b0581bec00e2644b3e45cb3d863e79891981b3c736bc0702246a2263",
+    "rstd.hex": "b3b09937d627299cbcc99b59728e6678d40c5912d1a4a1b097abc6d6ce2c5e6c"
+  }
+}
