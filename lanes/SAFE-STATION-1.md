@@ -6,3 +6,4 @@ Worktree intel1 /srv/opentallas-scratch2/claude/wt/safe-station-1 (branch claude
 - Pilot build t30__cl1653104c relay-bay (gen3): ot-run intel1 mem 24, client on intel2 pid in ~/ss1/t30_relaybay.pid, log ~/ss1/t30_relaybay.log.
 - Dry pre-build over 26 latest station kits (S81 t6/t7/t12/t14/t17/t20/t23/t29/t30/t41/t48/t50/t51, QC sle_fw/slw_fw/sle_stm): 26/26 PASS (stm needs pitch 33 for 204-um hops). QC *_fe_* kits: no generated kit on disk yet.
 - e811e9d1807: kit_wave class default (RELAY_BAY_RE s81 ^slice_station__, qwen_compute ^sl[ew]_(stm|fw|fe)_v\d), stage relay_bay after gen, FAIL_PREBUILD relay_bay -> PLAN.
+- 2026-11-03 06:53 PST main a37abb76a7c has relay_bay (afd014b6528 + RM25 advisory 06c4755d4e8). COORD ruling: miss still applies form -> READY claude/safe-station-1-adv-1103@58ae155b338.
