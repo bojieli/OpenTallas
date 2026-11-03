@@ -1,0 +1,13 @@
+orfs_hold_mm: GRT budget patched
+orfs_hold_mm: final legalization patched
+orfs_hold_mm: stage SDC patched
+orfs_hold_mm: {"helper": "/work/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "d9e6b3d823bbcfb0bda5bdc5e98180ca595e628b27669e289ab96beee0dc45f1", "status": "patched", "load_after": "2e3d6a87a0fb8fd24480615abbb52314add7e1b8e7c71a6ccda0e33887bb2b24", "util_after": "4d5fdc604dd3c15c5dc28cc23fa05883630ced4552558ec84431018daa5d6ced"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: sliver block hook patched
+orfs_hold_mm: pre-route gate hook patched
+{"scope": "PRIVATE_OBSERVATIONAL_DRT_NOT_ATOMIC_BIRTH_REJECTION", "native_run": false, "dispatch_ready": false, "input_kind": "ACTUAL_RETAINED_FINAL_FULL_CLOCK_SIGNAL_GRT50", "input_override": "load_design explicit filename API", "antenna_policy_changed": false, "original_hooks_preserved": true, "native_body_before_sha256": "e4041889c5949b6ea62f6e0605588c8bcdc55ea62bf9b71c51474bfd5d560952", "native_body_after_sha256": "2c9c98a0baac8cdf580b28185116bdc6ff0616fced9943ad77c74c0bb8fb9f38", "driver_sha256": "3890ca596b1b0d8c7ed8674388ce0f0283f27c0037faf7dfe3dfca96cfbea196"}
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 2  /OpenROAD-flow-scripts/flow/scripts/noop.tcl
+mkdir -p /work/run/objects/asap7/hbc_ot_hnx_fused_tnode/base
+touch /work/run/objects/asap7/hbc_ot_hnx_fused_tnode/base/copyright.txt
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route
