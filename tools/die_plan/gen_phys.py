@@ -3709,6 +3709,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
+    # KW-FIX-1/S81PF 11-02 (default on): a bound kit places its plan macros by their bound netlist path (bind flattens
+    # u_r0.u_bn0 -> u_bound.u_u_r0_u_bn0); declared as the kit-only physical identity, receipt in each kit.
+    import bound_macro_paths as BMP
+    praw, macro_paths = BMP.project(P.raw, kit_rtl)
+    if macro_paths:
+        P = S.Plan(praw, plan_path)
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
         import clock_landings as CL
@@ -3751,6 +3757,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
                                    cland_pinslot=tuple(cland_pinslot or ()),
                                    spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else ()))
+        if tn in macro_paths:
+            (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
