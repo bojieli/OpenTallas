@@ -1,0 +1,352 @@
+
+-- Running command `read_verilog -formal -sv /work/ot_rst_delivered3.sv /work/mutant.sv; prep -top copy_miter -flatten; sat -seq 8 -tempinduct -prove mismatch 0 -verify -set-def-inputs' --
+
+1. Executing Verilog-2005 frontend: /work/ot_rst_delivered3.sv
+Parsing formal SystemVerilog input from `/work/ot_rst_delivered3.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_delivered3'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /work/mutant.sv
+Parsing formal SystemVerilog input from `/work/mutant.sv' to AST representation.
+Generating RTLIL representation for module `\copy_miter'.
+Successfully finished Verilog frontend.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \copy_miter
+Used module:     \ot_rst_delivered3
+Parameter \REGIONS = 9
+
+3.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_delivered3'.
+Parameter \REGIONS = 9
+Generating RTLIL representation for module `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001'.
+Parameter \REGIONS = 1
+
+3.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_delivered3'.
+Parameter \REGIONS = 1
+Generating RTLIL representation for module `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001'.
+
+3.1.4. Analyzing design hierarchy..
+Top module:  \copy_miter
+Used module:     $paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001
+Used module:     $paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001
+
+3.1.5. Analyzing design hierarchy..
+Top module:  \copy_miter
+Used module:     $paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001
+Used module:     $paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001
+Removing unused module `\ot_rst_delivered3'.
+Removed 1 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 12 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\copy_miter.$proc$/work/mutant.sv:5$10'.
+  Set init value: \warm = 3'000
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$19'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$18'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$17'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$16'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$15'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$14'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$13'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$12'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$11'.
+Creating decoders for process `\copy_miter.$proc$/work/mutant.sv:5$10'.
+Creating decoders for process `\copy_miter.$proc$/work/mutant.sv:6$6'.
+Creating decoders for process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001.$proc$/work/ot_rst_delivered3.sv:7$20'.
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[8].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$19'.
+  created $dff cell `$procdff$21' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[7].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$18'.
+  created $dff cell `$procdff$22' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[6].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$17'.
+  created $dff cell `$procdff$23' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[5].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$16'.
+  created $dff cell `$procdff$24' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[4].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$15'.
+  created $dff cell `$procdff$25' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[3].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$14'.
+  created $dff cell `$procdff$26' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[2].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$13'.
+  created $dff cell `$procdff$27' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[1].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$12'.
+  created $dff cell `$procdff$28' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.\g_region[0].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$11'.
+  created $dff cell `$procdff$29' with positive edge clock.
+Creating register for signal `\copy_miter.\warm' using process `\copy_miter.$proc$/work/mutant.sv:6$6'.
+  created $dff cell `$procdff$30' with positive edge clock.
+Creating register for signal `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001.\g_region[0].pipe' using process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001.$proc$/work/ot_rst_delivered3.sv:7$20'.
+  created $dff cell `$procdff$31' with positive edge clock.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$19'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$18'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$17'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$16'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$15'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$14'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$13'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$12'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.$proc$/work/ot_rst_delivered3.sv:7$11'.
+Removing empty process `copy_miter.$proc$/work/mutant.sv:5$10'.
+Removing empty process `copy_miter.$proc$/work/mutant.sv:6$6'.
+Removing empty process `$paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001.$proc$/work/ot_rst_delivered3.sv:7$20'.
+Cleaned up 0 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.
+Optimizing module copy_miter.
+Optimizing module $paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001.
+
+3.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000001001.
+Deleting now unused module $paramod\ot_rst_delivered3\REGIONS=s32'00000000000000000000000000000001.
+<suppressed ~2 debug messages>
+
+3.4. Executing FUTURE pass.
+
+3.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_miter.
+
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \copy_miter..
+Removed 0 unused cells and 13 unused wires.
+<suppressed ~1 debug messages>
+
+3.7. Executing CHECK pass (checking for obvious problems).
+Checking module copy_miter...
+Found and reported 0 problems.
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_miter.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\copy_miter'.
+Computing hashes of 16 cells of `\copy_miter'.
+Finding duplicate cells in `\copy_miter'.
+Removed a total of 0 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \copy_miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \copy_miter.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\copy_miter'.
+Computing hashes of 16 cells of `\copy_miter'.
+Finding duplicate cells in `\copy_miter'.
+Removed a total of 0 cells.
+
+3.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \copy_miter..
+
+3.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_miter.
+
+3.8.8. Finished fast OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+
+3.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \copy_miter..
+
+3.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.12. Executing OPT pass (performing simple optimizations).
+
+3.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_miter.
+
+3.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\copy_miter'.
+Computing hashes of 16 cells of `\copy_miter'.
+Finding duplicate cells in `\copy_miter'.
+Removed a total of 0 cells.
+
+3.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \copy_miter..
+
+3.12.4. Finished fast OPT passes.
+
+3.13. Executing SORT pass.
+
+3.14. Printing statistics.
+
+=== copy_miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       24 wires
+       62 wire bits
+       22 public wires
+       60 public wire bits
+        3 ports
+        3 port bits
+       16 cells
+       11   $dff
+        1   $logic_and
+        1   $ne
+        1   $not
+        2   $scopeinfo
+
+3.15. Executing CHECK pass (checking for obvious problems).
+Checking module copy_miter...
+Found and reported 0 problems.
+
+4. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+Import set-constraint from init attribute: \warm = 3'000
+Final init constraint equation: \warm = 3'000
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+** Trying induction with length 1 **
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 16 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+
+[base case 1] Solving problem with 4698 variables and 12302 clauses..
+SAT temporal induction proof finished - model found for base case: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                      Dec       Hex           Bin
+  ---- ------------------------ ----------- --------- -------------
+  init \g.g_region[0].pipe                7         7           111
+  init \t.g_region[0].pipe                3         3           011
+  init \t.g_region[1].pipe                4         4           100
+  init \t.g_region[2].pipe                4         4           100
+  init \t.g_region[3].pipe                4         4           100
+  init \t.g_region[4].pipe                4         4           100
+  init \t.g_region[5].pipe                4         4           100
+  init \t.g_region[6].pipe                4         4           100
+  init \t.g_region[7].pipe                4         4           100
+  init \t.g_region[8].pipe                4         4           100
+  init \warm                              0         0           000
+  ---- ------------------------ ----------- --------- -------------
+     1 \mismatch                          0         0             0
+     1 \rst_n                             1         1             1
+  ---- ------------------------ ----------- --------- -------------
+     2 \mismatch                          0         0             0
+     2 \rst_n                             1         1             1
+  ---- ------------------------ ----------- --------- -------------
+     3 \mismatch                          0         0             0
+     3 \rst_n                             1         1             1
+  ---- ------------------------ ----------- --------- -------------
+     4 \mismatch                          1         1             1
+     4 \rst_n                             1         1             1
+  ---- ------------------------ ----------- --------- -------------
+     5 \mismatch                          1         1             1
+     5 \rst_n                             1         1             1
+  ---- ------------------------ ----------- --------- -------------
+     6 \mismatch                          1         1             1
+     6 \rst_n                             1         1             1
+  ---- ------------------------ ----------- --------- -------------
+     7 \mismatch                          1         1             1
+     7 \rst_n                             0         0             0
+  ---- ------------------------ ----------- --------- -------------
+     8 \mismatch                          1         1             1
+     8 \rst_n                             0         0             0
+  ---- ------------------------ ----------- --------- -------------
+     9 \mismatch                          1         1             1
+     9 \rst_n                             0         0             0
+
+ERROR: Called with -verify and proof did fail!

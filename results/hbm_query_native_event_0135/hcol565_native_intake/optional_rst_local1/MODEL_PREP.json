@@ -1,0 +1,72 @@
+{
+ "status": "PREP_NOT_DISPATCHED",
+ "qualification": "new intake source candidate, no previous proof transfer",
+ "modules": {
+  "h0": {
+   "top": "ot_hbm_idx_score_hcol_regional_head5_h0",
+   "HALF": 0,
+   "abi_bits": 2290,
+   "input_bits": 2255,
+   "output_bits": 35
+  },
+  "h1": {
+   "top": "ot_hbm_idx_score_hcol_regional_head5_h1",
+   "HALF": 1,
+   "abi_bits": 2323,
+   "input_bits": 2288,
+   "output_bits": 35
+  }
+ },
+ "parameters": {
+  "MUT": 0,
+  "DELIVERED_RESET": 1,
+  "RST_LOCAL": 1
+ },
+ "native_capacity": {
+  "SRAMs": 0,
+  "child_query_capture_bits": 1130,
+  "child_key_capture_bits": 1088,
+  "child_query_valid_capture_bits": 2,
+  "reset_regional_copies": 18,
+  "delivered_reset_pipeline_FF": 54,
+  "reset_copy_added_FF_vs_prior_preparation": 48,
+  "child_query_capture_FF_delta_vs_head8_same_RST_LOCAL": -6,
+  "global_mapped_FF_delta": "NOT_MEASURED"
+ },
+ "cycles_added": 0,
+ "reset_scope": "three synchronous assertion/release stages percopy; selected source/bootstrap join remains required; no native4 override or64receiptborrow",
+ "parent_private_FF": {
+  "two_b102_definitions": 71040,
+  "Dreach": "UNMEASURED"
+ },
+ "body_before_sha256": "592446ad7667d504576296f88491a1cf44f3ef388d1fc4c6249efd669954699d",
+ "body_after_sha256": "a26023a6cb10371ccfa375a15b824e1c5324349d019cd09e8a170def99e1eabc",
+ "holds": [
+  "selectedSOURCE13 native definition and closure identity pending token extraction",
+  "smallest local-reset fanout proof/mutant NOTRUN",
+  "fullchild mappednativeEQ NOTRUN",
+  "pinmodel/readset notcomplete; noGEN/SYNTH/P&R dispatch",
+  "currentclock/parent/resetcalendar adoption held"
+ ],
+ "reference_outline_um": [
+  218.592,
+  225.504
+ ],
+ "reference_area_um2": 49293.370368,
+ "pin_capacity": {
+  "west": 1127,
+  "east": 1127,
+  "pitch_um": 0.192,
+  "local_density_pins_per_um": 5.208333333333333,
+  "M4_available_rows_at_pitch": 1129,
+  "north": 33,
+  "south_h0": 1,
+  "south_h1": 34,
+  "native_clock_ports": 2,
+  "clock_entry_reference_only": [
+   112.32,
+   112.32
+  ]
+ },
+ "outline_reason": "Reference source-only outline dominated by 2254 regional face pins at0.192pitch; placement/fill/currentparent fit not qualified"
+}
