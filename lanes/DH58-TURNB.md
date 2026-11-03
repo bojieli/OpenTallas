@@ -7,3 +7,4 @@ Kit source needs the RTL (rtl/common ot_dp_clk_landing_ca.sv + ot_meso_fifo.sv) 
 hd_turn_a: same cause (raw fstart broadcast, real-parent TT -55.8, WFALL T/2); not in l48tb; spec {"hd_turn_a":{"buses":["t_i"],"dsrep":4}} if its l48rf run fails. Note: l48rf published turn_a lacks WFALL(1) although plan ring_hold.write_fall_types lists hd_turn_a (republish adds it).
 Units alive: none.
 2026-11-03 15:05 PST UPDATE: turn_a added to l48tb (WFALL republish + WREG/DSREP 4, K 60->61 x12) @8c0ecb9755f, plan 7afa351d779a. turn_a QP kit SDC +44.8->+62.4; IOHP SDC fstart -348.5->+165.8 but t_i -354 (ft budget vs T/2 fall capture, contract issue). Units alive: none.
+2026-11-03 15:45 PST UPDATE: FREG on turn_a @67cc18d2e8e plan f9623a82a239: K 60->62, +1 data cycle (bench proof). t_i under the corrected contract: +0.8 ideal / +156.5 after CTS with hold -102 (repair ~100 ps -> ~+55); +83 is not reachable on t_i under the 699.72 budget. Units alive: none.
