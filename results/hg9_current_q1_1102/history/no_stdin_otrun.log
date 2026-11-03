@@ -1,0 +1,5 @@
+ot-run: intel1         admits    10 GB (avail 157, reserve 0, fresh 7.9, peak 74.6, headroom 0, waiters 26/1239 GB) load 159/112 running 59 disk 281 GB 
+ot-run: epyc2          admits   353 GB (avail 462, reserve 0, fresh 0, peak 45, headroom 0, waiters 0/0 GB) load 42/128 running 31 disk 38 GB scratch disk /srv/opentallas-scratch2 has 38 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3232165-1793633602 after 1 s
+ot-run: RAN on intel1 (unit oth-ubuntu-3232165-1793633602): exit 0

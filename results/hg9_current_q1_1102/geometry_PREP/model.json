@@ -1,0 +1,68 @@
+{
+  "status": "PREP_ONLY_NO_FP_OR_ADOPTION",
+  "actual_mapped_macro_count": 4,
+  "placements": [
+    {
+      "inst": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "x": 17.28,
+      "y": 17.28,
+      "orient": "R0",
+      "size_um": [
+        94.824,
+        41.064
+      ]
+    },
+    {
+      "inst": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "x": 131.52,
+      "y": 17.28,
+      "orient": "R0",
+      "size_um": [
+        94.824,
+        41.064
+      ]
+    },
+    {
+      "inst": "u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "x": 17.28,
+      "y": 114.432,
+      "orient": "R0",
+      "size_um": [
+        94.824,
+        41.064
+      ]
+    },
+    {
+      "inst": "u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "x": 131.52,
+      "y": 114.432,
+      "orient": "R0",
+      "size_um": [
+        94.824,
+        41.064
+      ]
+    }
+  ],
+  "halo_um": 4.32,
+  "horizontal_macro_gap_um": 19.41600000000001,
+  "vertical_macro_gap_um": 56.088,
+  "clock_center_pin": {
+    "name": "ck[0]",
+    "layer": "M5",
+    "x": 108.024,
+    "y": 86.4
+  },
+  "source_netlist_sha256": "0192e029133af666b4471c050351de321f789c6199626cc1332761b2dd71f35e",
+  "macro_lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+  "source_only_holds": [
+    "actual source-to-SYNTH official LEC pending",
+    "macro-clock capsule/balanced insertion and related pairs",
+    "PDN metal/via/PG obstruction continuity",
+    "actual std-cell/face FF/relay placement and exact perbus reach",
+    "normal FP not authorized"
+  ]
+}

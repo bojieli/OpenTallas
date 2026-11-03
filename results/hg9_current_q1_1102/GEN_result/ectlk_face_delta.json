@@ -1,0 +1,6 @@
+{
+ "added_schedule_cycles": 0,
+ "private_port_flops": "sc_valid 1 + sc_data 128 + lmax 256 + lmax_any 2 + fault 1 (ectl_part); req 38 + fault 1 (k_issuer)",
+ "cfg_strap": "one landing flop on ck[0] feeds 3 leaves (+1 settle edge after a strap change)",
+ "miter": "results/ectlk_preflight_1025"
+}
