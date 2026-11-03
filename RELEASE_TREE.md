@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 13:34 PST:** count 64 flat 2 h (S81 31/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 16/32, HBM 8/84). Next counts: QC su_lane l6 + S81 ve_s once LEC-KEEP-1 (lec.py merged-twin proof, 6463f0643747) re-LEC passes. Merged H15/H16 (main 4b0a73deb5f): kit-wave host score, HEAD tapbal root cause + crash fallback, POSTCTS pinreg advisory, KV pv bind + CLAND budgets, HBM d44v part 4, S81 RF-D form 3. Relaunch batches: HEAD station/ft (l48rf), KV pv* + hgi + io_cor. Open classes: S81 OT_RESET_CORE (9 col_h9/h10, DIE-S81-51). Disk recovered (epyc2 266 GB, intel2 271 GB). Fleet: intel2 53 / intel1 32 waiters.
+**Status 2026-11-03 14:34 PST:** count 65 (+1 QC su_lane l6): S81 31/54, HEAD 4/4 + 1/25 types, QC 6/16, KV 16/32, HBM 8/84. Pending counts: KV 5 HR cores (rf_kv1_hr merged H18 main 2d0660db1b7; post-route re-sign + LEC running), S81 ve_s + QC l2 (LEC-KEEP-1 merged-twin proof), QC y-shrink re-delta on main (CA+1 conflict). Merged H17/H18: KV plan schema fix (every KV kit was failing), HBM RE-FORM RTL p2, KV HR delta; KV 22-kit batch relaunched 14:06. Open classes: S81 OT_RESET_CORE (DIE-S81-51), HBM gen stale src + HEAD kit_rtl staging (KW-FIX-4). Disks OK (>=265 GB scratch).
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -46,7 +46,7 @@
 - [ ] QC.GLUE Joint parent/interface geometry event · QC / DIE-QC-65 · RUNNING · OWNER 11-02 ADOPTED (EQ-gated; pipeline stages for 1838>1110 um reach); coordinate coupon legal but5306long reaches remain; fixedSTART1838um exceeds1110um reach budget; compact proposal leaves1088.64um parent gap and missing west peers → OWNER.SOURCE
 - [ ] QC.NL Corrected clock-inclusive GRT probe · QC · WAITS · prior attempt failed MM context before FF; same-byte4_cts alias+configuredmargin10 fixture passes, one bounded retry awaits root → INFRA.REVIEW
 
-## DIE qwen_kvsys · KV · rev plan_c (32 designs) + RF-KV1 + pv form B 86034cd29c4 · classes: pv preflight macro paths, OT_CLAND band · owner DIE-KV-64
+## DIE qwen_kvsys · KV · rev plan_c (32 designs) + RF-KV1 + pv form B + rf_kv1_hr (5 HR cores, H18) · pv bind + CLAND fixed, 22-kit batch relaunched · owner DIE-KV-64
 - [ ] KV.BIND Current strict native bind · KV / DIE-KV-63 · PASS · source connectivity passes; no physical die credit
 - [ ] KV.CLK Complete current real-view clock timing · KV / DIE-KV-63 · BLOCKED(kits) · clock proof stands (older pass counts): mix TT+595.71/CA0of3595 has7coreviews,0kits plus budgets; FF37674pairs NULL/unmeasured → KV.TILES
 - [ ] KV.GRT Current whole-die global routing · KV / DIE-KV-63 · NOT RUN · latest parent macro-fit vehicle explicitly dieGRT/route NOTRUN; reported zero-overflow successes are partition/core probes → KV.TILES → KV.HROOT → KV.HG
