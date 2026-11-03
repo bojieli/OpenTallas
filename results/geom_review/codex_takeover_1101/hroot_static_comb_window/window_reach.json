@@ -1,0 +1,206 @@
+[
+ {
+  "option": "current",
+  "window_um": [
+   1352.0957,
+   1380.6717
+  ],
+  "existing_storage_ff": 1200,
+  "max_pin_to_slot_um": 126.435,
+  "count_over150": 0,
+  "pg_blocked_tracks": 0,
+  "scope": "Exact current four native slot FF centres vs production PG-safe300-pin tracks; no source-PC/internal/output or forward-clock/START qualification",
+  "worst": [
+   {
+    "bit": 273,
+    "slot": 2,
+    "layer": "M7",
+    "pin_x": 1377.504,
+    "capture_xy": [
+     1404.0,
+     100.035
+    ],
+    "distance_um": 126.435
+   },
+   {
+    "bit": 267,
+    "slot": 0,
+    "layer": "M7",
+    "pin_x": 1377.312,
+    "capture_xy": [
+     1402.812,
+     100.57499999999999
+    ],
+    "distance_um": 125.979
+   },
+   {
+    "bit": 273,
+    "slot": 1,
+    "layer": "M7",
+    "pin_x": 1377.504,
+    "capture_xy": [
+     1404.0,
+     99.495
+    ],
+    "distance_um": 125.895
+   },
+   {
+    "bit": 299,
+    "slot": 3,
+    "layer": "M7",
+    "pin_x": 1380.576,
+    "capture_xy": [
+     1411.128,
+     95.17500000000001
+    ],
+    "distance_um": 125.631
+   },
+   {
+    "bit": 295,
+    "slot": 2,
+    "layer": "M7",
+    "pin_x": 1380.192,
+    "capture_xy": [
+     1409.94,
+     95.715
+    ],
+    "distance_um": 125.367
+   },
+   {
+    "bit": 273,
+    "slot": 0,
+    "layer": "M7",
+    "pin_x": 1377.504,
+    "capture_xy": [
+     1404.0,
+     98.955
+    ],
+    "distance_um": 125.355
+   },
+   {
+    "bit": 6,
+    "slot": 2,
+    "layer": "M5",
+    "pin_x": 1352.76,
+    "capture_xy": [
+     1327.968,
+     100.57499999999999
+    ],
+    "distance_um": 125.271
+   },
+   {
+    "bit": 266,
+    "slot": 3,
+    "layer": "M5",
+    "pin_x": 1377.528,
+    "capture_xy": [
+     1402.812,
+     100.035
+    ],
+    "distance_um": 125.223
+   }
+  ]
+ },
+ {
+  "option": "left_only_86p4",
+  "window_um": [
+   1294.2717,
+   1380.6717
+  ],
+  "existing_storage_ff": 1200,
+  "max_pin_to_slot_um": 132.183,
+  "count_over150": 0,
+  "pg_blocked_tracks": 0,
+  "scope": "Exact current four native slot FF centres vs production PG-safe300-pin tracks; no source-PC/internal/output or forward-clock/START qualification",
+  "worst": [
+   {
+    "bit": 6,
+    "slot": 2,
+    "layer": "M5",
+    "pin_x": 1296.264,
+    "capture_xy": [
+     1327.968,
+     100.57499999999999
+    ],
+    "distance_um": 132.183
+   },
+   {
+    "bit": 267,
+    "slot": 0,
+    "layer": "M7",
+    "pin_x": 1371.168,
+    "capture_xy": [
+     1402.812,
+     100.57499999999999
+    ],
+    "distance_um": 132.123
+   },
+   {
+    "bit": 6,
+    "slot": 1,
+    "layer": "M5",
+    "pin_x": 1296.264,
+    "capture_xy": [
+     1327.968,
+     100.035
+    ],
+    "distance_um": 131.643
+   },
+   {
+    "bit": 13,
+    "slot": 1,
+    "layer": "M7",
+    "pin_x": 1298.016,
+    "capture_xy": [
+     1329.156,
+     100.57499999999999
+    ],
+    "distance_um": 131.619
+   },
+   {
+    "bit": 266,
+    "slot": 3,
+    "layer": "M5",
+    "pin_x": 1371.144,
+    "capture_xy": [
+     1402.812,
+     100.035
+    ],
+    "distance_um": 131.607
+   },
+   {
+    "bit": 5,
+    "slot": 3,
+    "layer": "M7",
+    "pin_x": 1295.712,
+    "capture_xy": [
+     1327.968,
+     98.955
+    ],
+    "distance_um": 131.115
+   },
+   {
+    "bit": 6,
+    "slot": 0,
+    "layer": "M5",
+    "pin_x": 1296.264,
+    "capture_xy": [
+     1327.968,
+     99.495
+    ],
+    "distance_um": 131.103
+   },
+   {
+    "bit": 13,
+    "slot": 0,
+    "layer": "M7",
+    "pin_x": 1298.016,
+    "capture_xy": [
+     1329.156,
+     100.035
+    ],
+    "distance_um": 131.079
+   }
+  ]
+ }
+]

@@ -1,0 +1,5 @@
+# HEAD l48z actual terminal LOOK
+
+Personally viewed all three current images and parsed JSON/native GRT logs. The actual deck is M2–M7, adjustment0.25, congestion_iterations50; GRT0 converged without extra iterations. Eshim_tx pinp90/max89.75/90.6 um and r2r363.69/zero above405 fit the exact current four-shim standing class (90/180/371), verified in Intel2 /home/ubuntu/coord/autopilot/kit_wave.json dies.s81_head.geom_exceptions[0], joint GEOM104/103. No wrong-face claim or new waiver. Transit and turn have only aspect/fill/empty raw failures: adopted-slot shape and current FILL_ONLY standing handling apply. Actual r2r381.29/379.62, zero above405; pinp9028.75/27.66, max137.07/134.67, no unregistered pins. Distributed station strips have no macro wall or hot cut.
+
+CONCUR existing unit PASS-COND classifications. Normal collector may repair stale RUNNING state, subject to normal source/PG/intake holds; no redundant GRT or redesign is requested. All have zero built clock cells, so native CTS leaf reach/latency, full routed-clock timing and DRT remain unqualified. Mesh_e unit94510 is still active and untouched.

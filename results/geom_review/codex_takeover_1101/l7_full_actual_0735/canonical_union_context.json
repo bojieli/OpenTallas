@@ -1,0 +1,12 @@
+{
+  "scope": "Exact canonical source strip rects union, not broad overlapping strip bbox area; no native gate rewrite",
+  "macro_body_union_um2": 1859.7254399999995,
+  "pincol_canonical_rects": 12,
+  "pincol_canonical_union_um2": 668.2124160000005,
+  "pincol_bbox_union_um2": 682.8390719999998,
+  "macro_plus_pincol_canonical_union_um2": 2527.937856,
+  "functional_cells_intersecting_canonical_pincol_union": 0,
+  "sample": [],
+  "native_block_obstacle_records": 40,
+  "note": "Actual gate metrics computed from native macro body/OBS and actual connectivity. Pincol rects are preserved canonical row-cut context, not inflated bbox strip demands. Physical TAP excluded by normal geom dump; PG native audit separate."
+}

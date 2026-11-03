@@ -1,0 +1,13 @@
+{
+ "scope": "READ-ONLY single-cut interval-capacity feasibility on unchanged proxy bboxes/capacity; no routing/geometry gate waiver",
+ "bbox_extension_um": 4,
+ "cut_y_um": 107.5,
+ "nets": 1478,
+ "required_units": 70944,
+ "flow_units": 70944,
+ "all_bbox_cut_demands_assignable": true,
+ "scale_units_per_crossing": 48,
+ "hot_capacity_tracks": 255.20833333333337,
+ "hot_assigned_crossings": 170.33333333333334,
+ "note": "Maxflow reallocates fractional crossings within each original endpoint xbbox. It does not create native routes or check access/other cuts/layer continuity."
+}

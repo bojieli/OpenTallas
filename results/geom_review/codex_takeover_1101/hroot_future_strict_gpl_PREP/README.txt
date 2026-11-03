@@ -1,0 +1,5 @@
+Separate unconditionally held future STRICT source proposal, not adoption or dispatch. Source728a529a0 helperfc2afcb2, module8c9 unchanged; no module/inputcopy/runner. ROOT scope and merge/adoption + actualnativepreGPLLOOK required. The original private0415 packet is unchanged. Entire original group/status/guide/PRE + GPL/DPL + POST runs inside strict early begin/always cleanup; exactbothmodes0 and zero native creates/swaps/bound retained. External4609-only full guard and fresh savedPGaudit still mandatory. Finalsave outside successful lifecycle.
+
+PG owner source-pattern CONCUR: helperfc2afcb2/strict_eval0f4ceed6 exact; earlybegin afterPG0, completePRE/GPL/DPL/POST incleanup scope, both modes0 and zero counts beforefinalsave. Root adoption/scope/nativeLOOK hold unchanged; no job.
+
+Snapshot caller correction: canonical ot_pg_write_snapshot owns/closes its supplied channel in finally. Removed redundant caller close after both pre/post snapshots; otherwise future unheld execution would raise invalid-channel. No native job ran. Historical0415 template remains preserved/held with this known defect; do not execute it uncorrected.

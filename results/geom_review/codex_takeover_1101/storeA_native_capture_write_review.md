@@ -1,0 +1,7 @@
+# StoreA SAME979 native source/geometry review
+
+Personally viewed `/home/ubuntu/coord/tmp/codex-storeA-native-census-0455/storeA_capture_write_review_v2.png` and publication summaries. SAME979 is sourcevariant label; actual native ABI6040/2914FF/32SRAM, exact clock store0_clk[0]→2914FF+32SRAM. Saved sourceffb41fab..., allcoordinatesNONE. Original4x8 grid has64/1024 readcaptures with no optimistic legalrow405point, worst464.995 despite continuous357.468. Two added8.64gutters afterrows1/5 move24macros+8.64/+17.28 on same760.32x483.84 outline and give1024 independent candidate points only, not simultaneousplacement/access/PG qualification.
+
+Write/control frontier is still decisive HOLD:2,737,184 structural ABI→SRAM pairs,1,929,868 currentGEN rectangle failures/max1195.704;2256sharedbits reachall32macros with optimistic relocation minimax lowerbound560.736>405. Capture-only repair or input-pin relocation does not close current-layout bound. Coherent bank/geometry/sourcealternative requires its own truepin/readcapture/clock proof and any cycles priced; no fabricated FFs/aliases/outside shell or blanket sensitization exemption. Structural reach is conservative, no Boolean timingexception claimed.
+
+GEN clock proposal in io.tcl: location760.344,4.32 size.048x.480 on outline760.32x483.84, proposed xrectangle760.320..760.368 extends outside. This is not builtBTermmetal; future GEN needs true containment/PG/entry qualification. Single root is not an automatic1500gridcap waiver. Verdict HOLD/noPLACE/CTS/route/STA or sourceactivation; clockchild/parent notified.

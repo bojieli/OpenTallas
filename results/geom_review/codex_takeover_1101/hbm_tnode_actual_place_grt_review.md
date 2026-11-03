@@ -1,0 +1,5 @@
+# Compact Tnode actual PLACE and native GRT review
+
+Personally viewed actual placed_review/auto_geom.png and placed_grt50_review/auto_geom.png under /home/ubuntu/coord/tmp/codex-hbm-tnode-compact-kit-1101; parsed actual JSON/log. Native4 LEC now complete, source component4730EQ/KEEP358/requestUSED4 unchanged.
+
+Original PLACE AUTO FAIL only channel_h estimate.797 near big SRAM NE corner retained. Actual fill22.08%/empty41.38%,12084std/2984FF, pin7.72/18.21,r2r186.52/0,unregistered0,onmacro0,blockedcuts0,clockreach117.56; clear W/E rails and upperright logic/clockbank. Allowed one native M2–M5 GRT50 to resolve proxy. Same-placement GRT passed0overflow all layers,13169nets,M2util41.13%/total31.23%,EPYC2 unit2215553-1793598629 exit0. AUTO PASS, channel_h.797 WARN under actualGRT0 rule. Geometry supports ONE ordinary CTS-only diagnostic only after ROOT approves standard same-source helper capsule/source/reset/input gates. No parent clockshift/actual realclock/DRT/signoff credit from preCTS GRT. Sent root and owner.

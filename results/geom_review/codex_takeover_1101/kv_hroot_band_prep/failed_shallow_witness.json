@@ -1,0 +1,2295 @@
+{
+  "scope": "PREP capacity witness from exact actual TSV; not a placed OpenDB or route release",
+  "input_hashes": {
+    "config.mk": "e3a10f47ad71c50048e00a7a7cb0c12e65faee44122b42b57f0adbf9e56234fd",
+    "landing_placement.tcl": "b1ba30755d3a0cb4d6795fa2123beece90352df3f9de08b87750fee671f231ba",
+    "budget.json": "6db85e89132f5df0f8546852149a2bc7d4f03559276010788d5b9f299cdd8868",
+    "landing_contract.json": "09dc2b305d7c3015b93fc125e5651d97a8b0d2c3c84a120731f768a927e57a05",
+    "geom.tsv": "13c982c01fbcd59cffc0987fb9541f2f329f1a16da100d5a0bf1815fef6d2f8f",
+    "freeze.json": "23b8767685389980dd2d301ea3a45d5af21d4269089f86990b2be08740ba073d",
+    "pdn.tcl": "0f71bfe1f789da084168389207e161b1d8e3c970263c73f6a1f5df984662c442"
+  },
+  "old_band": {
+    "rect_um": [
+      1352.0957,
+      17.28,
+      1380.6717,
+      110.16
+    ],
+    "width": 299,
+    "ring_width": 320,
+    "live_data_storage_flops": 1500,
+    "padded_data_storage_flops": 1600,
+    "clock_roles": {
+      "forwarded_write_flops": 1280,
+      "local_read_flops": 320
+    },
+    "max_pin_to_band_hop_um": 124.448,
+    "area_reserve_um2": 2617.781,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_i_kvpc_Q_N_o_next",
+    "resized_from_um": [
+      1352.0957,
+      17.28,
+      1380.6717,
+      71.28
+    ],
+    "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+  },
+  "candidate_band": {
+    "rect_um": [
+      1313.28,
+      30.24,
+      1425.6,
+      64.8
+    ],
+    "width": 299,
+    "ring_width": 320,
+    "live_data_storage_flops": 1500,
+    "padded_data_storage_flops": 1600,
+    "clock_roles": {
+      "forwarded_write_flops": 1280,
+      "local_read_flops": 320
+    },
+    "max_pin_to_band_hop_um": 124.448,
+    "area_reserve_um2": 3881.779199999998,
+    "placement": "PREP only: wider shallow FF-only band; actual FIRM placement/PG and GRT NOTRUN",
+    "instance": "u_cland_i_kvpc_Q_N_o_next",
+    "resized_from_um": [
+      1352.0957,
+      17.28,
+      1380.6717,
+      71.28
+    ],
+    "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+    "ring_place": "ff",
+    "fill_axis": "x",
+    "spread": 1.0
+  },
+  "ring_cells": 6935,
+  "ring_ffs": 1585,
+  "released_ring_comb": 5350,
+  "retained_nonring_obstacles_in_window": 106,
+  "cell_body_witness_collisions": 0,
+  "witness_ff_bbox": [
+    1313.28,
+    30.24,
+    1419.66,
+    58.05000000000001
+  ],
+  "max_any_buspin_to_window_corner_um": 138.12,
+  "max_forwarded_clock_to_window_corner_um": 121.568,
+  "r2r_before": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 1010.34,
+    "r2r_captures_gt405": 19,
+    "r2r_captures": 22408,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_cland_i_seq__g_fan_N__u_fan_kc/u_ring.dch\\[0\\].u_dsel/y\\[33\\]$_DFF_P_ -> u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_"
+  },
+  "r2r_witness": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 1010.34,
+    "r2r_captures_gt405": 136,
+    "r2r_captures": 22408,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_cland_i_seq__g_fan_N__u_fan_kc/u_ring.dch\\[0\\].u_dsel/y\\[33\\]$_DFF_P_ -> u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_"
+  },
+  "new_captures_over405": [
+    {
+      "distance_um": 412.56,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[61\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[61\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        30.374999999999996
+      ],
+      "capture_xy": [
+        1397.25,
+        384.075
+      ]
+    },
+    {
+      "distance_um": 425.736,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[0\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[0\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        53.055
+      ],
+      "capture_xy": [
+        1406.646,
+        396.495
+      ]
+    },
+    {
+      "distance_um": 438.534,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[60\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[60\\]$_DFF_P_",
+      "launch_xy": [
+        1313.82,
+        55.75500000000001
+      ],
+      "capture_xy": [
+        1411.884,
+        396.225
+      ]
+    },
+    {
+      "distance_um": 410.616,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[57\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[57\\]$_DFF_P_",
+      "launch_xy": [
+        1341.8999999999999,
+        45.495000000000005
+      ],
+      "capture_xy": [
+        1405.836,
+        392.175
+      ]
+    },
+    {
+      "distance_um": 417.906,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[54\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[54\\]$_DFF_P_",
+      "launch_xy": [
+        1334.88,
+        37.935
+      ],
+      "capture_xy": [
+        1405.566,
+        385.155
+      ]
+    },
+    {
+      "distance_um": 415.368,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[51\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[51\\]$_DFF_P_",
+      "launch_xy": [
+        1334.8799999999999,
+        30.375
+      ],
+      "capture_xy": [
+        1400.328,
+        380.295
+      ]
+    },
+    {
+      "distance_um": 413.91,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[50\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[50\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        56.835
+      ],
+      "capture_xy": [
+        1418.58,
+        390.555
+      ]
+    },
+    {
+      "distance_um": 414.774,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[47\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[47\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        45.495
+      ],
+      "capture_xy": [
+        1416.204,
+        382.455
+      ]
+    },
+    {
+      "distance_um": 421.308,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[44\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[44\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        37.934999999999995
+      ],
+      "capture_xy": [
+        1410.048,
+        380.565
+      ]
+    },
+    {
+      "distance_um": 421.416,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[41\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[41\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        30.374999999999996
+      ],
+      "capture_xy": [
+        1409.886,
+        373.275
+      ]
+    },
+    {
+      "distance_um": 416.448,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[37\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[37\\]$_DFF_P_",
+      "launch_xy": [
+        1334.8799999999999,
+        45.495000000000005
+      ],
+      "capture_xy": [
+        1419.768,
+        377.055
+      ]
+    },
+    {
+      "distance_um": 421.2,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[34\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[34\\]$_DFF_P_",
+      "launch_xy": [
+        1327.8600000000001,
+        37.935
+      ],
+      "capture_xy": [
+        1418.58,
+        368.41499999999996
+      ]
+    },
+    {
+      "distance_um": 424.116,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[31\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[31\\]$_DFF_P_",
+      "launch_xy": [
+        1327.86,
+        30.375
+      ],
+      "capture_xy": [
+        1420.9560000000001,
+        361.395
+      ]
+    },
+    {
+      "distance_um": 415.206,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[30\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[30\\]$_DFF_P_",
+      "launch_xy": [
+        1334.8799999999999,
+        56.835
+      ],
+      "capture_xy": [
+        1432.026,
+        374.895
+      ]
+    },
+    {
+      "distance_um": 420.39,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[27\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[27\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        45.495
+      ],
+      "capture_xy": [
+        1428.3,
+        368.955
+      ]
+    },
+    {
+      "distance_um": 426.114,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[24\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[24\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        37.934999999999995
+      ],
+      "capture_xy": [
+        1429.704,
+        358.695
+      ]
+    },
+    {
+      "distance_um": 424.386,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[21\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[21\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        30.374999999999996
+      ],
+      "capture_xy": [
+        1423.116,
+        355.995
+      ]
+    },
+    {
+      "distance_um": 425.034,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[17\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[17\\]$_DFF_P_",
+      "launch_xy": [
+        1327.86,
+        45.495000000000005
+      ],
+      "capture_xy": [
+        1438.074,
+        360.315
+      ]
+    },
+    {
+      "distance_um": 430.434,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[14\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[14\\]$_DFF_P_",
+      "launch_xy": [
+        1320.8400000000001,
+        37.935
+      ],
+      "capture_xy": [
+        1436.724,
+        352.485
+      ]
+    },
+    {
+      "distance_um": 428.652,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[11\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[11\\]$_DFF_P_",
+      "launch_xy": [
+        1320.84,
+        30.375
+      ],
+      "capture_xy": [
+        1430.892,
+        348.975
+      ]
+    },
+    {
+      "distance_um": 406.674,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[9\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[9\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        45.495
+      ],
+      "capture_xy": [
+        1443.474,
+        354.105
+      ]
+    },
+    {
+      "distance_um": 411.804,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[6\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[6\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        37.934999999999995
+      ],
+      "capture_xy": [
+        1438.344,
+        349.78499999999997
+      ]
+    },
+    {
+      "distance_um": 409.212,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[5\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[5\\]$_DFF_P_",
+      "launch_xy": [
+        1341.9,
+        53.05500000000001
+      ],
+      "capture_xy": [
+        1447.362,
+        356.805
+      ]
+    },
+    {
+      "distance_um": 412.56,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[3\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[3\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        53.05500000000001
+      ],
+      "capture_xy": [
+        1447.47,
+        356.53499999999997
+      ]
+    },
+    {
+      "distance_um": 415.206,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[0\\].u_dsel/y\\[1\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[1\\]$_DFF_P_",
+      "launch_xy": [
+        1334.88,
+        53.05500000000001
+      ],
+      "capture_xy": [
+        1423.386,
+        379.755
+      ]
+    },
+    {
+      "distance_um": 424.386,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[62\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[126\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        48.195
+      ],
+      "capture_xy": [
+        1430.136,
+        373.815
+      ]
+    },
+    {
+      "distance_um": 431.514,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[57\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[121\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        33.074999999999996
+      ],
+      "capture_xy": [
+        1431.054,
+        357.885
+      ]
+    },
+    {
+      "distance_um": 431.406,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[55\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[119\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        55.75500000000001
+      ],
+      "capture_xy": [
+        1445.796,
+        365.71500000000003
+      ]
+    },
+    {
+      "distance_um": 428.058,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[52\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[116\\]$_DFF_P_",
+      "launch_xy": [
+        1327.86,
+        48.19500000000001
+      ],
+      "capture_xy": [
+        1442.4479999999999,
+        361.66499999999996
+      ]
+    },
+    {
+      "distance_um": 433.944,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[47\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[111\\]$_DFF_P_",
+      "launch_xy": [
+        1320.84,
+        33.075
+      ],
+      "capture_xy": [
+        1436.454,
+        351.405
+      ]
+    },
+    {
+      "distance_um": 407.484,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[45\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[109\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        56.835
+      ],
+      "capture_xy": [
+        1450.7640000000001,
+        358.96500000000003
+      ]
+    },
+    {
+      "distance_um": 428.976,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[42\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[106\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        48.195
+      ],
+      "capture_xy": [
+        1446.606,
+        354.91499999999996
+      ]
+    },
+    {
+      "distance_um": 436.104,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[37\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[101\\]$_DFF_P_",
+      "launch_xy": [
+        1317.33,
+        33.074999999999996
+      ],
+      "capture_xy": [
+        1397.034,
+        389.475
+      ]
+    },
+    {
+      "distance_um": 434.97,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[35\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[99\\]$_DFF_P_",
+      "launch_xy": [
+        1320.84,
+        55.75500000000001
+      ],
+      "capture_xy": [
+        1410.48,
+        401.08500000000004
+      ]
+    },
+    {
+      "distance_um": 409.32,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[34\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[98\\]$_DFF_P_",
+      "launch_xy": [
+        1348.92,
+        53.05500000000001
+      ],
+      "capture_xy": [
+        1412.37,
+        398.925
+      ]
+    },
+    {
+      "distance_um": 433.566,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[32\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[96\\]$_DFF_P_",
+      "launch_xy": [
+        1320.84,
+        48.19500000000001
+      ],
+      "capture_xy": [
+        1406.646,
+        395.955
+      ]
+    },
+    {
+      "distance_um": 407.268,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[29\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[93\\]$_DFF_P_",
+      "launch_xy": [
+        1348.92,
+        37.935
+      ],
+      "capture_xy": [
+        1407.888,
+        386.235
+      ]
+    },
+    {
+      "distance_um": 441.018,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[27\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[91\\]$_DFF_P_",
+      "launch_xy": [
+        1313.82,
+        33.075
+      ],
+      "capture_xy": [
+        1400.868,
+        387.045
+      ]
+    },
+    {
+      "distance_um": 405.54,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[26\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[90\\]$_DFF_P_",
+      "launch_xy": [
+        1348.9199999999998,
+        30.375
+      ],
+      "capture_xy": [
+        1402.65,
+        382.185
+      ]
+    },
+    {
+      "distance_um": 413.91,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[25\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[89\\]$_DFF_P_",
+      "launch_xy": [
+        1341.8999999999999,
+        56.835
+      ],
+      "capture_xy": [
+        1414.26,
+        398.385
+      ]
+    },
+    {
+      "distance_um": 438.804,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[22\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[86\\]$_DFF_P_",
+      "launch_xy": [
+        1317.33,
+        48.195
+      ],
+      "capture_xy": [
+        1418.634,
+        385.695
+      ]
+    },
+    {
+      "distance_um": 408.132,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[19\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[83\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        37.934999999999995
+      ],
+      "capture_xy": [
+        1409.022,
+        382.455
+      ]
+    },
+    {
+      "distance_um": 408.996,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[16\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[80\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        30.374999999999996
+      ],
+      "capture_xy": [
+        1409.076,
+        375.705
+      ]
+    },
+    {
+      "distance_um": 438.48,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[15\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[79\\]$_DFF_P_",
+      "launch_xy": [
+        1317.33,
+        55.75500000000001
+      ],
+      "capture_xy": [
+        1427.49,
+        384.075
+      ]
+    },
+    {
+      "distance_um": 412.182,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[14\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[78\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        53.05500000000001
+      ],
+      "capture_xy": [
+        1427.382,
+        383.265
+      ]
+    },
+    {
+      "distance_um": 439.938,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[12\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[76\\]$_DFF_P_",
+      "launch_xy": [
+        1313.82,
+        48.19500000000001
+      ],
+      "capture_xy": [
+        1424.088,
+        377.865
+      ]
+    },
+    {
+      "distance_um": 407.43,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[11\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[75\\]$_DFF_P_",
+      "launch_xy": [
+        1348.9199999999998,
+        45.495000000000005
+      ],
+      "capture_xy": [
+        1425.06,
+        376.78499999999997
+      ]
+    },
+    {
+      "distance_um": 428.76,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[9\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[73\\]$_DFF_P_",
+      "launch_xy": [
+        1327.86,
+        33.075
+      ],
+      "capture_xy": [
+        1421.01,
+        368.685
+      ]
+    },
+    {
+      "distance_um": 406.404,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[7\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[71\\]$_DFF_P_",
+      "launch_xy": [
+        1348.9199999999998,
+        56.835
+      ],
+      "capture_xy": [
+        1429.974,
+        382.185
+      ]
+    },
+    {
+      "distance_um": 437.4,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[5\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[69\\]$_DFF_P_",
+      "launch_xy": [
+        1317.33,
+        40.635
+      ],
+      "capture_xy": [
+        1422.0900000000001,
+        373.275
+      ]
+    },
+    {
+      "distance_um": 441.342,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[1\\].u_dsel/y\\[4\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[68\\]$_DFF_P_",
+      "launch_xy": [
+        1313.8200000000002,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1429.812,
+        365.985
+      ]
+    },
+    {
+      "distance_um": 410.4,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[61\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[189\\]$_DFF_P_",
+      "launch_xy": [
+        1348.9199999999998,
+        33.075
+      ],
+      "capture_xy": [
+        1440.72,
+        351.675
+      ]
+    },
+    {
+      "distance_um": 438.75,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[58\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[186\\]$_DFF_P_",
+      "launch_xy": [
+        1320.8400000000001,
+        50.895
+      ],
+      "capture_xy": [
+        1409.94,
+        400.545
+      ]
+    },
+    {
+      "distance_um": 412.884,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[57\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[185\\]$_DFF_P_",
+      "launch_xy": [
+        1348.9199999999998,
+        48.195
+      ],
+      "capture_xy": [
+        1416.474,
+        393.525
+      ]
+    },
+    {
+      "distance_um": 422.28,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[54\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[182\\]$_DFF_P_",
+      "launch_xy": [
+        1334.88,
+        40.635
+      ],
+      "capture_xy": [
+        1409.94,
+        387.855
+      ]
+    },
+    {
+      "distance_um": 413.424,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[51\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[179\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        33.074999999999996
+      ],
+      "capture_xy": [
+        1408.374,
+        383.53499999999997
+      ]
+    },
+    {
+      "distance_um": 443.88,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[48\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[176\\]$_DFF_P_",
+      "launch_xy": [
+        1317.33,
+        50.89500000000001
+      ],
+      "capture_xy": [
+        1423.17,
+        388.935
+      ]
+    },
+    {
+      "distance_um": 415.53,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[47\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[175\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        48.19500000000001
+      ],
+      "capture_xy": [
+        1420.74,
+        388.395
+      ]
+    },
+    {
+      "distance_um": 427.788,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[44\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[172\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1417.338,
+        382.455
+      ]
+    },
+    {
+      "distance_um": 416.178,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[41\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[169\\]$_DFF_P_",
+      "launch_xy": [
+        1341.8999999999999,
+        33.075
+      ],
+      "capture_xy": [
+        1418.1480000000001,
+        373.005
+      ]
+    },
+    {
+      "distance_um": 445.986,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[38\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[166\\]$_DFF_P_",
+      "launch_xy": [
+        1313.8200000000002,
+        50.89500000000001
+      ],
+      "capture_xy": [
+        1428.246,
+        382.455
+      ]
+    },
+    {
+      "distance_um": 417.042,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[37\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[165\\]$_DFF_P_",
+      "launch_xy": [
+        1341.8999999999999,
+        48.19500000000001
+      ],
+      "capture_xy": [
+        1427.922,
+        379.21500000000003
+      ]
+    },
+    {
+      "distance_um": 431.892,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[34\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[162\\]$_DFF_P_",
+      "launch_xy": [
+        1327.8600000000001,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1429.272,
+        371.115
+      ]
+    },
+    {
+      "distance_um": 419.094,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[31\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[159\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        33.075
+      ],
+      "capture_xy": [
+        1424.304,
+        366.255
+      ]
+    },
+    {
+      "distance_um": 405.108,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[29\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[157\\]$_DFF_P_",
+      "launch_xy": [
+        1355.94,
+        53.055
+      ],
+      "capture_xy": [
+        1435.6979999999999,
+        378.405
+      ]
+    },
+    {
+      "distance_um": 422.118,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[27\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[155\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        48.195
+      ],
+      "capture_xy": [
+        1442.4479999999999,
+        366.255
+      ]
+    },
+    {
+      "distance_um": 432.918,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[24\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[152\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        40.635
+      ],
+      "capture_xy": [
+        1436.508,
+        361.395
+      ]
+    },
+    {
+      "distance_um": 421.416,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[21\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[149\\]$_DFF_P_",
+      "launch_xy": [
+        1334.8799999999999,
+        33.074999999999996
+      ],
+      "capture_xy": [
+        1425.816,
+        363.555
+      ]
+    },
+    {
+      "distance_um": 423.198,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[17\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[145\\]$_DFF_P_",
+      "launch_xy": [
+        1334.8799999999999,
+        48.19500000000001
+      ],
+      "capture_xy": [
+        1447.038,
+        359.235
+      ]
+    },
+    {
+      "distance_um": 435.618,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[14\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[142\\]$_DFF_P_",
+      "launch_xy": [
+        1320.8400000000001,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1442.4479999999999,
+        354.645
+      ]
+    },
+    {
+      "distance_um": 425.412,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[11\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[139\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        33.075
+      ],
+      "capture_xy": [
+        1440.882,
+        348.975
+      ]
+    },
+    {
+      "distance_um": 406.782,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[9\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[137\\]$_DFF_P_",
+      "launch_xy": [
+        1352.4299999999998,
+        48.19500000000001
+      ],
+      "capture_xy": [
+        1450.062,
+        357.345
+      ]
+    },
+    {
+      "distance_um": 418.986,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[6\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[134\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1399.086,
+        398.925
+      ]
+    },
+    {
+      "distance_um": 428.76,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[4\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[132\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        55.75500000000001
+      ],
+      "capture_xy": [
+        1407.51,
+        408.375
+      ]
+    },
+    {
+      "distance_um": 432.972,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[2\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[130\\]$_DFF_P_",
+      "launch_xy": [
+        1327.86,
+        55.755
+      ],
+      "capture_xy": [
+        1411.722,
+        404.865
+      ]
+    },
+    {
+      "distance_um": 407.376,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[2\\].u_dsel/y\\[1\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[129\\]$_DFF_P_",
+      "launch_xy": [
+        1352.4299999999998,
+        56.83500000000001
+      ],
+      "capture_xy": [
+        1430.946,
+        385.695
+      ]
+    },
+    {
+      "distance_um": 416.772,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[0\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[192\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        42.795
+      ],
+      "capture_xy": [
+        1437.372,
+        367.605
+      ]
+    },
+    {
+      "distance_um": 426.276,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[62\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[254\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        50.89500000000001
+      ],
+      "capture_xy": [
+        1440.396,
+        375.16499999999996
+      ]
+    },
+    {
+      "distance_um": 407.754,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[59\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[251\\]$_DFF_P_",
+      "launch_xy": [
+        1355.94,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1438.884,
+        365.445
+      ]
+    },
+    {
+      "distance_um": 436.158,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[57\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[249\\]$_DFF_P_",
+      "launch_xy": [
+        1327.86,
+        35.775000000000006
+      ],
+      "capture_xy": [
+        1437.318,
+        362.475
+      ]
+    },
+    {
+      "distance_um": 428.166,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[52\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[244\\]$_DFF_P_",
+      "launch_xy": [
+        1334.88,
+        50.89500000000001
+      ],
+      "capture_xy": [
+        1449.306,
+        364.635
+      ]
+    },
+    {
+      "distance_um": 410.616,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[49\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[241\\]$_DFF_P_",
+      "launch_xy": [
+        1352.4299999999998,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1445.526,
+        358.155
+      ]
+    },
+    {
+      "distance_um": 436.644,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[47\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[239\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        35.775000000000006
+      ],
+      "capture_xy": [
+        1445.094,
+        351.675
+      ]
+    },
+    {
+      "distance_um": 424.656,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[44\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[236\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        55.755
+      ],
+      "capture_xy": [
+        1409.886,
+        408.91499999999996
+      ]
+    },
+    {
+      "distance_um": 432.0,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[42\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[234\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        50.895
+      ],
+      "capture_xy": [
+        1403.46,
+        410.805
+      ]
+    },
+    {
+      "distance_um": 415.314,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[39\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[231\\]$_DFF_P_",
+      "launch_xy": [
+        1348.92,
+        40.635
+      ],
+      "capture_xy": [
+        1403.5140000000001,
+        401.355
+      ]
+    },
+    {
+      "distance_um": 440.964,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[37\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[229\\]$_DFF_P_",
+      "launch_xy": [
+        1320.84,
+        35.775
+      ],
+      "capture_xy": [
+        1400.274,
+        397.305
+      ]
+    },
+    {
+      "distance_um": 436.86,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[32\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[224\\]$_DFF_P_",
+      "launch_xy": [
+        1327.8600000000001,
+        50.89500000000001
+      ],
+      "capture_xy": [
+        1412.37,
+        403.245
+      ]
+    },
+    {
+      "distance_um": 414.936,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[29\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[221\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1405.566,
+        395.41499999999996
+      ]
+    },
+    {
+      "distance_um": 442.962,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[27\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[219\\]$_DFF_P_",
+      "launch_xy": [
+        1317.33,
+        35.775000000000006
+      ],
+      "capture_xy": [
+        1403.3519999999999,
+        392.71500000000003
+      ]
+    },
+    {
+      "distance_um": 407.214,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[26\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[218\\]$_DFF_P_",
+      "launch_xy": [
+        1355.9399999999998,
+        33.075
+      ],
+      "capture_xy": [
+        1404.594,
+        391.635
+      ]
+    },
+    {
+      "distance_um": 429.462,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[24\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[216\\]$_DFF_P_",
+      "launch_xy": [
+        1334.8799999999999,
+        55.755
+      ],
+      "capture_xy": [
+        1419.8220000000001,
+        400.275
+      ]
+    },
+    {
+      "distance_um": 438.21,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[22\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[214\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        50.895
+      ],
+      "capture_xy": [
+        1419.6599999999999,
+        393.795
+      ]
+    },
+    {
+      "distance_um": 406.89,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[21\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[213\\]$_DFF_P_",
+      "launch_xy": [
+        1355.9399999999998,
+        48.195
+      ],
+      "capture_xy": [
+        1422.0900000000001,
+        388.935
+      ]
+    },
+    {
+      "distance_um": 419.418,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[19\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[211\\]$_DFF_P_",
+      "launch_xy": [
+        1341.9,
+        40.635
+      ],
+      "capture_xy": [
+        1414.638,
+        387.315
+      ]
+    },
+    {
+      "distance_um": 448.524,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[17\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[209\\]$_DFF_P_",
+      "launch_xy": [
+        1313.82,
+        35.775
+      ],
+      "capture_xy": [
+        1417.824,
+        380.295
+      ]
+    },
+    {
+      "distance_um": 409.212,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[16\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[208\\]$_DFF_P_",
+      "launch_xy": [
+        1352.4299999999998,
+        33.074999999999996
+      ],
+      "capture_xy": [
+        1413.882,
+        380.83500000000004
+      ]
+    },
+    {
+      "distance_um": 441.666,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[10\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[202\\]$_DFF_P_",
+      "launch_xy": [
+        1320.84,
+        45.495000000000005
+      ],
+      "capture_xy": [
+        1428.246,
+        379.755
+      ]
+    },
+    {
+      "distance_um": 432.27,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[9\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[201\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        35.775
+      ],
+      "capture_xy": [
+        1421.82,
+        377.595
+      ]
+    },
+    {
+      "distance_um": 423.738,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[6\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[198\\]$_DFF_P_",
+      "launch_xy": [
+        1341.8999999999999,
+        55.75500000000001
+      ],
+      "capture_xy": [
+        1440.288,
+        381.105
+      ]
+    },
+    {
+      "distance_um": 441.234,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[5\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[197\\]$_DFF_P_",
+      "launch_xy": [
+        1320.84,
+        43.33500000000001
+      ],
+      "capture_xy": [
+        1428.084,
+        377.325
+      ]
+    },
+    {
+      "distance_um": 446.58,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[4\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[196\\]$_DFF_P_",
+      "launch_xy": [
+        1317.33,
+        43.33500000000001
+      ],
+      "capture_xy": [
+        1429.65,
+        377.595
+      ]
+    },
+    {
+      "distance_um": 449.928,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[3\\].u_dsel/y\\[3\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[195\\]$_DFF_P_",
+      "launch_xy": [
+        1313.82,
+        43.335
+      ],
+      "capture_xy": [
+        1431.378,
+        375.705
+      ]
+    },
+    {
+      "distance_um": 417.636,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[41\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[297\\]$_DFF_P_",
+      "launch_xy": [
+        1348.9199999999998,
+        55.755
+      ],
+      "capture_xy": [
+        1417.716,
+        404.595
+      ]
+    },
+    {
+      "distance_um": 434.538,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[37\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[293\\]$_DFF_P_",
+      "launch_xy": [
+        1331.37,
+        43.335
+      ],
+      "capture_xy": [
+        1417.878,
+        391.365
+      ]
+    },
+    {
+      "distance_um": 424.278,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[34\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[290\\]$_DFF_P_",
+      "launch_xy": [
+        1341.8999999999999,
+        35.775
+      ],
+      "capture_xy": [
+        1415.4479999999999,
+        386.505
+      ]
+    },
+    {
+      "distance_um": 438.102,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[27\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[283\\]$_DFF_P_",
+      "launch_xy": [
+        1327.86,
+        43.33500000000001
+      ],
+      "capture_xy": [
+        1422.252,
+        387.045
+      ]
+    },
+    {
+      "distance_um": 427.302,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[24\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[280\\]$_DFF_P_",
+      "launch_xy": [
+        1338.3899999999999,
+        35.775000000000006
+      ],
+      "capture_xy": [
+        1422.522,
+        378.945
+      ]
+    },
+    {
+      "distance_um": 420.12,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[21\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[277\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        55.75500000000001
+      ],
+      "capture_xy": [
+        1432.62,
+        388.66499999999996
+      ]
+    },
+    {
+      "distance_um": 442.53,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[17\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[273\\]$_DFF_P_",
+      "launch_xy": [
+        1324.35,
+        43.33500000000001
+      ],
+      "capture_xy": [
+        1431.27,
+        378.945
+      ]
+    },
+    {
+      "distance_um": 406.836,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[16\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[272\\]$_DFF_P_",
+      "launch_xy": [
+        1359.4499999999998,
+        40.635000000000005
+      ],
+      "capture_xy": [
+        1433.376,
+        373.545
+      ]
+    },
+    {
+      "distance_um": 430.866,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[14\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[270\\]$_DFF_P_",
+      "launch_xy": [
+        1334.8799999999999,
+        35.775000000000006
+      ],
+      "capture_xy": [
+        1429.056,
+        372.46500000000003
+      ]
+    },
+    {
+      "distance_um": 432.27,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[7\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[263\\]$_DFF_P_",
+      "launch_xy": [
+        1334.8799999999999,
+        43.33500000000001
+      ],
+      "capture_xy": [
+        1445.58,
+        364.905
+      ]
+    },
+    {
+      "distance_um": 420.012,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[4\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[260\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        35.775000000000006
+      ],
+      "capture_xy": [
+        1443.042,
+        358.155
+      ]
+    },
+    {
+      "distance_um": 418.716,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[3\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[259\\]$_DFF_P_",
+      "launch_xy": [
+        1348.92,
+        50.895
+      ],
+      "capture_xy": [
+        1453.086,
+        365.445
+      ]
+    },
+    {
+      "distance_um": 421.362,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[2\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[258\\]$_DFF_P_",
+      "launch_xy": [
+        1345.4099999999999,
+        50.89500000000001
+      ],
+      "capture_xy": [
+        1449.522,
+        368.145
+      ]
+    },
+    {
+      "distance_um": 425.142,
+      "launch": "u_bound.u_cland_i_kvpc_Q_N_o_next/u_ring.dch\\[4\\].u_dsel/y\\[1\\]$_DFF_P_",
+      "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/q\\[257\\]$_DFF_P_",
+      "launch_xy": [
+        1341.9,
+        50.89500000000001
+      ],
+      "capture_xy": [
+        1422.792,
+        395.145
+      ]
+    }
+  ],
+  "clock_before": {
+    "taps": 62,
+    "grid_taps": 39,
+    "tap_mode": "nearest",
+    "clock_sinks": 22411,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": 2,
+    "grid_tap_sinks_max": 1475,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk": 13,
+      "clk_t1": 53,
+      "clk_t10": 351,
+      "clk_t11": 1346,
+      "clk_t12": 3,
+      "clk_t13": 182,
+      "clk_t14": 568,
+      "clk_t15": 13,
+      "clk_t16": 4,
+      "clk_t17": 753,
+      "clk_t18": 260,
+      "clk_t19": 3,
+      "clk_t2": 1105,
+      "clk_t20": 483,
+      "clk_t21": 7,
+      "clk_t22": 43,
+      "clk_t23": 51,
+      "clk_t24": 3,
+      "clk_t25": 326,
+      "clk_t26": 817,
+      "clk_t27": 92,
+      "clk_t28": 35,
+      "clk_t29": 81,
+      "clk_t3": 663,
+      "clk_t30": 59,
+      "clk_t31": 6,
+      "clk_t32": 2,
+      "clk_t33": 12,
+      "clk_t34": 78,
+      "clk_t35": 1402,
+      "clk_t36": 224,
+      "clk_t37": 1057,
+      "clk_t38": 764,
+      "clk_t4": 32,
+      "clk_t5": 599,
+      "clk_t6": 4,
+      "clk_t7": 2,
+      "clk_t8": 214,
+      "clk_t9": 1475,
+      "fclk_in_ft0_i[0]": 82,
+      "fclk_in_ft10_i[0]": 158,
+      "fclk_in_ft11_i[0]": 158,
+      "fclk_in_ft12_i[0]": 158,
+      "fclk_in_ft13_i[0]": 34,
+      "fclk_in_ft1_i[0]": 34,
+      "fclk_in_ft2_i[0]": 1194,
+      "fclk_in_ft3_i[0]": 34,
+      "fclk_in_ft4_i[0]": 94,
+      "fclk_in_ft5_i[0]": 102,
+      "fclk_in_ft6_i[0]": 158,
+      "fclk_in_ft7_i[0]": 158,
+      "fclk_in_ft8_i[0]": 34,
+      "fclk_in_ft9_i[0]": 158,
+      "fclk_in_i_fch_pc_Q_N_q[0]": 34,
+      "fclk_in_i_host_die_rst_n[0]": 34,
+      "fclk_in_i_host_hbm_rst_n[0]": 34,
+      "fclk_in_i_idsrc_Q_y[0]": 38,
+      "fclk_in_i_kvpc_Q_N_o_next[0]": 1226,
+      "fclk_in_i_kvpc_Q_N_pc__fo[0]": 34,
+      "fclk_in_i_kvs_ctl_o_hroot_Q[0]": 4502,
+      "fclk_in_i_seq__g_fan_N__u_fan_kc[0]": 162,
+      "fclk_in_i_slg_Q_N_o_ctl[0]": 606
+    },
+    "tap_set": [
+      [
+        "clk",
+        "area"
+      ],
+      [
+        "clk_t1",
+        "area"
+      ],
+      [
+        "clk_t10",
+        "area"
+      ],
+      [
+        "clk_t11",
+        "area"
+      ],
+      [
+        "clk_t12",
+        "area"
+      ],
+      [
+        "clk_t13",
+        "area"
+      ],
+      [
+        "clk_t14",
+        "area"
+      ],
+      [
+        "clk_t15",
+        "area"
+      ],
+      [
+        "clk_t16",
+        "area"
+      ],
+      [
+        "clk_t17",
+        "area"
+      ],
+      [
+        "clk_t18",
+        "area"
+      ],
+      [
+        "clk_t19",
+        "area"
+      ],
+      [
+        "clk_t2",
+        "area"
+      ],
+      [
+        "clk_t20",
+        "area"
+      ],
+      [
+        "clk_t21",
+        "area"
+      ],
+      [
+        "clk_t22",
+        "area"
+      ],
+      [
+        "clk_t23",
+        "area"
+      ],
+      [
+        "clk_t24",
+        "area"
+      ],
+      [
+        "clk_t25",
+        "area"
+      ],
+      [
+        "clk_t26",
+        "area"
+      ],
+      [
+        "clk_t27",
+        "area"
+      ],
+      [
+        "clk_t28",
+        "area"
+      ],
+      [
+        "clk_t29",
+        "area"
+      ],
+      [
+        "clk_t3",
+        "area"
+      ],
+      [
+        "clk_t30",
+        "area"
+      ],
+      [
+        "clk_t31",
+        "area"
+      ],
+      [
+        "clk_t32",
+        "area"
+      ],
+      [
+        "clk_t33",
+        "area"
+      ],
+      [
+        "clk_t34",
+        "area"
+      ],
+      [
+        "clk_t35",
+        "area"
+      ],
+      [
+        "clk_t36",
+        "area"
+      ],
+      [
+        "clk_t37",
+        "area"
+      ],
+      [
+        "clk_t38",
+        "area"
+      ],
+      [
+        "clk_t4",
+        "area"
+      ],
+      [
+        "clk_t5",
+        "area"
+      ],
+      [
+        "clk_t6",
+        "area"
+      ],
+      [
+        "clk_t7",
+        "area"
+      ],
+      [
+        "clk_t8",
+        "area"
+      ],
+      [
+        "clk_t9",
+        "area"
+      ],
+      [
+        "fclk_in_ft0_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft10_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft11_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft12_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft13_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft1_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft2_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft3_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft4_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft5_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft6_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft7_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft8_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft9_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_fch_pc_Q_N_q[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_host_die_rst_n[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_host_hbm_rst_n[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_idsrc_Q_y[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvpc_Q_N_o_next[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvpc_Q_N_pc__fo[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvs_ctl_o_hroot_Q[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_seq__g_fan_N__u_fan_kc[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_slg_Q_N_o_ctl[0]",
+        "area"
+      ]
+    ],
+    "clock_cells": 0,
+    "clock_depth_max": 0,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": null,
+    "leaf_sinks_max": null,
+    "clock_net_hpwl_max": 2712.28,
+    "clock_net_hpwl_p90": 197.66,
+    "stage": "placed"
+  },
+  "clock_witness": {
+    "taps": 62,
+    "grid_taps": 39,
+    "tap_mode": "nearest",
+    "clock_sinks": 22411,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": 2,
+    "grid_tap_sinks_max": 1475,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk": 13,
+      "clk_t1": 53,
+      "clk_t10": 351,
+      "clk_t11": 1346,
+      "clk_t12": 3,
+      "clk_t13": 182,
+      "clk_t14": 568,
+      "clk_t15": 13,
+      "clk_t16": 4,
+      "clk_t17": 753,
+      "clk_t18": 260,
+      "clk_t19": 3,
+      "clk_t2": 1105,
+      "clk_t20": 483,
+      "clk_t21": 7,
+      "clk_t22": 43,
+      "clk_t23": 51,
+      "clk_t24": 3,
+      "clk_t25": 326,
+      "clk_t26": 817,
+      "clk_t27": 92,
+      "clk_t28": 35,
+      "clk_t29": 81,
+      "clk_t3": 663,
+      "clk_t30": 59,
+      "clk_t31": 6,
+      "clk_t32": 2,
+      "clk_t33": 12,
+      "clk_t34": 78,
+      "clk_t35": 1402,
+      "clk_t36": 224,
+      "clk_t37": 1057,
+      "clk_t38": 764,
+      "clk_t4": 32,
+      "clk_t5": 599,
+      "clk_t6": 4,
+      "clk_t7": 2,
+      "clk_t8": 214,
+      "clk_t9": 1475,
+      "fclk_in_ft0_i[0]": 82,
+      "fclk_in_ft10_i[0]": 158,
+      "fclk_in_ft11_i[0]": 158,
+      "fclk_in_ft12_i[0]": 158,
+      "fclk_in_ft13_i[0]": 34,
+      "fclk_in_ft1_i[0]": 34,
+      "fclk_in_ft2_i[0]": 1194,
+      "fclk_in_ft3_i[0]": 34,
+      "fclk_in_ft4_i[0]": 94,
+      "fclk_in_ft5_i[0]": 102,
+      "fclk_in_ft6_i[0]": 158,
+      "fclk_in_ft7_i[0]": 158,
+      "fclk_in_ft8_i[0]": 34,
+      "fclk_in_ft9_i[0]": 158,
+      "fclk_in_i_fch_pc_Q_N_q[0]": 34,
+      "fclk_in_i_host_die_rst_n[0]": 34,
+      "fclk_in_i_host_hbm_rst_n[0]": 34,
+      "fclk_in_i_idsrc_Q_y[0]": 38,
+      "fclk_in_i_kvpc_Q_N_o_next[0]": 1226,
+      "fclk_in_i_kvpc_Q_N_pc__fo[0]": 34,
+      "fclk_in_i_kvs_ctl_o_hroot_Q[0]": 4502,
+      "fclk_in_i_seq__g_fan_N__u_fan_kc[0]": 162,
+      "fclk_in_i_slg_Q_N_o_ctl[0]": 606
+    },
+    "tap_set": [
+      [
+        "clk",
+        "area"
+      ],
+      [
+        "clk_t1",
+        "area"
+      ],
+      [
+        "clk_t10",
+        "area"
+      ],
+      [
+        "clk_t11",
+        "area"
+      ],
+      [
+        "clk_t12",
+        "area"
+      ],
+      [
+        "clk_t13",
+        "area"
+      ],
+      [
+        "clk_t14",
+        "area"
+      ],
+      [
+        "clk_t15",
+        "area"
+      ],
+      [
+        "clk_t16",
+        "area"
+      ],
+      [
+        "clk_t17",
+        "area"
+      ],
+      [
+        "clk_t18",
+        "area"
+      ],
+      [
+        "clk_t19",
+        "area"
+      ],
+      [
+        "clk_t2",
+        "area"
+      ],
+      [
+        "clk_t20",
+        "area"
+      ],
+      [
+        "clk_t21",
+        "area"
+      ],
+      [
+        "clk_t22",
+        "area"
+      ],
+      [
+        "clk_t23",
+        "area"
+      ],
+      [
+        "clk_t24",
+        "area"
+      ],
+      [
+        "clk_t25",
+        "area"
+      ],
+      [
+        "clk_t26",
+        "area"
+      ],
+      [
+        "clk_t27",
+        "area"
+      ],
+      [
+        "clk_t28",
+        "area"
+      ],
+      [
+        "clk_t29",
+        "area"
+      ],
+      [
+        "clk_t3",
+        "area"
+      ],
+      [
+        "clk_t30",
+        "area"
+      ],
+      [
+        "clk_t31",
+        "area"
+      ],
+      [
+        "clk_t32",
+        "area"
+      ],
+      [
+        "clk_t33",
+        "area"
+      ],
+      [
+        "clk_t34",
+        "area"
+      ],
+      [
+        "clk_t35",
+        "area"
+      ],
+      [
+        "clk_t36",
+        "area"
+      ],
+      [
+        "clk_t37",
+        "area"
+      ],
+      [
+        "clk_t38",
+        "area"
+      ],
+      [
+        "clk_t4",
+        "area"
+      ],
+      [
+        "clk_t5",
+        "area"
+      ],
+      [
+        "clk_t6",
+        "area"
+      ],
+      [
+        "clk_t7",
+        "area"
+      ],
+      [
+        "clk_t8",
+        "area"
+      ],
+      [
+        "clk_t9",
+        "area"
+      ],
+      [
+        "fclk_in_ft0_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft10_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft11_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft12_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft13_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft1_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft2_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft3_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft4_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft5_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft6_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft7_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft8_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft9_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_fch_pc_Q_N_q[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_host_die_rst_n[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_host_hbm_rst_n[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_idsrc_Q_y[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvpc_Q_N_o_next[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvpc_Q_N_pc__fo[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvs_ctl_o_hroot_Q[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_seq__g_fan_N__u_fan_kc[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_slg_Q_N_o_ctl[0]",
+        "area"
+      ]
+    ],
+    "clock_cells": 0,
+    "clock_depth_max": 0,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": null,
+    "leaf_sinks_max": null,
+    "clock_net_hpwl_max": 2712.28,
+    "clock_net_hpwl_p90": 197.66,
+    "stage": "placed"
+  },
+  "source_clock_pin_graph_changes": 0,
+  "pdn": "Unchanged actual kit M1/M2 followpins, M5/M6 pitch4.32, M7 pitch8.64; zero hard macros in window. Actual PG connectivity remains prototype gate.",
+  "limitations": [
+    "Witness packs exact master cell bodies on .054x.27 site rows but does not assign actual orientation or rerun OpenDB FIRM packer.",
+    "Actual existing cland FF-only bit-major implementation chooses final slots; witness is capacity/reach bound only.",
+    "Released combinational cells still require real global placement and native GRT50; no predicted overflow pass.",
+    "Baseline19 r2r captures>405, pin/clock/aspect/fill and relay failures retained."
+  ]
+}

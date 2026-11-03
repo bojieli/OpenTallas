@@ -1,0 +1,62 @@
+{
+  "scope": "ACTUAL current4596 physical graph only; not origin/source or epoch semantics proof",
+  "geom_sha256": "d38d1ce6d3f140bbd7a221e7fd0a6ca8e0cf1b5f8b028a8fe05bfa1a5b0dadca",
+  "pins": [
+    {
+      "pin": {
+        "k": 1466,
+        "name": "i_kvpc_Q_N_o_next[298]",
+        "io": "INPUT",
+        "sig": "SIGNAL",
+        "layer": "M5",
+        "x": 1380.6,
+        "y": 0.096
+      },
+      "net": 43194,
+      "driver": [
+        "p",
+        1466,
+        false
+      ],
+      "sinks": [
+        {
+          "endpoint": [
+            "i",
+            200648,
+            false
+          ],
+          "name": "input1711"
+        }
+      ]
+    },
+    {
+      "pin": {
+        "k": 1467,
+        "name": "i_kvpc_Q_N_o_next[299]",
+        "io": "INPUT",
+        "sig": "SIGNAL",
+        "layer": "M7",
+        "x": 1380.576,
+        "y": 0.096
+      },
+      "net": 43193,
+      "driver": [
+        "p",
+        1467,
+        false
+      ],
+      "sinks": [
+        {
+          "endpoint": [
+            "i",
+            200649,
+            false
+          ],
+          "name": "input1712"
+        }
+      ]
+    }
+  ],
+  "freeze_sha256": "23b8767685389980dd2d301ea3a45d5af21d4269089f86990b2be08740ba073d",
+  "source_readset_missing": true
+}

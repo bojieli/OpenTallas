@@ -1,0 +1,5 @@
+# Actual Tnode postrepair LOOK
+
+Personally viewed `/home/ubuntu/coord/tmp/codex-tnode-postrepair-look-0500/auto_geom.png` and parsed auto_geom/raw_no_grt/LOOK_SCOPE. Final native5_1 source codex-tnode-normal-grt-hold-0430,1875births/58swaps/3750bound,1871final cell delta. Coherent W/S/Erails and upper-right logic street retained; fill25.97/empty40.23,pin7.75/29.5/unreg0,r2r186.52/0,ownleaf17.33/rooted2987,onmacro0/blocked0,v.479. Rawh.781/GRTNA remains FAIL; previous.797 and stock30iter0 BEFORE repair are history only, not finalcapacity evidence. Fresh postrepair TT+91.64/FF+6.61, clock251.40/198.97,PG31224/0 and clockguard3269inst/160nets0diff are separate measurements.
+
+CONCUR HBMparent conditional ONE finalPG0-saved no-birth fullCLOCK+SIGNAL50+freshRC. Preserve final structure/poses/clock/source, completeguidecoverage and before/post/secondreadPG0; no repair/CTS mutation. No widening indicated by image. No DRT/SIGNED/parent/source release or fresh timing claim from reviewer; no EDA by reviewer.

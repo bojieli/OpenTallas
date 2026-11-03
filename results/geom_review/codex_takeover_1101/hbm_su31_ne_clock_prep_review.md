@@ -1,0 +1,3 @@
+# NE SU31 full-union planned clock review
+
+Personally VIEWED /home/ubuntu/coord/tmp/codex-hbm-su31-density-review-2250/clock_review.png and parsed contact_audit.json/density_result.json. ScopedPASS-COND contacts/source-event only:71nonempty localclockports+4preservedearly-core,61777softFF+3actualresetcontrols,load1494<=1500/radius211.905<=220,nine canonicalfullunion bodies/zero8.64halo ornativeFTbodyhits. Producer actual G.clock_pins identity verified, isolatedbottomtap carries actual1rst_o_0 sink and is notempty padding. Old20→71local adds51parentinputs for this type; source/provider/pin/parentrefs mustchangecoherently. Native66START and builtclock/PG/CTS/timing remainheld, no P&R authorization fromthisPREP. Clockowner/HBMparent informed.

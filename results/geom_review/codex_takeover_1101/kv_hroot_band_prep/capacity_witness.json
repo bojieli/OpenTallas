@@ -1,0 +1,839 @@
+{
+  "scope": "PREP capacity witness from exact actual TSV; not a placed OpenDB or route release",
+  "input_hashes": {
+    "config.mk": "e3a10f47ad71c50048e00a7a7cb0c12e65faee44122b42b57f0adbf9e56234fd",
+    "landing_placement.tcl": "b1ba30755d3a0cb4d6795fa2123beece90352df3f9de08b87750fee671f231ba",
+    "budget.json": "6db85e89132f5df0f8546852149a2bc7d4f03559276010788d5b9f299cdd8868",
+    "landing_contract.json": "09dc2b305d7c3015b93fc125e5651d97a8b0d2c3c84a120731f768a927e57a05",
+    "geom.tsv": "13c982c01fbcd59cffc0987fb9541f2f329f1a16da100d5a0bf1815fef6d2f8f",
+    "freeze.json": "23b8767685389980dd2d301ea3a45d5af21d4269089f86990b2be08740ba073d",
+    "pdn.tcl": "0f71bfe1f789da084168389207e161b1d8e3c970263c73f6a1f5df984662c442"
+  },
+  "old_band": {
+    "rect_um": [
+      1352.0957,
+      17.28,
+      1380.6717,
+      110.16
+    ],
+    "width": 299,
+    "ring_width": 320,
+    "live_data_storage_flops": 1500,
+    "padded_data_storage_flops": 1600,
+    "clock_roles": {
+      "forwarded_write_flops": 1280,
+      "local_read_flops": 320
+    },
+    "max_pin_to_band_hop_um": 124.448,
+    "area_reserve_um2": 2617.781,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_i_kvpc_Q_N_o_next",
+    "resized_from_um": [
+      1352.0957,
+      17.28,
+      1380.6717,
+      71.28
+    ],
+    "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+  },
+  "candidate_band": {
+    "rect_um": [
+      1326.24,
+      86.4,
+      1412.64,
+      120.96
+    ],
+    "width": 299,
+    "ring_width": 320,
+    "live_data_storage_flops": 1500,
+    "padded_data_storage_flops": 1600,
+    "clock_roles": {
+      "forwarded_write_flops": 1280,
+      "local_read_flops": 320
+    },
+    "area_reserve_um2": 2985.984000000002,
+    "placement": "PREP only: wider shallow FF-only band; actual FIRM placement/PG and GRT NOTRUN",
+    "instance": "u_cland_i_kvpc_Q_N_o_next",
+    "witness_correct_bit_storage_reach_um": 140.343,
+    "ring_place": "ff",
+    "fill_axis": "x",
+    "spread": 1.0
+  },
+  "ring_cells": 6935,
+  "ring_ffs": 1585,
+  "released_ring_comb": 5350,
+  "baseline_firm_ring_cells": 6917,
+  "retained_nonring_obstacles_in_window": 28,
+  "cell_body_witness_collisions": 0,
+  "witness_ff_bbox": [
+    1326.24,
+    86.4,
+    1408.3200000000002,
+    114.21000000000002
+  ],
+  "max_any_buspin_to_window_corner_um": 181.32,
+  "correct_bit_storage_reach_max_um": 140.343,
+  "actual_storage_slots_checked": 1200,
+  "max_forwarded_clock_to_window_corner_um": 164.768,
+  "r2r_before": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 1010.34,
+    "r2r_captures_gt405": 19,
+    "r2r_captures": 22408,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_cland_i_seq__g_fan_N__u_fan_kc/u_ring.dch\\[0\\].u_dsel/y\\[33\\]$_DFF_P_ -> u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_"
+  },
+  "r2r_witness": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 1010.34,
+    "r2r_captures_gt405": 19,
+    "r2r_captures": 22408,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bound.u_cland_i_seq__g_fan_N__u_fan_kc/u_ring.dch\\[0\\].u_dsel/y\\[33\\]$_DFF_P_ -> u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_"
+  },
+  "new_captures_over405": [],
+  "clock_before": {
+    "taps": 62,
+    "grid_taps": 39,
+    "tap_mode": "nearest",
+    "clock_sinks": 22411,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": 2,
+    "grid_tap_sinks_max": 1475,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk": 13,
+      "clk_t1": 53,
+      "clk_t10": 351,
+      "clk_t11": 1346,
+      "clk_t12": 3,
+      "clk_t13": 182,
+      "clk_t14": 568,
+      "clk_t15": 13,
+      "clk_t16": 4,
+      "clk_t17": 753,
+      "clk_t18": 260,
+      "clk_t19": 3,
+      "clk_t2": 1105,
+      "clk_t20": 483,
+      "clk_t21": 7,
+      "clk_t22": 43,
+      "clk_t23": 51,
+      "clk_t24": 3,
+      "clk_t25": 326,
+      "clk_t26": 817,
+      "clk_t27": 92,
+      "clk_t28": 35,
+      "clk_t29": 81,
+      "clk_t3": 663,
+      "clk_t30": 59,
+      "clk_t31": 6,
+      "clk_t32": 2,
+      "clk_t33": 12,
+      "clk_t34": 78,
+      "clk_t35": 1402,
+      "clk_t36": 224,
+      "clk_t37": 1057,
+      "clk_t38": 764,
+      "clk_t4": 32,
+      "clk_t5": 599,
+      "clk_t6": 4,
+      "clk_t7": 2,
+      "clk_t8": 214,
+      "clk_t9": 1475,
+      "fclk_in_ft0_i[0]": 82,
+      "fclk_in_ft10_i[0]": 158,
+      "fclk_in_ft11_i[0]": 158,
+      "fclk_in_ft12_i[0]": 158,
+      "fclk_in_ft13_i[0]": 34,
+      "fclk_in_ft1_i[0]": 34,
+      "fclk_in_ft2_i[0]": 1194,
+      "fclk_in_ft3_i[0]": 34,
+      "fclk_in_ft4_i[0]": 94,
+      "fclk_in_ft5_i[0]": 102,
+      "fclk_in_ft6_i[0]": 158,
+      "fclk_in_ft7_i[0]": 158,
+      "fclk_in_ft8_i[0]": 34,
+      "fclk_in_ft9_i[0]": 158,
+      "fclk_in_i_fch_pc_Q_N_q[0]": 34,
+      "fclk_in_i_host_die_rst_n[0]": 34,
+      "fclk_in_i_host_hbm_rst_n[0]": 34,
+      "fclk_in_i_idsrc_Q_y[0]": 38,
+      "fclk_in_i_kvpc_Q_N_o_next[0]": 1226,
+      "fclk_in_i_kvpc_Q_N_pc__fo[0]": 34,
+      "fclk_in_i_kvs_ctl_o_hroot_Q[0]": 4502,
+      "fclk_in_i_seq__g_fan_N__u_fan_kc[0]": 162,
+      "fclk_in_i_slg_Q_N_o_ctl[0]": 606
+    },
+    "tap_set": [
+      [
+        "clk",
+        "area"
+      ],
+      [
+        "clk_t1",
+        "area"
+      ],
+      [
+        "clk_t10",
+        "area"
+      ],
+      [
+        "clk_t11",
+        "area"
+      ],
+      [
+        "clk_t12",
+        "area"
+      ],
+      [
+        "clk_t13",
+        "area"
+      ],
+      [
+        "clk_t14",
+        "area"
+      ],
+      [
+        "clk_t15",
+        "area"
+      ],
+      [
+        "clk_t16",
+        "area"
+      ],
+      [
+        "clk_t17",
+        "area"
+      ],
+      [
+        "clk_t18",
+        "area"
+      ],
+      [
+        "clk_t19",
+        "area"
+      ],
+      [
+        "clk_t2",
+        "area"
+      ],
+      [
+        "clk_t20",
+        "area"
+      ],
+      [
+        "clk_t21",
+        "area"
+      ],
+      [
+        "clk_t22",
+        "area"
+      ],
+      [
+        "clk_t23",
+        "area"
+      ],
+      [
+        "clk_t24",
+        "area"
+      ],
+      [
+        "clk_t25",
+        "area"
+      ],
+      [
+        "clk_t26",
+        "area"
+      ],
+      [
+        "clk_t27",
+        "area"
+      ],
+      [
+        "clk_t28",
+        "area"
+      ],
+      [
+        "clk_t29",
+        "area"
+      ],
+      [
+        "clk_t3",
+        "area"
+      ],
+      [
+        "clk_t30",
+        "area"
+      ],
+      [
+        "clk_t31",
+        "area"
+      ],
+      [
+        "clk_t32",
+        "area"
+      ],
+      [
+        "clk_t33",
+        "area"
+      ],
+      [
+        "clk_t34",
+        "area"
+      ],
+      [
+        "clk_t35",
+        "area"
+      ],
+      [
+        "clk_t36",
+        "area"
+      ],
+      [
+        "clk_t37",
+        "area"
+      ],
+      [
+        "clk_t38",
+        "area"
+      ],
+      [
+        "clk_t4",
+        "area"
+      ],
+      [
+        "clk_t5",
+        "area"
+      ],
+      [
+        "clk_t6",
+        "area"
+      ],
+      [
+        "clk_t7",
+        "area"
+      ],
+      [
+        "clk_t8",
+        "area"
+      ],
+      [
+        "clk_t9",
+        "area"
+      ],
+      [
+        "fclk_in_ft0_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft10_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft11_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft12_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft13_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft1_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft2_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft3_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft4_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft5_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft6_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft7_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft8_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft9_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_fch_pc_Q_N_q[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_host_die_rst_n[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_host_hbm_rst_n[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_idsrc_Q_y[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvpc_Q_N_o_next[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvpc_Q_N_pc__fo[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvs_ctl_o_hroot_Q[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_seq__g_fan_N__u_fan_kc[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_slg_Q_N_o_ctl[0]",
+        "area"
+      ]
+    ],
+    "clock_cells": 0,
+    "clock_depth_max": 0,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": null,
+    "leaf_sinks_max": null,
+    "clock_net_hpwl_max": 2712.28,
+    "clock_net_hpwl_p90": 197.66,
+    "stage": "placed"
+  },
+  "clock_witness": {
+    "taps": 62,
+    "grid_taps": 39,
+    "tap_mode": "nearest",
+    "clock_sinks": 22411,
+    "unrooted_sinks": 0,
+    "grid_tap_sinks_min": 2,
+    "grid_tap_sinks_max": 1475,
+    "grid_taps_empty": [],
+    "tap_sinks": {
+      "clk": 13,
+      "clk_t1": 53,
+      "clk_t10": 351,
+      "clk_t11": 1346,
+      "clk_t12": 3,
+      "clk_t13": 182,
+      "clk_t14": 568,
+      "clk_t15": 13,
+      "clk_t16": 4,
+      "clk_t17": 753,
+      "clk_t18": 260,
+      "clk_t19": 3,
+      "clk_t2": 1105,
+      "clk_t20": 483,
+      "clk_t21": 7,
+      "clk_t22": 43,
+      "clk_t23": 51,
+      "clk_t24": 3,
+      "clk_t25": 326,
+      "clk_t26": 817,
+      "clk_t27": 92,
+      "clk_t28": 35,
+      "clk_t29": 81,
+      "clk_t3": 663,
+      "clk_t30": 59,
+      "clk_t31": 6,
+      "clk_t32": 2,
+      "clk_t33": 12,
+      "clk_t34": 78,
+      "clk_t35": 1402,
+      "clk_t36": 224,
+      "clk_t37": 1057,
+      "clk_t38": 764,
+      "clk_t4": 32,
+      "clk_t5": 599,
+      "clk_t6": 4,
+      "clk_t7": 2,
+      "clk_t8": 214,
+      "clk_t9": 1475,
+      "fclk_in_ft0_i[0]": 82,
+      "fclk_in_ft10_i[0]": 158,
+      "fclk_in_ft11_i[0]": 158,
+      "fclk_in_ft12_i[0]": 158,
+      "fclk_in_ft13_i[0]": 34,
+      "fclk_in_ft1_i[0]": 34,
+      "fclk_in_ft2_i[0]": 1194,
+      "fclk_in_ft3_i[0]": 34,
+      "fclk_in_ft4_i[0]": 94,
+      "fclk_in_ft5_i[0]": 102,
+      "fclk_in_ft6_i[0]": 158,
+      "fclk_in_ft7_i[0]": 158,
+      "fclk_in_ft8_i[0]": 34,
+      "fclk_in_ft9_i[0]": 158,
+      "fclk_in_i_fch_pc_Q_N_q[0]": 34,
+      "fclk_in_i_host_die_rst_n[0]": 34,
+      "fclk_in_i_host_hbm_rst_n[0]": 34,
+      "fclk_in_i_idsrc_Q_y[0]": 38,
+      "fclk_in_i_kvpc_Q_N_o_next[0]": 1226,
+      "fclk_in_i_kvpc_Q_N_pc__fo[0]": 34,
+      "fclk_in_i_kvs_ctl_o_hroot_Q[0]": 4502,
+      "fclk_in_i_seq__g_fan_N__u_fan_kc[0]": 162,
+      "fclk_in_i_slg_Q_N_o_ctl[0]": 606
+    },
+    "tap_set": [
+      [
+        "clk",
+        "area"
+      ],
+      [
+        "clk_t1",
+        "area"
+      ],
+      [
+        "clk_t10",
+        "area"
+      ],
+      [
+        "clk_t11",
+        "area"
+      ],
+      [
+        "clk_t12",
+        "area"
+      ],
+      [
+        "clk_t13",
+        "area"
+      ],
+      [
+        "clk_t14",
+        "area"
+      ],
+      [
+        "clk_t15",
+        "area"
+      ],
+      [
+        "clk_t16",
+        "area"
+      ],
+      [
+        "clk_t17",
+        "area"
+      ],
+      [
+        "clk_t18",
+        "area"
+      ],
+      [
+        "clk_t19",
+        "area"
+      ],
+      [
+        "clk_t2",
+        "area"
+      ],
+      [
+        "clk_t20",
+        "area"
+      ],
+      [
+        "clk_t21",
+        "area"
+      ],
+      [
+        "clk_t22",
+        "area"
+      ],
+      [
+        "clk_t23",
+        "area"
+      ],
+      [
+        "clk_t24",
+        "area"
+      ],
+      [
+        "clk_t25",
+        "area"
+      ],
+      [
+        "clk_t26",
+        "area"
+      ],
+      [
+        "clk_t27",
+        "area"
+      ],
+      [
+        "clk_t28",
+        "area"
+      ],
+      [
+        "clk_t29",
+        "area"
+      ],
+      [
+        "clk_t3",
+        "area"
+      ],
+      [
+        "clk_t30",
+        "area"
+      ],
+      [
+        "clk_t31",
+        "area"
+      ],
+      [
+        "clk_t32",
+        "area"
+      ],
+      [
+        "clk_t33",
+        "area"
+      ],
+      [
+        "clk_t34",
+        "area"
+      ],
+      [
+        "clk_t35",
+        "area"
+      ],
+      [
+        "clk_t36",
+        "area"
+      ],
+      [
+        "clk_t37",
+        "area"
+      ],
+      [
+        "clk_t38",
+        "area"
+      ],
+      [
+        "clk_t4",
+        "area"
+      ],
+      [
+        "clk_t5",
+        "area"
+      ],
+      [
+        "clk_t6",
+        "area"
+      ],
+      [
+        "clk_t7",
+        "area"
+      ],
+      [
+        "clk_t8",
+        "area"
+      ],
+      [
+        "clk_t9",
+        "area"
+      ],
+      [
+        "fclk_in_ft0_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft10_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft11_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft12_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft13_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft1_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft2_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft3_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft4_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft5_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft6_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft7_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft8_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_ft9_i[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_fch_pc_Q_N_q[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_host_die_rst_n[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_host_hbm_rst_n[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_idsrc_Q_y[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvpc_Q_N_o_next[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvpc_Q_N_pc__fo[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_kvs_ctl_o_hroot_Q[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_seq__g_fan_N__u_fan_kc[0]",
+        "area"
+      ],
+      [
+        "fclk_in_i_slg_Q_N_o_ctl[0]",
+        "area"
+      ]
+    ],
+    "clock_cells": 0,
+    "clock_depth_max": 0,
+    "clock_depth_spread": 0,
+    "leaf_sinks_p90": null,
+    "leaf_sinks_max": null,
+    "clock_net_hpwl_max": 2712.28,
+    "clock_net_hpwl_p90": 197.66,
+    "stage": "placed"
+  },
+  "clock_entry_before": {
+    "clock_entry": "fclk_in_i_kvs_ctl_o_hroot_Q[0]",
+    "clock_entry_xy": [
+      1898.656,
+      554.592
+    ],
+    "clock_entry_on_macro": 0,
+    "clock_entry_macro": [],
+    "clock_islands_fixed": 0,
+    "clock_reach_max": 267.89,
+    "clock_reach_far": [
+      189.6,
+      293.6
+    ],
+    "clock_leaf_reach_max": 2512.71,
+    "clock_leaf_reach_far": [
+      1894.8,
+      830.1
+    ],
+    "clock_leaf_reach_driver": [
+      190.6,
+      21.6
+    ],
+    "clock_entry_sink_max": 2434.0,
+    "clock_entry_sink_far": [
+      10.2,
+      9.0
+    ],
+    "clock_tree_leg_max": 2512.71,
+    "clock_tree_leg_worst": "clk -> u_bound.u_cland_fstart_ft13_o/q$_SDFF_PN0_",
+    "clock_tree_leg_edges": 22438,
+    "clock_tree_clock_cells": 0,
+    "clock_tree_unrooted_sinks": 0,
+    "clock_tree_trace_errors": []
+  },
+  "clock_entry_witness": {
+    "clock_entry": "fclk_in_i_kvs_ctl_o_hroot_Q[0]",
+    "clock_entry_xy": [
+      1898.656,
+      554.592
+    ],
+    "clock_entry_on_macro": 0,
+    "clock_entry_macro": [],
+    "clock_islands_fixed": 0,
+    "clock_reach_max": 267.89,
+    "clock_reach_far": [
+      189.6,
+      293.6
+    ],
+    "clock_leaf_reach_max": 2512.71,
+    "clock_leaf_reach_far": [
+      1894.8,
+      830.1
+    ],
+    "clock_leaf_reach_driver": [
+      190.6,
+      21.6
+    ],
+    "clock_entry_sink_max": 2434.0,
+    "clock_entry_sink_far": [
+      10.2,
+      9.0
+    ],
+    "clock_tree_leg_max": 2512.71,
+    "clock_tree_leg_worst": "clk -> u_bound.u_cland_fstart_ft13_o/q$_SDFF_PN0_",
+    "clock_tree_leg_edges": 22438,
+    "clock_tree_clock_cells": 0,
+    "clock_tree_unrooted_sinks": 0,
+    "clock_tree_trace_errors": []
+  },
+  "source_clock_pin_graph_changes": 0,
+  "pdn": "Unchanged actual kit M1/M2 followpins, M5/M6 pitch4.32, M7 pitch8.64; zero hard macros in window. Actual PG connectivity remains prototype gate.",
+  "limitations": [
+    "Witness packs exact master cell bodies on .054x.27 site rows but does not assign actual orientation or rerun OpenDB FIRM packer.",
+    "Actual existing cland FF-only bit-major implementation chooses final slots; witness is capacity/reach bound only.",
+    "Released combinational cells still require real global placement and native GRT50; no predicted overflow pass.",
+    "Baseline19 r2r captures>405, pin/clock/aspect/fill and relay failures retained."
+  ]
+}

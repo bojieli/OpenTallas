@@ -1,0 +1,115 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_GRT_DECK layers M2-M7 adjustment 0.25 iterations 50
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 69996
+[INFO GRT-0019] Found 0 clock nets.
+[WARNING GRT-0281] Net clk has a large fanout of 13213 terminals.
+[WARNING GRT-0281] Net fclk_in_ft2_i[0] has a large fanout of 1195 terminals.
+[WARNING GRT-0281] Net fclk_in_i_kvpc_Q_N_o_next[0] has a large fanout of 1227 terminals.
+[WARNING GRT-0281] Net fclk_in_i_kvs_ctl_o_hroot_Q[0] has a large fanout of 4503 terminals.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 4503
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   65671583      46499545          29.19%
+M3         Vertical     74074205      55016178          25.73%
+M4         Horizontal   57258462      42556599          25.68%
+M5         Vertical     54683405      40489537          25.96%
+M6         Horizontal   37152155      25176358          32.23%
+M7         Vertical     40374555      27296625          32.39%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50
+[INFO GRT-0102] Start extra iteration 3/50
+[INFO GRT-0102] Start extra iteration 4/50
+[INFO GRT-0102] Start extra iteration 5/50
+[INFO GRT-0102] Start extra iteration 6/50
+[INFO GRT-0102] Start extra iteration 7/50
+[INFO GRT-0102] Start extra iteration 8/50
+[INFO GRT-0102] Start extra iteration 9/50
+[INFO GRT-0102] Start extra iteration 10/50
+[INFO GRT-0102] Start extra iteration 11/50
+[INFO GRT-0102] Start extra iteration 12/50
+[INFO GRT-0102] Start extra iteration 13/50
+[INFO GRT-0102] Start extra iteration 14/50
+[INFO GRT-0102] Start extra iteration 15/50
+[INFO GRT-0102] Start extra iteration 16/50
+[INFO GRT-0102] Start extra iteration 17/50
+[INFO GRT-0102] Start extra iteration 18/50
+[INFO GRT-0102] Start extra iteration 19/50
+[INFO GRT-0102] Start extra iteration 20/50
+[INFO GRT-0102] Start extra iteration 21/50
+[INFO GRT-0102] Start extra iteration 22/50
+[INFO GRT-0102] Start extra iteration 23/50
+[INFO GRT-0102] Start extra iteration 24/50
+[INFO GRT-0102] Start extra iteration 25/50
+[INFO GRT-0102] Start extra iteration 26/50
+[INFO GRT-0102] Start extra iteration 27/50
+[INFO GRT-0102] Start extra iteration 28/50
+[INFO GRT-0102] Start extra iteration 29/50
+[INFO GRT-0102] Start extra iteration 30/50
+[INFO GRT-0102] Start extra iteration 31/50
+[INFO GRT-0102] Start extra iteration 32/50
+[INFO GRT-0102] Start extra iteration 33/50
+[INFO GRT-0102] Start extra iteration 34/50
+[INFO GRT-0102] Start extra iteration 35/50
+[INFO GRT-0102] Start extra iteration 36/50
+[INFO GRT-0102] Start extra iteration 37/50
+[INFO GRT-0102] Start extra iteration 38/50
+[INFO GRT-0102] Start extra iteration 39/50
+[INFO GRT-0102] Start extra iteration 40/50
+[INFO GRT-0102] Start extra iteration 41/50
+[INFO GRT-0102] Start extra iteration 42/50
+[INFO GRT-0102] Start extra iteration 43/50
+[INFO GRT-0102] Start extra iteration 44/50
+[INFO GRT-0102] Start extra iteration 45/50
+[INFO GRT-0102] Start extra iteration 46/50
+[INFO GRT-0102] Start extra iteration 47/50
+[INFO GRT-0102] Start extra iteration 48/50
+[INFO GRT-0102] Start extra iteration 49/50
+[INFO GRT-0102] Start extra iteration 50/50
+[INFO GRT-0197] Via related to pin nodes: 537349
+[INFO GRT-0198] Via related Steiner nodes: 10326
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 998282
+[INFO GRT-0112] Final usage 3D: 11486900
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2            46499545       3239891            6.97%            12 /  1 / 1150
+M3            55016178       2934093            5.33%             1 / 16 / 2225
+M4            42556599        840423            1.97%            14 /  1 / 1444
+M5            40489537       1052176            2.60%             1 / 12 / 1467
+M6            25176358        213194            0.85%            16 /  0 / 1309
+M7            27296625        212277            0.78%             1 /  5 / 676
+---------------------------------------------------------------------------------------
+Total        237034842       8492054            3.58%            45 / 35 / 8271
+
+[INFO GRT-0018] Total wirelength: 5124170 um
+[INFO GRT-0014] Routed nets: 93839
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 20:10:17
+OT_GRT_DONE

@@ -1,0 +1,4249 @@
+{
+ "scope": "READONLY exact current5GRT START DATA cone/pose census, no CAD/source/clock/FF/cycle edits",
+ "start_pin": {
+  "k": 6,
+  "name": "cland_fstart_in_u1_i",
+  "io": "INPUT",
+  "sig": "SIGNAL",
+  "layer": "M7",
+  "x": 133.28,
+  "y": 602.144
+ },
+ "comb_count": 4260,
+ "first_FF_count": 2094,
+ "clock_sink_edges": [],
+ "path_cells": [
+  {
+   "name": "input17",
+   "id": 21633,
+   "master": "BUFx8_ASAP7_75t_R",
+   "xy": [
+    133.704,
+    591.705
+   ],
+   "box": [
+    133.38,
+    591.57,
+    134.028,
+    591.84
+   ],
+   "inputs": [
+    {
+     "net_id": 30159,
+     "clock": false,
+     "driver": "PORT:cland_fstart_in_u1_i"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 20,
+     "signal": "SIGNAL",
+     "fanout": 70,
+     "sink_types": {
+      "B": 4,
+      "L": 66
+     },
+     "sinks": [
+      {
+       "id": 98879,
+       "name": "u_cland_u1_i/load_slew5643",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        96.066,
+        590.895
+       ]
+      },
+      {
+       "id": 98877,
+       "name": "u_cland_u1_i/load_slew5641",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        135.702,
+        591.435
+       ]
+      },
+      {
+       "id": 98876,
+       "name": "u_cland_u1_i/load_slew5640",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        141.912,
+        590.895
+       ]
+      },
+      {
+       "id": 98875,
+       "name": "u_cland_u1_i/wire5639",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        145.098,
+        591.165
+       ]
+      },
+      {
+       "id": 18548,
+       "name": "u_cland_u1_i/_13559_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        95.52600000000001,
+        588.735
+       ]
+      },
+      {
+       "id": 18554,
+       "name": "u_cland_u1_i/_13565_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        94.5,
+        587.925
+       ]
+      },
+      {
+       "id": 18525,
+       "name": "u_cland_u1_i/_13536_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        99.36,
+        590.895
+       ]
+      },
+      {
+       "id": 18531,
+       "name": "u_cland_u1_i/_13542_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        96.66,
+        590.085
+       ]
+      },
+      {
+       "id": 18533,
+       "name": "u_cland_u1_i/_13544_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        97.416,
+        587.925
+       ]
+      },
+      {
+       "id": 18539,
+       "name": "u_cland_u1_i/_13550_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        96.44399999999999,
+        589.005
+       ]
+      },
+      {
+       "id": 18541,
+       "name": "u_cland_u1_i/_13552_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        95.58000000000001,
+        587.925
+       ]
+      },
+      {
+       "id": 18503,
+       "name": "u_cland_u1_i/_13514_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        103.08600000000001,
+        589.275
+       ]
+      },
+      {
+       "id": 18507,
+       "name": "u_cland_u1_i/_13518_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        101.898,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 18509,
+       "name": "u_cland_u1_i/_13520_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        101.304,
+        590.355
+       ]
+      },
+      {
+       "id": 18515,
+       "name": "u_cland_u1_i/_13526_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        100.332,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 18517,
+       "name": "u_cland_u1_i/_13528_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        100.386,
+        590.625
+       ]
+      },
+      {
+       "id": 18521,
+       "name": "u_cland_u1_i/_13532_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        98.982,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 18480,
+       "name": "u_cland_u1_i/_13491_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        106.27199999999999,
+        589.815
+       ]
+      },
+      {
+       "id": 18482,
+       "name": "u_cland_u1_i/_13493_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        106.27199999999999,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 18486,
+       "name": "u_cland_u1_i/_13497_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        105.03,
+        589.005
+       ]
+      },
+      {
+       "id": 18488,
+       "name": "u_cland_u1_i/_13499_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        105.084,
+        590.355
+       ]
+      },
+      {
+       "id": 18494,
+       "name": "u_cland_u1_i/_13505_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        103.78800000000001,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 18496,
+       "name": "u_cland_u1_i/_13507_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        103.464,
+        589.815
+       ]
+      },
+      {
+       "id": 18458,
+       "name": "u_cland_u1_i/_13469_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        109.62,
+        590.355
+       ]
+      },
+      {
+       "id": 18460,
+       "name": "u_cland_u1_i/_13471_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        109.83600000000001,
+        587.925
+       ]
+      },
+      {
+       "id": 18464,
+       "name": "u_cland_u1_i/_13475_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        108.53999999999999,
+        589.545
+       ]
+      },
+      {
+       "id": 18469,
+       "name": "u_cland_u1_i/_13480_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        108.702,
+        587.925
+       ]
+      },
+      {
+       "id": 18473,
+       "name": "u_cland_u1_i/_13484_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        107.67599999999999,
+        590.085
+       ]
+      },
+      {
+       "id": 18475,
+       "name": "u_cland_u1_i/_13486_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        107.298,
+        587.925
+       ]
+      },
+      {
+       "id": 18430,
+       "name": "u_cland_u1_i/_13441_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        114.858,
+        590.895
+       ]
+      },
+      {
+       "id": 18434,
+       "name": "u_cland_u1_i/_13445_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        113.77799999999999,
+        588.465
+       ]
+      },
+      {
+       "id": 18436,
+       "name": "u_cland_u1_i/_13447_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        113.77799999999999,
+        590.895
+       ]
+      },
+      {
+       "id": 18440,
+       "name": "u_cland_u1_i/_13451_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        112.104,
+        588.465
+       ]
+      },
+      {
+       "id": 18445,
+       "name": "u_cland_u1_i/_13456_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        112.15799999999999,
+        590.355
+       ]
+      },
+      {
+       "id": 18449,
+       "name": "u_cland_u1_i/_13460_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        110.862,
+        588.735
+       ]
+      },
+      {
+       "id": 18451,
+       "name": "u_cland_u1_i/_13462_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        111.132,
+        590.625
+       ]
+      },
+      {
+       "id": 18407,
+       "name": "u_cland_u1_i/_13418_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        118.74600000000001,
+        590.085
+       ]
+      },
+      {
+       "id": 18409,
+       "name": "u_cland_u1_i/_13420_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        118.584,
+        588.465
+       ]
+      },
+      {
+       "id": 18413,
+       "name": "u_cland_u1_i/_13424_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        117.18,
+        590.355
+       ]
+      },
+      {
+       "id": 18415,
+       "name": "u_cland_u1_i/_13426_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        117.126,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 18421,
+       "name": "u_cland_u1_i/_13432_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        115.99199999999999,
+        589.005
+       ]
+      },
+      {
+       "id": 18423,
+       "name": "u_cland_u1_i/_13434_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        115.83000000000001,
+        590.355
+       ]
+      },
+      {
+       "id": 18384,
+       "name": "u_cland_u1_i/_13395_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        121.554,
+        588.465
+       ]
+      },
+      {
+       "id": 18386,
+       "name": "u_cland_u1_i/_13397_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        121.5,
+        590.355
+       ]
+      },
+      {
+       "id": 18392,
+       "name": "u_cland_u1_i/_13403_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        120.69,
+        589.545
+       ]
+      },
+      {
+       "id": 18394,
+       "name": "u_cland_u1_i/_13405_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        120.52799999999999,
+        587.925
+       ]
+      },
+      {
+       "id": 18400,
+       "name": "u_cland_u1_i/_13411_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        120.042,
+        589.815
+       ]
+      },
+      {
+       "id": 18402,
+       "name": "u_cland_u1_i/_13413_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        119.07,
+        587.925
+       ]
+      },
+      {
+       "id": 18363,
+       "name": "u_cland_u1_i/_13374_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        125.604,
+        589.275
+       ]
+      },
+      {
+       "id": 18365,
+       "name": "u_cland_u1_i/_13376_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        125.49600000000001,
+        590.355
+       ]
+      },
+      {
+       "id": 18369,
+       "name": "u_cland_u1_i/_13380_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        125.226,
+        588.735
+       ]
+      },
+      {
+       "id": 18371,
+       "name": "u_cland_u1_i/_13382_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        124.09200000000001,
+        590.895
+       ]
+      },
+      {
+       "id": 18377,
+       "name": "u_cland_u1_i/_13388_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        122.58000000000001,
+        588.735
+       ]
+      },
+      {
+       "id": 18379,
+       "name": "u_cland_u1_i/_13390_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        122.79599999999999,
+        590.355
+       ]
+      },
+      {
+       "id": 18338,
+       "name": "u_cland_u1_i/_13349_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.22,
+        590.895
+       ]
+      },
+      {
+       "id": 18342,
+       "name": "u_cland_u1_i/_13353_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        129.546,
+        589.545
+       ]
+      },
+      {
+       "id": 18344,
+       "name": "u_cland_u1_i/_13355_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        129.22199999999998,
+        587.925
+       ]
+      },
+      {
+       "id": 18348,
+       "name": "u_cland_u1_i/_13359_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        127.92599999999999,
+        588.735
+       ]
+      },
+      {
+       "id": 18352,
+       "name": "u_cland_u1_i/_13363_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        128.142,
+        590.355
+       ]
+      },
+      {
+       "id": 18356,
+       "name": "u_cland_u1_i/_13367_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        126.576,
+        589.815
+       ]
+      },
+      {
+       "id": 18358,
+       "name": "u_cland_u1_i/_13369_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        125.874,
+        590.625
+       ]
+      },
+      {
+       "id": 18315,
+       "name": "u_cland_u1_i/_13326_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        139.32,
+        590.895
+       ]
+      },
+      {
+       "id": 18317,
+       "name": "u_cland_u1_i/_13328_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        139.374,
+        589.815
+       ]
+      },
+      {
+       "id": 18323,
+       "name": "u_cland_u1_i/_13334_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        138.24,
+        590.625
+       ]
+      },
+      {
+       "id": 18329,
+       "name": "u_cland_u1_i/_13340_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        137.106,
+        591.165
+       ]
+      },
+      {
+       "id": 18335,
+       "name": "u_cland_u1_i/_13346_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.382,
+        589.545
+       ]
+      },
+      {
+       "id": 18294,
+       "name": "u_cland_u1_i/_13305_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        142.88400000000001,
+        590.625
+       ]
+      },
+      {
+       "id": 18300,
+       "name": "u_cland_u1_i/_13311_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        141.588,
+        591.435
+       ]
+      },
+      {
+       "id": 18310,
+       "name": "u_cland_u1_i/_13321_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        140.562,
+        591.435
+       ]
+      },
+      {
+       "id": 18286,
+       "name": "u_cland_u1_i/_13297_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        144.126,
+        590.085
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_cland_u1_i/load_slew5641",
+   "id": 98877,
+   "master": "BUFx24_ASAP7_75t_R",
+   "xy": [
+    135.702,
+    591.435
+   ],
+   "box": [
+    134.892,
+    591.3,
+    136.512,
+    591.57
+   ],
+   "inputs": [
+    {
+     "net_id": 20,
+     "clock": false,
+     "driver": "input17"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 39156,
+     "signal": "SIGNAL",
+     "fanout": 67,
+     "sink_types": {
+      "L": 66,
+      "B": 1
+     },
+     "sinks": [
+      {
+       "id": 19009,
+       "name": "u_cland_u1_i/_14020_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        135.108,
+        588.735
+       ]
+      },
+      {
+       "id": 18994,
+       "name": "u_cland_u1_i/_14005_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.652,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 18993,
+       "name": "u_cland_u1_i/_14004_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        140.77800000000002,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 18991,
+       "name": "u_cland_u1_i/_14002_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        134.487,
+        580.095
+       ]
+      },
+      {
+       "id": 18988,
+       "name": "u_cland_u1_i/_13999_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        137.64600000000002,
+        581.715
+       ]
+      },
+      {
+       "id": 18608,
+       "name": "u_cland_u1_i/_13619_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        85.91399999999999,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 18594,
+       "name": "u_cland_u1_i/_13605_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        86.72399999999999,
+        582.255
+       ]
+      },
+      {
+       "id": 18591,
+       "name": "u_cland_u1_i/_13602_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        86.02199999999999,
+        580.905
+       ]
+      },
+      {
+       "id": 18585,
+       "name": "u_cland_u1_i/_13596_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        88.18199999999999,
+        583.065
+       ]
+      },
+      {
+       "id": 18577,
+       "name": "u_cland_u1_i/_13588_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        89.208,
+        581.175
+       ]
+      },
+      {
+       "id": 18571,
+       "name": "u_cland_u1_i/_13582_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        90.55799999999999,
+        582.795
+       ]
+      },
+      {
+       "id": 18566,
+       "name": "u_cland_u1_i/_13577_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        92.44800000000001,
+        581.985
+       ]
+      },
+      {
+       "id": 18564,
+       "name": "u_cland_u1_i/_13575_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        92.124,
+        582.255
+       ]
+      },
+      {
+       "id": 18556,
+       "name": "u_cland_u1_i/_13567_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        92.286,
+        581.175
+       ]
+      },
+      {
+       "id": 18550,
+       "name": "u_cland_u1_i/_13561_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        93.96000000000001,
+        582.255
+       ]
+      },
+      {
+       "id": 18543,
+       "name": "u_cland_u1_i/_13554_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        95.418,
+        581.715
+       ]
+      },
+      {
+       "id": 18535,
+       "name": "u_cland_u1_i/_13546_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        96.12,
+        581.985
+       ]
+      },
+      {
+       "id": 18529,
+       "name": "u_cland_u1_i/_13540_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        98.334,
+        582.255
+       ]
+      },
+      {
+       "id": 18527,
+       "name": "u_cland_u1_i/_13538_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        96.768,
+        580.905
+       ]
+      },
+      {
+       "id": 18519,
+       "name": "u_cland_u1_i/_13530_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        99.684,
+        583.065
+       ]
+      },
+      {
+       "id": 18511,
+       "name": "u_cland_u1_i/_13522_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        100.494,
+        581.175
+       ]
+      },
+      {
+       "id": 18505,
+       "name": "u_cland_u1_i/_13516_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        101.898,
+        582.255
+       ]
+      },
+      {
+       "id": 18501,
+       "name": "u_cland_u1_i/_13512_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        102.6,
+        582.525
+       ]
+      },
+      {
+       "id": 18498,
+       "name": "u_cland_u1_i/_13509_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        102.816,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 18492,
+       "name": "u_cland_u1_i/_13503_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        103.68,
+        583.065
+       ]
+      },
+      {
+       "id": 18484,
+       "name": "u_cland_u1_i/_13495_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        104.868,
+        582.255
+       ]
+      },
+      {
+       "id": 18478,
+       "name": "u_cland_u1_i/_13489_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        106.05600000000001,
+        581.715
+       ]
+      },
+      {
+       "id": 18471,
+       "name": "u_cland_u1_i/_13482_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        107.19,
+        580.905
+       ]
+      },
+      {
+       "id": 18462,
+       "name": "u_cland_u1_i/_13473_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        108.594,
+        583.335
+       ]
+      },
+      {
+       "id": 18456,
+       "name": "u_cland_u1_i/_13467_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        110.106,
+        582.255
+       ]
+      },
+      {
+       "id": 18454,
+       "name": "u_cland_u1_i/_13465_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        109.62,
+        581.175
+       ]
+      },
+      {
+       "id": 18447,
+       "name": "u_cland_u1_i/_13458_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        111.132,
+        583.065
+       ]
+      },
+      {
+       "id": 18438,
+       "name": "u_cland_u1_i/_13449_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        112.15799999999999,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 18432,
+       "name": "u_cland_u1_i/_13443_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        113.616,
+        581.175
+       ]
+      },
+      {
+       "id": 18427,
+       "name": "u_cland_u1_i/_13438_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        114.912,
+        582.795
+       ]
+      },
+      {
+       "id": 18425,
+       "name": "u_cland_u1_i/_13436_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        114.47999999999999,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 18417,
+       "name": "u_cland_u1_i/_13428_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        115.77600000000001,
+        582.525
+       ]
+      },
+      {
+       "id": 18411,
+       "name": "u_cland_u1_i/_13422_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        117.18,
+        581.985
+       ]
+      },
+      {
+       "id": 18404,
+       "name": "u_cland_u1_i/_13415_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        118.04400000000001,
+        581.715
+       ]
+      },
+      {
+       "id": 18398,
+       "name": "u_cland_u1_i/_13409_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        119.232,
+        582.795
+       ]
+      },
+      {
+       "id": 18390,
+       "name": "u_cland_u1_i/_13401_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        120.96000000000001,
+        582.255
+       ]
+      },
+      {
+       "id": 18388,
+       "name": "u_cland_u1_i/_13399_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        119.988,
+        581.175
+       ]
+      },
+      {
+       "id": 18381,
+       "name": "u_cland_u1_i/_13392_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        122.094,
+        583.065
+       ]
+      },
+      {
+       "id": 18375,
+       "name": "u_cland_u1_i/_13386_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        123.28200000000001,
+        582.255
+       ]
+      },
+      {
+       "id": 18367,
+       "name": "u_cland_u1_i/_13378_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        124.30799999999999,
+        582.525
+       ]
+      },
+      {
+       "id": 18361,
+       "name": "u_cland_u1_i/_13372_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        125.226,
+        582.525
+       ]
+      },
+      {
+       "id": 18354,
+       "name": "u_cland_u1_i/_13365_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        126.63,
+        582.525
+       ]
+      },
+      {
+       "id": 18346,
+       "name": "u_cland_u1_i/_13357_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        127.494,
+        581.985
+       ]
+      },
+      {
+       "id": 18340,
+       "name": "u_cland_u1_i/_13351_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        129.06,
+        582.525
+       ]
+      },
+      {
+       "id": 18333,
+       "name": "u_cland_u1_i/_13344_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.166,
+        582.795
+       ]
+      },
+      {
+       "id": 18331,
+       "name": "u_cland_u1_i/_13342_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.54399999999998,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 18325,
+       "name": "u_cland_u1_i/_13336_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        136.89,
+        588.735
+       ]
+      },
+      {
+       "id": 18321,
+       "name": "u_cland_u1_i/_13332_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        138.29399999999998,
+        589.005
+       ]
+      },
+      {
+       "id": 18319,
+       "name": "u_cland_u1_i/_13330_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        138.024,
+        581.715
+       ]
+      },
+      {
+       "id": 18312,
+       "name": "u_cland_u1_i/_13323_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        139.482,
+        581.985
+       ]
+      },
+      {
+       "id": 18306,
+       "name": "u_cland_u1_i/_13317_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        140.832,
+        582.255
+       ]
+      },
+      {
+       "id": 17779,
+       "name": "u_cland_u1_i/_12790_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        134.73000000000002,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 14278,
+       "name": "u_cland_u1_i/_09289_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.76,
+        588.465
+       ]
+      },
+      {
+       "id": 14264,
+       "name": "u_cland_u1_i/_09275_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        140.832,
+        580.095
+       ]
+      },
+      {
+       "id": 14262,
+       "name": "u_cland_u1_i/_09273_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        140.94,
+        580.635
+       ]
+      },
+      {
+       "id": 14260,
+       "name": "u_cland_u1_i/_09271_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        140.94,
+        581.175
+       ]
+      },
+      {
+       "id": 14255,
+       "name": "u_cland_u1_i/_09266_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        136.458,
+        581.175
+       ]
+      },
+      {
+       "id": 14254,
+       "name": "u_cland_u1_i/_09265_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        134.784,
+        579.5550000000001
+       ]
+      },
+      {
+       "id": 14246,
+       "name": "u_cland_u1_i/_09257_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        141.642,
+        580.095
+       ]
+      },
+      {
+       "id": 14238,
+       "name": "u_cland_u1_i/_09249_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        142.01999999999998,
+        580.635
+       ]
+      },
+      {
+       "id": 14233,
+       "name": "u_cland_u1_i/_09244_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        141.264,
+        579.825
+       ]
+      },
+      {
+       "id": 14225,
+       "name": "u_cland_u1_i/_09236_",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        141.804,
+        580.365
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_cland_u1_i/_09236_",
+   "id": 14225,
+   "master": "INVx2_ASAP7_75t_R",
+   "xy": [
+    141.804,
+    580.365
+   ],
+   "box": [
+    141.696,
+    580.23,
+    141.912,
+    580.5
+   ],
+   "inputs": [
+    {
+     "net_id": 39156,
+     "clock": false,
+     "driver": "u_cland_u1_i/load_slew5641"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 25435,
+     "signal": "SIGNAL",
+     "fanout": 6,
+     "sink_types": {
+      "L": 6
+     },
+     "sinks": [
+      {
+       "id": 100147,
+       "name": "clone5713",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        145.341,
+        587.655
+       ]
+      },
+      {
+       "id": 14243,
+       "name": "u_cland_u1_i/_09254_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        142.263,
+        580.095
+       ]
+      },
+      {
+       "id": 14270,
+       "name": "u_cland_u1_i/_09281_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        142.803,
+        581.175
+       ]
+      },
+      {
+       "id": 14265,
+       "name": "u_cland_u1_i/_09276_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        142.641,
+        580.635
+       ]
+      },
+      {
+       "id": 14251,
+       "name": "u_cland_u1_i/_09262_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        138.18599999999998,
+        581.175
+       ]
+      },
+      {
+       "id": 14226,
+       "name": "u_cland_u1_i/_09237_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        142.749,
+        580.365
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_cland_u1_i/_09276_",
+   "id": 14265,
+   "master": "OR3x4_ASAP7_75t_R",
+   "xy": [
+    142.641,
+    580.635
+   ],
+   "box": [
+    142.398,
+    580.5,
+    142.884,
+    580.77
+   ],
+   "inputs": [
+    {
+     "net_id": 21037,
+     "clock": false,
+     "driver": "u_cland_u1_i/u_ring.tc\\[0\\]$_SDFF_PN0_"
+    },
+    {
+     "net_id": 25435,
+     "clock": false,
+     "driver": "u_cland_u1_i/_09236_"
+    },
+    {
+     "net_id": 37573,
+     "clock": false,
+     "driver": "u_cland_u1_i/load_slew4058"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 25465,
+     "signal": "SIGNAL",
+     "fanout": 49,
+     "sink_types": {
+      "B": 2,
+      "L": 47
+     },
+     "sinks": [
+      {
+       "id": 95366,
+       "name": "u_cland_u1_i/load_slew2130",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        149.85,
+        581.985
+       ]
+      },
+      {
+       "id": 95362,
+       "name": "u_cland_u1_i/load_slew2126",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        140.61599999999999,
+        589.005
+       ]
+      },
+      {
+       "id": 15941,
+       "name": "u_cland_u1_i/_10952_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        140.994,
+        588.735
+       ]
+      },
+      {
+       "id": 15943,
+       "name": "u_cland_u1_i/_10954_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        140.184,
+        590.355
+       ]
+      },
+      {
+       "id": 15945,
+       "name": "u_cland_u1_i/_10956_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        139.914,
+        587.655
+       ]
+      },
+      {
+       "id": 15951,
+       "name": "u_cland_u1_i/_10962_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        139.212,
+        582.255
+       ]
+      },
+      {
+       "id": 15919,
+       "name": "u_cland_u1_i/_10930_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        144.288,
+        589.005
+       ]
+      },
+      {
+       "id": 15921,
+       "name": "u_cland_u1_i/_10932_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        144.288,
+        590.355
+       ]
+      },
+      {
+       "id": 15923,
+       "name": "u_cland_u1_i/_10934_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        143.208,
+        581.175
+       ]
+      },
+      {
+       "id": 15925,
+       "name": "u_cland_u1_i/_10936_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        143.478,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 15927,
+       "name": "u_cland_u1_i/_10938_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        143.316,
+        590.355
+       ]
+      },
+      {
+       "id": 15929,
+       "name": "u_cland_u1_i/_10940_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        143.37,
+        580.905
+       ]
+      },
+      {
+       "id": 15931,
+       "name": "u_cland_u1_i/_10942_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        142.074,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 15933,
+       "name": "u_cland_u1_i/_10944_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        141.912,
+        590.355
+       ]
+      },
+      {
+       "id": 15935,
+       "name": "u_cland_u1_i/_10946_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        141.156,
+        581.715
+       ]
+      },
+      {
+       "id": 15938,
+       "name": "u_cland_u1_i/_10949_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        141.966,
+        583.065
+       ]
+      },
+      {
+       "id": 15897,
+       "name": "u_cland_u1_i/_10908_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        148.014,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 15899,
+       "name": "u_cland_u1_i/_10910_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        147.69,
+        587.925
+       ]
+      },
+      {
+       "id": 15901,
+       "name": "u_cland_u1_i/_10912_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        148.06799999999998,
+        589.545
+       ]
+      },
+      {
+       "id": 15903,
+       "name": "u_cland_u1_i/_10914_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        146.71800000000002,
+        582.255
+       ]
+      },
+      {
+       "id": 15905,
+       "name": "u_cland_u1_i/_10916_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        146.88,
+        587.925
+       ]
+      },
+      {
+       "id": 15907,
+       "name": "u_cland_u1_i/_10918_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        146.502,
+        590.355
+       ]
+      },
+      {
+       "id": 15909,
+       "name": "u_cland_u1_i/_10920_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        145.74599999999998,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 15911,
+       "name": "u_cland_u1_i/_10922_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        145.53,
+        587.925
+       ]
+      },
+      {
+       "id": 15913,
+       "name": "u_cland_u1_i/_10924_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        145.584,
+        590.355
+       ]
+      },
+      {
+       "id": 15916,
+       "name": "u_cland_u1_i/_10927_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        144.50400000000002,
+        582.525
+       ]
+      },
+      {
+       "id": 15879,
+       "name": "u_cland_u1_i/_10890_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        151.686,
+        589.005
+       ]
+      },
+      {
+       "id": 15885,
+       "name": "u_cland_u1_i/_10896_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        150.336,
+        588.735
+       ]
+      },
+      {
+       "id": 15887,
+       "name": "u_cland_u1_i/_10898_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        150.174,
+        590.085
+       ]
+      },
+      {
+       "id": 15889,
+       "name": "u_cland_u1_i/_10900_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        149.04,
+        583.065
+       ]
+      },
+      {
+       "id": 15891,
+       "name": "u_cland_u1_i/_10902_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        149.04,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 15894,
+       "name": "u_cland_u1_i/_10905_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        149.148,
+        590.355
+       ]
+      },
+      {
+       "id": 15853,
+       "name": "u_cland_u1_i/_10864_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        156.32999999999998,
+        589.815
+       ]
+      },
+      {
+       "id": 15859,
+       "name": "u_cland_u1_i/_10870_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        156.006,
+        589.545
+       ]
+      },
+      {
+       "id": 15865,
+       "name": "u_cland_u1_i/_10876_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        154.764,
+        589.005
+       ]
+      },
+      {
+       "id": 15872,
+       "name": "u_cland_u1_i/_10883_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        153.09,
+        589.275
+       ]
+      },
+      {
+       "id": 15829,
+       "name": "u_cland_u1_i/_10840_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        161.19,
+        588.465
+       ]
+      },
+      {
+       "id": 15831,
+       "name": "u_cland_u1_i/_10842_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        160.92000000000002,
+        590.355
+       ]
+      },
+      {
+       "id": 15835,
+       "name": "u_cland_u1_i/_10846_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        159.192,
+        587.925
+       ]
+      },
+      {
+       "id": 15837,
+       "name": "u_cland_u1_i/_10848_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        158.70600000000002,
+        590.085
+       ]
+      },
+      {
+       "id": 15841,
+       "name": "u_cland_u1_i/_10852_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        157.95,
+        587.925
+       ]
+      },
+      {
+       "id": 15843,
+       "name": "u_cland_u1_i/_10854_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        157.41,
+        589.275
+       ]
+      },
+      {
+       "id": 15849,
+       "name": "u_cland_u1_i/_10860_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        156.168,
+        589.005
+       ]
+      },
+      {
+       "id": 15809,
+       "name": "u_cland_u1_i/_10820_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        163.404,
+        590.085
+       ]
+      },
+      {
+       "id": 15811,
+       "name": "u_cland_u1_i/_10822_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        162.864,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 15815,
+       "name": "u_cland_u1_i/_10826_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        162.756,
+        589.545
+       ]
+      },
+      {
+       "id": 15821,
+       "name": "u_cland_u1_i/_10832_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        162.054,
+        588.735
+       ]
+      },
+      {
+       "id": 15823,
+       "name": "u_cland_u1_i/_10834_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        162.216,
+        590.355
+       ]
+      },
+      {
+       "id": 14268,
+       "name": "u_cland_u1_i/_09279_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        139.698,
+        582.255
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_cland_u1_i/load_slew2126",
+   "id": 95362,
+   "master": "BUFx24_ASAP7_75t_R",
+   "xy": [
+    140.61599999999999,
+    589.005
+   ],
+   "box": [
+    139.806,
+    588.87,
+    141.426,
+    589.14
+   ],
+   "inputs": [
+    {
+     "net_id": 25465,
+     "clock": false,
+     "driver": "u_cland_u1_i/_09276_"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 14506,
+     "signal": "SIGNAL",
+     "fanout": 45,
+     "sink_types": {
+      "B": 2,
+      "L": 43
+     },
+     "sinks": [
+      {
+       "id": 95361,
+       "name": "u_cland_u1_i/load_slew2125",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        110.97,
+        581.715
+       ]
+      },
+      {
+       "id": 95359,
+       "name": "u_cland_u1_i/load_slew2123",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        130.248,
+        589.275
+       ]
+      },
+      {
+       "id": 19005,
+       "name": "u_cland_u1_i/_14016_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        134.784,
+        588.735
+       ]
+      },
+      {
+       "id": 18999,
+       "name": "u_cland_u1_i/_14010_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.70600000000002,
+        581.175
+       ]
+      },
+      {
+       "id": 16083,
+       "name": "u_cland_u1_i/_11094_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        110.05199999999999,
+        583.065
+       ]
+      },
+      {
+       "id": 16075,
+       "name": "u_cland_u1_i/_11086_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        110.97,
+        582.525
+       ]
+      },
+      {
+       "id": 16065,
+       "name": "u_cland_u1_i/_11076_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        112.15799999999999,
+        581.715
+       ]
+      },
+      {
+       "id": 16059,
+       "name": "u_cland_u1_i/_11070_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        113.616,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 16053,
+       "name": "u_cland_u1_i/_11064_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        114.75,
+        582.525
+       ]
+      },
+      {
+       "id": 16045,
+       "name": "u_cland_u1_i/_11056_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        115.72200000000001,
+        581.715
+       ]
+      },
+      {
+       "id": 16043,
+       "name": "u_cland_u1_i/_11054_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        113.886,
+        583.065
+       ]
+      },
+      {
+       "id": 16039,
+       "name": "u_cland_u1_i/_11050_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        117.18,
+        583.335
+       ]
+      },
+      {
+       "id": 16033,
+       "name": "u_cland_u1_i/_11044_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        118.20599999999999,
+        582.525
+       ]
+      },
+      {
+       "id": 16031,
+       "name": "u_cland_u1_i/_11042_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        118.476,
+        581.175
+       ]
+      },
+      {
+       "id": 16023,
+       "name": "u_cland_u1_i/_11034_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        119.71799999999999,
+        581.985
+       ]
+      },
+      {
+       "id": 16019,
+       "name": "u_cland_u1_i/_11030_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        120.52799999999999,
+        582.795
+       ]
+      },
+      {
+       "id": 16017,
+       "name": "u_cland_u1_i/_11028_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        120.69,
+        581.715
+       ]
+      },
+      {
+       "id": 16013,
+       "name": "u_cland_u1_i/_11024_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        121.878,
+        588.465
+       ]
+      },
+      {
+       "id": 16011,
+       "name": "u_cland_u1_i/_11022_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        121.82400000000001,
+        582.525
+       ]
+      },
+      {
+       "id": 16007,
+       "name": "u_cland_u1_i/_11018_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        123.22800000000001,
+        588.465
+       ]
+      },
+      {
+       "id": 16004,
+       "name": "u_cland_u1_i/_11015_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        123.12,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 16001,
+       "name": "u_cland_u1_i/_11012_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        124.30799999999999,
+        589.545
+       ]
+      },
+      {
+       "id": 15999,
+       "name": "u_cland_u1_i/_11010_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        124.416,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 15997,
+       "name": "u_cland_u1_i/_11008_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        123.98400000000001,
+        582.255
+       ]
+      },
+      {
+       "id": 15993,
+       "name": "u_cland_u1_i/_11004_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        125.604,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 15991,
+       "name": "u_cland_u1_i/_11002_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        125.49600000000001,
+        581.715
+       ]
+      },
+      {
+       "id": 15987,
+       "name": "u_cland_u1_i/_10998_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        126.95400000000001,
+        589.005
+       ]
+      },
+      {
+       "id": 15985,
+       "name": "u_cland_u1_i/_10996_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        126.684,
+        582.255
+       ]
+      },
+      {
+       "id": 15979,
+       "name": "u_cland_u1_i/_10990_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        128.034,
+        588.465
+       ]
+      },
+      {
+       "id": 15977,
+       "name": "u_cland_u1_i/_10988_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        127.87199999999999,
+        581.4449999999999
+       ]
+      },
+      {
+       "id": 15975,
+       "name": "u_cland_u1_i/_10986_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        126.738,
+        583.335
+       ]
+      },
+      {
+       "id": 15971,
+       "name": "u_cland_u1_i/_10982_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        129.32999999999998,
+        585.495
+       ]
+      },
+      {
+       "id": 15967,
+       "name": "u_cland_u1_i/_10978_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.22,
+        589.275
+       ]
+      },
+      {
+       "id": 15965,
+       "name": "u_cland_u1_i/_10976_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.112,
+        587.655
+       ]
+      },
+      {
+       "id": 15963,
+       "name": "u_cland_u1_i/_10974_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.22,
+        582.525
+       ]
+      },
+      {
+       "id": 15960,
+       "name": "u_cland_u1_i/_10971_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        137.106,
+        590.085
+       ]
+      },
+      {
+       "id": 15957,
+       "name": "u_cland_u1_i/_10968_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        137.16,
+        588.465
+       ]
+      },
+      {
+       "id": 15955,
+       "name": "u_cland_u1_i/_10966_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        138.45600000000002,
+        590.895
+       ]
+      },
+      {
+       "id": 15953,
+       "name": "u_cland_u1_i/_10964_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        138.402,
+        588.465
+       ]
+      },
+      {
+       "id": 15949,
+       "name": "u_cland_u1_i/_10960_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        138.672,
+        589.545
+       ]
+      },
+      {
+       "id": 15947,
+       "name": "u_cland_u1_i/_10958_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        139.698,
+        589.275
+       ]
+      },
+      {
+       "id": 15438,
+       "name": "u_cland_u1_i/_10449_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        134.784,
+        587.925
+       ]
+      },
+      {
+       "id": 14288,
+       "name": "u_cland_u1_i/_09299_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.976,
+        587.925
+       ]
+      },
+      {
+       "id": 14286,
+       "name": "u_cland_u1_i/_09297_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        129.68099999999998,
+        584.955
+       ]
+      },
+      {
+       "id": 14285,
+       "name": "u_cland_u1_i/_09296_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        131.868,
+        583.335
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_cland_u1_i/load_slew2123",
+   "id": 95359,
+   "master": "BUFx24_ASAP7_75t_R",
+   "xy": [
+    130.248,
+    589.275
+   ],
+   "box": [
+    129.438,
+    589.14,
+    131.058,
+    589.41
+   ],
+   "inputs": [
+    {
+     "net_id": 14506,
+     "clock": false,
+     "driver": "u_cland_u1_i/load_slew2126"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 14509,
+     "signal": "SIGNAL",
+     "fanout": 48,
+     "sink_types": {
+      "B": 1,
+      "L": 47
+     },
+     "sinks": [
+      {
+       "id": 95358,
+       "name": "u_cland_u1_i/wire2122",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        94.446,
+        590.625
+       ]
+      },
+      {
+       "id": 16173,
+       "name": "u_cland_u1_i/_11184_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        94.392,
+        590.085
+       ]
+      },
+      {
+       "id": 16169,
+       "name": "u_cland_u1_i/_11180_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        94.446,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16167,
+       "name": "u_cland_u1_i/_11178_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        95.79599999999999,
+        589.815
+       ]
+      },
+      {
+       "id": 16160,
+       "name": "u_cland_u1_i/_11171_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        96.33600000000001,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16157,
+       "name": "u_cland_u1_i/_11168_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        95.364,
+        587.655
+       ]
+      },
+      {
+       "id": 16153,
+       "name": "u_cland_u1_i/_11164_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        96.98400000000001,
+        590.085
+       ]
+      },
+      {
+       "id": 16147,
+       "name": "u_cland_u1_i/_11158_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        99.25200000000001,
+        589.545
+       ]
+      },
+      {
+       "id": 16145,
+       "name": "u_cland_u1_i/_11156_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        99.144,
+        589.005
+       ]
+      },
+      {
+       "id": 16141,
+       "name": "u_cland_u1_i/_11152_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        100.386,
+        589.275
+       ]
+      },
+      {
+       "id": 16138,
+       "name": "u_cland_u1_i/_11149_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        100.16999999999999,
+        587.925
+       ]
+      },
+      {
+       "id": 16133,
+       "name": "u_cland_u1_i/_11144_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        101.68199999999999,
+        590.085
+       ]
+      },
+      {
+       "id": 16131,
+       "name": "u_cland_u1_i/_11142_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        101.46600000000001,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16127,
+       "name": "u_cland_u1_i/_11138_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        103.08600000000001,
+        588.735
+       ]
+      },
+      {
+       "id": 16125,
+       "name": "u_cland_u1_i/_11136_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        102.708,
+        587.655
+       ]
+      },
+      {
+       "id": 16121,
+       "name": "u_cland_u1_i/_11132_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        102.816,
+        589.545
+       ]
+      },
+      {
+       "id": 16119,
+       "name": "u_cland_u1_i/_11130_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        103.94999999999999,
+        587.655
+       ]
+      },
+      {
+       "id": 16113,
+       "name": "u_cland_u1_i/_11124_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        104.922,
+        590.085
+       ]
+      },
+      {
+       "id": 16111,
+       "name": "u_cland_u1_i/_11122_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        105.084,
+        589.815
+       ]
+      },
+      {
+       "id": 16107,
+       "name": "u_cland_u1_i/_11118_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        103.94999999999999,
+        584.145
+       ]
+      },
+      {
+       "id": 16105,
+       "name": "u_cland_u1_i/_11116_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        106.542,
+        589.545
+       ]
+      },
+      {
+       "id": 16099,
+       "name": "u_cland_u1_i/_11110_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        107.67599999999999,
+        589.815
+       ]
+      },
+      {
+       "id": 16091,
+       "name": "u_cland_u1_i/_11102_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        108.864,
+        589.275
+       ]
+      },
+      {
+       "id": 16089,
+       "name": "u_cland_u1_i/_11100_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        108.43199999999999,
+        587.655
+       ]
+      },
+      {
+       "id": 16085,
+       "name": "u_cland_u1_i/_11096_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        109.94399999999999,
+        589.005
+       ]
+      },
+      {
+       "id": 16079,
+       "name": "u_cland_u1_i/_11090_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        111.132,
+        590.355
+       ]
+      },
+      {
+       "id": 16077,
+       "name": "u_cland_u1_i/_11088_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        111.186,
+        588.465
+       ]
+      },
+      {
+       "id": 16071,
+       "name": "u_cland_u1_i/_11082_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        112.482,
+        590.085
+       ]
+      },
+      {
+       "id": 16067,
+       "name": "u_cland_u1_i/_11078_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        112.536,
+        588.465
+       ]
+      },
+      {
+       "id": 16063,
+       "name": "u_cland_u1_i/_11074_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        113.346,
+        589.815
+       ]
+      },
+      {
+       "id": 16061,
+       "name": "u_cland_u1_i/_11072_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        113.77799999999999,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16057,
+       "name": "u_cland_u1_i/_11068_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        114.912,
+        589.545
+       ]
+      },
+      {
+       "id": 16055,
+       "name": "u_cland_u1_i/_11066_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        114.696,
+        587.925
+       ]
+      },
+      {
+       "id": 16051,
+       "name": "u_cland_u1_i/_11062_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        115.614,
+        590.085
+       ]
+      },
+      {
+       "id": 16048,
+       "name": "u_cland_u1_i/_11059_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        116.208,
+        588.735
+       ]
+      },
+      {
+       "id": 16041,
+       "name": "u_cland_u1_i/_11052_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        117.23400000000001,
+        590.085
+       ]
+      },
+      {
+       "id": 16037,
+       "name": "u_cland_u1_i/_11048_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        117.396,
+        588.465
+       ]
+      },
+      {
+       "id": 16035,
+       "name": "u_cland_u1_i/_11046_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        118.368,
+        590.085
+       ]
+      },
+      {
+       "id": 16029,
+       "name": "u_cland_u1_i/_11040_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        119.66399999999999,
+        589.005
+       ]
+      },
+      {
+       "id": 16026,
+       "name": "u_cland_u1_i/_11037_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        119.178,
+        587.655
+       ]
+      },
+      {
+       "id": 16021,
+       "name": "u_cland_u1_i/_11032_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        120.69,
+        589.275
+       ]
+      },
+      {
+       "id": 16015,
+       "name": "u_cland_u1_i/_11026_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        121.878,
+        590.355
+       ]
+      },
+      {
+       "id": 16009,
+       "name": "u_cland_u1_i/_11020_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        122.74199999999999,
+        590.085
+       ]
+      },
+      {
+       "id": 15995,
+       "name": "u_cland_u1_i/_11006_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        125.334,
+        590.085
+       ]
+      },
+      {
+       "id": 15989,
+       "name": "u_cland_u1_i/_11000_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        126.41399999999999,
+        590.085
+       ]
+      },
+      {
+       "id": 15982,
+       "name": "u_cland_u1_i/_10993_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        128.142,
+        590.085
+       ]
+      },
+      {
+       "id": 15973,
+       "name": "u_cland_u1_i/_10984_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        129.978,
+        589.815
+       ]
+      },
+      {
+       "id": 15969,
+       "name": "u_cland_u1_i/_10980_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        130.03199999999998,
+        590.625
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_cland_u1_i/wire2122",
+   "id": 95358,
+   "master": "BUFx24_ASAP7_75t_R",
+   "xy": [
+    94.446,
+    590.625
+   ],
+   "box": [
+    93.636,
+    590.49,
+    95.256,
+    590.76
+   ],
+   "inputs": [
+    {
+     "net_id": 14509,
+     "clock": false,
+     "driver": "u_cland_u1_i/load_slew2123"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 14510,
+     "signal": "SIGNAL",
+     "fanout": 52,
+     "sink_types": {
+      "B": 1,
+      "L": 51
+     },
+     "sinks": [
+      {
+       "id": 95357,
+       "name": "u_cland_u1_i/load_slew2121",
+       "kind": "B",
+       "clock": false,
+       "xy": [
+        59.616,
+        589.005
+       ]
+      },
+      {
+       "id": 16382,
+       "name": "u_cland_u1_i/_11393_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        57.186,
+        590.355
+       ]
+      },
+      {
+       "id": 16375,
+       "name": "u_cland_u1_i/_11386_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        58.698,
+        590.625
+       ]
+      },
+      {
+       "id": 16367,
+       "name": "u_cland_u1_i/_11378_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        60.102000000000004,
+        589.545
+       ]
+      },
+      {
+       "id": 16365,
+       "name": "u_cland_u1_i/_11376_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        60.21,
+        583.065
+       ]
+      },
+      {
+       "id": 16360,
+       "name": "u_cland_u1_i/_11371_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        61.29,
+        589.815
+       ]
+      },
+      {
+       "id": 16353,
+       "name": "u_cland_u1_i/_11364_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        62.478,
+        589.815
+       ]
+      },
+      {
+       "id": 16351,
+       "name": "u_cland_u1_i/_11362_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        62.424,
+        587.925
+       ]
+      },
+      {
+       "id": 16347,
+       "name": "u_cland_u1_i/_11358_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        63.72,
+        589.275
+       ]
+      },
+      {
+       "id": 16341,
+       "name": "u_cland_u1_i/_11352_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        65.01599999999999,
+        590.625
+       ]
+      },
+      {
+       "id": 16338,
+       "name": "u_cland_u1_i/_11349_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        64.80000000000001,
+        587.655
+       ]
+      },
+      {
+       "id": 16333,
+       "name": "u_cland_u1_i/_11344_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        66.25800000000001,
+        590.085
+       ]
+      },
+      {
+       "id": 16331,
+       "name": "u_cland_u1_i/_11342_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        66.25800000000001,
+        588.735
+       ]
+      },
+      {
+       "id": 16327,
+       "name": "u_cland_u1_i/_11338_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        67.446,
+        590.085
+       ]
+      },
+      {
+       "id": 16325,
+       "name": "u_cland_u1_i/_11336_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        67.446,
+        588.735
+       ]
+      },
+      {
+       "id": 16321,
+       "name": "u_cland_u1_i/_11332_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        68.364,
+        589.275
+       ]
+      },
+      {
+       "id": 16319,
+       "name": "u_cland_u1_i/_11330_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        69.12,
+        587.655
+       ]
+      },
+      {
+       "id": 16313,
+       "name": "u_cland_u1_i/_11324_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        69.174,
+        590.085
+       ]
+      },
+      {
+       "id": 16311,
+       "name": "u_cland_u1_i/_11322_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        69.768,
+        588.735
+       ]
+      },
+      {
+       "id": 16305,
+       "name": "u_cland_u1_i/_11316_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        71.00999999999999,
+        589.545
+       ]
+      },
+      {
+       "id": 16299,
+       "name": "u_cland_u1_i/_11310_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        72.09,
+        589.815
+       ]
+      },
+      {
+       "id": 16289,
+       "name": "u_cland_u1_i/_11300_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        73.16999999999999,
+        590.625
+       ]
+      },
+      {
+       "id": 16287,
+       "name": "u_cland_u1_i/_11298_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        73.27799999999999,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16283,
+       "name": "u_cland_u1_i/_11294_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        74.196,
+        589.005
+       ]
+      },
+      {
+       "id": 16277,
+       "name": "u_cland_u1_i/_11288_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        75.27600000000001,
+        590.355
+       ]
+      },
+      {
+       "id": 16275,
+       "name": "u_cland_u1_i/_11286_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        75.708,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16270,
+       "name": "u_cland_u1_i/_11281_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        76.896,
+        589.545
+       ]
+      },
+      {
+       "id": 16267,
+       "name": "u_cland_u1_i/_11278_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        76.84200000000001,
+        587.925
+       ]
+      },
+      {
+       "id": 16263,
+       "name": "u_cland_u1_i/_11274_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        78.24600000000001,
+        589.815
+       ]
+      },
+      {
+       "id": 16261,
+       "name": "u_cland_u1_i/_11272_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        78.24600000000001,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16257,
+       "name": "u_cland_u1_i/_11268_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        80.298,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16255,
+       "name": "u_cland_u1_i/_11266_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        80.136,
+        587.655
+       ]
+      },
+      {
+       "id": 16251,
+       "name": "u_cland_u1_i/_11262_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        80.082,
+        589.815
+       ]
+      },
+      {
+       "id": 16248,
+       "name": "u_cland_u1_i/_11259_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        80.622,
+        587.925
+       ]
+      },
+      {
+       "id": 16243,
+       "name": "u_cland_u1_i/_11254_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        81.43199999999999,
+        589.815
+       ]
+      },
+      {
+       "id": 16241,
+       "name": "u_cland_u1_i/_11252_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        81.53999999999999,
+        589.005
+       ]
+      },
+      {
+       "id": 16235,
+       "name": "u_cland_u1_i/_11246_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        83.69999999999999,
+        589.815
+       ]
+      },
+      {
+       "id": 16231,
+       "name": "u_cland_u1_i/_11242_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        83.916,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16229,
+       "name": "u_cland_u1_i/_11240_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        85.15799999999999,
+        589.815
+       ]
+      },
+      {
+       "id": 16221,
+       "name": "u_cland_u1_i/_11232_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        85.536,
+        588.735
+       ]
+      },
+      {
+       "id": 16219,
+       "name": "u_cland_u1_i/_11230_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        85.26599999999999,
+        587.655
+       ]
+      },
+      {
+       "id": 16215,
+       "name": "u_cland_u1_i/_11226_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        86.184,
+        589.545
+       ]
+      },
+      {
+       "id": 16209,
+       "name": "u_cland_u1_i/_11220_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        88.668,
+        589.545
+       ]
+      },
+      {
+       "id": 16207,
+       "name": "u_cland_u1_i/_11218_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        88.398,
+        587.925
+       ]
+      },
+      {
+       "id": 16201,
+       "name": "u_cland_u1_i/_11212_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        89.58600000000001,
+        589.545
+       ]
+      },
+      {
+       "id": 16199,
+       "name": "u_cland_u1_i/_11210_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        89.856,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16195,
+       "name": "u_cland_u1_i/_11206_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        90.99000000000001,
+        590.085
+       ]
+      },
+      {
+       "id": 16193,
+       "name": "u_cland_u1_i/_11204_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        90.828,
+        588.465
+       ]
+      },
+      {
+       "id": 16189,
+       "name": "u_cland_u1_i/_11200_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        92.07,
+        589.545
+       ]
+      },
+      {
+       "id": 16187,
+       "name": "u_cland_u1_i/_11198_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        92.178,
+        587.925
+       ]
+      },
+      {
+       "id": 16182,
+       "name": "u_cland_u1_i/_11193_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        92.34,
+        590.625
+       ]
+      },
+      {
+       "id": 16179,
+       "name": "u_cland_u1_i/_11190_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        92.88,
+        589.275
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_cland_u1_i/load_slew2121",
+   "id": 95357,
+   "master": "BUFx24_ASAP7_75t_R",
+   "xy": [
+    59.616,
+    589.005
+   ],
+   "box": [
+    58.806,
+    588.87,
+    60.426,
+    589.14
+   ],
+   "inputs": [
+    {
+     "net_id": 14510,
+     "clock": false,
+     "driver": "u_cland_u1_i/wire2122"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 14511,
+     "signal": "SIGNAL",
+     "fanout": 52,
+     "sink_types": {
+      "L": 52
+     },
+     "sinks": [
+      {
+       "id": 16579,
+       "name": "u_cland_u1_i/_11590_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        21.276,
+        587.385
+       ]
+      },
+      {
+       "id": 16577,
+       "name": "u_cland_u1_i/_11588_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        20.898,
+        586.035
+       ]
+      },
+      {
+       "id": 16575,
+       "name": "u_cland_u1_i/_11586_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        21.276,
+        584.415
+       ]
+      },
+      {
+       "id": 16573,
+       "name": "u_cland_u1_i/_11584_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        22.842,
+        589.005
+       ]
+      },
+      {
+       "id": 16571,
+       "name": "u_cland_u1_i/_11582_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        22.896,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16565,
+       "name": "u_cland_u1_i/_11576_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        24.354,
+        589.275
+       ]
+      },
+      {
+       "id": 16558,
+       "name": "u_cland_u1_i/_11569_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        25.65,
+        589.545
+       ]
+      },
+      {
+       "id": 16551,
+       "name": "u_cland_u1_i/_11562_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        27.162,
+        590.085
+       ]
+      },
+      {
+       "id": 16549,
+       "name": "u_cland_u1_i/_11560_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        26.676000000000002,
+        587.925
+       ]
+      },
+      {
+       "id": 16545,
+       "name": "u_cland_u1_i/_11556_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        28.188000000000002,
+        588.735
+       ]
+      },
+      {
+       "id": 16539,
+       "name": "u_cland_u1_i/_11550_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        30.294,
+        589.005
+       ]
+      },
+      {
+       "id": 16536,
+       "name": "u_cland_u1_i/_11547_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        29.862000000000002,
+        587.655
+       ]
+      },
+      {
+       "id": 16531,
+       "name": "u_cland_u1_i/_11542_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        31.32,
+        589.275
+       ]
+      },
+      {
+       "id": 16529,
+       "name": "u_cland_u1_i/_11540_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        31.32,
+        588.465
+       ]
+      },
+      {
+       "id": 16525,
+       "name": "u_cland_u1_i/_11536_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        32.778,
+        590.085
+       ]
+      },
+      {
+       "id": 16523,
+       "name": "u_cland_u1_i/_11534_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        32.507999999999996,
+        588.465
+       ]
+      },
+      {
+       "id": 16519,
+       "name": "u_cland_u1_i/_11530_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        33.912,
+        589.275
+       ]
+      },
+      {
+       "id": 16517,
+       "name": "u_cland_u1_i/_11528_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        33.804,
+        587.655
+       ]
+      },
+      {
+       "id": 16511,
+       "name": "u_cland_u1_i/_11522_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        33.804,
+        590.355
+       ]
+      },
+      {
+       "id": 16509,
+       "name": "u_cland_u1_i/_11520_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        34.397999999999996,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16505,
+       "name": "u_cland_u1_i/_11516_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        35.424,
+        590.355
+       ]
+      },
+      {
+       "id": 16503,
+       "name": "u_cland_u1_i/_11514_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        35.586,
+        589.545
+       ]
+      },
+      {
+       "id": 16497,
+       "name": "u_cland_u1_i/_11508_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        37.314,
+        589.815
+       ]
+      },
+      {
+       "id": 16489,
+       "name": "u_cland_u1_i/_11500_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        38.772,
+        589.545
+       ]
+      },
+      {
+       "id": 16483,
+       "name": "u_cland_u1_i/_11494_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        39.096000000000004,
+        590.085
+       ]
+      },
+      {
+       "id": 16481,
+       "name": "u_cland_u1_i/_11492_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        38.772,
+        588.465
+       ]
+      },
+      {
+       "id": 16477,
+       "name": "u_cland_u1_i/_11488_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        40.230000000000004,
+        589.815
+       ]
+      },
+      {
+       "id": 16470,
+       "name": "u_cland_u1_i/_11481_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        42.012,
+        590.085
+       ]
+      },
+      {
+       "id": 16467,
+       "name": "u_cland_u1_i/_11478_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        42.066,
+        587.925
+       ]
+      },
+      {
+       "id": 16463,
+       "name": "u_cland_u1_i/_11474_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        43.254,
+        590.085
+       ]
+      },
+      {
+       "id": 16461,
+       "name": "u_cland_u1_i/_11472_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        43.308,
+        587.925
+       ]
+      },
+      {
+       "id": 16457,
+       "name": "u_cland_u1_i/_11468_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        44.496,
+        590.355
+       ]
+      },
+      {
+       "id": 16455,
+       "name": "u_cland_u1_i/_11466_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        44.388,
+        587.925
+       ]
+      },
+      {
+       "id": 16451,
+       "name": "u_cland_u1_i/_11462_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        45.576,
+        589.545
+       ]
+      },
+      {
+       "id": 16448,
+       "name": "u_cland_u1_i/_11459_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        46.007999999999996,
+        587.925
+       ]
+      },
+      {
+       "id": 16443,
+       "name": "u_cland_u1_i/_11454_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        46.17,
+        590.085
+       ]
+      },
+      {
+       "id": 16441,
+       "name": "u_cland_u1_i/_11452_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        46.332,
+        588.735
+       ]
+      },
+      {
+       "id": 16435,
+       "name": "u_cland_u1_i/_11446_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        48.06,
+        589.815
+       ]
+      },
+      {
+       "id": 16429,
+       "name": "u_cland_u1_i/_11440_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        49.464,
+        589.545
+       ]
+      },
+      {
+       "id": 16421,
+       "name": "u_cland_u1_i/_11432_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        49.95,
+        589.545
+       ]
+      },
+      {
+       "id": 16419,
+       "name": "u_cland_u1_i/_11430_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        49.842,
+        587.925
+       ]
+      },
+      {
+       "id": 16415,
+       "name": "u_cland_u1_i/_11426_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        51.3,
+        589.545
+       ]
+      },
+      {
+       "id": 16409,
+       "name": "u_cland_u1_i/_11420_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        52.92,
+        589.545
+       ]
+      },
+      {
+       "id": 16407,
+       "name": "u_cland_u1_i/_11418_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        52.974000000000004,
+        587.925
+       ]
+      },
+      {
+       "id": 16401,
+       "name": "u_cland_u1_i/_11412_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        54.054,
+        589.005
+       ]
+      },
+      {
+       "id": 16399,
+       "name": "u_cland_u1_i/_11410_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        54.162,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16395,
+       "name": "u_cland_u1_i/_11406_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        55.134,
+        588.465
+       ]
+      },
+      {
+       "id": 16393,
+       "name": "u_cland_u1_i/_11404_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        55.242000000000004,
+        587.925
+       ]
+      },
+      {
+       "id": 16389,
+       "name": "u_cland_u1_i/_11400_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        56.376,
+        588.1949999999999
+       ]
+      },
+      {
+       "id": 16387,
+       "name": "u_cland_u1_i/_11398_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        54.864000000000004,
+        585.225
+       ]
+      },
+      {
+       "id": 16379,
+       "name": "u_cland_u1_i/_11390_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        57.618,
+        588.735
+       ]
+      },
+      {
+       "id": 16373,
+       "name": "u_cland_u1_i/_11384_",
+       "kind": "L",
+       "clock": false,
+       "xy": [
+        58.536,
+        588.735
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "u_cland_u1_i/_11569_",
+   "id": 16558,
+   "master": "AO21x1_ASAP7_75t_R",
+   "xy": [
+    25.65,
+    589.545
+   ],
+   "box": [
+    25.488,
+    589.41,
+    25.812,
+    589.68
+   ],
+   "inputs": [
+    {
+     "net_id": 14511,
+     "clock": false,
+     "driver": "u_cland_u1_i/load_slew2121"
+    },
+    {
+     "net_id": 23932,
+     "clock": false,
+     "driver": "u_cland_u1_i/_11568_"
+    },
+    {
+     "net_id": 26582,
+     "clock": false,
+     "driver": "u_cland_u1_i/_08100_"
+    }
+   ],
+   "outputs": [
+    {
+     "net_id": 22087,
+     "signal": "SIGNAL",
+     "fanout": 1,
+     "sink_types": {
+      "S": 1
+     },
+     "sinks": [
+      {
+       "id": 22436,
+       "name": "u_cland_u1_i/u_ring.s_d\\[1\\]\\[10\\]$_DFFE_PP_",
+       "kind": "S",
+       "clock": false,
+       "xy": [
+        25.866,
+        586.575
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

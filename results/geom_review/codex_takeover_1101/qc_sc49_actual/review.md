@@ -1,0 +1,7 @@
+# SC49 actual closed native DATA buffer geometry LOOK
+
+Intel1 unit309237-1793623037 EXIT0, owned runtime codex-qc-sc-red-1101/sc_batch_buffer_geometry. Closed39MB dump collected without duplicate extraction/CAD. Personally viewed full auto_geom.png and actual_tails.png.49 actual selected bodies match all PREP master/bbox targets,24 chains/73 native fanout1 edges, maximum actual pin hop148.8965um/centre149.175um. Native all-other-cell/FF/CLOCK/pin/graph/flag guards PASS, PG751910/open0. No new cells/FF/cycles; no source/reset semantic inference from instance names.
+
+Actual r2r404.92/0>405, pin11.3/41.44/0unregistered,42665clock sinks rooted/ownleaf32 unchanged. Raw col1.094 versus previous3BUF1.091 worsens0.003 and remains FAIL; aspect2.102, honest customcheckpointNA/GRTNA retained. Previous GRT0/timing is not credited after49 DATA moves. Full image shows same dense core with no newly displaced FF/clock bands; tails visibly spread existing repeaters along the actual launch→endpoint paths.
+
+CONCUR actual DATA geometry for ROOT/parent to choose ONE fresh same-deck fullCLOCK+SIGNAL50 plus matchedTTFF diagnostic. Reviewer does not release replay/STA/CTS/DRT/native repair or parent/frame adoption. Existing baseline TT-388.81/FF-163.48 remain failures until new actual measurement; no gain claim. Owner/parent/ROOT notified. Rendering used actual closed dump only; no native mutation by reviewer.

@@ -1,0 +1,5 @@
+# Exact inherited PSlice tx3 GEN LOOK
+
+Personally viewed `/home/ubuntu/coord/tmp/codex-pslice-tx3-review-0400/exact_tx3_gen.png` and parsed model.json. Frozen source622cfa83e9d2b7cb2b4df40e7156dbd2c108970b,939.6x760.32/2789pins,100 true SRAMs/8columns,65inclusive guides.21.48um side streets and113um central trunk provide visible macro-side access; actual planned clock470.88,380.16 clear. Same-column macro spacing only0.216..0.264um: deliberate stacked banks, no individual per-bank STDchannel/4.32um claim. Native tap/PG/pin escape, actual guide membership/fill, FF relay/pin/r2r reach require PLACE measurement.
+
+PASS-COND for HBM parent's explicit-bash retry of ONE finite PLACE-only historical vehicle after normal source/preflight. Original tx3/tx4 exit126 occurred beforeCAD at nonexecutable run_kit_hbm.sh; failed receipts retained. No current-native4/adopted-parent evidence transfer: trunk XST3/OSTG1 plus external1in1out face shell2787FF/reset64 historical source. No new source epoch, CTS/GRT/STA/route or physical adoption authorized by review. Cores owns sole producer, actual saved PLACE image/model must be reviewed before any continuation. No CAD by reviewer.

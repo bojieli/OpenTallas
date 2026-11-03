@@ -1,0 +1,32 @@
+[
+ {
+  "variant": "A",
+  "scope": "STATIC current graph LP; no occupancy/PG/site/clock or source-event qualification",
+  "selected_existing_ff": 80,
+  "shared_reset101_movable": true,
+  "all19_captures_movable": true,
+  "margin_capture_movable": true,
+  "exact_touching_pairs": 206,
+  "success": false,
+  "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+  "landing_dx_um": 172.8,
+  "landing_dy_um": -146.88,
+  "minimum_touching_radius_success": true,
+  "minimum_touching_radius_um": 390.2040000000002
+ },
+ {
+  "variant": "B",
+  "scope": "STATIC current graph LP; no occupancy/PG/site/clock or source-event qualification",
+  "selected_existing_ff": 80,
+  "shared_reset101_movable": true,
+  "all19_captures_movable": true,
+  "margin_capture_movable": true,
+  "exact_touching_pairs": 206,
+  "success": false,
+  "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+  "landing_dx_um": 181.44,
+  "landing_dy_um": -151.2,
+  "minimum_touching_radius_success": true,
+  "minimum_touching_radius_um": 390.2040000000002
+ }
+]

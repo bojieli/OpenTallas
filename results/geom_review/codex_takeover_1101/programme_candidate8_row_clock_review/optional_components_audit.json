@@ -1,0 +1,35 @@
+{
+  "status": "PASS_NATIVE_CLOCK_GEOMETRY_PREP",
+  "actual_unique_FF": 20842,
+  "actual_unique_SRAM": 44,
+  "matched_typed_clock_pins": 20886,
+  "assigned_exactly_once": 20886,
+  "regional_roots": 32,
+  "max_load": 654,
+  "max_full_pin_L1_um": 219.8990000000007,
+  "margin_to_220_um": 0.10099999999928855,
+  "root_grid_body_overlap_halo_failures": [],
+  "entry": [
+    {
+      "name": "clk",
+      "rect_um": [
+        350.112,
+        401.52,
+        350.16,
+        402.0
+      ],
+      "failures": []
+    },
+    {
+      "name": "rst_n",
+      "rect_um": [
+        350.304,
+        401.52,
+        350.352,
+        402.0
+      ],
+      "failures": []
+    }
+  ],
+  "scope": "Full shape/source identity/landing geometry only; electrical CTS, actual built PDN connectivity, reset/START, arrival/skew, timing and physical adoption remain held"
+}

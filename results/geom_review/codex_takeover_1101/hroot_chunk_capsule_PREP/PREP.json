@@ -1,0 +1,20 @@
+{
+  "state": "NOT_DISPATCHABLE_PREP",
+  "scope": "ONE candidate normal same-ODB COMB-only GPL/DPL; root authorization pending; no source/pin/FF/clock change",
+  "input_odb_owned_epyc2": "/srv/opentallas-scratch2/claude/codex-hroot-ff-place-2338/3_place.odb",
+  "same_source_config": "original_config.mk",
+  "same_sdc": "input.sdc",
+  "normal_load": "ORFS make environment/load.tcl/load_design relativeinput after RESULTS_DIR switch",
+  "mobile_exact_cells": 4609,
+  "protected": "EVERY other instance pose/orientation, every master/flags/status, every CLOCK/DATA/PG net and BTerm",
+  "native_PG": "Required approved native_pg_binding.tcl dependency not copied/selected yet; pre/post audit must pass, no automatic binding mutation",
+  "held": [
+    "No inputODB transfer or native dispatch before ROOT decision",
+    "Fresh actual preGPL image/model review before touching CONTINUE_PLACE",
+    "PG helper approval and existing input PG0",
+    "Complete actual savedODB guard over all213407 instances/netgraphs/pins",
+    "PostDPL all19 reach/clock/pin/column/membership LOOK; no GRT/CTS/STA release",
+    "Native PG-birth analysis capability/strict guard must be resolved by pg_birth before any global_placement, even with timing-driven/port-buffering disabled; no wrapper bypass"
+  ],
+  "RAM_basis": "Previous same-source normalGPL/DPL actualpeak6.41GB; suggested12GB2T unchanged fleet normal class"
+}

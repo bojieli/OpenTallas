@@ -1,0 +1,492 @@
+[
+ {
+  "variant": "A",
+  "scope": "STATIC replay of prior absolute FF targets and rigid landing translations onto current actual213407-cell/22411FF graph; no plan/CAD edits",
+  "matched_prior_targets": 41,
+  "missing_prior_targets": [],
+  "metrics": {
+   "r2r_memory_instances": 0,
+   "r2r_incomplete_macros": [],
+   "r2r_max": 757.08,
+   "r2r_captures_gt405": 17,
+   "r2r_captures": 22408,
+   "comb_loop_cells": 0,
+   "r2r_worst": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[17\\].u_dsel/y\\[30\\]$_DFF_P_ -> u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_"
+  },
+  "remaining_bad": [
+   {
+    "distance_um": 461.808,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[3\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1262.898,
+     308.745
+    ]
+   },
+   {
+    "distance_um": 422.604,
+    "launch": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[45\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[941\\]$_DFF_P_",
+    "launch_xy": [
+     1870.992,
+     462.91499999999996
+    ],
+    "capture_xy": [
+     1561.248,
+     575.775
+    ]
+   },
+   {
+    "distance_um": 429.57,
+    "launch": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[11\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[907\\]$_DFF_P_",
+    "launch_xy": [
+     1869.804,
+     461.83500000000004
+    ],
+    "capture_xy": [
+     1556.604,
+     578.205
+    ]
+   },
+   {
+    "distance_um": 460.89,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[4\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1262.79,
+     309.555
+    ]
+   },
+   {
+    "distance_um": 559.818,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_host_die_rst_n/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1360.368,
+     308.205
+    ]
+   },
+   {
+    "distance_um": 550.692,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_host_hbm_rst_n/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1360.422,
+     317.385
+    ]
+   },
+   {
+    "distance_um": 561.546,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1361.016,
+     307.125
+    ]
+   },
+   {
+    "distance_um": 491.85,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvpc_Q_N_pc__fo/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1163.0699999999997,
+     178.87500000000003
+    ]
+   },
+   {
+    "distance_um": 441.018,
+    "launch": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[12\\].u_dsel/y\\[36\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[804\\]$_DFF_P_",
+    "launch_xy": [
+     1866.24,
+     461.83500000000004
+    ],
+    "capture_xy": [
+     1548.0720000000001,
+     584.685
+    ]
+   },
+   {
+    "distance_um": 462.348,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[5\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1264.788,
+     310.095
+    ]
+   },
+   {
+    "distance_um": 461.538,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[0\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1262.088,
+     308.205
+    ]
+   },
+   {
+    "distance_um": 462.618,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[1\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1262.628,
+     307.66499999999996
+    ]
+   },
+   {
+    "distance_um": 463.698,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1264.788,
+     308.745
+    ]
+   },
+   {
+    "distance_um": 579.99,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.fault$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1402.1399999999996,
+     329.805
+    ]
+   },
+   {
+    "distance_um": 626.076,
+    "launch": "u_bound.u_cland_i_idsrc_Q_y/u_ring.dch\\[0\\].u_dsel/y\\[2\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_idsrc_Q_y/eq$_DFF_PN0_",
+    "launch_xy": [
+     1817.424,
+     438.885
+    ],
+    "capture_xy": [
+     1263.708,
+     366.525
+    ]
+   },
+   {
+    "distance_um": 685.434,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1649.862,
+     472.08299999999963
+    ]
+   },
+   {
+    "distance_um": 757.08,
+    "launch": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[17\\].u_dsel/y\\[30\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_",
+    "launch_xy": [
+     1878.174,
+     514.755
+    ],
+    "capture_xy": [
+     1265.274,
+     370.575
+    ]
+   }
+  ],
+  "landing_dy_um": -146.88,
+  "landing_dx_um": 172.8,
+  "held": [
+   "These old coordinates were solved on countb22408FF; no current LP repair performed.",
+   "Paired pins/control/clock/bands/provider event not materialized.",
+   "No occupancy, TAP/PG, pin registration or clock closure claim."
+  ]
+ },
+ {
+  "variant": "B",
+  "scope": "STATIC replay of prior absolute FF targets and rigid landing translations onto current actual213407-cell/22411FF graph; no plan/CAD edits",
+  "matched_prior_targets": 41,
+  "missing_prior_targets": [],
+  "metrics": {
+   "r2r_memory_instances": 0,
+   "r2r_incomplete_macros": [],
+   "r2r_max": 757.08,
+   "r2r_captures_gt405": 17,
+   "r2r_captures": 22408,
+   "comb_loop_cells": 0,
+   "r2r_worst": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[17\\].u_dsel/y\\[30\\]$_DFF_P_ -> u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_"
+  },
+  "remaining_bad": [
+   {
+    "distance_um": 461.808,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[3\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1262.898,
+     308.745
+    ]
+   },
+   {
+    "distance_um": 422.604,
+    "launch": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[45\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[941\\]$_DFF_P_",
+    "launch_xy": [
+     1870.992,
+     462.91499999999996
+    ],
+    "capture_xy": [
+     1561.248,
+     575.775
+    ]
+   },
+   {
+    "distance_um": 429.57,
+    "launch": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[14\\].u_dsel/y\\[11\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[907\\]$_DFF_P_",
+    "launch_xy": [
+     1869.804,
+     461.83500000000004
+    ],
+    "capture_xy": [
+     1556.604,
+     578.205
+    ]
+   },
+   {
+    "distance_um": 460.89,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[4\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1262.79,
+     309.555
+    ]
+   },
+   {
+    "distance_um": 559.818,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_host_die_rst_n/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1360.368,
+     308.205
+    ]
+   },
+   {
+    "distance_um": 550.692,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_host_hbm_rst_n/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1360.422,
+     317.385
+    ]
+   },
+   {
+    "distance_um": 561.546,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvpc_Q_N_o_next/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1361.016,
+     307.125
+    ]
+   },
+   {
+    "distance_um": 487.53,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvpc_Q_N_pc__fo/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1158.75,
+     178.87500000000003
+    ]
+   },
+   {
+    "distance_um": 441.018,
+    "launch": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[12\\].u_dsel/y\\[36\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/q\\[804\\]$_DFF_P_",
+    "launch_xy": [
+     1866.24,
+     461.83500000000004
+    ],
+    "capture_xy": [
+     1548.0720000000001,
+     584.685
+    ]
+   },
+   {
+    "distance_um": 462.348,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[5\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1264.788,
+     310.095
+    ]
+   },
+   {
+    "distance_um": 461.538,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[0\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1262.088,
+     308.205
+    ]
+   },
+   {
+    "distance_um": 462.618,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[1\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1262.628,
+     307.66499999999996
+    ]
+   },
+   {
+    "distance_um": 463.698,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.cnt\\[2\\]$_DFFE_PN0N_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1264.788,
+     308.745
+    ]
+   },
+   {
+    "distance_um": 575.67,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_u_efault.fault$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1397.82,
+     329.805
+    ]
+   },
+   {
+    "distance_um": 626.076,
+    "launch": "u_bound.u_cland_i_idsrc_Q_y/u_ring.dch\\[0\\].u_dsel/y\\[2\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_idsrc_Q_y/eq$_DFF_PN0_",
+    "launch_xy": [
+     1817.424,
+     438.885
+    ],
+    "capture_xy": [
+     1263.708,
+     366.525
+    ]
+   },
+   {
+    "distance_um": 689.754,
+    "launch": "u_bound.u_rrl_101/q$_DFF_P_",
+    "capture": "u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq$_DFF_PN0_",
+    "launch_xy": [
+     984.4200000000001,
+     492.075
+    ],
+    "capture_xy": [
+     1649.862,
+     467.7629999999999
+    ]
+   },
+   {
+    "distance_um": 757.08,
+    "launch": "u_bound.u_cland_i_kvs_ctl_o_hroot_Q/u_ring.dch\\[17\\].u_dsel/y\\[30\\]$_DFF_P_",
+    "capture": "u_bound.u_bin_i_kvs_ctl_o_hroot_Q/eq$_DFF_PN0_",
+    "launch_xy": [
+     1878.174,
+     514.755
+    ],
+    "capture_xy": [
+     1265.274,
+     370.575
+    ]
+   }
+  ],
+  "landing_dy_um": -151.2,
+  "landing_dx_um": 181.44,
+  "held": [
+   "These old coordinates were solved on countb22408FF; no current LP repair performed.",
+   "Paired pins/control/clock/bands/provider event not materialized.",
+   "No occupancy, TAP/PG, pin registration or clock closure claim."
+  ]
+ }
+]

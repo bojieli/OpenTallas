@@ -1,0 +1,59 @@
+{
+ "scope": "STATIC current391 witness against UNCHANGED publicpin coordinates; B/INV-only first-direction register census, no land-ring substitute or contract adoption",
+ "moved_actual_existing_bodies": 2016,
+ "affected_public_pins": 2,
+ "affected_groups": {
+  "o_fch_hroot_Q_q": {
+   "pins": 1,
+   "old_max": 6.3509999999998,
+   "new_max": 244.23499999999981,
+   "new_over150": 1
+  },
+  "o_kvs_hroot_Q_o_pc": {
+   "pins": 1,
+   "old_max": 7.46099999999999,
+   "new_max": 16.471999999999984,
+   "new_over150": 0
+  }
+ },
+ "rows": [
+  {
+   "pin": "o_fch_hroot_Q_q[0]",
+   "direction": "OUTPUT",
+   "xy": [
+    1900.704,
+    233.112
+   ],
+   "old_nearest_um": 6.3509999999998,
+   "new_nearest_um": 244.23499999999981,
+   "first_regs": [
+    "u_bound.u_bout_o_fch_hroot_Q_q/q$_DFF_P_"
+   ],
+   "new_regs": [
+    [
+     1656.7060000000001,
+     232.875
+    ]
+   ]
+  },
+  {
+   "pin": "o_kvs_hroot_Q_o_pc[776]",
+   "direction": "OUTPUT",
+   "xy": [
+    1892.568,
+    0.096
+   ],
+   "old_nearest_um": 7.46099999999999,
+   "new_nearest_um": 16.471999999999984,
+   "first_regs": [
+    "u_bound.u_bout_o_kvs_hroot_Q_o_pc/q\\[776\\]$_DFF_P_"
+   ],
+   "new_regs": [
+    [
+     1888.0,
+     12.0
+    ]
+   ]
+  }
+ ]
+}
