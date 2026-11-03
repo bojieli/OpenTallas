@@ -1121,7 +1121,9 @@
       "queue_src": "claude/kit-wave-15-hbmtaps-cc-1101@e96f241822a",
       "hold_items": {
         "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
-        "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)"
+        "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
+        "*tailx_sk_step0": "DIE-HBM-58/LEC 11-02 18:5x: LEC hang class (unbounded ABC cone batch); hold until FLOW-22 LEC-CONE-TIMEOUT 9034ba3c4 is on main, then release + relaunch",
+        "*tailx_sk_steady": "DIE-HBM-58/LEC 11-02 18:5x: LEC hang class (unbounded ABC cone batch); hold until FLOW-22 LEC-CONE-TIMEOUT 9034ba3c4 is on main, then release + relaunch"
       }
     }
   },
