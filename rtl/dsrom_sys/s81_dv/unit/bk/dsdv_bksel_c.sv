@@ -24,19 +24,16 @@ module dsdv_bksel_c #(
 );
     localparam integer CB = 66, SB = 865, OB = 354;
     wire [4*CB-1:0] tc; wire [3:0] tcr; wire vf_unused; wire [513:0] vdw;
-    wire [0:0] rst_c;
-    generate if (RNF != 0) begin : g_rnf
-        reg r_f;
+    // ONE public name for the negedge rst flop (rst_nf, module scope, no alias wire): the LEC matches registers by name
+    // (the generate-scoped r_f + alias rst_c came out of synthesis as rst_c$_DFF_N_ -> unmatched, 6,182 points differ).
+    // RNF 0: the flop is unloaded and removed by synthesis.
+    reg rst_nf;
 `ifdef OT_RFD_MUT_RNF   // bench mutant: rst sampled on the RISING edge (release one edge late)
-        always @(posedge ck[0]) r_f <= rst[0];
+    always @(posedge ck[0]) rst_nf <= rst[0];
 `else
-        always @(negedge ck[0]) r_f <= rst[0];
+    always @(negedge ck[0]) rst_nf <= rst[0];
 `endif
-        assign rst_c = r_f;
-    end else begin : g_rnw
-        assign rst_c = rst;
-    end endgenerate
-    dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4), .PACE(2), .MRG_PIPE(1), .RQPIPE(1), .SLAT(4), .XDX(1)) u_c (.ck(ck), .rst(rst_c),
+    dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4), .PACE(2), .MRG_PIPE(1), .RQPIPE(1), .SLAT(4), .XDX(1)) u_c (.ck(ck), .rst(RNF != 0 ? rst_nf : rst[0]),
         .f_s({f_s_n, f_s_s}), .f_o({f_o_n, f_o_s}), .t_c(tc), .t_cr(tcr), .vd(vdw), .vf(vf_unused));
     // vdw[513], vdw[501:357]: constant 0; vdw[0]: unread (dropped pins).  Every port bit leaves a flop (+ OLL latch)
     dsdv_bk_oll #(.W(367 + 4*CB + 4), .EN(OLL)) u_oll (.ck(ck[0]),
