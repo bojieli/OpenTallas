@@ -29,7 +29,39 @@ def fixture():
         csr_apply_edges={'0':160,'1':164,'2':168,'3':172,'4':176,'9':180,'10':184,'8':188})
     return plan, offsets, programme
 
+def split_fixture():
+    """DH55-HSPLIT: hd_host -> W (HBC, coll_i0, h_rx_o) + E (lane1 coll_i1), one E->W seam lane (plan 2 cycles = +1 data cycle)."""
+    p, o, a = fixture()
+    p['partition_types']['h']['contents'][0]['module'] = 'ot_s81hd_host_w_core'
+    p['partition_types']['e'] = {'reset': {'start_role': 'bootstrap'}, 'contents': [dict(module='ot_s81hd_host_e_core')]}
+    p['partitions'].append(dict(name='host_e', type='e'))
+    for x in p['ports']:
+        if x['id'] == 'i1':
+            x['dst']['part'] = 'host_e'
+    p['ports'].append(dict(id='s0', src=dict(part='host_e', bus='l1_rx_o'), dst=dict(part='host', bus='l1_rx_i')))
+    p['lanes'].append(dict(id='seam', ports=['s0']))
+    p['latency']['lanes']['seam'] = dict(cycles=2)               # plan convention: E flop + W landing flop
+    o['start']['bootstrap_types'] = sorted(p['partition_types'])
+    o['parts']['host_e'] = dict(type='e', release=10)
+    return p, o, a
+
 class HeadBootRecipe(unittest.TestCase):
+    def test_split_host_keeps_hbc_dates_and_charges_the_seam_on_csr(self):
+        p, o, a = split_fixture()
+        a['transport']['peer_to_ctl_csr_apply'] = 10; a['transport']['peer_to_host_frame'] = 4   # +1 seam each
+        r = compile_recipe(p, o, PARAMS, a)
+        self.assertEqual(r['status'], 'TEST_RECIPE', r['blockers'])
+        self.assertEqual((r['host_part'], r['host_e_part'], r['host1_seam_cycles']), ('host', 'host_e', 1))
+        bp, bo, ba = fixture()
+        b = compile_recipe(bp, bo, PARAMS, ba)
+        self.assertEqual([f for f in r['frames'] if f['lane'] == 0], [f for f in b['frames'] if f['lane'] == 0])
+        l1 = lambda rr: [(f['csr_apply_global_edge'], f['launch_global_edge']) for f in rr['frames'] if f['lane'] == 1]
+        self.assertEqual(l1(r), [(ap, la - 1) for ap, la in l1(b)])         # same apply dates, launch 1 earlier
+        p2, o2, a2 = split_fixture()                    # transport age == config plan cycles: seam cycle not charged
+        a2['transport']['peer_to_ctl_csr_apply'] = 5
+        r2 = compile_recipe(p2, o2, PARAMS, a2)
+        self.assertEqual(r2['status'], 'BLOCKED'); self.assertIn('HOST-to-CTL', r2['blockers'][0])
+
     def test_relative_source_recipe_and_csr9_encoding(self):
         p,o,a=fixture();r=compile_recipe(p,o,PARAMS,a)
         self.assertEqual(r['status'],'TEST_RECIPE',r['blockers'])
