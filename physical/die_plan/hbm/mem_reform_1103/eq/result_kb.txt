@@ -1,0 +1,13 @@
+seed 1 replay-cycles-with-key=3000 fault_end=0
+seed 1 LOCKSTEP EQUAL (3001 lines)
+seed 1 m_addr killed
+seed 1 m_data killed
+seed 1103 replay-cycles-with-key=3000 fault_end=0
+seed 1103 LOCKSTEP EQUAL (3001 lines)
+seed 1103 m_addr killed
+seed 1103 m_data killed
+seed 7 replay-cycles-with-key=3000 fault_end=0
+seed 7 LOCKSTEP EQUAL (3001 lines)
+seed 7 m_addr killed
+seed 7 m_data killed
+rc=0

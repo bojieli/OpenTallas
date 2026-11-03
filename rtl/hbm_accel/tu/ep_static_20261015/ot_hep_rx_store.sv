@@ -29,11 +29,26 @@ module ot_hep_rx_leaf #(parameter integer W = 306, parameter integer MUT = 0) (
     reg wq; reg [5:0] aq; reg [W-1:0] dq;
     wire [511:0] mr;
     always @(posedge ck) begin wq <= we; aq <= wa; dq <= din; end
+`ifdef OT_HBM_RW_MACROS
+    // DIE-HBM-61/MEM 11-03 RE-FORM (macro channels): right-width r0c0 master, one mask pin, same 1r1w cycle contract
+    // (tools/mem_compiler/build_hbm_rightwidth_1103.py).  Repair pins were tied 0 and mask bits above W tied 0, so the
+    // W used bits behave identically; mr[511:W] were never read.
+    if (W == 306) begin : g_rw
+        wire [305:0] mr_w;
+        ot_sram_1r1w_64x306_m1_r0c0_g306 u_sram (
+            .clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mr_w),
+            .w_ce_in(wq), .w_addr_in(aq), .wd_in(dq), .w_mask_in(1'b1));
+        assign mr = {206'd0, mr_w};
+    end else begin : g_r2c2
+`endif
     ot_sram_1r1w_64x512_m1_r2c2 u_sram (
         .clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mr),
         .w_ce_in(wq), .w_addr_in(aq), .wd_in({{(512-W){1'b0}}, dq}),
         .w_mask_in({{(512-W){1'b0}}, {W{1'b1}}}),
         .rr_en(2'd0), .rr_addr(12'd0), .cr_en(2'd0), .cr_sel(18'd0));
+`ifdef OT_HBM_RW_MACROS
+    end
+`endif
     always @(posedge ck) dout <= mr[W-1:0] ^ (MUT != 0 ? {{(W-1){1'b0}}, 1'b1} : {W{1'b0}});
 endmodule
 
