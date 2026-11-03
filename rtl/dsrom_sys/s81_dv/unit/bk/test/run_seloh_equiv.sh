@@ -7,4 +7,6 @@ mk() { printf "read_verilog -sv $R/hdc/ot_hdc_prefix.sv $1 $R/dsrom_sys/s81_dv/u
 mk $P $T/base.ys; yosys -q $T/base.ys > $T/base.log 2>&1; b=$?
 sed "s/ja < 15; ja = ja + 1) acca_s = acca_s/ja < 14; ja = ja + 1) acca_s = acca_s/" $P > $T/mut.sv; mk $T/mut.sv $T/mut.ys
 yosys -q $T/mut.ys > $T/mut.log 2>&1; m=$?
-echo "SELOH_EQUIV base rc=$b (want 0) mutant rc=$m (want !=0)"; [ $b = 0 ] && [ $m != 0 ]
+sed "s/{CB{hot_r\[je\]}}/{CB{hot_r[15-je]}}/" $P > $T/mut2.sv; grep -q "hot_r\[15-je\]" $T/mut2.sv || m2=nomut
+mk $T/mut2.sv $T/mut2.ys; yosys -q $T/mut2.ys > $T/mut2.log 2>&1; m2=${m2:-$?}
+echo "SELOH_EQUIV base rc=$b (want 0) mutant acca rc=$m mutant res_eq rc=$m2 (want !=0)"; [ $b = 0 ] && [ $m != 0 ] && [ "$m2" != 0 ] && [ "$m2" != nomut ]

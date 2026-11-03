@@ -183,10 +183,24 @@ module ot_s81ph_sel_su_pipe #(
     end else begin : g_bbin
         always @(*) aboveb_s = aboveb;
     end endgenerate
+    // SELOH: res_eq selects with the one-hot of res_b[3:0], registered beside res_b (hot_r == onehot(res_b[3:0]) every
+    // edge: bb and hot come from the same geb), so the bs_r mux has no select decode and no binary 16:1 tree
+    reg [Q*CB-1:0] res_eq_s;
+    generate if (SELOH != 0) begin : g_eoh
+        reg [15:0] hot_r; integer je, se;
+        always @(posedge clk) hot_r <= g_boh.hot;
+        always @(*) begin
+            res_eq_s = {Q*CB{1'b0}};
+            for (se = 0; se < Q; se = se + 1)
+                for (je = 0; je < 16; je = je + 1)
+                    res_eq_s[CB*se +: CB] = res_eq_s[CB*se +: CB] | ({CB{hot_r[je]}} & bs_r[CB*(16*se + je) +: CB]);
+        end
+    end else begin : g_ebin
+        always @(*) for (s = 0; s < Q; s = s + 1) res_eq_s[CB*s +: CB] = bs_r[CB*(16*s + res_b[3:0]) +: CB];
+    end endgenerate
     always @(posedge clk) begin
         res_b <= {g_b4, bb}; res_ok <= okb; res_above <= aboveb_s;
-        for (s = 0; s < Q; s = s + 1)                // one edge after res_b (static counts only)
-            res_eq[CB*s +: CB] <= bs_r[CB*(16*s + res_b[3:0]) +: CB];
+        res_eq <= res_eq_s;                          // one edge after res_b (static counts only)
     end
     initial if (Q != 4) $fatal(1, "S81 search pipeline requires Q=4");
 endmodule
