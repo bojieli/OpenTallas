@@ -50,3 +50,10 @@ S81-064 l0r form 2b (RF >= 1: per-select-copy go flops gac / gbc, 0 cycles):
 S81-062 bk_g form 3 (kit-only, RF 2 RTL unchanged): recipes_rfd3a_1103 (10.824-um plan sites, both R0) and
   recipes_rfd3b_1103 (same sites, upper SRAM MY: one read port per macro face), two parallel variants.
 Kits rfd3a / rfd3b / l0r rfd3: GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.
+
+FORM 4 (11-03, owner pick a after rfd3a setup_tt -26.76 at the output ports): dsdv_bk_g RF 3 = RF 2 without the negedge
+out-face (0 cycles; receiver hold -> io_hold_parent).  Outputs /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench4.
+  run_bk_g_rf.sh RA 2 / RB 3 (equal every edge): seed 1 PASS, seed 7 PASS; RA 0 / RB 3: seed 3 PASS
+               mut 3 (OT_RFD_MUT_OF3, posedge out-face): FAIL errors=275730 (caught); mut 2 RA 1 / RB 3: FAIL 66103 (caught)
+  run_bk_bench.sh sel RF 3 (default): DSDV_BK_SEL PASS mut=0 (6 variants); +OT_RFD_MUT_OF3 base thru: FAIL (caught)
+  run_vstop_bench.sh: VSTOP_GATE PASS.  Kit rfd4 (rfd3a sites): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.

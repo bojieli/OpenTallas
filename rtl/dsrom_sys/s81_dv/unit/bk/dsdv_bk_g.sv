@@ -40,7 +40,11 @@ module dsdv_bk_g #(
     //   RF = 2 (form 2, 11-03: RF-D build 1 CTS TT -152.5 on u_vs.dl_n -> vin lane decode -> lanes[*]): RF 1 + dsdv_bk_vin
     //           LPIPE 1 (deliveries registered, one-hot lane hits pre-decoded): ln0..ln3 +1 edge (V pin -> lane word
     //           3 -> 4); vo and the drain window unchanged vs RF 1 (the selector tail is inside lower_bk TAIL_BUDGET).
-    //   RF = 0: the old form.  dsdv_bk_sel passes RF 2; dsdv_bk_col (VD_PK 0) keeps RF 0.
+    //   RF = 3 (form 4, 11-03: RF 2 at the plan sites routed congestion-free (GRT ov 0) but failed setup_tt -26.76 at the
+    //           output ports vo_n / ln*: negedge launch 416.5 + insertion ~426 ps > vclk required 916.4): RF 2 WITHOUT the
+    //           negedge out-face (b): every output leaves its existing posedge register (vstop vo regs, vin lane regs,
+    //           fault_r); 0 cycles (a rising-edge sampler sees the same value); receiver hold -> parent io_hold check.
+    //   RF = 0: the old form.  dsdv_bk_sel passes RF 3; dsdv_bk_col (VD_PK 0) keeps RF 0.
     parameter integer RF = 0
 ) (
     input  wire [0:0]        clk,
@@ -75,10 +79,16 @@ module dsdv_bk_g #(
     end endgenerate
     // ---------------------------------------------------------------- RF: negedge out-face (vo_s / vo_n / ln* / fault)
     wire [V-1:0] vo_s_r, vo_n_r; wire [4*515-1:0] ln; reg [0:0] fault_r;
-    generate if (RF != 0) begin : g_onf
+    generate if (RF == 1 || RF == 2) begin : g_onf
         reg [V-1:0] o_s, o_n; reg [4*515-1:0] o_l; reg o_f;
         always @(negedge clk[0]) begin o_s <= vo_s_r; o_n <= vo_n_r; o_l <= ln; o_f <= fault_r[0]; end
         assign vo_s = o_s; assign vo_n = o_n; assign {ln3, ln2, ln1, ln0} = o_l; assign fault = o_f;
+`ifdef OT_RFD_MUT_OF3   // bench mutant: RF 3 keeps a POSEDGE out-face (+1 edge on every output)
+    end else if (RF == 3) begin : g_onm
+        reg [V-1:0] o_s, o_n; reg [4*515-1:0] o_l; reg o_f;
+        always @(posedge clk[0]) begin o_s <= vo_s_r; o_n <= vo_n_r; o_l <= ln; o_f <= fault_r[0]; end
+        assign vo_s = o_s; assign vo_n = o_n; assign {ln3, ln2, ln1, ln0} = o_l; assign fault = o_f;
+`endif
     end else begin : g_onw
         assign vo_s = vo_s_r; assign vo_n = vo_n_r; assign {ln3, ln2, ln1, ln0} = ln; assign fault = fault_r;
     end endgenerate
