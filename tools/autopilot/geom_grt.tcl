@@ -7,6 +7,21 @@ read_db $::env(OT_GRT_ODB)
 set b [ord::get_db_block]
 foreach n [$b getNets] { if {[$n getSigType] eq "CLOCK"} { $n setSpecial } }
 foreach nm {clk ck tile_clk} { set n [$b findNet $nm]; if {$n ne "NULL"} { $n setSpecial } }
+# DIE-QC-63/KITS 11-02: nets of the kit SDC clock source ports (geom_check.sh OT_GRT_CLOCK_PORTS) are clock trees too
+set ot_nclk 0
+if {[info exists ::env(OT_GRT_CLOCK_PORTS)]} {
+  # get_ports NAME also names the bits NAME[i] of a bus port (QC fclk_in_*_i[0])
+  set ot_cp [dict create]
+  foreach pn $::env(OT_GRT_CLOCK_PORTS) { dict set ot_cp $pn 1 }
+  foreach bt [$b getBTerms] {
+    set nm [$bt getName]
+    regsub {\[[0-9]+\]$} $nm {} base
+    if {![dict exists $ot_cp $nm] && ![dict exists $ot_cp $base]} continue
+    set n [$bt getNet]
+    if {$n ne "NULL" && ![$n isSpecial] && [$n getSigType] ni {POWER GROUND}} { $n setSpecial; incr ot_nclk }
+  }
+}
+puts "OT_GRT_CLOCK_PORT_NETS $ot_nclk excluded"
 set lo [expr {[info exists ::env(OT_GRT_MIN)] ? $::env(OT_GRT_MIN) : "M2"}]
 set hi [expr {[info exists ::env(OT_GRT_MAX)] ? $::env(OT_GRT_MAX) : "M5"}]
 set adj [expr {[info exists ::env(OT_GRT_ADJ)] ? $::env(OT_GRT_ADJ) : 0.25}]
