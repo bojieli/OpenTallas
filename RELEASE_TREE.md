@@ -14,7 +14,7 @@ _Updated 2026-11-02 18:4x PST by COORD: count 53 (S81 26, HEAD 4, QC 5, KV 13, H
 
 ## DIE s81 · S81 · rev current native event2 / plan 6084e6cf0c95 · HARD FROZEN 12.20
 - [ ] S81.BIND Strict native bind · S81 / DIE-S81-47 · PASS · event2 completed 11:40:42; 398 partitions / 204 types / 873 crossings / 606281 bits, connectivity errors 0; this is not a routing pass
-- [ ] S81.CLK Die clock qualification · S81 / DIE-S81-47 · BLOCKED · T48 clock-tree GRT0, TT +49.70 and CA2330 pass; full real-view FF hold and current production composition remain incomplete → S81.TILES
+- [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-48 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kits sign; hold gate now >= 0 (OWNER 11-02) → S81.TILES
 - [ ] S81.GRT Whole-data-die global routing · S81 / DIE-S81-47 · NOT RUN · no qualified current all-partition signal+clock GRT receipt → S81.TILES → S81.PARENT
 - [ ] S81.STA Complete die TT setup / FF hold on real views · S81 / DIE-S81-47 · BLOCKED · retained partial run: TT +31.30, measured FF +10.75 on 65420 pairs; 747728 hold pairs unmeasured; current full-die propagated STA absent → S81.GRT → S81.TILES
 - [ ] S81.TILES Required current child / partition views · S81 / KIT-WAVE · RUNNING · cap B route/finish/RCX DRC0 ANT0, 748 pins preserved, final signoff+ownEQ next; L2M repaired route clean, final gates pending; Xfin relief GRT still running after prior202overflow
@@ -24,7 +24,7 @@ _Updated 2026-11-02 18:4x PST by COORD: count 53 (S81 26, HEAD 4, QC 5, KV 13, H
 
 ## DIE s81_head · HEAD · rev current l48x/l48z cohort · FROZEN 12.20 (l47u exception)
 - [ ] HEAD.BIND Current parent source / child-model composition · HEAD / DIE-HEAD-53 · BLOCKED · exact current source+views must compose before full parent release → HEAD.TILES
-- [ ] HEAD.CLK Current die clock qualification · HEAD / DIE-HEAD-53 · BLOCKED · retained l48w_sth GRT0/TT+252.75/START0of1607; only2 real core views,0 kits plus declared budgets; 530106 hold pairs unmeasured, not current full-die timing → HEAD.TILES
+- [ ] HEAD.CLK Current die clock qualification · HEAD / DIE-HEAD-53 · BLOCKED(kits) · clock proof l48w_sth GRT0/TT+252.75 stands (older pass counts); l48w_sth GRT0/TT+252.75/START0of1607; only2 real core views,0 kits plus declared budgets; 530106 hold pairs unmeasured, not current full-die timing → HEAD.TILES
 - [ ] HEAD.GRT Current whole-die signal+clock global routing · HEAD / DIE-HEAD-53 · BLOCKED · retained infrastructure routing is not a complete current parent data-route receipt → HEAD.TILES → HEAD.BIND
 - [ ] HEAD.STA Complete current parent TT/FF and seam timing · HEAD / DIE-HEAD-53 · BLOCKED · actual all-bit parent interface/hold qualification absent → HEAD.GRT → HEAD.TILES
 - [ ] HEAD.SERDES kp4 e13a own routed equivalence · HEAD / SIGNOFF-SPRINT-19 · RUNNING · n-head SIGNED TT+2.48 FF+11.85 DRC0 ANT0 faceguardPASS; existing own routedLEC CPU-active, await actualEQ before count
@@ -47,7 +47,7 @@ _Updated 2026-11-02 18:4x PST by COORD: count 53 (S81 26, HEAD 4, QC 5, KV 13, H
 
 ## DIE qwen_kvsys · KV · rev current plan_c cohort · HARD FROZEN 12.20
 - [ ] KV.BIND Current strict native bind · KV / DIE-KV-60 · PASS · source connectivity passes; no physical die credit
-- [ ] KV.CLK Complete current real-view clock timing · KV / DIE-KV-60 · BLOCKED · retained mix TT+595.71/CA0of3595 has7coreviews,0kits plus budgets; FF37674pairs NULL/unmeasured → KV.TILES
+- [ ] KV.CLK Complete current real-view clock timing · KV / DIE-KV-60 · BLOCKED(kits) · clock proof stands (older pass counts): mix TT+595.71/CA0of3595 has7coreviews,0kits plus budgets; FF37674pairs NULL/unmeasured → KV.TILES
 - [ ] KV.GRT Current whole-die global routing · KV / DIE-KV-60 · NOT RUN · latest parent macro-fit vehicle explicitly dieGRT/route NOTRUN; reported zero-overflow successes are partition/core probes → KV.TILES → KV.HROOT → KV.HG
 - [ ] KV.STA Current whole-die propagated TT/FF · KV / DIE-KV-60 · BLOCKED · no complete routed current-die timing receipt → KV.GRT → KV.CLK
 - [ ] KV.TILES Required hard-child and partition closure · KV / KIT-WAVE · RUNNING · EX70 SIGNED+own20490EQ publishedHG-only; PCfMX GRT0 now timing/repair, AHUB/PV/PHY and HR source-follow work remain
