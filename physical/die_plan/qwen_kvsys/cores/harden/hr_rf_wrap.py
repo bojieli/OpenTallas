@@ -22,6 +22,8 @@ module <mod> with the identical port list wraps it:
     is cut into B-bit column slices; each slice owns kept copies of every control it uses (wp/rp/bank copies loaded
     with the same next state, negedge copies of take/issue and of the write data per bank), so no control or data
     net fans out past one slice (bounded fanout by construction, cycle exact).
+  * exact logic rewrites (spec key "rewrite": [{"find", "replace", "add", "why"}]): a next-state expression replaced
+    by a Boolean-identical shallower form (each needs its identity argument in "why" and a 0-mismatch co-simulation).
 All other ports pass through unchanged.
 """
 import json
@@ -192,6 +194,18 @@ def queue_slices(body, sp, ck="ck"):
                       form="column slices with per-slice kept control copies, negedge take/issue/write-data copies")
 
 
+def rewrite(body, items):
+    rep = []
+    for it in items:
+        f = it["find"]
+        if body.count(f) != 1:
+            raise SystemExit(f"rf_wrap rewrite: {f[:60]!r} found {body.count(f)}x")
+        at = body.index(f); a = body.rfind("\n  always", 0, at) + 1
+        body = body[:a] + it.get("add", "") + body[a:].replace(f, it["replace"], 1)
+        rep.append(dict(find=f, why=it.get("why", "")))
+    return body, rep
+
+
 def transform(text, mod, spec):
     order, decl, at = ports(text, mod)
     clk = "ck" if "ck" in decl else None
@@ -211,6 +225,9 @@ def transform(text, mod, spec):
     if spec.get("rcopy_bits"):
         body, rc = rcopy(body, int(spec["rcopy_bits"]))
     nmr, bsr = [], None
+    rwr = []
+    if spec.get("rewrite"):
+        body, rwr = rewrite(body, spec["rewrite"])
     if spec.get("negmid"):
         body, nmr = negmid(body, spec["negmid"])
     if spec.get("queue_slices"):
@@ -258,7 +275,7 @@ def transform(text, mod, spec):
     hdr += [f"  {decl[p][0]} {decl[p][1]+' ' if decl[p][1] else ''}{p};" for p in order]
     inst = [f"  {inner} u_rf_core (" + ",\n    ".join(f".{p}({conn[p]})" for p in order) + ");", "endmodule", ""]
     rep["inner_port_keeps_dropped"] = nk
-    rep["negmid"] = nmr; rep["bank_split"] = bsr
+    rep["rewrite"] = rwr; rep["negmid"] = nmr; rep["bank_split"] = bsr
     rep["added_flops"] += sum(r["added_flops"] for r in nmr) + (bsr["added_flops"] if bsr else 0)
     rep["rcopy"] = rc; rep["added_flops"] += sum(r["added_flops"] for r in rc)
     return new.rstrip() + "\n\n" + "\n".join(hdr + lines + inst), rep
