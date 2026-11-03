@@ -1,0 +1,5 @@
+FIT_PASS edges=20000 land=20000(nz 18678, oob 1108, wrap 3222) pmem=20000(nz 14648) pvq=20000(nz 19993) stage=18097(nz 17929)
+- /srv/opentallas-scratch2/claude/die-s81-51/mem/wt/results/rtl/s81_svc_memory_fit_1103/tb.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 4.405 s; speed 3.787 us/s
+- Verilator: cpu 4.403 s on 1 threads; allocated 8 MB

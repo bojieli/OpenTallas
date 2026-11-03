@@ -32,6 +32,35 @@ CHILDREN = {
     'ot_t7_pvq_capture_candidate.sv': ('results/rtl/s81_T7_pvq_bound_cut_1040/ot_t7_pvq_capture_candidate.sv', '80367218'),
     'ot_t7_land_capture_candidate.sv': ('results/rtl/s81_T7_LAND_bound_cut_1102/ot_t7_land_capture_candidate.sv', '64e23cf3'),
 }
+# MEM v2 (svc fit, 2026-11-03): right-sized children, gate results/rtl/s81_svc_memory_fit_1103/run.sh
+CHILDREN_V2 = {
+    'ot_t7_pmem_capture_v2.sv': ('results/rtl/s81_svc_memory_fit_1103/ot_t7_pmem_capture_v2.sv', None),
+    'ot_t7_pvq_capture_v2.sv': ('results/rtl/s81_svc_memory_fit_1103/ot_t7_pvq_capture_v2.sv', None),
+    'ot_t7_land_capture_v2.sv': ('results/rtl/s81_svc_memory_fit_1103/ot_t7_land_capture_v2.sv', None),
+    'ot_hdc_v41x_attn_staging_fit.sv': ('results/rtl/s81_svc_memory_fit_1103/ot_hdc_v41x_attn_staging_fit.sv', None),
+}
+MACROS = {'v1': {'ot_sram_1r1w_256x256_m2_r2c2': 32, 'ot_sram_1r1w_32x64_m1': 34},
+          'v2': {'ot_sram_1r1w_160x256_m1_r0c0': 12, 'ot_sram_1r1w_160x265_m1_r0c0': 8,
+                 'ot_sram_1r1w_256x256_m1_r0c0': 4, 'ot_sram_1r1w_32x128_m1_r0c0': 17}}
+FIT_RE = [(re.compile(r'^(\s*)ot_t7_(land|pmem|pvq)_capture_candidate( \w+ \()$', re.M), r'\1ot_t7_\2_capture_v2\3', 3),
+          (re.compile(r"^(\s*)ot_hdc_v41x_attn_staging( #\(\.D\(32\), \.NL\(4\), \.SRAM_MACRO\(1'b1\), \.TROWS\(640\)\) "
+                      r"\w+_g_stage2_u_stage[01] \()$", re.M), r'\1ot_hdc_v41x_attn_staging_fit\2', 2)]
+
+
+def fit_v2(closed):
+    """MEM v2: the v1 closed bound with its 3 capture children and 2 staging instances bound to the right-sized
+    children (port-identical, gated against the v1 children in s81_svc_memory_fit_1103)."""
+    if re.search(r'^\s*ot_t7_land_capture_v2 ', closed, re.M): return closed   # already v2 (v2 packet)
+    for rx, rep, n in FIT_RE:
+        closed, k = rx.subn(rep, closed)
+        if k != n: raise ValueError('MEM v2: expected %d instances of %s, found %d' % (n, rx.pattern[:40], k))
+    return closed
+
+
+def children(form):
+    return CHILDREN if form == 'v1' else CHILDREN_V2
+
+
 REF_GZ = ROOT / 'results/rtl/s81_T7_pmem_bound_cut_0900/native_parent.sv.gz'   # T7 original bound 61c902f1
 NATIVE = ('ot_bind_native_193c9bdc13b0c4251a5bbbc4', 'ot_bind_native_9c28130c03bbd6a26f6fd9a5',
           'ot_bind_native_4c805a5536bda0930879099e', 'ot_hdc_v41x_attn_staging')
@@ -161,7 +190,7 @@ def applies(bound_text):
     return all(re.search(r'^\s*' + m + r'\b', bound_text, re.M) for m in NATIVE)
 
 
-def apply_kit(rtl_dir, ref_s=None, closed=None):
+def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2'):
     """Kit-RTL application (same recipe as the T7 canary3): replace s81p_<type>_bound.sv by its closure and list the
     three capture children right after it in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json files. Writes
     memory_closure.json receipt. `closed` = a precomputed closed bound text (else computed here)."""
@@ -179,22 +208,39 @@ def apply_kit(rtl_dir, ref_s=None, closed=None):
         closed, rep = box['r']
     else:
         rep = dict(before_sha256=sha(s), after_sha256=sha(closed))
+    if form == 'v2':
+        rep['v1_after_sha256'] = sha(closed); closed = fit_v2(closed); rep['after_sha256'] = sha(closed)
     kids = []
-    for c, (p, h) in CHILDREN.items():
+    for c, (p, h) in children(form).items():
         b = (ROOT / p).read_bytes()
-        if hashlib.sha256(b).hexdigest()[:8] != h: raise ValueError('child hash ' + c)
+        if h and hashlib.sha256(b).hexdigest()[:8] != h: raise ValueError('child hash ' + c)
         (rtl / c).write_bytes(b); kids.append(str(rtl / c))
+    # macro views the closure instantiates and bind did not see (bind runs before this event): black box in
+    # kit_rtl.f / files, behavioural model in kit_rtl_sim.f, lef + libs in hard_macros (same form as bind)
+    hm = kr.setdefault('hard_macros', {}); bbs, models = [], []
+    for mac in MACROS[form]:
+        if mac in hm: continue
+        d = next((ROOT / md / mac for md in ('physical/asap7_memory_macros_v2', 'physical/asap7_memory_macros')
+                  if (ROOT / md / mac / (mac + '.lef')).exists()), None)
+        if d is None: raise ValueError('MEM: no macro view for ' + mac)
+        hm[mac] = dict(dir=str(d), lef=str(d / (mac + '.lef')),
+                       libs=[str(d / ('%s_%s.lib' % (mac, c))) for c in ('ff', 'ss', 'tt')],
+                       bb=str(d / (mac + '_bb.v')), model=str(d / (mac + '.v')))
+        bbs.append(hm[mac]['bb']); models.append(hm[mac]['model'])
     edits = {}
     for fl in ('kit_rtl.f', 'kit_rtl_sim.f'):
         p = rtl / fl
         if not p.exists(): continue
-        L = p.read_text().split('\n'); i = L.index(str(bound)); L[i + 1:i + 1] = kids; edits[p] = '\n'.join(L)
-    i = kr['files'].index(str(bound)); kr['files'][i + 1:i + 1] = kids
+        L = p.read_text().split('\n'); i = L.index(str(bound))
+        L[i + 1:i + 1] = kids + (models if fl == 'kit_rtl_sim.f' else bbs); edits[p] = '\n'.join(L)
+    i = kr['files'].index(str(bound)); kr['files'][i + 1:i + 1] = kids + bbs
+    if 'sim_files' in kr and str(bound) in kr['sim_files']:
+        i = kr['sim_files'].index(str(bound)); kr['sim_files'][i + 1:i + 1] = kids + models
     edits[rtl / 'kit_rtl.json'] = json.dumps(kr, indent=1)
     for p, t in edits.items(): p.write_text(t)
     bound.write_text(closed)
     rep.update(status='APPLIED', event='S81-066 svc memory closure (T7 12605dc2 class port)', bound=str(bound),
-               children=kids, macros_added={'ot_sram_1r1w_256x256_m2_r2c2': 32, 'ot_sram_1r1w_32x64_m1': 34})
+               children=kids, form=form, macros_added=MACROS[form])
     (rtl / 'memory_closure.json').write_text(json.dumps(rep, indent=1) + '\n')
     return rep
 
@@ -206,6 +252,8 @@ def main():
     ap.add_argument('--out', help='fresh output dir')
     ap.add_argument('--kit-rtl', nargs='+', help='apply in place to kit rtl dirs (kit_rtl.json/.f); with --closed-dir reuse closed bounds')
     ap.add_argument('--closed-dir', help='packet dir (closure.json + closed/<bound>.sv.gz) or a dir of closed bounds; used only when the kit bound sha equals the recorded before sha, else the closure is computed')
+    ap.add_argument('--form', choices=('v1', 'v2'), default='v2', help='v2 (default) = right-sized children '
+                    '(MEM v2 svc fit); v1 = the 12605dc2 class port with 256x256_m2 / 32x64 masters')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--skip-self-check', action='store_true', help='only when the self-check already ran on this tool sha')
     a = ap.parse_args()
@@ -221,7 +269,7 @@ def main():
                     cd = Path(a.closed_dir); gz = cd / "closed" / (b.name + ".gz")
                     closed = gzip.decompress(gz.read_bytes()).decode() if gz.exists() else (cd / b.name).read_text()
                     if sha(closed) != r['after_sha256']: sys.exit('closed bound sha mismatch ' + t)
-            print(d, json.dumps({k: v for k, v in apply_kit(d, ref_s, closed).items() if k in ('status', 'after_sha256')}), flush=True)
+            print(d, json.dumps({k: v for k, v in apply_kit(d, ref_s, closed, a.form).items() if k in ('status', 'after_sha256')}), flush=True)
         return
     out = Path(a.out)
     if out.exists(): sys.exit('refusing existing ' + str(out))
@@ -238,12 +286,14 @@ def main():
         print('SELF-CHECK', 'PASS' if ok else 'FAIL', report['self_check']['t7'][:8], flush=True)
         if not ok:
             (out / 'closure.json').write_text(json.dumps(report, indent=1) + '\n'); sys.exit(2)
-    for c, (p, h) in CHILDREN.items():
+    for c, (p, h) in children(a.form).items():
         b = (ROOT / p).read_bytes()
-        if hashlib.sha256(b).hexdigest()[:8] != h: sys.exit('child hash ' + c)
+        if h and hashlib.sha256(b).hexdigest()[:8] != h: sys.exit('child hash ' + c)
         (out / c).write_bytes(b)
     for name, (new, rep) in res:
         typ = re.sub(r'^s81p_|_bound\.sv$', '', name)
+        if new is not None and a.form == 'v2':
+            rep['v1_after_sha256'] = rep['after_sha256']; new = fit_v2(new); rep['after_sha256'] = sha(new)
         if new is not None: (out / name).write_text(new)
         report['types'][typ] = rep; print(typ, rep['status'], rep.get('reason', rep.get('after_sha256', '')[:8]), flush=True)
     (out / 'closure.json').write_text(json.dumps(report, indent=1) + '\n')

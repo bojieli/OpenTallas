@@ -35,3 +35,19 @@ def test_head_detects_wrapper_level():
 
 def test_not_applicable_without_helpers():
     assert not c.applies('module m; endmodule\n')
+
+
+def test_fit_v2_rebinds_children_and_is_idempotent():
+    import gzip, json
+    pk = c.ROOT / "results/rtl/s81_svc_memory_fit_1103"
+    v1 = c.ROOT / "results/rtl/s81_svc_memory_closure_1103/closed/s81p_svc_hi_dsdv_svc_rs__t1_bound.sv.gz"
+    s1 = gzip.decompress(v1.read_bytes()).decode()
+    s2 = c.fit_v2(s1)
+    assert c.fit_v2(s2) == s2
+    assert s2.count("ot_hdc_v41x_attn_staging_fit #(") == 2 and "ot_t7_land_capture_candidate " not in s2
+    rec = json.loads((pk / "closure.json").read_text())["types"]["svc_hi_dsdv_svc_rs__t1"]
+    assert c.sha(s2) == rec["after_sha256"] and c.sha(s1) == rec["v1_after_sha256"]
+    for name, (p, _) in c.CHILDREN_V2.items():
+        assert (c.ROOT / p).exists(), name
+    with pytest.raises(ValueError):
+        c.fit_v2(s1.replace("ot_t7_pvq_capture_candidate ", "ot_t7_pvq_capture_x "))
