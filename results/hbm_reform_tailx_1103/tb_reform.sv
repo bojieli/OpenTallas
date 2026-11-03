@@ -62,6 +62,7 @@ initial begin
   // phase A: 50 clean schedules, 640-edge spacing (dut L = SKL+SDIV+CAP+2 = 576), value classes incl. max4 ties
   for(f=0;f<50;f=f+1) begin
     randin(f%5==4 ? 1 : f%5==3 ? 2 : f%5==2 ? 3 : 0); launch=1; @(negedge clk); #1 launch=0;
+    randin(1);   // scramble the launch data after the launch edge: only the launch-edge sample may be used
     for(k=0;k<640;k=k+1) begin sk_out_valid=(k>=200); sk_fault=(f==7&&k==300); sk_in_ready=!(f==11&&k<260); @(negedge clk); #1; end
     sk_out_valid=0;
   end

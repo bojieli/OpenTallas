@@ -75,9 +75,11 @@ def rest_source():
     a=must(a,"    localparam integer P1=1,P2=28,MAX=55,P3=56,P4=75,P5=148,P6=159,P7=186,EREADY=197;\n",
 """    // Unit latencies (RE-FORM: the c12 1.2 GHz library at LAT 6) and the operand register OPQ; every phase
     // starts when the previous one has written back (the original constants are this formula at 3/3/49/19/0).
-    localparam integer OPQ=(REFORM!=0)?1:0, MXS=OPQ;
+    // LDQ: launch-load register (RE-FORM): launch and the launch data are registered at the face, so
+    // t/b/s load one edge after launch and P1 starts one edge later.
+    localparam integer OPQ=(REFORM!=0)?1:0, MXS=OPQ, LDQ=(REFORM!=0)?1:0;
     localparam integer LMU=(REFORM!=0)?6:3, LAU=(REFORM!=0)?6:3, LEU=7*LMU+8*LAU+4, LDU=19;
-    localparam integer P1=1, P2=P1+24+LMU+OPQ, MAX=P2+24+LAU+OPQ, P3=MAX+1+MXS, P4=P3+16+LAU+OPQ,
+    localparam integer P1=1+LDQ, P2=P1+24+LMU+OPQ, MAX=P2+24+LAU+OPQ, P3=MAX+1+MXS, P4=P3+16+LAU+OPQ,
         P5=P4+24+LEU+OPQ, P6=P5+8+LAU+OPQ, P7=P6+8+LDU+OPQ, EREADY=P7+8+((LAU>LMU)?LAU:LMU)+OPQ;
 """)
     a=must(a,"reg [31:0] t[0:23],b[0:23],s[0:2],mx[0:3];","reg [31:0] t[0:23],b[0:23],s[0:2],mx[0:3],mlo[0:3],mhi[0:3];")
@@ -107,9 +109,60 @@ def rest_source():
     a=must(a,"    wire [4:0] i_comb=p1?5'(age-P1):p2?5'(age-P2):p3?5'(age-P3+8):\n        p4?5'(age-P4):p5?5'(age-P5):p6?5'(age-P6):5'(age-P7);",
              "    wire [4:0] i_comb=p1_c?5'(age-P1):p2_c?5'(age-P2):p3_c?5'(age-P3+8):\n        p4_c?5'(age-P4):p5_c?5'(age-P5):p6_c?5'(age-P6):5'(age-P7);")
     a=must(a,"generate if (PREDECODE_INDEX != 0) begin:g_predecode_index","generate if (PREDECODE_INDEX != 0 || (REFORM != 0 && REFORM_COMB == 0)) begin:g_predecode_index")
+    a=must(a,"    wire [4:0] i;\n    generate if (PREDECODE_INDEX","    wire [4:0] i,i_nx;   // i_nx: next index (feeds the registered one-hot select)\n    generate if (PREDECODE_INDEX")
+    a=must(a,"        assign i=i_q;\n","        assign i=i_q; assign i_nx=address(age_next,active_next);\n")
+    a=must(a,"        assign i=i_comb;\n","        assign i=i_comb; assign i_nx=i_comb;\n")
+    old_ld="""        if(launch)begin
+            for(integer j=0;j<24;j=j+1)begin t[j]<=mixes[j*32+:32];b[j]<=bases[j*32+:32];end
+            for(integer j=0;j<3;j=j+1)s[j]<=scales[j*32+:32];
+        end
+"""
+    a=must(a,old_ld,"""        for(integer j=0;j<24;j=j+1)if(ld_r[j])begin t[j]<=ld_mix[j*32+:32];b[j]<=ld_bas[j*32+:32];end
+        if(ld_r[0])for(integer j=0;j<3;j=j+1)s[j]<=ld_scl[j*32+:32];
+""")
     i=a.index("    wire [31:0] ma=t[i],mb=");j=a.index("    function automatic greater")
-    a=a[:i]+"""    wire [31:0] mb=p1?s[(i<4)?0:(i<8)?1:2]:32'h40000000;
-    wire [31:0] ab=p2?b[i]:p3?(mx[(i-8)>>2]^32'h80000000):
+    a=a[:i]+"""    // LDQ: launch and its data registered at the face; the load enable is one
+    // register per word (kept, not merged) so no launch net fans out to the
+    // whole 1632-bit load. t/b/s then load one edge after launch (P1=1+LDQ).
+    wire [23:0] ld_r;
+    wire [767:0] ld_mix,ld_bas;
+    wire [95:0] ld_scl;
+    generate if (LDQ != 0) begin:g_launch_q
+        (* keep *) reg [23:0] ld_q;
+        reg [767:0] mix_q,bas_q;
+        reg [95:0] scl_q;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)ld_q<=24'd0;
+            else ld_q<={24{launch}};
+        always @(posedge clk)begin mix_q<=mixes;bas_q<=bases;scl_q<=scales;end
+        assign ld_r=ld_q; assign ld_mix=mix_q; assign ld_bas=bas_q; assign ld_scl=scl_q;
+    end else begin:g_launch_c
+        assign ld_r={24{launch}}; assign ld_mix=mixes; assign ld_bas=bases; assign ld_scl=scales;
+    end endgenerate
+    // One-hot operand select (RE-FORM): a registered one-hot of the next index
+    // replaces the binary 24:1 mux, so no index bit fans out to 1536 select
+    // inputs; an out-of-range index selects 0 (only on cycles with no valid).
+    function automatic [23:0] onehot(input [4:0] k);
+        onehot=24'd0;
+        for(integer n=0;n<24;n=n+1)onehot[n]=(k==5'(n));
+    endfunction
+    wire [23:0] oh;
+    reg [31:0] t_sel,b_sel;
+    generate if (OPQ != 0 && REFORM_COMB == 0) begin:g_onehot_q
+        reg [23:0] oh_q;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)oh_q<=onehot(5'(0-P7));
+            else oh_q<=onehot(i_nx);
+        assign oh=oh_q;
+    end else begin:g_onehot_c
+        assign oh=onehot(i);
+    end endgenerate
+    always @*begin
+        t_sel=32'd0; b_sel=32'd0;
+        for(integer n=0;n<24;n=n+1)begin t_sel=t_sel|(t[n]&{32{oh[n]}}); b_sel=b_sel|(b[n]&{32{oh[n]}}); end
+    end
+    wire [31:0] mb=p1?s[(i<4)?0:(i<8)?1:2]:32'h40000000;
+    wire [31:0] ab=p2?((OPQ!=0)?b_sel:b[i]):p3?(mx[(i-8)>>2]^32'h80000000):
         p5?32'h3f800000:(MUT_PRE?32'd0:HC_EPS);
     // OPQ: operand capture register (RE-FORM). t[i] is captured once and feeds
     // mul a, add a, exp x (sign flipped below i=8) and div b; valids and the
@@ -124,7 +177,7 @@ def rest_source():
         always @(posedge clk or negedge rst_n)
             if(!rst_n){mv_q,av_q,ev_q,dv_q}<=4'd0;
             else {mv_q,av_q,ev_q,dv_q}<={mv,av,p4,p6};
-        always @(posedge clk)begin ti_q<=t[i];mb_q<=mb;ab_q<=ab;neg_q<=(i<8);end
+        always @(posedge clk)begin ti_q<=t_sel;mb_q<=mb;ab_q<=ab;neg_q<=(i<8);end
         assign {mv_u,av_u,ev_u,dv_u,neg_u}={mv_q,av_q,ev_q,dv_q,neg_q};
         assign ti_u=ti_q; assign mb_u=mb_q; assign ab_u=ab_q;
     end else begin:g_operand_c
@@ -183,7 +236,7 @@ def rest_source():
     b=must(b,"    parameter integer NSTA = 0,", "    parameter integer PREDECODE_INDEX = 0,\n    parameter integer NSTA = 0,")
     b=must(b,".NSTA(NSTA)) u_tail", ".NSTA(NSTA), .PREDECODE_INDEX(PREDECODE_INDEX), .REFORM(REFORM), .REFORM_COMB(REFORM_COMB)) u_tail")
     b=must(b,"    parameter integer PREDECODE_INDEX = 0,\n", "    parameter integer PREDECODE_INDEX = 0,\n    parameter integer REFORM = 1,     // RE-FORM 11-03 (0 = bench gold only)\n    parameter integer REFORM_COMB = 0, // bench only (u_tail REFORM_COMB)\n"
-        "    parameter integer TE = (REFORM != 0) ? 265 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)\n"
+        "    parameter integer TE = (REFORM != 0) ? 266 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)\n"
         "    parameter integer SKL = 198 + SDIV * ((TE + 1 - 198 + SDIV - 1) / SDIV),   // sink launch age: whole SDIV periods later\n")
     b=must(b,"    parameter integer L = 198 + SDIV + CAP + 2", "    parameter integer L = SKL + SDIV + CAP + 2")
     b=must(b,"age >= 10'd198 && wrap","age >= 10'(SKL) && wrap")
