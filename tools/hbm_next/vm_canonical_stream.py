@@ -59,7 +59,7 @@ def source_scope(records):
                 evidence=dict(ACCEPT_records=accept,TOKX_records=tokx),
                 normalization='Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.')
 
-def compile_stream(records,first,last,backing,IR,RC,emit_dir=None,group_static=False,retain_static=False):
+def compile_stream(records,first,last,backing,IR,RC,emit_dir=None,group_static=False,retain_static=False,vm_align=8):
     native_capacity(backing,4*(1<<19));ALL=(1<<len(RC.UNITS))-1
     blob=bytearray();manifest=[];phases=[];source=first
     state=None;pending_expert_writes=None
@@ -72,13 +72,13 @@ def compile_stream(records,first,last,backing,IR,RC,emit_dir=None,group_static=F
         anchor=max(external,key=lambda v:v['b']-v['a']);a=anchor['a'];size=o['b']-o['a'];out=[]
         for position in np.flatnonzero(state.vm==state.back[a]):
             c=int(position)-(a-o['a'])
-            if not 0<=c<c+size<=262144 or(c-o['a'])%8:continue
+            if not 0<=c<c+size<=262144 or(c-o['a'])%vm_align:continue
             if all(np.array_equal(state.vm[c+v['a']-o['a']:c+v['b']-o['a']],state.back[v['a']:v['b']])for v in external):out.append(c)
         return out
     def allocated(start,count,end):
-        if state is None:return build(records,source,end,start,count,IR,[(0,1<<19)])
-        try:return build(records,source,end,start,count,IR,[(0,1<<19)],placement_preference=resident_bases)
-        except ValueError:return build(records,source,end,start,count,IR,[(0,1<<19)])
+        if state is None:return build(records,source,end,start,count,IR,[(0,1<<19)],align=vm_align)
+        try:return build(records,source,end,start,count,IR,[(0,1<<19)],placement_preference=resident_bases,align=vm_align)
+        except ValueError:return build(records,source,end,start,count,IR,[(0,1<<19)],align=vm_align)
     def emit(r,x,kind,**meta):
         nonlocal pending_expert_writes
         q=copy.deepcopy(r)
@@ -100,7 +100,7 @@ def compile_stream(records,first,last,backing,IR,RC,emit_dir=None,group_static=F
         if(r.unit,r.op)==('IDX','UNION'):
             end=expert_end(records,source)
             if end>last:raise ValueError('range ends inside actual expert region')
-            raw,p=expert_lower(records,source,end);before=len(manifest)
+            raw,p=expert_lower(records,source,end,align=None if vm_align==8 else vm_align);before=len(manifest)
             if state is not None:pending_expert_writes=opaque_expert_writes(records,source,end,IR)
             for seg in p['segments']:transfer('load',*seg['source_words'],seg['vm_words'][0])
             for m in p['records']:
@@ -151,6 +151,7 @@ def compile_stream(records,first,last,backing,IR,RC,emit_dir=None,group_static=F
             phases.append(dict(source_range=[source,end],kind='stream_pair'if any(d.space=='STREAM'for d in r.desc.values())else'static',source_slots=[start,start+count],high_water_words=p['high_water_words'],commands=len(manifest)-before,command_range=[before,len(manifest)]))
         source=end+1
     packet=dict(schema='opentallas.hbm.vm_canonical_stream.v1',programme_scope=source_scope(records),source_range=[first,last],backing_range=[backing,backing+4*(1<<19)],phases=phases,records=manifest,native_commands=len(manifest),transfer_bytes=sum(m['hbm_range'][1]-m['hbm_range'][0]for m in manifest if'hbm_range'in m),max_vm_words=max(p['high_water_words']for p in phases),source_order_preserved=not group_static,independent_row_grouping=group_static,resident_placement_preferences=retain_static,whole_programme_executable=False,full_programme_fits=None,scratch_reserved=False,backend_qualified=False,holds=['actual backend DMA stack/VM namespace must cover canonical backing loads and stores','scratch must be reserved and correct source entry epoch published','native source arithmetic/mutable HBM execution and full source calendar need qualification'])
+    if vm_align!=8:packet['vm_hbm_congruence_words']=vm_align
     return bytes(blob),packet
 
 
@@ -158,13 +159,14 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     for k in('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--group-static',action='store_true');ap.add_argument('--retain-static',action='store_true')
+    ap.add_argument('--vm-align',type=int,default=8,help='VM/HBM-home congruence in words (8 = unchanged; 64 = native writer group, four-stack ruling A)')
     ap.add_argument('--backing-base',type=lambda s:int(s,0),required=True);ap.add_argument('--first',type=int,default=0);ap.add_argument('--last',type=int)
     a=ap.parse_args()
     from isa_loader import load_isa
     IR,IC=load_isa(a.compiler_tools)
     from hgi_sim import records as RC
     raw=Path(a.image).read_bytes();records=IC.decode_all(raw);last=len(records)-1 if a.last is None else a.last
-    blob,packet=compile_stream(records,a.first,last,a.backing_base,IR,RC,group_static=a.group_static,retain_static=a.retain_static);packet['source_sha256']=hashlib.sha256(raw).hexdigest()
+    blob,packet=compile_stream(records,a.first,last,a.backing_base,IR,RC,group_static=a.group_static,retain_static=a.retain_static,vm_align=a.vm_align);packet['source_sha256']=hashlib.sha256(raw).hexdigest()
     out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True);(out/'stream.hgi1r').write_bytes(blob);(out/'stream.json').write_text(json.dumps(packet,indent=1)+'\n');print(json.dumps({k:packet[k]for k in('source_range','native_commands','transfer_bytes','max_vm_words','backend_qualified','whole_programme_executable')}))
 
 if __name__=='__main__':main()

@@ -1,0 +1,102 @@
+{
+ "image": "results/tok_hbm_codex_1028/candidate_mtp_N6_a122.hgi1r (sha 79a81185 source = N6 MTP_VERIFY step)",
+ "cmd": "vm_canonical_stream.py --backing-base 0x1D11000000 --group-static --retain-static --vm-align A; vm_static_cache.py; spill_staging_plan.plan (codex 7e8287090); check_canonical.py",
+ "vm_align_8": {
+  "compile": {
+   "source_range": [
+    0,
+    3915
+   ],
+   "native_commands": 41888,
+   "transfer_bytes": 383876096,
+   "max_vm_words": 255168,
+   "backend_qualified": false,
+   "whole_programme_executable": false
+  },
+  "check": {
+   "address_checks": 20842,
+   "expert_regions": 40,
+   "stream_rows": 6,
+   "source_records": 3916,
+   "native_commands": 41888,
+   "transfer_bytes": 383876096,
+   "max_vm_words": 255168,
+   "numerical_arithmetic": false,
+   "backend_qualified": false,
+   "whole_programme_executable": false,
+   "controls": [
+    "wrong_canonical_load",
+    "missing_load_drain",
+    "stream_coupling_wait",
+    "known_reverse_source_group_rejected"
+   ]
+  },
+  "check_rc": "rc=0",
+  "stream_sha256": {
+   "cached": "79a81185a91387fdfe5e8bea1cd4429f31b7ce4a19f9d5f962109878802e76a3",
+   "resident": "787acf477e04126f72855083bb7f8ee27b41633b87aef257d0a9db68a4f90718"
+  },
+  "staging": {
+   "image_sha256": "79a81185a91387fdfe5e8bea1cd4429f31b7ce4a19f9d5f962109878802e76a3",
+   "native_fragments": 83229,
+   "staged_fragments": 33348,
+   "staged_words": 13964368,
+   "staged_bytes": 55857472,
+   "staged_fragments_missing_local_SU_source": 25130,
+   "native_issue_groups_64words": 579448
+  },
+  "noncongruent_stores": [
+   "stores by phase kind {'static': 11916, 'expert': 222, 'stream_pair': 6}",
+   "noncongruent {'static': 7281, 'expert': 58, 'stream_pair': 6} words {'static': 10751536, 'expert': 4006272, 'stream_pair': 48}"
+  ]
+ },
+ "vm_align_64": {
+  "compile": {
+   "source_range": [
+    0,
+    3915
+   ],
+   "native_commands": 42964,
+   "transfer_bytes": 383876096,
+   "max_vm_words": 255232,
+   "backend_qualified": false,
+   "whole_programme_executable": false
+  },
+  "check": {
+   "address_checks": 20842,
+   "expert_regions": 40,
+   "stream_rows": 6,
+   "source_records": 3916,
+   "native_commands": 42964,
+   "transfer_bytes": 383876096,
+   "max_vm_words": 255232,
+   "numerical_arithmetic": false,
+   "backend_qualified": false,
+   "whole_programme_executable": false,
+   "controls": [
+    "wrong_canonical_load",
+    "missing_load_drain",
+    "stream_coupling_wait",
+    "known_reverse_source_group_rejected"
+   ]
+  },
+  "check_rc": "rc=0",
+  "stream_sha256": {
+   "cached": "b02bcfae8e636f859c47012e8fda77ac64125f6a1b96afb5d75bf7ffda799dd6",
+   "resident": "a18d3f8f1e89fa33f2f7d030b9e22c4a05847edd9155d5eaaded03fe2a8c8038"
+  },
+  "staging": {
+   "image_sha256": "b02bcfae8e636f859c47012e8fda77ac64125f6a1b96afb5d75bf7ffda799dd6",
+   "native_fragments": 83234,
+   "staged_fragments": 7287,
+   "staged_words": 959896,
+   "staged_bytes": 3839584,
+   "staged_fragments_missing_local_SU_source": 6655,
+   "native_issue_groups_64words": 579321
+  },
+  "noncongruent_stores": [
+   "stores by phase kind {'static': 11916, 'expert': 222, 'stream_pair': 6}",
+   "noncongruent {} words {}"
+  ]
+ }
+}
