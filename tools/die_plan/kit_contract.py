@@ -924,6 +924,10 @@ def _plan_contents(kd, plan_dir):
         # physical_parts inventory gen_phys.type_macros() places, including SRAMs inside soft logic.
         for q in e.get("physical_parts") or []:
             out[q["physical_inst"]] = dict(q, inst=q["physical_inst"], module=q["physical_master"])
+    # KW-FIX-1/S81PF 11-02: gen_phys declared bound netlist paths for plan macros (kit receipt bound_macro_paths.json)
+    if (Path(kd) / "bound_macro_paths.json").is_file():
+        import bound_macro_paths
+        out = bound_macro_paths.overlay(kd, out)
     return out
 
 
