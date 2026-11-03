@@ -27,6 +27,16 @@ relays re-site, so their collector_tree is republished in the plan and in h2_224
 Step 3 (explicit types): slice_station__t18 clk_t16 (radius 151.093/150) and slice_station__t49 clk_t25 (150.963/150)
 fail explicit_taps under every tools tree; the same single-tap move (2.08 / 1.95 um), reset contract kept, relays
 republished.  (Codex source39 carried hand moves of the same 4 taps; this event re-derives them on main tools.)
+
+Step 4 (DIE-S81-50/diegrt 11-03, stale collector_tree snapshots; refresh_stale_trees.py, report refresh_stale_report.json):
+    python3 physical/die_plan/s81/rtobs_1102/refresh_stale_trees.py physical/die_plan/s81/plan_h2_2249.json \
+        --types iqf__t1,ot_s81sl_leaf__t29,ot_s81sl_leaf__t73 \
+        --sidecar physical/die_plan/s81/h2_2249/landed_sidecar_h2.json --sidecar-out physical/die_plan/s81/h2_2249/landed_sidecar_h2.json \
+        --out physical/die_plan/s81/plan_h2_2249.json --report physical/die_plan/s81/rtobs_1102/refresh_stale_report.json
+ot_s81sl_leaf__t29 / __t73: the published trees put 10 / 2 reset relays INSIDE hard core u_lf.u_ve.u_s (snapshot solved
+with the wider ve_s LEF; plan uses ot_s81sl_ve_s_tpl_w1728.lef, R180) -> republished (12 / 5 relays re-sited outside
+the core, contract kept).  iqf__t1 NOT refreshed: the re-solve moves u_rrl_109 2.16 um into landing band idx_i0 while
+the published site is clear, so the published snapshot stays (census 193/194; iqf__t1 = documented, benign).
 """
 import json, sys
 from pathlib import Path
