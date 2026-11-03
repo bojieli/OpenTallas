@@ -1,0 +1,57 @@
+{
+  "status": "ROOT_CAUSE_FOUND_SIM_BODY_FIX_MEASURED",
+  "lane": "TOK-QK-2/HBMSRC",
+  "date": "2026-11-01",
+  "failure": {
+    "codex_units": {"SOURCE11": "oth-ubuntu-2576921-1793576304 MEMCG-OOM 64 GiB", "SOURCE12": "oth-ubuntu-2723464-1793584697 MEMCG-OOM 96 GiB, root_4 alone"},
+    "target": "hbm_arch_root_4 (hier child of hbm_arch_B2o_bound_top)",
+    "frozen_inputs_sha256": {
+      "stage5/bound/hbm_arch_root.sv": "c87ff7e4a3edb11fb76278955939e5e993034164a940d4ca366cd80f294c2505",
+      "stage11/selected_preprocessed.sv": "4deccd56a4c723822f78d076224e095d49508ddab1f29fc98bc4dbac71ee65bc"
+    },
+    "args": "exact elab11/obj/Vhbm_arch_root_4__hierMkArgs.f (only -Mdir and input paths moved to a private copy)"
+  },
+  "probes_intel1_verilator_5.050": {
+    "debug_exit_parse": {"rc": 0, "peak_rss_kB": 1228152, "wall_s": 20},
+    "debug_exit_elab": {"rc": 0, "peak_rss_kB": 3328932, "wall_s": 51},
+    "lint_only_cap48GiB": {"rc": 143, "note": "OOM at ~150 s: not an -O0 or C++ emit problem"},
+    "full_O0_cap48GiB": {"rc": 143, "note": "OOM at ~675 s"},
+    "full_O0_cap60GiB": {"rc": 143, "note": "OOM at ~435 s; LBR stack samples from t=60 s on are all ScopeVisitor (V3Scope: per-instance copy of every module body)"}
+  },
+  "post_elab_census": {
+    "tool": "tools/hbm_layer_vehicle/verilator_flat_census.py on --json-only output",
+    "modules": 334,
+    "unflattened_ast_nodes": 355342,
+    "flattened_instances": 17703,
+    "flattened_ast_nodes": 119091534,
+    "largest_child": {"instance": "u_u_tkm_SW", "module": "ot_hgi_coll_tkm_m_tp192_p", "instances": 13382, "flattened_nodes": 114533999, "share": 0.962},
+    "next_children_flattened_nodes": {"u_u_hc_eng": 3185461, "u_u_mu_fused_root": 847976, "u_u_hb_argmax": 273476},
+    "construct": {
+      "module": "ot_tkm_lt_live #(W=85) (rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv)",
+      "what": "(* keep *) bit-level carry-lookahead compare tree, ~346 generate assigns with constant-function indices, 8544 AST nodes per instance",
+      "instances": 13312,
+      "why_13312": "32 TKM tiles (KMAX 2048 / 64) x 416 compares per ot_hgi_coll_tkm_tile_rg (68 positions x 4 + 9 groups x 16)",
+      "flattened_nodes": 113737728,
+      "share": 0.955
+    }
+  },
+  "fix": {
+    "kind": "simulation-only module body, selected through the existing --module-source-map of bound_preprocessed_closure.py",
+    "file": "rtl/test/hbm_layer/sim_compat/ot_tkm_lt_live_sim.sv",
+    "body": "assign lt = a < b;",
+    "equivalence": "yosys 0.68 SAT miter vs production body, W in {1,2,3,5,8,17,64,85}: EQUIVALENT; mutant a<=b caught (tools/hbm_layer_vehicle/test_tkm_lt_live_sim.py)",
+    "production_RTL_changes": 0,
+    "physical_use": "never; the keep-tree stays the synthesis/physical body",
+    "module_source_map_entry": {"ot_tkm_lt_live": "<repo>/rtl/test/hbm_layer/sim_compat/ot_tkm_lt_live_sim.sv"},
+    "measured_root_4_child_full_O0": {"rc": 0, "peak_rss_kB": 3942432, "wall_s": 220, "cpp_MB": 442.5, "cpp_files": 1873, "same_args": true},
+    "reduction": ">96 GiB (OOM) -> 3.76 GiB peak"
+  },
+  "rejected_alternative": {
+    "hier_block ot_hgi_coll_tkm_tile_rg (no source change)": "tile child verilated (peak 10.0 GB, 9 min) but the parent still went past 40 GiB; with ot_hgi_coll_tkm_m_tp192_p also a hier block that child reached 44.5 GB before it was stopped. Hierarchy alone does not bound it; why the hier wrapper does not cut the parent is not diagnosed.",
+    "RAM ratchet": "not used (COORD ruling)"
+  },
+  "consequences": [
+    "selected_preprocessed.sv changes, so make re-verilates all 86 children (a cold run). Only root contains a TKM (one instance, u_u_tkm_SW), so the other 85 child bodies are unchanged.",
+    "su00 and the B2 parent are still unmeasured."
+  ]
+}
