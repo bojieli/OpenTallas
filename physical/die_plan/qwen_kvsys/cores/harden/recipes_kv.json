@@ -166,5 +166,9 @@
    "u_tx__o_d[545]"
   ],
   "source": "DIE-KV-61/hr 11-02: u_tx__o_d[545:528] are the reserved constant outputs (KV-018; plan_c keeps the 18 pins) tied to one TIELO net -> declared spare_out"
+ },
+ "qkd_hr_core_guard": {
+  "hard_children": "physical/die_plan/qwen_kvsys/cores/harden/qkd_hr_core_guard_macro_plan.json",
+  "source": "DIE-KV-61/hr 11-02: GEN_LINT macro_tcl (no static site for the one ot_sram_1r1w_128x64_m1_p192) -> explicit core macro plan"
  }
 }
