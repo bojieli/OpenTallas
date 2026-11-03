@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 08:31 PST:** count 62 flat this hour (S81 28/54 +1 gunit_l0 READY-COUNT, HEAD 4/4 + 1/25 types, QC 5/16, KV 17/35, HBM 7/84). Only sign-off blocks (OWNER 11-03). Merged since 07:33: G4/G6 trains, place_async (epyc4 spill), KV pv_pair re-form; approved: xcheck TX-latch + HBM PHY 833 ps, S81 rfc-gu/rfa/mem, HEAD l48rf, HBM split g4. Open: LATCH-FACE LEC support (S81 helper), QC reticle row-band cut, S81 place TCL-error class (col_h9 x12). epyc4 load 63/256 underfilled; epyc2 scratch 91%, intel1 scratch 90%.
+**Status 2026-11-03 09:34 PST:** count 63 (+1 S81 gunit_l0): S81 29/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 17/34, HBM 7/84. Merged G9-G13 this hour (main 031b181ba35): TX-face latch + HBM PHY 833 ps, LATCH-FACE tools (face_guard/face_flops/lec latch support) + LEC raw wall, AUTO-GEOM advisory (~36 rows released), HEAD l48rf RTL, S81 reset relay form #7. Flow tags u-* on b62343715e6 (kits must carry the new tool copies). New class: ~60 S81 leaf face_guard dropped/land_slot (DIE-S81-51). intel2 scratch2 99% -> ot-run refuses intel2 (PRUNE-1103D).
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -23,7 +23,7 @@
 - [ ] S81.T41 Forwarded data/K timing witness · S81 / GEOM · WAITS · corrected A/B only placed; default-OFF observer ready4b96673bc; one baseline-A CTS+witness needs review, old GRT4750 remains FAIL → INFRA.REVIEW
 - [ ] S81.RESET SerDes warm-reset sequencer implementation · S81+HEAD / DIE-S81-50 + DIE-HEAD-56 · RUNNING · OWNER 11-02 17:55 closed the choice: local sequencer holds reset >=64 rck edges after PMA clock restart, no running-clock promise; shared module adoption on S81 in progress (helper reset) → READY
 
-## DIE s81_head · HEAD · rev l48x -> l48rf RE-FORM plan event (dh58-rfplan 9bb4620c625 approved 08:25) · owner DIE-HEAD-58
+## DIE s81_head · HEAD · rev l48rf RE-FORM (plan 9bb4620c625 G9 + RTL splits e10c0d4c9a9 G13, main 031b181ba35); types launching on epyc4 · owner DIE-HEAD-58
 - [ ] HEAD.BIND Current parent source / child-model composition · HEAD / DIE-HEAD-57 · BLOCKED · exact current source+views must compose before full parent release → HEAD.TILES
 - [ ] HEAD.CLK Current die clock qualification · HEAD / DIE-HEAD-57 · BLOCKED(kits) · clock proof l48w_sth GRT0/TT+252.75 stands (older pass counts); l48w_sth GRT0/TT+252.75/START0of1607; only2 real core views,0 kits plus declared budgets; 530106 hold pairs unmeasured, not current full-die timing → HEAD.TILES
 - [ ] HEAD.GRT Current whole-die signal+clock global routing · HEAD / DIE-HEAD-57 · BLOCKED · retained infrastructure routing is not a complete current parent data-route receipt → HEAD.TILES → HEAD.BIND
