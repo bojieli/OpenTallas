@@ -1393,6 +1393,13 @@ def main():
             text, ftr = hr_ft_regs.transform(dst.read_text(), rec["ft_face_regs"])
             dst.write_text(text)
             hr_ft_regs.write_report(kd, ftr, rec["ft_face_regs"])
+        if rec.get("spare_out_tie") and dst.stem == mod:
+            import hr_spare_tie  # DIE-KV-62/hr 11-02: declared spare outputs = 0 in kit RTL (X refinement, LEC)
+            text, stie = hr_spare_tie.transform(dst.read_text(), rec["spare_out_bits"])
+            dst.write_text(text)
+            (kd / "hr_spare_tie.json").write_text(json.dumps(dict(schema="opentallas.kit_hr_spare_tie.v1", ties=stie,
+                note="declared spare_out bits driven 0 from the first edge (refines the native X-until-written)"),
+                indent=1) + "\n")
         preserve_head_relays(dst)
         # std-cell simulation models (asap7sc7p5t_*.v, for leaves that instantiate cells): yosys takes the cells
         # from the liberty, the models are not synthesisable input

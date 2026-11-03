@@ -61,3 +61,19 @@ def test_recipes_hr_core_guard_order():
     o = r["qkd_hr_core_order"]
     assert "u_chain__chain_fault" not in o["timed_face"]["buses"]          # a feed-through is never a timed face
     assert o["ft_face_regs"]["regs"][0]["out"] == "u_chain__chain_fault"
+
+
+def test_spare_tie_masks_reserved_bits():
+    spec = importlib.util.spec_from_file_location("hr_spare_tie_t", H / "hr_spare_tie.py")
+    S = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(S)
+    rtl = ("module c(ck, o);\n  input ck;\n  output [5:0] o;\n  reg [5:0] o;\n  assign \\u.x [5] = o[5];\n"
+           "  always @(posedge ck)\n    o <= \\u.q ;\nendmodule\n")
+    out, rep = S.transform(rtl, ["o[4]", "o[5]"])
+    assert "o <= (\\u.q  ) & 6'hf;" in out and "assign \\u.x [5] = o[5];" in out
+    assert rep == [dict(bus="o", width=6, spare=[4, 5], driver="always")]
+    with pytest.raises(SystemExit, match="whole-bus drivers"):
+        S.transform(rtl.replace("    o <= \\u.q ;\n", ""), ["o[4]"])
+    with pytest.raises(SystemExit, match="lacks bit 9"):
+        S.transform(rtl, ["o[9]"])
+    assert json.load(open(H / "recipes_kv.json"))["qkd_hr_cdc_pc"]["spare_out_tie"] is True
