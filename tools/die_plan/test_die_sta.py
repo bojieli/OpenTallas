@@ -131,7 +131,7 @@ def test_verdict_tt_ff():
     ps["a"]["min_cppr"] = -181.0                          # OWNER 12.25: skew beyond target = WARN, never FAIL
     v = D.verdict(res)
     assert v["status"] == "PASS" and v["warnings"] and "WARN" in v["warnings"][0]
-    seams["a"]["min"]["worst"] = 9.0                      # FF hold +9 < +10 -> FAIL
+    seams["a"]["min"]["worst"] = -1.0                     # OWNER 11-02: FF hold -1 < 0 -> FAIL
     assert D.verdict(res)["status"] == "FAIL"
     seams["a"]["min"]["worst"] = 13.0
     ps["a"]["min_cppr"] = -20.0

@@ -26,7 +26,7 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
      (synth + pre-place LEC + floorplan + place; ot-run picks the least-loaded allowed host) -> AUTO-GEOM (main
      geom_check.sh, 50-it GRT) -> result.json.  Builds always via ot-run (honest --mem, <= 400k cells).
   6. collection: PASS -> enqueue.py (--geom PASS, geom_ref = the AUTO-GEOM record) so the autopilot routes, signs off
-     (measured-hold, hold margin 10 from gen) and runs post-route LEC; every 5th PASS also gets a GEOM REQ for the
+     (measured-hold, hold margin 0 from gen since OWNER 11-02) and runs post-route LEC; every 5th PASS also gets a GEOM REQ for the
      independent visual review (owner rule).  FAIL -> classify() into PLAN / FLOW / RTL / INFRA from the stage + log;
      INFRA (never admitted / host lost / OOM) is relaunched ONCE, everything else stops for the die owner.
      One grouped line per die per tick goes to lanes/COORD-REVIEW-QUEUE.md (for the die's owner lane); OWNERS.tsv

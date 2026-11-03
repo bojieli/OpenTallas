@@ -1498,7 +1498,7 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10 ps for NEW kits (the shared core_flow.HOLD_FF_MARGIN_DEFAULT; 15 where a measured
 # GRT->final RC hold loss > 10 ps is documented); signed views stay valid.
-HOLD_FF_MARGIN_DEFAULT = 10.0
+HOLD_FF_MARGIN_DEFAULT = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
 # HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
 HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"

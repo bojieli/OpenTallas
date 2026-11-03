@@ -3,7 +3,7 @@
 The die clock passes on routed die STA with the real DRT+RCX clock on the 12.24c basis (nominal policy, optimistic RCX,
 CPPR at the last common tree node) when
   (a) worst TT setup slack >= 0 on every related pair,
-  (b) worst FF hold slack >= +HOLD_MIN_PS (10 ps, on top of the 25 ps hold uncertainty; hold safe by structure),
+  (b) worst FF hold slack >= HOLD_MIN_PS (0 ps since OWNER 11-02, was +10, on top of the 25 ps hold uncertainty; hold safe by structure),
   (c) every hard block's clock-arrival contract (the tap window used at its sign-off) holds: 0 violations.
 Related-pair skew > SKEW_TARGET_PS (150 ps) is a design TARGET: it adds a WARN, never a FAIL.  Missing numbers fail
 closed (NOT RUN); unmeasured hold pairs (OWNER 12.19) give BLOCKED(kits), never PASS.
@@ -14,9 +14,9 @@ from __future__ import annotations
 
 import math
 
-RULE = "OWNER 12.25: TT setup >= 0, FF hold >= +10 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only"
+RULE = "OWNER 12.25/11-02: TT setup >= 0, FF hold >= 0 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only"
 SETUP_MIN_PS = 0.0
-HOLD_MIN_PS = 10.0
+HOLD_MIN_PS = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was +10 (12.25)
 SKEW_TARGET_PS = 150.0
 BLOCKED = "BLOCKED(kits)"
 
