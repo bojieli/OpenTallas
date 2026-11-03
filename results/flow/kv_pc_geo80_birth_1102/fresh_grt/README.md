@@ -1,0 +1,15 @@
+# Protected PC fresh DPL and data-GRT-only continuation
+
+PREP only. Parent requested one32GB8T process from protected checkpoint59d797cc, with explicit original CURRENT routed gold68650b4a as dirty-net reference. No source/SDC/model/clock change, second PRD, sizing, hold, power recovery, antenna repair, detailed route or finish.
+
+The actual checkpoint image was personally LOOKED in ../result. Multiple new buffers share sites; this continuation legalizes them before selecting all changed/new/moved nets against the ORIGINAL routed input. It clears only the known mixed access catalog before DPL, preserves clock freeze, detaches unaffected detailed wires before native GRT and restores them afterward. Current-guide-or-actual-FIXED-wire coverage plus exact independent original clock diff remain blocking.
+
+The complete actual post-MM global-route entry is hash-pinned. It installs canonical strict native PG begin after libs/DB/SDC/RC load and before the entire original PRE. The complete original remaining source body is preserved. Normal completion additionally requires the final POST marker, actual5_1 DB/SDC/guides and clock dump, successful native END and inactive0. Nonlocal returns, early helper success, generic errors, cleanup failure and missing POST/output are all rejected. No typed repair stop is accepted here.
+
+An admitted4GB1T make-n check1269536 completed0 and shows only native noop plus flow.sh5_1_grt global_route; no SYNTH/CTS/DRT/finish command. The retained6_final.spef is explicitly the ORIGINAL RCX seed, not an output or current result. Runtime drycheck generated no5_* outputs.
+
+The final198-file runtime readset is recorded in FRESH_GRT_RUNTIME.json (SHAbefb52cbe3a5c4f06551e3fedab174e379feaf9aa2743a7f9bd510a3d866d943). The immutable launcher verifies every file and creates an exclusive one-shot marker before entry. Dispatch still requires parent and PG source review plus the final immutable launcher guard. The runner includes a second, independent4GB1T interpreter which loads only the saved5_1 DB/SDC under the exact normal loader and writes a canonical PG snapshot plus prepare/assert audit. It loads no native module and performs no connection, repair or STA. Its PASS is mandatory before the overall completion receipt; in-process END audit is not described as reopened evidence. No job has been dispatched by this PREP.
+
+PG review delta: when body and cleanup both fail, preserve the original body code1/options and print cleanup separately. Successful completion additionally requires native creates/swaps/bound all exactly zero, because this scope allows no new cells or master changes.
+
+Error precedence is explicit: after END succeeds, propagate any body error/nonlocal code before evaluating success-only counters/status. Thus a body failure cannot be hidden by a zero-event scope rejection.

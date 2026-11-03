@@ -1,0 +1,24 @@
+{
+  "status": "NEXT_OWNED_COPY_PREP_NATIVE_BIRTH_EXPLICIT",
+  "flow_source": "9db068b5458b7a20a548ab165aabc8dc6c077a30",
+  "count_resource_override": "d0418b5a0",
+  "lec_helper_override": "e62321b46:results/flow/kv_pc_reload_checkpoint_1102/post_only/lec_async.sh",
+  "subject": "intel1:/srv/opentallas-scratch2/claude/codex-pc-post-0355",
+  "source_RTL_changed": false,
+  "source_SDC_changed": false,
+  "clock_policy_changed": false,
+  "target": "normal actual DRV set plus graph-asserted net41987 only",
+  "max_wire_um": 80,
+  "setup_margin_ps": 10,
+  "hold_margin_ps": 10,
+  "hold_allow_setup": 0,
+  "phase1": "repair-only before DPL/GRT,16GB8T",
+  "phase2": "separate fresh DPL/dataGRT after review and release,32GB8T,explicit CURRENT routed gold reference,no second repair",
+  "qualification": "NOT_SIGNED; source/provenance and own final-netlist proof remain held",
+  "files": {
+    "prd_targeted.tcl": "7271491f75fba7734d76f4eb5d284da1a73cb9f4ba1327d540ef1b42a2cce881",
+    "prd_hook_checkpoint.tcl": "c1f8cc6e61d5758871626afbd06013a72b6de69e3ec6523b09022bd0a72c0951"
+  },
+  "native_pg_helper_sha256": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+  "native_pg_module_sha256": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b"
+}
