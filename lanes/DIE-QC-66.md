@@ -11,3 +11,6 @@ Work dir: /home/ubuntu/OpenTallas/tmp/dieqc66 (local, light only).
 - 06:52 OWNER 07:0x: RE-FORM withdrawn; ECO units re-submitted; helpers rescoped (CORES->ECO watch, PLAN->tool-failure class fix, CLK target)
 - 07:04 v3 collected (DONE 07:02), estimate refreshed @4318ffbe729; reframed as die STA target (OWNER 07:0x), feeds QC-006/007/028.
 - 08:19 CA landed check v3: 30 low-side fails (su_l0 x_ctl/x_sc + st_a x_fe__4), +1 cycle -> 0 fail; @8e705df31c1 ca_v3/.
+
+## CORES
+- 2026-11-03 08:33 PST DIE-QC-66/CORES: NL IDLE_UCK READY claude/die-qc-66-cores-1103@3613d647aa5 (routed LEC b3h EQ 40386/40386; bench MUT0 PASS, MUT1 caught). PRD class fixes READY claude/die-qc-66-prdid-1103@9870c455d77 (4_1_cts identity from 5_1_grt; MM post_grt_drv body). NL eco_loop with the fixed tools is running: intel1 die-qc-66-cores/nl_eco66.log. NK estimate claude/die-qc-66-nkpipe-1103@ff83c1664b9 (nk_pipe/ESTIMATE.txt; place WNS pending). Watcher stopped.
