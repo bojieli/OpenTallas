@@ -63,3 +63,11 @@ def test_tcl_defaults_and_off_switch():
     assert 'OT_CLK_LEAF_REPEAT) ne "0"' in t                       # OT_CLK_LEAF_REPEAT=0 = old behaviour
     assert t.rstrip().endswith("{ source $::env(OT_CLR_NEXT_TCL) }")  # the chain always continues
     assert "getBTerms" in t                                        # root/port nets are never touched
+
+
+def test_slew_gate_default_and_balanced_siblings():
+    t = (HERE / "clk_leaf_repeat.tcl").read_text()
+    assert "OT_CLK_LEAF_SLEW_PS)] ? double($::env(OT_CLK_LEAF_SLEW_PS)) : 80.0}]" in t   # DIE-HBM-60: slew gate 80 ps default
+    assert "estimate_parasitics -placement" in t and "slew_max" in t              # placement-estimated load slew
+    assert "2.0 * $clr_slew_ps" in t                                             # non-branch nets only at 2x the gate
+    assert "every load of the net goes behind a repeater" in t                     # sibling leaves keep one depth
