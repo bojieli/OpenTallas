@@ -1083,6 +1083,13 @@ def charge(v, gb):
         v["wait_n"], v["wait_gb"] = int(v.get("wait_n", 0)) + 1, int(v.get("wait_gb", 0)) + gb
 
 
+def wsize(v, mem):
+    """GB one queued waiter books on a status row: its mean waiter size (most waiters are 10 GB gen/lint stages
+    waiting for short slots, not 48 GB PLACE), else the die's place_mem_gb"""
+    v = v or {}
+    return max(1, round(int(v.get("wait_gb", 0)) / int(v["wait_n"]))) if int(v.get("wait_n", 0)) > 0 else mem
+
+
 def uncharge(v, gb):
     """a waiter moved off a host: its queued GB leaves the cached status row"""
     if int(v.get("wait_n", 0)) > 0:
@@ -1128,7 +1135,7 @@ def restage_waiters(AP, cfg, st, notices):
             if multi:
                 best = pick_gen_host(cfg, die)
                 v = row(best) or {}
-                if best != g and host_score(v) - host_score(row(g)) >= mem:
+                if best != g and host_score(v) - host_score(row(g)) >= wsize(row(g), mem):
                     why = f"{g} -> {best}"
             # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
             if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
@@ -1142,10 +1149,11 @@ def restage_waiters(AP, cfg, st, notices):
                     AP.sh(["systemctl", "--user", "stop", svc["unit"]], timeout=180)
                 except (OSError, ValueError, KeyError):
                     pass
+            gb = wsize(row(g), mem)
             if v:
-                charge(v, mem)
+                charge(v, gb)
             if row(g):
-                uncharge(row(g), mem)
+                uncharge(row(g), gb)
             # the move is not an attempt: keep the infra budget where it was (and give a spent one its move)
             # (+1: the relaunch's attempt number +1 is not charged; a spent budget is lifted to exactly one relaunch)
             r["infra_base"] = int(r.get("infra_base") or 0) + max(1, infra_used(r) - infra_attempts(cfg, die) + 1)
