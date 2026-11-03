@@ -2206,7 +2206,7 @@ MACRO ot_s81dv_eng_finish
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 81.5520 189.9960 81.5760 190.0800 ;
+        RECT 81.5400 189.6000 81.5880 190.0800 ;
     END
   END clk
   PIN rst_n

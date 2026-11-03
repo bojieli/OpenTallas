@@ -19,7 +19,8 @@ for i, (n, d) in enumerate(pins):
     if prev is not None: assert c - prev >= .192 - 1e-6
     prev = c
     L += [f"  PIN {n}", f"    DIRECTION {d} ;", "    USE SIGNAL ;", "    PORT", "      LAYER M5 ;",
-          f"        RECT {c-.012:.4f} {H-.084:.4f} {c+.012:.4f} {H:.4f} ;", "    END", f"  END {n}"]
+          (f"        RECT {c-.024:.4f} {H-.48:.4f} {c+.024:.4f} {H:.4f} ;" if n == "clk" else   # GEOM-21 clock pin 0.048x0.48
+           f"        RECT {c-.012:.4f} {H-.084:.4f} {c+.012:.4f} {H:.4f} ;"), "    END", f"  END {n}"]
 L += ["END ot_s81dv_eng_finish", "END LIBRARY", ""]; lf.write_text("\n".join(L))
 sp = ROOT / "physical/ref_tile/s81dv_eng_finish/spec.json"; s = json.loads(sp.read_text())
 s["util"] = 0.40
