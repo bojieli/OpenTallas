@@ -1,0 +1,110 @@
+{
+  "status": "FINITE_LITERAL_PACKING_BIT_IDENTITY_PASS_NOT_WRAPPER_FORMAL",
+  "rows": [
+    {
+      "module": "hbm_arch_q_hub__q_hub_nw",
+      "instance": "u_bout_L160_o",
+      "old_width": 4986,
+      "new_width": 4983,
+      "removed_indices": [
+        517,
+        518,
+        519
+      ],
+      "all_remaining_source_bit_identities_equal": true,
+      "swapped_retained_bits_mutant_rejected": true
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_nw",
+      "instance": "u_bout_L6_o",
+      "old_width": 828,
+      "new_width": 825,
+      "removed_indices": [
+        517,
+        518,
+        519
+      ],
+      "all_remaining_source_bit_identities_equal": true,
+      "swapped_retained_bits_mutant_rejected": true
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_ne",
+      "instance": "u_bout_L160m_o",
+      "old_width": 4986,
+      "new_width": 4983,
+      "removed_indices": [
+        517,
+        518,
+        519
+      ],
+      "all_remaining_source_bit_identities_equal": true,
+      "swapped_retained_bits_mutant_rejected": true
+    },
+    {
+      "module": "hbm_arch_q_hub__q_hub_ne",
+      "instance": "u_bout_L6b_o",
+      "old_width": 828,
+      "new_width": 825,
+      "removed_indices": [
+        517,
+        518,
+        519
+      ],
+      "all_remaining_source_bit_identities_equal": true,
+      "swapped_retained_bits_mutant_rejected": true
+    },
+    {
+      "module": "hbm_arch_q_b000",
+      "instance": "u_bout_L14_o",
+      "old_width": 4127,
+      "new_width": 4124,
+      "removed_indices": [
+        35,
+        36,
+        37
+      ],
+      "all_remaining_source_bit_identities_equal": true,
+      "swapped_retained_bits_mutant_rejected": true
+    },
+    {
+      "module": "hbm_arch_q_b000__physical_v1",
+      "instance": "u_bout_L14_o",
+      "old_width": 4127,
+      "new_width": 4124,
+      "removed_indices": [
+        35,
+        36,
+        37
+      ],
+      "all_remaining_source_bit_identities_equal": true,
+      "swapped_retained_bits_mutant_rejected": true
+    },
+    {
+      "module": "hbm_arch_q_b100",
+      "instance": "u_bout_xo_procdff_71764_Q",
+      "old_width": 8,
+      "new_width": 5,
+      "removed_indices": [
+        5,
+        6,
+        7
+      ],
+      "all_remaining_source_bit_identities_equal": true,
+      "swapped_retained_bits_mutant_rejected": true
+    },
+    {
+      "module": "hbm_arch_q_b100__physical_v1",
+      "instance": "u_bout_xo_procdff_71764_Q",
+      "old_width": 8,
+      "new_width": 5,
+      "removed_indices": [
+        5,
+        6,
+        7
+      ],
+      "all_remaining_source_bit_identities_equal": true,
+      "swapped_retained_bits_mutant_rejected": true
+    }
+  ],
+  "scope": "Parse actual old/new ot_dp_st d expressions into named sourcebit identities; no guessed vector labels, no source equivalence waiver"
+}
