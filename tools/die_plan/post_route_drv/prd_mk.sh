@@ -16,6 +16,9 @@
 #   route = seed it with the ROUTED 5_2_route.odb: the hook rips only the wires of nets whose connectivity the ECO
 #           changed or whose cells it moved/re-mastered (vs that routed DB) and DRT routes those incrementally; every
 #           other net (all clock nets) keeps its signed-off metal, and clk_freeze_check.sh diffs clock WIRES too.
+#   final = route-keeping as route, seeded with the kit's signed 6_final.odb (fillers removed in the hook): for a kit whose
+#           6_final.{odb,spef} is a post-route ECO of 5_2_route.odb (DIE-S81-50 11-03, S81 l4 hxeco_* hold ECO), where
+#           the route seed does not match the SPEF (prd_hook.tcl OT_PRD STAGE_MISMATCH; eco_loop.py retries with final).
 # OT_PRD_PROTECT_NETS = Tcl list of exact measured data nets to preserve during
 # repair; persisted through both passes. Does not waive any signoff checks.
 set -euo pipefail
@@ -25,7 +28,8 @@ test ! -e "$OUT" || { echo "prd_mk: $OUT exists (never relaunch into a run dir)"
 RS=$(ls -d $KIT/run/results/asap7/*/base); NICK=$(basename $(dirname $RS))
 test -n "$SPEF" || SPEF=$RS/6_final.spef
 FROM=${OT_PRD_FROM:-grt}
-case $FROM in grt) SRC=5_1_grt.odb ;; route) SRC=5_2_route.odb ;; *) echo "prd_mk: OT_PRD_FROM=$FROM: want grt|route"; exit 2 ;; esac
+case $FROM in grt) SRC=5_1_grt.odb ;; route) SRC=5_2_route.odb ;; final) SRC=6_final.odb ;;
+  *) echo "prd_mk: OT_PRD_FROM=$FROM: want grt|route|final"; exit 2 ;; esac
 test -f $RS/$SRC -a -f "$SPEF" || { echo "prd_mk: $RS lacks $SRC / $SPEF"; exit 2; }
 # Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint.
 # Preserve that checkpoint through every PRD pass; never manufacture it from GRT.
@@ -40,11 +44,13 @@ mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OU
 cp $RS/$SRC $B/4_cts.odb
 cp "$RS/4_1_cts.odb" "$B/4_1_cts.odb"
 cp "$SPEF" $B/6_final.spef
+# DIE-S81-50 11-03: the logic instances the SPEF connects; prd_hook.tcl checks them against the seed (stale staging)
+python3 -I "$HERE/prd_spef_insts.py" "$SPEF" $OUT/prd_spef_insts.tsv
 for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_unreg_pins.txt; do
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl; do cp $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_spef_insts.py; do cp $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done

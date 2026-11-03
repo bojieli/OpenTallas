@@ -59,6 +59,42 @@ proc ot_prd_spef_arm {f} {
     return $r
   }
 }
+# DIE-S81-50 11-03 (class fix, stale-staging class): the SPEF must belong to the seed DB.  S81 l4: kit 6_final.{odb,
+# spef} = a post-route hold ECO (1,305 hxeco_* buffers) the seed 5_2_route.odb predates -> 1,000+ STA-1648 "instance
+# not found" on read_spef, then RSZ-0074 "found route to 23 pins, expected 24" in repair_design 30 min later.  Every
+# logic instance the SPEF connects (prd_spef_insts.py list, staged by prd_mk.sh; antenna/filler/tap/decap skipped)
+# must exist in the seed, else OT_PRD STAGE_MISMATCH at once (prd_mk.sh OT_PRD_FROM=final seeds such a kit with its
+# own 6_final.odb).  No list (older pass dir) = no check; OT_PRD_STAGE_CHECK=0 = off.  No timing check changes.
+proc ot_prd_stage_check {list} {
+  if {[info exists ::env(OT_PRD_STAGE_CHECK)] && $::env(OT_PRD_STAGE_CHECK) eq "0"} { puts "OT_PRD stage check off"; return }
+  if {![file exists $list]} { puts "OT_PRD stage check: no [file tail $list] (pass dir predates the check)"; return }
+  set block [ord::get_db_block]
+  set n 0; set miss {}
+  set fh [open $list r]
+  while {[gets $fh ln] >= 0} {
+    set name [lindex [split $ln " "] 0]
+    if {$name eq ""} continue
+    incr n
+    set found 0
+    foreach cand [list $name [regsub -all {\\([^\[\]])} $name {\1}] [string map {\\ {}} $name]] {
+      set i [$block findInst $cand]
+      if {$i ne "NULL" && $i ne ""} { set found 1; break }
+    }
+    if {!$found} { lappend miss $ln }
+  }
+  close $fh
+  if {[llength $miss]} {
+    error "OT_PRD STAGE_MISMATCH: [llength $miss] of $n SPEF logic instances are not in the seed DB (SPEF from another\
+      netlist, e.g. a post-route ECO'd 6_final; use OT_PRD_FROM=final): [lrange $miss 0 9]"
+  }
+  puts "OT_PRD stage check: all $n SPEF logic instances in the seed DB"
+}
+# OT_PRD_FROM=final (prd_mk.sh): the seed is the kit's signed 6_final.odb; its filler cells go before any repair (the
+# ECO legalizes new cells; ORFS fill runs again after the ECO route).  Fillers carry no signal net.
+if {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) eq "final"} {
+  remove_fillers
+  puts "OT_PRD seed final: 6_final.odb, fillers removed"
+}
 if {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_SPEFS) ne ""} {
   # The native estimator already supplied DATA RC and the early MM callback
   # restored only the immutable frozen clock. Never replay an old full SPEF or
@@ -68,6 +104,7 @@ if {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_S
   }
   ::ot_mm_frozen_clock_rc_restore prd_entry
 } else {
+  ot_prd_stage_check /work/prd_spef_insts.tsv
   ot_prd_spef_arm $::env(RESULTS_DIR)/6_final.spef
   set _ckf [file join $_here clk_freeze.tcl]
   if {![file exists $_ckf]} { error "OT_CLK_FREEZE FAIL: $_ckf not staged (ECO refuses to run without the clock lock)" }
@@ -92,6 +129,39 @@ if {[info exists ::env(OT_PRD_PROTECT_NETS)] && $::env(OT_PRD_PROTECT_NETS) ne "
     set_dont_touch $nets
     puts "OT_PRD_PROTECT_NETS preserved data net $name (all signoff checks retained)"
   }
+}
+# DIE-S81-50 11-03 (class fix, gated-clock-cell data-pin class): ot_clk_freeze dont_touches every clock-tree cell,
+# including ICGs, whose ENA (and SE) pins are DATA loads.  repair_design / hold repair buffering such a net then dies:
+# ODB-1211 "InsertBufferBeforeLoads: Load pin 'ot_rtg_icg0_2/ENA' is dont_touch" -> RSZ-3006 fatal (S81 rom, rom_t:
+# net10319 is a slew/cap-violating ENA net, so dont_touching the net would leave the DRV).  For the repair calls only,
+# a clock-tree cell with a non-clock input on a data net drops dont_touch; it stays LOCKED (no move), its master family
+# goes into the session's set_dont_use with the sinks' (no resize), the master revert guard covers it, and dont_touch is
+# put back before legalization; the clock nets stay dont_touch (no buffering of its output) and clk_freeze_check.sh
+# stays blocking.  OT_PRD_CLKCELL_DATA_PINS=0 restores the old freeze.
+set ::ot_prd_dtoff {}
+if {![info exists ::env(OT_PRD_CLKCELL_DATA_PINS)] || $::env(OT_PRD_CLKCELL_DATA_PINS) ne "0"} {
+  set _cknets [dict create]; set _ckdrv [dict create]
+  foreach n [ot_clk_dbnets] {
+    dict set _cknets [$n getName] 1
+    foreach it [$n getITerms] { if {[$it isOutputSignal]} { dict set _ckdrv [[$it getInst] getName] [$it getInst] } }
+  }
+  dict for {i inst} $_ckdrv {
+    if {![$inst isDoNotTouch]} continue
+    foreach it [$inst getITerms] {
+      if {![$it isInputSignal]} continue
+      set net [$it getNet]
+      if {$net eq "NULL" || $net eq ""} continue
+      if {[dict exists $_cknets [$net getName]] || [$net getSigType] in {CLOCK POWER GROUND}} continue
+      $inst setDoNotTouch 0
+      lappend ::ot_prd_dtoff $i
+      break
+    }
+  }
+  puts "OT_PRD clock-tree cells with data input pins: dont_touch off for the repair (LOCKED, family dont_use, revert guard) [llength $::ot_prd_dtoff] [lrange $::ot_prd_dtoff 0 9]"
+}
+proc ot_prd_dtoff_restore {} {
+  foreach i $::ot_prd_dtoff { [[ord::get_db_block] findInst $i] setDoNotTouch 1 }
+  puts "OT_PRD clock-tree cells dont_touch restored [llength $::ot_prd_dtoff]"
 }
 # OT_PRD_REPAIR_RC=placement (DIE-S81-48 11-02, class fix): with the GRT parasitics source every resizer move calls
 # GlobalRouter::updateDirtyRoutes -> TritonRoute::updateDirtyPAData, and FlexPA crashes (SIGSEGV in getEdgeCost /
@@ -207,6 +277,7 @@ proc ot_prd_sink_revert {} {
   puts "OT_PRD sink guard: [llength $rev] clock-net instance masters restored [lrange $rev 0 19]"
   return [llength $rev]
 }
+ot_prd_dtoff_restore
 set ::ot_prd_reverted [ot_prd_sink_revert]
 # OT_PAD_MASTERS as eco_route.tcl (DRT pin access around abutted ECO buffers)
 if {[info exists ::env(OT_PAD_MASTERS)] && $::env(OT_PAD_MASTERS) ne ""} {
@@ -221,7 +292,7 @@ if {[catch {check_placement} msg]} { error "OT_PRD FAIL: check_placement after t
 # keep every other net's routed wires for an incremental detailed route (prd_route_keep.tcl).  FLOW-13: selection + rip
 # run BEFORE the incremental GRT end and the kept wires are parked (detached) across it, since updateDirtyNets destroys
 # the wire of every journaled-dirty net (R1route: 2754 reference wires lost, 0 ripped).
-set _route_keep [expr {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) eq "route"}]
+set _route_keep [expr {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) in {route final}}]
 if {$_route_keep} {
   source [file join $_here prd_route_keep.tcl]
   ot_prd_route_keep

@@ -7,6 +7,7 @@
 #   otherwise pass p+1 = prd_mk.sh from pass p's 5_1_grt.odb + its RCX SPEF in D_p<p+1>.
 #   prd_run.sh D [CPUS=8] [MEM_GB=32] [MAX_PASS=2]          (heavy: through ot-run --mem MEM_GB --dir D)
 #   OT_PRD_FROM (from D/variant.env, prd_mk.sh): route = route-keeping ECO (pass p+1 again starts from pass p's routed DB)
+#   final = route seeded with the kit's 6_final.odb (pass p+1 is route: pass p has no post-route edits)
 #   OT_PRD_POST=0: skip the kit runner's GOAL=post sign-off after do-finish (default 1 = unchanged)
 # Result: D/prd_result.json (per pass: rc, clk check, TC/BC slew + cap counts, sink masters restored; final dir).
 set -uo pipefail
@@ -84,7 +85,7 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   B=$(ls -d $D/run/results/asap7/*/base)
   N=${D0}_p$((P + 1))
   OT_SLEW_MARGIN="$OT_SLEW_MARGIN" OT_SETUP_MARGIN="$OT_SETUP_MARGIN" OT_HOLD_ALLOW_SETUP="$OT_HOLD_ALLOW_SETUP" OT_HOLD_MAXBUF="$OT_HOLD_MAXBUF" \
-  OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" OT_PRD_REPAIR_RC="${OT_PRD_REPAIR_RC:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
+  OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_FROM=$(f=${OT_PRD_FROM:-grt}; [ $f = final ] && f=route; echo $f) OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" OT_PRD_REPAIR_RC="${OT_PRD_REPAIR_RC:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
   D=$N; P=$((P + 1))
 done
 if [ -n "$FINAL" ] && [ "${OT_PRD_FINISH:-1}" = 1 ]; then
