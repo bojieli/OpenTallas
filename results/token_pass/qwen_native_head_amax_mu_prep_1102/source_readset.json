@@ -1,0 +1,57 @@
+[
+  {
+    "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+    "relative_path": "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+    "sha256": "cc7c0e78e337420b0e4871302619569c90dcaec25bd91c49e52d17f0f81fe1ca",
+    "relevant_lines": [
+      {
+        "line": 32,
+        "source": "module qfd_dv_amax_mu #("
+      }
+    ]
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+    "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+    "sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+    "relevant_lines": [
+      {
+        "line": 303,
+        "source": "            if (c_stn) begin stn_dst <= cmd_q[25:24]; stn_dbase <= cmd_q[49:26]; end"
+      },
+      {
+        "line": 318,
+        "source": "    wire [23:0] r_addr = stn_dbase + {12'd0, r_idx, 4'd0};"
+      },
+      {
+        "line": 327,
+        "source": "    qfd_dv_amax_mu #(.NU(MU_NU), .MUT(0)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),"
+      },
+      {
+        "line": 412,
+        "source": "    assign am_stn_pend = stn_busy && !stn_snd && !(stn_left == 9'd1 && r_v);"
+      }
+    ]
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+    "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+    "sha256": "43e4fdb1799703b377cc2bf1af9531b6d1af9405b60d97175f1fb28138181f6e",
+    "relevant_lines": [
+      {
+        "line": 73,
+        "source": "end else if(MU_NU==4 && MUT==0) begin:g_safe4"
+      },
+      {
+        "line": 74,
+        "source": " qfd_dv_s5_ctl_repair4 u_ctl(.ck(ck),.rst_n(rst_n),.cmd_q(cmd_q),.chd_q(chd_q),.r_v(r_v),.r_idx(r_idx),.r_last(r_last),.r_d(r_d),.l9o_v(l9o_v),.stn_fault(stn_fault),.vm_we(vm_we),.vm_waddr(vm_waddr),.vm_wdata(vm_wdata),.kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.su_nr(su_nr),.su_idle(su_idle),.su_fault(su_fault),.su_prog(su_prog),.su_rows(su_rows),.vm_fault(vm_fault),.red_we(red_we),.red_addr(red_addr),.red_data(red_data),.sc_w1_we(sc_w1_we),.sc_w1_addr(sc_w1_addr),.sc_w1_data(sc_w1_data),.tok_v(tok_v),.tok_idx(tok_idx),.tok_own(tok_own),.tok_val(tok_val),.tok_user(tok_user),.sc_busy(sc_busy),.sc_fault(sc_fault),.stm_fault(stm_fault),.tld_fault(tld_fault),.hd_fault(hd_fault),.pc_bad(pc_bad),.sid(sid),.stn_cfg(stn_cfg),.sc_cfg(sc_cfg),.stm_cfg(stm_cfg),.su_cmd(su_cmd),.am_v(am_v),.am_idx(am_idx),.am_val(am_val),.am_u(am_u),.w16_we(w16_we),.w16_addr(w16_addr),.w16_data(w16_data),.w1_we(w1_we),.w1_addr(w1_addr),.w1_data(w1_data),.own_ch(own_ch),.ag_own(ag_own),.st(st),.cc_o(cc_o));"
+      }
+    ]
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+    "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+    "sha256": "eee27f3def670be904a761b5b73a7c714582da7c5d35c8b2503a0543f7499db8",
+    "relevant_lines": []
+  }
+]

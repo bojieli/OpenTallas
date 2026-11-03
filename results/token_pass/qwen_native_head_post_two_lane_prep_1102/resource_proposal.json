@@ -1,0 +1,18 @@
+{
+  "status": "PREP_NOT_RUN_REVIEW_REQUIRED",
+  "source_bytes": 2625973,
+  "source_files": 21,
+  "source_module_inventory": 66,
+  "component": "one sender + one receiver, native2lane add7/scale7, actual shared BTAB and real SRAM;16reset contexts",
+  "job_proposal": {
+    "host": "Intel1 only; Epyc2 floor hold respected",
+    "memory_GB": 4,
+    "threads": 1,
+    "disk_GB": 2,
+    "class": "normal",
+    "one_build": "same ELF baseline+wrong genuine BTABbit+no native neighbor control sequentially"
+  },
+  "basis": "No measured identical station peak. Native TG4 predecessor generation2449860KB/make1243112KB, ROOT prearm3296548KB; fixed4GB proposed conservative against66reachable source modules/2.63MB parsed source, not claimed station measurement. Parent must review.",
+  "scope": "nominal833ps component clock, referenceL6 boundary176rows; no physicalprovider/START/globalL6 execution/AMAX/ROOT claim",
+  "count": "176 scalar row values across16 sequential2lane contexts;11 full16lane REFERENCE words, no simultaneous16lane result assembly"
+}

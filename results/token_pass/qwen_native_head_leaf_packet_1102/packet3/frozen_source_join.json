@@ -1,0 +1,319 @@
+{
+  "scope": "29 exact packet source paths vs frozen821/f79 WT and named preferred alternatives only",
+  "root": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101",
+  "rows": [
+    {
+      "relative_path": "physical/asap7_memory_macros/ot_rom_2048x266_m8/ot_rom_2048x266_m8.v",
+      "packet_sha256": "d60b17c15f5f8757e4fe622261a9046967df03df74d371dc7ffd7a80a8da9443",
+      "frozen_sha256": "d60b17c15f5f8757e4fe622261a9046967df03df74d371dc7ffd7a80a8da9443",
+      "status": "MATCH",
+      "preferred_alternatives": [
+        {
+          "path": "physical/asap7_memory_macros/ot_rom_2048x266_m8/ot_rom_2048x266_m8.v",
+          "sha256": "d60b17c15f5f8757e4fe622261a9046967df03df74d371dc7ffd7a80a8da9443",
+          "matches_packet": true
+        }
+      ]
+    },
+    {
+      "relative_path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+      "packet_sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+      "frozen_sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+      "status": "MATCH",
+      "preferred_alternatives": [
+        {
+          "path": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+          "sha256": "c21a0c9fc465d305f4ff4180dc58fb5278cb83895ad57e8bdf319bdade274443",
+          "matches_packet": false
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+          "sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+          "matches_packet": true
+        }
+      ]
+    },
+    {
+      "relative_path": "rtl/hdc/ot_hdc_delay.sv",
+      "packet_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "packet_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "packet_sha256": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+      "packet_sha256": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "packet_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/hdc/ot_hdc_fpu.sv",
+      "packet_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/hdc/ot_hdc_prefix.sv",
+      "packet_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/hdc/ot_hdc_sfu.sv",
+      "packet_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/hdc/ot_qwen_w12_arith.sv",
+      "packet_sha256": "e62270cd204e14875b025c824c0a1d26f1a9e046ec1ef0a57467ac22f43e9726",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "e62270cd204e14875b025c824c0a1d26f1a9e046ec1ef0a57467ac22f43e9726",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/lib/ot_rst_relay.sv",
+      "packet_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "frozen_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32.sv",
+      "packet_sha256": "329c3402f1d790546f3d9a15fd1e67233b379cc0c6d4655bdf8e59fcba262e6a",
+      "frozen_sha256": "329c3402f1d790546f3d9a15fd1e67233b379cc0c6d4655bdf8e59fcba262e6a",
+      "status": "MATCH",
+      "preferred_alternatives": [
+        {
+          "path": "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32.sv",
+          "sha256": "329c3402f1d790546f3d9a15fd1e67233b379cc0c6d4655bdf8e59fcba262e6a",
+          "matches_packet": true
+        }
+      ]
+    },
+    {
+      "relative_path": "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32_select.sv",
+      "packet_sha256": "0d37babe0091da00211a2f4f1f6f5e17b2fd8aaa9995919bc0b329590f55d4ec",
+      "frozen_sha256": "0d37babe0091da00211a2f4f1f6f5e17b2fd8aaa9995919bc0b329590f55d4ec",
+      "status": "MATCH",
+      "preferred_alternatives": [
+        {
+          "path": "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32_select.sv",
+          "sha256": "0d37babe0091da00211a2f4f1f6f5e17b2fd8aaa9995919bc0b329590f55d4ec",
+          "matches_packet": true
+        }
+      ]
+    },
+    {
+      "relative_path": "rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv",
+      "packet_sha256": "8be46265367a6b6879783cf3ffeeee2bbb62bbc6125f3839bbf083d34a418f5d",
+      "frozen_sha256": "8be46265367a6b6879783cf3ffeeee2bbb62bbc6125f3839bbf083d34a418f5d",
+      "status": "MATCH",
+      "preferred_alternatives": [
+        {
+          "path": "rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv",
+          "sha256": "8be46265367a6b6879783cf3ffeeee2bbb62bbc6125f3839bbf083d34a418f5d",
+          "matches_packet": true
+        }
+      ]
+    },
+    {
+      "relative_path": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+      "packet_sha256": "42495df5c86f684ef4865db1e48af715fcc65d33fd0e69f032a2b645b3edc37f",
+      "frozen_sha256": "b092caede437f73f6bc90ed6ab6417f21176bee640c00a7d8368b2b9de294535",
+      "status": "DIFF",
+      "preferred_alternatives": [
+        {
+          "path": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+          "sha256": "b092caede437f73f6bc90ed6ab6417f21176bee640c00a7d8368b2b9de294535",
+          "matches_packet": false
+        }
+      ]
+    },
+    {
+      "relative_path": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+      "packet_sha256": "98ee8f9bea416cbb61bd6bcc395e7f6b6033471d1a1ea741e7e1ba378df9fac3",
+      "frozen_sha256": "98ee8f9bea416cbb61bd6bcc395e7f6b6033471d1a1ea741e7e1ba378df9fac3",
+      "status": "MATCH",
+      "preferred_alternatives": [
+        {
+          "path": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+          "sha256": "98ee8f9bea416cbb61bd6bcc395e7f6b6033471d1a1ea741e7e1ba378df9fac3",
+          "matches_packet": true
+        }
+      ]
+    },
+    {
+      "relative_path": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
+      "packet_sha256": "1027a061b0776678c74809ac0a781df1c088783a6ececa4af5d1bc0b66c8015a",
+      "frozen_sha256": "1027a061b0776678c74809ac0a781df1c088783a6ececa4af5d1bc0b66c8015a",
+      "status": "MATCH",
+      "preferred_alternatives": [
+        {
+          "path": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
+          "sha256": "1027a061b0776678c74809ac0a781df1c088783a6ececa4af5d1bc0b66c8015a",
+          "matches_packet": true
+        }
+      ]
+    },
+    {
+      "relative_path": "rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+      "packet_sha256": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c",
+      "frozen_sha256": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c",
+      "status": "MATCH",
+      "preferred_alternatives": [
+        {
+          "path": "rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+          "sha256": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c",
+          "matches_packet": true
+        }
+      ]
+    },
+    {
+      "relative_path": "rtl/physical/ot_qwen_rom_tile_nk.sv",
+      "packet_sha256": "486fdda7b187559d735a1861cd43073d4c46392a10bbebf418968bcc6182068f",
+      "frozen_sha256": "486fdda7b187559d735a1861cd43073d4c46392a10bbebf418968bcc6182068f",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/physical/ot_qwen_tile_lsl.sv",
+      "packet_sha256": "42f326a1cf8174fa352d17fd342a9c409b47e2b405baf903163c2a37ea3b28d5",
+      "frozen_sha256": "42f326a1cf8174fa352d17fd342a9c409b47e2b405baf903163c2a37ea3b28d5",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/physical/ot_qwen_tile_lsl_fp1.sv",
+      "packet_sha256": "7811e798022fadb7778bab5025e8a769a59215e4efae872491a6bcf8c463a7ad",
+      "frozen_sha256": "7811e798022fadb7778bab5025e8a769a59215e4efae872491a6bcf8c463a7ad",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/physical/ot_qwen_tile_node.sv",
+      "packet_sha256": "f40676e8db499d7c1b146eb33d3e474721116a202fad4c633e8c4ce331e3e71c",
+      "frozen_sha256": "f40676e8db499d7c1b146eb33d3e474721116a202fad4c633e8c4ce331e3e71c",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/physical/ot_qwen_tile_operand.sv",
+      "packet_sha256": "6101f036a03366c4b7502e04c1ffcb7602def4b66264eeae24c9bc0e3afe9884",
+      "frozen_sha256": "6101f036a03366c4b7502e04c1ffcb7602def4b66264eeae24c9bc0e3afe9884",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/physical/ot_qwen_tile_romleaf.sv",
+      "packet_sha256": "a0eeebf74422819d75c9c65b39ac170c7512ae1c146f716ec3800a64a23fd6a5",
+      "frozen_sha256": "a0eeebf74422819d75c9c65b39ac170c7512ae1c146f716ec3800a64a23fd6a5",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/physical/ot_qwen_tile_rpair.sv",
+      "packet_sha256": "771b7da54c161daa4bb829c7aacb9371024bb09abb3bf3e4836db4a6265e4dbd",
+      "frozen_sha256": "771b7da54c161daa4bb829c7aacb9371024bb09abb3bf3e4836db4a6265e4dbd",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/physical/ot_qwen_tile_rqr_half.sv",
+      "packet_sha256": "121043784984759a40400082551782e3203b59b8faa6b6bc661b85e00933a6b7",
+      "frozen_sha256": "121043784984759a40400082551782e3203b59b8faa6b6bc661b85e00933a6b7",
+      "status": "MATCH",
+      "preferred_alternatives": []
+    },
+    {
+      "relative_path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "packet_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "immutable_82190_status": "MATCH"
+    },
+    {
+      "relative_path": "rtl/test/qwen_dv/s5/sram_models_nofatal.sv",
+      "packet_sha256": "3f6de66848e831cf528928d5ead447cef36b41edca4a1105f8f16487290122a0",
+      "frozen_sha256": null,
+      "status": "MISSING",
+      "preferred_alternatives": [],
+      "immutable_status": "MISSING",
+      "immutable_82190_sha256": "3f6de66848e831cf528928d5ead447cef36b41edca4a1105f8f16487290122a0",
+      "immutable_82190_status": "MATCH"
+    }
+  ],
+  "counts": {
+    "MATCH": 17,
+    "DIFF": 1,
+    "MISSING": 11
+  },
+  "packet3_overrides": {
+    "src/015_ot_qwen_w12_matvec_land32.sv": {
+      "source": "epyc2:/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+      "sha256": "b092caede437f73f6bc90ed6ab6417f21176bee640c00a7d8368b2b9de294535",
+      "delta": "generatebranch qv/cv forREGROOT<8, avoidunusedout-of-rangespcpartselect"
+    },
+    "src/001_ot_rom_4096x266_m8.v": {
+      "source": "epyc2:/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+      "sha256": "c21a0c9fc465d305f4ff4180dc58fb5278cb83895ad57e8bdf319bdade274443",
+      "delta": "headercommentonly v1.0+aligned-v2, functionalbodyidentical"
+    }
+  },
+  "packet3_resolution": "16 directfrozenWTmatches +11immutable82190blobmatches +2exactpreferredfrozenreplacements =29sourcefiles. bd55commitnotavailablefromorigin; no git commands inotherWT."
+}

@@ -1,0 +1,68 @@
+{
+  "status": "PREP_NOT_RUN",
+  "contexts": [
+    {
+      "tile": 0,
+      "block": 0,
+      "i_gbase": 0,
+      "nout": 768,
+      "tiles": 1,
+      "k": 8,
+      "code_base": 18432,
+      "requests": 64,
+      "raw_vectors": 64,
+      "reference_useful_vectors": 64,
+      "genuine_padding_vectors": 0,
+      "masks": [
+        {
+          "source": "/srv/opentallas-scratch2/claude/codex-qwen-images-1101/recover_l0/cohorts/rank0/masks/rank0/masks/qtile_t0_b4_c0.viamap.hex",
+          "canonical_filename": "qtile_t0_b4_c0.viamap.hex",
+          "component_role": "mask_c0.viamap.hex",
+          "sha256": "cb1ba4c1264ddfafc601b00c9e66d74ce32d786b5e3c35d64482fa356d4a0daf"
+        },
+        {
+          "source": "/srv/opentallas-scratch2/claude/codex-qwen-images-1101/recover_l0/cohorts/rank0/masks/rank0/masks/qtile_t0_b4_c1.viamap.hex",
+          "canonical_filename": "qtile_t0_b4_c1.viamap.hex",
+          "component_role": "mask_c1.viamap.hex",
+          "sha256": "2546b36512e72dc0cb6815345fe8e2407116f6bd3c04e72dada526df4473393b"
+        }
+      ]
+    },
+    {
+      "tile": 639,
+      "block": 148,
+      "i_gbase": 2556,
+      "nout": 560,
+      "tiles": 1,
+      "k": 8,
+      "code_base": 19968,
+      "requests": 64,
+      "raw_vectors": 64,
+      "reference_useful_vectors": 24,
+      "genuine_padding_vectors": 40,
+      "masks": [
+        {
+          "source": "/srv/opentallas-scratch2/claude/codex-qwen-images-1101/recover_l0/cohorts/rank0/masks/rank0/masks/qtile_t639_b4_c0.viamap.hex",
+          "canonical_filename": "qtile_t639_b4_c0.viamap.hex",
+          "component_role": "mask_c0.viamap.hex",
+          "sha256": "08fab848be07746b1c213b172ca6be5ce7e911f34d2f446e19636e24c0a8c432"
+        },
+        {
+          "source": "/srv/opentallas-scratch2/claude/codex-qwen-images-1101/recover_l0/cohorts/rank0/masks/rank0/masks/qtile_t639_b4_c1.viamap.hex",
+          "canonical_filename": "qtile_t639_b4_c1.viamap.hex",
+          "component_role": "mask_c1.viamap.hex",
+          "sha256": "a080cf6cb58df103b3cd285ae44d9fb1cecf735c073196b56d084d3b3902b23b"
+        }
+      ]
+    }
+  ],
+  "scope": "public macro VIAMAP contentcontexts + actual ROMleaflogic + unchanged selected-parameter PART1; no selectedROM_TILEwrapperretarget/productionphase/full512claim",
+  "gold": "independenthdc_golden sequential8RNE pergroup+literalTG4tree eachK; usedcodecheckedcanonicalcrop, paddingobservedzero genuinephysicalmasks; baselineexpectedROM isneverDUTinput",
+  "input_hashes": {
+    "/home/ubuntu/coord/tmp/codex-native-head-full512-source/genuine_mask_rows_metadata.json": "ec9361dabda71095314afa3aa5aef5fe6c77452625b1f8c11bf46d9834301416",
+    "/home/ubuntu/coord/tmp/codex-native-head-post-reference-prep/genuine_row_block_slices.json": "bb86834f8ba4d5bd4696fa7f0adeea140051462ac02dfc0fa9565f6cb18bc71a",
+    "results/token_pass/qwen_native_head_post_reference_1102/H4096_me_fp32_REFERENCE.hex": "8bdbbf6401e2a591466c3b9d8cd28e976fb91e5538a756763c1e4ba1fd7965ca",
+    "/home/ubuntu/coord/tmp/codex-native-head-leaf-packet4/data/resident_ib379.hex": "aad0a04431fb289747d9b135f270347acce5ec594e0d717f0dec36c16b9ed3b2",
+    "/home/ubuntu/OpenTallas/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "status": "SOURCE_PREP_NOT_EXECUTED",
+  "selected_consumer": {
+    "qfd_tile_nk_rp2_romleaf_rr": {
+      "path": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
+      "sha256": "1027a061b0776678c74809ac0a781df1c088783a6ececa4af5d1bc0b66c8015a"
+    },
+    "qfd_tile_nk_rp2_45": {
+      "path": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+      "sha256": "98ee8f9bea416cbb61bd6bcc395e7f6b6033471d1a1ea741e7e1ba378df9fac3"
+    },
+    "ot_qwen_rom_tile_nk": {
+      "path": "rtl/physical/ot_qwen_rom_tile_nk.sv",
+      "sha256": "486fdda7b187559d735a1861cd43073d4c46392a10bbebf418968bcc6182068f"
+    },
+    "ot_qwen_rom_tile_logic_w12": {
+      "path": "rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+      "sha256": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c"
+    },
+    "ot_qwen_rom_tile_w12": {
+      "path": "rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+      "sha256": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c"
+    },
+    "ot_qwen_tile_romleaf": {
+      "path": "rtl/physical/ot_qwen_tile_romleaf.sv",
+      "sha256": "a0eeebf74422819d75c9c65b39ac170c7512ae1c146f716ec3800a64a23fd6a5"
+    },
+    "qfd_tile_nl_rp2_romleaf_rr": {
+      "path": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_romleaf_rr.sv",
+      "sha256": "c5a2a44092544921f7b2a83653966c6e5da8e63056fcd9393455e70c7d6bfcab"
+    },
+    "qfd_tile_nl_rp2_45": {
+      "path": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
+      "sha256": "f93d509ec2acc1b1e3c1d45c9ac0418be33783866c26f62656bc06bed49bf28f"
+    }
+  },
+  "descriptor_bounds": [
+    {
+      "chunk": 0,
+      "rounds": 8,
+      "rows": 6144,
+      "row0": 0,
+      "amc": 0,
+      "code": [
+        18432,
+        18944
+      ],
+      "scale": [
+        29376,
+        29760
+      ],
+      "local_code": [
+        0,
+        512
+      ],
+      "local_scale": [
+        0,
+        384
+      ]
+    },
+    {
+      "chunk": 1,
+      "rounds": 8,
+      "rows": 6144,
+      "row0": 6144,
+      "amc": 1,
+      "code": [
+        18944,
+        19456
+      ],
+      "scale": [
+        29760,
+        30144
+      ],
+      "local_code": [
+        512,
+        1024
+      ],
+      "local_scale": [
+        384,
+        768
+      ]
+    },
+    {
+      "chunk": 2,
+      "rounds": 8,
+      "rows": 6144,
+      "row0": 12288,
+      "amc": 1,
+      "code": [
+        19456,
+        19968
+      ],
+      "scale": [
+        30144,
+        30528
+      ],
+      "local_code": [
+        1024,
+        1536
+      ],
+      "local_scale": [
+        768,
+        1152
+      ]
+    },
+    {
+      "chunk": 3,
+      "rounds": 1,
+      "rows": 560,
+      "row0": 18432,
+      "amc": 1,
+      "code": [
+        19968,
+        20032
+      ],
+      "scale": [
+        30528,
+        30576
+      ],
+      "local_code": [
+        1536,
+        1600
+      ],
+      "local_scale": [
+        1152,
+        1200
+      ]
+    }
+  ],
+  "groups": 3072,
+  "tile_groups": 4,
+  "tile_id": 0,
+  "source_rank": 0,
+  "vocabulary_rows": 18992,
+  "code_words": 1600,
+  "scale_words": 1200,
+  "genuine_source": "/srv/opentallas-scratch2/claude/codex-qwen-images-1101/recover_l0/banks/head_images/rank0",
+  "genuine_code_sha256": "5f254e2074491e2927a7ed36c3b17ff8bf66add69b1f2f5caa61049f12080b80",
+  "genuine_scale_sha256": "df41b740b4cbbe3cdf67fae428cfbf081513269412baca49f5fcf15ccc9d3674",
+  "control_path": [
+    "HR cmd380",
+    "ot_qwen_tp8_rom_relocate",
+    "qfd_dv_hr_pack",
+    "actual HR/XPF transports",
+    "native NK tap508 {xl128,ib379,go}",
+    "qfd_tile_nk_rp2_romleaf_rr",
+    "qfd_tile_nk_rp2_45",
+    "ot_qwen_rom_tile_nk",
+    "ot_qwen_rom_tile_logic_w12",
+    "ot_qwen_w12_matvec_part PART1"
+  ],
+  "ammax_path": "selected collector -> S8 station shared BF16 BTAB post-scale -> peruser AMAX -> scalar root; selected HR AMAX payload tied zero and m_fin outputs unused",
+  "missing": [
+    "frozen821/f79 canonical instance/parameter+clock attachment beyond SHA-matched recovery chain",
+    "genuine physical ROMleaf mask extraction for selected tile (logical excerpt is not a macro image)",
+    "real Xfill/live-X ownership and perchunk GO/end dates",
+    "selected collector/STN298/sharedBF16BTAB/AMAX attachment and simulation; no generic PART2 substitution"
+  ],
+  "readset": {
+    "/home/ubuntu/OpenTallas/results/token_pass/qwen_rom_recovery_1101/receipt.json": "676fbf8caccd1c36fb3dddf281dd548be941e2a60040767bdc287ef5ef92c47d",
+    "/home/ubuntu/coord/tmp/codex-qwen-headlease-2125/native_head_gme_object.json": "745e5087a4f5ae6bb4c7462e2ffc1f0f6d4787b9a44db42dbb2dc04b345235cb",
+    "/home/ubuntu/coord/tmp/codex-native-head-consumer-prep/genuine_tile0.json": "5d0fd0b135911c3d64bc922c9dff1308aba278c5d8c7102b956f23b661bea424"
+  },
+  "artifacts": {
+    "resident_ib379.hex": "aad0a04431fb289747d9b135f270347acce5ec594e0d717f0dec36c16b9ed3b2",
+    "tile0_logical_int8.hex": "4b466a9550d49b943cc9cb2e7118b74274b3fb38260abb4c741bcd82d28048b0",
+    "genuine_scale_bf16.hex": "df41b740b4cbbe3cdf67fae428cfbf081513269412baca49f5fcf15ccc9d3674"
+  },
+  "source_review_update": "See selected_attachment.json for frozen821/f79 instance join and mask_decode.json for genuine bank4 mapping; earlier preparation missing items are retained until actual RTL execution."
+}

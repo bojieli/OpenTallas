@@ -1,0 +1,434 @@
+{
+  "status": "SELECTED_POST_SOURCE_AND_GENUINE_FIXTURE_REQUIREMENTS_ONLY",
+  "readset": {
+    "/home/ubuntu/coord/tmp/codex-qwen-headlease-2125/head_calendar_s8_1021.json": "e4abd187cfe5dd73e4b665c8b6b195299e75090cfce0f6bfbda00e9379e200be",
+    "/home/ubuntu/coord/tmp/codex-qwen-headlease-2125/head_btab.json": "c693b226ed4898818f256fb8879a052881f8aa6c97adbd73e5012523aa0ee57d",
+    "/srv/opentallas-scratch/claude/wt/codex-native-head-consumer-prep/results/token_pass/qwen_native_head_consumer_prep_1102/genuine_scale_bf16.hex": "df41b740b4cbbe3cdf67fae428cfbf081513269412baca49f5fcf15ccc9d3674",
+    "/home/ubuntu/coord/tmp/codex-native-head-post-prep/selected_source_readset.json": "3c5c4d8933324ce05cf4fbd769f6a753e968c4e7c3cab4a6da48e71a9ff95386"
+  },
+  "selected_sources": {
+    "scope": "namedselectedpostcone/source-only; no dispatch",
+    "rows": [
+      {
+        "path": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/slw_st_a_v2__clf4365a62.sv",
+        "sha256": "e971c9f31f2d9a97900d46edfd8a4309bb7f1381b811f5faabbd1c396cc314ec",
+        "station_instances": [
+          {
+            "module": "qfd_dv_s8_station_tail1_nb0",
+            "instance": "u_u_r0",
+            "line": 1668
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1_nb0",
+            "instance": "u_u_r1",
+            "line": 1699
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1_nb0",
+            "instance": "u_u_r2",
+            "line": 1730
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1_nb0",
+            "instance": "u_u_r3",
+            "line": 1761
+          }
+        ]
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/slw_st_a_v1__clfc5867a6.sv",
+        "sha256": "40ac782d876123adf24e1031d0ea06af2d06fc71c5bc241804aa0419dbe24602",
+        "station_instances": [
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r0",
+            "line": 2229
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r1",
+            "line": 2262
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r2",
+            "line": 2295
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r3",
+            "line": 2328
+          }
+        ]
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/slw_st_a_v1__clb036e152.sv",
+        "sha256": "70a774dbd955fbd8791e11f882282bf31144d18fd6ea65e0ee30571d7c7effed",
+        "station_instances": [
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r0",
+            "line": 2233
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r1",
+            "line": 2266
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r2",
+            "line": 2299
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r3",
+            "line": 2332
+          }
+        ]
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/sle_st_a_v1__cl67389ecd.sv",
+        "sha256": "e357f1d767bbbc446fc692f586cbe1fc091a31dd3a00cdb1263abce64eb626ba",
+        "station_instances": [
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r0",
+            "line": 2423
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r1",
+            "line": 2456
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r2",
+            "line": 2489
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r3",
+            "line": 2522
+          }
+        ]
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/sle_st_a_v1__cl989804f6__cl18eece69.sv",
+        "sha256": "4e58f0396c996c192c15e6fbcb3c5429e6a02cec6e1c098dfb0b51d90ce5e5f2",
+        "station_instances": [
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r0",
+            "line": 2337
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r1",
+            "line": 2370
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r2",
+            "line": 2403
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r3",
+            "line": 2436
+          }
+        ]
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/codex-qc62-collect-1101/bind_complete4/rtl/sle_st_a_v1__cl989804f6__cled3c1d7b.sv",
+        "sha256": "bcec248241ef1856ea9ca031663cc5d368d168033071f5e30635106acb9b0c73",
+        "station_instances": [
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r0",
+            "line": 2333
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r1",
+            "line": 2366
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r2",
+            "line": 2399
+          },
+          {
+            "module": "qfd_dv_s8_station_tail1",
+            "instance": "u_u_r3",
+            "line": 2432
+          }
+        ]
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/s8/qfd_dv_s8_ce.sv",
+        "relative_path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_ce.sv",
+        "sha256": "c1a49ea1f9902f97052a9c689dfb0786ccd2e705ddc01936978fba64e373aab1",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv",
+        "relative_path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv",
+        "sha256": "f8b88f24b6b03f34749f6d79fb72ffb1ba7d280c328b26c4558c11052891f709",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv",
+        "relative_path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv",
+        "sha256": "9b3eda7dc9eae5b4c79afd96c3c06c1b8eaf009fc09f60f5857c0e8d72ae2fcc",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv",
+        "relative_path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv",
+        "sha256": "cf202b85bcd951ca0edb28386d0807bef25c131ea0f30ea6bc000e5b459a8eae",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv",
+        "relative_path": "rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv",
+        "sha256": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv",
+        "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv",
+        "sha256": "08bc0cb9bac615c4ca16ef1539815736b5095b41fe934c343f133c8db217b8b3",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv",
+        "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv",
+        "sha256": "afcd737af00b983b10e0aaef11cc58a7e976eb263caf8d99290a12a7eec3d222",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+        "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+        "sha256": "43e4fdb1799703b377cc2bf1af9531b6d1af9405b60d97175f1fb28138181f6e",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+        "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+        "sha256": "eee27f3def670be904a761b5b73a7c714582da7c5d35c8b2503a0543f7499db8",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+        "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+        "sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+        "relative_path": "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+        "sha256": "cc7c0e78e337420b0e4871302619569c90dcaec25bd91c49e52d17f0f81fe1ca",
+        "status": "PRESENT"
+      },
+      {
+        "path": "/srv/opentallas-scratch2/claude/wt/codex-qc62-bind-complete-1101/rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+        "relative_path": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+        "sha256": "af467263c9a76c2b77fe629773538f4a7aea779f108bfa3a25c8af94dda3bfd3",
+        "status": "PRESENT"
+      }
+    ]
+  },
+  "fixtures": [
+    {
+      "block": 0,
+      "receiver": 1,
+      "sender": 0,
+      "rows": [
+        0,
+        128
+      ],
+      "words": 8,
+      "KC": 8,
+      "sbase": 72,
+      "BTAB_words": [
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79
+      ],
+      "genuine_scale_words": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "sender_command": {
+        "source_index": 500,
+        "word": "00000000000003800000000000435",
+        "decoded": {
+          "go": 1,
+          "kind": 2,
+          "dst": 0,
+          "mode": 3,
+          "wsrc": 0,
+          "nwords": 8,
+          "sbase": 0,
+          "sdst": 0,
+          "dbase": 0,
+          "amax": 0,
+          "user": 0,
+          "kc": 8
+        }
+      },
+      "receiver_command": {
+        "source_index": 501,
+        "word": "10000000000003804000000240425",
+        "decoded": {
+          "go": 1,
+          "kind": 2,
+          "dst": 1,
+          "mode": 2,
+          "wsrc": 0,
+          "nwords": 8,
+          "sbase": 72,
+          "sdst": 0,
+          "dbase": 0,
+          "amax": 1,
+          "user": 0,
+          "kc": 8
+        }
+      },
+      "component_inputs": {
+        "region0": "two lanes from each actual own L6 port fs/ns/fn/nn, plus real neighbor L8 word",
+        "full_vector": "all8 two-lane regions simultaneously;16lane word for actual per-userAMAX",
+        "streams_per_pair": 8,
+        "raw_K_blocks": 8,
+        "raw_words_per_stream": 64,
+        "final_scaled_vectors": 8
+      },
+      "expected_addresses": [
+        0,
+        16,
+        32,
+        48,
+        64,
+        80,
+        96,
+        112
+      ],
+      "row_scale_rule": "Each final16-row vector multiplies the corresponding genuine BF16 BTAB word after full512split tree. No scale before global sum."
+    },
+    {
+      "block": 148,
+      "receiver": 8,
+      "sender": 9,
+      "rows": [
+        18944,
+        18992
+      ],
+      "words": 3,
+      "KC": 8,
+      "sbase": 264,
+      "BTAB_words": [
+        264,
+        265,
+        266
+      ],
+      "genuine_scale_words": [
+        1184,
+        1185,
+        1186
+      ],
+      "sender_command": {
+        "source_index": 778,
+        "word": "900000000000038000000000001b5",
+        "decoded": {
+          "go": 1,
+          "kind": 2,
+          "dst": 9,
+          "mode": 3,
+          "wsrc": 0,
+          "nwords": 3,
+          "sbase": 0,
+          "sdst": 0,
+          "dbase": 0,
+          "amax": 0,
+          "user": 0,
+          "kc": 8
+        }
+      },
+      "receiver_command": {
+        "source_index": 779,
+        "word": "800000000000038040128008401a5",
+        "decoded": {
+          "go": 1,
+          "kind": 2,
+          "dst": 8,
+          "mode": 2,
+          "wsrc": 0,
+          "nwords": 3,
+          "sbase": 264,
+          "sdst": 0,
+          "dbase": 18944,
+          "amax": 1,
+          "user": 0,
+          "kc": 8
+        }
+      },
+      "component_inputs": {
+        "region0": "two lanes from each actual own L6 port fs/ns/fn/nn, plus real neighbor L8 word",
+        "full_vector": "all8 two-lane regions simultaneously;16lane word for actual per-userAMAX",
+        "streams_per_pair": 8,
+        "raw_K_blocks": 8,
+        "raw_words_per_stream": 24,
+        "final_scaled_vectors": 3
+      },
+      "expected_addresses": [
+        18944,
+        18960,
+        18976
+      ],
+      "row_scale_rule": "Each final16-row vector multiplies the corresponding genuine BF16 BTAB word after full512split tree. No scale before global sum."
+    }
+  ],
+  "smallest_numeric_cone": {
+    "sender": "sl_W5_st_a.u_u_r0 / qfd_dv_s8_station_tail1_nb0",
+    "receiver": "sl_W4_st_a.u_u_r0 / qfd_dv_s8_station_tail1",
+    "region_lanes": 2,
+    "shared_scale_store": "qfd_dv_s6_btab -> qfd_dv_s5_btab_s4 -> qfd_dv_s5_btab_safe ->4actual128x256SRAMs",
+    "parameters": {
+      "ADD_LAT": 7,
+      "SCALE_LAT": 7,
+      "SKEW": 14,
+      "JB": 8,
+      "PIN_IN": 1,
+      "BT_LAT": 1
+    },
+    "input_boundary": "actual L6 collector ports; not bare TG4 partial",
+    "output_boundary": "two final scaledFP32lanes +r_v/r_idx/r_last; fullAMAXrequires8regions"
+  },
+  "arithmetic_order": "KC8 selects lastK; ylo=add(fs,ns),yhi=add(fn,nn),ownL8=add(ylo,yhi);sender emits ownL8;receiver adds heldownL8+neighborL8;then BF16 row-scale mul",
+  "AMAX_boundary": {
+    "module": "qfd_dv_amax_mu NU4 under selected qfd_dv_s5_ctl_repair4_leaf",
+    "result_address": "stn_dbase+(r_idx<<4)+lane; global rank offset already in STNdbase",
+    "events": "STNuser/amax captured on actual command; sixreceiveronlyclear;8stationregionresults formfull16lanevector; taggedcandidate am_v/am_idx/am_val/am_u to selectedscalarup/root",
+    "scope": "No full logit or token claim until full512split collector values and root transport are supplied"
+  },
+  "still_required": [
+    "Canonical H4096 BF16 projection and genuine selected INT8 rows for blocks0 and148 across all4096columns, without checkpoint regeneration",
+    "Actual collector source mapping of8L6 streams to group/column intervals and exactRNE tree order; do not replace64-group L6 values with4-group tile0 values",
+    "KC8 complete intermediate-prefix sequences for each64-group stream:8 K blocks in slot order, not only finalK7 data",
+    "Actual selected pair neighbor transport publication/own9 lead and sharedBTAB response contract from frozen wrappers; no fittedlatency",
+    "Eightregion assembly/r_v coherence for16laneAMAX; realtagged6candidateROOTinterface; no fake ME ready/results"
+  ],
+  "qualification": "No RTL compile/simulation/heavy dispatch; genuineBTAB data join only; no genericPART2 substitute"
+}

@@ -1,0 +1,13 @@
+B256 SOURCE PREP — NOT RUN; no release or production activation.
+
+This packet preserves the passed B2 public ROM/converter/PART1 arithmetic source and clock (833ps, precision1fs), NX0, WCONV1 and M+9 ROM response. It runs one-round contexts for tile0..127 at block0 and tile512..639 at tail block148, each in a fresh immutable mask process. Both sets use genuine logical bank4; physical tile identities differ. Selected ROM_TILE wrapper guards are unchanged and outside this public component boundary.
+
+All 512 full original masks are hash-authenticated. The useful 720896 INT8 bytes join the bounded genuine source crop; 327680 additional padding bytes remain genuine full-mask content. All64 fetches and raw publications are retained for EACH context. Totals: 16384 ROM/raw TG4 vectors, 11264 useful and5120 padding. Downstream unchanged L6 must receive16contexts×64raw=1024vectors;704required and320padding are score labels, never an input filter. No executed L6/full512/logit/global phase claim.
+
+Baseline writes actual_ROM_RAW_transcript_baseline.tsv with tagged ROM and RAW records. ROM checks authenticate original address and request-derived M+9 response cycle; idle contents have no invented zero constraint. RAW records capture actual native t_out on every t_vout. Independent expected values never drive wrom_q. Capture checker checks complete ordinal/data/cycle shape then aggregates actual_all_ROM_RAW.tsv. Same ELF wrongAddress and wrongCycle controls use tile0 genuine nonzero words and must fail the named ROM contract. No gold/native/mask changes from B2 for its tile0/639 contexts.
+
+Run only after normal fixed-Intel1 admission: bash run.sh. One VL5.050 --cc/--exe/--main generation then normal make-j1, O0 flags unchanged. Generation/build time-v logs are separate. No job launched in PREP.
+
+Optional cache is a NEW independent copy created by prepare_terminal_cache.py from the TERMINAL protected B2 pilot plus exact controller proof. It excludes PCH, archives and ELF. NATIVE_HEAD_TERMINAL_CACHE may point only to that copy. reuse_terminal_objects.py checks compiler fingerprint, generated make config, every object and its complete .d CPP/header closure. Changed/missing closure declines reuse. PCH rules can rebuild every object; no timestamp override, hardlink or forced stamps. Actual make remains authoritative. No cache has been created by this PREP and no incremental speedup is promised.
+
+Resource proposal: normal Intel1 4GB/1T/disk3. Actual B2 build719.39s/RSS2133700KB, obj1003978885B; context3.03..3.35s/RSS~60MB. Full original139722752B masks plus fresh output, possible independent object cache and PCH/temp are priced. No Epyc2 staging or floor override.

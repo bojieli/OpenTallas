@@ -1,0 +1,23 @@
+	Command being timed: "python3 /srv/opentallas-scratch/claude/wt/codex-native-head-consumer-prep/tools/qwen_layerbench/native_head_post_reference.py reference --tools /home/ubuntu/OpenTallas/tools --slices /home/ubuntu/coord/tmp/codex-native-head-post-reference-prep/genuine_row_block_slices.json --head /home/ubuntu/coord/tmp/codex-qwen-headlease-2125/head37_monitor_slice0_candidate.json --h32 /srv/opentallas-scratch/claude/wt/codex-qwen-headlease-2130/results/token_pass/qwen_native_head_partial_gold_1102/H32_me_fp32.hex --scales /srv/opentallas-scratch/claude/wt/codex-native-head-consumer-prep/results/token_pass/qwen_native_head_consumer_prep_1102/genuine_scale_bf16.hex --capture /home/ubuntu/coord/tmp/codex-native-head-post-reference-prep/actual_raw_prefixes.tsv --out /home/ubuntu/coord/tmp/codex-native-head-post-reference-prep/reference"
+	User time (seconds): 2.70
+	System time (seconds): 0.01
+	Percent of CPU this job got: 1637%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 37208
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7034
+	Voluntary context switches: 42
+	Involuntary context switches: 155
+	Swaps: 0
+	File system inputs: 376
+	File system outputs: 320
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

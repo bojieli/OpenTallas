@@ -1,0 +1,48 @@
+{
+  "status": "PASS_DATA_ONLY_SELECTED_NATIVE_MASK_DECODE",
+  "rank": 0,
+  "tile": 0,
+  "bank": 4,
+  "macro_count": 2,
+  "logical_code_bytes": 102400,
+  "columns": [
+    {
+      "column": 0,
+      "groups": [
+        0,
+        1
+      ],
+      "instance": "qtile_t0_b4_c0",
+      "mask_sha256": "cb1ba4c1264ddfafc601b00c9e66d74ce32d786b5e3c35d64482fa356d4a0daf",
+      "head_row_range": [
+        2048,
+        3648
+      ],
+      "checked_words": 1600,
+      "checked_code_bytes": 51200
+    },
+    {
+      "column": 1,
+      "groups": [
+        2,
+        3
+      ],
+      "instance": "qtile_t0_b4_c1",
+      "mask_sha256": "2546b36512e72dc0cb6815345fe8e2407116f6bd3c04e72dada526df4473393b",
+      "head_row_range": [
+        2048,
+        3648
+      ],
+      "checked_words": 1600,
+      "checked_code_bytes": 51200
+    }
+  ],
+  "physical_mapping": "bitline=8*logical_bit+(word%8), maskrow=word//8; unused high80physicalbitlines zero",
+  "readset": {
+    "/home/ubuntu/coord/tmp/codex-native-head-consumer-prep/mask_pair_receipt_found.json": "b1520df1375cf3e94ee691045aa179e0eab657184d7bd63549b993cb557fa911",
+    "/home/ubuntu/coord/tmp/codex-native-head-consumer-prep/genuine_tile0.json": "5d0fd0b135911c3d64bc922c9dff1308aba278c5d8c7102b956f23b661bea424",
+    "qtile_t0_b4_c0.viamap.hex": "cb1ba4c1264ddfafc601b00c9e66d74ce32d786b5e3c35d64482fa356d4a0daf",
+    "qtile_t0_b4_c1.viamap.hex": "2546b36512e72dc0cb6815345fe8e2407116f6bd3c04e72dada526df4473393b"
+  },
+  "scope": "Genuine code address/payload mapping only; no numeric engine, clocks, Xfill, scales or AMAX execution"
+}

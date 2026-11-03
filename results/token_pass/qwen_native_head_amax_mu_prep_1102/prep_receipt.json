@@ -1,0 +1,72 @@
+{
+  "status": "SOURCE_PREP_NOT_RUN",
+  "scope": "actual qfd_dv_amax_mu NU4 logical numerical component, qualified nativepost176scalars assembled11vectors across8 sequential2lanecontexts; no simultaneousSTN, flattenedhardctl, fullvocab or ROOT/token claim",
+  "vectors": 11,
+  "scalar_values": 176,
+  "vector_addresses": [
+    0,
+    16,
+    32,
+    48,
+    64,
+    80,
+    96,
+    112,
+    18944,
+    18960,
+    18976
+  ],
+  "user_partition": [
+    {
+      "user": 0,
+      "vectors": [
+        0,
+        4,
+        8
+      ],
+      "index": 11,
+      "value": "410d3210",
+      "okey": "c10d3210"
+    },
+    {
+      "user": 1,
+      "vectors": [
+        1,
+        5,
+        9
+      ],
+      "index": 30,
+      "value": "41078928",
+      "okey": "c1078928"
+    },
+    {
+      "user": 2,
+      "vectors": [
+        2,
+        6,
+        10
+      ],
+      "index": 36,
+      "value": "4119bef9",
+      "okey": "c119bef9"
+    },
+    {
+      "user": 3,
+      "vectors": [
+        3,
+        7
+      ],
+      "index": 63,
+      "value": "40dd051a",
+      "okey": "c0dd051a"
+    }
+  ],
+  "input_sha256": "d30ff61ec386d96ef582d294e813983500432fbb0d795b65010425fab9d1435f",
+  "post_receipt_sha256": "24992a244af6bd1e05b28812c5b45d8ab420a47e16388d0761560b54311d671e",
+  "clear_control": "clear users2/3 after earlier user candidates merged; nativeMUT3 clear-all must be observable",
+  "user_control": "new STN on old last result edge is legal per actual ctl am_stn_pend = busy&&!sender&&!(left==1&&r_v); nativeMUT2 currentSTN merge differs from carrieduser",
+  "emit_control": "finalcurrentSTNuser2 nonamax; emitAMAXuser0 first, nativeMUT4 emitswrongtag",
+  "drain": "al0..al4 plusrun merge, lastwordE\u2192mergeE+5;6quietedges beforeemit/clear",
+  "clock": "explicit nominal833ps/1fs component clock; no productionphase claim",
+  "descriptor_legality": "elevenonewordAMAXSTNs, exactdbases0,64,18944,16,80,18960,32,96,18976,48,112; eachr_addr==latcheddbase,stn_left==1;finalnonamaxcontextuser2/dbase0/words1 has noAMAXresult/completionclaim"
+}

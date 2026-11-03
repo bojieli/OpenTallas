@@ -1,0 +1,335 @@
+{
+  "status": "SOURCE_ONLY_LEASE_LIMITATION_IDENTIFIED",
+  "readset": {
+    "/home/ubuntu/coord/tmp/codex-native-head-leaf-packet3/src/015_ot_qwen_w12_matvec_land32.sv": "b092caede437f73f6bc90ed6ab6417f21176bee640c00a7d8368b2b9de294535",
+    "/home/ubuntu/coord/tmp/codex-native-head-leaf-packet3/src/018_ot_qwen_rom_tile_w12_land32.sv": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c",
+    "/srv/opentallas-scratch/claude/wt/codex-qwen-headlease-2130/rtl/qwen_dv/headprep37/ot_qwen_rom_core_ctrl_g5prep.sv": "b3122fae33b7c352af1e04a3529569c07cdd6f8e385d879932389e984d8c7fc1",
+    "/srv/opentallas-scratch/claude/wt/codex-qwen-headlease-2130/rtl/qwen_dv/headprep37/ot_qfd_tt_ctlm_head_static_rk_g5prep.sv": "34c4b778dbeeee194eb0e86715d31c2f35db37dc002e3e36fbef52fc87324d62",
+    "/srv/opentallas-scratch/claude/wt/codex-qwen-headlease-2130/rtl/qwen_dv/headprep37/ot_qfd_tt_ctlm_static_hr_g5prep.sv": "6d8e7183881012ac0e012a0fbdc4ac0c4c7864c9c697621f1a2485f4c5d0c463",
+    "/home/ubuntu/OpenTallas/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a",
+    "/home/ubuntu/OpenTallas/rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13_parts.sv": "ccce2a8874869a928911ad53fa39daa7fec897b7eb7dcffcb47c40d635991c95",
+    "/srv/opentallas-scratch/claude/wt/codex-qwen-headlease-2130/results/token_pass/qwen_native_head_gme_source_1101/gme_object.json": "745e5087a4f5ae6bb4c7462e2ffc1f0f6d4787b9a44db42dbb2dc04b345235cb"
+  },
+  "native_acceptance": {
+    "PART1_ready": "015matvec line443 assignready=!active&&!pend",
+    "REGROOT3_accept": "line723 g_ctl_all; lines732..745 acceptsgo when!active&&!pend withnoidlecondition; descriptor regs loadthen",
+    "outer_go": "018land32 lines203..215 go_i=IREG?go_q:ib_go,go_q<=ib_go; same-edgeib_q<=ib. No outeridle guard/busyfault.",
+    "outer_ready": "018land32 u_me line276 ready() disconnected; idle propagated.",
+    "fault": "015 lines1952..1956 arithmetic/scale/splitfaults; no go&&ready&&!idle busy fault.",
+    "drain": "015 lines2167..2174 idle_c checksactive,pend,e_v,m_vl,s1,s1b,s2,s3,vline,post_pending,tv,ov1/2,ordbusy,mx_we; registeredidleclearedonacceptance. Hence ready1/idle0 is realpipeline-drainingstate andacceptsearlyGO."
+  },
+  "caller": {
+    "G5_core": "core_ctrl_g5prep621 xdep_ok barrier?own_idle:(!wait_u||own_idle). Native-static dropsotherunitdependencies,retainsownidlebarrier. Lines633..637 issue=fixed_issue, me_go=issue&&unitME.",
+    "fixed_calendar": "ot_qwen_fixed_issue.sv51 issue_v=scheduled&&headunitOWN, notavailablegated; line137 unavailabledate raisesfaultbutdoesnotdelay/suppressGO. Staticcalendarcorrectnessmustestablishdates.",
+    "G5_return": "head_static_rk_g5prep552 unpacksu_me_idle/readyfromret. idlethenCEdelayline516; retprovidedbystatic_hrandnative_cmd_route,notdirectPART1ready.",
+    "exact_frozen_u_hr": "preferredsource rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv line54574 u_hr rom_ret_i[0]=literal1, [1]=n_69957,[94]=n_69958. ThePART1readypinisnotwiredthere.",
+    "readable_status_lineage": "headprep13/qfd_tt_ctlm_dv_lpf_hp13_parts.sv118 ag_stn_busy=ag_q[9];290..291 rom_ret_v={ag_stn,!ag_stn_busy}. This is aggregate stationbusy contract, not directrawPART1drain. Exact generatedn69957 cone furthercorrespondenceisnotclaimedbythisreport."
+  },
+  "programme_decode": [
+    {
+      "rank": 0,
+      "pc": 0,
+      "UNIT": 1,
+      "BARRIER": 0,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 0,
+      "pc": 1,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 0,
+      "pc": 2,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 0,
+      "pc": 3,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 0,
+      "pc": 4,
+      "UNIT": 0,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 1,
+      "pc": 0,
+      "UNIT": 1,
+      "BARRIER": 0,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 1,
+      "pc": 1,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 1,
+      "pc": 2,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 1,
+      "pc": 3,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 1,
+      "pc": 4,
+      "UNIT": 0,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 2,
+      "pc": 0,
+      "UNIT": 1,
+      "BARRIER": 0,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 2,
+      "pc": 1,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 2,
+      "pc": 2,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 2,
+      "pc": 3,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 2,
+      "pc": 4,
+      "UNIT": 0,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 3,
+      "pc": 0,
+      "UNIT": 1,
+      "BARRIER": 0,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 3,
+      "pc": 1,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 3,
+      "pc": 2,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 3,
+      "pc": 3,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 3,
+      "pc": 4,
+      "UNIT": 0,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 4,
+      "pc": 0,
+      "UNIT": 1,
+      "BARRIER": 0,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 4,
+      "pc": 1,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 4,
+      "pc": 2,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 4,
+      "pc": 3,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 4,
+      "pc": 4,
+      "UNIT": 0,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 5,
+      "pc": 0,
+      "UNIT": 1,
+      "BARRIER": 0,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 5,
+      "pc": 1,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 5,
+      "pc": 2,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 5,
+      "pc": 3,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 5,
+      "pc": 4,
+      "UNIT": 0,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 6,
+      "pc": 0,
+      "UNIT": 1,
+      "BARRIER": 0,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 6,
+      "pc": 1,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 6,
+      "pc": 2,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 6,
+      "pc": 3,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 6,
+      "pc": 4,
+      "UNIT": 0,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 7,
+      "pc": 0,
+      "UNIT": 1,
+      "BARRIER": 0,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 7,
+      "pc": 1,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 7,
+      "pc": 2,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 7,
+      "pc": 3,
+      "UNIT": 1,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    },
+    {
+      "rank": 7,
+      "pc": 4,
+      "UNIT": 0,
+      "BARRIER": 1,
+      "WAIT_ME": 0
+    }
+  ],
+  "dates": {
+    "gme_object_status": "RELOCATABLE_NOT_EXECUTABLE",
+    "explicit_missing": [
+      "current82190/f79 programme PW/meta source join",
+      "perchunk native GO/end/live-X epoch dates",
+      "native commandfront/HR/XPF transport and headtap/Xfill lease",
+      "actual STN chunk receiver/btab/global vocabulary row mapping",
+      "single monitored17 H copy/caller/source installation",
+      "native GME/XPF control gate and coherent programme replay"
+    ],
+    "qualification": "NoauthenticatedproductionperchunkGO/end/liveXleaseinthissourceobject.1024spacingiscontrolledfixtureonly,notproductionproof."
+  },
+  "five_FF_latch_assessment": {
+    "verdict": "NOT_PROVED_SAFE_BY_CURRENT_CALLER_HANDSHAKE",
+    "reason": "A publicPART1ready1/idle0GOisacceptedwithoutbusyfault. ActualcallerdoesnotobservePART1ready, itsromreadyisliteral1, andidleisaggregatestatus. RealHEADbarriersareusefulbutrequireproductioncalendar/returneventjoin toprovethatnextmodeGOpostdatespreviousrawdrain.",
+    "required_contract": "For any modechangingacceptedGO, previousprofilelastnative/rawpublisherwordmusthavepassedtheprofileconsumptionpoint, includingouterface/feedthroughlatency. Bothsameclockandmesochronoussourcecountoriginsmustbeincluded.",
+    "do_not_infer": [
+      "readymeansdrained",
+      "BARRIERbyitselfmeansnativePART1idle",
+      "fixedcalendarunavailableblocksGO",
+      "fixture1024spacingqualifiesproductionlease"
+    ],
+    "alternative": "Per-wordpipelinedmode/qualifieralignedwithrawvaliddoesnotneedthisunprovennonoverlaplease; sourcecostdifferencecannotjustifyremovingepochidentitywithoutthejoin."
+  },
+  "scope": "NoRTL/sourcechanges/jobs oractiveBpacketmutation."
+}
