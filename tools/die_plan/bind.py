@@ -692,7 +692,7 @@ def core_reset_hierarchy_candidates(cells, members, target, modules):
             (cells[ci].path == target["inst"] or cells[ci].path.endswith(suffix))]
 
 
-def wavefront_cells_text(driver=False):
+def wavefront_cells_text(driver=False, lockup=False):
     """Copy physical reset cells verbatim, including their synthesis attributes.
 
     Dropping module ``keep`` deleted unused, geometrically required tap chains
@@ -702,10 +702,12 @@ def wavefront_cells_text(driver=False):
     names = ["ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"]
     if driver:
         names += ["ot_dp_rrelay_drive", "ot_dp_rgate_drive"]
+    if lockup:
+        names += ["ot_dp_rrelay_nl"]
     out = []
     for name in names:
         m = re.search(r"((?:\(\*[^\n]*\*\)\n)*module " + re.escape(name) +
-                      r"\b.*?\nendmodule\n)", gen_rtl.CELLS, re.S)
+                      r"\b.*?\nendmodule\n)", gen_rtl.CELLS + gen_rtl.LOCKUP_CELLS, re.S)
         if not m:
             raise BindError(f"canonical reset cell {name} missing from gen_rtl.CELLS")
         out.append(m.group(1))
@@ -2947,7 +2949,8 @@ class Binder:
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
-            cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")))
+            cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")),
+                                                 lockup=bool(P.reset.get("relay_lockup")))
             W = RT.wf_plan(P)
             missing = set(W["parts"]) - set(self.members)
             if missing:
@@ -4922,7 +4925,7 @@ def cmd_kit_rtl(a):
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
     if spb_geometry:
         leafm = [name for name in leafm if name != 'ot_hbm_spb0_regs']
     picks = {}

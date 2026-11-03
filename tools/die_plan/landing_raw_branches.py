@@ -48,7 +48,7 @@ class RawBranches:
     def driver_index(text):
         """Index one immutable connectivity epoch, retaining every driver for uniqueness checks."""
         drivers = {}
-        for m in re.finditer(r"\bot_dp_rrelay\s+(\w+)\s*\(([^;]*?)\);",text,re.S):
+        for m in re.finditer(r"\bot_dp_rrelay(?:_nl)?\s+(\w+)\s*\(([^;]*?)\);",text,re.S):
             pins=dict(re.findall(r"\.(clk|d|q)\(\s*(\w+)\s*\)",m.group(2)))
             if 'q' in pins:
                 drivers.setdefault(pins['q'], []).append((m.group(1),pins))
