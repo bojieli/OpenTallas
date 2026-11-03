@@ -58,6 +58,7 @@ module ot_hdc_fp32_add_lat #(
     wire [7:0]  xe_exp;
     wire [23:0] xe_big;
     wire [27:0] xe_small;
+    wire [27:0] xe_smalln;                             // XCUTS E: ~s1_small, registered beside it (B1 subtract input)
 
     // ---- A1 ----------------------------------------------------------------------------------------
     wire [7:0]  a_field = a[30:23];
@@ -152,6 +153,9 @@ module ot_hdc_fp32_add_lat #(
         assign xe_big = e_swap ? e_bman : e_aman;
         assign xe_small = e_swap ? (e_gea ? {27'd0, e_anya} : (e_shfa | {27'd0, e_sa}))
                                  : (e_geb ? {27'd0, e_anyb} : (e_shfb | {27'd0, e_sb}));
+        reg [27:0] s1n;
+        always @(posedge clk) s1n <= ~xe_small;
+        assign xe_smalln = s1n;
     end endgenerate
 
     // ---- B1 ----------------------------------------------------------------------------------------
@@ -159,7 +163,7 @@ module ot_hdc_fp32_add_lat #(
     wire [27:0] sum_w, dif_w;
     wire sum_c, dif_c;
     ot_hdc_ksadd_k #(.W(28)) u_sum (.a(big28), .b(s1_small), .cin(1'b0), .s(sum_w), .cout(sum_c));
-    ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
+    ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(XC_E ? xe_smalln : ~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
     localparam integer WB = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
     wire [WB-1:0] b2_in;
     ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B), .VB(DRST ? -1 : WB - 1)) u_cb (.clk(clk), .rst_n(rst_n),
