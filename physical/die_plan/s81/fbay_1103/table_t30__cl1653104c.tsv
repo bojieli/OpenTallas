@@ -1,0 +1,16 @@
+# FIXED-BAY pre-build table slice_station__t30__cl1653104c: M5 1-um... RCX ladder, BUFx4 every <=100 um (OT_MAXWIRE_UM), skew bound 30.0 ps (tap window+tol), duty 30.0 ps on the fall edge (form A)
+# lanes (slot k landed L_um): ft0 k=4 landed L=1226.7; ft1 k=4 landed L=1226.7; ft2 k=5 plain L=1226.7  -> cycle counts unchanged (form A: neg-level lockup behind each station flop)
+lane	frm	to	hop_um	kind	reps	A_lockup_wirebuf_tt	A_lockup_slew_tt	A_lockup_setup_tt	A_lockup_hold_ff	A_lockup_bay_hold_ff	plain_wirebuf_tt	plain_slew_tt	plain_setup_tt	plain_hold_ff	plain_bay_hold_ff
+ft0	ring u_cland_ft0_i	ft0 station s0	306.7	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft0	ft0 station s0	ft0 station s1	306.7	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft0	ft0 station s1	ft0 station s2	306.7	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft0	ft0 station s2	ft0 station s3	306.7	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft1	ring u_cland_ft1_i	ft1 station s0	306.7	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft1	ft1 station s0	ft1 station s1	306.7	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft1	ft1 station s1	ft1 station s2	306.7	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft1	ft1 station s2	ft1 station s3	306.7	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft2	port ft2_i	ft2 station s0	0.1	face (IO budget, unchanged)											
+ft2	ft2 station s0	ft2 station s1	307.4	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft2	ft2 station s1	ft2 station s2	306.2	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft2	ft2 station s2	ft2 station s3	306.2	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
+ft2	ft2 station s3	ft2 station s4	302.1	bay hop	3	153.8	65.4	130.4	512.4	5.3	151.0	85.7	556.4	105.9	None
