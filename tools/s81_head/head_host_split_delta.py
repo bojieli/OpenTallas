@@ -47,11 +47,15 @@ W_BUSES, E_BUSES = {'coll_i0', 'coll_o0', 'h_tx_i', 'h_rx_o'}, {'coll_i1', 'coll
 # plan convention (schema.lane_natural): source out boundary flop + destination in boundary flop + fixed_cycles.
 # DH56: gen.py emits a REAL boundary flop on every wrapper port (E u_bout_l1_rx_o / W u_bin_l1_rx_i, W u_bout_l1_tx_o /
 # E u_bin_l1_tx_i), none of them is a pre-existing lane flop; the W core adds its own landing (l1rx_*) / face
-# (l1tx_*) register (the mid-hop toward u_ctl_tx / u_mux), declared as fixed_cycles 1.  Each direction therefore adds
-# THREE data cycles vs the unsplit core (the DH55 '+1' counted only the core register).
-SEAM_FIXED = 1
-SEAM_LAT = {'cycles': 3, 'stations': 0, 'boundary': 2, 'faces': 1, 'fixed': SEAM_FIXED, 'clock_landing': 0,
-            'natural': 3, 'pad': 0}
+# (l1tx_*) register (the mid-hop toward u_ctl_tx / u_mux) and (DH56 FACE-HOME, MID=1) the E core its lane1 mid
+# stage (l1rx_m / l1tx_m: lane1 cluster ~365 um from the W-face seam windows), declared as fixed_cycles 2.  Each
+# direction therefore adds FOUR data cycles vs the unsplit core (the DH55 '+1' counted only the W core register).
+SEAM_FIXED = 2
+SEAM_LAT = {'cycles': 4, 'stations': 0, 'boundary': 2, 'faces': 1, 'fixed': SEAM_FIXED, 'clock_landing': 0,
+            'natural': 4, 'pad': 0}
+# DH56: E core co_m relay on the lane1 tx flits (gearbox beat_tx ~539 um from the S-face coll_o1 window): +1 on the
+# physical HOST1 egress lane (host_e.coll_o1 -> lk_HOST1), declared on that lane as fixed_cycles.
+EGRESS_PORT, EGRESS_FIXED = 'coll_HOST1_d__0', 1
 SEAM_PREEXISTING_FLOPS = 0
 DERIVED = ['clock.landing_contract (per type; E needs its own landing origin/START + collector root on the seam)',
            'clock.landing_network (die): host ends re-pointed by bus; seam collector/START edges for host_e missing', 'count_straps', 'reset_start_raw_exports',
@@ -184,6 +188,15 @@ def apply(base, sidecar=None, raw=True):
         p['ports'].append(dict(id=pid, src=src, dst=dst, width=s['width'], kind='data'))
         p['lanes'].append(dict(id=s['lane'], ports=[pid], fixed_cycles=SEAM_FIXED))
         p.setdefault('latency', {}).setdefault('lanes', {})[s['lane']] = dict(SEAM_LAT)
+    eg = [l for l in p['lanes'] if EGRESS_PORT in l['ports']]
+    if len(eg) != 1:
+        raise ValueError(f'expected one lane carrying {EGRESS_PORT}')
+    eg[0]['fixed_cycles'] = int(eg[0].get('fixed_cycles', 0)) + EGRESS_FIXED
+    lt = p.get('latency', {}).get('lanes', {}).get(eg[0]['id'])
+    if lt is not None:
+        for k in ('cycles', 'fixed', 'natural'):
+            if k in lt:
+                lt[k] = int(lt[k]) + EGRESS_FIXED
     ins = p.get('reset', {}).get('in_sites', {})
     if OLD in ins:
         xy = ins.pop(OLD)
@@ -226,9 +239,10 @@ def apply(base, sidecar=None, raw=True):
                   partitions={PW: [x0, y0], PE: [round(x0 + SPLIT_X, 6), y0]}, repointed_ports=repointed,
                   seam_ports=[s['lane'] + '__0' for s in SEAM.values()],
                   data_cycles_added={'E->W (host1 RX, lane1 fault)': SEAM_LAT['cycles'] - SEAM_PREEXISTING_FLOPS,
-                                     'W->E (lane1 STATUS TX)': SEAM_LAT['cycles'] - SEAM_PREEXISTING_FLOPS},
+                                     'W->E (lane1 STATUS TX)': SEAM_LAT['cycles'] - SEAM_PREEXISTING_FLOPS,
+                                     'HOST1 egress link (lane1 tx flits, co_m)': EGRESS_FIXED},
                   boot_dates=dict(BOOT_HEADER_EDGE='unchanged (lane0 HBC records)', BOOT_COMMIT_EDGE='unchanged',
-                                  host1_csr='transport.peer_to_host_frame +3, peer_to_ctl_csr_apply +3 (launch dates 3 earlier for the same apply dates)'),
+                                  host1_csr='transport.peer_to_host_frame +4, peer_to_ctl_csr_apply +4 (launch dates 4 earlier for the same apply dates)'),
                   required=DERIVED if raw else [],
                   sidecar_stale=['count_aligned', 'collector'] if raw and sidecar is not None else [])
     return p, side, report

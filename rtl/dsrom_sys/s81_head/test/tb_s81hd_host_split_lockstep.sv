@@ -14,10 +14,11 @@
 //   no other frame, same counts.
 // DH56: the DUT seam carries the two generated wrapper boundary flops of each plan port (gen.py ot_dp_st u_bout_* in
 //   the source wrapper, u_bin_* in the destination wrapper; data reset-free) in addition to the W core landing / face
-//   register, i.e. the die-level seam = plan lane cycles 3 (boundary 2 + fixed 1). Expected offsets: E2W=3, W2E=3.
+//   register and the E core lane1 mid stage (DH56 MID=1), i.e. the die-level seam = plan lane cycles 4 (boundary 2 +
+//   fixed 2). Expected offsets: E2W=4, W2E=4; peer1 RX additionally +P1X=1 (E co_m relay on the HOST1 egress flits).
 module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter integer MODE=0);
  reg ck=0,rn=0,start=0;always #0.4165 ck=~ck;
- localparam integer E2W=3, W2E=3;
+ localparam integer E2W=4, W2E=4, P1X=1;
  // ---------------- shared stimulus
  reg[1:0]pv=0;reg[552:0]pd0=0,pd1=0;reg flip1=0;
  // ---------------- REF system
@@ -134,7 +135,7 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
     n_hrx++;if(rdd[3:0]==6)n_t6++;else if(rdd[3:0]==7)n_t7++;else n_t8++;
    end
    if(rprv[0])begin q_p0.push_back('{c,rprd0});n_p0++;end
-   if(rprv[1])begin q_p1.push_back('{c+W2E,rprd1});n_p1++;end
+   if(rprv[1])begin q_p1.push_back('{c+W2E+P1X,rprd1});n_p1++;end
    if(ref_host.u_lane1.tx_v)begin q_l1.push_back('{c+W2E,ref_host.u_lane1.tx_d});n_l1++;end
    if(ddv)expect_rx(q_hrx,ddd,"h_rx_o",0,(ddd[3:0]!=6&&ddd[3:0]!=7)?E2W:0);
    if(dprv[0])expect_rx(q_p0,dprd0,"peer0_rx",0,0);

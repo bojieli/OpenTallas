@@ -2,7 +2,7 @@
 # DH55-HSPLIT: lockstep of the split HOST pair (hd_host_w + hd_host_e) against the original ot_s81hd_host_ep_core,
 # with real peer safe8 lanes; MODE 0 = TEST boot profile + real ctl cores, MODE 1 = open-loop random frames + lane1
 # fault. The TB models the two generated wrapper boundary flops per seam port; expected die-level seam offsets
-# E2W +3 / W2E +3 (plan lane cycles 3 = boundary 2 + fixed 1). Mutants 1-4 (no landing register, swapped bits, extra W->E cycle,
+# E2W +4 / W2E +4 (plan lane cycles 4 = boundary 2 + fixed 2: W core reg + E mid), peer1 +1 (E co_m relay). Mutants 1-4 (no landing register, swapped bits, extra W->E cycle,
 # lane1 fault not landed) must each be caught. Run through ot-run / a fleet host, never localhost.
 set -euo pipefail
 ROOT=${OT_SOURCE_ROOT:-$(git -C "$(dirname "$(readlink -f "$0")")" rev-parse --show-toplevel)}
@@ -46,7 +46,7 @@ res={f'{k[0]}_{k[1]}':v for k,v in rc.items()}
 ok=all(rc[(0,m)]==0 and 'LOCKSTEP PASS' in (o/f'run_0_{m}.log').read_text() for m in (0,1))
 caught={m:any(rc[(m,x)]!=0 and 'LOCKSTEP' in (o/f'run_{m}_{x}.log').read_text() for x in (0,1)) for m in (1,2,3,4)}
 v=dict(schema='opentallas.head_host_split_lockstep.v1',rc=res,production_pass=ok,mutants_caught=caught,
-       verdict='PASS' if ok and all(caught.values()) else 'FAIL',offsets=dict(E2W=3,W2E=3))
+       verdict='PASS' if ok and all(caught.values()) else 'FAIL',offsets=dict(E2W=4,W2E=4,P1X=1))
 (o/'verdict.json').write_text(json.dumps(v,indent=1)+'\n');print(json.dumps(v))
 sys.exit(0 if v['verdict']=='PASS' else 3)
 PY

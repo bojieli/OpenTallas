@@ -81,8 +81,8 @@ def test_split_geometry_and_ports():
     assert ends['coll_HOST0_u__1'] == ('sst5', 'host_w') and ends['host_rx__0__h5n'] == ('host_w', 'host_nstrip')
     assert ends['host_l1rx__0'] == ('host_e', 'host_w') and ends['host_l1tx__0'] == ('host_w', 'host_e')
     assert {'host_l1rx', 'host_l1tx'} <= {l['id'] for l in p['lanes']}
-    assert p['latency']['lanes']['host_l1rx']['cycles'] == 3 and p['latency']['lanes']['host_l1tx']['boundary'] == 2
-    assert {l['id']: l.get('fixed_cycles') for l in p['lanes'] if l['id'].startswith('host_l1')} == {'host_l1rx': 1, 'host_l1tx': 1}
+    assert p['latency']['lanes']['host_l1rx']['cycles'] == 4 and p['latency']['lanes']['host_l1tx']['boundary'] == 2
+    assert {l['id']: l.get('fixed_cycles') for l in p['lanes'] if l['id'].startswith('host_l1')} == {'host_l1rx': 2, 'host_l1tx': 2}
     assert p['reset']['in_sites'] == {'hd_host_e': [162.016, 561.568], 'hd_host_w': [600.992, 561.568]}
     ln = p['clock']['landing_network']
     assert [e['dst']['part'] for e in ln['edges']] == ['host_e', 'host_nstrip'] and ln['edges'][1]['src']['part'] == 'host_w'
@@ -91,7 +91,9 @@ def test_split_geometry_and_ports():
     sp = {x['port']: (x['src'], x['dst']) for x in s['ports']}
     assert sp['coll_HOST1_u__0'] == ('lk_HOST1', 'host_e') and sp['coll_HOST0_d__0'] == ('host_w', 'sst5')
     assert s['regions'][0]['parts'] == 3 and r['status'] == 'RAW_RECOMPOSE_REQUIRED' and r['sidecar_stale'] == ['count_aligned', 'collector']
-    assert r['data_cycles_added'] == {'E->W (host1 RX, lane1 fault)': 3, 'W->E (lane1 STATUS TX)': 3}
+    assert r['data_cycles_added'] == {'E->W (host1 RX, lane1 fault)': 4, 'W->E (lane1 STATUS TX)': 4,
+                                   'HOST1 egress link (lane1 tx flits, co_m)': 1}
+    assert [l.get('fixed_cycles') for l in p['lanes'] if 'coll_HOST1_d__0' in l['ports']] == [1]
     assert plan['partition_types']['hd_host']['outline_um'] == [1296.0, 570.24]   # input untouched
 
 
