@@ -46,3 +46,7 @@ intel2 /srv/opentallas-scratch2/claude/ss21-resign/ves_eco/i1 SIGNOFF-SPRINT-22 
 intel2 /srv/opentallas-scratch2/claude/ss22-resign SIGNOFF-SPRINT-22 re-sign dirs (ves_q_s81, qctl_q_hbm) + tag tools + ECO runs
 epyc2	/home/ubuntu/scratch-root/claude/die-hbm-58-cores/hcol_h1_w90	DIE-HBM-60/CORES HBM ot_hbm_idx_score_hcol_h1 PRD w90 m0 SIGNED 11-03 03:51 (count candidate, re-sign r-hbm)
 epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-19/hcol/p2_src	DIE-HBM-60/CORES source kit of hcol_h1 PRD w90 (SIGNED)
+epyc2 /home/ubuntu/scratch-root/claude/dkv61/pvjoin/R0_B/prd_w80_p2 DIE-KV-63/pv KV ot_qwen_tp8_pv_join_t R0 (pins de688492fadf) routed DB 6_final.odb sha b3bbef0e3d7cb2b3 (PRD w80 p2, counted via r-kv re-sign)
+epyc2 /home/ubuntu/scratch-root/claude/dkv61/pvjoin/R0_B/prd_w80.resign_rkv.resign_rkv DIE-KV-63/pv r-kv re-sign dir of pv_join_t R0 (SIGNED TT +96.89/FF +5.03, LEC EQ 18181, PROVENANCE kind resign)
+epyc2 /home/ubuntu/scratch-root/claude/dkv61/pvjoin/fMX_B/prd_w60_p2 DIE-KV-63/pv KV ot_qwen_tp8_pv_join_t fMX (pins 9d707d929550) routed DB 6_final.odb sha 4899e023cb99de87 (PRD w60 p2, counted via r-kv re-sign)
+epyc2 /home/ubuntu/scratch-root/claude/dkv61/pvjoin/fMX_B/prd_w60.resign_rkv.resign_rkv DIE-KV-63/pv r-kv re-sign dir of pv_join_t fMX (SIGNED TT +59.17/FF +5.03, LEC EQ 18181, PROVENANCE kind resign)
