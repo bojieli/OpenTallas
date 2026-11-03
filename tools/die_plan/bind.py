@@ -1210,6 +1210,22 @@ class Binder:
                           f"partition: " + ", ".join(f"{a}->{b} {n}" for (a, b), n in sorted(moved.items())[:40]))
         return dict(moved)
 
+    def _sink_name(self, ci, pn):
+        """(partition-relative leaf, port) naming a crossing sink.  DIE-KV-64 11-03: a composite port (asbuilt.compose)
+        keeps the name of the member leaf port it aliases whole (bind_compose.port_alias; smallest member for a shared
+        bit such as one clock), so composing hard cores never renames the partition's pins (KV pv_pair: the reset spine
+        pin stayed ri_pv_u_g0_b0_rst_n instead of turning into ri_pv_u_g0_j_rst_n -> PORT_BIND extra 1)."""
+        rv = getattr(self, "_comp_rev", None)
+        if rv is None:
+            rv = self._comp_rev = {}
+            for (m, mp), (inst, cp) in sorted((getattr(self, "composition_alias", None) or {}).items()):
+                rv.setdefault((inst, cp), (m, mp))
+        hit = rv.get((self.F.cells[ci].path, pn))
+        if hit is None:
+            return (self.rel_of(ci), pn)
+        m, mp = hit
+        return (self.R.local_of(m) or rel(m, self.root[self.cpart[ci]]), mp)
+
     def rel_of(self, ci):
         if ci in self.local:
             return self.local[ci]
@@ -1264,7 +1280,7 @@ class Binder:
                 cnt["intra"] += 1
                 return ("int", sci, spn, sb, st)
             self.cross[(sp, p)][(sci, spn)].add(sb)
-            self.cross_sinks[(sp, p, sci, spn)].add((self.rel_of(ci), pn))
+            self.cross_sinks[(sp, p, sci, spn)].add(self._sink_name(ci, pn))
             self.cross_stages[(sp, p, sci, spn)].append(st)
             cnt["crossing"] += 1
             return ("x", sp, sci, spn, sb, st, p)
