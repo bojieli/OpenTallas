@@ -7,3 +7,4 @@
 Probe: epyc2 /home/ubuntu/scratch-root/claude/cap-test-1/kv3_hub_Eo (copy of the kit, minus lec/), driver ../probe.sh = run_kit.sh with synth + pre-floor gates + LEC removed
   (stage-resume from the kit's own 1_synth.odb, make -q synth = up to date), cap lifted kit-locally (native_cell_cap.tcl limit 2,000,000; .orig kept). Flow settings UNCHANGED from the kit (baseline first).
   ot-run --mem 96 --threads 16 --hosts epyc2 (queued for memory at 22:4x).
+2026-11-02 23:22 PST 96 GB waiter never admitted (growth headroom 61 GB); cancelled my own waiter, relaunched --mem 64 (10-23 data: <0.7M ORFS stages <=25 GB, routability GPL 30-48 GB). Now waiting on epyc2 LOAD CAP (load1 281 >= 192, 18 waiters). intel1 admits 0 GB.
