@@ -563,6 +563,37 @@ def kit_spare_list(kitdir):
     return spare_out_list(json.loads(f.read_text())) if f.is_file() else []
 
 
+TIMED_SCHEMA = "opentallas.kit_timed_face.v1"
+# DIE-KV-61/hr 11-02: classes a declared timed-face bus may carry.  feedthrough (port wired to port) is never exempt:
+# it has no core-side timing arc the IO budget could bound.
+TIMED_CLASSES = frozenset({"unregistered", "shared", "dropped", "const"})
+
+
+def timed_face_list(doc):
+    """DIE-KV-61/hr 11-02 (HR raw memory-port / boot-handshake faces): a kit timed_face.json names whole port BUSES
+    whose bits the zero-cycle face transform cannot register (an async-FIFO storage cut wdata/rdata/wr/rd, an SRAM
+    address/data port, boot-barrier inputs read through logic).  Such a bit is a timed boundary: core STA times it
+    against the kit SDC IO budget (set_input_delay / set_output_delay on every non-clock port), exactly as a hard
+    macro pin is timed.  Its unregistered / shared / dropped / const finding is recorded in timed_declared instead
+    of failing; every other class (feedthrough, merged, ...) and every undeclared bus keeps the ordinary checks.
+    Fail-closed: schema, unique exact bus names (no regex, no bit index), a non-empty ruling and reason."""
+    if not isinstance(doc, dict) or doc.get("schema") != TIMED_SCHEMA:
+        raise ValueError(f"timed_face.json: schema must be {TIMED_SCHEMA}")
+    buses = doc.get("buses")
+    if not isinstance(buses, list) or not buses or len(set(buses)) != len(buses) or \
+            not all(isinstance(b, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", b) for b in buses):
+        raise ValueError(f"timed_face.json: buses must be unique exact port names: {buses}")
+    if not str(doc.get("ruling") or "").strip() or not str(doc.get("reason") or "").strip():
+        raise ValueError("timed_face.json: ruling and reason are required")
+    return list(buses)
+
+
+def kit_timed_list(kitdir):
+    """the kit's declared timed-face buses (timed_face.json), [] when none."""
+    f = Path(kitdir) / "timed_face.json"
+    return timed_face_list(json.loads(f.read_text())) if f.is_file() else []
+
+
 def _std_cell(master):
     return "_ASAP7_" in master.upper() or master.startswith("$")
 
@@ -669,7 +700,7 @@ def _spare_tie(F, drv, r, limit=16):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=()):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=()):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -770,7 +801,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         res["spare_declared"] = []
     claimed = defaultdict(list)
 
+    timed = set(timed or ())
+    if timed:
+        res["timed_declared"] = []
+
     def fail(cls, b, why):
+        if timed and cls in TIMED_CLASSES and re.sub(r"\[\d+\]$", "", str(b)) in timed:
+            res["timed_declared"].append(f"{b}: {cls} {why}")   # DIE-KV-61/hr: declared timed-face bit
+            return
         res["fails"][cls].append(f"{b}: {why}")
 
     res["bumps_exempt"] = sorted(bump_names)
@@ -1658,8 +1696,9 @@ def main(argv=None):
     land = kit_land(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
     spl = kit_spare_list(Path(a.pins).parent) if a.pins else []
+    tml = kit_timed_list(Path(a.pins).parent) if a.pins else []
     pad_clocks, native_clock_pins = kit_pad_clocks(bd) if bd else ([], set())
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl,
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl, timed=tml,
               types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
     if a.types_from:

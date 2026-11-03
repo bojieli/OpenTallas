@@ -34,7 +34,23 @@
  },
  "qkd_hr_cdc_hi": {
   "synth_memory_max_bits": 16384,
-  "source": "AUTOBUILD-PIPE-4 10-31: KIT-WAVE event28w_c qkd_hr_cdc_hi yosys FAIL 'Largest single memory instance: 8224 bits' > the qkd_hr_cdc_* 8192 (intel1 kit-wave/qwen_kvsys/event28w_c/items/qkd_hr_cdc_hi 1_2_yosys.log); flop array mapped to flops as qkd_hr_core_rx (8224 b -> 16384)"
+  "source": "AUTOBUILD-PIPE-4 10-31: KIT-WAVE event28w_c qkd_hr_cdc_hi yosys FAIL 'Largest single memory instance: 8224 bits' > the qkd_hr_cdc_* 8192 (intel1 kit-wave/qwen_kvsys/event28w_c/items/qkd_hr_cdc_hi 1_2_yosys.log); flop array mapped to flops as qkd_hr_core_rx (8224 b -> 16384)",
+  "timed_face": {
+   "buses": [
+    "u_cx__rd",
+    "u_cx__rdata",
+    "u_cx__rempty",
+    "u_cx__wdata",
+    "u_cx__wr",
+    "u_hx__rd",
+    "u_hx__rdata",
+    "u_hx__rempty",
+    "u_hx__wdata",
+    "u_hx__wr"
+   ],
+   "ruling": "DIE-KV-61/hr 11-02 (COORD default DIE-KV-60/res 11-01 13:50: native boundary kept, no mask/no added cycle; closed as the core's timed face against the plan IO budget)",
+   "reason": "ot_link_afifo FWFT storage cut (as qkd_hr_cdc_ci): shared 582 / unregistered 580; mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/die-kv-61-hr/census/<core>.json on the event28w_c efa6a9b9 kits"
+  }
  },
  "qkd_hr_core_rx": {
   "synth_memory_max_bits": 16384,
@@ -42,11 +58,53 @@
  },
  "qkd_hr_core_queue": {
   "synth_memory_max_bits": 8224,
-  "source": "KV residuals 11-01: actual kit GEN_LINT qkd_hr_core_queue/u_queue.q is 16x514=8224 bits; this declared FIFO maps to flops exactly as core_rx, no read-cycle change."
+  "source": "KV residuals 11-01: actual kit GEN_LINT qkd_hr_core_queue/u_queue.q is 16x514=8224 bits; this declared FIFO maps to flops exactly as core_rx, no read-cycle change.",
+  "timed_face": {
+   "buses": [
+    "u_bootbarrier__est",
+    "u_bootbarrier__in_d",
+    "u_bootbarrier__in_v",
+    "u_bootbarrier__require_fresh",
+    "u_marker_consumer__certificate_v",
+    "u_marker_consumer__est",
+    "u_marker_consumer__issued",
+    "u_marker_consumer__landed",
+    "u_marker_consumer__marker",
+    "u_marker_consumer__marker_v",
+    "u_marker_consumer__source_fault",
+    "u_queue__in_crn",
+    "u_queue__in_v",
+    "u_queue__out_cr",
+    "u_queue__out_d"
+   ],
+   "ruling": "DIE-KV-61/hr 11-02 (COORD default DIE-KV-60/res 11-01 13:50: native boundary kept, no mask/no added cycle; closed as the core's timed face against the plan IO budget)",
+   "reason": "boot-barrier / marker-consumer inputs read through compare logic and queue credit/data faces (unregistered 200 / shared 42 / dropped 22); mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/die-kv-61-hr/census/<core>.json on the event28w_c efa6a9b9 kits"
+  }
  },
  "qkd_hr_ingest_eng": {
   "hard_children": "physical/die_plan/qwen_kvsys/cores/harden/qkd_hr_ingest_eng_macro_plan.json",
-  "source": "CODEX11-01 actual preflight found 32 SRAM instances of the single 32x128 master with no static placement; explicit core plan keeps 16 K/V bank pairs adjacent and 25.92um central clock streets."
+  "source": "CODEX11-01 actual preflight found 32 SRAM instances of the single 32x128 master with no static placement; explicit core plan keeps 16 K/V bank pairs adjacent and 25.92um central clock streets.",
+  "timed_face": {
+   "buses": [
+    "busy",
+    "d_data",
+    "d_rdy",
+    "d_v",
+    "in_data",
+    "in_rdy",
+    "in_v",
+    "r_addr",
+    "r_v",
+    "rd_data",
+    "rd_v",
+    "w_addr",
+    "w_data",
+    "w_rdy",
+    "w_v"
+   ],
+   "ruling": "DIE-KV-61/hr 11-02 (COORD default DIE-KV-60/res 11-01 13:50: native boundary kept, no mask/no added cycle; closed as the core's timed face against the plan IO budget)",
+   "reason": "ingest engine SRAM-port / stream handshake faces (unregistered 290 / shared 757 / dropped 306; CODEX current4-v2 mapped FAIL); mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/die-kv-61-hr/census/<core>.json on the event28w_c efa6a9b9 kits"
+  }
  },
  "qkd_kvs_ctl": {
   "synth_keepdc": true,
@@ -56,5 +114,57 @@
  "qkd_hr_phy_adp": {
   "hard_children": "physical/die_plan/qwen_kvsys/cores/harden/qkd_hr_phy_adp_macro_plan.json",
   "source": "DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM ot_sram_1r1w_512x128_m4_r2c2 174.12 x 29.736 R270 on the core E edge (delta_phy_adp_macrofit_1101.py); rotated-only fit -> gen_core_kit_kv IFP stand-in + fixed-site check, M4-PG rotated -> PDN_MACRO_M4_ROT"
+ },
+ "qkd_hr_cdc_ci": {
+  "timed_face": {
+   "buses": [
+    "u_ox__rd",
+    "u_ox__rdata",
+    "u_ox__rempty",
+    "u_ox__wdata",
+    "u_ox__wfull",
+    "u_ox__wr",
+    "u_rx__rd",
+    "u_rx__rdata",
+    "u_rx__rempty",
+    "u_rx__wdata",
+    "u_rx__wr"
+   ],
+   "ruling": "DIE-KV-61/hr 11-02 (COORD default DIE-KV-60/res 11-01 13:50: native boundary kept, no mask/no added cycle; closed as the core's timed face against the plan IO budget)",
+   "reason": "ot_link_afifo FWFT storage cut: wdata loads every mem entry, rdata = mem[rbin] read mux; a face register is not exact under the independent warm read reset (CODEX-LOG 8595) and the 0-cycle transform leaves shared 550 / unregistered 547; mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/die-kv-61-hr/census/<core>.json on the event28w_c efa6a9b9 kits"
+  }
+ },
+ "qkd_hr_cdc_pc": {
+  "timed_face": {
+   "buses": [
+    "u_rx__i_cr",
+    "u_rx__o_v",
+    "u_tx__i_cr",
+    "u_tx__o_v"
+   ],
+   "ruling": "DIE-KV-61/hr 11-02 (COORD default DIE-KV-60/res 11-01 13:50: native boundary kept, no mask/no added cycle; closed as the core's timed face against the plan IO budget)",
+   "reason": "registered credit/valid outputs whose port flop also feeds the FIFO pointer logic after synthesis (shared 4); data stays registered; mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/die-kv-61-hr/census/<core>.json on the event28w_c efa6a9b9 kits"
+  },
+  "spare_out_bits": [
+   "u_tx__o_d[528]",
+   "u_tx__o_d[529]",
+   "u_tx__o_d[530]",
+   "u_tx__o_d[531]",
+   "u_tx__o_d[532]",
+   "u_tx__o_d[533]",
+   "u_tx__o_d[534]",
+   "u_tx__o_d[535]",
+   "u_tx__o_d[536]",
+   "u_tx__o_d[537]",
+   "u_tx__o_d[538]",
+   "u_tx__o_d[539]",
+   "u_tx__o_d[540]",
+   "u_tx__o_d[541]",
+   "u_tx__o_d[542]",
+   "u_tx__o_d[543]",
+   "u_tx__o_d[544]",
+   "u_tx__o_d[545]"
+  ],
+  "source": "DIE-KV-61/hr 11-02: u_tx__o_d[545:528] are the reserved constant outputs (KV-018; plan_c keeps the 18 pins) tied to one TIELO net -> declared spare_out"
  }
 }

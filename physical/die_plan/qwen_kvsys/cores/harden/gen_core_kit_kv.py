@@ -1460,6 +1460,15 @@ def main():
             listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
             **({"retimed_input_captures": fr["retimed_in"]} if fr.get("retimed_in") else {}),
             proof="equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)"), indent=1) + "\n")
+    # DIE-KV-61/hr 11-02: recipe-declared timed-face buses (face_guard timed_face.json) and tied spare outputs
+    # (face_guard spare_out.json); both are read by the kit core_preflight / signoff face guard.
+    if rec.get("timed_face"):
+        tf = rec["timed_face"]
+        (kd / "timed_face.json").write_text(json.dumps(dict(schema="opentallas.kit_timed_face.v1",
+            buses=list(tf["buses"]), ruling=tf["ruling"], reason=tf["reason"]), indent=1) + "\n")
+    if rec.get("spare_out_bits"):
+        (kd / "spare_out.json").write_text(json.dumps(dict(schema="opentallas.kit_spare_out.v1",
+            bits=list(rec["spare_out_bits"]), source=rec.get("source", "")), indent=1) + "\n")
     if a.ectlk_face_ports:
         if not (mod == "qkd_ectlk" or re.fullmatch(r"qkd_ectlk_q[0-3]", mod)):   # CORES-KITS/KVX 10-26: + the four quarter cores (same leaves)
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk / qkd_ectlk_q0..q3")

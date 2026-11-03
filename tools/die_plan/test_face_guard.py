@@ -1001,3 +1001,29 @@ def test_gen_phys_spare_out_bits_from_kit_rtl(tmp_path):
                                   narrow_buses=[dict(port="unit_o4", plan=267, bound=265)])))
     with pytest.raises(gen_rtl.GenError):
         gen_phys.kit_spare_out_bits(fl)
+
+
+def test_declared_timed_face_buses(tmp_path):
+    """DIE-KV-61/hr 11-02: a declared timed-face bus turns unregistered/shared/dropped/const findings into
+    timed_declared; feedthrough and undeclared buses keep failing; the file is fail-closed."""
+    comb = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));",
+                          "NAND2x1_ASAP7_75t_R _3_ (.A(_1_), .B(_0_), .Y(o[1]));")
+    assert face_guard.guard(comb)["verdict"] == "FAIL"
+    r = face_guard.guard(comb, timed=["o"])
+    assert r["verdict"] == "PASS" and r["timed_declared"] and r["timed_declared"][0].startswith("o[1]"), r
+    assert face_guard.guard(comb, timed=["a"])["verdict"] == "FAIL"          # other bus declared: still fails
+    shared = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "INVx3_ASAP7_75t_R _3_ (.A(_0_), .Y(o[1]));")
+    assert face_guard.guard(shared, timed=["o"])["verdict"] == "PASS"
+    dropped = NET_OK.replace(".D(a[1])", ".D(q[0])")
+    assert face_guard.guard(dropped, timed=["a"])["verdict"] == "PASS"
+    feed = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "assign o[1] = a[1];")
+    assert "feedthrough" in face_guard.guard(feed, timed=["o", "a"])["fail_counts"]
+    doc = dict(schema=face_guard.TIMED_SCHEMA, buses=["o"], ruling="r", reason="x")
+    assert face_guard.timed_face_list(doc) == ["o"]
+    for bad in (dict(doc, schema="x"), dict(doc, buses=["o[1]"]), dict(doc, buses=[]), dict(doc, ruling=""),
+                dict(doc, buses=["o", "o"]), dict(doc, reason=None)):
+        with pytest.raises(ValueError):
+            face_guard.timed_face_list(bad)
+    (tmp_path / "timed_face.json").write_text(json.dumps(doc))
+    assert face_guard.kit_timed_list(tmp_path) == ["o"]
+    assert face_guard.kit_timed_list(tmp_path / "none") == []
