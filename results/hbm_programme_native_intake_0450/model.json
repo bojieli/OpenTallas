@@ -1,0 +1,745 @@
+{
+  "status": "MODEL_FOR_ONE_NATIVE_GEN_SYNTH_SOURCEPROOF_INTAKE",
+  "top": "ot_hgi_sfu_programme_store_r10",
+  "params": {
+    "PAGE_AW": 1
+  },
+  "files": [
+    {
+      "file": "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_programme_store_r10.sv",
+      "sha256": "6260a442a066ad4c57ad65cf2d56d53705f84be989994c459e7e49cc37ce9487"
+    },
+    {
+      "file": "results/hbm_programme_source_frontier_0146/ot_hgi_sfu_store_stripe_leaf_r10.sv",
+      "sha256": "2889a6da816b04f32ce9fa9c445977d16bb353c5b3f7d61a59677ad661b0dfce"
+    },
+    {
+      "file": "results/hbm_programme_source_frontier_0146/ot_sram_1r1w_512x256_m1_r2c2.sv",
+      "sha256": "bcdf01881ee0132395188c1d1dd3d5b822fdf01dcef97192e1a9b951951f26b7"
+    }
+  ],
+  "ports": [
+    {
+      "name": "clk",
+      "direction": "input",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "cfg_we",
+      "direction": "input",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "cfg_stripe",
+      "direction": "input",
+      "width": 3,
+      "is_vector": true
+    },
+    {
+      "name": "cfg_addr",
+      "direction": "input",
+      "width": 11,
+      "is_vector": true
+    },
+    {
+      "name": "cfg_data",
+      "direction": "input",
+      "width": 256,
+      "is_vector": true
+    },
+    {
+      "name": "start_base",
+      "direction": "input",
+      "width": 11,
+      "is_vector": true
+    },
+    {
+      "name": "start_limit",
+      "direction": "input",
+      "width": 12,
+      "is_vector": true
+    },
+    {
+      "name": "start_loops",
+      "direction": "input",
+      "width": 16,
+      "is_vector": true
+    },
+    {
+      "name": "programme_active",
+      "direction": "output",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "programme_done",
+      "direction": "output",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "programme_ordinal",
+      "direction": "output",
+      "width": 32,
+      "is_vector": true
+    },
+    {
+      "name": "io_cfg_we",
+      "direction": "input",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "io_cfg_stripe",
+      "direction": "input",
+      "width": 2,
+      "is_vector": true
+    },
+    {
+      "name": "io_cfg_addr",
+      "direction": "input",
+      "width": 11,
+      "is_vector": true
+    },
+    {
+      "name": "io_cfg_data",
+      "direction": "input",
+      "width": 256,
+      "is_vector": true
+    },
+    {
+      "name": "io_start_v",
+      "direction": "input",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "io_start_base",
+      "direction": "input",
+      "width": 11,
+      "is_vector": true
+    },
+    {
+      "name": "io_start_limit",
+      "direction": "input",
+      "width": 12,
+      "is_vector": true
+    },
+    {
+      "name": "io_start_loops",
+      "direction": "input",
+      "width": 16,
+      "is_vector": true
+    },
+    {
+      "name": "io_active",
+      "direction": "output",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "io_done",
+      "direction": "output",
+      "width": 1,
+      "is_vector": false
+    },
+    {
+      "name": "io_ordinal",
+      "direction": "output",
+      "width": 32,
+      "is_vector": true
+    },
+    {
+      "name": "io_word",
+      "direction": "output",
+      "width": 471,
+      "is_vector": true
+    },
+    {
+      "name": "compiler_control",
+      "direction": "output",
+      "width": 1742,
+      "is_vector": true
+    },
+    {
+      "name": "fault",
+      "direction": "output",
+      "width": 1,
+      "is_vector": false
+    }
+  ],
+  "external_bits": 2904,
+  "declared_preopt_soft_FF": 22922,
+  "native_master_count": 44,
+  "native_capacity_bits": 5767168,
+  "macros": [
+    {
+      "inst": "g_leaf[0].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        17.28
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[0].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        17.28
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[0].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        17.28
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[0].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        17.28
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[1].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        438.048,
+        17.28
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[1].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        95.58
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[1].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        95.58
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[1].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        95.58
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[2].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        95.58
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[2].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        438.048,
+        95.58
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[2].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        173.88
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[2].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        173.88
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[3].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        173.88
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[3].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        173.88
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[3].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        438.048,
+        173.88
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[3].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        252.18
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[4].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        252.18
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[4].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        252.18
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[4].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        252.18
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[4].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        438.048,
+        252.18
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[5].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        330.48
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[5].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        330.48
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[5].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        330.48
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[5].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        330.48
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[6].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        438.048,
+        330.48
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[6].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        408.78
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[6].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        408.78
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[6].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        408.78
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[7].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        408.78
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[7].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        438.048,
+        408.78
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[7].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        487.08
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[7].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        487.08
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[8].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        487.08
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[8].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        487.08
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[8].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        438.048,
+        487.08
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[8].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        565.38
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[9].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        565.38
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[9].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        565.38
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[9].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        565.38
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[9].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        438.048,
+        565.38
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[10].u_leaf.g_page[0].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        643.68
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[10].u_leaf.g_page[1].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        122.472,
+        643.68
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[10].u_leaf.g_page[2].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        227.664,
+        643.68
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    },
+    {
+      "inst": "g_leaf[10].u_leaf.g_page[3].u_program",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "origin_um": [
+        332.856,
+        643.68
+      ],
+      "outline_um": [
+        96.552,
+        69.66
+      ]
+    }
+  ],
+  "outline_um": [
+    574.56,
+    738.72
+  ],
+  "macro_body_area_um2": 295935.74208,
+  "macro_halo_area_um2": 362407.4784,
+  "area_outside_macros_and_halos_um2": 62031.48479999998,
+  "context_only_other_source": {
+    "top_sha256": "f9ee5065debf3c65386aabcf1e36e7efc93665aae4417dc0b75d7a90de8bf383",
+    "soft_std_cells": 66275,
+    "soft_area_um2": 9506.7,
+    "source_equivalence_transfer": false
+  },
+  "requested_resources": {
+    "memory_GB": 12,
+    "threads": 2,
+    "disk_GB": 8,
+    "basis": "Other r10 source contextual66k mappedcells; selected body22922declaredFF/44same512masters. TwelveGB also covers two opposite-frontends; no inherited proof."
+  },
+  "collar": "Separate exact native collar source/mapping remains required; this first intake maps selected r10 only.",
+  "held": [
+    "No PLACE/P&R",
+    "Actual mapped FF/logic area",
+    "Legal provider internal rows and leaf clock/reset pin placement",
+    "44native SRAM access/PG streets",
+    "Actual two reset-route/START66 closure",
+    "Collar rows/clock",
+    "Parent5106existingXO plus2304upstream rows/clockloads",
+    "Actual provider-output\u2192B113capture405reach",
+    "No current parent/source event adoption"
+  ],
+  "release_eligible": false
+}

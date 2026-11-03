@@ -1,0 +1,33 @@
+# Full-T7 Verilator 5.050 --lint-only, top s81p_svc_lo_dsdv_svc_rs__t7, SYNTHESIS defines as in full_t7_lint.sh
+# intel2 ot-run 96 GB unit oth-ubuntu-3336031-1793676354 exit 0 (collected by TOK-DS-4 2026-11-02)
+# file list = kit-wave-15-s81b sim.f with the T7 bound file replaced; input bound/child SHA256:
+b30a42837e0839214c751a58848bfa095fe3d81d1a4311c1d72c14ef1668edf5  landcut_s81_T7_pmem_bound_cut_0900_native_parent.sv
+43dc924ceeb0d58da324e485cc62c5690e88ef29555ac73e1c821fe7c9ed2d7d  landcut_s81_T7_pvq_bound_cut_1040_PMEM_PVQ_joint_bound.sv
+64e23cf319339bc8fe8d549e20a233a4ddd8f8b824ee14cab950080384fd9b4c  ot_t7_land_capture_candidate.sv
+3d7ab5aa43a0d936558cc9c8bc729d0662ae4f08866bf45d2f4844eb160548eb  ot_t7_pmem_capture_candidate.sv
+8036721865d70ec8c0cae4f43a36c7499c92575ae86c21229e927ceba72918ee  ot_t7_pvq_capture_candidate.sv
+
+landonly rc=0 errors=0 warnings=6
+jointland rc=0 errors=0 warnings=6
+
+== landonly
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/native_glue/ot_bind_native_9dac3ec6a10d5c1fa30ab0cf.sv:11:17: Extracting 1024 bits from only 256 bit number
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/native_glue/ot_bind_native_9b4fb12e1e10c18fd5ac186c.sv:11:17: Extracting 2132 bits from only 32 bit number
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/native_glue/ot_bind_native_94fb3121d89a024ad3313eef.sv:11:17: Extracting 512 bits from only 32 bit number
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/native_glue/ot_bind_native_15eceba1215313fce255258d.sv:9:17: Extracting 512 bits from only 32 bit number
+%Warning-ALWNEVER: /srv/opentallas-scratch2/claude/wt/kit-wave-15-s81b/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:70:9: 'always @*' will never execute as expression list is empty (no variables read)
+%Warning-ALWNEVER: /srv/opentallas-scratch2/claude/wt/kit-wave-15-s81b/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:88:9: 'always @*' will never execute as expression list is empty (no variables read)
+- Verilator: Built from 198.458 MB sources in 324 modules, into 1685.952 MB in 1561 C++ files needing 0.000 MB
+- Verilator: Walltime 1053.015 s (elab=13.198, cvt=877.043, bld=0.000); cpu 1030.740 s on 1 threads; allocated 36314.047 MB
+
+== jointland
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/native_glue/ot_bind_native_9dac3ec6a10d5c1fa30ab0cf.sv:11:17: Extracting 1024 bits from only 256 bit number
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/native_glue/ot_bind_native_9b4fb12e1e10c18fd5ac186c.sv:11:17: Extracting 2132 bits from only 32 bit number
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/native_glue/ot_bind_native_94fb3121d89a024ad3313eef.sv:11:17: Extracting 512 bits from only 32 bit number
+%Warning-SELRANGE: /srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/native_glue/ot_bind_native_15eceba1215313fce255258d.sv:9:17: Extracting 512 bits from only 32 bit number
+%Warning-ALWNEVER: /srv/opentallas-scratch2/claude/wt/kit-wave-15-s81b/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:70:9: 'always @*' will never execute as expression list is empty (no variables read)
+%Warning-ALWNEVER: /srv/opentallas-scratch2/claude/wt/kit-wave-15-s81b/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:88:9: 'always @*' will never execute as expression list is empty (no variables read)
+- Verilator: Built from 207.411 MB sources in 326 modules, into 1721.401 MB in 1576 C++ files needing 0.000 MB
+- Verilator: Walltime 1083.004 s (elab=12.939, cvt=898.551, bld=0.000); cpu 1068.629 s on 1 threads; allocated 36320.156 MB
+
+# All 6 warnings are in pre-existing bind_ev2 native glue / fdiv source, none in the LAND child or the cut parent lines; identical set in both runs.

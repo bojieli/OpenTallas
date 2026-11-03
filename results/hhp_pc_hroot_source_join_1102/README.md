@@ -1,0 +1,3 @@
+The four PC_N31 → hroot o_next interfaces retain their raw 299-bit source output and have no added P1–P7 output stage. The exact return-hop instance and assignment are byte-identical before and after ea246756a. P3 changes o_grp and P4 changes o_prev, which are different buses.
+
+This closes the mistaken identification of these four seams with the P3 +1 status event. It does not close the complete source/programme join: the actual current 4596-pin graph has no surviving exact binder readset, and physical bit 299 and common-clock record-availability dates remain unjoined. The graph evidence and source snippets are recorded in SOURCE_INTERFACE_DELTA.json. No CAD or source adoption occurred.

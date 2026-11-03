@@ -1,0 +1,541 @@
+{
+  "ODB_sha256": "4342fc7ada90cf8c4def596e0b3ab47bd9a65bd877776061927beb4b2a1905b5",
+  "cells": 223911,
+  "rows": 1312,
+  "names_or_master_differences_from_repair": 0,
+  "DPL_moved_cells": {
+    "_185819_": {
+      "before": [
+        "PLACED",
+        "245106",
+        "88020",
+        "N"
+      ],
+      "after": [
+        245.16,
+        88.02
+      ],
+      "orientation_after": "R0"
+    },
+    "_202277_": {
+      "before": [
+        "PLACED",
+        "143748",
+        "106380",
+        "N"
+      ],
+      "after": [
+        143.64,
+        106.38
+      ],
+      "orientation_after": "R0"
+    },
+    "_232438_": {
+      "before": [
+        "PLACED",
+        "98766",
+        "204390",
+        "FS"
+      ],
+      "after": [
+        98.712,
+        204.66
+      ],
+      "orientation_after": "R0"
+    },
+    "_237617_": {
+      "before": [
+        "PLACED",
+        "112698",
+        "199800",
+        "N"
+      ],
+      "after": [
+        112.698,
+        198.72
+      ],
+      "orientation_after": "R0"
+    },
+    "_244034_": {
+      "before": [
+        "PLACED",
+        "122634",
+        "98010",
+        "FS"
+      ],
+      "after": [
+        122.634,
+        98.55
+      ],
+      "orientation_after": "MX"
+    },
+    "_257823_": {
+      "before": [
+        "PLACED",
+        "212922",
+        "91530",
+        "FS"
+      ],
+      "after": [
+        212.922,
+        91.26
+      ],
+      "orientation_after": "R0"
+    },
+    "_269871_": {
+      "before": [
+        "PLACED",
+        "17874",
+        "232740",
+        "N"
+      ],
+      "after": [
+        17.928,
+        232.74
+      ],
+      "orientation_after": "R0"
+    },
+    "_270046_": {
+      "before": [
+        "PLACED",
+        "18252",
+        "236790",
+        "FS"
+      ],
+      "after": [
+        18.198,
+        236.79
+      ],
+      "orientation_after": "MX"
+    },
+    "_270053_": {
+      "before": [
+        "PLACED",
+        "18306",
+        "233550",
+        "FS"
+      ],
+      "after": [
+        18.306,
+        233.28
+      ],
+      "orientation_after": "R0"
+    },
+    "_271210_": {
+      "before": [
+        "PLACED",
+        "18468",
+        "115560",
+        "N"
+      ],
+      "after": [
+        18.468,
+        116.1
+      ],
+      "orientation_after": "R0"
+    },
+    "_273749_": {
+      "before": [
+        "PLACED",
+        "15228",
+        "93150",
+        "FS"
+      ],
+      "after": [
+        15.282,
+        92.88
+      ],
+      "orientation_after": "R0"
+    },
+    "_298785_": {
+      "before": [
+        "PLACED",
+        "328158",
+        "287550",
+        "FS"
+      ],
+      "after": [
+        328.158,
+        287.82
+      ],
+      "orientation_after": "R0"
+    },
+    "fanout40233": {
+      "before": [
+        "PLACED",
+        "176850",
+        "110430",
+        "FS"
+      ],
+      "after": [
+        176.688,
+        110.43
+      ],
+      "orientation_after": "MX"
+    },
+    "output7407": {
+      "before": [
+        "PLACED",
+        "4536",
+        "212490",
+        "FS"
+      ],
+      "after": [
+        4.536,
+        213.03
+      ],
+      "orientation_after": "MX"
+    },
+    "output7651": {
+      "before": [
+        "PLACED",
+        "4860",
+        "255150",
+        "FS"
+      ],
+      "after": [
+        5.778,
+        255.69
+      ],
+      "orientation_after": "MX"
+    },
+    "output7659": {
+      "before": [
+        "PLACED",
+        "4914",
+        "255960",
+        "N"
+      ],
+      "after": [
+        4.968,
+        255.96
+      ],
+      "orientation_after": "R0"
+    },
+    "output7681": {
+      "before": [
+        "PLACED",
+        "4698",
+        "259200",
+        "N"
+      ],
+      "after": [
+        4.752,
+        259.47
+      ],
+      "orientation_after": "MX"
+    },
+    "place23491": {
+      "before": [
+        "PLACED",
+        "82782",
+        "338310",
+        "FS"
+      ],
+      "after": [
+        82.782,
+        338.04
+      ],
+      "orientation_after": "R0"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[495\\].g_data.u_q/_1_": {
+      "before": [
+        "PLACED",
+        "4752",
+        "212760",
+        "N"
+      ],
+      "after": [
+        4.968,
+        213.57
+      ],
+      "orientation_after": "MX"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[722\\].g_data.u_q/_1_": {
+      "before": [
+        "PLACED",
+        "5184",
+        "255960",
+        "N"
+      ],
+      "after": [
+        6.048,
+        255.69
+      ],
+      "orientation_after": "MX"
+    },
+    "u_leaf.u_pc.u_pce.u_path.u_front.g_ra\\[8\\].u_rp/rebuffer42959": {
+      "before": [
+        "PLACED",
+        "171882",
+        "100710",
+        "N"
+      ],
+      "after": [
+        171.882,
+        100.98
+      ],
+      "orientation_after": "R0"
+    },
+    "hold42963": {
+      "before": [
+        "PLACED",
+        "200124",
+        "211680",
+        "N"
+      ],
+      "after": [
+        200.124,
+        211.95
+      ],
+      "orientation_after": "MX"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[81\\].g_data.u_q/max_length42926": {
+      "before": [
+        "PLACED",
+        "18522",
+        "231660",
+        "N"
+      ],
+      "after": [
+        18.522,
+        231.93
+      ],
+      "orientation_after": "MX"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[103\\].g_data.u_q/wire42954": {
+      "before": [
+        "PLACED",
+        "4320",
+        "254880",
+        "N"
+      ],
+      "after": [
+        4.428,
+        255.15
+      ],
+      "orientation_after": "MX"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[104\\].g_data.u_q/wire42950": {
+      "before": [
+        "PLACED",
+        "4320",
+        "212760",
+        "N"
+      ],
+      "after": [
+        4.428,
+        212.76
+      ],
+      "orientation_after": "R0"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[104\\].g_data.u_q/wire42951": {
+      "before": [
+        "PLACED",
+        "4320",
+        "255960",
+        "N"
+      ],
+      "after": [
+        4.428,
+        255.96
+      ],
+      "orientation_after": "R0"
+    },
+    "max_length42929": {
+      "before": [
+        "PLACED",
+        "18522",
+        "236790",
+        "N"
+      ],
+      "after": [
+        18.522,
+        236.52
+      ],
+      "orientation_after": "R0"
+    },
+    "wire42940": {
+      "before": [
+        "PLACED",
+        "165024",
+        "116640",
+        "N"
+      ],
+      "after": [
+        165.132,
+        116.37
+      ],
+      "orientation_after": "MX"
+    },
+    "hold42964": {
+      "before": [
+        "PLACED",
+        "14796",
+        "142290",
+        "N"
+      ],
+      "after": [
+        14.796,
+        142.56
+      ],
+      "orientation_after": "R0"
+    },
+    "max_length42909": {
+      "before": [
+        "PLACED",
+        "218052",
+        "240300",
+        "N"
+      ],
+      "after": [
+        218.052,
+        240.57
+      ],
+      "orientation_after": "MX"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[63\\].g_data.u_q/max_length42919": {
+      "before": [
+        "PLACED",
+        "18522",
+        "232740",
+        "N"
+      ],
+      "after": [
+        18.522,
+        232.47
+      ],
+      "orientation_after": "MX"
+    },
+    "wire42943": {
+      "before": [
+        "PLACED",
+        "159192",
+        "164970",
+        "N"
+      ],
+      "after": [
+        159.192,
+        164.7
+      ],
+      "orientation_after": "R0"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[103\\].g_data.u_q/wire42953": {
+      "before": [
+        "PLACED",
+        "4320",
+        "212490",
+        "N"
+      ],
+      "after": [
+        4.428,
+        212.49
+      ],
+      "orientation_after": "MX"
+    },
+    "wire42912": {
+      "before": [
+        "PLACED",
+        "199206",
+        "36180",
+        "N"
+      ],
+      "after": [
+        199.206,
+        36.45
+      ],
+      "orientation_after": "MX"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[133\\].g_data.u_q/wire42948": {
+      "before": [
+        "PLACED",
+        "4320",
+        "259200",
+        "N"
+      ],
+      "after": [
+        4.428,
+        259.2
+      ],
+      "orientation_after": "R0"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[530\\].g_data.u_q/wire42910": {
+      "before": [
+        "PLACED",
+        "4320",
+        "275400",
+        "N"
+      ],
+      "after": [
+        4.428,
+        275.4
+      ],
+      "orientation_after": "R0"
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[133\\].g_data.u_q/wire42947": {
+      "before": [
+        "PLACED",
+        "4320",
+        "217890",
+        "N"
+      ],
+      "after": [
+        4.428,
+        217.89
+      ],
+      "orientation_after": "MX"
+    },
+    "wire42920": {
+      "before": [
+        "PLACED",
+        "18522",
+        "260280",
+        "N"
+      ],
+      "after": [
+        18.522,
+        260.55
+      ],
+      "orientation_after": "MX"
+    },
+    "wire42906": {
+      "before": [
+        "PLACED",
+        "164430",
+        "66420",
+        "N"
+      ],
+      "after": [
+        164.43,
+        65.07
+      ],
+      "orientation_after": "MX"
+    },
+    "rebuffer42960": {
+      "before": [
+        "PLACED",
+        "133650",
+        "208440",
+        "N"
+      ],
+      "after": [
+        133.65,
+        208.98
+      ],
+      "orientation_after": "R0"
+    }
+  },
+  "outside_outline": [],
+  "signal_pin_bits": 4133,
+  "placement_status": {
+    "PLACED": 163416,
+    "LOCKED": 60479,
+    "FIRM": 16
+  },
+  "PG_terms": {
+    "VDD": 223911,
+    "VSS": 223911
+  },
+  "render": "actual_saved_grt.png",
+  "status": "ACTUAL_SAVED_LAYOUT_FOR_LOOK_NOT_SIGNED"
+}

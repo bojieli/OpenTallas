@@ -44,6 +44,7 @@ import json
 import os
 import re
 import subprocess
+import time
 import sys
 from pathlib import Path
 
@@ -781,8 +782,13 @@ def main(argv=None):
             return 2
         rc = 0
     else:
+        # CLK-DME-LOG (11-02): say where the die_trial log goes (die_trial logs its stages and DME progress there, flushed)
+        print(f"ot_clk: {time.strftime('%F %T')} die_trial kit running, log {out / 'kit.log'}", file=sys.stderr, flush=True)
+        t0 = time.time()
         rc = subprocess.call([getattr(a, "python", sys.executable), str(dt)] + args,
                              stdout=open(out / "kit.log", "w"), stderr=subprocess.STDOUT)
+        print(f"ot_clk: {time.strftime('%F %T')} die_trial kit rc={rc} sec={time.time() - t0:.0f}", file=sys.stderr,
+              flush=True)
     if rc or a.cmd == "kit":
         print(json.dumps(dict(rc=rc, stage_check="PASS" if ok else "FAIL", out=str(out))))
         return rc

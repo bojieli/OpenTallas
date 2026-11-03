@@ -1,0 +1,4 @@
+STAGE_MACRO_FAIL mutant=1 edge=0 rd_addr=10
+[135000] %Fatal: tb.sv:50: Assertion failed in tb
+%Error: tb.sv:50: Verilog $stop
+Aborting...

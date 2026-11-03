@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-02T09:06:56+0000",
+ "verdict": "UNPROVEN",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_hnx_sfu_store_a__da81d76763c9",
+ "netlist": "/work/run/results/asap7/hbc_ot_hnx_sfu_store_a__da81d76763c9/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_256x256_m2_r2c2": 12
+ },
+ "ports": {
+  "inputs": 4150,
+  "outputs": 1890
+ },
+ "reason": "yosys gold.ys failed: ",
+ "t_total_s": 187.8,
+ "provenance": {
+  "commit": "97949a4f99316b4c12c97faf985517aa4270ae4f",
+  "dirty": false,
+  "source": "validated kit PROVENANCE.json",
+  "tool_update": null
+ }
+}

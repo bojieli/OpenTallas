@@ -1,0 +1,15 @@
+{
+  "focused_cases": 9,
+  "result": "PASS",
+  "wall_seconds": 15.73,
+  "full_native_or_model_replay": false,
+  "GEN": false,
+  "canonical_activation": false,
+  "production_files": [
+    "tools/die_plan/landing_place.py",
+    "tools/die_plan/landing_placement.tcl"
+  ],
+  "default_actual_T51_generated_bytes": "IDENTICAL",
+  "fixture_source": "actual inherited T51 nonPG/native pin/master census; foreign unqueried sinks/PG omitted",
+  "timing_or_EQ_qualification": false
+}

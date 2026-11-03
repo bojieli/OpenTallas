@@ -1,0 +1,94 @@
+{
+  "status": "DISABLED_SOURCE_ACTIVE_NATIVE_ENTRY_PREP",
+  "outline_um": [
+    604.8,
+    803.52
+  ],
+  "geometric_centre_um": [
+    302.4,
+    401.76
+  ],
+  "entry_island_um": [
+    345.816,
+    397.44,
+    354.456,
+    406.08
+  ],
+  "old_declared_points": {
+    "clk": {
+      "name": "clk",
+      "direction": "input",
+      "face": "W",
+      "layer": "M5",
+      "x": 0.024,
+      "y": 369.336,
+      "w": 0.048,
+      "h": 0.48
+    },
+    "rst_n": {
+      "name": "rst_n",
+      "direction": "input",
+      "face": "W",
+      "layer": "M5",
+      "x": 0.024,
+      "y": 377.976,
+      "w": 0.048,
+      "h": 0.48
+    }
+  },
+  "declared_points": {
+    "clk": [
+      350.136,
+      401.76
+    ],
+    "rst_n": [
+      350.328,
+      401.76
+    ]
+  },
+  "full_shapes": {
+    "clk": {
+      "rect_um": [
+        350.112,
+        401.52,
+        350.16,
+        402.0
+      ],
+      "macro_halo_um": 4.32,
+      "pg_spacing_guard_um": 0.072,
+      "source_role": "Actual scalar source clock"
+    },
+    "rst_n": {
+      "rect_um": [
+        350.304,
+        401.52,
+        350.352,
+        402.0
+      ],
+      "macro_halo_um": 4.32,
+      "pg_spacing_guard_um": 0.072,
+      "source_role": "Actual delivered programme reset input; no reset/START alias"
+    }
+  },
+  "row_intersections": 0,
+  "macro_halo_intersections": 0,
+  "PG_M5_intersections": 0,
+  "sink_counts": {
+    "FF": 20842,
+    "SRAM": 44
+  },
+  "common_clock_contract_ps": {
+    "TT": 250,
+    "FF": 202.5,
+    "setup_uncertainty": 0,
+    "hold_uncertainty": 25,
+    "cross_boundary_hold_uncertainty_each": 12.5
+  },
+  "source_reset": "Actual r10 rst_n\u2192rs1\u2192rs2\u2192ra_top/ra_leaf; no SRAM reset. Source reset is distinct from collar and B113 parent identities.",
+  "source_proof": "Exact actual0525 post-SYNTH54439 EQ, fresh official native4 conditional reset only; not physical phase66",
+  "held": [
+    "Separate structured internal-clock tree/model required",
+    "No CTS/PLACE/STA dispatch or parent adoption",
+    "Actual reset/START delivery and native I/O timing remain open"
+  ]
+}

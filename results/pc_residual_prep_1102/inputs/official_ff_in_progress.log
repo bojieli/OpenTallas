@@ -1,0 +1,32 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+OT_TIMING_LIBS FF exact_count 5 receipt /out/libraries.json
+SO PG 1545314 0 -
+SO UNC_POLICY nominal setup 0 hold 25 kinds setup errors 0
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+SO CORNER FF
+SO PARASITICS spef
+SO DESIGN qkd_kvs_pc
+SO CELLS 772657
+SO CLOCK_ENDPOINT_MASTERS DFFASRHQNx1_ASAP7_75t_R DFFHQNx1_ASAP7_75t_R DFFHQNx2_ASAP7_75t_R DFFHQNx3_ASAP7_75t_R
+SO CLOCK_ENDPOINT_MAPPING_ERRORS 0
+SO CLOCK_PORTS ck[0]
+SO FT_DIE_TIMED in ft_ck_i_0 ft_ck_i_1 out ft_ck_o_0 ft_ck_o_1
+SO INPUTS hrst_n i_grp i_next i_prev pc__cfg_stack pc__fi pc__hes pc__ki pc__land_er pc__land_er_259 pc__pc pc__pi rst_n x__est__0_1
+SO OUTPUTS ft_ck_o_0 ft_ck_o_1 o_grp o_next o_prev pc__fo pc__hcompletion_v pc__hcompletion_we pc__her pc__ko pc__land_es pc__po
+SO CLOCKS clk vclk
+SO VCLKS vclk
+SO PERIOD clk 833.000000
+SO PERIOD vclk 833.000000

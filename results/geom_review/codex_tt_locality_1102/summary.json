@@ -1,0 +1,217 @@
+{
+ "schema": "opentallas.tt_locality_prep.v1",
+ "status": "DISABLED_SOURCE_PREP",
+ "runtime": "intel2:/srv/opentallas-scratch2/claude/die-qc-61/tt_ctlm_C",
+ "source": "63-tap frozen tt_ctlm_C, same source+plan+sidecar; no new CAD",
+ "actual_r2r_captures_over405": 2655,
+ "actual_r2r_max_um": 943.76,
+ "proposed_cycle_delta": 0,
+ "boundary_moved": 45,
+ "boundary_fixed_neighbor_max_um": 282.5549999999999,
+ "output_readers": 1209,
+ "individually_feasible": 1049,
+ "coupled_HR": 155,
+ "coupled_TL": 5,
+ "macros": [
+  {
+   "master": "ot_rom_4096x72_m8",
+   "rect": [
+    423.36,
+    181.452,
+    461.4,
+    244.404
+   ],
+   "name": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom1"
+  },
+  {
+   "master": "ot_rom_4096x72_m8",
+   "rect": [
+    483.84,
+    181.452,
+    521.88,
+    244.404
+   ],
+   "name": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom2"
+  },
+  {
+   "master": "ot_rom_4096x72_m8",
+   "rect": [
+    544.32,
+    216.012,
+    582.36,
+    278.964
+   ],
+   "name": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.u_rom"
+  },
+  {
+   "master": "ot_rom_4096x266_m8",
+   "rect": [
+    483.84,
+    60.492,
+    605.688,
+    123.444
+   ],
+   "name": "u_bound.u_core.u_gi.u_cal.g_calrom.u_rom.m0"
+  },
+  {
+   "master": "ot_rom_4096x266_m8",
+   "rect": [
+    552.96,
+    138.252,
+    674.808,
+    201.204
+   ],
+   "name": "u_bound.u_core.u_gi.u_cal.g_calrom.u_rom.m1"
+  },
+  {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "rect": [
+    17.28,
+    86.412,
+    188.568,
+    164.196
+   ],
+   "name": "u_bound.u_core.u_gi.u_cal.g_fifo\\[0\\].u_fifo"
+  },
+  {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "rect": [
+    302.4,
+    86.412,
+    473.688,
+    164.196
+   ],
+   "name": "u_bound.u_core.u_gi.u_cal.g_fifo\\[1\\].u_fifo"
+  },
+  {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "rect": [
+    17.28,
+    181.452,
+    188.568,
+    259.236
+   ],
+   "name": "u_bound.u_core.u_gi.u_cal.g_fifo\\[2\\].u_fifo"
+  },
+  {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "rect": [
+    207.36,
+    233.292,
+    378.648,
+    311.076
+   ],
+   "name": "u_bound.u_core.u_gi.u_cal.g_fifo\\[3\\].u_fifo"
+  },
+  {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "rect": [
+    17.28,
+    285.132,
+    188.568,
+    362.916
+   ],
+   "name": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm"
+  },
+  {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "rect": [
+    267.84,
+    328.332,
+    439.128,
+    406.116
+   ],
+   "name": "u_bound.u_core.u_gi.u_cal.g_m\\[1\\].u_pm"
+  },
+  {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "rect": [
+    17.28,
+    380.172,
+    188.568,
+    457.956
+   ],
+   "name": "u_bound.u_core.u_hr.u_24525"
+  },
+  {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "rect": [
+    449.28,
+    397.452,
+    620.568,
+    475.236
+   ],
+   "name": "u_bound.u_core.u_hr.u_24526"
+  },
+  {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "rect": [
+    423.36,
+    293.772,
+    474.768,
+    314.562
+   ],
+   "name": "u_bound.u_core.u_hr.u_24527"
+  },
+  {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "rect": [
+    501.12,
+    293.772,
+    552.528,
+    314.562
+   ],
+   "name": "u_bound.u_core.u_hr.u_24528"
+  },
+  {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "rect": [
+    578.88,
+    293.772,
+    630.288,
+    314.562
+   ],
+   "name": "u_bound.u_core.u_hr.u_24529"
+  },
+  {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "rect": [
+    449.28,
+    354.252,
+    500.688,
+    375.042
+   ],
+   "name": "u_bound.u_core.u_hr.u_24530"
+  },
+  {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "rect": [
+    509.76,
+    362.892,
+    561.168,
+    383.682
+   ],
+   "name": "u_bound.u_core.u_hr.u_24531"
+  },
+  {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "rect": [
+    578.88,
+    354.252,
+    630.288,
+    375.042
+   ],
+   "name": "u_bound.u_core.u_hr.u_24532"
+  }
+ ],
+ "open_gates": [
+  "No actual legalize/placement/view of proposal",
+  "No native macro port reach model in original metric",
+  "Current clocks/reset providers not rederived after movement",
+  "All remaining internal/relay/clocklanding violations retained",
+  "No source/formal/timing/route release"
+ ],
+ "individual_macro_free_coarse_readers": 1047,
+ "coupled_or_obstacle_readers": 162,
+ "boundary_candidate_mutual_edges": 0
+}

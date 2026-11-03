@@ -5,9 +5,9 @@ ulimit -c 0
 R=$(cd "$(dirname "$0")" && pwd)
 cd "$R"
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
-sha256sum native_memory.sv sram.v reference.sv land_candidate.sv tb.sv > inputs.sha256
+sha256sum native_memory.sv sram.v reference.sv land_candidate.sv ot_t7_land_capture_candidate.sv tb.sv > inputs.sha256
 /usr/bin/time -v "$V" --binary --timing -O1 -j 2 --x-assign 0 --x-initial 0 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style \
-  --top-module tb -Mdir "$R/obj" native_memory.sv sram.v reference.sv land_candidate.sv tb.sv > build.log 2> build.err
+  --top-module tb -Mdir "$R/obj" native_memory.sv sram.v reference.sv land_candidate.sv ot_t7_land_capture_candidate.sv tb.sv > build.log 2> build.err
 set +e
 /usr/bin/time -v ./obj/Vtb > positive.log 2> positive.time
 rc=$?

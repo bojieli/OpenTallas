@@ -1,0 +1,34 @@
+{
+  "scope": "Native programme FORMAT/PHASE component, no arithmetic/globalVM0/COPY/currentphysical qualification",
+  "regions": [
+    "NWtarget118reset352",
+    "NEtarget119reset350"
+  ],
+  "native_producer_copies": 4,
+  "native_SRAMs": 176,
+  "raw_SRAM_bits": 23068672,
+  "declared_programme_soft_FF": 91688,
+  "controller_fault_input": "Explicit boundary input held0 in data-phase vehicle; independent-controller-fault global semantics remain unqualified",
+  "ingress_stages": 2,
+  "status_stages": 2,
+  "frames": 18450,
+  "need": [
+    14340,
+    4098
+  ],
+  "prm": "0x4008000000802000",
+  "ctl_rows": 4,
+  "io_rows": 2,
+  "clock_fs": 833000,
+  "reset_test": "66edge delivered-interface reset; not actual whole-parent R8/66 qualification",
+  "tests": [
+    "fullnative residentinstall and descriptor/launch ordering",
+    "warmrelaunch with no SRAMrewrite",
+    "resetduringinflight CFG, reject assumptions of retainedcommit, fullreinstallrecovery"
+  ],
+  "mutants": [
+    "sourcecapturebypass earlydelivery",
+    "wronglegacytarget116",
+    "c09 reset-as-datalosesasyncassertion"
+  ]
+}

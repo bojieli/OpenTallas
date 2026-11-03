@@ -1,0 +1,41 @@
+{
+  "status": "PASS_GEN_INVENTORY_ONLY",
+  "bits": 2904,
+  "unique_positions": 2904,
+  "layer": "M4 data; M5 explicit named clock/reset shapes",
+  "pitch_um": 0.048,
+  "offset_um": 0.024,
+  "outline_um": [
+    574.56,
+    738.72
+  ],
+  "all_inside_outline": true,
+  "all_on_tracks": true,
+  "clock": {
+    "name": "clk",
+    "direction": "input",
+    "face": "W",
+    "layer": "M5",
+    "x": 0.024,
+    "y": 369.336,
+    "w": 0.048,
+    "h": 0.48
+  },
+  "reset": {
+    "name": "rst_n",
+    "direction": "input",
+    "face": "W",
+    "layer": "M5",
+    "x": 0.024,
+    "y": 377.976,
+    "w": 0.048,
+    "h": 0.48
+  },
+  "planned_entry_only": true,
+  "output_y_range_um": [
+    17.304,
+    721.416
+  ],
+  "physical_source_pin_reach_qualified": false,
+  "M5_named_shapes_inside": true
+}

@@ -1,0 +1,8 @@
+{
+  "status": "FAIL_COMPILER_ELABORATION_NO_RUNTIME",
+  "host": "intel2",
+  "unit": "oth-ubuntu-1270734-1793620272",
+  "path": "/srv/opentallas-scratch2/claude/codex-hbm-programme-phase-0320",
+  "rc": 208,
+  "diagnosis": "Icarus rejects constant genvar array/bit selections used at actual producer output ports (page_data[p],cal[l],lv[l]). No real producer RTL was changed; switched to the SOURCE13 Verilator frontend."
+}

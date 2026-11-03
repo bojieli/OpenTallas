@@ -1,0 +1,69 @@
+{
+  "status": "NECESSARY_NATIVE_ROW_AND_PIN_GEOMETRY_ONLY",
+  "actual_FF": 20842,
+  "native_masters": 1,
+  "inputs_sha256": {
+    "model.json": "161218bfea47d804ea6438968f9b7ce24d5b654d55b3a076a0fd66d318b97ef6",
+    "actual_FF_rows.csv": "1e347ed819e9d35fd8d24e54ac5c011825280035b39c39eb8c63fe72cdd9072f",
+    "native_pins_clock_entry.json": "941a1c747d9047acf19bfc576fea988fb607e08e8164e5af40df028574bfb6ca",
+    "adjacent_model.json": "1a32833b080a2d84bb475cbe738318084ba176a5255be84d5a1fe8546c6851e7",
+    "ingress_first_capture.json": "625d0937e791be39beba529cba007946c769d5922e438d668d4dd830a0d375f1"
+  },
+  "native_footprint_um": [
+    1.08,
+    0.27
+  ],
+  "unique_native_lower_left_sites": 20842,
+  "macro_halo_violations": 0,
+  "row_grid_um": [
+    2.16,
+    0.27
+  ],
+  "ABI": 2904,
+  "pin_names_unique": 2904,
+  "pin_track_or_outline_violations": 0,
+  "native_pin_rectangles": 2904,
+  "same_layer_signal_rectangle_overlaps": 0,
+  "M4_data_pin_shape_um": [
+    0.192,
+    0.024
+  ],
+  "M5_clock_reset_shape_um": [
+    0.048,
+    0.48
+  ],
+  "adjacent_edges": {
+    "ff\u2192ff": {
+      "edges": 151475,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 392.3460000000001,
+      "bad_all_R0_MX_pin_corners": 0,
+      "max_all_R0_MX_pin_corner_distance_um": 392.865
+    },
+    "ff\u2192macro": {
+      "edges": 12496,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 403.64099999999985,
+      "bad_all_R0_MX_pin_corners": 0,
+      "max_all_R0_MX_pin_corner_distance_um": 403.955
+    },
+    "macro\u2192ff": {
+      "edges": 11264,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 377.271,
+      "bad_all_R0_MX_pin_corners": 0,
+      "max_all_R0_MX_pin_corner_distance_um": 377.57200000000006
+    }
+  },
+  "first_input_bits": 621,
+  "first_input_failures": 0,
+  "first_input_max_all_R0_MX_native_pin_corners_um": 233.65600000000003,
+  "output_capture_bits": 2282,
+  "output_capture_max_all_R0_MX_native_pin_corners_um": 23.47699999999999,
+  "extra1088_rows": "Conservative reservation only; not actual cells or clock sinks",
+  "parent_unplaced_obligations": "Existing9538 distinct wrapper capture FF plus new2304 upstream FF are outside this native core; no parent row/clock credit",
+  "held": [
+    "No PLACE/CTS/route/STA",
+    "Actual native orientation/clock/reset/START/pin access and parent source-event integration required"
+  ]
+}

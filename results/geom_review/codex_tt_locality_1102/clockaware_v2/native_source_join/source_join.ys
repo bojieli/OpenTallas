@@ -1,0 +1,8 @@
+read_verilog -lib -sv core.sv bind_cells.sv landing_ca.sv landing.sv
+read_verilog -sv -overwrite raw_leaf.sv
+read_verilog -sv regional_wrapper.sv
+hierarchy -check -top qfd_qc_tt_ctlm_part_bound
+proc
+check -assert
+write_json source_graph.json
+stat

@@ -1,0 +1,1474 @@
+[
+ {
+  "old_native": "_50814_",
+  "fresh_native_candidate": "_50936_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[0\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00685_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[0\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00698_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 96429 0 u_dut._50814_.IQN$_DFF_P_.lecq",
+   "latch 96429 0 u_dut._50814_.IQN",
+   "latch 96429 0 u_dut._50814_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50815_",
+  "fresh_native_candidate": "_50937_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[1\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02907_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[1\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02920_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94221 0 u_dut._50815_.IQN$_DFF_P_.lecq",
+   "latch 94221 0 u_dut._50815_.IQN",
+   "latch 94221 0 u_dut._50815_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50816_",
+  "fresh_native_candidate": "_50938_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[2\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02906_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[2\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02919_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94222 0 u_dut._50816_.IQN$_DFF_P_.lecq",
+   "latch 94222 0 u_dut._50816_.IQN",
+   "latch 94222 0 u_dut._50816_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50817_",
+  "fresh_native_candidate": "_50939_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[3\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02905_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[3\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02918_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94223 0 u_dut._50817_.IQN$_DFF_P_.lecq",
+   "latch 94223 0 u_dut._50817_.IQN",
+   "latch 94223 0 u_dut._50817_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50818_",
+  "fresh_native_candidate": "_50940_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[4\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02904_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[4\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02917_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94224 0 u_dut._50818_.IQN$_DFF_P_.lecq",
+   "latch 94224 0 u_dut._50818_.IQN",
+   "latch 94224 0 u_dut._50818_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50819_",
+  "fresh_native_candidate": "_50941_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[5\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02913_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[5\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02926_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94215 0 u_dut._50819_.IQN$_DFF_P_.lecq",
+   "latch 94215 0 u_dut._50819_.IQN",
+   "latch 94215 0 u_dut._50819_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50821_",
+  "fresh_native_candidate": "_50943_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[0\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02903_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[0\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02916_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94225 0 u_dut._50821_.IQN$_DFF_P_.lecq",
+   "latch 94225 0 u_dut._50821_.IQN",
+   "latch 94225 0 u_dut._50821_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50822_",
+  "fresh_native_candidate": "_50944_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[1\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02902_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[1\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02915_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94226 0 u_dut._50822_.IQN$_DFF_P_.lecq",
+   "latch 94226 0 u_dut._50822_.IQN",
+   "latch 94226 0 u_dut._50822_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50823_",
+  "fresh_native_candidate": "_50945_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[2\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02901_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[2\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02914_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94227 0 u_dut._50823_.IQN$_DFF_P_.lecq",
+   "latch 94227 0 u_dut._50823_.IQN",
+   "latch 94227 0 u_dut._50823_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50824_",
+  "fresh_native_candidate": "_50946_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[3\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02900_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[3\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02913_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94228 0 u_dut._50824_.IQN$_DFF_P_.lecq",
+   "latch 94228 0 u_dut._50824_.IQN",
+   "latch 94228 0 u_dut._50824_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50825_",
+  "fresh_native_candidate": "_50947_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[4\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02899_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[4\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02912_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94229 0 u_dut._50825_.IQN$_DFF_P_.lecq",
+   "latch 94229 0 u_dut._50825_.IQN",
+   "latch 94229 0 u_dut._50825_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50826_",
+  "fresh_native_candidate": "_50948_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[5\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02898_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[5\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02911_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94230 0 u_dut._50826_.IQN$_DFF_P_.lecq",
+   "latch 94230 0 u_dut._50826_.IQN",
+   "latch 94230 0 u_dut._50826_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50827_",
+  "fresh_native_candidate": "_50949_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[6\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02897_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[6\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02910_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94231 0 u_dut._50827_.IQN$_DFF_P_.lecq",
+   "latch 94231 0 u_dut._50827_.IQN",
+   "latch 94231 0 u_dut._50827_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50828_",
+  "fresh_native_candidate": "_50950_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[7\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02896_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[7\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02909_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94232 0 u_dut._50828_.IQN$_DFF_P_.lecq",
+   "latch 94232 0 u_dut._50828_.IQN",
+   "latch 94232 0 u_dut._50828_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50829_",
+  "fresh_native_candidate": "_50951_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[8\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02895_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[8\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02908_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94233 0 u_dut._50829_.IQN$_DFF_P_.lecq",
+   "latch 94233 0 u_dut._50829_.IQN",
+   "latch 94233 0 u_dut._50829_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50830_",
+  "fresh_native_candidate": "_50952_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[9\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02894_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[9\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02907_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94234 0 u_dut._50830_.IQN$_DFF_P_.lecq",
+   "latch 94234 0 u_dut._50830_.IQN",
+   "latch 94234 0 u_dut._50830_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50831_",
+  "fresh_native_candidate": "_50953_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[10\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02893_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[10\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02906_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94235 0 u_dut._50831_.IQN$_DFF_P_.lecq",
+   "latch 94235 0 u_dut._50831_.IQN",
+   "latch 94235 0 u_dut._50831_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50832_",
+  "fresh_native_candidate": "_50954_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[11\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02892_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[11\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02905_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94236 0 u_dut._50832_.IQN$_DFF_P_.lecq",
+   "latch 94236 0 u_dut._50832_.IQN",
+   "latch 94236 0 u_dut._50832_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50833_",
+  "fresh_native_candidate": "_50955_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[12\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02891_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[12\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02904_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94237 0 u_dut._50833_.IQN$_DFF_P_.lecq",
+   "latch 94237 0 u_dut._50833_.IQN",
+   "latch 94237 0 u_dut._50833_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50834_",
+  "fresh_native_candidate": "_50956_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[13\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02890_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[13\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02903_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94238 0 u_dut._50834_.IQN$_DFF_P_.lecq",
+   "latch 94238 0 u_dut._50834_.IQN",
+   "latch 94238 0 u_dut._50834_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50835_",
+  "fresh_native_candidate": "_50957_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[14\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02889_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[14\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02902_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94239 0 u_dut._50835_.IQN$_DFF_P_.lecq",
+   "latch 94239 0 u_dut._50835_.IQN",
+   "latch 94239 0 u_dut._50835_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50836_",
+  "fresh_native_candidate": "_50958_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[15\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00511_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_epoch\\[15\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00524_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 96603 0 u_dut._50836_.IQN$_DFF_P_.lecq",
+   "latch 96603 0 u_dut._50836_.IQN",
+   "latch 96603 0 u_dut._50836_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ },
+ {
+  "old_native": "_50820_",
+  "fresh_native_candidate": "_50942_",
+  "old_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_05808_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02914_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "fresh_actual": {
+   "pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_05822_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02927_"
+    }
+   },
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "width_um": 1.08,
+   "height_um": 0.27
+  },
+  "accepted": false,
+  "native_base_proved": false,
+  "old_retained_normal_aig_map_records": [
+   "latch 94214 0 u_dut._50820_.IQN$_DFF_P_.lecq",
+   "latch 94214 0 u_dut._50820_.IQN",
+   "latch 94214 0 u_dut._50820_.QN"
+  ],
+  "fresh_normal_aig_map": "NOT_GENERATED: producer required; do not invent AIG latch IDs",
+  "capture_primitive_next_state": "!D",
+  "capture_primitive_output_function": "IQN",
+  "external_QN_next": "!D",
+  "old_or_new_initial_value": "UNPROVED, never compare None as an equal initial value",
+  "actual_primitive_state_vars": [
+   "IQN",
+   "IQNN"
+  ]
+ }
+]

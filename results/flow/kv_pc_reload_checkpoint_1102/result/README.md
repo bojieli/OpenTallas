@@ -1,0 +1,11 @@
+# Actual PC fresh-process route/finish and repaired post result
+
+The source phase2 route/finish completed natively on Epyc2 /srv/opentallas-scratch2/claude/codex-pc-reload-0018/finalize. Its original post exited2 only on the manual new-runner/old-async-helper API mismatch; e623 fixes that gate-only closure in the fresh Intel1 post capsule. The sole post-only successor oth-ubuntu-4137542-1793621921 is terminal exit1, actual NOT SIGNED. No route, source build or proof was repeated by that post-only correction.
+
+Official current TT -15.30ps/24 violating endpoints, FF +8.07ps/0 under bound202.5 (legacy source-SDC FF -22.70 is separately shown), slew100/31, cap0, DRC0, antenna0, PG1545314/open0, pins4133 PASS, sourceSDC lint/face guard PASS. Clock gate PASS under the unchanged official policy; raw pair/spread values remain in the receipt, no relaxation. Original-to-final clock guard passes4261 nets and48012 clock-net instances with zero wire/pin/master changes and all4261 FIXED.
+
+Compared with original r27c TT -20.74/88 endpoints, FF -0.81, slew320/332, this improves timing/DRV but is not closed. The fresh native process passed the former incremental-GRT crash boundary; stock mixed-access cleanup reported already-consistent catalogs, so a mixed-AP root cause is not claimed. The precise stale journal/routing-session culprit remains unlocalized. The original Signal11, all old checkpoints and original failing official receipts remain intact.
+
+Complete actual native cases are retained on both hosts. Intel1 /srv/opentallas-scratch2/claude/codex-pc-post-0355 has actual final DB/SPEF/V, genuine original4_1_cts, source readset, real LEF/TTFF models, clock reports and actual official signoff. FinalODB323c18ac/nativeV36bb1d15/SPEFc10a0e35 match the Epyc2 native case. These are real provisional models with explicit PC_NOT_SIGNED status; own final-netlist proof/provenance and all adoption/count/parent credit remain held. No legacy source-proof or signed-export claim is borrowed.
+
+Measured next diagnosis60b646f33 identifies long INPUT net41987 to _217823_, not an established oversized inverter delay. The separate data-only candidate remains PREP; no next repair was launched here.

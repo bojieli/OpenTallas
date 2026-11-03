@@ -1,0 +1,749 @@
+{
+  "rows": [
+    {
+      "lane": "L203",
+      "part": "root",
+      "type": "root",
+      "bus": "L203_o",
+      "slot": null,
+      "candidate_type": "root",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_root",
+      "actual_selected_module": "hbm_arch_root",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_root.sv",
+      "source_sha256": "c87ff7e4a3edb11fb76278955939e5e993034164a940d4ca366cd80f294c2505",
+      "native_instances": [
+        {
+          "line": 2035,
+          "text": "ot_dp_st #(.W(180)) u_bout_L203_o (.clk(clk), .rst_n(rst_n), .d({w_u_col_idx_prm[757], w_u_col_idx_prm[755], w_u_col_idx_prm[753], w_u_col_idx_prm[751], w_u_col_idx_prm[749], w_u_col_idx_prm[747], w_u_col_idx_prm[745], w_u_col_idx_prm[743], w_u_col_idx_prm[741], w_u_col_idx_prm[739], w_u_col_idx_prm[737], w_u_col_idx_prm[735], w_u_col_idx_prm[733], w_u_col_idx_prm[731], w_u_col_idx_prm[729], w_u_col_idx_prm[727], w_u_col_idx_prm[725], w_u_col_idx_prm[723], w_u_col_idx_prm[721], w_u_col_idx_prm[719], w_u_col_idx_prm[717], w_u_col_idx_prm[715], w_u_col_idx_prm[713], w_u_col_idx_prm[711], w_u_col_idx_prm[709], w_u_col_idx_prm[707], w_u_col_idx_prm[705], w_u_col_idx_prm[703], w_u_col_idx_prm[701], w_u_col_idx_prm[699], w_u_col_idx_prm[697], w_u_col_idx_prm[695], w_u_col_idx_prm[693], w_u_col_idx_prm[691], w_u_col_idx_prm[689], w_u_col_idx_prm[687], w_u_col_idx_prm[685], w_u_col_idx_prm[683], w_u_col_idx_prm[681], w_u_col_idx_prm[679], w_u_col_idx_prm[677], w_u_col_idx_prm[675], w_u_col_idx_prm[673], w_u_col_idx_prm[671], w_u_col_idx_prm[669], w_u_col_idx_prm[667], w_u_col_idx_prm[665], w_u_col_idx_prm[663], w_u_col_idx_prm[661], w_u_col_idx_prm[659], w_u_col_idx_prm[657], w_u_col_idx_prm[655], w_u_col_idx_prm[653], w_u_col_idx_prm[651], w_u_col_idx_prm[649], w_u_col_idx_prm[647], w_u_col_idx_prm[645], w_u_col_idx_prm[643], w_u_col_idx_prm[641], w_u_col_idx_prm[639], w_u_col_idx_prm[637], w_u_col_idx_prm[635], w_u_col_idx_prm[633], w_u_col_idx_prm[631], w_u_col_idx_prm[629], w_u_col_idx_prm[627], w_u_col_idx_prm[625], w_u_col_idx_prm[623], w_u_col_idx_prm[621], w_u_col_idx_prm[619], w_u_col_idx_prm[617], w_u_col_idx_prm[615], w_u_col_idx_prm[613], w_u_col_idx_prm[611], w_u_col_idx_prm[609], w_u_col_idx_prm[607], w_u_col_idx_prm[605], w_u_col_idx_prm[603], w_u_col_idx_prm[601], w_u_col_idx_prm[599], w_u_col_idx_prm[597], w_u_col_idx_prm[595], w_u_col_idx_prm[593], w_u_col_idx_prm[591], w_u_col_idx_prm[589], w_u_col_idx_prm[587], w_u_col_idx_prm[585], w_u_col_idx_prm[583], w_u_col_idx_prm[581], w_u_col_idx_prm[579], w_u_col_idx_prm[577], w_u_col_idx_prm[575], w_u_col_idx_prm[573], w_u_col_idx_prm[571], w_u_col_idx_prm[569], w_u_col_idx_prm[567], w_u_col_idx_prm[565], w_u_col_idx_prm[563], w_u_col_idx_prm[561], w_u_col_idx_prm[559], w_u_col_idx_prm[557], w_u_col_idx_prm[555], w_u_col_idx_prm[553], w_u_col_idx_prm[551], w_u_col_idx_prm[549], w_u_col_idx_prm[547], w_u_col_idx_prm[545], w_u_col_idx_prm[543], w_u_col_idx_prm[541], w_u_col_idx_prm[539], w_u_col_idx_prm[537], w_u_col_idx_prm[535], w_u_col_idx_prm[533], w_u_col_idx_prm[531], w_u_col_idx_prm[529], w_u_col_idx_prm[527], w_u_col_idx_prm[525], w_u_col_idx_prm[523], w_u_col_idx_prm[521], w_u_col_idx_prm[519], w_u_col_idx_prm[517], w_u_col_idx_prm[515], w_u_col_idx_prm[513], w_u_col_idx_prm[511], w_u_col_idx_prm[509], w_u_col_idx_prm[507], w_u_col_idx_prm[505], w_u_col_idx_prm[503], w_u_col_idx_prm[501], w_u_col_idx_prm[499], w_u_col_idx_prm[497], w_u_col_idx_prm[495], w_u_col_idx_prm[493], w_u_col_idx_prm[491], w_u_col_idx_prm[489], w_u_col_idx_prm[487], w_u_col_idx_prm[485], w_u_col_idx_prm[483], w_u_col_idx_prm[481], w_u_col_idx_prm[479], w_u_col_idx_prm[477], w_u_col_idx_prm[475], w_u_col_idx_prm[473], w_u_col_idx_prm[471], w_u_col_idx_prm[469], w_u_col_idx_prm[467], w_u_col_idx_prm[465], w_u_col_idx_prm[463], w_u_col_idx_prm[461], w_u_col_idx_prm[459], w_u_col_idx_prm[457], w_u_col_idx_prm[455], w_u_col_idx_prm[453], w_u_col_idx_prm[451], w_u_col_idx_prm[449], w_u_col_idx_prm[447], w_u_col_idx_prm[445], w_u_col_idx_prm[443], w_u_col_idx_prm[441], w_u_col_idx_prm[439], w_u_col_idx_prm[437], w_u_col_idx_prm[435], w_u_col_idx_prm[433], w_u_col_idx_prm[431], w_u_col_idx_prm[429], w_u_col_idx_prm[427], w_u_col_idx_prm[425], w_u_col_idx_prm[423], w_u_col_idx_prm[421], w_u_col_idx_prm[419], w_u_col_idx_prm[417], w_u_col_idx_prm[74:66]}), .ea(rst_n), .q(L203_o[179:0]), .eq(L203_o[180]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        180
+      ]
+    },
+    {
+      "lane": "L203",
+      "part": "NW_b101",
+      "type": "q_b101_nw",
+      "bus": "L203x1_i",
+      "slot": "L203x1",
+      "candidate_type": "q_b101_nw",
+      "candidate_stations": 3,
+      "native_plan_module": "hbm_arch_q_b101",
+      "actual_selected_module": "hbm_arch_q_b101__q_b101_nw",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b101__q_b101_nw.sv",
+      "source_sha256": "fb7ef289c87b2e26cf042dddb0a30c3c6dea03ebea41db89c42876d204a20483",
+      "native_instances": [
+        {
+          "line": 383,
+          "text": "ot_dp_st #(.W(180)) u_ft_L203x1_o_0 (.clk(clk), .rst_n(rst_n), .d(L203x1_i[179:0]), .ea(L203x1_i[180]), .q(L203x1_o_s0[179:0]), .eq(L203x1_o_s0[180]));"
+        },
+        {
+          "line": 384,
+          "text": "ot_dp_st #(.W(180)) u_ft_L203x1_o_1 (.clk(clk), .rst_n(rst_n), .d(L203x1_o_s0[179:0]), .ea(L203x1_o_s0[180]), .q(L203x1_o_s1[179:0]), .eq(L203x1_o_s1[180]));"
+        },
+        {
+          "line": 385,
+          "text": "ot_dp_st #(.W(180)) u_ft_L203x1_o_2 (.clk(clk), .rst_n(rst_n), .d(L203x1_o_s1[179:0]), .ea(L203x1_o_s1[180]), .q(L203x1_o[179:0]), .eq(L203x1_o[180]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 3,
+      "native_data_widths": [
+        180
+      ]
+    },
+    {
+      "lane": "L203",
+      "part": "NW_b100",
+      "type": "q_b100",
+      "bus": "L203_i",
+      "slot": null,
+      "candidate_type": "q_b100",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_b100",
+      "actual_selected_module": "hbm_arch_q_b100",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b100.sv",
+      "source_sha256": "853b95f6e5c3a5a67f449a551a80f7bcc1dfc7cf13f4efa9b9fad2f7a84c31de",
+      "native_instances": [
+        {
+          "line": 508,
+          "text": "ot_dp_st #(.W(180)) u_bin_L203_i (.clk(clk), .rst_n(rst_n), .d(L203_i[179:0]), .ea(L203_i[180]), .q(L203_i_q), .eq(L203_i_eq));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        180
+      ]
+    },
+    {
+      "lane": "L203m",
+      "part": "root",
+      "type": "root",
+      "bus": "L203m_o",
+      "slot": null,
+      "candidate_type": "root",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_root",
+      "actual_selected_module": "hbm_arch_root",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_root.sv",
+      "source_sha256": "c87ff7e4a3edb11fb76278955939e5e993034164a940d4ca366cd80f294c2505",
+      "native_instances": [
+        {
+          "line": 2036,
+          "text": "ot_dp_st #(.W(178)) u_bout_L203m_o (.clk(clk), .rst_n(rst_n), .d({w_u_col_idx_prm[754], w_u_col_idx_prm[752], w_u_col_idx_prm[750], w_u_col_idx_prm[748], w_u_col_idx_prm[746], w_u_col_idx_prm[744], w_u_col_idx_prm[742], w_u_col_idx_prm[740], w_u_col_idx_prm[738], w_u_col_idx_prm[736], w_u_col_idx_prm[734], w_u_col_idx_prm[732], w_u_col_idx_prm[730], w_u_col_idx_prm[728], w_u_col_idx_prm[726], w_u_col_idx_prm[724], w_u_col_idx_prm[722], w_u_col_idx_prm[720], w_u_col_idx_prm[718], w_u_col_idx_prm[716], w_u_col_idx_prm[714], w_u_col_idx_prm[712], w_u_col_idx_prm[710], w_u_col_idx_prm[708], w_u_col_idx_prm[706], w_u_col_idx_prm[704], w_u_col_idx_prm[702], w_u_col_idx_prm[700], w_u_col_idx_prm[698], w_u_col_idx_prm[696], w_u_col_idx_prm[694], w_u_col_idx_prm[692], w_u_col_idx_prm[690], w_u_col_idx_prm[688], w_u_col_idx_prm[686], w_u_col_idx_prm[684], w_u_col_idx_prm[682], w_u_col_idx_prm[680], w_u_col_idx_prm[678], w_u_col_idx_prm[676], w_u_col_idx_prm[674], w_u_col_idx_prm[672], w_u_col_idx_prm[670], w_u_col_idx_prm[668], w_u_col_idx_prm[666], w_u_col_idx_prm[664], w_u_col_idx_prm[662], w_u_col_idx_prm[660], w_u_col_idx_prm[658], w_u_col_idx_prm[656], w_u_col_idx_prm[654], w_u_col_idx_prm[652], w_u_col_idx_prm[650], w_u_col_idx_prm[648], w_u_col_idx_prm[646], w_u_col_idx_prm[644], w_u_col_idx_prm[642], w_u_col_idx_prm[640], w_u_col_idx_prm[638], w_u_col_idx_prm[636], w_u_col_idx_prm[634], w_u_col_idx_prm[632], w_u_col_idx_prm[630], w_u_col_idx_prm[628], w_u_col_idx_prm[626], w_u_col_idx_prm[624], w_u_col_idx_prm[622], w_u_col_idx_prm[620], w_u_col_idx_prm[618], w_u_col_idx_prm[616], w_u_col_idx_prm[614], w_u_col_idx_prm[612], w_u_col_idx_prm[610], w_u_col_idx_prm[608], w_u_col_idx_prm[606], w_u_col_idx_prm[604], w_u_col_idx_prm[602], w_u_col_idx_prm[600], w_u_col_idx_prm[598], w_u_col_idx_prm[596], w_u_col_idx_prm[594], w_u_col_idx_prm[592], w_u_col_idx_prm[590], w_u_col_idx_prm[588], w_u_col_idx_prm[586], w_u_col_idx_prm[584], w_u_col_idx_prm[582], w_u_col_idx_prm[580], w_u_col_idx_prm[578], w_u_col_idx_prm[576], w_u_col_idx_prm[574], w_u_col_idx_prm[572], w_u_col_idx_prm[570], w_u_col_idx_prm[568], w_u_col_idx_prm[566], w_u_col_idx_prm[564], w_u_col_idx_prm[562], w_u_col_idx_prm[560], w_u_col_idx_prm[558], w_u_col_idx_prm[556], w_u_col_idx_prm[554], w_u_col_idx_prm[552], w_u_col_idx_prm[550], w_u_col_idx_prm[548], w_u_col_idx_prm[546], w_u_col_idx_prm[544], w_u_col_idx_prm[542], w_u_col_idx_prm[540], w_u_col_idx_prm[538], w_u_col_idx_prm[536], w_u_col_idx_prm[534], w_u_col_idx_prm[532], w_u_col_idx_prm[530], w_u_col_idx_prm[528], w_u_col_idx_prm[526], w_u_col_idx_prm[524], w_u_col_idx_prm[522], w_u_col_idx_prm[520], w_u_col_idx_prm[518], w_u_col_idx_prm[516], w_u_col_idx_prm[514], w_u_col_idx_prm[512], w_u_col_idx_prm[510], w_u_col_idx_prm[508], w_u_col_idx_prm[506], w_u_col_idx_prm[504], w_u_col_idx_prm[502], w_u_col_idx_prm[500], w_u_col_idx_prm[498], w_u_col_idx_prm[496], w_u_col_idx_prm[494], w_u_col_idx_prm[492], w_u_col_idx_prm[490], w_u_col_idx_prm[488], w_u_col_idx_prm[486], w_u_col_idx_prm[484], w_u_col_idx_prm[482], w_u_col_idx_prm[480], w_u_col_idx_prm[478], w_u_col_idx_prm[476], w_u_col_idx_prm[474], w_u_col_idx_prm[472], w_u_col_idx_prm[470], w_u_col_idx_prm[468], w_u_col_idx_prm[466], w_u_col_idx_prm[464], w_u_col_idx_prm[462], w_u_col_idx_prm[460], w_u_col_idx_prm[458], w_u_col_idx_prm[456], w_u_col_idx_prm[454], w_u_col_idx_prm[452], w_u_col_idx_prm[450], w_u_col_idx_prm[448], w_u_col_idx_prm[446], w_u_col_idx_prm[444], w_u_col_idx_prm[442], w_u_col_idx_prm[440], w_u_col_idx_prm[438], w_u_col_idx_prm[436], w_u_col_idx_prm[434], w_u_col_idx_prm[432], w_u_col_idx_prm[430], w_u_col_idx_prm[428], w_u_col_idx_prm[426], w_u_col_idx_prm[424], w_u_col_idx_prm[422], w_u_col_idx_prm[420], w_u_col_idx_prm[418], w_u_col_idx_prm[74:66]}), .ea(rst_n), .q(L203m_o[177:0]), .eq(L203m_o[178]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        178
+      ]
+    },
+    {
+      "lane": "L203m",
+      "part": "NE_b101",
+      "type": "q_b101",
+      "bus": "L203mx1_i",
+      "slot": "L203mx1",
+      "candidate_type": "q_b101",
+      "candidate_stations": 3,
+      "native_plan_module": "hbm_arch_q_b101",
+      "actual_selected_module": "hbm_arch_q_b101__q_b101",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b101__q_b101.sv",
+      "source_sha256": "6c365692394bd154459e91d26364f92eeb23b6cb5e69916ee61de9149f47a524",
+      "native_instances": [
+        {
+          "line": 383,
+          "text": "ot_dp_st #(.W(178)) u_ft_L203mx1_o_0 (.clk(clk), .rst_n(rst_n), .d(L203mx1_i[177:0]), .ea(L203mx1_i[178]), .q(L203mx1_o_s0[177:0]), .eq(L203mx1_o_s0[178]));"
+        },
+        {
+          "line": 384,
+          "text": "ot_dp_st #(.W(178)) u_ft_L203mx1_o_1 (.clk(clk), .rst_n(rst_n), .d(L203mx1_o_s0[177:0]), .ea(L203mx1_o_s0[178]), .q(L203mx1_o_s1[177:0]), .eq(L203mx1_o_s1[178]));"
+        },
+        {
+          "line": 385,
+          "text": "ot_dp_st #(.W(178)) u_ft_L203mx1_o_2 (.clk(clk), .rst_n(rst_n), .d(L203mx1_o_s1[177:0]), .ea(L203mx1_o_s1[178]), .q(L203mx1_o[177:0]), .eq(L203mx1_o[178]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 3,
+      "native_data_widths": [
+        178
+      ]
+    },
+    {
+      "lane": "L203m",
+      "part": "NE_b100",
+      "type": "q_b100__physical_v1",
+      "bus": "L203m_i",
+      "slot": null,
+      "candidate_type": "q_b100__physical_v1",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_b100__physical_v1",
+      "actual_selected_module": "hbm_arch_q_b100__physical_v1",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b100__physical_v1.sv",
+      "source_sha256": "0f777c1f4227cee560dc4fb31b2a588f5b0cc0aba647f478083a8fe4e3da74f8",
+      "native_instances": [
+        {
+          "line": 504,
+          "text": "ot_dp_st #(.W(178)) u_bin_L203m_i (.clk(clk), .rst_n(rst_n), .d(L203m_i[177:0]), .ea(L203m_i[178]), .q(L203m_i_q), .eq(L203m_i_eq));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        178
+      ]
+    },
+    {
+      "lane": "L700",
+      "part": "NE_hub",
+      "type": "q_hub_ne",
+      "bus": "L700_o",
+      "slot": null,
+      "candidate_type": "q_hub_ne",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_hub",
+      "actual_selected_module": "hbm_arch_q_hub__q_hub_ne",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_hub__q_hub_ne.sv",
+      "source_sha256": "c9243b4409d7b20495d6fcf8df3520a41b5948816ed81729fd67850e656d90fa",
+      "native_instances": [
+        {
+          "line": 9184,
+          "text": "ot_dp_st #(.W(2807)) u_bout_L700_o (.clk(clk), .rst_n(rst_n), .d({w_u_obs_Q_r_d[22:0], w_u_hcollb_Q_cw_o[279:0], w_u_hcollb_Q_ccw_o[279:0], w_u_hb_vms_Q_q0_ccw_out[2223:0]}), .ea(rst_n), .q(L700_o[2806:0]), .eq(L700_o[2807]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        2807
+      ]
+    },
+    {
+      "lane": "L700",
+      "part": "NE_b112",
+      "type": "q_b112__physical_v1",
+      "bus": "L700x1_i",
+      "slot": "L700x1",
+      "candidate_type": "q_b112__physical_v1",
+      "candidate_stations": 5,
+      "native_plan_module": "hbm_arch_q_b112__physical_v1",
+      "actual_selected_module": "hbm_arch_q_b112__physical_v1",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b112__physical_v1.sv",
+      "source_sha256": "0288df50564e7e0251ecc116e508fda35813ea4a77eef5cde111592d6aed6b82",
+      "native_instances": [
+        {
+          "line": 379,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x1_o_0 (.clk(clk), .rst_n(rst_n), .d(L700x1_i[2806:0]), .ea(L700x1_i[2807]), .q(L700x1_o_s0[2806:0]), .eq(L700x1_o_s0[2807]));"
+        },
+        {
+          "line": 380,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x1_o_1 (.clk(clk), .rst_n(rst_n), .d(L700x1_o_s0[2806:0]), .ea(L700x1_o_s0[2807]), .q(L700x1_o_s1[2806:0]), .eq(L700x1_o_s1[2807]));"
+        },
+        {
+          "line": 381,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x1_o_2 (.clk(clk), .rst_n(rst_n), .d(L700x1_o_s1[2806:0]), .ea(L700x1_o_s1[2807]), .q(L700x1_o_s2[2806:0]), .eq(L700x1_o_s2[2807]));"
+        },
+        {
+          "line": 382,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x1_o_3 (.clk(clk), .rst_n(rst_n), .d(L700x1_o_s2[2806:0]), .ea(L700x1_o_s2[2807]), .q(L700x1_o_s3[2806:0]), .eq(L700x1_o_s3[2807]));"
+        },
+        {
+          "line": 383,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x1_o_4 (.clk(clk), .rst_n(rst_n), .d(L700x1_o_s3[2806:0]), .ea(L700x1_o_s3[2807]), .q(L700x1_o[2806:0]), .eq(L700x1_o[2807]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 5,
+      "native_data_widths": [
+        2807
+      ]
+    },
+    {
+      "lane": "L700",
+      "part": "root",
+      "type": "root",
+      "bus": "L700x2_i",
+      "slot": "L700x2",
+      "candidate_type": "root",
+      "candidate_stations": 6,
+      "native_plan_module": "hbm_arch_root",
+      "actual_selected_module": "hbm_arch_root",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_root.sv",
+      "source_sha256": "c87ff7e4a3edb11fb76278955939e5e993034164a940d4ca366cd80f294c2505",
+      "native_instances": [
+        {
+          "line": 2139,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x2_o_0 (.clk(clk), .rst_n(rst_n), .d(L700x2_i[2806:0]), .ea(L700x2_i[2807]), .q(L700x2_o_s0[2806:0]), .eq(L700x2_o_s0[2807]));"
+        },
+        {
+          "line": 2140,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x2_o_1 (.clk(clk), .rst_n(rst_n), .d(L700x2_o_s0[2806:0]), .ea(L700x2_o_s0[2807]), .q(L700x2_o_s1[2806:0]), .eq(L700x2_o_s1[2807]));"
+        },
+        {
+          "line": 2141,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x2_o_2 (.clk(clk), .rst_n(rst_n), .d(L700x2_o_s1[2806:0]), .ea(L700x2_o_s1[2807]), .q(L700x2_o_s2[2806:0]), .eq(L700x2_o_s2[2807]));"
+        },
+        {
+          "line": 2142,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x2_o_3 (.clk(clk), .rst_n(rst_n), .d(L700x2_o_s2[2806:0]), .ea(L700x2_o_s2[2807]), .q(L700x2_o_s3[2806:0]), .eq(L700x2_o_s3[2807]));"
+        },
+        {
+          "line": 2143,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x2_o_4 (.clk(clk), .rst_n(rst_n), .d(L700x2_o_s3[2806:0]), .ea(L700x2_o_s3[2807]), .q(L700x2_o_s4[2806:0]), .eq(L700x2_o_s4[2807]));"
+        },
+        {
+          "line": 2144,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x2_o_5 (.clk(clk), .rst_n(rst_n), .d(L700x2_o_s4[2806:0]), .ea(L700x2_o_s4[2807]), .q(L700x2_o[2806:0]), .eq(L700x2_o[2807]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 6,
+      "native_data_widths": [
+        2807
+      ]
+    },
+    {
+      "lane": "L700",
+      "part": "NW_b112",
+      "type": "q_b112",
+      "bus": "L700x3_i",
+      "slot": "L700x3",
+      "candidate_type": "q_b112",
+      "candidate_stations": 6,
+      "native_plan_module": "hbm_arch_q_b112",
+      "actual_selected_module": "hbm_arch_q_b112",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b112.sv",
+      "source_sha256": "908431035275cb980604d239d7242eb2d92ff504895b8c074df0343995e2c48a",
+      "native_instances": [
+        {
+          "line": 379,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x3_o_0 (.clk(clk), .rst_n(rst_n), .d(L700x3_i[2806:0]), .ea(L700x3_i[2807]), .q(L700x3_o_s0[2806:0]), .eq(L700x3_o_s0[2807]));"
+        },
+        {
+          "line": 380,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x3_o_1 (.clk(clk), .rst_n(rst_n), .d(L700x3_o_s0[2806:0]), .ea(L700x3_o_s0[2807]), .q(L700x3_o_s1[2806:0]), .eq(L700x3_o_s1[2807]));"
+        },
+        {
+          "line": 381,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x3_o_2 (.clk(clk), .rst_n(rst_n), .d(L700x3_o_s1[2806:0]), .ea(L700x3_o_s1[2807]), .q(L700x3_o_s2[2806:0]), .eq(L700x3_o_s2[2807]));"
+        },
+        {
+          "line": 382,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x3_o_3 (.clk(clk), .rst_n(rst_n), .d(L700x3_o_s2[2806:0]), .ea(L700x3_o_s2[2807]), .q(L700x3_o_s3[2806:0]), .eq(L700x3_o_s3[2807]));"
+        },
+        {
+          "line": 383,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x3_o_4 (.clk(clk), .rst_n(rst_n), .d(L700x3_o_s3[2806:0]), .ea(L700x3_o_s3[2807]), .q(L700x3_o_s4[2806:0]), .eq(L700x3_o_s4[2807]));"
+        },
+        {
+          "line": 384,
+          "text": "ot_dp_st #(.W(2807)) u_ft_L700x3_o_5 (.clk(clk), .rst_n(rst_n), .d(L700x3_o_s4[2806:0]), .ea(L700x3_o_s4[2807]), .q(L700x3_o[2806:0]), .eq(L700x3_o[2807]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 6,
+      "native_data_widths": [
+        2807
+      ]
+    },
+    {
+      "lane": "L700",
+      "part": "NW_hub",
+      "type": "q_hub_nw",
+      "bus": "L700_i",
+      "slot": null,
+      "candidate_type": "q_hub_nw",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_hub",
+      "actual_selected_module": "hbm_arch_q_hub__q_hub_nw",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_hub__q_hub_nw.sv",
+      "source_sha256": "39e4cf48f23ae3a13679b3a45bc3c62ea68e8a4ed9212886ebb7c45903c6d49b",
+      "native_instances": [
+        {
+          "line": 9597,
+          "text": "ot_dp_st #(.W(2807)) u_bin_L700_i (.clk(clk), .rst_n(rst_n), .d(L700_i[2806:0]), .ea(L700_i[2807]), .q(L700_i_q), .eq(L700_i_eq));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        2807
+      ]
+    },
+    {
+      "lane": "L731",
+      "part": "NW_b113",
+      "type": "q_b113",
+      "bus": "L731_o",
+      "slot": null,
+      "candidate_type": "q_b113",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_b113",
+      "actual_selected_module": "hbm_arch_q_b113",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b113.sv",
+      "source_sha256": "e4fb41f3c4f3f1a99cac6fb232190420338dbb1c47a6c653c4fdb9dda7c9d27e",
+      "native_instances": [
+        {
+          "line": 2080,
+          "text": "ot_dp_st #(.W(596)) u_bout_L731_o (.clk(clk), .rst_n(rst_n), .d({w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[1685:1124], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[101:68]}), .ea(rst_n), .q(L731_o[595:0]), .eq(L731_o[596]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        596
+      ]
+    },
+    {
+      "lane": "L731",
+      "part": "NW_b012",
+      "type": "q_b012__physical_v1",
+      "bus": "L731x1_i",
+      "slot": "L731x1",
+      "candidate_type": "q_b012__physical_v1",
+      "candidate_stations": 6,
+      "native_plan_module": "hbm_arch_q_b012__physical_v1",
+      "actual_selected_module": "hbm_arch_q_b012__physical_v1",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b012__physical_v1.sv",
+      "source_sha256": "ad9726612d9126f9b06e13a8c7abe051c6ec9366110ed3279224c11fb7fb31bf",
+      "native_instances": [
+        {
+          "line": 1040,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_0 (.clk(clk), .rst_n(rst_n), .d(L731x1_i[595:0]), .ea(L731x1_i[596]), .q(L731x1_o_s0[595:0]), .eq(L731x1_o_s0[596]));"
+        },
+        {
+          "line": 1041,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_1 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s0[595:0]), .ea(L731x1_o_s0[596]), .q(L731x1_o_s1[595:0]), .eq(L731x1_o_s1[596]));"
+        },
+        {
+          "line": 1042,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_2 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s1[595:0]), .ea(L731x1_o_s1[596]), .q(L731x1_o_s2[595:0]), .eq(L731x1_o_s2[596]));"
+        },
+        {
+          "line": 1043,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_3 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s2[595:0]), .ea(L731x1_o_s2[596]), .q(L731x1_o_s3[595:0]), .eq(L731x1_o_s3[596]));"
+        },
+        {
+          "line": 1044,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_4 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s3[595:0]), .ea(L731x1_o_s3[596]), .q(L731x1_o_s4[595:0]), .eq(L731x1_o_s4[596]));"
+        },
+        {
+          "line": 1045,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_5 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s4[595:0]), .ea(L731x1_o_s4[596]), .q(L731x1_o[595:0]), .eq(L731x1_o[596]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 6,
+      "native_data_widths": [
+        596
+      ]
+    },
+    {
+      "lane": "L731",
+      "part": "NW_b002",
+      "type": "q_b002__physical_v1",
+      "bus": "L731x2_i",
+      "slot": "L731x2",
+      "candidate_type": "q_b002__physical_v1",
+      "candidate_stations": 10,
+      "native_plan_module": "hbm_arch_q_b002__physical_v1",
+      "actual_selected_module": "hbm_arch_q_b002__physical_v1",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b002__physical_v1.sv",
+      "source_sha256": "644995e1858112bf3e18007df0600dba2d88fef4d56de518dc11f5ef4dcb9f55",
+      "native_instances": [
+        {
+          "line": 925,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_0 (.clk(clk), .rst_n(rst_n), .d(L731x2_i[595:0]), .ea(L731x2_i[596]), .q(L731x2_o_s0[595:0]), .eq(L731x2_o_s0[596]));"
+        },
+        {
+          "line": 926,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_1 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s0[595:0]), .ea(L731x2_o_s0[596]), .q(L731x2_o_s1[595:0]), .eq(L731x2_o_s1[596]));"
+        },
+        {
+          "line": 927,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_2 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s1[595:0]), .ea(L731x2_o_s1[596]), .q(L731x2_o_s2[595:0]), .eq(L731x2_o_s2[596]));"
+        },
+        {
+          "line": 928,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_3 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s2[595:0]), .ea(L731x2_o_s2[596]), .q(L731x2_o_s3[595:0]), .eq(L731x2_o_s3[596]));"
+        },
+        {
+          "line": 929,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_4 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s3[595:0]), .ea(L731x2_o_s3[596]), .q(L731x2_o_s4[595:0]), .eq(L731x2_o_s4[596]));"
+        },
+        {
+          "line": 930,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_5 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s4[595:0]), .ea(L731x2_o_s4[596]), .q(L731x2_o_s5[595:0]), .eq(L731x2_o_s5[596]));"
+        },
+        {
+          "line": 931,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_6 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s5[595:0]), .ea(L731x2_o_s5[596]), .q(L731x2_o_s6[595:0]), .eq(L731x2_o_s6[596]));"
+        },
+        {
+          "line": 932,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_7 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s6[595:0]), .ea(L731x2_o_s6[596]), .q(L731x2_o_s7[595:0]), .eq(L731x2_o_s7[596]));"
+        },
+        {
+          "line": 933,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_8 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s7[595:0]), .ea(L731x2_o_s7[596]), .q(L731x2_o[595:0]), .eq(L731x2_o[596]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 9,
+      "native_data_widths": [
+        596
+      ]
+    },
+    {
+      "lane": "L731",
+      "part": "NW_su20",
+      "type": "q_su20__physical_v1",
+      "bus": "L731_i",
+      "slot": null,
+      "candidate_type": "q_su20__physical_v1",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_su20__physical_v1",
+      "actual_selected_module": "hbm_arch_q_su20__physical_v1",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_su20__physical_v1.sv",
+      "source_sha256": "a0c67734120648e888fc7f3e18d672ad450aaff66b36690dd12db9ed42138ee2",
+      "native_instances": [
+        {
+          "line": 2404,
+          "text": "ot_dp_st #(.W(596)) u_bin_L731_i (.clk(clk), .rst_n(rst_n), .d(L731_i[595:0]), .ea(L731_i[596]), .q(L731_i_q), .eq(L731_i_eq));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        596
+      ]
+    },
+    {
+      "lane": "L731m",
+      "part": "NE_b113",
+      "type": "q_b113__physical_v1",
+      "bus": "L731_o",
+      "slot": null,
+      "candidate_type": "q_b113__physical_v1",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_b113__physical_v1",
+      "actual_selected_module": "hbm_arch_q_b113__physical_v1",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b113__physical_v1.sv",
+      "source_sha256": "fe3aab1ab6fa2fce5d695659c2950998068eb931985361be687197022875fd32",
+      "native_instances": [
+        {
+          "line": 2080,
+          "text": "ot_dp_st #(.W(596)) u_bout_L731_o (.clk(clk), .rst_n(rst_n), .d({w_u_sfucore_Q_ctl_u_core_procdff_66921_Q[1685:1124], w_u_sfucore_Q_ctl_u_core_procdff_66916_Q[101:68]}), .ea(rst_n), .q(L731_o[595:0]), .eq(L731_o[596]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        596
+      ]
+    },
+    {
+      "lane": "L731m",
+      "part": "NE_b012",
+      "type": "q_b012",
+      "bus": "L731x1_i",
+      "slot": "L731x1",
+      "candidate_type": "q_b012",
+      "candidate_stations": 6,
+      "native_plan_module": "hbm_arch_q_b012",
+      "actual_selected_module": "hbm_arch_q_b012",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b012.sv",
+      "source_sha256": "c1f27da8c7696dfc69ce7671f7830d28b7ba50dad616837915e3f1e69800ccf3",
+      "native_instances": [
+        {
+          "line": 1040,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_0 (.clk(clk), .rst_n(rst_n), .d(L731x1_i[595:0]), .ea(L731x1_i[596]), .q(L731x1_o_s0[595:0]), .eq(L731x1_o_s0[596]));"
+        },
+        {
+          "line": 1041,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_1 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s0[595:0]), .ea(L731x1_o_s0[596]), .q(L731x1_o_s1[595:0]), .eq(L731x1_o_s1[596]));"
+        },
+        {
+          "line": 1042,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_2 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s1[595:0]), .ea(L731x1_o_s1[596]), .q(L731x1_o_s2[595:0]), .eq(L731x1_o_s2[596]));"
+        },
+        {
+          "line": 1043,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_3 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s2[595:0]), .ea(L731x1_o_s2[596]), .q(L731x1_o_s3[595:0]), .eq(L731x1_o_s3[596]));"
+        },
+        {
+          "line": 1044,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_4 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s3[595:0]), .ea(L731x1_o_s3[596]), .q(L731x1_o_s4[595:0]), .eq(L731x1_o_s4[596]));"
+        },
+        {
+          "line": 1045,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x1_o_5 (.clk(clk), .rst_n(rst_n), .d(L731x1_o_s4[595:0]), .ea(L731x1_o_s4[596]), .q(L731x1_o[595:0]), .eq(L731x1_o[596]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 6,
+      "native_data_widths": [
+        596
+      ]
+    },
+    {
+      "lane": "L731m",
+      "part": "NE_b002",
+      "type": "q_b002",
+      "bus": "L731x2_i",
+      "slot": "L731x2",
+      "candidate_type": "q_b002",
+      "candidate_stations": 10,
+      "native_plan_module": "hbm_arch_q_b002",
+      "actual_selected_module": "hbm_arch_q_b002",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_b002.sv",
+      "source_sha256": "ad91d025242fc322da40b2207677b4a8dd0366382e13aeafdd77b719d1e5a57c",
+      "native_instances": [
+        {
+          "line": 925,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_0 (.clk(clk), .rst_n(rst_n), .d(L731x2_i[595:0]), .ea(L731x2_i[596]), .q(L731x2_o_s0[595:0]), .eq(L731x2_o_s0[596]));"
+        },
+        {
+          "line": 926,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_1 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s0[595:0]), .ea(L731x2_o_s0[596]), .q(L731x2_o_s1[595:0]), .eq(L731x2_o_s1[596]));"
+        },
+        {
+          "line": 927,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_2 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s1[595:0]), .ea(L731x2_o_s1[596]), .q(L731x2_o_s2[595:0]), .eq(L731x2_o_s2[596]));"
+        },
+        {
+          "line": 928,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_3 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s2[595:0]), .ea(L731x2_o_s2[596]), .q(L731x2_o_s3[595:0]), .eq(L731x2_o_s3[596]));"
+        },
+        {
+          "line": 929,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_4 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s3[595:0]), .ea(L731x2_o_s3[596]), .q(L731x2_o_s4[595:0]), .eq(L731x2_o_s4[596]));"
+        },
+        {
+          "line": 930,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_5 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s4[595:0]), .ea(L731x2_o_s4[596]), .q(L731x2_o_s5[595:0]), .eq(L731x2_o_s5[596]));"
+        },
+        {
+          "line": 931,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_6 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s5[595:0]), .ea(L731x2_o_s5[596]), .q(L731x2_o_s6[595:0]), .eq(L731x2_o_s6[596]));"
+        },
+        {
+          "line": 932,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_7 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s6[595:0]), .ea(L731x2_o_s6[596]), .q(L731x2_o_s7[595:0]), .eq(L731x2_o_s7[596]));"
+        },
+        {
+          "line": 933,
+          "text": "ot_dp_st #(.W(596)) u_ft_L731x2_o_8 (.clk(clk), .rst_n(rst_n), .d(L731x2_o_s7[595:0]), .ea(L731x2_o_s7[596]), .q(L731x2_o[595:0]), .eq(L731x2_o[596]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 9,
+      "native_data_widths": [
+        596
+      ]
+    },
+    {
+      "lane": "L731m",
+      "part": "NE_su20",
+      "type": "q_su20",
+      "bus": "L731_i",
+      "slot": null,
+      "candidate_type": "q_su20",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_su20",
+      "actual_selected_module": "hbm_arch_q_su20",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_su20.sv",
+      "source_sha256": "ed262a256fa4b73bc6b319cee06c11acd34a9877220178694a87b7bc2af3f54a",
+      "native_instances": [
+        {
+          "line": 2396,
+          "text": "ot_dp_st #(.W(596)) u_bin_L731_i (.clk(clk), .rst_n(rst_n), .d(L731_i[595:0]), .ea(L731_i[596]), .q(L731_i_q), .eq(L731_i_eq));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        596
+      ]
+    },
+    {
+      "lane": "L96m",
+      "part": "NE_hub",
+      "type": "q_hub_ne",
+      "bus": "L96_o",
+      "slot": null,
+      "candidate_type": "q_hub_ne",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_hub",
+      "actual_selected_module": "hbm_arch_q_hub__q_hub_ne",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_hub__q_hub_ne.sv",
+      "source_sha256": "c9243b4409d7b20495d6fcf8df3520a41b5948816ed81729fd67850e656d90fa",
+      "native_instances": [
+        {
+          "line": 9195,
+          "text": "ot_dp_st #(.W(22)) u_bout_L96_o (.clk(clk), .rst_n(rst_n), .d({w_u_svg_Q3_run_done[0], w_u_svg_Q2_run_done[0], w_u_svg_Q1_run_done[0], w_u_svg_Q0_run_done[0], w_u_obs_Q_r_v[0], w_u_obs_Q_r_idx[7:0], w_u_obs_Q_r_d[31:23]}), .ea(rst_n), .q(L96_o[21:0]), .eq(L96_o[22]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        22
+      ]
+    },
+    {
+      "lane": "L96m",
+      "part": "root",
+      "type": "root",
+      "bus": "L96mx1_i",
+      "slot": "L96mx1",
+      "candidate_type": "root",
+      "candidate_stations": 10,
+      "native_plan_module": "hbm_arch_root",
+      "actual_selected_module": "hbm_arch_root",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_root.sv",
+      "source_sha256": "c87ff7e4a3edb11fb76278955939e5e993034164a940d4ca366cd80f294c2505",
+      "native_instances": [
+        {
+          "line": 2151,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_0 (.clk(clk), .rst_n(rst_n), .d(L96mx1_i[21:0]), .ea(L96mx1_i[22]), .q(L96mx1_o_s0[21:0]), .eq(L96mx1_o_s0[22]));"
+        },
+        {
+          "line": 2152,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_1 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s0[21:0]), .ea(L96mx1_o_s0[22]), .q(L96mx1_o_s1[21:0]), .eq(L96mx1_o_s1[22]));"
+        },
+        {
+          "line": 2153,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_2 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s1[21:0]), .ea(L96mx1_o_s1[22]), .q(L96mx1_o_s2[21:0]), .eq(L96mx1_o_s2[22]));"
+        },
+        {
+          "line": 2154,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_3 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s2[21:0]), .ea(L96mx1_o_s2[22]), .q(L96mx1_o_s3[21:0]), .eq(L96mx1_o_s3[22]));"
+        },
+        {
+          "line": 2155,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_4 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s3[21:0]), .ea(L96mx1_o_s3[22]), .q(L96mx1_o_s4[21:0]), .eq(L96mx1_o_s4[22]));"
+        },
+        {
+          "line": 2156,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_5 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s4[21:0]), .ea(L96mx1_o_s4[22]), .q(L96mx1_o_s5[21:0]), .eq(L96mx1_o_s5[22]));"
+        },
+        {
+          "line": 2157,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_6 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s5[21:0]), .ea(L96mx1_o_s5[22]), .q(L96mx1_o_s6[21:0]), .eq(L96mx1_o_s6[22]));"
+        },
+        {
+          "line": 2158,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_7 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s6[21:0]), .ea(L96mx1_o_s6[22]), .q(L96mx1_o_s7[21:0]), .eq(L96mx1_o_s7[22]));"
+        },
+        {
+          "line": 2159,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_8 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s7[21:0]), .ea(L96mx1_o_s7[22]), .q(L96mx1_o_s8[21:0]), .eq(L96mx1_o_s8[22]));"
+        },
+        {
+          "line": 2160,
+          "text": "ot_dp_st #(.W(22)) u_ft_L96mx1_o_9 (.clk(clk), .rst_n(rst_n), .d(L96mx1_o_s8[21:0]), .ea(L96mx1_o_s8[22]), .q(L96mx1_o[21:0]), .eq(L96mx1_o[22]));"
+        }
+      ],
+      "other_native_instances": [],
+      "native_registered_edges": 10,
+      "native_data_widths": [
+        22
+      ]
+    },
+    {
+      "lane": "L96m",
+      "part": "NW_hub",
+      "type": "q_hub_nw",
+      "bus": "L96_i",
+      "slot": null,
+      "candidate_type": "q_hub_nw",
+      "candidate_stations": null,
+      "native_plan_module": "hbm_arch_q_hub",
+      "actual_selected_module": "hbm_arch_q_hub__q_hub_nw",
+      "native_source": "/srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/stage13/bound/hbm_arch_q_hub__q_hub_nw.sv",
+      "source_sha256": "39e4cf48f23ae3a13679b3a45bc3c62ea68e8a4ed9212886ebb7c45903c6d49b",
+      "native_instances": [
+        {
+          "line": 9610,
+          "text": "ot_dp_st #(.W(22)) u_bin_L96_i (.clk(clk), .rst_n(rst_n), .d(L96_i[21:0]), .ea(L96_i[22]), .q(L96_i_b), .eq(L96_i_eb));"
+        }
+      ],
+      "other_native_instances": [
+        {
+          "line": 9611,
+          "text": "ot_dp_dly #(.W(23), .D(7)) u_lpad_L96_i (.clk(clk), .d({L96_i_eb, L96_i_b}), .q({L96_i_eq, L96_i_q}));  // lane pad: latency table 19 cycles"
+        }
+      ],
+      "native_registered_edges": 1,
+      "native_data_widths": [
+        22
+      ]
+    }
+  ]
+}

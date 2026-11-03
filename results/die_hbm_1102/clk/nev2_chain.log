@@ -1,0 +1,20 @@
+DRT ended Mon Nov  2 18:49:29 PST 2026
+	Page size (bytes): 4096
+	Exit status: 0
+EXIT 139
+[INFO DRT-0199]   Number of violations = 0.
+0
+Running as unit: dhbm58-gate-nev2.service
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 5min 59.495s
+             CPU time consumed: 5min 55.535s
+                   Memory peak: 2.1G (swap: 0B)
+gate_A_main_nev2 {'tt_setup_ps': 93.69, 'ff_hold_ps': None, 'contract_violations': 0, 'verdict': 'BLOCKED(kits)', 'reasons': ['396182 hold pairs without signed real views (OWNER 12.19)'], 'skew_max_ps': 5614.27} landed PASS {'TT': 109.3, 'FF': 144.2}
+   intra 153.16 PASS 162567
+   seam 155.63 PASS 9308
+gate_A_main_nev2 TT NW_hub taps 374 late min 8709.4 max 8954.7 spread 245.3
+gate_A_main_nev2 TT NE_hub taps 371 late min 5048.4 max 5265.4 spread 217.0
+gate_A_main_nev2 FF NW_hub taps 374 late min 7495.1 max 7692.5 spread 197.4
+gate_A_main_nev2 FF NE_hub taps 371 late min 4326.9 max 4495.4 spread 168.5
+CHAIN_DONE Mon Nov  2 18:56:42 PST 2026

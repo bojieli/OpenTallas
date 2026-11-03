@@ -1,0 +1,2046 @@
+{
+  "status": "EXACT_PIN_DELTA_ONLY_NOT_SOURCE_OR_PROGRAMME_QUALIFICATION",
+  "old4562": {
+    "host": "epyc2",
+    "path": "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/items/kv3_hroot/attempt_3/gen/kv3_hroot",
+    "freeze": {
+      "schema": "opentallas.partition_freeze.v1",
+      "die": "qwen_kvsys",
+      "type": "kv3_hroot",
+      "outline_um": [
+        1900.8,
+        838.08
+      ],
+      "pins_file": "plan_pins.json",
+      "pins_sha256": "400185677cc387bd54a4ce5b470ee3504b2ffb6319072c628dfcc2cb68013f2d",
+      "pins_canon_sha256": "69244e6554efae1fc80cfce69b658a95014742516213c8b9f94ebf16f9ede129",
+      "pins": 4562
+    },
+    "sha256": {
+      "plan_pins.json": "400185677cc387bd54a4ce5b470ee3504b2ffb6319072c628dfcc2cb68013f2d",
+      "freeze.json": "8f16b2aee7a64ddf93be83a64d246faa4f0d60ae42e2c8a7471189961876bf02",
+      "kv3_hroot_part_bound.sv": "ec589b80383271db8b0da13fffae25cbf656561d065f9373db33e813387b3789",
+      "kv3_hroot_part.sv": "1b2c212961565e112c84296c57cd2a86de4d8919ba540fa5abad3da263ff54a2"
+    }
+  },
+  "current4596": {
+    "freeze": {
+      "schema": "opentallas.partition_freeze.v1",
+      "die": "qwen_kvsys",
+      "type": "kv3_hroot",
+      "outline_um": [
+        1900.8,
+        838.08
+      ],
+      "pins_file": "plan_pins.json",
+      "pins_sha256": "394c4b592697a318f984341faa57a13560d8544f2e61dc9fc5e32a885dc72a5c",
+      "pins_canon_sha256": "afd12df6abf569b95c62e6c0ec832e4d589878e0f32e00bcc1d3023f6e9e8c03",
+      "pins": 4596
+    },
+    "freeze_sha256": "23b8767685389980dd2d301ea3a45d5af21d4269089f86990b2be08740ba073d",
+    "geom_sha256": "d38d1ce6d3f140bbd7a221e7fd0a6ca8e0cf1b5f8b028a8fe05bfa1a5b0dadca",
+    "full_current_source_readset_missing": true
+  },
+  "counts": {
+    "old_plan_pins": 4562,
+    "current_signal_pins": 4596,
+    "current_physical_PG_pins_excluded": [
+      "VSS",
+      "VDD"
+    ],
+    "retained_exact_name_after_scalar_render_normalization": 4562,
+    "added": 34,
+    "removed": 0,
+    "direction_changes": 0,
+    "common_pin_layer_or_coordinate_changes": 0,
+    "scalar_plan_vs_graph_rendering_pairs": 104
+  },
+  "added_pins": [
+    {
+      "name": "clk_t5",
+      "physical_graph_name": "clk_t5",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1890.144,
+      "y": 751.328,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 522
+    },
+    {
+      "name": "clk_t6",
+      "physical_graph_name": "clk_t6",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 768.48,
+      "y": 757.664,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 4
+    },
+    {
+      "name": "clk_t7",
+      "physical_graph_name": "clk_t7",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 69.6,
+      "y": 596.128,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 2
+    },
+    {
+      "name": "clk_t8",
+      "physical_graph_name": "clk_t8",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1244.832,
+      "y": 672.736,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 242
+    },
+    {
+      "name": "clk_t9",
+      "physical_graph_name": "clk_t9",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1556.576,
+      "y": 399.072,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 1476
+    },
+    {
+      "name": "clk_t10",
+      "physical_graph_name": "clk_t10",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1223.904,
+      "y": 344.8,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 348
+    },
+    {
+      "name": "clk_t11",
+      "physical_graph_name": "clk_t11",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1890.144,
+      "y": 296.416,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 1345
+    },
+    {
+      "name": "clk_t12",
+      "physical_graph_name": "clk_t12",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 584.608,
+      "y": 492.448,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 3
+    },
+    {
+      "name": "clk_t13",
+      "physical_graph_name": "clk_t13",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1598.88,
+      "y": 821.856,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 149
+    },
+    {
+      "name": "clk_t14",
+      "physical_graph_name": "clk_t14",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 985.44,
+      "y": 492.448,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 567
+    },
+    {
+      "name": "clk_t15",
+      "physical_graph_name": "clk_t15",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 768.48,
+      "y": 358.56,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 13
+    },
+    {
+      "name": "clk_t16",
+      "physical_graph_name": "clk_t16",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 422.88,
+      "y": 578.848,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 4
+    },
+    {
+      "name": "clk_t17",
+      "physical_graph_name": "clk_t17",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 924.0,
+      "y": 277.984,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 753
+    },
+    {
+      "name": "clk_t18",
+      "physical_graph_name": "clk_t18",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1890.144,
+      "y": 524.384,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 260
+    },
+    {
+      "name": "clk_t19",
+      "physical_graph_name": "clk_t19",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 241.44,
+      "y": 509.728,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 3
+    },
+    {
+      "name": "clk_t20",
+      "physical_graph_name": "clk_t20",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1624.8,
+      "y": 561.568,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 490
+    },
+    {
+      "name": "clk_t21",
+      "physical_graph_name": "clk_t21",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 517.92,
+      "y": 336.928,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 7
+    },
+    {
+      "name": "clk_t22",
+      "physical_graph_name": "clk_t22",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 930.656,
+      "y": 658.272,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 43
+    },
+    {
+      "name": "clk_t23",
+      "physical_graph_name": "clk_t23",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1286.88,
+      "y": 483.872,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 52
+    },
+    {
+      "name": "clk_t24",
+      "physical_graph_name": "clk_t24",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1184.352,
+      "y": 821.856,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 3
+    },
+    {
+      "name": "clk_t25",
+      "physical_graph_name": "clk_t25",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1588.32,
+      "y": 223.008,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 327
+    },
+    {
+      "name": "clk_t26",
+      "physical_graph_name": "clk_t26",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1877.28,
+      "y": 10.272,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 817
+    },
+    {
+      "name": "clk_t27",
+      "physical_graph_name": "clk_t27",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 761.824,
+      "y": 10.272,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 92
+    },
+    {
+      "name": "clk_t28",
+      "physical_graph_name": "clk_t28",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1138.464,
+      "y": 10.272,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 82
+    },
+    {
+      "name": "clk_t29",
+      "physical_graph_name": "clk_t29",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 385.248,
+      "y": 10.272,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 81
+    },
+    {
+      "name": "clk_t30",
+      "physical_graph_name": "clk_t30",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1548.768,
+      "y": 10.272,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 59
+    },
+    {
+      "name": "clk_t31",
+      "physical_graph_name": "clk_t31",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 785.76,
+      "y": 578.848,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 6
+    },
+    {
+      "name": "clk_t32",
+      "physical_graph_name": "clk_t32",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 8.16,
+      "y": 17.312,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 2
+    },
+    {
+      "name": "clk_t33",
+      "physical_graph_name": "clk_t33",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1158.24,
+      "y": 578.848,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 12
+    },
+    {
+      "name": "clk_t34",
+      "physical_graph_name": "clk_t34",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1800.288,
+      "y": 659.296,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 128
+    },
+    {
+      "name": "clk_t35",
+      "physical_graph_name": "clk_t35",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1800.288,
+      "y": 441.76,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 1402
+    },
+    {
+      "name": "clk_t36",
+      "physical_graph_name": "clk_t36",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1275.104,
+      "y": 223.008,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 224
+    },
+    {
+      "name": "clk_t37",
+      "physical_graph_name": "clk_t37",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1859.744,
+      "y": 498.464,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 1057
+    },
+    {
+      "name": "clk_t38",
+      "physical_graph_name": "clk_t38",
+      "direction": "INPUT",
+      "ODB_signal_type": "SIGNAL",
+      "layer": "M7",
+      "x": 1859.744,
+      "y": 610.784,
+      "width": 1,
+      "classified_role": "Additional pre-CTS clock spine tap input",
+      "role_evidence": "existing native clk_t1..4 declaration plus current actual graph clock classification",
+      "current_preCTS_grid_load": 791
+    }
+  ],
+  "removed_pins": [],
+  "scalar_rendering_pairs": [
+    {
+      "physical_graph": "cland_fstart_in_ft0_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft0_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft10_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft10_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft11_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft11_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft12_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft12_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft13_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft13_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft1_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft1_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft2_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft2_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft3_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft3_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft4_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft4_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft5_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft5_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft6_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft6_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft7_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft7_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft8_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft8_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_ft9_i[0]",
+      "old_plan_pin": "cland_fstart_in_ft9_i"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_fch_pc_Q_N_q[0]",
+      "old_plan_pin": "cland_fstart_in_i_fch_pc_Q_N_q"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_host_die_rst_n[0]",
+      "old_plan_pin": "cland_fstart_in_i_host_die_rst_n"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_host_hbm_rst_n[0]",
+      "old_plan_pin": "cland_fstart_in_i_host_hbm_rst_n"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_idsrc_Q_y[0]",
+      "old_plan_pin": "cland_fstart_in_i_idsrc_Q_y"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_kvpc_Q_N_o_next[0]",
+      "old_plan_pin": "cland_fstart_in_i_kvpc_Q_N_o_next"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_kvpc_Q_N_pc__fo[0]",
+      "old_plan_pin": "cland_fstart_in_i_kvpc_Q_N_pc__fo"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_kvs_ctl_o_hroot_Q[0]",
+      "old_plan_pin": "cland_fstart_in_i_kvs_ctl_o_hroot_Q"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_seq__g_fan_N__u_fan_kc[0]",
+      "old_plan_pin": "cland_fstart_in_i_seq__g_fan_N__u_fan_kc"
+    },
+    {
+      "physical_graph": "cland_fstart_in_i_slg_Q_N_o_ctl[0]",
+      "old_plan_pin": "cland_fstart_in_i_slg_Q_N_o_ctl"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft0_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft0_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft10_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft10_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft11_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft11_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft12_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft12_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft13_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft13_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft1_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft1_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft2_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft2_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft3_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft3_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft4_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft4_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft5_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft5_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft6_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft6_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft7_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft7_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft8_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft8_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_ft9_o[0]",
+      "old_plan_pin": "cland_fstart_out_ft9_o"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_fch_hroot_Q_q[0]",
+      "old_plan_pin": "cland_fstart_out_o_fch_hroot_Q_q"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_host_hbm_rst_n[0]",
+      "old_plan_pin": "cland_fstart_out_o_host_hbm_rst_n"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_host_hbm_rst_n_d1[0]",
+      "old_plan_pin": "cland_fstart_out_o_host_hbm_rst_n_d1"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_idhr_Q_y[0]",
+      "old_plan_pin": "cland_fstart_out_o_idhr_Q_y"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_kc_Q_kf[0]",
+      "old_plan_pin": "cland_fstart_out_o_kc_Q_kf"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_kc_Q_ko[0]",
+      "old_plan_pin": "cland_fstart_out_o_kc_Q_ko"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_kvs_hroot_Q_o_cN[0]",
+      "old_plan_pin": "cland_fstart_out_o_kvs_hroot_Q_o_cN"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_kvs_hroot_Q_o_chN[0]",
+      "old_plan_pin": "cland_fstart_out_o_kvs_hroot_Q_o_chN"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_kvs_hroot_Q_o_ctl[0]",
+      "old_plan_pin": "cland_fstart_out_o_kvs_hroot_Q_o_ctl"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_kvs_hroot_Q_o_emb[0]",
+      "old_plan_pin": "cland_fstart_out_o_kvs_hroot_Q_o_emb"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_kvs_hroot_Q_o_kg[0]",
+      "old_plan_pin": "cland_fstart_out_o_kvs_hroot_Q_o_kg"
+    },
+    {
+      "physical_graph": "cland_fstart_out_o_kvs_hroot_Q_o_pc[0]",
+      "old_plan_pin": "cland_fstart_out_o_kvs_hroot_Q_o_pc"
+    },
+    {
+      "physical_graph": "cland_tstart_in[0]",
+      "old_plan_pin": "cland_tstart_in"
+    },
+    {
+      "physical_graph": "cland_up_fault[0]",
+      "old_plan_pin": "cland_up_fault"
+    },
+    {
+      "physical_graph": "cland_up_ready[0]",
+      "old_plan_pin": "cland_up_ready"
+    },
+    {
+      "physical_graph": "fclk_in_ft0_i[0]",
+      "old_plan_pin": "fclk_in_ft0_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft10_i[0]",
+      "old_plan_pin": "fclk_in_ft10_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft11_i[0]",
+      "old_plan_pin": "fclk_in_ft11_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft12_i[0]",
+      "old_plan_pin": "fclk_in_ft12_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft13_i[0]",
+      "old_plan_pin": "fclk_in_ft13_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft1_i[0]",
+      "old_plan_pin": "fclk_in_ft1_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft2_i[0]",
+      "old_plan_pin": "fclk_in_ft2_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft3_i[0]",
+      "old_plan_pin": "fclk_in_ft3_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft4_i[0]",
+      "old_plan_pin": "fclk_in_ft4_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft5_i[0]",
+      "old_plan_pin": "fclk_in_ft5_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft6_i[0]",
+      "old_plan_pin": "fclk_in_ft6_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft7_i[0]",
+      "old_plan_pin": "fclk_in_ft7_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft8_i[0]",
+      "old_plan_pin": "fclk_in_ft8_i"
+    },
+    {
+      "physical_graph": "fclk_in_ft9_i[0]",
+      "old_plan_pin": "fclk_in_ft9_i"
+    },
+    {
+      "physical_graph": "fclk_in_i_fch_pc_Q_N_q[0]",
+      "old_plan_pin": "fclk_in_i_fch_pc_Q_N_q"
+    },
+    {
+      "physical_graph": "fclk_in_i_host_die_rst_n[0]",
+      "old_plan_pin": "fclk_in_i_host_die_rst_n"
+    },
+    {
+      "physical_graph": "fclk_in_i_host_hbm_rst_n[0]",
+      "old_plan_pin": "fclk_in_i_host_hbm_rst_n"
+    },
+    {
+      "physical_graph": "fclk_in_i_idsrc_Q_y[0]",
+      "old_plan_pin": "fclk_in_i_idsrc_Q_y"
+    },
+    {
+      "physical_graph": "fclk_in_i_kvpc_Q_N_o_next[0]",
+      "old_plan_pin": "fclk_in_i_kvpc_Q_N_o_next"
+    },
+    {
+      "physical_graph": "fclk_in_i_kvpc_Q_N_pc__fo[0]",
+      "old_plan_pin": "fclk_in_i_kvpc_Q_N_pc__fo"
+    },
+    {
+      "physical_graph": "fclk_in_i_kvs_ctl_o_hroot_Q[0]",
+      "old_plan_pin": "fclk_in_i_kvs_ctl_o_hroot_Q"
+    },
+    {
+      "physical_graph": "fclk_in_i_seq__g_fan_N__u_fan_kc[0]",
+      "old_plan_pin": "fclk_in_i_seq__g_fan_N__u_fan_kc"
+    },
+    {
+      "physical_graph": "fclk_in_i_slg_Q_N_o_ctl[0]",
+      "old_plan_pin": "fclk_in_i_slg_Q_N_o_ctl"
+    },
+    {
+      "physical_graph": "fclk_out_cland_up[0]",
+      "old_plan_pin": "fclk_out_cland_up"
+    },
+    {
+      "physical_graph": "fclk_out_ft0_o[0]",
+      "old_plan_pin": "fclk_out_ft0_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft10_o[0]",
+      "old_plan_pin": "fclk_out_ft10_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft11_o[0]",
+      "old_plan_pin": "fclk_out_ft11_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft12_o[0]",
+      "old_plan_pin": "fclk_out_ft12_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft13_o[0]",
+      "old_plan_pin": "fclk_out_ft13_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft1_o[0]",
+      "old_plan_pin": "fclk_out_ft1_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft2_o[0]",
+      "old_plan_pin": "fclk_out_ft2_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft3_o[0]",
+      "old_plan_pin": "fclk_out_ft3_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft4_o[0]",
+      "old_plan_pin": "fclk_out_ft4_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft5_o[0]",
+      "old_plan_pin": "fclk_out_ft5_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft6_o[0]",
+      "old_plan_pin": "fclk_out_ft6_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft7_o[0]",
+      "old_plan_pin": "fclk_out_ft7_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft8_o[0]",
+      "old_plan_pin": "fclk_out_ft8_o"
+    },
+    {
+      "physical_graph": "fclk_out_ft9_o[0]",
+      "old_plan_pin": "fclk_out_ft9_o"
+    },
+    {
+      "physical_graph": "fclk_out_o_fch_hroot_Q_q[0]",
+      "old_plan_pin": "fclk_out_o_fch_hroot_Q_q"
+    },
+    {
+      "physical_graph": "fclk_out_o_host_hbm_rst_n[0]",
+      "old_plan_pin": "fclk_out_o_host_hbm_rst_n"
+    },
+    {
+      "physical_graph": "fclk_out_o_host_hbm_rst_n_d1[0]",
+      "old_plan_pin": "fclk_out_o_host_hbm_rst_n_d1"
+    },
+    {
+      "physical_graph": "fclk_out_o_idhr_Q_y[0]",
+      "old_plan_pin": "fclk_out_o_idhr_Q_y"
+    },
+    {
+      "physical_graph": "fclk_out_o_kc_Q_kf[0]",
+      "old_plan_pin": "fclk_out_o_kc_Q_kf"
+    },
+    {
+      "physical_graph": "fclk_out_o_kc_Q_ko[0]",
+      "old_plan_pin": "fclk_out_o_kc_Q_ko"
+    },
+    {
+      "physical_graph": "fclk_out_o_kvs_hroot_Q_o_cN[0]",
+      "old_plan_pin": "fclk_out_o_kvs_hroot_Q_o_cN"
+    },
+    {
+      "physical_graph": "fclk_out_o_kvs_hroot_Q_o_chN[0]",
+      "old_plan_pin": "fclk_out_o_kvs_hroot_Q_o_chN"
+    },
+    {
+      "physical_graph": "fclk_out_o_kvs_hroot_Q_o_ctl[0]",
+      "old_plan_pin": "fclk_out_o_kvs_hroot_Q_o_ctl"
+    },
+    {
+      "physical_graph": "fclk_out_o_kvs_hroot_Q_o_emb[0]",
+      "old_plan_pin": "fclk_out_o_kvs_hroot_Q_o_emb"
+    },
+    {
+      "physical_graph": "fclk_out_o_kvs_hroot_Q_o_kg[0]",
+      "old_plan_pin": "fclk_out_o_kvs_hroot_Q_o_kg"
+    },
+    {
+      "physical_graph": "fclk_out_o_kvs_hroot_Q_o_pc[0]",
+      "old_plan_pin": "fclk_out_o_kvs_hroot_Q_o_pc"
+    },
+    {
+      "physical_graph": "start_i[0]",
+      "old_plan_pin": "start_i"
+    },
+    {
+      "physical_graph": "strap_ca_efall[0]",
+      "old_plan_pin": "strap_ca_efall"
+    }
+  ],
+  "all_old_declarations": {
+    "clk": {
+      "direction": "INPUT",
+      "range": "",
+      "width": 1,
+      "declared_role_comment": "clock entry: spine tap 0"
+    },
+    "clk_t1": {
+      "direction": "INPUT",
+      "range": "",
+      "width": 1,
+      "declared_role_comment": "R4 spine tap (clock_taps.tcl moves the nearest sinks onto it)"
+    },
+    "clk_t2": {
+      "direction": "INPUT",
+      "range": "",
+      "width": 1,
+      "declared_role_comment": "R4 spine tap (clock_taps.tcl moves the nearest sinks onto it)"
+    },
+    "clk_t3": {
+      "direction": "INPUT",
+      "range": "",
+      "width": 1,
+      "declared_role_comment": "R4 spine tap (clock_taps.tcl moves the nearest sinks onto it)"
+    },
+    "clk_t4": {
+      "direction": "INPUT",
+      "range": "",
+      "width": 1,
+      "declared_role_comment": "R4 spine tap (clock_taps.tcl moves the nearest sinks onto it)"
+    },
+    "arst_n": {
+      "direction": "INPUT",
+      "range": "",
+      "width": 1,
+      "declared_role_comment": "die reset"
+    },
+    "o_fch_hroot_Q_q": {
+      "direction": "OUTPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "i_host_die_rst_n": {
+      "direction": "INPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "i_host_hbm_rst_n": {
+      "direction": "INPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "i_idsrc_Q_y": {
+      "direction": "INPUT",
+      "range": "[2:0]",
+      "width": 3,
+      "declared_role_comment": "plan bus: 2 data + epoch [2]"
+    },
+    "o_kc_Q_kf": {
+      "direction": "OUTPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "i_kvs_ctl_o_hroot_Q": {
+      "direction": "INPUT",
+      "range": "[1118:0]",
+      "width": 1119,
+      "declared_role_comment": "plan bus: 1118 data + epoch [1118]"
+    },
+    "o_kvs_hroot_Q_o_cN": {
+      "direction": "OUTPUT",
+      "range": "[40:0]",
+      "width": 41,
+      "declared_role_comment": "plan bus: 40 data + epoch [40]"
+    },
+    "o_kvs_hroot_Q_o_ctl": {
+      "direction": "OUTPUT",
+      "range": "[144:0]",
+      "width": 145,
+      "declared_role_comment": "plan bus: 144 data + epoch [144]"
+    },
+    "o_kvs_hroot_Q_o_emb": {
+      "direction": "OUTPUT",
+      "range": "[299:0]",
+      "width": 300,
+      "declared_role_comment": "plan bus: 299 data + epoch [299]"
+    },
+    "o_kvs_hroot_Q_o_kg": {
+      "direction": "OUTPUT",
+      "range": "[23:0]",
+      "width": 24,
+      "declared_role_comment": "plan bus: 23 data + epoch [23]"
+    },
+    "i_seq__g_fan_N__u_fan_kc": {
+      "direction": "INPUT",
+      "range": "[33:0]",
+      "width": 34,
+      "declared_role_comment": "plan bus: 33 data + epoch [33]"
+    },
+    "o_host_hbm_rst_n": {
+      "direction": "OUTPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "i_fch_pc_Q_N_q": {
+      "direction": "INPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "o_host_hbm_rst_n_d1": {
+      "direction": "OUTPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "o_idhr_Q_y": {
+      "direction": "OUTPUT",
+      "range": "[2:0]",
+      "width": 3,
+      "declared_role_comment": "plan bus: 2 data + epoch [2]"
+    },
+    "o_kc_Q_ko": {
+      "direction": "OUTPUT",
+      "range": "[33:0]",
+      "width": 34,
+      "declared_role_comment": "plan bus: 33 data + epoch [33]"
+    },
+    "i_kvpc_Q_N_o_next": {
+      "direction": "INPUT",
+      "range": "[299:0]",
+      "width": 300,
+      "declared_role_comment": "plan bus: 299 data + epoch [299]"
+    },
+    "i_kvpc_Q_N_pc__fo": {
+      "direction": "INPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "o_kvs_hroot_Q_o_chN": {
+      "direction": "OUTPUT",
+      "range": "[271:0]",
+      "width": 272,
+      "declared_role_comment": "plan bus: 271 data + epoch [271]"
+    },
+    "o_kvs_hroot_Q_o_pc": {
+      "direction": "OUTPUT",
+      "range": "[780:0]",
+      "width": 781,
+      "declared_role_comment": "plan bus: 780 data + epoch [780]"
+    },
+    "i_slg_Q_N_o_ctl": {
+      "direction": "INPUT",
+      "range": "[144:0]",
+      "width": 145,
+      "declared_role_comment": "plan bus: 144 data + epoch [144]"
+    },
+    "ft0_i": {
+      "direction": "INPUT",
+      "range": "[13:0]",
+      "width": 14,
+      "declared_role_comment": "plan bus: 13 data + epoch [13]"
+    },
+    "ft0_o": {
+      "direction": "OUTPUT",
+      "range": "[13:0]",
+      "width": 14,
+      "declared_role_comment": "plan bus: 13 data + epoch [13]"
+    },
+    "ft1_i": {
+      "direction": "INPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "ft1_o": {
+      "direction": "OUTPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "ft2_i": {
+      "direction": "INPUT",
+      "range": "[291:0]",
+      "width": 292,
+      "declared_role_comment": "plan bus: 291 data + epoch [291]"
+    },
+    "ft2_o": {
+      "direction": "OUTPUT",
+      "range": "[291:0]",
+      "width": 292,
+      "declared_role_comment": "plan bus: 291 data + epoch [291]"
+    },
+    "ft3_i": {
+      "direction": "INPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "ft3_o": {
+      "direction": "OUTPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "ft4_i": {
+      "direction": "INPUT",
+      "range": "[16:0]",
+      "width": 17,
+      "declared_role_comment": "plan bus: 16 data + epoch [16]"
+    },
+    "ft4_o": {
+      "direction": "OUTPUT",
+      "range": "[16:0]",
+      "width": 17,
+      "declared_role_comment": "plan bus: 16 data + epoch [16]"
+    },
+    "ft5_i": {
+      "direction": "INPUT",
+      "range": "[18:0]",
+      "width": 19,
+      "declared_role_comment": "plan bus: 18 data + epoch [18]"
+    },
+    "ft5_o": {
+      "direction": "OUTPUT",
+      "range": "[18:0]",
+      "width": 19,
+      "declared_role_comment": "plan bus: 18 data + epoch [18]"
+    },
+    "ft6_i": {
+      "direction": "INPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft6_o": {
+      "direction": "OUTPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft7_i": {
+      "direction": "INPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft7_o": {
+      "direction": "OUTPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft8_i": {
+      "direction": "INPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "ft8_o": {
+      "direction": "OUTPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "ft9_i": {
+      "direction": "INPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft9_o": {
+      "direction": "OUTPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft10_i": {
+      "direction": "INPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft10_o": {
+      "direction": "OUTPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft11_i": {
+      "direction": "INPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft11_o": {
+      "direction": "OUTPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft12_i": {
+      "direction": "INPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft12_o": {
+      "direction": "OUTPUT",
+      "range": "[32:0]",
+      "width": 33,
+      "declared_role_comment": "plan bus: 32 data + epoch [32]"
+    },
+    "ft13_i": {
+      "direction": "INPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "ft13_o": {
+      "direction": "OUTPUT",
+      "range": "[1:0]",
+      "width": 2,
+      "declared_role_comment": "plan bus: 1 data + epoch [1]"
+    },
+    "start_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft0_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft0_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft10_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft10_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft11_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft11_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft12_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft12_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft13_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft13_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft1_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft1_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft2_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft2_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft3_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft3_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft4_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft4_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft5_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft5_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft6_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft6_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft7_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft7_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft8_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft8_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_ft9_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_ft9_o": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_fch_hroot_Q_q": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_fch_hroot_Q_q": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_host_hbm_rst_n": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_host_hbm_rst_n": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_host_hbm_rst_n_d1": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_host_hbm_rst_n_d1": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_idhr_Q_y": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_idhr_Q_y": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_kc_Q_kf": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_kc_Q_kf": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_kc_Q_ko": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_kc_Q_ko": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_kvs_hroot_Q_o_cN": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_kvs_hroot_Q_o_cN": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_kvs_hroot_Q_o_chN": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_kvs_hroot_Q_o_chN": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_kvs_hroot_Q_o_ctl": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_kvs_hroot_Q_o_ctl": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_kvs_hroot_Q_o_emb": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_kvs_hroot_Q_o_emb": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_kvs_hroot_Q_o_kg": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_kvs_hroot_Q_o_kg": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_o_kvs_hroot_Q_o_pc": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_out_o_kvs_hroot_Q_o_pc": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft0_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft0_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft0_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft10_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft10_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft10_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft11_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft11_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft11_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft12_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft12_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft12_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft13_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft13_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft13_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft1_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft1_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft1_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft2_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft2_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft2_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft3_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft3_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft3_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft4_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft4_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft4_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft5_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft5_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft5_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft6_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft6_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft6_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft7_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft7_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft7_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft8_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft8_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft8_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_ft9_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_ft9_i": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_ft9_i": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_fch_pc_Q_N_q": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_fch_pc_Q_N_q": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_fch_pc_Q_N_q": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_host_die_rst_n": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_host_die_rst_n": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_host_die_rst_n": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_host_hbm_rst_n": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_host_hbm_rst_n": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_host_hbm_rst_n": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_idsrc_Q_y": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_idsrc_Q_y": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_idsrc_Q_y": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_kvpc_Q_N_o_next": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_kvpc_Q_N_o_next": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_kvpc_Q_N_o_next": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_kvpc_Q_N_pc__fo": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_kvpc_Q_N_pc__fo": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_kvpc_Q_N_pc__fo": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_kvs_ctl_o_hroot_Q": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_kvs_ctl_o_hroot_Q": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_kvs_ctl_o_hroot_Q": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_seq__g_fan_N__u_fan_kc": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_seq__g_fan_N__u_fan_kc": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_seq__g_fan_N__u_fan_kc": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_in_i_slg_Q_N_o_ctl": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_fstart_in_i_slg_Q_N_o_ctl": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_k_i_slg_Q_N_o_ctl": {
+      "direction": "INPUT",
+      "range": "[5:0]",
+      "width": 6,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_tstart_in": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_pad": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "strap_ca_efall": {
+      "direction": "INPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_up_ready": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "cland_up_fault": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    },
+    "fclk_out_cland_up": {
+      "direction": "OUTPUT",
+      "range": "[0:0]",
+      "width": 1,
+      "declared_role_comment": "bound-only pin (die IO / reset spine / clock role): not a plan bus"
+    }
+  },
+  "selected_return_interface": {
+    "old_decl": {
+      "direction": "INPUT",
+      "range": "[299:0]",
+      "width": 300,
+      "declared_role_comment": "plan bus: 299 data + epoch [299]"
+    },
+    "current_graph_width": 300,
+    "all_300_names_directions_layers_coordinates_retained": true,
+    "payload_bits": "[298:0]",
+    "physical_reset_epoch_bit": "[299]",
+    "four_selected_plan_lanes": [
+      "L1190_0",
+      "L1252_0",
+      "L1314_0",
+      "L1376_0"
+    ],
+    "shared_type_boundary_only": "Both snapshots type kv3_hroot; actual four instance bind/readset and current internal epoch reset/latency still unjoined."
+  },
+  "interpretation": "Every count delta is a new scalar clock input clk_t5..clk_t38. No physical payload/control/epoch pin additions/removals/direction/width changes appear. All 4562 common pins retain exact layer and coordinates. Scalar [0] rendering is normalized only when the old exact scalar pin exists. This is not an alias of the old source or internal graph to current.",
+  "holds": [
+    "Current complete source/bind readset remains missing.",
+    "Clock tree/root/polarity, internal reset epoch semantics and station latency, source/programme/common-clock availability are not proven by pin identity.",
+    "No source adoption, G0C/bind qualification, old timing/clock transfer, hroot CAD or geometry qualification."
+  ]
+}

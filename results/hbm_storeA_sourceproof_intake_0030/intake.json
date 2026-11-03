@@ -1,0 +1,20 @@
+{
+  "status": "READY_FOR_ONE_ORDINARY_NATIVE_GEN_SYNTH_LEC",
+  "enabled_for_sourceproof_only": true,
+  "model_review": "Parent+agent LOOKED32nativeSRAM/3174preoptFF/6040ABI model; physicalPLACE not released",
+  "resource": {
+    "memory_GB": 8,
+    "threads": 2,
+    "disk_GB": 12,
+    "stages": "GEN,normal RTL/SDC/SELRANGE preflight,SYNTH,inline official LEC only"
+  },
+  "normal_backend_blob": "ac0d42eb58e1626499411c28bdbc5bf0212014dc",
+  "source_input_files": 4,
+  "hard_native_macros": 32,
+  "hard_native_master": "ot_sram_1r1w_256x256_m2_r2c2",
+  "native_master_ABI": "PASS821signal bits in frozenRTL/BB/TT/FF, LEF823inclVDD/VSS",
+  "official_EQ": "NOT_RUN",
+  "reset_contract": "No inherited64/HBM historicalreceipt; newHNXmodule absentcontract. Genuine newbody ordinary formalreset4 is conditional only. Physicalt22/native3/66START stillheld.",
+  "parent_producer_fields": "L730 source event remainsdisabled; realUNPLANNED1742compilercontrol calendar not solved by this provider proof",
+  "PNR_authorized": false
+}

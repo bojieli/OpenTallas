@@ -1,0 +1,144 @@
+"""Joint exact native-site completion of the finite cells that a single-cell move could not place."""
+from pathlib import Path
+import time,subprocess
+old_unit='oth-ubuntu-550012-1793623734.scope'
+probe=subprocess.run(['systemctl','--user','is-active',old_unit],capture_output=True,text=True)
+old_state=probe.stdout.strip()
+if old_state=='active':
+ raise SystemExit('DEFER: original row87 still active; no duplicate permitted')
+if old_state not in ('inactive','failed','unknown'):
+ raise SystemExit('DEFER: original row87 state cannot be resolved; no duplicate permitted')
+solve_start=time.monotonic();total_budget_s=60.0
+script=Path(__file__).with_name('rowprep_greedy.py').read_text().split('# Place the most constrained')[0]
+script=script.replace("P/'final_composed_homes_DISABLED.json'","P/'rowprep_homes.json'")
+exec(compile(script,'rowprep_common','exec'))
+import numpy as np
+from scipy.optimize import milp,Bounds,LinearConstraint
+from scipy.sparse import coo_matrix
+report=json.loads((P/'rowprep_report.json').read_text());seed={names[n] for n in report['failed']};joint=set(seed)
+for i in seed:joint.update(j for j in adj[i] if isinstance(j,int) and j in variables)
+cause=json.loads((P/'finite_obstruction_diagnosis.json').read_text())
+if cause['fresh_shrinking_variable_cells'] or cause['fresh_shrinking_fixed_obstacle_count'] or cause['fresh_shrinking_fixed_reach_anchors'] or cause['dead_PD3_obstacle_involved']:raise ValueError('Old obstruction does not survive actual fresh phase')
+added={r['id'] for r in cause['actual_fixed_ff_blockers']}
+if len(added)!=13:raise ValueError('Targeted real obstacle cohort differs')
+joint.update(added);variables.update(added)
+for i in added:
+ for j in walk(i,False):edges.update(translate(j,i))
+ for j in walk(i,True):edges.update(translate(i,j))
+ name=d.cells[i][6]
+ if name.startswith('u_bound.u_bout_tl/'):
+  m=re.search(r'/q\\\[([0-9]+)\\\]',name)
+  if not m:raise ValueError('Missing exact newly mobile TL bit')
+  p=pins['tl['+m[1]+']'];pin_targets[i]=(p['x'],p['y'])
+joint=sorted(joint);jset=set(joint);ix={i:k for k,i in enumerate(joint)};K=len(joint);N=4*K
+if K!=100:raise ValueError('Targeted component is not exactly100 real FFs')
+edge_subset={(a,b) for a,b in edges if a in jset or b in jset};goal={i:g.ctr(d.cells[i]) for i in joint};cuts=set();history=[]
+fresh={r['name']:r for r in json.loads((P/'fresh_master_changes.json').read_text())};conditional={}
+if any(d.cells[n][6] in fresh for e in edge_subset for n in e if isinstance(n,int)):raise ValueError('Newly incident fresh footprint/half-site anchor needs explicit coupling first')
+if any(n==('pd',3) for e in edge_subset for n in e):raise ValueError('Unexpected functional use of unconsumedPD3')
+for name,z in fresh.items():
+ i=names[name];c=d.cells[i];x,y=g.ctr(c);w,hh=z['fresh_width_um'],z['fresh_height_um']
+ if i in jset or c[1]!=z['old_master'] or w>c[4]-c[2]+1e-6:raise ValueError('Actual fresh footprint cohort differs')
+ d.cells[i]=(c[0],z['fresh_master'],x-w/2,y-hh/2,x+w/2,y+hh/2,c[6])
+ if abs((x-w/2)/.054-round((x-w/2)/.054))>1e-5:
+  conditional[i]=[[x-.027-w/2,y-hh/2,x-.027+w/2,y+hh/2],[x+.027-w/2,y-hh/2,x+.027+w/2,y+hh/2]]
+if len(conditional)!=207:raise ValueError('Actual conditional fresh half-site cohort differs')
+source=[h for h in source if not(h['stage']=='pd' and h['region']==3)]
+if len(source)!=15:raise ValueError('Live source-slot cohort differs')
+# Actual fresh x1 boxes are used.207 two-row-site alternatives remain conditional;
+# neither an illegal center nor an old larger master is forced as an obstacle.
+# Existing unmoved/greedily placed FFs and all15 actual live source slots
+# are physical obstacles. Combinational cells are left to normal future placement.
+fixed_boxes={i:list(c[2:6]) for i,c in d.cells.items() if c[0]=='S' and c[1]!='REAL_MACRO_PORT' and i not in jset and i not in oinv and i not in conditional}
+for k,h in enumerate(source):fixed_boxes[-k-1]=h['box']
+macro_boxes={i:list(c[2:6]) for i,c in d.cells.items() if c[0]=='M'}
+bins=collections.defaultdict(set)
+for i,b in fixed_boxes.items():
+ for x in range(int(b[0]//8.64),int(b[2]//8.64)+1):
+  for y in range(int(b[1]//8.64),int(b[3]//8.64)+1):bins[x,y].add(i)
+print('ROW_JOINT_MODEL',len(seed),'seeds',K,'coupled variables',len(edge_subset),'typed edges',len(fixed_boxes),'fixed FF/source obstacles',flush=True)
+for iteration in range(3):
+ rows=[];bs=[]
+ def add(row,b):rows.append(row);bs.append(b)
+ def expression(node,sx,sy,sign,row):
+  if node in ix:
+   c=d.cells[node];k=ix[node];row[2*k]=row.get(2*k,0)+sign*sx*.054;row[2*k+1]=row.get(2*k+1,0)+sign*sy*.27
+   return sign*(sx*(c[4]-c[2])/2+sy*(c[5]-c[3])/2)
+  x,y=point(node);return sign*(sx*x+sy*y)
+ for a,b in edge_subset:
+  for sx,sy in ((1,1),(1,-1),(-1,1),(-1,-1)):
+   row={};constant=expression(a,sx,sy,1,row)+expression(b,sx,sy,-1,row);add(row,405.0-constant)
+ for i in joint:
+  k=ix[i];c=d.cells[i];hw,hh=(c[4]-c[2])/2,(c[5]-c[3])/2;x,y=goal[i]
+  for axis,step,half,target in [(0,.054,hw,x),(1,.27,hh,y)]:
+   add({2*k+axis:step,2*K+2*k+axis:-1},target-half);add({2*k+axis:-step,2*K+2*k+axis:-1},half-target)
+  tap=pins[assign[c[6]]];other=[(tap['x'],tap['y'],200.0)]
+  if i in pin_targets:other.append((*pin_targets[i],30.0))
+  for x0,y0,r in other:
+   for sx,sy in ((1,1),(1,-1),(-1,1),(-1,-1)):add({2*k:sx*.054,2*k+1:sy*.27},r+sx*(x0-hw)+sy*(y0-hh))
+ expanded=N+4*len(cuts);MM=1600.0
+ for oi,(i,kind,j) in enumerate(sorted(cuts)):
+  k=ix[i];c=d.cells[i];w,hh=c[4]-c[2],c[5]-c[3];bits=[N+4*oi+t for t in range(4)]
+  if kind=='J':
+   kk=ix[j];cc=d.cells[j];ww,hj=cc[4]-cc[2],cc[5]-cc[3]
+   choices=[({2*k:.054,2*kk:-.054},-w),({2*kk:.054,2*k:-.054},-ww),({2*k+1:.27,2*kk+1:-.27},-hh),({2*kk+1:.27,2*k+1:-.27},-hj)]
+  else:
+   x0,y0,x1,y1=(macro_boxes if kind=='M' else fixed_boxes)[j]
+   choices=[({2*k:.054},x0-w),({2*k:-.054},-x1),({2*k+1:.27},y0-hh),({2*k+1:-.27},-y1)]
+  for (row,b),bit in zip(choices,bits):row[bit]=MM;add(row,b+MM)
+  add({bit:-1 for bit in bits},-1)
+ ri=[];ci=[];vv=[]
+ for n,row in enumerate(rows):
+  for j,v in row.items():ri.append(n);ci.append(j);vv.append(v)
+ A=coo_matrix((vv,(ri,ci)),shape=(len(rows),expanded)).tocsr();lo=[];hi=[]
+ for i in joint:
+  c=d.cells[i];w,hh=c[4]-c[2],c[5]-c[3];lo.extend([math.ceil(4.32/.054-1e-7),math.ceil(4.32/.27-1e-7)]);hi.extend([math.floor((773.28-w)/.054+1e-7),math.floor((514.08-hh)/.27+1e-7)])
+ lo=np.r_[lo,np.zeros(2*K),np.zeros(expanded-N)];hi=np.r_[hi,np.full(2*K,np.inf),np.ones(expanded-N)]
+ objective=np.zeros(expanded);integ=np.r_[np.ones(2*K),np.zeros(2*K),np.ones(expanded-N)]
+ remaining=total_budget_s-(time.monotonic()-solve_start)
+ if remaining<=.25:
+  (P/'rowjoint_report.json').write_text(json.dumps(dict(status='FINITE_FEASIBILITY_BUDGET_EXHAUSTED',variables=K,history=history,global_infeasibility_claim=False,source_correspondence='HELD'),indent=1));raise SystemExit(3)
+ result=milp(objective,integrality=integ,bounds=Bounds(lo,hi),constraints=LinearConstraint(A,np.full(len(bs),-np.inf),np.array(bs)),options={'time_limit':min(20.0,remaining),'presolve':True})
+ if result.x is None:
+  status='FINITE_COMPONENT_INFEASIBLE' if result.status==2 else 'FINITE_FEASIBILITY_TIME_OR_RESOURCE_UNRESOLVED'
+  (P/'rowjoint_report.json').write_text(json.dumps(dict(status=status,solver_status=int(result.status),message=result.message,variables=K,history=history,global_infeasibility_claim=False,source_correspondence='HELD'),indent=1));print('ROW_FEAS_UNRESOLVED',status,result.message,flush=True);raise SystemExit(2 if result.status==2 else 3)
+ if np.max(A@result.x-np.array(bs))>1e-5:raise RuntimeError('Invalid joint row solver residual')
+ if np.max(np.abs(result.x[integ.astype(bool)]-np.rint(result.x[integ.astype(bool)])))>1e-5:raise RuntimeError('Candidate is not an actual integer-site incumbent')
+ collisions=set();conditional_hits=[]
+ for i in joint:
+  k=ix[i];c=d.cells[i];w,hh=c[4]-c[2],c[5]-c[3];x=round(result.x[2*k])*.054;y=round(result.x[2*k+1])*.27;d.cells[i]=(c[0],c[1],x,y,x+w,y+hh,c[6])
+ def overlap(a,b):return min(a[2],b[2])-max(a[0],b[0])>1e-6 and min(a[3],b[3])-max(a[1],b[1])>1e-6
+ for i in joint:
+  box=d.cells[i][2:6]
+  for j,b in macro_boxes.items():
+   if overlap(box,b):collisions.add((i,'M',j))
+  nearby=set()
+  for x in range(int(box[0]//8.64),int(box[2]//8.64)+1):
+   for y in range(int(box[1]//8.64),int(box[3]//8.64)+1):nearby.update(bins[x,y])
+  for j in nearby:
+   if overlap(box,fixed_boxes[j]):collisions.add((i,'F',j))
+  for j in joint:
+   if j>i and overlap(box,d.cells[j][2:6]):collisions.add((i,'J',j))
+  for j,options in conditional.items():
+   flags=[overlap(box,b) for b in options]
+   if any(flags):conditional_hits.append(dict(variable=d.cells[i][6],conditional_ff=d.cells[j][6],overlap_choices=flags))
+ movement=sum(abs(g.ctr(d.cells[i])[0]-goal[i][0])+abs(g.ctr(d.cells[i])[1]-goal[i][1]) for i in joint)
+ summary=dict(iteration=iteration,cuts=len(cuts),collisions=len(collisions),objective_value=float(result.fun),actual_L1_movement_um=movement,elapsed_s=time.monotonic()-solve_start,solver_status=int(result.status),fresh_half_site_contacts=len(conditional_hits));history.append(summary)
+ incumbent=[dict(id=i,name=d.cells[i][6],xy=list(g.ctr(d.cells[i]))) for i in sorted(variables)]
+ (P/f'rowfeas_incumbent_{iteration}.json').write_text(json.dumps(incumbent,separators=(',',':')))
+ (P/f'rowfeas_receipt_{iteration}.json').write_text(json.dumps(dict(status='CANDIDATE_ONLY' if collisions else 'LOCAL_CONSTRAINTS_PASS_PENDING_FULL_AUDIT',summary=summary,integer_site_residual=float(np.max(np.abs(result.x[integ.astype(bool)]-np.rint(result.x[integ.astype(bool)])))),linear_constraint_residual=float(np.max(A@result.x-np.array(bs))),source_correspondence='HELD',fresh_master_reprice='PENDING',physical_release=False),indent=1))
+ print('ROW_FEAS_ITER',summary,flush=True)
+ if not collisions and conditional_hits:
+  (P/'rowfeas_conditional_hits.json').write_text(json.dumps(conditional_hits,indent=1)+'\n')
+  (P/'rowfeas_candidate_homes.json').write_text(json.dumps(incumbent,separators=(',',':'))+'\n')
+  (P/'rowjoint_report.json').write_text(json.dumps(dict(status='CANDIDATE_NEEDS_ACTUAL_HALF_SITE_COUPLING',variables=K,history=history,conditional_contacts=conditional_hits,native_correspondence='HELD',physical_release=False),indent=1));raise SystemExit(3)
+ if not collisions:break
+ new=collisions-cuts
+ if not new:raise RuntimeError('Repeated collision despite an installed disjunction')
+ cuts.update(new)
+ (P/'rowfeas_occupancy_cuts.json').write_text(json.dumps(sorted(cuts),separators=(',',':')))
+else:
+ (P/'rowjoint_report.json').write_text(json.dumps(dict(status='FINITE_FEASIBILITY_CUT_BUDGET_EXHAUSTED',variables=K,history=history,global_infeasibility_claim=False,source_correspondence='HELD'),indent=1));raise SystemExit(3)
+rows=[dict(id=i,name=d.cells[i][6],old_xy=list(g.ctr(orig[i])),xy=list(g.ctr(d.cells[i]))) for i in sorted(variables)]
+(P/'rowprep_complete_homes.json').write_text(json.dumps(rows,separators=(',',':')))
+(P/'rowjoint_report.json').write_text(json.dumps(dict(status='PASS_FINITE_JOINT_ROW_SITE_MODEL_ONLY',variables=K,typed_edges=len(edge_subset),iterations=history,full45301_audit_required=True,clock_map52_unchanged=True,added_ff=0,added_cycles=0,source_declared_extra_ff=13,source_live_extra_ff=12,fresh_master_reprice='ACTUAL244BOXES_WITH207EXPLICIT_CONDITIONALS',live_source_slots=15,source_correspondence='HELD',physical_release=False),indent=1));print('ROW_JOINT_DONE',K,'coupled variables; full45301 audit next',flush=True)

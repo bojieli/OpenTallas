@@ -66,13 +66,31 @@ Never apply this preparer to a host or another job's runtime.
 A separate process needs its own installation. Database/library/supply reloads
 inside an active transaction refuse.
 
-Default behavior is unchanged. The strict unsupported-birth guard admits only
-`repair_design` and `repair_timing`, and only when the real native callback is
-attached to the actual current DB and its native audit passes. Environment
-capability assertions, Tcl stand-ins, inactive callbacks, CTS, and GPL do not
-receive admission. CTS/GPL/detail-route integration requires its own reviewed
-entry point; this change does not assert coverage for those stages.
+This candidate extends strict command admission to `buffer_ports` and
+`global_placement`, alongside the qualified `repair_design`/`repair_timing`.
+All four require the real ABI-pinned module attached to the actual current DB
+and a passing native PG audit. No environment capability assertion, Tcl
+stand-in or inactive callback grants admission. CTS and the other unsupported
+commands retain their refusal; filler qualification is a separate branch.
 
-Native evidence and reproduction vehicles are in
-`results/flow/native_pg_birth_1102/`. This is a production mechanism candidate;
-no complete ordinary-flow canary, target sign-off, or physical release is claimed.
+Command admission does not install the callback or qualify an entire stage.
+Each OpenROAD process needs a reviewed early boundary after loaded libraries,
+DB and rules but before the full PRE chain, plus whole-body cleanup. An
+installation only in resize cannot protect preceding GPL. The existing GRT
+adapter remains specific to its genuine loaded input; this candidate makes no
+new generic PLACE launcher or default configuration change.
+
+The actual RECIP private ordinary PLACE vehicle preserves its original manual
+UNSET mode and normal flags. It records requested GPL and final native calls
+separately; its first native GPL attempt retained both timing and routability
+flags and succeeded without fallback (1111 creates,165 swaps,2222 PG bindings).
+The preceding port-buffer operation is separate (68 creates,136 bindings).
+These are native event counts, including temporary algorithm operations, not
+retained-cell deltas. A plain/fallback/no-birth observation does not establish
+timing-driven GPL behavior. Final independent saved-DB PG and physical/source
+guards must complete before review can recommend adopting this candidate.
+
+Original native resizer evidence is retained in
+`results/flow/native_pg_birth_1102/`; new candidate evidence is tracked in
+`results/flow/native_pg_gpl_candidate_1102/`. No main merge, deployment, target
+sign-off or physical release follows from preparing these sources.

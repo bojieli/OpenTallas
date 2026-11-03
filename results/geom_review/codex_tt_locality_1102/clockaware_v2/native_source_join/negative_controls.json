@@ -1,0 +1,17 @@
+[
+ {
+  "mutant": "wrong_region",
+  "status": "REJECTED",
+  "reason": "Forwarded regional D changed: u_cland_fstart_tl"
+ },
+ {
+  "mutant": "wrong_raw_parent",
+  "status": "REJECTED",
+  "reason": "Regional raw copy changed parent"
+ },
+ {
+  "mutant": "wrong_sf_edge",
+  "status": "REJECTED",
+  "reason": "Source edge changed: g_on.sf"
+ }
+]

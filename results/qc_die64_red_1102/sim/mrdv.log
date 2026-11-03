@@ -1,0 +1,7 @@
+P3 rd_v MISMATCH cyc 42
+P3 rd_v MISMATCH cyc 44
+P3 rd_v MISMATCH cyc 48
+P3 rd_v MISMATCH cyc 50
+RESULT cycles 3000 L 5 old_writes 117 old_busy_cycles 2785 old_fault_cycles 343 busy_falls 7 | H0 0 P1we 0 P1data 0 P2 0 P3 658 P4 0 P5 0
+VERDICT FAIL
+/home/ubuntu/scratch-root/claude/die-qc-63-red/wt/results/qc_die63_red_1102/tb_red_event.sv:90: $finish called at 2999700 (1ps)

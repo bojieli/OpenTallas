@@ -1,0 +1,43 @@
+read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top qfd_qc_tt_ctlm_part -DSYNTHESIS /work/rtl/qfd_qc_tt_ctlm_part.sv /work/rtl/qfd_qc_tt_ctlm_part_bound.sv /work/rtl/bind_cells.sv /work/rtl/ot_reset_sync.sv /tmp/lec_escsafe/f4fb6fbe5243ade8/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv /work/rtl/qfd_tt_ctlm_dv_wtn.sv /work/rtl/qfd_dv_typed_witness_control_frozen.sv /work/rtl/qfd_hp13_corepub39.sv /work/rtl/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv /work/rtl/ot_sram_1r1w_64x512_m1_r2c2_bb.v /work/rtl/ot_rom_4096x72_m8_bb.v /work/rtl/ot_rom_4096x266_m8_bb.v /work/rtl/native32_1r_param.v /work/rtl/native32_helpers.sv /work/rtl/ot_sram_1r1w_32x128_m1_bb.v /work/rtl/ot_dp_clk_landing_ca.sv /work/rtl/ot_dp_clk_landing.sv /work/rtl/ot_meso_fifo.sv
+setattr -unset init
+read_verilog -overwrite /work/lec/stubs.v
+read_verilog /work/lec/wrap_gold.v
+hierarchy -check -top lec_top
+setattr -set lec_keep 1 w:* a:keep %i
+setattr -set lec_keep 1 A:keep_hierarchy
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+proc
+opt_expr -keepdc
+opt_clean
+wreduce -keepdc
+peepopt
+opt_clean
+wreduce -keepdc
+opt_clean
+flatten -noscopeinfo
+opt_clean
+select -write /work/lec/gold.keep w:* a:lec_keep %i
+select -clear
+write_json /work/lec/gold.aliases.json
+memory -nomap -nordff
+memory_map
+opt_expr -keepdc
+opt_clean
+techmap
+opt_clean
+rename -wire t:$_*DFF*_ t:$_*FF*_
+async2sync
+dffunmap
+select -assert-none t:$_DLATCH* t:$_SR_* t:$_ALDFF* t:$_DFFSRE*
+techmap -map /work/lec/lecff.v t:$_DFF_P_ t:$_DFF_N_
+simplemap t:$dff
+opt_clean
+splitnets -ports
+setundef -undriven -anyseq
+setundef -anyseq
+setundef -zero -init
+aigmap
+opt_clean
+stat
+write_aiger -zinit -map /work/lec/gold.map /work/lec/gold.aig

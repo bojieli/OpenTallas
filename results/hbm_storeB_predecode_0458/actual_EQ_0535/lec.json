@@ -1,0 +1,352 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-02T13:35:44+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": 4,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_hnx_sfu_store_b__1300886e9f18",
+ "netlist": "/work/run/results/asap7/hbc_ot_hnx_sfu_store_b__1300886e9f18/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_256x256_m2_r2c2": 12
+ },
+ "ports": {
+  "inputs": 5062,
+  "outputs": 2802
+ },
+ "t_aig_s": 105.8,
+ "kit_reset_ports": [
+  "store0_rst_n"
+ ],
+ "hint_plan": {
+  "schema": "opentallas.lec_hint_plan.v1",
+  "discovery_rounds": 0,
+  "preseed": 36,
+  "post": 36
+ },
+ "hints": {
+  "file": "/lecout/hints.json",
+  "sha256": "db1297231431774e3ce2a3152c0a4d779984d7ab8da3e20363566ab6d8b69b62",
+  "given": 36,
+  "applied": 36,
+  "skipped": 0,
+  "anon": 3791,
+  "dropped": {
+   "n": 0,
+   "first": []
+  },
+  "kept": 3827,
+  "loaded": [],
+  "loaded_refused": [],
+  "fill": [],
+  "fill_refused": []
+ },
+ "auto_loaded": {
+  "proposed": 0
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:store0_rst_n[0]"
+   ],
+   "gate": [
+    "pi:store0_rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:store0_rst_n[0]": 0
+   },
+   "gate": {
+    "pi:store0_rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 4,
+  "n_reloaded": 0,
+  "n_dropped": 0,
+  "reloaded": [],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/lecout/noreset_constants.tsv",
+   "sha256": "180a4a30408613f5c5752e31c118531b193b3d15be1376ab3b492c9bdc2a75e2",
+   "n_kept": 4,
+   "n_dropped": 0
+  }
+ },
+ "constraint_bases": {
+  "checks": [],
+  "refused": []
+ },
+ "t_corr_s": 409.2,
+ "keypoints": {
+  "gold": {
+   "inputs": 95847,
+   "flops": 32872,
+   "outputs": 0,
+   "ands": 1433290
+  },
+  "gate": {
+   "inputs": 5245,
+   "flops": 36726,
+   "outputs": 0,
+   "ands": 379308
+  },
+  "matched": 17048,
+  "gold_constant_flops": {
+   "n": 4,
+   "first": [
+    "ff:u_dut.m0.lok_q[0]",
+    "ff:u_dut.m0.srv_q",
+    "ff:u_dut.m1.lok_q[0]",
+    "ff:u_dut.m1.srv_q"
+   ]
+  },
+  "paired_flops": {
+   "n": 3791,
+   "first": [
+    "gate:ff:__gate_anon_10000=~ff:u_dut.cmd4_Q[247]",
+    "gate:ff:__gate_anon_10002=~ff:u_dut.cmd4_Q[248]",
+    "gate:ff:__gate_anon_10004=~ff:u_dut.cmd4_Q[249]",
+    "gate:ff:__gate_anon_10006=~ff:u_dut.cmd4_Q[24]",
+    "gate:ff:__gate_anon_10008=~ff:u_dut.cmd4_Q[250]",
+    "gate:ff:__gate_anon_10010=~ff:u_dut.cmd4_Q[251]",
+    "gate:ff:__gate_anon_10012=~ff:u_dut.cmd4_Q[252]",
+    "gate:ff:__gate_anon_10014=~ff:u_dut.cmd4_Q[253]",
+    "gate:ff:__gate_anon_10016=~ff:u_dut.cmd4_Q[254]",
+    "gate:ff:__gate_anon_10018=~ff:u_dut.cmd4_Q[255]",
+    "gate:ff:__gate_anon_10020=~ff:u_dut.cmd4_Q[256]",
+    "gate:ff:__gate_anon_10022=~ff:u_dut.cmd4_Q[257]",
+    "gate:ff:__gate_anon_10024=~ff:u_dut.cmd4_Q[258]",
+    "gate:ff:__gate_anon_10026=~ff:u_dut.cmd4_Q[259]",
+    "gate:ff:__gate_anon_10028=~ff:u_dut.cmd4_Q[25]",
+    "gate:ff:__gate_anon_10030=~ff:u_dut.cmd4_Q[260]",
+    "gate:ff:__gate_anon_10032=~ff:u_dut.cmd4_Q[261]",
+    "gate:ff:__gate_anon_10034=~ff:u_dut.cmd4_Q[262]",
+    "gate:ff:__gate_anon_10036=~ff:u_dut.cmd4_Q[263]",
+    "gate:ff:__gate_anon_10038=~ff:u_dut.cmd4_Q[264]",
+    "gate:ff:__gate_anon_10040=~ff:u_dut.cmd4_Q[265]",
+    "gate:ff:__gate_anon_10042=~ff:u_dut.cmd4_Q[266]",
+    "gate:ff:__gate_anon_10044=~ff:u_dut.cmd4_Q[267]",
+    "gate:ff:__gate_anon_10046=~ff:u_dut.cmd4_Q[268]",
+    "gate:ff:__gate_anon_10048=~ff:u_dut.cmd4_Q[269]",
+    "gate:ff:__gate_anon_10050=~ff:u_dut.cmd4_Q[26]",
+    "gate:ff:__gate_anon_10052=~ff:u_dut.cmd4_Q[270]",
+    "gate:ff:__gate_anon_10054=~ff:u_dut.cmd4_Q[271]",
+    "gate:ff:__gate_anon_10056=~ff:u_dut.cmd4_Q[272]",
+    "gate:ff:__gate_anon_10058=~ff:u_dut.cmd4_Q[273]",
+    "gate:ff:__gate_anon_10060=~ff:u_dut.cmd4_Q[274]",
+    "gate:ff:__gate_anon_10062=~ff:u_dut.cmd4_Q[275]",
+    "gate:ff:__gate_anon_10064=~ff:u_dut.cmd4_Q[276]",
+    "gate:ff:__gate_anon_10066=~ff:u_dut.cmd4_Q[277]",
+    "gate:ff:__gate_anon_10068=~ff:u_dut.cmd4_Q[278]",
+    "gate:ff:__gate_anon_10070=~ff:u_dut.cmd4_Q[279]",
+    "gate:ff:__gate_anon_10072=~ff:u_dut.cmd4_Q[27]",
+    "gate:ff:__gate_anon_10074=~ff:u_dut.cmd4_Q[280]",
+    "gate:ff:__gate_anon_10076=~ff:u_dut.cmd4_Q[281]",
+    "gate:ff:__gate_anon_10078=~ff:u_dut.cmd4_Q[282]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 35,
+   "first": [
+    "ff:__gate_anon_5896",
+    "ff:__gate_anon_5898",
+    "ff:__gate_anon_5900",
+    "ff:__gate_anon_5902",
+    "ff:__gate_anon_5904",
+    "ff:__gate_anon_5906",
+    "ff:__gate_anon_5908",
+    "ff:__gate_anon_5910",
+    "ff:__gate_anon_5912",
+    "ff:__gate_anon_5914",
+    "ff:__gate_anon_5916",
+    "ff:__gate_anon_5918",
+    "ff:__gate_anon_5920",
+    "ff:__gate_anon_5922",
+    "ff:__gate_anon_5924",
+    "ff:__gate_anon_5926",
+    "ff:__gate_anon_5928",
+    "ff:__gate_anon_5930",
+    "ff:__gate_anon_5932",
+    "ff:__gate_anon_5934",
+    "ff:__gate_anon_5936",
+    "ff:__gate_anon_5938",
+    "ff:__gate_anon_5940",
+    "ff:__gate_anon_5942",
+    "ff:__gate_anon_5944",
+    "ff:__gate_anon_5946",
+    "ff:__gate_anon_5948",
+    "ff:__gate_anon_5950",
+    "ff:__gate_anon_5952",
+    "ff:__gate_anon_5954",
+    "ff:__gate_anon_5956",
+    "ff:__gate_anon_5958",
+    "ff:__gate_anon_10891",
+    "ff:__gate_anon_11727",
+    "ff:__gate_anon_12005"
+   ]
+  },
+  "gold_x_sources": 90785,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 183,
+  "gold_only_compare": {
+   "n": 4,
+   "first": [
+    "ff:u_dut.m0.lok_q[0]",
+    "ff:u_dut.m0.srv_q",
+    "ff:u_dut.m1.lok_q[0]",
+    "ff:u_dut.m1.srv_q"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 3858,
+   "first": [
+    "ff:__gate_anon_10000",
+    "ff:__gate_anon_10002",
+    "ff:__gate_anon_10004",
+    "ff:__gate_anon_10006",
+    "ff:__gate_anon_10008",
+    "ff:__gate_anon_10010",
+    "ff:__gate_anon_10012",
+    "ff:__gate_anon_10014",
+    "ff:__gate_anon_10016",
+    "ff:__gate_anon_10018",
+    "ff:__gate_anon_10020",
+    "ff:__gate_anon_10022",
+    "ff:__gate_anon_10024",
+    "ff:__gate_anon_10026",
+    "ff:__gate_anon_10028",
+    "ff:__gate_anon_10030",
+    "ff:__gate_anon_10032",
+    "ff:__gate_anon_10034",
+    "ff:__gate_anon_10036",
+    "ff:__gate_anon_10038",
+    "ff:__gate_anon_10040",
+    "ff:__gate_anon_10042",
+    "ff:__gate_anon_10044",
+    "ff:__gate_anon_10046",
+    "ff:__gate_anon_10048",
+    "ff:__gate_anon_10050",
+    "ff:__gate_anon_10052",
+    "ff:__gate_anon_10054",
+    "ff:__gate_anon_10056",
+    "ff:__gate_anon_10058",
+    "ff:__gate_anon_10060",
+    "ff:__gate_anon_10062",
+    "ff:__gate_anon_10064",
+    "ff:__gate_anon_10066",
+    "ff:__gate_anon_10068",
+    "ff:__gate_anon_10070",
+    "ff:__gate_anon_10072",
+    "ff:__gate_anon_10074",
+    "ff:__gate_anon_10076",
+    "ff:__gate_anon_10078"
+   ]
+  }
+ },
+ "t_prove_s": 195.3,
+ "x_dont_care_points": {
+  "n": 16738,
+  "first": [
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_addr_in[0]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_addr_in[1]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_addr_in[2]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_addr_in[3]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_addr_in[4]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_addr_in[5]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_addr_in[6]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_addr_in[7]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_ce_in",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[0]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[100]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[101]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[102]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[103]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[104]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[105]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[106]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[107]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[108]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[109]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[10]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[110]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[111]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[112]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[113]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[114]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[115]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[116]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[117]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[118]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[119]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[11]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[120]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[121]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[122]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[123]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[124]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[125]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[126]",
+   "bb:u_dut.m0.g_bank[0].u_b.g_m11.u_m.lec_bbi_w_mask_in[127]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 0,
+  "in_netlist": 0,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 28503,
+  "proved": 28503,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "28503 compare points proved; 17048 key points matched by name, 3791 register pairs / merges and 4 constant registers proved inductively; 0 RTL and 35 gate registers unmatched and unobservable (proved as free inputs); 16738 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 723.6,
+ "provenance": {
+  "commit": "b3abb3bab29a7ccf0d0bf1c3d0ca62f1ee3c377c",
+  "dirty": false,
+  "source": "validated kit PROVENANCE.json",
+  "tool_update": null
+ }
+}

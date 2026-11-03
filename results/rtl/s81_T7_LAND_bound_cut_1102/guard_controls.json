@@ -1,0 +1,28 @@
+{
+  "positive": {
+    "original_T7": {
+      "after_sha256": "b30a42837e0839214c751a58848bfa095fe3d81d1a4311c1d72c14ef1668edf5",
+      "removed": 65
+    },
+    "PMEM_data_cut": {
+      "after_sha256": "9c47d038b5373f28f8dd65548a4bb9222cdf9e499042ed8d4b2c88d69f9d9848",
+      "removed": 65
+    },
+    "PVQ_only_data_cut": {
+      "after_sha256": "b23f508c7c25b590b175a10db7d65cd0e65d7015c0c82907f2da9aded24332ca",
+      "removed": 65
+    },
+    "PMEM_PVQ_joint_data_cut": {
+      "after_sha256": "43dc924ceeb0d58da324e485cc62c5690e88ef29555ac73e1c821fe7c9ed2d7d",
+      "removed": 65
+    }
+  },
+  "controls": {
+    "lane1_wrong_RD_slice": "REFUSED: lane rowword 1",
+    "RD_ADDR_lane1_offset": "REFUSED: RD_ADDR lane 1",
+    "extra_struct_reader": "REFUSED: struct readers ['100:90', '1063:4', '1067:1064', '3:0']",
+    "lane2_win_on_tjob": "REFUSED: lane facts row 2",
+    "unapproved_hash": "REFUSED: unapproved preimage hash"
+  },
+  "ok": true
+}

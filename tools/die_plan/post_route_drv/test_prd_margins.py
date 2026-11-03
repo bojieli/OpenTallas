@@ -7,6 +7,15 @@ import unittest
 HERE = pathlib.Path(__file__).parent
 
 class Margins(unittest.TestCase):
+    def test_setup_repair_skips_buffer_removal_by_default(self):
+        hook = (HERE / 'prd_hook.tcl').read_text()
+        blk = hook[hook.index('set _st_args'):hook.index('repair_timing {*}$_st_args')]
+        self.assertIn('-skip_buffer_removal', blk)
+        self.assertIn('OT_PRD_BUFFER_REMOVAL', blk)
+        self.assertNotIn('repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp\n', hook)
+        mk = (HERE / 'prd_mk.sh').read_text()
+        self.assertIn('OT_PRD_BUFFER_REMOVAL=1" >> $OUT/variant.env', mk)
+
     def test_explicit_settings_survive_shell_boundary(self):
         mk = (HERE / 'prd_mk.sh').read_text()
         block = mk[mk.index('for setting in OT_SLEW_MARGIN'):mk.index('[ ${V:0:1} = b ]', mk.index('for setting in OT_SLEW_MARGIN'))]

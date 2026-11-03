@@ -1,0 +1,42 @@
+{
+  "status": "PASS_CONDITIONAL_NATIVE_STOREB_SOURCE_EQ",
+  "official_counts": {
+    "compare_points": 28503,
+    "proved": 28503,
+    "differs": 0,
+    "undecided": 0
+  },
+  "source_snapshot": "b3abb3bab29a7ccf0d0bf1c3d0ca62f1ee3c377c",
+  "hint_snapshot": "f5badaecf",
+  "actual_unit": "oth-ubuntu-2930561-1793626542",
+  "official_out": "intel2:/srv/opentallas-scratch2/claude/codex-storeB-native-cubes-0535/lec",
+  "typed_candidates": 36,
+  "retained_exact_B_predecode_cubes": 32,
+  "hints_dropped": 0,
+  "reset": {
+    "default": 4,
+    "requested": 4,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+  },
+  "source_netlist_unchanged": true,
+  "A_receipt_transfer": false,
+  "native_SRAM": 32,
+  "stdcells": 151943,
+  "soft_FF": 3826,
+  "source_ABI_bits": 7864,
+  "time_s": {
+    "total": 723.6,
+    "correspondence": 409.2,
+    "AIG": 105.8,
+    "prove": 195.3
+  },
+  "budget_GB": 12,
+  "threads": 2,
+  "held": [
+    "No parent physical reset/START66 credit",
+    "Actual32-SRAM raw write/source/capture reach remains a next gate",
+    "No PLACE/CTS/route or source-view/current-parent adoption"
+  ]
+}

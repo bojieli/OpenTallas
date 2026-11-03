@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.tt_future_wave_publish_contract.v1",
+ "enabled": false,
+ "apply_ready": false,
+ "scope": "Central parent cohort composition only; never replace a current multi-owner plan with this selected old TT_C baseline.",
+ "snapshot_root": "/srv/opentallas-scratch2/claude/codex-tt-regional-event-1102",
+ "baseline_event": "d90b109213c6949da87b330ef143d96bbe937934",
+ "baseline_src_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+ "fields": [
+  {
+   "field": "plan",
+   "old": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+   "future": "/srv/opentallas-scratch2/claude/codex-tt-regional-event-1102/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json"
+  },
+  {
+   "field": "src",
+   "old": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131",
+   "future": "/srv/opentallas-scratch2/claude/codex-tt-regional-event-1102"
+  },
+  {
+   "field": "src_sha",
+   "old": "d90b109213c6949da87b330ef143d96bbe937934",
+   "future": "ROOT_COMPOSED_COMMIT_REQUIRED"
+  },
+  {
+   "field": "gen_args.--clock-landing",
+   "old": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/results/qc_die57_1031/bind/sidecar.json",
+   "future": "/srv/opentallas-scratch2/claude/codex-tt-regional-event-1102/results/tt_regional_event_1102/bind/sidecar.json"
+  },
+  {
+   "field": "hold_items.tt_ctlm",
+   "old": "DIE-QC-61 16:3x: GEOM-107 FAIL PLAN (r2r 955.8 reset relays unpinned, E/S face regs far, 4 taps/38k FF); same plan block on d90 -> doomed. plan_qc52 tt_ctlm delta (density taps + relay sites + face homes) in progress; release on its merge.",
+   "future": "TT_C regional +13FF/0cycle coupled source event PREP only. Hold until source/model/global-reset/63clock native-name join, G0C0new, strictbind0, actual LOOK and all existing parent/source/IO/TTFF gates. Baseline fill/empty/pin-reg/channel/UNPROVEN145 remain held."
+  }
+ ],
+ "preserve": "All unrelated config fields, gate states and every other hold entry byte-equivalent; existing jobs immutable. Event is assigned centrally only after source/model composition.",
+ "required_files": [
+  "physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+  "results/tt_regional_event_1102/bind/sidecar.json",
+  "results/tt_regional_event_1102/bind/clock_landing_rtl.json",
+  "results/tt_regional_event_1102/native_clock_join.json"
+ ],
+ "first_executable_stage": "GEN/bind/count and source-model join in the new held snapshot; no physical admission until joins clear."
+}

@@ -1,0 +1,8 @@
+{
+  "status": "FAIL_GEN_BEFORE_SYNTH",
+  "run": "intel2:/srv/opentallas-scratch2/claude/codex-storeA-native-sourceproof-0040",
+  "unit": "oth-ubuntu-1201011-1793608763",
+  "cause": "PLAN_CORE_MACROS auto requires explicit per-module KNOWN plan rect inventory, not only recipe rows",
+  "source_EQ": "NOT_RUN",
+  "fix": "New explicit reviewed planned32rect inventory, no limit or memory/provider alias; fresh clean source/run, original preserved"
+}

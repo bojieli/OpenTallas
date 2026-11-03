@@ -39,7 +39,7 @@ def check(mutation=None):
   begin,end=ph['command_range'];maps=[];rfirst,rlast=ph['source_range'];expert=ph['kind']=='expert'
   if not expert and ph['kind']=='static' and rlast>rfirst:assert C.static_group_end(source,rfirst,rlast,IR)>=rlast,'reverse row-group dependency'
   if expert:
-   expected,ep=E.lower(source,rfirst,rlast);epdec=IC.decode_all(expected);bi=0;expert_count+=1
+   expected,ep=E.lower(source,rfirst,rlast,align=packet.get('vm_hbm_congruence_words'));epdec=IC.decode_all(expected);bi=0;expert_count+=1
   for pos in range(begin,end):
    meta=packet['records'][pos];r,x,_=IR.decode_one(raw,meta['offset'])
    if mutation and pos==mutation[0]:mutation[1](r,x)

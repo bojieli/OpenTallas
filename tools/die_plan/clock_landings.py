@@ -1152,7 +1152,32 @@ class Landings:
         lines[-1] = code.rstrip() + "," + ((" //" + comment) if sep else "")
         head = "\n".join(lines) + "\n" + ",\n".join(extra)
         self.emitted_types.add(tn)
-        return head + marker + "\n".join(logic) + "\n" + body
+        emitted = head + marker + "\n".join(logic) + "\n" + body
+        return self._regional_origin_source(tn, key, emitted)
+
+    def _regional_origin_source(self, tn, key, text):
+        """Default-OFF selected TT_C source event; never grants global/physical credit."""
+        cfg = self.types[key].get('clock', {}).get('landing_regional_origin')
+        if not cfg or not cfg.get('enabled', False):
+            return text
+        if tn != 'tt_ctlm' or key != 'tt_ctlm':
+            raise LandingError('regional START event supports only the selected existing tt_ctlm type')
+        model_path = Path(cfg['model_file'])
+        if not model_path.is_absolute():
+            raise LandingError('regional START model_file must identify the exact absolute frozen snapshot')
+        data = model_path.read_bytes()
+        if hashlib.sha256(data).hexdigest() != cfg['model_sha256']:
+            raise LandingError('regional START model content differs from its paired source event')
+        from tt_regional_origin.generated_adapter import apply_generated_type
+        emitted, rec = apply_generated_type(tn, text, json.loads(data), enabled=True)
+        placements = self.reset_placements.setdefault(tn, {})
+        rec['original_count_origin'] = placements.get('count_origin')
+        placements['count_origin'] = rec
+        # Existing source verifiers/land_slots must explicitly consume this new
+        # kind; retaining pending consumers prevents a local source transform
+        # from masquerading as a complete global reset/clock derivation.
+        self.__dict__.setdefault('regional_source_pending', {})[tn] = rec['pending_consumers']
+        return emitted
 
     def _origin_clock_port(self, tn, role, head, type_key=None):
         key = type_key or tn
@@ -1872,7 +1897,7 @@ class Landings:
         by_lane = defaultdict(int)
         for r in self.rows:
             by_lane[r["lane"]] += int(r["added_cycles"])
-        return dict(schema="opentallas.clock_landing_rtl.v1",
+        result = dict(schema="opentallas.clock_landing_rtl.v1",
                     implemented=self.emitted_top and self.emitted_types == set(self.types),
                     physical_qualified=False,
                     added_cycles_per_crossing="count_aligned (per crossing)" if self.ca else 3,
@@ -1887,6 +1912,12 @@ class Landings:
                     emitted_modules=getattr(self,"emitted_modules",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])
+        pending = getattr(self, "regional_source_pending", {})
+        if pending:
+            result["implemented"] = False
+            result["regional_source_pending"] = pending
+            result["remaining_gates"].append("regional source/global consumers listed in regional_source_pending")
+        return result
 
 
 if __name__ == "__main__":

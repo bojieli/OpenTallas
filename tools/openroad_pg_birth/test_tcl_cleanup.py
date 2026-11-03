@@ -81,7 +81,9 @@ switch $kind {
   interp alias {} ot_native_pg_audit {} fake_audit
  }
 }
-if {[ot_pg_native_birth_supported repair_design] || [ot_pg_native_birth_supported repair_timing]} {error "fake capability admitted $kind"}
+foreach command {repair_design repair_timing buffer_ports global_placement} {
+ if {[ot_pg_native_birth_supported $command]} {error "fake capability admitted $kind $command"}
+}
 puts PASS
 '''.replace('@HELPER@',str(HELPER)).replace('@KIND@',kind))
     r=subprocess.run(['tclsh',str(harness)],text=True,capture_output=True)

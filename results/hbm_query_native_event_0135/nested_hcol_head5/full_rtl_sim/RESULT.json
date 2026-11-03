@@ -1,0 +1,22 @@
+{
+  "status": "FINITE_FULL_ACTUAL_RTL_SIM_PASS_NOT_CANONICAL_NEW_ABI_LEC",
+  "worker": "Intel2",
+  "unit": "oth-ubuntu-2821410-1793613678",
+  "path": "/srv/opentallas-scratch2/claude/codex-hbm-hcol-head5-sourceproof-0205",
+  "HALF": 1,
+  "DELIVERED_RESET": 1,
+  "checks": 1404,
+  "positive_diff": 0,
+  "nonzero_outputs": 1385,
+  "mutant_diff": 1116,
+  "mutant_expected_fatal": true,
+  "build_wall_s": 184.012,
+  "build_memory_report_MB": 483.969,
+  "source_join": "ExactfrozenC10files; originalsingle568inputhigh3zero vsnew565perregion; actualarithmetic/reset independentlyphasedclocks",
+  "no_new_cycles": true,
+  "holds": [
+    "NativecanonicalprojectionEQ/all32head/invariant profile notyetfullformal",
+    "New2323nativepinGEN/faceguard/clock/PG/parentD/FF/capacityjoins unqualified",
+    "No default physical source activation"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "status": "FAIL_PRESERVE_RESET_ASSERTION_INTERFACE",
+  "variant_commit": "c09cd4fbc",
+  "variant_source": "/srv/opentallas-scratch/claude/codex-hbm-programme-move-0216/prototype_final2",
+  "counterexample": "Assert actual hub delivered rst_n between clocks while B113 delivered rst_n remains high. Source-face eq clears asynchronously, but destination eq and reset-data Q remain high until a later clock; the new native collar reset does not assert at the old interface event.",
+  "replacement": "Two distinct actual reset-delivery ports, not ordinary payload data. Real new R8 routes/FF/clock/phase cost remains null and unqualified.",
+  "functional_phase_test": "Prepared real selected collar+r10 test, including in-flight CFG abort, retained-SRAM warm re-launch, descriptor/launch/status order and the reset-data mutant. No result yet."
+}

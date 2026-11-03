@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.tt_clock_entry_geometry_failure.v1",
+ "status": "FAIL_V1_MACRO_PLAN",
+ "physical_release": "HELD",
+ "source_event_logic_unchanged": true,
+ "failures": [
+  {
+   "macro": "cal.g_fifo[3]",
+   "candidate_dx_um": 17.28,
+   "clock": "clk",
+   "clock_xy": [
+    394.208,
+    275.424
+   ],
+   "new_macro_rect": [
+    224.64,
+    233.292,
+    395.928,
+    311.076
+   ],
+   "reason": "Existing main clock entry lies inside translated macro body"
+  },
+  {
+   "macro": "cal.g_m[1]",
+   "candidate_dx_um": -8.64,
+   "clock": "clk_t53",
+   "clock_xy": [
+    253.792,
+    329.376
+   ],
+   "clearance_um": 5.408,
+   "required_um": 8.64
+  }
+ ],
+ "superseded_by": "clockaware_v2 one gm0+8.64, other18macrohomes unchanged; all63input clock entries fixed"
+}

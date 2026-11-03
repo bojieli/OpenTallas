@@ -1,0 +1,841 @@
+{
+  "schema": "opentallas.hhp.four_sram_geometry_prep.v1",
+  "status": "PREP_NOT_ADOPTED_NO_CAD",
+  "source_type": "kv3_pc__cl5a95b461",
+  "outline_um": [
+    1036.8,
+    1520.64
+  ],
+  "PC_data_pin_ranges": [
+    [
+      137.78399999999996,
+      232.104,
+      561.504,
+      561.504
+    ],
+    [
+      582.984,
+      637.464,
+      198.816,
+      198.816
+    ],
+    [
+      582.984,
+      637.464,
+      959.136,
+      959.136
+    ],
+    [
+      399.336,
+      453.81600000000003,
+      959.136,
+      959.136
+    ]
+  ],
+  "SRAMs": [
+    {
+      "bank": 0,
+      "instance": "u_bound.u_slg.u_core.u_slg.g_pc\\[0\\].u_pc.u_rows",
+      "origin_um": [
+        138.24,
+        600.012
+      ],
+      "orient": "R0",
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "box": [
+        138.24,
+        600.012,
+        233.06400000000002,
+        641.0759999999999
+      ],
+      "halo": [
+        133.92000000000002,
+        595.6919999999999,
+        237.38400000000001,
+        645.396
+      ],
+      "clk_pin_um": [
+        138.252,
+        600.7919999999999
+      ],
+      "nearest_existing_tap": "clk_t3",
+      "tap_Manhattan_um": 64.58799999999985,
+      "macro_or_island_or_fixed_relay_halo_collision": 0,
+      "off_M4_pin_centres": 0,
+      "existing_PC_to_SLG_delay_edges": 1
+    },
+    {
+      "bank": 1,
+      "instance": "u_bound.u_slg.u_core.u_slg.g_pc\\[1\\].u_pc.u_rows",
+      "origin_um": [
+        544.32,
+        600.012
+      ],
+      "orient": "R0",
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "box": [
+        544.32,
+        600.012,
+        639.144,
+        641.0759999999999
+      ],
+      "halo": [
+        540.0,
+        595.6919999999999,
+        643.464,
+        645.396
+      ],
+      "clk_pin_um": [
+        544.332,
+        600.7919999999999
+      ],
+      "nearest_existing_tap": "clk_t4",
+      "tap_Manhattan_um": 56.9319999999999,
+      "macro_or_island_or_fixed_relay_halo_collision": 0,
+      "off_M4_pin_centres": 0,
+      "existing_PC_to_SLG_delay_edges": 3
+    },
+    {
+      "bank": 2,
+      "instance": "u_bound.u_slg.u_core.u_slg.g_pc\\[2\\].u_pc.u_rows",
+      "origin_um": [
+        544.32,
+        873.612
+      ],
+      "orient": "R0",
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "box": [
+        544.32,
+        873.612,
+        639.144,
+        914.6759999999999
+      ],
+      "halo": [
+        540.0,
+        869.2919999999999,
+        643.464,
+        918.996
+      ],
+      "clk_pin_um": [
+        544.332,
+        874.3919999999999
+      ],
+      "nearest_existing_tap": "clk_t7",
+      "tap_Manhattan_um": 102.45200000000011,
+      "macro_or_island_or_fixed_relay_halo_collision": 0,
+      "off_M4_pin_centres": 0,
+      "existing_PC_to_SLG_delay_edges": 1
+    },
+    {
+      "bank": 3,
+      "instance": "u_bound.u_slg.u_core.u_slg.g_pc\\[3\\].u_pc.u_rows",
+      "origin_um": [
+        397.44,
+        873.612
+      ],
+      "orient": "R0",
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "box": [
+        397.44,
+        873.612,
+        492.264,
+        914.6759999999999
+      ],
+      "halo": [
+        393.12,
+        869.2919999999999,
+        496.584,
+        918.996
+      ],
+      "clk_pin_um": [
+        397.452,
+        874.3919999999999
+      ],
+      "nearest_existing_tap": "clk_t7",
+      "tap_Manhattan_um": 196.50800000000004,
+      "macro_or_island_or_fixed_relay_halo_collision": 0,
+      "off_M4_pin_centres": 0,
+      "existing_PC_to_SLG_delay_edges": 5
+    }
+  ],
+  "source_data_association": "selected R2C c_pc preserves payload[255:0]; group_h reverses lanes and concat reverses back, so bankq receives PCq",
+  "added_FF": 0,
+  "added_data_edges": 0,
+  "source_relay_delays": [
+    1,
+    3,
+    1,
+    5
+  ],
+  "existing_state_guide_paths": [
+    {
+      "kind": "PC0 existing D1 + ad_q",
+      "path_um": [
+        [
+          184.944,
+          561.504
+        ],
+        [
+          184.944,
+          580.5
+        ],
+        [
+          185.76,
+          580.5
+        ]
+      ],
+      "length_um": 19.811999999999983
+    },
+    {
+      "kind": "PC0 existing D1 + ad_q",
+      "path_um": [
+        [
+          185.76,
+          580.5
+        ],
+        [
+          129.60000000000002,
+          580.5
+        ],
+        [
+          129.60000000000002,
+          620.5319999999999
+        ]
+      ],
+      "length_um": 96.1919999999999
+    },
+    {
+      "kind": "PC0 existing D1 + ad_q",
+      "path_um": [
+        [
+          185.76,
+          580.5
+        ],
+        [
+          241.704,
+          580.5
+        ],
+        [
+          241.704,
+          620.5319999999999
+        ]
+      ],
+      "length_um": 95.97599999999994
+    },
+    {
+      "kind": "PC1 existing D3 + ad_q",
+      "path_um": [
+        [
+          610.224,
+          198.816
+        ],
+        [
+          610.224,
+          178.2
+        ],
+        [
+          560,
+          178.2
+        ]
+      ],
+      "length_um": 70.84000000000006
+    },
+    {
+      "kind": "PC1 existing D3 + ad_q",
+      "path_um": [
+        [
+          560,
+          178.2
+        ],
+        [
+          524.88,
+          178.2
+        ],
+        [
+          524.88,
+          380.16
+        ]
+      ],
+      "length_um": 237.08000000000004
+    },
+    {
+      "kind": "PC1 existing D3 + ad_q",
+      "path_um": [
+        [
+          524.88,
+          380.16
+        ],
+        [
+          518.4,
+          578.34
+        ]
+      ],
+      "length_um": 204.66000000000003
+    },
+    {
+      "kind": "PC1 existing D3 + ad_q",
+      "path_um": [
+        [
+          518.4,
+          578.34
+        ],
+        [
+          535.6800000000001,
+          578.34
+        ],
+        [
+          535.6800000000001,
+          620.5319999999999
+        ]
+      ],
+      "length_um": 59.47199999999998
+    },
+    {
+      "kind": "PC1 existing D3 + ad_q",
+      "path_um": [
+        [
+          518.4,
+          578.34
+        ],
+        [
+          647.784,
+          578.34
+        ],
+        [
+          647.784,
+          620.5319999999999
+        ]
+      ],
+      "length_um": 171.5759999999999
+    },
+    {
+      "kind": "PC2 existing D1 + ad_q",
+      "path_um": [
+        [
+          610.224,
+          959.136
+        ],
+        [
+          610.224,
+          940
+        ],
+        [
+          592,
+          940
+        ]
+      ],
+      "length_um": 37.360000000000014
+    },
+    {
+      "kind": "PC2 existing D1 + ad_q",
+      "path_um": [
+        [
+          592,
+          940
+        ],
+        [
+          535.6800000000001,
+          940
+        ],
+        [
+          535.6800000000001,
+          894.132
+        ]
+      ],
+      "length_um": 102.18799999999999
+    },
+    {
+      "kind": "PC2 existing D1 + ad_q",
+      "path_um": [
+        [
+          592,
+          940
+        ],
+        [
+          647.784,
+          940
+        ],
+        [
+          647.784,
+          894.132
+        ]
+      ],
+      "length_um": 101.65200000000004
+    },
+    {
+      "kind": "PC3 existing D5 + ad_q",
+      "path_um": [
+        [
+          426.576,
+          959.136
+        ],
+        [
+          426.576,
+          940
+        ],
+        [
+          445,
+          940
+        ]
+      ],
+      "length_um": 37.559999999999945
+    },
+    {
+      "kind": "PC3 existing D5 + ad_q",
+      "path_um": [
+        [
+          445,
+          940
+        ],
+        [
+          440,
+          938
+        ]
+      ],
+      "length_um": 7
+    },
+    {
+      "kind": "PC3 existing D5 + ad_q",
+      "path_um": [
+        [
+          440,
+          938
+        ],
+        [
+          435,
+          936
+        ]
+      ],
+      "length_um": 7
+    },
+    {
+      "kind": "PC3 existing D5 + ad_q",
+      "path_um": [
+        [
+          435,
+          936
+        ],
+        [
+          430,
+          934
+        ]
+      ],
+      "length_um": 7
+    },
+    {
+      "kind": "PC3 existing D5 + ad_q",
+      "path_um": [
+        [
+          430,
+          934
+        ],
+        [
+          425,
+          932
+        ]
+      ],
+      "length_um": 7
+    },
+    {
+      "kind": "PC3 existing D5 + ad_q",
+      "path_um": [
+        [
+          425,
+          932
+        ],
+        [
+          388.8,
+          932
+        ],
+        [
+          388.8,
+          894.132
+        ]
+      ],
+      "length_um": 74.06800000000004
+    },
+    {
+      "kind": "PC3 existing D5 + ad_q",
+      "path_um": [
+        [
+          425,
+          932
+        ],
+        [
+          500.904,
+          932
+        ],
+        [
+          500.904,
+          894.132
+        ]
+      ],
+      "length_um": 113.77200000000005
+    },
+    {
+      "kind": "SRAM0 read -> existing out_data",
+      "path_um": [
+        [
+          138.252,
+          601.656
+        ],
+        [
+          133.92000000000002,
+          601.656
+        ],
+        [
+          133.92000000000002,
+          690.12
+        ],
+        [
+          397.44,
+          690.12
+        ]
+      ],
+      "length_um": 356.31600000000003
+    },
+    {
+      "kind": "SRAM0 read -> existing out_data",
+      "path_um": [
+        [
+          138.252,
+          626.136
+        ],
+        [
+          133.92000000000002,
+          626.136
+        ],
+        [
+          133.92000000000002,
+          690.12
+        ],
+        [
+          397.44,
+          690.12
+        ]
+      ],
+      "length_um": 331.836
+    },
+    {
+      "kind": "bank0 out_data -> existing hop295",
+      "path_um": [
+        [
+          397.44,
+          690.12
+        ],
+        [
+          648,
+          690.12
+        ]
+      ],
+      "length_um": 250.56
+    },
+    {
+      "kind": "bank0 hop295 -> existing rowctl",
+      "path_um": [
+        [
+          648,
+          690.12
+        ],
+        [
+          895.104,
+          610.2
+        ]
+      ],
+      "length_um": 327.024
+    },
+    {
+      "kind": "SRAM1 read -> existing out_data",
+      "path_um": [
+        [
+          544.332,
+          601.656
+        ],
+        [
+          540.0,
+          601.656
+        ],
+        [
+          540.0,
+          690.12
+        ],
+        [
+          648,
+          690.12
+        ]
+      ],
+      "length_um": 200.79600000000005
+    },
+    {
+      "kind": "SRAM1 read -> existing out_data",
+      "path_um": [
+        [
+          544.332,
+          626.136
+        ],
+        [
+          540.0,
+          626.136
+        ],
+        [
+          540.0,
+          690.12
+        ],
+        [
+          648,
+          690.12
+        ]
+      ],
+      "length_um": 176.31600000000003
+    },
+    {
+      "kind": "bank1 out_data -> existing hop295",
+      "path_um": [
+        [
+          648,
+          690.12
+        ],
+        [
+          773.28,
+          690.12
+        ]
+      ],
+      "length_um": 125.27999999999997
+    },
+    {
+      "kind": "bank1 hop295 -> existing rowctl",
+      "path_um": [
+        [
+          773.28,
+          690.12
+        ],
+        [
+          895.104,
+          610.2
+        ]
+      ],
+      "length_um": 201.74400000000003
+    },
+    {
+      "kind": "SRAM2 read -> existing out_data",
+      "path_um": [
+        [
+          544.332,
+          875.256
+        ],
+        [
+          540.0,
+          875.256
+        ],
+        [
+          540.0,
+          835.92
+        ],
+        [
+          648,
+          835.92
+        ]
+      ],
+      "length_um": 151.668
+    },
+    {
+      "kind": "SRAM2 read -> existing out_data",
+      "path_um": [
+        [
+          544.332,
+          899.736
+        ],
+        [
+          540.0,
+          899.736
+        ],
+        [
+          540.0,
+          835.92
+        ],
+        [
+          648,
+          835.92
+        ]
+      ],
+      "length_um": 176.14800000000002
+    },
+    {
+      "kind": "bank2 out_data -> existing hop295",
+      "path_um": [
+        [
+          648,
+          835.92
+        ],
+        [
+          773.28,
+          760.05
+        ]
+      ],
+      "length_um": 201.14999999999998
+    },
+    {
+      "kind": "bank2 hop295 -> existing rowctl",
+      "path_um": [
+        [
+          773.28,
+          760.05
+        ],
+        [
+          895.104,
+          610.2
+        ]
+      ],
+      "length_um": 271.674
+    },
+    {
+      "kind": "SRAM3 read -> existing out_data",
+      "path_um": [
+        [
+          397.452,
+          875.256
+        ],
+        [
+          393.12,
+          875.256
+        ],
+        [
+          393.12,
+          795.96
+        ],
+        [
+          648,
+          795.96
+        ]
+      ],
+      "length_um": 338.5079999999999
+    },
+    {
+      "kind": "SRAM3 read -> existing out_data",
+      "path_um": [
+        [
+          397.452,
+          899.736
+        ],
+        [
+          393.12,
+          899.736
+        ],
+        [
+          393.12,
+          795.96
+        ],
+        [
+          648,
+          795.96
+        ]
+      ],
+      "length_um": 362.98799999999994
+    },
+    {
+      "kind": "bank3 out_data -> existing hop295",
+      "path_um": [
+        [
+          648,
+          795.96
+        ],
+        [
+          773.28,
+          760.05
+        ]
+      ],
+      "length_um": 161.19000000000005
+    },
+    {
+      "kind": "bank3 hop295 -> existing rowctl",
+      "path_um": [
+        [
+          773.28,
+          760.05
+        ],
+        [
+          895.104,
+          610.2
+        ]
+      ],
+      "length_um": 271.674
+    },
+    {
+      "kind": "rowctl -> existing BOUT KRSP",
+      "path_um": [
+        [
+          895.104,
+          610.2
+        ],
+        [
+          986.04,
+          610.2
+        ],
+        [
+          986.04,
+          310.5
+        ]
+      ],
+      "length_um": 390.63599999999997
+    },
+    {
+      "kind": "rowctl -> existing BOUT RSP",
+      "path_um": [
+        [
+          895.104,
+          610.2
+        ],
+        [
+          986.04,
+          610.2
+        ],
+        [
+          986.04,
+          603.18
+        ]
+      ],
+      "length_um": 97.95600000000002
+    }
+  ],
+  "max_screened_stage_Manhattan_um": 390.63599999999997,
+  "proposed_BOUT_pin_reach_um": {
+    "o_slg_Q_N_krsp": 123.21199999999999,
+    "o_slg_Q_N_rsp": 97.08400000000006
+  },
+  "path_screen_scope": "soft guide feasibility only; not placed cells, legal routes or timing; native GEN/PLACE review still required",
+  "original_soft_SRAM_sites_invalid_inside_hard_lots": true,
+  "original_soft_SRAM_Y_phase_error_um": 0.012,
+  "holds": [
+    "genuine head hardview absent; its data pins here are explicitly planned only",
+    "parent FT roles/wiring and coherent source projection remain pending",
+    "complete source-date/programme join and timing qualification pending",
+    "not a generated hard-macro kit; actual GEN render/native PG/pin/access/clock/guides and placement required"
+  ],
+  "inputs": {
+    "qkd_static_kv_landing.sv": "54e52aa0e901080a940eb4911b86baa70821c69bdae7982d7e4ebbc30ed1ae41",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "sram.lef": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+    "head_planned_pins.json": "38858e504f6955b58de1fa399a311a3cec3b018295dbf247a6cedc5ddb1aaec4",
+    "selected_plan.json": "7e0c26f5ca69990206118fb508836e3e492223ff8e08b54fee5c1debc25fdf1e",
+    "pc.lef": "b6a6b09f21cc43f2c1dc35f58514fbf86744935e1b7611795cb0c6b3552dab78",
+    "qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv": "e38a80024ea26b60f8bdbc2619a202dc689bfd8881f028ca711021d0275c8497",
+    "parent_pins.json": "9a2e35e02629c16434aade14482ee62f6d2f2ac0d5ef1f489836b1c9a762b95c",
+    "die_islands.tcl": "f0b57c218d1376125257b1996a0b78d8ecf1645b5fac2b847896a19fdcc5d451",
+    "kv3_pc__cl5a95b461_bound.sv": "83bbefa03ce63fafad378006ec80c7051f55c8134cd8cfdf216aca084a4dfad4",
+    "qkd_static_kv_landing_seg.sv": "2e0c93c17c26418d1f0be1c2afe089d29a5ce332bd3807295ff128e0c8f62ce2",
+    "group_r2c_native.sv": "6f88eccea7f32385fc8d91389ab3039751d0593288aa21d58f44787688e7f6b3",
+    "clock_tap_pins.json": "c82d4a249e6732c51c696055c342c6116e691a7fd52cfb5a1d61b7dc97718671"
+  }
+}

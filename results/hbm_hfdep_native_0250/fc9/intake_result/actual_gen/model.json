@@ -1,0 +1,69 @@
+{
+ "scope": "ACTUAL_FC9_NATIVE_GEN_ONLY",
+ "source": "6997d0a07d8338f8425b635007273f502c76d0ab",
+ "outline_um": [
+  427.68,
+  246.24
+ ],
+ "pins": 2286,
+ "macros": [
+  {
+   "instance": "u_rxb.g_block\\[0\\].u_block.g_mem\\[0\\].u_mem.u_sram",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "box": [
+    17.28,
+    47.532,
+    188.568,
+    125.316
+   ],
+   "orient": "MY"
+  },
+  {
+   "instance": "u_rxb.g_block\\[0\\].u_block.g_mem\\[1\\].u_mem.u_sram",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "box": [
+    17.28,
+    146.892,
+    188.568,
+    224.676
+   ],
+   "orient": "MY"
+  },
+  {
+   "instance": "u_rxb.g_block\\[1\\].u_block.g_mem\\[0\\].u_mem.u_sram",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "box": [
+    239.112,
+    47.532,
+    410.4,
+    125.316
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_rxb.g_block\\[1\\].u_block.g_mem\\[1\\].u_mem.u_sram",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "box": [
+    239.112,
+    146.892,
+    410.4,
+    224.676
+   ],
+   "orient": "R0"
+  }
+ ],
+ "guides": [],
+ "face_shell": null,
+ "clock_entry": {
+  "policy": "DECLARED_CLOCK_RESET_POINTS",
+  "pins_file": "pins.json",
+  "pins_sha256": "b580d2fb9c15a24dcbc36eca782ed389b6900eb33aa23e5f16b208888d270486",
+  "ports": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "physical_adoption": false,
+ "physical_run": "NOT_RUN",
+ "source_qualification": "Actual new FC9 component officialnative4 14054EQ/face2284PASS"
+}

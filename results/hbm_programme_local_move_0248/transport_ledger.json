@@ -1,0 +1,38 @@
+{
+  "status": "CORRECTED_DISABLED_IMPLEMENTATION_LOGICAL_PHASE_PASS_ONLY",
+  "current_payload": {
+    "CFG_descriptor_launch_bits": 279,
+    "epoch_bits": 1,
+    "native_FF_per_ingress_capture": 280
+  },
+  "status_return": {
+    "real_status_bits": 5,
+    "epoch_bits": 1,
+    "native_FF_per_capture": 6
+  },
+  "reset_delivery": {
+    "actual_distinct_routes": 2,
+    "NW_r10_source": "rst_n_t352",
+    "NE_r10_source": "rst_n_t350",
+    "other_source": "actual hub delivered rst_n",
+    "data_pipeline": false,
+    "distribution_FF": null,
+    "physical_cycles": null,
+    "current66_START_qualification": false
+  },
+  "total_new_native_data_FF_perlane": "280I+6J",
+  "logical_I2_J2_FF_perlane": 572,
+  "logical_I2_J2_paired_FF": 1144,
+  "physical_ingress_I": null,
+  "physical_return_J": null,
+  "latency_scope": "I is CFG/descriptor/launch arrival, J observer return. No added I on every resident opcode or L730 traversal.",
+  "old_reset_as_data": {
+    "commit": "c09cd4fbc",
+    "payload_data_plus_reset_bits": 281,
+    "total_with_epoch": 282,
+    "I2J2_FF_perlane": 576,
+    "status": "FAILED_ASYNC_ASSERTION_INTERFACE; historical only"
+  },
+  "absolute_existing_XO_and_parent_budget": "UNJOINED; no physical credit or old proof transfer",
+  "qualification": "Paired native component PASS+three mutants in results/hbm_programme_phase_0350; physical/source-view/globalmission held"
+}

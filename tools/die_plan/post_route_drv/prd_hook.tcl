@@ -160,8 +160,16 @@ if {[info exists ::env(OT_PRD_TARGETED)] && $::env(OT_PRD_TARGETED) eq "1"} {
   repair_design {*}${_drv_args}
 }
 if {$::env(OT_SETUP_MARGIN) ne ""} {
-  puts "OT_PRD pass $_pass repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN)"
-  repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp
+  # DIE-S81-49 11-02 (class fix, removed-buffer class): an UnbufferMove deletes an instance inside the incremental-GRT
+  # session; GRT/DRT then touch the deleted cell -- SIGSEGV in drt::FlexPA (getEdgeCost / FlexGCWorker::initPA0, at the
+  # first repair move or at global_route -end_incremental with OT_PRD_REPAIR_RC=placement) or GRT-0228 usage=65535
+  # (edge usage decremented below 0).  Measured: every crashed S81 ECO (l1c A/B, caprt, XRT1 w80/w60, H0 i2) removed or
+  # was removing a buffer; every completed one (H0 i1, BF i1t) removed none.  The ECO keeps sizing / buffering /
+  # cloning / pin swaps; OT_PRD_BUFFER_REMOVAL=1 restores the old move set.  No check or margin change.
+  set _st_args [list -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp]
+  if {![info exists ::env(OT_PRD_BUFFER_REMOVAL)] || $::env(OT_PRD_BUFFER_REMOVAL) ne "1"} { lappend _st_args -skip_buffer_removal }
+  puts "OT_PRD pass $_pass repair_timing $_st_args"
+  repair_timing {*}$_st_args
 }
 set args [list -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)]
 if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }

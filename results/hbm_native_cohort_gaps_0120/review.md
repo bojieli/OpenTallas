@@ -1,0 +1,13 @@
+# Exact remaining native cohort stage joins
+
+Narrow actual instance inventory confirms SOURCE13 already carries L203/m at5cycles and L700 at19. L96m is also19: source+rootFT10+receiver =12, plus actual native ot_dp_dly W23 D7 u_lpad_L96_i. These source paths need no added stage. Native module variants were read from the actual bound-top instance calls, including q_b101 specialized modules and the root instance without a u_ prefix; no filename aliases.
+
+Paired L731 remains17: source1+FT6+FT9+receiver1. The actual q_b002 and physical_v1 L731x2 chains need9→10 at exact596data+epoch (+597FF each). NW_L5 needs7→8 only in q_su31__physical_v1, at actual128data+epoch (+129nativeFF). NE remains7. The disabled generator's explicit --include-cohort-ft composes these additions with the previously prepared L730 source/downstream event. SOURCE13 and running proof worker979 remain untouched.
+
+Why L5 is128: actual bind_latency explicitly records128allocated data versus2725planned capacity, LSB-first source bits sfus_NW.l00_vi_q[0:31], l01, l02, l03 (mirrorNEsame), forwarded0. Actual hub output concatenates those four complete32-bit vectors; actual B110 lane0..3 lane_vi_q inputs consume the corresponding32-bit slices. Manifest transport is empty. Ordinary binder build_buses chooses width=len(actualitems), not an artificial128frontend cap; other actual SOURCE13 lanes have widths1662/2807. No L5 binding errors or unplanned same-pair residue were reported. Remaining2597 is unallocated planned capacity, not insertedzeros or a proof that unrelated source signals are unused. The physical129-native ABI versus2726-capacity pin/epoch/FF/clock join must still be explicit; no silent expansion/narrowing.
+
+The actual selected ot_dp_st normalizedbody equals the frozen miterbody. Its data bits are independent q<=d, with scalar epoch/reset independentofW. Existing1662/2725bit native+1 mechanism/mutant results project to128/596, and appendingone such stage operates on an arbitrary existing last-stage waveform. No redundant proof rerun or new receipt was made. This supports logical stage updates, not physical timing/source-provider/START qualification.
+
+Full disabled native delta versus SOURCE13 is15909FF (15896data+13epoch) including the prior paired L730 event. Current coherent plan already budgets its downstream stage additions, so do not charge them again. Upstream exact physical count, old XO absolute physical budget and L5 payload/capacity mapping remain open.
+
+Generated source files and full event manifest are in /srv/opentallas-scratch/claude/codex-hbm-l730-native-source-2320/disabled_fullcohort_0120. This packet is composable source/model work; no activation, P&R or sign-off claim.

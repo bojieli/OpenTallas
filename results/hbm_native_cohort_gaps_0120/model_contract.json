@@ -1,0 +1,52 @@
+{
+  "status": "DISABLED_EXACT_NATIVE_STAGE_SUPPLEMENT",
+  "already_matching_actual_SOURCE13": {
+    "L203": 5,
+    "L203m": 5,
+    "L700": 19,
+    "L96m": 19
+  },
+  "L96m": {
+    "part_stages": 12,
+    "actual_padding_instance": "hbm_arch_q_hub__q_hub_nw.u_lpad_L96_i",
+    "padding_module": "ot_dp_dly",
+    "W": 23,
+    "D": 7,
+    "total": 19
+  },
+  "updates": [
+    {
+      "module": "hbm_arch_q_su31__physical_v1",
+      "slot": "L5r0_1",
+      "old": 7,
+      "new": 8,
+      "data_bits": 128,
+      "new_FF": 129,
+      "NE_unchanged": true
+    },
+    {
+      "module": "hbm_arch_q_b002",
+      "slot": "L731x2",
+      "old": 9,
+      "new": 10,
+      "data_bits": 596,
+      "new_FF": 597
+    },
+    {
+      "module": "hbm_arch_q_b002__physical_v1",
+      "slot": "L731x2",
+      "old": 9,
+      "new": 10,
+      "data_bits": 596,
+      "new_FF": 597
+    }
+  ],
+  "full_disabled_event_native_FF_delta_vs_SOURCE13": 15909,
+  "new_data_FF": 15896,
+  "new_epoch_reset_FF": 13,
+  "physical_exact_upstream_edges": null,
+  "plan_budget": "Currentplan already includes downstreamstagedeltas; do notdoublecharge. NativeL5+129FF versusplannedcapacity+2726 andexistingXOabsoluteplan budget remainunjoined.",
+  "L5_reason": "Real128-bit fourlanevi_q payload, ordinaryactualbinding lenitems128, plannedcap2725 retained; no globalpayloadcap (otheractualSOURCE13lanes exceed128) ortransportoverride, no insertedzeros.",
+  "SOURCE13_mutated": false,
+  "running_StoreA_worker_979_mutated": false
+}

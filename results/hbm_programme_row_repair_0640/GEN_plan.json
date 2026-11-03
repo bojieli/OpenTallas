@@ -1,0 +1,87 @@
+{
+  "schema": "opentallas.die_plan.v1",
+  "die": {
+    "tech": "asap7",
+    "period_ps": 833,
+    "reach_um": 405.0,
+    "rep_um": 450.0,
+    "grid_um": 8.64,
+    "layer_budget": {
+      "partition_signal_max": "M7",
+      "die_layers": [
+        "M8",
+        "M9"
+      ],
+      "die_use": [
+        "clock_spine",
+        "pg",
+        "reset"
+      ],
+      "cut_avail": {
+        "M8": 0.6,
+        "M9": 0.6
+      }
+    },
+    "pg": {
+      "partition_pg_max": "M7",
+      "grid": [
+        {
+          "layer": "M8",
+          "width_um": 0.48,
+          "pitch_um": 4.32,
+          "offset_um": 2.16,
+          "nets": [
+            "VDD",
+            "VSS"
+          ]
+        },
+        {
+          "layer": "M9",
+          "width_um": 12.96,
+          "pitch_um": 34.56,
+          "offset_um": 17.28,
+          "nets": [
+            "VDD",
+            "VSS"
+          ]
+        }
+      ],
+      "domains": []
+    },
+    "name": "SELECTED_R10_NATIVE_ROW_CANDIDATE_GEN_ONLY",
+    "outline_um": [
+      604.8,
+      803.52
+    ]
+  },
+  "clock": {
+    "insertion_ps": 250,
+    "insertion_tol_ps": 80
+  },
+  "partition_types": {
+    "native_provider_slot": {
+      "outline_um": [
+        604.8,
+        803.52
+      ],
+      "hard_cores": [
+        {
+          "inst": "u_selected_r10",
+          "module": "ot_hgi_sfu_programme_store_r10",
+          "origin_um": [
+            0,
+            0
+          ],
+          "outline_um": [
+            604.8,
+            803.52
+          ],
+          "pins_file": "native_pins_clock_entry.json"
+        }
+      ]
+    }
+  },
+  "partitions": [],
+  "ports": [],
+  "lanes": []
+}

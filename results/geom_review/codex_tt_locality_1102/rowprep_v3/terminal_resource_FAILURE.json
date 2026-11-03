@@ -1,0 +1,23 @@
+{
+ "status": "OPTIMIZER_RESOURCE_EXHAUSTION",
+ "actual_unit": "oth-ubuntu-550012-1793623734.scope",
+ "host": "intel1",
+ "exit_code": 137,
+ "terminal_local_time": "2026-11-02 08:49:49 PST",
+ "actual_cause": "MEMCG-OOM at own MemoryMax; confirmed ot-heavy output and systemd oom-kill journal",
+ "memory_max_bytes": 4294967296,
+ "memory_peak_bytes": 4294967296,
+ "cpu_seconds": 14487.849,
+ "wall_seconds": 14454.313,
+ "original_objective": "minimum total L1 movement",
+ "last_completed_iteration": {
+  "iteration": 0,
+  "collisions": 366
+ },
+ "later_incumbent_receipt": false,
+ "geometry_infeasibility_claim": false,
+ "source_correspondence": "HELD",
+ "actual_live_source_extra_ff": 12,
+ "physical_release": false,
+ "next": "separate rowprep_v4_feasible, objective0/60s budget/20s percall/max3cut iterations, normal8GB2T; complete oldcandidate then fresh244/207 and all38243 audit"
+}

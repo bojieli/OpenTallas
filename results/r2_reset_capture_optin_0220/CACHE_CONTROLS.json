@@ -1,0 +1,17 @@
+{
+  "actual_native_positive": 9,
+  "controls": [
+    {
+      "control": "mapped_input",
+      "status": "REJECTED",
+      "reason": "actual source/mapped proof identity changed"
+    },
+    {
+      "control": "source_input",
+      "status": "REJECTED",
+      "reason": "frozen source/reset qualifier changed: ot_hgi_sm_xload_bfqg.sv"
+    }
+  ],
+  "original_kit_changed": false,
+  "registration_release": false
+}

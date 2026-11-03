@@ -32,6 +32,8 @@ land_sram_candidate #(.MUT(2)) c2 (clk, WR_ADDR, WR_DATA, WR_EN, rc, valid, win,
 land_sram_candidate #(.MUT(3)) c3 (clk, WR_ADDR, WR_DATA, WR_EN, rc, valid, win, need, scale, cq[3]);
 land_sram_candidate #(.MUT(4)) c4 (clk, WR_ADDR, WR_DATA, WR_EN, rc, valid, win, need, scale, cq[4]);
 land_sram_candidate #(.MUT(5)) c5 (clk, WR_ADDR, WR_DATA, WR_EN, rc, valid, win, need, scale, cq[5]);
+wire [1059:0] pq;
+ot_t7_land_capture_candidate prod (clk, WR_ADDR, WR_DATA, WR_EN, rc, valid, win, need, scale, pq);
 integer mutant = 0;
 wire [1059:0] observed = cq[mutant];
 
@@ -138,6 +140,9 @@ initial begin
             written[rows[ch]] = 1; wr_of[rows[ch]] = 2'(ch);
         end
         @(posedge clk); #2;
+        if (mutant == 0 && gold !== pq) begin
+            $display("LAND_NATIVE_FAIL production_child edge=%0d rc=%0d", i, rc); $fatal(1);
+        end
         if (gold !== observed) begin
             $display("LAND_NATIVE_FAIL mutant=%0d edge=%0d rc=%0d tjob=%0d wcount=%0d", mutant, i, rc, tjob, wcount);
             for (j = 0; j < 4; j = j + 1) if (gold[265*j +: 265] !== observed[265*j +: 265])

@@ -1,0 +1,672 @@
+{
+  "status": "ACTUAL_COMPLETED_PC0355_FT_JOIN_ONLY_PC_NOT_SIGNED",
+  "units_per_um": 1000,
+  "actual_cells": {
+    "mp_isl0_ck0": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "ports": {
+        "A": "ft_ck_i_0",
+        "Y": "ft_ck_o_0"
+      },
+      "placement_status": "FIXED",
+      "xy_um": [
+        123.39,
+        86.4
+      ],
+      "orient": "N"
+    },
+    "mp_isl0_ck1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "ports": {
+        "A": "ft_ck_i_0",
+        "Y": "ft_ck_o_0"
+      },
+      "placement_status": "FIXED",
+      "xy_um": [
+        125.01,
+        86.4
+      ],
+      "orient": "N"
+    },
+    "mp_isl1_ck0": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "ports": {
+        "A": "ft_ck_i_1",
+        "Y": "ft_ck_o_1"
+      },
+      "placement_status": "FIXED",
+      "xy_um": [
+        123.39,
+        276.21
+      ],
+      "orient": "FS"
+    },
+    "mp_isl1_ck1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "ports": {
+        "A": "ft_ck_i_1",
+        "Y": "ft_ck_o_1"
+      },
+      "placement_status": "FIXED",
+      "xy_um": [
+        125.01,
+        276.21
+      ],
+      "orient": "FS"
+    }
+  },
+  "actual_pin_records": {
+    "ft_ck_i_0": "    - ft_ck_i_0 + NET ft_ck_i_0 + DIRECTION INPUT + USE SIGNAL\n      + PORT\n        + LAYER M5 ( -24 -240 ) ( 24 240 )\n        + FIXED ( 122280 86535 ) N ;\n",
+    "ft_ck_i_1": "    - ft_ck_i_1 + NET ft_ck_i_1 + DIRECTION INPUT + USE SIGNAL\n      + PORT\n        + LAYER M5 ( -24 -240 ) ( 24 240 )\n        + FIXED ( 122280 276345 ) N ;\n",
+    "ft_ck_o_0": "    - ft_ck_o_0 + NET ft_ck_o_0 + DIRECTION OUTPUT + USE SIGNAL\n      + PORT\n        + LAYER M5 ( -24 -240 ) ( 24 240 )\n        + FIXED ( 127944 86535 ) N ;\n",
+    "ft_ck_o_1": "    - ft_ck_o_1 + NET ft_ck_o_1 + DIRECTION OUTPUT + USE SIGNAL\n      + PORT\n        + LAYER M5 ( -24 -240 ) ( 24 240 )\n        + FIXED ( 127944 276345 ) N ;\n"
+  },
+  "actual_nets": {
+    "ft_ck_i_0": {
+      "connections": [
+        [
+          "PIN",
+          "ft_ck_i_0"
+        ],
+        [
+          "mp_isl0_ck1",
+          "A"
+        ],
+        [
+          "mp_isl0_ck0",
+          "A"
+        ]
+      ],
+      "routed": true,
+      "route_record": "    - ft_ck_i_0 ( PIN ft_ck_i_0 ) ( mp_isl0_ck1 A ) ( mp_isl0_ck0 A ) + USE SIGNAL\n      + ROUTED M2 ( 122625 86625 ) ( 123417 * )\n      NEW M3 ( 122625 86616 ) ( * 86625 )\n      NEW M4 ( 122424 86616 ) ( 122625 * )\n      NEW M5 ( 122424 86616 ) ( * 86624 )\n      NEW M6 ( 122280 86624 ) ( 122424 * )\n      NEW M3 ( 123417 86517 ) ( * 86625 )\n      NEW M2 ( 123417 86517 ) ( 125037 * )\n      NEW M1 ( 125037 86517 ) VIA12\n      NEW M1 ( 123417 86625 ) VIA12\n      NEW M2 ( 122625 86625 ) VIA23\n      NEW M3 ( 122625 86616 ) VIA34\n      NEW M4 ( 122424 86616 ) VIA45\n      NEW M5 ( 122424 86624 ) VIA56\n      NEW M5 ( 122280 86624 ) VIA56\n      NEW M2 ( 123417 86517 ) VIA23\n      NEW M2 ( 123417 86625 ) VIA23\n      NEW M5 ( 122424 86616 ) RECT ( -12 -53 12 0 ) \n      NEW M2 ( 123417 86625 ) RECT ( -23 -9 0 9 )  ;\n"
+    },
+    "ft_ck_i_1": {
+      "connections": [
+        [
+          "PIN",
+          "ft_ck_i_1"
+        ],
+        [
+          "mp_isl1_ck1",
+          "A"
+        ],
+        [
+          "mp_isl1_ck0",
+          "A"
+        ]
+      ],
+      "routed": true,
+      "route_record": "    - ft_ck_i_1 ( PIN ft_ck_i_1 ) ( mp_isl1_ck1 A ) ( mp_isl1_ck0 A ) + USE SIGNAL\n      + ROUTED M3 ( 122517 276255 ) ( * 276264 )\n      NEW M4 ( 122424 276264 ) ( 122517 * )\n      NEW M5 ( 122424 276256 ) ( * 276264 )\n      NEW M6 ( 122280 276256 ) ( 122424 * )\n      NEW M2 ( 123417 276327 ) ( 125037 * )\n      NEW M3 ( 123417 276255 ) ( * 276327 )\n      NEW M2 ( 122517 276255 ) ( 123417 * )\n      NEW M2 ( 122517 276255 ) VIA23\n      NEW M3 ( 122517 276264 ) VIA34\n      NEW M4 ( 122424 276264 ) VIA45\n      NEW M5 ( 122424 276256 ) VIA56\n      NEW M5 ( 122280 276256 ) VIA56\n      NEW M1 ( 123417 276327 ) VIA12\n      NEW M1 ( 125037 276327 ) VIA12\n      NEW M2 ( 123417 276255 ) VIA23\n      NEW M2 ( 123417 276327 ) VIA23\n      NEW M5 ( 122424 276264 ) RECT ( -12 0 12 53 ) \n      NEW M2 ( 123417 276327 ) RECT ( -23 -9 0 9 )  ;\n"
+    },
+    "ft_ck_o_0": {
+      "connections": [
+        [
+          "PIN",
+          "ft_ck_o_0"
+        ],
+        [
+          "mp_isl0_ck1",
+          "Y"
+        ],
+        [
+          "mp_isl0_ck0",
+          "Y"
+        ]
+      ],
+      "routed": true,
+      "route_record": "    - ft_ck_o_0 ( PIN ft_ck_o_0 ) ( mp_isl0_ck1 Y ) ( mp_isl0_ck0 Y ) + USE SIGNAL\n      + ROUTED M5 ( 127800 86472 ) ( * 86496 )\n      NEW M6 ( 127800 86496 ) ( 127944 * )\n      NEW M3 ( 126585 86445 ) ( * 86472 )\n      NEW M3 ( 124965 86445 ) ( * 86472 )\n      NEW M4 ( 124965 86472 ) ( 127800 * )\n      NEW M4 ( 127800 86472 ) VIA45\n      NEW M5 ( 127800 86496 ) VIA56\n      NEW M5 ( 127944 86496 ) VIA56\n      NEW M1 ( 126585 86445 ) VIA12\n      NEW M2 ( 126585 86445 ) VIA23\n      NEW M3 ( 126585 86472 ) VIA34\n      NEW M3 ( 124965 86472 ) VIA34\n      NEW M1 ( 124965 86445 ) VIA12\n      NEW M2 ( 124965 86445 ) VIA23\n      NEW M5 ( 127800 86472 ) RECT ( -12 -37 12 0 ) \n      NEW M2 ( 126585 86445 ) RECT ( -23 -9 0 9 ) \n      NEW M4 ( 126585 86472 ) RECT ( 0 -12 64 12 ) \n      NEW M2 ( 124965 86445 ) RECT ( -23 -9 0 9 )  ;\n"
+    },
+    "ft_ck_o_1": {
+      "connections": [
+        [
+          "PIN",
+          "ft_ck_o_1"
+        ],
+        [
+          "mp_isl1_ck1",
+          "Y"
+        ],
+        [
+          "mp_isl1_ck0",
+          "Y"
+        ]
+      ],
+      "routed": true,
+      "route_record": "    - ft_ck_o_1 ( PIN ft_ck_o_1 ) ( mp_isl1_ck1 Y ) ( mp_isl1_ck0 Y ) + USE SIGNAL\n      + ROUTED M5 ( 127800 276384 ) ( * 276408 )\n      NEW M6 ( 127800 276384 ) ( 127944 * )\n      NEW M3 ( 126585 276408 ) ( * 276435 )\n      NEW M3 ( 124965 276408 ) ( * 276435 )\n      NEW M4 ( 124965 276408 ) ( 127800 * )\n      NEW M4 ( 127800 276408 ) VIA45\n      NEW M5 ( 127800 276384 ) VIA56\n      NEW M5 ( 127944 276384 ) VIA56\n      NEW M1 ( 126585 276435 ) VIA12\n      NEW M2 ( 126585 276435 ) VIA23\n      NEW M3 ( 126585 276408 ) VIA34\n      NEW M3 ( 124965 276408 ) VIA34\n      NEW M1 ( 124965 276435 ) VIA12\n      NEW M2 ( 124965 276435 ) VIA23\n      NEW M5 ( 127800 276408 ) RECT ( -12 0 12 37 ) \n      NEW M2 ( 126585 276435 ) RECT ( -23 -9 0 9 ) \n      NEW M4 ( 126585 276408 ) RECT ( 0 -12 64 12 ) \n      NEW M2 ( 124965 276435 ) RECT ( -23 -9 0 9 )  ;\n"
+    }
+  },
+  "real_model_ports": {
+    "ft_ck_i_1": {
+      "direction": "INPUT",
+      "shape_text": "\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT  122.256 276.105 122.304 276.585 ;\n    END\n  "
+    },
+    "ft_ck_o_0": {
+      "direction": "OUTPUT",
+      "shape_text": "\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT  127.92 86.295 127.968 86.775 ;\n    END\n  "
+    },
+    "ft_ck_i_0": {
+      "direction": "INPUT",
+      "shape_text": "\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT  122.256 86.295 122.304 86.775 ;\n    END\n  "
+    },
+    "ft_ck_o_1": {
+      "direction": "OUTPUT",
+      "shape_text": "\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT  127.92 276.105 127.968 276.585 ;\n    END\n  "
+    }
+  },
+  "official_FT_model": {
+    "schema": "opentallas.ft_interface_model.v1",
+    "ft_sha256": "1307f38a01f4b82954732cb1e058e204f6e5a61156efd2625119e2b47167fe1d",
+    "status": "characterised",
+    "env": {
+      "driving_cell": "BUFx4_ASAP7_75t_R",
+      "load_ff": 2.0
+    },
+    "note": "12.2a1 die-owned ft arcs: clock = pass-through propagated by die clock STA; reset = interface arc timed in die STA vs the reset wavefront plan; never core IO. delays ps, filled by signoff.",
+    "arcs": [
+      {
+        "source": "ft_ck_i_0",
+        "sink": "ft_ck_o_0",
+        "kind": "clock",
+        "tt_ps": {
+          "min": 29.19,
+          "max": 34.2
+        },
+        "ff_ps": {
+          "min": 22.19,
+          "max": 24.87
+        }
+      },
+      {
+        "source": "ft_ck_i_1",
+        "sink": "ft_ck_o_1",
+        "kind": "clock",
+        "tt_ps": {
+          "min": 29.06,
+          "max": 34.04
+        },
+        "ff_ps": {
+          "min": 22.15,
+          "max": 24.78
+        }
+      }
+    ]
+  },
+  "private_p1_outputs": "Absent as separate nets: both actual native HDL and final DEF directly connect each real ck0/ck1 Y to the same public ft_ck_o_k; this is an actual completed join, not an intent table.",
+  "source_hashes": {
+    "ft_ports.json": "f0a37e81d07710522918f93c449a31e5cb528706c1a287345f562ded02f470fb",
+    "qkd_kvs_pc.lef": "b6a6b09f21cc43f2c1dc35f58514fbf86744935e1b7611795cb0c6b3552dab78",
+    "island_ft.json": "2a4c535d6b47ef63a88f678aa10f8e45f0c913565c051b89101c7c5ef0209e8f",
+    "ft_interface.json": "966b7104928bafe6adfbe7895a21ba4258353239ba74f0ae09c0b8f2edbc7de0",
+    "official_ft_interface.json": "966b7104928bafe6adfbe7895a21ba4258353239ba74f0ae09c0b8f2edbc7de0",
+    "ft_stations.txt": "715f49540d7be2f97837544cb72cf1d3baa44b0a09958d78d9d0abc1f7d24af5",
+    "6_final.def": "0666fa2c890119d94b0d7490ecc421142b3b4390f2847fd5ee0fe8ccd2a1bbfa",
+    "6_final.v": "36bb1d1537d4dc2ea79fc31edffd79f770d5e8f6cb275ae10823107b04ff786c",
+    "island_ft.tcl": "89eb1dbb6849a333f8dd30a2912026b5d3ae747a40239750de46ca69596c5503",
+    "qkd_kvs_pc_tt.lib": "581c4f2e427b16aca2d495e6284e75038f0329b77a82602b3d4b44f6d8858304",
+    "qkd_kvs_pc_ff.lib": "235388ad7f0e2f7928329254a390780f9989c44a3acde569954a25d655f381e7"
+  },
+  "holds": [
+    "PC remains NOT_SIGNED; separate final post-LEC pending.",
+    "Parent placement/transform and genuine soft-HEAD native joins not yet qualified."
+  ],
+  "base_parent_pose_delta": [
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc1",
+      "arc": 0,
+      "cell": "mp_isl0_ck0",
+      "actual_parent_center_um": [
+        676.776,
+        285.255
+      ],
+      "canonical_center_um": [
+        676.7760000000005,
+        285.2550000000017
+      ],
+      "delta_um": [
+        -0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc1",
+      "arc": 0,
+      "cell": "mp_isl0_ck1",
+      "actual_parent_center_um": [
+        678.396,
+        285.255
+      ],
+      "canonical_center_um": [
+        678.3960000000013,
+        285.2550000000017
+      ],
+      "delta_um": [
+        -0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc1",
+      "arc": 1,
+      "cell": "mp_isl1_ck0",
+      "actual_parent_center_um": [
+        676.776,
+        475.065
+      ],
+      "canonical_center_um": [
+        676.7760000000005,
+        475.0649999999994
+      ],
+      "delta_um": [
+        -0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc1",
+      "arc": 1,
+      "cell": "mp_isl1_ck1",
+      "actual_parent_center_um": [
+        678.396,
+        475.065
+      ],
+      "canonical_center_um": [
+        678.3960000000013,
+        475.0649999999994
+      ],
+      "delta_um": [
+        -0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc2",
+      "arc": 0,
+      "cell": "mp_isl0_ck0",
+      "actual_parent_center_um": [
+        676.776,
+        1045.575
+      ],
+      "canonical_center_um": [
+        676.7760000000005,
+        1045.5750000000014
+      ],
+      "delta_um": [
+        -0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc2",
+      "arc": 0,
+      "cell": "mp_isl0_ck1",
+      "actual_parent_center_um": [
+        678.396,
+        1045.575
+      ],
+      "canonical_center_um": [
+        678.3960000000013,
+        1045.5750000000014
+      ],
+      "delta_um": [
+        -0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc2",
+      "arc": 1,
+      "cell": "mp_isl1_ck0",
+      "actual_parent_center_um": [
+        676.776,
+        1235.385
+      ],
+      "canonical_center_um": [
+        676.7760000000005,
+        1235.384999999999
+      ],
+      "delta_um": [
+        -0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc2",
+      "arc": 1,
+      "cell": "mp_isl1_ck1",
+      "actual_parent_center_um": [
+        678.396,
+        1235.385
+      ],
+      "canonical_center_um": [
+        678.3960000000013,
+        1235.384999999999
+      ],
+      "delta_um": [
+        -0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc3",
+      "arc": 0,
+      "cell": "mp_isl0_ck0",
+      "actual_parent_center_um": [
+        358.68,
+        1045.575
+      ],
+      "canonical_center_um": [
+        358.680000000001,
+        1045.5750000000014
+      ],
+      "delta_um": [
+        -0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc3",
+      "arc": 0,
+      "cell": "mp_isl0_ck1",
+      "actual_parent_center_um": [
+        357.06,
+        1045.575
+      ],
+      "canonical_center_um": [
+        357.0600000000002,
+        1045.5750000000014
+      ],
+      "delta_um": [
+        -0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc3",
+      "arc": 1,
+      "cell": "mp_isl1_ck0",
+      "actual_parent_center_um": [
+        358.68,
+        1235.385
+      ],
+      "canonical_center_um": [
+        358.680000000001,
+        1235.384999999999
+      ],
+      "delta_um": [
+        -0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_EN_0",
+      "owner": "kvpc3",
+      "arc": 1,
+      "cell": "mp_isl1_ck1",
+      "actual_parent_center_um": [
+        357.06,
+        1235.385
+      ],
+      "canonical_center_um": [
+        357.0600000000002,
+        1235.384999999999
+      ],
+      "delta_um": [
+        -0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc1",
+      "arc": 0,
+      "cell": "mp_isl0_ck0",
+      "actual_parent_center_um": [
+        676.776,
+        285.255
+      ],
+      "canonical_center_um": [
+        676.7759999999998,
+        285.2550000000017
+      ],
+      "delta_um": [
+        0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc1",
+      "arc": 0,
+      "cell": "mp_isl0_ck1",
+      "actual_parent_center_um": [
+        678.396,
+        285.255
+      ],
+      "canonical_center_um": [
+        678.396,
+        285.2550000000017
+      ],
+      "delta_um": [
+        0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc1",
+      "arc": 1,
+      "cell": "mp_isl1_ck0",
+      "actual_parent_center_um": [
+        676.776,
+        475.065
+      ],
+      "canonical_center_um": [
+        676.7759999999998,
+        475.0649999999994
+      ],
+      "delta_um": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc1",
+      "arc": 1,
+      "cell": "mp_isl1_ck1",
+      "actual_parent_center_um": [
+        678.396,
+        475.065
+      ],
+      "canonical_center_um": [
+        678.396,
+        475.0649999999994
+      ],
+      "delta_um": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc2",
+      "arc": 0,
+      "cell": "mp_isl0_ck0",
+      "actual_parent_center_um": [
+        676.776,
+        1045.575
+      ],
+      "canonical_center_um": [
+        676.7759999999998,
+        1045.5750000000014
+      ],
+      "delta_um": [
+        0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc2",
+      "arc": 0,
+      "cell": "mp_isl0_ck1",
+      "actual_parent_center_um": [
+        678.396,
+        1045.575
+      ],
+      "canonical_center_um": [
+        678.396,
+        1045.5750000000014
+      ],
+      "delta_um": [
+        0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc2",
+      "arc": 1,
+      "cell": "mp_isl1_ck0",
+      "actual_parent_center_um": [
+        676.776,
+        1235.385
+      ],
+      "canonical_center_um": [
+        676.7759999999998,
+        1235.384999999999
+      ],
+      "delta_um": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc2",
+      "arc": 1,
+      "cell": "mp_isl1_ck1",
+      "actual_parent_center_um": [
+        678.396,
+        1235.385
+      ],
+      "canonical_center_um": [
+        678.396,
+        1235.384999999999
+      ],
+      "delta_um": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc3",
+      "arc": 0,
+      "cell": "mp_isl0_ck0",
+      "actual_parent_center_um": [
+        358.68,
+        1045.575
+      ],
+      "canonical_center_um": [
+        358.67999999999984,
+        1045.5750000000014
+      ],
+      "delta_um": [
+        0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc3",
+      "arc": 0,
+      "cell": "mp_isl0_ck1",
+      "actual_parent_center_um": [
+        357.06,
+        1045.575
+      ],
+      "canonical_center_um": [
+        357.05999999999995,
+        1045.5750000000014
+      ],
+      "delta_um": [
+        0.0,
+        -0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc3",
+      "arc": 1,
+      "cell": "mp_isl1_ck0",
+      "actual_parent_center_um": [
+        358.68,
+        1235.385
+      ],
+      "canonical_center_um": [
+        358.67999999999984,
+        1235.384999999999
+      ],
+      "delta_um": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "part": "pc_WN_0",
+      "owner": "kvpc3",
+      "arc": 1,
+      "cell": "mp_isl1_ck1",
+      "actual_parent_center_um": [
+        357.06,
+        1235.385
+      ],
+      "canonical_center_um": [
+        357.05999999999995,
+        1235.384999999999
+      ],
+      "delta_um": [
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "full_pin_join": {
+    "source_bits": 4133,
+    "real_lef_bits": 4133,
+    "missing": [],
+    "extra": [],
+    "wrong_direction": [],
+    "source_file": "01484262b complete_source_capsule_r4/pc_EN_0/rtl/qkd_kvs_pc.sv",
+    "model": "PC0355 real qkd_kvs_pc.lef",
+    "scalar_aliases_used": false
+  },
+  "HEAD": {
+    "native_status": "NOT RUN; no native HEAD DB borrowed from BASE",
+    "source_status": "Actual normal producer in 01484262b source capsule, four real BUFx24 instances and two separate private p1 outputs",
+    "source_hook": "historical_HEAD_ft.tcl exact private-net allowlist, normal row/site/master guards and whole parent endpoint census",
+    "physical_join_status": "Intent/runtime-enforced next stage; not an actual native join",
+    "source_y_sites_um": [
+      285.12,
+      475.2
+    ],
+    "source_master_LEF_sha256": "a130e4259d0c337d59d0f5a8060f07ce5fe2af48ad56594719d4a89979c2ca1d"
+  },
+  "master_source": {
+    "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef",
+    "read": "Read-only standard master source extraction; no CAD"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "status": "PASS_COMPONENT",
+  "what": "main rtl/qwen_dv/qfd_dv_table_rom_loader.sv (HEAD_STAGE37=1, BTAB_COMPACT=1, WE34, no monitor tail) on the ACTUAL rank0 HEAD37 source masks (codex-head-source-event-1101/source1/rank0, 64c8e29ec), all 12 slices, stages 1/36/37, 4 users",
+  "host": "epyc2/dear-crayfish", "unit": "oth-ubuntu-360215-1793677152", "admission": {"mem_gb":4,"threads":1,"disk_gb":2,"critical":true},
+  "build": {"exit":0,"wall":"1:14.36","peak_rss_kb":435160}, "run": {"exit":0,"wall":"0:09.68"},
+  "prefix": "stages 1/36: HEAD37 and default instances in edge lockstep with the frozen reference loader on all 12 real slice masks (7712 writes)",
+  "default_off": "default and reference instances fault on stage37 on all 12 slices",
+  "stage37_payload": "2264 writes; every (slice,user) multiset equals head37_stage.json payload with the user_relocation.json rule (PROG +64 rows/user = pidx16/144/272/400, CROM +128 rows/user = 1088/3136/5184/7232, shared BTAB no offset); checker is independent of the loader RTL",
+  "measured_edges_after_start": {
+    "first_write": 4, "done": 91,
+    "prog_row": 4,
+    "btab_receivers_1_3_5_6_8_10": "10..59 (slice10: 10..57, 48 rows)",
+    "gain_crom_3block_slices_0_7": "60..83 (24 rows)",
+    "gain_crom_2block_slices_8_11": "60..75 (16 rows)",
+    "writes_per_user": {"s0,2,4,7":25,"s1,3,5,6":75,"s8":67,"s9,11":17,"s10":65}
+  },
+  "occupancy": "one stage37 user install holds the loader 91 edges (slot read is payload-independent); the synthetic gate2 done93 included the monitor tail (+2)",
+  "controls": {"MUT_GAIN": "same ELF, slice1 m0 arr[486] bit2 flipped: checker FAIL, 4 mismatching records (s1 u0..3), as intended"},
+  "boundary": "loader transport with genuine payload only; the global HEAD_TABLE_INSTALL_START versus stage36 traffic still needs the live calendar",
+  "clock": "833 ps (half 0.4165 ns), 1 fs precision"
+}

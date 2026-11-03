@@ -1,0 +1,22 @@
+{
+ "host": "intel2",
+ "root": "/srv/opentallas-scratch2/claude/codex-pslice-trunk-join-0425",
+ "controller": 127114,
+ "unit": "128328-1793632178",
+ "scope": "ONE_NORMAL_PLACE_ONLY",
+ "resources": {
+  "memGB": 48,
+  "threads": 4,
+  "diskGB": 8
+ },
+ "normal_preflight": "PASS0",
+ "proof": "canonical2af finished-proof transfer107482EQ/native64 reused; no newproof",
+ "current_stage": "3_3place;100fixed macros andPDN passed",
+ "no_extra_stages": [
+  "CTS",
+  "GRT",
+  "DRT"
+ ],
+ "default_activation": false,
+ "original_failures": "originalexit126, retryMPL0020 and controllerCLI/selfalias NOTRUN logs retained"
+}

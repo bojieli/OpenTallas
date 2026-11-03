@@ -14,6 +14,16 @@ import re
 import shutil
 from pathlib import Path
 
+
+def _common_flow_file(name, repo):
+    """physical/common_flow/<name> of checkout `repo`, from git HEAD in a sparse checkout without it
+    (common_flow_src.py, DIE-KV-62 11-02); a copy of this module without the helper: the plain path."""
+    try:
+        from common_flow_src import common_flow_file
+    except ImportError:
+        return Path(repo) / "physical/common_flow" / name
+    return common_flow_file(name, repo)
+
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1] if len(HERE.parents) > 1 else HERE   # core_forest sinks_file paths are repo-relative (a kit-staged copy in /work has no repo root)
 BUFFER = re.compile(r"BUFx(?:2|3|4|5|6|8|10|12|16|20|24)(?:f)?_ASAP7_75t_R\Z")
@@ -1372,7 +1382,7 @@ def install(kd, sl, copy_support=True):
         return True
     shutil.copyfile(HERE / "core_infra.tcl", kd / "core_infra_impl.tcl")
     root = HERE.parents[1]
-    shutil.copyfile(root / "physical/common_flow/native_pg_binding.tcl", kd / "native_pg_binding.tcl")
+    shutil.copyfile(_common_flow_file("native_pg_binding.tcl", root), kd / "native_pg_binding.tcl")
     return True
 
 

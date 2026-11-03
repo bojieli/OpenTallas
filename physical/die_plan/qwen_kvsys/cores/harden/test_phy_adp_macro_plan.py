@@ -21,6 +21,11 @@ def test_phy_adp_macro_plan_fits_core_and_plan_slot():
     assert halo <= b["x"] - 4.32 and b["x"] + mw + halo <= w + 1e-6      # E edge, inside the die area with halo
     assert 4.32 + halo <= b["y"] and b["y"] + mh + halo <= h - 4.32      # N / S logic gutters for the pin ends
     assert abs((b["x"] - 0.012) / 0.048 - round((b["x"] - 0.012) / 0.048)) < 1e-6   # M5 pin phase
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("mpt_adp", H / "macro_pin_tracks.py")
+    T = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(T)
+    assert T.check(p["blocks"], lambda m: lef)                # DIE-KV-62/hr: every SRAM pin on a preferred track
     rec = json.load(open(H / "recipes_kv.json"))["qkd_hr_phy_adp"]
     assert rec["hard_children"].endswith("qkd_hr_phy_adp_macro_plan.json")
     plan = json.load(open(QV / "plan_of_record/plan_c.json"))
@@ -58,3 +63,24 @@ def test_ifp_standin_for_rotated_only_fit_children():
     assert "rename initialize_floorplan ot_ifp_orig_initialize_floorplan" in G.IFP_STANDIN_TCL
     assert "read_liberty -corner $c $sl" in G.IFP_STANDIN_TCL     # swapMaster under STA needs the stand-in liberty
     assert "rename ::rtl_macro_placer ::ot_ifp_rtl_macro_placer" in G.IFP_STANDIN_MPL_TCL   # MPL-0006: fixed-site check
+
+
+def test_macro_pin_tracks_rotated_phase():
+    # DIE-KV-62/hr 11-02: R270 swaps the pin phase axis; y 17.28 put the M4 pins 0.012 um off the M4 tracks
+    import importlib.util
+    import pytest
+    spec = importlib.util.spec_from_file_location("mpt_t", H / "macro_pin_tracks.py")
+    T = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(T)
+    lef = ("MACRO m\n  SIZE 174.120 BY 29.736 ;\n  CLASS BLOCK ;\n  PIN clk\n    USE CLOCK ;\n    PORT\n"
+           "      LAYER M4 ;\n      RECT 0.000 0.768 0.024 0.792 ;\n    END\n  END clk\n  PIN VDD\n    USE POWER ;\n"
+           "    PORT\n      LAYER M4 ;\n      RECT 1.000 1.000 1.111 1.111 ;\n    END\n  END VDD\nEND m\n")
+    w, h, pins = T.lef_master(lef, "m")
+    assert (w, h) == (174.12, 29.736) and list(pins) == ["clk"]
+    assert T.place(0.012, 0.78, w, h, "R270", 17.772, 17.28) == pytest.approx((18.552, 191.388))
+    assert T.place(0.012, 0.78, w, h, "R0", 1.0, 2.0) == pytest.approx((1.012, 2.78))
+    bad = dict(inst="u", master="m", orient="R270", x=17.772, y=17.28)
+    with pytest.raises(SystemExit, match=r"shift the site by \(\+0.000, \+0.012\)"):
+        T.check([bad], lambda m: lef)
+    assert T.check([dict(bad, y=17.292)], lambda m: lef)
+    assert T.check([dict(bad, orient="R0", x=0.0, y=0.012)], lambda m: lef)     # R0: M4 y phase only

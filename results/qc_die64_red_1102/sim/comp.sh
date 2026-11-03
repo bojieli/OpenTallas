@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /home/ubuntu/scratch-root/claude/die-qc-63-red/sim5; ulimit -v 32000000
+iverilog -g2012 -o $1.vvp $2 -I /home/ubuntu/scratch-root/claude/die-qc-63-red/wt/rtl/qwen_dv/s5 /home/ubuntu/scratch-root/claude/die-qc-63-red/wt/results/qc_die63_red_1102/tb_red_event.sv old_k79.sv old_leaf.sv /home/ubuntu/scratch-root/claude/die-qc-63-red/wt/rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv /home/ubuntu/scratch-root/claude/die-qc-63-red/wt/rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv /home/ubuntu/scratch-root/claude/die-qc-63-red/wt/rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv /home/ubuntu/scratch-root/claude/die-qc-63-red/wt/rtl/qwen_dv/s5/qfd_dv_s5_red2p1_leaf.sv > $1.comp.log 2>&1

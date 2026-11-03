@@ -1,0 +1,44 @@
+{
+  "status": "NECESSARY_ADJACENT_SEQUENTIAL_GEOMETRY_ONLY",
+  "actual_FF": 20842,
+  "actual_SRAM": 44,
+  "proposed_outline_um": [
+    604.8,
+    803.52
+  ],
+  "macro_halo_um": 4.32,
+  "edge_classes": {
+    "ff\u2192ff": {
+      "edges": 151475,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 392.3460000000001,
+      "bad_all_R0_MX_pin_corners": 0,
+      "max_all_R0_MX_pin_corner_distance_um": 392.865
+    },
+    "ff\u2192macro": {
+      "edges": 12496,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 403.64099999999985,
+      "bad_all_R0_MX_pin_corners": 0,
+      "max_all_R0_MX_pin_corner_distance_um": 403.955
+    },
+    "macro\u2192ff": {
+      "edges": 11264,
+      "bad": 0,
+      "max_optimistic_pin_distance_um": 377.271,
+      "bad_all_R0_MX_pin_corners": 0,
+      "max_all_R0_MX_pin_corner_distance_um": 377.57200000000006
+    }
+  },
+  "bad_bank_pairs": [],
+  "worst_bad_edges": [],
+  "traversal": "Actual MTerm INPUT/OUTPUT graph; combinational arcs conservatively all-input/all-output, stop at every sequential/native boundary, CLOCK targets excluded",
+  "geometry": "Actual native LEF signal rectangles; proposed R0 SRAM locations and either R0/MX FF orientation. Minimum rectangle distance is optimistic; >405 is a necessary failure, <=405 is not timing/routing closure.",
+  "extra_preopt_rows": 1088,
+  "extra_rows_placed_or_used_as_endpoints": false,
+  "holds": [
+    "No CAD/PLACE/CTS/route/STA/source/default activation",
+    "Native macro pin-grid snap and actual physical IO/clock/reset/START integration remain separate",
+    "Combinational structural reach may include unsensitized arcs; source-specific exclusion would need proof"
+  ]
+}

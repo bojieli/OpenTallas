@@ -1,0 +1,41 @@
+{
+ "status": "PREP_ONLY_NO_JOB",
+ "scope": "Exact actual23-state BASE/reset-image and STEP relation in selected witness-control context",
+ "old_native": "/srv/opentallas-scratch2/claude/codex-tt-locality-1102/native_inventory_readonly/actual_old_1_2_yosys.v",
+ "fresh_native": "/srv/opentallas-scratch2/claude/codex-tt-locality-1102/synth_join_prep/run/results/asap7/dp_tt_ctlm/base/1_2_yosys.v",
+ "old_physical_reference": "native_inventory_readonly/actual_old_reference.tsv",
+ "fresh_source_census": "synth_join_prep/producer/actual_synth.tsv",
+ "shared_selected_source_context": "subject.json plus all4 actual module BODY files",
+ "resolved_parameters": {
+  "ENABLE": "1",
+  "SAFE_COMPARE": "1",
+  "SAFE_SELECT": "1",
+  "SAFE_PHYS": "1",
+  "GROUPS": "13",
+  "TEMPLATE_BITS": "134",
+  "PROFILE_DIGEST": "64'h198f7708b478a667",
+  "PROFILE_EPOCH": "16'd7"
+ },
+ "actual_parent_inputs": "subject.json actual_selected_control_inputs and both identical full callsites",
+ "actual_clock": "clk, sourceck_core direct n3159; no derived/disabled clock assumption",
+ "actual_reset": "core_rst_n through6actual posedge relays then original SAFE_PHYS rs1/rs2 and rli/rlr/rlo; retain all async/sync semantics verbatim",
+ "comparison": "All23 actual QN state relations unconditional, including invalid cycles. No valid/output mask or arbitrary comparison waiver.",
+ "base_requirement": "Native reset-image BASE in exact actual accepted cold/warm-reset profile. Unknown/None initial values are not evidence. If any endpoint cannot be justified, retain unknown/fail.",
+ "step_requirement": "Joint relation with actual CLK/D/Q polarity;22 exact transition ASTs+1actual133freeleaf universal Dfunction receipt are supporting transition evidence, not a BASE assumption.",
+ "boundary_requirement": "Preserve actual frozen source-body/input/parameter state relation; do not assume133leaf relation merely from labels, do not turn candidate23aliases into constraints.",
+ "negative_control": "Onecyclelate capture or swapped stage/epoch bit must reject under identical actual context",
+ "native_profile_and_resource": "Formal owner must freeze actual native profile/readset/resources and reset-image hook before any job. FLOW owns next actualHEAD a_v task; no overlap launched.",
+ "prohibited": [
+  "fullsourceLEC",
+  "reSYNTH",
+  "physicalCAD",
+  "sourceorSDCchange",
+  "NoneNoneinitialPASS",
+  "fullcubeassumptions",
+  "invalidcyclemask"
+ ],
+ "native_base_proved": false,
+ "aliases_accepted": false,
+ "whole_source_credit": false,
+ "physical_release": false
+}

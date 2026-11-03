@@ -63,3 +63,18 @@ def test_partial_or_foreign_final_tail_refuses(tmp_path, tail):
     (tmp_path / 'core_final_repair.tcl').write_text('repair_timing -setup\n')
     with pytest.raises(ValueError, match='unrecognized'):
         C.stage(tmp_path)
+
+
+def test_variant_a_legacy_repair_without_hold_line_skipped(tmp_path):
+    fixture(tmp_path)
+    (tmp_path / 'post_grt_drv.tcl').write_text('# variant A\n' + '\n'.join(C.LEGACY_REPAIRS[1]) + '\n')
+    assert 'repair_timing -hold -hold_margin 5 -max_buffer_percent 100' not in C.LEGACY_REPAIRS[1]
+    assert C.stage(tmp_path)['skipped_generated_repair']
+    assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post.tcl\n'
+
+
+def test_variant_a_with_extra_setup_repair_still_refuses(tmp_path):
+    fixture(tmp_path)
+    (tmp_path / 'post_grt_drv.tcl').write_text('\n'.join(C.LEGACY_REPAIRS[1] + ['repair_timing -setup']) + '\n')
+    with pytest.raises(ValueError, match='unrecognized'):
+        C.stage(tmp_path)

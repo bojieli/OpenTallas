@@ -1,0 +1,50 @@
+{
+  "status": "PASS_CONDITIONAL_SELECTED_R10_NATIVE_SOURCE_EQ",
+  "source_snapshot": "542757d902e",
+  "actual_unit": "oth-ubuntu-2712589-1793625657",
+  "actualkit": "intel2:/srv/opentallas-scratch2/claude/codex-programme-native-0525/kits/ot_hgi_sfu_programme_store_r10_6a471c27f403-native_boundary",
+  "official_counts": {
+    "compare_points": 56061,
+    "proved": 56061,
+    "differs": 0,
+    "undecided": 0
+  },
+  "time_s": {
+    "total": 572.7,
+    "AIG": 68.9,
+    "correspondence": 486.4,
+    "prove": 11.8
+  },
+  "budget_GB": 12,
+  "threads": 2,
+  "native_primitive": "ot_sram_1r1w_512x256_m1_r2c2",
+  "macro_instances": 44,
+  "native_external_ABI_bits": 2904,
+  "native_master_signal_bits": 827,
+  "soft_FF": 21930,
+  "stdcells": 69135,
+  "soft_area_um2": 9873.40016,
+  "normal_native_selector": "SYNTH_BLACKBOXES=ot_sram_1r1w_512x256_m1_r2c2",
+  "behavioural_contract_file_retained": true,
+  "actual_reset": {
+    "default": 4,
+    "requested": null,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+  },
+  "invalid_constant_candidates_dropped": 876,
+  "raw_native_BASE_constants_kept": 2,
+  "mapped_netlist_sha256": "03aca987895b2a03d1b3ea8023252843eac2c13436da16773013ad75ca12d891",
+  "mapped_bytes_identical_to_actual_0448": true,
+  "FF_row_candidate_identity_preserved": true,
+  "PNR": false,
+  "held": [
+    "No die64 or physical component4 reset-phase credit",
+    "Actual native clock/reset/START66 pin closure",
+    "SOURCE13 and proposed32definition overlay not adopted",
+    "Collar native mapping/proof",
+    "Global VM0/COPY/observer numerical mission",
+    "Physical legal rows/timing/source endpoints remain unqualified"
+  ]
+}

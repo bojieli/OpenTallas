@@ -1,0 +1,35 @@
+{
+ "lane": "DH54-TAIL",
+ "owner_decision": "2026-11-02 17:55 option A",
+ "base": "c8b158fafac6e29de71793981680390a8c103b69",
+ "codex_packet": "/home/ubuntu/coord/tmp/codex-native-head-B-pilot-packet1",
+ "tools": {
+  "verilator": "5.050",
+  "yosys": "0.67 (openroad/orfs:asap7lock)"
+ },
+ "host": "epyc2 docker -m cap",
+ "sha256": {
+  "rtl/physical/a0_rc16_head_tailpub/ot_qwen_w12_matvec_land32.sv": "4ad3600a3f431bcf85fc60984446d46ecf06eb09bbe808f61aa85f3e5d191456",
+  "rtl/physical/a0_rc16_head_tailpub/head_event_part1.f": "d16d85da824509aa40ae82604b0f5b11f1b6eb44c740bdfe583e4ff2bb5c132b",
+  "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv": "b092caede437f73f6bc90ed6ab6417f21176bee640c00a7d8368b2b9de294535",
+  "rtl/test/qwen_dv/head_tailpub/tb_head_tailpub_lockstep.sv": "241812cbf5818e2ab57a6b4e7931074a68e16f2040db0dd19b2cdbfd53c0fee3",
+  "tools/qwen_layerbench/prepare_head_tailpub_gate.sh": "7d172579e4d55e83113e17a972abb3de3e95a3422487d7235f10a8dc236c39fe",
+  "tools/qwen_layerbench/run_head_tailpub_gate.sh": "2c724130d4ccf98a5f726b03c2169caad31327551259c9c9cb51cc60f88eb403",
+  "tools/qwen_layerbench/head_tailpub_ffcount.ys": "d126cb97be23e1aa2882bad63b47a8873c236bfb605ef4cdc62c9620e461e8c4",
+  "tools/qwen_layerbench/head_tailpub_ff_wrap.sv": "a3e93f069593aad45c4e1a6900e0aaaeeb13eb6ae4ddb422c32714234e7c1413",
+  "tools/qwen_layerbench/prepare_head_tailpub_bpilot.sh": "ca09e352ee3acb3861a792ef6c384228c55fc09a68906a88b50fd8ef54066c52",
+  "tools/qwen_layerbench/run_head_tailpub_define_selection.sh": "847ebf8fe9dded43b0d151bc7d7b8dcd0f888b5b9696b09f213de1a76728f565"
+ },
+ "results": {
+  "bpilot_default": "PASS_NATIVE_B_PILOT_GATE",
+  "bpilot_define": "PASS_DEFINE_SELECTION",
+  "lockstep": "PASS_HEAD_TAILPUB_BENCH 13 scenarios, mutants union 31/31",
+  "ff": {
+   "rc14_part1_ff": 116245,
+   "tailpub0_delta": 0,
+   "tailpub1_delta": 47,
+   "estimate": 65
+  },
+  "added_cycles": 0
+ }
+}

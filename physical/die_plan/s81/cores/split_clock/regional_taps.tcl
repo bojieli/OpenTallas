@@ -153,8 +153,10 @@ proc rt_region {x y} {
   return 0
 }
 # macro taps hang off their region's leaf node: buffer at the macro clk pin (outside the macro, W/E edge nearest the pin)
-set mtap {}
+# one tap per macro clock PIN (2-clock SRAMs have two): name by a running index, not by the per-macro dict size
+set mtap {}; set rt_mi 0
 foreach mit $macs {
+  incr rt_mi
   set m [$mit getInst]
   set pbx [$mit getBBox]
   set mx [expr {([$pbx xMin]+[$pbx xMax])/2.0/$rt_dbu}]; set my [expr {([$pbx yMin]+[$pbx yMax])/2.0/$rt_dbu}]
@@ -163,8 +165,8 @@ foreach mit $macs {
   set r [rt_region $bx $my]
   # sibling of the region's leaf tap buffer (same stage count): hang from the leaf buffer's INPUT net
   lassign [dict get $tapnet $r] nx ny nn a b c d nin
-  set e [rt_run "m[llength $mtap]" $nx $ny $bx $my $nin]
-  set tn [rt_buf "mtap[dict size $mtap]" $bx $my $e]
+  set e [rt_run "m$rt_mi" $nx $ny $bx $my $nin]
+  set tn [rt_buf "mtap$rt_mi" $bx $my $e]
   $mit disconnect; $mit connect $tn
   dict set mtap [$m getName] $tn
   puts "OT_RT macro tap [$m getName] at ([format %.1f $bx],[format %.1f $my]) from region $r node ([format %.1f $nx],[format %.1f $ny])"

@@ -1,0 +1,15 @@
+{
+  "status": "OFFICIAL_UNPROVEN_NATIVE_LINT_OOM",
+  "source_commit": "63eef4b8a5f43cf69152650bbb2c80a0f437387d",
+  "stage": "FIRST read_slang implicit-net lint; before blackbox extraction and comparison",
+  "budget_GB": 12,
+  "process_anon_RSS_KiB": 12519216,
+  "actual_native_masters": 44,
+  "selected_primitive": "ot_sram_1r1w_512x256_m1_r2c2",
+  "same_native_ABI_preflight": "PASS827signal",
+  "normal_SYNTH": "PASS; retains44 true native macros",
+  "normal_lint": "read_liberty -lib then read_verilog -defer selectedsame-namebehavioral source",
+  "official_Slang": "does not receive --blackboxed-module because srcmods includes body and SYNTH_BLACKBOXES missing",
+  "scope": "No source mismatch or gate/source equivalence verdict; no new budget request or proof waiver",
+  "next": "FLOW owns ordinary exact native primitive-boundary join; existing SYNTH_BLACKBOXES support requires explicit genuine contract, not functional-cell substitution"
+}

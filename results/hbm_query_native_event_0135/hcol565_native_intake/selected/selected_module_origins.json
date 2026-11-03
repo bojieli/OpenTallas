@@ -1,0 +1,104 @@
+[
+  {
+    "module": "ot_hbm_idx_score_hcol_h0",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/rtl/hbm_next/bind/ot_hnx_idx_hcol_plan.sv\" 1",
+    "sha256": "e71563da57ee1a5c5dcab780d682d7472fab9adb507d76c37c1027d8bbde4ede",
+    "file": "ot_hbm_idx_score_hcol_h0.sv"
+  },
+  {
+    "module": "ot_hbm_idx_score_hcol_h1",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/rtl/hbm_next/bind/ot_hnx_idx_hcol_plan.sv\" 1",
+    "sha256": "862a02626edf9d0156589e3fb288002654b878d8d9c5243121d4d071106e5d57",
+    "file": "ot_hbm_idx_score_hcol_h1.sv"
+  },
+  {
+    "module": "ot_hdc_delay",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv\" 1",
+    "sha256": "45900503935757fc6c1d7e7d808b9e2ea603ce514c6790e5775012ee5b0a9592",
+    "file": "ot_hdc_delay.sv"
+  },
+  {
+    "module": "ot_hdc_fp32_add_fast",
+    "origin": "`line 151 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv\" 0",
+    "sha256": "9f5f63678dcaf5af1a928e46eba7b9a542d55dac275f6b74f46ad7574712ca1f",
+    "file": "ot_hdc_fp32_add_fast.sv"
+  },
+  {
+    "module": "ot_hdc_fp32_add_lat",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv\" 1",
+    "sha256": "42d68c986eb91fcc1a7bf0534bf7086a319a50ae67a049b5e40f5f191b0f1858",
+    "file": "ot_hdc_fp32_add_lat.sv"
+  },
+  {
+    "module": "ot_hdc_ksa",
+    "origin": "`line 21 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv\" 0",
+    "sha256": "0574689a08862c15375db38799377700b7552634678a2015ee747fa2df2f9b6c",
+    "file": "ot_hdc_ksa.sv"
+  },
+  {
+    "module": "ot_hdc_ksadd_k__u1",
+    "origin": "`line 10 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv\" 0",
+    "sha256": "25586343190a09f51416fd45ac15c103bd69de971930cc266ad6e6370bdb9403",
+    "file": "ot_hdc_ksadd_k__u1.sv"
+  },
+  {
+    "module": "ot_hdc_lzc32",
+    "origin": "`line 50 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv\" 0",
+    "sha256": "a59c0e61357685f24cb4bbe35cc0b8fcdfffc4d140b60d41faaf35139c7cfa4b",
+    "file": "ot_hdc_lzc32.sv"
+  },
+  {
+    "module": "ot_hdc_v41x_bf16",
+    "origin": "`line 228 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv\" 0",
+    "sha256": "1422215612558b035062476761a4a60fa9e61c6eb7c13c90ec14e311ca4ae128",
+    "file": "ot_hdc_v41x_bf16.sv"
+  },
+  {
+    "module": "ot_hdc_v41x_bmul_l",
+    "origin": "`line 152 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv\" 0",
+    "sha256": "1d0b0eac7089c17e20206b1d38f9ffc1ea23f777cedfe18d3322a82992c5f349",
+    "file": "ot_hdc_v41x_bmul_l.sv"
+  },
+  {
+    "module": "ot_hdc_v41x_csa",
+    "origin": "`line 31 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv\" 0",
+    "sha256": "760c6b9cab76aa8c3fdafcb8a775c5d7fc5daa3a9786ed0410928e6c50d20fd4",
+    "file": "ot_hdc_v41x_csa.sv"
+  },
+  {
+    "module": "ot_hdc_v41x_faddl",
+    "origin": "`line 260 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv\" 0",
+    "sha256": "ba6562f14b7bdcf42754ed2c2abb6b7f677064cca1cb165d32d7f9b79ce168ec",
+    "file": "ot_hdc_v41x_faddl.sv"
+  },
+  {
+    "module": "ot_hdc_v41x_q4dot_l",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv\" 1",
+    "sha256": "7261b5a8c973e123eba9bb7fa6c86a05780beeca25082f7ba815bd580775f4d3",
+    "file": "ot_hdc_v41x_q4dot_l.sv"
+  },
+  {
+    "module": "ot_hdc_w11_cut",
+    "origin": "`line 219 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv\" 0",
+    "sha256": "539c0c2b0f5c71ddcd480869fa58d92855c948597adaea9841c372613d97a343",
+    "file": "ot_hdc_w11_cut.sv"
+  },
+  {
+    "module": "ot_hidx_score_hcol",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/readset/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv\" 1",
+    "sha256": "3262e8a459d828513c4d20da178aaea54d1bfd8e2ce51d59cf0db35259c71e0c",
+    "file": "ot_hidx_score_hcol.sv"
+  },
+  {
+    "module": "ot_rst_delivered3",
+    "origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/readset/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/rtl/lib/ot_rst_delivered3.sv\" 1",
+    "sha256": "9acf49c87de26db832315be74684b36359af3061e53031b57530249cfdc0ce7d",
+    "file": "ot_rst_delivered3.sv"
+  },
+  {
+    "module": "ot_rst_relay",
+    "origin": "`line 14 \"/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv\" 0",
+    "sha256": "ae627fdff37ab755f2e114d3c9b8755cc6166d9dfd1b0884641d099e52792358",
+    "file": "ot_rst_relay.sv"
+  }
+]

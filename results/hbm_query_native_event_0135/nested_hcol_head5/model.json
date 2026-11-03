@@ -1,0 +1,61 @@
+{
+  "status": "DISABLED_NESTED_NATIVE_SOURCE_PREP_NO_PROOF_OR_PHYSICAL_RELEASE",
+  "actual_source_path": "SOURCE13 b102 xi head\u2192g_leaf71558\u2192core71519\u2192D0qlateW569\u2192separateHCOLq_b[567:0]",
+  "old_head_bits": [
+    567,
+    565
+  ],
+  "new_packet_width": 565,
+  "payload_bits": 560,
+  "head_bits": 5,
+  "region_query_port_width": 1130,
+  "old_regional_pins": 2329,
+  "proposed_regional_pins": 2323,
+  "added_cycles": 0,
+  "declared_capture_state_delta": -6,
+  "mapped_state_delta": "UNMEASURED (oldconstantcapturebits may already prune)",
+  "old_regional_source_sha256": "8adda1baa1ab3022cb41fd7a24287bab2853c104ebb44fb083d02a21c73f67c3",
+  "proposed_sha256": "592446ad7667d504576296f88491a1cf44f3ef388d1fc4c6249efd669954699d",
+  "exact_reverse_source_equal": true,
+  "delta": [
+    [
+      "module ot_hidx_score_hcol_regional #(",
+      "module ot_hidx_score_hcol_regional_head5 #("
+    ],
+    [
+      "QW = 8 + NB",
+      "QW = 5 + NB"
+    ],
+    [
+      "wire [7:0] qh_p = q_p[QW-1 -: 8];",
+      "wire [7:0] qh_p = {3'b000, q_p[QW-1 -: 5]};"
+    ],
+    [
+      "reg [QW-9:0] q2",
+      "reg [QW-6:0] q2"
+    ],
+    [
+      "q2 <= q_p[QW-9:0];",
+      "q2 <= q_p[QW-6:0];"
+    ],
+    [
+      "// PREP ONLY: +1113 data input pins, +0 FF, +0 cycles. Parent pin/window and",
+      "// PREP ONLY: q565 regional pins2323; no added cycles. Declared query capture\n// state is six bits smaller than head8; mapped/global costs UNQUALIFIED. Pin/window and"
+    ]
+  ],
+  "parent_cost": "Coherenthead5 single565+544+1\u2192regionalduplicate requires1110 additional OWNparentfaceFF/clockloads IF sameedgeD/enable/resetavailable; fullglobalclock/sourceDreach/pin/windowstillunqualified. Existing1113pricing forhead8 remains valid inthatcohort.",
+  "scope": "Internalhead8 comparison reconstructed onlyAFTER native5bit owncapture; no constant input ports. Nativehid4 still8bit runtimeinputs unchanged.",
+  "holds": [
+    "CanonicalnewABIprojectionEQ/mutant required",
+    "Nativegeneratorprofile/2323actualpins/faceguard NOTRUN",
+    "Full14wrapperevent stillrestoreslogical8 inheld consumerpacket; mustcompose new565 child/source/caller/pinplan",
+    "No default/nativebinding activation; ownershipscope OWNER? logged"
+  ],
+  "reverse_note": "Reverse5 functional edits plus1comment correction returns donor bytes",
+  "finite_full_rtl_sim": {
+    "positive": "1404/0diff/1385nonzero",
+    "wrongregionalbit": "1116diffexpectedfatal",
+    "receipt": "full_rtl_sim/RESULT.json",
+    "formal_credit": false
+  }
+}

@@ -1,0 +1,275 @@
+{
+  "status": "PASS_DISABLED_PARENT_WIDTH_JOIN",
+  "rows": [
+    {
+      "net": "x_NE_b000_L14_o_NE_b010",
+      "old_width": 4128,
+      "new_width": 4125,
+      "endpoints": [
+        {
+          "instance": "NE_b000",
+          "module": "hbm_arch_q_b000",
+          "port": "L14_o",
+          "old_width": 4128,
+          "new_width": 4125
+        },
+        {
+          "instance": "NE_b010",
+          "module": "hbm_arch_q_b010",
+          "port": "L14x1_i",
+          "old_width": 4128,
+          "new_width": 4125
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NE_b010_L14x1_o_NE_b001",
+      "old_width": 4128,
+      "new_width": 4125,
+      "endpoints": [
+        {
+          "instance": "NE_b001",
+          "module": "hbm_arch_q_b001",
+          "port": "L14_i",
+          "old_width": 4128,
+          "new_width": 4125
+        },
+        {
+          "instance": "NE_b010",
+          "module": "hbm_arch_q_b010",
+          "port": "L14x1_o",
+          "old_width": 4128,
+          "new_width": 4125
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NE_b100_xo_procdff_71764_Q_NE_b102",
+      "old_width": 9,
+      "new_width": 6,
+      "endpoints": [
+        {
+          "instance": "NE_b100",
+          "module": "hbm_arch_q_b100__physical_v1",
+          "port": "xo_procdff_71764_Q",
+          "old_width": 9,
+          "new_width": 6
+        },
+        {
+          "instance": "NE_b102",
+          "module": "hbm_arch_q_b102__physical_v1",
+          "port": "xi_gc_0_leaf_procdff_71558_D__0",
+          "old_width": 9,
+          "new_width": 6
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NE_b110_L6br0_2_o_NE_b100",
+      "old_width": 829,
+      "new_width": 826,
+      "endpoints": [
+        {
+          "instance": "NE_b100",
+          "module": "hbm_arch_q_b100__physical_v1",
+          "port": "L6b_i",
+          "old_width": 829,
+          "new_width": 826
+        },
+        {
+          "instance": "NE_b110",
+          "module": "hbm_arch_q_b110__physical_v1",
+          "port": "L6br0_2_o",
+          "old_width": 829,
+          "new_width": 826
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NE_hub_L160m_o_NE_b000",
+      "old_width": 4987,
+      "new_width": 4984,
+      "endpoints": [
+        {
+          "instance": "NE_b000",
+          "module": "hbm_arch_q_b000",
+          "port": "L160m_i",
+          "old_width": 4987,
+          "new_width": 4984
+        },
+        {
+          "instance": "NE_hub",
+          "module": "hbm_arch_q_hub__q_hub_ne",
+          "port": "L160m_o",
+          "old_width": 4987,
+          "new_width": 4984
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NE_hub_L6b_o_NE_su31",
+      "old_width": 829,
+      "new_width": 826,
+      "endpoints": [
+        {
+          "instance": "NE_hub",
+          "module": "hbm_arch_q_hub__q_hub_ne",
+          "port": "L6b_o",
+          "old_width": 829,
+          "new_width": 826
+        },
+        {
+          "instance": "NE_su31",
+          "module": "hbm_arch_q_su31",
+          "port": "L6br0_1_i",
+          "old_width": 829,
+          "new_width": 826
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NE_su31_L6br0_1_o_NE_b110",
+      "old_width": 829,
+      "new_width": 826,
+      "endpoints": [
+        {
+          "instance": "NE_b110",
+          "module": "hbm_arch_q_b110__physical_v1",
+          "port": "L6br0_2_i",
+          "old_width": 829,
+          "new_width": 826
+        },
+        {
+          "instance": "NE_su31",
+          "module": "hbm_arch_q_su31",
+          "port": "L6br0_1_o",
+          "old_width": 829,
+          "new_width": 826
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NW_b000_L14_o_NW_b010",
+      "old_width": 4128,
+      "new_width": 4125,
+      "endpoints": [
+        {
+          "instance": "NW_b000",
+          "module": "hbm_arch_q_b000__physical_v1",
+          "port": "L14_o",
+          "old_width": 4128,
+          "new_width": 4125
+        },
+        {
+          "instance": "NW_b010",
+          "module": "hbm_arch_q_b010__physical_v1",
+          "port": "L14x1_i",
+          "old_width": 4128,
+          "new_width": 4125
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NW_b010_L14x1_o_NW_b001",
+      "old_width": 4128,
+      "new_width": 4125,
+      "endpoints": [
+        {
+          "instance": "NW_b001",
+          "module": "hbm_arch_q_b001__physical_v1",
+          "port": "L14_i",
+          "old_width": 4128,
+          "new_width": 4125
+        },
+        {
+          "instance": "NW_b010",
+          "module": "hbm_arch_q_b010__physical_v1",
+          "port": "L14x1_o",
+          "old_width": 4128,
+          "new_width": 4125
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NW_b100_xo_procdff_71764_Q_NW_b102",
+      "old_width": 9,
+      "new_width": 6,
+      "endpoints": [
+        {
+          "instance": "NW_b100",
+          "module": "hbm_arch_q_b100",
+          "port": "xo_procdff_71764_Q",
+          "old_width": 9,
+          "new_width": 6
+        },
+        {
+          "instance": "NW_b102",
+          "module": "hbm_arch_q_b102",
+          "port": "xi_gc_0_leaf_procdff_71558_D__0",
+          "old_width": 9,
+          "new_width": 6
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NW_hub_L160_o_NW_b000",
+      "old_width": 4987,
+      "new_width": 4984,
+      "endpoints": [
+        {
+          "instance": "NW_b000",
+          "module": "hbm_arch_q_b000__physical_v1",
+          "port": "L160_i",
+          "old_width": 4987,
+          "new_width": 4984
+        },
+        {
+          "instance": "NW_hub",
+          "module": "hbm_arch_q_hub__q_hub_nw",
+          "port": "L160_o",
+          "old_width": 4987,
+          "new_width": 4984
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    },
+    {
+      "net": "x_NW_hub_L6_o_NW_b100",
+      "old_width": 829,
+      "new_width": 826,
+      "endpoints": [
+        {
+          "instance": "NW_b100",
+          "module": "hbm_arch_q_b100",
+          "port": "L6_i",
+          "old_width": 829,
+          "new_width": 826
+        },
+        {
+          "instance": "NW_hub",
+          "module": "hbm_arch_q_hub__q_hub_nw",
+          "port": "L6_o",
+          "old_width": 829,
+          "new_width": 826
+        }
+      ],
+      "changed": "whole shared vector declaration only; no cast/pad/truncate"
+    }
+  ],
+  "old_sha256": "2effa1972794384664643520345173706e70866b0e4c9d83799310d9cb793bc6",
+  "new_sha256": "86ca22dc3a228caccf0b3de7490c9d5d4478ed19417751722a5a844e6bd02905",
+  "complete_query_nets": 12,
+  "source_proof_transfer": false,
+  "frontend_compiled": false,
+  "physical_clock_reset_source_model_adoption": false
+}

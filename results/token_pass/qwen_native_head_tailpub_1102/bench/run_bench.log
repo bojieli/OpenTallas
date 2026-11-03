@@ -1,0 +1,17 @@
+Verilator 5.050 2026-07-01 rev v5.050
+tile639	1	639	raw=64	pub=24	mutants=10101	raw_publisher_mismatch=40
+tile639	1	512	raw=64	pub=24	mutants=10101	raw_publisher_mismatch=40
+tile639	1	700	raw=64	pub=0	mutants=10010	raw_publisher_mismatch=64
+tile639	1	767	raw=64	pub=0	mutants=10010	raw_publisher_mismatch=64
+tile639	1	0	raw=64	pub=64	mutants=00000	raw_publisher_mismatch=0
+tile639	1	384	raw=64	pub=64	mutants=00000	raw_publisher_mismatch=0
+tile639	4	639	raw=64	pub=64	mutants=01000	raw_publisher_mismatch=0
+tile639	4	700	raw=64	pub=64	mutants=01000	raw_publisher_mismatch=0
+tile639	3	639	raw=512	pub=512	mutants=00000	raw_publisher_mismatch=0
+tile639	5	639	raw=576	pub=536	mutants=10101	raw_publisher_mismatch=40
+tile639	5	700	raw=576	pub=512	mutants=10010	raw_publisher_mismatch=64
+tile0	2	0	raw=64	pub=64	mutants=00000	raw_publisher_mismatch=0
+tile0	3	0	raw=512	pub=512	mutants=00000	raw_publisher_mismatch=0
+MUTANTS_CAUGHT_UNION=31 (m5..m1 bits, 31 = all)
+PASS_HEAD_TAILPUB_BENCH
+EXIT=0

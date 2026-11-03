@@ -1,0 +1,6 @@
+ot-run: intel1         admits    10 GB (avail 203, reserve 0, fresh 28, peak 100.2, headroom 0, waiters 43/2194 GB) load 178/112 running 72 disk 367 GB 
+ot-run: epyc2          admits    27 GB (avail 230, reserve 0, fresh 40, peak 98.6, headroom 0, waiters 0/0 GB) load 92/128 running 45 disk 55 GB 
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1450477-1793616360 after 0 s
+COMPOSED_SOURCE_AUDIT PASS_SOURCE_MODEL_ONLY captures 45301 max 405.0 reachfail 0 bodyfail 0 source_slots 16
+ot-run: RAN on epyc2 (unit oth-ubuntu-1450477-1793616360): exit 0

@@ -1,0 +1,41 @@
+{
+  "status": "PASS_ACTUAL_POST_SYNTH_NATIVE_SOURCE_EQ",
+  "source_snapshot": "542757d902e",
+  "actual_target": "1_synth.v (same graph as saved1_synth.odb)",
+  "official_out": "intel2:/srv/opentallas-scratch2/claude/codex-programme-postsynth-EQ-0605/lec",
+  "actual_unit": "oth-ubuntu-3440851-1793628650",
+  "counts": {
+    "compare_points": 54439,
+    "proved": 54439,
+    "differs": 0,
+    "undecided": 0
+  },
+  "reset": {
+    "default": 4,
+    "requested": 4,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+  },
+  "source_kept_declared": 6553,
+  "source_kept_present": 5463,
+  "constant_proved": 2,
+  "unobservable_removed_proved": 1088,
+  "missing_kept": 0,
+  "time_s": {
+    "total": 665.1,
+    "correspondence": 594.7,
+    "prove": 12.9
+  },
+  "physical_graph": {
+    "FF": 20842,
+    "stdcells": 66230,
+    "SRAM": 44,
+    "ABI": 2904
+  },
+  "preopt_source_EQ": "b71490613 56061pointEQUIVALENT retained independently",
+  "held": [
+    "No physical placement/clock/reset66/STA/sourceview/parentactivation",
+    "Programme adjacent-sequential row candidate has genuine >405 failures, not a PLACE release"
+  ]
+}

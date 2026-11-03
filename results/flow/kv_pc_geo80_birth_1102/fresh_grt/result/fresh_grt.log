@@ -1,0 +1,273 @@
+PC_FRESH_ENTRY_PATCH aeeb5c3aa3bdef64ba569cb650fd119c3389d0f0bf7478a7e440dca3f6b50447 whole original body preserved 5377
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+mkdir -p /work/run/objects/asap7/hc_qkd_kvs_pc__397_44x362_88/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/4_cts.odb
+read_sdc -mode ss /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/4_cts.sdc
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+read_sdc -mode ff /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/4_cts.sdc
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/4_cts.sdc
+source /work/setRC_rcx.tcl
+OT_PG_FINAL_PASS native_pg_terminals=447822
+source /work/reload_pre.tcl
+KVCORES max_fanout 64
+OT_CLK_DUMP pre /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/clk_freeze_pre.tsv nets 4261 insts 48012 13.6 s
+OT_CLK_FREEZE ON clock nets 4261 (with wire 4261, re-encoded FIXED 0) instances 48012 (placement -> LOCKED: 0 were movable) dont_touch nets + 4260 clock-tree cells
+OT_ECO_DRT_PRE guides: special_signal_nets 0 guides_cleared 0
+OT_ECO_DRT_PRE access points: catalog consistent (insts idx -1 0 / idx>=0 223911, block aps 57319): unchanged
+OT_GRT_CLK_LOCK: 0 clock-net instances FIRM during detailed_placement
+[INFO DPL-0006] Core area: 137728.51 um^2
+[INFO DPL-0007] Movable instances area: 14923.91 um^2
+[INFO DPL-0008] Fixed instances area within core: 15366.82 um^2
+[INFO DPL-0009] Utilization: 22.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 223911 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         10 |         4 |         6
+        1 |         10 |         4 |         6
+        2 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 2.
+[INFO DPL-0500] Runtime: 5.00s
+Placement Analysis
+---------------------------------
+total displacement         22.9 u
+average displacement        0.0 u
+max displacement            1.5 u
+original HPWL         1302687.0 u
+legalized HPWL        1302698.2 u
+delta HPWL                    0 %
+
+OT_CLK_FREEZE reload_post_dpl OK: all 4261 clock nets carry their pre-ECO FIXED wire (restored 0 destroyed by GRT updateDirtyNets: )
+OT_PRD_ROUTE_KEEP ripped 58 nets (192 selected: new 63, connectivity 48, on moved/resized insts 81; insts changed 90); parked (detached) 208687 kept routed wires through the incremental GRT
+Took 111 seconds: source /work/reload_pre.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       13
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qkd_kvs_pc
+Die area:                 ( 0 0 ) ( 397440 362880 )
+Number of track patterns: 26
+Number of DEF vias:       0
+Number of components:     223911
+Number of terminals:      4135
+Number of snets:          2
+Number of nets:           213277
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+  Complete 200000 instances.
+[INFO DRT-0164] Number of unique instances = 295.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0018]   Complete 200000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 4178251.
+[INFO DRT-0033] V1 shape region query size = 14628777.
+[INFO DRT-0033] M2 shape region query size = 274808.
+[INFO DRT-0033] V2 shape region query size = 354510.
+[INFO DRT-0033] M3 shape region query size = 354510.
+[INFO DRT-0033] V3 shape region query size = 236340.
+[INFO DRT-0033] M4 shape region query size = 238075.
+[INFO DRT-0033] V4 shape region query size = 236340.
+[INFO DRT-0033] M5 shape region query size = 120928.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1716 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0081]   Complete 295 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0084]   Complete 150844 groups.
+#scanned instances     = 223911
+#unique  instances     = 295
+#stdCellGenAp          = 8812
+#stdCellValidPlanarAp  = 94
+#stdCellValidViaAp     = 7474
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 663605
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 01:51:38, elapsed time = 00:14:00, memory = 5218.32 (MB), peak = 5724.91 (MB)
+Took 854 seconds: pin_access
+global_route -congestion_report_file /work/run/reports/asap7/hc_qkd_kvs_pc__397_44x362_88/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 144843
+[INFO GRT-0019] Found 4261 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 32
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    5826395       4147023          28.82%
+M3         Vertical      6644295       4920740          25.94%
+M4         Horizontal    5139119       3809764          25.87%
+M5         Vertical      4925285       3641469          26.07%
+M6         Horizontal    3892981       2652501          31.86%
+M7         Vertical      3905758       2652747          32.08%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 1083296
+[INFO GRT-0198] Via related Steiner nodes: 34800
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1405078
+[INFO GRT-0112] Final usage 3D: 6624448
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             4147023       1015017           24.48%             0 /  0 /  0
+M3             4920740       1016062           20.65%             0 /  0 /  0
+M4             3809764        236604            6.21%             0 /  0 /  0
+M5             3641469        127663            3.51%             0 /  0 /  0
+M6             2652501          8886            0.34%             0 /  0 /  0
+M7             2652747          4982            0.19%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         21824244       2409214           11.04%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 1661463 um
+[INFO GRT-0014] Routed nets: 208907
+[INFO GRT-0303] Global routing runtime = 00:06:31
+Took 391 seconds: global_route -congestion_report_file /work/run/reports/asap7/hc_qkd_kvs_pc__397_44x362_88/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+estimate_parasitics -global_routing
+Took 42 seconds: estimate_parasitics -global_routing
+Estimate parasitics...
+estimate_parasitics -global_routing
+Took 40 seconds: estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+OT_INTERMEDIATE_POWER_SKIPPED stage 5: power not measured; final reporting unchanged
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 30291 um^2 22% utilization.
+[INFO FLW-0007] clock clk period 833.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 50686
+source /work/reload_post.tcl
+OT_CLK_FREEZE reload_post_grt OK: all 4261 clock nets carry their pre-ECO FIXED wire (restored 0 destroyed by GRT updateDirtyNets: )
+OT_PRD_ROUTE_KEEP restore: re-attached 208687 parked wires (0 replaced a GRT-time wire); kept routed 212948 nets (incl. frozen clock) after the incremental GRT
+OT_PG_CONNECT grt_post strict=1 skipped (native_pg_binding owns binding)
+OT_PG_BOUND grt_post pg_terms=447822 open=0
+PC_RELOAD_COVERAGE current_guided 213168 fixed_wire 0 missing 0
+OT_CLK_DUMP reload_post_grt /work/reload_post_grt.clock.tsv nets 4261 insts 48012 8.7 s
+Took 55 seconds: source /work/reload_post.tcl
+write_db /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.odb
+write_sdc -no_timestamp /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.sdc
+OT_PG_FINAL_PASS native_pg_terminals=447822
+OT_PG_NATIVE_BIRTH_PASS creates 0 swaps 0 bound 0
+PC_FRESH_DPL_DATA_GRT_COMPLETE active=0 full_post=1
+Elapsed time: 28:24.02[h:]min:sec. CPU time: user 7836.35 sys 80.83 (464%). Peak memory: 8316100KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb         1704           8121 d6680ddbcfada97c8f54
+5_1_grt                   .sdc                             08cb26adc01b2b56535b

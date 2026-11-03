@@ -1,0 +1,7 @@
+{
+  "status": "FAIL_RAW_BYTE_OVERLAP_GUARD",
+  "module": "hbm_arch_q_su31__physical_v1",
+  "cause": "2320 full generated file includes comments/timescale/default_nettype; selected PP extraction strips them",
+  "repair": "Compare exact Verilog token sequence after comments and line/timescale/defaultnettype directives only; retain authoritative selected PP bytes and both raw hashes. No executable-token normalization.",
+  "tokens_equal": true
+}

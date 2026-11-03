@@ -416,11 +416,12 @@ proc ot_pg_require_cts_placement_or_empty_context {} {
 # Wrapping command RETURN cannot cover internal CTS/resizer estimates. Strict
 # mode therefore refuses these native inserters BEFORE they execute. This is
 # deliberately not bypassed by an environment capability name or image label.
-# Explicit ABI-pinned native callbacks now admit only the two resizer commands
-# validated by the native birth/resize vehicles. All other commands retain
-# their refusal. This checks the actual attached callback, not a caller flag.
+# Explicit ABI-pinned native callbacks admit the resizer commands and the
+# buffer_ports/global_placement births exercised by the instrumented RECIP
+# PLACE vehicle. Every process still needs a reviewed early installation and
+# cleanup boundary. This checks the actual attached callback, not a caller flag.
 proc ot_pg_native_birth_supported {command} {
-  if {$command ni {repair_design repair_timing}} {return 0}
+  if {$command ni {repair_design repair_timing buffer_ports global_placement}} {return 0}
   # Tcl coroutines, ensembles and objects are commands without being procs or
   # aliases. Refuse these stand-ins too; this pinned Tcl introspector must exist.
   if {[info commands ::tcl::unsupported::corotype] eq ""} {return 0}

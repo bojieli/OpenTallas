@@ -1,0 +1,170 @@
+[
+ {
+  "type": "hd_spn_eshim_tx",
+  "corner": "TT",
+  "raw_native_gate": {
+   "corner": "TT",
+   "pinreg_n": 577,
+   "pinreg_mean_ps": 401.85,
+   "pinreg_min_ps": 383.43,
+   "pinreg_max_ps": 454.84,
+   "bound_ps": 450.0,
+   "dev_ps": 48.15,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": -46.51,
+   "hold_wns_est_ps": -80.73,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "FAIL",
+   "band_policy": "gate",
+   "band_verdict": "FAIL"
+  },
+  "source_resolution": {
+   "schema": "opentallas.partition_clock_binding.v1",
+   "type": "hd_spn_eshim_tx",
+   "die": "s81_head",
+   "corner": "TT",
+   "bound_ps": 450.0,
+   "declared_tol_ps": 40.0,
+   "effective_tol_ps": 40.0,
+   "freeze_sha256": "820648b046d8f3c552104df5da4d8b9a8ceb00fce184294526bedb051327a322",
+   "inputs_sha256": {
+    "budget.json": "d4c3d784bff56b8cc6983fe073b2e2f31244274cb16781f31303b6fddaacd7c7",
+    "clock_binding.json": "6436b3478c0d082cd4dac54716812d5a44d59f84dd3a676ec779f95863c1533f",
+    "config.mk": "118a35e654bb29efc4c8b3730306e85b5ad0b80e9bed96a276569c89bbd29247"
+   },
+   "pins_sha256": "93084624b4c8664e6a52e279a9448b5deb54e6bd7c1cc7d15bf34a77579d3645",
+   "policy": "unchanged; resolve tolerance only",
+   "authorizes_resume": false
+  },
+  "proposed_band_with_declared_tol": false,
+  "adopted": false,
+  "native_rerun": false
+ },
+ {
+  "type": "hd_spn_eshim_tx",
+  "corner": "FF",
+  "raw_native_gate": {
+   "corner": "FF",
+   "pinreg_n": 577,
+   "pinreg_mean_ps": 309.17,
+   "pinreg_min_ps": 292.43,
+   "pinreg_max_ps": 340.37,
+   "bound_ps": 342.0,
+   "dev_ps": 32.83,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": 9.05,
+   "hold_wns_est_ps": -89.35,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "FAIL",
+   "band_policy": "gate",
+   "band_verdict": "FAIL"
+  },
+  "source_resolution": {
+   "schema": "opentallas.partition_clock_binding.v1",
+   "type": "hd_spn_eshim_tx",
+   "die": "s81_head",
+   "corner": "FF",
+   "bound_ps": 342.0,
+   "declared_tol_ps": 40.0,
+   "effective_tol_ps": 40.0,
+   "freeze_sha256": "820648b046d8f3c552104df5da4d8b9a8ceb00fce184294526bedb051327a322",
+   "inputs_sha256": {
+    "budget.json": "d4c3d784bff56b8cc6983fe073b2e2f31244274cb16781f31303b6fddaacd7c7",
+    "clock_binding.json": "6436b3478c0d082cd4dac54716812d5a44d59f84dd3a676ec779f95863c1533f",
+    "config.mk": "118a35e654bb29efc4c8b3730306e85b5ad0b80e9bed96a276569c89bbd29247"
+   },
+   "pins_sha256": "93084624b4c8664e6a52e279a9448b5deb54e6bd7c1cc7d15bf34a77579d3645",
+   "policy": "unchanged; resolve tolerance only",
+   "authorizes_resume": false
+  },
+  "proposed_band_with_declared_tol": true,
+  "adopted": false,
+  "native_rerun": false
+ },
+ {
+  "type": "hd_st_n3_turn",
+  "corner": "TT",
+  "raw_native_gate": {
+   "corner": "TT",
+   "pinreg_n": 1146,
+   "pinreg_mean_ps": 421.97,
+   "pinreg_min_ps": 390.07,
+   "pinreg_max_ps": 467.42,
+   "bound_ps": 450.0,
+   "dev_ps": 28.03,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": -340.16,
+   "hold_wns_est_ps": 12.59,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "FAIL",
+   "band_policy": "gate",
+   "band_verdict": "FAIL"
+  },
+  "source_resolution": {
+   "schema": "opentallas.partition_clock_binding.v1",
+   "type": "hd_st_n3_turn",
+   "die": "s81_head",
+   "corner": "TT",
+   "bound_ps": 450.0,
+   "declared_tol_ps": 40.0,
+   "effective_tol_ps": 40.0,
+   "freeze_sha256": "55bb16abd1a5dceda36dbb69fe3b063bb8b8edd180072b0eb36f9a9e37488827",
+   "inputs_sha256": {
+    "budget.json": "94fe6fd49a73996807cef42b5addfd1b973a7e2f3ffe15efac399ac61a8cbb06",
+    "clock_binding.json": "e44d9fab7730e673ea6820aa2c1467eeb4f967517b4fa54a7c2dc3a501d0b08d",
+    "config.mk": "f96281c97051b4e293ca64eba4f5e4dfe87d8a2a13c1923e0d7611abfa1a390e"
+   },
+   "pins_sha256": "6f65b138aa580ef8823b82e32906d98b4c78efd3e33e3297eaedb3a0f1c38492",
+   "policy": "unchanged; resolve tolerance only",
+   "authorizes_resume": false
+  },
+  "proposed_band_with_declared_tol": true,
+  "adopted": false,
+  "native_rerun": false
+ },
+ {
+  "type": "hd_st_n3_turn",
+  "corner": "FF",
+  "raw_native_gate": {
+   "corner": "FF",
+   "pinreg_n": 1146,
+   "pinreg_mean_ps": 327.65,
+   "pinreg_min_ps": 300.91,
+   "pinreg_max_ps": 349.71,
+   "bound_ps": 342.0,
+   "dev_ps": 14.35,
+   "tol_ps": 20.0,
+   "setup_wns_est_ps": -117.99,
+   "hold_wns_est_ps": 10.01,
+   "rc": "/work/setRC_rcx.tcl",
+   "parasitics": "global_routing",
+   "verdict": "PASS",
+   "band_policy": "gate",
+   "band_verdict": "PASS"
+  },
+  "source_resolution": {
+   "schema": "opentallas.partition_clock_binding.v1",
+   "type": "hd_st_n3_turn",
+   "die": "s81_head",
+   "corner": "FF",
+   "bound_ps": 342.0,
+   "declared_tol_ps": 40.0,
+   "effective_tol_ps": 40.0,
+   "freeze_sha256": "55bb16abd1a5dceda36dbb69fe3b063bb8b8edd180072b0eb36f9a9e37488827",
+   "inputs_sha256": {
+    "budget.json": "94fe6fd49a73996807cef42b5addfd1b973a7e2f3ffe15efac399ac61a8cbb06",
+    "clock_binding.json": "e44d9fab7730e673ea6820aa2c1467eeb4f967517b4fa54a7c2dc3a501d0b08d",
+    "config.mk": "f96281c97051b4e293ca64eba4f5e4dfe87d8a2a13c1923e0d7611abfa1a390e"
+   },
+   "pins_sha256": "6f65b138aa580ef8823b82e32906d98b4c78efd3e33e3297eaedb3a0f1c38492",
+   "policy": "unchanged; resolve tolerance only",
+   "authorizes_resume": false
+  },
+  "proposed_band_with_declared_tol": true,
+  "adopted": false,
+  "native_rerun": false
+ }
+]

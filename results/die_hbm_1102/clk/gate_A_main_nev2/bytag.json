@@ -1,0 +1,1300 @@
+[
+ {
+  "window": 160.0,
+  "basis": "plan clock.tap_window.window_ps (gen_phys.tap_window_ps: kit SDC source -early -W / -late 0 on every tap port, CRPR credits same-tap)",
+  "tags": {
+   "NE_b101": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 153.16
+   },
+   "NE_su10": {
+    "pairs": 1190,
+    "viol": 0,
+    "need": 152.33
+   },
+   "NW_b003": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 149.75
+   },
+   "NW_su20": {
+    "pairs": 812,
+    "viol": 0,
+    "need": 149.54
+   },
+   "NW_b103": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 149.32
+   },
+   "NW_b100": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 147.1
+   },
+   "NW_su11": {
+    "pairs": 1122,
+    "viol": 0,
+    "need": 145.96
+   },
+   "NW_su21": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 145.29
+   },
+   "NW_su31": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 144.96
+   },
+   "NW_b113": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 144.73
+   },
+   "root": {
+    "pairs": 21756,
+    "viol": 0,
+    "need": 144.19
+   },
+   "NW_su30": {
+    "pairs": 812,
+    "viol": 0,
+    "need": 141.83
+   },
+   "NE_b010": {
+    "pairs": 1640,
+    "viol": 0,
+    "need": 140.46
+   },
+   "NE_spb0": {
+    "pairs": 462,
+    "viol": 0,
+    "need": 131.94
+   },
+   "NE_b113": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 128.67
+   },
+   "NE_io": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 128.58
+   },
+   "NE_su20": {
+    "pairs": 812,
+    "viol": 0,
+    "need": 125.8
+   },
+   "NW_io": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 123.99
+   },
+   "NE_su21": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 121.47
+   },
+   "NW_b000": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 117.71
+   },
+   "NE_b103": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 112.43
+   },
+   "NE_su31": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 112.33
+   },
+   "NW_su10": {
+    "pairs": 1190,
+    "viol": 0,
+    "need": 111.77
+   },
+   "NE_b001": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 109.61
+   },
+   "NE_hub": {
+    "pairs": 137270,
+    "viol": 0,
+    "need": 109.5
+   },
+   "NE_b000": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 103.83
+   },
+   "NE_b110": {
+    "pairs": 132,
+    "viol": 0,
+    "need": 103.03
+   },
+   "NW_b010": {
+    "pairs": 1640,
+    "viol": 0,
+    "need": 102.86
+   },
+   "NW_b101": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 101.77
+   },
+   "NE_b100": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 101.75
+   },
+   "NW_b012": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 100.98
+   },
+   "NW_b013": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 96.6
+   },
+   "NE_b012": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 94.22
+   },
+   "NW_b001": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 92.74
+   },
+   "NE_b011": {
+    "pairs": 342,
+    "viol": 0,
+    "need": 92.24
+   },
+   "NW_b102": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 91.86
+   },
+   "NW_su00": {
+    "pairs": 1190,
+    "viol": 0,
+    "need": 91.16
+   },
+   "NE_b102": {
+    "pairs": 552,
+    "viol": 0,
+    "need": 90.27
+   },
+   "NE_sm2": {
+    "pairs": 1122,
+    "viol": 0,
+    "need": 89.48
+   },
+   "NE_spb2": {
+    "pairs": 462,
+    "viol": 0,
+    "need": 87.51
+   },
+   "NE_sm3": {
+    "pairs": 1122,
+    "viol": 0,
+    "need": 87.34
+   },
+   "NW_su01": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 85.47
+   },
+   "NW_hub": {
+    "pairs": 139502,
+    "viol": 0,
+    "need": 85.23
+   },
+   "NE_b111": {
+    "pairs": 272,
+    "viol": 0,
+    "need": 83.12
+   },
+   "NE_su11": {
+    "pairs": 1122,
+    "viol": 0,
+    "need": 79.62
+   },
+   "NE_b003": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 78.66
+   },
+   "NE_su00": {
+    "pairs": 1190,
+    "viol": 0,
+    "need": 73.07
+   },
+   "NW_b011": {
+    "pairs": 342,
+    "viol": 0,
+    "need": 71.58
+   },
+   "NE_b112": {
+    "pairs": 420,
+    "viol": 0,
+    "need": 71.06
+   },
+   "NW_b112": {
+    "pairs": 420,
+    "viol": 0,
+    "need": 69.9
+   },
+   "NW_spb2": {
+    "pairs": 462,
+    "viol": 0,
+    "need": 69.46
+   },
+   "NE_su01": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 68.96
+   },
+   "NE_b002": {
+    "pairs": 342,
+    "viol": 0,
+    "need": 67.55
+   },
+   "NW_sm3": {
+    "pairs": 1122,
+    "viol": 0,
+    "need": 66.25
+   },
+   "NW_spt0": {
+    "pairs": 462,
+    "viol": 0,
+    "need": 64.66
+   },
+   "NW_sm2": {
+    "pairs": 1122,
+    "viol": 0,
+    "need": 60.09
+   },
+   "vsN0": {
+    "pairs": 462,
+    "viol": 0,
+    "need": 57.8
+   },
+   "vsN1": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 57.02
+   },
+   "NW_spb0": {
+    "pairs": 462,
+    "viol": 0,
+    "need": 55.4
+   },
+   "NW_b002": {
+    "pairs": 342,
+    "viol": 0,
+    "need": 54.8
+   },
+   "NE_spt2": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 54.63
+   },
+   "NW_mca": {
+    "pairs": 6006,
+    "viol": 0,
+    "need": 54.14
+   },
+   "NE_mcb": {
+    "pairs": 6006,
+    "viol": 0,
+    "need": 51.84
+   },
+   "NE_spt0": {
+    "pairs": 462,
+    "viol": 0,
+    "need": 51.32
+   },
+   "NE_sm1": {
+    "pairs": 1056,
+    "viol": 0,
+    "need": 51.09
+   },
+   "NE_spb1": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 50.25
+   },
+   "NW_b110": {
+    "pairs": 132,
+    "viol": 0,
+    "need": 50.2
+   },
+   "NE_b013": {
+    "pairs": 870,
+    "viol": 0,
+    "need": 49.85
+   },
+   "NE_su30": {
+    "pairs": 812,
+    "viol": 0,
+    "need": 48.6
+   },
+   "vsN5": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 44.68
+   },
+   "NW_sm0": {
+    "pairs": 1122,
+    "viol": 0,
+    "need": 44.51
+   },
+   "NW_spu0": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 43.24
+   },
+   "NE_sm0": {
+    "pairs": 1122,
+    "viol": 0,
+    "need": 42.35
+   },
+   "NW_mcb": {
+    "pairs": 6006,
+    "viol": 0,
+    "need": 41.9
+   },
+   "NE_spt1": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 40.98
+   },
+   "vsN6": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 39.66
+   },
+   "NW_b111": {
+    "pairs": 272,
+    "viol": 0,
+    "need": 38.53
+   },
+   "vsN4": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 37.71
+   },
+   "NE_spu0": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 36.21
+   },
+   "NW_spt1": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 34.64
+   },
+   "vsN2": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 27.91
+   },
+   "NE_mca": {
+    "pairs": 6006,
+    "viol": 0,
+    "need": 26.61
+   },
+   "NW_spb1": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 25.61
+   },
+   "NW_spt2": {
+    "pairs": 380,
+    "viol": 0,
+    "need": 25.19
+   },
+   "NE_spu1": {
+    "pairs": 240,
+    "viol": 0,
+    "need": 18.56
+   },
+   "NW_sm1": {
+    "pairs": 1056,
+    "viol": 0,
+    "need": 17.46
+   },
+   "NW_spu1": {
+    "pairs": 240,
+    "viol": 0,
+    "need": 11.7
+   }
+  }
+ },
+ {
+  "window": 160.0,
+  "basis": "plan clock.seam_hold.seam_ps (gen_phys.seam_hold)",
+  "tags": {
+   "NE_spu1->NE_spb2": {
+    "pairs": 352,
+    "viol": 0,
+    "need": 155.63
+   },
+   "NW_spu1->NW_su21": {
+    "pairs": 384,
+    "viol": 0,
+    "need": 149.63
+   },
+   "NE_su10->NE_su11": {
+    "pairs": 1190,
+    "viol": 0,
+    "need": 131.43
+   },
+   "NE_b103->NE_b111": {
+    "pairs": 425,
+    "viol": 0,
+    "need": 127.13
+   },
+   "NW_b103->NW_b102": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 123.1
+   },
+   "NW_b111->NW_b103": {
+    "pairs": 425,
+    "viol": 0,
+    "need": 120.84
+   },
+   "NW_b110->NW_b100": {
+    "pairs": 288,
+    "viol": 0,
+    "need": 120.12
+   },
+   "NE_spb1->NE_spb0": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 119.49
+   },
+   "NW_b102->NW_b103": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 118.08
+   },
+   "NE_b102->NE_b103": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 114.08
+   },
+   "NE_b100->NE_b110": {
+    "pairs": 288,
+    "viol": 0,
+    "need": 110.69
+   },
+   "NW_spu1->NW_spb2": {
+    "pairs": 352,
+    "viol": 0,
+    "need": 102.79
+   },
+   "NE_su21->NE_spu1": {
+    "pairs": 384,
+    "viol": 0,
+    "need": 102.22
+   },
+   "NE_su11->NE_su10": {
+    "pairs": 1190,
+    "viol": 0,
+    "need": 100.53
+   },
+   "NE_b110->NE_b100": {
+    "pairs": 288,
+    "viol": 0,
+    "need": 94.08
+   },
+   "NW_spu0->NW_su10": {
+    "pairs": 700,
+    "viol": 0,
+    "need": 92.39
+   },
+   "NE_spu0->NE_spt0": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 91.92
+   },
+   "NE_b103->NE_b102": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 88.62
+   },
+   "NE_spu0->NE_su01": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 81.47
+   },
+   "NW_spu0->NW_spt0": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 78.74
+   },
+   "NW_b100->NW_b110": {
+    "pairs": 288,
+    "viol": 0,
+    "need": 77.19
+   },
+   "NE_b111->NE_b103": {
+    "pairs": 425,
+    "viol": 0,
+    "need": 68.42
+   },
+   "NW_b103->NW_b111": {
+    "pairs": 425,
+    "viol": 0,
+    "need": 67.0
+   },
+   "NE_spb0->NE_spb1": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 62.7
+   },
+   "NW_su10->NW_spu0": {
+    "pairs": 700,
+    "viol": 0,
+    "need": 62.63
+   },
+   "vsN5->vsN4": {
+    "pairs": 400,
+    "viol": 0,
+    "need": 61.01
+   },
+   "vsN0->vsN1": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 60.78
+   },
+   "NE_spt1->NE_spt2": {
+    "pairs": 400,
+    "viol": 0,
+    "need": 58.33
+   },
+   "vsN1->vsN0": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 54.03
+   },
+   "NW_spb1->NW_spb0": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 50.13
+   },
+   "NW_spt1->NW_spt2": {
+    "pairs": 400,
+    "viol": 0,
+    "need": 43.33
+   },
+   "NE_spu1->NE_su21": {
+    "pairs": 384,
+    "viol": 0,
+    "need": 37.81
+   },
+   "NE_spt2->NE_spt1": {
+    "pairs": 400,
+    "viol": 0,
+    "need": 37.28
+   },
+   "NW_spb0->NW_spb1": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 30.88
+   },
+   "NW_spt0->NW_spu0": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 29.16
+   },
+   "NE_su01->NE_spu0": {
+    "pairs": 600,
+    "viol": 0,
+    "need": 23.69
+   },
+   "vsN4->vsN5": {
+    "pairs": 400,
+    "viol": 0,
+    "need": 21.39
+   },
+   "NW_spt2->NW_spt1": {
+    "pairs": 400,
+    "viol": 0,
+    "need": 16.5
+   },
+   "NW_su21->NW_spu1": {
+    "pairs": 384,
+    "viol": 0,
+    "need": 7.36
+   },
+   "NE_spt0->NE_spu0": {
+    "pairs": 440,
+    "viol": 0,
+    "need": 0.0
+   },
+   "NW_spb2->NW_spu1": {
+    "pairs": 352,
+    "viol": 0,
+    "need": 0.0
+   },
+   "NE_spb2->NE_spu1": {
+    "pairs": 352,
+    "viol": 0,
+    "need": 0.0
+   }
+  }
+ },
+ {
+  "window": 160.0,
+  "basis": "plan clock.seam_hold.seam_ps (gen_phys.seam_hold)",
+  "tags": {
+   "L48m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 110.22
+   },
+   "L33m_1": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 93.94
+   },
+   "L49_1": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 93.56
+   },
+   "L49m_1": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 93.13
+   },
+   "L720_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 92.86
+   },
+   "L164_0": {
+    "pairs": 6,
+    "viol": 0,
+    "need": 90.65
+   },
+   "L83_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 90.45
+   },
+   "L83m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 85.78
+   },
+   "L164m_0": {
+    "pairs": 6,
+    "viol": 0,
+    "need": 76.95
+   },
+   "L720m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 64.66
+   },
+   "L2_1": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 62.22
+   },
+   "L53_6": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 62.22
+   },
+   "L8m_1": {
+    "pairs": 5,
+    "viol": 0,
+    "need": 60.32
+   },
+   "L50m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 60.32
+   },
+   "L66m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 60.32
+   },
+   "L79m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 60.32
+   },
+   "L84m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 60.32
+   },
+   "L720m_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 55.25
+   },
+   "L722m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 47.77
+   },
+   "L723m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 47.77
+   },
+   "L165m_0": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 47.05
+   },
+   "L730m_6": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 47.05
+   },
+   "L48m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 46.36
+   },
+   "L730_5": {
+    "pairs": 4,
+    "viol": 0,
+    "need": 42.2
+   },
+   "L33_1": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 39.73
+   },
+   "L206m_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 39.61
+   },
+   "L63wm_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 38.3
+   },
+   "L125_4": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 36.28
+   },
+   "L0m_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 33.6
+   },
+   "L8_3": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 33.4
+   },
+   "L63w_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 33.4
+   },
+   "L66_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 31.61
+   },
+   "L79_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 31.61
+   },
+   "L106m_4": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 29.58
+   },
+   "L8m_3": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 28.59
+   },
+   "L66m_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 28.59
+   },
+   "L79m_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 28.59
+   },
+   "L106m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 28.51
+   },
+   "L48_t7_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 27.71
+   },
+   "L117_t4_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 27.71
+   },
+   "L138_t4_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 27.71
+   },
+   "L63wm_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 27.11
+   },
+   "L53m_t1_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 24.06
+   },
+   "L179_0": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 23.79
+   },
+   "L206m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 19.08
+   },
+   "L8_1": {
+    "pairs": 5,
+    "viol": 0,
+    "need": 18.89
+   },
+   "L63w_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 18.89
+   },
+   "L206_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 18.01
+   },
+   "L114m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 16.08
+   },
+   "L22m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 16.08
+   },
+   "L736m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 13.99
+   },
+   "L117_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 13.42
+   },
+   "L138_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 13.42
+   },
+   "L48_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 13.33
+   },
+   "L722_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 9.74
+   },
+   "L723_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 9.74
+   },
+   "L50_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 5.43
+   },
+   "L66_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 5.43
+   },
+   "L79_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 5.43
+   },
+   "L84_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 5.43
+   },
+   "L114_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 5.35
+   },
+   "L22_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 5.35
+   },
+   "L200_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 1.93
+   },
+   "L48_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 1.84
+   },
+   "L48m_5": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.76
+   },
+   "L201_0": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 0.24
+   },
+   "L0_1": {
+    "pairs": 4,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L2m_1": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L9_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L9m_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L21_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L21_4": {
+    "pairs": 4,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L21m_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L21m_4": {
+    "pairs": 4,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L40_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L40m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L41_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L41m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L48_5": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L53_9": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L53_10": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L53m_6": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L53m_9": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L53m_10": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L63_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L63m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L82_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L82_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L82m_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L82m_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L87_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L87m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L88_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L88m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L106_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L117_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L117m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L117m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L118_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L125m_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L125m_5": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L138_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L138m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L138m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L141_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L114w_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L114w_4": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L114wm_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L114wm_4": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L177m_0": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L179m_0": {
+    "pairs": 3,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L53_t1_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L48m_t7_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L117m_t4_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L138m_t4_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L6b_r0_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L6bm_r0_2": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L720_3": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L722_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L723_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L722m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L723m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L735_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L736_1": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L730m_4": {
+    "pairs": 2,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L735m_0": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   },
+   "L735m_2": {
+    "pairs": 1,
+    "viol": 0,
+    "need": 0.0
+   }
+  }
+ }
+]

@@ -1,0 +1,61 @@
+{
+  "status": "GEN_ONLY_SOURCE_MODEL_NOT_PLACEMENT_RELEASE",
+  "source_module": "ot_hnx_sfu_store_b__1300886e9f18",
+  "declared_direct_FF": 2800,
+  "declared_children_FF": 1286,
+  "total_declared_preopt_FF": 4086,
+  "known_LAT0_unused_declared_FF": 208,
+  "mapped_stdcell_area_um2": null,
+  "mapped_soft_FF": null,
+  "macros": 32,
+  "native_master": "ot_sram_1r1w_256x256_m2_r2c2",
+  "SRAM_bits": 2097152,
+  "true_ABI_bits": 7864,
+  "outline_um": [
+    760.32,
+    483.84
+  ],
+  "parent_allocated_outline_um": [
+    760.32,
+    691.2
+  ],
+  "area_um2": 367873.2288,
+  "macro_body_area_um2": 227099.031552,
+  "macro_body_fraction": 0.6173295955587622,
+  "macro_plus_4p32halo_area_um2": 288623.5729919999,
+  "soft_area_outside_macro_halos_um2": 79249.65580800007,
+  "intermacro_gap_um": 8.64,
+  "geometry_note": "8.64gap equals two4.32halos: no legal softFF channel between touching halo rectangles; perimeter and upper band must carry softlogic/PG/clock paths",
+  "source_reset_driver": "native ctl delivered rst_n_t22\u2192actual3edge internal relay\u2192store0_rst_n; formal4input reset only conditional, no receipt inherited",
+  "sourceEQ": "NOT_RUN_STOREB",
+  "build_dispatched": false,
+  "clock_ps": 833,
+  "latency_added": 0,
+  "parent_compact_context": "Proposal preserves parentorigin[656.64,216] andMXpose; no activeparent adoption",
+  "parent_output_export": {
+    "port": "cmd0_Q",
+    "bits": [
+      576,
+      895
+    ],
+    "local_face": "S",
+    "parent_face_under_MX": "N",
+    "parent_y_um": 699.84,
+    "parent_x_range_um": [
+      1356.192,
+      1409.616
+    ],
+    "local_D_to_Q_FF_placement": "UNPLACED",
+    "L730_corresponding_data_bits": [
+      0,
+      319
+    ],
+    "source_to_existing_face_direct405": "FAIL lowerbound horizontal448..502um; nativeintermediate relayrequired",
+    "physical_upstream_exactcycles": null,
+    "parent_y_range_um": [
+      699.816,
+      699.84
+    ]
+  },
+  "StoreA_proof_or_source_reused": false
+}

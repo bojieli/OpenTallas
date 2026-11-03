@@ -13,6 +13,10 @@ TOOLS=$(cd "$(dirname "$0")" && pwd)
 J() { python3 -I -c 'import json,sys;d=json.load(open(sys.argv[1]));v=d.get(sys.argv[2],sys.argv[3]);print(str(v).lower() if isinstance(v,bool) else v)' "$OUT/check.json" "$1" "$2"; }
 ODB=$(J odb ""); IMG=$(J image openroad/orfs:asap7lock); ID=$(J id x); MEM=$(J mem_gb 8)
 GRT=$(J grt true); GITER=$(J grt_iter 50)
+# DIE-QC-63/KITS 11-02: wall limit of the GRT probe (QC/HBM probes ran 15-44 h at ~1 extra iteration/h and held
+# the wave item, and through the parent OWNERS row its sibling classes).  On the limit the probe container is
+# stopped and grt = NA "GRT did not finish" (geom_rules); the kit route GRT measures overflow.  grt_wall_s 0 = no limit.
+GWALL=$(J grt_wall_s 7200)
 test -f "$ODB" || { echo "AP_AUTO_GEOM_ERROR checkpoint missing: $ODB"; exit 2; }
 OD=$(dirname "$ODB"); OB=$(basename "$ODB")
 KIT=$(cd "$OD/../../../../.." 2>/dev/null && pwd)
@@ -21,6 +25,16 @@ GMAX=$(J grt_max "$(kv MAX_ROUTING_LAYER)"); GMAX=${GMAX:-M5}
 GMIN=$(kv MIN_ROUTING_LAYER); GMIN=${GMIN:-M2}
 GADJ=$(kv ROUTING_LAYER_ADJUSTMENT); GADJ=${GADJ:-0.25}   # ORFS asap7 platform default (config.mk ROUTING_LAYER_ADJUSTMENT ?= 0.25), as the flow GRT
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
+# SDC clock source ports (create_clock ... [get_ports {...}]): their nets are CTS-built clock trees, not signal routes.
+# At 3_place they are not sigType CLOCK, so the deck excluded only clk/ck/tile_clk by name and routed every forwarded
+# clock (QC fclk_in_* nets 1-4.4k sinks each) as signal.
+CLKP=$(python3 -I -c 'import re,sys
+try: t=open(sys.argv[1]).read()
+except OSError: t=""
+o=[]
+for m in re.finditer(r"create_clock[^\n]*?\[get_ports\s+(\{[^}]*\}|\S+?)\s*\]", t):
+    o += m.group(1).strip("{}").split()
+print(" ".join(dict.fromkeys(o)))' "$KIT/constraint.sdc")
 printf 'read_db /odb/%s\nsource /out/geom_dump.tcl\n' "$OB" > "$OUT/dump.tcl"
 cp "$TOOLS/geom_dump.tcl" "$TOOLS/geom_grt.tcl" "$OUT/"
 run() {  # name mem script log env...
@@ -33,13 +47,21 @@ run() {  # name mem script log env...
 GPID=""
 if [ "$GRT" = true ]; then
   run grt "$MEM" /out/geom_grt.tcl /out/grt.log OT_GRT_ODB=/odb/$OB OT_GRT_MAX=$GMAX OT_GRT_MIN=$GMIN OT_GRT_ADJ=$GADJ \
-      OT_GRT_ITER=$GITER OT_GRT_RPT=/out/cong.rpt &
+      OT_GRT_ITER=$GITER OT_GRT_RPT=/out/cong.rpt "OT_GRT_CLOCK_PORTS=$CLKP" &
   GPID=$!
 fi
 run dump "$MEM" /out/dump.tcl /out/dump.log OT_GEOM_OUT=/out/geom.tsv
 rc=$?
 tail -1 "$OUT/dump.log"
-[ -n "$GPID" ] && { wait "$GPID"; echo "AP_AUTO_GEOM_GRT rc $? ($GMIN-$GMAX adj $GADJ, $GITER it)"; }
+if [ -n "$GPID" ]; then
+  T0=$SECONDS
+  while [ "$GWALL" -gt 0 ] && kill -0 "$GPID" 2>/dev/null && [ $((SECONDS - T0)) -lt "$GWALL" ]; do sleep 20; done
+  if kill -0 "$GPID" 2>/dev/null && [ "$GWALL" -gt 0 ]; then
+    $DK stop -t 10 "ap-ageom-$ID-grt-$$" >/dev/null 2>&1
+    echo "AP_AUTO_GEOM_GRT TIMEOUT ${GWALL}s after dump ($(grep -c 'Start extra iteration' "$OUT/grt.log" 2>/dev/null) it): grt NA, route GRT decides"
+  fi
+  wait "$GPID"; echo "AP_AUTO_GEOM_GRT rc $? ($GMIN-$GMAX adj $GADJ, $GITER it)"
+fi
 [ $rc = 0 ] || { echo "AP_AUTO_GEOM_ERROR dump rc $rc"; exit $rc; }
 mapfile -t RA < <(python3 -I -c 'import json,sys;[print(a) for a in json.load(open(sys.argv[1])).get("rules_args",[])]' "$OUT/check.json")
 GA=(); [ "$GRT" = true ] && GA=(--grt-log "$OUT/grt.log")

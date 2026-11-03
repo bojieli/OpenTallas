@@ -1,0 +1,7 @@
+Nov 02 04:48:55 key-cardinal systemd[39343]: Started oth-ubuntu-550012-1793623734.scope - [systemd-run] /usr/local/lib/ot-heavy/ot-heavy-exit oth-ubuntu-550012-1793623734 env OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 /srv/opentallas-scratch2/claude/codex-tt-locality-1102/venv/bin/python rowprep_joint.py.
+Nov 02 08:49:48 key-cardinal systemd[39343]: oth-ubuntu-550012-1793623734.scope: The kernel OOM killer killed some processes in this unit.
+Nov 02 08:49:49 key-cardinal sudo[161649]: pam_unix(sudo:session): session opened for user root(uid=0) by ubuntu(uid=1000)
+Nov 02 08:49:49 key-cardinal sudo[161649]: ubuntu :  PWD=/srv/opentallas-scratch2/claude/codex-tt-locality-1102/rowprep_v3 ; USER=root ; COMMAND=/usr/bin/journalctl --no-pager -q -o short-iso -u earlyoom --since 2026-11-02 04:48:50
+Nov 02 08:49:49 key-cardinal sudo[161649]: pam_unix(sudo:session): session closed for user root
+Nov 02 08:49:49 key-cardinal systemd[39343]: oth-ubuntu-550012-1793623734.scope: Failed with result 'oom-kill'.
+Nov 02 08:49:49 key-cardinal systemd[39343]: oth-ubuntu-550012-1793623734.scope: Consumed 4h 1min 27.849s CPU time over 4h 54.313s wall clock time, 4G memory peak.

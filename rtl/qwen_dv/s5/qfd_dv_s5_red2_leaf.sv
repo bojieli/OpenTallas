@@ -3,7 +3,13 @@
 // = qfd_dv_s5_red2 #(LA 7, LM 9) through tools/qwen_dv/bound_math_netlist.py --load-cap 8 --transparent-inverters --retain-mux
 // --shared-helpers --retain-keep (rtl/test/qwen_dv/s5_scred2/native_k.sh).  Ports = the instantiated qfd_dv_s5_red.
 // OT_S5_SCRED2_MUT_NETLIST (bench only): the constructed mutant netlist instead.
-module qfd_dv_s5_red2_leaf (
+module qfd_dv_s5_red2_leaf #(parameter integer HARD_PINREG =
+`ifdef OT_QC_HARD_PINREG
+    `OT_QC_HARD_PINREG
+`else
+    0
+`endif
+) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire [7:0]      l_ov,
@@ -22,7 +28,7 @@ module qfd_dv_s5_red2_leaf (
 `ifdef OT_S5_SCRED2_MUT_NETLIST
     qfd_dv_s5_red2_k79_mut u (
 `else
-    qfd_dv_s5_red2_k79 u (
+    qfd_dv_s5_red2_k79 #(.HARD_PINREG(HARD_PINREG)) u (
 `endif
         .ck(ck), .rst_n(rst_n), .l_ov(l_ov), .l_out(l_out), .l_red0(l_red0), .l_redsq0(l_redsq0), .l_last0(l_last0), .l_raddr0(l_raddr0), .red_we(red_we), .red_addr(red_addr), .red_data(red_data), .rd_v(rd_v), .busy(busy), .fault(fault));
 endmodule

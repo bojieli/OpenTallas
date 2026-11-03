@@ -1,0 +1,136 @@
+{
+ "status": "PREP_ONLY_NO_FRONTEND_OR_PROOF_JOB",
+ "normal_retained_profile": "Intel2:/srv/opentallas-scratch2/claude/die-qc-61/tt_ctlm_C/gen/tt_ctlm/lec",
+ "original_verdict": "UNPROVEN",
+ "original_unproven": 145,
+ "source_frontends": {
+  "original_gold": "slang",
+  "original_gate": "verilog",
+  "proposed_pair": "normal gate_script/mapped Verilog on both old and fresh actual mapped netlists"
+ },
+ "normal_liberty_commands": [
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_LVT_TT_nldm_211120.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_LVT_TT_nldm_211120.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_LVT_TT_nldm_220123.lib",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_SLVT_TT_nldm_211120.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_SLVT_TT_nldm_220122.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_SLVT_TT_nldm_211120.lib.gz",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_SLVT_TT_nldm_220123.lib",
+  "read_liberty -ignore_miss_func /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz"
+ ],
+ "normal_liberty_count": 15,
+ "normal_sequential_pipeline": [
+  "hierarchy -check -top lec_top",
+  "setattr -mod -unset keep_hierarchy",
+  "setattr -unset keep_hierarchy",
+  "proc",
+  "setattr -set keep 1 t:$*ff* t:$_*FF*_",
+  "flatten -noscopeinfo",
+  "opt_clean",
+  "techmap",
+  "opt_clean",
+  "rename -wire t:$_*DFF*_ t:$_*FF*_",
+  "async2sync",
+  "dffunmap",
+  "select -assert-none t:$_DLATCH* t:$_SR_* t:$_ALDFF* t:$_DFFSRE*",
+  "techmap -map /work/lec/lecff.v t:$_DFF_P_ t:$_DFF_N_",
+  "simplemap t:$dff",
+  "opt_clean",
+  "splitnets -ports",
+  "setundef -undriven -anyseq",
+  "setundef -anyseq",
+  "setundef -zero -init",
+  "aigmap",
+  "opt_clean",
+  "stat",
+  "write_aiger -zinit -map /work/lec/gate.map /work/lec/gate.aig"
+ ],
+ "readset": {
+  "gate.ys": "50f55c1b739392ad659a0b5aaf1d0a5fb79cb36b99b1edc44b2ea2659a56b729",
+  "gold.ys": "3b642f8da7413e479f63b0660c2560c72c9d4539642a8e3a34c74f5061ee0b5a",
+  "lecff.v": "b6904078a147360c999fbcae604f06260fcc6c04c1fd4f11981bd92dcc8c7322",
+  "stubs.v": "a5305744f2576cfed20e71dbe132656a2b006c58a0febb90175624a7cbd3d6e3",
+  "wrap_gate.v": "abf2068517be7c0d56d555cc3b86f51f84f295e3aa54c8d1341fc49e6714ef6b",
+  "reset_contract.json": "1f98496c8c6ec67753bcb329040942c6fc0ffdd4ec1400ad8add9ceffb2de070",
+  "clock_binding.json": "8c57bb1656d8b70d6177944d237cf44af608fcb6f78fb502b51425e74325998b",
+  "reset_contract/receipt.txt": "1e1994ab1acd729ea8651944f6946a8a024b9b4878287e4eb7c47411d1212cad"
+ },
+ "old_netlist": "Intel1:/srv/opentallas-scratch2/claude/codex-tt-locality-1102/native_inventory_readonly/actual_old_1_2_yosys.v",
+ "fresh_netlist": "Intel1:/srv/opentallas-scratch2/claude/codex-tt-locality-1102/synth_join_prep/run/results/asap7/dp_tt_ctlm/base/1_2_yosys.v",
+ "source_readset": "../actual_source_readset.json",
+ "existing_old_native_aig": "Intel2 original lec/gate.aig + gate.map; all23 exact actual latch aliases retained",
+ "fresh_native_aig": "NOT_GENERATED",
+ "clock_binding": {
+  "endpoint_root": "clk",
+  "actual_phase": "posedge for all23",
+  "source_context": "parent clk\u2192core ck_core\u2192n3159\u2192WTN ck\u2192CTL ck; explicit all10 reset-relay clocks also clk",
+  "other_main_ports": "63 original ports/833ps preserved; no arbitrary clock fold/source availability/physical clock join is assumed by this proposal"
+ },
+ "reset_binding": {
+  "original_contract": {
+   "default": 4,
+   "requested": null,
+   "contract": {
+    "file": "/work/reset_contract.json",
+    "die": "qwen_compute",
+    "edges": 64,
+    "assert_edges": 66,
+    "receipt": "/work/reset_contract/receipt.txt"
+   },
+   "used": 64,
+   "debug_overrides": {}
+  },
+  "actual_reset_ports": {
+   "gold": [
+    "pi:arst_n[0]"
+   ],
+   "gate": [
+    "pi:arst_n[0]"
+   ]
+  },
+  "actual_asserted": {
+   "gold": {
+    "pi:arst_n[0]": 0
+   },
+   "gate": {
+    "pi:arst_n[0]": 0
+   }
+  },
+  "root_PI": "pi:arst_n[0]",
+  "polarity": "active-low",
+  "normal_native_base_edges": 64,
+  "bound_relay_edges": 4,
+  "core_relay_edges": 6,
+  "inside_source_controls": "original rs1/rs2 and rli/rlr/rlo; all async/sync/enable semantics preserved",
+  "start_i": "not in core raw reset path; no assumed START constant",
+  "scope": "reuse only as reviewed finite unchanged-control-context proposal, never fresh global source/reset receipt"
+ },
+ "initial_state_policy": "Normal retained frontend contains setundef -zero -init/write_aiger-zinit. Native BASE must use actual all-unknown power-up/reset-image hook and demonstrate relation; those frontend defaults/map bitindex0 are not BASE evidence.",
+ "comparison": "unconditional23 actualQN relations, all invalid cycles/reset transitions retained",
+ "measured_old_gate_frontend": {
+  "peak_mb": 4762.89,
+  "elapsed_s": 446.03,
+  "yosys": "0.68+post"
+ },
+ "future_frontend_resource_proposal": {
+  "mem_gb": 8,
+  "threads": 2,
+  "placement": "normal Intel1/Epyc2/automatic, never Intel2reserved die memory"
+ },
+ "producer_missing": "Formal owner must review/freeze normal exact frontier frontend/input/clock/reset profile and generate fresh AIG/map once; no job requested here",
+ "no_source_or_constraints_changed": true,
+ "native_base_proved": false,
+ "aliases_accepted": false,
+ "full_lec_credit": false,
+ "physical_release": false,
+ "source_phase_distinction": "Fresh mapped1_2_yosys.v declares PD3; post-eliminate SYNTH-ODB has12netFF rather than13declared. Native frontend may retain an unobserved declared PD3 because it preserves states; do not equate AIG/state counts with physical live census.",
+ "primitive_polarity": "Actual ff vars[IQN,IQNN], next_state=!D, output QN=IQN, so physical QN(t+1)=!D(t). Source bmath logical Q(t+1)=D(t) is a distinct source-level primitive, not the physical QN pin.",
+ "polarity_metadata_correction": "Previous d0464f88c PREP capture prose incorrectly said QNnext=D; corrected without changing actual retained Liberty fields or the universal proof, which already used !D."
+}

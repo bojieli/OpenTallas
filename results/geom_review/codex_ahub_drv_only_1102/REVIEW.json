@@ -1,0 +1,23 @@
+{
+  "verdict": "PASS-COND one targeted MM data-DRV-only pass",
+  "source": "Epyc2 codex-kv-ahub-cg-2310/post_r3_interior, actual finished corrected CG r2 physics",
+  "pictures": {
+    "final_placement.webp": "228533f93fc263d6a8a79edcfd0c59a5b98cf1a5fadc06101489d92385af3adf",
+    "final_worst_path.webp": "b659c52b7a9c4e49694fa805a10519ecee4c8b23e3b93cfac86a526617ef5d36"
+  },
+  "personally_viewed": true,
+  "findings": "Four fixed ZH macros and one RECIP occupy the same existing geometry; central and bottom data-cell channels have whitespace for the three-net buffer correction. No macro, pin, clock tap, outline or architectural latency changes. Current actual route DRC0 and exact650-clock wire/4387-instance invariant pass. New cells must legalize without macro/clock conflicts.",
+  "actual_remaining_TT_slew_pins": {
+    "_22139_/A1": 323.03,
+    "_22054_/A1": 322.92,
+    "u_leaf.u_core.k_b[9]$_DFF_P_/D": 320.84
+  },
+  "limit_ps": 320,
+  "recipe": "Public m10 with OT_PRD_FROM=route, OT_PRD_TARGETED=1, explicitly empty OT_SETUP_MARGIN, OT_HOLD_ALLOW_SETUP=0; runtime OT_PRD_NO_HOLD=1, MAX_PASS1. No setup/hold repair. Restore original config for own final TT/FF post.",
+  "resource": {
+    "mem_gb": 16,
+    "threads": 8,
+    "observed_same_actual_DRT_peak_MB": 9103.59
+  },
+  "unresolved": "Expanded child-flop clock ETM/native graph remains unavailable; this case cannot waive it or establish parent SIGNED."
+}

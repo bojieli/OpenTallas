@@ -1,0 +1,53 @@
+{
+  "plan": "/home/ubuntu/coord/tmp/codex-hbm-su00-upper-clock-2335/composite_root_PENDING.json",
+  "plan_sha256": "6ecfacf5f23f700fedbbf38c9377dc08b229c882d39744fe36c1e52a4884dfc0",
+  "candidate_origin_um": [
+    17.28,
+    34.56
+  ],
+  "candidate_outline_um": [
+    604.8,
+    803.52
+  ],
+  "types": {
+    "q_b113": {
+      "status": "PASS_PLANNING_CONTACTS_ONLY",
+      "new_body_um": [
+        17.28,
+        34.56,
+        622.0799999999999,
+        838.0799999999999
+      ],
+      "canonical_obstacle_count": 5,
+      "canonical_body_probe_overlaps": [],
+      "actual_FT_body_overlaps": [],
+      "nominal_home_overlaps": [],
+      "existing_clock_contact_count": 25,
+      "clock_contact_failures": [],
+      "inside_parent": true,
+      "standard_cell_clearance_um": 4.32,
+      "clock_contact_guard_um": 8.64,
+      "physical_native_rows_source_clock_reset_PG": "UNQUALIFIED; nominal homes are not placed cells, no physical provider compatibility assumed"
+    },
+    "q_b113__physical_v1": {
+      "status": "PASS_PLANNING_CONTACTS_ONLY",
+      "new_body_um": [
+        17.28,
+        34.56,
+        622.0799999999999,
+        838.0799999999999
+      ],
+      "canonical_obstacle_count": 5,
+      "canonical_body_probe_overlaps": [],
+      "actual_FT_body_overlaps": [],
+      "nominal_home_overlaps": [],
+      "existing_clock_contact_count": 25,
+      "clock_contact_failures": [],
+      "inside_parent": true,
+      "standard_cell_clearance_um": 4.32,
+      "clock_contact_guard_um": 8.64,
+      "physical_native_rows_source_clock_reset_PG": "UNQUALIFIED; nominal homes are not placed cells, no physical provider compatibility assumed"
+    }
+  },
+  "scope": "Disabled programme placement planning; no P&R or current-plan mutation"
+}

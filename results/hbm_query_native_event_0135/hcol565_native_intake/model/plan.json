@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.die_plan.v1",
+ "die": {
+  "name": "HCOL565_COMPONENT_SOURCE_ONLY",
+  "outline_um": [
+   218.592,
+   225.504
+  ],
+  "period_ps": 833,
+  "reach_um": 405
+ },
+ "clock": {
+  "insertion_ps": 250,
+  "common_latency_ps": 250,
+  "insertion_tol_ps": 20
+ },
+ "partition_types": {},
+ "partitions": [],
+ "ports": [],
+ "lanes": [],
+ "qualification": "DISABLED_SOURCE_INTAKE_NO_PARENT_CLOCK_ADOPTION"
+}

@@ -2034,7 +2034,7 @@ def run_abc_script(abc, sf, limit):
         return s(e.stdout) + s(e.stderr), True
 
 
-def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runner=None):
+def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runner=None, timeouts=None, solo=False):
     """statuses (aligned with ids) of one &cone -O i; &cec batch.  With a per-cone wall limit (OT_LEC_CONE_S) the
     batch gets limit + CONE_BUDGET_S per cone; on an overrun the cones answered before the hang keep their status
     and the rest is bisected until the hung cone runs alone, which stays 'undecided' (UNRESOLVED, never proved)."""
@@ -2047,7 +2047,7 @@ def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runn
     # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
     sf = Path(work) / f"{tag}_cones_{ids[0]}_{ids[-1]}_n{len(ids)}_C{conflicts}{opt.replace(' ', '')}.abc"
     sf.write_text("\n".join(script) + "\n")
-    wall = (limit + CONE_BUDGET_S * len(ids)) if limit else None
+    wall = (limit if solo else limit + CONE_BUDGET_S * len(ids)) if limit else None
     t, timed_out = runner(abc, sf, wall)
     log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} -C {conflicts})"
                f"{' TIMEOUT after %.0f s' % wall if timed_out else ''}\n{t}")
@@ -2056,13 +2056,17 @@ def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runn
         return res
     done = res[:len(ids)]
     rest = ids[len(done):]
-    if len(rest) <= 1 or len(ids) == 1:
-        if rest:
-            log.append(f"LEC CONE TIMEOUT {tag} output {rest[0]}: no answer within {wall:.0f} s -> undecided")
-        return done + ["undecided"] * len(rest)
-    h = (len(rest) + 1) // 2
-    return (done + cone_batch(abc, swept, work, tag, rest[:h], opt, conflicts, log, limit, runner)
-            + cone_batch(abc, swept, work, tag, rest[h:], opt, conflicts, log, limit, runner))
+    if len(ids) == 1:
+        log.append(f"LEC CONE TIMEOUT {tag} output {ids[0]}: no answer within {wall:.0f} s -> undecided")
+        if timeouts is not None:
+            timeouts.add(ids[0])
+        return ["undecided"]
+    # the rest runs ONE cone per ABC call with the bare per-cone limit (DIE-HBM-59 LEC-CONE-BOUND): a piped ABC
+    # block-buffers its stdout, so a killed batch usually returns no text and bisection paid one full wall per tree
+    # node holding a hung cone (HBM tailx: ~190 x 600 s per stage).  Solo calls cost ~1 s per normal cone and
+    # exactly `limit` per hung cone, so a stage costs <= one batch wall + hung x limit.
+    return done + [cone_batch(abc, swept, work, tag, [i], opt, conflicts, log, limit, runner, timeouts, solo=True)[0]
+                   for i in rest]
 
 
 def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
@@ -2107,19 +2111,35 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
     # difference) by SAT sweeping inside the cone (&cec -m without -n, x100 / x1000): wide XOR trees (ECC encoders)
     # that naive SAT cannot finish collapse there (PATH-KV-PC4 10-25: 77 kvs_pc ECC / write-queue cones undecided at
     # 1M naive conflicts, each proved by &cec -m in ~1 s).  Only what no pass answers stays undecided.
+    timed, timed_m = set(), set()    # cones that hit the per-cone wall limit in an earlier stage
     for opt, factor in (("-n -m", 10), ("-m", 100), ("-m", 1000)):
+        if opt == "-m" and factor > 100:
+            # a cone that ran out of WALL time under &cec -m at x100 would only run longer with x1000 conflicts:
+            # it stays undecided (UNRESOLVED, never proved) and goes to xor_sat below (LEC-CONE-BOUND)
+            pending = [i for i in pending if i not in timed_m]
         if not pending:
             break
         from concurrent.futures import ThreadPoolExecutor
         jobs = max(1, PROVE_JOBS)
-        size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
-        batches = [pending[i:i+size] for i in range(0, len(pending), size)]
-        def one_batch(ids, factor=factor, opt=opt):
-            return ids, cone_batch(abc, swept, work, tag, ids, opt, conflicts * factor, log)
+        # cones that timed out in an earlier stage run alone (bare per-cone limit) so that they cannot cost a
+        # whole batch wall again; the rest is batched as before
+        solo = [i for i in pending if i in timed]
+        rest = [i for i in pending if i not in timed]
+        size = len(rest) if jobs == 1 else max(1, (len(rest) + jobs * 4 - 1) // (jobs * 4))
+        batches = [rest[i:i+size] for i in range(0, len(rest), size)] if rest else []
+        stage_to = set()
+        def one_batch(ids, factor=factor, opt=opt, stage_to=stage_to):
+            return ids, cone_batch(abc, swept, work, tag, ids, opt, conflicts * factor, log, timeouts=stage_to)
+        def one_solo(i, factor=factor, opt=opt, stage_to=stage_to):
+            return [i], cone_batch(abc, swept, work, tag, [i], opt, conflicts * factor, log, timeouts=stage_to,
+                                   solo=True)
         with ThreadPoolExecutor(max_workers=jobs) as ex:
-            for ids, res in ex.map(one_batch, batches):
+            for ids, res in list(ex.map(one_batch, batches)) + list(ex.map(one_solo, solo)):
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
+        timed = stage_to
+        if opt == "-m":
+            timed_m = stage_to
         pending = [i for i in pending if st[m.onames[i]] == "undecided"]
     unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
     if unknown:
@@ -2451,6 +2471,59 @@ def cone_sim(m, lits, fixed, words, seed):
 ZH = -2                                  # fsm_proposals: the zero-hot (all gate bits 0) state
 
 
+def _fsm_search(m, var, gk, tk, dl, n, nt, zh, words, log, base):
+    """fsm_proposals: score every (code -> gate bit) map on 64 x `words` random lanes per (code, bit) start state;
+    -> (ok, best, second, map): ok = a unique best map that explains a majority of all sampled transitions."""
+    import math
+    R = {}
+    for c in range(1 << n):
+
+        for j in list(range(nt)) + ([ZH] if zh else []):
+            ones = (1 << (64 * words)) - 1
+            fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
+            fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
+            vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + (j if j >= 0 else 63))
+            obs = collections.Counter()
+            for lane in range(64 * words):
+                gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
+                tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
+                obs[(gn, tn.index(1) if sum(tn) == 1 else (ZH if sum(tn) == 0 else -1))] += 1
+            R[(c, j)] = obs
+    # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
+    # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
+    # transitions (unique best, a majority of all lanes); the induction proof decides
+    import itertools
+    lanes = 64 * words
+    def search(zero_hot):
+        # zero_hot: one more code is the all-zero gate state (yosys fsm one-hot recoding of a reset/idle state
+        # as no bit set); its transitions are scored like the one-hot ones
+        best, second, pi = -1, -1, None
+        for codes in itertools.combinations(range(1 << n), nt):
+            for perm in itertools.permutations(range(nt)):
+                base_ = dict(zip(codes, perm))
+                for z in ([c for c in range(1 << n) if c not in base_] if zero_hot else [None]):
+                    cand = dict(base_)
+                    if z is not None:
+                        cand[z] = ZH
+                    sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
+                             if ti != -1 and cand.get(gn) == ti)
+                    if sc > best:
+                        best, second, pi = sc, best, cand
+                    elif sc > second:
+                        second = sc
+        ok = pi is not None and best != second and 2 * best > len(pi) * lanes
+        return ok, best, second, pi
+    ok, best, second, pi = search(False)
+    if not ok and zh:                  # only when no one-hot map is unique: earlier verdicts are unchanged
+        if math.comb(1 << n, nt) * math.factorial(nt) * ((1 << n) - nt) > 200000:
+            log.append(f"fsm: {base} ({n} gold / {nt} gate bits): zero-hot encoding search too large")
+        else:
+            okz, bz, sz, pz = search(True)
+            if okz:
+                ok, best, second, pi = okz, bz, sz, pz
+    return ok, best, second, pi
+
+
 def fsm_proposals(L, log, words=2, max_bits=4):
     """FSM state recoding (yosys fsm: a binary RTL state vector B[n-1:0] becomes one-hot gate flops B#t[i]).
     For each such vector the code -> one-hot-bit map is found by simulating both next-state functions from every
@@ -2486,55 +2559,17 @@ def fsm_proposals(L, log, words=2, max_bits=4):
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): encoding search too large, none proposed")
             continue
         dl = [L.dlit[("gold", k)] for k in gk] + [L.dlit[("gate", k)] for k in tk]
-        R = {}
         zh = nt + 1 <= (1 << n)            # room for a zero-hot state (all gate bits 0, LEC-FPREG-4 L3 u_rw.st)
-        for c in range(1 << n):
-            for j in list(range(nt)) + ([ZH] if zh else []):
-                ones = (1 << (64 * words)) - 1
-                fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
-                fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
-                vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + (j if j >= 0 else 63))
-                obs = collections.Counter()
-                for lane in range(64 * words):
-                    gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
-                    tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
-                    obs[(gn, tn.index(1) if sum(tn) == 1 else (ZH if sum(tn) == 0 else -1))] += 1
-                R[(c, j)] = obs
-        # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
-        # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
-        # transitions (unique best, a majority of all lanes); the induction proof decides
-        import itertools
-        lanes = 64 * words
-        def search(zero_hot):
-            # zero_hot: one more code is the all-zero gate state (yosys fsm one-hot recoding of a reset/idle state
-            # as no bit set); its transitions are scored like the one-hot ones
-            best, second, pi = -1, -1, None
-            for codes in itertools.combinations(range(1 << n), nt):
-                for perm in itertools.permutations(range(nt)):
-                    base_ = dict(zip(codes, perm))
-                    for z in ([c for c in range(1 << n) if c not in base_] if zero_hot else [None]):
-                        cand = dict(base_)
-                        if z is not None:
-                            cand[z] = ZH
-                        sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
-                                 if ti != -1 and cand.get(gn) == ti)
-                        if sc > best:
-                            best, second, pi = sc, best, cand
-                        elif sc > second:
-                            second = sc
-            ok = pi is not None and best != second and 2 * best > len(pi) * lanes
-            return ok, best, second, pi
-        ok, best, second, pi = search(False)
-        if not ok and zh:                  # only when no one-hot map is unique: earlier verdicts are unchanged
-            if math.comb(1 << n, nt) * math.factorial(nt) * ((1 << n) - nt) > 200000:
-                log.append(f"fsm: {base} ({n} gold / {nt} gate bits): zero-hot encoding search too large")
-            else:
-                okz, bz, sz, pz = search(True)
-                if okz:
-                    ok, best, second, pi = okz, bz, sz, pz
+        # rare transitions (HBM kshare st 11-02: ISSUE->WAIT on j == 15, WAIT->NORM on got == 63) need more lanes than
+        # the default sample: re-sample with 8x / 32x the lanes while the map is not unique (more evidence only; the
+        # induction proof still decides)
+        for w in (words, 8 * words, 32 * words):
+            ok, best, second, pi = _fsm_search(m, var, gk, tk, dl, n, nt, zh, w, log, base)
+            if ok:
+                break
         if not ok:
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
-                       f"{nt * lanes} transitions), none proposed")
+                       f"{nt * 64 * w} transitions), none proposed")
             continue
         for c, j in sorted(pi.items()):
             if j == ZH:                    # zero-hot: implied by the other cubes (every gate bit 0), no flop of its own
@@ -2916,6 +2951,26 @@ def unobservable_keys(L):
             k = v - I - NL - 1
             stack += (ands[2 * k] >> 1, ands[2 * k + 1] >> 1)
     return {k for k, lit in L.gp.items() if k.startswith("ff:") and (lit >> 1) not in seen}
+
+
+def kept_functionally_unobservable(L, missing, all_proved):
+    """DIE-QC-64/SUL 11-02 (QC su_lane l1 routed LEC: 86101/86101 proved, KEEP FAIL 96 = u_u_lrly1.idr[503..598]):
+    a kept bit the gold AIG cone still reaches structurally (so unobservable_keys keeps it) but that ORFS
+    eliminate_dead_logic removed because the synthesized netlist reads it nowhere.  When EVERY compare point is proved
+    with that register an unpaired free gold input -- no accepted correspondence hypothesis names it (not merged into
+    a twin, not paired with a gate flop, not proved constant) -- no output can depend on it in any state, so its
+    removal is dead-logic removal, not a merge.  A merged kept bit either carries an accepted eq hypothesis (stays
+    missing) or, left free, makes the compare points it feeds differ (not all proved): both stay fail-closed."""
+    if not all_proved or not missing:
+        return []
+    named = set()
+    for (side, k), h in L.hyp.items():
+        named.add(k)
+        if h and h[0] == "eq":
+            named.add(h[2])
+        elif h and h[0] == "cube":
+            named.update(h[2])
+    return sorted(k for k in missing if k not in named)
 
 
 def kept_wire_alias_copies(L, declared, aliases_file):
@@ -3995,7 +4050,15 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     eq_const_resolve(L, log)
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
-        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0"))
+        # DIE-HBM-59/LEC C4 (HBM n4ext / fused_lane 11-02): default-on at the reset window itself (OT_LEC_RESET_CYCLES,
+        # the declared die reset length or the default 4, set by reset_contract_gate): a no-reset register that is c
+        # after that many edges from ANY state with fresh free inputs at every edge (x*x products: s2_mr odd bits,
+        # sign y[31]) is c at the end of reset; pure ternary constant propagation calls it X and the constant was
+        # dropped (78 in n4ext, KIT-WAVE-16 loaded proposals need a guard register these pipelines do not have).
+        # No edge beyond the window is used, so no reset-length assumption is added; OT_LEC_RAW_BASE_STEPS stays the
+        # debug override (0 = off).  The final induction still proves every kept constant.
+        dflt = os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT))
+        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", dflt))
         if steps > 1:
             ok = noreset_sound(L)
             candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
@@ -4047,7 +4110,8 @@ def noreset_report(L):
                 release=[e for e in kept if e["basis"] == "release"][:500],
                 n_universal_raw_D=sum(1 for e in kept if e["basis"] == "universal_raw_D"),
                 universal_raw_D=[e for e in kept if e["basis"] == "universal_raw_D"][:500],
-                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0")),
+                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS",
+                                                  os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT)))),
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
                 universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
@@ -4801,6 +4865,35 @@ def merged_proposals(L, log, cap=4096):
     # differ).  Pick, per gold-only register, the first candidate whose next state simulates equal to it with the
     # pair's state bound together (a hold path then reads one value, so only the load condition / data decide);
     # the chosen relation is still proved inductively with all the others, a wrong one is dropped, never assumed.
+    # A twin that READS the merged register (HBM kshare 11-02, DIE-HBM-59/LEC C3): an async FIFO's rd_bin[MSB] holds
+    # itself (rd_bin[MSB] ^ carry) while rd_gray[MSB] loads the same rd_next[MSB] from rd_bin[MSB], never from itself;
+    # synthesis merges rd_bin[MSB] into rd_gray[MSB].  With only each flop's OWN state as SELF the two fingerprints
+    # differ, so rd_bin[MSB] stayed free.  A matched c whose support holds gold-only k (or whose k's support holds c)
+    # is a candidate when the two supports agree with BOTH read as SELF; proposed after the same-support candidates,
+    # bound-state simulation chooses, the induction proves (a wrong one is dropped, never assumed).
+    gset = set(gonly)
+    for c in L.matched:
+        if not c.startswith("ff:") or c not in L.gc:
+            continue
+        s_c = support(L.gc[c])
+        for k in [x for x in s_c if x in gset]:
+            if ("gold", k) in L.hyp or c in cands.get(k, ()):
+                continue
+            two = (k, c)
+            if frozenset("SELF" if x in two else x for x in s_c) == \
+                    frozenset("SELF" if x in two else x for x in support(L.gc[k])):
+                cands[k].append(c)
+    for k in gonly:
+        if ("gold", k) in L.hyp:
+            continue
+        s_k = support(L.gc[k])
+        for c in [x for x in s_k if isinstance(x, str) and x in L.matched and x.startswith("ff:") and x in L.gc]:
+            if c in cands.get(k, ()):
+                continue
+            two = (k, c)
+            if frozenset("SELF" if x in two else x for x in s_k) == \
+                    frozenset("SELF" if x in two else x for x in support(L.gc[c])):
+                cands[k].append(c)
     choice = {k: cs[0] for k, cs in cands.items()}
     pending = {k: list(cs) for k, cs in cands.items() if len(cs) > 1}
     rounds = 0
@@ -6347,11 +6440,18 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         if kf.is_file():
             kdecl, kmiss, kconst = kept_registers(L, kf)
             kdead = getattr(L, "kept_unobservable", [])
-            rec["kept_registers"] = dict(declared=len(kdecl), in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead),
+            kfree = kept_functionally_unobservable(L, kmiss, bool(status) and all(v == "proved" for v in status.values()))
+            kmiss = [k for k in kmiss if k not in set(kfree)]
+            rec["kept_registers"] = dict(declared=len(kdecl),
+                                         in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead) - len(kfree),
                                          constant_proved=lst(kconst), missing=lst(kmiss),
                                          unobservable_removed=lst(kdead),
                                          unobservable_reason="no compare point (output / black-box input) observes "
-                                                             "it in the gold AIG: dead logic, removal is not a merge" if kdead else None)
+                                                             "it in the gold AIG: dead logic, removal is not a merge" if kdead else None,
+                                         functionally_unobservable_removed=lst(kfree),
+                                         functionally_unobservable_reason="every compare point proved with it an "
+                                             "unpaired free input (no correspondence names it): dead logic, not a merge"
+                                             if kfree else None)
         else:
             kmiss = None
             rec["kept_registers"] = "not checked (no gold.keep: AIGs reused from an older lec.py)"
@@ -6495,6 +6595,30 @@ def _kit_input_identity(kit):
     if not rtl:
         raise ValueError("kit has no staged RTL inputs")
     paths += rtl
+    # Optional source-pinned GEN runtime assets (placement Tcl/CSV), never RTL
+    # or proof exemptions. Inline validation keeps standalone /lec.py complete.
+    freeze = json.loads((kit / "freeze.json").read_text())
+    runtime_seen = set()
+    runtime_files = freeze.get("runtime_files", [])
+    if not isinstance(runtime_files, list):
+        raise ValueError("runtime_files must be a list")
+    for row in runtime_files:
+        if not isinstance(row, dict):
+            raise ValueError("runtime asset identity must be an object")
+        dest = row.get("destination")
+        if (not isinstance(dest, str) or "\\" in dest or
+                any(x in ("", ".", "..") for x in dest.split("/")) or
+                not dest.startswith("runtime/") or dest in runtime_seen or
+                Path(dest).name == "freeze.json" or Path(dest).name.startswith("run_")):
+            raise ValueError("invalid runtime asset destination")
+        p = kit / dest
+        p.resolve(strict=True).relative_to(kit)
+        if p.is_symlink() or not re.fullmatch(r"[0-9a-f]{64}", row.get("sha256") or ""):
+            raise ValueError("invalid runtime asset identity")
+        if hashlib.sha256(p.read_bytes()).hexdigest() != row["sha256"]:
+            raise ValueError("runtime asset bytes differ from GEN readset")
+        runtime_seen.add(dest)
+        paths.append(p)
     result = {}
     for p in paths:
         p.resolve().relative_to(kit)  # no source outside the staged kit

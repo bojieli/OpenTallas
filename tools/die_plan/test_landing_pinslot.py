@@ -13,7 +13,7 @@ TCL = Path(__file__).with_name("landing_placement.tcl").read_text()
 pytestmark = pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh unavailable")
 NAMES = ["cland_group_insts", "cland_occupy", "cland_family_w", "cland_put_column", "cland_put", "cland_ffkey", "cland_dsel_wch",
          "cland_column_select", "cland_kbit", "cland_nearest_bit", "cland_ctl_rekey", "cland_bus_pins",
-         "cland_place_pinslot", "cland_place_pinslot_col", "cland_place_ff"]
+         "cland_place_pinslot", "cland_place_pinslot_col", "cland_start_bterm_name", "cland_place_ff"]
 BITS, SLOTS = 8, 2
 PIN_Y = {b: 300 + 650 * b for b in range(BITS)}     # W-face pins i[b] at x 0, y 0.30 .. 4.85 um
 
@@ -22,7 +22,7 @@ def _proc(name):
     return re.search(r"^proc " + name + r" \{[^\n]*\} \{\n.*?\n\}\n|^proc " + name + r" \{[^\n]*\}\n", TCL, re.S | re.M).group(0)
 
 
-def run(pinslot, tag="ring:i+ff", pin_y=PIN_Y, pin_xy=None, rect="2 0 12 5.4", occ=""):
+def run(pinslot, tag="ring:i+ff", pin_y=PIN_Y, pin_xy=None, rect="2 0 12 5.4", occ="", dense=None):
     s = COMMON + "\n" + "".join(_proc(n) for n in NAMES)
     s += "\nset cland_occ {};set cland_famw {};set cland_ff_fill 0.10;set instances {};set places {};set bterms {}\n" + occ
     for bit in range(BITS):
@@ -39,9 +39,11 @@ proc bt{bit} {{m args}} {{switch $m {{getName {{return {{i[{bit}]}}}} getBBox {{
     s += 'proc block {m args} {if {$m eq "getBTerms"} {return $::bterms};return $::instances}\nset ff_blk block\n'
     s += "if {[catch {cland_place_ff u_ring {%s} %s} e]} {puts \"ERR $e\"} else {foreach {n p} $places {puts \"LOC $n $p\"}}\n" % (rect, tag)
     s = s.replace("getHeight { return 270 }", "getHeight { return 270 } isBlock { return 0 }")
-    env = {k: v for k, v in os.environ.items() if k not in ("OT_CLAND_FIT_RESERVE", "OT_CLAND_PINSLOT")}
+    env = {k: v for k, v in os.environ.items() if k not in ("OT_CLAND_FIT_RESERVE", "OT_CLAND_PINSLOT", "OT_CLAND_PINSLOT_DENSE")}
     if pinslot is not None:
         env["OT_CLAND_PINSLOT"] = pinslot
+    if dense is not None:
+        env["OT_CLAND_PINSLOT_DENSE"] = dense
     cp = subprocess.run(["tclsh"], input=s, text=True, capture_output=True, env=env, check=True)
     assert not cp.stderr and "ERR" not in cp.stdout, cp.stdout + cp.stderr
     return {n: (int(x), int(y)) for n, x, y in re.findall(r"LOC (\S+) (\d+) (\d+)", cp.stdout)}, cp.stdout
@@ -271,3 +273,27 @@ def test_e_face_pins_fill_from_the_band_e_edge():
     far = {b: max(13000 - x + abs(y + 135 - PIN_Y[b]) for n, (x, y) in east.items() if n.endswith(f"[{b}]"))
            for b in range(BITS)}
     assert max(far.values()) < 4000
+
+
+def test_dense_y_column_packs_slots_body_to_body_toward_the_pin():
+    """DIE-KV-62/stations 11-02: OT_CLAND_PINSLOT_DENSE=1 reserves only each flop body in a y-column row (spread 0.4),
+    so the farthest slot of every bit is no farther from its pin than the default spread; unset/0 = unchanged."""
+    base, out0 = run("1")
+    zero, _ = run("1", dense="0")
+    dense, out = run("1", dense="1")
+    assert base == zero and "spread 1.0000" in out0
+    assert "spread 0.4000" in out and len(dense) == BITS * SLOTS
+    rows = {}
+    for x, y in dense.values():
+        rows.setdefault(y, []).append(x)
+    for xs in rows.values():
+        xs.sort()
+        assert all(b - a >= 81 for a, b in zip(xs, xs[1:]))      # no body overlap
+    fb, fd = farthest(base), farthest(dense)
+    assert all(fd[b] <= fb[b] for b in range(BITS))
+
+
+def test_gen_phys_dense_types_opt_in():
+    on = {"cland_pinslot_dense_types": ["kv3_io_ft"]}
+    assert gen_phys._cland_pinslot_dense(on, "kv3_io_ft__t1") and gen_phys._cland_pinslot_dense(on, "kv3_io_ft")
+    assert not gen_phys._cland_pinslot_dense(on, "kv3_io_ft_v1") and not gen_phys._cland_pinslot_dense({}, "kv3_io_ft")

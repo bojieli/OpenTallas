@@ -25,8 +25,9 @@ def test_largest_declared_table_wins(tmp_path):
 
 def test_elab_width_covers_pre_opt_lint_width(tmp_path):
     """DIE-KV-57: nearhbm_exp_p is 256 x 61 after opt (rom_infer_gate) but 256 x 64 in the gen lint elaboration"""
-    (tmp_path / "a.sv").write_text("module ot_qwen_nearhbm_exp_p; endmodule\n")
-    assert gen_phys.declared_rom_bits(tmp_path) == 256 * 64
+    for module in ("ot_qwen_nearhbm_exp_p", "ot_hdc_v41x_exp"):
+        (tmp_path / "a.sv").write_text(f"module {module}; endmodule\n")
+        assert gen_phys.declared_rom_bits(tmp_path) == 256 * 64
 
 
 def test_declared_flop_fifo_sets_exact_size(tmp_path):
@@ -34,6 +35,15 @@ def test_declared_flop_fifo_sets_exact_size(tmp_path):
     (tmp_path / "a.sv").write_text("module ot_qkvd_seq_m_sfifo #(parameter integer W = 128) (); endmodule\n")
     assert gen_phys.declared_flop_mem_bits(tmp_path) == 40 * 128
     assert gen_phys.declared_rom_bits(tmp_path) == 0
+
+
+def test_s81_t7_score_window_fifo_exact_size(tmp_path):
+    """TOK-DS-3: T7 u_att.sw 32 x 512 async-head FIFO glue -> 16384, together with the exp table (256 x 64 elab)"""
+    (tmp_path / "a.sv").write_text("module ot_bind_native_bfac540d36e9ad5c410d0d97(RD_ADDR); input [4:0] RD_ADDR; endmodule\n")
+    assert gen_phys.declared_flop_mem_bits(tmp_path) == 32 * 512
+    (tmp_path / "b.sv").write_text("module ot_bind_native_bfac540d36e9ad5c410d0d98(); endmodule\n")
+    (tmp_path / "a.sv").unlink()
+    assert gen_phys.declared_flop_mem_bits(tmp_path) == 0
 
 
 def test_flop_fifo_instance_only_does_not_count(tmp_path):

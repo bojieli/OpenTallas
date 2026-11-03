@@ -1,0 +1,5 @@
+python3 tools/hbm_b2/storeA_native_master_preflight.py --repo "$OWN_REPO" --selected-abi "$OWN_REPO/results/hbm_storeB_native_capsule_0136/selected_native_macro_ABIs.json" --out "$OUT/native_master_abi.json"
+python3 tools/hbm_b2/storeB_current_native_kit.py --repo "$OWN_REPO" --prepare-only --profile-out "$OUT/profile.json"
+# After review, one ordinary GEN-only intake, outputs outside the clean source worktree:
+python3 tools/hbm_b2/storeB_current_native_kit.py --repo "$OWN_REPO" --out "$OUT/kits" --tag native_source13_storeB --trial
+# No PLACE/P&R authorized by this packet. StoreB needs its own fresh native source equivalence.

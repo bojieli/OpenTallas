@@ -1,0 +1,23 @@
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -j 1 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_loader_real rom.v loader_main.sv reference.sv tb.sv -Mdir obj"
+	User time (seconds): 66.49
+	System time (seconds): 6.96
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:14.36
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 435160
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 6
+	Minor (reclaiming a frame) page faults: 979611
+	Voluntary context switches: 379
+	Involuntary context switches: 989
+	Swaps: 0
+	File system inputs: 4072
+	File system outputs: 405496
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

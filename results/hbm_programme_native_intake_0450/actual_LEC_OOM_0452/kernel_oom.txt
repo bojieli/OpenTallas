@@ -1,0 +1,3 @@
+Nov 02 04:57:23 tolerant-swine kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=docker-e4e164e55c87af6c6f2438192b4130c218cc26fe14d0050e6acf110753d8da85.scope,mems_allowed=0-1,oom_memcg=/system.slice/docker-e4e164e55c87af6c6f2438192b4130c218cc26fe14d0050e6acf110753d8da85.scope,task_memcg=/system.slice/docker-e4e164e55c87af6c6f2438192b4130c218cc26fe14d0050e6acf110753d8da85.scope,task=yosys,pid=2226483,uid=0
+Nov 02 04:57:23 tolerant-swine kernel: Memory cgroup out of memory: Killed process 2226483 (yosys) total-vm:13848384kB, anon-rss:12519216kB, file-rss:23284kB, shmem-rss:0kB, UID:0 pgtables:25740kB oom_score_adj:0
+Nov 02 04:57:25 tolerant-swine kernel: oom_reaper: reaped process 2226483 (yosys), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB

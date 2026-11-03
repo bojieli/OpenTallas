@@ -1,0 +1,26 @@
+{
+  "status": "PHYSICAL_NAMESPACE_PREP_ONLY",
+  "source_and_geometry_unchanged": true,
+  "proof_transfer": "HOLD: original physical failure needs completed-proof importer review",
+  "files": {
+    "macro_placement.tcl": {
+      "before": "bde534d5fb1b766bc308d2533619905ca0dbef98c66db6fd48c7f4aaddd6af49",
+      "after": "d04b09ae0a0059211cc825ebe7ba9fd8de4447398e6cb21a7d0f622a269583ed"
+    },
+    "macro_reg_guide.tcl": {
+      "before": "6f58ebafb9b45d534696bd277519e7fc2e77bd8448571e7660c03d8b080aa0bd",
+      "after": "308367131e5ce6753dea985f953f339ac9d3f705c4980e70f37a48a125b06780"
+    }
+  },
+  "copied_ephemeral_markers_moved_outside_kit": [
+    "lec_async.lock",
+    "lec_async.identity",
+    "lec_async.ready",
+    "lec_async.owner",
+    "lec_async.on",
+    "lec_async.pid",
+    "lec_async.log",
+    "lec_async.runs",
+    "lec_async.source_identity"
+  ]
+}

@@ -1,0 +1,9 @@
+  reg rs1,rs2;
+  always@(posedge ck or negedge rst_n)if(!rst_n)begin rs1<=0;rs2<=0;end else begin rs1<=1'b1;rs2<=rs1;end
+  (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(1),.ID(300),.RST(0)) rli(.ck(ck),.rst_n(1'b1),.d(rs2),.q(rl_ins));
+  (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(1),.ID(301),.RST(0)) rlr(.ck(ck),.rst_n(1'b1),.d(rs2),.q(rl_run));
+  (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(1),.ID(302),.RST(0)) rlo(.ck(ck),.rst_n(1'b1),.d(rs2),.q(rl_out));
+   f_start_v<=start_v;f_start_user<=start_user;f_start_stage<=start_stage;f_start_epoch<=start_epoch;
+  always@(posedge ck)if(!rl_ins)begin loaded<=0;next_pw<=0;record_index<=0;part<=0;s_loading<=0;s_lc<=0;sealed<=0;end
+  always@(posedge ck)if(!rl_run)begin s_fault<=0;active<=0;cache_valid<=0;pending<=0;rr<=0;s_gc<=0;s_cu<=0;s_cg<=0;end
+  always@(posedge ck)if(!rl_out)begin fault<=0;group_complete<=0;complete_user<=0;complete_group<=0;tr_q<=0;ca_q<=0;awc_q<=0;end

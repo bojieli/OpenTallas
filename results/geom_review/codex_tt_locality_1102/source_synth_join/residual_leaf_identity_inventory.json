@@ -1,0 +1,7997 @@
+{
+ "status": "PASS_STATIC_LEAF_PIN_SOURCE_JOIN_ONLY",
+ "old_source_host": "intel2",
+ "old_source": "/srv/opentallas-scratch2/claude/die-qc-61/tt_ctlm_C/gen/tt_ctlm/rtl/qfd_dv_typed_witness_control_frozen.sv",
+ "old_source_sha256": "737c772b892baf869ed19a58665d7792ef3a0281d82632a053f35af8fc0afac7",
+ "new_source_sha256": "737c772b892baf869ed19a58665d7792ef3a0281d82632a053f35af8fc0afac7",
+ "leaf_count": 133,
+ "rows": [
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.active\\[0\\]$_SDFF_PN0_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07155_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02418_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07169_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02431_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.active\\[1\\]$_SDFF_PN0_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07154_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02419_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07168_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02432_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.active\\[2\\]$_SDFF_PN0_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07153_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02420_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07167_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02433_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.active\\[3\\]$_SDFF_PN0_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09221_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00458_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09235_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00471_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.cache_valid\\[0\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09220_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00459_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09234_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00472_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.cache_valid\\[1\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09219_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00460_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09233_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00473_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.cache_valid\\[2\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09218_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00461_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09232_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00474_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.cache_valid\\[3\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09217_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00462_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09231_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00475_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.cache_valid\\[4\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09216_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00463_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09230_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00476_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.cache_valid\\[5\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09215_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00464_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09229_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00477_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.cache_valid\\[6\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09214_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00465_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09228_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00478_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.cache_valid\\[7\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09213_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00466_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09227_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00479_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_auth$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.a_all"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02958_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.a_all"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02972_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69730"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02816_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69730"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02829_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[10\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69740"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02806_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69740"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02819_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[11\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69741"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02805_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69741"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02818_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[12\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69742"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02804_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69742"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02817_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[13\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69743"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02803_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69743"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02816_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[14\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69744"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02802_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69744"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02815_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[15\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69745"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02801_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69745"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02814_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[16\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69746"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02800_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69746"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02813_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[17\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69747"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02799_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69747"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02812_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[18\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69748"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02798_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69748"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02811_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[19\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69749"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02797_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69749"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02810_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69731"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02815_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69731"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02828_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[20\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69750"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02796_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69750"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02809_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[21\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69751"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02795_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69751"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02808_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[22\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69752"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02794_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69752"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02807_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[23\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69753"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02793_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69753"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02806_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[24\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69754"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02792_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69754"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02805_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[25\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69755"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02791_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69755"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02804_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[26\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69756"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02790_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69756"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02803_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[27\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69757"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02789_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69757"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02802_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[28\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69758"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02788_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69758"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02801_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[29\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69759"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02787_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69759"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02800_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[2\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69732"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02814_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69732"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02827_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[30\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69760"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02786_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69760"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02799_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[31\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69761"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02785_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69761"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02798_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[32\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69762"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02784_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69762"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02797_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[33\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69763"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02783_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69763"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02796_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[34\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69764"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02782_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69764"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02795_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[35\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69765"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02781_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69765"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02794_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[36\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69766"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02780_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69766"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02793_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[37\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69767"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02779_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69767"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02792_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[38\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69768"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02778_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69768"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02791_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[39\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69769"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02777_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69769"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02790_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[3\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69733"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02813_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69733"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02826_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[40\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69770"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02776_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69770"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02789_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[41\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69771"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02775_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69771"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02788_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[42\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69772"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02774_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69772"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02787_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[43\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69773"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02773_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69773"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02786_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[44\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69774"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02772_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69774"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02785_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[45\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69775"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02771_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69775"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02784_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[46\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69776"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02770_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69776"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02783_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[47\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69777"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02769_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69777"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02782_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[48\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69778"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02768_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69778"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02781_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[49\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69779"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02767_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69779"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02780_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[4\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69734"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02812_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69734"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02825_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[50\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69780"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02766_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69780"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02779_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[51\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69781"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02765_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69781"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02778_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[52\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69782"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02764_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69782"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02777_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[53\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69783"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02763_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69783"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02776_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[54\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69784"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02762_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69784"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02775_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[55\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69785"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02761_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69785"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02774_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[56\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69786"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02760_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69786"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02773_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[57\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69787"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02759_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69787"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02772_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[58\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69788"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02758_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69788"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02771_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[59\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69789"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02757_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69789"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02770_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[5\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69735"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02811_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69735"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02824_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[60\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69790"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02756_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69790"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02769_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[61\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69791"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02755_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69791"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02768_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[62\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69792"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02754_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69792"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02767_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[63\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69793"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02960_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69793"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02974_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[6\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69736"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02810_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69736"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02823_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[7\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69737"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02809_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69737"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02822_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[8\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69738"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02808_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69738"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02821_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_dig\\[9\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69739"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02807_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69739"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02820_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_fcap$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69794"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02959_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69794"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02973_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69714"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02831_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69714"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02844_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[10\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69724"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02821_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69724"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02834_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[11\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69725"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02820_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69725"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02833_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[12\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69726"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02819_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69726"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02832_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[13\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69727"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02818_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69727"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02831_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[14\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69728"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02817_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69728"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02830_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[15\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69729"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02961_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69729"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02975_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69715"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02830_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69715"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02843_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[2\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69716"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02829_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69716"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02842_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[3\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69717"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02828_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69717"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02841_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[4\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69718"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02827_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69718"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02840_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[5\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69719"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02826_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69719"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02839_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[6\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69720"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02825_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69720"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02838_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[7\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69721"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02824_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69721"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02837_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[8\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69722"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02823_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69722"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02836_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_iep\\[9\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69723"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02822_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_69723"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02835_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net53869"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00032_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_28634"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00032_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net53868"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00027_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_24980"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00027_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[2\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net53867"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00028_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_28637"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00028_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[3\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net53866"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00029_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_24978"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00029_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[4\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net53865"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00030_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_24976"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00030_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_stage\\[5\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net53864"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00031_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_28639"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00031_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_user\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net53871"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05385_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_66430"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05592_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_user\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net53870"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05384_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_66431"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05591_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.f_start_v$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net54494"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02962_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.n_59038"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02976_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[0\\].ff/q\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09661_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[0\\].ff/_1_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09688_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[0\\].ff/_1_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[0\\].ff/q\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09662_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[0\\].ff/_0_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09689_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[0\\].ff/_0_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[1\\].ff/q\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09661_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[1\\].ff/_1_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09688_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[1\\].ff/_1_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[1\\].ff/q\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09662_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[1\\].ff/_0_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09689_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[1\\].ff/_0_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[2\\].ff/q\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09661_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[2\\].ff/_1_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09688_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[2\\].ff/_1_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[2\\].ff/q\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09662_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[2\\].ff/_0_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09689_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[2\\].ff/_0_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[3\\].ff/q\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09661_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[3\\].ff/_1_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09688_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[3\\].ff/_1_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[3\\].ff/q\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09662_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[3\\].ff/_0_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09689_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.gp.rk\\[3\\].ff/_0_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[0\\]\\[0\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07168_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00036_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07182_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00036_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[0\\]\\[1\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07167_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05495_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07181_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05367_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[0\\]\\[2\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07166_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02407_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07180_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02420_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[0\\]\\[3\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09238_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00442_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09252_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00455_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[1\\]\\[0\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07171_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00035_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07185_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00035_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[1\\]\\[1\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07170_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_04965_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07184_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05392_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[1\\]\\[2\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07169_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02406_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07183_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02419_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[1\\]\\[3\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09245_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00435_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09259_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00448_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[2\\]\\[0\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07174_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00034_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07188_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00034_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[2\\]\\[1\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07173_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_04626_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07187_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05406_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[2\\]\\[2\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07172_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02405_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07186_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02418_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[2\\]\\[3\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09252_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00428_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09266_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00441_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[3\\]\\[0\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07177_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00033_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07191_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00033_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[3\\]\\[1\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07176_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_04673_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07190_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_04696_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[3\\]\\[2\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07175_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02404_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_07189_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_02417_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.next_group\\[3\\]\\[3\\]$_SDFFE_PP0P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09259_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00421_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09273_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00434_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.pending$_SDFF_PN0_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09212_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00467_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09226_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00480_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.pending_slot$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_27227_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05696_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.pick_slot"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_04664_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.pending_user\\[0\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "net52884"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05258_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.pick_user\\[0\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_04663_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.pending_user\\[1\\]$_DFF_P_",
+   "old_cell": {
+    "master": "DFFHQNx2_ASAP7_75t_R",
+    "width_um": 1.134,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_11053_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05259_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.pick_user\\[1\\]"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_05325_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.s_fault$_SDFF_PN0_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09211_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00468_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09225_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00481_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  },
+  {
+   "name": "u_bound.u_core.u_gi.g_wtn.u_wtn.u_ctl.sealed$_SDFF_PN0_",
+   "old_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "fresh_cell": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+   },
+   "ff_primitive": {
+    "vars": [
+     "IQN",
+     "IQNN"
+    ],
+    "clocked_on": "CLK",
+    "next_state": "!D"
+   },
+   "output_functions": {
+    "QN": "IQN"
+   },
+   "old_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09204_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00474_"
+    }
+   },
+   "fresh_pins": {
+    "CLK": {
+     "direction": "INPUT",
+     "signal": "CLOCK",
+     "net": "clk"
+    },
+    "D": {
+     "direction": "INPUT",
+     "signal": "SIGNAL",
+     "net": "_09218_"
+    },
+    "QN": {
+     "direction": "OUTPUT",
+     "signal": "SIGNAL",
+     "net": "_00487_"
+    }
+   },
+   "reset_enable_context": "D-encoded; same selected frozen RTL, no reset/enable/initial constraint added",
+   "initial_relation": "UNPROVED: no initial value or None/None comparison accepted"
+  }
+ ],
+ "anonymous_alias_dependencies": 0,
+ "all_leaf_bits_free_in_proposed_comb_miter": true,
+ "native_base_proved": false,
+ "leaf_initial_values_constrained": false,
+ "accepted_anonymous_alias": false,
+ "physical_release": false,
+ "whole_source_credit": false
+}

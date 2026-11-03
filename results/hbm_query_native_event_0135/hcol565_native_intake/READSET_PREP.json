@@ -1,0 +1,88 @@
+{
+ "status": "EXACT_SOURCE_READSET_PREP_NOT_DISPATCHED",
+ "files": [
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_delay.sv",
+   "sha256": "45900503935757fc6c1d7e7d808b9e2ea603ce514c6790e5775012ee5b0a9592"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_fp32_add_fast.sv",
+   "sha256": "9f5f63678dcaf5af1a928e46eba7b9a542d55dac275f6b74f46ad7574712ca1f"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_fp32_add_lat.sv",
+   "sha256": "42d68c986eb91fcc1a7bf0534bf7086a319a50ae67a049b5e40f5f191b0f1858"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_ksa.sv",
+   "sha256": "0574689a08862c15375db38799377700b7552634678a2015ee747fa2df2f9b6c"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_ksadd_k__u1.sv",
+   "sha256": "25586343190a09f51416fd45ac15c103bd69de971930cc266ad6e6370bdb9403"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_lzc32.sv",
+   "sha256": "a59c0e61357685f24cb4bbe35cc0b8fcdfffc4d140b60d41faaf35139c7cfa4b"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_v41x_bf16.sv",
+   "sha256": "1422215612558b035062476761a4a60fa9e61c6eb7c13c90ec14e311ca4ae128"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_v41x_bmul_l.sv",
+   "sha256": "1d0b0eac7089c17e20206b1d38f9ffc1ea23f777cedfe18d3322a82992c5f349"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_v41x_csa.sv",
+   "sha256": "760c6b9cab76aa8c3fdafcb8a775c5d7fc5daa3a9786ed0410928e6c50d20fd4"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_v41x_faddl.sv",
+   "sha256": "ba6562f14b7bdcf42754ed2c2abb6b7f677064cca1cb165d32d7f9b79ce168ec"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_v41x_q4dot_l.sv",
+   "sha256": "7261b5a8c973e123eba9bb7fa6c86a05780beeca25082f7ba815bd580775f4d3"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_hdc_w11_cut.sv",
+   "sha256": "539c0c2b0f5c71ddcd480869fa58d92855c948597adaea9841c372613d97a343"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_rst_delivered3.sv",
+   "sha256": "9acf49c87de26db832315be74684b36359af3061e53031b57530249cfdc0ce7d"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/selected/ot_rst_relay.sv",
+   "sha256": "ae627fdff37ab755f2e114d3c9b8755cc6166d9dfd1b0884641d099e52792358"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/ot_hbm_idx_hcol_regional_head5.sv",
+   "sha256": "7939b021c39d1557cb81ad03b53df43db07d320dfb5924adfad56baf1450777e"
+  },
+  {
+   "file": "results/hbm_query_native_event_0135/hcol565_native_intake/ot_hbm_idx_hcol_regional_head5_plan.sv",
+   "sha256": "dc47e2726894ac87d581a1c16605669d9325bbc5eb465078d060a460eaffda7b"
+  }
+ ],
+ "definitions": 17,
+ "native_memory_masters": [],
+ "ordinary_source_profile": {
+  "release_eligible": false,
+  "component_proof_reset_cycles": 4,
+  "added_face_cycles": 0,
+  "clock_ports": [
+   "clk_pair[0]",
+   "clk_pair[1]"
+  ],
+  "reset_ports": [
+   "rst_col"
+  ],
+  "DELIVERED_RESET": 1,
+  "regional_reset_copies": 1,
+  "source_reset_DRST": 0
+ },
+ "reset_contract": "new component native4 must actually run; no historicalSS19/tail/die64 receipt staged",
+ "scope": "selected17definition closure replaces originalhcol+two wrappers with additivehead5regionalbody+two wrappers; exactselected math/resetdefinitions retained"
+}

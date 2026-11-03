@@ -1,0 +1,28 @@
+{"scope": "PRIVATE_OBSERVATIONAL_DRT_NOT_ATOMIC_BIRTH_REJECTION", "native_run": false, "dispatch_ready": false, "antenna_policy_changed": false, "original_hooks_preserved": true, "native_body_before_sha256": "e4041889c5949b6ea62f6e0605588c8bcdc55ea62bf9b71c51474bfd5d560952", "native_body_after_sha256": "d0dee9674cbf9760055fdef9734562fee80a5f0e83d0a1447157bd89686535a4", "driver_sha256": "ece63a4db5fd5e0cd56bc8d3bb352bb2771156a3a7a928fb50c90df9662871c0"}
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 1  -no_splash /work/preflight.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.odb
+read_sdc -mode ss /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.sdc
+read_sdc -mode ff /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/5_1_grt.sdc
+source /work/setRC_rcx.tcl
+PC_DRT_ACTUAL_NORMAL_POLICY SKIP_DETAILED_ROUTE 0
+PC_DRT_ACTUAL_NORMAL_POLICY SKIP_ANTENNA_REPAIR_POST_DRT 0
+PC_DRT_ACTUAL_NORMAL_POLICY MAX_REPAIR_ANTENNAS_ITER_DRT 5
+PC_DRT_ACTUAL_NORMAL_POLICY PRE_DETAIL_ROUTE_TCL /work/eco_drt_pre.tcl
+PC_DRT_ACTUAL_NORMAL_POLICY POST_DETAIL_ROUTE_TCL <unset>
+PC_DRT_ACTUAL_NORMAL_POLICY DETAILED_ROUTE_ARGS <unset>
+PC_DRT_ACTUAL_NORMAL_POLICY DETAILED_ROUTE_END_ITERATION 64
+PC_DRT_ACTUAL_NORMAL_POLICY REPAIR_PDN_VIA_LAYER <unset>
+DRT_DIAG_ALL_LOADED_MASTER_CENSUS count=212 core_antennacell=0
+PC_DRT_READ_ONLY_PREFLIGHT_PASS loaded_masters=212

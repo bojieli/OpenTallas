@@ -1,0 +1,29 @@
+{
+ "source": "DIE-KV-61/hr 11-02: kit GEN_LINT macro_tcl FAIL (1 instantiated ot_sram_1r1w_128x64_m1_p192, no static site). One SRAM 33.696 x 27.54 (M4 pins on its W/E edges) at the SW interior, clear of the E (693) / N (456) pin faces; site on the 8.64 um lattice, +0.012 um y phase for the native M4 pin centres (as qkd_hr_ingest_eng)",
+ "module": "qkd_hr_core_guard",
+ "outline_um": [
+  259.2,
+  250.56
+ ],
+ "halo_um": 4.32,
+ "added_cycles": 0,
+ "children": {
+  "ot_sram_1r1w_128x64_m1_p192": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192"
+ },
+ "blocks": [
+  {
+   "inst": "u_guard.g_mu.markers.g_sram.u_storage",
+   "master": "ot_sram_1r1w_128x64_m1_p192",
+   "x": 60.48,
+   "y": 60.492,
+   "orient": "R0"
+  }
+ ],
+ "pg_pin_layer": "M4",
+ "grid_um": 8.64,
+ "static_rows": true,
+ "track_offset_um": [
+  0,
+  0.012
+ ]
+}

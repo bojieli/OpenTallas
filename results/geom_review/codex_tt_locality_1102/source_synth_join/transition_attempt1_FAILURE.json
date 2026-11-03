@@ -1,0 +1,7 @@
+{
+ "status": "DIAGNOSTIC_PARSER_UNSUPPORTED",
+ "unit": "oth-ubuntu-3236893-1793633623",
+ "reason": "First finite cone decoder assumed a primitive D variable; actual selected FF Liberty next_state includes inversion. Parser now substitutes the actual full FF next_state Boolean expression.",
+ "design_failure_claimed": false,
+ "new_source_or_constraints": false
+}

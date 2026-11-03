@@ -1,0 +1,327 @@
+{
+ "status": "PASS_CHANGED_MACRO_CLOCK_CLEARANCE_MODEL_ONLY",
+ "changed_macro_count": 1,
+ "clock_input_count": 63,
+ "min_changed_macro_clock_clearance_um": 9.708,
+ "required_clearance_um": 8.64,
+ "clock_inputs_moved": 0,
+ "macro_clock_clearance_fail": [],
+ "physical_qualified": false,
+ "checks": [
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk",
+   "clearance_um": 206.708
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t1",
+   "clearance_um": 267.82
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t10",
+   "clearance_um": 487.476
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t11",
+   "clearance_um": 642.996
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t12",
+   "clearance_um": 214.956
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t13",
+   "clearance_um": 214.956
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t14",
+   "clearance_um": 336.372
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t15",
+   "clearance_um": 239.092
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t16",
+   "clearance_um": 174.324
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t17",
+   "clearance_um": 185.14
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t18",
+   "clearance_um": 476.724
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t19",
+   "clearance_um": 217.524
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t2",
+   "clearance_um": 267.82
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t20",
+   "clearance_um": 455.156
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t21",
+   "clearance_um": 411.956
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t22",
+   "clearance_um": 107.38
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t23",
+   "clearance_um": 206.708
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t24",
+   "clearance_um": 293.108
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t25",
+   "clearance_um": 381.684
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t26",
+   "clearance_um": 606.324
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t27",
+   "clearance_um": 141.876
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t28",
+   "clearance_um": 249.908
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t29",
+   "clearance_um": 659.7
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t3",
+   "clearance_um": 313.588
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t30",
+   "clearance_um": 422.772
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t31",
+   "clearance_um": 87.924
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t32",
+   "clearance_um": 195.956
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t33",
+   "clearance_um": 349.3
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t34",
+   "clearance_um": 530.74
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t35",
+   "clearance_um": 239.092
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t36",
+   "clearance_um": 271.54
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t37",
+   "clearance_um": 541.492
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t38",
+   "clearance_um": 584.692
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t39",
+   "clearance_um": 476.724
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t4",
+   "clearance_um": 258.156
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t40",
+   "clearance_um": 616.5
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t41",
+   "clearance_um": 541.556
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t42",
+   "clearance_um": 239.092
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t43",
+   "clearance_um": 282.292
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t44",
+   "clearance_um": 325.492
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t45",
+   "clearance_um": 584.116
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t46",
+   "clearance_um": 9.708
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t47",
+   "clearance_um": 293.108
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t48",
+   "clearance_um": 347.124
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t49",
+   "clearance_um": 411.892
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t5",
+   "clearance_um": 357.94
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t50",
+   "clearance_um": 207.816
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t51",
+   "clearance_um": 294.216
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t52",
+   "clearance_um": 380.616
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t53",
+   "clearance_um": 56.584
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t54",
+   "clearance_um": 348.168
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t55",
+   "clearance_um": 17.76
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t56",
+   "clearance_um": 251.016
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t57",
+   "clearance_um": 573.252
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t58",
+   "clearance_um": 316.868
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t59",
+   "clearance_um": 293.06
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t6",
+   "clearance_um": 239.092
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t60",
+   "clearance_um": 141.892
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t61",
+   "clearance_um": 104.7
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t62",
+   "clearance_um": 670.468
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t7",
+   "clearance_um": 411.892
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t8",
+   "clearance_um": 225.708
+  },
+  {
+   "macro": "u_bound.u_core.u_gi.u_cal.g_m\\[0\\].u_pm",
+   "port": "clk_t9",
+   "clearance_um": 293.108
+  }
+ ]
+}

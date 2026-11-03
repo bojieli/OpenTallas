@@ -1,0 +1,59 @@
+{
+ "status": "ACTUAL_FROZEN_PRODUCER_WIDTH_JOIN",
+ "instances": [
+  {
+   "parent": "hbm_arch_q_hub__q_hub_nw",
+   "instance": "u_u_hb_idx_q_Q_q0",
+   "source_sha256": "1fd067da80ce3f7f96eedad5e2766c87d30f72d9ad542927440c4cb342b87626",
+   "block_head": "w_u_hb_idx_op_Q_q0_block_head[4:0]",
+   "emit_head": "w_u_hb_idx_qctl_Q_q0_query_emit_head[4:0]",
+   "old8bit_input_high3": "actual5-bit source expression zero-extends in frozen8-bit port; not guessed producer bits",
+   "new5bit_input": "all actual producedbits preserved",
+   "clock": "clk",
+   "reset": "rst_n_t327",
+   "old_ql_head_pipeline": "inputeh_r\u2192corehead\u2192tophead unconditionalclock3edges; outputupper3 derivefromactualzeroextendedinputs",
+   "scope": "Source identity only; whole14event/clock/physical gates remainheld"
+  },
+  {
+   "parent": "hbm_arch_q_hub__q_hub_nw",
+   "instance": "u_u_hb_idx_q_Q_q1",
+   "source_sha256": "1fd067da80ce3f7f96eedad5e2766c87d30f72d9ad542927440c4cb342b87626",
+   "block_head": "w_u_hb_idx_op_Q_q1_block_head[4:0]",
+   "emit_head": "w_u_hb_idx_qctl_Q_q1_query_emit_head[4:0]",
+   "old8bit_input_high3": "actual5-bit source expression zero-extends in frozen8-bit port; not guessed producer bits",
+   "new5bit_input": "all actual producedbits preserved",
+   "clock": "clk",
+   "reset": "rst_n_t328",
+   "old_ql_head_pipeline": "inputeh_r\u2192corehead\u2192tophead unconditionalclock3edges; outputupper3 derivefromactualzeroextendedinputs",
+   "scope": "Source identity only; whole14event/clock/physical gates remainheld"
+  },
+  {
+   "parent": "hbm_arch_q_hub__q_hub_ne",
+   "instance": "u_u_hb_idx_q_Q_q0",
+   "source_sha256": "e1e23fdbddecc14dd291806420ce97e6bff21c8c91b31d9de4051d74a72c69ab",
+   "block_head": "w_u_hb_idx_op_Q_q0_block_head[4:0]",
+   "emit_head": "w_u_hb_idx_qctl_Q_q0_query_emit_head[4:0]",
+   "old8bit_input_high3": "actual5-bit source expression zero-extends in frozen8-bit port; not guessed producer bits",
+   "new5bit_input": "all actual producedbits preserved",
+   "clock": "clk",
+   "reset": "rst_n_t327",
+   "old_ql_head_pipeline": "inputeh_r\u2192corehead\u2192tophead unconditionalclock3edges; outputupper3 derivefromactualzeroextendedinputs",
+   "scope": "Source identity only; whole14event/clock/physical gates remainheld"
+  },
+  {
+   "parent": "hbm_arch_q_hub__q_hub_ne",
+   "instance": "u_u_hb_idx_q_Q_q1",
+   "source_sha256": "e1e23fdbddecc14dd291806420ce97e6bff21c8c91b31d9de4051d74a72c69ab",
+   "block_head": "w_u_hb_idx_op_Q_q1_block_head[4:0]",
+   "emit_head": "w_u_hb_idx_qctl_Q_q1_query_emit_head[4:0]",
+   "old8bit_input_high3": "actual5-bit source expression zero-extends in frozen8-bit port; not guessed producer bits",
+   "new5bit_input": "all actual producedbits preserved",
+   "clock": "clk",
+   "reset": "rst_n_t328",
+   "old_ql_head_pipeline": "inputeh_r\u2192corehead\u2192tophead unconditionalclock3edges; outputupper3 derivefromactualzeroextendedinputs",
+   "scope": "Source identity only; whole14event/clock/physical gates remainheld"
+  }
+ ],
+ "no_new_cycles": true,
+ "declared_compat_clocks": "sixunused ports perQUERY instance alreadyknown; no physicalclock retirement adopted"
+}

@@ -1,0 +1,30 @@
+RAW_SAMPLE tile=639 ordinal=0 lane0=c2fe7800
+RAW_SAMPLE tile=639 ordinal=56 lane0=c4abb980
+PASS_NATIVE_B_PILOT tile=639 raw_requests64 responses64 raw_vectors64 useful_vectors=24 nominal833ps
+- tb_native_head_B_pilot.sv:73: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 135ns; walltime 1.999 s; speed 67.493 ns/s
+- Verilator: cpu 1.992 s on 1 threads; allocated 63 MB
+	Command being timed: "/home/ubuntu/scratch-root/claude/dh54-tail/bp0/obj/Vtb_native_head_B_pilot +TILE=639"
+	User time (seconds): 1.99
+	System time (seconds): 0.00
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 59244
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 754
+	Voluntary context switches: 1
+	Involuntary context switches: 19
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 48
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

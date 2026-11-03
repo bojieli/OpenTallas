@@ -1,0 +1,68 @@
+{
+  "verdict": "PASS_DPL_AND_DATA_GRT_ONLY",
+  "unit": "oth-ubuntu-1423278-1793637022",
+  "host": "intel2",
+  "path": "/srv/opentallas-scratch2/claude/codex-pc-geo80-birth-1102/grt_only",
+  "runtime_source": "722d7d7e4",
+  "exit": 0,
+  "elapsed_seconds": 1704.02,
+  "peak_kb": 8316100,
+  "native_pg": {
+    "creates": 0,
+    "swaps": 0,
+    "bound": 0,
+    "active": 0,
+    "inprocess_checked": 447822,
+    "reopened_saved_checked": 447822,
+    "reopened_failures": 0
+  },
+  "DPL": {
+    "illegal_cells": 0,
+    "illegal_sites": 0,
+    "max_displacement_um": 1.5,
+    "total_displacement_um": 22.9,
+    "moved_from_repair": 40,
+    "new_or_missing_or_remastered_from_repair": 0
+  },
+  "wire_preservation": {
+    "selected": 192,
+    "new": 63,
+    "connectivity": 48,
+    "moved_or_resized": 81,
+    "changed_instances": 90,
+    "ripped": 58,
+    "parked_reattached": 208687,
+    "kept_routed_including_clock": 212948
+  },
+  "coverage": {
+    "guided_connected_nets": 213168,
+    "missing": 0,
+    "note": "No new clock implementation or clock-capacity waiver; exact original clock wires and connected instances independently match."
+  },
+  "clock": {
+    "nets": 4261,
+    "connected_instances": 48012,
+    "changes": 0,
+    "restores": 0,
+    "fixed": 4261
+  },
+  "pin_geometry": {
+    "expected": 4133,
+    "actual": 4133,
+    "missing": 0,
+    "extra": 0,
+    "planned_layer_point_mismatches": 0
+  },
+  "geometry_read_unit": "oth-ubuntu-1882870-1793638832",
+  "actual_geometry_archive": {
+    "path": "/srv/opentallas-scratch2/claude/codex-pc-geo80-birth-1102/geometry_read/GEOMETRY.json.gz",
+    "sha256": "7be23a9bad399c638173d2ae5567c40d4890420486cd948937c22ff7760be6b3"
+  },
+  "look": {
+    "image": "actual_saved_grt.png",
+    "verdict": "LOOKED; legal native placement inside unchanged outline, actual PG trunks and all public metal shown. No macro wall/new channel obstruction. Repair buffers follow existing fanout corridors. DRT still required."
+  },
+  "scope": "Preserved stock native GRT estimates/metrics ran; no sizing, hold, power recovery, antenna repair, DRT, finish or standalone STA/signoff. Native GRT timing is informational only.",
+  "next": "Future exact-hook observational DRT source PREP ad6c2d10c has PG-source concurrence; actual normal flags/master census/readset and parent release still required.",
+  "qualification": "NOT_SIGNED: detailed DRC/ANT, final TT/FF/DRV, own final netlist LEC and source-provenance/parent adoption holds remain."
+}

@@ -1,0 +1,368 @@
+{
+  "status": "ACTUAL_POST_SYNTH_SOURCE_CLOCK_ROLE_MAP",
+  "source": "Actual0525 saved1_synth.odb clock MTerms; no name-derived clock inference",
+  "source_port": "clk",
+  "actual_net": "clk",
+  "FF": {
+    "count": 20842,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "pin": "CLK",
+    "exact_name_set": "actual_FF_rows.csv"
+  },
+  "native_SRAM_clocks": [
+    {
+      "instance": "g_leaf[0].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[0].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[0].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[0].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[10].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[10].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[10].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[10].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[1].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[1].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[1].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[1].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[2].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[2].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[2].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[2].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[3].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[3].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[3].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[3].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[4].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[4].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[4].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[4].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[5].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[5].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[5].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[5].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[6].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[6].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[6].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[6].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[7].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[7].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[7].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[7].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[8].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[8].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[8].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[8].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[9].u_leaf.g_page[0].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[9].u_leaf.g_page[1].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[9].u_leaf.g_page[2].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    },
+    {
+      "instance": "g_leaf[9].u_leaf.g_page[3].u_program",
+      "pin": "clk",
+      "master": "ot_sram_1r1w_512x256_m1_r2c2",
+      "kind": "SRAM",
+      "source_clock_port": "clk",
+      "actual_net": "clk"
+    }
+  ],
+  "full_census": "intel2:/srv/opentallas-scratch2/claude/codex-programme-row-repair-0640/candidate8_native_constraints/source_clock_sink_map.json",
+  "physical_clock_credit": false
+}

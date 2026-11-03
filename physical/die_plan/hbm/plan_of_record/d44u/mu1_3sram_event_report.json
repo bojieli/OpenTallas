@@ -1,0 +1,394 @@
+{
+ "event": "mu1-3sram",
+ "owner_decision": "OWNER 2026-11-02 19:19 PST 'agree with 3-SRAM layout' (mu1 option A)",
+ "base": "/srv/opentallas-scratch2/claude/hbm-cores-kits-40/d44q/plan",
+ "base_sha256": {
+  "clock_entries.json": "8883cf02258f00bdc55d48141ada022f436bf1d83699dd6f7a66b54328f8ce87",
+  "core_conns.json": "e689ac2475d83e41b69311c0aeb6f8a82bdd7c1e8e3d7c3bcb4ebda659a74a49",
+  "core_macros.json": "3bca79b4624e782a6424299f96571f7c9dc0e8fe2d1fe363e81470543ffb976f",
+  "die_plan.json": "3171b0fc37321cf2565bae63fde2de603b117a2362418d8d43113a9b479f4192",
+  "pin_windows.json": "2d2869f4c7981a11f49e0bb83e65afa2d0da649ef48a8a2e229c8d05e0ecf140"
+ },
+ "old_module": "hnx_vms_bank_q0_faces__vec6293",
+ "new_module": "hnx_vms_bank_q0_faces__vecd4ae",
+ "changed_instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q0_mu1",
+   "orient": "MY",
+   "origin_um": [
+    2047.68,
+    1546.56
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q1_mu1",
+   "orient": "MY",
+   "origin_um": [
+    2047.68,
+    2963.52
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q2_mu1",
+   "orient": "R0",
+   "origin_um": [
+    3291.84,
+    1546.56
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__o_R0__codex_g21.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q3_mu1",
+   "orient": "R0",
+   "origin_um": [
+    3291.84,
+    2963.52
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__o_R0__codex_g21.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q4_mu1",
+   "orient": "MY",
+   "origin_um": [
+    6298.56,
+    1546.56
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q5_mu1",
+   "orient": "MY",
+   "origin_um": [
+    6298.56,
+    2963.52
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q6_mu1",
+   "orient": "MY",
+   "origin_um": [
+    7542.72,
+    1546.56
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_vmb_Q7_mu1",
+   "orient": "MY",
+   "origin_um": [
+    7542.72,
+    2963.52
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q0_mu1",
+   "orient": "MY",
+   "origin_um": [
+    2047.68,
+    1546.56
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q1_mu1",
+   "orient": "MY",
+   "origin_um": [
+    2047.68,
+    2963.52
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q2_mu1",
+   "orient": "R0",
+   "origin_um": [
+    3291.84,
+    1546.56
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__o_R0__codex_g21.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q3_mu1",
+   "orient": "R0",
+   "origin_um": [
+    3291.84,
+    2963.52
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__o_R0__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__o_R0__codex_g21.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q4_mu1",
+   "orient": "MY",
+   "origin_um": [
+    6298.56,
+    1546.56
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q5_mu1",
+   "orient": "MY",
+   "origin_um": [
+    6298.56,
+    2963.52
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q6_mu1",
+   "orient": "MY",
+   "origin_um": [
+    7542.72,
+    1546.56
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_vmb_Q7_mu1",
+   "orient": "MY",
+   "origin_um": [
+    7542.72,
+    2963.52
+   ],
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "new_pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json"
+  }
+ ],
+ "pins_files": {
+  "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json": {
+   "new": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__codex_g21.json",
+   "sha256": "2ef3928d129160b4667a4e6c0d7cbdb7bf2b53545630d24a1ceadf3643f63d2e",
+   "old_pins": 3933,
+   "new_pins": 3919,
+   "dropped": [
+    "clk_macro3",
+    "dq[281]",
+    "eg[276]",
+    "kq[281]",
+    "pq[285]",
+    "rq0[17]",
+    "rq1[17]",
+    "rq2[17]",
+    "rq3[17]",
+    "rq4[17]",
+    "wq0[281]",
+    "wq1[281]",
+    "xq2[276]",
+    "xq[276]"
+   ]
+  },
+  "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__o_R0__codex_g21.json": {
+   "new": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__o_R0__codex_g21.json",
+   "sha256": "c8e7a5b382d847ba03e61fd088b00f360d101a4785bc260efc37a4120e046a76",
+   "old_pins": 3933,
+   "new_pins": 3919,
+   "dropped": [
+    "clk_macro3",
+    "dq[281]",
+    "eg[276]",
+    "kq[281]",
+    "pq[285]",
+    "rq0[17]",
+    "rq1[17]",
+    "rq2[17]",
+    "rq3[17]",
+    "rq4[17]",
+    "wq0[281]",
+    "wq1[281]",
+    "xq2[276]",
+    "xq[276]"
+   ]
+  }
+ },
+ "new_module_pins": 3919,
+ "core_conns_entries_on_old_instances": 0,
+ "core_conns_dropped_pin_hits": 0,
+ "core_islands": "merged into NEW (identical rects)",
+ "clock_entries_changed": 16,
+ "pin_windows_record": {
+  "old_pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+  "pins_now": 3919
+ },
+ "core_macros_removed": {
+  "macros": [
+   {
+    "name": "u_fcore.u_core.u_ot_pr_core.bank.u_a",
+    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     47.616,
+     76.38,
+     222.36,
+     146.868
+    ]
+   },
+   {
+    "name": "u_fcore.u_core.u_ot_pr_core.bank.u_b",
+    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     47.616,
+     164.172,
+     222.36,
+     234.66
+    ]
+   },
+   {
+    "name": "u_fcore.u_core.u_ot_pr_core.bank.u_c",
+    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     47.616,
+     234.732,
+     222.36,
+     305.22
+    ]
+   },
+   {
+    "name": "u_fcore.u_core.u_ot_pr_core.bank.u_h",
+    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "orient": "R0",
+    "rect_um": [
+     47.616,
+     305.292,
+     222.36,
+     375.78
+    ]
+   }
+  ],
+  "outline_um": [
+   270.0,
+   403.92
+  ]
+ },
+ "core_macros_new": [
+  "u_fcore.u_core.u_ot_pr_core.bank.u_a",
+  "u_fcore.u_core.u_ot_pr_core.bank.u_b",
+  "u_fcore.u_core.u_ot_pr_core.bank.u_c"
+ ],
+ "new_sha256": {
+  "clock_entries.json": "e1866c76627b11669f901d6f5db74d3a4a09b497323f1ed81168504d8e668f37",
+  "core_macros.json": "d5241adce0c1dcb0c8a898fb0371370de33f9d3b1884c829c732054346b96b0b",
+  "die_plan.json": "68367329790d760b7469e653638d8fe0fa563d92adfa76773d4146978d234ce6",
+  "pin_windows.json": "20f1740d3747af05504243a1de97f995bf8c4f80a5d3de06993c667139023dd3"
+ },
+ "n_instances": 16,
+ "dropped_pins": [
+  "clk_macro3",
+  "dq[281]",
+  "eg[276]",
+  "kq[281]",
+  "pq[285]",
+  "rq0[17]",
+  "rq1[17]",
+  "rq2[17]",
+  "rq3[17]",
+  "rq4[17]",
+  "wq0[281]",
+  "wq1[281]",
+  "xq2[276]",
+  "xq[276]"
+ ],
+ "vms_modules_after": {
+  "hnx_vms_bank_q0_faces__vecd4ae": 32
+ }
+}

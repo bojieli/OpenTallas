@@ -1,0 +1,520 @@
+{
+  "schema": "opentallas.hhp.intentional_clock_mesh_role.proposal.v1",
+  "enabled_by_default": false,
+  "enabled_for_private_proposal": true,
+  "qualified": false,
+  "TYPE": "kv3_pc__cl5a95b461",
+  "cohort": "PRIVATE_HISTORICAL_D25_FULLM25",
+  "part": "pc_EN_0",
+  "role": "intentional_clock_mesh",
+  "kind": "clock",
+  "common_root": "port:root",
+  "polarity": "noninverting",
+  "ports": [
+    "ckm_w_ckm_n10_h1111111000",
+    "ckm_w_ckm_n10_h1111111001",
+    "ckm_w_ckm_n10_h1111111100",
+    "ckm_w_ckm_n10_h1111111101",
+    "ck_mesh"
+  ],
+  "raw_private_edges": [
+    {
+      "owner": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "cell": "mp_isl0_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_0",
+      "Y": "ft_ck_o_0",
+      "parent_input": "ckm_w_ckm_n10_h1111111101"
+    },
+    {
+      "owner": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "cell": "mp_isl0_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_0",
+      "Y": "ft_ck_o_0__p1",
+      "parent_input": "ckm_w_ckm_n10_h1111111101"
+    },
+    {
+      "owner": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "cell": "mp_isl1_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_1",
+      "Y": "ft_ck_o_1",
+      "parent_input": "ckm_w_ckm_n10_h1111111100"
+    },
+    {
+      "owner": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "cell": "mp_isl1_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_1",
+      "Y": "ft_ck_o_1__p1",
+      "parent_input": "ckm_w_ckm_n10_h1111111100"
+    },
+    {
+      "owner": "kvpc1",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl0_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_0",
+      "Y": "ft_ck_o_0",
+      "parent_input": "ckm_w_ckm_n10_h1111111101"
+    },
+    {
+      "owner": "kvpc1",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl0_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_0",
+      "Y": "ft_ck_o_0__p1",
+      "parent_input": "ckm_w_ckm_n10_h1111111101"
+    },
+    {
+      "owner": "kvpc1",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl1_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_1",
+      "Y": "ft_ck_o_1",
+      "parent_input": "ckm_w_ckm_n10_h1111111100"
+    },
+    {
+      "owner": "kvpc1",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl1_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_1",
+      "Y": "ft_ck_o_1__p1",
+      "parent_input": "ckm_w_ckm_n10_h1111111100"
+    },
+    {
+      "owner": "kvpc2",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl0_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_0",
+      "Y": "ft_ck_o_0",
+      "parent_input": "ckm_w_ckm_n10_h1111111001"
+    },
+    {
+      "owner": "kvpc2",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl0_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_0",
+      "Y": "ft_ck_o_0__p1",
+      "parent_input": "ckm_w_ckm_n10_h1111111001"
+    },
+    {
+      "owner": "kvpc2",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl1_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_1",
+      "Y": "ft_ck_o_1",
+      "parent_input": "ckm_w_ckm_n10_h1111111000"
+    },
+    {
+      "owner": "kvpc2",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl1_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_1",
+      "Y": "ft_ck_o_1__p1",
+      "parent_input": "ckm_w_ckm_n10_h1111111000"
+    },
+    {
+      "owner": "kvpc3",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl0_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_0",
+      "Y": "ft_ck_o_0",
+      "parent_input": "ckm_w_ckm_n10_h1111111001"
+    },
+    {
+      "owner": "kvpc3",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl0_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_0",
+      "Y": "ft_ck_o_0__p1",
+      "parent_input": "ckm_w_ckm_n10_h1111111001"
+    },
+    {
+      "owner": "kvpc3",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl1_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_1",
+      "Y": "ft_ck_o_1",
+      "parent_input": "ckm_w_ckm_n10_h1111111000"
+    },
+    {
+      "owner": "kvpc3",
+      "module": "qkd_kvs_pc",
+      "cell": "mp_isl1_ck1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "A": "ft_ck_i_1",
+      "Y": "ft_ck_o_1__p1",
+      "parent_input": "ckm_w_ckm_n10_h1111111000"
+    }
+  ],
+  "source_public_mesh_drivers": [
+    {
+      "owner": "kvpc0",
+      "cell": "mp_isl0_ck0",
+      "parent_output": "ck_mesh"
+    },
+    {
+      "owner": "kvpc0",
+      "cell": "mp_isl1_ck0",
+      "parent_output": "ck_mesh"
+    },
+    {
+      "owner": "kvpc1",
+      "cell": "mp_isl0_ck0",
+      "parent_output": "ck_mesh"
+    },
+    {
+      "owner": "kvpc1",
+      "cell": "mp_isl1_ck0",
+      "parent_output": "ck_mesh"
+    },
+    {
+      "owner": "kvpc2",
+      "cell": "mp_isl0_ck0",
+      "parent_output": "ck_mesh"
+    },
+    {
+      "owner": "kvpc2",
+      "cell": "mp_isl1_ck0",
+      "parent_output": "ck_mesh"
+    },
+    {
+      "owner": "kvpc3",
+      "cell": "mp_isl0_ck0",
+      "parent_output": "ck_mesh"
+    },
+    {
+      "owner": "kvpc3",
+      "cell": "mp_isl1_ck0",
+      "parent_output": "ck_mesh"
+    }
+  ],
+  "physical_join_intent": [
+    {
+      "owner": "kvpc0",
+      "private_output": "ft_ck_o_0__p1",
+      "public_output": "ft_ck_o_0",
+      "parent_output": "ck_mesh",
+      "intent": "physical join; absent in raw RTL"
+    },
+    {
+      "owner": "kvpc0",
+      "private_output": "ft_ck_o_1__p1",
+      "public_output": "ft_ck_o_1",
+      "parent_output": "ck_mesh",
+      "intent": "physical join; absent in raw RTL"
+    },
+    {
+      "owner": "kvpc1",
+      "private_output": "ft_ck_o_0__p1",
+      "public_output": "ft_ck_o_0",
+      "parent_output": "ck_mesh",
+      "intent": "physical join; absent in raw RTL"
+    },
+    {
+      "owner": "kvpc1",
+      "private_output": "ft_ck_o_1__p1",
+      "public_output": "ft_ck_o_1",
+      "parent_output": "ck_mesh",
+      "intent": "physical join; absent in raw RTL"
+    },
+    {
+      "owner": "kvpc2",
+      "private_output": "ft_ck_o_0__p1",
+      "public_output": "ft_ck_o_0",
+      "parent_output": "ck_mesh",
+      "intent": "physical join; absent in raw RTL"
+    },
+    {
+      "owner": "kvpc2",
+      "private_output": "ft_ck_o_1__p1",
+      "public_output": "ft_ck_o_1",
+      "parent_output": "ck_mesh",
+      "intent": "physical join; absent in raw RTL"
+    },
+    {
+      "owner": "kvpc3",
+      "private_output": "ft_ck_o_0__p1",
+      "public_output": "ft_ck_o_0",
+      "parent_output": "ck_mesh",
+      "intent": "physical join; absent in raw RTL"
+    },
+    {
+      "owner": "kvpc3",
+      "private_output": "ft_ck_o_1__p1",
+      "public_output": "ft_ck_o_1",
+      "parent_output": "ck_mesh",
+      "intent": "physical join; absent in raw RTL"
+    }
+  ],
+  "actual_ancestry": {
+    "ckm_w_ckm_n10_h1111111101": [
+      "ckm_n10_h1111111101",
+      "ckm_n9_h111111110",
+      "ckm_n8_h11111111",
+      "ckm_n7_h1111111",
+      "ckm_r7_h1111111_1",
+      "ckm_n6_h111111",
+      "ckm_r6_h111111_1",
+      "ckm_n5_h11111",
+      "ckm_r5_h11111_2",
+      "ckm_r5_h11111_1",
+      "ckm_n4_h1111",
+      "ckm_r4_h1111_3",
+      "ckm_r4_h1111_2",
+      "ckm_r4_h1111_1",
+      "ckm_n3_h111",
+      "ckm_r3_h111_5",
+      "ckm_r3_h111_4",
+      "ckm_r3_h111_3",
+      "ckm_r3_h111_2",
+      "ckm_r3_h111_1",
+      "ckm_n2_h11",
+      "ckm_r2_h11_6",
+      "ckm_r2_h11_5",
+      "ckm_r2_h11_4",
+      "ckm_r2_h11_3",
+      "ckm_r2_h11_2",
+      "ckm_r2_h11_1",
+      "ckm_n1_h1",
+      "ckm_r1_h1_15",
+      "ckm_r1_h1_14",
+      "ckm_r1_h1_13",
+      "ckm_r1_h1_12",
+      "ckm_r1_h1_11",
+      "ckm_r1_h1_10",
+      "ckm_r1_h1_9",
+      "ckm_r1_h1_8",
+      "ckm_r1_h1_7",
+      "ckm_r1_h1_6",
+      "ckm_r1_h1_5",
+      "ckm_r1_h1_4",
+      "ckm_r1_h1_3",
+      "ckm_r1_h1_2",
+      "ckm_r1_h1_1",
+      "ckm_n0",
+      "port:root"
+    ],
+    "ckm_w_ckm_n10_h1111111100": [
+      "ckm_n10_h1111111100",
+      "ckm_n9_h111111110",
+      "ckm_n8_h11111111",
+      "ckm_n7_h1111111",
+      "ckm_r7_h1111111_1",
+      "ckm_n6_h111111",
+      "ckm_r6_h111111_1",
+      "ckm_n5_h11111",
+      "ckm_r5_h11111_2",
+      "ckm_r5_h11111_1",
+      "ckm_n4_h1111",
+      "ckm_r4_h1111_3",
+      "ckm_r4_h1111_2",
+      "ckm_r4_h1111_1",
+      "ckm_n3_h111",
+      "ckm_r3_h111_5",
+      "ckm_r3_h111_4",
+      "ckm_r3_h111_3",
+      "ckm_r3_h111_2",
+      "ckm_r3_h111_1",
+      "ckm_n2_h11",
+      "ckm_r2_h11_6",
+      "ckm_r2_h11_5",
+      "ckm_r2_h11_4",
+      "ckm_r2_h11_3",
+      "ckm_r2_h11_2",
+      "ckm_r2_h11_1",
+      "ckm_n1_h1",
+      "ckm_r1_h1_15",
+      "ckm_r1_h1_14",
+      "ckm_r1_h1_13",
+      "ckm_r1_h1_12",
+      "ckm_r1_h1_11",
+      "ckm_r1_h1_10",
+      "ckm_r1_h1_9",
+      "ckm_r1_h1_8",
+      "ckm_r1_h1_7",
+      "ckm_r1_h1_6",
+      "ckm_r1_h1_5",
+      "ckm_r1_h1_4",
+      "ckm_r1_h1_3",
+      "ckm_r1_h1_2",
+      "ckm_r1_h1_1",
+      "ckm_n0",
+      "port:root"
+    ],
+    "ckm_w_ckm_n10_h1111111001": [
+      "ckm_n10_h1111111001",
+      "ckm_n9_h111111100",
+      "ckm_n8_h11111110",
+      "ckm_n7_h1111111",
+      "ckm_r7_h1111111_1",
+      "ckm_n6_h111111",
+      "ckm_r6_h111111_1",
+      "ckm_n5_h11111",
+      "ckm_r5_h11111_2",
+      "ckm_r5_h11111_1",
+      "ckm_n4_h1111",
+      "ckm_r4_h1111_3",
+      "ckm_r4_h1111_2",
+      "ckm_r4_h1111_1",
+      "ckm_n3_h111",
+      "ckm_r3_h111_5",
+      "ckm_r3_h111_4",
+      "ckm_r3_h111_3",
+      "ckm_r3_h111_2",
+      "ckm_r3_h111_1",
+      "ckm_n2_h11",
+      "ckm_r2_h11_6",
+      "ckm_r2_h11_5",
+      "ckm_r2_h11_4",
+      "ckm_r2_h11_3",
+      "ckm_r2_h11_2",
+      "ckm_r2_h11_1",
+      "ckm_n1_h1",
+      "ckm_r1_h1_15",
+      "ckm_r1_h1_14",
+      "ckm_r1_h1_13",
+      "ckm_r1_h1_12",
+      "ckm_r1_h1_11",
+      "ckm_r1_h1_10",
+      "ckm_r1_h1_9",
+      "ckm_r1_h1_8",
+      "ckm_r1_h1_7",
+      "ckm_r1_h1_6",
+      "ckm_r1_h1_5",
+      "ckm_r1_h1_4",
+      "ckm_r1_h1_3",
+      "ckm_r1_h1_2",
+      "ckm_r1_h1_1",
+      "ckm_n0",
+      "port:root"
+    ],
+    "ckm_w_ckm_n10_h1111111000": [
+      "ckm_n10_h1111111000",
+      "ckm_n9_h111111100",
+      "ckm_n8_h11111110",
+      "ckm_n7_h1111111",
+      "ckm_r7_h1111111_1",
+      "ckm_n6_h111111",
+      "ckm_r6_h111111_1",
+      "ckm_n5_h11111",
+      "ckm_r5_h11111_2",
+      "ckm_r5_h11111_1",
+      "ckm_n4_h1111",
+      "ckm_r4_h1111_3",
+      "ckm_r4_h1111_2",
+      "ckm_r4_h1111_1",
+      "ckm_n3_h111",
+      "ckm_r3_h111_5",
+      "ckm_r3_h111_4",
+      "ckm_r3_h111_3",
+      "ckm_r3_h111_2",
+      "ckm_r3_h111_1",
+      "ckm_n2_h11",
+      "ckm_r2_h11_6",
+      "ckm_r2_h11_5",
+      "ckm_r2_h11_4",
+      "ckm_r2_h11_3",
+      "ckm_r2_h11_2",
+      "ckm_r2_h11_1",
+      "ckm_n1_h1",
+      "ckm_r1_h1_15",
+      "ckm_r1_h1_14",
+      "ckm_r1_h1_13",
+      "ckm_r1_h1_12",
+      "ckm_r1_h1_11",
+      "ckm_r1_h1_10",
+      "ckm_r1_h1_9",
+      "ckm_r1_h1_8",
+      "ckm_r1_h1_7",
+      "ckm_r1_h1_6",
+      "ckm_r1_h1_5",
+      "ckm_r1_h1_4",
+      "ckm_r1_h1_3",
+      "ckm_r1_h1_2",
+      "ckm_r1_h1_1",
+      "ckm_n0",
+      "port:root"
+    ]
+  },
+  "closed_source_reference_census": {
+    "qkd_kvs_pc_h_head_p": {
+      "role_nets": [
+        "ft_ck_i_0",
+        "ft_ck_i_1",
+        "ft_ck_o_0",
+        "ft_ck_o_0__p1",
+        "ft_ck_o_1",
+        "ft_ck_o_1__p1"
+      ],
+      "exact_allowed_calls": 4,
+      "unclassified_references": 0
+    },
+    "qkd_kvs_pc": {
+      "role_nets": [
+        "ft_ck_i_0",
+        "ft_ck_i_1",
+        "ft_ck_o_0",
+        "ft_ck_o_0__p1",
+        "ft_ck_o_1",
+        "ft_ck_o_1__p1"
+      ],
+      "exact_allowed_calls": 4,
+      "unclassified_references": 0
+    },
+    "bound": {
+      "role_nets": [
+        "ck_mesh",
+        "ckm_w_ckm_n10_h1111111000",
+        "ckm_w_ckm_n10_h1111111001",
+        "ckm_w_ckm_n10_h1111111100",
+        "ckm_w_ckm_n10_h1111111101"
+      ],
+      "exact_allowed_calls": 4,
+      "unclassified_references": 0
+    },
+    "wrapper": {
+      "role_nets": [
+        "ck_mesh",
+        "ckm_w_ckm_n10_h1111111000",
+        "ckm_w_ckm_n10_h1111111001",
+        "ckm_w_ckm_n10_h1111111100",
+        "ckm_w_ckm_n10_h1111111101"
+      ],
+      "exact_allowed_calls": 1,
+      "unclassified_references": 0
+    }
+  },
+  "source_prep_sha256": "5323c1ed3853aa9ebd8bb191f93631b531391ce475ca5231f4b3df5a921dfed7",
+  "pinned_graphs": {
+    "canonical_mesh.json.gz": "6294fefcd5db18b1f8c0efe2271a51c63a504278b8cd0216a63795c0fc90f4a6",
+    "canonical_place.json.gz": "cb45c2b9dbad9fd69bd0c0f59c4054d9125004598adff8e52260fba5049bff4a",
+    "canonical_sites.json.gz": "d25f60c6f22e6921a36d73a850b3bc8a3822f0e5545879ff05e84bd1755513db",
+    "historical_ft_manifest.json": "6204f0d885ba697ceb261a6d9cfb9e99b757ff56d4b16d90d3c2ab4ff966307b"
+  },
+  "master_family_receipt_sha256": "91547a79f7671f58226daff55050f92ce6c5d662b60fa84481611935b8c85838",
+  "generic_ft_policy_changed": false,
+  "new_CAD": false,
+  "holds": [
+    "Standalone proposal, not a normal FT declaration or installed waiver",
+    "Physical joins are intent, not already-short raw private outputs",
+    "Private historical cohort only; P1-P7 programme/canonical clock/adoption HOLD",
+    "No characterization, geometry, PG, timing or parent qualification"
+  ]
+}

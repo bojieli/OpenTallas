@@ -100,14 +100,17 @@
   "observer": "ot_hbm_obs_leaf N144/LID0/SYNC0 u_u_obs_C; compact136 physical input with old144 logical index semantics must join"
  },
  "declared_state_delta": {
-  "child_fault_output": -2,
-  "per_source_and_root_boundary_data": -16,
-  "observer": "separate candidate/mapped unmeasured"
+  "child_fault_output_per_instance": -2,
+  "selected_children": 4,
+  "child_declared_total": -8,
+  "source_plus_root_carrier_capture_total": -16,
+  "observer_declared_p1_p2": -16,
+  "mapped_global_delta": "UNMEASURED; no sum claimed"
  },
  "holds": [
   "Selected2288/source-native4NEQ2 remains preserved",
   "Actual current physical lane/relay/pin plans must prune paired source+destination semantic identities",
-  "New nativeFC9SYNTH/officialLEC/faceguard NOTRUN",
+  "New component source-only intake PASS14054EQ/KEEP160/face2284/native4; fullcaller/physical/defaultadoption remains held",
   "No default/caller/parent/calendar/clock/P&R adoption",
   "NativeOBS136physicalEQ/faceguard andotherpotentialvc2/hostconstantpins remain separate"
  ],
@@ -131,5 +134,18 @@
   "actual_fault_active_cycles": 2577,
   "mutant_diff": 2579,
   "formal_credit": false
+ },
+ "component_intake": {
+  "receipt": "../intake_result/RESULT.json",
+  "scope": "ADDITIVE_COMPONENT_SOURCE_ONLY",
+  "source_commit": "6997d0a07d8338f8425b635007273f502c76d0ab",
+  "native4_compare_points": 14054,
+  "face_checked_passed": 2284,
+  "full_caller_source_event_qualified": false
+ },
+ "independent_caller_review": {
+  "commit": "839b6437d",
+  "file": "results/hbm_obs136_1102/HF_FC9_INDEPENDENT_REVIEW.md",
+  "scope": "finite exactsource ABI packing/epoch/scalar/OBSaftercapture review; no newproof oradoption"
  }
 }

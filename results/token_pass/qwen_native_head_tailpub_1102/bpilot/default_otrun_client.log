@@ -1,0 +1,10 @@
+ot-run: WARNING: epyc2: --dir /home/ubuntu/scratch-root/claude/dh54-tail/bp0 is on the ROOT filesystem; move it to /srv/opentallas-scratch2/claude/<lane> (owner 2026-10-24: never use root disks for work)
+ot-run: epyc2          admits   279 GB (avail 426, reserve 0, fresh 0, peak 83.4, headroom 0, waiters 17/632 GB) load 234/128 running 42 disk 2867 GB 
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-2780170-1793674466 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+EXPECTED_FAIL control=wrongAddress rc=1
+EXPECTED_FAIL control=wrongCycle rc=1
+PASS_NATIVE_B_PILOT_GATE two_fresh_contexts_and_same_ELF_protocol_controls
+ot-run: RAN on epyc2 (unit oth-ubuntu-2780170-1793674466): exit 0
+rc=0

@@ -1,0 +1,804 @@
+{
+  "removed_filler_count": 548807,
+  "status": "PROTECTED_REPAIR_CHECKPOINT_ONLY",
+  "source": "/srv/opentallas-scratch2/claude/codex-pc-geo80-birth-1102/repair/ORIGINAL_COMPONENTS.json",
+  "before_cells": 772657,
+  "after_cells": 223911,
+  "new": {
+    "u_leaf.u_pc.u_pce.u_path.u_front.g_ra\\[8\\].u_rp/rebuffer42959": {
+      "master": "BUFx3_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "171882",
+        "100710",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[85\\].g_data.u_q/wire42928": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "183060",
+        "N"
+      ]
+    },
+    "hold42963": {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "200124",
+        "211680",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[32\\].g_data.u_q/wire42956": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "14526",
+        "174960",
+        "N"
+      ]
+    },
+    "load_slew42942": {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "15120",
+        "93150",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[81\\].g_data.u_q/max_length42926": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "231660",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[106\\].g_data.u_q/wire42935": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "17388",
+        "183060",
+        "N"
+      ]
+    },
+    "hold42961": {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "255258",
+        "39960",
+        "N"
+      ]
+    },
+    "hold42965": {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "328320",
+        "287550",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[94\\].g_data.u_q/wire42931": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "183870",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[94\\].g_data.u_q/max_length42933": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "236790",
+        "N"
+      ]
+    },
+    "wire42903": {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "144072",
+        "106380",
+        "N"
+      ]
+    },
+    "wire42911": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "20412",
+        "338310",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[73\\].g_data.u_q/wire42921": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "180090",
+        "N"
+      ]
+    },
+    "wire42918": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "61938",
+        "232740",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[103\\].g_data.u_q/wire42954": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "4320",
+        "254880",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[63\\].g_data.u_q/wire42917": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "178740",
+        "N"
+      ]
+    },
+    "max_length42904": {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "177012",
+        "110430",
+        "N"
+      ]
+    },
+    "wire42949": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "27864",
+        "305370",
+        "N"
+      ]
+    },
+    "wire42934": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "257310",
+        "N"
+      ]
+    },
+    "wire42945": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "98334",
+        "204390",
+        "N"
+      ]
+    },
+    "wire42946": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "111996",
+        "270270",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[104\\].g_data.u_q/wire42950": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "4320",
+        "212760",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[104\\].g_data.u_q/wire42951": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "4320",
+        "255960",
+        "N"
+      ]
+    },
+    "max_length42908": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "218052",
+        "240300",
+        "N"
+      ]
+    },
+    "wire42916": {
+      "master": "BUFx10_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "16794",
+        "259200",
+        "N"
+      ]
+    },
+    "max_length42929": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "236790",
+        "N"
+      ]
+    },
+    "max_length42922": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "233550",
+        "N"
+      ]
+    },
+    "wire42927": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "260280",
+        "N"
+      ]
+    },
+    "wire42925": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "60696",
+        "231660",
+        "N"
+      ]
+    },
+    "wire42940": {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "165024",
+        "116640",
+        "N"
+      ]
+    },
+    "wire42939": {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "211734",
+        "108000",
+        "N"
+      ]
+    },
+    "wire42930": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "261630",
+        "N"
+      ]
+    },
+    "wire42955": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "23652",
+        "301860",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[60\\].g_data.u_q/wire42915": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "16794",
+        "180360",
+        "N"
+      ]
+    },
+    "hold42964": {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "14796",
+        "142290",
+        "N"
+      ]
+    },
+    "wire42913": {
+      "master": "BUFx10_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "82620",
+        "338310",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[81\\].g_data.u_q/wire42924": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "179820",
+        "N"
+      ]
+    },
+    "wire42936": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "60750",
+        "232740",
+        "N"
+      ]
+    },
+    "max_length42909": {
+      "master": "BUFx10_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "218052",
+        "240300",
+        "N"
+      ]
+    },
+    "wire42905": {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "212328",
+        "91530",
+        "N"
+      ]
+    },
+    "wire42938": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "17388",
+        "259470",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[63\\].g_data.u_q/max_length42919": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "232740",
+        "N"
+      ]
+    },
+    "wire42907": {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "122256",
+        "98010",
+        "N"
+      ]
+    },
+    "wire42943": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "159192",
+        "164970",
+        "N"
+      ]
+    },
+    "wire42941": {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "115560",
+        "N"
+      ]
+    },
+    "wire42914": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "123660",
+        "338310",
+        "N"
+      ]
+    },
+    "wire42952": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "23166",
+        "303480",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[103\\].g_data.u_q/wire42953": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "4320",
+        "212490",
+        "N"
+      ]
+    },
+    "wire42912": {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "199206",
+        "36180",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[133\\].g_data.u_q/wire42948": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "4320",
+        "259200",
+        "N"
+      ]
+    },
+    "wire42932": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "61344",
+        "236790",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[530\\].g_data.u_q/wire42910": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "4320",
+        "275400",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[133\\].g_data.u_q/wire42947": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "4320",
+        "217890",
+        "N"
+      ]
+    },
+    "wire42920": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "260280",
+        "N"
+      ]
+    },
+    "wire42923": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "18522",
+        "258930",
+        "N"
+      ]
+    },
+    "hold42962": {
+      "master": "HB4xp67_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "15606",
+        "143910",
+        "N"
+      ]
+    },
+    "wire42944": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "154170",
+        "117990",
+        "N"
+      ]
+    },
+    "wire42906": {
+      "master": "BUFx12_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "164430",
+        "66420",
+        "N"
+      ]
+    },
+    "u_leaf.u_pc.u_chain.g_port_forward\\[106\\].g_data.u_q/max_length42937": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "17388",
+        "232740",
+        "N"
+      ]
+    },
+    "wire42957": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "14526",
+        "253800",
+        "N"
+      ]
+    },
+    "rebuffer42960": {
+      "master": "BUFx3_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "133650",
+        "208440",
+        "N"
+      ]
+    },
+    "wire42958": {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "292194",
+        "6480",
+        "N"
+      ]
+    }
+  },
+  "removed": {
+    "fanout38445": {
+      "master": "BUFx2_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "173664",
+        "235440",
+        "N"
+      ]
+    },
+    "fanout39887": {
+      "master": "BUFx2_ASAP7_75t_R",
+      "pose": [
+        "PLACED",
+        "245160",
+        "237330",
+        "FS"
+      ]
+    }
+  },
+  "changed": {
+    "_255533_": {
+      "before": {
+        "master": "AND3x1_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "244782",
+          "88020",
+          "N"
+        ]
+      },
+      "after": {
+        "master": "AND3x2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "244782",
+          "88020",
+          "N"
+        ]
+      }
+    },
+    "fanout40233": {
+      "before": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "176850",
+          "110430",
+          "FS"
+        ]
+      },
+      "after": {
+        "master": "BUFx3_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "176850",
+          "110430",
+          "FS"
+        ]
+      }
+    },
+    "fanout39376": {
+      "before": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "154170",
+          "25650",
+          "FS"
+        ]
+      },
+      "after": {
+        "master": "BUFx3_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "154170",
+          "25650",
+          "FS"
+        ]
+      }
+    },
+    "fanout38469": {
+      "before": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "175122",
+          "234900",
+          "N"
+        ]
+      },
+      "after": {
+        "master": "BUFx3_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "175122",
+          "234900",
+          "N"
+        ]
+      }
+    },
+    "_237617_": {
+      "before": {
+        "master": "AND4x1_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "112698",
+          "199800",
+          "N"
+        ]
+      },
+      "after": {
+        "master": "AND4x2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "112698",
+          "199800",
+          "N"
+        ]
+      }
+    },
+    "_315843_": {
+      "before": {
+        "master": "AND2x2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "192240",
+          "173610",
+          "FS"
+        ]
+      },
+      "after": {
+        "master": "AND2x4_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "192240",
+          "173610",
+          "FS"
+        ]
+      }
+    },
+    "_237524_": {
+      "before": {
+        "master": "INVx1_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "125658",
+          "180090",
+          "FS"
+        ]
+      },
+      "after": {
+        "master": "INVx2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "125658",
+          "180090",
+          "FS"
+        ]
+      }
+    },
+    "fanout38347": {
+      "before": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "319788",
+          "292680",
+          "N"
+        ]
+      },
+      "after": {
+        "master": "BUFx3_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "319788",
+          "292680",
+          "N"
+        ]
+      }
+    },
+    "fanout42160": {
+      "before": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "220212",
+          "41310",
+          "FS"
+        ]
+      },
+      "after": {
+        "master": "BUFx3_ASAP7_75t_R",
+        "pose": [
+          "PLACED",
+          "220212",
+          "41310",
+          "FS"
+        ]
+      }
+    }
+  },
+  "files": {
+    "repair_checkpoint.odb": {
+      "bytes": 336568099,
+      "sha256": "59d797ccd83581ad87d59d8b191cb73b94916e9fd9db198c5d49c5858ffd4db2"
+    },
+    "repair_checkpoint.raw.odb": {
+      "bytes": 336555927,
+      "sha256": "3cc80941b734098f6f2617d14e1eec7c51509c9438de435d829a33de1dcd41c0"
+    },
+    "repair_checkpoint.def": {
+      "bytes": 240391703,
+      "sha256": "ee7b43a14089eb9fe004e9a7884ce238e204555c89661b7ded62aeed8ab101e5"
+    },
+    "repair_checkpoint.v": {
+      "bytes": 28230666,
+      "sha256": "3756f0d863430b811c350fe98171352916e37f5cd07f2bc00ae5bc9949e61c71"
+    },
+    "repair_checkpoint.active_mode.sdc": {
+      "bytes": 1155494,
+      "sha256": "ac4f18a41386f95640997764168902927a1df37df34875f7766e0799714dfda0"
+    },
+    "repair_phase.log": {
+      "bytes": 302858,
+      "sha256": "d8fe5b35f8cf37383228e25fd97c2601e8ba9ed2b095fa5f86713e6363147ec2"
+    }
+  }
+}

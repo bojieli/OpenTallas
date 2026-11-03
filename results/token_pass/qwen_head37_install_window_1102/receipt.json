@@ -1,0 +1,37 @@
+{
+  "status": "PASS_COMPONENT_MEASURED",
+  "lane": "TOK-QW-4 2026-11-02/03",
+  "what": "stage37 HEAD table-install window vs stage36 traffic (ledger item a, HEAD_TABLE_INSTALL_START), measured on main RTL with the genuine rank0 HEAD37 table ROMs",
+  "rtl": {
+    "qfd_dv_slice_tload.sv": "origin/main 0de65c365 blob 62c42c429 sha256 1c1f6d64",
+    "qfd_dv_table_rom_loader.sv": "origin/main blob c434e6972 sha256 b1d2110a",
+    "qfd_dv_cmd_cal_mu_head37.sv": "origin/main headprep37 sha256 f0e14460",
+    "profile": "qfd_dv_slice_tload #(SLICE 0..11, HEAD_STAGE37 1) = native C0/LOCAL0/WE34; CTLM #(HEAD_STAGE37 1, NU 4, CALENDAR_ROM 1, TABLE_ROM 1)"
+  },
+  "inputs": {
+    "table_roms": "48 viamaps table_s{0..11}_m{0..3} = TOK-QW-3 loader_real rom/ (genuine rank0 HEAD37 source, results/token_pass/qwen_head37_loader_realpayload_1102)",
+    "calendar": "calendar_m0/m1 sha 2b5c7bb0/560fea70 + dw.hex a56111e2 = the nent1021 image of results/token_pass/qwen_head_ctlm37_1021_1102",
+    "hashes": "slice/inputs.sha256, e2e/inputs.sha256"
+  },
+  "runs": {
+    "slice": {"host": "epyc2/dear-crayfish", "unit": "tokqw4-tloadwin (systemd user, MemoryMax 8G)", "run_wall_s": 6.3, "peak_rss_kb": 9352, "log": "slice/run.log"},
+    "e2e": {"host": "epyc2/dear-crayfish", "unit": "tokqw4-tloade2e (systemd user, MemoryMax 8G)", "run_wall_s": 99.7, "log": "e2e/run.log"}
+  },
+  "clock": "833 ps (half 0.4165 ns), 1 fs precision",
+  "measured": {
+    "loader_occupancy_face": "treq-face request to request: >= 90 edges fault-free on all 12 slices; 89 faults all 12 (busy start), same for same-user and cross-user (36u0->37u0, 36u0->37u1)",
+    "loader_occupancy_ctlm": "CTLM range start to range start (36,u0 at 1016 then 37,u at 1020): >= 90 fault-free, <= 89 faults all 12 slices; CTLM itself never faults",
+    "single_stage37_e2e": "CTLM start E -> table_load E+9 -> first slice write E+15 -> last write E+94 (slice 0), writes 25 (3-block) / 17 (2-block) per slice per user (tb negedge counting, T_die = 0)",
+    "single_stage36_e2e": "first write E+15, last write E+102, busy through E+101, 86 / 66 writes",
+    "collision_window_face": "a stream table write (s_we) faults the slice iff it lands on a loader write/data edge: offsets 3,5 (PROG), 9..58 (BTAB-owner slices 1,3,5,6,8,10), 59..76 (all), 77..84 (3-block slices 0..7) after the treq face edge; 0..2, 4, 6..8 and >= 85 are clean",
+    "boot_install_all": "4 users x stages 1..37 (148 LOCAL4 ranges through the actual CTLM + 1021 image): spacing 90 -> 0 faults, writes slice0 12484 = 4x(36x86+25), slice11 9572 = 4x(36x66+17), last write E+13324; spacing 89 -> all 12 fault",
+    "ctlm37_gate_spacing": "the CTLM37 component gate's 65-edge range spacing FAULTS all 12 slices (148 loads, writes halved): the CTLM-only gate cannot see loader occupancy"
+  },
+  "structural": {
+    "stream_table_writes_native": "the nent1021 image has 0 CTLM LOCAL kind-3 (TLOAD) entries (dst-14 entries: 37 LOCAL4, 2 kind1, 2 kind2), so tt_ctlm.tl stays 0; slice own stream words are kind 0 (qfd_dv_stream_tile own = {1,3'd0,..}); hence s_we never asserts in the native image and the stream/loader exclusive window is vacuous",
+    "residency": "stage37 rows (PROG 16/144/272/400, BTAB [72,272), CROM [1088,1472)+2048u) are disjoint from every transformer stage row (qwen_head_resident_lease_1101), so a BOOT install stays resident"
+  },
+  "ruling_TOK-QW-4": "HEAD_TABLE_INSTALL_START = BOOT/OPSEG-init LOCAL37 range per user, after the stage-36 LOCAL4 range, with >= 90 edges between ANY two LOCAL4/LOCAL37 range starts on the die (the 12 slice loaders are shared by all users). No runtime install, so no overlap with stage36 compute traffic. Compiler rule for the held production TREQ schedule: LOCAL4 range start spacing >= 90 edges (88 reads + 2 tail).",
+  "not_measured": ["T_die (die lane age from CTLM treq_q to the slice face) is modelled 0; it is a constant shift for all loads", "production OPSEG/TREQ schedule is not on main (held); this is the constraint it must meet"],
+  "enable_gate": "stage37 stays default-off until the composed token run matches the oracle"
+}

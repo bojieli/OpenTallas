@@ -1,0 +1,79 @@
+{
+ "status": "OPTIN_NATIVE_REVIEW9_RAW9FAIL_UNCHANGED",
+ "candidate": {
+  "reset_chain": [
+   "u_rst.rst_n$_DFF_PN0_",
+   "u_rst.sync_q[1]$_DFF_PN0_",
+   "u_rst.sync_q[0]$_DFF_PN0_"
+  ],
+  "candidates": [
+   {
+    "pin": "wce",
+    "mask": "_12360_",
+    "capture": "wce_q$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   },
+   {
+    "pin": "r_ce[0]",
+    "mask": "_12359_",
+    "capture": "g_t[0].rp_ce$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   },
+   {
+    "pin": "r_ce[1]",
+    "mask": "_12357_",
+    "capture": "g_t[1].rp_ce$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   },
+   {
+    "pin": "r_ce[2]",
+    "mask": "_12355_",
+    "capture": "g_t[2].rp_ce$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   },
+   {
+    "pin": "r_ce[3]",
+    "mask": "_12353_",
+    "capture": "g_t[3].rp_ce$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   },
+   {
+    "pin": "r_ce[4]",
+    "mask": "_12351_",
+    "capture": "g_t[4].rp_ce$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   },
+   {
+    "pin": "r_ce[5]",
+    "mask": "_12349_",
+    "capture": "g_t[5].rp_ce$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   },
+   {
+    "pin": "r_ce[6]",
+    "mask": "_12347_",
+    "capture": "g_t[6].rp_ce$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   },
+   {
+    "pin": "r_ce[7]",
+    "mask": "_12345_",
+    "capture": "g_t[7].rp_ce$_SDFF_PN0_",
+    "clock": "clk_ctrl"
+   }
+  ],
+  "physical_join": {
+   "actual_capture_edges": 9,
+   "note": "No geometry verdict or source-release effect"
+  },
+  "status": "SOURCE_QUALIFIED_REVIEW_CANDIDATES_ONLY",
+  "proof_input_identity": "2c4aefb8524aa6d4eb1c258cfc8c3d438ac73808a9388ef64431a84e46532b19",
+  "registration_release": false,
+  "gating_changed": false,
+  "generic_comb_waiver": false,
+  "raw_registration_failures_preserved": true
+ },
+ "raw_unregistered": 9,
+ "metrics_and_rules_unchanged": true,
+ "no_gate_release": true
+}

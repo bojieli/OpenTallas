@@ -1,0 +1,5 @@
+# Exact original r27c composite proof closure
+
+The original final proof reported NOT EQUIVALENT49655/49656, with sole static_cmd[7] mismatch due to unmatched active_row[6]. This bounded ROOT-authorized replay uses r27c's own original AIGs/maps/aliases/profile, not r27smin artifacts. EXPECTED checks every input hash, checker hash, subject and2268 prior count before solving. Native reset16 establishes gold active_row6 and mapped static_cmd_owner both0. All original2268 hypotheses plus the one exact scalar relation jointly re-prove; original profile unchanged, constraints0. The sole original pending static_cmd[7] compare is PROVED. Combined original49655+new1=49656/49656,29.1s, no full discovery/source rebuild.
+
+Original NOT EQUIVALENT and separate provenance mismatch are retained. This closes only the exact original r27c proof decomposition. It does not qualify the current data-ECO netlist, a changed source event, physical SIGNED view or parent. Subject Epyc2 /srv/opentallas-scratch2/claude/kv60-pcx/r27c/resign_mkv/lec; own output /srv/opentallas-scratch2/claude/codex-pc-r27c-replay-0155.

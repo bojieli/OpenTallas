@@ -694,6 +694,21 @@ def test_explicit_typed_origin_start_and_mutants():
         assert r['verdict'] == 'FAIL' and 'land_slot' in r['fail_counts'], r['fails']
 
 
+
+def test_typed_regional_origin_preserves_sampler_guards():
+    # Regional outputs add downstream state, while original SF/S0 remain the
+    # only two samplers of the external START pin (proved regional mechanism).
+    spec = dict(RS, st={'form':'origin_start', 'origin':'u_cland_origin'})
+    text = _origin_only_net().replace('ot_dp_landing_origin_s', 'ot_dp_landing_origin_s_regional')
+    good = _rs(text, land=spec)
+    assert good['verdict'] == 'PASS', good['fails']
+    assert len(good['ring_start']['st']['sampler_flops']) == 2
+    for mutant in (text.replace('sf (.CLK(clk)', 'sf (.CLK(fclk)'),
+                   text.replace('ot_dp_landing_origin_s_regional', 'unrelated_regional_origin')):
+        bad = _rs(mutant, land=spec)
+        assert bad['verdict'] == 'FAIL' and 'land_slot' in bad['fail_counts'], bad['fails']
+
+
 def _flat_like_odb(text, top="top"):
     """Emit the hierarchical test netlist as ONE flat module with the same hierarchical instance paths (what an
     ODB write_verilog of the synthesized design looks like): module types are lost, paths kept."""

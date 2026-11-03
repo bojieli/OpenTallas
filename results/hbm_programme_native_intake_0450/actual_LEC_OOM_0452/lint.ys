@@ -1,0 +1,2 @@
+read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top ot_hgi_sfu_programme_store_r10 -Wimplicit-net --single-unit -I/work/rtl -DSYNTHESIS /work/rtl/ot_hgi_sfu_programme_store_r10.sv /work/rtl/ot_hgi_sfu_store_stripe_leaf_r10.sv /work/rtl/ot_sram_1r1w_512x256_m1_r2c2.sv
+setattr -unset init

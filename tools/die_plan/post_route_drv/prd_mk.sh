@@ -130,6 +130,9 @@ done
 # DIE-S81-48 11-02: OT_PRD_REPAIR_RC=placement = repair on placement estimates for ECO nets (FlexPA SIG11 class)
 case "${OT_PRD_REPAIR_RC:-}" in '') ;; placement) echo "OT_PRD_REPAIR_RC=placement" >> $OUT/variant.env ;;
   *) echo "prd_mk: OT_PRD_REPAIR_RC=$OT_PRD_REPAIR_RC: want placement"; exit 2 ;; esac
+# DIE-S81-49 11-02: OT_PRD_BUFFER_REMOVAL=1 re-enables setup-repair buffer removal (default off: removed-buffer class)
+case "${OT_PRD_BUFFER_REMOVAL:-}" in ''|0) ;; 1) echo "OT_PRD_BUFFER_REMOVAL=1" >> $OUT/variant.env ;;
+  *) echo "prd_mk: OT_PRD_BUFFER_REMOVAL=$OT_PRD_BUFFER_REMOVAL: want 0|1"; exit 2 ;; esac
 echo "OT_HOLD_MM_KIT=${MM:-0}" >> $OUT/variant.env
 # clk_freeze_check.sh: grt -> --pre-unrouted (clock routed once by the ECO DRT); route -> clock wires must be unchanged
 echo "OT_ECO_FROM=$FROM" >> $OUT/variant.env
