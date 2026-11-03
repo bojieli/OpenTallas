@@ -165,7 +165,7 @@ def apply_kit(rtl_dir, ref_s=None, closed=None):
     """Kit-RTL application (same recipe as the T7 canary3): replace s81p_<type>_bound.sv by its closure and list the
     three capture children right after it in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json files. Writes
     memory_closure.json receipt. `closed` = a precomputed closed bound text (else computed here)."""
-    rtl = Path(rtl_dir); kr = json.loads((rtl / 'kit_rtl.json').read_text())
+    rtl = Path(rtl_dir).resolve(); kr = json.loads((rtl / 'kit_rtl.json').read_text())
     bound = rtl / (kr['bound_module'] + '.sv')
     if not bound.exists(): bound = rtl / ('s81p_%s_bound.sv' % kr['bound_type'])
     s = bound.read_text()
@@ -184,13 +184,15 @@ def apply_kit(rtl_dir, ref_s=None, closed=None):
         b = (ROOT / p).read_bytes()
         if hashlib.sha256(b).hexdigest()[:8] != h: raise ValueError('child hash ' + c)
         (rtl / c).write_bytes(b); kids.append(str(rtl / c))
-    bound.write_text(closed)
+    edits = {}
     for fl in ('kit_rtl.f', 'kit_rtl_sim.f'):
         p = rtl / fl
         if not p.exists(): continue
-        L = p.read_text().split('\n'); i = L.index(str(bound)); L[i + 1:i + 1] = kids; p.write_text('\n'.join(L))
+        L = p.read_text().split('\n'); i = L.index(str(bound)); L[i + 1:i + 1] = kids; edits[p] = '\n'.join(L)
     i = kr['files'].index(str(bound)); kr['files'][i + 1:i + 1] = kids
-    (rtl / 'kit_rtl.json').write_text(json.dumps(kr, indent=1))
+    edits[rtl / 'kit_rtl.json'] = json.dumps(kr, indent=1)
+    for p, t in edits.items(): p.write_text(t)
+    bound.write_text(closed)
     rep.update(status='APPLIED', event='S81-066 svc memory closure (T7 12605dc2 class port)', bound=str(bound),
                children=kids, macros_added={'ot_sram_1r1w_256x256_m2_r2c2': 32, 'ot_sram_1r1w_32x64_m1': 34})
     (rtl / 'memory_closure.json').write_text(json.dumps(rep, indent=1) + '\n')
