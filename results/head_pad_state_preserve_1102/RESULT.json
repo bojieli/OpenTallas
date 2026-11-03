@@ -1,0 +1,727 @@
+{
+ "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "versions": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)\n81cb1177c4103778f760c73944b59c8e62a4ec966b731448bedf392081cf1a5f  /OpenROAD-flow-scripts/flow/scripts/synth.tcl\n768c16b0fdc71293126e7642ab528d73ec96d184a6f91fb2d5fc6727222e4f25  /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl\nd2e1bcfa0bf358117a21db9d5ce75997ef69f4059b25a842ecbb725417a6d18a  /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl\n81cb1177c4103778f760c73944b59c8e62a4ec966b731448bedf392081cf1a5f  /coupon/prep/synth.tcl\n768c16b0fdc71293126e7642ab528d73ec96d184a6f91fb2d5fc6727222e4f25  /coupon/prep/synth_preamble.tcl\nd2e1bcfa0bf358117a21db9d5ce75997ef69f4059b25a842ecbb725417a6d18a  /coupon/prep/synth_canonicalize.tcl\n78df5dbb486a068fdddfe80e3951ced97ebfb199f4e6affbe37ff931afd8da8f  /coupon/prep/ot_keep_regs.reference.tcl\nfe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1  /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\n8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1  /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nbbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b  /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\n57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3  /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\n073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e  /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n",
+ "synth_runs": {
+  "m0_kit": {
+   "desc": "mode0 baseline + kit ot_keep_regs hook (negative control)",
+   "cells_total": 43,
+   "chip_area_um2": 6.76512,
+   "dff": 14,
+   "cells": {
+    "AND2x2_ASAP7_75t_R": {
+     "n": 4,
+     "area_um2": 0.35
+    },
+    "AND2x4_ASAP7_75t_R": {
+     "n": 10,
+     "area_um2": 1.458
+    },
+    "BUFx12f_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.262
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 4.082
+    },
+    "INVx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 0.612
+    }
+   },
+   "canon_dff_cells": 34,
+   "canon_keep_attr_on_cells": 0,
+   "odb_insts": 43,
+   "odb_dff": 14,
+   "formal": {
+    "dut_ff_total": 14,
+    "dut_hold_ff": 0,
+    "dut_out_ff": 14,
+    "dut_ff_inits": 0,
+    "bijection_structural": false,
+    "idle_fold": {
+     "dut": "PROVEN_FOLDED",
+     "gold": "CEX_STATE_VISIBLE"
+    },
+    "step": {},
+    "step_passing_maps": [],
+    "verdict": "REJECTED",
+    "structural_error": null,
+    "classify_issues": []
+   },
+   "hold_bits_surviving": 0,
+   "fold_trace": [
+    [
+     "canonical",
+     2
+    ],
+    [
+     "after_synth_coarse",
+     1
+    ],
+    [
+     "after_synth_fine",
+     14
+    ],
+    [
+     "after_opt_purge",
+     14
+    ]
+   ],
+   "delta_vs_m0_kit": {
+    "ff": 0,
+    "cells": 0,
+    "area_um2": 0.0
+   }
+  },
+  "m1_nohook": {
+   "desc": "mode1 wire keep/dont_touch, no canonicalize hook",
+   "cells_total": 58,
+   "chip_area_um2": 7.82946,
+   "dff": 14,
+   "cells": {
+    "AND2x2_ASAP7_75t_R": {
+     "n": 4,
+     "area_um2": 0.35
+    },
+    "AND2x4_ASAP7_75t_R": {
+     "n": 10,
+     "area_um2": 1.458
+    },
+    "BUFx12f_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.262
+    },
+    "BUFx2_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 1.021
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 4.082
+    },
+    "INVx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 0.612
+    },
+    "TIELOx1_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.044
+    }
+   },
+   "canon_dff_cells": 32,
+   "canon_keep_attr_on_cells": 0,
+   "odb_insts": 44,
+   "odb_dff": 14,
+   "formal": {
+    "dut_ff_total": 14,
+    "dut_hold_ff": 0,
+    "dut_out_ff": 14,
+    "dut_ff_inits": 0,
+    "bijection_structural": false,
+    "idle_fold": {
+     "dut": "PROVEN_FOLDED",
+     "gold": "CEX_STATE_VISIBLE"
+    },
+    "step": {},
+    "step_passing_maps": [],
+    "verdict": "REJECTED",
+    "structural_error": null,
+    "classify_issues": []
+   },
+   "hold_bits_surviving": 0,
+   "fold_trace": [
+    [
+     "canonical",
+     0
+    ],
+    [
+     "after_synth_coarse",
+     1
+    ],
+    [
+     "after_synth_fine",
+     14
+    ],
+    [
+     "after_opt_purge",
+     14
+    ]
+   ],
+   "delta_vs_m0_kit": {
+    "ff": 0,
+    "cells": 15,
+    "area_um2": 1.06434
+   }
+  },
+  "m1_kit": {
+   "desc": "mode1 wire keep/dont_touch + kit ot_keep_regs hook (kit default path)",
+   "cells_total": 58,
+   "chip_area_um2": 7.82946,
+   "dff": 14,
+   "cells": {
+    "AND2x2_ASAP7_75t_R": {
+     "n": 4,
+     "area_um2": 0.35
+    },
+    "AND2x4_ASAP7_75t_R": {
+     "n": 10,
+     "area_um2": 1.458
+    },
+    "BUFx12f_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.262
+    },
+    "BUFx2_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 1.021
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 4.082
+    },
+    "INVx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 0.612
+    },
+    "TIELOx1_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.044
+    }
+   },
+   "canon_dff_cells": 47,
+   "canon_keep_attr_on_cells": 14,
+   "odb_insts": 44,
+   "odb_dff": 14,
+   "formal": {
+    "dut_ff_total": 14,
+    "dut_hold_ff": 0,
+    "dut_out_ff": 14,
+    "dut_ff_inits": 0,
+    "bijection_structural": false,
+    "idle_fold": {
+     "dut": "PROVEN_FOLDED",
+     "gold": "CEX_STATE_VISIBLE"
+    },
+    "step": {},
+    "step_passing_maps": [],
+    "verdict": "REJECTED",
+    "structural_error": null,
+    "classify_issues": []
+   },
+   "hold_bits_surviving": 0,
+   "fold_trace": [
+    [
+     "canonical",
+     15
+    ],
+    [
+     "after_synth_coarse",
+     1
+    ],
+    [
+     "after_synth_fine",
+     14
+    ],
+    [
+     "after_opt_purge",
+     14
+    ]
+   ],
+   "optdff_probe": [
+    [
+     "kept_bit_flops_before",
+     14
+    ],
+    [
+     "bit_flops_after_opt_dff",
+     0
+    ]
+   ],
+   "delta_vs_m0_kit": {
+    "ff": 0,
+    "cells": 15,
+    "area_um2": 1.06434
+   }
+  },
+  "m0_cellkeep": {
+   "desc": "mode0 + cell_keep_hook_1102.tcl (packet per-bit cell KEEP recipe, selector fixed for pinned frontend)",
+   "cells_total": 58,
+   "chip_area_um2": 7.82946,
+   "dff": 14,
+   "cells": {
+    "AND2x2_ASAP7_75t_R": {
+     "n": 4,
+     "area_um2": 0.35
+    },
+    "AND2x4_ASAP7_75t_R": {
+     "n": 10,
+     "area_um2": 1.458
+    },
+    "BUFx12f_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.262
+    },
+    "BUFx2_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 1.021
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 4.082
+    },
+    "INVx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 0.612
+    },
+    "TIELOx1_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.044
+    }
+   },
+   "canon_dff_cells": 47,
+   "canon_keep_attr_on_cells": 14,
+   "odb_insts": 44,
+   "odb_dff": 14,
+   "formal": {
+    "dut_ff_total": 14,
+    "dut_hold_ff": 0,
+    "dut_out_ff": 14,
+    "dut_ff_inits": 0,
+    "bijection_structural": false,
+    "idle_fold": {
+     "dut": "PROVEN_FOLDED",
+     "gold": "CEX_STATE_VISIBLE"
+    },
+    "step": {},
+    "step_passing_maps": [],
+    "verdict": "REJECTED",
+    "structural_error": null,
+    "classify_issues": []
+   },
+   "hold_bits_surviving": 0,
+   "fold_trace": [
+    [
+     "canonical",
+     15
+    ],
+    [
+     "after_synth_coarse",
+     1
+    ],
+    [
+     "after_synth_fine",
+     14
+    ],
+    [
+     "after_opt_purge",
+     14
+    ]
+   ],
+   "optdff_probe": [
+    [
+     "kept_bit_flops_before",
+     14
+    ],
+    [
+     "bit_flops_after_opt_dff",
+     0
+    ]
+   ],
+   "delta_vs_m0_kit": {
+    "ff": 0,
+    "cells": 15,
+    "area_um2": 1.06434
+   }
+  },
+  "m2_kit": {
+   "desc": "mode2 kept generic leaf (keep_hierarchy) + kit hook",
+   "cells_total": 75,
+   "chip_area_um2": 8.73342,
+   "dff": 14,
+   "cells": {
+    "AND2x2_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 1.225
+    },
+    "AO21x1_ASAP7_75t_R": {
+     "n": 5,
+     "area_um2": 0.437
+    },
+    "AO21x2_ASAP7_75t_R": {
+     "n": 9,
+     "area_um2": 0.919
+    },
+    "BUFx3_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.087
+    },
+    "BUFx6f_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.146
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 4.082
+    },
+    "INVx1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 0.612
+    },
+    "INVx3_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.073
+    },
+    "OR2x2_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.087
+    },
+    "BUFx2_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 1.021
+    },
+    "TIELOx1_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.044
+    }
+   },
+   "canon_dff_cells": 34,
+   "canon_keep_attr_on_cells": 0,
+   "odb_insts": 74,
+   "odb_dff": 14,
+   "formal": {
+    "dut_ff_total": 14,
+    "dut_hold_ff": 0,
+    "dut_out_ff": 14,
+    "dut_ff_inits": 0,
+    "bijection_structural": false,
+    "idle_fold": {
+     "dut": "PROVEN_FOLDED",
+     "gold": "CEX_STATE_VISIBLE"
+    },
+    "step": {},
+    "step_passing_maps": [],
+    "verdict": "REJECTED",
+    "structural_error": null,
+    "classify_issues": []
+   },
+   "hold_bits_surviving": 0,
+   "fold_trace": [
+    [
+     "canonical",
+     2
+    ],
+    [
+     "after_synth_coarse",
+     1
+    ],
+    [
+     "after_synth_fine",
+     14
+    ],
+    [
+     "after_opt_purge",
+     14
+    ]
+   ],
+   "delta_vs_m0_kit": {
+    "ff": 0,
+    "cells": 32,
+    "area_um2": 1.9683
+   }
+  },
+  "m3_kit": {
+   "desc": "mode3 explicit 14 native DFFHQNx1 leaf + kit hook",
+   "cells_total": 90,
+   "chip_area_um2": 13.58856,
+   "dff": 28,
+   "cells": {
+    "AO21x1_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.087
+    },
+    "BUFx12f_ASAP7_75t_R": {
+     "n": 2,
+     "area_um2": 0.525
+    },
+    "BUFx3_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.087
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+     "n": 28,
+     "area_um2": 8.165
+    },
+    "INVx1_ASAP7_75t_R": {
+     "n": 15,
+     "area_um2": 0.656
+    },
+    "INVx6_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.117
+    },
+    "NAND2x1_ASAP7_75t_R": {
+     "n": 13,
+     "area_um2": 1.137
+    },
+    "NOR2x1_ASAP7_75t_R": {
+     "n": 14,
+     "area_um2": 1.225
+    },
+    "OA21x2_ASAP7_75t_R": {
+     "n": 13,
+     "area_um2": 1.327
+    },
+    "OR2x6_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.175
+    },
+    "OR3x1_ASAP7_75t_R": {
+     "n": 1,
+     "area_um2": 0.087
+    }
+   },
+   "canon_dff_cells": 33,
+   "canon_keep_attr_on_cells": 0,
+   "odb_insts": 90,
+   "odb_dff": 28,
+   "formal": {
+    "dut_ff_total": 28,
+    "dut_hold_ff": 14,
+    "dut_out_ff": 14,
+    "dut_ff_inits": 0,
+    "bijection_structural": true,
+    "idle_fold": {
+     "dut": "CEX_STATE_VISIBLE",
+     "gold": "CEX_STATE_VISIBLE"
+    },
+    "step": {
+     "hold_pol0_out_pol0": "FAIL",
+     "hold_pol0_out_pol1": "FAIL",
+     "hold_pol1_out_pol0": "FAIL",
+     "hold_pol1_out_pol1": "PROVEN"
+    },
+    "step_passing_maps": [
+     "hold_pol1_out_pol1"
+    ],
+    "verdict": "PRESERVED_BIT_EXACT",
+    "structural_error": null,
+    "classify_issues": []
+   },
+   "hold_bits_surviving": 14,
+   "fold_trace": [
+    [
+     "canonical",
+     15
+    ],
+    [
+     "after_synth_coarse",
+     15
+    ],
+    [
+     "after_synth_fine",
+     28
+    ],
+    [
+     "after_opt_purge",
+     28
+    ]
+   ],
+   "delta_vs_m0_kit": {
+    "ff": 14,
+    "cells": 47,
+    "area_um2": 6.82344
+   }
+  }
+ },
+ "rtl_controls": {
+  "rtl_mode0": {
+   "dut_ff_total": 28,
+   "dut_hold_ff": 14,
+   "dut_ff_inits": 0,
+   "bijection_structural": true,
+   "idle_fold": {
+    "dut": "CEX_STATE_VISIBLE",
+    "gold": "CEX_STATE_VISIBLE"
+   },
+   "step": {
+    "hold_pol0_out_pol0": "PROVEN",
+    "hold_pol0_out_pol1": "FAIL",
+    "hold_pol1_out_pol0": "FAIL",
+    "hold_pol1_out_pol1": "FAIL"
+   },
+   "verdict": "PRESERVED_BIT_EXACT",
+   "structural_error": null
+  },
+  "rtl_mode1": {
+   "dut_ff_total": 28,
+   "dut_hold_ff": 14,
+   "dut_ff_inits": 0,
+   "bijection_structural": true,
+   "idle_fold": {
+    "dut": "CEX_STATE_VISIBLE",
+    "gold": "CEX_STATE_VISIBLE"
+   },
+   "step": {
+    "hold_pol0_out_pol0": "PROVEN",
+    "hold_pol0_out_pol1": "FAIL",
+    "hold_pol1_out_pol0": "FAIL",
+    "hold_pol1_out_pol1": "FAIL"
+   },
+   "verdict": "PRESERVED_BIT_EXACT",
+   "structural_error": null
+  },
+  "rtl_mode2": {
+   "dut_ff_total": 28,
+   "dut_hold_ff": 14,
+   "dut_ff_inits": 0,
+   "bijection_structural": true,
+   "idle_fold": {
+    "dut": "CEX_STATE_VISIBLE",
+    "gold": "CEX_STATE_VISIBLE"
+   },
+   "step": {
+    "hold_pol0_out_pol0": "PROVEN",
+    "hold_pol0_out_pol1": "FAIL",
+    "hold_pol1_out_pol0": "FAIL",
+    "hold_pol1_out_pol1": "FAIL"
+   },
+   "verdict": "PRESERVED_BIT_EXACT",
+   "structural_error": null
+  },
+  "rtl_mode3": {
+   "dut_ff_total": 28,
+   "dut_hold_ff": 14,
+   "dut_ff_inits": 0,
+   "bijection_structural": true,
+   "idle_fold": {
+    "dut": "CEX_STATE_VISIBLE",
+    "gold": "CEX_STATE_VISIBLE"
+   },
+   "step": {
+    "hold_pol0_out_pol0": "FAIL",
+    "hold_pol0_out_pol1": "FAIL",
+    "hold_pol1_out_pol0": "PROVEN",
+    "hold_pol1_out_pol1": "FAIL"
+   },
+   "verdict": "PRESERVED_BIT_EXACT",
+   "structural_error": null
+  },
+  "rtl_mutant0": {
+   "dut_ff_total": 28,
+   "dut_hold_ff": 14,
+   "dut_ff_inits": 0,
+   "bijection_structural": true,
+   "idle_fold": {
+    "dut": "CEX_STATE_VISIBLE",
+    "gold": "CEX_STATE_VISIBLE"
+   },
+   "step": {
+    "hold_pol0_out_pol0": "FAIL",
+    "hold_pol0_out_pol1": "FAIL",
+    "hold_pol1_out_pol0": "FAIL",
+    "hold_pol1_out_pol1": "FAIL"
+   },
+   "verdict": "REJECTED",
+   "structural_error": null
+  },
+  "rtl_mutant1": {
+   "dut_ff_total": 28,
+   "dut_hold_ff": 14,
+   "dut_ff_inits": 14,
+   "bijection_structural": false,
+   "idle_fold": {
+    "dut": "CEX_STATE_VISIBLE",
+    "gold": "CEX_STATE_VISIBLE"
+   },
+   "step": {
+    "hold_pol0_out_pol0": "PROVEN",
+    "hold_pol0_out_pol1": "FAIL",
+    "hold_pol1_out_pol0": "FAIL",
+    "hold_pol1_out_pol1": "FAIL"
+   },
+   "verdict": "REJECTED",
+   "structural_error": null
+  },
+  "rtl_mutant2": {
+   "dut_ff_total": 28,
+   "dut_hold_ff": 14,
+   "dut_ff_inits": 0,
+   "bijection_structural": true,
+   "idle_fold": {
+    "dut": "CEX_STATE_VISIBLE",
+    "gold": "CEX_STATE_VISIBLE"
+   },
+   "step": {
+    "hold_pol0_out_pol0": "FAIL",
+    "hold_pol0_out_pol1": "FAIL",
+    "hold_pol1_out_pol0": "FAIL",
+    "hold_pol1_out_pol1": "FAIL"
+   },
+   "verdict": "REJECTED",
+   "structural_error": null
+  },
+  "rtl_mutant3": {
+   "dut_ff_total": 28,
+   "dut_hold_ff": 14,
+   "dut_ff_inits": 0,
+   "bijection_structural": true,
+   "idle_fold": {
+    "dut": "CEX_STATE_VISIBLE",
+    "gold": "CEX_STATE_VISIBLE"
+   },
+   "step": {
+    "hold_pol0_out_pol0": "FAIL",
+    "hold_pol0_out_pol1": "FAIL",
+    "hold_pol1_out_pol0": "FAIL",
+    "hold_pol1_out_pol1": "FAIL"
+   },
+   "verdict": "REJECTED",
+   "structural_error": null
+  }
+ },
+ "packet_cell_keep_hook_as_shipped": {
+  "status": "FAILED_CLOSED rc=1",
+  "evidence": [
+   "ERROR: Assertion failed: selection contains 0 elements instead of the asserted 1: head_pad_fragment/w:g_baseline.state"
+  ]
+ },
+ "m3_minus_m0_cells": {
+  "AND2x2_ASAP7_75t_R": -4,
+  "AND2x4_ASAP7_75t_R": -10,
+  "AO21x1_ASAP7_75t_R": 1,
+  "BUFx12f_ASAP7_75t_R": 1,
+  "BUFx3_ASAP7_75t_R": 1,
+  "DFFHQNx1_ASAP7_75t_R": 14,
+  "INVx1_ASAP7_75t_R": 1,
+  "INVx6_ASAP7_75t_R": 1,
+  "NAND2x1_ASAP7_75t_R": 13,
+  "NOR2x1_ASAP7_75t_R": 14,
+  "OA21x2_ASAP7_75t_R": 13,
+  "OR2x6_ASAP7_75t_R": 1,
+  "OR3x1_ASAP7_75t_R": 1
+ },
+ "conclusion": {
+  "preserving_modes": [
+   "m3_kit (mode3 explicit 14 native DFFHQNx1 leaf, kit ot_keep_regs hook)"
+  ],
+  "folding_modes": [
+   "m0_kit",
+   "m1_nohook",
+   "m1_kit",
+   "m0_cellkeep",
+   "m2_kit"
+  ],
+  "fold_location": "synth -run :fine (coarse): opt_dff re-slices the kept per-bit flop into a new $_DFFE_PP_ (keep not carried) and then sets the no-init constant-clear flop to constant 0 (optdff_probe: 14 kept -> 0). Wire keep, per-bit cell KEEP (ot_keep_regs recipe) and keep_hierarchy leaf all fold.",
+  "packet_hook_as_shipped": "generic_cell_keep_hook.tcl fails closed: pinned frontend names the wire genblk1.genblk1.g_baseline.state; successor cell_keep_hook_1102.tcl fixes only the selector (and still folds).",
+  "m3_cost_vs_m0_kit": {
+   "ff": 14,
+   "cells": 47,
+   "area_um2": 6.82344
+  },
+  "m3_state_map": "hold: gold q_i = ~(stored IQN_i of g_native.g_pad[i].u_state) ; out: gold o_i = ~(stored IQN of o[i]) -- bitwise bijection, 28/28 state bits, no init/reset; transition relation PROVEN (yosys sat, unbounded 1-step induction)",
+  "formal_tool": "flow yosys 0.68+post sat -prove on a combinational transition-relation miter (sby/eqy present in the image as /usr/local/bin with yosys 0.67, not used)",
+  "mutants": "rtl_mutant0..3 all REJECTED (mutant1 init-zero: transition proven but 14 init values -> bijection fails); RTL modes 0..3 PRESERVED (checker positive controls)",
+  "baseline_negative_control": "m0_kit: 0 hold flops survive; IDLE_FOLD proven on DUT (o==0 after one idle cycle for every initial state), gold has a counterexample -> no initial-state bijection exists"
+ }
+}

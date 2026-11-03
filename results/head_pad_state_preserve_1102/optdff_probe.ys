@@ -1,0 +1,12 @@
+# Diagnostic: isolate the pass that drops the per-bit cell-KEEP hold flops (m0_cellkeep / m1_kit canonical RTLIL).
+# Usage (in image): yosys -p "read_rtlil <run>/1_1_yosys_canonicalize.rtlil; script optdff_probe.ys"
+hierarchy -top head_pad_fragment
+proc
+flatten
+log OPTDFF_PROBE kept_bit_flops_before
+select -count t:$_*DFF* a:keep %i
+opt_expr
+opt_clean
+opt_dff
+log OPTDFF_PROBE bit_flops_after_opt_dff
+select -count t:$_*DFF*

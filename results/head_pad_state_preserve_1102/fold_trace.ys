@@ -1,0 +1,16 @@
+# Diagnostic replay of the ORFS synth.tcl pass order on a run's canonical RTLIL (1_1_yosys_canonicalize.rtlil),
+# printing the flip-flop CELL count (a multi-bit $dff/$sdff counts once; native DFF* instances included) after each stage, to locate where the pad hold state folds.
+# Usage (in image): yosys -p "read_rtlil <run>/1_1_yosys_canonicalize.rtlil; script fold_trace.ys"
+hierarchy -check -top head_pad_fragment
+log FOLDTRACE canonical
+select -count t:*dff* t:$_*DFF* t:DFF*
+select -count a:keep t:*dff* t:$_*DFF* %u %i
+synth -flatten -run :fine
+log FOLDTRACE after_synth_coarse
+select -count t:*dff* t:$_*DFF* t:DFF*
+synth -top head_pad_fragment -run fine: -noabc
+log FOLDTRACE after_synth_fine
+select -count t:*dff* t:$_*DFF* t:DFF*
+opt -purge
+log FOLDTRACE after_opt_purge
+select -count t:*dff* t:$_*DFF* t:DFF*
