@@ -1,0 +1,12 @@
+32c32
+<   active=1;stage=6'(s);first=10'(868+4*(s-1));rng=1;user_id=2'(u);start=1;@(negedge ck);start=0;
+---
+>   active=1;stage=6'(s);first=10'(876+4*(s-1));rng=1;user_id=2'(u);start=1;@(negedge ck);start=0;
+39c39
+<   active=1;stage=37;first=1012;rng=1;user_id=2'(u);
+---
+>   active=1;stage=37;first=1020;rng=1;user_id=2'(u);
+44c44
+<  $display("NATIVE_CTLM37_PASS oldloads144 headloads4 nent1013 sharedrange1012 defaultoffreject cycles%0d",cycles);$finish;
+---
+>  $display("NATIVE_CTLM37_PASS oldloads144 headloads4 nent1021 sharedrange1020 defaultoffreject cycles%0d",cycles);$finish;
