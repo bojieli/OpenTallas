@@ -523,6 +523,10 @@ SCHEMA = {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # Native START capture location used by physical source planning.
                         "start_capture_um": _xy,
+                        # FLOW-CANARY 10-25 opt-in GRT-RC tap pre-pass + pin-register pad (gen_phys._tap_grt_pre: type
+                        # clock.tap_grt_pre > plan clock.tap_grt_pre > OT_GEN_TAP_GRT_PRE > default off); DIE-HEAD-55
+                        # 11-02: the knob was read by gen_phys but refused here, so it could not be set from a plan
+                        "tap_grt_pre": {"type": "boolean"},
                         "landing_origin_clock_port": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                         "tap_pin_heights_um": {"type": "object", "additionalProperties": {
                             "type": "number", "minimum": 0.768}},
@@ -912,6 +916,7 @@ SCHEMA = {
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
+            "tap_grt_pre": {"type": "boolean"},   # die default of the type knob above (gen_phys._tap_grt_pre)
             # INFRA-FIRST-R4 kit hold window (COORD 10-26 11:24 ruling, opt-in, gen_phys.tap_window_ps): the die
             # delivers every grid tap of one partition within window_ps of each other ([-W, 0] source latency on each
             # real clock port in the kit SDC, CRPR credits same-tap); absent = all taps on one ideal clock (feature off).
