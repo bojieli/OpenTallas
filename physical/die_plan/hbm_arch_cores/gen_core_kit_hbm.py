@@ -1104,6 +1104,33 @@ def post_cts_setup_hook(kd, cfg):
     return dict(previous_post_cts=prev, repair="setup only (scene tc / vclk OT_VCLK_TT)", hold="GRT step only")
 
 
+CLK_LEAF_REPEAT_TCL = "clk_leaf_repeat.tcl"
+
+
+def clk_leaf_repeat_hook(kd, cfg):
+    """HBM-CTS-LEAFSLEW (DIE-HBM-59, COORD 2026-11-02 23:2x), default-on: POST_CTS clock level/leaf net repeaters
+    (clk_leaf_repeat.tcl: every clock-buffer-driven clock net keeps its loads within OT_CLK_LEAF_MAX_UM = 50 um of
+    the driver and a buffer-only level net at <= OT_CLK_LEAF_MAX_FANOUT = 12 loads), FIRST in the kit's POST_CTS chain,
+    so F4, the tap/leaf balance and the TT setup repair all run on the repeated tree.  TritonCTS leaves branch-to-leaf
+    star wires unbuffered and -repair_clock_nets fixes only the root wire: calendar_f20 / vmdel_lane_n routed
+    leaf-input slew 323-382 ps > 320, which the post-route late ECO may not touch.  Not installed for a plan-built
+    core tree (core_infra_plan.json core_tree / core_forest: the plan owns the tree; core_infra lists the file as a
+    clock editor).  Chains the effective POST_CTS_TCL via OT_CLR_NEXT_TCL.  No gate change."""
+    kd = Path(kd)
+    pj = kd / "core_infra_plan.json"
+    if pj.is_file():
+        data = json.loads(pj.read_text())
+        if data.get("core_tree") or data.get("core_forest"):
+            return dict(installed=False, reason="plan-built core tree owns the clock")
+    prev = _effective_hook(cfg, "POST_CTS_TCL")
+    if prev == f"/work/{CLK_LEAF_REPEAT_TCL}":
+        return dict(installed=True, previous_post_cts=None, note="already installed")
+    shutil.copyfile(HERE / CLK_LEAF_REPEAT_TCL, kd / CLK_LEAF_REPEAT_TCL)
+    cfg += [f"override export POST_CTS_TCL = /work/{CLK_LEAF_REPEAT_TCL}",
+            f"export OT_CLR_NEXT_TCL = {prev or ''}"]
+    return dict(installed=True, previous_post_cts=prev, max_um=50, max_fanout=12)
+
+
 def drv_fanout(a):
     """HBM-CORES-KITS-20 DRV basis: fanout cap for every repair_design (0 = off)."""
     return int(getattr(a, "max_fanout", 0) or 0)
@@ -1310,6 +1337,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # TT setup in scene tc vclk OT_VCLK_TT and FF hold in scene BC vclk OT_VCLK_FF).  --single-mode-grt = old FF-only
     # GRT hold repair (TT setup then only at the post-CTS hook).
     ap.add_argument("--no-cts-setup", action="store_true", help="no post-CTS TT setup-only repair (old behaviour)")
+    ap.add_argument("--no-clk-leaf-repeat", action="store_true",
+                    help="HBM-CTS-LEAFSLEW off: no post-CTS clock level/leaf repeaters (clk_leaf_repeat.tcl; old behaviour)")
     ap.add_argument("--single-mode-grt", action="store_true", help="FF-only GRT hold repair (no TT setup repair at GRT)")
     ap.add_argument("--final-ff-hold", action="store_true",
                     help="opt-in final TT-guarded FF data repair and mandatory post-legalization/GRT recheck; clock frozen")
@@ -2044,6 +2073,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # HBM-CORES-R13 (RM36 hold): every kit-own CTS hook is installed BEFORE the shared plan-tree hook, so
     # core_infra.kit_cts_hook sees the final POST_CTS chain (incl. post_cts_setup.tcl and what it sources) when it
     # adds the report-only tap/leaf lines and refuses clock editors; nothing edits cfg after it.
+    if not a.no_clk_leaf_repeat:
+        flow["clk_leaf_repeat"] = clk_leaf_repeat_hook(kd, cfg)
     if not a.no_cts_setup:
         flow["cts_setup_tt"] = post_cts_setup_hook(kd, cfg)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)

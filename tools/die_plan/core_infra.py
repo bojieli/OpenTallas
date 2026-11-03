@@ -1201,7 +1201,9 @@ CTS_POST_LINES = ("# S81-CORE-LAT-R12: plan-built tree -> tap balance + leaf aff
 # (12.7c/12.8b: the plan owns the tree), and none of them has a report-only mode -> refused, never silently mixed
 PLAN_TREE_CLOCK_EDITORS = ("regional_taps.tcl", "regional_taps_balance.tcl", "core_density_taps.tcl",
                            "core_tap_align.tcl", "f4_chain_leaf.tcl", "multiport_clock_stage_hold.tcl",
-                           "head_lane_taps.tcl", "astk_zone_taps.tcl", "astk_face_taps.tcl")
+                           "head_lane_taps.tcl", "astk_zone_taps.tcl", "astk_face_taps.tcl",
+                           # HBM-CTS-LEAFSLEW 11-03: post-CTS clock level/leaf repeaters (never installed on a plan tree)
+                           "clk_leaf_repeat.tcl")
 ROOT_SCOPED_EDITORS = PLAN_TREE_CLOCK_EDITORS + ("tap_balance.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl")
 ROOT_SCOPE_HOOK = "core_infra_scope.tcl"
 
