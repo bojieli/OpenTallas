@@ -1,0 +1,7 @@
+RED native GRT canary terminal FAIL; no DRT or signoff credit
+
+Unit3094774-1793603597 ran normal native GRT/data repairs and default-off d89be7729 explicit FINAL fullCLOCK+SIGNAL50 after all POST mutations. Final route recognized8270CLOCK,235237routednets, overflow0/0/0,27s route. Last prefinal MM measurement TT+7.26ps/FF+7.40ps is intermediate, not saved final timing.
+
+Blocking clock diff found exactly ONE changed clock-connected FF master/pose: u.u_143133/Q$_DFF_P_ DFFHQNx1@(193.428,75.870),R180 to DFFHQNx2@(193.374,75.870),R180. All8270 clock net pins/wires/incidence unchanged. Shared clk_freeze deliberately leaves sink FFs resizer-touchable so D-pin hold-buffer repair works; the native resizer changed this FF and final strictdiff correctly blocked. No final5_1 ODB survived (only original4cts), therefore no final GUIDEcoverage/TTFF/PG claim. PG473998/open0 was checked before finalcore hook. Original failure preserved.
+
+Fresh private retry PREP only in sibling red_grt_retry_prep: sharedprd_hook-style set_dont_use sequential NEW-master families for DFFHQN/DFFASRHQN across both loadedTTFFlibs, leaving existing FFs touchable and allDATA-buffer families available. Existing placementLOCKED+clockdiff remains blocking; no restore-after-route shortcut. Saves retained ODB+guide before finalassert for honest failure diagnosis. Original4cts/SDC/config/native deck/normalrepair unchanged. Revised retry not dispatched pending coordination review, no global defaults/adoption.

@@ -1,0 +1,37 @@
+{
+  "scope": "NARROW_ACTUAL_LITERAL_HARD0_RELATION_DIAGNOSTIC",
+  "parameter": 0,
+  "data_inputs": 107,
+  "independent_reset_supports": 5,
+  "observed_Qs": 509,
+  "after_first_capture_only": true,
+  "SAT_steps": 4,
+  "default_physical_or_native_mapped_adoption": false,
+  "cases": {
+    "correct": {
+      "native_rc": 0,
+      "expected": "RELATION_PASS",
+      "bad1_witness": false,
+      "verdict": "PASS"
+    },
+    "wrong_plain_data": {
+      "native_rc": 0,
+      "expected": "ACTIVE_HARD0_COUNTEREXAMPLE",
+      "bad1_witness": true,
+      "verdict": "PASS"
+    },
+    "reset_support_OR": {
+      "native_rc": 0,
+      "expected": "ACTIVE_HARD0_COUNTEREXAMPLE",
+      "bad1_witness": true,
+      "verdict": "PASS"
+    },
+    "control_forced_one": {
+      "native_rc": 0,
+      "expected": "ACTIVE_HARD0_COUNTEREXAMPLE",
+      "bad1_witness": true,
+      "verdict": "PASS"
+    }
+  },
+  "verdict": "PASS"
+}

@@ -1,0 +1,15 @@
+--- /srv/opentallas-scratch2/claude/codex-qc-red-lattice8-kit-1101/qfd_dv_s5_red2_leaf_pin1lat8/config.mk	2026-11-01 15:17:46.000000000 -0800
++++ /srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/red_cts_fixed/config.mk	2026-11-01 21:49:43.306602735 -0800
+@@ -55,3 +55,12 @@
+ override export OT_MM_SETUP_CORNER = tc
+ override export OT_MM_FF_SDC = /work/vclk_ff.sdc
+ override export OT_MM_MEASURED_HOLD = 1
++
++# Approved private actual-rebound fixed-tree CTS-only diagnostic.
++# The normal native pre-CTS hook stays intact; original cells/poses/graph/flags
++# must survive unchanged. No automatic GRT/route follower.
++override export PRE_CTS_TCL = /work/guard_before.tcl
++override export POST_CTS_TCL = /work/guard_after.tcl
++# Fixed-tree CTS witness preserves the actual rebound data implementation.
++# This skips an optimization only; timing/clock/uncertainty gates stay intact.
++override export SKIP_CTS_REPAIR_TIMING = 1

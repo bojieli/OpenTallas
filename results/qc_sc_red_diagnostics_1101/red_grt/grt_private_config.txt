@@ -1,0 +1,7 @@
+
+# Private approved RED actual CTS continuation: same constraints and normal repair.
+override export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_reviewed.tcl
+override export POST_GLOBAL_ROUTE_TCL = /work/grt_post_reviewed.tcl
+override export OT_CLK_FREEZE = 1
+override export OT_GRT_FINAL_FULL = 1
+override export GRT_OVERFLOW_ITERS = 50

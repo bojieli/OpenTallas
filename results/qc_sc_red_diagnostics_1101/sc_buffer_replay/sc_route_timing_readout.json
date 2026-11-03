@@ -1,0 +1,41 @@
+{
+  "scope": "READONLY_TT_FF_DIAGNOSTIC_ON_HONEST_ROUTE_ONLY_PLACE",
+  "cts_credit": false,
+  "signed_credit": false,
+  "corners": {
+    "tt": {
+      "corner": "TT",
+      "pinreg_n": 572,
+      "pinreg_mean_ps": 335.32,
+      "pinreg_min_ps": 308.44,
+      "pinreg_max_ps": 350.65,
+      "bound_ps": 250.0,
+      "dev_ps": 85.32,
+      "tol_ps": 20.0,
+      "setup_wns_est_ps": -388.81,
+      "hold_wns_est_ps": -166.2,
+      "rc": "/work/setRC_rcx.tcl",
+      "parasitics": "global_routing",
+      "verdict": "FAIL",
+      "band_policy": "gate",
+      "band_verdict": "FAIL"
+    },
+    "ff": {
+      "corner": "FF",
+      "pinreg_n": 572,
+      "pinreg_mean_ps": 287.28,
+      "pinreg_min_ps": 261.49,
+      "pinreg_max_ps": 303.5,
+      "bound_ps": 202.5,
+      "dev_ps": 84.78,
+      "tol_ps": 20.0,
+      "setup_wns_est_ps": -221.23,
+      "hold_wns_est_ps": -163.48,
+      "rc": "/work/setRC_rcx.tcl",
+      "parasitics": "global_routing",
+      "verdict": "FAIL",
+      "band_policy": "gate",
+      "band_verdict": "FAIL"
+    }
+  }
+}

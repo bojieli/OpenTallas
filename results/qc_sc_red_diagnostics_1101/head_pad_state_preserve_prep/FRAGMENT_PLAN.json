@@ -1,0 +1,44 @@
+{
+  "status": "PREP_ONLY_NOT_EXECUTED",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "production_changes": false,
+  "new_jobs": false,
+  "original_prior_count": 12732,
+  "original_raw_padding_failures": 14,
+  "mode_default": 0,
+  "modes": {
+    "0": "baseline negative preservation control",
+    "1": "wire KEEP/DNT semantics probe",
+    "2": "kept generic leaf semantics probe",
+    "3": "explicit fourteen native FF candidate"
+  },
+  "additional_probe": "cell_keep_probe.ys before first coarse opt",
+  "synth_scope": "one 14-bit projected data cone, not full HEAD or full N2 transmitter",
+  "readset": "same pinned image, exact seven native TT/FF Libs and canonical mapping files from current HEAD recipe; fill hashes before launch",
+  "required_checks": [
+    "initial q/physical QN bijection with no assumed zero",
+    "14 independent hold states, 14 existing output states, no added cycles",
+    "no new init/reset",
+    "all start/owe/b0 patterns, including reset-independent idle before first write",
+    "ordinary flow constant folding and post-map opt retained",
+    "all four active mutants reject",
+    "mapped body/clock/control load count"
+  ],
+  "not_authorized": [
+    "full synth",
+    "new proof job",
+    "output mask",
+    "new reset constraints",
+    "source or clock cohort adoption",
+    "P&R or STA"
+  ],
+  "resource_prep": {
+    "memory_gib": 4,
+    "threads": 1,
+    "disk_gib": 1,
+    "fleet": "automatic eligible small pool/Intel1/EPYC2",
+    "measurement_basis": "same small source-relation class used previously, no full design"
+  },
+  "existing_hook": "synth_canonicalize.tcl:SYNTH_CANONICALIZE_TCL; generic_cell_keep_hook.tcl uses exact ot_keep_regs.reference.tcl",
+  "mutant_scope_note": "missing owe control applies to arbitrary cut states, not asserted full-transmitter reachable"
+}

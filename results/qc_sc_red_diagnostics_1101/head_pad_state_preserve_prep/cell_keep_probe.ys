@@ -1,0 +1,10 @@
+# PREP ONLY. Run after read_verilog/hierarchy of PRESERVE_MODE=0 and
+# BEFORE any synth coarse pass. proc -noopt must create exact primitive.
+proc -noopt
+# A 14-bit-only fragment permits selecting the exact state-producing cell;
+# production W110/P62 would require exact per-bit split, not blanket 62-bit KEEP.
+select -assert-count 1 head_pad_fragment/w:g_baseline.state %ci t:$dff %i
+setattr -set keep 1 -set dont_touch 1 head_pad_fragment/w:g_baseline.state %ci t:$dff %i
+select -clear
+write_rtlil /out/cell_keep_preopt.il
+# Continue the same pinned synthesis script; no global -keepdc policy is added.

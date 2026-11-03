@@ -1,0 +1,448 @@
+{
+ "scope": "UNTRUSTED_SOURCE_ONLY_LB9_DIAGNOSIS_NO_PROOF_HINT_OR_JOB",
+ "current9verdict": "DIFFERS_UNCHANGED",
+ "separate_from_LA_replica_producer": true,
+ "existing_context": {
+  "prior_count": 12732,
+  "matched": 58437,
+  "reset_cycles": 64,
+  "LBreplica_relations_already_retained": true,
+  "new_reset_relation": false,
+  "retain_gold_s2v_tuple": [
+   "gold",
+   "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.s2v",
+   [
+    "eq",
+    "gold",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+    0
+   ]
+  ]
+ },
+ "points": [
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.ok_f",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_f2.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o2.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_ready.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_okc.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_oku.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_okv.q"
+ ],
+ "gold_primitives": [
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.s2v",
+   "Q_bit": 130455,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.$driver$s2v",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    141239
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130458,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.ok_f",
+   "Q_bit": 130570,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.$driver$ok_f",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    141239
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130458,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+   "Q_bit": 143019,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.\\g_fcopy.u_k_ok_f3.$driver$q",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    141497
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130458,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_f2.q",
+   "Q_bit": 129142,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.\\u_k_ok_f2.$driver$q",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    158898
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130458,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o.q",
+   "Q_bit": 129679,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.\\u_k_ok_o.$driver$q",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    158896
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130501,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o2.q",
+   "Q_bit": 129690,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.\\u_k_ok_o2.$driver$q",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    158898
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130501,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_ready.q",
+   "Q_bit": 129236,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.\\u_k_ok_ready.$driver$q",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    158898
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130501,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_okc.q",
+   "Q_bit": 128948,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.\\u_k_okc.$driver$q",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    141239
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130501,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_oku.q",
+   "Q_bit": 130583,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.\\u_k_oku.$driver$q",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    141239
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130501,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  },
+  {
+   "field": "u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_okv.q",
+   "Q_bit": 129262,
+   "cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.\\u_k_okv.$driver$q",
+   "type": "$aldff",
+   "CLK": [
+    2
+   ],
+   "reset_active_low_bit": [
+    141239
+   ],
+   "reset_value": [
+    "0"
+   ],
+   "D_bit": 130501,
+   "enable": null,
+   "state_age": "sameposedge sample of current p_take or currentok_d; no added stage"
+  }
+ ],
+ "mapped_primitives": [
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.ok_f$_DFF_PN0_",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "ports": {
+    "CLK": "clk",
+    "D": "\\u_core.u_lb.u_ln.u.u_ep.p_take",
+    "QN": "_037578_",
+    "RESETN": "\\u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r",
+    "SETN": "_103743_"
+   }
+  },
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3",
+   "master": "ot_s81ph_kff4_1",
+   "ports": {
+    "clk": "clk",
+    "d": "\\u_core.u_lb.u_ln.u.u_ep.p_take",
+    "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_f3",
+    "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[24].local_r"
+   }
+  },
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.u_k_ok_f2",
+   "master": "ot_s81ph_kff4_1",
+   "ports": {
+    "clk": "clk",
+    "d": "\\u_core.u_lb.u_ln.u.u_ep.p_take",
+    "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_f2",
+    "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[23].local_r"
+   }
+  },
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.u_k_ok_o",
+   "master": "ot_s81ph_kff4_1",
+   "ports": {
+    "clk": "clk",
+    "d": "\\u_core.u_lb.u_ln.u.u_ep.ok_d",
+    "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_o",
+    "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[22].local_r"
+   }
+  },
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.u_k_ok_o2",
+   "master": "ot_s81ph_kff4_1",
+   "ports": {
+    "clk": "clk",
+    "d": "\\u_core.u_lb.u_ln.u.u_ep.ok_d",
+    "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_o2",
+    "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[23].local_r"
+   }
+  },
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.u_k_ok_ready",
+   "master": "ot_s81ph_kff4_1",
+   "ports": {
+    "clk": "clk",
+    "d": "\\u_core.u_lb.u_ln.u.u_ep.ok_d",
+    "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_ready",
+    "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[23].local_r"
+   }
+  },
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.u_k_okc",
+   "master": "ot_s81ph_kff4_1",
+   "ports": {
+    "clk": "clk",
+    "d": "\\u_core.u_lb.u_ln.u.u_ep.ok_d",
+    "q": "\\u_core.u_lb.u_ln.u.u_ep.ack_ok",
+    "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r"
+   }
+  },
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.u_k_oku",
+   "master": "ot_s81ph_kff4_1",
+   "ports": {
+    "clk": "clk",
+    "d": "\\u_core.u_lb.u_ln.u.u_ep.ok_d",
+    "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_u",
+    "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r"
+   }
+  },
+  {
+   "instance": "u_core.u_lb.u_ln.u.u_ep.u_k_okv",
+   "master": "ot_s81ph_kff4_1",
+   "ports": {
+    "clk": "clk",
+    "d": "\\u_core.u_lb.u_ln.u.u_ep.ok_d",
+    "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_v",
+    "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r"
+   }
+  }
+ ],
+ "retained_reset_alias_chains": {
+  "8": [
+   [
+    "both",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+     0
+    ]
+   ],
+   [
+    "both",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+     0
+    ]
+   ]
+  ],
+  "23": [
+   [
+    "both",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[23].local_r",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+     0
+    ]
+   ],
+   [
+    "both",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+     0
+    ]
+   ]
+  ],
+  "24": [
+   [
+    "both",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[24].local_r",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+     0
+    ]
+   ],
+   [
+    "both",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+     0
+    ]
+   ]
+  ]
+ },
+ "source_equations": {
+  "p_take": "pv && !s2v",
+  "ok_d": "p_take && !p_bad",
+  "p_bad": "(pack-una_s) > (nxt_rw-una_s)",
+  "p_take_copy_next": "s2v,ok_f,ok_f2,ok_f3 allcapturecurrentp_take on sameposedge, reset0",
+  "ok_d_copy_next": "ok_u/ok_v/ok_c/ok_o/ok_o2/ok_ready allcapturecurrentok_d on sameposedge, reset0"
+ },
+ "actual_gate_feedback": {
+  "pv_QN": "_000733_",
+  "pv_logical": "INV_175258_.Y=_081753_",
+  "ok_f_QN": "_037578_",
+  "buffered_ok_f_QN": "BUFx2_104800_.Y=_100997_",
+  "p_take_driver": "AND2_175259_(_081753_,_100997_)",
+  "meaning": "pv && !ok_f; s2v merged into same physicalstatecohort"
+ },
+ "cause": "Originalgold-onlys2v mapping choosesfcopy3 whilegatep_take choosesok_f. Bothmatchedstatesremainindependentinthecurrentcut. Shared source/mapped CLK,D,resetvalue,enable,stateage andretainedresetaliases supportmissingcohortcorrespondence; actualnativeBooleanwitnessesforall9 verifycausality. No reachableDUTsequence inferred.",
+ "candidate_only": [
+  "both",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.ok_f",
+  [
+   "eq",
+   "gold",
+   "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+   0
+  ]
+ ],
+ "negative_controls": [
+  {
+   "name": "wrong_polarity_BASE",
+   "candidate": [
+    "both",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.ok_f",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+     1
+    ]
+   ],
+   "expected": "NativeBASE64rejects0vs1; do not assumeorpatchinitialstate."
+  },
+  {
+   "name": "wrong_ok_d_cohort_NEXT",
+   "candidate": [
+    "both",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.ok_f",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o.q",
+     0
+    ]
+   ],
+   "expected": "NativeBASE64mustmeasure0/0. NEXTmustDIFFER: p_take1,p_bad1 yieldsDp_take1vsDok_d0. Sameclock/resetage doesnotmakeaccept-validityfilterequivalent.",
+   "concrete_source_values": {
+    "pv": 1,
+    "s2v": 0,
+    "pack": 1,
+    "una_s": 0,
+    "nxt_rw": 0
+   },
+   "no_new_assumption": true
+  }
+ ],
+ "source_sha256": {
+  "/srv/opentallas-scratch/claude/codex-head-typed70-0248/subject/lec/gold.aliases.json": "4335dbca42fd196d3a31e13457b05db653b2a0386a4c82d43ca7372f170d9cfb",
+  "/srv/opentallas-scratch/claude/codex-head-typed70-0248/subject/lec/hyp.json": "406a2470ce1e46b959bd4cce99d4272d216c6dc2545152deff53b2acc0a7f7d6",
+  "/srv/opentallas-scratch/claude/head-ld-source-1102/1_2_yosys.v": "475d29d186ce3dcce4db949498eaf72cbcdc2bf810c6873b51efc4e585440ee4",
+  "/srv/opentallas-scratch/claude/head-ld-source-1102/rtl/ot_s81ph_link_ep_safe4.sv": "f7fe6c1c242eb7d96cf856bc2492fa5a090e825672ddffb73fb8ed9d73ca6536"
+ },
+ "native_witnesses": "native_cut_witnesses.json",
+ "limits": "No actual counts updated, no modifications to oldhyp/source/constraints/masks or LAjob scope. SoleFLOWmaypreparea separate futureboundednativeBASE/NEXTafterparent review."
+}

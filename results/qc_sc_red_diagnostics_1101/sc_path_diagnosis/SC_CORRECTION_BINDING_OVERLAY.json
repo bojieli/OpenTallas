@@ -1,0 +1,29 @@
+{
+  "scope": "PRIVATE_ONE_PLACE_CORRECTION_NOT_PARENT_ADOPTION",
+  "ff_moves": 1136,
+  "public_pin_changes": 0,
+  "native_ff": 42665,
+  "fixed_nodes": 2389,
+  "leaves": 1024,
+  "leaf_cap": 42,
+  "depth": 7,
+  "new_ff": 0,
+  "new_cycles": 0,
+  "files": [
+    {
+      "file": "core_infra_plan.json",
+      "old_sha": "7f28571b42d48bfd5dc4ac2b8027f57c250a5db2ab5b8abd1dd7dcc619ec375b",
+      "new_sha": "faadcf3a91b58ef5b59f2b8594662e03e734a7d44895d4c8c23e2ccc6998799d"
+    },
+    {
+      "file": "core_infra_slice.json",
+      "old_sha": "3c1edff0db249776bff4378c6e5762e60f80435648187bbece73c801c7bef671",
+      "new_sha": "1df91bc253bdfebffd9bc07b3ff107183cf441739dcd64bd0c842abdb7d76f91"
+    },
+    {
+      "file": "master_core_infra.tcl",
+      "old_sha": "4e71c3df00c19a82df623e3beaa0eceda7d5a702fa96f6e7a610af74e72ec0e1",
+      "new_sha": "9046201c7358e0ca0f4bd2dfdb2b62c0c7f842f60345afd6c054a2bd06ae1190"
+    }
+  ]
+}

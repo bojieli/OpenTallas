@@ -1,0 +1,66 @@
+{
+  "scope": "PREP_EXACT_SELECTED_DEFAULT_HARD0_CAPTURE_LEMMA_PLUS_LITERAL_SOURCE_COVERAGE",
+  "actual_old": "051340895d9",
+  "actual_new": "98bbbbd8184",
+  "fixture_archive": "41612e22eac",
+  "explicit_parameter": 0,
+  "data_inputs": 107,
+  "independent_reset_supports": 5,
+  "observed_old_capture_Qs": 509,
+  "gold_capture_primitives_match_actual_old": 509,
+  "gate_HARD0_capture_primitives_match_actual_new": 509,
+  "all509_Qs_observed_exactly_once": true,
+  "primitive_helpers": "actual unchanged old/new helpers blob, not invented primitive model",
+  "relation_after": "first capture edge; no arithmetic/data edge changed",
+  "proof_cycles": 4,
+  "input_assumptions": "defined arbitrary data/reset supports each cycle; independent reset support, no protocol/ready constraints",
+  "mutants": {
+    "wrong_plain_data": {
+      "instance": "u_227258",
+      "old_literal": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227258(.C(n_2),.D(n_105),.Q(n_239374));",
+      "mutant_literal": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227258(.C(n_2),.D(n_106),.Q(n_239374));",
+      "active_parameter": 0
+    },
+    "reset_support_OR": {
+      "instance": "u_228347",
+      "old_literal": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_228347(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_104),.Q(sc_pin_flag_u_228347),.R(n_240513));",
+      "mutant_literal": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_228347(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_104),.Q(sc_pin_flag_u_228347),.R(n_240513 | n_239764));",
+      "active_parameter": 0
+    },
+    "control_forced_one": {
+      "instance": "u_228347",
+      "old_literal": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_228347(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_104),.Q(sc_pin_flag_u_228347),.R(n_240513));",
+      "mutant_literal": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_228347(.C(n_2),.D(HARD_PINREG ? 1'b1 : 1'b1),.Q(sc_pin_flag_u_228347),.R(n_240513));",
+      "active_parameter": 0
+    }
+  },
+  "source_native_mapped_count_or_default_adoption": false,
+  "resources_proposed": {
+    "memGB": 4,
+    "threads": 1,
+    "diskGB": 1
+  },
+  "files": {
+    "control_forced_one.ys": "a429cd6cac25d547c2dd3f6e4154dcc0fe0352dd1a42b0d2f902885bb4c93710",
+    "correct.v": "0405c4ef20b059ae4f1347aef45b0689616586944b63ad680346beeedd232916",
+    "compare_hard0.py": "15e94eedd65d6694e0f29653e5d5374e0cdb798b2903d10c54d65cb857db409c",
+    "helpers.sv": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+    "new_qfd_dv_s5_sc2_k79.sv": "9d943818a85c00bccb8d16697de643a8435caff0c20b9a715dc60dbd3da2e943",
+    "prepare_lemma.py": "79cc98c180455a821a5f35f0c7aafd9afcb3be209e0f043e4366c7070118735f",
+    "reset_support_OR.v": "3a980fbe11f45894a51194fd9eaab8816cb7c3f2b8d1ecec89acf6ae285b27dc",
+    "gate0.v": "0405c4ef20b059ae4f1347aef45b0689616586944b63ad680346beeedd232916",
+    "reset_support_OR.ys": "f5bb34bba1aa152f2c42ac351758a8dd804f85e800f6a968480c6e860a1ddbf2",
+    "old_qfd_dv_s5_sc2_k79.sv": "af467263c9a76c2b77fe629773538f4a7aea779f108bfa3a25c8af94dda3bfd3",
+    "actual_helpers.sv": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f",
+    "correct.ys": "9ff580a2231cdc071a5001e742e2da638a43fbae3020a549f2d811dce4d8358d",
+    "control_forced_one.v": "7260c536a65b3207ab6223b8e811b1209c78bee5100d145913b4eec5834aad40",
+    "wrong_plain_data.ys": "479ba8cf8ebe3dd367c80b553de4f3cc8a5abac2b15c2fa4e5ab97789212b35e",
+    "wrong_plain_data.v": "daf2152a2486fc83a3931852bb776d6cc6fcc9cd30b35ffb64e9345f764c93ac",
+    "tb.v": "6edfca7a53c3ab443b7543363435bce0a30e95caecdc61d3d5b2a876ff533d7c",
+    "gold.v": "b477405cf5f916ae522ea1c575a6231ae02068321df20abeb13f0ff1b44e7c0d",
+    "tb_hard0.v": "783f94734deccf2ab91f925e3ca1e58dbe74725bdea8fe6f485b5744fbcc231a",
+    "new_qfd_dv_s5_sc2_leaf.sv": "953b5b1001ed8610ed286c05800819dfdfd1120f0e7f4482985692e549994849",
+    "old_qfd_dv_s5_sc2_leaf.sv": "efb1f3e68eca4b82e9daef83754187d6a4ec36dd53567e850c25073af1f4588b",
+    "proof0.ys": "8d7a2f5dcd5fcee141def3c3599600008e2804f120cd9a673770757cfc913d9f"
+  }
+}

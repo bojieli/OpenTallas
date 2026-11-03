@@ -1,0 +1,1293 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/4_cts.odb
+read_sdc -mode ss /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/4_cts.sdc
+read_sdc -mode ff /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/4_cts.sdc
+source /work/setRC_rcx.tcl
+source /work/grt_pre_reviewed.tcl
+OT_CLK_DUMP pre /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/red_clock_freeze/clk_freeze_pre.tsv nets 8270 insts 42494 0.9 s
+OT_CLK_FREEZE ON clock nets 8270 (with wire 0, re-encoded FIXED 0) instances 42494 (placement -> LOCKED: 34225 were movable) dont_touch nets + 8269 clock-tree cells
+Took 5 seconds: source /work/grt_pre_reviewed.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       13
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qfd_dv_s5_red2_leaf
+Die area:                 ( 0 0 ) ( 276480 276480 )
+Number of track patterns: 26
+Number of DEF vias:       0
+Number of components:     232619
+Number of terminals:      356
+Number of snets:          2
+Number of nets:           231012
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+  Complete 200000 instances.
+[INFO DRT-0164] Number of unique instances = 321.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0018]   Complete 200000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 4004266.
+[INFO DRT-0033] V1 shape region query size = 7742845.
+[INFO DRT-0033] M2 shape region query size = 184290.
+[INFO DRT-0033] V2 shape region query size = 184698.
+[INFO DRT-0033] M3 shape region query size = 184698.
+[INFO DRT-0033] V3 shape region query size = 123132.
+[INFO DRT-0033] M4 shape region query size = 123424.
+[INFO DRT-0033] V4 shape region query size = 123132.
+[INFO DRT-0033] M5 shape region query size = 61876.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1851 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0079]   Complete 300 unique inst patterns.
+[INFO DRT-0081]   Complete 321 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0084]   Complete 152287 groups.
+#scanned instances     = 232619
+#unique  instances     = 321
+#stdCellGenAp          = 8653
+#stdCellValidPlanarAp  = 180
+#stdCellValidViaAp     = 7110
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 625210
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 01:22:24, elapsed time = 00:41:17, memory = 1788.36 (MB), peak = 2030.16 (MB)
+Took 2485 seconds: pin_access
+global_route -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/congestion.rpt -congestion_iterations 50 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 103608
+[INFO GRT-0019] Found 8270 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 25
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    3084770       2196624          28.79%
+M3         Vertical      3557743       2643189          25.71%
+M4         Horizontal    2744828       2040608          25.66%
+M5         Vertical      2628788       1948544          25.88%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 1177461
+[INFO GRT-0198] Via related Steiner nodes: 23739
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1513290
+[INFO GRT-0112] Final usage 3D: 5754643
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2196624        517591           23.56%             0 /  0 /  0
+M3             2643189        563894           21.33%             0 /  0 /  0
+M4             2040608         75541            3.70%             0 /  0 /  0
+M5             1948544         57747            2.96%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          8828965       1214773           13.76%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 947038 um
+[INFO GRT-0014] Routed nets: 230857
+[INFO GRT-0303] Global routing runtime = 00:04:57
+Took 298 seconds: global_route -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/congestion.rpt -congestion_iterations 50 -congestion_report_iter_step 5 -verbose -resistance_aware
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+estimate_parasitics -global_routing
+Took 32 seconds: estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -cap_margin 20 -slew_margin 20
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    231012
+     1000 |     +0.0% |       0 |       0 |             0 |    230012
+     2000 |     +0.0% |       0 |       0 |             0 |    229012
+     3000 |     +0.0% |       0 |       0 |             0 |    228012
+     4000 |     +0.0% |       0 |       0 |             0 |    227012
+     5000 |     +0.0% |       0 |       0 |             0 |    226012
+     6000 |     +0.0% |       0 |       0 |             0 |    225012
+     7000 |     +0.0% |       0 |       0 |             0 |    224012
+     8000 |     +0.0% |       0 |       0 |             0 |    223012
+     9000 |     +0.0% |       0 |       0 |             0 |    222012
+[WARNING RSZ-0104] Net u.n_26000 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25859 only has one pin. Check if it is intended to be dangling.
+    10000 |     +0.0% |       0 |       0 |             0 |    221012
+[WARNING RSZ-0104] Net _18453_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_26004 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25855 only has one pin. Check if it is intended to be dangling.
+    11000 |     +0.0% |       0 |       0 |             0 |    220012
+[WARNING RSZ-0104] Net u.n_25801 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18454_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25793 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25837 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25874 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25896 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25918 only has one pin. Check if it is intended to be dangling.
+    12000 |     +0.0% |       0 |       0 |             0 |    219012
+    13000 |     +0.0% |       0 |       0 |             0 |    218012
+[WARNING RSZ-0104] Net _18450_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18448_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18446_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18444_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18440_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18438_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18436_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25789 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25833 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25797 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25870 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25892 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25914 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18451_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18449_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18447_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18445_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18441_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18439_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18437_ only has one pin. Check if it is intended to be dangling.
+    14000 |     +0.0% |       0 |       0 |             0 |    217012
+    15000 |     +0.0% |       0 |       0 |             0 |    216012
+    16000 |     +0.0% |       0 |       0 |             0 |    215012
+    17000 |     +0.0% |       0 |       0 |             0 |    214012
+    18000 |     +0.0% |       0 |       0 |             0 |    213012
+    19000 |     +0.0% |       0 |       0 |             0 |    212012
+    20000 |     +0.0% |       0 |       0 |             0 |    211012
+    21000 |     +0.0% |       0 |       0 |             0 |    210012
+    22000 |     +0.0% |       0 |       0 |             0 |    209012
+    23000 |     +0.0% |       0 |       0 |             0 |    208012
+[WARNING RSZ-0104] Net _18481_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18479_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18467_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18465_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18463_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18461_ only has one pin. Check if it is intended to be dangling.
+    24000 |     +0.0% |       0 |       0 |             0 |    207012
+    25000 |     +0.0% |       0 |       0 |             0 |    206012
+    26000 |     +0.0% |       0 |       0 |             0 |    205012
+    27000 |     +0.0% |       0 |       0 |             0 |    204012
+    28000 |     +0.0% |       0 |       0 |             0 |    203012
+    29000 |     +0.0% |       0 |       0 |             0 |    202012
+[WARNING RSZ-0104] Net _18468_ only has one pin. Check if it is intended to be dangling.
+    30000 |     +0.0% |       0 |       0 |             0 |    201012
+    31000 |     +0.0% |       0 |       0 |             0 |    200012
+[WARNING RSZ-0104] Net _18469_ only has one pin. Check if it is intended to be dangling.
+    32000 |     +0.0% |       0 |       0 |             0 |    199012
+    33000 |     +0.0% |       0 |       0 |             0 |    198012
+    34000 |     +0.0% |       0 |       0 |             0 |    197012
+    35000 |     +0.0% |       0 |       0 |             0 |    196012
+    36000 |     +0.0% |       0 |       0 |             0 |    195012
+[WARNING RSZ-0104] Net _18480_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18478_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18466_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18464_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18462_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18460_ only has one pin. Check if it is intended to be dangling.
+    37000 |     +0.0% |       0 |       0 |             0 |    194012
+    38000 |     +0.0% |       0 |       0 |             0 |    193012
+[WARNING RSZ-0104] Net _18477_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18475_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18473_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18471_ only has one pin. Check if it is intended to be dangling.
+    39000 |     +0.0% |       0 |       0 |             0 |    192012
+    40000 |     +0.0% |       0 |       0 |             0 |    191012
+    41000 |     +0.0% |       0 |       0 |             0 |    190012
+    42000 |     +0.0% |       0 |       0 |             0 |    189012
+    43000 |     +0.0% |       0 |       0 |             0 |    188012
+    44000 |     +0.0% |       0 |       0 |             0 |    187012
+    45000 |     +0.0% |       0 |       0 |             0 |    186012
+[WARNING RSZ-0104] Net _18476_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18474_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18472_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18470_ only has one pin. Check if it is intended to be dangling.
+    46000 |     +0.0% |       0 |       4 |             4 |    185012
+    47000 |     +0.0% |       0 |       4 |             4 |    184012
+[WARNING RSZ-0104] Net _18489_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18488_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18487_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18486_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18485_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18484_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18483_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18482_ only has one pin. Check if it is intended to be dangling.
+    48000 |     +0.0% |       0 |       4 |             4 |    183012
+    49000 |     +0.0% |       0 |       4 |             4 |    182012
+    50000 |     +0.0% |       0 |       4 |             4 |    181012
+    51000 |     +0.0% |       0 |       4 |             4 |    180012
+    52000 |     +0.0% |       0 |       4 |             4 |    179012
+    53000 |     +0.0% |       0 |       4 |             4 |    178012
+    54000 |     +0.0% |       0 |       4 |             4 |    177012
+[WARNING RSZ-0104] Net _18459_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18458_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18442_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18433_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18431_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18430_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18429_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18428_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18424_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18423_ only has one pin. Check if it is intended to be dangling.
+    55000 |     +0.0% |       0 |       4 |             4 |    176012
+    56000 |     +0.0% |       0 |       4 |             4 |    175012
+[WARNING RSZ-0104] Net _18456_ only has one pin. Check if it is intended to be dangling.
+    57000 |     +0.0% |       0 |       4 |             4 |    174012
+    58000 |     +0.0% |       0 |       4 |             4 |    173012
+    59000 |     +0.0% |       0 |       4 |             4 |    172012
+    60000 |     +0.0% |       0 |       4 |             4 |    171012
+    61000 |     +0.0% |       0 |       4 |             4 |    170012
+    62000 |     +0.0% |       0 |       4 |             4 |    169012
+    63000 |     +0.0% |       0 |       4 |             4 |    168012
+    64000 |     +0.0% |       0 |       4 |             4 |    167012
+    65000 |     +0.0% |       0 |       4 |             4 |    166012
+    66000 |     +0.0% |       0 |       4 |             4 |    165012
+    67000 |     +0.0% |       0 |       4 |             4 |    164012
+[WARNING RSZ-0104] Net _18426_ only has one pin. Check if it is intended to be dangling.
+    68000 |     +0.0% |       0 |       4 |             4 |    163012
+    69000 |     +0.0% |       0 |       4 |             4 |    162012
+    70000 |     +0.0% |       0 |       4 |             4 |    161012
+    71000 |     +0.0% |       0 |       4 |             4 |    160012
+    72000 |     +0.0% |       0 |       4 |             4 |    159012
+    73000 |     +0.0% |       0 |       4 |             4 |    158012
+    74000 |     +0.0% |       0 |       4 |             4 |    157012
+    75000 |     +0.0% |       0 |       4 |             4 |    156012
+    76000 |     +0.0% |       0 |       4 |             4 |    155012
+    77000 |     +0.0% |       0 |       4 |             4 |    154012
+    78000 |     +0.0% |       0 |       4 |             4 |    153012
+    79000 |     +0.0% |       0 |       4 |             4 |    152012
+    80000 |     +0.0% |       0 |       4 |             4 |    151012
+    81000 |     +0.0% |       0 |       4 |             4 |    150012
+    82000 |     +0.0% |       0 |       4 |             4 |    149012
+    83000 |     +0.0% |       0 |       4 |             4 |    148012
+    84000 |     +0.0% |       0 |       4 |             4 |    147012
+    85000 |     +0.0% |       0 |       4 |             4 |    146012
+    86000 |     +0.0% |       0 |       4 |             4 |    145012
+    87000 |     +0.0% |       0 |       4 |             4 |    144012
+    88000 |     +0.0% |       0 |       4 |             4 |    143012
+    89000 |     +0.0% |       0 |       4 |             4 |    142012
+    90000 |     +0.0% |       0 |       4 |             4 |    141012
+    91000 |     +0.0% |       0 |       4 |             4 |    140012
+    92000 |     +0.0% |       0 |       4 |             4 |    139012
+[WARNING RSZ-0104] Net _18457_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18455_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18452_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18443_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18435_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18434_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18432_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18427_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18425_ only has one pin. Check if it is intended to be dangling.
+    93000 |     +0.0% |       0 |       4 |             4 |    138012
+    94000 |     +0.0% |       0 |       4 |             4 |    137012
+    95000 |     +0.0% |       0 |       4 |             4 |    136012
+    96000 |     +0.0% |       0 |       4 |             4 |    135012
+    97000 |     +0.0% |       0 |       4 |             4 |    134012
+    98000 |     +0.0% |       0 |       4 |             4 |    133012
+    99000 |     +0.0% |       0 |       4 |             4 |    132012
+   100000 |     +0.0% |       0 |       4 |             4 |    131012
+   101000 |     +0.0% |       0 |       4 |             4 |    130012
+   102000 |     +0.0% |       0 |       4 |             4 |    129012
+   103000 |     +0.0% |       0 |       4 |             4 |    128012
+   104000 |     +0.0% |       0 |       4 |             4 |    127012
+   105000 |     +0.0% |       0 |       4 |             4 |    126012
+   106000 |     +0.0% |       0 |       4 |             4 |    125012
+   107000 |     +0.0% |       0 |       4 |             4 |    124012
+   108000 |     +0.0% |       0 |       4 |             4 |    123012
+   109000 |     +0.0% |       0 |       4 |             4 |    122012
+   110000 |     +0.0% |       0 |       4 |             4 |    121012
+   111000 |     +0.0% |       0 |       4 |             4 |    120012
+   112000 |     +0.0% |       0 |       4 |             4 |    119012
+   113000 |     +0.0% |       0 |       4 |             4 |    118012
+   114000 |     +0.0% |       0 |       4 |             4 |    117012
+   115000 |     +0.0% |       0 |       4 |             4 |    116012
+   116000 |     +0.0% |       0 |       4 |             4 |    115012
+   117000 |     +0.0% |       0 |       4 |             4 |    114012
+   118000 |     +0.0% |       0 |       4 |             4 |    113012
+   119000 |     +0.0% |       0 |       4 |             4 |    112012
+   120000 |     +0.0% |       0 |       4 |             4 |    111012
+   121000 |     +0.0% |       0 |       4 |             4 |    110012
+   122000 |     +0.0% |       0 |       4 |             4 |    109012
+   123000 |     +0.0% |       0 |       4 |             4 |    108012
+   124000 |     +0.0% |       0 |       4 |             4 |    107012
+   125000 |     +0.0% |       0 |       4 |             4 |    106012
+   126000 |     +0.0% |       0 |       4 |             4 |    105012
+   127000 |     +0.0% |       0 |       4 |             4 |    104012
+   128000 |     +0.0% |       0 |       4 |             4 |    103012
+   129000 |     +0.0% |       0 |       4 |             4 |    102012
+   130000 |     +0.0% |       0 |       4 |             4 |    101012
+   131000 |     +0.0% |       0 |       4 |             4 |    100012
+   132000 |     +0.0% |       0 |       4 |             4 |     99012
+   133000 |     +0.0% |       0 |       4 |             4 |     98012
+   134000 |     +0.0% |       0 |       4 |             4 |     97012
+   135000 |     +0.0% |       0 |       4 |             4 |     96012
+   136000 |     +0.0% |       0 |       4 |             4 |     95012
+   137000 |     +0.0% |       0 |       4 |             4 |     94012
+   138000 |     +0.0% |       0 |       4 |             4 |     93012
+   139000 |     +0.0% |       0 |       4 |             4 |     92012
+   140000 |     +0.0% |       0 |       4 |             4 |     91012
+   141000 |     +0.0% |       0 |       4 |             4 |     90012
+   142000 |     +0.0% |       0 |       4 |             4 |     89012
+   143000 |     +0.0% |       0 |       4 |             4 |     88012
+   144000 |     +0.0% |       0 |       4 |             4 |     87012
+   145000 |     +0.0% |       0 |       4 |             4 |     86012
+   146000 |     +0.0% |       0 |       4 |             4 |     85012
+   147000 |     +0.0% |       0 |       4 |             4 |     84012
+   148000 |     +0.0% |       0 |       4 |             4 |     83012
+   149000 |     +0.0% |       0 |       4 |             4 |     82012
+   150000 |     +0.0% |       0 |       4 |             4 |     81012
+   151000 |     +0.0% |       0 |       4 |             4 |     80012
+   152000 |     +0.0% |       0 |       4 |             4 |     79012
+   153000 |     +0.0% |       0 |       4 |             4 |     78012
+   154000 |     +0.0% |       0 |       4 |             4 |     77012
+   155000 |     +0.0% |       0 |       4 |             4 |     76012
+   156000 |     +0.0% |       0 |       4 |             4 |     75012
+   157000 |     +0.0% |       0 |       4 |             4 |     74012
+   158000 |     +0.0% |       0 |       4 |             4 |     73012
+   159000 |     +0.0% |       0 |       4 |             4 |     72012
+   160000 |     +0.0% |       0 |       4 |             4 |     71012
+   161000 |     +0.0% |       0 |       4 |             4 |     70012
+   162000 |     +0.0% |       0 |       4 |             4 |     69012
+   163000 |     +0.0% |       0 |       5 |             5 |     68012
+   164000 |     +0.0% |       0 |       5 |             5 |     67012
+   165000 |     +0.0% |       0 |       5 |             5 |     66012
+   166000 |     +0.0% |       0 |       5 |             5 |     65012
+   167000 |     +0.0% |       0 |       5 |             5 |     64012
+   168000 |     +0.0% |       0 |       5 |             5 |     63012
+   169000 |     +0.0% |       0 |       5 |             5 |     62012
+   170000 |     +0.0% |       0 |       5 |             5 |     61012
+   171000 |     +0.0% |       0 |       5 |             5 |     60012
+   172000 |     +0.0% |       0 |       5 |             5 |     59012
+   173000 |     +0.0% |       0 |       5 |             5 |     58012
+   174000 |     +0.0% |       0 |       5 |             5 |     57012
+   175000 |     +0.0% |       0 |       5 |             5 |     56012
+   176000 |     +0.0% |       0 |       5 |             5 |     55012
+   177000 |     +0.0% |       0 |       5 |             5 |     54012
+   178000 |     +0.0% |       0 |       5 |             5 |     53012
+   179000 |     +0.0% |       0 |       5 |             5 |     52012
+   180000 |     +0.0% |       0 |       5 |             5 |     51012
+   181000 |     +0.0% |       0 |       5 |             5 |     50012
+   182000 |     +0.0% |       0 |       5 |             5 |     49012
+   183000 |     +0.0% |       0 |       5 |             5 |     48012
+   184000 |     +0.0% |       0 |       5 |             5 |     47012
+   185000 |     +0.0% |       0 |       5 |             5 |     46012
+   186000 |     +0.0% |       0 |       5 |             5 |     45012
+   187000 |     +0.0% |       0 |       5 |             5 |     44012
+   188000 |     +0.0% |       0 |       5 |             5 |     43012
+   189000 |     +0.0% |       0 |       5 |             5 |     42012
+   190000 |     +0.0% |       0 |       5 |             5 |     41012
+   191000 |     +0.0% |       0 |       5 |             5 |     40012
+   192000 |     +0.0% |       0 |       5 |             5 |     39012
+   193000 |     +0.0% |       0 |       5 |             5 |     38012
+   194000 |     +0.0% |       0 |       5 |             5 |     37012
+   195000 |     +0.0% |       0 |       5 |             5 |     36012
+   196000 |     +0.0% |       0 |       5 |             5 |     35012
+   197000 |     +0.0% |       0 |       5 |             5 |     34012
+   198000 |     +0.0% |       0 |       5 |             5 |     33012
+   199000 |     +0.0% |       0 |       5 |             5 |     32012
+   200000 |     +0.0% |       0 |       5 |             5 |     31012
+   201000 |     +0.0% |       0 |       5 |             5 |     30012
+   202000 |     +0.0% |       0 |       5 |             5 |     29012
+   203000 |     +0.0% |       0 |       5 |             5 |     28012
+   204000 |     +0.0% |       0 |       5 |             5 |     27012
+   205000 |     +0.0% |       0 |       5 |             5 |     26012
+   206000 |     +0.0% |       0 |       5 |             5 |     25012
+   207000 |     +0.0% |       0 |       5 |             5 |     24012
+   208000 |     +0.0% |       0 |       5 |             5 |     23012
+   209000 |     +0.0% |       0 |       5 |             5 |     22012
+   210000 |     +0.0% |       0 |       5 |             5 |     21012
+   211000 |     +0.0% |       0 |       5 |             5 |     20012
+   212000 |     +0.0% |       0 |       5 |             5 |     19012
+   213000 |     +0.0% |       0 |       5 |             5 |     18012
+   214000 |     +0.0% |       0 |       5 |             5 |     17012
+   215000 |     +0.0% |       0 |       5 |             5 |     16012
+   216000 |     +0.0% |       0 |       5 |             5 |     15012
+   217000 |     +0.0% |       0 |       5 |             5 |     14012
+   218000 |     +0.0% |       0 |       5 |             5 |     13012
+   219000 |     +0.0% |       0 |       5 |             5 |     12012
+   220000 |     +0.0% |       0 |       5 |             5 |     11012
+   221000 |     +0.0% |       0 |       5 |             5 |     10012
+   222000 |     +0.0% |       0 |       5 |             5 |      9012
+   223000 |     +0.0% |       0 |       5 |             5 |      8012
+   224000 |     +0.0% |       0 |       5 |             5 |      7012
+   225000 |     +0.0% |       0 |       5 |             5 |      6012
+   226000 |     +0.0% |       0 |       5 |             5 |      5012
+   227000 |     +0.0% |       0 |       5 |             5 |      4012
+   228000 |     +0.0% |       0 |       5 |             5 |      3012
+   229000 |     +0.0% |       0 |       5 |             5 |      2012
+   230000 |     +0.0% |       0 |       5 |             5 |      1012
+   231000 |     +0.0% |       0 |       5 |             5 |        12
+    final |     +0.0% |       0 |       5 |             5 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 5 slew violations.
+[INFO RSZ-0038] Inserted 5 buffers in 5 nets.
+[INFO RSZ-0504] Runtime: 111.01s
+Took 111 seconds: repair_design -verbose -cap_margin 20 -slew_margin 20
+global_route -start_incremental
+detailed_placement
+OT_GRT_CLK_LOCK: 0 clock-net instances FIRM during detailed_placement
+[INFO DPL-0006] Core area: 71738.27 um^2
+[INFO DPL-0007] Movable instances area: 17435.42 um^2
+[INFO DPL-0008] Fixed instances area within core: 11656.74 um^2
+[INFO DPL-0009] Utilization: 40.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 232624 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 12.03s
+Placement Analysis
+---------------------------------
+total displacement      19876.3 u
+average displacement        0.1 u
+max displacement            1.1 u
+original HPWL          620240.2 u
+legalized HPWL         633350.3 u
+delta HPWL                    2 %
+
+Took 16 seconds: detailed_placement
+global_route -end_incremental -resistance_aware -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/congestion_post_repair_design.rpt
+Took 1419 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+Took 38 seconds: estimate_parasitics -global_routing
+OT_GRT_BUFFER_CAP repair_timing -max_buffer_percent 100
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_VCLK_MEASURED_BIND clock vclk measured 208.393253 bound 202.500000 tol 40.000000 samples 352
+OT_HOLD_MM sync: SS setup ws -4.83 / FF hold ws -54.22 ps
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 3 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 3 out of 3 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% |   -4.830 |      -12.7 |      -10.0 |      3 | u.u_7527/Q$_DFF_P_/D
+       3* |       0 |       0 |        3 |      0 |     1 |    +0.0% |    0.636 |        0.0 |        0.0 |      3 | u.u_147197/Q$_DFF_P_/D
+       4* |       0 |       0 |        3 |      0 |     1 |    +0.0% |    0.636 |        0.0 |        0.0 |      3 | u.u_147197/Q$_DFF_P_/D
+       5* |       0 |       0 |        3 |      0 |     1 |    +0.0% |    0.636 |        0.0 |        0.0 |      3 | u.u_147197/Q$_DFF_P_/D
+       5* |       0 |       0 |        3 |      0 |     1 |    +0.0% |    0.636 |        0.0 |        0.0 |      3 | u.u_147197/Q$_DFF_P_/D
+    final |       0 |       0 |        3 |      0 |     1 |    +0.0% |    0.636 |        0.0 |        0.0 |      0 | u.u_147197/Q$_DFF_P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0040] Inserted 3 buffers.
+[INFO RSZ-0043] Swapped pins on 1 instances.
+[INFO RSZ-0505] Runtime: 27.20s
+Took 27 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+OT_RC_CAL hold: -global_routing layers M6 M7 R 0.014 C 0.105 (RCX-calibrated upper-layer RC; platform setRC restored after)
+OT_HOLD_MM after repair: SS setup ws 0.64 / FF hold ws -54.22 ps
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_VCLK_MEASURED_BIND clock vclk measured 208.393253 bound 202.500000 tol 40.000000 samples 352
+OT_HOLD_MM sync: SS setup ws 0.64 / FF hold ws -54.22 ps
+OT_HOLD_GUARD start: hold ws -54.22 tns -14715.1 viol 375 (margin 10, chunk 1000 it, <= 2326 buffers of 232627 instances)
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 1.0 -verbose -hold -max_iterations 1000
+OT_HB4PAD: hold repair may pad with HB4xp67 (2 lib cells)
+[INFO RSZ-0046] Found 4244 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -54.224 | -14715.134 | u.u_2022/Q$_DFF_P_/D
+       10 |       0 |      18 |            0 |    +0.0% | -52.544 | -14230.442 | u.u_2004/Q$_DFF_P_/D
+       20 |       0 |      38 |            0 |    +0.0% | -52.203 | -13707.117 | u.u_2012/Q$_DFF_P_/D
+       30 |       0 |      58 |            0 |    +0.0% | -52.011 | -13185.762 | u.u_2028/Q$_DFF_P_/D
+       40 |       0 |      78 |            0 |    +0.0% | -51.604 | -12666.859 | u.u_2061/Q$_DFF_P_/D
+       50 |       0 |      98 |            0 |    +0.0% | -51.450 | -12151.781 | u.u_1985/Q$_DFF_P_/D
+       60 |       0 |     118 |            0 |    +0.0% | -51.316 | -11637.928 | u.u_1976/Q$_DFF_P_/D
+       70 |       0 |     138 |            0 |    +0.0% | -51.265 | -11125.055 | u.u_2068/Q$_DFF_P_/D
+       80 |       0 |     158 |            0 |    +0.1% | -51.175 | -10612.842 | u.u_1977/Q$_DFF_P_/D
+       90 |       0 |     178 |            0 |    +0.1% | -50.951 | -10101.923 | u.u_1953/Q$_DFF_P_/D
+      100 |       0 |     198 |            0 |    +0.1% | -50.855 | -9592.941 | u.u_1998/Q$_DFF_P_/D
+      110 |       0 |     218 |            0 |    +0.1% | -50.632 | -9085.502 | u.u_2053/Q$_DFF_P_/D
+      120 |       0 |     238 |            0 |    +0.1% | -50.408 | -8580.415 | u.u_2044/Q$_DFF_P_/D
+      130 |       0 |     258 |            0 |    +0.1% | -49.722 | -8080.130 | u.u_1923/Q$_DFF_P_/D
+      140 |       0 |     278 |            0 |    +0.1% | -49.545 | -7583.681 | u.u_1886/Q$_DFF_P_/D
+      150 |       0 |     298 |            0 |    +0.1% | -49.442 | -7088.819 | u.u_1922/Q$_DFF_P_/D
+      160 |       0 |     318 |            0 |    +0.1% | -49.365 | -6594.697 | u.u_1861/Q$_DFF_P_/D
+      170 |       0 |     338 |            0 |    +0.1% | -49.315 | -6101.255 | u.u_1903/Q$_DFF_P_/D
+      180 |       0 |     358 |            0 |    +0.1% | -49.226 | -5608.444 | u.u_2124/Q$_DFF_P_/D
+      190 |       0 |     378 |            0 |    +0.1% | -49.158 | -5116.446 | u.u_1846/Q$_DFF_P_/D
+      200 |       0 |     398 |            0 |    +0.1% | -49.110 | -4625.000 | u.u_2101/Q$_DFF_P_/D
+      210 |       0 |     418 |            0 |    +0.1% | -49.052 | -4134.197 | u.u_1897/Q$_DFF_P_/D
+      220 |       0 |     438 |            0 |    +0.2% | -49.003 | -3643.898 | u.u_1852/Q$_DFF_P_/D
+      230 |       0 |     458 |            0 |    +0.2% | -48.941 | -3154.083 | u.u_1911/Q$_DFF_P_/D
+      240 |       0 |     478 |            0 |    +0.2% | -48.830 | -2665.189 | u.u_1949/Q$_DFF_P_/D
+      250 |       0 |     498 |            0 |    +0.2% | -48.785 | -2177.089 | u.u_1915/Q$_DFF_P_/D
+      260 |       0 |     518 |            0 |    +0.2% | -48.611 | -1690.282 | u.u_1941/Q$_DFF_P_/D
+      270 |       0 |     538 |            0 |    +0.2% | -48.509 | -1204.514 | u.u_1906/Q$_DFF_P_/D
+      280 |       0 |     558 |            0 |    +0.2% | -47.753 | -721.717 | u.u_1843/Q$_DFF_P_/D
+      290 |       0 |     578 |            0 |    +0.2% | -46.522 | -249.512 | u.u_1973/Q$_DFF_P_/D
+      300 |       0 |     591 |            0 |    +0.2% |  -2.858 | -84.490 | u.u_10802/Q$_DFF_P_/D
+      310 |       0 |     601 |            0 |    +0.2% |  -2.140 | -59.463 | u.u_5474/Q$_DFF_P_/D
+      320 |       0 |     611 |            0 |    +0.2% |  -1.543 | -41.410 | u.u_13365/Q$_DFF_P_/D
+      330 |       0 |     621 |            0 |    +0.2% |  -1.375 | -26.599 | u.u_6000/Q$_DFF_PN0_/D
+      340 |       0 |     631 |            0 |    +0.2% |  -0.934 | -15.083 | u.u_11754/Q$_DFF_P_/D
+      350 |       0 |     641 |            0 |    +0.2% |  -0.566 |  -8.169 | u.u_12784/Q$_DFF_P_/D
+      360 |       0 |     651 |            0 |    +0.2% |  -0.372 |  -3.257 | u.u_11154/Q$_DFF_P_/D
+      370 |       0 |     661 |            0 |    +0.2% |  -0.188 |  -0.556 | u.u_2457/Q$_DFF_P_/D
+      380 |       0 |     671 |            0 |    +0.2% |   0.163 |   0.000 | u.u_11752/Q$_DFF_P_/D
+      390 |       0 |     681 |            0 |    +0.2% |   0.370 |   0.000 | u.u_12070/Q$_DFF_P_/D
+      400 |       0 |     691 |            0 |    +0.2% |   0.497 |   0.000 | u.u_10637/Q$_DFF_P_/D
+      410 |       0 |     699 |            0 |    +0.2% |   0.637 |   0.000 | u.u_2558/Q$_DFF_P_/D
+      420 |       0 |     708 |            0 |    +0.2% |   0.775 |   0.000 | u.u_146520/Q$_DFF_P_/D
+      430 |       0 |     717 |            0 |    +0.3% |   0.892 |   0.000 | u.u_11051/Q$_DFF_P_/D
+      440 |       0 |     726 |            0 |    +0.3% |   1.064 |   0.000 | u.u_3852/Q$_DFF_P_/D
+      450 |       0 |     734 |            0 |    +0.3% |   1.196 |   0.000 | u.u_4066/Q$_DFF_P_/D
+      460 |       0 |     743 |            0 |    +0.3% |   1.298 |   0.000 | u.u_142524/Q$_DFF_P_/D
+      470 |       0 |     751 |            0 |    +0.3% |   1.437 |   0.000 | u.u_13758/Q$_DFF_P_/D
+      480 |       0 |     760 |            0 |    +0.3% |   1.603 |   0.000 | u.u_5588/Q$_DFF_P_/D
+      490 |       0 |     768 |            0 |    +0.3% |   1.712 |   0.000 | u.u_12868/Q$_DFF_P_/D
+      500 |       0 |     778 |            0 |    +0.3% |   1.804 |   0.000 | u.u_142467/Q$_DFF_P_/D
+      510 |       0 |     788 |            0 |    +0.3% |   1.895 |   0.000 | u.u_11861/Q$_DFF_P_/D
+      520 |       0 |     798 |            0 |    +0.3% |   2.072 |   0.000 | u.u_5630/Q$_DFF_P_/D
+      530 |       0 |     807 |            0 |    +0.3% |   2.256 |   0.000 | u.u_2639/Q$_DFF_P_/D
+      540 |       0 |     817 |            0 |    +0.3% |   2.358 |   0.000 | u.u_12451/Q$_DFF_P_/D
+      550 |       0 |     827 |            0 |    +0.3% |   2.435 |   0.000 | u.u_3984/Q$_DFF_P_/D
+      560 |       0 |     837 |            0 |    +0.3% |   2.569 |   0.000 | u.u_13453/Q$_DFF_P_/D
+      570 |       0 |     847 |            0 |    +0.3% |   2.627 |   0.000 | u.u_5361/Q$_DFF_P_/D
+      580 |       0 |     857 |            0 |    +0.3% |   2.705 |   0.000 | u.u_10493/Q$_DFF_P_/D
+      590 |       0 |     867 |            0 |    +0.3% |   2.762 |   0.000 | u.u_5613/Q$_DFF_P_/D
+      600 |       0 |     877 |            0 |    +0.3% |   2.871 |   0.000 | u.u_4409/Q$_DFF_P_/D
+      610 |       0 |     887 |            0 |    +0.3% |   3.001 |   0.000 | u.u_4811/Q$_DFF_P_/D
+      620 |       0 |     896 |            0 |    +0.3% |   3.088 |   0.000 | u.u_13649/Q$_DFF_P_/D
+      630 |       0 |     906 |            0 |    +0.3% |   3.166 |   0.000 | u.u_3992/Q$_DFF_P_/D
+      640 |       0 |     916 |            0 |    +0.3% |   3.195 |   0.000 | u.u_11048/Q$_DFF_P_/D
+      650 |       0 |     925 |            0 |    +0.3% |   3.261 |   0.000 | u.u_142447/Q$_DFF_P_/D
+      660 |       0 |     935 |            0 |    +0.3% |   3.344 |   0.000 | u.u_12100/Q$_DFF_P_/D
+      670 |       0 |     944 |            0 |    +0.3% |   3.446 |   0.000 | u.u_5595/Q$_DFF_P_/D
+      680 |       0 |     953 |            0 |    +0.3% |   3.584 |   0.000 | u.u_5109/Q$_DFF_P_/D
+      690 |       0 |     962 |            0 |    +0.3% |   3.630 |   0.000 | u.u_5271/Q$_DFF_P_/D
+      700 |       0 |     971 |            0 |    +0.3% |   3.700 |   0.000 | u.u_12380/Q$_DFF_P_/D
+      710 |       0 |     979 |            0 |    +0.3% |   3.749 |   0.000 | u.u_13268/Q$_DFF_P_/D
+      720 |       0 |     989 |            0 |    +0.3% |   3.777 |   0.000 | u.u_12954/Q$_DFF_P_/D
+      730 |       0 |     998 |            0 |    +0.4% |   3.833 |   0.000 | u.u_11961/Q$_DFF_P_/D
+      740 |       0 |    1008 |            0 |    +0.4% |   3.867 |   0.000 | u.u_13710/Q$_DFF_P_/D
+      750 |       0 |    1018 |            0 |    +0.4% |   3.910 |   0.000 | u.u_13372/Q$_DFF_P_/D
+      760 |       0 |    1028 |            0 |    +0.4% |   3.957 |   0.000 | u.u_12395/Q$_DFF_P_/D
+      770 |       0 |    1038 |            0 |    +0.4% |   3.999 |   0.000 | u.u_5961/Q$_DFF_P_/D
+      780 |       0 |    1047 |            0 |    +0.4% |   4.038 |   0.000 | u.u_11966/Q$_DFF_P_/D
+      790 |       0 |    1057 |            0 |    +0.4% |   4.087 |   0.000 | u.u_6133/Q$_DFF_P_/D
+      800 |       0 |    1067 |            0 |    +0.4% |   4.138 |   0.000 | u.u_10561/Q$_DFF_P_/D
+      810 |       0 |    1077 |            0 |    +0.4% |   4.205 |   0.000 | u.u_11949/Q$_DFF_P_/D
+      820 |       0 |    1087 |            0 |    +0.4% |   4.255 |   0.000 | u.u_5617/Q$_DFF_P_/D
+      830 |       0 |    1097 |            0 |    +0.4% |   4.310 |   0.000 | u.u_5210/Q$_DFF_P_/D
+      840 |       0 |    1107 |            0 |    +0.4% |   4.373 |   0.000 | u.u_11672/Q$_DFF_P_/D
+      850 |       0 |    1115 |            0 |    +0.4% |   4.418 |   0.000 | u.u_13819/Q$_DFF_P_/D
+      860 |       0 |    1125 |            0 |    +0.4% |   4.468 |   0.000 | u.u_12310/Q$_DFF_P_/D
+      870 |       0 |    1135 |            0 |    +0.4% |   4.499 |   0.000 | u.u_5934/Q$_DFF_P_/D
+      880 |       0 |    1145 |            0 |    +0.4% |   4.530 |   0.000 | u.u_150119/Q$_DFF_PN0_/RESETN
+      890 |       0 |    1155 |            0 |    +0.4% |   4.567 |   0.000 | u.u_5465/Q$_DFF_P_/D
+      900 |       0 |    1164 |            0 |    +0.4% |   4.606 |   0.000 | u.u_10729/Q$_DFF_P_/D
+      910 |       0 |    1173 |            0 |    +0.4% |   4.665 |   0.000 | u.u_10395/Q$_DFF_P_/D
+      920 |       0 |    1183 |            0 |    +0.4% |   4.719 |   0.000 | u.u_11731/Q$_DFF_P_/D
+      930 |       0 |    1193 |            0 |    +0.4% |   4.741 |   0.000 | u.u_3184/Q$_DFF_P_/D
+      940 |       0 |    1203 |            0 |    +0.4% |   4.768 |   0.000 | u.u_13567/Q$_DFF_P_/D
+      950 |       0 |    1213 |            0 |    +0.4% |   4.795 |   0.000 | u.u_4998/Q$_DFF_P_/D
+      960 |       0 |    1222 |            0 |    +0.4% |   4.827 |   0.000 | u.u_13541/Q$_DFF_P_/D
+      970 |       0 |    1231 |            0 |    +0.4% |   4.869 |   0.000 | u.u_4664/Q$_DFF_P_/D
+      980 |       0 |    1241 |            0 |    +0.4% |   4.910 |   0.000 | u.u_147668/Q$_DFF_PN0_/RESETN
+      990 |       0 |    1251 |            0 |    +0.4% |   4.934 |   0.000 | u.u_3654/Q$_DFF_P_/D
+     1000 |       0 |    1261 |            0 |    +0.4% |   4.956 |   0.000 | u.u_10923/Q$_DFF_P_/D
+     1010 |       0 |    1271 |            0 |    +0.4% |   4.998 |   0.000 | u.u_4401/Q$_DFF_P_/D
+     1020 |       0 |    1281 |            0 |    +0.4% |   5.033 |   0.000 | u.u_3782/Q$_DFF_P_/D
+     1030 |       0 |    1291 |            0 |    +0.5% |   5.060 |   0.000 | u.u_3598/Q$_DFF_P_/D
+     1040 |       0 |    1301 |            0 |    +0.5% |   5.087 |   0.000 | u.u_5649/Q$_DFF_P_/D
+     1050 |       0 |    1311 |            0 |    +0.5% |   5.120 |   0.000 | u.u_5280/Q$_DFF_P_/D
+     1060 |       0 |    1321 |            0 |    +0.5% |   5.152 |   0.000 | u.u_12557/Q$_DFF_P_/D
+     1070 |       0 |    1330 |            0 |    +0.5% |   5.181 |   0.000 | u.u_5334/Q$_DFF_P_/D
+     1080 |       0 |    1339 |            0 |    +0.5% |   5.211 |   0.000 | u.u_13353/Q$_DFF_P_/D
+     1090 |       0 |    1349 |            0 |    +0.5% |   5.227 |   0.000 | u.u_4006/Q$_DFF_P_/D
+     1100 |       0 |    1358 |            0 |    +0.5% |   5.249 |   0.000 | u.u_5113/Q$_DFF_P_/D
+     1110 |       0 |    1366 |            0 |    +0.5% |   5.280 |   0.000 | u.u_143711/Q$_DFF_P_/D
+     1120 |       0 |    1375 |            0 |    +0.5% |   5.318 |   0.000 | u.u_3253/Q$_DFF_P_/D
+     1130 |       0 |    1384 |            0 |    +0.5% |   5.346 |   0.000 | u.u_5763/Q$_DFF_P_/D
+     1140 |       0 |    1394 |            0 |    +0.5% |   5.364 |   0.000 | u.u_10914/Q$_DFF_P_/D
+     1150 |       0 |    1404 |            0 |    +0.5% |   5.406 |   0.000 | u.u_5952/Q$_DFF_P_/D
+     1160 |       0 |    1414 |            0 |    +0.5% |   5.448 |   0.000 | u.u_5107/Q$_DFF_P_/D
+     1170 |       0 |    1424 |            0 |    +0.5% |   5.471 |   0.000 | u.u_10185/Q$_DFF_P_/D
+     1180 |       0 |    1434 |            0 |    +0.5% |   5.496 |   0.000 | u.u_143227/Q$_DFF_P_/D
+     1190 |       0 |    1444 |            0 |    +0.5% |   5.523 |   0.000 | u.u_12145/Q$_DFF_P_/D
+     1200 |       0 |    1454 |            0 |    +0.5% |   5.553 |   0.000 | u.u_5657/Q$_DFF_P_/D
+     1210 |       0 |    1464 |            0 |    +0.5% |   5.576 |   0.000 | u.u_10138/Q$_DFF_P_/D
+     1220 |       0 |    1474 |            0 |    +0.5% |   5.622 |   0.000 | u.u_3781/Q$_DFF_P_/D
+     1230 |       0 |    1484 |            0 |    +0.5% |   5.653 |   0.000 | u.u_4186/Q$_DFF_P_/D
+     1240 |       0 |    1494 |            0 |    +0.5% |   5.683 |   0.000 | u.u_5497/Q$_DFF_P_/D
+     1250 |       0 |    1504 |            0 |    +0.5% |   5.703 |   0.000 | u.u_5937/Q$_DFF_P_/D
+     1260 |       0 |    1514 |            0 |    +0.5% |   5.740 |   0.000 | u.u_6073/Q$_DFF_P_/D
+     1270 |       0 |    1524 |            0 |    +0.5% |   5.774 |   0.000 | u.u_12199/Q$_DFF_P_/D
+     1280 |       0 |    1534 |            0 |    +0.5% |   5.802 |   0.000 | u.u_12780/Q$_DFF_P_/D
+     1290 |       0 |    1544 |            0 |    +0.5% |   5.825 |   0.000 | u.u_5742/Q$_DFF_P_/D
+     1300 |       0 |    1554 |            0 |    +0.5% |   5.849 |   0.000 | u.u_4674/Q$_DFF_P_/D
+     1310 |       0 |    1564 |            0 |    +0.5% |   5.868 |   0.000 | u.u_11944/Q$_DFF_P_/D
+     1320 |       0 |    1573 |            0 |    +0.6% |   5.887 |   0.000 | u.u_12849/Q$_DFF_P_/D
+     1330 |       0 |    1582 |            0 |    +0.6% |   5.909 |   0.000 | u.u_11052/Q$_DFF_P_/D
+     1340 |       0 |    1592 |            0 |    +0.6% |   5.925 |   0.000 | u.u_13681/Q$_DFF_P_/D
+     1350 |       0 |    1602 |            0 |    +0.6% |   5.953 |   0.000 | u.u_11074/Q$_DFF_P_/D
+     1360 |       0 |    1612 |            0 |    +0.6% |   5.967 |   0.000 | u.u_11658/Q$_DFF_P_/D
+     1370 |       0 |    1621 |            0 |    +0.6% |   5.980 |   0.000 | u.u_3990/Q$_DFF_P_/D
+     1380 |       0 |    1631 |            0 |    +0.6% |   6.002 |   0.000 | u.u_3986/Q$_DFF_P_/D
+     1390 |       0 |    1641 |            0 |    +0.6% |   6.028 |   0.000 | u.u_5810/Q$_DFF_P_/D
+     1400 |       0 |    1651 |            0 |    +0.6% |   6.036 |   0.000 | u.u_6090/Q$_DFF_P_/D
+     1410 |       0 |    1661 |            0 |    +0.6% |   6.067 |   0.000 | u.u_12183/Q$_DFF_P_/D
+     1420 |       0 |    1671 |            0 |    +0.6% |   6.080 |   0.000 | u.u_2840/Q$_DFF_P_/D
+     1430 |       0 |    1681 |            0 |    +0.6% |   6.107 |   0.000 | u.u_10096/Q$_DFF_P_/D
+     1440 |       0 |    1691 |            0 |    +0.6% |   6.130 |   0.000 | u.u_11223/Q$_DFF_P_/D
+     1450 |       0 |    1699 |            0 |    +0.6% |   6.150 |   0.000 | u.u_3259/Q$_DFF_P_/D
+     1460 |       0 |    1709 |            0 |    +0.6% |   6.182 |   0.000 | u.u_5472/Q$_DFF_P_/D
+     1470 |       0 |    1718 |            0 |    +0.6% |   6.218 |   0.000 | u.u_13044/Q$_DFF_P_/D
+     1480 |       0 |    1727 |            0 |    +0.6% |   6.237 |   0.000 | u.u_12785/Q$_DFF_P_/D
+     1490 |       0 |    1737 |            0 |    +0.6% |   6.264 |   0.000 | u.u_10103/Q$_DFF_P_/D
+     1500 |       0 |    1747 |            0 |    +0.6% |   6.287 |   0.000 | u.u_3262/Q$_DFF_P_/D
+     1510 |       0 |    1757 |            0 |    +0.6% |   6.307 |   0.000 | u.u_12879/Q$_DFF_P_/D
+     1520 |       0 |    1767 |            0 |    +0.6% |   6.313 |   0.000 | u.u_13256/Q$_DFF_P_/D
+     1530 |       0 |    1777 |            0 |    +0.6% |   6.341 |   0.000 | u.u_143229/Q$_DFF_P_/D
+     1540 |       0 |    1787 |            0 |    +0.6% |   6.370 |   0.000 | u.u_11890/Q$_DFF_P_/D
+     1550 |       0 |    1797 |            0 |    +0.6% |   6.405 |   0.000 | u.u_146427/Q$_DFF_P_/D
+     1560 |       0 |    1806 |            0 |    +0.6% |   6.440 |   0.000 | u.u_10098/Q$_DFF_P_/D
+     1570 |       0 |    1816 |            0 |    +0.6% |   6.459 |   0.000 | u.u_2977/Q$_DFF_P_/D
+     1580 |       0 |    1826 |            0 |    +0.6% |   6.475 |   0.000 | u.u_5180/Q$_DFF_P_/D
+     1590 |       0 |    1836 |            0 |    +0.6% |   6.487 |   0.000 | u.u_11539/Q$_DFF_P_/D
+     1600 |       0 |    1846 |            0 |    +0.6% |   6.507 |   0.000 | u.u_4685/Q$_DFF_P_/D
+     1610 |       0 |    1856 |            0 |    +0.7% |   6.528 |   0.000 | u.u_148950/Q$_DFF_P_/D
+     1620 |       0 |    1866 |            0 |    +0.7% |   6.546 |   0.000 | u.u_11015/Q$_DFF_P_/D
+     1630 |       0 |    1876 |            0 |    +0.7% |   6.561 |   0.000 | u.u_4808/Q$_DFF_P_/D
+     1640 |       0 |    1886 |            0 |    +0.7% |   6.580 |   0.000 | u.u_5926/Q$_DFF_P_/D
+     1650 |       0 |    1896 |            0 |    +0.7% |   6.595 |   0.000 | u.u_2436/Q$_DFF_P_/D
+     1660 |       0 |    1906 |            0 |    +0.7% |   6.622 |   0.000 | u.u_4833/Q$_DFF_P_/D
+     1670 |       0 |    1916 |            0 |    +0.7% |   6.637 |   0.000 | u.u_5318/Q$_DFF_P_/D
+     1680 |       0 |    1926 |            0 |    +0.7% |   6.651 |   0.000 | u.u_5188/Q$_DFF_P_/D
+     1690 |       0 |    1936 |            0 |    +0.7% |   6.675 |   0.000 | u.u_11546/Q$_DFF_P_/D
+     1700 |       0 |    1946 |            0 |    +0.7% |   6.692 |   0.000 | u.u_12046/Q$_DFF_P_/D
+     1710 |       0 |    1956 |            0 |    +0.7% |   6.715 |   0.000 | u.u_11741/Q$_DFF_P_/D
+     1720 |       0 |    1966 |            0 |    +0.7% |   6.732 |   0.000 | u.u_5136/Q$_DFF_P_/D
+     1730 |       0 |    1976 |            0 |    +0.7% |   6.749 |   0.000 | u.u_5904/Q$_DFF_P_/D
+     1740 |       0 |    1986 |            0 |    +0.7% |   6.757 |   0.000 | u.u_11567/Q$_DFF_P_/D
+     1750 |       0 |    1995 |            0 |    +0.7% |   6.777 |   0.000 | u.u_12311/Q$_DFF_P_/D
+     1760 |       0 |    2005 |            0 |    +0.7% |   6.796 |   0.000 | u.u_143047/Q$_DFF_P_/D
+     1770 |       0 |    2014 |            0 |    +0.7% |   6.808 |   0.000 | u.u_12576/Q$_DFF_P_/D
+     1780 |       0 |    2024 |            0 |    +0.7% |   6.820 |   0.000 | u.u_5759/Q$_DFF_P_/D
+     1790 |       0 |    2034 |            0 |    +0.7% |   6.836 |   0.000 | u.u_7376/Q$_DFF_P_/D
+     1800 |       0 |    2044 |            0 |    +0.7% |   6.852 |   0.000 | u.u_12949/Q$_DFF_P_/D
+     1810 |       0 |    2054 |            0 |    +0.7% |   6.866 |   0.000 | u.u_10630/Q$_DFF_P_/D
+     1820 |       0 |    2062 |            0 |    +0.7% |   6.889 |   0.000 | u.u_10912/Q$_DFF_P_/D
+     1830 |       0 |    2072 |            0 |    +0.7% |   6.908 |   0.000 | u.u_4471/Q$_DFF_P_/D
+     1840 |       0 |    2082 |            0 |    +0.7% |   6.926 |   0.000 | u.u_12455/Q$_DFF_P_/D
+     1850 |       0 |    2092 |            0 |    +0.7% |   6.940 |   0.000 | u.u_4900/Q$_DFF_P_/D
+     1860 |       0 |    2102 |            0 |    +0.7% |   6.954 |   0.000 | u.u_4487/Q$_DFF_P_/D
+     1870 |       0 |    2112 |            0 |    +0.7% |   6.966 |   0.000 | u.u_13690/Q$_DFF_P_/D
+     1880 |       0 |    2122 |            0 |    +0.7% |   6.979 |   0.000 | u.u_13067/Q$_DFF_P_/D
+     1890 |       0 |    2130 |            0 |    +0.7% |   6.997 |   0.000 | u.u_4858/Q$_DFF_P_/D
+     1900 |       0 |    2139 |            0 |    +0.8% |   7.007 |   0.000 | u.u_13775/Q$_DFF_P_/D
+     1910 |       0 |    2149 |            0 |    +0.8% |   7.025 |   0.000 | u.u_11069/Q$_DFF_P_/D
+     1920 |       0 |    2159 |            0 |    +0.8% |   7.038 |   0.000 | u.u_5423/Q$_DFF_P_/D
+     1930 |       0 |    2169 |            0 |    +0.8% |   7.053 |   0.000 | u.u_5522/Q$_DFF_P_/D
+     1940 |       0 |    2177 |            0 |    +0.8% |   7.065 |   0.000 | u.u_12038/Q$_DFF_P_/D
+     1950 |       0 |    2186 |            0 |    +0.8% |   7.075 |   0.000 | u.u_147699/Q$_DFF_P_/D
+     1960 |       0 |    2195 |            0 |    +0.8% |   7.088 |   0.000 | u.u_5433/Q$_DFF_P_/D
+     1970 |       0 |    2204 |            0 |    +0.8% |   7.101 |   0.000 | u.u_10401/Q$_DFF_P_/D
+     1980 |       0 |    2214 |            0 |    +0.8% |   7.111 |   0.000 | u.u_10636/Q$_DFF_P_/D
+     1990 |       0 |    2224 |            0 |    +0.8% |   7.130 |   0.000 | u.u_12448/Q$_DFF_P_/D
+     2000 |       0 |    2234 |            0 |    +0.8% |   7.140 |   0.000 | u.u_12581/Q$_DFF_P_/D
+     2010 |       0 |    2243 |            0 |    +0.8% |   7.155 |   0.000 | u.u_5360/Q$_DFF_P_/D
+     2020 |       0 |    2253 |            0 |    +0.8% |   7.163 |   0.000 | u.u_12095/Q$_DFF_P_/D
+     2030 |       0 |    2263 |            0 |    +0.8% |   7.174 |   0.000 | u.u_10256/Q$_DFF_P_/D
+     2040 |       0 |    2272 |            0 |    +0.8% |   7.190 |   0.000 | u.u_146487/Q$_DFF_P_/D
+     2050 |       0 |    2282 |            0 |    +0.8% |   7.195 |   0.000 | u.u_13248/Q$_DFF_P_/D
+     2060 |       0 |    2292 |            0 |    +0.8% |   7.204 |   0.000 | u.u_5645/Q$_DFF_P_/D
+     2070 |       0 |    2302 |            0 |    +0.8% |   7.214 |   0.000 | u.u_3784/Q$_DFF_P_/D
+     2080 |       0 |    2312 |            0 |    +0.8% |   7.220 |   0.000 | u.u_12173/Q$_DFF_P_/D
+     2090 |       0 |    2322 |            0 |    +0.8% |   7.227 |   0.000 | u.u_10867/Q$_DFF_P_/D
+    final |       0 |    2327 |            0 |    +0.8% |   7.233 |   0.000 | u.u_2825/Q$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 2327 hold buffers.
+[ERROR RSZ-0060] Max buffer count reached.
+OT_HB4PAD: after hold repair the design holds 2327 HB4xp67 cells
+OT_HOLD_GUARD chunk 1: buffer cap 2326 reached (RSZ-0060), continuing
+OT_HOLD_GUARD chunk 1: hold ws 7.23 (+61.46) tns 0.0 (+100.0%) viol 0, 2417 s
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 0.990096 -verbose -hold -max_iterations 1000
+OT_HB4PAD: hold repair may pad with HB4xp67 (2 lib cells)
+[INFO RSZ-0046] Found 2103 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   7.233 |   0.000 | u.u_2825/Q$_DFF_P_/D
+       10 |       0 |       9 |            0 |    +0.0% |   7.240 |   0.000 | u.u_5905/Q$_DFF_P_/D
+       20 |       0 |      19 |            0 |    +0.0% |   7.254 |   0.000 | u.u_5498/Q$_DFF_P_/D
+       30 |       0 |      29 |            0 |    +0.0% |   7.262 |   0.000 | u.u_3656/Q$_DFF_P_/D
+       40 |       0 |      39 |            0 |    +0.0% |   7.273 |   0.000 | u.u_13153/Q$_DFF_P_/D
+       50 |       0 |      49 |            0 |    +0.0% |   7.286 |   0.000 | u.u_2770/Q$_DFF_P_/D
+       60 |       0 |      59 |            0 |    +0.0% |   7.300 |   0.000 | u.u_4739/Q$_DFF_P_/D
+       70 |       0 |      69 |            0 |    +0.0% |   7.317 |   0.000 | u.u_4476/Q$_DFF_P_/D
+       80 |       0 |      79 |            0 |    +0.0% |   7.328 |   0.000 | u.u_12873/Q$_DFF_P_/D
+       90 |       0 |      89 |            0 |    +0.0% |   7.335 |   0.000 | u.u_10422/Q$_DFF_P_/D
+      100 |       0 |      99 |            0 |    +0.0% |   7.353 |   0.000 | u.u_5973/Q$_DFF_PN0_/D
+      110 |       0 |     109 |            0 |    +0.0% |   7.359 |   0.000 | u.u_12961/Q$_DFF_P_/D
+      120 |       0 |     119 |            0 |    +0.0% |   7.371 |   0.000 | u.u_4831/Q$_DFF_P_/D
+      130 |       0 |     129 |            0 |    +0.0% |   7.380 |   0.000 | u.u_10707/Q$_DFF_P_/D
+      140 |       0 |     139 |            0 |    +0.0% |   7.394 |   0.000 | u.u_2989/Q$_DFF_P_/D
+      150 |       0 |     149 |            0 |    +0.1% |   7.409 |   0.000 | u.u_10214/Q$_DFF_P_/D
+      160 |       0 |     159 |            0 |    +0.1% |   7.416 |   0.000 | u.u_11423/Q$_DFF_P_/D
+      170 |       0 |     169 |            0 |    +0.1% |   7.429 |   0.000 | u.u_12185/Q$_DFF_P_/D
+      180 |       0 |     179 |            0 |    +0.1% |   7.438 |   0.000 | u.u_2632/Q$_DFF_P_/D
+      190 |       0 |     189 |            0 |    +0.1% |   7.451 |   0.000 | u.u_6003/Q$_DFF_PN0_/RESETN
+      200 |       0 |     199 |            0 |    +0.1% |   7.456 |   0.000 | u.u_3996/Q$_DFF_P_/D
+      210 |       0 |     208 |            0 |    +0.1% |   7.467 |   0.000 | u.u_6138/Q$_DFF_P_/D
+      220 |       0 |     218 |            0 |    +0.1% |   7.477 |   0.000 | u.u_12165/Q$_DFF_P_/D
+      230 |       0 |     228 |            0 |    +0.1% |   7.483 |   0.000 | u.u_10058/Q$_DFF_P_/D
+      240 |       0 |     238 |            0 |    +0.1% |   7.489 |   0.000 | u.u_12154/Q$_DFF_P_/D
+      250 |       0 |     247 |            0 |    +0.1% |   7.497 |   0.000 | u.u_11587/Q$_DFF_P_/D
+      260 |       0 |     257 |            0 |    +0.1% |   7.504 |   0.000 | u.u_5757/Q$_DFF_P_/D
+      270 |       0 |     267 |            0 |    +0.1% |   7.514 |   0.000 | u.u_4011/Q$_DFF_P_/D
+      280 |       0 |     277 |            0 |    +0.1% |   7.520 |   0.000 | u.u_142453/Q$_DFF_P_/D
+      290 |       0 |     287 |            0 |    +0.1% |   7.526 |   0.000 | u.u_5602/Q$_DFF_P_/D
+      300 |       0 |     297 |            0 |    +0.1% |   7.535 |   0.000 | u.u_10852/Q$_DFF_P_/D
+      310 |       0 |     307 |            0 |    +0.1% |   7.540 |   0.000 | u.u_10664/Q$_DFF_P_/D
+      320 |       0 |     317 |            0 |    +0.1% |   7.545 |   0.000 | u.u_12881/Q$_DFF_P_/D
+      330 |       0 |     327 |            0 |    +0.1% |   7.556 |   0.000 | u.u_5122/Q$_DFF_P_/D
+      340 |       0 |     337 |            0 |    +0.1% |   7.561 |   0.000 | u.u_2967/Q$_DFF_P_/D
+      350 |       0 |     346 |            0 |    +0.1% |   7.569 |   0.000 | u.u_5198/Q$_DFF_P_/D
+      360 |       0 |     356 |            0 |    +0.1% |   7.578 |   0.000 | u.u_3388/Q$_DFF_P_/D
+      370 |       0 |     366 |            0 |    +0.1% |   7.583 |   0.000 | u.u_12414/Q$_DFF_P_/D
+      380 |       0 |     376 |            0 |    +0.1% |   7.592 |   0.000 | u.u_5487/Q$_DFF_P_/D
+      390 |       0 |     385 |            0 |    +0.1% |   7.600 |   0.000 | u.u_142476/Q$_DFF_P_/D
+      400 |       0 |     395 |            0 |    +0.1% |   7.607 |   0.000 | u.u_5833/Q$_DFF_P_/D
+      410 |       0 |     405 |            0 |    +0.1% |   7.614 |   0.000 | u.u_5328/Q$_DFF_P_/D
+      420 |       0 |     415 |            0 |    +0.1% |   7.621 |   0.000 | u.u_10052/Q$_DFF_P_/D
+      430 |       0 |     424 |            0 |    +0.1% |   7.628 |   0.000 | u.u_11646/Q$_DFF_P_/D
+      440 |       0 |     434 |            0 |    +0.2% |   7.642 |   0.000 | u.u_12466/Q$_DFF_P_/D
+      450 |       0 |     444 |            0 |    +0.2% |   7.647 |   0.000 | u.u_12503/Q$_DFF_P_/D
+      460 |       0 |     454 |            0 |    +0.2% |   7.655 |   0.000 | u.u_2557/Q$_DFF_P_/D
+      470 |       0 |     464 |            0 |    +0.2% |   7.659 |   0.000 | u.u_13261/Q$_DFF_P_/D
+      480 |       0 |     474 |            0 |    +0.2% |   7.664 |   0.000 | u.u_142514/Q$_DFF_P_/D
+      490 |       0 |     484 |            0 |    +0.2% |   7.674 |   0.000 | u.u_4695/Q$_DFF_P_/D
+      500 |       0 |     493 |            0 |    +0.2% |   7.683 |   0.000 | u.u_12774/Q$_DFF_P_/D
+      510 |       0 |     503 |            0 |    +0.2% |   7.693 |   0.000 | u.u_13511/Q$_DFF_P_/D
+      520 |       0 |     512 |            0 |    +0.2% |   7.699 |   0.000 | u.u_11792/Q$_DFF_P_/D
+      530 |       0 |     520 |            0 |    +0.2% |   7.702 |   0.000 | u.u_13351/Q$_DFF_P_/D
+      540 |       0 |     529 |            0 |    +0.2% |   7.708 |   0.000 | u.u_2616/Q$_DFF_P_/D
+      550 |       0 |     538 |            0 |    +0.2% |   7.720 |   0.000 | u.u_4067/Q$_DFF_P_/D
+      560 |       0 |     548 |            0 |    +0.2% |   7.727 |   0.000 | u.u_6051/Q$_DFF_PN0_/RESETN
+      570 |       0 |     558 |            0 |    +0.2% |   7.731 |   0.000 | u.u_10262/Q$_DFF_P_/D
+      580 |       0 |     568 |            0 |    +0.2% |   7.741 |   0.000 | u.u_2443/Q$_DFF_P_/D
+      590 |       0 |     578 |            0 |    +0.2% |   7.752 |   0.000 | u.u_2983/Q$_DFF_P_/D
+      600 |       0 |     588 |            0 |    +0.2% |   7.759 |   0.000 | u.u_4408/Q$_DFF_P_/D
+      610 |       0 |     597 |            0 |    +0.2% |   7.766 |   0.000 | u.u_5573/Q$_DFF_P_/D
+      620 |       0 |     607 |            0 |    +0.2% |   7.771 |   0.000 | u.u_6361/Q$_DFF_P_/D
+      630 |       0 |     616 |            0 |    +0.2% |   7.781 |   0.000 | u.u_5967/Q$_DFF_P_/D
+      640 |       0 |     626 |            0 |    +0.2% |   7.789 |   0.000 | u.u_5806/Q$_DFF_P_/D
+      650 |       0 |     636 |            0 |    +0.2% |   7.795 |   0.000 | u.u_10776/Q$_DFF_P_/D
+      660 |       0 |     646 |            0 |    +0.2% |   7.802 |   0.000 | u.u_4945/Q$_DFF_P_/D
+      670 |       0 |     656 |            0 |    +0.2% |   7.810 |   0.000 | u.u_10479/Q$_DFF_P_/D
+      680 |       0 |     665 |            0 |    +0.2% |   7.824 |   0.000 | u.u_3648/Q$_DFF_P_/D
+      690 |       0 |     675 |            0 |    +0.2% |   7.829 |   0.000 | u.u_11854/Q$_DFF_P_/D
+      700 |       0 |     685 |            0 |    +0.2% |   7.838 |   0.000 | u.u_10408/Q$_DFF_P_/D
+      710 |       0 |     695 |            0 |    +0.2% |   7.845 |   0.000 | u.u_12052/Q$_DFF_P_/D
+      720 |       0 |     704 |            0 |    +0.2% |   7.857 |   0.000 | u.u_10062/Q$_DFF_P_/D
+      730 |       0 |     714 |            0 |    +0.2% |   7.863 |   0.000 | u.u_11941/Q$_DFF_P_/D
+      740 |       0 |     724 |            0 |    +0.3% |   7.870 |   0.000 | u.u_5428/Q$_DFF_P_/D
+      750 |       0 |     733 |            0 |    +0.3% |   7.875 |   0.000 | u.u_4901/Q$_DFF_P_/D
+      760 |       0 |     743 |            0 |    +0.3% |   7.885 |   0.000 | u.u_142457/Q$_DFF_P_/D
+      770 |       0 |     752 |            0 |    +0.3% |   7.897 |   0.000 | u.u_5897/Q$_DFF_P_/D
+      780 |       0 |     762 |            0 |    +0.3% |   7.903 |   0.000 | u.u_12168/Q$_DFF_P_/D
+      790 |       0 |     772 |            0 |    +0.3% |   7.911 |   0.000 | u.u_5436/Q$_DFF_P_/D
+      800 |       0 |     782 |            0 |    +0.3% |   7.919 |   0.000 | u.u_9891/Q$_DFF_P_/D
+      810 |       0 |     792 |            0 |    +0.3% |   7.930 |   0.000 | u.u_10861/Q$_DFF_P_/D
+      820 |       0 |     802 |            0 |    +0.3% |   7.938 |   0.000 | u.u_12877/Q$_DFF_P_/D
+      830 |       0 |     812 |            0 |    +0.3% |   7.946 |   0.000 | u.u_10872/Q$_DFF_P_/D
+      840 |       0 |     822 |            0 |    +0.3% |   7.953 |   0.000 | u.u_9945/Q$_DFF_P_/D
+      850 |       0 |     832 |            0 |    +0.3% |   7.959 |   0.000 | u.u_10534/Q$_DFF_P_/D
+      860 |       0 |     842 |            0 |    +0.3% |   7.968 |   0.000 | u.u_13370/Q$_DFF_P_/D
+      870 |       0 |     852 |            0 |    +0.3% |   7.977 |   0.000 | u.u_10634/Q$_DFF_P_/D
+      880 |       0 |     862 |            0 |    +0.3% |   7.988 |   0.000 | u.u_143122/Q$_DFF_P_/D
+      890 |       0 |     872 |            0 |    +0.3% |   7.996 |   0.000 | u.u_13560/Q$_DFF_P_/D
+      900 |       0 |     882 |            0 |    +0.3% |   8.004 |   0.000 | u.u_5807/Q$_DFF_P_/D
+      910 |       0 |     892 |            0 |    +0.3% |   8.010 |   0.000 | u.u_5316/Q$_DFF_P_/D
+      920 |       0 |     902 |            0 |    +0.3% |   8.013 |   0.000 | u.u_9971/Q$_DFF_P_/D
+      930 |       0 |     912 |            0 |    +0.3% |   8.019 |   0.000 | u.u_5134/Q$_DFF_P_/D
+      940 |       0 |     922 |            0 |    +0.3% |   8.030 |   0.000 | u.u_10387/Q$_DFF_P_/D
+      950 |       0 |     931 |            0 |    +0.3% |   8.041 |   0.000 | u.u_143029/Q$_DFF_P_/D
+      960 |       0 |     941 |            0 |    +0.3% |   8.052 |   0.000 | u.u_10786/Q$_DFF_P_/D
+      970 |       0 |     951 |            0 |    +0.3% |   8.065 |   0.000 | u.u_11955/Q$_DFF_P_/D
+      980 |       0 |     961 |            0 |    +0.3% |   8.075 |   0.000 | u.u_10640/Q$_DFF_P_/D
+      990 |       0 |     970 |            0 |    +0.3% |   8.082 |   0.000 | u.u_5519/Q$_DFF_P_/D
+     1000 |       0 |     980 |            0 |    +0.3% |   8.093 |   0.000 | u.u_12149/Q$_DFF_P_/D
+     1010 |       0 |     990 |            0 |    +0.3% |   8.104 |   0.000 | u.u_11065/Q$_DFF_P_/D
+     1020 |       0 |    1000 |            0 |    +0.3% |   8.113 |   0.000 | u.u_12453/Q$_DFF_P_/D
+     1030 |       0 |    1010 |            0 |    +0.4% |   8.123 |   0.000 | u.u_5960/Q$_DFF_P_/D
+     1040 |       0 |    1020 |            0 |    +0.4% |   8.134 |   0.000 | u.u_11631/Q$_DFF_P_/D
+     1050 |       0 |    1030 |            0 |    +0.4% |   8.141 |   0.000 | u.u_5156/Q$_DFF_P_/D
+     1060 |       0 |    1040 |            0 |    +0.4% |   8.155 |   0.000 | u.u_12262/Q$_DFF_P_/D
+     1070 |       0 |    1050 |            0 |    +0.4% |   8.162 |   0.000 | u.u_6327/Q$_DFF_P_/D
+     1080 |       0 |    1060 |            0 |    +0.4% |   8.169 |   0.000 | u.u_10919/Q$_DFF_P_/D
+     1090 |       0 |    1069 |            0 |    +0.4% |   8.177 |   0.000 | u.u_4892/Q$_DFF_P_/D
+     1100 |       0 |    1079 |            0 |    +0.4% |   8.185 |   0.000 | u.u_12566/Q$_DFF_P_/D
+     1110 |       0 |    1089 |            0 |    +0.4% |   8.193 |   0.000 | u.u_5830/Q$_DFF_P_/D
+     1120 |       0 |    1098 |            0 |    +0.4% |   8.204 |   0.000 | u.u_2837/Q$_DFF_P_/D
+     1130 |       0 |    1108 |            0 |    +0.4% |   8.212 |   0.000 | u.u_2412/Q$_DFF_P_/D
+     1140 |       0 |    1118 |            0 |    +0.4% |   8.219 |   0.000 | u.u_4820/Q$_DFF_P_/D
+     1150 |       0 |    1127 |            0 |    +0.4% |   8.227 |   0.000 | u.u_11355/Q$_DFF_P_/D
+     1160 |       0 |    1137 |            0 |    +0.4% |   8.243 |   0.000 | u.u_4211/Q$_DFF_P_/D
+     1170 |       0 |    1146 |            0 |    +0.4% |   8.257 |   0.000 | u.u_4741/Q$_DFF_P_/D
+     1180 |       0 |    1155 |            0 |    +0.4% |   8.268 |   0.000 | u.u_143226/Q$_DFF_P_/D
+     1190 |       0 |    1164 |            0 |    +0.4% |   8.276 |   0.000 | u.u_5761/Q$_DFF_P_/D
+     1200 |       0 |    1173 |            0 |    +0.4% |   8.289 |   0.000 | u.u_10299/Q$_DFF_P_/D
+     1210 |       0 |    1183 |            0 |    +0.4% |   8.298 |   0.000 | u.u_143713/Q$_DFF_P_/D
+     1220 |       0 |    1192 |            0 |    +0.4% |   8.311 |   0.000 | u.u_13464/Q$_DFF_P_/D
+     1230 |       0 |    1201 |            0 |    +0.4% |   8.320 |   0.000 | u.u_11676/Q$_DFF_P_/D
+     1240 |       0 |    1210 |            0 |    +0.4% |   8.329 |   0.000 | u.u_6086/Q$_DFF_P_/D
+     1250 |       0 |    1219 |            0 |    +0.4% |   8.346 |   0.000 | u.u_11785/Q$_DFF_P_/D
+     1260 |       0 |    1229 |            0 |    +0.4% |   8.359 |   0.000 | u.u_146523/Q$_DFF_P_/D
+     1270 |       0 |    1238 |            0 |    +0.4% |   8.365 |   0.000 | u.u_5152/Q$_DFF_P_/D
+     1280 |       0 |    1248 |            0 |    +0.4% |   8.374 |   0.000 | u.u_6042/Q$_DFF_PN0_/D
+     1290 |       0 |    1257 |            0 |    +0.4% |   8.391 |   0.000 | u.u_2128/Q$_DFF_P_/D
+     1300 |       0 |    1267 |            0 |    +0.4% |   8.402 |   0.000 | u.u_11789/Q$_DFF_P_/D
+     1310 |       0 |    1277 |            0 |    +0.4% |   8.417 |   0.000 | u.u_12443/Q$_DFF_P_/D
+     1320 |       0 |    1287 |            0 |    +0.4% |   8.434 |   0.000 | u.u_2981/Q$_DFF_P_/D
+     1330 |       0 |    1297 |            0 |    +0.5% |   8.444 |   0.000 | u.u_13273/Q$_DFF_P_/D
+     1340 |       0 |    1307 |            0 |    +0.5% |   8.453 |   0.000 | u.u_12546/Q$_DFF_P_/D
+     1350 |       0 |    1317 |            0 |    +0.5% |   8.461 |   0.000 | u.u_4969/Q$_DFF_P_/D
+     1360 |       0 |    1326 |            0 |    +0.5% |   8.474 |   0.000 | u.u_143701/Q$_DFF_P_/D
+     1370 |       0 |    1335 |            0 |    +0.5% |   8.489 |   0.000 | u.u_11533/Q$_DFF_P_/D
+     1380 |       0 |    1345 |            0 |    +0.5% |   8.507 |   0.000 | u.u_10225/Q$_DFF_P_/D
+     1390 |       0 |    1355 |            0 |    +0.5% |   8.522 |   0.000 | u.u_11886/Q$_DFF_P_/D
+     1400 |       0 |    1365 |            0 |    +0.5% |   8.536 |   0.000 | u.u_5427/Q$_DFF_P_/D
+     1410 |       0 |    1375 |            0 |    +0.5% |   8.544 |   0.000 | u.u_5523/Q$_DFF_P_/D
+     1420 |       0 |    1385 |            0 |    +0.5% |   8.553 |   0.000 | u.u_5421/Q$_DFF_P_/D
+     1430 |       0 |    1394 |            0 |    +0.5% |   8.563 |   0.000 | u.u_5503/Q$_DFF_PN0_/D
+     1440 |       0 |    1403 |            0 |    +0.5% |   8.574 |   0.000 | u.u_10342/Q$_DFF_P_/D
+     1450 |       0 |    1413 |            0 |    +0.5% |   8.591 |   0.000 | u.u_13252/Q$_DFF_P_/D
+     1460 |       0 |    1422 |            0 |    +0.5% |   8.596 |   0.000 | u.u_143609/Q$_DFF_P_/D
+     1470 |       0 |    1432 |            0 |    +0.5% |   8.616 |   0.000 | u.u_6348/Q$_DFF_P_/D
+     1480 |       0 |    1440 |            0 |    +0.5% |   8.631 |   0.000 | u.u_4255/Q$_DFF_P_/D
+     1490 |       0 |    1449 |            0 |    +0.5% |   8.652 |   0.000 | u.u_13380/Q$_DFF_P_/D
+     1500 |       0 |    1458 |            0 |    +0.5% |   8.663 |   0.000 | u.u_6197/Q$_DFF_P_/D
+     1510 |       0 |    1467 |            0 |    +0.5% |   8.678 |   0.000 | u.u_3882/Q$_DFF_P_/D
+     1520 |       0 |    1475 |            0 |    +0.5% |   8.688 |   0.000 | u.u_3373/Q$_DFF_P_/D
+     1530 |       0 |    1483 |            0 |    +0.5% |   8.701 |   0.000 | u.u_4469/Q$_DFF_P_/D
+     1540 |       0 |    1493 |            0 |    +0.5% |   8.710 |   0.000 | u.u_143124/Q$_DFF_P_/D
+     1550 |       0 |    1502 |            0 |    +0.5% |   8.728 |   0.000 | u.u_11671/Q$_DFF_P_/D
+     1560 |       0 |    1511 |            0 |    +0.5% |   8.746 |   0.000 | u.u_12477/Q$_DFF_P_/D
+     1570 |       0 |    1520 |            0 |    +0.5% |   8.765 |   0.000 | u.u_11548/Q$_DFF_P_/D
+     1580 |       0 |    1530 |            0 |    +0.5% |   8.779 |   0.000 | u.u_5628/Q$_DFF_P_/D
+     1590 |       0 |    1540 |            0 |    +0.5% |   8.794 |   0.000 | u.u_11795/Q$_DFF_P_/D
+     1600 |       0 |    1550 |            0 |    +0.5% |   8.815 |   0.000 | u.u_5117/Q$_DFF_P_/D
+     1610 |       0 |    1560 |            0 |    +0.5% |   8.828 |   0.000 | u.u_13454/Q$_DFF_P_/D
+     1620 |       0 |    1569 |            0 |    +0.5% |   8.841 |   0.000 | u.u_13451/Q$_DFF_P_/D
+     1630 |       0 |    1578 |            0 |    +0.5% |   8.863 |   0.000 | u.u_148398/Q$_DFF_P_/D
+     1640 |       0 |    1587 |            0 |    +0.6% |   8.880 |   0.000 | u.u_2543/Q$_DFF_P_/D
+     1650 |       0 |    1597 |            0 |    +0.6% |   8.890 |   0.000 | u.u_5642/Q$_DFF_P_/D
+     1660 |       0 |    1606 |            0 |    +0.6% |   8.900 |   0.000 | u.u_3657/Q$_DFF_P_/D
+     1670 |       0 |    1615 |            0 |    +0.6% |   8.915 |   0.000 | u.u_6382/Q$_DFF_P_/D
+     1680 |       0 |    1625 |            0 |    +0.6% |   8.927 |   0.000 | u.u_3989/Q$_DFF_P_/D
+     1690 |       0 |    1632 |            0 |    +0.6% |   8.944 |   0.000 | u.u_10543/Q$_DFF_P_/D
+     1700 |       0 |    1641 |            0 |    +0.6% |   8.965 |   0.000 | u.u_2542/Q$_DFF_P_/D
+     1710 |       0 |    1650 |            0 |    +0.6% |   8.975 |   0.000 | u.u_5432/Q$_DFF_P_/D
+     1720 |       0 |    1660 |            0 |    +0.6% |   8.986 |   0.000 | u.u_4809/Q$_DFF_P_/D
+     1730 |       0 |    1669 |            0 |    +0.6% |   9.005 |   0.000 | u.u_10540/Q$_DFF_P_/D
+     1740 |       0 |    1679 |            0 |    +0.6% |   9.023 |   0.000 | u.u_4832/Q$_DFF_P_/D
+     1750 |       0 |    1689 |            0 |    +0.6% |   9.041 |   0.000 | u.u_148305/Q$_DFF_P_/D
+     1760 |       0 |    1698 |            0 |    +0.6% |   9.068 |   0.000 | u.u_143214/Q$_DFF_P_/D
+     1770 |       0 |    1708 |            0 |    +0.6% |   9.090 |   0.000 | u.u_12964/Q$_DFF_P_/D
+     1780 |       0 |    1716 |            0 |    +0.6% |   9.117 |   0.000 | u.u_11619/Q$_DFF_P_/D
+     1790 |       0 |    1725 |            0 |    +0.6% |   9.141 |   0.000 | u.u_2684/Q$_DFF_PN0_/RESETN
+     1800 |       0 |    1735 |            0 |    +0.6% |   9.155 |   0.000 | u.u_11345/Q$_DFF_P_/D
+     1810 |       0 |    1745 |            0 |    +0.6% |   9.172 |   0.000 | u.u_13698/Q$_DFF_P_/D
+     1820 |       0 |    1754 |            0 |    +0.6% |   9.193 |   0.000 | u.u_12843/Q$_DFF_P_/D
+     1830 |       0 |    1763 |            0 |    +0.6% |   9.222 |   0.000 | u.u_5257/Q$_DFF_P_/D
+     1840 |       0 |    1771 |            0 |    +0.6% |   9.243 |   0.000 | u.u_5776/Q$_DFF_P_/D
+     1850 |       0 |    1780 |            0 |    +0.6% |   9.270 |   0.000 | u.u_143224/Q$_DFF_P_/D
+     1860 |       0 |    1789 |            0 |    +0.6% |   9.293 |   0.000 | u.u_10483/Q$_DFF_P_/D
+     1870 |       0 |    1797 |            0 |    +0.6% |   9.313 |   0.000 | u.u_12164/Q$_DFF_P_/D
+     1880 |       0 |    1805 |            0 |    +0.6% |   9.332 |   0.000 | u.u_5574/Q$_DFF_P_/D
+     1890 |       0 |    1813 |            0 |    +0.6% |   9.353 |   0.000 | u.u_12767/Q$_DFF_P_/D
+     1900 |       0 |    1821 |            0 |    +0.6% |   9.376 |   0.000 | u.u_2446/Q$_DFF_P_/D
+     1910 |       0 |    1830 |            0 |    +0.6% |   9.416 |   0.000 | u.u_482/Q$_DFF_P_/D
+     1920 |       0 |    1840 |            0 |    +0.6% |   9.448 |   0.000 | u.u_4958/Q$_DFF_P_/D
+     1930 |       0 |    1849 |            0 |    +0.6% |   9.474 |   0.000 | u.u_6061/Q$_DFF_PN0_/D
+     1940 |       0 |    1857 |            0 |    +0.6% |   9.514 |   0.000 | u.u_119/Q$_DFF_P_/D
+     1950 |       0 |    1866 |            0 |    +0.6% |   9.541 |   0.000 | u.u_143417/Q$_DFF_P_/D
+     1960 |       0 |    1875 |            0 |    +0.7% |   9.568 |   0.000 | u.u_143211/Q$_DFF_P_/D
+     1970 |       0 |    1884 |            0 |    +0.7% |   9.598 |   0.000 | u.u_10410/Q$_DFF_P_/D
+     1980 |       0 |    1892 |            0 |    +0.7% |   9.631 |   0.000 | u.u_11691/Q$_DFF_P_/D
+     1990 |       0 |    1901 |            0 |    +0.7% |   9.665 |   0.000 | u.u_5287/Q$_DFF_P_/D
+     2000 |       0 |    1911 |            0 |    +0.7% |   9.689 |   0.000 | u.u_6027/Q$_DFF_PN0_/D
+     2010 |       0 |    1920 |            0 |    +0.7% |   9.709 |   0.000 | u.u_11017/Q$_DFF_P_/D
+     2020 |       0 |    1928 |            0 |    +0.7% |   9.737 |   0.000 | u.u_10851/Q$_DFF_P_/D
+     2030 |       0 |    1938 |            0 |    +0.7% |   9.760 |   0.000 | u.u_11929/Q$_DFF_P_/D
+     2040 |       0 |    1945 |            0 |    +0.7% |   9.783 |   0.000 | u.u_13042/Q$_DFF_P_/D
+     2050 |       0 |    1954 |            0 |    +0.7% |   9.807 |   0.000 | u.u_3374/Q$_DFF_P_/D
+     2060 |       0 |    1962 |            0 |    +0.7% |   9.827 |   0.000 | u.u_10059/Q$_DFF_P_/D
+     2070 |       0 |    1966 |            0 |    +0.7% |   9.866 |   0.000 | u.u_11790/Q$_DFF_P_/D
+     2080 |       0 |    1974 |            0 |    +0.7% |   9.890 |   0.000 | u.u_4189/Q$_DFF_P_/D
+     2090 |       0 |    1982 |            0 |    +0.7% |   9.942 |   0.000 | u.u_3680/Q$_DFF_P_/D
+     2100 |       0 |    1990 |            0 |    +0.7% |   9.987 |   0.000 | u.u_11963/Q$_DFF_P_/D
+    final |       0 |    1993 |            0 |    +0.7% |  10.004 |   0.000 | u.u_5442/Q$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 1993 hold buffers.
+[INFO RSZ-0506] Runtime: 2071.78s
+OT_HB4PAD: after hold repair the design holds 4320 HB4xp67 cells
+Took 2075 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 0.990096 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 2: hold ws 10.00 (+2.77) tns 0.0 (+0.0%) viol 0, 4492 s
+OT_HOLD_MM after repair: OT_HOLD_GUARD chunk buffer caps reached (RSZ-0060); continuing
+OT_RC_CAL restored selected RC baseline /work/setRC_rcx.tcl
+OT_HOLD_MM after repair: SS setup ws 0.63 / FF hold ws 10.00 ps
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_VCLK_MEASURED_BIND clock vclk measured 208.393253 bound 202.500000 tol 40.000000 samples 352
+OT_HOLD_MM sync: SS setup ws 0.63 / FF hold ws 10.00 ps
+OT_HOLD_MM after repair: SS setup ws 0.63 / FF hold ws 10.00 ps
+global_route -start_incremental
+detailed_placement
+OT_GRT_CLK_LOCK: 0 clock-net instances FIRM during detailed_placement
+[INFO DPL-0006] Core area: 71738.27 um^2
+[INFO DPL-0007] Movable instances area: 17876.58 um^2
+[INFO DPL-0008] Fixed instances area within core: 11656.74 um^2
+[INFO DPL-0009] Utilization: 41.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 236947 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1945 |       415 |      1485
+        1 |       1634 |       270 |      1217
+        2 |       1051 |       187 |       837
+        3 |        533 |        91 |       427
+        4 |        308 |        60 |       248
+        5 |        123 |        23 |       100
+        6 |         55 |        11 |        44
+        7 |          8 |         2 |         6
+        8 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 8.
+[INFO DPL-0500] Runtime: 8.10s
+Placement Analysis
+---------------------------------
+total displacement       2001.5 u
+average displacement        0.0 u
+max displacement            3.5 u
+original HPWL          634604.6 u
+legalized HPWL         636422.1 u
+delta HPWL                    0 %
+
+Took 11 seconds: detailed_placement
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/congestion_post_repair_timing.rpt
+Took 100 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+Took 29 seconds: estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 42.25s
+Took 42 seconds: repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Took 26 seconds: estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+OT_INTERMEDIATE_POWER_SKIPPED stage 5: power not measured; final reporting unchanged
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 29533 um^2 41% utilization.
+[INFO FLW-0007] clock clk period 833.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 42164
+source /work/grt_post_reviewed.tcl
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    235340
+[WARNING RSZ-0104] Net u.n_26000 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25859 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18453_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_26004 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25855 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25801 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18454_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25793 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25837 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25874 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25896 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25918 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18450_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18448_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18446_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18444_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18440_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18438_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18436_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25789 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25833 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25797 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25870 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25892 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net u.n_25914 only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18451_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18449_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18447_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18445_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18441_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18439_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18437_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18481_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18479_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18467_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18465_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18463_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18461_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18468_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18469_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18480_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18478_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18466_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18464_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18462_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18460_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18477_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18475_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18473_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18471_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18476_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18474_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18472_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18470_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18489_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18488_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18487_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18486_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18485_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18484_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18483_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18482_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18459_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18458_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18442_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18433_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18431_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18430_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18429_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18428_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18424_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18423_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18456_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18426_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18457_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18455_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18452_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18443_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18435_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18434_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18432_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18427_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _18425_ only has one pin. Check if it is intended to be dangling.
+    final |     +0.0% |       1 |      52 |            39 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 40 slew violations.
+[INFO RSZ-0039] Resized 1 instances.
+[INFO RSZ-0038] Inserted 52 buffers in 39 nets.
+[INFO RSZ-0504] Runtime: 80.31s
+OT_HB4PAD: hold repair may pad with HB4xp67 (2 lib cells)
+[INFO RSZ-0033] No hold violations found.
+[INFO RSZ-0506] Runtime: 20.01s
+OT_HB4PAD: after hold repair the design holds 4320 HB4xp67 cells
+OT_GRT_CLK_LOCK: 0 clock-net instances FIRM during detailed_placement
+[INFO DPL-0006] Core area: 71738.27 um^2
+[INFO DPL-0007] Movable instances area: 17886.51 um^2
+[INFO DPL-0008] Fixed instances area within core: 11656.75 um^2
+[INFO DPL-0009] Utilization: 41.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 236999 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 4.32s
+Placement Analysis
+---------------------------------
+total displacement         23.0 u
+average displacement        0.0 u
+max displacement            1.4 u
+original HPWL          636515.1 u
+legalized HPWL         636526.2 u
+delta HPWL                    0 %
+
+OT_PG_CONNECT grt_post rules=2 protected_rebound=0
+OT_PG_BOUND grt_post pg_terms=473998 open=0
+OT_CORE_FINAL_REPAIR begin after all post-GRT mutations
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_VCLK_MEASURED_BIND clock vclk measured 208.393253 bound 202.500000 tol 40.000000 samples 352
+OT_HOLD_MM sync: SS setup ws 7.26 / FF hold ws 7.40 ps
+OT_HOLD_MM after repair: SS setup ws 7.26 / FF hold ws 7.40 ps
+OT_CORE_FINAL_REPAIR already meets nominal TT/FF; no margin-only repair (released policy still required)
+OT_GRT_FINAL_FULL begin clocks=8270 iterations=50 configured layers/capacity unchanged
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 103608
+[INFO GRT-0019] Found 8270 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 25
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    3084687       2196568          28.79%
+M3         Vertical      3557743       2643189          25.71%
+M4         Horizontal    2744828       2040608          25.66%
+M5         Vertical      2628788       1948544          25.88%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 1133109
+[INFO GRT-0198] Via related Steiner nodes: 24285
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1446139
+[INFO GRT-0112] Final usage 3D: 5584281
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2196568        572256           26.05%             0 /  0 /  0
+M3             2643189        593296           22.45%             0 /  0 /  0
+M4             2040608         48479            2.38%             0 /  0 /  0
+M5             1948544         31833            1.63%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          8828909       1245864           14.11%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 975784 um
+[INFO GRT-0014] Routed nets: 235237
+[INFO GRT-0303] Global routing runtime = 00:00:27
+OT_GRT_FINAL_FULL done clocks=8270 iterations=50
+OT_CLK_FREEZE red_final_full_grt OK: all 0 clock nets carry their pre-ECO FIXED wire (restored 0 destroyed by GRT updateDirtyNets: )
+OT_CLK_DUMP post /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/red_clock_freeze/clk_freeze_post.tsv nets 8270 insts 42494 0.9 s
+Error: global_route.tcl, 185 CLK_GEOM_DIFF FAIL clock nets 8270 -> 8270: changed 0 (wire 0, pins 0, missing 0, new 0); instances on clock nets 42494: changed 1; FIXED-wired after 0
+CLK_GEOM_DIFF inst (1): u.u_143133/Q$_DFF_P_
+child process exited abnormally
+Elapsed time: 2:55:28.11[h:]min:sec. CPU time: user 14864.34 sys 141.62 (142%). Peak memory: 5133852KB.
+make: *** [Makefile:585: do-5_1_grt] Error 1

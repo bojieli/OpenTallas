@@ -1,0 +1,65 @@
+{
+  "scope": "PLANNED_FF_CENTRES_NOT_NATIVE_PIN_REACH_OR_TIMING",
+  "ff": 42665,
+  "existing_leaf_count": 1024,
+  "used_leaves": 1024,
+  "empty_leaves": 0,
+  "max_fanout": 42,
+  "min_fanout": 1,
+  "load_histogram": {
+    "1": 6,
+    "41": 2,
+    "42": 1008,
+    "38": 1,
+    "39": 2,
+    "9": 1,
+    "31": 1,
+    "26": 1,
+    "34": 1,
+    "25": 1
+  },
+  "max_centre_reach_um": 31.995,
+  "mean_centre_reach_um": 26.477527059650768,
+  "new_ff": 0,
+  "new_clock_nodes": 0,
+  "new_cycles": 0,
+  "clock_depth": 7,
+  "empty_leaf_transfers": [
+    {
+      "instance": "u.u_15647/Q$_DFF_P_",
+      "old_leaf": "sc_ck_22200_leaf",
+      "new_leaf": "sc_ck_22222_leaf",
+      "centre_reach_um": 5.967000000000008
+    },
+    {
+      "instance": "u.u_15598/Q$_DFF_P_",
+      "old_leaf": "sc_ck_33312_leaf",
+      "new_leaf": "sc_ck_33323_leaf",
+      "centre_reach_um": 7.019999999999982
+    },
+    {
+      "instance": "u.u_15593/Q$_DFF_P_",
+      "old_leaf": "sc_ck_33311_leaf",
+      "new_leaf": "sc_ck_33330_leaf",
+      "centre_reach_um": 5.77800000000002
+    },
+    {
+      "instance": "u.u_15496/Q$_DFF_P_",
+      "old_leaf": "sc_ck_33133_leaf",
+      "new_leaf": "sc_ck_33331_leaf",
+      "centre_reach_um": 8.153999999999996
+    },
+    {
+      "instance": "u.g_sc_shared_rst_0.u_pin/Q$_DFF_P_",
+      "old_leaf": "sc_ck_33311_leaf",
+      "new_leaf": "sc_ck_33332_leaf",
+      "centre_reach_um": 24.57000000000005
+    },
+    {
+      "instance": "u.u_15500/Q$_DFF_P_",
+      "old_leaf": "sc_ck_33311_leaf",
+      "new_leaf": "sc_ck_33333_leaf",
+      "centre_reach_um": 9.018000000000029
+    }
+  ]
+}

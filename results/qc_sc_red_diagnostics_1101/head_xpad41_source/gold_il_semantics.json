@@ -1,0 +1,509 @@
+{
+ "scope": "SOURCE_IL_SEMANTICS_ONLY_NO_SOLVER_MASK_OR_NEW_CONSTRAINT",
+ "gold_sha256": "4335dbca42fd196d3a31e13457b05db653b2a0386a4c82d43ca7372f170d9cfb",
+ "raw_gold_X_points": 27,
+ "consistent_mux_path_literal_X_points": 0,
+ "rows": [
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.fault",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    76613
+   ],
+   "reset_value": "0",
+   "Qbit": 60480,
+   "Dbit": 76614,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:885.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[0]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63991,
+   "Dbit": 77980,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[10]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 64001,
+   "Dbit": 77990,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[11]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 64002,
+   "Dbit": 77991,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[12]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "1",
+   "Qbit": 64003,
+   "Dbit": 77992,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[13]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 64004,
+   "Dbit": 77993,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[14]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "1",
+   "Qbit": 64005,
+   "Dbit": 77994,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[15]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 64006,
+   "Dbit": 77995,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[16]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 64007,
+   "Dbit": 77996,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[17]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 64008,
+   "Dbit": 77997,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[18]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "1",
+   "Qbit": 64009,
+   "Dbit": 77998,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[19]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 64010,
+   "Dbit": 77999,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[1]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63992,
+   "Dbit": 77981,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[2]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63993,
+   "Dbit": 77982,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[3]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63994,
+   "Dbit": 77983,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[4]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63995,
+   "Dbit": 77984,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[5]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63996,
+   "Dbit": 77985,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[6]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63997,
+   "Dbit": 77986,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[7]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63998,
+   "Dbit": 77987,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[8]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 63999,
+   "Dbit": 77988,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[9]",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "0",
+   "Qbit": 64000,
+   "Dbit": 77989,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace_ok_r",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    77979
+   ],
+   "reset_value": "1",
+   "Qbit": 64187,
+   "Dbit": 78000,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pnak",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    76594
+   ],
+   "reset_value": "0",
+   "Qbit": 65881,
+   "Dbit": 78085,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:353.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pv",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    76594
+   ],
+   "reset_value": "0",
+   "Qbit": 65812,
+   "Dbit": 78086,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:353.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.fault",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    141258
+   ],
+   "reset_value": "0",
+   "Qbit": 125125,
+   "Dbit": 141259,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:104.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:885.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.pnak",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    141239
+   ],
+   "reset_value": "0",
+   "Qbit": 130526,
+   "Dbit": 142730,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:104.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:353.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.pv",
+   "gold_primitive": "$aldff",
+   "CLK": [
+    2
+   ],
+   "async_reset": [
+    141239
+   ],
+   "reset_value": "0",
+   "Qbit": 130457,
+   "Dbit": 142731,
+   "literal_X_reachable_after_consistent_mux_paths": false,
+   "D_source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:104.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:353.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37",
+   "current_native_verdict": "DIFFERS_UNCHANGED"
+  }
+ ],
+ "fault_truth_tables": [
+  {
+   "lane": "a",
+   "priority_selector_bits": [
+    65959,
+    65922,
+    74031,
+    63989,
+    64495,
+    74092
+   ],
+   "conditions": [
+    "retry_exh",
+    "ack_bad",
+    "c_ovf",
+    "accept && occ>=RPS",
+    "fr_bad",
+    "c_unexpl"
+   ],
+   "priority_cases": 64,
+   "fault_next_cases": 128,
+   "reachable_literal_X_cases": 0,
+   "exact_priority_code_matches": 64,
+   "fault_next_matches_sticky_OR": 128,
+   "code_histogram": {
+    "0": 1,
+    "6": 1,
+    "5": 2,
+    "4": 4,
+    "3": 8,
+    "2": 16,
+    "1": 32
+   }
+  },
+  {
+   "lane": "b",
+   "priority_selector_bits": [
+    130604,
+    130567,
+    138676,
+    128634,
+    129140,
+    138737
+   ],
+   "conditions": [
+    "retry_exh",
+    "ack_bad",
+    "c_ovf",
+    "accept && occ>=RPS",
+    "fr_bad",
+    "c_unexpl"
+   ],
+   "priority_cases": 64,
+   "fault_next_cases": 128,
+   "reachable_literal_X_cases": 0,
+   "exact_priority_code_matches": 64,
+   "fault_next_matches_sticky_OR": 128,
+   "code_histogram": {
+    "0": 1,
+    "6": 1,
+    "5": 2,
+    "4": 4,
+    "3": 8,
+    "2": 16,
+    "1": 32
+   }
+  }
+ ],
+ "classification": "All27RTLdriversarefullydefined. LiteralXnodesarefrontendtemporaryarmsmaskedbyconsistentconditions, notdeliberateinvalid-cycle unspecified-value contracts."
+}

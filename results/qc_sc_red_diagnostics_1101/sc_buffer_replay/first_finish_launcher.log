@@ -1,0 +1,5 @@
+ot-run: epyc2          admits    64 GB (avail 233, reserve 0, fresh 0, peak 104.5, headroom 0, waiters 0/0 GB) load 92/128 running 46 disk 50 GB 
+ot-run: -> epyc2
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1172903-1793614139 after 1 s
+bash: run_finish.sh: No such file or directory
+ot-run: RAN on epyc2 (unit oth-ubuntu-1172903-1793614139): exit 127

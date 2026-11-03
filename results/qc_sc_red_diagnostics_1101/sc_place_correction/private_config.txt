@@ -1,0 +1,10 @@
+
+# Approved one private same-pin PLACE correction: native actual source graph retained.
+override export PRE_GLOBAL_PLACE_TCL = /work/sc_gpl_pre.tcl
+override export POST_GLOBAL_PLACE_TCL = /work/sc_gpl_post.tcl
+override export PRE_DETAIL_PLACE_TCL = /work/sc_dpl_pre.tcl
+override export POST_DETAIL_PLACE_TCL = /work/sc_dpl_post.tcl
+# These existing ORFS options prevent resizing/removal/port buffering in the combinational-only placement trial.
+override export GPL_TIMING_DRIVEN = 0
+override export DONT_BUFFER_PORTS = 1
+override export CLUSTER_FLOPS = 0
