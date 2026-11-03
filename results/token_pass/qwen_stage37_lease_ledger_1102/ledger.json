@@ -137,6 +137,12 @@
       "measured": "CTLM37 PASS at nent1021 (LOCAL37 1020/count1, stage LOCAL4 876.., 144 lockstep loads, 4 HEAD loads, default-off reject, MUT_USER caught)",
       "receipt": "results/token_pass/qwen_head_ctlm37_1021_1102/receipt.json",
       "remaining": "link the 4 execution relocations (HEAD_APPLY_S*_ISSUE, HEAD_TABLE_INSTALL_START, RSTD publication->last H read, headtap/Xfill) then emit masks"
+    },
+    {
+      "item": "a",
+      "measured": "genuine rank0 payload through main loader, 12 slices x 4 users: payload exact (2264 writes), first4/done91, gain CROM writes 60..83 (3-block) / 60..75 (2-block), prefix lockstep, default-off reject, MUT_GAIN caught",
+      "receipt": "results/token_pass/qwen_head37_loader_realpayload_1102/receipt.json",
+      "remaining": "HEAD_TABLE_INSTALL_START date vs stage36 traffic in the live calendar (needs live-calendar vehicle)"
     }
   ]
 }
