@@ -7,7 +7,7 @@
   "q_hub_ne",
   "q_hub_nw"
  ],
- "status": "DONE (EQ PASS); open: a POST-path mutant (S1/S2 only perturb the PRE x_v/y_v retime, POST hv path is self-valid)",
+ "status": "EQ-PASS",
  "form": "lane control (+2 SRAM macros, chunk chain, output writer) + 4 IDENTICAL element-pair blocks (ot_hnx_fused_el2 x2 + their asb/op operand-register slice); asb/op moved into the pairs; element flags OR-ed in the pair",
  "rtl": [
   "rtl/hbm_accel/cores_split/reform_1103/hnx_fused_lane/hnx_fused_lane_split.sv",
@@ -57,7 +57,15 @@
    "S1": "SMUT 1 must FAIL",
    "S2": "SMUT 2 must FAIL"
   },
-  "result": "epyc2 fused/out verdict.txt: K 6/6 golden PASS + shadow SH0 6/6 (harness); S 6/6 golden PASS (PRE+POST N 1,2,4) + shadow SH4 6/6 (rq/scalar +0, chunk-sum/wq/fin/flt +4 vs the kit lane on the same inputs, wq nonzero every write); S1 FAIL 3/3 PRE (mism 5117/10231/20464), S2 FAIL 3/3 PRE (mism 4862/9719/19441); POST cases unaffected by S1/S2 (by design). Record cycles split vs kit: POST +4 (196->200, 304->308, 510->514), PRE +8 (406->414, 488->496, 650->658)"
+  "result": "epyc2 fused/out verdict.txt: K 6/6 golden PASS + shadow SH0 6/6 (harness); S 6/6 golden PASS (PRE+POST N 1,2,4) + shadow SH4 6/6 (rq/scalar +0, chunk-sum/wq/fin/flt +4 vs the kit lane on the same inputs, wq nonzero every write); S1 FAIL 3/3 PRE (mism 5117/10231/20464), S2 FAIL 3/3 PRE (mism 4862/9719/19441); POST cases unaffected by S1/S2 (by design). Record cycles split vs kit: POST +4 (196->200, 304->308, 510->514), PRE +8 (406->414, 488->496, 650->658)",
+  "mutants": {
+   "S3": "SMUT 3 (HC_POST: pairs hv one edge late vs ho) must FAIL"
+  },
+  "result_s3": "epyc4 fused/out2 (S re-run + S3, RTL with SMUT 3 added): S 6/6 golden PASS + shadow SH4 6/6; S3 FAIL all 3 POST cases (mism 20460/40848/81680), PRE unaffected (by design)",
+  "evidence": [
+   "bench/fused_lane/evidence/verdict_epyc2_K_S_S1_S2.txt",
+   "bench/fused_lane/evidence/verdict_epyc4_S_S3.txt"
+  ]
  },
  "latency": [
   [
