@@ -1,4 +1,4 @@
-# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1 + 2 + 3 (DIE-HBM-61/PLAN, 2026-11-03)
+# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-4 (DIE-HBM-61/PLAN, 2026-11-03)
 
 OWNER 11-03: TWO-STRIKES -> RE-FORM, ONE batch per die. Rules are design targets: plan GEOM, fill, aspect and channels
 are ADVISORY. Only sign-off blocks.
@@ -158,6 +158,25 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
 - **Result**: the signed record now gives DESIGN-MATCH: 1228/1228 pins match, 0 by convention. With d44v part 2 it
   gave "12/1228 pins: extra pin (record only)".
 
+## Part 4 (fix-only after freeze: KNOWN right-width macro sites for hfd_ep_static and ot_hbm_host_cp_rxs)
+
+- **Why**: KW-FIX-4 11:58 SWITCH held both cores. Part 2 swapped them to the DIE-HBM-61/MEM right-width masters
+  (55c4a61894a, `OT_HBM_RW_MACROS`). Their core_macros entries were left UNKNOWN, with the r2c2 rects kept under
+  `macros_r2c2_old`.
+- **Event** (`mk_rwmac.py`, written into `core_macros.json`; builder step after `mk_mpisl`). Status is now KNOWN, in
+  the keybuf 2d form:
+  - W column MY, E column R0, so the read pins (master W edge) face the centre logic channel.
+  - Channels are >= 10.8, row gaps 8.64, and the clock entry sits in the centre channel.
+  - Outlines, pins and die_plan.json are unchanged; the die_plan sha stays the same.
+  - The macro names are the recipe inst renames.
+
+  | core (outline) | macros | form |
+  |---|---|---|
+  | hfd_ep_static (427.68 x 246.24) | 4x ot_sram_1r1w_64x306_m1_r0c0_g306 `u_fcore.u_rxb.g_block[b].u_block.g_mem[m].u_mem.g_rw.u_sram` | the old 2x2 grid, each macro on the centre-facing edge of its old rect: x 82.512 / 239.112, y 70.416 / 169.776; centre channel 50.5 holds the entry (216.0, 120.96); W/E logic fields 82.5 um, S field 70 um |
+  | ot_hbm_host_cp_rxs (400.248 x 151.68) | 2x ot_sram_1r1w_256x256_m2_r0c0_g256 `u_fcore.u_land.g_bank[b].u_mem` + 4x ot_sram_1r1w_64x141_m1_r0c0_g141 `u_fcore.u_link.g_bank[k].u_store.u_native.g_rw141.u_sram` | S-edge block (the S face has no pins), 2 columns x 3 rows: 256 banks at y 15.12, 141 leaves at y 52.164 / 81.648 on the centre side; x 15.12 / 215.676; centre channel 31.2 holds the entry (198.72, 77.76); N std-cell band 49 um |
+
+- **Result**: both "macro positions UNKNOWN" clock_entry_macro WARNs are gone. Nothing else changes.
+
 ## Checks (epyc2 die-hbm-60-plan, same tools for every plan: main 08542fa9d7d + d44v tools)
 
 - **G0+G0C** (`tools/die_plan/check.py --completeness`):
@@ -167,14 +186,16 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
   | d44t | 74 | 128 |
   | d44v part 1 | 51 | 128 |
   | d44v part 2 | 24 | 128 |
-  | **d44v part 3** | **24** | 128 |
+  | d44v part 3 | 24 | 128 |
+  | **d44v part 4** | **24** | 128 |
 
   - Against part 1, 27 are gone and **0 are new**.
   - Against d44t, the 3 "new" are pre-existing items under a new message:
     - u_vmb_Q6/Q7_mu1 dq core_faces: mu1s3 282 -> 281 pins.
     - L701 reach: hop index shift, still 392 um.
   - Part 3 against part 2: gone 0, **new 0**, and the warnings stay at 1148 = 1148.
-  - Diffs: g0/g0_diff_d44t_d44v.txt, g0/g0_diff_d44v_p1_p2.txt and g0/g0_diff_d44v_p2_p3.txt.
+  - Part 4 against part 3: errors gone 0, new 0. Warnings go from 1148 to 1146: the 2 UNKNOWN-macro clock_entry_macro WARNs are gone.
+  - Diffs: g0/g0_diff_d44t_d44v.txt, g0/g0_diff_d44v_p1_p2.txt, g0/g0_diff_d44v_p2_p3.txt and g0/g0_diff_d44v_p3_p4.txt.
 - **Plan-time GEOM** (`plan_geom.py`, 74 types): **new FAIL = 0**, and the FAIL count is 225 -> 225. All of these
   are advisory, and every type already fails clock_tap_sinks or clock_reach.
   - Values worse on rules that already fail (clock_tap_sinks):
@@ -182,10 +203,12 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
     - q_su11pv1: 5654 -> 6403;
     - q_su01: 8890 -> 9194;
     - q_su20: +1.
-  - Part 3 against part 2: identical (new 0, worse 0, better 0).
+  - Part 3 against part 2, and part 4 against part 3: identical (new 0, worse 0, better 0).
   - Diff: geom/geom_diff_d44t_d44v.txt.
 - **Count**: 84 -> 84 designs, and the 6 signed cores keep their design key (SAME). See g0/count_check.txt.
   - The signed hcol_h1 record (signed-DEF pins) gives **MATCH** against the plan design: 1228/1228 pins.
+  - Part 4: all 8 signed records (routed-DEF pins) give MATCH: pretree, hcol_h1, qctl, tail_native x2, collar,
+    ring_ag, tnode.
     count_check.py uses the release counter's `design_pin_cmp` / `pins_equiv`.
   - hcol_h1 now has a new design key (the 12 pins), so 27 of 84 design keys are unchanged against d44c (was 28).
 - **Census** (ext/census_summary.json):
