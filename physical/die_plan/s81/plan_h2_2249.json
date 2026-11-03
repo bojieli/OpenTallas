@@ -4216,7 +4216,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h10_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -7576,7 +7577,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -8100,7 +8102,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0_nx","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -11531,7 +11534,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -15085,7 +15089,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -18716,7 +18721,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 710.924 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,515.956],"outline_um":[2608.48,710.924],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,352.092],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,352.092],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -20818,7 +20824,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1183.68,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1373.76,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -23101,7 +23108,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1854.39 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); DIE-S81-44 10-31 (delta_serdes_lots_1031): lot = full-width shore band (form of t15/t16) so the PMA pair lies along the shore (OWNER 10-29); + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_kp4_srams_1031 placement functions)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,581.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,581.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -25029,7 +25037,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1183.68,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1373.76,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -25253,7 +25262,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PMA tx/rx pair R90 along the shore (OWNER 10-29), stacked in depth 2246.4 x 259.2 in a 2885.76 x 1226.88 shore lot (DIE-S81-27 WS3 fix-only lot replan); the rest of the lot holds boundary flops and ft stations; DIE-S81-45 10-31 (delta_t12pma_1031): + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_serdes_lots_1031.corner_sites placement functions)","origin_um":[63.64,904.04],"outline_um":[2246.4,322.84],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[63.528,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[63.528,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1155.168,676.092],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1345.248,676.092],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -27521,7 +27531,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1667.96 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); DIE-S81-44 10-31 (delta_serdes_lots_1031): lot = full-width shore band (form of t15/t16) so the PMA pair lies along the shore (OWNER 10-29); + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_kp4_srams_1031 placement functions)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,581.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,581.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -30259,7 +30270,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_iqf","module":"dsdv_idx_qfs","status":"rework"}
@@ -32825,7 +32837,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_seqhost","module":"dsdv_seq_host_mux","status":"rework","params":{"TAP_K":"8'h00","SINK_K":"8'h00","SELECT_HBE":"1'b0"}},
@@ -41802,7 +41815,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
@@ -51147,7 +51161,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
@@ -60094,7 +60109,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
@@ -68999,7 +69015,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
@@ -77657,7 +77674,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
@@ -87009,7 +87027,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_pvso_entry","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
@@ -95266,7 +95285,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
@@ -104274,7 +104294,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
@@ -112494,7 +112515,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
@@ -121232,7 +121254,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
@@ -129398,7 +129421,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
@@ -138246,7 +138270,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_pvso_entry","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
@@ -147240,7 +147265,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
@@ -156349,7 +156375,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
@@ -166144,7 +166171,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
@@ -175845,7 +175873,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
@@ -180126,7 +180155,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -184824,7 +184854,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -190166,7 +190197,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -193707,7 +193739,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -195814,7 +195847,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lp","module":"dsdv_slice_lepw_mus.LP","status":"rework","note":"lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"},
@@ -199059,7 +199093,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -205299,7 +205334,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -213662,7 +213698,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -219927,7 +219964,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_lepw_mus.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -225713,7 +225751,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -232302,7 +232341,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -238737,7 +238777,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -244070,7 +244111,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lp","module":"dsdv_slice_lepw_mu.LP","status":"rework","note":"lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"},
@@ -249210,7 +249252,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -253906,7 +253949,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -258905,7 +258949,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -267038,7 +267083,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -273358,7 +273404,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_lepw_mu.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -277345,7 +277392,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -286130,7 +286178,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -293278,7 +293327,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -297407,7 +297457,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -301284,7 +301335,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -310220,7 +310272,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -317983,7 +318036,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -323384,7 +323438,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -328891,7 +328946,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -334609,7 +334665,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -339558,7 +339615,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -344342,7 +344400,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -352248,7 +352307,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -357145,7 +357205,8 @@
     "tap_mode": "grid"
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -364153,7 +364214,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -367259,7 +367321,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -369442,7 +369505,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -373010,7 +373074,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -380998,7 +381063,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -387883,7 +387949,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -393057,7 +393124,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -400076,7 +400144,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -403715,7 +403784,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -407526,7 +407596,8 @@
     "tap_mode": "grid"
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -410194,7 +410265,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -416678,7 +416750,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -419623,7 +419696,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -424389,7 +424463,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -428172,7 +428247,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -434277,7 +434353,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -440677,7 +440754,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_iq.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -446720,7 +446798,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -454272,7 +454351,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -459990,7 +460070,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -466485,7 +466566,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"},
@@ -478841,7 +478923,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"},
@@ -482806,7 +482889,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_kv512.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -486875,7 +486959,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"},
@@ -492113,7 +492198,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"},
@@ -496861,7 +496947,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"},
@@ -500389,7 +500476,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -505052,7 +505140,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -512479,7 +512568,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -518582,7 +518672,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -525170,7 +525261,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c3x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -529468,7 +529560,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -532482,7 +532575,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -536374,7 +536468,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -539438,7 +539533,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -543956,7 +544052,8 @@
     "tap_mode": "grid"
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -548008,7 +548105,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -551625,7 +551723,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -554593,7 +554692,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -558986,7 +559086,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -566595,7 +566696,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -574038,7 +574140,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -579278,7 +579381,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -585646,7 +585750,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -593872,7 +593977,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -598107,7 +598213,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -604097,7 +604204,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -612570,7 +612678,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -620910,7 +621019,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -629177,7 +629287,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -636968,7 +637079,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -642727,7 +642839,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -648784,7 +648897,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -653782,7 +653896,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -658036,7 +658151,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -665559,7 +665675,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -671328,7 +671445,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -678183,7 +678301,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -682184,7 +682303,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -685354,7 +685474,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -691496,7 +691617,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -699899,7 +700021,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -706908,7 +707031,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_lepe_nh_mus.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -713044,7 +713168,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -719907,7 +720032,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -725747,7 +725873,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -730387,7 +730514,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -734100,7 +734228,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -736623,7 +736752,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -740941,7 +741071,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -742983,7 +743114,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -745625,7 +745757,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lp","module":"dsdv_slice_lepe_nh_mus.LP","status":"rework","note":"lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"},
@@ -750665,7 +750798,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -758913,7 +759047,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -763093,7 +763228,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_c","module":"dsdv_slice_lepe_mu.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
@@ -766916,7 +767052,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -773861,7 +773998,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -780838,7 +780976,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -784955,7 +785094,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -786397,7 +786537,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lp","module":"dsdv_slice_lepe_mu.LP","status":"rework","note":"lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"},
@@ -791503,7 +791644,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -796544,7 +796686,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -800814,7 +800957,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_gunit","module":"dsdv_gunit","status":"rework","params":{"SID":"4'd3"},"note":"re-aspected 950x1469 -> 2-cell row slot"}
@@ -804857,7 +805001,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_bk_sel","module":"dsdv_bk_sel_vmtx","status":"rework","params":{"TAP_K":"8'h11","SINK_K":"8'h10","IK":"3'd4","EK":"3'd5","UID":"8'h5B","EG_N":"1'b0"},"note":"re-aspected 907x4536 -> 3-cell row slot"}
@@ -807668,7 +807813,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_eng","module":"dsdv_eng_rr","status":"rework"}
@@ -808509,20 +808655,20 @@
        {
         "name": "u_rrl_31",
         "xy": [
-         1126.44,
-         980.6
+         1126.818,
+         954.666
         ],
         "d": "rst_rl_22",
         "q": "rst_rl_31",
         "depth": 3,
         "tap": 28,
-        "kind": "tap"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_32",
         "xy": [
-         1126.44,
-         980.6
+         1126.818,
+         954.666
         ],
         "d": "rst_rl_31",
         "q": "rst_rl_32",
@@ -808533,8 +808679,8 @@
        {
         "name": "u_rrl_33",
         "xy": [
-         1126.44,
-         980.6
+         1126.818,
+         954.666
         ],
         "d": "rst_rl_32",
         "q": "rst_rl_33",
@@ -808545,74 +808691,74 @@
        {
         "name": "u_rrl_34",
         "xy": [
-         1126.44,
-         980.6
+         1126.818,
+         954.666
         ],
         "d": "rst_rl_33",
         "q": "rst_n_t28",
         "depth": 6,
         "tap": 28,
-        "kind": "pad"
+        "kind": "tap"
        },
        {
         "name": "u_rrl_35",
         "xy": [
-         885.4799999999999,
-         1115.6399999999999
+         1119.9599999999998,
+         980.5999999999999
         ],
-        "d": "rst_rl_31",
+        "d": "rst_rl_22",
         "q": "rst_rl_35",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_36",
         "xy": [
-         513.88,
+         885.4799999999999,
          1115.6399999999999
         ],
         "d": "rst_rl_35",
         "q": "rst_rl_36",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_37",
         "xy": [
+         513.88,
+         1115.6399999999999
+        ],
+        "d": "rst_rl_36",
+        "q": "rst_rl_37",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_38",
+        "xy": [
          180.36,
          1121.04
         ],
-        "d": "rst_rl_36",
+        "d": "rst_rl_37",
         "q": "rst_n_t12",
         "depth": 6,
         "tap": 12,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_38",
+        "name": "u_rrl_39",
         "xy": [
          162.2426,
          1121.9872
         ],
-        "d": "rst_rl_36",
+        "d": "rst_rl_37",
         "q": "rst_n_t37",
         "depth": 6,
         "tap": 37,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_39",
-        "xy": [
-         1213.92,
-         1058.4
-        ],
-        "d": "rst_rl_22",
-        "q": "rst_rl_39",
-        "depth": 3,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_40",
@@ -808620,9 +808766,9 @@
          1213.92,
          1058.4
         ],
-        "d": "rst_rl_39",
+        "d": "rst_rl_22",
         "q": "rst_rl_40",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "pad"
        },
@@ -808634,33 +808780,33 @@
         ],
         "d": "rst_rl_40",
         "q": "rst_rl_41",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_42",
+        "xy": [
+         1213.92,
+         1058.4
+        ],
+        "d": "rst_rl_41",
+        "q": "rst_rl_42",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_42",
+        "name": "u_rrl_43",
         "xy": [
          901.8,
          1121.04
         ],
-        "d": "rst_rl_41",
+        "d": "rst_rl_42",
         "q": "rst_n_t14",
         "depth": 6,
         "tap": 14,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_43",
-        "xy": [
-         1425.6,
-         574.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_43",
-        "depth": 1,
-        "tap": 19,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_44",
@@ -808668,9 +808814,9 @@
          1425.6,
          574.32
         ],
-        "d": "rst_rl_43",
+        "d": "rst_root_n",
         "q": "rst_rl_44",
-        "depth": 2,
+        "depth": 1,
         "tap": 19,
         "kind": "pad"
        },
@@ -808682,9 +808828,9 @@
         ],
         "d": "rst_rl_44",
         "q": "rst_rl_45",
-        "depth": 3,
+        "depth": 2,
         "tap": 19,
-        "kind": "tap"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_46",
@@ -808694,9 +808840,9 @@
         ],
         "d": "rst_rl_45",
         "q": "rst_rl_46",
-        "depth": 4,
+        "depth": 3,
         "tap": 19,
-        "kind": "pad"
+        "kind": "tap"
        },
        {
         "name": "u_rrl_47",
@@ -808706,7 +808852,7 @@
         ],
         "d": "rst_rl_46",
         "q": "rst_rl_47",
-        "depth": 5,
+        "depth": 4,
         "tap": 19,
         "kind": "pad"
        },
@@ -808717,34 +808863,34 @@
          574.32
         ],
         "d": "rst_rl_47",
-        "q": "rst_n_t19",
-        "depth": 6,
+        "q": "rst_rl_48",
+        "depth": 5,
         "tap": 19,
         "kind": "pad"
        },
        {
         "name": "u_rrl_49",
         "xy": [
-         1144.32,
-         479.32
+         1425.6,
+         574.32
         ],
-        "d": "rst_rl_45",
-        "q": "rst_rl_49",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
+        "d": "rst_rl_48",
+        "q": "rst_n_t19",
+        "depth": 6,
+        "tap": 19,
+        "kind": "pad"
        },
        {
         "name": "u_rrl_50",
         "xy": [
-         901.8,
-         457.92
+         1144.32,
+         479.32
         ],
-        "d": "rst_rl_49",
+        "d": "rst_rl_46",
         "q": "rst_rl_50",
-        "depth": 5,
-        "tap": 6,
-        "kind": "pad"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_51",
@@ -808753,46 +808899,46 @@
          457.92
         ],
         "d": "rst_rl_50",
+        "q": "rst_rl_51",
+        "depth": 5,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_52",
+        "xy": [
+         901.8,
+         457.92
+        ],
+        "d": "rst_rl_51",
         "q": "rst_n_t6",
         "depth": 6,
         "tap": 6,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_52",
+        "name": "u_rrl_53",
         "xy": [
          1049.32,
          194.32
         ],
-        "d": "rst_rl_49",
-        "q": "rst_rl_52",
+        "d": "rst_rl_50",
+        "q": "rst_rl_53",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_53",
+        "name": "u_rrl_54",
         "xy": [
          864.489,
          17.28
         ],
-        "d": "rst_rl_52",
+        "d": "rst_rl_53",
         "q": "rst_n_t36",
         "depth": 6,
         "tap": 36,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_54",
-        "xy": [
-         1425.6,
-         744.16
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_54",
-        "depth": 1,
-        "tap": 35,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_55",
@@ -808800,9 +808946,9 @@
          1425.6,
          744.16
         ],
-        "d": "rst_rl_54",
+        "d": "rst_root_n",
         "q": "rst_rl_55",
-        "depth": 2,
+        "depth": 1,
         "tap": 35,
         "kind": "pad"
        },
@@ -808814,7 +808960,7 @@
         ],
         "d": "rst_rl_55",
         "q": "rst_rl_56",
-        "depth": 3,
+        "depth": 2,
         "tap": 35,
         "kind": "pad"
        },
@@ -808826,7 +808972,7 @@
         ],
         "d": "rst_rl_56",
         "q": "rst_rl_57",
-        "depth": 4,
+        "depth": 3,
         "tap": 35,
         "kind": "pad"
        },
@@ -808838,7 +808984,7 @@
         ],
         "d": "rst_rl_57",
         "q": "rst_rl_58",
-        "depth": 5,
+        "depth": 4,
         "tap": 35,
         "kind": "pad"
        },
@@ -808849,22 +808995,22 @@
          744.16
         ],
         "d": "rst_rl_58",
-        "q": "rst_n_t35",
-        "depth": 6,
+        "q": "rst_rl_59",
+        "depth": 5,
         "tap": 35,
-        "kind": "tap"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_60",
         "xy": [
-         1324.08,
-         946.553
+         1425.6,
+         744.16
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_60",
-        "depth": 1,
-        "tap": 39,
-        "kind": "pad"
+        "d": "rst_rl_59",
+        "q": "rst_n_t35",
+        "depth": 6,
+        "tap": 35,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_61",
@@ -808872,9 +809018,9 @@
          1324.08,
          946.553
         ],
-        "d": "rst_rl_60",
+        "d": "rst_root_n",
         "q": "rst_rl_61",
-        "depth": 2,
+        "depth": 1,
         "tap": 39,
         "kind": "pad"
        },
@@ -808886,7 +809032,7 @@
         ],
         "d": "rst_rl_61",
         "q": "rst_rl_62",
-        "depth": 3,
+        "depth": 2,
         "tap": 39,
         "kind": "pad"
        },
@@ -808898,7 +809044,7 @@
         ],
         "d": "rst_rl_62",
         "q": "rst_rl_63",
-        "depth": 4,
+        "depth": 3,
         "tap": 39,
         "kind": "pad"
        },
@@ -808910,7 +809056,7 @@
         ],
         "d": "rst_rl_63",
         "q": "rst_rl_64",
-        "depth": 5,
+        "depth": 4,
         "tap": 39,
         "kind": "pad"
        },
@@ -808921,34 +809067,34 @@
          946.553
         ],
         "d": "rst_rl_64",
+        "q": "rst_rl_65",
+        "depth": 5,
+        "tap": 39,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_66",
+        "xy": [
+         1324.08,
+         946.553
+        ],
+        "d": "rst_rl_65",
         "q": "rst_n_t39",
         "depth": 6,
         "tap": 39,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_66",
+        "name": "u_rrl_67",
         "xy": [
          1429.32,
          574.32
         ],
         "d": "rst_root_n",
-        "q": "rst_rl_66",
+        "q": "rst_rl_67",
         "depth": 1,
         "tap": null,
         "kind": "wire"
-       },
-       {
-        "name": "u_rrl_67",
-        "xy": [
-         1386.72,
-         304.56
-        ],
-        "d": "rst_rl_66",
-        "q": "rst_rl_67",
-        "depth": 2,
-        "tap": 27,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_68",
@@ -808958,7 +809104,7 @@
         ],
         "d": "rst_rl_67",
         "q": "rst_rl_68",
-        "depth": 3,
+        "depth": 2,
         "tap": 27,
         "kind": "pad"
        },
@@ -808970,7 +809116,7 @@
         ],
         "d": "rst_rl_68",
         "q": "rst_rl_69",
-        "depth": 4,
+        "depth": 3,
         "tap": 27,
         "kind": "pad"
        },
@@ -808982,7 +809128,7 @@
         ],
         "d": "rst_rl_69",
         "q": "rst_rl_70",
-        "depth": 5,
+        "depth": 4,
         "tap": 27,
         "kind": "pad"
        },
@@ -808993,46 +809139,46 @@
          304.56
         ],
         "d": "rst_rl_70",
+        "q": "rst_rl_71",
+        "depth": 5,
+        "tap": 27,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_72",
+        "xy": [
+         1386.72,
+         304.56
+        ],
+        "d": "rst_rl_71",
         "q": "rst_n_t27",
         "depth": 6,
         "tap": 27,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_72",
+        "name": "u_rrl_73",
         "xy": [
          1386.72,
          298.08
         ],
-        "d": "rst_rl_66",
-        "q": "rst_rl_72",
-        "depth": 2,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_73",
-        "xy": [
-         1162.0800000000002,
-         289.44
-        ],
-        "d": "rst_rl_72",
+        "d": "rst_rl_67",
         "q": "rst_rl_73",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_74",
         "xy": [
-         901.8,
-         177.12
+         1162.0800000000002,
+         289.44
         ],
         "d": "rst_rl_73",
         "q": "rst_rl_74",
-        "depth": 4,
-        "tap": 2,
-        "kind": "pad"
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_75",
@@ -809042,7 +809188,7 @@
         ],
         "d": "rst_rl_74",
         "q": "rst_rl_75",
-        "depth": 5,
+        "depth": 4,
         "tap": 2,
         "kind": "pad"
        },
@@ -809053,58 +809199,58 @@
          177.12
         ],
         "d": "rst_rl_75",
+        "q": "rst_rl_76",
+        "depth": 5,
+        "tap": 2,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_77",
+        "xy": [
+         901.8,
+         177.12
+        ],
+        "d": "rst_rl_76",
         "q": "rst_n_t2",
         "depth": 6,
         "tap": 2,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_77",
+        "name": "u_rrl_78",
         "xy": [
          885.4799999999999,
          211.68
         ],
-        "d": "rst_rl_73",
-        "q": "rst_rl_77",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_78",
-        "xy": [
-         513.88,
-         211.68
-        ],
-        "d": "rst_rl_77",
+        "d": "rst_rl_74",
         "q": "rst_rl_78",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_79",
         "xy": [
-         180.36,
-         177.12
+         513.88,
+         211.68
         ],
         "d": "rst_rl_78",
-        "q": "rst_n_t0",
-        "depth": 6,
-        "tap": 0,
-        "kind": "tap"
+        "q": "rst_rl_79",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_80",
         "xy": [
-         1334.32,
-         764.32
+         180.36,
+         177.12
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_80",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_79",
+        "q": "rst_n_t0",
+        "depth": 6,
+        "tap": 0,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_81",
@@ -809112,71 +809258,71 @@
          1334.32,
          764.32
         ],
-        "d": "rst_rl_80",
+        "d": "rst_root_n",
         "q": "rst_rl_81",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_82",
         "xy": [
-         971.88,
-         756.0000000000001
+         1334.32,
+         764.32
         ],
         "d": "rst_rl_81",
         "q": "rst_rl_82",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_83",
         "xy": [
-         686.88,
-         738.64
+         971.88,
+         756.0000000000001
         ],
         "d": "rst_rl_82",
         "q": "rst_rl_83",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_84",
         "xy": [
-         595.32,
-         453.6
+         686.88,
+         738.64
         ],
         "d": "rst_rl_83",
         "q": "rst_rl_84",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_85",
         "xy": [
-         541.08,
-         153.36
+         595.32,
+         453.6
         ],
         "d": "rst_rl_84",
-        "q": "rst_n_t1",
-        "depth": 6,
-        "tap": 1,
-        "kind": "tap"
+        "q": "rst_rl_85",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_86",
         "xy": [
-         1317.6000000000001,
-         453.6
+         541.08,
+         153.36
         ],
-        "d": "rst_rl_81",
-        "q": "rst_rl_86",
-        "depth": 3,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_85",
+        "q": "rst_n_t1",
+        "depth": 6,
+        "tap": 1,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_87",
@@ -809184,9 +809330,9 @@
          1317.6000000000001,
          453.6
         ],
-        "d": "rst_rl_86",
+        "d": "rst_rl_82",
         "q": "rst_rl_87",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "pad"
        },
@@ -809198,33 +809344,33 @@
         ],
         "d": "rst_rl_87",
         "q": "rst_rl_88",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_89",
+        "xy": [
+         1317.6000000000001,
+         453.6
+        ],
+        "d": "rst_rl_88",
+        "q": "rst_rl_89",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_89",
+        "name": "u_rrl_90",
         "xy": [
          1262.52,
          153.36
         ],
-        "d": "rst_rl_88",
+        "d": "rst_rl_89",
         "q": "rst_n_t3",
         "depth": 6,
         "tap": 3,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_90",
-        "xy": [
-         1239.32,
-         764.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_90",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_91",
@@ -809232,23 +809378,23 @@
          1239.32,
          764.32
         ],
-        "d": "rst_rl_90",
+        "d": "rst_root_n",
         "q": "rst_rl_91",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_92",
         "xy": [
-         1157.76,
-         548.64
+         1239.32,
+         764.32
         ],
         "d": "rst_rl_91",
         "q": "rst_rl_92",
-        "depth": 3,
-        "tap": 29,
-        "kind": "pad"
+        "depth": 2,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_93",
@@ -809258,7 +809404,7 @@
         ],
         "d": "rst_rl_92",
         "q": "rst_rl_93",
-        "depth": 4,
+        "depth": 3,
         "tap": 29,
         "kind": "pad"
        },
@@ -809270,7 +809416,7 @@
         ],
         "d": "rst_rl_93",
         "q": "rst_rl_94",
-        "depth": 5,
+        "depth": 4,
         "tap": 29,
         "kind": "pad"
        },
@@ -809281,46 +809427,46 @@
          548.64
         ],
         "d": "rst_rl_94",
+        "q": "rst_rl_95",
+        "depth": 5,
+        "tap": 29,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_96",
+        "xy": [
+         1157.76,
+         548.64
+        ],
+        "d": "rst_rl_95",
         "q": "rst_n_t29",
         "depth": 6,
         "tap": 29,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_96",
+        "name": "u_rrl_97",
         "xy": [
          1162.0800000000002,
          548.64
         ],
-        "d": "rst_rl_91",
-        "q": "rst_rl_96",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_97",
-        "xy": [
-         859.68,
-         505.44
-        ],
-        "d": "rst_rl_96",
+        "d": "rst_rl_92",
         "q": "rst_rl_97",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_98",
         "xy": [
-         541.08,
-         460.08000000000004
+         859.68,
+         505.44
         ],
         "d": "rst_rl_97",
         "q": "rst_rl_98",
-        "depth": 5,
-        "tap": 5,
-        "kind": "pad"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_99",
@@ -809329,58 +809475,58 @@
          460.08000000000004
         ],
         "d": "rst_rl_98",
+        "q": "rst_rl_99",
+        "depth": 5,
+        "tap": 5,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_100",
+        "xy": [
+         541.08,
+         460.08000000000004
+        ],
+        "d": "rst_rl_99",
         "q": "rst_n_t5",
         "depth": 6,
         "tap": 5,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_100",
+        "name": "u_rrl_101",
         "xy": [
          548.64,
          453.6
         ],
-        "d": "rst_rl_97",
-        "q": "rst_rl_100",
+        "d": "rst_rl_98",
+        "q": "rst_rl_101",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_101",
+        "name": "u_rrl_102",
         "xy": [
          180.36,
          449.28
         ],
-        "d": "rst_rl_100",
+        "d": "rst_rl_101",
         "q": "rst_n_t4",
         "depth": 6,
         "tap": 4,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_102",
+        "name": "u_rrl_103",
         "xy": [
          859.32,
          764.32
         ],
-        "d": "rst_rl_91",
-        "q": "rst_rl_102",
+        "d": "rst_rl_92",
+        "q": "rst_rl_103",
         "depth": 3,
         "tap": null,
         "kind": "wire"
-       },
-       {
-        "name": "u_rrl_103",
-        "xy": [
-         669.32,
-         574.32
-        ],
-        "d": "rst_rl_102",
-        "q": "rst_rl_103",
-        "depth": 4,
-        "tap": 26,
-        "kind": "tap"
        },
        {
         "name": "u_rrl_104",
@@ -809390,9 +809536,9 @@
         ],
         "d": "rst_rl_103",
         "q": "rst_rl_104",
-        "depth": 5,
+        "depth": 4,
         "tap": 26,
-        "kind": "pad"
+        "kind": "tap"
        },
        {
         "name": "u_rrl_105",
@@ -809401,46 +809547,46 @@
          574.32
         ],
         "d": "rst_rl_104",
-        "q": "rst_n_t26",
-        "depth": 6,
+        "q": "rst_rl_105",
+        "depth": 5,
         "tap": 26,
         "kind": "pad"
        },
        {
         "name": "u_rrl_106",
         "xy": [
+         669.32,
+         574.32
+        ],
+        "d": "rst_rl_105",
+        "q": "rst_n_t26",
+        "depth": 6,
+        "tap": 26,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_107",
+        "xy": [
          558.36,
          306.68
         ],
-        "d": "rst_rl_103",
-        "q": "rst_rl_106",
+        "d": "rst_rl_104",
+        "q": "rst_rl_107",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_107",
+        "name": "u_rrl_108",
         "xy": [
          275.064,
          211.68
         ],
-        "d": "rst_rl_106",
+        "d": "rst_rl_107",
         "q": "rst_n_t41",
         "depth": 6,
         "tap": 41,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_108",
-        "xy": [
-         1334.32,
-         669.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_108",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_109",
@@ -809448,9 +809594,9 @@
          1334.32,
          669.32
         ],
-        "d": "rst_rl_108",
+        "d": "rst_root_n",
         "q": "rst_rl_109",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -809462,21 +809608,21 @@
         ],
         "d": "rst_rl_109",
         "q": "rst_rl_110",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_111",
         "xy": [
-         1262.52,
-         414.72
+         1334.32,
+         669.32
         ],
         "d": "rst_rl_110",
         "q": "rst_rl_111",
-        "depth": 4,
-        "tap": 7,
-        "kind": "pad"
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_112",
@@ -809486,7 +809632,7 @@
         ],
         "d": "rst_rl_111",
         "q": "rst_rl_112",
-        "depth": 5,
+        "depth": 4,
         "tap": 7,
         "kind": "pad"
        },
@@ -809497,34 +809643,34 @@
          414.72
         ],
         "d": "rst_rl_112",
+        "q": "rst_rl_113",
+        "depth": 5,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_114",
+        "xy": [
+         1262.52,
+         414.72
+        ],
+        "d": "rst_rl_113",
         "q": "rst_n_t7",
         "depth": 6,
         "tap": 7,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_114",
+        "name": "u_rrl_115",
         "xy": [
          1300.32,
          375.84
         ],
-        "d": "rst_rl_110",
-        "q": "rst_rl_114",
+        "d": "rst_rl_111",
+        "q": "rst_rl_115",
         "depth": 4,
         "tap": null,
         "kind": "wire"
-       },
-       {
-        "name": "u_rrl_115",
-        "xy": [
-         1126.44,
-         306.68
-        ],
-        "d": "rst_rl_114",
-        "q": "rst_rl_115",
-        "depth": 5,
-        "tap": 24,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_116",
@@ -809533,94 +809679,94 @@
          306.68
         ],
         "d": "rst_rl_115",
+        "q": "rst_rl_116",
+        "depth": 5,
+        "tap": 24,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_117",
+        "xy": [
+         1126.44,
+         306.68
+        ],
+        "d": "rst_rl_116",
         "q": "rst_n_t24",
         "depth": 6,
         "tap": 24,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_117",
+        "name": "u_rrl_118",
         "xy": [
          1119.9599999999998,
          306.68
         ],
-        "d": "rst_rl_114",
-        "q": "rst_rl_117",
+        "d": "rst_rl_115",
+        "q": "rst_rl_118",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_118",
+        "name": "u_rrl_119",
         "xy": [
          836.664,
          211.68
         ],
-        "d": "rst_rl_117",
+        "d": "rst_rl_118",
         "q": "rst_n_t42",
         "depth": 6,
         "tap": 42,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_119",
+        "name": "u_rrl_120",
         "xy": [
          1118.88,
          799.1999999999999
         ],
         "d": "rst_root_n",
-        "q": "rst_rl_119",
-        "depth": 1,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_120",
-        "xy": [
-         833.76,
-         842.4000000000001
-        ],
-        "d": "rst_rl_119",
         "q": "rst_rl_120",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_121",
         "xy": [
-         488.16,
-         853.5120000000001
+         833.76,
+         842.4000000000001
         ],
         "d": "rst_rl_120",
         "q": "rst_rl_121",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_122",
         "xy": [
-         146.04,
+         488.16,
          853.5120000000001
         ],
         "d": "rst_rl_121",
         "q": "rst_rl_122",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_123",
         "xy": [
-         17.28,
-         943.392
+         146.04,
+         853.5120000000001
         ],
         "d": "rst_rl_122",
         "q": "rst_rl_123",
-        "depth": 5,
-        "tap": 16,
-        "kind": "tap"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_124",
@@ -809629,106 +809775,106 @@
          943.392
         ],
         "d": "rst_rl_123",
+        "q": "rst_rl_124",
+        "depth": 5,
+        "tap": 16,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_125",
+        "xy": [
+         17.28,
+         943.392
+        ],
+        "d": "rst_rl_124",
         "q": "rst_n_t16",
         "depth": 6,
         "tap": 16,
         "kind": "pad"
        },
        {
-        "name": "u_rrl_125",
+        "name": "u_rrl_126",
         "xy": [
          17.28,
          1209.6
         ],
-        "d": "rst_rl_123",
+        "d": "rst_rl_124",
         "q": "rst_n_t21",
         "depth": 6,
         "tap": 21,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_126",
+        "name": "u_rrl_127",
         "xy": [
          1145.6879999999999,
          756.0000000000001
         ],
         "d": "rst_root_n",
-        "q": "rst_rl_126",
-        "depth": 1,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_127",
-        "xy": [
-         1144.32,
-         384.32
-        ],
-        "d": "rst_rl_126",
         "q": "rst_rl_127",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_128",
         "xy": [
-         954.32,
-         194.32
+         1144.32,
+         384.32
         ],
         "d": "rst_rl_127",
         "q": "rst_rl_128",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_129",
         "xy": [
-         574.32,
+         954.32,
          194.32
         ],
         "d": "rst_rl_128",
         "q": "rst_rl_129",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_130",
         "xy": [
-         220.32,
-         170.952
+         574.32,
+         194.32
         ],
         "d": "rst_rl_129",
         "q": "rst_rl_130",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_131",
         "xy": [
-         17.28,
-         17.28
+         220.32,
+         170.952
         ],
         "d": "rst_rl_130",
-        "q": "rst_n_t17",
-        "depth": 6,
-        "tap": 17,
-        "kind": "tap"
+        "q": "rst_rl_131",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_132",
         "xy": [
-         1429.32,
-         859.32
+         17.28,
+         17.28
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_132",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_131",
+        "q": "rst_n_t17",
+        "depth": 6,
+        "tap": 17,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_133",
@@ -809736,9 +809882,9 @@
          1429.32,
          859.32
         ],
-        "d": "rst_rl_132",
+        "d": "rst_root_n",
         "q": "rst_rl_133",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -809750,7 +809896,7 @@
         ],
         "d": "rst_rl_133",
         "q": "rst_rl_134",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "pad"
        },
@@ -809762,7 +809908,7 @@
         ],
         "d": "rst_rl_134",
         "q": "rst_rl_135",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "pad"
        },
@@ -809774,105 +809920,105 @@
         ],
         "d": "rst_rl_135",
         "q": "rst_rl_136",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_137",
+        "xy": [
+         1429.32,
+         859.32
+        ],
+        "d": "rst_rl_136",
+        "q": "rst_rl_137",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_137",
+        "name": "u_rrl_138",
         "xy": [
          1425.6,
          1209.6
         ],
-        "d": "rst_rl_136",
+        "d": "rst_rl_137",
         "q": "rst_n_t20",
         "depth": 6,
         "tap": 20,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_138",
+        "name": "u_rrl_139",
         "xy": [
          1239.32,
          669.32
         ],
         "d": "rst_root_n",
-        "q": "rst_rl_138",
-        "depth": 1,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_139",
-        "xy": [
-         1162.0800000000002,
-         375.84
-        ],
-        "d": "rst_rl_138",
         "q": "rst_rl_139",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_140",
         "xy": [
-         1018.6800000000001,
-         170.952
+         1162.0800000000002,
+         375.84
         ],
         "d": "rst_rl_139",
         "q": "rst_rl_140",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_141",
         "xy": [
-         678.2399999999999,
+         1018.6800000000001,
          170.952
         ],
         "d": "rst_rl_140",
         "q": "rst_rl_141",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_142",
         "xy": [
-         470.88,
-         99.36000000000001
+         678.2399999999999,
+         170.952
         ],
         "d": "rst_rl_141",
         "q": "rst_rl_142",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_143",
         "xy": [
-         288.0428,
-         17.28
+         470.88,
+         99.36000000000001
         ],
         "d": "rst_rl_142",
-        "q": "rst_n_t22",
-        "depth": 6,
-        "tap": 22,
-        "kind": "tap"
+        "q": "rst_rl_143",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_144",
         "xy": [
-         1334.32,
-         859.32
+         288.0428,
+         17.28
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_144",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_143",
+        "q": "rst_n_t22",
+        "depth": 6,
+        "tap": 22,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_145",
@@ -809880,71 +810026,71 @@
          1334.32,
          859.32
         ],
-        "d": "rst_rl_144",
+        "d": "rst_root_n",
         "q": "rst_rl_145",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_146",
         "xy": [
-         954.32,
+         1334.32,
          859.32
         ],
         "d": "rst_rl_145",
         "q": "rst_rl_146",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_147",
         "xy": [
-         574.32,
+         954.32,
          859.32
         ],
         "d": "rst_rl_146",
         "q": "rst_rl_147",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_148",
         "xy": [
-         479.32,
-         1144.32
+         574.32,
+         859.32
         ],
         "d": "rst_rl_147",
         "q": "rst_rl_148",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_149",
         "xy": [
-         340.0,
-         1209.6
+         479.32,
+         1144.32
         ],
         "d": "rst_rl_148",
-        "q": "rst_n_t23",
-        "depth": 6,
-        "tap": 23,
-        "kind": "tap"
+        "q": "rst_rl_149",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_150",
         "xy": [
-         1434.2399999999998,
-         462.24
+         340.0,
+         1209.6
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_150",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_149",
+        "q": "rst_n_t23",
+        "depth": 6,
+        "tap": 23,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_151",
@@ -809952,9 +810098,9 @@
          1434.2399999999998,
          462.24
         ],
-        "d": "rst_rl_150",
+        "d": "rst_root_n",
         "q": "rst_rl_151",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -809966,7 +810112,7 @@
         ],
         "d": "rst_rl_151",
         "q": "rst_rl_152",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "pad"
        },
@@ -809978,21 +810124,21 @@
         ],
         "d": "rst_rl_152",
         "q": "rst_rl_153",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_154",
         "xy": [
-         1425.6,
-         97.696
+         1434.2399999999998,
+         462.24
         ],
         "d": "rst_rl_153",
         "q": "rst_rl_154",
-        "depth": 5,
-        "tap": 30,
-        "kind": "pad"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_155",
@@ -810001,46 +810147,46 @@
          97.696
         ],
         "d": "rst_rl_154",
+        "q": "rst_rl_155",
+        "depth": 5,
+        "tap": 30,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_156",
+        "xy": [
+         1425.6,
+         97.696
+        ],
+        "d": "rst_rl_155",
         "q": "rst_n_t30",
         "depth": 6,
         "tap": 30,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_156",
+        "name": "u_rrl_157",
         "xy": [
          1334.88,
          211.68
         ],
-        "d": "rst_rl_153",
-        "q": "rst_rl_156",
+        "d": "rst_rl_154",
+        "q": "rst_rl_157",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_157",
+        "name": "u_rrl_158",
         "xy": [
          1154.0507,
          17.28
         ],
-        "d": "rst_rl_156",
+        "d": "rst_rl_157",
         "q": "rst_n_t25",
         "depth": 6,
         "tap": 25,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_158",
-        "xy": [
-         1144.32,
-         764.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_158",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_159",
@@ -810048,47 +810194,47 @@
          1144.32,
          764.32
         ],
-        "d": "rst_rl_158",
+        "d": "rst_root_n",
         "q": "rst_rl_159",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_160",
         "xy": [
-         781.88,
-         756.0000000000001
+         1144.32,
+         764.32
         ],
         "d": "rst_rl_159",
         "q": "rst_rl_160",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_161",
         "xy": [
-         639.36,
-         548.64
+         781.88,
+         756.0000000000001
         ],
         "d": "rst_rl_160",
         "q": "rst_rl_161",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_162",
         "xy": [
-         318.84,
-         531.672
+         639.36,
+         548.64
         ],
         "d": "rst_rl_161",
         "q": "rst_rl_162",
-        "depth": 5,
-        "tap": 32,
-        "kind": "pad"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_163",
@@ -810097,46 +810243,46 @@
          531.672
         ],
         "d": "rst_rl_162",
+        "q": "rst_rl_163",
+        "depth": 5,
+        "tap": 32,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_164",
+        "xy": [
+         318.84,
+         531.672
+        ],
+        "d": "rst_rl_163",
         "q": "rst_n_t32",
         "depth": 6,
         "tap": 32,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_164",
+        "name": "u_rrl_165",
         "xy": [
          318.84000000000003,
          525.1920000000001
         ],
-        "d": "rst_rl_161",
-        "q": "rst_rl_164",
+        "d": "rst_rl_162",
+        "q": "rst_rl_165",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_165",
+        "name": "u_rrl_166",
         "xy": [
          8.16,
          460.576
         ],
-        "d": "rst_rl_164",
+        "d": "rst_rl_165",
         "q": "rst_n_t40",
         "depth": 6,
         "tap": 40,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_166",
-        "xy": [
-         1429.32,
-         764.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_166",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_167",
@@ -810144,71 +810290,71 @@
          1429.32,
          764.32
         ],
-        "d": "rst_rl_166",
+        "d": "rst_root_n",
         "q": "rst_rl_167",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_168",
         "xy": [
-         1049.32,
+         1429.32,
          764.32
         ],
         "d": "rst_rl_167",
         "q": "rst_rl_168",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_169",
         "xy": [
-         686.88,
-         756.0000000000001
+         1049.32,
+         764.32
         ],
         "d": "rst_rl_168",
         "q": "rst_rl_169",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_170",
         "xy": [
-         323.88,
+         686.88,
          756.0000000000001
         ],
         "d": "rst_rl_169",
         "q": "rst_rl_170",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_171",
         "xy": [
-         17.28,
-         739.8
+         323.88,
+         756.0000000000001
         ],
         "d": "rst_rl_170",
-        "q": "rst_n_t34",
-        "depth": 6,
-        "tap": 34,
-        "kind": "tap"
+        "q": "rst_rl_171",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_172",
         "xy": [
-         1300.32,
-         972.0
+         17.28,
+         739.8
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_172",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_171",
+        "q": "rst_n_t34",
+        "depth": 6,
+        "tap": 34,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_173",
@@ -810216,9 +810362,9 @@
          1300.32,
          972.0
         ],
-        "d": "rst_rl_172",
+        "d": "rst_root_n",
         "q": "rst_rl_173",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -810230,7 +810376,7 @@
         ],
         "d": "rst_rl_173",
         "q": "rst_rl_174",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "pad"
        },
@@ -810242,45 +810388,45 @@
         ],
         "d": "rst_rl_174",
         "q": "rst_rl_175",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_176",
         "xy": [
-         1075.48,
-         1115.6399999999999
+         1300.32,
+         972.0
         ],
         "d": "rst_rl_175",
         "q": "rst_rl_176",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_177",
         "xy": [
-         735.1059,
-         1121.9002
+         1075.48,
+         1115.6399999999999
         ],
         "d": "rst_rl_176",
-        "q": "rst_n_t38",
-        "depth": 6,
-        "tap": 38,
-        "kind": "tap"
+        "q": "rst_rl_177",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_178",
         "xy": [
-         1209.6000000000001,
-         885.5999999999999
+         735.1059,
+         1121.9002
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_178",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_177",
+        "q": "rst_n_t38",
+        "depth": 6,
+        "tap": 38,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_179",
@@ -810288,9 +810434,9 @@
          1209.6000000000001,
          885.5999999999999
         ],
-        "d": "rst_rl_178",
+        "d": "rst_root_n",
         "q": "rst_rl_179",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -810302,7 +810448,7 @@
         ],
         "d": "rst_rl_179",
         "q": "rst_rl_180",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "pad"
        },
@@ -810314,7 +810460,7 @@
         ],
         "d": "rst_rl_180",
         "q": "rst_rl_181",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "pad"
        },
@@ -810326,17 +810472,29 @@
         ],
         "d": "rst_rl_181",
         "q": "rst_rl_182",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_183",
+        "xy": [
+         1209.6000000000001,
+         885.5999999999999
+        ],
+        "d": "rst_rl_182",
+        "q": "rst_rl_183",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_183",
+        "name": "u_rrl_184",
         "xy": [
          836.664,
          885.6
         ],
-        "d": "rst_rl_182",
+        "d": "rst_rl_183",
         "q": "rst_n_t44",
         "depth": 6,
         "tap": 44,
@@ -810391,7 +810549,7 @@
        "43": 4,
        "44": 2
       },
-      "n_tree": 105,
+      "n_tree": 106,
       "n_pad": 79,
       "reach_um": 405.0,
       "plan_reach_um": 380.0,
@@ -810693,8 +810851,8 @@
      {
       "name": "clk_t28",
       "xy": [
-       1126.44,
-       980.6
+       1126.818,
+       954.666
       ]
      },
      {
@@ -810784,7 +810942,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h10_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -811552,20 +811711,20 @@
        {
         "name": "u_rrl_31",
         "xy": [
-         1126.44,
-         980.6
+         1126.818,
+         954.666
         ],
         "d": "rst_rl_22",
         "q": "rst_rl_31",
         "depth": 3,
         "tap": 28,
-        "kind": "tap"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_32",
         "xy": [
-         1126.44,
-         980.6
+         1126.818,
+         954.666
         ],
         "d": "rst_rl_31",
         "q": "rst_rl_32",
@@ -811576,8 +811735,8 @@
        {
         "name": "u_rrl_33",
         "xy": [
-         1126.44,
-         980.6
+         1126.818,
+         954.666
         ],
         "d": "rst_rl_32",
         "q": "rst_rl_33",
@@ -811588,74 +811747,74 @@
        {
         "name": "u_rrl_34",
         "xy": [
-         1126.44,
-         980.6
+         1126.818,
+         954.666
         ],
         "d": "rst_rl_33",
         "q": "rst_n_t28",
         "depth": 6,
         "tap": 28,
-        "kind": "pad"
+        "kind": "tap"
        },
        {
         "name": "u_rrl_35",
         "xy": [
-         885.4799999999999,
-         1115.6399999999999
+         1119.9599999999998,
+         980.5999999999999
         ],
-        "d": "rst_rl_31",
+        "d": "rst_rl_22",
         "q": "rst_rl_35",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_36",
         "xy": [
-         513.88,
+         885.4799999999999,
          1115.6399999999999
         ],
         "d": "rst_rl_35",
         "q": "rst_rl_36",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_37",
         "xy": [
+         513.88,
+         1115.6399999999999
+        ],
+        "d": "rst_rl_36",
+        "q": "rst_rl_37",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_38",
+        "xy": [
          180.36,
          1121.04
         ],
-        "d": "rst_rl_36",
+        "d": "rst_rl_37",
         "q": "rst_n_t12",
         "depth": 6,
         "tap": 12,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_38",
+        "name": "u_rrl_39",
         "xy": [
          162.2426,
          1121.9872
         ],
-        "d": "rst_rl_36",
+        "d": "rst_rl_37",
         "q": "rst_n_t37",
         "depth": 6,
         "tap": 37,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_39",
-        "xy": [
-         1213.92,
-         1058.4
-        ],
-        "d": "rst_rl_22",
-        "q": "rst_rl_39",
-        "depth": 3,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_40",
@@ -811663,9 +811822,9 @@
          1213.92,
          1058.4
         ],
-        "d": "rst_rl_39",
+        "d": "rst_rl_22",
         "q": "rst_rl_40",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "pad"
        },
@@ -811677,33 +811836,33 @@
         ],
         "d": "rst_rl_40",
         "q": "rst_rl_41",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_42",
+        "xy": [
+         1213.92,
+         1058.4
+        ],
+        "d": "rst_rl_41",
+        "q": "rst_rl_42",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_42",
+        "name": "u_rrl_43",
         "xy": [
          901.8,
          1121.04
         ],
-        "d": "rst_rl_41",
+        "d": "rst_rl_42",
         "q": "rst_n_t14",
         "depth": 6,
         "tap": 14,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_43",
-        "xy": [
-         1425.6,
-         574.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_43",
-        "depth": 1,
-        "tap": 19,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_44",
@@ -811711,9 +811870,9 @@
          1425.6,
          574.32
         ],
-        "d": "rst_rl_43",
+        "d": "rst_root_n",
         "q": "rst_rl_44",
-        "depth": 2,
+        "depth": 1,
         "tap": 19,
         "kind": "pad"
        },
@@ -811725,9 +811884,9 @@
         ],
         "d": "rst_rl_44",
         "q": "rst_rl_45",
-        "depth": 3,
+        "depth": 2,
         "tap": 19,
-        "kind": "tap"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_46",
@@ -811737,9 +811896,9 @@
         ],
         "d": "rst_rl_45",
         "q": "rst_rl_46",
-        "depth": 4,
+        "depth": 3,
         "tap": 19,
-        "kind": "pad"
+        "kind": "tap"
        },
        {
         "name": "u_rrl_47",
@@ -811749,7 +811908,7 @@
         ],
         "d": "rst_rl_46",
         "q": "rst_rl_47",
-        "depth": 5,
+        "depth": 4,
         "tap": 19,
         "kind": "pad"
        },
@@ -811760,34 +811919,34 @@
          574.32
         ],
         "d": "rst_rl_47",
-        "q": "rst_n_t19",
-        "depth": 6,
+        "q": "rst_rl_48",
+        "depth": 5,
         "tap": 19,
         "kind": "pad"
        },
        {
         "name": "u_rrl_49",
         "xy": [
-         1144.32,
-         479.32
+         1425.6,
+         574.32
         ],
-        "d": "rst_rl_45",
-        "q": "rst_rl_49",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
+        "d": "rst_rl_48",
+        "q": "rst_n_t19",
+        "depth": 6,
+        "tap": 19,
+        "kind": "pad"
        },
        {
         "name": "u_rrl_50",
         "xy": [
-         901.8,
-         457.92
+         1144.32,
+         479.32
         ],
-        "d": "rst_rl_49",
+        "d": "rst_rl_46",
         "q": "rst_rl_50",
-        "depth": 5,
-        "tap": 6,
-        "kind": "pad"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_51",
@@ -811796,46 +811955,46 @@
          457.92
         ],
         "d": "rst_rl_50",
+        "q": "rst_rl_51",
+        "depth": 5,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_52",
+        "xy": [
+         901.8,
+         457.92
+        ],
+        "d": "rst_rl_51",
         "q": "rst_n_t6",
         "depth": 6,
         "tap": 6,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_52",
+        "name": "u_rrl_53",
         "xy": [
          1049.32,
          194.32
         ],
-        "d": "rst_rl_49",
-        "q": "rst_rl_52",
+        "d": "rst_rl_50",
+        "q": "rst_rl_53",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_53",
+        "name": "u_rrl_54",
         "xy": [
          864.489,
          17.28
         ],
-        "d": "rst_rl_52",
+        "d": "rst_rl_53",
         "q": "rst_n_t36",
         "depth": 6,
         "tap": 36,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_54",
-        "xy": [
-         1425.6,
-         744.16
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_54",
-        "depth": 1,
-        "tap": 35,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_55",
@@ -811843,9 +812002,9 @@
          1425.6,
          744.16
         ],
-        "d": "rst_rl_54",
+        "d": "rst_root_n",
         "q": "rst_rl_55",
-        "depth": 2,
+        "depth": 1,
         "tap": 35,
         "kind": "pad"
        },
@@ -811857,7 +812016,7 @@
         ],
         "d": "rst_rl_55",
         "q": "rst_rl_56",
-        "depth": 3,
+        "depth": 2,
         "tap": 35,
         "kind": "pad"
        },
@@ -811869,7 +812028,7 @@
         ],
         "d": "rst_rl_56",
         "q": "rst_rl_57",
-        "depth": 4,
+        "depth": 3,
         "tap": 35,
         "kind": "pad"
        },
@@ -811881,7 +812040,7 @@
         ],
         "d": "rst_rl_57",
         "q": "rst_rl_58",
-        "depth": 5,
+        "depth": 4,
         "tap": 35,
         "kind": "pad"
        },
@@ -811892,34 +812051,34 @@
          744.16
         ],
         "d": "rst_rl_58",
+        "q": "rst_rl_59",
+        "depth": 5,
+        "tap": 35,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_60",
+        "xy": [
+         1425.6,
+         744.16
+        ],
+        "d": "rst_rl_59",
         "q": "rst_n_t35",
         "depth": 6,
         "tap": 35,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_60",
+        "name": "u_rrl_61",
         "xy": [
          1429.32,
          574.32
         ],
         "d": "rst_root_n",
-        "q": "rst_rl_60",
+        "q": "rst_rl_61",
         "depth": 1,
         "tap": null,
         "kind": "wire"
-       },
-       {
-        "name": "u_rrl_61",
-        "xy": [
-         1386.72,
-         304.56
-        ],
-        "d": "rst_rl_60",
-        "q": "rst_rl_61",
-        "depth": 2,
-        "tap": 27,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_62",
@@ -811929,7 +812088,7 @@
         ],
         "d": "rst_rl_61",
         "q": "rst_rl_62",
-        "depth": 3,
+        "depth": 2,
         "tap": 27,
         "kind": "pad"
        },
@@ -811941,7 +812100,7 @@
         ],
         "d": "rst_rl_62",
         "q": "rst_rl_63",
-        "depth": 4,
+        "depth": 3,
         "tap": 27,
         "kind": "pad"
        },
@@ -811953,7 +812112,7 @@
         ],
         "d": "rst_rl_63",
         "q": "rst_rl_64",
-        "depth": 5,
+        "depth": 4,
         "tap": 27,
         "kind": "pad"
        },
@@ -811964,46 +812123,46 @@
          304.56
         ],
         "d": "rst_rl_64",
+        "q": "rst_rl_65",
+        "depth": 5,
+        "tap": 27,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_66",
+        "xy": [
+         1386.72,
+         304.56
+        ],
+        "d": "rst_rl_65",
         "q": "rst_n_t27",
         "depth": 6,
         "tap": 27,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_66",
+        "name": "u_rrl_67",
         "xy": [
          1386.72,
          298.08
         ],
-        "d": "rst_rl_60",
-        "q": "rst_rl_66",
-        "depth": 2,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_67",
-        "xy": [
-         1162.0800000000002,
-         289.44
-        ],
-        "d": "rst_rl_66",
+        "d": "rst_rl_61",
         "q": "rst_rl_67",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_68",
         "xy": [
-         901.8,
-         177.12
+         1162.0800000000002,
+         289.44
         ],
         "d": "rst_rl_67",
         "q": "rst_rl_68",
-        "depth": 4,
-        "tap": 2,
-        "kind": "pad"
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_69",
@@ -812013,7 +812172,7 @@
         ],
         "d": "rst_rl_68",
         "q": "rst_rl_69",
-        "depth": 5,
+        "depth": 4,
         "tap": 2,
         "kind": "pad"
        },
@@ -812024,58 +812183,58 @@
          177.12
         ],
         "d": "rst_rl_69",
+        "q": "rst_rl_70",
+        "depth": 5,
+        "tap": 2,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_71",
+        "xy": [
+         901.8,
+         177.12
+        ],
+        "d": "rst_rl_70",
         "q": "rst_n_t2",
         "depth": 6,
         "tap": 2,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_71",
+        "name": "u_rrl_72",
         "xy": [
          885.4799999999999,
          211.68
         ],
-        "d": "rst_rl_67",
-        "q": "rst_rl_71",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_72",
-        "xy": [
-         513.88,
-         211.68
-        ],
-        "d": "rst_rl_71",
+        "d": "rst_rl_68",
         "q": "rst_rl_72",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_73",
         "xy": [
-         180.36,
-         177.12
+         513.88,
+         211.68
         ],
         "d": "rst_rl_72",
-        "q": "rst_n_t0",
-        "depth": 6,
-        "tap": 0,
-        "kind": "tap"
+        "q": "rst_rl_73",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_74",
         "xy": [
-         1334.32,
-         764.32
+         180.36,
+         177.12
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_74",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_73",
+        "q": "rst_n_t0",
+        "depth": 6,
+        "tap": 0,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_75",
@@ -812083,71 +812242,71 @@
          1334.32,
          764.32
         ],
-        "d": "rst_rl_74",
+        "d": "rst_root_n",
         "q": "rst_rl_75",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_76",
         "xy": [
-         971.88,
-         756.0000000000001
+         1334.32,
+         764.32
         ],
         "d": "rst_rl_75",
         "q": "rst_rl_76",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_77",
         "xy": [
-         686.88,
-         738.64
+         971.88,
+         756.0000000000001
         ],
         "d": "rst_rl_76",
         "q": "rst_rl_77",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_78",
         "xy": [
-         595.32,
-         453.6
+         686.88,
+         738.64
         ],
         "d": "rst_rl_77",
         "q": "rst_rl_78",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_79",
         "xy": [
-         541.08,
-         153.36
+         595.32,
+         453.6
         ],
         "d": "rst_rl_78",
-        "q": "rst_n_t1",
-        "depth": 6,
-        "tap": 1,
-        "kind": "tap"
+        "q": "rst_rl_79",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_80",
         "xy": [
-         1317.6000000000001,
-         453.6
+         541.08,
+         153.36
         ],
-        "d": "rst_rl_75",
-        "q": "rst_rl_80",
-        "depth": 3,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_79",
+        "q": "rst_n_t1",
+        "depth": 6,
+        "tap": 1,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_81",
@@ -812155,9 +812314,9 @@
          1317.6000000000001,
          453.6
         ],
-        "d": "rst_rl_80",
+        "d": "rst_rl_76",
         "q": "rst_rl_81",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "pad"
        },
@@ -812169,33 +812328,33 @@
         ],
         "d": "rst_rl_81",
         "q": "rst_rl_82",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_83",
+        "xy": [
+         1317.6000000000001,
+         453.6
+        ],
+        "d": "rst_rl_82",
+        "q": "rst_rl_83",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_83",
+        "name": "u_rrl_84",
         "xy": [
          1262.52,
          153.36
         ],
-        "d": "rst_rl_82",
+        "d": "rst_rl_83",
         "q": "rst_n_t3",
         "depth": 6,
         "tap": 3,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_84",
-        "xy": [
-         1239.32,
-         764.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_84",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_85",
@@ -812203,23 +812362,23 @@
          1239.32,
          764.32
         ],
-        "d": "rst_rl_84",
+        "d": "rst_root_n",
         "q": "rst_rl_85",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_86",
         "xy": [
-         1157.76,
-         548.64
+         1239.32,
+         764.32
         ],
         "d": "rst_rl_85",
         "q": "rst_rl_86",
-        "depth": 3,
-        "tap": 29,
-        "kind": "pad"
+        "depth": 2,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_87",
@@ -812229,7 +812388,7 @@
         ],
         "d": "rst_rl_86",
         "q": "rst_rl_87",
-        "depth": 4,
+        "depth": 3,
         "tap": 29,
         "kind": "pad"
        },
@@ -812241,7 +812400,7 @@
         ],
         "d": "rst_rl_87",
         "q": "rst_rl_88",
-        "depth": 5,
+        "depth": 4,
         "tap": 29,
         "kind": "pad"
        },
@@ -812252,46 +812411,46 @@
          548.64
         ],
         "d": "rst_rl_88",
+        "q": "rst_rl_89",
+        "depth": 5,
+        "tap": 29,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_90",
+        "xy": [
+         1157.76,
+         548.64
+        ],
+        "d": "rst_rl_89",
         "q": "rst_n_t29",
         "depth": 6,
         "tap": 29,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_90",
+        "name": "u_rrl_91",
         "xy": [
          1162.0800000000002,
          548.64
         ],
-        "d": "rst_rl_85",
-        "q": "rst_rl_90",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_91",
-        "xy": [
-         859.68,
-         505.44
-        ],
-        "d": "rst_rl_90",
+        "d": "rst_rl_86",
         "q": "rst_rl_91",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_92",
         "xy": [
-         541.08,
-         460.08000000000004
+         859.68,
+         505.44
         ],
         "d": "rst_rl_91",
         "q": "rst_rl_92",
-        "depth": 5,
-        "tap": 5,
-        "kind": "pad"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_93",
@@ -812300,58 +812459,58 @@
          460.08000000000004
         ],
         "d": "rst_rl_92",
+        "q": "rst_rl_93",
+        "depth": 5,
+        "tap": 5,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_94",
+        "xy": [
+         541.08,
+         460.08000000000004
+        ],
+        "d": "rst_rl_93",
         "q": "rst_n_t5",
         "depth": 6,
         "tap": 5,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_94",
+        "name": "u_rrl_95",
         "xy": [
          548.64,
          453.6
         ],
-        "d": "rst_rl_91",
-        "q": "rst_rl_94",
+        "d": "rst_rl_92",
+        "q": "rst_rl_95",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_95",
+        "name": "u_rrl_96",
         "xy": [
          180.36,
          449.28
         ],
-        "d": "rst_rl_94",
+        "d": "rst_rl_95",
         "q": "rst_n_t4",
         "depth": 6,
         "tap": 4,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_96",
+        "name": "u_rrl_97",
         "xy": [
          859.32,
          764.32
         ],
-        "d": "rst_rl_85",
-        "q": "rst_rl_96",
+        "d": "rst_rl_86",
+        "q": "rst_rl_97",
         "depth": 3,
         "tap": null,
         "kind": "wire"
-       },
-       {
-        "name": "u_rrl_97",
-        "xy": [
-         669.32,
-         574.32
-        ],
-        "d": "rst_rl_96",
-        "q": "rst_rl_97",
-        "depth": 4,
-        "tap": 26,
-        "kind": "tap"
        },
        {
         "name": "u_rrl_98",
@@ -812361,9 +812520,9 @@
         ],
         "d": "rst_rl_97",
         "q": "rst_rl_98",
-        "depth": 5,
+        "depth": 4,
         "tap": 26,
-        "kind": "pad"
+        "kind": "tap"
        },
        {
         "name": "u_rrl_99",
@@ -812372,46 +812531,46 @@
          574.32
         ],
         "d": "rst_rl_98",
-        "q": "rst_n_t26",
-        "depth": 6,
+        "q": "rst_rl_99",
+        "depth": 5,
         "tap": 26,
         "kind": "pad"
        },
        {
         "name": "u_rrl_100",
         "xy": [
+         669.32,
+         574.32
+        ],
+        "d": "rst_rl_99",
+        "q": "rst_n_t26",
+        "depth": 6,
+        "tap": 26,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_101",
+        "xy": [
          558.36,
          306.68
         ],
-        "d": "rst_rl_97",
-        "q": "rst_rl_100",
+        "d": "rst_rl_98",
+        "q": "rst_rl_101",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_101",
+        "name": "u_rrl_102",
         "xy": [
          275.064,
          211.68
         ],
-        "d": "rst_rl_100",
+        "d": "rst_rl_101",
         "q": "rst_n_t40",
         "depth": 6,
         "tap": 40,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_102",
-        "xy": [
-         1334.32,
-         669.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_102",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_103",
@@ -812419,9 +812578,9 @@
          1334.32,
          669.32
         ],
-        "d": "rst_rl_102",
+        "d": "rst_root_n",
         "q": "rst_rl_103",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -812433,21 +812592,21 @@
         ],
         "d": "rst_rl_103",
         "q": "rst_rl_104",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_105",
         "xy": [
-         1262.52,
-         414.72
+         1334.32,
+         669.32
         ],
         "d": "rst_rl_104",
         "q": "rst_rl_105",
-        "depth": 4,
-        "tap": 7,
-        "kind": "pad"
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_106",
@@ -812457,7 +812616,7 @@
         ],
         "d": "rst_rl_105",
         "q": "rst_rl_106",
-        "depth": 5,
+        "depth": 4,
         "tap": 7,
         "kind": "pad"
        },
@@ -812468,34 +812627,34 @@
          414.72
         ],
         "d": "rst_rl_106",
+        "q": "rst_rl_107",
+        "depth": 5,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_108",
+        "xy": [
+         1262.52,
+         414.72
+        ],
+        "d": "rst_rl_107",
         "q": "rst_n_t7",
         "depth": 6,
         "tap": 7,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_108",
+        "name": "u_rrl_109",
         "xy": [
          1300.32,
          375.84
         ],
-        "d": "rst_rl_104",
-        "q": "rst_rl_108",
+        "d": "rst_rl_105",
+        "q": "rst_rl_109",
         "depth": 4,
         "tap": null,
         "kind": "wire"
-       },
-       {
-        "name": "u_rrl_109",
-        "xy": [
-         1126.44,
-         306.68
-        ],
-        "d": "rst_rl_108",
-        "q": "rst_rl_109",
-        "depth": 5,
-        "tap": 24,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_110",
@@ -812504,94 +812663,94 @@
          306.68
         ],
         "d": "rst_rl_109",
+        "q": "rst_rl_110",
+        "depth": 5,
+        "tap": 24,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_111",
+        "xy": [
+         1126.44,
+         306.68
+        ],
+        "d": "rst_rl_110",
         "q": "rst_n_t24",
         "depth": 6,
         "tap": 24,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_111",
+        "name": "u_rrl_112",
         "xy": [
          1119.9599999999998,
          306.68
         ],
-        "d": "rst_rl_108",
-        "q": "rst_rl_111",
+        "d": "rst_rl_109",
+        "q": "rst_rl_112",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_112",
+        "name": "u_rrl_113",
         "xy": [
          836.664,
          211.68
         ],
-        "d": "rst_rl_111",
+        "d": "rst_rl_112",
         "q": "rst_n_t41",
         "depth": 6,
         "tap": 41,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_113",
+        "name": "u_rrl_114",
         "xy": [
          1118.88,
          799.1999999999999
         ],
         "d": "rst_root_n",
-        "q": "rst_rl_113",
-        "depth": 1,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_114",
-        "xy": [
-         833.76,
-         842.4000000000001
-        ],
-        "d": "rst_rl_113",
         "q": "rst_rl_114",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_115",
         "xy": [
-         488.16,
-         853.5120000000001
+         833.76,
+         842.4000000000001
         ],
         "d": "rst_rl_114",
         "q": "rst_rl_115",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_116",
         "xy": [
-         146.04,
+         488.16,
          853.5120000000001
         ],
         "d": "rst_rl_115",
         "q": "rst_rl_116",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_117",
         "xy": [
-         17.28,
-         943.392
+         146.04,
+         853.5120000000001
         ],
         "d": "rst_rl_116",
         "q": "rst_rl_117",
-        "depth": 5,
-        "tap": 16,
-        "kind": "tap"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_118",
@@ -812600,106 +812759,106 @@
          943.392
         ],
         "d": "rst_rl_117",
+        "q": "rst_rl_118",
+        "depth": 5,
+        "tap": 16,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_119",
+        "xy": [
+         17.28,
+         943.392
+        ],
+        "d": "rst_rl_118",
         "q": "rst_n_t16",
         "depth": 6,
         "tap": 16,
         "kind": "pad"
        },
        {
-        "name": "u_rrl_119",
+        "name": "u_rrl_120",
         "xy": [
          17.28,
          1209.6
         ],
-        "d": "rst_rl_117",
+        "d": "rst_rl_118",
         "q": "rst_n_t21",
         "depth": 6,
         "tap": 21,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_120",
+        "name": "u_rrl_121",
         "xy": [
          1145.6879999999999,
          756.0000000000001
         ],
         "d": "rst_root_n",
-        "q": "rst_rl_120",
-        "depth": 1,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_121",
-        "xy": [
-         1144.32,
-         384.32
-        ],
-        "d": "rst_rl_120",
         "q": "rst_rl_121",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_122",
         "xy": [
-         954.32,
-         194.32
+         1144.32,
+         384.32
         ],
         "d": "rst_rl_121",
         "q": "rst_rl_122",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_123",
         "xy": [
-         574.32,
+         954.32,
          194.32
         ],
         "d": "rst_rl_122",
         "q": "rst_rl_123",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_124",
         "xy": [
-         220.32,
-         170.952
+         574.32,
+         194.32
         ],
         "d": "rst_rl_123",
         "q": "rst_rl_124",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_125",
         "xy": [
-         17.28,
-         17.28
+         220.32,
+         170.952
         ],
         "d": "rst_rl_124",
-        "q": "rst_n_t17",
-        "depth": 6,
-        "tap": 17,
-        "kind": "tap"
+        "q": "rst_rl_125",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_126",
         "xy": [
-         1429.32,
-         859.32
+         17.28,
+         17.28
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_126",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_125",
+        "q": "rst_n_t17",
+        "depth": 6,
+        "tap": 17,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_127",
@@ -812707,9 +812866,9 @@
          1429.32,
          859.32
         ],
-        "d": "rst_rl_126",
+        "d": "rst_root_n",
         "q": "rst_rl_127",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -812721,7 +812880,7 @@
         ],
         "d": "rst_rl_127",
         "q": "rst_rl_128",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "pad"
        },
@@ -812733,7 +812892,7 @@
         ],
         "d": "rst_rl_128",
         "q": "rst_rl_129",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "pad"
        },
@@ -812745,105 +812904,105 @@
         ],
         "d": "rst_rl_129",
         "q": "rst_rl_130",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_131",
+        "xy": [
+         1429.32,
+         859.32
+        ],
+        "d": "rst_rl_130",
+        "q": "rst_rl_131",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_131",
+        "name": "u_rrl_132",
         "xy": [
          1425.6,
          1209.6
         ],
-        "d": "rst_rl_130",
+        "d": "rst_rl_131",
         "q": "rst_n_t20",
         "depth": 6,
         "tap": 20,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_132",
+        "name": "u_rrl_133",
         "xy": [
          1239.32,
          669.32
         ],
         "d": "rst_root_n",
-        "q": "rst_rl_132",
-        "depth": 1,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_133",
-        "xy": [
-         1162.0800000000002,
-         375.84
-        ],
-        "d": "rst_rl_132",
         "q": "rst_rl_133",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_134",
         "xy": [
-         1018.6800000000001,
-         170.952
+         1162.0800000000002,
+         375.84
         ],
         "d": "rst_rl_133",
         "q": "rst_rl_134",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_135",
         "xy": [
-         678.2399999999999,
+         1018.6800000000001,
          170.952
         ],
         "d": "rst_rl_134",
         "q": "rst_rl_135",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_136",
         "xy": [
-         470.88,
-         99.36000000000001
+         678.2399999999999,
+         170.952
         ],
         "d": "rst_rl_135",
         "q": "rst_rl_136",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_137",
         "xy": [
-         288.0428,
-         17.28
+         470.88,
+         99.36000000000001
         ],
         "d": "rst_rl_136",
-        "q": "rst_n_t22",
-        "depth": 6,
-        "tap": 22,
-        "kind": "tap"
+        "q": "rst_rl_137",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_138",
         "xy": [
-         1334.32,
-         859.32
+         288.0428,
+         17.28
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_138",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_137",
+        "q": "rst_n_t22",
+        "depth": 6,
+        "tap": 22,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_139",
@@ -812851,71 +813010,71 @@
          1334.32,
          859.32
         ],
-        "d": "rst_rl_138",
+        "d": "rst_root_n",
         "q": "rst_rl_139",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_140",
         "xy": [
-         954.32,
+         1334.32,
          859.32
         ],
         "d": "rst_rl_139",
         "q": "rst_rl_140",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_141",
         "xy": [
-         574.32,
+         954.32,
          859.32
         ],
         "d": "rst_rl_140",
         "q": "rst_rl_141",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_142",
         "xy": [
-         479.32,
-         1144.32
+         574.32,
+         859.32
         ],
         "d": "rst_rl_141",
         "q": "rst_rl_142",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_143",
         "xy": [
-         340.0,
-         1209.6
+         479.32,
+         1144.32
         ],
         "d": "rst_rl_142",
-        "q": "rst_n_t23",
-        "depth": 6,
-        "tap": 23,
-        "kind": "tap"
+        "q": "rst_rl_143",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_144",
         "xy": [
-         1434.2399999999998,
-         462.24
+         340.0,
+         1209.6
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_144",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_143",
+        "q": "rst_n_t23",
+        "depth": 6,
+        "tap": 23,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_145",
@@ -812923,9 +813082,9 @@
          1434.2399999999998,
          462.24
         ],
-        "d": "rst_rl_144",
+        "d": "rst_root_n",
         "q": "rst_rl_145",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -812937,7 +813096,7 @@
         ],
         "d": "rst_rl_145",
         "q": "rst_rl_146",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "pad"
        },
@@ -812949,21 +813108,21 @@
         ],
         "d": "rst_rl_146",
         "q": "rst_rl_147",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_148",
         "xy": [
-         1425.6,
-         97.696
+         1434.2399999999998,
+         462.24
         ],
         "d": "rst_rl_147",
         "q": "rst_rl_148",
-        "depth": 5,
-        "tap": 30,
-        "kind": "pad"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_149",
@@ -812972,46 +813131,46 @@
          97.696
         ],
         "d": "rst_rl_148",
+        "q": "rst_rl_149",
+        "depth": 5,
+        "tap": 30,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_150",
+        "xy": [
+         1425.6,
+         97.696
+        ],
+        "d": "rst_rl_149",
         "q": "rst_n_t30",
         "depth": 6,
         "tap": 30,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_150",
+        "name": "u_rrl_151",
         "xy": [
          1334.88,
          211.68
         ],
-        "d": "rst_rl_147",
-        "q": "rst_rl_150",
+        "d": "rst_rl_148",
+        "q": "rst_rl_151",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_151",
+        "name": "u_rrl_152",
         "xy": [
          1154.0507,
          17.28
         ],
-        "d": "rst_rl_150",
+        "d": "rst_rl_151",
         "q": "rst_n_t25",
         "depth": 6,
         "tap": 25,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_152",
-        "xy": [
-         1144.32,
-         764.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_152",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_153",
@@ -813019,47 +813178,47 @@
          1144.32,
          764.32
         ],
-        "d": "rst_rl_152",
+        "d": "rst_root_n",
         "q": "rst_rl_153",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_154",
         "xy": [
-         781.88,
-         756.0000000000001
+         1144.32,
+         764.32
         ],
         "d": "rst_rl_153",
         "q": "rst_rl_154",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_155",
         "xy": [
-         639.36,
-         548.64
+         781.88,
+         756.0000000000001
         ],
         "d": "rst_rl_154",
         "q": "rst_rl_155",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_156",
         "xy": [
-         318.84,
-         531.672
+         639.36,
+         548.64
         ],
         "d": "rst_rl_155",
         "q": "rst_rl_156",
-        "depth": 5,
-        "tap": 32,
-        "kind": "pad"
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_157",
@@ -813068,46 +813227,46 @@
          531.672
         ],
         "d": "rst_rl_156",
+        "q": "rst_rl_157",
+        "depth": 5,
+        "tap": 32,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_158",
+        "xy": [
+         318.84,
+         531.672
+        ],
+        "d": "rst_rl_157",
         "q": "rst_n_t32",
         "depth": 6,
         "tap": 32,
         "kind": "tap"
        },
        {
-        "name": "u_rrl_158",
+        "name": "u_rrl_159",
         "xy": [
          318.84000000000003,
          525.1920000000001
         ],
-        "d": "rst_rl_155",
-        "q": "rst_rl_158",
+        "d": "rst_rl_156",
+        "q": "rst_rl_159",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_159",
+        "name": "u_rrl_160",
         "xy": [
          8.16,
          460.576
         ],
-        "d": "rst_rl_158",
+        "d": "rst_rl_159",
         "q": "rst_n_t39",
         "depth": 6,
         "tap": 39,
         "kind": "tap"
-       },
-       {
-        "name": "u_rrl_160",
-        "xy": [
-         1429.32,
-         764.32
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_160",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
        },
        {
         "name": "u_rrl_161",
@@ -813115,71 +813274,71 @@
          1429.32,
          764.32
         ],
-        "d": "rst_rl_160",
+        "d": "rst_root_n",
         "q": "rst_rl_161",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_162",
         "xy": [
-         1049.32,
+         1429.32,
          764.32
         ],
         "d": "rst_rl_161",
         "q": "rst_rl_162",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_163",
         "xy": [
-         686.88,
-         756.0000000000001
+         1049.32,
+         764.32
         ],
         "d": "rst_rl_162",
         "q": "rst_rl_163",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_164",
         "xy": [
-         323.88,
+         686.88,
          756.0000000000001
         ],
         "d": "rst_rl_163",
         "q": "rst_rl_164",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_165",
         "xy": [
-         17.28,
-         739.8
+         323.88,
+         756.0000000000001
         ],
         "d": "rst_rl_164",
-        "q": "rst_n_t34",
-        "depth": 6,
-        "tap": 34,
-        "kind": "tap"
+        "q": "rst_rl_165",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_166",
         "xy": [
-         1300.32,
-         972.0
+         17.28,
+         739.8
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_166",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_165",
+        "q": "rst_n_t34",
+        "depth": 6,
+        "tap": 34,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_167",
@@ -813187,9 +813346,9 @@
          1300.32,
          972.0
         ],
-        "d": "rst_rl_166",
+        "d": "rst_root_n",
         "q": "rst_rl_167",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -813201,7 +813360,7 @@
         ],
         "d": "rst_rl_167",
         "q": "rst_rl_168",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "pad"
        },
@@ -813213,45 +813372,45 @@
         ],
         "d": "rst_rl_168",
         "q": "rst_rl_169",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
-        "kind": "wire"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_170",
         "xy": [
-         1075.48,
-         1115.6399999999999
+         1300.32,
+         972.0
         ],
         "d": "rst_rl_169",
         "q": "rst_rl_170",
-        "depth": 5,
+        "depth": 4,
         "tap": null,
         "kind": "wire"
        },
        {
         "name": "u_rrl_171",
         "xy": [
-         735.1059,
-         1121.9002
+         1075.48,
+         1115.6399999999999
         ],
         "d": "rst_rl_170",
-        "q": "rst_n_t38",
-        "depth": 6,
-        "tap": 38,
-        "kind": "tap"
+        "q": "rst_rl_171",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_172",
         "xy": [
-         1209.6000000000001,
-         885.5999999999999
+         735.1059,
+         1121.9002
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_172",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
+        "d": "rst_rl_171",
+        "q": "rst_n_t38",
+        "depth": 6,
+        "tap": 38,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_173",
@@ -813259,9 +813418,9 @@
          1209.6000000000001,
          885.5999999999999
         ],
-        "d": "rst_rl_172",
+        "d": "rst_root_n",
         "q": "rst_rl_173",
-        "depth": 2,
+        "depth": 1,
         "tap": null,
         "kind": "pad"
        },
@@ -813273,7 +813432,7 @@
         ],
         "d": "rst_rl_173",
         "q": "rst_rl_174",
-        "depth": 3,
+        "depth": 2,
         "tap": null,
         "kind": "pad"
        },
@@ -813285,7 +813444,7 @@
         ],
         "d": "rst_rl_174",
         "q": "rst_rl_175",
-        "depth": 4,
+        "depth": 3,
         "tap": null,
         "kind": "pad"
        },
@@ -813297,17 +813456,29 @@
         ],
         "d": "rst_rl_175",
         "q": "rst_rl_176",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_177",
+        "xy": [
+         1209.6000000000001,
+         885.5999999999999
+        ],
+        "d": "rst_rl_176",
+        "q": "rst_rl_177",
         "depth": 5,
         "tap": null,
         "kind": "wire"
        },
        {
-        "name": "u_rrl_177",
+        "name": "u_rrl_178",
         "xy": [
          836.664,
          885.6
         ],
-        "d": "rst_rl_176",
+        "d": "rst_rl_177",
         "q": "rst_n_t43",
         "depth": 6,
         "tap": 43,
@@ -813361,7 +813532,7 @@
        "42": 4,
        "43": 2
       },
-      "n_tree": 104,
+      "n_tree": 105,
       "n_pad": 74,
       "reach_um": 405.0,
       "plan_reach_um": 380.0,
@@ -813592,8 +813763,8 @@
      {
       "name": "clk_t28",
       "xy": [
-       1126.44,
-       980.6
+       1126.818,
+       954.666
       ]
      },
      {
@@ -813669,7 +813840,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h10_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -814006,7 +814178,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r1","module":"col_h10_l4_lp_r1","note":"region r1 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_i1":"bus:frame_int_i1","frame_int_o0":"bus:frame_int_o0","frame_int_o1":"bus:frame_int_o1"},"status":"new"}
@@ -815902,7 +816075,8 @@
     }
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r1","module":"col_h10_l4_lp_r1","note":"region r1 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_i1":"bus:frame_int_i1","frame_int_o0":"bus:frame_int_o0","frame_int_o1":"bus:frame_int_o1"},"status":"new"}
@@ -818005,7 +818179,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h10_l4_lp_r2","note":"region r2 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -820412,7 +820587,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h10_l4_lp_r2","note":"region r2 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -822422,7 +822598,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h10_l4_lp_r2","note":"region r2 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -822728,7 +822905,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h10_l4_lp_r2","note":"region r2 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -825988,7 +826166,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -829469,7 +829648,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -829893,7 +830073,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r1","module":"col_h9_l4_lp_r1","note":"region r1 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_i1":"bus:frame_int_i1","frame_int_o0":"bus:frame_int_o0","frame_int_o1":"bus:frame_int_o1"},"status":"new"}
@@ -832303,7 +832484,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r1","module":"col_h9_l4_lp_r1","note":"region r1 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_i1":"bus:frame_int_i1","frame_int_o0":"bus:frame_int_o0","frame_int_o1":"bus:frame_int_o1"},"status":"new"}
@@ -834419,7 +834601,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h9_l4_lp_r2","note":"region r2 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -834711,7 +834894,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h9_l4_lp_r2","note":"region r2 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -836692,7 +836876,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h9_l4_lp_r2","note":"region r2 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -838855,7 +839040,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h9_l4_lp_r2","note":"region r2 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -840866,7 +841052,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r2","module":"col_h9_l4_lp_r2","note":"region r2 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -844148,7 +844335,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0_nx","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -847475,7 +847663,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0_nx","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -850646,7 +850835,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0_nx","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -854136,7 +854326,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -857984,7 +858175,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
@@ -862071,7 +862263,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -866478,7 +866671,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -869632,7 +869826,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -872531,7 +872726,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
@@ -875813,7 +876009,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (R0);clock landing cohort fromslice_station__t50 (exact local monitor children)",
@@ -879633,7 +879830,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (R0);clock landing cohort fromslice_station__t50 (exact local monitor children)",
@@ -882481,7 +882679,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (R0);clock landing cohort fromslice_station__t6 (exact local monitor children)",
@@ -885288,7 +885487,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (R0);clock landing cohort fromslice_station__t6 (exact local monitor children)",
@@ -887037,7 +887237,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (R0);clock landing cohort fromslice_station__t7 (exact local monitor children)",
@@ -888387,7 +888588,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (R0);clock landing cohort fromslice_station__t7 (exact local monitor children)",
@@ -889999,7 +890201,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (R0);clock landing cohort fromslice_station__t7 (exact local monitor children)",
@@ -893809,7 +894012,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (R0);clock landing cohort fromslice_station__t42 (exact local monitor children)",
@@ -897483,7 +897687,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (R0);clock landing cohort fromslice_station__t42 (exact local monitor children)",
@@ -901992,7 +902197,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -909500,7 +909706,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -915895,7 +916102,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -922730,7 +922938,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -930667,7 +930876,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -936674,7 +936884,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -942281,7 +942492,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -949400,7 +949612,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -956662,7 +956875,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -963133,7 +963347,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -970740,7 +970955,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -976845,7 +977061,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [
     {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
@@ -980540,7 +980757,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (MY);clock landing cohort fromslice_station__t24 (exact local monitor children)",
@@ -983002,7 +983220,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (MY);clock landing cohort fromslice_station__t24 (exact local monitor children)",
@@ -984866,7 +985085,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (MY);clock landing cohort fromslice_station__t24 (exact local monitor children)",
@@ -987620,7 +987840,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (MY);clock landing cohort fromslice_station__t29 (exact local monitor children)",
@@ -989983,7 +990204,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (MY);clock landing cohort fromslice_station__t29 (exact local monitor children)",
@@ -991207,7 +991429,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (MY);clock landing cohort fromslice_station__t30 (exact local monitor children)",
@@ -992148,7 +992371,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (MY);clock landing cohort fromslice_station__t30 (exact local monitor children)",
@@ -993631,7 +993855,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 3 instance(s) (MY);clock landing cohort fromslice_station__t30 (exact local monitor children)",
@@ -997621,7 +997846,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (MY);clock landing cohort fromslice_station__t40 (exact local monitor children)",
@@ -1001137,7 +1001363,8 @@
     ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "obstacle_model": "lef_origin"
    },
    "contents": [],
    "note": "slice partition; 2 instance(s) (MY);clock landing cohort fromslice_station__t40 (exact local monitor children)",
