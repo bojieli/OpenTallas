@@ -1544,6 +1544,11 @@ def main():
                 if not f.exists():
                     raise SystemExit(f"{tid}: hard child view file missing {f}")
                 shutil.copyfile(f, kd / "macros" / f.name)
+            # COORD 11-02 (d): the child's signed-view provenance travels with its ETM, so signoff.py can count the
+            # child endpoints through the SIGNED child ETM at the same flow tag (absent = parent stays NOT RUN)
+            pv = _CR.resolve(f"{vdir}/provenance.json", REPO)
+            if pv.exists():
+                shutil.copyfile(pv, kd / "macros" / f"{m}.provenance.json")
             if m not in macros:
                 macros.append(m)
                 lefs.append(f"/work/macros/{m}.lef")
