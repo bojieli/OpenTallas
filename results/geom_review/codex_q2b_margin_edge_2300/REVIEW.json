@@ -1,0 +1,21 @@
+{
+  "verdict": "PREP READY; HOLD physical launch while forceA/q2ib remain current",
+  "image": "q2b_margin_edge_prep.png",
+  "personally_viewed": true,
+  "actual_failure": {
+    "TT_setup_ps": 173.39,
+    "FF_hold_ps": 11.79,
+    "TT_slew_ps": 344.72,
+    "TT_slew_limit_ps": 320,
+    "DRC_M3_spacing": 3
+  },
+  "findings": [
+    "Actual SRAM0 FS at15.120,13.260; size94.824x41.064; solid M3 OBS covers body. M4 rd_out252 is west at15.132,28.488.",
+    "Existing B4 BUFx2 at8.748,27.540 drives actual capture at118.638,24.840 around south edge. Prepare only BUFx2->BUFx4 for row252; keep source,pin ABI,cycles and clock cells unchanged.",
+    "All3 markers are VIA23 M3 overhangs at actual M2 row track y13.230 (x20.061,20.241,27.513), reaching SRAM M3 edge13.260. Existing local keepout atx21.6 misses these positions.",
+    "Prepare one36nm M3 south lip covering full SRAM0 x15.120..109.944,y13.224..13.260. Native legal M2 row track13.149 gives VIA23 upperedge13.179,45nm below lip. This is a proposed router access correction, not claimed DRC closure.",
+    "Exact routed DEF has352 USE CLOCK nets, equal native freeze census352. Conservative M3 segment bounding-box intersection query found0 clock geometry in south lip region (including80nm surroundings).",
+    "No LEF/pin/macromaster change. Existing failed route remains untouched. PREP Tcl has exact-instance/master/connectivity/macro-location guards. Native legalizer, clock-freeze, TT/FF signoff and own-final LEC required on any future candidate."
+  ],
+  "native_execution": "NOT RUN; no new physical job launched"
+}

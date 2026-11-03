@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS-COND for one corrected FP/PLACE; CTS remains held",
+  "image": "actual_corrected_with_taps.png",
+  "personally_viewed": true,
+  "source": "Actual r5 io.tcl clock-pin placements, same unchanged geometry as r2",
+  "findings": [
+    "12 actual M7 clock taps form3x4 array at PC lot north/south edges and center streets. No SRAM collides with any tap or generated driver island.",
+    "PCs remain soft GPL guides, not closed hard cores. Internal leaf-group assignment and any later220um clock-leaf reach are unmeasured. No CTS authorization or latency credit.",
+    "This augments the original126 generated driver-island reservations and8 relay sites with actual clock-port coordinates that pins.json does not carry.",
+    "Original r2 container was safely stopped without CONT after synthesis completed; r5 reuses completed native SYNTH and changes only audited gate metadata plus reviewed FP/PLACE inputs."
+  ]
+}
