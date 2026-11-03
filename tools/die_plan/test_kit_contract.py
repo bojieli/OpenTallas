@@ -416,3 +416,69 @@ def test_generated_early_core_clock_metadata_keeps_geometry_gate(kit, monkeypatc
     b['clock']['taps_snapped'][1]['xy'][0] += 4.32
     (kit / 'budget.json').write_text(json.dumps(b))
     assert any('!= plan tap' in e for e in KC.clock_pin_geometry(kit)[0])
+
+
+# S81-49/kits 11-02: macro_channels judges an interior column boundary on macros that FACE across it; an early
+# core tap over a macro that has no M6/M7 metal is a via stack (legal); everything else keeps failing.
+def _two_lefs(kd, top_b=None):
+    obs = f"  OBS\n    LAYER M{top_b} ;\n      RECT 0 0 20 20 ;\n  END\n" if top_b else ""
+    (kd / "macros/m.lef").write_text("MACRO m\n  SIZE 20 BY 20 ;\nEND m\n"
+                                     f"MACRO n\n  SIZE 20 BY 20 ;\n{obs}END n\n")
+
+
+@pytest.mark.parametrize("yb,verdict", [(70.0, "PASS"), (20.0, "FAIL"), (35.0, "FAIL")])
+def test_macro_channels_interior_boundary_judged_on_facing_macros(kit, yb, verdict):
+    """m [20,40]x[10,30] and n [45,65]x[yb,yb+20]: x gap 5 < 10.8.  yb=70 -> n is 40 um above m (no facing pair:
+    PASS, recorded); yb=20/35 -> y overlap / y gap 5 < 10.8 (they face: the narrow channel still FAILs)."""
+    _two_lefs(kit)
+    (kit / "macro_place.tcl").write_text(f"foreach {{master sites}} {{m {{{{20 10 R0}}}} n {{{{45 {yb} R0}}}}}} {{\n}}\n")
+    err, info = KC.macro_channels(kit)
+    assert ("FAIL" if err else "PASS") == verdict, (err, info)
+    if verdict == "PASS":
+        assert info["boundary_judged_on_facing_macros"]
+    else:
+        assert any("vertical channel 5.000" in e for e in err), err
+
+
+def _core_tap_budget(kd, ports=("clk_c0",)):
+    (kd / "freeze.json").write_text(json.dumps(dict(schema="opentallas.partition_freeze.v1")))
+    (kd / "budget.json").write_text(json.dumps(dict(
+        schema="opentallas.die_plan.partition_budget.v1", type="tp", outline_um=[100.0, 100.0], signal_max="M7",
+        clock=dict(core_taps=[dict(port=p, inst="u_n", pin="clk") for p in ports]))))
+
+
+@pytest.mark.parametrize("top_b,port,ok", [(5, "clk_c0", True), (None, "clk_c0", True), (6, "clk_c0", False),
+                                           (7, "clk_c0", False), (5, "clk", False)])
+def test_clock_entry_core_tap_via_stack_exemption(kit, top_b, port, ok):
+    """an early core tap entry over a macro whose LEF metal tops below M6 is a via stack (PASS, listed in info);
+    the same entry over an M6/M7 macro, or a non-core-tap entry over any macro, FAILs."""
+    _two_lefs(kit, top_b)
+    (kit / "macro_place.tcl").write_text("foreach {master sites} {n {{40 10 R0}}} {\n}\n")
+    _core_tap_budget(kit)
+    err, info = KC.clock_entry_clear(kit, entries=[("io.tcl", port, 50.0, 20.0)])
+    assert (not err) == ok, (err, info)
+    if ok:
+        assert info["core_tap_via_stack_over_macro"]
+    _core_tap_budget(kit, ports=())         # no core_taps declared: nothing is exempt
+    assert KC.clock_entry_clear(kit, entries=[("io.tcl", port, 50.0, 20.0)])[0]
+
+
+def test_gen_core_tap_pin_moves_off_obstructing_macro_edge(monkeypatch):
+    """gen_phys.core_tap_pins: a tap snapped 0.06 um inside an M7-obstructing macro edge moves to the nearest snapped
+    point whose M7 pin clears the macro (<= ENTRY_CLEAR_MAX_UM); a tap clear of every block is unchanged; a tap deep
+    inside a macro keeps its snap (kit_contract then still FAILs it)."""
+    import types as _t
+    import gen_phys as G
+    P = _t.SimpleNamespace(types={"tp": dict(outline_um=[200.0, 200.0], clock={})},
+                           layer_budget=dict(partition_signal_max="M7"),
+                           layers=dict(M7=dict(dir="V", width_um=0.032)))
+    taps = [("clk_c0", 50.0, 100.06, {}), ("clk_c1", 150.0, 150.0, {}), ("clk_c2", 50.0, 120.0, {})]
+    monkeypatch.setattr(G.S, "core_taps", lambda p, t: taps)
+    monkeypatch.setattr(G, "entry_block_boxes", lambda p, t, root=None: [(20.0, 100.0, 80.0, 40.0 + 100.0)])
+    monkeypatch.setattr(G, "_snap_tap", lambda p, x, y, pg_legal=True: (round(x / 0.144) * 0.144,
+                                                                        round(y / 0.144) * 0.144))
+    got = {n: (x, y) for n, x, y in G.core_tap_pins(P, "tp")}
+    x0, y0 = got["clk_c0"]
+    assert y0 + 2 * G.PIN_LEN_UM <= 100.0 + 1e-9 and abs(y0 - 100.06) <= G.ENTRY_CLEAR_MAX_UM, got
+    assert got["clk_c1"] == (round(150 / 0.144) * 0.144, round(150 / 0.144) * 0.144)
+    assert got["clk_c2"] == (round(50 / 0.144) * 0.144, round(120 / 0.144) * 0.144)
