@@ -1,0 +1,60 @@
+schema: ot_clk_config/1
+die: qc
+event:
+  name: DIE-QC-64-CLK_qc52_v1_sul_dme_merge
+  source: plan_qc52 (main 1770163a818) + Codex config4 pattern (377-part actual region map, feed_rt2_FROZEN)
+inputs:
+  plan: /home/ubuntu/scratch-root/claude/die-qc-63-clk/qc52/src/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json
+  region_map: /home/ubuntu/scratch-root/claude/die-qc-63-clk/qc52/part_region_actual1364730_377.json
+  feed: /home/ubuntu/scratch-root/claude/die-qc-63-clk/qc52/feed_rt2_FROZEN.json
+  landing_infra: true
+  reset_infra: true
+stack:
+  cell: inv2
+  clock_rc: 1x
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+  site_legal: true
+  site_slide: true
+  rep_on_leg: true
+  rep_off_leg_max: 50
+  opts:
+    dme_feed_centroid: 1
+    region_stub: 1
+  body_sites: true
+  type_keepouts: true
+  chain_hop_max: 400
+  rep_reach_max: 400
+  rep_actual_max: 405
+  detour: adaptive
+region:
+  form: dme
+  dme_mode: delay
+  only:
+  - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}
+  - sl_{E,W}{0..5}_su_c
+  - coll_n
+  - coll_s
+  - sl_{E,W}{0..5}_su_l{0,1}
+  early:
+    tt: 1.0
+    ff: 0.87
+    merge_only:
+    - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}
+    - sl_W{1..5}_su_c
+    - sl_{E,W}{0..5}_su_l{0,1}
+  workers: 24
+  actual_max: 405
+stage_model:
+  entry: inv2_1x_qc_gen52b_grt1x
+  corners:
+  - TT
+  - FF
+  edge: rise
+residual:
+  snake:
+  - sl_{E,W}{0..5}_su_c
+  - sl_{E,W}{0..5}_su_l{0,1}
+  - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}
