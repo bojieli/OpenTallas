@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-_Updated 2026-11-02 19:4x PST by COORD: count 54 (S81 26, HEAD 4, QC 5, KV 14 +PV B w80, HBM 5); G0C-clean S81 203/204, HEAD 25/25, QC 110/119, KV 56/56, HBM 44/81; OWNER 11-02: hold margin 0 (FF >= 0), HBM mu1 3-SRAM, HBM UNFROZEN (die first), stage37, reset sequencer, QC/KV source events, HEAD publisher A, QUERY shared; scratch intel2 96% / intel1 94% / epyc2 89% (PRUNE-1102A); no die has whole-die GRT/STA PASS yet._
+_Updated 2026-11-02 22:4x PST by COORD: count 54 (S81 26, HEAD 4, QC 5, KV 14, HBM 5; KV qkd_ectlk_q2 re-sign pending count); all lanes restarted 22:2x after session limit 19:51-22:20 (Codex also rate-limited, no cover); KV die clock variant A GRT50 0 ov / TT +399.70 BLOCKED(kits); OWNER 11-02: hold margin 0, mu1 3-SRAM, HBM UNFROZEN, stage37, reset sequencer, QC/KV source events, HEAD publisher A, QUERY shared; CAP-TEST-1 600-800k probe running; scratch intel2 95% (185 GB); no die has whole-die GRT/STA PASS yet._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
