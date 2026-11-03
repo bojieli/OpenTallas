@@ -49,14 +49,52 @@ PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.04, M9=0.04)
 
 
-def _dpl_args(budgets, diamond=False):
+# DIE-KV-63 11-03 (default-on, no-op on legal kits): a FIRM CLAND cell that the resizer upsized IN PLACE after packing
+# (repair_design / timing GPL resize FIRM cells, they do not move them) can overlap a TAPCELL or another fixed cell; DPL
+# cannot move a FIRM cell, so 3_5 fails DPL-0033 (KV io_cor: 19 dsel INVx1 -> INVx2 over TAPCELLs under the legacy no-fit
+# form, which io_cor needs because the resize reserve leaves no status site). Only those overlapping CLAND cells go back
+# to PLACED, so DPL moves each to the nearest free site; every CLAND cell that still fits stays FIRM.
+CLAND_RELEASE_GROWN_TCL = """
+set cg_rows [dict create]
+foreach cg_i [$ff_blk getInsts] {
+ if {[$cg_i getPlacementStatus] ni {FIRM LOCKED FIXED COVER}} continue
+ if {[[$cg_i getMaster] isBlock]} continue
+ set cg_b [$cg_i getBBox]
+ dict lappend cg_rows [$cg_b yMin] [list [$cg_b xMin] [$cg_b xMax] $cg_i]
+}
+set cg_bad [dict create]
+dict for {cg_y cg_l} $cg_rows {
+ set cg_px -1; set cg_pi ""
+ foreach cg_e [lsort -integer -index 0 $cg_l] {
+  lassign $cg_e cg_x0 cg_x1 cg_i
+  if {$cg_pi ne "" && $cg_x0 < $cg_px} {
+   foreach cg_c [list $cg_i $cg_pi] {
+    if {[$cg_c getPlacementStatus] eq "FIRM" && [string match *u_cland_* [$cg_c getName]]} { dict set cg_bad [$cg_c getName] $cg_c }
+   }
+  }
+  if {$cg_x1 > $cg_px} { set cg_px $cg_x1; set cg_pi $cg_i }
+ }
+}
+dict for {cg_n cg_c} $cg_bad { $cg_c setPlacementStatus PLACED }
+puts "OT_CLAND released [dict size $cg_bad] FIRM cland cells grown into an occupied site (in-place resize) for DPL"
+"""
+
+
+def _dpl_args(budgets, tn=None, diamond=False):
     """FLOW-7 10-30: plan budgets.dpl_legalizer="diamond" -> ORFS DETAIL_PLACEMENT_ARGS lines; absent = [] (kit unchanged).
-    DIE-QC-65/KITS 11-03: diamond=True (gen phys --dpl-diamond TYPES, per-type opt-in) gives the same line for that kit:
+    DIE-KV-63 11-03: budgets.dpl_legalizer_types names the types (or unsplit base names) that get the diamond legalizer
+    while the plan-wide key is absent (KV io_cor 3_5: negotiation stalled at 122 illegal repair buffers / relay flops
+    inside FIRM ring bands for 1400 iterations; diamond legal in one pass).
+    DIE-QC-65/KITS 11-03: diamond=True (gen phys --dpl-diamond TYPES, per-type CLI opt-in) gives the same line for that kit:
     QC sle_hc2__clcc5e3e61 negotiation DPL stalled at 5,139 illegal cells for 1,400 iterations beside a 35,887-cell FIRM
-    landing band 55 um deep, then 'bad optional access'; the diamond legalizer on the same 3_4 DB passes check_placement
+    landing band 55 um deep, then bad optional access; the diamond legalizer on the same 3_4 DB passes check_placement
     in 434 s (max displacement 35.9 um, HPWL +4 %)."""
     v=budgets.get("dpl_legalizer")
-    if v is None:return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"] if diamond else []
+    if v is None and tn is not None:
+        on=list(budgets.get("dpl_legalizer_types") or [])
+        if tn in on or tn.split("__")[0] in on:v="diamond"
+    if v is None and diamond:v="diamond"
+    if v is None:return []
     if v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond'")
     return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
 
@@ -2897,7 +2935,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
            # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
            # around ~12k FIRM landing cells). Absent = unchanged kit.
-           *_dpl_args(P.budgets, dpl_diamond),
+           *_dpl_args(P.budgets, tn, dpl_diamond),
            # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
@@ -3093,7 +3131,7 @@ foreach cland_line [split [read $cland_fh] "\n"] {
 }
 close $cland_fh
 puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
-""")
+""" + CLAND_RELEASE_GROWN_TCL)
     # CODEX-PICKUP-KV 11-01 (KV HHP joint event): plan relay_sites keys naming EXISTING clock-landing ring flops
     # (u_cland_*) are placed after the landing placement hook, which would otherwise pack them back into the band
     if t.get("relay_sites"):
