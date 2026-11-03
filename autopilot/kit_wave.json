@@ -632,7 +632,7 @@
         "--clock-landing",
         "/srv/opentallas-scratch2/claude/codex-head-collect-1101/prepared_mesh_y864/source_sidecar.json",
         "--hold-ff-margin",
-        "10"
+        "0"
       ],
       "preflight_args": [],
       "only_items": [
@@ -660,7 +660,7 @@
         "hd_lep0N"
       ],
       "die_max_inflight": 60,
-      "owner_lane": "DIE-HEAD-53",
+      "owner_lane": "DIE-HEAD-54",
       "lane": "KIT-WAVE-5",
       "note": "KIT-WAVE-9 20:0x: HEAD l47k -> l48x (COORD 19:03 (1)/(3)); src NEW locked sparse wt intel2 wt/kit-wave-9-head @f3e4659f554 (holdlim + l48x gate event); all l48x blocks are new items; lane claims (<3 h) keep hd_st_turn/k5/n4/hd_st_m/hd_tile (DIE-HEAD-52) and hd_turn_a (HEAD-RINGHOLD-2). | KIT-WAVE-2 10-30 20:5x: HEAD on l45. Needs ROOT-MERGE of claude/kit-wave-2-1030 (gate allows l44/l45; explicit [] preflight_args) -- until merged the hub gate keeps HEAD off (event 'l45' not in main GATE_EVENTS). 1-item canary hd_mesh first (hd_host = DIE-HEAD claim <3 h). src = KIT-WAVE-2 sparse worktree intel2 wt/kit-wave-2-head (main 335447a59d0, 3.3 GB); remove both when HEAD wave is retired. | KIT-WAVE-2 21:4x: l45 -> l46 (gate l46 merged with claude/kit-wave-2b-1030@b8944f24e); src wt/kit-wave-2-head at main 7e2d2c4175c. | KIT-WAVE-2 22:5x (COORD 22:3x free slots -> HEAD l46): prepared2 (eligible hd_mesh,hd_host,hd_st_m,hd_turn_a,hd_turn_b,hd_st_str; hd_mesh/hd_host entries identical to prepared, so the running hd_mesh record keeps its key); manual kit_rtl export PASS st_m/turn_a/turn_b/st_str; take_states NEEDS-KIT,FIX; lane claims (<3 h) still protect types a HEAD lane is working. | 23:4x: src worktree intel2 wt/kit-wave-2-head was deleted by someone (not me) at ~23:2x; recreated sparse at main d518d908345 (same path, 3.3 GB). The 4 kit_rtl fails were 'cd: No such file' -> retry @1. | KIT-WAVE-3 02:2x: l46 -> l47 (COORD 01:43; DIE-HEAD-47 'KIT-WAVE re-kits the 21 types'); src wt/kit-wave-2-head -> main 1a34525e751; prepared intel2 kit-wave/s81_head/l47/prepared; only_items 20 types (hd_lep0N excluded: ECO7 LEC running); take_states NEEDS-KIT,FIX; die cap 12; lane claims <3 h still protect types a HEAD lane is working. take_states += KIT-PLACED (l46-era placed kits of hd_tile/spn/spn_end/st_k5/st_turn/st_n4 are stale under the l47 insertion_ff_ps change).",
       "take_states": [
@@ -673,7 +673,11 @@
         "hd_spn_end@2",
         "hd_ctl_e@1",
         "hd_host_n@1",
-        "hd_st_turn@1"
+        "hd_st_turn@1",
+        "hd_turn_b@1",
+        "hd_st_str@1",
+        "hd_spn_eshim_rx@1",
+        "hd_spn_wshim_rx@1"
       ],
       "pilot_max": 2,
       "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
