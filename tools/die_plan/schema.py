@@ -1071,6 +1071,9 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
+# historical metadata when the cohort says mesh_status "historical".
+SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
 # Existing PHY pad clocks have an explicit period/source and physical role.
 # They are distinct from registered landing clocks and imply no CDC exception, unless an input pin opts in with
 # "cdc": "synchronized" + "cdc_evidence" (COORD 10-31 ruling (3), pad_clock.cdc_sdc; default off).
