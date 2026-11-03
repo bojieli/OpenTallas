@@ -65,9 +65,10 @@ def host_provider(plan):
         raise ValueError('split HOST needs exactly one E->W seam lane')
     cyc = plan.get('latency', {}).get('lanes', {}).get(seam[0]['id'], {}).get('cycles')
     if not cyc or cyc < 2:
-        raise ValueError('split HOST seam lane needs planned cycles (E boundary flop + W landing flop)')
-    # the E boundary flop is the lane's own RX flop (already in the unsplit HOST timing): added age = cycles - 1
-    return hp, ht, hc, ep['name'], cyc - 1
+        raise ValueError('split HOST seam lane needs planned cycles (E out + W in boundary flops [+ fixed])')
+    # DH56: every seam stage is new (generated wrapper boundary flops + the W core landing register declared as
+    # fixed_cycles); none existed in the unsplit HOST timing: added age = the full planned lane cycles
+    return hp, ht, hc, ep['name'], cyc
 
 
 def boot_routes(plan, host, ctl, host_e=None):

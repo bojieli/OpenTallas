@@ -4,16 +4,20 @@
 // MODE 0 (boot, closed loop): the TEST boot profile of tb_s81hd_host_ctl_boot (3 real HBC records on lane0, TRACER
 //   HFWD, 7 CSR frames on lane1) with a real ctl core per system; both must boot and configure identically.
 // MODE 1 (open loop): h_tx_i from a host276 encoder (RESULT type 9 / STATUS type 8 / bad type frames, job_active),
-//   sparse random peer frames on both lanes (HFWD, CSR, bad types) and one lane1 bit-error burst (lane1 fault).
+//   sparse random peer frames on both lanes (HFWD, CSR, bad types), one lane1 bit error (absorbed by the safe8 replay)
+//   and a forced 4-cycle lane1 flt vector on both systems (lane1 fault landing checked every cycle at E2W).
 // Frame-exact checks (every frame, content and date):
-//   peer0 RX (RESULT via lane0) date +0; lane1 TX INPUT (u_lane1.tx_v/tx_d, the seam contract) date exactly +1
+//   peer0 RX (RESULT via lane0) date +0; lane1 TX INPUT (u_lane1.tx_v/tx_d, the seam contract) date exactly +W2E
 //   (W->E seam); peer1 RX (STATUS via lane1) same content/order, date +1 within one gearbox slot (the safe8 link
 //   launches on its 3-flits-per-4-edges gearbox phase, so a 1-edge input shift can arrive +0..+2 at the peer);
 //   h_rx_o frames: type 7 HFWD +0, type 6 CSR (host1) +1 (E->W seam), type 8 fault STATUS same payload, date +0/+1;
-//   no other frame, same counts. Expected seam offsets: E2W=1, W2E=1.
+//   no other frame, same counts.
+// DH56: the DUT seam carries the two generated wrapper boundary flops of each plan port (gen.py ot_dp_st u_bout_* in
+//   the source wrapper, u_bin_* in the destination wrapper; data reset-free) in addition to the W core landing / face
+//   register, i.e. the die-level seam = plan lane cycles 3 (boundary 2 + fixed 1). Expected offsets: E2W=3, W2E=3.
 module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter integer MODE=0);
  reg ck=0,rn=0,start=0;always #0.4165 ck=~ck;
- localparam integer E2W=1, W2E=1;
+ localparam integer E2W=3, W2E=3;
  // ---------------- shared stimulus
  reg[1:0]pv=0;reg[552:0]pd0=0,pd1=0;reg flip1=0;
  // ---------------- REF system
@@ -26,13 +30,17 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
   .coll_i0({2'b10,rp_tx0}),.coll_i1({2'b10,rp_tx1^{511'd0,flip1}}),.coll_o0(rh_tx0),.coll_o1(rh_tx1),.h_tx_i(r_htx),.h_rx_o(r_hrx));
  // ---------------- DUT system
  wire[511:0]dh_tx0,dh_tx1,dp_tx0,dp_tx1;wire[1:0]dprv;wire[552:0]dprd0,dprd1;wire[3:0]dpf0,dpf1;
- wire[276:0]d_htx;wire[275:0]d_hrx;wire[557:0]seam_rx;wire[553:0]seam_tx;
+ wire[276:0]d_htx;wire[275:0]d_hrx;wire[557:0]seam_rx,seam_rx_e;wire[553:0]seam_tx,seam_tx_w;
+ // wrapper boundary flops of the two seam ports (E u_bout_l1_rx_o -> W u_bin_l1_rx_i; W u_bout_l1_tx_o -> E u_bin_l1_tx_i)
+ reg[557:0]wb_rx0=0,wb_rx1=0;reg[553:0]wb_tx0=0,wb_tx1=0;
+ always@(posedge ck)begin wb_rx0<=seam_rx_e;wb_rx1<=wb_rx0;wb_tx0<=seam_tx_w;wb_tx1<=wb_tx0;end
+ assign seam_rx=wb_rx1;assign seam_tx=wb_tx1;
  ot_s81hd_mesh_lane dp0(.ck(ck),.rst_n(rn),.chb(1'b1),.rx({2'b10,dh_tx0}),.tx(dp_tx0),.tx_v(pv[0]),.tx_d(pd0),.rx_v(dprv[0]),.rx_d(dprd0),.flt(dpf0));
  ot_s81hd_mesh_lane dp1(.ck(ck),.rst_n(rn),.chb(1'b1),.rx({2'b10,dh_tx1}),.tx(dp_tx1),.tx_v(pv[1]),.tx_d(pd1),.rx_v(dprv[1]),.rx_d(dprd1),.flt(dpf1));
  ot_s81hd_host_w_core #(.SPLIT_MUT(SPLIT_MUT),.LOCAL_STAGE(1),.LOCAL_RANK(0),.PHASE_BOUND(1),.CLOCK_RESET_ID(64'h5381C7C0DE1021),
   .BOOT_HEADER_EDGE(48'd501),.BOOT_COMMIT_EDGE(48'd511))dut_w(.ck(ck),.rst_n(rn),.start_i(start),
-  .coll_i0({2'b10,dp_tx0}),.coll_o0(dh_tx0),.h_tx_i(d_htx),.h_rx_o(d_hrx),.l1_rx_i(seam_rx),.l1_tx_o(seam_tx));
- ot_s81hd_host_e_core dut_e(.ck(ck),.rst_n(rn),.coll_i1({2'b10,dp_tx1^{511'd0,flip1}}),.coll_o1(dh_tx1),.l1_rx_o(seam_rx),.l1_tx_i(seam_tx));
+  .coll_i0({2'b10,dp_tx0}),.coll_o0(dh_tx0),.h_tx_i(d_htx),.h_rx_o(d_hrx),.l1_rx_i(seam_rx),.l1_tx_o(seam_tx_w));
+ ot_s81hd_host_e_core dut_e(.ck(ck),.rst_n(rn),.coll_i1({2'b10,dp_tx1^{511'd0,flip1}}),.coll_o1(dh_tx1),.l1_rx_o(seam_rx_e),.l1_tx_i(seam_tx));
  // ---------------- h_tx source: real ctl per system (MODE 0) or one shared open-loop encoder (MODE 1)
  wire[1103:0]rring,dring;wire rcf,dcf;
  reg ev=0;reg[552:0]ef=0;reg job=0;wire[275:0]elane;wire efault;
@@ -65,7 +73,7 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
  typedef struct {int date;logic[552:0]f;} rec_t;
  rec_t q_hrx[$],q_p0[$],q_p1[$],q_l1[$];
  int n_l1=0,n_hrx=0,n_p0=0,n_p1=0,n_t6=0,n_t7=0,n_t8=0,n_err=0;
- int c=0;
+ int c=0;reg[3:0]ref_lf1_q[0:E2W-1];initial foreach(ref_lf1_q[k])ref_lf1_q[k]=0;
  function automatic int hrx_off(input logic[552:0]f);
   case(f[3:0])4'd7:return 0;4'd6:return E2W;default:return -1;endcase
  endfunction
@@ -113,6 +121,11 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
    end
    if(c==1500)job=1;
    if(c==3000)flip1=1;
+   // lane1 fault injection (DH56): the safe8 replay absorbs single bit errors, so the lane1 flt vector is forced
+   // identically at the lane1 flt net of both systems (REF u_lane1 -> lf1, DUT u_lane1 in hd_host_e) for 4 cycles.
+   // lf1 bit 0 lands in host_fault[4], which no frame-mux event sets in this profile.
+   if(c==3200)begin force ref_host.lf1=4'b0001;force dut_e.flt=4'b0001;end
+   if(c==3204)begin release ref_host.lf1;release dut_e.flt;end
   end
   // ---------- scoreboards (sampled after the posedge settled)
   if(rn)begin
@@ -131,6 +144,8 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
    foreach(q_p0[k])if(q_p0[k].date<c)begin fail("peer0 REF frame never seen at DUT");q_p0.delete(k);break;end
    foreach(q_l1[k])if(q_l1[k].date<c)begin fail("lane1 TX input REF frame never seen at DUT");q_l1.delete(k);break;end
    foreach(q_p1[k])if(q_p1[k].date+1<c)begin fail("peer1 REF frame never seen at DUT");q_p1.delete(k);break;end
+   // seam landing contract: the W lane1 fault landing equals the REF lane1 fault E2W cycles earlier
+   if(dut_w.lf1!==ref_lf1_q[E2W-1])fail($sformatf("lane1 fault landing dut%h expected%h",dut_w.lf1,ref_lf1_q[E2W-1]));
    if(rdf||ddf)fail("host276 decode fault");
    if(MODE==0&&c>100&&((|ref_host.host_fault)||(|dut_w.host_fault)||rcf||dcf))fail("host/ctl fault in boot profile");
    if(MODE==0&&rboot!=dboot)fail("HBC boot counters diverge");
@@ -142,11 +157,12 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
    finish_check();
   end
   if(MODE==1&&c==6400)begin
-   if(n_p1==0||n_p0==0||n_l1!=n_p1||n_t8==0||ref_host.host_fault[7:4]==0)fail($sformatf("open-loop coverage too thin p0=%0d p1=%0d t8=%0d lf1=%h",n_p0,n_p1,n_t8,ref_host.host_fault[7:4]));
+   if(n_p1==0||n_p0==0||n_l1!=n_p1||n_t8==0||!ref_host.host_fault[4])fail($sformatf("open-loop coverage too thin p0=%0d p1=%0d t8=%0d lf1=%h",n_p0,n_p1,n_t8,ref_host.host_fault[7:4]));
    if(ref_host.host_fault!==dut_w.host_fault)fail($sformatf("sticky fault vector ref%h dut%h",ref_host.host_fault,dut_w.host_fault));
    finish_check();
   end
   if(c>20000)$fatal(1,"no progress");
+  for(int k=E2W-1;k>0;k--)ref_lf1_q[k]=ref_lf1_q[k-1];ref_lf1_q[0]=ref_host.lf1;
  end
  task automatic finish_check();
   if(q_hrx.size()||q_p0.size()||q_p1.size()||q_l1.size())fail("REF frames left unmatched");
