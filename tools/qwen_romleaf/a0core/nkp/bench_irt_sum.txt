@@ -1,0 +1,15 @@
+BUILD_OK
+NKP_COUNTS MUT=0 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_COUNTS MUT=1 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_COUNTS MUT=2 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_COUNTS MUT=3 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_COUNTS MUT=4 checks=14000 cmds=24 t_valid=11369 t_nonzero=8431 kv_elems=512 kv_masked_elems=128
+NKP_COUNTS MUT=5 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_COUNTS MUT=6 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=1 strict_out_errors=0 first=-1 engine_state_errors=288 first=915 checks=14000
+NKP_FAIL MUT=2 strict_out_errors=0 first=-1 engine_state_errors=5923 first=930 checks=14000
+NKP_FAIL MUT=3 strict_out_errors=4108 first=1351 engine_state_errors=0 first=-1 checks=14000
+NKP_FAIL MUT=4 strict_out_errors=13290 first=270 engine_state_errors=10252 first=270 checks=14000
+NKP_FAIL MUT=5 strict_out_errors=10119 first=10 engine_state_errors=0 first=-1 checks=14000
+NKP_FAIL MUT=6 strict_out_errors=6519 first=1091 engine_state_errors=0 first=-1 checks=14000
+NKP_PASS MUT=0 checks=14000 strict_out=0 engine_state=0

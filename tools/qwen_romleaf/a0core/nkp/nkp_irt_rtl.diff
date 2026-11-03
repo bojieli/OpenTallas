@@ -1,0 +1,59 @@
+--- rtl_nkp/qfd_tile_nk_a0c.sv	2026-11-03 08:10:22.690613739 -0800
++++ rtl_nkpirt/qfd_tile_nk_a0c.sv	2026-11-03 09:32:46.178576393 -0800
+@@ -46,7 +46,10 @@
+     parameter integer ICG_K_NODE = 0,
+     // NKP (DIE-QC-66 11-03, opt-in, default 0 = unchanged): ot_qwen_w12_matvec_part logic-depth cuts (bit0 K-limit
+     // prep, bit1 raw XTX rung 0 + per-leaf round, bit2 round-step sum); 0 visible cycles (see the engine)
+-    parameter integer NKP = 0
++    parameter integer NKP = 0,
++    // ICG_IDLE_RT (DIE-QC-66 11-03, opt-in, default 0 = unchanged; ICG = 1 + ICG_EREG = 1 only): me_idle re-timed
++    // at the tile root on the ungated ck (idle_r) before the enable cone; absorbed by the dr drain (see g_erx)
++    parameter integer ICG_IDLE_RT = 0
+ `ifndef SYNTHESIS
+   , parameter integer ROM_TILE = -1
+ `endif
+@@ -259,7 +262,7 @@
+             wire en_g;
+             if (ICG_EREG == 0) begin : g_ec
+                 assign en_g = en;
+-            end else begin : g_er
++            end else if (ICG_IDLE_RT == 0) begin : g_er
+                 // en_q after edge t = en after edge t-1, async-set while rst_e is low (as dr), so it covers every
+                 // term of en(t) that is state at t-1 (go_h, dr, the reset relay, !me_idle: the body only changes
+                 // me_idle on an edge it was clocked by, i.e. en(t-1) = 1).  The terms that are port values at edge t
+@@ -270,6 +273,27 @@
+                 // ICG_IREG: ENA = en_q only (go_f / nv_act enter en, hence en_q, one edge before the first gated
+                 // capture of their face); bench mutant 13 puts the first stage back on ck_g, 14 the node leaf.
+                 assign en_g = en_q | ((ICG_IREG != 0) ? 1'b0 : (((mut == 12) ? 1'b0 : go_f) | ((mut == 4) ? 1'b0 : nv_act)));
++            end else begin : g_erx
++                // ICG_IDLE_RT: me_idle (u_me.idle, far side of the tile) re-timed here on the ungated ck; act / dr / en
++                // as above but from idle_r (the outer act / dr / en are then unused).  !idle_r lags !me_idle by one
++                // edge: a reload by the lagged term alone loads ICG_DRAIN - 1, so dr_x / en_x match dr / en on every
++                // edge (the busy start lies inside the go_h / dr window of its go).  Bench: tb_a0_nkp MUT4 idle_r
++                // stuck idle, MUT5 dr_x stuck 0, MUT6 (+ICG_MUT=16) lagged reload = ICG_DRAIN must FAIL.
++                reg idle_r;
++                always @(posedge ck or negedge rst_e) if (!rst_e) idle_r <= 1'b1; else idle_r <= me_idle;
++                wire act_o = ((mut == 5) ? 1'b0 : !rst_e) | go_act | ((mut == 4) ? 1'b0 : nv_act);   // terms not lagged
++                wire busy_r = (mut == 2) ? 1'b0 : !idle_r;                                              // lagged !me_idle
++                wire act_x = act_o | busy_r;
++                reg [7:0] dr_x;
++                always @(posedge ck or negedge rst_e)
++                    if (!rst_e) dr_x <= (mut == 5) ? 8'd0 : 8'(ICG_DRAIN);
++                    else if (act_o) dr_x <= 8'(ICG_DRAIN);
++                    else if (busy_r) dr_x <= 8'(ICG_DRAIN - ((mut == 16) ? 0 : 1));   // = original reload one edge earlier
++                    else if (dr_x != 8'd0) dr_x <= dr_x - 8'd1;
++                wire en_x = act_x | ((mut == 3) ? 1'b0 : (dr_x != 8'd0)) | (mut == 9);
++                reg en_q;
++                always @(posedge ck or negedge rst_e) if (!rst_e) en_q <= 1'b1; else en_q <= en_x;
++                assign en_g = en_q | ((ICG_IREG != 0) ? 1'b0 : (((mut == 12) ? 1'b0 : go_f) | ((mut == 4) ? 1'b0 : nv_act)));
+             end
+ `ifdef SYNTHESIS
+             ICGx8DC_ASAP7_75t_R u_icg (.CLK(ck), .ENA(en_g), .SE(1'b0), .GCLK(ck_g));
+@@ -426,4 +450,7 @@
+         .n_b(n_b),
+         .n_y(n_y)
+     );
++    generate if (ICG_IDLE_RT != 0) begin : g_irt_chk
++        initial if (ICG != 1 || ICG_EREG == 0 || ICG_DRAIN < 2) $fatal(1, "ICG_IDLE_RT needs ICG = 1, ICG_EREG = 1, ICG_DRAIN >= 2");
++    end endgenerate
+ endmodule

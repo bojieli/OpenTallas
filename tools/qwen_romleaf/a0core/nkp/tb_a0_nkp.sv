@@ -2,6 +2,7 @@
 // DIE-QC-66/CORES-NK 11-03 A0 NK NKP bench (stimulus pattern = tools/qwen_romleaf/a0core/icg/tb_a0_icg.sv, NK ports):
 //   u_k0 = NK kit form (G4_ROOTS 1, REGROOT_MODE 3, ICG 1, ICG_EREG 1, ICG_IREG 1, ICG_RRST 1), NKP 0 (== kit RTL)
 //   u_k1 = the same with NKP 7 (bit0 K-limit prep cut, bit1 raw XTX rung 0 + per-leaf round, bit2 round-step sum cut)
+//          and ICG_IDLE_RT = IRT (default 1: me_idle re-timed at the tile root; +IRT is a compile define OT_NKP_IRT)
 //   STRICT: every output bit (t_out, n_y, tie_hi/lo) at every negedge, plus the engine's architectural issue state
 //   (active/pend, cur/base_k/base_t/k/t/j, ot/oa, wrom_re/addr, kv_re/kv_addr, e_v, e_gm under e_v) every cycle.
 //   Commands: weight ops (round 0 / 1) and KV ops (wsrc 1, ragged K -> K-limit masks, K <= S -> a round boundary
@@ -9,6 +10,12 @@
 // +MUT=1: u_k1 K-limit pad mask kdm_q (group 0) forced 0     -> must FAIL
 // +MUT=2: u_k1 registered round-step carry-save sum ts_sq forced 0 -> must FAIL
 // +MUT=3: u_k1 leaf 0 group 0 BF16 round carry cy forced 0    -> must FAIL
+// +MUT=4: u_k1 ICG_IDLE_RT idle_r forced 1 (engine never busy to the gate) -> must FAIL
+// +MUT=5: u_k1 ICG_IDLE_RT drain counter dr_x forced 0 (the one-edge idle_r lag uncovered, no drain) -> must FAIL
+// +MUT=6 (bench adds +ICG_MUT=16): u_k1 lagged-busy reload = ICG_DRAIN instead of ICG_DRAIN - 1 (gating one edge late) -> must FAIL
+`ifndef OT_NKP_IRT
+`define OT_NKP_IRT 1
+`endif
 module tb_a0_nkp;
 integer NCYC = 14000, MUT = 0;
 initial begin
@@ -23,7 +30,7 @@ wire [513:0] t0, t1, y0, y1;
 wire h0, l0, h1, l1;
 qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(0), .ROM_TILE(48)) u_k0 (
   .ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(h0), .tie_lo(l0), .tap(tap), .t_out(t0), .n_a(na), .n_b(nb), .n_y(y0));
-qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(7), .ROM_TILE(48)) u_k1 (
+qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(7), .ICG_IDLE_RT(`OT_NKP_IRT), .ROM_TILE(48)) u_k1 (
   .ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(h1), .tie_lo(l1), .tap(tap), .t_out(t1), .n_a(na), .n_b(nb), .n_y(y1));
 `define ME0 u_k0.u_g.u_tile.u_tile.u_logic.u_me
 `define ME1 u_k1.u_g.u_tile.u_tile.u_logic.u_me
@@ -65,6 +72,10 @@ initial begin
   if (MUT == 1) force `ME1.g_gm_fast.g_kl[0].g_k7p.kdm_q = 0;
   if (MUT == 2) force `ME1.g_issue_fast.g_terms7p.g_ts1.ts_sq = 0;
   if (MUT == 3) force `ME1.g_hier.g_sl[0].g_hd.g_tx.g_lx.g_x[0].cy = 1'b0;
+`ifdef OT_NKP_IRT_MUT
+  if (MUT == 4) force u_k1.g_icg.g_root.g_erx.idle_r = 1'b1;
+  if (MUT == 5) force u_k1.g_icg.g_root.g_erx.dr_x = 8'd0;
+`endif
   repeat (8) @(negedge ck); rs = 1;
   for (cyc = 0; cyc < NCYC; cyc = cyc + 1) begin
     tap[0] = 0;
