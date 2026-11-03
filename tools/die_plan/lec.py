@@ -2034,7 +2034,7 @@ def run_abc_script(abc, sf, limit):
         return s(e.stdout) + s(e.stderr), True
 
 
-def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runner=None):
+def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runner=None, timeouts=None, solo=False):
     """statuses (aligned with ids) of one &cone -O i; &cec batch.  With a per-cone wall limit (OT_LEC_CONE_S) the
     batch gets limit + CONE_BUDGET_S per cone; on an overrun the cones answered before the hang keep their status
     and the rest is bisected until the hung cone runs alone, which stays 'undecided' (UNRESOLVED, never proved)."""
@@ -2047,7 +2047,7 @@ def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runn
     # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
     sf = Path(work) / f"{tag}_cones_{ids[0]}_{ids[-1]}_n{len(ids)}_C{conflicts}{opt.replace(' ', '')}.abc"
     sf.write_text("\n".join(script) + "\n")
-    wall = (limit + CONE_BUDGET_S * len(ids)) if limit else None
+    wall = (limit if solo else limit + CONE_BUDGET_S * len(ids)) if limit else None
     t, timed_out = runner(abc, sf, wall)
     log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} -C {conflicts})"
                f"{' TIMEOUT after %.0f s' % wall if timed_out else ''}\n{t}")
@@ -2056,13 +2056,17 @@ def cone_batch(abc, swept, work, tag, ids, opt, conflicts, log, limit=None, runn
         return res
     done = res[:len(ids)]
     rest = ids[len(done):]
-    if len(rest) <= 1 or len(ids) == 1:
-        if rest:
-            log.append(f"LEC CONE TIMEOUT {tag} output {rest[0]}: no answer within {wall:.0f} s -> undecided")
-        return done + ["undecided"] * len(rest)
-    h = (len(rest) + 1) // 2
-    return (done + cone_batch(abc, swept, work, tag, rest[:h], opt, conflicts, log, limit, runner)
-            + cone_batch(abc, swept, work, tag, rest[h:], opt, conflicts, log, limit, runner))
+    if len(ids) == 1:
+        log.append(f"LEC CONE TIMEOUT {tag} output {ids[0]}: no answer within {wall:.0f} s -> undecided")
+        if timeouts is not None:
+            timeouts.add(ids[0])
+        return ["undecided"]
+    # the rest runs ONE cone per ABC call with the bare per-cone limit (DIE-HBM-59 LEC-CONE-BOUND): a piped ABC
+    # block-buffers its stdout, so a killed batch usually returns no text and bisection paid one full wall per tree
+    # node holding a hung cone (HBM tailx: ~190 x 600 s per stage).  Solo calls cost ~1 s per normal cone and
+    # exactly `limit` per hung cone, so a stage costs <= one batch wall + hung x limit.
+    return done + [cone_batch(abc, swept, work, tag, [i], opt, conflicts, log, limit, runner, timeouts, solo=True)[0]
+                   for i in rest]
 
 
 def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
@@ -2107,19 +2111,35 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
     # difference) by SAT sweeping inside the cone (&cec -m without -n, x100 / x1000): wide XOR trees (ECC encoders)
     # that naive SAT cannot finish collapse there (PATH-KV-PC4 10-25: 77 kvs_pc ECC / write-queue cones undecided at
     # 1M naive conflicts, each proved by &cec -m in ~1 s).  Only what no pass answers stays undecided.
+    timed, timed_m = set(), set()    # cones that hit the per-cone wall limit in an earlier stage
     for opt, factor in (("-n -m", 10), ("-m", 100), ("-m", 1000)):
+        if opt == "-m" and factor > 100:
+            # a cone that ran out of WALL time under &cec -m at x100 would only run longer with x1000 conflicts:
+            # it stays undecided (UNRESOLVED, never proved) and goes to xor_sat below (LEC-CONE-BOUND)
+            pending = [i for i in pending if i not in timed_m]
         if not pending:
             break
         from concurrent.futures import ThreadPoolExecutor
         jobs = max(1, PROVE_JOBS)
-        size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
-        batches = [pending[i:i+size] for i in range(0, len(pending), size)]
-        def one_batch(ids, factor=factor, opt=opt):
-            return ids, cone_batch(abc, swept, work, tag, ids, opt, conflicts * factor, log)
+        # cones that timed out in an earlier stage run alone (bare per-cone limit) so that they cannot cost a
+        # whole batch wall again; the rest is batched as before
+        solo = [i for i in pending if i in timed]
+        rest = [i for i in pending if i not in timed]
+        size = len(rest) if jobs == 1 else max(1, (len(rest) + jobs * 4 - 1) // (jobs * 4))
+        batches = [rest[i:i+size] for i in range(0, len(rest), size)] if rest else []
+        stage_to = set()
+        def one_batch(ids, factor=factor, opt=opt, stage_to=stage_to):
+            return ids, cone_batch(abc, swept, work, tag, ids, opt, conflicts * factor, log, timeouts=stage_to)
+        def one_solo(i, factor=factor, opt=opt, stage_to=stage_to):
+            return [i], cone_batch(abc, swept, work, tag, [i], opt, conflicts * factor, log, timeouts=stage_to,
+                                   solo=True)
         with ThreadPoolExecutor(max_workers=jobs) as ex:
-            for ids, res in ex.map(one_batch, batches):
+            for ids, res in list(ex.map(one_batch, batches)) + list(ex.map(one_solo, solo)):
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
+        timed = stage_to
+        if opt == "-m":
+            timed_m = stage_to
         pending = [i for i in pending if st[m.onames[i]] == "undecided"]
     unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
     if unknown:
