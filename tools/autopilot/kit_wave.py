@@ -117,8 +117,9 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # HEAD plan of record (dh52-tile2 1d77f1bb566 hd_tile; wave switches only after that merge); l48z = l48x +
                # one-block geom fixes in 4 types (COORD 11-01 09:2x plan event, APPROVED 14:0x, merged 854277ebaaf);
                # l48h0 = DIE-HEAD-55 prepared_l48h0 on src claude/dh55-headsrc-1102@69e06c8b9 (COORD 11-03 00:2x (a) APPROVED)
+               # l48h1 = DIE-HEAD-56 prep_v3 (plan 8e8ce514127b: l48h0 + hd_ctl_e/hd_ctl_n/hd_host_n cland republish), DIE-HEAD-56 RULING 11-03 04:5x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
