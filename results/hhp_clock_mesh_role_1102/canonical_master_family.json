@@ -1,0 +1,471 @@
+{
+  "schema": "opentallas.hhp.pinned_clock_master_family.v1",
+  "scope": "Exact selected historical node/rep ancestry only; not a generic missing-master default",
+  "generator_sources": {
+    "tools/die_plan/die_clock.py": {
+      "commit": "98711b8be0",
+      "sha256": "d2a49f7925d93466ecacdef9436cf8e71445289e72ea76e91b85074a82036059",
+      "git_blob": "1f75d1582f3fc435aab9873583038c9b9127d7d1",
+      "source_statements": [
+        "BUF = \"BUFx24_ASAP7_75t_R\""
+      ]
+    },
+    "tools/die_plan/die_clock_mesh.py": {
+      "commit": "98711b8be0",
+      "sha256": "31b4376dc62313544ed6cb59ae89a285a139449475858583f587096c48da1112",
+      "git_blob": "0e6d03089882b33da5400d99ccf14d720dc1a870",
+      "source_statements": [
+        "BUF = DC.BUF",
+        "        L.append(f\"  {cells[c].get('lib', BUF)} {c} (.A({a}), .Y({y}));\")"
+      ]
+    }
+  },
+  "canonical_place_decompressed_sha256": "cb45c2b9dbad9fd69bd0c0f59c4054d9125004598adff8e52260fba5049bff4a",
+  "master": "BUFx24_ASAP7_75t_R",
+  "cells": {
+    "ckm_n0": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n10_h1101010010": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n10_h1101010011": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n10_h1101010110": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n10_h1101010111": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n10_h1111111000": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n10_h1111111001": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n10_h1111111100": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n10_h1111111101": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n1_h1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n2_h11": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n3_h110": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n3_h111": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n4_h1101": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n4_h1111": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n5_h11010": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n5_h11111": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n6_h110101": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n6_h111111": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n7_h1101010": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n7_h1111111": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n8_h11010100": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n8_h11010101": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n8_h11111110": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n8_h11111111": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n9_h110101001": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n9_h110101011": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n9_h111111100": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_n9_h111111110": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "node",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_10": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_11": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_12": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_13": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_14": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_15": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_3": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_4": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_5": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_6": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_7": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_8": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r1_h1_9": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r2_h11_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r2_h11_2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r2_h11_3": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r2_h11_4": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r2_h11_5": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r2_h11_6": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h110_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h110_2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h110_3": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h110_4": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h110_5": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h111_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h111_2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h111_3": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h111_4": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r3_h111_5": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r4_h1101_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r4_h1101_2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r4_h1101_3": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r4_h1111_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r4_h1111_2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r4_h1111_3": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r5_h11010_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r5_h11010_2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r5_h11111_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r5_h11111_2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r6_h110101_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r6_h111111_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r7_h1101010_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    },
+    "ckm_r7_h1111111_1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "kind": "rep",
+      "placement_has_explicit_lib": false,
+      "basis": "canonical explicitly selected node/rep family; pinned writer uses DC.BUF when lib omitted"
+    }
+  }
+}
