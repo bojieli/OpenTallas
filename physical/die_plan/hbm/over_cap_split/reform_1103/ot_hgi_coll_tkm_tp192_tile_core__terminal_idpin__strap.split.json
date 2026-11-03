@@ -52,11 +52,10 @@
  "root_dependency": "ot_hgi_coll_tkm_m_tp192__root must be re-extracted with PTILE 32 (NT 64: SETTLE 145->305, XL 87->151, +448 edges/op); root ports unchanged",
  "eq": {
   "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/tkm_idpin/run.sh (covers idpin+terminal: full chain REF PTILE64 kit cores vs SPLIT PTILE32 pairs, golden O/R + timeline + lockstep SHIFT 448)",
-  "result": "PENDING: verilator hier builds pos/mutp1/mutp2 running on epyc2 ($E/tkm/b1, log $E/tkm/b1.log); mutn build killed by external SIGTERM -> rebuild needed",
+  "result": "NOT RUN: verilator hier builds pos + mutn killed by external SIGTERM (signal 15, not mine) on epyc2 11-03 ~08:0x; mutp1/mutp2 state in $E/tkm/b1/build_mutp*.log; no sim ran",
   "remaining": [
-   "pos PASS full2048+part700",
-   "mutn/mutp1/mutp2 FAIL",
-   "rm -rf $E/tkm/b1/obj_mutn; re-run run.sh (skips built objs)"
+   "rm -rf $E/tkm/b1/obj_pos $E/tkm/b1/obj_mutn; re-run run.sh (skips built objs), ideally JOBS small + exempt from the hung-job/reaper kill",
+   "pos PASS full2048+part700; mutn/mutp1/mutp2 FAIL"
   ]
  },
  "host": "epyc2, E=/home/ubuntu/scratch-root/claude/die-hbm-61-split"

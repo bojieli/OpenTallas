@@ -8,6 +8,7 @@
 #         S   = ot_hnx_fused_top_s (32 split lanes) + SHADOW kit lane SH 4    -> HNX_FUSED PASS + SHADOW PASS (the proof)
 #         S1  = split SMUT 1 (x_v not re-timed by the 4-edge round trip)      -> must FAIL
 #         S2  = split SMUT 2 (y_v re-timed 3 instead of 4)                    -> must FAIL
+#         S3  = split SMUT 3 (HC_POST: pairs' hv one edge late against ho)  -> must FAIL (POST cases)
 # Cases: HC_PRE_NORM and HC_POST, N = 1, 2, 4, rgap 0 (golden words, every sector once, no fault).
 set -u
 BU=$(realpath "$1"); O=$(realpath -m "$2"); STAGES=${3:-"K S S1 S2"}; mkdir -p "$O"
@@ -39,6 +40,7 @@ for st in $STAGES; do
     S)  build S  "+define+TOPM=ot_hnx_fused_top_s +define+SPLIT +define+SHADOW -GSH=4 -GSMUT=0" ;;
     S1) build S1 "+define+TOPM=ot_hnx_fused_top_s +define+SPLIT +define+SHADOW -GSH=4 -GSMUT=1" ;;
     S2) build S2 "+define+TOPM=ot_hnx_fused_top_s +define+SPLIT +define+SHADOW -GSH=4 -GSMUT=2" ;;
+    S3) build S3 "+define+TOPM=ot_hnx_fused_top_s +define+SPLIT +define+SHADOW -GSH=4 -GSMUT=3" ;;
   esac
 done
 for st in $STAGES; do for op in pre post; do for n in 1 2 4; do run $st $op $n & done; done; done; wait

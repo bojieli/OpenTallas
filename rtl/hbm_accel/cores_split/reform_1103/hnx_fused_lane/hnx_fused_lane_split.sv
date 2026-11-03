@@ -20,7 +20,7 @@ module hnx_fused_lane_ctl #(
     parameter integer RR  = 10,              // VM read return: rr valid RR edges after the edge rq was sampled
     parameter integer MUT = 0,
     parameter integer XS  = 4,               // EL round trip: ctl out face + EL in face + EL out face + ctl in face
-    parameter integer SMUT = 0               // split bench mutants: 1 x_v not re-timed, 2 y_v re-timed XS-1
+    parameter integer SMUT = 0               // split bench mutants: 1 x_v not re-timed, 2 y_v re-timed XS-1, 3 HC_POST hv one edge late
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -158,7 +158,9 @@ module hnx_fused_lane_ctl #(
     // SPLIT: the 8 element columns are 4 hardened pairs; their results come back XS edges later than in the uncut
     // lane (ctl out face, pair in face, pair out face, ctl in face), so every ctl consumer of a pair result is re-timed
     // by XS: x_v (x store write, slot counters, chunk chain valid) and y_v (scale result) are XS edges deeper here.
-    wire [0:0] hv = e_hv[0]; wire [255:0] ho = e_ho; wire [255:0] xl = e_xl, sq = e_sq, qq = e_qq;
+    // SMUT 3 (bench only, HC_POST path): the pairs' hv one edge late against ho -> POST writes take the wrong row
+    reg hv_m3; always @(posedge clk) hv_m3 <= e_hv[0];
+    wire [0:0] hv = (SMUT == 3) ? hv_m3 : e_hv[0]; wire [255:0] ho = e_ho; wire [255:0] xl = e_xl, sq = e_sq, qq = e_qq;
     localparam integer XSX = (SMUT == 1) ? 0 : XS, XSY = (SMUT == 2) ? XS - 1 : XS;
     // n4: x leaves the folded chain at ML + 3 AL + 1 (the HC_POST multiplier ML 7 replaces the mix's LM 5: +2 edges)
     localparam integer DM = ML + 3 * AL + 1;
