@@ -1,11 +1,65 @@
-{"schema": "dh58_turnb.estimate.v1", "type": "hd_turn_b", "event": "l48tb (l48rf + clock.landing_ring_wreg hd_turn_b t_i, dsrep 4)",
- "cause": {"kit": "l48h0 attempt_4 f1c6df46bfbb", "signoff_tt_ps": -73.1, "signoff_ff_ps": -3.79,
-           "worst_path": "cland_fstart_in_t_i (raw port, input delay 166.6 vs fclk_in_t_i) -> ring writer t_rst_n broadcast to 4 x 568 s_d write enables (OR3 + 6 serial BUFx24, 853 ps) -> s_d[0][556]/D",
-           "drv": "max slew: fstart enable broadcast buffers (wire1316 65 pins, 360 ps) + ot_meso_dsel read-select INVx3 -> 66 loads per chunk (429 ps)",
-           "slot": "172.8 x 699.84 um, aspect 4.05, synth area 2050 um2 (util ~2 %), logic in a 25 um band at the N face",
-           "routed_t_i_contract_path_ps": 71.3},
+{
+ "schema": "dh58_turnb.estimate.v1",
+ "type": "hd_turn_b",
+ "event": "l48tb (l48rf + clock.landing_ring_wreg hd_turn_b t_i, dsrep 4)",
+ "cause": {
+  "kit": "l48h0 attempt_4 f1c6df46bfbb",
+  "signoff_tt_ps": -73.1,
+  "signoff_ff_ps": -3.79,
+  "worst_path": "cland_fstart_in_t_i (raw port, input delay 166.6 vs fclk_in_t_i) -> ring writer t_rst_n broadcast to 4 x 568 s_d write enables (OR3 + 6 serial BUFx24, 853 ps) -> s_d[0][556]/D",
+  "drv": "max slew: fstart enable broadcast buffers (wire1316 65 pins, 360 ps) + ot_meso_dsel read-select INVx3 -> 66 loads per chunk (429 ps)",
+  "slot": "172.8 x 699.84 um, aspect 4.05, synth area 2050 um2 (util ~2 %), logic in a 25 um band at the N face",
+  "routed_t_i_contract_path_ps": 71.3
+ },
  "form": "WREG-1: t_rst_n registered at the receiver face + one write-enable flop per (slot, 64-bit chunk) (36 kept flops, <= 64 loads each); DSREP-1: 4 read-select copies per chunk (16 loads each); strap K + 1 on 12 turn_b instances, 0 data cycles",
- "quick_place_tt_ps": {"old": {"worst": 22.3, "fstart": 22.3}, "new": {"worst": 52.7, "worst_path": "t_i input contract (unchanged)", "fstart_to_wen": 580.3, "wen_to_ring": 510.2},
-                       "max_slew_cap_violators": {"old": 0, "new": 0}},
+ "quick_place_tt_ps": {
+  "old": {
+   "worst": 22.3,
+   "fstart": 22.3
+  },
+  "new": {
+   "worst": 52.7,
+   "worst_path": "t_i input contract (unchanged)",
+   "fstart_to_wen": 580.3,
+   "wen_to_ring": 510.2
+  },
+  "max_slew_cap_violators": {
+   "old": 0,
+   "new": 0
+  }
+ },
  "routed_estimate_tt_ps": "worst ~ +71 (t_i contract path, routed today +71.3, unchanged by the form); fstart broadcast class removed (>= +400)",
- "geom": "plan_geom l48tb hd_turn_b: aspect FAIL 4.05 (advisory, unchanged vs l48rf), clock_reach/tap_sinks/pin_reg/r2r/partial_face PASS"}
+ "geom": "plan_geom l48tb hd_turn_b: aspect FAIL 4.05 (advisory, unchanged vs l48rf), clock_reach/tap_sinks/pin_reg/r2r/partial_face PASS",
+ "hd_turn_a": {
+  "form": "WFALL(1)+WREG(1)+DSREP(4) on u_cland_t_i (W=568,DEPTH=4); strap_ca_k_t_i 60->61 x12",
+  "quick_place_kit_sdc_headsrc": {
+   "old_wfall_only": {
+    "worst": 44.8,
+    "fstart": 68.0,
+    "t_i": 44.8
+   },
+   "new": {
+    "worst": 62.4,
+    "fstart": 582.3,
+    "t_i": 62.4
+   }
+  },
+  "quick_place_iohp_sdc_main": {
+   "old_wfall_only": {
+    "worst": -371.7,
+    "fstart": -348.5,
+    "t_i": -371.7,
+    "dn_ready": 165.7
+   },
+   "new": {
+    "worst": -354.1,
+    "fstart": 165.8,
+    "t_i": -354.1,
+    "dn_ready": 183.1
+   }
+  },
+  "note": "IOHP (main landing_contract, no T/2 shift) puts the ft bus t_i max at 699.72 vs the T/2 fall capture: -354 by construction, independent of WREG; kit src 69e06c8b939 still emits t_i 283.22/fstart -249.9 (T/2-optimistic)",
+  "geom": "aspect FAIL 6.0 (advisory, outline unchanged), all else PASS",
+  "sim": "WFALL seeds 7,23 n=400 PASS; WFALL mutant FAIL (21614 errors)"
+ }
+}

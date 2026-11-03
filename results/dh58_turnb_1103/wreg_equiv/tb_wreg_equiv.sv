@@ -1,7 +1,12 @@
-// DH58-TURNB WREG-1/DSREP-1 equivalence: A = cas WREG=1 DSREP=4 (strap K), B = cas WREG=0 DSREP=1 fed by t_rst_n through
+// DH58-TURNB WREG-1/DSREP-1 equivalence (+define+TB_WFALL: all three rings WFALL=1, B's flop on the falling edge): A = cas WREG=1 DSREP=4 (strap K), B = cas WREG=0 DSREP=1 fed by t_rst_n through
 // one wclk flop (strap K): q/ready/fault must be equal on every clk edge (exact).  C = cas WREG=0 with the raw t_rst_n and
 // strap K-1 (the W1 bind rule K_new = K_old + 1): once both are ready, q(A) == q(C) and neither faults.
 `timescale 1ps/1ps
+`ifdef TB_WFALL
+`define TBWF , .WFALL(1)
+`else
+`define TBWF
+`endif
 module tb;
     localparam int W = 568, D = 4, KW = $clog2(D) + 4;
     int fra, frc, nrc = 0, nfa = 0, nfc = 0, nra = 0, seed, ncase, phase, fs_at, rs_at, k, errs = 0, cyc, nready = 0, nmatch = 0;
@@ -9,13 +14,17 @@ module tb;
     logic [W-1:0] d;
     wire [W-1:0] qa, qb, qc; wire ra, rb, rc, fa, fb, fc;
     logic [KW-1:0] ka, kc;
-    ot_dp_clk_landing_cas #(.W(W), .DEPTH(D), .WREG(1), .DSREP(4)) u_a (.fclk(fclk), .t_rst_n(fstart), .clk(clk), .rst_n(rst_n),
+    ot_dp_clk_landing_cas #(.W(W), .DEPTH(D), .WREG(1), .DSREP(4) `TBWF) u_a (.fclk(fclk), .t_rst_n(fstart), .clk(clk), .rst_n(rst_n),
         .strap_k(ka), .d(d), .q(qa), .ready(ra), .fault(fa));
-    ot_dp_clk_landing_cas #(.W(W), .DEPTH(D)) u_b (.fclk(fclk), .t_rst_n(fs_d), .clk(clk), .rst_n(rst_n),
+    ot_dp_clk_landing_cas #(.W(W), .DEPTH(D) `TBWF) u_b (.fclk(fclk), .t_rst_n(fs_d), .clk(clk), .rst_n(rst_n),
         .strap_k(ka), .d(d), .q(qb), .ready(rb), .fault(fb));
-    ot_dp_clk_landing_cas #(.W(W), .DEPTH(D)) u_c (.fclk(fclk), .t_rst_n(fstart), .clk(clk), .rst_n(rst_n),
+    ot_dp_clk_landing_cas #(.W(W), .DEPTH(D) `TBWF) u_c (.fclk(fclk), .t_rst_n(fstart), .clk(clk), .rst_n(rst_n),
         .strap_k(kc), .d(d), .q(qc), .ready(rc), .fault(fc));
+`ifdef TB_WFALL
+    always @(negedge fclk) fs_d <= fstart;   // B: plain ring behind one flop on the WRITER edge (falling)
+`else
     always @(posedge fclk) fs_d <= fstart;
+`endif
     initial begin
         if (!$value$plusargs("seed=%d", seed)) seed = 1;
         if (!$value$plusargs("n=%d", ncase)) ncase = 200;
@@ -29,11 +38,19 @@ module tb;
             fork
                 begin
                     for (int c = 0; c < 140; c++) begin
+`ifdef TB_WFALL
+                        #416 fclk = 1; #1;   // falling-edge writer: inputs change half a period away from it
+`else
                         #416 fclk = 1;
-                        #417 fclk = 0; d = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom,
-                                            $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom,
-                                            $urandom, $urandom};
+                        #417 fclk = 0;
+`endif
+                        d = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom,
+                             $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom,
+                             $urandom, $urandom};
                         if (c == fs_at) fstart = 1;
+`ifdef TB_WFALL
+                        #416 fclk = 0;
+`endif
                     end
                 end
                 begin
