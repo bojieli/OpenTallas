@@ -133,3 +133,48 @@ def test_hooks_source_guard():
     assert "hold_guard_grt.tcl" in (HERE / "grt_pre.tcl").read_text()
     for f in ("gen_phys.py", "core_flow.py"):
         assert '"hold_guard_grt.tcl"' in (HERE / f).read_text(), f
+
+
+SILENT_CAP = r"""
+proc repair_timing_helper {args} {
+  lappend ::calls $args
+  if {[lsearch -exact $args -hold] < 0} { return }
+  set j [lsearch -exact $args -max_buffer_percent]
+  set cap [expr {int([lindex $args [expr {$j + 1}]] * $::n / 100.0)}]
+  set add [expr {min($cap, $::need)}]
+  incr ::n $add
+  set ::ws [expr {$::ws + 20.0}]
+  # FLOW-24: a suppressed RSZ-0060 (suppress_message RSZ 60) can reach Tcl with no message text
+  if {$cap <= $::need} { error "" }
+}
+"""
+
+
+def test_suppressed_cap_error_without_text_is_the_cap():
+    """FLOW-24 11-03: the chunk cap error is suppressed (no [ERROR RSZ-0060] line in 5_1_grt.log); a textless error
+    from a chunk that added its cap is still the cap, and the guard continues to the margin."""
+    out = run("20.0", preamble=SILENT_CAP)
+    assert len([c for c in calls(out) if "-hold" in c]) == 3
+    assert "suppressed per chunk" in out
+    assert float(out.split("WS ")[-1]) >= 10
+
+
+def test_textless_error_without_buffers_is_reraised():
+    """an error that is not the cap (no buffer added) is never swallowed"""
+    pre = SILENT_CAP.replace("incr ::n $add", "set add 0")
+    e = {k: v for k, v in os.environ.items() if not k.startswith("OT_HOLD")}
+    e.update({"OT_HOLD_CHUNK_S": "0", "OT_HOLD_CHUNK_BUF_MIN": "20"})
+    src = MOCK.replace("[MODEL]", "20.0") % (pre, GUARD)
+    with tempfile.NamedTemporaryFile("w", suffix=".tcl", delete=False) as f:
+        f.write(src)
+    try:
+        r = subprocess.run(["tclsh", f.name], capture_output=True, text=True, env=e, timeout=60)
+    finally:
+        os.unlink(f.name)
+    assert r.returncode != 0
+
+
+def test_guard_suppresses_rsz60_around_each_chunk():
+    i = GUARD.index("suppress_message RSZ 60")
+    j = GUARD.index("unsuppress_message RSZ 60")
+    assert i < GUARD.index("-hold -max_buffer_percent $pct", i) < j
