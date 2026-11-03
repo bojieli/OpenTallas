@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 07:33 PST:** count 62 (S81 28/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 17/35, HBM 7/84). OWNER 11-03: rules = design targets, only sign-off blocks (kit_contract/lint advisory, merged G3 31d4c8daaf4); TWO-STRIKES -> RE-FORM batches per die, released per type, 1.2 GHz kept. epyc4 (EPYC 9754, 256T/768G/7 TB) LIVE but underfilled. XCHECK: QC outline 26.27 mm > 26 mm reticle (shrink in RE-FORM); PHY TX hold -11..-30 ps -> TX-face lockup latch class fix; HBM3e PHY model 900 ps min period -> regen. Kit FAIL 163 / RUNNING 127.
+**Status 2026-11-03 08:31 PST:** count 62 flat this hour (S81 28/54 +1 gunit_l0 READY-COUNT, HEAD 4/4 + 1/25 types, QC 5/16, KV 17/35, HBM 7/84). Only sign-off blocks (OWNER 11-03). Merged since 07:33: G4/G6 trains, place_async (epyc4 spill), KV pv_pair re-form; approved: xcheck TX-latch + HBM PHY 833 ps, S81 rfc-gu/rfa/mem, HEAD l48rf, HBM split g4. Open: LATCH-FACE LEC support (S81 helper), QC reticle row-band cut, S81 place TCL-error class (col_h9 x12). epyc4 load 63/256 underfilled; epyc2 scratch 91%, intel1 scratch 90%.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -12,7 +12,7 @@
 - Release gate = die STA on real views + token pass.
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
-## DIE s81 · S81 · rev current native event2 / plan 6084e6cf0c95 · HARD FROZEN 12.20
+## DIE s81 · S81 · rev plan_h2_2249 (849b318cb1) + RF1 RE-FORM batch (cores first) · HARD FROZEN 12.20, RE-FORM batch per die (OWNER 11-03) · owner DIE-S81-51
 - [ ] S81.PROUTE Station safe form (OWNER 11-02 pilot + 11-03 safe forms) · S81 / S81-PROUTE-2 (DIE-S81-50) · RUNNING · MAIN = FIXED-BAY: relay flop + negative-level lockup latch + repeater bays pre-placed <=405 um, local leaf per bay, per-hop delay/slew/hold computed before route; parent-route kit p7S_x11 (GEN_LINT + PREFLIGHT PASS) kept only as comparison; result applies to QC stations as one class
 - [ ] S81.BIND Strict native bind · S81 / DIE-S81-50 · PASS · event2 completed 11:40:42; 398 partitions / 204 types / 873 crossings / 606281 bits, connectivity errors 0; this is not a routing pass
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-50 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kits sign; hold gate now >= 0 (OWNER 11-02) → S81.TILES
@@ -23,7 +23,7 @@
 - [ ] S81.T41 Forwarded data/K timing witness · S81 / GEOM · WAITS · corrected A/B only placed; default-OFF observer ready4b96673bc; one baseline-A CTS+witness needs review, old GRT4750 remains FAIL → INFRA.REVIEW
 - [ ] S81.RESET SerDes warm-reset sequencer implementation · S81+HEAD / DIE-S81-50 + DIE-HEAD-56 · RUNNING · OWNER 11-02 17:55 closed the choice: local sequencer holds reset >=64 rck edges after PMA clock restart, no running-clock promise; shared module adoption on S81 in progress (helper reset) → READY
 
-## DIE s81_head · HEAD · rev l48h1 (prep_v3, plan 8e8ce514127b; launch after plan-time GEOM 0 new FAIL) · FROZEN 12.20 (l47u exception) · owner DIE-HEAD-57
+## DIE s81_head · HEAD · rev l48x -> l48rf RE-FORM plan event (dh58-rfplan 9bb4620c625 approved 08:25) · owner DIE-HEAD-58
 - [ ] HEAD.BIND Current parent source / child-model composition · HEAD / DIE-HEAD-57 · BLOCKED · exact current source+views must compose before full parent release → HEAD.TILES
 - [ ] HEAD.CLK Current die clock qualification · HEAD / DIE-HEAD-57 · BLOCKED(kits) · clock proof l48w_sth GRT0/TT+252.75 stands (older pass counts); l48w_sth GRT0/TT+252.75/START0of1607; only2 real core views,0 kits plus declared budgets; 530106 hold pairs unmeasured, not current full-die timing → HEAD.TILES
 - [ ] HEAD.GRT Current whole-die signal+clock global routing · HEAD / DIE-HEAD-57 · BLOCKED · retained infrastructure routing is not a complete current parent data-route receipt → HEAD.TILES → HEAD.BIND
@@ -33,7 +33,7 @@
 - [ ] HEAD.HOSTLEC Current routed HOST qualification · HEAD · WAITS · retained component136216EQ complete; newer routedb2 is a different subject and still needs its own proof+physical closure → HEAD.TILES
 - [ ] HEAD.SEAM Mesh sender/receiver timing contract · HEAD · BLOCKED · finite hold repair hits setup-versus-hold feasibility; any seam rebudget needs actual peer and parent TT/FF qualification, no constraint relaxation → HEAD.STA
 
-## DIE qwen_compute · QC · rev d90 / event1131_fixed · HARD FROZEN 12.22 (OWNER 11-02: SC/RED/GLUE source events adopted, EQ/sim-gated) · owner DIE-QC-65
+## DIE qwen_compute · QC · rev plan_qc52 (1e5ed443cd) · reticle shrink ~0.6 mm row band pending (XCHECK: 26.27 > 26 mm) · owner DIE-QC-66
 - [ ] QC.BIND Strict native bind · QC / DIE-QC-65 · PASS · 119 types / 377 parts,0 errors; G0C completeness remains FAIL11
 - [ ] QC.CLK Native die clock implementation · QC / DIE-QC-65 · BLOCKED · 51596 planned cells / 10929 taps sourcegeometryPASS; native prefix is unexecuted, no parent PG/GRT/RC/STA or START-freeze credit → QC.CLOCKPREFIX → QC.TILES
 - [ ] QC.CLOCKPREFIX Bounded native clock import/access diagnostic · QC · WAITS · exact current homes/aliases reviewed; staged64GB8T geometry-only import, no legalization/GRT/STA; awaits root scoped release → INFRA.REVIEW
@@ -46,7 +46,7 @@
 - [ ] QC.GLUE Joint parent/interface geometry event · QC / DIE-QC-65 · RUNNING · OWNER 11-02 ADOPTED (EQ-gated; pipeline stages for 1838>1110 um reach); coordinate coupon legal but5306long reaches remain; fixedSTART1838um exceeds1110um reach budget; compact proposal leaves1088.64um parent gap and missing west peers → OWNER.SOURCE
 - [ ] QC.NL Corrected clock-inclusive GRT probe · QC · WAITS · prior attempt failed MM context before FF; same-byte4_cts alias+configuredmargin10 fixture passes, one bounded retry awaits root → INFRA.REVIEW
 
-## DIE qwen_kvsys · KV · rev current plan_c cohort · HARD FROZEN 12.20
+## DIE qwen_kvsys · KV · rev plan_c (3e7114d611) + RF-KV1 pv_pair re-form merged f31a5bdcd70 · owner DIE-KV-64
 - [ ] KV.BIND Current strict native bind · KV / DIE-KV-63 · PASS · source connectivity passes; no physical die credit
 - [ ] KV.CLK Complete current real-view clock timing · KV / DIE-KV-63 · BLOCKED(kits) · clock proof stands (older pass counts): mix TT+595.71/CA0of3595 has7coreviews,0kits plus budgets; FF37674pairs NULL/unmeasured → KV.TILES
 - [ ] KV.GRT Current whole-die global routing · KV / DIE-KV-63 · NOT RUN · latest parent macro-fit vehicle explicitly dieGRT/route NOTRUN; reported zero-overflow successes are partition/core probes → KV.TILES → KV.HROOT → KV.HG
@@ -58,7 +58,7 @@
 - [ ] KV.RECIP Compact RECIP and ZH physical qualification · KV · WAITS · RECIP GRT TT+161.66 FF+9.67 but actualfill15.27/empty68.78 FAIL; ZH actualfill45.589 and independentLOOK supports one PLACE diagnostic → INFRA.REVIEW
 - [ ] KV.FN Production token execution · KV / TOK · RUNNING · sole correctGEN1 probe fault0, nofirstcal; observed~2.3cycles/s implies~35h for290307-cycle window at that rate, not measured token throughput → TOK.QW
 
-## DIE hbm · HBM · rev d44o/d44p current native followups · UNFROZEN (OWNER 11-02: die problems first, no type pilots; mu1 = 3-SRAM) · owner DIE-HBM-60
+## DIE hbm · HBM · rev d44o kit wave; d44v RE-FORM part 1 merged, SPLIT groups 1-4 · UNFROZEN (OWNER 11-02) · owner DIE-HBM-61
 - [ ] HBM.BIND Qualified current native production composition · HBM / DIE-HBM-60 · BLOCKED · native source/pin/profile and clock/START joins incomplete; historical wrapped bindings do not qualify current production → HBM.CLK → HBM.TILES
 - [ ] HBM.HUBMESH Hub mesh / production clock integration · HBM / DIE-HBM-60 · STRUCTURAL PASS, BLOCKED(kits) · hub mesh a3e6s, NE_v2, die TT +93.69, CA 773/773 (hold margin 0); next: plan event d44v (q3_edge single-column slot, pslice_c5 2.6-um macro channels, xload ctlx, hnx fused) -> kits -> real-view hold
 - [ ] HBM.CLK Native clock/source/PG composition · HBM / DIE-HBM-60 · BLOCKED · 21 station types planned3077ports pass consumer/S0parity;283plannedhomes,260sourcehomes(16mismatch),23missing; active-role/native pin/net/START joins remain unqualified
