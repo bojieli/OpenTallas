@@ -4,3 +4,4 @@
 - 2026-11-03 11:27 PST PROGRESS: PREPARED l48rf 59c391855c18 (G0C 1 existing ERROR), GO posted to KW-FIX-4 11:24; lep_pair signed dir restored 11:02 (PRUNE-1103D move); RFPLAN+PROTO done; l48rf2 deferred to per-type failures.
 - 2026-11-03 11:56 PST HELPER: DH58-FBAY (HEAD station relay_bay class fix, RELAY_BAY_RE += s81_head station types, dry pre-build on l48rf). l48rf LAUNCHED: mesh, ctl_e, ctl_n, host, host_n, mesh_e. Live helpers: 1.
 - 2026-11-03 12:01 PST HELPER: DH58-FBAY done (relay_bay NOOP on HEAD stations); DH58-TAPBAL (tapbal_grt SIGABRT class, no FLOW lane live). Live helpers: 1.
+- 2026-11-03 13:24 PST HELPER: DH58-TURNB (turn_b re-form after l48h0@4 sign-off fail). Live helpers: 1.

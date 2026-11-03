@@ -1350,7 +1350,9 @@
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave",
-   "hold_items": {},
+   "hold_items": {
+    "hd_turn_b": "DIE-HEAD-58 13:2x: l48h0@4 sign-off FAIL TT -44 after 3 ECO = TWO-STRIKES RE-FORM; l48rf keeps its form; re-form from DH58-TURNB"
+   },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
     "hd_spn_wshim_tx@2": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
