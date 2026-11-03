@@ -9,10 +9,10 @@
 //     e2 warm rst with the PMA clock running
 //     e3 lock loss with the PMA clock running, relock
 //     e4 PMA clock stops, lock lost while stopped, clock restarts unlocked (must stay held), then lock
-// Actual codec, FIFO and PMA models, no mocked bodies.  Mutants: HOLD=63 (early release), IGNORE_LOCK=1 (ins sees lock
+// Actual codec, FIFO and PMA models, no mocked bodies; LOOP=1 feeds the released TX lane back into every RX.  Mutants: HOLD=63 (early release), IGNORE_LOCK=1 (ins sees lock
 // tied 1) and DEFAULT_MUT=1 (default activation) must each fail.
 module tb_s81_col_locksafe;
-    parameter integer HOLD = 64, IGNORE_LOCK = 0, DEFAULT_MUT = 0;
+    parameter integer HOLD = 64, IGNORE_LOCK = 0, DEFAULT_MUT = 0, LOOP = 0;
     reg clk=0,pck=0,run_pck=0,rst=1,lock=1;
     reg [511:0] tx=512'h9abcdef;
     always #416.5 clk=~clk;
@@ -21,10 +21,12 @@ module tb_s81_col_locksafe;
     wire [511:0] r_o,r_d,r_i,r_w; wire [1:0] s_o,s_d,s_i,s_w;
     wire [543:0] p_o,p_d,p_i,p_w; wire c_o,c_d,c_i,c_w;
     wire [3:0] rs_o,rs_d,rs_i,rs_w; wire g_i, rr_i;
-    ot_pdie_serdes_col_orig orig(.clk(clk),.rst(rst),.tx(tx),.rx(r_o),.st(s_o),.pma_tx(p_o),.pma_tck(c_o),.pma_rx(544'd0),.pma_rck(pck));
-    ot_pdie_serdes_col #(.LOCKSAFE(DEFAULT_MUT)) dflt(.clk(clk),.rst(rst),.tx(tx),.rx(r_d),.st(s_d),.pma_tx(p_d),.pma_tck(c_d),.pma_rx(544'd0),.pma_rck(pck));
-    ot_pdie_serdes_col #(.LOCKSAFE(1),.HOLD_EDGES(HOLD)) ins(.clk(clk),.rst(rst),.tx(tx),.rx(r_i),.st(s_i),.pma_tx(p_i),.pma_tck(c_i),.pma_rx(544'd0),.pma_rck(pck),.pma_lock(IGNORE_LOCK ? 1'b1 : lock));
-    ot_pdie_serdes_col_locksafe #(.LOCKSAFE(1)) wrap(.clk(clk),.rst(rst),.pma_lock(lock),.tx(tx),.rx(r_w),.st(s_w),.pma_tx(p_w),.pma_tck(c_w),.pma_rx(544'd0),.pma_rck(pck));
+    // LOOP=1: every column receives the released column's own PMA TX lane (plesiochronous 300 ppm recovered clock)
+    wire [543:0] rxin = LOOP ? p_o : 544'd0;
+    ot_pdie_serdes_col_orig orig(.clk(clk),.rst(rst),.tx(tx),.rx(r_o),.st(s_o),.pma_tx(p_o),.pma_tck(c_o),.pma_rx(rxin),.pma_rck(pck));
+    ot_pdie_serdes_col #(.LOCKSAFE(DEFAULT_MUT)) dflt(.clk(clk),.rst(rst),.tx(tx),.rx(r_d),.st(s_d),.pma_tx(p_d),.pma_tck(c_d),.pma_rx(rxin),.pma_rck(pck));
+    ot_pdie_serdes_col #(.LOCKSAFE(1),.HOLD_EDGES(HOLD)) ins(.clk(clk),.rst(rst),.tx(tx),.rx(r_i),.st(s_i),.pma_tx(p_i),.pma_tck(c_i),.pma_rx(rxin),.pma_rck(pck),.pma_lock(IGNORE_LOCK ? 1'b1 : lock));
+    ot_pdie_serdes_col_locksafe #(.LOCKSAFE(1)) wrap(.clk(clk),.rst(rst),.pma_lock(lock),.tx(tx),.rx(r_w),.st(s_w),.pma_tx(p_w),.pma_tck(c_w),.pma_rx(rxin),.pma_rck(pck));
     assign rs_o={orig.rs_t,orig.rs_r}; assign rs_d={dflt.rs_t,dflt.rs_r}; assign rs_i={ins.rs_t,ins.rs_r};
     assign rs_w={wrap.u_core.rs_t,wrap.u_core.rs_r}; assign g_i=ins.rst_g; assign rr_i=ins.rn_r;
     integer n,epoch,checks=0,live=0;

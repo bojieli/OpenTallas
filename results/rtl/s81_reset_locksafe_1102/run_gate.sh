@@ -4,7 +4,8 @@
 # 1. the codex/serdes-locksafe-2047 (ba934c4af) gate set on the new sources: shared ot_pdie_pma_reset_hold + real FIFO
 #    (cold / stopped / warm / relock, HOLD63 + IGNORE_LOCK mutants) and the native flat/col wrappers (+ default mutant);
 # 2. S81 in-column gate tb_s81_col_locksafe: default column == released column every edge; LOCKSAFE=1 column == shared
-#    gated wrapper every edge; release rck 66/68 after 5 epochs; HOLD63 / IGNORE_LOCK / DEFAULT_MUT mutants must fail.
+#    gated wrapper every edge; release rck 66/68 after 5 epochs; s81loop = the same with the released TX lane looped into
+#    every RX (link must go live: non-vacuous RX/FIFO compare); HOLD63 / IGNORE_LOCK / DEFAULT_MUT mutants must fail.
 set -eu
 S=$1; G=$2; O=$3
 L=$S/rtl/dsrom_sys/s81_link
@@ -32,14 +33,15 @@ for C in flat col defaultmut;do
  if [ "$C" = defaultmut ];then test "$rc" != 0;grep -q 'default wrapper differs' "$O/$C.log";else test "$rc" = 0;fi
  echo "GATE $C rc=$rc OK"
 done
-for C in s81col s81early s81nolock s81default;do
+for C in s81col s81loop s81early s81nolock s81default;do
  args=()
- case $C in s81early)args=(-Ptb_s81_col_locksafe.HOLD=63);;s81nolock)args=(-Ptb_s81_col_locksafe.IGNORE_LOCK=1);;s81default)args=(-Ptb_s81_col_locksafe.DEFAULT_MUT=1);;esac
+ case $C in s81loop)args=(-Ptb_s81_col_locksafe.LOOP=1);;s81early)args=(-Ptb_s81_col_locksafe.HOLD=63);;s81nolock)args=(-Ptb_s81_col_locksafe.IGNORE_LOCK=1);;s81default)args=(-Ptb_s81_col_locksafe.DEFAULT_MUT=1);;esac
  iverilog -g2012 -I "$L" -s tb_s81_col_locksafe "${args[@]}" -o "$O/$C" "${files[@]}" "$O/orig_col.sv" "$L/col/tb_s81_col_locksafe.sv" >"$O/$C.build.log" 2>&1
  set +e;vvp "$O/$C" >"$O/$C.log" 2>&1;rc=$?;set -e
  echo "$rc" >"$O/$C.rc"
  case $C in
   s81col)test "$rc" = 0;grep -q 'S81_COL_LOCKSAFE PASS' "$O/$C.log";test "$(grep -c S81_COL_RELEASE "$O/$C.log")" = 5;;
+  s81loop)test "$rc" = 0;grep -q 'S81_COL_LOCKSAFE PASS' "$O/$C.log";if grep -q 'live_samples=0 ' "$O/$C.log";then echo 'vacuous loop';exit 1;fi;;
   s81early)test "$rc" != 0;grep -q 'early release' "$O/$C.log";;
   s81nolock)test "$rc" != 0;grep -q -E 'not held|differs from gated' "$O/$C.log";;
   s81default)test "$rc" != 0;grep -q 'default column differs' "$O/$C.log";;

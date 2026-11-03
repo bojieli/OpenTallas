@@ -1,0 +1,8 @@
+S81_COL_RELEASE epoch=0 guard_edge=66 native_rck_edge=68
+S81_COL_RELEASE epoch=1 guard_edge=66 native_rck_edge=68
+S81_COL_RELEASE epoch=2 guard_edge=66 native_rck_edge=68
+S81_COL_RELEASE epoch=3 guard_edge=66 native_rck_edge=68
+S81_COL_RELEASE epoch=4 guard_edge=66 native_rck_edge=68
+S81_COL_LOCKSAFE PASS lockstep_checks=2276 live_samples=1163 default_identity=1 incol_eq_shared_wrapper=1 epochs=5
+tb_s81_col_locksafe.sv:74: $finish called at 956154375 (1fs)
+rc=0
