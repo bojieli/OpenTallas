@@ -1,30 +1,10 @@
 `timescale 1ns/1ps
-// Unselected candidate only. Production SerDes modules and callers stay unchanged.
+// Bench wrappers with an explicit pma_lock input (relock gate).  Production uses the in-core LOCKSAFE parameter of
+// ot_pdie_serdes / ot_pdie_serdes_col (same sequencer, pma_lock tied 1: rck-restart form, OWNER 11-02 17:55).
 // New pma_lock authority is required only by these new wrappers when LOCKSAFE=1.
 // Boot cost: two recovered-clock synchronizer edges, HOLD_EDGES recovered edges,
 // then the original core's reset synchronizers. No mission pipeline stage is added.
-module ot_pdie_pma_reset_hold #(parameter integer HOLD_EDGES = 64) (
-    input wire rst_n, pma_lock, pma_rck,
-    output wire core_rst_n,
-    output reg hold_ready
-);
-    localparam integer CW = (HOLD_EDGES < 2) ? 1 : $clog2(HOLD_EDGES);
-    wire permit = rst_n && pma_lock;
-    (* async_reg = "true" *) reg [1:0] release_sync;
-    reg [CW-1:0] count;
-    initial if (HOLD_EDGES < 1) $error("HOLD_EDGES must be positive");
-    always @(posedge pma_rck or negedge permit)
-        if (!permit) release_sync <= 2'b00;
-        else release_sync <= {release_sync[0], 1'b1};
-    always @(posedge pma_rck or negedge permit)
-        if (!permit) begin count <= 0; hold_ready <= 1'b0; end
-        else if (!release_sync[1]) begin count <= 0; hold_ready <= 1'b0; end
-        else if (!hold_ready) begin
-            if (count == HOLD_EDGES - 1) hold_ready <= 1'b1;
-            else count <= count + 1'b1;
-        end
-    assign core_rst_n = permit && hold_ready;
-endmodule
+// ot_pdie_pma_reset_hold now lives in ot_pdie_serdes.sv (shared by the in-core LOCKSAFE parameter of both cores).
 
 module ot_pdie_serdes_locksafe #(
     parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64,

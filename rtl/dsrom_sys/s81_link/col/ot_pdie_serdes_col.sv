@@ -16,7 +16,11 @@
 //   3 = pad 0 short, 4 = syn reset run long); 8 = TX relay one row short (PMA sees the lane one cycle early: no effect on
 //   data, kept as a probe only).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0) (
+// LOCKSAFE (opt-in, default 0 = unchanged): 1 = S81.RESET lock-safe PMA reset sequencer ot_pdie_pma_reset_hold
+//   (rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv) holds the whole core reset until HOLD_EDGES+2 recovered edges after rst
+//   releases with the PMA clock running (OWNER 11-02 17:55); enabled per instance by the S81 as-built netlist.
+module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0,
+                            parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64) (
     input  wire          clk,
     input  wire          rst,
     input  wire [511:0]  tx,
@@ -27,10 +31,19 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     input  wire [543:0]  pma_rx,
     input  wire          pma_rck
 );
+    // ---- S81.RESET lock-safe PMA reset sequencer (LOCKSAFE=1 only; region syn, on pma_rck)
+    wire rst_g;
+    generate if (LOCKSAFE != 0) begin : g_locksafe
+        wire hold_ready;
+        ot_pdie_pma_reset_hold #(.HOLD_EDGES(HOLD_EDGES)) u_hold
+            (.rst_n(rst), .pma_lock(1'b1), .pma_rck(pma_rck), .core_rst_n(rst_g), .hold_ready(hold_ready));
+    end else begin : g_legacy
+        assign rst_g = rst;
+    end endgenerate
     // ---- resets: one synchroniser per clock domain (rs_t in region tx, rs_r in region syn beside the PMA)
     reg [1:0] rs_t, rs_r;
-    always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
-    always @(posedge pma_rck or negedge rst) if (!rst) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
+    always @(posedge clk or negedge rst_g) if (!rst_g) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
+    always @(posedge pma_rck or negedge rst_g) if (!rst_g) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
     wire rn_t = rs_t[1], rn_r = rs_r[1];
     // ---- transmit: FEC encoder (closed tile) -> TX lane relay rows (clk) -> PMA TX
     wire e_v; wire [543:0] e_d; wire e_flt;

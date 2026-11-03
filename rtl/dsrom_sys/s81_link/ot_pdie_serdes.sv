@@ -21,7 +21,44 @@
 // st = {live (FEC locked / UCIe receiving), fault (sticky: uncorrectable frame, rate-match overflow)} (ck domain).
 // rst: the die stream reset (active low), released after the clocks run.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer DMUT = 0) (
+// ---------------------------------------------------------------------------------------------------------------
+// ot_pdie_pma_reset_hold: S81.RESET lock-safe PMA-domain reset sequencer (OWNER 11-02 17:55: the SerDes soft warm reset is
+// a LOCAL sequencer that holds reset >= 64 recovered edges after the PMA clock restarts; no system running-clock promise).
+// Async assertion on !rst_n || !pma_lock; release = 2 recovered-clock synchroniser edges + HOLD_EDGES recovered edges, then
+// the core's own reset synchronisers (guard release at rck edge 66, native rck reset release at 68).  A stopped PMA clock
+// simply keeps the domain in reset (legal idle).  Cost: 9 FF (2 sync + 6 count + 1 ready), 0 mission cycles.
+// (Moved here from ot_pdie_serdes_locksafe.sv so every caller of the shared SerDes cores gets it from one file.)
+// ---------------------------------------------------------------------------------------------------------------
+module ot_pdie_pma_reset_hold #(parameter integer HOLD_EDGES = 64) (
+    input wire rst_n, pma_lock, pma_rck,
+    output wire core_rst_n,
+    output reg hold_ready
+);
+    localparam integer CW = (HOLD_EDGES < 2) ? 1 : $clog2(HOLD_EDGES);
+    wire permit = rst_n && pma_lock;
+    (* async_reg = "true" *) reg [1:0] release_sync;
+    reg [CW-1:0] count;
+    initial if (HOLD_EDGES < 1) $error("HOLD_EDGES must be positive");
+    always @(posedge pma_rck or negedge permit)
+        if (!permit) release_sync <= 2'b00;
+        else release_sync <= {release_sync[0], 1'b1};
+    always @(posedge pma_rck or negedge permit)
+        if (!permit) begin count <= 0; hold_ready <= 1'b0; end
+        else if (!release_sync[1]) begin count <= 0; hold_ready <= 1'b0; end
+        else if (!hold_ready) begin
+            if (count == HOLD_EDGES - 1) hold_ready <= 1'b1;
+            else count <= count + 1'b1;
+        end
+    assign core_rst_n = permit && hold_ready;
+endmodule
+
+// LOCKSAFE (opt-in, default 0 = byte-identical behaviour): 1 = the whole core reset is held by ot_pdie_pma_reset_hold on
+// pma_rck (S81.RESET, enabled by the S81 as-built netlist; HEAD may set it the same way).  pma_lock is tied 1 here: the
+// sequencer is armed by rst and counts real recovered edges, so a warm reset with the PMA clock stopped is released only
+// HOLD_EDGES+2 edges after the clock restarts.  pma_tck = clk keeps running in reset, so the far die's recovered clock never
+// depends on this die leaving reset (no bring-up loop).
+module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer DMUT = 0,
+                        parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64) (
     input  wire          clk,
     input  wire          rst,
     input  wire [511:0]  tx,
@@ -33,10 +70,19 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
     input  wire [543:0]  pma_rx,
     input  wire          pma_rck
 );
+    // ---- S81.RESET lock-safe PMA reset sequencer (LOCKSAFE=1 only)
+    wire rst_g;
+    generate if (LOCKSAFE != 0) begin : g_locksafe
+        wire hold_ready;
+        ot_pdie_pma_reset_hold #(.HOLD_EDGES(HOLD_EDGES)) u_hold
+            (.rst_n(rst), .pma_lock(1'b1), .pma_rck(pma_rck), .core_rst_n(rst_g), .hold_ready(hold_ready));
+    end else begin : g_legacy
+        assign rst_g = rst;
+    end endgenerate
     // ---- resets: one synchroniser per clock domain
     reg [1:0] rs_t, rs_r;
-    always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
-    always @(posedge pma_rck or negedge rst) if (!rst) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
+    always @(posedge clk or negedge rst_g) if (!rst_g) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
+    always @(posedge pma_rck or negedge rst_g) if (!rst_g) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
     wire rn_t = rs_t[1], rn_r = rs_r[1];
     // ---- transmit: FEC encoder (ck) -> PMA TX model
     wire e_v; wire [543:0] e_d; wire e_flt;
