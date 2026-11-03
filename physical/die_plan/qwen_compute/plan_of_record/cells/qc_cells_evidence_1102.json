@@ -1,0 +1,548 @@
+{
+ "cells_per_type": {
+  "cbf_q00__cl1b5a6458": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbf_q00] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbf_q00__cl870de686": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbf_q00] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbf_q00_s2": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbf_q00_s2] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbf_q01": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbf_q01] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbf_q01_s2": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbf_q01_s2] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbf_q11": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbf_q11] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbn_q00__cl622f65d2": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbn_q00] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbn_q00__cld7bf7197": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbn_q00] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbn_q00__cldbcda913": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbn_q00] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbn_q01__clab6e67f2": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbn_q01] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbn_q01__cld9ff4c40": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbn_q01] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbn_q01__cldd6ea846": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbn_q01] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbn_q11__cl49ae4555": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbn_q11] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbn_q11__cl5cc92dfe": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbn_q11] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbx_q10__cl89936551": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbx_q10] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "cbx_q10__cl94a12200": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[cbx_q10] (no measured kit synth yet)",
+   "cells": 782764
+  },
+  "coll_core": {
+   "basis": "measured native d90 COUNT/ABI/FACE (Codex qc-neighbor-counts/native_pair); minus its landing rings 58816 (cells.py rule 6 adds this type's rings back)",
+   "cells": 612818,
+   "landing_rings_in_measured": 58816,
+   "measured_total": 671634,
+   "src": "epyc2 codex-qc62-collect-1101/native_pair_retry1/items/coll_core/receipt.json (671613 std + 21 SRAM)"
+  },
+  "coll_ft__cl78c7b300": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling coll_ft__cla4a25d77 (same base RTL); minus its landing rings 33724 (cells.py rule 6 adds this type's rings back)",
+   "cells": 32294,
+   "landing_rings_in_measured": 33724,
+   "measured_total": 66018,
+   "src": "intel2:/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/coll_ft__cla4a25d77/coll_ft__cla4a25d77/run/reports/asap7/dp_coll_ft__cla4a25d77/base/synth_stat.txt"
+  },
+  "coll_ftc": {
+   "basis": "measured native d90 COUNT/ABI/FACE (Codex qc-neighbor-counts/native_pair); minus its landing rings 87416 (cells.py rule 6 adds this type's rings back)",
+   "cells": 71488,
+   "landing_rings_in_measured": 87416,
+   "measured_total": 158904,
+   "src": "codex/qc-neighbor-counts-1101@c2b571529"
+  },
+  "coll_ftm": {
+   "basis": "measured native d90 COUNT/ABI/FACE (Codex qc-neighbor-counts/native_pair); minus its landing rings 46684 (cells.py rule 6 adds this type's rings back)",
+   "cells": 36633,
+   "landing_rings_in_measured": 46684,
+   "measured_total": 83317,
+   "src": "codex/qc-neighbor-counts-1101@c2b571529"
+  },
+  "coll_ftn": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[coll_ftn] (no measured kit synth yet)",
+   "cells": 6000
+  },
+  "coll_n": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 7840 (cells.py rule 6 adds this type's rings back)",
+   "cells": 38585,
+   "landing_rings_in_measured": 7840,
+   "measured_total": 46425,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/coll_n/gen/coll_n/run/reports/asap7/dp_coll_n/base/synth_stat.txt"
+  },
+  "coll_s": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[coll_s] (no measured kit synth yet)",
+   "cells": 15000
+  },
+  "native59": {
+   "basis": "measured native d90 COUNT/ABI/FACE (Codex qc-neighbor-counts/native_pair); minus its landing rings 75772 (cells.py rule 6 adds this type's rings back)",
+   "cells": 178967,
+   "landing_rings_in_measured": 75772,
+   "measured_total": 254739,
+   "src": "codex/qc-neighbor-counts-1101@c2b571529 (254739 std + 8 SRAM)"
+  },
+  "sle_ctl__cl372cea1c": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_ctl] (no measured kit synth yet)",
+   "cells": 253360
+  },
+  "sle_ctl__cl503337ff": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_ctl] (no measured kit synth yet)",
+   "cells": 253360
+  },
+  "sle_ctl__cl67434795": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_ctl] (no measured kit synth yet)",
+   "cells": 253360
+  },
+  "sle_ctl__cla4f6f12f": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_ctl] (no measured kit synth yet)",
+   "cells": 253360
+  },
+  "sle_fe_v1__cl1cbb7497": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling sle_fe_v1__cl8210183c (same base RTL); minus its landing rings 69224 (cells.py rule 6 adds this type's rings back)",
+   "cells": 111210,
+   "landing_rings_in_measured": 69224,
+   "measured_total": 180434,
+   "src": "intel2:/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen_union/sle_fe_v1__cl8210183c/sle_fe_v1__cl8210183c/run/reports/asap7/dp_sle_fe_v1__cl8210183c/base/synth_stat.txt"
+  },
+  "sle_fe_v2": {
+   "basis": "measured yosys synth_stat of family variant sle_fe_v1__cl8210183c (no kit of this variant yet); minus its landing rings 69224 (cells.py rule 6 adds this type's rings back)",
+   "cells": 111210,
+   "landing_rings_in_measured": 69224,
+   "measured_total": 180434,
+   "src": "intel2:/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen_union/sle_fe_v1__cl8210183c/sle_fe_v1__cl8210183c/run/reports/asap7/dp_sle_fe_v1__cl8210183c/base/synth_stat.txt"
+  },
+  "sle_hc0__cl05696ed1": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 23876 (cells.py rule 6 adds this type's rings back)",
+   "cells": 316946,
+   "landing_rings_in_measured": 23876,
+   "measured_total": 340822,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_hc0__cl05696ed1/gen/sle_hc0__cl05696ed1/run/reports/asap7/dp_sle_hc0__cl05696ed1/base/synth_stat.txt"
+  },
+  "sle_hc0__cl929603c0__cl4baa7c9c": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling sle_hc0__cl929603c0__cl38badc56 (same base RTL); minus its landing rings 23876 (cells.py rule 6 adds this type's rings back)",
+   "cells": 316950,
+   "landing_rings_in_measured": 23876,
+   "measured_total": 340826,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_hc0__cl929603c0__cl38badc56/gen/sle_hc0__cl929603c0__cl38badc56/run/reports/asap7/dp_sle_hc0__cl929603c0__cl38badc56/base/synth_stat.txt"
+  },
+  "sle_hc1__cl22c1ff36": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 37928 (cells.py rule 6 adds this type's rings back)",
+   "cells": 339649,
+   "landing_rings_in_measured": 37928,
+   "measured_total": 377577,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_hc1__cl22c1ff36/gen/sle_hc1__cl22c1ff36/run/reports/asap7/dp_sle_hc1__cl22c1ff36/base/synth_stat.txt"
+  },
+  "sle_hc1__cl7d360508": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 37928 (cells.py rule 6 adds this type's rings back)",
+   "cells": 339674,
+   "landing_rings_in_measured": 37928,
+   "measured_total": 377602,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_hc1__cl7d360508/gen/sle_hc1__cl7d360508/run/reports/asap7/dp_sle_hc1__cl7d360508/base/synth_stat.txt"
+  },
+  "sle_hc2__cl9c4c4509__cl3edce1b8": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 24032 (cells.py rule 6 adds this type's rings back)",
+   "cells": 321500,
+   "landing_rings_in_measured": 24032,
+   "measured_total": 345532,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_hc2__cl9c4c4509__cl3edce1b8/gen/sle_hc2__cl9c4c4509__cl3edce1b8/run/reports/asap7/dp_sle_hc2__cl9c4c4509__cl3edce1b8/base/synth_stat.txt"
+  },
+  "sle_hc2__cl9c4c4509__clf60c5152": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 24032 (cells.py rule 6 adds this type's rings back)",
+   "cells": 321542,
+   "landing_rings_in_measured": 24032,
+   "measured_total": 345574,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_hc2__cl9c4c4509__clf60c5152/gen/sle_hc2__cl9c4c4509__clf60c5152/run/reports/asap7/dp_sle_hc2__cl9c4c4509__clf60c5152/base/synth_stat.txt"
+  },
+  "sle_hc2__clcc5e3e61": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 23272 (cells.py rule 6 adds this type's rings back)",
+   "cells": 321701,
+   "landing_rings_in_measured": 23272,
+   "measured_total": 344973,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_hc2__clcc5e3e61/gen/sle_hc2__clcc5e3e61/run/reports/asap7/dp_sle_hc2__clcc5e3e61/base/synth_stat.txt"
+  },
+  "sle_sc_v1__cl115da35f": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 103836 (cells.py rule 6 adds this type's rings back)",
+   "cells": 462022,
+   "landing_rings_in_measured": 103836,
+   "measured_total": 565858,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_sc_v1__cl115da35f/gen/sle_sc_v1__cl115da35f/run/reports/asap7/dp_sle_sc_v1__cl115da35f/base/synth_stat.txt"
+  },
+  "sle_sc_v1__cl7479a5ec": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 103836 (cells.py rule 6 adds this type's rings back)",
+   "cells": 461746,
+   "landing_rings_in_measured": 103836,
+   "measured_total": 565582,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_sc_v1__cl7479a5ec/gen/sle_sc_v1__cl7479a5ec/run/reports/asap7/dp_sle_sc_v1__cl7479a5ec/base/synth_stat.txt"
+  },
+  "sle_sc_v3": {
+   "basis": "measured yosys synth_stat of family variant sle_sc_v1__cl7479a5ec (no kit of this variant yet); minus its landing rings 103836 (cells.py rule 6 adds this type's rings back)",
+   "cells": 461746,
+   "landing_rings_in_measured": 103836,
+   "measured_total": 565582,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_sc_v1__cl7479a5ec/gen/sle_sc_v1__cl7479a5ec/run/reports/asap7/dp_sle_sc_v1__cl7479a5ec/base/synth_stat.txt"
+  },
+  "sle_st_a_v1__cl989804f6__cl18eece69": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_st_a_v1] (no measured kit synth yet)",
+   "cells": 125514
+  },
+  "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_st_a_v1] (no measured kit synth yet)",
+   "cells": 125514
+  },
+  "sle_st_a_v2": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_st_a_v2] (no measured kit synth yet)",
+   "cells": 125514
+  },
+  "sle_st_b_v1": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 59440 (cells.py rule 6 adds this type's rings back)",
+   "cells": 283235,
+   "landing_rings_in_measured": 59440,
+   "measured_total": 342675,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_st_b_v1/gen/sle_st_b_v1/run/reports/asap7/dp_sle_st_b_v1/base/synth_stat.txt"
+  },
+  "sle_st_b_v2__cl14c98df5": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 55208 (cells.py rule 6 adds this type's rings back)",
+   "cells": 278508,
+   "landing_rings_in_measured": 55208,
+   "measured_total": 333716,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_st_b_v2__cl14c98df5/gen/sle_st_b_v2__cl14c98df5/run/reports/asap7/dp_sle_st_b_v2__cl14c98df5/base/synth_stat.txt"
+  },
+  "sle_st_b_v2__clfde1249e": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 54448 (cells.py rule 6 adds this type's rings back)",
+   "cells": 278338,
+   "landing_rings_in_measured": 54448,
+   "measured_total": 332786,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_st_b_v2__clfde1249e/gen/sle_st_b_v2__clfde1249e/run/reports/asap7/dp_sle_st_b_v2__clfde1249e/base/synth_stat.txt"
+  },
+  "sle_stm_v1__cl27746664": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 67648 (cells.py rule 6 adds this type's rings back)",
+   "cells": 156603,
+   "landing_rings_in_measured": 67648,
+   "measured_total": 224251,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_stm_v1__cl27746664/gen/sle_stm_v1__cl27746664/run/reports/asap7/dp_sle_stm_v1__cl27746664/base/synth_stat.txt"
+  },
+  "sle_stm_v1__clbe630b9c": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling sle_stm_v1__cl27746664 (same base RTL); minus its landing rings 67648 (cells.py rule 6 adds this type's rings back)",
+   "cells": 156603,
+   "landing_rings_in_measured": 67648,
+   "measured_total": 224251,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_stm_v1__cl27746664/gen/sle_stm_v1__cl27746664/run/reports/asap7/dp_sle_stm_v1__cl27746664/base/synth_stat.txt"
+  },
+  "sle_stm_v2__cl55be2264": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 67648 (cells.py rule 6 adds this type's rings back)",
+   "cells": 155058,
+   "landing_rings_in_measured": 67648,
+   "measured_total": 222706,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_stm_v2__cl55be2264/gen/sle_stm_v2__cl55be2264/run/reports/asap7/dp_sle_stm_v2__cl55be2264/base/synth_stat.txt"
+  },
+  "sle_stm_v2__cl7b3062fa": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling sle_stm_v2__cl55be2264 (same base RTL); minus its landing rings 67648 (cells.py rule 6 adds this type's rings back)",
+   "cells": 155058,
+   "landing_rings_in_measured": 67648,
+   "measured_total": 222706,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_stm_v2__cl55be2264/gen/sle_stm_v2__cl55be2264/run/reports/asap7/dp_sle_stm_v2__cl55be2264/base/synth_stat.txt"
+  },
+  "sle_stm_v3": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 36284 (cells.py rule 6 adds this type's rings back)",
+   "cells": 120501,
+   "landing_rings_in_measured": 36284,
+   "measured_total": 156785,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/sle_stm_v3/gen/sle_stm_v3/run/reports/asap7/dp_sle_stm_v3/base/synth_stat.txt"
+  },
+  "sle_su_c": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_su_c] (no measured kit synth yet)",
+   "cells": 711174
+  },
+  "sle_su_l0__cl086d85ba": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_su_l0] (no measured kit synth yet)",
+   "cells": 433443
+  },
+  "sle_su_l0__cl7a55c676": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_su_l0] (no measured kit synth yet)",
+   "cells": 433443
+  },
+  "sle_su_l1__cl5ea486db": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_su_l1] (no measured kit synth yet)",
+   "cells": 433443
+  },
+  "sle_su_l1__clc6d66f5b": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[sle_su_l1] (no measured kit synth yet)",
+   "cells": 433443
+  },
+  "slw_fe_v1__clfe325744__cl08d14f0d": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling slw_fe_v1__clfe325744__cldb4efe33 (same base RTL); minus its landing rings 55768 (cells.py rule 6 adds this type's rings back)",
+   "cells": 102010,
+   "landing_rings_in_measured": 55768,
+   "measured_total": 157778,
+   "src": "intel2:/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen_union/slw_fe_v1__clfe325744__cldb4efe33/slw_fe_v1__clfe325744__cldb4efe33/run/reports/asap7/dp_slw_fe_v1__clfe325744__cldb4efe33/base/synth_stat.txt"
+  },
+  "slw_fe_v2__cle312294d": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 56528 (cells.py rule 6 adds this type's rings back)",
+   "cells": 102171,
+   "landing_rings_in_measured": 56528,
+   "measured_total": 158699,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_fe_v2__cle312294d/gen/slw_fe_v2__cle312294d/run/reports/asap7/dp_slw_fe_v2__cle312294d/base/synth_stat.txt"
+  },
+  "slw_fw_v3": {
+   "basis": "measured yosys synth_stat of family variant slw_fw_v1__clf51c11d8__cl592e3d37 (no kit of this variant yet); minus its landing rings 88972 (cells.py rule 6 adds this type's rings back)",
+   "cells": 101910,
+   "landing_rings_in_measured": 88972,
+   "measured_total": 190882,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_fw_v1__clf51c11d8__cl592e3d37/gen/slw_fw_v1__clf51c11d8__cl592e3d37/run/reports/asap7/dp_slw_fw_v1__clf51c11d8__cl592e3d37/base/synth_stat.txt"
+  },
+  "slw_hc0__cl1bc59e1c": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 24636 (cells.py rule 6 adds this type's rings back)",
+   "cells": 316812,
+   "landing_rings_in_measured": 24636,
+   "measured_total": 341448,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc0__cl1bc59e1c/gen/slw_hc0__cl1bc59e1c/run/reports/asap7/dp_slw_hc0__cl1bc59e1c/base/synth_stat.txt"
+  },
+  "slw_hc0__cl4f54b7a3": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 24636 (cells.py rule 6 adds this type's rings back)",
+   "cells": 316866,
+   "landing_rings_in_measured": 24636,
+   "measured_total": 341502,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc0__cl4f54b7a3/gen/slw_hc0__cl4f54b7a3/run/reports/asap7/dp_slw_hc0__cl4f54b7a3/base/synth_stat.txt"
+  },
+  "slw_hc1__cl3449ea95": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 37928 (cells.py rule 6 adds this type's rings back)",
+   "cells": 339755,
+   "landing_rings_in_measured": 37928,
+   "measured_total": 377683,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc1__cl3449ea95/gen/slw_hc1__cl3449ea95/run/reports/asap7/dp_slw_hc1__cl3449ea95/base/synth_stat.txt"
+  },
+  "slw_hc1__cl68f9248e__cl144ee7b3": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 37928 (cells.py rule 6 adds this type's rings back)",
+   "cells": 339710,
+   "landing_rings_in_measured": 37928,
+   "measured_total": 377638,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc1__cl68f9248e__cl144ee7b3/gen/slw_hc1__cl68f9248e__cl144ee7b3/run/reports/asap7/dp_slw_hc1__cl68f9248e__cl144ee7b3/base/synth_stat.txt"
+  },
+  "slw_hc1__cl68f9248e__cle683a076": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling slw_hc1__cl68f9248e__cl144ee7b3 (same base RTL); minus its landing rings 37928 (cells.py rule 6 adds this type's rings back)",
+   "cells": 339710,
+   "landing_rings_in_measured": 37928,
+   "measured_total": 377638,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc1__cl68f9248e__cl144ee7b3/gen/slw_hc1__cl68f9248e__cl144ee7b3/run/reports/asap7/dp_slw_hc1__cl68f9248e__cl144ee7b3/base/synth_stat.txt"
+  },
+  "slw_hc2__cl6bcaba89": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 23272 (cells.py rule 6 adds this type's rings back)",
+   "cells": 321851,
+   "landing_rings_in_measured": 23272,
+   "measured_total": 345123,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc2__cl6bcaba89/gen/slw_hc2__cl6bcaba89/run/reports/asap7/dp_slw_hc2__cl6bcaba89/base/synth_stat.txt"
+  },
+  "slw_hc2__cla3497502__cl16607c7a": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 23272 (cells.py rule 6 adds this type's rings back)",
+   "cells": 321774,
+   "landing_rings_in_measured": 23272,
+   "measured_total": 345046,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc2__cla3497502__cl16607c7a/gen/slw_hc2__cla3497502__cl16607c7a/run/reports/asap7/dp_slw_hc2__cla3497502__cl16607c7a/base/synth_stat.txt"
+  },
+  "slw_hc2__cla3497502__cldc737267": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 23272 (cells.py rule 6 adds this type's rings back)",
+   "cells": 321927,
+   "landing_rings_in_measured": 23272,
+   "measured_total": 345199,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc2__cla3497502__cldc737267/gen/slw_hc2__cla3497502__cldc737267/run/reports/asap7/dp_slw_hc2__cla3497502__cldc737267/base/synth_stat.txt"
+  },
+  "slw_hc3__clccfc3e6b": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 760 (cells.py rule 6 adds this type's rings back)",
+   "cells": 296030,
+   "landing_rings_in_measured": 760,
+   "measured_total": 296790,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc3__clccfc3e6b/gen/slw_hc3__clccfc3e6b/run/reports/asap7/dp_slw_hc3__clccfc3e6b/base/synth_stat.txt"
+  },
+  "slw_hc3__cld86a7ad4": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 0 (cells.py rule 6 adds this type's rings back)",
+   "cells": 296044,
+   "landing_rings_in_measured": 0,
+   "measured_total": 296044,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_hc3__cld86a7ad4/gen/slw_hc3__cld86a7ad4/run/reports/asap7/dp_slw_hc3__cld86a7ad4/base/synth_stat.txt"
+  },
+  "slw_sc_v1__cl63e5a7a2": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 107308 (cells.py rule 6 adds this type's rings back)",
+   "cells": 462576,
+   "landing_rings_in_measured": 107308,
+   "measured_total": 569884,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_sc_v1__cl63e5a7a2/gen/slw_sc_v1__cl63e5a7a2/run/reports/asap7/dp_slw_sc_v1__cl63e5a7a2/base/synth_stat.txt"
+  },
+  "slw_sc_v1__cl64543eaf__cl4590432d": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling slw_sc_v1__cl63e5a7a2 (same base RTL); minus its landing rings 107308 (cells.py rule 6 adds this type's rings back)",
+   "cells": 462576,
+   "landing_rings_in_measured": 107308,
+   "measured_total": 569884,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_sc_v1__cl63e5a7a2/gen/slw_sc_v1__cl63e5a7a2/run/reports/asap7/dp_slw_sc_v1__cl63e5a7a2/base/synth_stat.txt"
+  },
+  "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling slw_sc_v1__cl63e5a7a2 (same base RTL); minus its landing rings 107308 (cells.py rule 6 adds this type's rings back)",
+   "cells": 462576,
+   "landing_rings_in_measured": 107308,
+   "measured_total": 569884,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_sc_v1__cl63e5a7a2/gen/slw_sc_v1__cl63e5a7a2/run/reports/asap7/dp_slw_sc_v1__cl63e5a7a2/base/synth_stat.txt"
+  },
+  "slw_sc_v2": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 103076 (cells.py rule 6 adds this type's rings back)",
+   "cells": 458831,
+   "landing_rings_in_measured": 103076,
+   "measured_total": 561907,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_sc_v2/gen/slw_sc_v2/run/reports/asap7/dp_slw_sc_v2/base/synth_stat.txt"
+  },
+  "slw_sc_v3": {
+   "basis": "measured yosys synth_stat of family variant slw_sc_v2 (no kit of this variant yet); minus its landing rings 103076 (cells.py rule 6 adds this type's rings back)",
+   "cells": 458831,
+   "landing_rings_in_measured": 103076,
+   "measured_total": 561907,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_sc_v2/gen/slw_sc_v2/run/reports/asap7/dp_slw_sc_v2/base/synth_stat.txt"
+  },
+  "slw_st_a_v1__clb036e152": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_st_a_v1] (no measured kit synth yet)",
+   "cells": 141126
+  },
+  "slw_st_a_v1__clfc5867a6": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_st_a_v1] (no measured kit synth yet)",
+   "cells": 141126
+  },
+  "slw_st_a_v2__cl9f076a5c": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_st_a_v2] (no measured kit synth yet)",
+   "cells": 141126
+  },
+  "slw_st_a_v2__clf4365a62": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_st_a_v2] (no measured kit synth yet)",
+   "cells": 141126
+  },
+  "slw_st_b_v1__cl6357f1cc": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 60200 (cells.py rule 6 adds this type's rings back)",
+   "cells": 282114,
+   "landing_rings_in_measured": 60200,
+   "measured_total": 342314,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_st_b_v1__cl6357f1cc/gen/slw_st_b_v1__cl6357f1cc/run/reports/asap7/dp_slw_st_b_v1__cl6357f1cc/base/synth_stat.txt"
+  },
+  "slw_st_b_v1__cle6023ec2": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 58680 (cells.py rule 6 adds this type's rings back)",
+   "cells": 283468,
+   "landing_rings_in_measured": 58680,
+   "measured_total": 342148,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_st_b_v1__cle6023ec2/gen/slw_st_b_v1__cle6023ec2/run/reports/asap7/dp_slw_st_b_v1__cle6023ec2/base/synth_stat.txt"
+  },
+  "slw_st_b_v2": {
+   "basis": "measured yosys synth_stat of family variant slw_st_b_v1__cle6023ec2 (no kit of this variant yet); minus its landing rings 58680 (cells.py rule 6 adds this type's rings back)",
+   "cells": 283468,
+   "landing_rings_in_measured": 58680,
+   "measured_total": 342148,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_st_b_v1__cle6023ec2/gen/slw_st_b_v1__cle6023ec2/run/reports/asap7/dp_slw_st_b_v1__cle6023ec2/base/synth_stat.txt"
+  },
+  "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 59184 (cells.py rule 6 adds this type's rings back)",
+   "cells": 151753,
+   "landing_rings_in_measured": 59184,
+   "measured_total": 210937,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_stm_v1__cl05fc43f7__cl2086fa2c/gen/slw_stm_v1__cl05fc43f7__cl2086fa2c/run/reports/asap7/dp_slw_stm_v1__cl05fc43f7__cl2086fa2c/base/synth_stat.txt"
+  },
+  "slw_stm_v1__cl05fc43f7__cl389df4e9": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 59184 (cells.py rule 6 adds this type's rings back)",
+   "cells": 151811,
+   "landing_rings_in_measured": 59184,
+   "measured_total": 210995,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_stm_v1__cl05fc43f7__cl389df4e9/gen/slw_stm_v1__cl05fc43f7__cl389df4e9/run/reports/asap7/dp_slw_stm_v1__cl05fc43f7__cl389df4e9/base/synth_stat.txt"
+  },
+  "slw_stm_v1__cle34a73c3": {
+   "basis": "measured yosys synth_stat of landing-cohort sibling slw_stm_v1__cl05fc43f7__cl389df4e9 (same base RTL); minus its landing rings 59184 (cells.py rule 6 adds this type's rings back)",
+   "cells": 151811,
+   "landing_rings_in_measured": 59184,
+   "measured_total": 210995,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_stm_v1__cl05fc43f7__cl389df4e9/gen/slw_stm_v1__cl05fc43f7__cl389df4e9/run/reports/asap7/dp_slw_stm_v1__cl05fc43f7__cl389df4e9/base/synth_stat.txt"
+  },
+  "slw_stm_v2__cl1ca9c415": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 59184 (cells.py rule 6 adds this type's rings back)",
+   "cells": 150189,
+   "landing_rings_in_measured": 59184,
+   "measured_total": 209373,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_stm_v2__cl1ca9c415/gen/slw_stm_v2__cl1ca9c415/run/reports/asap7/dp_slw_stm_v2__cl1ca9c415/base/synth_stat.txt"
+  },
+  "slw_stm_v2__cl9beb65e6": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 59184 (cells.py rule 6 adds this type's rings back)",
+   "cells": 150233,
+   "landing_rings_in_measured": 59184,
+   "measured_total": 209417,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_stm_v2__cl9beb65e6/gen/slw_stm_v2__cl9beb65e6/run/reports/asap7/dp_slw_stm_v2__cl9beb65e6/base/synth_stat.txt"
+  },
+  "slw_stm_v3": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 59184 (cells.py rule 6 adds this type's rings back)",
+   "cells": 149968,
+   "landing_rings_in_measured": 59184,
+   "measured_total": 209152,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/slw_stm_v3/gen/slw_stm_v3/run/reports/asap7/dp_slw_stm_v3/base/synth_stat.txt"
+  },
+  "slw_su_c__cl19bb38ef": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_su_c] (no measured kit synth yet)",
+   "cells": 711174
+  },
+  "slw_su_c__cl92142dac": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_su_c] (no measured kit synth yet)",
+   "cells": 711174
+  },
+  "slw_su_l0__cl1a1c1f8f": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_su_l0] (no measured kit synth yet)",
+   "cells": 463590
+  },
+  "slw_su_l0__cl1e5219ea": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_su_l0] (no measured kit synth yet)",
+   "cells": 463590
+  },
+  "slw_su_l0__cl76fb247e": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_su_l0] (no measured kit synth yet)",
+   "cells": 463590
+  },
+  "slw_su_l1__cla2a78701": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_su_l1] (no measured kit synth yet)",
+   "cells": 463590
+  },
+  "slw_su_l1__clcc9d0155": {
+   "basis": "plan estimate physical/die_plan/qwen_compute/plan_notes.json cells_per_type[slw_su_l1] (no measured kit synth yet)",
+   "cells": 463590
+  },
+  "tt_ctlm": {
+   "basis": "measured yosys synth_stat (kit of this type); minus its landing rings 14996 (cells.py rule 6 adds this type's rings back)",
+   "cells": 226201,
+   "landing_rings_in_measured": 14996,
+   "measured_total": 241197,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kit-wave/qwen_compute/5346b95c915/items/tt_ctlm/gen/tt_ctlm/run/reports/asap7/dp_tt_ctlm/base/synth_stat.txt"
+  }
+ },
+ "note": "DIE-QC-63 11-02: per-type std-cell estimates for G0C completeness [cells] (tools/die_plan/cells.py by_type source). Measured kit synth where one exists, else landing-cohort sibling, else plan_notes estimate; type.cells in the plan always wins.",
+ "schema": "qc_cells_evidence.v1"
+}
