@@ -456,7 +456,12 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
           # zq[5:2] address register became 4 unnamed gold latches, so every oa bit was UNPROVEN); the reference keeps
           # the RTL registers as written and an asynchronous read port
-          "memory -nomap -nordff", "memory_map", "opt_expr -keepdc", "opt_clean",
+          # OT_LEC_GOLD_NOWIDEN=1 (opt-in, DIE-HBM-60/LEC C8 11-03): -nowiden keeps one memory word per RTL element.
+          # Widened, an unpacked array with a non-zero base (HBM pgslice ot_hbm_su_static_ins r[1:DMAX], 120 b) became
+          # 480-bit words r[w][b] (element 4w + b/120), so the gold name r[1][b] (element 4..7) was paired with the
+          # gate's element r[1][b] (529 'differ', element 1 gold-only as r[0][120..]); naming only, no semantics
+          "memory -nomap -nordff" + (" -nowiden" if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1" else ""),
+          "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
     return "\n".join(s + seq_tail(out, lecff, split_seq(env))) + "\n"
 
@@ -6569,6 +6574,8 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_EARLY_COMPARE=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
+    if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1":
+        cmd += ["-e", "OT_LEC_GOLD_NOWIDEN=1"]
     if "OT_LEC_RAWPREFIX_S" in os.environ:
         cmd += ["-e", f"OT_LEC_RAWPREFIX_S={os.environ['OT_LEC_RAWPREFIX_S']}"]
     for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
