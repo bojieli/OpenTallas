@@ -39,3 +39,14 @@ S81-064 dsdv_gunit_l0r RF 2 = RF 1 + negedge in-face (all inputs incl. rst_n, 0 
                mut 2 (OT_RFD_MUT_L0R2, posedge in-face): FAIL errors=199929 (caught)
   run_gunit_bench.sh 8 cases: RF 2 MUT=0 GUNIT PASS router_lat=39 (51) hc_lat=1008 (1020), = RF 1 (contract unchanged)
 Kits rfd2 (plan_h2_2249): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0 (both).
+
+FORM 3 / 2b (11-03, after form 2 builds: bk_g rfd2 oth-ubuntu-3049984 GRT-0116 ov 2418 (34.6-um channel, demand +11%,
+hotspots along both macro pin faces); l0r rfd2 oth-ubuntu-3202643 NOT SIGNED TT -21.68 / 25 ep (g_w1.ga2 -> ~1,500-load
+go tree -> g_sel[*].oh), FF hold -1.44 / 1 ep).  Outputs /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench3.
+S81-064 l0r form 2b (RF >= 1: per-select-copy go flops gac / gbc, 0 cycles):
+  lockstep RA 1 / RB 2: mode 0 seed 1 PASS, mode 1 seed 5 PASS; RA 0 / RB 2 (+1): mode 0 seed 3 PASS, mode 1 seed 7 PASS
+  mut 3 (OT_RFD_MUT_L0R3, copy takes the undelayed go) RA 0 / RB 2: FAIL errors=199923 (caught); mut 2: FAIL 199929 (caught)
+  run_gunit_bench.sh 8 cases: GUNIT PASS router_lat=39 hc_lat=1008 (unchanged)
+S81-062 bk_g form 3 (kit-only, RF 2 RTL unchanged): recipes_rfd3a_1103 (10.824-um plan sites, both R0) and
+  recipes_rfd3b_1103 (same sites, upper SRAM MY: one read port per macro face), two parallel variants.
+Kits rfd3a / rfd3b / l0r rfd3: GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.
