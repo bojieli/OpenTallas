@@ -65,7 +65,7 @@ RSTOP_HOP = 2
 # V CTL injection is source-qualified by xr_timing.source_contract (XR2: seven edges).
 # dsdv_bk_sel rung transit vi -> vo: 3 edges since S81-TILES8/bk (10-18: one 276-b relay per input direction inside the
 # cluster, u_rn on vi_n; was ot_dsdv_vstop's 2).
-BKSEL_TRANSIT = 4                   # S81-RF1 11-03 (DIE-S81-51/RF-D, S81-062): +1, dsdv_bk_g RF 1 (vstop FPIPE)
+BKSEL_TRANSIT = 5                   # S81-RF1 11-03 (DIE-S81-51/RF-D, S81-062): +1, dsdv_bk_g RF 1 (vstop FPIPE); +1 RF 4 posedge out-face (form 5)
 # tb_s81sl_beat on the current vp (S81-SLICE NORMR, Verilator 5.050): results/rtl/s81_slice_1017/beat/g_b37 (op 7 NORMR,
 # hc_pre = G-unit leaf row R: SLBEAT go_to_partial=115 rstd_to_y0=18 rstd_to_xq=59 post_cmd_to_last_hw=63, PASS) and g_b37i
 # (op 5 NORM imm: go_to_partial=112); mutants g_mni (NORMR ignores the row) / g_mpl (old POST row order) FAIL.  (Was the

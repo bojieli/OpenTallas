@@ -55,15 +55,18 @@ module dsdv_bk_sel #(
     // vstop FPIPE 3); dv_layer_compile BKSEL_TRANSIT 4, lower_bk FWD 3.  +define+OT_DSDV_BKG_RF0 = the old leaf (benches).
     // RF 2 (form 2, 11-03): + vin LPIPE, ln0..ln3 +1 edge inside the unit (rung transit unchanged); +define+OT_DSDV_BKG_RF1
     // = form 1 (benches).  RF 3 (form 4, 11-03): RF 2 without the negedge out-face (0 cycles); +define+OT_DSDV_BKG_RF2
-    // = form 2 (benches).
+    // = form 2 (benches).  RF 4 (form 5, 11-03): RF 2 + posedge out-face pin registers, rung transit 4 -> 5 edges
+    // (BKSEL_TRANSIT 5, lower_bk OFACE 1), ln0..ln3 +1; +define+OT_DSDV_BKG_RF3 = form 4 (benches).
 `ifdef OT_DSDV_BKG_RF0
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(0)) u_g (
 `elsif OT_DSDV_BKG_RF1
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(1)) u_g (
 `elsif OT_DSDV_BKG_RF2
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(2)) u_g (
-`else
+`elsif OT_DSDV_BKG_RF3
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(3)) u_g (
+`else
+    dsdv_bk_g #(.V(V), .MUT(MUT), .RF(4)) u_g (
 `endif
 `endif
         .clk(clk), .rst_n(rst_n), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),

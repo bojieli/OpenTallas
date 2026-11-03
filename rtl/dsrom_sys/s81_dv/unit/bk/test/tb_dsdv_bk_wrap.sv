@@ -40,8 +40,14 @@ module tb_dsdv_bk_wrap #(
 `else
 `ifdef OT_DSDV_BKG_RF0
     localparam integer RL = (UNIT == 0) ? 1 : 0;
-`else   // DIE-S81-51/RF-D 11-03: dsdv_bk_sel's glue leaf dsdv_bk_g RF 1 (vstop FPIPE) adds +1 to the sel rung transit
+`elsif OT_DSDV_BKG_RF1   // DIE-S81-51/RF-D 11-03: dsdv_bk_sel's glue leaf dsdv_bk_g RF 1..3 (vstop FPIPE) adds +1 to the rung
     localparam integer RL = (UNIT == 0) ? 2 : 0;
+`elsif OT_DSDV_BKG_RF2
+    localparam integer RL = (UNIT == 0) ? 2 : 0;
+`elsif OT_DSDV_BKG_RF3
+    localparam integer RL = (UNIT == 0) ? 2 : 0;
+`else   // RF 4 (form 5): + the posedge out-face pin register, +1 more
+    localparam integer RL = (UNIT == 0) ? 3 : 0;
 `endif
 `endif   // S81-TILES8/bk 10-18: dsdv_bk_sel rung relays u_rs / u_rn = +1 rung
                                                    // cycle per direction (through beats and the drain CTL alike)

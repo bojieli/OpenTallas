@@ -44,7 +44,12 @@ module dsdv_bk_g #(
     //           output ports vo_n / ln*: negedge launch 416.5 + insertion ~426 ps > vclk required 916.4): RF 2 WITHOUT the
     //           negedge out-face (b): every output leaves its existing posedge register (vstop vo regs, vin lane regs,
     //           fault_r); 0 cycles (a rising-edge sampler sees the same value); receiver hold -> parent io_hold check.
-    //   RF = 0: the old form.  dsdv_bk_sel passes RF 3; dsdv_bk_col (VD_PK 0) keeps RF 0.
+    //   RF = 4 (form 5, 11-03, owner pick: RF 3 build rfd4 died in GRT-0183 after repair_design; RF 2 rfd3a negedge out-face
+    //           -26.76): RF 2 core + a POSEDGE per-face pin register on every output (vo_s / vo_n / ln* / fault), placed at
+    //           its pin by face_flops.tcl (GEOM pin_reg).  +1 cycle on every output: rung transit vi -> vo 4 -> 5
+    //           (dv_layer_compile BKSEL_TRANSIT 5, lower_bk OFACE 1, norm_q_report u_bk_sel 5, tb_dsdv_bk_wrap RL 3),
+    //           V pin -> lane word 4 -> 5 (inside dsdv_bk_sel), fault +1.  Mutant OT_RFD_MUT_OF4: RF 4 without the face.
+    //   RF = 0: the old form.  dsdv_bk_sel passes RF 4; dsdv_bk_col (VD_PK 0) keeps RF 0.
     parameter integer RF = 0
 ) (
     input  wire [0:0]        clk,
@@ -77,7 +82,7 @@ module dsdv_bk_g #(
     end else begin : g_ifw
         assign vi_s_f = vi_s; assign vi_n_f = vi_n; assign vd_f = vd; assign rst_f = rst_n[0];
     end endgenerate
-    // ---------------------------------------------------------------- RF: negedge out-face (vo_s / vo_n / ln* / fault)
+    // ---------------------------------------------------------------- RF: out-face (vo_s / vo_n / ln* / fault): 1/2 negedge, 4 posedge
     wire [V-1:0] vo_s_r, vo_n_r; wire [4*515-1:0] ln; reg [0:0] fault_r;
     generate if (RF == 1 || RF == 2) begin : g_onf
         reg [V-1:0] o_s, o_n; reg [4*515-1:0] o_l; reg o_f;
@@ -85,6 +90,12 @@ module dsdv_bk_g #(
         assign vo_s = o_s; assign vo_n = o_n; assign {ln3, ln2, ln1, ln0} = o_l; assign fault = o_f;
 `ifdef OT_RFD_MUT_OF3   // bench mutant: RF 3 keeps a POSEDGE out-face (+1 edge on every output)
     end else if (RF == 3) begin : g_onm
+        reg [V-1:0] o_s, o_n; reg [4*515-1:0] o_l; reg o_f;
+        always @(posedge clk[0]) begin o_s <= vo_s_r; o_n <= vo_n_r; o_l <= ln; o_f <= fault_r[0]; end
+        assign vo_s = o_s; assign vo_n = o_n; assign {ln3, ln2, ln1, ln0} = o_l; assign fault = o_f;
+`endif
+`ifndef OT_RFD_MUT_OF4   // bench mutant: RF 4 without its posedge out-face (0 cycles instead of +1)
+    end else if (RF == 4) begin : g_onp
         reg [V-1:0] o_s, o_n; reg [4*515-1:0] o_l; reg o_f;
         always @(posedge clk[0]) begin o_s <= vo_s_r; o_n <= vo_n_r; o_l <= ln; o_f <= fault_r[0]; end
         assign vo_s = o_s; assign vo_n = o_n; assign {ln3, ln2, ln1, ln0} = o_l; assign fault = o_f;
