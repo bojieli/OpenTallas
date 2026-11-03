@@ -3,3 +3,4 @@ Collected (no relaunch) [CHECKED ps/docker intel1/intel2/epyc2 06:1x]: SUL eco_l
 TWO-STRIKES (OWNER 06:07): in-flight admitted runs finish their current step; no next iteration on any >=2-strike core/type -> RE-FORM rows in CLOSURE-LIST.
 Work dir: /home/ubuntu/OpenTallas/tmp/dieqc66 (local, light only).
 ## log
+- 06:17 CLOSURE posted (QC-023..029), TWO-STRIKES cancels done
