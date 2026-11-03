@@ -59,7 +59,8 @@ def resolve(t, bound_text):
             for j in range(len(rest), 0, -1):
                 tail = "." + ".".join(rest[:j])
                 cand |= {a[:-len(tail)] for a in ab if a.endswith(tail) and len(a) > len(tail)}
-            common = cand if common is None else common & cand
+            if cand:                               # a macro with no as-built match stays unmapped, never vetoes
+                common = cand if common is None else common & cand
         if not common or len(common) != 1:
             continue
         root = next(iter(common))
