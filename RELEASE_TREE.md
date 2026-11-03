@@ -20,7 +20,7 @@ _Updated 2026-11-01 20:24 PST by COORD: count 49 (S81 23, HEAD 3+e13a pending re
 - [ ] S81.TILES Required current child / partition views · S81 / KIT-WAVE · RUNNING · cap B route/finish/RCX DRC0 ANT0, 748 pins preserved, final signoff+ownEQ next; L2M repaired route clean, final gates pending; Xfin relief GRT still running after prior202overflow
 - [ ] S81.PARENT Production parent composition · S81 · BLOCKED · QBS SYNTH reached but nine exact selected hard-child implementation/model joins missing; PINCOPY histogram parent proof+GPL running, child signed/EQ1866 does not qualify parent → S81.TILES
 - [ ] S81.T41 Forwarded data/K timing witness · S81 / GEOM · WAITS · corrected A/B only placed; default-OFF observer ready4b96673bc; one baseline-A CTS+witness needs review, old GRT4750 remains FAIL → INFRA.REVIEW
-- [ ] S81.RESET Soft SerDes reset contract · HEAD / S81 / DIE-S81-48 · OWNER · warm-reset choice A (running-clock guarantee) vs B (local >=64-edge rck sequencer) with OWNER, default B (COORD 11-02); B = lock-safe wrapper (2-edge sync + 64 rck hold on !rst_n||!pma_lock, codex ba934c4af gates PASS) being wired opt-in on S81, +9 FF/lane, +66 boot rck, 0 mission cycles → OWNER.RESET
+- [ ] S81.RESET SerDes warm-reset sequencer implementation · S81+HEAD / DIE-S81-48 + DIE-HEAD-54 · RUNNING · OWNER 11-02 17:55 closed the choice: local sequencer holds reset >=64 rck edges after PMA clock restart, no running-clock promise; shared module adoption on S81 in progress (helper reset) → READY
 
 ## DIE s81_head · HEAD · rev current l48x/l48z cohort · FROZEN 12.20 (l47u exception)
 - [ ] HEAD.BIND Current parent source / child-model composition · HEAD / DIE-HEAD-53 · BLOCKED · exact current source+views must compose before full parent release → HEAD.TILES
