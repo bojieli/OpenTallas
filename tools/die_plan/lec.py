@@ -2918,6 +2918,26 @@ def unobservable_keys(L):
     return {k for k, lit in L.gp.items() if k.startswith("ff:") and (lit >> 1) not in seen}
 
 
+def kept_functionally_unobservable(L, missing, all_proved):
+    """DIE-QC-64/SUL 11-02 (QC su_lane l1 routed LEC: 86101/86101 proved, KEEP FAIL 96 = u_u_lrly1.idr[503..598]):
+    a kept bit the gold AIG cone still reaches structurally (so unobservable_keys keeps it) but that ORFS
+    eliminate_dead_logic removed because the synthesized netlist reads it nowhere.  When EVERY compare point is proved
+    with that register an unpaired free gold input -- no accepted correspondence hypothesis names it (not merged into
+    a twin, not paired with a gate flop, not proved constant) -- no output can depend on it in any state, so its
+    removal is dead-logic removal, not a merge.  A merged kept bit either carries an accepted eq hypothesis (stays
+    missing) or, left free, makes the compare points it feeds differ (not all proved): both stay fail-closed."""
+    if not all_proved or not missing:
+        return []
+    named = set()
+    for (side, k), h in L.hyp.items():
+        named.add(k)
+        if h and h[0] == "eq":
+            named.add(h[2])
+        elif h and h[0] == "cube":
+            named.update(h[2])
+    return sorted(k for k in missing if k not in named)
+
+
 def kept_wire_alias_copies(L, declared, aliases_file):
     """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
 
@@ -6347,11 +6367,18 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         if kf.is_file():
             kdecl, kmiss, kconst = kept_registers(L, kf)
             kdead = getattr(L, "kept_unobservable", [])
-            rec["kept_registers"] = dict(declared=len(kdecl), in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead),
+            kfree = kept_functionally_unobservable(L, kmiss, bool(status) and all(v == "proved" for v in status.values()))
+            kmiss = [k for k in kmiss if k not in set(kfree)]
+            rec["kept_registers"] = dict(declared=len(kdecl),
+                                         in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead) - len(kfree),
                                          constant_proved=lst(kconst), missing=lst(kmiss),
                                          unobservable_removed=lst(kdead),
                                          unobservable_reason="no compare point (output / black-box input) observes "
-                                                             "it in the gold AIG: dead logic, removal is not a merge" if kdead else None)
+                                                             "it in the gold AIG: dead logic, removal is not a merge" if kdead else None,
+                                         functionally_unobservable_removed=lst(kfree),
+                                         functionally_unobservable_reason="every compare point proved with it an "
+                                             "unpaired free input (no correspondence names it): dead logic, not a merge"
+                                             if kfree else None)
         else:
             kmiss = None
             rec["kept_registers"] = "not checked (no gold.keep: AIGs reused from an older lec.py)"
