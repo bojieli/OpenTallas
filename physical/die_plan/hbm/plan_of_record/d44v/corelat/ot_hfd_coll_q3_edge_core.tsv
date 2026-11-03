@@ -1,0 +1,4 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hfd_coll_q3_edge_core	ot_hfd_coll_q3_edge_link x3	all link<k>_* pins	in/out	0	member boundary, no new seam; same single face flop per pin
+ot_hfd_coll_q3_edge_core	ot_hfd_coll_q3_edge_arg	all arg_* pins	in/out	0	member boundary, no new seam
+ot_hfd_coll_q3_edge_core	all	link0_epoch_new -> link1/2 epoch_new	in	0	fanned out at composition, each sub-block face-flops it (kit: one flop fanned) - lock-step PASS

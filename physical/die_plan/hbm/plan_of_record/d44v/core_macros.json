@@ -5,13 +5,19 @@
  "halo_um": 0.0,
  "cores": {
   "hfd_ep_static": {
-   "status": "KNOWN",
+   "status": "UNKNOWN",
    "outline_um": [
     427.68,
     246.24
    ],
    "basis": "DIE-HBM-48 10-31 promote PLAN-TRIAL DIE-HBM-20-EPB dh21b4r rects to KNOWN: same 4 instance names as the yosys flatten of view @ce811c3f8f1c kit RTL, master ot_sram_1r1w_64x512_m1_r2c2 (LEF 171.288x77.784 = rect), outline 427.68x246.24 = view; probe kitB4 (epyc2 die-hbm-20/epB, same rects, same outline) placed rc 0",
-   "macros": [
+   "channel_rule_um": 10.8,
+   "previous": {
+    "status": "PLAN-TRIAL",
+    "why": null
+   },
+   "note": " | DIE-HBM-61 d44v p2: right-width macro set (DIE-HBM-61/MEM recipe_delta) -> positions from the RE-FORM kit",
+   "macros_r2c2_old": [
     {
      "name": "u_fcore.u_rxb.g_block[0].u_block.g_mem[0].u_mem.u_sram",
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
@@ -56,12 +62,7 @@
       224.676
      ]
     }
-   ],
-   "channel_rule_um": 10.8,
-   "previous": {
-    "status": "PLAN-TRIAL",
-    "why": null
-   }
+   ]
   },
   "hfd_hgi_vm_calendar_f20": {
    "status": "KNOWN",
@@ -725,15 +726,31 @@
    "recipe_macros": null
   },
   "ot_hbm_host_cp_rxs": {
-   "status": "KNOWN",
+   "status": "UNKNOWN",
    "outline_um": [
-    434.808,
-    480.0
+    400.248,
+    151.68
    ],
    "basis": "rule",
    "rule": "DIE-HBM-21 SRAM-edge rule probe RB (rd_out faces the centre channel; N-face logic field)",
    "verdict": "FEASIBLE",
-   "macros": [
+   "recipe_macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2",
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ],
+   "sources": [
+    {
+     "file": "c25b_shadow/hcpe_216.0.mp.json",
+     "sha256": "f2f3f1c3a0e91c7b247979ad9ead60856029f09c6ed652252066c7a115ea2317"
+    },
+    {
+     "file": "c25b_shadow/hcpe_216.0.est.json",
+     "sha256": "a85274068b4a10b91682ccfdefcefb7f4594e6b02cbaa24db9ae622147b5d235"
+    }
+   ],
+   "note": "C25b: R-SRAM-ENTRY at the C25b outline 434.808x480 (KITS-3 mp_rule_c.py on a shadow kit hcpe_216.0: DIE/CORE_AREA grown, entry island unchanged); macro names are k below the kit face shell (macro_placement.v1) | DIE-HBM-24 macro_fold: HBM-CORES-KITS-22 ot_hbm_host_cp_rxs_b placement (min channel 10.8 um >= 10.8; was 8.64) | DIE-HBM-61 d44v p2: right-width macro set (DIE-HBM-61/MEM recipe_delta) -> positions from the RE-FORM kit",
+   "channel_rule_um": 10.8,
+   "macros_r2c2_old": [
     {
      "name": "u_fcore.u_link.g_bank[3].u_store.u_native.u_sram",
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
@@ -800,23 +817,7 @@
      ],
      "orient": "R0"
     }
-   ],
-   "recipe_macros": [
-    "ot_sram_1r1w_256x256_m2_r2c2",
-    "ot_sram_1r1w_64x512_m1_r2c2"
-   ],
-   "sources": [
-    {
-     "file": "c25b_shadow/hcpe_216.0.mp.json",
-     "sha256": "f2f3f1c3a0e91c7b247979ad9ead60856029f09c6ed652252066c7a115ea2317"
-    },
-    {
-     "file": "c25b_shadow/hcpe_216.0.est.json",
-     "sha256": "a85274068b4a10b91682ccfdefcefb7f4594e6b02cbaa24db9ae622147b5d235"
-    }
-   ],
-   "note": "C25b: R-SRAM-ENTRY at the C25b outline 434.808x480 (KITS-3 mp_rule_c.py on a shadow kit hcpe_216.0: DIE/CORE_AREA grown, entry island unchanged); macro names are k below the kit face shell (macro_placement.v1) | DIE-HBM-24 macro_fold: HBM-CORES-KITS-22 ot_hbm_host_cp_rxs_b placement (min channel 10.8 um >= 10.8; was 8.64)",
-   "channel_rule_um": 10.8
+   ]
   },
   "ot_hbm_idx_qctl_static": {
    "status": "KNOWN",
@@ -6844,68 +6845,130 @@
     241.92,
     293.76
    ],
-   "basis": "DIE-HBM-49 10-31 static sites (OWNER 07:1x one-block plan event, KIT-WAVE PLAN_CORE_MACROS / macro_channels): re-site of the d44g KNOWN explicit stack (same 5 names u_fcore.gm[0..4].mem): the plan rects used 172.8x41.04 but the LEF is 172.824x41.064 so the stacked gaps were 10.776; y pitch 51.84 -> 51.888 (gaps 10.824), x unchanged; clock island [203.04,142.56,211.68,151.2] clear (column ends at x 197.664)",
+   "basis": "DIE-HBM-61/PLAN d44v p2: MEM 55c4a61894a right-width SRAMs (OT_HBM_RW_MACROS, recipe inst renames), one column orient MY: write pins W (key_in), read pins E (key_out); W channel 31.32, E channel 41.23 (clock island clear), row gaps 25.392 x 6 for the key_in->key_out bypass; no route over a SRAM",
    "macros": [
     {
-     "name": "u_fcore.gm[0].mem",
-     "master": "ot_sram_1r1w_256x256_m2_r2c2",
-     "orient": "R0",
+     "name": "u_fcore.gm[0].g_rw.mem",
+     "master": "ot_sram_1r1w_256x256_m2_r0c0_g256",
+     "orient": "MY",
      "rect_um": [
-      24.84,
-      15.12,
-      197.664,
-      56.184
+      31.32,
+      25.272,
+      200.688,
+      53.664
      ]
     },
     {
-     "name": "u_fcore.gm[1].mem",
-     "master": "ot_sram_1r1w_256x256_m2_r2c2",
-     "orient": "R0",
+     "name": "u_fcore.gm[1].g_rw.mem",
+     "master": "ot_sram_1r1w_256x256_m2_r0c0_g256",
+     "orient": "MY",
      "rect_um": [
-      24.84,
-      67.008,
-      197.664,
-      108.072
+      31.32,
+      79.056,
+      200.688,
+      107.448
      ]
     },
     {
-     "name": "u_fcore.gm[2].mem",
-     "master": "ot_sram_1r1w_256x256_m2_r2c2",
-     "orient": "R0",
+     "name": "u_fcore.gm[2].g_rw.mem",
+     "master": "ot_sram_1r1w_256x256_m2_r0c0_g256",
+     "orient": "MY",
      "rect_um": [
-      24.84,
-      118.896,
-      197.664,
-      159.96
+      31.32,
+      132.84,
+      200.688,
+      161.232
      ]
     },
     {
-     "name": "u_fcore.gm[3].mem",
-     "master": "ot_sram_1r1w_256x256_m2_r2c2",
-     "orient": "R0",
+     "name": "u_fcore.gm[3].g_rw.mem",
+     "master": "ot_sram_1r1w_256x256_m2_r0c0_g256",
+     "orient": "MY",
      "rect_um": [
-      24.84,
-      170.784,
-      197.664,
-      211.848
+      31.32,
+      186.624,
+      200.688,
+      215.016
      ]
     },
     {
-     "name": "u_fcore.gm[4].mem",
-     "master": "ot_sram_1r1w_256x256_m2_r2c2",
-     "orient": "R0",
+     "name": "u_fcore.gm[4].g_rw64.mem",
+     "master": "ot_sram_1r1w_256x64_m2_r0c0_g64",
+     "orient": "MY",
      "rect_um": [
-      24.84,
-      222.672,
-      197.664,
-      263.736
+      147.528,
+      240.408,
+      200.688,
+      268.8
      ]
     }
    ],
    "channel_rule_um": 10.8,
    "previous": {
-    "status": "UNKNOWN",
-    "why": "DIE-HBM-49 re-site (macro_channels FAIL): was KNOWN basis 'production keybuf source gm[0..4].mem; LEF172.8x41.04; explicit stacked five SRA', 5 macros, core_macros sha ea6bd3fa92e0"
+    "status": "KNOWN",
+    "outline_um": [
+     241.92,
+     293.76
+    ],
+    "basis": "DIE-HBM-49 10-31 static sites (OWNER 07:1x one-block plan event, KIT-WAVE PLAN_CORE_MACROS / macro_channels): re-site of the d44g KNOWN explicit stack (same 5 names u_fcore.gm[0..4].mem): the plan rects used 172.8x41.04 but the LEF is 172.824x41.064 so the stacked gaps were 10.776; y pitch 51.84 -> 51.888 (gaps 10.824), x unchanged; clock island [203.04,142.56,211.68,151.2] clear (column ends at x 197.664)",
+    "macros": [
+     {
+      "name": "u_fcore.gm[0].mem",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orient": "R0",
+      "rect_um": [
+       24.84,
+       15.12,
+       197.664,
+       56.184
+      ]
+     },
+     {
+      "name": "u_fcore.gm[1].mem",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orient": "R0",
+      "rect_um": [
+       24.84,
+       67.008,
+       197.664,
+       108.072
+      ]
+     },
+     {
+      "name": "u_fcore.gm[2].mem",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orient": "R0",
+      "rect_um": [
+       24.84,
+       118.896,
+       197.664,
+       159.96
+      ]
+     },
+     {
+      "name": "u_fcore.gm[3].mem",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orient": "R0",
+      "rect_um": [
+       24.84,
+       170.784,
+       197.664,
+       211.848
+      ]
+     },
+     {
+      "name": "u_fcore.gm[4].mem",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orient": "R0",
+      "rect_um": [
+       24.84,
+       222.672,
+       197.664,
+       263.736
+      ]
+     }
+    ],
+    "channel_rule_um": 10.8
    }
   },
   "ot_pdie_serdes": {
