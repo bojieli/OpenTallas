@@ -1,0 +1,52 @@
+{
+  "verdict": "PASS",
+  "scope": "actual ROOTJ geometry only; uncached/cached equal; final dynamic RowAllocator and actual405 still required",
+  "results": [
+    {
+      "slot": "L4x1",
+      "rows": [
+        {
+          "bit": 0,
+          "stages": 9,
+          "max_planned_hop": 339.12000000000006,
+          "uncached_s": 2.7778758589411154,
+          "cached_cold_s": 1.5435326700098813,
+          "cached_warm_s": 0.010330957011319697,
+          "identical": true
+        },
+        {
+          "bit": 1,
+          "stages": 9,
+          "max_planned_hop": 339.12000000000006,
+          "uncached_s": 1.5441236479673535,
+          "cached_cold_s": 0.009771306999027729,
+          "cached_warm_s": 0.010534949018619955,
+          "identical": true
+        }
+      ]
+    },
+    {
+      "slot": "L700x2",
+      "rows": [
+        {
+          "bit": 0,
+          "stages": 6,
+          "max_planned_hop": 281.50400000000076,
+          "uncached_s": 0.8317608910147101,
+          "cached_cold_s": 0.8379727129358798,
+          "cached_warm_s": 0.0059475640300661325,
+          "identical": true
+        },
+        {
+          "bit": 1,
+          "stages": 6,
+          "max_planned_hop": 281.51200000000057,
+          "uncached_s": 0.8626193380914629,
+          "cached_cold_s": 0.0057149180211126804,
+          "cached_warm_s": 0.005869971006177366,
+          "identical": true
+        }
+      ]
+    }
+  ]
+}

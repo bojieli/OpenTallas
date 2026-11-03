@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS",
+  "scope": "actual ROOTJ scalar/vector greedy+fallback coordinate equality; no RowAllocator or hop-gate waiver",
+  "results": [
+    {
+      "slot": "L4x1",
+      "bits": [
+        0,
+        1
+      ],
+      "moved": 8,
+      "scalar_s": 1.2099561489885673,
+      "vector_s": 0.03569589403923601,
+      "identical": true
+    },
+    {
+      "slot": "L700x2",
+      "bits": [
+        0,
+        1
+      ],
+      "moved": 0,
+      "scalar_s": 0.00012814195360988379,
+      "vector_s": 0.006894330959767103,
+      "identical": true
+    }
+  ]
+}
