@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: run_qw_eq.sh REPO WORK  -> positive EQ + 4 mutants (all must FAIL)
+# usage: run_qw_eq.sh REPO WORK  -> positive EQ + 6 mutants (all must FAIL), run in parallel
 set -u
 R=$(cd "$1" && pwd -P); W=$(mkdir -p "$2" && cd "$2" && pwd -P); H=$(cd "$(dirname "$0")" && pwd -P)
 cd "$W"
@@ -13,8 +13,11 @@ run() { # name expect qw qd bq
   out=$(timeout 1800 vvp -n $1.vvp +seed=7 2>&1 | grep -E "QW_EQ|MISMATCH" | tail -n 1)
   echo "$1 expect=$2: $out"
 }
-run pos pass $NEW_QW $NEW_QD $NEW_BQ
-sed 's/localparam integer AL=14-BQS6;/localparam integer AL=14;/' $NEW_QD > mut_pipe14.sv; run mut_pipe14 fail $NEW_QW mut_pipe14.sv $NEW_BQ
-sed 's/{s6a_sgn\[i\], be\[7:0\], rn\[6:0\]}/{s5_sgn[i], be[7:0], rn[6:0]}/' $NEW_BQ > mut_sgn.sv; run mut_sgn fail $NEW_QW $NEW_QD mut_sgn.sv
-sed 's/+ s6a_qs\[b\] - 11/+ s5_qs[b] - 11/' $NEW_BQ > mut_qs.sv; run mut_qs fail $NEW_QW $NEW_QD mut_qs.sv
-sed 's/fault <= s6a_v \&\& s6a_nf;/fault <= s6a_v \&\& s5_nf;/' $NEW_BQ > mut_nf.sv; run mut_nf fail $NEW_QW $NEW_QD mut_nf.sv
+( run pos pass $NEW_QW $NEW_QD $NEW_BQ ) &
+( sed 's/localparam integer AL=14-BQS6-2\*BQPIPE-BQS4;/localparam integer AL=14;/' $NEW_QD > mut_pipe14.sv; run mut_pipe14 fail $NEW_QW mut_pipe14.sv $NEW_BQ ) &
+( sed 's/{s6a_sgn\[i\], be\[7:0\], rn\[6:0\]}/{s5_sgn[i], be[7:0], rn[6:0]}/' $NEW_BQ > mut_sgn.sv; run mut_sgn fail $NEW_QW $NEW_QD mut_sgn.sv ) &
+( sed 's/+ s6a_qs\[b\] - 11/+ s5_qs[b] - 11/' $NEW_BQ > mut_qs.sv; run mut_qs fail $NEW_QW $NEW_QD mut_qs.sv ) &
+( sed 's/fault <= s6a_v \&\& s6a_nf;/fault <= s6a_v \&\& s5_nf;/' $NEW_BQ > mut_nf.sv; run mut_nf fail $NEW_QW $NEW_QD mut_nf.sv ) &
+( sed 's/localparam integer AL=14-BQS6-2\*BQPIPE-BQS4;/localparam integer AL=14-BQS6-2*BQPIPE;/' $NEW_QD > mut_al1.sv; run mut_al1 fail $NEW_QW mut_al1.sv $NEW_BQ ) &
+( sed 's/+ s4a_qs\[b\] - 11'"'"'sd2/+ s3_qs[b] - 11'"'"'sd2/' $NEW_BQ > mut_s4qs.sv; run mut_s4qs fail $NEW_QW $NEW_QD mut_s4qs.sv ) &
+wait

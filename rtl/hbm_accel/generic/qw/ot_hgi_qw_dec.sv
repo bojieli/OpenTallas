@@ -3,7 +3,8 @@
 // ot_hgi_quant_wide_h decode tile (el1011-hbm-fq, 2026-10-11): ot_hgi_quant_decode hardened with registered seams (input
 // flops on v / header / x, output flops on vo / y / faults; +2 edges).  generic_enable = 1 and legacy_fp4 = 0 by design
 // (the wide fast path's only mode, as in ot_hgi_quant_wide).  Valids / faults reset, data free-running.
-// DIE-HBM-61 RE-FORM 11-03: u_dec BQS6=1 (fp4qdq S6 split, alignment pipe one shorter): port timing unchanged.
+// DIE-HBM-61 RE-FORM 11-03: u_dec BQS6=1 (fp4qdq S6 split) + BQPIPE=1 (fp4qdq PIPE=1 max-tree split) + BQS4=1
+// (fp4qdq S4 split), alignment pipe 14 -> 10: port timing unchanged.
 module ot_hgi_qw_dec (
     input  wire          clk,
     input  wire          rst_n,
@@ -21,7 +22,7 @@ module ot_hgi_qw_dec (
     always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) i_v <= 0; else i_v <= v;
     always @(posedge clk) begin i_h <= header; i_x <= x; end
     wire d_vo, d_f, d_df; wire [511:0] d_y;
-    ot_hgi_quant_decode #(.BQS6(1)) u_dec (.clk(clk), .rst_n(rr_n[1]), .v(i_v), .generic_enable(1'b1), .legacy_fp4(1'b0),
+    ot_hgi_quant_decode #(.BQS6(1),.BQPIPE(1),.BQS4(1)) u_dec (.clk(clk), .rst_n(rr_n[1]), .v(i_v), .generic_enable(1'b1), .legacy_fp4(1'b0),
         .header(i_h), .x(i_x), .vo(d_vo), .y(d_y), .fault(d_f), .decode_fault(d_df));
     always @(posedge clk or negedge rr_n[0])
         if (!rr_n[0]) begin vo <= 0; fault <= 0; decode_fault <= 0; end

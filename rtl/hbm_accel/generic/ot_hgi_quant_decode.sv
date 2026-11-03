@@ -8,7 +8,12 @@ module ot_hgi_quant_decode #(parameter integer MUTANT=0,
  parameter integer XRING=0, VRING=0,
  // DIE-HBM-61 RE-FORM 11-03: BQS6=1 builds bq with S6SPLIT=1 (+1 edge) and this alignment pipe one shorter, so vo/y/fault
  // keep their edge exactly; BQS6=0 (default) is unchanged
- parameter integer BQS6=0)(
+ parameter integer BQS6=0,
+ // DIE-HBM-61 RE-FORM round 2: BQPIPE=1 builds bq with PIPE=1 (the two 2-level max stages split, +2 edges) and this
+ // alignment pipe two shorter, so vo/y/fault keep their edge exactly; BQPIPE=0 (default) is unchanged
+ parameter integer BQPIPE=0,
+ // BQS4=1: bq S4SPLIT=1 (+1 edge), alignment pipe one shorter; 0 (default) unchanged
+ parameter integer BQS4=0)(
  input wire clk,rst_n,v,generic_enable,legacy_fp4,
  input wire [127:0] header,input wire [1023:0] x,
  output wire vo,output wire [511:0] y,output wire fault,
@@ -26,9 +31,9 @@ module ot_hgi_quant_decode #(parameter integer MUTANT=0,
  ot_hfd_actquant_m #(.MR(1),.MLAT(6),.XRING(XRING)) aq(
  .clk(clk),.rst_n(rst_n),.v(take && !e4),.fp4(fp4),.x(x),
  .vo(av),.q(q),.e(exponent),.y(ay),.fault(af));
- ot_hgi_fp4qdq #(.S6SPLIT(BQS6)) bq(.clk(clk),.rst_n(rst_n),.v(take && e4),.x(x),.vo(bv),.y(by),.fault(bf));
+ ot_hgi_fp4qdq #(.S6SPLIT(BQS6),.PIPE(BQPIPE),.S4SPLIT(BQS4)) bq(.clk(clk),.rst_n(rst_n),.v(take && e4),.x(x),.vo(bv),.y(by),.fault(bf));
  // hgi-1010/c: ot_hgi_fp4qdq is one edge longer (S5A / S5B); this alignment pipe one shorter (14)
- localparam integer AL=14-BQS6;
+ localparam integer AL=14-BQS6-2*BQPIPE-BQS4;
  reg [AL-1:0] valid_pipe,fault_pipe;
  reg [511:0] value_pipe[0:AL-1]; integer i;
  always @(posedge clk or negedge rst_n) begin

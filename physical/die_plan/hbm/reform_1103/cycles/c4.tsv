@@ -1,4 +1,4 @@
 core	port_or_bus	plus_cycles	note
-ot_hgi_qw_dec	all ports	0	fp4qdq S6 split (+1 internal: s5_n*twov product registered before leading-one/exp/BF16 select); quant_decode alignment pipe 14->13 (BQS6=1), so vo/y/fault edges unchanged
-ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	all ports	0	controller WP_REG=1: registered write-pointer one-hot + per-slot not-full replicas (exact next-state), no edge change
+ot_hgi_qw_dec	all ports	0	internal bq +4 edges (S6SPLIT +1, PIPE=1 max-tree +2, S4SPLIT +1) absorbed by quant_decode alignment pipe 14->10 (BQS6/BQPIPE/BQS4=1): vo/y/fault/decode_fault edges unchanged
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	all ports	0	controller WP_REG=1 (registered write pointer + not-full replicas); leaf QLATE=1 (head_n/push_n per cv/posted value, late select) + EREG=1 (enqueue terms registered from exact next state): no edge change
 ot_hbm_su_programme_pslice_c5	-	-	NOT RE-FORMED: d_addr -> dict SRAM r_ce wire distance in a 192k-cell core; needs PLAN SPLIT per g_c column (c1/c2/c3 heavy dicts 10/9/13 banks (worst path g_c[2]), rest c0,c4-c9+head) then per-macro r_ce/addr register (+1 read cycle) if still short
