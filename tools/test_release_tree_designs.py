@@ -333,3 +333,24 @@ def test_plan_excluded_clock_is_accepted_extra(tmp_path):
     got2 = {('intel1', '/k/pins.json'): dict(rows=allrows, outline_nm=(100000, 50000), source=d['source'])}
     s, u = R.credit_designs(D, rows, {'m': [('ref1', rec())]}, got2)
     assert s == {} and 'extra pin' in u['m'][0]
+
+
+def test_approved_pin_event_credits_only_the_event_location():
+    # PA clk is M5 (10.0, 20.0); the event moves it to M5 (30.0, 40.0) for module m only
+    D, rows = designs([core('m', 'a.json')])
+    ev = {'m': {'clk': ('M5', 30000, 40000, 'test event')}}
+    moved = [PA[0], dict(PA[1], x=30.0, y=40.0)]
+    other = [PA[0], dict(PA[1], x=31.0, y=40.0)]
+    rp = lambda pins: {('intel1', '/k/pins.json'): dict(rows=R.canon_pin_rows(pins), outline_nm=(100000, 50000))}
+    old = dict(R.APPROVED_PIN_EVENTS)
+    try:
+        R.APPROVED_PIN_EVENTS.clear()
+        s, u = R.credit_designs(D, rows, {'m': [('ref1', rec())]}, rp(moved))
+        assert s == {} and list(u) == ['m']                                   # no event: moved pin misses
+        R.APPROVED_PIN_EVENTS.update(ev)
+        s, u = R.credit_designs(D, rows, {'m': [('ref1', rec())]}, rp(moved))
+        assert s == {'m': ['ref1 DESIGN-MATCH pins (+1 approved pin event clk)']} and u == {}
+        s, u = R.credit_designs(D, rows, {'m': [('ref1', rec())]}, rp(other))
+        assert s == {} and list(u) == ['m']                                   # not at the event location
+    finally:
+        R.APPROVED_PIN_EVENTS.clear(); R.APPROVED_PIN_EVENTS.update(old)

@@ -586,6 +586,27 @@ def accept_die_owned_ft(cmp_, design):
     return cmp_
 
 
+# APPROVED PIN EVENTS (SIGNOFF-SPRINT-21 11-02, COORD 18:2x "count NNfu"): a root-approved per-module pin event that is
+# not yet in the plan-of-record pin table.  A record pin listed here that sits exactly at the event location (layer +
+# centre within PIN_TOL_NM) is moved from 'moved' to 'pin_event' (accepted); any other moved pin still misses.
+# {module: {pin: (layer, x_nm, y_nm, why)}}.  Remove an entry once the plan of record carries the event.
+APPROVED_PIN_EVENTS = {
+    m: {'clk[0]': ('M5', 21612, 38892, 'QBS centre-M5 clock event (Codex root-approved 30428e20f; COORD 11-02 18:2x)')}
+    for m in ('dsfd_node_NNfu', 'dsfd_node_LLfu', 'dsfd_node_LLfd')}
+
+
+def accept_pin_events(cmp_, design, got_rows, events=None):
+    ev = (APPROVED_PIN_EVENTS if events is None else events).get((design or {}).get('module')) or {}
+    if not (ev and cmp_.get('moved')): return cmp_
+    ok = []
+    for n in cmp_['moved']:
+        e, g = ev.get(n), (got_rows or {}).get(n)
+        if e and g and g[0] == e[0] and None not in g[1:3] and abs(g[1] - e[1]) <= PIN_TOL_NM and abs(g[2] - e[2]) <= PIN_TOL_NM:
+            ok.append(n)
+    if not ok: return cmp_
+    return dict(cmp_, moved=[n for n in cmp_['moved'] if n not in ok], pin_event=ok)
+
+
 def pins_equiv(cmp_):
     return bool(cmp_['match'] or cmp_['convention']) and not (cmp_['moved'] or cmp_['extra'] or cmp_['missing'])
 
@@ -854,7 +875,8 @@ def design_pin_cmp(got, did, designs, rows, plan_shapes=None):
     """pin_compare of a record (got) against plan design did, with the plan table's source-LEF shapes and the record's
     own shapes (signed LEF) when known"""
     ps = (plan_shapes or (lambda d: _plan_shapes_default(designs, d)))(did)
-    return accept_die_owned_ft(pin_compare(got['rows'], rows.get(did), got.get('shapes'), ps), designs.get(did))
+    return accept_pin_events(accept_die_owned_ft(pin_compare(got['rows'], rows.get(did), got.get('shapes'), ps), designs.get(did)),
+                             designs.get(did), got['rows'])
 
 
 def _cmp_text(c, a=None, b=None):
@@ -906,7 +928,7 @@ def credit_designs(designs, rows, core_recs, rec_pins, plan_shapes=None):
             for did in ds:
                 if not (got and rows.get(did)) or not (got['outline_nm'] is None or tuple(got['outline_nm']) == tuple(_nm(x) for x in designs[did]['outline_um'])):
                     continue
-                c = accept_die_owned_ft(pin_compare(got['rows'], rows[did]), designs[did])   # fast path: centres within tolerance
+                c = accept_pin_events(accept_die_owned_ft(pin_compare(got['rows'], rows[did]), designs[did]), designs[did], got['rows'])   # fast path: centres within tolerance
                 if not pins_equiv(c) and not (c['extra'] or c['missing']):
                     c = design_pin_cmp(got, did, designs, rows, plan_shapes)
                 if pins_equiv(c):
@@ -916,6 +938,7 @@ def credit_designs(designs, rows, core_recs, rec_pins, plan_shapes=None):
                     ' (same pin, other convention %d: %s)' % (len(c['convention']), ' '.join(c['convention'][:4])) if c['convention'] else '') + (
                     ' (+%d declared die-owned FT)' % len(c['die_owned_ft']) if c.get('die_owned_ft') else '') + (
                     ' (+%d plan-excluded %s)' % (len(c['plan_excluded']), ' '.join(c['plan_excluded'][:4])) if c.get('plan_excluded') else '') + (
+                    ' (+%d approved pin event %s)' % (len(c['pin_event']), ' '.join(c['pin_event'][:4])) if c.get('pin_event') else '') + (
                     ' [pins from %s]' % got.get('source') if got.get('source') else ''))
             if not hit:
                 unmatched.setdefault(m, []).append(ref + ' (%s)' % miss_why(got, ds, designs, rows, plan_shapes))
@@ -979,6 +1002,25 @@ def _term_unwinds():
         return None
 
 
+G0C_KEEP = CACHE.parent / 'g0c_reports'   # last G0C report per plan (error classes for COORD / die owners)
+
+
+def _g0c_run(tmp, pj, out):
+    t0 = time.time()
+    sh([sys.executable, str(tmp / 'tools/die_plan/check.py'), str(pj), '--completeness', '--quiet', '--out', str(out)],
+       900, cwd=str(tmp))
+    return round(time.time() - t0, 1)
+
+
+def keep_g0c_report(label, rep):
+    try:
+        G0C_KEEP.mkdir(parents=True, exist_ok=True)
+        f = G0C_KEEP / (label.replace('/', '_') + '.g0_report.json')
+        t = f.with_suffix('.tmp'); t.write_text(json.dumps(rep)); os.replace(t, f)
+    except OSError:
+        pass
+
+
 def refresh(log=lambda *a: None):
     errs = []
     for g in sweep_stale_tmp():
@@ -1002,6 +1044,7 @@ def refresh(log=lambda *a: None):
         # SIGNED records: fleet scan in parallel while the G0C checks run here
         with cf.ThreadPoolExecutor(len(HOSTS)) as ex:
             futs = {ex.submit(scan_host, h): h for h in HOSTS}
+            g0c_ex, g0c_jobs = cf.ThreadPoolExecutor(len(PLANS)), []
             for key, pdir, src, ovl in PLANS:
                 d = plan_label(src)
                 ent = dict(plan=d, plan_src=src)
@@ -1017,18 +1060,27 @@ def refresh(log=lambda *a: None):
                     ent['memory_macros'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and is_mem_macro(h)})
                     ent['designs'], design_rows[d] = plan_designs(P, pj.parent)
                     out = tmp / ('g0c_' + d.replace('/', '_'))
-                    t0 = time.time()
-                    rr = sh([sys.executable, str(tmp / 'tools/die_plan/check.py'), str(pj), '--completeness', '--quiet', '--out', str(out)],
-                            900, cwd=str(tmp))
-                    rep = json.loads((out / 'g0_report.json').read_text())
-                    gs = g0c_split(rep, list(T))
-                    ent.update(g0c_verdict=rep.get('verdict'), g0c_errors=rep.get('errors'), g0c_clean=gs['clean'],
-                               g0c_types=gs['types'], g0c_die_level=gs['die_level'], g0c_bad_types=gs['by_type'],
-                               geom_report=gs['geom_report'], check_s=round(time.time() - t0, 1))
-                    log('G0C %s: %s/%s clean (%s, %s errors, %.0fs)' % (d, ent['g0c_clean'], ent['g0c_types'], ent['g0c_verdict'], ent['g0c_errors'], ent['check_s']))
+                    # RTP-PAR-1102 (FLOW-22): the five G0C checks run in parallel (sequential 12.8 min > the render
+                    # unit's 600 s start timeout since 11-01 21:40, so the cache froze at a0f8f0ad60); materialization
+                    # above stays sequential (shared tmp tree)
+                    g0c_jobs.append((d, ent, list(T), out, g0c_ex.submit(_g0c_run, tmp, pj, out)))
                 except Exception as e:
                     errs.append('plan %s: %s' % (d, e)); ent['error'] = str(e)
                 res['plans'][d] = dict(ent, die=key)
+            for d, ent, tl, out, fu in g0c_jobs:
+                try:
+                    secs = fu.result()
+                    rep = json.loads((out / 'g0_report.json').read_text())
+                    keep_g0c_report(d, rep)
+                    gs = g0c_split(rep, tl)
+                    ent.update(g0c_verdict=rep.get('verdict'), g0c_errors=rep.get('errors'), g0c_clean=gs['clean'],
+                               g0c_types=gs['types'], g0c_die_level=gs['die_level'], g0c_bad_types=gs['by_type'],
+                               geom_report=gs['geom_report'], check_s=secs)
+                    log('G0C %s: %s/%s clean (%s, %s errors, %.0fs)' % (d, ent['g0c_clean'], ent['g0c_types'], ent['g0c_verdict'], ent['g0c_errors'], ent['check_s']))
+                except Exception as e:
+                    errs.append('plan %s: %s' % (d, e)); ent['error'] = str(e)
+                res['plans'][d] = dict(ent, die=res['plans'][d]['die'])
+            g0c_ex.shutdown(wait=True)
             recs = main_records(tmp)
             scanned = ['origin/main']
             for f, h in futs.items():
