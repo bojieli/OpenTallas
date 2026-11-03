@@ -30,6 +30,28 @@ def ring_write_fall(plan, tn=None):
     only = rh.get("write_fall_types")
     return tn is None or only is None or tn in only or tn.split("__")[0] in only
 
+def ring_write_reg(plan, tn, bus):
+    """WREG-1 (DIE-HEAD-58 TURNB 11-03): {"depth": 1, "dsrep": n} when receiver type tn opts bus into the registered
+    ring writer (partition_types[tn].clock.landing_ring_wreg = {"buses": [...], "dsrep": n}; a split copy
+    "<base>__<suffix>" reads its base): t_rst_n registered at the face + one write-enable flop per (slot, 64-bit chunk)
+    (ot_dp_clk_landing_cas WREG=1) and n read-select copies per chunk (DSREP).  The writer starts one fclk edge later, so
+    count_align_bind.strap_ties ties K + 1 (the landing_writer_start W=1 rule); the word stream q is unchanged.
+    None when absent."""
+    pt = plan.get("partition_types", {})
+    t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
+    cfg = (t.get("clock") or {}).get("landing_ring_wreg")
+    if not cfg:
+        return None
+    if not isinstance(cfg, dict) or not isinstance(cfg.get("buses"), list):
+        raise ValueError(f"{tn}: clock.landing_ring_wreg must be {{\"buses\": [...], \"dsrep\": n}}")
+    if bus not in cfg["buses"]:
+        return None
+    dsrep = cfg.get("dsrep", 1)
+    if isinstance(dsrep, bool) or not isinstance(dsrep, int) or dsrep < 1 or 64 % dsrep:
+        raise ValueError(f"{tn}: landing_ring_wreg.dsrep must divide 64")
+    return dict(depth=1, dsrep=dsrep)
+
+
 def ring_taps(plan, tn):
     """[(x, y)] of the taps whose wavefront relays drive rst_n_t<i> in type tn (type frame): the index space a ring
     reset node rst_n_t<i> refers to.  A plan clock.taps list of kind 'core' entries (S81 12.8a plan-defined core
@@ -1044,6 +1066,14 @@ class Landings:
                 # (slots, count, tags, t_rst_n) on the falling fclk edge (ot_dp_clk_landing_ca/_cas WFALL, DIE-HEAD-48)
                 if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
                     ring_mod = ring_mod[:-1] + ", .WFALL(1))"
+                # WREG-1 (DIE-HEAD-58 TURNB): registered writer start + per-(slot, chunk) write-enable flops; strap form
+                # only (the strap K carries the +1, count_align_bind.strap_ties)
+                wreg = ring_write_reg(self.plan, key, b) or ring_write_reg(self.plan, tn, b)
+                if wreg:
+                    if not cat.get("straps"):
+                        raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
+                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']}))"
+                    self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], strap_k_delta=1)
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring

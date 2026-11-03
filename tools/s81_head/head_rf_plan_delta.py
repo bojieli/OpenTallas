@@ -18,8 +18,13 @@ OWNER 11-03 06:11 RE-FORM shape rules + 06:14 slot infra, applied as ONE plan de
            taps), so taps.density_taps places an entry within tap_radius_um of each of them and splits load at
            tap_target_sinks.  Entries stay on the slot (type pins), one per region of <= tap_max_sinks sinks.
 
+  ring_wreg  (DH58-TURNB 11-03, WREG-1) receiver type -> {"buses": [...], "dsrep": n}: sets
+           partition_types[type].clock.landing_ring_wreg, so GEN emits ot_dp_clk_landing_cas WREG=1/DSREP=n on those
+           buses (writer start registered at the face + one write-enable flop per (slot, 64-bit chunk) + n read-select
+           copies per chunk) and count_align_bind.strap_ties ties strap K + 1 (word stream and slot geometry unchanged).
+
 usage: head_rf_plan_delta.py SRC_DIR OUT_DIR --spec SPEC.json [--report REPORT.json]
-  SPEC: {"grow": {"<type>": [l, b, r, t], ...}, "entries": ["<type>", ...]}
+  SPEC: {"grow": {"<type>": [l, b, r, t], ...}, "entries": ["<type>", ...], "ring_wreg": {"<type>": {...}}}
 """
 import argparse
 import copy
@@ -461,6 +466,9 @@ def main(argv=None):
     rep = dict(schema="opentallas.head_rf_plan_delta.v1", tag=TAG, src=str(src), src_sha256=sha(src / "source_plan.json"),
                spec=spec, grow={}, channels_clipped=[], entries={})
     apply_grow(plan, spec.get("grow", {}), rep)
+    for tn, cfg in sorted(spec.get("ring_wreg", {}).items()):     # DH58-TURNB WREG-1: receiver ring form
+        plan["partition_types"][tn].setdefault("clock", {})["landing_ring_wreg"] = cfg
+        rep.setdefault("ring_wreg", {})[tn] = cfg
     # assets resolve relative to the plan file: work inside OUT with the src assets linked
     for n in os.listdir(src):
         if n in ("source_plan.json", "wave_prepare.json") or n.endswith(".log"):
@@ -488,9 +496,11 @@ def main(argv=None):
         dedupe_local_reset_taps(plan, str(tmp), list(spec["entries"]), rep)
         tmp.write_text(json.dumps(plan, indent=1) + "\n")
     src_plan = json.loads((src / "source_plan.json").read_text())
-    remap_raw_refs(plan, str(tmp), src_plan, str(src / "source_plan.json"), rep)
-    tmp.write_text(json.dumps(plan, indent=1) + "\n")
-    for it in range(4):           # re-pointing changes nothing the tree reads; a second pass must be empty
+    moved = bool(spec.get("grow") or spec.get("entries"))   # ring_wreg alone moves no slot / tap / relay: no re-point
+    if moved:
+        remap_raw_refs(plan, str(tmp), src_plan, str(src / "source_plan.json"), rep)
+        tmp.write_text(json.dumps(plan, indent=1) + "\n")
+    for it in range(4 if moved else 0):           # re-pointing changes nothing the tree reads; a second pass must be empty
         before = rep.get("raw_repoint_summary", {}).get("rows")
         rep.pop("raw_repoint", None)
         repoint_raw(plan, str(tmp), src_plan, str(src / "source_plan.json"), rep)
@@ -499,7 +509,8 @@ def main(argv=None):
             break
         rep.setdefault("raw_repoint_passes", []).append(dict(rep["raw_repoint_summary"], raw_repoint=rep["raw_repoint"]))
     plan["note"] = (plan.get("note", "") + f" | {TAG}: RE-FORM batch plan event (grow {sorted(spec.get('grow', {}))}, "
-                    f"entries {sorted(spec.get('entries', []))})").strip(" |")
+                    f"entries {sorted(spec.get('entries', []))}"
+                    + (f", ring_wreg {sorted(spec['ring_wreg'])}" if spec.get("ring_wreg") else "") + ")").strip(" |")
     tmp.write_text(json.dumps(plan, indent=1) + "\n")
     rep["out_sha256"] = sha(tmp)
     Path(a.report or out / "rf_report.json").write_text(json.dumps(rep, indent=1, default=str) + "\n")
