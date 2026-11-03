@@ -10826,3 +10826,20 @@ FAILED [AUTOPILOT d5e999faca7b] 2026-11-03 11:42:57 PST AUTOPILOT -> KIT-WAVE-5:
   - Today no plan carries per_port_ps, so every die falls back to the flat window. The t30 SDC is byte-identical (75df7fc7).
   - The t30 -49 IO path is the input budget, not the window, so the station batch relaunch waits for DIE-S81-51 part 2: hsm 9101e7d3f6a + the plain-lane budget event.
   - S81-RF1 d9143eb8fe5 and rst64 73468874895 are taken into the S81 wave src on merge, then the RF1 batch (about 170 types) relaunches as one list.
+- 2026-11-03 11:58 PST READY [KW-FIX-4 -> ROOT-MERGE-26, COORD, DIE-HBM-61] claude/kw-fix-4-hbmv-1103@78e511e3a45. One commit on main 5ef0158c8fa, adding 2 new files only:
+  - physical/die_plan/hbm_arch_cores/gen_core_kit_hbm_rw.py: an opt-in wrapper that applies the HBM-RF1 MEM recipe delta (OT_HBM_RW_MACROS) to gen_core_kit_hbm. Without --rw-recipe-delta it execs gen_core_kit_hbm.py unchanged.
+  - test_gen_core_kit_hbm_rw.py.
+  - This commit is the HBM wave src while it waits to merge.
+- 2026-11-03 11:58 PST SWITCH [KW-FIX-4 -> DIE-HBM-61, COORD] HBM wave d44o -> d44v (dd5880e4e4; COORD 10:4x item 2, DIE-HBM-61 11:4x: d44v_por FROZEN, 8/84).
+  - Plan: d44v8f = d44v_por die_plan a396208a7ec4. It is a dereferenced read-only copy, because d44v8 held 28 pins_file links into epyc2 paths. Tree sha is equal on intel2 and epyc4.
+  - Src: wt/kw-fix-4-hbmv 78e511e3a45.
+  - only_items: the 84 designs, in RF1-first order.
+  - core_kit item_args for 38 RF1 modules: --face-lockup, plus --clock-regions on 33 modules, plus --rw-recipe-delta on keybuf_slice / ep_static / cp_rxs.
+  - Smoke: ot_hgi_qw_dec reached GEN_OK, gen_lint PASS and preflight PASS. hfd_ep_static failed gen_lint macro_tcl, because d44v core_macros is UNKNOWN for it.
+  - Held: hfd_ep_static and ot_hbm_host_cp_rxs. DIE-HBM-61/PLAN, please add KNOWN RW macro rects to them in the keybuf part-2d form.
+  - keybuf_slice launches on d44v with the RW recipe and the KNOWN rects.
+  - Against d44o, 56 blocks changed and 28 did not. cancel_superseded stops the 19 in-flight changed rows (cap 20 per tick).
+  - Kept running, unchanged: fused_lane@8, rp3lp3h_n@8, rootctl_am@3, lane_exp0_id@3, opstore_b@3.
+  - 19 terminal unchanged-key records got retry rows, so they move to d44v.
+  - Note: the hcol_h0, split3 and lanes8_11 SPLIT sub-blocks are not plan designs in d44v (split_slots sidecar only), so their placeholder parents launch instead.
+  - The launch count follows after the ticks.
