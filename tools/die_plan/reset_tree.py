@@ -2078,10 +2078,17 @@ def tcl_text(T, native_paths=None):
               f"if {{[llength $rtr_cn] != 1 || [llength $rtr_ci] != 1}} {{ error {{OT_RESET_CORE unresolved {inst}.{pin} or {q}}} }}",
               f"set rtr_it [[lindex $rtr_ci 0] findITerm {{{pin}}}]",
               f"if {{$rtr_it eq \"NULL\"}} {{ error {{OT_RESET_CORE missing {inst}.{pin}}} }}",
-              f"if {{![rtr_reset_equiv [$rtr_it getNet] 0 {{}}]}} {{ error {{OT_RESET_CORE {inst}.{pin}: existing reset is not an equal-depth relay copy; preserve its RTL latency}} }}",
-              "$rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
-              f"dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
-              f"puts \"OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}\""]
+              # CLASS RESET-CORE 11-03 (DIE-S81-51): a core reset that is not an equal-depth relay copy (an RTL
+              # private pipeline, a frame reset-forest leaf or a lane-carried reset bit) keeps its RTL driver and
+              # latency: no rewire, recorded in ot_reset_core_kept.txt.  Only equal-depth copies are re-targeted.
+              f"if {{![rtr_reset_equiv [$rtr_it getNet] 0 {{}}]}} {{",
+              f"  puts {{OT_RESET_CORE_KEPT {inst}.{pin}: RTL reset kept (not an equal-depth relay copy; RTL latency preserved)}}",
+              f"  set rtr_kf [open $::env(RESULTS_DIR)/ot_reset_core_kept.txt a]; puts $rtr_kf {{{inst}.{pin}}}; close $rtr_kf",
+              "} else {",
+              "  $rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
+              f"  dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
+              f"  puts {{OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}}}",
+              "}"]
     edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
     edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
     t += ["close $rtr_fh",
