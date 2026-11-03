@@ -33,3 +33,20 @@
 | 5564 | 2026-11-01 00:44 | /srv/opentallas-scratch2/claude/hbm-cores-kits-37 |
 | 5716 | 2026-10-31 15:33 | /srv/opentallas-scratch2/claude/hbm-cores-kits-26 |
 | 4757 | 2026-10-30 02:00 | /srv/opentallas-scratch2/claude/kits10-1029 |
+
+## epyc2 manifest D result (2026-11-02 23:12 PST)
+- MOVED 6/7 (52.54 GB) to /home/ubuntu/scratch-root/claude with symlinks, verified; kits10-1029 skipped (live). epyc2 scratch2 104 -> 153 GB free (82%); root 2147 GB free.
+
+## intel2 manifest E (2026-11-02 23:12 PST): DIE-HEAD-55 RELEASE 22:53 (die-head-48 .keep dir; owner-released paths only)
+- 37 dirs + their .p1/.p2.log (96 entries, 89.15 GB): rtlgen_l48a, rtlgen_l48b_hd_st_{k5,n4}, rtlgen_l48r, rtlgen_l48g_hd_st_{turn,k5,n4}, rtlgen_l48w_hd_st_{turn,k5,n4}, rtlgen_l48c_hd_* (21), dh51spn, prd51, kits_l47{t,u,v}, tile51.
+  Per-entry manifest (bytes, mtime, path): intel2:.../prune-1102a/i2_head_rel_1102b.tsv. Checked: newest file >24 h, not in protect.d/PROTECTED-DBS, not live.
+- HELD BACK (not deleted, need DIE-HEAD-55 confirm): dh52spn (11.5 GB; prd53/hd_spn_end_D + dh53/v1/spn_{band,end} preflight.json name dh52spn/kits_spn2band/... as kit source) and tile52 (3.3 GB; codex-head-tilea-1131/kit/preflight.json names tile52/l48y/gen/hd_tile).
+
+## intel2 manifest F (2026-11-02 23:12 PST): DIE-HBM-59 RELEASE 22:44
+- hbm-cores-kits-40/wt (47.37 GB, worktree claude/hbm-cores-kits-40-hb4-1101@b26a827db, clean, only __pycache__ ignored) and wt_tm (32.59 GB, detached e5b857a7e, clean). Removed via git worktree remove --force from the central repo (registered worktrees wt3/wt_tm). Kept: tailmax, wt_d44q, nk, hold, hfdep, tnode, lecc, resign.
+
+## manifest E/F results (2026-11-02 23:18 PST)
+- E: removed 96/96 entries, 89.15 GB (i2_head_rel_1102b_result.tsv). F: git worktree remove --force wt + wt_tm (79.95 GB). intel2 -> 264 GB free.
+
+## intel2 manifest G (2026-11-02 23:18 PST): FLOW-23 RELEASE 23:10
+- flow-21/kcc/base/tree/physical (31.41 GB, newest 2026-11-01 14:43) and flow-21/kcc/tip/tree/physical (31.41 GB); plain repo copies, no PROTECTED path inside (results/ kept). Manifest intel2:.../prune-1102a/i2_flow21_rel_1102b.tsv.
