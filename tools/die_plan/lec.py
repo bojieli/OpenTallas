@@ -67,6 +67,13 @@ from pathlib import Path
 
 SCHEMA = "opentallas.lec.v1"
 PROVE_JOBS = 1
+# per-cone ABC runtime limit (&cec -T, seconds) for the one-cone-at-a-time stages of prove(); ABC checks it between
+# SAT calls, so a cone may overrun by one call.  A cone that hits it stays UNDECIDED (never proved).  HBM tailx 11-02:
+# one batch of 256 cones under &cec -m x100 ran 45-151 h with no limit (49 cones each > 60 s).
+CONE_S = int(os.environ.get("OT_LEC_CONE_S", "60"))
+# wall backstop per cone (seconds) on top of CONE_S for the whole batch: covers the one SAT call ABC may finish after
+# the -T deadline; on expiry the batch is killed and every cone without a verdict stays UNDECIDED.
+CONE_WALL_S = int(os.environ.get("OT_LEC_CONE_WALL_S", "600"))
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 ORFS = "/OpenROAD-flow-scripts"
 NLDM = ORFS + "/flow/platforms/asap7/lib/NLDM"
@@ -1986,6 +1993,53 @@ def xor_sat(m, ids, log):
     return statuses
 
 
+CONE_MARK = "OTCONE"
+CONE_PAT = re.compile(r"Networks are (NOT EQUIVALENT|equivalent|UNDECIDED)|"
+                      r"UNSAT\s*=\s*(\d+)\.\s*SAT\s*=\s*(\d+)\.\s*UNDEC\s*=\s*(\d+)\.")
+
+
+def cone_verdicts(text):
+    """{cone id: (status, timed_out)} from the output of a marked cone batch (see prove()).
+
+    Each cone's segment starts at its "OTCONE <id>" echo. The first verdict in the segment decides: CEC sentence or
+    the naive-SAT aggregate line (1/0/0 proved, 0/1/0 differs, else undecided). A segment with no verdict (time limit,
+    killed batch, ABC error) is UNDECIDED; timed_out marks a -T expiry or a missing verdict."""
+    out = {}
+    parts = re.split(rf"^{CONE_MARK} (\d+)\s*$", text, flags=re.M)
+    for k in range(1, len(parts) - 1, 2):
+        i, seg = int(parts[k]), parts[k + 1]
+        hit = CONE_PAT.search(seg)
+        timed = bool(re.search(r"Timed out after", seg))
+        if hit is None:
+            out[i] = ("undecided", True)
+        elif hit[1]:
+            out[i] = ({"NOT EQUIVALENT": "differs", "equivalent": "proved"}.get(hit[1], "undecided"), timed)
+        else:
+            u, sat, undec = map(int, hit.group(2, 3, 4))
+            out[i] = ("proved" if (u, sat, undec) == (1, 0, 0) else
+                      "differs" if (u, sat, undec) == (0, 1, 0) else "undecided", timed)
+    return out
+
+
+def run_cone_batch(abc, script, n):
+    """run one marked cone batch (abc -f script) under a wall backstop of n * (CONE_S + CONE_WALL_S) seconds.
+
+    Output goes line-buffered to a file so that a killed batch keeps the verdicts of the cones it finished; the
+    remaining cones simply have no verdict (UNDECIDED in cone_verdicts)."""
+    outf = Path(str(script) + ".out")
+    cmd = [abc, "-f", str(script)]
+    if shutil.which("stdbuf"):
+        cmd = ["stdbuf", "-oL", "-eL"] + cmd
+    wall = n * (max(CONE_S, 0) + CONE_WALL_S) if CONE_S > 0 else None
+    note = ""
+    with open(outf, "w") as fh:
+        try:
+            subprocess.run(cmd, stdout=fh, stderr=subprocess.STDOUT, text=True, timeout=wall)
+        except subprocess.TimeoutExpired:
+            note = f"\nBATCH WALL BACKSTOP {wall}s expired: unfinished cones stay UNDECIDED\n"
+    return outf.read_text(errors="replace") + note
+
+
 def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
     """per-output status {name: 'proved' | 'differs' | 'undecided'} of the miter outputs of builder m.
     ABC: &fraig (simulation + SAT sweeping of the shared gold / gate structure; proved outputs collapse to 0), then
@@ -2035,33 +2089,32 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
         jobs = max(1, PROVE_JOBS)
         size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
         batches = [pending[i:i+size] for i in range(0, len(pending), size)]
+        timed_out = set()
         def one_batch(ids, factor=factor, opt=opt):
-            script = [f"&r {swept}; &cone -O {i}; &cec {opt} -C {conflicts * factor}" for i in ids]
+            lim = f" -T {CONE_S}" if CONE_S > 0 else ""
+            # an echo marker before every cone: each cone's verdict is read from its own segment, so a cone that
+            # prints nothing recognisable (ABC prints only "Timed out after N seconds." on -T) or a batch killed
+            # by the wall backstop can never shift a later verdict onto the wrong output
+            script = [f"echo {CONE_MARK} {i}\n&r {swept}; &cone -O {i}; &cec {opt} -C {conflicts * factor}{lim}"
+                      for i in ids]
             # one command per line in a script file (abc -f): a long batch passed as one -c argument exceeds the
             # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
             sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}_x{factor}{opt.replace(' ', '')}.abc"
             sf.write_text("\n".join(script) + "\n")
-            r = subprocess.run([abc, "-f", str(sf)], capture_output=True, text=True)
-            return ids, r.stdout + r.stderr
+            return ids, run_cone_batch(abc, sf, len(ids))
         with ThreadPoolExecutor(max_workers=jobs) as ex:
             for ids, t in ex.map(one_batch, batches):
-                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} conflicts x{factor})\n{t}")
-                # Naive SAT reports one aggregate line for a nontrivial cone; trivial
-                # cones use the CEC sentence. Keep UNDECIDED in sequence: dropping it
-                # would shift a later proof onto the wrong output.
-                pat = (r"Networks are (NOT EQUIVALENT|equivalent|UNDECIDED)|"
-                       r"UNSAT\s*=\s*(\d+)\.\s*SAT\s*=\s*(\d+)\.\s*UNDEC\s*=\s*(\d+)\.")
-                res = []
-                for hit in re.finditer(pat, t):
-                    if hit[1]:
-                        res.append({"NOT EQUIVALENT": "differs", "equivalent": "proved"}.get(hit[1], "undecided"))
-                    else:
-                        u, sat, undec = map(int, hit.group(2, 3, 4))
-                        res.append("proved" if (u, sat, undec) == (1, 0, 0) else
-                                   "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
-                for i, status in zip(ids, res):
+                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} conflicts x{factor}, "
+                           f"-T {CONE_S})\n{t}")
+                res = cone_verdicts(t)
+                for i in ids:
+                    status, timed = res.get(i, ("undecided", True))
                     st[m.onames[i]] = status
-        pending = [i for i in pending if st[m.onames[i]] == "undecided"]
+                    if timed and status == "undecided":
+                        timed_out.add(i)
+        # a cone that ran out of TIME (not conflicts) in a SAT-sweeping stage would only repeat that under the
+        # same limit at x1000: it skips the remaining &cec stages and goes on to xor_sat() as UNDECIDED
+        pending = [i for i in pending if st[m.onames[i]] == "undecided" and not (opt == "-m" and i in timed_out)]
     unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
     if unknown:
         st.update(xor_sat(m, unknown, log))
