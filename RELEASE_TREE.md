@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 11:40 PST:** count 64 (S81 31/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 16/32, HBM 8/84). HBM +1 hcol_h1 (d44v part 3, H4 main 5ef0158c8fa); HBM PLANS -> d44v_por then FREEZE. HEAD lep_pair restored after PRUNE moved it (new rule: no move/delete of SIGNED dirs). KV plan_c now 32 designs (18->16, confirm). Approved to ROOT-MERGE-26: HEAD l48rf (kw-fix-4-l48rf + dh58-rfrtl), S81 RF-G/RF-D re-forms. Open classes: KV pv preflight macro paths (11), KV OT_CLAND band (5), S81 input-face SDC tap window. Fleet: epyc4 173 waiters admission-bound -> FLEET-BAL-1 moving to intel1/intel2. TKM 4-tile bench stopped at 60-min cap; per-half lockstep via ot-run.
+**Status 2026-11-03 12:34 PST:** count 64 flat (S81 31/54, HEAD 4/4 + 1/25 types, QC 5/16, KV 16/32, HBM 8/84); next QC su_lane l6 (SIGNED, routed LEC running). Merged H8/H9 (main e326462580e): S81 measured SDC tap window, S81-RF1 batch -> S81 FROZEN, QC reticle y-shrink 25643.52, HBM MEM wrapper; HBM d44v FROZEN. Approved: S81 plain-seam input budget (pse, +1..+11 cycles on 170 lanes, TOK re-price), S81 RF-D form 2, HEAD l48rf pair. Classes open: KV pv macro paths + CLAND (DIE-KV-64), HEAD tapbal SIGABRT fallback + pinreg gate advisory (KW-FIX-4), kit-wave host pick admit-minus-waiting (KW-FIX-4). Fleet full: epyc4 97 / intel2 89 waiters.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -12,7 +12,7 @@
 - Release gate = die STA on real views + token pass.
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
-## DIE s81 · S81 · rev plan_h2_2249 (849b318cb1) + RF1 RE-FORM batch (cores first) · HARD FROZEN 12.20, RE-FORM batch per die (OWNER 11-03) · owner DIE-S81-51
+## DIE s81 · S81 · rev plan_h2_2249 + RF1 batch (06a3d7e0268) · FROZEN (one-block fixes); input-budget pse + RF-D2 approved · owner DIE-S81-51
 - [ ] S81.PROUTE Station safe form (OWNER 11-02 pilot + 11-03 safe forms) · S81 / S81-PROUTE-2 (DIE-S81-50) · RUNNING · MAIN = FIXED-BAY: relay flop + negative-level lockup latch + repeater bays pre-placed <=405 um, local leaf per bay, per-hop delay/slew/hold computed before route; parent-route kit p7S_x11 (GEN_LINT + PREFLIGHT PASS) kept only as comparison; result applies to QC stations as one class
 - [ ] S81.BIND Strict native bind · S81 / DIE-S81-50 · PASS · event2 completed 11:40:42; 398 partitions / 204 types / 873 crossings / 606281 bits, connectivity errors 0; this is not a routing pass
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-50 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kits sign; hold gate now >= 0 (OWNER 11-02) → S81.TILES
@@ -33,7 +33,7 @@
 - [ ] HEAD.HOSTLEC Current routed HOST qualification · HEAD · WAITS · retained component136216EQ complete; newer routedb2 is a different subject and still needs its own proof+physical closure → HEAD.TILES
 - [ ] HEAD.SEAM Mesh sender/receiver timing contract · HEAD · BLOCKED · finite hold repair hits setup-versus-hold feasibility; any seam rebudget needs actual peer and parent TT/FF qualification, no constraint relaxation → HEAD.STA
 
-## DIE qwen_compute · QC · rev plan_qc52 (1e5ed443cd) · reticle shrink ~0.6 mm row band pending (XCHECK: 26.27 > 26 mm) · owner DIE-QC-66
+## DIE qwen_compute · QC · rev plan_qc52 + y-shrink 25643.52 (e326462580e, fits reticle) · collector_tree re-compose class owed · owner DIE-QC-66
 - [ ] QC.BIND Strict native bind · QC / DIE-QC-65 · PASS · 119 types / 377 parts,0 errors; G0C completeness remains FAIL11
 - [ ] QC.CLK Native die clock implementation · QC / DIE-QC-65 · BLOCKED · 51596 planned cells / 10929 taps sourcegeometryPASS; native prefix is unexecuted, no parent PG/GRT/RC/STA or START-freeze credit → QC.CLOCKPREFIX → QC.TILES
 - [ ] QC.CLOCKPREFIX Bounded native clock import/access diagnostic · QC · WAITS · exact current homes/aliases reviewed; staged64GB8T geometry-only import, no legalization/GRT/STA; awaits root scoped release → INFRA.REVIEW
