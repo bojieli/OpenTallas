@@ -1,0 +1,1969 @@
+{
+ "status": "UNTRUSTED_TYPED_INITIAL_STATE_ISOMORPHISM_CANDIDATE",
+ "scope": "Source-only candidate; sole native proof owner is flow. Preserve exact12732 prior, reset64, failed aliases, all comparepoints and invalid-cycle policy.",
+ "field_count": 70,
+ "slot_fields": 54,
+ "load_fields": 16,
+ "fields": [
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[0]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[0]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76878 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[0]",
+    "latch 76878 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[0]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89172 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_169_",
+     "QN": "_103_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[0] : old q0[0]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[1]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[1]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76879 1 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[1]",
+    "latch 76879 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[1]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89098 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_168_",
+     "QN": "_023_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[1] : old q0[1]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[2]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[2]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76880 2 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[2]",
+    "latch 76880 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[2]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89099 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_167_",
+     "QN": "_024_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[2] : old q0[2]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[3]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[3]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76881 3 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[3]",
+    "latch 76881 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[3]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89100 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_166_",
+     "QN": "_025_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[3] : old q0[3]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[4]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[4]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76882 4 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[4]",
+    "latch 76882 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[4]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89101 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_165_",
+     "QN": "_026_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[4] : old q0[4]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[5]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[5]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76883 5 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[5]",
+    "latch 76883 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[5]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89102 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_164_",
+     "QN": "_027_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[5] : old q0[5]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[6]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[6]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76884 6 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[6]",
+    "latch 76884 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[6]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89103 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_163_",
+     "QN": "_028_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[6] : old q0[6]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[7]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[7]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76885 7 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[7]",
+    "latch 76885 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[7]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89104 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_162_",
+     "QN": "_029_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[7] : old q0[7]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[8]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0#t[8]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76886 8 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[8]",
+    "latch 76886 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[8]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89105 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_161_",
+     "QN": "_030_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[8] : old q0[8]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[0]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[0]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76869 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[0]",
+    "latch 76869 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[0]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89112 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_154_",
+     "QN": "_037_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[0] : old q1[0]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[1]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[1]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76870 1 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[1]",
+    "latch 76870 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[1]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89113 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_153_",
+     "QN": "_038_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[1] : old q1[1]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[2]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[2]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76871 2 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[2]",
+    "latch 76871 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[2]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89114 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_152_",
+     "QN": "_039_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[2] : old q1[2]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[3]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[3]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76872 3 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[3]",
+    "latch 76872 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[3]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89115 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_151_",
+     "QN": "_040_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[3] : old q1[3]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[4]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[4]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76873 4 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[4]",
+    "latch 76873 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[4]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89116 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_150_",
+     "QN": "_041_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[4] : old q1[4]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[5]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[5]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76874 5 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[5]",
+    "latch 76874 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[5]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89117 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_149_",
+     "QN": "_042_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[5] : old q1[5]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[6]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[6]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76875 6 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[6]",
+    "latch 76875 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[6]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89118 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_148_",
+     "QN": "_043_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[6] : old q1[6]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[7]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[7]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76876 7 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[7]",
+    "latch 76876 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[7]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89119 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_147_",
+     "QN": "_044_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[7] : old q1[7]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[8]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1#t[8]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76877 8 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[8]",
+    "latch 76877 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[8]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89120 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q1[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_146_",
+     "QN": "_045_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[8] : old q1[8]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[0]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[0]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76860 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[0]",
+    "latch 76860 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[0]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89127 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_137_",
+     "QN": "_054_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[0] : old q2[0]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[1]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[1]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76861 1 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[1]",
+    "latch 76861 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[1]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89128 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_136_",
+     "QN": "_055_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[1] : old q2[1]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[2]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[2]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76862 2 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[2]",
+    "latch 76862 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[2]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89129 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_135_",
+     "QN": "_056_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[2] : old q2[2]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[3]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[3]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76863 3 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[3]",
+    "latch 76863 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[3]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89130 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_134_",
+     "QN": "_057_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[3] : old q2[3]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[4]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[4]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76864 4 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[4]",
+    "latch 76864 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[4]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89131 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_133_",
+     "QN": "_058_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[4] : old q2[4]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[5]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[5]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76865 5 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[5]",
+    "latch 76865 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[5]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89132 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_132_",
+     "QN": "_059_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[5] : old q2[5]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[6]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[6]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76866 6 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[6]",
+    "latch 76866 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[6]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89133 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_131_",
+     "QN": "_060_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[6] : old q2[6]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[7]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[7]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76867 7 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[7]",
+    "latch 76867 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[7]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89134 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_130_",
+     "QN": "_061_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[7] : old q2[7]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[8]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2#t[8]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 76868 8 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[8]",
+    "latch 76868 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[8]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89135 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q2[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_129_",
+     "QN": "_062_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[8] : old q2[8]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[0]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[0]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 59525 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[0]",
+    "latch 59525 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[0]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89157 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[0]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_000_",
+     "QN": "_086_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[1]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[1]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 59528 1 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[1]",
+    "latch 59528 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[1]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89156 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[1]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_007_",
+     "QN": "_085_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[2]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[2]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 59531 2 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[2]",
+    "latch 59531 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[2]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89155 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[2]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_008_",
+     "QN": "_084_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[3]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[3]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 59534 3 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[3]",
+    "latch 59534 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[3]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89154 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[3]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_009_",
+     "QN": "_083_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[4]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[4]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 59537 4 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[4]",
+    "latch 59537 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[4]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89153 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[4]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_010_",
+     "QN": "_082_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[5]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[5]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 59540 5 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[5]",
+    "latch 59540 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[5]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89152 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[5]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_011_",
+     "QN": "_081_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[6]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[6]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 59543 6 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[6]",
+    "latch 59543 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[6]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89151 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[6]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_012_",
+     "QN": "_080_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[7]",
+   "gate": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld#t[7]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 59546 7 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[7]",
+    "latch 59546 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[7]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 89150 0 u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[7]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_013_",
+     "QN": "_079_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[0]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41220 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]",
+    "latch 41220 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77124 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_169_",
+     "QN": "_103_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[0] : old q0[0]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[1]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41221 1 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]",
+    "latch 41221 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77050 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_168_",
+     "QN": "_023_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[1] : old q0[1]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[2]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41222 2 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]",
+    "latch 41222 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77051 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_167_",
+     "QN": "_024_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[2] : old q0[2]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[3]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41223 3 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]",
+    "latch 41223 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77052 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_166_",
+     "QN": "_025_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[3] : old q0[3]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[4]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41224 4 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]",
+    "latch 41224 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77053 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_165_",
+     "QN": "_026_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[4] : old q0[4]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[5]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41225 5 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]",
+    "latch 41225 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77054 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_164_",
+     "QN": "_027_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[5] : old q0[5]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[6]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41226 6 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]",
+    "latch 41226 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77055 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_163_",
+     "QN": "_028_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[6] : old q0[6]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[7]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41227 7 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]",
+    "latch 41227 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77056 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_162_",
+     "QN": "_029_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[7] : old q0[7]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[8]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0#t[8]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41228 8 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[8]",
+    "latch 41228 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[8]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77057 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_161_",
+     "QN": "_030_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[0] ? old td_q[8] : old q0[8]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[0]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[0]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41211 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[0]",
+    "latch 41211 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[0]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77064 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_154_",
+     "QN": "_037_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[0] : old q1[0]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[1]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[1]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41212 1 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[1]",
+    "latch 41212 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[1]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77065 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_153_",
+     "QN": "_038_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[1] : old q1[1]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[2]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[2]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41213 2 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[2]",
+    "latch 41213 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[2]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77066 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_152_",
+     "QN": "_039_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[2] : old q1[2]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[3]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[3]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41214 3 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[3]",
+    "latch 41214 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[3]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77067 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_151_",
+     "QN": "_040_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[3] : old q1[3]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[4]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[4]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41215 4 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[4]",
+    "latch 41215 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[4]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77068 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_150_",
+     "QN": "_041_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[4] : old q1[4]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[5]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[5]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41216 5 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[5]",
+    "latch 41216 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[5]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77069 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_149_",
+     "QN": "_042_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[5] : old q1[5]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[6]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[6]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41217 6 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[6]",
+    "latch 41217 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[6]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77070 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_148_",
+     "QN": "_043_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[6] : old q1[6]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[7]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[7]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41218 7 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[7]",
+    "latch 41218 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[7]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77071 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_147_",
+     "QN": "_044_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[7] : old q1[7]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[8]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1#t[8]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41219 8 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[8]",
+    "latch 41219 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[8]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77072 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q1[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_146_",
+     "QN": "_045_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[1] ? old td_q[8] : old q1[8]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[0]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[0]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41202 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[0]",
+    "latch 41202 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[0]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77079 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[0]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_137_",
+     "QN": "_054_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[0] : old q2[0]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[1]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[1]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41203 1 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[1]",
+    "latch 41203 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[1]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77080 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[1]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_136_",
+     "QN": "_055_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[1] : old q2[1]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[2]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[2]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41204 2 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[2]",
+    "latch 41204 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[2]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77081 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[2]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_135_",
+     "QN": "_056_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[2] : old q2[2]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[3]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[3]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41205 3 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[3]",
+    "latch 41205 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[3]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77082 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[3]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_134_",
+     "QN": "_057_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[3] : old q2[3]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[4]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[4]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41206 4 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[4]",
+    "latch 41206 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[4]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77083 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[4]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_133_",
+     "QN": "_058_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[4] : old q2[4]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[5]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[5]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41207 5 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[5]",
+    "latch 41207 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[5]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77084 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[5]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_132_",
+     "QN": "_059_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[5] : old q2[5]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[6]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[6]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41208 6 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[6]",
+    "latch 41208 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[6]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77085 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[6]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_131_",
+     "QN": "_060_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[6] : old q2[6]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[7]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[7]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41209 7 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[7]",
+    "latch 41209 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[7]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77086 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[7]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_130_",
+     "QN": "_061_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[7] : old q2[7]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[8]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2#t[8]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 41210 8 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[8]",
+    "latch 41210 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[8]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77087 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q2[8]$_DFFE_PP_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_129_",
+     "QN": "_062_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "tv_q && (n != 3) && wp[2] ? old td_q[8] : old q2[8]",
+   "gate_enable": "DFF plus combinational feedback mux; no reset pin",
+   "kind": "slot"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[0]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[0]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 31156 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[0]",
+    "latch 31156 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[0]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77109 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[0]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_000_",
+     "QN": "_086_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[1]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[1]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 31153 1 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[1]",
+    "latch 31153 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[1]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77108 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[1]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_007_",
+     "QN": "_085_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[2]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[2]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 31150 2 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[2]",
+    "latch 31150 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[2]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77107 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[2]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_008_",
+     "QN": "_084_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[3]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[3]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 31147 3 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[3]",
+    "latch 31147 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[3]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77106 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[3]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_009_",
+     "QN": "_083_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[4]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[4]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 31144 4 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[4]",
+    "latch 31144 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[4]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77105 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[4]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_010_",
+     "QN": "_082_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[5]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[5]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 31141 5 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[5]",
+    "latch 31141 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[5]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77104 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[5]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_011_",
+     "QN": "_081_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[6]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[6]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 31138 6 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[6]",
+    "latch 31138 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[6]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77103 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[6]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_012_",
+     "QN": "_080_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  },
+  {
+   "gold": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[7]",
+   "gate": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld#t[7]",
+   "proposed_named_relation": "logical equality; candidate only",
+   "proposed_xor": 0,
+   "resolve": "Exact replayed L.gp and L.tp literals and polarity; refuse missing or mismatched keys; do not infer from name",
+   "gold_native_map": [
+    "latch 31135 7 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[7]",
+    "latch 31135 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[7]$_DFF_P_.lecq"
+   ],
+   "gate_native_map": [
+    "latch 77102 0 u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[7]$_DFF_P_.IQN$_DFF_P_.lecq"
+   ],
+   "primitive": {
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "pins": {
+     "CLK": "ck",
+     "D": "_013_",
+     "QN": "_079_"
+    }
+   },
+   "source_clock": "posedge ck; exact failing instance binds ck=clk",
+   "source_reset": null,
+   "source_update": "unconditional RP-selected old q0/q1/q2 each edge",
+   "gate_enable": "unconditional DFF",
+   "kind": "load"
+  }
+ ],
+ "expected_projected_reset_image": {
+  "free_variables": "54 qslot bits x_lane_slot_bit; arbitrary values, no zero/one restriction even for source-constant inputs before a write",
+  "correlations": [
+   {
+    "load": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[0]",
+    "equals": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[0]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[1]",
+    "equals": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[1]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[2]",
+    "equals": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[2]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[3]",
+    "equals": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[3]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[4]",
+    "equals": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[4]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[5]",
+    "equals": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[5]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[6]",
+    "equals": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[6]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.ld[7]",
+    "equals": "ff:u_dut.u_core.u_la.u_t3.g_txs[7].u_s.q0[7]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[0]",
+    "equals": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[0]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[1]",
+    "equals": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[1]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[2]",
+    "equals": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[2]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[3]",
+    "equals": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[3]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[4]",
+    "equals": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[4]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[5]",
+    "equals": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[5]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[6]",
+    "equals": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[6]"
+   },
+   {
+    "load": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.ld[7]",
+    "equals": "ff:u_dut.u_core.u_lb.u_t3.g_txs[7].u_s.q0[7]"
+   }
+  ],
+  "native_obligation": "Prove the actual64-edge reset image and typed bijective/surjective relation. This expected source image is not an assumed70-dimensional cube, accepted base, None/None match, or reset mask."
+ }
+}
