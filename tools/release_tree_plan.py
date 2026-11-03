@@ -47,8 +47,8 @@ PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),         
          # was:   # SIGNOFF-SPRINT-11 10-31: plan-relative native_domains/ + core_pins/ (DIE-HEAD-48 fd132f2b694) laid beside the por__ copy   # HEAD l47 (APPROVED, main c68675660; ROOT-MERGE-AI 04:20 READY, SIGNOFF-SPRINT-11 10-31; was l46a)
          ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json', ()),  # QC plan of record qc52 (0735589d; binds btab P8eco), COORD 12:43 10-31 SIGNOFF-SPRINT-13 (was plan_qc50)
          ('qwen_kvsys', 'qwen_kvsys/plan_of_record', 'physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json', ()),  # event28w_c
-         ('hbm', 'hbm/plan_of_record/d44c', _HBM_POR + 'd44c/die_plan.json.gz',   # d44c = HBM POR + freeze plan (COORD 20:19)
-          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c')))]
+         ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v/die_plan.json.gz',   # d44v = HBM RE-FORM batch, FROZEN (COORD 11-03 11:01)
+          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v')))]
 # PIN ALIASES (FLOW-15 2026-10-31, SIGNOFF-SPRINT-10 ASK (b)): a plan built in a lane tree may name a plan-relative pins
 # file that is not on main under that name; its byte-identical main copy elsewhere is laid at the plan-relative path
 # before the designs are read (sha256 checked: a different file is an error, never a silent substitute).  This wins
@@ -150,10 +150,13 @@ def fetch_results_refs(root, plan_path, rev='origin/main'):
     return have
 
 
-HOSTS = ['local', 'epyc2', 'intel1', 'intel2']
+HOSTS = ['local', 'epyc2', 'intel1', 'intel2', 'epyc4']
+# DIE-KV-64 11-03 (COORD 10:5x KV 17->14): PRUNE-1103D moved intel2 scratch2 dirs (die-kv-49 pv/tx, die-kv-51 ectl, ...) to
+# epyc4:/srv/opentallas-scratch3/claude/from-intel2-1103d and left symlinks (find -xdev does not follow them), so their SIGNED
+# records (kv3_pv_pair pv_bkv_eA b-kv re-sign, ...) left the scan. Scan epyc4 (rented 11-03) and every host's scratch3.
 # SIGNOFF-SPRINT-22 11-02: + epyc2 root scratch (OWNER 11-01: /home/ubuntu/scratch-root/claude = 2nd scratch root); KV
 # qkd_ectlk_q2 q-kv re-sign (DIE-KV-62) and the S81-48/49 ECO/kits live there and were never scanned.
-SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2 /home/ubuntu/scratch-root'
+SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2 /srv/opentallas-scratch3 /home/ubuntu/scratch-root'
 # RETIRED sign-offs (HEAD-CORE-R13 2026-10-27): a SIGNED record of a superseded build (older RTL / flow) that must not
 # count for the current design. One line per record: '<scan_host>:<path>\t<date>\t<lane>\t<reason>' ('#' = comment).
 # Matching records are dropped from signed_records / signed_* and listed in retired_records (visible, not deleted).
@@ -230,6 +233,17 @@ def name_retired(r_, die, names, keys):
     return None
 PROV_PY = r'''
 RESIGN_KEYS = ('src_commit', 'flow_tag', 'routed_db', 'build_commit', 'lec')
+def reloc(x, f):
+    # DIE-KV-64 11-03 (PRUNE-1103D): a moved run tree keeps PROVENANCE absolute paths of its old home; when that path is
+    # gone, take the same suffix below the nearest ancestor (<=4 up) of file f whose name appears in it, if it exists there
+    if os.path.exists(x): return x
+    q = os.path.dirname(f)
+    for _ in range(4):
+        n = '/' + os.path.basename(q) + '/'
+        i = x.rfind(n)
+        if i >= 0 and os.path.exists(q + x[i + len(n) - 1:]): return q + x[i + len(n) - 1:]
+        q = os.path.dirname(q)
+    return x
 def resign(f, x, load):
     # COORD ruling 2026-10-30 02:03 (3b): RE-SIGN record = a routed DB re-checked (signoff.py TT/FF/DRC + post-route LEC)
     # with tools at a released flow tag.  PROVENANCE.json {kind: resign, src_commit: tag commit, flow_tag, routed_db,
@@ -240,6 +254,7 @@ def resign(f, x, load):
         return dict(resign_error='re-sign PROVENANCE %s lacks %s' % (f, ','.join(miss)), prov_file=f)
     lp = x['lec'] if os.path.isabs(x['lec']) else os.path.join(os.path.dirname(f), x['lec'])
     db = x['routed_db'] if os.path.isabs(x['routed_db']) else os.path.join(os.path.dirname(f), x['routed_db'])
+    lp, db = reloc(lp, f), reloc(db, f)
     try:
         lv = (load(lp) or {}).get('verdict')
     except Exception:
@@ -717,13 +732,24 @@ out = {}
 # pins.json; (2) <kit>/pins.json; (3) the signed abstract LEF beside the record.  'read' names the file, 'source' the kind.
 _OR = {'N': lambda x, y: (x, y), 'S': lambda x, y: (-x, -y), 'E': lambda x, y: (-y, x), 'W': lambda x, y: (y, -x),
        'FN': lambda x, y: (-x, y), 'FS': lambda x, y: (x, -y), 'FE': lambda x, y: (y, x), 'FW': lambda x, y: (-y, -x)}
+def reloc(x, f):
+    # DIE-KV-64 11-03 (PRUNE-1103D): a moved run tree keeps PROVENANCE absolute paths of its old home; when that path is
+    # gone, take the same suffix below the nearest ancestor (<=4 up) of file f whose name appears in it, if it exists there
+    if os.path.exists(x): return x
+    q = os.path.dirname(f)
+    for _ in range(4):
+        n = '/' + os.path.basename(q) + '/'
+        i = x.rfind(n)
+        if i >= 0 and os.path.exists(q + x[i + len(n) - 1:]): return q + x[i + len(n) - 1:]
+        q = os.path.dirname(q)
+    return x
 def _routed_def(key, sp):
     rd = os.path.dirname(sp)
     for pv in (os.path.join(rd, 'PROVENANCE.json'), os.path.join(os.path.dirname(rd), 'PROVENANCE.json')):
         try: db = json.load(open(pv)).get('routed_db')
         except Exception: continue
         if isinstance(db, str):
-            c = os.path.splitext(db)[0] + '.def'
+            c = os.path.splitext(reloc(db, pv))[0] + '.def'
             if os.path.isfile(c): return c
     for kit in (os.path.dirname(rd), os.path.dirname(key)):
         c = glob.glob(os.path.join(kit, 'run', 'results', '*', '*', 'base', '6_final.def'))
