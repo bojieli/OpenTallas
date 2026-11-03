@@ -31,3 +31,9 @@
 - 2-state zero-start only.
 
 **Yosys elaboration** (`yosys_stat.txt`, ORFS asap7lock image): the unchanged module with `chparam SRAM_MACRO=1 D=32 NL=4 TROWS=640` plus the 256x256 `_bb.v` gives `hierarchy; proc; memory -nomap; stat` = 8 cells, all `ot_sram_1r1w_256x256_m2_r2c2`, and 0 memories. The `{{(8-AW){1'b0}}, ...}` zero-width pad (AW=8) is accepted.
+
+**T7 memory closure set** (one opt-in application, for the S81 plan/kit owner):
+- `T7_memory_closure_bound.sv.gz` (sha 12605dc2) replaces `s81p_svc_lo_dsdv_svc_rs__t7_bound.sv`. It is built from the original 61c902f1 in three steps: the PMEM cut (s81_T7_pmem_bound_cut_0900), then the PVQ cut (s81_T7_pvq_bound_cut_1040), then LAND (s81_T7_LAND_bound_cut_1102), followed by `stage_flip.py`.
+- Add three children right after the bound in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json `files`: `ot_t7_pmem_capture_candidate.sv` 3d7ab5aa, `ot_t7_pvq_capture_candidate.sv` 80367218 and `ot_t7_land_capture_candidate.sv` 64e23cf3.
+- Use gen_phys with the claude/tok-ds-3-1102 DECLARED_FLOP_MEMORIES/elab_width entries.
+- Macro delta for T7: +16 + 12 + 4 x 256x256 and +34 x 32x64. All of these macro types are already in the T7 kit_rtl.json `hard_macros`.
