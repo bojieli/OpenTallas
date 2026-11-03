@@ -29,8 +29,9 @@ run(){ # tag case
   "$O/obj_$1/Vtb" +DIR="$VEC/$2" > "$O/${1}_$2.log" 2>&1
   echo "$1 $2: $(grep -m1 -E 'TKM_SPLIT (PASS|FAIL)' "$O/${1}_$2.log" || tail -1 "$O/${1}_$2.log")"
 }
-# each hierarchical build peaks at ~170 GB RSS (epyc2 earlyoom SIGTERMed pos/mutn 11-03 07:53/08:06): BUILD_PAR=2 builds two at a time
+# each hierarchical build peaks at ~170 GB RSS (epyc2 earlyoom SIGTERMed pos/mutn 11-03 07:53/08:06): BUILD_PAR=2 builds two at a time, BUILD_PAR=1 serial (epyc4 450G cap OOM with 2 at 11-03 16:38)
 if [ "${BUILD_PAR:-4}" -ge 4 ]; then build pos & build mutn -GMUTN=1 & build mutp1 -GMUTP=1 & build mutp2 -GMUTP=2 & wait
+elif [ "${BUILD_PAR:-4}" -le 1 ]; then build pos; build mutn -GMUTN=1; build mutp1 -GMUTP=1; build mutp2 -GMUTP=2
 else build pos & build mutn -GMUTN=1 & wait; build mutp1 -GMUTP=1 & build mutp2 -GMUTP=2 & wait; fi
 for c in $CASES; do run pos $c & done
 run mutn full2048 & run mutp1 full2048 & run mutp2 full2048 &
