@@ -1,0 +1,10 @@
+{
+  "status": "EXPECTED_DEFAULT_REFUSAL_NATIVE_GB_PROVIDER_UNQUALIFIED",
+  "unit": "oth-ubuntu-638180-1793599299",
+  "exit": 1,
+  "all_source_hashes_passed": 100,
+  "failure": "GB frame requires its qualified one-edge-early GO/TAG provider: col_h10_l4_lp_asb_x",
+  "origin": "lower_xs.qualify_frame_source -> gb_provider_under_test",
+  "production_enabled": false,
+  "resolution_scope": "Original retained BF-active/Q-idle bench-only OT_XS_GB_PROVIDER_UNDER_TEST=1 with OT_XS_Q_CPR=1; does not mark native_provider_qualified true. Production provider proof still required."
+}

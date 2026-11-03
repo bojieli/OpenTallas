@@ -1,0 +1,118 @@
+{
+  "status": "PASS_SELECTED_NATIVE_274_BIT_BF_IMAGE_NAMESPACE",
+  "frames": [
+    "u_f_0L01",
+    "u_f_0L02"
+  ],
+  "columns": 14,
+  "images": 28,
+  "addresses": [
+    0,
+    1,
+    7,
+    8,
+    63,
+    511,
+    1023,
+    2047,
+    4095
+  ],
+  "read_samples": 252,
+  "classes_present_in_source_fields": {
+    "u_f_0L01": {
+      "full": {
+        "phase": 106,
+        "op": "attn.wo_a",
+        "rows": 6,
+        "seg": 0,
+        "nseg": 4,
+        "bf_pairs": [
+          1,
+          5,
+          10
+        ],
+        "calendar": "calendar_unmeasured",
+        "descriptor_count": 0
+      },
+      "tail": {
+        "phase": 122,
+        "op": "attn.wo_a",
+        "rows": 5,
+        "seg": 0,
+        "nseg": 4,
+        "bf_pairs": [
+          1,
+          5,
+          10
+        ],
+        "calendar": "calendar_unmeasured",
+        "descriptor_count": 0
+      },
+      "router": {
+        "phase": 126,
+        "op": "ffn.router",
+        "rows": 1,
+        "seg": 0,
+        "nseg": 5,
+        "bf_pairs": [
+          1
+        ],
+        "calendar": "calendar_unmeasured",
+        "descriptor_count": 0
+      }
+    },
+    "u_f_0L02": {
+      "full": {
+        "phase": 106,
+        "op": "attn.wo_a",
+        "rows": 6,
+        "seg": 0,
+        "nseg": 4,
+        "bf_pairs": [
+          4,
+          8,
+          13
+        ],
+        "calendar": "calendar_unmeasured",
+        "descriptor_count": 0
+      },
+      "tail": {
+        "phase": 122,
+        "op": "attn.wo_a",
+        "rows": 5,
+        "seg": 0,
+        "nseg": 4,
+        "bf_pairs": [
+          4,
+          8,
+          13
+        ],
+        "calendar": "calendar_unmeasured",
+        "descriptor_count": 0
+      },
+      "router": {
+        "phase": 126,
+        "op": "ffn.router",
+        "rows": 1,
+        "seg": 0,
+        "nseg": 5,
+        "bf_pairs": [
+          4
+        ],
+        "calendar": "calendar_unmeasured",
+        "descriptor_count": 0
+      }
+    }
+  },
+  "MB": 0,
+  "PP": 1,
+  "actual_native_macro": "ot_rom_4096x274_m8",
+  "native_selector_expressions": [
+    "#(.INSTANCE(MB == 0 ? $sformatf(\"%s_0\", INSTANCE) : $sformatf(\"%sb_0\", INSTANCE)))",
+    "#(.INSTANCE(MB == 0 ? $sformatf(\"%s_1\", INSTANCE) : $sformatf(\"%sb_1\", INSTANCE)))"
+  ],
+  "wrong_frame_image_caught": true,
+  "arithmetic_or_reset_requalified": false,
+  "full_token": false,
+  "canonical_manifest_or_active_ROM_directory_changed": false
+}

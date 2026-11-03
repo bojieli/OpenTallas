@@ -1,0 +1,17 @@
+{
+  "status": "PASS_EXACT_RETAINED_PROFILE_QUALIFIER",
+  "calendar": "measured_bf_active_idle_q",
+  "source_root": "/srv/opentallas-scratch2/claude/codex-ds-bf-selectors-2200/source_closure_candidate1",
+  "current_native_selected_RTL_changed": false,
+  "production_enabled": false,
+  "scope": "BF-active as-built frame return composition; Q outputs held quiescent",
+  "source_manifest": "retained immutable qualification manifest; not newly adopted selector manifest",
+  "added_cycles": 0,
+  "unit": "oth-ubuntu-677080-1793599463",
+  "exit": 0,
+  "explicit_experimental_environment": {
+    "OT_XS_GB_PROVIDER_UNDER_TEST": "1",
+    "OT_XS_Q_CPR": "1"
+  },
+  "native_provider_qualified": false
+}

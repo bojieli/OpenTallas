@@ -1,0 +1,100 @@
+{
+  "status": "PASS_ACTIVE_BF_INSTANCE_IMAGE_ONLY_SCOPE",
+  "files": {
+    "column_wrapper": {
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+      "sha256": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
+      "all_INSTANCE_uses": [
+        "module dsfd_bf_col #(parameter INSTANCE = \"\", parameter integer MB = 0) (",
+        "ot_v41_bf_col #(.NSEG(8), .NCH(16), .XF(8), .LV(5), .BF16(1), .NCHB(8), .NB(2), .MTP(1), .EARLY(1), .CG(1), .DRAIN(200), .FAST(1), .PP(1), .BP(0), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .QBF(2), .QZE(1), .TCG(1), .GRADUAL_RNE(1), .BXST(2), .FXST(2), .INSTANCE(INSTANCE), .MB(MB)) u_view ("
+      ],
+      "SYNTHESIS_INSTANCE_uses": [
+        "module dsfd_bf_col #(parameter INSTANCE = \"\", parameter integer MB = 0) (",
+        "ot_v41_bf_col #(.NSEG(8), .NCH(16), .XF(8), .LV(5), .BF16(1), .NCHB(8), .NB(2), .MTP(1), .EARLY(1), .CG(1), .DRAIN(200), .FAST(1), .PP(1), .BP(0), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .QBF(2), .QZE(1), .TCG(1), .GRADUAL_RNE(1), .BXST(2), .FXST(2), .INSTANCE(INSTANCE), .MB(MB)) u_view ("
+      ],
+      "operative_use": "named parameter forwarding only"
+    },
+    "column": {
+      "path": "rtl/v41rom/ot_v41_bf_col.sv",
+      "sha256": "66bf23bbce504d037bba98fb45af08559e7f77410d818d48d05adb761b983531",
+      "all_INSTANCE_uses": [
+        "parameter INSTANCE = \"\",",
+        "#(.INSTANCE(MB == 0 ? $sformatf(\"%s_0\", INSTANCE) : $sformatf(\"%sb_0\", INSTANCE)))",
+        "#(.INSTANCE(MB == 0 ? $sformatf(\"%s_1\", INSTANCE) : $sformatf(\"%sb_1\", INSTANCE)))",
+        "#(.INSTANCE(MB == 0 ? INSTANCE : $sformatf(\"%sb\", INSTANCE)))"
+      ],
+      "SYNTHESIS_INSTANCE_uses": [
+        "parameter INSTANCE = \"\","
+      ],
+      "operative_use": "none after preprocessing (unused parameter)"
+    },
+    "front_wrapper": {
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+      "sha256": "54c30803704601943e827a37263584f505e7546e0c1d8c62a8834031d5e16cf4",
+      "all_INSTANCE_uses": [
+        "module dsfd_bf_front_roots #(parameter INSTANCE = \"\") (",
+        "ot_s81_bf_front_roots #(.PINREG(1), .HITFIX(1), .RECUT(2), .QZE(1), .TCG(1), .HCOL(1), .BXST(2), .FXST(2), .PINLAT(1), .STATIC_PROGRAM(1), .CPIN(1), .SOQ(`DSFD_BF_SOQ), .SOQ_SWD(`DSFD_BF_SOQ_SWD), .N32(`DSFD_BF_N32), .INSTANCE(INSTANCE)) u_view ("
+      ],
+      "SYNTHESIS_INSTANCE_uses": [
+        "module dsfd_bf_front_roots #(parameter INSTANCE = \"\") (",
+        "ot_s81_bf_front_roots #(.PINREG(1), .HITFIX(1), .RECUT(2), .QZE(1), .TCG(1), .HCOL(1), .BXST(2), .FXST(2), .PINLAT(1), .STATIC_PROGRAM(1), .CPIN(1), .SOQ(0), .SOQ_SWD(160), .N32(0), .INSTANCE(INSTANCE)) u_view ("
+      ],
+      "operative_use": "named parameter forwarding only"
+    },
+    "front": {
+      "path": "rtl/s81/ot_s81_bf_front_roots.sv",
+      "sha256": "ee6caa2511c362c5122a5b49c4e5afe7f1a9e6ebc1762f5366583a3529a3f708",
+      "all_INSTANCE_uses": [
+        "parameter INSTANCE = \"\"",
+        ".QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM), .SOQ(SOQ), .SOQ_SWD(SOQ_SWD), .N32(N32)) u_front (",
+        ".QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_elem (",
+        ".INSTANCE(INSTANCE)"
+      ],
+      "SYNTHESIS_INSTANCE_uses": [
+        "parameter INSTANCE = \"\"",
+        ".QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM), .SOQ(SOQ), .SOQ_SWD(SOQ_SWD), .N32(N32)) u_front (",
+        ".QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_elem (",
+        ".INSTANCE(INSTANCE)"
+      ],
+      "operative_use": "named parameter forwarding only"
+    },
+    "front_core": {
+      "path": "rtl/v41rom/ot_v41_bf_front_core_roots.sv",
+      "sha256": "c72d93465a1c24277cb78fb021d06b95cee551a0da4af5c3c560c95d5e245b7d",
+      "all_INSTANCE_uses": [
+        "parameter INSTANCE = \"\""
+      ],
+      "SYNTHESIS_INSTANCE_uses": [
+        "parameter INSTANCE = \"\""
+      ],
+      "operative_use": "none after preprocessing (unused parameter)"
+    },
+    "macro": {
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "sha256": "9e83cdca202aa4e54e8024d91b35f5309ff9fca0961d23b36cd01a4e41c13e3f",
+      "all_INSTANCE_uses": [
+        "module ot_rom_4096x274_m8 #(parameter string VIAMAP = \"\", parameter string INSTANCE = \"\") (",
+        "if ($value$plusargs(\"OT_ROM_DIR=%s\", rom_dir) && INSTANCE != \"\")",
+        "$readmemh({rom_dir, \"/\", INSTANCE, \".viamap.hex\"}, arr);"
+      ],
+      "operative_use": "initial readmemh filename only; no reset/clock/arithmetic use"
+    }
+  },
+  "selected_profile": {
+    "front_HCOL": 1,
+    "front_RECUT": 2,
+    "front_STATIC_PROGRAM": 1,
+    "column_PP": 1,
+    "column_MB": 0,
+    "front_SOQ": 0,
+    "front_SOQ_SWD": 160,
+    "front_N32": 0
+  },
+  "active_graph": [
+    "dsfd_bf_col\u2192ot_v41_bf_col\u2192simulation-only 2\u00d7ot_rom_4096x274_m8 INSTANCE\u2192initial readmemh",
+    "dsfd_bf_front_roots\u2192ot_s81_bf_front_roots(HCOL1)\u2192ot_v41_bf_front_core_roots unused INSTANCE"
+  ],
+  "INSTANCE_drives_reset_clock_state_or_synthesis_logic": false,
+  "added_rtl_cycles": 0,
+  "production_reset_or_source_correspondence_qualified": false
+}

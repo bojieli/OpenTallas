@@ -1,0 +1,86 @@
+{
+  "status": "BF_PHASE_LOCAL_TAGS_OBSERVED_RANK_CONTRACT_UNQUALIFIED",
+  "field": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/down_cap_safe_fields_1131/u_f_0L01",
+  "phases": [
+    {
+      "phase": 106,
+      "op": "attn.wo_a",
+      "actual_owned_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "native_CFG_return_row_tags": {
+        "1": [
+          0,
+          1
+        ],
+        "5": [
+          2,
+          3
+        ],
+        "10": [
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "phase": 110,
+      "op": "attn.wo_a",
+      "actual_owned_rows": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "native_CFG_return_row_tags": {
+        "1": [
+          0,
+          1
+        ],
+        "5": [
+          2,
+          3
+        ],
+        "10": [
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "phase": 122,
+      "op": "attn.wo_a",
+      "actual_owned_rows": [
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "native_CFG_return_row_tags": {
+        "1": [
+          0,
+          1
+        ],
+        "5": [
+          2,
+          3
+        ],
+        "10": [
+          4
+        ]
+      }
+    }
+  ],
+  "source": "tools/s81_dv/field_rank_images.py tag_plan intentionally skips bf16 phases",
+  "production_failure_claim": false,
+  "added_cycles": 0,
+  "images_changed": false
+}

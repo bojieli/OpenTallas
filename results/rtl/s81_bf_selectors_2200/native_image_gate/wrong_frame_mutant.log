@@ -1,0 +1,10 @@
+BF_IMAGE_MISMATCH c0 bank0 address0
+BF_IMAGE_MISMATCH c0 bank0 address1
+BF_IMAGE_MISMATCH c0 bank0 address7
+BF_IMAGE_MISMATCH c0 bank0 address8
+BF_IMAGE_MISMATCH c0 bank0 address63
+BF_IMAGE_MISMATCH c0 bank0 address511
+BF_IMAGE_RESULT columns14 images28 samples252 errors6 clock833
+[15411] %Fatal: tb.sv:42: Assertion failed in tb: BF_IMAGE_SELECTOR_FAIL
+%Error: /srv/opentallas-scratch2/claude/codex-ds-bf-selectors-2200/gate1/tb.sv:42: Verilog $stop
+Aborting...
