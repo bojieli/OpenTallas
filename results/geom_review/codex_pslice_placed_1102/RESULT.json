@@ -1,0 +1,215 @@
+{
+  "status": "READ_ONLY_COLLECTION_COMPLETE_DEVICE_PG_AND_GEOMETRY_FAIL",
+  "source_scope": "legacy PSlice622/XST3/OSTG1/external1in1out/native64 only; no native4/currentparent credit",
+  "unit": "oth-ubuntu-4057472-1793636961",
+  "source_3place_sha256": "8e5311618f74ea51ddaeb8481d53e17734985dc2c03c43cdbe2de222cb934493",
+  "resources": {
+    "GB": 8,
+    "threads": 2,
+    "disk_GB": 2
+  },
+  "PG": {
+    "status": "FAIL",
+    "checked": 427728,
+    "failure_count": 69318,
+    "unique_open_buffer_instances": 34659,
+    "nonempty_wrong_nets": 0,
+    "mapping_error": "",
+    "failure_masters_terms": {
+      "BUFx3_ASAP7_75t_R": 41442,
+      "BUFx6f_ASAP7_75t_R": 7352,
+      "BUFx10_ASAP7_75t_R": 176,
+      "BUFx2_ASAP7_75t_R": 5622,
+      "BUFx24_ASAP7_75t_R": 60,
+      "BUFx16f_ASAP7_75t_R": 11296,
+      "BUFx12f_ASAP7_75t_R": 3144,
+      "BUFx12_ASAP7_75t_R": 222,
+      "BUFx4_ASAP7_75t_R": 4
+    }
+  },
+  "native_instance_count": 213864,
+  "macro_count": 100,
+  "native_clock_nets": [
+    {
+      "net": "clk",
+      "sigtype": "CLOCK",
+      "clock_pin_members": 32015
+    }
+  ],
+  "guides": {
+    "SIGNAL": {
+      "nets": 187237,
+      "guided_nets": 0,
+      "rectangles": 0
+    },
+    "POWER": {
+      "nets": 1,
+      "guided_nets": 0,
+      "rectangles": 0
+    },
+    "CLOCK": {
+      "nets": 1,
+      "guided_nets": 0,
+      "rectangles": 0
+    },
+    "GROUND": {
+      "nets": 1,
+      "guided_nets": 0,
+      "rectangles": 0
+    }
+  },
+  "r2r": {
+    "r2r_memory_instances": 100,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 561.26,
+    "r2r_captures_gt405": 3150,
+    "r2r_captures": 31705,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.wdat_r\\[1\\]\\[35\\]$_DFF_P_ -> u_fcore.g_c\\[3\\].u_c.g_p.u_p.g_m4.dt\\[0\\].mem.g\\[11\\].mem"
+  },
+  "cause_counts": {
+    "S->M": 35,
+    "long_inside_guide": 2982,
+    "guide_best_possible_canonical_reach_still_gt405": 1799,
+    "M->S": 3115,
+    "long_outside_guide": 168
+  },
+  "original_unit_exit": 1,
+  "original_render_error": "wrong legacy renderer selected, KeyError type; unchanged matching HBM Arch renderer succeeds on SAME exports",
+  "final_image": "placed_native.png",
+  "no_new_EDA_read_for_analysis": true,
+  "no_repair": true,
+  "no_CTS": true,
+  "no_GRT": true,
+  "no_STA": true,
+  "no_route": true,
+  "no_writeDB": true,
+  "disposition": "HOLD legacy prototype; no new cuts/PGrepair/physicalretry until actual currentselectedcaller/readset choosesbody",
+  "worst_write_fanout": {
+    "source": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.wdat_r[1][35]$_DFF_P_",
+    "connected_memory_bodies": [
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[10].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          12.972,
+          458.904,
+          54.036
+        ],
+        "xy": [
+          411.49199999999996,
+          33.504
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[11].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          632.652,
+          575.208,
+          673.716
+        ],
+        "xy": [
+          527.796,
+          653.184
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[12].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          480.384,
+          591.324,
+          575.208,
+          632.388
+        ],
+        "xy": [
+          527.796,
+          611.856
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[5].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          219.516,
+          458.904,
+          260.58
+        ],
+        "xy": [
+          411.49199999999996,
+          240.048
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[6].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          178.188,
+          458.904,
+          219.252
+        ],
+        "xy": [
+          411.49199999999996,
+          198.72
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[7].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          136.908,
+          458.904,
+          177.972
+        ],
+        "xy": [
+          411.49199999999996,
+          157.44
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[8].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          95.58,
+          458.904,
+          136.644
+        ],
+        "xy": [
+          411.49199999999996,
+          116.112
+        ]
+      },
+      {
+        "name": "u_fcore.g_c[3].u_c.g_p.u_p.g_m4.dt[0].mem.g[9].mem",
+        "kind": "M",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "bbox": [
+          364.08,
+          54.252,
+          458.904,
+          95.316
+        ],
+        "xy": [
+          411.49199999999996,
+          74.784
+        ]
+      }
+    ],
+    "canonical_unrestricted_one_point_minimax_um": 435.93600000000004,
+    "meaning": "whole-body conservative bound, not exact connected port coordinates"
+  }
+}
