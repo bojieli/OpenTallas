@@ -1326,7 +1326,9 @@
     "hd_spn_eshim_tx@3",
     "hd_spn@1",
     "hd_turn_a@1",
-    "hd_spn_end@1"
+    "hd_spn_end@1",
+    "hd_ctl_n@6",
+    "hd_host_n@6"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -1381,7 +1383,8 @@
    ],
    "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave",
    "hold_items": {
-    "hd_turn_b": "DIE-HEAD-58 13:2x: l48h0@4 sign-off FAIL TT -44 after 3 ECO = TWO-STRIKES RE-FORM; l48rf keeps its form; re-form from DH58-TURNB"
+    "hd_turn_b": "DIE-HEAD-58 13:2x: l48h0@4 sign-off FAIL TT -44 after 3 ECO = TWO-STRIKES RE-FORM; l48rf keeps its form; re-form from DH58-TURNB",
+    "hd_turn_a": "DIE-HEAD-58 14:4x: l48rf published wrapper lacks WFALL(1) though plan ring_hold.write_fall_types lists hd_turn_a + writer-start broadcast TT (-55.8, same as turn_b); RE-FORM via DH58-TURNB prepared_l48tb; launch turn_a+turn_b from l48tb after its READY merges"
    },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
@@ -1397,13 +1400,14 @@
     "hd_spn_eshim_tx@3": "tapbal root-cause 6bd4a7b2e51 + flowfix 1af320e0861 merged main 88f2e7ecac1 (COORD 12:40) = HEAD wave src kw-fix-4-fl-head2 @e20aedb65fe; DIE-HEAD-58 batch on l48rf (KW-FIX-4 13:2x)",
     "hd_spn@1": "tapbal root-cause 6bd4a7b2e51 + flowfix 1af320e0861 merged main 88f2e7ecac1 (COORD 12:40) = HEAD wave src kw-fix-4-fl-head2 @e20aedb65fe; DIE-HEAD-58 batch on l48rf (KW-FIX-4 13:2x)",
     "hd_turn_a@1": "DIE-HEAD-58 12:0x release hd_spn*/hd_turn_* on l48rf (prepared l48rf plan + src fl-head2 e20aedb65fe); KW-FIX-4 13:2x",
-    "hd_spn_end@1": "DIE-HEAD-58 12:0x release hd_spn*/hd_turn_* on l48rf (prepared l48rf plan + src fl-head2 e20aedb65fe); KW-FIX-4 13:2x"
+    "hd_spn_end@1": "DIE-HEAD-58 12:0x release hd_spn*/hd_turn_* on l48rf (prepared l48rf plan + src fl-head2 e20aedb65fe); KW-FIX-4 13:2x",
+    "hd_ctl_n@6": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)",
+    "hd_host_n@6": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)"
    },
    "gen_hosts": [
-    "epyc4",
     "intel2"
    ],
-   "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
+   "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
    "queue_src": "claude/kw-fix-4-headtb2-1103@e20aedb65fe"
   },
@@ -1551,7 +1555,10 @@
     "sle_hc2__clcc5e3e61@2",
     "coll_ucie@1",
     "coll_n@2",
-    "glue@3"
+    "glue@3",
+    "sle_hc0__cl929603c0__cl38badc56@4",
+    "sle_sc_v3@6",
+    "slw_st_b_v1__cl6357f1cc@4"
    ],
    "queue_src": "codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934",
    "type_args": {
@@ -1771,13 +1778,15 @@
     "sle_sc_v3@3": "DPL-STALL class: gen phys --dpl-diamond (merged main 08542fa9d7d via 1b76e9abd9a = a589a3fea9; wave src kit-wave-qc-dpl-1103 f75b8a10890 port) in type_args; diamond legalizer proved on the same 3_4 DBs; launched 04:52 by DIE-QC-65/KITS, resume_from prev attempt",
     "coll_ucie@1": "14c84655d0b (DIE-QC-66/PLAN coll_ucie physical_inst u_bound.u_io_ucie: certain macro_instances tool failure) applied to the wave plan -> plan_qc52_ucie1103.json (sha256 3d22325b04a5; only coll_ucie changed vs plan_qc52 9695f75fa95c); KW-FIX-4 08:4x",
     "coll_n@2": "XCHECK-1 TX-face lockup latch (G9 c55229e227a/867e693fa67 gen_rtl) + FLOW-LATCH-1 face_guard/face_flops/lec (G11 8f62e618709/a648c13e71c) in wave src kw-fix-4-fl-qc 335041a7cd7; old kit withdrawn from the queue (KW-FIX-4 09:5x)",
-    "glue@3": "XCHECK-1 TX-face lockup latch (G9 c55229e227a/867e693fa67 gen_rtl) + FLOW-LATCH-1 face_guard/face_flops/lec (G11 8f62e618709/a648c13e71c) in wave src kw-fix-4-fl-qc 335041a7cd7; old kit withdrawn from the queue (KW-FIX-4 09:5x)"
+    "glue@3": "XCHECK-1 TX-face lockup latch (G9 c55229e227a/867e693fa67 gen_rtl) + FLOW-LATCH-1 face_guard/face_flops/lec (G11 8f62e618709/a648c13e71c) in wave src kw-fix-4-fl-qc 335041a7cd7; old kit withdrawn from the queue (KW-FIX-4 09:5x)",
+    "sle_hc0__cl929603c0__cl38badc56@4": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)",
+    "sle_sc_v3@6": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)",
+    "slw_st_b_v1__cl6357f1cc@4": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)"
    },
    "gen_hosts": [
-    "intel2",
-    "epyc4"
+    "intel2"
    ],
-   "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)"
+   "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)"
   },
   "hbm": {
    "enabled": true,
@@ -1880,8 +1889,8 @@
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8g/die_plan.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbmv",
-   "src_sha": "78e511e3a45b09131cbb14fdc8f2c5b6e6c68a5d",
+   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbm2d",
+   "src_sha": "2d0660db1b765149042f7ad6cf0c01f289235a0f",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -2259,12 +2268,23 @@
     "ot_hbm_xp_aq_tree13_fmt@1",
     "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@2",
     "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@2",
-    "ot_hnx_fused_tnode@2"
+    "ot_hnx_fused_tnode@2",
+    "hfd_hgi_vms_glue_nw_t@3",
+    "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9@2",
+    "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f@2",
+    "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780@1",
+    "ot_hbm_su_programme_pslice_c5@3",
+    "ot_hbm_su_static_cxport_ij_q@3",
+    "ot_hbm_su_static_qcore_r13@2",
+    "ot_hbm_xp_aq_tree13_fmt@3",
+    "ot_hfd_coll_q2n2_body_core@4",
+    "ot_hfd_coll_q2n2_vm_core@3",
+    "ot_hgi_qw_dec@2"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-61",
    "pilot_mode": "queue",
-   "queue_src": "claude/kw-fix-4-hbmv-1103@78e511e3a45",
+   "queue_src": "main@2d0660db1b7",
    "hold_items": {
     "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
     "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)"
@@ -2282,7 +2302,19 @@
     "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@2": "LEC class: 9740a4deacb (G4 raw-prefix bound) + flow-latch-1 8f62e618709/a648c13e71c (G11 lec.py phase-aware latch + raw wall) in wave src kw-fix-4-fl-hbm 89eb1d03dba (DIE-HBM-61 08:43 ASK default, COORD 09:0x item 3); glue_nw_t = KW_PLACE_RC=1 single FLOW strike",
     "ot_hfd_coll_q2n2_body_core@3": "LEC class: 9740a4deacb (G4 raw-prefix bound) + flow-latch-1 8f62e618709/a648c13e71c (G11 lec.py phase-aware latch + raw wall) in wave src kw-fix-4-fl-hbm 89eb1d03dba (DIE-HBM-61 08:43 ASK default, COORD 09:0x item 3); glue_nw_t = KW_PLACE_RC=1 single FLOW strike",
     "ot_hnx_fused_hub_n4ext@3": "LEC class: 9740a4deacb (G4 raw-prefix bound) + flow-latch-1 8f62e618709/a648c13e71c (G11 lec.py phase-aware latch + raw wall) in wave src kw-fix-4-fl-hbm 89eb1d03dba (DIE-HBM-61 08:43 ASK default, COORD 09:0x item 3); glue_nw_t = KW_PLACE_RC=1 single FLOW strike",
-    "ot_hbm_idx_rootctl_static_am@2": "queue REJECTED (kit carries FAIL_PREFLOOR LEC from an earlier run) after GEOM-ADVISORY release; LEC class 9740a4deacb + G11 lec.py in wave src kw-fix-4-fl-hbm 89eb1d03dba; 0 design strikes"
+    "ot_hbm_idx_rootctl_static_am@2": "queue REJECTED (kit carries FAIL_PREFLOOR LEC from an earlier run) after GEOM-ADVISORY release; LEC class 9740a4deacb + G11 lec.py in wave src kw-fix-4-fl-hbm 89eb1d03dba; 0 design strikes",
+    "hfd_hgi_vms_glue_nw_t@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780@1": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_su_programme_pslice_c5@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_su_static_cxport_ij_q@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_su_static_qcore_r13@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_xp_aq_tree13_fmt@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hfd_coll_q2n2_body_core@4": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hfd_coll_q2n2_vm_core@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hgi_qw_dec@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "__batch_hbm_pins": "11 rows: INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)"
    },
    "plan_note": "KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | "
   }
