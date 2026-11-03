@@ -49,7 +49,7 @@ class Heavy(unittest.TestCase):
         s = s.replace('sleep 20', 'sleep 0.2').replace('sleep 5;', 'sleep 0.2;')
         self.h = d / 'ot-heavy'; self.h.write_text(s); self.h.chmod(0o755)
 
-    def run_(self, load, crit=False, maxwait='1'):
+    def run_(self, load, crit=False, maxwait='1', mem='4'):
         self.load.write_text(f'{load} 1.0 1.0 1/1 1\n')
         env = dict(os.environ, PATH=f'{self.d}/bin:' + os.environ['PATH'], OUT_ARGS=str(self.d / 'args'), OT_VL_JCAP='0',
                    OT_HEAVY_SYSTEM_TOOLS='1')
@@ -57,7 +57,7 @@ class Heavy(unittest.TestCase):
         if crit: env['OT_HEAVY_CPU'] = 'crit'
         try: (self.d / 'args').unlink()
         except FileNotFoundError: pass
-        r = subprocess.run([str(self.h), '--mem', '4', '--max-wait', maxwait, '--', 'true'], capture_output=True, text=True, env=env, timeout=60)
+        r = subprocess.run([str(self.h), '--mem', mem, '--max-wait', maxwait, '--', 'true'], capture_output=True, text=True, env=env, timeout=60)
         a = (self.d / 'args').read_text().split('\n') if (self.d / 'args').exists() else None
         return r, a
 
