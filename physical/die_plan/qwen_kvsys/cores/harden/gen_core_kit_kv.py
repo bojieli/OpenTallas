@@ -1168,6 +1168,9 @@ def main():
                     help="DIE-KV-61 11-02: native strap master kv3_astk (plan_c, kv_core_rtl wrapper of kv3_astk__leaf): "
                          "ctl PORT_REGS qo face bank + fault-b landing (+1 external-fault edge, 0 command cycles) + the "
                          "stale_in tc plan pins declared dead (astk_native_faces.py; the 0828 kit recut)")
+    ap.add_argument("--zh-rf1", action="store_true",
+                    help="DIE-KV-64/RF-E 11-03 RE-FORM RF-KV1 (two strikes): ot_nhb_zh read address pre-decoded into kept "
+                         "registered one-hot halves, <= 16 loads per select bit, 0 cycles (zh_rf1.py)")
     ap.add_argument("--astk-rf1", action="store_true",
                     help="DIE-KV-64/RF-E 11-03 RE-FORM RF-KV1 (two strikes): ctl zk / zh read selects as registered one-hot "
                          "replicas, <= 16 loads per select bit, 0 cycles (astk_rf1.py); with --astk-native-faces")
@@ -1418,6 +1421,9 @@ def main():
     if a.astk_native_faces:
         import astk_native_faces
         astk_native_faces.apply_kit(kd, mod, cj, a.core_json)
+    if a.zh_rf1:
+        import zh_rf1
+        zh_rf1.apply_kit(kd, mod)
     if a.astk_rf1:
         if not a.astk_native_faces:
             raise SystemExit("--astk-rf1 needs --astk-native-faces")
