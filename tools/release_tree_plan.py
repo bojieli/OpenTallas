@@ -595,6 +595,11 @@ def accept_die_owned_ft(cmp_, design):
 APPROVED_PIN_EVENTS = {
     m: {'clk[0]': ('M5', 21612, 38892, 'QBS centre-M5 clock event (Codex root-approved 30428e20f; COORD 11-02 18:2x)')}
     for m in ('dsfd_node_LLfu', 'dsfd_node_LLfd')}   # NNfu retired SS22 11-02: plan event merged (main 60905360932)
+# HBM centre clock entry (SIGNOFF-SPRINT-22 ASK 11-03 00:01, COORD YES 00:1x: plan-defined centre clock entry = approved
+# form, METHODOLOGY 12.8); DIE-HBM-59 lands the event in the HBM POR, then remove this entry.
+APPROVED_PIN_EVENTS['ot_hbm_idx_qctl_static'] = {
+    'clk_program': ('M5', 99384, 64800, 'HBM centre clock entry (COORD 11-03 00:1x)'),
+    'clk_program_mem': ('M5', 99480, 64800, 'HBM centre clock entry (COORD 11-03 00:1x)')}
 
 
 def accept_pin_events(cmp_, design, got_rows, events=None):
