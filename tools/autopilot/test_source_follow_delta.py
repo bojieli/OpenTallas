@@ -167,6 +167,19 @@ def test_live_refs_and_referenced_snapshots():
         assert S.referenced_snapshots(None, root) is None
 
 
+def test_live_refs_accept_runtime_sets():
+    # KW-FIX-1 11-02: kit_wave puts cfg["_near_count"] (a set) into cfg; source_follow.step dumps [original, cfg]
+    with tempfile.TemporaryDirectory() as td:
+        ap = Path(td) / "coord" / "autopilot"
+        ap.mkdir(parents=True)
+        (ap / "kit_wave_state.json").write_text(json.dumps({"items": {}}))
+        root = "/sf/qwen_kvsys"
+        cfg = {"_near_count": {("qwen_kvsys", "kv_leaf")}, "dies": {"qwen_kvsys": {"src": root + "/" + "3" * 12 + "/src"}}}
+        refs = S.live_snapshot_refs(ap, [cfg, cfg], {})
+        assert S.referenced_snapshots(refs, root) == [root + "/" + "3" * 12]
+        assert "kv_leaf" in refs[0]
+
+
 def test_payload_compiles_with_helpers():
     import inspect
     src = "\n".join(inspect.getsource(f) for f in (S.materialize_clock_mesh, S.copy_untracked_inputs,

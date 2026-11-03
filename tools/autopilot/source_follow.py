@@ -148,7 +148,10 @@ def live_snapshot_refs(ap_dir, cfg, state):
     the spec of each live wave record (RUNNING/WAITING/LAUNCHING, or ENQUEUED unless its queue run FAILED: a
     FAILED queue kit relaunches as a new attempt on the current source), plus PROTECTED-DBS.txt."""
     from pathlib import Path
-    refs = [json.dumps(cfg), json.dumps(state.get("source_follow", {}))]
+    # cfg carries runtime-only sets (kit_wave cfg["_near_count"]); serialize them instead of crashing the wave
+    # (KW-FIX-1 11-02: "Object of type set is not JSON serializable" on every new main tip since 11-01 21:11)
+    dump = lambda o: json.dumps(o, sort_keys=True, default=lambda x: sorted(map(str, x)) if isinstance(x, (set, frozenset)) else str(x))
+    refs = [dump(cfg), dump(state.get("source_follow", {}))]
     ap_dir = Path(ap_dir)
     try:
         items = json.loads((ap_dir / "kit_wave_state.json").read_text()).get("items", {})
@@ -161,7 +164,7 @@ def live_snapshot_refs(ap_dir, cfg, state):
             v.get("status") == "ENQUEUED" and v.get("q_status") != "FAIL")
         if not live:
             continue
-        refs.append(json.dumps(v))
+        refs.append(dump(v))
         try:
             refs.append((Path(v["dir"]) / "spec.json").read_text())
         except (OSError, KeyError, TypeError):
