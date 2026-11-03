@@ -49,6 +49,11 @@ proc ot_prd_spef_arm {f} {
   if {![llength [info commands ::estimate_parasitics]]} { return }
   rename ::estimate_parasitics ::ot_prd_native_estimate
   proc ::estimate_parasitics {args} {
+    # OT_PRD_REPAIR_RC=placement (DIE-S81-48 11-02): during the repair calls every global-routing estimate is a
+    # placement estimate (see below); existing nets still get the routed SPEF re-read right after
+    if {[info exists ::ot_prd_rc_place] && $::ot_prd_rc_place} {
+      set args [lmap a $args {expr {$a eq "-global_routing" ? "-placement" : $a}}]
+    }
     set r [uplevel 1 [list ::ot_prd_native_estimate {*}$args]]
     ot_prd_spef_read "after estimate_parasitics $args"
     return $r
@@ -87,6 +92,22 @@ if {[info exists ::env(OT_PRD_PROTECT_NETS)] && $::env(OT_PRD_PROTECT_NETS) ne "
     set_dont_touch $nets
     puts "OT_PRD_PROTECT_NETS preserved data net $name (all signoff checks retained)"
   }
+}
+# OT_PRD_REPAIR_RC=placement (DIE-S81-48 11-02, class fix): with the GRT parasitics source every resizer move calls
+# GlobalRouter::updateDirtyRoutes -> TritonRoute::updateDirtyPAData, and FlexPA crashes (SIGSEGV in getEdgeCost /
+# FlexGCWorker::initPA0) on the not-yet-legalized ECO cells: S81 l1c A/B and l4 die at the first
+# setup-repair move (run_prd.log "Signal 11"; 3 kits, Codex l4 twice).  Opt-in: nets the ECO creates or touches are estimated from
+# placement while repairing (every existing net keeps its routed RCX SPEF, re-read after each estimate as before); the
+# legalized result is routed by the same incremental GRT + DRT and signed off on its own RCX, so no check changes.
+set ::ot_prd_rc_place 0
+if {[info exists ::env(OT_PRD_REPAIR_RC)] && $::env(OT_PRD_REPAIR_RC) ne ""} {
+  if {$::env(OT_PRD_REPAIR_RC) ne "placement"} { error "OT_PRD_REPAIR_RC=$::env(OT_PRD_REPAIR_RC): want placement" }
+  if {![llength [info commands ::ot_prd_native_estimate]]} {
+    error "OT_PRD_REPAIR_RC=placement needs the routed-SPEF estimate wrapper (not the frozen-clock RC path)"
+  }
+  set ::ot_prd_rc_place 1
+  estimate_parasitics -placement
+  puts "OT_PRD repair RC: placement estimate for ECO-touched nets, routed SPEF for the rest (no GRT/PA updates in repair)"
 }
 global_route -start_incremental
 set _pass [expr {[info exists ::env(OT_PRD_PASS)] ? $::env(OT_PRD_PASS) : 1}]
@@ -197,6 +218,7 @@ if {$_route_keep} {
   source [file join $_here prd_route_keep.tcl]
   ot_prd_route_keep
 }
+set ::ot_prd_rc_place 0
 global_route -end_incremental
 ot_clk_freeze_assert post_grt
 if {$_route_keep} { ot_prd_route_keep_restore }

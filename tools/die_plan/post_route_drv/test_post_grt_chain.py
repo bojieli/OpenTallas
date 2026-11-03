@@ -42,3 +42,24 @@ def test_ordinary_nonrepair_custom_hook_unchanged(tmp_path):
 def test_no_core_hook_is_empty(tmp_path):
     assert not C.stage(tmp_path)['skipped_generated_repair']
     assert not (tmp_path / 'prd_post_grt_chain.tcl').read_text()
+
+
+def test_final_repair_tail_skipped_with_gate_chain_retained(tmp_path):
+    fixture(tmp_path)
+    core = tmp_path / 'grt_post_core.tcl'
+    core.write_text(core.read_text() + '\n'.join(C.FINAL_REPAIR_TAIL) + '\n')
+    (tmp_path / 'core_final_repair.tcl').write_text('repair_timing -setup\n')
+    rec = C.stage(tmp_path)
+    assert rec['skipped_generated_repair'] and rec['skipped_final_repair']
+    assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post.tcl\n'
+
+
+@pytest.mark.parametrize('tail', [['source /work/core_final_repair.tcl'],
+                                  ['write_db /work/pre_final_state.odb', 'source /work/custom_gate.tcl']])
+def test_partial_or_foreign_final_tail_refuses(tmp_path, tail):
+    fixture(tmp_path)
+    core = tmp_path / 'grt_post_core.tcl'
+    core.write_text(core.read_text() + '\n'.join(tail) + '\n')
+    (tmp_path / 'core_final_repair.tcl').write_text('repair_timing -setup\n')
+    with pytest.raises(ValueError, match='unrecognized'):
+        C.stage(tmp_path)

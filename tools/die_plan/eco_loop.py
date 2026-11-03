@@ -277,14 +277,24 @@ exit $rc
 
 
 # ------------------------------------------------------------------------------------------------ one iteration
-def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None):
-    """one ECO iteration from routed dir src into root/i<n> (a single-mode kit's t<N> pass first into root/i<n>t);
-    -> iteration record (metrics None when no sign-off)"""
-    d = Path(root) / f"i{n}"
+def flexpa_sig11(pd):
+    """the ECO session died with SIGSEGV inside DRT pin access (FlexPA) -- the incremental-GRT dirty-route class"""
+    try:
+        t = (Path(pd) / "run_prd.log").read_text(errors="replace")
+    except OSError:
+        return False
+    return "Signal 11 received" in t and "drt::FlexPA" in t
+
+
+def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc=""):
+    """one ECO iteration from routed dir src into root/i<n><tag> (a single-mode kit's t<N> pass first into
+    root/i<n><tag>t); repair_rc 'placement' = OT_PRD_REPAIR_RC (FlexPA SIG11 class); -> iteration record (metrics None
+    when no sign-off)"""
+    d = Path(root) / f"i{n}{tag}"
     t0 = time.time()
     vs = passes(kit, prev or {}, hm)
     it = dict(n=n, dir=str(d), source=str(src), mode=mode, variant="+".join(vs), started=t0, commands=[], rc={},
-              pass_dirs=[])
+              pass_dirs=[], repair_rc=repair_rc or "grt")
 
     def step(name, cmd, **kw):
         it["commands"].append(" ".join(shlex.quote(str(c)) for c in cmd))
@@ -303,18 +313,23 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
 
     s = src
     for i, v in enumerate(vs):
-        pd = d if i == len(vs) - 1 else Path(root) / f"i{n}{v[0]}"
+        pd = d if i == len(vs) - 1 else Path(root) / f"i{n}{tag}{v[0]}"
         it["pass_dirs"].append(str(pd))
         # the first pass of the iteration keeps / re-routes per the DRC count; a later one starts from a fresh ECO route
         env = dict(os.environ, OT_PRD_FROM=mode if i == 0 else "route", OT_PRD_POST="0", OT_PRD_FINISH="1")
-        tag = "" if len(vs) == 1 else "_" + v[0]
-        if step("prd_mk" + tag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
+        if repair_rc:
+            env["OT_PRD_REPAIR_RC"] = repair_rc
+        stag = "" if len(vs) == 1 else "_" + v[0]
+        if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
             return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
-        rc = step("prd_run" + tag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
+        rc = step("prd_run" + stag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
         if rc:
             hit = oom(rc, f"ECO {v} session", pd / "run_prd.log", pd / "run_prd_finish.log")
             if hit:
                 return hit
+            if flexpa_sig11(pd):
+                it["flexpa_sig11"] = True
+                return end("ERROR", f"ECO {v} session SIGSEGV in DRT pin access (FlexPA SIG11 class, run_prd.log)")
             return end("ERROR", f"ECO {v} route / clock-freeze check / finish failed (prd_result.json)")
         # the ECO overrides steer only the ECO route: the next pass and the sign-off start from the kit's own config
         if (pd / "config.mk").is_file():
@@ -366,7 +381,7 @@ def prune(it, intermediate_only=False):
 
 # ------------------------------------------------------------------------------------------------ the loop
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
-             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False):
+             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc=""):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE"""
     kit = Path(kit).resolve()
     t0 = time.time()
@@ -397,8 +412,16 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     verdict, stop = "EXHAUSTED", f"{max_iter} iterations, still not signed"
     for n in range(1, max_iter + 1):
         mode = "route" if prev["drc"] == 0 else "grt"
-        it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev)
+        it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
+                     repair_rc=repair_rc)
         res["iterations"].append(it)
+        if it.get("flexpa_sig11") and not repair_rc:
+            # class retry (once per loop): the same iteration with placement-estimated ECO nets in a new dir
+            repair_rc = "placement"
+            res["repair_rc_retry"] = f"iteration {n}: FlexPA SIG11 -> OT_PRD_REPAIR_RC=placement"
+            it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
+                         tag="r", repair_rc=repair_rc)
+            res["iterations"].append(it)
         m = it.get("metrics")
         if not m:
             stop = f"iteration {n}: {it.get('reason')}"
@@ -471,6 +494,8 @@ def main():
     r.add_argument("--keep", action="store_true", help="keep the run data of superseded iterations")
     r.add_argument("--lec", action="store_true", help="run the kit's post-route LEC on a PASS (into BEST/lec)")
     r.add_argument("--lec-tool")
+    r.add_argument("--repair-rc", choices=["placement"], default="",
+                   help="OT_PRD_REPAIR_RC from iteration 1 (default: only as the retry after a FlexPA SIG11)")
     c = sub.add_parser("check")
     c.add_argument("record")
     a = ap.parse_args()
@@ -482,7 +507,8 @@ def main():
     if not base:
         print("ECO_LOOP FAIL: no sign-off record in the kit")
         return 3
-    res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep)
+    res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep,
+                   repair_rc=a.repair_rc)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
         res["verdict"] = "LEC_FAIL"
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))

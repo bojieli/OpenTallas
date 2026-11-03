@@ -294,3 +294,35 @@ def test_measured_peak_floors_eco_mem(tmp_path):
     prd = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")][0]
     assert prd[4] == "33" and r["mem_gb"] == 33 and r["mem_requested_gb"] == 24 and r["kit_peak_gb"] > 21
     assert "at 33 GB docker cap" in r["iterations"][0]["reason"]
+
+class Sig11(Fake):
+    """the first prd_run dies with the FlexPA SIGSEGV (run_prd.log), the retry passes"""
+
+    def __init__(self, results):
+        super().__init__(results)
+        self.crashed = False
+
+    def __call__(self, cmd, **kw):
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh") and not self.crashed:
+            self.calls.append((cmd, kw.get("env") or {}))
+            self.crashed = True
+            Path(cmd[2], "run_prd.log").write_text("Signal 11 received\n 6# drt::FlexPA::getEdgeCost(...)\n")
+            return 2
+        return super().__call__(cmd, **kw)
+
+
+def test_flexpa_sig11_retried_once_with_placement_repair_rc(tmp_path):
+    k = kit(tmp_path)
+    f = Sig11([rec(5, 5)])
+    res = E.run_loop(k, base_rec(k, rec(-80, 2, slew=7)), tmp_path / "eco", run=f, tools=Path(E.HERE))
+    assert res["verdict"] == "PASS"
+    assert [i["status"] for i in res["iterations"]] == ["ERROR", "SIGNED"]
+    assert res["iterations"][0]["flexpa_sig11"] and res["iterations"][1]["dir"].endswith("/i1r")
+    runs = [env for cmd, env in f.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert "OT_PRD_REPAIR_RC" not in runs[0] and runs[1]["OT_PRD_REPAIR_RC"] == "placement"
+
+
+def test_non_sig11_route_failure_not_retried(tmp_path):
+    k = kit(tmp_path)
+    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=Fake([None]), tools=Path(E.HERE))
+    assert res["verdict"] == "ERROR" and len(res["iterations"]) == 1 and "repair_rc_retry" not in res
