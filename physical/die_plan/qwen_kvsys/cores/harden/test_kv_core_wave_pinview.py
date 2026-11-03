@@ -44,3 +44,13 @@ def test_view_missing_in_actual_type_fails_closed(tmp_path):
 def test_pair_uses_existing_pv_two_mode_recipe():
     assert wave.module_recipe("kv3_pv_pair") == wave.module_recipe("ot_qwen_tp8_pv_join_t")
     assert "--two-mode-grt" in wave.module_recipe("kv3_pv_pair")
+
+
+def test_view_only_in_sibling_type_uses_that_type(tmp_path):
+    """DIE-KV-61 11-02: the pv_join R0 table is planned only in kv3_pv_v*n, while the core json says kv3_pv."""
+    cj, view, plan = fixture(tmp_path, both=False)
+    view["type"] = "other"
+    assert wave.plan_slot_for_view(cj, view, plan) == ("other", "p0")
+    view["type"] = "actual"
+    with pytest.raises(SystemExit, match="has no slot in core type actual"):
+        wave.plan_slot_for_view(cj, view, plan)

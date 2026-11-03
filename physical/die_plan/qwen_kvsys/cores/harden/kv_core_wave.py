@@ -145,21 +145,30 @@ def memory_blackbox_sources(files):
     return sources, substitutions
 
 
-def plan_inst_for_view(cj, view, plan_path):
-    """Select this pin table in the core's actual type, not an alias in another type."""
+def plan_slot_for_view(cj, view, plan_path):
+    """(type, inst) of this pin table: the core's own type first (a repeated instance name in another type is not an
+    alias); when that type has no slot with this pin table, the type the view itself was found in (views: plan_views
+    'type'), e.g. a pin variant planned only in a sibling partition type (KV pv_join R0 table only in kv3_pv_v*n)."""
     plan_path = Path(plan_path)
     plan = json.loads(plan_path.read_text())
     wanted = view["view"].rsplit("@", 1)[-1]
-    matches = []
-    for c in plan.get("partition_types", {}).get(cj["type"], {}).get("hard_cores", []):
-        if c.get("module") != cj["module"] or not c.get("pins_file"):
-            continue
-        pins = plan_path.parent / c["pins_file"]
-        if pins.is_file() and sha12(pins) == wanted:
-            matches.append(c["inst"])
-    if not matches:
-        sys.exit(f"NO_RECIPE {cj['module']}: requested pin view {wanted} has no slot in core type {cj['type']}")
-    return cj.get("inst") if cj.get("inst") in matches else matches[0]
+    types = [cj["type"]] + ([view["type"]] if view.get("type") and view["type"] != cj["type"] else [])
+    for t in types:
+        matches = []
+        for c in plan.get("partition_types", {}).get(t, {}).get("hard_cores", []):
+            if c.get("module") != cj["module"] or not c.get("pins_file"):
+                continue
+            pins = plan_path.parent / c["pins_file"]
+            if pins.is_file() and sha12(pins) == wanted:
+                matches.append(c["inst"])
+        if matches:
+            return t, (cj.get("inst") if cj.get("inst") in matches else matches[0])
+    sys.exit(f"NO_RECIPE {cj['module']}: requested pin view {wanted} has no slot in core type {' or '.join(types)}")
+
+
+def plan_inst_for_view(cj, view, plan_path):
+    """Select this pin table in the core's actual type, not an alias in another type."""
+    return plan_slot_for_view(cj, view, plan_path)[1]
 
 
 def gen(a, extra):
@@ -172,6 +181,9 @@ def gen(a, extra):
     cj = json.load(open(cjp))
     if cj.get("module") != m:
         sys.exit(f"NO_RECIPE {m}: core json {cjp} is module {cj.get('module')}")
+    slot_type, inst = plan_slot_for_view(cj, e, a.plan or v["plan"])
+    if slot_type != cj["type"]:
+        cj = dict(cj, type=slot_type, inst=inst)
     repo = Path(a.repo).resolve()
     files, bad = [], []
     for f in cj["files"]:
@@ -218,7 +230,6 @@ def gen(a, extra):
             sys.exit(f"NO_RECIPE {m}: no PASS hr face proof under {','.join(a.fp_root) or '(no --fp-root)'} "
                      f"(hr_face_ports.sh; results/kv_host_regen_1/fp_core.sh {m})")
         cmd += ["--hr-face-ports", str(fp)]
-    inst = plan_inst_for_view(cj, e, a.plan or v["plan"])
     cmd += module_recipe(m) + ["--plan-inst", inst] + list(extra)
     (out / "kv_core_wave.json").write_text(json.dumps(dict(view=a.view, module=m, core_json=str(cjw), face_proof=str(
         fp) if fp else None, face_proof_sha=hashlib.sha256((fp / "hr_face_ports.json").read_bytes()).hexdigest()[:16]
