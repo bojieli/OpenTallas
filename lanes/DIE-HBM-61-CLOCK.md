@@ -1,0 +1,7 @@
+# DIE-HBM-61/CLOCK (helper of DIE-HBM-61: HBM die clock safe form + hold-safe estimate; successor of DIE-HBM-60/GRT clock part)
+- 2026-11-03 06:38 PST CLAIM+RESULT [DIE-HBM-61/CLOCK] collected DIE-HBM-60/GRT epyc2:/home/ubuntu/scratch-root/claude/die-hbm-60-grt (no relaunch of its runs; 27 partition GRT50 untouched).
+  Collected: gate_d44v_v0 (held C12e tree on d44v_v0) TT +93.69, contract 0, CA PASS, intra 153.16/seam 155.63 (W160), BLOCKED(kits) 396,182 pairs.
+  C12e kit REBUILT on d44t / d44v_v0 (main tools 65396c58159): FAIL intra 478.87/469.93 (NW_io t4-c2, 8 regions), seam 322.15 (NE_spb1->spb0), 1822/1507 contract viol.
+  CONTROL (mine, 06:23-06:35): same rebuild on the ORIGINAL d44f plan = intra 478.87 FAIL too -> the regression is tool/input drift (tree.json frozen_sites sha changed, repeaters 14113->14131, T029 imbalanced merges 71->78, spread 398->483), NOT the POR plan. The 12.25 pass rests on one held routed artifact (ctl/src/run) of a 227-stage die-wide DME tree; it is not reproducible -> not a safe form.
+  Whole-die signal+clock GRT50 on d44v_v0 (rebuilt tree obstruction, M4-M9, 369,476 nets, -congestion_iterations 50): overflow 0 (all layers, 3:45 GRT, 14 GB) = die-top GRT0 on abstracts.
+  (e) launcher ready: epyc2 die-hbm-60-grt/e61.sh <tag> <plan_dir> (ref gate on held tree + kit rebuild + TT/FF clock + proof + gate + whole-die sig GRT50). Launches the moment /PLAN posts d44v READY.
