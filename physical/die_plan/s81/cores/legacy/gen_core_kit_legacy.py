@@ -1074,6 +1074,10 @@ def multi_root_tcl_patches(kd, mr):
         rp = [("set_propagated_clock [get_clocks clk]\n", f"set_propagated_clock [get_clocks {{{real}}}]\n"),
               ("  set a [ot_pinreg_arr $p [get_clocks clk]]\n",
                f"  set a \"\"\n  foreach ot_rc [get_clocks {{{real}}}] {{ if {{$a eq \"\"}} {{ set a [ot_pinreg_arr $p $ot_rc] }} }}\n")]
+        if rp[0][0] not in t and t.count("set ot_pg_propagate [get_clocks clk]\n") == 1:
+            # postcts_gate 91538db4d1f/43e49c51f11: the primary-only profile names clk in ot_pg_propagate; a multi-root
+            # core propagates every declared real root there instead (same result as the old set_propagated_clock patch)
+            rp[0] = ("set ot_pg_propagate [get_clocks clk]\n", f"set ot_pg_propagate [get_clocks {{{real}}}]\n")
         for o, n in rp:
             assert t.count(o) == 1, f"postcts_gate.tcl anchor changed: {o.strip()}"
             t = t.replace(o, n)
