@@ -8,3 +8,4 @@ Work dir: /home/ubuntu/OpenTallas/tmp/dieqc66 (local, light only).
 
 ## CLK
 - 06:46 DIE-QC-66/CLK: collected v3 (no relaunch, still KIT 229/230 DME 06:45). ESTIMATE posted: 10251 parent entries (+181 on 50 partitions), 3180 core entries, all die-clock crossings face reg + DLL lockup (worst TT +136.8 / FF +237.0 core<->parent RE-FORM), landed = count-aligned fixed latency. claude/die-qc-66-clk-1103@2ade841c39c results/qc_die66_clk_1103/.
+- 06:52 OWNER 07:0x: RE-FORM withdrawn; ECO units re-submitted; helpers rescoped (CORES->ECO watch, PLAN->tool-failure class fix, CLK target)
