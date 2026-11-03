@@ -1,0 +1,54 @@
+{
+  "status": "PASS_FINITE_SYMBOLIC_MAPPING_CALCULATION_NOT_RTL_PROOF",
+  "states": 63,
+  "transitions": 1512,
+  "includes_warm_reset": true,
+  "includes_stale_output_when_empty": true,
+  "source_occupancy2_cases": [
+    {
+      "pop": true,
+      "push": false,
+      "pv": 0,
+      "ready_i": 1
+    },
+    {
+      "pop": true,
+      "push": false,
+      "pv": 1,
+      "ready_i": 1
+    },
+    {
+      "pop": false,
+      "push": false,
+      "pv": 1,
+      "ready_i": 0
+    },
+    {
+      "pop": false,
+      "push": false,
+      "pv": 0,
+      "ready_i": 0
+    }
+  ],
+  "occupancy2_push_excluded_by_actual_source_p_ready": true,
+  "even_pr_counterexample": {
+    "tjob": 1,
+    "R": 2,
+    "p_left": 1,
+    "pstep": 1,
+    "pr_after": 1,
+    "no_header_or_GO_pr_reset": true
+  },
+  "new_FF": {
+    "old_payload": 2048,
+    "new_payload": 1024,
+    "old_control": 4,
+    "new_control": 11,
+    "net_external_FF": -1017,
+    "new_reset_free_format_bits": 6,
+    "new_reset_free_latest_slot_bits": 1,
+    "original_wp_rp_preserved": true,
+    "reset_load_delta": 0
+  },
+  "qualified_native": false
+}

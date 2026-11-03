@@ -1,0 +1,67 @@
+2339:     wire [512:0] w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y;
+3469:     wire [2119:0] w_u_rsv_14_u_u_att_pvq_RD_DATA;
+8702:     assign w_u_rsv_14_u_u_att_742_Y = w_u_rsv_14_u_u_att_pvq_RD_DATA[2119:0];
+10034:     reg [512:0] g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q;
+10035:     assign w_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_Q = g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q;
+10036:     always @(posedge clk) g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q <= w_u_rsv_14_u_u_att_src_37314bb8933e4a98116c_Y[512:0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:540.5
+10066:     assign w_u_rsv_14_u_u_att_src_37314bb8933e4a98116c_Y = w_u_rsv_14_u_u_att_driver_dr_on_Q[0] ? w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y[512:0] : w_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_Q[512:0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:541.9-541.130|structural_full/a264cd3c5e19_dsdv_svc_att.sv:540.27-543.111
+10267:     assign w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y = w_u_rsv_14_u_u_att_src_5bbf14f4eb59b970c945_Y[0] ? {1'b1, w_u_rsv_14_u_u_att_u_pv_identity_provenance[439:0], w_u_rsv_14_u_u_att_742_Y[2119:2112], w_u_rsv_14_u_u_att_742_Y[63:0]} : {1'b0, w_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6_Y[511:0]};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:541.18-541.129
+10508:     ot_bind_native_9c28130c03bbd6a26f6fd9a5 g_u_rsv_14_u_u_att_pvq (.RD_ADDR(w_u_rsv_14_u_u_att_driver_pvr_Q[2:0]), .RD_DATA(w_u_rsv_14_u_u_att_pvq_RD_DATA), .WR_ADDR(w_u_rsv_14_u_u_att_driver_pvw_Q[2:0]), .WR_CLK(clk), .WR_DATA({w_u_rsv_14_u_u_att_u_eng_src_26cc0285b4c5b801b801_Q[7:0], w_u_rsv_14_u_u_att_u_eng_src_378b62d9249ca62f488b_Q[2047:0], w_u_rsv_14_u_u_att_u_eng_src_6870e5b5454840c8a2c3_Q[63:0]}), .WR_EN(w_u_rsv_14_u_u_att_src_8c9e9eb60b3aae42c23f_Y[2119:0]));
+
+Actual ENABLE1:
+    // as-built u_rsv_14.u.u_att.u_pv_identity
+    dsdv_pv_source_identity #(.ENABLE(1)) u_u_rsv_14_u_u_att_u_pv_identity (
+        .bad(w_u_rsv_14_u_u_att_u_pv_identity_bad),
+        .cfg_owner(w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[52:33]),
+        .cfg_v(w_u_rsv_14_u_u_att_src_42ea1cbd88ed627affc1_Y[0]),
+        .cfg_valid(w_u_rsv_14_u_src_b4e411b517a9f984ed73_Q[53]),
+        .clk(clk),
+        .launch(w_u_rsv_14_u_u_att_driver_go_Q[0]),
+        .launch_ok(w_u_rsv_14_u_u_att_src_5130ee55eaa4a82c5b5d_Y[0]),
+        .position(w_u_rsv_14_u_u_att_driver_wposition_Q[20:0]),
+        .provenance(w_u_rsv_14_u_u_att_u_pv_identity_provenance),
+        .quarter(w_u_rsv_14_u_u_att_45_Y[1:0]),
+        .rst_n(w_u_rsv_14_u_3_Y[0]),
+        .tag_id(w_u_rsv_14_u_u_att_driver_tagj_Q[7:0]),
+        .tile(w_u_rsv_14_u_12_Y[3:0]),
+        .user_id(w_u_rsv_14_u_u_att_driver_wuser_Q[9:0])
+    );
+    ot_bind_native_bee858f853329e639737636b g_u_rsv_14_u_u_att_wk (.RD_DATA(w_u_rsv_14_u_u_att_wk_RD_DATA), .WR_CLK({clk, clk}), .WR_DATA({w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1090_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0], w_u_rsv_14_u_u_att_1040_Y[0]}), .WR_EN({w_u_rsv_14_u_u_att_1099_Y[15:0], w_u_rsv_14_u_u_att_1049_Y[15:0]}));
+
+Original source capture/control:
+528:     localparam integer PVB = 8 + NT*H*32 + NT*H;
+529:     localparam integer PA = $clog2(PVQ);
+530:     reg [PVB-1:0] pvq [0:PVQ-1];
+531:     reg [PA:0] pvw, pvr;
+532:     reg [2:0] p_i;
+533:     reg [3:0] pv_n;
+534:     always @(posedge clk) if (pv_v) pvq[pvw[PA-1:0]] <= {pv_c, pv_y, pv_f};
+535:     wire [PVB-1:0] pb = pvq[pvr[PA-1:0]];
+536:     // S81-ROWX export word: 2 ROW HALVES (list entries x_k0 / x_k1), head flag on word 0 of every 5
+537:     function automatic [255:0] xhalf(input v, input [3:0] t, input [9:0] r, input [143:0] b);
+538:         xhalf = v ? {88'd0, b[127:89], 9'd0, b[88:0], b[143:128], r, t, 1'b1} : 256'd0;
+539:     endfunction
+540:     wire [9:0] x_q0 = (MUT == 6) ? x_r0 ^ 10'd1 : x_r0, x_q1 = (MUT == 6) ? x_r1 ^ 10'd1 : x_r1;
+541:     always @(posedge clk) if (dr_on)
+542:         pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
+543:         else if (RX && x_em)
+544:         pv_od <= {x5 == 3'd0, xhalf(x_v1, tile, x_q1, lrd[1][143:0]), xhalf(x_v0, tile, x_q0, lrd[0][143:0])};
+752:             // ---- P.V words: owner slices emit 5 words a beat (valid-only, never stalled)
+753:             pv_ov <= 1'b0;
+754:             if (RX && x_em) pv_ov <= 1'b1;
+755:             if (pv_v) begin
+756:                 pv_n <= pv_n + 1'b1;
+757:                 if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= 1'b0; done <= !pvown; end   // owners: at drain end
+758:             end
+759:             if (pvown) begin
+760:                 if (pv_v) begin pvw <= pvw + 1'b1; if ((PA+1)'(pvw - pvr) >= (PA+1)'(PVQ)) fc[15] <= 1'b1; end
+761:                 // compiled drain window: 8 beats x 5 words from PVO + pvs, back to back
+762:                 if (dr_arm && !go && jc == pvo + 16'(pvs)) begin dr_arm <= 1'b0; dr_on <= 1'b1; p_i <= 0; dbeat <= 0; end
+763:                 if (dr_on) begin
+764:                     pv_ov <= 1'b1;
+765:                     if (p_i == 3'd0 && pvw == pvr) fc[19] <= 1'b1;            // the beat is not produced at its slot
+766:                     p_i <= (p_i == 3'd4) ? 3'd0 : p_i + 1'b1;
+767:                     if (p_i == 3'd4) begin
+768:                         pvr <= pvr + 1'b1; dbeat <= dbeat + 1'b1;
+769:                         if (dbeat == 3'd7) begin dr_on <= 1'b0; done <= 1'b1; end
+770:                     end

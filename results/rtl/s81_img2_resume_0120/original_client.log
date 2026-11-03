@@ -1,0 +1,6 @@
+ot-run: intel1         admits    18 GB (avail 266, reserve 0, fresh 93.6, peak 90.5, headroom 0, waiters 135/3344 GB) load 179/112 running 66 disk 320 GB 
+ot-run: -> intel1 (will queue: admits 18 GB < 80 GB)
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 80 = 56 GB, admissible 25 GB: available 263 GB, growth charged 87 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 87 GB at x1), young 63 GB, floor 50 GB; invariant: committed 919 GB (in use 744, other 221, units max(now, peak) 611, + reserve 0 + fresh 87) vs physical - 64 = 943 GB -> headroom 25 GB
+ot-heavy: admitted on key-cardinal as oth-ubuntu-369048-1793572765 after 2248 s
+ot-heavy: MEMCG-OOM on key-cardinal at 2026-11-02T00:42:46-0800: 1 process(es) of unit oth-ubuntu-369048-1793572765 killed at the scope's own MemoryMax (85899345920 B, peak 80.0 GiB); job exit 143: raise --mem or lower -j
+ot-run: RAN on intel1 (unit oth-ubuntu-369048-1793572765): exit 143

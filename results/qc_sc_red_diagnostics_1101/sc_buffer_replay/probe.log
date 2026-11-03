@@ -1,0 +1,69 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+SC_NATIVE_FASTROUTE_CLOCK_PREFLIGHT native=2390 db=2390 same_set=1 expected=2390 no_timing_analysis
+OT_PG_BOUND sc_probe_pre pg_terms=751910 open=0
+SC_ROUTE_ONLY_DECK signal=M2-M5 clock=M4-M5 adjustment=0.25 iterations=50 clocks=2390 no_allow_congestion no_timing
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 129882
+[INFO GRT-0019] Found 2390 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 43
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    5094833       3623817          28.87%
+M3         Vertical      5847558       4343932          25.71%
+M4         Horizontal    4512454       3354286          25.67%
+M5         Vertical      4319229       3201737          25.87%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50
+[INFO GRT-0197] Via related to pin nodes: 1663166
+[INFO GRT-0198] Via related Steiner nodes: 38034
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 2117286
+[INFO GRT-0112] Final usage 3D: 9097329
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             3623817        967215           26.69%             0 /  0 /  0
+M3             4343932       1485116           34.19%             0 /  0 /  0
+M4             3354286         99163            2.96%             0 /  0 /  0
+M5             3201737        193977            6.06%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         14523772       2745471           18.90%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 1979343 um
+[INFO GRT-0014] Routed nets: 370320
+[INFO GRT-0303] Global routing runtime = 00:00:52
+SC_ROUTE_ONLY_SOURCE_GUARD_PASS all_cell_masters_poses_flags_all_connectivity_public_pins
+SC_CLOCK_GUIDE_LAYER_CENSUS layers=M1 45631 M2 84655 M3 36078 M4 7221 M5 2983 lower_terminal_access=45631 lower_unclassified=120733 above_ceiling=0
+Error: probe.tcl, 34 couldn't read file "/work/clk_freeze.tcl": no such file or directory

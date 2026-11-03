@@ -1,0 +1,214 @@
+FILE att.sv LINES 245..260
+245:       .clk(clk),.rst_n(rst_n),.cfg_v(hdr_mine && h_type==4'd12),.cfg_owner(q_d[52:33]),.cfg_valid(q_d[53]),
+246:       .launch(go),.launch_ok(job_open && !job_active && !run && !dr_arm && !dr_on),.user_id(wuser),.tag_id(tagj),.quarter(pv_owner_quarter),.tile(tile),.position(wposition),
+247:       .provenance(pv_provenance),.bad(pv_identity_bad));
+248:     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
+249:     wire start = hdr_mine && h_type == 4'd2;
+250:     wire [9:0] tjob = 10'(wcount) + nsel;
+251:     always @(posedge clk or negedge rst_n)
+252:         if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wposition <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
+253:         else begin
+254:             if (hdr_mine && h_type == 4'd12) begin wb <= q_d[29:0]; if (q_d[32]) st_r <= q_d[31:30]; end
+255:             if (start && !job_open) begin
+256:                 sb <= q_d[29:0]; wcount <= q_d[88:81]; nsel <= q_d[98:89]; wfirst <= q_d[119:99];
+257:                 wuser <= q_d[458:449]; tagj <= q_d[502:495];wposition<=q_d[479:459];
+258:             end
+259:         end
+260:     always @(posedge clk) tjob_o <= tjob;
+
+FILE att.sv LINES 389..394
+389:     end
+390: 
+391:     // ------------------------------------------------------------------ landing (slot-addressed: no overflow)
+392:     reg [255:0] land [0:TR-1];
+393:     reg [TR-1:0] pres;
+394:     reg [1023:0] wsc;                                // window scales, 128 slots x 8
+
+FILE att.sv LINES 413..418
+413:     wire rw_v = rows_mine || rk_v;
+414:     wire [9:0] rw_slot = 10'(wcount) + (rk_v ? rk_rank : q_d[9:0]);
+415:     wire [143:0] rw_bits = rk_v ? rk_bits : rows_bits;
+416: 
+417:     // ------------------------------------------------------------------ q store
+418:     reg [D*16-1:0] qmem [0:H-1];
+
+FILE att.sv LINES 453..503
+453:     wire [511:0] x_hm = (MUT == 8) ? sel_held : x_own;
+454:     wire x_ov0 = x_o0 < 11'(nsel) && x_hm[x_o0[8:0]], x_ov1 = x_o1 < 11'(nsel) && x_hm[x_o1[8:0]];
+455:     wire x_v0 = RX && x_em && (x_ro ? x_ov0 : 9'(x_k0) < 9'(x_n)), x_v1 = RX && x_em && (x_ro ? x_ov1 : 9'(x_k1) < 9'(x_n));
+456:     wire [9:0] x_r0 = x_ro ? x_o0[9:0] : x_rk[x_k0[XW-1:0]], x_r1 = x_ro ? x_o1[9:0] : x_rk[x_k1[XW-1:0]];
+457:     wire [9:0] x_s0 = 10'(wcount) + x_r0, x_s1 = 10'(wcount) + x_r1;
+458:     // the land row read ports 0 / 1 are shared with the export (the engine program never runs during an export:
+459:     // fault 25 / 27), so the export adds no landing read port
+460:     reg [255:0] lrd [0:NL-1];
+461:     integer j;
+462:     integer row; reg need, ok;
+463:     always @(*) begin
+464:         kc_w = '0; kc_m = '0; rel_bad = '0; row = 0; need = 1'b0; ok = 1'b0;
+465:         for (j = 0; j < NL; j = j + 1) begin
+466:             row = 4 * (32'(rc) - 1) + j;
+467:             lrd[j] = land[(RX && x_em && j == 0) ? 32'(x_s0) : (RX && x_em && j == 1) ? 32'(x_s1) : row];
+468:         end
+469:         for (j = 0; j < NL; j = j + 1) begin
+470:             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
+471:             if (row < 32'(tjob)) begin
+472:                 kc_m[j] = 1'b1;
+473: `ifdef OT_SVC_ALLQ
+474:                 need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r || allq_r;
+475: `else
+476:                 need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
+477: `endif
+478:                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
+479:                 kc_w[265*j +: 265] = rowword(row, lrd[j], wsc, wcount, wfirst, need);
+480:                 rel_bad[j] = need && !ok;
+481:             end
+482:         end
+483:     end
+484: 
+485:     // ------------------------------------------------------------------ p FIFO (stored in all; used by quarter ST)
+486:     reg [TD*16-1:0] pmem [0:PFIFO-1];
+487:     reg [PFW:0] pw, pr;
+488:     wire [PFW:0] pcnt = pw - pr;
+489:     reg [15:0] p_left;
+490:     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
+491: `ifdef OT_SVC_ALLQ
+492:     wire pvown = tile[3:2] == st_r || allq_r;
+493: `else
+494:     wire pvown = tile[3:2] == st_r;
+495: `endif
+496:     wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
+497:     wire ep_ready;
+498: `ifdef RTLGAP_MUT_ALLQ_NOP
+499:     // RTL MUTANT (bench only): ALLQ drains every slice, but P stays gated to quarter ST -> 12 tiles of zero P.V
+500:     wire [2*TD*16-1:0] ep_w = (tile[3:2] == st_r) ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
+501: `else
+502:     wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
+503: `endif
+
+FILE att.sv LINES 548..576
+548:     always @(posedge clk) begin
+549:         // write FIFO pushes
+550:         for (k = 0; k < 3; k = k + 1) if (wpush[k]) wq[k][wpush_pc[k]][wq_w[k][wpush_pc[k]][2:0]] <= wpush_d[k];
+551:         // q store
+552:         if (q_word) qmem[{f_hdr[448], f_idx[6:4]}] <= q_d;
+553:         // p store
+554:         if (pay_mine && f_type == 4'd5) pmem[pw[PFW-1:0]] <= q_d;
+555:         // landing writes: PC responses, ROWS
+556:         for (k = 0; k < 2; k = k + 1) if (qrv[k]) begin
+557:             reg [16:0] tg; reg [11:0] o144; reg [511:0] two; reg [9:0] slot;
+558:             tg = qr_tag[17*k +: 17];
+559:             case (tg[16:15])
+560:                 2'd0: land[tg[7:0]] <= qr_data[256*k +: 256];
+561:                 2'd1: wsc[256 * {tg[1], tg[0]} +: 256] <= qr_data[256*k +: 256];
+562:                 2'd2: begin
+563:                     o144 = 12'(tg[13:10]) * 12'd144;
+564:                     two = {qr_data[256*k +: 256], hold[k]};
+565:                     slot = 10'(wcount) + tg[9:0];
+566:                     if (32'(o144[7:0]) + 144 <= 256 && qr_beat[4*k +: 4] == 4'd0)
+567:                         land[slot] <= {112'd0, 144'(qr_data[256*k +: 256] >> o144[7:0])};
+568:                     else if (qr_beat[4*k +: 4] == 4'd1)
+569:                         land[slot] <= {112'd0, 144'(two >> o144[7:0])};
+570:                     if (qr_beat[4*k +: 4] == 4'd0) hold[k] <= qr_data[256*k +: 256];
+571:                 end
+572:                 default: ;
+573:             endcase
+574:         end
+575:         if (rw_v) land[rw_slot] <= {112'd0, rw_bits};
+576:         // S81-ROWX held list: every row this die / stack holds, in the scanner's rank order
+
+FILE att.sv LINES 582..586
+582:         // engine program inputs
+583:         eq_w <= qmem[4'(rc - 10'd1)];
+584:         ekv_w <= kc_w; ekv_m <= kc_m;
+585:         // PC request flops
+586:         for (k = 0; k < 2; k = k + 1) qrq[341*k +: 341] <= nv[k] ? nreq[k] : '0;
+
+FILE att.sv LINES 598..603
+598:             x_last <= 0; x5 <= 0; x_ro <= 0; x_ovf <= 0; x_np <= 0; x_xp <= 0; x_t <= 0; x_wb <= 0; x_own <= 0;
+599:             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
+600:             po <= 0; pvo <= 0; pio <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
+601:             ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0;
+602:             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
+603:             hcr <= 0; hack <= 0; iss_host <= 0; fc <= 0;
+
+FILE att.sv LINES 667..676
+667:                 if (job_open) fc[6] <= 1'b1;                                  // a job while one is open
+668:                 if (h_len != 0 || q_d[88:81] > 8'd128 || q_d[98:89] > 10'd512) fc[7] <= 1'b1;
+669:                 job_open <= 1'b1; done <= 1'b0; pres <= 0; spres <= 0; q_have <= 0;
+670:                 if (RX) begin x_n <= 0; x_ovf <= 1'b0; if (x_arm || x_on) fc[25] <= 1'b1; end
+671:                 wr_r[0] <= 8'(q_d[99] ^ 1'b0); wr_r[1] <= 8'(q_d[99] ^ 1'b1);
+672:                 wr_on[0] <= 32'(q_d[99]) < 32'(q_d[88:81]); wr_on[1] <= 32'(!q_d[99]) < 32'(q_d[88:81]);
+673:                 sc_n[0] <= 2'd2; sc_n[1] <= 2'd2;
+674:             end
+675:             if (q_word && !start) q_have <= q_have + 1'b1;
+676:             // ---- S81-ROWX export job (type 11): ROWX + gd = share-aligned start, words at XO + pvs + 1 + i
+
+FILE att.sv LINES 724..750
+724:             ej_v <= 1'b0; eq_v <= 1'b0; ekv_v <= 1'b0;
+725:             if (go) begin
+726:                 run <= 1'b1; rc <= 10'd1; ej_v <= 1'b1; job_active <= 1'b1; pv_n <= 0;
+727:                 if (dr_arm || dr_on) fc[22] <= 1'b1;                          // a start while P.V of the last job drains
+728:                 dr_arm <= pvown;
+729:                 if(pv_identity_bad) fc[23]<=1'b1;
+730:                 p_left <= (16'(tjob) + 16'(R) - 1) / 16'(R);
+731:                 if (q_have != 5'd16) fc[9] <= 1'b1;                           // q not loaded at the compiled start
+732:             end else if (run) begin
+733:                 eq_v <= rc <= 10'd16;
+734:                 ekv_v <= rc <= nbeat;
+735:                 if (rc <= nbeat && |rel_bad) fc[10] <= 1'b1;                  // a row not landed at its release cycle
+736:                 if (rc >= 10'd16 && rc >= nbeat) run <= 1'b0;
+737:                 rc <= rc + 1'b1;
+738:             end
+739:             if (ej_v && !ej_ready) fc[11] <= 1'b1;
+740:             if (eq_v && !eq_ready) fc[12] <= 1'b1;
+741:             if (ekv_v && !kv_ready) fc[13] <= 1'b1;
+742:             // ---- p feed (local: P.V is not cross-slice aligned)
+743:             if (pay_mine && f_type == 4'd5) begin pw <= pw + 1'b1; if (pcnt >= (PFW+1)'(PFIFO)) fc[14] <= 1'b1; end
+744:             // ---- static p feed: the step is taken at its compiled cycle whatever the engine says; a refusal is a fault
+745:             jc <= go ? 16'd1 : (jc == 16'hffff ? jc : jc + 1'b1);
+746:             if (ep_v) begin
+747:                 pr <= pr + (PFW+1)'(pstep); p_left <= p_left - 16'(pstep);
+748:                 if (pcnt < (PFW+1)'(pstep)) fc[20] <= 1'b1;                   // p words not landed at the step's cycle
+749:                 if (!ep_ready) fc[21] <= 1'b1;                                // the engine did not take the compiled step
+750:             end
+
+FILE engine.sv LINES 430..468
+430:     assign job_ready = !act;
+431:     wire job_go = job_v && job_ready;
+432:     // p words: a new block needs a free bank and at most 3 blocks between the issuing and the loading one
+433:     wire p_ready_i = p_side && (pl_blk < nblk_p) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + LA)));
+434:     // REPL: a 2-entry skid between the p port and the loader, so p_ready and q_ready come from registers
+435:     // only (no p_v -> q_ready path); a p word reaches the loader one cycle after its handshake
+436:     wire p_v_i;
+437:     wire [PWORDS*TD*16-1:0] p_w_i;
+438:     generate if (REPL != 0) begin : g_pskid
+439:         // two fixed slots: a push writes slot wp, the loader reads slot rp; a pop only moves rp (no wide mux enable
+440:         // behind the loader's accept logic)
+441:         reg [1:0] sk_n;
+442:         reg       wp, rp;
+443:         reg [PWORDS*TD*16-1:0] sk0, sk1;
+444:         wire push = p_v && p_ready, pop = p_v_i && p_ready_i;
+445:         assign p_ready = (sk_n != 2'd2);
+446:         assign p_v_i = (sk_n != 2'd0);
+447:         assign p_w_i = rp ? sk1 : sk0;
+448:         always @(posedge clk or negedge rst_n) begin
+449:             if (!rst_n) begin sk_n <= 2'd0; wp <= 1'b0; rp <= 1'b0; end
+450:             else begin
+451:                 sk_n <= sk_n + (push ? 2'd1 : 2'd0) - (pop ? 2'd1 : 2'd0);
+452:                 if (push) wp <= !wp;
+453:                 if (pop) rp <= !rp;
+454:             end
+455:         end
+456:         always @(posedge clk) begin
+457:             if (push && !wp) sk0 <= p_w;
+458:             if (push && wp) sk1 <= p_w;
+459:         end
+460:     end else begin : g_pdirect
+461:         assign p_ready = p_ready_i;
+462:         assign p_v_i = p_v;
+463:         assign p_w_i = p_w;
+464:     end endgenerate
+465:     wire p_go = p_v_i && p_ready_i;
+466:     wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
+467:     wire p_w2v = (PWORDS > 1) && ({8'd0, pl_word} + 1 < words_blk);   // second word of the pair is live
+468:     assign q_ready = act && (q_cnt < H) && ((q_cnt != 0) || q_bank_ok) && !((ILV != 0) && p_go);

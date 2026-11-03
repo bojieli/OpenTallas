@@ -1,0 +1,23 @@
+{
+  "top": "ot_hgi_sfu_core_split3__ctl",
+  "source13_frozen_native": true,
+  "files": [
+    {
+      "file": "results/hbm_ctl_native_intake_0440/closure_ot_hgi_sfu_core_split3__ctl.sv",
+      "sha256": "ff736f49006105d4f4cfd092302867f0615d045aafc19277b804e5dd47f52482"
+    }
+  ],
+  "clock_ports": [
+    "clk"
+  ],
+  "reset_ports": [
+    "rst_n",
+    "u_core_u_rst__rst_n"
+  ],
+  "native_capacity": {},
+  "conditional_formal_reset_edges": 4,
+  "release_eligible": false,
+  "pins_sha256": "787ff4e731f6c9047641bfcd1b84faa05c684f4bee1818ce383fd17f34f6e886",
+  "plan_sha256": "f012707cc60524703412438d4b270a4fbd90926c78282b0881331762b7ea573d",
+  "planned_core_macros_sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+}

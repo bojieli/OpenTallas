@@ -1,0 +1,66 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/3_place.odb
+read_sdc -mode ss /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/3_place.sdc
+read_sdc -mode ff /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/3_place.sdc
+source /work/setRC_rcx.tcl
+source /work/guard_before.tcl
+OT_FCAP: dont_touch lifted for CTS on 0 flops
+Took 18 seconds: source /work/guard_before.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
+OT_CORE_INFRA_CTS leaf-complete plan tree: 34225 register clock pins on planned dont_touch nets; TritonCTS not run
+Took 5 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
+estimate_parasitics -placement
+Took 20 seconds: estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 71738.27 um^2
+[INFO DPL-0007] Movable instances area: 0.00 um^2
+[INFO DPL-0008] Fixed instances area within core: 29090.56 um^2
+[INFO DPL-0009] Utilization: 40.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 232619 cells
+[INFO DPL-0500] Runtime: 2.22s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL          620236.1 u
+legalized HPWL         620236.1 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Took 14 seconds: estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 29091 um^2 41% utilization.
+source /work/guard_after.tcl
+RED_CTS_FIXED_IDENTITY_PASS all_original_cells_poses_graph_flags
+Took 28 seconds: source /work/guard_after.tcl
+write_db /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/4_1_cts.odb
+write_sdc -no_timestamp /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/4_cts.sdc
+Elapsed time: 4:55.75[h:]min:sec. CPU time: user 314.19 sys 11.77 (110%). Peak memory: 4398084KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb          295           4295 798be0cb57c73472c708
+cp /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/4_1_cts.odb /work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/4_cts.odb

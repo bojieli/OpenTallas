@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.native-pg-grt-adapter.v1",
+ "status": "STAGED_NOT_RUN",
+ "config_before_sha256": "c9d435be1857ad570c27c32c8103488431e44318101358792e5e83405139a9b8",
+ "config_after_sha256": "917f33cf52c14c0d6858800eb96fa870b80bec4e68625827746f8be963934e7f",
+ "original_hooks": {
+  "PRE_GLOBAL_ROUTE_TCL": {
+   "path": "/work/grt_pre_reviewed.tcl",
+   "sha256": "b7708acbc6baca464e7d3f9bffdd824f3812b4ce6f67fd728c33a7f83ec9c2c6"
+  },
+  "POST_GLOBAL_ROUTE_TCL": {
+   "path": "/work/grt_post_reviewed.tcl",
+   "sha256": "e0bbb864586337e98b50113f6ddfba1f8564d20a6e58a85d0889d4d9eb925f47"
+  }
+ },
+ "original_helper_sha256": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8",
+ "files": {
+  "nativepgbirth.so": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+  "native_pg_birth_pre.tcl": "5d53c5bc8ee8670284c218a0d760d32cfbdc4f3f6b5f2904ff400d8552177d1d",
+  "native_pg_birth_post.tcl": "2c22f4b9d55ff4c67d7d5f3e764bcfb74238ea4b7d484959529f28a8b075a21a",
+  "native_pg_binding.tcl": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+  "native_pg_birth_global_route.tcl": "e4f4afa5a91f9e8f6473efe6d91d5444ffb112607004ae9daa23b2906d58096b",
+  "native_pg_birth_wrap_runtime.py": "ae005c4468cfdc429aaa8824ad1bfc221816f09e2694256c2689aba4a8b83781"
+ },
+ "required_driver": "/work/native_pg_birth_global_route.tcl",
+ "required_env": {
+  "OT_PG_STRICT": "1"
+ },
+ "runtime_prepare": "After MM patch, inside own container: python3 -I /work/native_pg_birth_wrap_runtime.py /OpenROAD-flow-scripts/flow/scripts --driver /work/native_pg_birth_global_route.tcl",
+ "dispatch_ready": false,
+ "scope": "Opt-in fresh-copy GRT/MM process only; no CTS/detail-route/child-process coverage claim",
+ "source_rtl_changed": false,
+ "original_provenance_overwritten": false,
+ "physical_release": false
+}

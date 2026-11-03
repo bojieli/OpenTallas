@@ -1,0 +1,13 @@
+{
+  "status": "LOOKED_PASS_FP_ONLY",
+  "image": "actual_native_FP_review.png",
+  "image_sha256": "97f71ce7b3a781921632a393019e3824ed08fb70524cc17eb1229c8410fca27b",
+  "findings": [
+    "Actual496rows span corrected compact core; no macros or internal macro walls.",
+    "NativeVDD/VSS grid metal appears regular through the actual216x138.24 footprint; final connectivity/IR not asserted.",
+    "All69signalbits/70rectangles contained; bothx31M5shapes retained and overlapping36nm insideoneBPin, none above138.24.",
+    "Source IO clusters remain N-left/S-right/Wclock-reset; no new pin coordinates, FF, data cycles or clock contract.",
+    "This is floorplan only; current placement, routed signal/clock/PG and timing qualification remain unmeasured."
+  ],
+  "PLACE": "PREP_ONLY_NO_DISPATCH"
+}

@@ -1,0 +1,21 @@
+{
+  "status": "EXISTING_PREP_ONLY_NAMESPACE_INPUT_NOT_MISSION_PROFILE",
+  "receipt_commit": "4ba6f3753",
+  "native_image_join_sha256": "63914e5e906172aabd80c09426b6d74dc687bafed100aabb574b85c82a60fe3d",
+  "host": "intel1",
+  "alias_directory": "/srv/opentallas-scratch2/claude/codex-ds-bf-selectors-2200/romdir_bf_candidate",
+  "existing_regular_aliases": 11100,
+  "BF_aliases": 912,
+  "total_aliases": 12012,
+  "native_image_source": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/down_cap_safe_fields_1131",
+  "frames": 72,
+  "actual_original_wrappers": {
+    "fronts": 228,
+    "columns": 456
+  },
+  "gate": "Two actual frames,28images,252nativeword reads,full/tail/router classes,wrongframecontrol caught",
+  "active_ROM_directory_changed": false,
+  "actual_coherent_binary_using_input": false,
+  "all_BF_phase_descriptors_still_OFF": true,
+  "required": "Select truthful fresh source/profile/namespace event; do not infer programme availability or source epochs from image aliases"
+}

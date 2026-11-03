@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.kw_stage_resume.v1",
+  "decision": "full",
+  "start": "synth",
+  "reuse": [],
+  "why": "synth inputs changed: file io.tcl",
+  "changed": [
+    [
+      "synth",
+      "file",
+      "io.tcl"
+    ]
+  ],
+  "fingerprints": {
+    "new": {
+      "synth": "7b97e40cd072647cf3d394f58b5f47e59d9a68d7f60a91da8fc456b3f3c2255e",
+      "floorplan": "63c78e0d1a2b7e004782015a269c6a324356b563a41689fa59375f86f8bc0c20",
+      "place": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "grt": "324ebb44211aa425fdfc1efaa5a8fb49d4a469fb3f2691333451eb6e25132b00",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "ec563808311c3a39b5c2ff495e919a153f452d33be4262c26589d1837867d490"
+    },
+    "old": {
+      "synth": "3454d5fe18478e66c0639e08549feb37253235864da8ec96ebffe91f001df4d9",
+      "floorplan": "63c78e0d1a2b7e004782015a269c6a324356b563a41689fa59375f86f8bc0c20",
+      "place": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "cts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "grt": "324ebb44211aa425fdfc1efaa5a8fb49d4a469fb3f2691333451eb6e25132b00",
+      "route": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "gate": "ec563808311c3a39b5c2ff495e919a153f452d33be4262c26589d1837867d490"
+    }
+  },
+  "start_fingerprint": "synth",
+  "start_checkpoint": "cts"
+}

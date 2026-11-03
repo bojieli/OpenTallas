@@ -1,0 +1,15 @@
+{
+  "classification": "PRIVATE_CANARY_INPUT_BUNDLE_NOT_KW_RESUME_OVERRIDE",
+  "bundle_digest": "f905309fa82b5a0ec5f80b389a8fd7f20944ba7309e56ac04203d3f49cc7ee97",
+  "parts": {
+    "CANARY_INPUTS.json": "d235dcd8c3d396e41ad9fa8e0e5cd4559c01f3d44322d102cc295a138f907814",
+    "PLACE_EXPECTED.json": "ae2336f7e0051de86dd3f113c549cffe3366757b08d82d080994e18b7ea1dc89",
+    "NORMAL_SCRIPT_READSET.json": "706483ca3285df6fab6e47b9570a8071a6570d0baee2255d0ca0c2a968c31b75",
+    "ACTUAL_IO_BRANCH.json": "0736480b9d26cdbcda6711c8ae13578411982fefe54c37e893a1a84eed4b1b96"
+  },
+  "normal_KW_RESUME": "FULL unchanged",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "OT_PG_STRICT": "original manual121 UNSET",
+  "scope": "ONE private ordinary PLACE canary only; stop before CTS/GRT/route/STA; no production GPL admission",
+  "native_GPL_qualification_before_run": false
+}

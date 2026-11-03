@@ -1,0 +1,170 @@
+{
+  "status": "PREPARED_ACTUAL_BF_OPERAND_AND_SELECTED_XS_IMAGES_NOT_RUN",
+  "base": "/srv/opentallas-scratch2/claude/codex-ds-native-ring-0140/retry3_early_preload/programme/advance1",
+  "out": "/srv/opentallas-scratch2/claude/codex-ds-bf-source-bridge-0442/current_actual_BF",
+  "source": "/srv/opentallas-scratch2/claude/codex-ds-bf-1131/fixture/ops/attn.normalize.unrope.bin",
+  "source_sha256": "fa2e57f924e4e51c0fa5d3119b5f12b4a254e7b4b9653431bf3b71e8b6cf5a08",
+  "source_shape": [
+    64,
+    512
+  ],
+  "source_note": "o after the inverse RoPE (the wo_a operand)",
+  "source_group": 0,
+  "source_group_count": 8,
+  "K": 4096,
+  "phase": 106,
+  "measured_kseg": [
+    0,
+    1024
+  ],
+  "first1024_FP32_words_equal_retained_native_vector": true,
+  "BF16_rule": "FP32 round-to-nearest-even, integer bits+0x7fff+LSB, finite checkpoint",
+  "BF_gather_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+  ],
+  "BF_payload_fragments_changed": 256,
+  "Q_fragments_and_all_control_GO_CFG_calendar_dates_changed": false,
+  "wrong_norm_source_BF16_words": 4094,
+  "selected_XS_selector": "u_s_0S.u_sl.u_xg",
+  "selected_XS_aliases": 7,
+  "native_BF_partial_gold": [
+    {
+      "row": 0,
+      "segment": 0,
+      "fp32_bits": "bb801a5a"
+    },
+    {
+      "row": 1,
+      "segment": 0,
+      "fp32_bits": "bcac1a54"
+    },
+    {
+      "row": 2,
+      "segment": 0,
+      "fp32_bits": "3c9fbb8a"
+    },
+    {
+      "row": 3,
+      "segment": 0,
+      "fp32_bits": "3c96192a"
+    },
+    {
+      "row": 4,
+      "segment": 0,
+      "fp32_bits": "3d0c8c04"
+    },
+    {
+      "row": 5,
+      "segment": 0,
+      "fp32_bits": "bc4ea1c4"
+    }
+  ],
+  "arithmetic_consumer_executed": false,
+  "same_binary_executed": false,
+  "full_mission_programme_qualified": false,
+  "fresh_source_epoch_qualified": false,
+  "native_provider_qualified": false,
+  "physical_clock_sampling_qualified": false,
+  "superseded_full_accumulated_gold": [
+    {
+      "row": 0,
+      "source_row": 0,
+      "fp32_bits": "3bca1294",
+      "bf16_bits": "3bca"
+    },
+    {
+      "row": 1,
+      "source_row": 1,
+      "fp32_bits": "3c1cbe70",
+      "bf16_bits": "3c1d"
+    },
+    {
+      "row": 2,
+      "source_row": 2,
+      "fp32_bits": "3d36c243",
+      "bf16_bits": "3d37"
+    },
+    {
+      "row": 3,
+      "source_row": 3,
+      "fp32_bits": "bc0f2476",
+      "bf16_bits": "bc0f"
+    },
+    {
+      "row": 4,
+      "source_row": 4,
+      "fp32_bits": "3d44762a",
+      "bf16_bits": "3d44"
+    },
+    {
+      "row": 5,
+      "source_row": 5,
+      "fp32_bits": "3cab0df0",
+      "bf16_bits": "3cab"
+    }
+  ],
+  "oracle_correction": "Original acc fields are full four-segment accumulation; vals[0] supplies segment0 partial. Corrected before new BF execution."
+}

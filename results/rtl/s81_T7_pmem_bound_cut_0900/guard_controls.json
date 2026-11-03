@@ -1,0 +1,14 @@
+{
+  "wrong_body": {
+    "status": "CAUGHT",
+    "reason": "native parent body hash"
+  },
+  "wrong_port": {
+    "status": "CAUGHT",
+    "reason": "native memory port identity"
+  },
+  "missing_consumer": {
+    "status": "CAUGHT",
+    "reason": "native payload consumer count"
+  }
+}

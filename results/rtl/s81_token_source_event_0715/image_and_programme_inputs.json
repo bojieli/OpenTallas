@@ -1,0 +1,31 @@
+{
+  "BF_images": {
+    "existing_host": "intel1",
+    "existing_dir": "/srv/opentallas-scratch2/claude/codex-ds-bf-selectors-2200/romdir_bf_candidate",
+    "regular": 11100,
+    "BF": 912,
+    "total_aliases": 12012,
+    "native_field_count": 72,
+    "source_gate": "4ba6f3753"
+  },
+  "XS_programmes": {
+    "required_selectors": 16,
+    "XS4_selectors": 14,
+    "legacy_selectors": 2,
+    "required_prefixed_images": 112,
+    "current_mission_images_available": 0,
+    "existing_old_assets_scope": "two partial u_s0S programmes only; no cloning authority",
+    "selected_component_images": 7,
+    "selected_component_gate": "b70e77239 phase106 only, independent partial/date gate",
+    "fullmission_qualified": false
+  },
+  "BF_programmes": {
+    "default_descriptor_count0_phases": 1800,
+    "selected_phase106_overlay": "2ed5e1d18",
+    "real_phase106_source_native_gate": "b70e77239",
+    "mission_availability_qualified": false
+  },
+  "real_source_epoch_qualified": false,
+  "native_provider_qualified": false,
+  "physical_clock_sampling_qualified": false
+}

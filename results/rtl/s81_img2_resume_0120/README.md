@@ -1,0 +1,7 @@
+# IMG2 terminal OOM and serial continuation
+
+Collected the actual Intel1 IMG2 terminal failure at00:42:45: original80GiB/J10 unit369048-1793572765 MEMCG-OOM, exit143, after9h25m58s. `status` still says BUILD_START; the process is gone and build.err ends Terminated. Exact client failure retained here. Completed libraries are378 of395 generated hierarchy archive targets, NOT378 of379; sixteen service and one slice-leaf masters remain. The133GB cache, existing generated inputs, source and failed logs are preserved.
+
+One continuation `run.sh` uses the same existing hierarchy at J1/64GiB, admitted through ot-run. It resumes make targets, generates only pending dependencies, then builds the top and invokes the unchanged native run sequence. No RTL/source/ROM/cohort modification, no build restart or cache deletion. This directly removes the simultaneous ten-frontends failure mode; the earlier portable no-hcore-boundary96GiB failure is a distinct historical vehicle, not this continuation. The serial run is not yet a PASS. Monitor own remote `/srv/opentallas-scratch2/claude/codex-ds-img2-serial-0120/{status,resume_make.log,resume_make.err}` and Intel2 `/srv/opentallas-scratch2/claude/tok-ds-2/codex-img2-serial-0120.client.log`. No arbitrary timeout.
+
+Separate V1c3 has actually been active since21:10 after7304s wait, Epyc2 unit182056-1793588951,319 completed libs when collected. Its root-disk exception was inherited, not extended here. No duplicate/restart or source touch.

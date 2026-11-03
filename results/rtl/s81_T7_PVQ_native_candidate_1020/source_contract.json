@@ -1,0 +1,49 @@
+{
+  "status": "DISABLED_COMPONENT_CANDIDATE_NOT_ADOPTED",
+  "baseline_parent_sha256": "61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a",
+  "baseline_att_source_sha256": "107c4addac40494f621b463ca40a58bb47e560acddfc8d261aa1fe60c1ae5a88",
+  "native_helper_sha256": "cb7cc6f9d5c4c21ca697ba7cb0b6e6fc3e53f1030e82afa8b32483988f910a36",
+  "cut": {
+    "rows": 8,
+    "width": 2120,
+    "read": "asynchronous before original reset-free 513b pv_od capture",
+    "write": "2120 independent bit masks, same-edge read OLD",
+    "word_kinds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "control": "original queue/ready/drain/fault/pointers remain outside data cut and unchanged; no integrated queue claim"
+  },
+  "candidate": {
+    "masters": 34,
+    "master": "ot_sram_1r1w_32x64_m1",
+    "external_ff_before": 513,
+    "external_ff_after": 51,
+    "external_ff_delta": -462,
+    "reset_load_delta": 0,
+    "macro_clock_delta": 34,
+    "cycle_delta": 0,
+    "dynamic_provenance_bits": 48,
+    "literal_zero_provenance_bits": 392,
+    "capture": "READ-time header only; hold across idle/warm reset"
+  },
+  "proof_limits": [
+    "two-state zero startup finite vehicle",
+    "no all-init formal proof",
+    "no production queue integration",
+    "no physical timing/fit",
+    "no provider or mission epochs"
+  ],
+  "source_sha256": {
+    "candidate.sv": "bf871bfd20ee57dca8daa944f56946488a2247d491511e25bcdc62b646bd1b63",
+    "native_capture.sv": "912aa1d36405970bd30449be7a9a101614977ba806cd177063a616c312528daa",
+    "sram.v": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+    "wrong_sram.v": "58acc502af0ebfa4185fc344aecc0320de99d839bf0487922320e654110e56ea",
+    "tb.sv": "fe0c56e21b6d6dc1435be7f152412ffd0aa03e1251335d122b474f03396ebd08",
+    "identity.sv": "3bd7bc8bc42e37b164c4802ed301aaf0afccba0831270b3d3df2fff9d0ab65a4",
+    "native_memory.sv": "cb7cc6f9d5c4c21ca697ba7cb0b6e6fc3e53f1030e82afa8b32483988f910a36"
+  }
+}

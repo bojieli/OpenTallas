@@ -1,0 +1,56 @@
+{
+ "status": "NATIVE_SOURCE_SYNTH_PASS_FACE_FAIL_OFFICIAL_NATIVE4_NOT_EQ2",
+ "source_commit": "552b15ed84a",
+ "GEN": {
+  "pins": 2288,
+  "clocks": 1,
+  "SRAMs": 4,
+  "face_shell": null
+ },
+ "SYNTH": {
+  "total_cells": 21992,
+  "stdcells": 21988,
+  "SRAMs": 4,
+  "total_area_um2": 56917.4,
+  "soft_area_um2": 3623.57
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "checked": 2286,
+  "ok": 2284,
+  "fails": {
+   "fault_cause[3]": "_32339_ TIELOx1_ASAP7_75t_R",
+   "fault_cause[4]": "_32339_ TIELOx1_ASAP7_75t_R"
+  }
+ },
+ "native4": {
+  "verdict": "NOT EQUIVALENT",
+  "counts": {
+   "compare_points": 14002,
+   "proved": 14000,
+   "differs": 2,
+   "undecided": 0
+  },
+  "reset": {
+   "default": 4,
+   "requested": 4,
+   "contract": null,
+   "used": 4,
+   "debug_overrides": {}
+  },
+  "time_s": 554.0,
+  "reason": "2 compare points differ (first: po:fault_cause[3], po:fault_cause[4]); RTL registers removed by synthesis although not constant: ff:u_dut.fault_cause[3], ff:u_dut.fault_cause[4]"
+ },
+ "source_cause": "RX block fault_cause[4:3] reset0 thenhold forever; topcopiesbd_cause. Synthfolds tworeserved outputs, officialnative4 cannot prove two gold constants. NativeAIG supports include gold-onlyfaultbit/rn_bd/rst_n; sharedFLOW correspondence review, no BASEguess.",
+ "jobs": {
+  "GEN_FIRST": "1693141-1793621890 exit1 missinginventoryinstances; preserved0330",
+  "GEN_SYNTH": "1719847-1793621979 exit3 faceguard beforeLEC; preservedr2-0330",
+  "standalone_LEC": "1779130-1793622205 officialNEQ2 sourceonly; noP&R"
+ },
+ "holds": [
+  "No face-guard waiver or constant physical pins",
+  "No reset64 fallback/receipt or resetmode adoption",
+  "Next compactfault9 source+fourcaller/carrier event must be explicit if chosen",
+  "No P&R/clock/PG/TTFF/parentcalendar credit"
+ ]
+}

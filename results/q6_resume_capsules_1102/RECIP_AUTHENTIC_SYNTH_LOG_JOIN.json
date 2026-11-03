@@ -1,0 +1,24 @@
+{
+  "native_original": "/srv/opentallas-scratch2/claude/codex-kv-ahub-1131/kits/recip_native216",
+  "original_compact_source": "/srv/opentallas-scratch2/claude/codex-pickup-kv/recip_c138_place1",
+  "three_checkpoints_exact": {
+    "1_2_yosys.v": {
+      "source_copy": "ebaffaeff0de02cd19b36ce216f644f43a319171467760e258f9042fd86815c6",
+      "native_original": "ebaffaeff0de02cd19b36ce216f644f43a319171467760e258f9042fd86815c6"
+    },
+    "1_synth.odb": {
+      "source_copy": "7870f090f523e48c889cbc7701ff159973f1d3337eb09ed4817decf2f1c431db",
+      "native_original": "7870f090f523e48c889cbc7701ff159973f1d3337eb09ed4817decf2f1c431db"
+    },
+    "1_synth.sdc": {
+      "source_copy": "19e5582c1234efaff179dcec5736577b188062dad321f71fbcc21d4b5616354f",
+      "native_original": "19e5582c1234efaff179dcec5736577b188062dad321f71fbcc21d4b5616354f"
+    }
+  },
+  "authentic_log_sha256": {
+    "1_2_yosys.log": "44c77c6ee07da30bc37e7f21a708dd8483f2e1076ada1c43277b4423c562d706",
+    "1_synth.log": "fc3e4f64e27242f98223e9d780efaef30e26245046dc73959173d735d53856a6"
+  },
+  "own_copy_only": true,
+  "source_rtl_sdc_or_synth_outputs_changed": false
+}

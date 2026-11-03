@@ -1,0 +1,48 @@
+{
+  "status": "DISABLED_SOURCE_PATCH_GATE_PENDING",
+  "canonical_source_changed": false,
+  "patch": "legacy_XS_namespace_UNAPPLIED.patch",
+  "files": [
+    {
+      "file": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+      "base_sha256": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+      "candidate_sha256": "120c5c5dc8f8723a04e3b33b7a3d9daaf5cb243ae1b86e7d216b0a7b3842a2a5"
+    },
+    {
+      "file": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+      "base_sha256": "39e4531d95bb3365571e455665217213960611451126b1d4a1db957de46cdc67",
+      "candidate_sha256": "3d741e9757ba43f51a01fbb65c7de9f2fb2646997b55c0ca969e7b6de7f0927a"
+    },
+    {
+      "file": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg.sv",
+      "base_sha256": "140f9a5508b4fb44a4755f2b8add34efc5d839a088e9064e406ed34453afb5b6",
+      "candidate_sha256": "824700b93a92e60cda81f11fcc23c4547efea093e4123465eba8a3406e46e9f6"
+    }
+  ],
+  "required_manifest_extra_rule": {
+    "module": "ot_s81sl_xg",
+    "param": "INSTANCE"
+  },
+  "actual_legacy_paths": [
+    "u_s_3N.u_slice.u_xg",
+    "u_s_3S.u_sl.u_xg"
+  ],
+  "preserves_legacy_XS_timing": true,
+  "replaces_legacy_with_XS4": false,
+  "added_pipeline_state_bits": 0,
+  "added_cycles": 0,
+  "gate_required": [
+    "Exact old-legacyXS vs defaultcandidate40cycles833ps lockstep",
+    "Two actual legacy namespace instances with distinct7-ROM images +wrong-prefix control",
+    "SYNTHESIS preprocessing no ROMselector connectivity difference",
+    "After gate, pin the new legacy source receipt and preserve resolver added-capture0; current resolver has no legacy source hash allowlist, do not add this to XS4+1 fingerprints"
+  ],
+  "native_provider_qualified": false,
+  "profile_or_cohort_adopted": false,
+  "compiler_actual_capture_selection": {
+    "legacy_XS_added_edges": 0,
+    "XS4_added_edges": 1,
+    "actual_module_chain_followed": true,
+    "source_resolution_only": true
+  }
+}

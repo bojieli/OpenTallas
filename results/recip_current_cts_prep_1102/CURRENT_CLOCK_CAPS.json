@@ -1,0 +1,66 @@
+{
+  "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": {
+    "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "unit": "capacitive_load_unit (1,ff)",
+    "clock_pin": "CLK",
+    "masters": {
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "capacitance_fF": 0.503152,
+        "rise_capacitance_fF": 0.503152,
+        "fall_capacitance_fF": 0.502958
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "capacitance_fF": 0.52201,
+        "rise_capacitance_fF": 0.517449,
+        "fall_capacitance_fF": 0.52201
+      },
+      "DFFHQNx3_ASAP7_75t_R": {
+        "capacitance_fF": 0.522174,
+        "rise_capacitance_fF": 0.518012,
+        "fall_capacitance_fF": 0.522174
+      },
+      "DFFHQNx2_ASAP7_75t_R": {
+        "capacitance_fF": 0.521959,
+        "rise_capacitance_fF": 0.517415,
+        "fall_capacitance_fF": 0.521959
+      }
+    },
+    "total_clock_pin_cap_fF": {
+      "SYNTH": 4631.519628,
+      "PLACE": 4631.520459
+    },
+    "PLACE_minus_SYNTH_fF": 0.0008310000002893503
+  },
+  "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": {
+    "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "unit": "capacitive_load_unit (1,ff)",
+    "clock_pin": "CLK",
+    "masters": {
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "capacitance_fF": 0.462899,
+        "rise_capacitance_fF": 0.462899,
+        "fall_capacitance_fF": 0.461096
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "capacitance_fF": 0.474736,
+        "rise_capacitance_fF": 0.474467,
+        "fall_capacitance_fF": 0.474736
+      },
+      "DFFHQNx3_ASAP7_75t_R": {
+        "capacitance_fF": 0.475262,
+        "rise_capacitance_fF": 0.475262,
+        "fall_capacitance_fF": 0.474992
+      },
+      "DFFHQNx2_ASAP7_75t_R": {
+        "capacitance_fF": 0.474859,
+        "rise_capacitance_fF": 0.474859,
+        "fall_capacitance_fF": 0.474516
+      }
+    },
+    "total_clock_pin_cap_fF": {
+      "SYNTH": 4229.955916,
+      "PLACE": 4229.959440999999
+    },
+    "PLACE_minus_SYNTH_fF": 0.003524999999171996
+  }
+}

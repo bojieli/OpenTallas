@@ -1,0 +1,59 @@
+{
+  "status": "ASBUILT_AGE_DELAY_RECIPE_FAIL_UNDER_EXPLICIT_NATIVE_FIXTURE",
+  "native_packet_source": "u_s_0S.u_sl.$16.Y",
+  "actual_staged_source": "bind_ev2/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv:843",
+  "input_aliases": [
+    {
+      "packet_bit": 1,
+      "lane": 0,
+      "origin": "u_s_0S.u_sl.u_xg.xw_d[0]",
+      "current_edges": 41,
+      "recipe_edges": 46
+    },
+    {
+      "packet_bit": 567,
+      "lane": 2,
+      "origin": "u_s_0S.u_sl.u_xg.xw_d[0]",
+      "current_edges": 41,
+      "recipe_edges": 45
+    }
+  ],
+  "source_identity": "packet[1] == packet[567] == native XS xw_d[0]",
+  "consumer_requirement": "dsfd_cfifo_crs4 oa_[0]^ob_[0] == 0 at each read edge (after same lane-ring clocks/K)",
+  "fault_equation": "xflt = (|lf) | (oa_[0] ^ ob_[0]); sticky flt feeds rd[69]",
+  "markers": "packet[0] and[566] are released-reset bubble markers, not L3 epochs; stable before all measured phase controls",
+  "clock_assumptions": {
+    "core_clock_ps": 833,
+    "cr": "clk",
+    "cr_s": "clk",
+    "all_four_xk": "same fclk=clk&gate",
+    "gate": "negedge clk: gate<=CFIFO rs",
+    "startup": "global rst_n rises atcycle15; native CFIFO regional reset releases then forwarded clocks open",
+    "per_lane_K": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "LFACE": 0,
+    "LGATE": 0,
+    "source_and_consumer": "same controlled common-phase core clock; no physical OCV/droop or mesh sample-phase claim"
+  },
+  "age_semantics": "TB normal positive-edge source packet\u2192CFIFO lane-input delays, before unchanged native per-lane landing rings and consumer registers; not absolute arithmetic consumer edges or a reproduction of original physical clock phases",
+  "recipe_cost_if_it_were_adopted": {
+    "per_lane_extra": [
+      5,
+      0,
+      4,
+      6
+    ],
+    "word_bits": 276,
+    "packet_register_FF": 4140,
+    "existing_packet_valid_and_marker_bits_included": true,
+    "geometry_clock_reset_source_epoch_joins_not_prepared": true
+  },
+  "actual_physical_R8_relation_qualified": false,
+  "asbuilt_metadata_declared_wrong": false,
+  "native_contract_replaced": false,
+  "production_flags_changed": false
+}

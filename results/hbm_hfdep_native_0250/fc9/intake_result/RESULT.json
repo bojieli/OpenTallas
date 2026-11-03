@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.hfdep.fc9.native_intake.v1",
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/codex-hfdep-fc9-sourceproof-0640",
+  "unit": "3838691-1793630258",
+  "source_commit": "6997d0a07d8338f8425b635007273f502c76d0ab",
+  "top": "hfd_ep_static_fc9",
+  "scope": "SOURCE_ONLY_NONRELEASE",
+  "abi_bits": 2286,
+  "true_sram_count": 4,
+  "sram_master": "ot_sram_1r1w_64x512_m1_r2c2",
+  "lec": {
+    "verdict": "EQUIVALENT",
+    "counts": {
+      "compare_points": 14054,
+      "proved": 14054,
+      "differs": 0,
+      "undecided": 0
+    },
+    "reset_contract": {
+      "default": 4,
+      "requested": 4,
+      "contract": null,
+      "used": 4,
+      "debug_overrides": {}
+    },
+    "kept_registers": {
+      "declared": 160,
+      "in_netlist": 160,
+      "constant_proved": {
+        "n": 0,
+        "first": []
+      },
+      "missing": {
+        "n": 0,
+        "first": []
+      },
+      "unobservable_removed": {
+        "n": 0,
+        "first": []
+      },
+      "unobservable_reason": null
+    },
+    "seconds": 270.7
+  },
+  "face_guard": {
+    "verdict": "PASS",
+    "checked": 2284,
+    "ok": 2284,
+    "netlist_sha256": "834e3c045d88e365ae0064f7a20fa18c0f74c8bdf8eabb1d2afb01fd143a4276"
+  },
+  "mapped_ff": 7702,
+  "mapped_total_area_um2": 56924.82266,
+  "release_eligible": false,
+  "physical_run": "NOT_RUN",
+  "parent_adoption": false,
+  "original_selected_2288_failure": "PRESERVED; original native4 14000/14002, reservedbits3/4 differ; faceguard constant pins rejected"
+}

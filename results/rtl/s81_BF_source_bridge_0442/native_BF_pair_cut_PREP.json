@@ -1,0 +1,87 @@
+{
+  "status": "SOURCE_PREP_ONLY_NOT_BUILT",
+  "selected_field": "u_f_0L01",
+  "phase": 106,
+  "minimum_pair": {
+    "front": "u_f_0L01.u_r0.u_e1",
+    "west": "u_f_0L01.u_r0.u_e1w",
+    "east": "u_f_0L01.u_r0.u_e1e",
+    "columns_MB": 0
+  },
+  "native_sequencer": {
+    "module": "ot_s81_cfg7_seq_bfp",
+    "parameters": {
+      "DELTA": 0,
+      "LAYOUT": 1,
+      "NROM": 7,
+      "NSEG": 8,
+      "PHW": 10,
+      "PINREG": 1
+    },
+    "ROM_q_width": 72,
+    "f_prog_width": 38
+  },
+  "native_front": {
+    "module": "dsfd_bf_front_roots",
+    "cfg_width": 54,
+    "x0_width": 283,
+    "x1_width": 266,
+    "xb_data_width": 1024,
+    "xb_meta_width": 44,
+    "go_source": "d1_u_r0_u_s1_go_e",
+    "go_source_extra_edges": 1,
+    "xb_data_binding": "{xb[265:0],xa[265:0],x2[535:44]}",
+    "xb_meta_binding": "x2[43:0]",
+    "cfg_source": "w_u_r0_u_y_cfg_p1_0_o",
+    "f_prog_source": "w_u_r0_u_y_fp_p1_0_o"
+  },
+  "existing_Q_vehicle_limit": "Its station566 cut does not carry x2/f_prog; Q-only binary cannot qualify BF arithmetic",
+  "descriptor_overlay": {
+    "receipt": "2ed5e1d18",
+    "root": "/srv/opentallas-scratch2/claude/codex-ds-bf-selectors-2200/programme_phase106_overlay1",
+    "selected_CFG": "u_f_0L01_c1_0..3.viamap.hex",
+    "physical_row": 53,
+    "upper24_only": true,
+    "OFF": 4,
+    "PER": 1,
+    "N": 64
+  },
+  "before_any_execution": [
+    "Select root coherent source/ROM/profile event",
+    "Derive actual x2/f_prog station+relay paths and delivered reset from selected source; do not borrow Q566 delays",
+    "Use actual CFG7_bfp and direct one-edge BF GO path; do not copy Qbank two-edge GO/tag recipe",
+    "Consume literal checkpoint BF source group0 and unchanged source dates; preserve wrongnorm-source and wrongdate/tag/class controls",
+    "No global native_provider/epoch/profile qualification follows from one controlled source cut"
+  ],
+  "backend_launched": false,
+  "physical_sampling_qualified": false,
+  "superseded_full_accumulated_values": [
+    {
+      "row": 0,
+      "fp32": "3bca1294",
+      "bf16": "3bca"
+    },
+    {
+      "row": 1,
+      "fp32": "3c1cbe70",
+      "bf16": "3c1d"
+    }
+  ],
+  "independent_selected_segment0_partial_gold": [
+    {
+      "row": 0,
+      "fp32": "bb801a5a"
+    },
+    {
+      "row": 1,
+      "fp32": "bcac1a54"
+    }
+  ],
+  "oracle_correction": "Prior acc values are full four-segment accumulations, not segment0 partials. Corrected before any new BF execution. vals[0] is independent native/VM segment0 oracle.",
+  "retained_native_relative_date": {
+    "front_core_GO_sample": 147,
+    "BF_column_partial_sample": 321,
+    "edges": 174,
+    "scope": "Retained phase106 native column/core observations, not physical epoch qualification"
+  }
+}

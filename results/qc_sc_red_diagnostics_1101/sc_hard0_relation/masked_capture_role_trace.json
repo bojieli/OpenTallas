@@ -1,0 +1,160 @@
+{
+  "parsed_primitive_instances": 132352,
+  "scope": "EXACT_HARD1_SOURCE_COMBINATIONAL_FANOUT_OF_15_RESETTABLE_DATA_CAPTURE_OUTPUTS",
+  "source": "98bbbbd8184",
+  "generate_branches_HARD1": 498,
+  "reports": [
+    {
+      "input_bit": "sc_cfg[100]",
+      "original_capture_instance": "u_15387",
+      "masked_output": "n_28481",
+      "visited_combinational_nets": 1,
+      "terminal_counts": {
+        "D": 8
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "sc_cfg[100]",
+      "original_capture_instance": "u_228347",
+      "masked_output": "n_240463",
+      "visited_combinational_nets": 1,
+      "terminal_counts": {
+        "D": 8
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "sc_cfg[100]",
+      "original_capture_instance": "u_228348",
+      "masked_output": "n_240464",
+      "visited_combinational_nets": 1,
+      "terminal_counts": {
+        "D": 8
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "sc_cfg[100]",
+      "original_capture_instance": "u_228349",
+      "masked_output": "n_240465",
+      "visited_combinational_nets": 1,
+      "terminal_counts": {
+        "D": 8
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "sc_cfg[100]",
+      "original_capture_instance": "u_228400",
+      "masked_output": "n_240516",
+      "visited_combinational_nets": 1,
+      "terminal_counts": {
+        "D": 4
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "dn_i[47]",
+      "original_capture_instance": "u_15389",
+      "masked_output": "n_28483",
+      "visited_combinational_nets": 4780,
+      "terminal_counts": {
+        "D": 1209
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "dn_i[47]",
+      "original_capture_instance": "u_222995",
+      "masked_output": "n_235111",
+      "visited_combinational_nets": 81,
+      "terminal_counts": {
+        "D": 44
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "up_i[47]",
+      "original_capture_instance": "u_15390",
+      "masked_output": "n_28484",
+      "visited_combinational_nets": 3779,
+      "terminal_counts": {
+        "D": 1250
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "up_i[47]",
+      "original_capture_instance": "u_222996",
+      "masked_output": "n_235112",
+      "visited_combinational_nets": 2,
+      "terminal_counts": {
+        "D": 1
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "am_v[0]",
+      "original_capture_instance": "u_15400",
+      "masked_output": "n_28494",
+      "visited_combinational_nets": 253,
+      "terminal_counts": {
+        "D": 106
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "am_v[0]",
+      "original_capture_instance": "u_222979",
+      "masked_output": "n_235095",
+      "visited_combinational_nets": 49,
+      "terminal_counts": {
+        "D": 16
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "am_v[0]",
+      "original_capture_instance": "u_222980",
+      "masked_output": "n_235096",
+      "visited_combinational_nets": 49,
+      "terminal_counts": {
+        "D": 16
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "am_v[0]",
+      "original_capture_instance": "u_222981",
+      "masked_output": "n_235097",
+      "visited_combinational_nets": 49,
+      "terminal_counts": {
+        "D": 16
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "am_v[0]",
+      "original_capture_instance": "u_222982",
+      "masked_output": "n_235098",
+      "visited_combinational_nets": 49,
+      "terminal_counts": {
+        "D": 16
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    },
+    {
+      "input_bit": "am_v[0]",
+      "original_capture_instance": "u_222983",
+      "masked_output": "n_235099",
+      "visited_combinational_nets": 64,
+      "terminal_counts": {
+        "D": 57
+      },
+      "asynchronous_R_or_clock_C_terminals": []
+    }
+  ],
+  "total_async_R_or_clock_C_reach": 0,
+  "limit": "Cuts at every register, excludes parent/top external reconnection, no glitch/analog/reset qualification or adoption inferred. Names do not classify signal function."
+}

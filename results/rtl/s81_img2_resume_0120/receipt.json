@@ -1,0 +1,28 @@
+{
+  "status": "ORIGINAL_MEMCG_OOM_INCREMENTAL_SERIAL_SUCCESSOR_QUEUED",
+  "original_host": "intel1",
+  "original_unit": "oth-ubuntu-369048-1793572765",
+  "original_exit": 143,
+  "original_peak_GiB": 80,
+  "original_wall": "9h25m58s",
+  "original_failure_time": "2026-11-02T00:42:45-0800",
+  "archive_targets": 395,
+  "completed_archives": 378,
+  "unfinished": 17,
+  "unfinished_classes": {
+    "service": 16,
+    "slice_leaf": 1
+  },
+  "cache_GB": 133,
+  "cache_preserved": true,
+  "original_logs_preserved": true,
+  "successor_intel2_client": 1602009,
+  "successor_remote": "/srv/opentallas-scratch2/claude/codex-ds-img2-serial-0120",
+  "successor_mem_GiB": 64,
+  "successor_threads": 1,
+  "successor_disk_GB": 60,
+  "successor_compile": "incremental make existing hierarchy; no top Verilator reinvocation",
+  "source_edits": 0,
+  "new_native_results": false,
+  "V1c3": "separate active Epyc2 unit182056-1793588951; not touched"
+}

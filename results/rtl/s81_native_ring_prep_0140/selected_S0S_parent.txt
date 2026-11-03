@@ -1,0 +1,25 @@
+        .wo_v(w_u_s_0S_u_sl_u_xf_wo_v)
+    );
+    // as-built u_s_0S.u_sl.u_xg
+    ot_s81sl_xgt_xo u_u_s_0S_u_sl_u_xg (
+        .ci_b(w_u_s_0S_u_sl_u_xr_ci_b[1075:0]),
+        .ci_dir(w_u_s_0S_u_sl_u_xr_ci_dir[2:0]),
+        .clk(clk),
+        .dl_e(w_u_s_0S_u_sl_u_xg_dl_e),
+        .dl_ev(w_u_s_0S_u_sl_u_xg_dl_ev),
+        .dl_vb(w_u_s_0S_u_sl_u_xg_dl_vb),
+        .dl_vv(w_u_s_0S_u_sl_u_xg_dl_vv),
+        .dl_w(w_u_s_0S_u_sl_u_xg_dl_w),
+        .dl_wv(w_u_s_0S_u_sl_u_xg_dl_wv),
+        .fault(w_u_s_0S_u_sl_u_xg_fault),
+        .is_d(w_u_s_0S_u_sl_u_xr_is_d[159:0]),
+        .is_v(w_u_s_0S_u_sl_u_xr_is_v[0]),
+        .nx_ei(w_u_s_0S_u_sl_u_xg_nx_ei),
+        .nx_eo({w_u_s_0S_u_sl_u_xf_eo_v[0], w_u_s_0S_u_sl_u_xf_eo_h[3:0], w_u_s_0S_u_sl_u_xf_eo_b[7:0], w_u_s_0S_u_sl_u_xf_eo_d[159:0]}),
+        .nx_wi(w_u_s_0S_u_sl_u_xg_nx_wi),
+        .nx_wo({w_u_s_0S_u_sl_u_xf_wo_v[0], w_u_s_0S_u_sl_u_xf_wo_h[3:0], w_u_s_0S_u_sl_u_xf_wo_b[7:0], w_u_s_0S_u_sl_u_xf_wo_d[159:0]}),
+        .ri_e(xring_i0_q[1103:0]),
+        .ri_w(w_u_s_0S_10_Y[1103:0]),
+        .ro_e(w_u_s_0S_u_sl_u_xg_ro_e),
+        .ro_w(w_u_s_0S_u_sl_u_xg_ro_w),
+        .rst_n(d7_u_s_0S_u_sl_17_Y[0]),

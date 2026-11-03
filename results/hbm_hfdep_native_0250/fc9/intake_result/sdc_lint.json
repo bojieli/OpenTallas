@@ -1,0 +1,60 @@
+{
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_ff_ps": 202.5,
+ "insertion_tol_ps": 20.0,
+ "clock_ports": [
+  "clk"
+ ],
+ "inputs": [
+  "rst_n",
+  "rx_arm_bank",
+  "rx_arm_v",
+  "rx_block_words",
+  "rx_release_bank",
+  "rx_release_v",
+  "rx_slot_bank",
+  "rx_slot_index",
+  "rx_slot_v",
+  "sd_rx",
+  "sd_st",
+  "tx_frame",
+  "tx_v"
+ ],
+ "outputs": [
+  "rx_block_ready",
+  "fault_cause",
+  "fault",
+  "phy_up",
+  "rx_pin_v",
+  "sd_tx",
+  "rx_pin_flit"
+ ],
+ "unc_setup_ps": 0.0,
+ "unc_hold_ps": 25.0,
+ "time_unit_ps": 1.0,
+ "io_floor_ps": {
+  "rx_block_ready": 166.60000000000002,
+  "fault_cause": 166.60000000000002,
+  "fault": 166.60000000000002,
+  "phy_up": 166.60000000000002,
+  "rst_n": 166.60000000000002,
+  "rx_arm_bank": 166.60000000000002,
+  "rx_arm_v": 166.60000000000002,
+  "rx_pin_v": 166.60000000000002,
+  "rx_release_bank": 166.60000000000002,
+  "rx_release_v": 166.60000000000002,
+  "rx_slot_bank": 166.60000000000002,
+  "rx_slot_v": 166.60000000000002,
+  "tx_v": 166.60000000000002,
+  "sd_st": 166.60000000000002,
+  "rx_slot_index": 166.60000000000002,
+  "rx_block_words": 166.60000000000002,
+  "sd_tx": 166.60000000000002,
+  "sd_rx": 166.60000000000002,
+  "tx_frame": 166.60000000000002,
+  "rx_pin_flit": 166.60000000000002,
+  "clk": 166.60000000000002
+ },
+ "port_latency_ps": {}
+}

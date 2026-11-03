@@ -1,0 +1,60 @@
+{
+  "status": "READ_ONLY_NATIVE_SOURCE_CENSUS_NO_CANDIDATE_OR_JOB",
+  "parent_sha256": "61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a",
+  "source_sha256": "107c4addac40494f621b463ca40a58bb47e560acddfc8d261aa1fe60c1ae5a88",
+  "native_helper_sha256": "cb7cc6f9d5c4c21ca697ba7cb0b6e6fc3e53f1030e82afa8b32483988f910a36",
+  "instance": "g_u_rsv_14_u_u_att_pvq",
+  "native_helper": "ot_bind_native_9c28130c03bbd6a26f6fd9a5",
+  "native_depth": 8,
+  "native_width": 2120,
+  "native_bits": 16960,
+  "ports": {
+    "asynchronous_read": 1,
+    "clocked_write": 1,
+    "actual_write_mask": "scalar pv_v expanded into2120ones/zero; generic native helper permits per-bitmask",
+    "read_addr": "pvr[2:0]",
+    "write_addr": "pvw[2:0]",
+    "clock": "clk"
+  },
+  "word_fields": {
+    "tag": "pb[2119:2112] (8bits)",
+    "data": "pb[2111:64] (2048bits)",
+    "faults": "pb[63:0] (64bits)"
+  },
+  "first_capture": {
+    "register": "g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q, source pv_od[512:0]",
+    "enable": "dr_on",
+    "reset": "none; raw stale513bits survive warm reset",
+    "header": "p_i0: {1, read-time provenance440, storedtag8, storedfault64}",
+    "data": "p_i1..4: {0, 512bits at pb[64+(p_i-1)*512+:512]}",
+    "ROWX": "compiled out in current T7"
+  },
+  "identity": {
+    "actual_module": "dsdv_pv_source_identity",
+    "ENABLE": 1,
+    "provenance_bits": 440,
+    "read_time": true,
+    "constant_or_write_time_substitution_allowed": false,
+    "literal": "{392'd0,pos21,live1,t4,q2,owner20}",
+    "dynamic_bits": 48,
+    "source_constant_bits": 392
+  },
+  "control": {
+    "p_i": "reset0; whiledr_on increments0\u21921\u21922\u21923\u21924\u21920",
+    "pvr": "increments onlyatp_i4",
+    "drain": "8beats\u00d75words, no ready/credit stall",
+    "write": "always @(posedgeclk) ifpv_v, independentof drain",
+    "guards": [
+      "fault15 records overflow but doesnotcancel write",
+      "fault19 records emptyatheader but doesnotcancel read/capture"
+    ],
+    "samecycle_collision_structurally_excluded": false
+  },
+  "existing_params": {
+    "PVQ": 8,
+    "PV_IDENTITY": "actualselected1 despitebaredefault0",
+    "SRAM_MACRO": "engine staging only; no PVQ branch",
+    "capacity_reduction": "not justified: source retains all8beats"
+  },
+  "qualified_mission_or_physical": false
+}

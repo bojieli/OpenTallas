@@ -1,0 +1,54 @@
+{
+ "cores": {
+  "hfd_ep_static": {
+   "status": "KNOWN",
+   "basis": "reference placement only; newly generated exact SOURCE13 source kit",
+   "macros": [
+    {
+     "name": "u_rxb.g_block[0].u_block.g_mem[0].u_mem.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      17.28,
+      47.532,
+      188.568,
+      125.316
+     ],
+     "orient": "MY"
+    },
+    {
+     "name": "u_rxb.g_block[0].u_block.g_mem[1].u_mem.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      17.28,
+      146.892,
+      188.568,
+      224.676
+     ],
+     "orient": "MY"
+    },
+    {
+     "name": "u_rxb.g_block[1].u_block.g_mem[0].u_mem.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      239.112,
+      47.532,
+      410.4,
+      125.316
+     ],
+     "orient": "R0"
+    },
+    {
+     "name": "u_rxb.g_block[1].u_block.g_mem[1].u_mem.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "rect_um": [
+      239.112,
+      146.892,
+      410.4,
+      224.676
+     ],
+     "orient": "R0"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,17 @@
+{
+  "old_snapshot_completed": 380,
+  "BF_namespace_dirty": 216,
+  "XS4_namespace_source_dirty": 14,
+  "legacy_XG_namespace_dirty": 2,
+  "conditional_matched_archive_wrapper_candidates": 148,
+  "actual_reused": 0,
+  "missing_service_archives_at_snapshot": 15,
+  "no_inherited_cache_changed": true,
+  "optional_SOURCE39_control_changes": "both changed column implementations already within216 dirty BF classes; fresh identity comparison still mandatory",
+  "reuse_requirements": [
+    "fresh emitted exact source and parameters/native defines/tool identity",
+    "same generated mangled class key",
+    "matched existing wrapper+archive protectlib hash pair",
+    "no old generated source copied over newly emitted source"
+  ]
+}

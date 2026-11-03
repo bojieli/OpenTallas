@@ -1,0 +1,72 @@
+{
+  "bare": {
+    "mapping": [
+      {
+        "file": "Vot_s81c_attn_hcore_5__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      },
+      {
+        "file": "Vtb__hierMkArgs.f",
+        "line": "--hierarchical-block parent,parent"
+      },
+      {
+        "file": "Vtb__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      },
+      {
+        "file": "Vparent__hierMkArgs.f",
+        "line": "--hierarchical-block parent,parent"
+      },
+      {
+        "file": "Vparent__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      }
+    ],
+    "parent_CPP_hcore_references": [
+      {
+        "file": "bare/Vparent/Vparent___024root__0.cpp",
+        "references": 159
+      },
+      {
+        "file": "bare/Vparent/Vparent___024root__0__Slow.cpp",
+        "references": 76
+      }
+    ],
+    "run": "PASS_HIERARCHY_TOOL_REPRODUCER cycles=         10 q=5048403830282018\n- tb.sv:8: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 8ns; walltime 0.000 s; speed 104.453 us/s\n- Verilator: cpu 0.000 s on 10 threads; allocated 7 MB\n"
+  },
+  "explicit": {
+    "mapping": [
+      {
+        "file": "Vot_s81c_attn_hcore_5__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      },
+      {
+        "file": "Vtb__hierMkArgs.f",
+        "line": "--hierarchical-block parent,parent"
+      },
+      {
+        "file": "Vtb__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      },
+      {
+        "file": "Vparent__hierMkArgs.f",
+        "line": "--hierarchical-block parent,parent"
+      },
+      {
+        "file": "Vparent__hierMkArgs.f",
+        "line": "--hierarchical-block ot_s81c_attn_hcore,ot_s81c_attn_hcore_5"
+      }
+    ],
+    "parent_CPP_hcore_references": [
+      {
+        "file": "explicit/Vparent/Vparent___024root__0.cpp",
+        "references": 159
+      },
+      {
+        "file": "explicit/Vparent/Vparent___024root__0__Slow.cpp",
+        "references": 76
+      }
+    ],
+    "run": "PASS_HIERARCHY_TOOL_REPRODUCER cycles=         10 q=5048403830282018\n- tb.sv:8: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 8ns; walltime 0.000 s; speed 68.289 us/s\n- Verilator: cpu 0.000 s on 10 threads; allocated 7 MB\n"
+  }
+}

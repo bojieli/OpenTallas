@@ -1,0 +1,2303 @@
+{
+ "scope": "READ-ONLY current actual three-BUF SC geometry and exact signal graph; no CAD/STA/target moves;150um and10um are census filters, not new gates",
+ "clock_cone_excluded": 2389,
+ "serial_chains_with2plus_buffers": 65,
+ "first_hop_over150": 24,
+ "collapsed_within10um": 23,
+ "length_counts": {
+  "2": 23,
+  "3": 1
+ },
+ "ambiguous_source_nets_skipped": 0,
+ "semantic_note": "No reset/data meaning inferred from instance names; public input candidate strings are connectivity observations only.",
+ "long_first_hop_chains": [
+  {
+   "source_ff": "u.u_15645/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    236.97899999999998,
+    6.075
+   ],
+   "public_input_candidates": [
+    "dn_i[44]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15645/place27055",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      103.572,
+      317.25,
+      104.112,
+      317.52
+     ],
+     "centre_um": [
+      103.842,
+      317.385
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15645/place27054",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      103.788,
+      317.52,
+      104.328,
+      317.79
+     ],
+     "centre_um": [
+      104.05799999999999,
+      317.655
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15645/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     103.167,
+     317.925
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15645/Q$_DFF_P_",
+     "sink": "u.u_15645/place27055",
+     "net": 217898,
+     "fanout": 1,
+     "centre_l1_um": 444.447
+    },
+    {
+     "driver": "u.u_15645/place27055",
+     "sink": "u.u_15645/place27054",
+     "net": 369239,
+     "fanout": 1,
+     "centre_l1_um": 0.486
+    },
+    {
+     "driver": "u.u_15645/place27054",
+     "sink": "u.u_15645/_1_",
+     "net": 369238,
+     "fanout": 1,
+     "centre_l1_um": 1.161
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 444.447,
+   "longest_hop_centre_l1_um": 444.447,
+   "buffer_cluster_l1_diameter_um": 0.486,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15647/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    236.007,
+    6.885
+   ],
+   "public_input_candidates": [
+    "dn_i[46]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15647/place27052",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      106.326,
+      315.36,
+      106.866,
+      315.63
+     ],
+     "centre_um": [
+      106.596,
+      315.495
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15647/place27051",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      105.516,
+      316.17,
+      105.84,
+      316.44
+     ],
+     "centre_um": [
+      105.678,
+      316.305
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15647/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     104.733,
+     318.735
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15647/Q$_DFF_P_",
+     "sink": "u.u_15647/place27052",
+     "net": 217940,
+     "fanout": 1,
+     "centre_l1_um": 438.021
+    },
+    {
+     "driver": "u.u_15647/place27052",
+     "sink": "u.u_15647/place27051",
+     "net": 370304,
+     "fanout": 1,
+     "centre_l1_um": 1.728
+    },
+    {
+     "driver": "u.u_15647/place27051",
+     "sink": "u.u_15647/_1_",
+     "net": 369236,
+     "fanout": 1,
+     "centre_l1_um": 3.375
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 438.021,
+   "longest_hop_centre_l1_um": 438.021,
+   "buffer_cluster_l1_diameter_um": 1.728,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15635/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    233.84699999999998,
+    6.345000000000001
+   ],
+   "public_input_candidates": [
+    "dn_i[34]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15635/place27067",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      99.09,
+      281.88,
+      99.63,
+      282.15
+     ],
+     "centre_um": [
+      99.36,
+      282.015
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15635/place27066",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      98.172,
+      281.88,
+      98.712,
+      282.15
+     ],
+     "centre_um": [
+      98.44200000000001,
+      282.015
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15635/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     97.44300000000001,
+     282.015
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15635/Q$_DFF_P_",
+     "sink": "u.u_15635/place27067",
+     "net": 217687,
+     "fanout": 1,
+     "centre_l1_um": 410.157
+    },
+    {
+     "driver": "u.u_15635/place27067",
+     "sink": "u.u_15635/place27066",
+     "net": 369245,
+     "fanout": 1,
+     "centre_l1_um": 0.918
+    },
+    {
+     "driver": "u.u_15635/place27066",
+     "sink": "u.u_15635/_1_",
+     "net": 369939,
+     "fanout": 1,
+     "centre_l1_um": 0.999
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 410.157,
+   "longest_hop_centre_l1_um": 410.157,
+   "buffer_cluster_l1_diameter_um": 0.918,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15633/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    234.873,
+    6.075
+   ],
+   "public_input_candidates": [
+    "dn_i[32]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15633/place27070",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      91.53,
+      266.76,
+      91.854,
+      267.03
+     ],
+     "centre_um": [
+      91.69200000000001,
+      266.895
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15633/place27069",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      90.72,
+      267.3,
+      91.044,
+      267.57
+     ],
+     "centre_um": [
+      90.882,
+      267.435
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15633/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     89.93700000000001,
+     267.975
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15633/Q$_DFF_P_",
+     "sink": "u.u_15633/place27070",
+     "net": 217651,
+     "fanout": 1,
+     "centre_l1_um": 404.001
+    },
+    {
+     "driver": "u.u_15633/place27070",
+     "sink": "u.u_15633/place27069",
+     "net": 369248,
+     "fanout": 1,
+     "centre_l1_um": 1.35
+    },
+    {
+     "driver": "u.u_15633/place27069",
+     "sink": "u.u_15633/_1_",
+     "net": 369247,
+     "fanout": 1,
+     "centre_l1_um": 1.485
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 404.001,
+   "longest_hop_centre_l1_um": 404.001,
+   "buffer_cluster_l1_diameter_um": 1.35,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15628/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    234.81900000000002,
+    4.455
+   ],
+   "public_input_candidates": [
+    "dn_i[27]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15628/place27079",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      119.664,
+      208.98,
+      119.988,
+      209.25
+     ],
+     "centre_um": [
+      119.826,
+      209.115
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15628/place27078",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      117.99,
+      208.98,
+      118.314,
+      209.25
+     ],
+     "centre_um": [
+      118.15199999999999,
+      209.115
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15628/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     117.369,
+     209.115
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15628/Q$_DFF_P_",
+     "sink": "u.u_15628/place27079",
+     "net": 217563,
+     "fanout": 1,
+     "centre_l1_um": 319.653
+    },
+    {
+     "driver": "u.u_15628/place27079",
+     "sink": "u.u_15628/place27078",
+     "net": 369969,
+     "fanout": 1,
+     "centre_l1_um": 1.674
+    },
+    {
+     "driver": "u.u_15628/place27078",
+     "sink": "u.u_15628/_1_",
+     "net": 369256,
+     "fanout": 1,
+     "centre_l1_um": 0.783
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 319.653,
+   "longest_hop_centre_l1_um": 319.653,
+   "buffer_cluster_l1_diameter_um": 1.674,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15627/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    235.52100000000002,
+    4.995
+   ],
+   "public_input_candidates": [
+    "dn_i[26]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15627/place27081",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      120.096,
+      201.69,
+      120.42,
+      201.96
+     ],
+     "centre_um": [
+      120.25800000000001,
+      201.825
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15627/place27080",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      119.88,
+      201.96,
+      120.204,
+      202.23
+     ],
+     "centre_um": [
+      120.042,
+      202.095
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15627/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     119.09700000000001,
+     202.365
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15627/Q$_DFF_P_",
+     "sink": "u.u_15627/place27081",
+     "net": 217542,
+     "fanout": 1,
+     "centre_l1_um": 312.093
+    },
+    {
+     "driver": "u.u_15627/place27081",
+     "sink": "u.u_15627/place27080",
+     "net": 369258,
+     "fanout": 1,
+     "centre_l1_um": 0.486
+    },
+    {
+     "driver": "u.u_15627/place27080",
+     "sink": "u.u_15627/_1_",
+     "net": 369257,
+     "fanout": 1,
+     "centre_l1_um": 1.215
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 312.093,
+   "longest_hop_centre_l1_um": 312.093,
+   "buffer_cluster_l1_diameter_um": 0.486,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_208277/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    64.74600000000001,
+    454.815
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_208277/place26866",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      160.542,
+      239.49,
+      160.866,
+      239.76
+     ],
+     "centre_um": [
+      160.704,
+      239.625
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_208277/place26865",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      161.838,
+      238.95,
+      162.162,
+      239.22
+     ],
+     "centre_um": [
+      162.0,
+      239.08499999999998
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_208277/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     162.72899999999998,
+     239.08499999999998
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_208277/Q$_DFF_P_",
+     "sink": "u.u_208277/place26866",
+     "net": 303418,
+     "fanout": 1,
+     "centre_l1_um": 311.148
+    },
+    {
+     "driver": "u.u_208277/place26866",
+     "sink": "u.u_208277/place26865",
+     "net": 369747,
+     "fanout": 1,
+     "centre_l1_um": 1.836
+    },
+    {
+     "driver": "u.u_208277/place26865",
+     "sink": "u.u_208277/_1_",
+     "net": 369965,
+     "fanout": 1,
+     "centre_l1_um": 0.729
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 311.148,
+   "longest_hop_centre_l1_um": 311.148,
+   "buffer_cluster_l1_diameter_um": 1.836,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_208279/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    73.97999999999999,
+    468.045
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_208279/place26864",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      160.758,
+      243.81,
+      161.082,
+      244.08
+     ],
+     "centre_um": [
+      160.92000000000002,
+      243.945
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_208279/place26863",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      161.352,
+      243.54,
+      161.676,
+      243.81
+     ],
+     "centre_um": [
+      161.514,
+      243.675
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_208279/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     161.865,
+     243.405
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_208279/Q$_DFF_P_",
+     "sink": "u.u_208279/place26864",
+     "net": 303420,
+     "fanout": 1,
+     "centre_l1_um": 311.04
+    },
+    {
+     "driver": "u.u_208279/place26864",
+     "sink": "u.u_208279/place26863",
+     "net": 369746,
+     "fanout": 1,
+     "centre_l1_um": 0.864
+    },
+    {
+     "driver": "u.u_208279/place26863",
+     "sink": "u.u_208279/_1_",
+     "net": 369964,
+     "fanout": 1,
+     "centre_l1_um": 0.621
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 311.04,
+   "longest_hop_centre_l1_um": 311.04,
+   "buffer_cluster_l1_diameter_um": 0.864,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_208281/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    64.69200000000001,
+    455.355
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_208281/place26862",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      160.38,
+      241.38,
+      160.704,
+      241.65
+     ],
+     "centre_um": [
+      160.542,
+      241.515
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_208281/place26861",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      160.866,
+      241.38,
+      161.19,
+      241.65
+     ],
+     "centre_um": [
+      161.02800000000002,
+      241.515
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_208281/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     161.37900000000002,
+     241.245
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_208281/Q$_DFF_P_",
+     "sink": "u.u_208281/place26862",
+     "net": 303423,
+     "fanout": 1,
+     "centre_l1_um": 309.69
+    },
+    {
+     "driver": "u.u_208281/place26862",
+     "sink": "u.u_208281/place26861",
+     "net": 369745,
+     "fanout": 1,
+     "centre_l1_um": 0.486
+    },
+    {
+     "driver": "u.u_208281/place26861",
+     "sink": "u.u_208281/_1_",
+     "net": 369963,
+     "fanout": 1,
+     "centre_l1_um": 0.621
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 309.69,
+   "longest_hop_centre_l1_um": 309.69,
+   "buffer_cluster_l1_diameter_um": 0.486,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_209840/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    78.138,
+    434.295
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_209840/place26852",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      169.668,
+      235.98,
+      169.992,
+      236.25
+     ],
+     "centre_um": [
+      169.82999999999998,
+      236.115
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_209840/place26851",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      170.64,
+      235.98,
+      170.964,
+      236.25
+     ],
+     "centre_um": [
+      170.802,
+      236.115
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_209840/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     171.315,
+     236.115
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_209840/Q$_DFF_P_",
+     "sink": "u.u_209840/place26852",
+     "net": 304849,
+     "fanout": 1,
+     "centre_l1_um": 289.872
+    },
+    {
+     "driver": "u.u_209840/place26852",
+     "sink": "u.u_209840/place26851",
+     "net": 22018,
+     "fanout": 1,
+     "centre_l1_um": 0.972
+    },
+    {
+     "driver": "u.u_209840/place26851",
+     "sink": "u.u_209840/_1_",
+     "net": 369955,
+     "fanout": 1,
+     "centre_l1_um": 0.513
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 289.872,
+   "longest_hop_centre_l1_um": 289.872,
+   "buffer_cluster_l1_diameter_um": 0.972,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15629/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    233.14499999999998,
+    6.075
+   ],
+   "public_input_candidates": [
+    "dn_i[28]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15629/place27077",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      181.926,
+      234.09,
+      182.25,
+      234.36
+     ],
+     "centre_um": [
+      182.088,
+      234.22500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15629/place27076",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      181.602,
+      234.09,
+      181.926,
+      234.36
+     ],
+     "centre_um": [
+      181.764,
+      234.22500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15629/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     179.469,
+     234.765
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15629/Q$_DFF_P_",
+     "sink": "u.u_15629/place27077",
+     "net": 217584,
+     "fanout": 1,
+     "centre_l1_um": 279.207
+    },
+    {
+     "driver": "u.u_15629/place27077",
+     "sink": "u.u_15629/place27076",
+     "net": 369255,
+     "fanout": 1,
+     "centre_l1_um": 0.324
+    },
+    {
+     "driver": "u.u_15629/place27076",
+     "sink": "u.u_15629/_1_",
+     "net": 369254,
+     "fanout": 1,
+     "centre_l1_um": 2.835
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 279.207,
+   "longest_hop_centre_l1_um": 279.207,
+   "buffer_cluster_l1_diameter_um": 0.324,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15630/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    235.305,
+    5.535
+   ],
+   "public_input_candidates": [
+    "dn_i[29]"
+   ],
+   "buffer_count": 3,
+   "buffers": [
+    {
+     "name": "u.u_15630/place27075",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      203.094,
+      247.59,
+      203.418,
+      247.86
+     ],
+     "centre_um": [
+      203.256,
+      247.72500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15630/place27074",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      202.446,
+      247.59,
+      202.77,
+      247.86
+     ],
+     "centre_um": [
+      202.608,
+      247.72500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15630/wire27142",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "bbox_um": [
+      191.268,
+      247.59,
+      192.456,
+      247.86
+     ],
+     "centre_um": [
+      191.862,
+      247.72500000000002
+     ],
+     "size_um": [
+      1.188,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15630/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     191.511,
+     248.265
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15630/Q$_DFF_P_",
+     "sink": "u.u_15630/place27075",
+     "net": 217606,
+     "fanout": 1,
+     "centre_l1_um": 274.239
+    },
+    {
+     "driver": "u.u_15630/place27075",
+     "sink": "u.u_15630/place27074",
+     "net": 369253,
+     "fanout": 1,
+     "centre_l1_um": 0.648
+    },
+    {
+     "driver": "u.u_15630/place27074",
+     "sink": "u.u_15630/wire27142",
+     "net": 369252,
+     "fanout": 1,
+     "centre_l1_um": 10.746
+    },
+    {
+     "driver": "u.u_15630/wire27142",
+     "sink": "u.u_15630/_1_",
+     "net": 369285,
+     "fanout": 1,
+     "centre_l1_um": 0.891
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 274.239,
+   "longest_hop_centre_l1_um": 274.239,
+   "buffer_cluster_l1_diameter_um": 11.394,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": false
+  },
+  {
+   "source_ff": "u.u_208276/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    80.352,
+    429.705
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_208276/place26867",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      160.218,
+      242.73,
+      160.542,
+      243.0
+     ],
+     "centre_um": [
+      160.38,
+      242.865
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_208276/wire27156",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "bbox_um": [
+      160.596,
+      242.19,
+      161.784,
+      242.46
+     ],
+     "centre_um": [
+      161.19,
+      242.325
+     ],
+     "size_um": [
+      1.188,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_208276/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     162.351,
+     242.055
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_208276/Q$_DFF_P_",
+     "sink": "u.u_208276/place26867",
+     "net": 303417,
+     "fanout": 1,
+     "centre_l1_um": 266.868
+    },
+    {
+     "driver": "u.u_208276/place26867",
+     "sink": "u.u_208276/wire27156",
+     "net": 369966,
+     "fanout": 1,
+     "centre_l1_um": 1.35
+    },
+    {
+     "driver": "u.u_208276/wire27156",
+     "sink": "u.u_208276/_1_",
+     "net": 370312,
+     "fanout": 1,
+     "centre_l1_um": 1.431
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 266.868,
+   "longest_hop_centre_l1_um": 266.868,
+   "buffer_cluster_l1_diameter_um": 1.35,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15631/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    231.687,
+    5.805
+   ],
+   "public_input_candidates": [
+    "dn_i[30]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15631/place27073",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      195.318,
+      229.77,
+      195.642,
+      230.04
+     ],
+     "centre_um": [
+      195.48000000000002,
+      229.905
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15631/place27072",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      194.238,
+      229.77,
+      194.562,
+      230.04
+     ],
+     "centre_um": [
+      194.4,
+      229.905
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15631/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     194.31900000000002,
+     230.175
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15631/Q$_DFF_P_",
+     "sink": "u.u_15631/place27073",
+     "net": 217625,
+     "fanout": 1,
+     "centre_l1_um": 260.307
+    },
+    {
+     "driver": "u.u_15631/place27073",
+     "sink": "u.u_15631/place27072",
+     "net": 369968,
+     "fanout": 1,
+     "centre_l1_um": 1.08
+    },
+    {
+     "driver": "u.u_15631/place27072",
+     "sink": "u.u_15631/_1_",
+     "net": 369250,
+     "fanout": 1,
+     "centre_l1_um": 0.351
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 260.307,
+   "longest_hop_centre_l1_um": 260.307,
+   "buffer_cluster_l1_diameter_um": 1.08,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_208283/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    82.02600000000001,
+    419.175
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_208283/place26860",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      158.166,
+      238.41,
+      158.49,
+      238.68
+     ],
+     "centre_um": [
+      158.328,
+      238.54500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_208283/place26859",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      159.354,
+      238.14,
+      159.678,
+      238.41
+     ],
+     "centre_um": [
+      159.51600000000002,
+      238.27499999999998
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_208283/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     160.353,
+     238.27499999999998
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_208283/Q$_DFF_P_",
+     "sink": "u.u_208283/place26860",
+     "net": 303425,
+     "fanout": 1,
+     "centre_l1_um": 256.932
+    },
+    {
+     "driver": "u.u_208283/place26860",
+     "sink": "u.u_208283/place26859",
+     "net": 369744,
+     "fanout": 1,
+     "centre_l1_um": 1.458
+    },
+    {
+     "driver": "u.u_208283/place26859",
+     "sink": "u.u_208283/_1_",
+     "net": 369962,
+     "fanout": 1,
+     "centre_l1_um": 0.837
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 256.932,
+   "longest_hop_centre_l1_um": 256.932,
+   "buffer_cluster_l1_diameter_um": 1.458,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15636/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    236.007,
+    6.345000000000001
+   ],
+   "public_input_candidates": [
+    "dn_i[35]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15636/place27065",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      225.936,
+      247.59,
+      226.26,
+      247.86
+     ],
+     "centre_um": [
+      226.098,
+      247.72500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15636/place27064",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      225.45,
+      247.59,
+      225.774,
+      247.86
+     ],
+     "centre_um": [
+      225.612,
+      247.72500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15636/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     225.04500000000002,
+     247.72500000000002
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15636/Q$_DFF_P_",
+     "sink": "u.u_15636/place27065",
+     "net": 217708,
+     "fanout": 1,
+     "centre_l1_um": 251.289
+    },
+    {
+     "driver": "u.u_15636/place27065",
+     "sink": "u.u_15636/place27064",
+     "net": 369244,
+     "fanout": 1,
+     "centre_l1_um": 0.486
+    },
+    {
+     "driver": "u.u_15636/place27064",
+     "sink": "u.u_15636/_1_",
+     "net": 369243,
+     "fanout": 1,
+     "centre_l1_um": 0.567
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 251.289,
+   "longest_hop_centre_l1_um": 251.289,
+   "buffer_cluster_l1_diameter_um": 0.486,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_215771/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    234.036,
+    394.33500000000004
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_215771/place26798",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      234.738,
+      145.8,
+      235.062,
+      146.07
+     ],
+     "centre_um": [
+      234.9,
+      145.935
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_215771/wire27155",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "bbox_um": [
+      235.116,
+      144.72,
+      236.304,
+      144.99
+     ],
+     "centre_um": [
+      235.71,
+      144.85500000000002
+     ],
+     "size_um": [
+      1.188,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_215771/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     235.73700000000002,
+     144.58499999999998
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_215771/Q$_DFF_P_",
+     "sink": "u.u_215771/place26798",
+     "net": 310269,
+     "fanout": 1,
+     "centre_l1_um": 249.264
+    },
+    {
+     "driver": "u.u_215771/place26798",
+     "sink": "u.u_215771/wire27155",
+     "net": 369940,
+     "fanout": 1,
+     "centre_l1_um": 1.89
+    },
+    {
+     "driver": "u.u_215771/wire27155",
+     "sink": "u.u_215771/_1_",
+     "net": 370311,
+     "fanout": 1,
+     "centre_l1_um": 0.297
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 249.264,
+   "longest_hop_centre_l1_um": 249.264,
+   "buffer_cluster_l1_diameter_um": 1.89,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_215773/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    233.49599999999998,
+    393.525
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_215773/place26797",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      233.874,
+      145.26,
+      234.198,
+      145.53
+     ],
+     "centre_um": [
+      234.036,
+      145.39499999999998
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_215773/wire27154",
+     "master": "BUFx16f_ASAP7_75t_R",
+     "bbox_um": [
+      233.928,
+      144.72,
+      235.116,
+      144.99
+     ],
+     "centre_um": [
+      234.522,
+      144.85500000000002
+     ],
+     "size_um": [
+      1.188,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_215773/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     234.765,
+     143.77499999999998
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_215773/Q$_DFF_P_",
+     "sink": "u.u_215773/place26797",
+     "net": 310271,
+     "fanout": 1,
+     "centre_l1_um": 248.67
+    },
+    {
+     "driver": "u.u_215773/place26797",
+     "sink": "u.u_215773/wire27154",
+     "net": 370136,
+     "fanout": 1,
+     "centre_l1_um": 1.026
+    },
+    {
+     "driver": "u.u_215773/wire27154",
+     "sink": "u.u_215773/_1_",
+     "net": 369273,
+     "fanout": 1,
+     "centre_l1_um": 1.323
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 248.67,
+   "longest_hop_centre_l1_um": 248.67,
+   "buffer_cluster_l1_diameter_um": 1.026,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_15637/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    230.553,
+    6.075
+   ],
+   "public_input_candidates": [
+    "dn_i[36]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15637/place27063",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      222.156,
+      234.36,
+      222.696,
+      234.63
+     ],
+     "centre_um": [
+      222.426,
+      234.495
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15637/place27062",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      220.644,
+      234.63,
+      221.184,
+      234.9
+     ],
+     "centre_um": [
+      220.914,
+      234.765
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15637/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     220.185,
+     235.845
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15637/Q$_DFF_P_",
+     "sink": "u.u_15637/place27063",
+     "net": 217729,
+     "fanout": 1,
+     "centre_l1_um": 236.547
+    },
+    {
+     "driver": "u.u_15637/place27063",
+     "sink": "u.u_15637/place27062",
+     "net": 369242,
+     "fanout": 1,
+     "centre_l1_um": 1.782
+    },
+    {
+     "driver": "u.u_15637/place27062",
+     "sink": "u.u_15637/_1_",
+     "net": 369241,
+     "fanout": 1,
+     "centre_l1_um": 1.809
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 236.547,
+   "longest_hop_centre_l1_um": 236.547,
+   "buffer_cluster_l1_diameter_um": 1.782,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_16292/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    166.752,
+    40.095
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_16292/place26984",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      173.502,
+      255.69,
+      173.826,
+      255.96
+     ],
+     "centre_um": [
+      173.664,
+      255.825
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_16292/place26983",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      174.042,
+      255.96,
+      174.366,
+      256.23
+     ],
+     "centre_um": [
+      174.204,
+      256.095
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_16292/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     174.393,
+     256.905
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_16292/Q$_DFF_P_",
+     "sink": "u.u_16292/place26984",
+     "net": 231265,
+     "fanout": 1,
+     "centre_l1_um": 222.642
+    },
+    {
+     "driver": "u.u_16292/place26984",
+     "sink": "u.u_16292/place26983",
+     "net": 370273,
+     "fanout": 1,
+     "centre_l1_um": 0.81
+    },
+    {
+     "driver": "u.u_16292/place26983",
+     "sink": "u.u_16292/_1_",
+     "net": 370272,
+     "fanout": 1,
+     "centre_l1_um": 0.999
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 222.642,
+   "longest_hop_centre_l1_um": 222.642,
+   "buffer_cluster_l1_diameter_um": 0.81,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_210624/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    176.364,
+    439.155
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_210624/place26843",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      176.688,
+      240.03,
+      177.012,
+      240.3
+     ],
+     "centre_um": [
+      176.85,
+      240.16500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_210624/place26842",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      176.364,
+      240.03,
+      176.688,
+      240.3
+     ],
+     "centre_um": [
+      176.526,
+      240.16500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_210624/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     176.499,
+     239.89499999999998
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_210624/Q$_DFF_P_",
+     "sink": "u.u_210624/place26843",
+     "net": 305568,
+     "fanout": 1,
+     "centre_l1_um": 199.476
+    },
+    {
+     "driver": "u.u_210624/place26843",
+     "sink": "u.u_210624/place26842",
+     "net": 369176,
+     "fanout": 1,
+     "centre_l1_um": 0.324
+    },
+    {
+     "driver": "u.u_210624/place26842",
+     "sink": "u.u_210624/_1_",
+     "net": 369948,
+     "fanout": 1,
+     "centre_l1_um": 0.297
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 199.476,
+   "longest_hop_centre_l1_um": 199.476,
+   "buffer_cluster_l1_diameter_um": 0.324,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_210626/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    177.228,
+    432.945
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_210626/place26840",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      177.336,
+      238.95,
+      177.66,
+      239.22
+     ],
+     "centre_um": [
+      177.498,
+      239.08499999999998
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_210626/place26839",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      177.444,
+      238.41,
+      177.768,
+      238.68
+     ],
+     "centre_um": [
+      177.606,
+      238.54500000000002
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_210626/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     177.74099999999999,
+     237.735
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_210626/Q$_DFF_P_",
+     "sink": "u.u_210626/place26840",
+     "net": 305570,
+     "fanout": 1,
+     "centre_l1_um": 194.13
+    },
+    {
+     "driver": "u.u_210626/place26840",
+     "sink": "u.u_210626/place26839",
+     "net": 369178,
+     "fanout": 1,
+     "centre_l1_um": 0.648
+    },
+    {
+     "driver": "u.u_210626/place26839",
+     "sink": "u.u_210626/_1_",
+     "net": 369946,
+     "fanout": 1,
+     "centre_l1_um": 0.945
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 194.13,
+   "longest_hop_centre_l1_um": 194.13,
+   "buffer_cluster_l1_diameter_um": 0.648,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_210628/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    176.796,
+    429.435
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_210628/place26836",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      176.85,
+      240.3,
+      177.174,
+      240.57
+     ],
+     "centre_um": [
+      177.012,
+      240.435
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_210628/place26835",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      177.012,
+      238.95,
+      177.336,
+      239.22
+     ],
+     "centre_um": [
+      177.174,
+      239.08499999999998
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_210628/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     177.363,
+     238.815
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_210628/Q$_DFF_P_",
+     "sink": "u.u_210628/place26836",
+     "net": 305572,
+     "fanout": 1,
+     "centre_l1_um": 189.216
+    },
+    {
+     "driver": "u.u_210628/place26836",
+     "sink": "u.u_210628/place26835",
+     "net": 370176,
+     "fanout": 1,
+     "centre_l1_um": 1.512
+    },
+    {
+     "driver": "u.u_210628/place26835",
+     "sink": "u.u_210628/_1_",
+     "net": 369179,
+     "fanout": 1,
+     "centre_l1_um": 0.459
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 189.216,
+   "longest_hop_centre_l1_um": 189.216,
+   "buffer_cluster_l1_diameter_um": 1.512,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  },
+  {
+   "source_ff": "u.u_210627/Q$_DFF_P_",
+   "source_master": "DFFHQNx1_ASAP7_75t_R",
+   "source_centre_um": [
+    177.44400000000002,
+    423.765
+   ],
+   "public_input_candidates": [],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_210627/place26838",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      177.822,
+      238.14,
+      178.146,
+      238.41
+     ],
+     "centre_um": [
+      177.98399999999998,
+      238.27499999999998
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_210627/place26837",
+     "master": "BUFx3_ASAP7_75t_R",
+     "bbox_um": [
+      178.038,
+      237.87,
+      178.362,
+      238.14
+     ],
+     "centre_um": [
+      178.2,
+      238.005
+     ],
+     "size_um": [
+      0.324,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_210627/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     178.33499999999998,
+     237.735
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_210627/Q$_DFF_P_",
+     "sink": "u.u_210627/place26838",
+     "net": 305571,
+     "fanout": 1,
+     "centre_l1_um": 186.03
+    },
+    {
+     "driver": "u.u_210627/place26838",
+     "sink": "u.u_210627/place26837",
+     "net": 369180,
+     "fanout": 1,
+     "centre_l1_um": 0.486
+    },
+    {
+     "driver": "u.u_210627/place26837",
+     "sink": "u.u_210627/_1_",
+     "net": 369945,
+     "fanout": 1,
+     "centre_l1_um": 0.405
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 186.03,
+   "longest_hop_centre_l1_um": 186.03,
+   "buffer_cluster_l1_diameter_um": 0.486,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  }
+ ],
+ "current_dn44_dn47_reference_chains": [
+  {
+   "source_ff": "u.g_sc_shared_rst_1.u_pin/Q$_DFF_P_",
+   "source_master": "DFFHQNx3_ASAP7_75t_R",
+   "source_centre_um": [
+    237.168,
+    6.615
+   ],
+   "public_input_candidates": [
+    "dn_i[47]"
+   ],
+   "buffer_count": 3,
+   "buffers": [
+    {
+     "name": "u.g_sc_shared_rst_1.u_pin/place27112",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      203.148,
+      84.51,
+      203.688,
+      84.78
+     ],
+     "centre_um": [
+      203.418,
+      84.64500000000001
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    },
+    {
+     "name": "u.g_sc_shared_rst_1.u_pin/place27111",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      169.398,
+      162.54,
+      169.938,
+      162.81
+     ],
+     "centre_um": [
+      169.668,
+      162.675
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    },
+    {
+     "name": "u.g_sc_shared_rst_1.u_pin/place27110",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      135.756,
+      240.57,
+      136.296,
+      240.84
+     ],
+     "centre_um": [
+      136.026,
+      240.70499999999998
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.g_sc_shared_rst_1.u_pin/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     102.14099999999999,
+     318.46500000000003
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.g_sc_shared_rst_1.u_pin/Q$_DFF_P_",
+     "sink": "u.g_sc_shared_rst_1.u_pin/place27112",
+     "net": 195306,
+     "fanout": 1,
+     "centre_l1_um": 111.78
+    },
+    {
+     "driver": "u.g_sc_shared_rst_1.u_pin/place27112",
+     "sink": "u.g_sc_shared_rst_1.u_pin/place27111",
+     "net": 369308,
+     "fanout": 1,
+     "centre_l1_um": 111.78
+    },
+    {
+     "driver": "u.g_sc_shared_rst_1.u_pin/place27111",
+     "sink": "u.g_sc_shared_rst_1.u_pin/place27110",
+     "net": 369981,
+     "fanout": 1,
+     "centre_l1_um": 111.672
+    },
+    {
+     "driver": "u.g_sc_shared_rst_1.u_pin/place27110",
+     "sink": "u.g_sc_shared_rst_1.u_pin/_1_",
+     "net": 369309,
+     "fanout": 1,
+     "centre_l1_um": 111.645
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 111.78,
+   "longest_hop_centre_l1_um": 111.78,
+   "buffer_cluster_l1_diameter_um": 223.452,
+   "first_hop_over150_census_filter": false,
+   "repeaters_within10um_census_flag": false
+  },
+  {
+   "source_ff": "u.u_15645/Q$_DFF_P_",
+   "source_master": "DFFHQNx2_ASAP7_75t_R",
+   "source_centre_um": [
+    236.97899999999998,
+    6.075
+   ],
+   "public_input_candidates": [
+    "dn_i[44]"
+   ],
+   "buffer_count": 2,
+   "buffers": [
+    {
+     "name": "u.u_15645/place27055",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      103.572,
+      317.25,
+      104.112,
+      317.52
+     ],
+     "centre_um": [
+      103.842,
+      317.385
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    },
+    {
+     "name": "u.u_15645/place27054",
+     "master": "BUFx6f_ASAP7_75t_R",
+     "bbox_um": [
+      103.788,
+      317.52,
+      104.328,
+      317.79
+     ],
+     "centre_um": [
+      104.05799999999999,
+      317.655
+     ],
+     "size_um": [
+      0.54,
+      0.27
+     ]
+    }
+   ],
+   "endpoint": {
+    "name": "u.u_15645/_1_",
+    "master": "INVx3_ASAP7_75t_R",
+    "centre_um": [
+     103.167,
+     317.925
+    ]
+   },
+   "edges": [
+    {
+     "driver": "u.u_15645/Q$_DFF_P_",
+     "sink": "u.u_15645/place27055",
+     "net": 217898,
+     "fanout": 1,
+     "centre_l1_um": 444.447
+    },
+    {
+     "driver": "u.u_15645/place27055",
+     "sink": "u.u_15645/place27054",
+     "net": 369239,
+     "fanout": 1,
+     "centre_l1_um": 0.486
+    },
+    {
+     "driver": "u.u_15645/place27054",
+     "sink": "u.u_15645/_1_",
+     "net": 369238,
+     "fanout": 1,
+     "centre_l1_um": 1.161
+    }
+   ],
+   "stop": "first_nonBUF",
+   "first_hop_centre_l1_um": 444.447,
+   "longest_hop_centre_l1_um": 444.447,
+   "buffer_cluster_l1_diameter_um": 0.486,
+   "first_hop_over150_census_filter": true,
+   "repeaters_within10um_census_flag": true
+  }
+ ]
+}

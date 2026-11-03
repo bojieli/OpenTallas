@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS_PROTOTYPE_CONTROL_COMPONENT",
+  "host": "epyc2/dear-crayfish",
+  "unit": "oth-ubuntu-1011667-1793613168",
+  "path": "/srv/opentallas-scratch2/claude/codex-head-xpf37-control-packet1",
+  "build_seconds": 3.01,
+  "build_peak_RSS_KB": 194332,
+  "nominal_runtime_seconds": 0.011,
+  "nominal_Verilator_allocation_MB": 7,
+  "runtime_OS_RSS_KB": null,
+  "controls": {
+    "actual_loader_base": 28,
+    "actual_loader_stage": 37,
+    "record_count": 1,
+    "observer_commands": 12,
+    "arms": 1,
+    "nominal_fault": 0,
+    "wrong_first_pc_fault": 1,
+    "duplicate17_fault": 1,
+    "loader_fault": 0,
+    "observer_fault": 0
+  },
+  "scope": "canonical functional XPF monitor prototype and actual source segment loader/typed observer; TEST_ONLY dates; no selected flattened_p replacement or matrix/globalQC/numerical/physical credit",
+  "added_pipeline_edges": 0
+}

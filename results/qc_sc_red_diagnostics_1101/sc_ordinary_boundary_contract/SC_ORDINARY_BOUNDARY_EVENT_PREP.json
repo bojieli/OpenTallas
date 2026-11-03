@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.sc-ordinary-boundary-event-prep.v1",
+  "state": "PREP_ONLY_NOT_ADOPTABLE",
+  "ordinary_pin_bits": 570,
+  "reset_pin_bits": 1,
+  "boundary_FFs": 572,
+  "ordinary_boundary_FFs": 570,
+  "reset_boundary_FFs": 2,
+  "current_logical_clock_join": {
+    "parent_input_producers": "clk",
+    "child_boundary_registers": "ck (STA clk)",
+    "parent_output_captures": "clk",
+    "parent_reset_source": "clocked rst_n_t0 relay/gate, not an assumed asynchronous external clock",
+    "native_parent_arrival_TT_early_late": null,
+    "native_parent_arrival_FF_early_late": null
+  },
+  "existing_planning_authority": {
+    "parent_plan_root_TT_ps": 250,
+    "parent_plan_tolerance_ps": 40,
+    "parent_glue_taps_TT_ps": [
+      223,
+      223
+    ],
+    "parent_FF_reference_ps": null,
+    "standalone_recipe_TT_ps": 250,
+    "standalone_recipe_FF_ps": 202.5,
+    "standalone_FF_basis": "core_flow.FF_TT_INSERTION_RATIO0.81 and explicit private recipe; not a measured parent clock",
+    "absolute_intrinsic_core_band_is_new_gate": false
+  },
+  "current_physical_observations": {
+    "prior_three_buffer_GRT_only_not_SC49": {
+      "TT_mean_min_max_ps": [
+        335.32,
+        308.44,
+        350.65
+      ],
+      "FF_mean_min_max_ps": [
+        287.28,
+        261.49,
+        303.5
+      ],
+      "TT_setup_ps": -388.81,
+      "FF_hold_ps": -163.48
+    },
+    "SC49_current_timing": null
+  },
+  "existing_API_candidate_not_installed": {
+    "recipe_params": {
+      "HARD_PINREG": 1
+    },
+    "core_json_clock_contract": {
+      "kind": "hard_core_latency",
+      "io_reference_ps": {
+        "kind": "plan_declared",
+        "tt": 250,
+        "ff": 202.5,
+        "basis": "Existing prebuild reference only; qualified parent source/corner envelopes remain missing",
+        "source": "Exact fresh parent+child source/plan event required before installation"
+      }
+    },
+    "scope": "An explicit planned virtual reference is separate from measured intrinsic insertion and cannot create a qualified parent timing budget. Current master_slice.core_tree policy takes precedence over typed contract; do not delete the tree or fabricate qualification."
+  },
+  "required_source_event": {
+    "source": [
+      "Live d90 oldSC bytes joined to literalHARD0 equivalence; source candidate089+98 HARD1 explicit physical implementation identity.",
+      "Bind all7base/10parent u_core paths to exact view and exact parameter profile, preserving defaultH0 logical contract or proving explicitly selected new source. CE variants excluded."
+    ],
+    "view_and_count": [
+      "Publish exact native implementation, geometry/pins/RTL ABI, native sink count and parent instance/count sidecar. Never subtract declared387 from native parent counts."
+    ],
+    "clock": [
+      "Publish actual same-source parent producer/capture endpoint early/late clock envelopes at TT/FF and child root arrival plus intrinsic clock model; retain per-family/path ownership.",
+      "For existing promised core_tree use source-backed two-corner envelope qualification/fingerprint; do not replace measured_timing_used=false with measured samples or invent missing qualification.",
+      "Record planned IO reference and measured child insertion separately, then compensate the actual parent entry tap/related paths using existing real-view contract."
+    ],
+    "functional": [
+      "Keep exact first-capture/four-step and reset/control proof limits; no invalid-initial-state, fullboot or parent mission credit inferred."
+    ],
+    "publication": [
+      "Fresh recipe/core.json/master_slice/clock_binding/SDC/freeze/bind event; never mutate old jobs or use metadata alone to bypass current measured-hold band refusal."
+    ]
+  },
+  "timing_equations": {
+    "input_setup": "latest_parent_launch_clock + latest_cq_and_data <= earliest_child_root_plus_intrinsic_capture + period - setup - uncertainty_setup",
+    "input_hold": "earliest_parent_launch_clock + earliest_cq_and_data >= latest_child_root_plus_intrinsic_capture + hold + uncertainty_hold",
+    "output_setup": "latest_child_root_plus_intrinsic_launch + latest_cq_and_data <= earliest_parent_capture_clock + period - setup - uncertainty_setup",
+    "output_hold": "earliest_child_root_plus_intrinsic_launch + earliest_cq_and_data >= latest_parent_capture_clock + hold + uncertainty_hold"
+  },
+  "prohibited_inferences": [
+    "Replacing parent vclk with child mean is not ordinary-boundary authority.",
+    "Nominal FF202.5 is not globally conservative: versus287.28 it strengthens input hold but weakens output hold by84.78ps.",
+    "Missing parent/corner count or timing remains unknown, never PASS.",
+    "250/202.5 planning target deviation does not itself mandate hardware redesign or new DUT gate."
+  ],
+  "current_adoption_verdict": "HOLD"
+}

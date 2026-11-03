@@ -1,0 +1,40 @@
+{
+  "status": "PASS_NATIVE_FP_ONLY",
+  "host": "intel2",
+  "unit": "oth-ubuntu-2961941-1793626634",
+  "controller": "codex-recip-fp-0538-r1",
+  "geometry_read_unit": "oth-ubuntu-3013929-1793626817",
+  "geometry_read_controller": "codex-recip-fp-read-0540",
+  "classification": "MANUAL_PHYSICAL_CONTINUATION",
+  "KW_RESUME": "FULL unchanged",
+  "native_inputs_unchanged": true,
+  "authentic_SYNTH": {
+    "1_2_yosys.v": "ebaffaeff0de02cd19b36ce216f644f43a319171467760e258f9042fd86815c6",
+    "1_synth.odb": "7870f090f523e48c889cbc7701ff159973f1d3337eb09ed4817decf2f1c431db",
+    "1_synth.sdc": "19e5582c1234efaff179dcec5736577b188062dad321f71fbcc21d4b5616354f"
+  },
+  "native_final_FP": {
+    "2_floorplan.odb": "0c96813add639ecdc84ebb5cf96c56a6d16e6ba889d55f7337238183e38766ea",
+    "2_floorplan.sdc": "19e5582c1234efaff179dcec5736577b188062dad321f71fbcc21d4b5616354f"
+  },
+  "IO_rows_PG": {
+    "signal_bits": 69,
+    "signal_rects": 70,
+    "all_signal_shapes_contained": true,
+    "x31_two_shapes_retained": true,
+    "rows": 496,
+    "PG_both_nets_metal_present": true,
+    "PG_connectivity_final_signoff": "NOT_ASSERTED",
+    "PLACEMENT": "NOT_RUN",
+    "STA": "NOT_RUN"
+  },
+  "FP_resources": {
+    "mem_GB": 4,
+    "threads": 1,
+    "disk_GB": 2,
+    "actual_peak_KB": 535176
+  },
+  "no_new_SYNTH_PLACE_CTS_route_STA": true,
+  "scope": "standalone corrected compact RECIP; no AHUB selected-model substitution",
+  "original_intel1_attempt": "NOT_RUN143 exact waiter1342245 terminal verified; no duplicate remote process"
+}

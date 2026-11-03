@@ -1,0 +1,9 @@
+Independent bounded HEAD469 caller review
+
+Static CONCUR a1e402d5bb0ef04ed56fc389af8a5daf78fe38d1 after reviewing caller, exact SOURCE_JOIN and runtime run.sh. Sole FLOW producer only; no proof/job by this reviewer. Runtime Intel2 /srv/opentallas-scratch2/claude/codex-head-residual469-0825; proposed normal8GB2T, image16470, subject/certificate read-only, explicit HEAD469_REVIEWED opt-in.
+
+Initial0b01 caller validated files against a SOURCE_JOIN that was not itself pinned. Updated caller pins manifest808db775, certificateb3d3939a and typed caller4eb5de7a; the manifest pins actual AIG/maps/aliases/prior/helper/candidate/hints. It reconstructs the old joint98 AIG and requires exact7071c26d byte identity. Independently inspected AIG.write: it emits every allocated AND node, not a pruned98-output cone. This binds the complete compiled graph and assumptions, including nodes outside the selected98 outputs. Full output lists are restored before selecting the469 original residuals.
+
+Original58437 matched points/12732 prior are reconstructed and preserved. Current KEEP/hunt native BASE10+2 is checked. Reset-image correlations only enter separate bijection/reset compatibility validation, never L.hyp/L.cons or transition assumptions. Joint551 comprises469 original residual comparisons and82 auxiliary KEEP/hunt/typed next-state obligations. Output coverage and uniqueness are asserted; single_cap1000 covers551 and existing native SAT policy is unchanged. No full84750 solve, source/default/reset contract change, output mask, accepted hint or source credit.
+
+Residual classifications remain conditional on the auxiliary context if any of82 is not proved. The output retains auxiliary_all_proved and original_verdict_unchanged/source_creditfalse; diagnostic completion is not full equivalence or adoption. No further caller issue found in the reviewed finite scope.

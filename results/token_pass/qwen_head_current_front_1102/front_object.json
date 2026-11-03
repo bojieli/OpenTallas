@@ -1,0 +1,1307 @@
+{
+  "schema": "opentallas.qwen.native-head-command-front-source.v1",
+  "status": "SOURCE_TRANSPORT_EQUATIONS_NOT_EXECUTABLE_DATES",
+  "rows": [
+    {
+      "slice": 0,
+      "node": "dvs_W5",
+      "TT_to_FDN_input": 15,
+      "local_FW_to_CTL": 21,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 49,
+      "equation": "HEAD_NATIVE_SU_S0_CMD = HEAD_CALR_APPLY_S0_ISSUE + 49"
+    },
+    {
+      "slice": 1,
+      "node": "dvs_W4",
+      "TT_to_FDN_input": 22,
+      "local_FW_to_CTL": 21,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 56,
+      "equation": "HEAD_NATIVE_SU_S1_CMD = HEAD_CALR_APPLY_S1_ISSUE + 56"
+    },
+    {
+      "slice": 2,
+      "node": "dvs_W3",
+      "TT_to_FDN_input": 29,
+      "local_FW_to_CTL": 21,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 63,
+      "equation": "HEAD_NATIVE_SU_S2_CMD = HEAD_CALR_APPLY_S2_ISSUE + 63"
+    },
+    {
+      "slice": 3,
+      "node": "dvs_W2",
+      "TT_to_FDN_input": 36,
+      "local_FW_to_CTL": 21,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 70,
+      "equation": "HEAD_NATIVE_SU_S3_CMD = HEAD_CALR_APPLY_S3_ISSUE + 70"
+    },
+    {
+      "slice": 4,
+      "node": "dvs_W1",
+      "TT_to_FDN_input": 43,
+      "local_FW_to_CTL": 21,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 77,
+      "equation": "HEAD_NATIVE_SU_S4_CMD = HEAD_CALR_APPLY_S4_ISSUE + 77"
+    },
+    {
+      "slice": 5,
+      "node": "dvs_W0",
+      "TT_to_FDN_input": 50,
+      "local_FW_to_CTL": 21,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 84,
+      "equation": "HEAD_NATIVE_SU_S5_CMD = HEAD_CALR_APPLY_S5_ISSUE + 84"
+    },
+    {
+      "slice": 6,
+      "node": "dvs_E0",
+      "TT_to_FDN_input": 57,
+      "local_FW_to_CTL": 20,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 90,
+      "equation": "HEAD_NATIVE_SU_S6_CMD = HEAD_CALR_APPLY_S6_ISSUE + 90"
+    },
+    {
+      "slice": 7,
+      "node": "dvs_E1",
+      "TT_to_FDN_input": 63,
+      "local_FW_to_CTL": 20,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 96,
+      "equation": "HEAD_NATIVE_SU_S7_CMD = HEAD_CALR_APPLY_S7_ISSUE + 96"
+    },
+    {
+      "slice": 8,
+      "node": "dvs_E2",
+      "TT_to_FDN_input": 69,
+      "local_FW_to_CTL": 20,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 102,
+      "equation": "HEAD_NATIVE_SU_S8_CMD = HEAD_CALR_APPLY_S8_ISSUE + 102"
+    },
+    {
+      "slice": 9,
+      "node": "dvs_E3",
+      "TT_to_FDN_input": 75,
+      "local_FW_to_CTL": 20,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 108,
+      "equation": "HEAD_NATIVE_SU_S9_CMD = HEAD_CALR_APPLY_S9_ISSUE + 108"
+    },
+    {
+      "slice": 10,
+      "node": "dvs_E4",
+      "TT_to_FDN_input": 81,
+      "local_FW_to_CTL": 20,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 114,
+      "equation": "HEAD_NATIVE_SU_S10_CMD = HEAD_CALR_APPLY_S10_ISSUE + 114"
+    },
+    {
+      "slice": 11,
+      "node": "dvs_E5",
+      "TT_to_FDN_input": 87,
+      "local_FW_to_CTL": 20,
+      "CTL_to_SU": 11,
+      "TT_to_native_SU_command": 120,
+      "equation": "HEAD_NATIVE_SU_S11_CMD = HEAD_CALR_APPLY_S11_ISSUE + 120"
+    }
+  ],
+  "source_bus_groups_sha256": "fcd15f03c54fd5c3dc0002fafa8b8433e01d7d90a4f0f23da3710aa889163576",
+  "source_param_regen_sha256": "dbf9c79328bd1e846628e54233c797fb1e6c88fe4837c9b6309e3038c71d2248",
+  "cohort": "explicit frozen bind_complete4 82190/factory-f79 source; functional/module/PHY qualification remains separate",
+  "primary_source_sha256": {
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv": "bad64d67691f2bca53804b884d5da41b4900e4801db53da3c6e352b1796395a9",
+    "rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv": "686650fa5e7e5f3523a344f3c90d1f3ada14d411c1ab064901375269e6beb53a",
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv": "43e4fdb1799703b377cc2bf1af9531b6d1af9405b60d97175f1fb28138181f6e",
+    "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22"
+  },
+  "primary_register_contract": {
+    "FDN": 1,
+    "FUP": 1,
+    "RP_passthrough": 0,
+    "HARD1_CTL": 1
+  },
+  "head_prepare": {
+    "schema": "opentallas.qwen.head_prepare_params.v1",
+    "selected_masters": {
+      "d2d_rom": "qfd_d2d_static_ovl_sf7_obs1",
+      "native59": "qfd_native59_dv_headprep_obs1",
+      "sys_face": "qfd_sys_face_lctx3_wrapped"
+    },
+    "original": {
+      "d2d_rom.HEAD_CONTEXT": 0,
+      "native59.ROPE": 0,
+      "sys_face.L_CONTEXTS": 0
+    },
+    "bound": {
+      "d2d_rom.HEAD_CONTEXT": 1,
+      "native59.ROPE": 1,
+      "sys_face.L_CONTEXTS": 1
+    },
+    "scope": "SOURCE_CANDIDATE; changed native59 and glue types need current profile/image, model and physical qualification",
+    "added_pipeline_edges": 0,
+    "native_embedding_terminal_index": {
+      "legacy": 64,
+      "selected": 84,
+      "delta": 20
+    },
+    "programme_effects": [
+      "enable existing recurring HEAD callback",
+      "enable existing eight-word RoPE read after embedding",
+      "select existing segment1 for layer stages2..36"
+    ],
+    "record_timing": {
+      "schema": "opentallas.qwen.head_record_timing.v1",
+      "head_callback_edges": 8,
+      "witness_callback_edges": 8,
+      "record_return_edges": 5,
+      "intrinsic_edges": {
+        "d2d_callback_capture": 1,
+        "face_input_capture": 1,
+        "record_producer": 1,
+        "face_output_capture": 1,
+        "d2d_record_capture": 1
+      },
+      "port1_txd": 18,
+      "send_slot_to_bank_sample_edges": 10,
+      "scope": "Source endpoint ages; current phase/clock, package calendar and physical closure remain separate"
+    }
+  },
+  "landing_receipts": [
+    {
+      "path": "forward",
+      "sink": "dvs_E0.u_core.u_sub.u_fdn",
+      "source": "dvs_W0.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W0_fe__hr_eo_hr_ei"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E0.u_core.u_sub.u_fdn",
+      "source": "dvs_W0.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W0_fe__rd_eo_rd_ei"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E0.u_core.u_sub.u_rp",
+      "source": "dvs_E0.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E0_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E0.u_core.u_sub.u_rp",
+      "source": "dvs_E0.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E0_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_E0.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_E0.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_E0_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E1.u_core.u_sub.u_fdn",
+      "source": "dvs_E0.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E0_fe__hr_wo_hr_ei"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E1.u_core.u_sub.u_fdn",
+      "source": "dvs_E0.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E0_fe__rd_wo_rd_ei"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E1.u_core.u_sub.u_rp",
+      "source": "dvs_E1.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E1_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E1.u_core.u_sub.u_rp",
+      "source": "dvs_E1.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E1_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_E1.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_E1.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_E1_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E2.u_core.u_sub.u_fdn",
+      "source": "dvs_E1.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E1_fe__hr_wo_hr_ei"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E2.u_core.u_sub.u_fdn",
+      "source": "dvs_E1.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E1_fe__rd_wo_rd_ei"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E2.u_core.u_sub.u_rp",
+      "source": "dvs_E2.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E2_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E2.u_core.u_sub.u_rp",
+      "source": "dvs_E2.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E2_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_E2.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_E2.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_E2_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E3.u_core.u_sub.u_fdn",
+      "source": "dvs_E2.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E2_fe__hr_wo_hr_ei"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E3.u_core.u_sub.u_fdn",
+      "source": "dvs_E2.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E2_fe__rd_wo_rd_ei"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E3.u_core.u_sub.u_rp",
+      "source": "dvs_E3.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E3_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E3.u_core.u_sub.u_rp",
+      "source": "dvs_E3.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E3_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_E3.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_E3.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_E3_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E4.u_core.u_sub.u_fdn",
+      "source": "dvs_E3.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E3_fe__hr_wo_hr_ei"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E4.u_core.u_sub.u_fdn",
+      "source": "dvs_E3.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E3_fe__rd_wo_rd_ei"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E4.u_core.u_sub.u_rp",
+      "source": "dvs_E4.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E4_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E4.u_core.u_sub.u_rp",
+      "source": "dvs_E4.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E4_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_E4.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_E4.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_E4_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E5.u_core.u_sub.u_fdn",
+      "source": "dvs_E4.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E4_fe__hr_wo_hr_ei"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_E5.u_core.u_sub.u_fdn",
+      "source": "dvs_E4.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 4,
+      "lane": "sl_E4_fe__rd_wo_rd_ei"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E5.u_core.u_sub.u_rp",
+      "source": "dvs_E5.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E5_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_E5.u_core.u_sub.u_rp",
+      "source": "dvs_E5.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 20,
+      "lane": "sl_E5_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_E5.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_E5.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_E5_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W0.u_core.u_sub.u_fdn",
+      "source": "dvs_W1.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W1_fe__hr_eo_hr_wi"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W0.u_core.u_sub.u_fdn",
+      "source": "dvs_W1.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W1_fe__l9_eo_l9_wi"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W0.u_core.u_sub.u_rp",
+      "source": "dvs_W0.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W0_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W0.u_core.u_sub.u_rp",
+      "source": "dvs_W0.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W0_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_W0.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_W0.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_W0_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W1.u_core.u_sub.u_fdn",
+      "source": "dvs_W2.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W2_fe__hr_eo_hr_wi"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W1.u_core.u_sub.u_fdn",
+      "source": "dvs_W2.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W2_fe__rd_eo_rd_wi"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W1.u_core.u_sub.u_rp",
+      "source": "dvs_W1.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W1_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W1.u_core.u_sub.u_rp",
+      "source": "dvs_W1.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W1_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_W1.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_W1.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_W1_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W2.u_core.u_sub.u_fdn",
+      "source": "dvs_W3.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W3_fe__hr_eo_hr_wi"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W2.u_core.u_sub.u_fdn",
+      "source": "dvs_W3.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W3_fe__l9_eo_l9_wi"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W2.u_core.u_sub.u_rp",
+      "source": "dvs_W2.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W2_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W2.u_core.u_sub.u_rp",
+      "source": "dvs_W2.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W2_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_W2.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_W2.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_W2_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W3.u_core.u_sub.u_fdn",
+      "source": "dvs_W4.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W4_fe__hr_eo_hr_wi"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W3.u_core.u_sub.u_fdn",
+      "source": "dvs_W4.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W4_fe__rd_eo_rd_wi"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W3.u_core.u_sub.u_rp",
+      "source": "dvs_W3.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W3_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W3.u_core.u_sub.u_rp",
+      "source": "dvs_W3.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W3_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_W3.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_W3.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_W3_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W4.u_core.u_sub.u_fdn",
+      "source": "dvs_W5.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          50
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W5_fe__hr_eo_hr_wi"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W4.u_core.u_sub.u_fdn",
+      "source": "dvs_W5.u_core.u_sub.u_fup.cmd_o",
+      "source_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          51,
+          115
+        ]
+      ],
+      "landed_stages": 5,
+      "lane": "sl_W5_fe__l9_eo_l9_wi"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W4.u_core.u_sub.u_rp",
+      "source": "dvs_W4.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W4_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W4.u_core.u_sub.u_rp",
+      "source": "dvs_W4.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W4_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_W4.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_W4.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_W4_ctl__x_ctl_su_c"
+    },
+    {
+      "path": "forward",
+      "sink": "dvs_W5.u_core.u_sub.u_fdn",
+      "source": "tt_ctlm.cmd",
+      "source_bits": [
+        [
+          0,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          115
+        ]
+      ],
+      "landed_stages": 15,
+      "lane": "tt_ctlm__cmd_cmd_wi"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W5.u_core.u_sub.u_rp",
+      "source": "dvs_W5.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          33
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W5_fw__x_fw_ctl_p1"
+    },
+    {
+      "path": "local",
+      "sink": "dvs_W5.u_core.u_sub.u_rp",
+      "source": "dvs_W5.u_core.u_sub.u_fdn.cmd_q",
+      "source_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "sink_bits": [
+        [
+          34,
+          115
+        ]
+      ],
+      "landed_stages": 21,
+      "lane": "sl_W5_fw__x_fw_ctl_p2"
+    },
+    {
+      "path": "SU",
+      "sink": "dvs_W5.u_core.u_sub.u_suvm.u_vm8q.u_rpg",
+      "source": "dvs_W5.u_core.u_sub.u_ctl.su_cmd",
+      "source_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "sink_bits": [
+        [
+          0,
+          9
+        ]
+      ],
+      "landed_stages": 11,
+      "lane": "sl_W5_ctl__x_ctl_su_c"
+    }
+  ],
+  "added_pipeline_edges": 0,
+  "remaining": [
+    "current bound SU internal lane/VM path numerical qualification and H emission age",
+    "native SU output write\u2192CTL\u2192STREAM transport",
+    "real stream merge/headtap/Xfill arm and operand epoch leases",
+    "all executable peruser H/GME/station issue dates"
+  ],
+  "warning": "do not add the direct unbound-H component70/110 offsets to claim current bound headtap timing; additional arithmetic/write/stream crossings remain",
+  "executable": false
+}

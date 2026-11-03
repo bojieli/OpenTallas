@@ -1,0 +1,35 @@
+{
+  "scope": "PREP_ONLY_EXPLICIT_GRT_ANALYSIS_ROLE_WITH_UNCHANGED_NOMINAL_FF_FRAME",
+  "INPUT_STAGE": "fixed_clock_PLACE",
+  "analysis_role": "nativeGRT",
+  "legacy_internal_enum": "4_cts.sdc",
+  "actual_artifact_aliases_created": false,
+  "cts_credit": false,
+  "dispatch_ready": false,
+  "measured_hold_option": 0,
+  "nominal_ff_reference_ps": 202.5,
+  "measured_prior_mean_ps": 287.28,
+  "input_hold_padding_relative_to_measured_frame": "stronger by prior84.78ps",
+  "output_hold_padding_relative_to_measured_frame": "weaker by prior84.78ps; may underrepair actual later-neighbor capture",
+  "register_to_register_hold_frame_changed": false,
+  "SDC_bytes_changed": false,
+  "STA_gate_or_uncertainty_changed": false,
+  "parent_frame_qualification": false,
+  "affected_legacy_branches": [
+    41,
+    66,
+    91,
+    168,
+    182,
+    203,
+    216,
+    762
+  ],
+  "inputs": {
+    "run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/fixed_clock_PLACE_input.odb": "d2e70a597213771ffcee336e050d7725886af7260c4b9dcbe2dc23a4e4d60a78",
+    "run/results/asap7/kq_qfd_dv_s5_sc2_leaf_pin1centerwideNcurrent/base/fixed_clock_PLACE_input.sdc": "cc789db09dbba25306599491e4a48d94642ed0134b63f5f04f4bd2a9acfe13f9"
+  },
+  "helper_before_sha256": "45e004f796e67435f9539914dcc3594e2267e8a0616c8d59623d290cad983ab1",
+  "helper_after_sha256": "3aa9cd771172a8bc4ca34670f11b9db7c404af75a9153a02c80d39783872723b",
+  "private_role_adapter_sha256": "541a676262830717192b4c72524946fd1b2df9b10833bb77995527e7c5fd3cfd"
+}

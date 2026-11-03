@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "classification": "MANUAL_PHYSICAL_CONTINUATION",
+  "KW_RESUME": "FULL unchanged",
+  "steps": [
+    [
+      "2_1_floorplan",
+      "floorplan"
+    ],
+    [
+      "2_2_floorplan_macro",
+      "macro_place"
+    ],
+    [
+      "2_3_floorplan_tapcell",
+      "tapcell"
+    ],
+    [
+      "2_4_floorplan_pdn",
+      "pdn"
+    ]
+  ],
+  "only_stage2_targets": true,
+  "new_SYNTH_PLACE_CTS_route_STA": false,
+  "expected_inputs_sha256": "21a43be6b9904cd6efcfa311f5927c2c97028d5f95e0b0f96a36fdd0a62682e5",
+  "inside_fp_sha256": "456d80770e71562aa3d3cdaa5dbaca7849cf1a82f21db6d50c49b1c6bbdb5e35",
+  "dry_log_sha256": "6b00efe598f6caad13155ca98e964a63e1e5f5ef214f34a7d1c4b88c8046c98d",
+  "peak_original_FP_KB": 519900,
+  "resources": {
+    "mem_GB": 4,
+    "threads": 1,
+    "disk_GB": 2
+  },
+  "source_image": "openroad/orfs:asap7lock"
+}

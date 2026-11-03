@@ -1,0 +1,10 @@
+MANUAL_PHYSICAL_CONTINUATION guardPASS pre 92 exact inputs; normalKWRS FULL retained
+/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 1  /OpenROAD-flow-scripts/flow/scripts/noop.tcl
+mkdir -p /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base
+touch /work/run/objects/asap7/hc_ot_qkh_recip_leaf__216x216/base/copyright.txt
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_3_floorplan_tapcell tapcell
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+cp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_4_floorplan_pdn.odb /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_floorplan.odb
+cp /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_1_floorplan.sdc /work/run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base/2_floorplan.sdc

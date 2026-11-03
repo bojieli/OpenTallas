@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.sc-source-event-scope-correction.v1",
+  "scope": "NEW_CORRECTION_PRESERVES_HISTORICAL_RECEIPTS",
+  "corrects": {
+    "source_receipt": "98bbbbd8184:results/qc_sc_source_1755/source_event.json",
+    "diagnostic_receipt": "results/qc_sc_red_diagnostics_1101/SC_SOURCE_EVENT.json",
+    "invalid_claim": "physical_source_delta -387 applies in modes[0,1]"
+  },
+  "exact_source_old": "051340895d9",
+  "exact_source_new": "98bbbbd8184",
+  "modes": {
+    "HARD_PINREG=0": {
+      "declared_FF_old": 43058,
+      "declared_FF_new": 43058,
+      "declared_delta": 0,
+      "whole_literal_graph_primitives_equal": 131751,
+      "nontrivial_assignments_equal": 96676,
+      "observed_native_mapped_count": null,
+      "source_relation_evidence": "hard0_static_relation.json + hard0_lemma_result.json",
+      "caveat": "New generate hierarchy/alias declarations change source identity; no automatic physical/source-view adoption"
+    },
+    "HARD_PINREG=1": {
+      "declared_FF_old": 43058,
+      "declared_FF_new": 42671,
+      "declared_delta": -387,
+      "existing_standalone_mapped_FF": 42665,
+      "existing_whole_mapped_relation_points": 55664,
+      "not_default_or_native_parent_credit": true
+    }
+  },
+  "recorded_default_base_type_count": 7,
+  "recorded_default_base_replicas": 10,
+  "recorded_recipe_macro_override": "OT_QC_HARD_PINREG unused in recorded7-type census; future bindings must select exact parameter explicitly",
+  "default_declared_delta_across10": 0,
+  "default_native_mapped_or_parent_delta": null,
+  "narrow_native_diagnostic": {
+    "host": "intel1",
+    "unit": "3617760-1793620208",
+    "parameter": 0,
+    "data_inputs": 107,
+    "reset_supports": 5,
+    "observed_Qs": 509,
+    "SAT_steps": 4,
+    "after_first_capture_only": true,
+    "positive": "PASS",
+    "active_mutants_with_bad1_VCD": 3
+  },
+  "CE_dn0_up0_types_qualified": false,
+  "immutable_die_clock_count": 1364730,
+  "die_clock_count_modified": false,
+  "RTL_modified_for_diagnostic": false,
+  "source_default_plan_recipe_physical_adoption": false
+}

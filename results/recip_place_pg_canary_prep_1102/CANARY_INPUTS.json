@@ -1,0 +1,24 @@
+{
+  "status": "PRIVATE_CANARY_PREP_NOT_RELEASED",
+  "actual_original_mode": "OT_PG_STRICT_UNSET_121_MANUAL",
+  "global_strict_GPL_support": "UNCHANGED_UNSUPPORTED",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "expected": {
+    "PLACE_EXPECTED.json": "ae2336f7e0051de86dd3f113c549cffe3366757b08d82d080994e18b7ea1dc89",
+    "NORMAL_SCRIPT_READSET.json": "706483ca3285df6fab6e47b9570a8071a6570d0baee2255d0ca0c2a968c31b75",
+    "patch_place_entries.py": "188a724b054256cc5e65c6e84eeea79176b9a3bc52d22bf28808dcf6ffe70f45",
+    "inside_canary.sh": "59b0747805ab5790f5b47a0d564d4ac2f2847fcde6bb8d0d42e56a1304c3c660",
+    "run_canary.sh": "d6fb3c32bca1dd6996525a9c1a1386a134e5dc62f9eb075f39642cf2c8542c1c",
+    "guard_canary.py": "a48638e447fe62ed7e0af715a965db1ddf3fbc845184d7c0d849c8d70768c73d",
+    "kit/pg_place_canary.tcl": "8501261ee6807f47a9ec5178951b18eb270b7fdf6aea3c690ab1513bd4bae914",
+    "kit/pg_native_qualified_562.tcl": "e19c5fd9872e37f68d610e2dc46608359c9970b7c9e6de84f546f3b3c3ea3a2d",
+    "kit/pg_native_8c9.so": "8c9e1eef9ec6451a5bc1710da15fe683785aa8791d21099e4ee9ec30fee0a93b",
+    "source/tools/orfs_hold_mm.tcl": "45e004f796e67435f9539914dcc3594e2267e8a0616c8d59623d290cad983ab1"
+  },
+  "resources": {
+    "mem_GB": 4,
+    "threads": 1,
+    "disk_GB": 2
+  },
+  "normal_CAD_or_nativePG_claim_from_dry": false
+}

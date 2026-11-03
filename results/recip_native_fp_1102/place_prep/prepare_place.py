@@ -1,0 +1,8 @@
+from pathlib import Path
+import json,shutil,hashlib
+r=Path('/srv/opentallas-scratch2/claude/codex-recip-native-fp-0640');o=Path('/srv/opentallas-scratch2/claude/codex-recip-place-prep-0550');assert not o.exists();o.mkdir();k=o/'kit';shutil.copytree(r/'kit',k,ignore=lambda p,n: {'run'} if Path(p)==r/'kit' else set());rel=Path('run/results/asap7/hc_ot_qkh_recip_leaf__216x216/base');b=k/rel;b.mkdir(parents=True)
+for p in (r/'kit'/rel).glob('1_*'):shutil.copy2(p,b/p.name)
+for n in ['2_floorplan.odb','2_floorplan.sdc']:shutil.copy2(r/'kit'/rel/n,b/n)
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();record=json.loads((r/'FP_RESULT.json').read_text());assert all(sha(b/n)==h for n,h in record['native_final_FP'].items());expected={str(p.relative_to(k)):sha(p) for p in k.rglob('*') if p.is_file() and not str(p.relative_to(k)).startswith('geom/')}
+d={'status':'PREP_ONLY_NO_PLACE_DISPATCH','source_FP':str(r),'native_FP_output_hashes':record['native_final_FP'],'authentic_SYNTH':record['authentic_SYNTH'],'KW_RESUME':'FULL unchanged / manual physical continuation','normal_targets':['do-3_1_place_gp_skip_io','do-3_2_place_iop','do-3_3_place_gp','do-3_4_place_resized','do-3_5_place_dp','do-3_place'],'resources_proposed':{'mem_GB':4,'threads':1,'disk_GB':2},'measured_original_global_place_peak_KB':1151728,'measured_original_resize_peak_KB':622436,'measured_original_DPL_peak_KB':741376,'expected':expected,'new_SYNTH_FP_CTS_GRT_route_STA_or_proof':False,'actual_FP_review':'865c16e31 results/recip_native_fp_1102/actual_native_FP_review.png LOOKED'}
+(o/'PLACE_EXPECTED.json').write_text(json.dumps(d,indent=2)+'\n');print(o,len(expected),'guardedinputs')

@@ -1,0 +1,20 @@
+{
+  "status": "PASS_COMPLETE_SOURCE_PROPOSAL_DRY_ONLY",
+  "unit": "oth-ubuntu-1539963-1793637457",
+  "resources": {
+    "mem_GB": 4,
+    "threads": 1,
+    "disk_GB": 2
+  },
+  "steps": [
+    [
+      "4_1_cts",
+      "cts"
+    ]
+  ],
+  "all94_original_plus_current_PLACE_and_instruments_unchanged": true,
+  "whole_original_postMM_entry_preserved": true,
+  "reproduced_source_hashes_match_disposable_image": true,
+  "native_CTS_STA_solver_route_launched": false,
+  "helper_sha256": "5ffb56fadbac7ab3c13677488a67d0e50124e3136e4ae401a1e8cc7e2c097311"
+}

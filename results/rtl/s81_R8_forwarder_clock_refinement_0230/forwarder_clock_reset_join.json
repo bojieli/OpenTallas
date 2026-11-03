@@ -1,0 +1,495 @@
+{
+  "status": "CURRENT_BOUND_FORWARDERS_COMMON_LOGICAL_CLOCK_CONDITIONAL_VALID_PRESERVATION",
+  "source": "actual bound top/module/port/assign joins; no runtime",
+  "bound_top_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+  "forwarders": [
+    {
+      "sink": "u_f_0R03.u_r0.$3",
+      "sink_part": "fW0_p6_b0",
+      "source_part": "fW0_p5_b0",
+      "original_source": "u_f_0R02.u_r0.$4.Y",
+      "actual_source_type": "s81p_col_h9_r0_p5__t1",
+      "actual_top_parameter_bindings": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_0R02.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_0R02.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_0R02.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_0R02.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_0R02.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_0R02.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_0R02.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_0R02.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_0R02.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_0R02.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_0R02.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_0R02.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_0R02.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_0R02.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_0R02.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_0R02.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_0R02.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_0R02.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_0R02.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_0R02.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_0R02.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_0R02.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_0R02.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_0R02.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_0R02.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_0R02.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_0R02.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_0R02.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_0R02.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_0R02.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_0R02.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_0R02.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_0R02.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_0R02.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_0R02.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_0R02.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_0R02.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_0R02.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_0R02.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_col_h9_r0_p5__t1.sv",
+      "actual_source_sha256": "347bc4d29bd94eeccd22a79529715775c8c22e8ce48971ac7e787fab0e482012",
+      "typed_source_wire": "w_u_r0_4_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_r0_u_y_xo3_1_o[275:0], w_u_r0_u_y_xo2_1_o[275:0], w_u_r0_u_y_xo1_1_o[275:0], w_u_r0_u_y_xo0_1_o[275:0]}",
+      "source_export_faces": [],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": {
+        "1": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo0_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo0_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo0_1_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            },
+            {
+              "instance": "u_u_r0_u_y_xo0_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[275:0]",
+              "output": "w_u_r0_u_y_xo0_0_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            1
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        },
+        "567": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo2_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo2_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo2_1_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            },
+            {
+              "instance": "u_u_r0_u_y_xo2_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[827:552]",
+              "output": "w_u_r0_u_y_xo2_0_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            567
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        }
+      },
+      "nonliteral_clock_reset_path_signature_equal": true,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_r0_u_y_xo0_1_o",
+        1
+      ],
+      "bit567_origin": [
+        "w_u_r0_u_y_xo2_1_o",
+        15
+      ],
+      "literal_duplicate_valid_proven": false,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_2R13.u_r0.$3",
+      "sink_part": "fW4_p6_b0",
+      "source_part": "fW4_p5_b0",
+      "original_source": "u_f_2R12.u_r0.$4.Y",
+      "actual_source_type": "s81p_col_h9_r0_p5__t1",
+      "actual_top_parameter_bindings": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_2R12.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_2R12.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_2R12.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_2R12.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_2R12.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_2R12.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_2R12.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_2R12.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_2R12.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_2R12.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_2R12.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_2R12.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_2R12.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_2R12.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_2R12.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_2R12.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_2R12.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_2R12.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_2R12.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_2R12.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_2R12.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_2R12.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_2R12.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_2R12.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_2R12.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_2R12.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_2R12.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_2R12.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_2R12.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_2R12.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_2R12.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_2R12.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_2R12.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_2R12.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_2R12.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_2R12.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_2R12.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_2R12.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_2R12.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/s81p_col_h9_r0_p5__t1.sv",
+      "actual_source_sha256": "347bc4d29bd94eeccd22a79529715775c8c22e8ce48971ac7e787fab0e482012",
+      "typed_source_wire": "w_u_r0_4_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_r0_u_y_xo3_1_o[275:0], w_u_r0_u_y_xo2_1_o[275:0], w_u_r0_u_y_xo1_1_o[275:0], w_u_r0_u_y_xo0_1_o[275:0]}",
+      "source_export_faces": [],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": {
+        "1": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo0_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo0_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo0_1_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            },
+            {
+              "instance": "u_u_r0_u_y_xo0_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[275:0]",
+              "output": "w_u_r0_u_y_xo0_0_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            1
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        },
+        "567": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo2_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo2_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo2_1_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            },
+            {
+              "instance": "u_u_r0_u_y_xo2_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[827:552]",
+              "output": "w_u_r0_u_y_xo2_0_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            567
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        }
+      },
+      "nonliteral_clock_reset_path_signature_equal": true,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_r0_u_y_xo0_1_o",
+        1
+      ],
+      "bit567_origin": [
+        "w_u_r0_u_y_xo2_1_o",
+        15
+      ],
+      "literal_duplicate_valid_proven": false,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_5L03.u_r0.$3",
+      "sink_part": "fE1_p3_b0",
+      "source_part": "fE1_p2_b0",
+      "original_source": "u_f_5L02.u_r0.$4.Y",
+      "actual_source_type": "col_h9_r0_p2__t1__cl9f71e63d",
+      "actual_top_parameter_bindings": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_5L02.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_5L02.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_5L02.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_5L02.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_5L02.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_5L02.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_5L02.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_5L02.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_5L02.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_5L02.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_5L02.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_5L02.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_5L02.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_5L02.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_5L02.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_5L02.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_5L02.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_5L02.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_5L02.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_5L02.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_5L02.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_5L02.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_5L02.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_5L02.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_5L02.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_5L02.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_5L02.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_5L02.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_5L02.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_5L02.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_5L02.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_5L02.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_5L02.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_5L02.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_5L02.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_5L02.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_5L02.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_5L02.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_5L02.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/col_h9_r0_p2__t1__cl9f71e63d.sv",
+      "actual_source_sha256": "b79499683d530e9b7321580c26bd38c5055d7e5cc0ae83b1c6e2991e9585378b",
+      "typed_source_wire": "w_u_r0_4_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_r0_u_y_xo3_1_o[275:0], w_u_r0_u_y_xo2_1_o[275:0], w_u_r0_u_y_xo1_1_o[275:0], w_u_r0_u_y_xo0_1_o[275:0]}",
+      "source_export_faces": [],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": {
+        "1": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo0_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo0_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo0_1_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            },
+            {
+              "instance": "u_u_r0_u_y_xo0_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[275:0]",
+              "output": "w_u_r0_u_y_xo0_0_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            1
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        },
+        "567": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo2_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo2_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo2_1_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            },
+            {
+              "instance": "u_u_r0_u_y_xo2_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[827:552]",
+              "output": "w_u_r0_u_y_xo2_0_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            567
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        }
+      },
+      "nonliteral_clock_reset_path_signature_equal": true,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_r0_u_y_xo0_1_o",
+        1
+      ],
+      "bit567_origin": [
+        "w_u_r0_u_y_xo2_1_o",
+        15
+      ],
+      "literal_duplicate_valid_proven": false,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    },
+    {
+      "sink": "u_f_7L13.u_r0.$3",
+      "sink_part": "fE5_p3_b0",
+      "source_part": "fE5_p2_b0",
+      "original_source": "u_f_7L12.u_r0.$4.Y",
+      "actual_source_type": "col_h9_r0_p2__t1__cl9f71e63d",
+      "actual_top_parameter_bindings": ".P_u_r0_u_c0_0_INSTANCE(\"u_f_7L12.u_r0.u_c0_0\"), .P_u_r0_u_c0_1_INSTANCE(\"u_f_7L12.u_r0.u_c0_1\"), .P_u_r0_u_c0_2_INSTANCE(\"u_f_7L12.u_r0.u_c0_2\"), .P_u_r0_u_c0_3_INSTANCE(\"u_f_7L12.u_r0.u_c0_3\"), .P_u_r0_u_c0_4_INSTANCE(\"u_f_7L12.u_r0.u_c0_4\"), .P_u_r0_u_c0_5_INSTANCE(\"u_f_7L12.u_r0.u_c0_5\"), .P_u_r0_u_c0_6_INSTANCE(\"u_f_7L12.u_r0.u_c0_6\"), .P_u_r0_u_c1_0_INSTANCE(\"u_f_7L12.u_r0.u_c1_0\"), .P_u_r0_u_c1_1_INSTANCE(\"u_f_7L12.u_r0.u_c1_1\"), .P_u_r0_u_c1_2_INSTANCE(\"u_f_7L12.u_r0.u_c1_2\"), .P_u_r0_u_c1_3_INSTANCE(\"u_f_7L12.u_r0.u_c1_3\"), .P_u_r0_u_c1_4_INSTANCE(\"u_f_7L12.u_r0.u_c1_4\"), .P_u_r0_u_c1_5_INSTANCE(\"u_f_7L12.u_r0.u_c1_5\"), .P_u_r0_u_c1_6_INSTANCE(\"u_f_7L12.u_r0.u_c1_6\"), .P_u_r0_u_c2_0_INSTANCE(\"u_f_7L12.u_r0.u_c2_0\"), .P_u_r0_u_c2_1_INSTANCE(\"u_f_7L12.u_r0.u_c2_1\"), .P_u_r0_u_c2_2_INSTANCE(\"u_f_7L12.u_r0.u_c2_2\"), .P_u_r0_u_c2_3_INSTANCE(\"u_f_7L12.u_r0.u_c2_3\"), .P_u_r0_u_c2_4_INSTANCE(\"u_f_7L12.u_r0.u_c2_4\"), .P_u_r0_u_c2_5_INSTANCE(\"u_f_7L12.u_r0.u_c2_5\"), .P_u_r0_u_c2_6_INSTANCE(\"u_f_7L12.u_r0.u_c2_6\"), .P_u_r0_u_c3_0_INSTANCE(\"u_f_7L12.u_r0.u_c3_0\"), .P_u_r0_u_c3_1_INSTANCE(\"u_f_7L12.u_r0.u_c3_1\"), .P_u_r0_u_c3_2_INSTANCE(\"u_f_7L12.u_r0.u_c3_2\"), .P_u_r0_u_c3_3_INSTANCE(\"u_f_7L12.u_r0.u_c3_3\"), .P_u_r0_u_c3_4_INSTANCE(\"u_f_7L12.u_r0.u_c3_4\"), .P_u_r0_u_c3_5_INSTANCE(\"u_f_7L12.u_r0.u_c3_5\"), .P_u_r0_u_c3_6_INSTANCE(\"u_f_7L12.u_r0.u_c3_6\"), .P_u_r0_u_c4_0_INSTANCE(\"u_f_7L12.u_r0.u_c4_0\"), .P_u_r0_u_c4_1_INSTANCE(\"u_f_7L12.u_r0.u_c4_1\"), .P_u_r0_u_c4_2_INSTANCE(\"u_f_7L12.u_r0.u_c4_2\"), .P_u_r0_u_c4_3_INSTANCE(\"u_f_7L12.u_r0.u_c4_3\"), .P_u_r0_u_c4_4_INSTANCE(\"u_f_7L12.u_r0.u_c4_4\"), .P_u_r0_u_c4_5_INSTANCE(\"u_f_7L12.u_r0.u_c4_5\"), .P_u_r0_u_c4_6_INSTANCE(\"u_f_7L12.u_r0.u_c4_6\"), .P_u_r0_u_e0_INSTANCE(\"u_f_7L12.u_r0.u_e0\"), .P_u_r0_u_e1_INSTANCE(\"u_f_7L12.u_r0.u_e1\"), .P_u_r0_u_e2_INSTANCE(\"u_f_7L12.u_r0.u_e2\"), .P_u_r0_u_e3_INSTANCE(\"u_f_7L12.u_r0.u_e3\"), .S_u_r0_u_cf_lk(12'b010010010010)",
+      "actual_source_file": "/srv/opentallas-scratch2/claude/die-s81-47/bind_ev2/out/rtl/col_h9_r0_p2__t1__cl9f71e63d.sv",
+      "actual_source_sha256": "b79499683d530e9b7321580c26bd38c5055d7e5cc0ae83b1c6e2991e9585378b",
+      "typed_source_wire": "w_u_r0_4_Y",
+      "exact_original_name_match": true,
+      "typed_representative_name_used": false,
+      "source_expression": "{w_u_r0_u_y_xo3_1_o[275:0], w_u_r0_u_y_xo2_1_o[275:0], w_u_r0_u_y_xo1_1_o[275:0], w_u_r0_u_y_xo0_1_o[275:0]}",
+      "source_export_faces": [],
+      "source_cell_drivers": [],
+      "nonliteral_valid_paths": {
+        "1": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo0_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo0_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo0_1_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            },
+            {
+              "instance": "u_u_r0_u_y_xo0_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[0]",
+              "reset": "w_u_r0_u_xrl0_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[275:0]",
+              "output": "w_u_r0_u_y_xo0_0_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            1
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        },
+        "567": {
+          "steps": [
+            {
+              "instance": "u_u_r0_u_y_xo2_1",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_u_y_xo2_0_o[275:0]",
+              "output": "w_u_r0_u_y_xo2_1_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            },
+            {
+              "instance": "u_u_r0_u_y_xo2_0",
+              "type": "ot_s81_rly",
+              "parameters": ".RSREG(1), .W(276)",
+              "clock": "w_u_r0_2_Y[2]",
+              "reset": "w_u_r0_u_xrl2_sync_rst_n[0]",
+              "enable": null,
+              "input": "w_u_r0_3_Y[827:552]",
+              "output": "w_u_r0_u_y_xo2_0_o",
+              "resolved_clock_alias": "clk",
+              "reset_controller_signature": {
+                "module": "ot_reset_sync",
+                "parameters": ".ASYNC_STAGES(2), .OUTPUT_COPIES(1), .TREE(0)",
+                "clock": "clk",
+                "async_rst_n": "rst_n"
+              }
+            }
+          ],
+          "endpoint": [
+            "w_u_r0_3_Y",
+            567
+          ],
+          "endpoint_is_primary_port": false,
+          "literal_equality_not_inferred_from_matching_registers": true
+        }
+      },
+      "nonliteral_clock_reset_path_signature_equal": true,
+      "decoded_packet_width": 1104,
+      "bit1_origin": [
+        "w_u_r0_u_y_xo0_1_o",
+        1
+      ],
+      "bit567_origin": [
+        "w_u_r0_u_y_xo2_1_o",
+        15
+      ],
+      "literal_duplicate_valid_proven": false,
+      "physical_clock_reset_sampling_qualified": false,
+      "native_measured": false
+    }
+  ],
+  "primitive_body_source_hashes": {
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "57f568bf0cde9d0dfcf8ce9c2ffb18818471fd7a6e5ee7a30b806fcb03f905ea",
+    "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a"
+  },
+  "logical_obligation": "If incoming packetbits1/567 are equal at each common clk sampling edge and both equivalent reset-controller histories are initialized by the same reset, matching two-stage relay paths preserve output valid equality.",
+  "literal_aliases": false,
+  "physical_phase_or_reset_release_proven": false,
+  "physical_corrections_C": null,
+  "upstream_mission_epochs_qualified": false,
+  "R8_provider_or_cohort_flags_changed": false,
+  "source_stages_added": 0,
+  "new_runtime_or_formal_build": false
+}

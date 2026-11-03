@@ -1,0 +1,11 @@
+ot-run: intel2         admits   260 GB (avail 418, reserve 0, fresh 49.8, peak 43.9, headroom 0, waiters 1/360 GB) load 100/112 running 48 disk 113 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3013929-1793626817 after 1 s
+MANUAL_PHYSICAL_CONTINUATION guardPASS post 92 exact inputs; normalKWRS FULL retained
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+{"signal_bits": 69, "signal_rects": 70, "all_signal_shapes_contained": true, "x31_two_shapes_retained": true, "rows": 496, "PG_both_nets_metal_present": true, "PG_connectivity_final_signoff": "NOT_ASSERTED", "PLACEMENT": "NOT_RUN", "STA": "NOT_RUN"}
+ot-run: RAN on intel2 (unit oth-ubuntu-3013929-1793626817): exit 0

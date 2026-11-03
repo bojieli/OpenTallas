@@ -1,0 +1,105 @@
+{
+  "status": "READ_ONLY_MAPPING_NO_TRANSFORMER_OR_INTEGRATION",
+  "parent_sha256": "61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a",
+  "ram_instance": "    ot_bind_native_9c28130c03bbd6a26f6fd9a5 g_u_rsv_14_u_u_att_pvq (.RD_ADDR(w_u_rsv_14_u_u_att_driver_pvr_Q[2:0]), .RD_DATA(w_u_rsv_14_u_u_att_pvq_RD_DATA), .WR_ADDR(w_u_rsv_14_u_u_att_driver_pvw_Q[2:0]), .WR_CLK(clk), .WR_DATA({w_u_rsv_14_u_u_att_u_eng_src_26cc0285b4c5b801b801_Q[7:0], w_u_rsv_14_u_u_att_u_eng_src_378b62d9249ca62f488b_Q[2047:0], w_u_rsv_14_u_u_att_u_eng_src_6870e5b5454840c8a2c3_Q[63:0]}), .WR_EN(w_u_rsv_14_u_u_att_src_8c9e9eb60b3aae42c23f_Y[2119:0]));",
+  "same_output_alias": "w_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_Q[512:0]",
+  "original_control_preserved": [
+    "driver_pvr_Q",
+    "driver_pvw_Q",
+    "driver_p_i_Q",
+    "driver_dr_on_Q",
+    "all occupancy/fault/drain/ready/reset logic"
+  ],
+  "legal_p_i_source": "600:             po <= 0; pvo <= 0; pio <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;\n602:             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;\n762:                 if (dr_arm && !go && jc == pvo + 16'(pvs)) begin dr_arm <= 1'b0; dr_on <= 1'b1; p_i <= 0; dbeat <= 0; end\n766:                     p_i <= (p_i == 3'd4) ? 3'd0 : p_i + 1'b1;\n769:                         if (dbeat == 3'd7) begin dr_on <= 1'b0; done <= 1'b1; end",
+  "reference_lines": {
+    "w_u_rsv_14_u_u_att_pvq_RD_DATA": [
+      {
+        "line": 3469,
+        "text": "    wire [2119:0] w_u_rsv_14_u_u_att_pvq_RD_DATA;"
+      },
+      {
+        "line": 8702,
+        "text": "    assign w_u_rsv_14_u_u_att_742_Y = w_u_rsv_14_u_u_att_pvq_RD_DATA[2119:0];"
+      },
+      {
+        "line": 10508,
+        "text": "    ot_bind_native_9c28130c03bbd6a26f6fd9a5 g_u_rsv_14_u_u_att_pvq (.RD_ADDR(w_u_rsv_14_u_u_att_driver_pvr_Q[2:0]), .RD_DATA(w_u_rsv_14_u_u_att_pvq_RD_DATA), .WR_ADDR(w_u_rsv_14_u_u_att_driver_pvw_Q[2:0]), .WR_CLK(clk), .WR_DATA({w_u_rsv_14_u_u_att_u_eng_src_26cc0285b4c5b801b801_Q[7:0], w_u_rsv_14_u_u_att_u_eng_src_378b62d9249ca62f488b_Q[2047:0], w_u_rsv_14_u_u_att_u_eng_src_6870e5b5454840c8a2c3_Q[63:0]}), .WR_EN(w_u_rsv_14_u_u_att_src_8c9e9eb60b3aae42c23f_Y[2119:0]));"
+      }
+    ],
+    "g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q": [
+      {
+        "line": 10034,
+        "text": "    reg [512:0] g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q;"
+      },
+      {
+        "line": 10035,
+        "text": "    assign w_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_Q = g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q;"
+      },
+      {
+        "line": 10036,
+        "text": "    always @(posedge clk) g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q <= w_u_rsv_14_u_u_att_src_37314bb8933e4a98116c_Y[512:0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:540.5"
+      }
+    ],
+    "w_u_rsv_14_u_u_att_src_37314bb8933e4a98116c_Y": [
+      {
+        "line": 3393,
+        "text": "    wire [512:0] w_u_rsv_14_u_u_att_src_37314bb8933e4a98116c_Y;"
+      },
+      {
+        "line": 10036,
+        "text": "    always @(posedge clk) g_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_q <= w_u_rsv_14_u_u_att_src_37314bb8933e4a98116c_Y[512:0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:540.5"
+      },
+      {
+        "line": 10066,
+        "text": "    assign w_u_rsv_14_u_u_att_src_37314bb8933e4a98116c_Y = w_u_rsv_14_u_u_att_driver_dr_on_Q[0] ? w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y[512:0] : w_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_Q[512:0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:541.9-541.130|structural_full/a264cd3c5e19_dsdv_svc_att.sv:540.27-543.111"
+      }
+    ],
+    "w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y": [
+      {
+        "line": 2339,
+        "text": "    wire [512:0] w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y;"
+      },
+      {
+        "line": 10066,
+        "text": "    assign w_u_rsv_14_u_u_att_src_37314bb8933e4a98116c_Y = w_u_rsv_14_u_u_att_driver_dr_on_Q[0] ? w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y[512:0] : w_u_rsv_14_u_u_att_src_26dc491f45cf101b7ca4_Q[512:0];  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:541.9-541.130|structural_full/a264cd3c5e19_dsdv_svc_att.sv:540.27-543.111"
+      },
+      {
+        "line": 10267,
+        "text": "    assign w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y = w_u_rsv_14_u_u_att_src_5bbf14f4eb59b970c945_Y[0] ? {1'b1, w_u_rsv_14_u_u_att_u_pv_identity_provenance[439:0], w_u_rsv_14_u_u_att_742_Y[2119:2112], w_u_rsv_14_u_u_att_742_Y[63:0]} : {1'b0, w_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6_Y[511:0]};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:541.18-541.129"
+      }
+    ],
+    "w_u_rsv_14_u_u_att_742_Y": [
+      {
+        "line": 2330,
+        "text": "    wire [2119:0] w_u_rsv_14_u_u_att_742_Y;"
+      },
+      {
+        "line": 8702,
+        "text": "    assign w_u_rsv_14_u_u_att_742_Y = w_u_rsv_14_u_u_att_pvq_RD_DATA[2119:0];"
+      },
+      {
+        "line": 10267,
+        "text": "    assign w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y = w_u_rsv_14_u_u_att_src_5bbf14f4eb59b970c945_Y[0] ? {1'b1, w_u_rsv_14_u_u_att_u_pv_identity_provenance[439:0], w_u_rsv_14_u_u_att_742_Y[2119:2112], w_u_rsv_14_u_u_att_742_Y[63:0]} : {1'b0, w_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6_Y[511:0]};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:541.18-541.129"
+      },
+      {
+        "line": 10474,
+        "text": "    ot_bind_native_1d3023bdc8bf230da3726274 g_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6 (.A(w_u_rsv_14_u_u_att_742_Y[2119:0]), .B({1'b0, w_u_rsv_14_u_u_att_src_837373d00f902505acf2_Y[31:0]}), .Y(w_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6_Y));"
+      }
+    ],
+    "w_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6_Y": [
+      {
+        "line": 2338,
+        "text": "    wire [511:0] w_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6_Y;"
+      },
+      {
+        "line": 10267,
+        "text": "    assign w_u_rsv_14_u_u_att_src_94315fabef9950a10d33_Y = w_u_rsv_14_u_u_att_src_5bbf14f4eb59b970c945_Y[0] ? {1'b1, w_u_rsv_14_u_u_att_u_pv_identity_provenance[439:0], w_u_rsv_14_u_u_att_742_Y[2119:2112], w_u_rsv_14_u_u_att_742_Y[63:0]} : {1'b0, w_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6_Y[511:0]};  // structural_full/a264cd3c5e19_dsdv_svc_att.sv:541.18-541.129"
+      },
+      {
+        "line": 10474,
+        "text": "    ot_bind_native_1d3023bdc8bf230da3726274 g_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6 (.A(w_u_rsv_14_u_u_att_742_Y[2119:0]), .B({1'b0, w_u_rsv_14_u_u_att_src_837373d00f902505acf2_Y[31:0]}), .Y(w_u_rsv_14_u_u_att_src_f2d8531b2b64cd0f0ac6_Y));"
+      }
+    ]
+  },
+  "required_followup": "guarded transformer removing only RAM and original513b capture/closed formatter cone, same raw513b output alias; explicit readset32x64 BB/model join; no adoption authorized by this mapping"
+}

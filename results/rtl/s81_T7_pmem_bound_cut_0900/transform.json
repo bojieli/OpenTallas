@@ -1,0 +1,32 @@
+{
+  "status": "DISABLED_OWN_ISOLATED_SOURCE_ONLY_NOT_ELABORATED",
+  "parent": "/home/ubuntu/coord/tmp/ds-t7-census/parent.sv",
+  "output": "/srv/opentallas-scratch/claude/codex-ds-t7-bound-cut-0900/s81p_svc_lo_dsdv_svc_rs__t7_bound.sv",
+  "before_sha256": "61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a",
+  "after_sha256": "04a554300de8e3c87737a889aa4462dece93e4f5221c77ce98b04913cea94544",
+  "module_header_identical": true,
+  "native_memory_removed": 1,
+  "payload_drivers_removed": 2,
+  "payload_FF_removed": 2048,
+  "old_closed_cone_wires_removed": 6,
+  "old_closed_cone_assigns_removed": 5,
+  "removed_lines": 18,
+  "all_other_original_lines_identical_in_order": true,
+  "controls_ready_valid_reset_rp_mux_retained": true,
+  "new_macro_count": 4,
+  "new_payload_FF": 1024,
+  "new_format_and_marker_FF": 4,
+  "net_external_FF": -1020,
+  "added_macro_clock_pins": 4,
+  "reset_load_delta": 0,
+  "cycle_delta": 0,
+  "test_delay_FF": 0,
+  "algorithm_native_gate": "09032d7ab",
+  "fresh_projection_native_or_fullservice_proof": false,
+  "physical_or_profile_adopted": false,
+  "files": {
+    "bound_cut.patch": "36dd0bd3a1287ae30f87c48a7e2226d5254bedaec675d62f2725f4191542a16e",
+    "s81p_svc_lo_dsdv_svc_rs__t7_bound.sv": "04a554300de8e3c87737a889aa4462dece93e4f5221c77ce98b04913cea94544",
+    "ot_t7_pmem_capture_candidate.sv": "3d7ab5aa43a0d936558cc9c8bc729d0662ae4f08866bf45d2f4844eb160548eb"
+  }
+}

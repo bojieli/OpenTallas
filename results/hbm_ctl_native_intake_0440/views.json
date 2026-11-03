@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm_arch.views.v1",
+  "plan": "GEN_plan.json",
+  "plan_sha256": "f012707cc60524703412438d4b270a4fbd90926c78282b0881331762b7ea573d",
+  "view_list": [
+    {
+      "view": "ot_hgi_sfu_core_split3__ctl@787ff4e731f6",
+      "module": "ot_hgi_sfu_core_split3__ctl",
+      "outline_um": [
+        669.6,
+        626.4
+      ],
+      "pins_file": "CTL_pins.json",
+      "pins_sha256": "787ff4e731f6c9047641bfcd1b84faa05c684f4bee1818ce383fd17f34f6e886",
+      "pins": 11810,
+      "recipe_keys": [
+        "ot_hgi_sfu_core_split3__ctl"
+      ],
+      "family": "SOURCE13_NATIVE_CTL_COMPONENT",
+      "canonical_type": null,
+      "instances": [
+        "q_b113.u_sfucore_Q_ctl"
+      ],
+      "placed": 0
+    }
+  ]
+}

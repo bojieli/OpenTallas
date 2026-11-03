@@ -1,0 +1,45 @@
+{
+  "status": "LARGER_DISABLED_PLAN_ONLY_NOT_SELECTED",
+  "native_array_bits": 163840,
+  "read_banks": 4,
+  "rows_per_bank": 160,
+  "read_bank_equation": "j=(4*(rc-1)+j)mod4, localrow=rc-1",
+  "write_banks_per_logical_read_bank": 3,
+  "construction": "one independent writer-data SRAM per PC0/PC1/ROWS producer per read bank; a small FF latest-writer table selects source-priority winner",
+  "macro": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "macro_count": 12,
+  "nominal_macro_bits": 786432,
+  "logical_triplicated_data_bits": 491520,
+  "LVT": {
+    "rows": 640,
+    "bits_per_row": 2,
+    "reset": "resetfree; source initial-state relation, no invented clear",
+    "update": "per row choose ROWS if writing elsePC1 elsePC0, supports3differentrows/bank peredge",
+    "old_tag_sample": "must capture prewrite selector alongside macro OLD rowoutputs"
+  },
+  "capture": {
+    "old_payload_FF": 1024,
+    "old_control_FF": 36,
+    "new_payload_explicit_FF": 0,
+    "new_control_FF": 40,
+    "explanation": "perlane768 window(scale256\u00d7producer3) +3 neededcompressed +1 ignoredcompressed +1 invalid states=773, needs10bits, not9; 40total. Encode metadata+OLD LVT selection without dropping need/invalid cases",
+    "extra_LVT_FF": 1280,
+    "net_external_FF": 260,
+    "reset_load_delta": 0,
+    "added_macro_clock_pins": 12,
+    "macro_read_output_state_bits": 3072,
+    "metadata_encoding": {
+      "window": "code10={old_writer_tag2,scale8}, writer0/1/2",
+      "needed_compressed": "code10={2b11,8bit old_writer_tag0/1/2}",
+      "ignored_compressed": "code10={2b11,8d3} -> {1,264zeros}",
+      "invalid_row": "code10={2b11,8d4} ->265zeros"
+    }
+  },
+  "proof_scope": "old640x256 array + exact all3writechannels and priority + actual rowword/ekv_w1060 capture, fourlane outputs everycycle/faults. Samebankdifferentaddress writes and sameaddress priority mandatory. No livekit edit or single-port collapse.",
+  "remaining": [
+    "physical read-old collision/timing and macro fit/clock constraints",
+    "uninitialized and out-of-range source behavior retained in relational proof",
+    "all need/rowvalid/window-scale metadata tested, not a raw-only output miter"
+  ],
+  "qualification": false
+}

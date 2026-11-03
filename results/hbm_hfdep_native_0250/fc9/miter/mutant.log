@@ -1,0 +1,8 @@
+DIFF fault_cause cycle7
+DIFF fault_cause cycle8
+DIFF fault_cause cycle9
+DIFF fault_cause cycle10
+HF_FC9 checks=18200 diff=2579 fault_active=2577
+[26006000] %Fatal: tb.sv:73: Assertion failed in tb: FC9 projected source mismatch
+%Error: tb.sv:73: Verilog $stop
+Aborting...

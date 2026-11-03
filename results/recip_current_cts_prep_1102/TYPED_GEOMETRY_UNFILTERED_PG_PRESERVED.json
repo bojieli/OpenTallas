@@ -1,0 +1,2272 @@
+{
+  "status": "FAIL_GEOMETRY_REVIEW_REQUIRED",
+  "saved_ODB_sha256": "9ba70335e4f85dc5bd467e67629ab9a1db18143f8c319ea86656e531d3f9586f",
+  "boundary": {
+    "mapped_data_bits": 67,
+    "dedicated_registers": 67,
+    "explicit_role_exemptions": [
+      "clk",
+      "rst_n"
+    ],
+    "errors": [
+      {
+        "port": "VSS",
+        "targets": [],
+        "errors": [
+          {
+            "reason": "no_terminal",
+            "net": "VSS",
+            "path": []
+          }
+        ]
+      },
+      {
+        "port": "VDD",
+        "targets": [],
+        "errors": [
+          {
+            "reason": "no_terminal",
+            "net": "VDD",
+            "path": []
+          }
+        ]
+      }
+    ],
+    "p90_center_manhattan_um": 7.830600000000014,
+    "max_center_manhattan_um": 9.992999999999988,
+    "max_actual_D_Q_pin_manhattan_um": 9.705000000000016,
+    "declared_p90_limit_um": 30.0,
+    "declared_hard_max_um": 150.0,
+    "measurement": "Conservative maximum over every physical BPin rectangle centre to actual mapped register cell centre; D/Q-centroid distances separately retained",
+    "mapping": [
+      {
+        "instance": "fault$_DFF_PN0_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3404",
+            "Y",
+            "A"
+          ],
+          [
+            "_68342_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "port": "fault",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.02,
+            0.042
+          ]
+        ],
+        "register_center": [
+          203.742,
+          2.295
+        ],
+        "register_pin_xy": [
+          204.406,
+          2.295
+        ],
+        "center_manhattan_um": 3.53100000000002,
+        "terminal_manhattan_um": 2.8670000000000044
+      },
+      {
+        "instance": "vq$_DFF_PN0_",
+        "pin": "D",
+        "path": [
+          [
+            "input3371",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "port": "v",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.02,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.348,
+          135.675
+        ],
+        "register_pin_xy": [
+          2.898,
+          135.675
+        ],
+        "center_manhattan_um": 4.8509999999999955,
+        "terminal_manhattan_um": 4.400999999999996
+      },
+      {
+        "instance": "vo$_DFF_PN0_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3405",
+            "Y",
+            "A"
+          ],
+          [
+            "_68341_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "port": "vo",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.11599999999999,
+            0.042
+          ]
+        ],
+        "register_center": [
+          205.902,
+          2.295
+        ],
+        "register_pin_xy": [
+          206.566,
+          2.295
+        ],
+        "center_manhattan_um": 3.0390000000000015,
+        "terminal_manhattan_um": 3.703000000000017
+      },
+      {
+        "instance": "xq\\[0\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3372",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[0]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.116,
+            138.198
+          ]
+        ],
+        "register_center": [
+          4.59,
+          135.675
+        ],
+        "register_pin_xy": [
+          4.302,
+          135.675
+        ],
+        "center_manhattan_um": 5.996999999999996,
+        "terminal_manhattan_um": 5.708999999999996
+      },
+      {
+        "instance": "xq\\[10\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3373",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[10]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.076,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.132,
+          135.945
+        ],
+        "register_pin_xy": [
+          2.844,
+          135.945
+        ],
+        "center_manhattan_um": 3.3090000000000144,
+        "terminal_manhattan_um": 3.021000000000014
+      },
+      {
+        "instance": "xq\\[11\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3374",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[11]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.172,
+            138.198
+          ]
+        ],
+        "register_center": [
+          5.67,
+          135.945
+        ],
+        "register_pin_xy": [
+          5.382,
+          135.945
+        ],
+        "center_manhattan_um": 5.751000000000014,
+        "terminal_manhattan_um": 5.463000000000013
+      },
+      {
+        "instance": "xq\\[12\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3375",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[12]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.268,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.456,
+          135.405
+        ],
+        "register_pin_xy": [
+          3.168,
+          135.405
+        ],
+        "center_manhattan_um": 3.9810000000000065,
+        "terminal_manhattan_um": 3.6930000000000067
+      },
+      {
+        "instance": "xq\\[13\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3376",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[13]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.364,
+            138.198
+          ]
+        ],
+        "register_center": [
+          6.21,
+          135.675
+        ],
+        "register_pin_xy": [
+          5.922,
+          135.675
+        ],
+        "center_manhattan_um": 6.368999999999996,
+        "terminal_manhattan_um": 6.080999999999996
+      },
+      {
+        "instance": "xq\\[14\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3377",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[14]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.46,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.51,
+          134.865
+        ],
+        "register_pin_xy": [
+          3.222,
+          134.865
+        ],
+        "center_manhattan_um": 4.382999999999998,
+        "terminal_manhattan_um": 4.094999999999999
+      },
+      {
+        "instance": "xq\\[15\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3378",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[15]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.556,
+            138.198
+          ]
+        ],
+        "register_center": [
+          6.21,
+          135.405
+        ],
+        "register_pin_xy": [
+          5.922,
+          135.405
+        ],
+        "center_manhattan_um": 6.447000000000006,
+        "terminal_manhattan_um": 6.159000000000006
+      },
+      {
+        "instance": "xq\\[16\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3379",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[16]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.652,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.8339999999999996,
+          135.135
+        ],
+        "register_pin_xy": [
+          3.546,
+          135.135
+        ],
+        "center_manhattan_um": 4.245000000000016,
+        "terminal_manhattan_um": 3.9570000000000163
+      },
+      {
+        "instance": "xq\\[17\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3380",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[17]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.748,
+            138.198
+          ]
+        ],
+        "register_center": [
+          6.156,
+          135.135
+        ],
+        "register_pin_xy": [
+          5.868,
+          135.135
+        ],
+        "center_manhattan_um": 6.471000000000016,
+        "terminal_manhattan_um": 6.183000000000017
+      },
+      {
+        "instance": "xq\\[18\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3381",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[18]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.844,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.51,
+          134.595
+        ],
+        "register_pin_xy": [
+          3.222,
+          134.595
+        ],
+        "center_manhattan_um": 4.269000000000009,
+        "terminal_manhattan_um": 3.9810000000000088
+      },
+      {
+        "instance": "xq\\[19\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3382",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[19]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            2.94,
+            138.198
+          ]
+        ],
+        "register_center": [
+          4.86,
+          134.325
+        ],
+        "register_pin_xy": [
+          4.572,
+          134.325
+        ],
+        "center_manhattan_um": 5.793000000000019,
+        "terminal_manhattan_um": 5.5050000000000185
+      },
+      {
+        "instance": "xq\\[1\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3383",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[1]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.212,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.51,
+          134.055
+        ],
+        "register_pin_xy": [
+          3.222,
+          134.055
+        ],
+        "center_manhattan_um": 6.441000000000001,
+        "terminal_manhattan_um": 6.1530000000000005
+      },
+      {
+        "instance": "xq\\[20\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3384",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[20]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.036,
+            138.198
+          ]
+        ],
+        "register_center": [
+          5.94,
+          134.325
+        ],
+        "register_pin_xy": [
+          5.652,
+          134.325
+        ],
+        "center_manhattan_um": 6.777000000000019,
+        "terminal_manhattan_um": 6.4890000000000185
+      },
+      {
+        "instance": "xq\\[21\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3385",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[21]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.132,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.51,
+          134.325
+        ],
+        "register_pin_xy": [
+          3.222,
+          134.325
+        ],
+        "center_manhattan_um": 4.251000000000019,
+        "terminal_manhattan_um": 3.9630000000000187
+      },
+      {
+        "instance": "xq\\[22\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3386",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[22]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.228,
+            138.198
+          ]
+        ],
+        "register_center": [
+          6.21,
+          133.785
+        ],
+        "register_pin_xy": [
+          5.922,
+          133.785
+        ],
+        "center_manhattan_um": 7.39500000000001,
+        "terminal_manhattan_um": 7.10700000000001
+      },
+      {
+        "instance": "xq\\[23\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3387",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[23]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.324,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.24,
+          133.785
+        ],
+        "register_pin_xy": [
+          2.952,
+          133.785
+        ],
+        "center_manhattan_um": 4.4970000000000105,
+        "terminal_manhattan_um": 4.785000000000011
+      },
+      {
+        "instance": "xq\\[24\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3388",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[24]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.42,
+            138.198
+          ]
+        ],
+        "register_center": [
+          6.102,
+          133.515
+        ],
+        "register_pin_xy": [
+          5.814,
+          133.515
+        ],
+        "center_manhattan_um": 7.3650000000000215,
+        "terminal_manhattan_um": 7.077000000000021
+      },
+      {
+        "instance": "xq\\[25\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3389",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[25]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.516,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.6719999999999997,
+          133.245
+        ],
+        "register_pin_xy": [
+          3.384,
+          133.245
+        ],
+        "center_manhattan_um": 5.109000000000003,
+        "terminal_manhattan_um": 5.085000000000003
+      },
+      {
+        "instance": "xq\\[26\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3390",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[26]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.612,
+            138.198
+          ]
+        ],
+        "register_center": [
+          4.86,
+          133.515
+        ],
+        "register_pin_xy": [
+          4.572,
+          133.515
+        ],
+        "center_manhattan_um": 5.931000000000021,
+        "terminal_manhattan_um": 5.643000000000021
+      },
+      {
+        "instance": "xq\\[27\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3391",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[27]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.708,
+            138.198
+          ]
+        ],
+        "register_center": [
+          2.808,
+          133.515
+        ],
+        "register_pin_xy": [
+          2.52,
+          133.515
+        ],
+        "center_manhattan_um": 5.5830000000000215,
+        "terminal_manhattan_um": 5.871000000000022
+      },
+      {
+        "instance": "xq\\[28\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3392",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[28]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.804,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.51,
+          132.97500000000002
+        ],
+        "register_pin_xy": [
+          3.222,
+          132.975
+        ],
+        "center_manhattan_um": 5.516999999999985,
+        "terminal_manhattan_um": 5.805000000000013
+      },
+      {
+        "instance": "xq\\[29\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3393",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[29]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.9,
+            138.198
+          ]
+        ],
+        "register_center": [
+          2.808,
+          132.70499999999998
+        ],
+        "register_pin_xy": [
+          2.52,
+          132.705
+        ],
+        "center_manhattan_um": 6.585000000000024,
+        "terminal_manhattan_um": 6.872999999999995
+      },
+      {
+        "instance": "xq\\[2\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3394",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[2]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.308,
+            138.198
+          ]
+        ],
+        "register_center": [
+          5.022,
+          132.97500000000002
+        ],
+        "register_pin_xy": [
+          4.734,
+          132.975
+        ],
+        "center_manhattan_um": 8.936999999999985,
+        "terminal_manhattan_um": 8.649000000000013
+      },
+      {
+        "instance": "xq\\[30\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3395",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[30]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            3.996,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.8339999999999996,
+          132.435
+        ],
+        "register_pin_xy": [
+          3.546,
+          132.435
+        ],
+        "center_manhattan_um": 5.925000000000006,
+        "terminal_manhattan_um": 6.213000000000005
+      },
+      {
+        "instance": "xq\\[31\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3396",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[31]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            13.404,
+            138.13850000000002
+          ],
+          [
+            13.404,
+            138.198
+          ]
+        ],
+        "register_center": [
+          12.582,
+          135.675
+        ],
+        "register_pin_xy": [
+          12.294,
+          135.675
+        ],
+        "center_manhattan_um": 3.3449999999999953,
+        "terminal_manhattan_um": 3.6329999999999956
+      },
+      {
+        "instance": "xq\\[3\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3397",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[3]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.404,
+            138.198
+          ]
+        ],
+        "register_center": [
+          4.914,
+          132.435
+        ],
+        "register_pin_xy": [
+          4.626,
+          132.435
+        ],
+        "center_manhattan_um": 9.273000000000005,
+        "terminal_manhattan_um": 8.985000000000007
+      },
+      {
+        "instance": "xq\\[4\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3398",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[4]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.5,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.24,
+          131.89499999999998
+        ],
+        "register_pin_xy": [
+          2.952,
+          131.895
+        ],
+        "center_manhattan_um": 8.043000000000026,
+        "terminal_manhattan_um": 7.754999999999997
+      },
+      {
+        "instance": "xq\\[5\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3399",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[5]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.596,
+            138.198
+          ]
+        ],
+        "register_center": [
+          4.86,
+          132.16500000000002
+        ],
+        "register_pin_xy": [
+          4.572,
+          132.165
+        ],
+        "center_manhattan_um": 9.296999999999986,
+        "terminal_manhattan_um": 9.009000000000015
+      },
+      {
+        "instance": "xq\\[6\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3400",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[6]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.692,
+            138.198
+          ]
+        ],
+        "register_center": [
+          2.808,
+          131.625
+        ],
+        "register_pin_xy": [
+          2.52,
+          131.625
+        ],
+        "center_manhattan_um": 7.689000000000007,
+        "terminal_manhattan_um": 7.401000000000008
+      },
+      {
+        "instance": "xq\\[7\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3401",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[7]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.788,
+            138.198
+          ]
+        ],
+        "register_center": [
+          4.86,
+          131.89499999999998
+        ],
+        "register_pin_xy": [
+          4.572,
+          131.895
+        ],
+        "center_manhattan_um": 9.375000000000025,
+        "terminal_manhattan_um": 9.086999999999996
+      },
+      {
+        "instance": "xq\\[8\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3402",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[8]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.884,
+            138.198
+          ]
+        ],
+        "register_center": [
+          3.888,
+          131.35500000000002
+        ],
+        "register_pin_xy": [
+          3.6,
+          131.355
+        ],
+        "center_manhattan_um": 8.846999999999989,
+        "terminal_manhattan_um": 8.559000000000019
+      },
+      {
+        "instance": "xq\\[9\\]$_DFF_P_",
+        "pin": "D",
+        "path": [
+          [
+            "input3403",
+            "A",
+            "Y"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "x[9]",
+        "direction": "INPUT",
+        "pin_points": [
+          [
+            1.98,
+            138.198
+          ]
+        ],
+        "register_center": [
+          5.94,
+          132.16500000000002
+        ],
+        "register_pin_xy": [
+          5.652,
+          132.165
+        ],
+        "center_manhattan_um": 9.992999999999988,
+        "terminal_manhattan_um": 9.705000000000016
+      },
+      {
+        "instance": "y\\[0\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3406",
+            "Y",
+            "A"
+          ],
+          [
+            "_35151_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[0]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.212,
+            0.042
+          ]
+        ],
+        "register_center": [
+          207.9,
+          2.295
+        ],
+        "register_pin_xy": [
+          208.402,
+          2.295
+        ],
+        "center_manhattan_um": 4.941000000000017,
+        "terminal_manhattan_um": 5.442999999999998
+      },
+      {
+        "instance": "y\\[10\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3407",
+            "Y",
+            "A"
+          ],
+          [
+            "_35141_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[10]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.172,
+            0.042
+          ]
+        ],
+        "register_center": [
+          205.74,
+          2.835
+        ],
+        "register_pin_xy": [
+          206.242,
+          2.835
+        ],
+        "center_manhattan_um": 3.224999999999988,
+        "terminal_manhattan_um": 2.8629999999999933
+      },
+      {
+        "instance": "y\\[11\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3408",
+            "Y",
+            "A"
+          ],
+          [
+            "_35140_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[11]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.268,
+            0.042
+          ]
+        ],
+        "register_center": [
+          207.9,
+          2.835
+        ],
+        "register_pin_xy": [
+          208.402,
+          2.835
+        ],
+        "center_manhattan_um": 4.425000000000005,
+        "terminal_manhattan_um": 4.926999999999986
+      },
+      {
+        "instance": "y\\[12\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3409",
+            "Y",
+            "A"
+          ],
+          [
+            "_35139_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[12]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.364,
+            0.042
+          ]
+        ],
+        "register_center": [
+          202.5,
+          2.295
+        ],
+        "register_pin_xy": [
+          203.002,
+          2.295
+        ],
+        "center_manhattan_um": 6.117000000000004,
+        "terminal_manhattan_um": 5.614999999999995
+      },
+      {
+        "instance": "y\\[13\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3410",
+            "Y",
+            "A"
+          ],
+          [
+            "_35138_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[13]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.46,
+            0.042
+          ]
+        ],
+        "register_center": [
+          204.822,
+          2.5650000000000004
+        ],
+        "register_pin_xy": [
+          205.324,
+          2.565
+        ],
+        "center_manhattan_um": 4.161000000000006,
+        "terminal_manhattan_um": 3.658999999999996
+      },
+      {
+        "instance": "y\\[14\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3411",
+            "Y",
+            "A"
+          ],
+          [
+            "_35137_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[14]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.556,
+            0.042
+          ]
+        ],
+        "register_center": [
+          207.9,
+          2.5650000000000004
+        ],
+        "register_pin_xy": [
+          208.402,
+          2.565
+        ],
+        "center_manhattan_um": 3.8669999999999947,
+        "terminal_manhattan_um": 4.368999999999975
+      },
+      {
+        "instance": "y\\[15\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3412",
+            "Y",
+            "A"
+          ],
+          [
+            "_35136_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[15]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.652,
+            0.042
+          ]
+        ],
+        "register_center": [
+          203.094,
+          2.835
+        ],
+        "register_pin_xy": [
+          203.596,
+          2.835
+        ],
+        "center_manhattan_um": 6.350999999999993,
+        "terminal_manhattan_um": 5.848999999999983
+      },
+      {
+        "instance": "y\\[16\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3413",
+            "Y",
+            "A"
+          ],
+          [
+            "_35135_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[16]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.748,
+            0.042
+          ]
+        ],
+        "register_center": [
+          204.66,
+          3.1050000000000004
+        ],
+        "register_pin_xy": [
+          205.162,
+          3.105
+        ],
+        "center_manhattan_um": 5.1509999999999945,
+        "terminal_manhattan_um": 4.648999999999985
+      },
+      {
+        "instance": "y\\[17\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3414",
+            "Y",
+            "A"
+          ],
+          [
+            "_35134_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[17]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.844,
+            0.042
+          ]
+        ],
+        "register_center": [
+          208.494,
+          3.1050000000000004
+        ],
+        "register_pin_xy": [
+          208.996,
+          3.105
+        ],
+        "center_manhattan_um": 4.713000000000006,
+        "terminal_manhattan_um": 5.215000000000016
+      },
+      {
+        "instance": "y\\[18\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3415",
+            "Y",
+            "A"
+          ],
+          [
+            "_35133_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[18]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.94,
+            0.042
+          ]
+        ],
+        "register_center": [
+          203.57999999999998,
+          3.1050000000000004
+        ],
+        "register_pin_xy": [
+          204.082,
+          3.105
+        ],
+        "center_manhattan_um": 6.423000000000014,
+        "terminal_manhattan_um": 5.921000000000005
+      },
+      {
+        "instance": "y\\[19\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3416",
+            "Y",
+            "A"
+          ],
+          [
+            "_35132_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[19]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.036,
+            0.042
+          ]
+        ],
+        "register_center": [
+          205.74,
+          3.6449999999999996
+        ],
+        "register_pin_xy": [
+          206.242,
+          3.645
+        ],
+        "center_manhattan_um": 4.898999999999992,
+        "terminal_manhattan_um": 4.397000000000011
+      },
+      {
+        "instance": "y\\[1\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3417",
+            "Y",
+            "A"
+          ],
+          [
+            "_35150_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[1]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.308,
+            0.042
+          ]
+        ],
+        "register_center": [
+          207.9,
+          3.6449999999999996
+        ],
+        "register_pin_xy": [
+          208.402,
+          3.645
+        ],
+        "center_manhattan_um": 6.195000000000013,
+        "terminal_manhattan_um": 6.696999999999994
+      },
+      {
+        "instance": "y\\[20\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3418",
+            "Y",
+            "A"
+          ],
+          [
+            "_35131_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[20]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.132,
+            0.042
+          ]
+        ],
+        "register_center": [
+          203.57999999999998,
+          3.6449999999999996
+        ],
+        "register_pin_xy": [
+          204.082,
+          3.645
+        ],
+        "center_manhattan_um": 7.155000000000021,
+        "terminal_manhattan_um": 6.653000000000011
+      },
+      {
+        "instance": "y\\[21\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3419",
+            "Y",
+            "A"
+          ],
+          [
+            "_35130_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[21]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.228,
+            0.042
+          ]
+        ],
+        "register_center": [
+          204.66,
+          3.6449999999999996
+        ],
+        "register_pin_xy": [
+          205.162,
+          3.645
+        ],
+        "center_manhattan_um": 6.171000000000012,
+        "terminal_manhattan_um": 5.669000000000002
+      },
+      {
+        "instance": "y\\[22\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3420",
+            "Y",
+            "A"
+          ],
+          [
+            "_35129_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[22]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.324,
+            0.042
+          ]
+        ],
+        "register_center": [
+          207.57600000000002,
+          3.375
+        ],
+        "register_pin_xy": [
+          208.078,
+          3.375
+        ],
+        "center_manhattan_um": 3.5850000000000097,
+        "terminal_manhattan_um": 4.086999999999991
+      },
+      {
+        "instance": "y\\[23\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3421",
+            "Y",
+            "A"
+          ],
+          [
+            "_35128_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[23]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.42,
+            0.042
+          ]
+        ],
+        "register_center": [
+          210.06,
+          2.295
+        ],
+        "register_pin_xy": [
+          210.562,
+          2.295
+        ],
+        "center_manhattan_um": 4.893000000000015,
+        "terminal_manhattan_um": 5.395000000000024
+      },
+      {
+        "instance": "y\\[24\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3422",
+            "Y",
+            "A"
+          ],
+          [
+            "_35127_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[24]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.516,
+            0.042
+          ]
+        ],
+        "register_center": [
+          210.06,
+          2.5650000000000004
+        ],
+        "register_pin_xy": [
+          210.562,
+          2.565
+        ],
+        "center_manhattan_um": 5.067000000000012,
+        "terminal_manhattan_um": 5.56900000000002
+      },
+      {
+        "instance": "y\\[25\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3423",
+            "Y",
+            "A"
+          ],
+          [
+            "_35126_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[25]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.612,
+            0.042
+          ]
+        ],
+        "register_center": [
+          210.06,
+          3.1050000000000004
+        ],
+        "register_pin_xy": [
+          210.562,
+          3.105
+        ],
+        "center_manhattan_um": 5.511000000000008,
+        "terminal_manhattan_um": 6.013000000000018
+      },
+      {
+        "instance": "y\\[26\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3424",
+            "Y",
+            "A"
+          ],
+          [
+            "_35125_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[26]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.708,
+            0.042
+          ]
+        ],
+        "register_center": [
+          210.006,
+          2.835
+        ],
+        "register_pin_xy": [
+          210.508,
+          2.835
+        ],
+        "center_manhattan_um": 5.091000000000002,
+        "terminal_manhattan_um": 5.5930000000000115
+      },
+      {
+        "instance": "y\\[27\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3425",
+            "Y",
+            "A"
+          ],
+          [
+            "_35124_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[27]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.804,
+            0.042
+          ]
+        ],
+        "register_center": [
+          210.22199999999998,
+          3.375
+        ],
+        "register_pin_xy": [
+          210.724,
+          3.375
+        ],
+        "center_manhattan_um": 5.750999999999978,
+        "terminal_manhattan_um": 6.252999999999988
+      },
+      {
+        "instance": "y\\[28\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3426",
+            "Y",
+            "A"
+          ],
+          [
+            "_35123_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[28]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.9,
+            0.042
+          ]
+        ],
+        "register_center": [
+          210.06,
+          3.6449999999999996
+        ],
+        "register_pin_xy": [
+          210.562,
+          3.645
+        ],
+        "center_manhattan_um": 5.762999999999996,
+        "terminal_manhattan_um": 6.265000000000006
+      },
+      {
+        "instance": "y\\[29\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3427",
+            "Y",
+            "A"
+          ],
+          [
+            "_35122_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[29]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            207.996,
+            0.042
+          ]
+        ],
+        "register_center": [
+          207.9,
+          3.915
+        ],
+        "register_pin_xy": [
+          208.402,
+          3.915
+        ],
+        "center_manhattan_um": 3.969000000000004,
+        "terminal_manhattan_um": 4.278999999999978
+      },
+      {
+        "instance": "y\\[2\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3428",
+            "Y",
+            "A"
+          ],
+          [
+            "_35149_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[2]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.404,
+            0.042
+          ]
+        ],
+        "register_center": [
+          202.93200000000002,
+          3.375
+        ],
+        "register_pin_xy": [
+          203.434,
+          3.375
+        ],
+        "center_manhattan_um": 5.80499999999998,
+        "terminal_manhattan_um": 5.302999999999999
+      },
+      {
+        "instance": "y\\[30\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3429",
+            "Y",
+            "A"
+          ],
+          [
+            "_35121_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[30]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            192.732,
+            0.042
+          ]
+        ],
+        "register_center": [
+          192.402,
+          2.5650000000000004
+        ],
+        "register_pin_xy": [
+          192.904,
+          2.565
+        ],
+        "center_manhattan_um": 2.853000000000013,
+        "terminal_manhattan_um": 2.694999999999997
+      },
+      {
+        "instance": "y\\[31\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3430",
+            "Y",
+            "A"
+          ],
+          [
+            "_68343_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[31]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            192.828,
+            0.042
+          ]
+        ],
+        "register_center": [
+          193.59,
+          2.295
+        ],
+        "register_pin_xy": [
+          194.092,
+          2.295
+        ],
+        "center_manhattan_um": 3.0150000000000006,
+        "terminal_manhattan_um": 3.51700000000001
+      },
+      {
+        "instance": "y\\[3\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3431",
+            "Y",
+            "A"
+          ],
+          [
+            "_35148_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[3]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.5,
+            0.042
+          ]
+        ],
+        "register_center": [
+          205.25400000000002,
+          4.725
+        ],
+        "register_pin_xy": [
+          205.756,
+          4.725
+        ],
+        "center_manhattan_um": 4.928999999999981,
+        "terminal_manhattan_um": 4.939
+      },
+      {
+        "instance": "y\\[4\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3432",
+            "Y",
+            "A"
+          ],
+          [
+            "_35147_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[4]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.596,
+            0.042
+          ]
+        ],
+        "register_center": [
+          202.5,
+          4.1850000000000005
+        ],
+        "register_pin_xy": [
+          203.002,
+          4.185
+        ],
+        "center_manhattan_um": 7.239000000000004,
+        "terminal_manhattan_um": 6.736999999999994
+      },
+      {
+        "instance": "y\\[5\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3433",
+            "Y",
+            "A"
+          ],
+          [
+            "_35146_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[5]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.692,
+            0.042
+          ]
+        ],
+        "register_center": [
+          204.768,
+          5.535
+        ],
+        "register_pin_xy": [
+          205.27,
+          5.535
+        ],
+        "center_manhattan_um": 6.417000000000007,
+        "terminal_manhattan_um": 5.914999999999997
+      },
+      {
+        "instance": "y\\[6\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3434",
+            "Y",
+            "A"
+          ],
+          [
+            "_35145_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[6]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.788,
+            0.042
+          ]
+        ],
+        "register_center": [
+          207.738,
+          4.1850000000000005
+        ],
+        "register_pin_xy": [
+          208.24,
+          4.185
+        ],
+        "center_manhattan_um": 6.092999999999989,
+        "terminal_manhattan_um": 6.594999999999998
+      },
+      {
+        "instance": "y\\[7\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3435",
+            "Y",
+            "A"
+          ],
+          [
+            "_35144_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[7]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.88400000000001,
+            0.042
+          ]
+        ],
+        "register_center": [
+          203.57999999999998,
+          4.1850000000000005
+        ],
+        "register_pin_xy": [
+          204.082,
+          4.185
+        ],
+        "center_manhattan_um": 6.447000000000031,
+        "terminal_manhattan_um": 5.945000000000021
+      },
+      {
+        "instance": "y\\[8\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3436",
+            "Y",
+            "A"
+          ],
+          [
+            "_35143_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[8]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            205.98,
+            0.042
+          ]
+        ],
+        "register_center": [
+          205.74,
+          4.455
+        ],
+        "register_pin_xy": [
+          206.242,
+          4.455
+        ],
+        "center_manhattan_um": 4.652999999999981,
+        "terminal_manhattan_um": 4.675000000000001
+      },
+      {
+        "instance": "y\\[9\\]$_DFF_P_",
+        "pin": "QN",
+        "path": [
+          [
+            "output3437",
+            "Y",
+            "A"
+          ],
+          [
+            "_35142_",
+            "Y",
+            "A"
+          ]
+        ],
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "port": "y[9]",
+        "direction": "OUTPUT",
+        "pin_points": [
+          [
+            206.076,
+            0.042
+          ]
+        ],
+        "register_center": [
+          207.846,
+          5.535
+        ],
+        "register_pin_xy": [
+          208.348,
+          5.535
+        ],
+        "center_manhattan_um": 7.263000000000011,
+        "terminal_manhattan_um": 7.76500000000002
+      }
+    ]
+  },
+  "R2R": {
+    "all8994_sequential_boxes_contained": true,
+    "universal_outline_Manhattan_bound_um": 354.24,
+    "exact_all_pair_centres_max_Manhattan_um": 340.578,
+    "limit_um": 405.0,
+    "scope": "All register endpoint pairs covered geometrically; not routed length or timing"
+  },
+  "area": {
+    "outline": [
+      216.0,
+      138.24
+    ],
+    "aspect": 1.562,
+    "macros": 0,
+    "macro_area_pct": 0.0,
+    "std_cells": 50121,
+    "ff": 8994,
+    "fill_of_free": 0.2166,
+    "empty_area": 0.3047,
+    "band_share": 1.0,
+    "density_bin_um": 2.7,
+    "macro_list": []
+  },
+  "current_clock": {
+    "root_port": "clk",
+    "root_xy": [
+      0.042,
+      113.916
+    ],
+    "sink_count": 8994,
+    "sink_nets": {
+      "clk": 8994
+    },
+    "max_preCTS_root_to_sink_Manhattan_um": 321.19599999999997,
+    "worst_preCTS_sink": "y\\[23\\]$_DFF_P_",
+    "actual_preCTS_generated_taps": 0,
+    "generation": "Native ORFS cts.tcl clock_tree_synthesis creates a fresh tree from these current sinks; no old tap graph or old clustering reused",
+    "clock_reach_status": "PRE_CTS_TREE_NOT_GENERATED; raw root reach is not a completed clock-tree PASS"
+  },
+  "x31_BPin_groups": 1,
+  "x31_rectangles": 2,
+  "geom_rules_source": "/home/ubuntu/OpenTallas/tools/autopilot/geom_rules.py",
+  "geom_rules_sha256": "52f5aac9cf7096f8050b9d0187d74b9b9fee886f2fa19c9c79b9e2ded0ed445a",
+  "no_solver_STA_CTS": true
+}

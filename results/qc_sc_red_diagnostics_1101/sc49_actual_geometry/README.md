@@ -1,0 +1,9 @@
+Actual SC49 DATA-only geometry import PASS
+
+Parent-authorized ONE import/check completed Intel1 unit309237-1793623037 exit0,8GB1T/disk2. Exact49existingDATAposes moved, no newcells/FF/clock/source/cycles. Nativecheck_placement/actualroworientation andall-otherinstance/master/pose/status/DNT/pins/fullgraph guardsPASS; PG751910/open0. All73actualfanout1edges verified; longestnativepin-to-pin148.8965um.
+
+Honest savedcheckpoint intel1:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_batch_buffer_geometry/SC_BATCH_DATA_GEOMETRY_CHECKPOINT.odb SHA2561e5f74c32f72e7ca965dcccd4c1f5510417b312777884af50db6cf8921f0bceb. Closed39MBsc_batch_buffer_geometry.tsv retainedbesideit. SourceiscurrentHARD1three-bufferunroutedcheckpoint; defaultHARD0scope-correctiondidnotchangephysicalinput.
+
+Actual fullscene andselectedtails renderedbyindependentgeometryowner, personallyVIEWEDbybothownerandproducer. All49actualbodiesexactlymatchPREPtargets. Actualr2r404.92/0,pin11.3/41.44,42665rootedFF/ownleaf32 unchanged. Rawverticalcongestionproxy1.094 slightlyworsethanprior3BUF1.091; aspect2.102FAIL, checkpointcustomstageNA andGRTNA remain. No prior3BUFactualGRT0credittransferred. OldTT-388.81/FFhold-163.48 remainpriorlayoutresults, NOTnewtiming.
+
+Geometry-onlyscopeCOMPLETE; noGRT/STA/CTS/nativeDATArepair/DRT/adoptionauthorizedbythisreceipt. Rootnextdiagnosticscopeandmeasured-versusnominalframepolicyremainexplicitlyheld. Ifselectedforlateranalysis, createfreshsuccessorinput/receiptfromthisactualsavedcheckpoint; preserveoldpreparedsourcesandallfailures.

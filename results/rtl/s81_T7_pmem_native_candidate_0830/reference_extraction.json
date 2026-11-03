@@ -1,0 +1,15 @@
+{
+  "source_sha256": "b1f0d0def70e01764895016c92556ec03ebc7254d4b469fe532971d947020dc5",
+  "source": "Intel1 actualT7kit rtl/ot_hdc_v41x_attn_s.sv; byteidentical frozen39 rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+  "start_line": 436,
+  "end_line": 464,
+  "body_sha256": "43789f2a1b1d2eae57f7d57b0af2d6161941ce51a6d8bc91a4e8db584aa8a989",
+  "body_unchanged": true,
+  "added_only": "module input/output boundary plus output aliases",
+  "parameters": {
+    "REPL": 2,
+    "PWORDS": 2,
+    "TD": 32
+  },
+  "native_memory_helper_sha256": "26dec0c55cedfaa8598b1f3fb19939ad72d05f8a3935442c4941763bc8ad6cc6"
+}

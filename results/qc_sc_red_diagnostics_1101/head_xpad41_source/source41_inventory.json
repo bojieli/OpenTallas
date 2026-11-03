@@ -1,0 +1,2134 @@
+{
+ "scope": "EXACT_41_SOURCE_DRIVER_ABI_INVENTORY_ONLY_NO_PROOF_MASK_HINT_OR_JOB",
+ "source_sha256": {
+  "/srv/opentallas-scratch/claude/codex-head-typed70-0248/subject/lec/gold.aliases.json": "4335dbca42fd196d3a31e13457b05db653b2a0386a4c82d43ca7372f170d9cfb",
+  "/srv/opentallas-scratch/claude/codex-head-typed70-0248/subject/lec/hyp.json": "406a2470ce1e46b959bd4cce99d4272d216c6dc2545152deff53b2acc0a7f7d6",
+  "/srv/opentallas-scratch/claude/head-ld-source-1102/1_2_yosys.v": "475d29d186ce3dcce4db949498eaf72cbcdc2bf810c6873b51efc4e585440ee4",
+  "/srv/opentallas-scratch/claude/head-ld-source-1102/rtl/ot_s81ph_link_ep_safe4.sv": "f7fe6c1c242eb7d96cf856bc2492fa5a090e825672ddffb73fb8ed9d73ca6536",
+  "/srv/opentallas-scratch/claude/head-ld-source-1102/rtl/ot_s81hd_beat_link.sv": "7be572071055a7c0c316c0c86b35e98953a705fa7e208d20be30d0d1c14af2b0",
+  "/srv/opentallas-scratch/claude/head-ld-source-1102/rtl/ot_s81hd_mesh_ep_core.sv": "3b7414dc853ba1ddf273cad3f4b97dada177cfa8bc9506c3a5e82c9b265ad237"
+ },
+ "gold_X_points": 27,
+ "unreset_tail_points": 14,
+ "current_word_ABI": {
+  "word": "{ep_fault[11:0],copy,header+BEST[96:0]}",
+  "word_width": 110,
+  "port": "m_rx_o[63:0]={bi,vb,pay[61:0]}",
+  "beat0": "word0..61",
+  "beat1": "word62..109 +14zero-tailbits110..123",
+  "latency_and_fault_policy": "existing beat contract unchanged",
+  "warning": "Portbits48..61 areREALDATA inbeat0; neverblanketmask orzero them."
+ },
+ "rows": [
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.fault",
+   "original_unmatched": [
+    "x104",
+    "x105",
+    "x106",
+    "x107",
+    "x108",
+    "x109",
+    "x110",
+    "x111"
+   ],
+   "native_support_count": 153,
+   "gold": {
+    "Qbit": 60480,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     76613
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 76614,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2615",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:885.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.fault",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.fault$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_046001_",
+     "QN": "_000410_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[16].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "fault",
+    "source_equation": "fault || (priority_fault_n !=0)",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[0]",
+   "original_unmatched": [
+    "x190"
+   ],
+   "native_support_count": 15,
+   "gold": {
+    "Qbit": 63991,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77980,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[0]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[0]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045250_",
+     "QN": "_000022_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[0]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[10]",
+   "original_unmatched": [
+    "x200"
+   ],
+   "native_support_count": 25,
+   "gold": {
+    "Qbit": 64001,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77990,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[10]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[10]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045240_",
+     "QN": "_001144_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[10]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[11]",
+   "original_unmatched": [
+    "x201"
+   ],
+   "native_support_count": 26,
+   "gold": {
+    "Qbit": 64002,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77991,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[11]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[11]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045239_",
+     "QN": "_000013_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[11]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[12]",
+   "original_unmatched": [
+    "x202"
+   ],
+   "native_support_count": 27,
+   "gold": {
+    "Qbit": 64003,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "1",
+    "enable_pin": null,
+    "Dbit": 77992,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[12]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[12]$_DFFE_PN1P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045238_",
+     "QN": "_000014_",
+     "RESETN": "_103743_",
+     "SETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[12]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[13]",
+   "original_unmatched": [
+    "x203"
+   ],
+   "native_support_count": 28,
+   "gold": {
+    "Qbit": 64004,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77993,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[13]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[13]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045237_",
+     "QN": "_000056_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[13]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[14]",
+   "original_unmatched": [
+    "x204"
+   ],
+   "native_support_count": 29,
+   "gold": {
+    "Qbit": 64005,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "1",
+    "enable_pin": null,
+    "Dbit": 77994,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[14]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[14]$_DFFE_PN1P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045236_",
+     "QN": "_042403_",
+     "RESETN": "_103743_",
+     "SETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[14]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[15]",
+   "original_unmatched": [
+    "x205"
+   ],
+   "native_support_count": 30,
+   "gold": {
+    "Qbit": 64006,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77995,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[15]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[15]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045235_",
+     "QN": "_000015_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[15]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[16]",
+   "original_unmatched": [
+    "x206"
+   ],
+   "native_support_count": 31,
+   "gold": {
+    "Qbit": 64007,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77996,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[16]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[16]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045234_",
+     "QN": "_000057_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[16]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[17]",
+   "original_unmatched": [
+    "x207"
+   ],
+   "native_support_count": 32,
+   "gold": {
+    "Qbit": 64008,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77997,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[17]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[17]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045233_",
+     "QN": "_000016_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[17]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[18]",
+   "original_unmatched": [
+    "x208"
+   ],
+   "native_support_count": 33,
+   "gold": {
+    "Qbit": 64009,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "1",
+    "enable_pin": null,
+    "Dbit": 77998,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[18]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[18]$_DFFE_PN1P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045232_",
+     "QN": "_042404_",
+     "RESETN": "_103743_",
+     "SETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[18]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[19]",
+   "original_unmatched": [
+    "x102"
+   ],
+   "native_support_count": 34,
+   "gold": {
+    "Qbit": 64010,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77999,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[19]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[19]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045996_",
+     "QN": "_000017_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[19]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[1]",
+   "original_unmatched": [
+    "x191"
+   ],
+   "native_support_count": 16,
+   "gold": {
+    "Qbit": 63992,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77981,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[1]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[1]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045249_",
+     "QN": "_001139_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[1]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[2]",
+   "original_unmatched": [
+    "x192"
+   ],
+   "native_support_count": 17,
+   "gold": {
+    "Qbit": 63993,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77982,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[2]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[2]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045248_",
+     "QN": "_001140_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[2]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[3]",
+   "original_unmatched": [
+    "x193"
+   ],
+   "native_support_count": 18,
+   "gold": {
+    "Qbit": 63994,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77983,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[3]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[3]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045247_",
+     "QN": "_001141_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[3]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[4]",
+   "original_unmatched": [
+    "x194"
+   ],
+   "native_support_count": 19,
+   "gold": {
+    "Qbit": 63995,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77984,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[4]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[4]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045246_",
+     "QN": "_000018_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[4]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[5]",
+   "original_unmatched": [
+    "x195"
+   ],
+   "native_support_count": 20,
+   "gold": {
+    "Qbit": 63996,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77985,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[5]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[5]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045245_",
+     "QN": "_000019_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[5]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[6]",
+   "original_unmatched": [
+    "x196"
+   ],
+   "native_support_count": 21,
+   "gold": {
+    "Qbit": 63997,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77986,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[6]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[6]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045244_",
+     "QN": "_001142_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[6]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[7]",
+   "original_unmatched": [
+    "x197"
+   ],
+   "native_support_count": 22,
+   "gold": {
+    "Qbit": 63998,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77987,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[7]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[7]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045243_",
+     "QN": "_001143_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[7]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[8]",
+   "original_unmatched": [
+    "x198"
+   ],
+   "native_support_count": 23,
+   "gold": {
+    "Qbit": 63999,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77988,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[8]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[8]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045242_",
+     "QN": "_000020_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[8]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace[9]",
+   "original_unmatched": [
+    "x199"
+   ],
+   "native_support_count": 24,
+   "gold": {
+    "Qbit": 64000,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 77989,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2702",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace[9]",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace[9]$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045241_",
+     "QN": "_000021_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace[9]",
+    "source_equation": "iflaunch:pace-PCOST+PNUM; elseif!pace_ok:pace+PNUM; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pace_ok_r",
+   "original_unmatched": [
+    "x103"
+   ],
+   "native_support_count": 34,
+   "gold": {
+    "Qbit": 64187,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     77979
+    ],
+    "reset_value": "1",
+    "enable_pin": null,
+    "Dbit": 78000,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2698",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:879.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pace_ok_r",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pace_ok$_DFF_PN1_",
+    "gold_Q_alias_bit_if_renamed": 64187,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_047176_",
+     "QN": "_033135_",
+     "RESETN": "_103743_",
+     "SETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[15].local_r"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pace_ok_r",
+    "source_equation": "iflaunch:pace_ok_launch; elseif!pace_ok:pace_ok_inc; elsehold",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pnak",
+   "original_unmatched": [
+    "x128"
+   ],
+   "native_support_count": 15,
+   "gold": {
+    "Qbit": 65881,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     76594
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 78085,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2473",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:353.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pnak",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pnak$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045990_",
+     "QN": "_000418_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[8].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pnak",
+    "source_equation": "rr_ok0?(rr_nak0|(pv&&!p_take&&pnak)):p_take?0:pnak",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.pv",
+   "original_unmatched": [
+    "x127"
+   ],
+   "native_support_count": 13,
+   "gold": {
+    "Qbit": 65812,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     76594
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 78086,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_la.\\u_ln.\\u.\\u_ep.$procmux$2477",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:102.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:353.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_la.u_ln.u.u_ep.pv",
+    "mapped_instance": "u_core.u_la.u_ln.u.u_ep.pv$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045995_",
+     "QN": "_000415_",
+     "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[8].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pv",
+    "source_equation": "rr_ok0?1:p_take?0:pv",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.fault",
+   "original_unmatched": [
+    "x297",
+    "x298",
+    "x299",
+    "x300",
+    "x301",
+    "x302",
+    "x303",
+    "x304"
+   ],
+   "native_support_count": 153,
+   "gold": {
+    "Qbit": 125125,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     141258
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 141259,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.$procmux$2104",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:104.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:885.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_lb.u_ln.u.u_ep.fault",
+    "mapped_instance": "u_core.u_lb.u_ln.u.u_ep.fault$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045679_",
+     "QN": "_000728_",
+     "RESETN": "\\u_core.u_lb.u_ln.u.u_rr.g_local[16].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "fault",
+    "source_equation": "fault || (priority_fault_n !=0)",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.pnak",
+   "original_unmatched": [
+    "x61"
+   ],
+   "native_support_count": 15,
+   "gold": {
+    "Qbit": 130526,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     141239
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 142730,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.$procmux$1962",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:104.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:353.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_lb.u_ln.u.u_ep.pnak",
+    "mapped_instance": "u_core.u_lb.u_ln.u.u_ep.pnak$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045668_",
+     "QN": "_000736_",
+     "RESETN": "\\u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pnak",
+    "source_equation": "rr_ok0?(rr_nak0|(pv&&!p_take&&pnak)):p_take?0:pnak",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.pv",
+   "original_unmatched": [
+    "x60"
+   ],
+   "native_support_count": 13,
+   "gold": {
+    "Qbit": 130457,
+    "type": "$aldff",
+    "CLK": [
+     2
+    ],
+    "async_reset": [
+     141239
+    ],
+    "reset_value": "0",
+    "enable_pin": null,
+    "Dbit": 142731,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_lb.\\u_ln.\\u.\\u_ep.$procmux$1966",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:104.24|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:274.98|../../work/rtl/ot_s81ph_link_ep_safe4.sv:353.5|../../work/rtl/ot_s81ph_coll_lane_safe4.sv:133.106|../../work/rtl/ot_s81hd_mesh_ep_core.sv:61.32|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_lb.u_ln.u.u_ep.pv",
+    "mapped_instance": "u_core.u_lb.u_ln.u.u_ep.pv$_DFFE_PN0P_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045673_",
+     "QN": "_000733_",
+     "RESETN": "\\u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r",
+     "SETN": "_103743_"
+    }
+   },
+   "roles": {
+    "class": "MASKED_FRONTEND_LITERAL_X_FULLY_DEFINED_RTL",
+    "field": "pv",
+    "source_equation": "rr_ok0?1:p_take?0:pv",
+    "reset_role": "rst_v7 forpace/pace_ok; rst_v0 forpv/pnak; rst_v8 forfault. Native/sourcedetailsabove preserve actualreset values.",
+    "macro_cause": false,
+    "literal_X_policy_change_needed": false,
+    "diagnosis": "Syntactic temporaryXarms unreachable underconsistentselectors; actualnative mismatchtracks missingcohortcutrelations, not intentionalinvalid-cycle X."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[48]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[48]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5363,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189963,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[48]",
+    "mapped_instance": "u_core.u_wtx.oq_p[48]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045318_",
+     "QN": "_032008_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[48]",
+    "beat0_field": "realheader+BEST/bodybit48",
+    "beat1_field": "zero-padding wordbit110",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189899,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189837,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[49]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[49]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5364,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189964,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[49]",
+    "mapped_instance": "u_core.u_wtx.oq_p[49]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045317_",
+     "QN": "_001086_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[49]",
+    "beat0_field": "realheader+BEST/bodybit49",
+    "beat1_field": "zero-padding wordbit111",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189900,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189838,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[50]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[50]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5365,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189965,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[50]",
+    "mapped_instance": "u_core.u_wtx.oq_p[50]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045316_",
+     "QN": "_001087_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[50]",
+    "beat0_field": "realheader+BEST/bodybit50",
+    "beat1_field": "zero-padding wordbit112",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189901,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189839,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[51]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[51]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5366,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189966,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[51]",
+    "mapped_instance": "u_core.u_wtx.oq_p[51]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045315_",
+     "QN": "_001088_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[51]",
+    "beat0_field": "realheader+BEST/bodybit51",
+    "beat1_field": "zero-padding wordbit113",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189902,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189840,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[52]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[52]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5367,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189967,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[52]",
+    "mapped_instance": "u_core.u_wtx.oq_p[52]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045314_",
+     "QN": "_001089_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[52]",
+    "beat0_field": "realheader+BEST/bodybit52",
+    "beat1_field": "zero-padding wordbit114",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189903,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189841,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[53]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[53]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5368,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189968,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[53]",
+    "mapped_instance": "u_core.u_wtx.oq_p[53]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045313_",
+     "QN": "_001090_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[53]",
+    "beat0_field": "realheader+BEST/bodybit53",
+    "beat1_field": "zero-padding wordbit115",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189904,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189842,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[54]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[54]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5369,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189969,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[54]",
+    "mapped_instance": "u_core.u_wtx.oq_p[54]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045312_",
+     "QN": "_001091_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[54]",
+    "beat0_field": "realheader+BEST/bodybit54",
+    "beat1_field": "zero-padding wordbit116",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189905,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189843,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[55]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[55]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5370,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189970,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[55]",
+    "mapped_instance": "u_core.u_wtx.oq_p[55]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045311_",
+     "QN": "_001092_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[55]",
+    "beat0_field": "realheader+BEST/bodybit55",
+    "beat1_field": "zero-padding wordbit117",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189906,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189844,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[56]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[56]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5371,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189971,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[56]",
+    "mapped_instance": "u_core.u_wtx.oq_p[56]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045310_",
+     "QN": "_001093_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[56]",
+    "beat0_field": "realheader+BEST/bodybit56",
+    "beat1_field": "zero-padding wordbit118",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189907,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189845,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[57]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[57]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5372,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189972,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[57]",
+    "mapped_instance": "u_core.u_wtx.oq_p[57]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045309_",
+     "QN": "_001094_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[57]",
+    "beat0_field": "realheader+BEST/bodybit57",
+    "beat1_field": "zero-padding wordbit119",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189908,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189846,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[58]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[58]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5373,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189973,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[58]",
+    "mapped_instance": "u_core.u_wtx.oq_p[58]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045308_",
+     "QN": "_001095_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[58]",
+    "beat0_field": "realheader+BEST/bodybit58",
+    "beat1_field": "zero-padding wordbit120",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189909,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189847,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[59]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[59]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5374,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189974,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[59]",
+    "mapped_instance": "u_core.u_wtx.oq_p[59]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045307_",
+     "QN": "_001096_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[59]",
+    "beat0_field": "realheader+BEST/bodybit59",
+    "beat1_field": "zero-padding wordbit121",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189910,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189848,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[60]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[60]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5375,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189975,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[60]",
+    "mapped_instance": "u_core.u_wtx.oq_p[60]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_045306_",
+     "QN": "_001097_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[60]",
+    "beat0_field": "realheader+BEST/bodybit60",
+    "beat1_field": "zero-padding wordbit122",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189911,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189849,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  },
+  {
+   "point": "ff:u_dut.u_core.u_wtx.oq_p[61]",
+   "original_unmatched": [
+    "ff:u_dut.u_core.u_wtx.g_multi.hold[61]"
+   ],
+   "native_support_count": 8,
+   "gold": {
+    "Qbit": 5376,
+    "type": "$dff",
+    "CLK": [
+     2
+    ],
+    "async_reset": null,
+    "reset_value": null,
+    "enable_pin": null,
+    "Dbit": 189976,
+    "Droot_type": "$mux",
+    "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3844",
+    "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+   },
+   "mapped": {
+    "requested_logical_name": "u_core.u_wtx.oq_p[61]",
+    "mapped_instance": "u_core.u_wtx.oq_p[61]$_SDFF_PN0_",
+    "gold_Q_alias_bit_if_renamed": null,
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+     "CLK": "clk",
+     "D": "_046029_",
+     "QN": "_032358_"
+    }
+   },
+   "roles": {
+    "class": "UNRESET_TAIL_STORAGE_INITIAL_AND_LIFETIME",
+    "wire": "m_rx_o[61]",
+    "beat0_field": "realheader+BEST/bodybit61",
+    "beat1_field": "zero-padding wordbit123",
+    "word_W": 110,
+    "N": 2,
+    "payload_P": 62,
+    "control_reset": "u_wtx owe/nxt/vb/bi/fault reset rn=r_rx; datahold/oq_p noreset",
+    "write_lifetime": "holdpad startsarbitrary;start writes0;owe shift62writes0; otherwiseholds. oq_p readsoldhold on!start, includingidlebeforefirstwrite.",
+    "valid_lifetime": "Afterpostreset firststart, owedvalidbeat1tailis0; owe1/holdpad1 isunreachableafterthatwrite, although presentininductioncut.",
+    "macro_cause": false,
+    "hold_primitive": {
+     "Qbit": 189912,
+     "type": "$dff",
+     "CLK": [
+      2
+     ],
+     "async_reset": null,
+     "reset_value": null,
+     "enable_pin": null,
+     "Dbit": 189850,
+     "Droot_type": "$mux",
+     "Droot_cell": "$flatten\\u_dut.\\u_core.\\u_wtx.$procmux$3853",
+     "source": "/work/lec/wrap_gold.v:48.22-48.1668|../../work/rtl/ot_s81hd_mesh_ep_core.sv:178.47|../../work/rtl/ot_s81hd_beat_link.sv:62.9|../../work/rtl/ot_s81hd_mesh_ep.sv:277.37"
+    },
+    "contract": "Validbeats specifyzerotail; payloadstorage unreset. Rawidle payload beforefirstword isnotdeclaredzero byIDLE_ZERO0."
+   },
+   "current_snapshot_verdict": "DIFFERS_UNCHANGED"
+  }
+ ]
+}

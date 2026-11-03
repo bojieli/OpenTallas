@@ -1,0 +1,29 @@
+{
+  "status": "DISABLED_SOURCE_MODEL_PRICE_ONLY_NO_PLACEMENT",
+  "revision": "9db068b5458b7a20a548ab165aabc8dc6c077a30",
+  "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+  "macro_count": 4,
+  "nominal_data_bits": 262144,
+  "one_outline_um": [
+    172.824,
+    41.064
+  ],
+  "one_area_um2": 7096.844736000001,
+  "total_area_um2": 28387.378944000004,
+  "one_clk_cap_fF": 9.3458,
+  "total_added_macro_clk_cap_fF": 37.3832,
+  "removed_FF_clock_cap_not_yet_subtracted": true,
+  "T7_outline_um": [
+    1442.88,
+    2453.76
+  ],
+  "T7_existing_hardcores": 72,
+  "macro_area_to_T7_outline_ratio": 0.008017943638023899,
+  "placement_fit_qualified": false,
+  "clock_or_timing_qualified": false,
+  "new_macro_positions": null,
+  "existing_macro_view_source_sha256": {
+    "lef": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131",
+    "ttlib": "c725d57f52609ac9bcd2f3557fac1d8bb617659329744ac037879f52281cbb00"
+  }
+}

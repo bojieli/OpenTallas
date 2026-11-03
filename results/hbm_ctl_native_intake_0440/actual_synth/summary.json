@@ -1,0 +1,83 @@
+{
+  "status": "SYNTH_PASS_FACE_ABI_FAIL_SOURCE_PROOF_SEPARATE",
+  "source_snapshot": "2be20d026",
+  "normal_source_unit": "intel1:oth-ubuntu-572781-1793623795",
+  "std_cells": 81006,
+  "soft_FF": 34563,
+  "FF_masters": {
+    "DFFASRHQNx1_ASAP7_75t_R": 32345,
+    "DFFHQNx1_ASAP7_75t_R": 2218
+  },
+  "std_area_um2": 15544,
+  "SRAMs": 0,
+  "face_guard": {
+    "checked": 11808,
+    "ok": 11023,
+    "FAIL": 785,
+    "groups": {
+      "u_core_procdff_66936__D": {
+        "count": 1,
+        "ranges": [
+          [
+            470,
+            470
+          ]
+        ]
+      },
+      "u_core_procdff_66941__D": {
+        "count": 720,
+        "ranges": [
+          [
+            636,
+            779
+          ],
+          [
+            876,
+            1019
+          ],
+          [
+            1116,
+            1259
+          ],
+          [
+            1356,
+            1499
+          ],
+          [
+            1596,
+            1739
+          ]
+        ]
+      },
+      "u_core_u_vm__stage_mask": {
+        "count": 64,
+        "ranges": [
+          [
+            0,
+            63
+          ]
+        ]
+      }
+    }
+  },
+  "port_bind": "PASS11810 exact",
+  "SELRANGE": "PASS",
+  "physical_release": false,
+  "source_proof": {
+    "status": "EQUIVALENT",
+    "host": "intel1",
+    "unit": "oth-ubuntu-873068-1793624631",
+    "root": "/srv/opentallas-scratch2/claude/codex-hbm-ctl-native-lec-0510",
+    "native_conditional_reset": 4,
+    "historical64": false,
+    "compare_points": 41377,
+    "proved": 41377,
+    "differs": 0,
+    "undecided": 0,
+    "KEEP_declared": 4,
+    "KEEP_netlist": 4,
+    "exit_code": 0,
+    "receipt": "../actual_lec/lec.json"
+  },
+  "future_prune": "UNADOPTED:720 command bits/64 constant mask outputs require exact paired native ABI/caller event. IOword470 is unused by CTL but remains live in programme/collar START; do not drop it globally."
+}

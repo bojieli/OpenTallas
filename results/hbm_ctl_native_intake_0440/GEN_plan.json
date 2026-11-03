@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.die_plan.v1",
+  "die": {
+    "name": "HBM_CTL_SOURCE_COMPONENT",
+    "tech": "asap7",
+    "outline_um": [
+      669.6,
+      626.4
+    ],
+    "period_ps": 833,
+    "reach_um": 405,
+    "rep_um": 450,
+    "grid_um": 8.64,
+    "layer_budget": {
+      "partition_signal_max": "M7"
+    }
+  },
+  "clock": {
+    "insertion_ps": 250,
+    "insertion_tol_ps": 80
+  },
+  "partition_types": {
+    "native_provider_slot": {
+      "outline_um": [
+        669.6,
+        626.4
+      ],
+      "hard_cores": [
+        {
+          "inst": "u_native_ctl",
+          "module": "ot_hgi_sfu_core_split3__ctl",
+          "origin_um": [
+            0,
+            0
+          ],
+          "outline_um": [
+            669.6,
+            626.4
+          ],
+          "pins_file": "CTL_pins.json"
+        }
+      ]
+    }
+  },
+  "partitions": [],
+  "ports": [],
+  "lanes": []
+}

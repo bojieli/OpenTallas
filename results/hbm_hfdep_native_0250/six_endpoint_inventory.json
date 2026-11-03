@@ -1,0 +1,395 @@
+{
+  "status": "ACTUAL_SOURCE13_THREE_DISTINCT_NATIVE_ABI_CLASSES_NO_PHYSICAL_ADOPTION",
+  "rows": [
+    {
+      "module": "hfd_ep_static",
+      "actual_count": 4,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "tx_frame": {
+          "direction": "input",
+          "width": 612
+        },
+        "rx_arm_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_arm_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_block_words": {
+          "direction": "input",
+          "width": 7
+        },
+        "rx_release_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_release_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_index": {
+          "direction": "input",
+          "width": 6
+        },
+        "rx_pin_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "rx_pin_flit": {
+          "direction": "output",
+          "width": 612
+        },
+        "rx_block_ready": {
+          "direction": "output",
+          "width": 2
+        },
+        "phy_up": {
+          "direction": "output",
+          "width": 1
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        },
+        "fault_cause": {
+          "direction": "output",
+          "width": 11
+        },
+        "sd_tx": {
+          "direction": "output",
+          "width": 512
+        },
+        "sd_rx": {
+          "direction": "input",
+          "width": 512
+        },
+        "sd_st": {
+          "direction": "input",
+          "width": 2
+        }
+      },
+      "input_bits": 1148,
+      "output_bits": 1140,
+      "macros_per_instance": 4,
+      "clock_ports": [
+        "clk"
+      ],
+      "reset_ports": [
+        "rst_n"
+      ],
+      "actual_callers": [
+        {
+          "parent_module": "hbm_arch_NE_io",
+          "instance": "u_u_ep_N2",
+          "explicit_parameters": null,
+          "source_line": 162247
+        },
+        {
+          "parent_module": "hbm_arch_q_spb0",
+          "instance": "u_u_ep_S0",
+          "explicit_parameters": null,
+          "source_line": 276890
+        },
+        {
+          "parent_module": "hbm_arch_q_spb0__physical_v1",
+          "instance": "u_u_ep_S0",
+          "explicit_parameters": null,
+          "source_line": 277111
+        },
+        {
+          "parent_module": "hbm_arch_vsN0",
+          "instance": "u_u_ep_S1",
+          "explicit_parameters": null,
+          "source_line": 356008
+        }
+      ],
+      "ABI_bits": 2288
+    },
+    {
+      "module": "hfd_ep_static_vc2",
+      "actual_count": 1,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "tx_frame": {
+          "direction": "input",
+          "width": 612
+        },
+        "rx_arm_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_arm_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_block_words": {
+          "direction": "input",
+          "width": 7
+        },
+        "rx_release_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_release_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_index": {
+          "direction": "input",
+          "width": 6
+        },
+        "rx_pin_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "rx_pin_flit": {
+          "direction": "output",
+          "width": 612
+        },
+        "rx_block_ready": {
+          "direction": "output",
+          "width": 2
+        },
+        "phy_up": {
+          "direction": "output",
+          "width": 1
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        },
+        "fault_cause": {
+          "direction": "output",
+          "width": 11
+        },
+        "h_tx_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "h_tx_frame": {
+          "direction": "input",
+          "width": 612
+        },
+        "h_rx_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "h_rx_frame": {
+          "direction": "output",
+          "width": 612
+        },
+        "h_up": {
+          "direction": "output",
+          "width": 1
+        },
+        "h_cause": {
+          "direction": "output",
+          "width": 3
+        },
+        "sd_tx": {
+          "direction": "output",
+          "width": 512
+        },
+        "sd_rx": {
+          "direction": "input",
+          "width": 512
+        },
+        "sd_st": {
+          "direction": "input",
+          "width": 2
+        }
+      },
+      "input_bits": 1761,
+      "output_bits": 1757,
+      "macros_per_instance": 4,
+      "clock_ports": [
+        "clk"
+      ],
+      "reset_ports": [
+        "rst_n"
+      ],
+      "actual_callers": [
+        {
+          "parent": "hbm_arch_NW_io",
+          "instance": "u_u_ep_N0",
+          "explicit_parameters": ".HQ(4), .IDLE_K(204)",
+          "source_line": 162710
+        }
+      ],
+      "ABI_bits": 3518
+    },
+    {
+      "module": "hfd_ep_host_vc",
+      "actual_count": 1,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "tx_frame": {
+          "direction": "input",
+          "width": 612
+        },
+        "rx_arm_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_arm_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_block_words": {
+          "direction": "input",
+          "width": 7
+        },
+        "rx_release_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_release_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_bank": {
+          "direction": "input",
+          "width": 1
+        },
+        "rx_slot_index": {
+          "direction": "input",
+          "width": 6
+        },
+        "rx_pin_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "rx_pin_flit": {
+          "direction": "output",
+          "width": 612
+        },
+        "rx_block_ready": {
+          "direction": "output",
+          "width": 2
+        },
+        "phy_up": {
+          "direction": "output",
+          "width": 1
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        },
+        "fault_cause": {
+          "direction": "output",
+          "width": 11
+        },
+        "vc_tx_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "vc_tx_frame": {
+          "direction": "output",
+          "width": 612
+        },
+        "vc_rx_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "vc_rx_frame": {
+          "direction": "input",
+          "width": 612
+        },
+        "vc_up": {
+          "direction": "input",
+          "width": 1
+        },
+        "vc_cause": {
+          "direction": "input",
+          "width": 3
+        }
+      },
+      "input_bits": 1251,
+      "output_bits": 1241,
+      "macros_per_instance": 4,
+      "clock_ports": [
+        "clk"
+      ],
+      "reset_ports": [
+        "rst_n"
+      ],
+      "actual_callers": [
+        {
+          "parent": "hbm_arch_NW_io",
+          "instance": "u_u_host_ep",
+          "explicit_parameters": null,
+          "source_line": 162740
+        }
+      ],
+      "ABI_bits": 2492
+    }
+  ],
+  "actual_total_instances": 6,
+  "total_macro_instances": 24,
+  "actual_aggregate_ABI_bits": 15162,
+  "old_six_static_ABI_bits": 13728,
+  "aggregate_pin_delta_vs_six_static": 1434,
+  "vc2_additional_declared_HQ_data_FF": 2448,
+  "note": "No SRAM count increase: allthreeclasses4 true64x512. HQ4softqueue adds2448declaredFF inVC2class; no mapped/clock/area qualification yet",
+  "holds": [
+    "Three proper native masters/pinplans required; do not relabel static2288view asVC2/host",
+    "Host VC links612frame+control and sharedPHY arbitration/calendar mustcompose",
+    "No inheritedoldoutside/reset64/clock435352 physicalcredit"
+  ]
+}

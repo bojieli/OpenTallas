@@ -1,0 +1,400 @@
+{
+ "scope": "TWO_FIELD_SOURCE_RELATION_RECORD_ONLY_NO_HINT_APPLIED_NO_JOB",
+ "prior_unchanged": 12732,
+ "matched": 58437,
+ "reset64_retained": true,
+ "new_reset_assumption": false,
+ "lanes": [
+  {
+   "lane": "a",
+   "gold": [
+    {
+     "field": "s2v",
+     "Qbit": 65810,
+     "Dbit": 65813,
+     "CLK": [
+      2
+     ],
+     "async_reset": [
+      76594
+     ],
+     "reset_value": 0,
+     "state_enable": null,
+     "state_age": "sameedge currentp_take"
+    },
+    {
+     "field": "ok_f",
+     "Qbit": 65925,
+     "Dbit": 65813,
+     "CLK": [
+      2
+     ],
+     "async_reset": [
+      76594
+     ],
+     "reset_value": 0,
+     "state_enable": null,
+     "state_age": "sameedge currentp_take"
+    },
+    {
+     "field": "g_fcopy.u_k_ok_f3.q",
+     "Qbit": 78374,
+     "Dbit": 65813,
+     "CLK": [
+      2
+     ],
+     "async_reset": [
+      76852
+     ],
+     "reset_value": 0,
+     "state_enable": null,
+     "state_age": "sameedge currentp_take"
+    },
+    {
+     "field": "u_k_ok_f2.q",
+     "Qbit": 64497,
+     "Dbit": 65813,
+     "CLK": [
+      2
+     ],
+     "async_reset": [
+      94253
+     ],
+     "reset_value": 0,
+     "state_enable": null,
+     "state_age": "sameedge currentp_take"
+    }
+   ],
+   "mapped": [
+    {
+     "instance": "u_core.u_la.u_ln.u.u_ep.ok_f$_DFF_PN0_",
+     "master": "DFFASRHQNx1_ASAP7_75t_R",
+     "ports": {
+      "CLK": "clk",
+      "D": "\\u_core.u_la.u_ln.u.u_ep.p_take",
+      "QN": "_033088_",
+      "RESETN": "\\u_core.u_la.u_ln.u.u_rr.g_local[8].local_r",
+      "SETN": "_103743_"
+     }
+    },
+    {
+     "instance": "u_core.u_la.u_ln.u.u_ep.g_fcopy.u_k_ok_f3",
+     "master": "ot_s81ph_kff4_1",
+     "ports": {
+      "clk": "clk",
+      "d": "\\u_core.u_la.u_ln.u.u_ep.p_take",
+      "q": "\\u_core.u_la.u_ln.u.u_ep.ok_f3",
+      "rst_n": "\\u_core.u_la.u_ln.u.u_rr.g_local[24].local_r"
+     }
+    },
+    {
+     "instance": "u_core.u_la.u_ln.u.u_ep.u_k_ok_f2",
+     "master": "ot_s81ph_kff4_1",
+     "ports": {
+      "clk": "clk",
+      "d": "\\u_core.u_la.u_ln.u.u_ep.p_take",
+      "q": "\\u_core.u_la.u_ln.u.u_ep.ok_f2",
+      "rst_n": "\\u_core.u_la.u_ln.u.u_rr.g_local[23].local_r"
+     }
+    }
+   ],
+   "retained_gold_s2v_mapping": [
+    "gold",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.s2v",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_la.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+     0
+    ]
+   ],
+   "retained_reset_alias_chains": [
+    [
+     [
+      "both",
+      "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[8].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ]
+    ],
+    [
+     [
+      "both",
+      "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[23].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ]
+    ],
+    [
+     [
+      "both",
+      "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[24].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ]
+    ]
+   ],
+   "source_correspondence_to_qualify": {
+    "left_side": "both",
+    "left": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.ok_f",
+    "right_side": "gold",
+    "right": "ff:u_dut.u_core.u_la.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+    "xor": 0,
+    "existing_target_tuple": null,
+    "applied": false
+   },
+   "nine_fields": [
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.ok_f",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_ok_f2.q",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_ok_o.q",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_ok_o2.q",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_ok_ready.q",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_okc.q",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_oku.q",
+    "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_okv.q"
+   ]
+  },
+  {
+   "lane": "b",
+   "gold": [
+    {
+     "field": "s2v",
+     "Qbit": 130455,
+     "Dbit": 130458,
+     "CLK": [
+      2
+     ],
+     "async_reset": [
+      141239
+     ],
+     "reset_value": 0,
+     "state_enable": null,
+     "state_age": "sameedge currentp_take"
+    },
+    {
+     "field": "ok_f",
+     "Qbit": 130570,
+     "Dbit": 130458,
+     "CLK": [
+      2
+     ],
+     "async_reset": [
+      141239
+     ],
+     "reset_value": 0,
+     "state_enable": null,
+     "state_age": "sameedge currentp_take"
+    },
+    {
+     "field": "g_fcopy.u_k_ok_f3.q",
+     "Qbit": 143019,
+     "Dbit": 130458,
+     "CLK": [
+      2
+     ],
+     "async_reset": [
+      141497
+     ],
+     "reset_value": 0,
+     "state_enable": null,
+     "state_age": "sameedge currentp_take"
+    },
+    {
+     "field": "u_k_ok_f2.q",
+     "Qbit": 129142,
+     "Dbit": 130458,
+     "CLK": [
+      2
+     ],
+     "async_reset": [
+      158898
+     ],
+     "reset_value": 0,
+     "state_enable": null,
+     "state_age": "sameedge currentp_take"
+    }
+   ],
+   "mapped": [
+    {
+     "instance": "u_core.u_lb.u_ln.u.u_ep.ok_f$_DFF_PN0_",
+     "master": "DFFASRHQNx1_ASAP7_75t_R",
+     "ports": {
+      "CLK": "clk",
+      "D": "\\u_core.u_lb.u_ln.u.u_ep.p_take",
+      "QN": "_037578_",
+      "RESETN": "\\u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r",
+      "SETN": "_103743_"
+     }
+    },
+    {
+     "instance": "u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3",
+     "master": "ot_s81ph_kff4_1",
+     "ports": {
+      "clk": "clk",
+      "d": "\\u_core.u_lb.u_ln.u.u_ep.p_take",
+      "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_f3",
+      "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[24].local_r"
+     }
+    },
+    {
+     "instance": "u_core.u_lb.u_ln.u.u_ep.u_k_ok_f2",
+     "master": "ot_s81ph_kff4_1",
+     "ports": {
+      "clk": "clk",
+      "d": "\\u_core.u_lb.u_ln.u.u_ep.p_take",
+      "q": "\\u_core.u_lb.u_ln.u.u_ep.ok_f2",
+      "rst_n": "\\u_core.u_lb.u_ln.u.u_rr.g_local[23].local_r"
+     }
+    }
+   ],
+   "retained_gold_s2v_mapping": [
+    "gold",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.s2v",
+    [
+     "eq",
+     "gold",
+     "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+     0
+    ]
+   ],
+   "retained_reset_alias_chains": [
+    [
+     [
+      "both",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[8].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ],
+     [
+      "both",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ]
+    ],
+    [
+     [
+      "both",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[23].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ],
+     [
+      "both",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ]
+    ],
+    [
+     [
+      "both",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[24].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ],
+     [
+      "both",
+      "ff:u_dut.u_core.u_lb.u_ln.u.u_rr.g_local[0].local_r",
+      [
+       "eq",
+       "gold",
+       "ff:u_dut.u_core.u_la.u_ln.u.u_rr.g_local[0].local_r",
+       0
+      ]
+     ]
+    ]
+   ],
+   "source_correspondence_to_qualify": {
+    "left_side": "both",
+    "left": "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.ok_f",
+    "right_side": "gold",
+    "right": "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+    "xor": 0,
+    "existing_target_tuple": null,
+    "applied": false
+   },
+   "nine_fields": [
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.ok_f",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_f2.q",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o.q",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o2.q",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_ready.q",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_okc.q",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_oku.q",
+    "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_okv.q"
+   ]
+  }
+ ],
+ "source_expected18_points": [
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.ok_f",
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_ok_f2.q",
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_ok_o.q",
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_ok_o2.q",
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_ok_ready.q",
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_okc.q",
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_oku.q",
+  "ff:u_dut.u_core.u_la.u_ln.u.u_ep.u_k_okv.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.g_fcopy.u_k_ok_f3.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.ok_f",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_f2.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_o2.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_ok_ready.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_okc.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_oku.q",
+  "ff:u_dut.u_core.u_lb.u_ln.u.u_ep.u_k_okv.q"
+ ],
+ "actual_terminal_result_join": {
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-head-la2-0940/LA_REPLICA_RESULT.json",
+  "sha256": "0e78156ba3b28c7c66ca387e41f2fb9e76b5af1817679c4e00054f03239ab55c",
+  "remaining18_exact_match": true,
+  "matched_residual_counts": {
+   "proved": 238,
+   "differs": 18
+  },
+  "source_credit": false
+ },
+ "not_dispatchable_until_exact_terminal_join_and_caller_review": true,
+ "source_sha256": {
+  "/srv/opentallas-scratch/claude/codex-head-typed70-0248/subject/lec/gold.aliases.json": "4335dbca42fd196d3a31e13457b05db653b2a0386a4c82d43ca7372f170d9cfb",
+  "/srv/opentallas-scratch/claude/codex-head-typed70-0248/subject/lec/hyp.json": "406a2470ce1e46b959bd4cce99d4272d216c6dc2545152deff53b2acc0a7f7d6",
+  "/srv/opentallas-scratch/claude/head-ld-source-1102/1_2_yosys.v": "475d29d186ce3dcce4db949498eaf72cbcdc2bf810c6873b51efc4e585440ee4"
+ },
+ "no_LB_replica_cycle": "Separatep_takecohort; existingLBrep_ra/rep_o canonicaltuples untouched."
+}

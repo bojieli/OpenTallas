@@ -1,0 +1,265 @@
+{
+  "module": "ot_hgi_sfu_core_split3__ctl",
+  "source": "ot_hgi_sfu_core_split3__ctl.sv",
+  "source_sha256": "d8ce0deda2761ffcbdf5e87360cc42d45d81f3214251546c832a70edd43ff1cc",
+  "original_origin": "`line 1 \"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/stage5/external/6de52f51c482_b5ad1ef01e03939e80f6004861ef92c77b65776e539e61db0404fb0505fde9bd.sv\" 1",
+  "ports": [
+    {
+      "name": "clk",
+      "direction": "input",
+      "is_vector": true,
+      "width": 1
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "is_vector": true,
+      "width": 1
+    },
+    {
+      "name": "u_core_procdff_66891__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 1
+    },
+    {
+      "name": "u_core_procdff_66896__D",
+      "direction": "input",
+      "is_vector": true,
+      "width": 8
+    },
+    {
+      "name": "u_core_procdff_66896__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 8
+    },
+    {
+      "name": "u_core_procdff_66901__D",
+      "direction": "input",
+      "is_vector": true,
+      "width": 8
+    },
+    {
+      "name": "u_core_procdff_66901__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 8
+    },
+    {
+      "name": "u_core_procdff_66906__D",
+      "direction": "input",
+      "is_vector": true,
+      "width": 256
+    },
+    {
+      "name": "u_core_procdff_66906__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 256
+    },
+    {
+      "name": "u_core_procdff_66911__D",
+      "direction": "input",
+      "is_vector": true,
+      "width": 256
+    },
+    {
+      "name": "u_core_procdff_66911__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 256
+    },
+    {
+      "name": "u_core_procdff_66916__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 136
+    },
+    {
+      "name": "u_core_procdff_66921__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 2248
+    },
+    {
+      "name": "u_core_procdff_66926__D",
+      "direction": "input",
+      "is_vector": true,
+      "width": 2056
+    },
+    {
+      "name": "u_core_procdff_66931__D",
+      "direction": "input",
+      "is_vector": true,
+      "width": 8
+    },
+    {
+      "name": "u_core_procdff_66936__D",
+      "direction": "input",
+      "is_vector": true,
+      "width": 471
+    },
+    {
+      "name": "u_core_procdff_66936__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 34
+    },
+    {
+      "name": "u_core_procdff_66941__D",
+      "direction": "input",
+      "is_vector": true,
+      "width": 1742
+    },
+    {
+      "name": "u_core_u_engine_logic_or_ot_hgi_sfu_static_engine_sp2_sv_72_8058__A",
+      "direction": "input",
+      "is_vector": true,
+      "width": 1
+    },
+    {
+      "name": "u_core_u_engine_reduce_or_ot_hgi_sfu_static_engine_sp2_sv_72_8057__A",
+      "direction": "input",
+      "is_vector": true,
+      "width": 16
+    },
+    {
+      "name": "u_core_u_engine_reduce_or_ot_hgi_sfu_static_engine_sp2_sv_72_8059__A",
+      "direction": "input",
+      "is_vector": true,
+      "width": 16
+    },
+    {
+      "name": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+      "direction": "output",
+      "is_vector": true,
+      "width": 1022
+    },
+    {
+      "name": "u_core_u_rst__rst_n",
+      "direction": "output",
+      "is_vector": true,
+      "width": 1
+    },
+    {
+      "name": "u_core_u_vm__drain_data",
+      "direction": "input",
+      "is_vector": true,
+      "width": 512
+    },
+    {
+      "name": "u_core_u_vm__drain_result_v",
+      "direction": "input",
+      "is_vector": true,
+      "width": 2
+    },
+    {
+      "name": "u_core_u_vm__drain_v",
+      "direction": "output",
+      "is_vector": true,
+      "width": 2
+    },
+    {
+      "name": "u_core_u_vm__scalar_data",
+      "direction": "output",
+      "is_vector": true,
+      "width": 128
+    },
+    {
+      "name": "u_core_u_vm__scalar_load",
+      "direction": "output",
+      "is_vector": true,
+      "width": 4
+    },
+    {
+      "name": "u_core_u_vm__scalar_load_addr",
+      "direction": "output",
+      "is_vector": true,
+      "width": 96
+    },
+    {
+      "name": "u_core_u_vm__stage_addr",
+      "direction": "output",
+      "is_vector": true,
+      "width": 120
+    },
+    {
+      "name": "u_core_u_vm__stage_data",
+      "direction": "output",
+      "is_vector": true,
+      "width": 2048
+    },
+    {
+      "name": "u_core_u_vm__stage_group",
+      "direction": "output",
+      "is_vector": true,
+      "width": 16
+    },
+    {
+      "name": "u_core_u_vm__stage_mask",
+      "direction": "output",
+      "is_vector": true,
+      "width": 64
+    },
+    {
+      "name": "u_core_u_vm__stage_v",
+      "direction": "output",
+      "is_vector": true,
+      "width": 8
+    }
+  ],
+  "external_bits": 11810,
+  "planning_outline_um": [
+    669.6,
+    626.4
+  ],
+  "old_view_compatibility_credit": false,
+  "declared_direct_FF": 8933,
+  "required_native_export": {
+    "port": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+    "bits": [
+      0,
+      1021
+    ]
+  },
+  "START": {
+    "named_ports": [],
+    "opaque_command_contract": "Compiler control vectors remain exact; absence of a named START is not an absence-of-start claim. Native command/epoch/calendar joins required."
+  },
+  "status": "DISABLED_PROVIDER_SOURCE_EXPORT_NO_PHYSICAL_BUILD",
+  "source_model": {
+    "VM_READ_RETURN": 88,
+    "VM_WRITE_RETURN": 85,
+    "VM_bridge_declared_FF": 27301,
+    "reset_relay_FF": 6,
+    "total_declared_preopt_FF": 36240,
+    "native_SRAMs": 0,
+    "clock_fanout_status": "36240 source state bits on one exported clk; actual mapped sinks/tree unknown, clock decomposition/profile is a next gate"
+  },
+  "pin_capacity_model": {
+    "clock_and_reset_ports": [
+      {
+        "name": "clk",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "rst_n",
+        "direction": "input",
+        "is_vector": true,
+        "width": 1
+      },
+      {
+        "name": "u_core_u_rst__rst_n",
+        "direction": "output",
+        "is_vector": true,
+        "width": 1
+      }
+    ],
+    "perimeter_um": 2592.0,
+    "at6pins_per_um_capacity": 15344,
+    "actual_pin_placement": "UNBUILT"
+  }
+}

@@ -1,0 +1,40 @@
+{
+ "details": {
+  "INST u.u_143133/Q$_DFF_P_": {
+   "post": {
+    "master": "DFFHQNx2_ASAP7_75t_R",
+    "orient": "R180",
+    "status": "LOCKED",
+    "x": 193374,
+    "y": 75870
+   },
+   "pre": {
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "orient": "R180",
+    "status": "PLACED",
+    "x": 193428,
+    "y": 75870
+   }
+  }
+ },
+ "fixed_nets_post": 0,
+ "inst": [
+  "u.u_143133/Q$_DFF_P_"
+ ],
+ "missing": [],
+ "mode": "routed",
+ "n_insts_changed": 1,
+ "n_insts_pre": 42494,
+ "n_nets_changed": 0,
+ "n_nets_post": 8270,
+ "n_nets_pre": 8270,
+ "new": [],
+ "pins": [],
+ "post": "/work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/red_clock_freeze/clk_freeze_post.tsv",
+ "post_header": "#CLKDUMP tag post nets 8270 block qfd_dv_s5_red2_leaf",
+ "pre": "/work/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/red_clock_freeze/clk_freeze_pre.tsv",
+ "pre_header": "#CLKDUMP tag pre nets 8270 block qfd_dv_s5_red2_leaf",
+ "pre_wired": [],
+ "verdict": "FAIL",
+ "wire": []
+}

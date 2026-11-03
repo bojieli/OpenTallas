@@ -29,6 +29,15 @@ class ShortPool(Heavy):
         self.assertNotIn("CPUWeight=1000", a)
         self.assertIn("SHORT_POOL slot", (self.d / "state/admit.log").read_text())
 
+    def test_gen_lint_10gb_uses_pool(self):
+        # COORD 11-02: default gen_lint (8 GB + 2 GB) is a short-pool stage; 11 GB stays in the normal pool
+        r, a = self.run_("500", mem="10")
+        self.assertIsNotNone(a, r.stderr)
+        self.assertIn("SHORT_POOL slot", (self.d / "state/admit.log").read_text())
+        r, a = self.run_("500", mem="11")
+        self.assertIsNone(a)
+        self.assertEqual(r.returncode, 75)
+
     def test_busy_pool_waits(self):
         import fcntl
         state = self.d / "state"

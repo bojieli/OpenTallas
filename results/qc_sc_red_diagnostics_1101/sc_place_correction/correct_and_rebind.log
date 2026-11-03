@@ -1,0 +1,8 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_PG_CONNECT sc_place_corrected rules=2 protected_rebound=0
+OT_PG_BOUND sc_place_corrected pg_terms=751910 open=0
+OT_GEOM_DUMP /work/sc_actual_corrected.tsv
+SC_CORRECTION_REBIND_COMPLETE changed=42617 max_actual_Y_to_CLK_L1_um=32.7395 no_CTS_STA_GRT

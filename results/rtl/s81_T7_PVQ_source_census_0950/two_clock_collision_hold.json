@@ -1,0 +1,11 @@
+{
+  "status": "NOT_A_DIRECT_SUBSTITUTE",
+  "master": "ot_sram_1r1w2c_16x257_m1",
+  "source": "separate always @(posedgewclk) blockingword_write and always @(posedgerclk) registeredword_read",
+  "stock_comment": "the FIFO never reads a slot during its write",
+  "same_clock_tie": "does not establish deterministic old-data priority between the two active-edge processes",
+  "native_PVQ": "one clock, NBAwrite; old word sampled by actualpv_od evenoncollision",
+  "source_guards": "overflow and late/empty faults do not cancel write/drain; no local collision exclusion predicate",
+  "new_phase_or_delayed_write": "not selected or priced; would need an explicit source/clock event",
+  "macro_or_param_change_adopted": false
+}

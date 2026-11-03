@@ -1,0 +1,135 @@
+{
+ "status": "DISABLED_FC9_FOUR_CARRIERS_AND_ROOT_OBS136_JOIN_PREP",
+ "old_top": "hfd_ep_static",
+ "new_top": "hfd_ep_static_fc9",
+ "old_ABI": 2288,
+ "new_ABI": 2286,
+ "inputs": 1148,
+ "outputs": 1138,
+ "selected_static_instances": 4,
+ "SRAMs_per_instance": 4,
+ "macros_changed": false,
+ "clock_reset_changed": false,
+ "added_cycles": 0,
+ "retained_fault_mapping": {
+  "new8_3": "old10_5",
+  "new2_0": "old2_0",
+  "fault_scalar": "exact unchanged"
+ },
+ "removed_old_fault_bits": [
+  4,
+  3
+ ],
+ "callers": [
+  {
+   "module": "hbm_arch_NE_io",
+   "source_sha256": "f2166db3138008206fb9dc97eb3e2bf9e69e0f33f6fe54b8bdfd56e12136bc3c",
+   "proposed_sha256": "0f35c4e64d4f4ea9ce2285f3099e9c031270ef28eb0cd4f49719ff82d404b596",
+   "carrier": "L125_o",
+   "old_data_bits": 7,
+   "new_data_bits": 5,
+   "removed_old_data_indices": [
+    4,
+    3
+   ],
+   "epoch": {
+    "old": 7,
+    "new": 5
+   }
+  },
+  {
+   "module": "hbm_arch_q_spb0",
+   "source_sha256": "4e3fa3dfa699d41a2cf82f4b73faeee5135746d97a650e915e5f45656b05f975",
+   "proposed_sha256": "0833d74157cbbb28b6a2ba3d57e1729bfe342d7f5da32e3c392ee653e277b65f",
+   "carrier": "L117_o",
+   "old_data_bits": 11,
+   "new_data_bits": 9,
+   "removed_old_data_indices": [
+    4,
+    3
+   ],
+   "epoch": {
+    "old": 11,
+    "new": 9
+   }
+  },
+  {
+   "module": "hbm_arch_q_spb0__physical_v1",
+   "source_sha256": "4b085145c53b6afb8e5a2b0b6f6c0eea49004c80e2ad8074f81f49a632b433eb",
+   "proposed_sha256": "e94ce1b82634573430230ff0fcbf63f9bcd66768327309f9778700e37af62924",
+   "carrier": "L117_o",
+   "old_data_bits": 11,
+   "new_data_bits": 9,
+   "removed_old_data_indices": [
+    4,
+    3
+   ],
+   "epoch": {
+    "old": 11,
+    "new": 9
+   }
+  },
+  {
+   "module": "hbm_arch_vsN0",
+   "source_sha256": "a84e32a18c281bd12784d7bda4255957329e4a45dea93086cee2add50ea3135b",
+   "proposed_sha256": "2edf5b9031ffaf0e56314ba36552a311f142c87aade9e32e922e6e12ab7bb7e5",
+   "carrier": "L118_o",
+   "old_data_bits": 11,
+   "new_data_bits": 9,
+   "removed_old_data_indices": [
+    5,
+    4
+   ],
+   "epoch": {
+    "old": 11,
+    "new": 9
+   }
+  }
+ ],
+ "root_consumer": {
+  "module": "hbm_arch_root",
+  "sha256": "9059dc334df6fd94d47ca39c4e92e590464740e85beba3e7ba40f3f352050a1f",
+  "proposed_sha256": "a5841f75deee3b3e15bdee494b08ad07fc4479c3682d637521c2509e9d64e6ff",
+  "ports": [
+   "L117_i",
+   "L117m_i",
+   "L118_i",
+   "L125m_i"
+  ],
+  "fault_scalar_relay": "L118_i_q[0] to ot_hbm_b2_ep_root_relay unchanged",
+  "observer": "ot_hbm_obs_leaf N144/LID0/SYNC0 u_u_obs_C; compact136 physical input with old144 logical index semantics must join"
+ },
+ "declared_state_delta": {
+  "child_fault_output": -2,
+  "per_source_and_root_boundary_data": -16,
+  "observer": "separate candidate/mapped unmeasured"
+ },
+ "holds": [
+  "Selected2288/source-native4NEQ2 remains preserved",
+  "Actual current physical lane/relay/pin plans must prune paired source+destination semantic identities",
+  "New nativeFC9SYNTH/officialLEC/faceguard NOTRUN",
+  "No default/caller/parent/calendar/clock/P&R adoption",
+  "NativeOBS136physicalEQ/faceguard andotherpotentialvc2/hostconstantpins remain separate"
+ ],
+ "observer_join": {
+  "source_commit": "15e4f8d2f",
+  "canonical_rtl": "rtl/hbm_accel/die_glue/ot_hbm_obs_leaf_fc136.sv",
+  "snapshot": "ot_hbm_obs_leaf_fc136.sv",
+  "sha256": "43538a84a89ecc2019ece9260d0486fb316fdf52596417ec3a26feb7426f6982",
+  "physical_input": 136,
+  "logical_indices": 144,
+  "retained_order": "ascending oldindices excluding16/17,29/30,42/43,55/56",
+  "proof": "unbounded genuine reset4/arbitraryinitial induction3;3356cyclelockstep+formal/actualwrongretainedbitmutant",
+  "source_zero_premise": "producer separate FLOW actualnative4BASE0+existingRTL-XvaliditySTEP bothproved/wrong1diff; rawBooleanSTEPfailurepreserved"
+ },
+ "finite_source_projection": {
+  "receipt": "../miter/RESULT.json",
+  "checks": 18200,
+  "diff": 0,
+  "cycles": 2600,
+  "resets": 3,
+  "actual_fault_active_cycles": 2577,
+  "mutant_diff": 2579,
+  "formal_credit": false
+ }
+}

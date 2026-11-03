@@ -1,0 +1,28 @@
+{
+  "selected": null,
+  "accepted": {
+    "revision": "9db068b5458b7a20a548ab165aabc8dc6c077a30",
+    "plan_digest": "7bf83d029cc5ffb7",
+    "latency_sha256": "e44533870a4c778c0080128e920818b464e309189f763da812d5110e9329bb23"
+  },
+  "inactive_SOURCE39": {
+    "lineage": "4290c9c99",
+    "actual_plan_commit": "a484b1428",
+    "actual_latency_commit": "ef9559e12",
+    "actual_asbuilt_commit": "a01e4dfb0",
+    "export_commit": "617dd5502",
+    "proof_commit": "4e1f2ec72",
+    "corrected_reset_proof": "6604994a6",
+    "plan_digest": "bbec1f44f3672842",
+    "plan_path": "physical/die_plan/s81/plan_h2_2249.json",
+    "plan_sha256": "63447e7ed16070432894f6b331468547c87d70d1b3b01ecd8bec766998026aca",
+    "four_clock_tap_moves": true,
+    "refreshed_dead_declarations": 36,
+    "added_die_control_FFs_clock_reset_data_loads": 6,
+    "source_wrapper_reset_context": "SOURCE39 frozen185/179; not canonical physical186",
+    "lanes": 873,
+    "all_complete_lane_records_and_groups_identical_to_accepted": true,
+    "mission_cycle_delta": 0
+  },
+  "launch_allowed": false
+}
