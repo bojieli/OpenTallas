@@ -28,7 +28,7 @@ S=$OUT/src
 cat > "$OUT/elab.ys" <<YS
 read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top ot_hbm_hc_qhub_static -G W=128 -G DRLY=2 -G CHX=11 -G RD_CAPTURE=51 -G GATHER_PHASE=51 -G DONE_LAT=47 -G SFR=$SFR $S/ot_hbm_hc_q_static_bb.v $S/ot_hbm_hc_qcen_static.sv $S/ot_hbm_hc_qhub_static.sv $S/ot_hdc_fastfp.sv $S/ot_hdc_fastfp_lat.sv $S/ot_hdc_fp32_add_lat.sv $S/ot_hdc_prefix.sv $S/ot_rst_relay.sv
 setattr -mod -unset keep_hierarchy
-setattr -set keep_hierarchy 1 t:ot_hdc_fp32_add_lat* t:ot_hbm_hc_qcen_static* t:ot_hbm_hc_sfr_reg*
+setattr -set keep_hierarchy 1 t:ot_hdc_fp32_add_lat* t:ot_hbm_hc_qcen_static* t:ot_hbm_hc_sfr_*
 proc
 flatten
 memory -nomap

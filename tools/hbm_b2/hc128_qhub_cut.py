@@ -23,7 +23,7 @@ for k in range(4):
   if l<=5 and k*(N//4)<=i<(k+1)*(N//4):names.append(n);nodes.append(128-((2*128)>>l)+i)
  assert len(names)==31
  # SFR (DIE-HBM-61 11-03): subtree k's face registers g_sfr.g_sf[k].u_fi / u_fo / u_ff go into the cut with it
- sfr=sorted(n for n in cells if re.fullmatch(r'g_sfr\.g_sf\[%d\]\.u_f[iof]'%k,n));assert len(sfr) in (0,3),sfr;names+=sfr
+ sfr=sorted(n for n in cells if re.fullmatch(r'g_sfr\.g_sf\[%d\]\.u_(f[iof]|rr)'%k,n));assert len(sfr) in (0,4),sfr;names+=sfr
  for ni in nodes:
   drv=bybit[ne[ni]];assert len(drv)==1;dn=drv[0];names.append(dn)
   for p,d in cells[dn]['port_directions'].items():
