@@ -10,9 +10,9 @@
  "tx_type_ports": 523,
  "die_ports": 750,
  "lanes": 253,
- "tx_extrapolated_ports": 375,
+ "tx_extrapolated_ports": 187,
  "probe_max_um": 300,
- "tx_last_seg_max_um": 378.4,
+ "tx_last_seg_max_um": 374.4,
  "max_rx_written_new": 480.0,
  "min_rx_face_gain_ps": 119.7,
  "per_class": {
@@ -21,12 +21,12 @@
    "ports": 31,
    "sender_bus_unchanged": 6,
    "sender_cut": 25,
-   "worst_tx_margin_new_ps": 325.1,
+   "worst_tx_margin_new_ps": 352.0,
    "worst_tx": {
-    "type": "slice_station__t25",
-    "bus": "ft0_o",
-    "last_seg_um": 360.7,
-    "margin_old_ps": 444.8
+    "type": "col_h9_r0_p2__t1__cl9f71e63d",
+    "bus": "ft4_o",
+    "last_seg_um": 290.1,
+    "margin_old_ps": 471.7
    }
   },
   "col_h9_r0_p1": {
@@ -116,12 +116,12 @@
    "lanes": 1,
    "ports": 1,
    "sender_cut": 1,
-   "worst_tx_margin_new_ps": 330.2,
+   "worst_tx_margin_new_ps": 359.1,
    "worst_tx": {
     "type": "slice_station__t51",
     "bus": "ft4_o",
-    "last_seg_um": 348.0,
-    "margin_old_ps": 449.9
+    "last_seg_um": 278.4,
+    "margin_old_ps": 478.8
    }
   },
   "dsdv_slice_lepe_nh_mus_C": {
@@ -140,12 +140,12 @@
    "lanes": 1,
    "ports": 1,
    "sender_cut": 1,
-   "worst_tx_margin_new_ps": 336.8,
+   "worst_tx_margin_new_ps": 362.7,
    "worst_tx": {
     "type": "slice_station__t29__cl2e5c855a",
     "bus": "ft3_o",
-    "last_seg_um": 331.8,
-    "margin_old_ps": 456.5
+    "last_seg_um": 265.4,
+    "margin_old_ps": 482.4
    }
   },
   "dsdv_slice_lepw_mus_C": {
@@ -164,12 +164,12 @@
    "lanes": 2,
    "ports": 2,
    "sender_cut": 2,
-   "worst_tx_margin_new_ps": 330.4,
+   "worst_tx_margin_new_ps": 359.1,
    "worst_tx": {
     "type": "slice_station__t6__cl54a9ceeb",
     "bus": "ft2_o",
-    "last_seg_um": 347.4,
-    "margin_old_ps": 450.2
+    "last_seg_um": 277.9,
+    "margin_old_ps": 478.8
    }
   },
   "eng": {
@@ -248,24 +248,24 @@
    "ports": 207,
    "sender_cut": 179,
    "sender_bus_unchanged": 28,
-   "worst_tx_margin_new_ps": 317.9,
+   "worst_tx_margin_new_ps": 325.1,
    "worst_tx": {
-    "type": "slice_station__t38",
-    "bus": "ft5_o",
-    "last_seg_um": 378.4,
-    "margin_old_ps": 437.6
+    "type": "serdes__t1__clb45db5be",
+    "bus": "ft1_o",
+    "last_seg_um": 360.7,
+    "margin_old_ps": 444.8
    }
   },
   "svc_hi_dsdv_svc_rs": {
    "lanes": 11,
    "ports": 11,
    "sender_cut": 11,
-   "worst_tx_margin_new_ps": 346.9,
+   "worst_tx_margin_new_ps": 364.5,
    "worst_tx": {
-    "type": "slice_station__t8",
-    "bus": "ft2_o",
-    "last_seg_um": 306.7,
-    "margin_old_ps": 466.6
+    "type": "slice_station__t22",
+    "bus": "ft0_o",
+    "last_seg_um": 263.4,
+    "margin_old_ps": 484.2
    }
   },
   "svc_lo_dsdv_svc_rs": {
