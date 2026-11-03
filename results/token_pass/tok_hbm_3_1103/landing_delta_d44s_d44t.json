@@ -1,0 +1,566 @@
+{
+ "groups": 3992,
+ "skipped_unknown_lane": 316,
+ "mis_before": 81,
+ "mis_after": 81,
+ "new": [
+  {
+   "sink": "hcb_NE1.u_c.$procdff$71842",
+   "sink_part": "NE_b001",
+   "lanes": {
+    "L14m": [
+     8,
+     8
+    ],
+    "L167m": [
+     8,
+     8
+    ],
+    "L168m": [
+     8,
+     10
+    ]
+   },
+   "ports": [
+    "D"
+   ]
+  },
+  {
+   "sink": "hcb_NW1.u_c.$procdff$71842",
+   "sink_part": "NW_b001",
+   "lanes": {
+    "L14": [
+     8,
+     8
+    ],
+    "L167": [
+     8,
+     8
+    ],
+    "L168": [
+     8,
+     10
+    ]
+   },
+   "ports": [
+    "D"
+   ]
+  }
+ ],
+ "healed": [
+  {
+   "sink": "sm_NW3.g_qs_in.u_qs_c_land",
+   "sink_part": "NW_sm3",
+   "lanes": {
+    "L100": [
+     7,
+     8
+    ],
+    "L34": [
+     8,
+     8
+    ],
+    "L35": [
+     8,
+     8
+    ]
+   },
+   "ports": [
+    "d"
+   ]
+  },
+  {
+   "sink": "sm_NW7.g_qs_in.u_qs_c_land",
+   "sink_part": "NE_sm3",
+   "lanes": {
+    "L100m": [
+     7,
+     8
+    ],
+    "L34m": [
+     8,
+     8
+    ],
+    "L35m": [
+     8,
+     8
+    ]
+   },
+   "ports": [
+    "d"
+   ]
+  }
+ ],
+ "still_changed": [
+  {
+   "sink": "hb_idx__s_NE.scorer.$procdff$71762",
+   "sink_part": "NE_b100",
+   "lanes": {
+    "L203m": [
+     4,
+     5
+    ],
+    "L91m": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "D"
+   ]
+  },
+  {
+   "sink": "hb_idx__s_NE.scorer.$procdff$71770",
+   "sink_part": "NE_b100",
+   "lanes": {
+    "L6bm": [
+     8,
+     9
+    ],
+    "L6cm": [
+     8,
+     9
+    ],
+    "L6m": [
+     8,
+     9
+    ],
+    "L7m": [
+     2,
+     2
+    ],
+    "L91m": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "D"
+   ]
+  },
+  {
+   "sink": "hb_idx__s_NW.scorer.$procdff$71770",
+   "sink_part": "NW_b100",
+   "lanes": {
+    "L6": [
+     8,
+     9
+    ],
+    "L6b": [
+     8,
+     9
+    ],
+    "L6c": [
+     8,
+     9
+    ],
+    "L7": [
+     2,
+     2
+    ],
+    "L91": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "D"
+   ]
+  },
+  {
+   "sink": "hc_NE.u_q",
+   "sink_part": "NE_hub",
+   "lanes": {
+    "L12ms": [
+     13,
+     14
+    ],
+    "L169m": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "result",
+    "result_position",
+    "result_v"
+   ]
+  },
+  {
+   "sink": "hc_NE0",
+   "sink_part": "NE_su00",
+   "lanes": {
+    "L102m": [
+     7,
+     7
+    ],
+    "L36m": [
+     14,
+     18
+    ],
+    "L410m": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "c_rq",
+    "c_wq",
+    "local_read",
+    "local_write"
+   ]
+  },
+  {
+   "sink": "hc_NW.u_q",
+   "sink_part": "NW_hub",
+   "lanes": {
+    "L131": [
+     2,
+     2
+    ],
+    "L181": [
+     5,
+     6
+    ]
+   },
+   "ports": [
+    "lg_rr",
+    "lg_w_done"
+   ]
+  },
+  {
+   "sink": "hc_NW0",
+   "sink_part": "NW_su00",
+   "lanes": {
+    "L102": [
+     7,
+     7
+    ],
+    "L36": [
+     14,
+     18
+    ],
+    "L410": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "c_rq",
+    "c_wq",
+    "local_read",
+    "local_write"
+   ]
+  },
+  {
+   "sink": "hleaf_NE",
+   "sink_part": "NE_hub",
+   "lanes": {
+    "L12m": [
+     13,
+     14
+    ],
+    "L12ms": [
+     13,
+     14
+    ],
+    "L169m": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "cfg_addr",
+    "cfg_data",
+    "cfg_target",
+    "cfg_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "desc_v"
+   ]
+  },
+  {
+   "sink": "obs_C",
+   "sink_part": "root",
+   "lanes": {
+    "L117m": [
+     41,
+     42
+    ],
+    "L138m": [
+     40,
+     41
+    ]
+   },
+   "ports": [
+    "obs"
+   ]
+  },
+  {
+   "sink": "obs_C",
+   "sink_part": "root",
+   "lanes": {
+    "L117": [
+     41,
+     42
+    ],
+    "L138": [
+     40,
+     41
+    ]
+   },
+   "ports": [
+    "obs"
+   ]
+  },
+  {
+   "sink": "sm_NW0.g_qs_in.u_qs_c_land",
+   "sink_part": "NW_sm0",
+   "lanes": {
+    "L28": [
+     29,
+     30
+    ],
+    "L29": [
+     12,
+     12
+    ],
+    "L97": [
+     11,
+     11
+    ]
+   },
+   "ports": [
+    "d"
+   ]
+  },
+  {
+   "sink": "sm_NW4.g_qs_in.u_qs_c_land",
+   "sink_part": "NE_sm0",
+   "lanes": {
+    "L28m": [
+     29,
+     30
+    ],
+    "L29m": [
+     12,
+     12
+    ],
+    "L97m": [
+     11,
+     11
+    ]
+   },
+   "ports": [
+    "d"
+   ]
+  },
+  {
+   "sink": "su_NE0.u_slice.$memory\\g_inj.slot$wrmux[0][0][0]$71906",
+   "sink_part": "NE_su00",
+   "lanes": {
+    "L102m": [
+     7,
+     7
+    ],
+    "L36m": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "B"
+   ]
+  },
+  {
+   "sink": "su_NE0.u_slice.$memory\\g_inj.slot$wrmux[1][0][0]$71912",
+   "sink_part": "NE_su00",
+   "lanes": {
+    "L102m": [
+     7,
+     7
+    ],
+    "L36m": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "B"
+   ]
+  },
+  {
+   "sink": "su_NE0.u_slice.$memory\\g_inj.slot$wrmux[2][0][0]$71918",
+   "sink_part": "NE_su00",
+   "lanes": {
+    "L102m": [
+     7,
+     7
+    ],
+    "L36m": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "B"
+   ]
+  },
+  {
+   "sink": "su_NE0.u_slice.$memory\\g_inj.slot$wrmux[3][0][0]$71922",
+   "sink_part": "NE_su00",
+   "lanes": {
+    "L102m": [
+     7,
+     7
+    ],
+    "L36m": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "B"
+   ]
+  },
+  {
+   "sink": "su_NE0.u_slice.$procdff$67158",
+   "sink_part": "NE_su00",
+   "lanes": {
+    "L102m": [
+     7,
+     7
+    ],
+    "L36m": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "D"
+   ]
+  },
+  {
+   "sink": "su_NW0.u_slice.$memory\\g_inj.slot$wrmux[0][0][0]$72029",
+   "sink_part": "NW_su00",
+   "lanes": {
+    "L102": [
+     7,
+     7
+    ],
+    "L36": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "B"
+   ]
+  },
+  {
+   "sink": "su_NW0.u_slice.$memory\\g_inj.slot$wrmux[1][0][0]$72035",
+   "sink_part": "NW_su00",
+   "lanes": {
+    "L102": [
+     7,
+     7
+    ],
+    "L36": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "B"
+   ]
+  },
+  {
+   "sink": "su_NW0.u_slice.$memory\\g_inj.slot$wrmux[2][0][0]$72041",
+   "sink_part": "NW_su00",
+   "lanes": {
+    "L102": [
+     7,
+     7
+    ],
+    "L36": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "B"
+   ]
+  },
+  {
+   "sink": "su_NW0.u_slice.$memory\\g_inj.slot$wrmux[3][0][0]$72045",
+   "sink_part": "NW_su00",
+   "lanes": {
+    "L102": [
+     7,
+     7
+    ],
+    "L36": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "B"
+   ]
+  },
+  {
+   "sink": "su_NW0.u_slice.$procdff$69417",
+   "sink_part": "NW_su00",
+   "lanes": {
+    "L102": [
+     7,
+     7
+    ],
+    "L36": [
+     14,
+     18
+    ]
+   },
+   "ports": [
+    "D"
+   ]
+  },
+  {
+   "sink": "vmb_NW6",
+   "sink_part": "NW_hub",
+   "lanes": {
+    "L181": [
+     5,
+     6
+    ],
+    "L61": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "rq0",
+    "wq0"
+   ]
+  },
+  {
+   "sink": "vmb_NW7",
+   "sink_part": "NW_hub",
+   "lanes": {
+    "L181": [
+     5,
+     6
+    ],
+    "L61": [
+     2,
+     2
+    ]
+   },
+   "ports": [
+    "rq0",
+    "wq0"
+   ]
+  }
+ ]
+}
