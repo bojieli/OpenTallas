@@ -1,0 +1,11 @@
+{
+  "status": "FAILED_CLOSED_SOURCE_MANIFEST_ROOT_INTAKE",
+  "unit": "oth-ubuntu-873868-1793600216",
+  "exit": 1,
+  "error": "selected source manifest is outside source root",
+  "origin": "C.Die -> source_contract -> slice_source.manifest_selection",
+  "transport_ages_evaluated": false,
+  "resolution": "Use exact in-root asbuilt_b178_coll_h2_2249 source assembly for module resolution, assert staged manifest differs only by relocated base/clock-sidecar/map paths; actual transport ages and netlist provenance still come from original strict bind_ev2 records.",
+  "guard_relaxed": false,
+  "programme_rewritten": false
+}

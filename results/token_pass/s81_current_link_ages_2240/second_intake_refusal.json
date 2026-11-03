@@ -1,0 +1,9 @@
+{
+ "status": "FAILED_CLOSED_MISSING_SPARSE_SOURCE_INPUTS",
+ "unit": "oth-ubuntu-1011363-1793600621",
+ "exit": 1,
+ "error": "selected source manifest input absent/outside root: physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192_bb.v",
+ "diagnosed_missing_files": ["ot_sram_1r1w2c_16x257_m1_p192_bb.v", "ot_sram_1r1w2c_16x289_m1_p192_bb.v"],
+ "transport_ages_evaluated": false,
+ "resolution": "Private complete395-file native selection closure; exact two BB blobs recovered from actual bind provenance commit2026e1e156134b0cc5be9ab73cfd428ce94493f1; no foreign source worktree edited or guard relaxed."
+}
