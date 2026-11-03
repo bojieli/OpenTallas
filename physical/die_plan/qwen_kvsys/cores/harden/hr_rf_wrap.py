@@ -80,7 +80,7 @@ def transform(text, mod, spec):
                   f"  always @(posedge {ck}) rf_oh_{b} <= rf_ld_{b} ? rf_i_{b} : rf_oh_{b};",
                   f"  always @(posedge {ck}) rf_od_{b} <= rf_ld_{b} ? rf_i_{b} : rf_oh_{b};   // private port bank",
                   # private rempty port flop (= !rf_ov), next state from rf_ov, so its Q loads only the port
-                  f"  (* keep = 1 *) reg rf_pe_{b};",
+                  f"  reg rf_pe_{b};",
                   f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) rf_pe_{b} <= 1'b1;",
                   f"    else rf_pe_{b} <= rf_ld_{b} ? 1'b0 : ({rd}[0] ? 1'b1 : !rf_ov_{b});",
                   f"  assign {rdat} = rf_od_{b};", f"  assign {remp} = {{rf_pe_{b}}};"]
