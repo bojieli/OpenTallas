@@ -1890,6 +1890,14 @@ ADMITTED = "ot-heavy: admitted on"            # ot-run echoes the host's admissi
 PILOT_FAIL_CLASSES = ("PLAN", "RTL", "FLOW", "TIMING", "ROUTING")
 
 
+def is_wait_dep(r):
+    """KW-FIX-1 11-02 (COORD 19:2x): a FAIL record whose class reason is WAIT-DEP (a child hard core / ROM view of
+    the type has a lef but no lib yet) is a dependency wait, not a failure: kit_wave_stages.tsv shows it PENDING-DEP
+    and it never stops its class volume (pilot gate).  The type relaunches on its own once the plan carries the signed
+    child view (new block sha = new item key); the child cores already launch first (select() sorts cores first)."""
+    return r.get("status") == "FAIL" and str(r.get("reason") or "").startswith("WAIT-DEP")
+
+
 def pilot_fail_times(d, die, state):
     """-> {class: latest pilot FAIL time} over the die's non-volume records.  KIT-WAVE-14 11-01: an AUTO-GEOM FAIL
     (stage 'geom') is a per-block geometry verdict -- GEOM review often releases it PASS-COND (fill/empty standing
@@ -1901,7 +1909,8 @@ def pilot_fail_times(d, die, state):
             continue
         c = pilot_key(d, die, r.get("item"), r.get("kind") or "type")
         t = None
-        if r.get("status") == "FAIL" and r.get("class") in PILOT_FAIL_CLASSES and r.get("stage") != "geom":
+        if (r.get("status") == "FAIL" and r.get("class") in PILOT_FAIL_CLASSES and r.get("stage") != "geom"
+                and not is_wait_dep(r)):
             t = float(r.get("updated") or 0)
         elif r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL":
             t = float(r.get("q_updated") or r.get("updated") or 0)
@@ -2185,6 +2194,8 @@ def write_stages(st, ap_dir, cfg=None):
                  stage="queue:route" if r.get("status") == "ENQUEUED" else (r.get("stage") or ""),
                  updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)),
                  reason=(r.get("reason") or "")[:240])
+        if is_wait_dep(r):
+            v["status"] = "PENDING-DEP"
         if r.get("status") == "ENQUEUED" and r.get("q_stage"):
             # past GEOM: the autopilot queue job of this kit (follow_queue); evidence = its job id
             v.update(stage=r["q_stage"], status=r.get("q_status") or "", **{"class": r.get("q_class") or ""},
