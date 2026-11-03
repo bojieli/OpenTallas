@@ -155,3 +155,23 @@ def test_ff_eco_overrides_copied_two_mode_make_assignments(tmp_path):
     assert hook.index('source /work/kit_modes_eco.tcl') < hook.index('source /work/eco_route.tcl')
     assert 'kit_modes_eco_done' in hook
     assert (out/'kit_modes_eco.tcl').is_file()
+
+
+def test_hold_step_runs_on_signoff_drv(tmp_path):
+    """FLOW-23: hold met but sign-off FF slew violations -> the same ECO step runs (DRV first on the routed SPEF);
+    OT_HOLD_STEP_DRV=0 keeps the hold-only trigger."""
+    eco, kit = _stage(tmp_path, 'mkdir -p "$1/signoff"; echo "{\\"checks\\": {}}" > "$1/signoff/signoff.json"; exit 0\n')
+    sj = {"checks": {"hold_ff": {"wns_ps": 3.5},
+                     "drv": {"verdict": "FAIL", "by_corner": {"tt": {"slew": 0.0, "cap": 0.0}, "ff": {"slew": 13.0, "cap": 0.0}}}}}
+    (kit / "signoff/signoff.json").write_text(json.dumps(sj))
+    r = _run(eco, kit, tmp_path, {"OT_HOLD_STEP_DRV": "0"})
+    assert r.returncode == 0 and json.loads((kit / "hold_step.json").read_text())["status"] == "NOT_NEEDED"
+    r = _run(eco, kit, tmp_path)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "sign-off DRV 13" in r.stdout
+    assert json.loads((kit / "hold_step.json").read_text())["status"] == "PASS"
+    sj["checks"]["drv"]["by_corner"]["ff"]["slew"] = 0.0
+    (kit / "signoff/signoff.json").write_text(json.dumps(sj))
+    shutil.rmtree(Path(str(kit) + "_holdeco"))
+    assert _run(eco, kit, tmp_path).returncode == 0
+    assert json.loads((kit / "hold_step.json").read_text())["status"] == "NOT_NEEDED"
