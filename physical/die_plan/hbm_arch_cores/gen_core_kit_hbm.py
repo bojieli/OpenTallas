@@ -1332,6 +1332,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
                          "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
                          "that bus, recorded in face_shell.json out_extra_stages + freeze.json); default none = unchanged")
+    ap.add_argument("--face-reset-relay", type=int, default=0, metavar="N",
+                    help="DIE-HBM-61/RTL 11-03 (OWNER RE-FORM registered reset relay, opt-in, default 0 = off): every "
+                         "active-low reset input of the face shell goes through ot_hbm_face_rst_relay (async assert, "
+                         "release after N >= 2 edges); recorded in face_shell.json reset_relay + latency.reset_delay_cycles")
     ap.add_argument("--face-lockup", action="append", default=[], metavar="BUSRE",
                     help="opt-in (DIE-HBM-61/CLOCK, OWNER 11-03 RE-FORM hold-safe crossings; default for the HBM-RF1 "
                          "recipe): every shell OUTPUT bus matching BUSRE ('.*' = all) gets a negative-edge lockup "
@@ -1644,7 +1648,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
                              stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None,
-                             lockup=a.face_lockup or None)
+                             lockup=a.face_lockup or None, reset_relay=a.face_reset_relay)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
