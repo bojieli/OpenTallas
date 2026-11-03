@@ -135,11 +135,28 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144,placement_p
         root=uf.find(v['id']);o=objects.setdefault(root,dict(id=root,a=v['a'],b=v['b'],t0=v['t0'],t1=v['t1'],values=[]))
         o.update(a=min(o['a'],v['a']),b=max(o['b'],v['b']),t0=min(o['t0'],v['t0']),t1=max(o['t1'],v['t1']));o['values'].append(v['id'])
     hints={o['id']:list(placement_preference(o,vals))for o in objects.values()}if placement_preference else{}
-    placed=[];high=0
+    # Row siblings (opt-in, align != 8 only; TOK-HBM-2): the per-row objects of one explicit-row record operand take
+    # the same source->VM translation when it is free, so the record keeps its uniform row stride and stays folded
+    # (congruence padding between separately placed rows would otherwise scalarize the record).
+    siblings={}
+    if align!=8:
+        by_record={}
+        for op in ops:by_record.setdefault(op['source_record'],[]).append(op)
+        for rows in by_record.values():
+            if len(rows)<2:continue
+            for k in rows[0]['ports']:
+                roots=[uf.find(op['ports'][k])for op in rows if k in op['ports']]
+                for r in roots:siblings.setdefault(r,[]).extend(x for x in roots if x!=r)
+    placed=[];high=0;placed_by_id={}
     for o in sorted(objects.values(),key=lambda o:(not bool(hints.get(o['id'])), -(o['b']-o['a']),o['t0'])):
         size=o['b']-o['a'];candidate=o['a']%align
         occupied=sorted((p['base'],p['base']+p['b']-p['a'])for p in placed if not(p['t1']<o['t0']or o['t1']<p['t0']))
         preferred=next((int(c)for c in hints.get(o['id'],[])if c>=0 and c+size<=capacity and(c-o['a'])%align==0 and all(c+size<=lo or hi<=c for lo,hi in occupied)),None)
+        if preferred is None and siblings.get(o['id']):
+            for sib in siblings[o['id']]:
+                if sib not in placed_by_id:continue
+                c=placed_by_id[sib]['base']-placed_by_id[sib]['a']+o['a']
+                if 0<=c and c+size<=capacity and(c-o['a'])%align==0 and all(c+size<=lo or hi<=c for lo,hi in occupied):preferred=c;break
         if preferred is not None:candidate=preferred
         else:
             for lo,hi in occupied:
@@ -147,7 +164,7 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144,placement_p
                 if candidate<hi:candidate=hi+(o['a']-hi)%align
         if candidate+size>capacity and placement_preference:return build(records,first,last,start,count,IR,live_out,capacity,None,align)
         if candidate+size>capacity:raise ValueError(f'value phase needs {candidate+size} words > {capacity}')
-        o['base']=candidate;placed.append(o);high=max(high,candidate+size)
+        o['base']=candidate;placed.append(o);placed_by_id[o['id']]=o;high=max(high,candidate+size)
     # Every source port stays in its joined component with one translation.
     blob=bytearray();manifest=[];relocated=[]
     for op in ops:
