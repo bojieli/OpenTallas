@@ -1,0 +1,25 @@
+{
+ "event": "QC reach / T (hc3 density taps)",
+ "types": {
+  "slw_hc3__clccfc3e6b": {
+   "taps_old": 4,
+   "taps_new": 119,
+   "collector_tree": {
+    "old": 24,
+    "new": 441
+   },
+   "export_taps_changed": 1
+  },
+  "slw_hc3__cld86a7ad4": {
+   "taps_old": 4,
+   "taps_new": 116,
+   "collector_tree": {
+    "old": 0,
+    "new": 0
+   },
+   "export_taps_changed": 3
+  }
+ },
+ "src_sha256": "91ece1ff06b05141e6fdb75bb5d2dcb8a8ff817f3ef8f922e3bb5e726a46e3ee",
+ "dst_sha256": "f84a6d840a2078d1ce628001ade864a906cba14c523d47e2e52aa1eef26cfcc0"
+}
