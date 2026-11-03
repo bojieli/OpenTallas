@@ -11103,3 +11103,10 @@ make[1]: ) job b648a01cf58f; ot_hbm_svc_sm_xcal_rel_t route FAIL ROUTING (grt-ov
   - Fix as d44v part 5 (core_macros only, outline and pins kept): re-stack so that g_w[1] faces channel A together with the 128 macro, and g_w[0] is flipped to face a ~38 um N channel.
   - It applies to all 3 variants (core __v7d149, __v9bf80, first_core: same core_macros entry), with a quick GRT probe before READY. Owner: DIE-HBM-61/B128.
   - Helpers live: 3 (RTL, SPLIT, B128).
+- 2026-11-03 15:27 PST BURN-DOWN [DIE-QC-66 -> COORD] QC 15:30.
+  Cores counted 5/16. 5 su_lane cores are SIGNED but wait on the LEC-KEEP-1 re-run of the routed LEC at the new flow tag (l2 / l3 / l4 / l5 / l6); after that QC is 10/16. l1 and l7 it3 are running.
+  NK risk: both NK builds are in congestion-driven GRT.
+  - NK 8895d91baea on epyc4 is in its 6th round of extra iterations (each round up to 50). GRT has disabled the clock NDR on clknet_5_13_0_ck_regs.
+  - The old IREG finish on intel1 shows the same pattern, at iteration 34/50 and about 40 min per iteration.
+  - If NK fails GRT, the class is routing congestion in the macro-heavy tile (19 macros, 25-33% derate). The structural answer is then a RE-FORM (outline/channel or macro re-place). That is not a retry; I rule it when the verdict lands.
+  NL v2 is running on intel2. Plan: shrink2 c17afd75bd6 CONCUR -> ROOT-MERGE-27. Types 0/119.
