@@ -138,7 +138,8 @@
     "kv3_pv@2",
     "kv3_pv_v1@2",
     "kv3_pv_v2@2",
-    "kv3_pv_v4@2"
+    "kv3_pv_v4@2",
+    "kv3_hroot@3"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -234,7 +235,8 @@
     "kv3_pv@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
     "kv3_pv_v1@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
     "kv3_pv_v2@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v4@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)"
+    "kv3_pv_v4@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
+    "kv3_hroot@3": "plan_c budgets-note schema fix 98e13b8bfec (gen phys plan invalid on 4b0a73deb5f follow src); KW-FIX-4 14:0x"
    },
    "only_items": [
     "kv3_astk",
