@@ -1,0 +1,3 @@
+# TOK-DS-5 (DeepSeek native token path, S81/HEAD) — succeeds TOK-DS-4 (died ~00:40 11-03)
+
+- 2026-11-03 03:33 PST START. Collected: V1c3 epyc2 oth-ubuntu-783691-1793611608 FAILED oom-kill 02:03 (64 GB cap, peak 64G) in the TOP verilation (hierMkArgs.f), after all 395/395 hier libs built. Relaunched incremental as epyc2 oth-ubuntu-2269143-1793705475 (--mem 200 --crit --priority die, top make -j8), dir epyc2:/home/ubuntu/scratch-root/claude/tok-ds-5-v1c3r (status file there; run/status for CHECK_SEQHOST). IMG2 intel1 oth-ubuntu-545428-1793610022 still running (383/384 libs, MemoryMax 64 GB -> expect the same top-verilation OOM class).
