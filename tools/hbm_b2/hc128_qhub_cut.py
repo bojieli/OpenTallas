@@ -22,6 +22,8 @@ for k in range(4):
   l,i=map(int,m.groups());N=128>>l
   if l<=5 and k*(N//4)<=i<(k+1)*(N//4):names.append(n);nodes.append(128-((2*128)>>l)+i)
  assert len(names)==31
+ # SFR (DIE-HBM-61 11-03): subtree k's face registers g_sfr.g_sf[k].u_fi / u_fo / u_ff go into the cut with it
+ sfr=sorted(n for n in cells if re.fullmatch(r'g_sfr\.g_sf\[%d\]\.u_(f[iof]|rr)'%k,n));assert len(sfr) in (0,4),sfr;names+=sfr
  for ni in nodes:
   drv=bybit[ne[ni]];assert len(drv)==1;dn=drv[0];names.append(dn)
   for p,d in cells[dn]['port_directions'].items():
@@ -30,9 +32,9 @@ for k in range(4):
     for nn in bybit.get(b,[]):
      if cells[nn]['type']=='$reduce_or':names.append(nn)
  names=sorted(set(names));assert not (set(names)&used);used.update(names)
- pieces.append(dict(index=k,module=f'ot_hbm_hc_subtree32_{k}',cells=names,fp32_adders=31,tree_levels=5,error_nodes=sorted(nodes)))
+ pieces.append(dict(index=k,module=f'ot_hbm_hc_subtree32_{k}',cells=names,fp32_adders=31,tree_levels=5,error_nodes=sorted(nodes),face_registers=sfr))
 s=[f'read_json {a.netlist.resolve()}',f'select {qn}','splitnets','select -clear',f'cd {qn}']
 for p in pieces:
  s+=['select -set CUT '+' '.join('c:'+n.replace('\\','?').replace('[','?').replace(']','?') for n in p['cells']),f'submod -name {p["module"]} @CUT']
 s+=['cd ..',f'write_json {a.out.resolve()}/qhub_split128.json',f'write_verilog {a.out.resolve()}/qhub_split128.v','stat']
-(a.out/'cut.ys').write_text('\n'.join(s)+'\n');(a.out/'physical_contract.json').write_text(json.dumps(dict(schema='opentallas.hbm.hc128.qhub_cut.v1',source_sha=a.source_commit,status='CANDIDATE_NOT_ROUTED',W=128,subtree_replicas=4,subtree_inputs=32,subtree_levels=5,upper_levels=2,upper_fp32_adders=3,total_fp32_adders=127,split_cycle_delta=0,remainder_cells=len(cells)-len(used),pieces=pieces,model=dict(measured_W128_qcen_cells=534816,measured_W128_qcen_std_area_um2=55806.21846,estimated_subtree_cells=131000,estimated_subtree_outline_um=[220.32,220.32],estimate_only=True),pending=['exact composition miter+mutant','actual core pins/synthesis/floorplan integration','face shell latency adoption and timing']),indent=2)+'\n');print('four32input subtrees;',len(cells)-len(used),'remainder word cells;',len(used),'selected word cells')
+(a.out/'cut.ys').write_text('\n'.join(s)+'\n');(a.out/'physical_contract.json').write_text(json.dumps(dict(schema='opentallas.hbm.hc128.qhub_cut.v1',source_sha=a.source_commit,status='CANDIDATE_NOT_ROUTED',W=128,subtree_replicas=4,subtree_inputs=32,subtree_levels=5,upper_levels=2,upper_fp32_adders=3,total_fp32_adders=127,split_cycle_delta=2 if any(p['face_registers'] for p in pieces) else 0,remainder_cells=len(cells)-len(used),pieces=pieces,model=dict(measured_W128_qcen_cells=534816,measured_W128_qcen_std_area_um2=55806.21846,estimated_subtree_cells=131000,estimated_subtree_outline_um=[220.32,220.32],estimate_only=True),pending=['exact composition miter+mutant','actual core pins/synthesis/floorplan integration','face shell latency adoption and timing']),indent=2)+'\n');print('four32input subtrees;',len(cells)-len(used),'remainder word cells;',len(used),'selected word cells')

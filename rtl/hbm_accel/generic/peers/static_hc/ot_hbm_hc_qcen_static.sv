@@ -26,6 +26,17 @@ module ot_hbm_hc_qcen_static #(
     parameter integer CHX  = 0,     // HH-9 10-19: extra chain edges (bank chain pin registers, ot_hbm_hc_qeng_static CPR)
     parameter integer MUT  = 0,
     parameter integer W    = 64,    // 64 (quarter hub, as built) or 128 (B2 half hub)
+    // SFR (DIE-HBM-61 RE-FORM 11-03, OWNER TWO-STRIKES "all block I/O registered at the face"; default 0 = unchanged,
+    // bit for bit): W 128 only.  Each of the four 32-leaf / 5-level subtrees (the hard master ot_hbm_hc_subtree32_core,
+    // cut by tools/hbm_b2/hc128_qhub_cut.py) gets face registers: an input register on its 1,024 leaf bits + leaf
+    // valid (u_fi) and an output register on its sum + valid (u_fo) and its 31 node-fault bits (u_ff).  Every subtree
+    // port then lands on / leaves from its own flop.  Cost: +2 cycles on the tree: ps_v / ps / ps_f leave 2 edges later
+    // (lfd grows by 2 so ps_f stays aligned); every other output is unchanged.  Declared in
+    // physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv (the root absorbs it as XRU + 2).
+    parameter integer SFR  = 0,
+    // SXC (DIE-HBM-61 11-03, with SFR only): ot_hdc_fp32_add_lat XCUTS of the subtree (level 1..5) adders: every stage
+    // <= 70% of 833 ps; each set bit adds one edge per level (+5 per subtree).  Levels 6, 7 (parent) keep TLA.
+    parameter integer SXC  = 0,
     // derived (do not override)
     parameter integer NVW  = (W == 128) ? 8 : 7,
     parameter integer IWW  = (W == 128) ? 6 : 5,
@@ -48,6 +59,7 @@ module ot_hbm_hc_qcen_static #(
     localparam integer LM = 8, LA = 7, SOR = 1, ML = 2, LT = (W == 128) ? 7 : 6;
     localparam integer SB = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR;
     initial if (K % 2048 != 0 || R > 16 || WPRQ > (1 << IWW)) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
+    initial if (SFR != 0 && (W != 128 || LT != 7)) $fatal(1, "SFR needs W 128 (four 32-leaf subtrees)");
     initial if (!((W == 64 && NVW == 7 && IWW == 5 && JW == 1) || (W == 128 && NVW == 8 && IWW == 6 && JW == 2)))
         $fatal(1, "W must be 64 or 128 (NVW / IWW / JW are derived)");
 
@@ -142,31 +154,106 @@ module ot_hbm_hc_qcen_static #(
         assign lv0[i*32 +: 32] = s_i[SRC*32 +: 32];
     end
     wire [(W-1)*32-1:0] nd; wire [W-2:0] nv, ne;
+    // SFR face registers (names g_sf[k].u_fi / u_fo / u_ff are what hc128_qhub_cut.py selects into subtree k)
+    localparam integer SXN = (SFR != 0) ? (SXC % 2) + ((SXC / 2) % 2) + ((SXC / 4) % 2) : 0;   // extra edges per level
+    localparam integer SFD = (SFR != 0) ? 2 + 5 * SXN : 0;
+    wire ne_or;                                        // ps_f's node-fault OR (registered subtree faults when SFR)
+    wire [3:0] st_rst;                                 // SFR: subtree k's own reset relay output (u_rr); unused at SFR 0
+    if (SFR != 0) begin : g_sfr
+        wire [W*32-1:0] lv_f; wire [3:0] lv_vf;           // subtree input face: leaves + leaf valid
+        wire [4*32-1:0] nd_f; wire [3:0] nv_f;            // subtree output face: level-5 sum + valid
+        wire [W-2:0] ne_f;                                 // subtree output face: node faults (levels 1..5)
+        for (genvar k = 0; k < 4; k = k + 1) begin : g_sf
+            // registered reset relay at the subtree face (2 sync + 1 relay flop, release +3 edges; the tree has no
+            // valid in flight that early: leaf_v comes VD >= 20 edges after a descriptor)
+            ot_hbm_hc_sfr_rst u_rr (.clk(clk), .rst_n_in(rc), .rst_n(st_rst[k]));
+            ot_hbm_hc_sfr_reg #(.W(1 + 1024)) u_fi (.clk(clk), .rst_n(st_rst[k]),
+                .d({leaf_v, lv0[k*1024 +: 1024]}), .q({lv_vf[k], lv_f[k*1024 +: 1024]}));
+            ot_hbm_hc_sfr_reg #(.W(1 + 32)) u_fo (.clk(clk), .rst_n(st_rst[k]),
+                .d({nv[120 + k], nd[(120 + k)*32 +: 32]}), .q({nv_f[k], nd_f[k*32 +: 32]}));
+            // the subtree's 31 nodes: level l (1..5) nodes OFF_l + k*N/4 .. OFF_l + (k+1)*N/4 - 1, N = 128 >> l
+            wire [30:0] ned, neq;
+            for (genvar l = 1; l <= 5; l = l + 1) begin : g_l
+                localparam integer N4 = (128 >> l) / 4, OFF = 128 - (256 >> l), B = 32 - (64 >> l);
+                assign ned[B +: N4] = ne[OFF + k*N4 +: N4];
+                assign ne_f[OFF + k*N4 +: N4] = neq[B +: N4];
+            end
+            ot_hbm_hc_sfr_nf #(.N(SXN)) u_ff (.clk(clk), .rst_n(st_rst[k]), .d(ned), .q(neq));
+        end
+        assign ne_f[W-2:124] = ne[W-2:124];            // levels 6, 7 (nodes 124..126) stay in the parent, unregistered
+        assign ne_or = |ne_f;
+    end else begin : g_nosfr                           // SFR 0: no alias nets, so the 10-31 cut is reproduced bit for bit
+        assign ne_or = |ne;
+    end
     for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
         localparam integer N = W >> l, OFF = W - ((2*W) >> l), POFF = W - ((4*W) >> l);
         for (genvar i = 0; i < N; i = i + 1) begin : g_n
             wire [31:0] a, b; wire va; wire [1:0] e;
             if (l == 1) begin : g_leaf
-                assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
+                if (SFR != 0) begin : g_f
+                    assign a = g_sfr.lv_f[(2*i)*32 +: 32]; assign b = g_sfr.lv_f[(2*i+1)*32 +: 32]; assign va = g_sfr.lv_vf[i / 16];
+                end else begin : g_r
+                    assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
+                end
+            end else if (SFR != 0 && l == 6) begin : g_up6
+                assign a = g_sfr.nd_f[(2*i)*32 +: 32]; assign b = g_sfr.nd_f[(2*i + 1)*32 +: 32]; assign va = g_sfr.nv_f[2*i];
             end else begin : g_up
                 assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
             end
-            ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
+            localparam integer SK = (SFR != 0 && l <= 5) ? i / (32 >> l) : 0;   // SFR: subtree of this node
+            ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0), .XCUTS((SFR != 0 && l <= 5) ? SXC : 0)) u_a (.clk(clk), .rst_n((SFR != 0 && l <= 5) ? st_rst[SK] : rc),
+                .valid_in(va), .a(a), .b(b),
                 .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
             assign ne[OFF + i] = nv[OFF + i] && (|e);
         end
     end
     localparam integer RT = (MUT == 7) ? W - 4 : W - 2;   // MUT 7 (bench): top level dropped (left subtree out)
-    reg [LT*TLA-1:0] lfd;
-    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_i[W*32] && leaf_v};
+    reg [LT*TLA+SFD-1:0] lfd;
+    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA+SFD-2:0], s_i[W*32] && leaf_v};
     always @(posedge clk or negedge rc) begin
         if (!rc) begin ps_v <= 1'b0; ps_f <= 1'b0; fault <= 1'b0; end
         else begin
             ps_v <= nv[RT];
-            ps_f <= lfd[LT*TLA-1] || (|ne);
+            ps_f <= lfd[LT*TLA+SFD-1] || ne_or;
             if (ing_fault || rx_fault || (|wf_q)) fault <= 1'b1;
         end
     end
     always @(posedge clk) ps <= nd[RT*32 +: 32];
+endmodule
+
+// SFR subtree reset relay (DIE-HBM-61 11-03): ot_rst_relay with one region, kept as its own module for the cut.
+module ot_hbm_hc_sfr_rst (input wire clk, rst_n_in, output wire rst_n);
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+endmodule
+
+// SFR subtree node-fault face register (DIE-HBM-61 11-03): bits ordered level 1 (16) | 2 (8) | 3 (4) | 4 (2) | 5 (1).
+// Level l waits 1 + N * (5 - l) edges, N = extra adder cuts per level, so every node fault leaves the subtree on the
+// same edge offset as with N = 0 relative to the subtree output (a uniform shift of the whole master).  All bits reset.
+module ot_hbm_hc_sfr_nf #(parameter integer N = 0) (
+    input wire clk, rst_n, input wire [30:0] d, output wire [30:0] q
+);
+    for (genvar l = 1; l <= 5; l = l + 1) begin : g_l
+        localparam integer B = 32 - (64 >> l), C = 32 >> l, D = 1 + N * (5 - l);
+        reg [C-1:0] r [0:D-1];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin for (integer t = 0; t < D; t = t + 1) r[t] <= {C{1'b0}}; end
+            else begin r[0] <= d[B +: C]; for (integer t = 1; t < D; t = t + 1) r[t] <= r[t-1]; end
+        assign q[B +: C] = r[D-1];
+    end
+endmodule
+
+// SFR face register (DIE-HBM-61 11-03): W plain flops; bit VB (default W-1, the valid) async reset by rst_n;
+// VB -2 = every bit async reset (node-fault flags).  Kept as its own module so the subtree cut can select it by name.
+module ot_hbm_hc_sfr_reg #(parameter integer W = 1, parameter integer VB = -1) (
+    input wire clk, rst_n, input wire [W-1:0] d, output reg [W-1:0] q
+);
+    localparam integer V = (VB == -1) ? W - 1 : VB;
+    for (genvar j = 0; j < W; j = j + 1) begin : g_b
+        if (VB == -2 || j == V) begin : g_r
+            always @(posedge clk or negedge rst_n) if (!rst_n) q[j] <= 1'b0; else q[j] <= d[j];
+        end else begin : g_p
+            always @(posedge clk) q[j] <= d[j];
+        end
+    end
 endmodule
 `default_nettype wire

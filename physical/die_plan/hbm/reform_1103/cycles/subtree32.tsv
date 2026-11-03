@@ -1,0 +1,10 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_hc_subtree32_core	sum	17	SFR=1 SXC=7: face input reg (+1) + output reg (+1) + 3 adder cuts (E/F/G) x 5 levels (+15); subtree 35 -> 52 edges
+ot_hbm_hc_subtree32_core	valid_out	17	same shift as sum
+ot_hbm_hc_subtree32_core	node_fault	17	new(t)=old(t-17); ot_hbm_hc_sfr_nf per-level delay 1+3*(5-l) keeps all levels on one shift
+ot_hbm_hc_subtree32_core	data,valid_in,clk,rst_n	0	inputs: no change at the port; registered at the face
+ot_hdc_fp32_add_lat(XCUTS=7)	y,err	3	opt-in cuts E (after both jam shifts; swap pick + ~small after the cut) F (before LZC) G (before final select), LAT 7 -> 10 edges; XCUTS=0 default unchanged
+ot_hbm_hc_qcen_static(SFR=1,SXC=7)	ps_v,ps,ps_f	17	parent centre: tree +17, lfd +17 keeps ps_f aligned; levels 6/7 adders unchanged (XCUTS=0); all other outputs 0
+ot_hbm_hc_qhub_static(SFR=1,SXC=7)	ps_v,ps,ps_f	17	pass-through params SFR/SXC; qhub parent types must elaborate both
+ot_hbm_hc_root_static	qps_v/qps/qps_f due edge	17	root absorbs as XRU+17 (subtree sums due SYS_LAT +17); die schedule/tok re-baseline in the batch
+ot_hbm_hc_subtree32_core	rst_n (release)	3	SFR=1 own reset relay at the face (ot_rst_relay 2 sync + 1 relay); assert async unchanged; no valid in flight that early

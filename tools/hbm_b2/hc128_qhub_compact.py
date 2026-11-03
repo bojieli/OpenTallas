@@ -4,7 +4,8 @@ import argparse,collections,json,re
 from pathlib import Path
 ap=argparse.ArgumentParser();ap.add_argument('split',type=Path);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True);j=json.loads(a.split.read_text());mods=j['modules'];qt=mods['ot_hbm_hc_qhub_static']['cells']['u_cen']['type'];q=mods[qt];master='ot_hbm_hc_subtree32_core';maps={}
 nextbit=1+max(b for c in q['cells'].values() for bs in c['connections'].values() for b in bs if isinstance(b,int))
-labels={'clk':'clk','s_i':'data','vl':'valid_in','rn':'rst_n','u_rst.rst_n':'rst_n','nd':'sum','ne':'node_fault','nv':'valid_out'}
+labels={'clk':'clk','s_i':'data','vl':'valid_in','rn':'rst_n','u_rst.rst_n':'rst_n','nd':'sum','ne':'node_fault','nv':'valid_out',
+        'lv0':'data','g_sfr.nd_f':'sum','g_sfr.ne_f':'node_fault','g_sfr.nv_f':'valid_out','st_rst':'rst_n'}  # *_f: SFR face-register nets (DIE-HBM-61 11-03)
 for k in range(4):
  old=f'ot_hbm_hc_subtree32_{k}';m=mods[old];cell=q['cells'][old];read={b for c in m['cells'].values() for pn,bs in c['connections'].items() if c['port_directions'][pn]=='input' for b in bs if isinstance(b,int)}
  groups=collections.defaultdict(list)
