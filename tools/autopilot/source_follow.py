@@ -372,6 +372,10 @@ if not checkout_ready.exists():
  # Explicit initialization is required on the fleet Git 2.34; retry incomplete own snapshots.
  run(["git","-C",str(src),"sparse-checkout","init","--cone"])
  cone=["physical","rtl","tools","opentools","schemas","configs","results/token_pass"]
+ # KIT-WAVE core views (DIE-KV-64/RF-E 11-03): a die core generator reads its core jsons from results/ dirs outside the
+ # cone (KV kv_core_wave.py: results/kv_host_regen_1/rtl + results/kv_hg_ex_1101); without them every KV core became
+ # CORE_VIEW FAIL "0 views in the plan views" on the 1923c5d8459b snapshot.  Die config core_kit.sparse / src_follow.sparse_add.
+ cone+=[x for x in list((d.get("core_kit") or {}).get("sparse") or [])+list(opts.get("sparse_add") or []) if x not in cone]
  run(["git","-C",str(src),"sparse-checkout","set",*cone])
  # Delta snapshot (default-on): unchanged files are hard links into the newest previous snapshot.
  prev,linked=link_previous_snapshot(repo,src,tip,cone,root.parent) if opts.get("delta_snapshot",True) else (None,0)
