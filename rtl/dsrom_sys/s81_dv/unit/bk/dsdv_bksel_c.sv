@@ -6,7 +6,13 @@
 // vd on the E face (the glue leaf sits E of it).  Its forwarded-clock output vf is not used on the V rung.
 module dsdv_bksel_c #(
     parameter integer SELOH = 0, // DIE-S81-51 11-03 (S81-053): 1 = SEARCH_PIPE 4 (one-hot group select, res_above -217 ps)
-    parameter integer OLL = 0   // RF-C/bk 11-03: 1 = negative-level lockup latch, 2 = negedge flop, on every output port (dsdv_bk_oll)
+    parameter integer OLL = 0,  // RF-C/bk 11-03: 1 = negative-level lockup latch, 2 = negedge flop, on every output port (dsdv_bk_oll)
+    // RNF (DIE-S81-51/RF-D 11-03, S81-053: kits_seloh2 dsdv_bksel_c_rfc stopped at OT_HOLD_STRUCTURAL GRT FF hold -189.50 /
+    // 172 ep; FF STA on 4_cts.odb: the structural endpoints are ONLY rst[0] -> u_c.rst_s[1:0] removal -213.5 (input min
+    // -40 vs core insertion); the half-cycle f_* faces pass and the rest are reg -> reg >= -9.1 ps (hold repair)):
+    // 1 = rst lands in a negative-edge flop before u_c (0 cycles: release edge unchanged, rst leaves a posedge flop;
+    // assertion half an edge later; pin removal window ~T/2 by construction).  0 = the old form.
+    parameter integer RNF = 0
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rst,
@@ -18,7 +24,19 @@ module dsdv_bksel_c #(
 );
     localparam integer CB = 66, SB = 865, OB = 354;
     wire [4*CB-1:0] tc; wire [3:0] tcr; wire vf_unused; wire [513:0] vdw;
-    dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4), .PACE(2), .MRG_PIPE(1), .RQPIPE(1), .SLAT(4), .XDX(1)) u_c (.ck(ck), .rst(rst),
+    wire [0:0] rst_c;
+    generate if (RNF != 0) begin : g_rnf
+        reg r_f;
+`ifdef OT_RFD_MUT_RNF   // bench mutant: rst sampled on the RISING edge (release one edge late)
+        always @(posedge ck[0]) r_f <= rst[0];
+`else
+        always @(negedge ck[0]) r_f <= rst[0];
+`endif
+        assign rst_c = r_f;
+    end else begin : g_rnw
+        assign rst_c = rst;
+    end endgenerate
+    dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4), .PACE(2), .MRG_PIPE(1), .RQPIPE(1), .SLAT(4), .XDX(1)) u_c (.ck(ck), .rst(rst_c),
         .f_s({f_s_n, f_s_s}), .f_o({f_o_n, f_o_s}), .t_c(tc), .t_cr(tcr), .vd(vdw), .vf(vf_unused));
     // vdw[513], vdw[501:357]: constant 0; vdw[0]: unread (dropped pins).  Every port bit leaves a flop (+ OLL latch)
     dsdv_bk_oll #(.W(367 + 4*CB + 4), .EN(OLL)) u_oll (.ck(ck[0]),
