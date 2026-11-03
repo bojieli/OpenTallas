@@ -54,7 +54,27 @@ def test_final_repair_tail_skipped_with_gate_chain_retained(tmp_path):
     assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post.tcl\n'
 
 
-@pytest.mark.parametrize('tail', [['source /work/core_final_repair.tcl'],
+def test_core_flow_bare_final_repair_tail_skipped(tmp_path):
+    # the form tools/die_plan/core_flow.py writes: hooks, grt_post.tcl, then only the final repair
+    fixture(tmp_path)
+    core = tmp_path / 'grt_post_core.tcl'
+    core.write_text(core.read_text() + 'source /work/core_final_repair.tcl\n')
+    (tmp_path / 'core_final_repair.tcl').write_text('repair_timing -setup\n')
+    rec = C.stage(tmp_path)
+    assert rec['skipped_generated_repair'] and rec['skipped_final_repair']
+    assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post.tcl\n'
+
+
+def test_bare_final_repair_tail_without_its_file_refuses(tmp_path):
+    fixture(tmp_path)
+    core = tmp_path / 'grt_post_core.tcl'
+    core.write_text(core.read_text() + 'source /work/core_final_repair.tcl\n')
+    with pytest.raises(ValueError, match='unrecognized'):
+        C.stage(tmp_path)
+
+
+@pytest.mark.parametrize('tail', [['write_db /work/pre_final_state.odb', 'source /work/core_final_repair.tcl'],
+                                  ['source /work/core_final_repair.tcl', 'source /work/custom_gate.tcl'],
                                   ['write_db /work/pre_final_state.odb', 'source /work/custom_gate.tcl']])
 def test_partial_or_foreign_final_tail_refuses(tmp_path, tail):
     fixture(tmp_path)
