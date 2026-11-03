@@ -26,6 +26,7 @@ import json
 import math
 import re
 import shutil
+import sys
 from pathlib import Path
 
 import cores as _CR
@@ -1260,19 +1261,133 @@ def tap_window_ps(P, tn=None):
     return w
 
 
+# KW-FIX-4-SDC (COORD RULING 2026-11-03 10:49, plain-seam input-face class): MEASURED per-port window, opt-in plan
+# clock.tap_window.per_port_ps {type: {kit clock port: D_p}} (die_sta_related --kit-window-out writes it from the die
+# clock proof).  A flat -W on every port charges every cross-port pair the type's worst pair (t30: 133 ps cross-tap on
+# the bay hops).  Per port, with late 0 kept on every port, a cross-port pair i -> j is timed with
+#     setup: launch late 0, capture early -D_j      hold: launch early -D_i, capture late 0
+# so the kit covers the die exactly when D_p >= max over the type's regions and every other tap q of the measured
+#     damage(p early) = late(q) - early(p) - CPPR credit(p, q) (+ core-tap earliness offset, as the die kit contract)
+# D_p is that maximum (ceil 1 ps, no margin: OWNER 11-02 no hold margin; nominal setup 12.24c).  CPPR: the credit is
+# the die proof's range at the pair's last common tree node, so same-root taps (same region root / cppr_node) get the
+# root's credit and cross-root taps only the die-root credit; same-PORT pairs keep OpenSTA's CRPR at the common port.
+# (OpenSTA cannot credit a common path between two different source ports, so the credit is folded into D_p.)
+# Fallback: a type without a per_port_ps entry keeps the flat window_ps / per_type_ps value W_t (byte-identical SDC);
+# a listed type's port missing from its table takes W_t on that port (named in an SDC comment).
+# IO stays a contract check against vclk; one uniform shift cannot follow per-port windows, so: input max delays are
+# shifted by the LARGEST port window (input setup never tighter than before; at most max - D_p optimistic at port p,
+# priced in the SDC comment; seams are judged on measured arrivals at die level) and output min delays by the
+# SMALLEST (output/sender hold never looser than the contract).  Without a table both shifts are W_t, as before.
+def tap_window_port_table(P, tn):
+    """{port: D_p}: the type's measured per-port windows (plan clock.tap_window.per_port_ps[tn]); {} = none (flat W)."""
+    tw = P.clock.get("tap_window") or {}
+    tab = (tw.get("per_port_ps") or {}).get(tn) or {}
+    if not tab:
+        return {}
+    per = float(P.die["period_ps"]) if hasattr(P, "die") else float("inf")
+    out = {}
+    for n, v in tab.items():
+        v = float(v)
+        if not 0 <= v <= per / 4:
+            raise ValueError(f"clock.tap_window.per_port_ps[{tn}][{n}] {v:g} outside [0, T/4]")
+        out[n] = v
+    return out
+
+
+def window_port_names(P, tn):
+    """every port that carries a window line: grid / edge window ports, then the early core taps (ordered, unique)."""
+    out = [n for _ck, ports in tap_window_ports(P, tn) for n in ports]
+    for n, *_r in core_tap_rows(P, tn):
+        if n not in out:
+            out.append(n)
+    return out
+
+
+def port_window_ps(P, tn, port):
+    """the window of one kit clock port: its measured D_p, else the type's flat W_t (fallback)."""
+    tab = tap_window_port_table(P, tn)
+    return tab[port] if port in tab else tap_window_ps(P, tn)
+
+
+def tap_window_fallback_ports(P, tn):
+    """window ports of a type WITH a per-port table that the table does not list (they take W_t); [] without a table."""
+    tab = tap_window_port_table(P, tn)
+    return [n for n in window_port_names(P, tn) if n not in tab] if tab else []
+
+
+def tap_window_max_ps(P, tn=None):
+    """the largest per-port window of the type (= W_t without a table): hold-gate screen + input max shift."""
+    w = tap_window_ps(P, tn)
+    if not w or tn is None or not tap_window_port_table(P, tn):
+        return w
+    return max(port_window_ps(P, tn, n) for n in window_port_names(P, tn))
+
+
+def tap_window_min_ps(P, tn=None):
+    """the smallest per-port window of the type (= W_t without a table): output min shift."""
+    w = tap_window_ps(P, tn)
+    if not w or tn is None or not tap_window_port_table(P, tn):
+        return w
+    return min(port_window_ps(P, tn, n) for n in window_port_names(P, tn))
+
+
+def tap_window_note(P, tn):
+    """SDC / kit-log comment of the window form of type tn ('' without a window)."""
+    w = tap_window_ps(P, tn)
+    if not w:
+        return ""
+    if not tap_window_port_table(P, tn):
+        return (f"# tap window: flat {w:g} ps on every window port (no measured clock.tap_window.per_port_ps for "
+                f"{tn}: FALLBACK to the plan window_ps / per_type_ps)\n")
+    fb = tap_window_fallback_ports(P, tn)
+    hi, lo = tap_window_max_ps(P, tn), tap_window_min_ps(P, tn)
+    return (f"# tap window: MEASURED per port (plan clock.tap_window.per_port_ps, die proof damage with CPPR credit), "
+            f"{lo:g}..{hi:g} ps; IO shift input -{hi:g} / output +{lo:g} (input setup credit <= {hi - lo:g} ps at the "
+            f"smallest-window port)" + (f"; FALLBACK W {w:g} ps on unmeasured ports {' '.join(fb)}" if fb else "") + "\n")
+
+
+_TW_NOTED = set()
+
+
+def note_tap_window_fallback(P, tn):
+    """kit-log note (stderr, once per die / type) when a windowed type has no measured per-port table: its SDC keeps
+    the flat W_t (byte-identical to before KW-FIX-4-SDC)."""
+    if not tap_window_ps(P, tn) or tap_window_port_table(P, tn):
+        return
+    has = bool((P.clock.get("tap_window") or {}).get("per_port_ps"))
+    key = (id(P), tn if has else None)
+    if key in _TW_NOTED:
+        return
+    _TW_NOTED.add(key)
+    sys.stderr.write(f"TAP_WINDOW FALLBACK {getattr(P, 'name', '?')} "
+                     + (f"type {tn}: no clock.tap_window.per_port_ps entry -> flat {tap_window_ps(P, tn):g} ps\n" if has
+                        else "die: no measured clock.tap_window.per_port_ps -> flat window_ps / per_type_ps on every "
+                        "windowed type\n"))
+
+
 def tap_window_tcl(P, tn, value_ps=None, core=True):
     """the window's two set_clock_latency lines on the grid tap ports of type tn ('' without a window), then (core)
     the early-core-tap window lines (core_tap_window_tcl, TT).  value_ps overrides the early value (0 = the pre-CTS
     ideal stage).  core=False: grid / edge ports only (the golden SDC writes the core lines after the core taps' own
-    source latency, which would otherwise overwrite them)."""
+    source latency, which would otherwise overwrite them).  With a measured per-port table (KW-FIX-4-SDC) each port
+    gets its own early end -D_p (ports of equal D share one line); late stays 0."""
     w = tap_window_ps(P, tn)
     if not w:
         return ""
-    e = (-w if value_ps is None else -float(value_ps)) + 0.0     # never "-0.0000"
+    tab = tap_window_port_table(P, tn) if value_ps is None else {}
     out = ""
     for ck, ports in tap_window_ports(P, tn):
-        out += (f"set_clock_latency -source -early -clock {ck} {t_lib(e):.4f} [get_ports {{{' '.join(ports)}}}]\n"
-                f"set_clock_latency -source -late -clock {ck} {t_lib(0.0):.4f} [get_ports {{{' '.join(ports)}}}]\n")
+        if tab:
+            grp = {}
+            for n in ports:
+                grp.setdefault(port_window_ps(P, tn, n), []).append(n)
+            for v, ps in grp.items():
+                out += (f"set_clock_latency -source -early -clock {ck} {t_lib(-v) + 0.0:.4f} "
+                        f"[get_ports {{{' '.join(ps)}}}]\n")
+        else:
+            e = (-w if value_ps is None else -float(value_ps)) + 0.0     # never "-0.0000"
+            out += f"set_clock_latency -source -early -clock {ck} {t_lib(e):.4f} [get_ports {{{' '.join(ports)}}}]\n"
+        out += f"set_clock_latency -source -late -clock {ck} {t_lib(0.0):.4f} [get_ports {{{' '.join(ports)}}}]\n"
     return out + (core_tap_window_tcl(P, tn, value_ps=value_ps) if core else "")
 
 
@@ -1280,16 +1395,17 @@ def core_tap_window_tcl(P, tn, corner="TT", value_ps=None):
     """early-core-tap window lines of type tn at corner ('' without a window or core taps): one line per core tap
     port, set_clock_latency -source -early -clock clk -(early + W) [get_ports tap], written AFTER the port's own
     -source -clock clk -early line (which sets both early and late), so late keeps the core's own early latency and
-    only the early end widens by W.  value_ps overrides W (0 = the pre-CTS ideal stage: early back to the tap's own)."""
+    only the early end widens by W (the port's measured D_p with a per-port table).  value_ps overrides W (0 = the
+    pre-CTS ideal stage: early back to the tap's own)."""
     w = tap_window_ps(P, tn)
     if not w:
         return ""
-    v = w if value_ps is None else float(value_ps)
     out, seen = "", set()
     for n, _inst, _pin, early, _ins in core_tap_rows(P, tn, corner):
         if n in seen:
             continue
         seen.add(n)
+        v = port_window_ps(P, tn, n) if value_ps is None else float(value_ps)
         out += f"set_clock_latency -source -early -clock clk {t_lib(-(early + v)) + 0.0:.4f} [get_ports {n}]\n"
     return out
 
@@ -1315,6 +1431,8 @@ def ring_writer_clocks(P, tn):
 def tap_window_io_shift(P, tn=None):
     """(input max delay shift, output min delay shift) in ps that keep the IO contract exact under the window."""
     w = tap_window_ps(P, tn)
+    if w and tn is not None and tap_window_port_table(P, tn):
+        return -tap_window_max_ps(P, tn), tap_window_min_ps(P, tn)     # KW-FIX-4-SDC: see tap_window_port_table
     return -w, w
 
 
@@ -1757,6 +1875,7 @@ def sdc(P, tn, pins):
     lat = t_lib(ib["tt"])
     io = IO_BUDGET * per
     tw_in, _tw_out = tap_window_io_shift(P, tn)
+    note_tap_window_fallback(P, tn)
     cks = [n for n, _, _ in clock_pins(P, tn) + core_tap_pins(P, tn)]
     slots = [sv for sv in (s_["name"] for s_ in P.types[tn].get("ft_slots", []))]
     ft_in = " ".join(f"{n}_i[*]" for n in slots)
@@ -1773,6 +1892,7 @@ def sdc(P, tn, pins):
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P, tn):g} ps on every "
               "real clock port, [-W, 0]; IO delays shifted to keep the seam contract (gen_phys.tap_window_ps)\n"
+              + (tap_window_note(P, tn) if tap_window_port_table(P, tn) else "")
               + tap_window_tcl(P, tn, core=False) if tap_window_ps(P, tn) else "") +
            f"# clock uncertainty: sign-off margin policy {_SL.margin_policy()} ({_SL.MARGIN_POLICY_RULE})\n"
            f"set_clock_uncertainty {t_lib(unc_setup_ps()):.4f} -setup [all_clocks]\n"
@@ -3038,7 +3158,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
            f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P, tn)):.4f}",
-           *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P, tn)):.4f}"] if tap_window_ps(P, tn) else []),
+           *([f"export OT_TAP_WINDOW = {t_lib(tap_window_max_ps(P, tn)):.4f}"] if tap_window_ps(P, tn) else []),
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
            # LAYER_PARASITICS_FILE (this image) / SET_RC_TCL (newer variables.yaml) instead of the platform setRC.tcl.

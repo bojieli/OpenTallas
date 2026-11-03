@@ -925,7 +925,12 @@ SCHEMA = {
                            "properties": {"window_ps": _nonneg, "note": {"type": "string"},
                                           # DIE-S81-41 (COORD 2026-10-31 05:2x): per-type W override (measured
                                           # related-pair damage of the type's regions); unlisted types keep window_ps
-                                          "per_type_ps": {"type": "object", "additionalProperties": _nonneg}}},
+                                          "per_type_ps": {"type": "object", "additionalProperties": _nonneg},
+                                          # KW-FIX-4-SDC (COORD 11-03 10:49): measured per-port window {type: {kit
+                                          # clock port: D_p}} (die_sta_related --kit-window-out); gen_phys
+                                          # .tap_window_port_table; unlisted types / ports keep the flat W
+                                          "per_port_ps": {"type": "object", "additionalProperties": {
+                                              "type": "object", "additionalProperties": _nonneg}}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)

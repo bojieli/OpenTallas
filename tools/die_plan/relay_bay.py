@@ -99,10 +99,12 @@ def main(argv=None):
     win = 0.0
     if os.path.exists(f"{K}/constraint.sdc"):
         sdc = open(f"{K}/constraint.sdc").read()
-        e = re.search(r"set_clock_latency -source -early -clock \S+ ([-\d.]+)", sdc)
-        l = re.search(r"set_clock_latency -source -late -clock \S+ ([-\d.]+)", sdc)
+        # KW-FIX-4-SDC: measured per-port windows write one grid -early line per window value (core-tap lines,
+        # [get_ports clk_cN] without braces, carry the core's own earliness); the widest grid line bounds a hop
+        e = re.findall(r"set_clock_latency -source -early -clock \S+ ([-\d.]+) \[get_ports \{", sdc)
+        l = re.findall(r"set_clock_latency -source -late -clock \S+ ([-\d.]+) \[get_ports \{", sdc)
         if e and l:
-            win = max(0.0, float(l.group(1)) - float(e.group(1)))
+            win = max(0.0, max(float(x) for x in l) - min(float(x) for x in e))
     xskew = win + a.skew
     prev = None
     if os.path.exists(f"{K}/declared_cycles.json"):
