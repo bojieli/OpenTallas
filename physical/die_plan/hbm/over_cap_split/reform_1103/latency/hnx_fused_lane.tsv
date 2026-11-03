@@ -1,0 +1,8 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+hnx_fused_lane	hnx_fused_lane_c	rq_v/rq_s	out	0	VM read issue unchanged
+hnx_fused_lane	hnx_fused_lane_c	up (up_t 0, scalar)	out	0	prologue scalar returns unchanged
+hnx_fused_lane	hnx_fused_lane_c	up (up_t 1, chunk sum)	out	4	x path through the pairs
+hnx_fused_lane	hnx_fused_lane_c	wq_v/wq_s/wq_d	out	4	PRE y and POST o writes
+hnx_fused_lane	hnx_fused_lane_c	fin	out	4	record span +4
+hnx_fused_lane	hnx_fused_lane_c	flt (element flags)	out	4	control-origin faults +0
+hnx_fused_lane	hnx_fused_lane_c	all inputs	in	0	dn/r/rr/lid unchanged (top + tree valid-driven)
