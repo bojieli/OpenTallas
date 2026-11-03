@@ -9,8 +9,9 @@ memories > 4096 bits are reported, not mapped silently).  run.sh = `make synth` 
   head_type_synth_probe.py PLAN.json TYPE --root REPO --out DIR [--top MODULE] [--extra f.sv ...] [--blackbox M ...]
      [--view DIR ...] [--place]
 --view DIR: a signed hard core's view dir (M.lef + M_tt.lib): M is cut out of the sources and bound to its liberty.
+--rx-clock PORT: an extra (asynchronous, 833 ps) clock for the STA, e.g. hd_serdes_rx pma_rck.
 --place (pre-build quick-place gate, advisory): macro LEFs as ADDITIONAL_LEFS, run.sh target `place` (floorplan at
-CORE_UTILIZATION 40 + global/detail place), then quick_sta.tcl: estimate_parasitics -placement, worst setup/hold slack.
+CORE_UTILIZATION 40 + global/detail place), then quick_sta.tcl: estimate_parasitics -placement, worst setup/hold slack, then the same after repair_timing.
 """
 import argparse, json, shutil, sys
 from pathlib import Path
@@ -30,7 +31,7 @@ docker run --rm --name dh58probe-$(basename "$K")-$$ --cpus=$CPUS --memory=${MEM
 QUICK_STA = """# DH58-RFRTL quick-place STA (advisory pre-build gate): placement parasitics, ideal clock
 source $::env(SCRIPTS_DIR)/load.tcl
 load_design 3_place.odb 3_place.sdc
-estimate_parasitics -placement
+@EXTRA_CLOCKS@estimate_parasitics -placement
 puts "QUICK_STA begin"
 report_worst_slack -max -digits 1
 report_worst_slack -min -digits 1
@@ -38,6 +39,12 @@ report_tns -digits 1
 report_design_area
 report_checks -path_delay max -group_path_count 3 -format end
 report_checks -path_delay max -fields {fanout cap slew} -digits 1
+repair_timing -setup -setup_margin 0 -skip_pin_swap
+puts "REPAIRED (placement-parasitics repair_timing, no CTS)"
+report_worst_slack -max -digits 1
+report_worst_slack -min -digits 1
+report_tns -digits 1
+report_checks -path_delay max -format end -group_path_count 3
 puts "QUICK_STA end"
 """
 
@@ -54,6 +61,7 @@ def main(argv=None):
     ap.add_argument("--max-bits", type=int, default=1 << 30)
     ap.add_argument("--view", nargs="*", default=[], type=Path)
     ap.add_argument("--place", action="store_true")
+    ap.add_argument("--rx-clock", nargs="*", default=[], help="extra async clock port(s) (e.g. pma_rck), 833 ps")
     ap.add_argument("--clock", default=None, help="clock port (default: ck if the top declares it, else clk)")
     a = ap.parse_args(argv)
     t = json.loads(a.plan.read_text())["partition_types"][a.type]
@@ -147,7 +155,9 @@ def main(argv=None):
                                            "global_connect\n")
             cfg.append("export PDN_TCL = /work/pdn.tcl")
         (a.out / "target").write_text("place\n")
-        (a.out / "quick_sta.tcl").write_text(QUICK_STA)
+        ex = "".join(f"create_clock -name rck{i} -period 833 [get_ports {{{c}}}]\n"
+                     f"set_clock_groups -asynchronous -group clk -group rck{i}\n" for i, c in enumerate(a.rx_clock))
+        (a.out / "quick_sta.tcl").write_text(QUICK_STA.replace("@EXTRA_CLOCKS@", ex))
     if bbs:
         cfg.append(f"export SYNTH_BLACKBOXES = {' '.join(bbs)}")
     (a.out / "config.mk").write_text("\n".join(cfg) + "\n")
