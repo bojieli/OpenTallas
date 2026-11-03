@@ -1299,7 +1299,9 @@
     "slw_stm_v1__cle34a73c3@1",
     "sle_sc_v3@3",
     "sle_hc2__clcc5e3e61@2",
-    "coll_ucie@1"
+    "coll_ucie@1",
+    "coll_n@2",
+    "glue@3"
    ],
    "queue_src": "codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934",
    "type_args": {
@@ -1517,7 +1519,9 @@
    "retry_fix": {
     "sle_hc2__clcc5e3e61@2": "DPL-STALL class: gen phys --dpl-diamond (merged main 08542fa9d7d via 1b76e9abd9a = a589a3fea9; wave src kit-wave-qc-dpl-1103 f75b8a10890 port) in type_args; diamond legalizer proved on the same 3_4 DBs; launched 04:52 by DIE-QC-65/KITS, resume_from prev attempt",
     "sle_sc_v3@3": "DPL-STALL class: gen phys --dpl-diamond (merged main 08542fa9d7d via 1b76e9abd9a = a589a3fea9; wave src kit-wave-qc-dpl-1103 f75b8a10890 port) in type_args; diamond legalizer proved on the same 3_4 DBs; launched 04:52 by DIE-QC-65/KITS, resume_from prev attempt",
-    "coll_ucie@1": "14c84655d0b (DIE-QC-66/PLAN coll_ucie physical_inst u_bound.u_io_ucie: certain macro_instances tool failure) applied to the wave plan -> plan_qc52_ucie1103.json (sha256 3d22325b04a5; only coll_ucie changed vs plan_qc52 9695f75fa95c); KW-FIX-4 08:4x"
+    "coll_ucie@1": "14c84655d0b (DIE-QC-66/PLAN coll_ucie physical_inst u_bound.u_io_ucie: certain macro_instances tool failure) applied to the wave plan -> plan_qc52_ucie1103.json (sha256 3d22325b04a5; only coll_ucie changed vs plan_qc52 9695f75fa95c); KW-FIX-4 08:4x",
+    "coll_n@2": "XCHECK-1 TX-face lockup latch (G9 c55229e227a/867e693fa67 gen_rtl) + FLOW-LATCH-1 face_guard/face_flops/lec (G11 8f62e618709/a648c13e71c) in wave src kw-fix-4-fl-qc 335041a7cd7; old kit withdrawn from the queue (KW-FIX-4 09:5x)",
+    "glue@3": "XCHECK-1 TX-face lockup latch (G9 c55229e227a/867e693fa67 gen_rtl) + FLOW-LATCH-1 face_guard/face_flops/lec (G11 8f62e618709/a648c13e71c) in wave src kw-fix-4-fl-qc 335041a7cd7; old kit withdrawn from the queue (KW-FIX-4 09:5x)"
    },
    "gen_hosts": [
     "intel2",
