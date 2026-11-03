@@ -48,10 +48,14 @@ PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.04, M9=0.04)
 
 
-def _dpl_args(budgets):
-    """FLOW-7 10-30: plan budgets.dpl_legalizer="diamond" -> ORFS DETAIL_PLACEMENT_ARGS lines; absent = [] (kit unchanged)."""
+def _dpl_args(budgets, diamond=False):
+    """FLOW-7 10-30: plan budgets.dpl_legalizer="diamond" -> ORFS DETAIL_PLACEMENT_ARGS lines; absent = [] (kit unchanged).
+    DIE-QC-65/KITS 11-03: diamond=True (gen phys --dpl-diamond TYPES, per-type opt-in) gives the same line for that kit:
+    QC sle_hc2__clcc5e3e61 negotiation DPL stalled at 5,139 illegal cells for 1,400 iterations beside a 35,887-cell FIRM
+    landing band 55 um deep, then 'bad optional access'; the diamond legalizer on the same 3_4 DB passes check_placement
+    in 434 s (max displacement 35.9 um, HPWL +4 %)."""
     v=budgets.get("dpl_legalizer")
-    if v is None:return []
+    if v is None:return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"] if diamond else []
     if v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond'")
     return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
 
@@ -2582,7 +2586,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=(), spare_out=(), private_clock_mesh=None):
+                   cland_pinslot=(), spare_out=(), private_clock_mesh=None, dpl_diamond=False):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -2796,7 +2800,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
            # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
            # around ~12k FIRM landing cells). Absent = unchanged kit.
-           *_dpl_args(P.budgets),
+           *_dpl_args(P.budgets, dpl_diamond),
            # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
@@ -3682,8 +3686,9 @@ def bound_parent_id_plan(raw, kit_rtl):
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None):
-    """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None, dpl_diamond=()):
+    """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain).
+    dpl_diamond: types whose kit legalizes with the diamond DPL (--dpl-diamond; FIRM landing-band DPL stall)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
     The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
     reset relays, monitor), every type generated so the sidecar's type check sees all copies, and each kit carries the
@@ -3792,6 +3797,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
                                    gpl_plain=tn in (gpl_plain or ()),
+                                   dpl_diamond=tn in (dpl_diamond or ()),
                                    land_slots=(None if lands is None else
                                                kit_rtl_land_slots(lands, tn, mine) if land_decl_only else
                                                lands.land_slots(tn)),
