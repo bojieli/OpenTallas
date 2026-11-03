@@ -21,3 +21,12 @@ G0+G0C (tools/die_plan/check.py --completeness, origin/main 7cf44d5c0 tools), er
   by class d44s -> d44t: reach 56->22, stations 117->22, hops 63->16, core_faces 8->8, geometry 4->4,
   street_die_leg 2->2, merged_clock_view PENDING-VIEW 128->128, latency 0->0. 15 new messages (neighbour-seam
   reach 371-392 um in q_b011/q_b112, L6b/L700 S0, L736 hop 13) listed in g0/g0c_report_d44t.json.gz.
+
+## Die-local exception: street_die_leg L48#1 / L48m#1 (approved)
+
+DIE-HBM-59 ruling 11-03, approved by COORD 00:3x. The two remaining `street_die_leg` messages are **L48#1** and **L48m#1**. In each, stage S0 of L48x1 sits inside the q_b102 clock keepout [0, 1491.56, 698.25, 1555.2], which is the NW_io / NE_io PHY clock halo (u_lk_N0).
+
+This is accepted as a die-local HBM exception by intent:
+- S0 is the real input site, 1 µm inset from the pin, so it cannot leave the halo without moving the PHY pin.
+- The halo protects the PHY clock, and one registered bit column at the pin does not change that clock.
+- No gate change is made by HBM. FLOW-23 may still adopt the suggestion to exempt an S0 input site at the pin from street_die_leg.
