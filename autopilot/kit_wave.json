@@ -1343,7 +1343,11 @@
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave",
-   "hold_items": {},
+   "hold_items": {
+    "hd_st_*": "DIE-HEAD-58 11:5x: post-CTS FF hold class (st_str, n3_transit, spn); l48rf form unchanged -> no l48rf launch until DH58-FBAY relay_bay RELAY_BAY_RE s81_head fix merges, then one batch",
+    "hd_spn*": "DIE-HEAD-58 11:5x: post-CTS FF hold class (st_str, n3_transit, spn); l48rf form unchanged -> no l48rf launch until DH58-FBAY relay_bay RELAY_BAY_RE s81_head fix merges, then one batch",
+    "hd_turn_*": "DIE-HEAD-58 11:5x: post-CTS FF hold class (st_str, n3_transit, spn); l48rf form unchanged -> no l48rf launch until DH58-FBAY relay_bay RELAY_BAY_RE s81_head fix merges, then one batch"
+   },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
     "hd_spn_wshim_tx@2": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
