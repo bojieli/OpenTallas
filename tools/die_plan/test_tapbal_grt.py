@@ -110,3 +110,18 @@ def test_plan_schema_accepts_tap_grt_pre():
     assert not [e for e in schema.validate_structure(raw) if "tap_grt_pre" in e]
     raw["partition_types"]["src"]["clock"]["tap_grt_pre"] = "yes"
     assert [e for e in schema.validate_structure(raw) if "tap_grt_pre" in e]
+
+
+def test_incremental_grt_slack_query_runs_on_full_sta_search():
+    """DH58-TAPBAL 11-03: global_route -end_incremental -resistance_aware after the raw odb tap edits aborted OpenROAD in
+    sta::RequiredCmp::requiredSet (stale incremental tag groups; HEAD l48h0 hd_st_str, hd_st_n3_*, hd_spn_eshim_tx).  Every
+    incremental GRT end in the pre-pass must follow sta::arrivals_invalid so the slack query is a full search."""
+    for f in ("tap_balance.tcl", "pinreg_pad.tcl"):
+        lines = (HERE / f).read_text().splitlines()
+        ends = [i for i, ln in enumerate(lines) if "global_route -end_incremental" in ln and not ln.lstrip().startswith("#")]
+        assert ends, f
+        for i in ends:
+            ln = lines[i]
+            before = ln[:ln.index("global_route -end_incremental")]
+            prev = [p for p in lines[max(0, i - 3):i] if not p.lstrip().startswith("#")]
+            assert "sta::arrivals_invalid" in before or any(p.strip() == "sta::arrivals_invalid" for p in prev), (f, ln)

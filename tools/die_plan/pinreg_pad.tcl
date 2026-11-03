@@ -102,6 +102,8 @@ for {set it 0} {$it <= $pp_iters} {incr it} {
     incr pp_added
   }
   detailed_placement
+  # DH58-TAPBAL 11-03: full STA search before the resistance-aware slack query (see tap_balance.tcl tb_end)
+  sta::arrivals_invalid
   global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}]
 }
 puts "OT_PINREG_PAD done: $pp_added delay cells ($pp_cell) on pin-register leaf groups"
