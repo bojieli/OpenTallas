@@ -969,6 +969,35 @@ def outline_cmd(K):
             f" if o:\n  print(f'{{o[0]}}x{{o[1]}}');break\"")
 
 
+def region_guide_geom(prev, gen_host):
+    """FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D): the previous attempt's AUTO-GEOM dir when it FAILED at the geom
+    stage on the gen host (its geom.tsv is read in place), else None.  region_guide.py plan itself writes a spec only
+    when that AUTO-GEOM r2r rule FAILED (class D), so every other relaunch gets no guide (kit unchanged)."""
+    ev = str(prev.get("evidence") or "")
+    if prev.get("status") != "FAIL" or prev.get("stage") != "geom" or not ev.endswith("/auto_geom.json") or ":" not in ev:
+        return None
+    host, path = ev.split(":", 1)
+    return path.rsplit("/", 1)[0] if host == gen_host and path.startswith("/") else None
+
+
+def region_guide_cmd(sp, core):
+    """-> (shell prefix that sets RG, ' $RG'): region_guide.py plan on the previous AUTO-GEOM; RG = the generator flag
+    (core: --region-guide SPEC; type: --region-guide TYPE=SPEC) only when a class-D spec was written.  A source
+    without region_guide.py, a missing geom.tsv or a planner error leaves RG empty (kit unchanged, KW_NOTE)."""
+    q = shlex.quote
+    gd = sp.get("region_guide_geom")
+    if not gd:
+        return "RG=; ", ""
+    out = f"{sp['work']}/region_guide.json"
+    flag = f"--region-guide {out}" if core else f"--region-guide {sp['item']}={out}"
+    return (f"RG=; rm -f {q(out)}; if [ -f tools/die_plan/region_guide.py ] && [ -f {q(gd + '/geom.tsv')} ]; then "
+            f"python3 tools/die_plan/region_guide.py plan --geom-dir {q(gd)} --out {q(out)} "
+            f"|| echo 'KW_NOTE region_guide plan failed: kit without region guide'; "
+            f"if [ -s {q(out)} ]; then RG={q(flag)}; fi; "
+            f"else echo 'KW_NOTE no region_guide.py in this source or no previous geom.tsv: kit without region guide'; fi; "
+            f"echo \"KW_REGION_GUIDE ${{RG:-none}}\"; "), " $RG"
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -1167,7 +1196,8 @@ def run_item(spec_path):
             rc, txt = run("views", otrun(8, 2, sp["root"], prep, gh))
             if rc:
                 return fail("views", txt, f"{G}:{sp['root']}/views.log")
-        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(src)} && {gcmd}", gh))
+        rgp, rga = region_guide_cmd(sp, True)
+        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(src)} && {rgp}{gcmd}{rga}", gh))
         if rc:
             return fail("gen", txt)
         rc, kt = run("gen_kit", idempotent=True, argv=remote(kfind))
@@ -1215,8 +1245,9 @@ def run_item(spec_path):
         pin = (f"PS=; if python3 tools/die_plan/gen.py phys --help 2>/dev/null | grep -q -- --cland-pinslot; then "
                f"PS='--cland-pinslot {ps}'; else echo 'KW_NOTE gen.py of this source has no --cland-pinslot (plan list only)'; fi; "
                if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
-        gen = (f"cd {q(src)} && {pin}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
-               f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}")
+        rgp, rga = region_guide_cmd(sp, False)
+        gen = (f"cd {q(src)} && {pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
+               f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}")
         rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
         if rc:
             return fail("gen", txt)
@@ -1659,6 +1690,12 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         sp["work"] += f"/attempt_{attempt}"
         if opt(cfg, die, "stage_resume") is not False and prev.get("dir"):
             sp["resume_from"] = resume_source(AP, prev)
+        # FLOW-23 class D: a relaunch after an AUTO-GEOM FAIL plans soft region guides from that result (written only
+        # when its r2r rule failed); die opt-out: region_guide false
+        if opt(cfg, die, "region_guide") is not False:
+            rgg = region_guide_geom(prev, sp["gen_host"])
+            if rgg:
+                sp["region_guide_geom"] = rgg
     unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")

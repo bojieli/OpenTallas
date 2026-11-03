@@ -1269,6 +1269,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "(INCLUSIVE regions, released before DPL, fail-closed on an empty box / fill >= 0.80); boxes "
                          "must be inside the core and pairwise disjoint and no prefix may nest with another box's; "
                          "default off = kit unchanged")
+    ap.add_argument("--region-guide", default=None, metavar="SPEC_JSON",
+                    help="opt-in (FLOW-23, AUTO-GEOM class D r2r): tools/die_plan/region_guide.py plan spec of the "
+                         "kit's last AUTO-GEOM; per bit-slice INCLUSIVE GPL regions for the failing launch/capture "
+                         "registers, released before DPL (soft guide); default off = kit unchanged")
     ap.add_argument("--macro-reg-guide-um", type=float, default=15.0,
                     help="guide box = macro bbox grown by this many um on every side (clipped to the core area)")
     ap.add_argument("--macro-grid-snap", default="on", choices=["on", "off"],
@@ -2003,6 +2007,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                                                                      sha256=sha(a.reg_guide_boxes))),
                                                             indent=1) + "\n")
         rec["reg_guide_boxes"] = dict(boxes=len(rgb), sha256=sha(a.reg_guide_boxes))
+    if a.region_guide:
+        # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D): soft GPL region guides per failing r2r bit slice from the
+        # kit's last AUTO-GEOM (tools/die_plan/region_guide.py plan), sourced LAST in face_flops.tcl and released at
+        # the end of face_flops_release.tcl (before DPL); default off = kit unchanged.
+        sys.path.insert(0, str(TOOL))
+        import region_guide as RG
+        rec["region_guide"] = RG.install(kd, json.load(open(a.region_guide)), outline=(w, h),
+                                         src=dict(file=str(a.region_guide), sha256=sha(a.region_guide)))
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     # HBM-CORES3 10-25: --orfs-var overrides go LAST (a later make export wins; they used to precede the macro block,
