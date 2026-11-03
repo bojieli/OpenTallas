@@ -174,9 +174,9 @@
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
    "src_follow": {
-    "enabled": false,
+    "enabled": true,
     "root": "/srv/opentallas-scratch2/claude/source-follow-kv64",
-    "note": "KW-FIX-4 14:0x: follow PAUSED until claude/kw-fix-4-kvnote-1103@98e13b8bfec merges (main 88f2e7ecac1/4b0a73deb5f plan_c has budgets.cland_note_kv64_1103 -> schema \"unknown key\" -> every KV gen phys \"plan invalid\"); following main now would re-adopt the broken plan; re-enable on merge. | KW-FIX-4 13:5x: follow rebases from the DIE-KV-64 pvrec recipe + bind_pv; fresh root source-follow-kv64 so no snapshot reuses a bind copied from the pre-pvrec 54c3 recipe (old root snapshots 88f2e7ecac18/4b0a73deb5f9 lack kv3_pv_pair map). | DIE-KV-61 fresh ELAB+strict0 at 54c3c7c9f adopted (cached efa elab refused: group_r2c_native.sv changed). Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
+    "note": "KW-FIX-4 14:1x: 98e13b8bfec merged on main -> follow re-enabled (root source-follow-kv64, rebases from pvrec/bind_pv). | KW-FIX-4 14:0x: follow PAUSED until claude/kw-fix-4-kvnote-1103@98e13b8bfec merges (main 88f2e7ecac1/4b0a73deb5f plan_c has budgets.cland_note_kv64_1103 -> schema \"unknown key\" -> every KV gen phys \"plan invalid\"); following main now would re-adopt the broken plan; re-enable on merge. | KW-FIX-4 13:5x: follow rebases from the DIE-KV-64 pvrec recipe + bind_pv; fresh root source-follow-kv64 so no snapshot reuses a bind copied from the pre-pvrec 54c3 recipe (old root snapshots 88f2e7ecac18/4b0a73deb5f9 lack kv3_pv_pair map). | DIE-KV-61 fresh ELAB+strict0 at 54c3c7c9f adopted (cached efa elab refused: group_r2c_native.sv changed). Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
     "snapshot_kind": "bind",
     "snapshot_bind": "/srv/opentallas-scratch2/claude/die-kv-64/bind_pv",
     "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
