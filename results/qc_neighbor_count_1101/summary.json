@@ -1,0 +1,49 @@
+{
+ "native59": {
+  "status": "PASS_COUNT_ABI_FACE_ONLY",
+  "expanded_leaves": 254747,
+  "standard_cells": 254739,
+  "macro_instances": 8,
+  "sequential_cells": 56685,
+  "native_area_um2_including_macro_library_area": 106508.22678,
+  "macro_library_areas": {
+   "ot_sram_1r1w_32x512_m1": 8858.808
+  },
+  "standard_cell_area_um2": 35637.76277999999,
+  "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+  "PORT_BIND": 0,
+  "FACE": 0,
+  "stat": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/native59/phys/native59/run/reports/asap7/dp_native59/base/synth_stat.txt",
+  "stat_sha256": "504f5522e69843ff5029f9ad9fdb58ba5a22127b642c5ebb2c85c53994d21039"
+ },
+ "coll_ftm": {
+  "status": "PASS_COUNT_ABI_FACE_ONLY",
+  "expanded_leaves": 83317,
+  "standard_cells": 83317,
+  "macro_instances": 0,
+  "sequential_cells": 23866,
+  "native_area_um2_including_macro_library_area": 11609.3979,
+  "macro_library_areas": {},
+  "standard_cell_area_um2": 11609.3979,
+  "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+  "PORT_BIND": 0,
+  "FACE": 0,
+  "stat": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/coll_ftm/phys/coll_ftm/run/reports/asap7/dp_coll_ftm/base/synth_stat.txt",
+  "stat_sha256": "a69541ea7f92e92bbe4d5433f7f9959bb90bfa32ab7df80fe4bbd5980b1fc66e"
+ },
+ "coll_ftc": {
+  "status": "PASS_COUNT_ABI_FACE_ONLY",
+  "expanded_leaves": 158904,
+  "standard_cells": 158904,
+  "macro_instances": 0,
+  "sequential_cells": 44337,
+  "native_area_um2_including_macro_library_area": 21890.51406,
+  "macro_library_areas": {},
+  "standard_cell_area_um2": 21890.51406,
+  "source_sha": "d90b109213c6949da87b330ef143d96bbe937934",
+  "PORT_BIND": 0,
+  "FACE": 0,
+  "stat": "/srv/opentallas-scratch2/claude/codex-qc-nl-prefix-1101/neighbors/items/coll_ftc/phys/coll_ftc/run/reports/asap7/dp_coll_ftc/base/synth_stat.txt",
+  "stat_sha256": "3f533b060f5a42f021436a5f2722ef2f4c949a17d4e84ab755fc7f5e5d6c27f6"
+ }
+}
