@@ -690,34 +690,51 @@ def slice_clock_ports(slice_dir, module, clks):
     return list(clks) if ms.clock_entry_ports(sl) else None
 
 
-def write_boundary_context(kd, clks, rsts):
+# COORD ruling 10-24 (gen_core_kit_kv.write_core_contract / gen_core_kit_legacy form): typed hard-core latency contract.
+HARD_CORE_LATENCY_CONTRACT = dict(
+    kind="hard_core_latency", ruling="COORD 10-24",
+    target_applies_at="parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+    measured_in="KIT/signoff/signoff.json core_latency; views <module>.core.json; <module>_tt.lib max_clock_tree_path")
+
+
+def write_boundary_context(kd, clks, rsts, hard_core_latency=False):
     """COORD 10-30 15:27 (HBM-CORES-KITS-28 ASK rst_col, default A): the typed boundary control declaration every
     other core generator writes (KV gen_core_kit_kv.write_core_contract form): KIT/core.json boundary_role
     {clock bus: clk, reset port: reset} + KIT/boundary_guard_context.json (schema v1, no data-pin exemptions).
     The sign-off face_guard (signoff.boundary_controls) and lec.declared_resets read it, so a real reset port
     (freeze.json resets, matched by RST_RE, SDC '# reset' line) is not reported as a 'shared' data face.  Declaration
     only: clock/reset names come from the same clks/rsts the SDC and freeze.json use; no timing or netlist change.
-    No clock_contract (HBM cores keep the plan insertion target), so vclk_ref / core_io_reference are unchanged."""
+    No clock_contract by default (HBM cores keep the plan insertion target), so vclk_ref / core_io_reference are unchanged.
+    hard_core_latency=True (--hard-core-latency, DIE-HBM-60/CORES 11-03 class CLK-BAND): the SAME typed contract the
+    KV/S81 generators write (COORD 10-24; METHODOLOGY 12.3 v5.0 / 12.3a): the core publishes its measured insertion and
+    the parent taps it early, so the insertion band is a design target (core_clock_band info, vclk_ref bound-ff);
+    no gate changes."""
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
     cb = sorted({base(c) for c in clks})
     rb = sorted({base(r) for r in rsts} - set(cb))
     kd = Path(kd)
     (kd / "core.json").write_text(json.dumps(dict(
         schema="opentallas.hbm_core_boundary.v1", source="gen_core_kit_hbm.write_boundary_context",
-        boundary_role={**{c: "clk" for c in cb}, **{r: "reset" for r in rb}}), indent=1) + "\n")
+        boundary_role={**{c: "clk" for c in cb}, **{r: "reset" for r in rb}},
+        **({"clock_contract": HARD_CORE_LATENCY_CONTRACT} if hard_core_latency else {})), indent=1) + "\n")
     (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
         schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json",
         clock_ports=cb, unused_clock_ports=[], reset_ports=rb, data_pin_exemptions=[]), indent=1) + "\n")
     return dict(clock_ports=cb, reset_ports=rb)
 
 
-def retrofit_boundary_context(kd):
+def retrofit_boundary_context(kd, hard_core_latency=False):
     """--retrofit-boundary KIT: write the same declaration into an already generated HBM kit from its freeze.json
     clocks/resets (kits built before this change; same content the generator now writes)."""
     fz = json.loads((Path(kd) / "freeze.json").read_text())
     if fz.get("schema") != "opentallas.hbm_arch.core_freeze.v1":
         raise SystemExit(f"{kd}: not an HBM core kit freeze.json")
-    return write_boundary_context(kd, fz.get("clocks") or [], fz.get("resets") or [])
+    rep = write_boundary_context(kd, fz.get("clocks") or [], fz.get("resets") or [], hard_core_latency)
+    if hard_core_latency:   # ledger (KV retrofit_contract.py form): declaration only, no RTL/SDC/netlist change
+        (Path(kd) / "contract_retrofit.json").write_text(json.dumps(dict(
+            tool="gen_core_kit_hbm --retrofit-boundary --hard-core-latency (DIE-HBM-60/CORES CLK-BAND)",
+            clock_contract=HARD_CORE_LATENCY_CONTRACT, **rep), indent=1) + "\n")
+    return rep
 
 
 def resolve_recipe_by_top(module, R):
@@ -1326,6 +1343,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--stock-rc", action="store_true", help="old basis: platform setRC.tcl (no RCX-calibrated RC)")
     ap.add_argument("--no-f1", action="store_true", help="no per-corner FF IO basis in the FF hold repair")
     ap.add_argument("--no-f4", action="store_true", help="no zero-logic chain leaf affinity post-CTS")
+    ap.add_argument("--hard-core-latency", action="store_true",
+                    help="typed hard_core_latency clock contract in core.json (COORD 10-24; class CLK-BAND)")
     ap.add_argument("--no-reset-face-home", action="store_true",
                     help="old skip set: reset inputs excluded from face_flops pin-register homing (GEOM-111 class R)")
     ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
@@ -2102,7 +2121,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # normal kit hash and generation provenance; never retrofit a built kit.
     from kit_runtime_assets import stage as stage_runtime_assets
     runtime_files = stage_runtime_assets(kd, REPO, rec.get("runtime_files"))
-    write_boundary_context(kd, clks, rsts)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
+    write_boundary_context(kd, clks, rsts, a.hard_core_latency)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               canonical_type=v.get("canonical_type"), wrapper=wrap_rep, outline_um=[w, h],
@@ -2180,7 +2199,7 @@ def native_hc128_dispatch(argv):
 
 if __name__ == "__main__":
     native_hc128_dispatch(sys.argv[1:])
-    if len(sys.argv) == 3 and sys.argv[1] == "--retrofit-boundary":
-        print(json.dumps(retrofit_boundary_context(sys.argv[2])))
+    if len(sys.argv) in (3, 4) and sys.argv[1] == "--retrofit-boundary" and sys.argv[3:] in ([], ["--hard-core-latency"]):
+        print(json.dumps(retrofit_boundary_context(sys.argv[2], sys.argv[3:] == ["--hard-core-latency"])))
     else:
         main()
