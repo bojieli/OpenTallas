@@ -171,3 +171,13 @@ Elapsed time: 5:20.01[h:]min:sec. CPU time: user 688.90 sys 9.01 (218%). Peak me
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hbm_su_static_sfustore_hw/base/5_1_grt.odb] Error 2
  | kit epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_su_static_sfustore_hw/attempt_2/gen/ot_hbm_su_static_sfustore_hw_14918cf926c8 src claude/kw-fix-4-hbmv-1103@78e511e3a45 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-03 15:30:50 PST AUTOPILOT -> KIT-WAVE-3: FAILED 12cb1db9beb4 hbm/ot_hbm_hc_root_static__tailx_rest__v6bc7f2 (CRASH/flow-error): ; fix the clock, not the hold)
+Elapsed time: 9:36.83[h:]min:sec. CPU time: user 2607.34 sys 18.46 (455%). Peak memory: 2661888KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hbm_hc_root_static__tailx_rest__v6bc7f2/base/5_1_grt.odb] Error 2
+ | kit epyc2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_hc_root_static__tailx_rest__v6bc7f2/attempt_2/gen/ot_hbm_hc_root_static__tailx_rest__v6bc7f2_70244ff4464b src claude/kw-fix-4-hbmv-1103@78e511e3a45 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-03 15:30:55 PST AUTOPILOT -> KIT-WAVE-3: FAILED 2f6b6acc4a4e hbm/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap (CRASH/flow-error): x the clock, not the hold)
+Elapsed time: 13:34.50[h:]min:sec. CPU time: user 2912.70 sys 38.63 (362%). Peak memory: 4754604KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hgi_coll_tkm_tp192_tile_core__idpin__strap/base/5_1_grt.odb] Error 2
+ | kit epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap/attempt_5/gen/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_b05ff385dffe src claude/kw-fix-4-hbmv-1103@78e511e3a45 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
