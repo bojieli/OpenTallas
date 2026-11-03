@@ -35,3 +35,6 @@ CODEX HEAD STmD intel2:/srv/opentallas-scratch2/claude/codex-head-stm-prd-1131/D
 intel1 /srv/opentallas-scratch2/claude/codex-kvfn-monitor-1815 CODEX KV-FN-7 live readonly GEN1 event monitor service; preserve
 intel1 /srv/opentallas-scratch2/claude/codex-kvfn-perf-1755 CODEX KV-FN-7 denied single perf sample receipt; no permission changes
 intel2 /srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1 DIE-S81-48/nnfu S81 dsfd_node_NNfu routed DB (r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb sha 6a9459a0) + q-s81 sign dir r1/sign_q-s81 (SIGNED TT +9.62/FF +4.03, LEC EQ 2066, PROVENANCE) + tag tools ../t_q-s81; preserve (count candidate)
+intel1 /srv/opentallas-scratch2/claude/codex-pvb-tt-0108/t10_w80 DIE-KV-61/drv KV ot_qwen_tp8_pv_join_t fR180 (a837e3a580a0cb97) routed DB 6_final.odb sha 7a4a8aea (counted via m-kv re-sign)
+intel1 /srv/opentallas-scratch2/claude/dkv61/pvjoin/fR180_w80_mkv DIE-KV-61/drv m-kv re-sign dir of pv_join_t fR180 (SIGNED TT +51.16/FF +10.36, LEC EQ 18181, PROVENANCE kind resign)
+intel1 /srv/opentallas-scratch2/claude/dkv61/tools_mkv DIE-KV-61/drv m-kv tag tools for the pv_join_t re-sign
