@@ -5,3 +5,4 @@
 - 2026-11-03 11:56 PST HELPER: DH58-FBAY (HEAD station relay_bay class fix, RELAY_BAY_RE += s81_head station types, dry pre-build on l48rf). l48rf LAUNCHED: mesh, ctl_e, ctl_n, host, host_n, mesh_e. Live helpers: 1.
 - 2026-11-03 12:01 PST HELPER: DH58-FBAY done (relay_bay NOOP on HEAD stations); DH58-TAPBAL (tapbal_grt SIGABRT class, no FLOW lane live). Live helpers: 1.
 - 2026-11-03 13:24 PST HELPER: DH58-TURNB (turn_b re-form after l48h0@4 sign-off fail). Live helpers: 1.
+- 2026-11-03 15:42 PST HELPER: DH58-MESHE (mesh_e l48rf fail). Live: TURNB, MESHE.
