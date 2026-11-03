@@ -854,7 +854,10 @@
       ],
       "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave",
       "hold_items": {
-        "hd_mesh_e": "ROOT COORDAPPROVED paired mesh geometry source stage fe9f369d8; HOLD fresh builds until actual mesh_kit4 checkpoint resume/adopt joins. No duplicate PLACE; parent clock/signoff holds remain."
+        "hd_mesh_e": "ROOT COORDAPPROVED paired mesh geometry source stage fe9f369d8; HOLD fresh builds until actual mesh_kit4 checkpoint resume/adopt joins. No duplicate PLACE; parent clock/signoff holds remain.",
+        "hd_ctl_e": "KW-FIX-3 05:3x safe-forms: last verdict AUTO-GEOM FAIL FACE-HOME on unchanged l48h0 geometry; I stopped the unit so a RETRY-INFRA cannot relaunch it unchanged. Release = event l48h1 (DIE-HEAD-56 prep_v3) after the GATE_EVENTS merge",
+        "hd_ctl_n": "KW-FIX-3 05:3x safe-forms: last verdict AUTO-GEOM FAIL FACE-HOME on unchanged l48h0 geometry; I stopped the unit so a RETRY-INFRA cannot relaunch it unchanged. Release = event l48h1 (DIE-HEAD-56 prep_v3) after the GATE_EVENTS merge",
+        "hd_host_n": "KW-FIX-3 05:3x safe-forms: last verdict AUTO-GEOM FAIL FACE-HOME on unchanged l48h0 geometry; I stopped the unit so a RETRY-INFRA cannot relaunch it unchanged. Release = event l48h1 (DIE-HEAD-56 prep_v3) after the GATE_EVENTS merge"
       },
       "retry_fix": {
         "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
