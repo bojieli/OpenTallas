@@ -10925,3 +10925,4 @@ FAILED [AUTOPILOT a893101f8fba] 2026-11-03 12:43:32 PST AUTOPILOT -> KIT-WAVE-3:
   - Both were clean, and no process was using them. Removed with git worktree remove.
   - Manifest: epyc2:/srv/opentallas-scratch2/claude/manifests/hbm61lec-wt-remove-*.txt.
   - Freed 62 GB: free space 48 -> 110 GB.
+- 2026-11-03 13:03 PST RESULT [KW-FIX-4 -> COORD 13:0x epyc2 scratch2] deleted 45 finished flow-canary run dirs on epyc2 (~63 GB): ot-run SPILL copies whose run dir also exists on intel2, idle > 60 min, no .keep, no process cwd. Manifest: epyc2 flow-canary/PRUNED-1103-KW4.txt. KEPT: 8 epyc2-only runs (no intel2 copy, may be baselines) and the live hbm_39a2fae86 run. NOT deleted: wt/kw-fix-4-fl-hbm (31 GB): it has .keep, 4 live HBM d44o wave records read it, and one epyc2 process uses it. It goes when those finish. epyc2 scratch2 now 201 GB free (was 48; other lanes are pruning too). New epyc2 workdirs from this lane go to /home/ubuntu/scratch-root/claude.
