@@ -1168,6 +1168,9 @@ def main():
                     help="DIE-KV-61 11-02: native strap master kv3_astk (plan_c, kv_core_rtl wrapper of kv3_astk__leaf): "
                          "ctl PORT_REGS qo face bank + fault-b landing (+1 external-fault edge, 0 command cycles) + the "
                          "stale_in tc plan pins declared dead (astk_native_faces.py; the 0828 kit recut)")
+    ap.add_argument("--astk-rf1", action="store_true",
+                    help="DIE-KV-64/RF-E 11-03 RE-FORM RF-KV1 (two strikes): ctl zk / zh read selects as registered one-hot "
+                         "replicas, <= 16 loads per select bit, 0 cycles (astk_rf1.py); with --astk-native-faces")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--astk-rep-split", action="store_true",
                     help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
@@ -1415,6 +1418,11 @@ def main():
     if a.astk_native_faces:
         import astk_native_faces
         astk_native_faces.apply_kit(kd, mod, cj, a.core_json)
+    if a.astk_rf1:
+        if not a.astk_native_faces:
+            raise SystemExit("--astk-rf1 needs --astk-native-faces")
+        import astk_rf1
+        astk_rf1.apply_kit(kd, mod)
     if a.astk_timing_regs:
         if not mod.startswith("kv3_astk_"):
             raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
@@ -1825,6 +1833,10 @@ def main():
         # Keep the routed slew/cap margins; timing-driven repair chooses the buffer tree.
         (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 64 for every repair_design (in-flow, not in the golden SDC)\n"
                                            "set_max_fanout 64 [current_design]\nputs \"KVCORES max_fanout 64\"\n")
+    # RF-KV1 (DIE-KV-64/RF-E 11-03): --orfs-var OT_MAXWIRE_UM=<um> = repeater pitch on every signal net at the post-GRT
+    # repair_design (main grt_pre.tcl sources grt_maxwire.tcl when OT_MAXWIRE_UM is set; the kit needs its copy)
+    if any(kv.split("=", 1)[0].strip() == "OT_MAXWIRE_UM" for kv in a.orfs_var):
+        shutil.copyfile(tool / "grt_maxwire.tcl", kd / "grt_maxwire.tcl")
     mcmm = flow_basis and (not lefs or all(libs_ff))
     for f in ("corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
