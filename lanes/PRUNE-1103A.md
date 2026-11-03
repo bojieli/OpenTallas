@@ -19,3 +19,5 @@
 ## epyc2 manifest C (2026-11-03 03:47 PST): MOVE sub-dirs (no PROTECTED path inside/above, idle >24 h) of the 7 dirs that hold PROTECTED records
 - 30 dirs >= 1 GB, ~95 GB: codex-hbm-cores-1101/{query,exp0}, signoff-sprint-19/{hcol,stm}, s81ck5/kits/{ot_s81sl_ve_m_rt22m{,_hx},ot_s81c_attn_hcore_rt22m{,_hx},ot_s81sl_vn_a_rt22{,a,am,p,p_hxh}}, head-serdes-2/{e11c,e10a,e8a,e3a,e3,v1a}, die-qc-44/grt, codex-s81-cohort-1101/kits/{dsdv_eng_rr_h0_cc{A,B}{,_g2typed},ot_s81sl_vsw_cv{A,B},ot_s81sl_ve_s_cw1728{,_measure},dsdv_gunit_l1c_cc{A,B}}. PROTECTED dirs (e13a, kp4_e13a_*, rt22m_hx2, ...) stay in place.
 - Manifest epyc2:.../prune-1103a/e2_mvC.txt, result e2_mvC_result.tsv.
+- C result: 29/30 MOVED (90.07 GB); signoff-sprint-19/hcol skipped (live).
+- epyc2 TOTAL 03:58: moved 41 dirs, 213 GB, to /home/ubuntu/scratch-root/claude with symlinks (bytes+count verified, nothing deleted). scratch2 137 -> 327 GB free. TARGET MET.

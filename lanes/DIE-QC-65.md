@@ -8,3 +8,7 @@ Helpers (short, fresh; collect predecessor jobs first; dirs epyc2:/home/ubuntu/s
 - me: station parent-form estimate vs S81-PROUTE-2, READY/RESULT lines, rulings.
 ## log
 - 2026-11-03 03:28 PST start. Collected: ot-run clients alive on intel2 (l0 finish, l4 finish, l7 resign, NL resign, RED grt, l1lec, l1 resign). epyc2 load 301/128 > 1.5x cap -> non-crit waiters stuck 4 h.
+
+## EV
+- 2026-11-03 03:55 PST start (DIE-QC-65/EV). State found: RED NOT on main (19af2d0dd06). RED child GRT50 is RUNNING (not waiting): ot-run client intel2 pid 1531818, epyc2 die-qc-64-red/red_grt_h0 started 02:05, in post-repair incremental GRT -> left in place. SC: 64/SC branch a0b2e425540 + uncommitted TRACK x 0.012 fix; its G0C on main plan = 0 errors (base 9 = the SC CORE-KS set); strict bind NOT run. GLUE: G0C 14 err vs base 9 (+5: glue_ft cells, glue.N/glue_ft.S 10.4 pins/um, START provider x2); ev3 stage1 re-run 00:36 not assembled; bench 3 seeds PASS.
+- 2026-11-03 03:55 PST SC prepared on RED: epyc2 die-qc-65-ev/sc_wt branch claude/die-qc-65-sc-1103 = origin/main + merge RED 8247ff4ce24 (1582fffa369) + SC commits; delta1+delta2+G0C (docker qc65ev-sc-delta) and base G0C on RED plan 91ece1ff06b0 (docker qc65ev-g0c-base) running.
