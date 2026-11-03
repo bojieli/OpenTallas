@@ -82,13 +82,16 @@ class RelayBay(unittest.TestCase):
             self.assertEqual(open(K + "/rtl/t_bound.sv").read(), BOUND)
             self.assertFalse(os.path.exists(K + "/declared_cycles.json"))
 
-    def test_short_hops_advisory_kit_unchanged(self):
+    def test_short_hops_advisory_form_applied(self):
         with tempfile.TemporaryDirectory() as d:
             K = mkkit(d, L=150.0)                                          # 3 stations over 150 um: 50-75 um hops
             self.assertEqual(RB.main([K]), 0)                              # advisory: no launch gate (OWNER 06:40)
-            self.assertTrue(os.path.exists(K + "/relay_bay_table.tsv"))
-            self.assertFalse(os.path.exists(K + "/declared_cycles.json"))
-            self.assertEqual(open(K + "/rtl/t_bound.sv").read(), BOUND)
+            self.assertIn("FAIL", open(K + "/relay_bay_table.tsv").read())  # the miss is reported
+            self.assertTrue(os.path.exists(K + "/declared_cycles.json"))  # COORD 07:0x: form applied anyway
+            dc = json.load(open(K + "/declared_cycles.json"))
+            self.assertEqual(dc["lanes"]["fb"]["extra_cycles"], 0)         # short lane: no extra relay needed
+            ft = [l for l in open(K + "/ft_stations.txt") if l.startswith("fb ")][0].split()
+            self.assertEqual(len(ft), 4 + 2 * 3)                           # stations FIRM at explicit bays
 
     def test_plan_sites_kept_when_short_enough(self):
         with tempfile.TemporaryDirectory() as d:
