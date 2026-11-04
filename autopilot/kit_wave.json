@@ -238,7 +238,8 @@
     "kv3_io_ft": "KW-FIX-6 06:0x: live pilot ioft_a2, no second build; read its sign-off first",
     "kv3_hroot": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_hub_Ei": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
-    "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before"
+    "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
+    "kv3_io_ft_v1": "KW-FIX-7 06:3x COORD: Ring FT no release until DIE-KV-67 posts the guard 0 vs gate -90 cause; do not launch"
    },
    "work_root": "/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave",
    "retry_fix": {
