@@ -273,7 +273,10 @@
     "kv3_hroot": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_hub_Ei": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
-    "kv3_io_ft_v1": "KW-FIX-7 06:3x COORD: Ring FT no release until DIE-KV-67 posts the guard 0 vs gate -90 cause; do not launch"
+    "kv3_io_ft_v1": "KW-FIX-7 06:3x COORD: Ring FT no release until DIE-KV-67 posts the guard 0 vs gate -90 cause; do not launch",
+    "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
+    "kv3_hub_Eo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ",
+    "kv3_hub_Wo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1104/kit-wave",
    "retry_fix": {
@@ -2204,7 +2207,8 @@
    ],
    "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave",
    "hold_items": {
-    "hd_mesh_e": "DIE-HEAD-58 20:1x: COUNTED (SS24 20:16); running builds may finish, no relaunch"
+    "hd_mesh_e": "DIE-HEAD-58 20:1x: COUNTED (SS24 20:16); running builds may finish, no relaunch",
+    "hd_turn_a": "KW-FIX-8 09:2x DIE-HEAD-62 09:23: FACE_GUARD 568-bit WREG class expected on current main [inferred]; launch with retry hd_turn_a@4 on the first tag holding claude/die-qc-70-fall"
    },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
