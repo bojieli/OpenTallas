@@ -44,7 +44,9 @@
 // a 254-entry table holding the golden's own products.
 module ot_hbm_selected_c12__ot_hdc_v41x_exp #(
     parameter integer LM = 3,                   // multiplier latency (ot_hbm_selected_c12__ot_hdc_qmul_lat)
-    parameter integer LA = 3                    // add latency (ot_hbm_selected_c12__ot_hdc_qadd_lat: 3, or 4 input cut)
+    parameter integer LA = 3,                   // add latency (ot_hbm_selected_c12__ot_hdc_qadd_lat: 3, or 4 input cut)
+    parameter integer L7X = 0,                  // 11-03 opt-in: adders at LA 7 use the _l7x cut set (default: unchanged)
+    parameter integer NREP = 1                  // 11-03 opt-in: n table lookup from NREP kept copies of n (64 % NREP == 0)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -361,13 +363,27 @@ module ot_hbm_selected_c12__ot_hdc_v41x_exp #(
     always @(posedge clk) nint <= t[31] ? -{1'b0, tmag} : {1'b0, tmag};
 
     reg [31:0] a_hi, a_lo;
-    always @(posedge clk) {a_hi, a_lo} <= ln2_nk(nint[7:0]);
+    generate if (NREP <= 1) begin : g_tab1
+        always @(posedge clk) {a_hi, a_lo} <= ln2_nk(nint[7:0]);
+    end else begin : g_tabn
+        // Same registered value as g_tab1, but each 64/NREP-bit slice of the table reads its own kept copy of n, so
+        // no n bit fans out to the whole 256-entry table.  Same latency (the copies load where nint loads).
+        localparam integer TW = 64 / NREP;
+        (* keep = "true" *) reg [7:0] nint_r [0:NREP-1];
+        always @(posedge clk) for (integer q = 0; q < NREP; q = q + 1) nint_r[q] <= t[31] ? 8'(-{1'b0, tmag}) : tmag;
+        reg [63:0] tab;
+        always @* begin
+            tab = 64'd0;
+            for (integer q = 0; q < NREP; q = q + 1) tab[q*TW +: TW] = ln2_nk(nint_r[q]) >> (q*TW);
+        end
+        always @(posedge clk) {a_hi, a_lo} <= tab;
+    end endgenerate
 
     wire [31:0] r1, r, xc_d, lo_d;
     ot_hbm_selected_c12__ot_hdc_delay #(.W(32), .D(T_K - 1)) d_x (clk, rst_n, xc, xc_d);
-    ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+    ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA), .L7X(L7X)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
     ot_hbm_selected_c12__ot_hdc_delay #(.W(32), .D(LA)) d_lo (clk, rst_n, a_lo, lo_d);
-    ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+    ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA), .L7X(L7X)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
 
     // Horner: p = C0; six times p = p*r + C[k]; r travels in (LM+LA)-cycle hops.
     wire [31:0] rd [0:6];
@@ -383,7 +399,7 @@ module ot_hbm_selected_c12__ot_hdc_v41x_exp #(
                 ot_hbm_selected_c12__ot_hdc_delay #(.W(32), .D(LM + LA)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
             ot_hbm_selected_c12__ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
-            ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+            ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA), .L7X(L7X)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
         end
     endgenerate
 

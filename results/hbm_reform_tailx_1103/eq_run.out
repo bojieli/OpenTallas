@@ -1,25 +1,28 @@
-eqv_bal_tie seed=20261103 expect=fail rc=0: TAILX_REFORM checks=81834 gold_errors=0 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 TAILX_REFORM PASS 
-mut_vline seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=31706 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_opq_short seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=31895 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-pos_s1 seed=20261103 expect=pass rc=0: TAILX_REFORM checks=81834 gold_errors=0 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 TAILX_REFORM PASS 
-mut_ld_scl seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=31853 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_mx_stage seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=350 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_index_late seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=31902 ref_errors=80457 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_opq_exp_v seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=350 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_ld_data seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=29928 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_p1_early seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=23866 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_mx_stage seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=350 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_ld_scl seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31853 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
 mut_skl seed=20261103 expect=fail rc=1: [0] %Fatal: tb_reform.sv:60: Assertion failed in tb: TAILX_REFORM FAIL schedule constants 
-mut_phase_edge seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=31552 ref_errors=69601 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_p1_early seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=23866 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-eqv_phase_prio seed=20261103 expect=fail rc=0: TAILX_REFORM checks=81834 gold_errors=0 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 TAILX_REFORM PASS 
-mut_bsel seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=31874 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_p3_early seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=280 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_pair_order seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=322 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_max_early seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=84 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-pos_s2 seed=7741 expect=pass rc=0: TAILX_REFORM checks=81834 gold_errors=0 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 TAILX_REFORM PASS 
-mut_oh_late seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=31902 ref_errors=80240 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-mut_neg seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81834 gold_errors=31552 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=70 [818861000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
-833edd8c820db3feb605dd628780d0d5a24fcac293b33f07f51b4b5c3065b3d3  rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv
-c645e4804e1d26d7bb533a92ef47086568fc3bdf44cc58598557561950d42b2a  results/hbm_reform_tailx_1103/tb_reform.sv
-74c0331f011228873e2af0e07b5640146301f1b371db79cc1a52d3107beaf251  tools/hbm_b2/sk_ce_kit.py
+mut_phase_edge seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31552 ref_errors=69713 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_opq_short seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31895 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_nrep_slice seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31713 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_opq_exp_v seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=350 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_max_early seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=84 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+eqv_phase_prio seed=20261103 expect=fail rc=0: TAILX_REFORM checks=81974 gold_errors=0 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 TAILX_REFORM PASS 
+eqv_bal_tie seed=20261103 expect=fail rc=0: TAILX_REFORM checks=81974 gold_errors=0 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 TAILX_REFORM PASS 
+pos_s2 seed=7741 expect=pass rc=0: TAILX_REFORM checks=81974 gold_errors=0 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 TAILX_REFORM PASS 
+mut_neg seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31552 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_oh_late seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31902 ref_errors=80488 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+pos_s1 seed=20261103 expect=pass rc=0: TAILX_REFORM checks=81974 gold_errors=0 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 TAILX_REFORM PASS 
+mut_p3_early seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=280 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_pair_order seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=322 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_ld_data seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=29928 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_nrep_late seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31902 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_vline seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31706 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_index_late seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31902 ref_errors=80718 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_bsel seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31874 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+mut_add7_cut seed=20261103 expect=fail rc=1: TAILX_REFORM checks=81974 gold_errors=31902 ref_errors=0 results=50 nonzero=50 sk_checks=350 prio=8 SH=84 [820261000] %Fatal: tb_reform.sv:86: Assertion failed in tb: TAILX_REFORM FAIL 
+967246dc72a02f3d612673e8340f9dbab2b8e71b04bab197f264f3ae991e4141  rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv
+80e37d7c489f3079b3312841bbe9a091a31aca10c9a11d77962feae4ef447be9  results/hbm_reform_tailx_1103/tb_reform.sv
+392cf061fee2c0ffd9f7a0570f545204ceab0b153a21476119bad9542871cd1b  tools/hbm_b2/sk_ce_kit.py
 OVERALL rc=0 (eqv_bal_tie, eqv_phase_prio are declared-equivalent mutants: expected PASS)
 EXIT 0
