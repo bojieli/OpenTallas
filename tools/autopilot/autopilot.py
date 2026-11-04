@@ -1686,6 +1686,10 @@ def write_provenance(host, dest, j):
     prov.update(schema="opentallas.provenance.v1", verdict="SIGNED" if j.get("flow_tag") and j.get("src_commit")
                 else "SIGNED-UNVERSIONED", why=j.get("prov_error", ""), written=now_s())
     prov.update(eco_provenance(j))
+    if j.get("resign_carry"):                           # KW-FIX-4 11-03: counted through the RE-SIGN of its routed DB
+        prov.update(kind="resign-carry", resign_carry=j["resign_carry"],
+                    why=f"build flow untagged; same routed DB re-signed at {j['resign_carry']['flow_tag']} "
+                        f"({j['resign_carry']['host']}:{j['resign_carry']['record']})")
     return rpy(host, PROBE_PROVENANCE, {"dest": dest, "prov": prov}, timeout=120)
 
 
@@ -1703,17 +1707,99 @@ def record_signed(st, j, host, so):
     return False
 
 
+PROBE_ROUTED_SHA = r'''
+import hashlib, json, os, sys
+a = json.loads(sys.argv[1]); out = {}
+try:
+    x = json.load(open(a["prov"])) if a.get("prov") else {}
+    if a.get("prov") and x.get("kind") != "resign":
+        raise ValueError("%s is not a kind:resign record" % a["prov"])
+    out["sha"] = x.get("routed_db_sha256") or None
+    if not out["sha"]:
+        h = hashlib.sha256()
+        with open(a["db"], "rb") as f:
+            for b in iter(lambda: f.read(1 << 20), b""):
+                h.update(b)
+        out["sha"] = h.hexdigest()
+except Exception as e:
+    out["error"] = str(e)[:300]
+print("AP_JSON " + json.dumps(out))
+'''
+RESIGN_PROBES_PER_TICK = 6                              # routed-DB hash probes per tick (each reads one routed DB once)
+
+
+def _asap7_design(db):
+    """.../results/asap7/<design>/base/6_final.odb -> <design> ('' when the path has no such segment)"""
+    parts = str(db or "").split("/")
+    return parts[parts.index("asap7") + 1] if "asap7" in parts[:-1] else ""
+
+
+def resign_carry(j, cache=None, probe=None, budget=None):
+    """KW-FIX-4/HBMRS 11-03 (DIE-HBM-61, COORD 17:1x): a SIGNED-UNVERSIONED job whose SAME routed DB (sha256 equal: the
+    path itself or a byte copy) already has a valid RE-SIGN record (kind:resign PROVENANCE on a released flow tag
+    covering its die; release_tree_plan checked tag -> src_commit, post-route LEC EQUIVALENT and the DB) is carried by
+    that tag: the RE-SIGN is the 12.20 way to count a sign-off whose build flow no tag carries, and this run's sign-off
+    is the same routed DB.  -> {flow_tag, tag_commit, record, host, routed_db, routed_db_sha256} or None.  Never
+    guessed: no cache / no matching record / any hash unknown -> None (the job stays SIGNED-UNVERSIONED)."""
+    db = (j.get("signoff") or {}).get("odb")
+    jhosts = [h for h in dict.fromkeys((j.get("ran_on"), j.get("host"))) if h]   # the DB lives where the run ran
+    design = _asap7_design(db)
+    if not db or not jhosts or not design:
+        return None
+    if cache is None:
+        try:
+            cache = json.loads(RELEASE_CACHE.read_text())
+        except (OSError, ValueError):
+            return None
+    probe = probe or rpy
+    budget = budget if budget is not None else CLOSURE.setdefault("resign_probes", [RESIGN_PROBES_PER_TICK])
+    tags = {t for t, _ in _all_flow_tags()}
+    cands = [r for r in (cache or {}).get("signed_records") or []
+             if isinstance(r, dict) and r.get("resign") and r.get("versioned") and not r.get("resign_error")
+             and r.get("flow_tag") in tags and tag_covers(r.get("flow_tag"), j.get("die"))
+             and r.get("prov_file") and r.get("host") and _asap7_design(r.get("routed_db")) == design]
+    if not cands:
+        return None
+    memo = j.setdefault("resign_sha", {})                # host:path -> sha256 (routed DBs are immutable once signed)
+
+    def sha(host, path, prov=None):
+        k = f"{host}:{prov or path}"
+        if k not in memo:
+            if budget[0] <= 0:
+                return None
+            budget[0] -= 1
+            got = probe(host, PROBE_ROUTED_SHA, {"db": path, "prov": prov}, timeout=900)
+            if got.get("error") or not got.get("sha"):
+                return None
+            memo[k] = got["sha"]
+        return memo[k]
+    mine = next((x for x in (sha(h, db) for h in jhosts) if x), None)
+    if not mine:
+        return None
+    for r in sorted(cands, key=lambda r: r["flow_tag"], reverse=True):
+        if sha(r["host"], r["routed_db"], r["prov_file"]) == mine:
+            return dict(flow_tag=r["flow_tag"], tag_commit=r.get("src_commit"), record=r["prov_file"], host=r["host"],
+                        routed_db=r["routed_db"], routed_db_sha256=mine)
+    return None
+
+
 def retry_unversioned(st):
-    """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow"""
+    """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow, or (KW-FIX-4
+    11-03) once a valid RE-SIGN of its same routed DB on a released flow tag exists (resign_carry)"""
     for j in st["jobs"].values():
         if j.get("status") != "SIGNED-UNVERSIONED" or not j.get("archive"):
             continue
         prov = resolve_provenance(j["src"], j.get("flow", ""), j.get("die"))
         if prov.get("error"):
             j["prov_error"] = prov["error"]
-            if not apply_legacy(j):
-                continue
-            prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": LEGACY_TAG}
+            if apply_legacy(j):
+                prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": LEGACY_TAG}
+            else:
+                rc_ = resign_carry(j)
+                if not rc_:
+                    continue
+                j["resign_carry"] = rc_
+                prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": rc_["flow_tag"]}
         j.update(src_commit=prov["src_commit"], flow_tag=prov["flow_tag"], prov_error="")
         host, dest = j["archive"].split(":", 1)
         if DRY:
@@ -1725,7 +1811,8 @@ def retry_unversioned(st):
             continue
         record_signed(st, j, host, j.get("signoff") or {})
         log(f"PROMOTE {j['id']} {j['die']}/{j['type']}: SIGNED-UNVERSIONED -> signed.tsv (src {j['src_commit'][:12]}, "
-            f"flow {j['flow_tag']})")
+            f"flow {j['flow_tag']}" + (f" via RE-SIGN {j['resign_carry']['host']}:{j['resign_carry']['record']}"
+                                       if j.get("resign_carry") else "") + ")")
 
 
 def canary_wave_gate(row):

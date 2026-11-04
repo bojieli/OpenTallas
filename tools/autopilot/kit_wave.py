@@ -2726,7 +2726,8 @@ def write_stages(st, ap_dir, cfg=None):
     """OWNER 12.20: one row per wave kit (keyed on plan block sha) for SIGNOFF-SPRINT-1's lanes/SIGNOFF-STAGES.tsv;
     ENQUEUED rows continue in the autopilot queue (route / sign-off / post-route LEC), joined on the kit path.
     plan_current (KIT-TRIAGE-1 11-01; reason stays the last column): yes = the row's key is an item of the die's current plan of record, no = a
-    superseded block/event (history only: count burn-down on 'yes' rows), '' = no cached plan probe for the die."""
+    superseded block/event (history only: count burn-down on 'yes' rows; its FAIL reads status/class SUPERSEDED), '' = no
+    cached plan probe for the die."""
     cur = current_keys(cfg, st)
     rows = ["\t".join(STAGE_COLS)]
     for r in sorted((st.get("items") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
@@ -2743,6 +2744,12 @@ def write_stages(st, ap_dir, cfg=None):
             v.update(stage=r["q_stage"], status=r.get("q_status") or "", **{"class": r.get("q_class") or ""},
                      reason=(r.get("q_reason") or "")[:240],
                      evidence=f"autopilot job {r.get('q_id', '')} | {r.get('evidence') or ''}")
+        if v["plan_current"] == "no" and v.get("status") == "FAIL":
+            # KW-FIX-4/HBMRS 11-03 (DIE-HBM-61, COORD 17:1x): a FAIL on a superseded plan block can never relaunch
+            # or count as such (its current block is another key), so the class burn-down skips it: SUPERSEDED here,
+            # the wave record itself (attempts, two-strike history) is unchanged
+            v.update(status="SUPERSEDED", **{"class": "SUPERSEDED"},
+                     reason=f"superseded plan block (plan_current=no), was FAIL {v.get('class') or ''}: {v.get('reason') or ''}"[:240])
         rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
     # KW-FIX-4 11-03: gen-time lint verdicts of the current plans (never launched, no build cost)
     for r in sorted((st.get("lint") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
