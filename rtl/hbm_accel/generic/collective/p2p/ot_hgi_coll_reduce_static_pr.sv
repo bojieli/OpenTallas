@@ -46,12 +46,53 @@ module ot_hgi_coll_reduce_static_pr #(parameter integer MUT_TAG=0,MUT_BF16=0,MUT
   pub_bf16_q<=pub_bf16;pub_meta_q<=pub_meta;
  end
  wire f_c;
+`ifdef OT_HBM_REDUCE_LREP
+ // DIE-HBM-61/CUTS 11-03 (opt-in define OT_HBM_REDUCE_LREP; without it the code below the `else is compiled, names and
+ // netlist unchanged): per-lane KEPT copies of the lane control pin registers (same edge as the shared *_q registers,
+ // same reset class), each driving one lane of ot_hgi_coll_reduce_static_lr. Census 766 ps (pub_tag_a_q fanout into 16
+ // lanes' 16:1 read muxes) -> one lane per copy. 0 added cycles, every port edge unchanged.
+ // LMUT (bench): 1 = lane 8 pub_tag_a copy captures pub_tag_b; 2 = lane 3 load_v copy one edge late; 3 = lane 5 read_tag
+ // copy holds its value while add_read is low (enable bug); 4 = lane 12 add_issue copy stuck 0.
+ localparam integer LMUT=
+`ifdef OT_HBM_REDUCE_LMUT
+ `OT_HBM_REDUCE_LMUT
+`else
+ 0
+`endif
+ ;
+ (* keep = 1 *) reg [15:0] ln_load_v_q,ln_add_read_q,ln_pub_read_q,ln_add_issue_q;
+ (* keep = 1 *) reg [63:0] ln_load_tag_q,ln_read_tag_q,ln_pub_tag_a_q,ln_pub_tag_b_q;
+ reg lmut_lv_d;
+ always @(posedge clk_control or negedge rst_n)
+  if(!rst_n)begin ln_load_v_q<=16'd0;ln_add_read_q<=16'd0;ln_pub_read_q<=16'd0;ln_add_issue_q<=16'd0;lmut_lv_d<=1'b0;end
+  else begin
+   ln_load_v_q<={16{load_v}};ln_add_read_q<={16{add_read}};ln_pub_read_q<={16{pub_read}};
+   ln_add_issue_q<={16{add_issue}};lmut_lv_d<=load_v;
+   if(LMUT==2) ln_load_v_q[3]<=lmut_lv_d;
+   if(LMUT==4) ln_add_issue_q[12]<=1'b0;
+  end
+ always @(posedge clk_control)begin
+  ln_load_tag_q<={16{load_tag}};ln_pub_tag_a_q<={16{pub_tag_a}};ln_pub_tag_b_q<={16{pub_tag_b}};
+  ln_read_tag_q<={16{read_tag}};
+  if(LMUT==1) ln_pub_tag_a_q[4*8+:4]<=pub_tag_b;
+  if(LMUT==3 && !add_read) ln_read_tag_q[4*5+:4]<=ln_read_tag_q[4*5+:4];
+ end
+ ot_hgi_coll_reduce_static_lr #(.MUT_TAG(MUT_TAG),.MUT_BF16(MUT_BF16),.LOCAL_CTRL(LOCAL_CTRL)) u_red(
+  .ln_load_v(ln_load_v_q),.ln_add_read(ln_add_read_q),.ln_pub_read(ln_pub_read_q),.ln_add_issue(ln_add_issue_q),
+  .ln_load_tag(ln_load_tag_q),.ln_read_tag(ln_read_tag_q),.ln_pub_tag_a(ln_pub_tag_a_q),.ln_pub_tag_b(ln_pub_tag_b_q),
+  .clk_control(clk_control),.clk_state(clk_state),.clk_add(clk_add),.rst_n(rst_n),.clear(clear_q),.in_v(in_v_q),
+  .in_flit((MUT==1)?in_flit:in_flit_q),.load_v(load_v_q),.load_tag(load_tag_q),.add_read(add_read_q),.read_tag(read_tag_q),
+  .add_issue(add_issue_q),.pub_read(pub_read_q),.pub_tag_a(pub_tag_a_q),.pub_tag_b(pub_tag_b_q),.pub_bf16(pub_bf16_q),
+  .pub_meta(pub_meta_q),.pub_release(pub_release_q),.pub_issue(pub_issue_q),
+  .out_v(out_v),.out_flit(out_flit),.fault(f_c),.fault_cause(fault_cause));
+`else
  ot_hgi_coll_reduce_static #(.MUT_TAG(MUT_TAG),.MUT_BF16(MUT_BF16),.LOCAL_CTRL(LOCAL_CTRL)) u_red(
   .clk_control(clk_control),.clk_state(clk_state),.clk_add(clk_add),.rst_n(rst_n),.clear(clear_q),.in_v(in_v_q),
   .in_flit((MUT==1)?in_flit:in_flit_q),.load_v(load_v_q),.load_tag(load_tag_q),.add_read(add_read_q),.read_tag(read_tag_q),
   .add_issue(add_issue_q),.pub_read(pub_read_q),.pub_tag_a(pub_tag_a_q),.pub_tag_b(pub_tag_b_q),.pub_bf16(pub_bf16_q),
   .pub_meta(pub_meta_q),.pub_release(pub_release_q),.pub_issue(pub_issue_q),
   .out_v(out_v),.out_flit(out_flit),.fault(f_c),.fault_cause(fault_cause));
+`endif
  if(MUT==2)begin:g_fmut assign fault=f_c; end
  else begin:g_freg reg f_q; always @(posedge clk_control or negedge rst_n) if(!rst_n) f_q<=1'b0; else f_q<=f_c; assign fault=f_q; end
 endmodule

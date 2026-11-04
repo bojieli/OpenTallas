@@ -686,6 +686,25 @@
   "read_at_commit": true,
   "asbuilt_inst": "xq_NW_p0_bfq0"
  },
+ "ot_hgi_sm_xload_cl2_bfqg__cut1": {
+  "top": "ot_hgi_sm_xload_cl2_bfqg",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {
+   "RPR": 16
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance xq_NW_p0_bfq0 (module ot_hgi_sm_xload_cl2_bfqg); files = closure of ot_hgi_sm_xload_cl2_bfqg at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": false,
+  "asbuilt_inst": "xq_NW_p0_bfq0",
+  "cut": "DIE-HBM-61/CUTS 11-03 RF1 cut (census 710 ps g_t[*].rp_sel -> 256 cap ANDs): RPR 16 kept rp_sel copies per tile (16 bits each); 0 added cycles, every port edge unchanged (cycles/cuts_rdbf.tsv); files from the tree (tree file == d34578d6f + the opt-in RPR param, default 1 unchanged); EQ results/hbm_cuts_1103/bfqg/"
+ },
  "ot_hbm_sm_vm_wr_q_t_lanes4": {
   "top": "ot_hbm_sm_vm_wr_q_t_lanes4",
   "files": [
@@ -1849,6 +1868,34 @@
    "72041fe1902610536dde7a09cf1f5109f2afe59dea0e89dfc2468acfcef2a8b0": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv",
    "82f225ece4b9fefd3296ff2fba2b487a203218fd79ec389c1505c5e701b9a066": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce__in512.sv"
   }
+ },
+ "ot_hfd_coll_q2_hard_v8g__reduce__cut1": {
+  "defines": [
+   "OT_HBM_REDUCE_LREP",
+   "OT_HBM_REDUCE_LOCAL_CTRL"
+  ],
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static_lr.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static_pr.sv",
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv"
+  ],
+  "functional_type": "coll_q2_reduce",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hfd_coll_q2_reduce_core ports; cut pin -> canonical map in canonical_ports_split.json types.coll_q2_reduce.type_ids[\"ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28\"]",
+  "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_reduce = ot_hgi_coll_reduce_static_pr (HBM-P5 twin: input pin register on every data/control input + fault register); pub_meta[32:24] tied 9'h1ff inside as the master | Common-root plan wiring selected only by exact pin-table SHA; native clocks share clk, other data/reset terminals unchanged.",
+  "top": "ot_hfd_coll_q2_reduce_core",
+  "wrapper_by_pins_sha256": {
+   "07982cfbef37edd49280a29e1b6e3963e734969a260e057a2f4bb3c728253534": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv",
+   "72041fe1902610536dde7a09cf1f5109f2afe59dea0e89dfc2468acfcef2a8b0": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv",
+   "82f225ece4b9fefd3296ff2fba2b487a203218fd79ec389c1505c5e701b9a066": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce__in512.sv"
+  },
+  "cut": "DIE-HBM-61/CUTS 11-03 RF1 cut (census 766 ps pub_tag_a_q -> 16 lanes 16:1 state read mux): define OT_HBM_REDUCE_LREP = per-lane kept copies of the lane control pin registers (ot_hgi_coll_reduce_static_lr) + OT_HBM_REDUCE_LOCAL_CTRL (existing per-lane wb/tag copies); 0 added cycles, every port edge unchanged (physical/die_plan/hbm/reform_1103/cycles/cuts_rdbf.tsv); EQ results/hbm_cuts_1103/q2_reduce/; same wrapper/pins"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp0_id": {
   "defines": [],
