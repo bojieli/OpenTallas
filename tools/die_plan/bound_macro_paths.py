@@ -36,21 +36,42 @@ def _macro_entries(t):
     return cores + [c for c in t.get("contents", []) or [] if c.get("lef") and c["inst"] not in names]
 
 
+_INSTANCE = re.compile(r"(?m)^[ \t]+([A-Za-z_]\w*)(?:[ \t]*#\(.*?\))?[ \t]+([A-Za-z_]\w*)[ \t]*\(", re.S)
+_NOT_MODULE = {"module", "input", "output", "inout", "wire", "logic", "assign", "if", "for", "case", "always", "function"}
+
+
+def _flat_rows(todo, bound_text):
+    """KW6-CLASS 11-04 (QC *_su_* macro_instances): a dotless plan macro is a direct child of the bound module, named
+    <inst> (u_lane0) or u_<inst> (plan u_suvm_u_vm8q_u_bt, bound u_u_suvm_u_vm8q_u_bt).  Mapped only when exactly one
+    such instance has the plan's module; anything else keeps its plan name, so the preflight still reports it."""
+    insts = {}
+    for m in _INSTANCE.finditer(bound_text):
+        if m.group(1) not in _NOT_MODULE:
+            insts.setdefault(m.group(2), set()).add(m.group(1))
+    rows = []
+    for c in todo:
+        hits = [n for n in (c["inst"], "u_" + c["inst"]) if c.get("module") in insts.get(n, ())]
+        if len(hits) == 1:
+            rows.append(dict(inst=c["inst"], physical_inst="u_bound." + hits[0], physical_master=c["module"], asbuilt=""))
+    return rows
+
+
 def resolve(t, bound_text):
     """[{inst, physical_inst, physical_master, asbuilt}] for the plan type t's placed macros that carry no physical
     identity and whose plan path maps to the bound netlist.  A content root (plan content inst -> as-built prefix) is
     accepted only when every mapped macro under it agrees on one prefix."""
+    free = [c for c in _macro_entries(t)
+            if "physical_inst" not in c and "physical_master" not in c and not c["inst"].startswith("u_bound.")]
+    flat = _flat_rows([c for c in free if "." not in c["inst"]], bound_text)
     ab = asbuilt_map(bound_text)
     if not ab:
-        return []
-    todo = [c for c in _macro_entries(t)
-            if "physical_inst" not in c and "physical_master" not in c and not c["inst"].startswith("u_bound.")
-            and "." in c["inst"]]
+        return flat
+    todo = [c for c in free if "." in c["inst"]]
     groups = {}
     for c in todo:
         head, rest = c["inst"].split(".", 1)
         groups.setdefault(head, []).append((c, rest.split(".")))
-    rows = []
+    rows = flat
     for head, members in sorted(groups.items()):
         # prefix candidates per macro: an as-built path ending in a leading run of its plan components below the root
         common = None

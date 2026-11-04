@@ -43,6 +43,38 @@ def _core(inst, module, **kw):
     return dict(inst=inst, module=module, lef=f"v/{module}.lef", origin_um=[1.0, 2.0], outline_um=[3.0, 4.0], **kw)
 
 
+def test_dotless_direct_child_of_the_bound_module():
+    # QC sle_su_l0 / sle_su_c (KW6-CLASS 11-04)
+    bound = """module b (input wire clk);
+    qfd_qc_su_lane_w_l0 u_lane0 (.clk(clk), .c_i({a, b}));
+    qfd_dv_s8x_btab u_u_suvm_u_vm8q_u_bt (
+        .ck(clk)
+    );
+    other_rp2 u_u_t_0_0 (.ck(clk));
+    two u_two (.ck(clk));
+    two u_u_two (.ck(clk));
+endmodule
+"""
+    t = dict(hard_cores=[_core("u_lane0", "qfd_qc_su_lane_w_l0"), _core("u_suvm_u_vm8q_u_bt", "qfd_dv_s8x_btab"),
+                         _core("u_t00", "qfd_tile_nk_a0c"),            # no such child: stays, preflight reports it
+                         _core("u_t_0_0", "qfd_tile_nk_a0c"),          # that name, another module: stays
+                         _core("u_two", "two")])                       # two candidates: stays
+    rows = {r["inst"]: r["physical_inst"] for r in BMP.resolve(t, bound)}
+    assert rows == {"u_lane0": "u_bound.u_lane0", "u_suvm_u_vm8q_u_bt": "u_bound.u_u_suvm_u_vm8q_u_bt"}
+
+
+def test_dotless_with_parameters_and_project_receipt_row():
+    bound = """module b (input wire clk);
+    // as-built root.u_r0.u_a
+    amod u_u_r0_u_a (.ck(clk));
+    pmod #(.W(4)) u_p (.ck(clk));
+endmodule
+"""
+    t = dict(hard_cores=[_core("u_p", "pmod"), _core("u_r0.u_a", "amod")])
+    rows = {r["inst"]: r["physical_inst"] for r in BMP.resolve(t, bound)}
+    assert rows == {"u_p": "u_bound.u_p", "u_r0.u_a": "u_bound.u_u_r0_u_a"}
+
+
 def test_col_flat_nested_and_mismatch():
     t = dict(contents=[dict(inst="u_r0", module="col_r0")],
              hard_cores=[_core("u_r0.u_bn0", "dsfd_qbank_N"), _core("u_r0.u_e1e.u_view", "ot_v41_bf_col"),
