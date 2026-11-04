@@ -254,6 +254,17 @@ def io_tcl(pins, w, h, tag, clock_entry=None):
                              entry=[cx, cy]))
             continue
         f = face_of(p["x"], p["y"], w, h)
+        if clock_entry and p["layer"] == "M5" and f in "EW" and p.get("w") is None:
+            # DIE-HBM-62/FLOW class M5-EW-PIN (hnx_vms_bank_q0_faces v796f rst_n: DRT-0422/DRT-0074 no access point): M5
+            # tracks are vertical, so a face stub along x on an E/W face has no track through it.  Same y and face as the
+            # plan, in the proven on-track entry form that clock pins already use on those faces.
+            cx, cy, (sx, sy), f2 = clock_entry_pin(p, w, h, clock_entry["m5"])
+            out.append(f"place_pin -pin_name {{{p['name']}}} -layer M5 -location {{{cx:.4f} {cy:.4f}}} "
+                       f"-pin_size {{{sx:.4f} {sy:.4f}}}")
+            b, i = split_name(p["name"])
+            rows.append(dict(bus=b, bit=i, layer="M5", x=round(w if f == "E" else 0.0, 4), y=round(cy, 4), face=f, w=sx,
+                             h=sy, entry=[cx, cy]))
+            continue
         lw = LAYER_W.get(p["layer"], 0.04)
         # DIE-HBM-10 C25a (opt-in): a plan pin record with explicit w (across the face) and h (into the core) keeps that
         # size, e.g. the clock-class pins at M5 0.048 x 0.48 (GEOM-21 / KIT_PREFLIGHT clock_pin_geometry); records
