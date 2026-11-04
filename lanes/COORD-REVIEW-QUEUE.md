@@ -11401,3 +11401,4 @@ Elapsed time: 35:32.93[h:]min:sec. CPU time: user 4562.09 sys 14.40 (214%). Peak
   - EQ PASS on the reduced 2-tile chain KMAX=128: full128 256/256 words (shift 28), part44 88/88. Mutants FAIL 3/3 (262/242/259).
   - Runs: 4 ot-run jobs, --mem 60, epyc2. Evidence: bench/tkm_idpin/evidence/verdict_epyc2_kmax128.txt.
   - Every split EQ is now done (hcol_h0, split3, lanes8_11, fused_lane, rp3lp3h n/s, q3_edge, tkm) except q3_body.
+- 2026-11-03 17:55 PST [PRUNE-1103E] RESULT intel2 252->191 GB free (95%; ~25 GB freed, concurrent writers ate more; rules leave little: kit-wave/.keep, most big dirs signed/recent/referenced), intel1 242->312 GB free (92%), 17 dirs (+1 partial, root-owned), manifest /home/ubuntu/.claude/jobs/b7f906df/tmp/prune-1103E-manifest.tsv; blocked big clean-but-referenced: intel2 qc-kits-aa/gen 51G, codex-qc-kits-0336 30G, die-qc-58a 18G; needs COORD call to reach <85%
