@@ -369,6 +369,235 @@ def test_dry_launches_nothing(ap, tmp_path, monkeypatch):
     assert not ap.launched
 
 
+# ---------------------------------------------------------------- near-miss late-ECO (item 2)
+def eco_kit(root, tt=5.0, ff=-1.5, drc=0, fails=("hold_ff",), name="dp_x"):
+    kit = make_kit(root, name=name, verdict="NOT SIGNED")
+    p = kit / "signoff" / "signoff.json"
+    d = json.loads(p.read_text())
+    d["local_verdict"] = "NOT SIGNED"
+    d["checks"] = {"setup_tt": {"wns_ps": tt, "verdict": "FAIL" if "setup_tt" in fails else "PASS"},
+                   "hold_ff": {"wns_ps": ff, "verdict": "FAIL" if "hold_ff" in fails else "PASS"},
+                   "drc": {"count": drc, "verdict": "FAIL" if "drc" in fails else "PASS"}}
+    for f in fails:
+        d["checks"].setdefault(f, {"verdict": "FAIL"})
+    p.write_text(json.dumps(d))
+    return kit
+
+
+def test_near_miss_enters_the_loop_once(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    it = only_item(ap)
+    assert it["status"] == "ECO"
+    argv = ap.launched[0][1]
+    i = argv.index("--")
+    assert argv[i + 3].endswith("/tools/die_plan/eco_loop.py") and argv[i + 4] == "run" and "--crit" in argv
+    assert "--hold-margin" not in argv and "--max-iter" not in argv     # the tool's own limits
+    AR.step(ap)
+    assert len(ap.launched) == 1
+
+
+@pytest.mark.parametrize("kw,word", [(dict(tt=-40.0, fails=("setup_tt",)), "bound"), (dict(ff=-31.0), "bound"), (dict(drc=51, fails=("drc",)), "bound"),
+                                     (dict(fails=("hold_ff", "clock")), "ECO class"), (dict(fails=("antenna",)), "ECO class")])
+def test_outside_the_approved_class_is_not_touched(ap, tmp_path, monkeypatch, kw, word):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path, **kw))
+    AR.step(ap)
+    assert only_item(ap)["status"] == "SKIP" and word in only_item(ap)["why"] and not ap.launched
+
+
+def test_held_design_gets_no_eco(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path, name="dp_kv_astk_a"), name="kv_astk_a")
+    AR.step(ap)
+    assert "HELD" in only_item(ap)["why"] and not ap.launched
+
+
+def _hand_loop(kit, base, best=None, loop_kit=None):
+    """kit is the best iteration of a finished hand loop ROOT/iN"""
+    rec = kit / "signoff" / "signoff.json"
+    best = best or json.loads(rec.read_text())
+    (kit.parent / "eco_loop.json").write_text(json.dumps(dict(verdict="EXHAUSTED", kit=str(loop_kit or "/none/k"),
+                                                              base_metrics=base, best=dict(signoff=str(rec), metrics=best))))
+
+
+NEAR = dict(tt=5.0, ff=-1.5, drv=0, drc=0, fails=["hold_ff"])
+
+
+@pytest.mark.parametrize("base,best,launch,word", [
+    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR, True, "second loop"),                                   # the rule
+    (dict(tt=5.0, ff=0.0, drv=9, drc=0), dict(tt=5.0, ff=0.0, drv=3, drc=0, fails=["drv"]), True, "second loop"),      # DRV-only
+    (dict(tt=None, ff=None, drv=9, drc=0), dict(tt=None, ff=None, drv=3, drc=0, fails=["drv"]), True, "second loop"),  # DRV-only, no timing read
+    (dict(tt=5.0, ff=-1.5, drv=0, drc=0), NEAR, False, "did not improve"),
+    (dict(tt=5.0, ff=-0.5, drv=0, drc=0), NEAR, False, "did not improve"),
+    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), dict(tt=5.0, ff=-5.5, drv=0, drc=0, fails=["hold_ff"]), False, "outside"),
+    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), dict(tt=5.0, ff=-5.5, drv=2, drc=0, fails=["hold_ff", "drv"]), False, "outside"),
+])
+def test_second_loop_rule_on_a_hand_loop(ap, tmp_path, monkeypatch, base, best, launch, word):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path)
+    _hand_loop(kit, base, best)
+    register(ap, kit)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    it = only_item(ap)
+    assert it["status"] == ("ECO" if launch else "LANE") and word in it["why"] and bool(ap.launched) == launch
+    if not launch:
+        assert any(word in x for x in ap.lines)
+
+
+def test_no_third_loop_after_a_chained_hand_loop(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    first = tmp_path / "first" / "i3"
+    first.mkdir(parents=True)
+    (first.parent / "eco_loop.json").write_text("{}")
+    kit = eco_kit(tmp_path)
+    _hand_loop(kit, dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR, loop_kit=first)
+    register(ap, kit)
+    AR.step(ap)
+    assert only_item(ap)["status"] == "LANE" and "no third" in only_item(ap)["why"] and not ap.launched
+
+
+def test_loop_that_started_from_this_db_goes_on_from_its_best(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path)
+    odb = next(kit.rglob("6_final.odb"))
+    (tmp_path / "it2").mkdir()
+    best = eco_kit(tmp_path / "it2", ff=-0.5)
+    rec = best / "signoff" / "signoff.json"
+    (kit / "eco_1").mkdir()
+    (kit / "eco_1" / "eco_loop.json").write_text(json.dumps(dict(kit=str(kit), base_routed_db=str(odb), base_metrics=dict(tt=5.0, ff=-1.5, drv=0, drc=0),
+                                                                 best=dict(signoff=str(rec), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0, fails=["hold_ff"])))))
+    register(ap, kit)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    assert only_item(ap)["status"] == "ECO"
+    argv = ap.launched[0][1]
+    assert argv[argv.index("--signoff") + 1] == str(rec) and argv[argv.index("--kit") + 1] == json.loads(rec.read_text())["inputs"]["kit"]
+
+
+@pytest.mark.parametrize("how", ["empty", "garbled"])
+def test_unreadable_loop_stays_for_a_lane(ap, tmp_path, monkeypatch, how):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path)
+    (kit.parent / "eco_loop.json").write_text("{}" if how == "empty" else "{not json")
+    register(ap, kit)
+    AR.step(ap)
+    assert only_item(ap)["status"] == "LANE" and "not readable" in only_item(ap)["why"] and not ap.launched
+
+
+def test_held_design_gets_no_second_loop(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path, name="dp_kv_astk_a")
+    _hand_loop(kit, dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR)
+    register(ap, kit, name="kv_astk_a")
+    AR.step(ap)
+    assert "HELD" in only_item(ap)["why"] and not ap.launched
+
+
+def test_own_loop_gets_one_second_loop_then_stops(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path, ff=-9.0))
+    AR.step(ap)
+    assert len(ap.launched) == 1
+    out1 = tmp_path / "loop1"
+    (out1).mkdir()
+    i1 = eco_kit(out1, ff=-1.5)
+    next(i1.rglob("6_final.odb")).write_bytes(b"odb after loop 1")
+    (i1.parent / "eco_loop.json").write_text(json.dumps(dict(kit="/none/k", base_metrics=dict(tt=5.0, ff=-9.0, drv=0, drc=0),
+                                                             best=dict(signoff=str(i1 / "signoff" / "signoff.json"), metrics=NEAR))))
+    _eco_result(ap, dict(verdict="EXHAUSTED", reason="no gain", best_signoff=str(i1 / "signoff" / "signoff.json"), best_dir=str(i1), metrics=dict(tt=5.0, ff=-1.5, drv=0, drc=0)))
+    AR.step(ap)                                      # poll reads the result, the same tick goes on
+    assert len(ap.launched) == 2 and only_item(ap)["status"] == "ECO"
+    argv = ap.launched[1][1]
+    assert argv[argv.index("--signoff") + 1] == str(i1 / "signoff" / "signoff.json")
+    assert argv[argv.index("--out") + 1] != ap.launched[0][1][ap.launched[0][1].index("--out") + 1]
+    out2 = tmp_path / "loop2"
+    out2.mkdir()
+    i2 = eco_kit(out2, ff=-0.5)
+    next(i2.rglob("6_final.odb")).write_bytes(b"odb after loop 2")
+    (i2.parent / "eco_loop.json").write_text(json.dumps(dict(kit=str(i1), base_metrics=NEAR,
+                                                             best=dict(signoff=str(i2 / "signoff" / "signoff.json"), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0, fails=["hold_ff"])))))
+    _eco_result(ap, dict(verdict="EXHAUSTED", reason="no gain", best_signoff=str(i2 / "signoff" / "signoff.json"), best_dir=str(i2), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0)))
+    AR.step(ap)
+    assert len(ap.launched) == 2 and only_item(ap)["status"] == "LANE" and "no third" in only_item(ap)["why"]
+    assert any("no third" in x for x in ap.lines)
+
+
+def _eco_result(ap, r):
+    orig = ap.rpy
+
+    def rpy(host, code, args, timeout=600):
+        return r if code == AR.PROBE_ECO_RESULT else orig(host, code, args, timeout)
+    ap.rpy = rpy
+
+
+def test_pass_goes_to_the_re_sign_on_the_best_dir(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    AR.step(ap)
+    (tmp_path / "root").mkdir()
+    best = make_kit(tmp_path / "root")
+    _eco_result(ap, dict(verdict="PASS", best_dir=str(best), best_signoff=str(best / "signoff" / "signoff.json"), metrics=dict(tt=5, ff=0.1, drv=0, drc=0)))
+    AR.step(ap)
+    assert only_item(ap)["status"] == "RUNNING"
+    argv = ap.launched[-1][1]
+    assert "--auto" in argv and argv[argv.index("--routed-db") + 1].startswith(str(best))
+
+
+def test_loop_with_no_best_record_stays_for_a_lane(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    AR.step(ap)
+    _eco_result(ap, dict(verdict="EXHAUSTED", reason="no gain", metrics=dict(tt=5, ff=-0.1, drv=0, drc=0)))
+    AR.step(ap)
+    n = len(ap.launched)
+    AR.step(ap)
+    assert only_item(ap)["status"] == "LANE" and "no best record" in only_item(ap)["why"] and len(ap.launched) == n == 1
+    assert any("EXHAUSTED" in x for x in ap.lines)
+
+
+def test_eco_oom_relaunches_once_at_more_memory(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    AR.step(ap)
+    _eco_result(ap, dict(verdict="ECO_OOM", metrics={}))
+    AR.step(ap)
+    assert len(ap.launched) == 2
+    assert ap.launched[1][1][ap.launched[1][1].index("--mem") + 1] == "96" and ap.launched[1][1][ap.launched[1][1].index("--out") + 1].endswith("_a2")
+    AR.step(ap)
+    assert len(ap.launched) == 2 and only_item(ap)["status"] == "LANE"
+
+
+def test_eco_cap(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    monkeypatch.setattr(AR, "MAX_LAUNCH_PER_TICK", 99)
+    rows = ""
+    for i in range(AR.MAX_ECO_INFLIGHT + 2):
+        (tmp_path / str(i)).mkdir()
+        eco_kit(tmp_path / str(i), name="dp_x%d" % i)
+        rows += "%s\tx%d\th\t%s/%d/kit\t-\tL\tn\n" % (DIE, i, tmp_path, i)
+    (ap.coord / AR.REGISTRY).write_text(rows)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    assert len(ap.launched) == AR.MAX_ECO_INFLIGHT
+
+
 def test_hub_kit_uses_the_name_ot_run_knows(ap, tmp_path, monkeypatch):
     roots_ok(monkeypatch, tmp_path)
     ap.ssh_host = lambda h: "localhost" if h == "intel2" else h
@@ -389,3 +618,199 @@ def test_stage_tools_leaves_a_ready_export_alone(ap, monkeypatch):
     d, err = AR.stage_tools(ap, "h1", "/r", "flow-20261104-h-kv", {})
     assert d == "/r/claude/auto-resign/tools/flow-20261104-h-kv" and not err
     assert len(calls) == 1 and "test -f" in calls[0][-1]
+
+
+# ---------------------------------------------------------------- one row's error never ends the pass (ROOT-MERGE-30 07:05)
+def rows(ap, tmp_path, *names, kit=make_kit):
+    text = "# die name host dir build lane note\n"
+    for n in names:
+        (tmp_path / n).mkdir()
+        text += "%s\t%s\th1\t%s\t-\tDIE-KV\tpilot\n" % (DIE, n, kit(tmp_path / n, name="dp_" + n))
+    (ap.coord / AR.REGISTRY).write_text(text)
+
+
+def items_by_name(ap):
+    return {it["name"]: it for it in AR.load_state(ap.apd)["items"].values()}
+
+
+def raising_for(ap, name, code=None):
+    """the host probe raises for one row until the returned switch is cleared"""
+    orig, on = ap.rpy, {"on": True}
+
+    def rpy(host, c, args, timeout=600):
+        if on["on"] and "/%s/" % name in json.dumps(args) + "/" and (code is None or c == code):
+            raise ValueError("injected on " + name)
+        return orig(host, c, args, timeout)
+    ap.rpy = rpy
+    return on
+
+
+def logged(ap):
+    got = []
+    ap.log = got.append
+    return got
+
+
+def test_raise_after_a_launch_loses_nothing_and_the_pass_goes_on(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    rows(ap, tmp_path, "a", "b", "c")
+    on, log = raising_for(ap, "b"), logged(ap)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    it = items_by_name(ap)
+    assert it["a"]["status"] == "RUNNING" and it["c"]["status"] == "RUNNING" and it["b"]["status"] == "NEW" and "attempt" not in it["b"]
+    assert len(ap.launched) == 2 and any("ROW-SKIP" in x and "/b:" in x and "ValueError" in x for x in log)
+    on["on"] = False                                 # next pass takes b, and only b
+    AR.step(ap)
+    assert [u for u, _ in ap.launched].count(it["a"]["unit"]) == 1 and len(ap.launched) == 3
+    assert items_by_name(ap)["b"]["status"] == "RUNNING"
+
+
+def test_launched_row_is_on_disk_before_the_next_row(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    rows(ap, tmp_path, "a", "b")
+    seen = []
+    launched = ap.launch_unit
+
+    def launch_unit(unit, log, argv):
+        seen.append({k["name"]: k["status"] for k in AR.load_state(ap.apd)["items"].values()})
+        return launched(unit, log, argv)
+    ap.launch_unit = launch_unit
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    assert len(seen) == 2 and seen[1]["a"] == "RUNNING"
+
+
+def test_kill_mid_pass_keeps_the_launched_row(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    rows(ap, tmp_path, "a", "b")
+    orig = ap.rpy
+
+    def rpy(host, c, args, timeout=600):
+        if "/b/" in json.dumps(args):
+            raise KeyboardInterrupt()                # not an Exception: the row guard lets it through
+        return orig(host, c, args, timeout)
+    ap.rpy = rpy
+    ap.unit_active = lambda u: True
+    with pytest.raises(KeyboardInterrupt):
+        AR.step(ap)
+    assert items_by_name(ap)["a"]["status"] == "RUNNING"
+
+
+def test_raise_after_the_unit_started_keeps_the_row_on_record(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    rows(ap, tmp_path, "a", "b")
+    orig = ap.log
+
+    def log(m):
+        if "LAUNCH" in m and "/a " in m:
+            raise OSError("log disk full")
+        orig(m)
+    ap.log = log
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    it = items_by_name(ap)
+    assert it["a"]["status"] == "RUNNING" and it["a"]["attempt"] == 1 and it["b"]["status"] == "RUNNING"
+    AR.step(ap)
+    assert len(ap.launched) == 2
+
+
+def test_raise_after_an_eco_launch_loses_nothing(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    rows(ap, tmp_path, "a", "b", kit=eco_kit)
+    raising_for(ap, "b")
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    it = items_by_name(ap)
+    assert it["a"]["status"] == "ECO" and it["a"]["eco_unit"] and it["b"]["status"] == "NEW" and len(ap.launched) == 1
+
+
+def test_poll_row_raise_leaves_it_running_and_keeps_the_others(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    rows(ap, tmp_path, "a", "b")
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    st = AR.load_state(ap.apd)
+    names = {it["name"]: it for it in st["items"].values()}
+    orig, log = ap.rpy, logged(ap)
+    on = {"on": True}
+
+    def rpy(host, c, args, timeout=600):
+        if c == AR.PROBE_RESULT:
+            if on["on"] and args["out"] == names["b"]["out"]:
+                raise ValueError("injected")
+            return dict(signoff=dict(verdict="SIGNED", tt=1, ff=1), lec=dict(verdict="EQUIVALENT"), provenance=True)
+        return orig(host, c, args, timeout)
+    ap.rpy = rpy
+    monkeypatch.setattr(AR, "classify", lambda client, res, tag: ("RECORDED", ""))
+    ap.unit_active = lambda u: False
+    AR.step(ap)
+    it = items_by_name(ap)
+    assert it["a"]["status"] == "RECORDED" and it["b"]["status"] == "RUNNING"
+    assert any("/a RECORDED" in x for x in ap.lines) and not any("/b RECORDED" in x for x in ap.lines)
+    assert any("ROW-SKIP" in x and "/b:" in x for x in log)
+    on["on"] = False
+    AR.step(ap)
+    assert items_by_name(ap)["b"]["status"] == "RECORDED"
+
+
+def test_poll_row_raise_after_changes_restores_the_row(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    rows(ap, tmp_path, "a")
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    orig = ap.rpy
+    ap.rpy = lambda host, c, args, timeout=600: dict(signoff={}, lec={}) if c == AR.PROBE_RESULT else orig(host, c, args, timeout)
+    monkeypatch.setattr(AR, "classify", lambda client, res, tag: ("RECORDED", ""))
+    ap.unit_active = lambda u: False
+
+    def boom(*a):
+        raise OSError("tsv")
+    ap.tsv_append = boom
+    n = len(ap.launched)
+    AR.step(ap)
+    assert items_by_name(ap)["a"]["status"] == "RUNNING" and "finished" not in items_by_name(ap)["a"]
+    assert not any("RECORDED" in x for x in ap.lines) and len(ap.launched) == n
+
+
+def test_poll_eco_row_raise_leaves_it_on_eco_and_keeps_the_others(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    rows(ap, tmp_path, "a", "b", kit=eco_kit)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    names = items_by_name(ap)
+    assert names["a"]["status"] == names["b"]["status"] == "ECO"
+    orig, log = ap.rpy, logged(ap)
+
+    def rpy(host, c, args, timeout=600):
+        if c == AR.PROBE_ECO_RESULT:
+            if args["out"] == names["b"]["eco_out"]:
+                raise ValueError("injected")
+            return dict(verdict="NOT_ELIGIBLE", reason="r", metrics={})
+        return orig(host, c, args, timeout)
+    ap.rpy = rpy
+    ap.unit_active = lambda u: False
+    AR.step(ap)
+    it = items_by_name(ap)
+    assert it["a"]["status"] == "LANE" and it["b"]["status"] == "ECO" and any("ROW-SKIP" in x for x in log)
+    assert any("/a late-ECO" in x for x in ap.lines)
+
+
+def test_raise_outside_the_rows_saves_state_and_notices(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    rows(ap, tmp_path, "a")
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    orig = ap.rpy
+    ap.rpy = lambda host, c, args, timeout=600: dict(signoff={}, lec={}) if c == AR.PROBE_RESULT else orig(host, c, args, timeout)
+    monkeypatch.setattr(AR, "classify", lambda client, res, tag: ("RECORDED", ""))
+    ap.unit_active = lambda u: False
+
+    def boom(*a):
+        raise ValueError("candidates")
+    monkeypatch.setattr(AR, "candidates", boom)
+    with pytest.raises(ValueError):                  # the tick hook logs this one
+        AR.step(ap)
+    assert only_item(ap)["status"] == "RECORDED" and any("RECORDED" in x for x in ap.lines)
