@@ -11775,3 +11775,4 @@ READY [DIE-HBM-61/LEC -> ROOT-MERGE-27, COORD, KW-FIX-4, DIE-HBM-61] claude/die-
     - l4 302.4x108 at (950.4, 233.28); core tap moved with it.
     - The grid+explicit light tap clk_t50 was inside the new core box; moved to the l4/l1 street (1049.32, 360.72).
     - schema.validate PASS (0 errors).
+- [11-03 19:49] DIE-QC-66 HOST: intel2 /srv/opentallas-scratch2 is 100% full (5.1 GB free) and ot-run refuses new work there. QC lanes on it use only ~2.8 GB (die-qc-66-*, dq66-*). The large dirs belong to other lanes, so the owners need to prune; I am not touching foreign dirs. Separately, NL v2 GRT failed with 27 overflow (M6 13); it resumes once with allow-congestion -> DRT, as an understood near miss.
