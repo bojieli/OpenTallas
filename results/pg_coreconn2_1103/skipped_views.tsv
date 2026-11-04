@@ -1,0 +1,8 @@
+view	class	placed_uses	types	VDD_layers	VSS_layers	OBS_layers	proof
+physical/die_plan/s81/cores/elem_boundary/ot_v41_rom_elem_q_qxpq_w10_gb.lef	buried	104	26	M1,M2,M6,M7	M1,M2,M6,M7	M1,M2,M3,M4,M5,M6,M7	PG landing M6->M7 but OBS on M7; not a pgobs stub (full routed abstract); PG also on ['M1', 'M2', 'M6', 'M7']
+physical/die_plan/s81/cores/legacy/lef/ot_v41_bf_col.lef	no_pg	56	26	M7	M7	M1,M2,M3,M4,M5,M6,M7	PIN present={'VDD': True, 'VSS': True}, no PORT geometry on M4/M5/M6
+physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef	no_pg	16	16	M7	M7	M1,M2,M3,M4,M5,M6,M7	PIN present={'VDD': True, 'VSS': True}, no PORT geometry on M4/M5/M6
+physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef	no_pg	4	1	M7	M7	M1,M2,M3,M4,M5,M6,M7	PIN present={'VDD': True, 'VSS': True}, no PORT geometry on M4/M5/M6
+physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h0.lef	no_pg	1	1	-	-	M1,M2,M3,M4,M5	no PIN VDD/VSS in LEF
+physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h1.lef	no_pg	1	1	-	-	M1,M2,M3,M4,M5	no PIN VDD/VSS in LEF
+physical/die_plan/s81/cores/legacy/lef/dsdv_eng_rr_e_clkm5_1101.lef	no_pg	1	1	-	-	M1,M2,M3,M4,M5,M6,M7	no PIN VDD/VSS in LEF
