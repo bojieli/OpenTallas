@@ -818,6 +818,13 @@ class Binder:
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
+        if self.ab.get("core_splits"):
+            # DIE-KV-66 RF-KV3 (opt-in): one as-built hard leaf -> two hard leaves, before composition and drivers/loads
+            import bind_core_split
+            try:
+                self.core_split_receipts = bind_core_split.apply(self, self.ab["core_splits"])
+            except ValueError as exc:
+                raise BindError(f"CORE_SPLIT {exc}") from exc
         if self.ab.get("compose"):
             import bind_compose
             bind_compose.apply(self, self.ab["compose"])
