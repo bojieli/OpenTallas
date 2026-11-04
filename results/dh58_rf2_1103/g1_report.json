@@ -1,0 +1,207 @@
+{
+ "schema": "opentallas.head_rf_plan_delta.v1",
+ "tag": "DH58-RF2 l48rf2",
+ "src": "/srv/opentallas-scratch2/claude/dh58/rfplan_work/prepared_l48rf",
+ "src_sha256": "59c391855c182bfc6c9c4cb0d7990903f1025bbdf9400ed1f0a1b72f1d610fb7",
+ "spec": {
+  "tag": "DH58-RF2 l48rf2",
+  "note": "HEAD plan event l48rf2 = l48rf + two RE-FORMs (TWO-STRIKES, safe forms, 0 added cycles, 1.2 GHz kept). (1) hd_ctl_n OT_RESET_TREE LEAF FAIL (w3d ft station epoch flops s2/s3 488.97/485.73 um from the nearest terminal) -> one reset.local_taps_um terminal at the free interior point that covers the whole outline (plan-time interior worst 660.8 -> 379.3 um < 405). (2) class PLAIN-FT-FACE: every HEAD sign-off failure on a plain ft input (hd_spn_eshim_tx link_i TT -63.34 / FF hold -36.88, hd_ctl_e n_tx_ft_i TT -28.99 / FF hold -24.30, hd_spn_wshim_tx link_i TT -64.99 / FF -113.28 / FF hold -48.14, hd_host_n h_rx_ft_i TT -25.70 / FF -94.35 / FF hold -75.50) is the port -> station-0 face register path (zero logic): the ft hop input max (1 - 0.16) T leaves ~130 ps for the hold pads that in_min -90 requires. Every sender of those lanes is a generated face register (gen_rtl u_bout_<bus>, plain non-ft bus), so the plain-seam input-face class (COORD 11-03 10:49, DIE-S81-51 gen_phys.plain_seam_split, S81 values) applies unscoped: written receiver input max <= 480 ps (raw <= 580), no sender cut (no ft_o sender is all-plain), hold model (seam_ps 90) unchanged.",
+  "reset_local_taps": {
+   "hd_ctl_n": [
+    [
+     535.68,
+     622.08
+    ]
+   ]
+  },
+  "plain_seam_split": {
+   "rx_in_max_ps": 480,
+   "rx_in_raw_max_ps": 580,
+   "note": "DH58-RF2 l48rf2 HEAD class PLAIN-FT-FACE (S81 class values, COORD 11-03 10:49)"
+  }
+ },
+ "grow": {},
+ "channels_clipped": [],
+ "entries": {},
+ "reset_local_taps": {
+  "hd_ctl_n": {
+   "before": 0,
+   "added": [
+    [
+     535.68,
+     622.08
+    ]
+   ]
+  }
+ },
+ "plain_seam_split": {
+  "rx_in_max_ps": 480,
+  "rx_in_raw_max_ps": 580,
+  "note": "DH58-RF2 l48rf2 HEAD class PLAIN-FT-FACE (S81 class values, COORD 11-03 10:49)"
+ },
+ "raw_ref_remap": {
+  "hd_ctl_n": {
+   "nets": 4,
+   "refs": 37,
+   "max_move_um": 0.0,
+   "moves": [
+    {
+     "old": "rst_rl_28",
+     "new": "rst_rl_31",
+     "depth": 2,
+     "move_um": 0.0
+    },
+    {
+     "old": "rst_rl_29",
+     "new": "rst_rl_32",
+     "depth": 3,
+     "move_um": 0.0
+    },
+    {
+     "old": "rst_rl_20",
+     "new": "rst_rl_23",
+     "depth": 3,
+     "move_um": 0.0
+    },
+    {
+     "old": "rst_rl_14",
+     "new": "rst_rl_17",
+     "depth": 3,
+     "move_um": 0.0
+    }
+   ]
+  }
+ },
+ "raw_ref_remap_summary": {
+  "hd_ctl_n": [
+   4,
+   0.0
+  ]
+ },
+ "raw_repoint_summary": {
+  "rows": 0,
+  "max_move_um": 0,
+  "max_abs_depth_delta": 0
+ },
+ "raw_repoint_passes": [
+  {
+   "rows": 4,
+   "max_move_um": 0.0,
+   "max_abs_depth_delta": 0,
+   "raw_repoint": {
+    "hd_ctl_n": [
+     {
+      "port": "rst_start_raw_2",
+      "old": [
+       "u_rrl_13",
+       "rst_rl_13",
+       [
+        304.17920000000004,
+        126.816
+       ],
+       2
+      ],
+      "new": [
+       "u_rrl_16",
+       "rst_rl_16",
+       [
+        304.17920000000004,
+        126.816
+       ],
+       2
+      ],
+      "move_um": 0.0,
+      "depth_delta": 0,
+      "pin_move_um": [
+       0.0,
+       0.0
+      ]
+     },
+     {
+      "port": "rst_start_raw_3",
+      "old": [
+       "u_rrl_16",
+       "rst_rl_16",
+       [
+        986.112,
+        105.248
+       ],
+       1
+      ],
+      "new": [
+       "u_rrl_19",
+       "rst_rl_19",
+       [
+        986.112,
+        105.248
+       ],
+       1
+      ],
+      "move_um": 0.0,
+      "depth_delta": 0,
+      "pin_move_um": [
+       0.0,
+       0.0
+      ]
+     },
+     {
+      "port": "rst_start_raw_4",
+      "old": [
+       "u_rrl_23",
+       "rst_rl_23",
+       [
+        1160.832,
+        8.608
+       ],
+       1
+      ],
+      "new": [
+       "u_rrl_26",
+       "rst_rl_26",
+       [
+        1160.832,
+        8.608
+       ],
+       1
+      ],
+      "move_um": 0.0,
+      "depth_delta": 0,
+      "pin_move_um": [
+       0.0,
+       0.0
+      ]
+     },
+     {
+      "port": "rst_start_raw_5",
+      "old": [
+       "u_rrl_27",
+       "rst_rl_27",
+       [
+        441.19466666666665,
+        8.608
+       ],
+       1
+      ],
+      "new": [
+       "u_rrl_30",
+       "rst_rl_30",
+       [
+        441.19466666666665,
+        8.608
+       ],
+       1
+      ],
+      "move_um": 0.0,
+      "depth_delta": 0,
+      "pin_move_um": [
+       0.0,
+       0.0
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "raw_repoint": {},
+ "out_sha256": "8327f303db76f153f517d8bfc40a7a33c9f0ff276df382953e743f148c57e450"
+}

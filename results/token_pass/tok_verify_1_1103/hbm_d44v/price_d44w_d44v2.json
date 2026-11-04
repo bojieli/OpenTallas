@@ -1,0 +1,113 @@
+{
+ "tool": "reform_rebaseline.py",
+ "die": "hbm",
+ "base": "../hbm_d44v/d44w.json.gz",
+ "batch": "../hbm_d44v/d44v2.json.gz",
+ "delta": {
+  "changed": 20,
+  "added": [],
+  "removed": [],
+  "lane_cycles": 40,
+  "max_inc": 7,
+  "classes": {
+   "L": {
+    "lanes": 20,
+    "sum": 40,
+    "max_inc": 7,
+    "max_lane": "L730",
+    "min": 0
+   }
+  }
+ },
+ "price": {
+  "model": "TOK-13d DS native S2 (price_d44t.py)",
+  "kind": "BOUND (+7 on IDX/SM/COLL/FUSED/SFU)",
+  "T_base": 655471.98,
+  "T_new": 663626.98,
+  "tok_base": 1676.95,
+  "tok_new": 1656.34,
+  "pct": -1.229
+ },
+ "lanes": {
+  "L12": {
+   "old": 13,
+   "new": 14
+  },
+  "L12s": {
+   "old": 13,
+   "new": 14
+  },
+  "L34": {
+   "old": 8,
+   "new": 10
+  },
+  "L34m": {
+   "old": 8,
+   "new": 10
+  },
+  "L35": {
+   "old": 8,
+   "new": 10
+  },
+  "L35m": {
+   "old": 8,
+   "new": 10
+  },
+  "L5": {
+   "old": 9,
+   "new": 11
+  },
+  "L5m": {
+   "old": 9,
+   "new": 11
+  },
+  "L6": {
+   "old": 9,
+   "new": 10
+  },
+  "L6b": {
+   "old": 9,
+   "new": 10
+  },
+  "L6bm": {
+   "old": 9,
+   "new": 10
+  },
+  "L6c": {
+   "old": 9,
+   "new": 10
+  },
+  "L6cm": {
+   "old": 9,
+   "new": 10
+  },
+  "L6m": {
+   "old": 9,
+   "new": 10
+  },
+  "L701": {
+   "old": 21,
+   "new": 22
+  },
+  "L730": {
+   "old": 44,
+   "new": 51
+  },
+  "L730m": {
+   "old": 44,
+   "new": 51
+  },
+  "L736": {
+   "old": 21,
+   "new": 23
+  },
+  "L736m": {
+   "old": 21,
+   "new": 23
+  },
+  "L96": {
+   "old": 21,
+   "new": 22
+  }
+ }
+}

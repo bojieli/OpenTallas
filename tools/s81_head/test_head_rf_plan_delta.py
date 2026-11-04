@@ -50,3 +50,18 @@ def test_grow_rejects_off_grid():
     plan = {'partition_types': {'t': {'outline_um': [86.4, 86.4]}}, 'partitions': [], 'die': {'outline_um': [1000, 1000]}}
     with pytest.raises(SystemExit):
         rf.apply_grow(plan, {'t': [1.0, 0, 0, 0]}, {'grow': {}, 'channels_clipped': []})
+
+
+def test_rf2_reset_taps_and_plain_seam_split():
+    """DH58-RF2: reset_local_taps append (rounded, no duplicates); plain_seam_split copied to plan clock."""
+    plan = {'clock': {}, 'partition_types': {'a': {'reset': {'local_taps_um': [[1.0, 2.0]]}}, 'b': {}}}
+    spec = {'reset_local_taps': {'a': [[1.0, 2.0], [535.68, 622.08]], 'b': [[3.0001, 4.0], [3.0001, 4.0]]},
+            'plain_seam_split': {'rx_in_max_ps': 480, 'rx_in_raw_max_ps': 580}}
+    rep = {}
+    rf.apply_rf2(plan, spec, rep)
+    assert plan['partition_types']['a']['reset']['local_taps_um'] == [[1.0, 2.0], [535.68, 622.08]]
+    assert plan['partition_types']['b']['reset']['local_taps_um'] == [[3.0, 4.0]]
+    assert rep['reset_local_taps']['a'] == {'before': 1, 'added': [[535.68, 622.08]]}
+    assert plan['clock']['plain_seam_split'] == {'rx_in_max_ps': 480, 'rx_in_raw_max_ps': 580}
+    spec['plain_seam_split']['rx_in_max_ps'] = 1                       # deep copy: spec edits do not leak
+    assert plan['clock']['plain_seam_split']['rx_in_max_ps'] == 480
