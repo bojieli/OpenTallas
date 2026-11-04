@@ -1610,7 +1610,12 @@ def main():
             macro_pin_tracks.check(hard_children["blocks"], lambda m: (kd / "macros" / f"{m}.lef").read_text())
         if hard_children.get("static_rows"):
             from macro_sites import static_placement_tcl
-            (kd / "macro_place.tcl").write_text(static_placement_tcl(hard_children["blocks"]))
+            # DIE-KV-65 11-03: hr_rf_wrap nests the original core as u_rf_core, and the static plan matches exact flat names
+            blocks = hard_children["blocks"]
+            if rec.get("rf_wrap"):
+                blocks = [dict(b, inst="u_rf_core." + b["inst"]) if not b["inst"].startswith("u_rf_core.") else b
+                          for b in blocks]
+            (kd / "macro_place.tcl").write_text(static_placement_tcl(blocks))
         def _lef_size(m):
             g = re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)", (kd / "macros" / f"{m}.lef").read_text())
             return float(g.group(1)), float(g.group(2))
