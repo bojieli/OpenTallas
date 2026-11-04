@@ -2300,6 +2300,25 @@ def core_pg_connect_layer(lef):
     return pick["VDD"], CORE_PG_UP[pick["VDD"]]
 
 
+def macro_obs_layers(lef):
+    """set of routing layers named in the macro LEF OBS sections."""
+    text = Path(lef).read_text(errors="replace")
+    out = set()
+    for blk in re.findall(r"\bOBS\b(.*?)\bEND\b", text, re.S):
+        out |= set(re.findall(r"\bLAYER\s+(M[0-9]+)\s*;", blk))
+    return out
+
+
+def core_pg_landing(lef, strict=True):
+    """core_pg_connect_layer, plus (implicit default-on only) ValueError when the view obstructs the tile layer above
+    its PG pins: a buried-PG view (e.g. M5 PG under an M6/M7 OBS) cannot take the via and would fail pdngen with
+    PDN-0006, so the implicit default skips it instead of breaking a kit that never opted in."""
+    lo, hi = core_pg_connect_layer(lef)
+    if not strict and hi in macro_obs_layers(lef):
+        raise ValueError(f"{lef}: {lo} PG pins buried under OBS on {hi}; no landing for core_pg_connect")
+    return lo, hi
+
+
 def core_pg_on(P, tn):
     """PG-CORECONN-2 class fix (DIE-S81-51 11-03): core_pg_connect is DEFAULT-ON.  Unset -> True (implicit), explicit
     false keeps the legacy kit bytes.  S81 plan_h2_2249: 136/158 macro-placing types never set it, so 18,993 placed
@@ -2327,12 +2346,12 @@ def core_pg_grids(P, tn, macros, root=None, exclude=()):
         if inst in exclude:
             continue
         try:
-            groups.setdefault(core_pg_connect_layer(C.resolve(lef, root)), []).append(inst)
+            groups.setdefault(core_pg_landing(C.resolve(lef, root), _core_pg_strict(P, tn)), []).append(inst)
         except ValueError as ex:
             if _core_pg_strict(P, tn):
                 raise
             skipped.append((inst, str(ex)))
-    t = [f"# PG-CORECONN-2 (default-on): macro {i} skipped, view has no landable PG geometry: {e[:160]}"
+    t = [f"# PG-CORECONN-2 (default-on): macro {i} skipped, view has no landable PG geometry: {e[:200]}"
          for i, e in skipped]
     for (lo, hi), insts in sorted(groups.items(), key=lambda kv: int(kv[0][0][1:])):
         g = f"core_pg_{lo}"
@@ -2357,7 +2376,7 @@ def core_pg_unconnected(pdn, macros, root=None, exclude=(), strict=True):
         if inst in exclude:
             continue
         try:
-            lo, hi = core_pg_connect_layer(C.resolve(lef, root))
+            lo, hi = core_pg_landing(C.resolve(lef, root), strict)
         except ValueError:
             if strict:
                 raise

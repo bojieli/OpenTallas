@@ -160,3 +160,21 @@ def test_default_on_when_unset_and_skips_unlandable_view():
         Q.types["hd"]["core_pg_connect"] = True
         with pytest.raises(ValueError):
             gen_phys.core_pg_grids(Q, "hd", mq)
+
+
+def test_default_on_skips_buried_pg_view_explicit_keeps_it():
+    """PDN-0006 guard for the implicit default: a view whose M5 PG sits under an M6 OBS is skipped (comment) unless
+    the type explicitly opts in."""
+    with tempfile.TemporaryDirectory() as d:
+        P = _P(d)
+        del P.types["hd"]["core_pg_connect"]
+        lf = Path(d) / "core.lef"
+        lf.write_text(lf.read_text().replace("END core\n", "  OBS\n    LAYER M6 ;\n      RECT 0 0 20 10 ;\n  END\nEND core\n"))
+        assert gen_phys.macro_obs_layers(lf) == {"M6"}
+        mac = gen_phys.type_macros(P, "hd")
+        txt = "\n".join(gen_phys.core_pg_grids(P, "hd", mac))
+        assert "buried under OBS on M6" in txt
+        assert "-layers {M5 M6}" not in txt and "-layers {M4 M5}" in txt
+        assert gen_phys.core_pg_unconnected(txt, mac, strict=False) == []
+        P.types["hd"]["core_pg_connect"] = True          # explicit opt-in keeps the old (strict) landing
+        assert "-layers {M5 M6}" in "\n".join(gen_phys.core_pg_grids(P, "hd", mac))
