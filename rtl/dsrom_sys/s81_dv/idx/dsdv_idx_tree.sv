@@ -101,7 +101,7 @@ module dsdv_idx_txm #(
         localparam integer NB = D / 1024;
         initial if (D % 1024 != 0 || D < 1024) $fatal(1, "dsdv_idx_txm: D must be a multiple of 1024");
         wire [255:0] q [0:NB-1];
-        reg  [(AW > 10 ? AW-11 : 0):0] bs;
+        wire [(AW > 10 ? AW-11 : 0):0] bs;      // read bank select (registered with rd; constant 0 at NB == 1)
         // DIE-S81-51 11-03: bank address bits as a generate branch (AW = 10 has none): ra[AW-1:10] at AW = 10 is a
         // reversed range that yosys-slang (the LEC gold frontend) refuses even under the constant NB == 1 mask.
         wire [(AW > 10 ? AW-11 : 0):0] ra_hi, wa_hi;
@@ -125,8 +125,17 @@ module dsdv_idx_txm #(
             for (k = 0; k < NB; k = k + 1) if (bs == k) mx = mx | q[k];
         end
         always @(posedge ck) begin
-            if (re) bs <= (NB == 1) ? '0 : ra_hi; // selrange-ok: ra[AW-1:10] dead at NB=1/D=1024 because constant ternary chooses zero; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
             rd <= mx;
+        end
+        // LEC-EGN-1 11-03: at NB == 1 the bank select is the constant 0 (a wire, not an unreset flop that only ever
+        // loads 0): synthesis folds such a flop, but the LEC gold keeps its free initial value, so the kit LEC saw
+        // u_ib*.g_m.bs as removed although not constant.  NB > 1 keeps the registered select.
+        if (NB > 1) begin : g_bs
+            reg [(AW > 10 ? AW-11 : 0):0] bs_q;
+            always @(posedge ck) if (re) bs_q <= ra_hi;
+            assign bs = bs_q;
+        end else begin : g_bs1
+            assign bs = '0;
         end
     end else begin : g_b
         reg [255:0] mem [0:D-1];

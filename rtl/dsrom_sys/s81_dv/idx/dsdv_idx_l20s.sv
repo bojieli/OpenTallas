@@ -639,7 +639,11 @@ module dsdv_idx_tx_n32 #(
     // ------------------------------------------------------------------ window store (2 buffers) + beat descriptor
     reg         wv;                          // a window is open (in buffer act)
     reg         act;                         // buffer of the open window
-    reg  [19:0] w0c;                         // the open window's base
+    // LEC-EGN-1 11-03: the window base is 16-aligned (only ever loaded with {r_i[19:4], 4'd0}), so its low nibble is
+    // the constant 0 by construction, not an unreset flop that only loads 0 (synthesis folded it; the LEC gold kept
+    // its free initial value and reported w0c[3:0] removed).  Every read is gated by wv, which is set with the load.
+    reg  [19:4] w0c_h;
+    wire [19:0] w0c = {w0c_h, 4'd0};         // the open window's base
     wire [19:0] w0b [0:1]; wire [15:0] wlvb [0:1]; wire [255:0] wscb [0:1];
     reg  [19:0] lcur;                        // the parent lane's cursor
     reg  [2:0]  bq_n;                        // beats left in the descriptor
@@ -790,7 +794,7 @@ module dsdv_idx_tx_n32 #(
             if (ib_push) ib_w <= ib_w + 1'b1;
         end
     always @(posedge ck) begin
-        act <= nx_act; w0c <= nx_w0c; tc <= nx_tc; rc <= nx_rc; sn <= nx_sn; bix <= nx_bix; lcur <= nx_lcur_private;
+        act <= nx_act; w0c_h <= nx_w0c[19:4]; tc <= nx_tc; rc <= nx_rc; sn <= nx_sn; bix <= nx_bix; lcur <= nx_lcur_private;
         d_h <= nx_d_h; d_buf <= nx_d_buf; d_rb <= nx_d_rb; d_em <= nx_d_em; d_last <= nx_d_last;
     end
     // window buffers: field f of buffer b written with the result score when the result lands in b
