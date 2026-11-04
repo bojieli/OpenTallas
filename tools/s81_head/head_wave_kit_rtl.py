@@ -16,7 +16,7 @@ from head_start_raw_private import prepare_plan, patch_rtl as private_patch
 from head_start_reset_aliases import patch_rtl as alias_patch
 
 # These profiles require additional native/PMA decisions, beyond this recipe.
-HELD = {'hd_serdes', 'hd_ctl'}
+HELD = set()
 TRANSPORT_STRIPS = {'hd_ctl_n', 'hd_ctl_e'}
 
 def check_transport_strip(typ, entry):
@@ -142,6 +142,12 @@ def export(args):
     if files.count(wrapper_file) != 1:
         raise ValueError('exact partition wrapper absent/duplicated in source closure')
     files = [wrapper_file] + [f for f in files if f != wrapper_file]
+    if args.type == 'hd_ctl':   # DIE-HEAD-59 11-03: the reviewed hd_ctl profile of head_ctl_hk5_kit (dead g_rsel copies)
+        from head_ctl_hk5_kit import rsel_fix
+        hsf = [p for p in files if p.name == 'ot_s81hd_ctl_hsf0_static.sv']
+        if len(hsf) != 1:
+            raise ValueError('hd_ctl: hsf0_static absent/duplicated in source closure')
+        hsf[0].write_text(rsel_fix(hsf[0].read_text())[0])
     (out / 'kit_rtl.f').write_text(''.join(str(p) + '\n' for p in files))
     write(out / 'kit_rtl.json', dict(schema='opentallas.head_wave_kit_rtl.v1', plan_type=args.type,
           defines=value('VERILOG_DEFINES'), added_cycles=0, private_raw=private,
