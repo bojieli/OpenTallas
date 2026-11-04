@@ -3139,3 +3139,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 2026-11-04 10:35 PST COORD hourly: count 109; main 56055ff212a (I38), I39 in test; form A stations + KV PV/PC launched; prune by inode, 47q freed 22 GB; intel1 126, epyc2 101 GB.
 2026-11-04 11:34 PST COORD hourly: count 111; main bf1e2233ce0 (I40), I41 test; I38 relaunch out; stale-RTL read 75/111 text diff, owners answering; intel2 235 GB after prune.
 2026-11-04 12:34 PST COORD hourly: count 111 flat; main 5440cdcc4a9 (I42), I43 test, I44 lined up; xrt1 + astk await plan events; hbm_sram baseline refreshed, TT read owed; epyc2 scratch 115 GB falling, PRUNE-1104P.
+2026-11-04 13:34 PST COORD hourly: count 112 (HBM bfqg); main 7e4dc3113a2 (I45), I46 test; serdes MPL delta split out first; re-signs half, bf_front_roots, n3_turn on prdtie tags; epyc2 scratch 134 GB after reserve.
