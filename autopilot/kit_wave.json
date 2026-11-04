@@ -2490,8 +2490,8 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/physical/die_plan/qwen_compute/plan_of_record/plan_qc52_ucie1103.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/kw-fix-8/wt-qc",
-   "src_sha": "1a4f626d4a844364e040c4a18f70a399c3334fa7",
+   "src": "/srv/opentallas-scratch2/claude/kw-fix-8/wt-qc2",
+   "src_sha": "488b89796f3b2103e383017ecc97b4706b70621a",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/results/qc_die57_1031/bind/final_asbuilt.json",
@@ -2518,7 +2518,7 @@
    "die_max_inflight": 60,
    "owner_lane": "DIE-QC-65",
    "lane": "KIT-WAVE-12",
-   "note": "KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
+   "note": "KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
    "pilot_mode": "queue",
    "hold_items": {
     "sle_sc_v2": "CORE_CAP 542365/400000 (measured): CORE_CAP: no materialized hard cores",
@@ -2692,9 +2692,12 @@
     "cbx_q10__cl94a12200@2",
     "sle_su_c@2",
     "slw_su_c__cl19bb38ef@2",
-    "slw_su_c__cl92142dac@2"
+    "slw_su_c__cl92142dac@2",
+    "cbf_q01@3",
+    "cbf_q11@5",
+    "cbn_q11__cl5cc92dfe@4"
    ],
-   "queue_src": "claude/kw8-qcsrc-1104@1a4f626d4a844364e040c4a18f70a399c3334fa7",
+   "queue_src": "claude/kw8-qcsrc2-1104@488b89796f3b2103e383017ecc97b4706b70621a",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -3005,7 +3008,10 @@
     "cbx_q10__cl94a12200@2": "provlef class, COORD I35 09:0x: provisional view stamps every repeat instance (c0e1946dbd8, main d3001422956) on QC src 1a4f626d4a8; batch of 19, stops the floating form",
     "sle_su_c@2": "provlef class, COORD I35 09:0x: provisional view stamps every repeat instance (c0e1946dbd8, main d3001422956) on QC src 1a4f626d4a8; batch of 19, stops the floating form",
     "slw_su_c__cl19bb38ef@2": "provlef class, COORD I35 09:0x: provisional view stamps every repeat instance (c0e1946dbd8, main d3001422956) on QC src 1a4f626d4a8; batch of 19, stops the floating form",
-    "slw_su_c__cl92142dac@2": "provlef class, COORD I35 09:0x: provisional view stamps every repeat instance (c0e1946dbd8, main d3001422956) on QC src 1a4f626d4a8; batch of 19, stops the floating form"
+    "slw_su_c__cl92142dac@2": "provlef class, COORD I35 09:0x: provisional view stamps every repeat instance (c0e1946dbd8, main d3001422956) on QC src 1a4f626d4a8; batch of 19, stops the floating form",
+    "cbf_q01@3": "COORD 09:5x class fix: src 1a4f626d4a8 had no physical/common_flow/grt183_make.sh at gen; wt-qc2 has common_flow + tools at main 6c547da940f",
+    "cbf_q11@5": "COORD 09:5x class fix: src 1a4f626d4a8 had no physical/common_flow/grt183_make.sh at gen; wt-qc2 has common_flow + tools at main 6c547da940f",
+    "cbn_q11__cl5cc92dfe@4": "COORD 09:5x class fix: src 1a4f626d4a8 had no physical/common_flow/grt183_make.sh at gen; wt-qc2 has common_flow + tools at main 6c547da940f"
    },
    "gen_hosts": [
     "intel2"
