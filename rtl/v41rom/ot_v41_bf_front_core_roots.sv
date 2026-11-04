@@ -2251,6 +2251,26 @@ module ot_v41_bf_front_core_roots #(
         assign nbp[1] = XW'(nbm[0]);
         assign nbp[2] = nbp[1] + XW'(nbm[1]);
         assign nbp[3] = nbp[2] + XW'(nbm[2]);
+`ifdef OT_BF6_WPAR
+        // S81-RF1 WPAR (DIE-S81-52 2026-11-03, same function, 0 cycles): nwr_a + nbp[b] written as parallel sums selected
+        // by the same controls, with f_wr + npush + nbp[b] carry-saved into ONE carry chain.  This removes the second
+        // carry chain in series on the npush -> f_wr -> BF16 write decode path (zb3 TT -23.25, 110 failing endpoints).
+        wire [XW-1:0] nwb [0:3];
+        for (genvar bq = 0; bq < 4; bq = bq + 1) begin : g_nwb
+            wire [XW-1:0] csx = f_wr ^ XW'(npush) ^ nbp[bq];
+            wire [XW-1:0] csm = (f_wr & XW'(npush)) | (f_wr & nbp[bq]) | (XW'(npush) & nbp[bq]);
+`ifdef OT_BF6_WPAR_MUT
+            wire [XW-1:0] cst = csx + XW'(csm[XW-1:1] << 2);   // MUTANT: the bit 0 carry is lost
+`else
+            wire [XW-1:0] cst = csx + XW'(csm << 1);
+`endif
+`ifdef OT_BF6_WPAR_MUT0
+            assign nwb[bq] = '0;   // sensitivity control: every BF16 write goes to entry 0
+`else
+            assign nwb[bq] = c_fn ? (gok[GFW] ? nbp[bq] : cst) : XW'(f_wr + nbp[bq]);
+`endif
+        end
+`endif
         (* keep *) wire [XF-1:0] sfa_d, sfb_d, tfa_d, tfb_d;
         (* keep *) wire [XF-1:0] sbk_d0, sbk_d1, sbk_d2, sbk_d3, tbk_d0, tbk_d1, tbk_d2, tbk_d3;
         wire [XF-1:0] sbk_d [0:3];
@@ -2263,7 +2283,11 @@ module ot_v41_bf_front_core_roots #(
             assign sfa_d[e] = zq4[e % 2] && tfa_d[e];
             assign sfb_d[e] = zq4[2 + e % 2] && tfb_d[e];
             for (genvar b = 0; b < 4; b = b + 1) begin : g_b
+`ifdef OT_BF6_WPAR
+                assign tbk_d[b][e] = nbm[b] && nwb[b] == XW'(e);
+`else
                 assign tbk_d[b][e] = nbm[b] && XW'(nwr_a + nbp[b]) == XW'(e);
+`endif
                 assign sbk_d[b][e] = zq4[b] && tbk_d[b][e];
             end
         end

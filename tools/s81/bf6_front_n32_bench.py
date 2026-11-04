@@ -8,13 +8,14 @@ label tables, SWD 160), inside the full BF die pair against the independent orac
   --case mwself        mutant: write slice 0 loses the FP8 beat write select (OT_BF6_MUT_WSELF)
 """
 import argparse
+import os
 import json
 from pathlib import Path
 import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-BASE = 'DSFD_BF_N32=1,DSFD_BF_SOQ=1,DSFD_BF_SOQ_SWD=160'
+BASE = 'DSFD_BF_N32=1,DSFD_BF_SOQ=1,DSFD_BF_SOQ_SWD=160' + os.environ.get('BF6_EXTRA_DEF', '')
 MUT = {'mroh': 'OT_BF6_MUT_ROH', 'mwsel': 'OT_BF6_MUT_WSEL', 'mwself': 'OT_BF6_MUT_WSELF'}
 
 
