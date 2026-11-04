@@ -206,6 +206,11 @@ def signal_bases(pins):
     return {split_bit(n)[0] for n, v in pins.items() if v[1] not in ("POWER", "GROUND")}
 
 
+def lib_signal_ports(got, pins):
+    """lib port names without PG pins: a signed-view lib may list VDD/VSS as pins, also when the LEF has none"""
+    return got - ({"VDD", "VSS"} | {split_bit(n)[0] for n, v in pins.items() if v[1] in ("POWER", "GROUND")})
+
+
 # ------------------------------------------------------------------------------------------------------ RTL directions
 _DECL = re.compile(r"\b(input|output|inout)\b([^;()]*?)(?=[;)]|\b(?:input|output|inout)\b)", re.S)
 
@@ -429,6 +434,7 @@ def check_routed(cdir, module, entry, ppins, plan_lef):
         got = lib_cell_ports(f, module)
         if got is None:
             return False, f"{os.path.basename(f)}: no cell ({module})"
+        got = lib_signal_ports(got, lp)
         if got != want:
             return False, f"{os.path.basename(f)} ports != LEF ports (+{sorted(got - want)[:2]} -{sorted(want - got)[:2]})"
     return True, "ok"
