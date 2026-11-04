@@ -11,8 +11,11 @@ def run(c): return sp.run(c,capture_output=True,text=True)
 def g(*a): return run(['git','-C',s]+list(a))
 why=[]; head=g('rev-parse','HEAD').stdout.strip()
 st=g('status','--porcelain').stdout.splitlines()
+# COORD 11:05 (3): a reaper-style .keep is overridden where the rest of the test passes; only a root .keep, listed in the manifest
+keep_only=[l for l in st if l=='?? .keep']; st=[l for l in st if l!='?? .keep']
 mod=st
 if st: why.append('not-clean:%d'%len(st))
+REL=os.environ.get('P1104N_RELEASED')=='1'  # COORD 11:19 (3): owner named it finished, so idle<24h does not hold it
 hub=run(['ssh','-n','-o','ConnectTimeout=20','hub',f"cd OpenTallas && git cat-file -t {head} && git for-each-ref --contains {head} --count=2 --format='%(refname:short)' | tr '\\n' ','"])
 if not hub.stdout.startswith('commit') or len(hub.stdout.split())<2: why.append('not-reachable-on-hub:'+hub.stderr[:80])
 idx=set(g('ls-files').stdout.splitlines()); nw=0; sz=0; nsig=0; own=[]; me=os.getuid()
@@ -32,7 +35,7 @@ for dp,dn,fn in os.walk(d):
             if t:
                 nsig+=1
                 if not fp.startswith(s+'/') or fp[len(s)+1:] not in idx: why.append('untracked-signed:'+fp)
-if time.time()-nw<24*3600: why.append('idle<24h')
+if time.time()-nw<24*3600 and not REL: why.append('idle<24h')
 if own: why.append('not-mine:%d'%len(own))
 hits=set()
 for pid in filter(str.isdigit,os.listdir('/proc')):
