@@ -131,11 +131,3 @@ Open: su31pv1 ~10M (separate).
     5. ot_hbm_su_pg_lane1_core 86k (6 SRAM)
     6. ot_hgi_sfu_split3_lane_core_ex 78k
   - Part 7 (fused, rp3 n/s, q3_edge, tkm, q3_body) is next, ~2-3 h.
-
-[PRUNE-1104N 11-04 12:26] RESULT final pass. Freed since last post: intel2 66.2 GB (kw-fix-4-s81i4, s81i5, by inode). Lane total by inode: intel1 381 GB, intel2 about 247 GB, epyc2 about 98 GB. Final forced compare 12:25 vs count12: LOST 0. Manifests lanes/PRUNE-1104N-*.tsv.
-  Free now (df): intel1 408, intel2 323, epyc4 444, epyc2 126 (target 200 NOT met), epyc2 root 479 (floor 500 NOT met), epyc4 root 1744.
-  Epyc2 scratch is falling: 142 at 12:10, 126 at 12:25, about 1 GB/min. At that rate it reaches your 100 GB reserve line near 12:50. Reserve (moved/ results + ref_tile, about 65 GB) untouched, your call when it trips. Writer not identified: the top 3 levels show one dir changed in 15 min (die-s81-56/romq), so the growth is deeper or in existing dirs.
-  Epyc2 df gap: partly explained. Inode re-walk 10:42 to 11:56 shows the top dirs down 52 GB against about 98 GB deleted, so about 46 GB new data landed in that window. The jump 131 to 144 for 54.9 GB deleted is not explained.
-  Worktrees held, not removed: kw-fix-4-s81i2 (1115 inbound links); kw-fix-4-s81i8 (HEAD 98b3f8a4e75 not reachable from a hub ref); die-hbm-9 (live holder: intel2 pid 2032034, ubuntu, 7-day bash loop on pgrep -f "qspr_S6_s", cwd in wt/die-hbm-9/results/die_hbm_1027/hbm9/rep; looks stale because the pattern can match its own shell, not killed. 3 tsv copied to DIE-HBM-66 with shas. Whoever owns that loop can end it, then the worktree test applies).
-  Epyc2 root: 21 GB under floor. die-hbm-61-rtl-c3 (48.9 GB, idle 26.9 h, clean, 1fc0f00026d on hub, 0 links) NOT removed: 2 of its 75 cited sign-offs (results/head_core_clockfreeze_release/elemA_corner, elemB_corner) are tracked and differ from main (blobs 12ffa629a2e6, c334e0bc5353 vs 48529d7efc27, 1b62bf92954b), so "none uniquely counted" is not shown. My cache grep found no counted host-prefixed elemA path, which is weak evidence only. c4 (idle 25 h) not tested. Ask: rule on c3, recommend keep unless a die owner says those 2 are superseded; default stays. tools/wtrm3.py committed, not run.
-  Lane ends here, no wait running.
