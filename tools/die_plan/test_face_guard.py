@@ -961,6 +961,103 @@ def test_registered_onehot_rejects_unmodeled_sequential_polarity_or_edge():
     assert r["verdict"] == "FAIL" and not r.get("registered_onehot")
 
 
+WREG4 = {"d": {"D": 4, "form": "hold_mux"}, "start": {"form": "ring_start", "ring": "d"}}
+
+
+def _wreg_vehicle(mutant=None, buffered=False):
+    """WREG-1 (ot_dp_clk_landing_ca g_wreg): kept per-slot write-enable flops, D = start && slot_nx == k,
+    slot_nx = fs_q ? tc + 1 : 0."""
+    ff = f"DFFHQNx{'2' if buffered else '1'}{_X}"
+    st = "start_b" if buffered else "start"
+    wen = (f"module ot_meso_wen_ff(clk, d, q); input clk; input d; output q;\n"
+           f" {ff} ff (.CLK(clk), .D(d), .QN(qn));\n INVx1{_X} qi (.A(qn), .Y(q));\nendmodule\n")
+    body = [f"DFFHQNx1{_X} fs (.CLK(fclk), .D({st}), .QN(fsn));", f"INVx1{_X} fi (.A(fsn), .Y(fsq));",
+            f"DFFHQNx1{_X} tq0 (.CLK(fclk), .D(nx0), .QN(t0n));", f"DFFHQNx1{_X} tq1 (.CLK(fclk), .D(nx1), .QN(t1n));",
+            f"INVx1{_X} it0 (.A(t0n), .Y(t0));",
+            f"AND2x2{_X} n0 (.A(fsq), .B(t0n), .Y(nx0));",
+            f"XNOR2xp5{_X} x1 (.A(t0), .B(t1n), .Y(xt1));", f"AND2x2{_X} n1 (.A(fsq), .B(xt1), .Y(nx1));",
+            f"INVx1{_X} nn0 (.A(nx0), .Y(z0));", f"INVx1{_X} nn1 (.A(nx1), .Y(z1));"]
+    if buffered:
+        body.append(f"BUFx2{_X} sb (.A(start), .Y(start_b));")
+    dec = {0: ("z1", "z0"), 1: ("z1", "nx0"), 2: ("nx1", "z0"), 3: ("nx1", "nx0")}
+    if mutant == "overlap":
+        dec[1] = ("z1", "z1")                 # slot_nx[0] dropped: wen 0 and 1 both set on slot_nx == 0
+    ports, decl = "", ""
+    for k in range(4):
+        hi, lo = dec[k]
+        if mutant == "no_reset" and k == 2:
+            body.append(f"AND2x2{_X} wg{k} (.A({hi}), .B({lo}), .Y(wd{k}));")
+        elif mutant == "stuck" and k == 3:
+            body.append(f"TIELOx1{_X} wg{k} (.L(wd{k}));")
+        else:
+            body.append(f"AND3x1{_X} wg{k} (.A({st}), .B({hi}), .C({lo}), .Y(wd{k}));")
+        ck = "fclk2" if mutant == "other_clock" and k == 1 else "fclk"
+        d = f"wd{k}"
+        if buffered:
+            body.append(f"BUFx2{_X} wb{k} (.A(wd{k}), .Y(wdb{k}));")
+            d = f"wdb{k}"
+        if mutant == "data_leaf" and k == 0:
+            body.append(f"AND2x2{_X} wx (.A({d}), .B(e), .Y(wde));")
+            d = "wde"
+            ports, decl = ", e", " input e;"
+        if mutant == "other_clock_leaf" and k == 0:
+            body += [f"DFFHQNx1{_X} xf (.CLK(fclk2), .D(fsq), .QN(xn));", f"AND2x2{_X} wx (.A({d}), .B(xn), .Y(wde));"]
+            d = "wde"
+        if mutant == "wide" and k == 0:
+            for j in range(12):
+                body += [f"DFFHQNx1{_X} wf{j} (.CLK(fclk), .D(fsq), .QN(wn{j}));",
+                         f"AND2x2{_X} wa{j} (.A({d}), .B(wn{j}), .Y(wc{j}));"]
+                d = f"wc{j}"
+        if mutant == "polarity" and k == 1:
+            body += [f"DFFLQNx1{_X} u_wen{k} (.CLK({ck}), .D({d}), .QN(wq{k}));", f"INVx1{_X} wi{k} (.A(wq{k}), .Y(w{k}));"]
+        else:
+            body.append(f"ot_meso_wen_ff u_wen{k} (.clk({ck}), .d({d}), .q(w{k}));")
+        w = f"w{k}"
+        if buffered:                          # one wen flop drives its slots through a repeater, as resizing inserts
+            body.append(f"BUFx4{_X} wr{k} (.A(w{k}), .Y(wbf{k}));")
+            w = f"wbf{k}"
+        body.append(f"INVx1{_X} wn_{k} (.A({w}), .Y(nw{k}));")
+        if mutant == "inverted_write":        # at-most-one state, but every idle slot writes: a real write conflict
+            body += _mux_slot(k, w=f"nw{k}", nw=w)
+        else:
+            body += _mux_slot(k, w=w, nw=f"nw{k}")
+    if mutant == "start_sink":
+        body.append(f"DFFHQNx1{_X} sink (.CLK(fclk2), .D(start), .QN(sinkq));")
+    return (wen + f"module top(fclk, fclk2, start, d{ports}); input fclk; input fclk2; input start; input d;{decl}\n"
+            + "\n".join(" " + b for b in body) + "\nendmodule\n")
+
+
+def _wreg_guard(text, land=WREG4):
+    return face_guard.guard(text, "top", clocks=["fclk", "fclk2"], land=land)
+
+
+@pytest.mark.parametrize("buffered", [False, True])
+def test_wreg_write_enable_flops_prove_at_most_one(buffered):
+    r = _wreg_guard(_wreg_vehicle(buffered=buffered))
+    assert r["verdict"] == "PASS", r["fails"]
+    assert not r.get("registered_onehot")
+    (proof,) = r["registered_atmost_one"].values()
+    assert proof["flops"] == [f"u_wen{k}/ff" for k in range(4)]
+    assert proof["start"] == "start" and proof["start_chain_edges"] == 0
+    # the wen flops are ring writers of the start, no origin sampler
+    assert r["ring_start"]["start"]["writer_flops"] == 5 and not r["ring_start"]["start"].get("sampler_flops")
+
+
+@pytest.mark.parametrize("mutant", ["overlap", "no_reset", "stuck", "other_clock", "other_clock_leaf", "data_leaf",
+                                    "wide", "polarity", "inverted_write", "start_sink"])
+def test_wreg_write_enable_mutants_fail_closed(mutant):
+    r = _wreg_guard(_wreg_vehicle(mutant))
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], (mutant, r)
+    if mutant not in ("inverted_write", "start_sink"):
+        assert not r.get("registered_atmost_one"), (mutant, r)
+
+
+def test_wreg_start_needs_a_declared_role():
+    land = {"d": {"D": 4, "form": "hold_mux"}}
+    r = _wreg_guard(_wreg_vehicle(), land=land)
+    assert r["verdict"] == "FAIL" and not r.get("registered_atmost_one")
+
+
 NET_SPARE = r"""
 module top(clk, a, o, s);
   input clk; input [1:0] a; output [1:0] o; output [1:0] s;
