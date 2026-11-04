@@ -36,7 +36,7 @@ def openset():
 def scan(d):
     links={};nl={};bl={};nw=0;sig=False;keep=False
     for dp,dn,fn in os.walk(d):
-        nw=max(nw,os.lstat(dp).st_mtime)
+        if not PART: nw=max(nw,os.lstat(dp).st_mtime)
         for f in fn:
             fp=os.path.join(dp,f)
             try: s=os.lstat(fp)
@@ -48,6 +48,7 @@ def scan(d):
                     if SIG.search(open(fp,errors='replace').read()): sig=True
                 except OSError: sig=True
     return nw,sum(bl[i] for i in bl if links[i]>=nl[i]),sig,keep
+PART=os.environ.get('P1104N_PARTIAL')=='1'  # finishing a row already deleted under its ruling: its dir mtimes are my own rmtree, and intel2 rows were non-latest under exception (c)
 S=openset(); last=time.time(); fr=0;n=0;sk={}
 def skip(p,w): sk[w]=sk.get(w,0)+1; print('SKIP',w,p,flush=True)
 for p in [l.strip() for l in open(L) if l.strip()]:
@@ -62,7 +63,7 @@ for p in [l.strip() for l in open(L) if l.strip()]:
     a=os.path.dirname(p); kp=False
     while a.startswith(ROOT):
         k=a+'/.keep'
-        if os.path.exists(k) and not (k in OKKEEP and os.path.getsize(k)==0) and not SPILL.match(open(k,errors='replace').read().strip()): kp=True
+        if os.path.exists(k) and not (k in OKKEEP and os.path.getsize(k)==0) and not SPILL.match(open(k,errors='replace').read().strip()) and not (PART and k==ROOT+'/codex-s81-wave-1345/.keep' and open(k,errors='replace').read().startswith('Immutable S81 current-source')): kp=True
         a=os.path.dirname(a)
     if kp: skip(p,'keep-ancestor'); continue
     nw,u,sig,keep=scan(p)

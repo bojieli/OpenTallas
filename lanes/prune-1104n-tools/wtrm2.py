@@ -40,7 +40,8 @@ for pid in filter(str.isdigit,os.listdir('/proc')):
     try:
         c=open(f'/proc/{pid}/cmdline','rb').read().decode('utf8','replace')
         # the counter's read-only signoff find lists worktrees as prune paths: not a holder
-        counter=c.replace('\0',' ').startswith(('find /srv/opentallas-scratch2/claude ','bash -c find /srv/opentallas-scratch2/claude ')) and 'signoff.json' in c
+        # a read-only find listing worktrees (counter scan, prune paths) is not a holder
+        cs=c.replace('\0',' '); counter=cs.startswith(('find /srv/opentallas-scratch2/claude ','bash -c find /srv/opentallas-scratch2/claude ')) and '-delete' not in cs and '-exec' not in cs
         if hx in c and 'p1104n_' not in c and 'sfgate' not in c and not counter: hits.add('cmd:'+pid)
         for l in ('cwd','root'):
             if hx in os.readlink(f'/proc/{pid}/{l}'): hits.add('cwd:'+pid)
