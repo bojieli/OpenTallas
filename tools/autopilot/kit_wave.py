@@ -1836,8 +1836,10 @@ def run_item(spec_path):
             # KW-FIX-4 11-03 (ONBOARD-1 ask, COORD approved): no --hosts pin (a pin disables ot-run SPILL / LOAD SPILL /
             # RE-PLACE); --stage = the kit dir + its runner, so a waiter the gen host cannot admit (or that would
             # overload it) is copied to a host that admits it NOW (epyc4), runs there and copies every written file
-            # back before the client exits.  The receipt then appears on G only at the client's end (KW_PLACE_RC
-            # wins), so the kit on G stays the one authoritative copy.  Die option place_spill false = the old pin.
+            # back before the client exits.  SPILL-PROOF-1 11-04: OT_RUN_SPILL_HANDOFF (ot-run spill_handoff, below) hands
+            # the physical result to G at phase_done while the proof owner stays admitted on the spill host; the proof's
+            # own files follow at client end and G:K is the one physical /work, so route runs there.  Without a hand-off
+            # the receipt appears on G at the client's end (KW_PLACE_RC wins).  Die option place_spill false = the old pin.
             argv = ([sp["ot_run"], "--mem", str(m), "--threads", str(t), "--dir", K, "--stage", K, "--stage", prun]
                     + crit_args(sp) + ["--", "bash", "-c", cmd])
         else:
@@ -1849,7 +1851,7 @@ def run_item(spec_path):
         inner = " ".join(shlex.quote(a) for a in argv)
         cmd = ["systemd-run", "--user", "--quiet", "--collect", f"--unit={unit}",
                f"--setenv=PATH={HOME}/.local/bin:/usr/local/bin:/usr/bin:/bin", f"--setenv=HOME={HOME}",
-               "--property=TimeoutStopSec=120", "/bin/bash", "-c",
+               "--setenv=OT_RUN_SPILL_HANDOFF=place", "--property=TimeoutStopSec=120", "/bin/bash", "-c",
                f"exec >> {shlex.quote(svc['log'])} 2>&1; echo KW_PLACE_START $(date +%s) {unit}; {inner}; echo KW_PLACE_RC=$?"]
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
         svc["launch"] = "launched" if p.returncode == 0 else "failed"
