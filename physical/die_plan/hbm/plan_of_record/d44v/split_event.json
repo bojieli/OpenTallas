@@ -317,6 +317,559 @@
    "designs_added": [
     "ot_hbm_su_pg_lane1_core"
    ]
+  },
+  {
+   "core": "hnx_rp3lp3h_n",
+   "sha": "c37ffbb6c4",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "hnx_rp3lp3h_n__p7glue.sv",
+   "slot_um": [
+    630.72,
+    1209.6
+   ],
+   "instances": 64,
+   "types": [
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_g": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      630.72,
+      345.6
+     ]
+    ],
+    "u_fcore.u_core.u_ln0_lc": [
+     [
+      0.0,
+      578.88
+     ],
+     [
+      198.72,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_ln0_tl0": [
+     [
+      0.0,
+      803.52
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln0_tl1": [
+     [
+      103.68,
+      803.52
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln1_lc": [
+     [
+      216.0,
+      578.88
+     ],
+     [
+      198.72,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_ln1_tl0": [
+     [
+      216.0,
+      803.52
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln1_tl1": [
+     [
+      319.68,
+      803.52
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln2_lc": [
+     [
+      432.0,
+      578.88
+     ],
+     [
+      198.72,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_ln2_tl0": [
+     [
+      432.0,
+      803.52
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln2_tl1": [
+     [
+      535.6800000000001,
+      803.52
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_xs": [
+     [
+      0.0,
+      354.24
+     ],
+     [
+      630.72,
+      216.0
+     ]
+    ]
+   },
+   "tables": {
+    "hnx_rp3h_gn": {
+     "pins_file": "cores/hnx_rp3h_gn__630.72x345.6__d44v_split.json",
+     "outline_um": [
+      630.72,
+      345.6
+     ],
+     "pins": 9573,
+     "clock_pins": 1,
+     "clock_entry": [
+      315.36,
+      172.8
+     ],
+     "faces": {
+      "E": 2887,
+      "I": 1,
+      "N": 3067,
+      "S": 604,
+      "W": 3014
+     }
+    },
+    "hnx_rp3h_lc": {
+     "pins_file": "cores/hnx_rp3h_lc__198.72x216__d44v_split.json",
+     "outline_um": [
+      198.72,
+      216.0
+     ],
+     "pins": 1671,
+     "clock_pins": 1,
+     "clock_entry": [
+      99.36,
+      108.0
+     ],
+     "faces": {
+      "I": 1,
+      "N": 515,
+      "S": 1155
+     }
+    },
+    "hnx_rp3h_tl": {
+     "pins_file": "cores/hnx_rp3h_tl__95.04x155.52__d44v_split.json",
+     "outline_um": [
+      95.04,
+      155.52
+     ],
+     "pins": 517,
+     "clock_pins": 1,
+     "clock_entry": [
+      47.52,
+      77.76
+     ],
+     "faces": {
+      "I": 1,
+      "S": 516
+     }
+    },
+    "hnx_rp3h_xs": {
+     "pins_file": "cores/hnx_rp3h_xs__630.72x216__d44v_split.json",
+     "outline_um": [
+      630.72,
+      216.0
+     ],
+     "pins": 7785,
+     "clock_pins": 1,
+     "clock_entry": [
+      315.36,
+      108.0
+     ],
+     "faces": {
+      "E": 1,
+      "I": 1,
+      "N": 4866,
+      "S": 2917
+     }
+    }
+   },
+   "added_cycles": "leaf result +7 edges, xs->glue act mask +2/+3 pure delay; latency/hnx_rp3lp3h_n.tsv (TOK-VERIFY batch)",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {},
+   "designs_removed": [
+    "hnx_rp3lp3h_n"
+   ],
+   "designs_added": [
+    "hnx_rp3h_gn",
+    "hnx_rp3h_lc",
+    "hnx_rp3h_tl",
+    "hnx_rp3h_xs"
+   ]
+  },
+  {
+   "core": "hnx_rp3lp3h_s",
+   "sha": "c37ffbb6c4",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "hnx_rp3lp3h_s__p7glue.sv",
+   "slot_um": [
+    630.72,
+    1036.8
+   ],
+   "instances": 64,
+   "types": [
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_g": [
+     [
+      0.0,
+      691.2
+     ],
+     [
+      630.72,
+      345.6
+     ]
+    ],
+    "u_fcore.u_core.u_ln0_lc": [
+     [
+      0.0,
+      241.92
+     ],
+     [
+      198.72,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_ln0_tl0": [
+     [
+      0.0,
+      77.76
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln0_tl1": [
+     [
+      103.68,
+      77.76
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln1_lc": [
+     [
+      216.0,
+      241.92
+     ],
+     [
+      198.72,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_ln1_tl0": [
+     [
+      216.0,
+      77.76
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln1_tl1": [
+     [
+      319.68,
+      77.76
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln2_lc": [
+     [
+      432.0,
+      241.92
+     ],
+     [
+      198.72,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_ln2_tl0": [
+     [
+      432.0,
+      77.76
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_ln2_tl1": [
+     [
+      535.6800000000001,
+      77.76
+     ],
+     [
+      95.04,
+      155.52
+     ]
+    ],
+    "u_fcore.u_core.u_xs": [
+     [
+      0.0,
+      466.56
+     ],
+     [
+      630.72,
+      216.0
+     ]
+    ]
+   },
+   "tables": {
+    "hnx_rp3h_gs": {
+     "pins_file": "cores/hnx_rp3h_gs__630.72x345.6__d44v_split.json",
+     "outline_um": [
+      630.72,
+      345.6
+     ],
+     "pins": 7604,
+     "clock_pins": 1,
+     "clock_entry": [
+      315.36,
+      172.8
+     ],
+     "faces": {
+      "E": 818,
+      "I": 1,
+      "N": 604,
+      "S": 3067,
+      "W": 3114
+     }
+    },
+    "hnx_rp3h_lc": {
+     "pins_file": "cores/hnx_rp3h_lc__198.72x216__d44v_split.json",
+     "outline_um": [
+      198.72,
+      216.0
+     ],
+     "pins": 1671,
+     "clock_pins": 1,
+     "clock_entry": [
+      99.36,
+      108.0
+     ],
+     "faces": {
+      "I": 1,
+      "N": 515,
+      "S": 1155
+     }
+    },
+    "hnx_rp3h_tl": {
+     "pins_file": "cores/hnx_rp3h_tl__95.04x155.52__d44v_split.json",
+     "outline_um": [
+      95.04,
+      155.52
+     ],
+     "pins": 517,
+     "clock_pins": 1,
+     "clock_entry": [
+      47.52,
+      77.76
+     ],
+     "faces": {
+      "I": 1,
+      "S": 516
+     }
+    },
+    "hnx_rp3h_xs": {
+     "pins_file": "cores/hnx_rp3h_xs__630.72x216__d44v_split.json",
+     "outline_um": [
+      630.72,
+      216.0
+     ],
+     "pins": 7785,
+     "clock_pins": 1,
+     "clock_entry": [
+      315.36,
+      108.0
+     ],
+     "faces": {
+      "E": 1,
+      "I": 1,
+      "N": 4866,
+      "S": 2917
+     }
+    }
+   },
+   "added_cycles": "leaf result +7 edges, xs->glue act mask +2/+3 pure delay; latency/hnx_rp3lp3h_s.tsv (TOK-VERIFY batch)",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {},
+   "designs_removed": [
+    "hnx_rp3lp3h_s"
+   ],
+   "designs_added": [
+    "hnx_rp3h_gs",
+    "hnx_rp3h_lc",
+    "hnx_rp3h_tl",
+    "hnx_rp3h_xs"
+   ]
+  },
+  {
+   "core": "hnx_fused_lane",
+   "sha": "c37ffbb6c4",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "hnx_fused_lane__p7glue.sv",
+   "slot_um": [
+    345.6,
+    518.4
+   ],
+   "instances": 32,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_c": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      345.6,
+      103.68
+     ]
+    ],
+    "u_fcore.u_core.u_p0": [
+     [
+      0.0,
+      112.32
+     ],
+     [
+      172.8,
+      198.72
+     ]
+    ],
+    "u_fcore.u_core.u_p1": [
+     [
+      172.8,
+      112.32
+     ],
+     [
+      172.8,
+      198.72
+     ]
+    ],
+    "u_fcore.u_core.u_p2": [
+     [
+      0.0,
+      319.68
+     ],
+     [
+      172.8,
+      198.72
+     ]
+    ],
+    "u_fcore.u_core.u_p3": [
+     [
+      172.8,
+      319.68
+     ],
+     [
+      172.8,
+      198.72
+     ]
+    ]
+   },
+   "tables": {
+    "hnx_fused_lane_c": {
+     "pins_file": "cores/hnx_fused_lane_c__345.6x103.68__d44v_split.json",
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "pins": 2998,
+     "clock_pins": 1,
+     "clock_entry": [
+      172.8,
+      51.84
+     ],
+     "faces": {
+      "E": 289,
+      "I": 1,
+      "N": 2001,
+      "W": 707
+     }
+    },
+    "hnx_fused_lane_elp": {
+     "pins_file": "cores/hnx_fused_lane_elp__172.8x198.72__d44v_split.json",
+     "outline_um": [
+      172.8,
+      198.72
+     ],
+     "pins": 653,
+     "clock_pins": 1,
+     "clock_entry": [
+      86.4,
+      99.36
+     ],
+     "faces": {
+      "I": 1,
+      "N": 1,
+      "S": 651
+     }
+    }
+   },
+   "added_cycles": "up chunk sum +4, wq/fin HC_POST +4, HC_PRE_NORM +8, flt +4, rq 0, scalar up 0, inputs 0; latency/hnx_fused_lane.tsv (TOK-VERIFY batch)",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 160,
+    "dead-port": 128
+   },
+   "designs_removed": [
+    "hnx_fused_lane"
+   ],
+   "designs_added": [
+    "hnx_fused_lane_c",
+    "hnx_fused_lane_elp"
+   ]
   }
  ],
  "core_faces_moves": [

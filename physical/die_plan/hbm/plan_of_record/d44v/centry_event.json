@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_clock_entry_pin_event.v1",
  "plan": "p/b3/die_plan.json",
- "plan_sha256": "93c039aac5806b8d182e2b7c89c46dfce08d43839017e52c21945a48767bcf7b",
- "clock_entries_sha256": "087f32384d9d77fb38d8a5da96feebf8a3b2e6576de6aee9ba03443775ba17c9",
+ "plan_sha256": "a0434e20f6d8c7272a4c4a91f325f882a59c3eb0174cc3c7d84df1ac22486f4c",
+ "clock_entries_sha256": "f69d44c07f4a7b774ff4615efeb1d6f72da99e4612b1019e3f3e5d220120a6f5",
  "keep": [
   "ot_hbm_idx_qctl_static",
   "ot_hbm_idx_score_hcol_h1",
@@ -15,7 +15,7 @@
  ],
  "rule": "METHODOLOGY 12.8a plan clock entry; gen_core_kit_hbm plan_clock_entries + clock_entry_pin (DIE-HBM-60, COORD 11-03 00:2x (4))",
  "summary": {
-  "tables": 87,
+  "tables": 91,
   "moved": 51,
   "kept": 6,
   "refused": 0,
@@ -219,14 +219,29 @@
     120.96
    ]
   },
-  "hnx_rp3lp3h_s|cores/hnx_rp3lp3h_s.json": {
-   "module": "hnx_rp3lp3h_s",
-   "pins_file": "cores/hnx_rp3lp3h_s.json",
+  "hnx_rp3h_gs|cores/hnx_rp3h_gs__630.72x345.6__d44v_split.json": {
+   "module": "hnx_rp3h_gs",
+   "pins_file": "cores/hnx_rp3h_gs__630.72x345.6__d44v_split.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
-  "hnx_rp3lp3h_n|cores/hnx_rp3lp3h_n.json": {
-   "module": "hnx_rp3lp3h_n",
-   "pins_file": "cores/hnx_rp3lp3h_n.json",
+  "hnx_rp3h_lc|cores/hnx_rp3h_lc__198.72x216__d44v_split.json": {
+   "module": "hnx_rp3h_lc",
+   "pins_file": "cores/hnx_rp3h_lc__198.72x216__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "hnx_rp3h_tl|cores/hnx_rp3h_tl__95.04x155.52__d44v_split.json": {
+   "module": "hnx_rp3h_tl",
+   "pins_file": "cores/hnx_rp3h_tl__95.04x155.52__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "hnx_rp3h_xs|cores/hnx_rp3h_xs__630.72x216__d44v_split.json": {
+   "module": "hnx_rp3h_xs",
+   "pins_file": "cores/hnx_rp3h_xs__630.72x216__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "hnx_rp3h_gn|cores/hnx_rp3h_gn__630.72x345.6__d44v_split.json": {
+   "module": "hnx_rp3h_gn",
+   "pins_file": "cores/hnx_rp3h_gn__630.72x345.6__d44v_split.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
   "ot_hbm_svc_sm_xcal_rel_t|cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__canon.json": {
@@ -2913,9 +2928,14 @@
     155.52
    ]
   },
-  "hnx_fused_lane|cores/hnx_fused_lane__345.6x518.4__mu_template.json": {
-   "module": "hnx_fused_lane",
-   "pins_file": "cores/hnx_fused_lane__345.6x518.4__mu_template.json",
+  "hnx_fused_lane_c|cores/hnx_fused_lane_c__345.6x103.68__d44v_split.json": {
+   "module": "hnx_fused_lane_c",
+   "pins_file": "cores/hnx_fused_lane_c__345.6x103.68__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "hnx_fused_lane_elp|cores/hnx_fused_lane_elp__172.8x198.72__d44v_split.json": {
+   "module": "hnx_fused_lane_elp",
+   "pins_file": "cores/hnx_fused_lane_elp__172.8x198.72__d44v_split.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
   "ot_hnx_fused_tnode|cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json": {

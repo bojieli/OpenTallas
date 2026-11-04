@@ -19,13 +19,14 @@ python3 $R/mk_b128.py p/b3
 python3 $R/mk_cefix.py p/b3
 python3 $R/mk_mpisl_q.py p/b3
 python3 $R/mk_split.py p/b3 $R/split_p6/split_p6.json $R/split_p6 > split_p6.log; cut -c1-300 split_p6.log
+python3 $R/mk_split.py p/b3 $R/split_p7/split_p7.json $R/split_p7 > split_p7.log; cut -c1-400 split_p7.log
 python3 $R/mk_smrst.py p/b3 $T | cut -c1-300
-cp p/b3/die_plan.json /tmp/h61_lat_before.json
+cp p/b3/die_plan.json h61_lat_before.json
 python3 $R/mk_bays.py p/b3 $S0
 (cd p/b3 && python3 ../../$T/gen.py latency die_plan.json --inplace --out ../../lat_p2 | tail -1)
 python3 - p/b3 <<'PY'
 import json, sys
-A = json.load(open('/tmp/h61_lat_before.json'))['latency']['lanes']; B = json.load(open(sys.argv[1] + '/die_plan.json'))['latency']['lanes']
+A = json.load(open('h61_lat_before.json'))['latency']['lanes']; B = json.load(open(sys.argv[1] + '/die_plan.json'))['latency']['lanes']
 old = json.load(open('latency_changes.json'))
 ch = {k: dict(before=old.get(k, {}).get('before', A[k]), after=B[k]) for k in B if A.get(k) != B[k]}
 old.update(ch); json.dump(old, open(sys.argv[1] + '/latency_changes_d44v.json', 'w'), indent=1)
@@ -35,7 +36,7 @@ rm -rf p/b4cx; python3 $T/clock_entry_pins.py p/b3 --keep $K --write p/b4cx | ta
 rm -rf p/$OUT; cp -al p/b3 p/$OUT; rm p/$OUT/die_plan.json; cp p/b4cx/die_plan.json p/b4cx/centry_event.json p/$OUT/
 cp --update=none p/b4cx/cores/* p/$OUT/cores/
 python3 $R/mk_census.py reform_v4.json p/b2/reform_event.json p/$OUT/reform_census.json | head -1
-python3 $R/mk_clkreg.py p/$OUT h61_geomcoll.json --keep $K
+python3 $R/mk_clkreg.py p/$OUT h61_geomcoll.json --extra $R/split_p7/sinks.json --keep $K
 python3 $R/mk_split_slots.py p/$OUT $R/split_spec.json reform_v4.json > /dev/null
 git -C repo show 55c4a61894a:physical/die_plan/hbm/mem_reform_1103/recipe_delta.json > p/$OUT/mem_recipe_delta.json
 sha256sum p/$OUT/die_plan.json | cut -c1-12
