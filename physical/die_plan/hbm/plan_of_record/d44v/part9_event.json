@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.hbm_plan_event.part9",
+ "moved": {
+  "cores/ot_hbm_su_pg_lane1_core__190.08x311.04__d44v_split__oneclk.json": 16,
+  "cores/ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__440.64x207.36__canon__codex_g21__centry__oneclk.json": 60,
+  "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon__codex_g21__centry__oneclk.json": 2,
+  "cores/ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28__q_hub_u_hb_coll_Q_reduce__oneclk__codex_g21__centry__in512.json": 2
+ },
+ "q2r_dropped": 33,
+ "core_macros": [
+  "ot_hbm_su_pg_lane1_core",
+  "ot_hbm_svc_sm_xcal_rel_t"
+ ]
+}

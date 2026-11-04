@@ -1,3 +1,203 @@
+WARN  [types] near-duplicate types ['q_b012', 'q_b012__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_b013', 'q_b013__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_b110', 'q_b110__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_b111', 'q_b111__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_b113', 'q_b113__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['NE_io', 'NW_io'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_spb0', 'q_spb0__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_spb2', 'q_spb2__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_spt0', 'q_spt0__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_spt1', 'q_spt2'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['q_spu1', 'q_spu1__physical_v1'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['vsN5', 'vsN6'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [core_faces] type q_b000: 3/19 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b001: 14/48 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b002: 3/11 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b010: 11/41 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b011: 3/19 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b101: 1/25 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_su20 core u_su_Q2_lanes16_19 port rst_lane_n: 4 pins on face S face away from its partner(s) u_su_Q2_lanes0_3, u_su_Q2_lanes24_27, u_su_Q2_lanes8_11__p0 ...: mean cos -0.02, 4 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type root core u_tkm_SW_tile7 port tile_clr_o: 1 pins on face N face away from its partner(s) u_tkm_SW_tile8: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type root core u_tkm_SW_tile7 port tile_conv: 1 pins on face N face away from its partner(s) u_tkm_SW_tile8: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type root core u_tkm_SW_tile7 port tile_ovf_b: 344 pins on face N face away from its partner(s) u_tkm_SW_tile8: mean cos -0.08, 344 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type root core u_tkm_SW_tile7 port tile_ovf_v: 1 pins on face N face away from its partner(s) u_tkm_SW_tile8: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type root core u_tkm_SW_tile7 port tile_up_in: 344 pins on face N face away from its partner(s) u_tkm_SW_tile8: mean cos -0.08, 344 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type root core u_hb_idx__selector port k: 10 pins on face W face away from its partner(s) u_col_idx: mean cos -0.04, 10 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_vmb_Q2 port rr0: 257 pins on face W face away from its partner(s) face N (L103_o), face N (L135_i), face N (L25_i) ...: mean cos -0.06, 257 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_vmb_Q4 port rq2: 17 pins on face E face away from its partner(s) u_xl_Q_ctl: mean cos -0.07, 17 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_vmb_Q4 port rr2: 257 pins on face E face away from its partner(s) u_xl_Q_ctl: mean cos -0.07, 257 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_vmb_Q5 port rq2: 17 pins on face E face away from its partner(s) u_xl_Q_ctl: mean cos -0.04, 17 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_vmb_Q5 port rr2: 257 pins on face E face away from its partner(s) u_xl_Q_ctl: mean cos -0.04, 257 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_vmb_Q6 port rr0: 257 pins on face E face away from its partner(s) face S (L105_o), face S (L131_i), face S (L27_i) ...: mean cos -0.07, 257 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_vmb_Q6 port wq_done0: 1 pins on face E face away from its partner(s) face S (L105_o), face S (L113_o), face S (L131_i) ...: mean cos -0.09, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+ERROR [core_faces] type q_hub_nw core u_vmb_Q6_mu1 port dq: 281 pins on face E face away from its partner(s) u_vmdel_Q6: mean cos -0.53, 281 pins on the far side (re-pin to face N)
+ERROR [core_faces] type q_hub_nw core u_vmb_Q7_mu1 port dq: 281 pins on face E face away from its partner(s) u_vmdel_Q7: mean cos -0.98, 281 pins on the far side (re-pin to face W)
+WARN  [core_faces] type q_hub_nw core u_hb_idx__q_Q__q0 port ql_codes: 512 pins on face N face away from its partner(s) face S (L137_i), face S (L6_o), face S (L7_o) ...: mean cos -0.09, 512 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_hb_idx__q_Q__q0 port ql_head: 8 pins on face N face away from its partner(s) face S (L137_i), face S (L6_o), face S (L7_o) ...: mean cos -0.09, 8 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_hb_idx__q_Q__q0 port ql_sc: 32 pins on face N face away from its partner(s) face S (L137_i), face S (L6_o), face S (L7_o) ...: mean cos -0.09, 32 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_hb_idx__q_Q__q0 port ql_v: 1 pins on face N face away from its partner(s) face S (L137_i), face S (L6_o), face S (L7_o) ...: mean cos -0.09, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_hb_idx__q_Q__q0 port ql_w: 16 pins on face N face away from its partner(s) face S (L137_i), face S (L6_o), face S (L7_o) ...: mean cos -0.09, 16 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_smw_Q__q1 port wq_s2: 281 pins on face S face away from its partner(s) u_vmb_Q2, u_vmm_Q2: mean cos -0.02, 281 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_smw_Q__q1 port wq_t0: 281 pins on face E/S face away from its partner(s) u_vmb_Q4, u_vmm_Q4: mean cos -0.06, 154 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_cij_Q__q0 port su_inj_d_r0: 512 pins on face W face away from its partner(s) u_cxij_Q_s: mean cos -0.06, 512 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw core u_cij_Q__q0 port su_inj_d_r1: 512 pins on face W face away from its partner(s) u_cxij_Q_s: mean cos -0.06, 512 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_nw: 22/207 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b101_nw: 1/25 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+ERROR [core_faces] type q_hub_ne core u_vmb_Q0 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p0: mean cos -0.27, 281 pins on the far side (re-pin to face E)
+WARN  [core_faces] type q_hub_ne core u_vmb_Q0 port rq1: 17 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.05, 17 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q0 port rr1: 257 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.05, 257 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+ERROR [core_faces] type q_hub_ne core u_vmb_Q2 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p1: mean cos -0.79, 281 pins on the far side (re-pin to face N)
+WARN  [core_faces] type q_hub_ne core u_vmb_Q2 port rq1: 17 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.08, 17 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q2 port rr1: 257 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.08, 257 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+ERROR [core_faces] type q_hub_ne core u_vmb_Q3 port rr0: 257 pins on face W face away from its partner(s) face N (L103_o), face N (L135_i), face N (L25_i) ...: mean cos -0.10, 257 pins on the far side (re-pin to face N)
+WARN  [core_faces] type q_hub_ne core u_vmb_Q4 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p2: mean cos -0.05, 281 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+ERROR [core_faces] type q_hub_ne core u_vmb_Q4 port rq1: 17 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.93, 17 pins on the far side (re-pin to face N)
+ERROR [core_faces] type q_hub_ne core u_vmb_Q4 port rr1: 257 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.93, 257 pins on the far side (re-pin to face N)
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port eg: 276 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.08, 276 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port pq: 285 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.08, 285 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port pr: 266 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.08, 266 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port rslot: 3 pins on face N face away from its partner(s) u_calendar_Q: mean cos -0.07, 3 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port rslot_v: 1 pins on face N face away from its partner(s) u_calendar_Q: mean cos -0.07, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port status: 18 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.08, 18 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port wslot: 3 pins on face N face away from its partner(s) u_calendar_Q: mean cos -0.07, 3 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port wslot_v: 1 pins on face N face away from its partner(s) u_calendar_Q: mean cos -0.07, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port xq: 276 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.08, 276 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port xq2: 276 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.08, 276 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port xq2_done: 1 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.08, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q6 port xq_done: 1 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.08, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q7 port eg: 276 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.02, 276 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q7 port pq: 285 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.02, 285 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q7 port pr: 266 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.02, 266 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q7 port status: 18 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.02, 18 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q7 port xq: 276 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.02, 276 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q7 port xq2: 276 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.02, 276 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q7 port xq2_done: 1 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.02, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_vmb_Q7 port xq_done: 1 pins on face W face away from its partner(s) u_hb_vms_Q: mean cos -0.02, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_hb_idx__q_Q__q0 port emit_head: 5 pins on face W face away from its partner(s) u_hb_idx__qctl_Q__q0: mean cos -0.03, 5 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type q_hub_ne core u_hb_idx__q_Q__q0 port emit_v: 1 pins on face W face away from its partner(s) u_hb_idx__qctl_Q__q0: mean cos -0.03, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+ERROR [core_faces] type q_hub_ne: 13 core ports face away from their partners (8 more not listed)
+WARN  [core_faces] type q_hub_ne: 22/204 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b000__physical_v1: 3/19 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b001__physical_v1: 14/48 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b002__physical_v1: 3/11 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b010__physical_v1: 11/41 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type q_b011__physical_v1: 3/19 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [geometry] type q_b001 slot L730x2: crossing ~2553 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b010 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b010 slot L730x3: crossing ~2575 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b012 slot L731x1: crossing ~2436 um > 6 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b101 slot L6cr0_1: crossing ~1140 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b102 slot L48x1: crossing ~1132 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b102 slot L53x11: crossing ~1132 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b113 slot L125x1: crossing ~1715 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_su01 slot L28_detour: crossing ~1754 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_su10 slot L0x1: crossing ~1888 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_su30 slot L181r0_1: crossing ~1810 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type root slot L114x4: crossing ~4739 um > 6 station(s) x reach 405 (see hops)
+WARN  [geometry] type root slot L114mx4: crossing ~4739 um > 7 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b101_nw slot L6cr0_1: crossing ~1140 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b001__physical_v1 slot L730x2: crossing ~2553 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b010__physical_v1 slot L730x3: crossing ~2575 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b012__physical_v1 slot L731x1: crossing ~2436 um > 6 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b102__physical_v1 slot L48x1: crossing ~1132 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b102__physical_v1 slot L53x11: crossing ~1132 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_b113__physical_v1 slot L125x1: crossing ~1715 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_su01__physical_v1 slot L28_detour: crossing ~1754 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_su10__physical_v1 slot L0x1: crossing ~1888 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type q_su30__physical_v1 slot L181r0_1: crossing ~1810 um > 3 station(s) x reach 405 (see hops)
+WARN  [clock_entry_macro] module ot_hbm_idx_score_hcol_h0_ra: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hbm_idx_score_hcol_h0_rb: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] type q_b000 hard core u_hb_idx__s_Q2_r0c0_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b000 hard core u_hb_idx__s_Q2_r0c0_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b000 hard core u_hb_idx__s_Q2_r0c0_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r0c3_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r0c3_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c0_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c0_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c0_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c0_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c1_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c1_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c1_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c1_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c2_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c2_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c2_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001 hard core u_hb_idx__s_Q2_r1c2_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b002 hard core u_hb_idx__s_Q2_r1c3_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b002 hard core u_hb_idx__s_Q2_tail0 (ot_hbm_idx_tail_native): no plan clock entry
+WARN  [clock_entry_macro] type q_b002 hard core u_hb_idx__s_Q2_tail1 (ot_hbm_idx_tail_native): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c0_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c1_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c1_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c1_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c1_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c2_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c2_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c2_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c2_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c3_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010 hard core u_hb_idx__s_Q2_r0c3_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b011 hard core u_hb_idx__s_Q2_r1c3_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b011 hard core u_hb_idx__s_Q2_r1c3_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b011 hard core u_hb_idx__s_Q2_r1c3_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] module ot_hbm_idx_score_hcol_h1: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hbm_idx_tail_native: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hgi_sfu_split3_lane_core_bk: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hgi_sfu_split3_lane_core_ex: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hgi_sfu_split3_lane_core_fr: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module hnx_rp3h_gs: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module hnx_rp3h_lc: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module hnx_rp3h_tl: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module hnx_rp3h_gn: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hgi_coll_tkm_tp192_tile_core__idpin__strap: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hbm_hc_root_static__tailx_sk_step0: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hbm_hc_root_static__tailx_sk_steady: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hbm_hc_root_static__tailx_rest__v6bc7f2: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hbm_hc_root_static__tailx_rest__v4f4566: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hbm_svc_vm_kshare_splitstrap__v700685: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hbm_svc_vm_kshare_splitstrap__v8e478a: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module hnx_fused_lane_elp: macro positions not in sidecar -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hfd_coll_q3_vm_core: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] module ot_hfd_coll_q2n2_vm_core: macro positions UNKNOWN -- clock entry vs macros unchecked
+WARN  [clock_entry_macro] type q_b000__physical_v1 hard core u_hb_idx__s_Q2_r0c0_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b000__physical_v1 hard core u_hb_idx__s_Q2_r0c0_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b000__physical_v1 hard core u_hb_idx__s_Q2_r0c0_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r0c3_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r0c3_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c0_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c0_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c0_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c0_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c1_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c1_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c1_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c1_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c2_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c2_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c2_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b001__physical_v1 hard core u_hb_idx__s_Q2_r1c2_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b002__physical_v1 hard core u_hb_idx__s_Q2_r1c3_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b002__physical_v1 hard core u_hb_idx__s_Q2_tail0 (ot_hbm_idx_tail_native): no plan clock entry
+WARN  [clock_entry_macro] type q_b002__physical_v1 hard core u_hb_idx__s_Q2_tail1 (ot_hbm_idx_tail_native): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c0_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c1_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c1_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c1_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c1_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c2_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c2_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c2_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c2_k3h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c3_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b010__physical_v1 hard core u_hb_idx__s_Q2_r0c3_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b011__physical_v1 hard core u_hb_idx__s_Q2_r1c3_k0h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b011__physical_v1 hard core u_hb_idx__s_Q2_r1c3_k1h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+WARN  [clock_entry_macro] type q_b011__physical_v1 hard core u_hb_idx__s_Q2_r1c3_k2h1 (ot_hbm_idx_score_hcol_h1): no plan clock entry
+PENDING-VIEW [merged_clock_view] q_b100/u_hb_idx__s_Q_r0c0_k0h1: PENDING-VIEW no native LEF+Liberty for ot_hbm_idx_score_hcol_h1; tap stays at plan clock pins ['clk_pair[0]', 'clk_pair[1]']
+PENDING-VIEW [merged_clock_view] q_b100/u_hb_idx__s_Q_r0c0_k1h1: PENDING-VIEW no native LEF+Liberty for ot_hbm_idx_score_hcol_h1; tap stays at plan clock pins ['clk_pair[0]', 'clk_pair[1]']
+... 977 more in g0_report.json
 G0C per type: 7/81 types clean (G3-eligible: 0); die-level {'street_die_leg': 2}; ERRORs
-G0C FAIL: 24 errors, 64 pending-view, 1085 warnings; 81 types / 90 partitions (24 in near-duplicate groups); worst cut {'ratio': 0.1767, 'at': 'horizontal@6000'}, worst partition segment {'ratio': 0.5938, 'at': 'horizontal@5250:NW_b101'}; report ck_d44v11/g0_report.json
-EXIT 1
+G0C FAIL: 24 errors, 64 pending-view, 1089 warnings; 81 types / 90 partitions (24 in near-duplicate groups); worst cut {'ratio': 0.1767, 'at': 'horizontal@6000'}, worst partition segment {'ratio': 0.5938, 'at': 'horizontal@5250:NW_b101'}; report g0/g0_report.json

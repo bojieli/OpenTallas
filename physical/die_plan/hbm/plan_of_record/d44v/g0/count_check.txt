@@ -16,3 +16,4 @@ record ot_hbm_static_cfg_collar_idx256r MATCH ot_hbm_static_cfg_collar_idx256r (
 record ot_hbm_su_static_pgslice_lg__pretree MATCH ot_hbm_su_static_pgslice_lg__pretree (pins 1138: match 1138, convention 0)
 record ot_hfd_coll_q2_hard_v8g__ring_ag MATCH ot_hfd_coll_q2_hard_v8g__ring_ag (pins 2226: match 2226, convention 0)
 record ot_hnx_fused_tnode MATCH ot_hnx_fused_tnode (pins 1341: match 1341, convention 0)
+Part 9: designs 91 -> 91. ot_hfd_coll_q2_hard_v8g__reduce record ss27/resign/q2r_d kit pins.json vs new table: pin_compare match 1110, moved 0, extra 0, missing 0, pins_equiv True (release_tree_plan.py). Oneclk modules lane1, lane_exp canon, split3 ctl and xcal_rel_t have no signed record.
