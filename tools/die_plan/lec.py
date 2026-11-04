@@ -271,6 +271,43 @@ def blackbox_local_constant_cleanup(env, kit):
     return commands
 
 
+def blackbox_formal_parameters(env, kit, masters):
+    """{hard macro: [formal parameter names]} read from the macro's own source header.
+
+    An instance may override a formal parameter of a hard macro (#(.AL(6), .ML(7), .MUTANT(0))); the pin-only stub must
+    still accept those names, or hierarchy -check stops the gold read and the LEC is UNPROVEN.  Only names the source
+    declares are added, so an override of an unknown name still fails hierarchy.
+    """
+    found = {}
+    files = [Path(kpath(kit, f)) for f in env.get("VERILOG_FILES", "").split()]
+    for path in files:
+        try:
+            text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*', " ", path.read_text(), flags=re.S)
+        except OSError:
+            continue
+        for master in masters:
+            match = re.search(r"\bmodule\s+" + re.escape(master) + r"\s*#\s*\(", text)
+            if not match:
+                continue
+            depth, i = 1, match.end()
+            while i < len(text) and depth:
+                depth += {"(": 1, ")": -1}.get(text[i], 0)
+                i += 1
+            header, depth, parts, part = text[match.end():i - 1], 0, [], ""
+            for ch in header:
+                depth += {"(": 1, "[": 1, "{": 1, ")": -1, "]": -1, "}": -1}.get(ch, 0)
+                if ch == "," and depth == 0:
+                    parts.append(part)
+                    part = ""
+                else:
+                    part += ch
+            parts.append(part)
+            names = [m.group(1) for m in (re.search(r"([A-Za-z_][A-Za-z0-9_$]*)\s*(?:\[[^\]]*\]\s*)*=", q) for q in parts) if m]
+            if names:
+                found[master] = sorted(set(found.get(master, [])) | set(names))
+    return found
+
+
 ESC_DOTTED = re.compile(r"^[A-Za-z_][\w$]*(?:\.[A-Za-z_][\w$]*)+$")
 
 
@@ -1122,7 +1159,7 @@ def parse_bb_verilog(path):
     return mods
 
 
-def stub_verilog(bbports, native_parameters=None):
+def stub_verilog(bbports, native_parameters=None, formal_parameters=None):
     """{module: [(port, dir, width, lsb)]} -> stubs identical for gold and gate: input bits land on keep flops
     '<inst>.lec_bbi_<pin>[i]' (compare points), output bits come from free self-loop flops '<inst>.lec_bbo_<pin>[i]'
     (shared inputs)."""
@@ -1138,6 +1175,8 @@ def stub_verilog(bbports, native_parameters=None):
                 out.append(f"  parameter {integer}{param} = {literal};")
         elif re.fullmatch(r"ot_rom_[0-9]+x[0-9]+_m[0-9]+", mod):
             out.append('  parameter VIAMAP = "", INSTANCE = "";')
+        elif formal_parameters and mod in formal_parameters:
+            out.append("  parameter " + ", ".join(f"{name} = 0" for name in formal_parameters[mod]) + ";")
         out.append("  wire lec_clk;")
         for p, d, w, lo in ports:
             rng = f"[{lo + w - 1}:{lo}] " if w > 1 or lo else ""
@@ -4271,6 +4310,115 @@ def noreset_sound(L):
     return out
 
 
+def self_hold_reset(d, lit, c, max_cone=400, max_support=12):
+    """COORD 11-04 (S81 leaf, form 1): the one no-load-path constant.  lit = a register's literal, c its constant.
+    -> (reset var, value) when the next state, exhaustively over its small support, (1) reads the register, (2) with
+    the register at c stays c for every other input and state: there is no load path, and (3) one support var at one
+    value forces c whatever the register holds: the reset.  Else None: a hold path that a load can leave (D = en ? v :
+    Q) never qualifies, nor does a register with no reset (D = Q).  Soundness rests on that reset being asserted
+    before use; lec.json lists each register with its net so the claim can be read."""
+    I, NL, a, nand = d["I"], d["L"], d["ands"], d["A"]
+    base, q = I + NL + 1, lit >> 1
+    if not I < q < base:
+        return None
+    cq = c ^ (lit & 1)
+    fold = d.get("_const_fold")
+    if fold is None:                  # aigmap keeps an AND with constant 0: its other input is no support
+        fold = {0: 0}
+        for k in range(nand):
+            x, y = [None if (r >> 1) not in fold else fold[r >> 1] ^ (r & 1) for r in (a[2 * k], a[2 * k + 1])]
+            if x == 0 or y == 0:
+                fold[base + k] = 0
+            elif x == 1 and y == 1:
+                fold[base + k] = 1
+        d["_const_fold"] = fold
+    nxt = d["latches"][q - I - 1]
+    cone, support, todo = set(), set(), [nxt >> 1]
+    while todo:
+        v = todo.pop()
+        if v in fold or v in cone or v in support:
+            continue
+        if v < base:
+            support.add(v)
+        else:
+            cone.add(v)
+            if len(cone) > max_cone:
+                return None
+            todo += [a[2 * (v - base)] >> 1, a[2 * (v - base) + 1] >> 1]
+    if q not in support or len(support) > max_support:
+        return None
+    order, others = sorted(cone), sorted(support - {q})
+
+    def next_state(asg):
+        val = dict(fold)
+        val.update(asg)
+        for v in order:
+            r0, r1 = a[2 * (v - base)], a[2 * (v - base) + 1]
+            val[v] = (val[r0 >> 1] ^ (r0 & 1)) & (val[r1 >> 1] ^ (r1 & 1))
+        return val[nxt >> 1] ^ (nxt & 1)
+
+    def assignments(names):
+        for m in range(1 << len(names)):
+            yield {n: (m >> i) & 1 for i, n in enumerate(names)}
+
+    if any(next_state({**x, q: cq}) != cq for x in assignments(others)):
+        return None
+    for r in others:
+        rest = [n for n in others if n != r] + [q]
+        for b in (0, 1):
+            if all(next_state({**x, r: b}) == cq for x in assignments(rest)):
+                return r, b
+    return None
+
+
+ASYNC_LOG = re.compile(r"^Replacing \S+?\.(\S+) \((\$\S+)\): (.*)$")
+ASYNC_ORIG = re.compile(r"\$_DFFE?_[PN][PN]([01])(?:[PN])?_")
+
+
+def read_async_resets(*logs):
+    """yosys logs of one side -> {'ff:<reg bit>': (reset value, async net or None)}: async2sync prints every flop it
+    rewrites, the only place the async reset is still visible.  Gold $_ALDFF_ with a constant AD: value + net; a gate
+    liberty flop ($_DFFSR_, set and clear nets are internal): the value from the mapped type kept in its name.  A flop
+    that only has a synchronous load never appears here."""
+    out = {}
+    for path in logs:
+        try:
+            lines = Path(path).read_text(errors="replace").splitlines()
+        except OSError:
+            continue
+        for ln in lines:
+            m = ASYNC_LOG.match(ln)
+            if not m:
+                continue
+            key = flop_key(m[1] + ".lecq")[0]
+            if not key or key.startswith("$"):
+                continue
+            if m[2].startswith("$_ALDFF_"):
+                f = re.search(r"ALOAD=(.*?), AD=1'([01]),", m[3])
+                if f:
+                    out["ff:" + GENBLK.sub("", key)] = (int(f[2]), f[1].lstrip("\\"))
+            elif m[2].startswith("$_DFFSR_"):
+                f = ASYNC_ORIG.search(m[1])
+                if f:
+                    out["ff:" + GENBLK.sub("", key)] = (int(f[1]), None)
+    return out
+
+
+def _noreset_self_hold(L, s, k, c):
+    """self_hold_reset for one hypothesis, cached; a hit is recorded for lec.json: L.noreset_self_hold[(side, key)]"""
+    cache = L.__dict__.setdefault("_self_hold_cache", {})
+    key = (s, k, c)
+    if key not in cache:
+        d, p = (L.gold, L.gp) if s == "gold" else (L.gate, L.tp)
+        ar = ((getattr(L, "async_reset_regs", None) or {}).get(s) or {}).get(k)
+        got = self_hold_reset(d, p[k], c) if k in p and ar and ar[0] == c else None
+        if got:
+            names = [n for n, lit in p.items() if lit >> 1 == got[0]]
+            got = dict(value=c, reset_net=names[0] if names else f"var{got[0]}", forces_at=got[1], async_net=ar[1])
+        cache[key] = got
+    return cache[key]
+
+
 def _noreset_held(L, consts, sides, cycles, extra, banned):
     """noreset_sound's fixpoint -> {(side, key): first edge the constant holds}; edges past `cycles` only for
     unmatched registers not in `banned`."""
@@ -4286,6 +4434,11 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
             if prefix is not None and (prefix <= cycles or
                     (sd != "both" and k not in matched and (s, k) not in banned)):
                 edges.append(prefix)
+            if not edges:
+                sh = _noreset_self_hold(L, s, k, c)
+                if sh:
+                    L.__dict__.setdefault("noreset_self_hold", {})[(s, k)] = sh
+                    edges.append(1)
             if edges:
                 held[(s, k)] = min(edges)
     hyp_side = lambda s, j: (("both", j) in consts) or ((s, j) in consts)
@@ -4625,9 +4778,14 @@ def noreset_report(L):
         sides = ("gold", "gate") if sd == "both" else (sd,)
         raw = all(getattr(L, "raw_constant_status", {}).get((s, k, h[1])) == "proved" for s in sides)
         prefix = all(getattr(L, "raw_prefix_edges", {}).get((s, k, h[1])) == edge for s in sides)
+        sh = getattr(L, "noreset_self_hold", {})
+        hold = (not raw and not prefix and all((s, k) in sh for s in sides))
         kept.append(dict(register=k, side=sd, value=h[1], edge=edge,
+                         **(dict(reset_net=sh[(sides[0], k)]["reset_net"], forces_at=sh[(sides[0], k)]["forces_at"],
+                                  async_net=sh[(sides[0], k)].get("async_net")) if hold else {}),
                          basis="universal_raw_D" if raw else
                                "universal_raw_prefix" if prefix else
+                               "self_hold_reset" if hold else
                                "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
@@ -4646,12 +4804,16 @@ def noreset_report(L):
                 raw_prefix_bounded=list(getattr(L, "raw_prefix_bounded", []))[:200],
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
                 universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
+                n_self_hold=sum(1 for e in kept if e["basis"] == "self_hold_reset"),
+                self_hold=[e for e in kept if e["basis"] == "self_hold_reset"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
                 n_dropped=len(dropped), reloaded=[e for e in kept if e["basis"] == "reloaded"][:500],
                 dropped=dropped[:500],
                 basis=("a constant hypothesis is kept only when the reset state (every reset port asserted for "
                        "reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic "
-                       "reload is inductively constant from already established constants; equality/FSM "
+                       "reload is inductively constant from already established constants, or (self_hold, COORD "
+                       "11-04) the register has no load path and one net forces the constant, listed per register "
+                       "with that net, which must be asserted before use; equality/FSM "
                        "assumptions never establish a constant's base case"))
 
 
@@ -4666,7 +4828,8 @@ def noreset_listing(L, path):
         noreset_report(L)
         kept = L.noreset_kept_all
     rows = ["status\tside\tregister\tvalue\tedge\tbasis"]
-    rows += [f"kept\t{e['side']}\t{e['register']}\t{e['value']}\t{e['edge']}\t{e['basis']}" for e in kept]
+    rows += [f"kept\t{e['side']}\t{e['register']}\t{e['value']}\t{e['edge']}\t{e['basis']}"
+             + (f" {e['reset_net']}={e['forces_at']}" if e.get("reset_net") else "") for e in kept]
     rows += [f"dropped\t{e['side']}\t{e['register']}\t{e['value']}\t\tnot constant in the reset state"
              for e in L.noreset_dropped_all]
     data = ("\n".join(rows) + "\n").encode()
@@ -6911,6 +7074,14 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                 (out / "icg_gold_bb.v").write_text(icg_verilog(gicg))
                 env["_LEC_ICG_GOLD_V"] = str(out / "icg_gold_bb.v")
             rec["clock_gate_cells"] = icg
+        # A hard macro whose module body is also in the kit sources: synth reads its liberty over the body and keeps a
+        # cell, so the gold side must black-box it too, else the netlist names a module the stubs do not have.
+        macro_cells = {c for l in macro_libs(env, kit) for c in lib_cells(l)}
+        declared = set(env.get("SYNTH_BLACKBOXES", "").split())
+        kept = sorted((macro_cells & srcmods & set(types)) - declared)
+        if kept:
+            env["SYNTH_BLACKBOXES"] = " ".join(sorted(declared | set(kept)))
+            rec["macro_bodies_blackboxed"] = kept
         lib_bbs = [l for l in macro_libs(env, kit) if not set(lib_cells(l)) <= srcmods]
         # 0. lint: implicit nets fail the kit before any proof (see implicit_net_lint)
         hits = implicit_net_lint(env, kit, lib_bbs, out, log)
@@ -6940,7 +7111,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if not set(native_parameters).issubset(bbports):
                 raise Unproven("selected native metadata master missing from elaborated blackboxes")
             rec["native_stub_metadata"] = json.loads((out / "native_stub_metadata.json").read_text())
-        (out / "stubs.v").write_text(stub_verilog(bbports, native_parameters))
+        (out / "stubs.v").write_text(stub_verilog(bbports, native_parameters, blackbox_formal_parameters(env, kit, set(bbports))))
         tops = parse_bb_verilog(out / "bb_top.v")
         if top not in tops:
             raise LecError(f"pre-pass did not write the ports of {top}")
@@ -6973,6 +7144,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
                 read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
         L.kit_reset_ports = kit_reset_ports(kit)
+        L.async_reset_regs = {s: read_async_resets(out / f"{s}.ys.log", out / f"{s}_b.ys.log") for s in ("gold", "gate")}
+        rec["async_reset_regs"] = {s: len(v) for s, v in L.async_reset_regs.items()}
         rec["kit_reset_ports"] = L.kit_reset_ports
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
         discovery_rounds = 24
