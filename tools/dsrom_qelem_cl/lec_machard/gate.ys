@@ -1,0 +1,38 @@
+verilog_defines -DSYNTHESIS
+read_verilog -defer -sv /w/rom_lec.sv
+read_verilog -lib -overwrite -sv /w/ot_rom_8192x274_m8_bb.v
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_rom_mac.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_elem_pq_tags.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_kreg.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_chain3.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_chain4.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_fadd2.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_rom_elem_w10.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_bterm.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_chain.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_segtree.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_bf16_lanes.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_fadd.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_bterm2_w10.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_chain2.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_segtree2.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_bf16_lanes2.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_bterm3_w10.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_bterm4_w10.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_bterm5_w10.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_segtree3.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_segtree4.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_segtree5.sv
+read_verilog -defer -sv -noautowire /w/rtl/v41rom/ot_v41_segtree6.sv
+read_verilog -defer -sv -noautowire /w/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fpu.sv
+read_verilog -defer -sv -noautowire /w/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -defer -sv -noautowire /w/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_delay.sv
+read_verilog -defer -sv -noautowire /w/rtl/test/w17_owner_progress_watchdog/pinned/rtl/proto/ot_fp32_add_rne_pipe.sv
+read_verilog -defer -sv -noautowire /w/rtl/common/ot_prefix.sv
+read_verilog -defer -sv -noautowire /w/cg_lec.sv
+hierarchy -check -top ot_v41_rom_elem_q_qxpq_w10_gb -chparam MTP 1 -chparam EARLY 1 -chparam NB 2 -chparam FAST 1 -chparam PP 1 -chparam QTIMING_FIX 1 -chparam QPIPE 1 -chparam QP_XS 1 -chparam QP_CAP 0 -chparam QP_P1 1 -chparam QP_CSAM 10 -chparam QZ 1 -chparam QZ_NS 8 -chparam QZ_NE 4 -chparam QY 1 -chparam QX 10 -chparam PQ 1 -chparam QW 0 -chparam QM 5 -chparam QS 5 -chparam RSTP 1 -chparam CGR 0 -chparam OLAT 0 -chparam IFN 1 -chparam MACHARD 1
+setattr -mod -unset keep_hierarchy *; proc; flatten; opt_clean -purge; memory -nomap; memory_map; async2sync; opt_clean -purge
+stat
+write_rtlil /w/gate.il
