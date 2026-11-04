@@ -116,7 +116,7 @@ ROOT-MERGE-27	ac89fa83e22953b62	LIVE 2026-11-03 14:4x
 LEC-KEEP-1	a1aa2690ff0785350	DONE (not running at 19:4x; was: LIVE 2026-11-03 12:4x)
 PRUNE-1103E	a405a8295339b196e	DONE (not running at 19:4x; was: DONE waiting QC-66 ruling (default 18:3x))
 PRUNE-1103C	ae4ebffcb1c156bf0	DONE (not running at 19:4x; was: DONE)
-PRUNE-1103F	a9bd1b7b8a05336af	LIVE intel2 scratch2 99%
+PRUNE-1103F	a9bd1b7b8a05336af	DONE 20:3x freed 330 GB, intel2 388 GB free
 TOK-VERIFY-1	a55a637ccad993385	LIVE token exactness
 RF-B	a412862b7d3c4d61d	LIVE KV kvs_pc re-form
 RF-E	a70d0be91aadb4fdb	LIVE KV astk/ahub re-form
@@ -129,9 +129,13 @@ DH58-RF2	a35e902987f3403ff	LIVE HEAD l48rf2
 HBM-RF-SPLIT	a4210ad422c3c1891	LIVE HBM >150k splits
 QC-RF-PLAN	a2f15df148bf9ffac	LIVE QC re-form plan event
 PG-CORECONN-3	ac8a6dd5e4de6255a	LIVE PG class
-RF-CAPRT	afb62dd79c0f130b1	LIVE S81 cap_rt
+RF-CAPRT	afb62dd79c0f130b1	DONE 20:00 (cap_rt now under DIE-S81-51 rfdc2)
 RF-GL5	a8134015fffbface0	LIVE S81 gunit_l5
-QC-CLK-EST	a1ef7a08e37724ca0	LIVE QC clock hold-safe
+QC-CLK-EST	a1ef7a08e37724ca0	DONE 20:00 (QC-66 owns follow-up)
 HBM-RF1	a54e3a2a4fda85eab	LIVE HBM RF1 builds
 RF-H-BFCOL	a0521356414119486	LIVE S81 bf_col
-KW-INS-FIX	abff33cea4faf7507	LIVE insertion-band class fix
+KW-INS-FIX	abff33cea4faf7507	DONE merged 466b42259c6
+KW-PROV-1	a3c736586d8671beb	LIVE waits merge (bg work)
+HBM-TAILX-RF	ac1c4900bab36a11e	LIVE HBM tailx_rest RTL (equiv running)
+UNKNOWN-1	acd5b819a84eaf800	LIVE spawned 19:57 (check)
+UNKNOWN-2	a94c3003e5666e97d	LIVE Explore 19:59 (check)

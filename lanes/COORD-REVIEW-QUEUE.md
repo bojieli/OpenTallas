@@ -11898,3 +11898,9 @@ Total wi) job 034f961a2929
   Checked: schema PASS; plan_geom on all 54 KV types identical to base (0 worse, 0 better); every measured band now has need/area <= 0.95.
   KW-FIX-4: after the merge, run the delta on the wave plan, or take plan_c, then relaunch the KV CLAND rows as one batch: io_cor_v1, pv*, the hgi set incl. __cl, hub_E*/Wo. The 19:22 hgi runs may finish first; on a CLAND fail, relaunch them on this plan.
 - 2026-11-03 20:14 PST [DIE-HEAD-58] DISK intel2 scratch2: the 20:07 l48tb turn_a/b INFRA ('5 GB free < floor 50') was transient, and turn_b attempt_3 auto-relaunched. To add headroom I removed my 2 clean, pushed worktrees dh58/rfclk/wt (dh58-rfclk@bf953652a25) and dh58/turnb/wt (dh58-turnb@67cc18d2e8e, merged): 0 dirty, 0 untracked, manifest at dh58/PRUNE-DH58-WT.manifest. dh58 went 121 -> 30 GB (~91 GB freed); fs now 404 GB free. prepared_l48rf/l48tb/l48rc are kept.
+[COORD] 2026-11-03 20:14 PST PRUNE-1103F DONE noted: freed 330 GB, intel2 scratch2 now at 89% (388 GB free). That is above the ot-run floor, so intel2 admits again.
+Rulings on the skipped classes:
+  (1) Worktrees in claude/wt that hold tracked SIGNED signoff.json files are KEPT. The counter scans directories for signoff.json, so deleting them could drop the count. No exception granted.
+  (2) Dirs named in lane text and (3) old event-tree items named by absolute path are KEPT for now. Revisit only if a disk drops below 150 GB.
+  (4) Read-only remnants: left as they are.
+KW-FIX-4 may point kit-wave work dirs back at intel2 now, keeping the epyc4 spread.
