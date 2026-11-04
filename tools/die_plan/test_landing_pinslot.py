@@ -11,7 +11,7 @@ from test_landing_status_slide_resize import COMMON
 
 TCL = Path(__file__).with_name("landing_placement.tcl").read_text()
 pytestmark = pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh unavailable")
-NAMES = ["cland_group_insts", "cland_occupy", "cland_family_w", "cland_put_column", "cland_put", "cland_ffkey", "cland_dsel_wch",
+NAMES = ["cland_group_insts", "cland_occupy", "cland_family_w", "cland_put_column", "cland_put", "cland_ffkey", "cland_freg_rekey", "cland_dsel_wch",
          "cland_column_select", "cland_kbit", "cland_nearest_bit", "cland_ctl_rekey", "cland_bus_pins",
          "cland_place_pinslot", "cland_place_pinslot_col", "cland_start_bterm_name", "cland_place_ff"]
 BITS, SLOTS = 8, 2
@@ -297,3 +297,17 @@ def test_gen_phys_dense_types_opt_in():
     on = {"cland_pinslot_dense_types": ["kv3_io_ft"]}
     assert gen_phys._cland_pinslot_dense(on, "kv3_io_ft__t1") and gen_phys._cland_pinslot_dense(on, "kv3_io_ft")
     assert not gen_phys._cland_pinslot_dense(on, "kv3_io_ft_v1") and not gen_phys._cland_pinslot_dense({}, "kv3_io_ft")
+
+
+@pytest.mark.parametrize("rev,want", [(0, "u/s_d|000000007|000000000|!freg"), (1, f"u/s_d|{999999999 - 7:09d}|000000000|!freg")])
+def test_face_register_keys_to_its_own_bus_bit_not_the_start_pin(rev, want):
+    """hd_turn_a GRT-0183: g_freg.u_face/q[N] as control registers packed at the START-pin bit"""
+    tcl = _proc("cland_freg_rekey") + r"""
+set ffs [list [list {u_t/g_freg.u_face/q\[7\]$_DFF_P_} a] [list {u_t/g_freg.u_face/q\[9\]$_DFF_P_} b] [list {u/s_d|000000001|000000000|x} c] [list {u/ctl} d]]
+lassign [cland_freg_rekey $ffs u/s_d 8 %d] n out
+puts $n; foreach pr $out { puts [lindex $pr 0] }
+""" % rev
+    out = subprocess.run(["tclsh"], input=tcl, text=True, capture_output=True, check=True).stdout.split("\n")
+    assert out[0] == "1" and out[1] == want
+    assert "q\\[9\\]" in out[2]                             # q[9]: beyond the 8-bit bus, stays a control key
+    assert out[3] == "u/s_d|000000001|000000000|x" and out[4] == "u/ctl"
