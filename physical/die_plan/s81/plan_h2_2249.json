@@ -581848,7 +581848,8 @@
   },
   "ring_hold": {
    "sender_ps": 80,
-   "write_edge": "fall"
+   "write_edge": "fall",
+   "ft_ring_max_ps": 166.6
   },
   "seam_hold": {
    "sender_ps": 0.0,
