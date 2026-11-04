@@ -3135,3 +3135,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 - 2026-11-04 07:35 PST COORD hourly: count 102 (94+8t). Train I34 in test, merge ~08:00. DIE-KV-68 live; ROOT-MERGE-30, DIE-S81-54 parking soon. --priority die now needs --disk 20 (canaries 30). Viewed t62@7, sle_su_l0@2: advisory only.
 - 2026-11-04 08:22 PST COORD: limit 07:43-08:20 killed all lanes; 10 fresh successors started 08:2x. Fleet kept running; count 102; I34 not merged, ROOT-MERGE-31 owns it.
 - 2026-11-04 08:34 PST COORD hourly: count 103 (95+8t), bk_g landed. Lanes restarted after limit. Viewed iqf__t1@5 (fill 0.011), slw_su_l0@2 (fill 0.029): advisory.
+2026-11-04 09:35 PST COORD hourly: count 104; main d3001422956 (I35); I36 in test; QC 19 relaunched 09:34; DIE-HBM-66 replaced 65; intel1 128 GB, prune on source-follow gate; epyc2 root 441 GB under floor.
