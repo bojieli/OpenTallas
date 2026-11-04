@@ -16,7 +16,7 @@ SRC="$R/rtl/test/qwen_kv_die/tb_qkd_astk_strip_exadd.sv $R/rtl/test/qwen_kv_die/
  $M/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v"
 one() {  # tag expect(PASS|FAIL) mut gparams...
   local tag=$1 exp=$2 mut=$3; shift 3
-  "$V" --binary -j 4 --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_qkd_astk_strip_exadd -DKVD_HEADS=1 -DKVD_STMUT=$mut "$@" \
+  "$V" --binary -j 4 -CFLAGS -O0 --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_qkd_astk_strip_exadd -DKVD_HEADS=1 -DKVD_STMUT=$mut "$@" \
     -Mdir "$OUT/$tag" -o Vtb $SRC > "$OUT/$tag.build.log" 2>&1 || { echo "BUILD_FAIL $tag" | tee "$OUT/$tag.res"; return; }
   "$OUT/$tag/Vtb" > "$OUT/$tag.log" 2>&1
   local got; got=$(grep -m1 -E '^(PASS|FAIL)' "$OUT/$tag.log" || echo "NORESULT")

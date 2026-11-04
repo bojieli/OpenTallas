@@ -5,7 +5,8 @@
 //       lanes 2, 3 behind CD relay registers each way and EX_ADD2/3 = 2 CD (FIX 1), so EXM = max(2 CD, PADX).
 // Phase 1 (tb_qkd_astk_strip_st's functional stimulus: T 8192, 8,192 score words, M, Z calendar): B must raise no fault and
 // match A edge for edge on ap / af / lt / si, except si's committed-e flags (si[568:537] an engine), which follow the Z
-// return chain and must equal A's EXM edges later.  Phase 2: restart, T 600, random words (the same comparison).
+// return chain and must equal A's EXM edges later (not within EXM edges of a start, which clears both at once).
+// Phase 2 faults (random words): af_b equals af_a at the same edge or EXM edges later (the join-path checks).  Phase 2: restart, T 600, random words (the same comparison).
 // Must FAIL: FIX 0 (the cut without the fix), +define+KVD_STMUT=6 (DT not raised), =7 (near lanes not padded).
 `ifndef KVD_STMUT
 `define KVD_STMUT 0
@@ -29,14 +30,17 @@ module tb_qkd_astk_strip_exadd #(parameter integer CD = 2, parameter integer FIX
  initial begin FM=0;for(n=0;n<8;n=n+1)FM[633*n+537+:32]={32{1'b1}};end
  reg [633*8-1:0] sia_d [0:63];integer k;
  always @(posedge ck)begin for(k=63;k>0;k=k-1)sia_d[k]<=sia_d[k-1];sia_d[0]<=si_a;end
+ reg [63:0] afa_d=0;integer since_start=0;
+ always @(posedge ck)begin afa_d<={afa_d[62:0],af_a};since_start<=aq[0]?0:since_start+1;end
  integer cycle=0,errors=0,m_si=0,m_fl=0,m_ap=0,m_af=0,m_lt=0,afb=0,afa=0,fb=0;
  integer e_;
  always @(negedge ck)if(rst_n)begin
   cycle=cycle+1;
   if((si_b&~FM)!==(si_a&~FM))begin m_si=m_si+1;if(m_si<4)$display("MISMATCH cycle=%0d si (non-flag)",cycle);end
-  if(cycle>EXM+2 && (si_b&FM)!==(sia_d[EXM-1]&FM))begin m_fl=m_fl+1;if(m_fl<4)$display("MISMATCH cycle=%0d si committed flags (A delayed %0d)",cycle,EXM);end
+  if(cycle>EXM+2 && since_start>EXM+1 && (si_b&FM)!==(sia_d[EXM-1]&FM))begin m_fl=m_fl+1;if(m_fl<4)$display("MISMATCH cycle=%0d si committed flags (A delayed %0d)",cycle,EXM);end
   if(ap_b!==ap_a)begin m_ap=m_ap+1;if(m_ap<4)$display("MISMATCH cycle=%0d ap a=%h b=%h",cycle,ap_a,ap_b);end
-  if(af_b!==af_a)begin m_af=m_af+1;if(m_af<4)$display("MISMATCH cycle=%0d af a=%b b=%b",cycle,af_a,af_b);end
+  // the join / adder faults leave EXM edges later on B (its join is EXM later); the others at the same edge
+  if(af_b!==af_a && af_b!==afa_d[EXM-1])begin m_af=m_af+1;if(m_af<4)$display("MISMATCH cycle=%0d af a=%b b=%b",cycle,af_a,af_b);end
   if(lt_b!==lt_a)begin m_lt=m_lt+1;if(m_lt<4)$display("MISMATCH cycle=%0d lt",cycle);end
  end
  reg chk=1;
