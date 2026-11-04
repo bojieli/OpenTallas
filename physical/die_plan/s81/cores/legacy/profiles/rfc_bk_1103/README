@@ -1,0 +1,3 @@
+rfc_bk_1103 plan COPY notes (moved out of plan_h2_2249_rfcbk.json.gz so schema.validate passes)
+
+DIE-S81-51/RF-C/bk 11-03 plan COPY (kit gen only, not the plan of record): bk_sel__t2 dsdv_bksel_c outline 388.8x172.8 -> 388.8x129.6 (same origin), pins cores/legacy/profiles/rfc_bk_1103/pins/dsdv_bksel_c_r130.json, obs_max M5 -> M6; dsdv_bksel_q (x4) pins cores/legacy/profiles/rfc_bk_1103/pins/dsdv_bksel_q_rfc.json = plan pins with ck on M5 0.048x0.48 (GEOM-21); contract LEFs cores/legacy/profiles/rfc_bk_1103/lef/; dsdv_bksel_q (x4) pins cores/legacy/profiles/rfc_bk_1103/pins/dsdv_bksel_q_rfc.json = plan pins with ck on M5 0.048x0.48 (GEOM-21); contract LEFs cores/legacy/profiles/rfc_bk_1103/lef/
