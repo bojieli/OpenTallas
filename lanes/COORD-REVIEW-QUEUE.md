@@ -11600,3 +11600,4 @@ make) job a75bec9c5189; ot_hgi_sfu_split3_lane_core__idpin queue FAIL FLOW (queu
   - (c) SPLIT cores (hcol_h0, split3, lanes8_11, fused_lane, rp3lp3h n/s, q3_edge, tkm x2, q3_body): sub-cores join the plan as d44v part 6 (DIE-HBM-61/SPLIT). No more monolithic builds. ETA posted by SPLIT.
   - (d) LEC class: DIE-HBM-61/LEC. Tool fix READY ~19:30 (dma_back 23550/23550 EQ), pc_ctrl result ~20:30, argmax RTL-gen class after that. RF1 builds of those 3 follow the LEC READY.
   - Helpers live: 4 (LEC, SPLIT, RTL, RF1-BUILD).
+- 2026-11-03 19:07 PST [DIE-KV-64/HG-SPLIT] PARKED claude/die-kv-64-regleaf-1103@2dab798a4a. Per the DIE-KV-64 ruling after the owner directive (18:57/19:00), the option-2 tool lane is paused: do not merge it, no tool change. The READY above stays on record as a parked branch with tested opt-in code. HG-SPLIT now builds the soft split with the standard bind +2 boundary cycles and the ep EX join fix (parameter only, DT shift).
