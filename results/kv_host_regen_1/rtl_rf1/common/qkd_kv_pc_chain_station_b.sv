@@ -9,6 +9,7 @@
 // qkd_kv_pc_chain_station's bit for bit, tb_kv_boot_chain lockstep).  Size +290 flops (land_es) +8.
 // MUT (bench only): as qkd_kv_pc_chain_station, plus 6 = boot tap compares pc[3:0] only.
 // ---------------------------------------------------------------------------------------------------------------------
+// RF-KV2 DIE-KV-64/RF-B 11-03: source rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv + registered boot tap
 module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
     input  wire          ck,
     input  wire          rst_n,
@@ -17,7 +18,7 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
     input  wire [779:0]  di,
     output wire [779:0]  dout,
     // BOOT: this PC's HOST slice landing face (qkd_host_pc_slice_die land_es / land_er, unchanged slice)
-    (* keep *) output reg [287:0]  land_es,
+    output reg  [287:0]  land_es,
     input  wire [260:0]  land_er,
     // PC face: writer word + intake context / expected descriptor
     output reg  [287:0]  wes,
@@ -56,15 +57,7 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
     always @(posedge ck or negedge rs_q)
         if (!rs_q) begin ev0 <= 1'b0; ev1 <= 1'b0; ss <= 1'b0; cv <= 1'b0; bt <= 1'b0; end
         else begin ev0 <= di[F_EV]; ev1 <= di[F_EV + 1]; ss <= di[F_SS]; cv <= di[F_CV]; bt <= di[F_BT]; end
-    // PATH-KV-PC 10-25 (P4): private outgoing launch; input capture c stays local, only dout gains one edge.
-    wire [779:0] port_fwd_d = {bt, c[F_BT-1:F_CV+1], cv, c[F_CV-1:F_SS+1], ss, c[F_SS-1:F_EV+2], ev1, ev0, c[F_EV-1:0]};
-    for (genvar fp = 0; fp < 780; fp = fp + 1) begin : g_port_forward
-        if (fp == 0 || fp == 1 || fp == 615 || fp == 616 || fp == 719 || fp == 754 || fp == 779) begin : g_control
-            (* keep *) ot_kvpc_pin_ar0 u_q (.ck(ck), .rn(rs_q), .d(port_fwd_d[fp]), .q(dout[fp]));
-        end else begin : g_data
-            (* keep *) ot_kvpc_pin_dff u_q (.ck(ck), .d(port_fwd_d[fp]), .q(dout[fp]));
-        end
-    end
+    assign dout = {bt, c[F_BT-1:F_CV+1], cv, c[F_CV-1:F_SS+1], ss, c[F_SS-1:F_EV+2], ev1, ev0, c[F_EV-1:0]};
     // ---- identity strap registers (HKV-PCH 2026-10-19) ----
     // pc / cfg_stack are die-top identity straps (kv_static_die cls strap: constants on the die).  Unregistered they
     // reached ~1,100 tap enables (wes / land_es / ctx / eid / r[] / emb_*) straight from the tile pins inside the
@@ -117,19 +110,14 @@ module qkd_kv_pc_chain_station_b #(parameter integer MUT = 0) (
     //      boot stream; note.md).
     wire [4:0] bpm = (MUT == 6) ? 5'h0f : 5'h1f;
     wire bh = bt && ((c[F_PC0 +: 5] & bpm) == (spc & bpm));
-    // KV-CORE-RTL/PC 10-25: land_es[287:1] private port flops (no hold loop on the pin flop): next state from the
-    // internal copy les_i (port <= bh ? new : les_i), equal on every edge (0 cycles)
     // RF-KV2 (DIE-KV-64/RF-B 11-03, ruling (c)): the boot tap is REGISTERED before it fans out -- bh_q / les_q capture
-    // the hit and the word, then the 287-bit port / internal copy load from them: land_es (data and valid) is one edge
-    // later than before (+1 cycle on the static boot landing; the slice paces nothing back, the credit counter bo
-    // counts the same delayed land_es[0]).  Was: c -> pc compare -> bh -> 574 enables in one cycle (routed TT -55 ps).
-    (* keep *) reg [287:1] les_i;
-    wire [287:1] les_n = {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};
+    // the hit and the word, then land_es (data and valid) loads from them one edge later than before (+1 cycle on the
+    // static boot landing; the slice paces nothing back, the credit counter bo counts the same delayed land_es[0]).
+    // Was: c -> pc compare -> bh -> 574 enables in one cycle (routed TT -55 ps, r27c).
     reg bh_q; reg [287:1] les_q;
     always @(posedge ck or negedge rs_q) if (!rs_q) bh_q <= 1'b0; else bh_q <= bh;
-    always @(posedge ck) les_q <= les_n;
-    always @(posedge ck) if (bh_q) les_i <= les_q;
-    always @(posedge ck) land_es[287:1] <= (bh_q ? les_q : les_i);
+    always @(posedge ck) les_q <= {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};
+    always @(posedge ck) if (bh_q) land_es[287:1] <= les_q;
     always @(posedge ck or negedge rs_q) if (!rs_q) land_es[0] <= 1'b0; else land_es[0] <= bh_q;
     (* keep *) reg ler_v, ler_cr, ler_f;
     always @(posedge ck or negedge rs_q)
