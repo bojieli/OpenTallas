@@ -129,7 +129,7 @@
   "macros": [],
   "source": "d4g as-built die_r18h5.v instance hb_quant_NW__u_dec (module ot_hgi_qw_dec); files = closure of ot_hgi_qw_dec at d34578d6f",
   "source_commit": "d34578d6f",
-  "read_at_commit": true,
+  "read_at_commit": false,
   "asbuilt_inst": "hb_quant_NW__u_dec",
   "ambiguous_defs_resolved": {
    "ot_hfd_actquant_m": [
@@ -1487,7 +1487,10 @@
   "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): type-reduction canon of the 15 lane_exp members; wrappers/<module>.sv = pure rename of the member split wrappers (lane_lane_id strap -> pin), checked pin-by-pin vs all 15 members; memory guard 256x64 = 16384 bits (gen lint: the exp ROM infers as 256 x 64) | member recipe: rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (lanes L 1..15: KIND 1 exp lane)",
   "top": "ot_hbm_su_pg_lane_exp_core",
   "alias_of": "ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92",
-  "synth_memory_max_bits": 16384
+  "synth_memory_max_bits": 16384,
+  "wrapper_by_pins_sha256": {
+   "672f8b639527aa9a69a5a347d23b0c43330f3b6a9e3cbea5ef025e500c97fbe9": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691.sv"
+  }
  },
  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
   "defines": [],
@@ -1843,7 +1846,8 @@
   "top": "ot_hfd_coll_q2_reduce_core",
   "wrapper_by_pins_sha256": {
    "07982cfbef37edd49280a29e1b6e3963e734969a260e057a2f4bb3c728253534": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv",
-   "72041fe1902610536dde7a09cf1f5109f2afe59dea0e89dfc2468acfcef2a8b0": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv"
+   "72041fe1902610536dde7a09cf1f5109f2afe59dea0e89dfc2468acfcef2a8b0": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv",
+   "82f225ece4b9fefd3296ff2fba2b487a203218fd79ec389c1505c5e701b9a066": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce__in512.sv"
   }
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp0_id": {
@@ -2612,6 +2616,10 @@
   "files_at": {
    "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_su_static_pgslice_lg__lanes8_11/ot_hbm_su_pg_lane1_core.sv": "8dd205e8bcc"
   },
-  "source": "DIE-HBM-63 d44v part 6: sub-core of the EQ-PASS ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 split (over_cap_split/reform_1103, 8dd205e8bcc); parent recipe file set + the split RTL, read at its pin."
+  "source": "DIE-HBM-63 d44v part 6: sub-core of the EQ-PASS ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 split (over_cap_split/reform_1103, 8dd205e8bcc); parent recipe file set + the split RTL, read at its pin.",
+  "rename_top": "ot_hbm_su_pg_lane1_core__mc",
+  "wrapper_by_pins_sha256": {
+   "f591eea96fcd5be525174dfe05407b58e98f7355705114a0b0c55c5ff2c220a8": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane1_core.sv"
+  }
  }
 }

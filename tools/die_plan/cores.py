@@ -70,8 +70,8 @@ def lef_pins(path, macro=None):
         if q["bits"]:
             q["bits"].sort()
             q["width"] = q["bits"][-1] + 1
-            if q["bits"] != list(range(q["width"])):
-                raise ValueError(f"{path}: bus {base} bits are not contiguous from 0 ({len(q['bits'])} of {q['width']})")
+            # A signed view may drop pins of dead bits (gunit_l2 hp_a: 0, 40-243): the width stays the port's, `bits` says which exist.
+            q["sparse"] = q["bits"] != list(range(q["width"]))
         else:
             q["width"] = 0          # scalar
     return out

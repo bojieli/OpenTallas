@@ -11,7 +11,7 @@
 `define SEED 20261103
 `endif
 `ifndef SH
-`define SH 70
+`define SH 84
 `endif
 module tb;
 localparam integer SH=`SH;
@@ -59,7 +59,7 @@ initial begin
   if(dut.SKL-198!=SH || dut.TE!=dut.u_tail.EREADY || dut.SKL<dut.u_tail.EREADY+1 || (SH%7)!=0) begin
     $display("SCHED SKL=%0d TE=%0d EREADY=%0d SH=%0d",dut.SKL,dut.TE,dut.u_tail.EREADY,SH); $fatal(1,"TAILX_REFORM FAIL schedule constants"); end
   randin(0); repeat(3) @(negedge clk); #1 rst_n=1; repeat(SH+2) @(negedge clk); #1 gold_on=1;
-  // phase A: 50 clean schedules, 640-edge spacing (dut L = SKL+SDIV+CAP+2 = 576), value classes incl. max4 ties
+  // phase A: 50 clean schedules, 640-edge spacing (dut L = SKL+SDIV+CAP+2 = 590), value classes incl. max4 ties
   for(f=0;f<50;f=f+1) begin
     randin(f%5==4 ? 1 : f%5==3 ? 2 : f%5==2 ? 3 : 0); launch=1; @(negedge clk); #1 launch=0;
     randin(1);   // scramble the launch data after the launch edge: only the launch-edge sample may be used

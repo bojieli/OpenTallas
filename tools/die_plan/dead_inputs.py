@@ -110,3 +110,21 @@ class ProvenDead:
             if any(lo <= bit <= hi for lo, hi in row['ports'].get(port, [])):
                 return True
         return False
+
+
+class DeclaredTies:
+    """DIE-S81-53/CAPEND (11-04): manifest "declared_ties" rows: a hard core's constant input bits of a declared absent lane
+    (the row-end slices tie the dead capture lanes of the one plan master ot_s81sl_capc5r).  Exact in partition type, module,
+    port, bit range and value, with a recorded equality bench; never a generic pin regex.  Any other constant stays TIED."""
+
+    KEYS = ('types', 'module', 'port', 'bits', 'value', 'proof')
+
+    def __init__(self, manifest):
+        self.rows = manifest.get('declared_ties', [])
+        for row in self.rows:
+            if set(row) - {'note'} != set(self.KEYS) or not row['types'] or row['value'] not in ('0', '1'):
+                raise ValueError('malformed declared_ties row: ' + json.dumps(row)[:200])
+
+    def allows(self, partition_type, module, port, bit, value):
+        return any(partition_type in r['types'] and r['module'] == module and r['port'] == port
+                   and r['bits'][0] <= bit <= r['bits'][1] and r['value'] == str(value) for r in self.rows)

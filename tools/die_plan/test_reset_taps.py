@@ -100,11 +100,11 @@ def test_reset_leaf_uses_real_launch_and_checks_placed_sink(tmp_path):
     assert 'LEAF 1 sinks, max hop 100.000 um, limit 405 um: PASS' in p.stdout
 
 
-def test_reset_leaf_overreach_mutant_fails_closed(tmp_path):
+def test_reset_leaf_overreach_is_advisory_and_named(tmp_path):
     p = leaf_hook(tmp_path, 500)
-    assert p.returncode != 0
-    assert 'OT_RESET_LEAF unreachable control sinks' in p.stderr
-    assert 'max hop 500.000 um, limit 405 um: FAIL' in p.stdout
+    assert p.returncode == 0, p.stderr
+    assert 'OT_RESET_LEAF advisory' in p.stdout
+    assert 'max hop 500.000 um, limit 405 um: OVER' in p.stdout
 
 
 def single_hook(tmp_path, sink_x=100, launch=True):
@@ -144,10 +144,11 @@ def test_reset_leaf_single_terminal_bounded(tmp_path):
     assert 'LEAF 1 sinks (single terminal 0), max hop 100.000 um, limit 405 um: PASS' in p.stdout
 
 
-def test_reset_leaf_single_terminal_overreach_fails(tmp_path):
+def test_reset_leaf_single_terminal_overreach_is_advisory(tmp_path):
     p = single_hook(tmp_path, 500)
-    assert p.returncode != 0
-    assert 'OT_RESET_LEAF unreachable control sinks' in p.stderr
+    assert p.returncode == 0, p.stderr
+    assert 'OT_RESET_LEAF advisory' in p.stdout
+    assert 'limit 405 um: OVER' in p.stdout
 
 
 def test_reset_leaf_single_terminal_without_launch_flop_fails(tmp_path):
@@ -164,9 +165,9 @@ def test_dangling_preserved_terminal_alias_still_counts_functional_sinks(tmp_pat
     assert 'FINAL n1' in p.stdout
     # The alias must not turn a real geometry failure into PASS with zero sinks.
     p=leaf_hook(tmp_path,sink_x=500,alias=alias)
-    assert p.returncode!=0
+    assert p.returncode==0,p.stderr
     assert 'LEAF 1 sinks, max hop 500.000 um' in p.stdout
-    assert 'OT_RESET_LEAF unreachable control sinks' in p.stderr
+    assert 'OT_RESET_LEAF advisory' in p.stdout
 
 
 def test_shared_leaf_alias_maps_to_nonzero_missing_terminal(tmp_path):

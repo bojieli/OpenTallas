@@ -4234,45 +4234,45 @@
     {
      "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_hi",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-     "orient": "R0",
+     "orient": "MX",
      "rect_um": [
       33.588,
-      10.8,
+      8.64,
       208.332,
-      81.288
+      79.128
      ]
     },
     {
      "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_lo",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-     "orient": "MX",
+     "orient": "R0",
      "rect_um": [
       33.588,
-      143.1,
+      149.76,
       208.332,
-      213.588
+      220.248
      ]
     },
     {
      "name": "u_fcore.u_xcal.g_t2.u_tab_lo",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
       15.12,
-      91.8,
+      93.96,
       109.944,
-      132.864
+      135.024
      ]
     },
     {
      "name": "u_fcore.u_xcal.g_t2.u_tab_hi",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "MY",
+     "orient": "R0",
      "rect_um": [
       131.976,
-      91.8,
+      93.96,
       226.8,
-      132.864
+      135.024
      ]
     }
    ],
@@ -7319,10 +7319,10 @@
   "ot_hnx_fused_host_program": {
    "status": "KNOWN",
    "outline_um": [
-    207.36,
+    276.48,
     129.6
    ],
-   "basis": "DIE-HBM-49 10-31 static sites (OWNER 07:1x one-block plan event, KIT-WAVE PLAN_CORE_MACROS / macro_channels): 2 SRAMs u_fcore.provider.lo/hi (yosys flatten of view @65a08f6d43f9 kit RTL); one centred column (W/E channels ~12.9), lo below / hi above the centre clock island [99.36,60.48,108,69.12] which sits in the 12.98-um interior channel (2.17 um clear each side); N/S pin faces keep ~12.9-um std-cell bands; E/W faces have no pins",
+   "basis": "DIE-HBM-66 part 10 conservative outline (COORD 09:16 (2)): +69.12 um on E, same SRAMs and pins at the same die position; DIE-HBM-49 10-31 static sites (OWNER 07:1x one-block plan event, KIT-WAVE PLAN_CORE_MACROS / macro_channels): 2 SRAMs u_fcore.provider.lo/hi (yosys flatten of view @65a08f6d43f9 kit RTL); one centred column (W/E channels ~12.9), lo below / hi above the centre clock island [99.36,60.48,108,69.12] which sits in the 12.98-um interior channel (2.17 um clear each side); N/S pin faces keep ~12.9-um std-cell bands; E/W faces have no pins",
    "macros": [
     {
      "name": "u_fcore.provider.lo",
@@ -7446,7 +7446,7 @@
    ],
    "macros": [
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[0].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[0].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7457,7 +7457,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[1].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[1].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7468,7 +7468,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[2].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[2].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7479,7 +7479,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[3].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[3].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7490,7 +7490,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[4].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[4].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7501,7 +7501,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[5].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[5].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [

@@ -1,0 +1,11 @@
+qadd_lat_KEEP_0_LAT_3 EQUIV (equiv_make/induct)
+qadd_lat_KEEP_1_LAT_3 EQUIV (equiv_make/induct)
+qadd_lat_KEEP_1_LAT_4 EQUIV (equiv_make/induct)
+qadd_lat_KEEP_1_LAT_5 EQUIV (equiv_make/induct)
+qadd_lat_KEEP_1_LAT_6 EQUIV (equiv_make/induct)
+qadd_lat_KEEP_1_LAT_7 EQUIV (SAT miter, temporal induction)
+v41x_exp_LM_3_LA_3 EQUIV (equiv_make/induct)
+# PARTIAL at commit 20:16: v41x_exp LM/LA 4/4,5/4,5/5,6/6 still proving; follow-up commit adds them.
+# Instantiation grep: L7X/NREP set only in ot_hbm_hc_tail_rest_core_ce.sv; all other c12 users rely on the defaults L7X=0 and NREP=1 (g_tab1 = original table line).
+rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv:170:        ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP(1),.LAT(LAU),.L7X(1)) add(clk,rst_n,av_u,ti_u,ab_u,ay,af);
+rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv:171:        ot_hbm_selected_c12__ot_hdc_v41x_exp #(.LM(LMU),.LA(LAU),.L7X(1),.NREP(8)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),

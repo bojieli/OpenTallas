@@ -54,7 +54,8 @@ endmodule
 // the input-cut ot_hdc_fp32_add_lat4i (W11 serial domain, 0.9 GHz at SS).
 module ot_hbm_selected_c12__ot_hdc_qadd_lat #(
     parameter integer KEEP = 0,
-    parameter integer LAT = 3
+    parameter integer LAT = 3,
+    parameter integer L7X = 0           // 11-03 opt-in: KEEP 1, LAT 7 -> the _l7x cut set (default: unchanged)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -79,6 +80,9 @@ module ot_hbm_selected_c12__ot_hdc_qadd_lat #(
         // 1.2 GHz c12 build: decode, exponent differences | compare | alignments, swap | add, LZC | shift, round |
         // encode
         ot_hbm_selected_c12__ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+    end else if (LAT == 7 && L7X != 0) begin : g_keep7x
+        // 1.2 GHz tailx RE-FORM build: the _l6x cut set plus a cut inside the k1 -> k3 span
+        ot_hbm_selected_c12__ot_hdc_fp32_add_f12_l7x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 3) begin : g_keep
         ot_hdc_fp32_add_lat3 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else begin : g_keepn

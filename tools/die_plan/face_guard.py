@@ -997,6 +997,10 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     def native_inverted_ff(master, pin):
         return bool(re.fullmatch(r"DFFHQNx[123]_ASAP7_75t_R", master) and pin == "QN")
 
+    def native_inverted_ff_either_edge(master, pin):
+        """DFFHQN or DFFLQN (a WFALL ring writer maps to DFFLQN): same QN state model, only the clock edge differs."""
+        return bool(re.fullmatch(r"DFF[HL]QNx[123]_ASAP7_75t_R", master) and pin == "QN")
+
     def _reset_port(port):
         return bool(re.fullmatch(skip_re, port)
                     and re.fullmatch(r"(?:a?rst_n|reset_n|rsi|rs_[A-Za-z0-9_]+)(?:\[\d+\])?", port))
@@ -1018,7 +1022,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         ci, pin = d; m, _, pp = F.cells[ci]
         ins = {p: F.find(v[0]) for p, (dd, v) in pp.items() if dd == "in" and len(v) == 1}
         if is_ff(m):
-            if not native_inverted_ff(m, pin) or set(ins) != {"CLK", "D"} or _ckpin(ci) != clock:
+            if not native_inverted_ff_either_edge(m, pin) or set(ins) != {"CLK", "D"} or _ckpin(ci) != clock:
                 raise KeyError("unsupported reset register")
             val, depth = _reset_level(ins["D"], stack, clock, port_ok)
             return (not val if pin == "QN" else val), depth + 1
@@ -1103,7 +1107,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         """WREG-1: prove per-(slot, chunk) write-enable flops at-most-one-hot from the mapped FF equations.
 
         The flops share no parent and need not rotate on their own, so the rotation proof does not apply.  Instead,
-        on the native DFFHQN model and one clock: (a) every control net is a QN flop with only CLK and D; (b) over
+        on the native DFFHQN / DFFLQN model and one clock: (a) every control net is a QN flop with only CLK and D; (b) over
         every assignment of the D cones' leaves at most one D is 1, so the state after ANY edge is at-most-one-hot
         whatever the prior state; (c) a leaf traced through buffers/registers to a declared ring start
         (or a real reset input) forces every D to 0 while asserted, so that state is established by reset, and every
@@ -1123,11 +1127,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 return None
             ci, pin = driver
             m, _, pp = F.cells[ci]
-            if (not native_inverted_ff(m, pin) or _ckpin(ci) != clock
+            if (not native_inverted_ff_either_edge(m, pin) or _ckpin(ci) != clock
                     or {p for p, (dd, _) in pp.items() if dd == "in"} != {"CLK", "D"}):
                 return None
             regs.append(ci); dn.append(F.find(pp["D"][1][0]))
-        if len(set(regs)) != D:
+        if len(set(regs)) != D or len({F.cells[ci][0][:4] for ci in regs}) != 1:   # one edge across the set
             return None
         leaves = sorted({x for n in dn for x in _leaves(n) if not x.startswith("CONST_")})
         if len(leaves) > 14:
@@ -1145,7 +1149,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             d = _single_drv(x)
             if x in starts and x in roots_ports:
                 continue
-            if d is None or not native_inverted_ff(F.cells[d[0]][0], d[1]) or _ckpin(d[0]) != clock:
+            if d is None or not native_inverted_ff_either_edge(F.cells[d[0]][0], d[1]) or _ckpin(d[0]) != clock:
                 return None
         rows = []
         try:

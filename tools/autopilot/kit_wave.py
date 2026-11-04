@@ -503,10 +503,13 @@ def select(rows, cfg, die, state, plan_types=None):
                     skip.setdefault("die-owned hold: " + hc, []).append(c)
                     blocked.append(c)
             cls = [c for c in cls if c not in blocked]
-            todo = [c for c in cls if not its.get(item_key(die, ev, c, blk(c)))
+            # KW-FIX-8 11-04: a class in flight is never picked again.  Without this a retry row naming the live attempt
+            # relaunched a RUNNING class (QC 11:30: 12 classes launched twice in one pass, a2 then a3)
+            cls_live = lambda c: (its.get(item_key(die, ev, c, blk(c))) or {}).get("status") in ("RUNNING", "LAUNCHING")
+            todo = [c for c in cls if not cls_live(c) and (not its.get(item_key(die, ev, c, blk(c)))
                     or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry
                     or (is_wait_dep(its[item_key(die, ev, c, blk(c))]) and not its[item_key(die, ev, c, blk(c))].get("provisional")
-                        and prov_item(d, c))]
+                        and prov_item(d, c)))]
             if not cls and blocked:
                 continue
             if not cls:
@@ -2381,6 +2384,27 @@ def plan_names(AP, st, d):
     return p
 
 
+def ensure_plan_view(AP, st, d):
+    """The INFRA relaunch loop runs before plan_dies, on a fresh config: a launch there saw no _plan_flags, so a type
+    with planned child cores got no provisional views and its kit tried the child bodies (11-04, 16 QC cb rows + the
+    su_c pilot).  Read the plan first, cached like plan_dies.  False when the plan cannot be read."""
+    if d is None:
+        return False
+    if "_plan_flags" in d:
+        return True
+    pn = plan_names(AP, st, d)
+    if pn.get("error"):
+        return False
+    d["_plan_sha"] = pn.get("plan_sha")
+    d["_plan_flags"] = pn.get("flags") or {}
+    d["_plan_deps"] = pn.get("deps") or {}
+    d["_prov_deps"] = pn.get("prov_deps") or {}
+    d["_prov_keys"] = pn.get("prov_keys") or {}
+    d["_prov_bound"] = pn.get("bound") or {}
+    d["_plan_dir"] = pn.get("plan_dir") or ""
+    return True
+
+
 def core_view_names(names, core_views):
     """a hard-core module with several plan pin tables is one wave item per table: '<module>__v<sha12>' (select()
     expands an OWNERS row named by the module into these classes); a module with one table keeps its name"""
@@ -2522,7 +2546,12 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         return None
     key = item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
-    attempt = int(prev.get("attempt", 0)) + 1
+    # The attempt dir is per item and event, not per plan block: number across every block's records, or a new block's
+    # attempt N lands in an older block's attempt_N, whose results make "make place" a no-op (t14@4, t17@5, COORD 11-04).
+    event = cfg["dies"][die]["event"]
+    attempt = max([int(prev.get("attempt", 0))] + [int(v.get("attempt", 0)) for v in st["items"].values()
+                                                  if v.get("die") == die and v.get("event") == event
+                                                  and v.get("item") == r["item"]]) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
     sp["start_delay_s"] = round(float(delay_s), 1)
@@ -3076,6 +3105,8 @@ def _step(AP, ap_dir):
         # old pending retry before plan_dies has had a chance to hold it.
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
         if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
+            if not ensure_plan_view(AP, st, cfg["dies"].get(rec["die"])):
+                continue                                 # plan unreadable: stays RETRY-INFRA, next tick
             rec["status"] = "FAIL"
             launch_safe(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),

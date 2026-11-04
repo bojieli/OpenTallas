@@ -1,4 +1,4 @@
-# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-7 (DIE-HBM-61/PLAN + /SPLIT, DIE-HBM-62/BIG, 2026-11-03)
+# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-9 (DIE-HBM-61/PLAN + /SPLIT, DIE-HBM-62/BIG, 2026-11-03)
 
 OWNER 11-03: TWO-STRIKES -> RE-FORM, ONE batch per die. Rules are design targets: plan GEOM, fill, aspect and channels
 are ADVISORY. Only sign-off blocks.
@@ -212,6 +212,17 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
 
   The r2r hits are one lane -> `lf` fan-in (advisory).
 
+## Part 9 (one-block events: one plan clock pin for 3 cores, xcal central macros, q2r table; DIE-HBM-65, COORD 07:34 (2), 08:40 (4))
+
+Builder: `results/die_hbm_1104/reform/mk_p9.py PLAN TABLES results/die_hbm_1104/reform/part9/core_macros_delta.json`, after the build_d44v.sh steps; tables gunzipped from part9/tables. Replay on base = this plan [CHECKED].
+
+- **Oneclk** (DIE-HBM-63 02c23e9262c5, class PORT-TREE-SKEW): lane1, lane_exp canon and split3 ctl get one pin `clk` at the middle clock pin. 78 pins_file refs in q_su*. 0 added cycles. Approve basis COORD 07:34 (2): bench mutants, source LEC on logic (lane1oc 17121, lane1b 17125, ctl_oc 56984), wrapper diff `oneclk_wrapper_diff.txt` (tool oneclk_wrapper_diff.py): lane_exp 13 changed lines, ctl 9, lane1 69 connections with 4 clock lines; off-rule 0. Kit LEC is clock-blind, so it is not part of the basis. No oneclk kit has a sign-off yet. Canon lane_exp ~188k and ctl ~187k cells are over the 150k conservative target (target only).
+- **ctl recipe pin**: the oneclk ctl wrapper was only ever passed by hand; recipes_split.json now selects it by table sha 5e0b96ed.
+- **xcal_rel_t + lane1 macros**: the 2 core_macros rows that differ (part9/core_macros_delta.json), central form and the `u_core` names under one clock.
+- **q2r table**: `...__oneclk__codex_g21__centry__in512.json` drops u_reduce_in_flit[544:512] (33 bits, 1143 -> 1110). The RTL reads 16 x 32 bits and the face shell already dropped these, so the signed record had 1110 pins and counted as core, not design. Wrapper `oneclk/ot_hfd_coll_q2_hard_v8g__reduce__in512.sv` ties the 33 bits to 0 at the RTL input. Parent side [CHECKED, results/hbm_query_native_event_0135/selected, q_hub_nw and q_hub_ne]: the 33 bits are the two top slices of the 545-bit concat at this pin (qout_17 bit 0, qout_16 31:0); each wire has one driver (the body output) and this pin as its only sink, so the body outputs end unloaded and nothing else changes. The parent RTL still passes 545 bits to a 512-bit port, so elaboration drops the 33 MSBs, the same bits; not elaborated or LEC-checked at parent level here. core_conns.json has no entry for this port. No re-sign.
+- **Checks**: G0+G0C 24 -> 24, errors gone 0, **new 0**; warnings new 0, gone 1 (`g0/g0_diff_d44v_p7_p9.txt`). Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0 (`geom/geom_diff_d44v_p7_p9.txt`). Gen trial of all 4 views rc 0 on this plan (no build). Count: q2r record MATCH 1110/1110, `g0/count_check.txt`. Designs stay 91.
+- **Open**: the live oneclk kits were built on plan copy d44v13oc, older than main in 3 places, so this event carries the delta and not that copy. Whether each of those kits counts on this plan is read from its pins at the sign-off record; not checked here.
+
 ## Part 7 (conservative form, OWNER 18:57: the huge rp3lp3h n/s and fused_lane cores become plan sub-core designs; DIE-HBM-62/BIG)
 
 Builder step `mk_split.py p/b3 split_p7/split_p7.json split_p7`, right after the part 6 step (build_d44v.sh). Inputs are in
@@ -362,3 +373,9 @@ physical sub-core path is `<inst>.u_fcore.u_core.<u_sub>`.
   - hfd_hgi_vm_calendar_f20 plan LEF: 10-16 ref_tile copy -> cores/hfd_hgi_vm_calendar_f20__241.92x116.64.lef (sibling
     routed view cal_sg 11-03). 558/558 table pins inside the LEF pin rects, 0 layer differences. No pin table,
     outline or lane changed; plan GEOM unchanged by construction.
+
+## Part 10 (fused host program conservative outline; DIE-HBM-66, COORD 09:16 (2))
+
+- **u_mu_fused_program** (`ot_hnx_fused_host_program`): 207.36 x 129.6 -> 276.48 x 129.6 (35832 um2), fill 0.65 -> 0.43 (1273 std + 14194 macro) for the owner-rule conservative form (fhp7 failed on the old outline). All growth on E, 69.12 um, origin (734.4, 5339.52) kept. Pin table `__p10`: same 562 pins, N and S faces only, same core and die position; both SRAMs and the clock island unchanged; no parent wire moves.
+- **Why E only**: the first trial grew 34.56 W and E; G0 flagged L9x1 stage 10 bit sites (x up to 747.36) against W (428 cells), new error. E is free: `part10_event.json` slot_hits [] including actual bit sites, hard cores, contents, channels, internal stations.
+- **Checks**: G0+G0C 24 -> 24, new 0, gone 0 (`g0/g0_diff_d44v_p9_p10.txt`). Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0 (`geom/geom_diff_d44v_p9_p10.txt`). Gen trial of the core rc 0, DIE 276.48 x 129.6. Designs stay 91. Stacks on part 9.

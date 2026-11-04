@@ -223,9 +223,10 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     if {$rt_port_mode} {
       puts "OT_RESET_TREE LEAF $rt_leaf_n sinks (port-delivered $rt_port_reset, no in-kit terminal), max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: INFO ([llength $rt_leaf_bad] beyond; the parent reset tree + rst_n boot hold own this hop)"
     } else {
-    set verdict [expr {[llength $rt_leaf_bad] ? "FAIL" : "PASS"}]
+    # Owner 11-03 (targets, not gates): the hop limit is a repeater-reach target.  Recovery on these sinks is timed at sign-off.
+    set verdict [expr {[llength $rt_leaf_bad] ? "OVER" : "PASS"}]
     puts "OT_RESET_TREE LEAF $rt_leaf_n sinks (single terminal $i), max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: $verdict"
-    if {[llength $rt_leaf_bad]} { error "OT_RESET_LEAF unreachable control sinks: [lrange $rt_leaf_bad 0 19]" }
+    if {[llength $rt_leaf_bad]} { puts "OT_RESET_LEAF advisory, over the hop target, timed at sign-off: [lrange $rt_leaf_bad 0 19]" }
     }
   } else {
     puts "OT_RESET_TAPS single tap or no per-tap synchronisers: nothing to do"
@@ -332,7 +333,10 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       dict incr rt_cnt $best
       incr rt_leaf_n
       if {$bd > $rt_leaf_max} { set rt_leaf_max $bd }
-      if {[info exists rt_leaf_reach_um] && ($bd > $rt_leaf_reach_um * $rt_dbu || ![dict exists $rt_launch $best])} {
+      if {[info exists rt_leaf_reach_um] && ![dict exists $rt_launch $best]} {
+        error "OT_RESET_LEAF no launch flop on reset terminal $best for [$ins getName]/[[$it getMTerm] getName]"
+      }
+      if {[info exists rt_leaf_reach_um] && $bd > $rt_leaf_reach_um * $rt_dbu} {
         lappend rt_leaf_bad "[$ins getName]/[[$it getMTerm] getName]:[format %.3f [expr {$bd/double($rt_dbu)}]]um"
       }
       if {$k == $best} { incr rt_keep; continue }
@@ -343,9 +347,9 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     }
   }
   if {[info exists rt_leaf_reach_um]} {
-    set verdict [expr {[llength $rt_leaf_bad] ? "FAIL" : "PASS"}]
+    set verdict [expr {[llength $rt_leaf_bad] ? "OVER" : "PASS"}]
     puts "OT_RESET_TREE LEAF $rt_leaf_n sinks, max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: $verdict"
-    if {[llength $rt_leaf_bad]} { error "OT_RESET_LEAF unreachable control sinks: [lrange $rt_leaf_bad 0 19]" }
+    if {[llength $rt_leaf_bad]} { puts "OT_RESET_LEAF advisory, over the hop target, timed at sign-off: [lrange $rt_leaf_bad 0 19]" }
   }
   puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed to the nearest tap's synchroniser, $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"
 }

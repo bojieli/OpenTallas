@@ -103,3 +103,19 @@ def test_clock_bus_bits_exempt_their_root_only_when_all_bits_are_clocks(tmp_path
     assert r['verdict'] == 'PASS' and r['checked'] == 4, r
     # one bit of the bus is not a clock: the root is not exempt
     assert signoff.run_face_guard(disc, clock_ports=['clk_pair[0]'])['verdict'] == 'FAIL'
+
+
+def test_kit_sdc_clock_is_a_clock_role_as_in_the_cli(tmp_path):
+    """DIE-KV-69 11-04: t17r landing clocks passed the kit guard and failed sign-off's only because sign-off ignored the SDC."""
+    disc, _ = fixture(tmp_path)
+    (tmp_path / 'boundary_guard_context.json').unlink()
+    assert signoff.run_face_guard(disc)['verdict'] == 'FAIL'
+    sdc = tmp_path / 'c.sdc'
+    sdc.write_text('create_clock -name unused_clk -period 1 [get_ports unused_clk]\n'
+                   'create_clock -name rst -period 1 [get_ports rst]\n')
+    disc['sdc'] = str(sdc)
+    r = signoff.run_face_guard(disc)
+    assert r['verdict'] == 'PASS', r
+    # A data port the SDC does not declare keeps the boundary gate.
+    sdc.write_text('create_clock -name unused_clk -period 1 [get_ports unused_clk]\n')
+    assert signoff.run_face_guard(disc)['verdict'] == 'FAIL'

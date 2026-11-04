@@ -2080,8 +2080,11 @@ def tcl_text(T, native_paths=None):
         q = f"rst_n_t{c['tap']}"
         inst, pin = c["inst"], c["pin"]
         # ODB getName escapes brackets (u_core.u.g_pp\\[0\\].u_pair); match on the plain Verilog form (hd_lep0N).
+        # A flat plan core with no physical_inst stays u_bound.<inst> in ODB (QC u_t32, MY tile with no lef in the plan):
+        # "." is a hierarchy separator too, and the exactly-one check below still rejects an ambiguous name.
         names = [inst] + ([c["physical_inst"]] if c.get("physical_inst") else [])
-        match = " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}" for x in names)
+        match = " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}"
+                           f" || [string range $n end-[string length {{{x}}}] end] eq {{.{x}}}" for x in names)
         t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
               "set rtr_cn {}; set rtr_ci {}",
               f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",

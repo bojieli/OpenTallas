@@ -103,7 +103,8 @@ die case waited ~90 min on the epyc8 DIE CAP):
   memory headroom ((admits - request) / RAM) by the job's GB per thread -- memory-heavy few-thread builds/GRT/STA go to
   idle RAM even on a CPU-busy host, CPU-heavy jobs to idle cores.  Nothing is held.
   DISK ADMISSION replaces the die count cap: a die job needs --disk (default DIE_DISK_GB 60) free scratch under --dir after
-  each active die scope's declared --disk (legacy unknown: 60 GB; hosts with < 2 TB free); HOST_MAX_DIE is empty.  When every host with
+  each active die scope's declared --disk (legacy unknown: 60 GB; hosts with < 2 TB free; FLOW-32: a scope running 15 min or
+  more counts 1/4, and real free - --disk must stay >= 60 GB); HOST_MAX_DIE is empty.  When every host with
   --dir lacks the scratch, the die job SPILLS (die lanes up to OT_RUN_SPILL_MAX_DIE_GB 400; tile lanes 40).
   INCREMENTAL SPILL: only directories/files the spill host lacks or holds older travel (manifests of both sides).
   Host side (ot-heavy-reconcile v10): growth charged capped at GROWTH_CAP_FRAC (0.10) x RAM.
@@ -158,6 +159,11 @@ HOST_RESERVE = {"localhost": (8, 16)}   # 2026-10-24 ~21:00 COORD (owner: use ep
 DIE_DISK_GB = int(os.environ.get("OT_RUN_DIE_DISK_GB", "60"))   # estimated scratch of one die chain (measured 10-19:
 # die case dirs 0.7 GB at start, die chains 16-40 GB per lane); the default --disk of a die job
 DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for active die scopes
+# FLOW-32: a die scope running at least RUNNING_FULL_CHARGE_S is charged 1/RUNNING_CHARGE_DIV of its --disk; younger
+# scopes and queued launchers stay charged in full.  A die job never leaves the root under DIE_FREE_FLOOR_GB real free.
+RUNNING_FULL_CHARGE_S = int(os.environ.get("OT_RUN_RUNNING_FULL_CHARGE_S", "900"))
+RUNNING_CHARGE_DIV = 4
+DIE_FREE_FLOOR_GB = int(os.environ.get("OT_RUN_DIE_FREE_FLOOR_GB", "60"))
 
 
 def retryable_queued_probe_failures(first, previously_qualified, notes):
@@ -213,7 +219,9 @@ SCRATCH_ROOTS = ("/srv/opentallas-scratch", "/srv/opentallas-scratch2") + tuple(
     r for r in ROOT_SCRATCH_ROOTS if r not in ("/srv/opentallas-scratch", "/srv/opentallas-scratch2"))
 SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "; do test -d $r/claude && "
                    "echo OT_SCRATCH_FREE $r $(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9) "
-                   "$([ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && echo 1 || echo 0); done; "
+                   "$([ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && echo 1 || echo 0); "
+                   "test -d $r/claude && echo OT_SCRATCH_DEV $r $(stat -L -c %d $r/claude); done; "
+                   "echo OT_DIR_DEV $(stat -L -c %d \"$t\" 2>/dev/null); "
                    "echo OT_ROOTFS $(df --output=pcent / | tail -1 | tr -dc 0-9) $(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
                    "echo OT_DIR_ONROOT $([ \"$(stat -L -c %d \"$t\" 2>/dev/null)\" = \"$rd\" ] && echo 1 || echo 0); ")
 SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
@@ -234,16 +242,21 @@ def scratch2_on():
 def scratch_disk(row, d, out):
     """v12 SCRATCH2: a scratch --dir's disk_gb = the most free scratch root on the host (new run dirs go there), unless
     the named root itself is nearly full (< SCRATCH_OWN_FLOOR_GB: files written straight into an existing --dir land
-    there).  The --dir's own figure is kept as disk_own_gb."""
+    there).  The --dir's own figure is kept as disk_own_gb.  disk_dev = device of the root disk_gb measures (FLOW-31),
+    absent when the probe did not say."""
     if not (isinstance(row, dict) and "disk_gb" in row):
         return row
-    roots, onroot, extra = {}, set(), {}
+    roots, onroot, extra, devs = {}, set(), {}, {}
     for ln in out.splitlines():
         f = ln.split()
         if len(f) in (3, 4) and f[0] == "OT_SCRATCH_FREE" and f[2].isdigit():
             roots[f[1]] = int(f[2])
             if f[3:] == ["1"]:
                 onroot.add(f[1])
+        elif len(f) == 3 and f[0] == "OT_SCRATCH_DEV":
+            devs[f[1]] = f[2]
+        elif len(f) == 2 and f[0] == "OT_DIR_DEV":
+            extra["disk_dev"] = f[1]
         elif len(f) == 3 and f[0] == "OT_ROOTFS" and f[1].isdigit() and f[2].isdigit():
             extra.update(rootfs_pct=int(f[1]), rootfs_free_gb=int(f[2]))
         elif len(f) == 2 and f[0] == "OT_DIR_ONROOT":
@@ -266,9 +279,10 @@ def scratch_disk(row, d, out):
         return row
     own = row["disk_gb"]
     if "scratch_disk" in row and (row.get("dir_onroot") or max(roots.values()) > own):
-        return dict(row, disk_own_gb=own, disk_gb=max(roots.values()))   # new run dirs go to the disk, never the root fs
+        # new run dirs go to the disk, never the root fs
+        return dict(row, disk_own_gb=own, disk_gb=max(roots.values()), disk_dev=devs.get(max(roots, key=roots.get)))
     if roots and own >= SCRATCH_OWN_FLOOR_GB and max(roots.values()) > own:
-        row = dict(row, disk_own_gb=own, disk_gb=max(roots.values()))
+        row = dict(row, disk_own_gb=own, disk_gb=max(roots.values()), disk_dev=devs.get(max(roots, key=roots.get)))
     return row
 
 
@@ -372,8 +386,11 @@ def die_running(host):
 # One record per active scope or unstarted launcher, never a second charge for its
 # closure-daemon state. Legacy scopes can carry an owner-verified disk.UNIT file
 # containing their declared lifetime scratch GB; unknown declarations retain 60 GB.
+# DIEDEV (FLOW-31): device of each DIEDIR; "unknown" unless the dir is on a scratch root and stats.
+# DIEAGE (FLOW-32): seconds an active scope has run; no line (and every waiter) means charged in full.
 DIE_DISK_UNITS_SH = r"""# Snapshot launchers first: if one admits during the probe, its PID-derived
 # scope below represents it; an exec transition cannot disappear between lists.
+die_dev() { case "$1" in /srv/opentallas-scratch*) stat -L -c %d "$1" 2>/dev/null || echo unknown;; *) echo unknown;; esac; }
 waiters=$(pgrep -f '^(/(usr/)?bin/)?bash /usr/local/bin/ot-heavy ')
 units=$(systemctl --user list-units --type=scope --state=active --no-legend --plain 'oth-*') || exit 1
 for u in $(printf '%s\n' "$units" | awk '{print $1}'); do
@@ -382,7 +399,8 @@ for u in $(printf '%s\n' "$units" | awk '{print $1}'); do
     for p in $(head -3 "/sys/fs/cgroup$cg/cgroup.procs" 2>/dev/null); do
         v=$(readlink "/proc/$p/cwd" 2>/dev/null)
         [ -z "$v" ] || dirs="$dirs
-DIEDIR $u $v"
+DIEDIR $u $v
+DIEDEV $u $(die_dev "$v")"
         e=$(tr '\0' '\n' <"/proc/$p/environ" 2>/dev/null)
         printf '%s\n' "$e" | grep -qx OT_HEAVY_PRIO=die && prio=die
         v=$(printf '%s\n' "$e" | sed -n 's/^OT_HEAVY_DISK_GB=//p' | head -1)
@@ -395,6 +413,9 @@ DIEDIR $u $v"
     fi
     echo "DIEDISK $u ${disk:-unknown}"
     printf '%s\n' "$dirs"
+    v=$(systemctl --user show -p ActiveEnterTimestampMonotonic --value "$u" 2>/dev/null)
+    up=; { read -r up _ <"/proc/uptime"; } 2>/dev/null; up=${up%.*}
+    case "$v:$up" in *[!0-9:]*|:*|*:|0:*) ;; *) echo "DIEAGE $u $((up - v / 1000000))";; esac
 done
 for p in $waiters; do
     represented=
@@ -411,24 +432,30 @@ for p in $waiters; do
     case "$disk" in ''|*[!0-9]*) disk=unknown;; esac
     echo "DIEDISK waiter-$p $disk"
     v=$(readlink "/proc/$p/cwd" 2>/dev/null)
-    [ -z "$v" ] || echo "DIEDIR waiter-$p $v"
+    [ -z "$v" ] || { echo "DIEDIR waiter-$p $v"; echo "DIEDEV waiter-$p $(die_dev "$v")"; }
 done
 echo DIEDISK_DONE
 """
 
 
-def die_disk_reserved(host):
+def die_disk_reserved(host, dev=None):
     """Declared GB budgeted to active die scopes and queued launchers; None if the probe failed.
 
-    Existing output already reduces df free space. Retain the full declaration as
-    a conservative future-write budget; this does not infer remaining use from du.
+    Existing output already reduces df free space. FLOW-32: a scope that has run
+    RUNNING_FULL_CHARGE_S keeps 1/RUNNING_CHARGE_DIV of its declaration as the future-write
+    budget; younger scopes, queued launchers and scopes of unknown age keep all of it.
+    This rule does not walk the run dirs (no du): dirs are shared between scopes and the
+    probe runs every 120 s per client. The real-free floor is in drop_low_disk.
+    FLOW-31: with dev (device of the job's scratch root) a unit whose dirs all lie on
+    other devices is not charged. A unit with no dir or an unknown one, and any
+    daemon job without a scope, is charged as before; so is every unit without dev.
     """
     try:
         r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", host, DIE_DISK_UNITS_SH],
                            capture_output=True, text=True, timeout=40)
         if r.returncode or "DIEDISK_DONE" not in r.stdout.splitlines():
             return None
-        units, dirs = {}, {}
+        units, dirs, devs, ages = {}, {}, {}, {}
         for line in r.stdout.splitlines():
             fields = line.split()
             if fields and fields[0] == "DIEDISK":
@@ -441,6 +468,10 @@ def die_disk_reserved(host):
                 parts = line.split(maxsplit=2)
                 if len(parts) == 3:
                     dirs.setdefault(parts[1], []).append(parts[2])
+            elif fields and fields[0] == "DIEDEV" and len(fields) == 3:
+                devs.setdefault(fields[1], []).append(fields[2])
+            elif fields and fields[0] == "DIEAGE" and len(fields) == 3 and fields[2].isascii() and fields[2].isdigit():
+                ages[fields[1]] = int(fields[2])
         # Daemon jobs can use a standalone docker path outside an ot-heavy scope.
         # Keep their conservative budget unless a charged scope or queued launcher actually
         # has a process under that exact job run directory.
@@ -463,7 +494,9 @@ def die_disk_reserved(host):
                 for u in units for d in dirs.get(u, []))
             if not represented:
                 extra += DIE_DISK_GB
-        return sum(units.values()) + extra
+        return extra + sum((-(-gb // RUNNING_CHARGE_DIV) if ages.get(u, 0) >= RUNNING_FULL_CHARGE_S else gb)
+                           for u, gb in units.items()
+                           if dev is None or not devs.get(u) or any(x in (dev, "unknown") for x in devs[u]))
     except (subprocess.SubprocessError, OSError, ValueError):
         return None
 
@@ -473,22 +506,28 @@ def drop_low_disk(ok, die, need, say=None):
 
     Hosts below DISK_RESERVE_BELOW_GB retain this future-write budget in addition
     to the new request. If the declaration probe fails, retain the legacy count
-    budget. Other jobs: place() already checks --disk.
+    budget. Other jobs: place() already checks --disk. FLOW-32: at any free figure the
+    job must leave DIE_FREE_FLOOR_GB real free, whatever the reservations come to.
     """
     if not die:
         return ok
     out = dict(ok)
     for h, r in ok.items():
         free = r.get("disk_gb", 0)
+        if free - need < DIE_FREE_FLOOR_GB:
+            out.pop(h)
+            if say:
+                say(f"ot-run: {h} skipped for this die job: DISK {free} GB free - {need} GB this job < {DIE_FREE_FLOOR_GB} GB real-free floor")
+            continue
         reserve = 0
         if free < DISK_RESERVE_BELOW_GB:
-            reserve = die_disk_reserved(h)
+            reserve = die_disk_reserved(h, r.get("disk_dev"))
             if reserve is None:
                 reserve = (die_running(h) or 0) * DIE_DISK_GB
         if free - reserve < need:
             out.pop(h)
             if say:
-                say(f"ot-run: {h} skipped for this die job: DISK {free} GB free - {reserve} GB running/queued die reservations < {need} GB")
+                say(f"ot-run: {h} skipped for this die job: DISK {free} GB free - {reserve} GB running/queued die reservations{' on its root' if r.get('disk_dev') else ''} < {need} GB")
     return out
 
 
@@ -643,7 +682,7 @@ def choose_selftest():
     keep_dd = globals()["die_disk_reserved"]
     disk = lambda free, load=0: dict(row(900, load), disk_gb=free)
     try:
-        globals()["die_disk_reserved"] = lambda h: None
+        globals()["die_disk_reserved"] = lambda h, dev=None: None
         globals()["die_running"] = lambda h: 3
         two = {"ot-epyc5": disk(4000), "ot-epyc8": disk(523)}
         okc = sorted(drop_low_disk(two, True, 60)) == ["ot-epyc5", "ot-epyc8"]          # 523 - 3 x 60 = 343 >= 60

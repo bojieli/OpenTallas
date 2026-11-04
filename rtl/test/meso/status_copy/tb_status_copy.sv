@@ -19,11 +19,11 @@ module tb_status_copy;
         wire [3:0] flags_gold,flags_copy;
         integer clean_gold=0;
         ot_meso_ring_ca #(.W(64),.DEPTH(D),.GUARD_HI(D),.CONTROL_STATUS_COPY(0)) u_gold (
-            .tclk(fclk),.t_rst_n(t_rst_n),.t_d(data),.rclk(clk),.r_rst_n(r_rst_n),.k_s(k),
+            .tclk(fclk), .wen_clk(1'b0),.t_rst_n(t_rst_n),.t_d(data),.rclk(clk),.r_rst_n(r_rst_n),.k_s(k),
             .r_d(q_gold),.r_v(flags_gold[0]),.r_lap_ok(flags_gold[1]),
             .r_glo_ok(flags_gold[2]),.r_ghi_ok(flags_gold[3]));
         ot_meso_ring_ca #(.W(64),.DEPTH(D),.GUARD_HI(D),.CONTROL_STATUS_COPY(1)) u_copy (
-            .tclk(fclk),.t_rst_n(t_rst_n),.t_d(data),.rclk(clk),.r_rst_n(r_rst_n),.k_s(k),
+            .tclk(fclk), .wen_clk(1'b0),.t_rst_n(t_rst_n),.t_d(data),.rclk(clk),.r_rst_n(r_rst_n),.k_s(k),
             .r_d(q_copy),.r_v(flags_copy[0]),.r_lap_ok(flags_copy[1]),
             .r_glo_ok(flags_copy[2]),.r_ghi_ok(flags_copy[3]));
         always @(posedge clk) begin

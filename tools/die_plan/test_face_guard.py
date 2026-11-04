@@ -1042,6 +1042,14 @@ def _wreg_guard(text, land=WREG4):
     return face_guard.guard(text, "top", clocks=["fclk", "fclk2"], land=land)
 
 
+def test_wreg_write_enable_flops_prove_at_most_one_on_falling_edge():
+    """DIE-QC-70 WFALL + WREG: writer and write-enable flops all DFFLQN on the raw fclk (ot_meso_wen_ff NEG=1)."""
+    r = _wreg_guard(_wreg_vehicle().replace("DFFHQNx", "DFFLQNx"))
+    assert r["verdict"] == "PASS", r["fails"]
+    (proof,) = r["registered_atmost_one"].values()
+    assert proof["flops"] == [f"u_wen{k}/ff" for k in range(4)]
+
+
 @pytest.mark.parametrize("buffered", [False, True])
 def test_wreg_write_enable_flops_prove_at_most_one(buffered):
     r = _wreg_guard(_wreg_vehicle(buffered=buffered))
