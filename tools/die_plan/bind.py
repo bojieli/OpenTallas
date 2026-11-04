@@ -3042,7 +3042,12 @@ class Binder:
                 try:
                     txt = self.clock_landings.type_rtl(tn, txt, base=t.get("split_of", tn))
                 except ValueError as exc:
-                    raise BindError(str(exc)) from exc
+                    # DIE-QC-69: name the type (the landing message may not); --all-gaps records it and goes on
+                    err = BindError(f"{tn}: {exc}")
+                    if not getattr(self, "collect_gaps", False):
+                        raise err from exc
+                    self._gap(err)
+                    continue
             reset_localization = t.get("reset", {}).get("consumer_localization")
             if reset_localization:
                 import reset_consumers
@@ -4919,7 +4924,10 @@ def cmd_kit_rtl(a):
     import kit_core_clocks
     try:
         btxt, kit_core_swaps = kit_core_clocks.swap_native_cores(btxt, t.get("hard_cores"))
-        btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, gen_phys.core_tap_rows(P, tn) if P else [])
+        # DIE-QC-69: a hard core nested in a bound leaf (QC RED u_u_red.u_core) declares its physical_inst in the plan
+        phys = {c["inst"]: c["physical_inst"] for c in t.get("hard_cores", []) or [] if c.get("physical_inst")}
+        core_rows = [(r[0], phys.get(r[1], r[1])) + tuple(r[2:]) for r in (gen_phys.core_tap_rows(P, tn) if P else [])]
+        btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, core_rows)
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
