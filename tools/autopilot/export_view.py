@@ -111,6 +111,9 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
     lib_basis = {}
     for corner, orfs in (("tt", "tc"), ("ff", "bc")):     # the routed run's own ETM (ORFS finish write_timing_model of
         rel, alt = f"{mod}_{corner}.lib", os.path.join(base, f"{mod}_{orfs}.lib")   # 6_final), as s81_eco/publish_view.sh
+        if not os.path.isfile(alt) and os.path.isfile(os.path.join(base, f"{mod}_{orfs.upper()}.lib")):
+            orfs = orfs.upper()     # SS26-TOK 11-04: kits name the FF ETM <mod>_BC.lib; lower-case only left the view incomplete
+            alt = os.path.join(base, f"{mod}_{orfs}.lib")
         if mod and rel not in (r.get("files") or {}) and os.path.isfile(alt):
             r.setdefault("files", {})[rel] = alt
             r.setdefault("files_sha256", {})[rel] = sha256(alt)
