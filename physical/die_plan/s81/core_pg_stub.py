@@ -38,14 +38,17 @@ def refresh(text):
     size=re.search(r'\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)\s*;',text)
     if not size:raise ValueError('missing LEF SIZE')
     for net in ['VDD','VSS']:
-        pattern=r'(?m)^  PIN '+net+r'\s*\n.*?^  END '+net+r'\s*\n'
+        pattern=r'(?m)^\s*PIN '+net+r'\s*\n.*?^\s*END '+net+r'\s*\n'
         match=re.search(pattern,text,re.S|re.M)
         if match:
             if re.search(r'\bRECT\b',match.group()):
                 raise ValueError('preserve existing actual PG geometry: '+net)
             text=text[:match.start()]+text[match.end():]
-    where=re.search(r'(?m)^  OBS\s*$',text)
-    if not where:raise ValueError('stub has no OBS insertion point')
+    where=re.search(r'(?m)^\s*OBS\s*$',text)
+    if not where:     # PG-CORECONN-3 11-03: a stub without OBS (S81 H2 coll lane.lef) takes the pins before END <macro>
+        name=re.search(r'(?m)^\s*MACRO\s+(\S+)',text)
+        where=name and re.search(r'(?m)^END\s+'+re.escape(name[1])+r'\s*$',text)
+    if not where:raise ValueError('stub has no OBS / END MACRO insertion point')
     lines='\n'.join(port_lines(float(size[1]),float(size[2])))+'\n'
     return text[:where.start()]+lines+text[where.start():]
 
