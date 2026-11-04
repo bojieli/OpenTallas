@@ -9,10 +9,11 @@
 // through each slot's clr_o).  PIPE 1, HOP 2, FRT 4, CB 21, CLRB 0, DELIVERED_RESET 1, TP 192, KMAX 2048.
 // Checks: (1) golden O/R words (NumPy oracle) + exact timeline in BOTH chains; (2) lock-step: every SPLIT write
 // (v, addr, mask, data) and done / fault == REF exactly SHIFT edges earlier, SHIFT = 2*dSETTLE + 2*dXL.
+// Chain length NT0 = KMAX/64 tiles (KMAX 2048: 32 tiles; reduced-chain receipt KMAX 256: 4 tiles = first, 2 middle, terminal).
 // MUTN (root timeline for 32 elements on the split chain) and MUTP (pair-internal conv / up-hop mutants) must FAIL.
 module tb;
  parameter integer MUTN=0,MUTP=0,KMAX=2048,TP=192,PIPE=1,HOP=2,FRT=4,CB=21,CLRB=0;
- localparam integer EW=86,NT0=32,NT1=64,SN0=(3+HOP)*(NT0-1)+11-CB,XL0=FRT+CB+HOP*(NT0-1),
+ localparam integer EW=86,NT0=KMAX/64,NT1=2*NT0,SN0=(3+HOP)*(NT0-1)+11-CB,XL0=FRT+CB+HOP*(NT0-1),
   NL1=(MUTN!=0)?NT0:NT1,SN1=(3+HOP)*(NL1-1)+11-CB,XL1=FRT+CB+HOP*(NL1-1),SHIFT=2*(SN1-SN0)+2*(XL1-XL0);
  reg clk=0,rst_n=0,start=0;always #1 clk=~clk;
  reg[31:0]cfg[0:15],a[0:TP*2048-1],b[0:TP*2048-1],eo[0:2047],er[0:2047],ns[0:TP-1];
@@ -31,18 +32,18 @@ module tb;
   // root face shell (tile-facing pins): +1 out, +1 in
   reg fclr,fconv,fev;reg[4*EW-1:0]fent,fup0;assign tup0=fup0;
   always @(posedge clk)begin fclr<=tclr;fconv<=tconv;fev<=tev;fent<=tent;end
-  wire[4*EW-1:0]down[0:32],up[0:32];wire[32:0]dv;wire[31:0]clr_l,conv_l;
+  wire[4*EW-1:0]down[0:NT0],up[0:NT0];wire[NT0:0]dv;wire[NT0-1:0]clr_l,conv_l;
   always @(posedge clk)fup0<=up[0];
   assign down[0]=fent;assign dv[0]=fev;
   reg bc[0:CB-1];always @(posedge clk)begin bc[0]<=fconv;for(integer j=1;j<CB;j=j+1)bc[j]<=bc[j-1];end
-  for(genvar t=0;t<32;t=t+1)begin:g_t
-   wire ci=(t==0)?fclr:clr_l[t-1];wire vi=(t==31)?bc[CB-1]:conv_l[t+1];
-   if(m==0&&t<31)begin:r ot_hgi_coll_tkm_tp192_tile_core__idpin__strap tile(.tile_clk(clk),.tile_clr(ci),.tile_clr_o(clr_l[t]),
+  for(genvar t=0;t<NT0;t=t+1)begin:g_t
+   wire ci=(t==0)?fclr:clr_l[t-1];wire vi=(t==NT0-1)?bc[CB-1]:conv_l[t+1];
+   if(m==0&&t<NT0-1)begin:r ot_hgi_coll_tkm_tp192_tile_core__idpin__strap tile(.tile_clk(clk),.tile_clr(ci),.tile_clr_o(clr_l[t]),
      .tile_conv(vi),.tile_conv_o(conv_l[t]),.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),
      .tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t])); end
    else if(m==0)begin:e ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap tile(.tile_clk(clk),.tile_clr(ci),.tile_clr_o(clr_l[t]),
      .tile_conv(vi),.tile_conv_o(conv_l[t]),.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_out(up[t])); end
-   else if(t<31)begin:r ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__split #(.MUT(MUTP)) tile(.tile_clk(clk),.tile_clr(ci),.tile_clr_o(clr_l[t]),
+   else if(t<NT0-1)begin:r ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__split #(.MUT(MUTP)) tile(.tile_clk(clk),.tile_clr(ci),.tile_clr_o(clr_l[t]),
      .tile_conv(vi),.tile_conv_o(conv_l[t]),.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),
      .tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t])); end
    else begin:e ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__split #(.MUT(MUTP)) tile(.tile_clk(clk),.tile_clr(ci),.tile_clr_o(clr_l[t]),
