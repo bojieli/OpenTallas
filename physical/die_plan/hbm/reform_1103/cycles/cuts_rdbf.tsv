@@ -1,0 +1,3 @@
+core	port_or_bus	plus_cycles	note
+ot_hfd_coll_q2_hard_v8g__reduce (recipe __cut1)	*	0	defines OT_HBM_REDUCE_LREP + OT_HBM_REDUCE_LOCAL_CTRL: per-lane kept copies of the lane control pin registers (same D, same reset, same edge as the shared *_q) and of wb/wb_tag (existing LOCAL_CTRL, pipe_v[6]/pipe_tag[6] one stage before pipe_v[7]); out_v/out_flit/fault/fault_cause unchanged on every edge (lockstep vs main _pr)
+ot_hgi_sm_xload_cl2_bfqg (recipe __cut1)	*	0	RPR 16: 16 kept rp_sel copies per tile (same D rp_ce, same reset, same edge), copy k gates cq bits [16k+:16]; rwq unchanged on every edge (lockstep vs d34578d6f module)
