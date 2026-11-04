@@ -1,6 +1,6 @@
 {
  "core": "hnx_rp3lp3h_n",
- "status": "WIP (EQ partial: s MUT0 PASS; mutants + nx pair bench running at stop)",
+ "status": "EQ-PASS (nx N+S pair MUT0 PASS; MUT1/2/3 FAIL)",
  "form": "leaf cut: x store / 6 BF16 column halves / 3 lane cores / glue (5 masters for n+s, 3 leaf masters shared)",
  "uncut_cells_orfs": 806841,
  "census_cells": 679904,
@@ -103,11 +103,13 @@
  "eq": {
   "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/rp3lp3h_n/run.sh (mode nx: N+S pair)",
   "kit_ref": "intel2 kit-wave d44o items hnx_rp3lp3h_n attempt_6",
-  "results": {},
-  "running": [
-   "epyc2:/home/ubuntu/scratch-root/claude/die-hbm-61-split/rp3/bench_nx MUT0 (pid 3023878)"
-  ],
-  "remains": "n: nx MUT0 PASS (running), then nx MUT 1/2/3 must FAIL (MUTS=1|2|3, separate OUT dirs; ~30 min verilator build each)"
+  "results": {
+   "nx MUT0": "LOCKSTEP PASS checks=22000 toggled_out_bits=3905",
+   "nx MUT1": "LOCKSTEP FAIL errs=39994 (expected)",
+   "nx MUT2": "LOCKSTEP FAIL errs=46116 (expected)",
+   "nx MUT3": "LOCKSTEP FAIL errs=570 (expected)"
+  },
+  "remains": "none"
  },
  "gate_tool": "not run (DIE-HBM-61/RTL prebuild gate not yet available to this helper)"
 }

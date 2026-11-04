@@ -59,6 +59,25 @@ class TestParse(unittest.TestCase):
                                      "CLOSED-DELTA s1\nprose PENDING-DELTA x y z\n")
         self.assertEqual(d, {("qwen_kvsys", "kv3_hgi_v8"): "kv-c", ("qwen_kvsys", "kv3_sys_c"): "kv-c"})
 
+    def test_plan_delta_stale_vs_plan_of_record(self):
+        # DELTA-STALE (COORD 2026-11-03 17:5x): a PENDING delta holds only if it names the die's current plan of
+        # record and is dated after that plan's freeze; otherwise it is ignored and logged
+        text = ("2026-10-25 20:37 PDT TYPE-REDUCE-2\n"
+                "PENDING-DELTA old s81 bk_sel\n"                                       # pre-POR, names nothing
+                "PENDING-DELTA named s81 bk_g plan=b1a2125433d0 2026-10-26 01:00\n"    # names POR, before freeze
+                "2026-11-03 18:00 PDT S81 lane\n"
+                "PENDING-DELTA cur s81 bk_h plan=b1a2125433d0\n"                       # names POR, after freeze
+                "PENDING-DELTA kvd kv kv_core\n"                                       # die with no POR: legacy
+                "PENDING-DELTA gone s81 bk_x plan=b1a2125433d0\nRETIRED-DELTA gone\n")
+        por = {"s81": {"ids": {"b1a2125433d0", "plan_h2_2249"}, "frozen": "2026-11-02 12:00"}}
+        d = self.ap.parse_plan_delta(text, por)
+        self.assertEqual(d, {("s81", "bk_h"): "cur", ("qwen_kvsys", "kv_core"): "kvd"})
+        self.assertEqual(sorted(x[0] for x in self.ap.PLAN_DELTA_IGNORED), ["named", "old"])
+        # PLAN-OF-RECORD lines in PLAN-DELTA.md declare / extend the plan of record and its freeze date
+        d = self.ap.parse_plan_delta("PLAN-OF-RECORD kv plan_c 2026-11-01 10:00\n" + text, por)
+        self.assertEqual(d, {("s81", "bk_h"): "cur"})
+        self.assertEqual(self.ap.parse_plan_delta(text), {("s81", "bk_sel"): "old", ("s81", "bk_g"): "named",
+                                                         ("s81", "bk_h"): "cur", ("qwen_kvsys", "kv_core"): "kvd"})
 
 class TestGates(TickBase):
     def setUp(self):

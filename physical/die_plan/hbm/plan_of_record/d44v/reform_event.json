@@ -3,17 +3,6 @@
  "event": "d44v-reform",
  "decisions": [
   {
-   "module": "hfd_ep_static",
-   "old": [
-    427.68,
-    246.24
-   ],
-   "old_fill": 0.0915,
-   "old_aspect": 1.74,
-   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
-   "macro_pin_channel_errors_old": 4
-  },
-  {
    "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
    "old": [
     319.68,
@@ -185,17 +174,6 @@
    "clock_regions": 8
   },
   {
-   "module": "ot_hbm_host_cp_rxs",
-   "old": [
-    434.808,
-    480.0
-   ],
-   "old_fill": 0.0352,
-   "old_aspect": 1.1,
-   "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels",
-   "macro_pin_channel_errors_old": 4
-  },
-  {
    "module": "ot_hbm_su_programme_pslice_c5",
    "old": [
     939.6,
@@ -360,11 +338,76 @@
    "old_fill": 0.0328,
    "old_aspect": 1.81,
    "decision": "UNCHANGED: no lattice outline meets fill<=0.45 + aspect<=2 + pins/face + reach + macro channels"
+  },
+  {
+   "module": "hfd_ep_static",
+   "old": [
+    427.68,
+    246.24
+   ],
+   "decision": "RESHAPE (part 2: DIE-HBM-61/MEM 55c4a61894a right-width SRAM (4x 64x306): slot kept (channel_fit 250.56x146.88 fits, but any shrink adds 1 register on vsN0 u_lk_S1->u_ep_S1 / NW_io u_ep_N0->u_lk_N0 stations, hop 366-392 > 360))",
+   "new": [
+    427.68,
+    246.24
+   ],
+   "new_aspect": 1.74,
+   "new_fill": 0.0519
+  },
+  {
+   "module": "ot_hbm_host_cp_rxs",
+   "old": [
+    434.808,
+    480.0
+   ],
+   "decision": "RESHAPE (part 2: DIE-HBM-61/MEM 55c4a61894a right-width SRAM (4x 64x141 + 2x 256x256) channel_fit 397.44x138.24 snapped up to the 17.28 centre-kept step)",
+   "new": [
+    400.248,
+    151.68
+   ],
+   "new_aspect": 2.64,
+   "new_fill": 0.1071
   }
  ],
  "stations_old_sites_kept": [],
- "clock_entries_moved": 2,
- "lef_dropped": [],
+ "clock_entries_moved": 9,
+ "lef_dropped": [
+  {
+   "type": "NW_io",
+   "inst": "u_ep_N0",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "NW_io",
+   "inst": "u_host_ep",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "q_spb0",
+   "inst": "u_ep_S0",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "vsN0",
+   "inst": "u_ep_S1",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "NE_io",
+   "inst": "u_ep_N2",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  },
+  {
+   "type": "q_spb0__physical_v1",
+   "inst": "u_ep_S0",
+   "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+   "lib": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_tt.lib"
+  }
+ ],
  "stations_latency_up": [],
  "stations_failed": {},
  "hub_repack": {
@@ -379,11 +422,23 @@
     "macro_fit": true,
     "accepted": true,
     "reason": "macros fit, fill <= 0.60"
+   },
+   {
+    "module": "ot_hbm_host_cp_rxs",
+    "outline_um": [
+     400.248,
+     151.68
+    ],
+    "est_fill": 0.1071,
+    "macro_fit": true,
+    "accepted": true,
+    "reason": "macros fit, fill <= 0.60"
    }
   ],
   "new_pin_files": [
+   "cores/ot_hbm_host_cp_rxs__400.248x151.68__c25b.json",
    "cores/ot_hgi_qw_dec__260x173.6__c25c__codex_g21.json"
   ],
-  "plan_sha256": "94ab1e28ff67f7319ed24143ff780c3b1bae756e1aacbee2dfe3aaeac39baefe"
+  "plan_sha256": "e853be3116458f33c7a16d59ec83539c23d34a1592a955f50f6cdd5a75d11b22"
  }
 }

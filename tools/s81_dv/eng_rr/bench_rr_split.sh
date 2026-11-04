@@ -7,6 +7,8 @@
 # Prints ENG_RR_SPLIT PASS <variant> or ENG_RR_SPLIT FAIL <variant>.  Run from the repo root.
 # SPLIT_SV=<file> (S81-KITS-RTLA 10-24) replaces dsdv_eng_rr_split.sv, e.g. the pre-fix split (H cores without the in_w
 # capture flop) as a negative control of the +1-edge crossing check: must FAIL.
+# XDEF="+define+..." (DIE-S81-51/RF-G 11-03) adds Verilator defines to the build (e.g. +define+OT_S81ENG_HXL = the E
+# hx_res landing stage; +define+OT_S81ENG_HXL_MUT = its negative control, must FAIL).
 set -u
 W=$(realpath -m ${1:?work}); V=${2:?variant}; shift 2; mkdir -p $W
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -27,7 +29,7 @@ python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom > $W/prep.log 2>&1 || { echo "ENG
 $VL --version
 $VL --binary --timing -j ${J:-8} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
     -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 +define+OT_S81ENG_RR_N32 +define+OT_S81ENG_RR_MUL_N32 +define+OT_ENGRAM_CRCMAT \
-    +define+OT_S81ENG_RR_SPLIT_LOCKSTEP --top-module tb_dsdv_eng_rr "${G[@]}" "${F[@]}" --Mdir $W/obj -o sim > $W/build.log 2>&1 \
+    +define+OT_S81ENG_RR_SPLIT_LOCKSTEP ${XDEF:-} --top-module tb_dsdv_eng_rr "${G[@]}" "${F[@]}" --Mdir $W/obj -o sim > $W/build.log 2>&1 \
     || { tail -20 $W/build.log; echo "ENG_RR_SPLIT FAIL build"; exit 1; }
 $W/obj/sim +OT_ROM_DIR=$W/rom "$@" > $W/run.log 2>&1
 python3 tools/s81_dv/eng_rr/check_eng_rr.py $W/run.log $PWD >> $W/run.log 2>&1

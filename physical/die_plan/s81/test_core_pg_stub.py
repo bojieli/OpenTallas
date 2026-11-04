@@ -21,3 +21,38 @@ class CorePGTest(unittest.TestCase):
   with self.assertRaises(ValueError):rectangles(8,100)
 
 if __name__=='__main__':unittest.main()
+
+
+STUBS_M5 = ["cores/leaf/lef/ot_s81sl_ve_m_tpl.lef", "cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+            "cores/leaf/lef/ot_s81sl_ve_s_tpl_w1728.lef", "cores/leaf/lef/ot_s81sl_vn_a_tpl.lef",
+            "cores/leaf/lef/ot_s81sl_vn_b_tpl.lef", "cores/leaf/lef/ot_s81sl_vq_tpl.lef", "cores/leaf/lef/ot_s81sl_vs_tpl.lef",
+            "cores/eg/lef/ot_s81sl_eg_c.lef", "cores/svc/lef/dsdv_svc_sx_hrow_c.lef"]
+
+
+def _obs_layers(text):
+    import re
+    o = re.search(r"(?ms)^\s*OBS\s*$(.*?)^\s*END\s*$", text)
+    return set(re.findall(r"LAYER (M\d+)", o.group(1))) if o else set()
+
+
+def test_m5_pg_stubs_leave_m6_open_for_core_pg_connect():
+    # PDN-0006 class (kv_leaf__t1/t5 11-03): M5 PG pins under an own M6/M7 OBS cannot land on the parent M6 straps.
+    from pathlib import Path
+    root = Path(__file__).resolve().parent
+    for s in STUBS_M5:
+        text = (root / s).read_text()
+        assert "LAYER M5" in text.split("PIN VSS", 1)[1].split("END VSS", 1)[0], s
+        assert not ({"M6", "M7"} & _obs_layers(text)), s
+
+
+def test_clip_obs_drops_only_layers_above_top():
+    import importlib.util
+    from pathlib import Path
+    p = Path(__file__).resolve().parent / "core_pg_stub.py"
+    spec = importlib.util.spec_from_file_location("cps", p); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    lef = ("MACRO x\n  PIN VSS\n    PORT\n      LAYER M5 ;\n        RECT 1 1 2 2 ;\n    END\n  END VSS\n"
+           "  OBS\n    LAYER M4 ;\n      RECT 0 0 9 9 ;\n    LAYER M6 ;\n      RECT 0 0 9 9 ;\n    LAYER M7 ;\n"
+           "      RECT 0 0 9 9 ;\n  END\nEND x\n")
+    out = m.clip_obs(lef)
+    assert _obs_layers(out) == {"M4"}
+    assert "LAYER M5" in out and out.count("RECT") == 2

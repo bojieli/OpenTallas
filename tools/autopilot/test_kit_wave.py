@@ -76,7 +76,7 @@ class Gate(unittest.TestCase):
         for ev in ("l47k", "l47t"):                            # COORD 10-31 04:4x: l47k now, l47t after merge
             c["dies"]["s81_head"]["event"] = ev
             self.assertTrue(KW.gate(c, "s81_head")[0])
-        for ev in ("l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1"):   # l48h0 COORD 11-03 00:2x (a); l48h1 DIE-HEAD-56 11-03 04:5x            # COORD 10-31 16:2x l48w; l48x pin fixes; l48y COORD 11-01 01:0x; l48z 11-01 14:0x
+        for ev in ("l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf"):   # l48h0 COORD 11-03 00:2x (a); l48h1 DIE-HEAD-56 11-03 04:5x            # COORD 10-31 16:2x l48w; l48x pin fixes; l48y COORD 11-01 01:0x; l48z 11-01 14:0x
             c["dies"]["s81_head"]["event"] = ev
             self.assertTrue(KW.gate(c, "s81_head")[0])
         for ev in ("l48", "l48q"):
@@ -268,7 +268,7 @@ class Capacity(unittest.TestCase):
             "scratch 141 GB | intel1 admits 163 GB (avail 393, reserve 0, fresh 47.2, peak 118.5) load 185/112 waiters "
             "1:200 GB run 37 root 9% scratch 830 GB | localhost admits 329 GB (avail 479) load 249/112 run 43 root 14% "
             "scratch 731 GB | next 16-thread 32 GB job -> intel1")
-        self.assertEqual(s["intel1"], {"admit": 163, "load": 185.0, "cores": 112, "run": 37})
+        self.assertEqual(s["intel1"], {"admit": 163, "load": 185.0, "cores": 112, "run": 37, "wait_n": 1, "wait_gb": 200})
         self.assertEqual(s["epyc2"]["admit"], -29)
         self.assertEqual(s["localhost"]["run"], 43)
 
@@ -414,6 +414,30 @@ class QueueFill(unittest.TestCase):
             st["items"][KW.item_key("qwen_kvsys", "event28w_c", "kv3_st_t3")] = st["items"].pop("q")
             picks, _ = KW.select(rows, c, "qwen_kvsys", st, PLAN | {"kv3_st_t3"})
             self.assertIn("kv3_st_t3", [p["item"] for p in picks])
+
+
+class VolumeSrcTest(unittest.TestCase):
+    def test_old_src_pilot_fail_does_not_cancel_new_src_volume(self):
+        """KW-FIX-4 11-03: a pilot FAIL generated from a superseded src never cancels volume on the current src"""
+        with tempfile.TemporaryDirectory() as d:
+            ap = FakeAP(d, "{}")
+            c = cfg(pilot_mode="queue")
+            c["dies"]["qwen_kvsys"]["src_sha"] = "new"
+            cls = "qwen_kvsys|type|kv#_st_t#"
+            now = time.time()
+            for n in ("p", "q"):
+                (Path(d) / n).mkdir()
+            (Path(d) / "p" / "spec.json").write_text(json.dumps({"src_sha": "old"}))
+            (Path(d) / "q" / "place.live.log").write_text("waiting for memory\n")
+            st = {"items": {
+                "p": {"die": "qwen_kvsys", "item": "kv3_st_t1", "status": "FAIL", "class": "PLAN", "updated": now,
+                      "dir": str(Path(d) / "p"), "reason": "OT_RESET_CORE"},
+                "q": {"die": "qwen_kvsys", "item": "kv3_st_t3", "status": "RUNNING", "volume": cls, "unit": "u3",
+                      "dir": str(Path(d) / "q"), "started": now - 60},
+            }}
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 0)
+            (Path(d) / "p" / "spec.json").write_text(json.dumps({"src_sha": "new"}))
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 1)
 
 
 class VolumeGeomTest(unittest.TestCase):
@@ -738,7 +762,8 @@ class RejudgeGeom(unittest.TestCase):
         self.assertEqual(KW.geom_verdict(KW.prects_clock_info("AUTO-GEOM FAIL x 3_place clock_reach=FAIL(300)"))[0], "PASS")
 
     def test_rows(self):
-        cfg = {"dies": {"d": {"gen_host": "h", "plan": "/p.json", "event": "e2"}}}
+        # hard-gate semantics (die opt geom_advisory false); the advisory default is test_kit_wave_geomadv.py
+        cfg = {"dies": {"d": {"gen_host": "h", "plan": "/p.json", "event": "e2", "geom_advisory": False}}}
         st = {"plans": {"h:/p.json|e2": {"blocks": {"a": "a" * 64, "b": "b" * 64, "c": "c" * 64}}}, "items": {}}
 
         def rec(item, blk, ev="e2", **kw):

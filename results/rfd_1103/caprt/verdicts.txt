@@ -1,0 +1,34 @@
+DIE-S81-51/RF-D 11-03 S81-044 ot_s81sl_cap_rt RF2 (RF1 = 2) RE-FORM (RF1 ECO m0 / m1w / m2 exhausted TT -4.09, 16 ep).
+Failing classes in eco_m2/i1 sta_tt_max.rpt: (1) g_st[*].u_g/la_sl, lb_sl -> fa_ev / fb_ev / fb_es (raw -23..-29: 6-buffer
+select fanout + 256:1 ev / es read); (2) cb -> g_st[*].u_g key_g / ev_g / cnt_g (raw -26: cb -> NAND -> 48-load fanout ->
+group write decode).  (3) cw_s_d[152/154/163] out ports MET +79..+82 in this report (already a registered negedge out-face,
+no +1 added).  (4) ev_g / cnt_g endpoints in g_st[2/4/6]: from u_rr.rst_n[9] they are recovery checks MET +219; the
+violating ones start at cb (data, class 2).
+Form (0 edges moved; no latency contract change): per-group h-column pre-select of ev / es (next state, same-edge write
+forwarded) -> lookup = 8:1 on la_sl; registered decision selects sb_m / sb_d / sb_g[8] / rel_q (kept copies, reset rs_f)
+and per-side registered group one-hots gsa / gsb -> s_in / r_in from flops through one 2:1.
+Lockstep (Verilator 5.050, results/rfd_1103/caprt/run.sh; outputs + fa/fb kh / ev / es / cn every edge, 200k cycles):
+  RA 1 / RB 2 seed 1 PASS (key_hits 16010 inserts 879 merges 149), seed 5 PASS; RA 0 / RB 2 seed 3 PASS
+  mut 1 OT_RFD_MUT_CAP2 (column without the same-edge forward): FAIL 4 mismatches (caught)
+  mut 2 OT_RFD_MUT_CAP2B (A one-hot = B group): FAIL 197463 mismatches (caught)
+Kit ot_s81sl_cap_rt_rfd (recipes_rfd_caprt_1103.json = recipes.json rf1 entry + RF1 2; config identical to rf1 but
+VERILOG_TOP_PARAMS): GEN_LINT PASS issues 0 (pins_vs_plan PASS), KIT_PREFLIGHT PASS issues 0.  Estimate: rf1 synth
+66.5k cells (+~300 flops) <= 150k; util ~0.46 (rf1 placed 0.459, DRC 0) -- outline is the capc5r LEF contract, not grown.
+
+RF3 / kit ot_s81sl_cap_rt_rfd2 (11-03, owner GO after rfd oth-ubuntu-3220705 NOT SIGNED: TT -41.89 / 561 ep, FF hold -4.81 / 17 ep)
+  rfd violators (probe on 6_final, golden SDC): all slot-group store writes from sb_m: key_g 286 (wns -41.9), ev_g 129 (-24.1),
+  es_g 64 (-40.7), cb_es 25, cnt_g 20, cb_ev 18, ca_es 12 (-40.4), ca_ev 6, fb_kh 1 (-0.18).  Common front: sb_m -> s_slot / s_h
+  2:1 -> 21-load net (594 ps) -> ~120 ps wire -> group entry 788 ps -> group-wide write nets fo 13 x 24 (~300 loads) -> D ~1119.
+  Owner form (per-group sb_m copy + local mux) estimate: group entry ~595 ps but the in-group decode keeps the fo 13 -> fo 24
+  write nets (2 fo-24 levels) and the decision (do_ins / do_mrg) is still broadcast -> misses the "<= 1 fo-24 level" gate
+  -> fallback (owner): pay one edge on the WRITE only (lookups forward it, so 0 edges moved at the ports / lookups).
+S81-044 ot_s81sl_cap_rt RF1 = 3 (ot_s81sl_cap_grp_rf1 WD): per group, PENDING write flops (pw_c / ins / kw / mrg / r, sl, rsl,
+  h, side, key, cnt_s, cnt_r) loaded from the broadcast decision; arrays written one edge later from them; reads forward the
+  pending write via registered one-hot selects (ska / skb / sca / scb + pka / pkb / pca / pcb, one-hot AO instead of the
+  la_sl / lb_sl binary 8:1); ca / cb columns forward pending behind this edge's write; any_q from the pending-applied view.
+  Estimate: decision nets now load ~60 pending / select / column flops per group (one fo level) -> pending D ~830 vs req
+  ~1078; array write pw_sl decode -> per-slot enable (fo 24, one level) from a flop at ~300 -> D ~550-650; ca/cb columns
+  ~940.  Risk: a_kh / b_kh read (one-hot 9-term AO vs 8:1 mux) on the rfd fb_kh -0.18 path.
+  run.sh lockstep RA 2 / RB 3: seed 1 PASS (key_hits 16010, merges 149), seed 5 PASS; RA 1 / RB 3 seed 3 PASS
+          mut 3 (OT_RFD_MUT_CAP3, cnt lookup misses the pending write) RA 2 / RB 3: FAIL mismatches 8982 (caught)
+          mut 1 (OT_RFD_MUT_CAP2) RA 1 / RB 3: FAIL mismatches 4 (caught)

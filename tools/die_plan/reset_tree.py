@@ -859,6 +859,8 @@ def for_type(P, tn, reach=None):
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
                  type=tn, start=start_broadcast(P), relay_driver=bool(P.reset.get("relay_driver")))
+        if relay_lockup(P, tn):
+            T["relay_lockup"] = "negedge"
         if T["entry"] == "sync" and lock_stages(P):
             lk = pad_spec(P)["lock"]
             T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
@@ -896,6 +898,8 @@ def for_type(P, tn, reach=None):
         T = _type_tree(P, tn, None, reach)
     T.update(entry=ent, sync_stages=sync_stages(P, tn), type=tn,
              relay_driver=bool(P.reset.get("relay_driver")))
+    if relay_lockup(P, tn):
+        T["relay_lockup"] = "negedge"
     if T["relay_driver"]:
         T["relay_pair_boxes"] = blockages(P.types[tn])
     return T
@@ -1809,7 +1813,29 @@ def relay_cell(T, r, gated=False):
     driven = T.get("relay_driver") and r.get("tap") not in external
     if gated:
         return "ot_dp_rgate_drive" if driven else "ot_dp_rgate"
+    if T.get("relay_lockup") and not driven and not str(r.get("q", "")).startswith("rst_n_t"):
+        return "ot_dp_rrelay_nl"     # CLK form #7: internal relay->relay hop only (gen_rtl.LOCKUP_CELLS)
     return "ot_dp_rrelay_drive" if driven else "ot_dp_rrelay"
+
+
+def relay_lockup(P, tn):
+    """CLK FORM #7 (opt-in): reset.relay_lockup = {"form": "negedge", "types": [type, ...]}.  True when type tn's
+    internal relays are ot_dp_rrelay_nl.  Absent = False (every tree and kit byte-identical)."""
+    cfg = P.reset.get("relay_lockup")
+    if not cfg:
+        return False
+    if not isinstance(cfg, dict) or cfg.get("form") != "negedge" or not isinstance(cfg.get("types"), list):
+        raise ResetError('reset.relay_lockup must be {"form": "negedge", "types": [type, ...]}')
+    bad = sorted(set(cfg["types"]) - set(P.types))
+    if bad:
+        raise ResetError(f"reset.relay_lockup names unknown types {bad[:5]}")
+    if tn not in cfg["types"]:
+        return False
+    if P.reset.get("relay_driver"):
+        raise ResetError(f"type {tn}: reset.relay_lockup and reset.relay_driver are exclusive")
+    if start_broadcast(P):
+        raise ResetError(f"type {tn}: reset.relay_lockup does not support START broadcast plans")
+    return True
 
 
 def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SRC):
@@ -2052,10 +2078,17 @@ def tcl_text(T, native_paths=None):
               f"if {{[llength $rtr_cn] != 1 || [llength $rtr_ci] != 1}} {{ error {{OT_RESET_CORE unresolved {inst}.{pin} or {q}}} }}",
               f"set rtr_it [[lindex $rtr_ci 0] findITerm {{{pin}}}]",
               f"if {{$rtr_it eq \"NULL\"}} {{ error {{OT_RESET_CORE missing {inst}.{pin}}} }}",
-              f"if {{![rtr_reset_equiv [$rtr_it getNet] 0 {{}}]}} {{ error {{OT_RESET_CORE {inst}.{pin}: existing reset is not an equal-depth relay copy; preserve its RTL latency}} }}",
-              "$rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
-              f"dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
-              f"puts \"OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}\""]
+              # CLASS RESET-CORE 11-03 (DIE-S81-51): a core reset that is not an equal-depth relay copy (an RTL
+              # private pipeline, a frame reset-forest leaf or a lane-carried reset bit) keeps its RTL driver and
+              # latency: no rewire, recorded in ot_reset_core_kept.txt.  Only equal-depth copies are re-targeted.
+              f"if {{![rtr_reset_equiv [$rtr_it getNet] 0 {{}}]}} {{",
+              f"  puts {{OT_RESET_CORE_KEPT {inst}.{pin}: RTL reset kept (not an equal-depth relay copy; RTL latency preserved)}}",
+              f"  set rtr_kf [open $::env(RESULTS_DIR)/ot_reset_core_kept.txt a]; puts $rtr_kf {{{inst}.{pin}}}; close $rtr_kf",
+              "} else {",
+              "  $rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
+              f"  dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
+              f"  puts {{OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}}}",
+              "}"]
     edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
     edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
     t += ["close $rtr_fh",

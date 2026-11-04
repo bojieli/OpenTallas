@@ -1,0 +1,28 @@
+{
+ "_doc": "DIE-S81-51/RF-D 11-03 dsdv_bksel_c RNF form (rfc_bk_1103 profile + RNF 1)",
+ "dsdv_bksel_c": {
+  "ref_tile": "physical/ref_tile/s81dvbk_selc2",
+  "params": {
+   "OLL": 2,
+   "SELOH": 1,
+   "RNF": 1
+  },
+  "half_cycle_inputs": [
+   "f_s_s",
+   "f_s_n",
+   "f_o_s",
+   "f_o_n"
+  ],
+  "regional_taps": {
+   "nx": 4,
+   "ny": 2,
+   "split": "count",
+   "win_ps": 20
+  },
+  "orfs_vars": {
+   "MAX_ROUTING_LAYER": "M6"
+  },
+  "suffix": "rfd",
+  "_rfd": "DIE-S81-51/RF-D 11-03: kits_seloh2 dsdv_bksel_c_rfc OT_HOLD_STRUCTURAL GRT FF hold -189.50 / 172 ep; structural endpoints only rst[0] -> u_c.rst_s removal (-213.5 FF STA on 4_cts.odb); RNF 1 = rst through a negedge flop (0 cycles)"
+ }
+}

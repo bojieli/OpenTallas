@@ -1,0 +1,24 @@
+[
+ {
+  "module": "hfd_ep_static",
+  "outline_um": [
+   427.68,
+   246.24
+  ],
+  "macros_unknown": true,
+  "reason": "DIE-HBM-61/MEM 55c4a61894a right-width SRAM (4x 64x306): slot kept (channel_fit 250.56x146.88 fits, but any shrink adds 1 register on vsN0 u_lk_S1->u_ep_S1 / NW_io u_ep_N0->u_lk_N0 stations, hop 366-392 > 360)",
+  "cell_area": 4760,
+  "macro_area": 13531
+ },
+ {
+  "module": "ot_hbm_host_cp_rxs",
+  "outline_um": [
+   400.248,
+   151.68
+  ],
+  "macros_unknown": true,
+  "reason": "DIE-HBM-61/MEM 55c4a61894a right-width SRAM (4x 64x141 + 2x 256x256) channel_fit 397.44x138.24 snapped up to the 17.28 centre-kept step",
+  "cell_area": 4971,
+  "macro_area": 14294
+ }
+]

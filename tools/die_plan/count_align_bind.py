@@ -524,8 +524,13 @@ def strap_ties(ca, plan):
         # A sender writer START delayed W edges (landing_writer_start) writes W edges later: K_new=K_old+W-R
         # (W1/R proof results/die_head_36_1029/writer_r1_proof, 4572 cases).
         s = p["src"]
+        # WREG-1 (DIE-HEAD-58 TURNB): a receiver ring with a registered writer start (clock.landing_ring_wreg) starts
+        # its writer one fclk edge later, exactly W = 1 at the receiver face: K_new = K_old + 1
+        # (results/dh58_turnb_1103/wreg_equiv: WREG ring == plain ring behind one t_rst_n flop; q(K+1) == q_plain(K)).
+        import clock_landings as CL
+        wreg = CL.ring_write_reg(plan, ptype[q], bus)
         inst_bus[q][bus] = dict(K=int(c["K"]) - reader_start_depth(plan, ptype[q])
-                                + writer_start_depth(plan, ptype[s["part"]], s["bus"]),
+                                + writer_start_depth(plan, ptype[s["part"]], s["bus"]) + (wreg["depth"] if wreg else 0),
                                depth=int(c["depth"]), port=pid, tree=bool(c["tree"]))
     cparts = ca.get("parts")
     role = {}

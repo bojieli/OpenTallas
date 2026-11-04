@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_clock_entry_pin_event.v1",
  "plan": "p/b3/die_plan.json",
- "plan_sha256": "0372fc44e93ec9624fa6c1205e37c77f6b7c6057fdeb2fce7f5da71ff6b5d1ee",
- "clock_entries_sha256": "9d76f2f47a01457c77ea0445f120e3ccb0096b09db4eda5fd6016c9b8790e045",
+ "plan_sha256": "b117a7de1a9853b6571fe56a62931945450174e279aadcba8d3115c043225b3d",
+ "clock_entries_sha256": "a045dee33b82a1ae9faf631a40b79bbd03ac32db1a0135e6cd2e31d06f3848ec",
  "keep": [
   "ot_hbm_idx_qctl_static",
   "ot_hbm_idx_score_hcol_h1",
@@ -16,7 +16,7 @@
  "rule": "METHODOLOGY 12.8a plan clock entry; gen_core_kit_hbm plan_clock_entries + clock_entry_pin (DIE-HBM-60, COORD 11-03 00:2x (4))",
  "summary": {
   "tables": 84,
-  "moved": 52,
+  "moved": 53,
   "kept": 6,
   "refused": 0,
   "missing": 0,
@@ -33,9 +33,9 @@
    "pins_file": "cores/ot_hbm_idx_score_hcol_h0__218.592x187.488__canon__c25c_native__d16f__codex_g21.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
-  "ot_hbm_idx_score_hcol_h1|cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21.json": {
+  "ot_hbm_idx_score_hcol_h1|cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21__mpisl.json": {
    "module": "ot_hbm_idx_score_hcol_h1",
-   "pins_file": "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21.json",
+   "pins_file": "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21__mpisl.json",
    "status": "KEPT (signed record)"
   },
   "ot_hbm_hc_bank128_pair_core|cores/ot_hbm_hc_bank128_pair_core__250.56x267.84__canon.json": {
@@ -210,7 +210,24 @@
   "hfd_ep_static|cores/hfd_ep_static__427.68x246.24__dh21b4r.json": {
    "module": "hfd_ep_static",
    "pins_file": "cores/hfd_ep_static__427.68x246.24__dh21b4r.json",
-   "status": "UNCHANGED (table at entry or no entry)"
+   "new_pins_file": "cores/hfd_ep_static__427.68x246.24__dh21b4r__centry.json",
+   "status": "MOVED",
+   "moved": {
+    "clk": [
+     216.024,
+     120.96
+    ]
+   },
+   "old": {
+    "clk": [
+     220.344,
+     25.92
+    ]
+   },
+   "entry": [
+    216.0,
+    120.96
+   ]
   },
   "hnx_rp3lp3h_s|cores/hnx_rp3lp3h_s.json": {
    "module": "hnx_rp3lp3h_s",
@@ -405,307 +422,307 @@
    "status": "MOVED",
    "moved": {
     "clk_bank[0]": [
-     216.744,
+     164.904,
      228.96
     ],
     "clk_bank[1]": [
-     216.84,
+     165.0,
      228.96
     ],
     "clk_bank[2]": [
-     216.936,
+     165.096,
      228.96
     ],
     "clk_bank[3]": [
-     217.032,
+     165.192,
      228.96
     ],
     "clk_bank_macro[0]": [
-     217.128,
+     165.288,
      228.96
     ],
     "clk_bank_macro[10]": [
-     217.224,
+     165.384,
      228.96
     ],
     "clk_bank_macro[11]": [
-     217.32,
+     165.48,
      228.96
     ],
     "clk_bank_macro[12]": [
-     217.416,
+     165.576,
      228.96
     ],
     "clk_bank_macro[13]": [
-     217.512,
+     165.672,
      228.96
     ],
     "clk_bank_macro[14]": [
-     217.608,
+     165.768,
      228.96
     ],
     "clk_bank_macro[15]": [
-     217.704,
+     165.864,
      228.96
     ],
     "clk_bank_macro[16]": [
-     217.8,
+     165.96,
      228.96
     ],
     "clk_bank_macro[17]": [
-     217.896,
+     166.056,
      228.96
     ],
     "clk_bank_macro[18]": [
-     217.992,
+     166.152,
      228.96
     ],
     "clk_bank_macro[19]": [
-     218.088,
+     166.248,
      228.96
     ],
     "clk_bank_macro[1]": [
-     218.184,
+     166.344,
      228.96
     ],
     "clk_bank_macro[20]": [
-     218.28,
+     166.44,
      228.96
     ],
     "clk_bank_macro[21]": [
-     218.376,
+     166.536,
      228.96
     ],
     "clk_bank_macro[22]": [
-     218.472,
+     166.632,
      228.96
     ],
     "clk_bank_macro[23]": [
-     218.568,
+     166.728,
      228.96
     ],
     "clk_bank_macro[2]": [
-     218.664,
+     166.824,
      228.96
     ],
     "clk_bank_macro[3]": [
-     218.76,
+     166.92,
      228.96
     ],
     "clk_bank_macro[4]": [
-     218.856,
+     167.016,
      228.96
     ],
     "clk_bank_macro[5]": [
-     218.952,
+     167.112,
      228.96
     ],
     "clk_bank_macro[6]": [
-     219.048,
+     167.208,
      228.96
     ],
     "clk_bank_macro[7]": [
-     219.144,
+     167.304,
      228.96
     ],
     "clk_bank_macro[8]": [
-     219.24,
+     167.4,
      228.96
     ],
     "clk_bank_macro[9]": [
-     219.336,
+     167.496,
      228.96
     ],
     "clk_insert[0]": [
-     219.432,
+     167.592,
      228.96
     ],
     "clk_insert[10]": [
-     219.528,
+     167.688,
      228.96
     ],
     "clk_insert[11]": [
-     219.624,
+     167.784,
      228.96
     ],
     "clk_insert[12]": [
-     219.72,
+     167.88,
      228.96
     ],
     "clk_insert[13]": [
-     219.816,
+     167.976,
      228.96
     ],
     "clk_insert[14]": [
-     219.912,
+     168.072,
      228.96
     ],
     "clk_insert[15]": [
-     220.008,
+     168.168,
      228.96
     ],
     "clk_insert[1]": [
-     220.104,
+     168.264,
      228.96
     ],
     "clk_insert[2]": [
-     220.2,
+     168.36,
      228.96
     ],
     "clk_insert[3]": [
-     220.296,
+     168.456,
      228.96
     ],
     "clk_insert[4]": [
-     220.392,
+     168.552,
      228.96
     ],
     "clk_insert[5]": [
-     220.488,
+     168.648,
      228.96
     ],
     "clk_insert[6]": [
-     220.584,
+     168.744,
      228.96
     ],
     "clk_insert[7]": [
-     220.68,
+     168.84,
      228.96
     ],
     "clk_insert[8]": [
-     220.776,
+     168.936,
      228.96
     ],
     "clk_insert[9]": [
-     220.872,
+     169.032,
      228.96
     ],
     "clk_lane[0]": [
-     220.968,
+     169.128,
      228.96
     ],
     "clk_lane[10]": [
-     221.064,
+     169.224,
      228.96
     ],
     "clk_lane[11]": [
-     221.16,
+     169.32,
      228.96
     ],
     "clk_lane[12]": [
-     221.256,
+     169.416,
      228.96
     ],
     "clk_lane[13]": [
-     221.352,
+     169.512,
      228.96
     ],
     "clk_lane[14]": [
-     221.448,
+     169.608,
      228.96
     ],
     "clk_lane[15]": [
-     221.544,
+     169.704,
      228.96
     ],
     "clk_lane[16]": [
-     221.64,
+     169.8,
      228.96
     ],
     "clk_lane[17]": [
-     221.736,
+     169.896,
      228.96
     ],
     "clk_lane[18]": [
-     221.832,
+     169.992,
      228.96
     ],
     "clk_lane[19]": [
-     221.928,
+     170.088,
      228.96
     ],
     "clk_lane[1]": [
-     222.024,
+     170.184,
      228.96
     ],
     "clk_lane[20]": [
-     222.12,
+     170.28,
      228.96
     ],
     "clk_lane[21]": [
-     222.216,
+     170.376,
      228.96
     ],
     "clk_lane[22]": [
-     222.312,
+     170.472,
      228.96
     ],
     "clk_lane[23]": [
-     222.408,
+     170.568,
      228.96
     ],
     "clk_lane[24]": [
-     222.504,
+     170.664,
      228.96
     ],
     "clk_lane[25]": [
-     222.6,
+     170.76,
      228.96
     ],
     "clk_lane[26]": [
-     222.696,
+     170.856,
      228.96
     ],
     "clk_lane[27]": [
-     222.792,
+     170.952,
      228.96
     ],
     "clk_lane[28]": [
-     222.888,
+     171.048,
      228.96
     ],
     "clk_lane[29]": [
-     222.984,
+     171.144,
      228.96
     ],
     "clk_lane[2]": [
-     223.08,
+     171.24,
      228.96
     ],
     "clk_lane[30]": [
-     223.176,
+     171.336,
      228.96
     ],
     "clk_lane[31]": [
-     223.272,
+     171.432,
      228.96
     ],
     "clk_lane[3]": [
-     223.368,
+     171.528,
      228.96
     ],
     "clk_lane[4]": [
-     223.464,
+     171.624,
      228.96
     ],
     "clk_lane[5]": [
-     223.56,
+     171.72,
      228.96
     ],
     "clk_lane[6]": [
-     223.656,
+     171.816,
      228.96
     ],
     "clk_lane[7]": [
-     223.752,
+     171.912,
      228.96
     ],
     "clk_lane[8]": [
-     223.848,
+     172.008,
      228.96
     ],
     "clk_lane[9]": [
-     223.944,
+     172.104,
      228.96
     ]
    },
@@ -1016,7 +1033,7 @@
     ]
    },
    "entry": [
-    220.296,
+    168.456,
     228.96
    ]
   },
@@ -2604,10 +2621,27 @@
     224.64
    ]
   },
-  "ot_hbm_host_cp_rxs|cores/ot_hbm_host_cp_rxs__434.808x480__c25b.json": {
+  "ot_hbm_host_cp_rxs|cores/ot_hbm_host_cp_rxs__400.248x151.68__c25b.json": {
    "module": "ot_hbm_host_cp_rxs",
-   "pins_file": "cores/ot_hbm_host_cp_rxs__434.808x480__c25b.json",
-   "status": "UNCHANGED (table at entry or no entry)"
+   "pins_file": "cores/ot_hbm_host_cp_rxs__400.248x151.68__c25b.json",
+   "new_pins_file": "cores/ot_hbm_host_cp_rxs__400.248x151.68__c25b__centry.json",
+   "status": "MOVED",
+   "moved": {
+    "clk": [
+     198.744,
+     77.76
+    ]
+   },
+   "old": {
+    "clk": [
+     198.854,
+     68.256
+    ]
+   },
+   "entry": [
+    198.72,
+    77.76
+   ]
   },
   "ot_hbm_idx_rootctl_static_am|cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__canon.json": {
    "module": "ot_hbm_idx_rootctl_static_am",
@@ -3681,67 +3715,10 @@
     69.12
    ]
   },
-  "ot_hbm_sm_vm_wr_q_t_lanes4|cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json": {
+  "ot_hbm_sm_vm_wr_q_t_lanes4|cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial__p2pin.json": {
    "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
-   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
-   "new_pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial__centry.json",
-   "status": "MOVED",
-   "moved": {
-    "clk": [
-     68.952,
-     108.0
-    ],
-    "clk_cal": [
-     69.048,
-     108.0
-    ],
-    "clk_l0": [
-     69.144,
-     108.0
-    ],
-    "clk_l1": [
-     69.24,
-     108.0
-    ],
-    "clk_l2": [
-     69.336,
-     108.0
-    ],
-    "clk_l3": [
-     69.432,
-     108.0
-    ]
-   },
-   "old": {
-    "clk": [
-     141.528,
-     215.904
-    ],
-    "clk_cal": [
-     141.432,
-     215.904
-    ],
-    "clk_l0": [
-     1.032,
-     215.904
-    ],
-    "clk_l1": [
-     1.128,
-     215.904
-    ],
-    "clk_l2": [
-     1.224,
-     215.904
-    ],
-    "clk_l3": [
-     1.32,
-     215.904
-    ]
-   },
-   "entry": [
-    69.12,
-    108.0
-   ]
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial__p2pin.json",
+   "status": "UNCHANGED (table at entry or no entry)"
   },
   "ot_hbm_su_programme_pslice_c5|cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21.json": {
    "module": "ot_hbm_su_programme_pslice_c5",
@@ -4272,9 +4249,9 @@
     194.4
    ]
   },
-  "ot_hnx_idxn_keybuf_slice|cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__spread.json": {
+  "ot_hnx_idxn_keybuf_slice|cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__spread__p2pin.json": {
    "module": "ot_hnx_idxn_keybuf_slice",
-   "pins_file": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__spread.json",
+   "pins_file": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__spread__p2pin.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
   "ot_hfd_coll_q2n2_body_core|cores/ot_hfd_coll_q2n2_body_core__786.24x743.04__canon__codex_g21.json": {

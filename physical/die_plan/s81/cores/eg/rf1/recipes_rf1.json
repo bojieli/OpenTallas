@@ -1,0 +1,19 @@
+{
+ "_doc": "S81-RF1 RE-FORM recipes for the split ot_s81sl_eg (DIE-S81-51/RF-B 11-03). OT_KEEP_WIRES r/line/y: the rsqrt sign pipes (m_hm g_l5 u_k6 r[44], d_h line[127], m_yy y[31]) are identical never-reset copies that opt_merge folded, so the synth LEC needed correspondence hints (dropped, NOT EQ 4); kept, every gold register has its own gate register and the LEC needs no hint (function unchanged).",
+ "ot_s81sl_egn": {
+  "ref_tile": "physical/ref_tile/s81sl_egn",
+  "rtl_dirs": true,
+  "suffix": "rf1",
+  "orfs_vars": {
+   "OT_KEEP_WIRES": "r line y"
+  }
+ },
+ "ot_s81sl_egg": {
+  "ref_tile": "physical/ref_tile/s81sl_egg",
+  "rtl_dirs": true,
+  "suffix": "rf1",
+  "orfs_vars": {
+   "OT_KEEP_WIRES": "r line y"
+  }
+ }
+}

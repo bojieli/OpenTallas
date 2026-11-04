@@ -225,7 +225,7 @@ class Verification:
             allowed={prefix+row['name'],prefix+row['name']+'_r',prefix+'u_cland_reset_'+ident(n)}
             if extra:allowed.add(prefix+extra)
             if n in outq:allowed.add(prefix+row['name']+'_t')
-            if up.path not in allowed or up.module!='ot_dp_rrelay' or port!='q':return False
+            if up.path not in allowed or up.module not in('ot_dp_rrelay','ot_dp_rrelay_nl') or port!='q':return False
             ib=up.ports.get('d',[])
             return len(ib)==1 and walk(ib[0],row['d'],seen|{n})
         if not walk(bits[0],node,set()):

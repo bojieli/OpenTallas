@@ -134,8 +134,13 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # one-block geom fixes in 4 types (COORD 11-01 09:2x plan event, APPROVED 14:0x, merged 854277ebaaf);
                # l48h0 = DIE-HEAD-55 prepared_l48h0 on src claude/dh55-headsrc-1102@69e06c8b9 (COORD 11-03 00:2x (a) APPROVED)
                # l48h1 = DIE-HEAD-56 prep_v3 (plan 8e8ce514127b: l48h0 + hd_ctl_e/hd_ctl_n/hd_host_n cland republish), DIE-HEAD-56 RULING 11-03 04:5x
+               # l48rf = DH58-RFPLAN RE-FORM plan event on l48h1 (head_rf_plan_delta.py 9bb4620c625, plan a09cd3ac1180), COORD 11-03 09:0x/09:20
+               # l48tb = DH58-TURNB FREG-1 on l48rf (hd_turn_a/hd_turn_b face register + strap K, plan f9623a82a239,
+               # claude/dh58-turnb-1103@67cc18d2e8e merged main 4b09653bef8, COORD 16:00 approved)
+               # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
+               # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
@@ -432,7 +437,7 @@ def select(rows, cfg, die, state, plan_types=None):
             why = "wave kit enqueued" + (" (queue FAIL; relaunch = retry item@attempt)" if rec.get("q_status") == "FAIL" else "")
         elif rec and rec.get("status") == "CANCELLED" and rec.get("volume") and (
                 rec["volume"] in pilot_classes_state(d, die, state)[0]
-                or pilot_fail_times(d, die, state).get(rec["volume"], 0.0) <= float(rec.get("started") or 0)):
+                or pilot_fail_times(d, die, state, d.get("src_sha") or "").get(rec["volume"], 0.0) <= float(rec.get("started") or 0)):
             pass        # queued volume cancelled by a failed pilot: class now proven, or no class FAIL stands any more
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
@@ -569,6 +574,10 @@ def parse_otrun_status(text):
         if m:
             out[m.group(1)] = {"admit": int(m.group(2)), "load": float(m.group(3)), "cores": int(m.group(4)),
                                "run": int(m.group(5))}
+            # KW-FIX-4 11-03 (COORD 12:1x FLEET): the queued demand 'waiters N:G GB' -> wait_n / wait_gb
+            w = re.search(r"\bwaiters (\d+):(\d+) GB", part)
+            if w:
+                out[m.group(1)].update(wait_n=int(w.group(1)), wait_gb=int(w.group(2)))
     return out
 
 
@@ -875,6 +884,22 @@ def geom_verdict(line, waived=None, standing=True):
     return "FAIL", failing, ""
 
 
+GEOM_ADVISORY_REF = "OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory)"
+
+
+def geom_gate(line, waived=None, advisory=True):
+    """KW-FIX-4 11-03: the wave's AUTO-GEOM gate.  geom_verdict() still judges the line; with advisory on (default,
+    die opt geom_advisory false = the old hard gate) a FAIL with a verdict line passes as PASS-COND tagged
+    'GEOM-ADVISORY <rules>' so the kit goes on to sign-off, which is the only blocking gate.  A missing verdict line
+    stays FAIL (geom did not run)."""
+    v, failing, tag = geom_verdict(line, waived)
+    if v == "FAIL" and advisory and re.search(r"AUTO-GEOM (PASS|FAIL)\b", line or ""):
+        na = sorted(set(re.findall(r"(?:^|\s)([A-Za-z0-9_]+)=NA\(", line)) - set(failing))
+        return "PASS-COND", failing, ("GEOM-ADVISORY " + ",".join(failing + [f"{r}(NA)" for r in na]) + ": "
+                                      + GEOM_ADVISORY_REF)
+    return v, failing, tag
+
+
 def geom_waivers(d, item, parent=None):
     """die config geom_exceptions [{rules: [...], items: [glob ...] (default all), ref: 'COORD ruling', max: {rule: limit}
     (optional value bound)}] -> {rule: ref | (ref, limit)}
@@ -988,6 +1013,18 @@ def core_kit_cmds(ck, src, plan, root, work, item):
     return views, vcmd, gen, find, c["runner"]
 
 
+ENV_KEY_RE, ENV_VAL_RE = re.compile(r"OT_[A-Z0-9_]+"), re.compile(r"[A-Za-z0-9_.,:=+-]*")
+
+
+def item_env(d, item):
+    """die item_env[item] -> {OT_*: value} (validated: OT_ names, shell-safe values; anything else raises)"""
+    env = dict((d.get("item_env") or {}).get(item) or {})
+    for k, v in env.items():
+        if not ENV_KEY_RE.fullmatch(str(k)) or not ENV_VAL_RE.fullmatch(str(v)):
+            raise ValueError(f"item_env {item}: {k}={v!r} (OT_* names, [A-Za-z0-9_.,:=+-] values)")
+    return {str(k): str(v) for k, v in sorted(env.items())}
+
+
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
@@ -1000,6 +1037,9 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "core_kit": dict(d.get("core_kit") or {}, args=list((d.get("core_kit") or {}).get("args") or [])
                              + list(((d.get("core_kit") or {}).get("item_args") or {}).get(core_module(item)) or []))
                         if d.get("core_kit") else {},
+            # die option item_env {item: {OT_*: value}}: generation environment of that item's gen.py phys only
+            # (e.g. OT_IO_HOLD=sender_min, a die-owner input-hold contract ruling on one type; plan clock.io_hold wins)
+            "gen_env": item_env(d, item),
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
             # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
@@ -1014,6 +1054,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
+            "geom_advisory": opt(cfg, die, "geom_advisory") is not False,
             "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN,
@@ -1021,11 +1062,14 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
 
 
 def host_score(v):
-    """ot-run --status row -> preference (higher first): free admits, discounted 4x on a host already >= 0.9 x cores"""
+    """ot-run --status row -> preference (higher first): free admits MINUS the GB already waiting there (KW-FIX-4 11-03,
+    COORD 12:1x FLEET: raw admits sent every burst to epyc4 while 131 waiters / 1359 GB queued there and intel1 had 0),
+    a positive score discounted 4x on a host already >= 0.9 x cores"""
     if not v:
         return -1e9
     busy = float(v.get("load", 0)) >= 0.9 * max(1, int(v.get("cores") or 1))
-    return float(v.get("admit", 0)) * (0.25 if busy else 1.0)
+    s = float(v.get("admit", 0)) - float(v.get("wait_gb", 0))
+    return s * 0.25 if (busy and s > 0) else s
 
 
 def gen_hosts(cfg, die):
@@ -1034,7 +1078,43 @@ def gen_hosts(cfg, die):
     a fresh host fills instead of every kit pinning to the one configured gen host.  Default: [gen_host] (unchanged)."""
     d = cfg["dies"][die]
     hs = [h for h in (d.get("gen_hosts") or []) if h]
-    return hs if d.get("gen_host") in hs else [d["gen_host"]] + hs
+    hs = hs if d.get("gen_host") in hs else [d["gen_host"]] + hs
+    # KW-FIX-4 11-03 (COORD 14:2x INFRA class 2): a host whose die lane root carries an ot-run SPILL marker treats
+    # every --dir under it as a stale copy (ot-run probe NODIR -> "NOT RUN: no host qualifies"), although the wave's
+    # mkdir made the attempt dir there: such a host is no gen host for the die (the configured gen_host always stays)
+    marked = cfg.get("_spill_marked") or {}
+    lane = lane_root(opt(cfg, die, "work_root"))
+    return [h for h in hs if h == d["gen_host"] or lane not in marked.get(h, ())]
+
+
+SPILL_MARK = ".ot-run-spill-copy"                  # ot-run SPILL copy marker (ot-run v14 mark_ancestors)
+LANE_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
+
+
+def lane_root(path):
+    """ot-run lane root of a scratch path (/srv/opentallas-scratch*/claude/<lane>), else the path itself"""
+    m = LANE_RE.match(os.path.normpath(str(path or "")))
+    return m.group(1) if m else os.path.normpath(str(path or ""))
+
+
+def spill_marked(AP, cfg):
+    """{host: {lane roots carrying the ot-run SPILL marker}} for every non-hub gen host of an enabled die (one ssh
+    per host; an unreachable host is left out = unknown, never marked)"""
+    hub, roots = cfg.get("_hub") or "", {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        for h in d.get("gen_hosts") or []:
+            if h and h not in (hub, "localhost", d.get("gen_host")):
+                roots.setdefault(h, set()).add(lane_root(opt(cfg, die, "work_root")))
+    out = {}
+    for h, rs in sorted(roots.items()):
+        cmd = "; ".join(f"test -e {shlex.quote(r + '/' + SPILL_MARK)} && echo {shlex.quote(r)}" for r in sorted(rs)) + "; true"
+        rc, o, _ = AP.sh(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, cmd],
+                         timeout=60)
+        if rc == 0:
+            out[h] = {x for x in o.split() if x in rs}
+    return out
 
 
 def pick_gen_host(cfg, die, take=0):
@@ -1046,20 +1126,44 @@ def pick_gen_host(cfg, die, take=0):
     key = lambda h: stt.get("localhost" if h == hub else h)
     best = max(hs, key=lambda h: (host_score(key(h)), -hs.index(h)))
     if key(best) is not None and take:
-        key(best)["admit"] = key(best).get("admit", 0) - take
+        charge(key(best), take)
     return best
 
 
+def charge(v, gb):
+    """book gb of new demand on a cached ot-run status row: it admits now if it fits, else it waits there"""
+    if int(v.get("admit", 0)) >= gb:
+        v["admit"] = int(v.get("admit", 0)) - gb
+    else:
+        v["wait_n"], v["wait_gb"] = int(v.get("wait_n", 0)) + 1, int(v.get("wait_gb", 0)) + gb
+
+
+def wsize(v, mem):
+    """GB one queued waiter books on a status row: its mean waiter size (most waiters are 10 GB gen/lint stages
+    waiting for short slots, not 48 GB PLACE), else the die's place_mem_gb"""
+    v = v or {}
+    return max(1, round(int(v.get("wait_gb", 0)) / int(v["wait_n"]))) if int(v.get("wait_n", 0)) > 0 else mem
+
+
+def uncharge(v, gb):
+    """a waiter moved off a host: its queued GB leaves the cached status row"""
+    if int(v.get("wait_n", 0)) > 0:
+        v["wait_n"], v["wait_gb"] = int(v["wait_n"]) - 1, max(0, int(v.get("wait_gb", 0)) - gb)
+
+
 def restage_waiters(AP, cfg, st, notices):
-    """KW-FIX-4 11-03 (COORD: not-yet-started waiters may be restaged to epyc4): a RUNNING attempt of a die with
-    gen_hosts whose current ot-run stage still WAITS for admission (volume_started False) on a gen host other than the
-    best one, while the best host admits >= 2 x place_mem_gb at load < 0.7 x cores, is stopped (unit + detached PLACE
-    client, exact unit names) and marked RETRY-INFRA: the INFRA relaunch path starts it again this tick on the best
-    host (a never-admitted wait is not a design result).  Also an async PLACE client started PINNED (--hosts G, before
-    place_spill) that still waits: relaunched it can SPILL.  At most restage_max_per_tick (60); die restage_waiters
-    false opts out."""
+    """KW-FIX-4 11-03 (COORD: not-yet-started waiters may be restaged): a RUNNING attempt of a die with gen_hosts whose
+    current ot-run stage still WAITS for admission (volume_started False) on a gen host other than the best one is
+    stopped (unit + detached PLACE client, exact unit names) and marked RETRY-INFRA: the INFRA relaunch path starts it
+    again this tick on the best host.  Also an async PLACE client started PINNED (--hosts G, before place_spill) that
+    still waits: relaunched it can SPILL.  At most restage_max_per_tick (60); die restage_waiters false opts out.
+    COORD 12:1x FLEET class fix: (1) 'best' = the most admits MINUS queued waiter GB (host_score); a waiter moves when
+    the best host's score beats its own host's by >= place_mem_gb -- no load hold (owner: NO LOAD HOLD), so 131
+    waiters on epyc4 move to an intel1 with 0; (2) a never-admitted wait is an infra move, not an attempt: it moves
+    even when the infra retry budget is used, and the move itself is not charged (infra_base + 1)."""
     stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     cap, n = int(cfg.get("restage_max_per_tick", 60)), 0
+    row = lambda h: stt.get("localhost" if h == hub else h)
     for die, d in (cfg.get("dies") or {}).items():
         if not isinstance(d, dict) or d.get("restage_waiters") is False:
             continue
@@ -1071,9 +1175,8 @@ def restage_waiters(AP, cfg, st, notices):
                 return n
             if r.get("die") != die or r.get("status") != "RUNNING" or not r.get("unit"):
                 continue
-            # only an attempt the INFRA path WILL relaunch this tick (budget left, raw block identity)
-            if (infra_used(r) >= infra_attempts(cfg, die) or (d.get("block_identity", "raw") != "raw")
-                    or stop_reason(cfg, die, cfg.get("_ap_dir"))):
+            # only an attempt the INFRA path WILL relaunch this tick (raw block identity, die not stopped)
+            if (d.get("block_identity", "raw") != "raw") or stop_reason(cfg, die, cfg.get("_ap_dir")):
                 continue
             try:
                 g = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("gen_host")
@@ -1086,9 +1189,8 @@ def restage_waiters(AP, cfg, st, notices):
             why, best, v = "", g, {}
             if multi:
                 best = pick_gen_host(cfg, die)
-                v = stt.get("localhost" if best == hub else best) or {}
-                if not (best == g or v.get("admit", 0) < 2 * mem
-                        or float(v.get("load", 0)) >= 0.7 * max(1, int(v.get("cores") or 1))):
+                v = row(best) or {}
+                if best != g and host_score(v) - host_score(row(g)) >= wsize(row(g), mem):
                     why = f"{g} -> {best}"
             # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
             if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
@@ -1102,13 +1204,89 @@ def restage_waiters(AP, cfg, st, notices):
                     AP.sh(["systemctl", "--user", "stop", svc["unit"]], timeout=180)
                 except (OSError, ValueError, KeyError):
                     pass
+            gb = wsize(row(g), mem)
             if v:
-                v["admit"] = v.get("admit", 0) - mem
+                charge(v, gb)
+            if row(g):
+                uncharge(row(g), gb)
+            # the move is not an attempt: keep the infra budget where it was (and give a spent one its move)
+            # (+1: the relaunch's attempt number +1 is not charged; a spent budget is lifted to exactly one relaunch)
+            r["infra_base"] = int(r.get("infra_base") or 0) + max(1, infra_used(r) - infra_attempts(cfg, die) + 1)
             r.update(status="RETRY-INFRA", **{"class": "INFRA"}, updated=time.time(),
                      reason=f"restaged: unstarted ot-run waiter ({why}) (KW-FIX-4)")
             notices.setdefault(die, []).append(f"{r['item']} unstarted waiter RESTAGED ({why})")
             AP.log(f"KIT-WAVE RESTAGE {die}/{r['item']} unit {r['unit']} ({why})")
             n += 1
+    return n
+
+
+OT_TAG_RE = re.compile(r"--tag (otrun-(\S+)-(\d+)-\d+)\s")
+
+
+def orphan_waiters(ps_text, node, live_pids, roots=("/kit-wave/",)):
+    """remote `ps -eo pid=,ppid=,args=` -> {tag: [pids]} of ot-heavy WAITERS whose hub ot-run client (pid in the tag,
+    tag made on hub `node`) is gone and that never started (no ot-heavy-exit / systemd-run child), limited to kit-wave
+    item dirs (roots).  The bash -c wrapper carrying the same tag is listed too (ot-run's own cancel = pkill by tag)."""
+    rows = []
+    for ln in (ps_text or "").splitlines():
+        p = ln.split(None, 2)
+        if len(p) == 3 and p[0].isdigit() and p[1].isdigit():
+            rows.append((int(p[0]), int(p[1]), p[2]))
+    kids = {}
+    for pid, ppid, a in rows:
+        kids.setdefault(ppid, []).append(a)
+    tags, started = {}, set()
+    for pid, ppid, a in rows:
+        m = OT_TAG_RE.search(a + " ")
+        if not m or m.group(2) != node or int(m.group(3)) in live_pids or not any(r in a for r in roots):
+            continue
+        tags.setdefault(m.group(1), []).append(pid)
+        if "ot-heavy --mem" in a and any(("ot-heavy-exit" in k or "systemd-run" in k) for k in kids.get(pid, [])):
+            started.add(m.group(1))
+    return {t: sorted(v) for t, v in tags.items() if t not in started}
+
+
+def local_otrun_pids():
+    out = set()
+    for p in os.listdir("/proc"):
+        if p.isdigit():
+            try:
+                if b"ot-run" in Path(f"/proc/{p}/cmdline").read_bytes():
+                    out.add(int(p))
+            except OSError:
+                pass
+    return out
+
+
+def reap_orphan_waiters(AP, cfg):
+    """KW-FIX-4 11-03 (COORD 12:1x FLEET): a stopped kit-wave unit's ot-run client cancels its remote waiter with one
+    `ssh host pkill --tag` from its signal handler; under a 70-unit stop burst (11:26) those ssh calls were lost and
+    35 waiters stayed queued on epyc4 with no client (20 of them for attempt dirs already deleted): they inflate the
+    host's waiter count and would start with nobody listening.  Each tick, per remote gen/place host, one ssh lists the
+    ot-heavy waiters tagged by THIS hub whose client pid is dead and which never started (kit-wave dirs only) and
+    TERMs exactly those pids.  cfg reap_orphan_waiters false opts out."""
+    if cfg.get("reap_orphan_waiters") is False:
+        return 0
+    hub, node = AP.HUB_NAME, os.uname().nodename
+    hosts = set()
+    for die, d in (cfg.get("dies") or {}).items():
+        if isinstance(d, dict):
+            hosts |= set(gen_hosts(cfg, die)) | set(d.get("hosts") or [])
+    n = 0
+    for h in sorted(x for x in hosts if x and x not in ("localhost", hub)):
+        live = local_otrun_pids()
+        rc, out, _ = AP.sh(_ssh(h, hub) + ["ps -eo pid=,ppid=,args="], timeout=60)
+        if rc != 0:
+            continue
+        orph = orphan_waiters(out, node, live | local_otrun_pids())
+        pids = sorted(p for v in orph.values() for p in v)
+        if not pids or AP.DRY:
+            n += len(orph)
+            continue
+        AP.sh(_ssh(h, hub) + ["kill -TERM " + " ".join(map(str, pids)) + " 2>/dev/null; true"], timeout=60)
+        AP.log(f"KIT-WAVE REAP {h}: {len(orph)} orphan waiter(s) (hub client gone, never started): "
+               + " ".join(sorted(orph))[:600])
+        n += len(orph)
     return n
 
 
@@ -1282,7 +1460,7 @@ def run_item(spec_path):
         if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
             # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
             return fail("geom_run", txt[-3000:], f"{G}:{gd}")
-        v, failing, tag = geom_verdict(line, sp.get("geom_waivers"))
+        v, failing, tag = geom_gate(line, sp.get("geom_waivers"), sp.get("geom_advisory", True))
         if v not in ("PASS", "PASS-COND"):
             return fail("geom", line, f"{G}:{gd}/auto_geom.json")
         res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
@@ -1453,7 +1631,8 @@ def run_item(spec_path):
                f"PS='--cland-pinslot {ps}'; else echo 'KW_NOTE gen.py of this source has no --cland-pinslot (plan list only)'; fi; "
                if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
         rgp, rga = region_guide_cmd(sp, False)
-        gen = (f"cd {q(src)} && {pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
+        genv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items()))
+        gen = (f"cd {q(src)} && {genv}{pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
                f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}")
         rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
         if rc:
@@ -2229,7 +2408,15 @@ def is_wait_dep(r):
     return r.get("status") == "FAIL" and str(r.get("reason") or "").startswith("WAIT-DEP")
 
 
-def pilot_fail_times(d, die, state):
+def rec_src_sha(rec):
+    """the src_sha an attempt was generated from (its spec.json), '' when unknown"""
+    try:
+        return json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("src_sha") or ""
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+
+
+def pilot_fail_times(d, die, state, src_sha=""):
     """-> {class: latest pilot FAIL time} over the die's non-volume records.  KIT-WAVE-14 11-01: an AUTO-GEOM FAIL
     (stage 'geom') is a per-block geometry verdict -- GEOM review often releases it PASS-COND (fill/empty standing
     exceptions) and it says nothing about the other blocks of the class -- so it never stops the class volume
@@ -2245,6 +2432,11 @@ def pilot_fail_times(d, die, state):
             t = float(r.get("updated") or 0)
         elif r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL":
             t = float(r.get("q_updated") or r.get("updated") or 0)
+        # KW-FIX-4 11-03 (I2 RESET-CORE batch: old-src col_h9 attempts failing OT_RESET_CORE at 17:21 cancelled the
+        # class-fix volume just launched on the fixed src): with src_sha given, only a pilot FAIL generated from that
+        # same source counts -- a failure on a superseded source says nothing about volume on the current one
+        if t is not None and t > fail_t.get(c, 0.0) and src_sha and rec_src_sha(r) not in ("", src_sha):
+            t = None
         if t is not None:
             fail_t[c] = max(fail_t.get(c, 0.0), t)
     return fail_t
@@ -2269,7 +2461,7 @@ def cancel_class_volume(AP, cfg, st, notices):
         if not isinstance(d, dict) or not pilot_queue_mode(d, cfg):
             continue
         signed, _ = pilot_classes_state(d, die, st)
-        fail_t = pilot_fail_times(d, die, st)
+        fail_t = pilot_fail_times(d, die, st, d.get("src_sha") or "")
         for r in items.values():
             c = r.get("volume")
             if r.get("die") != die or r.get("status") != "RUNNING" or not c or c in signed:
@@ -2387,7 +2579,19 @@ def _step(AP, ap_dir):
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
+    try:
+        cfg["_spill_marked"] = spill_marked(AP, cfg)
+        for h, rs in cfg["_spill_marked"].items():
+            if rs:
+                AP.log(f"KIT-WAVE SPILL-MARKED {h}: {' '.join(sorted(rs))} (ot-run treats dirs there as stale copies; "
+                       "not a gen host for those dies)")
+    except Exception as e:                      # a diagnostic probe never stops the tick
+        AP.log(f"KIT-WAVE spill-mark probe skipped: {e}")
     restage_waiters(AP, cfg, st, notices)
+    try:
+        reap_orphan_waiters(AP, cfg)
+    except Exception as e:                      # a diagnostic sweep never stops the tick
+        AP.log(f"KIT-WAVE REAP skipped: {e}")
     stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
     nl = 0                                               # items launched this tick: start delay nl * stagger
     if not scheduler_current(AP):                        # code changed during collect: launch on the current code now
@@ -2524,7 +2728,8 @@ def write_stages(st, ap_dir, cfg=None):
     """OWNER 12.20: one row per wave kit (keyed on plan block sha) for SIGNOFF-SPRINT-1's lanes/SIGNOFF-STAGES.tsv;
     ENQUEUED rows continue in the autopilot queue (route / sign-off / post-route LEC), joined on the kit path.
     plan_current (KIT-TRIAGE-1 11-01; reason stays the last column): yes = the row's key is an item of the die's current plan of record, no = a
-    superseded block/event (history only: count burn-down on 'yes' rows), '' = no cached plan probe for the die."""
+    superseded block/event (history only: count burn-down on 'yes' rows; its FAIL reads status/class SUPERSEDED), '' = no
+    cached plan probe for the die."""
     cur = current_keys(cfg, st)
     rows = ["\t".join(STAGE_COLS)]
     for r in sorted((st.get("items") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
@@ -2541,6 +2746,12 @@ def write_stages(st, ap_dir, cfg=None):
             v.update(stage=r["q_stage"], status=r.get("q_status") or "", **{"class": r.get("q_class") or ""},
                      reason=(r.get("q_reason") or "")[:240],
                      evidence=f"autopilot job {r.get('q_id', '')} | {r.get('evidence') or ''}")
+        if v["plan_current"] == "no" and v.get("status") == "FAIL":
+            # KW-FIX-4/HBMRS 11-03 (DIE-HBM-61, COORD 17:1x): a FAIL on a superseded plan block can never relaunch
+            # or count as such (its current block is another key), so the class burn-down skips it: SUPERSEDED here,
+            # the wave record itself (attempts, two-strike history) is unchanged
+            v.update(status="SUPERSEDED", **{"class": "SUPERSEDED"},
+                     reason=f"superseded plan block (plan_current=no), was FAIL {v.get('class') or ''}: {v.get('reason') or ''}"[:240])
         rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
     # KW-FIX-4 11-03: gen-time lint verdicts of the current plans (never launched, no build cost)
     for r in sorted((st.get("lint") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
@@ -2744,9 +2955,10 @@ def rejudge_rows(cfg, st, probe):
         if g.get("stage") == "placed" and g.get("clk_fixed") == 0 and "clock_reach=FAIL(" in line2:
             line2 = prects_clock_info(line2)
             note = (note + "; " if note else "") + "clock_reach INFO (3_place, 0 fixed clock cells; COORD 11-01 04:4x)"
-        v, failing, tag = geom_verdict(line2, w)
+        adv = opt(cfg, r["die"], "geom_advisory") is not False
+        v, failing, tag = geom_gate(line2, w, adv)
         row.update(old=old, new=v, failing=failing, tag=tag, note=note, line=line2,
-                   whatif=geom_verdict(prects_clock_info(line2), w)[0])
+                   whatif=geom_gate(prects_clock_info(line2), w, adv)[0])
         rows.append(row)
     return rows
 
