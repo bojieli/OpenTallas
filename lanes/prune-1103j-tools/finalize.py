@@ -22,7 +22,7 @@ for h in sys.argv[1:]:
             if gb<0.05: continue
             if not GEN.match(b) and b in words: drop.append((p,gb)); continue
         keep.append((host,p,gb,mt,cl,why)); tot[cl]+=gb
-    with open(f'{H}/coord/lanes/PRUNE-1103J-{h}.tsv','w') as o:
+    with open(f'{H}/coord/lanes/PRUNE-1103J-{h}'+('-'+os.environ['TAG'] if os.environ.get('TAG') else '')+'.tsv','w') as o:
         o.write('path\tsize_GB\tlast_mtime\treason\tclass\n')
         for host,p,gb,mt,cl,why in keep: o.write(f'{host}:{p}\t{gb:.2f}\t{mt}\t{why}; idle rule met, unsigned, no .keep, unreferenced, no live process\t{cl}\n')
     print(h,'manifest rows',len(keep),{k:round(v,1) for k,v in tot.items()},'dropped by word check',len(drop),round(sum(x[1] for x in drop),1),'GB; top dropped',[(os.path.relpath(p,'/srv/opentallas-scratch2/claude'),g) for p,g in sorted(drop,key=lambda x:-x[1])[:6]])
