@@ -2002,7 +2002,7 @@ def tcl_text(T):
         t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
               "set rtr_cn {}; set rtr_ci {}",
               f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",
-              f"foreach i [$ff_blk getInsts] {{ set n [$i getName]; if {{$n eq {{{inst}}} || [string range $n end-[string length {{{inst}}}] end] eq {{/{inst}}}}} {{ lappend rtr_ci $i }} }}",
+              f"foreach i [$ff_blk getInsts] {{ set n [string map {{\\\\[ [ \\\\] ]}} [$i getName]]; if {{$n eq {{{inst}}} || [string range $n end-[string length {{{inst}}}] end] eq {{/{inst}}}}} {{ lappend rtr_ci $i }} }}",
               f"if {{[llength $rtr_cn] != 1 || [llength $rtr_ci] != 1}} {{ error {{OT_RESET_CORE unresolved {inst}.{pin} or {q}}} }}",
               f"set rtr_it [[lindex $rtr_ci 0] findITerm {{{pin}}}]",
               f"if {{$rtr_it eq \"NULL\"}} {{ error {{OT_RESET_CORE missing {inst}.{pin}}} }}",
