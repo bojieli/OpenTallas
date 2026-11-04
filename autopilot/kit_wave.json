@@ -156,7 +156,11 @@
     "kv3_pv_v6@3",
     "kv3_pv_v6n@1",
     "kv3_pv_v7@3",
-    "kv3_pv_v8@3"
+    "kv3_pv_v8@3",
+    "kv3_hgi_v1__cl141fc26e@1",
+    "kv3_hgi_v1__cl42bc8b12@1",
+    "kv3_hgi_v2__cl2862d491@1",
+    "kv3_hgi_v2__cle0015330@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -270,7 +274,11 @@
     "kv3_pv_v6@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_pv_v6n@1": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_pv_v7@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
-    "kv3_pv_v8@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)"
+    "kv3_pv_v8@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
+    "kv3_hgi_v1__cl141fc26e@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)",
+    "kv3_hgi_v1__cl42bc8b12@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)",
+    "kv3_hgi_v2__cl2862d491@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)",
+    "kv3_hgi_v2__cle0015330@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)"
    },
    "only_items": [
     "kv3_astk",
