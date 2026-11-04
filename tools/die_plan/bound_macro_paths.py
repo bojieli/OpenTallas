@@ -61,7 +61,16 @@ def resolve(t, bound_text):
                 cand |= {a[:-len(tail)] for a in ab if a.endswith(tail) and len(a) > len(tail)}
             if cand:                               # a macro with no as-built match stays unmapped, never vetoes
                 common = cand if common is None else common & cand
-        if not common or len(common) != 1:
+        if common is None:
+            # S81 bk_sel__t2: the content is bound whole (as-built u_bk_sel = bound u_core), so nothing below it is
+            # in the as-built map and the macros sit under that one instance.  Same module as the plan content only.
+            whole = ab.get(head)
+            module = next((x.get("module") for x in t.get("contents", []) or [] if x.get("inst") == head), None)
+            if whole and whole[1] == module:
+                rows.extend(dict(inst=c["inst"], physical_inst="u_bound." + whole[0] + "." + ".".join(rest),
+                                 physical_master=c["module"], asbuilt=head) for c, rest in members)
+            continue
+        if len(common) != 1:
             continue
         root = next(iter(common))
         for c, rest in members:
