@@ -40,7 +40,7 @@ def inst_block(s, mod, inst):
 def main(kit, pcc_out, pcf_out, top):
     kit, pcc_out, pcf_out = Path(kit), Path(pcc_out), Path(pcf_out)
     pcc_top = {"qkd_kvs_pc": "qkd_kvs_pcc", "qkd_kvs_pc_h_head_p": "qkd_kvs_pcc_h_head_p"}[top]
-    pcf_top = {"qkd_kvs_pc": "qkd_kvs_pcf", "qkd_kvs_pc_h_head_p": "qkd_kvs_pcf_h_head_p"}[top]
+    pcf_top = "qkd_kvs_pcf"   # same front + return RTL in PC and HHP
     for d in (pcc_out, pcf_out):
         if d.exists():
             shutil.rmtree(d)
@@ -73,26 +73,41 @@ def main(kit, pcc_out, pcf_out, top):
         head = head.replace(w, "")
     src[pn] = head + tail
 
-    # ---- fan_nc_b: pass pcf_x
-    fn = "qkd_static_kv_pc_path_fan_nc_b.sv"
-    s = src[fn]
-    s = s.replace("module qkd_static_kv_pc_path_fan_nc_b ", f"module qkd_static_kv_pc_path_fan_nc_b{SFX} ", 1)
-    s = sub1(r"(module qkd_static_kv_pc_path_fan_nc_b" + SFX + r"\b[^\n]*\n)", r"\1    output wire [297:0] pcf_x,\n", s, "fan port")
-    s = sub1(r"qkd_static_kv_pc_path_nc #\(", f"qkd_static_kv_pc_path_nc{SFX} #(", s, "fan inst")
-    s = sub1(r"(\) u_path \(\n)", r"\1        .pcf_x(pcf_x),\n", s, "fan conn")
-    src[fn] = s
-
-    # ---- leaf: pass pcf_x
-    leaf_f = next(n for n, t in src.items() if re.search(r"^module " + re.escape(top) + r"__leaf\b", t, re.M))
-    s = src[leaf_f]
-    a = s.index(f"module {top}__leaf")
-    b = s.index("\nendmodule", a)
-    L = s[a:b]
-    L = L.replace(f"module {top}__leaf", f"module {pcc_top}__leaf", 1)
-    L = sub1(r"(module " + pcc_top + r"__leaf\b[^\n]*\n)", r"\1    output wire [297:0] pcf_x,\n", L, "leaf port")
-    L = sub1(r"qkd_static_kv_pc_path_fan_nc_b (#\([^;]*?\) u_pc \()", r"qkd_static_kv_pc_path_fan_nc_b" + SFX + r" \1.pcf_x(pcf_x), ", L, "leaf inst")
-    src[leaf_f] = s[:a] + L + s[b:]
-
+    # ---- pass pcf_x up the hierarchy: (module, child module, child instance), innermost first
+    chain = {"qkd_kvs_pc": [("qkd_static_kv_pc_path_emb_nc_b", "qkd_static_kv_pc_path_nc", "u_path"),
+                            ("qkd_static_kv_pc_path_fan_nc_b", "qkd_static_kv_pc_path_emb_nc_b", "u_pce"),
+                            (f"{top}__leaf", "qkd_static_kv_pc_path_fan_nc_b", "u_pc")],
+             "qkd_kvs_pc_h_head_p": [("qkd_static_kv_pc_path_emb_nc_b", "qkd_static_kv_pc_path_nc", "u_path"),
+                                     ("qkd_static_kv_pc_path_fan_nc_b_head_p", "qkd_static_kv_pc_path_emb_nc_b", "u_pce"),
+                                     (f"{top}__leaf", "qkd_static_kv_pc_path_fan_nc_b_head_p", "u_pc")]}[top]
+    for mod, child, inst in chain:
+        newm = f"{pcc_top}__leaf" if mod.endswith("__leaf") else mod + SFX
+        fn = next(n for n, t in src.items() if re.search(r"^(\(\* [^)]*\*\) )?module " + re.escape(mod) + r"\b", t, re.M))
+        s = src[fn]
+        a0 = re.search(r"^(\(\* [^)]*\*\) )?module " + re.escape(mod) + r"\b", s, re.M).start()
+        b0 = s.index("\nendmodule", a0)
+        M = s[a0:b0]
+        M = re.sub(r"module " + re.escape(mod) + r"\b", "module " + newm, M, count=1)
+        k = M.index("module " + newm) + len("module " + newm)
+        while M[k].isspace():
+            k += 1
+        if M[k] == "#":   # skip the parameter list
+            k = M.index("(", k)
+            dep = 0
+            while True:
+                dep += {"(": 1, ")": -1}.get(M[k], 0)
+                k += 1
+                if dep == 0:
+                    break
+        k = M.index("(", k) + 1
+        M = M[:k] + "\n    output wire [297:0] pcf_x,   // RF-B split -> PCF" + M[k:]
+        cm = re.search(r"\b" + re.escape(child) + r"\b(\s*#\s*\()?", M)
+        assert cm, (mod, child)
+        ci = re.search(r"\b" + re.escape(child) + r"(\s*#\s*\(.*?\))?\s+" + re.escape(inst) + r"\s*\(", M, re.S)
+        assert ci, (mod, inst)
+        rep = ci.group(0).replace(child, child + SFX, 1) + ".pcf_x(pcf_x), "
+        M = M[:ci.start()] + rep + M[ci.end():]
+        src[fn] = s[:a0] + M + s[b0:]
     # ---- top: rename, re-port i_grp/o_grp, registered pcf_x
     tf = f"{top}.sv"
     s = src[tf]
