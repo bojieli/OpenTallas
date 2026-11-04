@@ -252,3 +252,116 @@ module dsdv_bk_vout #(
                : !p2s ? {qlo, qhi[255:244], 1'b0, 1'b0, 2'b00, ek, 1'b1}
                :        {(MUT == 4) ? qlo : qhi, 12'd0, 1'b0, 1'b1, 2'b00, ek, 1'b1};
 endmodule
+
+// dsdv_bk_vin3 (DIE-S81-51/RF-D form 8, 11-03, OWNER 18:57 conservative form + COORD 18:59 bk_g ruling): dsdv_bk_vin LPIPE 2
+// with every per-lane state / select copied LOCALLY per slice, so no cross-slice combinational term reaches a flop.
+// rfd6 TT -124.58 was u_vin q0 copy -> shared hv_n -> q1/q2 copies (one recurrence across the tile).  The part-0-held
+// recurrence is LOCAL: hv' = lv ? (!b6 && !b7) : hv needs only this lane's own registered beat bits and its own hv, so
+// each slice keeps its OWN hv copy, updated from its OWN registered copies of lv / b6 / b7 (no slice reads another
+// slice's new state; copies agree by construction; OT_RFD_CHK8 = bench assertion that all 9 copies of a lane agree).
+// Per lane: 4 data slices k (beat bits [20+64k +: 64]) x 2 control copies (lo: hd[64k +: 64] + word bits [64k +: 64],
+// hi: word bits [256+64k +: 64]) + 1 control copy (valid / fault / protocol error) = 9 copies.  Stage A also keeps one
+// beat register pair per face side (W: lanes 0 / 2, E: lanes 1 / 3).  Timing is cycle-identical to dsdv_bk_vin LPIPE 2
+// (V pin -> lane word +2 vs LPIPE 0; drain command unchanged).  Mutant OT_RFD_MUT_HD8: slice 1 loads hd without valid.
+module dsdv_bk_vin3 #(
+    parameter integer V   = 276,
+    parameter integer MUT = 0
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [2:0]        ik,
+    input  wire [7:0]        uid,
+    input  wire              dl_nv,
+    input  wire [V-1:0]      dl_n,
+    input  wire              dl_sv,
+    input  wire [V-1:0]      dl_s,
+    output wire [4*515-1:0]  lanes,
+    output reg               dr_v,
+    output reg  [7:0]        dr_n,
+    output reg  [7:0]        dr_d,
+    output reg               fault
+);
+    localparam integer NC = 9;            // copies per lane: 2k = slice k lo, 2k+1 = slice k hi, 8 = control
+    wire dn = dl_nv && dl_n[3:1] == ik, ds = dl_sv && dl_s[3:1] == ik;
+    wire cn = dl_nv && dl_n[3:1] == 3'd0 && dl_n[28:21] == uid && dl_n[31:29] == 3'd1;
+    wire cs = dl_sv && dl_s[3:1] == 3'd0 && dl_s[28:21] == uid && dl_s[31:29] == 3'd1;
+    // ---------------------------------------------------------------- stage A: per-copy lane hits, per-side beats
+    (* keep = "true" *) reg [4*NC-1:0] pa, sa;
+    (* keep = "true" *) reg [V-1:0] bn_w, bs_w, bn_e, bs_e;
+    reg cc_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pa <= {4*NC{1'b0}}; sa <= {4*NC{1'b0}}; cc_q <= 1'b0; end
+        else begin
+            cc_q <= cn && cs;
+            for (integer l = 0; l < 4; l = l + 1) for (integer c = 0; c < NC; c = c + 1) begin
+                pa[NC * l + c] <= dn && dl_n[5:4] == l; sa[NC * l + c] <= ds && dl_s[5:4] == l;
+            end
+        end
+    always @(posedge clk) begin bn_w <= dl_n; bs_w <= dl_s; bn_e <= dl_n; bs_e <= dl_s; end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) dr_v <= 1'b0; else dr_v <= cn | cs;
+    always @(posedge clk) begin dr_n <= cn ? dl_n[39:32] : dl_s[39:32]; dr_d <= cn ? dl_n[47:40] : dl_s[47:40]; end
+    // ---------------------------------------------------------------- live chain (as LPIPE 2)
+    (* keep = "true" *) reg [3:0] lv_0, lv_1, lv_2, lv_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin lv_0 <= 4'd0; lv_1 <= 4'd0; lv_2 <= 4'd0; lv_q <= 4'd0; end
+        else begin lv_0 <= 4'hf; lv_1 <= lv_0; lv_2 <= lv_1; lv_q <= lv_2; end
+    reg cc_r;
+    always @(posedge clk or negedge rst_n) if (!rst_n) cc_r <= 1'b0; else cc_r <= cc_q;
+    wire [3:0] errv; wire [3:0] wvc;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) fault <= 1'b0; else if (cc_r || errv != 4'd0) fault <= 1'b1;
+    genvar gl, gk;
+    generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_l
+        wire [V-1:0] bn = (gl == 0 || gl == 2) ? bn_w : bn_e, bs = (gl == 0 || gl == 2) ? bs_w : bs_e;
+        wire [NC-1:0] p = pa[NC * gl +: NC], s = sa[NC * gl +: NC];
+        // ------------------------------------------------------------ control copy (valid, fault flag, protocol error)
+        reg lvc, l2c, hvc; reg b6c, b7c, b8c;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin lvc <= 1'b0; l2c <= 1'b0; end else begin lvc <= p[8] | s[8]; l2c <= p[8] & s[8]; end
+        always @(posedge clk) begin b6c <= p[8] ? bn[6] : bs[6]; b7c <= p[8] ? bn[7] : bs[7]; b8c <= p[8] ? bn[8] : bs[8]; end
+        always @(posedge clk or negedge rst_n) if (!rst_n) hvc <= 1'b0; else if (lvc) hvc <= !b6c && !b7c;
+        assign wvc[gl] = lvc && (b6c ? hvc : b7c);
+        assign errv[gl] = lvc && (l2c || (!b6c ? hvc : (!hvc || b7c)));
+        reg q_v, q_f;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin q_v <= 1'b0; q_f <= 1'b0; end else begin q_v <= wvc[gl]; q_f <= (wvc[gl] && b6c && b8c) || fault; end
+        wire [511:0] q_d;
+        // ------------------------------------------------------------ data slices
+        for (gk = 0; gk < 4; gk = gk + 1) begin : g_k
+            reg [63:0] bd, hd; reg [11:0] bt;
+            reg lvL, b6L, b7L, hvL, lvH, b6H, b7H, hvH;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin lvL <= 1'b0; lvH <= 1'b0; end
+                else begin lvL <= p[2 * gk] | s[2 * gk]; lvH <= p[2 * gk + 1] | s[2 * gk + 1]; end
+            always @(posedge clk) begin
+                bd  <= p[2 * gk] ? bn[20 + 64 * gk +: 64] : bs[20 + 64 * gk +: 64];
+                b6L <= p[2 * gk] ? bn[6] : bs[6];         b7L <= p[2 * gk] ? bn[7] : bs[7];
+                b6H <= p[2 * gk + 1] ? bn[6] : bs[6];     b7H <= p[2 * gk + 1] ? bn[7] : bs[7];
+                bt  <= p[2 * gk + 1] ? bn[19:8] : bs[19:8];
+            end
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin hvL <= 1'b0; hvH <= 1'b0; end
+                else begin if (lvL) hvL <= !b6L && !b7L; if (lvH) hvH <= !b6H && !b7H; end
+`ifdef OT_RFD_MUT_HD8   // bench mutant: slice 1 loads hd without its valid
+            always @(posedge clk) if ((lvL || gk == 1) && !b6L) hd <= bd;
+`else
+            always @(posedge clk) if (lvL && !b6L) hd <= bd;
+`endif
+            wire wvL = lvL && (b6L ? hvL : b7L), wvH = lvH && (b6H ? hvH : b7H);
+            reg [63:0] qL, qH;
+            always @(posedge clk) begin
+                qL <= !wvL ? 64'd0 : (b6L && MUT != 1) ? hd : bd;
+                qH <= !wvH ? 64'd0 : b6H ? ((MUT == 1) ? hd : bd)
+                    : (gk == 3) ? {((MUT == 2) ? 12'd0 : bt), 52'd0} : 64'd0;
+            end
+            assign q_d[64 * gk +: 64] = qL; assign q_d[256 + 64 * gk +: 64] = qH;
+        end
+        assign lanes[515 * gl +: 515] = {q_f, lv_q[gl], q_d, q_v};
+`ifdef OT_RFD_CHK8
+        always @(posedge clk) if (rst_n && ({g_k[0].hvL, g_k[0].hvH, g_k[1].hvL, g_k[1].hvH, g_k[2].hvL, g_k[2].hvH,
+                g_k[3].hvL, g_k[3].hvH} != {8{hvc}}))
+            $display("DSDV_BK_VIN3 HV COPY MISMATCH lane %0d", gl);
+`endif
+    end endgenerate
+endmodule
