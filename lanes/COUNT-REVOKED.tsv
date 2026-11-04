@@ -1,0 +1,4 @@
+# COUNT-REVOKED (COORD 11-03 23:2x; read by tools/release_tree_plan.py): die<TAB>design/type<TAB>sha256:<6_final.v> or <scan_host>:<view dir><TAB>reason<TAB>date
+# Only that signed view stops counting; a new signed view of the type counts. Routed DB and signoff.json stay untouched.
+head	hd_turn_a	sha256:c7da568b01c1255af470f7822b0043244b6fa01502bf763767ce5dd77583214e	measured real-parent FAIL on the counted netlist: cland_fstart_in_t_i TT -55.8 (dh56/iohp/turn/io_hold_parent.json; DIE-HEAD-59 23:21, COORD ruling); replacement l48tb FREG-1	2026-11-03 23:2x PST
+head	hd_turn_a	intel2:/srv/opentallas-scratch2/claude/head-ringhold-2/prd_l48x_D	measured real-parent FAIL on the counted netlist: cland_fstart_in_t_i TT -55.8 (dh56/iohp/turn/io_hold_parent.json; DIE-HEAD-59 23:21, COORD ruling); replacement l48tb FREG-1	2026-11-03 23:2x PST
