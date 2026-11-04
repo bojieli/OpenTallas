@@ -3,7 +3,7 @@
 type did not (kit @5: 4 grid taps, 23.5k sinks, tap insertion 626-715 ps, post-CTS hold -486.36).  Runs the GEOM-96
 tools unchanged with TYPES set to this type; the tap sites come from geom96_1031/cover_taps.py (added_taps.json here).
 col_v site is the @5 kit's AUTO-GEOM hot spot (1170, 192.5).
-usage (repo root): event.py taps|start|raw PLAN_IN PLAN_OUT [RAWBR.json]|REPORT.json"""
+usage (repo root): event.py taps|start|raw PLAN_IN PLAN_OUT [RAWBR.json]|REPORT.json; event.py rawgen PLAN BIND_RTL_DIR RAWBR.json"""
 import json, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
@@ -18,6 +18,10 @@ elif step == "start":
     import delta_geom96_start as M
     M.TYPES = (TN,)
     M.COLV_AT = {TN: (1170.0, 192.5)}
+    sys.argv = ["x", a, b, c]
+elif step == "rawgen":
+    import raw_branches_gen as M
+    M.TYPES = (TN,)
     sys.argv = ["x", a, b, c]
 elif step == "raw":
     import delta_geom96_raw as M
