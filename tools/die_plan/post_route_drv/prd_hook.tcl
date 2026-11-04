@@ -169,9 +169,41 @@ proc ot_prd_dtoff_restore {} {
 # setup-repair move (run_prd.log "Signal 11"; 3 kits, Codex l4 twice).  Opt-in: nets the ECO creates or touches are estimated from
 # placement while repairing (every existing net keeps its routed RCX SPEF, re-read after each estimate as before); the
 # legalized result is routed by the same incremental GRT + DRT and signed off on its own RCX, so no check changes.
+# FLOW-25 11-03 (RSZ-0074 class, default on): a seed that carries routed data wires (OT_PRD_FROM=route|final, or a grt
+# pass whose seed is a route-keeping pass's 5_1_grt.odb) leaves GRT with no route for those nets: GRT skips a net with
+# wires (hasWires), so "global_route" routes only the ripped ones (n3_turn i2t: 390 of 45721 nets).  With the GRT source
+# repair_design then builds BufferedNet trees from those routes for EVERY driver it visits, violating or not.  No route +
+# driver alone in its GCell = nullptr, silent Steiner fallback; no route + driver sharing its GCell and layer with some
+# loads = a partial tree = RSZ-0074 "found route to 1 pins, expected 2", on any net, at chance (measured 7 days, all
+# hosts: 15 of ~480 wired sessions, 0 of 72 fresh ones; the same seeds pass with placement: pcf, egg).  Such a seed
+# therefore always repairs on the placement source above: Steiner trees, existing nets keep the routed SPEF.
+# OT_PRD_REPAIR_RC=grt keeps the GRT source (A/B only).  Fresh seeds are unchanged; so are all checks and margins.
+proc ot_prd_wired_data_nets {} {
+  set clk [dict create]
+  foreach n [ot_clk_dbnets] { dict set clk [$n getName] 1 }
+  set wired 0
+  foreach n [[ord::get_db_block] getNets] {
+    if {[$n getSigType] in {POWER GROUND CLOCK} || [$n isSpecial] || [dict exists $clk [$n getName]]} continue
+    set w [$n getWire]
+    if {$w ne "NULL" && $w ne ""} { incr wired }
+  }
+  return $wired
+}
 set ::ot_prd_rc_place 0
-if {[info exists ::env(OT_PRD_REPAIR_RC)] && $::env(OT_PRD_REPAIR_RC) ne ""} {
-  if {$::env(OT_PRD_REPAIR_RC) ne "placement"} { error "OT_PRD_REPAIR_RC=$::env(OT_PRD_REPAIR_RC): want placement" }
+set _rc [expr {[info exists ::env(OT_PRD_REPAIR_RC)] ? $::env(OT_PRD_REPAIR_RC) : ""}]
+if {$_rc ni {"" placement grt}} { error "OT_PRD_REPAIR_RC=$_rc: want placement|grt" }
+if {$_rc eq ""} {
+  set _wired [ot_prd_wired_data_nets]
+  puts "OT_PRD seed: $_wired data nets carry routed wires"
+  if {$_wired > 0} {
+    if {[llength [info commands ::ot_prd_native_estimate]]} {
+      set _rc placement
+    } else {
+      puts "OT_PRD WARNING: wired seed on the frozen-clock RC path keeps the GRT repair source (RSZ-0074 possible)"
+    }
+  }
+}
+if {$_rc eq "placement"} {
   if {![llength [info commands ::ot_prd_native_estimate]]} {
     error "OT_PRD_REPAIR_RC=placement needs the routed-SPEF estimate wrapper (not the frozen-clock RC path)"
   }

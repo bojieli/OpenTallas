@@ -306,7 +306,7 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     t0 = time.time()
     vs = passes(kit, prev or {}, hm)
     it = dict(n=n, dir=str(d), source=str(src), mode=mode, variant="+".join(vs), started=t0, commands=[], rc={},
-              pass_dirs=[], repair_rc=repair_rc or "grt")
+              pass_dirs=[], repair_rc=repair_rc or "auto")
 
     def step(name, cmd, **kw):
         it["commands"].append(" ".join(shlex.quote(str(c)) for c in cmd))
@@ -515,8 +515,8 @@ def main():
     r.add_argument("--keep", action="store_true", help="keep the run data of superseded iterations")
     r.add_argument("--lec", action="store_true", help="run the kit's post-route LEC on a PASS (into BEST/lec)")
     r.add_argument("--lec-tool")
-    r.add_argument("--repair-rc", choices=["placement"], default="",
-                   help="OT_PRD_REPAIR_RC from iteration 1 (default: only as the retry after a FlexPA SIG11)")
+    r.add_argument("--repair-rc", choices=["placement", "grt"], default="",
+                   help="OT_PRD_REPAIR_RC from iteration 1 (default: the hook decides, a wired seed repairs on placement; a fresh one after a FlexPA SIG11)")
     c = sub.add_parser("check")
     c.add_argument("record")
     a = ap.parse_args()

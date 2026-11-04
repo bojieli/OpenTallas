@@ -328,6 +328,7 @@ def test_protected_net_is_exact_data_only(name, signal_type, clock_nets, ok):
                       source.index("global_route -start_incremental")]
     harness = f'''
 set ::env(OT_PRD_PROTECT_NETS) {{{name}}}
+set ::env(OT_PRD_REPAIR_RC) grt
 namespace eval ord {{ proc get_db_block {{}} {{return block}} }}
 proc block {{command name}} {{if {{$name eq "missing"}} {{return NULL}}; return dbnet}}
 proc dbnet {{command}} {{return {signal_type}}}

@@ -159,8 +159,9 @@ done
 [ -z "${OT_PRD_PROTECT_NETS:-}" ] || printf 'OT_PRD_PROTECT_NETS=%q\n' "$OT_PRD_PROTECT_NETS" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGETED:-}" ] || printf 'OT_PRD_TARGETED=%q\n' "$OT_PRD_TARGETED" >> $OUT/variant.env
 # DIE-S81-48 11-02: OT_PRD_REPAIR_RC=placement = repair on placement estimates for ECO nets (FlexPA SIG11 class)
-case "${OT_PRD_REPAIR_RC:-}" in '') ;; placement) echo "OT_PRD_REPAIR_RC=placement" >> $OUT/variant.env ;;
-  *) echo "prd_mk: OT_PRD_REPAIR_RC=$OT_PRD_REPAIR_RC: want placement"; exit 2 ;; esac
+# FLOW-25 11-03: unset = the hook decides (a seed with routed data wires repairs on placement, RSZ-0074 class); grt = A/B
+case "${OT_PRD_REPAIR_RC:-}" in '') ;; placement|grt) echo "OT_PRD_REPAIR_RC=$OT_PRD_REPAIR_RC" >> $OUT/variant.env ;;
+  *) echo "prd_mk: OT_PRD_REPAIR_RC=$OT_PRD_REPAIR_RC: want placement|grt"; exit 2 ;; esac
 # DIE-S81-49 11-02: OT_PRD_BUFFER_REMOVAL=1 re-enables setup-repair buffer removal (default off: removed-buffer class)
 case "${OT_PRD_BUFFER_REMOVAL:-}" in ''|0) ;; 1) echo "OT_PRD_BUFFER_REMOVAL=1" >> $OUT/variant.env ;;
   *) echo "prd_mk: OT_PRD_BUFFER_REMOVAL=$OT_PRD_BUFFER_REMOVAL: want 0|1"; exit 2 ;; esac
