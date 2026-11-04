@@ -424,7 +424,7 @@ def prune(it, intermediate_only=False):
 
 # ------------------------------------------------------------------------------------------------ the loop
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
-             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc=""):
+             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode=""):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE"""
     kit = Path(kit).resolve()
     t0 = time.time()
@@ -454,7 +454,7 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     best = None
     verdict, stop = "EXHAUSTED", f"{max_iter} iterations, still not signed"
     for n in range(1, max_iter + 1):
-        mode = "route" if prev["drc"] == 0 else "grt"
+        mode = from_mode or ("route" if prev["drc"] == 0 else "grt")
         it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                      repair_rc=repair_rc)
         res["iterations"].append(it)
@@ -543,6 +543,9 @@ def main():
     r.add_argument("--keep", action="store_true", help="keep the run data of superseded iterations")
     r.add_argument("--lec", action="store_true", help="run the kit's post-route LEC on a PASS (into BEST/lec)")
     r.add_argument("--lec-tool")
+    # DIE-KV-67/CL 11-04: a small-DRC kit whose full DRT took many hours (ZH rfB: 13.7 h) can keep its wires instead
+    r.add_argument("--from", dest="from_mode", choices=["route", "grt"], default="",
+                   help="seed of every iteration (default: route when the DB has no DRC, else grt)")
     r.add_argument("--repair-rc", choices=["placement", "grt"], default="",
                    help="OT_PRD_REPAIR_RC from iteration 1 (default: the hook decides, a wired seed repairs on placement; a fresh one after a FlexPA SIG11)")
     c = sub.add_parser("check")
@@ -557,7 +560,7 @@ def main():
         print("ECO_LOOP FAIL: no sign-off record in the kit")
         return 3
     res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep,
-                   repair_rc=a.repair_rc)
+                   repair_rc=a.repair_rc, from_mode=a.from_mode)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
         res["verdict"] = "LEC_FAIL"
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))
