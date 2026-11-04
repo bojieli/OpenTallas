@@ -147,7 +147,7 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
                # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
