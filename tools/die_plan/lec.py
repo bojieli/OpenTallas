@@ -4219,6 +4219,32 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
                    f"{sum(status.get(n) == 'proved' for n in m.onames)} / {len(todo)} bases")
 
 
+def eq_const_restore(L, log=None):
+    """LEC-EQCONST-RESTORE (DIE-HBM-61/LEC 11-03, HBM FAIL_PREFLOOR NOT EQ class: dma_back wb_fill_epoch[2..3] /
+    wb_fill_bank, argmax cq_d, pc_ctrl_leaf, kshare lane st).  eq_const_resolve rewrites an equality whose
+    representative carries a constant into that constant; the constant only stands in for the equality.  When it is
+    dropped later (the representative is not that constant: induction, a simulation witness, or the no-reset base),
+    the equality itself was lost too, so a gold-only register that synthesis merged into the partner it duplicates
+    became a free state input and its face register 'differed'.  Each rewritten equality comes back ONCE as a plain
+    candidate (kept as 'eq', never rewritten again); the next induction round proves or drops it like any proposal.
+    Nothing is assumed: only proved sets are ever returned. -> number restored."""
+    origin = L.__dict__.setdefault("eq_const_origin", {})
+    restored = L.__dict__.setdefault("eq_const_restored", set())
+    back = []
+    for key, h in origin.items():
+        if key in restored or key in L.hyp:
+            continue
+        points = getattr(L, "gp" if h[1] == "gold" else "tp", None)
+        if points is None or h[2] in points:
+            L.hyp[key] = h
+            restored.add(key)
+            back.append(key)
+    if back and log is not None:
+        log.append(f"eq-to-const restored as equalities (their constant was dropped): {len(back)} "
+                   f"{[f'{sd}:{k}' for sd, k in back[:6]]}")
+    return len(back)
+
+
 def eq_const_resolve(L, log=None):
     """An equality hypothesis whose representative carries a constant hypothesis is that constant (HBM-CORES-REBAL-6
     10-28, side_rest u_egs: gold-only rem_stage[0][34..] = eq gold g_dig[2].src_rem[0], itself const 0, while the
@@ -4238,12 +4264,15 @@ def eq_const_resolve(L, log=None):
                 c = const_of(h[1], h[2], seen | {key})
                 return None if c is None else c ^ h[3]
         return None
+    eq_const_restore(L, log)
+    origin, restored = L.eq_const_origin, L.eq_const_restored
     n, first = 0, []
     for key, h in list(L.hyp.items()):
-        if h[0] != "eq":
+        if h[0] != "eq" or key in restored:
             continue
         c = const_of(h[1], h[2], {key})
         if c is not None:
+            origin.setdefault(key, h)
             L.hyp[key] = ("const", c ^ h[3])
             n += 1
             if len(first) < 6:
@@ -4285,6 +4314,8 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
         ok = noreset_sound(L)
         bad = [(sd, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok]
         if not bad:
+            if eq_const_restore(L, log):     # a dropped eq-to-const stand-in: its equality is a candidate again
+                continue
             break
         L.noreset_dropped = getattr(L, "noreset_dropped", {})
         for sd, k, c in bad:
