@@ -1770,13 +1770,17 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         lf = Path(disc["kit"]) / "land_slots.json" if disc.get("kit") else None
         land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
         pad_clocks, native_clock_pins = face_guard.kit_pad_clocks(disc['kit'], library_receipt) if disc.get('kit') else ([], set())
-        exports = face_guard.sdc_clock_exports(Path(disc['sdc']).read_text()) if pad_clocks else []
+        # DIE-KV-69 11-04: same SDC facts as the face_guard CLI / kit gate read, so a landing clock on a [0:0] bus and a
+        # declared forwarded output are clock roles here too.  guard() still proves an export is buffers from its source.
+        sdc_text = Path(disc['sdc']).read_text() if disc.get('sdc') else ""
+        exports = face_guard.sdc_clock_exports(sdc_text)
+        sdc_clocks = face_guard.sdc_clock_ports(sdc_text)
         synth_text = Path(disc["synth"]).read_text(errors="replace")
         types = synth_types(disc["synth"], synth_text)
         r = face_guard.guard(synth_text, pins=pins, skip_re=skip_re, ft1=ft1,
                              straps=sl, dead=dl, land=land, exports=exports, spare=spl, timed=tml,
                              pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
-                             clocks=[p['name'] for p in pad_clocks if p['dir'] == 'in'], types=types)
+                             clocks=sorted({p['name'] for p in pad_clocks if p['dir'] == 'in'} | set(sdc_clocks)), types=types)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),
