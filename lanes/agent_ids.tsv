@@ -174,15 +174,25 @@ FLOW-27	a279b23d1e329160c	PARKED 07:02 canary on --priority die; timer tick stay
 FLOW-28	ad009af3610708c5b	DONE 06:59 grt183 merged I30; re-run path unproven on a real kit
 SS27-TOK	af09266fbb3d02ca2	PARKED 07:35 -> SS28-RESIGN
 DIE-KV-67	aeddd7e8ec67a6012	PARKED 07:32 -> DIE-KV-68
-PRUNE-1104M	a05ec3e5054dcd3a2	LIVE 05:3x successor of PRUNE-1103L
+PRUNE-1104M	a05ec3e5054dcd3a2	DEAD 07:4x session limit, successor 08:2x
 DIE-S81-54	a2667b131817fb317	PARKED 07:37 -> DIE-S81-55
-ROOT-MERGE-30	a430a63a35e154264	LIVE 05:5x successor of ROOT-MERGE-29
+ROOT-MERGE-30	a430a63a35e154264	DEAD 07:4x session limit, successor 08:2x
 FLOW-29	a637ab300e208c71f	PARKED branches in I34
-KW-FIX-7	a3458aef6d15eb045	LIVE 06:2x successor of KW-FIX-6
-DIE-HEAD-61	ac0794d6c94fc17ac	LIVE 06:2x successor of DIE-HEAD-60
-DIE-QC-69	a9a968666fc647803	LIVE 06:2x successor of DIE-QC-68
-FLOW-30	a605f7b211ee10da9	LIVE 06:3x real clock profile at post-CTS gate
-DIE-HBM-64	add69632f55da2a85	LIVE 06:5x successor of DIE-HBM-63
-DIE-KV-68	a43c0335acc1c8dda	LIVE 07:3x successor of DIE-KV-67
-DIE-S81-55	a81150d323968edf0	LIVE 07:4x successor of DIE-S81-54
-SS28-RESIGN	a1d3ffcf5e0d943cb	LIVE 07:4x successor of SS27-TOK
+KW-FIX-7	a3458aef6d15eb045	DEAD 07:4x session limit, successor 08:2x
+DIE-HEAD-61	ac0794d6c94fc17ac	DEAD 07:4x session limit, successor 08:2x
+DIE-QC-69	a9a968666fc647803	DEAD 07:4x session limit, successor 08:2x
+FLOW-30	a605f7b211ee10da9	PARKED 07:4x branch approved for train after I34
+DIE-HBM-64	add69632f55da2a85	DEAD 07:4x session limit, successor 08:2x
+DIE-KV-68	a43c0335acc1c8dda	DEAD 07:4x session limit, successor 08:2x
+DIE-S81-55	a81150d323968edf0	DEAD 07:4x session limit, successor 08:2x
+SS28-RESIGN	a1d3ffcf5e0d943cb	DEAD 07:4x session limit, successor 08:2x
+ROOT-MERGE-31	a9d3e8f2ea4564cbb	LIVE 08:2x I34 + next train
+KW-FIX-8	a9c8f8f444f5c35c0	LIVE 08:2x successor of KW-FIX-7
+FLOW-31	a152e4df3368f1db8	LIVE 08:2x ot-run per-root reservations
+PRUNE-1104N	a11c6a433c7295ed5	LIVE 08:2x successor of PRUNE-1104M
+DIE-S81-56	a59b96587f81b1e78	LIVE 08:2x successor of DIE-S81-55
+DIE-HEAD-62	a9c68f19e3afb629a	LIVE 08:2x successor of DIE-HEAD-61
+DIE-QC-70	a47a0a22f3fe52d6e	LIVE 08:2x successor of DIE-QC-69
+DIE-KV-69	a40e6c5de1074cbac	LIVE 08:2x successor of DIE-KV-68
+DIE-HBM-65	a4820504720dca6c7	LIVE 08:2x successor of DIE-HBM-64
+SS29-RESIGN	a6d0bcac07ca01171	LIVE 08:2x successor of SS28-RESIGN
