@@ -804998,13 +804998,13 @@
       "name": "u_gunit.u_l4.clk",
       "kind": "core",
       "xy": [
-       1443.0,
-       369.384
+       1105.452,
+       341.04
       ],
       "insertion_ps": 303.0,
       "insertion_ff_ps": 252.9,
       "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean | RF-D 11-03: moved with the core (clk S-edge pin 155.052, 0.24)"
      },
      {
       "name": "u_gunit.u_l3.clk",
@@ -809033,7 +809033,7 @@
       "name": "clk_t50",
       "xy": [
        1049.32,
-       289.32
+       360.72
       ]
      },
      {
@@ -809097,7 +809097,27 @@
     {"inst":"u_gunit.u_l0r","module":"dsdv_gunit_l0r","lef":"physical/die_plan/s81/cores/legacy/lef/dsdv_gunit_l0r.lef","origin_um":[1632.96,423.36],"outline_um":[267.84,267.84],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l0r.json","obs_max":"M5","lib":"physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r_tt.lib"},
     {"inst":"u_gunit.u_l5f","module":"dsdv_gunit_l5f","lef":"physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f.lef","origin_um":[1632.96,17.28],"outline_um":[151.2,151.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l5f.json","obs_max":"M5","lib":"physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f_tt.lib"},
     {"inst":"u_gunit.u_l4r","module":"dsdv_gunit_l4r","lef":"physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r.lef","origin_um":[1632.96,285.12],"outline_um":[129.6,129.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l4r.json","obs_max":"M5","lib":"physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r_tt.lib"},
-    {"inst":"u_gunit.u_l4","module":"dsdv_gunit_l4","lef":"physical/die_plan/s81/cores/legacy/lef/dsdv_gunit_l4.lef","origin_um":[1270.08,336.96],"outline_um":[345.6,64.8],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l4.json","obs_max":"M5"}
+    {
+     "inst": "u_gunit.u_l4",
+     "module": "dsdv_gunit_l4",
+     "lef": "physical/die_plan/s81/cores/legacy/lef/rfc_1103/dsdv_gunit_l4.lef",
+     "origin_um": [
+      950.4,
+      233.28
+     ],
+     "outline_um": [
+      302.4,
+      108.0
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "inputs/core_pins/rfc_1103/dsdv_gunit_l4.json",
+     "obs_max": "M5",
+     "note": "RF-D 11-03: 302.4x108 at (950.4, 233.28), conservative form OLAT 2"
+    }
    ],
    "note": "unit partition; 1 instance(s) (R0)",
    "internal_stations": [
