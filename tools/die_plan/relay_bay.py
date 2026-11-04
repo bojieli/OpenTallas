@@ -225,9 +225,14 @@ def main(argv=None):
                 decl[s]["bit_sites_dropped"] = True
     if pitch is not None:
         cm = f"{K}/config.mk"; t = open(cm).read()
-        t2, nn = re.subn(r"^export OT_MAXWIRE_UM = \d+$", f"export OT_MAXWIRE_UM = {pitch}", t, flags=re.M)
-        if nn != 1:
-            print(f"FAIL_PREBUILD relay_bay: {T}: config.mk has no single OT_MAXWIRE_UM line"); return 2
+        # KW-FIX-4 11-03 (DIE-QC-66 class B): accept 'override export' and spacing variants; a kit whose config.mk has
+        # no OT_MAXWIRE_UM line gets one appended (the flow default applies otherwise); only >1 lines stay a FAIL
+        t2, nn = re.subn(r"^((?:override[ \t]+)?export[ \t]+OT_MAXWIRE_UM[ \t]*[:?]?=)[ \t]*\d+[ \t]*$",
+                         lambda m: f"{m.group(1)} {pitch}", t, flags=re.M)
+        if nn == 0:
+            t2 = t + ("" if not t or t.endswith("\n") else "\n") + f"export OT_MAXWIRE_UM = {pitch}\n"
+        elif nn > 1:
+            print(f"FAIL_PREBUILD relay_bay: {T}: config.mk has {nn} OT_MAXWIRE_UM lines"); return 2
         open(cm, "w").write(t2)
     json.dump(dict(schema="opentallas.declared_cycles.v1", form=FORM, owner_rule="TWO-STRIKES 11-03", kit=T,
                    max_hop_um=a.max_hop, repeater_pitch_um=pitch, lanes=decl), open(f"{K}/declared_cycles.json", "w"), indent=1)

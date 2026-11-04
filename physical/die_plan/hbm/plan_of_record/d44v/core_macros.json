@@ -7407,6 +7407,83 @@
    "recipe_macros": [
     "ot_sram_1r1w_128x256_m1_r2c2"
    ]
+  },
+  "ot_hbm_su_pg_lane1_core": {
+   "status": "KNOWN",
+   "outline_um": [
+    190.08,
+    311.04
+   ],
+   "macros": [
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      8.22,
+      135.972,
+      49.284
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      49.308,
+      135.972,
+      90.372
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      114.396,
+      135.972,
+      155.46
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      155.484,
+      135.972,
+      196.548
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      220.572,
+      135.972,
+      261.636
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      261.66,
+      135.972,
+      302.724
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT p6: the uncut 6x4 grid row b = bank b -> one bank per lane1 tile, 6 reads as one column (pairs abutted, 24.024 channel as the uncut rows), x 41.148 ; clock entry (164.16, 155.52) in the 54-um macro-free E strip (cefix rule: entry off macros)"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"

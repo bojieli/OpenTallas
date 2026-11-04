@@ -226,7 +226,7 @@ def _bitexpr(name, w, override):
 
 
 def emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant=None, scalars=None, stages=None,
-               lockup=None, rst_relay=None):
+               lockup=None, rst_relay=None, in_stages=None):
     """shell SV text.  mutant (bench only): {'kind': 'in_bypass'|'out_bypass'|'out_delay2', 'bus': n, 'bit': i}.
     stages (opt-in, HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): {bus: k} -> k extra pipeline register stages
     u_bmid<j>_<bus> between the core port and the face flop of an OUTPUT bus (k-cycle read pipeline before the
@@ -235,9 +235,14 @@ def emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant=N
     lockup stage u_bout_<bus>__nl (ot_hbm_face_nreg) that drives the port (hold +T/2, cycle count unchanged).
     mutant kind 'out_latch' (bench only): the lockup stage of that bus is a negative-LEVEL latch instead.
     rst_relay (opt-in, DIE-HBM-61/RTL): {active-low reset INPUT name: N} -> u_brst_<name> (ot_hbm_face_rst_relay,
-    async assert, release after N edges) between the pin and the core reset port."""
+    async assert, release after N edges) between the pin and the core reset port.
+    in_stages (opt-in, DIE-HBM-61/CUTS 11-03): {INPUT bus: k} -> k extra free-placed pipeline register stages
+    u_bimid<j>_<bus> between the face flop u_bin_<bus> (stays at the face) and the core port (input relay: a far
+    capture inside the core gets a mid-way register).  Latency +k on that input bus only; default none = unchanged.
+    mutant kind 'in_short' (bench only): bit `bit` of that bus skips its last input stage (one cycle early)."""
     mutant = mutant or {}
     stages = stages or {}
+    in_stages = in_stages or {}
     lockup = set(lockup or ())
     rst_relay = dict(rst_relay or {})
     if mutant.get("bus") in lockup and mutant.get("kind") != "out_latch":
@@ -272,6 +277,14 @@ def emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant=N
             src = f"{i_}__fq"
             if mutant.get("kind") == "in_bypass" and mutant.get("bus") == n:
                 src = _bitexpr(f"{i_}__fq", k, {mutant["bit"]: sbit(n, mutant["bit"])})
+            if in_stages.get(n):
+                prev_ = src
+                for j_ in range(int(in_stages[n])):
+                    body.append(f"    wire [{k - 1}:0] {i_}__i{j_};")
+                    body.append(f"    (* keep *) {CELL} #(.W({k})) u_bimid{j_}_{i_} (.clk({clk}), .d({src}), .q({i_}__i{j_}));")
+                    prev_, src = src, f"{i_}__i{j_}"
+                if mutant.get("kind") == "in_short" and mutant.get("bus") == n:
+                    src = _bitexpr(src, k, {mutant["bit"]: f"{prev_}[{mutant['bit']}]"})
             conns.append(f".{n}({src})" if k == w else f".{n}({{{w - k}'d0, {src}}})")
         else:
             body.append(f"    wire [{w - 1}:0] {i_}__fc;")
@@ -383,7 +396,7 @@ def rename_module(files, module, new, defines=None):
 
 
 def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None,
-          stages=None, lockup=None, reset_relay=0):
+          stages=None, lockup=None, reset_relay=0, in_stages=None):
     """turn kit `kd` (generated, top = `module` with exactly the plan pins) into a shelled kit.
     local: kit RTL paths (host), srcs: /work paths (config.mk), params: top params of `module` (moved onto the core
     instance).  reset_relay (opt-in, DIE-HBM-61/RTL): N >= 2 -> every active-low reset input (rst_re, name ending
@@ -420,6 +433,14 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
             raise RuntimeError(f"face_shell: stage {rx_!r}={k_} matches no signal output bus (or k < 1)")
         for n in hit_:
             st_[n] = max(st_.get(n, 0), int(k_))
+    # opt-in input relay stages (DIE-HBM-61/CUTS): {regex: k} matched against the shell's kept signal INPUT buses
+    ist_ = {}
+    for rx_, k_ in (in_stages or {}).items():
+        hit_ = [n for n in widths if dirs[n] == "input" and n not in passthru and keep[n] > 0 and re.search(rx_, n)]
+        if not hit_ or int(k_) < 1:
+            raise RuntimeError(f"face_shell: in-stage {rx_!r}={k_} matches no signal input bus (or k < 1)")
+        for n in hit_:
+            ist_[n] = max(ist_.get(n, 0), int(k_))
     # opt-in output lockup stage: regexes over the signal OUTPUT buses ('.*' = every output); an unmatched regex fails
     lk_ = set()
     for rx_ in (lockup or ()):
@@ -438,7 +459,8 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
                 rr_[n] = int(reset_relay)
         if not rr_:
             raise RuntimeError(f"face_shell: reset_relay: {module} has no reset input")
-    txt = emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant, set(scalars), st_, lk_, rr_)
+    txt = emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant, set(scalars), st_, lk_, rr_,
+                     ist_ or None)
     (kd / "rtl" / f"{module}__fshell.sv").write_text(txt)
     (kd / "rtl" / f"{CELL}.sv").write_text(CELL_SV)
     if lk_:
@@ -466,6 +488,10 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
                widths=widths, dirs=dirs, keep=keep,
                top_fanout_in=sorted(((v, k) for k, v in rep["in_fanout"].items() if base(k) in sig_in), reverse=True)[:16],
                files=[f"{module}__fshell.sv", f"{CELL}.sv"] + ([f"{NCELL}.sv"] if lk_ else []) + ([f"{RCELL}.sv"] if rr_ else []))
+    if ist_:
+        out["in_extra_stages"] = {n: k for n, k in sorted(ist_.items())}
+        out["in_extra_stage_flops"] = sum(keep[n] * k for n, k in ist_.items())
+        out["face_flops_in_relay_note"] = "u_bimid<j>_<bus> relay flops are free-placed (face flop u_bin_<bus> stays at the face)"
     if lk_:
         out["out_lockup"] = dict(form="negedge_face_stage", cell=NCELL, buses=sorted(lk_),
                                  bits=sum(widths[n] for n in lk_), latency_cycles=0,
@@ -492,6 +518,8 @@ def latency_table(out, reports):
                    const_out_bits=J["const_out_bits"], dup_out_bits=J["dup_out_bits"])
         if J.get("out_extra_stages"):
             row["out_extra_cycles"] = J["out_extra_stages"]     # {output bus: +k} on top of out_cycles
+        if J.get("in_extra_stages"):
+            row["in_extra_cycles"] = J["in_extra_stages"]       # {input bus: +k} on top of in_cycles
         prev = rows.get(m)
         if prev and (prev["dropped_in_bits"] != row["dropped_in_bits"]):
             row["note"] = "views of this module disagree on dropped bits"

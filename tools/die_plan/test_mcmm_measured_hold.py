@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 HERE=Path(__file__).parent
@@ -22,12 +23,21 @@ ot_vclk_measured_bind
 if {{$latency(ss) != 250 || $latency(ff) != 195}} {{error "mode corruption"}}
 rename ot_vmh_pinreg_mean original_mean2
 proc ot_vmh_pinreg_mean {{}} {{return {{100 10 0 1}}}}
-if {{![catch {{ot_vclk_measured_bind}} err]}} {{error "out-of-band accepted"}}
-if {{$latency(ff) != 195}} {{error "out-of-band mutated constraints"}}
+if {{[info exists ::env(OT_POSTCTS_BAND_GATE)] && $::env(OT_POSTCTS_BAND_GATE) eq "1"}} {{
+  if {{![catch {{ot_vclk_measured_bind}} err]}} {{error "out-of-band accepted under OT_POSTCTS_BAND_GATE=1"}}
+  if {{$latency(ff) != 195}} {{error "out-of-band mutated constraints"}}
+}} else {{
+  ot_vclk_measured_bind
+  if {{$latency(ss) != 250 || $latency(ff) != 100}} {{error "advisory band: ff not bound to measured mean or ss touched"}}
+}}
 puts PASS
 """
-    r=subprocess.run(["tclsh"],input=script,text=True,capture_output=True)
-    assert r.returncode==0 and "PASS" in r.stdout and not r.stderr, r
+    # KW-FIX-4/BAND 11-03 (OWNER 19:12): an out-of-band FF mean is ADVISORY by default (binds, no stop);
+    # OT_POSTCTS_BAND_GATE=1 keeps the old fail-closed stop.  Both modes are checked; ss stays isolated in both.
+    for gate in ("", "1"):
+        env = dict(os.environ, OT_POSTCTS_BAND_GATE=gate)
+        r=subprocess.run(["tclsh"],input=script,text=True,capture_output=True,env=env)
+        assert r.returncode==0 and "PASS" in r.stdout, (gate, r)
 
 def test_mm_binds_before_repair_in_bc_shim():
     s=(HERE.parent/"orfs_hold_mm.tcl").read_text()

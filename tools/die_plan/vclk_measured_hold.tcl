@@ -1,7 +1,8 @@
 # tools/die_plan/vclk_measured_hold.tcl (S81-ECO-2 10-27; OPT-IN form, FLOW-SHARED-4 10-27 rebase of 2f4c07767 + 9891c5f4e7).
 # Measured FF boundary reference for the coupled two-mode (orfs_hold_mm.tcl) GRT repair: in ot_mm_sync, mode ff, the IO
 # virtual clock is bound to the FF IO-boundary pin-register clock-arrival mean measured on the session's GRT parasitics
-# (same selection as signoff.py FF_VCLK_TCL), band-checked against the bound FF insertion +- tol (fail closed), BEFORE
+# (same selection as signoff.py FF_VCLK_TCL), band-checked against the bound FF insertion +- tol (ADVISORY since KW-FIX-4/BAND
+# 11-03; OT_POSTCTS_BAND_GATE=1 = the old fail-closed stop), BEFORE
 # setup/hold repair.  ONLY when the kit opts in (config.mk OT_MM_MEASURED_HOLD = 1, kit_modes.py stage --measured-hold,
 # 'rebind' kits only); no default flow (grt_post.tcl, gen_phys.py, core_flow.py) sources this file.
 # Frame note (FLOW-SHARED-4, COORD ruling 3): the bound mean is measured in the SAME RC model the repair times the
@@ -112,7 +113,23 @@ proc ot_vclk_measured_bind {} {
   if {$n == 0 || $bad != 0 || $ncl != 1} {
     error "OT_VCLK_MEASURED_HOLD: pin-register mean unavailable (samples $n missing $bad clocks $ncl) -- sign-off would be NOT RUN"
   }
-  if {abs($mean - $ffb) > $tol} {
+  # KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the FF insertion band is ADVISORY.  A measured mean outside bound +- tol
+  # is reported (OT_VCLK_MEASURED_BAND line + vclk_measured_band.json beside this file, read by signoff.py into
+  # signoff.json insertion_band) and the IO virtual clock is still bound to the MEASURED mean, so the FF hold repair
+  # runs in the frame the registers actually see; the band moves to die STA.  OT_POSTCTS_BAND_GATE=1 restores the stop.
+  # An unavailable measurement (above) still fails: there is no frame to bind.
+  set band_ok [expr {abs($mean - $ffb) <= $tol}]
+  set band_gate [expr {[info exists ::env(OT_POSTCTS_BAND_GATE)] && $::env(OT_POSTCTS_BAND_GATE) eq "1"}]
+  set bv [expr {$band_ok ? "PASS" : ($band_gate ? "FAIL" : "ADVISORY")}]
+  catch {
+    set fh [open [file join $::ot_vmh_dir vclk_measured_band.json] w]
+    puts $fh [format "{\"corner\": \"FF\", \"source\": \"vclk_measured_hold.tcl\", \"parasitics\": \"global_routing\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.6f, \"bound_ps\": %s, \"tol_ps\": %s, \"dev_ps\": %.6f, \"band_verdict\": \"%s\"}" \
+      $n $mean $ffb $tol [expr {abs($mean - $ffb)}] $bv]
+    close $fh
+  }
+  puts [format "OT_VCLK_MEASURED_BAND FF mean %.3f bound %s tol %s dev %.3f %s" $mean $ffb $tol [expr {abs($mean - $ffb)}] \
+    [expr {$bv eq "ADVISORY" ? "ADVISORY (outside the band; not a stop, OWNER 11-03 19:12; die STA owns the band)" : $bv}]]
+  if {$bv eq "FAIL"} {
     error "OT_VCLK_MEASURED_HOLD: FF pin-register mean [format %.3f $mean] outside bound $ffb +- $tol (sign-off band FAIL; fix the clock, not the hold)"
   }
   set_clock_latency -source $mean [lindex $vc 0]

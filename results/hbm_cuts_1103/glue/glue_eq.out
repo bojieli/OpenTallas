@@ -1,0 +1,5 @@
+cut GLUE_EQ PASS compared=5880 nonzero_out_samples=33330
+m1_cw_in_short GLUE_EQ FAIL mismatches=170 of 5880
+m2_b3_eg_short GLUE_EQ FAIL mismatches=173 of 5880
+m3_b5_pr_short GLUE_EQ FAIL mismatches=5 of 5880
+m4_ccw_in_bypass GLUE_EQ FAIL mismatches=166 of 5880

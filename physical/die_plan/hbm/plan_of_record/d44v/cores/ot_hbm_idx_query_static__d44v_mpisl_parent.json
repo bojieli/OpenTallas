@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.core_mesh_island_parent.v1",
+ "module": "ot_hbm_idx_query_static",
+ "event": "DIE-HBM-61 d44v part 6a",
+ "plan_core_pins": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q__mpisl.json",
+ "plan_core_pins_sha256": "c307375429dcba5dc7287d1a8f9d82af0f833f83d125d3d6a666be850747aee8",
+ "previous_core_pins": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q.json",
+ "outline_um": [
+  170.64,
+  164.16
+ ],
+ "core_signal_pins": 1633,
+ "mesh_island_ft_pins": [
+  {
+   "name": "mp_isl0_ck_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    85.296,
+    84.0,
+    85.344,
+    84.48
+   ],
+   "island": "isl0",
+   "island_role": "clock_entry",
+   "parent": "die_clock_tap",
+   "connect": "die M9 clock stack (M9->M5 at the island centre): die mesh/tree tap"
+  },
+  {
+   "name": "mp_isl0_ck_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    87.456,
+    84.0,
+    87.504,
+    84.48
+   ],
+   "island": "isl0",
+   "island_role": "clock_entry",
+   "parent": "die_clock_feed",
+   "connect": "die mesh/tree feed-through net; independent core clock pin"
+  },
+  {
+   "name": "mp_isl0_rst_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    85.304,
+    79.824,
+    85.336,
+    80.016
+   ],
+   "island": "isl0",
+   "island_role": "clock_entry",
+   "parent": "die_reset_tap",
+   "connect": "die regional reset stack (M9->M5 at the island centre)"
+  },
+  {
+   "name": "mp_isl0_rst_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    87.464,
+    79.824,
+    87.496,
+    80.016
+   ],
+   "island": "isl0",
+   "island_role": "clock_entry",
+   "parent": "die_reset_feed",
+   "connect": "die reset feed-through net; independent core reset pin"
+  }
+ ],
+ "ft_arcs": [
+  {
+   "source": "mp_isl0_ck_i",
+   "sink": "mp_isl0_ck_o",
+   "kind": "clock",
+   "cells": [
+    "mp_isl0_ck0"
+   ],
+   "master": "BUFx12f_ASAP7_75t_R",
+   "cell_xy_um": [
+    85.914,
+    82.35
+   ],
+   "tt_ps": {
+    "min": 18.77,
+    "max": 21.19
+   },
+   "ff_ps": {
+    "min": 14.21,
+    "max": 15.42
+   }
+  },
+  {
+   "source": "mp_isl0_rst_i",
+   "sink": "mp_isl0_rst_o",
+   "kind": "reset",
+   "cells": [
+    "mp_isl0_rst0"
+   ],
+   "master": "BUFx4_ASAP7_75t_R",
+   "cell_xy_um": [
+    86.238,
+    81.27
+   ],
+   "tt_ps": {
+    "min": 24.89,
+    "max": 27.88
+   },
+   "ff_ps": {
+    "min": 18.4,
+    "max": 19.59
+   }
+  }
+ ],
+ "signed_view": {
+  "resign": "/srv/opentallas-scratch2/claude/ss24/q7b2_w_hbm (epyc2, PROVENANCE kind resign, SIGNED)",
+  "def_": "codex-hbm-cores-1101/query/q7b2/run/results/asap7/hbc_ot_hbm_idx_query_static/base/6_final.def",
+  "def_sha256_16": "88f7ef6a00a78f36",
+  "routed_db_sha256_16": "c00d6a8e025e859a",
+  "flow_tag": "flow-20261103-w-hbm"
+ },
+ "rule": "12.2a1 pushdown island ft ports are plan core pins (d35a master-plan form); the die connects each _i pin to its tap (M9->M5 stack at the island centre) and each _o pin to its feed-through net; clock arcs are pass-through in die clock STA, reset arcs are interface arcs in die STA; no core logic."
+}

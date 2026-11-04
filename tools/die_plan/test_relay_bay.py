@@ -63,6 +63,23 @@ class RelayBay(unittest.TestCase):
             self.assertEqual(len(re.findall(r"u_ft_fb_o_\d", open(K + "/rtl/t_bound.sv").read())), 5)
             self.assertEqual(json.load(open(K + "/declared_cycles.json"))["lanes"]["fb"]["extra_cycles"], 2)
 
+    def test_maxwire_line_absent_or_override(self):
+        for cm, want in (("export X = 1\n", r"\nexport OT_MAXWIRE_UM = (50|62|75|100)\n$"),
+                         ("override export OT_MAXWIRE_UM = 100\n", r"^override export OT_MAXWIRE_UM = (50|62|75|100)\n$")):
+            with tempfile.TemporaryDirectory() as d:
+                K = mkkit(d)
+                open(K + "/config.mk", "w").write(cm)
+                self.assertEqual(RB.main([K]), 0)
+                t = open(K + "/config.mk").read()
+                self.assertRegex(t, want)
+                self.assertEqual(len(re.findall(r"OT_MAXWIRE_UM", t)), 1)
+                self.assertEqual(RB.main([K]), 0)                  # idempotent
+                self.assertEqual(len(re.findall(r"OT_MAXWIRE_UM", open(K + "/config.mk").read())), 1)
+        with tempfile.TemporaryDirectory() as d:
+            K = mkkit(d)
+            open(K + "/config.mk", "w").write("export OT_MAXWIRE_UM = 100\nexport OT_MAXWIRE_UM = 90\n")
+            self.assertEqual(RB.main([K]), 2)
+
     def test_bit_sites_dropped_for_regenerated_lanes(self):
         with tempfile.TemporaryDirectory() as d:
             K = mkkit(d)

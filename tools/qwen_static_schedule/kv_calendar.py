@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import importlib.util
 import math
+import os
 from pathlib import Path
 
 from .calendar import ScheduleError
@@ -46,6 +47,10 @@ SOURCED = dict(
     front_nblk=4, front_blk=8, front_stride=1, # qkd_kv_hbm_elastic_front defaults
     ring_depth=8,                              # qkd_static_kv_return_slots DEPTH default
     qk_consume_age=34, qk_row_latency=21,      # attention native service (RL21) / static_qk_calendar consume age
+    # DIE-KV-64/RF-B 11-03 RF-KV3 split (physical/die_plan/qwen_kvsys/plan_of_record/rf3s_delta.json): the PC read return
+    # (front + return slots) moves into qkd_kvs_pcf behind a 298-bit PCC->PCF face, a uniform +2 core-edge shift, so a put
+    # is consumable 2 core edges later.  0 = unsplit PC (RF-KV1/RF-KV2 vehicles); OT_KV_PC_FORM=rf3s selects the split.
+    pc_return_core_edges=2 if os.environ.get('OT_KV_PC_FORM', '') == 'rf3s' else 0,
 )
 REQUIRED = ('core_ps', 'hbm_ps', 'rd_landing_nominal_hbm', 'front_window_hbm', 'put_after_go_hbm', 'front_nblk', 'front_blk',
             'front_stride', 'ring_depth', 'ring_cdc_core_edges', 'qk_consume_age', 'qk_row_latency',
@@ -158,9 +163,14 @@ def hbm_to_core(e_hbm, p):
     return math.ceil(e_hbm * p['hbm_ps'] / p['core_ps'])
 
 
+def visible_core(e_hbm, p):
+    """core edge a put at HBM edge e_hbm is consumable: ring CDC + the PC read-return face (RF-KV3 split, else 0)"""
+    return hbm_to_core(e_hbm, p) + p['ring_cdc_core_edges'] + p.get('pc_return_core_edges', 0)
+
+
 def _layer_pc(ks, p):
     sch = pc_schedule(ks, p, 0)
-    vis = [hbm_to_core(x, p) + p['ring_cdc_core_edges'] for x in sch['put']]   # core edge the sector is consumable
+    vis = [visible_core(x, p) for x in sch['put']]   # core edge the sector is consumable
     cons = [c for _, c, _ in ks]
     start = max(v - c for v, c in zip(vis, cons))                               # QK start so every put precedes consume
     ev = sorted([(v, 1) for v in vis] + [(start + c + 1, -1) for c in cons])    # ring: visible, not yet consumed
@@ -326,7 +336,7 @@ def _layer_pc_paced(ks, p):
     cons = [c for _, c, _ in ks]
     while True:
         sch = pc_schedule_paced(ks, p, start)
-        vis = [hbm_to_core(x, p) + p['ring_cdc_core_edges'] for x in sch['put']]
+        vis = [visible_core(x, p) for x in sch['put']]
         if all(v <= start + c for v, c in zip(vis, cons)):
             break
         start += 1
@@ -414,7 +424,7 @@ def timeline_36(T, p, layers=36, pv_rl=19, writes_per_layer=2):
         lead = 0
         while True:
             sch = _paced_abs(demand, p, lead, win, blocked)
-            vis = [hbm_to_core(x, p) + p['ring_cdc_core_edges'] for x in sch['put']]
+            vis = [visible_core(x, p) for x in sch['put']]
             late = max(v - (lead + c) for v, (_, c, _) in zip(vis, demand))
             if late <= 0:
                 break

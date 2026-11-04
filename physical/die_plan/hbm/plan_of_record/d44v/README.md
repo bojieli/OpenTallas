@@ -1,4 +1,4 @@
-# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-5 (DIE-HBM-61/PLAN, 2026-11-03)
+# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-6 (DIE-HBM-61/PLAN + /SPLIT, 2026-11-03)
 
 OWNER 11-03: TWO-STRIKES -> RE-FORM, ONE batch per die. Rules are design targets: plan GEOM, fill, aspect and channels
 are ADVISORY. Only sign-off blocks.
@@ -212,6 +212,60 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
 
   The r2r hits are one lane -> `lf` fan-in (advisory).
 
+## Part 6a (one-block plan pin event: query_static q7b2 mesh-island ft pins; builder step after mk_cefix)
+
+SS24 re-signed ot_hbm_idx_query_static q7b2 at 20:16 (ss24/q7b2_w_hbm, flow-20261103-w-hbm): SIGNED TT +0.35 /
+FF +6.54, LEC EQ. It did not count because design_unmatched showed 4 extra pins against the d44v table. This is the
+same class as hcol_h1 in part 3.
+
+- `mk_mpisl_q.py` adds mp_isl0_{ck,rst}_{i,o} to the query_static table (1633 -> 1637 pins). The pins are placed at
+  the signed DEF layer, centre and rect (DEF sha256 88f7ef6a00a78f36).
+- It repoints the 4 pins_file refs and writes the parent-connection sidecar
+  cores/ot_hbm_idx_query_static__d44v_mpisl_parent.json. That sidecar holds the 12.2a1 ft arcs from signoff
+  ft_interface.json: BUFx12f clock and BUFx4 reset.
+- Count: the q7b2 record (signed-DEF pins) gives **MATCH** against the plan design, 1637/1637 pins.
+
+## Part 6 (conservative form, OWNER 18:57: the DIE-HBM-61/SPLIT cores become plan sub-core designs)
+
+Builder step `mk_split.py p/b3 split_p6/split_p6.json split_p6`. It runs after mk_cefix / mk_mpisl_q and before
+mk_smrst. The centre clock-entry pins stay LAST. Inputs, all in results/die_hbm_1103/reform/split_p6/:
+
+- the spec;
+- `<core>__p6glue.sv`, the thin parent glue;
+- `<sub>.conn.json`, which split_conn.py derives from a yosys netlist of glue + composition with the subs blackboxed.
+
+The glue is the kit pass-through wrapper `<core>__fcore` with its u_core swapped to the SPLIT composition, plus the
+plan module as a wires-only shell. It has no face registers: every sub-core carries its own kit face shell. The
+physical sub-core path is `<inst>.u_fcore.u_core.<u_sub>`.
+
+| core (SPLIT EQ sha) | inst | slot | sub-core designs (tile, pins) | added cycles |
+|---|---|---|---|---|
+| ot_hbm_idx_score_hcol_h0 (c4237519789) | 128 | 218.592 x 187.488 | ra 106.272 x 187.488 (1165), rb 106.272 x 187.488 (1198); street 6.048 | 0 on every port |
+| ot_hgi_sfu_split3_lane_core__idpin (273120b2730) | 32 | 388.8 x 345.6 | bk 155.52 (385), fr 120.96 (1557), ex 95.04 (68), full height; streets 8.64 | +4 on sfu_vm/kv/ro/fault/coll outputs |
+| ot_hbm_su_static_pgslice_lg__lanes8_11 (8dd205e8bcc) | 4 | 760.32 x 311.04 | 4 x ot_hbm_su_pg_lane1_core 190.08 x 311.04 (2035), abutted, one table | 0 on every port |
+
+- **Tiles.**
+  - Tiles run along the long axis. Every tile edge is on the 8.64 lattice in both R0 and mirrored instances, so
+    track_offset is 0.
+  - The sub order is the permutation with the least pin displacement: bk | fr | ex. The 35 bk<->ex bits cross fr.
+- **Pins.**
+  - Parent-pin bits keep the parent face and position, clamped into the tile.
+  - Seam bits sit on facing faces in the same order on both ends.
+  - Clock bits sit at the sub's own centre entry: M5, every 2nd track, the same placement as clock_entry_pins.
+  - The lane1 entry is at (164.16, 155.52) in the macro-free E strip.
+  - Unconnected bits go on the replicas' common outer faces.
+  - core_faces pass (check.py model, as mk_repin): hcol rb cf_out / cs_out / prdy move E -> N.
+- **Sidecars**, re-pointed from the core inst to its subs:
+  - clock_entries.json and clock.taps: one entry/tap per sub.
+  - core_conns.json: sub ports, parent targets, seam peers, and the partners' core:<sub>.
+  - internal_stations: 11,696 re-pointed; <inst>.<port> goes to the owning sub port, a bare inst to the nearest
+    tile. The 132 hcol cs_in/cf_in refs are dead ports, tied 0 in the uncut shell.
+  - parent_id_straps (split3 map_lane_j) move to fr.
+  - core_macros.json: lane1 is KNOWN with 6 x 128x256 as one column (pairs abutted, 24.024 channel as the uncut
+    rows), x 41.148.
+- **Part 7** (next event): fused_lane, rp3lp3h n/s, q3_edge, tkm idpin/terminal, q3_body. Their EQ verdicts are on
+  claude/die-hbm-61-split-1103.
+
 ## Checks (epyc2 die-hbm-60-plan, same tools for every plan: main 08542fa9d7d + d44v tools)
 
 - **G0+G0C** (`tools/die_plan/check.py --completeness`):
@@ -223,7 +277,8 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
   | d44v part 2 | 24 | 128 |
   | d44v part 3 | 24 | 128 |
   | d44v part 4 | 24 | 128 |
-  | **d44v part 5** | **24** | 128 |
+  | d44v part 5 | 24 | 128 |
+  | **d44v part 6 + 6a** | **24** | 64 |
 
   - Against part 1, 27 are gone and **0 are new**.
   - Against d44t, the 3 "new" are pre-existing items under a new message:
@@ -232,6 +287,7 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
   - Part 3 against part 2: gone 0, **new 0**, and the warnings stay at 1148 = 1148.
   - Part 4 against part 3: errors gone 0, new 0. Warnings go from 1148 to 1146: the 2 UNKNOWN-macro clock_entry_macro WARNs are gone.
   - Part 5 against part 4: errors gone 0, new 0; warnings stay at 1146 = 1146.
+  - Part 6 + 6a against part 5: errors gone 0, **new 0**; warnings 1146 -> 1085; pending-view 128 -> 64 (the 128 hcol_h0 merged clk_pair taps become single-clock sub taps). Diff: g0/g0_diff_d44v_p5_p6.txt.
   - Diffs: g0/g0_diff_d44t_d44v.txt, g0/g0_diff_d44v_p1_p2.txt, g0/g0_diff_d44v_p2_p3.txt, g0/g0_diff_d44v_p3_p4.txt and g0/g0_diff_d44v_p4_p5.txt.
 - **Plan-time GEOM** (`plan_geom.py`, 74 types): **new FAIL = 0**, and the FAIL count is 225 -> 225. All of these
   are advisory, and every type already fails clock_tap_sinks or clock_reach.
@@ -241,8 +297,9 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
     - q_su01: 8890 -> 9194;
     - q_su20: +1.
   - Part 3 against part 2, part 4 against part 3 and part 5 against part 4: identical (new 0, worse 0, better 0).
+  - Part 6 + 6a against part 5: new FAIL 0, 225 -> 225. One value is worse on a rule that already fails (q_b112__physical_v1 clock_tap_sinks 9577 -> 9580). Better: q_b110 clock_reach 289 -> 238, plus 6 clock_tap_sinks. Diff: geom/geom_diff_d44v_p5_p6.txt.
   - Diff: geom/geom_diff_d44t_d44v.txt.
-- **Count**: 84 -> 84 designs, and the 6 signed cores keep their design key (SAME). See g0/count_check.txt.
+- **Count** (part 6): 84 -> **87** designs: -3 split cores, +6 sub-core designs (ra, rb, fr, ex, bk, lane1). All 9 signed records are **MATCH**: the 8 of part 4 plus q7b2 query_static (part 6a). hcol_h0 had an unchanged key, so 26 of 84 keys are unchanged. Earlier parts: 84 -> 84 designs, and the 6 signed cores keep their design key (SAME). See g0/count_check.txt.
   - The signed hcol_h1 record (signed-DEF pins) gives **MATCH** against the plan design: 1228/1228 pins.
   - Part 4: all 8 signed records (routed-DEF pins) give MATCH: pretree, hcol_h1, qctl, tail_native x2, collar,
     ring_ag, tnode. Part 5: the same, count output identical to part 4.

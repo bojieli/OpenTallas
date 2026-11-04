@@ -1842,7 +1842,8 @@
   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_reduce = ot_hgi_coll_reduce_static_pr (HBM-P5 twin: input pin register on every data/control input + fault register); pub_meta[32:24] tied 9'h1ff inside as the master | Common-root plan wiring selected only by exact pin-table SHA; native clocks share clk, other data/reset terminals unchanged.",
   "top": "ot_hfd_coll_q2_reduce_core",
   "wrapper_by_pins_sha256": {
-   "07982cfbef37edd49280a29e1b6e3963e734969a260e057a2f4bb3c728253534": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv"
+   "07982cfbef37edd49280a29e1b6e3963e734969a260e057a2f4bb3c728253534": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv",
+   "72041fe1902610536dde7a09cf1f5109f2afe59dea0e89dfc2468acfcef2a8b0": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hfd_coll_q2_hard_v8g__reduce.sv"
   }
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp0_id": {

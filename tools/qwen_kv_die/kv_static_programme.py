@@ -810,7 +810,7 @@ def shaped_schedule(demand, p, shape, start_core=None):
 
 
 def _visible(sch, p):
-    return [KC.hbm_to_core(x, p) + p['ring_cdc_core_edges'] for x in sch['put']]
+    return [KC.visible_core(x, p) for x in sch['put']]
 
 
 def v_start(demand, p, shape):
@@ -892,7 +892,7 @@ def law_check(pr, plans, Ts=LAW_TS):
                     last = min(len(st), b + 8) - 1
                     if l['issue'][last] + lmax > l['go0'] + off[b]:
                         bad.append(dict(T=T, group=f'{s}{g}', kind=kind, block=b // 8, why='blk_go before landing'))
-                req = max(KC.hbm_to_core(x, P) + P['ring_cdc_core_edges'] - c for x, (_, c, _) in zip(put, st))
+                req = max(KC.visible_core(x, P) - c for x, (_, c, _) in zip(put, st))
                 if kind == 'k':
                     need_k = max(need_k, req)
                     L.setdefault('k_cases', []).append((put, [c for _, c, _ in st]))
@@ -909,7 +909,7 @@ def law_check(pr, plans, Ts=LAW_TS):
                     bad.append(dict(T=T, group=f'{s}{g}', kind='v', sector=i, why='put before its ring slot is consumed'))
                     break
         for put, cons in L.get('k_cases', []):               # K ring occupancy if K is launched e edges earlier
-            vis = [KC.hbm_to_core(x, P) + P['ring_cdc_core_edges'] for x in put]
+            vis = [KC.visible_core(x, P) for x in put]
             for e in range(EARLY_MAX + 1):
                 occ = peak = 0
                 for _, d in sorted([(v, 1) for v in vis] + [(need_k + e + c + 1, -1) for c in cons]):

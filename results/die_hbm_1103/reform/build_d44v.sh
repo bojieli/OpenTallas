@@ -1,7 +1,7 @@
 #!/bin/bash
 # DIE-HBM-61/PLAN: build HBM d44v from DIE-HBM-60/PLAN v4 (d44t + d44w + d44u + FT moves).  Order: templates (d) ->
 # RE-FORM slots (class 2 + part-2 lane outlines: MEM channel_fit, pin-spread growth) -> slot infra (a: core_pg_connect) ->
-# part-2 pin moves (PIN-BOUND) -> keybuf macros -> part-3 hcol_h1 mesh-island ft pins -> part-4 ep/cp_rxs right-width macros -> part-5 bank128_pair macro stack -> centre entries off macros -> hard-type core reset trees (q_sm) -> first-hop relay bays on
+# part-2 pin moves (PIN-BOUND) -> keybuf macros -> part-3 hcol_h1 mesh-island ft pins -> part-4 ep/cp_rxs right-width macros -> part-5 bank128_pair macro stack -> centre entries off macros -> part-6a query_static mesh-island ft pins -> part-6 SPLIT cores as plan sub-core designs -> hard-type core reset trees (q_sm) -> first-hop relay bays on
 # the 8 die lanes over the 405 hop -> centre clock-entry pins (LAST plan change) -> sidecars (reform census, core clock
 # regions, SPLIT sub-block slots, MEM recipe delta).  usage: build_d44v.sh WORK OUT   (WORK = die-hbm-60-plan dir)
 set -e
@@ -17,6 +17,8 @@ python3 $R/mk_mpisl.py p/b3
 python3 $R/mk_rwmac.py p/b3
 python3 $R/mk_b128.py p/b3
 python3 $R/mk_cefix.py p/b3
+python3 $R/mk_mpisl_q.py p/b3
+python3 $R/mk_split.py p/b3 $R/split_p6/split_p6.json $R/split_p6 > split_p6.log; cut -c1-300 split_p6.log
 python3 $R/mk_smrst.py p/b3 $T | cut -c1-300
 cp p/b3/die_plan.json /tmp/h61_lat_before.json
 python3 $R/mk_bays.py p/b3 $S0
