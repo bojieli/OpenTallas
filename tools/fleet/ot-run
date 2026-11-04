@@ -1312,9 +1312,17 @@ SPILL_HOSTS_EXCLUDE = {"ot-pve1", "ot-agidock128"}          # small / shared hos
 # back by itself once the disk has room; jobs whose --dir already lives there are unaffected; a probe without the field: not refused.
 SPILL_DST_ROOT_FLOOR = {"epyc2": 500}
 SPILL_DST_SCRATCH_FLOOR = {"epyc2": 80, "intel1": 100, "intel2": 100, "localhost": 100}
+# COORD 11-04 00:2x: epyc4 queue 53 waiters while epyc2 admits; a --stage ECO job may use the epyc2 scratch disk down to this floor.
+SPILL_DST_SCRATCH_FLOOR_ECO = {"epyc2": 50}
+SPILL_ECO_RE = re.compile(r"eco_loop|late_eco|(^|[/_.-])eco($|[/_.-]|\s)")
 
 
-def spill_dst_full(host, row, roots=()):
+def spill_is_eco(cmd):
+    """a --stage job that runs an ECO (eco_loop or an eco dir in its command)"""
+    return bool(STAGE) and bool(SPILL_ECO_RE.search(" ".join(cmd or ())))
+
+
+def spill_dst_full(host, row, roots=(), cmd=()):
     """the disk a spill of these lane roots would write on host is below its floor"""
     if not isinstance(row, dict):
         return False
@@ -1323,6 +1331,8 @@ def spill_dst_full(host, row, roots=()):
         if not roots or spill_lands_on_root(host, roots):
             return True
     floor = SPILL_DST_SCRATCH_FLOOR.get(host)
+    if spill_is_eco(cmd):
+        floor = SPILL_DST_SCRATCH_FLOOR_ECO.get(host, floor)
     return floor is not None and "scratch_disk_gb" in row and row["scratch_disk_gb"] < floor
 
 
@@ -1558,7 +1568,7 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
         res = dict(ex.map(lambda h: (h, [probe(h, b)[1] for b in bases]), cands))
     ok = {h: rs[0] for h, rs in res.items() if all(r and not r.get("error") for r in rs) and rs[0].get("ncpu")
           and min(r["disk_gb"] for r in rs) >= disk + size_gb and physically_capable(rs[0], mem) and not host_refusal(rs[0])
-          and not spill_dst_full(h, rs[0], roots)
+          and not spill_dst_full(h, rs[0], roots, cmd)
           and (max_ratio is None or ratio(rs[0], threads) <= max_ratio)}
     dst, queue = choose(drop_low_disk(ok, die, disk + size_gb), mem, threads, die)
     if not dst or queue:
