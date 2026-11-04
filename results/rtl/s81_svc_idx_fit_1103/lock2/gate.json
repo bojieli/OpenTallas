@@ -1,0 +1,64 @@
+{
+ "cases": {
+  "pass_l20": {
+   "verdict": "PASS",
+   "cyc": 25639,
+   "stats": "TB_IDXRD_STATS gather 0 N 87382 keys 87382 words 5463 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 16916 end_to_last 16851 nerr 0 nopen 0 qerr 0 slice_err 0"
+  },
+  "pass_small": {
+   "verdict": "PASS",
+   "cyc": 4815,
+   "stats": "TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1298 end_to_last 1233 nerr 0 nopen 0 qerr 0 slice_err 0"
+  },
+  "pass_gs": {
+   "verdict": "PASS",
+   "cyc": 5415,
+   "stats": "TB_IDXRD_STATS gather 1 N 256 keys 2048 words 128 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 2027 end_to_last 1946 nerr 0 nopen 0 qerr 0 slice_err 0"
+  },
+  "pass_g2048": {
+   "verdict": "PASS",
+   "cyc": 10134,
+   "stats": "TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5850 end_to_last 5657 nerr 0 nopen 0 qerr 0 slice_err 0"
+  },
+  "pass_g2048s2": {
+   "verdict": "PASS",
+   "cyc": 10134,
+   "stats": "TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5850 end_to_last 5657 nerr 0 nopen 0 qerr 0 slice_err 0"
+  },
+  "pass_open6": {
+   "verdict": "PASS",
+   "cyc": 4815,
+   "stats": "TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1298 end_to_last 1233 nerr 0 nopen 0 qerr 0 slice_err 0"
+  },
+  "closed_g2048p3": {
+   "verdict": "FAIL",
+   "cyc": 9111,
+   "stats": "TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4827 end_to_last 4634 nerr 921 nopen 0 qerr 0 slice_err 0"
+  }
+ },
+ "coverage": {
+  "h0_lo": 139550,
+  "h0_scan": 12032,
+  "h0_gath": 43294,
+  "h1": 139550,
+  "h0_rd": 270064,
+  "h1_rd": 135032,
+  "lf_w": 3200,
+  "lf_r": 2711,
+  "iq_w": 138926,
+  "sq_w": 135032
+ },
+ "mutants": {
+  "0": 0,
+  "1": 13367,
+  "2": 458,
+  "3": 34565,
+  "4": 34344,
+  "5": 42843,
+  "6": 20916,
+  "7": 36182
+ },
+ "max_cycles": 25639,
+ "bad": [],
+ "gate": "PASS"
+}
