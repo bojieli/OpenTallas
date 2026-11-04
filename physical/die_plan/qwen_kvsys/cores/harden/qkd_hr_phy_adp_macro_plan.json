@@ -1,5 +1,5 @@
 {
- "source": "DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM ot_sram_1r1w_512x128_m4_r2c2 174.12 x 29.736 R270 on the core E edge (rotated footprint 29.736 x 174.12); pins (macro short ends) face the N / S logic gutters, W logic band 9.13 um holds the W-face pins; x = 0.012 mod 0.048 (M5 pin phase), y on the 8.64 lattice; PG M4 stripes vertical -> M6 straps + M4-M6 connect; DIE-KV-62/hr 11-02: y 17.28 -> 17.292 (+0.012 um): under R270 the M4 pin centres take the y phase (master x 0.012 mod 0.048 -> core y), 17.28 left all 437 SRAM signal pins off the M4 tracks (DRT-0419/DRT-0073 at GRT pin access); macro_pin_tracks.py checks it in gen",
+ "source": "DIE-KV-60/adp 11-01 MACRO-FIT V1: native SRAM ot_sram_1r1w_512x128_m4_r2c2 174.12 x 29.736 R270 on the core E edge (rotated footprint 29.736 x 174.12); pins (macro short ends) face the N / S logic gutters, W logic band 9.13 um holds the W-face pins; x = 0.012 mod 0.048 (M5 pin phase), y on the 8.64 lattice; PG M4 stripes vertical -> M6 straps + M4-M6 connect; DIE-KV-62/hr 11-02: y 17.28 -> 17.292 (+0.012 um): under R270 the M4 pin centres take the y phase (master x 0.012 mod 0.048 -> core y), 17.28 left all 437 SRAM signal pins off the M4 tracks (DRT-0419/DRT-0073 at GRT pin access); macro_pin_tracks.py checks it in gen; DIE-KV-65/HR 11-03: R270 M4 edge pins had no access point (DRT-0073), kit view moves the signal pins to M5 at the same rects (M5 is free over the macro); pin access PASS on the first build",
  "module": "qkd_hr_phy_adp",
  "outline_um": [
   51.84,
@@ -25,5 +25,6 @@
  "track_offset_um": [
   0.012,
   0.012
- ]
+ ],
+ "signal_pin_layer": "M5"
 }

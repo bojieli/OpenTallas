@@ -22,6 +22,9 @@ module <mod> with the identical port list wraps it:
     is cut into B-bit column slices; each slice owns kept copies of every control it uses (wp/rp/bank copies loaded
     with the same next state, negedge copies of take/issue and of the write data per bank), so no control or data
     net fans out past one slice (bounded fanout by construction, cycle exact).
+  * registered write face (spec key "out_slice", DIE-KV-64/RF-E 11-03): a valid/ready write port leaves from
+    private port flop banks through a one-entry slice (+1 write latency, 1/cycle); done/tag/count held until the
+    descriptor's last sector left the slice; busy covers the slice and pending done (see out_slice()).
   * exact logic rewrites (spec key "rewrite": [{"find", "replace", "add", "why"}]): a next-state expression replaced
     by a Boolean-identical shallower form (each needs its identity argument in "why" and a 0-mismatch co-simulation).
 All other ports pass through unchanged.
@@ -249,6 +252,94 @@ def skid_slices(body, sp, ck="ck"):
     return body, rep
 
 
+def out_slice(decl, conn, sp, ck, gates):
+    """registered write face (spec key "out_slice": {"v", "rdy", "data": [bus..], "done": {"v", "tag", "cnt"},
+    "busy", "rst"}): a one-entry forward-registered slice between the core's valid/ready write port and the port
+    (throughput 1/cycle, +1 write latency).  w_v / data come from private port flop banks (od, loaded from the core or
+    from the hold bank oh), so each port flop Q loads only its port; the core sees rdy' = !occupied | rdy.
+    done (v/tag/cnt) is held in a 2-deep queue until the slice no longer holds that descriptor's last sector
+    (released when the slice is empty or transferring), then leaves from registered port flops one edge later:
+    every done still follows its last sector at the port (the engine contract); tag and count are the core's values
+    captured with the done.  busy = core busy | slice occupied | done pending, so busy stays high until the done left."""
+    v, rdy, rst = sp["v"], sp["rdy"], sp["rst"]
+    for p, d in ((v, "output"), (rdy, "input"), (rst, "input")):
+        if decl.get(p, ("",))[0] != d or width(decl[p][1]) != 1:
+            raise SystemExit(f"rf_wrap out_slice: {p} is not a 1-bit {d}")
+    rr = conn[rst]; rr1 = rr.strip("{}") if rr != rst else f"{rst}[0]"
+    # the port flop and its internal twin: the twin holds the INVERTED state (rf_on = !occupied, reset 1), so the two
+    # cells differ structurally and opt_merge cannot fold them (an equal-D (* keep *) pair was still folded, and a kept
+    # port-side wire survives flatten behind a buffer on the face net: face_guard shared); the fwft rf_pe pattern
+    L = [f"  wire rf_cwv; reg rf_on; reg rf_pv;",
+         f"  wire rf_cwrdy = rf_on || {rdy}[0];",
+         f"  wire rf_ld = rf_cwv && rf_cwrdy;",
+         f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_on <= 1'b1; rf_pv <= 1'b0; end",
+         f"    else begin rf_on <= rf_ld ? 1'b0 : ({rdy}[0] ? 1'b1 : rf_on); rf_pv <= rf_ld ? 1'b1 : ({rdy}[0] ? 1'b0 : !rf_on); end",
+         f"  assign {v} = {{rf_pv}};"]
+    conn[v] = "{rf_cwv}"; conn[rdy] = "{rf_cwrdy}"
+    added = 2; buses = []
+    for b in sp["data"]:
+        if decl.get(b, ("",))[0] != "output":
+            raise SystemExit(f"rf_wrap out_slice: {b} is not an output")
+        w = width(decl[b][1])
+        L += [f"  wire [{w-1}:0] rf_c_{b};", f"  (* keep = 1 *) reg [{w-1}:0] rf_od_{b};",
+              f"  (* keep = 1 *) reg [{w-1}:0] rf_oh_{b};",
+              f"  always @(posedge {ck}) rf_oh_{b} <= rf_ld ? rf_c_{b} : rf_oh_{b};",
+              f"  always @(posedge {ck}) rf_od_{b} <= rf_ld ? rf_c_{b} : rf_oh_{b};   // private port bank",
+              f"  assign {b} = rf_od_{b};"]
+        conn[b] = f"rf_c_{b}"; added += 2 * w; buses.append(dict(bus=b, width=w))
+    dn = sp.get("done")
+    if dn:
+        dv, tg, cn = dn["v"], dn["tag"], dn["cnt"]
+        wt, wc = width(decl[tg][1]), width(decl[cn][1])
+        for p in (dv, tg, cn):
+            if decl.get(p, ("",))[0] != "output":
+                raise SystemExit(f"rf_wrap out_slice: done port {p} is not an output")
+        D = int(dn.get("depth", 2)); la = max(1, (D - 1).bit_length())
+        if D < 2 or D & (D - 1):
+            raise SystemExit("rf_wrap out_slice: done depth must be a power of two >= 2")
+        L += [f"  wire rf_cdv; wire [{wt-1}:0] rf_ctg; wire [{wc-1}:0] rf_ccn;",
+              f"  reg [{wt-1}:0] rf_qtg [0:{D-1}]; reg [{wc-1}:0] rf_qcn [0:{D-1}]; reg [{la}:0] rf_qn; reg [{la-1}:0] rf_qw, rf_qr;",
+              f"  wire rf_rel = (rf_qn != 0) && (rf_on || {rdy}[0]);",
+              f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_qn <= 0; rf_qw <= 0; rf_qr <= 0; end",
+              f"    else begin rf_qn <= rf_qn + (rf_cdv ? 1'b1 : 1'b0) - (rf_rel ? 1'b1 : 1'b0);",
+              f"      if (rf_cdv) rf_qw <= rf_qw + 1'b1; if (rf_rel) rf_qr <= rf_qr + 1'b1; end",
+              f"  always @(posedge {ck}) if (rf_cdv) begin rf_qtg[rf_qw] <= rf_ctg; rf_qcn[rf_qw] <= rf_ccn; end",
+              f"  reg rf_dv; reg rf_dvn; (* keep = 1 *) reg [{wt-1}:0] rf_dtg; (* keep = 1 *) reg [{wc-1}:0] rf_dcn;",
+              f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_dv <= 1'b0; rf_dvn <= 1'b1; end",  # rf_dvn = inverted internal twin
+              f"    else begin rf_dv <= rf_rel; rf_dvn <= !rf_rel; end",
+              # tag / count ports: the head entry, loaded every edge (the parent samples them with done_v only)
+              f"  always @(posedge {ck}) begin rf_dtg <= rf_qtg[rf_qr]; rf_dcn <= rf_qcn[rf_qr]; end",
+              f"  assign {dv} = {{rf_dv}}; assign {tg} = rf_dtg; assign {cn} = rf_dcn;"]
+        conn[dv] = "{rf_cdv}"; conn[tg] = "rf_ctg"; conn[cn] = "rf_ccn"
+        added += (la + 1) + 2 * la + D * (wt + wc) + 2 + wt + wc
+        g = dn.get("gate")
+        if g:
+            # bound the done queue (DIE-KV-64/RF-E): only a fenced descriptor yields a done, so the wrapper counts the
+            # fenced descriptors accepted whose done the core has not produced yet (rf_fo; cleared whenever the core
+            # is idle, so a fenced descriptor that ends without a done cannot leak) and admits no descriptor while
+            # rf_fo + pending dones >= depth: pending dones never exceed the queue depth (by construction).
+            gv, gr, fb = g["v"], g["rdy"], g["fence_bit"]
+            fbus = re.sub(r"\[\d+\]$", "", fb)
+            if decl.get(fbus, ("",))[0] != "input":
+                raise SystemExit(f"rf_wrap out_slice: fence bit {fb} is not an input bit")
+            L += [f"  wire rf_cbusy_g; reg [{la+1}:0] rf_fo;",
+                  f"  wire rf_dacc = {gv}[0] && !rf_hold_{gr} && rf_crdy_{gr};",
+                  f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) rf_fo <= 0;",
+                  f"    else rf_fo <= (rf_cbusy_g ? rf_fo - ((rf_cdv && rf_fo != 0) ? 1'b1 : 1'b0) : 0) + ((rf_dacc && {fb}) ? 1'b1 : 1'b0);",
+                  f"  wire rf_dhold = ({{1'b0, rf_fo}} + rf_qn) >= {D};"]
+            gates.setdefault((gv, gr), []).append("rf_dhold")
+            added += la + 2
+    bz = sp.get("busy")
+    if bz:
+        if decl.get(bz, ("",))[0] != "output" or width(decl[bz][1]) != 1:
+            raise SystemExit(f"rf_wrap out_slice: busy {bz} is not a 1-bit output")
+        L += [f"  wire rf_cbusy;", f"  assign rf_cbusy_g = rf_cbusy;" if dn and dn.get("gate") else "",
+              f"  assign {bz} = {{rf_cbusy || !rf_on{' || (rf_qn != 0) || !rf_dvn' if dn else ''}}};"]
+        conn[bz] = "{rf_cbusy}"
+    return L, dict(v=v, rdy=rdy, data=buses, done=bool(dn), busy=bz, write_added_cycles=1, done_added_cycles="1..2 (held until its last sector left the slice)",
+                   throughput="1/cycle", rdy_face="combinational (timed face: slice load enable)", added_flops=added)
+
+
 def inline_alias(body):
     """replace every whole-vector alias wire `wire [n:0] _N_ = \\reg ;` by the reg itself (pure rename): yosys
     otherwise names the flop after the alias and LEC cannot pair it with the gold register"""
@@ -344,6 +435,30 @@ def transform(text, mod, spec):
         rep["fwft_reads"].append(dict(rd=rd, rdata=rdat, rempty=remp, rst=rst, width=w, read_added_cycles=1,
                                       throughput="1/cycle", rd_face="combinational (stage load enable)"))
         rep["added_flops"] += 2 * w + 2
+    rep["out_slice"] = None; gates = {}
+    if spec.get("out_slice"):
+        osl, rep["out_slice"] = out_slice(decl, conn, spec["out_slice"], ck, gates)
+        g = (spec["out_slice"].get("done") or {}).get("gate")
+        if g:   # declared before the slice logic that reads them
+            lines += [f"  wire rf_crdy_{g['rdy']}; wire rf_hold_{g['rdy']};"]
+        lines += osl; rep["added_flops"] += rep["out_slice"]["added_flops"]
+    for hp in spec.get("reset_hold", []):
+        # an input handshake of a relayed-reset core: the port ready is low (and the core sees no valid) until the
+        # core's reset relay released, so nothing is accepted on the edge the parent leaves reset (+1 edge)
+        q = conn[hp["rst"]].strip("{}")
+        if not q.startswith("rf_rst_q__"):
+            raise SystemExit(f"rf_wrap reset_hold: {hp['rst']} is not a relayed reset")
+        gates.setdefault((hp["v"], hp["rdy"]), []).append("!" + q)
+    for (gv, gr), terms in gates.items():
+        for p, d in ((gv, "input"), (gr, "output")):
+            if decl.get(p, ("",))[0] != d or width(decl[p][1]) != 1 or conn[p] != p:
+                raise SystemExit(f"rf_wrap gate: {p} is not a free 1-bit {d}")
+        hold = " || ".join(terms)
+        pre = f"  wire rf_crdy_{gr}; wire rf_hold_{gr};" in lines
+        lines += ([] if pre else [f"  wire rf_crdy_{gr}; wire rf_hold_{gr};"]) + \
+            [f"  assign rf_hold_{gr} = {hold};", f"  assign {gr} = {{rf_crdy_{gr} && !rf_hold_{gr}}};"]
+        conn[gv] = f"{{{gv}[0] && !rf_hold_{gr}}}"; conn[gr] = f"{{rf_crdy_{gr}}}"
+    rep["input_gates"] = {f"{v}/{r}": t for (v, r), t in gates.items()}
     hdr = [f"// GENERATED hr_rf_wrap.py (RF-KV1 RE-FORM, DIE-KV-64/RF-C 11-03): {mod} = {inner} + registered reset/read faces",
            "(* top = 1 *)", f"module {mod}({', '.join(order)});"]
     hdr += [f"  {decl[p][0]} {decl[p][1]+' ' if decl[p][1] else ''}{p};" for p in order]

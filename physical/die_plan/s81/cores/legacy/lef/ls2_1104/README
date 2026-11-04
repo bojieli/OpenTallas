@@ -1,0 +1,6 @@
+LEF-SWEEP-2 (11-04) refresh, DIE-S81-53: stale plan LEFs of gunit__t1 replaced by the routed signed-off view LEF; the plan pin
+tables already match these views (LEF-SWEEP-2 [CHECKED] per-pin compare, view LEF vs signed DB 6_final.def). Files are byte copies from:
+l0  epyc2 die-s81-50/eco/l0c/eco/i1 (SIGNED); l0r epyc4 die-s81-51/rfd/kits/dsdv_gunit_l0r_rfd3 (LOCAL_PASS_NEEDS_PARENT);
+l1  intel1 s81ck13x/kits/dsdv_gunit_l1_ck13D1M70_E12_S10; l1c epyc4 die-s81-51/rfc-gu/kits/dsdv_gunit_l1c_rf1/eco_m0/i2 (LOCAL_PASS_NEEDS_PARENT);
+l2  epyc2 s81ck13x/kits/dsdv_gunit_l2_ccA_s6M_B10h; l3 intel1 s81ck12/kits/dsdv_gunit_l3_ck12E_K13E_S10_R2_Q2.
+l4  epyc4 die-s81-51/rfd/eco_gunit_l4_rfd2/i1 (LOCAL_PASS_NEEDS_PARENT, LEC EQ): replaces rfc_1103 LEF, which carries 216 LEF-only pins.

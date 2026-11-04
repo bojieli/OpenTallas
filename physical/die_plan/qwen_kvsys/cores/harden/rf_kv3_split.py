@@ -60,7 +60,9 @@ def main(kit, pcc_out, pcf_out, top):
     head = head.replace("module qkd_static_kv_pc_path_nc ", f"module qkd_static_kv_pc_path_nc{SFX} ", 1)
     head = sub1(r"(module qkd_static_kv_pc_path_nc" + SFX + r"\b[^\n]*\n)", r"\1    output wire [297:0] pcf_x,  // RF-B split: {corrected_epoch, controller_co} -> PCF\n", head, "pn port")
     head += ("\n    // RF-B split (DIE-KV-64/RF-B 11-03): u_front + u_return live in the PCF core; their outputs leave from PCF pins\n"
-             "    assign pcf_x = {corrected_epoch, controller_co};\n"
+             # DIE-KV-66/LEC 11-04: bit 8 = controller l_sec[7], the literal 1'b0 of qkd_ctrl_pc_sched reached through unreset
+             # s1/o_sec (X until the first ECC beat); synthesis ties it, so tie it here as KV-KITS-10 does at the landing.
+             "    assign pcf_x = {corrected_epoch, controller_co[281:9], 1'b0, controller_co[7:0]};\n"
              "    assign {front_blk_freed, front_hold, front_stall_edges, front_occupancy, front_idle_hbm, front_fault_overflow_hbm,"
              " front_fault_go_hbm} = 26'd0;\n"
              "    assign {actual_valid, actual_sector, actual_epoch, actual_layer, actual_data, return_fault_hbm, return_fault_core,"

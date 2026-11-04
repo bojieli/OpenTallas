@@ -2428,6 +2428,12 @@
        "tap_passthrough": {
         "type": "boolean"
        },
+       "tap_core_etap": {
+        "type": "boolean"
+       },
+       "pregrt_ff_hold": {
+        "type": "boolean"
+       },
        "landing_origin_export_copy": {
         "type": "boolean"
        },
@@ -4897,6 +4903,10 @@
        "items": {
         "type": "string"
        }
+      },
+      "ft_ring_max_ps": {
+       "type": "number",
+       "exclusiveMinimum": 0
       }
      }
     },

@@ -1,0 +1,5 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+hnx_rp3lp3h_s	hnx_rp3h_gs	rin_s -> rout_s	in->out	0	row transport unchanged
+hnx_rp3lp3h_s	hnx_rp3h_gs	sb_bank/sb_vld -> gout[199:50] (leaf-0 + pass lanes via the seam landing)	in->out	0	seam landing read unchanged (leaf-0 lane carries the n half's +7 from the source)
+hnx_rp3lp3h_s	leaf (xs+tl+lc)	rin_s/bin -> gout[49:0] (leaf-1 lane)	in->out	+7	LEAF RESULT +7 (same leaf form as n)
+hnx_rp3lp3h_s	hnx_rp3h_gs	rst_n	in	0	unchanged

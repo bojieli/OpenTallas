@@ -10,6 +10,8 @@ be exactly one `assign OUT[i] = IN[j];` in the flat kit RTL (hr_face_ports emitt
 input ports, and nothing else may drive the output.
 
 recipe:  "ft_face_regs": {"regs": [{"out": BUS, "clock": CK, "reset_n": RST, "reset_value": 0}], "ruling": .., "reason": ..}
+Optional "bits": [i, ..] on a reg entry: only those bits of BUS are feed-throughs and get a flop; its other bits keep their
+drivers (DIE-KV-65/HR 11-03, core_prompt fault_src: 17 of 32 bits are wires, the rest already flops).
 """
 import json
 import re
@@ -35,8 +37,12 @@ def transform(text, spec):
         w, vec = _port_width(text, "output", out)
         _port_width(text, "input", ck)
         _port_width(text, "input", rst)
+        bits = r.get("bits")
+        if bits is not None and (not vec or not bits or len(set(bits)) != len(bits)
+                                 or not all(isinstance(i, int) and 0 <= i < w for i in bits)):
+            raise SystemExit(f"hr_ft_regs: bad bits {bits} for {out}[{w - 1}:0]")
         srcs = []
-        for i in range(w):
+        for i in (range(w) if bits is None else bits):
             lhs = rf"{re.escape(out)}\[{i}\]" if vec else re.escape(out)
             pat = re.compile(rf"^\s*assign\s+{lhs}\s*=\s*([A-Za-z_][A-Za-z0-9_]*)(\[\d+\])?\s*;\s*\n", re.M)
             hits = pat.findall(text)
@@ -46,6 +52,22 @@ def transform(text, spec):
             _port_width(text, "input", hits[0][0])
             text = pat.sub("", text, count=1)
             srcs.append(src)
+        if bits is not None:
+            q = f"ot_ftreg_{out}"
+            n = len(bits)
+            cat = "{" + ", ".join(reversed(srcs)) + "}"
+            blk = (f"  // DIE-KV-65/HR hr_ft_regs: face register on {n} wire feed-through bits of {out} (+1 edge, declared)\n"
+                   f"  (* keep *) reg [{n - 1}:0] {q};\n"
+                   f"  always @(posedge {ck}, negedge {rst})\n"
+                   f"    if (!{rst}) {q} <= {n}'d{rv};\n"
+                   f"    else {q} <= {cat};\n")
+            blk += "".join(f"  assign {out}[{i}] = {q}[{k}];\n" for k, i in enumerate(bits))
+            end = text.rfind("endmodule")
+            if end < 0:
+                raise SystemExit("hr_ft_regs: no endmodule")
+            text = text[:end] + blk + text[end:]
+            rep.append(dict(out=out, bits=bits, src=srcs, clock=ck, reset_n=rst, reset_value=rv, added_edges=1, flops=n))
+            continue
         drv = re.findall(rf"^\s*assign\s+{re.escape(out)}\b", text, re.M)
         if drv or re.search(rf"\.\w+\(\s*{re.escape(out)}\b", text):
             raise SystemExit(f"hr_ft_regs: {out} has other drivers/loads after removing the feed-through")

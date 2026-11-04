@@ -126,6 +126,28 @@ def load(p):
 
 
 # ------------------------------------------------------------------------------------------------ record reading
+def measured_vclk(ref):
+    """sign-off IO frame: 'applied mode pin_flop_mean clock vclk latency_ps 332.27 ...' -> 332.27, else None"""
+    m = re.match(r"applied mode pin_flop_mean .*\blatency_ps ([0-9.]+)", ref or "")
+    return float(m.group(1)) if m else None
+
+
+def eco_vclk_frame(pass_dir, variant, prev):
+    """Single-mode pass: repair against the IO frame sign-off measured, not the plan bound.  The session bound
+    OT_VCLK_FF (hd_ctl_e FF 342) while sign-off rebinds pin_flop_mean (332.27), so repair_timing saw no hold violation
+    at FF -4.17.  Steers this pass only (kit_modes_eco.tcl); eco_loop restores the kit config.mk after the pass.
+    OT_ECO_MEASURED_VCLK=0 = old frame.  -> ps written, or None."""
+    if os.environ.get("OT_ECO_MEASURED_VCLK", "1") == "0" or variant[0] not in "tb":
+        return None
+    ps = (prev or {}).get("vclk_tt" if variant[0] == "t" else "vclk_ff")
+    cfg = Path(pass_dir) / "config.mk"
+    if ps is None or not cfg.is_file():
+        return None
+    with open(cfg, "a") as f:
+        f.write(f"\nexport OT_ECO_VCLK_PS = {ps:.6f}\n")
+    return ps
+
+
 def metrics(rec):
     """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}"""
     c = rec.get("checks") or {}
@@ -139,7 +161,9 @@ def metrics(rec):
     signed = verdict == "SIGNED" or (verdict == "LOCAL_PASS_NEEDS_PARENT" and rec.get("local_verdict") == "SIGNED")
     return dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
                 ff=(c.get("hold_ff") or {}).get("wns_ps"), drv=int(drv), drc=int((c.get("drc") or {}).get("count") or 0),
-                drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails)
+                drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails,
+                vclk_tt=measured_vclk((c.get("setup_tt") or {}).get("vclk_reference")),
+                vclk_ff=measured_vclk((c.get("hold_ff") or {}).get("ff_vclk_reference")))
 
 
 def passes(kit, prev, hm):
@@ -337,6 +361,7 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         stag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
             return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
+        it.setdefault("eco_vclk_ps", {})[v] = eco_vclk_frame(pd, v, prev)
         rc = step("prd_run" + stag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
         if rc:
             hit = oom(rc, f"ECO {v} session", pd / "run_prd.log", pd / "run_prd_finish.log")
