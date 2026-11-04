@@ -466,8 +466,15 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
     driven by one buffer placed at the source tap (clamped into the core; CTS DPL legalises it). Its input is a
     non-register load of the source net, which TritonCTS keeps at the root, so the source net stays local. The
     synthesized forward driver (assign fclk_out = clk -> BUF, ORFS output buffer) that drives nothing after the move is
-    removed; a non-buffer driver fails closed. The SDC generated clock on the port is unchanged."""
+    removed; a non-buffer driver fails closed. The SDC generated clock on the port is unchanged.
+
+    FWDCLK-1 11-04: TritonCTS keys the sinks of a clock net by location (HTreeBuilder mapLocationToSink_) after it has
+    disconnected every input on the net, so of several buffers at ONE location only the last is reconnected and the
+    others keep .Y with no input: all exports on one source tap but one were dead.  The 2nd+ export of a source tap
+    therefore sits k rows from the first, toward the core centre (stateless, so k distinct rows = k distinct sink
+    locations by construction; DPL legalises as before).  A tap with one export emits exactly the old text."""
     pins=P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])
+    on_tap={}
     out=["set cland_block [ord::get_db_block]",
          "proc ot_cland_drop_orphan {net} {",
          "  while {$net ne \"NULL\" && ![llength [$net getBTerms]]} {",
@@ -488,6 +495,7 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
     for p in pins:
         if p["kind"]!="clock" or p["dir"]!="out":continue
         n,s=p["name"],p["source_clock_port"];fw="cland_fwd_"+n
+        k=on_tap.get(s,0);on_tap[s]=k+1
         out += [f"set cland_dst [$cland_block findBTerm {{{_bterm(n,bit0)}}}]",
                 f"set cland_src [$cland_block findBTerm {{{_bterm(s,bit0)}}}]",
                 'if {$cland_dst eq "NULL" || $cland_src eq "NULL"} { error "clock landing export endpoint missing" }',
@@ -501,6 +509,7 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 "set cland_bb [$cland_src getBBox]",
                 "set cland_x [expr {min(max(([$cland_bb xMin] + [$cland_bb xMax]) / 2, [$cland_ca xMin]), [$cland_ca xMax] - [$cland_m getWidth])}]",
                 "set cland_y [expr {min(max(([$cland_bb yMin] + [$cland_bb yMax]) / 2, [$cland_ca yMin]), [$cland_ca yMax] - [$cland_m getHeight])}]",
+                *([f"set cland_y [expr {{$cland_y + {k} * [$cland_m getHeight] * (2 * $cland_y > [$cland_ca yMin] + [$cland_ca yMax] ? -1 : 1)}}]"] if k else []),
                 "$cland_i setLocation $cland_x $cland_y; $cland_i setPlacementStatus PLACED",
                 "[$cland_i findITerm A] connect $cland_net",
                 f"set cland_fn [odb::dbNet_create $cland_block {{{fw}}}]",
@@ -509,3 +518,51 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 "$cland_net setSigType CLOCK; $cland_fn setSigType CLOCK",
                 f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)}}"]
     return "\n".join(out)+"\n"
+
+
+def export_check_tcl(P,tn,bit0=frozenset()):
+    """FWDCLK-1 POST_CTS flow check (not a sign-off gate): every forwarded clock output must still reach an input port
+    on a CLOCK net, through single-input cells only; else FAIL_POSTCTS + error, so the kit stops at CTS.  The SDC
+    generated clock on the port lets kit STA see a clock with the port dead, so STA alone does not show it."""
+    pins=P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])
+    names=[_bterm(p["name"],bit0) for p in pins if p["kind"]=="clock" and p["dir"]=="out"]
+    if not names:return ""
+    return "\n".join([
+        "proc ot_cland_export_trace {bt} {",
+        "  set net [$bt getNet]",
+        "  for {set hop 0} {$hop < 1000} {incr hop} {",
+        '    if {$net eq "NULL"} { return "no net" }',
+        "    foreach b [$net getBTerms] {",
+        '      if {[$b getIoType] eq "INPUT"} {',
+        '        if {[$net getSigType] eq "CLOCK"} { return "OK [$b getName]" }',
+        '        return "input port [$b getName] is not on a clock net"',
+        "      }",
+        "    }",
+        "    set drv {}; foreach it [$net getITerms] { if {[$it isOutputSignal]} {lappend drv $it} }",
+        '    if {[llength $drv] != 1} { return "net [$net getName] has [llength $drv] drivers" }',
+        "    set inst [[lindex $drv 0] getInst]",
+        "    set ins {}; foreach it [$inst getITerms] { if {[$it isInputSignal]} {lappend ins $it} }",
+        '    if {[llength $ins] != 1} { return "driver [$inst getName] has [llength $ins] signal inputs" }',
+        "    set net [[lindex $ins 0] getNet]",
+        '    if {$net eq "NULL"} { return "[$inst getName] input has no net" }',
+        "  }",
+        '  return "no input port within 1000 cells"',
+        "}",
+        "proc ot_cland_export_check {names} {",
+        "  set block [ord::get_db_block]; set bad {}",
+        "  foreach n $names {",
+        "    set bt [$block findBTerm $n]",
+        '    set r [expr {$bt eq "NULL" ? "port missing" : [ot_cland_export_trace $bt]}]',
+        '    puts "OT_CLAND_EXPORT_CHECK $n: $r"',
+        '    if {![string match "OK *" $r]} { lappend bad "$n: $r" }',
+        "  }",
+        '  puts "OT_CLAND_EXPORT_CHECK [llength $names] exports, [llength $bad] dead"',
+        "  if {[llength $bad]} {",
+        "    set fh [open /work/FAIL_POSTCTS a]",
+        '    foreach b $bad { puts $fh "FAIL_POSTCTS forwarded clock output dead after CTS $b" }',
+        "    close $fh",
+        '    error "OT_CLAND_EXPORT_CHECK FAIL [llength $bad] dead forwarded clock output(s): [lindex $bad 0]"',
+        "  }",
+        "}",
+        "ot_cland_export_check {"+" ".join("{"+n+"}" for n in names)+"}",
+        ""])
