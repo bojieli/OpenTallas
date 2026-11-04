@@ -85,6 +85,11 @@ cd $O
 python3 -I $H/check_moddup.py --drop-redundant $O/vl.f --json $O/moddup.json ${MODDUP_ALLOW:+--allow $MODDUP_ALLOW} > $O/moddup.log; mrc=$?
 tail -1 $O/moddup.log
 if [ $mrc != 0 ]; then grep -e "^MODDUP " $O/moddup.log; echo "BUILD rc=4 duplicate module definitions in vl.f (see $O/moddup.log)"; exit 4; fi
+# SS25-TOK 11-03: an empty (* blackbox *) that drives outputs reads 0 in Verilator and fakes or breaks a token run (veh60c45
+# dcal ROM cost 13 h).  Bench PHY models replace the PHY boxes; VEHICLE_BB_ALLOW=REGEX exempts modules modelled on purpose.
+python3 -I $H/../check_vehicle_blackbox.py $O/vl.f --top tb_kvslice --root $O --json $O/vehicle_blackbox.json ${VEHICLE_BB_ALLOW:+--allow "$VEHICLE_BB_ALLOW"} > $O/vehicle_blackbox.log 2>&1; brc=$?
+tail -1 $O/vehicle_blackbox.log
+if [ $brc != 0 ]; then echo "BUILD rc=5 empty black box reachable in vl.f (see $O/vehicle_blackbox.log)"; exit 5; fi
 if [ "$MODE" = lint ]; then
   /usr/bin/time -v $VL --lint-only --timing -f vl.f > lint.log 2>&1; rc=$?
   echo "LINT rc=$rc errors $(grep -c '^%Error' lint.log) $(grep 'Maximum resident' lint.log)"; exit $rc
