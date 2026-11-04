@@ -1483,11 +1483,6 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
     if STAGE:                    # v14 STAGE: exactly the caller's paths, no lane-root closure
         if not under(d, STAGE):
             return None, f"--dir {d} is not inside a --stage path", True
-        try:
-            if proof_away(src, STAGE):       # SPILL-PROOF-1: runs on src until the proof's verdict is back
-                return None, "its proof still runs on another host (hand-off)", False
-        except subprocess.SubprocessError as e:
-            return None, f"cannot check {src} for a proof hand-off: {str(e)[:80]}", False
         for p in command_srv_paths(cmd):
             m = SCRATCH_RE.match(os.path.normpath(p))
             if not under(p, STAGE) and not (m and m.group(1).rsplit("/", 1)[-1] in SHARED_LANES):
@@ -1500,6 +1495,11 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
             missing, size_gb, sym, native, lanes = spill_scan(src, sorted(roots), strict=True)
         except Exception as e:
             return None, f"cannot scan {sorted(roots)} on {src}: {str(e)[:80]}", True
+        try:
+            if proof_away(src, STAGE):       # SPILL-PROOF-1: runs on src until the proof's verdict is back
+                return None, "its proof still runs on another host (hand-off)", False
+        except subprocess.SubprocessError as e:
+            return None, f"cannot check {src} for a proof hand-off: {str(e)[:80]}", False
         other = sorted(x for x in lanes if not under(x, STAGE) and not any(under(r, [x]) for r in STAGE))
         if other:
             say(f"ot-run: STAGE: the staged scripts name other lane(s) {', '.join(other[:4])}; not copied (--stage says the inputs are complete)")
