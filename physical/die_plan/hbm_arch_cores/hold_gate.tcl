@@ -9,7 +9,8 @@ if {![info exists ::env(PLIBS)] || ![llength $::env(PLIBS)]} { error "hold gate:
 foreach l $::env(PLIBS) { if {$l ne ""} { read_liberty $l } }
 read_db $::env(ODB)
 read_sdc $::env(SDC)
-set_propagated_clock [get_clocks clk]
+# FLOW-30 11-04 (COORD 06:35 (1)): every declared real clock, as tools/die_plan/hold_gate.tcl and signoff.py; a kit with clk + vclk reads the same.
+set_propagated_clock [all_clocks]
 if {[info exists ::env(OT_VCLK_FF)] && $::env(OT_VCLK_FF) ne ""} {
   source [file join [file dirname [file normalize [info script]]] vclk_corner.tcl]
   ot_vclk_bind ff

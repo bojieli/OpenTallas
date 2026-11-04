@@ -150,14 +150,16 @@ if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARA
 # first left the clock tree with no wire RC and read the pin-register CK ~55-62 ps early (KITS-SPARE ve_m 193 vs 316,
 # FLOW 09:41 10-25; the earlier "placement reads ~75 ps early" rr_h0 note was this).  FLOW-INFRA-2 A/B 10-25 on the
 # head + KV canary 5_1_grt.odb: -global_routing is order-independent (bit-identical); fixed placement reads +10..+13 ps.
-# Optional source-profile diagnostic, default OFF: preserve the original
-# primary-clock-only context until an exact future event enables all real roots.
+# Clock frame (FLOW-30 11-04, COORD 06:35 (1), DIE-KV-67 FT-CAUSE-1): every declared real clock is propagated, as
+# signoff.py and hold_gate.tcl do (set_propagated_clock [all_clocks]); the sign-off frame is the truth.  Primary-only left
+# the fclk_in_* forwarded clocks ideal, with no tree at capture: S81 station t17 FF hold read -90 for -1 on the same DB.
+# A kit with clk alone reads the same in both.  OT_POSTCTS_REAL_CLOCK_PROFILE=0 restores primary-only (A/B only).
 if {[info exists ::env(OT_POSTCTS_REAL_CLOCK_PROFILE)] && $::env(OT_POSTCTS_REAL_CLOCK_PROFILE) ni {0 1}} {error "postcts: invalid real-clock profile opt-in"}
-set ot_pg_profile legacy_primary_only
-set ot_pg_propagate [get_clocks clk]
-if {[info exists ::env(OT_POSTCTS_REAL_CLOCK_PROFILE)] && $::env(OT_POSTCTS_REAL_CLOCK_PROFILE) eq "1"} {
-  set ot_pg_profile declared_all_real
-  set ot_pg_propagate $ot_pg_real
+set ot_pg_profile declared_all_real
+set ot_pg_propagate $ot_pg_real
+if {[info exists ::env(OT_POSTCTS_REAL_CLOCK_PROFILE)] && $::env(OT_POSTCTS_REAL_CLOCK_PROFILE) eq "0"} {
+  set ot_pg_profile legacy_primary_only
+  set ot_pg_propagate [get_clocks clk]
 }
 set_propagated_clock $ot_pg_propagate
 set ot_pg_real_names {}

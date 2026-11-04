@@ -73,6 +73,15 @@ def policy_context(kit, base, settings):
     return disc, ctx, policy
 
 
+def hold_ff_blocks(kit):
+    """FLOW-30 11-04 (COORD 06:35 (1), OWNER 11-03 only sign-off blocks): G2 hold_ff at GRT is ADVISORY, measured and
+    recorded in grt_policy.json; routed FF hold at sign-off decides.  'export OT_G2_HOLD_GATE = 1' restores the stop."""
+    cfg = Path(kit) / 'config.mk'
+    text = cfg.read_text() if cfg.is_file() else ''
+    return (os.environ.get('OT_G2_HOLD_GATE') == '1'
+            or re.search(r'^export\s+OT_G2_HOLD_GATE\s*=\s*1\s*$', text, re.M) is not None)
+
+
 def policy_session(kit, corner, base, disc, ctx, policy):
     """Append the existing signoff policy to the already loaded GRT session.
 
@@ -95,11 +104,14 @@ def policy_session(kit, corner, base, disc, ctx, policy):
         raise ValueError('signoff G2 session anchor changed')
     definitions = so.SESSION_TCL.split('@TIMING_LIBRARIES@', 1)[0]
     tail = text[text.index(anchor):]
-    # A known data failure cannot reach DRT; do not spend a full pair census
+    # A known blocking data failure cannot reach DRT; do not spend a full pair census
     # on a rejected prototype. Positive candidates still require both censuses.
-    stop = ('if {[sta::worst_slack_cmd ' + ('max' if corner == 'TT' else 'min') + '] < 0} {\n'
-            f'  so G2_REQUIRED_FAIL {"setup_tt" if corner == "TT" else "hold_ff"}\n'
-            '  so DONE 1\n  exit\n}\n')
+    # FF hold is advisory (hold_ff_blocks): the session runs on to the pair census.
+    stop = ''
+    if corner == 'TT' or hold_ff_blocks(kit):
+        stop = ('if {[sta::worst_slack_cmd ' + ('max' if corner == 'TT' else 'min') + '] < 0} {\n'
+                f'  so G2_REQUIRED_FAIL {"setup_tt" if corner == "TT" else "hold_ff"}\n'
+                '  so DONE 1\n  exit\n}\n')
     if tail.count('so_timing STD\n') != 1:
         raise ValueError('signoff standard-overlay timing anchor changed')
     tail = tail.replace('so_timing STD\n', 'so_timing STD\n' + stop)
@@ -113,8 +125,9 @@ def policy_session(kit, corner, base, disc, ctx, policy):
             + definitions + f'so CORNER {corner}\nso PARASITICS global_routing\n' + tail)
 
 
-def policy_record(corners, policy):
-    """Apply the existing sign-off setup/standard-hold/pair-skew checks only."""
+def policy_record(corners, policy, hold_blocks=False):
+    """Apply the existing sign-off setup/standard-hold/pair-skew checks only.  A measured hold_ff FAIL is advisory unless
+    hold_blocks; NOT RUN (standard overlay not applied, no FF reference) still stops: no measurement is not a pass."""
     import signoff as so
     for c in ('tt', 'ff'):
         x = corners[c]
@@ -157,7 +170,9 @@ def policy_record(corners, policy):
     return dict(schema='opentallas.grt_policy.v1', parasitics='global_routing',
                 policy=dict(period_ps=so.PERIOD_PS, uncertainty_setup_ps=so.UNC_SETUP_PS,
                             uncertainty_hold_ps=so.UNC_HOLD_PS, pair_skew_max_ps=so.PAIR_SKEW_MAX_PS, **policy),
-                checks=wanted, verdict='PASS' if all(x['verdict']=='PASS' for x in wanted.values()) else 'FAIL')
+                checks=wanted, advisory=[] if hold_blocks else ['hold_ff'],
+                verdict='PASS' if all(x['verdict']=='PASS' or (k=='hold_ff' and x['verdict']=='FAIL' and not hold_blocks)
+                                      for k, x in wanted.items()) else 'FAIL')
 
 
 def run(kit, stage, netlist=None, execute=subprocess.run):
@@ -260,11 +275,15 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
                 kit / f'postcts_gate_{corner.lower()}.libraries.json', disc,
                 parsed.get('clock_endpoint_masters'), parsed.get('clock_endpoint_mapping_errors'))
             corners[corner.lower()] = parsed
-        result = policy_record(corners, policy)
+        result = policy_record(corners, policy, hold_ff_blocks(kit))
         timing_receipt.write_text(json.dumps(result, indent=1) + '\n')
+        for k in result['advisory']:
+            if result['checks'][k]['verdict'] == 'FAIL':
+                print(f'OT_LEGACY_GATE ADVISORY G2 {k} {so._detail(k, result["checks"][k])} (not a gate, sign-off decides)')
         if result['verdict'] != 'PASS':
             why = '; '.join(f'{k}: {v["verdict"]} {so._detail(k, v)}'
-                            for k, v in result['checks'].items() if v['verdict'] != 'PASS')
+                            for k, v in result['checks'].items()
+                            if v['verdict'] != 'PASS' and not (k in result['advisory'] and v['verdict'] == 'FAIL'))
             raise ValueError(f'G2 timing policy failed: {why}')
         print('OT_LEGACY_GATE GRT TT/FF insertion + standard timing + CPPR pair skew PASS')
         return 0
