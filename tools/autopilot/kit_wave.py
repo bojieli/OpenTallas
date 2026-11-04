@@ -416,19 +416,28 @@ def select(rows, cfg, die, state, plan_types=None):
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
     skip = {}
     picked = []
-    if d.get("plan_items_from_allowlist") and plan_types is not None:
+    if (d.get("plan_items_from_allowlist") or d.get("plan_core_items")) and plan_types is not None:
         # Adopted plans may split types before the ownership census catches up.
         # Explicit die-owned allowlists select those real plan types; retain every
         # existing ownership/live-job claim and the normal retry/geometry gates.
         rows = list(rows)
         known = {r["item"] for r in rows if r["die"] == die}
-        for item in d.get("only_items") or []:
+        for item in (d.get("only_items") or []) if d.get("plan_items_from_allowlist") else []:
             if item in known or item not in plan_types:
                 continue
             rows.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT",
                              owner="KIT-WAVE", live_job="none", last_activity="",
                              next_step="adopted plan allowlist", evidence=d.get("plan", ""),
                              default_owner=d.get("owner_lane", ""), replicas="1", members=""))
+        # A plan-of-record hard core the ownership census cannot see yet (OWNERS reads the older HBM plan): a kind=core
+        # row for the names the die lists, and only those.
+        for item in d.get("plan_core_items") or []:
+            if item in known or item not in plan_types:
+                continue
+            rows.append(dict(die=die, item=item, kind="core", state="NEEDS-KIT",
+                             owner="KIT-WAVE", live_job="none", last_activity="",
+                             next_step="adopted plan core allowlist", evidence=d.get("plan", ""),
+                             default_owner=d.get("owner_lane", ""), replicas="1", members=item))
     for r in rows:
         if r["die"] != die:
             continue
