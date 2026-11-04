@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """HG-SPLIT 11-03 (DIE-KV-64 ruling): soft split of the 8 KV head-group types over the 400k native-cell cap.
 
-Every kv3_hg* type (1278.72 x 1520.64) is cut at type-frame y = CUT into two partition types <T>_a (y < CUT) and <T>_b
-(y >= CUT, shifted down by CUT); every hg_<Q>_<k> partition becomes hg_<Q>_<k> (half a, same name) + hgb_<Q>_<k>
-(half b).  The half of every element is fixed by geometry or by the H2opt half map (hg_h2opt/<T>_H2opt.json, key H:
+Every kv3_hg* type (1278.72 x 1520.64) is cut at type-frame y = CUT into two partition types <T>_a (y < CUT) and <T>
+(y >= CUT, shifted down by CUT; b keeps the type name and the collector root); every hg_<Q>_<k> partition becomes
+hg_<Q>_<k> (half b, same name) + hg_<Q>_<k>_a (half a).  The half of every element is fixed by geometry or by the H2opt half map (hg_h2opt/<T>_H2opt.json, key H:
 "PORT:<bus>" / "HC:u_bound.<core>" / bound leaf -> a|b; v1* reuse the v3 map with owner -> a, efault -> b):
 
   buses, ft slots, landing pins/bands/edge clocks   the bus's half (H PORT, else the face/window of its port)
@@ -19,7 +19,7 @@ The cut is CUT = 673.92 (8.64 lattice; 665.28 = the H2opt 667.44 snapped down cu
 every HG type; 673.92 cuts no core, macro, island, station or band).  The ep SRAM macros sc0/sc1 (ep is half a) move from
 y 682.6 / 812.2 into the half-a street between the core rows (x 570.24, y 240.84 / 287.28).
 
-Both halves stay in ONE landing region (eW_sidecar regions[].parts += hgb_*): the cut lanes are same-region plain
+Both halves stay in ONE landing region (eW_sidecar regions[].parts += hg_*_a): the cut lanes are same-region plain
 boundary pairs (no landing ring); every landed port keeps its row with the moved endpoint renamed.
 
 usage (repo root): hg_split.py PLAN SIDECAR MAP_JSON OUTDIR [--cut-widths J]
@@ -44,6 +44,7 @@ HG = ["kv3_hg", "kv3_hg_v1", "kv3_hg_v1p2", "kv3_hg_v1p3", "kv3_hg_v1p4", "kv3_h
 HMAP = {tn: ("kv3_hg" if tn == "kv3_hg" else "kv3_hg_v3") for tn in HG}
 # contents the H2opt map does not name (single small leaves); half = the half of their main connection
 CONTENT_OVERRIDE = {"u_id_row": "b", "u_id_next": "a", "u_fch": "b"}
+MAP_INST_HALF = {"u_id": "b"}   # asbuilt_map_binder2 idhg_*: the id source of the die netlist (u_id_row in half b; straps elsewhere)
 # ep SRAM macros moved into half a (ep is a): free street between the core rows y 233.28..336.96, channel x 552.96..656.64
 PP_MOVE = {"u_bound.u_astk_u_strip_u_strip_g_ep_p_u_ep.u_sc1": [570.24, 240.84],
            "u_bound.u_astk_u_strip_u_strip_g_ep_p_u_ep.u_sc0": [570.24, 287.28]}
@@ -68,6 +69,11 @@ def sh(xy, side):
 
 def shr(r, side):
     return [r[0], round(r[1] - CUT, 6), r[2], round(r[3] - CUT, 6)] if side == "b" else list(r)
+
+
+def half_type(tn, s):
+    """ruling 18:09: half b keeps the type name, half a is <type>_a"""
+    return tn + "_a" if s == "a" else tn
 
 
 def load_h(tn):
@@ -174,7 +180,7 @@ class TypeSplit:
         if unknown:
             raise ValueError(f"{self.tn}: unhandled type keys {sorted(unknown)}")
         H = {"a": A, "b": B}
-        A["module"], B["module"] = self.tn + "_a_part", self.tn + "_b_part"
+        A["module"], B["module"] = self.tn + "_a_part", t.get("module", self.tn + "_part")
         A["outline_um"], B["outline_um"] = [self.W, CUT], [self.W, round(self.Ht - CUT, 6)]
         for s in "ab":
             H[s]["note"] = (f"HG-SPLIT 11-03 (DIE-KV-64 ruling) half {s} of {self.tn} (type-frame y "
@@ -346,7 +352,7 @@ class TypeSplit:
             L = H[s]["clock"]["landing_contract"] = {k: copy.deepcopy(v) for k, v in lc.items()
                                                      if k not in ("pins", "bands", "collector_tree", "collector_local_sources",
                                                                   "collector_children", "collector_root_node")}
-            L["base_type"] = self.tn + "_" + s
+            L["base_type"] = half_type(self.tn, s)
             L["pins"], L["bands"] = [], {}
         for p in lc["pins"]:
             if COLLECTOR_PIN.match(p["name"]):
@@ -488,7 +494,7 @@ def main():
     ap.add_argument("sidecar")
     ap.add_argument("map_json", help="asbuilt map file (parts, rules) or an asbuilt.json with an inline map")
     ap.add_argument("outdir")
-    ap.add_argument("--cut-widths", help="JSON {type: {ab: n, ba: n}} (default: H2opt estimate + 15%)")
+    ap.add_argument("--cut-widths", help="JSON {type: {ab: n, ba: n}} (default: H2opt estimate + 15 pct)")
     ap.add_argument("--per-um", type=float, default=8.0, help="cut-face pin density used to size the windows")
     a = ap.parse_args()
     raw = json.load(open(a.plan))
@@ -518,13 +524,14 @@ def main():
     pt = {}
     for tn, t in raw["partition_types"].items():
         if tn in splits:
-            pt[tn + "_a"], pt[tn + "_b"] = splits[tn][1], splits[tn][2]
+            pt[tn] = splits[tn][2]
+            pt[tn + "_a"] = splits[tn][1]        # right after b, so e0/e1/e2 cohort order and block hashes stay
         else:
             pt[tn] = t
     raw["partition_types"] = pt
     # ---- partitions
     newparts = []
-    bname = {}
+    aname = {}
     for p in raw["partitions"]:
         if p["type"] not in splits:
             newparts.append(p)
@@ -534,21 +541,20 @@ def main():
         ox, oy = p["origin_um"]
         H = 1520.64
         flipy = o in ("MX", "R180")
-        pa = dict(p, type=tn + "_a", origin_um=[ox, round(oy + (H - CUT if flipy else 0.0), 6)])
-        nb = re.sub(r"^hg_", "hgb_", p["name"])
-        assert nb != p["name"]
-        pb = dict(p, name=nb, type=tn + "_b", origin_um=[ox, round(oy if flipy else oy + CUT, 6)])
-        bname[p["name"]] = nb
-        newparts += [pa, pb]
+        na = p["name"] + "_a"
+        pa = dict(p, name=na, type=tn + "_a", origin_um=[ox, round(oy + (H - CUT if flipy else 0.0), 6)])
+        pb = dict(p, type=tn, origin_um=[ox, round(oy if flipy else oy + CUT, 6)])
+        aname[p["name"]] = na
+        newparts += [pb, pa]
     raw["partitions"] = newparts
     pmap = {p["name"]: p for p in newparts}
     # ---- ports: move endpoints of b buses
     def ep_part(part, bus):
-        if part not in bname:
+        if part not in aname:
             return part
         tn = [q for q in orig["partitions"] if q["name"] == part][0]["type"]
         ts = splits[tn][0]
-        return bname[part] if ts.side_of_bus(bus) == "b" else part
+        return aname[part] if ts.side_of_bus(bus) == "a" else part
     moved = Counter()
     for p in raw["ports"]:
         for e in ("src", "dst"):
@@ -567,7 +573,7 @@ def main():
             continue
         tn = p["type"]
         ts = splits[tn][0]
-        pa, pb = p["name"], bname[p["name"]]
+        pa, pb = aname[p["name"]], p["name"]
         items = [("leg:" + bus, L["width"] + 1, L["x"]) for bus, L in sorted(ts.leg_cut.items())]
         items += [("ft:" + f["slot"], f["width"] + 1, f["x"]) for f in ts.ft_cut]
         items += [("cut:ab", cw[tn]["ab"] + 1, None), ("cut:ba", cw[tn]["ba"] + 1, None)]   # + epoch pin
@@ -674,12 +680,12 @@ def main():
             xy = ins.pop(tn)
             s = half_of_y(xy[1])
             o = "a" if s == "b" else "b"
-            ins[tn + "_" + s] = sh(xy, s)
-            ins[tn + "_" + o] = [xy[0], round(CUT - 8.672, 3)] if o == "a" else [xy[0], 8.672]
+            ins[half_type(tn, s)] = sh(xy, s)
+            ins[half_type(tn, o)] = [xy[0], round(CUT - 8.672, 3)] if o == "a" else [xy[0], 8.672]
     # ---- sidecar
     sd = copy.deepcopy(side)
     for r in sd["regions"]:
-        add = [bname[p] for p in r["parts"] if p in bname]
+        add = [aname[p] for p in r["parts"] if p in aname]
         r["parts"] += add
     for r in sd["ports"]:
         pr = ports[r["port"]]
@@ -687,29 +693,34 @@ def main():
             r["src"] = pr["src"]["part"]
         if r["dst"] != pr["dst"]["part"]:
             r["dst"] = pr["dst"]["part"]
-    sd["note_hgsplit"] = (f"HG-SPLIT 11-03: hgb_* halves share their hg_* region; {len(rep['ports_added'])} cut ports are "
+    sd["note_hgsplit"] = (f"HG-SPLIT 11-03: hg_*_a halves share their hg_* region; {len(rep['ports_added'])} cut ports are "
                           "same-region (no landing row); landed rows of moved buses renamed")
     # ---- map
     mj = json.load(open(a.map_json))
     M = mj["map"] if "map" in mj and "parts" not in mj else mj
     nmap = 0
-    for k, (part, inst) in list(M["parts"].items()):
-        if part in bname:
+    for k, v in list(M["parts"].items()):
+        if isinstance(v, str):
+            if v in aname:
+                raise ValueError(f"map {k}: whole HG partition {v} (needs a half)")
+            continue
+        part, inst = v
+        if part in aname:
             tn = [q for q in orig["partitions"] if q["name"] == part][0]["type"]
             ts = splits[tn][0]
             hc = {h["inst"]: h for h in ts.t["hard_cores"]}
-            s = ts.content_half.get(inst) or (ts.core_side(hc[inst]) if inst in hc else None)
+            s = ts.content_half.get(inst) or (ts.core_side(hc[inst]) if inst in hc else None) or MAP_INST_HALF.get(inst)
             if s is None:
                 raise ValueError(f"map {k}: {part}.{inst} has no half")
-            if s == "b":
-                M["parts"][k] = [bname[part], inst]
+            if s == "a":
+                M["parts"][k] = [aname[part], inst]
                 nmap += 1
     rep["map_moved"] = nmap
     json.dump(raw, open(out / "plan_c.json", "w"), indent=1)
     json.dump(sd, open(out / "eW_sidecar.json", "w"), indent=1)
     json.dump(mj, open(out / "asbuilt_map.json", "w"), indent=1)
     json.dump(rep, open(out / "report.json", "w"), indent=1)
-    print(json.dumps(dict(types=len(splits) * 2, parts=len(bname) * 2, ports_added=len(rep["ports_added"]),
+    print(json.dumps(dict(types=len(splits) * 2, parts=len(aname) * 2, ports_added=len(rep["ports_added"]),
                           lanes_added=len(rep["lanes_added"]), lanes_changed=len(rep["lanes_changed"]),
                           latency_changed=len(changed), untouched_changed=len(pads_moved), map_moved=nmap)))
 
