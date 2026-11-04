@@ -1,0 +1,5 @@
+host	path	size_gb	head	status_clean	on_branch	process_container	plan_cache_unique	token_or_build_reads	action
+intel2	/srv/opentallas-scratch2/claude/tok-verify-1/qc/build3/obj	78	-	generated cpp	-	stopped by SS25-TOK	none	none	DELETED per COORD ruling (1), receipts in qc/build3/receipts
+intel2	/srv/opentallas-scratch2/claude/tok-verify-1/wt	46	2221bcac20e	clean	ancestor of origin/main	none	none	s81_self.json only names it in an old traceback; s81_event.sh cd's to it, no process runs it	REMOVED by git worktree remove
+intel2	/srv/opentallas-scratch2/claude/tok-verify-1/kvrf3	46	874a6e0af5e	clean	ancestor of origin/main	none	none	none	REMOVED by git worktree remove
+intel2	/srv/opentallas-scratch2/claude/tok-verify-1/gu/br	46	b083be983b1	clean	hub-coord branches claude/die-s81-51-rfd-gl5-1103, claude/lec2-gl5-1103 (not on GitHub origin)	none	none	none	REMOVED by git worktree remove; gu/runs evidence is on epyc4
