@@ -435,7 +435,7 @@ def select(rows, cfg, die, state, plan_types=None):
             why = "wave kit enqueued" + (" (queue FAIL; relaunch = retry item@attempt)" if rec.get("q_status") == "FAIL" else "")
         elif rec and rec.get("status") == "CANCELLED" and rec.get("volume") and (
                 rec["volume"] in pilot_classes_state(d, die, state)[0]
-                or pilot_fail_times(d, die, state).get(rec["volume"], 0.0) <= float(rec.get("started") or 0)):
+                or pilot_fail_times(d, die, state, d.get("src_sha") or "").get(rec["volume"], 0.0) <= float(rec.get("started") or 0)):
             pass        # queued volume cancelled by a failed pilot: class now proven, or no class FAIL stands any more
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
@@ -2406,7 +2406,15 @@ def is_wait_dep(r):
     return r.get("status") == "FAIL" and str(r.get("reason") or "").startswith("WAIT-DEP")
 
 
-def pilot_fail_times(d, die, state):
+def rec_src_sha(rec):
+    """the src_sha an attempt was generated from (its spec.json), '' when unknown"""
+    try:
+        return json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("src_sha") or ""
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+
+
+def pilot_fail_times(d, die, state, src_sha=""):
     """-> {class: latest pilot FAIL time} over the die's non-volume records.  KIT-WAVE-14 11-01: an AUTO-GEOM FAIL
     (stage 'geom') is a per-block geometry verdict -- GEOM review often releases it PASS-COND (fill/empty standing
     exceptions) and it says nothing about the other blocks of the class -- so it never stops the class volume
@@ -2422,6 +2430,11 @@ def pilot_fail_times(d, die, state):
             t = float(r.get("updated") or 0)
         elif r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL":
             t = float(r.get("q_updated") or r.get("updated") or 0)
+        # KW-FIX-4 11-03 (I2 RESET-CORE batch: old-src col_h9 attempts failing OT_RESET_CORE at 17:21 cancelled the
+        # class-fix volume just launched on the fixed src): with src_sha given, only a pilot FAIL generated from that
+        # same source counts -- a failure on a superseded source says nothing about volume on the current one
+        if t is not None and t > fail_t.get(c, 0.0) and src_sha and rec_src_sha(r) not in ("", src_sha):
+            t = None
         if t is not None:
             fail_t[c] = max(fail_t.get(c, 0.0), t)
     return fail_t
@@ -2446,7 +2459,7 @@ def cancel_class_volume(AP, cfg, st, notices):
         if not isinstance(d, dict) or not pilot_queue_mode(d, cfg):
             continue
         signed, _ = pilot_classes_state(d, die, st)
-        fail_t = pilot_fail_times(d, die, st)
+        fail_t = pilot_fail_times(d, die, st, d.get("src_sha") or "")
         for r in items.values():
             c = r.get("volume")
             if r.get("die") != die or r.get("status") != "RUNNING" or not c or c in signed:
