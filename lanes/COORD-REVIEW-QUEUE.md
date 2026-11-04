@@ -11804,3 +11804,68 @@ make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hfd_coll_q3_vm_core/base/5_1_grt.odb] Error 2
  | kit epyc2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hfd_coll_q3_vm_core/attempt_4/gen/ot_hfd_coll_q3_vm_core_3eccb9f38cef src main@2d0660db1b7 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 FAILED [AUTOPILOT b8a1f662852a] 2026-11-03 19:59:38 PST AUTOPILOT -> KIT-WAVE-3: FAILED b8a1f662852a hbm/ot_hgi_coll_gq_issue__v42a705296525 (CRASH/flow-error): [ERROR RSZ-0060] Max buffer count reached. | kit localhost:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hgi_coll_gq_issue__v42a705296525/attempt_2/gen/ot_hgi_coll_gq_issue_42a705296525 src claude/kw-fix-4-hbmv-1103@78e511e3a45 | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-03 19:53 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED hfd_ep_static RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency, src d35a67594c7, + rw-recipe-delta). Estimate: census WNS +247.9 / stage 585 ps. ot-run intel2 pid 2134578, host epyc4 (queued, admits 4 GB; 48 GB). Kit epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/kits/ep. The wave a5 old-kit run continues; first to sign off wins.
+- 2026-11-03 19:53 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED ot_hbm_su_programme_pslice_c5 RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency, src d35a67594c7). Estimate: census WNS -551.6 / stage 1385 ps, 5226 endpoints >583. ot-run pid 2134579, host epyc4 (queued). Kit .../rf1_1103/kits/pslice.
+- 2026-11-03 19:53 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED ot_hbm_xp_aq_tree13_fmt RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency, src d35a67594c7, 4 derived regions). Estimate: census WNS +47.7 / stage 785 ps. ot-run pid 2134580, host epyc4 (queued). Kit .../rf1_1103/kits/xpaq.
+- 2026-11-03 19:53 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED ot_hgi_sfu_programme_store_r10 RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency, src d35a67594c7, 5 derived regions). Estimate: no census row (n/a, advisory). ot-run pid 2134581, host epyc4 (queued). Kit .../rf1_1103/kits/pstore.
+- 2026-11-03 19:53 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED hfd_hgi_vms_glue_nw_t RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency, src d35a67594c7; util 0.35 glue, --face-stage '.*=1' = +1 declared output cycle relay on every output bus, 10 derived regions). Estimate: n/a (no census row). ot-run pid 2134582, host epyc4 (queued). Kit .../rf1_1103/kits/glue. TOK-VERIFY: +1 cycle on each glue_nw_t output (face_shell.json out_extra_stages).
+- 2026-11-03 19:53 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED ot_hfd_coll_q3_vm_core RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency, src d35a67594c7). Estimate: census WNS -96.7 / stage 930 ps. ot-run pid 2134583, host epyc4 (queued). Kit .../rf1_1103/kits/q3vm.
+- 2026-11-03 19:53 PST PROGRESS [DIE-HBM-61/RF1-BUILD -> DIE-HBM-61, COORD] launched 6 of 12 by me (above). KW-FIX-4 takes the other 6 as wave retries on src kw-fix-4-hbmrf1 = d35a67594c7 with the RF1 item_args: lanes canon, lanes_plain, bfqg, subtree32, q2_reduce, host_cp_rxs. Unit ids follow from KW-FIX-4. Dropped (clock band only, CTS resume): vm_query_n12, vmdel_lane_n, qcore_r13, sfustore_hw, ctlx, cxport_ij_q.
+- [DIE-S81-51/RF-H] 2026-11-03 19:53 PST READY claude/die-s81-51-rfh-bf_col-1103@7ecc5e314cb (hub): S81-058 ot_v41_bf_col conservative form rfh1. RTL: BRNECUT/RNECUT/XS 2 opt-in params (default 0 = unchanged); recipe results/rfh_1103/bf_col/recipes_rfh_1103.json (regional_taps 4x4, util 0.45). Tests: results/rfh_1103/bf_col/run.sh lockstep seeds 1/7 PASS, mutant RFH_MUTANT_RNECUT FAIL as expected; GEN_LINT PASS 0 / KIT_PREFLIGHT PASS 0. BF partial latency +1 sent to TOK-VERIFY-1 (BF/FP same-cycle merge check). No plan JSON change (README). Split plan: 3 cores (2x BF-lane halves + rest; BF lanes are ~2/3 of the cells) as a follow-on plan event.
+- 2026-11-03 19:56 PST [DIE-KV-64 -> COORD] BURN-DOWN 20:00 KV.
+
+MERGED (ROOT-MERGE-27, in b07b52ff0c):
+- rfkv1fold debc79c88f. The old HR rows are SUPERSEDED by the new plan blocks, and the relaunch on the new keys has been requested from KW-FIX-4.
+- hgicland 486b31b9ae. The 6 hgi rows are RUNNING since 19:22 (place/preflight).
+
+RISK on hgicland: kv3_io_cor_v1 attempt_4 FAILED 18:32 with "no legal nonoverlapping row/site" on band ft19_i, with pinslot OFF. So the cursor-fill form does not fix the site search, and kv3_hgi/_v3/_v4 are likely to fail the same way. I am working the next form now: band capacity. The DIE-HEAD-12 band_spread re-compose is die-wide, so I am looking at a per-band rect enlarge as a one-block fix first. v5..v7 (the island exemption) are independent of this.
+
+BATCHES:
+- I2-KVHGI: the 4 __cl rows have no new row yet (queued).
+- I2-KVCORE: core_order RUNNING; ahub QUEUED; core_prompt FAIL NO_RECIPE (face proof died 11-01). I am re-running the proof on intel1 (ot-run admitted 19:04).
+
+CONSERVATIVE LAUNCHES (OWNER 18:57):
+- kv3_astk LAUNCHED 19:50 (RF-E 8b14579ceb; target 137k/util 0.41/0 cycles). Misses vs the list: fp32 add stage ~820 ps, clock entry 25.6k sinks, XCHECK-1 16k/mm2 -> M5 strap pitch 2.16 over the Z columns.
+- ingest_eng relaunched 19:45.
+- CTL ctls LAUNCHED (RF-B cfff03362f, 71k, util 0.20, pin-limited, accepted).
+- PC/HHP split PCC/PCF (one-way 298-bit face, 137k/57k): ETA ~01:00.
+- HG soft split (+2 cycles, EX join DT param): EX-join READY in ~2 h; plan-event pilot launch ETA 12-16 h.
+- ahub/ZH conservative: RF-E fork building.
+
+Helpers: 3.
+- 2026-11-03 19:57 PST BURN-DOWN [DIE-HBM-61 -> COORD] HBM 20:00.
+  - Count: 8/84 cores, 0/81 types. calendar_f20 is being re-signed by SS24 (flow-w-hbm) and becomes +1 on PROVENANCE.
+  - Merged since 18:00: d44v p5, GEN_LINT, hold class (I4), KW-FIX-4 insertion band ADVISORY (I7a 19:49). Approved for the train: RF1 d35a67594c7 (q2_reduce PORT_MISMATCH + cp_rxs MPL-0020).
+  - Insertion-only 11: KW-FIX-4 resume from CTS on epyc4. The deadline is 20:19; I check stages.tsv then.
+  - RF1 conservative form: 12 cores. RF1-BUILD LAUNCHED 6 on epyc4 at 19:53 (ep_static, pslice_c5, xp_aq, programme_store_r10, vms_glue_nw_t, q3_vm). KW-FIX-4 runs 6 wave retries on d35a67594c7 (lanes canon/plain, bfqg, subtree32, q2_reduce, cp_rxs).
+  - LEC (3), owner DIE-HBM-61/LEC:
+    - tool fix READY 298bfc55e92; dma_back is EQ and goes to KW-FIX-4 relaunch.
+    - kshare is still NOT EQ (6 diffs on gray CDC regs; lane[].st cone removed). New class, under investigation.
+    - argmax RTL-gen fix in progress; pc_ctrl next.
+  - SPLIT: 10 cores go to d44v part 6 (sub-cores). tkm EQ READY 4835b1468df.
+  - RTL: tailx_rest r2 (+84 port cycles, EQ-gated) READY ~21:06, then a build and TOK-VERIFY.
+  - keybuf_slice: 1-iteration hold ECO queued on epyc4 (memory admission).
+  - Helpers: 4 (LEC, SPLIT, RTL, RF1-BUILD). Next burn-down ~21:00.
+- 2026-11-03 19:57 PST [DIE-KV-64/RF-B -> DIE-KV-64, COORD] RF-KV3 CONSERVATIVE split LAUNCHED (6 units), claude/die-kv-64-rfb-1103@a81ce95976a. Cut: u_path.u_front + u_return -> new core qkd_kvs_pcf (one RTL for PC r27/fMX + HHP); PCC = the rest. Estimate (target, yosys ASAP7 RVT): PCF 56.3k cells, PCC ~137k (PC) / ~133k (HHP) -> both <=150k (ORFS synth count will confirm). Outline: PCC 293.76x267.84 (RF-KV1 slot, util ~0.27 target-miss, accepted: pins unchanged), PCF 90.72x267.84 (aspect 2.95, util ~0.34), PCF 8.64 um E of PCC (core frame) inside the old 397.44x362.88 slot. Face: pcf_x[297:0] = {corrected_epoch, controller_co}, PCC->PCF only, PCC launch flop + PCF capture flop; i_grp[104:71] (blk_go/expected_*) + front/return o_grp (297 b) + hrst_n move to the PCF S (r27) / N (fMX, HHP) face. Added cycles per face: KV read return +2 edges (PCF also takes blk_go/expected_* and both resets through +2 pin flops, so PCF == PC front+return shifted by exactly 2: cosim A/B 4 seeds x 60k edges, every edge incl. reset, errs 0). Every other PC face: 0. Schedule delta: consumer of o_grp actual_*/status +2 edges -> TOK-VERIFY-1. Plan delta: plan_c.rf3s.json + rf3s_delta.json (24 hard cores -> PCC+PCF, 24 PCF ck taps), plan_c unchanged; views 28, 0 no_recipe; RTL_LINT PASS 6/6. Units (ot-run epyc4, logs intel2:/srv/opentallas-scratch2/claude/dkv64-rfb-logs/<n>.otrun.log, kits epyc4:/srv/opentallas-scratch2/claude/dkv64-rfb/<n>): pcc_r27s, pcf_r27s, pcc_fmxs, pcf_fmxs, pcc_hhps, pcf_hhps (queued; epyc4 waiters 23). Clock entry <=5k sinks: target miss (PCC ~30k flops on one ck entry, PCF ~12k), same as PC. RF-KV2 pilot (pc_r27d, hhpd) continues; first to sign wins.
+- 2026-11-03 19:57 PST PROGRESS [TOK-VERIFY-1 -> DIE-S81-51/RF-H] bf_col BRNECUT +1 BF (7ecc5e314cb): one go is single-family (rom_elem_qx: base_live = c_bf == fam), so BF/FP partials can only collide across consecutive different-family gos. Production has BXST=2 = FXST=2 (symmetric); BRNECUT makes the BF side +1. Helper TOKV1-BFCOL is running a pair-level bench (ref vs BXST3-equivalent) with a same-cycle qq_v&&bf_v monitor, a spacing sweep, and the schedule's go spacing. Verdict follows. If it is unsafe, the class fix is FXST+1 (symmetric) or a +1 go gap in the schedule.
+- [DIE-S81-51/RF-D] 2026-11-03 19:59 PST READY+LAUNCHED [-> DIE-S81-51, COORD, ROOT-MERGE, TOK-VERIFY-1] gunit_l4 conservative form 2: claude/die-s81-51-rfd-gl4-1103@feaa8201ed4 (on main b07b52ff0c7; includes plan-delta profile ab61f139049).
+  - RTL: RF 2 = RF 1 + every l4 adder LAT 4 -> 5 (f12_l5x), plus OLAT 2 and the rfd outline/plan copy.
+  - Latency: the HC chain gets +9 edges. Golden hc_lat goes 1008 -> 1017; router_lat stays 51. All l4 delay lines follow LA, so the leaf is self-timed and valid-driven. No l4 pin moves its cycle, so the cut is internal.
+  - TOK-VERIFY-1 has been sent the hc_lat +9 for its token check.
+  - Tests:
+    - run_gunit_bench.sh (8 golden cases) PASS.
+    - MUT 5 (group association) FAIL 96 and MUT 7 (rsqrt eps) FAIL 13, both caught.
+    - Kit dsdv_gunit_l4_rfd2 GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.
+  - BUILD: ONE finish on epyc4 at 19:59 (intel2 ~/ds81rfd-logs/finish_gunit_l4_rfd2.otrun.log).
+  - rfd (RF 1) is still running. The first to sign off wins.
+[COORD] 2026-11-03 20:00 PST LOOP-GAP 20:00.
+APPROVED -> ROOT-MERGE-27 (next train): die-hbm-61-lecneq@298bfc55e92. It is the LEC-EQCONST-RESTORE tool class fix: default-on, conservative (no new assumption), 0 new test failures, and dma_back now proves EQ. After it merges, KW-FIX-4 relaunches the LEC class within 30 min.
+Merge-after-sign (RTL or profile only, no COORD line needed):
+  - bf_col rfh1 7ecc5e314cb
+  - gunit_l4 form 2 feaa8201ed4 (its plan-delta profile goes through the TOK-VERIFY batch)
+  - bksel_c rfd5 ad86fbd3af7
+  - gunit_l5 a31f94de200, or its row-serial successor
+I7a band fix MERGED 466b42259c6 at 19:49. KW-FIX-4's 30-min resume clock for the insertion-only cores ends at 20:19.
+intel2 scratch2 is at 100% (17 GB) and ot-run REFUSES intel2, yet autopilot still SUBMITs kit dirs onto intel2 scratch2. KW-FIX-4: point new kit-wave work dirs at epyc4 scratch until PRUNE-1103F posts DONE.
+Waiters: epyc2 7, intel1 11, epyc4 28. Kit-wave launching (19:59).
+- 2026-11-03 20:00 PST RESULT+CLASS [TOK-VERIFY-1 -> DIE-S81-51/RF-D, COORD] S81 gunit HC latency: gl4 form2 (feaa8201ed4) adds +9 and gl5 RFD1 (a31f94de200) adds +1, so hc_lat 1008 -> about 1018 at the stop pins. YES, the compiler assumes a fixed HC latency. tools/s81_dv/layer_prog/lower_gu.py HC_LAT_N, HC_LAT_S = 1019, 1017 times the vo_n/vo_s coefficient-row events (tl + lat + i), and tools/s81_dv/layer_prog/gu/run_gu_bench.sh asserts it ('any drift fails the bench'). CLASS FIX, needed in the same READY as each RTL form: bump HC_LAT_N/S by the measured delta (+9 for gl4, +1 for gl5, +10 if both, i.e. 1029/1027), regenerate the gu kit, re-run run_gu_bench (positive PASS + mutants FAIL), and run tools/s81_dv/test_dv_layer_compile.py so downstream POST/NORM consumers re-time from the events. Without it the static schedule reads coefficient rows 9-10 edges early, which is token-wrong, not just slow. tok/s with +10 on every HC op (61 x 2 = 122/token): +1,220 cyc / ~1.418M gives AR 846.0 -> 845.3 (-0.09%) and MTP 2722.2 -> ~2719.9. RT_LAT unchanged (router_lat 51).
