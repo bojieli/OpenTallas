@@ -41,3 +41,7 @@ def test_from_failed_keeps_prehold(tmp_path):
     F.from_failed(tmp_path)
     assert (b / "4_cts.odb").read_text() == "held" and (b / "4_cts.prehold.odb").read_text() == "cts"
     assert not (b / "5_1_grt-failed.odb").exists()
+
+
+def test_grt_form_skips_antenna_repair():
+    assert "set ::env(SKIP_ANTENNA_REPAIR) 1" in F.GRT
