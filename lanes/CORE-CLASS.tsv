@@ -1,0 +1,68 @@
+# die	core(prefix ok)	class	note   (COORD-maintained override for lane-built cores; refresh hourly)
+s81	ot_s81sl_ve_s	re-sign/count	t-s81 re-sign
+s81	dsdv_gunit_l1c	re-sign/count	NEEDS_PARENT counts
+s81	dsdv_gunit_l0r	re-sign/count	NEEDS_PARENT counts
+s81	ot_s81_cfg7_seq_bfp	re-sign/count	NEEDS_PARENT counts
+s81	dsdv_eng_rr_h0	re-sign/count	ccA_g2typed SIGNED, routed LEC
+s81	ot_s81sl_xrt1	near (1 fix)	FF -5.7
+s81	ot_s81sl_xrt3	near (1 fix)	GRT ov 14
+s81	ot_s81sl_eg	near (1 fix)	egn hold ECO FF -2.9
+s81	dsfd_bf_front_roots	near (1 fix)	TT -0.84
+s81	ot_s81sl_vs	near (1 fix)	DRT 3
+s81	dsdv_bk_g	conservative build	form 8 per-slice hv
+s81	ot_s81sl_capc5r	conservative build	rfdc
+s81	dsdv_gunit_l4	conservative build	rfd-gl4
+s81	dsdv_gunit_l5	conservative build	RF-D
+s81	ot_v41_bf_col	conservative build	split <=150k
+s81	dsdv_bksel_q	conservative build	RF-H + cts-dt-1
+s81	ot_s81dv_xfin	conservative build	99.5k cells fill .43
+s81	ot_v41_rom_elem_q_qxpq_w10_gb	conservative build	RF1 at GP
+s81	dsdv_eng_rr_e	conservative build	RF-G
+s81	dsdv_idx_tx_n32	conservative build	rf1t + cts-dt-1
+s81	dsdv_bksel_c	LEC	LEC-EGN-1 class
+s81	dsfd_coll_lane_w_safe8_ntf	not built	no current build
+s81	dsfd_coll_lane_e_safe8_ntf	not built	no current build
+qwen_compute	qfd_qc_su_lane_w_l0	re-sign/count	verified
+qwen_compute	qfd_qc_su_lane_w_l1	near (1 fix)	one-repeater ECO
+qwen_compute	qfd_tile_nk_a0c	conservative build	NK (28 types wait)
+qwen_compute	qfd_tile_nl_a0c	conservative build	NL clock split
+qwen_compute	qfd_dv_s5_red2_leaf	running	new after RED
+qwen_kvsys	kv3_head_eighth_e6	re-sign/count	e6 s-kv re-sign
+qwen_kvsys	qkd_kvs_pc	conservative build	RF-B
+qwen_kvsys	qkd_kvs_ctl	conservative build	RF-B
+qwen_kvsys	qkd_kvs_pc_h_head_p	conservative build	RF-B
+qwen_kvsys	kv3_astk	conservative build	RF-E, EX join reschedule
+qwen_kvsys	qkd_ahub	conservative build	RF-E
+qwen_kvsys	qkd_hr_	conservative build	RF-C/RF-D HR
+hbm	hfd_hgi_vm_calendar_f20	re-sign/count	SIGNED, needs flow tag
+hbm	ot_hbm_idx_tail_native	re-sign/count	signed views, new pin keys
+hbm	ot_hnx_idxn_keybuf_slice	near (1 fix)	hold ECO FF -5.3
+hbm	ot_hbm_idx_score_hcol_h0	clock window -> resume	insertion advisory fix
+hbm	ot_hbm_idx_vm_query_static_n12	clock window -> resume	insertion advisory fix
+hbm	hfd_ep_static	clock window -> resume	insertion advisory fix
+hbm	ot_hbm_su_static_qcore_r13	clock window -> resume	insertion advisory fix
+hbm	ot_hgi_coll_tkm_tp192_tile_core	clock window -> resume	insertion advisory fix
+hbm	ot_hbm_su_static_cxport_ij_q	clock window -> resume	insertion advisory fix
+hbm	ot_hgi_sm_xload_cl2_ctlx	clock window -> resume	insertion advisory fix
+hbm	ot_hgi_coll_inj_idx_join_rg	clock window -> resume	insertion advisory fix
+hbm	ot_hbm_xp_aq_tree13_fmt	clock window -> resume	insertion advisory fix
+hbm	ot_hbm_su_static_pgslice_lg__lanes	conservative build	hold -184/-286, clock split
+hbm	ot_hbm_svc_vmdel_lane_n	conservative build	hold -114
+hbm	ot_hbm_hc_subtree32_core	conservative build	63 unreg pins
+hbm	ot_hbm_hc_root_static__tailx_rest	conservative build	pipeline cycles ~21:06
+hbm	ot_hfd_coll_q3_	conservative build	memory shape
+hbm	ot_hbm_host_cp_rxs	conservative build	memory shape
+hbm	ot_hgi_sm_xload_cl2_bfqg	conservative build	memory shape
+hbm	ot_hbm_su_programme_pslice_c5	conservative build	memory shape
+hbm	ot_hgi_sfu_programme_store_r10	conservative build	memory shape
+hbm	ot_hbm_su_static_pgslice_lg__lanes8_11	conservative build	memory shape
+hbm	hnx_rp3lp3h_	conservative build	memory shape
+hbm	hnx_fused_lane	conservative build	shape
+hbm	ot_hbm_su_static_sfustore_hw	conservative build	shape
+hbm	hfd_hgi_vms_glue_nw_t	conservative build	relays
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	LEC	no owner yet
+hbm	ot_hbm_argmax_static_sw_vm_r2	LEC	no owner yet
+hbm	ot_hgi_dma_back_static_vp4_banks_cp	LEC	no owner yet
+hbm	hnx_vms_bank_q0_faces	not tried (census fix merged)	pin-table views
+hbm	ot_hbm_hc_bank128_pair_core	not tried (census fix merged)	pin-table views
+hbm	ot_hgi_coll_gq_	not tried (census fix merged)	pin-table views
