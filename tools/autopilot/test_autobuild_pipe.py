@@ -25,6 +25,15 @@ def classify_log(stage, txt):
 
 
 class Classes(unittest.TestCase):
+    def test_advisory_line_is_never_the_reason(self):
+        # real kv3_pv_v12 a5 / S81 t27 a7 place.log (KW6-CLASS 11-04)
+        log = ("KIT_PREFLIGHT PASS issues 0\nKIT_PREFLIGHT ADVISORY pins_canonical check could not run: "
+               "ModuleNotFoundError: No module named 'pair_slack_gate'\nKW_PLACE_RC=1\n")
+        reason = classify_log("place", log)[1]
+        self.assertNotIn("ModuleNotFoundError", reason)
+        self.assertIn("KW_PLACE_RC=1", reason)
+        self.assertNotIn("ADVISORY", KW.decisive_line(log))
+
     def test_long_gen_log_missing_lib_is_plan_dep_not_unclassified(self):
         self.assertGreater(len(NOLIB.split("ValueError")[1]), 3000)       # the old tail never saw the exception
         self.assertEqual(KW.classify("gen", NOLIB[-3000:])[1][:12], "unclassified")
