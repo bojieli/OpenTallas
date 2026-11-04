@@ -1239,6 +1239,7 @@ class Binder:
         G, F = self.G, self.F
         self.cross = defaultdict(lambda: defaultdict(set))   # (src part, dst part) -> {(src ci, port): {bits}}
         self.cross_sinks = defaultdict(set)                  # (sp, dp, src ci, port) -> {(dst rel, dst port)}
+        self.cross_sink_alias = {}                           # composite (dst rel, port) -> member (rel, port)
         self.cross_stages = defaultdict(list)                # (sp, dp, src ci, port) -> [as-built stages]
         self.intra_dly = defaultdict(set)                    # part -> {(src ci, port, stages)}
         self.clk_dom = defaultdict(set)                      # part -> {domain}
@@ -1280,7 +1281,13 @@ class Binder:
                 cnt["intra"] += 1
                 return ("int", sci, spn, sb, st)
             self.cross[(sp, p)][(sci, spn)].add(sb)
-            self.cross_sinks[(sp, p, sci, spn)].add(self._sink_name(ci, pn))
+            # DIE-KV-64 11-03 (sinkname): the sink set keeps the partition-relative names (ordering, lane scoring and the
+            # smallest-sink choice are unchanged); only a NAME chosen from a composite sink takes its member alias
+            sk = (self.rel_of(ci), pn)
+            self.cross_sinks[(sp, p, sci, spn)].add(sk)
+            al = self._sink_name(ci, pn)
+            if al != sk:
+                self.cross_sink_alias[sk] = al
             self.cross_stages[(sp, p, sci, spn)].append(st)
             cnt["crossing"] += 1
             return ("x", sp, sci, spn, sb, st, p)
@@ -1634,6 +1641,7 @@ class Binder:
         dl = []
         for sp, dp, sci, spn, bl in direct:
             dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            dr, dpn = self.cross_sink_alias.get((dr, dpn), (dr, dpn))
             D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
                      cycles=2, unplanned=use_lanes, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
                      stages=self.cross_stages[(sp, dp, sci, spn)])
@@ -1642,6 +1650,7 @@ class Binder:
             dl.append(D)
         for sp, dp, sci, spn, bl, ns in spine:
             dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            dr, dpn = self.cross_sink_alias.get((dr, dpn), (dr, dpn))
             D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
                      cycles=ns, spine=True, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
                      stages=self.cross_stages[(sp, dp, sci, spn)])
@@ -4376,12 +4385,12 @@ DIRECTIVE_RE = re.compile(r"^\s*`(ifdef|ifndef|elsif|else|endif|define|undef)\b[
 MACRO_USE_RE = re.compile(r"`([A-Za-z_]\w*)")
 
 
-def kit_object_defines(text, defines=(), seed=None):
+def kit_object_defines(text, defines=(), seed=None, func=None):
     """FLOW-18 10-31 (DIE-S81-42 08:45 seqhost__t1: kit_rtl.f had no ot_sram_1r1w2c_16x257/289_m1_p192 black box): the
     RTL instantiates its SRAM masters through object-like macros (`OT_SH_M257 u_mem(...)), which E.instantiated never
     sees.  -> {name: value} of the object-like `define's active in `text` under the kit defines (`defines`: "N" or
-    "N=V"; `seed`: macros already known), honouring `ifdef/`ifndef/`elsif/`else/`endif.  Function-like macros are
-    not expanded (their name only marks the macro defined)."""
+    "N=V"; `seed`: macros already known), honouring `ifdef/`ifndef/`elsif/`else/`endif.  A function-like macro's name
+    only marks the macro defined here; its body goes in `func` when that dict is given."""
     vals = dict(seed or {})
     for d in defines:
         n, _, v = str(d).partition("=")
@@ -4404,8 +4413,13 @@ def kit_object_defines(text, defines=(), seed=None):
             stack.pop()
         elif kw == "define" and on and name:
             vals[name] = "" if args else rest
+            if func is not None:
+                if args:
+                    func[name] = rest
+                else:
+                    func.pop(name, None)
         elif kw == "undef" and on and name:
-            vals.pop(name, None)
+            vals.pop(name, None)     # func keeps it: xs4 `undef's its ROM macro at end of file, after the module body
     return vals
 
 
@@ -4417,6 +4431,34 @@ def expand_object_macros(body, vals, depth=4):
             break
         body = new
     return body
+
+
+def expand_function_macros(body, func):
+    """`NAME(args) -> its body with the argument list dropped, for finding the module it instantiates (S81 xs4:
+    `OT_S81SL_XS4_ROM("pq_stream3") u_stream3 (...) names ot_rom_4096x72_m8).  Parameters stay unsubstituted, so this
+    result is for the closure scan only, never for synthesis."""
+    if not func:
+        return body
+    out, i = [], 0
+    for m in re.finditer(r"`(" + "|".join(re.escape(n) for n in sorted(func, key=len, reverse=True)) + r")\s*\(", body):
+        if m.start() < i:
+            continue
+        depth, j, quoted = 1, m.end(), False
+        while j < len(body) and depth:
+            c = body[j]
+            if quoted:
+                j += c == "\\"
+                quoted = c != '"'
+            elif c == '"':
+                quoted = True
+            elif c in "()":
+                depth += 1 if c == "(" else -1
+            j += 1
+        if depth:
+            continue
+        out += [body[i:m.start()], func[m.group(1)]]
+        i = j
+    return "".join(out) + body[i:]
 
 
 def macro_views(base):
@@ -4510,8 +4552,10 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
         found = E.instantiated(body, known)
         if defines is not None and "`" in body:
             if f not in mdefs:
-                mdefs[f] = kit_object_defines(E._strip(Path(f).read_text(errors="replace")), defines)
-            found |= E.instantiated(expand_object_macros(body, mdefs[f]), known)
+                fn = {}
+                mdefs[f] = (kit_object_defines(E._strip(Path(f).read_text(errors="replace")), defines, func=fn), fn)
+            vals, fn = mdefs[f]
+            found |= E.instantiated(expand_object_macros(expand_function_macros(body, fn), vals), known)
         todo += sorted(found)
     return files, sorted(missing), macros
 

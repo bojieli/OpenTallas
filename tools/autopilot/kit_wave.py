@@ -63,6 +63,7 @@ from pathlib import Path
 
 import plan_block_identity as BI
 import kit_resume as KR
+import wave_jobs as WJ
 
 # A main merge can happen during a long tick. Never release a merged fix with
 # older in-memory launch logic; the next ordinary tick imports the new package.
@@ -146,7 +147,7 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
                # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
@@ -553,7 +554,7 @@ def pilot_classes_state(d, die, state):
         c = pilot_key(d, die, r.get("item"), r.get("kind") or "type")
         if r.get("q_status") == "SIGNED":
             signed.add(c)
-        elif r.get("status") in ("RUNNING", "LAUNCHING") or (
+        elif r.get("status") in ("RUNNING", "LAUNCHING") or r.get("enqueue_pending") or (
                 r.get("status") == "ENQUEUED" and r.get("q_status") not in ("FAIL", "SIGNED")):
             live[c] = live.get(c, 0) + 1
     return signed, live
@@ -1835,8 +1836,10 @@ def run_item(spec_path):
             # KW-FIX-4 11-03 (ONBOARD-1 ask, COORD approved): no --hosts pin (a pin disables ot-run SPILL / LOAD SPILL /
             # RE-PLACE); --stage = the kit dir + its runner, so a waiter the gen host cannot admit (or that would
             # overload it) is copied to a host that admits it NOW (epyc4), runs there and copies every written file
-            # back before the client exits.  The receipt then appears on G only at the client's end (KW_PLACE_RC
-            # wins), so the kit on G stays the one authoritative copy.  Die option place_spill false = the old pin.
+            # back before the client exits.  SPILL-PROOF-1 11-04: OT_RUN_SPILL_HANDOFF (ot-run spill_handoff, below) hands
+            # the physical result to G at phase_done while the proof owner stays admitted on the spill host; the proof's
+            # own files follow at client end and G:K is the one physical /work, so route runs there.  Without a hand-off
+            # the receipt appears on G at the client's end (KW_PLACE_RC wins).  Die option place_spill false = the old pin.
             argv = ([sp["ot_run"], "--mem", str(m), "--threads", str(t), "--dir", K, "--stage", K, "--stage", prun]
                     + crit_args(sp) + ["--", "bash", "-c", cmd])
         else:
@@ -1848,7 +1851,7 @@ def run_item(spec_path):
         inner = " ".join(shlex.quote(a) for a in argv)
         cmd = ["systemd-run", "--user", "--quiet", "--collect", f"--unit={unit}",
                f"--setenv=PATH={HOME}/.local/bin:/usr/local/bin:/usr/bin:/bin", f"--setenv=HOME={HOME}",
-               "--property=TimeoutStopSec=120", "/bin/bash", "-c",
+               "--setenv=OT_RUN_SPILL_HANDOFF=place", "--property=TimeoutStopSec=120", "/bin/bash", "-c",
                f"exec >> {shlex.quote(svc['log'])} 2>&1; echo KW_PLACE_START $(date +%s) {unit}; {inner}; echo KW_PLACE_RC=$?"]
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
         svc["launch"] = "launched" if p.returncode == 0 else "failed"
@@ -2644,11 +2647,29 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))
         return
-    rc, out, err = AP.sh(argv, timeout=300)
+    if cfg.get("_enqueue_down"):                         # the coord remote failed earlier this tick: do not repeat the backoff
+        rc, out, err = 1, "", "enqueue: NOT SUBMITTED: " + cfg["_enqueue_down"]
+    else:
+        rc, out, err = AP.sh(argv, timeout=300)
+    if rc and (rc == 124 or "NOT SUBMITTED" in f"{err}{out}"):
+        # KW6-CODE 11-04: the row did not reach coord/state (a transport error, not a verdict on the kit). The kit
+        # stays PASS and retry_enqueue() sends it on a later tick; publish is idempotent, so a lost reply cannot
+        # duplicate the row.
+        why = (err or out)[-200:]
+        cfg["_enqueue_down"] = why
+        if not rec.get("enqueue_pending"):
+            notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS, enqueue not submitted; retried next tick ({why[:120]})")
+        rec.update(status="PASS", enqueue_pending=int(rec.get("enqueue_pending") or 0) + 1, **{"class": ""},
+                   reason=f"enqueue pending, rc {rc}: {why}", updated=time.time())
+        AP.log(f"KIT-WAVE ENQUEUE-PENDING {rec['die']}/{rec['item']}@{rec.get('attempt')} try {rec['enqueue_pending']}: {why}")
+        return
     if rc:
+        rec.pop("enqueue_pending", None)
         rec.update(status="FAIL", **{"class": "FLOW"}, reason=f"enqueue rc {rc}: {(err or out)[-200:]}")
         notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS but enqueue failed rc {rc}")
         return
+    if rec.pop("enqueue_pending", None):
+        rec.update(reason="", updated=time.time())
     rec["status"] = "ENQUEUED"
     st["pass_n"] = int(st.get("pass_n", 0)) + 1
     msg = f"{rec['item']} AUTO-GEOM PASS{' ' + rec['geom_tag'] if rec.get('geom_tag') else ''} -> enqueued ({rec['kit']})"
@@ -2660,6 +2681,31 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         msg += " + GEOM REQ sample"
     notices.setdefault(rec["die"], []).append(msg)
     AP.log(f"KIT-WAVE ENQUEUE {rec['die']}/{rec['item']} {rec['kit']} geom {rec.get('geom', '')[:120]}")
+
+
+def retry_enqueue(AP, cfg, st, notices):
+    """send the kits enqueue_pass() kept PASS on a transport failure. Only records it marked: old FAIL FLOW rows whose
+    reason reads NOT SUBMITTED stay with the operator (some hold kits older than a class fix). A die stop or a
+    hold_items match waits; a block that left the current plan is closed, not sent."""
+    import fnmatch
+    n = 0
+    for rec in (st.get("items") or {}).values():
+        if rec.get("status") != "PASS" or not rec.get("enqueue_pending") or not rec.get("kit"):
+            continue
+        d = (cfg.get("dies") or {}).get(rec.get("die"))
+        if not isinstance(d, dict) or stop_reason(cfg, rec["die"], cfg.get("_ap_dir") or AP.AP_DIR):
+            continue
+        if any(fnmatch.fnmatchcase(rec["item"], pat) for pat in (d.get("hold_items") or {})):
+            continue
+        if _plan_current(cfg, st, rec) is False:
+            rec.pop("enqueue_pending", None)
+            rec.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=time.time(),
+                       reason="enqueue pending on a superseded plan block (plan_current=no); not sent")
+            notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} SUPERSEDED: pending enqueue not sent")
+            continue
+        enqueue_pass(AP, cfg, st, rec, notices)
+        n += 1
+    return n
 
 
 # ------------------------------------------------------------------------------------------------ past GEOM
@@ -2842,13 +2888,22 @@ def cancel_class_volume(AP, cfg, st, notices):
     return n
 
 
+def attempt_root(r):
+    """the attempt's dir on its host (spec.json work), else its kit path; '' when neither is known"""
+    try:
+        return json.loads((Path(r["dir"]) / "spec.json").read_text())["work"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return (r.get("kit") or "").partition(":")[2]
+
+
 def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     """COORD 11-01 18:3x (KV kv3_io_ft pre-fix kits ran GRT 22.5 h after a newer fix superseded them): an attempt
     whose plan block is no longer in the die's current plan of record (plan_current=no) can never count, so it is
     stopped at the next tick -- a RUNNING/LAUNCHING wave unit (and its detached place client) and the autopilot
     route job of an ENQUEUED kit -- and marked CANCELLED class SUPERSEDED.  The current block is a different key
     and launches on its own.  Only dies with a cached current-plan probe are judged; die option cancel_superseded
-    false opts out; at most supersede_max_per_tick stops per tick (a mass stop is logged, not hidden)."""
+    false opts out; at most supersede_max_per_tick stops per tick (a mass stop is logged, not hidden).  The containers of a
+    stopped attempt are stopped on every fleet host too (WATCHDOG-1 11-03); watchdog.py is the net for a host missed here."""
     cur = current_keys(cfg, st)
     jobs = {}
     if ap_dir:
@@ -2858,6 +2913,7 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             jobs = {}
     cap = int(cfg.get("supersede_max_per_tick", DEFAULTS.get("supersede_max_per_tick", 20)))
     n = 0
+    roots = []
     for key, r in (st.get("items") or {}).items():
         die = r.get("die")
         d = (cfg.get("dies") or {}).get(die)
@@ -2886,12 +2942,18 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             for u in units:
                 if u:
                     AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+            roots.append(attempt_root(r))
         r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=time.time(),
                  reason=f"{what} on a superseded plan block (plan_current=no) stopped; the current block "
                         f"relaunches on its own key (COORD 11-01 18:3x)")
         notices.setdefault(die, []).append(f"{r.get('item')}@{r.get('attempt')} SUPERSEDED: {what} stopped")
         AP.log(f"KIT-WAVE CANCEL-SUPERSEDED {die}/{r.get('item')}@{r.get('attempt')} {what} units {units}")
         n += 1
+    if roots:
+        # the units above are hub clients; ot-run leaves a started command running on its host (HUNG-1103)
+        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
+        AP.log(f"KIT-WAVE CANCEL-SUPERSEDED remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
+               + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
     return n
 
 
@@ -2926,6 +2988,7 @@ def _step(AP, ap_dir):
     st.setdefault("items", {})
     notices = {}
     collect(AP, cfg, st, notices)
+    retry_enqueue(AP, cfg, st, notices)
     follow_queue(st, ap_dir, notices)
     auto_rejudge(AP, cfg, st, notices)
     try:

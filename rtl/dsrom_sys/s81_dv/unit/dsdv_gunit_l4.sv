@@ -33,11 +33,18 @@
 // -> buffer tree -> load.  OLAT = 1 (default, DIE-S81-51/CLK crossing table row 1): every output port leaves its flop
 // through one transparent-low lockup latch (0 cycles).  Bench: results/rfc_gu_1103/l4 (RF/OLAT 1 == 0, every output,
 // every edge; mutant caught).
+// S81-RF1 conservative form (DIE-S81-51/RF-D 11-03, OWNER 18:57): OLAT = 2 (default) = negedge out-face flops (0 cycles);
+// outline 302.4x108 (fill <= 0.45, aspect 2.8) moved to a free gunit__t1 slot (die-local plan delta, results/rfd_gl4_1103).
+// RF = 2 (default, RF-D 11-03 conservative form 2: rfd quick-place reg->reg -172.5 ps, all 138 violators in qadd stage 1
+// (u_k1) of the T levels; the A-tree u_a2 stage 1 from flops alone is 820 ps): RF 1 + every adder LAT 4 -> 5
+// (ot_hdc_qadd_lat KEEP 1 LAT 5 = ot_hdc_fp32_add_f12_l5x: operand mux + decode + exponent differences | compare, alignments,
+// swap | add, LZC | shift, round | encode; same f12 arithmetic).  Every delay line follows LA, so the leaf is self-timed:
+// +1 edge per adder level on the HC chain (valid-driven; the mix phase / launch follow r_ok and the last mix).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l4 #(
     parameter integer MUT  = 0,
-    parameter integer RF   = 1,
-    parameter integer OLAT = 1
+    parameter integer RF   = 2,
+    parameter integer OLAT = 2
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -86,7 +93,17 @@ module dsdv_gunit_l4 #(
     (* keep *) reg [31:0] eps_c_r;
     localparam integer OW = 1132;   // 23 output ports, 1132 bits
     wire [OW-1:0] o_r = {rs_o_r, hct_v_r, hct_b_r, mix_go_s_r, launch_s_r, fault_r, rn_o_r, launch_r, mx_v_r, mx_i_r, mx_y_r, t_set_r, t_w_r, t_row_r, t_lm_r, t_sm_r, cwo_v_r, cwo_a_r, cwo_d_r, sid_o_r, ss_v_r, ss_r, eps_c_r};
-    generate if (OLAT != 0) begin : g_olat
+    // DIE-S81-51/RF-D 11-03 (OWNER conservative form, uniform out-face ruling 07:58): OLAT = 2 = negative-EDGE flop
+    // (DFFLQN) per output bit, same T/2 hold window as the OLAT = 1 latch, 0 cycles; a DFF to face_guard / face_flops / LEC.
+    generate if (OLAT == 2) begin : g_onff
+        reg [OW-1:0] o_l;
+`ifdef OT_RFD_MUT_L4F   // bench mutant: the out face samples on the rising edge (one edge late)
+        always @(posedge clk) o_l <= o_r;
+`else
+        always @(negedge clk) o_l <= o_r;
+`endif
+        assign {rs_o, hct_v, hct_b, mix_go_s, launch_s, fault, rn_o, launch, mx_v, mx_i, mx_y, t_set, t_w, t_row, t_lm, t_sm, cwo_v, cwo_a, cwo_d, sid_o, ss_v, ss, eps_c} = o_l;
+    end else if (OLAT != 0) begin : g_olat
         reg [OW-1:0] o_l;                 // not kept: a kept latch wire gets a dangling buffer load (face_guard shared)
         always_latch if (!clk) o_l = o_r;
         assign {rs_o, hct_v, hct_b, mix_go_s, launch_s, fault, rn_o, launch, mx_v, mx_i, mx_y, t_set, t_w, t_row, t_lm, t_sm, cwo_v, cwo_a, cwo_d, sid_o, ss_v, ss, eps_c} = o_l;
@@ -94,7 +111,7 @@ module dsdv_gunit_l4 #(
         assign {rs_o, hct_v, hct_b, mix_go_s, launch_s, fault, rn_o, launch, mx_v, mx_i, mx_y, t_set, t_w, t_row, t_lm, t_sm, cwo_v, cwo_a, cwo_d, sid_o, ss_v, ss, eps_c} = o_r;
     end endgenerate
 
-    localparam integer V = 276, LA = 4, LM = 5, NACC = 25, NSET = 2;
+    localparam integer V = 276, LA = (RF >= 2) ? 5 : 4, LM = 5, NACC = 25, NSET = 2;
     // reset relay (S81U-GUNIT4): the rst_n port drives only ot_rst_relay; 4 kept region copies (each <= ~256
     // reset loads, no port net spans the leaf).  Release is 3 edges after the port (transaction-level exact).
     wire [3:0] rq;
@@ -207,6 +224,7 @@ module dsdv_gunit_l4 #(
     ot_hdc_vline #(.D(LA)) u_vq2 (.clk(clk), .rst_n(rq[2]), .v(vq1[LA]), .vd(vq2));
     ot_hdc_delay #(.W(10), .D(LA)) u_tq2 (.clk(clk), .rst_n(rq[2]), .d(tq1), .q(tq2));
     // ---------------------------------------------------------------- T: streaming levels 8 .. 12
+    wire [4:0] t_vp; wire [5*5-1:0] t_ap;   // per level: valid / slot one edge ahead (flat: no hierarchical reads, yosys)
     wire [5:0] t_vv; wire [32*6-1:0] t_d; wire [5*6-1:0] t_i; wire [5:0] t_l; wire [5*6-1:0] t_a; wire [4:0] t_f;
     assign t_vv[0] = vq2[LA]; assign t_d[31:0] = l7; assign t_i[4:0] = tq2[9:5]; assign t_l[0] = tq2[9:5] == 5'd19;
     assign t_a[4:0] = tq2[4:0];
@@ -229,6 +247,7 @@ module dsdv_gunit_l4 #(
         assign t_d[32 * (lv + 1) +: 32] = y; assign t_i[5 * (lv + 1) +: 5] = tt[9:5]; assign t_a[5 * (lv + 1) +: 5] = tt[4:0];
         assign t_l[lv + 1] = tt[10];
         assign t_f[lv] = f;
+        assign t_vp[lv] = vv[LA-1]; assign t_ap[5 * lv +: 5] = ta_pre;
     end endgenerate
     wire root_v = t_vv[5]; wire [31:0] root = t_d[32 * 5 +: 32]; wire [4:0] root_acc = t_a[5 * 5 +: 5];
     // ---------------------------------------------------------------- roots -> proj / ss_r -> r
@@ -239,8 +258,8 @@ module dsdv_gunit_l4 #(
     end else begin : g_pw1
     // RF-1: the proj write slot as a registered one-hot (== root_v && root_acc == k on the write edge)
     (* keep *) reg [23:0] pw_oh;
-    wire [4:0] pa = g_lv[4].ta_pre;
-    always @(posedge clk or negedge rq[3]) if (!rq[3]) pw_oh <= 24'd0; else pw_oh <= (g_lv[4].vv[LA-1] && pa < 5'd24) ? 24'd1 << pa : 24'd0;
+    wire [4:0] pa = t_ap[5 * 4 +: 5];
+    always @(posedge clk or negedge rq[3]) if (!rq[3]) pw_oh <= 24'd0; else pw_oh <= (t_vp[4] && pa < 5'd24) ? 24'd1 << pa : 24'd0;
     genvar k;
     for (k = 0; k < 24; k = k + 1) begin : g_pw
         always @(posedge clk) if (pw_oh[k]) proj[k] <= root;

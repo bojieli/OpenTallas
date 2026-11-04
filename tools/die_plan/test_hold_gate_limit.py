@@ -111,3 +111,11 @@ def test_default_stop_counts_from_tap_window(tmp_path, wns, win, stops):
 def test_default_stop_counts_from_seam_contract(tmp_path):
     r = _run(tmp_path, -190.0, n=10, in_min=-90, stop=False)      # stop -150 + (-90 + 40) = -200
     assert r.returncode == 0 and "OT_HOLD_GATE INFO" in r.stdout, r.stdout + r.stderr
+
+
+def test_stop_override_opt_in(tmp_path, monkeypatch):
+    # DIE-HEAD-59 11-03: OT_HOLD_STOP_PS moves the stop base; the default stop is unchanged without it
+    assert "structural stop" in _run(tmp_path, -214.78, in_min=-90).stdout
+    monkeypatch.setenv("OT_HOLD_STOP_PS", "-200")
+    r = _run(tmp_path, -214.78, in_min=-90)
+    assert "structural stop" not in r.stdout

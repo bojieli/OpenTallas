@@ -58,6 +58,7 @@ import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
 import kit_wave as KW  # noqa: E402
+import wave_jobs as WJ  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -1340,6 +1341,25 @@ def near_count_args(near, die, *names):
     return ["--priority", "die", "--crit"] if near and near_count_match(near, die, *names) else []
 
 
+def wave_superseded(j):
+    """why the kit-wave no longer wants this job ('' = it does, or no wave row): a resubmit would only restart it on the
+    same kit (HUNG-1103: cancelled rows came back as a second container 5 min to 3 h after the cancel)"""
+    v = WJ.judge(WJ.load_rows(str(AP_DIR)), WJ.wave_id([j.get("path")]), j.get("started"))
+    return v[1] if v and v[0] == "STOP" else ""
+
+
+def stop_survivors(j):
+    """one flow container per kit (WATCHDOG-1 11-03): a resubmit resumes the run dir, and the previous attempt's container may
+    still run, on any host, after its ot-run client was lost (ot-run leaves a started command running)"""
+    res = WJ.stop_on_fleet(sh, HUB_NAME, [j.get("path")])
+    names = WJ.stopped_names(res)
+    if names:
+        log(f"STOP-SURVIVOR {j['id']} {j['die']}/{j['type']}: stopped {' '.join(names)[:400]} before attempt {j.get('attempts', 0) + 1}")
+    for h, v in res.items():
+        if v.get("error"):
+            log(f"STOP-SURVIVOR {j['id']}: {h} not checked: {v['error']} (watchdog duplicate check is the net)")
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
@@ -1368,6 +1388,8 @@ def submit(st, j, attempt_note=""):
     if DRY:
         log(f"would SUBMIT {j['id']} {j['die']}/{j['type']} {attempt_note}: {' '.join(argv)}")
         return
+    if n > 1:
+        stop_survivors(j)
     if launch_unit(unit, logf, argv):
         j.pop("client_done_at", None)
         j.update(attempts=n, unit=unit, client_log=str(logf), started=time.time())
@@ -2187,6 +2209,12 @@ def finish(st, j, c, client):
                                                    "lec_all_shown", "lec_tool", "signoff", "netlist", "eco")}
     log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> {cls} ({kind}): {reasons[:240]}")
     if cls == "CRASH" and kind in INFRA_KINDS and not j.get("adopted"):
+        why = wave_superseded(j)
+        if why:
+            j.update(cls="CANCELLED", kind="cancelled")
+            log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> CANCELLED (not resubmitted): {why[:240]}")
+            set_status(st, j, "CANCELLED", f"wave no longer wants it: {why[:200]}")
+            return
         notrun = kind == "infra-notrun"
         if notrun and j.get("notrun_retries", 0) < MAX_NOTRUN:
             j["notrun_retries"] = j.get("notrun_retries", 0) + 1

@@ -78,6 +78,10 @@ CONE_BUDGET_S = 2.0          # + this much wall per cone in a batch (normal cone
 # recorded in noreset.raw_prefix_bounded.  0 = no limit (the old behaviour).
 RAWPREFIX_ANDS_DEFAULT = 500000
 RAWPREFIX_S_DEFAULT = 900
+# LEC-RAWPREFIX-SIM (DIE-KV-65/LEC 11-03): random simulation of a raw prefix miter before ABC.  One set output is a real
+# counterexample (state and every input are free), so that base is refuted without a solver call.
+RAWPREFIX_SIM_WORDS = 8
+RAWPREFIX_SIM_ROUNDS = 4
 
 
 def cone_limit_s():
@@ -465,7 +469,12 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
           # zq[5:2] address register became 4 unnamed gold latches, so every oa bit was UNPROVEN); the reference keeps
           # the RTL registers as written and an asynchronous read port
-          "memory -nomap -nordff", "memory_map", "opt_expr -keepdc", "opt_clean",
+          # OT_LEC_GOLD_NOWIDEN=1 (opt-in, DIE-HBM-60/LEC C8 11-03): -nowiden keeps one memory word per RTL element.
+          # Widened, an unpacked array with a non-zero base (HBM pgslice ot_hbm_su_static_ins r[1:DMAX], 120 b) became
+          # 480-bit words r[w][b] (element 4w + b/120), so the gold name r[1][b] (element 4..7) was paired with the
+          # gate's element r[1][b] (529 'differ', element 1 gold-only as r[0][120..]); naming only, no semantics
+          "memory -nomap -nordff" + (" -nowiden" if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1" else ""),
+          "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
     return "\n".join(s + seq_tail(out, lecff, split_seq(env))) + "\n"
 
@@ -2408,9 +2417,16 @@ def renamed(L, log, words=4, packed=frozenset()):
             bases[mm.group(1)].append(k)
     hit = []
     for b, ks in bases.items():
+        bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
+        # one surviving gate bit of a narrowed vector (hcp nout_r = 24: gate nout_r[1] is the RTL's bit 4): no second bit
+        # to compare, so a lone disagreeing name with RTL bits the gate lacks is not trusted, packed or not.  Re-keying
+        # only proposes: every compare point is still proved, and the by-name pair stays a candidate at the fixpoint.
+        if len(bad) == 1 == len(ks) and any(IDX.match(g) and IDX.match(g).group(1) == b for g in L.gonly):
+            hit.append(b)
+            log.append(f"renamed: {b} (its only gate bit {bad[0]} disagrees and the gate lacks the other RTL bits)")
+            continue
         if b in packed:
             continue                           # declared packed bit indices are shared by both frontends
-        bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
         if len(bad) < 2:
             continue
         tsig = {}
@@ -4202,6 +4218,21 @@ def raw_prefix_miter(d, roots, steps):
     return m
 
 
+def raw_prefix_sim_survivors(m, words=None, rounds=None):
+    """LEC-RAWPREFIX-SIM: output indices of miter m that random simulation does not set.  A set output of a raw prefix
+    miter is a concrete counterexample to that base (no reset, assumption or X mask enters this AIG), so only proofs
+    are skipped, never assumed."""
+    words = RAWPREFIX_SIM_WORDS if words is None else words
+    rounds = RAWPREFIX_SIM_ROUNDS if rounds is None else rounds
+    alive = list(range(len(m.outs)))
+    for r in range(rounds):
+        if not alive:
+            break
+        val, mask = m.simulate(words, seed=7919 + r)
+        alive = [i for i in alive if not lit_val(val, mask, m.outs[i])]
+    return alive
+
+
 def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
     """Prove requested constant bases after an exact finite prefix, unconditionally.
 
@@ -4218,11 +4249,27 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
             continue
         if any(k not in points or c not in (0, 1) for k, c in todo):
             raise LecError("invalid raw prefix base candidate")
-        m = raw_prefix_miter(d, [points[k] for k, c in todo], steps)
-        m.outs = [lit ^ c for lit, (k, c) in zip(m.outs, todo)]
-        m.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in todo]
+        def miter(items):
+            mi = raw_prefix_miter(d, [points[k] for k, c in items], steps)
+            mi.outs = [lit ^ c for lit, (k, c) in zip(mi.outs, items)]
+            mi.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in items]
+            return mi
+        m = miter(todo)
         batch = L.__dict__.get("_raw_prefix_batch", 0)
         tag = f"rawprefix{batch}_{side}_{steps}"
+        # LEC-RAWPREFIX-SIM (DIE-KV-65/LEC 11-03): every KV/S81 miter that hung in ABC 1-12 h is refuted by simulation in
+        # seconds (astk gate 16: 7368 outputs, 1.35M ANDs, none survive, 10 s).  Refuted bases never reach the solver and
+        # the survivors' smaller cone is what the size cap and the sweep see.
+        total = len(todo)
+        alive = raw_prefix_sim_survivors(m)
+        refuted = {m.onames[i] for i in set(range(total)) - set(alive)}
+        L.__dict__["raw_prefix_sim_refuted"] = L.__dict__.get("raw_prefix_sim_refuted", 0) + len(refuted)
+        log.append(f"LEC RAWPREFIX SIM {tag}: {len(refuted)} / {total} bases refuted by simulation, "
+                   f"{len(alive)} left for the sweep")
+        names = m.onames
+        if len(alive) != total:
+            todo_alive = [todo[i] for i in alive]
+            m = miter(todo_alive)
         # LEC-RAWPREFIX-BOUND (DIE-HBM-60/61 LEC 11-03): a 16/64-edge unroll of a large cone (HBM vm_calendar, KV
         # head_eighth, kshare: 1.5-3.7 h in one &fraig/&sat, FLOW canaries of 19af2d0dd) is bounded.  Primary bound
         # = miter size (deterministic, no ABC run); the wall limit is a backstop.  Either way no base is proved,
@@ -4230,20 +4277,22 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
         # output into a difference / undecided, never into a false EQ), and the bound is recorded explicitly.
         ands, cap = len(m.ands) // 2, raw_prefix_limit_ands()
         bounded = L.__dict__.setdefault("raw_prefix_bounded", [])
-        if cap and ands > cap:
-            log.append(f"LEC RAWPREFIX SIZE BOUND {tag}: {ands} ANDs > {cap} (OT_LEC_RAWPREFIX_ANDS) -> "
-                       f"{len(todo)} bases not proved")
+        if not alive:
             status = {}
-            bounded.append(dict(tag=tag, side=side, steps=steps, n=len(todo), ands=ands, why="size", limit=cap))
+        elif cap and ands > cap:
+            log.append(f"LEC RAWPREFIX SIZE BOUND {tag}: {ands} ANDs > {cap} (OT_LEC_RAWPREFIX_ANDS) -> "
+                       f"{len(alive)} bases not proved")
+            status = {}
+            bounded.append(dict(tag=tag, side=side, steps=steps, n=len(alive), ands=ands, why="size", limit=cap))
         else:
             wall = raw_prefix_limit_s()
             status = prove(m, work, conflicts, log, tag=tag, wall=wall)
             if status.pop(SWEEP_TIMEOUT, False):
-                bounded.append(dict(tag=tag, side=side, steps=steps, n=len(todo), ands=ands, why="wall",
+                bounded.append(dict(tag=tag, side=side, steps=steps, n=len(alive), ands=ands, why="wall",
                                     limit=wall))
         L._raw_prefix_batch = batch + 1
-        for (k, c), name in zip(todo, m.onames):
-            result = status.get(name, "undecided")
+        for (k, c), name in zip(todo, names):
+            result = "differs" if name in refuted else status.get(name, "undecided")
             cache[(side, k, c, steps)] = result
             if result == "proved":
                 edges[(side, k, c)] = min(steps, edges.get((side, k, c), steps))
@@ -4325,6 +4374,7 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     is reported, never assumed away). There is no switch to assume an unknown
     power-up value equals a constant. -> number dropped."""
     eq_const_resolve(L, log)
+    t_raw = time.time()
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
         # DIE-HBM-59/LEC C4 (HBM n4ext / fused_lane 11-02): default-on at the reset window itself (OT_LEC_RESET_CYCLES,
@@ -4341,6 +4391,8 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
             candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
                           for s in (("gold", "gate") if sd == "both" else (sd,))]
             raw_prefix_bases(L, candidates, steps, work, conflicts, log)
+    # these base sweeps are not refinement: the OT_LEC_REFINE_S budget in correspond() does not pay for them
+    L.__dict__["raw_sweep_s"] = L.__dict__.get("raw_sweep_s", 0.0) + time.time() - t_raw
     total = 0
     while True:                     # dropping one can unseat a register reloaded from it
         ok = noreset_sound(L)
@@ -4392,6 +4444,7 @@ def noreset_report(L):
                 raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS",
                                                   os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT)))),
                 raw_prefix_wall_s=raw_prefix_limit_s(), raw_prefix_ands_cap=raw_prefix_limit_ands(),
+                n_raw_prefix_sim_refuted=getattr(L, "raw_prefix_sim_refuted", 0),
                 n_raw_prefix_bounded=len(getattr(L, "raw_prefix_bounded", [])),
                 raw_prefix_bounded=list(getattr(L, "raw_prefix_bounded", []))[:200],
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
@@ -5088,6 +5141,21 @@ def alias_arrays(L, log, words=4, work=None):
                           f"gate {len(t) - len(best[1])} left to correspondence" if common else ""))
 
 
+def merged_reproposals(L, log, tried):
+    """A merged twin whose proposal fell with a wrong constant (HBM kshare u_cmd.rd_bin[2], DIE-HBM-62: simulation never
+    fills the FIFO, so rd_gray[2] looks constant; that constant falls in round 0 and takes rd_bin[2] == rd_gray[2] with
+    it, and rd_bin[2] then stayed free -> rd_gray[1], rd_gray[2] differ).  Propose the pair again at the fixpoint, at
+    most twice per pair; the induction proves it like every other hypothesis.  -> any proposed."""
+    n = 0
+    for k, c in getattr(L, "merged_choice", {}).items():
+        if ("gold", k) not in L.hyp and tried[("gold", k, c, 0)] < 2:
+            L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+            n += 1
+    if n:
+        log.append(f"merged twins re-proposed at the fixpoint: {n}")
+    return n > 0
+
+
 def merged_proposals(L, log, cap=4096):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
@@ -5199,6 +5267,7 @@ def merged_proposals(L, log, cap=4096):
                 if not pending[k]:
                     del pending[k]                   # none agrees: keep the first (refinement drops it)
     n_dis = sum(1 for k, c in choice.items() if len(cands[k]) > 1 and c != cands[k][0])
+    L.merged_choice = {**getattr(L, "merged_choice", {}), **choice}
     for k, c in choice.items():
         L.hyp[("gold", k)] = ("eq", "gold", c, 0)
         n += 1
@@ -5314,7 +5383,10 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     seen_proved = collections.Counter()   # proved-set signature -> rounds proved
     early_compare_tried = False
     for rnd in range(rounds + 1000):
-        if rnd >= rounds + 40 and time.time() - t_ref > budget:
+        # LEC-REFINE-BUDGET-RAW (DIE-KV-65/LEC 11-03, KV ctl): raw base sweep time is not refine time.  ctl paid the whole
+        # budget in 6 raw prefix walls (5400 s of 7059 s), expired at the first check (round 64), and the monotone finish
+        # freed 3843 valid relations -> 1513 false differs.
+        if rnd >= rounds + 40 and time.time() - t_ref - L.__dict__.get("raw_sweep_s", 0.0) > budget:
             if os.environ.get("OT_LEC_REFINE_MONOTONE", "1") == "0":
                 break
             if not expired:
@@ -5692,6 +5764,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 continue
             if renamed_identity_closure(L, log, traces, tried) and surviving_change():
                 continue
+            if merged_reproposals(L, log, tried) and surviving_change():
+                continue
             if L.hyp == before or not adding:
                 return
             continue
@@ -5808,6 +5882,21 @@ def _and_leaves(d, lit, cap=64, nodes=False):
     return out + inner if nodes else out
 
 
+def _live_term(d, lit, cap=16):
+    """An OR literal with exactly one term that is not structurally false -> that term.  An async-reset flop after
+    async2sync reads D = OR(AND(rst_n, ld), AND(!rst_n, 0)) and aigmap keeps the AND with 0, so its load condition
+    sits behind an inverted node that _and_leaves does not expand."""
+    base = d["I"] + d["L"] + 1
+    for _ in range(cap):
+        if not (lit & 1) or (lit >> 1) < base:
+            return lit
+        live = [t for t in (y ^ 1 for y in _and_leaves(d, lit ^ 1)) if 0 not in _and_leaves(d, t)]
+        if len(live) != 1:
+            return lit
+        lit = live[0]
+    return lit
+
+
 def loaded_proposals(L, log, cands=None, cap=20000):
     """Automatic loaded-valid hints (KIT-WAVE-16 11-01, LEC NOT EQUIVALENT class x10: HBM g_ld3k p1/p2/q2, kshare,
     QC coll_n e3, HEAD beat_link hold).  A gold-only RTL register with no reset that holds itself until a load with
@@ -5818,7 +5907,7 @@ def loaded_proposals(L, log, cands=None, cap=20000):
     only PROPOSES such hints (the commercial 'user match', untrusted): the hold term of D(k) (the AND term that
     reads Q(k)) names the load condition en = NOT(another leaf); a guard is a gold register g whose next state
     implies en, directly (an AND leaf of D(g): a valid delayed from the load, ldp_v <= ld_e) or sticky (a leaf
-    OR(Q(g), en): v <= v | ld), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
+    OR(Q(g) & hold, en): v <= v | ld, also with a clear term, wq_pv), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
     same induction (guard' -> D(k) == c and not X), refuses a guard true at reset, and drops a wrong one; a read of
     k outside its guard sees the free value and still differs.  Nothing is assumed: no X == c, no waiver.
     cands: {gold key: c} (default: the gold-only constants noreset_filter dropped). -> hint list."""
@@ -5844,16 +5933,27 @@ def loaded_proposals(L, log, cands=None, cap=20000):
         if rv not in (0, 1):
             continue
         val = 1 - rv                      # the guard value that is definitely false in the reset state
-        nxt = gc[g] ^ (val ^ 1)           # literal true iff g' == val
-        for leaf in _and_leaves(d, nxt, nodes=True):
+        nxt = _live_term(d, gc[g] ^ (val ^ 1))    # literal true iff g' == val
+        leaves = _and_leaves(d, nxt, nodes=True)
+        # a leaf can itself be an async-reset mux (ldq_v <= ldp_v, read through rst_n ? ldp_v : 0): g' implies its term
+        for leaf in list(leaves):
+            live = _live_term(d, leaf)
+            if live != leaf:
+                leaves += _and_leaves(d, live, nodes=True)
+        for leaf in leaves:
             imp[leaf].append((g, val))    # g' == val -> leaf
             v = leaf >> 1
             if (leaf & 1) and v >= base:  # leaf = OR(NOT y_i): sticky form OR(g == val, en)
                 ys = [y ^ 1 for y in _and_leaves(d, leaf ^ 1)]
                 own = q ^ (val ^ 1)
-                rest = [y for y in ys if y != own]
-                if len(rest) == 1 and len(ys) == 2:
-                    imp[rest[0]].append((g, val))
+                # g' = hold term(s) that read Q(g) | load term(s): every load term implies each of its AND leaves
+                loads = [y for y in ys if own not in _and_leaves(d, y)]
+                if loads and len(loads) < len(ys):
+                    common = set(_and_leaves(d, loads[0], nodes=True))
+                    for y in loads[1:]:
+                        common &= set(_and_leaves(d, y, nodes=True))
+                    for x in common:
+                        imp[x].append((g, val))
     hints, nog = [], 0
     for k, c in sorted(cands.items()):
         q, dk = gp[k], gc[k]
@@ -6864,6 +6964,8 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_EARLY_COMPARE=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
+    if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1":
+        cmd += ["-e", "OT_LEC_GOLD_NOWIDEN=1"]
     for k in ("OT_LEC_RAWPREFIX_S", "OT_LEC_RAWPREFIX_ANDS"):
         if k in os.environ:
             cmd += ["-e", f"{k}={os.environ[k]}"]
@@ -6994,6 +7096,25 @@ PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_CO
                  "OT_LEC_ENABLE_FILL_GUARD")
 
 
+def nowiden_retry(r, out, run):
+    """A failed run whose gold memories were widened (one word packs several RTL elements: pgslice lane_exp0_id r[1:DMAX],
+    gold r[1][b] pairs by name with another gate element) runs once more with one gold word per element.  Each run is
+    a complete proof of its own; the second verdict replaces the first only when it is EQUIVALENT."""
+    log = out / "gold.ys.log"
+    if r.get("verdict") != "NOT EQUIVALENT" or os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1" \
+            or not log.is_file() or "Merging ports" not in log.read_text(errors="replace"):
+        return r
+    os.environ["OT_LEC_GOLD_NOWIDEN"] = "1"
+    try:
+        r2 = run()
+    finally:
+        del os.environ["OT_LEC_GOLD_NOWIDEN"]
+    keep, other = (r2, r) if r2.get("verdict") == "EQUIVALENT" else (r, r2)
+    keep["nowiden_retry"] = dict(verdict=other.get("verdict"), counts=other.get("counts"), widened=keep is r)
+    (out / "lec.json").write_text(json.dumps(keep, indent=1) + "\n")
+    return keep
+
+
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
@@ -7035,7 +7156,8 @@ def main(argv=None):
                   f"({r.get('t_total_s')} s)")
         return rc
     pm = json.loads(Path(a.port_map).read_text()) if a.port_map else None
-    r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
+    run = lambda: check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
+    r = nowiden_retry(run(), Path(a.out or Path(a.kit) / "lec"), run)
     c = r.get("counts", {})
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "

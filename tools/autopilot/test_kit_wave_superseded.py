@@ -11,9 +11,15 @@ import kit_wave as KW
 class Superseded(unittest.TestCase):
     def setUp(self):
         self.t = Path(tempfile.mkdtemp())
-        self.stops, self.logs = [], []
-        self.AP = SimpleNamespace(DRY=False, log=self.logs.append,
-                                  sh=lambda cmd, timeout=None: self.stops.append(cmd[-1]) or (0, "", ""))
+        self.stops, self.logs, self.remote = [], [], []
+
+        def sh(cmd, timeout=None, input=None):
+            if input:                                    # wave_jobs.STOP_KIT on one fleet host
+                self.remote.append(json.loads(cmd[-1].strip("'"))["roots"])
+                return 0, json.dumps({"containers": ["dpkit-old-1"], "scopes": []}), ""
+            self.stops.append(cmd[-1])
+            return 0, "", ""
+        self.AP = SimpleNamespace(DRY=False, log=self.logs.append, sh=sh, HUB_NAME="intel2")
         cur_blk, old_blk = "a" * 40, "b" * 40
         self.cfg = {"dies": {"d": {"plan": "/p.json", "event": "e", "gen_host": "h"}}}
         wdir = self.t / "w"; wdir.mkdir()
