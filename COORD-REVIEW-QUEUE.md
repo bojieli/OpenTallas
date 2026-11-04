@@ -113,3 +113,21 @@ Open: su31pv1 ~10M (separate).
 - 2026-11-03 20:11 PST [DIE-S81-51/RF-D] READY claude/die-s81-51-rfd-gl5-1103@b083be983b1: gunit_l5 CONSERVATIVE FORM (OWNER 18:57, <=150k cells) = row-pipelined Sinkhorn ot_hdc_sinkhorn_fsr (one row datapath: 16->4 quotients, 24->6 row adds, 4->1 seed/predecode; rows issue on 4 consecutive edges, every skip read realigned; ot_hdc_skf_quotp carries tm/xm3/xz/E/s/ms per stage) + kept LOOP fix (registered fault zeroing) + per-bank SRAM write regs. D0 18->21, DS 16->19, Sinkhorn LAT 642->762. RTL of record flips (l5 RFD default 1; tail_fs default fsr, OT_S81_GUNIT_SKFS = old fs, instance paths unchanged); schedule: lower_gu HC_LAT_N/S 1019/1017 -> 1140/1138 (+121). Tests: run_gunit_bench PASS 8 cases hc_lat 1008->1129 router_lat 51; MUT 10 FAIL 153; OT_RFD_MUT_RB (buffer word miss) FAIL 73. No pin cycle moves (HC compute latency only) -> no pin-latency plan delta; hc_lat delta sent to TOK-VERIFY-1.
 - 2026-11-03 20:11 PST [DIE-S81-51/RF-D] ESTIMATE gunit_l5 rfd2 (synth part): generic gates 700,665 -> 234,003 (Sinkhorn 649,982 -> 183,212) => ~138k cells by the ccB 414k/700k ratio (<=150k form rule MET, under 400k cap); outline/pins/clock taps unchanged (345.6x302.4, util est ~16% at ccB density -> GEN_LINT PASS, PREFLIGHT PASS, advisories clk M4 + E macro channel 6.888 um). Quick place = rfd2p place-only copy queued with the finish; PPROBE_REG2REG_WS to follow.
 - 2026-11-03 20:11 PST [DIE-S81-51/RF-D] LAUNCHED gunit_l5 rfd2 finish: kit /srv/opentallas-scratch2/claude/die-s81-51/rfd/kits/dsdv_gunit_l5_rfd2 (ioref 500.85/403.75, M6 hook as rfd), ot-run epyc4 (intel2 client pid 2753811, log intel2 ~/ds81rfd-logs/finish_gunit_l5_rfd2.otrun.log, queued for memory); place copy rfd2p pid 2753813 (log place_gunit_l5_rfd2p.otrun.log). The 414k rfd finish stays queued as in-flight variant.
+- 2026-11-03 20:51 PST [DIE-HBM-61/SPLIT] READY claude/die-hbm-61-por-1103@5c6ef37035c -> ROOT-MERGE-27 / COORD / KW-FIX-4 / DIE-HBM-61 / TOK-VERIFY-1 (die-local plan delta, no ask): **HBM d44v part 6 + 6a**.
+  - Part 6 (conservative form, OWNER 18:57): the SPLIT cores hcol_h0 (128 inst), split3_lane (32) and lanes8_11 (4) are now 6 sub-core plan designs inside their parent slots. Step mk_split.py in build_d44v.sh, before mk_smrst; centre clock entries stay LAST.
+    - hcol_h0 = ra|rb at 106.272 x 187.488; split3 = bk|fr|ex at 155.52/120.96/95.04 x 345.6; lanes8_11 = 4 x ot_hbm_su_pg_lane1_core 190.08 x 311.04, abutted.
+    - The parent glue is a thin wires-only wrapper (split branch 49134585fc, rtl/.../<core>__p6glue.sv). Each sub has one pin table, a sub centre clock entry and tap, its share of core_conns and 11.7k stations re-pointed, and the lane1 6-SRAM column in core_macros.
+    - Added cycles = the SPLIT EQ shift maps: hcol 0, lanes 0, split3 +4 on sfu_vm/kv/ro/fault/coll outputs.
+  - Part 6a (SS24 20:16 ask): mk_mpisl_q.py adds query_static +4 mp_isl0_{ck,rst}_{i,o} pins at the signed q7b2 DEF xy, part-3 recipe. **q7b2 record MATCH 1637/1637**, so SS24 can re-count with no rebuild.
+  - Checks:
+    - G0C: 24 -> 24 ERROR, new 0; warn 1146 -> 1085; pending-view 128 -> 64.
+    - Plan GEOM: new FAIL 0 (225 -> 225).
+    - Count: designs 84 -> 87; 9/9 signed records MATCH (the 8 plus q7b2).
+  - KW-FIX-4 kit items, biggest first; RTL is the split branch composition subs + glue:
+    1. ot_hgi_sfu_split3_lane_core_bk 130k
+    2. ot_hbm_idx_score_hcol_h0_rb 103k
+    3. ot_hgi_sfu_split3_lane_core_fr 102k
+    4. ot_hbm_idx_score_hcol_h0_ra 97k
+    5. ot_hbm_su_pg_lane1_core 86k (6 SRAM)
+    6. ot_hgi_sfu_split3_lane_core_ex 78k
+  - Part 7 (fused, rp3 n/s, q3_edge, tkm, q3_body) is next, ~2-3 h.
