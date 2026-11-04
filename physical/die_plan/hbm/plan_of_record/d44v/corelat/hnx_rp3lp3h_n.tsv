@@ -1,0 +1,7 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+hnx_rp3lp3h_n	hnx_rp3h_gn	rin_n -> rout_n	in->out	0	row transport unchanged (glue block holds pinrow + row_w + row_e)
+hnx_rp3lp3h_n	hnx_rp3h_gn	bin -> bout	in->out	0	beat transport unchanged
+hnx_rp3lp3h_n	hnx_rp3h_gn	gin -> sb_bank[k*150+50 +: 100] (pass lanes gpm)	in->out	0	pass lanes unchanged
+hnx_rp3lp3h_n	hnx_rp3h_gn	sb_vld	out	0	seam ring slot valids unchanged
+hnx_rp3lp3h_n	leaf (xs+tl+lc)	rin_n/bin -> sb_bank[k*150 +: 50] (leaf-0 lane g0m)	in->out	+7	LEAF RESULT +7: glue->xs +2, xs->tl +1 (face replaces xf station), tl->lc +2, lc->glue +2; lc/glue pure-delay re-alignment (tct control +1, block-dot result +1, act +3)
+hnx_rp3lp3h_n	hnx_rp3h_gn	rst_n	in	0	reset release unchanged at the glue; leaf blocks take rst_lf (passthrough)
