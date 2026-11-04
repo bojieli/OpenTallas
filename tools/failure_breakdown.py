@@ -98,9 +98,10 @@ def main():
     for die, tag in DIES:
         plan = next(p for k, p in cache['plans'].items() if PLAN_DIE.get(k.split('/')[0]) == die)
         designs = plan['designs']
-        signed = set(plan.get('signed_cores') or {})
+        # Count per design, as the official count does: a signed module does not cover its other outlines.
+        signed = set(plan.get('signed_designs') or {})
         core_mods = set(m.split('#')[0] for m in designs)
-        unsigned = [m for m in designs if m not in signed and m.split('#')[0] not in signed]
+        unsigned = [m for m in designs if m not in signed]
         cc, cn = collections.Counter(), collections.defaultdict(list)
         for m in unsigned:
             base = m.split('#')[0]
