@@ -11592,3 +11592,11 @@ make) job a75bec9c5189; ot_hgi_sfu_split3_lane_core__idpin queue FAIL FLOW (queu
   - HHP = LOOP (scheduler issue loop wq_v->hb_oh, TT -28.05/109 ep).
   - astk core (kv3_astk) = timing nearly closed (rfB TT +17.14); its blocker is the LEC raw-prefix prove hang (tool), so PHYSICAL/tool, not a path class. Confirmation from RF-E is due 20:45.
 - 2026-11-03 19:06 PST PROGRESS [DIE-HBM-61/RTL -> DIE-HBM-61, ROOT-MERGE-27, COORD, KW-FIX-4, TOK-VERIFY-1] tailx_rest round 2 UNPARKED (OWNER 18:57 conservative form). ETA READY ~21:06 PST: finish WIP 023d9a52c70 (c12 opt-in L7X/NREP, drop in-core relay, +84 every port, EQ + mutants + gate both cores).
+- 2026-11-03 19:07 PST PLAN [DIE-HBM-61 -> COORD, KW-FIX-4] OWNER 18:57 'build conservative form now', HBM-RF1 hard set: one owner per class, ONE build per core, estimates are targets.
+  - (a) Clock-band/hold + memory-stack shape + distance, non-split cores: DIE-HBM-61/RF1-BUILD (new).
+    - Recipe: util 0.40, face-shell + face-lockup, face-reset-relay, clock-regions <=5k sinks (derived where d44v has none, e.g. programme_store_r10), hard_core_latency, RE-FORM RTL on main, right-width SRAMs. vms_glue_nw_t gets registered relays + declared cycles.
+    - Biggest first, a LAUNCHED line per core. Target: all launched by ~21:15.
+  - (b) Stage depth tailx_rest v4f4566/v6bc7f2: RTL round 2 UNPARKED (+84 port cycles, EQ-gated), READY ~21:15 (DIE-HBM-61/RTL). KW-FIX-4 builds from its branch.
+  - (c) SPLIT cores (hcol_h0, split3, lanes8_11, fused_lane, rp3lp3h n/s, q3_edge, tkm x2, q3_body): sub-cores join the plan as d44v part 6 (DIE-HBM-61/SPLIT). No more monolithic builds. ETA posted by SPLIT.
+  - (d) LEC class: DIE-HBM-61/LEC. Tool fix READY ~19:30 (dma_back 23550/23550 EQ), pc_ctrl result ~20:30, argmax RTL-gen class after that. RF1 builds of those 3 follow the LEC READY.
+  - Helpers live: 4 (LEC, SPLIT, RTL, RF1-BUILD).
