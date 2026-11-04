@@ -301,7 +301,10 @@ module dsfd_selt_c #(
     reg        seg_open;
     reg [KW-1:0] seg_k, k_r;
     reg [7:0]  seg_tag;
-    reg [4:0]  flt;
+    // LEC-EGN-1 11-03: fault bit 4 is never set (flt only ORs in {1'b0, ...}); make the constant structural
+    // (synthesis folded flt[4] / flt_rep[4]; the LEC reported them removed although not constant).
+    reg  [3:0]  flt_l;
+    wire [4:0]  flt = {1'b0, flt_l};
     reg        e_coll, e_kt, kld_r;
     reg [2*Q-1:0] qs;                        // the quarter each slice serves (from its lane's header)
     reg        coll_n;
@@ -406,7 +409,8 @@ module dsfd_selt_c #(
     reg        done_pend;
     reg  [9:0] cnt;
     reg  [4:0] cnt_add;                      // MRG_PIPE: the last take's lane count, added on the next edge
-    reg  [4:0] flt_rep;
+    reg  [3:0] flt_rep_l;                    // fault bits already reported (bit 4: constant 0, as flt)
+    wire [4:0] flt_rep = {1'b0, flt_rep_l};
     reg  [$clog2(PACE+1)-1:0] pc;
     wire       slot = (pc == 0);
     wire [4:0] flt_new = flt & ~flt_rep;
@@ -436,10 +440,10 @@ module dsfd_selt_c #(
     reg [511:0] o_d;
     always @(posedge ck[0] or negedge rst_n) begin
         if (!rst_n) begin
-            seg_open <= 1'b0; seg_k <= {KW{1'b0}}; seg_tag <= 8'd0; flt <= 5'd0; e_coll <= 1'b0; e_kt <= 1'b0;
+            seg_open <= 1'b0; seg_k <= {KW{1'b0}}; seg_tag <= 8'd0; flt_l <= 4'd0; e_coll <= 1'b0; e_kt <= 1'b0;
             k_r <= {KW{1'b0}}; kld_r <= 1'b0; qs <= {2'd3, 2'd2, 2'd1, 2'd0};
             ovf_seen <= 1'b0; rep_pend <= 2'd0; rep_n <= 1'b0; cq <= 2'd0; done_pend <= 1'b1; cnt <= 10'd0; cnt_add <= 5'd0;
-            flt_rep <= 5'd0; pc <= 0; o_v <= 1'b0; o_d <= 512'd0;
+            flt_rep_l <= 4'd0; pc <= 0; o_v <= 1'b0; o_d <= 512'd0;
         end else begin
             kld_r <= |s_acc;
             if (|s_acc) k_r <= seg_k;
@@ -458,7 +462,7 @@ module dsfd_selt_c #(
             end
             begin : fl
                 reg [2:0] lf; lf = lflt[2:0] | lflt[5:3] | lflt[8:6] | lflt[11:9];
-                flt <= flt | {1'b0, lf[2], e_kt, lf[1] | e_coll, lf[0]};
+                flt_l <= flt_l | {lf[2], e_kt, lf[1] | e_coll, lf[0]};
             end
             if (ovf) ovf_seen <= 1'b1;
             pc <= (pc == PACE - 1) ? 0 : pc + 1'b1;
@@ -468,7 +472,7 @@ module dsfd_selt_c #(
             if (slot) begin
                 if (|flt_new) begin
                     o_v <= 1'b1; o_d <= {4'd5, seg_tag, 484'd0, flt, 11'd0};
-                    flt_rep <= flt;
+                    flt_rep_l <= flt_l;
                 end else if (rep_pend != 0 && &s_ready) begin
                     o_v <= 1'b1; o_d <= {4'd7, seg_tag, 499'd0, rep_n};
                     rep_n <= ~rep_n;
