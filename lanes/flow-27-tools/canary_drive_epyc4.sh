@@ -6,7 +6,7 @@
 # Usage on intel2: canary_drive_epyc4.sh <run dir on epyc4> <mem GB> <threads> <src snapshot, only for a {src} recipe, else ->
 set -u
 R=$1; MEM=$2; TH=$3; SRC=${4:--}
-OT="$HOME/.local/bin/ot-run --crit --mem $MEM --threads $TH --priority die --hosts epyc4 --no-spill"
+OT="$HOME/.local/bin/ot-run --crit --mem $MEM --threads $TH --priority die --disk 30 --hosts epyc4 --no-spill"
 E="ssh -o ControlPath=none -o ServerAliveInterval=60 epyc4"
 $OT --dir "$R" -- bash "$R/job.sh"; echo "DRIVE job rc=$?"
 if ! $E "test -f $R/GENERATED"; then echo "DRIVE no GENERATED: no flow run"; exit 3; fi
