@@ -63,6 +63,7 @@ from pathlib import Path
 
 import plan_block_identity as BI
 import kit_resume as KR
+import wave_jobs as WJ
 
 # A main merge can happen during a long tick. Never release a merged fix with
 # older in-memory launch logic; the next ordinary tick imports the new package.
@@ -2842,13 +2843,22 @@ def cancel_class_volume(AP, cfg, st, notices):
     return n
 
 
+def attempt_root(r):
+    """the attempt's dir on its host (spec.json work), else its kit path; '' when neither is known"""
+    try:
+        return json.loads((Path(r["dir"]) / "spec.json").read_text())["work"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return (r.get("kit") or "").partition(":")[2]
+
+
 def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     """COORD 11-01 18:3x (KV kv3_io_ft pre-fix kits ran GRT 22.5 h after a newer fix superseded them): an attempt
     whose plan block is no longer in the die's current plan of record (plan_current=no) can never count, so it is
     stopped at the next tick -- a RUNNING/LAUNCHING wave unit (and its detached place client) and the autopilot
     route job of an ENQUEUED kit -- and marked CANCELLED class SUPERSEDED.  The current block is a different key
     and launches on its own.  Only dies with a cached current-plan probe are judged; die option cancel_superseded
-    false opts out; at most supersede_max_per_tick stops per tick (a mass stop is logged, not hidden)."""
+    false opts out; at most supersede_max_per_tick stops per tick (a mass stop is logged, not hidden).  The containers of a
+    stopped attempt are stopped on every fleet host too (WATCHDOG-1 11-03); watchdog.py is the net for a host missed here."""
     cur = current_keys(cfg, st)
     jobs = {}
     if ap_dir:
@@ -2858,6 +2868,7 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             jobs = {}
     cap = int(cfg.get("supersede_max_per_tick", DEFAULTS.get("supersede_max_per_tick", 20)))
     n = 0
+    roots = []
     for key, r in (st.get("items") or {}).items():
         die = r.get("die")
         d = (cfg.get("dies") or {}).get(die)
@@ -2886,12 +2897,18 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             for u in units:
                 if u:
                     AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+            roots.append(attempt_root(r))
         r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=time.time(),
                  reason=f"{what} on a superseded plan block (plan_current=no) stopped; the current block "
                         f"relaunches on its own key (COORD 11-01 18:3x)")
         notices.setdefault(die, []).append(f"{r.get('item')}@{r.get('attempt')} SUPERSEDED: {what} stopped")
         AP.log(f"KIT-WAVE CANCEL-SUPERSEDED {die}/{r.get('item')}@{r.get('attempt')} {what} units {units}")
         n += 1
+    if roots:
+        # the units above are hub clients; ot-run leaves a started command running on its host (HUNG-1103)
+        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
+        AP.log(f"KIT-WAVE CANCEL-SUPERSEDED remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
+               + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
     return n
 
 
