@@ -1,0 +1,267 @@
+{
+ "lane": "DIE-KV-58",
+ "rule": "GEOM-93 FAIL PLAN r2r, 12.20 one-block START transport",
+ "step_um": 340.0,
+ "types": {
+  "kv3_io_cor_v1": {
+   "origin_site": [
+    159.328,
+    12.0
+   ],
+   "W": 6,
+   "R": 4,
+   "writer": {
+    "ft0_o": {
+     "direct_um": 737.2,
+     "max_hop_um": 105.3,
+     "raw_hop_max_um": 60.2
+    },
+    "ft10_o": {
+     "direct_um": 743.6,
+     "max_hop_um": 106.2,
+     "raw_hop_max_um": 56.5
+    },
+    "ft12_o": {
+     "direct_um": 586.9,
+     "max_hop_um": 94.0,
+     "raw_hop_max_um": 155.2
+    },
+    "ft13_o": {
+     "direct_um": 1812.7,
+     "max_hop_um": 269.1,
+     "raw_hop_max_um": 141.5
+    },
+    "ft14_o": {
+     "direct_um": 1882.6,
+     "max_hop_um": 279.1,
+     "raw_hop_max_um": 125.6
+    },
+    "ft15_o": {
+     "direct_um": 1907.3,
+     "max_hop_um": 282.6,
+     "raw_hop_max_um": 136.1
+    },
+    "ft16_o": {
+     "direct_um": 1934.5,
+     "max_hop_um": 286.5,
+     "raw_hop_max_um": 145.4
+    },
+    "ft17_o": {
+     "direct_um": 1961.7,
+     "max_hop_um": 290.4,
+     "raw_hop_max_um": 151.9
+    },
+    "ft18_o": {
+     "direct_um": 1985.9,
+     "max_hop_um": 293.9,
+     "raw_hop_max_um": 169.0
+    },
+    "ft19_o": {
+     "direct_um": 2015.2,
+     "max_hop_um": 298.1,
+     "raw_hop_max_um": 143.8
+    },
+    "ft1_o": {
+     "direct_um": 738.4,
+     "max_hop_um": 105.5,
+     "raw_hop_max_um": 59.5
+    },
+    "ft20_o": {
+     "direct_um": 2044.4,
+     "max_hop_um": 302.2,
+     "raw_hop_max_um": 118.9
+    },
+    "ft21_o": {
+     "direct_um": 2068.8,
+     "max_hop_um": 305.7,
+     "raw_hop_max_um": 97.9
+    },
+    "ft22_o": {
+     "direct_um": 2093.0,
+     "max_hop_um": 309.2,
+     "raw_hop_max_um": 77.2
+    },
+    "ft23_o": {
+     "direct_um": 1096.1,
+     "max_hop_um": 156.6,
+     "raw_hop_max_um": 144.4
+    },
+    "ft24_o": {
+     "direct_um": 2117.2,
+     "max_hop_um": 312.6,
+     "raw_hop_max_um": 78.3
+    },
+    "ft2_o": {
+     "direct_um": 739.3,
+     "max_hop_um": 105.6,
+     "raw_hop_max_um": 59.0
+    },
+    "ft3_o": {
+     "direct_um": 739.5,
+     "max_hop_um": 105.6,
+     "raw_hop_max_um": 58.9
+    },
+    "ft6_o": {
+     "direct_um": 741.4,
+     "max_hop_um": 105.9,
+     "raw_hop_max_um": 57.7
+    },
+    "ft7_o": {
+     "direct_um": 452.4,
+     "max_hop_um": 64.6,
+     "raw_hop_max_um": 77.2
+    },
+    "ft8_o": {
+     "direct_um": 499.1,
+     "max_hop_um": 71.3,
+     "raw_hop_max_um": 80.4
+    },
+    "ft9_o": {
+     "direct_um": 742.7,
+     "max_hop_um": 106.1,
+     "raw_hop_max_um": 57.0
+    }
+   },
+   "reader": {
+    "ft0_i": {
+     "direct_um": 1032.0,
+     "max_hop_um": 243.6,
+     "raw_hop_max_um": 138.8
+    },
+    "ft10_i": {
+     "direct_um": 1587.9,
+     "max_hop_um": 354.7,
+     "raw_hop_max_um": 98.3
+    },
+    "ft11_i": {
+     "direct_um": 1694.8,
+     "max_hop_um": 395.4,
+     "raw_hop_max_um": 107.7
+    },
+    "ft12_i": {
+     "direct_um": 1639.1,
+     "max_hop_um": 365.0,
+     "raw_hop_max_um": 65.7
+    },
+    "ft13_i": {
+     "direct_um": 834.3,
+     "max_hop_um": 221.2,
+     "raw_hop_max_um": 36.4
+    },
+    "ft14_i": {
+     "direct_um": 1094.2,
+     "max_hop_um": 256.0,
+     "raw_hop_max_um": 131.0
+    },
+    "ft15_i": {
+     "direct_um": 1114.8,
+     "max_hop_um": 260.1,
+     "raw_hop_max_um": 114.5
+    },
+    "ft16_i": {
+     "direct_um": 977.7,
+     "max_hop_um": 232.7,
+     "raw_hop_max_um": 114.7
+    },
+    "ft17_i": {
+     "direct_um": 1121.3,
+     "max_hop_um": 261.4,
+     "raw_hop_max_um": 109.3
+    },
+    "ft18_i": {
+     "direct_um": 1141.4,
+     "max_hop_um": 265.4,
+     "raw_hop_max_um": 93.2
+    },
+    "ft19_i": {
+     "direct_um": 901.2,
+     "max_hop_um": 217.0,
+     "raw_hop_max_um": 54.0
+    },
+    "ft1_i": {
+     "direct_um": 1149.8,
+     "max_hop_um": 267.1,
+     "raw_hop_max_um": 86.5
+    },
+    "ft20_i": {
+     "direct_um": 1166.8,
+     "max_hop_um": 270.5,
+     "raw_hop_max_um": 72.9
+    },
+    "ft21_i": {
+     "direct_um": 1009.5,
+     "max_hop_um": 239.0,
+     "raw_hop_max_um": 140.2
+    },
+    "ft22_i": {
+     "direct_um": 1192.7,
+     "max_hop_um": 275.7,
+     "raw_hop_max_um": 70.3
+    },
+    "ft23_i": {
+     "direct_um": 820.4,
+     "max_hop_um": 220.5,
+     "raw_hop_max_um": 140.9
+    },
+    "ft24_i": {
+     "direct_um": 994.8,
+     "max_hop_um": 236.1,
+     "raw_hop_max_um": 180.6
+    },
+    "ft2_i": {
+     "direct_um": 1174.5,
+     "max_hop_um": 272.1,
+     "raw_hop_max_um": 66.7
+    },
+    "ft3_i": {
+     "direct_um": 1199.1,
+     "max_hop_um": 277.0,
+     "raw_hop_max_um": 71.6
+    },
+    "ft4_i": {
+     "direct_um": 1229.0,
+     "max_hop_um": 279.2,
+     "raw_hop_max_um": 82.1
+    },
+    "ft5_i": {
+     "direct_um": 1277.5,
+     "max_hop_um": 312.0,
+     "raw_hop_max_um": 93.9
+    },
+    "ft6_i": {
+     "direct_um": 1373.9,
+     "max_hop_um": 311.9,
+     "raw_hop_max_um": 130.8
+    },
+    "ft7_i": {
+     "direct_um": 1481.8,
+     "max_hop_um": 352.8,
+     "raw_hop_max_um": 122.4
+    },
+    "ft8_i": {
+     "direct_um": 1534.9,
+     "max_hop_um": 342.0,
+     "raw_hop_max_um": 74.5
+    },
+    "ft9_i": {
+     "direct_um": 1500.8,
+     "max_hop_um": 337.3,
+     "raw_hop_max_um": 96.5
+    }
+   },
+   "colv_band": {
+    "band": "ft5_i",
+    "rect_um": [
+     1144.8,
+     162.8918,
+     1194.48,
+     254.3958
+    ],
+    "col_v_at": [
+     1170.0,
+     192.5
+    ]
+   }
+  }
+ }
+}
