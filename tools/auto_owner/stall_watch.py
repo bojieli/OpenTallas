@@ -31,7 +31,7 @@ import argparse, json, os, re, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor
 
 LOCAL_NAME = os.environ.get('OT_HUB_NAME', 'epyc1')            # EPYC1-RETIRE 2026-10-26: hub host name (epyc1 -> intel2)
-DEFAULT_HOSTS = ['localhost'] + [h for h in ['epyc2', 'intel1', 'intel2'] if h != LOCAL_NAME]   # epyc3 retired 2026-10-25
+DEFAULT_HOSTS = ['localhost'] + [h for h in ['epyc2', 'intel1', 'intel2', 'epyc4'] if h != LOCAL_NAME]   # epyc3 retired 2026-10-25
 
 PROBE = r'''
 import os, re, json, time, subprocess
@@ -125,7 +125,8 @@ try:
             binds = [m['Source'] for m in c.get('Mounts', []) if m.get('Type') == 'bind' and m.get('RW', True)
                      and not m['Source'].startswith(('/tmp/.X11', '/var/run', '/run', '/etc', '/dev', '/sys', '/proc'))
                      and m['Source'] not in ('/', '/home', '/home/ubuntu', '/srv')]
-            conts[name] = {'name': name, 'start': t0, 'image': c.get('Config', {}).get('Image', ''), 'binds': binds}
+            conts[name] = {'name': name, 'start': t0, 'image': c.get('Config', {}).get('Image', ''), 'binds': binds,
+                           'work': [m['Source'] for m in c.get('Mounts', []) if m.get('Type') == 'bind' and m.get('RW', True) and m.get('Destination') == '/work']}
 except Exception as e:
     res['errors'].append('docker: %s' % e)
 for c in conts.values():
@@ -203,6 +204,13 @@ for u in units:
                     continue
         except OSError:
             pass
+    ppids = {}
+    for pid in pids:
+        try:
+            ppids[pid] = int(open('/proc/%d/stat' % pid).read().rsplit(')', 1)[1].split()[1])
+        except (OSError, IndexError, ValueError):
+            pass
+    orphan = bool(ppids) and all(pp == 1 or pp in ppids for pp in ppids.values())   # ot-run client gone: its remote shell died
     ev = {'mtime': 0.0, 'log': None, 'orfs': None}
     for f in set(wfiles):
         try:
@@ -218,7 +226,7 @@ for u in units:
     if ev2['mtime'] > ev['mtime']:
         ev['mtime'], ev['log'] = ev2['mtime'], ev2['log']
     res['scopes'].append({'unit': u, 'start': t0, 'cmd': cmd[:400], 'cwds': sorted(cwds)[:4], 'containers': names,
-                          'unnamed_docker': unnamed_docker, 'npids': len(pids), 'ev': ev})
+                          'unnamed_docker': unnamed_docker, 'npids': len(pids), 'ev': ev, 'orphan': orphan})
 print(json.dumps(res))
 '''
 
@@ -295,12 +303,14 @@ def analyse(probes, lanes, a, now):
             paths = [ev.get('log')] + s['cwds'] + [b for c in evs for b in c['binds']] + [s['cmd']]
             jobs.append({'kind': 'ot-run', 'id': s['unit'] + (' [' + ','.join(c['name'] for c in evs) + ']' if evs else ''),
                          'start': s['start'], 'ev': ev, 'paths': paths, 'cmd': s['cmd'],
+                         'wave_paths': [p for p in s['cwds'] + [b for c in evs for b in c['binds']] if p not in ('/', '/tmp', '/home/ubuntu') and '/wt/' not in p],
+                         'work': [w for c in evs for w in c.get('work', [])], 'client_gone': s.get('orphan', False),
                          'note': 'docker run w/o --name: container reported separately' if s['unnamed_docker'] and not evs else ''})
         for c in r['containers']:
             if c['name'] in claimed:
                 continue
             jobs.append({'kind': 'docker', 'id': c['name'], 'start': c['start'], 'ev': c['ev'], 'paths': [c['ev'].get('log')] + c['binds'],
-                         'cmd': c['image'], 'note': '' if c['binds'] else 'no RW bind mount: no log visible'})
+                         'wave_paths': c['binds'], 'work': c.get('work', []), 'client_gone': False, 'cmd': c['image'], 'note': '' if c['binds'] else 'no RW bind mount: no log visible'})
         for j in jobs:
             ev = j['ev']; o = ev.get('orfs') or {}
             start = j['start'] or now
@@ -316,7 +326,8 @@ def analyse(probes, lanes, a, now):
                 run = next((p for p in j['paths'] if p and '/srv/' in p), j['paths'][0] if j['paths'] else '')
             row = {'host': hn, 'kind': j['kind'], 'id': j['id'], 'lane': lane, 'dir': d, 'stage': o.get('stage', '-'),
                    'drt': drt, 'idle_s': idle, 'age_s': now - start if j['start'] else None, 'log': ev.get('log') or '-',
-                   'run': run or '-', 'last': o.get('last', ''), 'note': j['note'], 'cmd': j['cmd'][:160]}
+                   'run': run or '-', 'last': o.get('last', ''), 'note': j['note'], 'cmd': j['cmd'][:160],
+                   'wave_paths': j['wave_paths'], 'work': j['work'], 'client_gone': j['client_gone']}
             if idle > lim:
                 row['verdict'] = 'STALLED'
             elif o.get('running') and o.get('stage_start') and now - o['stage_start'] > a.stage_hours * 3600 and idle < lim:
