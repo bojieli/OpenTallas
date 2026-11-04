@@ -155,7 +155,7 @@ GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be P
 # or FAIL_PREBUILD before route.  Class default ON; a die opts out with "relay_bay_re": "".
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
-            "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
+            "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24, "geom_grt_wall_s": 1800,
             "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2", "epyc4"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
             # KW-RESUME-1 (OWNER 11-01 19:5x / COORD 20:0x default-on): a relaunch reuses the previous attempt's ORFS
@@ -1084,7 +1084,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "cland_pinslot": cland_pinslot_arg(d),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
-            "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
+            "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "geom_grt_wall_s": int(opt(cfg, die, "geom_grt_wall_s")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
@@ -1760,7 +1760,7 @@ def run_item(spec_path):
         _, ol = run("outline", remote(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
         chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
-               "grt": True, "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
+               "grt": True, "grt_wall_s": int(sp.get("geom_grt_wall_s", 1800)), "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
                + ["--title", f"{T} KIT-WAVE {sp['event']} 3_place"]}
         gd = f"{W}/geom"
         rc, txt = run("geom_cfg", idempotent=True, argv=remote(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
