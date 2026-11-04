@@ -2993,6 +2993,7 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
     an ot_dp_landing_origin[_s] or ot_dp_landing_relay instance; and every count-aligned u_cland_* ring in the bound RTL must be declared
     (no undeclared ring, no declared ring that the binder did not build).  None when the type lands nothing."""
     import copy
+    import clock_landings
     import gen_rtl
     ls = copy.deepcopy(lands.land_slots(tn))
     txt = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files if Path(f).suffix in (".sv", ".v"))
@@ -3033,7 +3034,9 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                         raise gen_rtl.GenError(f"type {tn}: land_slots {b}: copy {copy} is not one bound relay instance")
                     copies.append(cp)
                 v["copies"] = copies
-    extra = sorted(set(built) - set(rings))
+    # a FREG-1 ring is behind ordinary face registers (Landings.land_slots declares nothing for it)
+    freg = {r for r in built if (clock_landings.ring_write_reg(getattr(lands, "plan", None) or {}, tn, r) or {}).get("freg")}
+    extra = sorted(set(built) - set(rings) - freg)
     if extra:
         raise gen_rtl.GenError(f"type {tn}: bound count-aligned rings not declared by the landing sidecar: {extra[:5]}")
     return ls
