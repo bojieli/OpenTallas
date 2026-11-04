@@ -27,3 +27,13 @@ def test_recipes_carry_c12_files():
         files = r[core]["files"]
         for f in m.C12_FILES:
             assert (m.C12 + f) in files and (REPO / m.C12 / f).is_file()
+
+def test_committed_recipes_b2_carry_c12_files():
+    # KIT-WAVE d44v attempt_5 GEN_LINT: kits are built from recipes_b2.json, which must list the c12 files too.
+    import json
+    sys.path.insert(0, str(REPO / "tools/hbm_b2"))
+    import sk_ce_kit
+    b2 = json.loads((REPO / "physical/die_plan/hbm_arch_cores/recipes_b2.json").read_text())
+    for m in ("ot_hbm_hc_root_static__tailx_rest__v6bc7f2", "ot_hbm_hc_root_static__tailx_rest__v4f4566"):
+        for f in sk_ce_kit.C12_FILES:
+            assert sk_ce_kit.C12 + f in b2[m]["files"], (m, f)
