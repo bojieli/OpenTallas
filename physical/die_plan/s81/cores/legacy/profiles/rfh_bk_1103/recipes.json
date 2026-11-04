@@ -1,0 +1,24 @@
+{
+ "_doc": "DIE-S81-51/RF-H 11-03 S81-054 dsdv_bksel_q CONSERVATIVE form (OWNER 18:57): RFH 1 = negedge face flop on every input (lane, f_c, f_cr, rst; legacy IO contract in_min -40 / max 166.6, no sender lockup latch, 0 cycles on data), registered type-8 selects (no s0 raw-type broadcast), per-group posedge reset copies (+1 edge assert/release), OLL 2 negedge out-face (0 cycles); regional clock taps 4x4 (~2k sinks per entry); M2-M6; plan outline 648x648 / pins = rfc_bk_1103 plan copy (unchanged).",
+ "dsdv_bksel_q": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/profiles/rfh_bk_1103/spec",
+  "defines": [
+   "OT_HB_PINCOPY"
+  ],
+  "params": {
+   "OLL": 2,
+   "RFH": 1
+  },
+  "regional_taps": {
+   "nx": 4,
+   "ny": 4,
+   "split": "count",
+   "win_ps": 20
+  },
+  "orfs_vars": {
+   "SYNTH_BLACKBOXES": "ot_s81ph_native_sel_hist_bank",
+   "MAX_ROUTING_LAYER": "M6"
+  },
+  "suffix": "rfh"
+ }
+}

@@ -1,0 +1,9 @@
+DIE-S81-51/RF-H 11-03 S81-054 dsdv_bksel_q conservative form (epyc2, Verilator 5.050; outputs /srv/opentallas-scratch2/claude/die-s81-51/rfh/bksel_q/bench*)
+rtl/dsrom_sys/s81_dv/unit/bk/test/run_bksel_q_rfh.sh  lockstep RFH 0 (RF-C form, rst via one TB posedge register) vs RFH 1, both OLL 2, HQ quarter (kit defines):
+  seed 1: BKSELQ_RFH PASS cycles=4000 compared=3987 toggling_edges=3922 errors=0
+  seed 7: BKSELQ_RFH PASS cycles=4000 compared=3987 toggling_edges=3922 errors=0
+  mut face (OT_RFH_MUT_FACE, posedge face flops = every input one edge late): BKSELQ_RFH FAIL errors=3922 (caught)
+  mut sel  (OT_RFH_MUT_SEL, one registered select copy inverted): BKSELQ_RFH FAIL errors=23 (caught)
+  Note: random commands/credits give beats=0 on t_o valid; equivalence covers status t_s (toggling every edge) and t_o.
+Kit dsdv_bksel_q_rfh (plan copy rfc_bk_1103, recipes rfh_bk_1103): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0; regional_taps.tcl = main (CTS-DT-1).
+Parent contract: no pin-latency change (0 data edges); reset +1 edge inside the core; inputs on the legacy IO contract.

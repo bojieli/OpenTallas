@@ -1,0 +1,12 @@
+rfh_bk_1103: DIE-S81-51/RF-H 11-03 S81-054 dsdv_bksel_q CONSERVATIVE form (OWNER 18:57 directive), kit-gen profile.
+Plan: the rfc_bk_1103 plan COPY (plan_h2_2249 + ck M5 pin, GEOM-21), unchanged: outline 648x648, pins, macro sites. No die-local plan delta.
+RTL (copies of the rfc_bk_1103 / hist_pincopy_1101 profile files, opt-in parameters, RFH 0 / FACE 0 = the old form):
+  rtl/dsdv_bksel_c.sv     dsdv_bksel_q RFH 1: one negedge face flop per input pin (lane_nf, f_c_nf, f_cr_nf, rst_nf).
+  rtl/ot_s81ph_hq_tile.sv ot_s81ph_hq_in FACE 1: 53 registered type-8 selects + s0c/s0d kept copies decoded from lane
+                          at the s0 edge (no s0 raw-type broadcast); dsfd_selt_q_hq FACE 1: posedge reset copies
+                          rst_c_in / rst_c_s / rst_c_t per consumer group.
+Cycles: lane / f_c / f_cr / outputs 0 (sampled half an edge later, same rising edge into s0 / cq0); reset assert and
+release +1 edge (synchronous).  IO contract: plan-of-record legacy (in_min -40 / max 166.6, plain posedge sender, NO
+sender lockup latch; the RF-C half_cycle_inputs recipe is not used).
+Recipes: recipes.json (OLL 2, RFH 1, regional taps 4x4, M6).  Bench: rtl/dsrom_sys/s81_dv/unit/bk/test/run_bksel_q_rfh.sh;
+verdicts results/rfh_1103/bksel_q/verdicts.txt.
