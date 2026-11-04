@@ -125,7 +125,7 @@
  },
  "qkd_hr_ingest_eng": {
   "hard_children": "physical/die_plan/qwen_kvsys/cores/harden/qkd_hr_ingest_eng_macro_plan.json",
-  "source": "CODEX11-01 actual preflight found 32 SRAM instances of the single 32x128 master with no static placement; explicit core plan keeps 16 K/V bank pairs adjacent and 25.92um central clock streets.",
+  "source": "DIE-KV-64/RF-E 11-03 RF-KV1 RE-FORM (CORE_PREFLIGHT face_guard unregistered 290: w_addr/w_data/w_v from the write mux, busy/in_rdy): registered reset relay + registered write face (one-entry slice, private port banks, done held until its last sector left, fence-bounded done queue), slot kept 362.88 (fill 0.39) | was: CODEX11-01 actual preflight found 32 SRAM instances of the single 32x128 master with no static placement; explicit core plan keeps 16 K/V bank pairs adjacent and 25.92um central clock streets.",
   "timed_face": {
    "buses": [
     "busy",
@@ -139,13 +139,48 @@
     "r_v",
     "rd_data",
     "rd_v",
-    "w_addr",
-    "w_data",
-    "w_rdy",
-    "w_v"
+    "w_rdy"
    ],
    "ruling": "DIE-KV-61/hr 11-02 (COORD default DIE-KV-60/res 11-01 13:50: native boundary kept, no mask/no added cycle; closed as the core's timed face against the plan IO budget)",
-   "reason": "ingest engine SRAM-port / stream handshake faces (unregistered 290 / shared 757 / dropped 306; CODEX current4-v2 mapped FAIL); mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/die-kv-61-hr/census/<core>.json on the event28w_c efa6a9b9 kits"
+   "reason": "DIE-KV-64/RF-E 11-03 RF-KV1: w_v / w_addr / w_data are now registered port faces (rf_wrap out_slice); the remaining stream / descriptor handshake faces stay timed against the plan IO budget | was: ingest engine SRAM-port / stream handshake faces (unregistered 290 / shared 757 / dropped 306; CODEX current4-v2 mapped FAIL); mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/die-kv-61-hr/census/<core>.json on the event28w_c efa6a9b9 kits"
+  },
+  "rf_wrap": {
+   "resets": [
+    "rst_n"
+   ],
+   "out_slice": {
+    "v": "w_v",
+    "rdy": "w_rdy",
+    "data": [
+     "w_addr",
+     "w_data"
+    ],
+    "done": {
+     "v": "done_v",
+     "tag": "done_tag",
+     "cnt": "n_sectors",
+     "depth": 2,
+     "gate": {
+      "v": "d_v",
+      "rdy": "d_rdy",
+      "fence_bit": "d_data[7]"
+     }
+    },
+    "busy": "busy",
+    "rst": "rst_n"
+   },
+   "reset_hold": [
+    {
+     "v": "d_v",
+     "rdy": "d_rdy",
+     "rst": "rst_n"
+    },
+    {
+     "v": "in_v",
+     "rdy": "in_rdy",
+     "rst": "rst_n"
+    }
+   ]
   }
  },
  "qkd_kvs_ctl": {
