@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.prebuild_gate.v1",
- "kit": "/home/ubuntu/scratch-root/claude/die-hbm-61-tailx-probe/gk5_v6bc7f2",
+ "kit": "/home/ubuntu/scratch-root/claude/die-hbm-61-tailx-probe/gk6_v6bc7f2",
  "design": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
  "flow_status": [
   "GATE_FLOW",
@@ -10,43 +10,43 @@
   "GATE_STA",
   "rc=0"
  ],
- "cells": 124055,
+ "cells": 126926,
  "macros": 0,
- "stdcell_area_um2": 15238.7,
+ "stdcell_area_um2": 15666.5,
  "sta_stage": "place_resized",
  "period": 833.0,
  "groups": {
   "r2r": {
-   "slack": -46.0,
-   "start": "u_fcore.u_core.u_tail.g_c12.exp_.nint[0]$_DFF_P_/QN",
-   "end": "u_fcore.u_core.u_tail.g_c12.exp_.a_hi[15]$_DFF_P_/D"
+   "slack": -0.2,
+   "start": "u_fcore.u_core.u_tail.g_c12.exp_.m_t.genblk1.genblk1.genblk1.g_l6.u.u.y[23]$_DFF_PN0_/QN",
+   "end": "u_fcore.u_core.u_tail.g_c12.exp_.g_tabn.nint_r[2][6]$_DFF_P_/D"
   },
   "in2reg": {
-   "slack": 361.8,
+   "slack": 397.5,
    "start": "x_g_tail_0_u_t_u_tail_sink_rst_n",
-   "end": "u_fcore.u_core.u_tail.age[6]$_DFFE_PN0P_/RESETN"
+   "end": "u_fcore.u_core.u_tail.sink_fault$_DFFE_PN0P_/RESETN"
   },
   "reg2out": {
-   "slack": 583.0,
-   "start": "u_bout_x_g_tail_0_u_t_u_tail_sink_in_valid/q$_DFF_P_/QN",
-   "end": "x_g_tail_0_u_t_u_tail_sink_in_valid"
+   "slack": 582.8,
+   "start": "u_bout_x_g_tail_0_u_t_u_tail_sk_en_sk/q$_DFF_P_/QN",
+   "end": "x_g_tail_0_u_t_u_tail_sk_en_sk"
   },
   "in2out": null
  },
- "wns": -46.0,
- "r2r_endpoints_stage_over_583": 2184,
- "stage_ps": 879.0,
+ "wns": -0.2,
+ "r2r_endpoints_stage_over_583": 2256,
+ "stage_ps": 833.2,
  "stage_limit_ps": 583.1,
  "setup_limit_ps": 83.3,
  "checks": {
   "timing": {
    "ok": false,
-   "wns": -46.0,
+   "wns": -0.2,
    "sta_stage": "place_resized"
   },
   "cells": {
    "ok": true,
-   "cells": 124055
+   "cells": 126926
   },
   "memory": {
    "ok": true,
@@ -79,7 +79,7 @@
     "x_g_tail_0_u_t_u_tail_sink_rst_n"
    ],
    "landing_pins": {
-    "x_g_tail_0_u_t_u_tail_sink_rst_n": 811
+    "x_g_tail_0_u_t_u_tail_sink_rst_n": 820
    },
    "unregistered": [
     "x_g_tail_0_u_t_u_tail_sink_rst_n"
@@ -94,5 +94,5 @@
   "reset"
  ],
  "needs_stage_cut": true,
- "worst_path": "Startpoint: x_g_tail_0_u_t_u_tail_sink_rst_n (input port clocked by vclk)\nEndpoint: u_fcore.u_core.u_tail.age[6]$_DFFE_PN0P_\n          (recovery check against rising-edge clock clk)\nPath Group: asynchronous\nPath Type: max\n\nFanout  Delay   Time   Description\n-------------------------------------------------------------\n          0.0    0.0   clock vclk (rise edge)\n        250.0  250.0   clock network delay (ideal)\n        166.6  416.6 ^ input external delay\n     1    3.0  419.6 ^ x_g_tail_0_u_t_u_tail_sink_rst_n (in)\n     3   28.1  447.7 ^ input816/Y (BUFx8_ASAP7_75t_R)\n     4   92.0  539.6 ^ place8201/Y (BUFx3_ASAP7_75t_R)\n    14   44.6  584.2 ^ place8192/Y (BUFx6f_ASAP7_75t_R)\n    14   30.8  614.9 ^ place8190/Y (BUFx6f_ASAP7_75t_R)\n    64   88.3  703.3 ^ fanout8276/Y (BUFx3_ASAP7_75t_R)\n         41.3  744.6 ^ u_fcore.u_core.u_tail.age[6]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)\n               744.6   data arrival time\n\n        833.0  833.0   clock clk (rise edge)\n        250.0 1083.0   clock network delay (ideal)\n          0.0 1083.0   clock reconvergence pessimism\n              1083.0 ^ u_fcore.u_core.u_tail.age[6]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)\n         23.4 1106.4   library recovery time\n              1106.4   data required time\n-------------------------------------------------------------\n              1106.4   data required time\n              -744.6   data arrival time\n-------------------------------------------------------------\n               361.8   slack (MET)\n\n\nStartpoint: u_fcore.u_core.u_tail.g_c12.exp_.nint[0]$_DFF_P_\n            (rising edge-triggered flip-flop clocked by clk)\nEndpoint: u_fcore.u_core.u_tail.g_c12.exp_.a_hi[15]$_DFF_P_\n          (rising edge-triggered flip-flop clocked by clk)\nPath Group: clk\nPath Type: max\n\nFanout  Delay   Time   Description\n-------------------------------------------------------------\n          0.0    0.0   clock clk (rise edge)\n        250.0  250.0   clock network delay (ideal)\n          0.0  250.0 ^ u_fcore.u_core.u_tail.g_c12.exp_.nint[0]$_DFF_P_/CLK (DFFHQNx3_ASAP7_75t_R)\n     2   81.6  331.6 ^ u_fcore.u_core.u_tail.g_c12.exp_.nint[0]$_DFF_P_/QN (DFFHQNx3_ASAP7_75t_R)\n     1   50.5  382.2 ^ place7698/Y (BUFx10_ASAP7_75t_R)\n    35   73.3  455.4 ^ fanout8349/Y (BUFx2_ASAP7_75t_R)\n    41  112.5  567.9 ^ fanout8348/Y (BUFx2_ASAP7_75t_R)\n     1   42.0  609.9 ^ place7697/Y (BUFx6f_ASAP7_75t_R)\n    38   81.6  691.5 ^ fanout8321/Y (BUFx2_ASAP7_75t_R)\n    64  146.5  838.0 ^ fanout8320/Y (BUFx2_ASAP7_75t_R)\n     5   84.5  922.5 v _134283_/Y (NOR2x1_ASAP7_75t_R)\n     2   41.6  964.1 v _134284_/Y (AO21x1_ASAP7_75t_R)\n     1   22.5  986.6 v _138395_/Y (AO21x1_ASAP7_75t_R)\n     1   30.8 1017.4 v _138396_/Y (OR3x1_ASAP7_75t_R)\n     1   28.3 1045.7 v _138399_/Y (AO221x1_ASAP7_75t_R)\n     1   35.3 1081.0 v _138400_/Y (OA211x2_ASAP7_75t_R)\n     1   39.0 1119.9 v _138401_/Y (OR3x1_ASAP7_75t_R)\n          0.6 1120.6 v u_fcore.u_core.u_tail.g_c12.exp_.a_hi[15]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)\n              1120.6   data arrival time\n\n        833.0  833.0   clock clk (rise edge)\n        250.0 1083.0   clock network delay (ideal)\n          0.0 1083.0   clock reconvergence pessimism\n              1083.0 ^ u_fcore.u_core.u_tail.g_c12.exp_.a_hi[15]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)\n         -8.4 1074.6   library setup time\n              1074.6   data required time\n-------------------------------------------------------------\n              1074.6   data required time\n              -1120.6   data arrival time\n-------------------------------------------------------------\n               -46.0   slack (VIOLATED)\n\n\nStartpoint: u_bout_x_g_tail_0_u_t_u_tail_sink_in_valid/q$_DFF_P_\n            (rising edge-triggered flip-flop clocked by clk)\nEndpoint: x_g_tail_0_u_t_u_tail_sink_in_valid (output port clocked by vclk)\nPath Group: vclk\nPath Type: max\n\nFanout  Delay   Time   Description\n-------------------------------------------------------------\n          0.0    0.0   clock clk (rise edge)\n        250.0  250.0   clock network delay (ideal)\n          0.0  250.0 ^ u_bout_x_g_tail_0_u_t_u_tail_sink_in_valid/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)\n     1   51.2  301.2 v u_bout_x_g_tail_0_u_t_u_tail_sink_in_valid/q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)\n     1    9.2  310.4 ^ u_bout_x_g_tail_0_u_t_u_tail_sink_in_valid/_1_/Y (INVx3_ASAP7_75t_R)\n     1   22.5  332.9 ^ output4243/Y (BUFx2_ASAP7_75t_R)\n          0.5  333.4 ^ x_g_tail_0_u_t_u_tail_sink_in_valid (out)\n               333.4   data arrival time\n\n        833.0  833.0   clock vclk (rise edge)\n        250.0 1083.0   clock network delay (ideal)\n          0.0 1083.0   clock reconvergence pessimism\n       -166.6  916.4   output external delay\n               916.4   data required time\n-------------------------------------------------------------\n               916.4   data required time\n              -333.4   data arrival time\n-------------------------------------------------------------\n               583.0   slack (MET)\n\n\n"
+ "worst_path": "Startpoint: x_g_tail_0_u_t_u_tail_sink_rst_n (input port clocked by vclk)\nEndpoint: u_fcore.u_core.u_tail.sink_fault$_DFFE_PN0P_\n          (recovery check against rising-edge clock clk)\nPath Group: asynchronous\nPath Type: max\n\nFanout  Delay   Time   Description\n-------------------------------------------------------------\n          0.0    0.0   clock vclk (rise edge)\n        250.0  250.0   clock network delay (ideal)\n        166.6  416.6 ^ input external delay\n     1    3.0  419.6 ^ x_g_tail_0_u_t_u_tail_sink_rst_n (in)\n     3   28.0  447.6 ^ input825/Y (BUFx8_ASAP7_75t_R)\n     4   73.6  521.2 ^ place8003/Y (BUFx3_ASAP7_75t_R)\n     2   40.9  562.1 ^ place7995/Y (BUFx3_ASAP7_75t_R)\n    16   28.3  590.4 ^ place7994/Y (BUFx10_ASAP7_75t_R)\n    64  104.5  695.0 ^ fanout8044/Y (BUFx3_ASAP7_75t_R)\n         13.5  708.5 ^ u_fcore.u_core.u_tail.sink_fault$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)\n               708.5   data arrival time\n\n        833.0  833.0   clock clk (rise edge)\n        250.0 1083.0   clock network delay (ideal)\n          0.0 1083.0   clock reconvergence pessimism\n              1083.0 ^ u_fcore.u_core.u_tail.sink_fault$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)\n         23.0 1106.0   library recovery time\n              1106.0   data required time\n-------------------------------------------------------------\n              1106.0   data required time\n              -708.5   data arrival time\n-------------------------------------------------------------\n               397.5   slack (MET)\n\n\nStartpoint: u_fcore.u_core.u_tail.g_c12.exp_.m_t.genblk1.genblk1.genblk1.g_l6.u.u.y[23]$_DFF_PN0_\n            (rising edge-triggered flip-flop clocked by clk)\nEndpoint: u_fcore.u_core.u_tail.g_c12.exp_.g_tabn.nint_r[2][6]$_DFF_P_\n          (rising edge-triggered flip-flop clocked by clk)\nPath Group: clk\nPath Type: max\n\nFanout  Delay   Time   Description\n-------------------------------------------------------------\n          0.0    0.0   clock clk (rise edge)\n        250.0  250.0   clock network delay (ideal)\n          0.0  250.0 ^ u_fcore.u_core.u_tail.g_c12.exp_.m_t.genblk1.genblk1.genblk1.g_l6.u.u.y[23]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)\n     2   63.2  313.2 v u_fcore.u_core.u_tail.g_c12.exp_.m_t.genblk1.genblk1.genblk1.g_l6.u.u.y[23]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)\n    42   43.6  356.8 v place7491/Y (BUFx6f_ASAP7_75t_R)\n     2   17.8  374.6 ^ _094470_/Y (INVx2_ASAP7_75t_R)\n     5   34.4  409.0 v _178401_/CON (HAxp5_ASAP7_75t_R)\n    15   70.8  479.8 ^ _096623_/Y (XOR2x2_ASAP7_75t_R)\n     2   36.7  516.4 ^ _163879_/Y (AND3x1_ASAP7_75t_R)\n     2   27.7  544.2 ^ _167142_/Y (XNOR2x2_ASAP7_75t_R)\n     6   32.4  576.6 ^ _167195_/Y (AND2x2_ASAP7_75t_R)\n     1   33.0  609.6 ^ _167201_/Y (AO32x1_ASAP7_75t_R)\n     1   10.5  620.1 v _167202_/Y (INVx1_ASAP7_75t_R)\n     1   35.4  655.5 v _167209_/Y (OR4x1_ASAP7_75t_R)\n     1   36.8  692.4 v _167212_/Y (OR4x1_ASAP7_75t_R)\n     1   36.3  728.7 v _167213_/Y (AO32x1_ASAP7_75t_R)\n     4   50.8  779.4 ^ _178070_/CON (HAxp5_ASAP7_75t_R)\n     1   39.6  819.0 v _114471_/Y (INVx1_ASAP7_75t_R)\n     2   36.4  855.4 ^ _178399_/CON (HAxp5_ASAP7_75t_R)\n     2   23.6  879.0 v _178399_/SN (HAxp5_ASAP7_75t_R)\n     2   34.1  913.1 v _096795_/Y (OR2x2_ASAP7_75t_R)\n     2   23.3  936.4 ^ _178578_/CON (HAxp5_ASAP7_75t_R)\n     2   17.3  953.7 v _096787_/Y (INVx1_ASAP7_75t_R)\n     2   42.3  996.0 v _096788_/Y (OA211x2_ASAP7_75t_R)\n     1   23.6 1019.6 v _096790_/Y (AO21x1_ASAP7_75t_R)\n     8   44.6 1064.2 ^ _096791_/Y (XOR2x2_ASAP7_75t_R)\n          0.5 1064.7 ^ u_fcore.u_core.u_tail.g_c12.exp_.g_tabn.nint_r[2][6]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)\n              1064.7   data arrival time\n\n        833.0  833.0   clock clk (rise edge)\n        250.0 1083.0   clock network delay (ideal)\n          0.0 1083.0   clock reconvergence pessimism\n              1083.0 ^ u_fcore.u_core.u_tail.g_c12.exp_.g_tabn.nint_r[2][6]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)\n        -18.4 1064.6   library setup time\n              1064.6   data required time\n-------------------------------------------------------------\n              1064.6   data required time\n              -1064.7   data arrival time\n-------------------------------------------------------------\n                -0.2   slack (VIOLATED)\n\n\nStartpoint: u_bout_x_g_tail_0_u_t_u_tail_sk_en_sk/q$_DFF_P_\n            (rising edge-triggered flip-flop clocked by clk)\nEndpoint: x_g_tail_0_u_t_u_tail_sk_en_sk (output port clocked by vclk)\nPath Group: vclk\nPath Type: max\n\nFanout  Delay   Time   Description\n-------------------------------------------------------------\n          0.0    0.0   clock clk (rise edge)\n        250.0  250.0   clock network delay (ideal)\n          0.0  250.0 ^ u_bout_x_g_tail_0_u_t_u_tail_sk_en_sk/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)\n     1   51.4  301.4 v u_bout_x_g_tail_0_u_t_u_tail_sk_en_sk/q$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)\n     1    9.3  310.7 ^ u_bout_x_g_tail_0_u_t_u_tail_sk_en_sk/_1_/Y (INVx3_ASAP7_75t_R)\n     1   22.4  333.1 ^ output4253/Y (BUFx2_ASAP7_75t_R)\n          0.5  333.6 ^ x_g_tail_0_u_t_u_tail_sk_en_sk (out)\n               333.6   data arrival time\n\n        833.0  833.0   clock vclk (rise edge)\n        250.0 1083.0   clock network delay (ideal)\n          0.0 1083.0   clock reconvergence pessimism\n       -166.6  916.4   output external delay\n               916.4   data required time\n-------------------------------------------------------------\n               916.4   data required time\n              -333.6   data arrival time\n-------------------------------------------------------------\n               582.8   slack (MET)\n\n\n"
 }

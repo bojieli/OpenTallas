@@ -1,19 +1,19 @@
 core	port_or_bus	plus_cycles	note
-ot_hbm_hc_root_static__tailx_rest__v4f4566	result_v	+70	exact, 70 edges later (lockstep vs pre-RE-FORM RTL); core latency L 506 -> 576 edges
-ot_hbm_hc_root_static__tailx_rest__v4f4566	result[767:0]	+70	exact, 70 edges later
-ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_valid	+70	sink launch age 198 -> SKL 268 (= 198 + 10 x SDIV 7, wrap-aligned so the shift is exact for every launch phase)
-ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_e[511:0]	+70	exact on every sk_in_valid edge
-ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_ready,sk_out_valid,sk_fault,sk_y	+70	sink-side inputs are consumed 70 edges later (same offset from sk_in_valid; CAP 299 unchanged)
+ot_hbm_hc_root_static__tailx_rest__v4f4566	result_v	+84	exact, 84 edges later (lockstep vs pre-RE-FORM RTL); core latency L 506 -> 590 edges
+ot_hbm_hc_root_static__tailx_rest__v4f4566	result[767:0]	+84	exact, 84 edges later
+ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_valid	+84	sink launch age 198 -> SKL 282 (= 198 + 12 x SDIV 7, wrap-aligned so the shift is exact for every launch phase)
+ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_e[511:0]	+84	exact on every sk_in_valid edge
+ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_ready,sk_out_valid,sk_fault,sk_y	+84	sink-side inputs are consumed 84 edges later (same offset from sk_in_valid; CAP 299 unchanged)
 ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_en_sk	0	free-running 1-in-7 enable, unchanged
-ot_hbm_hc_root_static__tailx_rest__v4f4566	fault	+70	never earlier than before; equal at every result_v
-ot_hbm_hc_root_static__tailx_rest__v4f4566	launch,mixes,bases,scales	0	sampled on the launch edge (registered at the face, loaded one edge later; internal only), unchanged; min launch spacing (busy) 506 -> 576
-ot_hbm_hc_root_static__tailx_rest__v4f4566	(internal) u_tail EREADY	+69	197 -> 266: launch-load register (+1, P1 1 -> 2), operand register (+1/phase), c12 units mul/add LAT 3 -> 6, exp 49 -> 94, two-stage max4
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	result_v	+70	exact, 70 edges later (lockstep vs pre-RE-FORM RTL); core latency L 506 -> 576 edges
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	result[767:0]	+70	exact, 70 edges later
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_valid	+70	sink launch age 198 -> SKL 268 (= 198 + 10 x SDIV 7, wrap-aligned so the shift is exact for every launch phase)
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_e[511:0]	+70	exact on every sk_in_valid edge
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_ready,sk_out_valid,sk_fault,sk_y	+70	sink-side inputs are consumed 70 edges later (same offset from sk_in_valid; CAP 299 unchanged)
+ot_hbm_hc_root_static__tailx_rest__v4f4566	fault	+84	never earlier than before; equal at every result_v
+ot_hbm_hc_root_static__tailx_rest__v4f4566	launch,mixes,bases,scales	0	sampled on the launch edge (registered at the face, loaded one edge later; internal only), unchanged; min launch spacing (busy) 506 -> 590
+ot_hbm_hc_root_static__tailx_rest__v4f4566	(internal) u_tail EREADY	+81	197 -> 278: launch-load register (+1, P1 1 -> 2), operand register (+1/phase), c12 units mul LAT 3 -> 6, add LAT 3 -> 7 (opt-in _l7x cut set), exp 49 -> 102 (LA 7; n table from 8 kept n copies, +0), two-stage max4
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	result_v	+84	exact, 84 edges later (lockstep vs pre-RE-FORM RTL); core latency L 506 -> 590 edges
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	result[767:0]	+84	exact, 84 edges later
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_valid	+84	sink launch age 198 -> SKL 282 (= 198 + 12 x SDIV 7, wrap-aligned so the shift is exact for every launch phase)
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_e[511:0]	+84	exact on every sk_in_valid edge
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_ready,sk_out_valid,sk_fault,sk_y	+84	sink-side inputs are consumed 84 edges later (same offset from sk_in_valid; CAP 299 unchanged)
 ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_en_sk	0	free-running 1-in-7 enable, unchanged
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	fault	+70	never earlier than before; equal at every result_v
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	launch,mixes,bases,scales	0	sampled on the launch edge (registered at the face, loaded one edge later; internal only), unchanged; min launch spacing (busy) 506 -> 576
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	(internal) u_tail EREADY	+69	197 -> 266: launch-load register (+1, P1 1 -> 2), operand register (+1/phase), c12 units mul/add LAT 3 -> 6, exp 49 -> 94, two-stage max4
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	fault	+84	never earlier than before; equal at every result_v
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	launch,mixes,bases,scales	0	sampled on the launch edge (registered at the face, loaded one edge later; internal only), unchanged; min launch spacing (busy) 506 -> 590
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	(internal) u_tail EREADY	+81	197 -> 278: launch-load register (+1, P1 1 -> 2), operand register (+1/phase), c12 units mul LAT 3 -> 6, add LAT 3 -> 7 (opt-in _l7x cut set), exp 49 -> 102 (LA 7; n table from 8 kept n copies, +0), two-stage max4
