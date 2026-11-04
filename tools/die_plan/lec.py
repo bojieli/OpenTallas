@@ -469,7 +469,12 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
           # zq[5:2] address register became 4 unnamed gold latches, so every oa bit was UNPROVEN); the reference keeps
           # the RTL registers as written and an asynchronous read port
-          "memory -nomap -nordff", "memory_map", "opt_expr -keepdc", "opt_clean",
+          # OT_LEC_GOLD_NOWIDEN=1 (opt-in, DIE-HBM-60/LEC C8 11-03): -nowiden keeps one memory word per RTL element.
+          # Widened, an unpacked array with a non-zero base (HBM pgslice ot_hbm_su_static_ins r[1:DMAX], 120 b) became
+          # 480-bit words r[w][b] (element 4w + b/120), so the gold name r[1][b] (element 4..7) was paired with the
+          # gate's element r[1][b] (529 'differ', element 1 gold-only as r[0][120..]); naming only, no semantics
+          "memory -nomap -nordff" + (" -nowiden" if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1" else ""),
+          "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
     return "\n".join(s + seq_tail(out, lecff, split_seq(env))) + "\n"
 
@@ -2412,9 +2417,16 @@ def renamed(L, log, words=4, packed=frozenset()):
             bases[mm.group(1)].append(k)
     hit = []
     for b, ks in bases.items():
+        bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
+        # one surviving gate bit of a narrowed vector (hcp nout_r = 24: gate nout_r[1] is the RTL's bit 4): no second bit
+        # to compare, so a lone disagreeing name with RTL bits the gate lacks is not trusted, packed or not.  Re-keying
+        # only proposes: every compare point is still proved, and the by-name pair stays a candidate at the fixpoint.
+        if len(bad) == 1 == len(ks) and any(IDX.match(g) and IDX.match(g).group(1) == b for g in L.gonly):
+            hit.append(b)
+            log.append(f"renamed: {b} (its only gate bit {bad[0]} disagrees and the gate lacks the other RTL bits)")
+            continue
         if b in packed:
             continue                           # declared packed bit indices are shared by both frontends
-        bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
         if len(bad) < 2:
             continue
         tsig = {}
@@ -5129,6 +5141,21 @@ def alias_arrays(L, log, words=4, work=None):
                           f"gate {len(t) - len(best[1])} left to correspondence" if common else ""))
 
 
+def merged_reproposals(L, log, tried):
+    """A merged twin whose proposal fell with a wrong constant (HBM kshare u_cmd.rd_bin[2], DIE-HBM-62: simulation never
+    fills the FIFO, so rd_gray[2] looks constant; that constant falls in round 0 and takes rd_bin[2] == rd_gray[2] with
+    it, and rd_bin[2] then stayed free -> rd_gray[1], rd_gray[2] differ).  Propose the pair again at the fixpoint, at
+    most twice per pair; the induction proves it like every other hypothesis.  -> any proposed."""
+    n = 0
+    for k, c in getattr(L, "merged_choice", {}).items():
+        if ("gold", k) not in L.hyp and tried[("gold", k, c, 0)] < 2:
+            L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+            n += 1
+    if n:
+        log.append(f"merged twins re-proposed at the fixpoint: {n}")
+    return n > 0
+
+
 def merged_proposals(L, log, cap=4096):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
@@ -5240,6 +5267,7 @@ def merged_proposals(L, log, cap=4096):
                 if not pending[k]:
                     del pending[k]                   # none agrees: keep the first (refinement drops it)
     n_dis = sum(1 for k, c in choice.items() if len(cands[k]) > 1 and c != cands[k][0])
+    L.merged_choice = {**getattr(L, "merged_choice", {}), **choice}
     for k, c in choice.items():
         L.hyp[("gold", k)] = ("eq", "gold", c, 0)
         n += 1
@@ -5736,6 +5764,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 continue
             if renamed_identity_closure(L, log, traces, tried) and surviving_change():
                 continue
+            if merged_reproposals(L, log, tried) and surviving_change():
+                continue
             if L.hyp == before or not adding:
                 return
             continue
@@ -5852,6 +5882,21 @@ def _and_leaves(d, lit, cap=64, nodes=False):
     return out + inner if nodes else out
 
 
+def _live_term(d, lit, cap=16):
+    """An OR literal with exactly one term that is not structurally false -> that term.  An async-reset flop after
+    async2sync reads D = OR(AND(rst_n, ld), AND(!rst_n, 0)) and aigmap keeps the AND with 0, so its load condition
+    sits behind an inverted node that _and_leaves does not expand."""
+    base = d["I"] + d["L"] + 1
+    for _ in range(cap):
+        if not (lit & 1) or (lit >> 1) < base:
+            return lit
+        live = [t for t in (y ^ 1 for y in _and_leaves(d, lit ^ 1)) if 0 not in _and_leaves(d, t)]
+        if len(live) != 1:
+            return lit
+        lit = live[0]
+    return lit
+
+
 def loaded_proposals(L, log, cands=None, cap=20000):
     """Automatic loaded-valid hints (KIT-WAVE-16 11-01, LEC NOT EQUIVALENT class x10: HBM g_ld3k p1/p2/q2, kshare,
     QC coll_n e3, HEAD beat_link hold).  A gold-only RTL register with no reset that holds itself until a load with
@@ -5862,7 +5907,7 @@ def loaded_proposals(L, log, cands=None, cap=20000):
     only PROPOSES such hints (the commercial 'user match', untrusted): the hold term of D(k) (the AND term that
     reads Q(k)) names the load condition en = NOT(another leaf); a guard is a gold register g whose next state
     implies en, directly (an AND leaf of D(g): a valid delayed from the load, ldp_v <= ld_e) or sticky (a leaf
-    OR(Q(g), en): v <= v | ld), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
+    OR(Q(g) & hold, en): v <= v | ld, also with a clear term, wq_pv), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
     same induction (guard' -> D(k) == c and not X), refuses a guard true at reset, and drops a wrong one; a read of
     k outside its guard sees the free value and still differs.  Nothing is assumed: no X == c, no waiver.
     cands: {gold key: c} (default: the gold-only constants noreset_filter dropped). -> hint list."""
@@ -5888,16 +5933,27 @@ def loaded_proposals(L, log, cands=None, cap=20000):
         if rv not in (0, 1):
             continue
         val = 1 - rv                      # the guard value that is definitely false in the reset state
-        nxt = gc[g] ^ (val ^ 1)           # literal true iff g' == val
-        for leaf in _and_leaves(d, nxt, nodes=True):
+        nxt = _live_term(d, gc[g] ^ (val ^ 1))    # literal true iff g' == val
+        leaves = _and_leaves(d, nxt, nodes=True)
+        # a leaf can itself be an async-reset mux (ldq_v <= ldp_v, read through rst_n ? ldp_v : 0): g' implies its term
+        for leaf in list(leaves):
+            live = _live_term(d, leaf)
+            if live != leaf:
+                leaves += _and_leaves(d, live, nodes=True)
+        for leaf in leaves:
             imp[leaf].append((g, val))    # g' == val -> leaf
             v = leaf >> 1
             if (leaf & 1) and v >= base:  # leaf = OR(NOT y_i): sticky form OR(g == val, en)
                 ys = [y ^ 1 for y in _and_leaves(d, leaf ^ 1)]
                 own = q ^ (val ^ 1)
-                rest = [y for y in ys if y != own]
-                if len(rest) == 1 and len(ys) == 2:
-                    imp[rest[0]].append((g, val))
+                # g' = hold term(s) that read Q(g) | load term(s): every load term implies each of its AND leaves
+                loads = [y for y in ys if own not in _and_leaves(d, y)]
+                if loads and len(loads) < len(ys):
+                    common = set(_and_leaves(d, loads[0], nodes=True))
+                    for y in loads[1:]:
+                        common &= set(_and_leaves(d, y, nodes=True))
+                    for x in common:
+                        imp[x].append((g, val))
     hints, nog = [], 0
     for k, c in sorted(cands.items()):
         q, dk = gp[k], gc[k]
@@ -6908,6 +6964,8 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_EARLY_COMPARE=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
+    if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1":
+        cmd += ["-e", "OT_LEC_GOLD_NOWIDEN=1"]
     for k in ("OT_LEC_RAWPREFIX_S", "OT_LEC_RAWPREFIX_ANDS"):
         if k in os.environ:
             cmd += ["-e", f"{k}={os.environ[k]}"]
@@ -7038,6 +7096,25 @@ PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_CO
                  "OT_LEC_ENABLE_FILL_GUARD")
 
 
+def nowiden_retry(r, out, run):
+    """A failed run whose gold memories were widened (one word packs several RTL elements: pgslice lane_exp0_id r[1:DMAX],
+    gold r[1][b] pairs by name with another gate element) runs once more with one gold word per element.  Each run is
+    a complete proof of its own; the second verdict replaces the first only when it is EQUIVALENT."""
+    log = out / "gold.ys.log"
+    if r.get("verdict") != "NOT EQUIVALENT" or os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1" \
+            or not log.is_file() or "Merging ports" not in log.read_text(errors="replace"):
+        return r
+    os.environ["OT_LEC_GOLD_NOWIDEN"] = "1"
+    try:
+        r2 = run()
+    finally:
+        del os.environ["OT_LEC_GOLD_NOWIDEN"]
+    keep, other = (r2, r) if r2.get("verdict") == "EQUIVALENT" else (r, r2)
+    keep["nowiden_retry"] = dict(verdict=other.get("verdict"), counts=other.get("counts"), widened=keep is r)
+    (out / "lec.json").write_text(json.dumps(keep, indent=1) + "\n")
+    return keep
+
+
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
@@ -7079,7 +7156,8 @@ def main(argv=None):
                   f"({r.get('t_total_s')} s)")
         return rc
     pm = json.loads(Path(a.port_map).read_text()) if a.port_map else None
-    r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
+    run = lambda: check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
+    r = nowiden_retry(run(), Path(a.out or Path(a.kit) / "lec"), run)
     c = r.get("counts", {})
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "
