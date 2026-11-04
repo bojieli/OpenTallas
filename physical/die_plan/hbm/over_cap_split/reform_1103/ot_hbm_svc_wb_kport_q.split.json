@@ -24,8 +24,8 @@
    "face_flops": 9717,
    "pins": 9721,
    "outline_um": [
-    475.2,
-    77.76
+    544.32,
+    95.04
    ],
    "place_density": 0.55
   },
@@ -38,8 +38,8 @@
    "face_flops": 3266,
    "pins": 3270,
    "outline_um": [
-    112.32,
-    397.44
+    129.6,
+    457.92
    ],
    "place_density": 0.65,
    "strap": "strap_bsel[1:0] tied at the parent, one master"
@@ -98,7 +98,8 @@
   "limits": "one stimulus set; external w_k pin handshake through the kit face shell is not modelled by SEAM; no LEC against the uncut core"
  },
  "open": [
-  "util above the 0.45 target: hub ~48%, root ~55% of free area",
+  "slot grown to 544.32x552.96 after GPL-0301; estimated util of free area root 0.45, hub 0.46",
+  "street_reach 432/415 um on q1 and 492 um on u_mu_fused_11 (limit 400), advisory",
   "hub ~24k hbm_clk sinks on one entry, above the 5k target",
   "die GRT not run with this form"
  ]

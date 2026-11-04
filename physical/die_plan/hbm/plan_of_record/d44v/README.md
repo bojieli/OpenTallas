@@ -319,11 +319,12 @@ Builder step: `mk_split.py p/$OUT split_kport/split_kport.json split_kport --onl
 
 | design | per core | tile | pins | cells (synth, no face shell) | macros |
 |---|---|---|---|---|---|
-| ot_hbm_svc_wb_kp_hub | 1 | 475.2 x 77.76, N band | 9721 | 138,295 | 0 |
-| ot_hbm_svc_wb_kp_root (one master, strap_bsel[1:0]) | 4 | 112.32 x 397.44, streets 8.64 | 3270 | 61,049 | 8 x 128x256 |
+| ot_hbm_svc_wb_kp_hub | 1 | 544.32 x 95.04, N band | 9721 | 138,295 | 0 |
+| ot_hbm_svc_wb_kp_root (one master, strap_bsel[1:0]) | 4 | 129.6 x 457.92, streets 8.64 | 3270 | 61,049 | 8 x 128x256 |
 
+- **Slot.** Grown from 475.2 x 475.2 to 544.32 x 552.96 after kport_root GPL-0301 (153%: fixed 34465, movable 8971 um2 in a 40311 core). Origins: q0 (1140.48, 3188.16), q1 (5391.36, 2989.44) in q_hub_nw and q_hub_ne. Estimated util of free area: root 0.45, hub 0.46.
 - **Form.** Root port j carries only PCs with pc[1:0]==j, 4 credit ports per root. The 32->16 crossbar is gone. The hub has 16 port FIFOs, a per-PC 4:1 pick and one output register per PC.
 - **Cycles.** 0 on fixed-schedule pins. K write path adds edges inside the variable wait for wa; flagged for TOK-VERIFY.
 - **Proof.** Transaction lockstep bench `over_cap_split/reform_1103/bench/kport/run.sh`; not LEC, because internal K timing changes.
-- **Checks.** Plan-time GEOM new FAIL 0. G0C keeps 3 core_faces port errors on the hub (E face, partners to the S, S face full) plus the summary lines, see g0/g0_diff_d44v_p6_kport.txt. No track_offset errors.
+- **Checks.** Plan-time GEOM new FAIL 0. G0C keeps 3 core_faces port errors on the hub (E face, partners to the S, S face full) plus the summary lines, see g0/g0_diff_d44v_p6_kport.txt. No track_offset errors. New street_reach errors in q_hub_nw/ne: q1 root3 432 um, q1 hub 415 um, u_mu_fused_11 492 um (limit 400), because the q1 slot closes the gap beside u_mu_fused_11; fix = move u_mu_fused_11 east if die GRT needs it.
 - **Open.** wd is a 2056-bit broadcast to 4 roots (S face, parent wiring not measured). Hub ~24k hbm_clk sinks on one entry, above the 5k target.

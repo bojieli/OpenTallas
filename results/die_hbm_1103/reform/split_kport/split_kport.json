@@ -19,11 +19,11 @@
    "u_fcore.u_core.u_hub": [
     [
      0.0,
-     397.44
+     457.92
     ],
     [
-     475.2,
-     77.76
+     544.32,
+     95.04
     ]
    ],
    "u_fcore.u_core.u_root0": [
@@ -32,38 +32,38 @@
      0.0
     ],
     [
-     112.32,
-     397.44
+     129.6,
+     457.92
     ]
    ],
    "u_fcore.u_core.u_root1": [
     [
-     120.96,
+     138.24,
      0.0
     ],
     [
-     112.32,
-     397.44
+     129.6,
+     457.92
     ]
    ],
    "u_fcore.u_core.u_root2": [
     [
-     241.92,
+     276.48,
      0.0
     ],
     [
-     112.32,
-     397.44
+     129.6,
+     457.92
     ]
    ],
    "u_fcore.u_core.u_root3": [
     [
-     362.88,
+     414.72,
      0.0
     ],
     [
-     112.32,
-     397.44
+     129.6,
+     457.92
     ]
    ]
   },
@@ -102,9 +102,9 @@
      "orient": "MY",
      "rect_um": [
       4.32,
-      11.916,
+      28.656,
       99.144,
-      52.98
+      69.72
      ]
     },
     {
@@ -113,9 +113,9 @@
      "orient": "MY",
      "rect_um": [
       4.32,
-      53.004,
+      69.744,
       99.144,
-      94.068
+      110.808
      ]
     },
     {
@@ -124,9 +124,9 @@
      "orient": "MY",
      "rect_um": [
       4.32,
-      109.068,
+      134.808,
       99.144,
-      150.132
+      175.872
      ]
     },
     {
@@ -135,9 +135,9 @@
      "orient": "MY",
      "rect_um": [
       4.32,
-      150.156,
+      175.896,
       99.144,
-      191.22
+      216.96
      ]
     },
     {
@@ -146,9 +146,9 @@
      "orient": "MY",
      "rect_um": [
       4.32,
-      206.22,
+      240.96,
       99.144,
-      247.284
+      282.024
      ]
     },
     {
@@ -157,9 +157,9 @@
      "orient": "MY",
      "rect_um": [
       4.32,
-      247.308,
+      282.048,
       99.144,
-      288.372
+      323.112
      ]
     },
     {
@@ -168,9 +168,9 @@
      "orient": "MY",
      "rect_um": [
       4.32,
-      303.372,
+      347.112,
       99.144,
-      344.436
+      388.176
      ]
     },
     {
@@ -179,19 +179,48 @@
      "orient": "MY",
      "rect_um": [
       4.32,
-      344.46,
+      388.2,
       99.144,
-      385.524
+      429.264
      ]
     }
    ]
   },
-  "macro_basis": "DIE-HBM-62/KPORT d44v: 8 x 128x256 as one column, MY so the W-edge macro pins face the 13-um E strip, pairs abutted, 15.0 channels (rule 10.8), x 4.32; clock entry in the E strip (cefix rule: entry off macros)",
+  "macro_basis": "DIE-HBM-62/KPORT d44v: 8 x 128x256 as one column, MY so macro pins face the 26-um E strip, pairs abutted, 24.0 channels (rule 10.8), x 4.32; clock entry in the E strip",
   "clock_entry": {
    "ot_hbm_svc_wb_kp_root": [
-    103.68,
-    198.72
+    112.32,
+    224.64
    ]
+  },
+  "slot": {
+   "outline_um": [
+    544.32,
+    552.96
+   ],
+   "origin": {
+    "q_hub_nw": {
+     "u_wbk_Q__q0": [
+      1140.48,
+      3188.16
+     ],
+     "u_wbk_Q__q1": [
+      5391.36,
+      2989.44
+     ]
+    },
+    "q_hub_ne": {
+     "u_wbk_Q__q0": [
+      1140.48,
+      3188.16
+     ],
+     "u_wbk_Q__q1": [
+      5391.36,
+      2989.44
+     ]
+    }
+   },
+   "basis": "kport_root GPL-0301 measured 153%: fixed 34465, movable 8971 um2; grown so root and hub reach about 0.45 of free area"
   }
  }
 ]

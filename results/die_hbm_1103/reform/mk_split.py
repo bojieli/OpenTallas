@@ -164,6 +164,9 @@ for sp in SPEC:
              if h["module"] == core]
     if not insts:
         event["cores"].append(dict(core=core, status="NOT IN PLAN")); continue
+    if sp.get("slot"):                          # spec resizes / moves the slot before the split (util, not pins)
+        for tn, _, h in insts:
+            h["outline_um"] = list(sp["slot"]["outline_um"]); h["origin_um"] = list(sp["slot"]["origin"][tn][h["inst"]])
     W, H = (r3(v) for v in insts[0][2]["outline_um"])
     assert all(r3(h["outline_um"][0]) == W and r3(h["outline_um"][1]) == H for _, _, h in insts), core
     ors = {h.get("orient", "R0") for _, _, h in insts}
