@@ -1461,6 +1461,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="typed hard_core_latency clock contract in core.json (COORD 10-24; class CLK-BAND; default on)")
     ap.add_argument("--no-hard-core-latency", dest="hard_core_latency", action="store_false",
                     help="no typed clock contract (old default): plan insertion band gated post-CTS/GRT")
+    ap.add_argument("--gpl-no-routability", action="store_true",
+                    help="class GPL-SPIN (late_forms.py gpl): 3_3 global placement without -routability_driven")
     ap.add_argument("--multiport-density", default="auto", choices=["auto", "off"],
                     help="DIE-HBM-61/HOLD class MULTIPORT-HOLD: a native multi-port core without a reviewed contract "
                          "gets per-port density trees + common tap alignment (auto, default); off = old independent trees")
@@ -1988,6 +1990,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
     ff = face_flops_text((TOOL / "face_flops.tcl").read_text(), clks, rsts, kit_straps,
                          home_resets=not a.no_reset_face_home)
+    if a.gpl_no_routability:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import late_forms
+        (kd / "gpl_no_routability.tcl").write_text(late_forms.GPL)
+        ff = "source /work/gpl_no_routability.tcl\n" + ff
     (kd / "face_flops.tcl").write_text(ff)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl",
