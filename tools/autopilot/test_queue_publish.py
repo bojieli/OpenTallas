@@ -62,6 +62,54 @@ class Publication(unittest.TestCase):
   self.assertEqual(text.count("  shared exact physical condition"),2)
   self.assertNotEqual(a,b)
   self.assertEqual(b,Q.publish(self.r/"one",second,"repeat packet",path="lanes/GEOM-REVIEW.md"))
+ def fault_runner(self,verb,faults):
+  actual=subprocess.run; left=list(faults); calls=[]
+  def run(cmd,*a,**kw):
+   if verb in cmd:
+    calls.append(cmd)
+    if left:return subprocess.CompletedProcess(cmd,128,'',left.pop(0))
+   return actual(cmd,*a,**kw)
+  return run,calls
+ DENIED='git@github.com: Permission denied (publickey).\nfatal: Could not read from remote repository.'
+ def test_fetch_denied_then_ok(self):
+  run,calls=self.fault_runner('fetch',[self.DENIED,self.DENIED])
+  with patch.object(Q.subprocess,'run',side_effect=run),patch.object(Q,"time") as t:
+   sha=Q.publish(self.r/'one','after denial','append')
+  self.assertEqual(len(calls),3);self.assertEqual(t.sleep.call_count,2)
+  self.assertIn('after denial',self.g('one','show',sha+':autopilot/queue.tsv'))
+ def test_push_denied_then_ok(self):
+  run,calls=self.fault_runner('push',[self.DENIED])
+  with patch.object(Q.subprocess,'run',side_effect=run),patch.object(Q,"time") as t:
+   sha=Q.publish(self.r/'one','after push denial','append')
+  self.assertEqual((len(calls),t.sleep.call_count),(2,1))
+  self.assertIn('after push denial',self.g('one','show',sha+':autopilot/queue.tsv'))
+ def test_transport_retries_are_bounded(self):
+  run,calls=self.fault_runner('fetch',[self.DENIED]*20)
+  with patch.object(Q.subprocess,'run',side_effect=run),patch.object(Q,"time") as t:
+   with self.assertRaisesRegex(RuntimeError,'transport error on fetch.*Permission denied'):
+    Q.publish(self.r/'one','never','append')
+  self.assertEqual(len(calls),len(Q.TRANSPORT_BACKOFF_S)+1);self.assertEqual(t.sleep.call_count,len(Q.TRANSPORT_BACKOFF_S))
+ def test_hung_fetch_counts_as_transport(self):
+  actual=subprocess.run;n=[0]
+  def run(cmd,*a,**kw):
+   if 'fetch' in cmd and n[0]==0:
+    n[0]+=1;raise subprocess.TimeoutExpired(cmd,kw.get('timeout'))
+   return actual(cmd,*a,**kw)
+  with patch.object(Q.subprocess,'run',side_effect=run),patch.object(Q,"time"):
+   sha=Q.publish(self.r/'one','after hang','append')
+  self.assertIn('after hang',self.g('one','show',sha+':autopilot/queue.tsv'))
+ def test_push_refused_is_not_called_a_race(self):
+  run,calls=self.fault_runner('push',['remote: error: GH006: protected branch\n ! [remote rejected] x -> coord/state (pre-receive hook declined)']*9)
+  with patch.object(Q.subprocess,'run',side_effect=run),patch.object(Q,"time") as t:
+   with self.assertRaisesRegex(RuntimeError,'not a race.*GH006'):
+    Q.publish(self.r/'one','refused','append')
+  self.assertEqual((len(calls),t.sleep.call_count),(1,0))
+ def test_repeated_races_keep_race_message(self):
+  run,calls=self.fault_runner('push',['! [rejected] x -> coord/state (fetch first)']*9)
+  with patch.object(Q.subprocess,'run',side_effect=run),patch.object(Q,"time") as t:
+   with self.assertRaisesRegex(RuntimeError,'raced repeatedly'):
+    Q.publish(self.r/'one','raced','append',attempts=3)
+  self.assertEqual((len(calls),t.sleep.call_count),(3,0))
  def test_repeated_exact_row_is_idempotent(self):
   a=Q.publish(self.r/'one','same row','first');b=Q.publish(self.r/'one','same row','repeat')
   self.assertEqual(a,b)
