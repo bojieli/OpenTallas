@@ -23,6 +23,30 @@ class CorePGTest(unittest.TestCase):
 if __name__=='__main__':unittest.main()
 
 
+def test_refresh_without_obs_inserts_before_end_macro():
+    # PG-CORECONN-3 11-03: S81 H2 coll lane.lef stubs have no OBS (one-space indent); pins go before END <macro>
+    base = 'MACRO L\n SIZE 172.8 BY 345.6 ;\n PIN d[0]\n  PORT\n   LAYER M4 ;\n   RECT 0 1 0.084 1.024 ;\n  END\n END d[0]\nEND L\nEND LIBRARY\n'
+    out = refresh(base)
+    pg = '\n'.join(port_lines(172.8, 345.6)) + '\n'
+    assert out.replace(pg, '') == base and out.index(pg) == base.index('END L\n')
+
+
+def test_class_b_stubs_carry_native_m5_pg():
+    # PG-CORECONN-3 11-03 class B: the 5 plan stubs without PIN VDD/VSS now carry the native M5 recipe, OBS <= M5
+    from pathlib import Path
+    root = Path(__file__).resolve().parent
+    for s in CLASS_B:
+        text = (root / s).read_text()
+        for net in ('VDD', 'VSS'):
+            body = text.split(f'PIN {net}\n', 1)[1].split(f'END {net}\n', 1)[0]
+            assert 'LAYER M5' in body and 'USE ' in body, (s, net)
+        assert not ({'M6', 'M7'} & _obs_layers(text)), s
+
+
+
+CLASS_B = ["cores/eng/lef/dsdv_eng_rr_h0.lef", "cores/eng/lef/dsdv_eng_rr_h1.lef",
+           "cores/legacy/lef/dsdv_eng_rr_e_clkm5_1101.lef", "h2_2249/coll_w/lane.lef", "h2_2249/coll_e/lane.lef",
+           "cores/h2/ot_s81_mu72_lnland/ot_s81_mu72_lnland.lef", "cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef"]
 STUBS_M5 = ["cores/leaf/lef/ot_s81sl_ve_m_tpl.lef", "cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
             "cores/leaf/lef/ot_s81sl_ve_s_tpl_w1728.lef", "cores/leaf/lef/ot_s81sl_vn_a_tpl.lef",
             "cores/leaf/lef/ot_s81sl_vn_b_tpl.lef", "cores/leaf/lef/ot_s81sl_vq_tpl.lef", "cores/leaf/lef/ot_s81sl_vs_tpl.lef",
