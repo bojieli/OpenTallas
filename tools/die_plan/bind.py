@@ -1126,6 +1126,7 @@ class Binder:
         retain their original names and therefore cannot silently coalesce.
         """
         count = 0
+        src_key = getattr(self, "src_key", None) or (lambda src: src)
         for p, members in self.members.items():
             groups = defaultdict(list)
             for ci in members:
@@ -1139,7 +1140,7 @@ class Binder:
                     parent = name.split(".$", 1)[0] + "."
                 else:
                     continue
-                shape = (c.src, c.ytype, c.yparams,
+                shape = (src_key(c.src), c.ytype, c.yparams,
                          sorted((pn, self.G.dirs[ci].get(pn), len(bits)) for pn, bits in c.ports.items()))
                 digest = hashlib.sha256(json.dumps(shape, sort_keys=True).encode()).hexdigest()[:20]
                 groups[parent + "$src_" + digest].append(ci)
@@ -4166,6 +4167,7 @@ def cmd_bind(a):
     out = Path(a.out)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
+    B.src_key = E.stage_src_key(B.base, out, B.ab.get("stage_hash_roots"))
     B.source_plan = Path(a.plan).resolve()
     B.strict_types = bool(getattr(a, "strict", False))
     B.collect_gaps = bool(getattr(a, "all_gaps", False))
