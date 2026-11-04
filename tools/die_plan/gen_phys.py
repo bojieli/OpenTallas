@@ -23,6 +23,7 @@ SPEF (sta_die.tcl): timing paths through the face boundary flops.
 """
 import json
 import math
+import os
 import re
 import shutil
 from pathlib import Path
@@ -2588,7 +2589,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_VCLK_TT = {t_lib(ib['tt']):.4f}",
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
+           # DIE-HEAD-59 11-03: opt-in per item (item_env, commas for spaces): keep these FSM wires in their RTL encoding
+           *([f"export OT_FSM_NONE_WIRES = {os.environ['OT_FSM_NONE_WIRES'].replace(',', ' ')}"] if os.environ.get("OT_FSM_NONE_WIRES") else []),
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
+           # DIE-HEAD-59 11-03: opt-in per item (kit_wave item_env reaches gen only): hold_gate.tcl stop base
+           *([f"export OT_HOLD_STOP_PS = {os.environ['OT_HOLD_STOP_PS']}"] if os.environ.get("OT_HOLD_STOP_PS") else []),
            f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P, tn)):.4f}",
            *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P, tn)):.4f}"] if tap_window_ps(P, tn) else []),
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
@@ -3029,6 +3034,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
         OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
         OT_TAP_WINDOW=\$(sed -n 's/^export OT_TAP_WINDOW = //p' /work/config.mk) \
+        OT_HOLD_STOP_PS=\$(sed -n 's/^export OT_HOLD_STOP_PS = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \

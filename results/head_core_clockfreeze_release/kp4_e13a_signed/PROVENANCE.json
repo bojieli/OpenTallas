@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "10f591c1ce19c8079133547d903b1bb8f4db6961",
+ "flow_tag": "flow-20261101-n-head",
+ "routed_db": "/srv/opentallas-scratch2/claude/head-serdes-2/e13a/run/results/asap7/hbc_ot_s81_kp4_dchn/base/6_final.odb",
+ "build_commit": "f741977250dc571ea4f58d3a7e067a85e3932661",
+ "lec": "/srv/opentallas-scratch2/claude/signoff-sprint-19/kp4_e13a_lecp/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/signoff-sprint-19/kp4_e13a_n/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/head-serdes-2/e13a",
+ "original_signoff": "/srv/opentallas-scratch2/claude/head-serdes-2/e13a/signoff/signoff.json",
+ "name": "hbc_ot_s81_kp4_dchn",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "dear-crayfish",
+ "created": "2026-11-01 19:56 PST",
+ "routed_db_sha256": "3afdd80f74adcaa464c8a2b848c81c49f1cb1e58812e61c19644945c2ca5e4e6",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/signoff-sprint-19/t_nhead/tools/die_plan",
+  "sha256": {
+   "signoff.py": "e32413a9ca340f9817edcdf5c6f62b9914037200e87ec060e1c0c46c91061b04",
+   "lec.py": "36a12f9f7ab5bc30ca1b04436b760d5514133946a91ab691789c378fb4adb7a5"
+  },
+  "checked": "byte-identical to flow-20261101-n-head"
+ },
+ "lane": "SIGNOFF-SPRINT-19",
+ "as_run_note": "hd_serdes ot_s81_kp4_dchn: HEAD-SERDES-3 e13a = e11c + approved one-endpoint ECO (COORD 16:43), incremental route DRC 0, clock FIXED (clk_geom_diff PASS); n-head sign-off + n-head post-route LEC (EQ 4217/4217, run in kp4_e13a_lecp, identical lec.py/6_final.v)"
+}
