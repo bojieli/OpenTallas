@@ -557,7 +557,7 @@ def read_ctx(AP, ap_dir):
     """the inputs every launch rests on; (ctx, '') or (None, why nothing may launch)"""
     holds = parse_holds(AP.read_coord(HOLD))
     if holds is None:
-        return None, "%s unreadable or empty" % HOLD
+        return None, "the hold list is unreadable or empty"
     try:
         cache = json.loads(Path(AP.RELEASE_CACHE).read_text())
     except (OSError, ValueError) as e:
