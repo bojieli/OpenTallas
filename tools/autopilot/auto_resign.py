@@ -33,6 +33,15 @@ failed DB only if those tools changed, since the same bytes on the same DB give 
 admitted, host lost, out of memory) relaunches once, at 1.5 x memory after OOM, as the autopilot does for kits.  A
 retracted tag (gone from origin) makes a RECORDED item a candidate again on the newest tag.
 
+NEAR-MISS ECO (item 2, default on; off: "auto_eco": false or "late_eco": false in kit_wave.json, KIT/late_eco.off).
+A registered dir whose newest record does not count enters the existing late-ECO loop (tools/die_plan/eco_loop.py at the
+tag) when it is in the owner-approved class: fails only setup_tt / hold_ff / drv / drc / fanout (eco_loop.eligible), TT and
+FF within the autopilot's NEAR-MISS bound, DRC <= 50, and no hold row.  A wave run needs none of this: its chain already
+runs the loop.  One loop per routed DB.  A record that is itself a loop's output (ROOT/eco_loop.json above it), or a DB a
+loop already started from, stays for a lane: a second chained loop is not approved unattended (COORD 11-04).  A PASS goes
+to the re-sign above on the loop's best dir; anything else says so in the queue with the best numbers.  No gate moves: the
+loop's sign-off is the kit's own, and resign.py --auto runs sign-off + routed LEC again at the tag.
+
     auto_resign.py status                 state table (hub)
 """
 import fnmatch
@@ -65,6 +74,10 @@ CLOCK_FAMILY_RELS = ("tools/die_plan/clock_family.tcl", "physical/common_flow/cl
 HERE = Path(__file__).resolve().parent
 DRIVER = HERE / "die_plan" / "resign.py" if (HERE / "die_plan" / "resign.py").is_file() else HERE.parent / "die_plan" / "resign.py"
 WAVE_STATUS = ("WAIT-PARENT", "SIGNED-UNVERSIONED")
+ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}   # = eco_loop.ECO_FAILS
+ECO_MEM_GB = 64
+ECO_DISK_GB = 40
+MAX_ECO_INFLIGHT = 4
 RE_KEYS = re.compile(r"^(dp|kr)_(.+)$")
 
 
@@ -229,6 +242,7 @@ def wave_candidates(jobs, kits, core_module=lambda x: x):
 
 
 def cand_id(c):
+    """from the row alone: an item keeps its state when it moves on to a late-ECO result"""
     return hashlib.sha1(("%s|%s|%s|%s" % (c["die"], c["name"], c["host"], c.get("path"))).encode()).hexdigest()[:12]
 
 
@@ -273,6 +287,40 @@ def judge(c, p, ctx, it):
     if not bc:
         return "LANE", "NO-BUILD-COMMIT: none provable from the row, the job or the kit records; left for a lane"
     return "LAUNCH", dict(tag=tag, key=key, build_commit=bc)
+
+
+def judge_eco(c, e, it, holds, near_wns, near_drc):
+    """(action, why) for a registered dir with no counting record.  LAUNCH | WAIT | SKIP | LANE"""
+    if e.get("error"):
+        return "WAIT", "eco probe: " + str(e["error"])[:200]
+    if not e.get("record"):
+        return "WAIT", "no record that counts yet"
+    names = rec_keys(e.get("name"), e.get("top")) | {c["name"]}
+    why = hold_hit(holds, c["die"], names)
+    if why:
+        return "SKIP", "HELD " + why
+    fails = set(e.get("fails") or [])
+    nums = "TT %s FF %s DRC %s, fails %s" % (e.get("tt"), e.get("ff"), e.get("drc"), ",".join(sorted(fails)))
+    if not fails:
+        return "WAIT", "no FAIL gate (%s), not an ECO case" % e.get("verdict")
+    if fails - ECO_FAILS:
+        return "SKIP", "not an ECO class: " + nums
+    if any(w is not None and w < near_wns for w in (e.get("tt"), e.get("ff"))) or (e.get("drc") or 0) > near_drc:
+        return "SKIP", "outside the near-miss bound: " + nums
+    if e.get("late_eco_off"):
+        return "SKIP", "KIT/late_eco.off"
+    if not e.get("odb_sha"):
+        return "LANE", "routed DB not readable where the record says: %s" % e.get("odb")
+    if e.get("from_loop") or e.get("prior_loop") or e["odb_sha"] in (it.get("eco_done") or {}):
+        return "LANE", "late-ECO already ran on this DB, a second chained loop is not approved unattended: " + nums
+    return "LAUNCH", nums
+
+
+def eco_argv(AP, c, e, d, out, mem):
+    host = AP.HUB_NAME if AP.ssh_host(c["host"]) == "localhost" else c["host"]
+    return [AP.OT_RUN, "--mem", str(mem), "--threads", str(THREADS), "--hosts", host, "--no-spill", "--disk", str(ECO_DISK_GB),
+            "--dir", d, "--priority", "die", "--crit", "--", "python3", "-I", d + "/tools/die_plan/eco_loop.py", "run",
+            "--kit", e["kit"], "--signoff", e["record"], "--out", out, "--mem", str(mem), "--cpus", str(THREADS)]
 
 
 # ------------------------------------------------------------------------------------------------ host probes
@@ -374,6 +422,66 @@ for n in ("signoff.log", "lec.log"):
     except OSError:
         pass
 done()
+'''
+
+PROBE_ECO = r'''
+import glob, hashlib, json, os, shutil, sys
+a = json.loads(sys.argv[1]); out = {}
+def done(): print("AP_JSON " + json.dumps(out)); sys.exit(0)
+try:
+    recs = []
+    for d in glob.glob(a["path"]):
+        recs.append(os.path.join(d, "signoff", "signoff.json"))
+    best, bm = None, -1
+    for p in recs:
+        try:
+            m = os.path.getmtime(p); d = json.load(open(p))
+        except Exception:
+            continue
+        if m > bm: best, bm = (p, d), m
+    if best:
+        p, d = best
+        c, inp, fg = d.get("checks") or {}, d.get("inputs") or {}, d.get("face_guard") or {}
+        out.update(record=p, verdict=d.get("verdict"), name=d.get("name"), top=fg.get("top") if isinstance(fg, dict) else None,
+                   fails=sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL"),
+                   tt=(c.get("setup_tt") or {}).get("wns_ps"), ff=(c.get("hold_ff") or {}).get("wns_ps"),
+                   drc=(c.get("drc") or {}).get("count"), odb=inp.get("odb"), kit=inp.get("kit"))
+        kit, odb = inp.get("kit") or "", inp.get("odb") or ""
+        out["late_eco_off"] = os.path.exists(os.path.join(kit, "late_eco.off"))
+        out["from_loop"] = os.path.exists(os.path.join(os.path.dirname(kit), "eco_loop.json"))
+        prior = False
+        for j in glob.glob(os.path.join(kit, "eco_*", "eco_loop.json")):
+            try:
+                prior = prior or json.load(open(j)).get("base_routed_db") == odb
+            except Exception:
+                prior = True
+        out["prior_loop"] = prior
+        if os.path.isfile(odb) and os.path.isdir(kit):
+            h = hashlib.sha256()
+            with open(odb, "rb") as f:
+                for b in iter(lambda: f.read(1 << 20), b""): h.update(b)
+            out["odb_sha"] = h.hexdigest()
+    need = a.get("free_gb", 40) << 30
+    roots = [r for r in a.get("roots") or [] if os.path.isdir(os.path.join(r, "claude")) and shutil.disk_usage(r).free > need]
+    out["root"] = roots[0] if roots else None
+except Exception as e:
+    out["error"] = "%s: %s" % (type(e).__name__, e)
+done()
+'''
+
+PROBE_ECO_RESULT = r'''
+import json, os, sys
+a = json.loads(sys.argv[1]); out = {}
+try:
+    r = json.load(open(os.path.join(a["out"], "eco_loop.json")))
+    b = r.get("best") or {}
+    out.update(verdict=r.get("verdict"), reason=str(r.get("reason") or "")[:200], best_dir=b.get("dir"), best_signoff=b.get("signoff"),
+               metrics={k: (b.get("metrics") or {}).get(k) for k in ("tt", "ff", "drv", "drc")})
+except FileNotFoundError:
+    out["verdict"] = None
+except Exception as e:
+    out["error"] = "%s: %s" % (type(e).__name__, e)
+print("AP_JSON " + json.dumps(out))
 '''
 
 ROOTS = ("/srv/opentallas-scratch3", "/srv/opentallas-scratch2", "/srv/opentallas-scratch", "/home/ubuntu/scratch-root")
@@ -538,6 +646,94 @@ def poll(AP, st, notices, ap_dir):
         AP.tsv_append(LOG_TSV, "%s-%s" % (cid, int(it["finished"])), [it["die"], it["name"], it["host"], it["tag"], it["status"], it["out"], it.get("build_commit", ""), it.get("why", "")])
 
 
+def poll_eco(AP, st, notices):
+    for cid, it in st["items"].items():
+        if it.get("status") != "ECO" or AP.unit_active(it["eco_unit"]):
+            continue
+        try:
+            client = AP.parse_client_log(Path(it["eco_log"]).read_text(errors="replace"))
+        except OSError:
+            client = {}
+        r = AP.rpy(it["host"], PROBE_ECO_RESULT, {"out": it["eco_out"]}, timeout=120)
+        if r.get("error"):
+            AP.log("AUTO-ECO %s: result probe failed, next tick: %s" % (it["name"], r["error"][:200]))
+            continue
+        v = r.get("verdict")
+        if (v == "ECO_OOM" or v is None) and it.get("eco_infra", 0) < MAX_INFRA and (v == "ECO_OOM" or client.get("not_run") or client.get("not_completed")):
+            it["eco_infra"] = it.get("eco_infra", 0) + 1
+            if v == "ECO_OOM":
+                it["eco_mem"] = int(it.get("eco_mem", ECO_MEM_GB) * 1.5 + 0.999)
+            it.update(status="WAIT", why="late-ECO infra (%s); relaunch at --mem %s" % (v or "not run", it.get("eco_mem", ECO_MEM_GB)))
+            it.setdefault("eco_done", {}).pop(it.get("eco_key"), None)
+            AP.log("AUTO-ECO %s/%s: %s" % (it["die"], it["name"], it["why"]))
+            continue
+        m = r.get("metrics") or {}
+        nums = "TT %s FF %s DRV %s DRC %s" % (m.get("tt"), m.get("ff"), m.get("drv"), m.get("drc"))
+        if v == "PASS" and r.get("best_signoff"):
+            it.update(status="WAIT", why="late-ECO PASS, re-sign next", eco_record=r["best_signoff"])
+            msg = "%s/%s late-ECO PASS %s, %s:%s; re-sign follows" % (it["die"], it["name"], nums, it["host"], r.get("best_dir"))
+        else:
+            it.update(status="LANE", why="late-ECO %s, best %s, %s: second loop not approved unattended" % (v or "no result", nums, r.get("reason") or "client exit %s" % client.get("exit")))
+            msg = "%s/%s %s; dir %s:%s" % (it["die"], it["name"], it["why"], it["host"], it["eco_out"])
+        AP.log("AUTO-ECO " + msg)
+        notices.append(msg)
+        AP.tsv_append(LOG_TSV, "eco-%s-%s" % (cid, int(time.time())), [it["die"], it["name"], it["host"], "", "ECO-" + str(v), it["eco_out"], "", it.get("why", "")])
+
+
+def eco_stop(AP, ap_dir):
+    try:
+        cfg = json.loads((Path(ap_dir) / "kit_wave.json").read_text())
+    except (OSError, ValueError):
+        return False
+    return cfg.get("auto_eco", True) is False or cfg.get("late_eco", True) is False
+
+
+def try_eco(AP, c, ctx, it, cid, ap_dir, eco_running, notices):
+    """-> True when a late-ECO loop was launched"""
+    e = AP.rpy(c["host"], PROBE_ECO, dict(path=c["path"], roots=ROOTS, free_gb=ECO_DISK_GB), timeout=300)
+    action, why = judge_eco(c, e, it, ctx["holds"], getattr(AP, "NEAR_WNS_PS", -30.0), getattr(AP, "NEAR_DRC_MAX", 50))
+    if action == "LANE" and e.get("odb_sha") in (it.get("eco_done") or {}):
+        return False                                 # this DB's loop already reported its result once
+    if action != "LAUNCH":
+        new = "%s %s" % (action, why)
+        if it.get("why") != new:
+            it["why"] = new
+            if action == "LANE":
+                notices.append("%s/%s needs a lane: %s" % (c["die"], c["name"], why[:300]))
+        it["status"] = action
+        return False
+    if eco_running >= MAX_ECO_INFLIGHT or AP.DRY or eco_stop(AP, ap_dir):
+        it.update(status="WAIT", why="near miss, ECO not launched this tick (%s)" % why)
+        return False
+    if not e.get("root"):
+        it.update(status="WAIT", why="near miss, no scratch root with %d GB free on %s" % (ECO_DISK_GB, c["host"]))
+        return False
+    tag = ctx["tag"](c["die"])
+    ctx["tool_key"](tag) if tag else None
+    shas = ctx["shas"].get(tag) or {}
+    if not shas:
+        it.update(status="WAIT", why="no tag tools for %s" % c["die"])
+        return False
+    d, err = stage_tools(AP, c["host"], e["root"], tag, shas)
+    if not d:
+        it.update(status="WAIT", why=err)
+        return False
+    n = it.get("eco_attempt", 0) + 1
+    out = "%s/claude/auto-resign/eco/%s/%s__%s%s" % (e["root"], c["die"], c["name"], e["odb_sha"][:8], "" if n == 1 else "_a%d" % n)
+    mem = it.get("eco_mem", ECO_MEM_GB)
+    unit = "ae-%s-a%d" % (cid, n)
+    logf = Path(ap_dir) / "auto_resign_jobs" / (unit + ".log")
+    if not AP.launch_unit(unit, logf, eco_argv(AP, c, e, d, out, mem)):
+        it.update(status="WAIT", why="systemd-run failed")
+        return False
+    it.update(status="ECO", why=why, eco_unit=unit, eco_log=str(logf), eco_out=out, eco_key=e["odb_sha"], eco_attempt=n, eco_mem=mem, eco_tag=tag)
+    it.setdefault("eco_done", {})[e["odb_sha"]] = tag
+    msg = "%s/%s near miss enters late-ECO on %s: %s" % (c["die"], c["name"], tag, why)
+    AP.log("AUTO-ECO LAUNCH " + msg)
+    notices.append(msg)
+    return True
+
+
 def build_commit_of(AP):
     def f(c, p):
         if c.get("source") == "wave" and "@" in str(c.get("src")):
@@ -580,6 +776,7 @@ def _step(AP, ap_dir):
     st = load_state(ap_dir)
     notices = []
     poll(AP, st, notices, ap_dir)
+    poll_eco(AP, st, notices)
     stop = stop_reason(ap_dir)
     if stop:
         st["blocked"] = stop
@@ -610,13 +807,16 @@ def advance(AP, st, ctx, ap_dir, notices):
     items = st["items"]
     handled = set()
     running = sum(1 for it in items.values() if it.get("status") == "RUNNING")
+    eco_running = sum(1 for it in items.values() if it.get("status") == "ECO")
     launched = 0
     for c in candidates(AP, ap_dir):
         handled.add((c["die"], c["name"]))
         cid = cand_id(c)
         it = items.setdefault(cid, dict(die=c["die"], name=c["name"], host=c["host"], path=c["path"], source=c["source"], status="NEW"))
-        if it["status"] == "RUNNING":
+        if it["status"] in ("RUNNING", "ECO"):
             continue
+        if it.get("eco_record"):                     # the late-ECO best dir is what gets re-signed
+            c = dict(c, record=it["eco_record"])
         if it["status"] == "RECORDED":
             if it.get("tag") in [t for t in ctx_tags(AP, c["die"])]:
                 continue
@@ -626,6 +826,10 @@ def advance(AP, st, ctx, ap_dir, notices):
         p = AP.rpy(c["host"], PROBE_RECORD, dict(path=c["path"], record=c.get("record"), roots=ROOTS,
                                                  known=dict(stamp=it.get("stamp"), odb_sha=it.get("odb_sha"), netlist_sha=it.get("netlist_sha"))), timeout=300)
         action, why = judge(c, p, ctx, it)
+        if action == "WAIT" and why == "no record that counts yet" and c["source"] == "registry" and not p.get("error"):
+            if try_eco(AP, c, ctx, it, cid, ap_dir, eco_running, notices):
+                eco_running += 1
+            continue
         it.update({k: p[k] for k in ("stamp", "odb_sha", "netlist_sha") if p.get(k)})
         if action != "LAUNCH":
             new = "%s %s" % (action, why)

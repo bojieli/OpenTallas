@@ -367,3 +367,146 @@ def test_dry_launches_nothing(ap, tmp_path, monkeypatch):
     ap.DRY = True
     AR.step(ap)
     assert not ap.launched
+
+
+# ---------------------------------------------------------------- near-miss late-ECO (item 2)
+def eco_kit(root, tt=5.0, ff=-1.5, drc=0, fails=("hold_ff",), name="dp_x"):
+    kit = make_kit(root, name=name, verdict="NOT SIGNED")
+    p = kit / "signoff" / "signoff.json"
+    d = json.loads(p.read_text())
+    d["local_verdict"] = "NOT SIGNED"
+    d["checks"] = {"setup_tt": {"wns_ps": tt, "verdict": "FAIL" if "setup_tt" in fails else "PASS"},
+                   "hold_ff": {"wns_ps": ff, "verdict": "FAIL" if "hold_ff" in fails else "PASS"},
+                   "drc": {"count": drc, "verdict": "FAIL" if "drc" in fails else "PASS"}}
+    for f in fails:
+        d["checks"].setdefault(f, {"verdict": "FAIL"})
+    p.write_text(json.dumps(d))
+    return kit
+
+
+def test_near_miss_enters_the_loop_once(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    it = only_item(ap)
+    assert it["status"] == "ECO"
+    argv = ap.launched[0][1]
+    i = argv.index("--")
+    assert argv[i + 3].endswith("/tools/die_plan/eco_loop.py") and argv[i + 4] == "run" and "--crit" in argv
+    assert "--hold-margin" not in argv and "--max-iter" not in argv     # the tool's own limits
+    AR.step(ap)
+    assert len(ap.launched) == 1
+
+
+@pytest.mark.parametrize("kw,word", [(dict(tt=-40.0, fails=("setup_tt",)), "bound"), (dict(ff=-31.0), "bound"), (dict(drc=51, fails=("drc",)), "bound"),
+                                     (dict(fails=("hold_ff", "clock")), "ECO class"), (dict(fails=("antenna",)), "ECO class")])
+def test_outside_the_approved_class_is_not_touched(ap, tmp_path, monkeypatch, kw, word):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path, **kw))
+    AR.step(ap)
+    assert only_item(ap)["status"] == "SKIP" and word in only_item(ap)["why"] and not ap.launched
+
+
+def test_held_design_gets_no_eco(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path, name="dp_kv_astk_a"), name="kv_astk_a")
+    AR.step(ap)
+    assert "HELD" in only_item(ap)["why"] and not ap.launched
+
+
+@pytest.mark.parametrize("how", ["output", "prior"])
+def test_no_second_chained_loop(ap, tmp_path, monkeypatch, how):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path)
+    if how == "output":
+        (kit.parent / "eco_loop.json").write_text("{}")
+    else:
+        odb = next(kit.rglob("6_final.odb"))
+        (kit / "eco_1").mkdir()
+        (kit / "eco_1" / "eco_loop.json").write_text(json.dumps({"base_routed_db": str(odb)}))
+    register(ap, kit)
+    AR.step(ap)
+    assert only_item(ap)["status"] == "LANE" and "second chained loop" in only_item(ap)["why"] and not ap.launched
+    assert any("second chained loop" in x for x in ap.lines)
+
+
+def test_late_eco_off_marker_and_config(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path)
+    register(ap, kit)
+    (ap.apd / "kit_wave.json").write_text(json.dumps({"late_eco": False}))
+    AR.step(ap)
+    assert not ap.launched
+    (ap.apd / "kit_wave.json").write_text("{}")
+    (kit / "late_eco.off").write_text("")
+    AR.step(ap)
+    assert not ap.launched and "late_eco.off" in only_item(ap)["why"]
+
+
+def _eco_result(ap, r):
+    orig = ap.rpy
+
+    def rpy(host, code, args, timeout=600):
+        return r if code == AR.PROBE_ECO_RESULT else orig(host, code, args, timeout)
+    ap.rpy = rpy
+
+
+def test_pass_goes_to_the_re_sign_on_the_best_dir(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    AR.step(ap)
+    (tmp_path / "root").mkdir()
+    best = make_kit(tmp_path / "root")
+    _eco_result(ap, dict(verdict="PASS", best_dir=str(best), best_signoff=str(best / "signoff" / "signoff.json"), metrics=dict(tt=5, ff=0.1, drv=0, drc=0)))
+    AR.step(ap)
+    assert only_item(ap)["status"] == "RUNNING"
+    argv = ap.launched[-1][1]
+    assert "--auto" in argv and argv[argv.index("--routed-db") + 1].startswith(str(best))
+
+
+def test_exhausted_stays_for_a_lane(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    AR.step(ap)
+    _eco_result(ap, dict(verdict="EXHAUSTED", reason="no gain", metrics=dict(tt=5, ff=-0.1, drv=0, drc=0)))
+    AR.step(ap)
+    n = len(ap.launched)
+    AR.step(ap)
+    assert only_item(ap)["status"] == "LANE" and "second loop" in only_item(ap)["why"] and len(ap.launched) == n == 1
+    assert any("EXHAUSTED" in x for x in ap.lines)
+
+
+def test_eco_oom_relaunches_once_at_more_memory(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    AR.step(ap)
+    _eco_result(ap, dict(verdict="ECO_OOM", metrics={}))
+    AR.step(ap)
+    assert len(ap.launched) == 2
+    assert ap.launched[1][1][ap.launched[1][1].index("--mem") + 1] == "96" and ap.launched[1][1][ap.launched[1][1].index("--out") + 1].endswith("_a2")
+    AR.step(ap)
+    assert len(ap.launched) == 2 and only_item(ap)["status"] == "LANE"
+
+
+def test_eco_cap(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    monkeypatch.setattr(AR, "MAX_LAUNCH_PER_TICK", 99)
+    rows = ""
+    for i in range(AR.MAX_ECO_INFLIGHT + 2):
+        (tmp_path / str(i)).mkdir()
+        eco_kit(tmp_path / str(i), name="dp_x%d" % i)
+        rows += "%s\tx%d\th\t%s/%d/kit\t-\tL\tn\n" % (DIE, i, tmp_path, i)
+    (ap.coord / AR.REGISTRY).write_text(rows)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    assert len(ap.launched) == AR.MAX_ECO_INFLIGHT
