@@ -25,5 +25,10 @@ for t in pt["clock"]["taps"]:
     if t["name"] == "u_gunit.u_l4.clk":
         t["xy"] = [round(X0 + 155.052, 3), round(Y0 + H - 0.24, 3)]   # clk on the core S edge (MX: top in the die)
         t["note"] = t.get("note", "") + " | RF-D 11-03: moved with the core (clk S-edge pin 155.052, 0.24)"
+# the grid+explicit light tap clk_t50 (1049.32, 289.32) sat in the free field the core now covers: move it into the
+# l4 / l1 street (core top 341.28, l1 bottom 380.16), same x (schema added-tap outline / halo / spacing check)
+for t in pt["clock"]["added_taps"]:
+    if t["name"] == "clk_t50":
+        t["xy"] = [1049.32, 360.72]
 json.dump(plan, open(out, "w"), indent=1)
 print("delta_gl4 OK", rect)
