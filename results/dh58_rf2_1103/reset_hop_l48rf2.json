@@ -1,0 +1,462 @@
+{
+ "schema": "opentallas.head_reset_hop_estimate.v1",
+ "plan": "prepared_l48rf2/source_plan.json",
+ "reach_um": 405.0,
+ "types": {
+  "hd_ctl": {
+   "outline_um": [
+    587.52,
+    518.4
+   ],
+   "terminals": 38,
+   "local_taps": 4,
+   "worst_sink_um": 180.26,
+   "worst_sink": "face:lw_i",
+   "worst_sink_xy": [
+    148.94,
+    518.4
+   ],
+   "nearest_terminal": 33,
+   "worst_station_um": null,
+   "interior_worst_um_info": 270.0,
+   "verdict": "PASS"
+  },
+  "hd_ctl_e": {
+   "outline_um": [
+    855.36,
+    103.68
+   ],
+   "terminals": 4,
+   "local_taps": 0,
+   "worst_sink_um": 189.94,
+   "worst_sink": "ft:n_rx_ft.s1",
+   "worst_sink_xy": [
+    427.68,
+    81.48
+   ],
+   "nearest_terminal": 0,
+   "worst_station_um": 189.94,
+   "interior_worst_um_info": 207.82,
+   "verdict": "PASS"
+  },
+  "hd_ctl_n": {
+   "outline_um": [
+    1296.0,
+    708.48
+   ],
+   "terminals": 11,
+   "local_taps": 1,
+   "worst_sink_um": 341.47,
+   "worst_sink": "face:w3d_out",
+   "worst_sink_xy": [
+    855.68,
+    708.48
+   ],
+   "nearest_terminal": 9,
+   "worst_station_um": 339.33,
+   "interior_worst_um_info": 379.33,
+   "verdict": "PASS"
+  },
+  "hd_host": {
+   "outline_um": [
+    1296.0,
+    570.24
+   ],
+   "terminals": 29,
+   "local_taps": 10,
+   "worst_sink_um": 105.53,
+   "worst_sink": "face:coll_i0",
+   "worst_sink_xy": [
+    0.0,
+    120.0
+   ],
+   "nearest_terminal": 8,
+   "worst_station_um": null,
+   "interior_worst_um_info": 302.4,
+   "verdict": "PASS"
+  },
+  "hd_host_n": {
+   "outline_um": [
+    1442.88,
+    656.64
+   ],
+   "terminals": 9,
+   "local_taps": 0,
+   "worst_sink_um": 431.0,
+   "worst_sink": "ft:bd.s1",
+   "worst_sink_xy": [
+    912.25,
+    499.44
+   ],
+   "nearest_terminal": 0,
+   "worst_station_um": 431.0,
+   "interior_worst_um_info": 606.8,
+   "verdict": "FAIL"
+  },
+  "hd_lep0N": {
+   "outline_um": [
+    1762.56,
+    1226.88
+   ],
+   "terminals": 28,
+   "local_taps": 27,
+   "worst_sink_um": 296.08,
+   "worst_sink": "face:coll_i2",
+   "worst_sink_xy": [
+    0.0,
+    326.0
+   ],
+   "nearest_terminal": 9,
+   "worst_station_um": null,
+   "interior_worst_um_info": 444.96,
+   "verdict": "PASS"
+  },
+  "hd_mesh": {
+   "outline_um": [
+    604.8,
+    1226.88
+   ],
+   "terminals": 28,
+   "local_taps": 9,
+   "worst_sink_um": 120.29,
+   "worst_sink": "face:coll_ia",
+   "worst_sink_xy": [
+    160.0,
+    1226.88
+   ],
+   "nearest_terminal": 17,
+   "worst_station_um": null,
+   "interior_worst_um_info": 254.51,
+   "verdict": "PASS"
+  },
+  "hd_mesh_e": {
+   "outline_um": [
+    838.08,
+    423.36
+   ],
+   "terminals": 4,
+   "local_taps": 0,
+   "worst_sink_um": 169.06,
+   "worst_sink": "ft:m_rx_ft.s1",
+   "worst_sink_xy": [
+    419.04,
+    63.48
+   ],
+   "nearest_terminal": 0,
+   "worst_station_um": 169.06,
+   "interior_worst_um_info": 524.62,
+   "verdict": "PASS"
+  },
+  "hd_serdes": {
+   "outline_um": [
+    2885.76,
+    1226.88
+   ],
+   "terminals": 1,
+   "local_taps": 0,
+   "worst_sink_um": 664.96,
+   "worst_sink": "face:coll_i0",
+   "worst_sink_xy": [
+    2030.08,
+    0.0
+   ],
+   "nearest_terminal": 0,
+   "worst_station_um": null,
+   "interior_worst_um_info": 2583.36,
+   "verdict": "FAIL"
+  },
+  "hd_spn": {
+   "outline_um": [
+    587.52,
+    2073.6
+   ],
+   "terminals": 58,
+   "local_taps": 16,
+   "worst_sink_um": 159.09,
+   "worst_sink": "ft:hd.s3",
+   "worst_sink_xy": [
+    426.29,
+    888.69
+   ],
+   "nearest_terminal": 20,
+   "worst_station_um": 159.09,
+   "interior_worst_um_info": 233.58,
+   "verdict": "PASS"
+  },
+  "hd_spn_end": {
+   "outline_um": [
+    587.52,
+    2073.6
+   ],
+   "terminals": 49,
+   "local_taps": 16,
+   "worst_sink_um": 168.8,
+   "worst_sink": "face:bw_i",
+   "worst_sink_xy": [
+    0.0,
+    1008.51
+   ],
+   "nearest_terminal": 0,
+   "worst_station_um": 151.61,
+   "interior_worst_um_info": 423.6,
+   "verdict": "PASS"
+  },
+  "hd_spn_eshim_rx": {
+   "outline_um": [
+    95.04,
+    1036.8
+   ],
+   "terminals": 5,
+   "local_taps": 0,
+   "worst_sink_um": 184.47,
+   "worst_sink": "face:link_in",
+   "worst_sink_xy": [
+    0.0,
+    1008.51
+   ],
+   "nearest_terminal": 4,
+   "worst_station_um": 73.54,
+   "interior_worst_um_info": 232.2,
+   "verdict": "PASS"
+  },
+  "hd_spn_eshim_tx": {
+   "outline_um": [
+    95.04,
+    1036.8
+   ],
+   "terminals": 4,
+   "local_taps": 0,
+   "worst_sink_um": 227.67,
+   "worst_sink": "face:link_in",
+   "worst_sink_xy": [
+    0.0,
+    1008.51
+   ],
+   "nearest_terminal": 3,
+   "worst_station_um": 30.34,
+   "interior_worst_um_info": 255.96,
+   "verdict": "PASS"
+  },
+  "hd_spn_wshim_rx": {
+   "outline_um": [
+    699.84,
+    1036.8
+   ],
+   "terminals": 17,
+   "local_taps": 0,
+   "worst_sink_um": 167.4,
+   "worst_sink": "face:link_out",
+   "worst_sink_xy": [
+    699.84,
+    708.48
+   ],
+   "nearest_terminal": 12,
+   "worst_station_um": 161.02,
+   "interior_worst_um_info": 328.32,
+   "verdict": "PASS"
+  },
+  "hd_spn_wshim_tx": {
+   "outline_um": [
+    699.84,
+    1036.8
+   ],
+   "terminals": 4,
+   "local_taps": 0,
+   "worst_sink_um": 167.4,
+   "worst_sink": "face:link_out",
+   "worst_sink_xy": [
+    699.84,
+    708.48
+   ],
+   "nearest_terminal": 3,
+   "worst_station_um": 157.78,
+   "interior_worst_um_info": 1022.76,
+   "verdict": "PASS"
+  },
+  "hd_st_k5": {
+   "outline_um": [
+    1442.88,
+    872.64
+   ],
+   "terminals": 54,
+   "local_taps": 18,
+   "worst_sink_um": 193.16,
+   "worst_sink": "ft:u.s2",
+   "worst_sink_xy": [
+    970.93,
+    133.8
+   ],
+   "nearest_terminal": 5,
+   "worst_station_um": 193.16,
+   "interior_worst_um_info": 254.24,
+   "verdict": "PASS"
+  },
+  "hd_st_m": {
+   "outline_um": [
+    1442.88,
+    129.6
+   ],
+   "terminals": 8,
+   "local_taps": 1,
+   "worst_sink_um": 138.96,
+   "worst_sink": "ft:rx.s1",
+   "worst_sink_xy": [
+    961.92,
+    86.76
+   ],
+   "nearest_terminal": 3,
+   "worst_station_um": 138.96,
+   "interior_worst_um_info": 223.1,
+   "verdict": "PASS"
+  },
+  "hd_st_n3_transit": {
+   "outline_um": [
+    1442.88,
+    475.2
+   ],
+   "terminals": 15,
+   "local_taps": 5,
+   "worst_sink_um": 341.48,
+   "worst_sink": "face:d2_out",
+   "worst_sink_xy": [
+    0.0,
+    452.16
+   ],
+   "nearest_terminal": 1,
+   "worst_station_um": 213.05,
+   "interior_worst_um_info": 396.08,
+   "verdict": "PASS"
+  },
+  "hd_st_n3_turn": {
+   "outline_um": [
+    1304.64,
+    604.8
+   ],
+   "terminals": 24,
+   "local_taps": 10,
+   "worst_sink_um": 341.86,
+   "worst_sink": "face:u1_out",
+   "worst_sink_xy": [
+    1304.64,
+    17.92
+   ],
+   "nearest_terminal": 9,
+   "worst_station_um": 157.94,
+   "interior_worst_um_info": 359.78,
+   "verdict": "PASS"
+  },
+  "hd_st_n4": {
+   "outline_um": [
+    1123.2,
+    993.6
+   ],
+   "terminals": 48,
+   "local_taps": 17,
+   "worst_sink_um": 163.24,
+   "worst_sink": "ft:d1.s2",
+   "worst_sink_xy": [
+    449.28,
+    869.56
+   ],
+   "nearest_terminal": 25,
+   "worst_station_um": 163.24,
+   "interior_worst_um_info": 257.57,
+   "verdict": "PASS"
+  },
+  "hd_st_str": {
+   "outline_um": [
+    1442.88,
+    475.2
+   ],
+   "terminals": 23,
+   "local_taps": 5,
+   "worst_sink_um": 231.84,
+   "worst_sink": "face:d_in",
+   "worst_sink_xy": [
+    1442.88,
+    452.16
+   ],
+   "nearest_terminal": 11,
+   "worst_station_um": 213.05,
+   "interior_worst_um_info": 300.24,
+   "verdict": "PASS"
+  },
+  "hd_st_turn": {
+   "outline_um": [
+    1304.64,
+    1131.84
+   ],
+   "terminals": 50,
+   "local_taps": 14,
+   "worst_sink_um": 182.29,
+   "worst_sink": "face:d_out",
+   "worst_sink_xy": [
+    346.36,
+    1131.84
+   ],
+   "nearest_terminal": 23,
+   "worst_station_um": 129.48,
+   "interior_worst_um_info": 285.12,
+   "verdict": "PASS"
+  },
+  "hd_tile": {
+   "outline_um": [
+    708.48,
+    1036.8
+   ],
+   "terminals": 53,
+   "local_taps": 9,
+   "worst_sink_um": 166.11,
+   "worst_sink": "face:i",
+   "worst_sink_xy": [
+    0.0,
+    1008.51
+   ],
+   "nearest_terminal": 38,
+   "worst_station_um": null,
+   "interior_worst_um_info": 293.76,
+   "verdict": "PASS"
+  },
+  "hd_turn_a": {
+   "outline_um": [
+    172.8,
+    1036.8
+   ],
+   "terminals": 6,
+   "local_taps": 1,
+   "worst_sink_um": 148.32,
+   "worst_sink": "ft:t.s1",
+   "worst_sink_xy": [
+    43.33,
+    429.25
+   ],
+   "nearest_terminal": 2,
+   "worst_station_um": 148.32,
+   "interior_worst_um_info": 252.72,
+   "verdict": "PASS"
+  },
+  "hd_turn_b": {
+   "outline_um": [
+    172.8,
+    699.84
+   ],
+   "terminals": 6,
+   "local_taps": 1,
+   "worst_sink_um": 177.12,
+   "worst_sink": "face:t_in",
+   "worst_sink_xy": [
+    4.32,
+    699.84
+   ],
+   "nearest_terminal": 4,
+   "worst_station_um": 87.69,
+   "interior_worst_um_info": 195.48,
+   "verdict": "PASS"
+  }
+ },
+ "over_reach": [
+  "hd_host_n",
+  "hd_serdes"
+ ],
+ "method": "terminal relays (reset_tree.for_type) vs ft stations on the in->out window line + face windows; interior grid INFO"
+}

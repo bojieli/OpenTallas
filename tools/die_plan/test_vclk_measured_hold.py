@@ -99,5 +99,5 @@ def test_measured_selection_mirrors_signoff():
         assert key.rstrip("]") in m, key
         assert key.replace("$din", "$so_din") in signoff.FF_VCLK_TCL, key
     assert "set_clock_latency -source $mean" in m
-    assert re.search(r"abs\(\$mean - \$ffb\) > \$tol", m)            # band check, fail closed
+    assert re.search(r"abs\(\$mean - \$ffb\) <= \$tol", m)           # band check (ADVISORY, KW-FIX-4/BAND 11-03)
     assert "repair_timing -hold -hold_margin $hm" in m                 # margin unchanged (kit OT_HOLD_FF_MARGIN)

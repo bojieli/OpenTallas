@@ -187,9 +187,11 @@ class Probe(unittest.TestCase):
             res = json.loads(out.stdout.split("AP_JSON ", 1)[1])
         self.assertEqual(res["flags"], {"a": "noview", "h": "hard"})
         self.assertEqual(res["deps"], {"a": ["rom_e"]})
-        d = {"_plan_flags": res["flags"]}
+        d = {"_plan_flags": res["flags"], "prov_view": False}           # KW-PROV-1 die opt-out: old WAIT-DEP hold
         self.assertIn("WAIT-DEP", KW.plan_entry_block(d, "a"))
         self.assertIsNone(KW.plan_entry_block(d, "b"))
+        # KW-PROV-1 default ON: the type launches on provisional child views
+        self.assertIsNone(KW.plan_entry_block({"_plan_flags": res["flags"]}, "a"))
 
     def test_probe_flags_planned_core_types(self):
         """DIE-KV-62/types 11-02 class A: a hard_cores[] entry with no lef (PLANNED core, view not bound) -> the type
@@ -212,7 +214,9 @@ class Probe(unittest.TestCase):
         self.assertEqual(res["flags"], {"pv": "planned", "mix": "noview"})
         self.assertEqual(res["deps"], {"pv": ["kv3_pv_pair"], "mix": ["m_a"]})
         self.assertEqual(res["probe_v"], KW.PROBE_V)
-        d = {"_plan_flags": res["flags"]}
+        self.assertEqual(res["prov_deps"], {"pv": ["kv3_pv_pair"], "mix": ["m_a", "m_b"]})
+        self.assertIsNone(KW.plan_entry_block({"_plan_flags": res["flags"]}, "pv"))    # KW-PROV-1 default ON
+        d = {"_plan_flags": res["flags"], "prov_view": False}
         self.assertTrue(KW.plan_entry_block(d, "pv").startswith("WAIT-DEP"))
         self.assertIsNone(KW.plan_entry_block(d, "hg"))
         self.assertIsNone(KW.plan_entry_block(d, "flat"))

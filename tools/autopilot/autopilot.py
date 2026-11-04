@@ -533,6 +533,37 @@ if so:
         out["signoff"]["odb_bytes"] = os.path.getsize(out["signoff"]["odb"])
     except Exception:
         out["signoff"]["odb_bytes"] = 0
+    # KW-PROV-1 11-03 (COORD 17:50 (C)): a kit built on PROVISIONAL child views (kit_wave marker
+    # provisional_views.json) is never a sign-off for the count until every child is FINAL (signed child libs in
+    # macros/, sha-checked) and this record is the STA-only re-sign on them (newer than the final libs):
+    # SIGNED -> LOCAL_PASS_NEEDS_PARENT (WAIT-PARENT: provisional.tsv, no archive; retry_pending re-probes)
+    pv = jl(os.path.join(K, "provisional_views.json"))
+    if isinstance(pv, dict) and str(pv.get("schema", "")).startswith("opentallas.provisional_views"):
+        import hashlib
+        kids = pv.get("children") or {}
+        owed = sorted(m for m, v in kids.items() if not (isinstance(v, dict) and v.get("final")))
+        bad, newest = [], 0.0
+        for m, v in kids.items():
+            for n, h in ((v or {}).get("final_sha256") or {}).items():
+                f = os.path.join(K, "macros", n)
+                try:
+                    ok = hashlib.sha256(open(f, "rb").read()).hexdigest() == h
+                    newest = max(newest, os.path.getmtime(f))
+                except Exception:
+                    ok = False
+                if not ok:
+                    bad.append(n)
+        stale = bool(newest) and os.path.getmtime(so[-1]) < newest
+        s_ = out["signoff"]
+        s_["provisional"] = {"status": pv.get("status"), "owed": owed, "lib_mismatch": bad, "stale_signoff": stale}
+        if s_.get("verdict") == "SIGNED" and (pv.get("status") != "FINAL" or owed or bad or stale):
+            why = ("provisional_child_view: built on PROVISIONAL child views " + ",".join(
+                "%s:%s" % (m, (v or {}).get("source", "?")) for m, v in sorted(kids.items()))
+                + (" (owed %s)" % ",".join(owed) if owed else "") + (" (lib sha mismatch %s)" % ",".join(bad) if bad else "")
+                + (" (sign-off predates the final child libs)" if stale else "")
+                + "; STA-only re-sign on the signed child libs owed (KW-PROV-1)")
+            s_.update(verdict="LOCAL_PASS_NEEDS_PARENT", local_verdict="SIGNED", release_qualified=False,
+                      reasons=list(s_.get("reasons") or []) + [why[:400]])
 for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS"):
     p = os.path.join(K, f)
     if os.path.isfile(p) and os.path.getmtime(p) >= since:
