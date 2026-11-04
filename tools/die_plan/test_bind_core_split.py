@@ -84,3 +84,21 @@ def test_gate_tap_skips_registered_reset_out():
     # tap k >= consumer count is a reset out: emitted as rr_t<k>, no rst_n_t<k> net exists
     relays = [dict(q="rst_n_t0", xy=[0, 0]), dict(q="rst_n_t1", xy=[100, 0])]
     assert S.gate_tap(relays, (90, 0), 1) == "rst_n_t0"
+
+
+def test_view_drop_and_parts():
+    c = Cell("u_a", "pc", {}, {"g": [1, 2, 3], "ck": [4], "r": [5, 6], "h": [7], "e": [8, 9, 10, 11]},
+             {"g": "input", "ck": "input", "r": "input", "h": "input", "e": "input"}, "leaf", ytype="pc", yparams={}, src=None)
+    b = binder(c)
+    S.apply(b, [spec(view_drop=["h"], view_parts={"e": {"e": [0], "e_2": [2, 3]}})])
+    pcc = b.F.cells[0]
+    assert pcc.ports["h"] == [7] and pcc.ports["e"] == [8] and pcc.ports["e_2"] == [10, 11]
+    assert pcc.dirs["e_2"] == "input"
+    assert S.view_hidden([spec(view_drop=["h"]), spec(pcc="o")]) == {"pcc": {"h"}}
+
+
+@pytest.mark.parametrize("kw", [dict(view_drop=["nope"]), dict(view_parts={"nope": {"e": [0]}}),
+                                dict(view_parts={"ck": {"e": [5]}})])
+def test_view_fit_refuses_bad_spec(kw):
+    with pytest.raises(S.CoreSplitError):
+        S.apply(binder(leaf()), [spec(**kw)])

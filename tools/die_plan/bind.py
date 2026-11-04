@@ -3742,6 +3742,10 @@ class Binder:
                     if (G.dirs[ci].get(pn) == "input" and len(bits) == 1
                             and tuple(self.sinks[(ci, pn, 0)][:2]) == ("rst", "low")):
                         native_reset_roles[f"{short_id('u_' + r, 90)}.{pn}"] = dict(kind="control", clocks=clocks)
+            if self.ab.get("core_splits"):
+                import bind_core_split
+                hide = bind_core_split.view_hidden(self.ab["core_splits"]).get(c.module, ())
+                conns = [(pn, e) for pn, e in conns if pn not in hide]
             cs = ",\n".join(f"        .{pn}({e})" for pn, e in conns)
             insts.append(f"    // as-built {c.path}\n    {c.module}{pstr} {short_id('u_' + r, 90)} (\n{cs}\n    );")
         for L in obus_tree:

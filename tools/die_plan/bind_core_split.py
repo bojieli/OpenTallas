@@ -6,7 +6,12 @@ substitute_inst, before compose and Graph: PCC keeps the path and every port exc
 Spec: {"from": module, "pcc": module, "pcf": module, "face": {"port": name, "width": n},
        "split": {port: {"pcc": [bits], "pcf": [bits], "pcc_port": name, "pcf_port": name}},
        "shared": {port: [bits or null=all]},  # ports PCF also connects
-       "reset_gate": [ports]}  # optional, both new leaves: see gate_ports
+       "reset_gate": [ports],  # optional, both new leaves: see gate_ports
+       "view_drop": [ports],  # optional: PCC view has no such pin (die-clock aliases collapsed inside the view): not emitted
+       "view_parts": {port: {view port: [bits]}}}  # optional: PCC view keeps only these bits, under these names; other bits dead
+view_drop/view_parts (DIE-KV-67 11-04): the as-built leaf ports are not the hardened view ports (kvspc_face_ports). Without these
+the parent instance names pins the child does not have and rtl_lint stops the kit. view_drop pins stay in the connectivity graph so
+their lanes and lane epochs stay as planned (plan cells read them); only the emitted instance leaves them out.
 reset_gate (DIE-KV-67 11-04, COORD LOOP-GAP 05:20 (4), option b): the PC reset pins come from a reset-less data lane, so the die
 reset contract does not cover them. Each listed pin gets one ot_dp_rgate: q <= lane & local wavefront tap. Lane function kept,
 one edge later; while the die reset holds the tap low the pin is held low, so the wavefront proof covers it by construction.
@@ -41,6 +46,26 @@ def gate_tap(relays, xy, consumer_taps):
     return best["q"]
 
 
+def view_hidden(specs):
+    """{PCC module: set(pins the emitted instance leaves out)}."""
+    return {s["pcc"]: set(s["view_drop"]) for s in specs if s.get("view_drop")}
+
+
+def fit_view(c, s, pc, dc):
+    """PCC ports as the hardened view has them: rename the live bits of view_parts.  Dead bits lose their load."""
+    for port in s.get("view_drop", []):
+        if port not in pc:
+            raise CoreSplitError(f"{c.path}: no view_drop port {port}")
+    for port, parts in (s.get("view_parts") or {}).items():
+        if port not in pc:
+            raise CoreSplitError(f"{c.path}: no view_parts port {port}")
+        bits, d = pc.pop(port), dc.pop(port)
+        for name, sel in parts.items():
+            if not sel or max(sel) >= len(bits) or min(sel) < 0:
+                raise CoreSplitError(f"{c.path}.{port}: view_parts {name} bits outside {len(bits)}")
+            pc[name], dc[name] = [bits[i] for i in sel], d
+
+
 def apply(binder, specs):
     F, R = binder.F, binder.R
     by = {s["from"]: s for s in specs}
@@ -69,6 +94,7 @@ def apply(binder, specs):
                 raise CoreSplitError(f"{c.path}: no shared port {port}")
             bits = c.ports[port]
             pf[port], df[port] = (list(bits) if sel is None else [bits[i] for i in sel]), c.dirs[port]
+        fit_view(c, s, pc, dc)
         pc[fp], dc[fp] = list(face), "output"
         pf[fp], df[fp] = list(face), "input"
         lp, part = c.path + "_f", R.part_of(c.path)
