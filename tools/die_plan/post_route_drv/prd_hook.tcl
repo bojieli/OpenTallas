@@ -243,6 +243,47 @@ if {$_rc eq "placement"} {
   puts "OT_PRD repair RC: placement estimate for ECO-touched nets, routed SPEF for the rest (no GRT/PA updates in repair)"
 }
 global_route -start_incremental
+# OT_PRD_UNFOLD_CHAINS=1: a placed input-port buffer chain can fold far away from a sink that sits at the pin
+# (S81 bksel_c f_s_n[998]: flop 10 um from its pin, two buffers 100 um away, 217 um of wire, TT -19.13; repair_timing
+# neither moves nor removes them).  Put the buffers of such a chain back on the pin-to-sink line, inside this GRT
+# session so their nets are rerouted; detailed_placement below legalizes.  Single-sink chains of unfixed buffers only.
+proc ot_prd_unfold_input_chains {} {
+  set moved 0
+  foreach bt [[ord::get_db_block] getBTerms] {
+    if {[$bt getIoType] ne "INPUT" || [$bt getSigType] ne "SIGNAL"} continue
+    set bb [$bt getBBox]
+    set px [$bb xMin]; set py [$bb yMin]
+    set net [$bt getNet]; set lx $px; set ly $py; set sum 0; set bufs {}; set sink ""
+    while {1} {
+      set inputs {}
+      foreach x [$net getITerms] { if {[$x isInputSignal]} { lappend inputs $x } }
+      if {[llength $inputs] != 1} { set sink ""; break }
+      set inst [[lindex $inputs 0] getInst]
+      lassign [$inst getLocation] ix iy
+      incr sum [expr {abs($ix-$lx)+abs($iy-$ly)}]
+      set lx $ix; set ly $iy
+      if {![string match BUF* [[$inst getMaster] getName]]} { set sink $inst; break }
+      if {[$inst isFixed]} { set sink ""; break }
+      lappend bufs $inst
+      set net ""
+      foreach z [$inst getITerms] { if {[$z isOutputSignal]} { set net [$z getNet] } }
+      if {$net eq "" || $net eq "NULL"} { set sink ""; break }
+    }
+    if {$sink eq "" || ![llength $bufs]} continue
+    set direct [expr {abs($lx-$px)+abs($ly-$py)}]
+    set um [[ord::get_db_block] getDbUnitsPerMicron]
+    if {$sum <= 3*$direct + 50*$um} continue
+    set n [expr {[llength $bufs]+1}]; set k 0
+    foreach b $bufs {
+      incr k
+      $b setLocation [expr {$px+($lx-$px)*$k/$n}] [expr {$py+($ly-$py)*$k/$n}]
+    }
+    incr moved
+    puts "OT_PRD unfold [$bt getName]: [llength $bufs] buffers, chain [expr {$sum/$um}] um, direct [expr {$direct/$um}] um"
+  }
+  puts "OT_PRD unfold: $moved input chains moved"
+}
+if {[info exists ::env(OT_PRD_UNFOLD_CHAINS)] && $::env(OT_PRD_UNFOLD_CHAINS) eq "1"} { ot_prd_unfold_input_chains }
 set _pass [expr {[info exists ::env(OT_PRD_PASS)] ? $::env(OT_PRD_PASS) : 1}]
 
 # instances on clock nets (as ot_clk_freeze): drivers = clock-tree cells (dont_touch there), the rest = sinks
