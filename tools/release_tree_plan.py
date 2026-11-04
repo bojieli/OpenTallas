@@ -244,6 +244,13 @@ def reloc(x, f):
         if i >= 0 and os.path.exists(q + x[i + len(n) - 1:]): return q + x[i + len(n) - 1:]
         q = os.path.dirname(q)
     return x
+def counts_signed(d):
+    # COORD 11-03 18:48 + OWNER 18:49 (standing, every die): LOCAL_PASS_NEEDS_PARENT counts SIGNED when the local
+    # sign-off is SIGNED and the only open reason is io_hold_parent (that receipt moves to the die STA FF row).
+    v = d.get('verdict')
+    if v == 'SIGNED': return True
+    if v != 'LOCAL_PASS_NEEDS_PARENT' or d.get('local_verdict') != 'SIGNED': return False
+    return all(str(r).startswith('io_hold_parent') for r in (d.get('reasons') or []))
 def resign(f, x, load):
     # COORD ruling 2026-10-30 02:03 (3b): RE-SIGN record = a routed DB re-checked (signoff.py TT/FF/DRC + post-route LEC)
     # with tools at a released flow tag.  PROVENANCE.json {kind: resign, src_commit: tag commit, flow_tag, routed_db,
@@ -283,7 +290,7 @@ def prov(p, d, load):
             # upward for the resign / tagged record (KV PHY103 was unversioned by it, SPRINT-4 13:10).
             if n == 'PROVENANCE.json' and str(x.get('schema', '')).endswith('kit_provenance.v1'):
                 continue
-            if n == 'PROVENANCE.json' and x.get('verdict') not in (None, 'SIGNED'):
+            if n == 'PROVENANCE.json' and x.get('verdict') not in (None, 'SIGNED', 'LOCAL_PASS_NEEDS_PARENT'):
                 return {}
             if n == 'PROVENANCE.json' and x.get('kind') == 'resign':
                 return resign(f, x, load)
@@ -304,7 +311,7 @@ for p in sys.stdin.read().split():
         if os.path.getsize(p) > 8 << 20: continue
         d = json.load(open(p))
     except Exception: continue
-    if not isinstance(d, dict) or d.get('verdict') != 'SIGNED': continue
+    if not isinstance(d, dict) or not counts_signed(d): continue
     fg = d.get('face_guard') or {}
     r = dict(path=p, name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
              generated=d.get('generated'), host=d.get('host'), pins_path=fg.get('pins') if isinstance(fg, dict) else None)
@@ -424,7 +431,7 @@ def main_records(tree):
     for p in tree.rglob('*signoff.json'):
         try: d = json.loads(p.read_text())
         except Exception: continue
-        if isinstance(d, dict) and d.get('verdict') == 'SIGNED':
+        if isinstance(d, dict) and _PROV_NS['counts_signed'](d):
             fg = d.get('face_guard') or {}
             r = dict(path='origin/main:' + str(p.relative_to(tree)), name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
                      generated=d.get('generated'), host=d.get('host'), scan_host='origin/main',
