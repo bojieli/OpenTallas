@@ -332,7 +332,7 @@ def contract_lib(module, corner, w, h, pins, dirs, clocks, period_ps):
         buses.setdefault(b, set())
         if bit is not None:
             buses[b].add(bit)
-    # clock pins by port (a vector clock port ck[0] is the bus ck: clock + tree path on the bus group, related_pin "ck")
+    # clock pins by port (a vector clock port ck[0] is the bus ck: clock + tree path on its bit pins, related_pin "ck")
     lat = {}
     for c, v in clocks.items():
         lat.setdefault(split_bit(c)[0], v[0] if corner == "tt" else v[1])
@@ -366,7 +366,20 @@ def contract_lib(module, corner, w, h, pins, dirs, clocks, period_ps):
         if buses[b]:
             body.append(f"      bus_type : bus_{max(buses[b])}_{min(buses[b])};")
         body.append(f"      direction : {d};")
-        if b in lat:
+        if b in lat and buses[b]:
+            # a vector clock port as signed views write it: clock + tree path on each bit's pin group.  cores.lib_clocks
+            # reads pin groups only, so a clock on the bus group read as "no clock pins" at gen (bk_sel__t2 ck[0]).
+            l = lat[b]
+            body.append(f"      capacitance : {IN_CAP_FF};")
+            for bit in sorted(buses[b]):
+                body += [f'      pin ("{b}[{bit}]") {{', "        direction : input;", "        clock : true;",
+                         f"        capacitance : {IN_CAP_FF};"]
+                for tt in ("max_clock_tree_path", "min_clock_tree_path"):
+                    body += ["        timing () {", f"          timing_type : {tt};",
+                             "          timing_sense : positive_unate;", "  " + sc("cell_rise", l),
+                             "  " + sc("cell_fall", l), "        }"]
+                body.append("      }")
+        elif b in lat:
             l = lat[b]
             body += ["      clock : true;", f"      capacitance : {IN_CAP_FF};"]
             for tt in ("max_clock_tree_path", "min_clock_tree_path"):
