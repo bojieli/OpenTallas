@@ -2312510,7 +2312510,7 @@
   }
  ],
  "clock": {
-  "ring_hold": {"sender_ps": -100.0},
+  "ring_hold": {"sender_ps": -385.0, "write_edge": "fall" },
   "source": {
    "part": "@die",
    "bus": "clk_core"
