@@ -1205940,7 +1205940,16 @@
        "fstart:ft3_o"
       ]
      }
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "ft0_i",
+      "ft1_i",
+      "ft2_i",
+      "ft3_i"
+     ],
+     "dsrep": 1
+    }
    },
    "reset": {
     "tap_um": [
@@ -1206144,7 +1206153,8 @@
      ]
     }
    ],
-   "cells": 38472
+   "cells": 38472,
+   "landing_control_status_copy": true
   },
   "kv3_io_ft_v1": {
    "module": "kv3_io_ft_v1_part",
@@ -1230625,7 +1230635,16 @@
        "fstart:ft3_o"
       ]
      }
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "ft0_i",
+      "ft1_i",
+      "ft2_i",
+      "ft3_i"
+     ],
+     "dsrep": 1
+    }
    },
    "reset": {
     "tap_um": [
@@ -1230829,7 +1230848,8 @@
      ]
     }
    ],
-   "cells": 38398
+   "cells": 38398,
+   "landing_control_status_copy": true
   },
   "kv3_pc_v3": {
    "module": "kv3_pc_v3_part",
