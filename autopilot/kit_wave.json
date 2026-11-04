@@ -1697,7 +1697,8 @@
     "hd_ctl_n@6",
     "hd_host_n@6",
     "hd_ctl_e@7",
-    "hd_spn_eshim_tx@8"
+    "hd_spn_eshim_tx@8",
+    "hd_mesh_e@1"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -1773,14 +1774,93 @@
     "hd_ctl_n@6": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)",
     "hd_host_n@6": "INFRA class: epyc4 gen host under an ot-run spill-copy marker -> NOT RUN no host qualifies; gen_hosts intel2 only (KW-FIX-4 14:5x, COORD 14:2x)",
     "hd_ctl_e@7": "INFRA class: epyc4 gen host under an ot-run spill-copy marker (launched 14:48 before the intel2-only gen_hosts reached the hub) -> relaunch on intel2; class fix claude/kw-fix-4-spillmark-1103@2ff7575ee42 (KW-FIX-4 15:2x)",
-    "hd_spn_eshim_tx@8": "INFRA class: epyc4 gen host under an ot-run spill-copy marker (launched 14:48 before the intel2-only gen_hosts reached the hub) -> relaunch on intel2; class fix claude/kw-fix-4-spillmark-1103@2ff7575ee42 (KW-FIX-4 15:2x)"
+    "hd_spn_eshim_tx@8": "INFRA class: epyc4 gen host under an ot-run spill-copy marker (launched 14:48 before the intel2-only gen_hosts reached the hub) -> relaunch on intel2; class fix claude/kw-fix-4-spillmark-1103@2ff7575ee42 (KW-FIX-4 15:2x)",
+    "hd_mesh_e@1": "DIE-HEAD-58: re-kit on l48rf with OT_IO_HOLD=sender_min for m_rx_ft_i (replaces DIE-HEAD-56 legacy min -90 exception), item_env (KW-FIX-4 17:52)"
    },
    "gen_hosts": [
     "intel2"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
-   "queue_src": "claude/kw-fix-4-headtb2-1103@e20aedb65fe"
+   "queue_src": "claude/kw-fix-4-headtb2-1103@e20aedb65fe",
+   "item_env": {
+    "hd_ctl": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_ctl_e": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_ctl_n": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_host": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_host_n": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_lep0N": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_mesh": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_mesh_e": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_serdes": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_spn": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_spn_end": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_spn_eshim_rx": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_spn_eshim_tx": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_spn_wshim_rx": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_spn_wshim_tx": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_st_k5": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_st_m": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_st_n3_transit": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_st_n3_turn": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_st_n4": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_st_str": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_st_turn": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_tile": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_turn_a": {
+     "OT_IO_HOLD": "sender_min"
+    },
+    "hd_turn_b": {
+     "OT_IO_HOLD": "sender_min"
+    }
+   },
+   "item_env_note": "KW-FIX-4 17:52 (DIE-HEAD-58 ruling, item_env merged abf51d0c72): every HEAD type moves from the legacy seam_hold min -90 exception to OT_IO_HOLD=sender_min at its next (re)launch; hd_mesh_e relaunched now (m_rx_ft_i, 73-ps window)."
   },
   "qwen_compute": {
    "enabled": true,
@@ -2260,8 +2340,8 @@
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/die_plan.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbm2d",
-   "src_sha": "2d0660db1b765149042f7ad6cf0c01f289235a0f",
+   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbmi3",
+   "src_sha": "eaf46c760f81af3364d546758023dc40fdc92399",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -2652,12 +2732,15 @@
     "ot_hfd_coll_q2n2_vm_core@3",
     "ot_hgi_qw_dec@2",
     "ot_hbm_hc_bank128_pair_core__v7d149b37532c@1",
-    "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d@4"
+    "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d@4",
+    "ot_hbm_hc_bank128_pair_first_core@3",
+    "ot_hbm_hc_root_static__tailx_rest__v4f4566@4",
+    "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@5"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-61",
    "pilot_mode": "queue",
-   "queue_src": "main@2d0660db1b7",
+   "queue_src": "main@eaf46c760f8",
    "hold_items": {
     "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
     "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)"
@@ -2689,7 +2772,10 @@
     "ot_hgi_qw_dec@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
     "__batch_hbm_pins": "11 rows: INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
     "ot_hbm_hc_bank128_pair_core__v7d149b37532c@1": "DIE-HBM-61/B128 d44v part 5 bank128_pair S-edge macro stack (101616937ca; probe GRT ovf 7646 -> 0) = plan dir d44v8h; batch I2-B128 (KW-FIX-4 17:29); first_core follows in the I3 hold-fix batch",
-    "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d@4": "DIE-HBM-61/B128 d44v part 5 bank128_pair S-edge macro stack (101616937ca; probe GRT ovf 7646 -> 0) = plan dir d44v8h; batch I2-B128 (KW-FIX-4 17:29); first_core follows in the I3 hold-fix batch"
+    "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d@4": "DIE-HBM-61/B128 d44v part 5 bank128_pair S-edge macro stack (101616937ca; probe GRT ovf 7646 -> 0) = plan dir d44v8h; batch I2-B128 (KW-FIX-4 17:29); first_core follows in the I3 hold-fix batch",
+    "ot_hbm_hc_bank128_pair_first_core@3": "d44v part 5 101616937ca merged (plan dir d44v8h); hold fix 9855c866403 not merged yet -> launch now per DIE-HBM-61; batch I3-HBM (KW-FIX-4 17:52)",
+    "ot_hbm_hc_root_static__tailx_rest__v4f4566@4": "tailx_rest GEN_LINT fix 8ddb49948e4 merged main eaf46c760f8 = wave src kw-fix-4-hbmi3 (DIE-HBM-61, KW-FIX-4 17:52); batch I3-HBM",
+    "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@5": "tailx_rest GEN_LINT fix 8ddb49948e4 merged main eaf46c760f8 = wave src kw-fix-4-hbmi3 (DIE-HBM-61, KW-FIX-4 17:52); batch I3-HBM"
    },
    "plan_note": "17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | "
   }
