@@ -9,9 +9,10 @@ grt KIT [--from-failed]  class GRT-NEAR-MISS: GRT stopped on a small congestion 
 gpl KIT  class GPL-SPIN: routability-driven global placement of a macro die runs out of filler and its overflow stays
     near 0.33-0.40 for >10k Nesterov iterations (idx_topk_link, idx_selector_sel, pdie_serdes: > 9 h).  3_3 runs without
     -routability_driven; GRT and sign-off still judge routing.
-dpl KIT  class DPL-NEGOTIATION: the default legalizer leaves overlaps (DPL-0701, then DPL-0033 at the check) although
-    utilization is low (idx_topk_link 43 %, long-wire buffers in macro channels).  3_5 runs the diamond legalizer, as
-    S81-CORES-KITS-12 did on peco; check_placement still judges the result.
+dpl KIT  class DPL-INSIDE-MACRO: 3_4 leaves long-wire buffers deep inside a large macro, beyond the legalizer's default
+    reach of 500 sites / 100 rows, so 3_5 stops at DPL-0033 or DPL-0036 at low utilization (idx_topk_link 43 %: 1241 cells
+    out of reach, up to 1586 sites and 144 rows from a macro edge).  3_5 gets the diamond legalizer with a reach past
+    half a macro; check_placement still judges the result.
 Then: run_kit_hbm.sh KIT finish (resumes at the first unfinished stage).
 """
 import argparse
@@ -43,8 +44,8 @@ if {[info commands ot_gp_full] eq ""} {
   }
 }
 """
-DPL = """# DIE-HBM-62/FLOW class DPL-NEGOTIATION: diamond legalizer in 3_5; check_placement still judges the result.
-set ::env(DETAIL_PLACEMENT_ARGS) -use_diamond_legalizer
+DPL = """# DIE-HBM-62/FLOW class DPL-INSIDE-MACRO: reach past half a macro; check_placement still judges the result.
+set ::env(DETAIL_PLACEMENT_ARGS) {-use_diamond_legalizer -max_displacement {2000 200}}
 """
 
 

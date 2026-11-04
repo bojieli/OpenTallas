@@ -52,4 +52,4 @@ def test_dpl_form_hooks_the_detail_place_stage(tmp_path):
     (tmp_path / "face_flops_release.tcl").write_text("puts x\n")
     F.hook(tmp_path, "DETAIL_PLACE", "dpl_diamond.tcl", F.DPL)
     assert (tmp_path / "face_flops_release.tcl").read_text().startswith("source /work/dpl_diamond.tcl\n")
-    assert "-use_diamond_legalizer" in (tmp_path / "dpl_diamond.tcl").read_text()
+    assert "-use_diamond_legalizer -max_displacement {2000 200}" in (tmp_path / "dpl_diamond.tcl").read_text()
