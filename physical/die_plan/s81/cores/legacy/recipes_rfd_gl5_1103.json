@@ -1,0 +1,20 @@
+{
+ "_doc": "DIE-S81-51/RF-D gunit_l5 conservative form (plan of record plan_h2_2249, outline / pins unchanged)",
+ "dsdv_gunit_l5": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l5_n32",
+  "spec_git": "1766568f01:physical/ref_tile/dsdv_gunit_l5_n32/spec.json",
+  "suffix": "rfd",
+  "lec_hints": "physical/die_plan/s81/cores/legacy/lec_hints/dsdv_gunit_l5_n32.json",
+  "params": {
+   "RFD": 1
+  },
+  "regional_taps": {
+   "nx": 4,
+   "ny": 2,
+   "split": "count",
+   "win_ps": 20,
+   "protect_spine": 1
+  },
+  "_rfd": "DIE-S81-51/RF-D 11-03 conservative form of the routed ccB build (DIE-S81-48 liveB, TT -17.73 / FF +8.38, DRV slew): RFD 1 = (1) Sinkhorn fault LOOP: registered fault zeroing, HC result +1 edge; (2) per-bank kept SRAM write registers (0 edges). Clock = ccB regional taps 4x2 count/20 ps; IO reference = ccB plan_declared 500.85/403.75 (applied post-gen, apply_ioref_v1.py); M6 = ccB die-local layer ruling."
+ }
+}

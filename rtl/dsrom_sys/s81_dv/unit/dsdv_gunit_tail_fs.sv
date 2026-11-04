@@ -28,7 +28,9 @@ module dsdv_gunit_tail_fs #(
     // 0 edges added; 0 = the reviewed L5 ro3 source.
     parameter integer NAT32 = 0,
     // S81-KITS-RTLC 10-24: seam stages of the L5f round trip (operand out .. result in); L5 lands ye/yd in a pin register (+1)
-    parameter integer XS = 3
+    parameter integer XS = 3,
+    // DIE-S81-51/RF-D 11-03: Sinkhorn FQ (registered fault zeroing, LAT + 1): the calendar (SLAT, CAP, L) moves with it
+    parameter integer SKFQ = 0
 ) (
     input  wire          clk, rst_n,
     input  wire [7:0]    rst_v,
@@ -47,7 +49,7 @@ module dsdv_gunit_tail_fs #(
     localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 2, P4 = P3 + 16 + LAe;
     localparam integer P5 = P4 + 24 + LEe, P6 = P5 + 8 + LAe, P7 = P6 + 8 + LDe;
     localparam integer EREADY = P7 + 8 + ((LMe > LAe) ? LMe : LAe);
-    localparam integer SLAT = 18 + (2 * ITERS - 1) * 16;     // ot_hdc_sinkhorn_fs LAT (Q4: D0 18, DS 16): 642
+    localparam integer SLAT = 18 + (2 * ITERS - 1) * 16 + SKFQ;  // ot_hdc_sinkhorn_fs LAT (Q4: D0 18, DS 16): 642 (+ FQ)
     localparam integer CAP = SLAT + 1;
     localparam integer L = EREADY + CAP + 3;
     localparam integer NA = 272;                               // decoded ages 0 .. NA-1 (every issue / write-back age)
@@ -297,7 +299,7 @@ module dsdv_gunit_tail_fs #(
     generate for (k = 0; k < 8; k = k + 1) begin : g_slc
         (* keep = 1 *) ot_skf_kr #(.W(1)) u_s (.clk(clk), .d(sl_d), .q(slc[k]));
     end endgenerate
-    ot_hdc_sinkhorn_fs #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .NVIN(8), .OH(NAT32)) u_sinkh (.clk(clk), .rst_n(rst_v[3]), .rst_n2(rst_v[4]),
+    ot_hdc_sinkhorn_fs #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .NVIN(8), .OH(NAT32), .FQ(SKFQ)) u_sinkh (.clk(clk), .rst_n(rst_v[3]), .rst_n2(rst_v[4]),
         .in_valid(sl), .vin(slc), .in_ready(sr), .in_e(se), .out_valid(sv), .y(sy), .fault(sf), .busy(sbusy));
 
     // ---------------------------------------------------------------- control, fixed latency (dsdv_gunit_tail)

@@ -35,6 +35,9 @@
 `ifndef OT_S81_GUNIT_NAT32
 `define OT_S81_GUNIT_NAT32 0
 `endif
+`ifndef OT_S81_GUNIT_RFD
+`define OT_S81_GUNIT_RFD 0
+`endif
 // S81-GUNIT whole model (10-19, FANOUT_SAFE, default 0 = legacy): (1) the 3,072-bit base table lives in 12 native
 // ot_sram_1r1w2c_32x64_m1 banks (rows {set, which}, bank b = base words 2b, 2b + 1); each bank reads continuously
 // (r_ce 1) at its own kept copy of the rank-2 job select, so its registered rd_out is the old `bases` capture register
@@ -52,7 +55,14 @@ module dsdv_gunit_l5 #(
     parameter integer Q4 = `OT_S81_GUNIT_Q4,
     parameter integer FANOUT_SAFE = `OT_S81_GUNIT_FANOUT_SAFE,
     // S81-GUVE 10-20: 1 = native-32 tail (dsdv_gunit_tail_fs NAT32; needs FANOUT_SAFE 1); 0 edges added
-    parameter integer NAT32 = `OT_S81_GUNIT_NAT32
+    parameter integer NAT32 = `OT_S81_GUNIT_NAT32,
+    // DIE-S81-51/RF-D 11-03 conservative form (FANOUT_SAFE 1 only), routed ccB classes: (1) one-cycle LOOP Sinkhorn fault
+    // -> fault-zeroing copies (fault_n cone + 4 x 16 kept copies across the leaf, TT -17.73): copies from the registered
+    // master fault, HC result + 1 edge (tail SKFQ; result_v / ct rows are valid-driven, no pin contract moves);
+    // (2) base-bank write port (shared wd / wv / wa flops -> 3 banks each, 170-um wire into the SRAM 124-ps setup, TT
+    // -15.21): per-bank KEPT write registers (wce / wrow / 64-bit wd) loaded from the cw pin registers on the same edge as
+    // wv / wa / wd (0 edges).  0 = the reviewed form.
+    parameter integer RFD = `OT_S81_GUNIT_RFD
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -170,11 +180,26 @@ module dsdv_gunit_l5 #(
         wire [5:0] wo = wa[5:0] - 6'd56;
         wire wbase = wv && !wa[9] && wa[5:0] >= 6'd56 && wa[5:0] < 6'd62;
         wire [1:0] wrow = {wa[8], wo >= 6'd3};
+        // RFD: next-edge decode of the same write from the cw pin registers (wv <= cw_vp, wa <= {cw_ap[7:6], 2'd0, cw_ap[5:0]})
+        wire [5:0] wo_d = cw_ap[5:0] - 6'd56;
+        wire wbase_d = cw_vp && !cw_ap[7] && cw_ap[5:0] >= 6'd56 && cw_ap[5:0] < 6'd62;
+        wire [1:0] wrow_d = {cw_ap[6], wo_d >= 6'd3};
         for (g = 0; g < 12; g = g + 1) begin : g_bank
-            wire wce = wbase && (wo == 6'(g / 4) || wo == 6'(g / 4 + 3));
+            wire wce; wire [1:0] wrw; wire [63:0] wdb;
+            if (RFD) begin : g_wq                       // per-bank kept write registers (same edge as wv / wa / wd)
+                (* keep = "true" *) reg ce_q; (* keep = "true" *) reg [1:0] row_q; (* keep = "true" *) reg [63:0] d_q;
+`ifdef OT_RFD_MUT_WQ        // RF-D bench mutant: bank 5 decodes its row group from the wrong half (o % 3 == 1 only)
+                always @(posedge clk) begin ce_q <= wbase_d && (wo_d == 6'(g / 4) || (g != 5 && wo_d == 6'(g / 4 + 3))); row_q <= wrow_d; d_q <= cw_dp[64 * (g % 4) +: 64]; end
+`else
+                always @(posedge clk) begin ce_q <= wbase_d && (wo_d == 6'(g / 4) || wo_d == 6'(g / 4 + 3)); row_q <= wrow_d; d_q <= cw_dp[64 * (g % 4) +: 64]; end
+`endif
+                assign wce = ce_q; assign wrw = row_q; assign wdb = d_q;
+            end else begin : g_w0
+                assign wce = wbase && (wo == 6'(g / 4) || wo == 6'(g / 4 + 3)); assign wrw = wrow; assign wdb = wd[64 * (g % 4) +: 64];
+            end
             wire [63:0] rd;
             ot_sram_1r1w2c_32x64_m1 u_m (.wclk(clk), .rclk(clk), .r_ce_in(1'b1), .r_addr_in({3'b000, ss[g], sw[g]}),
-                .rd_out(rd), .w_ce_in(wce), .w_addr_in({3'b000, wrow}), .wd_in(wd[64 * (g % 4) +: 64]),
+                .rd_out(rd), .w_ce_in(wce), .w_addr_in({3'b000, wrw}), .wd_in(wdb),
                 .w_mask_in({64{1'b1}}));
             always @(*) bases[64 * g +: 64] = rd;          // the macro's read register IS the bases capture
         end
@@ -244,7 +269,7 @@ module dsdv_gunit_l5 #(
         (* keep = 1 *) dsdv_gunit_control_first u_e (.clk(clk), .rst_n(rr[1]), .d(ye_vp), .q(qe_vc[vc]));
         (* keep = 1 *) dsdv_gunit_control_first u_d (.clk(clk), .rst_n(rr[1]), .d(yd_vp), .q(qd_vc[vc]));
     end
-    dsdv_gunit_tail_fs #(.PIN_COPY(PIN_COPY), .NAT32(NAT32), .XS(4), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rr[6]), .rst_v(rr[14:7]), .launch(ln_c[0]), .launch_pre(lp12), .mixes(mx), .bases(bases), .scales(scales),
+    dsdv_gunit_tail_fs #(.PIN_COPY(PIN_COPY), .NAT32(NAT32), .XS(4), .SKFQ(RFD), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rr[6]), .rst_v(rr[14:7]), .launch(ln_c[0]), .launch_pre(lp12), .mixes(mx), .bases(bases), .scales(scales),
         .result_v(tl_v), .result(coef), .fault(tl_f),
         .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_vc), .xe_y(qe_y), .xe_f(qe_f),
         .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_vc), .xd_y(qd_y), .xd_f(qd_f));

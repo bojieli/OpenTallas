@@ -475,7 +475,12 @@ module ot_hdc_sinkhorn_fs #(
     parameter integer MUT_Q4 = 0,
     parameter integer MUT = 0,                  // bench only: 1 = a steady step lands one stage early
     parameter integer NVIN = 8,                 // in_valid copies (vin)
-    parameter integer OH = `OT_SKF_OH           // S81-GUVE 10-20: 1 = one-hot sliced shifters (native-32), bit-identical
+    parameter integer OH = `OT_SKF_OH,          // S81-GUVE 10-20: 1 = one-hot sliced shifters (native-32), bit-identical
+    // DIE-S81-51/RF-D 11-03 (conservative form, one-cycle LOOP fix): 1 = the fault-zeroing copies load from the REGISTERED
+    // master fault (not the 16-wide range / bad cone of fault_n), and out_valid / fault leave one edge later so y and the
+    // pulse stay aligned: LAT + 1 (the caller's calendar adds FQ).  y holds until the next accept, so the extra edge reads
+    // the same state.  0 = the reviewed schedule.
+    parameter integer FQ = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,               // master + st-select replicas (11 asynchronous pins)
@@ -484,9 +489,9 @@ module ot_hdc_sinkhorn_fs #(
     input  wire [NVIN-1:0] vin,                 // kept same-edge copies of in_valid
     output wire            in_ready,
     input  wire [511:0]    in_e,                // element (r, c) at [32 (4r + c) +: 32]
-    output reg             out_valid,
+    output wire            out_valid,
     output wire [511:0]    y,
-    output reg             fault,
+    output wire            fault,
     output wire            busy
 );
     localparam integer STEPS = 2 * ITERS - 1;
@@ -691,10 +696,10 @@ module ot_hdc_sinkhorn_fs #(
     wire sbad = sub_any | (|bad4) | (|q_rng);
 
     // ---- master control (fixed schedule): flt / fault / out_valid from replica 0's state ----------------------------
-    reg flt;
+    reg flt, ov_r, fault_r;
     reg flt_n, fault_n, ov_n;
     always @* begin
-        flt_n = flt; fault_n = fault; ov_n = 1'b0;
+        flt_n = flt; fault_n = fault_r; ov_n = 1'b0;
         case (ph)
             P_IDLE: if (in_valid) flt_n = 1'b0;
             P_Z: if (zcap) begin
@@ -708,13 +713,29 @@ module ot_hdc_sinkhorn_fs #(
         endcase
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin flt <= 1'b0; out_valid <= 1'b0; fault <= 1'b0; end
-        else begin flt <= flt_n; out_valid <= ov_n; fault <= fault_n; end
+        if (!rst_n) begin flt <= 1'b0; ov_r <= 1'b0; fault_r <= 1'b0; end
+        else begin flt <= flt_n; ov_r <= ov_n; fault_r <= fault_n; end
+    wire fz;                                    // the fault-zeroing source: fault_n (FQ 0) or the master fault (FQ 1)
+    generate if (FQ) begin : g_fq
+        reg ov_q, fault_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ov_q <= 1'b0; fault_q <= 1'b0; end
+            else begin ov_q <= ov_r; fault_q <= fault_r; end
+`ifdef OT_RFD_MUT_FQ        // RF-D bench mutant: the pulse is not delayed with the zeroing copies (the caller captures one edge early)
+        assign out_valid = ov_r;
+`else
+        assign out_valid = ov_q;
+`endif
+        assign fault = fault_q;
+        assign fz = fault_r;
+    end else begin : g_fq0
+        assign out_valid = ov_r; assign fault = fault_r; assign fz = fault_n;
+    end endgenerate
     // fault copies (zero the output, 16 bits each); fault_n == fault during reset
     wire [63:0] fc;                             // 2 kept fault copies per 16 output bits (8 bits each), D from 4 kept fault_n gates
     wire [3:0] fn;
     generate for (g = 0; g < 4; g = g + 1) begin : g_fn
-        (* keep = 1 *) ot_skf_and2 u_n (.a(fault_n), .b(1'b1), .y(fn[g]));
+        (* keep = 1 *) ot_skf_and2 u_n (.a(fz), .b(1'b1), .y(fn[g]));
     end
     for (g = 0; g < 64; g = g + 1) begin : g_fc
         (* keep = 1 *) ot_skf_kr #(.W(1)) u_f (.clk(clk), .d(fn[g / 16]), .q(fc[g]));
