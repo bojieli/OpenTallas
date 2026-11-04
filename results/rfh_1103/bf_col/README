@@ -1,0 +1,9 @@
+DIE-S81-51/RF-H 11-03 S81-058 ot_v41_bf_col rfh1 -- die-local delta notes (no plan JSON copy)
+
+The conservative single-core form changes no plan field: outline 450.168x198.72, origins/orients of the 56 uses, pins
+file inputs/core_pins/ot_v41_bf_col.json (842 pins), plan LEF, obs_max M7 and the ROM macro sites are all unchanged, so
+no plan_h2_2249 copy (.json.gz) is needed and schema.validate is unaffected.
+Changed: kit recipe (recipes_rfh_1103.json: params BRNECUT 1, regional_taps 4x4 count, util 0.45, hold_ff_margin 0,
+suffix rfh1) and the BF partial latency at the column pins (+1 cycle, BF16 partials only; FP4/FP8 partials unchanged).
+Schedule: the column and its parent are valid-driven (no fixed BF column latency constant in tools/s81_dv), so the
+schedule change is the +1 BF partial latency itself; TOK-VERIFY-1 checks token exactness with it.

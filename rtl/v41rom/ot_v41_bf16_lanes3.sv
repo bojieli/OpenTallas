@@ -37,6 +37,10 @@ module ot_v41_bf16_lanes3 #(
     parameter integer TNODE = 0,
     // Final tag-stage replication; 0 retains the original shared source.
     // 4 or 16 kept copies distribute to four-lane groups or individual lanes.
+    // RNECUT (RF-H bf_col conservative form, 2026-11-03; default 0 = unchanged): with RC != 0, the product is
+    // ot_v41_bmul2_rne_prepare XS = 2 (one more register cut in the subnormal RNE encode): product latency 8 -> 9, lane
+    // latency +1 (transaction level, like one more XST stage).
+    parameter integer RNECUT = 0,
     parameter integer TAG_GROUPS = 0
 ) (
     input  wire              fclk,     // free-running element clock
@@ -90,7 +94,7 @@ module ot_v41_bf16_lanes3 #(
     always @(posedge clk) t_r <= t_s;
     wire [TW-1:0] t_in = t_r;
     wire [TW-1:0] t_p;
-    localparam integer PL = RC != 0 ? 8 : 5;                     // product latency
+    localparam integer PL = RC != 0 ? (RNECUT != 0 ? 9 : 8) : 5;                     // product latency
     localparam [8:0] CUTT = RC != 0 ? 9'b1_1111_1111 : CUT;    // tree adders
     localparam integer LATT = 1 + CUTT[0] + CUTT[1] + CUTT[2] + CUTT[3] + CUTT[4] + CUTT[5] + CUTT[6] + CUTT[7] + CUTT[8];
     ot_hdc_delay #(.W(TW), .D(PL)) u_pt (.clk(clk), .rst_n(rst_n), .d(t_in), .q(t_p));
@@ -123,7 +127,7 @@ module ot_v41_bf16_lanes3 #(
         reg        v_r;
         always @(posedge lclk or negedge lrst) if (!lrst) v_r <= 1'b0; else v_r <= v_s;
         always @(posedge lclk) begin w_r <= w_s[16*l +: 16]; x_r <= x_s[16*l +: 16]; end
-        ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_n(lrst), .v(v_r), .a({w_r, 16'd0}), .b({x_r, 16'd0}),
+        ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? (RNECUT != 0 ? 2 : 1) : 0)) u_m (.clk(lclk), .rst_n(lrst), .v(v_r), .a({w_r, 16'd0}), .b({x_r, 16'd0}),
                          .y(prod[l]), .fault(pf[l]));
         reg [PL-1:0] vp;
         always @(posedge lclk or negedge lrst) if (!lrst) vp <= '0; else vp <= {vp[PL-2:0], v_r};
