@@ -100,7 +100,7 @@ MOCK = r"""
 proc mk {o props} { set ::P($o) $props; proc $o {m args} [string map [list @O@ $o] { return [dict get $::P(@O@) $m] }] }
 mk bbx {xMin @X0@ yMin 50000 xMax 120000 yMax 60000}
 mk bk {getBBox bbx isSoft @SOFT@}
-mk blk {getInsts {} getBlockages {bk}}
+mk blk {getInsts {} getBlockages {bk} getRows {}}
 set ff_blk blk; set ff_dbu 1000
 set ff_x0 0; set ff_y0 0; set ff_x1 200000; set ff_y1 200000; set ff_rh 270; set ff_sw 54
 set ff_orient {}

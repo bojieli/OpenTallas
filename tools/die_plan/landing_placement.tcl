@@ -59,6 +59,24 @@ foreach i [$ff_blk getInsts] {
  set b [$i getBBox]
  cland_occupy [$b xMin] [$b yMin] [expr {[$b xMax]-[$b xMin]}] [expr {[$b yMax]-[$b yMin]}]
 }
+# KW6-CLASS 11-04 (S81 ot_s81sl_leaf__t34/t66 3_5 DPL-0033 "Placed in rows check failed", diamond 0 failures): the row
+# model ff_orient is per y only, so the row-cut halo around a macro (rows stop 2 um beside it, core 215.1 in a row ending
+# 214.11) was free space and FIRM ring/collector cells landed outside any row.  The x gaps of each row y are occupied.
+proc cland_occupy_row_gaps {rows} {
+ global ff_x0 ff_x1 ff_rh
+ set spans {}
+ foreach r $rows { set b [$r getBBox]; dict lappend spans [$b yMin] [list [$b xMin] [$b xMax]] }
+ dict for {y row_spans} $spans {
+  set at $ff_x0
+  foreach s [lsort -integer -index 0 $row_spans] {
+   lassign $s l u
+   if {$l > $at} { cland_occupy $at $y [expr {$l-$at}] $ff_rh }
+   set at [expr {max($at,$u)}]
+  }
+  if {$at < $ff_x1} { cland_occupy $at $y [expr {$ff_x1-$at}] $ff_rh }
+ }
+}
+cland_occupy_row_gaps [$ff_blk getRows]
 # Opt-in (gen_phys reserved_sites_um): die clock-tree reservations are occupied space for ring/status cells.
 if {[info exists ::cland_avoid_rects]} {
  foreach r $::cland_avoid_rects { lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}] }
@@ -242,8 +260,13 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
  # resized, not moved) cannot grow into a tapcell / foreign FIRM cell (KV io_ft kits_gen5 3_5 DPL-0033: 3 FIRM
  # INVx1 -> INVx3 over TAPCELLs). Default (unset) unchanged.
  set fw $w
+ # DIE-S81-53/BAND 11-04 (S81 leaf t4/t6 ft5_i, t71 ft3_i, 1-bit buses: 82 flops, need 60 um2, band 411-425 um2): the fill
+ # spread of a +ff ring is max(1, 0.9*band/need), 6.4 here, so one 1.08 um flop asked for 17.28 um free in a 15.14 um band,
+ # and a tapcell beside the band (t4 y >= 32.4, x 1026.16) took every row with 26 flops left.  That footprint is a fill
+ # target, not upsize room: the fit footprint of a +ff ring stays at the base w/0.4.  The reservation (rw) is unchanged.
  if {[info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "1"} {
   set fsp $sp; if {$fsp eq {}} { set fsp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> fsp }
+  if {$fsp > 1.0 && [string match {ring:*+ff*} $tag]} { set fsp 1.0 }
   set fw [expr {max($w,int(ceil(double($w)/0.4*$fsp/$ff_sw))*$ff_sw)}]
  }
  # FLOW-6 10-30 opt-in OT_CLAND_FIT_RESERVE=resize: the site must be free of other occupancy over the widest drive
@@ -421,9 +444,12 @@ foreach spec $cland_status {
   error "OT_CLAND $net requires one actual dedicated output FF"
  }
  set cland_sw [list [expr {$x-2.16}] [expr {$y-2.16}] [expr {$x+2.16}] [expr {$y+2.16}]]
- # grow only a window that touches the core (a crowded window); a status point wholly outside the core fails closed
- if {[lindex $cland_sw 2]*$ff_dbu > $ff_x0 && [lindex $cland_sw 0]*$ff_dbu < $ff_x1 &&
-     [lindex $cland_sw 3]*$ff_dbu > $ff_y0 && [lindex $cland_sw 1]*$ff_dbu < $ff_y1} {
+ # grow a window whose largest grown size (+-17.28 um) touches the core (a crowded window); a status point farther out
+ # fails closed.  DIE-S81-53/BAND 11-04 (S81 leaf t56 landing_ready_ft9_i): a pin at y 0 with the core at y 4.32 has a
+ # +-2.16 um window clear of the core, so it took the plain path: slid into the core, inside the FIRM ft9 pin-register
+ # diamond (columns 2.16 um apart, y 4.3-24), with no site and no grow; free sites were 12 um away.
+ if {($x+17.28)*$ff_dbu > $ff_x0 && ($x-17.28)*$ff_dbu < $ff_x1 &&
+     ($y+17.28)*$ff_dbu > $ff_y0 && ($y-17.28)*$ff_dbu < $ff_y1} {
   cland_put_grow [lindex $drivers 0] $cland_sw status:$net status
  } else { cland_put [lindex $drivers 0] $cland_sw status:$net }
 }
@@ -487,6 +513,20 @@ proc cland_ctl_rekey {ffs base kb nbb rev} {
   } else { set pr }
  }]
  return [list $nc $out]
+}
+# FREG-1 (DIE-HEAD-60 11-04, hd_turn_a GRT-0183): a registered face's g_freg.u_face/q[N] has no [slot][bit] index, so
+# cland_ctl_rekey took all 566 as control registers and packed them at the START-pin bit: y 820..880 against pins
+# 700..1010, median pin-to-flop 104 um, max 196 um, one net boxed in.  q[N] registers bus bit N: key it first in that bit,
+# on the pin side.  N at or above the bus width (status / start bits) stays control.
+proc cland_freg_rekey {ffs base nbb rev} {
+ set nf 0
+ set out [lmap pr $ffs {
+  set k [lindex $pr 0]
+  if {$k eq [lindex [split $k |] 0] && [regexp {g_freg\.u_face/q\\?\[([0-9]+)\\?\]} $k -> b] && $b < $nbb} {
+   incr nf; list [format {%s|%09d|%09d|!freg} $base [expr {$rev ? 999999999-$b : $b}] 0] [lindex $pr 1]
+  } else { set pr }
+ }]
+ return [list $nf $out]
 }
 proc cland_dsel_wch {names} {
  set w 0
@@ -745,6 +785,11 @@ proc cland_place_ff {prefix rect tag} {
   }
   set base {}
   foreach pr $ffs { set k [lindex $pr 0]; if {[regexp {^([^|]+s_d)\|} $k -> b0]} { set base $b0; break } }
+  if {[llength $bxy] && $base ne {}} {
+   set nfb 0; foreach e $bxy { set nfb [expr {max($nfb,[lindex $e 0]+1)}] }
+   lassign [cland_freg_rekey $ffs $base $nfb $rev] nfr ffs
+   if {$nfr} { puts "OT_CLAND fregkey $prefix: $nfr face registers keyed to their own bus bit" }
+  }
   if {[llength $sx] && [llength $bxy] && $base ne {}} {
    lassign [cland_nearest_bit $sx $bxy] best bd
    set kb [expr {$rev ? 999999999-$best : $best}]

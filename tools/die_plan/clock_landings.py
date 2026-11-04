@@ -1896,6 +1896,11 @@ class Landings:
             return None
         buses = {}
         for b in sorted(ins):
+            # DIE-HEAD-59 11-03 (DH59-FG): FREG-1 puts one rising-fclk face flop in front of the ring, so d, the status
+            # pins and the start end in ordinary face registers (1 load each): no hold_mux / ring_start declaration.
+            wr = ring_write_reg(self.plan, tn, b)
+            if wr and wr["freg"]:
+                continue
             d = {"D": int(cat["rings"][b]["depth"]), "form": "hold_mux"}
             for n in [b] + ([f"cland_dn_ready_{b}", f"cland_dn_fault_{b}"] if self.dataflow else []):
                 buses[n] = dict(d)

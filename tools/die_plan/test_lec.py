@@ -2,7 +2,9 @@
     python3 -m pytest -q tools/die_plan/test_lec.py
 The integration tests run lec.py on the csa31 fixture (examples/lec_csa31: the 10-24 slang out-of-range select
 bug, synthesised by ORFS with the slang frontend) and need docker + the ORFS image; the rest is pure python."""
+import collections
 import json
+import os
 import itertools
 import shutil
 import subprocess
@@ -1297,6 +1299,61 @@ def test_json_q_alias_scalar_pass_needs_gate_scalar_and_one_to_one(tmp_path):
     assert lec.json_alias_keys(L, [], work=tmp_path) == 0
 
 
+def test_lone_surviving_bit_of_narrowed_vector_is_rekeyed(tmp_path):
+    # hcp nout_r = 24: the constant low bits are gone and the gate's nout_r[1] behaves as the RTL's bit 4.
+    def side(name, nx, bits):
+        p = tmp_path / (name + ".aig")
+        p.write_bytes(f"aig {1 + len(bits)} 1 {len(bits)} 0 0\n".encode() + "".join(f"{x}\n" for x in nx).encode())
+        mp = {"input": {0: [("a", 0)]}, "output": {},
+              "latch": {i: [(f"u_dut.nout_r[{b}]$_DFF_P_.lecq", 0)] for i, b in enumerate(bits)}}
+        return lec.read_aig(p), mp
+    def rekeyed(gate_nx, gold_bits):
+        g, gm = side("gold", [4, 2] + [2] * (len(gold_bits) - 2), gold_bits)
+        t, tm = side("gate", [gate_nx], [1])
+        L = lec.Lec(g, gm, t, tm)
+        lec.renamed(L, [], packed={"ff:u_dut.nout_r"})
+        return L
+    L = rekeyed(2, [1, 4])                 # gold [1] holds itself, [4] loads a; gate [1] loads a: the name moved
+    assert L.tonly == ["ff:u_dut.nout_r#t[1]"] and "ff:u_dut.nout_r[1]" in L.gonly
+    L = rekeyed(4, [1, 4])                 # the gate bit agrees with its own name: nothing moves
+    assert L.tonly == [] and "ff:u_dut.nout_r[1]" in L.matched
+
+
+def test_nowiden_retry_only_after_a_widened_failure(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_LEC_GOLD_NOWIDEN", raising=False)
+    seen = []
+    def run(verdict):
+        def f():
+            seen.append(os.environ.get("OT_LEC_GOLD_NOWIDEN"))
+            return {"verdict": verdict, "counts": {"differs": 0 if verdict == "EQUIVALENT" else 9}}
+        return f
+    bad = {"verdict": "NOT EQUIVALENT", "counts": {"differs": 529}}
+    # no widening evidence, or already proved: no second run
+    assert lec.nowiden_retry(dict(bad), tmp_path, run("EQUIVALENT"))["verdict"] == "NOT EQUIVALENT" and not seen
+    (tmp_path / "gold.ys.log").write_text("  Merging ports 12, 13 (address 4'1101).\n")
+    assert lec.nowiden_retry({"verdict": "EQUIVALENT"}, tmp_path, run("EQUIVALENT")) == {"verdict": "EQUIVALENT"} and not seen
+    # the proof with one word per element replaces the failure
+    r = lec.nowiden_retry(dict(bad), tmp_path, run("EQUIVALENT"))
+    assert r["verdict"] == "EQUIVALENT" and r["nowiden_retry"]["verdict"] == "NOT EQUIVALENT" and seen == ["1"]
+    assert json.loads((tmp_path / "lec.json").read_text())["verdict"] == "EQUIVALENT"
+    # a genuine difference stays NOT EQUIVALENT with the first run's points
+    r = lec.nowiden_retry(dict(bad), tmp_path, run("NOT EQUIVALENT"))
+    assert r["verdict"] == "NOT EQUIVALENT" and r["counts"]["differs"] == 529 and r["nowiden_retry"]["widened"] is True
+    assert "OT_LEC_GOLD_NOWIDEN" not in os.environ
+
+
+def test_merged_twin_is_reproposed_after_its_constant_falls():
+    from types import SimpleNamespace
+    L = SimpleNamespace(hyp={}, merged_choice={"ff:u.rd_bin[2]": "ff:u.rd_gray[2]"})
+    tried, log = collections.Counter({("gold", "ff:u.rd_bin[2]", "ff:u.rd_gray[2]", 0): 1}), []
+    assert lec.merged_reproposals(L, log, tried)
+    assert L.hyp == {("gold", "ff:u.rd_bin[2]"): ("eq", "gold", "ff:u.rd_gray[2]", 0)}
+    assert not lec.merged_reproposals(L, log, tried)                   # still held: nothing new
+    L.hyp.clear()
+    tried[("gold", "ff:u.rd_bin[2]", "ff:u.rd_gray[2]", 0)] = 2        # refuted twice: stays free
+    assert not lec.merged_reproposals(L, log, tried) and not L.hyp
+
+
 def test_packed_vector_rename_heuristic_does_not_rekey_real_changed_bits(tmp_path):
     # Swapped input functions simulate like other vector bits.  A declaration proves these are packed
     # bit identities, so keep the correspondence and expose the real mutant instead of changing names.
@@ -1347,3 +1404,22 @@ def test_singleton_narrowed_memory_tail_paired_by_function_and_mutant_fails(tmp_
         m, _ = L.build(with_compare=True, with_hyp=True)
         st = _sim_prove(m)
         assert (set(st.values()) == {"proved"}) != mutant, st
+
+
+def test_kept_copy_takes_representatives_renamed_gate_flop(tmp_path):
+    """link_gbx g_pc[c].ps: a kept copy whose gate flop took another name and is paired to the class representative."""
+    keep = tmp_path / 'gold.keep'
+    keep.write_text("lec_top/u_dut.copy0" + chr(10) + "lec_top/u_dut.copy1" + chr(10))
+    keep.with_suffix('.aliases.json').write_text(json.dumps({'modules': {lec.WRAP: {'netnames': {
+        'u_dut.copy0': {'bits': [10]}, 'u_dut.copy1': {'bits': [11]}}}}}))
+    def build(both):
+        g, gm = _seq(tmp_path, 'rpgold', ['d'], ['copy0', 'copy1'], lambda m, x: {'copy0': x['d'], 'copy1': x['d']})
+        names = ['copy0', 'a0'] if both else ['copy0']
+        t, tm = _seq(tmp_path, 'rpgate', ['d'], names, lambda m, x: {n: x['d'] for n in names})
+        L = lec.Lec(g, gm, t, tm)
+        L.hyp[('gold', 'ff:u_dut.copy1')] = ('eq', 'gold', 'ff:u_dut.copy0', 0)
+        if both:
+            L.hyp[('gate', 'ff:u_dut.a0')] = ('eq', 'gold', 'ff:u_dut.copy0', 0)
+        return L
+    assert not lec.kept_registers(build(True), keep)[1]
+    assert lec.kept_registers(build(False), keep)[1]      # no second gate flop: one kept bit stays missing

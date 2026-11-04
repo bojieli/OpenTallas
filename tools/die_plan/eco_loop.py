@@ -10,7 +10,8 @@ sign-off of a new routed DB.
 One iteration (at most MAX_ITER = 3), from the previous iteration's routed DB (iteration 1: the kit's):
   1. prd_mk.sh SRC D <m|b|t><hold margin> SO   (tools/die_plan/post_route_drv; two-mode kit: m<N>; single-mode kit:
      t<N> (TT setup + DRV, no hold) when TT fails, then b<N> (FF hold + DRV) from it when FF fails; OT_PRD_FROM=route when the DB has no DRC,
-     else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts)
+     else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts;
+     final = route from the kit's signed 6_final.odb, retried once when the routed seed does not match the SPEF)
   2. prd_run.sh D CPUS MEM 1 with OT_PRD_POST=0: the ECO hook prd_hook.tcl on the routed RCX SPEF (= measured arrivals)
        repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 0 ps
        (OWNER 11-02; was 12.19 measured arrivals + 10 ps) -> detailed_placement (legalises only what moved) ->
@@ -61,7 +62,8 @@ ECO_TOOL_FILES = ("clk_freeze.tcl", "clk_dump_db.tcl", "clk_geom_diff.py", "clk_
                   "kit_modes_eco.tcl", "pg_connect.tcl")
 FLOW_FILES = ("post_route_drv/prd_mk.sh", "post_route_drv/prd_run.sh", "post_route_drv/prd_hook.tcl",
               "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl",
-              "post_route_drv/prd_count.tcl", "post_route_drv/post_grt_chain.py", "eco_loop.py") + ECO_TOOL_FILES
+              "post_route_drv/prd_count.tcl", "post_route_drv/post_grt_chain.py", "post_route_drv/prd_seed.py",
+              "post_route_drv/prd_spef_insts.py", "eco_loop.py") + ECO_TOOL_FILES
 POST_RUNNERS = ("run_kit_hbm.sh", "run_kit_kv.sh", "run_kit.sh")
 # ECO-OOM-1 (DIE-S81-48 11-02, VEs autopilot 246986099dc1): the late ECO inherited the kit runner's ot-run memory (24 GB)
 # as its docker cap, but the ECO session holds the routed DB + the routed SPEF in TWO scenes + repair + DRT on top of what
@@ -124,6 +126,28 @@ def load(p):
 
 
 # ------------------------------------------------------------------------------------------------ record reading
+def measured_vclk(ref):
+    """sign-off IO frame: 'applied mode pin_flop_mean clock vclk latency_ps 332.27 ...' -> 332.27, else None"""
+    m = re.match(r"applied mode pin_flop_mean .*\blatency_ps ([0-9.]+)", ref or "")
+    return float(m.group(1)) if m else None
+
+
+def eco_vclk_frame(pass_dir, variant, prev):
+    """Single-mode pass: repair against the IO frame sign-off measured, not the plan bound.  The session bound
+    OT_VCLK_FF (hd_ctl_e FF 342) while sign-off rebinds pin_flop_mean (332.27), so repair_timing saw no hold violation
+    at FF -4.17.  Steers this pass only (kit_modes_eco.tcl); eco_loop restores the kit config.mk after the pass.
+    OT_ECO_MEASURED_VCLK=0 = old frame.  -> ps written, or None."""
+    if os.environ.get("OT_ECO_MEASURED_VCLK", "1") == "0" or variant[0] not in "tb":
+        return None
+    ps = (prev or {}).get("vclk_tt" if variant[0] == "t" else "vclk_ff")
+    cfg = Path(pass_dir) / "config.mk"
+    if ps is None or not cfg.is_file():
+        return None
+    with open(cfg, "a") as f:
+        f.write(f"\nexport OT_ECO_VCLK_PS = {ps:.6f}\n")
+    return ps
+
+
 def metrics(rec):
     """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}"""
     c = rec.get("checks") or {}
@@ -137,7 +161,9 @@ def metrics(rec):
     signed = verdict == "SIGNED" or (verdict == "LOCAL_PASS_NEEDS_PARENT" and rec.get("local_verdict") == "SIGNED")
     return dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
                 ff=(c.get("hold_ff") or {}).get("wns_ps"), drv=int(drv), drc=int((c.get("drc") or {}).get("count") or 0),
-                drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails)
+                drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails,
+                vclk_tt=measured_vclk((c.get("setup_tt") or {}).get("vclk_reference")),
+                vclk_ff=measured_vclk((c.get("hold_ff") or {}).get("ff_vclk_reference")))
 
 
 def passes(kit, prev, hm):
@@ -267,6 +293,7 @@ def docker():
 ABSTRACT_SH = r'''set -uo pipefail
 D=$1; CPUS=$2; MEM=$3; IMAGE=$4; DK=$5; MM=$6
 PATCH=true; [ "$MM" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
+[ -f "$D/kwrs_busfit.py" ] && PATCH="python3 -I /work/kwrs_busfit.py patch /OpenROAD-flow-scripts/flow/scripts/util.tcl; $PATCH"
 $DK run --rm --name eco-abs-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
   "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-generate_abstract" > "$D/run_eco_abstract.log" 2>&1
@@ -286,6 +313,16 @@ def flexpa_sig11(pd):
     return "Signal 11 received" in t and "drt::FlexPA" in t
 
 
+def stage_mismatch(pd):
+    """the ECO hook found SPEF instances missing from the seed DB (prd_hook.tcl OT_PRD STAGE_MISMATCH): the kit's
+    6_final is a post-route ECO of its 5_2_route.odb (DIE-S81-50 11-03, S81 l4) -> seed with OT_PRD_FROM=final"""
+    try:
+        t = (Path(pd) / "run_prd.log").read_text(errors="replace")
+    except OSError:
+        return False
+    return "OT_PRD STAGE_MISMATCH" in t
+
+
 def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc=""):
     """one ECO iteration from routed dir src into root/i<n><tag> (a single-mode kit's t<N> pass first into
     root/i<n><tag>t); repair_rc 'placement' = OT_PRD_REPAIR_RC (FlexPA SIG11 class); -> iteration record (metrics None
@@ -294,7 +331,7 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     t0 = time.time()
     vs = passes(kit, prev or {}, hm)
     it = dict(n=n, dir=str(d), source=str(src), mode=mode, variant="+".join(vs), started=t0, commands=[], rc={},
-              pass_dirs=[], repair_rc=repair_rc or "grt")
+              pass_dirs=[], repair_rc=repair_rc or "auto")
 
     def step(name, cmd, **kw):
         it["commands"].append(" ".join(shlex.quote(str(c)) for c in cmd))
@@ -317,16 +354,22 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         it["pass_dirs"].append(str(pd))
         # the first pass of the iteration keeps / re-routes per the DRC count; a later one starts from a fresh ECO route
         env = dict(os.environ, OT_PRD_FROM=mode if i == 0 else "route", OT_PRD_POST="0", OT_PRD_FINISH="1")
+        if (Path(kit) / "kwrs_busfit.py").is_file():  # KW-FIX-5: the kit's LEF-only pins (prd_run.sh busfit_prep)
+            env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
         if repair_rc:
             env["OT_PRD_REPAIR_RC"] = repair_rc
         stag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
             return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
+        it.setdefault("eco_vclk_ps", {})[v] = eco_vclk_frame(pd, v, prev)
         rc = step("prd_run" + stag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
         if rc:
             hit = oom(rc, f"ECO {v} session", pd / "run_prd.log", pd / "run_prd_finish.log")
             if hit:
                 return hit
+            if stage_mismatch(pd):
+                it["stage_mismatch"] = True
+                return end("ERROR", f"ECO {v} seed DB does not match the SPEF (OT_PRD STAGE_MISMATCH, run_prd.log)")
             if flexpa_sig11(pd):
                 it["flexpa_sig11"] = True
                 return end("ERROR", f"ECO {v} session SIGSEGV in DRT pin access (FlexPA SIG11 class, run_prd.log)")
@@ -381,7 +424,7 @@ def prune(it, intermediate_only=False):
 
 # ------------------------------------------------------------------------------------------------ the loop
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
-             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc=""):
+             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode=""):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE"""
     kit = Path(kit).resolve()
     t0 = time.time()
@@ -411,7 +454,8 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     best = None
     verdict, stop = "EXHAUSTED", f"{max_iter} iterations, still not signed"
     for n in range(1, max_iter + 1):
-        mode = "route" if prev["drc"] == 0 else "grt"
+        # --from wins over OT_ECO_FROM=route|grt: owner-chosen seed (DIE-HEAD-59: a DRC tied to one pin + a GRT-session RSZ-0074, route-keep)
+        mode = from_mode or os.environ.get("OT_ECO_FROM") or ("route" if prev["drc"] == 0 else "grt")
         it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                      repair_rc=repair_rc)
         res["iterations"].append(it)
@@ -421,6 +465,12 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
             res["repair_rc_retry"] = f"iteration {n}: FlexPA SIG11 -> OT_PRD_REPAIR_RC=placement"
             it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                          tag="r", repair_rc=repair_rc)
+            res["iterations"].append(it)
+        if it.get("stage_mismatch") and n == 1 and mode == "route":
+            # class retry: the kit's routed seed predates its signed 6_final (post-route ECO kit) -> seed with 6_final
+            res["stage_retry"] = "iteration 1: OT_PRD STAGE_MISMATCH -> OT_PRD_FROM=final"
+            it = iterate(n, src, root, kit, runner, so, "final", hold_margin, mem, cpus, run, image, prev=prev,
+                         tag="f", repair_rc=repair_rc)
             res["iterations"].append(it)
         m = it.get("metrics")
         if not m:
@@ -494,8 +544,11 @@ def main():
     r.add_argument("--keep", action="store_true", help="keep the run data of superseded iterations")
     r.add_argument("--lec", action="store_true", help="run the kit's post-route LEC on a PASS (into BEST/lec)")
     r.add_argument("--lec-tool")
-    r.add_argument("--repair-rc", choices=["placement"], default="",
-                   help="OT_PRD_REPAIR_RC from iteration 1 (default: only as the retry after a FlexPA SIG11)")
+    # DIE-KV-67/CL 11-04: a small-DRC kit whose full DRT took many hours (ZH rfB: 13.7 h) can keep its wires instead
+    r.add_argument("--from", dest="from_mode", choices=["route", "grt"], default="",
+                   help="seed of every iteration (default: route when the DB has no DRC, else grt)")
+    r.add_argument("--repair-rc", choices=["placement", "grt"], default="",
+                   help="OT_PRD_REPAIR_RC from iteration 1 (default: the hook decides, a wired seed repairs on placement; a fresh one after a FlexPA SIG11)")
     c = sub.add_parser("check")
     c.add_argument("record")
     a = ap.parse_args()
@@ -508,7 +561,7 @@ def main():
         print("ECO_LOOP FAIL: no sign-off record in the kit")
         return 3
     res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep,
-                   repair_rc=a.repair_rc)
+                   repair_rc=a.repair_rc, from_mode=a.from_mode)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
         res["verdict"] = "LEC_FAIL"
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))

@@ -4234,45 +4234,45 @@
     {
      "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_hi",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-     "orient": "R0",
+     "orient": "MX",
      "rect_um": [
       33.588,
-      10.8,
+      8.64,
       208.332,
-      81.288
+      79.128
      ]
     },
     {
      "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_lo",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-     "orient": "MX",
+     "orient": "R0",
      "rect_um": [
       33.588,
-      143.1,
+      149.76,
       208.332,
-      213.588
+      220.248
      ]
     },
     {
      "name": "u_fcore.u_xcal.g_t2.u_tab_lo",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
       15.12,
-      91.8,
+      93.96,
       109.944,
-      132.864
+      135.024
      ]
     },
     {
      "name": "u_fcore.u_xcal.g_t2.u_tab_hi",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "MY",
+     "orient": "R0",
      "rect_um": [
       131.976,
-      91.8,
+      93.96,
       226.8,
-      132.864
+      135.024
      ]
     }
    ],
@@ -5313,13 +5313,43 @@
    "recipe_macros": []
   },
   "ot_hgi_coll_tkm_m_tp192__root": {
-   "status": "UNKNOWN",
+   "status": "KNOWN",
    "outline_um": [
     319.68,
-    345.6
+    389.664
    ],
-   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
-   "rejected": []
+   "basis": "DIE-HBM-62/FLOW d44v one-block event: root_core has 2 1024x256 buffers (u.u_buffer.g_bm[0..1].u_b); E column above and below the 5 pushdown islands, master W-edge pins face the logic column, W and N pin channels clear; outline and pins kept",
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[0].u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      136.08,
+      6.48,
+      310.824,
+      76.968
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[1].u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      136.08,
+      268.92,
+      310.824,
+      339.408
+     ]
+    }
+   ],
+   "previous": {
+    "status": "UNKNOWN",
+    "outline_um": [
+     319.68,
+     345.6
+    ],
+    "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
+    "rejected": []
+   }
   },
   "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
    "status": "UNKNOWN",
@@ -7289,10 +7319,10 @@
   "ot_hnx_fused_host_program": {
    "status": "KNOWN",
    "outline_um": [
-    207.36,
+    276.48,
     129.6
    ],
-   "basis": "DIE-HBM-49 10-31 static sites (OWNER 07:1x one-block plan event, KIT-WAVE PLAN_CORE_MACROS / macro_channels): 2 SRAMs u_fcore.provider.lo/hi (yosys flatten of view @65a08f6d43f9 kit RTL); one centred column (W/E channels ~12.9), lo below / hi above the centre clock island [99.36,60.48,108,69.12] which sits in the 12.98-um interior channel (2.17 um clear each side); N/S pin faces keep ~12.9-um std-cell bands; E/W faces have no pins",
+   "basis": "DIE-HBM-66 part 10 conservative outline (COORD 09:16 (2)): +69.12 um on E, same SRAMs and pins at the same die position; DIE-HBM-49 10-31 static sites (OWNER 07:1x one-block plan event, KIT-WAVE PLAN_CORE_MACROS / macro_channels): 2 SRAMs u_fcore.provider.lo/hi (yosys flatten of view @65a08f6d43f9 kit RTL); one centred column (W/E channels ~12.9), lo below / hi above the centre clock island [99.36,60.48,108,69.12] which sits in the 12.98-um interior channel (2.17 um clear each side); N/S pin faces keep ~12.9-um std-cell bands; E/W faces have no pins",
    "macros": [
     {
      "name": "u_fcore.provider.lo",
@@ -7416,7 +7446,7 @@
    ],
    "macros": [
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[0].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[0].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7427,7 +7457,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[1].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[1].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7438,7 +7468,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[2].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[2].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7449,7 +7479,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[3].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[3].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7460,7 +7490,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[4].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[4].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7471,7 +7501,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[5].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[5].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7484,6 +7514,182 @@
    ],
    "channel_rule_um": 10.8,
    "basis": "DIE-HBM-61/SPLIT p6: the uncut 6x4 grid row b = bank b -> one bank per lane1 tile, 6 reads as one column (pairs abutted, 24.024 channel as the uncut rows), x 41.148 ; clock entry (164.16, 155.52) in the 54-um macro-free E strip (cefix rule: entry off macros)"
+  },
+  "hnx_rp3h_xs": {
+   "status": "KNOWN",
+   "outline_um": [
+    630.72,
+    216.0
+   ],
+   "macros": [
+    {
+     "name": "u_xs.u_leaf.g_ln\\[0\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      51.948,
+      5.4,
+      146.772,
+      46.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[0\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      51.948,
+      59.4,
+      146.772,
+      100.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[0\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      51.948,
+      113.4,
+      146.772,
+      154.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[0\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      51.948,
+      167.4,
+      146.772,
+      208.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[1\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      267.948,
+      5.4,
+      362.772,
+      46.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[1\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      267.948,
+      59.4,
+      362.772,
+      100.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[1\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      267.948,
+      113.4,
+      362.772,
+      154.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[1\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      267.948,
+      167.4,
+      362.772,
+      208.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[2\\].g_xm\\[0\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      483.948,
+      5.4,
+      578.772,
+      46.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[2\\].g_xm\\[1\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      483.948,
+      59.4,
+      578.772,
+      100.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[2\\].g_xm\\[2\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      483.948,
+      113.4,
+      578.772,
+      154.464
+     ]
+    },
+    {
+     "name": "u_xs.u_leaf.g_ln\\[2\\].g_xm\\[3\\].u_x",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      483.948,
+      167.4,
+      578.772,
+      208.464
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-62/BIG d44v part 7: 12 x-store SRAMs in 3 lane columns x 4 rows, clock entry in the middle row gap"
+  },
+  "hnx_fused_lane_c": {
+   "status": "KNOWN",
+   "outline_um": [
+    345.6,
+    103.68
+   ],
+   "macros": [
+    {
+     "name": "u_ctl.u_gb",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      38.88,
+      34.572,
+      133.704,
+      75.636
+     ]
+    },
+    {
+     "name": "u_ctl.u_xb",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      211.896,
+      34.572,
+      306.72,
+      75.636
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-62/BIG d44v part 7: gain + x SRAMs in one row, clock entry between them"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"

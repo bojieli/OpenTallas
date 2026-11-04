@@ -558,6 +558,8 @@ SCHEMA = {
                         # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
                         # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density", "explicit", "grid+explicit"]}, "tap_radius_um": _pos,
+                        # opt-in per type: density taps as frozen plans solved them (pre-0ddc1ccd8c8 anchor lattice, see taps.density_taps)
+                        "tap_model": {"enum": ["consumed", "frozen_anchor"]},
                         # "grid+explicit" (DIE-S81-39 10-31, COORD 00:2x): the R4 grid unchanged + these ADDED light taps
                         # (names clk_t<n_grid+i> in order; taps.grid_explicit_taps validates each one)
                         "added_taps": {"type": "array", "items": {
@@ -943,7 +945,11 @@ SCHEMA = {
             # optional write_fall_types list limits the fall write to those receiver types (absent = every type).
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
                           "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
-                                         "write_fall_types": {"type": "array", "items": {"type": "string"}}}},
+                                         "write_fall_types": {"type": "array", "items": {"type": "string"}},
+                                         # DIE-QC-67/STM: sender data-vs-fclk max (ps) replacing the ft-hop -max on ft ring
+                                         # inputs of falling-edge writer types only: a (1-share) T budget cannot be captured
+                                         # at T/2 (landing_contract.ring_input_sdc); the real arrival is priced in die STA
+                                         "ft_ring_max_ps": {"type": "number", "exclusiveMinimum": 0}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
@@ -1127,6 +1133,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # Liberty arcs (island ft clock pass-through, e.g. ft_ck0_i) to its outputs instead of measuring it as a clock sink.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_passthrough"] = {
     "type": "boolean"}
+# DH59-TILE 11-03, both opt-in: OT_TAP_CORE_ETAP as a plan form (tap_balance.tcl early-source core re-hang, was C9-only) and
+# the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
 # HEAD START-export fanout: retained copies of existing data states, zero added cycles.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
 # Uniform, physically planned reader-only START delivery.  K is compensated
@@ -1466,6 +1476,24 @@ class Plan:
             self.clock["insertion_ps"] = float(self.clock["common_latency_ps"])   # kit balances to + vclk latency
         self.reset = dict(DEFAULT_RESET, **raw.get("reset", {}))
         self.budgets = dict(DEFAULT_BUDGETS, **raw.get("budgets", {}))
+        self._separate_landing_pins()
+
+    def _separate_landing_pins(self):
+        """DIE-QC-67 PINDUP 11-03: two landing pins of a type on one site abort global route (GRT-0080).  Every tool
+        sees the separated sites through P.types; raw stays exactly as read, so plan digests and hashes do not move.
+        A plan without such a pair keeps P.types is raw["partition_types"], byte-identical."""
+        hit = [tn for tn, t in self.types.items() if t.get("clock", {}).get("landing_contract", {}).get("pins")]
+        if not hit:
+            return
+        if str(Path(__file__).resolve().parent) not in sys.path:
+            sys.path.append(str(Path(__file__).resolve().parent))
+        import landing_contract as LC
+        hit = [tn for tn in hit if LC.overlapping_pins(self, self.types[tn])]
+        if hit:
+            types = dict(self.types)
+            self.types = types
+            for tn in sorted(hit):
+                types[tn] = LC.separate_pins(self, tn)
 
     # -- port geometry from the type's bus declaration
     def _type_geom(self, part, bus):
@@ -2013,7 +2041,11 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False, *, pin_snap=N
     # a macro wholly inside a clock keepout blocks nothing the keepout does not (S81 PMA in the shore keepout): its box
     # would only add candidate edges and move grid taps that tie on the ring distance
     from placement_obstacles import placement_boxes
-    boxes = [m for m in placement_boxes(t, halo=clear).values()
+    if t.get("clock", {}).get("tap_model") == "frozen_anchor":
+        pool = placed_macro_boxes(t, halo=clear)
+    else:
+        pool = placement_boxes(t, halo=clear)
+    boxes = [m for m in pool.values()
              if not any(k[0] <= m[0] and k[1] <= m[1] and m[2] <= k[2] and m[3] <= k[3] for k in keep)] + keep
 
     def free(px, py):

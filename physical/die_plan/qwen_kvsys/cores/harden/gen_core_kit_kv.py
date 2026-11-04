@@ -1130,6 +1130,15 @@ def resolve_recipe(recs, mod):
     return rec
 
 
+def macro_pin_layer(lef, layer):
+    """LEF text with the signal pin shapes of every PIN on layer (USE POWER / GROUND pins and OBS unchanged)."""
+    def pin(m):
+        if re.search(r"\bUSE\s+(POWER|GROUND)\b", m.group(0)):
+            return m.group(0)
+        return re.sub(r"\bLAYER\s+\S+\s*;", f"LAYER {layer} ;", m.group(0))
+    return re.sub(r"^\s*PIN\s+(\S+)\s*$.*?^\s*END\s+\1\s*$", pin, lef, flags=re.M | re.S)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -1223,6 +1232,9 @@ def main():
     ap.add_argument("--hr-face-ports", metavar="DIR", help="KVHR2 10-26: qkd_hr_* zero-cycle face recut: kit RTL = DIR/<core>.v "
                     "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
                     "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
+    ap.add_argument("--hr-face-proof-pending", action="store_true", help="DIE-KV-65/HR 11-04 (die owner ruling, opt-in): build from "
+                    "--hr-face-ports DIR while its proof is still running; freeze.json + PROVENANCE.json + hr_face_delta.json say "
+                    "face_proof pending. The kit does not count until the proof returns.")
     ap.add_argument("--related-clock", action="append", default=[], metavar="PORT",
                     help="DIE-KV-10 opt-in: this clock-class port is its own RELATED clock root at the core period "
                          "(landing-ring write clock fclk), with the landing-contract phase window to clk; default off")
@@ -1343,7 +1355,12 @@ def main():
             raise SystemExit("--hr-face-ports only applies to qkd_hr_* cores")
         fpd = Path(a.hr_face_ports)
         rc = (fpd / "eq_rc.txt").read_text().split()
-        if rc != ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
+        import hr_dead_inputs
+        # COORD 11-04 05:23: a stopped leg may return under its own name (named_legs.json); eq_rc.txt stays as it was
+        hr_face_state = hr_dead_inputs.proof_state(fpd, mod)
+        if hr_face_state in ("pass", "named"):
+            a.hr_face_proof_pending = False          # a returned proof is never recorded as pending
+        elif not a.hr_face_proof_pending:
             raise SystemExit(f"--hr-face-ports: proof not clean in {fpd}/eq_rc.txt: {rc}")
         files = [str(fpd / f"{mod}.v")] + [f for f in files if f.endswith("_bb.v")]
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
@@ -1483,7 +1500,11 @@ def main():
             added_cycles=0, private_port_flops=len(fr["private_out"]), merged_input_captures=len(fr["merged_in"]),
             listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
             **({"retimed_input_captures": fr["retimed_in"]} if fr.get("retimed_in") else {}),
-            proof="equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)"), indent=1) + "\n")
+            proof=("PENDING: " + " ".join((Path(a.hr_face_ports) / "eq_rc.txt").read_text().split()) if a.hr_face_proof_pending else
+                   hr_dead_inputs.proof_text(a.hr_face_ports, mod))),
+            indent=1) + "\n")
+        if hr_face_state == "named":
+            shutil.copy2(Path(a.hr_face_ports) / "named_legs.json", kd / "hr_face_named_legs.json")
     # DIE-KV-61/hr 11-02: recipe-declared timed-face buses (face_guard timed_face.json) and tied spare outputs
     # (face_guard spare_out.json); both are read by the kit core_preflight / signoff face guard.
     if rec.get("timed_face"):
@@ -1608,9 +1629,20 @@ def main():
             # (qkd_hr_phy_adp R270 at y 17.28: 437 pins off-track -> DRT-0073 at GRT pin access)
             import macro_pin_tracks
             macro_pin_tracks.check(hard_children["blocks"], lambda m: (kd / "macros" / f"{m}.lef").read_text())
+        if hard_children.get("signal_pin_layer"):
+            # DIE-KV-65/HR 11-03: an N-designed M4 edge pin rotated 90 deg has no planar exit along M4 (DRT-0073 on
+            # qkd_hr_phy_adp R270, 2 kits). Kit view keeps every rect and moves the signal pins to the free layer above.
+            for m in hard_children["children"]:
+                f = kd / "macros" / f"{m}.lef"
+                f.write_text(macro_pin_layer(f.read_text(), hard_children["signal_pin_layer"]))
         if hard_children.get("static_rows"):
             from macro_sites import static_placement_tcl
-            (kd / "macro_place.tcl").write_text(static_placement_tcl(hard_children["blocks"]))
+            # DIE-KV-65 11-03: hr_rf_wrap nests the original core as u_rf_core, and the static plan matches exact flat names
+            blocks = hard_children["blocks"]
+            if rec.get("rf_wrap"):
+                blocks = [dict(b, inst="u_rf_core." + b["inst"]) if not b["inst"].startswith("u_rf_core.") else b
+                          for b in blocks]
+            (kd / "macro_place.tcl").write_text(static_placement_tcl(blocks))
         def _lef_size(m):
             g = re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)", (kd / "macros" / f"{m}.lef").read_text())
             return float(g.group(1)), float(g.group(2))
@@ -1892,6 +1924,8 @@ def main():
             raise SystemExit("--head-lane-taps chains face_flops.tcl; recipe face_flops=false is not supported")
         head_lane_taps(kd, tool)
         cfg += ["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels"]
+    if rec.get("fsm_keep"):    # DIE-KV-67/HR 11-04: physical/common_flow/ot_keep_regs.tcl keeps FSM state registers as written
+        cfg.append("export OT_FSM_KEEP = 1")
     synth_keepdc = bool(a.synth_keepdc or rec.get("synth_keepdc"))
     if synth_keepdc:
         # DIE-KV-60 ctlin / KV-FN-7 (COORD 11-01 09:1x): opt-in synth hook, -keepdc on opt_dff / wreduce only
@@ -1998,8 +2032,14 @@ def main():
         fz["master_plan"] = ms
     if reset_contract is not None:
         fz["reset_contract"] = reset_contract
+    if a.hr_face_proof_pending:
+        fz["face_proof"] = "pending"
+    elif a.hr_face_ports and hr_face_state == "named":
+        fz["face_proof"] = "named legs, hr_face_named_legs.json: " + hr_dead_inputs.proof_text(a.hr_face_ports, mod)
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
-    LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
+    prov = LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
+    if a.hr_face_proof_pending:
+        (kd / "PROVENANCE.json").write_text(json.dumps(dict(prov, face_proof="pending"), indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
                           macros=macros, kit_hash=fz["kit_hash"])))
 

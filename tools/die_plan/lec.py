@@ -52,6 +52,7 @@ Run inside the ORFS image (run_kit.sh does), or from a host with docker: lec.py 
 import argparse
 import collections
 import gzip
+import itertools
 import json
 import hashlib
 import os
@@ -78,6 +79,10 @@ CONE_BUDGET_S = 2.0          # + this much wall per cone in a batch (normal cone
 # recorded in noreset.raw_prefix_bounded.  0 = no limit (the old behaviour).
 RAWPREFIX_ANDS_DEFAULT = 500000
 RAWPREFIX_S_DEFAULT = 900
+# LEC-RAWPREFIX-SIM (DIE-KV-65/LEC 11-03): random simulation of a raw prefix miter before ABC.  One set output is a real
+# counterexample (state and every input are free), so that base is refuted without a solver call.
+RAWPREFIX_SIM_WORDS = 8
+RAWPREFIX_SIM_ROUNDS = 4
 
 
 def cone_limit_s():
@@ -264,6 +269,43 @@ def blackbox_local_constant_cleanup(env, kit):
             for name in sorted(declarations[0]):
                 commands.append(f"setparam -unset {name} t:{master}")
     return commands
+
+
+def blackbox_formal_parameters(env, kit, masters):
+    """{hard macro: [formal parameter names]} read from the macro's own source header.
+
+    An instance may override a formal parameter of a hard macro (#(.AL(6), .ML(7), .MUTANT(0))); the pin-only stub must
+    still accept those names, or hierarchy -check stops the gold read and the LEC is UNPROVEN.  Only names the source
+    declares are added, so an override of an unknown name still fails hierarchy.
+    """
+    found = {}
+    files = [Path(kpath(kit, f)) for f in env.get("VERILOG_FILES", "").split()]
+    for path in files:
+        try:
+            text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*', " ", path.read_text(), flags=re.S)
+        except OSError:
+            continue
+        for master in masters:
+            match = re.search(r"\bmodule\s+" + re.escape(master) + r"\s*#\s*\(", text)
+            if not match:
+                continue
+            depth, i = 1, match.end()
+            while i < len(text) and depth:
+                depth += {"(": 1, ")": -1}.get(text[i], 0)
+                i += 1
+            header, depth, parts, part = text[match.end():i - 1], 0, [], ""
+            for ch in header:
+                depth += {"(": 1, "[": 1, "{": 1, ")": -1, "]": -1, "}": -1}.get(ch, 0)
+                if ch == "," and depth == 0:
+                    parts.append(part)
+                    part = ""
+                else:
+                    part += ch
+            parts.append(part)
+            names = [m.group(1) for m in (re.search(r"([A-Za-z_][A-Za-z0-9_$]*)\s*(?:\[[^\]]*\]\s*)*=", q) for q in parts) if m]
+            if names:
+                found[master] = sorted(set(found.get(master, [])) | set(names))
+    return found
 
 
 ESC_DOTTED = re.compile(r"^[A-Za-z_][\w$]*(?:\.[A-Za-z_][\w$]*)+$")
@@ -465,7 +507,12 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
           # zq[5:2] address register became 4 unnamed gold latches, so every oa bit was UNPROVEN); the reference keeps
           # the RTL registers as written and an asynchronous read port
-          "memory -nomap -nordff", "memory_map", "opt_expr -keepdc", "opt_clean",
+          # OT_LEC_GOLD_NOWIDEN=1 (opt-in, DIE-HBM-60/LEC C8 11-03): -nowiden keeps one memory word per RTL element.
+          # Widened, an unpacked array with a non-zero base (HBM pgslice ot_hbm_su_static_ins r[1:DMAX], 120 b) became
+          # 480-bit words r[w][b] (element 4w + b/120), so the gold name r[1][b] (element 4..7) was paired with the
+          # gate's element r[1][b] (529 'differ', element 1 gold-only as r[0][120..]); naming only, no semantics
+          "memory -nomap -nordff" + (" -nowiden" if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1" else ""),
+          "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
     return "\n".join(s + seq_tail(out, lecff, split_seq(env))) + "\n"
 
@@ -1112,7 +1159,7 @@ def parse_bb_verilog(path):
     return mods
 
 
-def stub_verilog(bbports, native_parameters=None):
+def stub_verilog(bbports, native_parameters=None, formal_parameters=None):
     """{module: [(port, dir, width, lsb)]} -> stubs identical for gold and gate: input bits land on keep flops
     '<inst>.lec_bbi_<pin>[i]' (compare points), output bits come from free self-loop flops '<inst>.lec_bbo_<pin>[i]'
     (shared inputs)."""
@@ -1128,6 +1175,8 @@ def stub_verilog(bbports, native_parameters=None):
                 out.append(f"  parameter {integer}{param} = {literal};")
         elif re.fullmatch(r"ot_rom_[0-9]+x[0-9]+_m[0-9]+", mod):
             out.append('  parameter VIAMAP = "", INSTANCE = "";')
+        elif formal_parameters and mod in formal_parameters:
+            out.append("  parameter " + ", ".join(f"{name} = 0" for name in formal_parameters[mod]) + ";")
         out.append("  wire lec_clk;")
         for p, d, w, lo in ports:
             rng = f"[{lo + w - 1}:{lo}] " if w > 1 or lo else ""
@@ -2408,9 +2457,16 @@ def renamed(L, log, words=4, packed=frozenset()):
             bases[mm.group(1)].append(k)
     hit = []
     for b, ks in bases.items():
+        bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
+        # one surviving gate bit of a narrowed vector (hcp nout_r = 24: gate nout_r[1] is the RTL's bit 4): no second bit
+        # to compare, so a lone disagreeing name with RTL bits the gate lacks is not trusted, packed or not.  Re-keying
+        # only proposes: every compare point is still proved, and the by-name pair stays a candidate at the fixpoint.
+        if len(bad) == 1 == len(ks) and any(IDX.match(g) and IDX.match(g).group(1) == b for g in L.gonly):
+            hit.append(b)
+            log.append(f"renamed: {b} (its only gate bit {bad[0]} disagrees and the gate lacks the other RTL bits)")
+            continue
         if b in packed:
             continue                           # declared packed bit indices are shared by both frontends
-        bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
         if len(bad) < 2:
             continue
         tsig = {}
@@ -3240,6 +3296,13 @@ def kept_wire_alias_copies(L, declared, aliases_file):
         if k in gate:
             choices.add(k)
         choices.update(renamed[k])
+        # s81 link_gbx g_pc[c].ps (DIE-HEAD-61 11-04): slotv[0] = 1 makes a term the bare kept bit, so the gate flop is
+        # named g_b[i].a0 and paired to the kept class's gold representative, not to this copy.  The gate flop proved
+        # equal to the representative also stands for k when k's own hypothesis ties it to that representative with
+        # the same polarity; the one-distinct-gate-FF-per-kept-bit matching below stays the proof.
+        h = L.hyp.get(("gold", k))
+        if h and h[0] == "eq" and h[1] == "gold" and not h[3]:
+            choices.update(c for c in renamed[h[2]] if not L.hyp[("gate", c)][3])
         candidates[k] = choices
     assigned = {}
     def assign(k, seen):
@@ -3486,6 +3549,19 @@ def structural_twin_closure(L, log):
                 c = closest(k, [q for q, _ in choices])[0]
                 dc = dict(choices)[c]
                 new.append((("gate", k), ("eq", "gold", c, (d ^ dc) & 1)))
+        # LEC-MATCHED-TWIN: two matched registers with one next-state literal on BOTH sides are one value, and each side's
+        # logic may read either copy (ctl: h_e[20] reads eid_p[6] in the RTL, epc_p[7] in the netlist; both load r1[32]).
+        # Each pair is proposed once and proved by the same induction with its own reset state.
+        done = L.__dict__.setdefault("matched_twin_tried", set())
+        reps = {}
+        for k in sorted(L.matched):
+            g, t = L.dlit.get(("gold", k), 0), L.dlit.get(("gate", k), 0)
+            if not k.startswith("ff:") or g <= 1 or g != t or ("both", k) in L.hyp:
+                continue
+            r = reps.setdefault(g >> 1, (k, g))
+            if r[0] != k and (k, r[0]) not in done:
+                done.add((k, r[0]))
+                new.append((("both", k), ("eq", "gold", r[0], (g ^ r[1]) & 1)))
         if not new:
             break
         L.hyp.update(new)
@@ -3494,6 +3570,182 @@ def structural_twin_closure(L, log):
         log.append(f"structural twin closure: {total} relations proposed")
     return total
 
+
+
+SELFTWIN_NEAR_DEPTH = 6
+SELFTWIN_RANK_CAP = 4096
+SELFTWIN_TRIES = 3
+
+
+def self_hold_twin_closure(L, log, tried, words=8, seed=7171):
+    """Propose unpaired registers that are copies of each other through their OWN hold term (LEC-SELFTWIN, DIE-KV-65/LEC
+    11-03, qkd_kvs_ctl 444 false differs).  k <= en ? d : k and c <= en ? d : c have different next-state functions
+    (each reads its own Q), so literal identity (structural_twin_closure) and random signatures never pair them, and
+    seq_traces see a rare load as constant.  ctl: synthesis merged r0[72] / r0[77] (one group bit loaded twice into one
+    select chunk) into gate dest_pc[14], gold r0[77] stayed free; gate q#t vs gold q of a config field, never pairable.
+    Every unpaired register is held at 0, then at 1 (L.build free_const, so each reads the same value for its own Q):
+    twins have the same next state under both.  A pair that only ever holds (0 / all ones under both) carries no
+    evidence and is skipped.  Candidates only: each enters the same induction proof and is dropped when refuted, at
+    most 2 tries per pair; nothing is assumed.  -> number of relations proposed."""
+    sig = {}
+    for fc in (0, 1):
+        m, kind = L.build(with_compare=False, with_hyp=False, free_const=fc)
+        val, mask = m.simulate(words, seed=seed + fc)
+        for hk, lit in L.dlit.items():
+            sig.setdefault(hk, []).append(lit_val(val, mask, lit))
+    L.build(with_compare=False, with_hyp=False)
+    roots = {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and h[1] == "gold" and sd == "gate"}
+    free = lambda side, k: k.startswith("ff:") and (side, k) not in L.hyp and (side, k) in sig
+    live = lambda hk: not all(v in (0, mask) for v in sig[hk])
+    # A rare load leaves only the reset term in the signature, so a class can hold every field on one reset copy (ctl:
+    # all 32 g_ef fields): the signature only narrows, the name orders, and a pair the proof refuted is not tried again.
+    # LEC-SELFTWIN-NEAR: a rare load leaves only the reset term in the signature, and a data source that is itself unpaired
+    # is held too, so a class holds every field of every lane (ctl: all 1024 es_data bits; 256 lane-1 pairs drew es_p[257],
+    # lane-0 bits, ... for rounds on end).  What tells two fields apart is what the D reads next to its hold mux: the same
+    # (paired or matched) data input.  The class narrows, the near inputs rank, the name breaks ties; a register gets at
+    # most SELFTWIN_TRIES candidates so a register with no partner cannot keep the fixpoint open.
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    near_memo = {}
+
+    def near(hk):
+        if hk not in near_memo:
+            near_memo[hk] = frozenset(v for v in m.near_inputs(L.dlit[hk], SELFTWIN_NEAR_DEPTH)
+                                      if kind.get(v, ("", None))[1] != hk[1])
+        return near_memo[hk]
+
+    def ranked(side, k, cs):
+        if len(cs) > SELFTWIN_RANK_CAP:
+            return closest(k, cs)
+        nk = near((side, k))
+        return sorted(cs, key=lambda c: (len(nk ^ near(("gold", c))), name_dist(k, c)))
+
+    groups = collections.defaultdict(list)    # (s0, s1) -> free gold registers
+    for k in sorted(L.gonly):
+        if free("gold", k) and live(("gold", k)):
+            groups[tuple(sig[("gold", k)])].append(k)
+    new, taken = [], set()
+    bound = bound_keys(L)
+    for k in sorted(L.tonly):
+        if not free("gate", k) or k in bound or not live(("gate", k)):
+            continue
+        s0, s1 = sig[("gate", k)]
+        # the frontends named one register twice: gate q#t[i] is gold q[i] (its own hypothesis, if any, chains through)
+        name = k.replace("#t", "")
+        if name != k and name in L.gp and name not in L.tp and L.hyp.get(("gold", name), ("",))[0] != "const" \
+                and not tried[("gate", k, name, 0)]:
+            new.append((("gate", k), ("eq", "gold", name, 0)))
+            taken.add(name)
+            continue
+        if tried[("selftwin", "gate", k)] >= SELFTWIN_TRIES:
+            continue
+        for inv, t in ((0, (s0, s1)), (1, (s1 ^ mask, s0 ^ mask))):
+            cs = [c for c in groups.get(t, ()) if c not in taken and not tried[("gate", k, c, inv)]]
+            c = name if name in cs else (ranked("gate", k, cs)[0] if cs else None)
+            if c is not None:
+                new.append((("gate", k), ("eq", "gold", c, inv)))
+                taken.add(c)
+                tried[("selftwin", "gate", k)] += 1
+                break
+    reps = roots | taken
+    for t, ks in groups.items():
+        cand = [c for c in ks if c in reps] or ks[:1]
+        for k in ks:
+            if k in reps or k == cand[0] or tried[("selftwin", "gold", k)] >= SELFTWIN_TRIES:
+                continue
+            cs = [c for c in cand if not tried[("gold", k, c, 0)]]
+            # gold twins come from one RTL: a true copy reads the same inputs around its hold mux
+            cs = [c for c in cs if near(("gold", c)) == near(("gold", k))]
+            if cs:
+                new.append((("gold", k), ("eq", "gold", closest(k, cs)[0], 0)))
+                tried[("selftwin", "gold", k)] += 1
+    L.hyp.update(new)
+    if new:
+        log.append(f"self-hold twin closure: {len(new)} relations proposed")
+    return len(new)
+
+
+CONEDIFF_INPUTS = 6       # at most this many unshared inputs per side of one compare point
+CONEDIFF_CONE = 256
+CONEDIFF_COMBOS = 512
+CONEDIFF_TRIES = 3
+
+
+def cone_diff_closure(L, log, tried, words=4, seed=9191):
+    """LEC-CONE-DIFF: a compare point that differs only in unshared inputs names its own missing relation.  A free gold-only
+    register in the gold cone, and a register in the gate cone only, are what synthesis merged even when every signature
+    and support test misses it (KV pcc: gold static_owner_q <= static_cmd_owner, gate <= active_row[6], loaded together
+    with 1 and (64 + layer)[6], different support, so no twin closure sees it; left 155 differs on 4 such registers).
+    Candidates are the assignments of the gold cone's unshared registers to the gate cone's (either polarity) or a
+    constant under which the two cones simulate equal; candidates only, each enters the same induction proof and is
+    dropped when refuted, at most CONEDIFF_TRIES per register.  -> number of relations proposed."""
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    free = {v: k for v, (t, k) in kind.items() if t == "gold_only" and k.startswith("ff:") and ("gold", k) not in L.hyp}
+    free = {v: k for v, k in free.items() if tried[("conediff", k)] < CONEDIFF_TRIES}
+    if not free:
+        return 0
+    val, mask = m.simulate(words, seed=seed)
+    base, ands = m.ni + 1, m.ands
+
+    def evaluate(lit, over, memo):
+        st = [lit >> 1]
+        while st:
+            v = st[-1]
+            if v in memo:
+                st.pop()
+            elif v < base:
+                memo[v] = over.get(v, val[v])
+                st.pop()
+            else:
+                a, b = ands[2 * (v - base)], ands[2 * (v - base) + 1]
+                need = [x >> 1 for x in (a, b) if (x >> 1) not in memo]
+                if need:
+                    st += need
+                else:
+                    memo[v] = (memo[a >> 1] ^ (mask if a & 1 else 0)) & (memo[b >> 1] ^ (mask if b & 1 else 0))
+                    st.pop()
+        return memo[lit >> 1] ^ (mask if lit & 1 else 0)
+    votes = collections.Counter()
+    for p in sorted(L.matched):
+        g, t = L.dlit.get(("gold", p), 0), L.dlit.get(("gate", p), 0)
+        if not p.startswith("ff:") or g == t or ("both", p) in L.hyp:
+            continue
+        cg = m.cone_inputs(g)
+        if not any(v in free for v in cg):
+            continue
+        ct = m.cone_inputs(t)
+        G, T = sorted(cg - ct), sorted(ct - cg)
+        if not all(v in free for v in G) or not G or len(T) > CONEDIFF_INPUTS or len(G) > CONEDIFF_INPUTS \
+                or len(cg | ct) > CONEDIFF_CONE:
+            continue
+        T = [v for v in T if kind.get(v, ("", ""))[0] in ("matched", "paired", "gate_only")]
+        opts = [(c, inv) for c in T for inv in (0, 1)] + [(None, 0), (None, 1)]
+        if len(opts) ** len(G) > CONEDIFF_COMBOS:
+            continue
+        for combo in itertools.product(opts, repeat=len(G)):
+            over = {v: (val[c] ^ (mask if inv else 0)) if c is not None else (mask if inv else 0)
+                    for v, (c, inv) in zip(G, combo)}
+            memo = {0: 0}
+            if evaluate(g, over, memo) == evaluate(t, over, memo):
+                votes.update((free[v], kind[c][1] if c is not None else None, kind[c][0] if c is not None else "const", inv)
+                             for v, (c, inv) in zip(G, combo))
+    new = {}
+    for (k, c, how, inv), _ in sorted(votes.items(), key=lambda e: (-e[1], repr(e[0]))):
+        if k in new:
+            continue
+        if how == "const":
+            if not tried[("gold", k, "c")]:
+                new[k] = (("gold", k), ("const", inv))
+        elif how == "gate_only":
+            if not tried[("gate", c, k, inv)] and ("gate", c) not in L.hyp:
+                new[k] = (("gate", c), ("eq", "gold", k, inv))
+        elif not tried[("gold", k, c, inv)]:
+            new[k] = (("gold", k), ("eq", "gold" if c in L.gp else "gate", c, inv))   # 'paired' may name the gate key
+    for k, (hk, h) in new.items():
+        L.hyp[hk] = h
+        tried[("conediff", k)] += 1
+    if new:
+        log.append(f"cone diff closure: {len(new)} relations proposed: {sorted(new)[:8]}")
+    return len(new)
 
 
 def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
@@ -4058,6 +4310,115 @@ def noreset_sound(L):
     return out
 
 
+def self_hold_reset(d, lit, c, max_cone=400, max_support=12):
+    """COORD 11-04 (S81 leaf, form 1): the one no-load-path constant.  lit = a register's literal, c its constant.
+    -> (reset var, value) when the next state, exhaustively over its small support, (1) reads the register, (2) with
+    the register at c stays c for every other input and state: there is no load path, and (3) one support var at one
+    value forces c whatever the register holds: the reset.  Else None: a hold path that a load can leave (D = en ? v :
+    Q) never qualifies, nor does a register with no reset (D = Q).  Soundness rests on that reset being asserted
+    before use; lec.json lists each register with its net so the claim can be read."""
+    I, NL, a, nand = d["I"], d["L"], d["ands"], d["A"]
+    base, q = I + NL + 1, lit >> 1
+    if not I < q < base:
+        return None
+    cq = c ^ (lit & 1)
+    fold = d.get("_const_fold")
+    if fold is None:                  # aigmap keeps an AND with constant 0: its other input is no support
+        fold = {0: 0}
+        for k in range(nand):
+            x, y = [None if (r >> 1) not in fold else fold[r >> 1] ^ (r & 1) for r in (a[2 * k], a[2 * k + 1])]
+            if x == 0 or y == 0:
+                fold[base + k] = 0
+            elif x == 1 and y == 1:
+                fold[base + k] = 1
+        d["_const_fold"] = fold
+    nxt = d["latches"][q - I - 1]
+    cone, support, todo = set(), set(), [nxt >> 1]
+    while todo:
+        v = todo.pop()
+        if v in fold or v in cone or v in support:
+            continue
+        if v < base:
+            support.add(v)
+        else:
+            cone.add(v)
+            if len(cone) > max_cone:
+                return None
+            todo += [a[2 * (v - base)] >> 1, a[2 * (v - base) + 1] >> 1]
+    if q not in support or len(support) > max_support:
+        return None
+    order, others = sorted(cone), sorted(support - {q})
+
+    def next_state(asg):
+        val = dict(fold)
+        val.update(asg)
+        for v in order:
+            r0, r1 = a[2 * (v - base)], a[2 * (v - base) + 1]
+            val[v] = (val[r0 >> 1] ^ (r0 & 1)) & (val[r1 >> 1] ^ (r1 & 1))
+        return val[nxt >> 1] ^ (nxt & 1)
+
+    def assignments(names):
+        for m in range(1 << len(names)):
+            yield {n: (m >> i) & 1 for i, n in enumerate(names)}
+
+    if any(next_state({**x, q: cq}) != cq for x in assignments(others)):
+        return None
+    for r in others:
+        rest = [n for n in others if n != r] + [q]
+        for b in (0, 1):
+            if all(next_state({**x, r: b}) == cq for x in assignments(rest)):
+                return r, b
+    return None
+
+
+ASYNC_LOG = re.compile(r"^Replacing \S+?\.(\S+) \((\$\S+)\): (.*)$")
+ASYNC_ORIG = re.compile(r"\$_DFFE?_[PN][PN]([01])(?:[PN])?_")
+
+
+def read_async_resets(*logs):
+    """yosys logs of one side -> {'ff:<reg bit>': (reset value, async net or None)}: async2sync prints every flop it
+    rewrites, the only place the async reset is still visible.  Gold $_ALDFF_ with a constant AD: value + net; a gate
+    liberty flop ($_DFFSR_, set and clear nets are internal): the value from the mapped type kept in its name.  A flop
+    that only has a synchronous load never appears here."""
+    out = {}
+    for path in logs:
+        try:
+            lines = Path(path).read_text(errors="replace").splitlines()
+        except OSError:
+            continue
+        for ln in lines:
+            m = ASYNC_LOG.match(ln)
+            if not m:
+                continue
+            key = flop_key(m[1] + ".lecq")[0]
+            if not key or key.startswith("$"):
+                continue
+            if m[2].startswith("$_ALDFF_"):
+                f = re.search(r"ALOAD=(.*?), AD=1'([01]),", m[3])
+                if f:
+                    out["ff:" + GENBLK.sub("", key)] = (int(f[2]), f[1].lstrip("\\"))
+            elif m[2].startswith("$_DFFSR_"):
+                f = ASYNC_ORIG.search(m[1])
+                if f:
+                    out["ff:" + GENBLK.sub("", key)] = (int(f[1]), None)
+    return out
+
+
+def _noreset_self_hold(L, s, k, c):
+    """self_hold_reset for one hypothesis, cached; a hit is recorded for lec.json: L.noreset_self_hold[(side, key)]"""
+    cache = L.__dict__.setdefault("_self_hold_cache", {})
+    key = (s, k, c)
+    if key not in cache:
+        d, p = (L.gold, L.gp) if s == "gold" else (L.gate, L.tp)
+        ar = ((getattr(L, "async_reset_regs", None) or {}).get(s) or {}).get(k)
+        got = self_hold_reset(d, p[k], c) if k in p and ar and ar[0] == c else None
+        if got:
+            names = [n for n, lit in p.items() if lit >> 1 == got[0]]
+            got = dict(value=c, reset_net=names[0] if names else f"var{got[0]}", forces_at=got[1], async_net=ar[1])
+        cache[key] = got
+    return cache[key]
+
+
 def _noreset_held(L, consts, sides, cycles, extra, banned):
     """noreset_sound's fixpoint -> {(side, key): first edge the constant holds}; edges past `cycles` only for
     unmatched registers not in `banned`."""
@@ -4073,6 +4434,11 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
             if prefix is not None and (prefix <= cycles or
                     (sd != "both" and k not in matched and (s, k) not in banned)):
                 edges.append(prefix)
+            if not edges:
+                sh = _noreset_self_hold(L, s, k, c)
+                if sh:
+                    L.__dict__.setdefault("noreset_self_hold", {})[(s, k)] = sh
+                    edges.append(1)
             if edges:
                 held[(s, k)] = min(edges)
     hyp_side = lambda s, j: (("both", j) in consts) or ((s, j) in consts)
@@ -4202,6 +4568,21 @@ def raw_prefix_miter(d, roots, steps):
     return m
 
 
+def raw_prefix_sim_survivors(m, words=None, rounds=None):
+    """LEC-RAWPREFIX-SIM: output indices of miter m that random simulation does not set.  A set output of a raw prefix
+    miter is a concrete counterexample to that base (no reset, assumption or X mask enters this AIG), so only proofs
+    are skipped, never assumed."""
+    words = RAWPREFIX_SIM_WORDS if words is None else words
+    rounds = RAWPREFIX_SIM_ROUNDS if rounds is None else rounds
+    alive = list(range(len(m.outs)))
+    for r in range(rounds):
+        if not alive:
+            break
+        val, mask = m.simulate(words, seed=7919 + r)
+        alive = [i for i in alive if not lit_val(val, mask, m.outs[i])]
+    return alive
+
+
 def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
     """Prove requested constant bases after an exact finite prefix, unconditionally.
 
@@ -4218,11 +4599,27 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
             continue
         if any(k not in points or c not in (0, 1) for k, c in todo):
             raise LecError("invalid raw prefix base candidate")
-        m = raw_prefix_miter(d, [points[k] for k, c in todo], steps)
-        m.outs = [lit ^ c for lit, (k, c) in zip(m.outs, todo)]
-        m.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in todo]
+        def miter(items):
+            mi = raw_prefix_miter(d, [points[k] for k, c in items], steps)
+            mi.outs = [lit ^ c for lit, (k, c) in zip(mi.outs, items)]
+            mi.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in items]
+            return mi
+        m = miter(todo)
         batch = L.__dict__.get("_raw_prefix_batch", 0)
         tag = f"rawprefix{batch}_{side}_{steps}"
+        # LEC-RAWPREFIX-SIM (DIE-KV-65/LEC 11-03): every KV/S81 miter that hung in ABC 1-12 h is refuted by simulation in
+        # seconds (astk gate 16: 7368 outputs, 1.35M ANDs, none survive, 10 s).  Refuted bases never reach the solver and
+        # the survivors' smaller cone is what the size cap and the sweep see.
+        total = len(todo)
+        alive = raw_prefix_sim_survivors(m)
+        refuted = {m.onames[i] for i in set(range(total)) - set(alive)}
+        L.__dict__["raw_prefix_sim_refuted"] = L.__dict__.get("raw_prefix_sim_refuted", 0) + len(refuted)
+        log.append(f"LEC RAWPREFIX SIM {tag}: {len(refuted)} / {total} bases refuted by simulation, "
+                   f"{len(alive)} left for the sweep")
+        names = m.onames
+        if len(alive) != total:
+            todo_alive = [todo[i] for i in alive]
+            m = miter(todo_alive)
         # LEC-RAWPREFIX-BOUND (DIE-HBM-60/61 LEC 11-03): a 16/64-edge unroll of a large cone (HBM vm_calendar, KV
         # head_eighth, kshare: 1.5-3.7 h in one &fraig/&sat, FLOW canaries of 19af2d0dd) is bounded.  Primary bound
         # = miter size (deterministic, no ABC run); the wall limit is a backstop.  Either way no base is proved,
@@ -4230,20 +4627,22 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
         # output into a difference / undecided, never into a false EQ), and the bound is recorded explicitly.
         ands, cap = len(m.ands) // 2, raw_prefix_limit_ands()
         bounded = L.__dict__.setdefault("raw_prefix_bounded", [])
-        if cap and ands > cap:
-            log.append(f"LEC RAWPREFIX SIZE BOUND {tag}: {ands} ANDs > {cap} (OT_LEC_RAWPREFIX_ANDS) -> "
-                       f"{len(todo)} bases not proved")
+        if not alive:
             status = {}
-            bounded.append(dict(tag=tag, side=side, steps=steps, n=len(todo), ands=ands, why="size", limit=cap))
+        elif cap and ands > cap:
+            log.append(f"LEC RAWPREFIX SIZE BOUND {tag}: {ands} ANDs > {cap} (OT_LEC_RAWPREFIX_ANDS) -> "
+                       f"{len(alive)} bases not proved")
+            status = {}
+            bounded.append(dict(tag=tag, side=side, steps=steps, n=len(alive), ands=ands, why="size", limit=cap))
         else:
             wall = raw_prefix_limit_s()
             status = prove(m, work, conflicts, log, tag=tag, wall=wall)
             if status.pop(SWEEP_TIMEOUT, False):
-                bounded.append(dict(tag=tag, side=side, steps=steps, n=len(todo), ands=ands, why="wall",
+                bounded.append(dict(tag=tag, side=side, steps=steps, n=len(alive), ands=ands, why="wall",
                                     limit=wall))
         L._raw_prefix_batch = batch + 1
-        for (k, c), name in zip(todo, m.onames):
-            result = status.get(name, "undecided")
+        for (k, c), name in zip(todo, names):
+            result = "differs" if name in refuted else status.get(name, "undecided")
             cache[(side, k, c, steps)] = result
             if result == "proved":
                 edges[(side, k, c)] = min(steps, edges.get((side, k, c), steps))
@@ -4325,6 +4724,7 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     is reported, never assumed away). There is no switch to assume an unknown
     power-up value equals a constant. -> number dropped."""
     eq_const_resolve(L, log)
+    t_raw = time.time()
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
         # DIE-HBM-59/LEC C4 (HBM n4ext / fused_lane 11-02): default-on at the reset window itself (OT_LEC_RESET_CYCLES,
@@ -4341,6 +4741,8 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
             candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
                           for s in (("gold", "gate") if sd == "both" else (sd,))]
             raw_prefix_bases(L, candidates, steps, work, conflicts, log)
+    # these base sweeps are not refinement: the OT_LEC_REFINE_S budget in correspond() does not pay for them
+    L.__dict__["raw_sweep_s"] = L.__dict__.get("raw_sweep_s", 0.0) + time.time() - t_raw
     total = 0
     while True:                     # dropping one can unseat a register reloaded from it
         ok = noreset_sound(L)
@@ -4376,9 +4778,14 @@ def noreset_report(L):
         sides = ("gold", "gate") if sd == "both" else (sd,)
         raw = all(getattr(L, "raw_constant_status", {}).get((s, k, h[1])) == "proved" for s in sides)
         prefix = all(getattr(L, "raw_prefix_edges", {}).get((s, k, h[1])) == edge for s in sides)
+        sh = getattr(L, "noreset_self_hold", {})
+        hold = (not raw and not prefix and all((s, k) in sh for s in sides))
         kept.append(dict(register=k, side=sd, value=h[1], edge=edge,
+                         **(dict(reset_net=sh[(sides[0], k)]["reset_net"], forces_at=sh[(sides[0], k)]["forces_at"],
+                                  async_net=sh[(sides[0], k)].get("async_net")) if hold else {}),
                          basis="universal_raw_D" if raw else
                                "universal_raw_prefix" if prefix else
+                               "self_hold_reset" if hold else
                                "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
@@ -4392,16 +4799,21 @@ def noreset_report(L):
                 raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS",
                                                   os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT)))),
                 raw_prefix_wall_s=raw_prefix_limit_s(), raw_prefix_ands_cap=raw_prefix_limit_ands(),
+                n_raw_prefix_sim_refuted=getattr(L, "raw_prefix_sim_refuted", 0),
                 n_raw_prefix_bounded=len(getattr(L, "raw_prefix_bounded", [])),
                 raw_prefix_bounded=list(getattr(L, "raw_prefix_bounded", []))[:200],
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
                 universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
+                n_self_hold=sum(1 for e in kept if e["basis"] == "self_hold_reset"),
+                self_hold=[e for e in kept if e["basis"] == "self_hold_reset"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
                 n_dropped=len(dropped), reloaded=[e for e in kept if e["basis"] == "reloaded"][:500],
                 dropped=dropped[:500],
                 basis=("a constant hypothesis is kept only when the reset state (every reset port asserted for "
                        "reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic "
-                       "reload is inductively constant from already established constants; equality/FSM "
+                       "reload is inductively constant from already established constants, or (self_hold, COORD "
+                       "11-04) the register has no load path and one net forces the constant, listed per register "
+                       "with that net, which must be asserted before use; equality/FSM "
                        "assumptions never establish a constant's base case"))
 
 
@@ -4416,7 +4828,8 @@ def noreset_listing(L, path):
         noreset_report(L)
         kept = L.noreset_kept_all
     rows = ["status\tside\tregister\tvalue\tedge\tbasis"]
-    rows += [f"kept\t{e['side']}\t{e['register']}\t{e['value']}\t{e['edge']}\t{e['basis']}" for e in kept]
+    rows += [f"kept\t{e['side']}\t{e['register']}\t{e['value']}\t{e['edge']}\t{e['basis']}"
+             + (f" {e['reset_net']}={e['forces_at']}" if e.get("reset_net") else "") for e in kept]
     rows += [f"dropped\t{e['side']}\t{e['register']}\t{e['value']}\t\tnot constant in the reset state"
              for e in L.noreset_dropped_all]
     data = ("\n".join(rows) + "\n").encode()
@@ -4860,8 +5273,9 @@ def common_shape_maps(g, t, min_common=0.75):
     constant: the gate kept the RTL bit names and dropped 34..35, while the gold memory was narrowed before it was
     mapped, so its names were compacted to 0..61 (it 'lacks' 62..63).
     Candidates, each a {gate key: gold key} map:
-      * 'rank': when one side's inner indices are 0..n-1 in every row (compacted) and the other side has holes with
-        the same per-row count, pair the bits of each row in index order (outer index as is, or reversed);
+      * 'rank': index depth >= 2 only (memory rows), when one side's inner indices are 0..n-1 in every row
+        (compacted) and the other side has holes with the same per-row count, pair the bits of each row in index
+        order (outer index as is, or reversed); a 1-D vector keeps its bit names on both sides (never ranked);
       * 'common': otherwise, the identity map on the common index tuples (outer index as is, or reversed), when they
         are >= min_common of both sides.
     One-side-only bits stay gold-only / gate-only for function correspondence.  Every name pair stays a
@@ -4885,7 +5299,12 @@ def common_shape_maps(g, t, min_common=0.75):
         return {k: sorted(x) for k, x in r.items()}
     rg, rt = rows(gi), rows(ti)
     packed = lambda R: all([x[-1] for x in r] == list(range(len(r))) for r in R.values())
-    if set(rg) == set(rt) and all(len(rg[k]) == len(rt[k]) for k in rg) and packed(rg) != packed(rt):
+    # DIE-QC-66 11-03 (QC xhead3 b_k3[7:0] <= 8'(3 * a_k), 4 slw/sle hc kits, 7 + 56 false differences): 'rank'
+    # is the compacted-ROW form of a narrowed memory (depth >= 2).  A 1-D vector is never compacted: both frontends
+    # name its flops by the packed bit index (rename -wire), so gold {0..6} (bit 7 constant) vs gate {1..7} (bit 0
+    # merged into b_k[0]) is two different dropped bits, not a renumbering; ranking them paired gate b_k3[i+1]
+    # with gold b_k3[i] (off by one).  1-D vectors take the identity map on the common bits below.
+    if d > 1 and set(rg) == set(rt) and all(len(rg[k]) == len(rt[k]) for k in rg) and packed(rg) != packed(rt):
         out = []
         for rev in outer:
             mp = {}
@@ -5088,6 +5507,30 @@ def alias_arrays(L, log, words=4, work=None):
                           f"gate {len(t) - len(best[1])} left to correspondence" if common else ""))
 
 
+def merged_reproposals(L, log, tried):
+    """A merged twin whose proposal fell with a wrong constant (HBM kshare u_cmd.rd_bin[2], DIE-HBM-62: simulation never
+    fills the FIFO, so rd_gray[2] looks constant; that constant falls in round 0 and takes rd_bin[2] == rd_gray[2] with
+    it, and rd_bin[2] then stayed free -> rd_gray[1], rd_gray[2] differ).  Propose the pair again at the fixpoint, at
+    most twice per pair; the induction proves it like every other hypothesis.  -> any proposed."""
+    n = 0
+    for k, c in getattr(L, "merged_choice", {}).items():
+        if ("gold", k) not in L.hyp and tried[("gold", k, c, 0)] < 2:
+            L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+            n += 1
+    if n:
+        log.append(f"merged twins re-proposed at the fixpoint: {n}")
+    return n > 0
+
+
+def _same_reading_self(a, b, k, c):
+    """Do supports a and b agree when k and c both read as SELF?  Same answer as mapping both and comparing, without
+    rebuilding two sets per pair: 4096-bit supports times every gold-only member cost hours (KV core_peer 11-04)."""
+    if abs(len(a) - len(b)) > 2:
+        return False
+    two = {k, c, "SELF"}
+    return (a ^ b) <= two and bool(a & two) == bool(b & two)
+
+
 def merged_proposals(L, log, cap=4096):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
@@ -5161,9 +5604,7 @@ def merged_proposals(L, log, cap=4096):
         for k in [x for x in s_c if x in gset]:
             if ("gold", k) in L.hyp or c in cands.get(k, ()):
                 continue
-            two = (k, c)
-            if frozenset("SELF" if x in two else x for x in s_c) == \
-                    frozenset("SELF" if x in two else x for x in support(L.gc[k])):
+            if _same_reading_self(s_c, support(L.gc[k]), k, c):
                 cands[k].append(c)
     for k in gonly:
         if ("gold", k) in L.hyp:
@@ -5172,9 +5613,7 @@ def merged_proposals(L, log, cap=4096):
         for c in [x for x in s_k if isinstance(x, str) and x in L.matched and x.startswith("ff:") and x in L.gc]:
             if c in cands.get(k, ()):
                 continue
-            two = (k, c)
-            if frozenset("SELF" if x in two else x for x in s_k) == \
-                    frozenset("SELF" if x in two else x for x in support(L.gc[c])):
+            if _same_reading_self(s_k, support(L.gc[c]), k, c):
                 cands[k].append(c)
     choice = {k: cs[0] for k, cs in cands.items()}
     pending = {k: list(cs) for k, cs in cands.items() if len(cs) > 1}
@@ -5199,6 +5638,7 @@ def merged_proposals(L, log, cap=4096):
                 if not pending[k]:
                     del pending[k]                   # none agrees: keep the first (refinement drops it)
     n_dis = sum(1 for k, c in choice.items() if len(cands[k]) > 1 and c != cands[k][0])
+    L.merged_choice = {**getattr(L, "merged_choice", {}), **choice}
     for k, c in choice.items():
         L.hyp[("gold", k)] = ("eq", "gold", c, 0)
         n += 1
@@ -5313,8 +5753,12 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     expired, sup = False, {}
     seen_proved = collections.Counter()   # proved-set signature -> rounds proved
     early_compare_tried = False
+    late_merged = 0
     for rnd in range(rounds + 1000):
-        if rnd >= rounds + 40 and time.time() - t_ref > budget:
+        # LEC-REFINE-BUDGET-RAW (DIE-KV-65/LEC 11-03, KV ctl): raw base sweep time is not refine time.  ctl paid the whole
+        # budget in 6 raw prefix walls (5400 s of 7059 s), expired at the first check (round 64), and the monotone finish
+        # freed 3843 valid relations -> 1513 false differs.
+        if rnd >= rounds + 40 and time.time() - t_ref - L.__dict__.get("raw_sweep_s", 0.0) > budget:
             if os.environ.get("OT_LEC_REFINE_MONOTONE", "1") == "0":
                 break
             if not expired:
@@ -5692,6 +6136,22 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 continue
             if renamed_identity_closure(L, log, traces, tried) and surviving_change():
                 continue
+            if merged_reproposals(L, log, tried) and surviving_change():
+                continue
+            if os.environ.get("OT_LEC_SELF_TWINS", "1") != "0" and self_hold_twin_closure(L, log, tried) \
+                    and surviving_change():
+                continue
+            # LEC-LATE-MERGED: a pair refuted while its neighbours were still wrong is free for good once its tries are
+            # spent (KV pcc: static_cmd_owner, merged into active_row[6] = (64 + layer)[6], failed twice in early rounds
+            # and left 155 differs).  Re-propose the free gold-only registers against the final proved set, twice at
+            # most; each is proved by the same induction and dropped if refuted.
+            if os.environ.get("OT_LEC_SELF_TWINS", "1") != "0" and late_merged < 2:
+                late_merged += 1
+                merged_proposals(L, log)
+                if surviving_change():
+                    continue
+            if os.environ.get("OT_LEC_SELF_TWINS", "1") != "0" and cone_diff_closure(L, log, tried) and surviving_change():
+                continue
             if L.hyp == before or not adding:
                 return
             continue
@@ -5808,6 +6268,21 @@ def _and_leaves(d, lit, cap=64, nodes=False):
     return out + inner if nodes else out
 
 
+def _live_term(d, lit, cap=16):
+    """An OR literal with exactly one term that is not structurally false -> that term.  An async-reset flop after
+    async2sync reads D = OR(AND(rst_n, ld), AND(!rst_n, 0)) and aigmap keeps the AND with 0, so its load condition
+    sits behind an inverted node that _and_leaves does not expand."""
+    base = d["I"] + d["L"] + 1
+    for _ in range(cap):
+        if not (lit & 1) or (lit >> 1) < base:
+            return lit
+        live = [t for t in (y ^ 1 for y in _and_leaves(d, lit ^ 1)) if 0 not in _and_leaves(d, t)]
+        if len(live) != 1:
+            return lit
+        lit = live[0]
+    return lit
+
+
 def loaded_proposals(L, log, cands=None, cap=20000):
     """Automatic loaded-valid hints (KIT-WAVE-16 11-01, LEC NOT EQUIVALENT class x10: HBM g_ld3k p1/p2/q2, kshare,
     QC coll_n e3, HEAD beat_link hold).  A gold-only RTL register with no reset that holds itself until a load with
@@ -5818,7 +6293,7 @@ def loaded_proposals(L, log, cands=None, cap=20000):
     only PROPOSES such hints (the commercial 'user match', untrusted): the hold term of D(k) (the AND term that
     reads Q(k)) names the load condition en = NOT(another leaf); a guard is a gold register g whose next state
     implies en, directly (an AND leaf of D(g): a valid delayed from the load, ldp_v <= ld_e) or sticky (a leaf
-    OR(Q(g), en): v <= v | ld), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
+    OR(Q(g) & hold, en): v <= v | ld, also with a clear term, wq_pv), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
     same induction (guard' -> D(k) == c and not X), refuses a guard true at reset, and drops a wrong one; a read of
     k outside its guard sees the free value and still differs.  Nothing is assumed: no X == c, no waiver.
     cands: {gold key: c} (default: the gold-only constants noreset_filter dropped). -> hint list."""
@@ -5844,16 +6319,27 @@ def loaded_proposals(L, log, cands=None, cap=20000):
         if rv not in (0, 1):
             continue
         val = 1 - rv                      # the guard value that is definitely false in the reset state
-        nxt = gc[g] ^ (val ^ 1)           # literal true iff g' == val
-        for leaf in _and_leaves(d, nxt, nodes=True):
+        nxt = _live_term(d, gc[g] ^ (val ^ 1))    # literal true iff g' == val
+        leaves = _and_leaves(d, nxt, nodes=True)
+        # a leaf can itself be an async-reset mux (ldq_v <= ldp_v, read through rst_n ? ldp_v : 0): g' implies its term
+        for leaf in list(leaves):
+            live = _live_term(d, leaf)
+            if live != leaf:
+                leaves += _and_leaves(d, live, nodes=True)
+        for leaf in leaves:
             imp[leaf].append((g, val))    # g' == val -> leaf
             v = leaf >> 1
             if (leaf & 1) and v >= base:  # leaf = OR(NOT y_i): sticky form OR(g == val, en)
                 ys = [y ^ 1 for y in _and_leaves(d, leaf ^ 1)]
                 own = q ^ (val ^ 1)
-                rest = [y for y in ys if y != own]
-                if len(rest) == 1 and len(ys) == 2:
-                    imp[rest[0]].append((g, val))
+                # g' = hold term(s) that read Q(g) | load term(s): every load term implies each of its AND leaves
+                loads = [y for y in ys if own not in _and_leaves(d, y)]
+                if loads and len(loads) < len(ys):
+                    common = set(_and_leaves(d, loads[0], nodes=True))
+                    for y in loads[1:]:
+                        common &= set(_and_leaves(d, y, nodes=True))
+                    for x in common:
+                        imp[x].append((g, val))
     hints, nog = [], 0
     for k, c in sorted(cands.items()):
         q, dk = gp[k], gc[k]
@@ -6588,6 +7074,14 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                 (out / "icg_gold_bb.v").write_text(icg_verilog(gicg))
                 env["_LEC_ICG_GOLD_V"] = str(out / "icg_gold_bb.v")
             rec["clock_gate_cells"] = icg
+        # A hard macro whose module body is also in the kit sources: synth reads its liberty over the body and keeps a
+        # cell, so the gold side must black-box it too, else the netlist names a module the stubs do not have.
+        macro_cells = {c for l in macro_libs(env, kit) for c in lib_cells(l)}
+        declared = set(env.get("SYNTH_BLACKBOXES", "").split())
+        kept = sorted((macro_cells & srcmods & set(types)) - declared)
+        if kept:
+            env["SYNTH_BLACKBOXES"] = " ".join(sorted(declared | set(kept)))
+            rec["macro_bodies_blackboxed"] = kept
         lib_bbs = [l for l in macro_libs(env, kit) if not set(lib_cells(l)) <= srcmods]
         # 0. lint: implicit nets fail the kit before any proof (see implicit_net_lint)
         hits = implicit_net_lint(env, kit, lib_bbs, out, log)
@@ -6617,7 +7111,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if not set(native_parameters).issubset(bbports):
                 raise Unproven("selected native metadata master missing from elaborated blackboxes")
             rec["native_stub_metadata"] = json.loads((out / "native_stub_metadata.json").read_text())
-        (out / "stubs.v").write_text(stub_verilog(bbports, native_parameters))
+        (out / "stubs.v").write_text(stub_verilog(bbports, native_parameters, blackbox_formal_parameters(env, kit, set(bbports))))
         tops = parse_bb_verilog(out / "bb_top.v")
         if top not in tops:
             raise LecError(f"pre-pass did not write the ports of {top}")
@@ -6650,6 +7144,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
                 read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
         L.kit_reset_ports = kit_reset_ports(kit)
+        L.async_reset_regs = {s: read_async_resets(out / f"{s}.ys.log", out / f"{s}_b.ys.log") for s in ("gold", "gate")}
+        rec["async_reset_regs"] = {s: len(v) for s, v in L.async_reset_regs.items()}
         rec["kit_reset_ports"] = L.kit_reset_ports
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
         discovery_rounds = 24
@@ -6858,12 +7354,16 @@ def via_docker(args, image, mem):
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
+    if os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1":   # a proof option: same forward as the two above
+        cmd += ["-e", "OT_LEC_ENABLE_FILL_GUARD=1"]
     if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
         cmd += ["-e", "OT_LEC_HINTS_PRESEED=1"]
     if os.environ.get("OT_LEC_EARLY_COMPARE") == "1":
         cmd += ["-e", "OT_LEC_EARLY_COMPARE=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
+    if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1":
+        cmd += ["-e", "OT_LEC_GOLD_NOWIDEN=1"]
     for k in ("OT_LEC_RAWPREFIX_S", "OT_LEC_RAWPREFIX_ANDS"):
         if k in os.environ:
             cmd += ["-e", f"{k}={os.environ[k]}"]
@@ -6994,6 +7494,25 @@ PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_CO
                  "OT_LEC_ENABLE_FILL_GUARD")
 
 
+def nowiden_retry(r, out, run):
+    """A failed run whose gold memories were widened (one word packs several RTL elements: pgslice lane_exp0_id r[1:DMAX],
+    gold r[1][b] pairs by name with another gate element) runs once more with one gold word per element.  Each run is
+    a complete proof of its own; the second verdict replaces the first only when it is EQUIVALENT."""
+    log = out / "gold.ys.log"
+    if r.get("verdict") != "NOT EQUIVALENT" or os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1" \
+            or not log.is_file() or "Merging ports" not in log.read_text(errors="replace"):
+        return r
+    os.environ["OT_LEC_GOLD_NOWIDEN"] = "1"
+    try:
+        r2 = run()
+    finally:
+        del os.environ["OT_LEC_GOLD_NOWIDEN"]
+    keep, other = (r2, r) if r2.get("verdict") == "EQUIVALENT" else (r, r2)
+    keep["nowiden_retry"] = dict(verdict=other.get("verdict"), counts=other.get("counts"), widened=keep is r)
+    (out / "lec.json").write_text(json.dumps(keep, indent=1) + "\n")
+    return keep
+
+
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
@@ -7035,7 +7554,8 @@ def main(argv=None):
                   f"({r.get('t_total_s')} s)")
         return rc
     pm = json.loads(Path(a.port_map).read_text()) if a.port_map else None
-    r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
+    run = lambda: check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
+    r = nowiden_retry(run(), Path(a.out or Path(a.kit) / "lec"), run)
     c = r.get("counts", {})
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "

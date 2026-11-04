@@ -759,7 +759,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     slots; the START net undriven inside, wired to no other port; and everything reachable forward from each bit
     through combinational std cells ends at flop D pins ONLY (no port, macro, clock/other flop pin), each either
     (1) a ring-writer flop: clocked by the clock net of R's slot flops AND in the same parent instance as R's slot
-    flops (ot_meso_ring_ca state: slots, lap, tag, write count, write-valid), or
+    flops (ot_meso_ring_ca state: slots, lap, tag, write count, write-valid), or a write-enable flop of R proven
+    at-most-one-hot (WREG-1, _registered_atmost_one), or
     (2) an origin start sampler flop: in ONE parent instance whose last path segment contains "origin" (the emitted
     u_cland_origin), at most 2 such flops (sf negedge + s0 first synchroniser stage), all on ONE clock net that is a
     clock input port and not a ring clock, each D cone's leaves only the bit, declared strap ports and Q/QN of flops on
@@ -989,6 +990,48 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 else:
                     _fwd(cj, seen, out)
 
+    # Actual ASAP7 RVT Liberty: DFFHQNx{1,2,3} has ff(IQN,IQNN),
+    # clocked_on="CLK", next_state="!D", and QN.function="IQN".
+    # Restrict the sequential proofs to that model; a pin named QN alone
+    # does not establish its polarity or its active clock edge.
+    def native_inverted_ff(master, pin):
+        return bool(re.fullmatch(r"DFFHQNx[123]_ASAP7_75t_R", master) and pin == "QN")
+
+    def native_inverted_ff_either_edge(master, pin):
+        """DFFHQN or DFFLQN (a WFALL ring writer maps to DFFLQN): same QN state model, only the clock edge differs."""
+        return bool(re.fullmatch(r"DFF[HL]QNx[123]_ASAP7_75t_R", master) and pin == "QN")
+
+    def _reset_port(port):
+        return bool(re.fullmatch(skip_re, port)
+                    and re.fullmatch(r"(?:a?rst_n|reset_n|rsi|rs_[A-Za-z0-9_]+)(?:\[\d+\])?", port))
+
+    def _reset_level(net, stack, clock, port_ok):
+        """(value of net while the reset input is asserted low, register depth to that input), else KeyError."""
+        if net in stack:
+            raise KeyError("reset feedback")
+        stack = stack | {net}
+        if net in roots_ports:
+            ports = roots_ports[net]
+            if (len(ports) != 1 or T.dirs.get(re.sub(r"\[\d+\]$", "", ports[0])) != "input"
+                    or not port_ok(ports[0])):
+                raise KeyError("not a reset input")
+            return False, 0
+        d = _single_drv(net)
+        if d is None:
+            raise KeyError("ambiguous reset source")
+        ci, pin = d; m, _, pp = F.cells[ci]
+        ins = {p: F.find(v[0]) for p, (dd, v) in pp.items() if dd == "in" and len(v) == 1}
+        if is_ff(m):
+            if not native_inverted_ff_either_edge(m, pin) or set(ins) != {"CLK", "D"} or _ckpin(ci) != clock:
+                raise KeyError("unsupported reset register")
+            val, depth = _reset_level(ins["D"], stack, clock, port_ok)
+            return (not val if pin == "QN" else val), depth + 1
+        if not is_buf(m) or len(ins) != 1:
+            raise KeyError("reset chain is not buffers and registers")
+        p, upstream = next(iter(ins.items()))
+        val, depth = _reset_level(upstream, stack, clock, port_ok)
+        return cell_fn(m, {p: val}, pin), depth
+
     onehot_memo = {}
 
     def _registered_onehot(control, D, clock):
@@ -1004,12 +1047,6 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         onehot_memo[key] = None
         if len(control) != D or not 2 <= D <= 8:
             return None
-        # Actual ASAP7 RVT Liberty: DFFHQNx{1,2,3} has ff(IQN,IQNN),
-        # clocked_on="CLK", next_state="!D", and QN.function="IQN".
-        # Restrict this sequential proof to that model; a pin named QN alone
-        # does not establish its polarity or its active clock edge.
-        def native_inverted_ff(master, pin):
-            return bool(re.fullmatch(r"DFFHQNx[123]_ASAP7_75t_R", master) and pin == "QN")
         regs, dn, inv = [], [], []
         for net in control:
             driver = _single_drv(net)
@@ -1033,35 +1070,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return None
         reset = next(iter(extra))
 
-        def reset_level(net, stack):
-            if net in stack:
-                raise KeyError("reset feedback")
-            stack = stack | {net}
-            if net in roots_ports:
-                ports = roots_ports[net]
-                if (len(ports) != 1 or T.dirs.get(re.sub(r"\[\d+\]$", "", ports[0])) != "input"
-                        or not re.fullmatch(skip_re, ports[0])
-                        or not re.fullmatch(r"(?:a?rst_n|reset_n|rsi|rs_[A-Za-z0-9_]+)(?:\[\d+\])?", ports[0])):
-                    raise KeyError("not a reset input")
-                return False, 0
-            d = _single_drv(net)
-            if d is None:
-                raise KeyError("ambiguous reset source")
-            ci, pin = d; m, _, pp = F.cells[ci]
-            ins = {p: F.find(v[0]) for p, (dd, v) in pp.items() if dd == "in" and len(v) == 1}
-            if is_ff(m):
-                if not native_inverted_ff(m, pin) or set(ins) != {"CLK", "D"} or _ckpin(ci) != clock:
-                    raise KeyError("unsupported reset register")
-                val, depth = reset_level(ins["D"], stack)
-                return (not val if pin == "QN" else val), depth + 1
-            if not is_buf(m) or len(ins) != 1:
-                raise KeyError("reset chain is not buffers and registers")
-            p, upstream = next(iter(ins.items()))
-            val, depth = reset_level(upstream, stack)
-            return cell_fn(m, {p: val}, pin), depth
-
         try:
-            reset_value, reset_depth = reset_level(reset, set())
+            reset_value, reset_depth = _reset_level(reset, set(), clock, _reset_port)
             if reset_depth >= 64:
                 return None
             def step(state, rv):
@@ -1088,6 +1098,82 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                      cycle=D, reset_vector=list(next(iter(initial))))
         res.setdefault("registered_onehot", {})[parent] = proof
         onehot_memo[key] = valid
+        return valid
+
+    atmost_memo = {}
+    atmost_regs = set()              # control flops of a proven at-most-one write-enable set: they are ring writers
+
+    def _registered_atmost_one(control, D, clock):
+        """WREG-1: prove per-(slot, chunk) write-enable flops at-most-one-hot from the mapped FF equations.
+
+        The flops share no parent and need not rotate on their own, so the rotation proof does not apply.  Instead,
+        on the native DFFHQN / DFFLQN model and one clock: (a) every control net is a QN flop with only CLK and D; (b) over
+        every assignment of the D cones' leaves at most one D is 1, so the state after ANY edge is at-most-one-hot
+        whatever the prior state; (c) a leaf traced through buffers/registers to a declared ring start
+        (or a real reset input) forces every D to 0 while asserted, so that state is established by reset, and every
+        D can be 1 once it is released.  All other leaves must be QN flops on the same clock (no port, macro or
+        other-domain leaf: those could decode differently at each flop).  Returns the valid states (QN level, in
+        control order) or None; only an at-most-one state may reach the caller's write-conflict check."""
+        key = (tuple(control), D, clock)
+        if key in atmost_memo:
+            return atmost_memo[key]
+        atmost_memo[key] = None
+        if len(control) != D or not 2 <= D <= 8:
+            return None
+        regs, dn = [], []
+        for net in control:
+            driver = _single_drv(net)
+            if driver is None:
+                return None
+            ci, pin = driver
+            m, _, pp = F.cells[ci]
+            if (not native_inverted_ff_either_edge(m, pin) or _ckpin(ci) != clock
+                    or {p for p, (dd, _) in pp.items() if dd == "in"} != {"CLK", "D"}):
+                return None
+            regs.append(ci); dn.append(F.find(pp["D"][1][0]))
+        if len(set(regs)) != D or len({F.cells[ci][0][:4] for ci in regs}) != 1:   # one edge across the set
+            return None
+        leaves = sorted({x for n in dn for x in _leaves(n) if not x.startswith("CONST_")})
+        if len(leaves) > 14:
+            return None
+
+        def start_port(port):
+            return land_form.get(re.sub(r"\[\d+\]$", "", port)) == "ring_start" or _reset_port(port)
+
+        starts = {}
+        for x in leaves:
+            try:
+                starts[x] = _reset_level(x, set(), clock, start_port)
+            except (KeyError, RecursionError):
+                pass
+            d = _single_drv(x)
+            if x in starts and x in roots_ports:
+                continue
+            if d is None or not native_inverted_ff_either_edge(F.cells[d[0]][0], d[1]) or _ckpin(d[0]) != clock:
+                return None
+        rows = []
+        try:
+            for vals in itertools.product((False, True), repeat=len(leaves)):
+                a = dict(zip(leaves, vals))
+                rows.append((a, [bool(_ev(n, a, {})) for n in dn]))
+        except (KeyError, TypeError, RecursionError):
+            return None
+        if any(sum(dv) > 1 for _, dv in rows):
+            return None
+        forcing = sorted(x for x, (lvl, depth) in starts.items() if depth < 64
+                         and not any(any(dv) for a, dv in rows if a[x] == lvl))
+        if not forcing:
+            return None
+        start = min(forcing, key=lambda x: starts[x][1])
+        lvl = starts[start][0]
+        if not all(any(dv[k] for a, dv in rows if a[start] != lvl) for k in range(D)):
+            return None
+        atmost_regs.update(regs)
+        res.setdefault("registered_atmost_one", {})[F.cells[regs[0]][1]] = dict(
+            flops=[F.cells[ci][1] for ci in regs], leaves=leaves, start=start,
+            start_chain_edges=starts[start][1], start_asserted_edges_required=starts[start][1] + 1)
+        valid = {s for s in itertools.product((False, True), repeat=D) if sum(not v for v in s) <= 1}
+        atmost_memo[key] = valid
         return valid
 
     def land_mux(b, r, D):
@@ -1170,6 +1256,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             a = dict(zip(allc, vals))
             if sum(1 for c, Wk in per if tuple(a[x] for x in c) in Wk) > 1:
                 valid = _registered_onehot(allc, D, next(iter(clks)))
+                if valid is None:
+                    valid = _registered_atmost_one(allc, D, next(iter(clks)))
                 if valid is not None and vals not in valid:
                     continue
                 return f"write conditions not mutually exclusive at {a}", [], []
@@ -1203,6 +1291,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return ring_memo[R]
         cks, pars = set(), set()
         for rb in _bits_of(T, R):
+            if rb in dead:  # DIE-QC-69 11-04: a declared dead bit has no slot; the dead class below proves it has no load
+                continue
             why, ffs, _ = land_mux(rb, port_root[rb], int(land[R]))
             if why:
                 ring_memo[R] = (f"ring {R} slots do not prove ({rb}: {why})", None, None)
@@ -1270,7 +1360,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         writers, samplers = set(), set()
         for _, ci in sinks:
             ck = _ckpin(ci)
-            if any(ck == c and (_parent(F.cells[ci][1]) == q or _status_descendant(ci, q)) for c, q in rdom):
+            if (ci in atmost_regs and ck in rck) or any(ck == c and (_parent(F.cells[ci][1]) == q or _status_descendant(ci, q)) for c, q in rdom):
                 writers.add(ci)
             else:
                 samplers.add(ci)

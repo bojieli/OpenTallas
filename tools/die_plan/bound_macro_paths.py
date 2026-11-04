@@ -40,9 +40,10 @@ def resolve(t, bound_text):
     """[{inst, physical_inst, physical_master, asbuilt}] for the plan type t's placed macros that carry no physical
     identity and whose plan path maps to the bound netlist.  A content root (plan content inst -> as-built prefix) is
     accepted only when every mapped macro under it agrees on one prefix."""
+    rows = _resolve_flat(t, bound_text)
     ab = asbuilt_map(bound_text)
     if not ab:
-        return []
+        return rows
     todo = [c for c in _macro_entries(t)
             if "physical_inst" not in c and "physical_master" not in c and not c["inst"].startswith("u_bound.")
             and "." in c["inst"]]
@@ -50,7 +51,6 @@ def resolve(t, bound_text):
     for c in todo:
         head, rest = c["inst"].split(".", 1)
         groups.setdefault(head, []).append((c, rest.split(".")))
-    rows = []
     for head, members in sorted(groups.items()):
         # prefix candidates per macro: an as-built path ending in a leading run of its plan components below the root
         common = None
@@ -61,7 +61,16 @@ def resolve(t, bound_text):
                 cand |= {a[:-len(tail)] for a in ab if a.endswith(tail) and len(a) > len(tail)}
             if cand:                               # a macro with no as-built match stays unmapped, never vetoes
                 common = cand if common is None else common & cand
-        if not common or len(common) != 1:
+        if common is None:
+            # S81 bk_sel__t2: the content is bound whole (as-built u_bk_sel = bound u_core), so nothing below it is
+            # in the as-built map and the macros sit under that one instance.  Same module as the plan content only.
+            whole = ab.get(head)
+            module = next((x.get("module") for x in t.get("contents", []) or [] if x.get("inst") == head), None)
+            if whole and whole[1] == module:
+                rows.extend(dict(inst=c["inst"], physical_inst="u_bound." + whole[0] + "." + ".".join(rest),
+                                 physical_master=c["module"], asbuilt=head) for c, rest in members)
+            continue
+        if len(common) != 1:
             continue
         root = next(iter(common))
         for c, rest in members:
@@ -78,6 +87,23 @@ def resolve(t, bound_text):
             phys = "u_bound." + inst + ("." + ".".join(rest[j:]) if j < len(rest) else "")
             rows.append(dict(inst=c["inst"], physical_inst=phys, physical_master=c["module"],
                              asbuilt=root + "." + ".".join(rest[:j])))
+    return rows
+
+
+def _resolve_flat(t, bound_text):
+    """DIE-QC-68/TYPES 11-04: a flat plan core name (QC u_lane0, u_t22, u_suvm_u_vm8q_u_bt) is one bound leaf `<inst>` or
+    `u_<inst>` of that exact module, inside the kit wrapper's u_bound.  No exact unique leaf: no row (preflight reports)."""
+    rows = []
+    for c in _macro_entries(t):
+        inst = c["inst"]
+        if "physical_inst" in c or "physical_master" in c or "." in inst:
+            continue
+        hits = [name for name in (inst, "u_" + inst)
+                if re.search(r"(?m)^[ \t]+" + re.escape(c.get("module", inst)) + r"(?:[ \t]+#\(.*?\))?[ \t]+"
+                             + re.escape(name) + r"[ \t]*\(", bound_text)]
+        if len(hits) == 1:
+            rows.append(dict(inst=inst, physical_inst="u_bound." + hits[0], physical_master=c.get("module", inst),
+                             asbuilt=None))
     return rows
 
 

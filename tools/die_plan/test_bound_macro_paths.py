@@ -104,5 +104,36 @@ def test_reset_tcl_resolves_physical_name():
     assert "$n eq {u_r0.u_e0}" in line and "$n eq {u_bound.u_u_r0_u_e0}" in line
     T["core_resets"][0].pop("physical_inst")
     line = next(x for x in RT.tcl_text(T).splitlines() if "lappend rtr_ci" in x)
-    assert line == ("foreach i [$ff_blk getInsts] { set n [$i getName]; if {$n eq {u_r0.u_e0} || [string range $n "
-                    "end-[string length {u_r0.u_e0}] end] eq {/u_r0.u_e0}} { lappend rtr_ci $i } }")   # unchanged form
+    assert line == ("foreach i [$ff_blk getInsts] { set n [string map {\\\\[ [ \\\\] ]} [$i getName]]; if {$n eq {u_r0.u_e0} || [string range $n "
+                    "end-[string length {u_r0.u_e0}] end] eq {/u_r0.u_e0} || [string range $n end-[string length {u_r0.u_e0}] end] eq {.u_r0.u_e0}} "
+                    "{ lappend rtr_ci $i } }")   # no physical_inst: exact, /inst or .inst (flat core u_bound.<inst>)
+
+
+def test_flat_core_names_resolve_inside_wrapper():
+    t = {"hard_cores": [_core("u_lane0", "qfd_lane"), _core("u_t22", "qfd_tile_nk_a0c"), _core("u_bt", "qfd_rom"),
+                         _core("u_missing", "qfd_x"), _core("u_other", "qfd_y")]}
+    bound = """module top ();
+    qfd_lane u_lane0 (.a(a));
+    qfd_tile_nk_a0c u_t22 (.a(a));
+    qfd_rom #(.W(4)) u_u_bt (.a(a));
+    qfd_wrong u_other (.a(a));
+endmodule
+"""
+    rows = {r["inst"]: r for r in BMP.resolve(t, bound)}
+    assert rows["u_lane0"]["physical_inst"] == "u_bound.u_lane0"
+    assert rows["u_t22"]["physical_inst"] == "u_bound.u_t22"
+    assert rows["u_bt"]["physical_inst"] == "u_bound.u_u_bt"
+    assert rows["u_bt"]["physical_master"] == "qfd_rom"
+    assert "u_missing" not in rows and "u_other" not in rows
+
+
+def test_macros_under_content_bound_whole():
+    t = {"contents": [{"inst": "u_bk_sel", "module": "vmtx"}],
+         "hard_cores": [{"inst": "u_bk_sel.u_sel.g_q[0].u_q", "module": "q", "lef": "q.lef"},
+                        {"inst": "u_bk_sel.u_tx", "module": "tx", "lef": "tx.lef"}]}
+    bound = "    // as-built u_bk_sel\n    vmtx #(.V(276)) u_core (\n"
+    rows = {r["inst"]: r["physical_inst"] for r in BMP.resolve(t, bound)}
+    assert rows == {"u_bk_sel.u_sel.g_q[0].u_q": "u_bound.u_core.u_sel.g_q[0].u_q",
+                    "u_bk_sel.u_tx": "u_bound.u_core.u_tx"}
+    t["contents"][0]["module"] = "other"
+    assert BMP.resolve(t, bound) == []

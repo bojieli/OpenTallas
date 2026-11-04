@@ -65,8 +65,14 @@ module dsdv_bk_sel #(
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(2)) u_g (
 `elsif OT_DSDV_BKG_RF3
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(3)) u_g (
-`else
+`elsif OT_DSDV_BKG_RF4
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(4)) u_g (
+`elsif OT_DSDV_BKG_RF5   // RF 5 (form 7a, 11-03): RF 4 + strap negedge in-face + rn copies, 0 edges vs RF 4
+    dsdv_bk_g #(.V(V), .MUT(MUT), .RF(5)) u_g (
+`elsif OT_DSDV_BKG_RF6   // RF 6 (form 7, 11-03): RF 5 + vin LPIPE 2 (lane words +1 inside dsdv_bk_sel; rung edges = RF 4)
+    dsdv_bk_g #(.V(V), .MUT(MUT), .RF(6)) u_g (
+`else   // RF 7 (form 8, 11-03 conservative): RF 6 with slice-local vin copies (dsdv_bk_vin3), 0 edges vs RF 6
+    dsdv_bk_g #(.V(V), .MUT(MUT), .RF(7)) u_g (
 `endif
 `endif
         .clk(clk), .rst_n(rst_n), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),

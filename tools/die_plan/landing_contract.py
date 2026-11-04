@@ -3,6 +3,7 @@
 Like reset wavefront pins and die clock taps, these scalar endpoints are not
 functional R8 buses. Ordinary port alignment/layer rules remain unchanged.
 """
+import sys
 import math
 import re
 
@@ -262,6 +263,79 @@ def on_track(P,layer,x,y):
     return (snap(x),y) if L.get("dir")=="V" else (x,snap(y))
 
 
+# DIE-QC-67 PINDUP 11-03 (tt_ctlm GRT-0031/GRT-0080 "Invalid pin placement", 12 QC types): landing scalars are placed
+# independently from their bus windows (clock_landing_plan._scalar: window centre + 2.16 um steps), so two pins of a
+# type can get the same site: buses exactly 8.64 um apart (fclk_out_<a> / cland_fstart_out_<b>), or two children at one
+# seam point (cland_dn_ready_0 / _1), or overlap on one track.  OpenROAD refuses two pins at one position on one layer.
+SEPARATE_STEP_UM=2.16   # the generator's own spacing between landing scalars
+
+
+def _rects_overlap(a,b):
+    """Pin rectangles 0.0800 x 0.4320 (io_tcl) overlap (the same site is the extreme case)."""
+    return abs(a[0]-b[0])<.08-1e-6 and abs(a[1]-b[1])<.432-1e-6
+
+
+def _site_clear(a,b):
+    """A new site keeps one pin width / spacing from every other pin rectangle."""
+    return abs(a[0]-b[0])>=.08+.04 or abs(a[1]-b[1])>=.432+.04
+
+
+def overlapping_pins(P,t):
+    """[pin names] that must leave their site, in keep order: clock inputs, clocks, then name order keep theirs."""
+    edge={e["port"] for e in t.get("clock",{}).get("edge_clocks",[])}
+    pins=t.get("clock",{}).get("landing_contract",{}).get("pins",[])
+    kept,out=[],[]
+    for p in sorted(pins,key=lambda p:(p["name"] not in edge,p.get("kind")!="clock",p["name"])):
+        if not p.get("layer") or not p.get("xy_um"):continue    # check() reports an incomplete pin
+        xy=on_track(P,p["layer"],*p["xy_um"])
+        if any(l==p["layer"] and _rects_overlap(xy,q) for l,q in kept):out.append(p["name"])
+        else:kept.append((p["layer"],xy))
+    return out
+
+
+def separate_pins(P,tn):
+    """A copy of type tn with overlapping landing pins separated, or None when it has none (input untouched).  Each pin
+    of overlapping_pins slides along its nearest face in SEPARATE_STEP_UM steps to the nearest legal track clear of the
+    type's other landing pins (clock taps and reset outs need the sink bins, too heavy for every plan load:
+    test_landing_pin_sites checks them on the plan).  A moved clock input takes its edge_clocks tap with it.
+    Deterministic, so every tool that loads the plan (io.tcl, pin records, the freeze, routes, die checks) sees the same sites."""
+    import copy
+    import gen_phys as GP
+    t=P.types[tn];move=overlapping_pins(P,t)
+    if not move:return None
+    t=dict(t);t["clock"]=dict(t["clock"]);lc=t["clock"]["landing_contract"]=dict(t["clock"]["landing_contract"])
+    lc["pins"]=copy.deepcopy(lc["pins"])
+    if "edge_clocks" in t["clock"]:t["clock"]["edge_clocks"]=copy.deepcopy(t["clock"]["edge_clocks"])
+    edge={e["port"]:e for e in t["clock"].get("edge_clocks",[])}
+    pins={p["name"]:p for p in lc["pins"]}
+    w,h=t["outline_um"]
+    taken=[(p["layer"],on_track(P,p["layer"],*p["xy_um"])) for p in lc["pins"] if p.get("layer") and p.get("xy_um") and p["name"] not in move]
+    for name in move:
+        layer=pins[name]["layer"];x0,y0=on_track(P,layer,*pins[name]["xy_um"])
+        along_x=min(y0,h-y0)<=min(x0,w-x0)    # nearest face S/N: slide in x; E/W: slide in y
+        sites=[]
+        # DIE-QC-68: a corner pin is nearest to the face it does not sit on (KV kv3_hub_C y 0.416 from N, x 2.144 from W), and
+        # its other coordinate can already be inside the edge margin: try both faces, cross coordinate held inside the margin.
+        for ax in (along_x,not along_x):
+            xc=min(max(x0,.432),w-.432);yc=min(max(y0,.432),h-.432)
+            for n in range(1,200):
+                for sgn in (1,-1):
+                    q=(xc+sgn*n*SEPARATE_STEP_UM,yc) if ax else (xc,yc+sgn*n*SEPARATE_STEP_UM)
+                    if not (.432<=q[0]<=w-.432 and .432<=q[1]<=h-.432):continue
+                    q=GP._snap_tap(P,*q,pg_legal=not t.get("hard"))
+                    xy=on_track(P,layer,*q)
+                    if all(l!=layer or _site_clear(xy,b) for l,b in taken):sites.append(q)
+                if sites:break
+            if sites:break
+        if not sites:
+            # A full band stops that one type at its GRT, never every consumer of the plan: the site stays as planned.
+            print(f"LANDING_PIN_SITE_FULL {tn}.{name}: no free site near {x0:g},{y0:g}, site kept",file=sys.stderr)
+            taken.append((layer,(x0,y0)));continue
+        q=list(sites[0]);pins[name]["xy_um"]=q;taken.append((layer,on_track(P,layer,*q)))
+        if name in edge:edge[name]["tap_um"]=q
+    return t
+
+
 def io_tcl(P,tn):
     t=P.types[tn];c=t.get("clock",{}).get("landing_contract",{})
     input_clocks={e["port"] for e in t.get("clock",{}).get("edge_clocks",[])}
@@ -376,6 +450,7 @@ def ring_input_sdc(P,tn):
     A=G.input_hold_min(P,tn)
     dd=G.die_sta_hold_demand(P,tn) or {}
     rh=P.clock.get("ring_hold")   # opt-in measured sender data-vs-fclk min at the sender port (S81-RINGHOLD-3)
+    fall=ring_fall_clocks(P,tn)
     out=[]
     for ck,sel in rows:
         if any(s.split("[")[0] in (dd.get("inputs") or {}) for s in sel):
@@ -386,6 +461,10 @@ def ring_input_sdc(P,tn):
             bus=s.split("[")[0]
             # no tap-window shift: the ring write clock carries no window (gen_phys.tap_window_ports, S81-RINGHOLD-3)
             mx=(1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per
+            # DIE-QC-67/STM: ft-hop budget + falling writer = no eye (max + min spread above T/2 capture).  Opt-in sender
+            # max on ft rings of fall types; rise types, non-ft rings and plans without the key are unchanged.
+            if bus in ft and ck in fall and rh is not None and rh.get("ft_ring_max_ps") is not None:
+                mx=float(rh["ft_ring_max_ps"])
             # DH56-IOHP 11-03: NO T/2 shift for a falling-edge writer.  The sender launches on the forwarded RISE and
             # STA already captures at the fall T/2 later, so the max stays the IO budget (real internal budget T/2 -
             # budget).  The old 'mx -= T/2' restored full-cycle slack: HEAD hd_turn_a kit fstart -max -249.9 passed
@@ -461,8 +540,15 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
     driven by one buffer placed at the source tap (clamped into the core; CTS DPL legalises it). Its input is a
     non-register load of the source net, which TritonCTS keeps at the root, so the source net stays local. The
     synthesized forward driver (assign fclk_out = clk -> BUF, ORFS output buffer) that drives nothing after the move is
-    removed; a non-buffer driver fails closed. The SDC generated clock on the port is unchanged."""
+    removed; a non-buffer driver fails closed. The SDC generated clock on the port is unchanged.
+
+    FWDCLK-1 11-04: TritonCTS keys the sinks of a clock net by location (HTreeBuilder mapLocationToSink_) after it has
+    disconnected every input on the net, so of several buffers at ONE location only the last is reconnected and the
+    others keep .Y with no input: all exports on one source tap but one were dead.  The 2nd+ export of a source tap
+    therefore sits k rows from the first, toward the core centre (stateless, so k distinct rows = k distinct sink
+    locations by construction; DPL legalises as before).  A tap with one export emits exactly the old text."""
     pins=P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])
+    on_tap={}
     out=["set cland_block [ord::get_db_block]",
          "proc ot_cland_drop_orphan {net} {",
          "  while {$net ne \"NULL\" && ![llength [$net getBTerms]]} {",
@@ -483,6 +569,7 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
     for p in pins:
         if p["kind"]!="clock" or p["dir"]!="out":continue
         n,s=p["name"],p["source_clock_port"];fw="cland_fwd_"+n
+        k=on_tap.get(s,0);on_tap[s]=k+1
         out += [f"set cland_dst [$cland_block findBTerm {{{_bterm(n,bit0)}}}]",
                 f"set cland_src [$cland_block findBTerm {{{_bterm(s,bit0)}}}]",
                 'if {$cland_dst eq "NULL" || $cland_src eq "NULL"} { error "clock landing export endpoint missing" }',
@@ -496,6 +583,7 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 "set cland_bb [$cland_src getBBox]",
                 "set cland_x [expr {min(max(([$cland_bb xMin] + [$cland_bb xMax]) / 2, [$cland_ca xMin]), [$cland_ca xMax] - [$cland_m getWidth])}]",
                 "set cland_y [expr {min(max(([$cland_bb yMin] + [$cland_bb yMax]) / 2, [$cland_ca yMin]), [$cland_ca yMax] - [$cland_m getHeight])}]",
+                *([f"set cland_y [expr {{$cland_y + {k} * [$cland_m getHeight] * (2 * $cland_y > [$cland_ca yMin] + [$cland_ca yMax] ? -1 : 1)}}]"] if k else []),
                 "$cland_i setLocation $cland_x $cland_y; $cland_i setPlacementStatus PLACED",
                 "[$cland_i findITerm A] connect $cland_net",
                 f"set cland_fn [odb::dbNet_create $cland_block {{{fw}}}]",
@@ -504,3 +592,51 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 "$cland_net setSigType CLOCK; $cland_fn setSigType CLOCK",
                 f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)}}"]
     return "\n".join(out)+"\n"
+
+
+def export_check_tcl(P,tn,bit0=frozenset()):
+    """FWDCLK-1 POST_CTS flow check (not a sign-off gate): every forwarded clock output must still reach an input port
+    on a CLOCK net, through single-input cells only; else FAIL_POSTCTS + error, so the kit stops at CTS.  The SDC
+    generated clock on the port lets kit STA see a clock with the port dead, so STA alone does not show it."""
+    pins=P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])
+    names=[_bterm(p["name"],bit0) for p in pins if p["kind"]=="clock" and p["dir"]=="out"]
+    if not names:return ""
+    return "\n".join([
+        "proc ot_cland_export_trace {bt} {",
+        "  set net [$bt getNet]",
+        "  for {set hop 0} {$hop < 1000} {incr hop} {",
+        '    if {$net eq "NULL"} { return "no net" }',
+        "    foreach b [$net getBTerms] {",
+        '      if {[$b getIoType] eq "INPUT"} {',
+        '        if {[$net getSigType] eq "CLOCK"} { return "OK [$b getName]" }',
+        '        return "input port [$b getName] is not on a clock net"',
+        "      }",
+        "    }",
+        "    set drv {}; foreach it [$net getITerms] { if {[$it isOutputSignal]} {lappend drv $it} }",
+        '    if {[llength $drv] != 1} { return "net [$net getName] has [llength $drv] drivers" }',
+        "    set inst [[lindex $drv 0] getInst]",
+        "    set ins {}; foreach it [$inst getITerms] { if {[$it isInputSignal]} {lappend ins $it} }",
+        '    if {[llength $ins] != 1} { return "driver [$inst getName] has [llength $ins] signal inputs" }',
+        "    set net [[lindex $ins 0] getNet]",
+        '    if {$net eq "NULL"} { return "[$inst getName] input has no net" }',
+        "  }",
+        '  return "no input port within 1000 cells"',
+        "}",
+        "proc ot_cland_export_check {names} {",
+        "  set block [ord::get_db_block]; set bad {}",
+        "  foreach n $names {",
+        "    set bt [$block findBTerm $n]",
+        '    set r [expr {$bt eq "NULL" ? "port missing" : [ot_cland_export_trace $bt]}]',
+        '    puts "OT_CLAND_EXPORT_CHECK $n: $r"',
+        '    if {![string match "OK *" $r]} { lappend bad "$n: $r" }',
+        "  }",
+        '  puts "OT_CLAND_EXPORT_CHECK [llength $names] exports, [llength $bad] dead"',
+        "  if {[llength $bad]} {",
+        "    set fh [open /work/FAIL_POSTCTS a]",
+        '    foreach b $bad { puts $fh "FAIL_POSTCTS forwarded clock output dead after CTS $b" }',
+        "    close $fh",
+        '    error "OT_CLAND_EXPORT_CHECK FAIL [llength $bad] dead forwarded clock output(s): [lindex $bad 0]"',
+        "  }",
+        "}",
+        "ot_cland_export_check {"+" ".join("{"+n+"}" for n in names)+"}",
+        ""])

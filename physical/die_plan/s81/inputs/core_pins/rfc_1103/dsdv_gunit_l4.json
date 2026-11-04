@@ -1,14 +1,14 @@
 {
  "module": "dsdv_gunit_l4",
  "lef": "physical/die_plan/s81/cores/legacy/lef/rfc_1103/dsdv_gunit_l4.lef",
- "source": "S81-P9-HC 10-23 from LEF physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 558 constant pins dropped (inputs/const_pins_dropped.json); S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): clock clk M4(0.042,35.292) -> M5(0.06,35.292) 0.120x0.480 edge rectangle on the M5 track (GEOM-21); plan LEF = plan-owned copy of physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef (only PIN clk differs); S81 gunit pin event DIE-S81-33/GUNIT 2026-10-29 (delta_gunit_pins_1029.py): clk M5(0.06,35.292) -> M5(172.812,32.412); S81-RF1 RE-FORM outline 345.6x64.8 -> 302.4x108.0 (results/rfc_gu_1103/plan/make_outline.py)",
+ "source": "S81-P9-HC 10-23 from LEF physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 558 constant pins dropped (inputs/const_pins_dropped.json); S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): clock clk M4(0.042,35.292) -> M5(0.06,35.292) 0.120x0.480 edge rectangle on the M5 track (GEOM-21); plan LEF = plan-owned copy of physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef (only PIN clk differs); S81 gunit pin event DIE-S81-33/GUNIT 2026-10-29 (delta_gunit_pins_1029.py): clk M5(0.06,35.292) -> M5(172.812,32.412); S81-RF1 RE-FORM outline 345.6x64.8 -> 302.4x108.0 (results/rfc_gu_1103/plan/make_outline.py); RF-D 11-03: M4 E/W face pins -0.024 um onto the kit M4 tracks (0.012 + 0.048 k); RF-D 11-03: clk interior (151.212, 54.012) -> S edge (155.052, 0.24; 0.048x0.48 GEOM-21 clock rect) in the S pin gap 153.612-156.54 (no master-slice interior clock contract); RF-D 11-03: cw_d[150:151] / cwo_d[150] were clamped off the S / N edges (x < 1 read as W face): back on their faces at 0.588 / 0.78 (0.192 pitch kept)",
  "pinhash": "fbca97b9bf63",
  "pins": [
   {
    "name": "clk",
    "layer": "M5",
-   "x": 151.212,
-   "y": 54.012
+   "x": 155.052,
+   "y": 0.24
   },
   {
    "name": "cw_a[0]",
@@ -397,14 +397,14 @@
   {
    "name": "cw_d[150]",
    "layer": "M5",
-   "x": 0.732,
-   "y": 0.5
+   "x": 0.588,
+   "y": 0.042
   },
   {
    "name": "cw_d[151]",
    "layer": "M5",
-   "x": 0.924,
-   "y": 0.692
+   "x": 0.78,
+   "y": 0.042
   },
   {
    "name": "cw_d[152]",
@@ -1987,8 +1987,8 @@
   {
    "name": "cwo_d[150]",
    "layer": "M5",
-   "x": 0.924,
-   "y": 64.74
+   "x": 0.78,
+   "y": 107.958
   },
   {
    "name": "cwo_d[151]",
@@ -3194,193 +3194,193 @@
    "name": "eps_c[0]",
    "layer": "M4",
    "x": 302.358,
-   "y": 51.396
+   "y": 51.372
   },
   {
    "name": "eps_c[10]",
    "layer": "M4",
    "x": 302.358,
-   "y": 53.316
+   "y": 53.292
   },
   {
    "name": "eps_c[11]",
    "layer": "M4",
    "x": 302.358,
-   "y": 53.508
+   "y": 53.484
   },
   {
    "name": "eps_c[12]",
    "layer": "M4",
    "x": 302.358,
-   "y": 53.7
+   "y": 53.676
   },
   {
    "name": "eps_c[13]",
    "layer": "M4",
    "x": 302.358,
-   "y": 53.892
+   "y": 53.868
   },
   {
    "name": "eps_c[14]",
    "layer": "M4",
    "x": 302.358,
-   "y": 54.084
+   "y": 54.06
   },
   {
    "name": "eps_c[15]",
    "layer": "M4",
    "x": 302.358,
-   "y": 54.276
+   "y": 54.252
   },
   {
    "name": "eps_c[16]",
    "layer": "M4",
    "x": 302.358,
-   "y": 54.468
+   "y": 54.444
   },
   {
    "name": "eps_c[17]",
    "layer": "M4",
    "x": 302.358,
-   "y": 54.66
+   "y": 54.636
   },
   {
    "name": "eps_c[18]",
    "layer": "M4",
    "x": 302.358,
-   "y": 54.852
+   "y": 54.828
   },
   {
    "name": "eps_c[19]",
    "layer": "M4",
    "x": 302.358,
-   "y": 55.044
+   "y": 55.02
   },
   {
    "name": "eps_c[1]",
    "layer": "M4",
    "x": 302.358,
-   "y": 51.588
+   "y": 51.564
   },
   {
    "name": "eps_c[20]",
    "layer": "M4",
    "x": 302.358,
-   "y": 55.236
+   "y": 55.212
   },
   {
    "name": "eps_c[21]",
    "layer": "M4",
    "x": 302.358,
-   "y": 55.428
+   "y": 55.404
   },
   {
    "name": "eps_c[22]",
    "layer": "M4",
    "x": 302.358,
-   "y": 55.62
+   "y": 55.596
   },
   {
    "name": "eps_c[23]",
    "layer": "M4",
    "x": 302.358,
-   "y": 55.812
+   "y": 55.788
   },
   {
    "name": "eps_c[24]",
    "layer": "M4",
    "x": 302.358,
-   "y": 56.004
+   "y": 55.98
   },
   {
    "name": "eps_c[25]",
    "layer": "M4",
    "x": 302.358,
-   "y": 56.196
+   "y": 56.172
   },
   {
    "name": "eps_c[26]",
    "layer": "M4",
    "x": 302.358,
-   "y": 56.388
+   "y": 56.364
   },
   {
    "name": "eps_c[27]",
    "layer": "M4",
    "x": 302.358,
-   "y": 56.58
+   "y": 56.556
   },
   {
    "name": "eps_c[28]",
    "layer": "M4",
    "x": 302.358,
-   "y": 56.772
+   "y": 56.748
   },
   {
    "name": "eps_c[29]",
    "layer": "M4",
    "x": 302.358,
-   "y": 56.964
+   "y": 56.94
   },
   {
    "name": "eps_c[2]",
    "layer": "M4",
    "x": 302.358,
-   "y": 51.78
+   "y": 51.756
   },
   {
    "name": "eps_c[30]",
    "layer": "M4",
    "x": 302.358,
-   "y": 57.156
+   "y": 57.132
   },
   {
    "name": "eps_c[31]",
    "layer": "M4",
    "x": 302.358,
-   "y": 57.348
+   "y": 57.324
   },
   {
    "name": "eps_c[3]",
    "layer": "M4",
    "x": 302.358,
-   "y": 51.972
+   "y": 51.948
   },
   {
    "name": "eps_c[4]",
    "layer": "M4",
    "x": 302.358,
-   "y": 52.164
+   "y": 52.14
   },
   {
    "name": "eps_c[5]",
    "layer": "M4",
    "x": 302.358,
-   "y": 52.356
+   "y": 52.332
   },
   {
    "name": "eps_c[6]",
    "layer": "M4",
    "x": 302.358,
-   "y": 52.548
+   "y": 52.524
   },
   {
    "name": "eps_c[7]",
    "layer": "M4",
    "x": 302.358,
-   "y": 52.74
+   "y": 52.716
   },
   {
    "name": "eps_c[8]",
    "layer": "M4",
    "x": 302.358,
-   "y": 52.932
+   "y": 52.908
   },
   {
    "name": "eps_c[9]",
    "layer": "M4",
    "x": 302.358,
-   "y": 53.124
+   "y": 53.1
   },
   {
    "name": "f5",
@@ -7880,205 +7880,205 @@
    "name": "r_f",
    "layer": "M4",
    "x": 302.358,
-   "y": 6.852
+   "y": 6.828
   },
   {
    "name": "r_v",
    "layer": "M4",
    "x": 302.358,
-   "y": 7.044
+   "y": 7.02
   },
   {
    "name": "r_y[0]",
    "layer": "M4",
    "x": 302.358,
-   "y": 7.236
+   "y": 7.212
   },
   {
    "name": "r_y[10]",
    "layer": "M4",
    "x": 302.358,
-   "y": 9.204
+   "y": 9.18
   },
   {
    "name": "r_y[11]",
    "layer": "M4",
    "x": 302.358,
-   "y": 9.396
+   "y": 9.372
   },
   {
    "name": "r_y[12]",
    "layer": "M4",
    "x": 302.358,
-   "y": 9.588
+   "y": 9.564
   },
   {
    "name": "r_y[13]",
    "layer": "M4",
    "x": 302.358,
-   "y": 9.78
+   "y": 9.756
   },
   {
    "name": "r_y[14]",
    "layer": "M4",
    "x": 302.358,
-   "y": 9.972
+   "y": 9.948
   },
   {
    "name": "r_y[15]",
    "layer": "M4",
    "x": 302.358,
-   "y": 10.164
+   "y": 10.14
   },
   {
    "name": "r_y[16]",
    "layer": "M4",
    "x": 302.358,
-   "y": 10.356
+   "y": 10.332
   },
   {
    "name": "r_y[17]",
    "layer": "M4",
    "x": 302.358,
-   "y": 10.548
+   "y": 10.524
   },
   {
    "name": "r_y[18]",
    "layer": "M4",
    "x": 302.358,
-   "y": 10.74
+   "y": 10.716
   },
   {
    "name": "r_y[19]",
    "layer": "M4",
    "x": 302.358,
-   "y": 10.932
+   "y": 10.908
   },
   {
    "name": "r_y[1]",
    "layer": "M4",
    "x": 302.358,
-   "y": 7.428
+   "y": 7.404
   },
   {
    "name": "r_y[20]",
    "layer": "M4",
    "x": 302.358,
-   "y": 11.124
+   "y": 11.1
   },
   {
    "name": "r_y[21]",
    "layer": "M4",
    "x": 302.358,
-   "y": 11.316
+   "y": 11.292
   },
   {
    "name": "r_y[22]",
    "layer": "M4",
    "x": 302.358,
-   "y": 11.508
+   "y": 11.484
   },
   {
    "name": "r_y[23]",
    "layer": "M4",
    "x": 302.358,
-   "y": 11.7
+   "y": 11.676
   },
   {
    "name": "r_y[24]",
    "layer": "M4",
    "x": 302.358,
-   "y": 11.892
+   "y": 11.868
   },
   {
    "name": "r_y[25]",
    "layer": "M4",
    "x": 302.358,
-   "y": 12.084
+   "y": 12.06
   },
   {
    "name": "r_y[26]",
    "layer": "M4",
    "x": 302.358,
-   "y": 12.276
+   "y": 12.252
   },
   {
    "name": "r_y[27]",
    "layer": "M4",
    "x": 302.358,
-   "y": 12.468
+   "y": 12.444
   },
   {
    "name": "r_y[28]",
    "layer": "M4",
    "x": 302.358,
-   "y": 12.66
+   "y": 12.636
   },
   {
    "name": "r_y[29]",
    "layer": "M4",
    "x": 302.358,
-   "y": 12.852
+   "y": 12.828
   },
   {
    "name": "r_y[2]",
    "layer": "M4",
    "x": 302.358,
-   "y": 7.62
+   "y": 7.596
   },
   {
    "name": "r_y[30]",
    "layer": "M4",
    "x": 302.358,
-   "y": 39.108
+   "y": 39.084
   },
   {
    "name": "r_y[31]",
    "layer": "M4",
    "x": 302.358,
-   "y": 39.3
+   "y": 39.276
   },
   {
    "name": "r_y[3]",
    "layer": "M4",
    "x": 302.358,
-   "y": 7.812
+   "y": 7.788
   },
   {
    "name": "r_y[4]",
    "layer": "M4",
    "x": 302.358,
-   "y": 8.052
+   "y": 8.028
   },
   {
    "name": "r_y[5]",
    "layer": "M4",
    "x": 302.358,
-   "y": 8.244
+   "y": 8.22
   },
   {
    "name": "r_y[6]",
    "layer": "M4",
    "x": 302.358,
-   "y": 8.436
+   "y": 8.412
   },
   {
    "name": "r_y[7]",
    "layer": "M4",
    "x": 302.358,
-   "y": 8.628
+   "y": 8.604
   },
   {
    "name": "r_y[8]",
    "layer": "M4",
    "x": 302.358,
-   "y": 8.82
+   "y": 8.796
   },
   {
    "name": "r_y[9]",
    "layer": "M4",
    "x": 302.358,
-   "y": 9.012
+   "y": 8.988
   },
   {
    "name": "rn_i[0]",
@@ -14708,7 +14708,7 @@
    "name": "rst_n",
    "layer": "M4",
    "x": 0.042,
-   "y": 35.46
+   "y": 35.436
   },
   {
    "name": "sid_i[0]",
@@ -14762,199 +14762,199 @@
    "name": "ss[0]",
    "layer": "M4",
    "x": 302.358,
-   "y": 39.492
+   "y": 39.468
   },
   {
    "name": "ss[10]",
    "layer": "M4",
    "x": 302.358,
-   "y": 41.412
+   "y": 41.388
   },
   {
    "name": "ss[11]",
    "layer": "M4",
    "x": 302.358,
-   "y": 41.604
+   "y": 41.58
   },
   {
    "name": "ss[12]",
    "layer": "M4",
    "x": 302.358,
-   "y": 41.796
+   "y": 41.772
   },
   {
    "name": "ss[13]",
    "layer": "M4",
    "x": 302.358,
-   "y": 41.988
+   "y": 41.964
   },
   {
    "name": "ss[14]",
    "layer": "M4",
    "x": 302.358,
-   "y": 42.18
+   "y": 42.156
   },
   {
    "name": "ss[15]",
    "layer": "M4",
    "x": 302.358,
-   "y": 42.372
+   "y": 42.348
   },
   {
    "name": "ss[16]",
    "layer": "M4",
    "x": 302.358,
-   "y": 42.564
+   "y": 42.54
   },
   {
    "name": "ss[17]",
    "layer": "M4",
    "x": 302.358,
-   "y": 42.756
+   "y": 42.732
   },
   {
    "name": "ss[18]",
    "layer": "M4",
    "x": 302.358,
-   "y": 42.948
+   "y": 42.924
   },
   {
    "name": "ss[19]",
    "layer": "M4",
    "x": 302.358,
-   "y": 43.14
+   "y": 43.116
   },
   {
    "name": "ss[1]",
    "layer": "M4",
    "x": 302.358,
-   "y": 39.684
+   "y": 39.66
   },
   {
    "name": "ss[20]",
    "layer": "M4",
    "x": 302.358,
-   "y": 43.332
+   "y": 43.308
   },
   {
    "name": "ss[21]",
    "layer": "M4",
    "x": 302.358,
-   "y": 43.524
+   "y": 43.5
   },
   {
    "name": "ss[22]",
    "layer": "M4",
    "x": 302.358,
-   "y": 43.716
+   "y": 43.692
   },
   {
    "name": "ss[23]",
    "layer": "M4",
    "x": 302.358,
-   "y": 43.908
+   "y": 43.884
   },
   {
    "name": "ss[24]",
    "layer": "M4",
    "x": 302.358,
-   "y": 44.1
+   "y": 44.076
   },
   {
    "name": "ss[25]",
    "layer": "M4",
    "x": 302.358,
-   "y": 44.292
+   "y": 44.268
   },
   {
    "name": "ss[26]",
    "layer": "M4",
    "x": 302.358,
-   "y": 44.484
+   "y": 44.46
   },
   {
    "name": "ss[27]",
    "layer": "M4",
    "x": 302.358,
-   "y": 44.676
+   "y": 44.652
   },
   {
    "name": "ss[28]",
    "layer": "M4",
    "x": 302.358,
-   "y": 44.868
+   "y": 44.844
   },
   {
    "name": "ss[29]",
    "layer": "M4",
    "x": 302.358,
-   "y": 45.06
+   "y": 45.036
   },
   {
    "name": "ss[2]",
    "layer": "M4",
    "x": 302.358,
-   "y": 39.876
+   "y": 39.852
   },
   {
    "name": "ss[30]",
    "layer": "M4",
    "x": 302.358,
-   "y": 45.252
+   "y": 45.228
   },
   {
    "name": "ss[31]",
    "layer": "M4",
    "x": 302.358,
-   "y": 45.444
+   "y": 45.42
   },
   {
    "name": "ss[3]",
    "layer": "M4",
    "x": 302.358,
-   "y": 40.068
+   "y": 40.044
   },
   {
    "name": "ss[4]",
    "layer": "M4",
    "x": 302.358,
-   "y": 40.26
+   "y": 40.236
   },
   {
    "name": "ss[5]",
    "layer": "M4",
    "x": 302.358,
-   "y": 40.452
+   "y": 40.428
   },
   {
    "name": "ss[6]",
    "layer": "M4",
    "x": 302.358,
-   "y": 40.644
+   "y": 40.62
   },
   {
    "name": "ss[7]",
    "layer": "M4",
    "x": 302.358,
-   "y": 40.836
+   "y": 40.812
   },
   {
    "name": "ss[8]",
    "layer": "M4",
    "x": 302.358,
-   "y": 41.028
+   "y": 41.004
   },
   {
    "name": "ss[9]",
    "layer": "M4",
    "x": 302.358,
-   "y": 41.22
+   "y": 41.196
   },
   {
    "name": "ss_v",
    "layer": "M4",
    "x": 302.358,
-   "y": 45.636
+   "y": 45.612
   },
   {
    "name": "t_lm[0]",

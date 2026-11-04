@@ -249,6 +249,27 @@ class Make(unittest.TestCase):
         hdr = "module m #(parameter P = 1) (input wire clk, (* keep *) output reg [3:0] q, output y);\nendmodule"
         self.assertEqual(P.module_ports(hdr), {"clk": "input", "q": "output", "y": "output"})
 
+    def test_vector_clock_reads_as_a_clock_pin(self):
+        """gen reads clock pins through cores.lib_clocks, which sees pin groups: bk_sel__t2 ck[0] stopped gen on "no clock
+        pins" while the clock sat on the bus group"""
+        sys.path.insert(0, str(HERE))
+        sys.path.insert(0, str(HERE.parent / "die_plan"))
+        import prov_view as P
+        import cores
+        pins = [{"name": "ck[0]"}, {"name": "ck[1]"}, {"name": "d_i[0]"}, {"name": "q_o"}, {"name": "clk"}]
+        dirs = {"ck[0]": "INPUT", "ck[1]": "INPUT", "d_i[0]": "INPUT", "q_o": "OUTPUT", "clk": "INPUT"}
+        lib = P.contract_lib("c", "tt", 1, 1, pins, dirs, {"ck[0]": (50.0, 40.0), "clk": (7.0, 6.0)}, 833)
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "c_tt.lib"
+            f.write_text(lib)
+            ck = cores.lib_clocks(f)
+        self.assertEqual(sorted(ck), ["ck[0]", "ck[1]", "clk"])
+        self.assertAlmostEqual(ck["ck[0]"]["rise"], 50.0)
+        self.assertAlmostEqual(ck["clk"]["rise"], 7.0)
+        # a data bus stays a data bus
+        self.assertNotIn("d_i[0]", ck)
+        self.assertEqual(lib.count("{"), lib.count("}"))
+
     def test_no_direction_fails(self):
         with tempfile.TemporaryDirectory() as t:
             plan = mkplan(Path(t) / "pd", [{"name": "mystery", "layer": "M4", "x": 5.0, "y": 0.0}])

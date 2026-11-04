@@ -91,6 +91,20 @@ def test_compacted_side_pairs_by_rank():
     assert maps[0]["ff:u.q#t[2][7]"] == "ff:u.q[2][5]" and maps[1]["ff:u.q#t[0][7]"] == "ff:u.q[3][5]"
 
 
+def test_one_dim_vector_never_ranked():
+    # DIE-QC-66 11-03 QC xhead3 b_k3: gold kept bits 0..6 (bit 7 constant), gate kept 1..7 (bit 0 merged into
+    # b_k[0]).  Rank order paired gate [i + 1] with gold [i]; the identity on the common bits 1..6 is the layout.
+    g = {f"ff:u.b_k3[{b}]": (b,) for b in range(7)}
+    t = {f"ff:u.b_k3#t[{b}]": (b,) for b in range(1, 8)}
+    kind, maps = lec.common_shape_maps(g, t)
+    assert kind == "common" and len(maps) == 1
+    assert maps[0] == {f"ff:u.b_k3#t[{b}]": f"ff:u.b_k3[{b}]" for b in range(1, 7)}
+    # a 1-D vector compacted on one side is still not renumbered: below min_common nothing is paired by name
+    g = {f"ff:u.v[{b}]": (b,) for b in range(4)}
+    t = {f"ff:u.v#t[{b}]": (b,) for b in (0, 2, 4, 6)}
+    assert lec.common_shape_maps(g, t) == (None, [])
+
+
 @pytest.mark.parametrize("compact", [False, True])
 @pytest.mark.parametrize("mutant", [False, True])
 def test_one_side_constant_bits_pair_end_to_end(tmp_path, monkeypatch, mutant, compact):

@@ -37,5 +37,11 @@ def regen(ctx):
     p, rec = pv_trunk(ctx)
     base._merge(r["params"], p, "pv_trunk")
     r["record"]["pv_trunk"] = dict(rec, rule="regen_constants.kv_pv_trunk law on the padded bind (kv_pv_col_pads.py)")
+    # HG-SPLIT 11-03: ep EX lane parameters from the bound EX legs (empty unless a cut registers an EX leg)
+    X = _load("kv_ex_join_regen", HERE / "kv_ex_join_regen.py")
+    xp, xrec = X.ex_join(ctx)
+    if xp:
+        base._merge(r["params"], xp, "ex_join")
+    r["record"]["ex_join"] = xrec
     r["record"]["hook"] = "physical/die_plan/qwen_kvsys/r8/kv_pv_col_regen.py"
     return r

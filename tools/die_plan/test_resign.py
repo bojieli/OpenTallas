@@ -155,3 +155,90 @@ def test_run_refuses_a_different_clock_family_in_place(env, capsys):
     Path(env['tools'], 'clock_family.tcl').write_text('# hand-copied other version\n')
     assert _run_dry(env) == 1
     assert 'differs from %s clock_family.tcl' % TAG in capsys.readouterr().err
+
+
+# ---------------------------------------------------------------- auto form (FLOW-29 11-04): unattended, stricter
+GATES = {k: {'verdict': 'PASS'} for k in ('setup_tt', 'hold_ff', 'drv', 'clock', 'drc', 'antenna', 'pg')}
+
+
+def _auto_ready(env, verdict='SIGNED', **so):
+    rec = {'name': 'hc_x', 'verdict': verdict, 'local_verdict': 'SIGNED', 'inputs': {'odb': env['odb']}, 'checks': GATES}
+    rec.update(so)
+    Path(env['d'], 'signoff', 'signoff.json').write_text(json.dumps(rec))
+    Path(env['d'], 'lec', 'lec.json').write_text(json.dumps({'verdict': 'EQUIVALENT', 'superset_vec': {'all_shown': True}}))
+
+
+def _manifest(env, tmp_path):
+    m = tmp_path / 'tag_manifest.json'
+    files = {'tools/die_plan/' + n: resign.sha256(os.path.join(env['repo'], 'tools', 'die_plan', n)) for n in resign.TOOLS}
+    m.write_text(json.dumps({'schema': resign.MANIFEST_SCHEMA, 'tag': TAG, 'commit': env['commit'], 'files': files}))
+    return str(m)
+
+
+def test_auto_accepts_needs_parent_only(env):
+    _auto_ready(env, 'LOCAL_PASS_NEEDS_PARENT', reasons=['io_hold_parent: NEEDS_PARENT; receipt missing'])
+    r = resign.build_record(env['d'], env['kit'], TAG, repo=env['repo'], tools=env['tools'], auto=True)
+    assert r['verdict'] == 'SIGNED' and 'LOCAL_PASS_NEEDS_PARENT' in r['verdict_basis']
+
+
+def test_hand_form_still_refuses_needs_parent(env):
+    _auto_ready(env, 'LOCAL_PASS_NEEDS_PARENT', reasons=['io_hold_parent: NEEDS_PARENT'])
+    with pytest.raises(resign.ResignError):
+        resign.build_record(env['d'], env['kit'], TAG, repo=env['repo'], tools=env['tools'])
+
+
+@pytest.mark.parametrize('case', ['other_reason', 'local_fail', 'gate_fail', 'gate_missing', 'not_shown', 'no_superset'])
+def test_auto_is_stricter(env, case):
+    _auto_ready(env)
+    so = Path(env['d'], 'signoff', 'signoff.json')
+    rec = json.loads(so.read_text())
+    if case == 'other_reason':
+        rec.update(verdict='LOCAL_PASS_NEEDS_PARENT', reasons=['io_hold_parent: NEEDS_PARENT', 'drc: 3'])
+    elif case == 'local_fail':
+        rec.update(verdict='LOCAL_PASS_NEEDS_PARENT', local_verdict='NOT SIGNED', reasons=['io_hold_parent: x'])
+    elif case == 'gate_fail':
+        rec['checks'] = dict(GATES, hold_ff={'verdict': 'FAIL'})
+    elif case == 'gate_missing':
+        rec['checks'] = {k: v for k, v in GATES.items() if k != 'pg'}
+    so.write_text(json.dumps(rec))
+    lec = Path(env['d'], 'lec', 'lec.json')
+    if case == 'not_shown':
+        lec.write_text(json.dumps({'verdict': 'EQUIVALENT', 'superset_vec': {'all_shown': False}}))
+    elif case == 'no_superset':
+        lec.write_text(json.dumps({'verdict': 'EQUIVALENT'}))
+    with pytest.raises(resign.ResignError):
+        resign.build_record(env['d'], env['kit'], TAG, repo=env['repo'], tools=env['tools'], auto=True)
+
+
+def test_manifest_stands_in_for_the_repo_and_catches_drift(env, tmp_path):
+    _auto_ready(env)
+    m = _manifest(env, tmp_path)
+    r = resign.build_record(env['d'], env['kit'], TAG, repo=m, tools=env['tools'], auto=True)
+    assert r['src_commit'] == env['commit']
+    Path(env['tools'], resign.TOOLS[0]).write_text('# drifted\n')
+    with pytest.raises(resign.ResignError):
+        resign.build_record(env['d'], env['kit'], TAG, repo=m, tools=env['tools'], auto=True)
+
+
+def test_manifest_of_another_tag_refused(env, tmp_path):
+    _auto_ready(env)
+    m = json.loads(Path(_manifest(env, tmp_path)).read_text())
+    m['tag'] = 'flow-20261030-b-kv'
+    p = tmp_path / 'other.json'
+    p.write_text(json.dumps(m))
+    with pytest.raises(resign.ResignError):
+        resign.build_record(env['d'], env['kit'], TAG, repo=str(p), tools=env['tools'], auto=True)
+
+
+def test_mark_keep_adds_to_an_existing_keep(env):
+    Path(env['kit'], '.keep').write_text('lane note\n')
+    rec = dict(routed_db=env['odb'], flow_tag=TAG, lane='AUTO-RESIGN', created='now')
+    resign.mark_keep(rec, env['d'], env['kit'])
+    assert Path(env['kit'], '.keep').read_text().startswith('lane note\nsigned DB ')
+    assert env['odb'] in Path(env['d'], '.keep').read_text()
+
+
+def test_auto_run_superset_env_set_and_raw_base_not(env):
+    cmds = resign.run_cmds(env['kit'], env['kit'] + '/run', env['tools'], env['d'], 'img', 'hc_x', superset=True)
+    text = ' '.join(' '.join(c) for c in cmds)
+    assert 'OT_LEC_SUPERSET_VEC=1' in text and 'OT_LEC_RAW_BASE_STEPS' not in text

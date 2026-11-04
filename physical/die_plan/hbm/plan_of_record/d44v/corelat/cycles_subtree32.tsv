@@ -1,0 +1,7 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hbm_hc_subtree32_core		sum	port	17	SFR=1 SXC=7: face input reg (+1) + output reg (+1) + 3 adder cuts (E/F/G) x 5 levels (+15); subtree 35 -> 52 edges
+ot_hbm_hc_subtree32_core		valid_out	port	17	same shift as sum
+ot_hbm_hc_subtree32_core		node_fault	port	17	new(t)=old(t-17); ot_hbm_hc_sfr_nf per-level delay 1+3*(5-l) keeps all levels on one shift
+ot_hbm_hc_subtree32_core		data,valid_in,clk,rst_n	port	0	inputs: no change at the port; registered at the face
+ot_hbm_hc_subtree32_core		rst_n (release)	reset	3	SFR=1 own reset relay at the face (ot_rst_relay 2 sync + 1 relay); assert async unchanged; no valid in flight that early
+ot_hbm_hc_root_static		qps_v/qps/qps_f due edge	cut	17	root absorbs as XRU+17 (subtree sums due SYS_LAT +17); die schedule/tok re-baseline in the batch

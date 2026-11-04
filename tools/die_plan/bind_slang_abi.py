@@ -68,7 +68,7 @@ def _parameters(header, body):
     return names
 
 
-def stage(files, keep, requested, out, module_re, strip, match):
+def stage(files, keep, requested, out, module_re, strip, match, key=str):
     """Stage only named interface leaves; return files and a small source receipt."""
     if not isinstance(requested,list) or not requested or any(not isinstance(n,str) or not re.fullmatch(IDENT,n) for n in requested):
         raise ValueError('slang_parameterized_blackboxes must be a nonempty list of module names')
@@ -112,7 +112,7 @@ def stage(files, keep, requested, out, module_re, strip, match):
         if edits:
             for a,b,replacement in sorted(edits,reverse=True):text=text[:a]+replacement+text[b:]
             out.mkdir(parents=True,exist_ok=True)
-            dest=out/(hashlib.sha256(str(source).encode()).hexdigest()[:12]+'_'+source.name)
+            dest=out/(hashlib.sha256(key(source).encode()).hexdigest()[:12]+'_'+source.name)
             dest.write_text(text);staged.append(str(dest))
         else: staged.append(name)
     if found!=wanted:raise ValueError(f'parameterized leaf definitions missing: {sorted(wanted-found)}')

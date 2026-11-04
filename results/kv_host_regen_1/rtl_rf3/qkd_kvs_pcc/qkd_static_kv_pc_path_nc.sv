@@ -166,7 +166,7 @@ module qkd_static_kv_pc_path_nc_sc #(parameter integer MU = 0, CORE_CLOCK = 0) (
     wire mu_kv = (MU != 0) && (static_cmd[32:31] == 2'd0 || static_cmd[32:31] == 2'd3) && static_cmd[19:9] == 11'd0;
     assign static_cmd_mu = {static_cmd[42:11], static_cmd[10:9] | (mu_kv ? static_epoch[1:0] : 2'd0), static_cmd[8:0]};
     // RF-B split (DIE-KV-64/RF-B 11-03): u_front + u_return live in the PCF core; their outputs leave from PCF pins
-    assign pcf_x = {corrected_epoch, controller_co};
+    assign pcf_x = {corrected_epoch, controller_co[281:9], 1'b0, controller_co[7:0]};
     assign {front_blk_freed, front_hold, front_stall_edges, front_occupancy, front_idle_hbm, front_fault_overflow_hbm, front_fault_go_hbm} = 26'd0;
     assign {actual_valid, actual_sector, actual_epoch, actual_layer, actual_data, return_fault_hbm, return_fault_core, return_idle_hbm, return_idle_core} = 293'd0;
 

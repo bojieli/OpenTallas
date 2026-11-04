@@ -818,6 +818,13 @@ class Binder:
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
+        if self.ab.get("core_splits"):
+            # DIE-KV-66 RF-KV3 (opt-in): one as-built hard leaf -> two hard leaves, before composition and drivers/loads
+            import bind_core_split
+            try:
+                self.core_split_receipts = bind_core_split.apply(self, self.ab["core_splits"])
+            except ValueError as exc:
+                raise BindError(f"CORE_SPLIT {exc}") from exc
         if self.ab.get("compose"):
             import bind_compose
             bind_compose.apply(self, self.ab["compose"])
@@ -839,12 +846,14 @@ class Binder:
         import dead_inputs
         try:
             self.proven_dead = dead_inputs.ProvenDead(self.ab, E.REPO, self.types)
+            self.declared_ties = dead_inputs.DeclaredTies(self.ab)
         except ValueError as exc:
             raise BindError(str(exc)) from exc
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
         self.tied_pins = defaultdict(list)   # (path, port) -> [(bit, value, source)]; every tied bit, uncapped
+        self.declared_tied = defaultdict(list)   # (type, module, port) -> bits, manifest declared_ties (reported, not errors)
         self.rewire, self.rewire_stats = {}, {}
         # as-built die-port names of RTL ports (GEN bundle-wrapper masters renamed 1:1), for plan-name affinity
         self.die_port_name = {}
@@ -1126,6 +1135,7 @@ class Binder:
         retain their original names and therefore cannot silently coalesce.
         """
         count = 0
+        src_key = getattr(self, "src_key", None) or (lambda src: src)
         for p, members in self.members.items():
             groups = defaultdict(list)
             for ci in members:
@@ -1139,7 +1149,7 @@ class Binder:
                     parent = name.split(".$", 1)[0] + "."
                 else:
                     continue
-                shape = (c.src, c.ytype, c.yparams,
+                shape = (src_key(c.src), c.ytype, c.yparams,
                          sorted((pn, self.G.dirs[ci].get(pn), len(bits)) for pn, bits in c.ports.items()))
                 digest = hashlib.sha256(json.dumps(shape, sort_keys=True).encode()).hexdigest()[:20]
                 groups[parent + "$src_" + digest].append(ci)
@@ -1239,6 +1249,7 @@ class Binder:
         G, F = self.G, self.F
         self.cross = defaultdict(lambda: defaultdict(set))   # (src part, dst part) -> {(src ci, port): {bits}}
         self.cross_sinks = defaultdict(set)                  # (sp, dp, src ci, port) -> {(dst rel, dst port)}
+        self.cross_sink_alias = {}                           # composite (dst rel, port) -> member (rel, port)
         self.cross_stages = defaultdict(list)                # (sp, dp, src ci, port) -> [as-built stages]
         self.intra_dly = defaultdict(set)                    # part -> {(src ci, port, stages)}
         self.clk_dom = defaultdict(set)                      # part -> {domain}
@@ -1280,7 +1291,13 @@ class Binder:
                 cnt["intra"] += 1
                 return ("int", sci, spn, sb, st)
             self.cross[(sp, p)][(sci, spn)].add(sb)
-            self.cross_sinks[(sp, p, sci, spn)].add(self._sink_name(ci, pn))
+            # DIE-KV-64 11-03 (sinkname): the sink set keeps the partition-relative names (ordering, lane scoring and the
+            # smallest-sink choice are unchanged); only a NAME chosen from a composite sink takes its member alias
+            sk = (self.rel_of(ci), pn)
+            self.cross_sinks[(sp, p, sci, spn)].add(sk)
+            al = self._sink_name(ci, pn)
+            if al != sk:
+                self.cross_sink_alias[sk] = al
             self.cross_stages[(sp, p, sci, spn)].append(st)
             cnt["crossing"] += 1
             return ("x", sp, sci, spn, sb, st, p)
@@ -1307,6 +1324,10 @@ class Binder:
             if self.proven_dead.allows(self.parts[p]["type"], cell, pn, i,
                     self.param_defaults.get((cell.ytype, cell.module), {})):
                 cnt["proven_dead"] += 1
+                return ("literal", s[1])
+            if self.declared_ties.allows(self.parts[p]["type"], cell.module, pn, i, s[1]):
+                cnt["declared_tie"] += 1
+                self.declared_tied[(self.parts[p]["type"], cell.module, pn)].append(i)
                 return ("literal", s[1])
             if self.R.is_strap(pin):
                 cnt["strap"] += 1
@@ -1634,6 +1655,7 @@ class Binder:
         dl = []
         for sp, dp, sci, spn, bl in direct:
             dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            dr, dpn = self.cross_sink_alias.get((dr, dpn), (dr, dpn))
             D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
                      cycles=2, unplanned=use_lanes, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
                      stages=self.cross_stages[(sp, dp, sci, spn)])
@@ -1642,6 +1664,7 @@ class Binder:
             dl.append(D)
         for sp, dp, sci, spn, bl, ns in spine:
             dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            dr, dpn = self.cross_sink_alias.get((dr, dpn), (dr, dpn))
             D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
                      cycles=ns, spine=True, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
                      stages=self.cross_stages[(sp, dp, sci, spn)])
@@ -3019,7 +3042,12 @@ class Binder:
                 try:
                     txt = self.clock_landings.type_rtl(tn, txt, base=t.get("split_of", tn))
                 except ValueError as exc:
-                    raise BindError(str(exc)) from exc
+                    # DIE-QC-69: name the type (the landing message may not); --all-gaps records it and goes on
+                    err = BindError(f"{tn}: {exc}")
+                    if not getattr(self, "collect_gaps", False):
+                        raise err from exc
+                    self._gap(err)
+                    continue
             reset_localization = t.get("reset", {}).get("consumer_localization")
             if reset_localization:
                 import reset_consumers
@@ -3653,6 +3681,32 @@ class Binder:
                                 + ("fault OR" if k == "or" else "AND join"))
                 return orn[key]
             raise BindError(f"no expression for {d}")
+        # DIE-KV-67 PC reset safe form (opt-in core_splits[].reset_gate): pin <= lane & nearest wavefront tap, one flop per
+        # (leaf, driver); ot_dp_rgate traces through d, so the bind proof still sees the as-built driver.
+        core_gate_ports, core_gates = {}, {}
+        if self.ab.get("core_splits"):
+            import bind_core_split
+            core_gate_ports = bind_core_split.gate_ports(self.ab["core_splits"])
+
+        def core_reset_gate(x, c, r):
+            key = (r, x)
+            if key not in core_gates:
+                hc = next((h for h in t.get("hard_cores", []) if h["inst"] in (r, r.removeprefix("u_"))), None)
+                if rtree is None or hc is None:
+                    raise BindError(f"CORE_SPLIT reset_gate {tn}/{r}: needs a wavefront tree and a plan hard core row")
+                w, h = hc["outline_um"]
+                o = hc["origin_um"]
+                try:
+                    tap_net = bind_core_split.gate_tap(rtree["relays"], (o[0] + w / 2, o[1] + h / 2), RT.consumer_count(rtree))
+                except ValueError as exc:
+                    raise BindError(f"CORE_SPLIT {tn}/{r}: {exc}") from exc
+                nm = short_id(f"prg_{sv_id(r)}_{len(core_gates)}", 100)
+                core_gates[key] = nm
+                decl.append(f"    wire {nm};")
+                body.append(f"    ot_dp_rgate u_{nm} (.clk(clk), .d({x}), .run({tap_net}), .q({nm}));  "
+                            f"// PC reset safe form: lane & wavefront tap")
+            return core_gates[key]
+
         insts = []
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
             c = F.cells[ci]
@@ -3666,6 +3720,8 @@ class Binder:
                     conns.append((pn, drv_w[(ci, pn)]))
                 elif dd == "input":
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
+                    if pn in core_gate_ports.get(c.module, ()):
+                        e = [core_reset_gate(x, c, r) for x in e]
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
@@ -3698,6 +3754,10 @@ class Binder:
                     if (G.dirs[ci].get(pn) == "input" and len(bits) == 1
                             and tuple(self.sinks[(ci, pn, 0)][:2]) == ("rst", "low")):
                         native_reset_roles[f"{short_id('u_' + r, 90)}.{pn}"] = dict(kind="control", clocks=clocks)
+            if self.ab.get("core_splits"):
+                import bind_core_split
+                hide = bind_core_split.view_hidden(self.ab["core_splits"]).get(c.module, ())
+                conns = [(pn, e) for pn, e in conns if pn not in hide]
             cs = ",\n".join(f"        .{pn}({e})" for pn, e in conns)
             insts.append(f"    // as-built {c.path}\n    {c.module}{pstr} {short_id('u_' + r, 90)} (\n{cs}\n    );")
         for L in obus_tree:
@@ -4157,6 +4217,7 @@ def cmd_bind(a):
     out = Path(a.out)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
+    B.src_key = E.stage_src_key(B.base, out, B.ab.get("stage_hash_roots"))
     B.source_plan = Path(a.plan).resolve()
     B.strict_types = bool(getattr(a, "strict", False))
     B.collect_gaps = bool(getattr(a, "all_gaps", False))
@@ -4216,6 +4277,9 @@ def cmd_bind(a):
     (out / "bind_tied.json").write_text(json.dumps(
         [dict(path=k[0], port=k[1], module=k[2], bits=[b[0] for b in v], values="".join(str(b[1]) for b in v),
               sources=sorted({b[2] for b in v})) for k, v in sorted(B.tied_pins.items())], indent=0) + "\n")
+    (out / "bind_declared_ties.json").write_text(json.dumps(
+        [dict(type=k[0], module=k[1], port=k[2], bits=sorted(set(v)), n=len(v)) for k, v in sorted(B.declared_tied.items())],
+        indent=0) + "\n")
     rep, lat = B.report()
     if B.instance_path_params:
         rep["instance_path_params"] = B.instance_path_params
@@ -4376,12 +4440,12 @@ DIRECTIVE_RE = re.compile(r"^\s*`(ifdef|ifndef|elsif|else|endif|define|undef)\b[
 MACRO_USE_RE = re.compile(r"`([A-Za-z_]\w*)")
 
 
-def kit_object_defines(text, defines=(), seed=None):
+def kit_object_defines(text, defines=(), seed=None, func=None):
     """FLOW-18 10-31 (DIE-S81-42 08:45 seqhost__t1: kit_rtl.f had no ot_sram_1r1w2c_16x257/289_m1_p192 black box): the
     RTL instantiates its SRAM masters through object-like macros (`OT_SH_M257 u_mem(...)), which E.instantiated never
     sees.  -> {name: value} of the object-like `define's active in `text` under the kit defines (`defines`: "N" or
-    "N=V"; `seed`: macros already known), honouring `ifdef/`ifndef/`elsif/`else/`endif.  Function-like macros are
-    not expanded (their name only marks the macro defined)."""
+    "N=V"; `seed`: macros already known), honouring `ifdef/`ifndef/`elsif/`else/`endif.  A function-like macro's name
+    only marks the macro defined here; its body goes in `func` when that dict is given."""
     vals = dict(seed or {})
     for d in defines:
         n, _, v = str(d).partition("=")
@@ -4404,8 +4468,13 @@ def kit_object_defines(text, defines=(), seed=None):
             stack.pop()
         elif kw == "define" and on and name:
             vals[name] = "" if args else rest
+            if func is not None:
+                if args:
+                    func[name] = rest
+                else:
+                    func.pop(name, None)
         elif kw == "undef" and on and name:
-            vals.pop(name, None)
+            vals.pop(name, None)     # func keeps it: xs4 `undef's its ROM macro at end of file, after the module body
     return vals
 
 
@@ -4417,6 +4486,34 @@ def expand_object_macros(body, vals, depth=4):
             break
         body = new
     return body
+
+
+def expand_function_macros(body, func):
+    """`NAME(args) -> its body with the argument list dropped, for finding the module it instantiates (S81 xs4:
+    `OT_S81SL_XS4_ROM("pq_stream3") u_stream3 (...) names ot_rom_4096x72_m8).  Parameters stay unsubstituted, so this
+    result is for the closure scan only, never for synthesis."""
+    if not func:
+        return body
+    out, i = [], 0
+    for m in re.finditer(r"`(" + "|".join(re.escape(n) for n in sorted(func, key=len, reverse=True)) + r")\s*\(", body):
+        if m.start() < i:
+            continue
+        depth, j, quoted = 1, m.end(), False
+        while j < len(body) and depth:
+            c = body[j]
+            if quoted:
+                j += c == "\\"
+                quoted = c != '"'
+            elif c == '"':
+                quoted = True
+            elif c in "()":
+                depth += 1 if c == "(" else -1
+            j += 1
+        if depth:
+            continue
+        out += [body[i:m.start()], func[m.group(1)]]
+        i = j
+    return "".join(out) + body[i:]
 
 
 def macro_views(base):
@@ -4510,8 +4607,10 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
         found = E.instantiated(body, known)
         if defines is not None and "`" in body:
             if f not in mdefs:
-                mdefs[f] = kit_object_defines(E._strip(Path(f).read_text(errors="replace")), defines)
-            found |= E.instantiated(expand_object_macros(body, mdefs[f]), known)
+                fn = {}
+                mdefs[f] = (kit_object_defines(E._strip(Path(f).read_text(errors="replace")), defines, func=fn), fn)
+            vals, fn = mdefs[f]
+            found |= E.instantiated(expand_object_macros(expand_function_macros(body, fn), vals), known)
         todo += sorted(found)
     return files, sorted(missing), macros
 
@@ -4824,7 +4923,11 @@ def cmd_kit_rtl(a):
     import gen_phys
     import kit_core_clocks
     try:
-        btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, gen_phys.core_tap_rows(P, tn) if P else [])
+        btxt, kit_core_swaps = kit_core_clocks.swap_native_cores(btxt, t.get("hard_cores"))
+        # DIE-QC-69: a hard core nested in a bound leaf (QC RED u_u_red.u_core) declares its physical_inst in the plan
+        phys = {c["inst"]: c["physical_inst"] for c in t.get("hard_cores", []) or [] if c.get("physical_inst")}
+        core_rows = [(r[0], phys.get(r[1], r[1])) + tuple(r[2:]) for r in (gen_phys.core_tap_rows(P, tn) if P else [])]
+        btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, core_rows)
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
@@ -4972,7 +5075,7 @@ def cmd_kit_rtl(a):
         spb_geometry = hbm_spb_native.kit_geometry(out, key, btxt, kd)
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
-    if bmod == mod or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
+    if bmod == mod or kit_core_swaps or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
         bfile, bmod = kd / f"{nb}.sv", nb
@@ -4988,8 +5091,10 @@ def cmd_kit_rtl(a):
             verdict="PASS", method=KIT_DEAD_METHOD,
             receipt=dict(wrapper=str(kd / f"{mod}.sv"), sha256=hashlib.sha256(txt.encode()).hexdigest(),
                          narrow_buses=[x for x in narrow if bmap[x["port"]][0] == "input"])))
-    if kit_core_clock_rows:
-        (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0), indent=1) + "\n")
+    if kit_core_clock_rows or kit_core_swaps:
+        (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0,
+                                                                 **({"native_core_swaps": kit_core_swaps} if kit_core_swaps else {})),
+                                                            indent=1) + "\n")
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
     ab0 = raw["asbuilt"]
     base = plan_base(a.plan, raw)
@@ -5013,6 +5118,12 @@ def cmd_kit_rtl(a):
     # not in the frozen bind source base: the base wins, the tool checkout only adds views the base lacks
     for m, d in macro_views(Path(__file__).resolve().parents[2]).items():
         views.setdefault(m, d)
+    # DIE-KV-67 11-04: a plan row that binds a view (a provisional overlay row) is a hard macro of this kit even when the
+    # module has no source under the manifest's RTL roots (KV PCC / PCF live in results/kv_host_regen_1/rtl_rf3)
+    for hc in t.get("hard_cores") or []:
+        lef = Path(str(hc.get("lef") or ""))
+        if isinstance(hc, dict) and lef.stem == hc.get("module") and lef.is_absolute() and lef.is_file():
+            views.setdefault(lef.stem, lef.parent)
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened,
                                          defines=ab0.get("defines", []))
     if widened:

@@ -37,6 +37,8 @@ foreach rg_nm $rg_order {
     set rg_area [expr {$rg_area + double([[$i getMaster] getWidth]) * [[$i getMaster] getHeight] / $rg_u / $rg_u}]
   }
   if {[llength $rg_insts] == 0} { puts "OT_REGION_GUIDE $rg_nm: no guidable instance (skipped)"; continue }
+  # A GPL region needs enough cells to spread: 2 cells in 64 um2 ended GPL-0307 on leaf t32. A few cells are not a guide anyway.
+  if {[llength $rg_insts] < 20} { puts "OT_REGION_GUIDE $rg_nm: [llength $rg_insts] cells < 20 (skipped)"; set rg_small 1; continue }
   set rg_fixed 0.0
   foreach fi [$rg_blk getInsts] {
     if {[$fi getPlacementStatus] ni {FIRM LOCKED}} continue
@@ -58,5 +60,5 @@ foreach rg_nm $rg_order {
   incr rg_n; incr rg_cells [llength $rg_insts]
 }
 puts "OT_REGION_GUIDE $rg_n guides $rg_cells cells (missing $rg_miss, fixed/grouped skipped $rg_skip; GPL guide, released before DPL)"
-if {$rg_cells == 0} { error "OT_REGION_GUIDE: no spec instance matched the design (stale guide)" }
+if {$rg_cells == 0 && ![info exists rg_small]} { error "OT_REGION_GUIDE: no spec instance matched the design (stale guide)" }
 }

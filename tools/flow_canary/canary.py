@@ -47,7 +47,9 @@ TCL_ERR_RE = re.compile(r"can't read \"[^\"]+\": no such variable|invalid comman
                         r"ERROR \[?[A-Z]{3}-\d+")
 STRUCTURAL_HOLD = (r"OT_HOLD_STRUCTURAL stage=(?:cts|grt): FF hold ws -?[0-9.]+ ps, "
                    r"[0-9]+ true failing endpoints \(limits: ws >= -100 ps, endpoints <= 2000\); "
-                   r"revise plan/RTL/boundary before repair")
+                   r"revise plan/RTL/boundary before repair"
+                   # FLOW-27 11-04: tools/orfs_hold_mm.tcl appends this exact text when ws is past ::OT_HOLD_STOP_PS.
+                   r"(?: \(beyond the structural stop OT_HOLD_STOP_PS -?[0-9.]+ ps\))?")
 STRUCTURAL_HOLD_RE = re.compile(r"^" + STRUCTURAL_HOLD + r"$", re.M)
 # FLOW-HOLD-2 2026-10-29 (OWNER 12.19): the measured-frame hold step (tools/die_plan/vclk_measured_hold.tcl, default on
 # new two-mode rebind kits since 81f9c6c39e) refuses to repair hold when the kit's FF pin-register mean is outside the

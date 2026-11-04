@@ -1,0 +1,7 @@
+dsdv_gunit_l4 S81-RF1 conservative form (DIE-S81-51/RF-D 11-03, OWNER 18:57): gold RF 0 / OLAT 0 vs RF 1 / OLAT 2 (negedge out-face flops), 0 edges, Verilator 5.050, run.sh
+MUT=0: L4_RF PASS cycles=200000 mx_v=1128 ss_v=181 launch=47 (all 1132 output bits, 0 edges)
+MUT=1: L4_RF FAIL 198045 (mx_v 1128 ss_v 181 launch 47)
+MUT=2: L4_RF FAIL 199992 (mx_v 1128 ss_v 181 launch 47)
+(MUT 1 = OT_RF_MUT_L4 write one-hot neighbour group; MUT 2 = OT_RFD_MUT_L4F out face on the rising edge)
+Kit /srv/opentallas-scratch2/claude/die-s81-51/rfd/kits/dsdv_gunit_l4_rfd (epyc2+epyc4): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0; plan COPY /srv/opentallas-scratch2/claude/die-s81-51/rfd/plan_h2_2249_gl4.json (delta_gl4.py; not committed, 7.6M-line plan).
+Pin set rfc_1103 fixes: 100 M4 E/W pins -0.024 onto the kit M4 tracks; cw_d[150:151] / cwo_d[150] back on S / N; clk interior -> S edge (155.052, 0.24) 0.048x0.48.

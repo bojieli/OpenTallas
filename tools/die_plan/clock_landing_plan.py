@@ -1141,6 +1141,13 @@ def _finish(raw,P,bytype,pports,side):
                 collector_children=bytype[tn]["children"],
                 **({"monitor":bytype[tn]["mask"]["monitor"]} if bytype[tn]["mask"].get("monitor") in ("dataflow","region") else {}))
         t["buses"]=[b for b in t.get("buses",[]) if b not in special]
+    # DIE-QC-67 PINDUP 11-03: a new plan is written with its landing pins on separate sites (see schema.Plan for old ones)
+    import landing_contract as LC
+    from types import SimpleNamespace
+    Q=SimpleNamespace(types=raw["partition_types"],layers=getattr(P,"layers",None),layer_budget=P.layer_budget)
+    for tn in sorted(raw["partition_types"]) if Q.layers else ():
+        sep=LC.separate_pins(Q,tn)
+        if sep is not None:raw["partition_types"][tn]=sep
     infra_edges=[]
     for pr in raw["ports"]:
         if pr["id"] in pports:continue

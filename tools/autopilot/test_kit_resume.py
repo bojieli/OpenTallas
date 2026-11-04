@@ -16,6 +16,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "die_plan"))
 import kit_resume as KR  # noqa: E402
+import kit_wave as KW  # noqa: E402
 
 BASE = "run/results/asap7/top/base"
 LOGS = "run/logs/asap7/top/base"
@@ -157,6 +158,18 @@ class Fingerprint(unittest.TestCase):
         self.assertEqual(KR.decide(new, man(self.oK))["decision"], "nochange")
         d = KR.decide(new, man(self.oK), allow_nochange=True)
         self.assertEqual((d["decision"], d["start"]), ("resume", "route"))
+
+    def test_stopped_attempt_may_rerun_same_inputs(self):
+        # KW6-CLASS 11-04: S81 slice_station__t23/t44: volume cancelled mid-run, released, refused for ever
+        with tempfile.TemporaryDirectory() as td:
+            base = dict(dir=td, attempt=3, status="FAIL", **{"class": "FLOW"})
+            self.assertFalse(KW.resume_source(None, base)["allow_nochange"])
+            self.assertTrue(KW.resume_source(None, dict(base, status="CANCELLED"))["allow_nochange"])
+            self.assertTrue(KW.resume_source(None, dict(base, **{"class": "VOLUME"}))["allow_nochange"])
+            (Path(td) / "result.json").write_text(json.dumps({"stage": "resume_nochange", "class": "VOLUME"}))
+            self.assertTrue(KW.resume_source(None, base)["allow_nochange"])
+            (Path(td) / "result.json").write_text(json.dumps({"stage": "resume_nochange", "class": "FLOW"}))
+            self.assertFalse(KW.resume_source(None, base)["allow_nochange"])
 
     def test_runner_normalisation(self):
         self.assertEqual(KR.runner_norm(RUNNER), OLD_RUNNER)

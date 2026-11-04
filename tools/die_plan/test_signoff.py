@@ -181,8 +181,9 @@ def test_session_measures_pairs_before_source_latency_zeroing():
 def test_insertion_target():
     rec = signoff.evaluate(record(), insertion_target=250.0)
     assert rec["checks"]["clock"]["verdict"] == "PASS"
-    rec = signoff.evaluate(record(), insertion_target=150.0)
-    assert rec["checks"]["clock"]["verdict"] == "FAIL"
+    rec = signoff.evaluate(record(), insertion_target=150.0)   # OWNER 11-03 19:12: window = information for die STA
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert any("pin-flop insertion" in p for p in rec["checks"]["clock"]["insertion_band_info"])
 
 
 def test_drv_unconstrained_drc_antenna():
@@ -379,6 +380,15 @@ def test_ff_vclk_optin_keeps_raw_and_shared_io_contract():
     assert 'set_output_delay' not in signoff.FF_VCLK_TCL
     assert '$so_ff_bad == 0' in enabled
     assert 'set so_reference_ok 0' in enabled
+
+
+def test_ff_vclk_reference_excludes_forwarded_boundary_regs():
+    # FLOW-30 11-04: the mean is over clk; forwarded-clock regs in the boundary set must not turn it NOT RUN or move it.
+    t = signoff.FF_VCLK_TCL
+    assert '[dict size $so_ff_clocks] > 1 && [dict exists $so_ff_clocks clk] && $so_ff_clk_n > 0' in t
+    assert 'set so_ff_clocks [dict create clk 1]' in t
+    assert '$so_ff_bad == 0 && [dict size $so_ff_clocks] == 1' in t      # no clk among them: still unavailable
+    assert 'set_clock_uncertainty' not in t
 
 
 def test_ff_vclk_missing_measurement_blocks_optimistic_mutant():

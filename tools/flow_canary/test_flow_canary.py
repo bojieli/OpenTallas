@@ -306,6 +306,33 @@ def test_runtime_structural_hold_reports_gate_failure_not_tcl_crash(tmp_path):
     assert C.check_run(tmp_path)["stages"]["tcl_errors"]["verdict"] == "FAIL"
 
 
+def test_structural_stop_suffix_is_a_gate_failure_not_tcl_crash(tmp_path):
+    # FLOW-27 11-04: the line as hbm_013b33ef3 logged it; orfs_hold_mm.tcl appends the suffix when ws < OT_HOLD_STOP_PS.
+    guard = ("OT_HOLD_STRUCTURAL stage=grt: FF hold ws -257.29 ps, 701 true failing endpoints "
+             "(limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair "
+             "(beyond the structural stop OT_HOLD_STOP_PS -150 ps)")
+    assert C.GATE_ERR_RE.search("Error: global_route.tcl, 191 " + guard)
+    assert C.STRUCTURAL_HOLD_RE.search(guard)
+    # only that exact suffix: other trailing text is still an error
+    assert not C.GATE_ERR_RE.search("Error: global_route.tcl, 191 " + guard + " extra")
+    assert not C.GATE_ERR_RE.search("Error: global_route.tcl, 191 " + guard.replace("(beyond the", "(past the"))
+    kit = tmp_path / "kit"
+    logs = kit / "run/logs/asap7/d/base"
+    logs.mkdir(parents=True)
+    (kit / "config.mk").write_text("export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl\n")
+    (tmp_path / "canary_meta.json").write_text(json.dumps(dict(
+        kit=str(kit), spec=dict(die="hbm", item="tkm", grt_gate=False))))
+    log = logs / "5_1_grt.log"
+    log.write_text(guard + "\nError: global_route.tcl, 191 " + guard + "\n")
+    result = C.check_run(tmp_path)
+    assert result["stages"]["grt_gate"]["verdict"] == "FAIL"
+    assert "-257.29" in result["stages"]["grt_gate"]["why"]
+    assert result["stages"]["tcl_errors"]["verdict"] == "PASS"
+    # a real crash in the same log still fails
+    log.write_text(log.read_text() + 'Error: global_route.tcl, 192 can\'t read "missing": no such variable\n')
+    assert C.check_run(tmp_path)["stages"]["tcl_errors"]["verdict"] == "FAIL"
+
+
 def test_unavailable_ff_scene_is_a_runtime_error():
     text = "Error: global_route.tcl, 175 OT_HOLD_STRUCTURAL: synchronized FF scene BC unavailable"
     assert not C.GATE_ERR_RE.search(text)

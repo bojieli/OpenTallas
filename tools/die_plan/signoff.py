@@ -292,7 +292,7 @@ KIT_TOOL_DEPENDENCIES = {
     "ft_ports.py": ("hhp_clock_mesh_role.py",),
     "hhp_clock_mesh_role.py": ("ft_ports.py", "sdc_lint.py"),
     "orfs_hold_mm.tcl": ("macro_cts_cluster.tcl",),
-    "die_sta_related.py": ("clock_components.py", "data_droop.py"),
+    "die_sta_related.py": ("clock_components.py", "data_droop.py", "pair_slack_gate.py", "die_sta.py"),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
                          "kit_contract.py", "die_sta_related.py", "data_droop.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
@@ -608,6 +608,8 @@ if {[llength [all_outputs]]} {
 set so_ff_sum 0.0
 set so_ff_n 0
 set so_ff_bad 0
+set so_ff_clk_sum 0.0
+set so_ff_clk_n 0
 set so_ff_clocks {}
 if {[llength [info commands ot_cf_refresh]]} { catch {ot_cf_refresh} }
 dict for {i unused} $so_ff_bnd {
@@ -622,11 +624,24 @@ dict for {i unused} $so_ff_bnd {
   if {![string is double -strict $a] || [regexp -nocase {inf|nan} $a]} { incr so_ff_bad; continue }
   set so_ff_sum [expr {$so_ff_sum + $a}]
   incr so_ff_n
+  if {[llength $cl] == 1 && [get_full_name [lindex $cl 0]] eq "clk"} {
+    set so_ff_clk_sum [expr {$so_ff_clk_sum + $a}]
+    incr so_ff_clk_n
+  }
+}
+# FLOW-30 11-04: vclk stands for the local clock.  Registers on a forwarded clock (S81 station u_cland_monitor_N rings:
+# no OT_FWD_RING_INPUTS tag, so _fwd_ring_tcl keeps them) are not in its reference; with clk present the mean is over clk.
+set so_ff_other 0
+if {[dict size $so_ff_clocks] > 1 && [dict exists $so_ff_clocks clk] && $so_ff_clk_n > 0} {
+  set so_ff_other [expr {$so_ff_n - $so_ff_clk_n}]
+  set so_ff_sum $so_ff_clk_sum
+  set so_ff_n $so_ff_clk_n
+  set so_ff_clocks [dict create clk 1]
 }
 if {[llength $so_vclk] == 1 && $so_ff_n > 0 && $so_ff_bad == 0 && [dict size $so_ff_clocks] == 1} {
   set so_ff_mean [expr {$so_ff_sum / $so_ff_n}]
   set_clock_latency -source $so_ff_mean [lindex $so_vclk 0]
-  so FF_VCLK applied mode pin_flop_mean clock [get_full_name [lindex $so_vclk 0]] latency_ps [format %.6f $so_ff_mean] samples $so_ff_n missing $so_ff_bad clocks [dict size $so_ff_clocks]
+  so FF_VCLK applied mode pin_flop_mean clock [get_full_name [lindex $so_vclk 0]] latency_ps [format %.6f $so_ff_mean] samples $so_ff_n missing $so_ff_bad clocks [dict size $so_ff_clocks] forwarded_excluded $so_ff_other
 } else {
   set so_reference_ok 0
   so FF_VCLK unavailable mode pin_flop_mean vclks [llength $so_vclk] samples $so_ff_n missing $so_ff_bad
@@ -699,7 +714,18 @@ proc ot_lib_load {corner receipt {config /work/config.mk}} {
     lappend rows "{\"path\":[ot_lib_json_string $f],\"sha256\":[ot_lib_json_string $digest]}"
   }
   set digest [lindex [exec sha256sum -- $config] 0]
-  foreach f $files {read_liberty $f}
+  # KW-FIX-5 11-04: K/.busfit/<lib> = this lib plus the LEF pins the module does not have (no arcs); all_registers segfaults
+  # without them.  The receipt above and every view hash stay on the kit lib.
+  foreach f $files {
+    set g [file join [file dirname [file dirname $f]] .busfit [file tail $f]]
+    set use $f
+    if {[file exists $g]} {
+      # only a fit made from exactly this kit lib; a stale one would read old timing arcs under this lib's receipt
+      set c [open $g]; gets $c h; close $c
+      if {[string first [lindex [exec sha256sum -- $f] 0] $h] >= 0} {set use $g}
+    }
+    read_liberty $use
+  }
   set fp [open $receipt w]
   puts $fp "{\"status\":\"LOADED\",\"corner\":[ot_lib_json_string $corner],\"source\":\"ORFS make print corner LIB_FILES\",\"config\":[ot_lib_json_string $config],\"config_sha256\":[ot_lib_json_string $digest],\"libraries\":\[[join $rows ,]\]}"
   close $fp
@@ -1744,13 +1770,17 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         lf = Path(disc["kit"]) / "land_slots.json" if disc.get("kit") else None
         land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
         pad_clocks, native_clock_pins = face_guard.kit_pad_clocks(disc['kit'], library_receipt) if disc.get('kit') else ([], set())
-        exports = face_guard.sdc_clock_exports(Path(disc['sdc']).read_text()) if pad_clocks else []
+        # DIE-KV-69 11-04: same SDC facts as the face_guard CLI / kit gate read, so a landing clock on a [0:0] bus and a
+        # declared forwarded output are clock roles here too.  guard() still proves an export is buffers from its source.
+        sdc_text = Path(disc['sdc']).read_text() if disc.get('sdc') else ""
+        exports = face_guard.sdc_clock_exports(sdc_text)
+        sdc_clocks = face_guard.sdc_clock_ports(sdc_text)
         synth_text = Path(disc["synth"]).read_text(errors="replace")
         types = synth_types(disc["synth"], synth_text)
         r = face_guard.guard(synth_text, pins=pins, skip_re=skip_re, ft1=ft1,
                              straps=sl, dead=dl, land=land, exports=exports, spare=spl, timed=tml,
                              pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
-                             clocks=[p['name'] for p in pad_clocks if p['dir'] == 'in'], types=types)
+                             clocks=sorted({p['name'] for p in pad_clocks if p['dir'] == 'in'} | set(sdc_clocks)), types=types)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),
@@ -1975,6 +2005,7 @@ def evaluate(rec, insertion_target=None):
         if insertion_target is not None:
             bound["tt"] = insertion_target
         tol = float(bound.get("tol", INSERTION_TOL_PS))
+        band_info = []
         for c in ("tt", "ff"):          # FLOW 10-25: the routed I of each corner within tol of the bound I
             if bound.get(c) is None:
                 continue
@@ -1982,8 +2013,10 @@ def evaluate(rec, insertion_target=None):
             if not pf:
                 continue
             if abs(pf["mean"] - float(bound[c])) > tol:
-                why.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound {float(bound[c]):g} +- "
-                           f"{tol:g}")
+                # OWNER 11-03 19:12 (all dies): the insertion window moves to die STA (the die tap absorbs it); a core
+                # counts on its own sign-off.  Information here, never a reason (signoff.json insertion_band too).
+                band_info.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound "
+                                 f"{float(bound[c]):g} +- {tol:g}")
         raw_clock_verdict = "FAIL" if why else "PASS"
         coverage = {c: C[c]["clock_endpoint_coverage"] for c in SPREAD_CORNERS if C[c].get("clock_endpoint_coverage")}
         unqualified = {c: value for c, value in coverage.items() if value.get("verdict") != "PASS"}
@@ -1994,6 +2027,7 @@ def evaluate(rec, insertion_target=None):
             endpoint_model_coverage=coverage, raw_clock_verdict=raw_clock_verdict,
             raw_pair_basis="visible_clock_pins", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
             pair_skew_info_only=True, pair_skew_info=skew_info, by_corner=sp, problems=why,
+            insertion_band_info=band_info,
             insertion_target_ps=insertion_target, insertion_bound=bound or None)
     else:
         put("clock", "NOT RUN")

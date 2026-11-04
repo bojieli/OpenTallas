@@ -49,7 +49,22 @@ module dsdv_bk_g #(
     //           its pin by face_flops.tcl (GEOM pin_reg).  +1 cycle on every output: rung transit vi -> vo 4 -> 5
     //           (dv_layer_compile BKSEL_TRANSIT 5, lower_bk OFACE 1, norm_q_report u_bk_sel 5, tb_dsdv_bk_wrap RL 3),
     //           V pin -> lane word 4 -> 5 (inside dsdv_bk_sel), fault +1.  Mutant OT_RFD_MUT_OF4: RF 4 without the face.
-    //   RF = 0: the old form.  dsdv_bk_sel passes RF 4; dsdv_bk_col (VD_PK 0) keeps RF 0.
+    //   RF = 5 (form 7 part a, 11-03; rfd5 FF hold -21.78 sdc / -69.28 std on the posedge strap captures ik / ek / uid /
+    //           eg_n / tap_k / sink_k, removal -8.25 rs[1] -> u_vs.vo_s): RF 4 + (a) NEGEDGE IN-FACE on the strap / config
+    //           inputs too (as vi / vd: 0 cycles) + the release synchronizer output KEPT-copied per consumer block
+    //           (rn_t / rn_s / rn_i / rn_o, same D as rs[1]: 0 edges) so each reset tree starts local.  (A negedge rn as
+    //           on bksel_c is NOT used here: rn's recovery slack is +194 ps of a full cycle over a ~3k-load tree; half a
+    //           cycle would cost ~416 ps of it.)  0 edges vs RF 4.  Mutant OT_RFD_MUT_SF5 (posedge strap face).
+    //   RF = 6 (form 7, 11-03; owner: two strikes -> pay a cycle; rfd5 TT -17.79 u_vin pn_q -> lane words): RF 5 +
+    //           dsdv_bk_vin LPIPE 2 (one more per-lane register stage of the selected beat / valid / two-beat error):
+    //           ln0..ln3 and fault +1 edge vs RF 5 (V pin -> lane word 5 -> 6, inside dsdv_bk_sel); vo_s / vo_n and
+    //           the drain command unchanged (rung transit 5, RL 3: no parent constant changes).  Mutant OT_RFD_MUT_LPS.
+    //   RF = 7 (form 8, 11-03, OWNER 18:57 conservative form + COORD 18:59: rfd6 TT -124.58 = u_vin q0 copy -> shared
+    //           hv_n -> q1/q2 copies, a cross-slice recurrence): RF 6 with u_vin = dsdv_bk_vin3, the LPIPE 2 calendar with
+    //           every per-lane state / select copied LOCALLY per 64-b slice (each slice keeps its own part-0-held copy hv
+    //           from its own registered beat bits), and one stage-A beat pair per face side.  0 edges vs RF 6 (cycle
+    //           identical).  Mutant OT_RFD_MUT_HD8.
+    //   RF = 0: the old form.  dsdv_bk_sel passes RF 7; dsdv_bk_col (VD_PK 0) keeps RF 0.
     parameter integer RF = 0
 ) (
     input  wire [0:0]        clk,
@@ -95,7 +110,7 @@ module dsdv_bk_g #(
         assign vo_s = o_s; assign vo_n = o_n; assign {ln3, ln2, ln1, ln0} = o_l; assign fault = o_f;
 `endif
 `ifndef OT_RFD_MUT_OF4   // bench mutant: RF 4 without its posedge out-face (0 cycles instead of +1)
-    end else if (RF == 4) begin : g_onp
+    end else if (RF >= 4) begin : g_onp
         reg [V-1:0] o_s, o_n; reg [4*515-1:0] o_l; reg o_f;
         always @(posedge clk[0]) begin o_s <= vo_s_r; o_n <= vo_n_r; o_l <= ln; o_f <= fault_r[0]; end
         assign vo_s = o_s; assign vo_n = o_n; assign {ln3, ln2, ln1, ln0} = o_l; assign fault = o_f;
@@ -105,9 +120,29 @@ module dsdv_bk_g #(
     end endgenerate
     reg [1:0] rs;
     always @(posedge clk[0] or negedge rst_f) if (!rst_f) rs <= 2'b00; else rs <= {rs[0], 1'b1};
-    wire rn = rs[1];
+    wire rn, rn_s, rn_i, rn_o;
+    generate if (RF >= 5) begin : g_rnc
+        (* keep = "true" *) reg r_t, r_s, r_i, r_o;      // kept copies of rs[1] (same D, same reset)
+        always @(posedge clk[0] or negedge rst_f) if (!rst_f) {r_t, r_s, r_i, r_o} <= 4'd0; else {r_t, r_s, r_i, r_o} <= {4{rs[0]}};
+        assign rn = r_t, rn_s = r_s, rn_i = r_i, rn_o = r_o;
+    end else begin : g_rn1
+        assign rn = rs[1], rn_s = rs[1], rn_i = rs[1], rn_o = rs[1];
+    end endgenerate
+    // RF 5 (a): negedge in-face on the strap / config inputs (0 cycles, as vi / vd)
+    wire [2:0] ik_f, ek_f; wire [7:0] uid_f; wire egn_f; wire [5:0] tap_f, sink_f;
+    generate if (RF >= 5) begin : g_sfn
+        reg [2:0] a_ik, a_ek; reg [7:0] a_uid; reg a_eg; reg [5:0] a_tap, a_sink;
+`ifdef OT_RFD_MUT_SF5   // bench mutant: the strap face is a posedge flop (+1 edge)
+        always @(posedge clk[0]) begin a_ik <= ik; a_ek <= ek; a_uid <= uid; a_eg <= eg_n[0]; a_tap <= tap_k; a_sink <= sink_k; end
+`else
+        always @(negedge clk[0]) begin a_ik <= ik; a_ek <= ek; a_uid <= uid; a_eg <= eg_n[0]; a_tap <= tap_k; a_sink <= sink_k; end
+`endif
+        assign ik_f = a_ik, ek_f = a_ek, uid_f = a_uid, egn_f = a_eg, tap_f = a_tap, sink_f = a_sink;
+    end else begin : g_sfw
+        assign ik_f = ik, ek_f = ek, uid_f = uid, egn_f = eg_n[0], tap_f = tap_k, sink_f = sink_k;
+    end endgenerate
     reg [2:0] ik_c, ek_c; reg [7:0] uid_c; reg egn_c;
-    always @(posedge clk[0]) begin ik_c <= ik; ek_c <= ek; uid_c <= uid; egn_c <= eg_n[0]; end
+    always @(posedge clk[0]) begin ik_c <= ik_f; ek_c <= ek_f; uid_c <= uid_f; egn_c <= egn_f; end
     wire [513:0] vdu;                                  // vd unpacked (VD_PK: dropped constant bits are 0)
     reg vdv; reg [511:0] vdd;                          // vd captured at the pin
     always @(posedge clk[0] or negedge rn) if (!rn) vdv <= 1'b0; else vdv <= vdu[1];
@@ -119,13 +154,18 @@ module dsdv_bk_g #(
     else begin : g_vfl assign vdu = vd_f; end endgenerate
     always @(posedge clk[0]) vdd <= vdu[513:2];
     wire dnv, dsv; wire [V-1:0] dn, ds, ob; wire vs_f, vi_f, vo_f, ov;
-    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK), .FPIPE(RF != 0)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k({tap_k[5:1], 2'b00, tap_k[0]}), .sink_k({sink_k[5:1], 2'b00, sink_k[0]}), .bk_uid(uid), .vi_s(vi_s_f), .vo_n(vo_n_r),
+    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK), .FPIPE(RF != 0)) u_vs (.clk(clk[0]), .rst_n(rn_s), .tap_k({tap_f[5:1], 2'b00, tap_f[0]}), .sink_k({sink_f[5:1], 2'b00, sink_f[0]}), .bk_uid(uid_f), .vi_s(vi_s_f), .vo_n(vo_n_r),
         .vi_n(vi_n_f), .vo_s(vo_s_r), .dl_nv(dnv), .dl_n(dn), .dl_sv(dsv), .dl_s(ds),
         .in_nv(ov && egn_c), .in_n(ob), .in_sv(ov && !egn_c), .in_s(ob), .fault(vs_f));
     wire drv; wire [7:0] drn, drd;
-    dsdv_bk_vin #(.V(V), .MUT(MUT), .LPIPE(RF >= 2)) u_vin (.clk(clk[0]), .rst_n(rn), .ik(ik_c), .uid(uid_c), .dl_nv(dnv), .dl_n(dn),
+    generate if (RF >= 7) begin : g_vin3
+    dsdv_bk_vin3 #(.V(V), .MUT(MUT)) u_vin (.clk(clk[0]), .rst_n(rn_i), .ik(ik_c), .uid(uid_c), .dl_nv(dnv), .dl_n(dn),
         .dl_sv(dsv), .dl_s(ds), .lanes(ln), .dr_v(drv), .dr_n(drn), .dr_d(drd), .fault(vi_f));
-    dsdv_bk_vout #(.V(V), .MUT(MUT)) u_vout (.clk(clk[0]), .rst_n(rn), .ek(ek_c), .w_v(vdv), .w_d(vdd),
+    end else begin : g_vin
+    dsdv_bk_vin #(.V(V), .MUT(MUT), .LPIPE((RF >= 6) ? 2 : (RF >= 2) ? 1 : 0)) u_vin (.clk(clk[0]), .rst_n(rn_i), .ik(ik_c), .uid(uid_c), .dl_nv(dnv), .dl_n(dn),
+        .dl_sv(dsv), .dl_s(ds), .lanes(ln), .dr_v(drv), .dr_n(drn), .dr_d(drd), .fault(vi_f));
+    end endgenerate
+    dsdv_bk_vout #(.V(V), .MUT(MUT)) u_vout (.clk(clk[0]), .rst_n(rn_o), .ek(ek_c), .w_v(vdv), .w_d(vdd),
         .dr_v(drv), .dr_n(drn), .dr_d(drd), .o_v(ov), .o_b(ob), .fault(vo_f));
     always @(posedge clk[0] or negedge rn) if (!rn) fault_r <= 1'b0; else fault_r <= vs_f | vi_f | vo_f;
 endmodule
