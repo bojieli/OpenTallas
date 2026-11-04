@@ -84,3 +84,13 @@ def test_macro_pin_tracks_rotated_phase():
         T.check([bad], lambda m: lef)
     assert T.check([dict(bad, y=17.292)], lambda m: lef)
     assert T.check([dict(bad, orient="R0", x=0.0, y=0.012)], lambda m: lef)     # R0: M4 y phase only
+
+
+def test_signal_pins_move_to_free_layer_power_and_obs_stay():
+    G = _gk()
+    lef = ("MACRO m\n  PIN clk\n    USE CLOCK ;\n    PORT\n      LAYER M4 ;\n      RECT 0 0.768 0.024 0.792 ;\n    END\n  END clk\n"
+           "  PIN VDD\n    USE POWER ;\n    PORT\n      LAYER M4 ;\n      RECT 1 0 2 9 ;\n    END\n  END VDD\n"
+           "  OBS\n    LAYER M4 ;\n    RECT 0.072 0 9 9 ;\n  END\nEND m\n")
+    out = G.macro_pin_layer(lef, "M5")
+    assert out.count("LAYER M5 ;") == 1 and out.count("LAYER M4 ;") == 2 and "RECT 0 0.768 0.024 0.792 ;" in out
+    assert out.index("LAYER M5 ;") < out.index("PIN VDD")

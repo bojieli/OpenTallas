@@ -1130,6 +1130,15 @@ def resolve_recipe(recs, mod):
     return rec
 
 
+def macro_pin_layer(lef, layer):
+    """LEF text with the signal pin shapes of every PIN on layer (USE POWER / GROUND pins and OBS unchanged)."""
+    def pin(m):
+        if re.search(r"\bUSE\s+(POWER|GROUND)\b", m.group(0)):
+            return m.group(0)
+        return re.sub(r"\bLAYER\s+\S+\s*;", f"LAYER {layer} ;", m.group(0))
+    return re.sub(r"^\s*PIN\s+(\S+)\s*$.*?^\s*END\s+\1\s*$", pin, lef, flags=re.M | re.S)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -1608,6 +1617,12 @@ def main():
             # (qkd_hr_phy_adp R270 at y 17.28: 437 pins off-track -> DRT-0073 at GRT pin access)
             import macro_pin_tracks
             macro_pin_tracks.check(hard_children["blocks"], lambda m: (kd / "macros" / f"{m}.lef").read_text())
+        if hard_children.get("signal_pin_layer"):
+            # DIE-KV-65/HR 11-03: an N-designed M4 edge pin rotated 90 deg has no planar exit along M4 (DRT-0073 on
+            # qkd_hr_phy_adp R270, 2 kits). Kit view keeps every rect and moves the signal pins to the free layer above.
+            for m in hard_children["children"]:
+                f = kd / "macros" / f"{m}.lef"
+                f.write_text(macro_pin_layer(f.read_text(), hard_children["signal_pin_layer"]))
         if hard_children.get("static_rows"):
             from macro_sites import static_placement_tcl
             (kd / "macro_place.tcl").write_text(static_placement_tcl(hard_children["blocks"]))
