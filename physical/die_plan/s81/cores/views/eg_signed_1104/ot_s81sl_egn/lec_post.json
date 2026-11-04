@@ -1,0 +1,3402 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-04T11:41:14+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "s81",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 64,
+  "debug_overrides": {
+   "OT_LEC_RAW_BASE_STEPS": "0"
+  }
+ },
+ "top": "ot_s81sl_egn",
+ "netlist": "/work/run/results/asap7/kl_ot_s81sl_egn_rf1/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 67,
+  "outputs": 34
+ },
+ "clock_gates": {
+  "gold": {
+   "gates": 0,
+   "gated_flops": 0,
+   "gated_bb_clock_pins": 0,
+   "per_gate": {},
+   "flop_types": {}
+  },
+  "gate": {
+   "gates": 0,
+   "gated_flops": 0,
+   "gated_bb_clock_pins": 0,
+   "per_gate": {},
+   "flop_types": {}
+  }
+ },
+ "lockup_latches": {
+  "gold": {
+   "latches": 0,
+   "to_wire": 0,
+   "per_latch": {},
+   "phase_mux": 0,
+   "phases": {},
+   "port_phase": {},
+   "port_phase_counts": {
+    "edge": 34
+   }
+  },
+  "gate": {
+   "latches": 0,
+   "to_wire": 0,
+   "per_latch": {},
+   "phase_mux": 0,
+   "phases": {},
+   "port_phase": {},
+   "port_phase_counts": {
+    "edge": 34
+   }
+  }
+ },
+ "t_aig_s": 76.5,
+ "latch_phase": {
+  "n_differ": 0,
+  "differ": []
+ },
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "auto_loaded": {
+  "proposed": 0
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 64,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "raw_prefix_wall_s": 900.0,
+  "raw_prefix_ands_cap": 500000,
+  "n_raw_prefix_bounded": 0,
+  "raw_prefix_bounded": [],
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 1108,
+  "n_reloaded": 417,
+  "n_dropped": 0,
+  "reloaded": [
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[61]",
+    "side": "both",
+    "value": 1,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k3.q[0]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k3.q[13]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[102]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[114]",
+    "side": "both",
+    "value": 1,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[129]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[49]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[51]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[53]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[55]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[57]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[59]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[61]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[63]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[65]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[67]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[69]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[71]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[73]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[75]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[77]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[79]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[81]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[83]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[85]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[87]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[89]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[91]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[93]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[95]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.q[96]",
+    "side": "both",
+    "value": 1,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.q[61]",
+    "side": "both",
+    "value": 1,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k3.q[0]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k3.q[13]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[102]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[114]",
+    "side": "both",
+    "value": 1,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[129]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[49]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[51]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[53]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[55]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[57]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[59]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[61]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[63]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[65]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[67]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[69]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[71]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[73]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[75]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[77]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[79]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[81]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[83]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[85]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[87]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[89]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[91]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[93]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[95]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.q[96]",
+    "side": "both",
+    "value": 1,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.q[61]",
+    "side": "both",
+    "value": 1,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k3.q[0]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k3.q[13]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[102]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[114]",
+    "side": "both",
+    "value": 1,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[129]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[49]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[51]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[53]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[55]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[57]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[59]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[61]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[63]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[65]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[67]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[69]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[71]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[73]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[75]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[77]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[79]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[81]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[83]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[85]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[87]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[89]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[91]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[93]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[95]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.q[96]",
+    "side": "both",
+    "value": 1,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.divide.s3b_qh[14]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.divide.s3b_qh[15]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.divide.s4_qm[22]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.divide.s4_qm[23]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.divide.s5_q[48]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.divide.s5_q[49]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.u_k3.g_r.r[103]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.u_k5.g_r.r[66]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[100]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[101]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[103]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[70]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[71]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[72]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[73]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[74]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[75]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[76]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[77]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[78]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[79]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[80]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[81]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[82]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[83]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[84]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[85]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[86]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[87]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[88]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[89]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[90]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[91]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[33]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[34]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[35]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[36]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[37]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[38]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[39]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[40]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[41]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[42]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[43]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[44]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[45]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[47]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[48]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[49]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[50]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[51]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[52]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[53]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[54]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[63]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[64]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[66]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_y.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_y.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_y.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[0].m_yy.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[100]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[101]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[103]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[70]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[71]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[72]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[73]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[74]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[75]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[76]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[77]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[78]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[79]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[80]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[81]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[82]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[83]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[84]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[85]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[86]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[87]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[88]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[89]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[90]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[91]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[33]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[34]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[35]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[36]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[37]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[38]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[39]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[40]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[41]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[42]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[43]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[44]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[45]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[47]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[48]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[49]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[50]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[51]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[52]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[53]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[54]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[63]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[64]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[66]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_hm.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_hm.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_hm.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_y.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_y.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_y.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[1].m_yy.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[100]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[101]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[103]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[70]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[71]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[72]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[73]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[74]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[75]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[76]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[77]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[78]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[79]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[80]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[81]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[82]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[83]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[84]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[85]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[86]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[87]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[88]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[89]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[90]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[91]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[33]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[34]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[35]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[36]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[37]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[38]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[39]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[40]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[41]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[42]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[43]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[44]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[45]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[47]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[48]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[49]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[50]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[51]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[52]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[53]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[54]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[63]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[64]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].a_s.gq.u.g_keep4.u.u.u_k5.g_r.r[66]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_hm.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_hm.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_hm.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_y.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_y.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_y.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.g_nr[2].m_yy.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[123]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[124]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[125]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[126]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[127]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[128]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[129]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[12]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[130]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[131]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[132]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[133]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[134]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[135]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[136]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[137]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[138]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[139]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[13]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[140]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[141]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[142]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[143]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[144]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[145]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[146]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[147]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[148]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[149]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[14]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[150]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[151]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[152]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[153]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[154]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[15]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[16]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[179]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[17]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[180]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[181]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[182]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[183]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[184]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[185]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[186]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[187]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[188]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[189]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[18]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[190]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[191]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[192]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[193]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[194]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[195]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[196]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[197]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[198]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[199]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[19]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[200]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[201]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[206]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[20]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[21]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[22]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[23]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[24]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[25]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[26]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[27]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[28]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[29]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[30]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[31]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[32]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[33]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[34]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[66]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[67]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[68]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[69]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[70]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[71]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[72]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[73]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[74]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[75]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[76]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[77]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[78]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[79]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[80]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[81]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[82]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[83]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[84]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[85]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[86]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[87]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[88]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[89]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[90]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[91]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[92]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[93]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[94]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[95]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[96]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[97]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k3.g_r.r[98]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[128]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[129]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[130]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[131]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[132]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[133]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[134]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[135]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[136]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[137]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[138]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[139]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[140]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[141]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[142]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[143]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[144]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[145]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[146]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[147]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[148]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[149]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[150]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[175]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[178]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k6.g_r.r[46]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   }
+  ],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/eco/lec/noreset_constants.tsv",
+   "sha256": "4253a77c67fb758faada3fc20b36e088c0c375e6cf51c8012ec4ef07fa48eaab",
+   "n_kept": 1108,
+   "n_dropped": 0
+  }
+ },
+ "constraint_bases": {
+  "checks": [],
+  "refused": []
+ },
+ "t_corr_s": 865.6,
+ "keypoints": {
+  "gold": {
+   "inputs": 909,
+   "flops": 10051,
+   "outputs": 0,
+   "ands": 473063
+  },
+  "gate": {
+   "inputs": 1721,
+   "flops": 17742,
+   "outputs": 0,
+   "ands": 148592
+  },
+  "matched": 8850,
+  "gold_constant_flops": {
+   "n": 1108,
+   "first": [
+    "ff:u_dut.u_n.divide.s3_qh[6]",
+    "ff:u_dut.u_n.divide.s3_qh[7]",
+    "ff:u_dut.u_n.divide.s3b_qh[14]",
+    "ff:u_dut.u_n.divide.s3b_qh[15]",
+    "ff:u_dut.u_n.divide.s4_qm[22]",
+    "ff:u_dut.u_n.divide.s4_qm[23]",
+    "ff:u_dut.u_n.divide.s5_q[48]",
+    "ff:u_dut.u_n.divide.s5_q[49]",
+    "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.u_k1.g_r.r[27]",
+    "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.u_k1.g_r.r[93]",
+    "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.u_k3.g_r.r[103]",
+    "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.u_k5.g_r.r[66]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[27]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[60]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[61]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[62]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[63]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[64]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[65]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[66]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[67]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[68]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[69]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[70]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[71]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[72]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[73]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[74]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[75]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[76]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[77]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[78]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[79]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[80]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[81]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[90]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[91]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.g_r.r[93]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[51]",
+    "ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.g_r.r[100]"
+   ]
+  },
+  "paired_flops": {
+   "n": 577,
+   "first": [
+    "both:ff:u_dut.u_n.divide.s1_sub=~ff:u_dut.u_n.divide.s1_m[23]",
+    "both:ff:u_dut.u_n.divide.s2_eu[8]=ff:u_dut.u_n.divide.s2_eu[10]",
+    "both:ff:u_dut.u_n.divide.s2_eu[9]=ff:u_dut.u_n.divide.s2_eu[10]",
+    "both:ff:u_dut.u_n.divide.s3_eu[8]=ff:u_dut.u_n.divide.s3_eu[10]",
+    "both:ff:u_dut.u_n.divide.s3_eu[9]=ff:u_dut.u_n.divide.s3_eu[10]",
+    "both:ff:u_dut.u_n.divide.s3b_eu[8]=ff:u_dut.u_n.divide.s3b_eu[10]",
+    "both:ff:u_dut.u_n.divide.s3b_eu[9]=ff:u_dut.u_n.divide.s3b_eu[10]",
+    "both:ff:u_dut.u_n.divide.s4_eu[8]=ff:u_dut.u_n.divide.s4_eu[10]",
+    "both:ff:u_dut.u_n.divide.s4_eu[9]=ff:u_dut.u_n.divide.s4_eu[10]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[83]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[82]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[84]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[82]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[85]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[82]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[86]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[82]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[87]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[82]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[88]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[82]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[89]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[82]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[92]=~ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k1.q[82]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[92]=~ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[102]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[93]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[92]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[94]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[92]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[95]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[92]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[96]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[92]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[97]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[92]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[98]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[92]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[99]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k3.q[92]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[56]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[55]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[57]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[55]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[58]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[55]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[59]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[55]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[60]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[55]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[61]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[55]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[62]=ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[55]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[65]=~ff:u_dut.u_n.rsqrt.g_nr[0].a_s.gq.u.g_keep4.u.u.u_k5.q[55]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[11]=ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[10]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[21]=ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[20]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[22]=ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[20]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[23]=ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[20]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[72]=ff:u_dut.u_n.rsqrt.g_nr[0].g_h.d_h.g_line.line[31]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[8]=ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[10]",
+    "both:ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[9]=ff:u_dut.u_n.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k1.q[10]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 59,
+   "first": [
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[0]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[10]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[115]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[116]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[117]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[118]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[119]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[11]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[120]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[121]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[122]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[123]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[124]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[125]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[127]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[12]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[13]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[14]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[15]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[16]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[17]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[18]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[19]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[1]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[20]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[21]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[22]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[2]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[3]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[47]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[49]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[4]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[50]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[51]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[52]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[53]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[54]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[55]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[56]",
+    "ff:u_dut.u_n.rsqrt.m_half.g_l5.u.u.u_k5.g_r.r[57]"
+   ]
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 842,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 1654,
+  "gold_only_compare": {
+   "n": 1234,
+   "first": [
+    "ff:u_dut.u_n.divide.s3_qh[6]",
+    "ff:u_dut.u_n.divide.s3_qh[7]",
+    "ff:u_dut.u_n.divide.s3b_qh[14]",
+    "ff:u_dut.u_n.divide.s3b_qh[15]",
+    "ff:u_dut.u_n.divide.s4_qm[22]",
+    "ff:u_dut.u_n.divide.s4_qm[23]",
+    "ff:u_dut.u_n.divide.s5_q[0]",
+    "ff:u_dut.u_n.divide.s5_q[10]",
+    "ff:u_dut.u_n.divide.s5_q[11]",
+    "ff:u_dut.u_n.divide.s5_q[12]",
+    "ff:u_dut.u_n.divide.s5_q[13]",
+    "ff:u_dut.u_n.divide.s5_q[14]",
+    "ff:u_dut.u_n.divide.s5_q[15]",
+    "ff:u_dut.u_n.divide.s5_q[16]",
+    "ff:u_dut.u_n.divide.s5_q[17]",
+    "ff:u_dut.u_n.divide.s5_q[18]",
+    "ff:u_dut.u_n.divide.s5_q[19]",
+    "ff:u_dut.u_n.divide.s5_q[1]",
+    "ff:u_dut.u_n.divide.s5_q[20]",
+    "ff:u_dut.u_n.divide.s5_q[21]",
+    "ff:u_dut.u_n.divide.s5_q[2]",
+    "ff:u_dut.u_n.divide.s5_q[3]",
+    "ff:u_dut.u_n.divide.s5_q[48]",
+    "ff:u_dut.u_n.divide.s5_q[49]",
+    "ff:u_dut.u_n.divide.s5_q[4]",
+    "ff:u_dut.u_n.divide.s5_q[5]",
+    "ff:u_dut.u_n.divide.s5_q[6]",
+    "ff:u_dut.u_n.divide.s5_q[7]",
+    "ff:u_dut.u_n.divide.s5_q[8]",
+    "ff:u_dut.u_n.divide.s5_q[9]",
+    "ff:u_dut.u_n.divide.u_v.line[1]",
+    "ff:u_dut.u_n.divide.u_v.line[2]",
+    "ff:u_dut.u_n.divide.u_v.line[3]",
+    "ff:u_dut.u_n.divide.u_v.line[4]",
+    "ff:u_dut.u_n.divide.u_v.line[5]",
+    "ff:u_dut.u_n.divide.u_v.line[6]",
+    "ff:u_dut.u_n.divide.u_v.line[7]",
+    "ff:u_dut.u_n.divide.u_v.line[8]",
+    "ff:u_dut.u_n.divide.u_v.line[9]",
+    "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.u_k1.g_r.r[27]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 71,
+   "first": [
+    "ff:u_dut.u_n.divide.u_v.vd[1]",
+    "ff:u_dut.u_n.divide.u_v.vd[2]",
+    "ff:u_dut.u_n.divide.u_v.vd[3]",
+    "ff:u_dut.u_n.divide.u_v.vd[4]",
+    "ff:u_dut.u_n.divide.u_v.vd[5]",
+    "ff:u_dut.u_n.divide.u_v.vd[6]",
+    "ff:u_dut.u_n.divide.u_v.vd[7]",
+    "ff:u_dut.u_n.divide.u_v.vd[8]",
+    "ff:u_dut.u_n.divide.u_v.vd[9]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[10]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[11]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[12]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[13]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[14]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[15]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[16]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[17]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[18]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[19]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[1]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[20]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[21]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[22]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[23]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[24]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[25]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[26]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[27]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[28]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[29]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[2]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[30]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[31]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[32]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[33]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[34]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[35]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[36]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[37]",
+    "ff:u_dut.u_n.rsqrt.u_v.vd[38]"
+   ]
+  }
+ },
+ "t_prove_s": 19.5,
+ "x_dont_care_points": {
+  "n": 505,
+  "first": [
+   "ff:u_dut.u_n.divide.y[0]",
+   "ff:u_dut.u_n.divide.y[10]",
+   "ff:u_dut.u_n.divide.y[11]",
+   "ff:u_dut.u_n.divide.y[12]",
+   "ff:u_dut.u_n.divide.y[13]",
+   "ff:u_dut.u_n.divide.y[14]",
+   "ff:u_dut.u_n.divide.y[15]",
+   "ff:u_dut.u_n.divide.y[16]",
+   "ff:u_dut.u_n.divide.y[17]",
+   "ff:u_dut.u_n.divide.y[18]",
+   "ff:u_dut.u_n.divide.y[19]",
+   "ff:u_dut.u_n.divide.y[1]",
+   "ff:u_dut.u_n.divide.y[20]",
+   "ff:u_dut.u_n.divide.y[21]",
+   "ff:u_dut.u_n.divide.y[22]",
+   "ff:u_dut.u_n.divide.y[23]",
+   "ff:u_dut.u_n.divide.y[24]",
+   "ff:u_dut.u_n.divide.y[25]",
+   "ff:u_dut.u_n.divide.y[26]",
+   "ff:u_dut.u_n.divide.y[27]",
+   "ff:u_dut.u_n.divide.y[28]",
+   "ff:u_dut.u_n.divide.y[29]",
+   "ff:u_dut.u_n.divide.y[2]",
+   "ff:u_dut.u_n.divide.y[30]",
+   "ff:u_dut.u_n.divide.y[31]",
+   "ff:u_dut.u_n.divide.y[3]",
+   "ff:u_dut.u_n.divide.y[4]",
+   "ff:u_dut.u_n.divide.y[5]",
+   "ff:u_dut.u_n.divide.y[6]",
+   "ff:u_dut.u_n.divide.y[7]",
+   "ff:u_dut.u_n.divide.y[8]",
+   "ff:u_dut.u_n.divide.y[9]",
+   "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.err[0]",
+   "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.err[1]",
+   "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.y[0]",
+   "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.y[10]",
+   "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.y[11]",
+   "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.y[12]",
+   "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.y[13]",
+   "ff:u_dut.u_n.epsilon.gq.u.g_keep4.u.u.y[14]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 0,
+  "in_netlist": 0,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null,
+  "functionally_unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "functionally_unobservable_reason": null,
+  "dead_twin_classes_removed": {
+   "n": 0,
+   "first": []
+  },
+  "dead_twin_classes_reason": null,
+  "merged_twins_proved": {
+   "n": 0,
+   "first": []
+  },
+  "merged_twins_reason": null
+ },
+ "counts": {
+  "compare_points": 11012,
+  "proved": 11012,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "11012 compare points proved; 8850 key points matched by name, 577 register pairs / merges and 1108 constant registers proved inductively; 59 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 505 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "superset_vec": {
+  "enabled": true,
+  "n_extra": 0,
+  "all_shown": true,
+  "extra_bits": [],
+  "basis": "free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"
+ },
+ "t_total_s": 967.2,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'",
+  "tool_update": null
+ }
+}

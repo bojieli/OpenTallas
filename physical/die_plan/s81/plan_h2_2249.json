@@ -216702,18 +216702,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       414.774
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,570.48],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -219424,8 +219413,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 44,
-      "n_reset_consumers": 44,
+      "n_clock_taps": 46,
+      "n_reset_consumers": 46,
       "local_reset_taps": false,
       "outs": [
        [
@@ -219452,20 +219441,7 @@
         "internal_depth": 1,
         "tap": 46
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         414.75100000000003
-        ],
-        "xy": [
-         898.677,
-         410.4
-        ],
-        "internal_depth": 1,
-        "tap": 47
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,414.762],"xy":[833.772,410.442],"internal_depth":1,"tap":47}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,414.762],"xy":[972.012,410.442],"internal_depth":1,"tap":47}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,570.282],"xy":[904.716,565.962],"internal_depth":1,"tap":47},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -219975,7 +219951,7 @@
      {
       "name": "clk_t32",
       "xy": [
-       1037.0533,
+       1045.558,
        406.4133
       ]
      },
@@ -220075,7 +220051,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,414.72],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,570.24],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,34.56],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -269798,18 +269776,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       414.774
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,570.48],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -273000,8 +272967,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 44,
-      "n_reset_consumers": 44,
+      "n_clock_taps": 46,
+      "n_reset_consumers": 46,
       "local_reset_taps": false,
       "outs": [
        [
@@ -273028,20 +272995,7 @@
         "internal_depth": 1,
         "tap": 46
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         414.75100000000003
-        ],
-        "xy": [
-         898.677,
-         410.4
-        ],
-        "internal_depth": 1,
-        "tap": 47
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,414.762],"xy":[833.772,410.442],"internal_depth":1,"tap":47}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,414.762],"xy":[972.012,410.442],"internal_depth":1,"tap":47}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,570.282],"xy":[904.716,565.962],"internal_depth":1,"tap":47},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -273415,7 +273369,7 @@
      {
       "name": "clk_t32",
       "xy": [
-       1037.0533,
+       1045.558,
        406.4133
       ]
      },
@@ -273515,7 +273469,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,414.72],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,570.24],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,34.56],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -323713,18 +323669,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       1198.584,
-       414.774
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[1134.348,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[1272.588,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[1203.468,570.48],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -326344,8 +326289,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 45,
-      "n_reset_consumers": 45,
+      "n_clock_taps": 47,
+      "n_reset_consumers": 47,
       "local_reset_taps": false,
       "outs": [
        [
@@ -326372,20 +326317,7 @@
         "internal_depth": 1,
         "tap": 47
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         1201.0769999999998,
-         414.75100000000003
-        ],
-        "xy": [
-         1201.077,
-         410.4
-        ],
-        "internal_depth": 1,
-        "tap": 48
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[1136.172,414.762],"xy":[1136.172,410.442],"internal_depth":1,"tap":48}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[1274.412,414.762],"xy":[1274.412,410.442],"internal_depth":1,"tap":48}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[1207.116,570.282],"xy":[1207.116,565.962],"internal_depth":1,"tap":48},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -326739,7 +326671,7 @@
      {
       "name": "clk_t34",
       "xy": [
-       1339.317,
+       1347.958,
        410.4
       ]
      },
@@ -326747,7 +326679,7 @@
       "name": "clk_t35",
       "xy": [
        1162.04,
-       684.72
+       734.422
       ]
      },
      {
@@ -326842,7 +326774,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[1071.36,414.72],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[1071.36,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[1209.6,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[1075.68,570.24],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[1019.52,34.56],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -358640,18 +358574,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       803.514
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,647.76],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -360197,8 +360120,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 16,
-      "n_reset_consumers": 16,
+      "n_clock_taps": 18,
+      "n_reset_consumers": 18,
       "local_reset_taps": false,
       "outs": [
        [
@@ -360225,20 +360148,7 @@
         "internal_depth": 1,
         "tap": 18
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         803.537
-        ],
-        "xy": [
-         898.677,
-         807.84
-        ],
-        "internal_depth": 1,
-        "tap": 19
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,803.478],"xy":[833.772,807.798],"internal_depth":1,"tap":19}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,803.478],"xy":[972.012,807.798],"internal_depth":1,"tap":19}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,647.958],"xy":[904.716,652.278],"internal_depth":1,"tap":19},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -360609,7 +360519,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,794.88],"outline_um":[311.04,395.28],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,544.32],"outline_um":[259.2,259.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,492.48],"outline_um":[259.2,155.52],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,820.8],"outline_um":[362.88,362.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -387312,18 +387224,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       1034.424,
-       933.174
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[633.228,881.52],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[771.468,881.52],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[702.348,1037.04],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -390647,8 +390548,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 48,
-      "n_reset_consumers": 48,
+      "n_clock_taps": 50,
+      "n_reset_consumers": 50,
       "local_reset_taps": false,
       "outs": [
        [
@@ -390675,20 +390576,7 @@
         "internal_depth": 1,
         "tap": 50
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         1036.917,
-         933.151
-        ],
-        "xy": [
-         1036.917,
-         928.8
-        ],
-        "internal_depth": 1,
-        "tap": 51
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[635.052,881.322],"xy":[635.052,877.002],"internal_depth":1,"tap":51}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[773.292,881.322],"xy":[773.292,877.002],"internal_depth":1,"tap":51}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[705.996,1036.842],"xy":[705.996,1032.522],"internal_depth":1,"tap":51},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -391353,7 +391241,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[907.2,933.12],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[570.24,881.28],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[708.48,881.28],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[574.56,1036.8],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[855.36,552.96],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -409546,18 +409436,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       803.514
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,647.76],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -410774,8 +410653,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 16,
-      "n_reset_consumers": 16,
+      "n_clock_taps": 18,
+      "n_reset_consumers": 18,
       "local_reset_taps": false,
       "outs": [
        [
@@ -410798,20 +410677,7 @@
         "internal_depth": 1,
         "tap": 17
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         803.537
-        ],
-        "xy": [
-         898.677,
-         807.84
-        ],
-        "internal_depth": 1,
-        "tap": 18
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,803.478],"xy":[833.772,807.798],"internal_depth":1,"tap":18}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,803.478],"xy":[972.012,807.798],"internal_depth":1,"tap":18}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,647.958],"xy":[904.716,652.278],"internal_depth":1,"tap":18},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -411000,7 +410866,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,794.88],"outline_um":[311.04,395.28],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,544.32],"outline_um":[259.2,259.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,492.48],"outline_um":[259.2,155.52],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,820.8],"outline_um":[362.88,362.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -440589,18 +440457,7 @@
       "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/insertion.json",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       803.514
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,647.76],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -443587,8 +443444,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 52,
-      "n_reset_consumers": 52,
+      "n_clock_taps": 54,
+      "n_reset_consumers": 54,
       "local_reset_taps": false,
       "outs": [
        [
@@ -443615,20 +443472,7 @@
         "internal_depth": 1,
         "tap": 54
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         803.537
-        ],
-        "xy": [
-         898.677,
-         807.84
-        ],
-        "internal_depth": 1,
-        "tap": 55
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,803.478],"xy":[833.772,807.798],"internal_depth":1,"tap":55}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,803.478],"xy":[972.012,807.798],"internal_depth":1,"tap":55}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,647.958],"xy":[904.716,652.278],"internal_depth":1,"tap":55},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -444158,7 +444002,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt3","lef":"physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/ot_s81sl_xrt3.lef","origin_um":[492.48,1019.52],"outline_um":[207.36,164.16],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt3.json","obs_max":"M6"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,544.32],"outline_um":[259.2,259.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,492.48],"outline_um":[259.2,155.52],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,820.8],"outline_um":[362.88,362.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (R0); PATH-S81 10-25: u_c.u_xr = ot_s81sl_xrt3 (actual HB=1 source, die_b178 u_s_3S #(.HB(1))), c3x_C xrt3 view, origin [492.48, 1019.52]"
@@ -482923,18 +482769,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       803.514
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,647.76],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -485650,8 +485485,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 51,
-      "n_reset_consumers": 51,
+      "n_clock_taps": 53,
+      "n_reset_consumers": 53,
       "local_reset_taps": false,
       "outs": [
        [
@@ -485674,20 +485509,7 @@
         "internal_depth": 1,
         "tap": 52
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         803.537
-        ],
-        "xy": [
-         898.677,
-         807.84
-        ],
-        "internal_depth": 1,
-        "tap": 53
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,803.478],"xy":[833.772,807.798],"internal_depth":1,"tap":53}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,803.478],"xy":[972.012,807.798],"internal_depth":1,"tap":53}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,647.958],"xy":[904.716,652.278],"internal_depth":1,"tap":53},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -486172,7 +485994,7 @@
      {
       "name": "clk_t35",
       "xy": [
-       1036.9636,
+       1045.558,
        811.9164
       ]
      },
@@ -486293,7 +486115,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,794.88],"outline_um":[311.04,395.28],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,544.32],"outline_um":[259.2,259.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,492.48],"outline_um":[259.2,155.52],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,820.8],"outline_um":[362.88,362.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -525077,18 +524901,7 @@
       "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/insertion.json",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       1155.384,
-       803.514
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[1091.148,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[1229.388,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[1160.268,647.76],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -528061,8 +527874,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 48,
-      "n_reset_consumers": 48,
+      "n_clock_taps": 50,
+      "n_reset_consumers": 50,
       "local_reset_taps": false,
       "outs": [
        [
@@ -528089,20 +527902,7 @@
         "internal_depth": 1,
         "tap": 50
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         1157.877,
-         803.537
-        ],
-        "xy": [
-         1157.877,
-         807.84
-        ],
-        "internal_depth": 1,
-        "tap": 51
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[1092.972,803.478],"xy":[1092.972,807.798],"internal_depth":1,"tap":51}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[1231.212,803.478],"xy":[1231.212,807.798],"internal_depth":1,"tap":51}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[1163.916,647.958],"xy":[1163.916,652.278],"internal_depth":1,"tap":51},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -528665,7 +528465,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt3","lef":"physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/ot_s81sl_xrt3.lef","origin_um":[570.24,1019.52],"outline_um":[207.36,164.16],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt3.json","obs_max":"M6"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[1028.16,544.32],"outline_um":[259.2,259.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[1028.16,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[1166.4,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[1032.48,492.48],"outline_um":[259.2,155.52],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[976.32,820.8],"outline_um":[362.88,362.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -545864,18 +545666,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       414.774
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,570.48],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -547162,8 +546953,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 16,
-      "n_reset_consumers": 16,
+      "n_clock_taps": 18,
+      "n_reset_consumers": 18,
       "local_reset_taps": false,
       "outs": [
        [
@@ -547186,20 +546977,7 @@
         "internal_depth": 1,
         "tap": 17
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         414.75100000000003
-        ],
-        "xy": [
-         898.677,
-         410.4
-        ],
-        "internal_depth": 1,
-        "tap": 18
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,414.762],"xy":[833.772,410.442],"internal_depth":1,"tap":18}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,414.762],"xy":[972.012,410.442],"internal_depth":1,"tap":18}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,570.282],"xy":[904.716,565.962],"internal_depth":1,"tap":18},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -547456,7 +547234,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,414.72],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,570.24],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,34.56],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -573879,18 +573659,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       803.514
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,647.76],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -576820,8 +576589,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 49,
-      "n_reset_consumers": 49,
+      "n_clock_taps": 51,
+      "n_reset_consumers": 51,
       "local_reset_taps": false,
       "outs": [
        [
@@ -576844,20 +576613,7 @@
         "internal_depth": 1,
         "tap": 50
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         803.537
-        ],
-        "xy": [
-         898.677,
-         807.84
-        ],
-        "internal_depth": 1,
-        "tap": 51
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,803.478],"xy":[833.772,807.798],"internal_depth":1,"tap":51}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,803.478],"xy":[972.012,807.798],"internal_depth":1,"tap":51}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,647.958],"xy":[904.716,652.278],"internal_depth":1,"tap":51},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -577410,7 +577166,7 @@
      {
       "name": "clk_t35",
       "xy": [
-       1036.9636,
+       1045.558,
        811.9164
       ]
      },
@@ -577544,7 +577300,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,794.88],"outline_um":[311.04,395.28],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,544.32],"outline_um":[259.2,259.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,492.48],"outline_um":[259.2,155.52],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,820.8],"outline_um":[362.88,362.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -599905,18 +599663,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       414.774
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,570.48],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -601342,8 +601089,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 16,
-      "n_reset_consumers": 16,
+      "n_clock_taps": 18,
+      "n_reset_consumers": 18,
       "local_reset_taps": false,
       "outs": [
        [
@@ -601370,20 +601117,7 @@
         "internal_depth": 1,
         "tap": 18
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         414.75100000000003
-        ],
-        "xy": [
-         898.677,
-         410.4
-        ],
-        "internal_depth": 1,
-        "tap": 19
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,414.762],"xy":[833.772,410.442],"internal_depth":1,"tap":19}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,414.762],"xy":[972.012,410.442],"internal_depth":1,"tap":19}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,570.282],"xy":[904.716,565.962],"internal_depth":1,"tap":19},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -601617,7 +601351,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,414.72],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,570.24],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,34.56],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -636405,18 +636141,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       933.174
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[1160.268,881.52],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[1298.508,881.52],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[1229.388,1037.04],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -639777,8 +639502,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 49,
-      "n_reset_consumers": 49,
+      "n_clock_taps": 51,
+      "n_reset_consumers": 51,
       "local_reset_taps": false,
       "outs": [
        [
@@ -639805,20 +639530,7 @@
         "internal_depth": 1,
         "tap": 51
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         933.151
-        ],
-        "xy": [
-         898.677,
-         928.8
-        ],
-        "internal_depth": 1,
-        "tap": 52
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[1162.092,881.322],"xy":[1162.092,877.002],"internal_depth":1,"tap":52}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[1300.332,881.322],"xy":[1300.332,877.002],"internal_depth":1,"tap":52}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[1233.036,1036.842],"xy":[1233.036,1032.522],"internal_depth":1,"tap":52},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -640483,7 +640195,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,933.12],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[1097.28,881.28],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[1235.52,881.28],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[1101.6,1036.8],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,552.96],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -672861,18 +672575,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       414.774
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,570.48],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -674454,8 +674157,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 16,
-      "n_reset_consumers": 16,
+      "n_clock_taps": 18,
+      "n_reset_consumers": 18,
       "local_reset_taps": false,
       "outs": [
        [
@@ -674478,20 +674181,7 @@
         "internal_depth": 1,
         "tap": 17
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         414.75100000000003
-        ],
-        "xy": [
-         898.677,
-         410.4
-        ],
-        "internal_depth": 1,
-        "tap": 18
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,414.762],"xy":[833.772,410.442],"internal_depth":1,"tap":18}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,414.762],"xy":[972.012,410.442],"internal_depth":1,"tap":18}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,570.282],"xy":[904.716,565.962],"internal_depth":1,"tap":18},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -674849,7 +674539,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,414.72],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,570.24],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,34.56],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -707251,18 +706943,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       414.774
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,414.96],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,570.48],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -709791,8 +709472,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 43,
-      "n_reset_consumers": 43,
+      "n_clock_taps": 45,
+      "n_reset_consumers": 45,
       "local_reset_taps": false,
       "outs": [
        [
@@ -709819,20 +709500,7 @@
         "internal_depth": 1,
         "tap": 45
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         414.75100000000003
-        ],
-        "xy": [
-         898.677,
-         410.4
-        ],
-        "internal_depth": 1,
-        "tap": 46
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,414.762],"xy":[833.772,410.442],"internal_depth":1,"tap":46}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,414.762],"xy":[972.012,410.442],"internal_depth":1,"tap":46}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,570.282],"xy":[904.716,565.962],"internal_depth":1,"tap":46},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -710356,7 +710024,7 @@
      {
       "name": "clk_t34",
       "xy": [
-       1037.0533,
+       1045.558,
        406.4133
       ]
      },
@@ -710435,7 +710103,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,34.56],"outline_um":[311.04,395.28],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,414.72],"outline_um":[259.2,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,414.72],"outline_um":[129.6,146.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,570.24],"outline_um":[259.2,155.52],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,34.56],"outline_um":[362.88,362.88],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -764857,18 +764527,7 @@
       "budget_owner": "parent_budget early tap 120.7 ps TT: S81-CORES-KITS-12/etap measured TCTS pin-register insertion (s81ck12/gate_*_T/g_{TT,FF}.log), COORD 19:0x (4)",
       "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ETAP-1031 measured kit frame"
      },
-     {
-      "name": "u_c.u_eg.clk",
-      "kind": "core",
-      "xy": [
-       896.184,
-       803.514
-      ],
-      "insertion_ps": 351.3,
-      "insertion_ff_ps": 290.1,
-      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
-      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"
-     },
+     {"name":"u_c.u_eg.u_nh.clk","kind":"core","xy":[831.948,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_nk.clk","kind":"core","xy":[970.188,803.28],"insertion_ps":264.67,"insertion_ff_ps":207.59,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"}, {"name":"u_c.u_eg.u_gg.clk","kind":"core","xy":[901.068,647.76],"insertion_ps":275.03,"insertion_ff_ps":219.31,"budget_owner":"parent_budget pin_register_mean physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/insertion.json","note":"CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean"},
      {
       "name": "u_c.u_xf.clk",
       "kind": "core",
@@ -766323,8 +765982,8 @@
        "core_rst2"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 16,
-      "n_reset_consumers": 16,
+      "n_clock_taps": 18,
+      "n_reset_consumers": 18,
       "local_reset_taps": false,
       "outs": [
        [
@@ -766351,20 +766010,7 @@
         "internal_depth": 1,
         "tap": 18
        },
-       {
-        "inst": "u_c.u_eg",
-        "pin": "rst_n",
-        "pin_um": [
-         898.677,
-         803.537
-        ],
-        "xy": [
-         898.677,
-         807.84
-        ],
-        "internal_depth": 1,
-        "tap": 19
-       },
+       {"inst":"u_c.u_eg.u_nh","pin":"rst_n","pin_um":[833.772,803.478],"xy":[833.772,807.798],"internal_depth":1,"tap":19}, {"inst":"u_c.u_eg.u_nk","pin":"rst_n","pin_um":[972.012,803.478],"xy":[972.012,807.798],"internal_depth":1,"tap":19}, {"inst":"u_c.u_eg.u_gg","pin":"rst_n","pin_um":[904.716,647.958],"xy":[904.716,652.278],"internal_depth":1,"tap":19},
        {
         "inst": "u_c.u_xf",
         "pin": "rst_n",
@@ -766632,7 +766278,9 @@
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib"},
     {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,794.88],"outline_um":[311.04,395.28],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/ot_s81sl_xrt1_prov_1101/ot_s81sl_xrt1_tt.lib"},
-    {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,544.32],"outline_um":[259.2,259.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7","lib":"physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib"},
+    {"inst":"u_c.u_eg.u_nh","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[768.96,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_nk","module":"ot_s81sl_egn","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn.lef","origin_um":[907.2,656.64],"outline_um":[129.6,146.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egn.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egn/ot_s81sl_egn_tt.lib"},
+    {"inst":"u_c.u_eg.u_gg","module":"ot_s81sl_egg","lef":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg.lef","origin_um":[773.28,492.48],"outline_um":[259.2,155.52],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_egg.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/eg_signed_1104/ot_s81sl_egg/ot_s81sl_egg_tt.lib"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,820.8],"outline_um":[362.88,362.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
