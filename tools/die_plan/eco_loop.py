@@ -454,7 +454,8 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     best = None
     verdict, stop = "EXHAUSTED", f"{max_iter} iterations, still not signed"
     for n in range(1, max_iter + 1):
-        mode = "route" if prev["drc"] == 0 else "grt"
+        # OT_ECO_FROM=route|grt: owner-chosen seed (DIE-HEAD-59: a DRC tied to one pin + a GRT-session RSZ-0074, route-keep)
+        mode = os.environ.get("OT_ECO_FROM") or ("route" if prev["drc"] == 0 else "grt")
         it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                      repair_rc=repair_rc)
         res["iterations"].append(it)

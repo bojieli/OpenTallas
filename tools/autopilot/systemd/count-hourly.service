@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenTallas: refresh the release count and append lanes/SIGN-RATE.tsv, no agent (FLOW-29, owner 11-04)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/coord
+Environment=COUNT_COORD=%h/coord
+ExecStart=/usr/bin/python3 -I %h/coord/tools/count_hourly.py
+Nice=15
+IOSchedulingClass=idle
+MemoryMax=6G
+TimeoutStartSec=1800

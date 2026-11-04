@@ -74,7 +74,9 @@ proc ot_prd_route_keep {{ref_odb ""}} {
   set clk [dict create]
   if {[llength [info commands ot_clk_dbnets]]} { foreach n [ot_clk_dbnets] { dict set clk [$n getName] 1 } }
   set nrip 0; set bad {}; set rip [dict create]
-  foreach k [dict get $sel rip] {
+  set _rip_list [dict get $sel rip]
+  if {[info exists ::ot_prd_force_rip]} { foreach k $::ot_prd_force_rip { if {[lsearch -exact $_rip_list $k] < 0} { lappend _rip_list $k } } }
+  foreach k $_rip_list {
     dict set rip $k 1
     if {[dict exists $clk $k]} { lappend bad $k; continue }
     set n [$b findNet $k]

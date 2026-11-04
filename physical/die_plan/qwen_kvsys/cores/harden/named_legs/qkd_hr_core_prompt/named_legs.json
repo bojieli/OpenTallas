@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.hr_named_proof_legs.v1",
+ "module": "qkd_hr_core_prompt",
+ "legs": {
+  "post": {
+   "module": "qkd_hr_core_prompt",
+   "engine": "yosys miter -equiv + write_aiger -zinit, then ABC strash; scorr; dprove",
+   "initial_state": "zero",
+   "srams": "ports",
+   "limit": "state outside zero init is not proved",
+   "result": "UNSATISFIABLE",
+   "gold": "pre.json",
+   "gold_sha256": "896f15e63d2a8468487b35c89967fa6cb8bb69047d80cf18f21bd96cba3aa545",
+   "gate": "post.json",
+   "gate_sha256": "1d19b2a82b16e188e7dac6b0f6693d569dc32a00a970a29df1855ed1fe42b333",
+   "before": {
+    "latches": 24608,
+    "ands": 146364
+   },
+   "after": {
+    "latches": 0,
+    "ands": 0
+   },
+   "script_sha256": "b8f795fc940f66b6be0e64e058219245fcc02430903b36006978b3d2ca731fcf",
+   "log_sha256": "93aaef1f0a9418fa7b2dc75383c90f60f88a7f40e827c65642f824f0b9d770bb",
+   "source": {
+    "script": "/srv/opentallas-scratch2/claude/dkv66/hr/prompt_proof/postz.ys",
+    "log": "/srv/opentallas-scratch2/claude/dkv66/hr/prompt_proof/postz.abc.log"
+   },
+   "mutant": {
+    "result": "NOT_EQUIVALENT",
+    "frame": 4,
+    "gate": "mut.json",
+    "gate_sha256": "bcb4e11b0451f5843a918597fbd6202714644b728a43e31ab574d6c614e06f96",
+    "script_sha256": "5721d62cccac63367d59771a842ff99fd468ff8715fff13e35f0d52cf93cecfe",
+    "log_sha256": "948b8454a5b9a7fd12e6acfb347e99b5ed6edf426df59ac4822c337817c33603",
+    "source": {
+     "script": "/srv/opentallas-scratch2/claude/dkv66/hr/prompt_proof/mutz.ys",
+     "log": "/srv/opentallas-scratch2/claude/dkv66/hr/prompt_proof/mutz.abc.log"
+    }
+   },
+   "ruling": "COORD 2026-11-04 05:23 PST LOOP-GAP 05:20 item 5",
+   "note": "DIE-KV-66/HR run, recorded by DIE-KV-67/HR; eq_rc.txt unchanged"
+  }
+ }
+}

@@ -107,7 +107,8 @@ AP_DIR = Path(os.environ.get("AP_DIR", str(HOME / "coord" / "autopilot")))
 OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 LANE = "KIT-WAVE-1"
 CLASSES = ("PLAN", "FLOW", "RTL", "INFRA")
-CELL_CAP = 400_000
+CELL_CAP = 400_000       # default kit run cap; a kit's own native_cell_count.json limit (--native-cell-cap) overrides it
+CELL_CAP_MAX = 517_000   # COORD 11-04 06:00 (2): 400k advisory up to the largest closed run; above stays stopped
 PLACE_POLL_S = float(os.environ.get("KW_PLACE_POLL_S", "60"))
 # run on the gen host by place_receipt(): argv K, service start time (epoch s)
 PLACE_RECEIPT = r"""
@@ -147,7 +148,7 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
                # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
@@ -416,19 +417,28 @@ def select(rows, cfg, die, state, plan_types=None):
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
     skip = {}
     picked = []
-    if d.get("plan_items_from_allowlist") and plan_types is not None:
+    if (d.get("plan_items_from_allowlist") or d.get("plan_core_items")) and plan_types is not None:
         # Adopted plans may split types before the ownership census catches up.
         # Explicit die-owned allowlists select those real plan types; retain every
         # existing ownership/live-job claim and the normal retry/geometry gates.
         rows = list(rows)
         known = {r["item"] for r in rows if r["die"] == die}
-        for item in d.get("only_items") or []:
+        for item in (d.get("only_items") or []) if d.get("plan_items_from_allowlist") else []:
             if item in known or item not in plan_types:
                 continue
             rows.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT",
                              owner="KIT-WAVE", live_job="none", last_activity="",
                              next_step="adopted plan allowlist", evidence=d.get("plan", ""),
                              default_owner=d.get("owner_lane", ""), replicas="1", members=""))
+        # A plan-of-record hard core the ownership census cannot see yet (OWNERS reads the older HBM plan): a kind=core
+        # row for the names the die lists, and only those.
+        for item in d.get("plan_core_items") or []:
+            if item in known or item not in plan_types:
+                continue
+            rows.append(dict(die=die, item=item, kind="core", state="NEEDS-KIT",
+                             owner="KIT-WAVE", live_job="none", last_activity="",
+                             next_step="adopted plan core allowlist", evidence=d.get("plan", ""),
+                             default_owner=d.get("owner_lane", ""), replicas="1", members=item))
     for r in rows:
         if r["die"] != die:
             continue
@@ -655,6 +665,9 @@ RULES = [
     # KIT-TRIAGE-1 11-01: gen raises when a plan landing band has no rect / placement FAIL (S81 svc_* on e8cbe5f6c70;
     # DIE-S81-47 event2 2026e1e1561 adds the bands) -> a plan event, not a flow error
     ("PLAN", None, r"landing band absent", "plan landing band absent (plan event: band rect / placement)"),
+    # KW-FIX-7 11-04: before INFRA. S81 serdes__t3/t4/t12-16 stopped on the cap with ot-run client text beside it, read as
+    # INFRA and relaunched at the same cap.  The cap line is a verdict on the kit whatever surrounds it.
+    ("PLAN", r"^place$", r"OT_NATIVE_CELL_CAP.*above \d+ run cap", "actual native standard-cell count above the kit run cap"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+137\b", "infra"),
@@ -714,8 +727,7 @@ RULES = [
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
     ("FLOW", r"^bind$", r"FileNotFoundError|No such file", "die-prep bind recipe input missing"),
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
-    ("PLAN", r"^cells$", r".", "cell count above the 400k run cap"),
-    ("PLAN", r"^place$", r"OT_NATIVE_CELL_CAP.*above 400000 run cap", "actual native standard-cell count above the 400k run cap"),
+    ("PLAN", r"^cells$", r".", "cell count above the kit run cap"),
     ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
     # KIT-TRIAGE-1/G26 11-01 (QC cbf_q00/cbf_q11/cbn_q11): instances that differ ONLY in ID parameters (tile_id ...) are
     # one kit once the plan declares those leaf ports parent_id_straps (OWNER 10-25 option B: strap_* pins tied at the
@@ -1752,9 +1764,11 @@ def run_item(spec_path):
             if count.get("schema") == "opentallas.native_cell_count.v1" and type(count.get("stdcells")) is int:
                 res["cells"] = count["stdcells"]
                 res["cells_basis"] = "actual synthesized top standard cells, excluding block macros"
+                if type(count.get("limit")) is int:
+                    res["cells_limit"] = min(count["limit"], CELL_CAP_MAX)
         if rc or not odb:
             return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
-        if res["cells"] and res["cells"] > CELL_CAP:
+        if res["cells"] and res["cells"] > res.get("cells_limit", CELL_CAP):
             return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
         olc = outline_cmd(K)
         _, ol = run("outline", remote(olc), idempotent=True)
@@ -2249,6 +2263,15 @@ try:
     st = os.stat(a["plan"]); raw = open(a["plan"], "rb").read(); p = json.loads(raw)
     pt = p.get("partition_types") or {}; bud = p.get("budgets") if isinstance(p.get("budgets"), dict) else {}
     mode = a.get("block_identity", "raw")
+    # die option block_ignore (KW-FIX-6 11-04): plan-model metadata that moves no geometry, pin or net stays out of the
+    # block hash, so pinning a frozen plan to the models it was solved with does not supersede its live and signed kits
+    for dotted in a.get("block_ignore") or []:
+        sec, key = dotted.split(".", 1)
+        for v in pt.values():
+            if isinstance(v, dict) and isinstance(v.get(sec), dict):
+                v[sec].pop(key, None)
+                if not v[sec]:
+                    del v[sec]
     ids = identities(p, a["plan"], mode)
     blocks = {name: value["block_sha"] for name, value in ids.items()}
     baseline = None
@@ -2345,7 +2368,8 @@ def plan_names(AP, st, d):
     mode = d.get("block_identity", "raw")
     if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": d.get("prelint_cells_max")}
+    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": d.get("prelint_cells_max"),
+            "block_ignore": d.get("block_ignore")}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
     p = AP.rpy(d["gen_host"], PROBE_PLAN, args, timeout=600)
@@ -2482,6 +2506,17 @@ def resume_source(AP, prev):
     return out
 
 
+def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
+    """KW-FIX-7 11-04: one row's launch error never ends the pass.  06:28 a merge changed kit_resume.py under a reload pass:
+    launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
+    relaunch the same attempt dirs).  The row stays as it was and is taken again on a later pass."""
+    try:
+        return launch(AP, cfg, st, die, r, hub, delay_s=delay_s)
+    except Exception as e:
+        AP.log(f"KIT-WAVE LAUNCH-SKIP {die}/{r.get('item')}: {type(e).__name__}: {e} (pass continues; retried next pass)")
+        return None
+
+
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
@@ -2515,7 +2550,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if opt(cfg, die, "future_lec") is not False:
         import hashlib
         snapshot = jd / "future_lec"
-        snapshot.mkdir()
+        snapshot.mkdir(exist_ok=True)      # an attempt whose launch failed before its unit started is taken again
         source = Path(__file__).resolve().parents[1] / "die_plan" / "lec.py"
         payload = source.read_bytes()
         commit = subprocess.run(["git", "-C", str(source.parent), "rev-parse", "HEAD"],
@@ -2658,7 +2693,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
             "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS", "--geom-ref", ref,
-            "--mem", str(opt(cfg, rec["die"], "place_mem_gb")), "--cells", str(int(cells * 1.3) if cells else 200000),
+            "--mem", str(opt(cfg, rec["die"], "place_mem_gb")), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
             "--lane", d.get("lane", LANE)]
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))
@@ -3042,17 +3077,21 @@ def _step(AP, ap_dir):
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
         if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
             rec["status"] = "FAIL"
-            launch(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
+            launch_safe(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
                                               "replicas": rec.get("replicas")}, AP.HUB_NAME, delay_s=nl * stagger)
             nl += 1
+    if nl and not AP.DRY:                                # launched units are on record before anything else can raise
+        save_state(st, ap_dir)
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
     _, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
     for die, r in todo:
-        rec = launch(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)
+        rec = launch_safe(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)
         nl += 1
         if rec:
             notices.setdefault(die, []).append(f"{r['item']} LAUNCHED ({rec['unit']})")
+    if nl and not AP.DRY:
+        save_state(st, ap_dir)
     try:
         prov_resign_step(AP, cfg, st, notices, ap_dir, AP.HUB_NAME)
     except Exception as e:                               # a re-sign problem never stops the wave
