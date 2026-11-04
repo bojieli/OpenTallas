@@ -3,6 +3,7 @@
 Like reset wavefront pins and die clock taps, these scalar endpoints are not
 functional R8 buses. Ordinary port alignment/layer rules remain unchanged.
 """
+import sys
 import math
 import re
 
@@ -312,17 +313,24 @@ def separate_pins(P,tn):
     for name in move:
         layer=pins[name]["layer"];x0,y0=on_track(P,layer,*pins[name]["xy_um"])
         along_x=min(y0,h-y0)<=min(x0,w-x0)    # nearest face S/N: slide in x; E/W: slide in y
-        for n in range(1,200):
-            sites=[]
-            for sgn in (1,-1):
-                q=(x0+sgn*n*SEPARATE_STEP_UM,y0) if along_x else (x0,y0+sgn*n*SEPARATE_STEP_UM)
-                if not (.432<=q[0]<=w-.432 and .432<=q[1]<=h-.432):continue
-                q=GP._snap_tap(P,*q,pg_legal=not t.get("hard"))
-                xy=on_track(P,layer,*q)
-                if all(l!=layer or _site_clear(xy,b) for l,b in taken):sites.append(q)
+        sites=[]
+        # DIE-QC-68: a corner pin is nearest to the face it does not sit on (KV kv3_hub_C y 0.416 from N, x 2.144 from W), and
+        # its other coordinate can already be inside the edge margin: try both faces, cross coordinate held inside the margin.
+        for ax in (along_x,not along_x):
+            xc=min(max(x0,.432),w-.432);yc=min(max(y0,.432),h-.432)
+            for n in range(1,200):
+                for sgn in (1,-1):
+                    q=(xc+sgn*n*SEPARATE_STEP_UM,yc) if ax else (xc,yc+sgn*n*SEPARATE_STEP_UM)
+                    if not (.432<=q[0]<=w-.432 and .432<=q[1]<=h-.432):continue
+                    q=GP._snap_tap(P,*q,pg_legal=not t.get("hard"))
+                    xy=on_track(P,layer,*q)
+                    if all(l!=layer or _site_clear(xy,b) for l,b in taken):sites.append(q)
+                if sites:break
             if sites:break
-        else:
-            raise ValueError(f"{tn}.{name}: no free landing pin site near {x0:g},{y0:g}")
+        if not sites:
+            # A full band stops that one type at its GRT, never every consumer of the plan: the site stays as planned.
+            print(f"LANDING_PIN_SITE_FULL {tn}.{name}: no free site near {x0:g},{y0:g}, site kept",file=sys.stderr)
+            taken.append((layer,(x0,y0)));continue
         q=list(sites[0]);pins[name]["xy_um"]=q;taken.append((layer,on_track(P,layer,*q)))
         if name in edge:edge[name]["tap_um"]=q
     return t

@@ -95,3 +95,24 @@ def test_plan_qc52_has_no_duplicate_site_and_raw_is_as_read():
         sites = [(r["layer"], round(r["x"], 4), round(r["y"], 4)) for r in recs]
         assert len(sites) == len(set(sites)), tn
     assert not LC.check(P)["errors"] or LC.check(P)["errors"] == LC.check(S.Plan(json.loads(keep), str(QC)))["errors"]
+
+
+def test_corner_pin_slides_on_the_face_it_sits_on():
+    # DIE-QC-68: KV plan_c kv3_hub_C, y 0.416 from N is inside the edge margin and x 2.144 from W: sliding along N never fits
+    pins = [_pin("a", 2.144, 1675.744, "clock", "in"), _pin("b", 2.144, 1675.744, "ctl", "in")]
+    P = _plan(pins)
+    P.types["t"]["outline_um"] = [2160.0, 1676.16]
+    t = LC.separate_pins(P, "t")
+    got = {p["name"]: p["xy_um"] for p in t["clock"]["landing_contract"]["pins"]}
+    assert got["a"] == [2.144, 1675.744]
+    assert got["b"] != got["a"] and got["b"][0] == pytest.approx(2.144, abs=4.0)  # a near free site, same corner
+    assert not LC.overlapping_pins(SimpleNamespace(types={"t": t}, layers=LAYERS), t)
+
+
+def test_full_band_keeps_the_site_and_does_not_raise(capsys):
+    pins = [_pin("a", 1.0, 1.0, "clock", "in"), _pin("b", 1.0, 1.0, "ctl", "in")]
+    P = _plan(pins)
+    P.types["t"]["outline_um"] = [1.2, 1.2]            # no other legal site inside the edge margin
+    t = LC.separate_pins(P, "t")
+    assert {p["name"]: p["xy_um"] for p in t["clock"]["landing_contract"]["pins"]}["b"] == [1.0, 1.0]
+    assert "LANDING_PIN_SITE_FULL t.b" in capsys.readouterr().err
