@@ -4829,8 +4829,9 @@ def common_shape_maps(g, t, min_common=0.75):
     constant: the gate kept the RTL bit names and dropped 34..35, while the gold memory was narrowed before it was
     mapped, so its names were compacted to 0..61 (it 'lacks' 62..63).
     Candidates, each a {gate key: gold key} map:
-      * 'rank': when one side's inner indices are 0..n-1 in every row (compacted) and the other side has holes with
-        the same per-row count, pair the bits of each row in index order (outer index as is, or reversed);
+      * 'rank': index depth >= 2 only (memory rows), when one side's inner indices are 0..n-1 in every row
+        (compacted) and the other side has holes with the same per-row count, pair the bits of each row in index
+        order (outer index as is, or reversed); a 1-D vector keeps its bit names on both sides (never ranked);
       * 'common': otherwise, the identity map on the common index tuples (outer index as is, or reversed), when they
         are >= min_common of both sides.
     One-side-only bits stay gold-only / gate-only for function correspondence.  Every name pair stays a
@@ -4854,7 +4855,12 @@ def common_shape_maps(g, t, min_common=0.75):
         return {k: sorted(x) for k, x in r.items()}
     rg, rt = rows(gi), rows(ti)
     packed = lambda R: all([x[-1] for x in r] == list(range(len(r))) for r in R.values())
-    if set(rg) == set(rt) and all(len(rg[k]) == len(rt[k]) for k in rg) and packed(rg) != packed(rt):
+    # DIE-QC-66 11-03 (QC xhead3 b_k3[7:0] <= 8'(3 * a_k), 4 slw/sle hc kits, 7 + 56 false differences): 'rank'
+    # is the compacted-ROW form of a narrowed memory (depth >= 2).  A 1-D vector is never compacted: both frontends
+    # name its flops by the packed bit index (rename -wire), so gold {0..6} (bit 7 constant) vs gate {1..7} (bit 0
+    # merged into b_k[0]) is two different dropped bits, not a renumbering; ranking them paired gate b_k3[i+1]
+    # with gold b_k3[i] (off by one).  1-D vectors take the identity map on the common bits below.
+    if d > 1 and set(rg) == set(rt) and all(len(rg[k]) == len(rt[k]) for k in rg) and packed(rg) != packed(rt):
         out = []
         for rev in outer:
             mp = {}
