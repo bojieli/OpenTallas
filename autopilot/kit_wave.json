@@ -299,7 +299,12 @@
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
     "kv3_hub_Eo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ",
     "kv3_hub_Wo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ",
-    "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read"
+    "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
+    "kv3_pc": "DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
+    "kv3_pc__cl254f2e73": "DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
+    "kv3_pc__cl5a95b461": "DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
+    "kv3_pc_v1": "DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
+    "kv3_pc_v3": "DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1104/kit-wave",
    "retry_fix": {

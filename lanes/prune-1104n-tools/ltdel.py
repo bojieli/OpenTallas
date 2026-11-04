@@ -5,7 +5,8 @@ L,mode=sys.argv[1:3]; N=int(sys.argv[3]) if len(sys.argv)>3 else 10**9
 ROOT='/srv/opentallas-scratch2/claude'
 SIG=re.compile(r'(?<!NOT )(?<!NOT_)(?<![A-Z_])SIGNED\b|LOCAL_PASS')
 SPILL=re.compile(r'^KW-FIX-\d+\b[^\n]*spill target[^\n]*$')  # one-line spill marker is not protection, COORD 22:56 and 03:2x
-OKKEEP={ROOT+'/kit-wave/.keep',ROOT+'/kit-wave/hbm/.keep'}
+# COORD 11:19 (1): empty markers on these, confirmed empty per host; a marker with content is real. The size test stays below.
+OKKEEP={ROOT+x+'/.keep' for x in('/kit-wave','/kit-wave/hbm','/kit-wave/qwen_kvsys/event28w_c','/kit-wave/qwen_compute/5346b95c915','/kit-wave/qwen_compute','/codex-head-wave-1131','/codex-head-lep-wave-1101')}
 NT=re.compile(r'/(ss27|ss28|die-s81-51|die-s81-52|dh59|dh60|kit_turn_b|tok-[^/]*|kv-fn-[^/]*|codex-ds-[^/]*|veh[^/]*|vehicle[^/]*)(/|$)|/die-hbm-63/eco(/|$)')
 PROT=[]
 for ln in open('/tmp/p1104n_prot.txt',errors='replace'):
@@ -35,7 +36,7 @@ def openset():
 def scan(d):
     links={};nl={};bl={};nw=0;sig=False;keep=False
     for dp,dn,fn in os.walk(d):
-        nw=max(nw,os.lstat(dp).st_mtime)
+        if not PART: nw=max(nw,os.lstat(dp).st_mtime)
         for f in fn:
             fp=os.path.join(dp,f)
             try: s=os.lstat(fp)
@@ -47,6 +48,7 @@ def scan(d):
                     if SIG.search(open(fp,errors='replace').read()): sig=True
                 except OSError: sig=True
     return nw,sum(bl[i] for i in bl if links[i]>=nl[i]),sig,keep
+PART=os.environ.get('P1104N_PARTIAL')=='1'  # finishing a row already deleted under its ruling: its dir mtimes are my own rmtree, and intel2 rows were non-latest under exception (c)
 S=openset(); last=time.time(); fr=0;n=0;sk={}
 def skip(p,w): sk[w]=sk.get(w,0)+1; print('SKIP',w,p,flush=True)
 for p in [l.strip() for l in open(L) if l.strip()]:
@@ -61,7 +63,7 @@ for p in [l.strip() for l in open(L) if l.strip()]:
     a=os.path.dirname(p); kp=False
     while a.startswith(ROOT):
         k=a+'/.keep'
-        if os.path.exists(k) and not (k in OKKEEP and os.path.getsize(k)==0) and not SPILL.match(open(k,errors='replace').read().strip()): kp=True
+        if os.path.exists(k) and not (k in OKKEEP and os.path.getsize(k)==0) and not SPILL.match(open(k,errors='replace').read().strip()) and not (PART and k==ROOT+'/codex-s81-wave-1345/.keep' and open(k,errors='replace').read().startswith('Immutable S81 current-source')): kp=True
         a=os.path.dirname(a)
     if kp: skip(p,'keep-ancestor'); continue
     nw,u,sig,keep=scan(p)
