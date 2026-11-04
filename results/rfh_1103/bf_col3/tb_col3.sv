@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // DIE-S81-51/RF-H 11-03: ot_v41_bf_col (g48 parameters, BRNECUT 0) vs ot_v41_bf_col3 (3 hard cores, BRNECUT 1) on the
 // same pins.  Scoreboard: the sequence of partials {pval, prow, pseg, pnseg, perr, ppos} on pv must be identical (latency
-// may differ; free=0 gates the clock legally: closed only GATE_DRAIN=150 cycles after the last word); with ze_d = 1 (+free=1) every partial must also be exactly D cycles later (D = 3: 2 face + 1 RNE cut).
+// may differ; free=0 gates the clock legally: closed only GATE_DRAIN=150 cycles after the last word); every partial must also be exactly D cycles later (D = 3: 2 face + 1 RNE cut), under gating too (r2).
 // qy_bkf: same final value and same number of rising edges.  Random ROM via maps (+OT_ROM_DIR, INSTANCE "tb").
 module tb;
     reg clk = 0, rst_n = 0;
@@ -41,7 +41,7 @@ module tb;
                 else begin
                     if (q_old[n1 % QN] !== {pval1, pr1, ps1, pn1, pe1, pp1, 3'd0}) begin errs = errs + 1;
                         if (errs < 6) $display("MISMATCH #%0d cyc %0d %h vs %h", n1, cyc, {pval1, pr1, ps1, pn1, pe1, pp1, 3'd0}, q_old[n1 % QN]); end
-                    if (free != 0 && cyc != t_old[n1 % QN] + D) begin nex = nex + 1; if (nex < 4) $display("LATENCY #%0d %0d vs %0d+%0d", n1, cyc, t_old[n1 % QN], D); end
+                    if (cyc != t_old[n1 % QN] + D) begin nex = nex + 1; if (nex < 4) $display("LATENCY #%0d %0d vs %0d+%0d", n1, cyc, t_old[n1 % QN], D); end
                 end
                 n1 = n1 + 1;
             end

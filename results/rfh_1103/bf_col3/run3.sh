@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # DIE-S81-51/RF-H 11-03 3-core bf_col lockstep: run3.sh <repo root> <out> [mut 0|1|2] [seed] [free 1|0]
-#   mut 1 = RFH3_MUTANT_EQ (FP partial data one cycle early vs its valid), mut 2 = RFH3_MUTANT_FACE (half drops slot-1 valids)
+#   mut 1 = RFH3_MUTANT_EQ (FP partial data one cycle early vs its valid), mut 2 = RFH3_MUTANT_FACE (half drops slot-1 valids),
+#   mut 3 = RFH3_MUTANT_ZE=${ZEMUT:-8} (half gate enable late; run with free 0: words hit a closed gate)
 set -u
 R=$1; O=$2; M=${3:-0}; S=${4:-1}; F=${5:-1}; mkdir -p "$O/rom$S"
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
-D=""; [ "$M" = 1 ] && D="+define+RFH3_MUTANT_EQ"; [ "$M" = 2 ] && D="+define+RFH3_MUTANT_FACE"
+D=""; [ "$M" = 1 ] && D="+define+RFH3_MUTANT_EQ"; [ "$M" = 2 ] && D="+define+RFH3_MUTANT_FACE"; [ "$M" = 3 ] && D="+define+RFH3_MUTANT_ZE=${ZEMUT:-8}"
 python3 $R/results/rfh_1103/bf_col3/mkrom.py "$O/rom$S" $S
 L=$R/rtl/v41rom
 SRC=$(python3 -c "import json;print(' '.join('$R/'+s for s in json.load(open('$R/physical/die_plan/s81/cores/legacy/specs/ot_v41_bf_col/spec.json'))['sources'] if not s.endswith('_bb.v')))")

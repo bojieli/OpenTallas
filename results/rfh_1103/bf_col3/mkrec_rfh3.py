@@ -24,7 +24,7 @@ for m, s in (("ot_v41_bf_col3_c", c), ("ot_v41_bf16_half", h)):
     (D / m).mkdir(parents=True, exist_ok=True)
     (D / m / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
 rec = json.load(open("results/rfh_1103/bf_col/recipes_rfh_1103.json"))["ot_v41_bf_col"]
-common = {"rtl_dirs": True, "hold_ff_margin": 0, "suffix": "rfh3"}
+common = {"rtl_dirs": True, "hold_ff_margin": 0, "suffix": "rfh4"}
 R = {"_doc": "DIE-S81-51/RF-H 2026-11-03 3-core bf_col recipes (plan delta physical/die_plan/s81/rfh3/plan_h2_2249_rfh3_bfcol3.json.gz). "
              "Conservative form: each core <= 150k cells, own N-face clock entry, regional taps <= 5k sinks per region, "
              "registered faces on every inter-core cut. util: the unchanged slot cannot hold 3 cores at 0.45 "

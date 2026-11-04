@@ -179,8 +179,10 @@ module ot_v41_bf_col3_c #(
         ot_bf_hdly #(.W(16*NSEG), .N(HDLY)) u_hdly_row (.a(so_row), .y(d_so_row));
         ot_bf_hdly #(.W(10*NSEG), .N(HDLY)) u_hdly_so (.a({so_idx, so_n}), .y({d_so_idx, d_so_n}));
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze (.clk(clk), .arst_n(rst_n_pin), .d(d_ze), .q(b_ze));
-        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze_a (.clk(clk), .arst_n(rst_n_pin), .d(d_ze), .q(h_ze_a));
-        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze_b (.clk(clk), .arst_n(rst_n_pin), .d(d_ze), .q(h_ze_b));
+        // RF-H r2 (FACE_GUARD: one capture flop per input pin): ze_d lands only in r_ze; each half copy is an out-face flop
+        // after it (+1 edge on the half gate enable; ze_d is the dynamic go || drain window, opening edge covered by tb_col3 free=0)
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze_a (.clk(clk), .arst_n(rst_n_pin), .d(b_ze), .q(h_ze_a));
+        ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) r_ze_b (.clk(clk), .arst_n(rst_n_pin), .d(b_ze), .q(h_ze_b));
         // el1011-ds-bf 2026-10-11: input capture registers as named ot_v41_kreg cells (g_pin.r_*). As plain always-regs
         // yosys named them after the outer nets (b_i2x_q0[..]$_DFF_P_), so they fell outside BOTH the CTS pin-clock
         // group (pinclk_group.tcl, g_pin.r_*) and the sign-off input reference L (signoff_col.sdc mean over g_pin.r_*):

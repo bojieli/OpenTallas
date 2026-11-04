@@ -3,9 +3,9 @@
 // core.  Lanes 0..7 of the half are lanes 8*h + 0..7 of lanes3, with the same lane tiles, multipliers (RNECUT: the RNE
 // encode cut, XS 2), chunk chains and the first three levels of the pairwise tree; the root (fourth) level adds the
 // two halves' sums in ot_v41_bf_col3_c.  Faces:
-//   * clk is the column clock (own core clock entry); rst_c / ze_c are the column's pin registers r_rst / r_ze, as
-//     dedicated face copies in ot_v41_bf_col3_c (g_pin.r_rst_a/b, r_ze_a/b: same function, same edges), so the half's
-//     tile clocks have the column tiles' edges and its resets release on the column reset's edge;
+//   * clk is the column clock (own core clock entry); rst_c = the column's r_rst face copy (g_pin.r_rst_a/b: same function,
+//     same edges); ze_c = out-face flop after the column's r_ze (g_pin.r_ze_a/b), captured once here (u_ze_f): the half's
+//     tile clocks follow the column tiles' by +2 edges (RF-H r2, see below), its resets release on the column reset's edge;
 //   * v / w / x / t are registered on the column side (ot_v41_bf_col3_c, = lanes3 XST stage 1) and again here
 //     (u_fiv / u_fi, = lanes3 XST stage 2): lanes3 XST = 2 with the two relay stages on the two core faces;
 //   * every output is registered here (u_fov / u_fo) and again on the column side: +2 cycles on the BF sums.
@@ -33,7 +33,20 @@ module ot_v41_bf16_half #(
 );
     localparam integer HW = $clog2(NCHB);
     localparam integer TW = HW + 2 + TRW + 1;
-    wire b_rst = rst_c, b_ze = ze_c;   // = ot_v41_bf_col g_pin.r_rst / r_ze (HDLY 0)
+    wire b_rst = rst_c;                // = ot_v41_bf_col g_pin.r_rst (HDLY 0)
+    // RF-H r2 (FACE_GUARD: one capture flop per input pin): ze_c lands in ONE in-face flop u_ze_f, which feeds every
+    // tile's local enable copy.  With the column out-face r_ze_a/b that is +2 edges on the halves' gate enable vs the
+    // column tiles (open and close); the BF words reach the halves later than that (tb_col3 free=0: ze_d rises with the
+    // first issue, latency still exactly +3), and the column's drain window covers the later close.
+    wire b_ze;
+`ifdef RFH3_MUTANT_ZE
+    // negative control: the halves' gate enable arrives RFH3_MUTANT_ZE edges later (first words hit a closed gate)
+    reg [`RFH3_MUTANT_ZE-1:0] ze_mut;
+    always @(posedge clk or negedge rst_c) if (!rst_c) ze_mut <= '1; else ze_mut <= {ze_mut, ze_c};
+    ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_f (.clk(clk), .arst_n(rst_c), .d(ze_mut[`RFH3_MUTANT_ZE-1]), .q(b_ze));
+`else
+    ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze_f (.clk(clk), .arst_n(rst_c), .d(ze_c), .q(b_ze));
+`endif
     wire fclk = clk, rst_pin = b_rst, ze_dd = b_ze;
     wire tclk, rst_n;
     ot_v41_tile_clk u_tt (.fclk(fclk), .rst_pin(rst_pin), .ze_d(ze_dd), .gclk(tclk), .rst_n(rst_n));

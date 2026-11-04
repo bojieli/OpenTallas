@@ -47,3 +47,10 @@ Schedule (TOK-VERIFY-1 ruling via DIE-S81-51 20:41, form-driven, tools/s81_dv/la
 FAIL / span tails +3; predicted, FLOOR_MEASURED replaces it after a measure on a 3-core frame); BF return calendar
 emission +3 (xs_bf.bf_plan) unless the measurement record carries bf_col_form rfh3.  FP +3 moves no BF calendar (BF
 pairs carry only BF16 ops).  test_bf_col_form / test_dv_layer_compile (L0) / test_xs_asb_profile / selftest PASS.
+
+r2 (DIE-S81-52/RF-H 11-03, FACE_GUARD raw stop of the rfh3 kits: ze_d 3 loads / ze_c 16 loads): one capture flop per
+  input pin.  C: r_ze captures ze_d; r_ze_a/r_ze_b are out-face flops after it (+1 edge).  H: u_ze_f captures ze_c
+  (AR, reset value 1) and fans out to the 16 tile u_ze (+1 edge).  ze is DYNAMIC (go || drain), so the halves' gate
+  enable moves +2 edges vs the column tiles, opening and closing.  Bench raises ze_d in the same cycle as the first
+  issue and checks exact +3 with gating: PASS seeds 1/7 free 0|1; mut 3 (ZE +8) caught, so the check sees a late gate.
+  No schedule change beyond rfh3.  Kits rfh4 (recipes_rfh3.json suffix; rfh3 kits kept as the failed record).
