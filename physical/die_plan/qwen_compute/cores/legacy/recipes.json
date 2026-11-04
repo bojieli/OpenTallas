@@ -81,7 +81,7 @@
    "NCH": 4
   },
   "suffix": "hc3a",
-  "util": 0.4,
+  "util": 0.5,
   "two_mode": true,
   "hold_ff_margin": 0,
   "_why": "DIE-QC-67/HC3 11-04 split form A of slw_hc3: 8x one hard master, conservative form (31k cells, util 0.40, one register on every data pin). Pin contract = plan table cores/hc3/ot_qfd_xs_leaf_pins.json; RTL unchanged. 6,972 sinks on one clock entry is over the 5k target (target, not a gate)."
