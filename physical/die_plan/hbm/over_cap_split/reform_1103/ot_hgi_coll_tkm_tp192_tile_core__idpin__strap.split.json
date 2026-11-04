@@ -6,7 +6,7 @@
   "cells": 176000,
   "instances": 31
  },
- "status": "WIP (EQ bench building; stopped by COORD helper cap)",
+ "status": "EQ-PASS (reduced-chain receipt, COORD-approved 11-03)",
  "form": "half-tile chain: each tile slot = 2 identical face-shelled chain elements (ot_hgi_coll_tkm_tile_rg PT 32, verbatim), wired like 2 consecutive tiles (clr systolic hA->hB, conv deep-first hB->hA, ovf hA->hB.ins, up hB.up_out->hA.up_in). No R2R cut exists inside the insertion array (X[q-4..q] same-edge reads), so the only seam is the chain-element boundary. Chain 32x64 -> 64x32 entries (KMAX 2048 unchanged).",
  "rtl": [
   "rtl/hbm_accel/cores_split/reform_1103/tkm_tile/ot_hgi_coll_tkm_tp192_htile_core.sv",
@@ -51,12 +51,23 @@
  "latency": "latency/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap.tsv (down +5, clr_o +3, conv_o +2, up_out +2 on conv; TKM op +448 edges)",
  "root_dependency": "ot_hgi_coll_tkm_m_tp192__root must be re-extracted with PTILE 32 (NT 64: SETTLE 145->305, XL 87->151, +448 edges/op); root ports unchanged",
  "eq": {
-  "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/tkm_idpin/run.sh (covers idpin+terminal: full chain REF PTILE64 kit cores vs SPLIT PTILE32 pairs, golden O/R + timeline + lockstep SHIFT 448)",
+  "bench": "bench/tkm_idpin/run.sh ONLY=<tag> FLAT=1 KMAX=128 CASES='full128 part44' (vectors: tkm_split_vectors.py --kmax 128)",
   "result": "NOT RUN: verilator hier builds pos + mutn killed by external SIGTERM (signal 15, not mine) on epyc2 11-03 ~08:0x; mutp1/mutp2 state in $E/tkm/b1/build_mutp*.log; no sim ran",
   "remaining": [
    "rm -rf $E/tkm/b1/obj_pos $E/tkm/b1/obj_mutn; re-run run.sh (skips built objs), ideally JOBS small + exempt from the hung-job/reaper kill",
    "pos PASS full2048+part700; mutn/mutp1/mutp2 FAIL"
-  ]
+  ],
+  "receipt": "reduced TKM chain KMAX 128: REF root #(PTILE 64) + 1 x idpin + 1 x terminal_idpin (uncut kit cores, kit face shells) vs SPLIT root #(PTILE 32) + 2 x __split (4 face-shelled half tiles); same TB as KMAX 2048, NT0=KMAX/64",
+  "why_reduced": "full 32-tile chain: hierarchical top pass 292 GB, flat -O0 >250 GB (1 tile = 9.5 GB / 6.7 min at -O0); no per-half bench exists (htile is a 32-entry re-parameterization, not a slice; shift exact only at chain level)",
+  "host": "epyc2 via ot-run --mem 60, units oth-ubuntu-768766/768694/767625/768357-1793733488",
+  "results": {
+   "pos full128": "TKM_SPLIT PASS words=256/256 cycles ref=1199 split=1227 shift=28 lockstep_edges=1252",
+   "pos part44": "TKM_SPLIT PASS words=88/88 cycles ref=1136 split=1164 shift=28 lockstep_edges=1189",
+   "mutn full128": "FAIL total=262 (expected)",
+   "mutp1 full128": "FAIL total=242 (expected)",
+   "mutp2 full128": "FAIL total=259 (expected)"
+  },
+  "evidence": "bench/tkm_idpin/evidence/verdict_epyc2_kmax128.txt, sources_kmax128.sha256"
  },
  "host": "epyc2, E=/home/ubuntu/scratch-root/claude/die-hbm-61-split"
 }
