@@ -47,6 +47,9 @@ module dsdv_bk_vin #(
     // + pre-decoded one-hot lane hits pn / ps), so the lane mux selects from flops.  Lane words (incl. live and the
     // sticky fault) leave +1 edge (V pin -> lane word 3 -> 4); the drain command (dr_*) timing is UNCHANGED (window LW,
     // CTL-relative, unchanged).  0 = the old form.
+    // LPIPE 2 (S81-062 form 6, 11-03; rfd5 TT -17.79 pn_q[l] -> 515-b lane word through ~600 ps of fanout buffers):
+    // LPIPE 1 + KEPT copies of the lane hits / beat type bits / part-0 held flags, one copy group per lane-word quarter
+    // (128 data bits) and per hd half; same D as pn_q / ps_q / bn_q[7:6] / bs_q[7:6] / hv, 0 edges moved.
     parameter integer LPIPE = 0
 ) (
     input  wire              clk,
@@ -88,7 +91,7 @@ module dsdv_bk_vin #(
         end
         assign bn = dl_n; assign bs = dl_s; assign cc = cn && cs;
     end endgenerate
-    reg [3:0]   hv;                       // part 0 held per lane
+    reg [3:0]   hv, hv_n;                 // part 0 held per lane (hv_n: its next state)
     reg [255:0] hd [0:3];
     reg [3:0]   wv, err;                  // this cycle: word complete / protocol error, per lane
     reg [511:0] wd [0:3];
@@ -115,7 +118,56 @@ module dsdv_bk_vin #(
             end
         end
     end
+    always @(*) for (integer l = 0; l < 4; l = l + 1)
+        hv_n[l] = ((pn[l] && !bn[6] && !bn[7]) || (!pn[l] && ps[l] && !bs[6] && !bs[7])) ? 1'b1 : wv[l] ? 1'b0 : hv[l];
     reg [4*515-1:0] lq;                   // lane registers; bit 515*l+513 (live) comes from lv_q[l] instead
+    // next lane data (nd) and hd load (hde per half, hdn) per lane: LPIPE 2 from the quarter copy groups
+    wire [4*512-1:0] nd; wire [4*256-1:0] hdn; wire [7:0] hde;
+    generate if (LPIPE >= 2) begin : g_cp
+        (* keep = "true" *) reg [23:0] pc_f, sc_f, hc_f;      // copy group c (0..3 quarters, 4..5 hd halves), lane l: bit 4c+l
+        (* keep = "true" *) reg [11:0] bn67_f, bs67_f;        // copy group c: bits 2c+1:2c = beat type bits [7:6]
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin pc_f <= 24'd0; sc_f <= 24'd0; hc_f <= 24'd0; end
+            else for (integer c = 0; c < 6; c = c + 1) for (integer l = 0; l < 4; l = l + 1) begin
+                pc_f[4 * c + l] <= dn && dl_n[5:4] == l; sc_f[4 * c + l] <= ds && dl_s[5:4] == l;
+                hc_f[4 * c + l] <= hv_n[l];
+            end
+        always @(posedge clk) for (integer c = 0; c < 6; c = c + 1) begin
+            bn67_f[2 * c +: 2] <= dl_n[7:6]; bs67_f[2 * c +: 2] <= dl_s[7:6];
+        end
+        for (genvar l = 0; l < 4; l = l + 1) begin : g_l
+            for (genvar q = 0; q < 4; q = q + 1) begin : g_q
+`ifdef OT_RFD_MUT_LP2   // bench mutant: quarter 3 of every lane decodes with the neighbour lane's hit copy
+                wire p = pc_f[4 * q + ((q == 3) ? (l ^ 1) : l)], s = sc_f[4 * q + ((q == 3) ? (l ^ 1) : l)];
+`else
+                wire p = pc_f[4 * q + l], s = sc_f[4 * q + l];
+`endif
+                wire h = hc_f[4 * q + l];
+                wire b6 = p ? bn67_f[2 * q] : bs67_f[2 * q], b7 = p ? bn67_f[2 * q + 1] : bs67_f[2 * q + 1];
+                wire [V-1:0] b = p ? bn : bs;
+                wire [511:0] ws = {(MUT == 2) ? 12'd0 : b[19:8], 244'd0, b[275:20]};
+                wire [511:0] wp = (MUT == 1) ? {hd[l], b[275:20]} : {b[275:20], hd[l]};
+                assign nd[512 * l + 128 * q +: 128] = ((p || s) && !b6 && b7) ? ws[128 * q +: 128]
+                                                    : ((p || s) && b6 && h) ? wp[128 * q +: 128] : 128'd0;
+            end
+            for (genvar k = 0; k < 2; k = k + 1) begin : g_h
+                wire p = pc_f[4 * (4 + k) + l], s = sc_f[4 * (4 + k) + l];
+                assign hde[2 * l + k] = (p && !bn67_f[2 * (4 + k)]) || (!p && s && !bs67_f[2 * (4 + k)]);
+                wire [255:0] hb = p ? bn[275:20] : bs[275:20];
+                assign hdn[256 * l + 128 * k +: 128] = hb[128 * k +: 128];
+            end
+        end
+    end else begin : g_nc
+        for (genvar l = 0; l < 4; l = l + 1) begin : g_l
+`ifdef OT_RTLC_MUT_BKLN   // bench mutant: lane 1 keeps its previous word on a new word
+            assign nd[512 * l +: 512] = (wv[l] && l != 1) ? wd[l] : (l == 1 ? lq[515 * l + 1 +: 512] : 512'd0);
+`else
+            assign nd[512 * l +: 512] = wv[l] ? wd[l] : 512'd0;     // wd[l] is 0 when !wv[l] (comb default)
+`endif
+            assign hde[2 * l +: 2] = {2{(pn[l] && !bn[6]) || (!pn[l] && ps[l] && !bs[6])}};
+            assign hdn[256 * l +: 256] = pn[l] ? bn[275:20] : bs[275:20];
+        end
+    end endgenerate
     // S81-KITS-RTLC 10-25: one KEPT live chain per lane (the 4 identical chains were merged into one flop that fed all
     // four ln*[513] pins); the data bits load the word and are 0 when no word arrives (no hold self-loop at the pin)
     (* keep = "true" *) reg [3:0] lv_0, lv_1, lv_q;   // LPIPE 1: one more live stage (lane words +1 edge)
@@ -140,9 +192,7 @@ module dsdv_bk_vin #(
             dr_v <= cn | cs;
             if (cc || err != 4'd0) fault <= 1'b1;
             for (integer l = 0; l < 4; l = l + 1) begin
-                if ((pn[l] && !bn[6] && !bn[7]) || (!pn[l] && ps[l] && !bs[6] && !bs[7]))
-                    hv[l] <= 1'b1;
-                else if (wv[l]) hv[l] <= 1'b0;
+                hv[l] <= hv_n[l];
                 lq[515 * l]       <= wv[l];
                 lq[515 * l + 514] <= (wv[l] && wf[l]) || fault;
             end
@@ -151,13 +201,9 @@ module dsdv_bk_vin #(
         dr_n <= cn ? dl_n[39:32] : dl_s[39:32];
         dr_d <= cn ? dl_n[47:40] : dl_s[47:40];
         for (integer l = 0; l < 4; l = l + 1) begin
-`ifdef OT_RTLC_MUT_BKLN   // bench mutant: lane 1 keeps its previous word on a new word
-            lq[515 * l + 1 +: 512] <= (wv[l] && l != 1) ? wd[l] : (l == 1 ? lq[515 * l + 1 +: 512] : 512'd0);
-`else
-            lq[515 * l + 1 +: 512] <= wv[l] ? wd[l] : 512'd0;     // wd[l] is 0 when !wv[l] (comb default)
-`endif
-            if ((pn[l] && !bn[6]) || (!pn[l] && ps[l] && !bs[6]))
-                hd[l] <= pn[l] ? bn[275:20] : bs[275:20];
+            lq[515 * l + 1 +: 512] <= nd[512 * l +: 512];
+            if (hde[2 * l]) hd[l][127:0] <= hdn[256 * l +: 128];
+            if (hde[2 * l + 1]) hd[l][255:128] <= hdn[256 * l + 128 +: 128];
         end
     end
 endmodule

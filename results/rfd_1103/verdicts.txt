@@ -71,3 +71,16 @@ S81-062 dsdv_bk_g RF 4 = RF 2 core + POSEDGE per-face pin register on every outp
   lower_bk OFACE 1 (PIN_TO_PIN 3 -> 4), norm_q_report u_bk_sel 4 -> 5, tb_dsdv_bk_wrap RL 2 -> 3.
   Kit dsdv_bk_g_rfd5 (recipes_rfd5_1103, rfd3a sites, regional_taps 2x1): GEN_LINT PASS issues 0, KIT_PREFLIGHT PASS issues 0;
   estimate ~32k cells (rfd3a 29.8k + 2613 face flops), util ~0.41 (rfd3a 0.39) <= 0.45, outline unchanged.
+
+FORM 6 (11-03, owner GO (a)+(b), no cycles added; rfd5 oth-ubuntu-2077299 NOT SIGNED: TT -17.79 pn_q fanout, FF hold -69.28
+posedge strap captures, removal -8.25 rs[1]->u_vs).  Outputs /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench6.
+S81-062 dsdv_bk_g RF 5 = RF 4 + (a) NEGEDGE in-face on ik / ek / uid / eg_n / tap_k / sink_k (like vi / vd), mutant
+  OT_RFD_MUT_SF5 (posedge face; not catchable in sim, straps constant in tb) + kept rs[0] reset copies per load group
+  (top / u_vs / u_vin / u_vout), not a negedge rn (rn recovery +194 ps on a full cycle over ~3k loads; half cycle ~ -220 ps)
+  + (b) u_vin LPIPE 2: kept per-lane x quarter copies of the pn_q / ps_q / hv decode (same D, 24+12 flops), each 128-bit
+  quarter select driven by its own copy.  Latency unchanged (RL 3, rung transit 5).
+  run_bk_g_rf.sh lockstep RA 4 / RB 5: seed 1 PASS errors=0, seed 7 PASS; RA 2 / RB 5 seed 3 PASS
+               mut 5 (OT_RFD_MUT_LP2, quarter 3 uses lane l^1 copy): FAIL errors=28325 (caught)
+  run_bk_bench.sh sel RF 5 (default, RL 3): DSDV_BK_SEL PASS mut=0, all 6 variants; RF 4 (+define+OT_DSDV_BKG_RF4) base thru PASS;
+               LP2 mutant: FAIL (uniform_k512 FAULT words, timeout) (caught)
+  Kit dsdv_bk_g_rfd6 (recipes_rfd6_1103, rfd3a sites, regional_taps 2x1).
