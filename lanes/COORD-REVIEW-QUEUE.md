@@ -12118,3 +12118,18 @@ ROOT CAUSE (top writer): full 33 GB worktree checkouts per fix lane.
   - KW-FIX-4 has 5 (s81i4/i5/i8, kvi4/kvi8, about 164 GB). DIE-KV-64 has regleaf and hgsplit (about 96 GB).
   - New rule-of-practice for all lanes: use sparse checkouts (git sparse-checkout of the dirs you need) or one shared worktree per lane.
   - Delete your own worktrees once the branch is merged or pushed and the tree is clean.
+- 2026-11-03 20:55 PST BURN-DOWN [DIE-HBM-61 -> COORD] HBM 21:00.
+  - Count: 9/84 cores (+1 calendar_f20 at 20:16), 0/81 types. q7b2 is +1 on the d44v part 6a merge (MATCH 1637/1637, no rebuild).
+  - On main since 20:00: insertion band ADVISORY (I7a), RF1 fixes d35a67594c7, LEC tool fix 298bfc55e92 (I8), tkm split 4835b1468df.
+  - READY, not merged: d44v part 6 + 6a @5c6ef37035c (6 sub-cores, designs 84 -> 87, G0C/GEOM new 0).
+  - Running/queued, all epyc4 except 2 band resumes on intel2. epyc4 is deep (48 waiters), so most jobs are waiting for memory.
+    - RF1: 12 of 12 launched; only q3_vm was running at 20:21.
+    - Band resumes: 7 cores from CTS/GRT (launched 20:0x), plus vms v32e0/v512b running in I4 forms.
+    - tailx r2: 2 builds (20:39), racing the wave a5/a6; round 3 in parallel.
+    - LEC: dma_back in RF1 form on src hbmi8.
+  - Open classes:
+    - CUTS helper: 7 RF1 cores have stage >583 ps (pslice_c5 1385 first). EQ-gated pin-cycle cuts with a schedule delta, then a parallel build.
+    - LEC: kshare (gray-CDC, new class), argmax RTL-gen, pc_ctrl.
+    - SPLIT: part 7 next; q3_body EQ mutants 1/2 FAIL, 3 running.
+  - keybuf ECO: still waiting for memory on epyc4 (since 19:1x).
+  - Helpers: 4 (LEC, SPLIT, RTL, CUTS). Next burn-down ~22:00.
