@@ -68,7 +68,8 @@ HC_LAT_N, HC_LAT_S = 1019, 1017  # -> first coefficient row on vo_n / vo_s (rows
 # TOK-ALL-16 10-27: re-measured on current main (gunit parent with the bound native-32 L5 127356adf2 + 10-24 pin-register
 # stations; identical with and without the GUNIT_* defines): HC 759/757 -> 1018/1016 (+259), router ids 68/66 -> 50/48
 # (-18), RW_GAP 121 -> 101; every value bit-exact (results/token_pass/tok16_dsl0_1027/gu)
-RT_LAT_N, RT_LAT_S = 50, 48     # -> ids row on vo_n / vo_s (S81-CORE-LAT-R17: +1, l1c order sort CPS 3 -> 2)
+RT_LAT_N, RT_LAT_S = 62, 60     # -> ids row on vo_n / vo_s (S81-CORE-LAT-R17: +1, l1c order sort CPS 3 -> 2;
+#                                  S81-RF1 11-03: +12, l1c RE-FORM RF 1 = one exchange per stage, 4 accumulators)
 RW_GAP = 101                    # ids row -> first weights row on the same port (L3 ot_s81_su_rw, measured)
 import sys as _sys                                  # noqa: E402
 _sys.path.insert(0, str(Path(__file__).resolve().parent))
