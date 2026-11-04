@@ -37,14 +37,25 @@ PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.04, M9=0.04)
 
 
-def _dpl_args(budgets, diamond=False):
+def _dpl_args(budgets, tn=None, diamond=False, landing=False, outline=None):
     """FLOW-7 10-30: plan budgets.dpl_legalizer="diamond" -> ORFS DETAIL_PLACEMENT_ARGS lines; absent = [] (kit unchanged).
-    DIE-QC-65/KITS 11-03: diamond=True (gen phys --dpl-diamond TYPES, per-type opt-in) gives the same line for that kit
-    (QC FIRM landing-band negotiation-DPL stall class; port of claude/die-qc-65-kits-1103@a589a3fea9)."""
+    DIE-QC-65/KITS 11-03: diamond=True (gen phys --dpl-diamond TYPES, per-type opt-in) gives the same line for that kit.
+    DIE-QC-66/PLAN 11-03 DPL class (port of main 42db137e7f2, KW-FIX-4): a kit with FIRM landing bands (landing=True)
+    legalizes with the diamond legalizer, and every kit-level diamond call gets the whole kit outline as its search window
+    (-max_displacement {w h}); budgets.dpl_legalizer_off_types keeps the ORFS default for named types."""
     v=budgets.get("dpl_legalizer")
-    if v is None:return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"] if diamond else []
-    if v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond'")
-    return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
+    if v is not None and v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond'")
+    if v is None and diamond:v="diamond"
+    if v is None and landing and not _dpl_off(budgets, tn):v="diamond"
+    if v is None:return []
+    if outline is None:return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
+    w,h=(int(math.ceil(float(x))) for x in outline)
+    return [f"export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer -max_displacement {{{w} {h}}}"]
+
+
+def _dpl_off(budgets, tn):
+    off=list(budgets.get("dpl_legalizer_off_types") or [])
+    return tn is not None and (tn in off or tn.split("__")[0] in off)
 
 
 def _cland_pinslot(budgets, tn, extra=()):
@@ -2494,7 +2505,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
            # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
            # around ~12k FIRM landing cells). Absent = unchanged kit.
-           *_dpl_args(P.budgets, dpl_diamond),
+           *_dpl_args(P.budgets, tn, dpl_diamond, landing=bool(t.get("clock", {}).get("landing_contract")),
+                      outline=t["outline_um"]),
            # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
@@ -3109,6 +3121,8 @@ def bound_parent_id_plan(raw, kit_rtl):
     import copy
     from parent_id_straps import type_parent_id_straps
     from bind import short_id
+    from bound_r8_straps import project
+    raw = project(raw, kit_rtl)
     result = raw
     for tn, filelist in (kit_rtl or {}).items():
         t = raw["partition_types"][tn]
@@ -3138,6 +3152,13 @@ def bound_parent_id_plan(raw, kit_rtl):
                     or name != short_id(f"strap_{leaf}__{port}", 80)
                     or actual.get(name) != ("input", width)):
                 raise ValueError(f"type {tn}: bound parent ID {name} disagrees with plan or kit ports")
+            if name in declared_top:
+                # DIE-QC-61 11-01: the plan already declares this validated child ID as a top-level strap (QC CB batch
+                # b1fef12091e: tile_id under count_straps).  Promoting it again duplicated the kit strap list
+                # (sdc_lint straps: duplicate names, 12 QC CB types).  Same name + width = already declared.
+                if declared_top[name] != width:
+                    raise ValueError(f"type {tn}: bound parent ID {name} width {width} != declared {declared_top[name]}")
+                continue
             additions.append(dict(name=name, width=width))
         if additions:
             if result is raw:

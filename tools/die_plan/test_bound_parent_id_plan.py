@@ -50,3 +50,21 @@ def test_existing_count_rows_are_not_child_ids(tmp_path):
     (tmp_path/'bind_parent_id_straps.json').write_text(json.dumps(manifest))
     got=bound_parent_id_plan(raw,files)
     assert len(logical_strap_pin_records(got['partition_types']['t']))==8
+
+
+def test_child_id_already_declared_top_level_is_not_duplicated(tmp_path):
+    # DIE-QC-61 11-01: QC CB types declare child tile_id straps under count_straps; the bind manifest also lists them
+    # with their leaf, so promotion must not append a second id_straps row (sdc_lint straps: duplicate names).
+    raw, files, _, _, name = vehicle(tmp_path)
+    raw['partition_types']['t']['count_straps'] = [dict(name=name, width=2)]
+    got = bound_parent_id_plan(raw, files)
+    t = got['partition_types']['t']
+    assert logical_strap_names(t) == [name]
+    assert not t.get('id_straps')
+
+
+def test_child_id_declared_top_level_with_other_width_fails(tmp_path):
+    raw, files, _, _, name = vehicle(tmp_path)
+    raw['partition_types']['t']['count_straps'] = [dict(name=name, width=3)]
+    with pytest.raises(ValueError):
+        bound_parent_id_plan(raw, files)
