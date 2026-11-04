@@ -45,8 +45,8 @@
 //   * the decision's store write command is REGISTERED at the top (t_* = the forwarding copy, g_st[*].g_td per-group
 //     kept copies on the group's clock entry) and the groups see each command one edge later; every top lookup
 //     (fa_* / fb_*) forwards the registered command behind this edge's decision (delayed write + forward, 2 deep);
-//   * the store-open flag (F11) is an exact top counter of nonzero slots (nopen, updated from the decision's own
-//     old / new counts), registered one edge late = the old any_g timing (the groups' any_o lags one more edge);
+//   * the store-open flag (F11) is an exact top counter of nonzero slots (nopen, from the decision's own old / new
+//     counts via registered up / down flags), at the old any_g timing (the groups' any_o lags one more edge);
 //   * the B look-ahead decode (norm / slot / h of the re-entry tag) is computed at the INPUT of the 5-edge tag delay
 //     line (from the m3_t flop) and delayed with it (u_stx), so re_tn / nb_sln / nb_hn leave flops.
 // Lockstep tb_ot_s81sl_cap_rt_rf1 -GRA=3 -GRB=4 (and 1 / 4); mutant OT_RFD_MUT_CAP4 (cnt lookup misses t_*) must FAIL.
@@ -255,7 +255,7 @@ module ot_s81sl_cap_rt #(
     // key [slot] {pos, row, nseg}, es [slot] entry side (lo[k] of the waiting child), cnt [slot], ev [slot] entry valid
     // bit h: all in the slot groups g_st[slot / 8]
     wire [7:0]  any_g;                                    // registered OR of cnt != 0 per slot group (F11)
-    reg         nz_q;                                     // S81-RF4: registered store-open flag (nopen != 0)
+    reg         nz_q;                                     // S81-RF4: store-open flag (nopen != 0, see nopen)
     wire        any_open = (RF1 >= 4) ? nz_q : |any_g;
     // registered look-ahead lookups of the F1 words' slots (loaded with fa_* / fb_*, see below)
     reg  [5:0]  fa_cn, fb_cn; reg fa_kh, fb_kh, fa_ev, fb_ev, fa_es, fb_es;
@@ -355,9 +355,20 @@ module ot_s81sl_cap_rt #(
     wire        rl_eff = do_rel && !(upd && r_slot == s_slot);
     wire [6:0]  op_up = {6'd0, upd && cnt_s != 6'd0 && s_cn == 6'd0} + {6'd0, rl_eff && cnt_r != 6'd0 && fb_cn == 6'd0};
     wire [6:0]  op_dn = {6'd0, upd && cnt_s == 6'd0 && s_cn != 6'd0} + {6'd0, rl_eff && cnt_r == 6'd0 && fb_cn != 6'd0};
+    // the up / down flags are registered first and the count adds them one edge later, so nopen already has the old
+    // any_g timing (the decision -> 7-bit add -> nopen stage was the rfdc place worst, -119 ps); nz_q = nopen != 0
+    reg  [1:0]  opu_q, opd_q;
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin nopen <= 7'd0; nz_q <= 1'b0; end
-        else begin nopen <= nopen + op_up - op_dn; nz_q <= nopen != 7'd0; end
+        if (!rs_c) begin nopen <= 7'd0; opu_q <= 2'd0; opd_q <= 2'd0; end
+        else begin
+`ifdef OT_RFD_MUT_CAP4N  // bench mutant: the store-open count misses the A / B open (+1) flag of the first source
+            opu_q <= {1'b0, op_up[1]}; opd_q <= op_dn[1:0];
+`else
+            opu_q <= op_up[1:0]; opd_q <= op_dn[1:0];
+`endif
+            nopen <= nopen + {5'd0, opu_q} - {5'd0, opd_q};
+        end
+    always @* nz_q = nopen != 7'd0;
     wire [4:0]  na_hn = hof(n6r_t), nb_hn = nb_hx;
     wire        rs_same = r_slot == s_slot;
     genvar gs;

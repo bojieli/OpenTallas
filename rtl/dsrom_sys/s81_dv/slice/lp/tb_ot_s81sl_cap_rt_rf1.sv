@@ -4,7 +4,7 @@
 // plus the registered lookups fa_kh / fb_kh (sampled in the low phase, after the RF1 out-face latch opens).  Stimulus tags come from a small domain so slots and keys collide.
 // Run with -DOT_S81_CAP_RT_RF1 -DOT_S81_CAP_RT_FACE_REGS.  PASS = 0 mismatches and nonzero key-hit coverage.
 // S81-RF2 (DIE-S81-51/RF-D 11-03): -GRA / -GRB pick the two RF1 forms (default 0 / 1; RF2 record 1 / 2); the registered
-// lookups fa_ev / fb_ev / fa_es / fb_es are compared too.  Mutants OT_RFD_MUT_CAP2 / OT_RFD_MUT_CAP2B must FAIL.
+// lookups fa_ev / fb_ev / fa_es / fb_es are compared too.  S81-RF4: the store-open flag any_open (F11) is compared too.  Mutants OT_RFD_MUT_CAP2 / OT_RFD_MUT_CAP2B must FAIL.
 module tb_ot_s81sl_cap_rt_rf1;
     parameter integer RA = 0, RB = 1;
     parameter integer N = 200000;
@@ -58,7 +58,8 @@ module tb_ot_s81sl_cap_rt_rf1;
             drive;
             if ({s_v0, s_a0, s_d0, n_v0, n_a0, n_d0, f0} !== {s_v1, s_a1, s_d1, n_v1, n_a1, n_d1, f1}
                 || u0.fa_kh !== u1.fa_kh || u0.fb_kh !== u1.fb_kh
-                || {u0.fa_ev, u0.fb_ev, u0.fa_es, u0.fb_es, u0.fa_cn, u0.fb_cn} !== {u1.fa_ev, u1.fb_ev, u1.fa_es, u1.fb_es, u1.fa_cn, u1.fb_cn}) begin
+                || {u0.fa_ev, u0.fb_ev, u0.fa_es, u0.fb_es, u0.fa_cn, u0.fb_cn} !== {u1.fa_ev, u1.fb_ev, u1.fa_es, u1.fb_es, u1.fa_cn, u1.fb_cn}
+                || u0.any_open !== u1.any_open) begin
                 mism = mism + 1;
                 if (mism < 6) $display("MISMATCH cyc %0d fa_kh %b/%b fb_kh %b/%b fault %b/%b", cyc, u0.fa_kh, u1.fa_kh,
                                        u0.fb_kh, u1.fb_kh, f0, f1);

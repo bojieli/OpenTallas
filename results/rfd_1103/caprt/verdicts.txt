@@ -36,3 +36,6 @@ S81-044 ot_s81sl_cap_rt RF1 = 3 (ot_s81sl_cap_grp_rf1 WD): per group, PENDING wr
 == S81-RF4 conservative form (RF1 4, OWNER 18:57), 2026-11-03 19:1x PST, branch claude/die-s81-51-rfd-capc-1103
 lockstep tb_ot_s81sl_cap_rt_rf1 (N 200000): RA3/RB4 s1 PASS (0 mism, kh 16010, ins 879, mrg 149); RA3/RB4 s5 PASS; RA1/RB4 s3 PASS
 mutant OT_RFD_MUT_CAP4 (cnt lookup misses the registered command) RA3/RB4 s1: FAIL 8991 mismatches (caught)
+rfdc build (7ece1910aa7) place estimate (its own flow, 3_5 detailed place): stdcell 72,244, util 0.479 (std 0.371), ws -119.35 sb_m -> nopen[6] (store-open counter add), next u_n6.r_t -> g_st[0] ca_es -46.80, TNS -929
+rfdc2: counter up / down flags registered first (nopen at the old any_g timing, any_open combinational from it); tb now compares any_open too.
+  RA3/RB4 s1,s5 + RA1/RB4 s3 PASS (0 mism incl. any_open); mutant CAP4 caught (8991); mutant CAP4N (count misses opens) caught (143347)
