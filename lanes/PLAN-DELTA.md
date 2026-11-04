@@ -245,3 +245,9 @@ DROPPED-DELTA D-INFRA-FIRST-HEAD
 
 2026-11-01 06:38 PST CODEX (HBM die-owner takeover, ROOT ruling release unchanged hard cores): D-HBM-C16 from 10-27 R15 is superseded by current approved d44o/d44p views. EP current427.68x246.24 dh21b4r pin table and Q3edge216x1054.08 r15_relot__codex_g21 are already the plan-of-record interfaces; current S9 station/VMS and PSlice/Pstore batch does not change EP/Q3edge/XQ core RTL, pins, outline or clock contract. Parent die G4 failure is independent. Drop the historical C16 blanket hold; every core still needs its own geometry/LEC/timing/signoff gates.
 DROPPED-DELTA D-HBM-C16
+
+2026-11-03 17:24 PST KW-FIX-4 (COORD 17:2x (a)): RETIRED D-INFRA-FIRST-QC (10-27, INFRA-FIRST-QC-R20 plan_d43 proposal). QC plan is FROZEN on plan_qc52 (CA + shrink2 merged 8d65a48084); no live lane owns this delta (INFRA-FIRST-QC lanes ended 10-27; QC owner DIE-QC-66). It held 19 queued QC sign-off rows as WAIT-PLAN-DELTA.
+DROPPED-DELTA D-INFRA-FIRST-QC
+
+2026-11-03 17:24 PST KW-FIX-4 (COORD 17:2x (a)): RETIRED D-S81-B2 (10-26 PATH-S81 batch proposal on the a8/stations-v4 plans). S81 plan is FROZEN on RF1 (plan_h2_2249 lineage); no live lane owns it (PATH-S81 ended; CODEX/DIE-S81-47 already marked it DROPPED on 11-01 12:0x, a line that never reached coord/state, so the hub kept 20 S81 rows as WAIT-PLAN-DELTA).
+DROPPED-DELTA D-S81-B2
