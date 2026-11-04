@@ -11818,3 +11818,16 @@ CONSERVATIVE LAUNCHES (OWNER 18:57):
 - ahub/ZH conservative: RF-E fork building.
 
 Helpers: 3.
+- 2026-11-03 19:57 PST BURN-DOWN [DIE-HBM-61 -> COORD] HBM 20:00.
+  - Count: 8/84 cores, 0/81 types. calendar_f20 is being re-signed by SS24 (flow-w-hbm) and becomes +1 on PROVENANCE.
+  - Merged since 18:00: d44v p5, GEN_LINT, hold class (I4), KW-FIX-4 insertion band ADVISORY (I7a 19:49). Approved for the train: RF1 d35a67594c7 (q2_reduce PORT_MISMATCH + cp_rxs MPL-0020).
+  - Insertion-only 11: KW-FIX-4 resume from CTS on epyc4. The deadline is 20:19; I check stages.tsv then.
+  - RF1 conservative form: 12 cores. RF1-BUILD LAUNCHED 6 on epyc4 at 19:53 (ep_static, pslice_c5, xp_aq, programme_store_r10, vms_glue_nw_t, q3_vm). KW-FIX-4 runs 6 wave retries on d35a67594c7 (lanes canon/plain, bfqg, subtree32, q2_reduce, cp_rxs).
+  - LEC (3), owner DIE-HBM-61/LEC:
+    - tool fix READY 298bfc55e92; dma_back is EQ and goes to KW-FIX-4 relaunch.
+    - kshare is still NOT EQ (6 diffs on gray CDC regs; lane[].st cone removed). New class, under investigation.
+    - argmax RTL-gen fix in progress; pc_ctrl next.
+  - SPLIT: 10 cores go to d44v part 6 (sub-cores). tkm EQ READY 4835b1468df.
+  - RTL: tailx_rest r2 (+84 port cycles, EQ-gated) READY ~21:06, then a build and TOK-VERIFY.
+  - keybuf_slice: 1-iteration hold ECO queued on epyc4 (memory admission).
+  - Helpers: 4 (LEC, SPLIT, RTL, RF1-BUILD). Next burn-down ~21:00.
