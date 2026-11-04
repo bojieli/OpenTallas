@@ -327,6 +327,7 @@ if {[catch {check_placement} msg]} { error "OT_PRD FAIL: check_placement after t
 # keep every other net's routed wires for an incremental detailed route (prd_route_keep.tcl).  FLOW-13: selection + rip
 # run BEFORE the incremental GRT end and the kept wires are parked (detached) across it, since updateDirtyNets destroys
 # the wire of every journaled-dirty net (R1route: 2754 reference wires lost, 0 ripped).
+if {[llength [info commands ot_prd_tie_mark_dirty]]} { ot_prd_tie_mark_dirty }
 set _route_keep [expr {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) in {route final}}]
 if {$_route_keep} {
   source [file join $_here prd_route_keep.tcl]

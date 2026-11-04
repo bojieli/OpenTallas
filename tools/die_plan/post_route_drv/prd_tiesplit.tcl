@@ -7,6 +7,7 @@ proc ot_prd_tie_split {} {
   set dbu [$block getDbUnitsPerMicron]
   set span [expr {[info exists ::env(OT_PRD_TIE_SPAN_UM)] ? $::env(OT_PRD_TIE_SPAN_UM) : 60}]
   set split 0; set made 0
+  set ::ot_prd_tie_drivers {}
   foreach net [$block getNets] {
     if {[$net getSigType] ne "SIGNAL"} continue
     set drv {}; set loads {}
@@ -39,6 +40,7 @@ proc ot_prd_tie_split {} {
       $ti setLocation $x $y
       $ti setPlacementStatus PLACED
       [$ti findITerm $out] connect $nn
+      lappend ::ot_prd_tie_drivers [$ti findITerm $out]
       # a gated-clock cell load is dont_touch: its data pin moves, the cell stays LOCKED
       set li [$l getInst]; set ldt [$li isDoNotTouch]
       $li setDoNotTouch 0
@@ -47,8 +49,21 @@ proc ot_prd_tie_split {} {
       $li setDoNotTouch $ldt
       incr made
     }
+    lappend ::ot_prd_tie_drivers [lindex $drv 0]
     incr split
   }
   puts "OT_PRD_TARGETED tie nets split $split, tie cells added $made"
+}
+# The split runs before global_route -start_incremental, so GRT does not see these nets as dirty and leaves them without
+# guides (half: detail_route "Global routing failed"). Reconnecting each tie output inside the window marks them dirty.
+proc ot_prd_tie_mark_dirty {} {
+  foreach it $::ot_prd_tie_drivers {
+    set net [$it getNet]; set inst [$it getInst]; set dt [$inst isDoNotTouch]
+    $inst setDoNotTouch 0
+    $it disconnect
+    $it connect $net
+    $inst setDoNotTouch $dt
+  }
+  puts "OT_PRD_TARGETED tie nets marked dirty [llength $::ot_prd_tie_drivers]"
 }
 if {![info exists ::env(OT_PRD_TIE_SPLIT)] || $::env(OT_PRD_TIE_SPLIT) ne "0"} { ot_prd_tie_split }
