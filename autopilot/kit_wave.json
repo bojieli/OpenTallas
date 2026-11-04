@@ -240,7 +240,7 @@
     "kv3_hub_Ei": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave",
+   "work_root": "/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
     "kv3_io_cor_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
@@ -3488,7 +3488,7 @@
    "hosts": [
     "epyc4"
    ],
-   "cancel_superseded": false,
+   "cancel_superseded": true,
    "plan_core_items": [
     "hnx_rp3h_xs"
    ]
