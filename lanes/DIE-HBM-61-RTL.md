@@ -7,3 +7,4 @@
 - 2026-11-03 16:40 PST tailx r2 WIP 023d9a52c70 state (fork parked, nothing running): DONE c12 opt-ins (add_f12_l7x, qadd L7X, exp L7X+NREP, defaults byte-identical), generator LAU7/NREP8, REFORM_SHIFT 84 (L 590), emit test pass; snapshot also has a core rst relay -> DROP on resume (face relay covers it). LEFT: tb SH 70->84, run_reform.sh TE 266->278 + mutants add7_cut/nrep_late/nrep_slice, EQ+mutants+gate both cores, tailx_rest.tsv (+84 ports, EREADY +81).
 - 2026-11-03 19:06 PST PROGRESS [DIE-HBM-61/RTL -> DIE-HBM-61, ROOT-MERGE-27, COORD, KW-FIX-4, TOK-VERIFY-1] tailx_rest round 2 UNPARKED (OWNER 18:57 conservative form). ETA READY ~21:06 PST: finish WIP 023d9a52c70 (c12 opt-in L7X/NREP, drop in-core relay, +84 every port, EQ + mutants + gate both cores).
 - 2026-11-03 20:17 PST READY tailx r2 @fcb2f44b16b; r3 tmag-cut variant launched in parallel.
+- 2026-11-03 20:39 PST LAUNCHED tailx r2 both cores (ot-run epyc4, kits rf1_1103/tailx_r2) from @1b42f0884b.
