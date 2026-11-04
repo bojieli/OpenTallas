@@ -70,6 +70,17 @@ if {[info exists ::cland_avoid_rects]} {
 set cland_hard {}
 set cland_avoid_db {}
 if {[info exists ::cland_avoid_rects]} { foreach r $::cland_avoid_rects { lappend cland_avoid_db [lmap v $r {expr {int($v)}}] } }
+# DIE-KV-64 11-03 (KV kv3_hgi_v5/v6/v7 "band overlaps hard placement blockage"): the die clock driver islands
+# (die_islands.tcl, global ::di_rects in DBU, one 2.7 x 0.81 um driver site each) are reserved clock sites like
+# ::cland_avoid_rects: occupied space the ring is packed around, not a band/blockage conflict.
+if {[info exists ::di_rects]} {
+ foreach r $::di_rects {
+  set r [lmap v $r {expr {int($v)}}]
+  if {$r in $cland_avoid_db} continue
+  lappend cland_avoid_db $r
+  lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}]
+ }
+}
 foreach bk [$ff_blk getBlockages] {
  if {[$bk isSoft]} continue
  set bb [$bk getBBox]; set hr [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
