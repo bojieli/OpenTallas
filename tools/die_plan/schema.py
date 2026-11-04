@@ -943,7 +943,11 @@ SCHEMA = {
             # optional write_fall_types list limits the fall write to those receiver types (absent = every type).
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
                           "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
-                                         "write_fall_types": {"type": "array", "items": {"type": "string"}}}},
+                                         "write_fall_types": {"type": "array", "items": {"type": "string"}},
+                                         # DIE-QC-67/STM: sender data-vs-fclk max (ps) replacing the ft-hop -max on ft ring
+                                         # inputs of falling-edge writer types only: a (1-share) T budget cannot be captured
+                                         # at T/2 (landing_contract.ring_input_sdc); the real arrival is priced in die STA
+                                         "ft_ring_max_ps": {"type": "number", "exclusiveMinimum": 0}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
