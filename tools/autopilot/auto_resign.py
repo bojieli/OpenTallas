@@ -424,6 +424,8 @@ def known_commit(AP, sha, branch=None):
 def tag_shas(AP, tag):
     """manifest files: sha256 of every tag file resign.py checks; {} when the tag lacks a tool"""
     out = {}
+    if hub_git(AP, "rev-parse", "-q", "--verify", tag + "^{commit}")[0]:   # flow_tags reads origin; the hub may not hold it yet
+        hub_git(AP, "fetch", "-q", "origin", "refs/tags/%s:refs/tags/%s" % (tag, tag), timeout=300)
     for rel in TAG_TOOL_FILES + CLOCK_FAMILY_RELS:
         rc, txt, _ = bin_show(AP, tag, rel)
         if rc == 0:
@@ -442,6 +444,9 @@ def stage_tools(AP, host, root, tag, shas):
     them); the driver is main's, since a tag older than this stage has none with --auto."""
     d = "%s/claude/auto-resign/tools/%s" % (root, tag)
     h = AP.ssh_host(host)
+    # a READY export is never rewritten: a running sign-off may be reading it
+    if AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "test -f %s/READY" % shlex.quote(d)], timeout=60)[0] == 0:
+        return d, ""
     rels = ["tools/die_plan"] + [r for r in CLOCK_FAMILY_RELS if r in shas and not r.startswith("tools/die_plan")]
     cmd = ("git -C %s archive %s -- %s | ssh -o BatchMode=yes -o ControlPath=none %s %s"
            % (shlex.quote(str(AP.REPO)), shlex.quote(tag), " ".join(shlex.quote(r) for r in rels), shlex.quote(h),
@@ -458,7 +463,8 @@ def stage_tools(AP, host, root, tag, shas):
                            timeout=120, input=text)
         if rc:
             return None, "%s to %s: %s" % (name, host, err.strip()[-200:])
-    return d, ""
+    rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "touch %s/READY" % shlex.quote(d)], timeout=60)
+    return (d, "") if rc == 0 else (None, "READY on %s: %s" % (host, err.strip()[-200:]))
 
 
 def out_dir(root, c, tag, odb_sha, attempt):
@@ -469,7 +475,7 @@ def out_dir(root, c, tag, odb_sha, attempt):
 def job_argv(AP, c, p, d, out, tag, bc, mem):
     # --dir is the tools dir, not the kit: ot-run ignores a --dir under a lane root marked .ot-run-spill-copy (ECO kits on a
     # spill copy, e.g. die-hbm-63 on epyc2), so a pinned job on the kit would wait for ever on a DB that is really there.
-    host = AP.HUB_NAME if AP.ssh_host(c["host"]) == "localhost" else c["host"]
+    host = "localhost" if AP.ssh_host(c["host"]) == "localhost" else c["host"]   # ot-run names the hub localhost
     note = "%s; %s" % (c.get("lane") or c.get("source"), c.get("note") or "")
     return [AP.OT_RUN, "--mem", str(mem), "--threads", str(THREADS), "--hosts", host, "--no-spill", "--disk", "2",
             "--dir", d, "--priority", "die", "--crit", "--", "python3", "-I", d + "/resign_driver.py", "run",
@@ -653,7 +659,7 @@ def launch(AP, c, p, ctx, it, plan, cid, ap_dir):
     ctx["tool_key"](tag)
     shas = ctx["shas"].get(tag) or {}
     if not shas:
-        it.update(status="LANE", why="%s has no signoff.py + lec.py" % tag)
+        it.update(status="WAIT", why="%s: signoff.py + lec.py not readable on the hub" % tag)
         return False
     if AP.DRY:
         AP.log("would AUTO-RESIGN %s/%s on %s, build %s" % (c["die"], c["name"], tag, bc[:12]))
