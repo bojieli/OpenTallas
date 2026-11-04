@@ -251,3 +251,19 @@ DROPPED-DELTA D-INFRA-FIRST-QC
 
 2026-11-03 17:24 PST KW-FIX-4 (COORD 17:2x (a)): RETIRED D-S81-B2 (10-26 PATH-S81 batch proposal on the a8/stations-v4 plans). S81 plan is FROZEN on RF1 (plan_h2_2249 lineage); no live lane owns it (PATH-S81 ended; CODEX/DIE-S81-47 already marked it DROPPED on 11-01 12:0x, a line that never reached coord/state, so the hub kept 20 S81 rows as WAIT-PLAN-DELTA).
 DROPPED-DELTA D-S81-B2
+
+2026-11-03 18:02 PST KW-FIX-4 (COORD 17:50 (A) DELTA-STALE): RETIRED 14 stale PENDING-DELTA entries from 10-25..10-27. Each targets a plan that is no longer the die's plan of record (S81 now plan_h2_2249/b1a2125433d0, QC plan_qc52_ucie1103/d90b1092, KV plan_c/event28w_c, HBM d44v); none names the current plan, and no live lane owns any of them (only mention today = COORD 17:50 ruling). D-QC-SU1713, D-QC-N59-1C, TR2-KV, TR2-HBM were already MERGED. Class fix claude/kw-fix-4-deltastale-1103@ffed459129 makes the autopilot ignore+log such entries from now on. A real delta against a current plan must be re-filed naming that plan (plan=<id>) dated after its freeze.
+DROPPED-DELTA TR2-S81
+DROPPED-DELTA D-S81-FT-A8
+DROPPED-DELTA D-QC-CB16-PHASE
+DROPPED-DELTA D-QC-N59-DENSITY
+DROPPED-DELTA D-QC-SRAM-INVENTORY
+DROPPED-DELTA D-QC-DEAD-FAULT
+DROPPED-DELTA D-HBM-RESET-RELAY
+DROPPED-DELTA D-QC-FE-FWD-STATIONS
+DROPPED-DELTA D-HBM-B1
+DROPPED-DELTA D-QC-FE-REACH
+DROPPED-DELTA D-QC-IOHOLD40
+DROPPED-DELTA D-S81-PHY
+DROPPED-DELTA D-QC-SCROOT
+DROPPED-DELTA D-KV-ECTLK-Q2-SI
