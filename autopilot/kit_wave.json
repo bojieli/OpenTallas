@@ -2636,7 +2636,9 @@
     "ot_hbm_xp_aq_tree13_fmt@3",
     "ot_hfd_coll_q2n2_body_core@4",
     "ot_hfd_coll_q2n2_vm_core@3",
-    "ot_hgi_qw_dec@2"
+    "ot_hgi_qw_dec@2",
+    "ot_hbm_hc_bank128_pair_core__v7d149b37532c@1",
+    "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d@4"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-61",
@@ -2671,7 +2673,9 @@
     "ot_hfd_coll_q2n2_body_core@4": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
     "ot_hfd_coll_q2n2_vm_core@3": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
     "ot_hgi_qw_dec@2": "INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
-    "__batch_hbm_pins": "11 rows: INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)"
+    "__batch_hbm_pins": "11 rows: INFRA class (COORD 14:2x): gen \"rtl file ... missing in tree and at <pin>\" = recipe read_at_commit/files_at pins d34578d6f/97b0810d615/4d6f5439dce absent from the epyc4 repo (not on main; hub does not advertise them) -> fetched by bundle into epyc4 refs/pins/recipe-*; all 13 HBM recipe pins verified on intel2+epyc4; src -> main 2d0660db1b7 (RE-FORM RTL part 2) kw-fix-4-hbm2d staged on intel2+epyc4 (KW-FIX-4 14:5x)",
+    "ot_hbm_hc_bank128_pair_core__v7d149b37532c@1": "DIE-HBM-61/B128 d44v part 5 bank128_pair S-edge macro stack (101616937ca; probe GRT ovf 7646 -> 0) = plan dir d44v8h; batch I2-B128 (KW-FIX-4 17:29); first_core follows in the I3 hold-fix batch",
+    "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d@4": "DIE-HBM-61/B128 d44v part 5 bank128_pair S-edge macro stack (101616937ca; probe GRT ovf 7646 -> 0) = plan dir d44v8h; batch I2-B128 (KW-FIX-4 17:29); first_core follows in the I3 hold-fix batch"
    },
    "plan_note": "17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | "
   }
