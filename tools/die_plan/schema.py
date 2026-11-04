@@ -1071,6 +1071,8 @@ SCHEMA = {
             # landing cells (fragmented 5/9-site gaps, 92.9 % fixed); diamond legalised in 44 s; unset = unchanged kits
             dpl_legalizer={"enum": ["diamond"]},
             dpl_legalizer_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-QC-66/PLAN 11-03: landing-band kits default to diamond DPL with a whole-kit window; named types opt out
+            dpl_legalizer_off_types={"type": "array", "uniqueItems": True, "items": _name},
             # FLOW 10-30: only named types may move landing bands to avoid reset relay/collector sites.
             # Absent/empty preserves all existing bands; compose also accepts the unsplit base type name.
             cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name},

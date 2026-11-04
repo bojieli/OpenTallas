@@ -5489,6 +5489,14 @@
       "minLength": 1
      }
     },
+    "dpl_legalizer_off_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
     "cland_avoid_reset_types": {
      "type": "array",
      "uniqueItems": true,
