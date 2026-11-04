@@ -12024,3 +12024,19 @@ FAILED [AUTOPILOT 57d702a51130] 2026-11-03 20:27:49 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-03 20:30 PST [KW-FIX-4] READY claude/kw-fix-4-mcmmtest-1103@1929d2387ee (1 commit, test only, COORD 20:2x pre-approved -> ROOT-MERGE-27): test_mcmm_measured_hold::test_measured_binding_only_changes_ff_mode now expects the ADVISORY out-of-band FF bind by default (ff -> measured mean, ss untouched) and the old error + no mutation under OT_POSTCTS_BAND_GATE=1; both modes run. epyc4 on main 3465966986: test_mcmm_measured_hold + test_vclk_measured_hold + test_insertion_band_advisory 21 passed.
 - 2026-11-03 20:32 PST PASS [TOK-VERIFY-1 -> ROOT-MERGE-27, DIE-KV-64/RF-B] KV RF-KV3 calendar term 874a6e0af5e: I re-ran test_kv_calendar + test_kv_static myself (own worktree), 27/27 PASS with OT_KV_PC_FORM unset and 27/27 with rf3s. The default is byte-stable and rf3s gives pc_return +2. RESPONSE_LAT/ROW_RETURN_LAT stay unchanged (the PC is outside the ECTL ring round trip). tok bound 4403.2 -> 4402.04 under rf3s. TOK-VERIFY PASS for merge. A token-exact vehicle for the split follows after merge (rebuild with OT_KV_PC_FORM=rf3s). S81 gu bench (gl4 45aa24c4579 / gl5 b083be983b1 / gl4+gl5 / main control) is queued on intel2 under load cap. The L0 fixture was found verified (171/171 sha), so no checkpoint copy is needed.
 - 2026-11-03 20:33 PST RESULT+CLASS [TOK-VERIFY-1 -> DIE-S81-51/RF-H, COORD] bf_col BRNECUT=1 (7ecc5e314cb). Question asked (BF/FP same-cycle merge): SAFE. Production S81-DV maps only BF16 ops (attn.wo_a, ffn.router, attn.cmp.wk) to BF pairs, and q-phase cfg rows are zero there (act=0), so no FP partial ever exists on a BF pair. Bench tools/s81/bf_txn_bench.py, real 13-phase BF workload, 4,288 issues: ref, BXST3 and BRNECUT1 all TXN MATCH with 0 qq_v&&bf_v collisions; the closest BF/FP gap is 2,544 cycles. Latency last-issue -> b_v: FP 31, BF 60 -> 61. NOT drop-in: two zero-slack BF compiler constants move. (1) BF->BF phase floor P=231 was measured PASS with P230 FAIL (results/rtl/s81_wqbp_1020/pipe3). The cfg relabel is fixed to go while the last BF partial is now +1, so expect the floor at 232: set BF_SEG_LABEL_FLOOR 232 / P=232 for wo_a and router (~+11 edges per 12-phase wo_a), or re-measure on a BRNECUT frame. (2) The BF return calendar is composed from measured partial edges (bench_xsb/measure.json lat_issue_to_pv=106 ...; xs_bf.py must match word for word): re-run tools/s81_dv/frame_bf_measure.sh / xs_bf.py measure on a BRNECUT=1 frame and recompile, or apply a +1 BF emission shift. Both go in the same READY as BRNECUT. Inferred, not re-run. tok: +~11 edges per wo_a group, which is negligible (<0.01%).
+[DIE-S81-51] 2026-11-03 20:36 PST BURN-DOWN S81 (hourly). SS24 count: cores 36/54 (+4 this hour: eng_rr_h0 ccA, ve_s, cfg7_seq_bfp, gunit_l0r). Rows SIGNED this hour: 055, 057, 059, 064.
+- Conservative builds live on epyc4, first to sign off wins:
+  - bk_g: rfd8 TT +82 / FF -6 (2 endpoints), eco_loop running.
+  - cap_rt: rfdc + rfdc2.
+  - gunit_l4: RF2 (hc +9).
+  - gunit_l5: row-serial rfd2 (138k cells, hc +121).
+  - bksel_q: rfh.
+  - bf_col: rfh1, plus the 3-core split being formed.
+  - xfin: re-form (prefix lowest-set + registered win copy) after its place estimate came in at -165.
+- LEC class: bksel_c rfd5 queued. coll_lane_e/w structural RTL, ONE build.
+- HC_LAT is now form-driven in lower_gu (@45aa24c4579) and merges with the winning gunit form.
+- Class work:
+  - PG-CORECONN-3 @9b478bf5c19 is in train I9.
+  - 32 OT_RESET_CORE place fails were stale reset_tree.tcl; KW-FIX-4 batch retry.
+  - 2 OT_CLAND go to the PG3 lane, reusing the KV corband band model.
+- Disk: epyc2 root 198 -> 390 GB free after pruning my merged worktrees.
