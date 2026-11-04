@@ -83,3 +83,18 @@ def test_protected_list_names_entry_child_or_parent(tmp_path, monkeypatch):
     assert not m.spill_stage_protected("/srv/x/claude/z")
     (d / "PROTECTED-DBS.txt").unlink()
     assert m.spill_stage_protected("/srv/x/claude/z")                  # unreadable list keeps the copy
+
+
+def test_stage_eco_uses_lower_epyc2_scratch_floor():
+    m = load()
+    m.spill_lands_on_root = lambda host, roots: False
+    r, eco, kit = ["/srv/opentallas-scratch2/claude/l/k"], ["python3 /x/eco_loop.py run --kit /k"], ["bash /x/run_kit.sh"]
+    r60, r40 = {"rootfs_free_gb": 361, "scratch_disk_gb": 60}, {"rootfs_free_gb": 361, "scratch_disk_gb": 40}
+    assert m.spill_dst_full("epyc2", r60, r, eco)                      # not a --stage job
+    m.STAGE.append(r[0])
+    assert not m.spill_dst_full("epyc2", r60, r, eco)
+    assert m.spill_dst_full("epyc2", r40, r, eco)
+    assert m.spill_dst_full("epyc2", r60, r, kit)
+    assert m.spill_dst_full("intel1", r60, r, eco)
+    m.spill_lands_on_root = lambda host, roots: True
+    assert m.spill_dst_full("epyc2", r60, r, eco)                      # the root floor stays
