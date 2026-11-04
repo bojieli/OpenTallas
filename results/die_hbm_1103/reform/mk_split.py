@@ -22,6 +22,9 @@ sub-core port bit to the parent plan pins it reaches and to the peer sub-cores i
       - N/S faces use M5 and W/E faces use M4, 0.096 um inside the edge, on every 2nd track where it fits.
   * core_faces pass: the check.py core_faces model (as mk_repin) scores each sub port.  A port group whose mean cos
     is < 0 moves to the outer face of its tile that scores best over all instances.
+  * spec options (DIE-HBM-62/KPORT, 2-D tile plan): tiles {sub inst: [[x, y], [w, h]]} replaces the 1-D tile search;
+    pin_want (file, sub module -> bit -> [face, x, y]) gives the pin order and face of the listed bits and switches the
+    core_faces pass off for this core; inst_straps {sub inst: parent_id_straps} ties ID pins per instance.
   * sidecars, re-pointed from the core inst to its subs:
       - clock_entries.json: one entry per sub at its tile centre, 4.32 PG lattice, or at the spec point clear of
         the macros.
@@ -172,8 +175,9 @@ for sp in SPEC:
     cells = {s["module"]: s["cells"] for s in sp["subs"]}
     names = [s["inst"] for s in subs]
     best = None
-    for perm in ([names] if sp.get("replicas") else itertools.permutations(names)):
-        bx = tiles_rep(W, H, len(perm)) if sp.get("replicas") else tiles_1d(W, H, [cells[mod_of[n]] for n in perm], mir)
+    for perm in ([names] if sp.get("replicas") or sp.get("tiles") else itertools.permutations(names)):
+        bx = ([tuple(sp["tiles"][n]) for n in perm] if sp.get("tiles") else
+              tiles_rep(W, H, len(perm)) if sp.get("replicas") else tiles_1d(W, H, [cells[mod_of[n]] for n in perm], mir))
         tb = dict(zip(perm, bx))
         cost = 0.0
         for s in subs:
@@ -187,6 +191,7 @@ for sp in SPEC:
             best = (cost, tb)
     tb = best[1]
     tag = {s["inst"]: s["inst"].split(".")[-1].removeprefix("u_") for s in subs}
+    pin_want = json.loads((SD / sp["pin_want"]).read_text()) if sp.get("pin_want") else {}   # sub module -> bit -> [face, x, y]
     rep = collections.OrderedDict()
     for s in subs:
         rep.setdefault(s["module"], []).append(s["inst"])
@@ -205,6 +210,9 @@ for sp in SPEC:
         for nm, b in s["bits"].items():
             if isclk(nm):
                 wm[nm] = ("C", None); continue
+            pw = pin_want.get(s["module"], {}).get(nm)
+            if pw:
+                wm[nm] = (pw[0], (pw[1], pw[2])); continue
             tops = [OP[t] for t in b["top"] if t in OP]
             if tops:
                 fs = [face_of(p["x"], p["y"], W, H) for p in tops]
@@ -326,6 +334,7 @@ for core, S in cores.items():
                      note=f"DIE-HBM-61/SPLIT d44v p6: sub-core {s['inst']} of {core} (SPLIT {sp['sha']}; glue {sp['glue']})")
             if orr != "R0": e["orient"] = orr
             if "obs_max" in old: e["obs_max"] = old["obs_max"]
+            if sp.get("inst_straps", {}).get(s["inst"]): e["parent_id_straps"] = dict(sp["inst_straps"][s["inst"]])
             st = old.get("parent_id_straps")
             if st:
                 mine = {}
@@ -470,6 +479,8 @@ for (core, mod, port), means in bad.items():
     if min(means) >= CK.FACE_WARN_COS - 1e-9 and sum(means) / len(means) >= 0:
         continue
     S = cores[core]
+    if S["sp"].get("pin_want"):                 # the spec placed every pin (slot-level plan): no face moves
+        continue
     o, wh = S["tb"][S["rep"][mod][0]]
     of = outer_faces(o, wh, S["W"], S["H"]) or list("NSEW")
     sc = {f: sum(v) / len(v) for f, v in score[(core, mod, port)].items() if f in of}

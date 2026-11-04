@@ -1925,5 +1925,31 @@
   "source_commit": "d34578d6f",
   "read_at_commit": false,
   "asbuilt_inst": "pgp_NW"
+ },
+ "ot_hbm_svc_wb_kp_hub": {
+  "top": "ot_hbm_svc_wb_kp_hub",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_svc_wb_kport_q/ot_hbm_svc_wb_kp_hub.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "DIE-HBM-62/KPORT 11-03: hub of the re-formed ot_hbm_svc_wb_kport_q; files from the tree"
+ },
+ "ot_hbm_svc_wb_kp_root": {
+  "top": "ot_hbm_svc_wb_kp_root",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_svc_wb_kport_q/ot_hbm_svc_wb_kp_root.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "DIE-HBM-62/KPORT 11-03: root master (4 replicas, strap_bsel tied at the parent) of the re-formed ot_hbm_svc_wb_kport_q; files from the tree"
  }
 }
