@@ -3028,7 +3028,12 @@ class Binder:
                 try:
                     txt = self.clock_landings.type_rtl(tn, txt, base=t.get("split_of", tn))
                 except ValueError as exc:
-                    raise BindError(str(exc)) from exc
+                    # DIE-QC-69: name the type (the landing message may not); --all-gaps records it and goes on
+                    err = BindError(f"{tn}: {exc}")
+                    if not getattr(self, "collect_gaps", False):
+                        raise err from exc
+                    self._gap(err)
+                    continue
             reset_localization = t.get("reset", {}).get("consumer_localization")
             if reset_localization:
                 import reset_consumers
