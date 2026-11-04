@@ -1109,6 +1109,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "geom_advisory": opt(cfg, die, "geom_advisory") is not False,
             "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
+            "prov_first_re": (d.get("prov_first_re") or "") if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN,
             "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))}
 
@@ -1905,6 +1906,16 @@ def run_item(spec_path):
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
     core = sp.get("kind") == "core" and bool(sp.get("core_kit"))
+    # DIE-KV-69 11-04: die option prov_first_re names types whose planned children have no source under the manifest
+    # roots (KV PCC / PCF, results/kv_host_regen_1/rtl_rf3).  bind kit-rtl finds such a child only through the view an
+    # overlay plan row binds, so these types build the overlay first and run kit-rtl on it.  Every other type keeps
+    # kit RTL -> overlay.
+    prov_first = bool(sp.get("prov_views") and not core and sp.get("prov_first_re")
+                      and re.search(sp["prov_first_re"], T))
+    if prov_first:
+        plan, prc = prov_stage(sp, run, remote, fail, res)
+        if plan is None:
+            return prc
     if core:
         # AUTOBUILD-PIPE-2: hard core = the die's own core generator (HBM gen_core_kit_hbm.py) on the plan's views
         # inventory (built once per event under flock, like the die bind); kit = W/gen/<module>_<sha12>
@@ -1959,7 +1970,7 @@ def run_item(spec_path):
         if rc:
             return fail("kit_rtl", txt)
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
-    if sp.get("prov_views") and not core:
+    if sp.get("prov_views") and not core and not prov_first:
         # KW-PROV-1: build against PROVISIONAL child views (latest routed DRC-clean abstract, else the plan-contract
         # abstract) through an overlay plan; the kit is marked PROVISIONAL and never counted until the STA-only re-sign.
         # After kit RTL (bind kit-rtl reads no child view): the kit RTL is the first source of child port directions
