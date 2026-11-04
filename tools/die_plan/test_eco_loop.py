@@ -326,3 +326,37 @@ def test_non_sig11_route_failure_not_retried(tmp_path):
     k = kit(tmp_path)
     res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=Fake([None]), tools=Path(E.HERE))
     assert res["verdict"] == "ERROR" and len(res["iterations"]) == 1 and "repair_rc_retry" not in res
+
+
+class Stale(Fake):
+    """the first ECO session stops with OT_PRD STAGE_MISMATCH (seed DB older than the kit's post-route ECO SPEF)"""
+
+    def __init__(self, results):
+        super().__init__(results)
+        self.hit = False
+
+    def __call__(self, cmd, **kw):
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh") and not self.hit:
+            self.calls.append((cmd, kw.get("env") or {}))
+            self.hit = True
+            Path(cmd[2], "run_prd.log").write_text("Error: OT_PRD STAGE_MISMATCH: 1305 of 91669 SPEF logic instances\n")
+            return 2
+        return super().__call__(cmd, **kw)
+
+
+def test_stage_mismatch_retried_once_from_final(tmp_path):
+    k = kit(tmp_path)
+    f = Stale([rec(5, 5)])
+    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=f, tools=Path(E.HERE))
+    assert res["verdict"] == "PASS" and "stage_retry" in res
+    assert [i["status"] for i in res["iterations"]] == ["ERROR", "SIGNED"]
+    assert res["iterations"][0]["stage_mismatch"] and res["iterations"][1]["dir"].endswith("/i1f")
+    runs = [env for cmd, env in f.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert runs[0]["OT_PRD_FROM"] == "route" and runs[1]["OT_PRD_FROM"] == "final"
+
+
+def test_stage_mismatch_on_grt_mode_not_retried(tmp_path):
+    k = kit(tmp_path)
+    res = E.run_loop(k, base_rec(k, rec(-80, 2, drc=3)), tmp_path / "eco", run=Stale([rec(5, 5)]),
+                     tools=Path(E.HERE))
+    assert res["verdict"] == "ERROR" and len(res["iterations"]) == 1 and "stage_retry" not in res

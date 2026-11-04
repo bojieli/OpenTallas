@@ -118,3 +118,16 @@ def test_check_uses_vector_bterm_name():
 def test_cts_post_sources_check_when_present():
     t = (HERE / "cts_post.tcl").read_text()
     assert "landing_export_check.tcl" in t and "file exists" in t
+
+
+def test_export_source_tap_moves_only_planned_taps(monkeypatch):
+    import export_source_tap as EST
+    pins = [_pin("fclk_out_a", "clk"), _pin("fclk_out_b", "clk"), _pin("fclk_out_c", "clk"), _pin("fclk_out_d", "clk")]
+    pins[0]["source_clock_tap"], pins[1]["source_clock_tap"], pins[2]["source_clock_tap"] = "clk_t1", "clk", "clk_t9"
+    raw = {"partition_types": {"T": {"clock": {"landing_contract": {"pins": pins}}}, "U": {}}}
+    monkeypatch.setattr(EST.S, "Plan", lambda r: None)
+    monkeypatch.setattr(EST.S, "tap_grid", lambda P, tn: [("clk", 0, 0), ("clk_t1", 1, 1)])
+    changed, missing = EST.apply(raw)
+    assert changed == {"T": [["fclk_out_a", "clk", "clk_t1"]]} and missing == {"T": [["fclk_out_c", "clk_t9"]]}
+    assert [p["source_clock_port"] for p in pins] == ["clk_t1", "clk", "clk", "clk"]
+    assert raw["partition_types"]["T"]["clock"]["landing_contract"]["forwarded_clock_only_inputs"] is True

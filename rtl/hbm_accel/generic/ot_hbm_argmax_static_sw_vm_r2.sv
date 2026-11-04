@@ -71,7 +71,8 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     // ---------------------------------------------------------------- outputs
     reg [7:0] rq_v; reg [15:0] rq_d; reg cq_v; reg [336:0] cq_d;
     for (genvar l = 0; l < 8; l = l + 1) begin : g_rq assign vm_rq[17*l +: 17] = {rq_v[l], rq_d}; end   // sector is don't-care when !v
-    assign cq = {cq_v, cq_d};
+    // The constant fields read as constants: the flops synthesis folds are X until the first write (LEC, DIE-HBM-62).
+    assign cq = {cq_v, 1'b1, 11'd0, 1'b0, cq_d[323:309], 5'd0, cq_d[303:16], 14'h1E80, 1'b0, cq_d[0]};
     localparam [3:0] E_IDLE=0, E_CHK=1, E_ROW=2, E_RD=3, E_WAIT=4, E_W0=5, E_W1=6, E_END=7;
     // HBM-CORE-LAT-R5 10-27: keep the RTL binary state code (no Yosys one-hot recode). The recode is legal (only the 8 codes
     // E_IDLE..E_END are reachable, st[3] == 0: proof in results/hbm_core_lat_r5_argmax) but the LEC cannot certify the
@@ -82,8 +83,12 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     wire legal = n_p != 18'd0 && imm_p < 18'd262143 &&
                  (mode_p || (am_p ? ab_p[17:16] == 2'd0 : ab_p[17:16] == sid)) &&
                  ob_p[17:16] == sid && ((ob_p + {2'd0, ois_p}) >> 16) == {16'd0, sid};
+    // mode_p is constant on this VM engine: mode_q resets to that constant instead of holding X until the first go.
+    always @(posedge clk or negedge rst_ctl)
+        if (!rst_ctl) mode_q <= 1'b0;
+        else if (go_p && !busy_i) mode_q <= mode_p;
     always @(posedge clk) if (go_p && !busy_i) begin
-        mode_q <= mode_p; am_q <= am_p; imm_q <= imm_p; ab_q <= ab_p; n_q <= n_p; ob_q <= ob_p;
+        am_q <= am_p; imm_q <= imm_p; ab_q <= ab_p; n_q <= n_p; ob_q <= ob_p;
         ois_q <= ois_p; legal_q <= legal;
     end
     // ---------------------------------------------------------------- VM reader (one sector per edge)
@@ -129,7 +134,7 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
         end
     end
     wire o_v, o_nan, o_f, o_rf; wire [17:0] o_idx; wire [31:0] o_val;
-    ot_hgi_argmax18_m #(.LP(8), .GENERIC18(1), .RANK_W(RANK_W)) u_e (.clk(clk), .rst_n(rst_eng), .in_v(e_v), .in_last(e_last),
+    ot_hgi_argmax18_m #(.LP(8), .GENERIC18(1), .RANK_W(RANK_W), .TI_CONST(1)) u_e (.clk(clk), .rst_n(rst_eng), .in_v(e_v), .in_last(e_last),
         .in_bias_en(e_be), .in_mask(e_m), .in_vals(e_vals), .in_bias(e_bias), .cfg_rank(RANK_W'(die_id_q)), .cfg_imm_a(imm_q),
         .out_v(o_v), .out_idx(o_idx), .out_nan(o_nan), .fault(o_f), .out_range_fault(o_rf), .out_value(o_val));
     // ---------------------------------------------------------------- result and writes

@@ -27,6 +27,7 @@ module ot_hgi_argmax18_value_m #(
     parameter integer LP   = 8,       // lanes a beat (power of two)
     parameter integer IW   = 17,      // index width (vocabulary)
     parameter integer FLAT = 7,       // ot_gpu_fadd latency (the 1.2 GHz SS depth)
+    parameter integer TI_CONST = 0,   // 1: tree index bits fixed by the lane position read as constants (ti_view)
     parameter integer FAST = 0        // 1: 1.2 GHz SS successor: the beat's keys / mask / index / NaN flags are
                                       //    registered before the lane update, and the fault flag is registered:
                                       //    every output one cycle later, values unchanged
@@ -175,6 +176,15 @@ module ot_hgi_argmax18_value_m #(
             out_v <= tv[LL];
         end
     end
+    // Entry e of level lv only holds lanes e*2^lv ..: index bits [LL-1:lv] equal e once loaded (lane j carries b*LP + j).
+    function automatic [IW-1:0] ti_view(input [IW-1:0] x, input integer lv_i, input integer e_i);
+        integer b;
+        begin
+            ti_view = x;
+            if (TI_CONST != 0)
+                for (b = lv_i; b < LL; b = b + 1) ti_view[b] = e_i[b - lv_i];
+        end
+    endfunction
     // level 0 = the lane bests; level l+1 = pairwise winners of level l
     always @(posedge clk) begin
         if (fin) begin
@@ -186,10 +196,10 @@ module ot_hgi_argmax18_value_m #(
         for (lv = 0; lv < LL; lv = lv + 1) begin
             for (e = 0; e < (LP >> (lv + 1)); e = e + 1) begin
                 if (!tvl[lv][2*e+1] || (tvl[lv][2*e] && (tk[lv][2*e] > tk[lv][2*e+1] ||
-                    (tk[lv][2*e] == tk[lv][2*e+1] && ti[lv][2*e] < ti[lv][2*e+1])))) begin
-                    tbits[lv+1][e] <= tbits[lv][2*e]; tk[lv+1][e] <= tk[lv][2*e]; ti[lv+1][e] <= ti[lv][2*e]; tvl[lv+1][e] <= tvl[lv][2*e];
+                    (tk[lv][2*e] == tk[lv][2*e+1] && ti_view(ti[lv][2*e], lv, 2*e) < ti_view(ti[lv][2*e+1], lv, 2*e+1))))) begin
+                    tbits[lv+1][e] <= tbits[lv][2*e]; tk[lv+1][e] <= tk[lv][2*e]; ti[lv+1][e] <= ti_view(ti[lv][2*e], lv, 2*e); tvl[lv+1][e] <= tvl[lv][2*e];
                 end else begin
-                    tbits[lv+1][e] <= tbits[lv][2*e+1]; tk[lv+1][e] <= tk[lv][2*e+1]; ti[lv+1][e] <= ti[lv][2*e+1]; tvl[lv+1][e] <= tvl[lv][2*e+1];
+                    tbits[lv+1][e] <= tbits[lv][2*e+1]; tk[lv+1][e] <= tk[lv][2*e+1]; ti[lv+1][e] <= ti_view(ti[lv][2*e+1], lv, 2*e+1); tvl[lv+1][e] <= tvl[lv][2*e+1];
                 end
             end
             tnan[lv+1] <= tnan[lv];
