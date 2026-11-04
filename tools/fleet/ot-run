@@ -1802,22 +1802,45 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     return rc
 
 
+def spill_stage_protected(r):
+    """True when PROTECTED-DBS.txt names r, a path inside r or a parent of r.  Unreadable list = protected (keep the copy)."""
+    try:
+        lines = open(os.path.expanduser("~/coord/PROTECTED-DBS.txt")).read().splitlines()
+    except OSError:
+        return True
+    base = r.rstrip("/")
+    for ln in lines:
+        for w in ln.split():
+            w = w.split(":", 1)[1] if re.match(r"^[A-Za-z0-9_.-]+:/", w) else w
+            if w.startswith("/") and (w.rstrip("/") == base or w.startswith(base + "/") or base.startswith(w.rstrip("/") + "/")):
+                return True
+    return False
+
+
+def spill_drop_cmd(r, mk, mk2):
+    """the remote command: no depth limit (ECO records sit at K/eco_<stamp>/i<n>/signoff/signoff.json), any .keep or SIGNED
+    signoff.json anywhere keeps the copy, and a find that fails keeps it too (fail closed)."""
+    q = shlex.quote(r)
+    return (f"test -d {q} && {{ test -e {mk} || test -e {mk2}; }} && "
+            f"o=$(find {q} \\( -name .keep -print \\) -o \\( -name signoff.json -exec sh -c 'grep -l SIGNED \"$@\"; test $? -le 1' sh {{}} + \\)) && test -z \"$o\" "
+            f"&& rm -rf {q} && echo DROPPED")
+
+
 def spill_drop_stage(dst, roots, say=lambda m: None):
     """KW-FIX-5 2026-11-03: a --stage copy is scratch once its outputs are back (kit-wave left ~2-30 GB per spilled kit on the
     destination, COORD disk order).  Only --stage directories below a lane root that carries the spill marker, never one
-    holding a SIGNED signoff.json, and never a file (the runner sits inside the kit or stays)."""
+    holding a SIGNED signoff.json or a .keep at any depth, and never a PROTECTED-DBS entry (COORD 00:0x)."""
     if not STAGE:
         return
     for r in roots:
         m = SCRATCH_RE.match(r)
-        if not m or not m.group(2) or r.rstrip("/") == m.group(1):
+        if not m or not m.group(2) or r.rstrip("/") == m.group(1) or spill_stage_protected(r):
             continue
-        q, mk, mk2 = shlex.quote(r), shlex.quote(m.group(1) + "/" + SPILL_MARK), shlex.quote(r + "/" + SPILL_MARK)
-        c = (f"test -d {q} && {{ test -e {mk} || test -e {mk2}; }} && ! find {q} -maxdepth 3 -name signoff.json -exec grep -l SIGNED {{}} + 2>/dev/null | grep -q . "
-             f"&& rm -rf {q} && echo DROPPED")
+        mk, mk2 = shlex.quote(m.group(1) + "/" + SPILL_MARK), shlex.quote(r + "/" + SPILL_MARK)
         try:
-            if "DROPPED" in ssh_sh(dst, c, timeout=300).stdout:
+            if "DROPPED" in ssh_sh(dst, spill_drop_cmd(r, mk, mk2), timeout=300).stdout:
                 say(f"ot-run: SPILL: dropped the stage copy {r} on {dst}")
+                log_signal(f"SPILL-DROP {r} on {dst}")
         except Exception:
             pass
 

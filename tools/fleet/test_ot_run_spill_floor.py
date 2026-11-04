@@ -33,8 +33,53 @@ def test_drop_stage_only_under_a_lane():
     m = load()
     calls = []
     m.ssh_sh = lambda h, c, timeout=0: calls.append(c) or type("R", (), {"stdout": "DROPPED"})()
+    m.spill_stage_protected = lambda r: False
     m.spill_drop_stage("epyc4", ["/srv/opentallas-scratch2/claude/l/k"])
     assert not calls                                   # not a --stage job
     m.STAGE.append("/srv/opentallas-scratch2/claude/l/k")
     m.spill_drop_stage("epyc4", ["/srv/opentallas-scratch2/claude/l", "/tmp/x", "/srv/opentallas-scratch2/claude/l/k"])
     assert len(calls) == 1 and "SIGNED" in calls[0] and ".ot-run-spill-copy" in calls[0]
+    assert "-maxdepth" not in calls[0] and ".keep" in calls[0]
+    calls.clear()
+    m.spill_stage_protected = lambda r: True
+    m.spill_drop_stage("epyc4", ["/srv/opentallas-scratch2/claude/l/k"])
+    assert not calls                                   # a PROTECTED-DBS entry is never dropped
+
+
+def _drop(tmp_path, setup):
+    import shlex, subprocess
+    m = load()
+    r = tmp_path / "stage"
+    r.mkdir()
+    (tmp_path / "mark").touch()
+    setup(r)
+    out = subprocess.run(["sh", "-c", m.spill_drop_cmd(str(r), shlex.quote(str(tmp_path / "mark")), shlex.quote(str(r / "nomark")))],
+                         capture_output=True, text=True).stdout
+    return "DROPPED" in out, r.exists()
+
+
+def _put(r, rel, txt=""):
+    p = r / rel
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(txt)
+
+
+def test_drop_only_without_signed_or_keep_at_any_depth(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir(); (tmp_path / "c").mkdir(); (tmp_path / "d").mkdir()
+    assert _drop(tmp_path / "a", lambda r: _put(r, "x/signoff.json", "FAILED")) == (True, False)
+    assert _drop(tmp_path / "b", lambda r: _put(r, "K/eco_1/i2/signoff/signoff.json", "SIGNED")) == (False, True)
+    assert _drop(tmp_path / "c", lambda r: _put(r, "a/b/c/d/.keep")) == (False, True)
+    assert _drop(tmp_path / "d", lambda r: (_put(r, "a/signoff.json", "FAILED"), _put(r, "b/signoff.json", "SIGNED"))) == (False, True)
+
+
+def test_protected_list_names_entry_child_or_parent(tmp_path, monkeypatch):
+    m = load()
+    d = tmp_path / "coord"; d.mkdir()
+    (d / "PROTECTED-DBS.txt").write_text("intel1\t/srv/x/claude/a/b\tnote\nepyc2:/srv/x/claude/c note\n")
+    monkeypatch.setattr(m.os.path, "expanduser", lambda p: str(tmp_path / p[2:]))
+    assert m.spill_stage_protected("/srv/x/claude/a/b")
+    assert m.spill_stage_protected("/srv/x/claude/a")
+    assert m.spill_stage_protected("/srv/x/claude/c/k")
+    assert not m.spill_stage_protected("/srv/x/claude/z")
+    (d / "PROTECTED-DBS.txt").unlink()
+    assert m.spill_stage_protected("/srv/x/claude/z")                  # unreadable list keeps the copy
