@@ -105,7 +105,8 @@ def test_reset_tcl_resolves_physical_name():
     T["core_resets"][0].pop("physical_inst")
     line = next(x for x in RT.tcl_text(T).splitlines() if "lappend rtr_ci" in x)
     assert line == ("foreach i [$ff_blk getInsts] { set n [string map {\\\\[ [ \\\\] ]} [$i getName]]; if {$n eq {u_r0.u_e0} || [string range $n "
-                    "end-[string length {u_r0.u_e0}] end] eq {/u_r0.u_e0}} { lappend rtr_ci $i } }")   # unchanged form
+                    "end-[string length {u_r0.u_e0}] end] eq {/u_r0.u_e0} || [string range $n end-[string length {u_r0.u_e0}] end] eq {.u_r0.u_e0}} "
+                    "{ lappend rtr_ci $i } }")   # no physical_inst: exact, /inst or .inst (flat core u_bound.<inst>)
 
 
 def test_flat_core_names_resolve_inside_wrapper():
