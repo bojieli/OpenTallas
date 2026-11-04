@@ -188,11 +188,15 @@ DIE-S81-55	a81150d323968edf0	DEAD 07:4x session limit, successor 08:2x
 SS28-RESIGN	a1d3ffcf5e0d943cb	DEAD 07:4x session limit, successor 08:2x
 ROOT-MERGE-31	a9d3e8f2ea4564cbb	LIVE 08:2x I34 + next train
 KW-FIX-8	a9c8f8f444f5c35c0	LIVE 08:2x successor of KW-FIX-7
-FLOW-31	a152e4df3368f1db8	LIVE 08:2x ot-run per-root reservations
-PRUNE-1104N	a11c6a433c7295ed5	LIVE 08:2x successor of PRUNE-1104M
+FLOW-31	a152e4df3368f1db8	DONE 09:3x
+PRUNE-1104N	a11c6a433c7295ed5	DONE 12:3x was LIVE 08:2x successor of PRUNE-1104M
 DIE-S81-56	a59b96587f81b1e78	LIVE 08:2x successor of DIE-S81-55
 DIE-HEAD-62	a9c68f19e3afb629a	LIVE 08:2x successor of DIE-HEAD-61
 DIE-QC-70	a47a0a22f3fe52d6e	LIVE 08:2x successor of DIE-QC-69
 DIE-KV-69	a40e6c5de1074cbac	LIVE 08:2x successor of DIE-KV-68
-DIE-HBM-65	a4820504720dca6c7	LIVE 08:2x successor of DIE-HBM-64
+DIE-HBM-65	a4820504720dca6c7	PARKED 09:15 successor DIE-HBM-66
 SS29-RESIGN	a6d0bcac07ca01171	LIVE 08:2x successor of SS28-RESIGN
+DIE-HBM-66	a0748a50aabeee1e5	LIVE 09:1x successor of DIE-HBM-65
+FLOW-32	a3682ddce592ac83a	DONE 10:1x
+FLOW-33	a64e70b7acde64907	LIVE 12:2x hbm_sram canary read
+PRUNE-1104P	a8e2071389889ba78	LIVE 12:3x epyc2 scratch successor of PRUNE-1104N
