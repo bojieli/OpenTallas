@@ -257,8 +257,10 @@ def io_tcl(pins, w, h, tag, clock_entry=None):
         if clock_entry and p["layer"] == "M5" and f in "EW" and p.get("w") is None:
             # DIE-HBM-62/FLOW class M5-EW-PIN (hnx_vms_bank_q0_faces v796f rst_n: DRT-0422/DRT-0074 no access point): M5
             # tracks are vertical, so a face stub along x on an E/W face has no track through it.  Same y and face as the
-            # plan, in the proven on-track entry form that clock pins already use on those faces.
-            cx, cy, (sx, sy), f2 = clock_entry_pin(p, w, h, clock_entry["m5"])
+            # plan, in the proven on-track entry form that clock pins already use on those faces.  A plan point a few um
+            # inside the face still means that face (as the stub form below projects it), so it goes in on the face.
+            on_face = dict(p, x=w if f == "E" else 0.0)
+            cx, cy, (sx, sy), f2 = clock_entry_pin(on_face, w, h, clock_entry["m5"])
             out.append(f"place_pin -pin_name {{{p['name']}}} -layer M5 -location {{{cx:.4f} {cy:.4f}}} "
                        f"-pin_size {{{sx:.4f} {sy:.4f}}}")
             b, i = split_name(p["name"])
