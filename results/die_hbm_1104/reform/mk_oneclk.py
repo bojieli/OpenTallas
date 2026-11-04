@@ -56,7 +56,8 @@ if a.wrap:
         n = width(e, w)
         return f".{m[1]}({'clk' if n == 1 else '{%d{clk}}' % n})"
     s = re.sub(r"\.(\w+)\(\s*([^()]*?)\s*\)", conn, s)
-    if re.search(r"\b(" + names + r")\b", re.sub(r"//.*", "", s)): raise SystemExit(f"{a.module}: clock name left in wrapper")
+    left = re.sub(r"\.\w+\(", "(", re.sub(r"//.*", "", s))   # instance port names may keep the clock's name
+    if re.search(r"\b(" + "|".join(re.escape(n) for n in ckbus if n != "clk") + r")\b", left): raise SystemExit(f"{a.module}: clock name left in wrapper")
     txt = HDR + s
 else:
     if not (a.rename_top and a.portlist): raise SystemExit("--wrap or --rename-top + --portlist")
