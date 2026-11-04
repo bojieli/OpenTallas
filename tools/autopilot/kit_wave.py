@@ -1009,6 +1009,18 @@ def core_kit_cmds(ck, src, plan, root, work, item):
     return views, vcmd, gen, find, c["runner"]
 
 
+ENV_KEY_RE, ENV_VAL_RE = re.compile(r"OT_[A-Z0-9_]+"), re.compile(r"[A-Za-z0-9_.,:=+-]*")
+
+
+def item_env(d, item):
+    """die item_env[item] -> {OT_*: value} (validated: OT_ names, shell-safe values; anything else raises)"""
+    env = dict((d.get("item_env") or {}).get(item) or {})
+    for k, v in env.items():
+        if not ENV_KEY_RE.fullmatch(str(k)) or not ENV_VAL_RE.fullmatch(str(v)):
+            raise ValueError(f"item_env {item}: {k}={v!r} (OT_* names, [A-Za-z0-9_.,:=+-] values)")
+    return {str(k): str(v) for k, v in sorted(env.items())}
+
+
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
@@ -1021,6 +1033,9 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "core_kit": dict(d.get("core_kit") or {}, args=list((d.get("core_kit") or {}).get("args") or [])
                              + list(((d.get("core_kit") or {}).get("item_args") or {}).get(core_module(item)) or []))
                         if d.get("core_kit") else {},
+            # die option item_env {item: {OT_*: value}}: generation environment of that item's gen.py phys only
+            # (e.g. OT_IO_HOLD=sender_min, a die-owner input-hold contract ruling on one type; plan clock.io_hold wins)
+            "gen_env": item_env(d, item),
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
             # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
@@ -1612,7 +1627,8 @@ def run_item(spec_path):
                f"PS='--cland-pinslot {ps}'; else echo 'KW_NOTE gen.py of this source has no --cland-pinslot (plan list only)'; fi; "
                if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
         rgp, rga = region_guide_cmd(sp, False)
-        gen = (f"cd {q(src)} && {pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
+        genv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items()))
+        gen = (f"cd {q(src)} && {genv}{pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
                f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}")
         rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
         if rc:

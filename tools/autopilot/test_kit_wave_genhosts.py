@@ -187,3 +187,15 @@ def test_spill_marked_probe():
     assert got == {"epyc4": {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"}}
     assert len(calls) == 1 and calls[0][-2] == "epyc4" and ".ot-run-spill-copy" in calls[0][-1]
     assert K.lane_root("/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v") == "/srv/opentallas-scratch2/claude/kit-wave"
+
+
+def test_item_env():
+    """item_env: per-item gen environment (DIE-HEAD-58 hd_mesh_e OT_IO_HOLD=sender_min), validated"""
+    d = {"item_env": {"hd_mesh_e": {"OT_IO_HOLD": "sender_min"}}}
+    assert K.item_env(d, "hd_mesh_e") == {"OT_IO_HOLD": "sender_min"}
+    assert K.item_env(d, "hd_mesh") == {}
+    import pytest
+    with pytest.raises(ValueError):
+        K.item_env({"item_env": {"x": {"PATH": "/tmp"}}}, "x")
+    with pytest.raises(ValueError):
+        K.item_env({"item_env": {"x": {"OT_A": "a; rm -rf /"}}}, "x")
