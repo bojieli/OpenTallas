@@ -40,6 +40,7 @@ module ot_hgi_sm_xload_cl2_bfqg #(parameter integer RPR=1, RPMUT=0) (
         if (!rn_l[0]) wce_q <= 1'b0; else wce_q <= wce;
     end
     wire [255:0] cap [0:7];
+    wire [7:0] rp_ce_all;  // RPMUT 3 source (rtl_lint: no hierarchical reference)
     for (genvar gt=0;gt<8;gt=gt+1) begin:g_t
         (* keep = 1 *) reg mask_hi,mask_lo,rp_ce;
         reg rp_sel;
@@ -49,6 +50,7 @@ module ot_hgi_sm_xload_cl2_bfqg #(parameter integer RPR=1, RPMUT=0) (
         always @(posedge clk_ctrl) begin
             if (!rn_l[0]) rp_ce <= 1'b0; else rp_ce <= r_ce[gt];
         end
+        assign rp_ce_all[gt] = rp_ce;
         wire [255:0] sel_v;
         if (RPR > 1) begin:g_rpr
             (* keep = 1 *) reg [RPR-1:0] rp_sel_r;
@@ -58,7 +60,7 @@ module ot_hgi_sm_xload_cl2_bfqg #(parameter integer RPR=1, RPMUT=0) (
                 else for (k=0;k<RPR;k=k+1) rp_sel_r[k] <=
                     (RPMUT==1 && gt==2 && k==5) ? r_ce[gt] :
                     (RPMUT==2 && gt==4 && k==9) ? 1'b1 :
-                    (RPMUT==3 && gt==6 && k==0) ? g_t[7].rp_ce : rp_ce;
+                    (RPMUT==3 && gt==6 && k==0) ? rp_ce_all[7] : rp_ce;
             end
             for (genvar b=0;b<256;b=b+1) begin:g_b
                 assign sel_v[b] = rp_sel_r[(b*RPR)/256];
