@@ -1905,7 +1905,10 @@ def main():
                 "export MACRO_PLACE_HALO = 4.32 4.32",
                 *([f"export SYNTH_BLACKBOXES = {' '.join(hard_children['children'])}",
                    "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if hard_children else []),
-                "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5"]
+                # RF-KV1 11-03: a recipe / --orfs-var CTS_ARGS (emitted above) is not overridden by the macro default
+                *([] if "CTS_ARGS" in rec.get("orfs_vars", {}) or any(kv.split("=", 1)[0].strip() == "CTS_ARGS"
+                                                                      for kv in a.orfs_var) else
+                  ["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5"])]
     if ifp_standins:   # DIE-KV-60/adp 11-01: rotated-only-fit hard children (IFP-0002), chained before other hooks
         pre = [l for l in cfg if l.startswith("export PRE_FLOORPLAN_TCL = ")]
         cfg = [l for l in cfg if not l.startswith("export PRE_FLOORPLAN_TCL = ")]
