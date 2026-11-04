@@ -21,10 +21,10 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch3/claude/kw-fix-6/kvsrc/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
-   "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch3/claude/kw-fix-6/kvsrc",
-   "src_sha": "aa5b73dff5b3a64d869dd1a3571392f56ab45f33",
+   "plan": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kvi8/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "gen_host": "intel1",
+   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kvi8",
+   "src_sha": "34659669869dcd7841e5a0dfee72b277ecc881ed",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
@@ -35,7 +35,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch3/claude/kw-fix-6/kvsrc/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kvi8/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -213,14 +213,14 @@
     "kv3_phy",
     "kv3_phy_v1"
    ],
-   "note": "KW-FIX-6 05:0x: KV event I24 plan_c c3ca3c1de69f, src = main aa5b73dff5b (tag flow-20261104-c-kv) on epyc4; gen off intel1 (COORD 04:20). ft exports held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
+   "note": "KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
    "die_max_inflight": 60,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
    "src_follow": {
     "enabled": false,
     "root": "/srv/opentallas-scratch2/claude/source-follow-kv64-pv2",
-    "note": "KW-FIX-6 05:0x: stays off, src set at the event. | KW-FIX-6 03:5x: follow PAUSED until DIE-KV-66's KV plan event (COORD 01:2x: no KV exporter builds on root-clk senders between FWDCLK merge and event); re-enable or set src at the event | KW-FIX-4 14:1x: 98e13b8bfec merged on main -> follow re-enabled (root source-follow-kv64, rebases from pvrec/bind_pv). | KW-FIX-4 14:0x: follow PAUSED until claude/kw-fix-4-kvnote-1103@98e13b8bfec merges (main 88f2e7ecac1/4b0a73deb5f plan_c has budgets.cland_note_kv64_1103 -> schema \"unknown key\" -> every KV gen phys \"plan invalid\"); following main now would re-adopt the broken plan; re-enable on merge. | KW-FIX-4 13:5x: follow rebases from the DIE-KV-64 pvrec recipe + bind_pv; fresh root source-follow-kv64 so no snapshot reuses a bind copied from the pre-pvrec 54c3 recipe (old root snapshots 88f2e7ecac18/4b0a73deb5f9 lack kv3_pv_pair map). | DIE-KV-61 fresh ELAB+strict0 at 54c3c7c9f adopted (cached efa elab refused: group_r2c_native.sv changed). Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
+    "note": "KW-FIX-6 03:5x: follow PAUSED until DIE-KV-66's KV plan event (COORD 01:2x: no KV exporter builds on root-clk senders between FWDCLK merge and event); re-enable or set src at the event | KW-FIX-4 14:1x: 98e13b8bfec merged on main -> follow re-enabled (root source-follow-kv64, rebases from pvrec/bind_pv). | KW-FIX-4 14:0x: follow PAUSED until claude/kw-fix-4-kvnote-1103@98e13b8bfec merges (main 88f2e7ecac1/4b0a73deb5f plan_c has budgets.cland_note_kv64_1103 -> schema \"unknown key\" -> every KV gen phys \"plan invalid\"); following main now would re-adopt the broken plan; re-enable on merge. | KW-FIX-4 13:5x: follow rebases from the DIE-KV-64 pvrec recipe + bind_pv; fresh root source-follow-kv64 so no snapshot reuses a bind copied from the pre-pvrec 54c3 recipe (old root snapshots 88f2e7ecac18/4b0a73deb5f9 lack kv3_pv_pair map). | DIE-KV-61 fresh ELAB+strict0 at 54c3c7c9f adopted (cached efa elab refused: group_r2c_native.sv changed). Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
     "snapshot_kind": "bind",
     "snapshot_bind": "/srv/opentallas-scratch2/claude/die-kv-64/bind_pv2",
     "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
@@ -229,9 +229,7 @@
    "hold_items": {
     "kv3_hub_C": "Known actual GEN_LINT OOM at8GB and measured16GB (rc137,16,726,636KiB); typed AHUB/CTL hard-child closure required, no blind memory escalation or same-flat-source retry.",
     "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post",
-    "qkd_hr_core_prompt": "DIE-KV-64 19:0x: NO_RECIPE no PASS hr face proof; proof re-run die-kv-64/fpjobs/qkd_hr_core_prompt; KW-FIX-4 adds --fp-root on PASS",
-    "kv3_io_ft": "COORD 04:41/04:4x KV batch: ft exports stay out until pilot ioft_a2 reads (DIE-KV-66, ft_ring_max_ps)",
-    "kv3_io_ft_v1": "COORD 04:41/04:4x KV batch: ft exports stay out until pilot ioft_a2 reads (DIE-KV-66, ft_ring_max_ps)"
+    "qkd_hr_core_prompt": "DIE-KV-64 19:0x: NO_RECIPE no PASS hr face proof; proof re-run die-kv-64/fpjobs/qkd_hr_core_prompt; KW-FIX-4 adds --fp-root on PASS"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave",
    "retry_fix": {
@@ -404,7 +402,7 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "main@aa5b73dff5b3a64d869dd1a3571392f56ab45f33",
+   "queue_src": "main@34659669869",
    "hold_items_released": {
     "kv3_pc": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -417,10 +415,8 @@
    },
    "hosts": [
     "epyc4",
+    "intel1",
     "intel2"
-   ],
-   "gen_hosts": [
-    "epyc4"
    ]
   },
   "s81": {
