@@ -499,14 +499,14 @@
     "clock": "PASS",
     "evidence": "KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch3/claude/kw-fix-8/src_q/physical/die_plan/s81/plan_h2_2249.json",
+   "plan": "/srv/opentallas-scratch3/claude/kw-fix-8/src_r/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_q",
-   "src_sha": "bf1e2233ce051aed7a93626f129f760bf34351df",
+   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_r",
+   "src_sha": "f8170b8b778fa5e43f1499e23d7f7f26fe2596ad",
    "kit_rtl": {
     "mode": "script",
     "script": "/srv/opentallas-scratch3/claude/kw-fix-8/kit_rtl_q.sh",
-    "note": "KW-FIX-8 fall tag: S81 on src_q main bf1e2233ce0 with strict bind_sp (src_p; bind inputs same, ring-only delta), 16 C types | 17:03 KW-FIX-4 I2 batch: src kw-fix-4-s81i2 = main 4b09653bef8 (RESET-CORE ef3c0b855a4 + RF-D form 5 451deb44c63 + KV pvname + HEAD turnb), bind_h10 unchanged (plan_h2_2249 unchanged 39a2->4b09) | KW-FIX-4 15:0x: S81-RF1 batch = main 39a2fae866 (RF1 06a3d7e0268 + RF-D d4fe8ba0063 + plain-lane budget 721f34fddf0); strict bind bind_h10 (elab+bind --strict on plan_h2_2249 @39a2fae866, asbuilt asbuilt_b178_coll_h2_2249) errors 0 | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KIT-WAVE-15 19:1x: kw15d = kw15b recipe on the second locked sparse intel1 wt kit-wave-15-s81b @ main 6defc3c2306 (stnbank f6fd665d117 + col2 d451a87c958 on ccband 99172ad7946); wt kit-wave-15-s81 (99172) is still read by in-flight items, so the two wts alternate (one per die in use + one being prepared). Smoke kw15d kit_rtl+gen 4/4 PASS. | KIT-WAVE-15 18:3x ccband: same recipe as kw15b on the same locked wt kit-wave-15-s81, updated in place to main 99172ad7946 (ccband 0c1986bda + leafmean 0f7194720bb + sfuntracked). Smoke kw15c kit_rtl+gen 4/4 PASS; every smoke kit stages core_clock_band.py. | KIT-WAVE-15 17:2x (collect 1 of KIT-WAVE-14): canonical strict bind die-s81-47/bind_ev2 + current readset overlay (108 remapped; CHANGED rtl/dsdv_svc_sx.sv = main 3d45bed4e gout fix) on locked sparse intel1 wt kit-wave-15-s81 @ main 951cc627353 (kcc 0179511885c nested-leaf fix, leafmean 884eca70689, canreg, KV adp, HBM d44q, samplegap, 9cc"
+    "note": "KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: S81 on src_q main bf1e2233ce0 with strict bind_sp (src_p; bind inputs same, ring-only delta), 16 C types | 17:03 KW-FIX-4 I2 batch: src kw-fix-4-s81i2 = main 4b09653bef8 (RESET-CORE ef3c0b855a4 + RF-D form 5 451deb44c63 + KV pvname + HEAD turnb), bind_h10 unchanged (plan_h2_2249 unchanged 39a2->4b09) | KW-FIX-4 15:0x: S81-RF1 batch = main 39a2fae866 (RF1 06a3d7e0268 + RF-D d4fe8ba0063 + plain-lane budget 721f34fddf0); strict bind bind_h10 (elab+bind --strict on plan_h2_2249 @39a2fae866, asbuilt asbuilt_b178_coll_h2_2249) errors 0 | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KIT-WAVE-15 19:1x: kw15d = kw15b recipe on the second locked sparse intel1 wt kit-wave-15-s81b @ main 6defc3c2306 (stnbank f6fd665d117 + col2 d451a87c958 on ccband 99172ad7946); wt kit-wave-15-s81 (99172) is still read by in-flight items, so the two wts alternate (one per die in use + one being prepared). Smoke kw15d kit_rtl+gen 4/4 PASS. | KIT-WAVE-15 18:3x ccband: same recipe as kw15b on the same locked wt kit-wave-15-s81, updated in place to main 99172ad7946 (ccband 0c1986bda + leafmean 0f7194720bb + sfuntracked). Smoke kw15c kit_rtl+gen 4/4 PASS; every smoke kit stages core_clock_band.py. | KIT-WAVE-15 17:2x (collect 1 of KIT-WAVE-14): canonical strict bind die-s81-47/bind_ev2 + current readset overlay (108 remapped; CHANGED rtl/dsdv_svc_sx.sv = main 3d45bed4e gout fix) on locked sparse intel1 wt kit-wave-15-s81 @ main 951cc627353 (kcc 0179511885c nested-leaf fix, leafmean 884eca70689, canreg, KV adp, HBM d44q, samplegap, 9cc"
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -514,7 +514,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch3/claude/kw-fix-8/src_q/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+    "/srv/opentallas-scratch3/claude/kw-fix-8/src_r/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
    ],
    "owner_lane": "DIE-S81-50",
    "lane": "KIT-WAVE-3",
@@ -634,20 +634,12 @@
     "col_h9_r0_p5__t1@1",
     "col_h9_r1__t1__cl49d7a23e@2",
     "col_h9_r1__t1__clf32cde8d@3",
-    "dsdv_slice_c1x_C__t1@1",
-    "dsdv_slice_c1x_C__t3@1",
     "dsdv_slice_c1x_C__t6@2",
-    "dsdv_slice_c1x_C__t8@1",
-    "dsdv_slice_c1x_C__t9@1",
-    "dsdv_slice_c3x_C__t1@1",
     "dsdv_slice_iq_C__t1@1",
-    "dsdv_slice_lepe_mu_C__t1@1",
     "dsdv_slice_lepe_mu_LP__t2@1",
     "dsdv_slice_lepe_nh_mus_C__t1@2",
     "dsdv_slice_lepe_nh_mus_LP__t1@1",
-    "dsdv_slice_lepw_mu_C__t1@1",
     "dsdv_slice_lepw_mu_LP__t2@2",
-    "dsdv_slice_lepw_mus_C__t1@1",
     "dsdv_slice_lepw_mus_LP__t2@1",
     "eng__t1@1",
     "iqf__t1@1",
@@ -1095,10 +1087,7 @@
     "ot_s81sl_leaf__t75@5",
     "ot_s81sl_leaf__t8@5",
     "ot_s81sl_leaf__t9@5",
-    "dsdv_slice_c1x_C__t10@1",
     "dsdv_slice_c1x_C__t4@3",
-    "dsdv_slice_c1x_C__t5@1",
-    "dsdv_slice_c1x_C__t7@1",
     "dsdv_slice_kv512_C__t1@2",
     "ot_s81sl_kv_leaf__t5@4",
     "ot_s81sl_leaf__t13@6",
@@ -1371,7 +1360,8 @@
     "gunit__t1@3",
     "bk_sel__t2@2",
     "gunit__t1@1",
-    "slice_station__t17@4"
+    "slice_station__t17@4",
+    "slice_station__t38@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1432,7 +1422,7 @@
     "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
     "svc_lo_dsdv_svc_rs__t4": "COORD 11:0x: 42400-bit behavioural memory fails GEN_LINT every retry; release at svc MEM v2 event"
    },
-   "queue_src": "claude/kw8-srcn-1104@90ad150b102e16940e6939cb09fd9074ff9f465d",
+   "queue_src": "main@f8170b8b778fa5e43f1499e23d7f7f26fe2596ad",
    "work_root": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
@@ -1961,7 +1951,8 @@
     "ot_s81sl_leaf__t32@11": "RM-31 09:42 (c) small b51373145a5 on tag n-s81",
     "bk_sel__t2@2": "RM-31 09:42 (d) selt b979201e97 on tag n-s81",
     "gunit__t1@1": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)",
-    "slice_station__t17@4": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)"
+    "slice_station__t17@4": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)",
+    "slice_station__t38@4": "KW-FIX-8 11-04 I44 rstleaf 84f5a49e989: OT_RESET_LEAF over target is advisory, main f8170b8b778; COORD 13:02"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -2026,12 +2017,12 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/dh61/oneplan/prepared_l48ua/source_plan.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_q",
-   "src_sha": "bf1e2233ce051aed7a93626f129f760bf34351df",
+   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_r",
+   "src_sha": "f8170b8b778fa5e43f1499e23d7f7f26fe2596ad",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch3/claude/kw-fix-8/src_q/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
-    "note": "KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
+    "script": "/srv/opentallas-scratch3/claude/kw-fix-8/src_r/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "note": "KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
    },
    "gen_args": [
     "--clock-landing",
@@ -2101,7 +2092,8 @@
     "hd_spn_wshim_rx@2",
     "hd_spn_wshim_tx@5",
     "hd_st_n4@1",
-    "hd_turn_a@4"
+    "hd_turn_a@4",
+    "hd_serdes@1"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -2188,14 +2180,15 @@
     "hd_spn_eshim_rx@2": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
     "hd_spn_wshim_rx@2": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
     "hd_spn_wshim_tx@5": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
-    "hd_st_n4@1": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41"
+    "hd_st_n4@1": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
+    "hd_serdes@1": "KW-FIX-8 11-04 I44 rstleaf 84f5a49e989: OT_RESET_LEAF over target is advisory, main f8170b8b778; resume at cts per DIE-HEAD-62"
    },
    "gen_hosts": [
     "epyc4"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
-   "queue_src": "main@fe4a38b9337770e4ed4baeaa9b3b6b947d12da9c",
+   "queue_src": "main@f8170b8b778fa5e43f1499e23d7f7f26fe2596ad",
    "item_env": {
     "hd_ctl": {
      "OT_IO_HOLD": "sender_min"
