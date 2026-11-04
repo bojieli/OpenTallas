@@ -1,0 +1,51 @@
+{
+ "_doc": "DIE-S81-51/RF-H 2026-11-03 3-core bf_col recipes (plan delta physical/die_plan/s81/rfh3/plan_h2_2249_rfh3_bfcol3.json.gz). Conservative form: each core <= 150k cells, own N-face clock entry, regional taps <= 5k sinks per region, registered faces on every inter-core cut. util: the unchanged slot cannot hold 3 cores at 0.45 (est. cell util C ~0.53 / H ~0.57 of the core rows); PLACE_DENSITY just above the estimate.",
+ "ot_v41_bf_col3_c": {
+  "rtl_dirs": true,
+  "hold_ff_margin": 0,
+  "suffix": "rfh3",
+  "params": {
+   "KEEP_XPOS": 1,
+   "BRNECUT": 1
+  },
+  "lec_hints": "results/die_s81_25_bf_1029/lec_hints.json",
+  "ref_tile": "results/rfh_1103/bf_col3/specs/ot_v41_bf_col3_c",
+  "util": 0.62,
+  "macro_sites": {
+   "ot_rom_4096x274_m8": [
+    [
+     42.12,
+     31.008,
+     "R180"
+    ],
+    [
+     42.12,
+     104.784,
+     "MY"
+    ]
+   ]
+  },
+  "regional_taps": {
+   "nx": 2,
+   "ny": 4,
+   "split": "count",
+   "win_ps": 20
+  },
+  "_why": "ROM pair at the old core-local sites (x 42.12, R180 / MY): read bits face both logic channels (W: half faces + capture, E: pin faces + FP lanes); 2x4 regions of ~2.4k sinks"
+ },
+ "ot_v41_bf16_half": {
+  "rtl_dirs": true,
+  "hold_ff_margin": 0,
+  "suffix": "rfh3",
+  "params": {},
+  "ref_tile": "results/rfh_1103/bf_col3/specs/ot_v41_bf16_half",
+  "util": 0.65,
+  "regional_taps": {
+   "nx": 4,
+   "ny": 2,
+   "split": "count",
+   "win_ps": 20
+  },
+  "_why": "one master for u_ha / u_hb (241.92 x 95.04, E-face pins toward the column core); 4x2 regions of ~2.3k sinks (~18.3k flops)"
+ }
+}
