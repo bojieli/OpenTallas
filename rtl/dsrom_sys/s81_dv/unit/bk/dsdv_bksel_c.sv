@@ -12,7 +12,8 @@ module dsdv_bksel_c #(
     // -40 vs core insertion); the half-cycle f_* faces pass and the rest are reg -> reg >= -9.1 ps (hold repair)):
     // 1 = rst lands in a negative-edge flop before u_c (0 cycles: release edge unchanged, rst leaves a posedge flop;
     // assertion half an edge later; pin removal window ~T/2 by construction).  0 = the old form.
-    parameter integer RNF = 0
+    parameter integer RNF = 0,
+    parameter integer LQH = 0   // DIE-S81-52 11-03: 1 = one-hot landing FIFO count in u_c (0 cycles; dsfd_selt_c LQH)
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rst,
@@ -33,7 +34,7 @@ module dsdv_bksel_c #(
 `else
     always @(negedge ck[0]) rst_nf <= rst[0];
 `endif
-    dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4), .PACE(2), .MRG_PIPE(1), .RQPIPE(1), .SLAT(4), .XDX(1)) u_c (.ck(ck), .rst(RNF != 0 ? rst_nf : rst[0]),
+    dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4), .PACE(2), .MRG_PIPE(1), .RQPIPE(1), .SLAT(4), .XDX(1), .LQH(LQH)) u_c (.ck(ck), .rst(RNF != 0 ? rst_nf : rst[0]),
         .f_s({f_s_n, f_s_s}), .f_o({f_o_n, f_o_s}), .t_c(tc), .t_cr(tcr), .vd(vdw), .vf(vf_unused));
     // vdw[513], vdw[501:357]: constant 0; vdw[0]: unread (dropped pins).  Every port bit leaves a flop (+ OLL latch)
     dsdv_bk_oll #(.W(367 + 4*CB + 4), .EN(OLL)) u_oll (.ck(ck[0]),
