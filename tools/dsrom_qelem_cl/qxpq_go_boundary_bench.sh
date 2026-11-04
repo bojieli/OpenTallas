@@ -37,8 +37,8 @@ run() { # name expect seed
 MODE=${3:-all}
 case "$MODE" in
   pass) build pass $PCHK || exit 2; rc=0; for s in 1 2 3; do run pass pass $s || rc=1; done; echo "BENCH_RC $rc"; exit $rc ;;
-  mut_bypass|mut_late|mut_cgr)
-    case $MODE in mut_bypass) D=+define+OT_QXPQ_GO_MUT_BYPASS ;; mut_late) D=+define+TB_MUT_LATE ;; mut_cgr) D=+define+OT_CGR_MUTANT_R3 ;; esac
+  mut_bypass|mut_late|mut_cgr|mut_ifn)
+    case $MODE in mut_bypass) D=+define+OT_QXPQ_GO_MUT_BYPASS ;; mut_late) D=+define+TB_MUT_LATE ;; mut_cgr) D=+define+OT_CGR_MUTANT_R3 ;; mut_ifn) D=+define+OT_QXPQ_IFN_MUT_POS ;; esac
     build $MODE $D || exit 2
     if run $MODE fail 1; then echo "MUTANT_DETECTED $MODE"; exit 1; fi
     echo "MUTANT_ESCAPED $MODE"; exit 0 ;;

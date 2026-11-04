@@ -50,6 +50,8 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
     parameter integer CGR = 0,         // 8 = one clock-gate copy per in-core region (S81-CORE-LAT 2026-10-26; 0 cycles, see qx_pq)
     parameter integer OLAT = 0,        // S81-RF1 (DIE-S81-51/RF-A 2026-11-03): 1 = negative-edge lockup flop after every
                                        // registered output face bit (hold-safe core->parent crossing, 0 cycles; see g_olat)
+    parameter integer IFN = 0,         // S81 RF-J (DIE-S81-52/RF-J 2026-11-03): 1 = one negative-edge flop on every data input pin bit
+                                       // (input hold +T/2, no input hold buffers, 0 cycles for a rising-edge sender; see g_ifn)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -92,6 +94,32 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
     end else begin : g_nrstp
         assign rst_n_e = rst_n;
     end
+    // S81 RF-J IFN (conservative form, input side of the OLAT crossing): rf1s ended at FF -239 on 2342 input endpoints (zero-logic
+    // pin -> posedge flop against a 460 ps insertion).  Every data input bit lands in ONE negative-edge flop first: it samples the
+    // sender's rising-edge launch half a cycle later, and the existing rising-edge logic reads it at the SAME edge it read the pin
+    // (0 cycles at a rising-edge sender; a falling-edge sender would be +1 cycle, the plan senders are rising-edge).  rst_n keeps its
+    // RSTP relay.  Setup: ~+200 ps budget at in_max 166.6 / half cycle 416.  Bench: tb_qxpq_go_boundary +define+TB_DUT_IFN=1.
+    wire cfg_v_i, go_i, xs_v_i; wire [4:0] cfg_a_i; wire [47:0] cfg_d_i; wire [1:0] go_tag_i; wire [7:0] xs_p_i; wire [2:0] xs_b_i, xs_pos_i;
+    wire [255:0] xs_q0_i, xs_q1_i; wire [9:0] xs_e0_i, xs_e1_i;
+    if (IFN != 0) begin : g_ifn
+        reg cfg_v_n, go_n, xs_v_n; reg [4:0] cfg_a_n; reg [47:0] cfg_d_n; reg [1:0] go_tag_n; reg [7:0] xs_p_n; reg [2:0] xs_b_n, xs_pos_n;
+        reg [255:0] xs_q0_n, xs_q1_n; reg [9:0] xs_e0_n, xs_e1_n;
+`ifdef OT_QXPQ_IFN_MUT_POS
+        always @(posedge clk) begin                  // MUTANT: rising-edge copy = one extra cycle (the bench must catch it)
+`else
+        always @(negedge clk) begin
+`endif
+            cfg_v_n <= cfg_v; cfg_a_n <= cfg_a; cfg_d_n <= cfg_d; go_n <= go; go_tag_n <= go_tag; xs_v_n <= xs_v; xs_p_n <= xs_p;
+            xs_b_n <= xs_b; xs_q0_n <= xs_q0; xs_e0_n <= xs_e0; xs_q1_n <= xs_q1; xs_e1_n <= xs_e1; xs_pos_n <= xs_pos;
+        end
+        assign cfg_v_i = cfg_v_n; assign cfg_a_i = cfg_a_n; assign cfg_d_i = cfg_d_n; assign go_i = go_n; assign go_tag_i = go_tag_n;
+        assign xs_v_i = xs_v_n; assign xs_p_i = xs_p_n; assign xs_b_i = xs_b_n; assign xs_q0_i = xs_q0_n; assign xs_e0_i = xs_e0_n;
+        assign xs_q1_i = xs_q1_n; assign xs_e1_i = xs_e1_n; assign xs_pos_i = xs_pos_n;
+    end else begin : g_nifn
+        assign cfg_v_i = cfg_v; assign cfg_a_i = cfg_a; assign cfg_d_i = cfg_d; assign go_i = go; assign go_tag_i = go_tag;
+        assign xs_v_i = xs_v; assign xs_p_i = xs_p; assign xs_b_i = xs_b; assign xs_q0_i = xs_q0; assign xs_e0_i = xs_e0;
+        assign xs_q1_i = xs_q1; assign xs_e1_i = xs_e1; assign xs_pos_i = xs_pos;
+    end
     // The historical element uses go_pin in status and clock-gate lookahead.
     // Capture at the outer pin first so the pin itself drives only one D input.
     // Compiler contract: GO_BOUNDARY=1 issues go/tag one edge earlier relative
@@ -103,17 +131,17 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
         reg [1:0] tag_q;
         always @(posedge clk or negedge rst_n_e)
             if (!rst_n_e) go_q <= 1'b0;
-            else go_q <= go;
-        always @(posedge clk) tag_q <= go_tag;
+            else go_q <= go_i;
+        always @(posedge clk) tag_q <= go_tag_i;
 `ifdef OT_QXPQ_GO_MUT_BYPASS
-        assign go_e_in = go;
+        assign go_e_in = go_i;
 `else
         assign go_e_in = go_q;
 `endif
         assign go_tag_e_in = tag_q;
     end else begin : g_go_legacy
-        assign go_e_in = go;
-        assign go_tag_e_in = go_tag;
+        assign go_e_in = go_i;
+        assign go_tag_e_in = go_tag_i;
     end
     // S81-RF1 OLAT (DIE-S81-51/CLK crossing table class 1, core->parent face, zero-logic hold -96..-228 FF): the
     // element's registered output faces leave through one negative-EDGE flop per bit (DFFLQN, the HBM face-lockup form:
@@ -129,7 +157,7 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
     wire [OW-1:0] p_face;
     if (OLAT != 0) begin : g_olat
         for (genvar ob = 0; ob < OW; ob = ob + 1) begin : g_bit
-            (* keep, dont_touch = "true" *) reg q;
+            reg q;  // no keep: a kept wire adds a buffer load on the scalar port nets (face_guard shared; RF-A c7b2edc390)
 `ifdef OT_QXPQ_OLAT_MUT_POS
             always @(posedge clk) q <= o_face[ob];    // MUTANT: rising-edge copy = one extra cycle (the bench must catch it)
 `else
@@ -143,9 +171,9 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
     assign {walking, bank_free, sh_free, pv, pval, prow, pseg, pnseg, perr, ppos, busy, fault} = p_face;
     /* verilator lint_off PINCONNECTEMPTY */
     ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .CGR(CGR), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
-        .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go_e_in), .go_bf_pin(1'b0), .go_tag_pin(go_tag_e_in), .walking(o_walking), .bank_free(o_bank_free), .sh_free(o_sh_free),
-        .xs_v_pin(xs_v), .xs_p_pin(xs_p), .xs_b_pin(xs_b), .xs_sv_pin(), .xs_q0_pin(xs_q0), .xs_e0_pin(xs_e0), .xs_q1_pin(xs_q1),
-        .xs_e1_pin(xs_e1), .xs_pos_pin(xs_pos), .xb_pos_pin(3'd0), .ppos(o_ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),
+        .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_e_in), .go_bf_pin(1'b0), .go_tag_pin(go_tag_e_in), .walking(o_walking), .bank_free(o_bank_free), .sh_free(o_sh_free),
+        .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(), .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i),
+        .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i), .xb_pos_pin(3'd0), .ppos(o_ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),
         .xb_u_pin(32'd0), .xb_d_pin(1024'd0),
         .pv(o_pv), .pval(o_pval), .prow(o_prow), .pseg(o_pseg), .pnseg(o_pnseg), .perr(o_perr), .busy(o_busy), .fault(o_fault));
 endmodule

@@ -10,6 +10,11 @@
 `ifndef TB_DUT_OLAT
 `define TB_DUT_OLAT 0
 `endif
+// S81 RF-J: TB_DUT_IFN=1 = the _gb DUT with negative-edge input flops; every data input then launches on the rising edge through a
+// TB sender flop (the plan contract), feeding DUT and legacy ref alike.  Mutant: OT_QXPQ_IFN_MUT_POS must fail.
+`ifndef TB_DUT_IFN
+`define TB_DUT_IFN 0
+`endif
 `ifndef TB_DUT_CGR
 `define TB_DUT_CGR 0
 `endif
@@ -27,6 +32,19 @@ module tb_qxpq_go_boundary;
  reg [7:0] xs_p = 0; reg [2:0] xs_b = 0, xs_pos = 0; reg [1:0] xs_sv = 2'b11;
  reg [255:0] xs_q0 = 0, xs_q1 = 0; reg [9:0] xs_e0 = 10'd127, xs_e1 = 10'd127;
  always @(posedge clk) rst_l <= rst_e;
+ wire s_cfg_v, s_go, s_xs_v; wire [4:0] s_cfg_a; wire [47:0] s_cfg_d; wire [1:0] s_go_tag; wire [7:0] s_xs_p; wire [2:0] s_xs_b, s_xs_pos;
+ wire [255:0] s_xs_q0, s_xs_q1; wire [9:0] s_xs_e0, s_xs_e1;
+ generate if (`TB_DUT_IFN != 0) begin : g_snd
+   reg cfg_v_r=0, go_r=0, xs_v_r=0; reg [4:0] cfg_a_r=0; reg [47:0] cfg_d_r=0; reg [1:0] go_tag_r=0; reg [7:0] xs_p_r=0; reg [2:0] xs_b_r=0, xs_pos_r=0;
+   reg [255:0] xs_q0_r=0, xs_q1_r=0; reg [9:0] xs_e0_r=10'd127, xs_e1_r=10'd127;
+   always @(posedge clk) begin cfg_v_r<=cfg_v; go_r<=go; xs_v_r<=xs_v; cfg_a_r<=cfg_a; cfg_d_r<=cfg_d; go_tag_r<=go_tag; xs_p_r<=xs_p; xs_b_r<=xs_b; xs_pos_r<=xs_pos;
+     xs_q0_r<=xs_q0; xs_q1_r<=xs_q1; xs_e0_r<=xs_e0; xs_e1_r<=xs_e1; end
+   assign s_cfg_v=cfg_v_r; assign s_go=go_r; assign s_xs_v=xs_v_r; assign s_cfg_a=cfg_a_r; assign s_cfg_d=cfg_d_r; assign s_go_tag=go_tag_r; assign s_xs_p=xs_p_r;
+   assign s_xs_b=xs_b_r; assign s_xs_pos=xs_pos_r; assign s_xs_q0=xs_q0_r; assign s_xs_q1=xs_q1_r; assign s_xs_e0=xs_e0_r; assign s_xs_e1=xs_e1_r;
+ end else begin : g_nsnd
+   assign s_cfg_v=cfg_v; assign s_go=go; assign s_xs_v=xs_v; assign s_cfg_a=cfg_a; assign s_cfg_d=cfg_d; assign s_go_tag=go_tag; assign s_xs_p=xs_p;
+   assign s_xs_b=xs_b; assign s_xs_pos=xs_pos; assign s_xs_q0=xs_q0; assign s_xs_q1=xs_q1; assign s_xs_e0=xs_e0; assign s_xs_e1=xs_e1;
+ end endgenerate
 `ifdef TB_MUT_LATE
  wire dut_rst = rst_l;
 `else
@@ -38,18 +56,18 @@ module tb_qxpq_go_boundary;
 `define QP .MTP(1), .EARLY(1), .NB(2), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .PQ(1), .QW(0), .QM(5), .QS(5)
  reg ref_go=0; reg [1:0] ref_tag=0;
  always @(posedge clk or negedge rst_l)
-   if (!rst_l) ref_go<=0; else ref_go<=go;
- always @(posedge clk) ref_tag<=go_tag;
+   if (!rst_l) ref_go<=0; else ref_go<=s_go;
+ always @(posedge clk) ref_tag<=s_go_tag;
  ot_v41_rom_elem_q_qxpq_w10 #(`QP, .RSTP(0), .CGR(`TB_REF_CGR), .INSTANCE("r")) ref_e (
-  .clk(clk), .rst_n(rst_l), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(ref_go), .go_tag(ref_tag),
+  .clk(clk), .rst_n(rst_l), .cfg_v(s_cfg_v), .cfg_a(s_cfg_a), .cfg_d(s_cfg_d), .go(ref_go), .go_tag(ref_tag),
   .walking(awk), .bank_free(abf), .sh_free(ash),
-  .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
-  .xs_pos(xs_pos), .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
- ot_v41_rom_elem_q_qxpq_w10_gb #(`QP, .GO_BOUNDARY(1), .RSTP(1), .CGR(`TB_DUT_CGR), .OLAT(`TB_DUT_OLAT), .INSTANCE("d")) dut_e (
-  .clk(clk), .rst_n(dut_rst), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag),
+  .xs_v(s_xs_v), .xs_p(s_xs_p), .xs_b(s_xs_b), .xs_sv(xs_sv), .xs_q0(s_xs_q0), .xs_e0(s_xs_e0), .xs_q1(s_xs_q1), .xs_e1(s_xs_e1),
+  .xs_pos(s_xs_pos), .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
+ ot_v41_rom_elem_q_qxpq_w10_gb #(`QP, .GO_BOUNDARY(1), .RSTP(1), .CGR(`TB_DUT_CGR), .OLAT(`TB_DUT_OLAT), .IFN(`TB_DUT_IFN), .INSTANCE("d")) dut_e (
+  .clk(clk), .rst_n(dut_rst), .cfg_v(s_cfg_v), .cfg_a(s_cfg_a), .cfg_d(s_cfg_d), .go(s_go), .go_tag(s_go_tag),
   .walking(bwk), .bank_free(bbf), .sh_free(bsh),
-  .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1),
-  .xs_pos(xs_pos), .pv(bv), .pval(bd), .prow(br), .pseg(bsg), .pnseg(bn), .perr(be), .ppos(bp), .busy(bb), .fault(bf));
+  .xs_v(s_xs_v), .xs_p(s_xs_p), .xs_b(s_xs_b), .xs_q0(s_xs_q0), .xs_e0(s_xs_e0), .xs_q1(s_xs_q1), .xs_e1(s_xs_e1),
+  .xs_pos(s_xs_pos), .pv(bv), .pval(bd), .prow(br), .pseg(bsg), .pnseg(bn), .perr(be), .ppos(bp), .busy(bb), .fault(bf));
  wire [OW-1:0] ro = {awk, abf, ash, av, ad, ar, asg, an, ae, ap, ab, af};
  wire [OW-1:0] dov = {bwk, bbf, bsh, bv, bd, br, bsg, bn, be, bp, bb, bf};
  // release check: edges from the pin release to the local reset release
