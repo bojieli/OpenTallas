@@ -317,7 +317,7 @@ def judge_eco(c, e, it, holds, near_wns, near_drc):
 
 
 def eco_argv(AP, c, e, d, out, mem):
-    host = AP.HUB_NAME if AP.ssh_host(c["host"]) == "localhost" else c["host"]
+    host = "localhost" if AP.ssh_host(c["host"]) == "localhost" else c["host"]
     return [AP.OT_RUN, "--mem", str(mem), "--threads", str(THREADS), "--hosts", host, "--no-spill", "--disk", str(ECO_DISK_GB),
             "--dir", d, "--priority", "die", "--crit", "--", "python3", "-I", d + "/tools/die_plan/eco_loop.py", "run",
             "--kit", e["kit"], "--signoff", e["record"], "--out", out, "--mem", str(mem), "--cpus", str(THREADS)]
