@@ -2150,7 +2150,11 @@
     "sle_st_b_v2__cl14c98df5@6",
     "slw_hc2__cla3497502__cl16607c7a@5",
     "slw_st_b_v1__cle6023ec2@6",
-    "slw_st_b_v2@8"
+    "slw_st_b_v2@8",
+    "sle_st_b_v1@2",
+    "sle_st_b_v2__clfde1249e@2",
+    "sle_hc2__cl9c4c4509__cl3edce1b8@3",
+    "sle_st_a_v2@5"
    ],
    "queue_src": "claude/kw-fix-4-qcdpl-1103@d85db82cddb",
    "type_args": {
@@ -2391,7 +2395,11 @@
     "sle_st_b_v2__cl14c98df5@6": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
     "slw_hc2__cla3497502__cl16607c7a@5": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
     "slw_st_b_v1__cle6023ec2@6": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
-    "slw_st_b_v2@8": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike"
+    "slw_st_b_v2@8": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
+    "sle_st_b_v1@2": "QC class C (DPL-0033 / detail_place bad optional access): DPL class fix 42db137e7f2 (diamond + whole-kit window) is in wave src fl-qc2 (overlay 3); D: INFRA host/disk (kit dir missing on epyc2 / scratch floor) plain relaunch; DIE-QC-66 20:5x, KW-FIX-4 one batch",
+    "sle_st_b_v2__clfde1249e@2": "QC class C (DPL-0033 / detail_place bad optional access): DPL class fix 42db137e7f2 (diamond + whole-kit window) is in wave src fl-qc2 (overlay 3); D: INFRA host/disk (kit dir missing on epyc2 / scratch floor) plain relaunch; DIE-QC-66 20:5x, KW-FIX-4 one batch",
+    "sle_hc2__cl9c4c4509__cl3edce1b8@3": "QC class C (DPL-0033 / detail_place bad optional access): DPL class fix 42db137e7f2 (diamond + whole-kit window) is in wave src fl-qc2 (overlay 3); D: INFRA host/disk (kit dir missing on epyc2 / scratch floor) plain relaunch; DIE-QC-66 20:5x, KW-FIX-4 one batch",
+    "sle_st_a_v2@5": "QC class C (DPL-0033 / detail_place bad optional access): DPL class fix 42db137e7f2 (diamond + whole-kit window) is in wave src fl-qc2 (overlay 3); D: INFRA host/disk (kit dir missing on epyc2 / scratch floor) plain relaunch; DIE-QC-66 20:5x, KW-FIX-4 one batch"
    },
    "gen_hosts": [
     "intel2"
