@@ -1607,6 +1607,9 @@
         "minItems": 2,
         "maxItems": 2
        },
+       "tap_grt_pre": {
+        "type": "boolean"
+       },
        "landing_origin_clock_port": {
         "type": "string",
         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
@@ -4730,6 +4733,9 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "tap_grt_pre": {
+     "type": "boolean"
+    },
     "tap_window": {
      "type": "object",
      "additionalProperties": false,
@@ -4894,6 +4900,26 @@
      "type": "number",
      "exclusiveMinimum": 0,
      "exclusiveMaximum": 0.5
+    },
+    "plain_seam_split": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "rx_in_max_ps"
+     ],
+     "properties": {
+      "rx_in_max_ps": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "rx_in_raw_max_ps": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "note": {
+       "type": "string"
+      }
+     }
     },
     "face_xing": {
      "enum": [
