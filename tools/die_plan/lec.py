@@ -5833,7 +5833,7 @@ def loaded_proposals(L, log, cands=None, cap=20000):
     only PROPOSES such hints (the commercial 'user match', untrusted): the hold term of D(k) (the AND term that
     reads Q(k)) names the load condition en = NOT(another leaf); a guard is a gold register g whose next state
     implies en, directly (an AND leaf of D(g): a valid delayed from the load, ldp_v <= ld_e) or sticky (a leaf
-    OR(Q(g), en): v <= v | ld), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
+    OR(Q(g) & hold, en): v <= v | ld, also with a clear term, wq_pv), with reset-state value 1 - guard value.  apply_hints then proves every hint by the
     same induction (guard' -> D(k) == c and not X), refuses a guard true at reset, and drops a wrong one; a read of
     k outside its guard sees the free value and still differs.  Nothing is assumed: no X == c, no waiver.
     cands: {gold key: c} (default: the gold-only constants noreset_filter dropped). -> hint list."""
@@ -5866,9 +5866,14 @@ def loaded_proposals(L, log, cands=None, cap=20000):
             if (leaf & 1) and v >= base:  # leaf = OR(NOT y_i): sticky form OR(g == val, en)
                 ys = [y ^ 1 for y in _and_leaves(d, leaf ^ 1)]
                 own = q ^ (val ^ 1)
-                rest = [y for y in ys if y != own]
-                if len(rest) == 1 and len(ys) == 2:
-                    imp[rest[0]].append((g, val))
+                # g' = hold term(s) that read Q(g) | load term(s): every load term implies each of its AND leaves
+                loads = [y for y in ys if own not in _and_leaves(d, y)]
+                if loads and len(loads) < len(ys):
+                    common = set(_and_leaves(d, loads[0], nodes=True))
+                    for y in loads[1:]:
+                        common &= set(_and_leaves(d, y, nodes=True))
+                    for x in common:
+                        imp[x].append((g, val))
     hints, nog = [], 0
     for k, c in sorted(cands.items()):
         q, dk = gp[k], gc[k]

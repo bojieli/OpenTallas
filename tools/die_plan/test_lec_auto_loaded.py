@@ -145,6 +145,22 @@ def test_async_reset_guard_behind_constant_mux_arm_is_proposed():
             [["gold", "ff:k", ["loaded", 0, [[["ff:v", 1]]]]]], log
 
 
+def test_valid_with_clear_term_guards_the_load():
+    """wq_pv form: v <= (v & ~clr) | (ld & a); k <= (ld & a) ? 0 : k.  Inputs rn=1 ld=2 clr=3 a=4; latches v=5 k=6."""
+    I, Lc, ands = 4, 2, []
+    rn, ld, clr, a, v, k = 2, 4, 6, 8, 10, 12
+
+    def AND(x, y):
+        ands.extend((x, y))
+        return 2 * (I + Lc + len(ands) // 2)
+    en = AND(ld, a)
+    live = AND(AND(v, clr ^ 1) ^ 1, en ^ 1) ^ 1
+    dv = AND(AND(live, rn) ^ 1, AND(rn ^ 1, 0) ^ 1) ^ 1
+    dk = AND(AND(en, 0) ^ 1, AND(en ^ 1, k) ^ 1) ^ 1
+    d = dict(I=I, L=Lc, O=0, A=len(ands) // 2, latches=[dv, dk], outputs=[], ands=ands)
+    assert lec.loaded_proposals(_L(d, v, k, dv, dk), []) == [["gold", "ff:k", ["loaded", 0, [[["ff:v", 1]]]]]]
+
+
 def test_live_term_keeps_two_live_or_terms():
     d, _, _, dv, _ = _async_reset_aig(reset_val=1)     # rn ? ld : 1 has two live terms: no single load condition
     assert lec._live_term(d, dv) == dv
