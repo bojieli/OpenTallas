@@ -1,0 +1,163 @@
+# WATCHDOG DRY-RUN 2026-11-03 23:25 PST: 311 running jobs, idle threshold 120 min (log, files, stdout; per-step rule)
+REPORT intel1  -     idle 43h01  age 47h26  lane CODEX        oth-ubuntu-3566194-1793606281.scope
+         kit intel1:/srv/opentallas-scratch2/claude/codex-hbm-root-minimal-2355/A_vs_B_input_identity.json
+         log /srv/opentallas-scratch2/claude/codex-hbm-root-minimal-2355/A_vs_B_input_identity.json
+         why Codex hand-launched, outside a wave root: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 39h09  age 39h23  lane CODEX        oth-ubuntu-951089-1793635333.scope
+         kit intel2:/srv/opentallas-scratch2/claude/codex-storeA-regional-write-0900/capture_mutant.log
+         log /srv/opentallas-scratch2/claude/codex-storeA-regional-write-0900/capture_mutant.log
+         why Codex hand-launched, outside a wave root: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 39h05  age 39h09  lane CODEX        oth-ubuntu-1212924-1793636182.scope
+         kit intel2:/srv/opentallas-scratch2/claude/codex-storeA-regional-write-columns-0920/capture_synth_summary.json
+         log /srv/opentallas-scratch2/claude/codex-storeA-regional-write-columns-0920/capture_synth_summary.json
+         why Codex hand-launched, outside a wave root: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 3h48   age 49h32  lane CODEX        oth-ubuntu-664216-1793566115.scope
+         kit intel2:/srv/opentallas-scratch2/claude/codex-s81-vs8-1131/eight_route.log
+         log /srv/opentallas-scratch2/claude/codex-s81-vs8-1131/eight_route.log
+         why Codex hand-launched, outside a wave root: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 3h48   age 49h32  lane CODEX        angry_roentgen
+         kit intel2:/srv/opentallas-scratch2/claude/codex-s81-vs8-1131/eight_route.log
+         log /srv/opentallas-scratch2/claude/codex-s81-vs8-1131/eight_route.log
+         why Codex hand-launched, outside a wave root: report only (stop only if COORD says superseded)
+REPORT intel1  SYNTH idle 3h11   age 3h39   lane CODEX        oth-ubuntu-2311897-1793763674.scope
+         kit intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t1/attempt_4/gen/svc_hi_dsdv_svc_rs__t1/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t1/attempt_4/gen/svc_hi_dsdv_svc_rs__t1/gen_lint_yosys.log
+         why no tool process alive in the job (/bin/bash /usr/local/lib/ot-heavy/ot-heavy-exit oth-ubuntu-2311897-1793763674 ba)
+REPORT intel1  SYNTH idle 3h11   age 3h39   lane CODEX        relaxed_hoover
+         kit intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t1/attempt_4/gen/svc_hi_dsdv_svc_rs__t1/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t1/attempt_4/gen/svc_hi_dsdv_svc_rs__t1/gen_lint_yosys.log
+         why progressing, CPU active, log silent: openroad +60 s CPU in 60 s (pids [2441948]), 0 progress lines, limit 6h00; not stopped
+REPORT intel1  SYNTH idle 3h10   age 3h37   lane CODEX        oth-ubuntu-2337966-1793763729.scope
+         kit intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_lo_dsdv_svc_rs__t6/attempt_2/gen/svc_lo_dsdv_svc_rs__t6/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_lo_dsdv_svc_rs__t6/attempt_2/gen/svc_lo_dsdv_svc_rs__t6/gen_lint_yosys.log
+         why no tool process alive in the job (/bin/bash /usr/local/lib/ot-heavy/ot-heavy-exit oth-ubuntu-2337966-1793763729 ba)
+REPORT intel1  SYNTH idle 3h10   age 3h37   lane CODEX        goofy_hopper
+         kit intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_lo_dsdv_svc_rs__t6/attempt_2/gen/svc_lo_dsdv_svc_rs__t6/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_lo_dsdv_svc_rs__t6/attempt_2/gen/svc_lo_dsdv_svc_rs__t6/gen_lint_yosys.log
+         why progressing, CPU active, log silent: openroad +59 s CPU in 60 s (pids [2478805]), 0 progress lines, limit 6h00; not stopped
+REPORT intel1  SYNTH idle 3h00   age 3h26   lane CODEX        oth-ubuntu-2750913-1793764753.scope
+         kit intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_lo_dsdv_svc_rs__t4/attempt_3/gen/svc_lo_dsdv_svc_rs__t4/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_lo_dsdv_svc_rs__t4/attempt_3/gen/svc_lo_dsdv_svc_rs__t4/gen_lint_yosys.log
+         why no tool process alive in the job (/bin/bash /usr/local/lib/ot-heavy/ot-heavy-exit oth-ubuntu-2750913-1793764753 ba)
+REPORT intel1  SYNTH idle 3h00   age 3h26   lane CODEX        sharp_shamir
+         kit intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_lo_dsdv_svc_rs__t4/attempt_3/gen/svc_lo_dsdv_svc_rs__t4/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_lo_dsdv_svc_rs__t4/attempt_3/gen/svc_lo_dsdv_svc_rs__t4/gen_lint_yosys.log
+         why progressing, CPU active, log silent: openroad +60 s CPU in 60 s (pids [2752537]), 0 progress lines, limit 6h00; not stopped
+REPORT epyc2   DRT   idle 2h43   age 20h29  lane ?            oth-ubuntu-3648266-1793690031.scope [prd-bf-v1_grt_b0-1977628]
+         kit epyc2:/home/ubuntu/scratch-root/claude/die-s81-49/eco/bf/v1_grt_b0
+         log /home/ubuntu/scratch-root/claude/die-s81-49/eco/bf/v1_grt_b0/run_prd.log
+         why progressing, CPU active, log silent: openroad +179 s CPU in 60 s (pids [2095412]), 638 progress lines, limit 6h00; not stopped
+REPORT epyc4   SYNTH idle 2h42   age 2h55   lane CODEX        oth-ubuntu-1308676-1793766542.scope
+         kit epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t6/attempt_3/gen/svc_hi_dsdv_svc_rs__t6/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t6/attempt_3/gen/svc_hi_dsdv_svc_rs__t6/gen_lint_yosys.log
+         why no tool process alive in the job (/bin/bash /usr/local/lib/ot-heavy/ot-heavy-exit oth-ubuntu-1308676-1793766542 ba)
+REPORT epyc4   SYNTH idle 2h42   age 2h55   lane CODEX        suspicious_wiles
+         kit epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t6/attempt_3/gen/svc_hi_dsdv_svc_rs__t6/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t6/attempt_3/gen/svc_hi_dsdv_svc_rs__t6/gen_lint_yosys.log
+         why progressing, CPU active, log silent: openroad +60 s CPU in 60 s (pids [1361854]), 0 progress lines, limit 6h00; not stopped
+REPORT epyc4   SYNTH idle 2h25   age 2h38   lane CODEX        oth-ubuntu-1480096-1793766783.scope
+         kit epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t5/attempt_5/gen/svc_hi_dsdv_svc_rs__t5/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t5/attempt_5/gen/svc_hi_dsdv_svc_rs__t5/gen_lint_yosys.log
+         why no tool process alive in the job (/bin/bash /usr/local/lib/ot-heavy/ot-heavy-exit oth-ubuntu-1480096-1793766783 ba)
+REPORT epyc4   SYNTH idle 2h25   age 2h38   lane CODEX        sharp_pare
+         kit epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t5/attempt_5/gen/svc_hi_dsdv_svc_rs__t5/gen_lint_yosys.log
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/svc_hi_dsdv_svc_rs__t5/attempt_5/gen/svc_hi_dsdv_svc_rs__t5/gen_lint_yosys.log
+         why progressing, CPU active, log silent: openroad +60 s CPU in 60 s (pids [2111660]), 0 progress lines, limit 6h00; not stopped
+REPORT intel1  -     idle 13m    age 27m    lane ?            oth-ubuntu-1945520-1793775488.scope [hbmcore-ot_pdie_serdes_2decc99de1f3_-1945879]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_pdie_serdes/gen/ot_pdie_serdes_2decc99de1f3
+         log /srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_pdie_serdes/gen/ot_pdie_serdes_2decc99de1f3/run_finish.log
+         why SUPERSEDED (report): hbm/ot_pdie_serdes@1 row d44v@2: older attempt than live attempt_2, but started after it (a lane resume): not stopped
+STOP   intel1  -     idle 6m     age 2h12   lane ?            oth-ubuntu-421605-1793769189.scope [dpkit-slice_station__t25-423797]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t25/gen/slice_station__t25
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t25/gen/slice_station__t25/run_route.log
+         why SUPERSEDED: s81/slice_station__t25@1 row e8cbe5f6c70@1 CANCELLED class SUPERSEDED: queue job 50e7d7ba84b1 on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-421605-1793769189.scope; docker stop -t 30 dpkit-slice_station__t25-423797 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t25-423797 >/dev
+STOP   intel1  -     idle 5m     age 1h41   lane ?            oth-ubuntu-1009515-1793771012.scope [dpkit-slice_station__t38-1016486]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t38/gen/slice_station__t38
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t38/gen/slice_station__t38/run_route.log
+         why SUPERSEDED: s81/slice_station__t38@1 row e8cbe5f6c70@1 CANCELLED class SUPERSEDED: queue job 467dd0127dee on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-1009515-1793771012.scope; docker stop -t 30 dpkit-slice_station__t38-1016486 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t38-1016486 >/
+STOP   intel1  -     idle 3m     age 5h35   lane ?            oth-ubuntu-383272-1793756976.scope [dpkit-slice_station__t28-384531]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t28/attempt_2/gen/slice_station__t28
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t28/attempt_2/gen/slice_station__t28/run_route.log
+         why SUPERSEDED: s81/slice_station__t28@2 row e8cbe5f6c70@2 CANCELLED class SUPERSEDED: queue job ee1e4c737318 on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-383272-1793756976.scope; docker stop -t 30 dpkit-slice_station__t28-384531 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t28-384531 >/dev
+STOP   epyc2   -     idle 3m     age 2h08   lane ?            oth-ubuntu-2656860-1793769427.scope [dpkit-slice_station__t31-2658735]
+         kit epyc2:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t31/gen/slice_station__t31
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t31/gen/slice_station__t31/run_route.log
+         why SUPERSEDED: s81/slice_station__t31@1 row e8cbe5f6c70@1 CANCELLED class SUPERSEDED: queue job 38bf6b9e917b on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-2656860-1793769427.scope; docker stop -t 30 dpkit-slice_station__t31-2658735 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t31-2658735 >/
+STOP   intel1  -     idle 1m     age 1h57   lane ?            oth-ubuntu-690089-1793770000.scope [dpkit-slice_station__t26-718996]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t26/attempt_3/gen/slice_station__t26
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t26/attempt_3/gen/slice_station__t26/run_route.log
+         why SUPERSEDED: s81/slice_station__t26@3 row e8cbe5f6c70@3 CANCELLED class SUPERSEDED: queue job cfd3ed8263c7 on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-690089-1793770000.scope; docker stop -t 30 dpkit-slice_station__t26-718996 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t26-718996 >/dev
+REPORT epyc2   -     idle 1m     age 5h13   lane ?            oth-ubuntu-3261950-1793758181.scope [hbmcore-hnx_fused_lane_2ea678e1526e_-3311018]
+         kit epyc2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/hnx_fused_lane/attempt_9/gen/hnx_fused_lane_2ea678e1526e
+         log /srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/hnx_fused_lane/attempt_9/gen/hnx_fused_lane_2ea678e1526e/run/reports/asap7/hbc_hnx_fused_lane/base/4_cts_final.rpt
+         why SUPERSEDED (report): second container on kit /srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/hnx_fused_lane/attempt_9/gen/hnx_fused_lane_2ea678e1526e: this one has its client, newer oth-ubuntu-900568-1793776256.scope [hbmcore-hnx_fused_lane_2ea678e1526 on epyc2
+REPORT epyc4   -     idle 1m     age 31m    lane ?            dh59-minilec-1715096
+         kit epyc4:/srv/opentallas-scratch2/claude/dh59/lec_lane
+         log /srv/opentallas-scratch2/claude/dh59/lec_lane/lf0/rawprefix5_gate_4_swept.aig
+         why SUPERSEDED (report): second container on kit /srv/opentallas-scratch2/claude/dh59/lec_lane: this one has its client, newer dh59-minilec-2321017 on epyc4
+REPORT epyc4   -     idle 0m     age 1h59   lane DIE-S81-51   oth-ubuntu-1331660-1793766571.scope [klegacy-xfin_r64_form2-1025195]
+         kit epyc4:/srv/opentallas-scratch2/claude/die-s81-51/lecxfin-kit/xfin_r64_form2
+         log /srv/opentallas-scratch2/claude/die-s81-51/lecxfin-kit/xfin_r64_form2/run/logs/asap7/kl_ot_s81dv_eng_finish_rf1/base/5_1_grt.tmp.log
+         why SUPERSEDED (report): second container on kit /srv/opentallas-scratch2/claude/die-s81-51/lecxfin-kit/xfin_r64_form2: this one has its client, newer oth-ubuntu-509126-1793774140.scope [klegacy-xfin_r64_form2-986293] on epyc4
+REPORT intel1  -     idle 0m     age 1h10   lane CODEX        oth-ubuntu-1443438-1793772840.scope [dpkit-slice_station__t20-1449906]
+         kit intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t20/attempt_2/gen/slice_station__t20
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t20/attempt_2/gen/slice_station__t20/run_route.log
+         why SUPERSEDED (report): s81/slice_station__t20@2 row b1a2125433d0@2: older than live attempt_4, plan_current=no
+STOP   intel1  -     idle 0m     age 1h31   lane ?            oth-ubuntu-1185717-1793771659.scope [dpkit-slice_station__t27-1186191]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t27/gen/slice_station__t27
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t27/gen/slice_station__t27/run_route.log
+         why SUPERSEDED: s81/slice_station__t27@1 row e8cbe5f6c70@1 CANCELLED class SUPERSEDED: queue job 5f63c8991820 on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-1185717-1793771659.scope; docker stop -t 30 dpkit-slice_station__t27-1186191 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t27-1186191 >/
+STOP   intel1  -     idle 0m     age 2h01   lane ?            oth-ubuntu-634956-1793769847.scope [dpkit-slice_station__t44-635811]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t44/gen/slice_station__t44
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t44/gen/slice_station__t44/run_route.log
+         why SUPERSEDED: s81/slice_station__t44@1 row e8cbe5f6c70@1 CANCELLED class SUPERSEDED: queue job 52f72e1cfa1a on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-634956-1793769847.scope; docker stop -t 30 dpkit-slice_station__t44-635811 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t44-635811 >/dev
+STOP   intel2  -     idle 0m     age 3h53   lane CODEX        dpkit-kv3_pv_v12-1409279
+         kit intel2:/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v12/attempt_5/gen/kv3_pv_v12
+         log /srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v12/attempt_5/gen/kv3_pv_v12/run/logs/asap7/dp_kv3_pv_v12/base/2_1_floorplan.tmp.log
+         why SUPERSEDED: qwen_kvsys/kv3_pv_v12@5 row event28w_c@5 FAILED while it ran: unclassified failure @place (see log): KIT_PREFLIGHT ADVISORY pins_canonical check could not run: ModuleNotFoundError: N
+         stop: docker stop -t 30 dpkit-kv3_pv_v12-1409279 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-kv3_pv_v12-1409279 >/dev/null 2>&1 || break; sleep 1; done; true
+REPORT intel1  -     idle 0m     age 10h24  lane ?            oth-ubuntu-3155248-1793738463.scope [hbmcore-hnx_rp3lp3h_s_bcba97c60131_-3587196]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/hnx_rp3lp3h_s/attempt_6/gen/hnx_rp3lp3h_s_bcba97c60131
+         log /srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/hnx_rp3lp3h_s/attempt_6/gen/hnx_rp3lp3h_s_bcba97c60131/run/logs/asap7/hbc_hnx_rp3lp3h_s/base/4_1_cts.tmp.log
+         why SUPERSEDED (report): second container on kit /srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/hnx_rp3lp3h_s/attempt_6/gen/hnx_rp3lp3h_s_bcba97c60131: this one has its client, newer oth-ubuntu-2152841-1793776253.scope [hbmcore-hnx_rp3lp3h_s_bcba97c6013 on intel1
+STOP   intel1  -     idle 0m     age 2h06   lane ?            oth-ubuntu-538556-1793769544.scope [dpkit-slice_station__t43-539798]
+         kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t43/attempt_3/gen/slice_station__t43
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t43/attempt_3/gen/slice_station__t43/run_route.log
+         why SUPERSEDED: s81/slice_station__t43@3 row e8cbe5f6c70@3 CANCELLED class SUPERSEDED: queue job 00049c4c969f on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-538556-1793769544.scope; docker stop -t 30 dpkit-slice_station__t43-539798 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t43-539798 >/dev
+REPORT intel2  -     idle 0m     age 46h11  lane CODEX        dpkit-slw_st_b_v2-1874607
+         kit intel2:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_b_v2/attempt_3/gen/slw_st_b_v2
+         log /srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_b_v2/attempt_3/gen/slw_st_b_v2/run/logs/asap7/dp_slw_st_b_v2/base/3_3_place_gp.tmp.log
+         why SUPERSEDED (report): qwen_compute/slw_st_b_v2@3 row d90b109213c6949da87b330ef143d96bbe937934@9: older than live attempt_9 on the current plan; listed in WATCHDOG.skip (dpkit-slw_st_b_v2-1874607)
+STOP   epyc2   -     idle 0m     age 2h23   lane ?            oth-ubuntu-2348290-1793768432.scope [dpkit-slice_station__t46-2377053]
+         kit epyc2:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t46/attempt_3/gen/slice_station__t46
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t46/attempt_3/gen/slice_station__t46/run_route.log
+         why SUPERSEDED: s81/slice_station__t46@3 row e8cbe5f6c70@3 CANCELLED class SUPERSEDED: queue job 7a93f5881368 on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-2348290-1793768432.scope; docker stop -t 30 dpkit-slice_station__t46-2377053 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t46-2377053 >/
+STOP   intel1  -     idle 0m     age 1h26   lane CODEX        oth-ubuntu-1196440-1793771700.scope [dpkit-iqf__t1-1258818]
+         kit intel1:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/iqf__t1/attempt_10/gen/iqf__t1
+         log /srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/iqf__t1/attempt_10/gen/iqf__t1/run_route.log
+         why SUPERSEDED: s81/iqf__t1@10 row b1a2125433d0@10 CANCELLED class SUPERSEDED: queue job 83490e270a2d on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-1196440-1793771700.scope; docker stop -t 30 dpkit-iqf__t1-1258818 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-iqf__t1-1258818 >/dev/null 2>&1 || break
+STOP   epyc2   -     idle 0m     age 1h47   lane ?            oth-ubuntu-3176876-1793770710.scope [dpkit-slice_station__t36-3179184]
+         kit epyc2:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t36/gen/slice_station__t36
+         log /srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t36/gen/slice_station__t36/run/reports/asap7/dp_slice_station__t36/base/4_cts_final.rpt
+         why SUPERSEDED: s81/slice_station__t36@1 row e8cbe5f6c70@1 CANCELLED class SUPERSEDED: queue job 1e95eb0292b1 on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key
+         stop: systemctl --user stop oth-ubuntu-3176876-1793770710.scope; docker stop -t 30 dpkit-slice_station__t36-3179184 >/dev/null 2>&1; for i in $(seq 60); do docker inspect dpkit-slice_station__t36-3179184 >/
+STOP   epyc2   -     idle 0m     age 10h42  lane ?            oth-ubuntu-1912308-1793738566.scope [hbmcore-ot_hbm_idx_topk_link_static_55ea061bcf0d_-1912951]
+         kit epyc2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_idx_topk_link_static/attempt_6/gen/ot_hbm_idx_topk_link_static_55ea061bcf0d
+         log /srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_idx_topk_link_static/attempt_6/gen/ot_hbm_idx_topk_link_static_55ea061bcf0d/lec/miter_cones_7245_7245_n1_C100000-m.abc
+         why SUPERSEDED: hbm/ot_hbm_idx_topk_link_static@6 row d44v@6 CANCELLED class SUPERSEDED: wave place on a superseded plan block (plan_current=no) stopped; the current block relaunches on its own key (COORD 11-0
+         stop: systemctl --user stop oth-ubuntu-1912308-1793738566.scope; docker stop -t 30 hbmcore-ot_hbm_idx_topk_link_static_55ea061bcf0d_-1912951 >/dev/null 2>&1; for i in $(seq 60); do docker inspect hbmcore-ot
+REPORT epyc2   -     idle 0m     age 3h44   lane ?            oth-ubuntu-639813-1793763391.scope [kvcore-qkd_hr_ingest_eng__362.88x362.88_-742096]
+         kit epyc2:/srv/opentallas-scratch2/claude/dkv64-rfe/hri/kits/qkd_hr_ingest_eng__362.88x362.88
+         log /srv/opentallas-scratch2/claude/dkv64-rfe/hri/kits/qkd_hr_ingest_eng__362.88x362.88/run_route.log
+         why SUPERSEDED (report): second container on kit /srv/opentallas-scratch2/claude/dkv64-rfe/hri/kits/qkd_hr_ingest_eng__362.88x362.88: this one has its client, newer oth-ubuntu-608727-1793775193.scope [kvcore-qkd_hr_ingest_eng__362.88x3 on epyc2
+# 0 ACT, 0 FIX, 13 STOP (13 superseded), 24 REPORT (8 superseded) (DRY-RUN); probe 11 s, re-check 62 s, tick 73 s
