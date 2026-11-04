@@ -637,6 +637,29 @@ def stage_keyer(base, out, pins=None):
     return key
 
 
+def stage_src_key(base, out, pins=None):
+    """Same place-not-path rule for a yosys src attribute: slang writes a file reached through `include relative to its
+    cwd (the elab out dir), e.g. ../../wt/rtl/x.svh:3.1-3.9, so that text moves with the checkout.  A span under the base
+    becomes base-relative, or with asbuilt.stage_hash_roots the exact text the published bind saw."""
+    pins = pins or {}
+    base, out = Path(base).resolve(), Path(out).resolve()
+
+    def one(span):
+        m = re.fullmatch(r"(.*?)(:[0-9][0-9.\-]*)?", span)
+        path, pos = m.group(1), m.group(2) or ""
+        if not (path.startswith("../") or path.startswith("/")):
+            return span
+        try:
+            rel = Path(os.path.normpath(out / path)).relative_to(base)
+        except ValueError:
+            return span
+        if "base" in pins and "out" in pins:
+            return os.path.relpath(f"{pins['base']}/{rel}", pins["out"]) + pos
+        return f"base:{rel}{pos}"
+
+    return lambda src: "|".join(one(s) for s in src.split("|")) if isinstance(src, str) else src
+
+
 def structural_sources(files, keep, out, key=str):
     """Interface-only leaf bodies even when co-hosted with structural wrappers.
 

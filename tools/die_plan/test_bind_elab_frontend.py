@@ -1,5 +1,6 @@
 """bind_elab frontends: default native script unchanged; opt-in slang and typed-string staging."""
 import hashlib
+import os
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -99,4 +100,22 @@ def test_stage_key_outside_roots_keeps_path_and_is_recorded(tmp_path):
 def test_stage_hash_roots_rejects_unknown_root(tmp_path):
     with pytest.raises(E.ElabError):
         E.stage_keyer(tmp_path, tmp_path, {'bse': '/x'})
+
+
+def test_stage_src_key_include_span_independent_of_location(tmp_path):
+    """16 S81 svc types: an `included .svh reaches src as a path relative to the elab out dir."""
+    keys = []
+    for root in (tmp_path / 'a', tmp_path / 'b' / 'deep' / 'er'):
+        base, out = root / 'wt', root / 'x' / 'bind'
+        keys.append(E.stage_src_key(base, out)(os.path.relpath(base / 'rtl/r.svh', out) + ':3.1-3.9'))
+    assert keys[0] == keys[1] == 'base:rtl/r.svh:3.1-3.9'
+
+
+def test_stage_src_key_pins_reproduce_published_text_and_keep_staged_spans(tmp_path):
+    base, out = tmp_path / 'wt', tmp_path / 'p' / 'bind'
+    key = E.stage_src_key(base, out, {'base': '/c/wt/h10', 'out': '/c/kit/s81/bind_h10'})
+    assert key('../../wt/rtl/r.svh:3.1-3.9') == '../../../wt/h10/rtl/r.svh:3.1-3.9'
+    assert key('structural_full/ab_x.sv:6.8') == 'structural_full/ab_x.sv:6.8'
+    assert key('structural_full/ab_x.sv:6.8|../../wt/r.svh:1.1') == 'structural_full/ab_x.sv:6.8|../../../wt/h10/r.svh:1.1'
+    assert key(None) is None
 
