@@ -3257,6 +3257,13 @@ def kept_wire_alias_copies(L, declared, aliases_file):
         if k in gate:
             choices.add(k)
         choices.update(renamed[k])
+        # s81 link_gbx g_pc[c].ps (DIE-HEAD-61 11-04): slotv[0] = 1 makes a term the bare kept bit, so the gate flop is
+        # named g_b[i].a0 and paired to the kept class's gold representative, not to this copy.  The gate flop proved
+        # equal to the representative also stands for k when k's own hypothesis ties it to that representative with
+        # the same polarity; the one-distinct-gate-FF-per-kept-bit matching below stays the proof.
+        h = L.hyp.get(("gold", k))
+        if h and h[0] == "eq" and h[1] == "gold" and not h[3]:
+            choices.update(c for c in renamed[h[2]] if not L.hyp[("gate", c)][3])
         candidates[k] = choices
     assigned = {}
     def assign(k, seen):
@@ -7169,6 +7176,8 @@ def via_docker(args, image, mem):
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
+    if os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1":   # a proof option: same forward as the two above
+        cmd += ["-e", "OT_LEC_ENABLE_FILL_GUARD=1"]
     if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
         cmd += ["-e", "OT_LEC_HINTS_PRESEED=1"]
     if os.environ.get("OT_LEC_EARLY_COMPARE") == "1":
