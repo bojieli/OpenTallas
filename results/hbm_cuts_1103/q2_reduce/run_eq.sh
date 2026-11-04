@@ -8,5 +8,6 @@ for M in 0 1 2 3 4; do
   D="-DOT_HBM_REDUCE_LREP"; [ $M = 0 ] || D="$D -DOT_HBM_REDUCE_LMUT=$M"
   iverilog -g2012 $D -o $O/sim$M $R/results/hbm_cuts_1103/q2_reduce/tb_q2_reduce_lrep.sv $O/gold_*.sv $L \
     $P/ot_hgi_coll_reduce_static.sv $P/ot_hgi_coll_reduce_static_lr.sv $P/ot_hgi_coll_reduce_static_pr.sv 2>&1 | grep -iv warn | head -5
-  echo "LMUT=$M $(vvp -n $O/sim$M | grep LREP_EQ | tail -1)"
+  ( timeout ${SIM_T:-5400} vvp -n $O/sim$M > $O/run$M.log 2>&1; rc=$?; echo "LMUT=$M rc=$rc $(grep LREP_EQ $O/run$M.log | grep -v MISMATCH | tail -1)" ) &
 done
+wait
