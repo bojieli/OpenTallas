@@ -1827,13 +1827,46 @@ def spill_stage_protected(r):
     return False
 
 
+# KW-FIX-5 11-04 (DIE-KV-65 read in the code): two jobs can --stage the same dir (a shared tools dir).  Keep the copy while any other
+# process names it in its command line or runs inside it, or a container mounts it; a docker that cannot answer keeps it too.
+SPILL_BUSY_PY = r"""
+import os, shutil, subprocess, sys
+r = sys.argv[1].rstrip("/")
+me, p = set(), os.getpid()
+while p > 1:
+    me.add(p)
+    try:
+        p = int(open(f"/proc/{p}/stat").read().rsplit(")", 1)[1].split()[1])
+    except (OSError, ValueError, IndexError):
+        break
+for d in os.listdir("/proc"):
+    if not d.isdigit() or int(d) in me:
+        continue
+    try:
+        cmd = open(f"/proc/{d}/cmdline", "rb").read()
+        cwd = os.readlink(f"/proc/{d}/cwd")
+    except OSError:
+        continue
+    if r.encode() in cmd or cwd == r or cwd.startswith(r + "/"):
+        sys.exit(1)
+if shutil.which("docker"):
+    q = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True)
+    if q.returncode:
+        sys.exit(1)
+    if q.stdout.split():
+        m = subprocess.run(["docker", "inspect", "-f", "{{range .Mounts}}{{.Source}}\\n{{end}}", *q.stdout.split()], capture_output=True, text=True)
+        if m.returncode or any(x == r or x.startswith(r + "/") for x in m.stdout.split()):
+            sys.exit(1)
+"""
+
+
 def spill_drop_cmd(r, mk, mk2):
     """the remote command: no depth limit (ECO records sit at K/eco_<stamp>/i<n>/signoff/signoff.json), any .keep or SIGNED
     signoff.json anywhere keeps the copy, and a find that fails keeps it too (fail closed)."""
     q = shlex.quote(r)
     return (f"test -d {q} && {{ test -e {mk} || test -e {mk2}; }} && "
             f"o=$(find {q} \\( -name .keep -print \\) -o \\( -name signoff.json -exec sh -c 'grep -l SIGNED \"$@\"; test $? -le 1' sh {{}} + \\)) && test -z \"$o\" "
-            f"&& rm -rf {q} && echo DROPPED")
+            f"&& python3 -I -c {shlex.quote(SPILL_BUSY_PY)} {q} && rm -rf {q} && echo DROPPED")
 
 
 def spill_drop_stage(dst, roots, say=lambda m: None):
