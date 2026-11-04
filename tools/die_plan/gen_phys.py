@@ -660,6 +660,61 @@ def clock_tap_pin_metadata(P, tn):
     return [dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn) + core_tap_pins(P, tn)]
 
 
+CLOCK_PIN_ALIASES = ("clk", "ck")
+
+
+def bound_core_clock_pins(P, tn, inst, pin):
+    """KW-FIX-5 11-03 (COORD 23:3x, safe form A): `pin` of a planned early core tap, read against the core's BOUND view.
+
+    -> None when the view has that clock pin or no readable clock pins (plan pin stands, nothing changes);
+    otherwise {view pin: TT insertion ps} of the pin(s) the tap must carry.  A plan pin absent from the view leaves the
+    tap EMPTY in clock_taps.tcl: the core falls on a grid tap and CTS pads that tap's flops to the core's internal
+    latency (col_h9_r0_p2: plan u_e3.ck, view clk 690 ps, clk_t30 flops +655 ps, 27 delay buffers, FF hold -548)."""
+    import cores as C
+    core = next((c for c in P.types[tn].get("hard_cores", []) or [] if c.get("inst") == inst), None)
+    if core is None or pin == "*":
+        return None
+    ck = C.clock_pins(core, None)
+    if not ck or pin in ck:
+        return None
+    bits = sorted(p for p in ck if p.startswith(pin + "["))
+    alias = sorted(p for p in ck if p in CLOCK_PIN_ALIASES or p.split("[")[0] in CLOCK_PIN_ALIASES)
+    sel = bits or alias or [max(sorted(ck), key=lambda p: ck[p]["rise"])]
+    return {p: float(ck[p]["rise"]) for p in sel}
+
+
+def view_core_tap_values(P, tp, view_tt_ps, corner="TT"):
+    """(early, insertion) of a re-bound tap from the current view.  early = min(view insertion - common latency, what
+    the tap can deliver); a tap arrives at the clock root at best, so it can be at most the common latency early.  The
+    FF insertion uses the plan's FF/TT ratio on the view number, as a tap with no FF value does."""
+    if view_tt_ps <= 0:          # a view with the pin but no tree arc (LEF only): the pin binds, the plan values stand
+        return S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)
+    c = "FF" if str(corner).upper().startswith("F") else "TT"
+    ins = view_tt_ps if c == "TT" else round(S.FF_TT_INSERTION_RATIO * view_tt_ps, 3)
+    lat = S.common_latency_ps(P, c)
+    return max(0.0, min(ins - lat, lat)), ins
+
+
+def core_tap_view_report(P, tn):
+    """rows of core_tap_view.json / the OT_CORE_TAP_* gen lines: every planned tap whose pin the bound view re-binds."""
+    out = []
+    for n, _x, _y, tp in S.core_taps(P, tn):
+        if "core_group" in tp or tp.get("merged_clock_ports"):
+            continue
+        for c in sorted((x.get("inst") for x in P.types[tn].get("hard_cores", []) or [] if x.get("inst")), key=len, reverse=True):
+            if not tp["name"].startswith(c + "."):
+                continue
+            plan_pin = tp["name"][len(c) + 1:]
+            for pin, tt in (bound_core_clock_pins(P, tn, c, plan_pin) or {}).items():
+                early, ins = view_core_tap_values(P, tp, tt)
+                out.append(dict(port=n, inst=c, plan_pin=plan_pin, view_pin=pin,
+                                plan_insertion_ps=S.core_tap_insertion_ps(tp), view_insertion_ps=ins,
+                                plan_early_ps=S.core_tap_early_ps(P, tp), early_ps=early,
+                                clamped=ins - S.common_latency_ps(P, "TT") > early))
+            break
+    return out
+
+
 def core_tap_rows(P, tn, corner="TT", pending=None):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin.  A merged tap on a core with no native view
@@ -692,7 +747,12 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
             for pin in MC.pins_or_pending(P, tn, tp, hit[0], pending):
                 out.append((n, hit[0], pin, S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
         else:
-            out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
+            rebound = bound_core_clock_pins(P, tn, hit[0], hit[1])
+            if rebound:
+                # only a tap that was EMPTY in every earlier kit: a pin the view has keeps its plan values
+                out.extend((n, hit[0], pin, *view_core_tap_values(P, tp, tt, corner)) for pin, tt in rebound.items())
+            else:
+                out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
     physical = {c["inst"]: content_physical_identity(c)[0] for c in P.types[tn].get("hard_cores", [])
                 if "physical_inst" in c or "physical_master" in c}
     return [(n, physical.get(inst, inst), pin, early, insertion) for n, inst, pin, early, insertion in out]
@@ -2564,6 +2624,20 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
         (kd / "merged_clock_pending_view.json").write_text(json.dumps(dict(
             type=tn, status="PENDING-VIEW", rule="COORD 10-27 19:12 HBM-STREETS-2 ruling 1", rows=pending_view),
             indent=1) + "\n")
+    rebound = core_tap_view_report(P, tn) if taps and not mean_contract else []
+    if rebound:
+        (kd / "core_tap_view.json").write_text(json.dumps(dict(type=tn, rows=rebound), indent=1) + "\n")
+        for r in rebound:
+            print(f"OT_CORE_TAP_PIN {tn} {r['port']} {r['inst']} plan {r['plan_pin']} -> view {r['view_pin']} "
+                  f"insertion {r['plan_insertion_ps']:g} -> {r['view_insertion_ps']:g} early {r['plan_early_ps']:g} -> {r['early_ps']:g}")
+            if r["clamped"]:
+                print(f"OT_CORE_TAP_CLAMP {tn} {r['port']} {r['inst']}/{r['view_pin']}: view insertion {r['view_insertion_ps']:g} "
+                      f"needs more than the {r['early_ps']:g} ps a tap can deliver (die STA target, not a stop)")
+    if rows and not mean_contract:
+        by_pin = {(i, p): n for n, i, p, _e, _s in taps}
+        for r in rows:
+            if r.get("tap") == "grid" and (r["inst"], r["pin"]) in by_pin:
+                r["tap"] = by_pin[(r["inst"], r["pin"])]
     if mean_contract:
         for _port, inst, pin, _early, insertion in taps:
             matching = [r for r in rows if r["inst"] == inst and (pin == "*" or r["pin"] == pin)]
