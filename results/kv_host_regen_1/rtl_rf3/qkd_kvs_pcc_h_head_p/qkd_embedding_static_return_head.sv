@@ -7,7 +7,7 @@
 // data256 [255:0]} (the layout qkd_embedding_static_join4 unpacks).
 // Proof: rtl/test/qwen_static_kv/tb_qkd_embedding_return_head.sv (lock-step vs the hop with upi = 0).
 // MUT (bench only): 1 = transfer without an occupied beat does not fault.
-module qkd_embedding_static_return_head #(parameter integer MUT = 0) (
+module qkd_embedding_static_return_head #(parameter integer MUT = 0, parameter [297:0] TIE0 = 298'd0) (
     input wire ck,rst_n,
     input wire capture_slot,capture_v,input wire [297:0] capture_record,
     input wire transfer_slot,
@@ -20,7 +20,9 @@ module qkd_embedding_static_return_head #(parameter integer MUT = 0) (
     reg upo0;
     assign upo[0] = upo0;
     // PATH-KV-PC 10-25 (P7): kept record pin flops (bits constant for one PC are not folded into a shared tie)
-    wire [297:0] upo_d = ts_q ? retained : 298'd0;
+    // DIE-KV-67/LEC 11-04: TIE0 = record bits the PC strap holds 0 (unreset retained, X until the first capture;
+    // synthesis ties these pin flops)
+    wire [297:0] upo_d = ts_q ? (retained & ~TIE0) : 298'd0;
     for (genvar ub = 1; ub < 299; ub = ub + 1) begin : g_upo
         (* keep *) ot_kvpc_pin_dff u_q (.ck(ck), .d(upo_d[ub-1]), .q(upo[ub]));
     end

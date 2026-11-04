@@ -12,7 +12,7 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0, COR
  input wire hck,rst_n,
  input wire cfg_we,input wire [4:0] cfg_addr,input wire [63:0] cfg_data,
  input wire seal,go,input wire [15:0] epoch,input wire [5:0] layer,
- output reg static_cmd_owner,output reg [42:0] static_cmd,
+ output wire static_cmd_owner,output reg [42:0] static_cmd,
  output reg reserved_rd,reserved_static_col,reserved_write_col,
  output reg [15:0] static_epoch,output wire expected_raw_valid,
  output reg fault,output reg idle
@@ -28,6 +28,9 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0, COR
  else begin we_q<=cfg_we;seal_q<=seal;go_q<=go;end
  reg [127:0] image[0:N-1];reg [N-1:0] low_seen,high_seen;
  reg sealed;reg [15:0] active_epoch;reg [18:0] active_row;
+ // DIE-KV-67/LEC 11-04: owner = active_row[6]: same reset, same load, ROW0+layer has bit 6 set for layer<64.
+ initial if(ROW0!=64)$fatal(1,"static_cmd_owner reads active_row[6]: ROW0 must be 64");
+ assign static_cmd_owner=active_row[6];
  reg [15:0] wait_q[0:N-1];reg [9:0] left_q[0:N-1];reg [3:0] burst_q[0:N-1];
  wire [N-1:0] fire,live;
  genvar g;
@@ -56,7 +59,7 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0, COR
  always @(posedge hck or negedge rn)
  if(!rn)begin
  low_seen<=0;high_seen<=0;sealed<=0;active_epoch<=0;active_row<=0;
- static_cmd_owner<=0;static_cmd<=0;reserved_rd<=0;reserved_static_col<=0;reserved_write_col<=0;
+ static_cmd<=0;reserved_rd<=0;reserved_static_col<=0;reserved_write_col<=0;
  static_epoch<=0;static_read_q<=0;fault<=0;idle<=1;
  for(i=0;i<N;i=i+1)begin wait_q[i]<=0;left_q[i]<=0;burst_q[i]<=0;end
  end else begin
@@ -72,7 +75,7 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0, COR
  if(go_q)begin
  if(!sealed || |live || we_q)fault<=1;
  else begin
- active_epoch<=epoch_q;active_row<=19'(ROW0)+{13'b0,layer_q};static_cmd_owner<=1;idle<=0;
+ active_epoch<=epoch_q;active_row<=19'(ROW0)+{13'b0,layer_q};idle<=0;
  for(i=0;i<N;i=i+1)begin
  wait_q[i]<=image[i][15:0]+16'(MUT==1);left_q[i]<=image[i][25:16];burst_q[i]<=0;
  end

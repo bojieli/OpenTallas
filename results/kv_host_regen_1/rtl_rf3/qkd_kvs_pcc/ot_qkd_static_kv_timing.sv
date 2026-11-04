@@ -107,7 +107,9 @@ module ot_qkd_static_kv_timing #(
     reg [31:0] open, done, stale, refreshed;
     reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
     reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
-    reg streaming; reg [2:0] last; reg [10:0] nm1;   // registered at descriptor accept
+    reg streaming; reg [2:0] last_q; reg [10:0] nm1;  // DIE-KV-67/LEC 11-04: last = nm1[9:7] without context descriptors
+    wire [2:0] last = CONTEXT_DESC != 0 ? last_q : nm1[9:7];
+      // registered at descriptor accept
     wire [2:0] k = j[9:7];
     wire [4:0] rd_bank = {j[9:7], j[1:0]};
     wire [1:0] rd_bg = j[1:0];
@@ -562,7 +564,7 @@ module ot_qkd_static_kv_timing #(
     assign busy = streaming; assign ref_fault = fault_r;
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
-        streaming <= 0;v_consumer_order<=0;context_active<=0;context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last <= 0; nm1 <= 0;
+        streaming <= 0;v_consumer_order<=0;context_active<=0;context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last_q <= 0; nm1 <= 0;
         j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0;
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
@@ -690,7 +692,7 @@ module ot_qkd_static_kv_timing #(
           j <= first_sector; n <= desc_n; row <= desc_row;
           context_active<=context_accept;context_v<=desc_vpass;context_kb<=desc_k_order_b;context_k0<=desc_k_count0;ordinal<=0;context_count<=desc_n[8:0];
           v_consumer_order <= !context_accept && desc_first==10'd512 && desc_n==11'd768; done <= 0; running <= 0;
-          streaming <= (desc_n != 0); nm1 <= desc_n - 11'd1; last <= context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7);
+          streaming <= (desc_n != 0); nm1 <= desc_n - 11'd1; last_q <= context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7);
           stale <= open_nx;                     // rows still open from the old descriptor close first
         end
       end
