@@ -240,6 +240,8 @@ def test_hard_core_reset_gets_equal_depth_local_relay_and_reach_gate():
     assert RT._free(q["xy"], RT.blockages(P.types["src"]), (RT.CLEAR_UM, RT.CLEAR_UM, 859.68, 859.68))
     text = RT.tcl_text(T)
     assert "OT_RESET_CORE unresolved u_core.g_h[0].u_hc.rst_n" in text
+    # ODB getName returns u_core.g_h\\[0\\].u_hc: the instance match must unescape it (hd_lep0N global_place)
+    assert "set n [string map {\\\\[ [ \\\\] ]} [$i getName]]; if {$n eq {u_core.g_h[0].u_hc}" in text
     assert f"core:{c['tap']} rst_n_t{c['tap']}" in text
     offsets = RT.wf_plan(P)
     row = next(r for r in offsets["parts"].values() if r["type"] == "src")

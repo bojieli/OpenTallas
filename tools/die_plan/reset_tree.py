@@ -2069,12 +2069,13 @@ def tcl_text(T, native_paths=None):
     for c in T.get("core_resets", []):
         q = f"rst_n_t{c['tap']}"
         inst, pin = c["inst"], c["pin"]
+        # ODB getName escapes brackets (u_core.u.g_pp\\[0\\].u_pair); match on the plain Verilog form (hd_lep0N).
         names = [inst] + ([c["physical_inst"]] if c.get("physical_inst") else [])
         match = " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}" for x in names)
         t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
               "set rtr_cn {}; set rtr_ci {}",
               f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",
-              f"foreach i [$ff_blk getInsts] {{ set n [$i getName]; if {{{match}}} {{ lappend rtr_ci $i }} }}",
+              f"foreach i [$ff_blk getInsts] {{ set n [string map {{\\\\[ [ \\\\] ]}} [$i getName]]; if {{{match}}} {{ lappend rtr_ci $i }} }}",
               f"if {{[llength $rtr_cn] != 1 || [llength $rtr_ci] != 1}} {{ error {{OT_RESET_CORE unresolved {inst}.{pin} or {q}}} }}",
               f"set rtr_it [[lindex $rtr_ci 0] findITerm {{{pin}}}]",
               f"if {{$rtr_it eq \"NULL\"}} {{ error {{OT_RESET_CORE missing {inst}.{pin}}} }}",
