@@ -4,11 +4,11 @@ s81	dsdv_gunit_l1c	re-sign/count	NEEDS_PARENT counts
 s81	dsdv_gunit_l0r	re-sign/count	NEEDS_PARENT counts
 s81	ot_s81_cfg7_seq_bfp	re-sign/count	NEEDS_PARENT counts
 s81	dsdv_eng_rr_h0	re-sign/count	ccA_g2typed SIGNED, routed LEC
-s81	ot_s81sl_xrt1	near (1 fix)	FF -5.7
-s81	ot_s81sl_xrt3	near (1 fix)	GRT ov 14
+s81	ot_s81sl_xrt1	conservative build	RF-J (GRT-0232 x2)
+s81	ot_s81sl_xrt3	conservative build	RF-J (GRT-0232 x2)
 s81	ot_s81sl_eg	near (1 fix)	egn hold ECO FF -2.9
-s81	dsfd_bf_front_roots	near (1 fix)	TT -0.84
-s81	ot_s81sl_vs	near (1 fix)	DRT 3
+s81	dsfd_bf_front_roots	near (1 fix)	rf1s TT -23 FF -16.6, eco_loop
+s81	ot_s81sl_vs	near (1 fix)	rf1s TT -69.8 FF -0.9, eco_loop
 s81	dsdv_bk_g	conservative build	form 8 per-slice hv
 s81	ot_s81sl_capc5r	conservative build	rfdc
 s81	dsdv_gunit_l4	conservative build	rfd-gl4
@@ -66,3 +66,4 @@ hbm	ot_hgi_dma_back_static_vp4_banks_cp	LEC	no owner yet
 hbm	hnx_vms_bank_q0_faces	not tried (census fix merged)	pin-table views
 hbm	ot_hbm_hc_bank128_pair_core	not tried (census fix merged)	pin-table views
 hbm	ot_hgi_coll_gq_	not tried (census fix merged)	pin-table views
+s81	ot_s81sl_rom_q	conservative build	RF-J (FF -239 structural)
