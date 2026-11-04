@@ -9,6 +9,9 @@ grt KIT [--from-failed]  class GRT-NEAR-MISS: GRT stopped on a small congestion 
 gpl KIT  class GPL-SPIN: routability-driven global placement of a macro die runs out of filler and its overflow stays
     near 0.33-0.40 for >10k Nesterov iterations (idx_topk_link, idx_selector_sel, pdie_serdes: > 9 h).  3_3 runs without
     -routability_driven; GRT and sign-off still judge routing.
+dpl KIT  class DPL-NEGOTIATION: the default legalizer leaves overlaps (DPL-0701, then DPL-0033 at the check) although
+    utilization is low (idx_topk_link 43 %, long-wire buffers in macro channels).  3_5 runs the diamond legalizer, as
+    S81-CORES-KITS-12 did on peco; check_placement still judges the result.
 Then: run_kit_hbm.sh KIT finish (resumes at the first unfinished stage).
 """
 import argparse
@@ -40,6 +43,9 @@ if {[info commands ot_gp_full] eq ""} {
   }
 }
 """
+DPL = """# DIE-HBM-62/FLOW class DPL-NEGOTIATION: diamond legalizer in 3_5; check_placement still judges the result.
+set ::env(DETAIL_PLACEMENT_ARGS) -use_diamond_legalizer
+"""
 
 
 def hook(kit, stage, name, text):
@@ -68,7 +74,7 @@ def from_failed(kit):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("form", choices=["grt", "gpl"])
+    ap.add_argument("form", choices=["grt", "gpl", "dpl"])
     ap.add_argument("kit")
     ap.add_argument("--from-failed", action="store_true")
     a = ap.parse_args()
@@ -76,6 +82,8 @@ if __name__ == "__main__":
         hook(a.kit, "GLOBAL_ROUTE", "grt_near_miss.tcl", GRT)
         if a.from_failed:
             from_failed(a.kit)
+    elif a.form == "dpl":
+        hook(a.kit, "DETAIL_PLACE", "dpl_diamond.tcl", DPL)
     else:
         hook(a.kit, "GLOBAL_PLACE", "gpl_no_routability.tcl", GPL)
     print("LATE_FORM", a.form, a.kit)

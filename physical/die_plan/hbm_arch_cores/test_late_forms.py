@@ -45,3 +45,11 @@ def test_from_failed_keeps_prehold(tmp_path):
 
 def test_grt_form_skips_antenna_repair():
     assert "set ::env(SKIP_ANTENNA_REPAIR) 1" in F.GRT
+
+
+def test_dpl_form_hooks_the_detail_place_stage(tmp_path):
+    (tmp_path / "config.mk").write_text("export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl\n")
+    (tmp_path / "face_flops_release.tcl").write_text("puts x\n")
+    F.hook(tmp_path, "DETAIL_PLACE", "dpl_diamond.tcl", F.DPL)
+    assert (tmp_path / "face_flops_release.tcl").read_text().startswith("source /work/dpl_diamond.tcl\n")
+    assert "-use_diamond_legalizer" in (tmp_path / "dpl_diamond.tcl").read_text()
