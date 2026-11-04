@@ -11,6 +11,16 @@ def test_m5_e_pin_on_track_and_touches_face():
     assert rows[0]["w"] >= 0.048 and rows[0]["h"] == 0.48
 
 
+def test_plan_point_inside_the_face_still_lands_on_it():
+    # v39c3 rst_n: plan x 266.712 on a 270 um core, 3.288 um inside the E face
+    p = dict(name="rst_n", layer="M5", x=266.712, y=313.181)
+    txt, rows = G.io_tcl([p], 270.0, 403.92, "t", clock_entry=dict(names=[], m5=M5))
+    assert "-location {269.9280 313.1810} -pin_size {0.1440 0.4800}" in txt
+    assert rows[0]["face"] == "E" and rows[0]["x"] == 270.0
+    txt, rows = G.io_tcl([dict(p, x=3.0)], 270.0, 403.92, "t", clock_entry=dict(names=[], m5=M5))
+    assert rows[0]["face"] == "W" and rows[0]["x"] == 0.0 and rows[0]["entry"][0] - rows[0]["w"] / 2 <= 0.0
+
+
 def test_other_pins_unchanged():
     ps = [dict(name="a", layer="M4", x=270.0, y=10.0), dict(name="b", layer="M5", x=50.0, y=0.0)]
     with_ce = G.io_tcl(ps, 270.0, 403.92, "t", clock_entry=dict(names=[], m5=M5))
