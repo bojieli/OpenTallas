@@ -28,7 +28,7 @@ def refs(path):
             m.append(rel[y]); x-=1;y-=1
         if ok and any(not GENERIC.match(q) for q in m):
             if k=='S': return ('S','/'.join(c))
-            best=('L','/'.join(c))
+            if k=='L' or not best: best=(k,'/'.join(c))
     return best
 import bisect
 cache_words=set()
@@ -73,9 +73,9 @@ def exact_ref(p):
             m.append(rel[y]); x-=1;y-=1
         if ok and any(not GENERIC.match(q) for q in m): return True
     return False
-def full_ref(p):
+def full_ref(p,skipA=False):
     f=refs(p)
-    if f: return f
+    if f and not(skipA and f[0]=='A'): return f
     b=os.path.basename(p)
     if os.path.dirname(p) in (CL,CL+'/wt') and b in cache_words: return ('S','cacheword:'+b)
     if os.path.dirname(p)==CL and any(c[i]==b for k,c,i in idx_any.get(b,())): return ('L','name:'+b)
@@ -83,7 +83,7 @@ def full_ref(p):
     if link_in(p): return ('S','symlink-in:'+link_in(p))
     if live_hit(p): return ('S','live-cmdline')
     for c in childs.get(p,()):
-        f=full_ref(c)
+        f=full_ref(c,skipA)
         if f: return f
     return None
 idx_any=collections.defaultdict(list)
@@ -99,6 +99,7 @@ newest=collections.defaultdict(int)
 for p in rows:
     m=ATT.match(p)
     if m: newest[m.group(1)]=max(newest[m.group(1)],int(m.group(2)))
+TERM=set(l.strip() for l in open(f'/tmp/p1104m_term_{host}.txt')) if os.path.exists(f'/tmp/p1104m_term_{host}.txt') else set()
 res=collections.Counter(); out_rows=[]; kept=collections.Counter(); keptl=collections.defaultdict(list)
 # class 1 superseded attempts
 for p,r in rows.items():
@@ -111,7 +112,7 @@ for p,r in rows.items():
     elif EXCL.search(rel): why='excl'
     elif age<6: why='recent'
     else:
-        f=full_ref(p)
+        f=full_ref(p,p in TERM)
         if f: why='ref'+f[0]
     if why: kept['att-'+why]+=r['kb']; continue
     res['attempt']+=r['kb']; out_rows.append((p,r,'attempt',f"superseded kit-wave attempt (newer attempt_{newest[m.group(1)]})"))
