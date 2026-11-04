@@ -21,10 +21,10 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch3/claude/kw-fix-8/src_n/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch3/claude/kw-fix-8/src_o/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_n",
-   "src_sha": "90ad150b102e16940e6939cb09fd9074ff9f465d",
+   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_o",
+   "src_sha": "981ebe39fdb2dbb436c37c5df186781dda0e1d28",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch3/claude/kw-fix-8/asbuilt_o.json",
@@ -35,7 +35,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch3/claude/kw-fix-8/src_n/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch3/claude/kw-fix-8/src_o/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -275,7 +275,7 @@
     "kv3_phy",
     "kv3_phy_v1"
    ],
-   "note": "KW-FIX-8 10:0x I36: src_n main 6c547da940f, PV 16 + PC 6 one class; hubs held, kv3_phy waits phymid | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-7 06:4x: src main 5405676ba19 (tag j, plan and sidecar blobs identical to d0cddccfa24 [git rev-parse]), --native-cell-cap 517000 (COORD 06:00 (2)). | KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
+   "note": "KW-FIX-8 10:1x I37 tag p-kv: src_o, kv3_phy pilot alone (phymid); kv3_phy_v1 held for its G2 read | KW-FIX-8 10:0x I36: src_n main 6c547da940f, PV 16 + PC 6 one class; hubs held, kv3_phy waits phymid | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-7 06:4x: src main 5405676ba19 (tag j, plan and sidecar blobs identical to d0cddccfa24 [git rev-parse]), --native-cell-cap 517000 (COORD 06:00 (2)). | KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
    "die_max_inflight": 60,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
@@ -298,7 +298,8 @@
     "kv3_io_ft_v1": "KW-FIX-7 06:3x COORD: Ring FT no release until DIE-KV-67 posts the guard 0 vs gate -90 cause; do not launch",
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
     "kv3_hub_Eo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ",
-    "kv3_hub_Wo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ"
+    "kv3_hub_Wo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ",
+    "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1104/kit-wave",
    "retry_fix": {
@@ -533,7 +534,7 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "claude/kw8-srcn-1104@90ad150b102e16940e6939cb09fd9074ff9f465d",
+   "queue_src": "claude/kw8-srco-1104@981ebe39fdb2dbb436c37c5df186781dda0e1d28",
    "hold_items_released": {
     "kv3_pc": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
