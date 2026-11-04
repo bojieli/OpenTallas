@@ -9,7 +9,7 @@ S=$(cd "$1" && pwd); W=$2; mkdir -p "$W"; W=$(cd "$W" && pwd)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 TB=$S/tools/dsrom_qelem_cl/tb_qxpq_go_boundary.sv
 DUT_CGR=${DUT_CGR:-0}; REF_CGR=${REF_CGR:-0}
-CG="+define+TB_DUT_CGR=$DUT_CGR +define+TB_REF_CGR=$REF_CGR"; PCHK=""; [ "$DUT_CGR" != 0 ] && PCHK=+define+QP_CHECK
+CG="+define+TB_DUT_CGR=$DUT_CGR +define+TB_REF_CGR=$REF_CGR ${EXTRA_DEF:-}"; PCHK=""; [ "$DUT_CGR" != 0 ] && PCHK=+define+QP_CHECK
 echo "DUT_CGR $DUT_CGR REF_CGR $REF_CGR verilator $("$V" --version)"
 RTL="rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv rtl/v41rom/ot_v41_elem_pq_tags.sv rtl/v41rom/ot_v41_kreg.sv
  rtl/v41rom/ot_v41_chain3.sv rtl/v41rom/ot_v41_chain4.sv rtl/v41rom/ot_v41_fadd2.sv rtl/v41rom/ot_v41_rom_elem_w10.sv
