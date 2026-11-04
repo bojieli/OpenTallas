@@ -1148,11 +1148,19 @@ def wf_solve(P):
                         out.append((q, j, round(d, 1)))
         return out
     ein = {}                                   # (p, cand) -> [(q, j, d)]
+    # reset.parent_pins {part: parent} (opt-in, plan events): a part keeps its already solved parent, so a local geometry
+    # change cannot flip release races elsewhere and rewrite the reset trees of untouched types; a pin out of hop leaves
+    # the part unreachable (flagged like any other, G0 error).
+    # A pin [parent, site] also names the parent's rst_o face site; reset.keep_outs {type: [site]} keeps a published out of
+    # an untouched type that no instance uses any more, so the type's tree stays as signed.
+    pins = P.reset.get("parent_pins") or {}
+    pinned = lambda p, rows: (rows if p not in pins else [r for r in rows if r[0] == pins[p]] if isinstance(pins[p], str)
+                              else [r for r in rows if r[0] == pins[p][0] and r[1] == pins[p][1]])
     for p in soft:
         for c in cands[P.parts[p]["type"]]:
-            ein[(p, c)] = near(p, P.to_die(p, c))
+            ein[(p, c)] = pinned(p, near(p, P.to_die(p, c)))
     for p in hard:
-        ein[(p, None)] = near(p, part_reset_pin(P, p))
+        ein[(p, None)] = pinned(p, near(p, part_reset_pin(P, p)))
     rtype = P.parts[root]["type"]
 
     def entry(p):
@@ -1247,6 +1255,8 @@ def wf_solve(P):
     for p, pr in par.items():
         if pr is not None:
             outs[P.parts[pr[0]]["type"]].add(pr[1])
+    for tn, kept in (P.reset.get("keep_outs") or {}).items():
+        outs[tn].update(kept)
     res = dict(root=root, root_type=rtype, choice=choice, parent=par, unreachable=unr, est_rel=rel,
                outs={tn: sorted(v) for tn, v in outs.items()}, hard=sorted(hard), hard_depth=hdep)
     cache["wf_solve"] = res
