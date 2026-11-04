@@ -2050,7 +2050,10 @@
     "type"
    ],
    "take_states": [
-    "NEEDS-KIT"
+    "NEEDS-KIT",
+    "FIX",
+    "KIT-PLACED",
+    "PLAN-STRUCTURAL"
    ],
    "pilot_max": 2,
    "place_mem_gb": 48,
@@ -2464,7 +2467,8 @@
     "epyc4",
     "intel1",
     "intel2"
-   ]
+   ],
+   "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged."
   },
   "hbm": {
    "enabled": true,
