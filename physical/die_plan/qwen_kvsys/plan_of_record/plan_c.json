@@ -2178744,7 +2178744,7 @@
     },
     {
      "inst": "kvpc0_f",
-     "module": "qkd_kvs_pcf",
+     "module": "qkd_kvs_pcf_h_head_p",
      "origin_um": [
       90.72,
       246.24
@@ -2178754,7 +2178754,7 @@
       267.84
      ],
      "orient": "MY",
-     "note": "RF-KV3 split PCF of kvpc0 (u_front + u_return; DIE-KV-64/RF-B 11-03, derived plan)",
+     "note": "RF-KV3 split PCF of kvpc0 (u_front + u_return; DIE-KV-64/RF-B 11-03, derived plan) | DIE-KV-67 11-04 distinct master: fMY PCF shares a parent with fMX PCF, one LEF per master",
      "track_offset_um": [
       -0.96,
       0.0
@@ -2182926,7 +2182926,7 @@
     },
     {
      "inst": "kvpc0_f",
-     "module": "qkd_kvs_pcf",
+     "module": "qkd_kvs_pcf_h_head_p",
      "origin_um": [
       90.72,
       246.24
@@ -2182936,7 +2182936,7 @@
       267.84
      ],
      "orient": "MY",
-     "note": "RF-KV3 split PCF of kvpc0 (u_front + u_return; DIE-KV-64/RF-B 11-03, derived plan)",
+     "note": "RF-KV3 split PCF of kvpc0 (u_front + u_return; DIE-KV-64/RF-B 11-03, derived plan) | DIE-KV-67 11-04 distinct master: fMY PCF shares a parent with fMX PCF, one LEF per master",
      "track_offset_um": [
       -0.96,
       0.0

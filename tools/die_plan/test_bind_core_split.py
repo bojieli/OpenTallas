@@ -1,0 +1,80 @@
+"""DIE-KV-67 11-04: opt-in asbuilt.core_splits (one hard leaf -> PCC + PCF, optional PC reset gate)."""
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import bind_core_split as S
+from bind_elab import Cell
+
+
+def spec(**kw):
+    s = dict({"from": "pc", "pcc": "pcc", "pcf": "pcf", "face": {"port": "x", "width": 2},
+              "split": {"g": {"pcc": [0, 2], "pcf": [1], "pcc_port": "g_c", "pcf_port": "g_f"}},
+              "shared": {"ck": None, "r": [0]}})
+    s.update(kw)
+    return s
+
+
+def binder(*cells):
+    F = SimpleNamespace(cells=list(cells), n=100)
+
+    def new(n):
+        F.n += n
+        return F.n - n
+    F.new = new
+    R = SimpleNamespace(parts={}, part_of=lambda p: "P0" if p.startswith("u_") else None, local_of=lambda p: p)
+    return SimpleNamespace(F=F, R=R)
+
+
+def leaf(path="u_a", module="pc"):
+    return Cell(path, module, {}, {"g": [1, 2, 3], "ck": [4], "r": [5, 6]},
+                {"g": "input", "ck": "input", "r": "input"}, "leaf", ytype=module, yparams={}, src=None)
+
+
+def test_split_ports_bits_and_face():
+    b = binder(leaf(), Cell("u_o", "other", {}, {}, {}, "leaf", ytype="other", yparams={}, src=None))
+    got = S.apply(b, [spec()])
+    assert got == [dict(leaf="u_a", pcc="pcc", pcf="pcf", part="P0")]
+    c, f, o = b.F.cells
+    assert (c.path, c.module, f.path, f.module, o.module) == ("u_a", "pcc", "u_a_f", "pcf", "other")
+    assert c.ports["g_c"] == [1, 3] and f.ports["g_f"] == [2] and "g" not in c.ports
+    assert c.ports["x"] == f.ports["x"] == [100, 101]
+    assert (c.dirs["x"], f.dirs["x"]) == ("output", "input")
+    assert f.ports["ck"] == [4] and f.ports["r"] == [5] and c.ports["r"] == [5, 6]
+    assert b.R.parts["u_a_f"] == ["P0", "u_a_f"]
+
+
+def test_two_masters_for_two_sources():
+    b = binder(leaf("u_a", "pc"), leaf("u_h", "pch"))
+    S.apply(b, [spec(), spec(**{"from": "pch", "pcc": "pcc_h", "pcf": "pcf_h"})])
+    assert [c.module for c in b.F.cells] == ["pcc", "pcf", "pcc_h", "pcf_h"]
+
+
+@pytest.mark.parametrize("split", [{"pcc": [0], "pcf": [1]}, {"pcc": [0, 1], "pcf": [1, 2]}])
+def test_split_must_cover_each_bit_once(split):
+    bad = spec(split={"g": dict(split, pcc_port="g_c", pcf_port="g_f")})
+    with pytest.raises(S.CoreSplitError):
+        S.apply(binder(leaf()), [bad])
+
+
+def test_missing_ports_and_partition_refused():
+    with pytest.raises(S.CoreSplitError):
+        S.apply(binder(leaf()), [spec(shared={"nope": None})])
+    with pytest.raises(S.CoreSplitError):
+        S.apply(binder(leaf("x_a")), [spec()])
+
+
+def test_gate_ports_only_when_asked():
+    assert S.gate_ports([spec()]) == {}
+    assert S.gate_ports([spec(reset_gate=["r"])]) == {"pcc": {"r"}, "pcf": {"r"}}
+
+
+def test_gate_tap_nearest_boot_tap():
+    relays = [dict(q="rst_rl_0", xy=(0, 0)), dict(q="rst_n_t1", xy=(100, 0)), dict(q="rst_n_t0", xy=(10, 10))]
+    assert S.gate_tap(relays, (0, 0)) == "rst_n_t0"
+    assert S.gate_tap(relays, (90, 0)) == "rst_n_t1"
+    with pytest.raises(S.CoreSplitError):
+        S.gate_tap(relays[:1], (0, 0))
