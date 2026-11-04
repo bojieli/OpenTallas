@@ -19,14 +19,14 @@ def test_no_dead_contract_without_complete_proof(tmp_path):
     with pytest.raises(ValueError): H.emit(tmp_path,'m',tmp_path,['dead[0]'])
 
 
-def test_stopped_post_leg_is_recorded_and_other_gaps_still_refused(tmp_path):
+def test_stopped_post_leg_stays_pending_and_declares_nothing(tmp_path):
     pre = dict(modules=dict(m=dict(ports=dict(dead=dict(direction='input',bits=[2])),cells={})))
     fp=tmp_path/'fp';fp.mkdir();kit=tmp_path/'kit';kit.mkdir()
     (fp/'pre.json').write_text(json.dumps(pre))
     (fp/'eq_rc.txt').write_text('post stopped see post_leg_note.txt mut rc=1 emitted_v rc=0')
-    assert H.emit(fp,'m',kit,['dead[0]']) == ['dead[0]']
-    r=json.loads((kit/'hr_dead_inputs_proof.json').read_text())
-    assert r['post_leg']=='stopped, no result' and 'stopped' in r['method'] and r['eq_rc'][1]=='stopped'
+    assert H.emit(fp,'m',kit,['dead[0]']) == []
+    assert json.loads((kit/'hr_dead_inputs_proof.json').read_text())['verdict']=='PENDING'
+    assert not (kit/'dead_inputs.json').exists()
     import pytest
     for bad in ('post stopped mut pending emitted_v pending','post stopped mut rc=0 emitted_v rc=0',
                 'post stopped mut rc=1 emitted_v rc=1','post rc=1 mut rc=1 emitted_v rc=0'):

@@ -9,7 +9,7 @@ FP_TAIL = ['mut', 'rc=1', 'emitted_v', 'rc=0']   # the legs that prove the kit R
 
 
 def stopped_post_only(rc):
-    """Post-JSON leg stopped with no result, emitted-RTL leg and mutant returned. The receipt says so."""
+    """Post-JSON leg stopped with no result: pending, never accepted."""
     return rc[:2] == ['post', 'stopped'] and rc[-4:] == FP_TAIL
 
 
@@ -44,16 +44,21 @@ def emit(fp, module, kit, candidates):
     if not candidates or not (fp / 'pre.json').is_file():
         return []
     rc = (fp / 'eq_rc.txt').read_text().split()
-    stopped = stopped_post_only(rc)
-    if rc != FP_PASS and not stopped:
+    if stopped_post_only(rc):
+        # COORD 11-04: a stopped leg is no proof. Recorded as pending, nothing is declared dead.
+        (kit / 'hr_dead_inputs_proof.json').write_text(json.dumps(dict(
+            verdict='PENDING', module=module, candidates=candidates, eq_rc=rc,
+            reason='post-JSON leg stopped with no result; no dead input declared until it returns'), indent=1) + '\n')
+        return []
+    if rc != FP_PASS:
         raise ValueError('HR dead-input contract needs complete post/mutant/emitted proof')
     raw = (fp / 'pre.json').read_bytes()
     bits = exact_dead_bits(json.loads(raw), module, candidates)
     if not bits:
         return []
-    receipt = dict(verdict='PASS', module=module, bits=bits, eq_rc=rc, post_leg='stopped, no result' if stopped else 'rc=0',
+    receipt = dict(verdict='PASS', module=module, bits=bits, eq_rc=rc,
                    pre_sha256=hashlib.sha256(raw).hexdigest(),
-                   method='Exact input bits have no cell connection or output alias in the original flattened pre-netlist; ' + ('emitted-RTL equivalence and its mutant control passed; the post-JSON leg was stopped with no result.' if stopped else 'full transform and emitted-RTL equivalence passed.') + ' Mapped guard independently requires no load or driver.')
+                   method='Exact input bits have no cell connection or output alias in the original flattened pre-netlist; full transform and emitted-RTL equivalence passed. Mapped guard independently requires no load or driver.')
     (kit / 'hr_dead_inputs_proof.json').write_text(json.dumps(receipt, indent=1) + '\n')
     (kit / 'dead_inputs.json').write_text(json.dumps(dict(schema='opentallas.kit_dead_inputs.v1', bits=bits,
         proof=dict(verdict='PASS', method=receipt['method'], receipt='hr_dead_inputs_proof.json')), indent=1) + '\n')
