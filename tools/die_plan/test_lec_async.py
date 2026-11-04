@@ -214,3 +214,40 @@ def test_reused_proof_refuses_changed_synth_before_physical(tmp_path):
     assert failed.returncode == 11 and "synth changed reused proof netlist" in failed.stderr
     assert all((k / n).read_bytes() == value for n, value in original.items())
     assert not (k / "lec_async.stop").exists()  # Original proof remains its own valid scope.
+
+
+def _long_ready(k, tmp_path):
+    # The fake docker cannot kill the exec when the container's main process ends, so the LEC watches for that here.
+    (k / "lec_async.ready").write_text("1\nuntil [ -f /work/lec_async.abort ]; do sleep 0.1; done; exit 137\n")
+    for _ in range(100):
+        if (k / "docker_exec.args").exists():
+            return
+        time.sleep(0.1)
+    raise AssertionError("LEC never started")
+
+
+def _wait(k, env, rc):
+    args = ["bash", str(TOOL), "wait", str(k), "flowc", "route", str(rc)]
+    return subprocess.run(args, check=True, env=env, capture_output=True, text=True, timeout=30).stdout
+
+
+def test_plan_stop_aborts_the_proof_without_a_verdict(tmp_path):
+    k, env = _kit(tmp_path, 0)
+    _long_ready(k, tmp_path)
+    assert "LEC aborted" in _wait(k, env, 2)
+    assert _finish(k, env, 2) == "2"
+    assert (k / "lec_async.done").exists() and not (k / "lec_async.rc").exists()
+    assert not (k / "lec_async.stop").exists() and not (k / "FAIL_PREFLOOR").exists()
+    assert not (k / "flow.stopped").exists()
+    assert not (k / "lec_async.ready").exists() and not (k / "lec_async.identity").exists()
+
+
+def test_stop_after_place_keeps_the_proof(tmp_path):
+    k, env = _kit(tmp_path, 0)
+    d = k / "run/results/asap7/x/base"
+    d.mkdir(parents=True)
+    (d / "3_place.odb").write_text("x")
+    _ready(k, "1", 0)
+    assert "aborted" not in _wait(k, env, 2)
+    assert (k / "lec_async.rc").read_text().strip() == "0" and not (k / "lec_async.abort").exists()
+    assert (k / "lec_async.identity").exists()

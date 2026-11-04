@@ -266,6 +266,12 @@ watch)
     -w /OpenROAD-flow-scripts/flow "$NAME" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $RUN; r=\$?; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log 2>/dev/null; exit \$r" \
     >> "$K/lec_async.log" 2>&1
   lr=$?
+  if [ -f "$K/lec_async.abort" ]; then
+    # Not a verdict: no rc, no LEC marker, and no ready/identity for a later scope to take as a finished proof.
+    rm -f "$K/lec_async.ready" "$K/lec_async.identity"
+    echo "LEC_ASYNC $(date '+%F %T') aborted with its flow (exit $lr)"
+    exit 0
+  fi
   echo $lr > "$K/lec_async.rc"
   tail -1 "$K/lec_run.log" 2>/dev/null
   if { [ "$POL" = nz ] && [ $lr != 0 ]; } || { [ "$POL" = 1 ] && [ $lr = 1 ]; }; then
@@ -303,6 +309,15 @@ wait)
   [ -z "$NAME" ] || phase_done "$K" "$NAME" "$GOAL" "$RC"
   OWNER=$(cat "$K/lec_async.owner" 2>/dev/null || true)
   [ -z "$NAME" ] || [ "$NAME" = "$OWNER" ] || exit 0
+  # A flow that stopped before it has a place checkpoint (plan stop: cell cap, MPL-0034) has nothing a later scope
+  # could resume, so its proof has no reader. Return now: this is the container's last step, so the LEC exec'd in it
+  # ends with it and the admitted slot is released. Stops from place on keep the proof for stage resume.
+  if [ "$RC" != 0 ] && [ -f "$K/lec_async.ready" ] && [ ! -f "$K/lec_async.rc" ] \
+     && ! compgen -G "$K/run/results/asap7/*/base/3_place.odb" > /dev/null; then
+    echo "LEC_ASYNC flow stopped rc $RC before a place checkpoint: pre-route LEC aborted"
+    touch "$K/lec_async.abort"
+    exit 0
+  fi
   while [ -f "$K/lec_async.on" ] && [ -f "$K/lec_async.ready" ] && [ ! -f "$K/lec_async.rc" ]; do
     sleep "${OT_LEC_ASYNC_POLL:-5}"
   done
