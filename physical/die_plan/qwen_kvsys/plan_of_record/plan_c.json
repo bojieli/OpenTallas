@@ -1205940,7 +1205940,17 @@
        "fstart:ft3_o"
       ]
      }
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "ft0_i",
+      "ft1_i",
+      "ft2_i",
+      "ft3_i"
+     ],
+     "dsrep": 8,
+     "freg": true
+    }
    },
    "reset": {
     "tap_um": [
@@ -2312566,8 +2312576,7 @@
  "clock": {
   "ring_hold": {
    "sender_ps": -385.0,
-   "write_edge": "fall",
-   "ft_ring_max_ps": 166.6
+   "write_edge": "fall"
   },
   "source": {
    "part": "@die",
