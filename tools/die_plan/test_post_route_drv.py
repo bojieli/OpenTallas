@@ -7,6 +7,7 @@ import re
 import shutil
 import stat
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -183,9 +184,9 @@ def test_mk_refuses_ff_only_variant_on_two_mode_kit(tmp_path):
 
 def test_hook_sink_guard_order():
     s = (PRD / "prd_hook.tcl").read_text()
-    order = ["ot_clk_freeze\n", "set_dont_use $lc", "repair_design {*}${_drv_args}", "repair_timing -setup",
+    order = ["ot_clk_freeze\n", "set_dont_use $lc", "repair_design {*}${_drv_args}", "repair_timing {*}$_st_args",
              "ot_repair_hold_guarded $args", "repair_timing -hold {*}$args", "set ::ot_prd_reverted [ot_prd_sink_revert]", "\ndetailed_placement\n",
-             "check_placement", "global_route -end_incremental", "ot_clk_freeze_assert post_grt"]
+             "check_placement", "\nglobal_route -end_incremental", "ot_clk_freeze_assert post_grt"]
     pos = [s.index(x) for x in order]
     assert pos == sorted(pos), list(zip(order, pos))
     assert "ot_prd_spef_arm $::env(RESULTS_DIR)/6_final.spef" in s
@@ -278,7 +279,7 @@ def test_optional_wire_limit_uses_real_repair_command():
     import subprocess
     source = (PRD / "prd_hook.tcl").read_text()
     start = source.index("set _drv_args")
-    end = source.index("repair_design {*}${_drv_args}", start) + len("repair_design {*}${_drv_args}")
+    end = source.index("repair_design {*}${_drv_args}\n}", start) + len("repair_design {*}${_drv_args}\n}")
     fragment = source[start:end]
     prefix = "set ::env(OT_SLEW_MARGIN) 20\nset _pass 1\nproc repair_design {args} {puts \"CALL $args\"}\n"
     for limit, expected in ((None, "-slew_margin 20 -cap_margin 20"), (100, "-slew_margin 20 -cap_margin 20 -max_wire_length 100")):
@@ -327,6 +328,7 @@ def test_protected_net_is_exact_data_only(name, signal_type, clock_nets, ok):
                       source.index("global_route -start_incremental")]
     harness = f'''
 set ::env(OT_PRD_PROTECT_NETS) {{{name}}}
+set ::env(OT_PRD_REPAIR_RC) grt
 namespace eval ord {{ proc get_db_block {{}} {{return block}} }}
 proc block {{command name}} {{if {{$name eq "missing"}} {{return NULL}}; return dbnet}}
 proc dbnet {{command}} {{return {signal_type}}}
@@ -515,10 +517,10 @@ def test_hook_route_keep_after_clock_assert_before_guides():
     s = (PRD / "prd_hook.tcl").read_text()
     # FLOW-13: select + rip + park BEFORE the incremental GRT end (updateDirtyNets destroys dirty nets' wires), restore after
     order = ["detailed_placement", "source [file join $_here prd_route_keep.tcl]", "ot_prd_route_keep\n",
-             "global_route -end_incremental", "ot_clk_freeze_assert post_grt", "ot_prd_route_keep_restore", "write_guides"]
+             "\nglobal_route -end_incremental", "ot_clk_freeze_assert post_grt", "ot_prd_route_keep_restore", "write_guides"]
     pos = [s.index(x) for x in order]
     assert pos == sorted(pos)
-    assert 'set _route_keep [expr {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) eq "route"}]' in s
+    assert 'set _route_keep [expr {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) in {route final}}]' in s
 
 
 MOCK_ODB = r"""
@@ -666,8 +668,75 @@ def test_mk_tt_only_variant_on_single_mode_kit(tmp_path):
 def test_tt_only_eco_contract():
     hook = (PRD / "prd_hook.tcl").read_text()
     i = hook.index("OT_PRD_NO_HOLD")
-    assert hook.index("repair_timing -setup") < i < hook.index("ot_repair_hold_guarded")
+    assert hook.index("repair_timing {*}$_st_args") < i < hook.index("ot_repair_hold_guarded")
     km = (ROOT / "tools/die_plan/kit_modes_eco.tcl").read_text()
     t = km.index('$km_cs eq "tc"')
     assert t < km.index('[lindex $km_cs 0] ne "bc"') and "OT_PRD_NO_HOLD" in km[t:t + 200]
     assert "-e OT_PRD_NO_HOLD" in (PRD / "prd_run.sh").read_text()
+
+
+# FLOW-24 11-03 (B): stale-seed class (S81 l4: 6_final.{odb,spef} rewritten by a later peco; 5_1/5_2 pre-ECO)
+def _odb(*names):
+    return b"ODB\x00" + b"".join(len(n).to_bytes(4, "little") + n.encode() + b"\x00" for n in names) + b"\x00"
+
+
+def _spef(nets, insts, extra_map=()):
+    names = list(nets) + list(insts) + list(extra_map)
+    s = ['*SPEF "ieee 1481-1999"', "*NAME_MAP"] + [f"*{i + 1} {n}" for i, n in enumerate(names)] + ["", "*PORTS", ""]
+    for j, n in enumerate(nets):
+        s += [f"*D_NET *{j + 1} 0.001", "*CONN"] + [f"*I *{len(nets) + k + 1}:A I *D BUFx2_ASAP7_75t_R"
+                                                   for k in range(len(insts))] + ["*END", ""]
+    return "\n".join(s) + "\n"
+
+
+def _seed_kit(tmp_path, final_extra):
+    kit = make_kit(tmp_path)
+    b = kit / "run/results/asap7" / NICK / "base"
+    base = ["n1", "n2", "u1", "u2"]
+    (b / "5_1_grt.odb").write_bytes(_odb(*base))
+    (b / "5_2_route.odb").write_bytes(_odb(*base))
+    (b / "6_final.odb").write_bytes(_odb(*base, "FILLER_0_1", *final_extra))
+    nets = ["n1", "n2"] + [n for n in final_extra if n.endswith("_n")]
+    insts = ["u1", "u2"] + [n for n in final_extra if not n.endswith("_n")]
+    (b / "6_final.spef").write_text(_spef(nets, insts, extra_map=["FILLER_0_1"]))
+    return kit
+
+
+def test_prd_seed_detects_stale_seed_and_ignores_pinless_fillers(tmp_path):
+    kit = _seed_kit(tmp_path, ["hxeco_0", "hxeco_0_n"])
+    b = kit / "run/results/asap7" / NICK / "base"
+    r = subprocess.run([sys.executable, "-I", str(PRD / "prd_seed.py"), str(b / "5_2_route.odb"),
+                        str(b / "6_final.odb"), str(b / "6_final.spef")], capture_output=True, text=True)
+    assert r.returncode == 3, r.stdout + r.stderr
+    rec = json.loads(r.stdout)
+    assert rec["stale"] and rec["missing"] == 2 and set(rec["examples"]) == {"hxeco_0", "hxeco_0_n"}
+    ok = _seed_kit(tmp_path / "ok", [])   # a normal finish: 6_final adds only pin-less fillers (in the NAME_MAP)
+    b = ok / "run/results/asap7" / NICK / "base"
+    r = subprocess.run([sys.executable, "-I", str(PRD / "prd_seed.py"), str(b / "5_2_route.odb"),
+                        str(b / "6_final.odb"), str(b / "6_final.spef")], capture_output=True, text=True)
+    assert r.returncode == 0 and not json.loads(r.stdout)["stale"], r.stdout + r.stderr
+
+
+@pytest.mark.parametrize("frm", ["grt", "route"])
+def test_mk_stale_seed_stages_final_before_the_session(tmp_path, frm):
+    kit = _seed_kit(tmp_path, ["hxeco_0", "hxeco_0_n"])
+    r = mk(kit, tmp_path / "p", env=dict(os.environ, OT_PRD_FROM=frm))
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "STALE SEED" in r.stdout
+    p = tmp_path / "p"
+    v = (p / "variant.env").read_text().splitlines()
+    assert "OT_ECO_FROM=final" in v and "OT_PRD_FROM=final" in v      # hook: fillers removed + route-keep
+    prd = json.loads((p / "PRD.json").read_text())
+    assert prd["from"] == "final" and prd["source_route"].endswith("/6_final.odb")
+    b = p / "run/results/asap7" / NICK / "base"
+    assert (b / "4_cts.odb").read_bytes() == (kit / "run/results/asap7" / NICK / "base/6_final.odb").read_bytes()
+    assert json.loads((p / "prd_seed.json").read_text())["missing"] == 2
+
+
+def test_mk_consistent_seed_unchanged(tmp_path):
+    kit = _seed_kit(tmp_path, [])
+    r = mk(kit, tmp_path / "g")
+    assert r.returncode == 0 and "STALE" not in r.stdout, r.stdout + r.stderr
+    g = tmp_path / "g"
+    assert "OT_ECO_FROM=grt" in (g / "variant.env").read_text().splitlines()
+    assert (g / "run/results/asap7" / NICK / "base/4_cts.odb").read_bytes() == _odb("n1", "n2", "u1", "u2")
