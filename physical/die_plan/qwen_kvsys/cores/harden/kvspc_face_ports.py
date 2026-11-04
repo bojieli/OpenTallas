@@ -101,6 +101,18 @@ def sched_nc(text, mut=0):
 def chain_land(text, mod, mut=0):
     i, j = _module(text, mod)
     s = text[i:j]
+    if "if (bh_q) land_es[287:1] <= les_q;" in s:
+        # RF-KV2 registered boot tap source (rtl_rf1/common, DIE-KV-64/RF-B 11-03): same private port flop form on the
+        # registered hit / word (port <= bh_q ? les_q : les_i), 0 cycles on top of the source's +1
+        s = _sub1(s, "    always @(posedge ck) if (bh_q) land_es[287:1] <= les_q;\n",
+                  "    // KV-CORE-RTL/PC 10-25: land_es[287:1] private port flops (no hold loop on the pin flop): next state from the\n"
+                  "    // internal copy les_i (port <= bh_q ? les_q : les_i), equal on every edge (0 cycles)\n"
+                  "    (* keep *) reg [287:1] les_i;\n"
+                  "    always @(posedge ck) if (bh_q) les_i <= les_q;\n"
+                  "    always @(posedge ck) land_es[287:1] <= (bh_q ? les_q : les_i)" + (" ^ 287'd64" if mut == 5 else "") + ";\n")
+        s = re.sub(r"output reg (\s*)\[287:0\](\s*)land_es,", r"(* keep *) output reg\1[287:0]\2land_es,", s, count=1)
+        assert "(* keep *) output reg" in s
+        return text[:i] + s + text[j:]
     s = _sub1(s, "    always @(posedge ck) if (bh) land_es[287:1] <= {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};\n",
               "    // KV-CORE-RTL/PC 10-25: land_es[287:1] private port flops (no hold loop on the pin flop): next state from the\n"
               "    // internal copy les_i (port <= bh ? new : les_i), equal on every edge (0 cycles)\n"
