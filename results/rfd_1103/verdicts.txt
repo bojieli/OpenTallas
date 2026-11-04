@@ -71,3 +71,20 @@ S81-062 dsdv_bk_g RF 4 = RF 2 core + POSEDGE per-face pin register on every outp
   lower_bk OFACE 1 (PIN_TO_PIN 3 -> 4), norm_q_report u_bk_sel 4 -> 5, tb_dsdv_bk_wrap RL 2 -> 3.
   Kit dsdv_bk_g_rfd5 (recipes_rfd5_1103, rfd3a sites, regional_taps 2x1): GEN_LINT PASS issues 0, KIT_PREFLIGHT PASS issues 0;
   estimate ~32k cells (rfd3a 29.8k + 2613 face flops), util ~0.41 (rfd3a 0.39) <= 0.45, outline unchanged.
+
+FORM 7 (11-03, owner: two strikes -> pay a cycle; rfd5 TT -17.79 u_vin pn_q -> lane words).  Outputs .../rfd/bench7, bench7b.
+S81-062 dsdv_bk_g RF 5 (7a) = RF 4 + negedge strap in-face (ik/ek/uid/eg_n/tap_k/sink_k) + kept rs[1] copies per block, 0 edges;
+  RF 6 (7) = RF 5 + dsdv_bk_vin LPIPE 2 per-lane register stage (lane words +1 inside dsdv_bk_sel; rung edges = RF 4).
+  run_bk_g_rf.sh lockstep RA 5 / RB 6 seeds 1, 7 PASS; RA 4 / RB 6 seed 3 PASS; RA 4 / RB 5 (7a) PASS
+               mut 7 (OT_RFD_MUT_LPS): FAIL errors=20482 (caught); mut 6 (OT_RFD_MUT_SF5) caught
+  run_bk_bench.sh sel RF 6 (default): DSDV_BK_SEL PASS (6 variants); RF 5 base thru PASS; LPS mutant: FAIL errors 35970 (caught)
+  Kit dsdv_bk_g_rfd7: GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.  rfd6 (form 6, dropped): TT -124.58 / FF -12.02, not signed.
+
+FORM 8 (11-03, OWNER 18:57 conservative form + COORD 18:59 bk_g ruling).  Outputs .../rfd/bench8.
+S81-062 dsdv_bk_g RF 7 = RF 6 with u_vin = dsdv_bk_vin3: every per-lane state / select copied LOCALLY per 64-b slice
+  (9 copies per lane, each slice's part-0-held hv from its own registered lv/b6/b7; the recurrence is local:
+  hv' = lv ? !b6 && !b7 : hv) + per-face-side stage-A beats; 0 edges vs RF 6; regional taps 2x2 (<= ~2.8k sinks / tap).
+  run_bk_g_rf.sh (+OT_RFD_CHK8 copy assertion) RA 6 / RB 7 seeds 1, 7 PASS errors=0; RA 4 / RB 7 seed 3 PASS; 0 copy mismatches
+               mut 8 (OT_RFD_MUT_HD8): FAIL errors=2934 (caught)
+  run_bk_bench.sh sel RF 7 (default): DSDV_BK_SEL PASS (6 variants); RF 6 base thru PASS; HD8 mutant base thru FAIL 4316 / 6380 (caught)
+  Kit dsdv_bk_g_rfd8 (recipes_rfd8_1103): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0; ONE finish build + place-only estimate copy rfd8p.
