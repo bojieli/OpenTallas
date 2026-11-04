@@ -64,7 +64,33 @@ JOB_LEAD = 8                    # job at the cw pin this many edges before the f
 NE, NEMAX, K = 384, 448, 6
 # fixed latencies, measured on the RTL of record by run_gu_bench.sh (asserted there: any drift fails the bench)
 #   from the edge the LAST beat is on vi_n (the matching S beat is on vi_s 2 edges later; both reach the stop together)
-HC_LAT_N, HC_LAT_S = 1019, 1017  # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge; S81-RF1 11-03: +1, l0r RE-FORM RF 1)
+HC_LAT_BASE_N, HC_LAT_BASE_S = 1019, 1017  # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge; S81-RF1 11-03: +1, l0r RE-FORM RF 1)
+# DIE-S81-51/RF-D 11-03: the HC latency follows the gunit FORM selected in the RTL of record (the default parameter / define
+# of each leaf), so whichever conservative form signs off first carries its schedule with it (no second edit):
+#   dsdv_gunit_l4 RF >= 2   every adder LAT 4 -> 5 (f12_l5x)   +9  (golden run_gunit_bench hc_lat 1008 -> 1017)
+#   dsdv_gunit_l5 RFD >= 1  Sinkhorn fault LOOP cut            +1  (1008 -> 1009)
+#   dsdv_gunit_tail_fs on ot_hdc_sinkhorn_fsr (row-pipelined Sinkhorn, gl5 rfd2; not with `OT_S81_GUNIT_SKFS)
+#                                                              +120 (LAT 642 -> 762; gl5 rfd2 total +121, 1008 -> 1129)
+# A new form adds its row here with the delta measured by rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh;
+# run_gu_bench.sh asserts the total (any drift fails).
+HC_FORM_DELTAS = (('dsdv_gunit_l4.sv', r'parameter\s+integer\s+RF\s*=\s*(\d+)', 2, 9),
+                  ('dsdv_gunit_l5.sv', r'`define\s+OT_S81_GUNIT_RFD\s+(\d+)', 1, 1),
+                  ('dsdv_gunit_tail_fs.sv', r'^\s*ot_hdc_sinkhorn_fsr\b', None, 120))
+
+
+def hc_form_delta(unit_dir=None):
+    """Sum of the HC latency deltas of the gunit leaf forms the RTL at unit_dir selects by default."""
+    d = Path(unit_dir) if unit_dir else Path(__file__).resolve().parents[3] / 'rtl/dsrom_sys/s81_dv/unit'
+    tot = 0
+    for fn, rx, at, delta in HC_FORM_DELTAS:
+        f = d / fn
+        m = re.search(rx, f.read_text(), re.M) if f.exists() else None
+        if m and (at is None or int(m.group(1)) >= at):
+            tot += delta
+    return tot
+
+
+HC_LAT_N, HC_LAT_S = HC_LAT_BASE_N + hc_form_delta(), HC_LAT_BASE_S + hc_form_delta()
 # TOK-ALL-16 10-27: re-measured on current main (gunit parent with the bound native-32 L5 127356adf2 + 10-24 pin-register
 # stations; identical with and without the GUNIT_* defines): HC 759/757 -> 1018/1016 (+259), router ids 68/66 -> 50/48
 # (-18), RW_GAP 121 -> 101; every value bit-exact (results/token_pass/tok16_dsl0_1027/gu)
