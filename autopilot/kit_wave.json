@@ -1364,7 +1364,30 @@
     "ot_s81sl_leaf__t4@8",
     "ot_s81sl_leaf__t6@6",
     "ot_s81sl_leaf__t71@7",
-    "ot_s81sl_leaf__t56@7"
+    "ot_s81sl_leaf__t56@7",
+    "col_h10_r0_p1__t1__cl574cc59d@7",
+    "col_h10_r0_p1__t1__cl911743eb@6",
+    "col_h10_r0_p4__t1@16",
+    "col_h10_r1__t1__cl95b37463@8",
+    "col_h10_r1__t1__cld01bb4ae@10",
+    "col_h10_r2__t1__cl1f5d6c2a@11",
+    "col_h10_r2__t1__cl8b686b3e@10",
+    "col_h10_r2__t1__cl99efd374@17",
+    "col_h10_r2__t1__clac068e56@8",
+    "col_h9_r0_p2__t1__cl0045af7b@11",
+    "col_h9_r0_p3__t1__cl0cd90c0e@21",
+    "col_h9_r0_p3__t1__cl31d0dc4b@15",
+    "col_h9_r0_p4__t1__clcb2fbfe8@8",
+    "col_h9_r0_p5__t1@14",
+    "col_h9_r0_p6__t1@15",
+    "col_h9_r1__t1__cl49d7a23e@20",
+    "col_h9_r1__t1__clf32cde8d@11",
+    "col_h9_r2__t1__cl774acf45@7",
+    "col_h9_r2__t1__cl87f3ff59@11",
+    "col_h9_r2__t1__clc9ad8f7e@9",
+    "col_h9_r0_p1__t1@13",
+    "col_h9_r0_p3__t1__cl8ce97bcb@17",
+    "col_h9_r2__t1__clb8d86cd5@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1422,11 +1445,7 @@
    "hold_items": {
     "svc_lo_dsdv_svc_rs__t7": "S81/g0c owns exact current-source GEN/LINT/preflight canary; release after its terminal result, avoid duplicate while portable canary staged.",
     "slice_station__t51": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
-    "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
-    "col_h9_r0_p[!2]*": "DIE-S81-52 23:5x via KW-FIX-5: col family waits for col_h9_r0_p2 pilot WNS split (core tap pin form A); no volume until it reads",
-    "col_h9_r[!0]*": "DIE-S81-52 23:5x via KW-FIX-5: col family waits for col_h9_r0_p2 pilot WNS split (core tap pin form A); no volume until it reads",
-    "col_h10_*": "DIE-S81-52 23:5x via KW-FIX-5: col family waits for col_h9_r0_p2 pilot WNS split (core tap pin form A); no volume until it reads",
-    "col_h9_r0_p2__t1__cl0045af7b": "DIE-S81-52 23:5x via KW-FIX-5: col family waits for col_h9_r0_p2 pilot WNS split (core tap pin form A); no volume until it reads"
+    "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event"
    },
    "queue_src": "main@48b8d51c9fecca8d6629fc07e4a3bbacddbca648",
    "work_root": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave",
@@ -1890,7 +1909,30 @@
     "ot_s81sl_leaf__t4@8": "band ad12cde5f56 (I28 48b8d51c9fe), COORD 05:40",
     "ot_s81sl_leaf__t6@6": "band ad12cde5f56 (I28 48b8d51c9fe), COORD 05:40",
     "ot_s81sl_leaf__t71@7": "band ad12cde5f56 (I28 48b8d51c9fe), COORD 05:40",
-    "ot_s81sl_leaf__t56@7": "band ad12cde5f56 (I28 48b8d51c9fe), COORD 05:40"
+    "ot_s81sl_leaf__t56@7": "band ad12cde5f56 (I28 48b8d51c9fe), COORD 05:40",
+    "col_h10_r0_p1__t1__cl574cc59d@7": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h10_r0_p1__t1__cl911743eb@6": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h10_r0_p4__t1@16": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h10_r1__t1__cl95b37463@8": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h10_r1__t1__cld01bb4ae@10": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h10_r2__t1__cl1f5d6c2a@11": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h10_r2__t1__cl8b686b3e@10": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h10_r2__t1__cl99efd374@17": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h10_r2__t1__clac068e56@8": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r0_p2__t1__cl0045af7b@11": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r0_p3__t1__cl0cd90c0e@21": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r0_p3__t1__cl31d0dc4b@15": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r0_p4__t1__clcb2fbfe8@8": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r0_p5__t1@14": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r0_p6__t1@15": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r1__t1__cl49d7a23e@20": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r1__t1__clf32cde8d@11": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r2__t1__cl774acf45@7": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r2__t1__cl87f3ff59@11": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r2__t1__clc9ad8f7e@9": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r0_p1__t1@13": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r0_p3__t1__cl8ce97bcb@17": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+    "col_h9_r2__t1__clb8d86cd5@4": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3322,7 +3364,8 @@
     "ot_hgi_dma_back_static_vp4_banks_cp@2",
     "ot_hgi_sfu_core_split3__opstore_b@3",
     "ot_hbm_su_static_pgslice_lg__lane_exp0_id@3",
-    "ot_hgi_coll_tkm_m_tp192__root@2"
+    "ot_hgi_coll_tkm_m_tp192__root@2",
+    "ot_hgi_coll_tkm_m_tp192__root@3"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-61",
@@ -3338,7 +3381,8 @@
     "ot_hgi_sfu_split3_lane_core_ex": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
     "ot_hgi_sfu_split3_lane_core_fr": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
     "ot_hbm_idx_query_static": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
-    "ot_hbm_idx_score_hcol_h1": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen"
+    "ot_hbm_idx_score_hcol_h1": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
+    "hfd_ep_static": "KW-FIX-6 06:1x: DIE-HBM-63 06:04 ECO on routed ep is live; hand flow, not relaunched by the wave"
    },
    "gen_hosts": [
     "epyc4"
@@ -3396,7 +3440,8 @@
     "ot_hgi_dma_back_static_vp4_banks_cp@2": "LEC classes a04433da484 (I20)",
     "ot_hgi_sfu_core_split3__opstore_b@3": "LEC classes a04433da484 (I20)",
     "ot_hbm_su_static_pgslice_lg__lane_exp0_id@3": "LEC classes a04433da484 (I20), OT_LEC_GOLD_NOWIDEN auto retry",
-    "ot_hgi_coll_tkm_m_tp192__root@2": "tkm_root cut map 403c855c44e (I20): leaves hold, regenerates"
+    "ot_hgi_coll_tkm_m_tp192__root@2": "tkm_root cut map 403c855c44e (I20): leaves hold, regenerates",
+    "ot_hgi_coll_tkm_m_tp192__root@3": "d44v10 core_macros has root rects (DIE-HBM-63 06:04, COORD 06:00 (7))"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
