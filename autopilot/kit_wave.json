@@ -79,7 +79,6 @@
     "kv3_hroot@2",
     "kv3_phy_v1@1",
     "qkd_hr_core_peer@1",
-    "kv3_phy@3",
     "kv3_hub_Eo@1",
     "kv3_hub_Wo@1",
     "kv3_phy_v1@3",
@@ -171,7 +170,9 @@
     "kv3_pc_v3@5",
     "kv3_pc_v1__cl23f6a148@1",
     "kv3_pc_v1__cl4ea58a5c@1",
-    "kv3_pc_v1__cl7f648944@1"
+    "kv3_pc_v1__cl7f648944@1",
+    "kv3_phy@2",
+    "kv3_hgi_v6@7"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -381,7 +382,9 @@
     "kv3_pc_v3@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
     "kv3_pc_v1__cl23f6a148@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
     "kv3_pc_v1__cl4ea58a5c@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
-    "kv3_pc_v1__cl7f648944@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o"
+    "kv3_pc_v1__cl7f648944@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_phy@2": "KW-FIX-8 11-04 COORD 13:21 (2) DIE-KV-70 13:12: item_env OT_HOLD_STOP_PS, only sign-off blocks: one endpoint 3.45 ps past the stop",
+    "kv3_hgi_v6@7": "KW-FIX-8 11-04 COORD 13:21 (2) DIE-KV-70 13:12: item_env OT_HOLD_STOP_PS, only sign-off blocks: pilot (A), a7 has no env; a8 takes it, other hgi rows wait"
    },
    "only_items": [
     "kv3_astk",
@@ -488,7 +491,15 @@
    ],
    "place_prefer": [
     "epyc2"
-   ]
+   ],
+   "item_env": {
+    "kv3_phy": {
+     "OT_HOLD_STOP_PS": "-200"
+    },
+    "kv3_hgi_v6": {
+     "OT_HOLD_STOP_PS": "-300"
+    }
+   }
   },
   "s81": {
    "enabled": true,
