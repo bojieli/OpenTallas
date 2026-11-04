@@ -2612,5 +2612,57 @@
    "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_su_static_pgslice_lg__lanes8_11/ot_hbm_su_pg_lane1_core.sv": "8dd205e8bcc"
   },
   "source": "DIE-HBM-63 d44v part 6: sub-core of the EQ-PASS ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 split (over_cap_split/reform_1103, 8dd205e8bcc); parent recipe file set + the split RTL, read at its pin."
+ },
+ "ot_hbm_su_pcol_s": {
+  "top": "ot_hbm_su_pcol_s",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pcol.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "DIE-HBM-63/CUTS d44v part 8 sub-core of ot_hbm_su_programme_pslice_c5; lockstep bench results/die_hbm_1103/reform/split_p8/run_eq.sh",
+  "source_commit": "09c5053d5aa7ebe944abc2fea80773b562069a7e",
+  "read_at_commit": true,
+  "util": 0.4
+ },
+ "ot_hbm_su_pcol_l": {
+  "top": "ot_hbm_su_pcol_l",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pcol.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "DIE-HBM-63/CUTS d44v part 8 sub-core of ot_hbm_su_programme_pslice_c5; lockstep bench results/die_hbm_1103/reform/split_p8/run_eq.sh",
+  "source_commit": "09c5053d5aa7ebe944abc2fea80773b562069a7e",
+  "read_at_commit": true,
+  "util": 0.4
+ },
+ "ot_hbm_su_pcol_h": {
+  "top": "ot_hbm_su_pcol_h",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pcol.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "DIE-HBM-63/CUTS d44v part 8 sub-core of ot_hbm_su_programme_pslice_c5; lockstep bench results/die_hbm_1103/reform/split_p8/run_eq.sh",
+  "source_commit": "09c5053d5aa7ebe944abc2fea80773b562069a7e",
+  "read_at_commit": true,
+  "util": 0.4
  }
 }

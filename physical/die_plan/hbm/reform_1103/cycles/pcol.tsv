@@ -1,0 +1,5 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_su_programme_pslice_c5	start, length, cfg_we, cfg_any, cfg_bank, cfg_row, cfg_data (slice inputs)	+2	head H: one register at the slice face + one per-column relay; every column has its own start/length flops, none shared
+ot_hbm_su_programme_pslice_c5	command, busy, valid, done, edge_index (slice outputs)	+2	registered funnel + registered slice face; all same offset, so busy/valid/command stay aligned to each other
+ot_hbm_su_programme_pslice_c5	fault	+4	column fault -> head fault register chain; sticky, reaches the slice later than the status outputs
+ot_hbm_su_pcol_s/l/h	kit face shell	+1 in / +1 out per sub pin	inside the numbers above: the face registers of the sub tiles ARE the declared edges, the parent adds no more

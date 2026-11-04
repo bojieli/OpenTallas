@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_clock_entry_pin_event.v1",
  "plan": "p/b3/die_plan.json",
- "plan_sha256": "a0434e20f6d8c7272a4c4a91f325f882a59c3eb0174cc3c7d84df1ac22486f4c",
- "clock_entries_sha256": "f69d44c07f4a7b774ff4615efeb1d6f72da99e4612b1019e3f3e5d220120a6f5",
+ "plan_sha256": "852a5d0f47ed6aaf371f88a46706704f972918e2b8810fc7bd3d092f5f40f1ca",
+ "clock_entries_sha256": "a2f15b87c265712a155e0995ddcf9c6672700b6ff17675bfff69419876a75948",
  "keep": [
   "ot_hbm_idx_qctl_static",
   "ot_hbm_idx_score_hcol_h1",
@@ -15,8 +15,8 @@
  ],
  "rule": "METHODOLOGY 12.8a plan clock entry; gen_core_kit_hbm plan_clock_entries + clock_entry_pin (DIE-HBM-60, COORD 11-03 00:2x (4))",
  "summary": {
-  "tables": 91,
-  "moved": 51,
+  "tables": 93,
+  "moved": 50,
   "kept": 6,
   "refused": 0,
   "missing": 0,
@@ -3113,27 +3113,20 @@
    "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial__p2pin.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
-  "ot_hbm_su_programme_pslice_c5|cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21.json": {
-   "module": "ot_hbm_su_programme_pslice_c5",
-   "pins_file": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21.json",
-   "new_pins_file": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21__centry.json",
-   "status": "MOVED",
-   "moved": {
-    "clk": [
-     470.904,
-     380.16
-    ]
-   },
-   "old": {
-    "clk": [
-     937.416,
-     0.24
-    ]
-   },
-   "entry": [
-    470.88,
-    380.16
-   ]
+  "ot_hbm_su_pcol_s|cores/ot_hbm_su_pcol_s__118.8x336.96__d44v_split.json": {
+   "module": "ot_hbm_su_pcol_s",
+   "pins_file": "cores/ot_hbm_su_pcol_s__118.8x336.96__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "ot_hbm_su_pcol_l|cores/ot_hbm_su_pcol_l__257.04x423.36__d44v_split.json": {
+   "module": "ot_hbm_su_pcol_l",
+   "pins_file": "cores/ot_hbm_su_pcol_l__257.04x423.36__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "ot_hbm_su_pcol_h|cores/ot_hbm_su_pcol_h__136.08x216__d44v_split.json": {
+   "module": "ot_hbm_su_pcol_h",
+   "pins_file": "cores/ot_hbm_su_pcol_h__136.08x216__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
   },
   "ot_hbm_su_static_cxport_ij_q|cores/ot_hbm_su_static_cxport_ij_q__250.56x414.72__canon__codex_g21.json": {
    "module": "ot_hbm_su_static_cxport_ij_q",

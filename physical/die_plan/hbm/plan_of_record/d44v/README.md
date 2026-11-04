@@ -1,4 +1,4 @@
-# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-7 (DIE-HBM-61/PLAN + /SPLIT, DIE-HBM-62/BIG, 2026-11-03)
+# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-8 (DIE-HBM-61/PLAN + /SPLIT, DIE-HBM-62/BIG, 2026-11-03)
 
 OWNER 11-03: TWO-STRIKES -> RE-FORM, ONE batch per die. Rules are design targets: plan GEOM, fill, aspect and channels
 are ADVISORY. Only sign-off blocks.
@@ -211,6 +211,15 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
   | alt g_w[0] R180 (pins up) | 0 | 41.3% | 1.03 | 2 (434 um) |
 
   The r2r hits are one lane -> `lf` fan-in (advisory).
+
+## Part 8 (conservative form, COORD 00:57 GO after two failed dcut forms: pslice_c5 per-column sub-cores; DIE-HBM-63/CUTS)
+
+Builder step `mk_split.py p/b3 split_p8/split_p8.json split_p8`, after the part 7 step. Inputs in results/die_hbm_1103/reform/split_p8/.
+ot_hbm_su_programme_pslice_c5 (4 inst, q_hub_nw/ne.u_pgp_Q__q0/q1) becomes ot_hbm_su_pcol_s x7 (118.8x336.96, 7 macros), _l x3 (257.04x423.36,
+17 macros) and head _h (136.08x216, no macro). Registered faces, per-column start/length relay with no shared flop, registered command funnel.
+Slice latency: inputs +2, command/busy/valid/done/edge_index +2, fault +4, physical/die_plan/hbm/reform_1103/cycles/pcol.tsv.
+mk_split options keep_face and hub_sub are part 8 only. Every sub keeps its full RTL pin list (conn_union.py): status outputs only column 0 drives
+stay as free pins on the other columns. Bench: split_p8/run_eq.sh (lockstep against d34578d6f plus the kit shell and declared shift, 8 mutants killed).
 
 ## Part 7 (conservative form, OWNER 18:57: the huge rp3lp3h n/s and fused_lane cores become plan sub-core designs; DIE-HBM-62/BIG)
 

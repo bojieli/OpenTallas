@@ -870,6 +870,205 @@
     "hnx_fused_lane_c",
     "hnx_fused_lane_elp"
    ]
+  },
+  {
+   "core": "ot_hbm_su_programme_pslice_c5",
+   "sha": "pcol",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_su_programme_pslice_c5__p8glue.sv",
+   "slot_um": [
+    939.6,
+    760.32
+   ],
+   "instances": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_c0": [
+     [
+      0.0,
+      423.36
+     ],
+     [
+      118.8,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_c1": [
+     [
+      146.88,
+      0.0
+     ],
+     [
+      257.04,
+      423.36
+     ]
+    ],
+    "u_fcore.u_core.u_c2": [
+     [
+      414.72,
+      0.0
+     ],
+     [
+      257.04,
+      423.36
+     ]
+    ],
+    "u_fcore.u_core.u_c3": [
+     [
+      682.56,
+      0.0
+     ],
+     [
+      257.04,
+      423.36
+     ]
+    ],
+    "u_fcore.u_core.u_c4": [
+     [
+      172.8,
+      423.36
+     ],
+     [
+      118.8,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_c5": [
+     [
+      302.4,
+      423.36
+     ],
+     [
+      118.8,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_c6": [
+     [
+      432.0,
+      423.36
+     ],
+     [
+      118.8,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_c7": [
+     [
+      561.6,
+      423.36
+     ],
+     [
+      118.8,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_c8": [
+     [
+      691.2,
+      423.36
+     ],
+     [
+      118.8,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_c9": [
+     [
+      820.8,
+      423.36
+     ],
+     [
+      118.8,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_h": [
+     [
+      0.0,
+      207.36
+     ],
+     [
+      136.08,
+      216.0
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hbm_su_pcol_s": {
+     "pins_file": "cores/ot_hbm_su_pcol_s__118.8x336.96__d44v_split.json",
+     "outline_um": [
+      118.8,
+      336.96
+     ],
+     "pins": 565,
+     "clock_pins": 1,
+     "clock_entry": [
+      60.48,
+      190.08
+     ],
+     "faces": {
+      "I": 1,
+      "N": 274,
+      "S": 289,
+      "W": 1
+     }
+    },
+    "ot_hbm_su_pcol_l": {
+     "pins_file": "cores/ot_hbm_su_pcol_l__257.04x423.36__d44v_split.json",
+     "outline_um": [
+      257.04,
+      423.36
+     ],
+     "pins": 565,
+     "clock_pins": 1,
+     "clock_entry": [
+      129.6,
+      211.68
+     ],
+     "faces": {
+      "I": 1,
+      "N": 545,
+      "S": 18,
+      "W": 1
+     }
+    },
+    "ot_hbm_su_pcol_h": {
+     "pins_file": "cores/ot_hbm_su_pcol_h__136.08x216__d44v_split.json",
+     "outline_um": [
+      136.08,
+      216.0
+     ],
+     "pins": 769,
+     "clock_pins": 1,
+     "clock_entry": [
+      69.12,
+      108.0
+     ],
+     "faces": {
+      "I": 1,
+      "N": 408,
+      "S": 60,
+      "W": 300
+     }
+    }
+   },
+   "added_cycles": "start/length/cfg inputs +2, command/busy/valid/done/edge_index +2, fault +4; reform_1103/cycles/pcol.tsv (TOK-VERIFY batch)",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 0
+   },
+   "designs_removed": [
+    "ot_hbm_su_programme_pslice_c5"
+   ],
+   "designs_added": [
+    "ot_hbm_su_pcol_h",
+    "ot_hbm_su_pcol_l",
+    "ot_hbm_su_pcol_s"
+   ]
   }
  ],
  "core_faces_moves": [
