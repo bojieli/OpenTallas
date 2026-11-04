@@ -41,5 +41,10 @@ if {[info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1"} {
     kit_modes_vclk_latency
     puts "KIT_MODES eco FF-only, vclk = OT_VCLK_FF $::env(OT_VCLK_FF)"
   }
+  # eco_loop.py eco_vclk_frame: repair against the IO frame sign-off measured on this DB (pin_flop_mean), not the plan bound
+  if {[info exists ::env(OT_ECO_VCLK_PS)] && $::env(OT_ECO_VCLK_PS) ne ""} {
+    set_clock_latency -source $::env(OT_ECO_VCLK_PS) [kit_modes_vclk_latency]
+    puts "KIT_MODES eco vclk = sign-off measured $::env(OT_ECO_VCLK_PS)"
+  }
   proc kit_modes_eco_done {} {}
 }
