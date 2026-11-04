@@ -218,7 +218,7 @@ def sink_sites(P, tn, control=True):
         rows += json.loads((_root() / ck["sink_bins_file"]).read_text())["bins"]
         out = []
     else:
-        out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn, bit_sites=True)]
+        out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn, bit_sites=ck.get("tap_model") != "frozen_anchor")]
     out += [(float(r[0]), float(r[1]), float(r[2]) if len(r) > 2 else 1.0) for r in rows]
     if control and ck.get("control_sinks"):
         out += [(x, y, 1.0) for _, x, y in control_pin_sinks(P, tn)]
@@ -498,15 +498,23 @@ def density_taps(P, tn, control=True):
     taken = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)]
     if control:
         taken += [(x, y) for _, x, y in control_pin_sinks(P, tn)]
-    from placement_obstacles import placement_boxes
-    boxes = list(placement_boxes(t).values())
+    # clock.tap_model "frozen_anchor" (opt-in per type, pin_frozen_tap_model.py): the model this plan was solved with,
+    # before 0ddc1ccd8c8 (consumed PG-safe tracks) / e2a63cfee7d (reuse-leaf union) / 1d753c326cf (per-bit sinks).
+    # Its relay graph, raw exports and landing raw_reset names depend on these taps; default = current model.
+    frozen = ck.get("tap_model") == "frozen_anchor"
+    if frozen:
+        boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
+                  c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", []) or []]
+    else:
+        from placement_obstacles import placement_boxes
+        boxes = list(placement_boxes(t).values())
     blocked = lambda x, y: any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in boxes)
     min_sinks = int(ck.get("tap_min_sinks", max(1, target // 20)))
     leaves = sorted(_bisect(pts, target, radius, blocked, min_sinks), key=lambda a: (round(a[1], 3), round(a[0], 3)))
 
     import gen_phys
-    legal_axes = gen_phys.clock_legal_axes(P, tn)
-    pin_snap = lambda x, y: gen_phys._snap_tap(P, x, y, pg_legal=not t.get('hard'))
+    legal_axes = None if frozen else gen_phys.clock_legal_axes(P, tn)
+    pin_snap = None if frozen else (lambda x, y: gen_phys._snap_tap(P, x, y, pg_legal=not t.get('hard')))
 
     def place(cands):
         tk, xy = list(taken), []

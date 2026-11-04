@@ -1748,6 +1748,12 @@
         "type": "number",
         "exclusiveMinimum": 0
        },
+       "tap_model": {
+        "enum": [
+         "consumed",
+         "frozen_anchor"
+        ]
+       },
        "added_taps": {
         "type": "array",
         "items": {
