@@ -1437,30 +1437,89 @@ def parse_path_freeze(text):
     return gates, parts
 
 
-def parse_plan_delta(text):
+TS_RE = re.compile(r"(20\d\d-\d\d-\d\d)[ T]+(\d\d:\d\d)")
+
+
+def plan_of_record():
+    """-> {die: {"ids": set, "frozen": 'YYYY-MM-DD HH:MM' or ''}}: each die's current plan of record = the kit-wave plan
+    (autopilot/kit_wave.json dies[*]: 'event', the plan file stem, optional 'por_ids' list and 'por_frozen' date)"""
+    try:
+        cfg = json.loads((AP_DIR / "kit_wave.json").read_text())
+    except Exception:
+        return {}
+    out = {}
+    for key, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        ids = {str(x) for x in [d.get("event"), Path(str(d.get("plan") or "")).stem] + list(d.get("por_ids") or [])
+               if x and len(str(x)) >= 4 and str(x) not in ("die_plan", "source_plan", "plan", "plan_of_record")}
+        if ids:
+            por = out.setdefault(canonical_die(d.get("die") or key), {"ids": set(), "frozen": ""})
+            por["ids"] |= ids
+            por["frozen"] = max(por["frozen"], str(d.get("por_frozen") or ""))
+    return out
+
+
+PLAN_DELTA_IGNORED = []
+CLOSURE_IGNORED_LOGGED = []
+
+
+def parse_plan_delta(text, por=None):
     """-> {(die, type): delta id} of PENDING deltas: lines 'PENDING-DELTA <id> <die> type[,type ...]', closed by
-    'CLOSED-DELTA <id>' / 'MERGED-DELTA <id>' / 'DROPPED-DELTA <id>' (later lines win)"""
+    'CLOSED-DELTA <id>' / 'MERGED-DELTA <id>' / 'DROPPED-DELTA <id>' / 'RETIRED-DELTA <id>' (later lines win).
+    Class fix DELTA-STALE (COORD 2026-11-03 17:5x): with por = plan_of_record() (or 'PLAN-OF-RECORD <die> <id>
+    [YYYY-MM-DD HH:MM]' lines here), a PENDING delta of a die with a plan of record holds only if its line names one
+    of that plan's ids and it is dated (timestamp on the line, else the latest one above it) after the plan's freeze;
+    otherwise it is ignored and listed in PLAN_DELTA_IGNORED.  por=None keeps the legacy rule (every PENDING holds)."""
     pend = {}
+    por = {k: {"ids": set(v["ids"]), "frozen": v.get("frozen", "")} for k, v in (por or {}).items()} if por is not None \
+        else None
+    last_ts = ""
     for raw in (text or "").splitlines():
         line = raw.strip()
+        ts = [f"{a} {b}" for a, b in TS_RE.findall(line)]
+        m = re.match(r"^PLAN-OF-RECORD\s+(\S+)\s+(\S+)(.*)$", line)
+        if m and por is not None:
+            ent = por.setdefault(canonical_die(m.group(1)), {"ids": set(), "frozen": ""})
+            ent["ids"].add(m.group(2))
+            if ts:
+                ent["frozen"] = max(ent["frozen"], ts[0])
+            continue
         m = re.match(r"^PENDING-DELTA\s+(\S+)\s+(\S+)\s+(\S+)", line)
         if m:
-            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t})
-            continue
-        m = re.match(r"^(?:CLOSED|MERGED|DROPPED)-DELTA\s+(\S+)", line)
-        if m:
-            pend.pop(m.group(1), None)
+            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t},
+                                max(ts) if ts else last_ts, line)
+        else:
+            m = re.match(r"^(?:CLOSED|MERGED|DROPPED|RETIRED)-DELTA\s+(\S+)", line)
+            if m:
+                pend.pop(m.group(1), None)
+        if ts:
+            last_ts = max(ts)
     out = {}
-    for did, (die, types) in pend.items():
+    ignored = []
+    for did, (die, types, when, line) in pend.items():
+        ent = (por or {}).get(die)
+        if ent and ent["ids"]:
+            named = any(i in line for i in ent["ids"])
+            if not named or (ent["frozen"] and not (when and when > ent["frozen"])):
+                ignored.append((did, die, "names no current plan of record (" + ",".join(sorted(ent["ids"]))[:80] + ")"
+                                if not named else f"dated {when or 'undated'} <= plan freeze {ent['frozen']}"))
+                continue
         for t in types:
             out[(die, t)] = did
+    PLAN_DELTA_IGNORED[:] = ignored
     return out
 
 
 def load_closure():
     CLOSURE.clear()
     CLOSURE["gates"], CLOSURE["parts"] = parse_path_freeze(read_coord("lanes/PATH-FREEZE.md"))
-    CLOSURE["delta"] = parse_plan_delta(read_coord("lanes/PLAN-DELTA.md"))
+    CLOSURE["delta"] = parse_plan_delta(read_coord("lanes/PLAN-DELTA.md"), plan_of_record())
+    ign = sorted(PLAN_DELTA_IGNORED)
+    if ign and ign != CLOSURE_IGNORED_LOGGED[:]:
+        log("PLAN-DELTA stale ignored (DELTA-STALE: not on the die's plan of record / dated before its freeze): " +
+            "; ".join(f"{d} {die}: {why}" for d, die, why in ign)[:3000])
+    CLOSURE_IGNORED_LOGGED[:] = ign
 
 
 def _base_type(t):
