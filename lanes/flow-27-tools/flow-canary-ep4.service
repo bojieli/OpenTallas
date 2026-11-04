@@ -1,0 +1,6 @@
+[Unit]
+Description=OpenTallas flow canary on epyc4 (FLOW-27 11-04): newest flow tag per die
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I %h/.local/share/flow_canary/flow_canary_ep4_tick.py
