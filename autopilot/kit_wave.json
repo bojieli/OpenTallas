@@ -21,21 +21,21 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch3/claude/kw-fix-7/src_j/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch3/claude/kw-fix-8/src_n/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch3/claude/kw-fix-7/src_j",
-   "src_sha": "5405676ba19baaa797f9443503746576d3e71bae",
+   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_n",
+   "src_sha": "90ad150b102e16940e6939cb09fd9074ff9f465d",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/dkv66/asbuilt_e.json",
-    "note": "KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
-    "bind_out": "/srv/opentallas-scratch2/claude/dkv66/bind_e2"
+    "asbuilt": "/srv/opentallas-scratch3/claude/kw-fix-8/asbuilt_o.json",
+    "note": "KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
+    "bind_out": "/srv/opentallas-scratch3/claude/kw-fix-8/bind_o"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch3/claude/kw-fix-7/src_j/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch3/claude/kw-fix-8/src_n/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -222,7 +222,29 @@
     "kv3_pv_v8@4",
     "kv3_pv@4",
     "kv3_hgi_v5@4",
-    "kv3_sys_SD@4"
+    "kv3_sys_SD@4",
+    "kv3_pv@5",
+    "kv3_pv_v12@5",
+    "kv3_pv_v1@5",
+    "kv3_pv_v1n@5",
+    "kv3_pv_v2@5",
+    "kv3_pv_v2n@5",
+    "kv3_pv_v3@5",
+    "kv3_pv_v3n@5",
+    "kv3_pv_v4@5",
+    "kv3_pv_v4n@5",
+    "kv3_pv_v5@5",
+    "kv3_pv_v5n@5",
+    "kv3_pv_v6@5",
+    "kv3_pv_v6n@5",
+    "kv3_pv_v7@5",
+    "kv3_pv_v8@5",
+    "kv3_pc__cl254f2e73@5",
+    "kv3_pc__cl5a95b461@5",
+    "kv3_pc_v3@5",
+    "kv3_pc_v1__cl23f6a148@1",
+    "kv3_pc_v1__cl4ea58a5c@1",
+    "kv3_pc_v1__cl7f648944@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -253,7 +275,7 @@
     "kv3_phy",
     "kv3_phy_v1"
    ],
-   "note": "KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-7 06:4x: src main 5405676ba19 (tag j, plan and sidecar blobs identical to d0cddccfa24 [git rev-parse]), --native-cell-cap 517000 (COORD 06:00 (2)). | KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
+   "note": "KW-FIX-8 10:0x I36: src_n main 6c547da940f, PV 16 + PC 6 one class; hubs held, kv3_phy waits phymid | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-7 06:4x: src main 5405676ba19 (tag j, plan and sidecar blobs identical to d0cddccfa24 [git rev-parse]), --native-cell-cap 517000 (COORD 06:00 (2)). | KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
    "die_max_inflight": 60,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
@@ -404,7 +426,29 @@
     "kv3_pv_v8@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
     "kv3_pv@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
     "kv3_hgi_v5@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
-    "kv3_sys_SD@4": "KW-FIX-7 11-04: @4 kit_rtl PHY view lookup on the old src; src_j + plan_c there carries the whole w522 view [CHECKED resolve], retry is the read"
+    "kv3_sys_SD@4": "KW-FIX-7 11-04: @4 kit_rtl PHY view lookup on the old src; src_j + plan_c there carries the whole w522 view [CHECKED resolve], retry is the read",
+    "kv3_pv@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v12@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v1@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v1n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v2@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v2n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v3@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v3n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v4@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v4n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v5@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v5n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v6@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v6n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v7@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v8@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pc__cl254f2e73@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pc__cl5a95b461@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pc_v3@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pc_v1__cl23f6a148@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pc_v1__cl4ea58a5c@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pc_v1__cl7f648944@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o"
    },
    "only_items": [
     "kv3_astk",
@@ -489,7 +533,7 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "main@d0cddccfa24f5e90551797ba6ee227b1fe86d575",
+   "queue_src": "claude/kw8-srcn-1104@90ad150b102e16940e6939cb09fd9074ff9f465d",
    "hold_items_released": {
     "kv3_pc": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1504,7 +1548,9 @@
     "slice_station__t7__cl945bc067@11",
     "gunit__t1@3",
     "ot_s81sl_leaf__t32@11",
-    "bk_sel__t2@2"
+    "bk_sel__t2@2",
+    "gunit__t1@1",
+    "slice_station__t17@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2091,7 +2137,9 @@
     "slice_station__t7__cl945bc067@11": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)",
     "gunit__t1@3": "RM-31 09:42 (c) small b51373145a5 on tag n-s81",
     "ot_s81sl_leaf__t32@11": "RM-31 09:42 (c) small b51373145a5 on tag n-s81",
-    "bk_sel__t2@2": "RM-31 09:42 (d) selt b979201e97 on tag n-s81"
+    "bk_sel__t2@2": "RM-31 09:42 (d) selt b979201e97 on tag n-s81",
+    "gunit__t1@1": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)",
+    "slice_station__t17@4": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
