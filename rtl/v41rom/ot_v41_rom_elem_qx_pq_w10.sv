@@ -234,6 +234,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                                         //     register is 1), so no clock gate drives a macro (Z27a post-CTS at 770: the
                                         //     macro-gating clones sat at the clock root, ENA -208.8 / -119.3, ce_in -96.7,
                                         //     launch latency 742 ps under the outputs; flop-only clones closed > +80)
+    parameter integer MACHARD = 0,      // S81 rom_q RE-FORM (DIE-S81-56 11-04): 1 = g_mac body as module ot_v41_rom_mac (hard core), 0 cycles; 0 = unchanged
     parameter integer CGR = 0,          // 0 = one clock gate g_cg.u_cg (unchanged circuit); 8 = one clock-gate copy per in-core
                                         //    region (S81-CORE-LAT 2026-10-26, see "CGR" at the gate); NB = 2, QZ, QM <= 5, QS 5
     parameter INSTANCE = ""
@@ -1934,7 +1935,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         initial begin $display("ot_v41_rom_elem_qp_w10: QPIPE requires FAST = 1, BF16 = 0, BP = 0"); $finish; end
     end
     genvar mb;
-    generate for (mb = 0; mb < NB; mb = mb + 1) begin : g_mac
+    generate for (mb = 0; mb < (MACHARD != 0 ? 0 : NB); mb = mb + 1) begin : g_mac
     wire gclk_ma, gclk_mb;               // QM >= 6: this half's clock-gate clones (issue / capture / lanes; chains / tree)
     wire gclk_c1, gclk_l0, gclk_l1;      // CGR: ROM 1 + capture 1 (= gclk_mb's region), lane 0, lane 1 (else gclk_ma)
     // QM >= 6 (Z26a post-CTS at 770: u_z -> root ICG ENA -48.6 ps, the gated subtree's ~600 ps latency in front of the
@@ -2542,6 +2543,30 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         assign qy_bkf[mb] = bk_fault[mb];
     end
     end endgenerate
+    if (MACHARD != 0) begin : g_mh
+        // ot_v41_rom_mac is fixed to this one configuration
+        if (NSEG != 8 || NCH != 16 || LV != 5 || BF16 != 0 || NB != 2 || MTP == 0 || EARLY == 0 || FAST == 0 || PP == 0 ||
+            BP != 0 || QPIPE == 0 || QP_CAP != 0 || QZ == 0 || QZ_NS != 8 || QZ_NE != 4 || QY == 0 || QX != 10 || PQ == 0 ||
+            QM != 5 || QS != 5 || CGR != 0 || CG == 0 || CUT != 9'b1_0111_1011) begin : g_bad
+            initial begin $display("ot_v41_rom_elem_qx_pq_w10: MACHARD requires the S81 rom_q configuration"); $finish; end
+        end
+        genvar mh;
+        for (mh = 0; mh < NB; mh = mh + 1) begin : g_m
+            ot_v41_rom_mac
+`ifndef SYNTHESIS
+                #(.INSTANCE(mh == 0 ? INSTANCE : $sformatf("%sb", INSTANCE)))
+`endif
+                u_m (.clk(clk), .rst_n_pin(rst_n_pin), .cg_en(cg_en_g), .wen_t(wen_t),
+                .i1_v(i1_v), .i1_bk(i1_bk), .i1_bf(i1_bf), .i1_t(i1_t),
+                .i2x_q0(i2x_q0), .i2x_e0(i2x_e0), .i2x_q1(i2x_q1), .i2x_e1(i2x_e1),
+                .issue(issue), .a_ctr(a_ctr[12:0]),
+                .pq_idle(pq_idle[mh]), .pq_row(pq_row[16*mh +: 16]), .pq_idx(pq_idx[5*mh +: 5]), .pq_n(pq_n[5*mh +: 5]),
+                .pv(pv[mh]), .pval(pval[32*mh +: 32]), .prow(prow[16*mh +: 16]), .pseg(pseg[5*mh +: 5]),
+                .pnseg(pnseg[5*mh +: 5]), .perr(perr[mh]), .ppos(ppos[3*mh +: 3]),
+                .pq_tree(pq_tree[TRW*mh +: TRW]), .pq_pos(pq_pos[3*mh +: 3]), .qy_bkf(qy_bkf[mh]));
+            assign bk_fault[mh] = 1'b0;     // QY: only qy_bkf reaches the fault port
+        end
+    end
     assign busy_c = w_run | i1_v | i2_v | drain != 8'd0;
     assign walk_busy = w_run | n_run | bn_run | i1_v | i2_v | (BP != 0 && bp_hold != 3'd0);
     // slot field of the tag is HW bits; BF16 chains use its low log2(NCHB) bits (words per round <= NCHB)

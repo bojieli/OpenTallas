@@ -1,0 +1,95 @@
+{
+ "top": "ot_v41_rom_elem_q_qxpq_w10_gb",
+ "sources": [
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv",
+  "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+  "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_chain.sv",
+  "rtl/v41rom/ot_v41_segtree.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_segtree2.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+  "rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_segtree3.sv",
+  "rtl/v41rom/ot_v41_segtree4.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_segtree6.sv",
+  "rtl/v41rom/ot_v41_rom_mac.sv"
+ ],
+ "params": {
+  "MTP": 1,
+  "EARLY": 1,
+  "NB": 2,
+  "FAST": 1,
+  "PP": 1,
+  "QTIMING_FIX": 1,
+  "QPIPE": 1,
+  "QP_XS": 1,
+  "QP_CAP": 0,
+  "QP_P1": 1,
+  "QP_CSAM": 10,
+  "QZ": 1,
+  "QZ_NS": 8,
+  "QZ_NE": 4,
+  "QY": 1,
+  "QX": 10,
+  "PQ": 1,
+  "QW": 0,
+  "QM": 5,
+  "QS": 5,
+  "RSTP": 1,
+  "CGR": 0,
+  "MACHARD": 1,
+  "OLAT": 0,
+  "IFN": 1
+ },
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "route": {
+  "pd": 0.6
+ },
+ "children": [
+  {
+   "view": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_mac/views/ot_v41_rom_mac",
+   "inst": "u_e.g_mh.g_m[0].u_m",
+   "at": [
+    4.32,
+    10.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_mac/views/ot_v41_rom_mac",
+   "inst": "u_e.g_mh.g_m[1].u_m",
+   "at": [
+    273.24,
+    10.8
+   ],
+   "orient": "MY"
+  }
+ ],
+ "notes": "DIE-S81-56 11-04 RE-FORM: rom_q with hard children ot_v41_rom_mac (MACHARD 1), plan outline and pins unchanged.",
+ "provenance": "closed_archive ot_v41_rom_elem_q_qxpq_w10/dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb (tools/dsrom_qelem_cl/cl_route_qs.sh QX=10 QM=5 QS=5 RSTP=1)"
+}

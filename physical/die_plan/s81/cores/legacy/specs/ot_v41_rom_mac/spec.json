@@ -1,0 +1,55 @@
+{
+ "top": "ot_v41_rom_mac",
+ "sources": [
+  "rtl/v41rom/ot_v41_rom_mac.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_chain.sv",
+  "rtl/v41rom/ot_v41_segtree.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_segtree2.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+  "rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_segtree3.sv",
+  "rtl/v41rom/ot_v41_segtree4.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_segtree6.sv"
+ ],
+ "params": {},
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n_pin"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "count": 2,
+   "at": [
+    21.6,
+    32.592
+   ],
+   "orient": "R180"
+  }
+ ],
+ "route": {
+  "pd": 0.45
+ },
+ "children": [],
+ "notes": "DIE-S81-56 11-04 RE-FORM (COORD order): one rom_q g_mac half as hard core, 0 cycles, LEC MACHARD 1 vs 0.  Outline 233.28x198.72; ROMs at (21.6, 32.592) R180 and (21.6, 104.208) MY, the same y phase as the flat rom_q.",
+ "provenance": "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv g_mac"
+}

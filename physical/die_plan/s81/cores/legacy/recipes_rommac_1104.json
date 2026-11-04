@@ -1,0 +1,30 @@
+{
+ "ot_v41_rom_elem_q_qxpq_w10_gb": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_elem_q_qxpq_w10_mh",
+  "suffix": "mh1",
+  "why": "S81 rom_q g_mac RE-FORM parent (DIE-S81-56 11-04): children must be SIGNED first"
+ },
+ "ot_v41_rom_mac": {
+  "child_of": "ot_v41_rom_elem_q_qxpq_w10_gb",
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_mac",
+  "lef_contract": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_mac/views/ot_v41_rom_mac/ot_v41_rom_mac.lef",
+  "rtl_dirs": true,
+  "util": 0.45,
+  "suffix": "f1",
+  "macro_sites": {
+   "ot_rom_4096x274_m8": [
+    [
+     21.6,
+     32.592,
+     "R180"
+    ],
+    [
+     21.6,
+     104.208,
+     "MY"
+    ]
+   ]
+  },
+  "why": "S81 rom_q g_mac RE-FORM child (DIE-S81-56 11-04, COORD): 2 ROMs, about 96k cells, registered faces except issue/a_ctr to ROM"
+ }
+}
