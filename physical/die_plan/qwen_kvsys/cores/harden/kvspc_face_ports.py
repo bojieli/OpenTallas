@@ -183,9 +183,21 @@ def wrapper(text, mod, head=False):
     s, expr, _ = _port_split(s, "pc__land_er", 261, [(0, 0), (259, 260)], LAND_DEAD)
     s = _sub1(s, ".pc__land_er(pc__land_er[260:0])", f".pc__land_er({expr})   /* [258:1] dead: plan drop, no load inside */")
     if head:
+        # Same stale form on the chain head: the pins file already names pc__ki_15 / pc__ki_31, so the raw extractor keeps
+        # them beside the full raw bus; the split below declares them again.  read_verilog (synth) tolerated the repeat,
+        # yosys-slang (LEC gold) asserts in RTLIL (DIE-KV-65/LEC 11-03: every h_head_p kit LEC UNPROVEN at lint).
+        for stale in ("    input wire [20:15] pc__ki_15,\n", "    input wire [32:31] pc__ki_31,\n"):
+            if stale in s:
+                name = stale.rstrip(",\n").rsplit(" ", 1)[1]
+                assert s.count(name) == 1, "a live pc__ki slice port cannot be discarded"
+                s = _sub1(s, stale, "")
         s, expr, _ = _port_split(s, "pc__ki", 33, [(0, 0), (15, 20), (31, 32)], HEAD_KI_DEAD)
         s = _sub1(s, ".pc__ki(pc__ki[32:0])", f".pc__ki({expr})   /* chain head (no ko): [30:21] [14:1] dead, plan drop */")
     s = s.replace("module " + mod + " (", "// KV-CORE-RTL/PC 10-25 (kvspc_face_ports.py): one clock (hck / HBM data clocks := ck), dead pins dropped\nmodule " + mod + " (", 1)
+    header = s[:s.index(");")]
+    names = re.findall(r"^\s*(?:input|output)\s+wire\s+(?:\[[^\]]*\]\s*)?(\w+)\s*,?\s*$", header, re.M)
+    repeated = sorted({n for n in names if names.count(n) > 1})
+    assert not repeated, f"{mod}: repeated wrapper ports {repeated}"
     return text[:i] + s + text[j:]
 
 

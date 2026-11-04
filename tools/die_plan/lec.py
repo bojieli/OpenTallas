@@ -78,6 +78,10 @@ CONE_BUDGET_S = 2.0          # + this much wall per cone in a batch (normal cone
 # recorded in noreset.raw_prefix_bounded.  0 = no limit (the old behaviour).
 RAWPREFIX_ANDS_DEFAULT = 500000
 RAWPREFIX_S_DEFAULT = 900
+# LEC-RAWPREFIX-SIM (DIE-KV-65/LEC 11-03): random simulation of a raw prefix miter before ABC.  One set output is a real
+# counterexample (state and every input are free), so that base is refuted without a solver call.
+RAWPREFIX_SIM_WORDS = 8
+RAWPREFIX_SIM_ROUNDS = 4
 
 
 def cone_limit_s():
@@ -4202,6 +4206,21 @@ def raw_prefix_miter(d, roots, steps):
     return m
 
 
+def raw_prefix_sim_survivors(m, words=None, rounds=None):
+    """LEC-RAWPREFIX-SIM: output indices of miter m that random simulation does not set.  A set output of a raw prefix
+    miter is a concrete counterexample to that base (no reset, assumption or X mask enters this AIG), so only proofs
+    are skipped, never assumed."""
+    words = RAWPREFIX_SIM_WORDS if words is None else words
+    rounds = RAWPREFIX_SIM_ROUNDS if rounds is None else rounds
+    alive = list(range(len(m.outs)))
+    for r in range(rounds):
+        if not alive:
+            break
+        val, mask = m.simulate(words, seed=7919 + r)
+        alive = [i for i in alive if not lit_val(val, mask, m.outs[i])]
+    return alive
+
+
 def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
     """Prove requested constant bases after an exact finite prefix, unconditionally.
 
@@ -4218,11 +4237,27 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
             continue
         if any(k not in points or c not in (0, 1) for k, c in todo):
             raise LecError("invalid raw prefix base candidate")
-        m = raw_prefix_miter(d, [points[k] for k, c in todo], steps)
-        m.outs = [lit ^ c for lit, (k, c) in zip(m.outs, todo)]
-        m.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in todo]
+        def miter(items):
+            mi = raw_prefix_miter(d, [points[k] for k, c in items], steps)
+            mi.outs = [lit ^ c for lit, (k, c) in zip(mi.outs, items)]
+            mi.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in items]
+            return mi
+        m = miter(todo)
         batch = L.__dict__.get("_raw_prefix_batch", 0)
         tag = f"rawprefix{batch}_{side}_{steps}"
+        # LEC-RAWPREFIX-SIM (DIE-KV-65/LEC 11-03): every KV/S81 miter that hung in ABC 1-12 h is refuted by simulation in
+        # seconds (astk gate 16: 7368 outputs, 1.35M ANDs, none survive, 10 s).  Refuted bases never reach the solver and
+        # the survivors' smaller cone is what the size cap and the sweep see.
+        total = len(todo)
+        alive = raw_prefix_sim_survivors(m)
+        refuted = {m.onames[i] for i in set(range(total)) - set(alive)}
+        L.__dict__["raw_prefix_sim_refuted"] = L.__dict__.get("raw_prefix_sim_refuted", 0) + len(refuted)
+        log.append(f"LEC RAWPREFIX SIM {tag}: {len(refuted)} / {total} bases refuted by simulation, "
+                   f"{len(alive)} left for the sweep")
+        names = m.onames
+        if len(alive) != total:
+            todo_alive = [todo[i] for i in alive]
+            m = miter(todo_alive)
         # LEC-RAWPREFIX-BOUND (DIE-HBM-60/61 LEC 11-03): a 16/64-edge unroll of a large cone (HBM vm_calendar, KV
         # head_eighth, kshare: 1.5-3.7 h in one &fraig/&sat, FLOW canaries of 19af2d0dd) is bounded.  Primary bound
         # = miter size (deterministic, no ABC run); the wall limit is a backstop.  Either way no base is proved,
@@ -4230,20 +4265,22 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
         # output into a difference / undecided, never into a false EQ), and the bound is recorded explicitly.
         ands, cap = len(m.ands) // 2, raw_prefix_limit_ands()
         bounded = L.__dict__.setdefault("raw_prefix_bounded", [])
-        if cap and ands > cap:
-            log.append(f"LEC RAWPREFIX SIZE BOUND {tag}: {ands} ANDs > {cap} (OT_LEC_RAWPREFIX_ANDS) -> "
-                       f"{len(todo)} bases not proved")
+        if not alive:
             status = {}
-            bounded.append(dict(tag=tag, side=side, steps=steps, n=len(todo), ands=ands, why="size", limit=cap))
+        elif cap and ands > cap:
+            log.append(f"LEC RAWPREFIX SIZE BOUND {tag}: {ands} ANDs > {cap} (OT_LEC_RAWPREFIX_ANDS) -> "
+                       f"{len(alive)} bases not proved")
+            status = {}
+            bounded.append(dict(tag=tag, side=side, steps=steps, n=len(alive), ands=ands, why="size", limit=cap))
         else:
             wall = raw_prefix_limit_s()
             status = prove(m, work, conflicts, log, tag=tag, wall=wall)
             if status.pop(SWEEP_TIMEOUT, False):
-                bounded.append(dict(tag=tag, side=side, steps=steps, n=len(todo), ands=ands, why="wall",
+                bounded.append(dict(tag=tag, side=side, steps=steps, n=len(alive), ands=ands, why="wall",
                                     limit=wall))
         L._raw_prefix_batch = batch + 1
-        for (k, c), name in zip(todo, m.onames):
-            result = status.get(name, "undecided")
+        for (k, c), name in zip(todo, names):
+            result = "differs" if name in refuted else status.get(name, "undecided")
             cache[(side, k, c, steps)] = result
             if result == "proved":
                 edges[(side, k, c)] = min(steps, edges.get((side, k, c), steps))
@@ -4325,6 +4362,7 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     is reported, never assumed away). There is no switch to assume an unknown
     power-up value equals a constant. -> number dropped."""
     eq_const_resolve(L, log)
+    t_raw = time.time()
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
         # DIE-HBM-59/LEC C4 (HBM n4ext / fused_lane 11-02): default-on at the reset window itself (OT_LEC_RESET_CYCLES,
@@ -4341,6 +4379,8 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
             candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
                           for s in (("gold", "gate") if sd == "both" else (sd,))]
             raw_prefix_bases(L, candidates, steps, work, conflicts, log)
+    # these base sweeps are not refinement: the OT_LEC_REFINE_S budget in correspond() does not pay for them
+    L.__dict__["raw_sweep_s"] = L.__dict__.get("raw_sweep_s", 0.0) + time.time() - t_raw
     total = 0
     while True:                     # dropping one can unseat a register reloaded from it
         ok = noreset_sound(L)
@@ -4392,6 +4432,7 @@ def noreset_report(L):
                 raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS",
                                                   os.environ.get("OT_LEC_RESET_CYCLES", str(RESET_DEFAULT)))),
                 raw_prefix_wall_s=raw_prefix_limit_s(), raw_prefix_ands_cap=raw_prefix_limit_ands(),
+                n_raw_prefix_sim_refuted=getattr(L, "raw_prefix_sim_refuted", 0),
                 n_raw_prefix_bounded=len(getattr(L, "raw_prefix_bounded", [])),
                 raw_prefix_bounded=list(getattr(L, "raw_prefix_bounded", []))[:200],
                 n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
@@ -5314,7 +5355,10 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     seen_proved = collections.Counter()   # proved-set signature -> rounds proved
     early_compare_tried = False
     for rnd in range(rounds + 1000):
-        if rnd >= rounds + 40 and time.time() - t_ref > budget:
+        # LEC-REFINE-BUDGET-RAW (DIE-KV-65/LEC 11-03, KV ctl): raw base sweep time is not refine time.  ctl paid the whole
+        # budget in 6 raw prefix walls (5400 s of 7059 s), expired at the first check (round 64), and the monotone finish
+        # freed 3843 valid relations -> 1513 false differs.
+        if rnd >= rounds + 40 and time.time() - t_ref - L.__dict__.get("raw_sweep_s", 0.0) > budget:
             if os.environ.get("OT_LEC_REFINE_MONOTONE", "1") == "0":
                 break
             if not expired:
