@@ -2385,8 +2385,8 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/physical/die_plan/qwen_compute/plan_of_record/plan_qc52_ucie1103.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-6-qcd",
-   "src_sha": "1ed4353aa1188a62f4b78bb00e250bb0eb76aad4",
+   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-7-qcd",
+   "src_sha": "ccb4065691eba5f4b19f243fa2f18ed5bc038eb5",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/results/qc_die57_1031/bind/final_asbuilt.json",
@@ -2557,9 +2557,17 @@
     "slw_su_l0__cl1e5219ea@1",
     "slw_su_l0__cl76fb247e@1",
     "slw_su_l1__cla2a78701@1",
-    "slw_su_l1__clcc9d0155@1"
+    "slw_su_l1__clcc9d0155@1",
+    "cbf_q00__cl1b5a6458@3",
+    "cbf_q11@3",
+    "cbn_q00__cl622f65d2@2",
+    "cbn_q00__cldbcda913@2",
+    "cbn_q01__clab6e67f2@2",
+    "cbn_q01__cld9ff4c40@2",
+    "cbx_q10__cl89936551@2",
+    "sle_su_l0__cl7a55c676@2"
    ],
-   "queue_src": "claude/kw6-qcd-1104@1ed4353aa1188a62f4b78bb00e250bb0eb76aad4",
+   "queue_src": "claude/kw7-resetdot-1104@ccb4065691eba5f4b19f243fa2f18ed5bc038eb5",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -2840,7 +2848,15 @@
     "slw_su_l0__cl1e5219ea@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
     "slw_su_l0__cl76fb247e@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
     "slw_su_l1__cla2a78701@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
-    "slw_su_l1__clcc9d0155@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools"
+    "slw_su_l1__clcc9d0155@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
+    "cbf_q00__cl1b5a6458@3": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbf_q11@3": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q00__cl622f65d2@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q00__cldbcda913@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q01__clab6e67f2@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q01__cld9ff4c40@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbx_q10__cl89936551@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "sle_su_l0__cl7a55c676@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved"
    },
    "gen_hosts": [
     "intel2"
