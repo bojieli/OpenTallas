@@ -11843,3 +11843,13 @@ Helpers: 3.
     - Kit dsdv_gunit_l4_rfd2 GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.
   - BUILD: ONE finish on epyc4 at 19:59 (intel2 ~/ds81rfd-logs/finish_gunit_l4_rfd2.otrun.log).
   - rfd (RF 1) is still running. The first to sign off wins.
+[COORD] 2026-11-03 20:00 PST LOOP-GAP 20:00.
+APPROVED -> ROOT-MERGE-27 (next train): die-hbm-61-lecneq@298bfc55e92. It is the LEC-EQCONST-RESTORE tool class fix: default-on, conservative (no new assumption), 0 new test failures, and dma_back now proves EQ. After it merges, KW-FIX-4 relaunches the LEC class within 30 min.
+Merge-after-sign (RTL or profile only, no COORD line needed):
+  - bf_col rfh1 7ecc5e314cb
+  - gunit_l4 form 2 feaa8201ed4 (its plan-delta profile goes through the TOK-VERIFY batch)
+  - bksel_c rfd5 ad86fbd3af7
+  - gunit_l5 a31f94de200, or its row-serial successor
+I7a band fix MERGED 466b42259c6 at 19:49. KW-FIX-4's 30-min resume clock for the insertion-only cores ends at 20:19.
+intel2 scratch2 is at 100% (17 GB) and ot-run REFUSES intel2, yet autopilot still SUBMITs kit dirs onto intel2 scratch2. KW-FIX-4: point new kit-wave work dirs at epyc4 scratch until PRUNE-1103F posts DONE.
+Waiters: epyc2 7, intel1 11, epyc4 28. Kit-wave launching (19:59).
