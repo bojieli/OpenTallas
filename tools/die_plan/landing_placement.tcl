@@ -59,6 +59,24 @@ foreach i [$ff_blk getInsts] {
  set b [$i getBBox]
  cland_occupy [$b xMin] [$b yMin] [expr {[$b xMax]-[$b xMin]}] [expr {[$b yMax]-[$b yMin]}]
 }
+# KW6-CLASS 11-04 (S81 ot_s81sl_leaf__t34/t66 3_5 DPL-0033 "Placed in rows check failed", diamond 0 failures): the row
+# model ff_orient is per y only, so the row-cut halo around a macro (rows stop 2 um beside it, core 215.1 in a row ending
+# 214.11) was free space and FIRM ring/collector cells landed outside any row.  The x gaps of each row y are occupied.
+proc cland_occupy_row_gaps {rows} {
+ global ff_x0 ff_x1 ff_rh
+ set spans {}
+ foreach r $rows { set b [$r getBBox]; dict lappend spans [$b yMin] [list [$b xMin] [$b xMax]] }
+ dict for {y row_spans} $spans {
+  set at $ff_x0
+  foreach s [lsort -integer -index 0 $row_spans] {
+   lassign $s l u
+   if {$l > $at} { cland_occupy $at $y [expr {$l-$at}] $ff_rh }
+   set at [expr {max($at,$u)}]
+  }
+  if {$at < $ff_x1} { cland_occupy $at $y [expr {$ff_x1-$at}] $ff_rh }
+ }
+}
+cland_occupy_row_gaps [$ff_blk getRows]
 # Opt-in (gen_phys reserved_sites_um): die clock-tree reservations are occupied space for ring/status cells.
 if {[info exists ::cland_avoid_rects]} {
  foreach r $::cland_avoid_rects { lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}] }
