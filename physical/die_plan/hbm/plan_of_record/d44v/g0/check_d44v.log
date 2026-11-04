@@ -200,4 +200,4 @@ PENDING-VIEW [merged_clock_view] q_b100/u_hb_idx__s_Q_r0c0_k0h1: PENDING-VIEW no
 PENDING-VIEW [merged_clock_view] q_b100/u_hb_idx__s_Q_r0c0_k1h1: PENDING-VIEW no native LEF+Liberty for ot_hbm_idx_score_hcol_h1; tap stays at plan clock pins ['clk_pair[0]', 'clk_pair[1]']
 ... 977 more in g0_report.json
 G0C per type: 7/81 types clean (G3-eligible: 0); die-level {'street_die_leg': 2}; ERRORs
-G0C FAIL: 24 errors, 64 pending-view, 1089 warnings; 81 types / 90 partitions (24 in near-duplicate groups); worst cut {'ratio': 0.1767, 'at': 'horizontal@6000'}, worst partition segment {'ratio': 0.5938, 'at': 'horizontal@5250:NW_b101'}; report g0/g0_report.json
+G0C FAIL: 24 errors, 64 pending-view, 1089 warnings; 81 types / 90 partitions (24 in near-duplicate groups); worst cut {'ratio': 0.1767, 'at': 'horizontal@6000'}, worst partition segment {'ratio': 0.5938, 'at': 'horizontal@5250:NW_b101'}; report /srv/opentallas-scratch3/claude/die-hbm-66/plan10e/g0c/g0_report.json
