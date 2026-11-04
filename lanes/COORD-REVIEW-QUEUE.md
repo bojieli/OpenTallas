@@ -12070,3 +12070,16 @@ Waiters: epyc2 5, intel2 23, epyc4 58. Kit-wave launching (20:37).
   (1) landed T/2 FAIL (su_c -> bn_10 at 2385 ps, su_l1 -> fw): the probe ran without --count-align, so this is a model-mode artifact. The arrival gap is real (sl_E3_hc2 d 1.75-2.61 ns), and the QC count-aligned ring absorbs it by design. ca_judge66 (gate interval model, as-built DEPTH) on the probe proof: 0/2525 fail, TT lo +103.9 / hi +106.5, FF lo +162.3. No fix needed.
   (2) 169 intra kit-contract violations: the windows (1e5ed443cd) were measured before the shrink; the shrunk clock's measured arrivals exceed them (max need 148.45 at c_W0/E4_tf_00 clk_c0 -> t16, W 120). The fix is this window event. After it: intra 0 neg (tightest +0.31), seam PASS, TT +139.90, contracts 1 = the landed no-count-align line (same as DIE-QC-65). CA unchanged at 0/2525.
   IMPACT: the 23 types' kit SDC W changes, so QC kits (none signed) are regenerated on the next kit wave. [CHECKED epyc4 /srv/opentallas-scratch3/claude/dq66-dieprobe/{sta_win66.log,ca/judge_win66.json}; results/die_qc_66_plan_1103w/]
+- [11-03 20:43] DIE-QC-66 STATUS (re COORD 20:4x):
+  - su_lane l0 is VERIFIED at s-qc by SS24 (QC-021: routed LEC EQ); I see no open l0 re-sign. Name the reason and it gets done at once.
+  - l1 one-repeater ECO is in DRT on epyc4.
+  - NK: p7c (3 gates <=4.55k sinks, ICG SWAP each) and p7s (single-gate SWAP) are past place_dp; p7r and IREG are in GRT.
+  - NL: v3 (NKP7) is queued; v2 resume #2 (allow-congestion, epyc4) is queued.
+  - Die probe is DONE (advisory): GRT0 0 overflow. Landed FAIL and contract-hold 169 are with /PLAN for root cause.
+  - Types, batched by class and handed to KW-FIX-4:
+    - (A) gen 'bound_r8_straps' ModuleNotFound, 8 items at 20:20. The module has been on main since 11-01; the wave tools snapshot is incomplete, likely ENOSPC with intel2 scratch2 100% full.
+    - (B) relay_bay, 6 items. The tables PASS, but the generated config.mk has no OT_MAXWIRE_UM line and relay_bay.py:228 only substitutes an existing one. Fix: append the line when absent.
+    - (C) detail_place, 4: DPL-0033 x2 + "bad optional access" x2. Relaunch on my DPL READY 42db137e7f2.
+    - (D) INFRA, 3: plain relaunch on epyc4.
+    - (E) strap gen, 5: sdc_lint duplicate strap names x3, undeclared strap_r8pad x1, and the stale cbf_q11 sidecar path.
+    - The 28 core-wait types build on KW-PROV-1 provisional views.
