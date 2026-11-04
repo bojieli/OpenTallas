@@ -9,7 +9,7 @@
 // vi_s / vi_n, random vd words.  +define+OT_RFD_MUT_BKG (vstop mutant) must FAIL.  Verdict line "BKG_RF PASS|FAIL".
 module tb_dsdv_bk_g_rf #(parameter integer RA = 0, parameter integer RB = 1);
     localparam integer V = 276;
-    localparam integer DVO = (RB >= 1) - (RA >= 1), DLN = (RB >= 2) - (RA >= 2);
+    localparam integer DVO = (RB >= 1) + (RB == 4) - (RA >= 1) - (RA == 4), DLN = (RB >= 2) + (RB == 4) - (RA >= 2) - (RA == 4);  // RF 4: +1 out-face
     reg clk = 0; always #0.4165 clk = ~clk;
     reg rst_n = 0;
     reg [V-1:0] vi_s = 0, vi_n = 0; reg [366:0] vd = 0;

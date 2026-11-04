@@ -50,3 +50,24 @@ S81-064 l0r form 2b (RF >= 1: per-select-copy go flops gac / gbc, 0 cycles):
 S81-062 bk_g form 3 (kit-only, RF 2 RTL unchanged): recipes_rfd3a_1103 (10.824-um plan sites, both R0) and
   recipes_rfd3b_1103 (same sites, upper SRAM MY: one read port per macro face), two parallel variants.
 Kits rfd3a / rfd3b / l0r rfd3: GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.
+
+FORM 4 (11-03, owner pick a after rfd3a setup_tt -26.76 at the output ports): dsdv_bk_g RF 3 = RF 2 without the negedge
+out-face (0 cycles; receiver hold -> io_hold_parent).  Outputs /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench4.
+  run_bk_g_rf.sh RA 2 / RB 3 (equal every edge): seed 1 PASS, seed 7 PASS; RA 0 / RB 3: seed 3 PASS
+               mut 3 (OT_RFD_MUT_OF3, posedge out-face): FAIL errors=275730 (caught); mut 2 RA 1 / RB 3: FAIL 66103 (caught)
+  run_bk_bench.sh sel RF 3 (default): DSDV_BK_SEL PASS mut=0 (6 variants); +OT_RFD_MUT_OF3 base thru: FAIL (caught)
+  run_vstop_bench.sh: VSTOP_GATE PASS.  Kit rfd4 (rfd3a sites): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.
+
+FORM 5 (11-03, owner pick + COORD confirm: rfd4 RF 3 died GRT-0183 after repair_design, not retried).  Outputs
+/srv/opentallas-scratch2/claude/die-s81-51/rfd/bench5.
+S81-062 dsdv_bk_g RF 4 = RF 2 core + POSEDGE per-face pin register on every output (vo_s / vo_n / ln0..3 / fault), +1 cycle.
+  Inputs already face-registered (vi_s / vi_n / vd / rst_n negedge in-face; ik / ek / uid / eg_n / tap_k / sink_k posedge
+  captures); face_flops.tcl places every port-adjacent flop at its pin (GEOM pin_reg).
+  run_bk_g_rf.sh lockstep RA 3 / RB 4 (vo +1, ln +1): seed 1 PASS errors=0, seed 7 PASS errors=0; RA 2 / RB 4 seed 3 PASS
+               mut 4 (OT_RFD_MUT_OF4, out-face removed): FAIL errors=138124 (caught)
+  run_bk_bench.sh sel RF 4 (default, RL 3): DSDV_BK_SEL PASS mut=0, all 6 variants (wrap errors 0)
+               RF 3 (+define+OT_DSDV_BKG_RF3, RL 2) base thru: PASS;  OF4 mutant base thru: FAIL thru errors 3035 (caught)
+  Parent contract (+1, compiler/boot-programme constants only, no other type touched): dv_layer_compile BKSEL_TRANSIT 4 -> 5,
+  lower_bk OFACE 1 (PIN_TO_PIN 3 -> 4), norm_q_report u_bk_sel 4 -> 5, tb_dsdv_bk_wrap RL 2 -> 3.
+  Kit dsdv_bk_g_rfd5 (recipes_rfd5_1103, rfd3a sites, regional_taps 2x1): GEN_LINT PASS issues 0, KIT_PREFLIGHT PASS issues 0;
+  estimate ~32k cells (rfd3a 29.8k + 2613 face flops), util ~0.41 (rfd3a 0.39) <= 0.45, outline unchanged.
