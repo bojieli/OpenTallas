@@ -85,10 +85,21 @@
 // dl_vv dl_vb bi) in exactly one pin flop; the XR8 predecode (OT_S81SL_XR_PDC) then decodes from those landing flops,
 // never from the pins.  +1 cycle on every CTL / RD / V / SC / B consequence; default 0 (= previous module) until the
 // S81-RF1 batch adopts it with -DOT_S81SL_XRT_RLAND -DOT_S81SL_XR_PDC.
-`ifdef OT_S81SL_XRT_RLAND
+// RF-J conservative form (DIE-S81-52/RF-J 11-03, off by default, -DOT_S81SL_XRT_RFJ): every ring / band / leaf input bit lands in
+// ONE negative-edge pin flop (0 cycles): RING_LAND = 2 replaces the +1 posedge landing of RING_LAND = 1 by a negedge flop,
+// FACE_LAND = 2 puts a negedge flop in front of the existing posedge lo / p / e landing flop.  Input hold against a posedge
+// sender gets the T/2 window, so no input hold buffers (the 4.4k-5.5k inputs at FF -63..-88 caused GRT-0232 twice).
+// Same cycle at every consumer as RING_LAND = 0 / FACE_LAND = 1 when the sender launches on the rising edge (plan IO
+// contract in_min -40 / max 166.6).  eg_* and x_rb* keep posedge pin flops.  Bench: tools/s81_slice/xrt_rfj_eq.sh.
+`ifdef OT_S81SL_XRT_RFJ
+`define OT_S81SL_XRT_RLAND_DEF 2
+`define OT_S81SL_XRT_FLAND_DEF 2
+`elsif OT_S81SL_XRT_RLAND
 `define OT_S81SL_XRT_RLAND_DEF 1
+`define OT_S81SL_XRT_FLAND_DEF 1
 `else
 `define OT_S81SL_XRT_RLAND_DEF 0
+`define OT_S81SL_XRT_FLAND_DEF 1
 `endif
 // RF-B RE-FORM (DIE-S81-51/CLK crossing table row 1): OLAT = 1 puts a negative-EDGE lockup flop (DFFLQN) between every
 // output face flop and its port: face flop -> negedge flop -> port, no logic between.  Same cycle at the receiver (the
@@ -157,7 +168,7 @@ module ot_s81sl_xrt #(
     parameter [14:0] PDSK = 15'd0,
     parameter integer HB = 0,
     parameter integer FOREG = 0,          // XR6 fallback: dedicated fault output flop (+1 more fault-visibility cycle)
-    parameter integer RING_LAND = 0,      // RF-B RE-FORM 11-03: ring / band landing stage (+1 cycle, see header)
+    parameter integer RING_LAND = 0,      // RF-B RE-FORM 11-03: ring / band landing stage (+1 cycle, see header); 2 = RF-J negedge landing (0 cycles)
     parameter integer FACE_LAND = 1,      // S81-KITS-RTLB 10-24: lo / p / e leaf interface landing stage (+1 cycle, below);
                                           // S81-KITS-RTLC 10-24: default ON everywhere (slice / die / benches)
     parameter integer W  = 1104,
@@ -246,15 +257,32 @@ module ot_s81sl_xrt #(
     // xrt_bench.sh with XR_LAND = 1 (the compiler issues lo / p one cycle earlier).
     wire [4:0] lo_v_i, p_v_i, e_v_i; wire [5*256-1:0] lo_d_i; wire [5*32-1:0] p_d_i; wire [5*2-1:0] e_c_i;
     wire [5*96-1:0] e_d_i;
+    // RF-J FACE_LAND = 2: negedge pin flop, then the same posedge landing flop (same edge at the landing flop, 0 cycles)
+    wire [4:0] lo_v_f, p_v_f, e_v_f; wire [5*256-1:0] lo_d_f; wire [5*32-1:0] p_d_f; wire [5*2-1:0] e_c_f; wire [5*96-1:0] e_d_f;
+    generate if (FACE_LAND == 2) begin : g_fnf
+        reg [4:0] lov_n, pv_n, ev_n; reg [5*256-1:0] lod_n; reg [5*32-1:0] pd_n; reg [5*2-1:0] ec_n; reg [5*96-1:0] ed_n;
+`ifdef OT_S81SL_XRT_MUT_RFJ_FPOS
+        always @(posedge clk) begin                        // mutant: posedge pin flop (lo / p / e one edge late)
+`else
+        always @(negedge clk) begin
+`endif
+            lov_n <= lo_v; pv_n <= p_v; ev_n <= e_v; lod_n <= lo_d; pd_n <= p_d; ec_n <= e_c; ed_n <= e_d;
+        end
+        assign lo_v_f = lov_n; assign p_v_f = pv_n; assign e_v_f = ev_n; assign lo_d_f = lod_n; assign p_d_f = pd_n;
+        assign e_c_f = ec_n; assign e_d_f = ed_n;
+    end else begin : g_fpin
+        assign lo_v_f = lo_v; assign p_v_f = p_v; assign e_v_f = e_v; assign lo_d_f = lo_d; assign p_d_f = p_d;
+        assign e_c_f = e_c; assign e_d_f = e_d;
+    end endgenerate
     generate if (FACE_LAND != 0) begin : g_land
         reg [4:0] lov_l, pv_l, ev_l; reg [5*256-1:0] lod_l; reg [5*32-1:0] pd_l; reg [5*2-1:0] ec_l; reg [5*96-1:0] ed_l;
         always @(posedge clk) begin
 `ifdef OT_S81SL_XRT_MUT_LAND_PV
             pv_l <= 5'd0;                                  // mutant: p_v landing stuck (partials never collected)
 `else
-            pv_l <= p_v;
+            pv_l <= p_v_f;
 `endif
-            lov_l <= lo_v; ev_l <= e_v; lod_l <= lo_d; pd_l <= p_d; ec_l <= e_c; ed_l <= e_d;
+            lov_l <= lo_v_f; ev_l <= e_v_f; lod_l <= lo_d_f; pd_l <= p_d_f; ec_l <= e_c_f; ed_l <= e_d_f;
         end
 `ifdef OT_S81SL_XRT_MUT_LAND_EVPIN
         assign e_v_i = e_v;                                // mutant: e_v not landed (pre-fix timing on the ENG path)
@@ -273,7 +301,20 @@ module ot_s81sl_xrt #(
     // recomputed from reset state): the module = the RING_LAND = 0 module with these 7 inputs one edge later.
     // Bench: tools/s81_slice/xrt_rland_eq.sh (RING_LAND = 1 + PDC vs origin/main fed the 7 inputs one edge later).
     wire dl_ev_i, dl_wv_i, dl_vv_i; wire [W-29:1] dl_e_i, dl_w_i; wire [V-1:1] dl_vb_i; wire [W-59:0] bi_i;
-    generate if (RING_LAND != 0) begin : g_rland
+    generate if (RING_LAND == 2) begin : g_rnf
+        // RF-J: negedge pin flop = same rising edge into eb / wb / vb / bb and the XR8 predicates as RING_LAND = 0
+        reg ev_l, wv_l, vv_l; reg [W-29:1] e_l, w_l; reg [V-1:1] vb_l; reg [W-59:0] bi_l;
+`ifdef OT_S81SL_XRT_MUT_RFJ_RPOS
+        always @(posedge clk) begin                        // mutant: posedge pin flop (ring / band one edge late)
+`else
+        always @(negedge clk) begin
+`endif
+            ev_l <= dl_ev; wv_l <= dl_wv; vv_l <= dl_vv; e_l <= dl_e; w_l <= dl_w; vb_l <= dl_vb;
+            bi_l <= (HB != 0) ? bi : {(W-58){1'b0}};
+        end
+        assign dl_ev_i = ev_l; assign dl_wv_i = wv_l; assign dl_vv_i = vv_l; assign dl_e_i = e_l; assign dl_w_i = w_l;
+        assign dl_vb_i = vb_l; assign bi_i = bi_l;
+    end else if (RING_LAND != 0) begin : g_rland
         reg ev_l, wv_l, vv_l; reg [W-29:1] e_l, w_l; reg [V-1:1] vb_l; reg [W-59:0] bi_l;
         always @(posedge clk) begin
 `ifdef OT_S81SL_XRT_MUT_RLAND_WV
@@ -964,7 +1005,7 @@ endmodule
 // C1 (14 slices): ring E/W + V.  C3 (s_1S, s_6S): + band port B (attention q / P.V).  Hardened masters, no parameters.
 // S81-KITS-RTLC 10-24 (OWNER DECISION 8): ring ports narrowed to the bits that are read / not constant (dl_e / dl_w
 // [1075:1], dl_vb [275:1], ci_b [1075:0], x_si [6:0], C3 bi packed {B[1075:37], B[6:0]}); FACE_LAND = 1 by default.
-module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = 1,
+module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = `OT_S81SL_XRT_FLAND_DEF,
     parameter integer RING_LAND = `OT_S81SL_XRT_RLAND_DEF, parameter integer OLAT = `OT_S81SL_XRT_OLAT_DEF,
     parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF, parameter [127:0] QDELAYS=`OT_S81SL_QREL_DELAYS) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
@@ -1039,7 +1080,7 @@ module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, paramet
         .is_v(o_is_v), .is_d(o_is_d), .cfg_v(o_cfg_v), .cfg_d(o_cfg_d), .fault(o_fault));
 endmodule
 
-module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = 1,
+module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = `OT_S81SL_XRT_FLAND_DEF,
     parameter integer RING_LAND = `OT_S81SL_XRT_RLAND_DEF, parameter integer OLAT = `OT_S81SL_XRT_OLAT_DEF,
     parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF, parameter [127:0] QDELAYS=`OT_S81SL_QREL_DELAYS) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,

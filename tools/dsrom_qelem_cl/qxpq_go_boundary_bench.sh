@@ -9,7 +9,7 @@ S=$(cd "$1" && pwd); W=$2; mkdir -p "$W"; W=$(cd "$W" && pwd)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 TB=$S/tools/dsrom_qelem_cl/tb_qxpq_go_boundary.sv
 DUT_CGR=${DUT_CGR:-0}; REF_CGR=${REF_CGR:-0}
-CG="+define+TB_DUT_CGR=$DUT_CGR +define+TB_REF_CGR=$REF_CGR"; PCHK=""; [ "$DUT_CGR" != 0 ] && PCHK=+define+QP_CHECK
+CG="+define+TB_DUT_CGR=$DUT_CGR +define+TB_REF_CGR=$REF_CGR ${EXTRA_DEF:-}"; PCHK=""; [ "$DUT_CGR" != 0 ] && PCHK=+define+QP_CHECK
 echo "DUT_CGR $DUT_CGR REF_CGR $REF_CGR verilator $("$V" --version)"
 RTL="rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv rtl/v41rom/ot_v41_elem_pq_tags.sv rtl/v41rom/ot_v41_kreg.sv
  rtl/v41rom/ot_v41_chain3.sv rtl/v41rom/ot_v41_chain4.sv rtl/v41rom/ot_v41_fadd2.sv rtl/v41rom/ot_v41_rom_elem_w10.sv
@@ -37,8 +37,8 @@ run() { # name expect seed
 MODE=${3:-all}
 case "$MODE" in
   pass) build pass $PCHK || exit 2; rc=0; for s in 1 2 3; do run pass pass $s || rc=1; done; echo "BENCH_RC $rc"; exit $rc ;;
-  mut_bypass|mut_late|mut_cgr)
-    case $MODE in mut_bypass) D=+define+OT_QXPQ_GO_MUT_BYPASS ;; mut_late) D=+define+TB_MUT_LATE ;; mut_cgr) D=+define+OT_CGR_MUTANT_R3 ;; esac
+  mut_bypass|mut_late|mut_cgr|mut_ifn)
+    case $MODE in mut_bypass) D=+define+OT_QXPQ_GO_MUT_BYPASS ;; mut_late) D=+define+TB_MUT_LATE ;; mut_cgr) D=+define+OT_CGR_MUTANT_R3 ;; mut_ifn) D=+define+OT_QXPQ_IFN_MUT_POS ;; esac
     build $MODE $D || exit 2
     if run $MODE fail 1; then echo "MUTANT_DETECTED $MODE"; exit 1; fi
     echo "MUTANT_ESCAPED $MODE"; exit 0 ;;
