@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.hbm_compiler_core_delta.v1",
+ "note": "Core port cycles the plan latency.lanes table cannot carry (they are not lanes). No compiler code reads core cycle tables today (LAT ABI = latency.lanes only), so this is the schedule delta for the S2 model of record: unit = per-record charge (price_d44t.run extra), op = per-opcode charge (run opx). Port-level rows: ext/crossing_latency.json.",
+ "S2": {
+  "opx": {
+   "HC_PRE_NORM": 8,
+   "HC_POST": 4
+  },
+  "extra": {
+   "SM": 7
+  }
+ },
+ "basis": {
+  "HC_PRE_NORM": "hnx_fused_lane +8, bench S vs K record N=1 406->414, N=2 488->496",
+  "HC_POST": "hnx_fused_lane +4, bench S vs K record N=1 196->200, N=2 304->308",
+  "SM": "hnx_rp3lp3h_n/s LEAF RESULT +7 (every SM leaf alike): n sb_bank g0m, s gout[49:0], s gout[99:50] via the seam; pass lanes gout[199:100] carry other tiles leaves, already +7 at source: +7 once per SM record, not per hop"
+ },
+ "other_edges": "glue +1, subtree32 +17 and tailx_rest are core_internal rows of ext/crossing_latency.json; their record-class mapping stays with TOK-VERIFY (SS26 price_big rows: bounds, HC records have slack)",
+ "folded": {
+  "hnx_fused_lane": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/hnx_fused_lane.tsv",
+  "hnx_rp3lp3h_n": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/hnx_rp3lp3h_n.tsv",
+  "hnx_rp3lp3h_s": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/hnx_rp3lp3h_s.tsv",
+  "ot_hbm_idx_score_hcol_h0": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/ot_hbm_idx_score_hcol_h0.tsv",
+  "ot_hbm_su_static_pgslice_lg__lanes8_11": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/ot_hbm_su_static_pgslice_lg__lanes8_11.tsv",
+  "ot_hfd_coll_q3_edge_core": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/ot_hfd_coll_q3_edge_core.tsv",
+  "ot_hgi_sfu_split3_lane_core__idpin": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/ot_hgi_sfu_split3_lane_core__idpin.tsv",
+  "ot_hbm_sm_vm_wr_q_t_lanes4": "physical/die_plan/hbm/reform_1103/cycles/c3.tsv",
+  "ot_hnx_idxn_keybuf_slice": "physical/die_plan/hbm/reform_1103/cycles/c3.tsv",
+  "hfd_hgi_vm_calendar_f20": "physical/die_plan/hbm/reform_1103/cycles/c3.tsv",
+  "ot_hbm_host_cp_rxs": "physical/die_plan/hbm/reform_1103/cycles/c3.tsv",
+  "ot_hgi_qw_dec": "physical/die_plan/hbm/reform_1103/cycles/c4.tsv",
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "physical/die_plan/hbm/reform_1103/cycles/c4.tsv",
+  "ot_hbm_su_programme_pslice_c5": "physical/die_plan/hbm/reform_1103/cycles/c4.tsv",
+  "hfd_hgi_vms_glue_nw_t": "physical/die_plan/hbm/reform_1103/cycles/cuts_glue.tsv",
+  "ot_hbm_hc_subtree32_core": "physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv",
+  "ot_hbm_hc_root_static": "physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv",
+  "ot_hbm_hc_root_static__tailx_rest__v4f4566": "physical/die_plan/hbm/reform_1103/cycles/tailx_rest.tsv",
+  "ot_hbm_hc_root_static__tailx_rest__v6bc7f2": "physical/die_plan/hbm/reform_1103/cycles/tailx_rest.tsv"
+ },
+ "not_in_plan": {
+  "ot_hfd_coll_q3_body_core": {
+   "source": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/ot_hfd_coll_q3_body_core.tsv",
+   "why": "split form not in this plan"
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+   "source": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap.tsv",
+   "why": "split form not in this plan"
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": {
+   "source": "physical/die_plan/hbm/over_cap_split/reform_1103/latency/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap.tsv",
+   "why": "split form not in this plan"
+  },
+  "*(kits generated with --face-reset-relay N)": {
+   "source": "physical/die_plan/hbm/reform_1103/cycles/face_reset_relay.tsv",
+   "why": "class row (reset release of kits with --face-reset-relay), no data cycle"
+  },
+  "ot_hdc_fp32_add_lat(XCUTS=7)": {
+   "source": "physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv",
+   "why": "not a hard core of this plan"
+  },
+  "ot_hbm_hc_qcen_static(SFR=1,SXC=7)": {
+   "source": "physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv",
+   "why": "not a hard core of this plan"
+  },
+  "ot_hbm_hc_qhub_static(SFR=1,SXC=7)": {
+   "source": "physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv",
+   "why": "not a hard core of this plan"
+  }
+ }
+}

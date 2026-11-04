@@ -349,4 +349,16 @@ physical sub-core path is `<inst>.u_fcore.u_core.<u_sub>`.
     - The 133 reset gaps include the 128 q_sm rp3lp3h. Those are now covered by hard_reset_trees.json, which the
       census does not read.
   - (b) 203/203 die lanes over 400 um are hop-compliant (part 1: 195/203). FT slots: 520, 0 over.
-  - (c) 21,132 crossings; plan cycles +44 over d44t; RTL/SPLIT cycles +16 (split3 4 ports x 4).
+  - (c) 21,184 crossings; plan cycles +44 over d44t; RTL/SPLIT core port cycles: see the 11-04 fold below.
+- **Core cycle fold + calendar LEF, 11-04 (DIE-HBM-63; SS25-TOK 23:23, SS26-TOK 04:05 exactness gap):**
+  - `corelat/` now holds every declared core cycle table whose form is in this plan, built by
+    results/die_hbm_1103/reform/mk_corelat_fold.py: over_cap_split latency tables + reform_1103/cycles tables.
+    `ext/crossing_latency.json` was regenerated with ext_census.py --core-lat on this plan (it was last written on part 7a, d44v7).
+    Lanes and type_internal rows unchanged: die lane cycles 4035, type internal 91793, plan cycles +44.
+    Core port maxima new here: hnx_fused_lane 8, hnx_rp3lp3h_n/s 7, tailx_rest 70, subtree32 17, vms_glue_nw_t 1.
+  - Not folded (split form not in this plan): q3_body_core, the two tkm tile straps (+448 TKM op), listed in the delta.
+  - `compiler_core_delta.json`: no compiler code reads core cycle tables (LAT ABI = latency.lanes only), so this is the
+    schedule delta for the S2 model of record: HC_PRE_NORM +8, HC_POST +4 per record, SM +7 per record.
+  - hfd_hgi_vm_calendar_f20 plan LEF: 10-16 ref_tile copy -> cores/hfd_hgi_vm_calendar_f20__241.92x116.64.lef (sibling
+    routed view cal_sg 11-03). 558/558 table pins inside the LEF pin rects, 0 layer differences. No pin table,
+    outline or lane changed; plan GEOM unchanged by construction.
