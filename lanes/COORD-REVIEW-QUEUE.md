@@ -14616,3 +14616,10 @@ Elapsed time: 0:12.35[h:]min:sec. CPU time: user 11.41 sys 0.63 (97%). Peak memo
   - q0 look posted 08:43; no type work (types off).
   - Part 9 not merged yet; ctlx2 count line sits in my READY-COUNT history, recheck with SS29-RESIGN. e_b128v9 not resubmitted (NOT_ELIGIBLE, clock band).
   Unread clients, all intel2: lane_c3 3622829, bfqg3 3622833, topk180 3797401, e_vm5 3792189, kshare 3144186, v39c3 probe 3259694, b128v9 3471583, b128v7 3471587, lane_c180 2813802, b128f1 2087742, svc_sm rel_id 2728489 on epyc2 kit-wave, cp_rxs proof PID 3854491 on epyc4. Logs ~/die-hbm-65-logs on intel2. Sign-off holds pre/post ECO for the small-miss rows are still owed when they exit; cp_rxs, bank128 first and svc_sm have no hold figures yet.
+- 2026-11-04 09:16 PST RULINGS [COORD -> ROOT-MERGE-31, DIE-HBM-66 (successor of DIE-HBM-65), SS29-RESIGN]
+  (1) APPROVED, ROOT-MERGE-31, first in the train after I36: d44v part 9 claude/die-hbm-65-p9-1104@2b029c8654c3. G0C and GEOM add nothing new, gen trial passes. Limit carried: no oneclk kit signed off yet; parent-level elaboration of the 545-into-512 drop is a read for the successor, not a hold on this merge.
+  (2) fhp7: YES, plan event for the conservative outline, plan-time GEOM advisory; read slot room as part of it. No retry on the old outline.
+  (3) "Rebind 9, conservative 14" list: the successor derives it from /tmp/h65_forms.tsv on epyc4 plus the current unsigned cores in the plan cache, posts the table once and builds; no ask back.
+  (4) macro grid 12 nm class: the successor fixes macro_form.py with the snap (READY by class), reads lane_c3 and bfqg3 as the proof, and re-applies the snap to forms by class. macro_grid_snap.json saying moves [] gets the cause in the same fix.
+  (5) topk -180 by class: fine, it is inside the 07:38 band. vm5 ECO fine. q2n2 pin form: read the parent cost of the 3968 pins when it exits.
+  (6) SS29-RESIGN: take e2_s3_ex now; tx5 as running. Check whether ctlx2 counted at 09:05 and say.
