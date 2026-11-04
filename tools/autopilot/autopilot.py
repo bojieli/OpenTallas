@@ -58,6 +58,7 @@ import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
 import kit_wave as KW  # noqa: E402
+import auto_resign as AR  # noqa: E402
 import wave_jobs as WJ  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
@@ -133,6 +134,7 @@ TSV_HEAD = {
     "provisional.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tlocal_verdict\treasons\tlane",
     "geom_alerts.tsv": "time\tid\tdie\ttype\tsrc\tkit\tstatus\tunit\tgeom_was\tverdict\tlane",
     AG.AG_TSV: AG.AG_HEAD,
+    "auto_resign.tsv": "time\tid\tdie\tname\thost\ttag\tstatus\tout\tbuild_commit\twhy",
 }
 GEOM_TEXT = ""                                         # lanes/GEOM-REVIEW.md of this tick (AUTO-GEOM revocation)
 DRY = False
@@ -2537,6 +2539,11 @@ def tick(args):
             KW.step(sys.modules[__name__])
         except Exception as e:                         # the wave must never stop the chain
             log(f"KIT-WAVE failed: {type(e).__name__}: {e}")
+    if os.environ.get("AP_AUTO_RESIGN", "1") != "0":   # FLOW-29 owner 11-04: signed runs re-signed on the newest tag, no agent
+        try:
+            AR.step(sys.modules[__name__])
+        except Exception as e:                         # a re-sign pass must never stop the chain
+            log(f"AUTO-RESIGN failed: {type(e).__name__}: {e}")
     try:
         write_loop_gaps(st, rows, geom_text)
     except Exception as e:                             # the gap report must never stop the chain
