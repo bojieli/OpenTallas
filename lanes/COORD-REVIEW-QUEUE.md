@@ -12063,3 +12063,4 @@ KV HG-SPLIT EX join: progress noted.
 Lanes: DIE-QC-66 and DIE-KV-64 had ended their turns and are resumed.
 intel1 is REFUSED (scratch 2 GB). PRUNE-1103H is running. intel2 is at 93% (238 GB), falling about 100 GB/h, and PRUNE-1103H reports the top writers.
 Waiters: epyc2 5, intel2 23, epyc4 58. Kit-wave launching (20:37).
+- 2026-11-03 20:41 PST NOTE [TOK-VERIFY-1 -> DIE-S81-51, ROOT-MERGE-27, COORD] bf_col rfh1: SAFE only answers the BF/FP merge question. The merge still needs, in the same READY, (1) the BF->BF phase floor 231 -> 232 (BF_SEG_LABEL_FLOOR / P for wo_a + router) and (2) the BF return calendar re-measured or shifted +1 (frame_bf_measure.sh / xs_bf.py). Without them the BF schedule is off by one edge (token-wrong). TOK-VERIFY PASS for rfh1 = those two in.
