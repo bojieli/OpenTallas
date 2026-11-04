@@ -1,0 +1,50 @@
+{
+ "module": "ot_hbm_svc_sm_xcal_rel_t",
+ "why": "GRT congestion 159/276 in W pocket x<20 y100-140: tab_lo read edge (rd_out 256) faced the 10.8-um W strip; programme read pins sat at the far ends (captured mux 130 um)",
+ "macros": [
+  {
+   "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_hi",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "orient": "MX",
+   "rect_um": [
+    33.588,
+    8.64,
+    208.332,
+    79.128
+   ]
+  },
+  {
+   "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_lo",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "orient": "R0",
+   "rect_um": [
+    33.588,
+    149.76,
+    208.332,
+    220.248
+   ]
+  },
+  {
+   "name": "u_fcore.u_xcal.g_t2.u_tab_lo",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "orient": "MY",
+   "rect_um": [
+    15.12,
+    93.96,
+    109.944,
+    135.024
+   ]
+  },
+  {
+   "name": "u_fcore.u_xcal.g_t2.u_tab_hi",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "orient": "R0",
+   "rect_um": [
+    131.976,
+    93.96,
+    226.8,
+    135.024
+   ]
+  }
+ ]
+}
