@@ -1,0 +1,4 @@
+G0C findings against main d44v (DIE-HBM-62/KPORT), 28 errors in total
+gone: ERROR core_faces q_hub_ne summary (13 ports), 2 WARN core_faces
+new: ERROR core_faces q_hub_ne summary (17 ports), q_hub_nw summary (6 ports); hub fault, wbw_base, wbw_total face E vs partners u_hleaf_Q, u_wbc_Q (re-pin to S; hub S is full with the root seam); 2 WARN core_faces; WARN clock_entry_macro hub (no macros)
+track_offset errors: 0. Other checks unchanged. G0C is advisory.

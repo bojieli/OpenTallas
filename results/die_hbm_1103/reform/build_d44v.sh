@@ -37,5 +37,6 @@ cp --update=none p/b4cx/cores/* p/$OUT/cores/
 python3 $R/mk_census.py reform_v4.json p/b2/reform_event.json p/$OUT/reform_census.json | head -1
 python3 $R/mk_clkreg.py p/$OUT h61_geomcoll.json --keep $K
 python3 $R/mk_split_slots.py p/$OUT $R/split_spec.json reform_v4.json > /dev/null
+python3 $R/mk_split.py p/$OUT $R/split_kport/split_kport.json $R/split_kport --only ot_hbm_svc_wb_kport_q > split_kport.log; cut -c1-300 split_kport.log
 git -C repo show 55c4a61894a:physical/die_plan/hbm/mem_reform_1103/recipe_delta.json > p/$OUT/mem_recipe_delta.json
 sha256sum p/$OUT/die_plan.json | cut -c1-12

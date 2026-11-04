@@ -1,0 +1,105 @@
+{
+ "schema": "opentallas.hbm.reform_split.v1",
+ "lane": "DIE-HBM-62/KPORT 2026-11-03",
+ "core": "ot_hbm_svc_wb_kport_q",
+ "census": {
+  "instances_at_floorplan": 388000,
+  "instances": 4,
+  "source": "COORD ruling 22:50 + kit floorplan"
+ },
+ "status": "BENCH-PASS (transaction lockstep, not LEC: internal K timing changes)",
+ "form": "Port-restricted credit form. 1 hub + 4 replicas of one root master. Root port j carries only PCs with pc[1:0]==j, 4 credit-based ports per root; hub keeps 16 DEPTH-4 port FIFOs (index 4*r+j) and a per-PC 4:1 pick over (r, pc%4). Removes the 286-b 32->16 crossbar of ot_hbm_svc_wb_cutthrough_cdc. K skid2 replaced by one output register per PC.",
+ "rtl": [
+  "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_svc_wb_kport_q/ot_hbm_svc_wb_kp_hub.sv",
+  "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_svc_wb_kport_q/ot_hbm_svc_wb_kp_root.sv",
+  "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_svc_wb_kport_q/ot_hbm_svc_wb_kport_q__split.sv"
+ ],
+ "sub_blocks": [
+  {
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "per_core": 1,
+   "cells_est": 138295,
+   "area_est_um2": 17179,
+   "macros": 0,
+   "face_flops": 9717,
+   "pins": 9721,
+   "outline_um": [
+    475.2,
+    77.76
+   ],
+   "place_density": 0.55
+  },
+  {
+   "module": "ot_hbm_svc_wb_kp_root",
+   "per_core": 4,
+   "cells_est": 61049,
+   "area_est_um2": 7306,
+   "macros": 8,
+   "face_flops": 3266,
+   "pins": 3270,
+   "outline_um": [
+    112.32,
+    397.44
+   ],
+   "place_density": 0.65,
+   "strap": "strap_bsel[1:0] tied at the parent, one master"
+  }
+ ],
+ "cells_basis": "ORFS asap7lock make synth (flat), without the kit face shell, SRAM blackboxed",
+ "unique_masters": 2,
+ "designs_delta": "-1 +2",
+ "hard_cores_delta": "4 -> 20",
+ "added_cycles": {
+  "fixed_schedule_pins": 0,
+  "k_write_path": "added edges inside the variable-wait path; wa = true completion; compiler untouched; not priced per sector, flagged for the TOK-VERIFY batch",
+  "bench_end_time_us": {
+   "split": 16,
+   "uncut": 17,
+   "note": "same stimulus, Verilator whole-us rounding"
+  }
+ },
+ "crossings": [
+  {
+   "between": "root.port_* -> hub.port_*",
+   "bits": "290 x 16",
+   "kind": "REG->REG with credit return",
+   "edges": 2
+  },
+  {
+   "between": "hub.c_* -> 4 roots",
+   "bits": 44,
+   "kind": "copy frame broadcast, stream_clk",
+   "edges": 2
+  },
+  {
+   "between": "parent wd -> 4 roots",
+   "bits": 2056,
+   "kind": "broadcast (was one load)",
+   "edges": 0,
+   "note": "root S face uses every M5 track; parent wiring not measured"
+  }
+ ],
+ "eq": {
+  "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/kport/run.sh (unchanged rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv, SEAM=2 models the face shells)",
+  "pass": [
+   "e",
+   "w",
+   "e_wopen"
+  ],
+  "sectors": 5563,
+  "lockstep_windows": 8,
+  "mutants_caught": [
+   "mp WBMUT1",
+   "mq WBMUT2",
+   "ms WBMUT3",
+   "mcr WBMUT11 credit",
+   "mid WBMUT12 root id"
+  ],
+  "limits": "one stimulus set; external w_k pin handshake through the kit face shell is not modelled by SEAM; no LEC against the uncut core"
+ },
+ "open": [
+  "util above the 0.45 target: hub ~48%, root ~55% of free area",
+  "hub ~24k hbm_clk sinks on one entry, above the 5k target",
+  "die GRT not run with this form"
+ ]
+}

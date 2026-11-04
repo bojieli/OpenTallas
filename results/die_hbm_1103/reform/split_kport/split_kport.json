@@ -1,7 +1,7 @@
 [
  {
   "core": "ot_hbm_svc_wb_kport_q",
-  "sha": "PENDING",
+  "sha": "3c47fdc256",
   "glue": "ot_hbm_svc_wb_kport_q__kpglue.sv",
   "conn": "kport.conn.json",
   "subs": [
@@ -19,11 +19,11 @@
    "u_fcore.u_core.u_hub": [
     [
      0.0,
-     388.8
+     397.44
     ],
     [
      475.2,
-     86.4
+     77.76
     ]
    ],
    "u_fcore.u_core.u_root0": [
@@ -32,38 +32,38 @@
      0.0
     ],
     [
-     118.8,
-     388.8
+     112.32,
+     397.44
     ]
    ],
    "u_fcore.u_core.u_root1": [
     [
-     118.8,
+     120.96,
      0.0
     ],
     [
-     118.8,
-     388.8
+     112.32,
+     397.44
     ]
    ],
    "u_fcore.u_core.u_root2": [
     [
-     237.6,
+     241.92,
      0.0
     ],
     [
-     118.8,
-     388.8
+     112.32,
+     397.44
     ]
    ],
    "u_fcore.u_core.u_root3": [
     [
-     356.4,
+     362.88,
      0.0
     ],
     [
-     118.8,
-     388.8
+     112.32,
+     397.44
     ]
    ]
   },
@@ -99,98 +99,98 @@
     {
      "name": "u_fcore.g_lane[0].u_payload",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      12.0,
-      9.0,
-      106.824,
-      50.064
+      4.32,
+      11.916,
+      99.144,
+      52.98
      ]
     },
     {
      "name": "u_fcore.g_lane[1].u_payload",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      12.0,
-      50.088,
-      106.824,
-      91.152
+      4.32,
+      53.004,
+      99.144,
+      94.068
      ]
     },
     {
      "name": "u_fcore.g_lane[2].u_payload",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      12.0,
-      105.192,
-      106.824,
-      146.256
+      4.32,
+      109.068,
+      99.144,
+      150.132
      ]
     },
     {
      "name": "u_fcore.g_lane[3].u_payload",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      12.0,
-      146.28,
-      106.824,
-      187.344
+      4.32,
+      150.156,
+      99.144,
+      191.22
      ]
     },
     {
      "name": "u_fcore.g_lane[4].u_payload",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      12.0,
-      201.384,
-      106.824,
-      242.448
+      4.32,
+      206.22,
+      99.144,
+      247.284
      ]
     },
     {
      "name": "u_fcore.g_lane[5].u_payload",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      12.0,
-      242.472,
-      106.824,
-      283.536
+      4.32,
+      247.308,
+      99.144,
+      288.372
      ]
     },
     {
      "name": "u_fcore.g_lane[6].u_payload",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      12.0,
-      297.576,
-      106.824,
-      338.64
+      4.32,
+      303.372,
+      99.144,
+      344.436
      ]
     },
     {
      "name": "u_fcore.g_lane[7].u_payload",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      12.0,
-      338.664,
-      106.824,
-      379.728
+      4.32,
+      344.46,
+      99.144,
+      385.524
      ]
     }
    ]
   },
-  "macro_basis": "DIE-HBM-62/KPORT d44v: 8 x 128x256 as one column, pairs abutted, 14.04 channels (rule 10.8), x 12.0; clock entry in the E strip (cefix rule: entry off macros)",
+  "macro_basis": "DIE-HBM-62/KPORT d44v: 8 x 128x256 as one column, MY so the W-edge macro pins face the 13-um E strip, pairs abutted, 15.0 channels (rule 10.8), x 4.32; clock entry in the E strip (cefix rule: entry off macros)",
   "clock_entry": {
    "ot_hbm_svc_wb_kp_root": [
-    112.32,
-    194.4
+    103.68,
+    198.72
    ]
   }
  }

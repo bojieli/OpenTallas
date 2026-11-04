@@ -317,32 +317,223 @@
    "designs_added": [
     "ot_hbm_su_pg_lane1_core"
    ]
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "sha": "PENDING",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_svc_wb_kport_q__kpglue.sv",
+   "slot_um": [
+    475.2,
+    475.2
+   ],
+   "instances": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_hub": [
+     [
+      0.0,
+      397.44
+     ],
+     [
+      475.2,
+      77.76
+     ]
+    ],
+    "u_fcore.u_core.u_root0": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      112.32,
+      397.44
+     ]
+    ],
+    "u_fcore.u_core.u_root1": [
+     [
+      120.96,
+      0.0
+     ],
+     [
+      112.32,
+      397.44
+     ]
+    ],
+    "u_fcore.u_core.u_root2": [
+     [
+      241.92,
+      0.0
+     ],
+     [
+      112.32,
+      397.44
+     ]
+    ],
+    "u_fcore.u_core.u_root3": [
+     [
+      362.88,
+      0.0
+     ],
+     [
+      112.32,
+      397.44
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hbm_svc_wb_kp_hub": {
+     "pins_file": "cores/ot_hbm_svc_wb_kp_hub__475.2x77.76__d44v_split.json",
+     "outline_um": [
+      475.2,
+      77.76
+     ],
+     "pins": 9721,
+     "clock_pins": 2,
+     "clock_entry": [
+      237.6,
+      38.88
+     ],
+     "faces": {
+      "E": 293,
+      "I": 2,
+      "N": 4624,
+      "S": 4689,
+      "W": 113
+     }
+    },
+    "ot_hbm_svc_wb_kp_root": {
+     "pins_file": "cores/ot_hbm_svc_wb_kp_root__112.32x397.44__d44v_split.json",
+     "outline_um": [
+      112.32,
+      397.44
+     ],
+     "pins": 3270,
+     "clock_pins": 2,
+     "clock_entry": [
+      103.68,
+      198.72
+     ],
+     "faces": {
+      "I": 2,
+      "N": 1206,
+      "S": 2062
+     }
+    }
+   },
+   "added_cycles": "0 on fixed-schedule pins; K write path +edges inside the variable wait (latency/ot_hbm_svc_wb_kport_q.tsv)",
+   "pin_displacement_um": 10160719.1,
+   "stations_repointed": {
+    "stations": 0
+   },
+   "designs_removed": [
+    "ot_hbm_svc_wb_kport_q"
+   ],
+   "designs_added": [
+    "ot_hbm_svc_wb_kp_hub",
+    "ot_hbm_svc_wb_kp_root"
+   ]
   }
  ],
  "core_faces_moves": [
   {
-   "core": "ot_hbm_idx_score_hcol_h0",
-   "module": "ot_hbm_idx_score_hcol_h0_rb",
-   "port": "cf_out",
-   "to": "N",
-   "mean_before": -0.098,
-   "score_after": 0.984
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "fault",
+   "to": "E",
+   "mean_before": -0.784,
+   "score_after": 0.266
   },
   {
-   "core": "ot_hbm_idx_score_hcol_h0",
-   "module": "ot_hbm_idx_score_hcol_h0_rb",
-   "port": "cs_out",
-   "to": "N",
-   "mean_before": -0.098,
-   "score_after": 0.984
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wbw_base",
+   "to": "E",
+   "mean_before": -0.142,
+   "score_after": 0.388
   },
   {
-   "core": "ot_hbm_idx_score_hcol_h0",
-   "module": "ot_hbm_idx_score_hcol_h0_rb",
-   "port": "prdy",
-   "to": "N",
-   "mean_before": -0.0,
-   "score_after": 0.984
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wbw_total",
+   "to": "E",
+   "mean_before": -0.142,
+   "score_after": 0.388
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wbw_v",
+   "to": "E",
+   "mean_before": -0.142,
+   "score_after": 0.388
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wa",
+   "to": "E",
+   "mean_before": -0.535,
+   "score_after": 0.529
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wb_fill_epoch",
+   "to": "E",
+   "mean_before": -0.535,
+   "score_after": 0.529
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wb_ready",
+   "to": "E",
+   "mean_before": -0.535,
+   "score_after": 0.529
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wb_reserve_bank",
+   "to": "E",
+   "mean_before": -0.535,
+   "score_after": 0.529
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wb_reserve_base",
+   "to": "E",
+   "mean_before": -0.535,
+   "score_after": 0.529
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wb_reserve_epoch",
+   "to": "E",
+   "mean_before": -0.535,
+   "score_after": 0.529
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wb_reserve_sectors",
+   "to": "E",
+   "mean_before": -0.535,
+   "score_after": 0.529
+  },
+  {
+   "core": "ot_hbm_svc_wb_kport_q",
+   "module": "ot_hbm_svc_wb_kp_hub",
+   "port": "wb_reserve_v",
+   "to": "E",
+   "mean_before": -0.535,
+   "score_after": 0.529
   }
  ]
 }

@@ -1,0 +1,3 @@
+port	added_edges	note
+stream, reservation, window, wb_ready, wa protocol	0	same edges as the uncut core per lockstep
+w_k_* payload	variable	K write path, inside the wait for wa; flag for TOK-VERIFY

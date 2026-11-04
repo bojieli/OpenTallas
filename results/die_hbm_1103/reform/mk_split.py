@@ -23,8 +23,8 @@ sub-core port bit to the parent plan pins it reaches and to the peer sub-cores i
   * core_faces pass: the check.py core_faces model (as mk_repin) scores each sub port.  A port group whose mean cos
     is < 0 moves to the outer face of its tile that scores best over all instances.
   * spec options (DIE-HBM-62/KPORT, 2-D tile plan): tiles {sub inst: [[x, y], [w, h]]} replaces the 1-D tile search;
-    pin_want (file, sub module -> bit -> [face, x, y]) gives the pin order and face of the listed bits and switches the
-    core_faces pass off for this core; inst_straps {sub inst: parent_id_straps} ties ID pins per instance.
+    pin_want (file, sub module -> bit -> [face, x, y]) gives the pin order and face of the listed bits; the core_faces
+    pass leaves those ports alone; inst_straps {sub inst: parent_id_straps} ties ID pins per instance.
   * sidecars, re-pointed from the core inst to its subs:
       - clock_entries.json: one entry per sub at its tile centre, 4.32 PG lattice, or at the spec point clear of
         the macros.
@@ -479,7 +479,8 @@ for (core, mod, port), means in bad.items():
     if min(means) >= CK.FACE_WARN_COS - 1e-9 and sum(means) / len(means) >= 0:
         continue
     S = cores[core]
-    if S["sp"].get("pin_want"):                 # the spec placed every pin (slot-level plan): no face moves
+    pw_ = json.loads((SD / S["sp"]["pin_want"]).read_text()).get(mod, {}) if S["sp"].get("pin_want") else {}
+    if any(base(k) == port for k in pw_):       # the spec placed this port: no face move
         continue
     o, wh = S["tb"][S["rep"][mod][0]]
     of = outer_faces(o, wh, S["W"], S["H"]) or list("NSEW")
