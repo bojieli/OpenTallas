@@ -166,6 +166,15 @@ def test_gen_fails_closed_without_pass_proof(tmp_path):
     assert kit_wave.classify("gen", str(e.value))[0] == "PLAN"
 
 
+def test_gen_pending_is_opt_in_and_passed_to_generator(tmp_path, monkeypatch):
+    views, view, repo = gen_setup(tmp_path, proof=False)
+    seen = {}
+    monkeypatch.setattr(kcw.subprocess, "run", lambda cmd: seen.setdefault("cmd", cmd) and type("R", (), {"returncode": 0}))
+    rc = kcw.main(["gen", "--views", str(views), "--view", view, "--out", str(tmp_path / "gen"), "--kit-rtl", "/k",
+                   "--fp-root", str(tmp_path / "fp"), "--repo", str(repo), "--face-proof-pending"])
+    assert rc == 0 and "--hr-face-proof-pending" in seen["cmd"]
+
+
 def test_gen_fails_closed_on_missing_source(tmp_path):
     views, view, repo = gen_setup(tmp_path)
     (repo / "physical/m/x_bb.v").unlink()

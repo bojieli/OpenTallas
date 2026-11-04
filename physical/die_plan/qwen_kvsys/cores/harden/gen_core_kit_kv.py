@@ -1232,6 +1232,9 @@ def main():
     ap.add_argument("--hr-face-ports", metavar="DIR", help="KVHR2 10-26: qkd_hr_* zero-cycle face recut: kit RTL = DIR/<core>.v "
                     "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
                     "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
+    ap.add_argument("--hr-face-proof-pending", action="store_true", help="DIE-KV-65/HR 11-04 (die owner ruling, opt-in): build from "
+                    "--hr-face-ports DIR while its proof is still running; freeze.json + PROVENANCE.json + hr_face_delta.json say "
+                    "face_proof pending. The kit does not count until the proof returns.")
     ap.add_argument("--related-clock", action="append", default=[], metavar="PORT",
                     help="DIE-KV-10 opt-in: this clock-class port is its own RELATED clock root at the core period "
                          "(landing-ring write clock fclk), with the landing-contract phase window to clk; default off")
@@ -1352,7 +1355,9 @@ def main():
             raise SystemExit("--hr-face-ports only applies to qkd_hr_* cores")
         fpd = Path(a.hr_face_ports)
         rc = (fpd / "eq_rc.txt").read_text().split()
-        if rc != ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
+        if rc == ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
+            a.hr_face_proof_pending = False          # a returned proof is never recorded as pending
+        elif not a.hr_face_proof_pending:
             raise SystemExit(f"--hr-face-ports: proof not clean in {fpd}/eq_rc.txt: {rc}")
         files = [str(fpd / f"{mod}.v")] + [f for f in files if f.endswith("_bb.v")]
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
@@ -1492,7 +1497,9 @@ def main():
             added_cycles=0, private_port_flops=len(fr["private_out"]), merged_input_captures=len(fr["merged_in"]),
             listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
             **({"retimed_input_captures": fr["retimed_in"]} if fr.get("retimed_in") else {}),
-            proof="equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)"), indent=1) + "\n")
+            proof=("PENDING: no proof leg has returned for this kit RTL" if a.hr_face_proof_pending else
+                   "equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)")),
+            indent=1) + "\n")
     # DIE-KV-61/hr 11-02: recipe-declared timed-face buses (face_guard timed_face.json) and tied spare outputs
     # (face_guard spare_out.json); both are read by the kit core_preflight / signoff face guard.
     if rec.get("timed_face"):
@@ -2013,8 +2020,12 @@ def main():
         fz["master_plan"] = ms
     if reset_contract is not None:
         fz["reset_contract"] = reset_contract
+    if a.hr_face_proof_pending:
+        fz["face_proof"] = "pending"
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
-    LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
+    prov = LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
+    if a.hr_face_proof_pending:
+        (kd / "PROVENANCE.json").write_text(json.dumps(dict(prov, face_proof="pending"), indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
                           macros=macros, kit_hash=fz["kit_hash"])))
 
