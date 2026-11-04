@@ -1157,6 +1157,10 @@
  "type_canon": true,
  "internal_primitive_constants": true,
  "glue_source_names": true,
+ "stage_hash_roots": {
+  "base": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-s81h10",
+  "out": "/srv/opentallas-scratch2/claude/kit-wave/s81/bind_h10"
+ },
  "hard_params": [
   "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_vg.hard_params.json",
   "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit_vg.hard_params.json"

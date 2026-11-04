@@ -1,4 +1,5 @@
 """bind_elab frontends: default native script unchanged; opt-in slang and typed-string staging."""
+import hashlib
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -58,3 +59,44 @@ def test_string_parameter_staging_preserves_defaults_and_original(tmp_path):
     unchanged = tmp_path / 'plain.sv'
     unchanged.write_text('module bar; endmodule\n')
     assert E.string_parameter_compat([str(unchanged)], tmp_path / 'stage') == ([str(unchanged)], [])
+
+
+def _stage_names(root, pins=None):
+    base, out = root / 'wt', root / 'bind'
+    (base / 'rtl').mkdir(parents=True)
+    out.mkdir()
+    f = base / 'rtl' / 'a.sv'
+    f.write_text('module die; endmodule\nmodule leaf(input a); wire x; endmodule\n')
+    g = out / 'stub.sv'
+    g.write_text('module stub; parameter string S = "x"; endmodule\n')
+    key = E.stage_keyer(base, out, pins)
+    names = [Path(n).name for n in E.structural_sources([str(f)], {'die'}, out / 'st', key=key)]
+    names += [Path(n).name for n in E.string_parameter_compat([str(g)], out / 'c', key=key)[0]]
+    return names, key
+
+
+def test_stage_names_do_not_depend_on_worktree_or_out_location(tmp_path):
+    """CAPEND 11-04: the staged name feeds the $src_ digest and through it the collector bit order."""
+    a, _ = _stage_names(tmp_path / 'one')
+    b, _ = _stage_names(tmp_path / 'other' / 'deeper')
+    assert a == b
+
+
+def test_stage_hash_roots_reproduce_the_published_bind_digest(tmp_path):
+    pins = {'base': '/published/wt', 'out': '/published/bind'}
+    a, _ = _stage_names(tmp_path / 'one', pins)
+    b, _ = _stage_names(tmp_path / 'two', pins)
+    assert a == b
+    assert a[0] == hashlib.sha256(b'/published/wt/rtl/a.sv').hexdigest()[:12] + '_a.sv'
+    assert a[1] == hashlib.sha256(b'/published/bind/stub.sv').hexdigest()[:12] + '_stub.sv'
+
+
+def test_stage_key_outside_roots_keeps_path_and_is_recorded(tmp_path):
+    key = E.stage_keyer(tmp_path / 'wt', tmp_path / 'bind')
+    assert key(Path('/elsewhere/x.sv')) == '/elsewhere/x.sv' and key.outside == {'/elsewhere/x.sv'}
+
+
+def test_stage_hash_roots_rejects_unknown_root(tmp_path):
+    with pytest.raises(E.ElabError):
+        E.stage_keyer(tmp_path, tmp_path, {'bse': '/x'})
+
