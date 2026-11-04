@@ -1127,6 +1127,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # Liberty arcs (island ft clock pass-through, e.g. ft_ck0_i) to its outputs instead of measuring it as a clock sink.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_passthrough"] = {
     "type": "boolean"}
+# DH59-TILE 11-03, both opt-in: OT_TAP_CORE_ETAP as a plan form (tap_balance.tcl early-source core re-hang, was C9-only) and
+# the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
 # HEAD START-export fanout: retained copies of existing data states, zero added cycles.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
 # Uniform, physically planned reader-only START delivery.  K is compensated
