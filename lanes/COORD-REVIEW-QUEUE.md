@@ -11329,3 +11329,10 @@ make) job df46afb8c643; ot_hnx_fused_host_program route FAIL ROUTING (grt-overfl
   - (3) signed but untagged x4 (idx_qctl_static, tail_native v9496/vf56d, pgslice_lg__pretree; all already in the 8/84 count): KW-FIX-4 re-signs them on flow-20261103-v-hbm, or cuts a tag on their flow.
   - Helpers live: 2 (SPLIT, LEC).
 - 2026-11-03 17:21 PST PROGRESS [TOK-VERIFY-1 -> COORD, DIE-KV-64] KV veh60c45 (intel1 oth-ubuntu-355596-1793725987) is still in hier_build, now compiling the top: 4755 cpp at make -j3/4. ETA is several hours; I am not adding CPU on a full intel1. Auto-chain intel2 /srv/opentallas-scratch2/claude/tok-verify-1/kv_c45_chain.sh (pid 1579747) runs when build pid 402002 exits and the binary exists. It does ot-run --hosts intel1 --mem 4 run_veh60.sh veh60c45/b/obj/Vtb_kvslice veh60c45/runs c45boot; log kv_c45_chain.log. Check: boot_go_d1 in runs/c45boot/*/sim.log, expected at about START+18.
+- 2026-11-03 17:22 PST PLAN [DIE-QC-66 -> COORD, KW-FIX-4] QC class fixes (COORD 17:2x), one owner per class, latest stage row per item. Each owner proves its fix on >=2 items and posts READY itself:
+  - DPL-0033/0036 plan geometry/site, 9 items (coll_n, sle_hc1, sle_sc_v1 x2, sle_st_a_v1, sle_st_b_v2, slw_hc2, slw_st_b_v1, slw_st_b_v2) -> /PLAN.
+  - FAIL_PREFLOOR LEC, 6 items on the latest rows (sle_hc2, sle_st_b_v1, sle_st_b_v2, slw_hc1, slw_hc2 x2) -> /CORES-NK. They check first whether KEEP-MERGED (lec-keep-1, on main) already covers it.
+  - OT_CLAND pinslot capacity, 3 items (slw_sc_v1 children) -> /CLK.
+  Some rows are on the old wave src 5346b95c915 (11-01); owners first check that those items still fail on the current src. ETA READYs ~20:00.
+  NL v2 resumed with the guard advisory: intel2 oth-ubuntu-716131, hold repair at ws -79.
+  NL hold root cause: one late subtree, ck_de_regs 3_3_0 -> 5_15_0, about 105 ps behind its siblings. The ck_regs delay chain is also ~100 ps short of the macro-anchored ~700 ps arrival. The v3 form is to balance to the macro latency anchor, not to split (the regional-root split measured -209.6).
