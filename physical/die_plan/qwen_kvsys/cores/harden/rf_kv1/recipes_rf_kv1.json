@@ -540,6 +540,15 @@
    "ruling": "DIE-KV-66/HR 11-04 same class as COORD GRANT 19:2x of DIE-KV-61/hr and core_prompt (declared buses = timed faces, 166.6 ps kit IO budget, no mask, no added cycle)",
    "reason": "mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/dkv66/hr/census/peer.json: unregistered 609 / shared 1307, 0 left with these buses timed plus the 3 por_n typed resets"
   },
-  "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl"
+  "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl",
+  "rf_wrap": {
+   "resets": [
+    "u_coordinator__por_n",
+    "u_peer_codec__por_n",
+    "u_root_mux__por_n",
+    "u_peer__rst_n"
+   ]
+  },
+  "source_1104b": "DIE-KV-69 11-04 RE-FORM (OWNER two strikes, peer2 TT -594): root mux pl2 + codec status stage (peer_rf_1104.py, results/kv_peer_rf_1104) + reset relays; slot 311 -> 216"
  }
 }
