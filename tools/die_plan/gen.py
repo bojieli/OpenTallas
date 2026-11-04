@@ -195,6 +195,9 @@ def main(argv=None):
                          "master_plan.required or OT_MASTER_PLAN_REQUIRED=1)")
     a3.add_argument("--trial", action="store_true",
                     help="trial kit (not sign-off): allowed without a master-plan slice when one is required")
+    a3.add_argument("--native-cell-cap", type=int, default=None, metavar="N",
+                    help="kit-level native standard-cell run cap (default 400000; native_cell_cap.tcl clamps to 517000; "
+                         "COORD 11-04: 400k advisory up to 517k)")
     a3.add_argument("--gpl-plain", default="", metavar="TYPES",
                     help="comma list of pure-FT corridor types whose kits place with GPL_ROUTABILITY_DRIVEN=0 / "
                          "GPL_TIMING_DRIVEN=0 (stations FIRM at plan sites; KV hub_Ei routability GPL diverged)")
@@ -244,6 +247,7 @@ def main(argv=None):
                                            plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc,
                                            master_slice=a.master_slice, trial=a.trial,
                                            gpl_plain=[x for x in a.gpl_plain.split(",") if x],
+                                           native_cell_cap=a.native_cell_cap,
                                            dpl_diamond=[x for x in a.dpl_diamond.split(",") if x],
                                            bound_native_reset=[x for x in a.bound_native_reset.split(",") if x],
                                            landing=load_json(a.clock_landing) if a.clock_landing else None,

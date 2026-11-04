@@ -107,7 +107,8 @@ AP_DIR = Path(os.environ.get("AP_DIR", str(HOME / "coord" / "autopilot")))
 OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 LANE = "KIT-WAVE-1"
 CLASSES = ("PLAN", "FLOW", "RTL", "INFRA")
-CELL_CAP = 400_000
+CELL_CAP = 400_000       # default kit run cap; a kit's own native_cell_count.json limit (--native-cell-cap) overrides it
+CELL_CAP_MAX = 517_000   # COORD 11-04 06:00 (2): 400k advisory up to the largest closed run; above stays stopped
 PLACE_POLL_S = float(os.environ.get("KW_PLACE_POLL_S", "60"))
 # run on the gen host by place_receipt(): argv K, service start time (epoch s)
 PLACE_RECEIPT = r"""
@@ -664,6 +665,9 @@ RULES = [
     # KIT-TRIAGE-1 11-01: gen raises when a plan landing band has no rect / placement FAIL (S81 svc_* on e8cbe5f6c70;
     # DIE-S81-47 event2 2026e1e1561 adds the bands) -> a plan event, not a flow error
     ("PLAN", None, r"landing band absent", "plan landing band absent (plan event: band rect / placement)"),
+    # KW-FIX-7 11-04: before INFRA. S81 serdes__t3/t4/t12-16 stopped on the cap with ot-run client text beside it, read as
+    # INFRA and relaunched at the same cap.  The cap line is a verdict on the kit whatever surrounds it.
+    ("PLAN", r"^place$", r"OT_NATIVE_CELL_CAP.*above \d+ run cap", "actual native standard-cell count above the kit run cap"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+137\b", "infra"),
@@ -723,8 +727,7 @@ RULES = [
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
     ("FLOW", r"^bind$", r"FileNotFoundError|No such file", "die-prep bind recipe input missing"),
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
-    ("PLAN", r"^cells$", r".", "cell count above the 400k run cap"),
-    ("PLAN", r"^place$", r"OT_NATIVE_CELL_CAP.*above 400000 run cap", "actual native standard-cell count above the 400k run cap"),
+    ("PLAN", r"^cells$", r".", "cell count above the kit run cap"),
     ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
     # KIT-TRIAGE-1/G26 11-01 (QC cbf_q00/cbf_q11/cbn_q11): instances that differ ONLY in ID parameters (tile_id ...) are
     # one kit once the plan declares those leaf ports parent_id_straps (OWNER 10-25 option B: strap_* pins tied at the
@@ -1761,9 +1764,11 @@ def run_item(spec_path):
             if count.get("schema") == "opentallas.native_cell_count.v1" and type(count.get("stdcells")) is int:
                 res["cells"] = count["stdcells"]
                 res["cells_basis"] = "actual synthesized top standard cells, excluding block macros"
+                if type(count.get("limit")) is int:
+                    res["cells_limit"] = min(count["limit"], CELL_CAP_MAX)
         if rc or not odb:
             return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
-        if res["cells"] and res["cells"] > CELL_CAP:
+        if res["cells"] and res["cells"] > res.get("cells_limit", CELL_CAP):
             return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
         olc = outline_cmd(K)
         _, ol = run("outline", remote(olc), idempotent=True)
@@ -2677,7 +2682,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
             "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS", "--geom-ref", ref,
-            "--mem", str(opt(cfg, rec["die"], "place_mem_gb")), "--cells", str(int(cells * 1.3) if cells else 200000),
+            "--mem", str(opt(cfg, rec["die"], "place_mem_gb")), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
             "--lane", d.get("lane", LANE)]
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))
