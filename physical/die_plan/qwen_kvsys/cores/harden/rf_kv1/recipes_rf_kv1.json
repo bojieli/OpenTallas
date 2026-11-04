@@ -358,6 +358,8 @@
   "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl"
  },
  "qkd_hr_core_prompt": {
+  "fsm_keep": true,
+  "source_1104_c": "DIE-KV-67/HR 11-04: yosys fsm re-encodes 23 registers (u_csr st_*.state 2 -> 3 bits, u_host _4879_), kit LEC NOT EQUIVALENT 74 differ, gold_only state cones; other HR cores have 0 recoded [CHECKED netlist scan]",
   "timed_face": {
    "buses": [
     "u_control__crom_fault",
