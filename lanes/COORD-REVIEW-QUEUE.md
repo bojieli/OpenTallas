@@ -11212,3 +11212,4 @@ make[1]: *** [Makefile:585: do) job c6a7bef1559a; ot_hbm_hc_root_static__tailx_r
   - Pre-build GRT probe: overflow 7646 -> 0.
   - Plan checks: G0C 0 new ERROR, plan_geom new FAIL 0. Count: 84 designs, 8/8 signed records MATCH. die_plan.json unchanged.
   - One-block fix after the freeze; KW-FIX-4 relaunches the 3 bank128_pair items.
+- 2026-11-03 16:25 PST [COORD] APPROVED -> ROOT-MERGE-27 next train: die-hbm-61-por@101616937ca (d44v p5 bank128_pair one-block fix: SRAMs moved x 21.6->38.88; pre-build GRT overflow 7646 -> 0; G0C unchanged at 24 errors; 84 designs, all 8 signed-off records still match). The 422 um r2r path is advisory. After merge, KW-FIX-4 relaunches bank128_pair_core within 30 min.
