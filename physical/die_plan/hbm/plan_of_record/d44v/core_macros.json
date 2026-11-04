@@ -7319,10 +7319,10 @@
   "ot_hnx_fused_host_program": {
    "status": "KNOWN",
    "outline_um": [
-    207.36,
+    276.48,
     129.6
    ],
-   "basis": "DIE-HBM-49 10-31 static sites (OWNER 07:1x one-block plan event, KIT-WAVE PLAN_CORE_MACROS / macro_channels): 2 SRAMs u_fcore.provider.lo/hi (yosys flatten of view @65a08f6d43f9 kit RTL); one centred column (W/E channels ~12.9), lo below / hi above the centre clock island [99.36,60.48,108,69.12] which sits in the 12.98-um interior channel (2.17 um clear each side); N/S pin faces keep ~12.9-um std-cell bands; E/W faces have no pins",
+   "basis": "DIE-HBM-66 part 10 conservative outline (COORD 09:16 (2)): +69.12 um on E, same SRAMs and pins at the same die position; DIE-HBM-49 10-31 static sites (OWNER 07:1x one-block plan event, KIT-WAVE PLAN_CORE_MACROS / macro_channels): 2 SRAMs u_fcore.provider.lo/hi (yosys flatten of view @65a08f6d43f9 kit RTL); one centred column (W/E channels ~12.9), lo below / hi above the centre clock island [99.36,60.48,108,69.12] which sits in the 12.98-um interior channel (2.17 um clear each side); N/S pin faces keep ~12.9-um std-cell bands; E/W faces have no pins",
    "macros": [
     {
      "name": "u_fcore.provider.lo",
