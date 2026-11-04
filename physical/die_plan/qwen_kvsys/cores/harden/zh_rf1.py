@@ -185,6 +185,83 @@ def derive(src, out, repo, maxwire_um=60, hold_ff_margin=10, zy_reps=0, io_hold_
     return kd
 
 
+# ---- RF-CONS (DIE-KV-64/RF-E 11-03 19:xx, OWNER 18:57 conservative form): util 0.35-0.45 needs a larger ZH outline ----
+# rfB (RF-KV1b) GRT std area 10795.8 um2 in the 151.2 outline = fill 0.50.  The conservative ZH grows the square outline
+# UP and RIGHT only: S (268 inputs) and W (clk / rst_n) pins keep their exact ZH-frame coordinates; the 68 N-face pins
+# (root / zerr) keep x and move to the new top edge.  No E-face pins exist.  The parent (qkd_ahub) keeps the input
+# faces in place by moving each instance origin by -(side-151.2) along every mirrored axis (R180: x,y; MX: y; MY: x).
+OLD_SIDE = 151.2
+
+
+def regrow(kd, side):
+    import re as _re
+    kd = Path(kd)
+    d = round(side - OLD_SIDE, 4)
+    if d <= 0 or abs(side / 0.216 - round(side / 0.216)) > 1e-6:
+        raise SystemExit("zh_rf1 regrow: side must grow and be a multiple of 0.216 um")
+    pins = json.loads((kd / "pins.json").read_text())
+    if any(p["face"] == "E" for p in pins):
+        raise SystemExit("zh_rf1 regrow: E-face pins present")
+    n_moved = 0
+    for p in pins:
+        if p["face"] == "N":
+            if abs(p["y"] - OLD_SIDE) > 1e-9:
+                raise SystemExit("zh_rf1 regrow: N pin off the old edge")
+            p["y"] = side; n_moved += 1
+    (kd / "pins.json").write_text(json.dumps(pins))
+    io = (kd / "io.tcl").read_text()
+    old_y, new_y = f"{OLD_SIDE - 0.042:.4f}}}", f"{side - 0.042:.4f}}}"
+    if io.count(old_y) != n_moved:
+        raise SystemExit("zh_rf1 regrow: io.tcl N pins not in the expected form")
+    (kd / "io.tcl").write_text(io.replace(old_y, new_y))
+    cfg = (kd / "config.mk").read_text()
+    m = 2.16
+    new_cfg = cfg.replace(f"export DIE_AREA = 0 0 {OLD_SIDE} {OLD_SIDE}", f"export DIE_AREA = 0 0 {side:g} {side:g}")
+    new_cfg = new_cfg.replace(f"export CORE_AREA = {m} {m} {OLD_SIDE - m:.2f} {OLD_SIDE - m:.2f}",
+                              f"export CORE_AREA = {m} {m} {side - m:.2f} {side - m:.2f}")
+    if new_cfg.count(f"{side:g} {side:g}") != 1 or f"{side - m:.2f} {side - m:.2f}" not in new_cfg:
+        raise SystemExit("zh_rf1 regrow: config.mk DIE_AREA / CORE_AREA not in the expected form")
+    (kd / "config.mk").write_text(new_cfg)
+    cj = json.loads((kd / "core.json").read_text())
+    cj["native_pin_contract"]["outline_um"] = [side, side]
+    cj["native_pin_contract"]["rf_cons_regrow"] = dict(from_um=[OLD_SIDE, OLD_SIDE], n_face_pins_moved=n_moved,
+                                                      dy_um=d, s_w_pins="unchanged")
+    (kd / "core.json").write_text(json.dumps(cj, indent=1) + "\n")
+    sa = (kd / "synth_area.py").read_text()
+    if sa.count(f"{OLD_SIDE}") < 3:
+        raise SystemExit("zh_rf1 regrow: synth_area.py outline not in the expected form")
+    (kd / "synth_area.py").write_text(sa.replace(f"{OLD_SIDE}", f"{side:g}"))
+    return dict(outline_um=[side, side], n_face_pins_moved=n_moved, dy_um=d)
+
+
+def derive_cons(src, out, repo, side=162.0, zy_reps=8, io_hold_pad_margin=35, maxwire_um=60, hold_ff_margin=10):
+    """conservative ZH kit: the RF-KV1b RTL form (exact, 0 cycles) + IO-HOLD-PAD + maxwire, in a grown outline."""
+    import hashlib as _h
+    import sys
+    import tempfile
+    tmp = Path(tempfile.mkdtemp(dir=out))
+    kd0 = derive(src, tmp, repo, maxwire_um, hold_ff_margin, zy_reps, io_hold_pad_margin)
+    rg = regrow(kd0, side)
+    sys.path.insert(0, str(Path(repo) / "tools/die_plan"))
+    import lec as LEC
+    import gen_core_kit_kv as GEN
+    fz = json.loads((kd0 / "freeze.json").read_text())
+    fz["type"] = f"ot_nhb_zh__{side:g}x{side:g}"
+    fz["outline_um"] = [side, side]
+    fz["pins_sha256"] = _h.sha256((kd0 / "pins.json").read_bytes()).hexdigest()
+    fz["rf_cons"] = dict(rg, form="RF-CONS: RF-KV1b RTL + IO-HOLD-PAD + maxwire in a util<=0.45 outline")
+    fz["recipe"]["util"] = round(10795.8 / ((side - 4.32) ** 2), 3)
+    kd = Path(out) / fz["type"]
+    if kd.exists():
+        raise SystemExit(f"zh_rf1 derive_cons: {kd} exists")
+    kd0.rename(kd)
+    tmp.rmdir()
+    fz["kit_hash"] = GEN.kit_hash(kd)
+    (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
+    LEC.write_kit_provenance(kd, repo)
+    return kd
+
+
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser(description="derive the RF-KV1 ZH kit from the native ZH kit")
@@ -195,5 +272,10 @@ if __name__ == "__main__":
     ap.add_argument("--hold-ff-margin", type=float, default=10)
     ap.add_argument("--zy-reps", type=int, default=0, help="RF-KV1b: kept zy_r write replicas (0 = RF-KV1 only)")
     ap.add_argument("--io-hold-pad-margin", type=float, default=None, help="enable IO-HOLD-PAD at GRT with this margin")
+    ap.add_argument("--cons-side", type=float, default=None, help="RF-CONS: grown square outline (um), zy 8 + pad 35")
     a = ap.parse_args()
-    print(derive(a.src, a.out, a.repo, a.maxwire_um, a.hold_ff_margin, a.zy_reps, a.io_hold_pad_margin))
+    if a.cons_side:
+        print(derive_cons(a.src, a.out, a.repo, a.cons_side, a.zy_reps or 8,
+                          35 if a.io_hold_pad_margin is None else a.io_hold_pad_margin, a.maxwire_um, a.hold_ff_margin))
+    else:
+        print(derive(a.src, a.out, a.repo, a.maxwire_um, a.hold_ff_margin, a.zy_reps, a.io_hold_pad_margin))
