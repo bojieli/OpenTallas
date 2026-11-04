@@ -129,7 +129,7 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
     wire [OW-1:0] p_face;
     if (OLAT != 0) begin : g_olat
         for (genvar ob = 0; ob < OW; ob = ob + 1) begin : g_bit
-            (* keep, dont_touch = "true" *) reg q;
+            reg q;                                    // no keep: a kept wire adds a buffer load on the scalar port nets (face_guard shared)
 `ifdef OT_QXPQ_OLAT_MUT_POS
             always @(posedge clk) q <= o_face[ob];    // MUTANT: rising-edge copy = one extra cycle (the bench must catch it)
 `else
