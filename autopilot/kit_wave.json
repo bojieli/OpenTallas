@@ -2568,7 +2568,10 @@
     "slw_fw_v3@3",
     "slw_hc1__cl3449ea95@3",
     "slw_hc1__cl68f9248e__cl144ee7b3@3",
-    "slw_su_c__cl92142dac@5"
+    "slw_su_c__cl92142dac@5",
+    "sle_stm_v1__clbe630b9c@2",
+    "sle_stm_v2__cl7b3062fa@2",
+    "slw_stm_v1__cle34a73c3@2"
    ],
    "queue_src": "claude/kw8-srcp-1104@322f8cea192c53776def709b03717107c1725d3e",
    "type_args": {
@@ -2897,7 +2900,10 @@
     "cbn_q11__cl49ae4555@4": "KW-FIX-8 12:2x: launched 11:49 by the INFRA relaunch path before plan_dies: no _plan_flags, so no provisional child views; kit tried the tile body flat. Relaunch on prov views via select",
     "cbx_q10__cl89936551@4": "KW-FIX-8 12:2x: launched 11:49 by the INFRA relaunch path before plan_dies: no _plan_flags, so no provisional child views; kit tried the tile body flat. Relaunch on prov views via select",
     "cbx_q10__cl94a12200@4": "KW-FIX-8 12:2x: launched 11:49 by the INFRA relaunch path before plan_dies: no _plan_flags, so no provisional child views; kit tried the tile body flat. Relaunch on prov views via select",
-    "slw_su_c__cl92142dac@4": "KW-FIX-8 12:2x: launched 11:49 by the INFRA relaunch path before plan_dies: no _plan_flags, so no provisional child views; kit tried the tile body flat. Relaunch on prov views via select"
+    "slw_su_c__cl92142dac@4": "KW-FIX-8 12:2x: launched 11:49 by the INFRA relaunch path before plan_dies: no _plan_flags, so no provisional child views; kit tried the tile body flat. Relaunch on prov views via select",
+    "sle_stm_v1__clbe630b9c@2": "KW-FIX-8 11-04 COORD YES to 12:42 ASK: a1 stopped by KW-FIX-8 before route, a2 refused nochange on it; record CANCELLED, inputs unchanged, the run never happened",
+    "sle_stm_v2__cl7b3062fa@2": "KW-FIX-8 11-04 COORD YES to 12:42 ASK: a1 stopped by KW-FIX-8 before route, a2 refused nochange on it; record CANCELLED, inputs unchanged, the run never happened",
+    "slw_stm_v1__cle34a73c3@2": "KW-FIX-8 11-04 COORD YES to 12:42 ASK: a1 stopped by KW-FIX-8 before route, a2 refused nochange on it; record CANCELLED, inputs unchanged, the run never happened"
    },
    "gen_hosts": [
     "epyc4"
