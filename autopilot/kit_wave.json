@@ -1334,7 +1334,11 @@
    "hold_items": {
     "svc_lo_dsdv_svc_rs__t7": "S81/g0c owns exact current-source GEN/LINT/preflight canary; release after its terminal result, avoid duplicate while portable canary staged.",
     "slice_station__t51": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
-    "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event"
+    "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
+    "col_h9_r0_p[!2]*": "DIE-S81-52 23:5x via KW-FIX-5: col family waits for col_h9_r0_p2 pilot WNS split (core tap pin form A); no volume until it reads",
+    "col_h9_r[!0]*": "DIE-S81-52 23:5x via KW-FIX-5: col family waits for col_h9_r0_p2 pilot WNS split (core tap pin form A); no volume until it reads",
+    "col_h10_*": "DIE-S81-52 23:5x via KW-FIX-5: col family waits for col_h9_r0_p2 pilot WNS split (core tap pin form A); no volume until it reads",
+    "col_h9_r0_p2__t1__cl0045af7b": "DIE-S81-52 23:5x via KW-FIX-5: col family waits for col_h9_r0_p2 pilot WNS split (core tap pin form A); no volume until it reads"
    },
    "queue_src": "claude/kw-fix-5-s81col-1103@51ace0d1e681",
    "work_root": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave",
