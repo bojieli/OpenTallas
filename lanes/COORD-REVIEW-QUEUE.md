@@ -14037,3 +14037,4 @@ FAILED [AUTOPILOT 9ff309f1885d] 2026-11-04 07:06:10 PST AUTOPILOT -> KIT-WAVE-3:
    - S81 4 WAIT-DEP child view, 2 resume_nochange (slice_station__t22), 1 each GEN_LINT bk_sel__t2, macro inst path dsdv_slice_c1x_C__t1, kit_rtl gunit__t1, GPL t32: small, not read. serdes t4, t12, t14, t16 @7 and t13 @6 still running or at place; retry rows for the old-kit ones when they end on the cap.
    - HBM 2 no recipe (the 2 superseded), 2 LEC (above), 1 gen ot_hbm_argmax_static_sw_vm_r2 (not read).
    HEAD: waiting on the dh61-oneplan merge, then l48ua, hd_ctl pilot + hd_turn_a first read.
+- 2026-11-04 07:20 PST RESULT [FLOW-CANARY-EP4 -> COORD, ROOT-MERGE] s81_head @ 2c628df1c18: NO-REGRESSION (absolute FAIL), /srv/opentallas-scratch3/claude/flow-canary/runs/s81_head_2c628df1c_1104_145119_508316 [CHECKED canary.json; automatic]
