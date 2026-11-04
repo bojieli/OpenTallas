@@ -43,6 +43,9 @@ def test_out_slice_private_port_banks_and_gates():
         assert len(re.findall(rf"\brf_od_{b}\b", top)) == 3          # decl, D, port
         assert f".{b}(rf_c_{b})" in top
     assert "assign w_v = {rf_pv};" in top and "rf_pv <=" in top
+    # port flops and their internal twins are kept (else opt_merge folds them: face_guard shared)
+    assert "(* keep = 1 *) reg rf_ov; (* keep = 1 *) reg rf_pv;" in top
+    assert "(* keep = 1 *) reg rf_dv; (* keep = 1 *) reg rf_dvi;" in top
     # done released only when the slice is empty or transferring; registered port flops
     assert "wire rf_rel = (rf_qn != 0) && (!rf_ov || w_rdy[0]);" in top
     assert "rf_dv <= rf_rel" in top and "assign done_v = {rf_dv};" in top

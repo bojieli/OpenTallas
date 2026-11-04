@@ -266,7 +266,9 @@ def out_slice(decl, conn, sp, ck, gates):
         if decl.get(p, ("",))[0] != d or width(decl[p][1]) != 1:
             raise SystemExit(f"rf_wrap out_slice: {p} is not a 1-bit {d}")
     rr = conn[rst]; rr1 = rr.strip("{}") if rr != rst else f"{rst}[0]"
-    L = [f"  wire rf_cwv; reg rf_ov; reg rf_pv;",
+    # (* keep *): the port flop and its internal twin share one next state; unkept, opt_merge folds them into one
+    # flop whose Q loads the port and the slice logic (face_guard shared)
+    L = [f"  wire rf_cwv; (* keep = 1 *) reg rf_ov; (* keep = 1 *) reg rf_pv;",
          f"  wire rf_cwrdy = !rf_ov || {rdy}[0];",
          f"  wire rf_ld = rf_cwv && rf_cwrdy;",
          f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_ov <= 1'b0; rf_pv <= 1'b0; end",
@@ -301,7 +303,7 @@ def out_slice(decl, conn, sp, ck, gates):
               f"    else begin rf_qn <= rf_qn + (rf_cdv ? 1'b1 : 1'b0) - (rf_rel ? 1'b1 : 1'b0);",
               f"      if (rf_cdv) rf_qw <= rf_qw + 1'b1; if (rf_rel) rf_qr <= rf_qr + 1'b1; end",
               f"  always @(posedge {ck}) if (rf_cdv) begin rf_qtg[rf_qw] <= rf_ctg; rf_qcn[rf_qw] <= rf_ccn; end",
-              f"  reg rf_dv, rf_dvi; (* keep = 1 *) reg [{wt-1}:0] rf_dtg; (* keep = 1 *) reg [{wc-1}:0] rf_dcn;",
+              f"  (* keep = 1 *) reg rf_dv; (* keep = 1 *) reg rf_dvi; (* keep = 1 *) reg [{wt-1}:0] rf_dtg; (* keep = 1 *) reg [{wc-1}:0] rf_dcn;",
               f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_dv <= 1'b0; rf_dvi <= 1'b0; end",
               f"    else begin rf_dv <= rf_rel; rf_dvi <= rf_rel; end",
               # tag / count ports: the head entry, loaded every edge (the parent samples them with done_v only)
