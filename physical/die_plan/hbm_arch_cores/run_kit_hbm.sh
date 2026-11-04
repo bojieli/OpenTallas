@@ -18,6 +18,10 @@ set -uo pipefail
 # (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = INFO
 # pre-repair screen since KIT-TRIAGE-1/G5 11-01 (COORD 11-01 05:1x / OWNER 12.28b); STOP, marker /work/FAIL_POSTCTS, rc 4,
 # only below OT_HOLD_STOP_PS -150 ps reg2reg).  OT_PRE_ROUTE_FF_HOLD (GRT-estimate FF hold < 0 after repair) is INFO, not a stop.
+# KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the post-GRT per-corner insertion gate (postcts_gate.tcl TT/FF) is
+# ADVISORY: a miss (band dev > tol, or no verdict) prints OT_POSTCTS_ADVISORY (postcts_advisory.log), writes no
+# FAIL_POSTCTS and the kit routes on to sign-off; signoff.py records the band as signoff.json insertion_band.
+# 'export OT_POSTCTS_BAND_GATE = 1' in config.mk restores the old stop (rc 6).  OT_HOLD_GATE above is unchanged.
 K=$(cd "$1" && pwd -P); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
@@ -80,8 +84,11 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     if [ \$rc = 9 ]; then echo 'FAIL_POSTCTS kit_modes grt (one timing mode per corner)' | tee -a /work/FAIL_POSTCTS; fi; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ]; then grep -hiE \"hold buffer|RSZ-00(32|46)\" /work/run/logs/asap7/*/base/5_1_grt.log > /work/hold_census.txt 2>/dev/null; echo \"OT_HOLD_CENSUS \$(cat /work/hold_census.txt | tr \"\\n\" \" \")\"; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
-    for c in TT FF; do OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
-      grc=\$?; if [ \$grc != 0 ] || ! grep -q 'OT_POSTCTS_GATE.*PASS' /work/postcts_gate_\$c.log; then echo \"FAIL_POSTCTS per-corner insertion gate \$c\" | tee -a /work/FAIL_POSTCTS; rc=6; fi; done; \
+    BG=\$(grep -c '^export OT_POSTCTS_BAND_GATE = 1' /work/config.mk); rm -f /work/postcts_advisory.log; \
+    for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
+      grc=\$?; if [ \$grc != 0 ] || ! grep -q 'OT_POSTCTS_GATE.*PASS' /work/postcts_gate_\$c.log; then \
+        if [ \$BG != 0 ]; then echo \"FAIL_POSTCTS per-corner insertion gate \$c\" | tee -a /work/FAIL_POSTCTS; rc=6; \
+        else echo \"OT_POSTCTS_ADVISORY per-corner insertion gate \$c rc \$grc: \$(grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log | tail -1) (not a stop, OWNER 11-03 19:12; band recorded in signoff.json insertion_band)\" | tee -a /work/postcts_advisory.log; fi; fi; done; \
     if grep -q '^export OT_PRE_ROUTE_FF_HOLD = 1' /work/config.mk; then \
       python3 -c 'import json,sys; d=json.load(open(\"/work/postcts_gate_ff.json\")); print(\"FF_PRE_ROUTE_HOLD\",d[\"hold_wns_est_ps\"]); sys.exit(d[\"hold_wns_est_ps\"] < 0)' > /work/pre_route_ff_hold.log 2>&1; \
       if [ \$? != 0 ]; then echo \"PRE_ROUTE_FF_HOLD INFO \$(cat /work/pre_route_ff_hold.log) (GRT estimate after repair; information only, the routed FF hold sign-off decides)\"; fi; fi; fi; \
