@@ -1,0 +1,11 @@
+dsdv_gunit_l1c RE-FORM RF=1/OLAT=1 vs RF=0/OLAT=0 (Verilator 5.050, run.sh, 11-03):
+MUT=0: L1C_RF PASS cycles=200000 id_rows=28510 (gate select ports = gold +12 edges, gather reply +0)
+MUT=0 seed 77: L1C_RF PASS cycles=300000 id_rows=42779
+MUT=1 (OT_RF_MUT_L1C, acc_{T-3} kept for 3-beat segments): L1C_RF FAIL 2450 (caught)
+Whole-unit golden bench rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh 8 cases (tools/hdc_golden_v41):
+base (e01562875d4): MUT=0 GUNIT PASS router_lat=39 (51 at unit pins) hc_lat=1007 (1019)
+RF-1:               MUT=0 GUNIT PASS router_lat=51 (63 at unit pins) hc_lat=1007 (1019); MUT=10 GUNIT FAIL 153 (caught)
+=> router latency +12 edges (lower_gu RT_LAT_N/S 50/48 -> 62/60), HC latency unchanged.
+DIE-S81-51/NFF 11-03 OLAT=2 (negedge flop per output bit, recipe params OLAT 2):
+run.sh bench RF=0/OLAT=0 vs RF=1/OLAT=2 (Verilator): L1C_RF PASS cycles=200000 id_rows=28510
+latch (RF1/OLAT1) vs nff (RF1/OLAT2), same edge: Verilator 100k cycles posedge errs 0; iverilog 12 20k cycles 0 at posedge and negedge+0.2 ns

@@ -5,7 +5,11 @@
 // pipelines are retained; full16 sequence and wrapper faults suppress valid in
 // its registered D cone, before publication. Exceptional abort has no recovery.
 // Native source blob: 4e7c69f591dc5e6e235e444e1f40cc1f18864682
-module ot_hgi_coll_static_seq_ctl (
+// RXPRE=1 (DIE-HBM-61/RTL-C3 RE-FORM 11-03, used by ot_hbm_host_link_capture only; default 0 = the native form): the
+// one RX CRC is computed from p_rx_flit, one edge before rf (rf <= p_rx_flit on every edge), and only its mismatch bit
+// is registered.  crc_bad is the same on every edge (0 added cycles); rf -> 32-bit CRC over 580 bits -> crc_bad ->
+// full_fault -> p_tx_v/rx_v was the worst stage of ot_hbm_host_cp_rxs (pre-build gate TT +52).
+module ot_hgi_coll_static_seq_ctl #(parameter integer RXPRE=0) (
     input wire clk,
     input wire rst_n, epoch_begin,
     input wire abort_in,
@@ -46,10 +50,31 @@ module ot_hgi_coll_static_seq_ctl (
     reg [611:0] rf;
     wire [CW-1:0] tx_crc, rx_crc;
     ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_tx_crc(.d(body),.q(tx_crc));
-    ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_rx_crc(.d(rf[FW+18:0]),.q(rx_crc));
+    wire rx_crc_ne;
+    generate if(RXPRE!=0)begin:g_rxpre
+        ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_rx_crc(.d(p_rx_flit[FW+18:0]
+`ifdef C3MUT_RX_BIT
+            ^{1'b1,{(FW+18){1'b0}}}
+`endif
+            ),.q(rx_crc));
+        reg ne_q;
+`ifdef C3MUT_RX_STALE
+        always @(posedge clk)ne_q<=(rx_crc!==rf[PW-1-:CW]);
+`else
+        always @(posedge clk)ne_q<=(rx_crc!==p_rx_flit[PW-1-:CW]);
+`endif
+`ifdef C3MUT_RX_NOREG
+        assign rx_crc_ne=(rx_crc!==p_rx_flit[PW-1-:CW]);
+`else
+        assign rx_crc_ne=ne_q;
+`endif
+    end else begin:g_rxcur
+        ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_rx_crc(.d(rf[FW+18:0]),.q(rx_crc));
+        assign rx_crc_ne=(rx_crc!==rf[PW-1-:CW]);
+    end endgenerate
     // Inspect payload only for an expected present frame. An unexpected frame
     // is already its own fault; idle/aborted payload bits are not diagnostics.
-    wire crc_bad=rv && ev && (rx_crc!==rf[PW-1-:CW]);
+    wire crc_bad=rv && ev && rx_crc_ne;
     wire slot_bad=rv && ev && (rf[FW+7:FW]!=={2'b00,es} || rf[FW+17-:8]!==re ||
                          rf[FW+8]!==1'b1 || rf[FW+9]!==1'b0 || rf[FW+18]!==1'b0);
     // Full-sequence checks are in the D cones of the output valid flops.

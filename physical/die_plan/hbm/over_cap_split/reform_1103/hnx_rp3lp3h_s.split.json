@@ -1,6 +1,6 @@
 {
  "core": "hnx_rp3lp3h_s",
- "status": "WIP (EQ partial: s MUT0 PASS; mutants + nx pair bench running at stop)",
+ "status": "EQ-PASS (s MUT0 PASS; MUT1/2/3 FAIL)",
  "form": "leaf cut: x store / 6 BF16 column halves / 3 lane cores / glue (5 masters for n+s, 3 leaf masters shared)",
  "uncut_cells_orfs": 785258,
  "census_cells": 657997,
@@ -104,14 +104,12 @@
   "bench": "physical/die_plan/hbm/over_cap_split/reform_1103/bench/rp3lp3h_s/run.sh",
   "kit_ref": "intel2 kit-wave d44o items hnx_rp3lp3h_s attempt_5",
   "results": {
-   "s MUT0": "LOCKSTEP PASS checks=13200 toggled_out_bits=1018 (gout_leaf shift 7)"
+   "s MUT0": "LOCKSTEP PASS checks=13200 toggled_out_bits=1018 (gout_leaf shift 7)",
+   "s MUT1": "LOCKSTEP FAIL errs=39353 (expected)",
+   "s MUT2": "LOCKSTEP FAIL errs=43179 checks=13200 (expected)",
+   "s MUT3": "LOCKSTEP FAIL errs=828 (expected)"
   },
-  "running": [
-   "epyc2:/home/ubuntu/scratch-root/claude/die-hbm-61-split/rp3/bench_s_m1 (pid 3092112)",
-   "epyc2:/home/ubuntu/scratch-root/claude/die-hbm-61-split/rp3/bench_s_m2 (pid 3092115)",
-   "epyc2:/home/ubuntu/scratch-root/claude/die-hbm-61-split/rp3/bench_s_m3 (pid 3092116)"
-  ],
-  "remains": "s: MUT 1/2/3 must FAIL (running, ~30 min build each)"
+  "remains": "none"
  },
  "gate_tool": "not run (DIE-HBM-61/RTL prebuild gate not yet available to this helper)"
 }

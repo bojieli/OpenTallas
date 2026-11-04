@@ -1,0 +1,16 @@
+{
+ "event": "DIE-HBM-61 d44v part 6a: query_static +4 mesh-island ft pins (signed q7b2 DEF xy)",
+ "module": "ot_hbm_idx_query_static",
+ "table_before": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q.json",
+ "table_after": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q__mpisl.json",
+ "pins_before": 1633,
+ "pins_after": 1637,
+ "pins_file_refs": 4,
+ "added": [
+  "mp_isl0_ck_i",
+  "mp_isl0_ck_o",
+  "mp_isl0_rst_i",
+  "mp_isl0_rst_o"
+ ],
+ "parent_sidecar": "cores/ot_hbm_idx_query_static__d44v_mpisl_parent.json"
+}

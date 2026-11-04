@@ -4,7 +4,8 @@
 # setRC_rcx.tcl by default), propagated clocks.  Pin-register set = the registers the sign-off clock check uses
 # (fanout of the data inputs, fanin of the outputs).  Writes /work/postcts_gate_<corner>.json:
 #   pin-reg CK arrival mean / min / max / n, bound I, |mean - bound|, setup / hold WNS (estimate), verdict.
-# Verdict FAIL when |mean - bound| > OT_POSTCTS_TOL (default 20 ps): the route would carry a wrong I into sign-off.
+# Band |mean - bound| > OT_POSTCTS_TOL (default 20 ps): ADVISORY since OWNER 11-03 (only sign-off blocks); FAIL only with
+# OT_POSTCTS_BAND_GATE=1 or when no pin register was measured.
 set C $::env(OT_CORNER)
 # outside make (runner calls openroad directly): take the kit exports from /work/config.mk
 if {[file exists /work/config.mk]} {
@@ -210,12 +211,18 @@ set ws [expr {[sta::worst_slack_cmd max] * 1e12}]
 set hs [expr {[sta::worst_slack_cmd min] * 1e12}]
 if {$::env(OT_CORNER) ne $ot_pg_C} {error "postcts: OT_CORNER changed during the gate ($ot_pg_C -> $::env(OT_CORNER))"}
 set dev [expr {$n ? abs($mean - $ot_pg_bound) : 1e9}]
-set ot_pg_band_verdict [expr {$dev <= $ot_pg_tol ? "PASS" : ($ot_pg_band_policy eq "info" ? "INFO" : "FAIL")}]
+# KW-FIX-4 / OWNER 11-03 (only sign-off blocks; COORD 12:01 ruling (2)): a MEASURED band miss (dev > tol) under the
+# "gate" policy is ADVISORY -- reported here and in the json, the flow routes on and sign-off TT/FF decides.
+# OT_POSTCTS_BAND_GATE=1 restores the blocking band (A/B only).  An empty or missing measurement still FAILs.
+set ot_pg_band_gate [expr {[info exists ::env(OT_POSTCTS_BAND_GATE)] && $::env(OT_POSTCTS_BAND_GATE) eq "1"}]
+set ot_pg_band_verdict [expr {$dev <= $ot_pg_tol ? "PASS" : ($ot_pg_band_policy eq "info" ? "INFO" : ($ot_pg_band_gate ? "FAIL" : "ADVISORY"))}]
 set v [expr {$n && $ot_pg_band_verdict ne "FAIL" ? "PASS" : "FAIL"}]
 set fh [open /work/postcts_gate_${ot_pg_c}.json w]
 puts $fh [format "{\"corner\": \"%s\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.2f, \"pinreg_min_ps\": %.2f, \"pinreg_max_ps\": %.2f, \"bound_ps\": %.2f, \"dev_ps\": %.2f, \"tol_ps\": %.1f, \"setup_wns_est_ps\": %.2f, \"hold_wns_est_ps\": %.2f, \"rc\": \"%s\", \"parasitics\": \"%s\", \"verdict\": \"%s\", \"band_policy\": \"%s\", \"band_verdict\": \"%s\"}" \
   $ot_pg_C $n $mean [expr {$n ? [lindex $arr 0] : -1}] [expr {$n ? [lindex $arr end] : -1}] $ot_pg_bound $dev $ot_pg_tol $ws $hs \
   [expr {[info exists ::env(LAYER_PARASITICS_FILE)] ? $::env(LAYER_PARASITICS_FILE) : "platform setRC.tcl"}] $ot_pg_mode $v $ot_pg_band_policy $ot_pg_band_verdict]
 close $fh
-puts [format "OT_POSTCTS_GATE %s (%s) pinreg n %d mean %.2f bound %.2f dev %.2f tol %.1f setup_est %.2f hold_est %.2f %s" \
-  $ot_pg_C $ot_pg_mode $n $mean $ot_pg_bound $dev $ot_pg_tol $ws $hs $v]
+# the last word stays the verdict (flow_canary baseline GATE_RE); an advisory band miss is named before it
+puts [format "OT_POSTCTS_GATE %s (%s) pinreg n %d mean %.2f bound %.2f dev %.2f tol %.1f setup_est %.2f hold_est %.2f %s%s" \
+  $ot_pg_C $ot_pg_mode $n $mean $ot_pg_bound $dev $ot_pg_tol $ws $hs \
+  [expr {$ot_pg_band_verdict eq "ADVISORY" ? "ADVISORY band dev > tol (not a gate, OWNER 11-03) " : ""}] $v]

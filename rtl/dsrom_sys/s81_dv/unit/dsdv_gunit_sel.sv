@@ -220,3 +220,39 @@ module dsdv_sel_merge8 #(
     assign q = s2;
     assign fp = f1;
 endmodule
+
+// S81-RF1 RE-FORM (DIE-S81-51/RF-C 11-03, OWNER TWO-STRIKES: stage > 70% of 833 ps -> add cycles): the same merge as
+// dsdv_sel_merge8 (fold c[i] = max(A[i], B[7-i]), then (8,4), (8,2), (8,1): the same four compare levels, bit for bit),
+// ONE compare-exchange per registered stage (4 stages, was 2 stages of two exchanges at ~850 ps TT: l1c fd -> u_m23.s1
+// -22.6 / -19.7 after two ECO strikes).  fo = the flags 4 edges after fi; fp = fo's next value (stage-3 flags).
+module dsdv_sel_merge8_p4 #(
+    parameter integer EW = 43,
+    parameter integer FW = 3
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire [FW-1:0]   fi,
+    input  wire [8*EW-1:0] a,
+    input  wire [8*EW-1:0] b,
+    output wire [FW-1:0]   fo,
+    output wire [8*EW-1:0] q,
+    output wire [FW-1:0]   fp
+);
+    wire [8*EW-1:0] c0, c1, c2, c3;
+    reg  [8*EW-1:0] s0, s1, s2, s3;
+    reg  [4*FW-1:0] f;
+    genvar i;
+    generate
+        for (i = 0; i < 8; i = i + 1) begin : g_f        // fold: the larger of A[i] and B[7-i] (one compare)
+            wire [EW-1:0] x = a[EW*i +: EW], y = b[EW*(7-i) +: EW];
+            assign c0[EW*i +: EW] = (x[EW-1:1] > y[EW-1:1]) ? x : y;
+        end
+    endgenerate
+    dsdv_sel_cx8 #(.EW(EW), .J(4), .KB(8)) u1 (.d(s0), .q(c1));
+    dsdv_sel_cx8 #(.EW(EW), .J(2), .KB(8)) u2 (.d(s1), .q(c2));
+    dsdv_sel_cx8 #(.EW(EW), .J(1), .KB(8)) u3 (.d(s2), .q(c3));
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) f <= {4*FW{1'b0}}; else f <= {f[0 +: 3*FW], fi};
+    always @(posedge clk) begin s0 <= c0; s1 <= c1; s2 <= c2; s3 <= c3; end
+    assign q = s3; assign fo = f[3*FW +: FW]; assign fp = f[2*FW +: FW];
+endmodule

@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.prebuild_gate.v1",
+ "kit": "/home/ubuntu/scratch-root/claude/die-hbm-61-gate/kits/hnx_rp3lp3h_s",
+ "design": "hnx_rp3lp3h_s",
+ "flow_status": [],
+ "cells": null,
+ "macros": null,
+ "stdcell_area_um2": null,
+ "sta_stage": null,
+ "period": null,
+ "groups": {},
+ "wns": null,
+ "r2r_endpoints_stage_over_583": null,
+ "stage_ps": null,
+ "stage_limit_ps": 583.1,
+ "setup_limit_ps": 83.3,
+ "checks": {
+  "timing": {
+   "ok": false,
+   "wns": null,
+   "sta_stage": null
+  },
+  "cells": {
+   "ok": false,
+   "cells": null
+  },
+  "memory": {
+   "ok": true,
+   "max_bits": 4096,
+   "largest": 0,
+   "over": []
+  },
+  "face": {
+   "ok": false,
+   "why": "no synth netlist"
+  },
+  "straps": {
+   "ok": false,
+   "why": "no synth netlist"
+  },
+  "reset": {
+   "ok": false,
+   "why": "no synth netlist"
+  }
+ },
+ "advisory": true,
+ "verdict": "FAIL",
+ "fails": [
+  "timing",
+  "cells",
+  "face",
+  "straps",
+  "reset"
+ ],
+ "needs_stage_cut": false
+}

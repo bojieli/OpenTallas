@@ -66,7 +66,11 @@ module ot_s81sl_capc5cf (
     ot_s81sl_cap_tr u_te (.clk(clk), .rst_n(rst_n), .rt(eq), .o_v(x_v), .o_t(x_t), .o_d(x_d), .o_e(x_e), .fault(x_f));
     ot_s81sl_cap_ed #(.D(24)) u_ed (.clk(clk), .rst_n(rst_n), .i_v(x_v), .i_t(x_t), .i_d(x_d), .i_e(x_e), .i_f(x_f),
         .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .o_f(e_f));
-    ot_s81sl_cap_rt u_rt (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_cap_rt u_rt (.clk(clk),
+`ifdef OT_S81_CAP_RT_RF1
+        .clk_g0(clk), .clk_g1(clk),   // S81-RF1: cap_rt clock entries 2/3 = the same root
+`endif
+        .rst_n(rst_n),
         .w_v(w_v), .w_t(w_t), .w_d(w_d), .w_e(w_e), .w_f(w_f), .e_v(e_v), .e_t(e_t), .e_d(e_d), .e_e(e_e), .e_f(e_f),
         .cfg_v(cq_v), .cfg_d(cq_d),
         .cw_s_v(sv_o), .cw_s_a(sa_o), .cw_s_d(sd_o), .cw_n_v(nv_o), .cw_n_a(na_o), .cw_n_d(nd_o),

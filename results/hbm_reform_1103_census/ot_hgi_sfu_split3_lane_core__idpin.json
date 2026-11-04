@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.prebuild_gate.v1",
+ "kit": "/home/ubuntu/scratch-root/claude/die-hbm-61-gate/kits/ot_hgi_sfu_split3_lane_core__idpin",
+ "design": "ot_hgi_sfu_split3_lane_core__idpin",
+ "flow_status": [
+  "GATE_FLOW",
+  "stop=ok",
+  "GATE_STAGE",
+  "place_resized",
+  "GATE_STA",
+  "rc=0"
+ ],
+ "cells": 264945,
+ "macros": 0,
+ "stdcell_area_um2": 33862.6,
+ "sta_stage": "place_resized",
+ "period": 833.0,
+ "groups": {
+  "r2r": {
+   "slack": -10.3,
+   "start": "u_fcore.u_core.u_map.j0[1]$_DFF_P_/QN",
+   "end": "u_fcore.u_core.u_map.meta1[79]$_DFF_P_/D"
+  },
+  "in2reg": {
+   "slack": 181.9,
+   "start": "sfu_rst_n",
+   "end": "u_fcore.u_core.u_sfu.u.u.g_sfu.u_exp.g_h[5].u_a.genblk1.genblk1.genblk1.g_keep6.u.u.y[24]$_DFF_PN0_/RESETN"
+  },
+  "reg2out": {
+   "slack": 581.1,
+   "start": "u_bout_sfu_kv_wdata/q[18]$_DFF_P_/QN",
+   "end": "sfu_kv_wdata[18]"
+  },
+  "in2out": null
+ },
+ "wns": -10.3,
+ "r2r_endpoints_stage_over_583": 10781,
+ "stage_ps": 843.3,
+ "stage_limit_ps": 583.1,
+ "setup_limit_ps": 83.3,
+ "checks": {
+  "timing": {
+   "ok": false,
+   "wns": -10.3,
+   "sta_stage": "place_resized"
+  },
+  "cells": {
+   "ok": false,
+   "cells": 264945
+  },
+  "memory": {
+   "ok": true,
+   "max_bits": 16384,
+   "largest": 0,
+   "over": []
+  },
+  "face": {
+   "ok": true,
+   "pin_unreg": 0,
+   "pins_registered": 1462,
+   "pins_to_macro": 0,
+   "unreg_head": [],
+   "unreg_buses": [],
+   "definition": "geom_rules.pin_reg_metrics (flop reachable through BUF/INV)",
+   "strict_face_guard": {
+    "fails": 0,
+    "fail_counts": {},
+    "fails_head": {}
+   }
+  },
+  "straps": {
+   "ok": true,
+   "strap_ports": [],
+   "leaked": []
+  },
+  "reset": {
+   "ok": false,
+   "resets": [
+    "sfu_rst_n",
+    "map_rst_n"
+   ],
+   "landing_pins": {
+    "sfu_rst_n": 2438,
+    "map_rst_n": 4
+   },
+   "unregistered": [
+    "sfu_rst_n"
+   ],
+   "max": 8
+  }
+ },
+ "advisory": true,
+ "verdict": "FAIL",
+ "fails": [
+  "timing",
+  "cells",
+  "reset"
+ ],
+ "needs_stage_cut": true
+}

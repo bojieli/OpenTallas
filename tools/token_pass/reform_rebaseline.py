@@ -47,7 +47,7 @@ def load_lanes(path: Path) -> dict:
     lanes = (d.get('latency') or {}).get('lanes') if 'latency' in d else d.get('lanes')
     if not isinstance(lanes, dict) or not lanes:
         raise SystemExit(f'{path}: no latency.lanes table')
-    return {k: int(v['cycles']) for k, v in lanes.items()}
+    return {k: int(v.get("cycles", 0)) if isinstance(v, dict) else int(v) for k, v in lanes.items()}
 
 
 def lane_class(name: str) -> str:

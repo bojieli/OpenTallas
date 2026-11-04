@@ -1074,7 +1074,11 @@ def multi_root_tcl_patches(kd, mr):
             assert ("set ot_pg_virtual {}\n" in t
                     and "get_property $ot_pg_clock sources" in t
                     and "set_clock_latency -source $ot_pg_bound $ot_pg_virtual" in t), "postcts_gate.tcl virtual-clock selector changed"
-        rp = [("set_propagated_clock [get_clocks clk]\n", f"set_propagated_clock [get_clocks {{{real}}}]\n"),
+        # FLOW template (11-03): the primary-only profile sets ot_pg_propagate; older templates propagate directly
+        prop = ("set ot_pg_propagate [get_clocks clk]\n" if "set ot_pg_propagate [get_clocks clk]\n" in t
+                else "set_propagated_clock [get_clocks clk]\n")
+        prop_new = prop.replace("[get_clocks clk]", f"[get_clocks {{{real}}}]")
+        rp = [(prop, prop_new),
               ("  set a [ot_pinreg_arr $p [get_clocks clk]]\n",
                f"  set a \"\"\n  foreach ot_rc [get_clocks {{{real}}}] {{ if {{$a eq \"\"}} {{ set a [ot_pinreg_arr $p $ot_rc] }} }}\n")]
         if rp[0][0] not in t and t.count("set ot_pg_propagate [get_clocks clk]\n") == 1:

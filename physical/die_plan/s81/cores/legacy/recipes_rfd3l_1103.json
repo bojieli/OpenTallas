@@ -1,0 +1,18 @@
+{
+ "_doc": "DIE-S81-51/RF-D form 2b (dsdv_gunit_l0r; plan_h2_2249, outline / pins unchanged)",
+ "dsdv_gunit_l0r": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l0r",
+  "io_hold": "sender_min",
+  "params": {
+   "RF": 2
+  },
+  "regional_taps": {
+   "nx": 2,
+   "ny": 2,
+   "split": "count",
+   "win_ps": 20
+  },
+  "suffix": "rfd3",
+  "_rfd3": "RF-D form 2b 11-03: RF 2 build oth-ubuntu-3202643 routed TT -21.68 / 25 ep (g_w1.ga2 -> ~1,500-load go tree -> g_sel[*].oh), FF hold -1.44 / 1 ep (ad -> ad2); RTL: per-select-copy go flops (0 cycles).  RF 2."
+ }
+}

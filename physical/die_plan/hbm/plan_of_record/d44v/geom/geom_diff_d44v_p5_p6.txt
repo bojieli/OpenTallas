@@ -1,0 +1,6 @@
+top keys ['schema', 'plan', 'types'] types 74 74
+FAIL count 225 -> 225 | types FAIL 74 -> 74
+NEW 0 []
+GONE 0 []
+WORSE 1 [('q_b112__physical_v1', 'clock_tap_sinks', 9577.0, 9580.0)]
+BETTER 8 [('q_b110', 'clock_reach', 289.14, 238.22), ('q_b110__physical_v1', 'clock_reach', 289.14, 238.22), ('q_b111', 'clock_tap_sinks', 1887.0, 1886.0), ('q_b111__physical_v1', 'clock_tap_sinks', 1887.0, 1886.0), ('q_b113', 'clock_tap_sinks', 1826.0, 1816.0), ('q_b113__physical_v1', 'clock_tap_sinks', 1826.0, 1816.0), ('q_su20', 'clock_tap_sinks', 4275.0, 4274.0), ('q_su20__physical_v1', 'clock_tap_sinks', 4275.0, 4274.0)]

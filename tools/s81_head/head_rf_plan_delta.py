@@ -18,8 +18,23 @@ OWNER 11-03 06:11 RE-FORM shape rules + 06:14 slot infra, applied as ONE plan de
            taps), so taps.density_taps places an entry within tap_radius_um of each of them and splits load at
            tap_target_sinks.  Entries stay on the slot (type pins), one per region of <= tap_max_sinks sinks.
 
+  ring_wreg  (DH58-TURNB 11-03, WREG-1) receiver type -> {"buses": [...], "dsrep": n}: sets
+           partition_types[type].clock.landing_ring_wreg, so GEN emits ot_dp_clk_landing_cas WREG=1/DSREP=n on those
+           buses (writer start registered at the face + one write-enable flop per (slot, 64-bit chunk) + n read-select
+           copies per chunk) and count_align_bind.strap_ties ties strap K + 1 (word stream and slot geometry unchanged).
+
+  reset_local_taps  (DH58-RF2 11-03, l48rf2) type -> [[x, y], ...]: APPENDED to partition_types[type].reset.local_taps_um
+           (reset_tree.consumer_taps: extra reset terminal relays at the type's equal wavefront depth, no clock port),
+           for control sinks (ft station epoch / reset flops) that the clock-tap terminals leave beyond the 405-um leaf
+           hop (OT_RESET_TREE LEAF).  The tree is re-derived, so START / landing raw references are re-pointed as for
+           grow / entries.
+  plain_seam_split  (DH58-RF2 11-03) {rx_in_max_ps, rx_in_raw_max_ps[, note]}: sets plan clock.plain_seam_split
+           (gen_phys.plain_seam_split, COORD 11-03 10:49 plain-seam input-face class); no slot / tap / relay moves.
+  tag               (DH58-RF2) note tag for this event (default "DH58-RFPLAN l48rf").
+
 usage: head_rf_plan_delta.py SRC_DIR OUT_DIR --spec SPEC.json [--report REPORT.json]
-  SPEC: {"grow": {"<type>": [l, b, r, t], ...}, "entries": ["<type>", ...]}
+  SPEC: {"grow": {"<type>": [l, b, r, t], ...}, "entries": ["<type>", ...], "ring_wreg": {"<type>": {...}},
+         "reset_local_taps": {"<type>": [[x, y], ...]}, "plain_seam_split": {...}}
 """
 import argparse
 import copy
@@ -27,6 +42,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -356,11 +372,115 @@ def dedupe_local_reset_taps(plan, plan_path, types, rep):
                 rs.pop("local_taps_um")
 
 
+REF_KEYS = ("raw_reset", "raw", "source_copy_from_net", "source_net")
+
+
+def _all_relays(P, tn):
+    import reset_tree as RT
+    tr = RT.for_type(P, tn)
+    out = {}
+    for fam, rel in (("start", RT.start_relays(tr) if tr.get("start") else []), ("tree", tr["relays"])):
+        for r in rel:                         # family = which list + net prefix: depths compare only inside one
+            out[r["q"]] = dict(r, fam=(fam, re.sub(r"\d+$", "", r["q"])))
+    memo = {}
+
+    def chain(q, seen=()):                    # RTL depth = registered relays from the root (GEN depth())
+        if q not in memo:
+            r = out.get(q)
+            memo[q] = 0 if r is None or q in seen else chain(r.get("d"), seen + (q,)) + 1
+        return memo[q]
+    for q, r in out.items():
+        r["depth"] = chain(q)
+    return out
+
+
+def remap_raw_refs(plan, plan_path, src_plan, src_path, rep):
+    """landing START / local-reset stages name their registered raw source by NET (landing_reader_start /
+    landing_writer_start .stages[].raw_reset, landing_local_resets[].raw, landing pins source_net /
+    source_copy_from_net), frozen from the l48h1 reset tree.  When a type's tree is re-derived (grown frame, new
+    clock entries) each referenced net is mapped ONCE, by its l48h1 relay, to the relay of the new tree at the SAME
+    wavefront depth nearest that relay's die position (release cycle unchanged by construction).  START raw export
+    rows/pins are left to repoint_raw.  A net with no same-depth relay is an error for that type."""
+    import schema as S
+    P0 = S.Plan(copy.deepcopy(src_plan), Path(src_path).resolve())
+    P1 = S.Plan(copy.deepcopy(plan), Path(plan_path).resolve())
+    out = rep.setdefault("raw_ref_remap", {})
+    bad = {}
+    for tn, t in sorted(plan["partition_types"].items()):
+        if t.get("hard") or tn not in src_plan["partition_types"]:
+            continue
+        ports = {r["port"] for r in t.get("reset_start_raw_exports", [])}
+        refs = []
+
+        def walk(o, path):
+            if isinstance(o, dict):
+                for k, v in o.items():
+                    if k in REF_KEYS and isinstance(v, str):
+                        if not (k.startswith("source_") and o.get("name") in ports):
+                            refs.append((o, k))
+                    elif isinstance(v, (dict, list)):
+                        walk(v, path + "/" + k)
+            elif isinstance(o, list):
+                for v in o:
+                    walk(v, path)
+        walk(t.get("clock", {}), "clock")
+        if not refs:
+            continue
+        old = _all_relays(P0, tn)
+        new = _all_relays(P1, tn)
+        l, b = (rep["grow"].get(tn, {}).get("grow_ltrb_um") or [0, 0])[:2]
+        m, moves = {}, []
+        for o, k in refs:
+            n = o[k]
+            if n not in old:
+                continue                      # not a relay net (port / logic net): untouched
+            if n not in m:
+                r0 = old[n]
+                ox, oy = r0["xy"][0] + l, r0["xy"][1] + b
+                c = new.get(n)
+                if not (c and c["depth"] == r0["depth"] and c["fam"] == r0["fam"] and abs(c["xy"][0] - ox) + abs(c["xy"][1] - oy) < 1e-6):
+                    cand = [c for c in new.values() if c["depth"] == r0["depth"] and c["fam"][0] == r0["fam"][0]]
+                    if not cand:
+                        bad.setdefault(tn, []).append(n)
+                        m[n] = n
+                        continue
+                    c = min(cand, key=lambda c: (c["fam"] != r0["fam"], abs(c["xy"][0] - ox) + abs(c["xy"][1] - oy), c["q"]))
+                m[n] = c["q"]
+                if c["q"] != n:
+                    moves.append(dict(old=n, new=c["q"], depth=r0["depth"],
+                                      move_um=r3(abs(c["xy"][0] - ox) + abs(c["xy"][1] - oy))))
+            o[k] = m[n]
+        if moves:
+            out[tn] = dict(nets=len(moves), refs=len(refs),
+                           max_move_um=max(x["move_um"] for x in moves), moves=moves)
+    if bad:
+        raise SystemExit(f"remap_raw_refs: no same-depth relay for {bad}")
+    rep["raw_ref_remap_summary"] = {tn: (v["nets"], v["max_move_um"]) for tn, v in out.items()}
+
+
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+def apply_rf2(plan, spec, rep):
+    """DH58-RF2 spec keys: reset_local_taps (append, de-duplicated, 3-decimal um) + plain_seam_split (plan clock)."""
+    for tn, xys in sorted(spec.get("reset_local_taps", {}).items()):   # extra reset terminals (leaf hop)
+        rs = plan["partition_types"][tn].setdefault("reset", {})
+        have = rs.get("local_taps_um") or []
+        add = []
+        for x, y in xys:
+            xy = [r3(float(x)), r3(float(y))]
+            if xy not in have and xy not in add:
+                add.append(xy)
+        rs["local_taps_um"] = have + add
+        rep.setdefault("reset_local_taps", {})[tn] = dict(before=len(have), added=add)
+    if spec.get("plain_seam_split"):                                   # plain-lane input budget class
+        plan["clock"]["plain_seam_split"] = copy.deepcopy(spec["plain_seam_split"])
+        rep["plain_seam_split"] = spec["plain_seam_split"]
+
+
 def main(argv=None):
+    global TAG
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("src")
     ap.add_argument("out")
@@ -370,10 +490,15 @@ def main(argv=None):
     src, out = Path(a.src), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     spec = json.loads(Path(a.spec).read_text())
+    TAG = spec.get("tag", TAG)                                          # DH58-RF2: per-event note tag (l48rf2)
     plan = json.loads((src / "source_plan.json").read_text())
     rep = dict(schema="opentallas.head_rf_plan_delta.v1", tag=TAG, src=str(src), src_sha256=sha(src / "source_plan.json"),
                spec=spec, grow={}, channels_clipped=[], entries={})
     apply_grow(plan, spec.get("grow", {}), rep)
+    for tn, cfg in sorted(spec.get("ring_wreg", {}).items()):     # DH58-TURNB WREG-1: receiver ring form
+        plan["partition_types"][tn].setdefault("clock", {})["landing_ring_wreg"] = cfg
+        rep.setdefault("ring_wreg", {})[tn] = cfg
+    apply_rf2(plan, spec, rep)
     # assets resolve relative to the plan file: work inside OUT with the src assets linked
     for n in os.listdir(src):
         if n in ("source_plan.json", "wave_prepare.json") or n.endswith(".log"):
@@ -401,7 +526,12 @@ def main(argv=None):
         dedupe_local_reset_taps(plan, str(tmp), list(spec["entries"]), rep)
         tmp.write_text(json.dumps(plan, indent=1) + "\n")
     src_plan = json.loads((src / "source_plan.json").read_text())
-    for it in range(4):           # re-pointing changes nothing the tree reads; a second pass must be empty
+    # ring_wreg / plain_seam_split alone move no slot / tap / relay: no re-point; new reset terminals re-derive the tree
+    moved = bool(spec.get("grow") or spec.get("entries") or spec.get("reset_local_taps"))
+    if moved:
+        remap_raw_refs(plan, str(tmp), src_plan, str(src / "source_plan.json"), rep)
+        tmp.write_text(json.dumps(plan, indent=1) + "\n")
+    for it in range(4 if moved else 0):           # re-pointing changes nothing the tree reads; a second pass must be empty
         before = rep.get("raw_repoint_summary", {}).get("rows")
         rep.pop("raw_repoint", None)
         repoint_raw(plan, str(tmp), src_plan, str(src / "source_plan.json"), rep)
@@ -410,7 +540,11 @@ def main(argv=None):
             break
         rep.setdefault("raw_repoint_passes", []).append(dict(rep["raw_repoint_summary"], raw_repoint=rep["raw_repoint"]))
     plan["note"] = (plan.get("note", "") + f" | {TAG}: RE-FORM batch plan event (grow {sorted(spec.get('grow', {}))}, "
-                    f"entries {sorted(spec.get('entries', []))})").strip(" |")
+                    f"entries {sorted(spec.get('entries', []))}"
+                    + (f", ring_wreg {sorted(spec['ring_wreg'])}" if spec.get("ring_wreg") else "")
+                    + (f", reset_local_taps {sorted(spec['reset_local_taps'])}" if spec.get("reset_local_taps") else "")
+                    + (f", plain_seam_split {spec['plain_seam_split']['rx_in_max_ps']}" if spec.get("plain_seam_split") else "")
+                    + ")").strip(" |")
     tmp.write_text(json.dumps(plan, indent=1) + "\n")
     rep["out_sha256"] = sha(tmp)
     Path(a.report or out / "rf_report.json").write_text(json.dumps(rep, indent=1, default=str) + "\n")

@@ -12,8 +12,17 @@
 // serves every target id; TGT_PIN=0 keeps the TARGET parameter (tgt unused).
 // CAP_CLK=1 (H-NETLIST 0600): the F20 input-capture rung (cv/dv/lv, target/address/data/base/limit/loops, tgt) runs on
 // clk_cap, a related same-frequency phase-0 root kept short at the face; the body (bitmap, scan, outputs) stays on clk.
+// FREE_PAYLOAD=1 (DIE-HBM-61 RE-FORM C3 11-03, unbounded form only): program_cfg_addr/data capture address/data_q on
+// EVERY edge, like the bounded form. On the edge that raises program_cfg_we they load the same address/data_q as the
+// enabled form, and a consumer may read them only while program_cfg_we is high (the installed bitmap here, the
+// calendar W rung), so cycle behaviour is unchanged (0 added cycles). It removes the 266-bit enable cone
+// (program_active/scanning/lv/range/magic -> accept), the worst stage of hfd_hgi_vm_calendar_f20.
+// SCAN_REP=N>1 (same event, unbounded form only): N kept copies of scan_row, each assigned exactly like scan_row,
+// address one ROWS/N-row group of the installed bitmap; scan_row's top bits pick the group.  Same installed[scan_row]
+// value on every edge (0 cycles); it removes the scan_row fanout tree of the 1024:1 bitmap read (TT +3 after FREE_PAYLOAD).
 module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer PCW=10,parameter integer TGT_PIN=0,
-                                  parameter integer CAP_CLK=0,parameter integer INSTALLED_ROWS=0)(
+                                  parameter integer CAP_CLK=0,parameter integer INSTALLED_ROWS=0,
+                                  parameter integer FREE_PAYLOAD=0,parameter integer SCAN_REP=0)(
     input wire clk,rst_n,
     input wire clk_cap,   // used only when CAP_CLK=1
     input wire [7:0] tgt,
@@ -55,6 +64,19 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     reg [PCW:0] stored_limit;
     reg [15:0] loops,stored_loops;
     reg [ROWS-1:0] installed;
+    generate if(INSTALLED_ROWS==0&&FREE_PAYLOAD!=0)begin:g_free_payload
+     always @(posedge clk)begin
+`ifdef C3MUT_CAL_RAW
+      program_cfg_addr<=address[PCW-1:0];program_cfg_data<=cfg_data;
+`elsif C3MUT_CAL_HOLD
+      program_cfg_addr<=address[PCW-1:0];if(!cv)program_cfg_data<=data_q;
+`elsif C3MUT_CAL_ADDR
+      program_cfg_addr<=address[PCW-1:0]&~{{(PCW-1){1'b0}},1'b1};program_cfg_data<=data_q;
+`else
+      program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;
+`endif
+     end
+    end endgenerate
     generate if(INSTALLED_ROWS!=0)begin:g_bounded_payload
      // Unqualified output payloads capture every edge. Only the real valid
      // registers gate target transactions; no256-bit reset/enable broadcast.
@@ -67,6 +89,22 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     reg [PCW-1:0] scan_row;
     reg [PCW:0] scan_limit;
     reg [1:0] commit;
+    localparam integer NREP=(SCAN_REP>1)?SCAN_REP:1;
+    localparam integer GR=ROWS/NREP;
+    localparam integer GB=(GR>1)?$clog2(GR):1;
+    initial if(SCAN_REP>1 && (INSTALLED_ROWS!=0 || (1<<PCW)%SCAN_REP!=0 || (1<<GB)!=GR))$fatal(1,"SCAN_REP must divide 2^PCW (unbounded form)");
+    (* keep *) reg [NREP*PCW-1:0] scan_row_c;
+    wire inst_hit;
+    generate if(SCAN_REP>1)begin:g_scan_rep
+        wire [NREP-1:0] sub;
+        for(genvar g=0;g<NREP;g=g+1)begin:g_grp
+            wire [GR-1:0] grp=installed[g*GR+:GR];
+            assign sub[g]=grp[scan_row_c[g*PCW+:GB]];
+        end
+        assign inst_hit=sub[scan_row[PCW-1:GB]];
+    end else begin:g_scan_one
+        assign inst_hit=installed[scan_row];
+    end endgenerate
     wire launch_ready=armed&&validated&&!scanning&&commit==0&&!program_active&&!fault;
     always @(posedge clk_in)begin
         target<=cfg_target;address<=cfg_addr;data_q<=cfg_data;
@@ -90,7 +128,7 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         if(!reset_live)begin
             program_cfg_we<=0;program_start_v<=0;configured<=0;fault<=0;
             installed<=0;install_open<=0;armed<=0;scanning<=0;validated<=0;missing<=0;
-            scan_row<=0;scan_limit<=0;commit<=0;
+            scan_row<=0;scan_row_c<=0;scan_limit<=0;commit<=0;
         end else begin
             program_cfg_we<=0;program_start_v<=0;
             configured<=launch_ready&&!lv&&!((cv||dv)&&target==tid);
@@ -106,7 +144,7 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 armed<=0;validated<=0;configured<=0;
                 if(program_active || scanning || lv || {1'b0,address}>=ROWS ||
                    data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address})fault<=1;
-                else begin program_cfg_we<=1;if(INSTALLED_ROWS==0)begin program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end end
+                else begin program_cfg_we<=1;if(INSTALLED_ROWS==0&&FREE_PAYLOAD==0)begin program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end end
             end
             if(dv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;install_open<=0;
@@ -119,17 +157,23 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                         // the completed row proof, not a stale descriptor arm.
                         validated<=1;scanning<=0;
                     end else begin
-                        scanning<=1;scan_row<=base[PCW-1:0];scan_limit<=limit[PCW:0];
+                        scanning<=1;scan_row<=base[PCW-1:0];scan_row_c<={NREP{base[PCW-1:0]}};scan_limit<=limit[PCW:0];
                     end
                 end
             end
             if(scanning)begin
-                if(!installed[scan_row])missing<=1;
+                if(!inst_hit)missing<=1;
                 if({1'b0,scan_row}+1'b1==scan_limit)begin
                     scanning<=0;
-                    if(missing || !installed[scan_row])fault<=1;
+                    if(missing || !inst_hit)fault<=1;
                     else validated<=1;
-                end else scan_row<=scan_row+1'b1;
+                end else begin scan_row<=scan_row+1'b1;
+`ifdef C3MUT_CAL_SCANC
+                    scan_row_c<={NREP{scan_row}};
+`else
+                    scan_row_c<={NREP{scan_row+1'b1}};
+`endif
+                end
             end
             if(lv && armed)begin
                 armed<=0;configured<=0;

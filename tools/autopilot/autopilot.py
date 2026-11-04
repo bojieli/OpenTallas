@@ -58,6 +58,7 @@ import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
 import kit_wave as KW  # noqa: E402
+import wave_jobs as WJ  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -533,6 +534,37 @@ if so:
         out["signoff"]["odb_bytes"] = os.path.getsize(out["signoff"]["odb"])
     except Exception:
         out["signoff"]["odb_bytes"] = 0
+    # KW-PROV-1 11-03 (COORD 17:50 (C)): a kit built on PROVISIONAL child views (kit_wave marker
+    # provisional_views.json) is never a sign-off for the count until every child is FINAL (signed child libs in
+    # macros/, sha-checked) and this record is the STA-only re-sign on them (newer than the final libs):
+    # SIGNED -> LOCAL_PASS_NEEDS_PARENT (WAIT-PARENT: provisional.tsv, no archive; retry_pending re-probes)
+    pv = jl(os.path.join(K, "provisional_views.json"))
+    if isinstance(pv, dict) and str(pv.get("schema", "")).startswith("opentallas.provisional_views"):
+        import hashlib
+        kids = pv.get("children") or {}
+        owed = sorted(m for m, v in kids.items() if not (isinstance(v, dict) and v.get("final")))
+        bad, newest = [], 0.0
+        for m, v in kids.items():
+            for n, h in ((v or {}).get("final_sha256") or {}).items():
+                f = os.path.join(K, "macros", n)
+                try:
+                    ok = hashlib.sha256(open(f, "rb").read()).hexdigest() == h
+                    newest = max(newest, os.path.getmtime(f))
+                except Exception:
+                    ok = False
+                if not ok:
+                    bad.append(n)
+        stale = bool(newest) and os.path.getmtime(so[-1]) < newest
+        s_ = out["signoff"]
+        s_["provisional"] = {"status": pv.get("status"), "owed": owed, "lib_mismatch": bad, "stale_signoff": stale}
+        if s_.get("verdict") == "SIGNED" and (pv.get("status") != "FINAL" or owed or bad or stale):
+            why = ("provisional_child_view: built on PROVISIONAL child views " + ",".join(
+                "%s:%s" % (m, (v or {}).get("source", "?")) for m, v in sorted(kids.items()))
+                + (" (owed %s)" % ",".join(owed) if owed else "") + (" (lib sha mismatch %s)" % ",".join(bad) if bad else "")
+                + (" (sign-off predates the final child libs)" if stale else "")
+                + "; STA-only re-sign on the signed child libs owed (KW-PROV-1)")
+            s_.update(verdict="LOCAL_PASS_NEEDS_PARENT", local_verdict="SIGNED", release_qualified=False,
+                      reasons=list(s_.get("reasons") or []) + [why[:400]])
 for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS"):
     p = os.path.join(K, f)
     if os.path.isfile(p) and os.path.getmtime(p) >= since:
@@ -1309,6 +1341,25 @@ def near_count_args(near, die, *names):
     return ["--priority", "die", "--crit"] if near and near_count_match(near, die, *names) else []
 
 
+def wave_superseded(j):
+    """why the kit-wave no longer wants this job ('' = it does, or no wave row): a resubmit would only restart it on the
+    same kit (HUNG-1103: cancelled rows came back as a second container 5 min to 3 h after the cancel)"""
+    v = WJ.judge(WJ.load_rows(str(AP_DIR)), WJ.wave_id([j.get("path")]), j.get("started"))
+    return v[1] if v and v[0] == "STOP" else ""
+
+
+def stop_survivors(j):
+    """one flow container per kit (WATCHDOG-1 11-03): a resubmit resumes the run dir, and the previous attempt's container may
+    still run, on any host, after its ot-run client was lost (ot-run leaves a started command running)"""
+    res = WJ.stop_on_fleet(sh, HUB_NAME, [j.get("path")])
+    names = WJ.stopped_names(res)
+    if names:
+        log(f"STOP-SURVIVOR {j['id']} {j['die']}/{j['type']}: stopped {' '.join(names)[:400]} before attempt {j.get('attempts', 0) + 1}")
+    for h, v in res.items():
+        if v.get("error"):
+            log(f"STOP-SURVIVOR {j['id']}: {h} not checked: {v['error']} (watchdog duplicate check is the net)")
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
@@ -1337,6 +1388,8 @@ def submit(st, j, attempt_note=""):
     if DRY:
         log(f"would SUBMIT {j['id']} {j['die']}/{j['type']} {attempt_note}: {' '.join(argv)}")
         return
+    if n > 1:
+        stop_survivors(j)
     if launch_unit(unit, logf, argv):
         j.pop("client_done_at", None)
         j.update(attempts=n, unit=unit, client_log=str(logf), started=time.time())
@@ -1437,30 +1490,89 @@ def parse_path_freeze(text):
     return gates, parts
 
 
-def parse_plan_delta(text):
+TS_RE = re.compile(r"(20\d\d-\d\d-\d\d)[ T]+(\d\d:\d\d)")
+
+
+def plan_of_record():
+    """-> {die: {"ids": set, "frozen": 'YYYY-MM-DD HH:MM' or ''}}: each die's current plan of record = the kit-wave plan
+    (autopilot/kit_wave.json dies[*]: 'event', the plan file stem, optional 'por_ids' list and 'por_frozen' date)"""
+    try:
+        cfg = json.loads((AP_DIR / "kit_wave.json").read_text())
+    except Exception:
+        return {}
+    out = {}
+    for key, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        ids = {str(x) for x in [d.get("event"), Path(str(d.get("plan") or "")).stem] + list(d.get("por_ids") or [])
+               if x and len(str(x)) >= 4 and str(x) not in ("die_plan", "source_plan", "plan", "plan_of_record")}
+        if ids:
+            por = out.setdefault(canonical_die(d.get("die") or key), {"ids": set(), "frozen": ""})
+            por["ids"] |= ids
+            por["frozen"] = max(por["frozen"], str(d.get("por_frozen") or ""))
+    return out
+
+
+PLAN_DELTA_IGNORED = []
+CLOSURE_IGNORED_LOGGED = []
+
+
+def parse_plan_delta(text, por=None):
     """-> {(die, type): delta id} of PENDING deltas: lines 'PENDING-DELTA <id> <die> type[,type ...]', closed by
-    'CLOSED-DELTA <id>' / 'MERGED-DELTA <id>' / 'DROPPED-DELTA <id>' (later lines win)"""
+    'CLOSED-DELTA <id>' / 'MERGED-DELTA <id>' / 'DROPPED-DELTA <id>' / 'RETIRED-DELTA <id>' (later lines win).
+    Class fix DELTA-STALE (COORD 2026-11-03 17:5x): with por = plan_of_record() (or 'PLAN-OF-RECORD <die> <id>
+    [YYYY-MM-DD HH:MM]' lines here), a PENDING delta of a die with a plan of record holds only if its line names one
+    of that plan's ids and it is dated (timestamp on the line, else the latest one above it) after the plan's freeze;
+    otherwise it is ignored and listed in PLAN_DELTA_IGNORED.  por=None keeps the legacy rule (every PENDING holds)."""
     pend = {}
+    por = {k: {"ids": set(v["ids"]), "frozen": v.get("frozen", "")} for k, v in (por or {}).items()} if por is not None \
+        else None
+    last_ts = ""
     for raw in (text or "").splitlines():
         line = raw.strip()
+        ts = [f"{a} {b}" for a, b in TS_RE.findall(line)]
+        m = re.match(r"^PLAN-OF-RECORD\s+(\S+)\s+(\S+)(.*)$", line)
+        if m and por is not None:
+            ent = por.setdefault(canonical_die(m.group(1)), {"ids": set(), "frozen": ""})
+            ent["ids"].add(m.group(2))
+            if ts:
+                ent["frozen"] = max(ent["frozen"], ts[0])
+            continue
         m = re.match(r"^PENDING-DELTA\s+(\S+)\s+(\S+)\s+(\S+)", line)
         if m:
-            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t})
-            continue
-        m = re.match(r"^(?:CLOSED|MERGED|DROPPED)-DELTA\s+(\S+)", line)
-        if m:
-            pend.pop(m.group(1), None)
+            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t},
+                                max(ts) if ts else last_ts, line)
+        else:
+            m = re.match(r"^(?:CLOSED|MERGED|DROPPED|RETIRED)-DELTA\s+(\S+)", line)
+            if m:
+                pend.pop(m.group(1), None)
+        if ts:
+            last_ts = max(ts)
     out = {}
-    for did, (die, types) in pend.items():
+    ignored = []
+    for did, (die, types, when, line) in pend.items():
+        ent = (por or {}).get(die)
+        if ent and ent["ids"]:
+            named = any(i in line for i in ent["ids"])
+            if not named or (ent["frozen"] and not (when and when > ent["frozen"])):
+                ignored.append((did, die, "names no current plan of record (" + ",".join(sorted(ent["ids"]))[:80] + ")"
+                                if not named else f"dated {when or 'undated'} <= plan freeze {ent['frozen']}"))
+                continue
         for t in types:
             out[(die, t)] = did
+    PLAN_DELTA_IGNORED[:] = ignored
     return out
 
 
 def load_closure():
     CLOSURE.clear()
     CLOSURE["gates"], CLOSURE["parts"] = parse_path_freeze(read_coord("lanes/PATH-FREEZE.md"))
-    CLOSURE["delta"] = parse_plan_delta(read_coord("lanes/PLAN-DELTA.md"))
+    CLOSURE["delta"] = parse_plan_delta(read_coord("lanes/PLAN-DELTA.md"), plan_of_record())
+    ign = sorted(PLAN_DELTA_IGNORED)
+    if ign and ign != CLOSURE_IGNORED_LOGGED[:]:
+        log("PLAN-DELTA stale ignored (DELTA-STALE: not on the die's plan of record / dated before its freeze): " +
+            "; ".join(f"{d} {die}: {why}" for d, die, why in ign)[:3000])
+    CLOSURE_IGNORED_LOGGED[:] = ign
 
 
 def _base_type(t):
@@ -1686,6 +1798,10 @@ def write_provenance(host, dest, j):
     prov.update(schema="opentallas.provenance.v1", verdict="SIGNED" if j.get("flow_tag") and j.get("src_commit")
                 else "SIGNED-UNVERSIONED", why=j.get("prov_error", ""), written=now_s())
     prov.update(eco_provenance(j))
+    if j.get("resign_carry"):                           # KW-FIX-4 11-03: counted through the RE-SIGN of its routed DB
+        prov.update(kind="resign-carry", resign_carry=j["resign_carry"],
+                    why=f"build flow untagged; same routed DB re-signed at {j['resign_carry']['flow_tag']} "
+                        f"({j['resign_carry']['host']}:{j['resign_carry']['record']})")
     return rpy(host, PROBE_PROVENANCE, {"dest": dest, "prov": prov}, timeout=120)
 
 
@@ -1703,17 +1819,99 @@ def record_signed(st, j, host, so):
     return False
 
 
+PROBE_ROUTED_SHA = r'''
+import hashlib, json, os, sys
+a = json.loads(sys.argv[1]); out = {}
+try:
+    x = json.load(open(a["prov"])) if a.get("prov") else {}
+    if a.get("prov") and x.get("kind") != "resign":
+        raise ValueError("%s is not a kind:resign record" % a["prov"])
+    out["sha"] = x.get("routed_db_sha256") or None
+    if not out["sha"]:
+        h = hashlib.sha256()
+        with open(a["db"], "rb") as f:
+            for b in iter(lambda: f.read(1 << 20), b""):
+                h.update(b)
+        out["sha"] = h.hexdigest()
+except Exception as e:
+    out["error"] = str(e)[:300]
+print("AP_JSON " + json.dumps(out))
+'''
+RESIGN_PROBES_PER_TICK = 6                              # routed-DB hash probes per tick (each reads one routed DB once)
+
+
+def _asap7_design(db):
+    """.../results/asap7/<design>/base/6_final.odb -> <design> ('' when the path has no such segment)"""
+    parts = str(db or "").split("/")
+    return parts[parts.index("asap7") + 1] if "asap7" in parts[:-1] else ""
+
+
+def resign_carry(j, cache=None, probe=None, budget=None):
+    """KW-FIX-4/HBMRS 11-03 (DIE-HBM-61, COORD 17:1x): a SIGNED-UNVERSIONED job whose SAME routed DB (sha256 equal: the
+    path itself or a byte copy) already has a valid RE-SIGN record (kind:resign PROVENANCE on a released flow tag
+    covering its die; release_tree_plan checked tag -> src_commit, post-route LEC EQUIVALENT and the DB) is carried by
+    that tag: the RE-SIGN is the 12.20 way to count a sign-off whose build flow no tag carries, and this run's sign-off
+    is the same routed DB.  -> {flow_tag, tag_commit, record, host, routed_db, routed_db_sha256} or None.  Never
+    guessed: no cache / no matching record / any hash unknown -> None (the job stays SIGNED-UNVERSIONED)."""
+    db = (j.get("signoff") or {}).get("odb")
+    jhosts = [h for h in dict.fromkeys((j.get("ran_on"), j.get("host"))) if h]   # the DB lives where the run ran
+    design = _asap7_design(db)
+    if not db or not jhosts or not design:
+        return None
+    if cache is None:
+        try:
+            cache = json.loads(RELEASE_CACHE.read_text())
+        except (OSError, ValueError):
+            return None
+    probe = probe or rpy
+    budget = budget if budget is not None else CLOSURE.setdefault("resign_probes", [RESIGN_PROBES_PER_TICK])
+    tags = {t for t, _ in _all_flow_tags()}
+    cands = [r for r in (cache or {}).get("signed_records") or []
+             if isinstance(r, dict) and r.get("resign") and r.get("versioned") and not r.get("resign_error")
+             and r.get("flow_tag") in tags and tag_covers(r.get("flow_tag"), j.get("die"))
+             and r.get("prov_file") and r.get("host") and _asap7_design(r.get("routed_db")) == design]
+    if not cands:
+        return None
+    memo = j.setdefault("resign_sha", {})                # host:path -> sha256 (routed DBs are immutable once signed)
+
+    def sha(host, path, prov=None):
+        k = f"{host}:{prov or path}"
+        if k not in memo:
+            if budget[0] <= 0:
+                return None
+            budget[0] -= 1
+            got = probe(host, PROBE_ROUTED_SHA, {"db": path, "prov": prov}, timeout=900)
+            if got.get("error") or not got.get("sha"):
+                return None
+            memo[k] = got["sha"]
+        return memo[k]
+    mine = next((x for x in (sha(h, db) for h in jhosts) if x), None)
+    if not mine:
+        return None
+    for r in sorted(cands, key=lambda r: r["flow_tag"], reverse=True):
+        if sha(r["host"], r["routed_db"], r["prov_file"]) == mine:
+            return dict(flow_tag=r["flow_tag"], tag_commit=r.get("src_commit"), record=r["prov_file"], host=r["host"],
+                        routed_db=r["routed_db"], routed_db_sha256=mine)
+    return None
+
+
 def retry_unversioned(st):
-    """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow"""
+    """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow, or (KW-FIX-4
+    11-03) once a valid RE-SIGN of its same routed DB on a released flow tag exists (resign_carry)"""
     for j in st["jobs"].values():
         if j.get("status") != "SIGNED-UNVERSIONED" or not j.get("archive"):
             continue
         prov = resolve_provenance(j["src"], j.get("flow", ""), j.get("die"))
         if prov.get("error"):
             j["prov_error"] = prov["error"]
-            if not apply_legacy(j):
-                continue
-            prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": LEGACY_TAG}
+            if apply_legacy(j):
+                prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": LEGACY_TAG}
+            else:
+                rc_ = resign_carry(j)
+                if not rc_:
+                    continue
+                j["resign_carry"] = rc_
+                prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": rc_["flow_tag"]}
         j.update(src_commit=prov["src_commit"], flow_tag=prov["flow_tag"], prov_error="")
         host, dest = j["archive"].split(":", 1)
         if DRY:
@@ -1725,7 +1923,8 @@ def retry_unversioned(st):
             continue
         record_signed(st, j, host, j.get("signoff") or {})
         log(f"PROMOTE {j['id']} {j['die']}/{j['type']}: SIGNED-UNVERSIONED -> signed.tsv (src {j['src_commit'][:12]}, "
-            f"flow {j['flow_tag']})")
+            f"flow {j['flow_tag']}" + (f" via RE-SIGN {j['resign_carry']['host']}:{j['resign_carry']['record']}"
+                                       if j.get("resign_carry") else "") + ")")
 
 
 def canary_wave_gate(row):
@@ -2010,6 +2209,12 @@ def finish(st, j, c, client):
                                                    "lec_all_shown", "lec_tool", "signoff", "netlist", "eco")}
     log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> {cls} ({kind}): {reasons[:240]}")
     if cls == "CRASH" and kind in INFRA_KINDS and not j.get("adopted"):
+        why = wave_superseded(j)
+        if why:
+            j.update(cls="CANCELLED", kind="cancelled")
+            log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> CANCELLED (not resubmitted): {why[:240]}")
+            set_status(st, j, "CANCELLED", f"wave no longer wants it: {why[:200]}")
+            return
         notrun = kind == "infra-notrun"
         if notrun and j.get("notrun_retries", 0) < MAX_NOTRUN:
             j["notrun_retries"] = j.get("notrun_retries", 0) + 1

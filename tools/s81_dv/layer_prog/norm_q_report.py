@@ -75,8 +75,8 @@ def main(prog, tree, out=None):
                 age[(inst, side)] = N._lane0(die, inst, port)[3]
         vage[inst] = N._lane0(die, inst, 'vo')[3]
     # fc31 selected contracts: BK_COL is a vstop (2), BK_SEL adds its
-    # face relay (3), seqhost's RL1 rung is 6+RL (7), both directions.
-    bridges = dict(u_bk_col=2, u_bk_sel=3, u_seqhost=7, u_gunit=12, u_eng=2)
+    # face relay (3; +1 S81-RF1 dsdv_bk_g RF 1 = 4), seqhost's RL1 rung is 6+RL (7), both directions.
+    bridges = dict(u_bk_col=2, u_bk_sel=5, u_seqhost=7, u_gunit=12, u_eng=2)
     vpaths = Q.v_paths(die, bridges)
     Q.V_ASM = None
     qn = {inst: root[inst] + Q_NOMINAL for inst in root}

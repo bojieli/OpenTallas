@@ -1,6 +1,6 @@
 `timescale 1ps/1fs
 module tb_keybuf_np4;
- parameter integer MUT=0;
+ parameter integer MUT=0,RS=0;
  localparam integer NP=4,W=NP*1099,DW=NP*1088;
  reg clk=0;always #416.5 clk=~clk;
  reg rst_n=0,clear=0,live_v=0,pre_v=0,replay_v=0;
@@ -12,13 +12,14 @@ module tb_keybuf_np4;
  wire[2:0]mutbase=(MUT==1)?(pbase^3'b100):pbase;
  wire[7:0]mutpre=(MUT==3&&pre_v)?pre_index+8'd1:pre_index;
  wire[W-1:0]mutinput=(MUT==2&&live_v)?(key_in^(W'(1)<<(2*1099+1098))):key_in;
- ot_hnx_idxn_keybuf #(.NP(NP),.RS(0)) golden(.clk(clk),.rst_n(rst_n),.clear(clear),.pbase(pbase),
+ ot_hnx_idxn_keybuf #(.NP(NP),.RS(RS)) golden(.clk(clk),.rst_n(rst_n),.clear(clear),.pbase(pbase),
   .live_v(live_v),.live_index(live_index),.key_in(key_in),.pre_v(pre_v),.pre_index(pre_index),
   .replay_v(replay_v),.replay_index(replay_index),.key_out(gold),.fault(gf));
- ot_hnx_idxn_keybuf_sliced_np4 #(.NP(NP),.RS(0)) candidate(.clk(clk),.rst_n(rst_n),.clear(clear),.pbase(mutbase),
+ ot_hnx_idxn_keybuf_sliced_np4 #(.NP(NP),.RS(RS)) candidate(.clk(clk),.rst_n(rst_n),.clear(clear),.pbase(mutbase),
   .live_v(live_v),.live_index(live_index),.key_in(mutinput),.pre_v(pre_v),.pre_index(mutpre),
   .replay_v(replay_v),.replay_index(replay_index),.key_out(raw),.fault(df));
  reg[DW-1:0]memory[0:255];reg[DW-1:0]read_data=0;
+ reg pv_q=0;reg[7:0]pi_q=0;   // RS=1 model: the select / tag index are the PRE of the previous edge
  reg[W-1:0]want;integer epoch=0,cycles=0,checks=0,replays=0,writes=0,negative_cases=0;
  function automatic[W-1:0]word(input integer addr,input integer salt);
   reg[W-1:0]v;reg[31:0]x;integer p,j;
@@ -43,8 +44,8 @@ module tb_keybuf_np4;
    key_in=word(li,epoch*4096+cycles);
    #1;
    want=key_in;
-   if(rv)for(p=0;p<NP;p=p+1)begin
-    tag=10'((int'(pbase)+p)*128+ri);
+   if(RS==0?rv:pv_q)for(p=0;p<NP;p=p+1)begin
+    tag=10'((int'(pbase)+p)*128+(RS==0?ri:int'(pi_q)));
     want[p*1099+:1099]={read_data[p*1088+:1088],tag,1'b1};
    end
    // Sample before the SRAM read edge, exactly where the scorer samples the
@@ -65,13 +66,13 @@ module tb_keybuf_np4;
    #1;
    if(df!==gf)$fatal(1,"LOCKSTEP_FAULT MUT=%0d cycle=%0d golden=%b candidate=%b",MUT,cycles,gf,df);
    if(gf!==expect_fault)$fatal(1,"FAULT_EXPECT cycle=%0d want=%b got=%b",cycles,expect_fault,gf);
-   checks=checks+2;cycles=cycles+1;if(rv)replays=replays+1;
+   checks=checks+2;cycles=cycles+1;if(rv)replays=replays+1;pv_q=pv;pi_q=8'(pi);
   end
  endtask
  task automatic warm_reset;
   begin
    @(negedge clk);clear=0;live_v=0;pre_v=0;replay_v=0;rst_n=0;
-   @(posedge clk);#1;
+   @(posedge clk);#1;pv_q=0;
    if(gf!==0||df!==0)$fatal(1,"RESET_FAULT");
    @(negedge clk);rst_n=1;
   end
@@ -99,6 +100,8 @@ module tb_keybuf_np4;
    step(0,0,0,0,0,1,170,0);
    // Reverse address order defeats a constant/previous-address response.
    for(a=170;a>=0;a=a-1)begin step(0,0,0,1,a,0,0,0);step(0,0,0,0,0,1,a,0);end
+   // RS=1 (DIE-HBM-61/RTL-C3): a PRE not followed by its REPLAY on the next edge FAULTs (registered-PRE select).
+   if(RS!=0)begin step(0,0,0,1,5,0,0,0);step(0,0,0,0,0,0,0,1);negative_cases=negative_cases+1;end
    warm_reset();
    // Physical SRAM retains data, while control validity resets.
    step(0,0,0,1,170,0,0,1);negative_cases=negative_cases+1;
@@ -115,7 +118,7 @@ module tb_keybuf_np4;
    warm_reset();step(1,1,0,0,0,0,0,0);step(0,0,0,1,0,0,0,1);negative_cases=negative_cases+1;
    warm_reset();
   end
-  $display("NP4_PASS MUT=%0d checks=%0d cycles=%0d full_payload_bits=%0d writes=%0d replays=%0d negative_cases=%0d pbase=0,4 period_ps=833 SRAM=ACTUAL",MUT,checks,cycles,W,writes,replays,negative_cases);
+  $display("NP4_PASS RS=%0d MUT=%0d checks=%0d cycles=%0d full_payload_bits=%0d writes=%0d replays=%0d negative_cases=%0d pbase=0,4 period_ps=833 SRAM=ACTUAL",RS,MUT,checks,cycles,W,writes,replays,negative_cases);
   $finish;
  end
 endmodule

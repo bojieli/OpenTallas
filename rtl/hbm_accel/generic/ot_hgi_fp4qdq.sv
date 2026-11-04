@@ -33,7 +33,15 @@
 // compare-and-select per stage (+2 edges, LATENCY 10); XEXT=1 takes the S4-aligned element copy from x4_ext (driven by
 // an external staging tile: x delayed PIPE ? 7 : 5 edges after s0_x) instead of the internal line.  Defaults keep the
 // original module bit for bit and cycle for cycle.
-module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, parameter integer XEXT=0) (
+// DIE-HBM-61 RE-FORM (2026-11-03): S6SPLIT=1 splits S6 (S5 code/scale -> twov*n product -> leading one -> exponent add ->
+// shift -> BF16 select, ~850 ps placed in ot_hgi_qw_dec) into S6A (the product r registered) and S6B (the rest): +1 edge
+// (LATENCY + 1).  S6SPLIT=0 (default) keeps the module bit for bit and cycle for cycle.
+module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, parameter integer XEXT=0,
+                       parameter integer S6SPLIT=0,
+                       // DIE-HBM-61 RE-FORM round 2: S4SPLIT=1 splits S4 (s3_n -> K*n -> leading one -> exponent add ->
+                       // range compare) into S4A (pp / mantissa key / qs registered) and S4B (exponent + big): +1 edge,
+                       // the element line one longer.  0 (default) keeps the module bit for bit and cycle for cycle.
+                       parameter integer S4SPLIT=0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
@@ -217,6 +225,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
     reg [3:0]        pp;
     reg signed [10:0] bt;
     reg [22:0]       mt;
+    initial if (S4SPLIT != 0 && XEXT != 0) $fatal(1, "fp4qdq: S4SPLIT needs the internal element line (XEXT=0)");
+    generate if (S4SPLIT == 0) begin : g_s4
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s4_v <= 1'b0;
         else s4_v <= s3_v;
@@ -237,8 +247,49 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
             end
         end
     end
+    end else begin : g_s4s
+    // S4A: leading-one position and mantissa key of K * n (n only), n / qs carried
+    reg              s4a_v, s4a_nf;
+    reg [3:0]        s4a_pp [0:13];
+    reg [22:0]       s4a_mt [0:13];
+    reg [4:0]        s4a_n [0:1];
+    reg signed [9:0] s4a_qs [0:1];
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin s4a_v <= 1'b0; s4_v <= 1'b0; end
+        else begin s4a_v <= s3_v; s4_v <= s4a_v; end
+    end
+    always @(posedge clk) begin : p_lv8a
+        integer i, j, b;
+        reg [8:0] pka; reg [3:0] ppa;
+        s4a_nf <= s3_nf;
+        for (b = 0; b < 2; b = b + 1) begin
+            s4a_n[b] <= s3_n[b]; s4a_qs[b] <= s3_qs[b];
+            for (j = 0; j < 7; j = j + 1) begin
+                pka = kmid(j) * s3_n[b];
+                ppa = 4'd0;
+                for (i = 0; i < 9; i = i + 1) if (pka[i]) ppa = i[3:0];
+                s4a_pp[7*b + j] <= ppa;
+                s4a_mt[7*b + j] <= ({14'd0, pka} << (5'd23 - {1'b0, ppa}));
+            end
+        end
+    end
+    // S4B: exponent = pp + qs - 2 + 127 and the range flag
+    always @(posedge clk) begin : p_lv8b
+        integer j, b;
+        reg signed [10:0] bta;
+        s4_nf <= s4a_nf;
+        for (b = 0; b < 2; b = b + 1) begin
+            s4_n[b] <= s4a_n[b]; s4_qs[b] <= s4a_qs[b];
+            for (j = 0; j < 7; j = j + 1) begin
+                bta = $signed({7'd0, s4a_pp[7*b + j]}) + s4a_qs[b] - 11'sd2 + 11'sd127;
+                s4_big[7*b + j] <= (bta >= 11'sd255);
+                s4_t[7*b + j] <= {bta[7:0], s4a_mt[7*b + j]};
+            end
+        end
+    end
+    end endgenerate
     wire [1023:0] x4, x4_i;
-    ot_hdc_delay #(.W(1024), .D((XEXT != 0) ? 0 : (PIPE != 0) ? 7 : 5)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x4_i));
+    ot_hdc_delay #(.W(1024), .D((XEXT != 0) ? 0 : ((PIPE != 0) ? 7 : 5) + ((S4SPLIT != 0) ? 1 : 0))) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x4_i));
     assign x4 = (XEXT != 0) ? x4_ext : x4_i;
 
     // -- S5: E2M1 codes ------------------------------------------------------------------------
@@ -322,6 +373,7 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
     reg [2:0]         pr;
     reg signed [10:0] be;
     reg [7:0]         rn;
+    generate if (S6SPLIT == 0) begin : g_s6
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; end
         else begin vo <= s5_v; fault <= s5_v && s5_nf; end
@@ -340,4 +392,36 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, par
             else                     y[16*i +: 16] <= {s5_sgn[i], be[7:0], rn[6:0]};
         end
     end
+    end else begin : g_s6s
+    // S6A: the product r = twov(code) * n per element; sign, qs, valid and fault carried one edge
+    reg              s6a_v, s6a_nf;
+    reg [7:0]        s6a_r [0:31];
+    reg [31:0]       s6a_sgn;
+    reg signed [9:0] s6a_qs [0:1];
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin s6a_v <= 1'b0; vo <= 1'b0; fault <= 1'b0; end
+        else begin s6a_v <= s5_v; vo <= s6a_v; fault <= s6a_v && s6a_nf; end
+    end
+    always @(posedge clk) begin : p_lv11a
+        integer i, b;
+        s6a_nf <= s5_nf; s6a_sgn <= s5_sgn;
+        for (b = 0; b < 2; b = b + 1) s6a_qs[b] <= s5_qs[b];
+        for (i = 0; i < 32; i = i + 1) s6a_r[i] <= twov(s5_c[i]) * s5_n[i / 16];
+    end
+    // S6B: leading one, exponent, shift, BF16 select (the S6SPLIT=0 arithmetic on the registered r)
+    always @(posedge clk) begin : p_lv11b
+        integer i, j, b;
+        for (i = 0; i < 32; i = i + 1) begin
+            b = i / 16;
+            r = s6a_r[i];
+            pr = 3'd0;
+            for (j = 0; j < 8; j = j + 1) if (r[j]) pr = j[2:0];
+            be = $signed({8'd0, pr}) + s6a_qs[b] - 11'sd1 + 11'sd127;
+            rn = r << (3'd7 - pr);
+            if (r == 8'd0)           y[16*i +: 16] <= {s6a_sgn[i], 15'd0};
+            else if (be >= 11'sd255) y[16*i +: 16] <= {s6a_sgn[i], 8'hFF, 7'd0};
+            else                     y[16*i +: 16] <= {s6a_sgn[i], be[7:0], rn[6:0]};
+        end
+    end
+    end endgenerate
 endmodule

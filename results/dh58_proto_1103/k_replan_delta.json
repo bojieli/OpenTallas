@@ -1,0 +1,118 @@
+{
+ "schema": "dh58_proto.k_replan.v1",
+ "bind": "bind_l48rf_dm700.json",
+ "gate": "o_l48rf/die_sta_related.json",
+ "need_ps": 100.0,
+ "ports": {
+  "coll_WN0_d__0": {
+   "src": "lep0N",
+   "dst": "lk_WN0",
+   "K_old": -14,
+   "K_new": -12,
+   "dK": 2,
+   "sched_lat_old": 2,
+   "sched_lat_new": 4,
+   "margin_after_ps": 920.2,
+   "margin_before_ps": -516.6
+  },
+  "coll_WN1_d__0": {
+   "src": "lep0N",
+   "dst": "nst4",
+   "K_old": -23,
+   "K_new": -21,
+   "dK": 2,
+   "sched_lat_old": 1,
+   "sched_lat_new": 3,
+   "margin_after_ps": 1016.1,
+   "margin_before_ps": -639.5
+  },
+  "coll_WN1_u__2": {
+   "src": "nst4",
+   "dst": "lep0N",
+   "K_old": 26,
+   "K_new": 25,
+   "dK": -1,
+   "sched_lat_old": 4,
+   "sched_lat_new": 3,
+   "margin_after_ps": 610.0,
+   "margin_before_ps": -223.0
+  },
+  "coll_WN2_d__0": {
+   "src": "lep0N",
+   "dst": "nst4",
+   "K_old": -23,
+   "K_new": -21,
+   "dK": 2,
+   "sched_lat_old": 1,
+   "sched_lat_new": 3,
+   "margin_after_ps": 1016.1,
+   "margin_before_ps": -639.5
+  },
+  "coll_WN2_u__4": {
+   "src": "nst4",
+   "dst": "lep0N",
+   "K_old": 26,
+   "K_new": 25,
+   "dK": -1,
+   "sched_lat_old": 4,
+   "sched_lat_new": 3,
+   "margin_after_ps": 610.0,
+   "margin_before_ps": -223.0
+  },
+  "coll_WN3_d__0": {
+   "src": "lep0N",
+   "dst": "ctl_nstrip",
+   "K_old": 8,
+   "K_new": 10,
+   "dK": 2,
+   "sched_lat_old": 2,
+   "sched_lat_new": 4,
+   "margin_after_ps": 664.7,
+   "margin_before_ps": -1001.3
+  },
+  "ctrl_lep__0": {
+   "src": "lep0N",
+   "dst": "ctl_nstrip",
+   "K_old": 8,
+   "K_new": 10,
+   "dK": 2,
+   "sched_lat_old": 2,
+   "sched_lat_new": 4,
+   "margin_after_ps": 664.7,
+   "margin_before_ps": -1001.3
+  },
+  "head_lep_fault_return__0": {
+   "src": "lep0N",
+   "dst": "ctl_nstrip",
+   "K_old": 8,
+   "K_new": 10,
+   "dK": 2,
+   "sched_lat_old": 2,
+   "sched_lat_new": 4,
+   "margin_after_ps": 664.8,
+   "margin_before_ps": -1001.2
+  },
+  "head_lep_landing__0": {
+   "src": "lep0N",
+   "dst": "ctl_nstrip",
+   "K_old": 8,
+   "K_new": 10,
+   "dK": 2,
+   "sched_lat_old": 2,
+   "sched_lat_new": 4,
+   "margin_after_ps": 664.8,
+   "margin_before_ps": -1001.2
+  },
+  "ku__0": {
+   "src": "lep0N",
+   "dst": "ctl",
+   "K_old": -2,
+   "K_new": 0,
+   "dK": 2,
+   "sched_lat_old": 2,
+   "sched_lat_new": 4,
+   "margin_after_ps": 681.0,
+   "margin_before_ps": -985.0
+  }
+ }
+}

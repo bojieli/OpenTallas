@@ -37,6 +37,10 @@ for m, d in sorted(mods.items()):
             cand = sorted(((round(round(x / Q) * Q + dx * Q, 3), round(round(y / Q) * Q + dy * Q, 3)) for dx in range(-30, 31) for dy in range(-30, 31)),
                           key=lambda p: abs(p[0] - x) + abs(p[1] - y))
             p = next((p for p in cand if Q <= p[0] <= W - Q and Q <= p[1] <= H - Q and free(*p)), None)
+            if p is None:      # part 2: region centre window all macro -> nearest free lattice point in the core (CLOCK 11-03: 1 unsited)
+                cand = sorted(((round(a * Q, 3), round(b * Q, 3)) for a in range(1, int(W / Q)) for b in range(1, int(H / Q))),
+                              key=lambda p: abs(p[0] - x) + abs(p[1] - y))
+                p = next((p for p in cand if free(*p)), None)
             ents.append(dict(xy_um=list(p) if p else None, region_um=[round(W * j / c, 3), round(H * i / r, 3), round(W * (j + 1) / c, 3), round(H * (i + 1) / r, 3)]))
     out[m] = dict(sinks=N, entries=n, grid=[r, c], outline_um=[W, H], instances=d['inst'], kept_signed=m in keep,
                   sinks_per_entry=math.ceil(N / n), regional_entries=ents)

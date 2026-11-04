@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "d44v-p2-hard-type-core-reset",
+ "types": [
+  {
+   "type": "q_sm0",
+   "cores": 32,
+   "relays": 376,
+   "depth": 20,
+   "max_hop_um": 380.0,
+   "old_depth": null,
+   "last_mile_over_reach": []
+  },
+  {
+   "type": "q_sm1",
+   "cores": 32,
+   "relays": 307,
+   "depth": 19,
+   "max_hop_um": 380.0,
+   "old_depth": null,
+   "last_mile_over_reach": [
+    {
+     "inst": "u_sm_t00_s",
+     "last_mile_um": 439.32
+    }
+   ]
+  },
+  {
+   "type": "q_sm2",
+   "cores": 32,
+   "relays": 340,
+   "depth": 20,
+   "max_hop_um": 380.0,
+   "old_depth": null,
+   "last_mile_over_reach": []
+  },
+  {
+   "type": "q_sm3",
+   "cores": 32,
+   "relays": 325,
+   "depth": 19,
+   "max_hop_um": 380.0,
+   "old_depth": null,
+   "last_mile_over_reach": [
+    {
+     "inst": "u_sm_t00_s",
+     "last_mile_um": 439.32
+    }
+   ]
+  }
+ ]
+}

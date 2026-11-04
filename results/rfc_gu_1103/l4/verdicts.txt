@@ -1,0 +1,3 @@
+dsdv_gunit_l4 RE-FORM RF=1/OLAT=1 vs RF=0/OLAT=0 (Verilator 5.050, run.sh, 11-03), 0 edges:
+MUT=0: L4_RF PASS cycles=200000 mx_v=1128 ss_v=181 launch=47 (all 1132 output bits; mx_y on mx_v edges)
+MUT=1 (OT_RF_MUT_L4, write one-hot picks neighbour group): L4_RF FAIL 198045 (caught)

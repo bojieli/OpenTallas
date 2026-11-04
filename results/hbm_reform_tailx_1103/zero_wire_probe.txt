@@ -1,0 +1,25 @@
+base P61 raw r2r_ws=-771.2 start=u_fcore.u_core.u_tail.age[0]$_DFFE_PN0P_/QN end=u_fcore.u_core.u_tail.add.s1_small[0]$_DFF_P_/D
+base P61 raw grp add_s1 n=96 slack=-771.2 start=u_fcore.u_core.u_tail.age[0]$_DFFE_PN0P_/QN
+base P61 raw grp mul_s1 n=239 slack=-649.4 start=u_fcore.u_core.u_tail.age[0]$_DFFE_PN0P_/QN
+base P61 raw grp mx n=128 slack=-611.1 start=u_fcore.u_core.u_tail.t[9][29]$_DFFE_PP_/QN
+base P61 raw grp exp n=6408 slack=-323.9 start=u_fcore.u_core.u_tail.age[0]$_DFFE_PN0P_/QN
+base P61 raw grp div n=1604 slack=-384.8 start=u_fcore.u_core.u_tail.age[0]$_DFFE_PN0P_/QN
+base P61 raw grp t n=1024 slack=409.7 start=u_fcore.u_core.u_tail.mt.genblk1.g_line.line[13]$_DFF_P_/QN
+base P61 raw grp ctl n=9 slack=362.1 start=u_fcore.u_core.u_tail.age[2]$_DFFE_PN0P_/QN
+base P61 raw any_ws=-63.8 start=x_g_tail_0_u_t_u_tail_sink_rst_n end=u_fcore.u_core.active$_DFFE_PN0P_/RESETN
+base P61 raw any_ws=-771.2 start=u_fcore.u_core.u_tail.age[0]$_DFFE_PN0P_/QN end=u_fcore.u_core.u_tail.add.s1_small[0]$_DFF_P_/D
+base P61 raw any_ws=853.4 start=u_bout_x_g_tail_0_u_t_u_tail_sink_in_valid/q$_DFF_P_/QN end=x_g_tail_0_u_t_u_tail_sink_in_valid
+reform P61 raw r2r_ws=-86.5 start=u_fcore.u_core.u_tail.exp_.a_r.g_fast.u.s1_big[7]$_DFF_P_/QN end=u_fcore.u_core.u_tail.exp_.a_r.g_fast.u.s2_exp[6]$_DFF_P_/D
+reform P61 raw grp add_s1 n=96 slack=112.5 start=u_fcore.u_core.u_tail.g_operand_q.ti_q[24]$_DFF_P_/QN
+reform P61 raw grp mul_s1 n=239 slack=66.3 start=u_fcore.u_core.u_tail.g_operand_q.ti_q[24]$_DFF_P_/QN
+reform P61 raw grp mx n=128 slack=298.5 start=u_fcore.u_core.u_tail.mhi[2][1]$_DFFE_PP_/QN
+reform P61 raw grp mlo n=128 slack=305.8 start=u_fcore.u_core.u_tail.t[21][1]$_DFFE_PP_/QN
+reform P61 raw grp exp n=6408 slack=-86.5 start=u_fcore.u_core.u_tail.exp_.a_r.g_fast.u.s1_big[7]$_DFF_P_/QN
+reform P61 raw grp div n=1604 slack=69.3 start=u_fcore.u_core.u_tail.div_.f2_sig[0]$_DFF_P_/QN
+reform P61 raw grp opq n=66 slack=482.3 start=u_fcore.u_core.u_tail.g_predecode_index.i_q[3]$_DFF_PN0_/QN
+reform P61 raw grp t n=1024 slack=409.7 start=u_fcore.u_core.u_tail.mt.genblk1.g_line.line[18]$_DFF_P_/QN
+reform P61 raw grp pq n=12 slack=171.2 start=u_fcore.u_core.u_tail.age[1]$_DFFE_PN0P_/QN
+reform P61 raw grp ctl n=9 slack=532.7 start=u_fcore.u_core.u_tail.age[8]$_DFFE_PN0P_/QN
+reform P61 raw any_ws=-270.0 start=x_g_tail_0_u_t_u_tail_sink_rst_n end=u_fcore.u_core.u_tail.g_predecode_index.i_q[1]$_DFF_PN1_/SETN
+reform P61 raw any_ws=-86.5 start=u_fcore.u_core.u_tail.exp_.a_r.g_fast.u.s1_big[7]$_DFF_P_/QN end=u_fcore.u_core.u_tail.exp_.a_r.g_fast.u.s2_exp[6]$_DFF_P_/D
+reform P61 raw any_ws=853.4 start=u_bout_x_g_tail_0_u_t_u_tail_sink_in_valid/q$_DFF_P_/QN end=x_g_tail_0_u_t_u_tail_sink_in_valid

@@ -44,6 +44,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     // identity reads both candidate slots from registered addresses and selects late; (d) controller PHYS_WACT 2.
     // QREG=0 is H6 exactly.
     parameter integer QREG=1,
+    // QLATE=1 (DIE-HBM-61 RE-FORM 2026-11-03, gate -169 ps: controller hb_oh -> col_v -> rp_n - wp -> hit compare
+    // -> 64-bit head_n select): head_n / push_n are built for both values of cv / posted from flops and cv / posted
+    // only select the finished word.  Same edges, same values (lockstep tb); QLATE=0 is the previous form exactly.
+    parameter integer QLATE=1,
+    // EREG=1 (round 2b, gate -53 ps: read_reserved -> <32 -> enqueue -> controller ent_q): the enqueue terms
+    // state==RUN, unposted!=0 and read_reserved<32 are flops loaded from their exact next values. EREG=0 = previous.
+    parameter integer EREG=1,
     parameter integer RMUT=0,
     // Default OFF. Conservative local-R14-model 833ps profile; same clock/CDC.
     // Paired PC row/column phase alignment and bootreload144..252 are required.
@@ -125,7 +132,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     reg[63:0]head_q;reg[4:0]rp1;      // QREG: == queue[rp] / rp+1 on every edge (head metadata from a register)
     wire[319:0]head={(QREG!=0)?head_q:queue[rp],head_wdata},push={(QREG!=0)?push_q:queue[ep],256'b0};
     wire push_read=!push[319];
-    wire enqueue=state==RUN && unposted!=0 && (!push_read || read_reserved<32) && !sticky;
+    wire enq_run,enq_unp,enq_rr;   // EREG: == state==RUN, unposted!=0, read_reserved<32 on every edge
+    wire enqueue=enq_run && enq_unp && (!push_read || enq_rr) && !sticky;
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
     wire posted_read=posted&&push_read;
     wire column_read=cv&&!cwe;
@@ -206,7 +214,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
       .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
       .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
       .T_REFI(TIMING_833?4681:3808),.T_REFIPB(TIMING_833?144:118),.T_RREFD(TIMING_833?10:8),
-      .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10)) controller(
+      .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10),
+      .WP_REG(1)) controller(   // DIE-HBM-61 RE-FORM 2026-11-03: registered write pointer / not-full, zero latency
         .reset_regions(reset_regions),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .clk(clk),.rst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
         .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
@@ -222,18 +231,46 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
         localparam [1:0] B2=b;   // YOSYS-CONCAT 10-26: 2'(incoming[1:0]+b) in a concat member lost the MSB members in yosys (YC1)
         assign qentry[b*64+:64]={i_we,incoming[14:12]^incoming[19:17],((incoming[1:0]+B2)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
     end
-    wire[4:0]ep_n=posted?ep1:ep;
-    wire[4:0]ep_off=ep_n-wp;
-    wire ep_hit=ep_off<5'd4 && count+6'(ep_off)<6'd32;
-    wire[63:0]push_n=ep_hit?qentry[ep_off[1:0]*64+:64]:(posted?queue[ep1]:push_q);
-    wire[4:0]rp_n=cv?rp1:rp;
-    wire[4:0]rp_off=rp_n-wp;
-    wire rp_hit=rp_off<5'd4 && count+6'(rp_off)<6'd32;
-    wire[63:0]head_n=rp_hit?qentry[rp_off[1:0]*64+:64]:(cv?queue[rp1]:head_q);
+    wire[63:0]push_n,head_n;
+    if(QLATE==0)begin:g_qearly
+        wire[4:0]ep_n=posted?ep1:ep;
+        wire[4:0]ep_off=ep_n-wp;
+        wire ep_hit=ep_off<5'd4 && count+6'(ep_off)<6'd32;
+        assign push_n=ep_hit?qentry[ep_off[1:0]*64+:64]:(posted?queue[ep1]:push_q);
+        wire[4:0]rp_n=cv?rp1:rp;
+        wire[4:0]rp_off=rp_n-wp;
+        wire rp_hit=rp_off<5'd4 && count+6'(rp_off)<6'd32;
+        assign head_n=rp_hit?qentry[rp_off[1:0]*64+:64]:(cv?queue[rp1]:head_q);
+    end else begin:g_qlate
+        // candidate 0: posted / cv low (ep, rp); candidate 1: high (ep1, rp1); the late select is the only cv/posted use
+        wire[4:0]ep_off0=ep-wp, ep_off1=ep1-wp, rp_off0=rp-wp, rp_off1=rp1-wp;
+        wire ep_hit0=ep_off0<5'd4 && count+6'(ep_off0)<6'd32, ep_hit1=ep_off1<5'd4 && count+6'(ep_off1)<6'd32;
+        wire rp_hit0=rp_off0<5'd4 && count+6'(rp_off0)<6'd32, rp_hit1=rp_off1<5'd4 && count+6'(rp_off1)<6'd32;
+        wire[63:0]push_n0=ep_hit0?qentry[ep_off0[1:0]*64+:64]:push_q;
+        wire[63:0]push_n1=ep_hit1?qentry[ep_off1[1:0]*64+:64]:queue[ep1];
+        wire[63:0]head_n0=rp_hit0?qentry[rp_off0[1:0]*64+:64]:head_q;
+        wire[63:0]head_n1=rp_hit1?qentry[rp_off1[1:0]*64+:64]:queue[rp1];
+        assign push_n=posted?push_n1:push_n0;
+        assign head_n=cv?head_n1:head_n0;
+    end
     // push_q/head_q track queue[ep]/queue[rp] exactly, also through reset (ep = rp = 0 while lrst_n is low).
     always @(posedge clk) if(QREG!=0)begin
         push_q<=lrst_n?push_n:queue[0];
         head_q<=lrst_n?head_n:queue[0];
+    end
+    if(EREG==0)begin:g_ecomb
+        assign enq_run=state==RUN; assign enq_unp=unposted!=0; assign enq_rr=read_reserved<32;
+    end else begin:g_ereg
+        // next values exactly as the main block loads them (i_rdy admits an accept only in IDLE / RUN)
+        wire[1:0]state_n=(accepted&&(state==IDLE || !same_row))?DESC:
+                         (state==DESC && dr)?DRAIN:(state==DRAIN && observed_open==0)?RUN:state;
+        wire[5:0]unposted_n=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
+        wire[5:0]read_reserved_n=read_reserved+(posted_read?6'd1:6'd0)-(response_take?6'd1:6'd0);
+        reg q_run,q_unp,q_rr;
+        always @(posedge clk)
+            if(!reset_regions[3])begin q_run<=1'b0;q_unp<=1'b0;q_rr<=1'b1;end
+            else begin q_run<=state_n==RUN;q_unp<=unposted_n!=0;q_rr<=read_reserved_n<32;end
+        assign enq_run=q_run; assign enq_unp=q_unp; assign enq_rr=q_rr;
     end
     // H8: pending_wp is a FREE slot whenever pending_count<32. Refresh it
     // unconditionally from the registered command head; a column-read edge

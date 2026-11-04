@@ -142,10 +142,67 @@ module ot_hbm_sm_vm_wr_q_lanes_n #(
         wire push = rv_r;
         wire full = (cnt == DEPTH[AW:0]);
         wire emit = (cnt != 0);
-        wire last = (ps + 4'd1 >= d_p);
-        wire pop = emit && last;
+        // DIE-HBM-61/RTL-C3 RE-FORM (zero latency, 11-03): last and pop come from flops.  ps -> (ps + 1 >= d_p) -> pop ->
+        // 4 x 268 FIFO entry selects was the whole-core worst stage (pre-build gate TT -113 ps).  last_r holds
+        // (ps + 1 >= d_p) of the CURRENT ps/d_p, computed one edge earlier from their next-state values (the same update
+        // rules as the ps / d_p / cnt registers below); pop_e are kept copies of emit && last, one per FIFO entry (+1 for
+        // the counters), each <= 268 loads.  Every sampled edge is unchanged.
+        wire last;
+        wire pop;
+        wire acc_row;
+        wire [3:0] ps_n  = !rl ? 4'd0 : (emit ? (last ? 4'd0 : ps + 4'd1) : ps);
+        wire [3:0] d_p_n = !rl ? 4'd0 : (cv_q ? cmd_q[23:20] : d_p);
+        wire [AW:0] cnt_n = !rl ? '0 : cnt + (acc_row ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
+`ifdef C3MUT_LASTCUR
+        wire last_n = (ps + 4'd1 >= d_p);
+`elsif C3MUT_DPN
+        wire last_n = (ps_n + 4'd1 >= d_p);
+`else
+        wire last_n = (ps_n + 4'd1 >= d_p_n);
+`endif
+        reg last_r, pop_r;
+`ifdef C3MUT_CNTN
+        wire pop_n = (cnt != 0) && last_n;
+`else
+        wire pop_n = (cnt_n != 0) && last_n;
+`endif
+        always @(posedge lclk) begin last_r <= last_n; pop_r <= pop_n; end
+        assign last = last_r;
+        assign pop = pop_r;
+        // entry write selects from flops too (pop -> cnt - pop -> == i -> 268 entry bits was the next stage, TT +67):
+        // wsel_e[i] = acc_row && (widx == i) of the NEXT edge, from the next-state values of rv_r / cnt / pop.
+        wire rv_n = !rl ? 1'b0 : rv[k];
+        wire full_n = (cnt_n == DEPTH[AW:0]);
+        wire acc_n = rv_n && !(full_n && !pop_n);
+`ifdef C3MUT_WSEL
+        wire [AW:0] widx_n = cnt_n;
+`else
+        wire [AW:0] widx_n = cnt_n - {{AW{1'b0}}, pop_n};
+`endif
+        // Each 268-bit entry is split in NCH chunks (8 x 32 data + 12 row bits); every chunk has its own kept copy of the
+        // write select, the pop shift and (entry 0) the emit rotate, so no select flop drives more than ~64 loads
+        // (one wsel copy per entry drove 268 bits x 2 = TT +52).
+        localparam integer NCH = 9;
+        (* keep *) reg [DEPTH*NCH-1:0] wsel_c, pop_c;
+        (* keep *) reg [NCH-1:0] emit_c;
+        always @(posedge lclk) begin
+            for (integer j = 0; j < DEPTH; j = j + 1)
+                for (integer c = 0; c < NCH; c = c + 1) begin
+                    wsel_c[j*NCH+c] <= acc_n && (widx_n == (AW+1)'(j));
+`ifdef C3MUT_POPE0
+                    pop_c[j*NCH+c] <= pop_n && !(j == 0 && c == 3);
+`else
+                    pop_c[j*NCH+c] <= pop_n;
+`endif
+                end
+`ifdef C3MUT_EMITC
+            for (integer c = 0; c < NCH; c = c + 1) emit_c[c] <= (cnt != 0);
+`else
+            for (integer c = 0; c < NCH; c = c + 1) emit_c[c] <= (cnt_n != 0);
+`endif
+        end
         wire [31:0] col = hd[31:0];
-        wire acc_row = push && !(full && !pop);     // accepted row (write suppressed on overrun)
+        assign acc_row = push && !(full && !pop);     // accepted row (write suppressed on overrun)
         wire [AW:0] widx = cnt - {{AW{1'b0}}, pop};
         assign sm_busy[k] = emit || o_v;
         assign lane_fault[k] = flt;
@@ -164,11 +221,15 @@ module ot_hbm_sm_vm_wr_q_lanes_n #(
         for (genvar i = 0; i < DEPTH; i = i + 1) begin : g_e
             reg [267:0] q;
             assign ent[i] = q;
-            always @(posedge lclk)
-                if (acc_row && widx == (AW+1)'(i)) q <= {rrow_r, rdata_r};
-                else if (pop) begin
-                    if (i < DEPTH - 1) q <= ent[i + 1];
-                end else if (i == 0 && emit) q[255:0] <= {q[31:0], q[255:32]};
+            wire [267:0] din = {rrow_r, rdata_r};
+            for (genvar c = 0; c < NCH; c = c + 1) begin : g_c
+                localparam integer LO = c * 32, CW = (c < 8) ? 32 : 12, RO = ((c + 1) % 8) * 32;
+                always @(posedge lclk)
+                    if (wsel_c[i*NCH+c]) q[LO +: CW] <= din[LO +: CW];
+                    else if (pop_c[i*NCH+c]) begin
+                        if (i < DEPTH - 1) q[LO +: CW] <= ent[i + 1][LO +: CW];
+                    end else if (i == 0 && c < 8 && emit_c[c]) q[LO +: CW] <= q[RO +: CW];
+            end
         end
         always @(posedge lclk) begin
             o_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], ((MUT == 6) ? 3'(k) : lbv + 3'(k))};

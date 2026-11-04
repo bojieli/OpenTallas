@@ -1,5 +1,5 @@
 // S81-DV REAL-VIEW bound die top (tools/s81_dv/dv_bind.py) -- strict die_port_bind gates it
-module dv_die (lk_WS0_pma_tx, lk_WS0_pma_tck, lk_WS0_pma_rx, lk_WS0_pma_rck, lk_WS1_pma_tx, lk_WS1_pma_tck, lk_WS1_pma_rx, lk_WS1_pma_rck, lk_WN0_pma_tx, lk_WN0_pma_tck, lk_WN0_pma_rx, lk_WN0_pma_rck, lk_WN1_pma_tx, lk_WN1_pma_tck, lk_WN1_pma_rx, lk_WN1_pma_rck, lk_ES0_pma_tx, lk_ES0_pma_tck, lk_ES0_pma_rx, lk_ES0_pma_rck, lk_ES1_pma_tx, lk_ES1_pma_tck, lk_ES1_pma_rx, lk_ES1_pma_rck, lk_EN0_pma_tx, lk_EN0_pma_tck, lk_EN0_pma_rx, lk_EN0_pma_rck, lk_EN1_pma_tx, lk_EN1_pma_tck, lk_EN1_pma_rx, lk_EN1_pma_rck, lk_WN2_pma_tx, lk_WN2_pma_tck, lk_WN2_pma_rx, lk_WN2_pma_rck, lk_WN3_pma_tx, lk_WN3_pma_tck, lk_WN3_pma_rx, lk_WN3_pma_rck, lk_EN2_pma_tx, lk_EN2_pma_tck, lk_EN2_pma_rx, lk_EN2_pma_rck, lk_EN3_pma_tx, lk_EN3_pma_tck, lk_EN3_pma_rx, lk_EN3_pma_rck, lk_WS2_pma_tx, lk_WS2_pma_tck, lk_WS2_pma_rx, lk_WS2_pma_rck, lk_WS3_pma_tx, lk_WS3_pma_tck, lk_WS3_pma_rx, lk_WS3_pma_rck, die_clk, die_rst_n);
+module dv_die (lk_WS0_pma_tx, lk_WS0_pma_tck, lk_WS0_pma_rx, lk_WS0_pma_rck, lk_WS0_pma_lock, lk_WS1_pma_tx, lk_WS1_pma_tck, lk_WS1_pma_rx, lk_WS1_pma_rck, lk_WS1_pma_lock, lk_WN0_pma_tx, lk_WN0_pma_tck, lk_WN0_pma_rx, lk_WN0_pma_rck, lk_WN0_pma_lock, lk_WN1_pma_tx, lk_WN1_pma_tck, lk_WN1_pma_rx, lk_WN1_pma_rck, lk_WN1_pma_lock, lk_ES0_pma_tx, lk_ES0_pma_tck, lk_ES0_pma_rx, lk_ES0_pma_rck, lk_ES0_pma_lock, lk_ES1_pma_tx, lk_ES1_pma_tck, lk_ES1_pma_rx, lk_ES1_pma_rck, lk_ES1_pma_lock, lk_EN0_pma_tx, lk_EN0_pma_tck, lk_EN0_pma_rx, lk_EN0_pma_rck, lk_EN0_pma_lock, lk_EN1_pma_tx, lk_EN1_pma_tck, lk_EN1_pma_rx, lk_EN1_pma_rck, lk_EN1_pma_lock, lk_WN2_pma_tx, lk_WN2_pma_tck, lk_WN2_pma_rx, lk_WN2_pma_rck, lk_WN2_pma_lock, lk_WN3_pma_tx, lk_WN3_pma_tck, lk_WN3_pma_rx, lk_WN3_pma_rck, lk_WN3_pma_lock, lk_EN2_pma_tx, lk_EN2_pma_tck, lk_EN2_pma_rx, lk_EN2_pma_rck, lk_EN2_pma_lock, lk_EN3_pma_tx, lk_EN3_pma_tck, lk_EN3_pma_rx, lk_EN3_pma_rck, lk_EN3_pma_lock, lk_WS2_pma_tx, lk_WS2_pma_tck, lk_WS2_pma_rx, lk_WS2_pma_rck, lk_WS2_pma_lock, lk_WS3_pma_tx, lk_WS3_pma_tck, lk_WS3_pma_rx, lk_WS3_pma_rck, lk_WS3_pma_lock, die_clk, die_rst_n);
   wire ck_b_bk_sel;
   wire ck_b_ctrl_07;
   wire ck_b_gunit;
@@ -489,42 +489,52 @@ module dv_die (lk_WS0_pma_tx, lk_WS0_pma_tck, lk_WS0_pma_rx, lk_WS0_pma_rck, lk_
   input wire die_rst_n;
   input wire [543:0] lk_WS0_pma_rx;
   input wire [0:0] lk_WS0_pma_rck;
+  input wire lk_WS0_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_WS1_pma_tx;
   output wire [0:0] lk_WS1_pma_tck;
   input wire [543:0] lk_WS1_pma_rx;
   input wire [0:0] lk_WS1_pma_rck;
+  input wire lk_WS1_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_WN0_pma_tx;
   output wire [0:0] lk_WN0_pma_tck;
   input wire [543:0] lk_WN0_pma_rx;
   input wire [0:0] lk_WN0_pma_rck;
+  input wire lk_WN0_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_WN1_pma_tx;
   output wire [0:0] lk_WN1_pma_tck;
   input wire [543:0] lk_WN1_pma_rx;
   input wire [0:0] lk_WN1_pma_rck;
+  input wire lk_WN1_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_ES0_pma_tx;
   output wire [0:0] lk_ES0_pma_tck;
   input wire [543:0] lk_ES0_pma_rx;
   input wire [0:0] lk_ES0_pma_rck;
+  input wire lk_ES0_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_ES1_pma_tx;
   output wire [0:0] lk_ES1_pma_tck;
   input wire [543:0] lk_ES1_pma_rx;
   input wire [0:0] lk_ES1_pma_rck;
+  input wire lk_ES1_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_EN0_pma_tx;
   output wire [0:0] lk_EN0_pma_tck;
   input wire [543:0] lk_EN0_pma_rx;
   input wire [0:0] lk_EN0_pma_rck;
+  input wire lk_EN0_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_EN1_pma_tx;
   output wire [0:0] lk_EN1_pma_tck;
   input wire [543:0] lk_EN1_pma_rx;
   input wire [0:0] lk_EN1_pma_rck;
+  input wire lk_EN1_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_WN2_pma_tx;
   output wire [0:0] lk_WN2_pma_tck;
   input wire [543:0] lk_WN2_pma_rx;
   input wire [0:0] lk_WN2_pma_rck;
+  input wire lk_WN2_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_WN3_pma_tx;
   output wire [0:0] lk_WN3_pma_tck;
   input wire [543:0] lk_WN3_pma_rx;
   input wire [0:0] lk_WN3_pma_rck;
+  input wire lk_WN3_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   wire [275:0] w_xrE_0S_l0_src, w_xrE_0S_l0_dst;
   wire [19:0] nxrE_0S_l0_fck;
   wire [275:0] w_xrE_0S_l1_src, w_xrE_0S_l1_dst;
@@ -3700,14 +3710,14 @@ module dv_die (lk_WS0_pma_tx, lk_WS0_pma_tck, lk_WS0_pma_rx, lk_WS0_pma_rck, lk_
   dsdv_gunit u_gunit (.clk(ck_b_gunit), .rst_n(rsleaf_rs_60_61_2_ck_b_gunit), .sid(4'd3), .vi_s({w_tvN_s_3S_lnd[275:0]}), .vo_s({w_tvS_gunit_src[275:0]}), .vo_n({w_tvN_gunit_src[275:0]}), .vi_n({w_tvS_s_3N_lnd[275:0]}), .cw_v({w_cw_seqhost_lnd[0:0]}), .cw_a({w_cw_seqhost_lnd[10:1]}), .cw_d({w_cw_seqhost_lnd[266:11]}), .fault(f_gunit));
   dsdv_bk_sel_vmtx #(.TX_SRAM(1)) u_bk_sel (.clk(ck_b_bk_sel), .rst_n(rsleaf_rs_20_10_ck_b_bk_sel), .tap_k(8'h11), .sink_k(8'h10), .ik(3'd4), .ek(3'd5), .uid(8'h5B), .eg_n(1'b0), .vi_s({w_tvN_s_4S_lnd[275:0]}), .vo_s({w_tvS_bk_sel_src[275:0]}), .vo_n({w_tvN_bk_sel_src[275:0]}), .vi_n({w_tvS_seqhost_lnd[275:0]}), .vi_idx({w_is_tail_lnd[275:0]}), .ca(h4_ca), .cb(h4_cb), .tl_o(h4_tl), .fault(f_bk_sel), .tpn_o(idxn_tp__bk_sel__s_7N_LP), .tpn_i(idxn_tp__s_7N_LP__bk_sel), .tps_o(idxn_tp__bk_sel__s_7S_LP));
   dsdv_hostb_seqhost_mux #(.HOSTB_ENABLE(0), .STATIC_KS6(0)) u_seqhost (.ck(ck_g6_6), .rst_n(rs_42_61_3), .tap_k(8'h00), .sink_k(8'h00), .select_hbe(1'b0), .vi_s({w_tvN_bk_sel_lnd[275:0]}), .vo_s({w_tvS_seqhost_src[275:0]}), .vo_n({w_tvN_seqhost_src[275:0]}), .vi_n({w_tvS_s_4N_lnd[275:0]}), .cw_v({w_cw_seqhost_src[0:0]}), .cw_a({w_cw_seqhost_src[10:1]}), .cw_d({w_cw_seqhost_src[266:11]}), .s_j({w_jw_E_l0_src[32:0]}), .s_hw_e({w_jw_E_l1_src[48:0], w_jw_E_l0_src[275:33]}), .s_hw_w({w_jw_W_l1_src[48:0], w_jw_W_l0_src[275:33]}), .s_jd_e({w_jd_E_lnd[1:0]}), .s_hc_e({w_jd_E_lnd[10:2]}), .st_rg_e({w_jd_E_lnd[12:11]}), .s_jd_w({w_jd_W_lnd[1:0]}), .s_hc_w({w_jd_W_lnd[10:2]}), .st_rg_w({w_jd_W_lnd[12:11]}), .f_host({w_hf_7N_l1_lnd[238:0], w_hf_7N_l0_lnd[275:0]}), .f_lf({w_hf_7N_l1_lnd[242:239]}), .f_ks({w_hf_7N_l2_lnd[19:0], w_hf_7N_l1_lnd[275:243]}), .mu_rt_7n({w_hf_7N_l2_lnd[51:20]}), .t_host({w_ht_7N_src[76:0]}), .t_kd({w_ht_7N_src[130:77]}), .mu_c_7n({w_ht_7N_src[164:131]}), .mu_rc_7n({w_ht_7N_src[175:165]}), .mu_c_0n({w_mu_0N_src[33:0]}), .mu_rc_0n({w_mu_0N_src[44:34]}), .mu_rt_0n({w_rt_0N_lnd[31:0]}), .mu_c_0s({w_mu_0S_src[33:0]}), .mu_rc_0s({w_mu_0S_src[44:34]}), .mu_c_7s({w_mu_7S_src[33:0]}), .mu_rc_7s({w_mu_7S_src[44:34]}), .engram_f_ks({w_eks_7N_src[52:0]}), .hbe_f_host({w_hbc_forward_l1_lnd[238:0], w_hbc_forward_l0_lnd[275:0]}), .starter_f_ks({w_hbc_forward_l2_lnd[15:0], w_hbc_forward_l1_lnd[275:239]}), .hbe_ks_slot({w_hbc_forward_l2_lnd[18:16]}), .hb_starter_armed({w_hbc_reverse_l0_src[131:131]}), .sid_ro(fr_sid_seqhost), .vid_ro(fr_vid_seqhost), .sid_ri(fr_sid_ret), .vid_ri(fr_vid_ret));
-  ot_pdie_serdes_col u_lk_WS0 (.clk(ck_b_lk_WS0), .rst(rsleaf_rs_19_0_1_ck_b_lk_WS0), .tx({w_lt_lk_WS0_lnd[511:0]}), .rx({w_lr_lk_WS0_src[511:0]}), .st({w_lr_lk_WS0_src[513:512]}), .pma_tx(lk_WS0_pma_tx), .pma_tck(lk_WS0_pma_tck), .pma_rx(lk_WS0_pma_rx), .pma_rck(lk_WS0_pma_rck));
-  ot_pdie_serdes_col u_lk_WS1 (.clk(ck_b_lk_WS1), .rst(rsleaf_rs_21_0_ck_b_lk_WS1), .tx({w_lt_lk_WS1_lnd[511:0]}), .rx({w_lr_lk_WS1_src[511:0]}), .st({w_lr_lk_WS1_src[513:512]}), .pma_tx(lk_WS1_pma_tx), .pma_tck(lk_WS1_pma_tck), .pma_rx(lk_WS1_pma_rx), .pma_rck(lk_WS1_pma_rck));
-  ot_pdie_serdes_col u_lk_WN0 (.clk(ck_b_lk_WN0), .rst(rsleaf_rs_20_21_2_ck_b_lk_WN0), .tx({w_lt_lk_WN0_lnd[511:0]}), .rx({w_lr_lk_WN0_src[511:0]}), .st({w_lr_lk_WN0_src[513:512]}), .pma_tx(lk_WN0_pma_tx), .pma_tck(lk_WN0_pma_tck), .pma_rx(lk_WN0_pma_rx), .pma_rck(lk_WN0_pma_rck));
-  ot_pdie_serdes_col u_lk_WN1 (.clk(ck_g3_5), .rst(rs_21_45), .tx({w_lt_lk_WN1_lnd[511:0]}), .rx({w_lr_lk_WN1_src[511:0]}), .st({w_lr_lk_WN1_src[513:512]}), .pma_tx(lk_WN1_pma_tx), .pma_tck(lk_WN1_pma_tck), .pma_rx(lk_WN1_pma_rx), .pma_rck(lk_WN1_pma_rck));
-  ot_pdie_serdes_col u_lk_ES0 (.clk(ck_b_lk_ES0), .rst(rsleaf_rs_62_0_ck_b_lk_ES0), .tx({w_lt_lk_ES0_lnd[511:0]}), .rx({w_lr_lk_ES0_src[511:0]}), .st({w_lr_lk_ES0_src[513:512]}), .pma_tx(lk_ES0_pma_tx), .pma_tck(lk_ES0_pma_tck), .pma_rx(lk_ES0_pma_rx), .pma_rck(lk_ES0_pma_rck));
-  ot_pdie_serdes_col u_lk_ES1 (.clk(ck_b_lk_ES1), .rst(rsleaf_rs_62_10_ck_b_lk_ES1), .tx({w_lt_lk_ES1_lnd[511:0]}), .rx({w_lr_lk_ES1_src[511:0]}), .st({w_lr_lk_ES1_src[513:512]}), .pma_tx(lk_ES1_pma_tx), .pma_tck(lk_ES1_pma_tck), .pma_rx(lk_ES1_pma_rx), .pma_rck(lk_ES1_pma_rck));
-  ot_pdie_serdes_col u_lk_EN0 (.clk(ck_b_lk_EN0), .rst(rsleaf_rs_62_20_1_ck_b_lk_EN0), .tx({w_lt_lk_EN0_lnd[511:0]}), .rx({w_lr_lk_EN0_src[511:0]}), .st({w_lr_lk_EN0_src[513:512]}), .pma_tx(lk_EN0_pma_tx), .pma_tck(lk_EN0_pma_tck), .pma_rx(lk_EN0_pma_rx), .pma_rck(lk_EN0_pma_rck));
-  ot_pdie_serdes_col u_lk_EN1 (.clk(ck_b_lk_EN1), .rst(rsleaf_rs_62_30_3_ck_b_lk_EN1), .tx({w_lt_lk_EN1_lnd[511:0]}), .rx({w_lr_lk_EN1_src[511:0]}), .st({w_lr_lk_EN1_src[513:512]}), .pma_tx(lk_EN1_pma_tx), .pma_tck(lk_EN1_pma_tck), .pma_rx(lk_EN1_pma_rx), .pma_rck(lk_EN1_pma_rck));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_WS0 (.clk(ck_b_lk_WS0), .rst(rsleaf_rs_19_0_1_ck_b_lk_WS0), .tx({w_lt_lk_WS0_lnd[511:0]}), .rx({w_lr_lk_WS0_src[511:0]}), .st({w_lr_lk_WS0_src[513:512]}), .pma_tx(lk_WS0_pma_tx), .pma_tck(lk_WS0_pma_tck), .pma_rx(lk_WS0_pma_rx), .pma_rck(lk_WS0_pma_rck), .pma_lock(lk_WS0_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_WS1 (.clk(ck_b_lk_WS1), .rst(rsleaf_rs_21_0_ck_b_lk_WS1), .tx({w_lt_lk_WS1_lnd[511:0]}), .rx({w_lr_lk_WS1_src[511:0]}), .st({w_lr_lk_WS1_src[513:512]}), .pma_tx(lk_WS1_pma_tx), .pma_tck(lk_WS1_pma_tck), .pma_rx(lk_WS1_pma_rx), .pma_rck(lk_WS1_pma_rck), .pma_lock(lk_WS1_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_WN0 (.clk(ck_b_lk_WN0), .rst(rsleaf_rs_20_21_2_ck_b_lk_WN0), .tx({w_lt_lk_WN0_lnd[511:0]}), .rx({w_lr_lk_WN0_src[511:0]}), .st({w_lr_lk_WN0_src[513:512]}), .pma_tx(lk_WN0_pma_tx), .pma_tck(lk_WN0_pma_tck), .pma_rx(lk_WN0_pma_rx), .pma_rck(lk_WN0_pma_rck), .pma_lock(lk_WN0_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_WN1 (.clk(ck_g3_5), .rst(rs_21_45), .tx({w_lt_lk_WN1_lnd[511:0]}), .rx({w_lr_lk_WN1_src[511:0]}), .st({w_lr_lk_WN1_src[513:512]}), .pma_tx(lk_WN1_pma_tx), .pma_tck(lk_WN1_pma_tck), .pma_rx(lk_WN1_pma_rx), .pma_rck(lk_WN1_pma_rck), .pma_lock(lk_WN1_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_ES0 (.clk(ck_b_lk_ES0), .rst(rsleaf_rs_62_0_ck_b_lk_ES0), .tx({w_lt_lk_ES0_lnd[511:0]}), .rx({w_lr_lk_ES0_src[511:0]}), .st({w_lr_lk_ES0_src[513:512]}), .pma_tx(lk_ES0_pma_tx), .pma_tck(lk_ES0_pma_tck), .pma_rx(lk_ES0_pma_rx), .pma_rck(lk_ES0_pma_rck), .pma_lock(lk_ES0_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_ES1 (.clk(ck_b_lk_ES1), .rst(rsleaf_rs_62_10_ck_b_lk_ES1), .tx({w_lt_lk_ES1_lnd[511:0]}), .rx({w_lr_lk_ES1_src[511:0]}), .st({w_lr_lk_ES1_src[513:512]}), .pma_tx(lk_ES1_pma_tx), .pma_tck(lk_ES1_pma_tck), .pma_rx(lk_ES1_pma_rx), .pma_rck(lk_ES1_pma_rck), .pma_lock(lk_ES1_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_EN0 (.clk(ck_b_lk_EN0), .rst(rsleaf_rs_62_20_1_ck_b_lk_EN0), .tx({w_lt_lk_EN0_lnd[511:0]}), .rx({w_lr_lk_EN0_src[511:0]}), .st({w_lr_lk_EN0_src[513:512]}), .pma_tx(lk_EN0_pma_tx), .pma_tck(lk_EN0_pma_tck), .pma_rx(lk_EN0_pma_rx), .pma_rck(lk_EN0_pma_rck), .pma_lock(lk_EN0_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_EN1 (.clk(ck_b_lk_EN1), .rst(rsleaf_rs_62_30_3_ck_b_lk_EN1), .tx({w_lt_lk_EN1_lnd[511:0]}), .rx({w_lr_lk_EN1_src[511:0]}), .st({w_lr_lk_EN1_src[513:512]}), .pma_tx(lk_EN1_pma_tx), .pma_tck(lk_EN1_pma_tck), .pma_rx(lk_EN1_pma_rx), .pma_rck(lk_EN1_pma_rck), .pma_lock(lk_EN1_pma_lock));
   dsdv_idx_rg3 #(.SRAM_MACRO(1)) u_irg_00 (.ck(ck_b_irg_00), .rst(rsleaf_rs_23_3_ck_b_irg_00), .sid(4'd0), .rqo({w_hrrq_01_src[91:0], w_hrrq_00_src[91:0]}), .rri({w_hrrd_01_lnd[543:0], w_hrrd_00_lnd[543:0]}), .qo({w_iq_00_01_l1_src[236:0], w_iq_00_01_l0_src[275:0]}), .so({w_is_00_01_src[275:0]}), .qi({w_iq_qf_l1_lnd[236:0], w_iq_qf_l0_lnd[275:0]}), .si({276'd0}), .fault(f_irg_00));
   dsdv_idx_rg3 #(.SRAM_MACRO(1)) u_irg_01 (.ck(ck_g3_0), .rst(rs_23_0), .sid(4'd2), .rqo({w_hrrq_03_src[91:0], w_hrrq_02_src[91:0]}), .rri({w_hrrd_03_lnd[543:0], w_hrrd_02_lnd[543:0]}), .qi({w_iq_00_01_l1_lnd[236:0], w_iq_00_01_l0_lnd[275:0]}), .si({w_is_00_01_lnd[275:0]}), .qo({w_iq_01_02_l1_src[236:0], w_iq_01_02_l0_src[275:0]}), .so({w_is_01_02_src[275:0]}), .fault(f_irg_01));
   dsdv_idx_rg3 #(.SRAM_MACRO(1)) u_irg_02 (.ck(ck_b_irg_02), .rst(rsleaf_rs_26_0_ck_b_irg_02), .sid(4'd4), .rqo({w_hrrq_05_src[91:0], w_hrrq_04_src[91:0]}), .rri({w_hrrd_05_lnd[543:0], w_hrrd_04_lnd[543:0]}), .qi({w_iq_01_02_l1_lnd[236:0], w_iq_01_02_l0_lnd[275:0]}), .si({w_is_01_02_lnd[275:0]}), .qo({w_iq_02_03_l1_src[236:0], w_iq_02_03_l0_src[275:0]}), .so({w_is_02_03_src[275:0]}), .fault(f_irg_02));
@@ -3717,8 +3727,8 @@ module dv_die (lk_WS0_pma_tx, lk_WS0_pma_tck, lk_WS0_pma_rx, lk_WS0_pma_rck, lk_
   dsdv_idx_rg3 #(.SRAM_MACRO(1)) u_irg_06 (.ck(ck_g8_0), .rst(rs_59_0_1), .sid(4'd12), .rqo({w_hrrq_13_src[91:0], w_hrrq_12_src[91:0]}), .rri({w_hrrd_13_lnd[543:0], w_hrrd_12_lnd[543:0]}), .qi({w_iq_05_06_l1_lnd[236:0], w_iq_05_06_l0_lnd[275:0]}), .si({w_is_05_06_lnd[275:0]}), .qo({w_iq_06_07_l1_src[236:0], w_iq_06_07_l0_src[275:0]}), .so({w_is_06_07_src[275:0]}), .fault(f_irg_06));
   dsdv_idx_rg3_nq #(.SRAM_MACRO(1)) u_irg_07 (.ck(ck_b_irg_07), .rst(rsleaf_rs_59_3_3_ck_b_irg_07), .sid(4'd14), .rqo({w_hrrq_15_src[91:0], w_hrrq_14_src[91:0]}), .rri({w_hrrd_15_lnd[543:0], w_hrrd_14_lnd[543:0]}), .qi({w_iq_06_07_l1_lnd[236:0], w_iq_06_07_l0_lnd[275:0]}), .si({w_is_06_07_lnd[275:0]}), .so({w_is_tail_src[275:0]}), .fault(f_irg_07));
   dsdv_idx_qfs u_iqf (.ck(ck_g3_1), .rst(rs_25_5), .qr({w_iq_qf_l1_src[236:0], w_iq_qf_l0_src[275:0]}), .qs({w_iq_src_l1_lnd[236:0], w_iq_src_l0_lnd[275:0]}), .ql(idxn_ql__s_0N_LP__iqf), .fault(f_iqf), .qc(idxn_qc__iqf__s_0N_LP));
-  ot_pdie_serdes_col u_lk_WN2 (.clk(ck_b_lk_WN2), .rst(rsleaf_rs_21_21_ck_b_lk_WN2), .tx({w_lt_lk_WN2_lnd[511:0]}), .rx({w_lr_lk_WN2_src[511:0]}), .st({w_lr_lk_WN2_src[513:512]}), .pma_tx(lk_WN2_pma_tx), .pma_tck(lk_WN2_pma_tck), .pma_rx(lk_WN2_pma_rx), .pma_rck(lk_WN2_pma_rck));
-  ot_pdie_serdes_col u_lk_WN3 (.clk(ck_g2_5), .rst(rs_19_45_1), .tx({w_lt_lk_WN3_lnd[511:0]}), .rx({w_lr_lk_WN3_src[511:0]}), .st({w_lr_lk_WN3_src[513:512]}), .pma_tx(lk_WN3_pma_tx), .pma_tck(lk_WN3_pma_tck), .pma_rx(lk_WN3_pma_rx), .pma_rck(lk_WN3_pma_rck));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_WN2 (.clk(ck_b_lk_WN2), .rst(rsleaf_rs_21_21_ck_b_lk_WN2), .tx({w_lt_lk_WN2_lnd[511:0]}), .rx({w_lr_lk_WN2_src[511:0]}), .st({w_lr_lk_WN2_src[513:512]}), .pma_tx(lk_WN2_pma_tx), .pma_tck(lk_WN2_pma_tck), .pma_rx(lk_WN2_pma_rx), .pma_rck(lk_WN2_pma_rck), .pma_lock(lk_WN2_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_WN3 (.clk(ck_g2_5), .rst(rs_19_45_1), .tx({w_lt_lk_WN3_lnd[511:0]}), .rx({w_lr_lk_WN3_src[511:0]}), .st({w_lr_lk_WN3_src[513:512]}), .pma_tx(lk_WN3_pma_tx), .pma_tck(lk_WN3_pma_tck), .pma_rx(lk_WN3_pma_rx), .pma_rck(lk_WN3_pma_rck), .pma_lock(lk_WN3_pma_lock));
   dsdv_eng_rr u_eng (.ck(ck_g7_6), .rst_n(rs_50_61_2), .vi_s({w_tvN_s_6S_lnd[275:0]}), .vi_n({w_tvS_s_6N_lnd[275:0]}), .rco({w_erc_15_src[42:0]}), .pci({w_epc_15_lnd[267:0]}), .f_ks({w_eks_7N_lnd[52:0]}), .vo_s({w_tvS_eng_src[275:0]}), .vo_n({w_tvN_eng_src[275:0]}), .fault(f_eng));
   dsdv_eng_tap_w u_etap_00 (.ck(ck_g4_1), .rst_n(rsleaf_rs_29_4_ck_g4_1), .sid(4'd0), .rqi({w_hrrq_00_lnd[91:0]}), .rro({w_hrrd_00_src[543:0]}), .rqo({w_erq_00_src[91:0]}), .rri({w_erd_00_lnd[543:0]}), .rci({w_erc_00_lnd[42:0]}), .pco({w_epc_00_src[267:0]}), .fault(f_etap_00));
   dsdv_eng_tap u_etap_01 (.ck(ck_g4_1), .rst_n(rsleaf_rs_30_4_3_ck_g4_1), .sid(4'd1), .rqi({w_hrrq_01_lnd[91:0]}), .rro({w_hrrd_01_src[543:0]}), .rqo({w_erq_01_src[91:0]}), .rri({w_erd_01_lnd[543:0]}), .rco({w_erc_00_src[42:0]}), .pci({w_epc_00_lnd[267:0]}), .rci({w_erc_01_lnd[42:0]}), .pco({w_epc_01_src[267:0]}), .fault(f_etap_01));
@@ -85349,18 +85359,22 @@ module dv_die (lk_WS0_pma_tx, lk_WS0_pma_tck, lk_WS0_pma_rx, lk_WS0_pma_rck, lk_
   output wire lk_EN2_pma_tck;
   input wire [543:0] lk_EN2_pma_rx;
   input wire lk_EN2_pma_rck;
+  input wire lk_EN2_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_EN3_pma_tx;
   output wire lk_EN3_pma_tck;
   input wire [543:0] lk_EN3_pma_rx;
   input wire lk_EN3_pma_rck;
+  input wire lk_EN3_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_WS2_pma_tx;
   output wire lk_WS2_pma_tck;
   input wire [543:0] lk_WS2_pma_rx;
   input wire lk_WS2_pma_rck;
+  input wire lk_WS2_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   output wire [543:0] lk_WS3_pma_tx;
   output wire lk_WS3_pma_tck;
   input wire [543:0] lk_WS3_pma_rx;
   input wire lk_WS3_pma_rck;
+  input wire lk_WS3_pma_lock;  // S81.RESET: PMA lock authority (modelled PMA), OWNER 11-02 17:55
   wire [275:0] idxn_tp__bk_sel__s_7N_LP;
   wire [275:0] idxn_tp__s_7N_LP__bk_sel;
   wire [275:0] idxn_tp__bk_sel__s_7S_LP;
@@ -85375,8 +85389,8 @@ module dv_die (lk_WS0_pma_tx, lk_WS0_pma_tck, lk_WS0_pma_rx, lk_WS0_pma_rck, lk_
   wire [513:0] idxn_lk_WS2_rx;
   wire [511:0] idxn_lk_WS3_tx;
   wire [513:0] idxn_lk_WS3_rx;
-  ot_pdie_serdes_col u_lk_EN2 (.clk(ck_b_lk_EN0), .rst(rsleaf_rs_62_20_1_ck_b_lk_EN0), .tx(idxn_lk_EN2_tx), .rx(idxn_lk_EN2_rx[511:0]), .st(idxn_lk_EN2_rx[513:512]), .pma_tx(lk_EN2_pma_tx), .pma_tck(lk_EN2_pma_tck), .pma_rx(lk_EN2_pma_rx), .pma_rck(lk_EN2_pma_rck));
-  ot_pdie_serdes_col u_lk_EN3 (.clk(ck_b_lk_EN1), .rst(rsleaf_rs_62_30_3_ck_b_lk_EN1), .tx(idxn_lk_EN3_tx), .rx(idxn_lk_EN3_rx[511:0]), .st(idxn_lk_EN3_rx[513:512]), .pma_tx(lk_EN3_pma_tx), .pma_tck(lk_EN3_pma_tck), .pma_rx(lk_EN3_pma_rx), .pma_rck(lk_EN3_pma_rck));
-  ot_pdie_serdes_col u_lk_WS2 (.clk(ck_b_lk_WS0), .rst(rsleaf_rs_19_0_1_ck_b_lk_WS0), .tx(idxn_lk_WS2_tx), .rx(idxn_lk_WS2_rx[511:0]), .st(idxn_lk_WS2_rx[513:512]), .pma_tx(lk_WS2_pma_tx), .pma_tck(lk_WS2_pma_tck), .pma_rx(lk_WS2_pma_rx), .pma_rck(lk_WS2_pma_rck));
-  ot_pdie_serdes_col u_lk_WS3 (.clk(ck_b_lk_WS1), .rst(rsleaf_rs_21_0_ck_b_lk_WS1), .tx(idxn_lk_WS3_tx), .rx(idxn_lk_WS3_rx[511:0]), .st(idxn_lk_WS3_rx[513:512]), .pma_tx(lk_WS3_pma_tx), .pma_tck(lk_WS3_pma_tck), .pma_rx(lk_WS3_pma_rx), .pma_rck(lk_WS3_pma_rck));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_EN2 (.clk(ck_b_lk_EN0), .rst(rsleaf_rs_62_20_1_ck_b_lk_EN0), .tx(idxn_lk_EN2_tx), .rx(idxn_lk_EN2_rx[511:0]), .st(idxn_lk_EN2_rx[513:512]), .pma_tx(lk_EN2_pma_tx), .pma_tck(lk_EN2_pma_tck), .pma_rx(lk_EN2_pma_rx), .pma_rck(lk_EN2_pma_rck), .pma_lock(lk_EN2_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_EN3 (.clk(ck_b_lk_EN1), .rst(rsleaf_rs_62_30_3_ck_b_lk_EN1), .tx(idxn_lk_EN3_tx), .rx(idxn_lk_EN3_rx[511:0]), .st(idxn_lk_EN3_rx[513:512]), .pma_tx(lk_EN3_pma_tx), .pma_tck(lk_EN3_pma_tck), .pma_rx(lk_EN3_pma_rx), .pma_rck(lk_EN3_pma_rck), .pma_lock(lk_EN3_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_WS2 (.clk(ck_b_lk_WS0), .rst(rsleaf_rs_19_0_1_ck_b_lk_WS0), .tx(idxn_lk_WS2_tx), .rx(idxn_lk_WS2_rx[511:0]), .st(idxn_lk_WS2_rx[513:512]), .pma_tx(lk_WS2_pma_tx), .pma_tck(lk_WS2_pma_tck), .pma_rx(lk_WS2_pma_rx), .pma_rck(lk_WS2_pma_rck), .pma_lock(lk_WS2_pma_lock));
+  ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_lk_WS3 (.clk(ck_b_lk_WS1), .rst(rsleaf_rs_21_0_ck_b_lk_WS1), .tx(idxn_lk_WS3_tx), .rx(idxn_lk_WS3_rx[511:0]), .st(idxn_lk_WS3_rx[513:512]), .pma_tx(lk_WS3_pma_tx), .pma_tck(lk_WS3_pma_tck), .pma_rx(lk_WS3_pma_rx), .pma_rck(lk_WS3_pma_rck), .pma_lock(lk_WS3_pma_lock));
 endmodule

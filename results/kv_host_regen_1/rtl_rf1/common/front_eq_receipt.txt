@@ -1,0 +1,4 @@
+eq_nc.log:Proved 10185 previously unproven $equiv cells.
+eq_nc.log:Proved 444 previously unproven $equiv cells.
+inv_nc.log:Induction step proven: SUCCESS!
+equiv (eq_nc.ys): all cells proven except mem_rd (222), which follows from the copy-equality invariant proven by sat -tempinduct (inv_nc.ys; base = reset value, 1-step induction). keep_hierarchy stripped for the proof.

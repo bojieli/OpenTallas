@@ -1,0 +1,2 @@
+core	port_or_bus	plus_cycles	note
+*(kits generated with --face-reset-relay N)	active-low reset inputs (release)	N	face_shell ot_hbm_face_rst_relay: async assert, release N edges after the pin (N=2 proposed); data crossings unchanged; recorded as face_shell.json latency.reset_delay_cycles; census: 12 kits had >8 raw reset landing pins (tailx x2, subtree32 has its own, keybuf, fused_lane, pslice_c5, qcore_r13, pc_ctrl_h9b, q2_reduce, sfu_split3_lane, cxport, pgslice lanes8_11, q3_edge, q3_body)

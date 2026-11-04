@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.provenance.v1",
+ "verdict": "SIGNED",
+ "core": "ot_s81hd_lep_pair",
+ "run": "/srv/opentallas-scratch2/claude/die-head-46/lep_eco7_kit/run",
+ "src_commit": null,
+ "flow_tag": null,
+ "signoff": "/srv/opentallas-scratch2/claude/dh58/proto/wt/results/head_lep_pair_views_1101/source_signoff.json",
+ "resign_provenance": "/srv/opentallas-scratch2/claude/dh58/proto/wt/results/head_lep_pair_views_1101/source_signoff.json",
+ "lec_verdict": null,
+ "signoff_generated": "2026-10-31T00:17:31-07:00",
+ "kit": {
+  "pins_file": "core_pins/lep_pair_pins_777.json",
+  "pins_sha256": "a36807f643052ee658add3ffc91195045bff11ca0b32eaff23308cca41a3adb8",
+  "pins_canon_sha256": "910a913e54ba312650d6b484915240e29e0481fd99047b8b3ebc5f1dd9d58b43",
+  "outline_um": [
+   777.6,
+   492.48
+  ],
+  "signed_lef_sha256": "ad47cc153670a647ec7e4973df1fb7e2a0c64d327b78d4dedfaa4bf78e4b872e"
+ },
+ "plan_pins": {
+  "file": "core_pins/lep_pair_pins_777.json",
+  "sha256": "0e40649dca0fc3f1a6e55543e5d6679c327ffe1e7f81ba8ec846831ceea70351",
+  "canon_sha256": "c5f54d93cd231ba25b44c2a5c4bde741c0f6d55468df2312a0b27e235ce7c1e8",
+  "content_equal_signed_lef": false
+ },
+ "sha256": {
+  "ot_s81hd_lep_pair_tt.lib": "5f5b91374489aca6f50f7eea36f8d58bfbdc2fbb0e3f78a34c8247084fe6c30f",
+  "ot_s81hd_lep_pair_ff.lib": "fd3ed3e19f0248faef4d47193fcf088dc4f3175d42c0dae17109a026377a789e",
+  "ot_s81hd_lep_pair.lef": "ad47cc153670a647ec7e4973df1fb7e2a0c64d327b78d4dedfaa4bf78e4b872e"
+ }
+}

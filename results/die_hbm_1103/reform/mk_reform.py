@@ -19,6 +19,9 @@ import json, math, sys
 from pathlib import Path
 
 plan, out, tools, census = map(Path, sys.argv[1:5])
+# part 2: lane-supplied outlines (MEM channel_fit, pin-spread growth) applied as given, no search: [{module, outline_um,
+# reason, macros_unknown}] (macros_unknown: the macro set changes in the RE-FORM kit -> core_macros status UNKNOWN)
+OV = {o['module']: o for o in json.loads(Path(sys.argv[5]).read_text())} if len(sys.argv) > 5 else {}
 sys.path.insert(0, str(tools))
 sys.path.insert(0, str(tools.parent.parent / 'physical' / 'die_plan' / 'hbm'))
 import hub_repack as HR  # noqa: E402
@@ -72,6 +75,8 @@ def shifted(rows, dx, dy):
 decisions, spec, plan_rows = [], [], {}
 for c in C:
     m = c['module']; d = dict(module=m, old=c.get('old'), old_fill=c.get('old_fill'), old_aspect=c.get('old_aspect'))
+    if m in OV:
+        continue
     decisions.append(d)
     if m in EXCLUDE:
         d['decision'] = EXCLUDE[m]; continue
@@ -115,6 +120,21 @@ for c in C:
     plan_rows[m] = dict(old=[W, H], new=[W2, H2])
     spec.append(dict(module=m, outline_um=[W2, H2], est_fill=round(f2, 4), macro_fit=True,
                      source='DIE-HBM-61/PLAN d44v RE-FORM slot class'))
+
+
+for m, o in OV.items():
+    W, H = next(h['outline_um'] for t in P['partition_types'].values() for h in t.get('hard_cores') or [] if h['module'] == m)
+    W2, H2 = o['outline_um']
+    assert round((W - W2) / 8.64) % 2 == 0 and round((H - H2) / 8.64) % 2 == 0, (m, W, H, W2, H2)
+    decisions.append(dict(module=m, old=[W, H], decision='RESHAPE (part 2: %s)' % o['reason'], new=[W2, H2],
+                          new_aspect=round(max(W2, H2) / min(W2, H2), 2)))
+    plan_rows[m] = dict(old=[W, H], new=[W2, H2], macros_unknown=bool(o.get('macros_unknown')))
+    cc = next((c for c in C if c['module'] == m), {})
+    A = o.get('cell_area', cc.get('cell_area')); MA = o.get('macro_area', cc.get('macro_area') or 0)
+    ef = round(A / (W2 * H2 - MA), 4)
+    decisions[-1]['new_fill'] = ef
+    if [W2, H2] != [W, H]:
+        spec.append(dict(module=m, outline_um=[W2, H2], est_fill=ef, macro_fit=True, source='DIE-HBM-61/PLAN d44v p2: ' + o['reason']))
 
 
 def taps_of(PP):
@@ -164,6 +184,11 @@ for m, r in plan_rows.items():
         continue
     dx, dy = (r['old'][0] - r['new'][0]) / 2, (r['old'][1] - r['new'][1]) / 2
     e['outline_um'] = r['new']
+    if r.get('macros_unknown'):
+        e['status'] = 'UNKNOWN'
+        e['note'] = (e.get('note') or '') + ' | DIE-HBM-61 d44v p2: right-width macro set (DIE-HBM-61/MEM recipe_delta) -> positions from the RE-FORM kit'
+        e['macros_r2c2_old'] = e.pop('macros', [])
+        continue
     if e.get('macros'):
         e['macros'] = shifted(e['macros'], dx, dy)
         err, _ = CMF.channel_errors(e['macros'], r['new'])

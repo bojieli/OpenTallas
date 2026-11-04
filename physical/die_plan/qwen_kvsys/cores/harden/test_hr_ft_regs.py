@@ -57,7 +57,7 @@ def test_ft_register_fail_closed():
 def test_recipes_hr_core_guard_order():
     r = json.load(open(H / "recipes_kv.json"))
     assert "u_native__legacy_tk" in r["qkd_hr_core_guard"]["timed_face"]["buses"]
-    assert r["qkd_hr_core_guard"]["hard_children"].endswith("qkd_hr_core_guard_macro_plan.json")
+    assert r["qkd_hr_core_guard"]["hard_children"].endswith(("qkd_hr_core_guard_macro_plan.json", "qkd_hr_core_guard_macro_plan_rfkv1.json"))  # RF-KV1 fold 11-03
     o = r["qkd_hr_core_order"]
     assert "u_chain__chain_fault" not in o["timed_face"]["buses"]          # a feed-through is never a timed face
     assert o["ft_face_regs"]["regs"][0]["out"] == "u_chain__chain_fault"

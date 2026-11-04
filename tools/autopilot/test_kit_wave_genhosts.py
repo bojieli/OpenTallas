@@ -74,12 +74,52 @@ def test_restage_multi_and_pinned(tmp_path, monkeypatch):
     assert K.restage_waiters(FakeAP(), c3, st3, {}) == 0
 
 
-def test_restage_skips_no_infra_budget(tmp_path, monkeypatch):
+def test_restage_spent_budget_is_infra_move(tmp_path, monkeypatch):
+    # COORD 12:1x FLEET: a never-admitted waiter moves even with its infra budget used; the move is not charged
     monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
     c = cfg(gen_hosts=["intel1", "epyc4"], place_mem_gb=48); c["_otrun_status"] = {h: dict(v) for h, v in ST.items()}
     r = _rec(tmp_path, "intel1"); r["attempt"] = 9
     st = {"items": {"a": r}}
-    assert K.restage_waiters(FakeAP(), c, st, {}) == 0 and r["status"] == "RUNNING"
+    assert K.restage_waiters(FakeAP(), c, st, {}) == 1 and r["status"] == "RETRY-INFRA"
+    assert K.infra_relaunch_due(c, r)
+    a = tmp_path / "b"; a.mkdir()
+    r2 = _rec(a, "intel1"); r2["attempt"], r2["infra_base"] = 2, 1          # budget left: base +1, not charged
+    c["_otrun_status"] = {h: dict(v) for h, v in ST.items()}
+    assert K.restage_waiters(FakeAP(), c, {"items": {"b": r2}}, {}) == 1 and r2["infra_base"] == 2
+    assert (r2["attempt"] + 1) - r2["infra_base"] == 1                       # relaunch keeps infra_used 1
+
+
+STW = {"epyc4": {"admit": 100, "load": 83, "cores": 256, "run": 56, "wait_n": 131, "wait_gb": 1359},
+       "intel1": {"admit": 151, "load": 106, "cores": 112, "run": 45},      # busy, still taken (NO LOAD HOLD)
+       "localhost": {"admit": 183, "load": 117, "cores": 112, "run": 62, "wait_n": 93, "wait_gb": 797}}
+
+
+def test_score_counts_waiters():
+    assert K.host_score(STW["epyc4"]) == 100 - 1359
+    assert K.host_score(STW["intel1"]) > K.host_score(STW["localhost"]) > K.host_score(STW["epyc4"])
+    c = cfg(gen_hosts=["epyc4", "intel1", "intel2"]); c["_hub"] = "intel2"
+    c["_otrun_status"] = {h: dict(v) for h, v in STW.items()}
+    assert K.pick_gen_host(c, "s81") == "intel1"
+
+
+def test_restage_balances_waiters(tmp_path, monkeypatch):
+    monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
+    c = cfg(gen_host="epyc4", gen_hosts=["epyc4", "intel1", "intel2"], place_mem_gb=10)
+    c["_hub"], c["_otrun_status"], c["restage_max_per_tick"] = "intel2", {h: dict(v) for h, v in STW.items()}, 200
+    items = {}
+    for k in range(131):
+        d = tmp_path / f"w{k}"; d.mkdir()
+        (d / "spec.json").write_text(json.dumps({"gen_host": "epyc4"}))
+        (d / "place.live.log").write_text("ot-run: -> epyc4 (will queue)\n")
+        items[str(k)] = {"die": "s81", "status": "RUNNING", "unit": f"kw-{k}", "dir": str(d), "attempt": 4,
+                         "infra_base": 0, "item": f"t{k}"}
+    n = K.restage_waiters(FakeAP(), c, {"items": items}, {})
+    s = c["_otrun_status"]
+    assert n >= 60 and s["epyc4"]["wait_n"] <= 131 - 60 and s["intel1"]["wait_n"] > 0
+    # balanced: epyc4 ends within one move of the best other host (localhost's own waiters have no records here)
+    assert max(K.host_score(s[h]) for h in ("intel1", "localhost")) - K.host_score(s["epyc4"]) < 10
+    # the moved records relaunch; the never-moved remain RUNNING
+    assert sum(1 for r in items.values() if r["status"] == "RETRY-INFRA") == n
 
 
 def test_spec_place_spill_default_and_epyc4_host():
@@ -96,3 +136,66 @@ def test_place_async_argv_source():
     i = src.index("def place_async(K, prun, m, t):")
     body = src[i:i + 2500]
     assert '"--stage", K, "--stage", prun' in body and 'otrun(m, t, K, cmd, [G])' in body
+
+
+PS = """  100     1 bash -c export OT_SCRATCH=x; /usr/local/bin/ot-heavy --mem 10 --tag otrun-hub-1-11 -- bash -c cd /s/kit-wave/s81/items/a; echo
+  101   100 /bin/bash /usr/local/bin/ot-heavy --mem 10 --tag otrun-hub-1-11 -- bash -c cd /s/kit-wave/s81/items/a
+  102   101 flock 8
+  200     1 /bin/bash /usr/local/bin/ot-heavy --mem 48 --tag otrun-hub-2-22 -- bash /s/kit-wave/s81/items/b/run.sh
+  201   200 /usr/local/lib/ot-heavy/ot-heavy-exit oth-x bash /s/kit-wave/s81/items/b/run.sh
+  300     1 /bin/bash /usr/local/bin/ot-heavy --mem 48 --tag otrun-hub-3-33 -- bash /s/kit-wave/s81/items/c/run.sh
+  400     1 /bin/bash /usr/local/bin/ot-heavy --mem 48 --tag otrun-hub-4-44 -- bash /s/other-lane/x.sh
+  500     1 /bin/bash /usr/local/bin/ot-heavy --mem 48 --tag otrun-otherhub-5-55 -- bash /s/kit-wave/x.sh
+"""
+
+
+def test_orphan_waiters():
+    o = K.orphan_waiters(PS, "hub", live_pids={3})
+    # 1: dead client, waiting -> both tagged pids; 2: started; 3: client alive; 4: not kit-wave; 5: other hub
+    assert o == {"otrun-hub-1-11": [100, 101]}
+    assert K.orphan_waiters(PS, "hub", live_pids={1, 3}) == {}
+
+
+def test_spill_marked_host_is_no_gen_host():
+    """COORD 14:2x INFRA class 2: an ot-run SPILL marker on the die lane root of a gen host -> ot-run NODIR for every
+    attempt dir there; gen_hosts drops that host (the configured gen_host stays), other dies keep it"""
+    cfg = {"work_root": "/srv/opentallas-scratch2/claude/kit-wave",
+           "dies": {"s81_head": {"gen_host": "intel2", "gen_hosts": ["epyc4", "intel2"],
+                                 "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave"},
+                    "hbm": {"gen_host": "intel2", "gen_hosts": ["intel2", "epyc4"]}}}
+    assert K.gen_hosts(cfg, "s81_head") == ["epyc4", "intel2"]
+    cfg["_spill_marked"] = {"epyc4": {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"}}
+    assert K.gen_hosts(cfg, "s81_head") == ["intel2"]
+    assert K.gen_hosts(cfg, "hbm") == ["intel2", "epyc4"]
+    cfg["_spill_marked"] = {"intel2": {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"}}
+    assert K.gen_hosts(cfg, "s81_head") == ["epyc4", "intel2"]          # the configured gen_host never drops
+
+
+def test_spill_marked_probe():
+    calls = []
+
+    class AP:
+        @staticmethod
+        def sh(cmd, timeout=0):
+            calls.append(cmd)
+            return 0, "/srv/opentallas-scratch2/claude/codex-head-wave-1131\n", ""
+    cfg = {"_hub": "intel2", "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
+           "dies": {"s81_head": {"gen_host": "intel2", "gen_hosts": ["epyc4", "intel2"],
+                                 "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave"},
+                    "hbm": {"gen_host": "intel2", "gen_hosts": ["intel2", "epyc4"]}}}
+    got = K.spill_marked(AP, cfg)
+    assert got == {"epyc4": {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"}}
+    assert len(calls) == 1 and calls[0][-2] == "epyc4" and ".ot-run-spill-copy" in calls[0][-1]
+    assert K.lane_root("/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v") == "/srv/opentallas-scratch2/claude/kit-wave"
+
+
+def test_item_env():
+    """item_env: per-item gen environment (DIE-HEAD-58 hd_mesh_e OT_IO_HOLD=sender_min), validated"""
+    d = {"item_env": {"hd_mesh_e": {"OT_IO_HOLD": "sender_min"}}}
+    assert K.item_env(d, "hd_mesh_e") == {"OT_IO_HOLD": "sender_min"}
+    assert K.item_env(d, "hd_mesh") == {}
+    import pytest
+    with pytest.raises(ValueError):
+        K.item_env({"item_env": {"x": {"PATH": "/tmp"}}}, "x")
+    with pytest.raises(ValueError):
+        K.item_env({"item_env": {"x": {"OT_A": "a; rm -rf /"}}}, "x")

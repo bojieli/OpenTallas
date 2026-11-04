@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# DIE-HBM-61/SPLIT TKM tile RE-FORM chain proof (Verilator 5 hierarchical; fleet host).  run.sh REPO KIT_IDPIN_RTL KIT_TERM_RTL VECDIR OUT
+# DIE-HBM-61/SPLIT TKM tile RE-FORM chain proof (Verilator 5 hierarchical, or FLAT=1 flat -O0; fleet host).  run.sh REPO KIT_IDPIN_RTL KIT_TERM_RTL VECDIR OUT
 #   REPO = checkout with rtl/hbm_accel/{generic/collective/tkm,cores_split/reform_1103/tkm_tile}, rtl/lib,
 #          physical/asap7_memory_macros (or a dir holding ot_rst_relay.sv + the SRAM model as $LIBDIR)
 #   VECDIR = tkm_split_vectors.py output.  Positive (MUTN 0 MUTP 0) must PASS every case; MUTN 1, MUTP 1, MUTP 2 FAIL.
@@ -17,21 +17,32 @@ SRC=("$H/tb_tkm_tile_split.sv" "$RT/ot_hgi_coll_tkm_static_pdh.sv" "$RT/ot_hgi_c
      "$KT/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__fshell.sv" "$KT/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__wrap.sv"
      "$TK/ot_hgi_coll_tkm_buffer.sv" "$RELAY" "$SRAM")
 sha256sum "${SRC[@]:1}" > "$O/sources.sha256"
-CASES=${CASES:-full2048 part700}
+KMAX=${KMAX:-2048}; CASES=${CASES:-full2048 part700}   # KMAX 128 = 2-tile reduced chain (idpin + terminal; CASES="full128 part44", vectors --kmax 128)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/bin/verilator}
 build(){ # tag -G...
   local tag=$1; shift
   [ -x "$O/obj_$tag/Vtb" ] && return 0
-  { "$V" --cc --exe --main --timing --hierarchical -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN       --top-module tb -Mdir "$O/obj_$tag" "$@" "$H/tkm_split_hier.vlt" "${SRC[@]}" &&
+  if [ "${FLAT:-0}" = 1 ]; then # cheaper receipt: flat model, -O0 (hierarchical top verilation hit 292 GB on epyc4 11-03)
+    { "$V" --cc --exe --main --timing -O0 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
+        --top-module tb -GKMAX=$KMAX -Mdir "$O/obj_$tag" "$@" "${SRC[@]}" && make -C "$O/obj_$tag" -f Vtb.mk -j${JOBS:-8} OPT_FAST=-O0 OPT_SLOW=-O0 Vtb; } \
+      > "$O/build_$tag.log" 2>&1 || { echo "BUILD FAIL $tag"; tail -8 "$O/build_$tag.log"; return 2; }
+    return 0
+  fi
+  { "$V" --cc --exe --main --timing --hierarchical -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN       --top-module tb -GKMAX=$KMAX -Mdir "$O/obj_$tag" "$@" "$H/tkm_split_hier.vlt" "${SRC[@]}" &&
     make -C "$O/obj_$tag" -f Vtb_hier.mk -j1 hier_verilation && make -C "$O/obj_$tag" -f Vtb_hier.mk -j${JOBS:-8} hier_build; } > "$O/build_$tag.log" 2>&1     || { echo "BUILD FAIL $tag"; tail -8 "$O/build_$tag.log"; return 2; }
 }
 run(){ # tag case
   "$O/obj_$1/Vtb" +DIR="$VEC/$2" > "$O/${1}_$2.log" 2>&1
   echo "$1 $2: $(grep -m1 -E 'TKM_SPLIT (PASS|FAIL)' "$O/${1}_$2.log" || tail -1 "$O/${1}_$2.log")"
 }
-# each hierarchical build peaks at ~170 GB RSS (epyc2 earlyoom SIGTERMed pos/mutn 11-03 07:53/08:06): BUILD_PAR=2 builds two at a time
+# each hierarchical build peaks at ~170 GB RSS (epyc2 earlyoom SIGTERMed pos/mutn 11-03 07:53/08:06): BUILD_PAR=2 builds two at a time, BUILD_PAR=1 serial (epyc4 450G cap OOM with 2 at 11-03 16:38)
+if [ -n "${ONLY:-}" ]; then # one tag per ot-run job: pos | mutn | mutp1 | mutp2
+  case $ONLY in pos) build pos;; mutn) build mutn -GMUTN=1;; mutp1) build mutp1 -GMUTP=1;; mutp2) build mutp2 -GMUTP=2;; esac || exit 2
+  if [ "$ONLY" = pos ]; then for c in $CASES; do run pos $c; done; else run "$ONLY" "${CASES%% *}"; fi; exit 0
+fi
 if [ "${BUILD_PAR:-4}" -ge 4 ]; then build pos & build mutn -GMUTN=1 & build mutp1 -GMUTP=1 & build mutp2 -GMUTP=2 & wait
+elif [ "${BUILD_PAR:-4}" -le 1 ]; then build pos; build mutn -GMUTN=1; build mutp1 -GMUTP=1; build mutp2 -GMUTP=2
 else build pos & build mutn -GMUTN=1 & wait; build mutp1 -GMUTP=1 & build mutp2 -GMUTP=2 & wait; fi
 for c in $CASES; do run pos $c & done
-run mutn full2048 & run mutp1 full2048 & run mutp2 full2048 &
+C1=${CASES%% *}; run mutn $C1 & run mutp1 $C1 & run mutp2 $C1 &
 wait

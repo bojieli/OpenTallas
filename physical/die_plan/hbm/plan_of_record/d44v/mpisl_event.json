@@ -1,0 +1,24 @@
+{
+ "event": "DIE-HBM-61/PLAN d44v part 3: hcol_h1 +12 mesh-island ft pins (signed-DEF xy)",
+ "module": "ot_hbm_idx_score_hcol_h1",
+ "table_before": "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21.json",
+ "table_after": "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21__mpisl.json",
+ "pins_before": 1216,
+ "pins_after": 1228,
+ "pins_file_refs": 128,
+ "added": [
+  "mp_isl0_ck_i",
+  "mp_isl0_ck_o",
+  "mp_isl0_rst_i",
+  "mp_isl0_rst_o",
+  "mp_isl1_ck_i",
+  "mp_isl1_ck_o",
+  "mp_isl1_rst_i",
+  "mp_isl1_rst_o",
+  "mp_isl2_ck_i",
+  "mp_isl2_ck_o",
+  "mp_isl2_rst_i",
+  "mp_isl2_rst_o"
+ ],
+ "parent_sidecar": "cores/ot_hbm_idx_score_hcol_h1__d44v_mpisl_parent.json"
+}

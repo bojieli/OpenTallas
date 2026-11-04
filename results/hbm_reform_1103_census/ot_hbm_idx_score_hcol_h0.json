@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.prebuild_gate.v1",
+ "kit": "/home/ubuntu/scratch-root/claude/die-hbm-61-gate/kits/ot_hbm_idx_score_hcol_h0",
+ "design": "ot_hbm_idx_score_hcol_h0",
+ "flow_status": [
+  "GATE_FLOW",
+  "stop=ok",
+  "GATE_STAGE",
+  "place_resized",
+  "GATE_STA",
+  "rc=0"
+ ],
+ "cells": 184442,
+ "macros": 0,
+ "stdcell_area_um2": 22091.9,
+ "sta_stage": "place_resized",
+ "period": 833.0,
+ "groups": {
+  "r2r": {
+   "slack": 38.4,
+   "start": "u_fcore.u_core.g_rgn[0].g_h[0].qc[472]$_DFFE_PP_/QN",
+   "end": "u_fcore.u_core.g_rgn[0].g_h[0].g_blk[3].u_d.ra[34]$_DFF_P_/D"
+  },
+  "in2reg": {
+   "slack": 565.5,
+   "start": "rst_col",
+   "end": "u_fcore.u_core.g_rgn[1].g_legacy_reset.u_rr.rst_n$_DFF_PN0_/RESETN"
+  },
+  "reg2out": {
+   "slack": 583.4,
+   "start": "u_bout_prdy/q[1]$_DFF_P_/QN",
+   "end": "prdy[1]"
+  },
+  "in2out": null
+ },
+ "wns": 38.4,
+ "r2r_endpoints_stage_over_583": 2056,
+ "stage_ps": 794.6,
+ "stage_limit_ps": 583.1,
+ "setup_limit_ps": 83.3,
+ "checks": {
+  "timing": {
+   "ok": false,
+   "wns": 38.4,
+   "sta_stage": "place_resized"
+  },
+  "cells": {
+   "ok": false,
+   "cells": 184442
+  },
+  "memory": {
+   "ok": true,
+   "max_bits": 4096,
+   "largest": 0,
+   "over": []
+  },
+  "face": {
+   "ok": true,
+   "pin_unreg": 0,
+   "pins_registered": 1181,
+   "pins_to_macro": 0,
+   "unreg_head": [],
+   "unreg_buses": [],
+   "definition": "geom_rules.pin_reg_metrics (flop reachable through BUF/INV)",
+   "strict_face_guard": {
+    "fails": 0,
+    "fail_counts": {},
+    "fails_head": {}
+   }
+  },
+  "straps": {
+   "ok": true,
+   "strap_ports": [],
+   "leaked": []
+  },
+  "reset": {
+   "ok": true,
+   "resets": [
+    "rst_col"
+   ],
+   "landing_pins": {
+    "rst_col": 6
+   },
+   "unregistered": [],
+   "max": 8
+  }
+ },
+ "advisory": true,
+ "verdict": "FAIL",
+ "fails": [
+  "timing",
+  "cells"
+ ],
+ "needs_stage_cut": true
+}

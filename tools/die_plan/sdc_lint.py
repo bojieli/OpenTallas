@@ -364,7 +364,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, root_reset_hier=None):
+         pad_clock_cdc=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -379,6 +379,9 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     .tap_window_ps, COORD 11:24): every non-core clock port then carries source -early -W / -late 0, input max delays
     may sit W below their IO budget and output min delays W above the contract limit (the exact IO shift of the
     early tap); without it no -early / -late source latency is allowed.
+    tap_window_port_ps {clock port: D_p} / tap_window_in_ps (KW-FIX-4-SDC, gen_phys.tap_window_port_table): measured
+    per-port windows; each window port then carries -early -D_p (core taps -(own + D_p)), input max delays may sit
+    tap_window_in_ps (the largest D_p) below their budget and output min delays tap_window_ps (the smallest) above.
     forwarded_clock_outputs / landed_clock_inputs: the plan clock.landing_contract export (clock out) and receive
     (clock in) ports (see the 'landing' check above); without them the three landing forms stay forbidden.
     edge_clock_latency_ps {edge clock: (early, late) ps}: the plan clock.edge_clocks[].source_latency_ps TT arrival of a
@@ -464,6 +467,9 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     port_win = {}                     # clock port -> {"early"|"late": ps} (plan clock.tap_window)
     clk_win = {}                      # edge clock -> {"early"|"late": ps} (plan edge_clocks[].source_latency_ps)
     tw = float(tap_window_ps or 0.0)
+    tw_ports = {k: float(v) for k, v in (tap_window_port_ps or {}).items()}
+    tw_in = tw if tap_window_in_ps is None else float(tap_window_in_ps)
+    win_on = bool(tw) or bool(tw_ports)
     unc = {}                          # (kind, from, to) -> ps ; from/to None = global
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
     odly = {p: {} for p in ctx.allp}
@@ -837,24 +843,26 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             err.append(f"clocks: plan early core tap {p_} has no source latency")
     wports = [p_ for p_ in ctx.clock_ports if p_ not in want and p_ not in pad_in and p_ not in (ring_clock_ports or ())]
     for p_, d in port_win.items():
-        if not tw:
+        wp = tw_ports.get(p_, tw)
+        if not win_on:
             err.append(f"clocks: source -early/-late window on port {p_} without a plan clock.tap_window")
         elif p_ in want:      # DIE-S81-10: early core tap keeps its own latency as late, early end -(early + W)
-            if set(d) != {"early"} or abs(d["early"] - (want[p_] - tw)) > EPS:
-                err.append(f"clocks: core tap {p_} window {d} ps, plan early {want[p_] - tw:g} (own {want[p_]:g} - W "
-                           f"{tw:g}), no -late line")
+            if set(d) != {"early"} or abs(d["early"] - (want[p_] - wp)) > EPS:
+                err.append(f"clocks: core tap {p_} window {d} ps, plan early {want[p_] - wp:g} (own {want[p_]:g} - W "
+                           f"{wp:g}), no -late line")
         elif p_ not in wports:
             err.append(f"clocks: tap window on {p_}, which is not a window clock port")
-    if tw:
+    if win_on:
         for p_ in want:
             if p_ not in port_win:
                 err.append(f"clocks: plan early core tap {p_} has no clock.tap_window early line")
-    if tw:
+    if win_on:
         for p_ in wports:
             d = port_win.get(p_, {})
-            if abs(d.get("early", 1e9) + tw) > EPS or abs(d.get("late", 1e9)) > EPS:
+            wp = tw_ports.get(p_, tw)
+            if abs(d.get("early", 1e9) + wp) > EPS or abs(d.get("late", 1e9)) > EPS:
                 err.append(f"clocks: clock port {p_} window early {d.get('early')} / late {d.get('late')} ps, plan "
-                           f"clock.tap_window -{tw:g} / 0")
+                           f"clock.tap_window -{wp:g} / 0")
     ewant = {n: (float(a), float(b)) for n, (a, b) in (edge_clock_latency_ps or {}).items()}
     for n, d in clk_win.items():
         if n not in ewant:
@@ -889,7 +897,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                        "(sender hold check waived)")
     for p, fl in (io_floor_ps or {}).items():
         tab = idly if p in ctx.inputs else odly
-        if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - (tw if p in ctx.inputs else 0.0) - EPS:
+        if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - (tw_in if p in ctx.inputs else 0.0) - EPS:
             err.append(f"relaxation: {p} max delay {tab[p]['max'][1]:g} ps below its IO budget {fl:g} ps")
     full = {"setup": unc_setup_ps, "hold": unc_hold_ps}
     for kk, fv in full.items():
@@ -941,12 +949,13 @@ def kit_context(P, tn):
         n = gen_rtl.sv_id(b["name"])
         (ins if b["dir"] == "in" else outs).append(n)
         floor[n] = gen_phys.IO_BUDGET * per
+    spl = gen_phys.plain_seam_split(P)      # plain-lane input budget event (opt-in clock.plain_seam_split)
     for s in t.get("ft_slots", []):
         ni, no = gen_rtl.sv_id(s["name"] + "_i"), gen_rtl.sv_id(s["name"] + "_o")
         ins.append(ni)
         outs.append(no)
-        floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
-        floor[no] = gen_phys.ft_hop_in_share(P) * per
+        floor[ni] = spl["in"].get(tn, {}).get(ni, (1 - gen_phys.ft_hop_in_share(P)) * per)
+        floor[no] = spl["out"].get(tn, {}).get(no, gen_phys.ft_hop_in_share(P) * per)
     floor["arst_n"] = gen_phys.IO_BUDGET * per
     ids = [sp["name"] for sp in t.get("id_straps", []) + t.get("count_straps", [])]      # HEAD-BIND-4: partition ID straps (OWNER 10-25 B)
     for n in ids:
@@ -982,12 +991,24 @@ def kit_context(P, tn):
                 port_period_mult=edge,
                 **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}),
                 **({"pad_clock_cdc": pad_cdc} if pad_cdc else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
-                **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn) else {}),
+                **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn)
+                   and not gen_phys.tap_window_port_table(P, tn) else {}),
+                **_tap_window_port_ctx(P, tn),
                 **({"ring_clock_ports": sorted(gen_phys.ring_writer_clocks(P, tn))} if gen_phys.ring_writer_clocks(P, tn) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
                 **({"root_reset_hier": RT.bound_native_contract(P, tn)["entry_path"]}
                    if RT.bound_native_contract(P, tn) and gen_phys.root_async_reset(P, tn) else {}),
                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))
+
+
+def _tap_window_port_ctx(P, tn):
+    """KW-FIX-4-SDC measured per-port window (none without a per_port_ps table: byte-identical json): every window
+    port's D_p (fallback W_t filled in), the input shift (largest) and the output shift (smallest) as tap_window_ps."""
+    import gen_phys
+    if not gen_phys.tap_window_ps(P, tn) or not gen_phys.tap_window_port_table(P, tn):
+        return {}
+    return dict(tap_window_ps=gen_phys.tap_window_min_ps(P, tn), tap_window_in_ps=gen_phys.tap_window_max_ps(P, tn),
+                tap_window_port_ps={n: gen_phys.port_window_ps(P, tn, n) for n in gen_phys.window_port_names(P, tn)})
 
 
 def _edge_latency_ctx(P, tn):

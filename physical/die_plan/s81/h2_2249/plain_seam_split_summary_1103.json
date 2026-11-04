@@ -1,0 +1,279 @@
+{
+ "period_ps": 833.0,
+ "ft_hop_in_share": 0.16,
+ "cfg": {
+  "rx_in_max_ps": 480.0,
+  "rx_in_raw_max_ps": 580.0,
+  "note": "DIE-S81-51/PLAN 11-03 (COORD 10:49 plain-seam input-face class part 2): plain ft-lane receiver input max min(0.84 T, 580 raw, 480 + window) -> written <= 480 ps, face path keeps >= one hold pad (70 ps) setup after hold repair (t30 pilot basis); cut taken from registered ft_o senders whose every die port is a plain lane (output max T - receiver max); other senders keep 0.16 T (O + I <= T on every seam)"
+ },
+ "rx_type_ports": 657,
+ "tx_type_ports": 523,
+ "die_ports": 750,
+ "lanes": 253,
+ "tx_extrapolated_ports": 375,
+ "probe_max_um": 300,
+ "tx_last_seg_max_um": 378.4,
+ "max_rx_written_new": 480.0,
+ "min_rx_face_gain_ps": 119.7,
+ "per_class": {
+  "col_h10_r0_p1": {
+   "lanes": 31,
+   "ports": 31,
+   "sender_bus_unchanged": 6,
+   "sender_cut": 25,
+   "worst_tx_margin_new_ps": 325.1,
+   "worst_tx": {
+    "type": "slice_station__t25",
+    "bus": "ft0_o",
+    "last_seg_um": 360.7,
+    "margin_old_ps": 444.8
+   }
+  },
+  "col_h9_r0_p1": {
+   "lanes": 30,
+   "ports": 30,
+   "sender_bus_unchanged": 6,
+   "sender_cut": 24,
+   "worst_tx_margin_new_ps": 352.0,
+   "worst_tx": {
+    "type": "col_h9_r0_p2__t1__cl0045af7b",
+    "bus": "ft4_o",
+    "last_seg_um": 290.1,
+    "margin_old_ps": 471.7
+   }
+  },
+  "col_h9_r0_p2": {
+   "lanes": 12,
+   "ports": 12,
+   "sender_cut": 12,
+   "worst_tx_margin_new_ps": 368.0,
+   "worst_tx": {
+    "type": "col_h9_r0_p1__t1",
+    "bus": "ft0_o",
+    "last_seg_um": 250.6,
+    "margin_old_ps": 487.7
+   }
+  },
+  "col_h9_r0_p3": {
+   "lanes": 36,
+   "ports": 36,
+   "sender_bus_unchanged": 12,
+   "sender_cut": 24,
+   "worst_tx_margin_new_ps": 331.8,
+   "worst_tx": {
+    "type": "col_h10_r0_p4__t1",
+    "bus": "ft1_o",
+    "last_seg_um": 344.0,
+    "margin_old_ps": 451.6
+   }
+  },
+  "col_h9_r0_p5": {
+   "lanes": 12,
+   "ports": 12,
+   "sender_bus_unchanged": 12,
+   "worst_tx_margin_new_ps": null,
+   "worst_tx": null
+  },
+  "dsdv_slice_c1x_C": {
+   "lanes": 6,
+   "ports": 7,
+   "sender_cut": 6,
+   "sender_bus_unchanged": 1,
+   "worst_tx_margin_new_ps": 329.3,
+   "worst_tx": {
+    "type": "dsdv_slice_c1x_C__t8",
+    "bus": "ft5_o",
+    "last_seg_um": 350.3,
+    "margin_old_ps": 449.0
+   }
+  },
+  "dsdv_slice_iq_C": {
+   "lanes": 2,
+   "ports": 2,
+   "sender_cut": 2,
+   "worst_tx_margin_new_ps": 329.3,
+   "worst_tx": {
+    "type": "dsdv_slice_c3x_C__t1",
+    "bus": "ft1_o",
+    "last_seg_um": 350.3,
+    "margin_old_ps": 449.0
+   }
+  },
+  "dsdv_slice_kv512_C": {
+   "lanes": 2,
+   "ports": 2,
+   "sender_bus_unchanged": 1,
+   "sender_cut": 1,
+   "worst_tx_margin_new_ps": 346.7,
+   "worst_tx": {
+    "type": "ot_s81sl_kv_leaf__t3",
+    "bus": "ft0_o",
+    "last_seg_um": 307.2,
+    "margin_old_ps": 466.4
+   }
+  },
+  "dsdv_slice_lepe_mu_LP": {
+   "lanes": 1,
+   "ports": 1,
+   "sender_cut": 1,
+   "worst_tx_margin_new_ps": 330.2,
+   "worst_tx": {
+    "type": "slice_station__t51",
+    "bus": "ft4_o",
+    "last_seg_um": 348.0,
+    "margin_old_ps": 449.9
+   }
+  },
+  "dsdv_slice_lepe_nh_mus_C": {
+   "lanes": 2,
+   "ports": 2,
+   "sender_cut": 2,
+   "worst_tx_margin_new_ps": 328.0,
+   "worst_tx": {
+    "type": "ot_s81sl_leaf__t67",
+    "bus": "ft6_o",
+    "last_seg_um": 353.6,
+    "margin_old_ps": 447.7
+   }
+  },
+  "dsdv_slice_lepe_nh_mus_LP": {
+   "lanes": 1,
+   "ports": 1,
+   "sender_cut": 1,
+   "worst_tx_margin_new_ps": 336.8,
+   "worst_tx": {
+    "type": "slice_station__t29__cl2e5c855a",
+    "bus": "ft3_o",
+    "last_seg_um": 331.8,
+    "margin_old_ps": 456.5
+   }
+  },
+  "dsdv_slice_lepw_mus_C": {
+   "lanes": 1,
+   "ports": 1,
+   "sender_cut": 1,
+   "worst_tx_margin_new_ps": 354.4,
+   "worst_tx": {
+    "type": "ot_s81sl_leaf__t3",
+    "bus": "ft5_o",
+    "last_seg_um": 288.2,
+    "margin_old_ps": 474.1
+   }
+  },
+  "dsdv_slice_lepw_mus_LP": {
+   "lanes": 2,
+   "ports": 2,
+   "sender_cut": 2,
+   "worst_tx_margin_new_ps": 330.4,
+   "worst_tx": {
+    "type": "slice_station__t6__cl54a9ceeb",
+    "bus": "ft2_o",
+    "last_seg_um": 347.4,
+    "margin_old_ps": 450.2
+   }
+  },
+  "eng": {
+   "lanes": 1,
+   "ports": 1,
+   "sender_bus_unchanged": 1,
+   "worst_tx_margin_new_ps": null,
+   "worst_tx": null
+  },
+  "iqf": {
+   "lanes": 4,
+   "ports": 4,
+   "sender_cut": 3,
+   "sender_bus_unchanged": 1,
+   "worst_tx_margin_new_ps": 329.6,
+   "worst_tx": {
+    "type": "serdes__t12",
+    "bus": "ft5_o",
+    "last_seg_um": 349.5,
+    "margin_old_ps": 449.3
+   }
+  },
+  "ot_s81sl_kv_leaf": {
+   "lanes": 18,
+   "ports": 25,
+   "sender_cut": 19,
+   "sender_bus_unchanged": 6,
+   "worst_tx_margin_new_ps": 331.4,
+   "worst_tx": {
+    "type": "ot_s81sl_leaf__t26",
+    "bus": "ft4_o",
+    "last_seg_um": 344.9,
+    "margin_old_ps": 451.2
+   }
+  },
+  "ot_s81sl_leaf": {
+   "lanes": 201,
+   "ports": 345,
+   "sender_cut": 261,
+   "sender_bus_unchanged": 84,
+   "worst_tx_margin_new_ps": 319.5,
+   "worst_tx": {
+    "type": "ot_s81sl_kv_leaf__t1",
+    "bus": "ft2_o",
+    "last_seg_um": 374.4,
+    "margin_old_ps": 439.2
+   }
+  },
+  "seqhost": {
+   "lanes": 2,
+   "ports": 2,
+   "sender_cut": 2,
+   "worst_tx_margin_new_ps": 382.0,
+   "worst_tx": {
+    "type": "ot_s81sl_leaf__t31",
+    "bus": "ft3_o",
+    "last_seg_um": 210.5,
+    "margin_old_ps": 501.7
+   }
+  },
+  "serdes": {
+   "lanes": 13,
+   "ports": 15,
+   "sender_cut": 14,
+   "sender_bus_unchanged": 1,
+   "worst_tx_margin_new_ps": 322.1,
+   "worst_tx": {
+    "type": "iqf__t1",
+    "bus": "ft8_o",
+    "last_seg_um": 368.0,
+    "margin_old_ps": 441.8
+   }
+  },
+  "slice_station": {
+   "lanes": 107,
+   "ports": 207,
+   "sender_cut": 179,
+   "sender_bus_unchanged": 28,
+   "worst_tx_margin_new_ps": 317.9,
+   "worst_tx": {
+    "type": "slice_station__t38",
+    "bus": "ft5_o",
+    "last_seg_um": 378.4,
+    "margin_old_ps": 437.6
+   }
+  },
+  "svc_hi_dsdv_svc_rs": {
+   "lanes": 11,
+   "ports": 11,
+   "sender_cut": 11,
+   "worst_tx_margin_new_ps": 346.9,
+   "worst_tx": {
+    "type": "slice_station__t8",
+    "bus": "ft2_o",
+    "last_seg_um": 306.7,
+    "margin_old_ps": 466.6
+   }
+  },
+  "svc_lo_dsdv_svc_rs": {
+   "lanes": 1,
+   "ports": 1,
+   "sender_bus_unchanged": 1,
+   "worst_tx_margin_new_ps": null,
+   "worst_tx": null
+  }
+ }
+}

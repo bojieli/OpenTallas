@@ -1,0 +1,1001 @@
+set cland_groups {
+  {u_cland_cws2_i {45.36000 1200.96000 134.54400 1252.80000} ring:cws2_i}
+  {u_cland_x_ctl_i {94.46400 1259.28000 121.63200 1321.92000} ring:x_ctl_i}
+  {u_cland_x_ctl_su_c_i {144.32000 1272.24000 240.16000 1319.76000} ring:x_ctl_su_c_i}
+  {u_cland_x_ctl_su_c_p1_i {241.12000 1272.24000 336.56000 1319.76000} ring:x_ctl_su_c_p1_i}
+  {u_cland_x_ctl_su_c_p2_i {337.52000 1270.08000 431.64800 1319.76000} ring:x_ctl_su_c_p2_i}
+  {u_cland_x_fw_ctl_p1_i {19.44000 112.26400 64.80000 212.20000} ring:x_fw_ctl_p1_i}
+  {u_cland_x_fw_ctl_p2_i {17.28000 213.16000 62.64000 314.84000} ring:x_fw_ctl_p2_i}
+  {u_cland_x_fw_fe_i {92.88000 422.16800 138.24000 523.11200} ring:x_fw_fe_i}
+  {u_cland_x_fw_fe_p1_i {49.68000 629.16000 95.04000 730.84000} ring:x_fw_fe_p1_i}
+  {u_cland_x_fw_fe_p2_i {19.44000 731.80000 64.80000 835.17600} ring:x_fw_fe_p2_i}
+  {u_cland_x_fw_i {17.28000 846.00800 99.36000 854.92000} ring:x_fw_i}
+  {u_cland_x_fw_st_b_i {19.44000 905.86400 73.44000 954.84000} ring:x_fw_st_b_i}
+  {u_cland_x_st_a_fe_i {17.28000 855.88000 71.28000 904.90400} ring:x_st_a_fe_i}
+  {u_cland_x_stm_fe_i {19.44000 955.80000 64.80000 1059.19200} ring:x_stm_fe_i}
+  {u_cland_x_stm_fe_p1_i {136.08000 1164.44000 181.44000 1266.55200} ring:x_stm_fe_p1_i}
+  {u_cland_x_su_c_i {380.76800 17.28000 390.44800 92.88000} ring:x_su_c_i}
+  {u_cland_x_su_l1_ctl_i {391.40800 95.04000 470.68800 146.88000} ring:x_su_l1_ctl_i}
+  {u_cland_x_su_l1_i {467.75200 146.88000 476.39200 231.12000} ring:x_su_l1_i}
+  {u_cland_monitor_0 {45.36000 502.20000 92.88000 510.84000} ring:monitor_0}
+  {u_cland_collect_rst_n_t1 {441.00800 15.12000 445.32800 19.44000} collector:rst_n_t1}
+  {u_cland_collect_rst_n_t10 {15.12000 332.64000 19.44000 336.96000} collector:rst_n_t10}
+  {u_cland_collect_rst_n_t2 {406.80000 37.68000 411.12000 42.00000} collector:rst_n_t2}
+  {u_cland_collect_rst_n_t20 {15.12000 470.19200 19.44000 474.51200} collector:rst_n_t20}
+  {u_cland_collect_rst_n_t24 {15.12000 667.44000 19.44000 671.76000} collector:rst_n_t24}
+  {u_cland_collect_rst_n_t31 {15.12000 742.92000 19.44000 747.24000} collector:rst_n_t31}
+  {u_cland_collect_rst_n_t34 {15.12000 822.12800 19.44000 826.44800} collector:rst_n_t34}
+  {u_cland_collect_rst_n_t37 {15.12000 910.72800 19.44000 915.04800} collector:rst_n_t37}
+  {u_cland_collect_rst_n_t43 {15.12000 1002.24000 19.44000 1006.56000} collector:rst_n_t43}
+  {u_cland_collect_rst_n_t51 {15.12000 1213.12800 19.44000 1217.44800} collector:rst_n_t51}
+  {u_cland_collect_rst_n_t53 {57.62400 1319.76000 61.94400 1324.08000} collector:rst_n_t53}
+  {u_cland_collect_rst_n_t54 {168.94400 1319.76000 173.26400 1324.08000} collector:rst_n_t54}
+  {u_cland_collect_rst_n_t55 {275.11200 1319.76000 279.43200 1324.08000} collector:rst_n_t55}
+  {u_cland_collect_rst_n_t56 {378.73600 1319.76000 383.05600 1324.08000} collector:rst_n_t56}
+  {u_cland_collect_rst_n_t57 {6.00000 500.01600 10.32000 504.33600} collector:rst_n_t57}
+  {u_cland_collect_rst_n_t6 {15.12000 183.38400 19.44000 187.70400} collector:rst_n_t6}
+  {u_cland_collect_rst_rl_10 {406.80000 667.44000 411.12000 671.76000} collector:rst_rl_10}
+  {u_cland_collect_rst_rl_100 {406.80000 989.28000 411.12000 993.60000} collector:rst_rl_100}
+  {u_cland_collect_rst_rl_101 {406.80000 989.28000 411.12000 993.60000} collector:rst_rl_101}
+  {u_cland_collect_rst_rl_104 {65.92800 1002.24000 70.24800 1006.56000} collector:rst_rl_104}
+  {u_cland_collect_rst_rl_107 {378.73600 1319.76000 383.05600 1324.08000} collector:rst_rl_107}
+  {u_cland_collect_rst_rl_118 {302.75200 834.86400 307.07200 839.18400} collector:rst_rl_118}
+  {u_cland_collect_rst_rl_119 {302.75200 834.86400 307.07200 839.18400} collector:rst_rl_119}
+  {u_cland_collect_rst_rl_120 {302.75200 834.86400 307.07200 839.18400} collector:rst_rl_120}
+  {u_cland_collect_rst_rl_122 {271.18800 834.86400 275.50800 839.18400} collector:rst_rl_122}
+  {u_cland_collect_rst_rl_123 {271.18800 834.86400 275.50800 839.18400} collector:rst_rl_123}
+  {u_cland_collect_rst_rl_124 {271.18800 834.86400 275.50800 839.18400} collector:rst_rl_124}
+  {u_cland_collect_rst_rl_126 {263.14800 834.86400 267.46800 839.18400} collector:rst_rl_126}
+  {u_cland_collect_rst_rl_127 {263.14800 834.86400 267.46800 839.18400} collector:rst_rl_127}
+  {u_cland_collect_rst_rl_128 {263.14800 834.86400 267.46800 839.18400} collector:rst_rl_128}
+  {u_cland_collect_rst_rl_130 {225.43200 834.86400 229.75200 839.18400} collector:rst_rl_130}
+  {u_cland_collect_rst_rl_131 {225.43200 834.86400 229.75200 839.18400} collector:rst_rl_131}
+  {u_cland_collect_rst_rl_132 {225.43200 834.86400 229.75200 839.18400} collector:rst_rl_132}
+  {u_cland_collect_rst_rl_134 {225.40800 834.86400 229.72800 839.18400} collector:rst_rl_134}
+  {u_cland_collect_rst_rl_135 {225.40800 834.86400 229.72800 839.18400} collector:rst_rl_135}
+  {u_cland_collect_rst_rl_136 {225.40800 834.86400 229.72800 839.18400} collector:rst_rl_136}
+  {u_cland_collect_rst_rl_15 {43.56000 667.44000 47.88000 671.76000} collector:rst_rl_15}
+  {u_cland_collect_rst_rl_17 {508.17600 667.44000 512.49600 671.76000} collector:rst_rl_17}
+  {u_cland_collect_rst_rl_21 {467.31200 344.01600 471.63200 348.33600} collector:rst_rl_21}
+  {u_cland_collect_rst_rl_24 {441.00800 15.12000 445.32800 19.44000} collector:rst_rl_24}
+  {u_cland_collect_rst_rl_26 {406.80000 37.68000 411.12000 42.00000} collector:rst_rl_26}
+  {u_cland_collect_rst_rl_30 {202.32000 264.36000 206.64000 268.68000} collector:rst_rl_30}
+  {u_cland_collect_rst_rl_33 {134.57600 667.44000 138.89600 671.76000} collector:rst_rl_33}
+  {u_cland_collect_rst_rl_34 {134.57600 667.44000 138.89600 671.76000} collector:rst_rl_34}
+  {u_cland_collect_rst_rl_44 {406.80000 777.92800 411.12000 782.24800} collector:rst_rl_44}
+  {u_cland_collect_rst_rl_64 {202.32000 667.44000 206.64000 671.76000} collector:rst_rl_64}
+  {u_cland_collect_rst_rl_65 {202.32000 667.44000 206.64000 671.76000} collector:rst_rl_65}
+  {u_cland_collect_rst_rl_74 {406.80000 897.97600 411.12000 902.29600} collector:rst_rl_74}
+  {u_cland_collect_rst_rl_75 {406.80000 897.97600 411.12000 902.29600} collector:rst_rl_75}
+  {u_cland_collect_rst_rl_81 {202.32000 989.61600 206.64000 993.93600} collector:rst_rl_81}
+  {u_cland_collect_rst_rl_84 {162.12000 989.71200 166.44000 994.03200} collector:rst_rl_84}
+  {u_cland_collect_rst_rl_89 {562.96800 968.67600 567.28800 972.99600} collector:rst_rl_89}
+  {u_cland_collect_rst_rl_9 {406.80000 667.44000 411.12000 671.76000} collector:rst_rl_9}
+  {u_cland_collect_rst_rl_90 {562.96800 968.67600 567.28800 972.99600} collector:rst_rl_90}
+  {u_cland_collect_rst_rl_93 {305.07200 989.36400 309.39200 993.68400} collector:rst_rl_93}
+  {u_cland_collect_rst_root_n {603.12000 834.86400 607.44000 839.18400} collector:rst_root_n}
+}
+set cland_optional_groups {
+  {u_cland_rst_cws2_i {57.62400 1319.76000 61.94400 1324.08000} raw-copy-optional}
+  {u_cland_rst_x_ctl_i {57.62400 1319.76000 61.94400 1324.08000} raw-copy-optional}
+  {u_cland_rst_x_ctl_su_c_i {168.94400 1319.76000 173.26400 1324.08000} raw-copy-optional}
+  {u_cland_rst_x_ctl_su_c_p1_i {275.11200 1319.76000 279.43200 1324.08000} raw-copy-optional}
+  {u_cland_rst_x_ctl_su_c_p2_i {378.73600 1319.76000 383.05600 1324.08000} raw-copy-optional}
+  {u_cland_rst_x_fw_ctl_p1_i {15.12000 183.38400 19.44000 187.70400} raw-copy-optional}
+  {u_cland_rst_x_fw_ctl_p2_i {15.12000 332.64000 19.44000 336.96000} raw-copy-optional}
+  {u_cland_rst_x_fw_fe_i {15.12000 470.19200 19.44000 474.51200} raw-copy-optional}
+  {u_cland_rst_x_fw_fe_p1_i {15.12000 667.44000 19.44000 671.76000} raw-copy-optional}
+  {u_cland_rst_x_fw_fe_p2_i {15.12000 742.92000 19.44000 747.24000} raw-copy-optional}
+  {u_cland_rst_x_fw_i {15.12000 822.12800 19.44000 826.44800} raw-copy-optional}
+  {u_cland_rst_x_fw_st_b_i {15.12000 910.72800 19.44000 915.04800} raw-copy-optional}
+  {u_cland_rst_x_st_a_fe_i {15.12000 910.72800 19.44000 915.04800} raw-copy-optional}
+  {u_cland_rst_x_stm_fe_i {15.12000 1002.24000 19.44000 1006.56000} raw-copy-optional}
+  {u_cland_rst_x_stm_fe_p1_i {15.12000 1213.12800 19.44000 1217.44800} raw-copy-optional}
+  {u_cland_rst_x_su_c_i {406.80000 37.68000 411.12000 42.00000} raw-copy-optional}
+  {u_cland_rst_x_su_l1_ctl_i {441.00800 15.12000 445.32800 19.44000} raw-copy-optional}
+  {u_cland_rst_x_su_l1_i {441.00800 15.12000 445.32800 19.44000} raw-copy-optional}
+  {u_cland_reset_rst_n_t1 {441.00800 15.12000 445.32800 19.44000} raw-copy-optional}
+  {u_cland_reset_rst_n_t10 {15.12000 332.64000 19.44000 336.96000} raw-copy-optional}
+  {u_cland_reset_rst_n_t2 {406.80000 37.68000 411.12000 42.00000} raw-copy-optional}
+  {u_cland_reset_rst_n_t20 {15.12000 470.19200 19.44000 474.51200} raw-copy-optional}
+  {u_cland_reset_rst_n_t24 {15.12000 667.44000 19.44000 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_n_t31 {15.12000 742.92000 19.44000 747.24000} raw-copy-optional}
+  {u_cland_reset_rst_n_t34 {15.12000 822.12800 19.44000 826.44800} raw-copy-optional}
+  {u_cland_reset_rst_n_t37 {15.12000 910.72800 19.44000 915.04800} raw-copy-optional}
+  {u_cland_reset_rst_n_t43 {15.12000 1002.24000 19.44000 1006.56000} raw-copy-optional}
+  {u_cland_reset_rst_n_t51 {15.12000 1213.12800 19.44000 1217.44800} raw-copy-optional}
+  {u_cland_reset_rst_n_t53 {57.62400 1319.76000 61.94400 1324.08000} raw-copy-optional}
+  {u_cland_reset_rst_n_t54 {168.94400 1319.76000 173.26400 1324.08000} raw-copy-optional}
+  {u_cland_reset_rst_n_t55 {275.11200 1319.76000 279.43200 1324.08000} raw-copy-optional}
+  {u_cland_reset_rst_n_t56 {378.73600 1319.76000 383.05600 1324.08000} raw-copy-optional}
+  {u_cland_reset_rst_n_t57 {6.00000 500.01600 10.32000 504.33600} raw-copy-optional}
+  {u_cland_reset_rst_n_t6 {15.12000 183.38400 19.44000 187.70400} raw-copy-optional}
+  {u_cland_reset_rst_rl_10 {406.80000 667.44000 411.12000 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_rl_100 {406.80000 989.28000 411.12000 993.60000} raw-copy-optional}
+  {u_cland_reset_rst_rl_101 {406.80000 989.28000 411.12000 993.60000} raw-copy-optional}
+  {u_cland_reset_rst_rl_104 {65.92800 1002.24000 70.24800 1006.56000} raw-copy-optional}
+  {u_cland_reset_rst_rl_107 {378.73600 1319.76000 383.05600 1324.08000} raw-copy-optional}
+  {u_cland_reset_rst_rl_118 {302.75200 834.86400 307.07200 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_119 {302.75200 834.86400 307.07200 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_120 {302.75200 834.86400 307.07200 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_122 {271.18800 834.86400 275.50800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_123 {271.18800 834.86400 275.50800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_124 {271.18800 834.86400 275.50800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_126 {263.14800 834.86400 267.46800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_127 {263.14800 834.86400 267.46800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_128 {263.14800 834.86400 267.46800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_130 {225.43200 834.86400 229.75200 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_131 {225.43200 834.86400 229.75200 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_132 {225.43200 834.86400 229.75200 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_134 {225.40800 834.86400 229.72800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_135 {225.40800 834.86400 229.72800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_136 {225.40800 834.86400 229.72800 839.18400} raw-copy-optional}
+  {u_cland_reset_rst_rl_15 {43.56000 667.44000 47.88000 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_rl_17 {508.17600 667.44000 512.49600 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_rl_21 {467.31200 344.01600 471.63200 348.33600} raw-copy-optional}
+  {u_cland_reset_rst_rl_24 {441.00800 15.12000 445.32800 19.44000} raw-copy-optional}
+  {u_cland_reset_rst_rl_26 {406.80000 37.68000 411.12000 42.00000} raw-copy-optional}
+  {u_cland_reset_rst_rl_30 {202.32000 264.36000 206.64000 268.68000} raw-copy-optional}
+  {u_cland_reset_rst_rl_33 {134.57600 667.44000 138.89600 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_rl_34 {134.57600 667.44000 138.89600 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_rl_44 {406.80000 777.92800 411.12000 782.24800} raw-copy-optional}
+  {u_cland_reset_rst_rl_64 {202.32000 667.44000 206.64000 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_rl_65 {202.32000 667.44000 206.64000 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_rl_74 {406.80000 897.97600 411.12000 902.29600} raw-copy-optional}
+  {u_cland_reset_rst_rl_75 {406.80000 897.97600 411.12000 902.29600} raw-copy-optional}
+  {u_cland_reset_rst_rl_81 {202.32000 989.61600 206.64000 993.93600} raw-copy-optional}
+  {u_cland_reset_rst_rl_84 {162.12000 989.71200 166.44000 994.03200} raw-copy-optional}
+  {u_cland_reset_rst_rl_89 {562.96800 968.67600 567.28800 972.99600} raw-copy-optional}
+  {u_cland_reset_rst_rl_9 {406.80000 667.44000 411.12000 671.76000} raw-copy-optional}
+  {u_cland_reset_rst_rl_90 {562.96800 968.67600 567.28800 972.99600} raw-copy-optional}
+  {u_cland_reset_rst_rl_93 {305.07200 989.36400 309.39200 993.68400} raw-copy-optional}
+}
+set cland_status {
+  {landing_ready_cws2_i 48.91200 1339.20000}
+  {landing_fault_cws2_i 48.91200 1339.20000}
+  {landing_ready_x_ctl_i 108.04800 1339.20000}
+  {landing_fault_x_ctl_i 108.04800 1339.20000}
+  {landing_ready_x_ctl_su_c_i 192.24000 1339.20000}
+  {landing_fault_x_ctl_su_c_i 192.24000 1339.20000}
+  {landing_ready_x_ctl_su_c_p1_i 288.84000 1339.20000}
+  {landing_fault_x_ctl_su_c_p1_i 288.84000 1339.20000}
+  {landing_ready_x_ctl_su_c_p2_i 384.58400 1339.20000}
+  {landing_fault_x_ctl_su_c_p2_i 384.58400 1339.20000}
+  {landing_ready_x_fw_ctl_p1_i 0.00000 162.23200}
+  {landing_fault_x_fw_ctl_p1_i 0.00000 162.23200}
+  {landing_ready_x_fw_ctl_p2_i 0.00000 264.00000}
+  {landing_fault_x_fw_ctl_p2_i 0.00000 264.00000}
+  {landing_ready_x_fw_fe_i 0.00000 472.64000}
+  {landing_fault_x_fw_fe_i 0.00000 472.64000}
+  {landing_ready_x_fw_fe_p1_i 0.00000 680.00000}
+  {landing_fault_x_fw_fe_p1_i 0.00000 680.00000}
+  {landing_ready_x_fw_fe_p2_i 0.00000 783.48800}
+  {landing_fault_x_fw_fe_p2_i 0.00000 783.48800}
+  {landing_ready_x_fw_i 0.00000 850.46400}
+  {landing_fault_x_fw_i 0.00000 850.46400}
+  {landing_ready_x_fw_st_b_i 0.00000 930.35200}
+  {landing_fault_x_fw_st_b_i 0.00000 930.35200}
+  {landing_ready_x_st_a_fe_i 0.00000 880.39200}
+  {landing_fault_x_st_a_fe_i 0.00000 880.39200}
+  {landing_ready_x_stm_fe_i 0.00000 1007.49600}
+  {landing_fault_x_stm_fe_i 0.00000 1007.49600}
+  {landing_ready_x_stm_fe_p1_i 0.00000 1215.49600}
+  {landing_fault_x_stm_fe_p1_i 0.00000 1215.49600}
+  {landing_ready_x_su_c_i 385.60800 0.00000}
+  {landing_fault_x_su_c_i 385.60800 0.00000}
+  {landing_ready_x_su_l1_ctl_i 431.04800 0.00000}
+  {landing_fault_x_su_l1_ctl_i 431.04800 0.00000}
+  {landing_ready_x_su_l1_i 472.07200 0.00000}
+  {landing_fault_x_su_l1_i 472.07200 0.00000}
+  {cland_dn_trained_0 8.16000 502.17600}
+  {cland_dn_guard_0 8.16000 502.17600}
+}
+# Generated caller provides cland_groups: {prefix rect tag}, and
+# cland_status: {net x y}. Called after existing face/reset/FT FIRM sites.
+if {![info exists ff_blk] || ![info exists ff_dbu]} { error "OT_CLAND missing face placement context" }
+set cland_occ {}; set cland_done {}; set cland_n 0
+proc cland_ours {name} { return [regexp {(^|[/.])u_cland_} $name] }
+proc cland_occupy {x y w h} {
+ global cland_occ ff_y0 ff_rh
+ set r0 [expr {int(floor(double($y-$ff_y0)/$ff_rh))}]
+ set r1 [expr {int(ceil(double($y+$h-$ff_y0)/$ff_rh))}]
+ # Store the occupied union, rather than every historical reservation.  Dense
+ # row packing creates adjacent ranges; keeping each one made first-fit scans
+ # quadratic.  Merging only overlapping/touching ranges preserves every gap and
+ # the final first-fit location (a scan cannot stop inside an occupied chain).
+ for {set r $r0} {$r<$r1} {incr r} {
+  set ranges {}
+  if {[dict exists $cland_occ $r]} {set ranges [dict get $cland_occ $r]}
+  lappend ranges [list $x [expr {$x+$w}]]
+  set merged {}
+  foreach range [lsort -real -index 0 $ranges] {
+   lassign $range l u
+   if {![llength $merged] || $l>[lindex $merged end 1]} {
+    lappend merged [list $l $u]
+   } else {
+    lassign [lindex $merged end] ml mu
+    lset merged end [list $ml [expr {max($mu,$u)}]]
+   }
+  }
+  dict set cland_occ $r $merged
+ }
+}
+foreach i [$ff_blk getInsts] {
+ if {[cland_ours [$i getName]]} continue
+ if {[$i getPlacementStatus] ni {FIRM LOCKED} && ![[$i getMaster] isBlock]} continue
+ set b [$i getBBox]
+ cland_occupy [$b xMin] [$b yMin] [expr {[$b xMax]-[$b xMin]}] [expr {[$b yMax]-[$b yMin]}]
+}
+# Opt-in (gen_phys reserved_sites_um): die clock-tree reservations are occupied space for ring/status cells.
+if {[info exists ::cland_avoid_rects]} {
+ foreach r $::cland_avoid_rects { lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}] }
+}
+# DIE-KV-42 10-29 (KV-022 SD try3 3_5 DPL-0033): a ring band that overlaps a HARD placement blockage (pdn.tcl PHY
+# supply region, die clock islands, reserved clock sites) packs ring cells where detailed placement cannot keep them;
+# fail closed here, before any cell is placed. Bands clear of every hard blockage are unchanged. The die clock-tree
+# reserved sites (::cland_avoid_rects, occupied above) stay legal inside a band: the ring is packed around them.
+set cland_hard {}
+set cland_avoid_db {}
+if {[info exists ::cland_avoid_rects]} { foreach r $::cland_avoid_rects { lappend cland_avoid_db [lmap v $r {expr {int($v)}}] } }
+foreach bk [$ff_blk getBlockages] {
+ if {[$bk isSoft]} continue
+ set bb [$bk getBBox]; set hr [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+ if {$hr in $cland_avoid_db} continue
+ lappend cland_hard $hr
+ # DPL treats hard blockages as unavailable row sites even when getRows
+ # still returns a full-width row. Every cland_put caller and capacity bound
+ # must share this occupancy, including non-ring structural helper groups.
+ lassign $hr hx0 hy0 hx1 hy1
+ cland_occupy $hx0 $hy0 [expr {$hx1-$hx0}] [expr {$hy1-$hy0}]
+}
+foreach spec $cland_groups {
+ lassign $spec prefix rect tag
+ if {![string match {ring:*} $tag]} continue
+ lassign $rect ax ay bx by
+ set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
+ set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
+ foreach hb $cland_hard {
+  lassign $hb hx0 hy0 hx1 hy1
+  if {min($bx,$hx1) > max($ax,$hx0) && min($by,$hy1) > max($ay,$hy0)} {
+   error "OT_CLAND band $prefix ($tag) {$rect} overlaps hard placement blockage {[expr {$hx0/double($ff_dbu)}] [expr {$hy0/double($ff_dbu)}] [expr {$hx1/double($ff_dbu)}] [expr {$hy1/double($ff_dbu)}]}"
+  }
+ }
+}
+set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
+# FLOW-6 10-30: widest master of a cell's drive family (OT_CLAND_FIT_RESERVE=resize), cached per master name.
+set cland_famw {}
+proc cland_family_w {m} {
+ global cland_famw
+ set nm [$m getName];set w [$m getWidth];set h [$m getHeight]
+ if {[dict exists $cland_famw $nm]} { return [dict get $cland_famw $nm] }
+ set fw $w
+ if {[regexp {^(.*x)p?[0-9]+[a-z]*(_.*)$} $nm -> pre suf]} {
+  foreach lib [[ord::get_db] getLibs] {
+   foreach mm [$lib getMasters] {
+    if {[regexp {^(.*x)p?[0-9]+[a-z]*(_.*)$} [$mm getName] -> p2 s2] && $p2 eq $pre && $s2 eq $suf
+        && [$mm getHeight] == $h && [$mm getWidth] > $fw} { set fw [$mm getWidth] }
+   }
+  }
+ }
+ dict set cland_famw $nm $fw
+ return $fw
+}
+# Explicit per-band +x opt-in: bit-major flops fill upward within a column,
+# then advance across x. Density spacing is vertical; drive-family width is
+# still reserved horizontally so in-place resizing cannot overlap a neighbor.
+proc cland_put_column {i ax ay bx by tag sp cur fw} {
+ global ff_x0 ff_y0 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_col_cursor cland_col_reduce cland_col_dry
+ set m [$i getMaster];set w [$m getWidth];set h [$m getHeight]
+ set rw [expr {int(ceil(double(max($w,$fw))/$ff_sw))*$ff_sw}]
+ set rh [expr {int(ceil(double($h)/0.4*$sp/$ff_rh))*$ff_rh}]
+ # Column density spacing is a row quantum. Capacity selection may remove
+ # whole padding rows, never the physical cell height or horizontal reserve.
+ if {[info exists cland_col_reduce]} {
+  set rh [expr {max(int(ceil(double($h)/$ff_rh))*$ff_rh,$rh-$cland_col_reduce*$ff_rh)}]
+ }
+ set x0 [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
+ set y0 [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
+ set x $x0;set y $y0;set cw 0
+ if {$cur && [info exists cland_col_cursor] && [llength $cland_col_cursor]==3} {
+  lassign $cland_col_cursor x y cw
+ }
+ while {$x+$rw<=$bx} {
+  for {} {$y+$h<=$by} {incr y $ff_rh} {
+   if {![dict exists $ff_orient $y]} continue
+   set free 1
+   set r0 [expr {int(($y-$ff_y0)/$ff_rh)}]
+   set r1 [expr {int(ceil(double($y+$rh-$ff_y0)/$ff_rh))}]
+   for {set r $r0} {$r<$r1} {incr r} {
+    if {![dict exists $cland_occ $r]} continue
+    foreach interval [dict get $cland_occ $r] {
+     lassign $interval l u
+     if {$x<$u && $x+$rw>$l} {set free 0;break}
+    }
+    if {!$free} break
+   }
+   if {!$free} continue
+   set dry [expr {[info exists cland_col_dry] && $cland_col_dry}]
+   if {!$dry} {
+    if {[$i getPlacementStatus] eq "FIRM"} {$i setPlacementStatus PLACED}
+    $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+   }
+   cland_occupy $x $y $rw $rh
+   if {$cur} {set cland_col_cursor [list $x [expr {$y+$rh}] [expr {max($cw,$rw)}]]}
+   dict set cland_done [$i getName] 1;incr cland_n
+   if {!$dry} {
+   puts $cland_fh "[$i getName]\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
+   }
+   return 1
+  }
+  set x [expr {$x+max($cw,$rw)}];set y $y0;set cw 0
+ }
+ return 0
+}
+# DIE-HEAD-13 opt-in: sp = reserve spread given by the caller (else from the tag), cur = resume the row scan at the last
+# site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
+proc cland_put {i rect tag {sp {}} {cur 0}} {
+ global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_cursor
+ set name [$i getName]
+ if {[dict exists $cland_done $name]} { error "OT_CLAND duplicate placement $name" }
+ lassign $rect ax ay bx by
+ set m [$i getMaster];set w [$m getWidth];set h [$m getHeight]
+ # Evaluate the existing half-window slide eligibility before conservative DBU quantization.
+ # QC coll_ftn: face 691.2 / core edge 686.88 / half-window 2.16 is exactly eligible,
+ # but ceil(689.040... * 1000) became 689041 and incorrectly rejected the window.
+ # The drawn bounds remain ceil/floor-conservative; this only removes the rounding artefact.
+ set sxov [expr {min($bx,double($ff_x1)/$ff_dbu)-max($ax,double($ff_x0)/$ff_dbu)}]
+ set syov [expr {min($by,double($ff_y1)/$ff_dbu)-max($ay,double($ff_y0)/$ff_dbu)}]
+ set slide_x [expr {2.0*$sxov+1e-9 >= $ax-$bx}]
+ set slide_y [expr {2.0*$syov+1e-9 >= $ay-$by}]
+ set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
+ set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
+ # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 5): a window centred within half its size of the core edge (a status pin in the
+ # core margin) clips to less than the cell; slide it, same size, inside the core (windows that fit are unchanged,
+ # windows farther out still fail closed)
+ set ov [expr {min($bx,$ff_x1)-max($ax,$ff_x0)}]
+ if {$ov < $w && $bx-$ax >= $w && $slide_x} {
+  if {$ax < $ff_x0} { set bx [expr {$bx+$ff_x0-$ax}];set ax $ff_x0 } elseif {$bx > $ff_x1} { set ax [expr {$ax-($bx-$ff_x1)}];set bx $ff_x1 }
+ }
+ set ov [expr {min($by,$ff_y1)-max($ay,$ff_y0)}]
+ if {$ov < $h && $by-$ay >= $h && $slide_y} {
+  if {$ay < $ff_y0} { set by [expr {$by+$ff_y0-$ay}];set ay $ff_y0 } elseif {$by > $ff_y1} { set ay [expr {$ay-($by-$ff_y1)}];set by $ff_y1 }
+ }
+ # DIE-KV-33 opt-in OT_CLAND_FIT_RESERVE=1: the site must be free of other occupancy over the whole reserved footprint
+ # (rw, as cland_occupy reserves it), not just the body, so an in-place upsize by timing-driven GPL (FIRM cells are
+ # resized, not moved) cannot grow into a tapcell / foreign FIRM cell (KV io_ft kits_gen5 3_5 DPL-0033: 3 FIRM
+ # INVx1 -> INVx3 over TAPCELLs). Default (unset) unchanged.
+ set fw $w
+ if {[info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "1"} {
+  set fsp $sp; if {$fsp eq {}} { set fsp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> fsp }
+  set fw [expr {max($w,int(ceil(double($w)/0.4*$fsp/$ff_sw))*$ff_sw)}]
+ }
+ # FLOW-6 10-30 opt-in OT_CLAND_FIT_RESERVE=resize: the site must be free of other occupancy over the widest drive
+ # variant of the cell's own family (same name stem/suffix and height, e.g. DFFHQNx1 -> DFFHQNx3), not the w/0.4*spread
+ # reserve of "=1": timing-driven GPL resizes FIRM cells in place (HEAD n3_turn v3nofr 3_5 DPL-0033: FIRM ring
+ # DFFHQNx1 abutting a TAPCELL resized to DFFHQNx2, +54 dbu over it) and the "=1" reserve overfills ring bands
+ # (HEAD st_m v3). Default (unset) and "=1" unchanged.
+ if {([info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize") || [info exists ::cland_pinslot_fit]} { set fw [cland_family_w $m] }
+ # FLOW-6 10-30 (HEAD n3_turn / turn_a v3 status d1_o/t_o): a status window centred in the core margin can overlap the
+ # core by more than one cell height and still hold ONE row only (pin y 602.144, window 599.984..604.304, core top
+ # 600.48 -> row 600.21); when that row has no fitting site, the window (same size) slides inside the core and is
+ # scanned once more. A window placed on the first scan is unchanged; a window that is not slide-eligible, already
+ # inside the core, or still without a site fails closed as before.
+ set cland_win [list $ax $ay $bx $by]
+ foreach cland_pass {0 1} {
+ if {$cland_pass} {
+  lassign $cland_win ax ay bx by
+  set moved 0
+  if {$slide_x && $bx-$ax <= $ff_x1-$ff_x0} {
+   if {$ax < $ff_x0} { set bx [expr {$bx+$ff_x0-$ax}];set ax $ff_x0;set moved 1 } elseif {$bx > $ff_x1} { set ax [expr {$ax-($bx-$ff_x1)}];set bx $ff_x1;set moved 1 }
+  }
+  if {$slide_y && $by-$ay <= $ff_y1-$ff_y0} {
+   if {$ay < $ff_y0} { set by [expr {$by+$ff_y0-$ay}];set ay $ff_y0;set moved 1 } elseif {$by > $ff_y1} { set ay [expr {$ay-($by-$ff_y1)}];set by $ff_y1;set moved 1 }
+  }
+  if {!$moved} break
+ }
+ set ax [expr {max($ff_x0,$ax)}];set ay [expr {max($ff_y0,$ay)}]
+ set bx [expr {min($ff_x1,$bx)}];set by [expr {min($ff_y1,$by)}]
+ set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
+ set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
+ if {[string match {ring:*+x+ff*} $tag]} {
+  if {$sp eq {}} {error "OT_CLAND column fill requires explicit FF spread"}
+  if {[cland_put_column $i $ax $ay $bx $by $tag $sp $cur $fw]} {return}
+  continue
+ }
+ # AUTOBUILD-PIPE-4 10-31 (GEOM-87, HEAD l47 hd_st_m/hd_st_str/hd_st_turn E-face pin_reg 55-128 um): ::cland_xdesc (set
+ # by cland_place_pinslot for a band whose pins lie beyond its E edge) scans each row from the band's HIGH-x (pin-side)
+ # edge leftwards and mirrors the spacing reserve to the cell's interior side; the row order and fail-closed error are
+ # unchanged, the resume cursor is not used.  Unset = the left-to-right scan below, byte-identical.
+ if {[info exists ::cland_xdesc] && $::cland_xdesc} {
+  set endx [expr {$ff_x0+int(floor(double($bx-$w-$ff_x0)/$ff_sw))*$ff_sw}]
+  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
+   if {![dict exists $ff_orient $y]} continue
+   set x $endx
+   while {$x>=$startx && $x>=$ax} {
+    set lim $x;set r0 [expr {int(($y-$ff_y0)/$ff_rh)}];set r1 [expr {int(ceil(double($y+$h-$ff_y0)/$ff_rh))}]
+    for {set r $r0} {$r<$r1} {incr r} {
+     if {![dict exists $cland_occ $r]} continue
+     foreach interval [dict get $cland_occ $r] {
+      lassign $interval l u
+      if {$x<$u && $x+$fw>$l} { set lim [expr {min($lim,$l-$fw)}] }
+     }
+    }
+    if {$lim<$x} { set x [expr {$ff_x0+int(floor(double($lim-$ff_x0)/$ff_sw))*$ff_sw}];continue }
+    if {[$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED }
+    $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+    if {$sp eq {}} { set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp }
+    set rw [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}]
+    cland_occupy [expr {$x+$w-$rw}] $y $rw $h
+    dict set cland_done $name 1;incr cland_n
+    puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
+    return
+   }
+  }
+  continue
+ }
+ if {!$cland_pass && $cur && [llength $cland_cursor]==2} { lassign $cland_cursor cy cx; if {$cy>$starty} { set starty $cy } } else { set cy {} }
+ for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
+  if {![dict exists $ff_orient $y]} continue
+  set x $startx
+  if {$cur && $cy ne {} && $y==$cy && $cx>$x} { set x $cx }
+  while {$x+$w<=$bx} {
+   set skip $x;set r0 [expr {int(($y-$ff_y0)/$ff_rh)}];set r1 [expr {int(ceil(double($y+$h-$ff_y0)/$ff_rh))}]
+   for {set r $r0} {$r<$r1} {incr r} {
+    if {![dict exists $cland_occ $r]} continue
+    foreach interval [dict get $cland_occ $r] {
+     lassign $interval l u
+     if {$x<$u && $x+$fw>$l} { set skip [expr {max($skip,$u)}] }
+    }
+   }
+   if {$skip>$x} { set x [expr {$ff_x0+int(ceil(double($skip-$ff_x0)/$ff_sw))*$ff_sw}];continue }
+   if {[$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED }
+   $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+   # Reserve spacing as well as the real body. Density margin permits the
+   # datapath mux/control cells and leaves room for clock/reset repair.
+   # DIE-HEAD-12 opt-in band spread: tag ring:<bus>@<spread> widens the reserved footprint so the ring fills its band
+   if {$sp eq {}} { set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp }
+   set rw [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}]
+   cland_occupy $x $y $rw $h
+   if {$cur} { set cland_cursor [list $y [expr {$x+$rw}]] }
+   dict set cland_done $name 1;incr cland_n
+   puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
+   return
+  }
+ }
+ }
+ error "OT_CLAND no legal nonoverlapping row/site in reserved band for $name ($tag)"
+}
+proc cland_drivers {n} {
+ set d {}
+ foreach it [$n getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { lappend d [$it getInst] } }
+ return $d
+}
+# AUTOBUILD-PIPE-2 10-31 (collectors) + KIT-TRIAGE-1/G4 11-01 (status): a cell with no free site in its +-2.16 um window
+# takes the window grown about the same centre x2, x4, x8 (<= +-17.28 um); still none fails closed with the same
+# error.  KV kv3_io_cor@4 (3_3 'no legal ... (status:landing_ready_ft10_i)'): the ready/fault status stages of a ring
+# share ONE plan point on the S face, inside the FIRM pin-register strip of the neighbouring bus bits, so the 4.32 um
+# window had no site; a registered status output 17 um from its pin is far inside any timing / reach budget.
+proc cland_put_grow {i rect tag kind} {
+ lassign $rect ax ay bx by
+ set cx [expr {($ax+$bx)/2.0}]; set cy [expr {($ay+$by)/2.0}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
+ foreach g {1 2 4 8} {
+  set w [list [expr {$cx-$hx*$g}] [expr {$cy-$hy*$g}] [expr {$cx+$hx*$g}] [expr {$cy+$hy*$g}]]
+  if {![catch {cland_put $i $w $tag} err]} {
+   if {$g > 1} { puts "OT_CLAND $kind grow [$i getName] ($tag): window x$g (+-[format %.2f [expr {$hx*$g}]] um)" }
+   return
+  }
+  if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
+ }
+ error $err
+}
+# Registered status outputs sit at their declared source point, separately
+# from the ring storage band; the collector then follows its original tree.
+# Status placement only moves cells; it does not create, remove or rename nets.
+# Reset the lookup epoch on every hook invocation (reset/clock hooks may have
+# changed connectivity before this source). Cache simple suffixes in one DB
+# pass instead of scanning every net for every parent-prefixed status output.
+proc cland_status_net {net} {
+ global ff_blk cland_status_suffix
+ set n [$ff_blk findNet $net]
+ if {$n ne "NULL"} { return $n }
+ set candidates {}
+ if {![regexp {[/.]} $net]} {
+  if {![info exists cland_status_suffix]} {
+   set cland_status_suffix {}
+   foreach dn [$ff_blk getNets] {
+    set name [$dn getName]
+    if {[regexp {^.*[/.]([^/.]+)$} $name -> tail]} {
+     dict lappend cland_status_suffix $tail $dn
+    }
+   }
+  }
+  if {[dict exists $cland_status_suffix $net]} {set candidates [dict get $cland_status_suffix $net]}
+ } else {
+  # Unusual hierarchical requested names retain the original exact suffix law.
+  set length [string length $net]
+  foreach dn [$ff_blk getNets] {
+   set name [$dn getName]
+   if {[string length $name] > $length && [string range $name end-[expr {$length-1}] end] eq $net
+       && [string index $name end-$length] in {. /}} {lappend candidates $dn}
+  }
+ }
+ if {[llength $candidates] == 1} {return [lindex $candidates 0]}
+ if {[llength $candidates] > 1} {
+  error "OT_CLAND ambiguous status net $net: [llength $candidates] hierarchical matches"
+ }
+ return NULL
+}
+unset -nocomplain cland_status_suffix
+foreach spec $cland_status {
+ lassign $spec net x y
+ set n [cland_status_net $net]
+ if {$n eq "NULL"} { error "OT_CLAND missing actual status net $net" }
+ set drivers [cland_drivers $n]
+ # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 4): ASAP7 maps the status FF as DFFHQN + INV (no Q flop): follow exactly one
+ # inverter to its single QN flop driver; the flop is placed at the status point, the INV is left to GPL beside it
+ if {[llength $drivers]==1 && [string match "INV*" [[[lindex $drivers 0] getMaster] getName]]} {
+  set cland_inv [lindex $drivers 0];set cland_qd {}
+  foreach it [$cland_inv getITerms] {
+   if {[[$it getMTerm] getIoType] eq "INPUT" && [$it getNet] ne "NULL"} { set cland_qd [cland_drivers [$it getNet]] }
+  }
+  if {[llength $cland_qd]==1 && [string match "*DFF*" [[[lindex $cland_qd 0] getMaster] getName]]} { set drivers $cland_qd }
+ }
+ if {[llength $drivers]!=1 || ![string match "*DFF*" [[[lindex $drivers 0] getMaster] getName]]} {
+  error "OT_CLAND $net requires one actual dedicated output FF"
+ }
+ set cland_sw [list [expr {$x-2.16}] [expr {$y-2.16}] [expr {$x+2.16}] [expr {$y+2.16}]]
+ # grow only a window that touches the core (a crowded window); a status point wholly outside the core fails closed
+ if {[lindex $cland_sw 2]*$ff_dbu > $ff_x0 && [lindex $cland_sw 0]*$ff_dbu < $ff_x1 &&
+     [lindex $cland_sw 3]*$ff_dbu > $ff_y0 && [lindex $cland_sw 1]*$ff_dbu < $ff_y1} {
+  cland_put_grow [lindex $drivers 0] $cland_sw status:$net status
+ } else { cland_put [lindex $drivers 0] $cland_sw status:$net }
+}
+foreach spec $cland_optional_groups {
+ lassign $spec prefix rect tag
+ foreach i [$ff_blk getInsts] {
+  set nm [$i getName]
+  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
+  if {[dict exists $cland_done $nm]} continue
+  cland_put $i $rect $tag
+ }
+}
+# DIE-HEAD-13 10-28 opt-in ring_place=ff (tag suffix +ff, compose(band_ring="ff")): only the ring's SEQUENTIAL cells are
+# placed FIRM, in bit-major order (a 2-D register x[slot][bit] sorts by bit, then slot, so the DEPTH copies of one bit and
+# their write/read logic sit together), at the spread that fills the band to cland_ff_fill; the ring's combinational logic
+# (write enables, read muxes, count compare) is left to global placement next to the flops it connects. Measured why
+# (DIE-HEAD-12 probe B, hd_tile): ring FIRM in netlist order 676,805 GRT overflow, flops-only FIRM -97 %.
+set cland_ff_fill 0.90
+set cland_cursor {}
+# DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
+# band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
+proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0}} {
+ if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} {
+  if {$rev} { set i [expr {999999999-$i}] }
+  return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t]
+ }
+ # FLOW-10 10-30 (HEAD st_str / wshim_rx r2r 510): the read-side registers of a chunked ring (ot_meso_dsel per 64-bit
+ # chunk: dch[c].u_dsel/y[i] = word bit c*WCH+i, dch[c].u_dsel/di[k] = the chunk's one-hot selects) have no adjacent
+ # [slot][bit] index, so they keyed by raw name and all packed BEFORE the storage at the band's low corner (st_str: 517
+ # y regs in y 27..64 while their bits span y 25..231 -> ring-to-station-0 hop 510 um).  With the ring's chunk width
+ # (wch > 0, from cland_place_ff) each y register takes its word bit's storage key, right after that bit's slots; the
+ # di selects sit at their chunk centre.  wch 0 (no chunked dsel registers in the band) = the old raw-name key.  Word bits
+ # at or above nbits (the band bus's port width, when known) are the ring's own status/tag bits: they keep the raw-name
+ # key (band low corner, where the plan sites the status stages), as before.
+ if {$wch > 0 && [regexp {^(.*[/.])dch\\?\[([0-9]+)\\?\]\.u_dsel/(y|di)\\?\[([0-9]+)\\?\](.*)$} $nm -> b c kind i t]} {
+  if {$kind eq "y"} { set bit [expr {$c*$wch+$i}]; set s 999999998 } else { set bit [expr {$c*$wch+$wch/2}]; set s [expr {999999990+$i}] }
+  if {$nbits > 0 && $bit >= $nbits} { return $nm }
+  if {$rev} { set bit [expr {999999999-$bit}] }
+  return [format {%s|%09d|%09d|%s} "${b}s_d" $bit $s $t]
+ }
+ return $nm
+}
+# chunk width WCH of a band's chunked ring read registers (max y index + 1; every chunk has WCH bits), 0 when none
+proc cland_kbit {kf rev} { scan $kf %d v; return [expr {$rev ? 999999999-$v : $v}] }
+# DIE-HEAD-43 c3 (FLOW-11 shared): bus bit (index) whose pin centre is nearest the START pin {x y}; bxy = {{bit x y} ..}
+proc cland_nearest_bit {sx bxy} {
+ lassign $sx px py; set best {}; set bd 0
+ foreach e $bxy { lassign $e bi cx cy; set d [expr {abs($cx-$px)+abs($cy-$py)}]; if {$best eq {} || $d < $bd} { set best $bi; set bd $d } }
+ return [list $best $bd]
+}
+# ring CONTROL registers (raw-name keys = not storage/read bits) and status/s_tag keys (bits >= bus width, other storage
+# base, or the 99999999x tag slots) move right after bus bit kb; returns {n_moved ffs}
+proc cland_ctl_rekey {ffs base kb nbb rev} {
+ set nc 0
+ set out [lmap pr $ffs {
+  set k [lindex $pr 0]
+  set f [split $k |]
+  if {$k eq [lindex $f 0]} {
+   incr nc; list [format {%s|%09d|%09d|%s} $base $kb 999999997 $k] [lindex $pr 1]
+  } elseif {[llength $f] >= 3 && ([lindex $f 0] ne $base || [cland_kbit [lindex $f 1] $rev] >= $nbb || ([scan [lindex $f 2] %d] >= 999999990 && [scan [lindex $f 2] %d] < 999999998))} {
+   incr nc; list [format {%s|%09d|%09d|%s} $base $kb 999999996 $k] [lindex $pr 1]
+  } else { set pr }
+ }]
+ return [list $nc $out]
+}
+proc cland_dsel_wch {names} {
+ set w 0
+ foreach nm $names {
+  if {[regexp {[/.]dch\\?\[[0-9]+\\?\]\.u_dsel/y\\?\[([0-9]+)\\?\]} $nm -> i]} { set w [expr {max($w,$i+1)}] }
+ }
+ return $w
+}
+# Select the largest native-row spacing that fits the WHOLE ordered band.
+# The continuous 90% area estimate can overflow after vertical ceil rounding
+# (HEAD turn_b: 2885 cells fit, then writer bit12 fails). Probe the exact same
+# scanner/foreign occupancy/width policy transactionally before moving cells.
+proc cland_column_select {ffs rect tag sp} {
+ global ff_rh cland_occ cland_done cland_n cland_cursor cland_col_cursor cland_col_reduce cland_col_dry
+ set saved [list $cland_occ $cland_done $cland_n $cland_cursor $cland_col_cursor]
+ set maxrows 0
+ foreach pr $ffs {
+  set h [[[lindex $pr 1] getMaster] getHeight]
+  set maxrows [expr {max($maxrows,int(ceil(double($h)/0.4*$sp/$ff_rh)))}]
+ }
+ try {
+  set cland_col_dry 1
+  for {set r 0} {$r <= $maxrows} {incr r} {
+   lassign $saved cland_occ cland_done cland_n cland_cursor cland_col_cursor
+   set cland_col_reduce $r
+   set rc [catch {
+    foreach pr $ffs {cland_put [lindex $pr 1] $rect $tag $sp 1}
+   } msg opts]
+   if {!$rc} {return $r}
+   if {![string match {OT_CLAND no legal nonoverlapping row/site in reserved band*} $msg]} {
+    return -options $opts $msg
+   }
+  }
+  # A physically full band still fails, without partial placement or records.
+  return -options $opts $msg
+ } finally {
+  lassign $saved cland_occ cland_done cland_n cland_cursor cland_col_cursor
+  unset -nocomplain cland_col_reduce cland_col_dry
+ }
+}
+# FLOW-11 10-30 (DIE-HEAD-43 (C), GEOM-68 band-form class: HEAD turn_a/turn_b/st_str/wshim_rx pin_reg_p90 65-92):
+# opt-in OT_CLAND_PINSLOT=1 (plan budgets.cland_pinslot_types) places each bus bit's ring slot flops next to that bit's
+# own pin instead of packing the band bit-major from its low corner (turn_a t_i: 566 bits x 4 slots packed in y
+# 708..973 while the pins span 709..1008 -> bit 0 slots 35 um below its pin; farthest-slot p90 69 um).  Each flop is
+# kept in key order and stretched over the pin span (cland_place_pinslot).  Ring flops without a bus-bit key keep the old
+# cursor fill after them.  Unset = byte-identical placement.
+# bit -> {x y} (dbu) centres of the bus pins <bus>[bit]
+proc cland_bus_pins {bus} {
+ global ff_blk
+ set out {}
+ foreach bt [$ff_blk getBTerms] {
+  if {[regexp {^(.*)\[([0-9]+)\]$} [$bt getName] -> bn bi] && $bn eq $bus} {
+   set bb [$bt getBBox]
+   dict set out $bi [list [expr {([$bb xMin]+[$bb xMax])/2}] [expr {([$bb yMin]+[$bb yMax])/2}]]
+  }
+ }
+ return $out
+}
+# Ring flops with a bus-bit key keep their key (bit-major) order and are stretched over the span of their pins: flop j
+# of n starts the band cursor at the row of lo + (hi-lo)*j/(n-1) (lo/hi = pin y of the first/last flop's bit), so each
+# bit's flops sit next to its pin row, never before it, and rows are filled left to right as before.  Aiming each flop
+# at its own pin with a nearest-free-site search drifts instead (HEAD turn_a what-if: the band's last bits found their
+# rows taken and fell back to holes 323 um away).  Applies to a pin column whose y order follows the key order (the
+# plan's +ff/+ffr choice); any other band (pins along x, or y order against the keys) keeps the old fill.
+proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
+ global ff_dbu ff_y0 ff_rh cland_cursor
+ lassign $rect ax ay bx by
+ set rest {}; set al {}
+ foreach pr $ordered {
+  set k [lindex $pr 0]
+  if {![regexp {^[^|]+\|([0-9]+)\|} $k -> kf] || ![dict exists $pins [set bit [cland_kbit $kf $rev]]]} { lappend rest $pr; continue }
+  lappend al [list [lindex $pr 1] [dict get $pins $bit]]
+ }
+ set n [llength $al]; set cland_cursor {}
+ if {$n} {
+  set xs [lmap e $al {lindex $e 1 0}]; set ys [lmap e $al {lindex $e 1 1}]
+  set lo [lindex $ys 0]; set hi [lindex $ys end]
+  set dy [expr {[tcl::mathfunc::max {*}$ys]-[tcl::mathfunc::min {*}$ys]}]
+  set dx [expr {[tcl::mathfunc::max {*}$xs]-[tcl::mathfunc::min {*}$xs]}]
+ }
+ if {!$n || $hi <= $lo || $dy < $dx} {
+  foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
+  return [list 0 [llength $ordered] "pins not a y column in key order: old fill"]
+ }
+ # the stretched rows sit at the plan spread, tighter than the fill spread: fit each flop on its widest drive variant
+ # (as OT_CLAND_FIT_RESERVE=resize) so the in-place GPL upsize cannot grow over a tapcell (turn_a what-if without it:
+ # 3_5 DPL-0033, 55 ring DFFHQNx1 -> x2 over TAPCELLs)
+ # AUTOBUILD-PIPE-4 10-31 (GEOM-87): pins beyond the band's E edge -> fill each row from the band's E (pin-side) edge
+ # (cland_put ::cland_xdesc); W-face bands already fill from their pin side (the low-x edge)
+ set xdesc [expr {[tcl::mathfunc::min {*}$xs] >= int(floor($bx*$ff_dbu))}]
+ set ::cland_pinslot_fit 1
+ if {$xdesc} { set ::cland_xdesc 1 }
+ try {
+ set j 0
+ foreach e $al {
+  set i [lindex $e 0]
+  set ty [expr {$lo+($hi-$lo)*double($j)/($n-1)}]; incr j
+  set ry [expr {$ff_y0+int(round(($ty-$ff_rh/2.0-$ff_y0)/$ff_rh))*$ff_rh}]
+  set w [list $ax [expr {max($ay,double($ry)/$ff_dbu)}] $bx $by]
+  # target row to band top all taken: the whole band, first fit (fails closed with the usual error)
+  if {[catch {cland_put $i $w $tag $psp 1} err]} {
+   if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
+   cland_put $i $rect $tag $psp 0
+  }
+ }
+ set cland_cursor {}
+ foreach pr $rest {cland_put [lindex $pr 1] $rect $tag $psp 1}
+ } finally { unset -nocomplain ::cland_pinslot_fit ::cland_xdesc }
+ return [list $n [llength $rest] "[expr {$xdesc ? {E face, from the band E edge, } : {}}]stretched over pin y [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]]"]
+}
+# FLOW-12 10-30 (COORD 20:4x, DIE-HEAD-45 turn_b pin_reg_p90 92.5 with pinslot on): the +x column form of a ring whose
+# bus pins run along x on the face next to the band (turn_b t_i: 566 bits on the N face, band 8.6..164.2 x 608.6..682.6,
+# @2.0453) filled every column from the band's far edge to its face edge, 22 slots deep at the band spread, so the
+# farthest slot of most bits sat 60..91 um below its pin (pin_reg judges a ring pin at its FARTHEST slot flop); the
+# y-column pinslot form never ran there (the +x branch comes first, and its pins are not a y column).  With
+# OT_CLAND_PINSLOT=1 such a band now keeps the column form but packs it into a strip on the FACE edge: the n keyed flops
+# are dealt in key order over the C columns that fit across the band (flop j -> column floor(j*C/n), so each column
+# sits under its own bits' pins); the k-th flop of a column goes k slots (base reserve, spread psp) in from the face
+# edge, inside a strip of ceil(1.15*n/C)+1 slots; a taken slot (tapcell, overflow) takes the next free one of its
+# column, then of the strip from the nearest columns to its left, then the whole band (first fit, fails closed as before).  Unkeyed flops follow at the band cursor.  Applies only when the pin x order
+# follows the key order and the pins lie beyond the band's N or S edge; else it places nothing and returns n = 0 (the
+# caller keeps the old column fill).
+proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
+ global ff_dbu ff_x0 ff_y0 ff_sw ff_rh cland_col_cursor cland_col_reduce
+ lassign $rect ax ay bx by
+ set rest {}; set al {}
+ foreach pr $ordered {
+  set k [lindex $pr 0]
+  if {![regexp {^[^|]+\|([0-9]+)\|} $k -> kf] || ![dict exists $pins [set bit [cland_kbit $kf $rev]]]} { lappend rest $pr; continue }
+  # storage slot (slot field below the 99999999x read/select keys of cland_ffkey) or read register of that bit
+  set st [expr {[regexp {^[^|]+\|[0-9]+\|([0-9]+)\|} $k -> ks] && [scan $ks %d] < 999999990}]
+  lappend al [list [lindex $pr 1] [dict get $pins $bit] $st]
+ }
+ set n [llength $al]
+ if {!$n} { return [list 0 [llength $ordered] "no keyed flop on a bus pin: old column fill"] }
+ set xs [lmap e $al {lindex $e 1 0}]; set ys [lmap e $al {lindex $e 1 1}]
+ set lo [lindex $xs 0]; set hi [lindex $xs end]
+ set dx [expr {[tcl::mathfunc::max {*}$xs]-[tcl::mathfunc::min {*}$xs]}]
+ set dy [expr {[tcl::mathfunc::max {*}$ys]-[tcl::mathfunc::min {*}$ys]}]
+ set pyc [expr {[tcl::mathfunc::min {*}$ys]}]; set pyh [expr {[tcl::mathfunc::max {*}$ys]}]
+ set ayd [expr {int(ceil($ay*$ff_dbu))}]; set byd [expr {int(floor($by*$ff_dbu))}]
+ if {$hi <= $lo || $dx < $dy} { return [list 0 [llength $ordered] "pins not an x row in key order: old column fill"] }
+ if {$pyc >= $byd} { set face N } elseif {$pyh <= $ayd} { set face S } else {
+  return [list 0 [llength $ordered] "pins not beyond the band's N/S edge: old column fill"]
+ }
+ set m0 [[lindex $al 0 0] getMaster]
+ set rw [expr {int(ceil(double(max([$m0 getWidth],[cland_family_w $m0]))/$ff_sw))*$ff_sw}]
+ # vertical pitch: the cell rows plus as many free rows (50 % column density; the write muxes and repair cells sit in
+ # the free rows).  The band spread reserve (h/0.4*spread) would make the strip 3+ rows per flop and as deep as the old
+ # fill's farthest slots on turn_b (estimate: 22.6 flops per column x 0.81 um -> p90 ~35 um vs 22.6 x 0.54 -> ~28).
+ set h0 [$m0 getHeight]
+ # rows 1 (AUTOBUILD-PIPE-2 10-31, the +ff band as +x form): every row of the strip (100 % column density), the strip
+ # half as deep; the ring's combinational cells go to global placement beside it (S81 t7__cl503f4913 what-if: strip
+ # 18.90 -> 9.45 um, pin_reg_p90 30.25 -> 23.97, GRT 0 overflow at 50 iterations)
+ set rh [expr {$rows*int(ceil(double($h0)/$ff_rh))*$ff_rh}]
+ # cland_put_column reserves ceil(h/0.4*spread) rows; its column-capacity reduce takes it down to this pitch
+ set red [expr {max(0,int(ceil(double($h0)/0.4*$psp/$ff_rh))-$rh/$ff_rh)}]
+ set axd [expr {int(ceil($ax*$ff_dbu))}]; set bxd [expr {int(floor($bx*$ff_dbu))}]
+ set x0 [expr {$ff_x0+int(ceil(double($axd-$ff_x0)/$ff_sw))*$ff_sw}]
+ set nc [expr {max(1,($bxd-$x0)/$rw)}]
+ set depth [expr {min($byd-$ayd,(int(ceil(1.15*$n/$nc))+1)*$rh)}]
+ if {$face eq "N"} {
+  set s0 [expr {$ff_y0+int(floor(double($byd-$depth-$ff_y0)/$ff_rh))*$ff_rh}]; set s0 [expr {max($ayd,$s0)}]; set s1 $byd
+ } else { set s0 $ayd; set s1 [expr {min($byd,$ayd+$depth)}] }
+ set ::cland_pinslot_fit 1
+ set nf 0
+ set cland_col_reduce $red
+ try {
+  # column of flop j (key order) = floor(j*C/n); storage slots take the face rows of their column first, the bit's read
+  # registers follow behind them in the same column
+  set j 0; set kc [dict create]; set q {}
+  foreach e $al { lappend q [list [expr {[lindex $e 2] ? 0 : 1}] $j [lindex $e 0]]; incr j }
+  foreach e [lsort -integer -index 0 [lsort -integer -index 1 $q]] {
+   set i [lindex $e 2]
+   set c [expr {[lindex $e 1]*$nc/$n}]
+   set k [expr {[dict exists $kc $c] ? [dict get $kc $c] : 0}]; dict set kc $c [expr {$k+1}]
+   # k-th flop of column c: k rows of rh in from the face edge (N: down from the strip top, S: up from its bottom)
+   set ty [expr {$face eq "N" ? $s1-($k+1)*$rh : $s0+$k*$rh}]
+   set ty [expr {max($s0,$ff_y0+int(floor(double($ty-$ff_y0)/$ff_rh))*$ff_rh)}]
+   set w [list [expr {double($x0+$c*$rw)/$ff_dbu}] [expr {double($ty)/$ff_dbu}] $bx [expr {double($s1)/$ff_dbu}]]
+   # taken (tapcell, overflow): the strip from 1, 2, 4 .. columns left of c (nearest columns first; a whole-strip
+   # first fit from its left end sent turn_b's last bits 160 um away), then the whole band (first fit, fails closed)
+   if {[catch {cland_put $i $w $tag $psp 0} err]} {
+    set ok 0
+    for {set d 1} {!$ok} {set d [expr {2*$d}]} {
+     set cl [expr {max(0,$c-$d)}]
+     set w [list [expr {double($x0+$cl*$rw)/$ff_dbu}] [expr {double($s0)/$ff_dbu}] $bx [expr {double($s1)/$ff_dbu}]]
+     if {![catch {cland_put $i $w $tag $psp 0} err]} { set ok 1 } elseif {![string match {OT_CLAND no legal*} $err]} {
+      error $err $::errorInfo
+     }
+     if {$cl == 0} break
+    }
+    if {!$ok} { cland_put $i $rect $tag $psp 0; incr nf }
+   }
+  }
+  set cland_col_cursor {}
+  unset -nocomplain cland_col_reduce
+  foreach pr $rest {cland_put [lindex $pr 1] $rect $tag $psp 1}
+ } finally { unset -nocomplain ::cland_pinslot_fit cland_col_reduce; set cland_col_cursor {} }
+ return [list $n [llength $rest] "$face face strip [format %.2f [expr {double($s1-$s0)/$ff_dbu}]] um deep, $nc columns over pin x [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]], $nf by the whole band"]
+}
+proc cland_place_ff {prefix rect tag} {
+ global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
+ set ffs {};set comb 0;set need 0.0
+ foreach i [$ff_blk getInsts] {
+  set nm [$i getName]
+  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
+  if {[dict exists $cland_done $nm]} continue
+  set m [$i getMaster]
+  if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
+  if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb;continue }
+  lappend ffs [list $nm $i]
+  set needw [$m getWidth]
+  if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} {
+   set needw [cland_family_w $m]
+  }
+  set need [expr {$need+int(ceil(double($needw)/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
+ }
+ if {![llength $ffs]} { return 0 }
+ set wch [cland_dsel_wch [lmap pr $ffs {lindex $pr 0}]]
+ set rev [string match {ring:*+ffr} $tag]
+ set nbits 0; set bus ""
+ if {$wch && [regexp {^ring:([^@+]+)} $tag -> bus]} {
+  foreach bt [$ff_blk getBTerms] { if {[regexp {^(.*)\[([0-9]+)\]$} [$bt getName] -> bn bi] && $bn eq $bus} { set nbits [expr {max($nbits,$bi+1)}] } }
+ }
+ set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits] [lindex $pr 1]}]
+ # DIE-HEAD-43 c3 (FLOW-11 shared): ring CONTROL registers (raw-name key: counters/ctl/oh/rp/tmo/ready/fault) and
+ # status/s_tag keys are keyed right after the bus bit whose pin is nearest the ring's START pin (cland_fstart_in_<bus>)
+ # instead of packing first at the band's low corner (HEAD wshim_rx origin->arm_cnt r2r 488 -> 378).  Bands without a
+ # START pin or without a storage bus keep the old keys.
+ if {[regexp {^ring:([^@+]+)} $tag -> cbus]} {
+  set sx {}; set bxy {}
+  foreach bt [$ff_blk getBTerms] {
+   set bn [$bt getName]; set bb [$bt getBBox]
+   set cx [expr {([$bb xMin]+[$bb xMax])/2}]; set cy [expr {([$bb yMin]+[$bb yMax])/2}]
+   if {$bn eq "cland_fstart_in_$cbus"} { set sx [list $cx $cy] }
+   if {[regexp {^(.*)\[([0-9]+)\]$} $bn -> bbn bbi] && $bbn eq $cbus} { lappend bxy [list $bbi $cx $cy] }
+  }
+  set base {}
+  foreach pr $ffs { set k [lindex $pr 0]; if {[regexp {^([^|]+s_d)\|} $k -> b0]} { set base $b0; break } }
+  if {[llength $sx] && [llength $bxy] && $base ne {}} {
+   lassign [cland_nearest_bit $sx $bxy] best bd
+   set kb [expr {$rev ? 999999999-$best : $best}]
+   set nbb 0; foreach e $bxy { set nbb [expr {max($nbb,[lindex $e 0]+1)}] }
+   lassign [cland_ctl_rekey $ffs $base $kb $nbb $rev] nc ffs
+   puts "OT_CLAND ctlkey $prefix: $nc control registers keyed at bit $best (START pin nearest, [format %.1f [expr {$bd/double($ff_dbu)}]] um)"
+  }
+ }
+ if {$wch} { puts "OT_CLAND ring_place=ff $prefix: chunked read registers keyed to their word bits (chunk width $wch, bus $bus width $nbits)" }
+ lassign $rect ax ay bx by
+ set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
+ set cland_cursor {};set cland_col_cursor {}
+ set ordered [lsort -dictionary -index 0 $ffs]
+ set pinx {}
+ if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1"
+     && [regexp {^ring:([^@+]+)} $tag -> pbus] && [dict size [set ppins [cland_bus_pins $pbus]]]} {
+  # FLOW-12 10-30: pins along x (N/S face) in key order -> face strip; anything else returns n=0 having placed nothing
+  set psp 1.0
+  set pinx [cland_place_pinslot_col $ordered $rect $tag $ppins $rev $psp]
+  lassign $pinx na nr how
+  if {$na} {
+   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $psp]), $nr by the band cursor"
+  } else { puts "OT_CLAND pinslot $prefix: $how" }
+ }
+ if {[llength $pinx] && [lindex $pinx 0]} {
+ } elseif {[string match {ring:*+x+ff*} $tag]} {
+  set cland_col_reduce [cland_column_select $ordered $rect $tag $sp]
+  puts "OT_CLAND column capacity $prefix: vertical padding reduced by $cland_col_reduce native rows; horizontal reserve unchanged"
+  try {
+   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
+  } finally {unset -nocomplain cland_col_reduce}
+ } elseif {[info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1" && [regexp {^ring:([^@+]+)} $tag -> pbus]
+            && [dict size [set ppins [cland_bus_pins $pbus]]]} {
+  # spread 1.0 (the base w/0.4 reserve): the band spread (tag @<spread>, fill-derived $sp) widens each footprint so a
+  # low-corner pack fills its band; the stretched fill already spans the band along the pins, and a wider reserve only
+  # pushes each row's later flops away from the face (turn_a what-ifs: fill spread 3.81 -> 3rd flop of a row 38 um
+  # off the face; @2.0066 -> 30 um, farthest-slot p90 34.4)
+  set psp 1.0
+  # AUTOBUILD-PIPE-2 10-31 (S81 slice_station wave 95b1992a3d0, GEOM-85: pin_reg_p90 45..94 on every N/S-face ring): the
+  # plan tags those bands +ff/+ffr (no fill_axis x), so only this y-column form ran and refused ("pins not a y column
+  # in key order: old fill").  Pins along x beyond the band's N/S edge in key order take the FLOW-12 face-strip column
+  # form (the same tag with +x); it places nothing unless that holds, and the y-column form below runs as before.
+  set xt [regsub {\+ff(r?)$} $tag {+x+ff\1}]
+  set pinx [cland_place_pinslot_col $ordered $rect $xt $ppins $rev $psp 1]
+  if {[lindex $pinx 0]} {
+   lassign $pinx na nr how
+   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, +ff band as +x, spread [format %.4f $psp]), $nr by the band cursor"
+  } else {
+  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $psp] na nr how
+  puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $psp]), $nr by the band cursor"
+  }
+ } else {
+  foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
+ }
+ set cland_cursor {};set cland_col_cursor {}
+ puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement"
+ return [llength $ffs]
+}
+# FLOW-KITFAIL-3 10-29 (S81-KITS-B iqf__t1, plan_s13r2 band_ring=all): an all-cells ring whose reserved footprints
+# cannot fit its band still ran the first-fit cland_put cell by cell (each call rescans from the band corner, O(n^2):
+# 5,154 of 30,520 ft1_i cells in 40 min) before the certain "no legal nonoverlapping row/site" error.  The same error is
+# raised up front when the group's reserved area (w/0.4*spread per cell, as cland_put reserves it) exceeds an upper
+# bound of what the band can hold: per band row, every free segment (length >= the narrowest body) plus one widest
+# reservation of overhang at its end (a last body fits, its reservation may run past the segment).  Bands that fit,
+# multi-row cells and bands not inside the core skip it: their placement is unchanged.
+proc cland_band_fit {prefix rect tag} {
+ global ff_blk ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done
+ set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
+ set need 0.0; set maxrw 0; set minw {}; set n 0
+ foreach i [$ff_blk getInsts] {
+  set nm [$i getName]
+  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
+  if {[dict exists $cland_done $nm]} continue
+  set m [$i getMaster]
+  if {[$m isBlock]} return
+  set w [$m getWidth]; set h [$m getHeight]
+  if {$h > $ff_rh} return
+  set rw [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}]
+  set need [expr {$need + double($rw)*$ff_rh}]
+  if {$rw > $maxrw} { set maxrw $rw }
+  if {$minw eq {} || $w < $minw} { set minw $w }
+  incr n
+ }
+ if {!$n} return
+ lassign $rect ax ay bx by
+ set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
+ set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
+ if {$ax < $ff_x0 || $ay < $ff_y0 || $bx > $ff_x1 || $by > $ff_y1} return
+ set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
+ set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
+ set cap 0.0
+ for {set y $starty} {$y+$ff_rh<=$by} {incr y $ff_rh} {
+  if {![dict exists $ff_orient $y]} continue
+  set r [expr {int(($y-$ff_y0)/$ff_rh)}]
+  set occ {}
+  if {[dict exists $cland_occ $r]} { set occ [lsort -integer -index 0 [dict get $cland_occ $r]] }
+  set x $startx
+  foreach iv [concat $occ [list [list $bx $bx]]] {
+   lassign $iv l u
+   set e [expr {min($l,$bx)}]
+   if {$e - $x >= $minw} { set cap [expr {$cap + double($e - $x + $maxrw)*$ff_rh}] }
+   if {$u > $x} { set x $u }
+   if {$x >= $bx} break
+  }
+ }
+ if {$need > $cap} {
+  set a2 [expr {double($ff_dbu)*$ff_dbu}]
+  error [format "OT_CLAND no legal nonoverlapping row/site in reserved band for %s (%s): %d cells reserve %.1f um2 > band upper bound %.1f um2 (ratio %.2f), checked before placement" $prefix $tag $n [expr {$need/$a2}] [expr {$cap/$a2}] [expr {$cap > 0 ? $need/$cap : 0}]]
+ }
+}
+# AUTOBUILD-PIPE-2 10-31 (S81 slice_station wave, event 95b1992a3d0: 7 of 7 place FAILs "no legal ... (collector:rst_rl_N)"):
+# a reset-collector window is its relay xy +-2.16 um, but the plan's reset tree puts 2..6 relays on ONE xy (t42
+# rst_rl_146/147, t40 rst_rl_162..165: identical windows) or the relay inside a ring band the FIRM ring fill already
+# took (t21 rst_n_t8 in ft5_i).  A collector cell with no site in its window takes the window grown about the same
+# centre x2, x4, x8 (<= +-17.28 um; a reset status hop, far below the 405 um relay reach); still none fails closed as
+# before.  Rings, status, start relays and every collector that fits its window are unchanged.
+proc cland_put_collector {i rect tag} { cland_put_grow $i $rect $tag collector }
+foreach spec $cland_groups {
+ lassign $spec prefix rect tag
+ set hit 0
+ if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]} {
+  if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
+  continue
+ }
+ set coll [string match {collector:*} $tag]
+ if {!$coll} { cland_band_fit $prefix $rect $tag }
+ foreach i [$ff_blk getInsts] {
+  set nm [$i getName]
+  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
+  if {[dict exists $cland_done $nm]} continue
+  if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
+  if {$coll} { cland_put_collector $i $rect $tag } else { cland_put $i $rect $tag };incr hit
+ }
+ if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
+}
+close $cland_fh
+puts "OT_CLAND placed $cland_n actual mapped cells FIRM in nonoverlapping reserved bands/relay sites"
+# DIE-HEAD-42 V1: landed stations of plan-siteless bits follow their now-placed ring fan-in (face_flops.tcl)
+if {[info exists ff_landed_line] && [llength $ff_landed_line] && [llength [info procs ff_landed_line_place]]} { ff_landed_line_place }
+# AUTOBUILD-PIPE-2 (AUTOBUILD-GATE-1 handoff, S81 slice_station t14/t26 r2r 580-677 um): reset_taps.tcl re-pointed every
+# FIRM flop's reset to its nearest tap BEFORE the landed line moved stations s0..s<k-2> (eq epoch flops went ~580 um
+# from their reset leaf u_rrl_<k>).  Re-point only the moved stations again, now at their final sites.
+if {[info exists ff_landed_moved] && [llength $ff_landed_moved] && [file exists /work/reset_taps.tcl]} {
+  set rt_repoint_only [dict create]
+  foreach n $ff_landed_moved { dict set rt_repoint_only $n 1 }
+  source /work/reset_taps.tcl
+  unset rt_repoint_only
+}

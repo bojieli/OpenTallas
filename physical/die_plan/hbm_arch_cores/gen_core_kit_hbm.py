@@ -1066,6 +1066,33 @@ def multiport_density_contract(path, module, clocks):
     return dict(c, file=str(Path(path).resolve()), sha256=sha(path))
 
 
+AUTO_MULTIPORT_NOTE = (
+    "DIE-HBM-61/HOLD 11-03 class MULTIPORT-HOLD (OWNER 11-03 safe forms; targets, not gates): a native multi-port "
+    "core (face clocks clk_n/e/s/w + clk_macro* + clk) without a reviewed density contract got one independent "
+    "TritonCTS tree per port; tap_balance pads short trees to the fixed 250-ps target only, so face trees stayed "
+    "50-95 ps early vs the macro-fan core tree (130-167 um leaf fans) -> face->body zero-logic reg2reg FF hold "
+    "-158..-212 ps.  Auto form = the reviewed vec6293 form: per-port density trees (no pin merged or dropped) + "
+    "common tap alignment.  Probe vms vb64bbf321780 CTS: FF reg2reg -212.47 -> -34.32 (screen PASS), tap spread "
+    "20.6 ps, TT setup -82.9 -> -9.3; insertion ~482 ps TT -> hard_core_latency contract (band INFO)")
+
+
+def multiport_density_auto(clocks, explicit_contract, source_profile, clock_sites, clock_taps, mode="auto"):
+    """True when a plain native multi-port core takes the automatic multi-port density form (default-on class fix)."""
+    return (mode == "auto" and len(set(clocks)) > 1 and not explicit_contract and source_profile is None
+            and not clock_sites and clock_taps == "off")
+
+
+def auto_multiport_density_contract(module, clocks):
+    """Exact-interface density contract of the auto form (same schema/checks as a reviewed one, verdict AUTO)."""
+    return dict(schema="opentallas.hbm_multi_density.v1", module=module, clock_ports=sorted(set(clocks)),
+                layout="density", common_alignment=True, merge_roots=False,
+                review=dict(verdict="AUTO", by="gen_core_kit_hbm --multiport-density auto", note=AUTO_MULTIPORT_NOTE),
+                delay_cell=AUTO_MULTIPORT_DELAY_CELL)
+
+
+AUTO_MULTIPORT_DELAY_CELL = "BUFx12_ASAP7_75t_R"   # core_tap_align pad cell (default BUFx4: too weak for 8 x ~1k-sink trees)
+
+
 def density_cts_lines(derate, shallow=False):
     """config.mk lines of the density-tap CTS (HBM-CLKSTRUCT 10-25).  shallow (DIE-HBM-32 10-30, opt-in): the clock
     insertion of the default form is ~1.9x the 250-ps TT core target (tkm tile0 canary, TT: port->root 147 + binary
@@ -1374,6 +1401,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
                          "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
                          "that bus, recorded in face_shell.json out_extra_stages + freeze.json); default none = unchanged")
+    ap.add_argument("--face-in-stage", action="append", default=[], metavar="BUSRE=K",
+                    help="opt-in (DIE-HBM-61/CUTS 11-03): K extra free-placed relay register stages after the face flop "
+                         "of every shell INPUT bus matching BUSRE (that input +K cycles, recorded in face_shell.json "
+                         "in_extra_stages); default none = unchanged")
+    ap.add_argument("--face-reset-relay", type=int, default=0, metavar="N",
+                    help="DIE-HBM-61/RTL 11-03 (OWNER RE-FORM registered reset relay, opt-in, default 0 = off): every "
+                         "active-low reset input of the face shell goes through ot_hbm_face_rst_relay (async assert, "
+                         "release after N >= 2 edges); recorded in face_shell.json reset_relay + latency.reset_delay_cycles")
     ap.add_argument("--face-lockup", action="append", default=[], metavar="BUSRE",
                     help="opt-in (DIE-HBM-61/CLOCK, OWNER 11-03 RE-FORM hold-safe crossings; default for the HBM-RF1 "
                          "recipe): every shell OUTPUT bus matching BUSRE ('.*' = all) gets a negative-edge lockup "
@@ -1418,8 +1453,17 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--stock-rc", action="store_true", help="old basis: platform setRC.tcl (no RCX-calibrated RC)")
     ap.add_argument("--no-f1", action="store_true", help="no per-corner FF IO basis in the FF hold repair")
     ap.add_argument("--no-f4", action="store_true", help="no zero-logic chain leaf affinity post-CTS")
-    ap.add_argument("--hard-core-latency", action="store_true",
-                    help="typed hard_core_latency clock contract in core.json (COORD 10-24; class CLK-BAND)")
+    # DIE-HBM-61/HOLD 11-03: default ON (KV write_core_contract parity; OWNER 11-03 targets, not gates).  The plan
+    # insertion band (250+-20 TT / 202.5+-20 FF) failed post-CTS/GRT on d44v vm_query_static_n12 (TT 292.5), svc_vmdel_lane_n
+    # (275.8), hc_bank128_pair_first_core / vms v32e0,v512b / tkm idpin straps (GRT FF 304-327); with the typed contract the
+    # band is information and the kit hold reference is bound-ff.  --no-hard-core-latency = old opt-in behaviour.
+    ap.add_argument("--hard-core-latency", dest="hard_core_latency", action="store_true", default=True,
+                    help="typed hard_core_latency clock contract in core.json (COORD 10-24; class CLK-BAND; default on)")
+    ap.add_argument("--no-hard-core-latency", dest="hard_core_latency", action="store_false",
+                    help="no typed clock contract (old default): plan insertion band gated post-CTS/GRT")
+    ap.add_argument("--multiport-density", default="auto", choices=["auto", "off"],
+                    help="DIE-HBM-61/HOLD class MULTIPORT-HOLD: a native multi-port core without a reviewed contract "
+                         "gets per-port density trees + common tap alignment (auto, default); off = old independent trees")
     ap.add_argument("--no-reset-face-home", action="store_true",
                     help="old skip set: reset inputs excluded from face_flops pin-register homing (GEOM-111 class R)")
     ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
@@ -1709,7 +1753,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
                              stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None,
-                             lockup=a.face_lockup or None)
+                             lockup=a.face_lockup or None, reset_relay=a.face_reset_relay,
+                             in_stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_in_stage} or None)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -1901,6 +1946,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         if a.clock_taps != "density":
             raise SystemExit("--clock-density-contract requires --clock-taps density")
         density_contract = multiport_density_contract(a.clock_density_contract, module, clks)
+        shutil.copyfile(HERE / "core_multi_density.tcl", kd / "core_multi_density.tcl")
+        (kd / "clock_density_contract.json").write_text(json.dumps(density_contract, indent=1) + "\n")
+    elif multiport_density_auto(clks, a.clock_density_contract, source_profile, rec.get("clock_sites_um"), a.clock_taps,
+                                a.multiport_density):
+        a.clock_taps = "density"   # DIE-HBM-61/HOLD: class MULTIPORT-HOLD default-on form (see AUTO_MULTIPORT_NOTE)
+        density_contract = dict(auto_multiport_density_contract(module, clks), file="clock_density_contract.json")
         shutil.copyfile(HERE / "core_multi_density.tcl", kd / "core_multi_density.tcl")
         (kd / "clock_density_contract.json").write_text(json.dumps(density_contract, indent=1) + "\n")
     if a.clock_taps_shallow and a.clock_taps != "density":
@@ -2160,6 +2211,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 "export OT_DTAP_PORTS = " + " ".join(clks),
                 "export OT_DTAP_LAYOUT = " + density_contract["layout"],
                 "export OT_DTAP_CALIBRATE = 1"]
+        if density_contract.get("delay_cell"):
+            cfg.append("export OT_DTAP_DELAY_CELL = " + density_contract["delay_cell"])
     multiport_hold = len(clks) > 1 and (source_profile is not None or a.clock_taps == "density") and not density_contract
     if multiport_hold:
         # Every q3 cut has multiple named taps of one core domain.  The ordinary

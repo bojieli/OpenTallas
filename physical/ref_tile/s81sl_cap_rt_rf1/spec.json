@@ -1,0 +1,177 @@
+{
+ "name": "s81sl_cap_rt_rf1",
+ "top": "ot_s81sl_cap_rt",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    34.56,
+    4.368
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "w_v",
+   "w_t",
+   "w_d",
+   "w_e",
+   "w_f",
+   "cfg_v",
+   "cfg_d",
+   "rst_n",
+   "cw_n_v",
+   "cw_n_a",
+   "clk",
+   "clk_g0",
+   "clk_g1",
+   "cw_n_d",
+   "e_v",
+   "e_t",
+   "e_d",
+   "e_e",
+   "e_f"
+  ],
+  "S": [
+   "cw_s_v",
+   "cw_s_a",
+   "cw_s_d",
+   "fault"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.025,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-RF1 RE-FORM (DIE-S81-51/RF-B 11-03, OWNER TWO-STRIKES): (1) SRAM on the S edge (die x 34.56, y 4.368; was the block centre 43.2/43.2 splitting the std-cell area into two bands), S-face outputs moved into the W (x 5-29) and E (x 214-254.5) channels beside it; (2) three clock entries of the one ck_rt root: clk (n6/FIN/DEC/adder/faces ~4.5k sinks), clk_g0 (slot groups 0-3, ~3.3k), clk_g1 (groups 4-7, ~3.3k), was 10,723 sinks on one entry (TT insertion 290-444, related-pair skew 152 > 80); (3) group-local key compare (1-bit hit per group; was the 24-bit 8:1 across groups + compare, TT -108.98/-158 placed la_gs/lb_sl -> fa_kh/fb_kh), 0 edges moved, lockstep bench RF1 0 vs 1 PASS; (4) negative-level lockup latch on every output face bit, 0 cycles.",
+ "job": {
+  "owner": "Claude:DIE-S81-51/RF-B",
+  "branch": "claude/die-s81-51-rfb-capc5r-1103",
+  "tag": "s81sl_cap_rt_rf1"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81-SLICE): every data input lands in a flop at the pin (the *_c capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+ },
+ "util": 0.52,
+ "outline": {
+  "w": 259.2,
+  "h": 129.6
+ },
+ "keep_pin_regs": true,
+ "why_floorplan": "259.2 x 108 (S81U-CAP3): SRAM at (43.2, 43.2) on the 43.2 lattice (CAP2 had it off-lattice at 23.04 / 23.76); its rd_out pins sit on its W edge and wd_in on its E edge, so the outline is 6 lattice steps wide to leave a ~42-um std-cell column on each side; one contiguous ring band (S 41 um: DEC + cw outputs to the S face; N 33 um: n6 / FIN under the N pins; W/E 41-42 um: pairing store, beside the macro's ports). clk/rst_n mid N face between the trees (cluster spine channel); N face = W-tree word (under u_tw), cfg + cw_n (middle), E-tree word (under u_te MY); S face cw_s + fault; ~10k flops, one root. S81U-CAP5: clk moved to the N-face centre 128-131 um (was 106-110), rst_n / cw_n_v / cw_n_a shifted W of it. S81U-CAP5 gate 2 (a83851436): TT 326.9 / spread 104.3 with the latest sinks = u_n6 adder / port flops in the top-right density hotspot of the 27.5-um N band (78.3..105.8 above the macro): outline 108 -> 116.64 so the N band is ~36 um like the S band (macro stays at (43.2, 43.2) on the lattice; util ~46%).",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "children": [],
+ "inter": [],
+ "defines": [
+  "OT_S81_CAP_RT_FACE_REGS",
+  "OT_S81_CAP_RT_RF1"
+ ],
+ "clock_ports": [
+  "clk",
+  "clk_g0",
+  "clk_g1"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "w_v",
+    "w_t",
+    "w_d",
+    "w_e",
+    "w_f",
+    "e_v",
+    "e_t",
+    "e_d",
+    "e_e",
+    "e_f",
+    "cfg_v",
+    "cfg_d",
+    "rst_n"
+   ],
+   "outputs": [
+    "cw_s_v",
+    "cw_s_a",
+    "cw_s_d",
+    "cw_n_v",
+    "cw_n_a",
+    "cw_n_d",
+    "fault"
+   ]
+  },
+  "g0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_g0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "g1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_g1"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ }
+}

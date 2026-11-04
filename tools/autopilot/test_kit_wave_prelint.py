@@ -59,9 +59,15 @@ class Probe(unittest.TestCase):
         self.assertIsNone(KW.plan_entry_block(d, "small"))
         self.assertIsNone(KW.plan_entry_block(d, "cored"))
         self.assertIsNone(KW.plan_entry_block(d, "ok_strap"))
-        # planned core: keeps its WAIT-DEP launch hold, and also shows as a LINT 'view' row
-        self.assertTrue(KW.plan_entry_block(d, "pv").startswith("WAIT-DEP"))
+        # planned core: launches on PROVISIONAL child views (KW-PROV-1 default ON) and shows as a LINT 'view' row
+        self.assertIsNone(KW.plan_entry_block(d, "pv"))
         self.assertTrue(d["_lint"]["pv"][0].startswith("view: planned hard core"))
+        self.assertIn("PROVISIONAL", d["_lint"]["pv"][0])
+        # die opt-out prov_view false: the old WAIT-DEP launch hold
+        d0 = dict(d, prov_view=False)
+        d0["_lint"] = KW.prelint(d0, "die", names, {"items": {}})
+        self.assertTrue(KW.plan_entry_block(d0, "pv").startswith("WAIT-DEP"))
+        self.assertIn("WAIT-DEP", d0["_lint"]["pv"][0])
         self.assertIsNone(KW.plan_entry_block(dict(d, prelint=False, prelint_block=True), "big"))
 
 

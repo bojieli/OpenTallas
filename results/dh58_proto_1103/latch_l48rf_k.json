@@ -1,0 +1,153 @@
+{
+ "model": {
+  "period_ps": 833.0,
+  "latch_ckq_ps": 73.0,
+  "latch_ckq_min_ps": 15.0,
+  "launch_clkq_credit": {
+   "budget": 81.968,
+   "core:ot_s81hd_elemA_cv": 363.8,
+   "core:ot_s81hd_elemB_cv": 321.374
+  },
+  "launch_clkq_min_credit": {
+   "budget": 35.143,
+   "core:ot_s81hd_elemA_cv": 331.99,
+   "core:ot_s81hd_elemB_cv": 311.858
+  },
+  "form": "launch-side neg-level lockup latch on every non-landed pair"
+ },
+ "intra": {
+  "paths": 664962,
+  "tt_setup_before_ps": 255.27,
+  "ff_hold_before_ps": -213.07,
+  "hold_neg_before": 361267,
+  "tt_setup_after_ps": -152.27,
+  "setup_neg_after": 40597,
+  "worst_setup": [
+   "t_tW1o8__clk_t9",
+   "t_tW1o8__clk_t33",
+   "tW1o8",
+   "budget",
+   "core:ot_s81hd_elemB_cv"
+  ],
+  "ff_hold_after_ps": -83.85,
+  "worst_hold": [
+   "t_tW1o8__clk_t33",
+   "t_tW1o8__clk_t9",
+   "tW1o8",
+   "core:ot_s81hd_elemB_cv",
+   "budget"
+  ],
+  "hold_neg_after": 9291,
+  "worst_hold_before": [
+   "t_lep0N__clk_t26",
+   "t_lep0N__clk_t20",
+   "lep0N",
+   "budget",
+   "budget"
+  ],
+  "sel_latched": 624365,
+  "sel_ff_hold_ps": -83.85,
+  "sel_hold_neg": 9291,
+  "sel_tt_setup_ps": 0.0,
+  "sel_worst_hold": [
+   "t_tW1o8__clk_t33",
+   "t_tW1o8__clk_t9",
+   "tW1o8",
+   "core:ot_s81hd_elemB_cv",
+   "budget"
+  ],
+  "sel_hold_neg_by_where_top": [
+   [
+    "tE2b2",
+    106
+   ],
+   [
+    "tE3b5",
+    98
+   ],
+   [
+    "tE3b2",
+    97
+   ],
+   [
+    "tE5b5",
+    96
+   ],
+   [
+    "tE0b10",
+    90
+   ],
+   [
+    "tE4b5",
+    84
+   ],
+   [
+    "tW2o5",
+    83
+   ],
+   [
+    "tW2o3",
+    82
+   ],
+   [
+    "tW2o6",
+    78
+   ],
+   [
+    "tE2b3",
+    72
+   ],
+   [
+    "tW0b1",
+    71
+   ],
+   [
+    "tW1o5",
+    69
+   ]
+  ]
+ },
+ "seam": {
+  "paths": 18118,
+  "tt_setup_before_ps": 651.26,
+  "ff_hold_before_ps": -71.92,
+  "hold_neg_before": 9294,
+  "tt_setup_after_ps": 243.73,
+  "setup_neg_after": 0,
+  "worst_setup": [
+   "t_sp0_bw_i_shim__clk_t16",
+   "t_sp0__clk_t30",
+   "sp0_bw_i_shim->sp0",
+   "budget",
+   "budget"
+  ],
+  "ff_hold_after_ps": 324.44,
+  "worst_hold": [
+   "t_mesh7N__clk_t6",
+   "t_mesh7N_estrip__clk_t1",
+   "mesh7N->mesh7N_estrip",
+   "budget",
+   "budget"
+  ],
+  "hold_neg_after": 0,
+  "worst_hold_before": [
+   "t_mesh7N__clk_t6",
+   "t_mesh7N_estrip__clk_t1",
+   "mesh7N->mesh7N_estrip",
+   "budget",
+   "budget"
+  ],
+  "sel_latched": 18118,
+  "sel_ff_hold_ps": 324.44,
+  "sel_hold_neg": 0,
+  "sel_tt_setup_ps": 243.73,
+  "sel_worst_hold": [
+   "t_mesh7N__clk_t6",
+   "t_mesh7N_estrip__clk_t1",
+   "mesh7N->mesh7N_estrip",
+   "budget",
+   "budget"
+  ],
+  "sel_hold_neg_by_where_top": []
+ }
+}

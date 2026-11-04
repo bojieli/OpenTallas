@@ -3165,6 +3165,38 @@ def kept_dead_twin_classes(L, missing):
     return out
 
 
+def kept_merged_twins(L, missing, status):
+    """LEC-KEEP-1 11-03 (class KEEP-MERGED; QC su_lane l6 96 bits, S81 ve_s 108 bits = x_sw[i] proved == ~x_bz[i],
+    xr0c[i] == xr[i]; every compare point proved, 0 differ): a kept bit synthesis merged into a twin that SURVIVES as a
+    gate flop.  COORD 12:4x ruling: such a bit passes when LEC proves it equal to the surviving flop.  A missing kept
+    bit k is accepted only when (a) every miter output proved (compare points AND every correspondence hypothesis,
+    proved together by induction), (b) following its gold-side hypotheses k -> r1 -> ... -> r reaches r through plain
+    gold-gold 'eq' steps only, each step's own hypothesis output 'hyp:gold:<x>' explicitly proved (no const / cube /
+    loaded / fill / both / gate form, no cycle), and (c) the root r carries no gold hypothesis and is a flop in the
+    netlist: a gate flop of its own name or a gate flop proved equal to it (a rename).  -> {k: (r, inv)}; anything
+    else (no hypothesis, unproved step, root missing / constant / free / an input) stays missing (fail closed)."""
+    if not status or not missing or any(v != "proved" for v in status.values()):
+        return {}
+    hyp, gate, miss = L.hyp, set(L.tp), set(missing)
+    renamed = {h[2] for (sd, c), h in hyp.items()
+               if sd == "gate" and h and h[0] == "eq" and len(h) >= 4 and h[1] == "gold" and h[2] in L.gp}
+    out = {}
+    for k in sorted(miss):
+        x, inv, seen, ok = k, 0, set(), True
+        while ("gold", x) in hyp:
+            h = hyp[("gold", x)]
+            if x in seen or not (h and h[0] == "eq" and len(h) >= 4 and h[1] == "gold") or \
+                    status.get(f"hyp:gold:{x}") != "proved":
+                ok = False
+                break
+            seen.add(x)
+            inv ^= int(h[3])
+            x = h[2]
+        if ok and x != k and x.startswith("ff:") and x not in miss and (x in gate or x in renamed):
+            out[k] = (x, inv)
+    return out
+
+
 def kept_wire_alias_copies(L, declared, aliases_file):
     """Recognize RTL Q-wire aliases while requiring one distinct gate FF per kept bit.
 
@@ -4219,6 +4251,32 @@ def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
                    f"{sum(status.get(n) == 'proved' for n in m.onames)} / {len(todo)} bases")
 
 
+def eq_const_restore(L, log=None):
+    """LEC-EQCONST-RESTORE (DIE-HBM-61/LEC 11-03, HBM FAIL_PREFLOOR NOT EQ class: dma_back wb_fill_epoch[2..3] /
+    wb_fill_bank, argmax cq_d, pc_ctrl_leaf, kshare lane st).  eq_const_resolve rewrites an equality whose
+    representative carries a constant into that constant; the constant only stands in for the equality.  When it is
+    dropped later (the representative is not that constant: induction, a simulation witness, or the no-reset base),
+    the equality itself was lost too, so a gold-only register that synthesis merged into the partner it duplicates
+    became a free state input and its face register 'differed'.  Each rewritten equality comes back ONCE as a plain
+    candidate (kept as 'eq', never rewritten again); the next induction round proves or drops it like any proposal.
+    Nothing is assumed: only proved sets are ever returned. -> number restored."""
+    origin = L.__dict__.setdefault("eq_const_origin", {})
+    restored = L.__dict__.setdefault("eq_const_restored", set())
+    back = []
+    for key, h in origin.items():
+        if key in restored or key in L.hyp:
+            continue
+        points = getattr(L, "gp" if h[1] == "gold" else "tp", None)
+        if points is None or h[2] in points:
+            L.hyp[key] = h
+            restored.add(key)
+            back.append(key)
+    if back and log is not None:
+        log.append(f"eq-to-const restored as equalities (their constant was dropped): {len(back)} "
+                   f"{[f'{sd}:{k}' for sd, k in back[:6]]}")
+    return len(back)
+
+
 def eq_const_resolve(L, log=None):
     """An equality hypothesis whose representative carries a constant hypothesis is that constant (HBM-CORES-REBAL-6
     10-28, side_rest u_egs: gold-only rem_stage[0][34..] = eq gold g_dig[2].src_rem[0], itself const 0, while the
@@ -4238,12 +4296,15 @@ def eq_const_resolve(L, log=None):
                 c = const_of(h[1], h[2], seen | {key})
                 return None if c is None else c ^ h[3]
         return None
+    eq_const_restore(L, log)
+    origin, restored = L.eq_const_origin, L.eq_const_restored
     n, first = 0, []
     for key, h in list(L.hyp.items()):
-        if h[0] != "eq":
+        if h[0] != "eq" or key in restored:
             continue
         c = const_of(h[1], h[2], {key})
         if c is not None:
+            origin.setdefault(key, h)
             L.hyp[key] = ("const", c ^ h[3])
             n += 1
             if len(first) < 6:
@@ -4285,6 +4346,8 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
         ok = noreset_sound(L)
         bad = [(sd, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok]
         if not bad:
+            if eq_const_restore(L, log):     # a dropped eq-to-const stand-in: its equality is a candidate again
+                continue
             break
         L.noreset_dropped = getattr(L, "noreset_dropped", {})
         for sd, k, c in bad:
@@ -6672,9 +6735,15 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             ktwin = sorted(kept_dead_twin_classes(L, kmiss)) if bool(status) and \
                 all(v == "proved" for v in status.values()) else []
             kmiss = [k for k in kmiss if k not in set(ktwin)]
+            kmerged = kept_merged_twins(L, kmiss, status)
+            kmiss = [k for k in kmiss if k not in kmerged]
+            if kmerged:
+                (out / "kept_merged_twins.tsv").write_text(
+                    "kept_bit\tsurviving_flop\tinverted\n" +
+                    "".join(f"{k}\t{r}\t{i}\n" for k, (r, i) in sorted(kmerged.items())))
             rec["kept_registers"] = dict(declared=len(kdecl),
                                          in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead) - len(kfree)
-                                         - len(ktwin),
+                                         - len(ktwin) - len(kmerged),
                                          constant_proved=lst(kconst), missing=lst(kmiss),
                                          unobservable_removed=lst(kdead),
                                          unobservable_reason="no compare point (output / black-box input) observes "
@@ -6687,7 +6756,13 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                                          dead_twin_classes_reason="every compare point proved; each class = kept "
                                              "registers proved equal only to each other (gold eq), all absent from "
                                              "the netlist, representative free: removed together as dead logic, no "
-                                             "surviving twin" if ktwin else None)
+                                             "surviving twin" if ktwin else None,
+                                         merged_twins_proved=lst([f"{k}={'~' if i else ''}{r}"
+                                                                  for k, (r, i) in sorted(kmerged.items())]),
+                                         merged_twins_reason="every miter output proved; each kept bit proved "
+                                             "(gold eq chain, each step's hypothesis proved) equal to a surviving "
+                                             "netlist flop: merged/renamed twin, function kept (kept_merged_twins.tsv)"
+                                             if kmerged else None)
         else:
             kmiss = None
             rec["kept_registers"] = "not checked (no gold.keep: AIGs reused from an older lec.py)"

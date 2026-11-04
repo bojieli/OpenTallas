@@ -29,13 +29,21 @@ class StepTest(unittest.TestCase):
         self.assertEqual(wd.step_of('5_1_grt', '', ''), 'GRT')
         self.assertEqual(wd.step_of('4_1_cts', '', ''), 'CTS')
         self.assertEqual(wd.step_of('3_3_place_gp', '', ''), 'PLACE')
-        self.assertIsNone(wd.step_of('1_2_yosys', '', ''))
+        self.assertEqual(wd.step_of('1_2_yosys', '', ''), 'SYNTH')
         self.assertIsNone(wd.step_of('2_1_floorplan', '', ''))
 
     def test_custom_script_tail(self):
         self.assertEqual(wd.step_of('-', '/x/die_grt.log', '[INFO GRT-0101] Running extra iterations'), 'GRT')
         self.assertEqual(wd.step_of('-', '/x/eco.log', '[INFO DPL-0001] Placed 3 instances'), 'PLACE')
-        self.assertIsNone(wd.step_of('-', '/x/lec.log', 'miter cones'))
+        self.assertEqual(wd.step_of('-', '/x/lec.log', 'miter cones'), 'LEC')
+        self.assertEqual(wd.step_of('5_2_route', '/k/lec/hyp3_failed.txt', ''), 'LEC')
+        self.assertEqual(wd.step_of('-', '/k/out.txt', '', ['123 python3 -I /work/lec.py']), 'LEC')
+        # a wrapper naming lec.py is not LEC: DRT in the kit's own container (ot_hgi_coll_gq_land dry run 11-03)
+        self.assertEqual(wd.step_of('-', '/k/run_finish.log', 'Completing 30% DRT-0199',
+                                    ['1 bash -c bash run_kit.sh; python3 /work/lec.py', '2 /tools/openroad -exit x']), 'DRT')
+        self.assertEqual(wd.step_of('-', '/k/gen_lint_yosys.log', ''), 'SYNTH')
+        self.assertEqual(wd.step_of('-', '/k/x.txt', '', ['9 /tools/yosys -v 3']), 'SYNTH')
+        self.assertIsNone(wd.step_of('-', '/x/sta.log', 'report_checks'))
 
 
 class ClassifyTest(unittest.TestCase):
@@ -52,7 +60,7 @@ class ClassifyTest(unittest.TestCase):
 
     def test_deleted_and_synth_report(self):
         self.assertEqual(wd.classify(row(run='/srv/a/k (deleted)'), {}, [], 120)[0], 'REPORT')
-        self.assertEqual(wd.classify(row(stage='1_2_yosys'), {}, [], 120)[0], 'REPORT')
+        self.assertEqual(wd.classify(row(stage='2_1_floorplan'), {}, [], 120)[0], 'REPORT')
         self.assertEqual(wd.classify(row(log='-'), {}, [], 120)[0], 'REPORT')
 
     def test_skip_list(self):
@@ -64,6 +72,47 @@ class ClassifyTest(unittest.TestCase):
     def test_second_hang_is_fix(self):
         st = {wd.kit_key(row()): {'relaunches': [{'at': '2026-10-30 19:13 PDT'}]}}
         self.assertEqual(wd.classify(row(), st, [], 120)[0], 'FIX')
+
+
+class WaveClassifyTest(unittest.TestCase):
+    W = '/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a/items/t6/attempt_8/gen/t6'
+
+    def test_codex_wave_root_is_a_normal_wave_job(self):
+        c = wd.classify(row(lane='CODEX', run=self.W, log=self.W + '/run/logs/asap7/t6/base/3_3_place_gp.log', stage='3_3_place_gp',
+                            wave_paths=[self.W]), {}, [], 120)
+        self.assertEqual(c[:2], ('STOP', 'PLACE'))
+        self.assertIn('kit-wave client', c[2])
+
+    def test_hand_codex_stays_report(self):
+        c = wd.classify(row(lane='CODEX', run='/srv/opentallas-scratch2/claude/codex-s81-vs8-1131', wave_paths=['/srv/opentallas-scratch2/claude/codex-s81-vs8-1131']), {}, [], 120)
+        self.assertEqual(c[0], 'REPORT')
+        self.assertIn('Codex', c[2])
+
+    def test_lane_job_also_writing_elsewhere_has_no_wave_identity(self):
+        self.assertIsNone(wd.job_wave(row(wave_paths=[self.W, '/srv/opentallas-scratch2/claude/hbm60-lec/out'])))
+        self.assertIsNone(wd.job_wave(row(wave_paths=[])))
+        self.assertEqual(wd.job_wave(row(wave_paths=[self.W]))[2], 't6')
+
+    def test_hung_lec_and_synth_stop_no_relaunch(self):
+        self.assertEqual(wd.classify(row(log='/srv/k/lec/raw_gate_16.aig', stage='-'), {}, [], 120)[:2], ('STOP', 'LEC'))
+        self.assertEqual(wd.classify(row(stage='1_2_yosys'), {}, [], 120)[:2], ('STOP', 'SYNTH'))
+
+    def test_limit(self):
+        self.assertEqual(wd.silent_limit_s(61 * H, 25), 3 * 61 * H / 25)   # die GRT, it 25 after 61 h: 7.3 h
+        self.assertEqual(wd.silent_limit_s(20 * H, 200), 6 * H)              # DRT with many early lines (prd-bf-v1 dry run 11-03)
+        self.assertEqual(wd.silent_limit_s(40 * H, 1), 12 * H)
+        self.assertEqual(wd.silent_limit_s(40 * H, 0), 12 * H)
+        self.assertEqual(wd.silent_limit_s(None, 5), 12 * H)
+
+    def test_duplicates_stop_only_a_client_less_older_job(self):
+        a, b, c = row(id='old', age_s=50 * H, work=['/k'], client_gone=True), row(id='new', host='intel1', age_s=2 * H, work=['/k']), row(id='solo', work=['/j'])
+        d = wd.duplicates([a, b, c], {})
+        self.assertEqual(list(d), [id(a)])
+        self.assertTrue(d[id(a)][0])
+        self.assertIn('new', d[id(a)][1])
+        self.assertEqual(wd.duplicates([a, b], {id(a): ('STOP', 'x')}), {})
+        a2 = dict(a, client_gone=False)
+        self.assertFalse(wd.duplicates([a2, b], {})[id(a2)][0])
 
 
 class ScriptTest(unittest.TestCase):
@@ -120,35 +169,48 @@ class ScriptTest(unittest.TestCase):
 
 
 class VerifyFakeDirTest(unittest.TestCase):
+    def one(self, cs=0, **job):
+        job.setdefault('unit', None); job.setdefault('containers', [])
+        return wd.ssh_py('localhost', wd.VERIFY, {'jobs': [job], 'cpu_sample_s': cs})[0]
+
     def test_verify_reads_fake_log(self):
         with tempfile.TemporaryDirectory() as d:
             log = os.path.join(d, 'run/logs/asap7/x/base/5_1_grt.log')
             os.makedirs(os.path.dirname(log))
             with open(log, 'w') as f:
-                f.write('[INFO GRT-0101] Running extra iterations to remove overflow.\n')
+                f.write('[INFO GRT-0101] Running extra iterations to remove overflow.\n[INFO GRT-0102] Start extra iteration 7/50\n'
+                        '[INFO DRT-0199]   Completing 10% with 3 violations.\n')
             old = time.time() - 4 * H
             os.utime(log, (old, old))
-            v = wd.ssh_py('localhost', wd.VERIFY, {'log': log, 'unit': None, 'containers': []})
+            v = self.one(log=log)
             self.assertAlmostEqual(v['log_mtime'], old, delta=2)
             self.assertIn('GRT-0101', v['tail'])
+            self.assertEqual(v['progress_n'], 2)
             self.assertFalse(v['openroad'])
+
+    def test_batch_keeps_order_and_shares_one_sample(self):
+        with tempfile.TemporaryDirectory() as d:
+            logs = [os.path.join(d, '%d.log' % i) for i in range(5)]
+            for l in logs:
+                open(l, 'w').write(l)
+            t0 = time.time()
+            res = wd.ssh_py('localhost', wd.VERIFY, {'jobs': [{'log': l, 'unit': None, 'containers': [], 'sample': True} for l in logs],
+                                                     'cpu_sample_s': 1})
+            self.assertEqual([r['tail'] for r in res], logs)
+            self.assertLess(time.time() - t0, 5)
 
     def test_verify_cpu_sample_without_openroad_is_absent(self):
         with tempfile.TemporaryDirectory() as d:
             log = os.path.join(d, 'x.log'); open(log, 'w').write('GRT-0101\n')
-            v = wd.ssh_py('localhost', wd.VERIFY, {'log': log, 'unit': None, 'containers': [], 'cpu_sample_s': 1})
-            self.assertNotIn('cpu_delta_s', v)
+            self.assertNotIn('cpu_delta_s', self.one(cs=1, log=log, sample=True))
 
     def test_verify_cpu_sample_counts_busy_process(self):
-        import subprocess, shutil
-        # a busy process named openroad (symlinked python) is sampled through a fake unit cgroup-free path:
-        # cpu_s() is exercised via the VERIFY source on a real pid list
+        import subprocess
         busy = subprocess.Popen([sys.executable, '-c', 'import time\nt=time.time()\nwhile time.time()-t<20: pass'])
         try:
             ns = {}
-            src = wd.VERIFY.split("if a.get('cpu_sample_s'):")[0]
-            src = src.split("def or_pids():", 1)[1]
-            exec('import os\ndef or_pids():' + src, ns)
+            src = wd.VERIFY.split('def cpu_s(pids):')[1].split('PROGRESS =')[0]
+            exec('import os\ndef cpu_s(pids):' + src, ns)
             c0 = ns['cpu_s']([busy.pid]); time.sleep(2); c1 = ns['cpu_s']([busy.pid])
             self.assertGreater(c1 - c0, 1.0)
             self.assertIsNone(ns['cpu_s']([999999999]))
@@ -165,7 +227,7 @@ class MainTest(unittest.TestCase):
 
     def run_main(self, rows, verify, act, coord):
         calls = []
-        wd.ssh_py = lambda host, script, args, timeout=120: verify
+        wd.ssh_py = lambda host, script, args, timeout=120: [verify for _ in args['jobs']]
         wd.ssh_sh = lambda host, sh, timeout=300: (calls.append((host, sh)), (0, ''))[1]
         p = os.path.join(coord, 'rows.json')
         json.dump(rows, open(p, 'w'))
@@ -232,7 +294,7 @@ class MainTest(unittest.TestCase):
 
     def test_cpu_sample_requested_for_grt_only(self):
         seen = []
-        wd.ssh_py = lambda host, script, args, timeout=120: (seen.append((args, timeout)), dict(VERIFY_OK, log_mtime=time.time()))[1]
+        wd.ssh_py = lambda host, script, args, timeout=120: (seen.append((args, timeout)), [dict(VERIFY_OK, log_mtime=time.time()) for _ in args['jobs']])[1]
         wd.ssh_sh = lambda host, sh, timeout=300: (0, '')
         with tempfile.TemporaryDirectory() as d:
             for st in ('5_1_grt', '3_3_place_gp'):
@@ -240,6 +302,7 @@ class MainTest(unittest.TestCase):
                 json.dump([row(stage=st)], open(p, 'w'))
                 wd.main(['--rows', p, '--coord', d])
         self.assertEqual(seen[0][0]['cpu_sample_s'], 60)
+        self.assertTrue(seen[0][0]['jobs'][0]['sample'])
         self.assertGreaterEqual(seen[0][1], 180)
         self.assertEqual(seen[1][0]['cpu_sample_s'], 0)
 
@@ -247,6 +310,70 @@ class MainTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             calls = self.run_main([row()], dict(VERIFY_OK, openroad=False), True, d)
             self.assertEqual(calls, [])
+
+    def test_busy_grt_past_limit_is_hung(self):
+        with tempfile.TemporaryDirectory() as d:
+            r = row(stage='5_1_grt', idle_s=13 * H, age_s=20 * H)  # past the 12 h cap
+            calls = self.run_main([r], dict(VERIFY_OK, cpu_delta_s=59.5, cpu_pids=[42], progress_n=20), True, d)
+            self.assertEqual(len(calls), 2)
+
+    def test_stdout_moved_not_stopped(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(self.run_main([row()], dict(VERIFY_OK, stdout_recent=True), True, d), [])
+
+    def _wave_state(self, d, **kw):
+        os.makedirs(os.path.join(d, 'autopilot'), exist_ok=True)
+        r = dict(die='s81', event='e8c', item='t18', attempt=4, status='CANCELLED', block_sha='a' * 40, updated=time.time() - H, reason='x')
+        r.update(kw)
+        json.dump({'items': {'k': r}}, open(os.path.join(d, 'autopilot', 'kit_wave_state.json'), 'w'))
+
+    W = '/srv/opentallas-scratch2/claude/kit-wave/s81/e8c/items/t18/attempt_4/gen/t18'
+
+    def test_cancelled_row_stops_a_moving_log_without_relaunch(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._wave_state(d)
+            calls = self.run_main([row(idle_s=60, log=self.W + '/x.log', wave_paths=[self.W])], VERIFY_OK, True, d)
+            self.assertEqual(len(calls), 1)
+            self.assertIn('stop oth-ubuntu-1-2.scope', calls[0][1])
+
+    def test_superseded_report_only_for_plan_current_no(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._wave_state(d, status='RUNNING')
+            open(os.path.join(d, 'autopilot', 'kit_wave_stages.tsv'), 'w').write(
+                'die\titem\tblock_sha\tplan_current\ns81\tt18\t%s\tno\n' % ('a' * 12))
+            calls = self.run_main([row(idle_s=60, log=self.W + '/x.log', wave_paths=[self.W])], VERIFY_OK, True, d)
+            self.assertEqual(calls, [])
+
+    def test_skip_blocks_a_superseded_stop(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._wave_state(d)
+            open(os.path.join(d, 'autopilot', 'WATCHDOG.skip'), 'w').write('items/t18/\n')
+            r = row(idle_s=60, log=self.W + '/x.log', wave_paths=[self.W])
+            self.assertEqual(self.run_main([r], VERIFY_OK, True, d), [])
+
+    def test_older_duplicate_on_one_kit_is_stopped(self):
+        with tempfile.TemporaryDirectory() as d:
+            a = row(id='oth-a.scope [dpkit-a]', idle_s=60, age_s=50 * H, log=self.W + '/x.log', wave_paths=[self.W], work=[self.W], client_gone=True)
+            b = row(id='oth-b.scope [dpkit-b]', idle_s=60, age_s=2 * H, log=self.W + '/x.log', wave_paths=[self.W], work=[self.W])
+            calls = self.run_main([a, b], VERIFY_OK, True, d)
+            self.assertEqual(len(calls), 1)
+            self.assertIn('oth-a.scope', calls[0][1])
+
+    def test_client_owned_older_duplicate_only_reported(self):
+        with tempfile.TemporaryDirectory() as d:
+            a = row(id='oth-a.scope [dpkit-a]', idle_s=60, age_s=50 * H, log=self.W + '/x.log', wave_paths=[self.W], work=[self.W])
+            b = row(id='oth-b.scope [dpkit-b]', idle_s=60, age_s=2 * H, log=self.W + '/x.log', wave_paths=[self.W], work=[self.W], client_gone=True)
+            self.assertEqual(self.run_main([a, b], VERIFY_OK, True, d), [])
+
+    def test_stop_cap(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._wave_state(d)
+            calls = []
+            wd.ssh_sh = lambda host, sh, timeout=300: (calls.append(sh), (0, ''))[1]
+            rows = [row(id='oth-%d.scope [c%d]' % (i, i), idle_s=60, log=self.W + '/x.log', wave_paths=[self.W]) for i in range(3)]
+            p = os.path.join(d, 'rows.json'); json.dump(rows, open(p, 'w'))
+            wd.main(['--rows', p, '--coord', d, '--act', '--max-stops', '2'])
+            self.assertEqual(len(calls), 2)
 
 
 if __name__ == '__main__':

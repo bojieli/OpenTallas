@@ -1,0 +1,19 @@
+{
+ "_doc": "DIE-S81-51/RF-D 11-03 conservative form (OWNER 18:57) dsdv_gunit_l4 (S81-050), plan COPY results/rfd_gl4_1103/delta_gl4.py (outline 302.4x108 at (950.4, 233.28), rfc_1103 pins / LEF).",
+ "dsdv_gunit_l4": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l4",
+  "io_hold": "sender_min",
+  "params": {
+   "RF": 1,
+   "OLAT": 2
+  },
+  "regional_taps": {
+   "nx": 4,
+   "ny": 1,
+   "split": "count",
+   "win_ps": 20
+  },
+  "suffix": "rfd",
+  "_rfd": "RF-D conservative form 11-03: RF 1 (registered one-hot l5 write / Q read / proj write / mix read selects, 0 cycles) + OLAT 2 negedge out-face flop per output bit (0 cycles; uniform out-face ruling 07:58); every input lands in a flop; outline 302.4x108 (aspect 2.8); regional taps 4x1 by count (each clock entry <= 5k sinks)."
+ }
+}

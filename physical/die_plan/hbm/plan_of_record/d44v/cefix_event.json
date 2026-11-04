@@ -1,0 +1,246 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "d44v-p2-centry-off-macro",
+ "moved": [
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lanes_plain0_3",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lanes_plain8_11",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lanes_plain4_7",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su01",
+   "inst": "u_su_Q0_lanes_plain12_15",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lanes_plain0_3",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lanes_plain8_11",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lanes_plain4_7",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lanes_plain12_15",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su00__physical_v1",
+   "inst": "u_su_Q0_lanes_plain0_3",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su00__physical_v1",
+   "inst": "u_su_Q0_lanes_plain8_11",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su01__physical_v1",
+   "inst": "u_su_Q0_lanes_plain4_7",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su01__physical_v1",
+   "inst": "u_su_Q0_lanes_plain12_15",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lanes_plain0_3",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lanes_plain8_11",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lanes_plain4_7",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lanes_plain12_15",
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "old": [
+    220.296,
+    228.96
+   ],
+   "new": [
+    168.456,
+    228.96
+   ],
+   "manhattan_um": 51.84,
+   "taps": 1
+  }
+ ]
+}

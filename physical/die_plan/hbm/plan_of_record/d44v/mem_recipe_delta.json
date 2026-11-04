@@ -1,0 +1,12 @@
+{
+ "_doc": "DIE-HBM-61/MEM 11-03 RE-FORM class 4 (macro channels): recipe delta for DIE-HBM-61/PLAN d44v. Apply ONLY to the RE-FORM kit of each core (its current-kit run keeps the r2c2 recipe). defines += OT_HBM_RW_MACROS; macros := list below (physical/asap7_memory_macros_v2, built by tools/mem_compiler/build_hbm_rightwidth_1103.py); macro instance paths: '.u_sram' -> '.g_rw*.u_sram' / 'u_mem' unchanged with the generate scope named below. Cycle contract unchanged (latency.tsv: +0).",
+ "hfd_ep_static": {"defines_add": ["OT_HBM_RW_MACROS"], "macros": ["ot_sram_1r1w_64x306_m1_r0c0_g306"],
+   "inst_rename": {"u_rxb.g_block[*].u_block.g_mem[*].u_mem.u_sram": "u_rxb.g_block[*].u_block.g_mem[*].u_mem.g_rw.u_sram"}, "eq": "eq/run_eq_hep.sh"},
+ "ot_hbm_host_cp_rxs": {"defines_add": ["OT_HBM_RW_MACROS"], "macros": ["ot_sram_1r1w_64x141_m1_r0c0_g141", "ot_sram_1r1w_256x256_m2_r0c0_g256"],
+   "inst_rename": {"<llr leaf>.u_sram": "<llr leaf>.g_rw141.u_sram | g_rw32.u_sram (W<=32)", "<landing256>.g_bank[*].u_mem": "unchanged path"}, "eq": "eq/run_eq_cp.sh"},
+ "ot_hnx_idxn_keybuf_slice": {"defines_add": ["OT_HBM_RW_MACROS"], "macros": ["ot_sram_1r1w_256x256_m2_r0c0_g256", "ot_sram_1r1w_256x64_m2_r0c0_g64"],
+   "inst_rename": {"gm[0..3].mem": "gm[0..3].g_rw.mem", "gm[4].mem": "gm[4].g_rw64.mem"}, "eq": "eq/run_eq_kb.sh",
+   "pin_note": "class 3: all 2231 face pins are on W; split key_in (W) / key_out (E) -> H need 223 um < 293 current (plan pin move, no RTL)"},
+ "ot_hfd_coll_q3_edge_core": {"defines_add": ["OT_HBM_RW_MACROS"], "macros": ["ot_sram_1r1w_64x141_m1_r0c0_g141"],
+   "inst_rename": {"<llr leaf>.u_sram": "<llr leaf>.g_rw141.u_sram"}, "eq": "eq/run_eq_cp.sh (same leaf, W 141/138)", "note": "only if the KW-FIX-4 current-kit run fails; >150k cells -> DIE-HBM-61/SPLIT owns the split"}
+}

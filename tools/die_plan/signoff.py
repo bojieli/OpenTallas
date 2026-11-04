@@ -1467,6 +1467,57 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
 
 
 # ---- record checks -------------------------------------------------------------------------------------------------
+INSERTION_BAND_SCHEMA = "opentallas.insertion_band.v1"
+
+
+def insertion_band_record(kit):
+    """KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the in-flow per-corner clock-insertion window is ADVISORY -- a core
+    stopped only by it routes on and counts on its own sign-off; the band moves to die STA (the die tap delay absorbs
+    it).  This collects what the flow measured so die STA can use it: postcts_gate_<tt|ff>.json (post-GRT pin-register
+    CK arrival mean vs the bound per corner, run_kit*.sh) and vclk_measured_band.json (the FF measured-reference band of
+    the coupled GRT repair, vclk_measured_hold.tcl).  Information only: never read by evaluate(), never a reason.
+    Returns None when the kit carries no in-flow band evidence."""
+    kd = Path(kit)
+    corners, sources = {}, []
+    for c in ("tt", "ff", "ss"):
+        f = kd / f"postcts_gate_{c}.json"
+        if not f.is_file():
+            continue
+        sources.append(f.name)
+        try:
+            d = json.loads(f.read_text())
+        except (OSError, ValueError) as exc:
+            corners[c] = dict(verdict="UNREADABLE", error=str(exc)[:200])
+            continue
+        mean, bound, tol = d.get("pinreg_mean_ps"), d.get("bound_ps"), d.get("tol_ps")
+        win = [round(bound - tol, 3), round(bound + tol, 3)] if all(
+            isinstance(v, (int, float)) for v in (bound, tol)) else None
+        corners[c] = dict(mean_ps=mean, min_ps=d.get("pinreg_min_ps"), max_ps=d.get("pinreg_max_ps"),
+                          n=d.get("pinreg_n"), bound_ps=bound, tol_ps=tol, window_ps=win, dev_ps=d.get("dev_ps"),
+                          in_window=(d.get("dev_ps") is not None and tol is not None and d["dev_ps"] <= tol
+                                     and (d.get("pinreg_n") or 0) > 0),
+                          gate_verdict=d.get("verdict"), band_verdict=d.get("band_verdict"),
+                          band_policy=d.get("band_policy"), parasitics=d.get("parasitics"),
+                          setup_wns_est_ps=d.get("setup_wns_est_ps"), hold_wns_est_ps=d.get("hold_wns_est_ps"))
+    grt_ff = None
+    f = kd / "vclk_measured_band.json"
+    if f.is_file():
+        sources.append(f.name)
+        try:
+            grt_ff = json.loads(f.read_text())
+        except (OSError, ValueError) as exc:
+            grt_ff = dict(band_verdict="UNREADABLE", error=str(exc)[:200])
+    if not corners and grt_ff is None:
+        return None
+    miss = sorted(c for c, v in corners.items() if not v.get("in_window"))
+    if grt_ff is not None and grt_ff.get("band_verdict") not in ("PASS", None):
+        miss.append("grt_ff")
+    return dict(schema=INSERTION_BAND_SCHEMA, verdict="ADVISORY" if miss else "PASS", outside=miss,
+                corners=corners, grt_measured_ff=grt_ff, sources=sources,
+                rule="OWNER 11-03 19:12: in-flow insertion window is advisory (not a stop, not a sign-off reason); "
+                     "the band is carried to die STA")
+
+
 def route_counts(disc):
     """DRC / antenna counts from the ORFS route metrics, else the gate record, else the DRC report."""
     r = dict(drc=None, antenna_nets=None, drc_source=None, antenna_source=None)
@@ -1924,6 +1975,7 @@ def evaluate(rec, insertion_target=None):
         if insertion_target is not None:
             bound["tt"] = insertion_target
         tol = float(bound.get("tol", INSERTION_TOL_PS))
+        band_info = []
         for c in ("tt", "ff"):          # FLOW 10-25: the routed I of each corner within tol of the bound I
             if bound.get(c) is None:
                 continue
@@ -1931,8 +1983,10 @@ def evaluate(rec, insertion_target=None):
             if not pf:
                 continue
             if abs(pf["mean"] - float(bound[c])) > tol:
-                why.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound {float(bound[c]):g} +- "
-                           f"{tol:g}")
+                # OWNER 11-03 19:12 (all dies): the insertion window moves to die STA (the die tap absorbs it); a core
+                # counts on its own sign-off.  Information here, never a reason (signoff.json insertion_band too).
+                band_info.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound "
+                                 f"{float(bound[c]):g} +- {tol:g}")
         raw_clock_verdict = "FAIL" if why else "PASS"
         coverage = {c: C[c]["clock_endpoint_coverage"] for c in SPREAD_CORNERS if C[c].get("clock_endpoint_coverage")}
         unqualified = {c: value for c, value in coverage.items() if value.get("verdict") != "PASS"}
@@ -1943,6 +1997,7 @@ def evaluate(rec, insertion_target=None):
             endpoint_model_coverage=coverage, raw_clock_verdict=raw_clock_verdict,
             raw_pair_basis="visible_clock_pins", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
             pair_skew_info_only=True, pair_skew_info=skew_info, by_corner=sp, problems=why,
+            insertion_band_info=band_info,
             insertion_target_ps=insertion_target, insertion_bound=bound or None)
     else:
         put("clock", "NOT RUN")
@@ -2171,6 +2226,9 @@ def cmd_run(a):
     rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()), out / "tt" / "libraries.json")
     rec["route"] = route_counts(disc)
     evaluate(rec, a.insertion_target)
+    band = insertion_band_record(disc["kit"]) if disc.get("kit") else None   # KW-FIX-4/BAND: information for die STA, not a reason
+    if band is not None:
+        rec["insertion_band"] = band
     if core_contract:
         rec["core_latency"] = dict(contract=core_contract, measured={
             c: rec["corners"][c].get("insertion_pinflops") for c in rec["corners"] if rec["corners"][c].get("done")})

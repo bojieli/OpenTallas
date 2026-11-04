@@ -3,6 +3,8 @@
 // sampled data/control edge are unchanged. Four active keybuf.gp[p].u_line
 // hard children replace the 17 packed SRAMs with 20 line-local SRAMs.
 // Select this distinct module explicitly; the packed quarter remains unchanged.
+// DIE-HBM-61/RTL-C3 11-03: the hardened slices are RS=1 (registered PRE strobe select, the packed RS=1 contract),
+// so this composition is RS=1: same key_out on every correct edge, 0 edges; PRE without REPLAY on the next edge FAULTs.
 module ot_hnx_idxn_quarter_with_keybuf_sliced #(
  parameter integer TP=192,RANK_W=(TP<=1?1:$clog2(TP)),DELIVERED_RESET=0
 )(
@@ -17,7 +19,7 @@ module ot_hnx_idxn_quarter_with_keybuf_sliced #(
  output wire[305:0]score,output wire fault
 );
  wire[4395:0]replayed_key_lines;wire keybuf_fault,scorer_fault;
- ot_hnx_idxn_keybuf_sliced_np4 #(.NP(4),.RS(0)) keybuf(.clk(clk),.rst_n(rst_n),.clear(clear),.pbase({half,2'b00}),
+ ot_hnx_idxn_keybuf_sliced_np4 #(.NP(4),.RS(1)) keybuf(.clk(clk),.rst_n(rst_n),.clear(clear),.pbase({half,2'b00}),
   .live_v(live_v),.live_index(live_index),.key_in(key_lines),
   .pre_v(pre_v),.pre_index(pre_index),.replay_v(replay_v),.replay_index(replay_index),
   .key_out(replayed_key_lines),.fault(keybuf_fault));

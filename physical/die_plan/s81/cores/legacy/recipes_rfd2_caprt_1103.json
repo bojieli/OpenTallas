@@ -1,0 +1,31 @@
+{
+ "_doc": "DIE-S81-51/RF-D cap_rt RF3 (plan of record, outline / pins unchanged)",
+ "ot_s81sl_cap_rt": {
+  "child_of": "ot_s81sl_capc5r",
+  "ref_tile": "physical/ref_tile/s81sl_cap_rt_rf1",
+  "lef_contract": "physical/ref_tile/s81sl_cap_rt_rf1/views/ot_s81sl_cap_rt/ot_s81sl_cap_rt.lef",
+  "multi_master": true,
+  "multi_root": true,
+  "suffix": "rfd2",
+  "macro_sites": {
+   "ot_sram_1r1w_512x128_m4_r2c2": [
+    [
+     34.56,
+     4.368,
+     "R0"
+    ]
+   ]
+  },
+  "why": "S81-RF1 RE-FORM (DIE-S81-51/RF-B 11-03): hard child of ot_s81sl_capc5r, two strikes (cap_rt LS TT -94, caprt ECO TT -122 / pair skew 151). SRAM on the S edge, 3 clock entries <= 5k sinks (declared multi-root, same root ck_rt), group-local key compare, out-face lockup latch. Defines in spec.json.",
+  "params": {
+   "RF1": 3
+  },
+  "_rfd": "DIE-S81-51/RF-D 11-03 S81-044 RE-FORM RF2 (RF1 = 2): h-column pre-select of the ev / es lookups in the slot groups + registered decision selects (sb / do_rel copies, per-side group one-hots); 0 edges moved (lockstep vs RF1 = 1). Outline / pins / SRAM site / clock entries = rf1.",
+  "_rfd2": "RF-D cap_rt RF3 11-03 (owner GO): rfd (RF1 2, oth-ubuntu-3220705) TT -41.89 / 561 ep on the slot-group store writes; RF1 3 = per-group pending write flops (arrays written one edge later from flops, lookups forward the pending write via registered one-hot selects), 0 edges moved."
+ },
+ "ot_s81sl_capc5r": {
+  "ref_tile": "physical/ref_tile/s81sl_capc5r",
+  "multi_root": true,
+  "why_multi_root": "S81-CORE-LAT-R20 10-27 (COORD S81-CORES-R1 ruling 2): DECLARED multi-root core (spec clock_entry_domains, same_pll_fixed_phase 1:1): one clock / entry per root pin, each at the 12.3 budget, inter-root paths timed as related pairs"
+ }
+}

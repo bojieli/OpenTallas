@@ -169,12 +169,74 @@ module ot_s81sl_capc5r #(
     #(.D(24))
 `endif
     u_ed (.clk(ck_ce), .rst_n(lpr_c_u_ed), .i_v(x_v), .i_t(x_t), .i_d(x_d), .i_e(x_e), .i_f(x_f), .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .o_f(e_f));   // region ce, t = 0
-    ot_s81sl_cap_rt u_rt (.clk(ck_rt), .rst_n(lpr_c_u_rt), .w_v(w_v__l_rt), .w_t(w_t__l_rt), .w_d(w_d__l_rt), .w_e(w_e__l_rt), .w_f(w_f__l_rt), .e_v(e_v__l_rt), .e_t(e_t__l_rt), .e_d(e_d__l_rt), .e_e(e_e__l_rt), .e_f(e_f__l_rt), .cfg_v(cq_v__l_rt), .cfg_d(cq_d__l_rt), .cw_s_v(sv_o), .cw_s_a(sa_o), .cw_s_d(sd_o), .cw_n_v(nv_o), .cw_n_a(na_o), .cw_n_d(nd_o), .fault(f_o));   // region rt, t = 3
+    ot_s81sl_cap_rt u_rt (.clk(ck_rt),
+`ifdef OT_S81_CAP_RT_RF1
+        .clk_g0(ck_rt), .clk_g1(ck_rt),   // S81-RF1: cap_rt clock entries 2/3 = the same root
+`endif
+        .rst_n(lpr_c_u_rt), .w_v(w_v__l_rt), .w_t(w_t__l_rt), .w_d(w_d__l_rt), .w_e(w_e__l_rt), .w_f(w_f__l_rt), .e_v(e_v__l_rt), .e_t(e_t__l_rt), .e_d(e_d__l_rt), .e_e(e_e__l_rt), .e_f(e_f__l_rt), .cfg_v(cq_v__l_rt), .cfg_d(cq_d__l_rt), .cw_s_v(sv_o), .cw_s_a(sa_o), .cw_s_d(sd_o), .cw_n_v(nv_o), .cw_n_a(na_o), .cw_n_d(nd_o), .fault(f_o));   // region rt, t = 3
+`ifdef OT_S81_CAPC5R_OLATCH
+    wire [5:0] u_osv_f;
+    ot_pl_pad #(.W(6), .N(1)) u_osv (.ck(ck_rs), .d(sv_o__l_rs), .q(u_osv_f));
+    ot_s81sl_capc5r_olat #(.W(6)) u_osv_l (.ck(ck_rs), .d(u_osv_f), .q(cw_s_v));   // face flop -> latch -> pin
+`else
     ot_pl_pad #(.W(6), .N(1)) u_osv (.ck(ck_rs), .d(sv_o__l_rs), .q(cw_s_v));   // region rs, t = 6
+`endif
+`ifdef OT_S81_CAPC5R_OLATCH
+    wire [71:0] u_osa_f;
+    ot_pl_pad #(.W(72), .N(1)) u_osa (.ck(ck_rs), .d(sa_o__l_rs), .q(u_osa_f));
+    ot_s81sl_capc5r_olat #(.W(72)) u_osa_l (.ck(ck_rs), .d(u_osa_f), .q(cw_s_a));   // face flop -> latch -> pin
+`else
     ot_pl_pad #(.W(72), .N(1)) u_osa (.ck(ck_rs), .d(sa_o__l_rs), .q(cw_s_a));   // region rs, t = 6
+`endif
+`ifdef OT_S81_CAPC5R_OLATCH
+    wire [191:0] u_osd_f;
+    ot_pl_pad #(.W(192), .N(1)) u_osd (.ck(ck_rs), .d(sd_o__l_rs), .q(u_osd_f));
+    ot_s81sl_capc5r_olat #(.W(192)) u_osd_l (.ck(ck_rs), .d(u_osd_f), .q(cw_s_d));   // face flop -> latch -> pin
+`else
     ot_pl_pad #(.W(192), .N(1)) u_osd (.ck(ck_rs), .d(sd_o__l_rs), .q(cw_s_d));   // region rs, t = 6
+`endif
+`ifdef OT_S81_CAPC5R_OLATCH
+    wire [0:0] u_osf_f;
+    ot_pl_pad #(.W(1), .N(1)) u_osf (.ck(ck_rs), .d(f_o__l_rs), .q(u_osf_f));
+    ot_s81sl_capc5r_olat #(.W(1)) u_osf_l (.ck(ck_rs), .d(u_osf_f), .q(fault));   // face flop -> latch -> pin
+`else
     ot_pl_pad #(.W(1), .N(1)) u_osf (.ck(ck_rs), .d(f_o__l_rs), .q(fault));   // region rs, t = 6
+`endif
+`ifdef OT_S81_CAPC5R_OLATCH
+    wire [3:0] u_onv_f;
+    ot_pl_pad #(.W(4), .N(1)) u_onv (.ck(ck_rn), .d(nv_o__l_rn), .q(u_onv_f));
+    ot_s81sl_capc5r_olat #(.W(4)) u_onv_l (.ck(ck_rn), .d(u_onv_f), .q(cw_n_v));   // face flop -> latch -> pin
+`else
     ot_pl_pad #(.W(4), .N(1)) u_onv (.ck(ck_rn), .d(nv_o__l_rn), .q(cw_n_v));   // region rn, t = 6
+`endif
+`ifdef OT_S81_CAPC5R_OLATCH
+    wire [47:0] u_ona_f;
+    ot_pl_pad #(.W(48), .N(1)) u_ona (.ck(ck_rn), .d(na_o__l_rn), .q(u_ona_f));
+    ot_s81sl_capc5r_olat #(.W(48)) u_ona_l (.ck(ck_rn), .d(u_ona_f), .q(cw_n_a));   // face flop -> latch -> pin
+`else
     ot_pl_pad #(.W(48), .N(1)) u_ona (.ck(ck_rn), .d(na_o__l_rn), .q(cw_n_a));   // region rn, t = 6
+`endif
+`ifdef OT_S81_CAPC5R_OLATCH
+    wire [127:0] u_ond_f;
+    ot_pl_pad #(.W(128), .N(1)) u_ond (.ck(ck_rn), .d(nd_o__l_rn), .q(u_ond_f));
+    ot_s81sl_capc5r_olat #(.W(128)) u_ond_l (.ck(ck_rn), .d(u_ond_f), .q(cw_n_d));   // face flop -> latch -> pin
+`else
     ot_pl_pad #(.W(128), .N(1)) u_ond (.ck(ck_rn), .d(nd_o__l_rn), .q(cw_n_d));   // region rn, t = 6
+`endif
 endmodule
+`ifdef OT_S81_CAPC5R_OLATCH
+// S81-RF1 (DIE-S81-51/RF-B 11-03, DIE-S81-51/CLK crossing table row 1): core-owned negative-level lockup latch on every
+// registered output face bit: face flop -> latch (transparent while ck is low) -> pin, no logic between.  The pin changes
+// half a period after the launching edge, so a zero-logic core -> parent face is hold-safe by construction (estimate
+// hold >= +179 near / +144 all, setup >= +35 near / +3 all); 0 cycles added (the capture edge is unchanged).
+(* keep_hierarchy *)
+module ot_s81sl_capc5r_olat #(parameter integer W = 1) (input wire ck, input wire [W-1:0] d, output reg [W-1:0] q);
+    // DIE-S81-51/NFF 11-03 (uniform out-face form ruling): default = negative-EDGE flop (DFFLQN) per bit, same T/2 hold
+    // window as the transparent-low latch, 0 cycles; +define+OT_S81_CAPC5R_OLATCH_LEVEL keeps the latch form.
+`ifdef OT_S81_CAPC5R_OLATCH_LEVEL
+    always @* if (!ck) q = d;
+`else
+    always @(negedge ck) q <= d;
+`endif
+endmodule
+`endif

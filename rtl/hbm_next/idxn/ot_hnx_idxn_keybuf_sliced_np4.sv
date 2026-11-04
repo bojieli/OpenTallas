@@ -12,10 +12,10 @@ module ot_hnx_idxn_keybuf_sliced_np4 #(
  input wire replay_v,input wire[7:0]replay_index,
  output wire[NP*1099-1:0]key_out,output wire fault
 );
- // Unsupported configurations fail elaboration; RS=1's registered mux is a
- // different contract and must not silently use this RS=0 physical composition.
- if(RS!=0)begin:g_unsupported_rs
-  ERROR_keybuf_sliced_np4_requires_RS_zero invalid_configuration();
+ // Unsupported configurations fail elaboration.  RS is passed to every slice (DIE-HBM-61/RTL-C3 11-03): RS=1 is the
+ // packed RS=1 contract (registered PRE strobe select, per-column copies), the hardened slice form; RS=0 unchanged.
+ if(RS!=0&&RS!=1)begin:g_unsupported_rs
+  ERROR_keybuf_sliced_np4_requires_RS_zero_or_one invalid_configuration();
  end
  if(NP!=4 && NP!=8)begin:g_unsupported_np
   ERROR_keybuf_sliced_np4_requires_NP_four_or_eight invalid_configuration();
@@ -23,7 +23,7 @@ module ot_hnx_idxn_keybuf_sliced_np4 #(
  wire[NP-1:0]lane_fault;
  for(genvar p=0;p<NP;p=p+1)begin:gp
   wire[2:0]lane_id=pbase+3'(p);
-  ot_hnx_idxn_keybuf_slice u_line(.clk(clk),.rst_n(rst_n),.clear(clear),.strap_lane_id(lane_id),
+  ot_hnx_idxn_keybuf_slice #(.RS(RS)) u_line(.clk(clk),.rst_n(rst_n),.clear(clear),.strap_lane_id(lane_id),
    .live_v(live_v),.live_index(live_index),.key_in(key_in[p*1099+:1099]),
    .pre_v(pre_v),.pre_index(pre_index),.replay_v(replay_v),.replay_index(replay_index),
    .key_out(key_out[p*1099+:1099]),.fault(lane_fault[p]));

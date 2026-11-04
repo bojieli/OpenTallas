@@ -27,7 +27,16 @@
 module dsdv_eng_rr_e #(
     parameter integer RETURN_AGE = 640,
     parameter [29:0] PCBASE = 30'd0,
-    parameter integer XQ_MUT = 0
+    parameter integer XQ_MUT = 0,
+    // DIE-S81-51/RF-G 11-03 (S81-063): HXL = 1 hx_res landing stage (res_c pin face flop -> res_c2), see
+    // dsfd_engram_lkp_ra640_hx; default from define OT_S81ENG_HXL (kit recipe), else 0 = netlist unchanged
+`ifdef OT_S81ENG_HXL_N
+    parameter integer HXL = `OT_S81ENG_HXL_N            // bench window-margin probe only
+`elsif OT_S81ENG_HXL
+    parameter integer HXL = 1
+`else
+    parameter integer HXL = 0
+`endif
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -64,7 +73,7 @@ module dsdv_eng_rr_e #(
         .ks_pos(ks[20:0]), .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids), .fault(wf));
     wire hq_v, hr_v, o_v, st_v, st_bad, lf; wire [30:0] hq_atom; wire [2:0] hq_tag, hr_slot, hr_tag, o_beat, o_slot, st_slot;
     wire [3:0] hr_idx; wire [255:0] hr_d; wire [4:0] o_col; wire [263:0] o_d;
-    dsfd_engram_lkp_ra640_hx #(.RETURN_AGE(RETURN_AGE)) u_lkp (.ck(ck), .ck_seed(ck), .ck_hash({6{ck}}),
+    dsfd_engram_lkp_ra640_hx #(.RETURN_AGE(RETURN_AGE), .HXL(HXL)) u_lkp (.ck(ck), .ck_seed(ck), .ck_hash({6{ck}}),
         .ck_n(ck), .ck_s(ck), .ck_rd(ck), .rst_n(rl[1]), .rst_regions(rl[31:16]),
         .cfg_layer(ly_q), .cfg_rank(rk_q), .hx_w(hx_w), .hx_res(hx_res),
         .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids),

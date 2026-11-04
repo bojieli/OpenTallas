@@ -21,7 +21,7 @@
     {
      "xy_um": [
       108.0,
-      133.92
+      125.28
      ],
      "region_um": [
       0.0,
@@ -33,7 +33,7 @@
     {
      "xy_um": [
       319.68,
-      133.92
+      125.28
      ],
      "region_um": [
       213.84,
@@ -617,7 +617,10 @@
      ]
     },
     {
-     "xy_um": null,
+     "xy_um": [
+      527.04,
+      889.92
+     ],
      "region_um": [
       420.48,
       989.673,
@@ -1081,8 +1084,8 @@
     },
     {
      "xy_um": [
-      203.04,
-      64.8
+      190.08,
+      82.08
      ],
      "region_um": [
       125.28,
@@ -1093,7 +1096,7 @@
     },
     {
      "xy_um": [
-      17.28,
+      34.56,
       198.72
      ],
      "region_um": [
@@ -1105,7 +1108,7 @@
     },
     {
      "xy_um": [
-      203.04,
+      220.32,
       198.72
      ],
      "region_um": [
@@ -1316,12 +1319,12 @@
    "sinks": 7654,
    "entries": 2,
    "grid": [
-    2,
-    1
+    1,
+    2
    ],
    "outline_um": [
-    434.808,
-    480.0
+    400.248,
+    151.68
    ],
    "instances": 1,
    "kept_signed": false,
@@ -1329,26 +1332,26 @@
    "regional_entries": [
     {
      "xy_um": [
-      216.0,
-      120.96
+      99.36,
+      77.76
      ],
      "region_um": [
       0.0,
       0.0,
-      434.808,
-      240.0
+      200.124,
+      151.68
      ]
     },
     {
      "xy_um": [
-      216.0,
-      358.56
+      298.08,
+      77.76
      ],
      "region_um": [
+      200.124,
       0.0,
-      240.0,
-      434.808,
-      480.0
+      400.248,
+      151.68
      ]
     }
    ]
@@ -1491,95 +1494,6 @@
       0.0,
       475.2,
       259.2
-     ]
-    }
-   ]
-  },
-  "ot_hbm_idx_score_hcol_h0": {
-   "sinks": 25078,
-   "entries": 6,
-   "grid": [
-    2,
-    3
-   ],
-   "outline_um": [
-    218.592,
-    187.488
-   ],
-   "instances": 128,
-   "kept_signed": false,
-   "sinks_per_entry": 4180,
-   "regional_entries": [
-    {
-     "xy_um": [
-      34.56,
-      47.52
-     ],
-     "region_um": [
-      0.0,
-      0.0,
-      72.864,
-      93.744
-     ]
-    },
-    {
-     "xy_um": [
-      108.0,
-      47.52
-     ],
-     "region_um": [
-      72.864,
-      0.0,
-      145.728,
-      93.744
-     ]
-    },
-    {
-     "xy_um": [
-      181.44,
-      47.52
-     ],
-     "region_um": [
-      145.728,
-      0.0,
-      218.592,
-      93.744
-     ]
-    },
-    {
-     "xy_um": [
-      34.56,
-      142.56
-     ],
-     "region_um": [
-      0.0,
-      93.744,
-      72.864,
-      187.488
-     ]
-    },
-    {
-     "xy_um": [
-      108.0,
-      142.56
-     ],
-     "region_um": [
-      72.864,
-      93.744,
-      145.728,
-      187.488
-     ]
-    },
-    {
-     "xy_um": [
-      181.44,
-      142.56
-     ],
-     "region_um": [
-      145.728,
-      93.744,
-      218.592,
-      187.488
      ]
     }
    ]
@@ -1953,119 +1867,6 @@
       0.0,
       440.64,
       207.36
-     ]
-    }
-   ]
-  },
-  "ot_hbm_su_static_pgslice_lg__lanes8_11": {
-   "sinks": 38590,
-   "entries": 8,
-   "grid": [
-    2,
-    4
-   ],
-   "outline_um": [
-    760.32,
-    311.04
-   ],
-   "instances": 4,
-   "kept_signed": false,
-   "sinks_per_entry": 4824,
-   "regional_entries": [
-    {
-     "xy_um": [
-      95.04,
-      56.16
-     ],
-     "region_um": [
-      0.0,
-      0.0,
-      190.08,
-      155.52
-     ]
-    },
-    {
-     "xy_um": [
-      272.16,
-      77.76
-     ],
-     "region_um": [
-      190.08,
-      0.0,
-      380.16,
-      155.52
-     ]
-    },
-    {
-     "xy_um": [
-      488.16,
-      77.76
-     ],
-     "region_um": [
-      380.16,
-      0.0,
-      570.24,
-      155.52
-     ]
-    },
-    {
-     "xy_um": [
-      665.28,
-      56.16
-     ],
-     "region_um": [
-      570.24,
-      0.0,
-      760.32,
-      155.52
-     ]
-    },
-    {
-     "xy_um": [
-      95.04,
-      254.88
-     ],
-     "region_um": [
-      0.0,
-      155.52,
-      190.08,
-      311.04
-     ]
-    },
-    {
-     "xy_um": [
-      272.16,
-      233.28
-     ],
-     "region_um": [
-      190.08,
-      155.52,
-      380.16,
-      311.04
-     ]
-    },
-    {
-     "xy_um": [
-      488.16,
-      233.28
-     ],
-     "region_um": [
-      380.16,
-      155.52,
-      570.24,
-      311.04
-     ]
-    },
-    {
-     "xy_um": [
-      665.28,
-      254.88
-     ],
-     "region_um": [
-      570.24,
-      155.52,
-      760.32,
-      311.04
      ]
     }
    ]
@@ -3186,155 +2987,6 @@
     }
    ]
   },
-  "ot_hgi_sfu_split3_lane_core__idpin": {
-   "sinks": 51400,
-   "entries": 11,
-   "grid": [
-    1,
-    11
-   ],
-   "outline_um": [
-    388.8,
-    345.6
-   ],
-   "instances": 32,
-   "kept_signed": false,
-   "sinks_per_entry": 4673,
-   "regional_entries": [
-    {
-     "xy_um": [
-      17.28,
-      172.8
-     ],
-     "region_um": [
-      0.0,
-      0.0,
-      35.345,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      51.84,
-      172.8
-     ],
-     "region_um": [
-      35.345,
-      0.0,
-      70.691,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      86.4,
-      172.8
-     ],
-     "region_um": [
-      70.691,
-      0.0,
-      106.036,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      125.28,
-      172.8
-     ],
-     "region_um": [
-      106.036,
-      0.0,
-      141.382,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      159.84,
-      172.8
-     ],
-     "region_um": [
-      141.382,
-      0.0,
-      176.727,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      194.4,
-      172.8
-     ],
-     "region_um": [
-      176.727,
-      0.0,
-      212.073,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      228.96,
-      172.8
-     ],
-     "region_um": [
-      212.073,
-      0.0,
-      247.418,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      263.52,
-      172.8
-     ],
-     "region_um": [
-      247.418,
-      0.0,
-      282.764,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      302.4,
-      172.8
-     ],
-     "region_um": [
-      282.764,
-      0.0,
-      318.109,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      336.96,
-      172.8
-     ],
-     "region_um": [
-      318.109,
-      0.0,
-      353.455,
-      345.6
-     ]
-    },
-    {
-     "xy_um": [
-      371.52,
-      172.8
-     ],
-     "region_um": [
-      353.455,
-      0.0,
-      388.8,
-      345.6
-     ]
-    }
-   ]
-  },
   "ot_hgi_sm_xload_cl2_bdring": {
    "sinks": 13885,
    "entries": 3,
@@ -3439,11 +3091,14 @@
   "ot_hbm_hc_root_static__tailx_sk_steady",
   "ot_hbm_hc_root_static__tailx_sk_step0",
   "ot_hbm_idx_qctl_static",
+  "ot_hbm_idx_score_hcol_h0_ra",
+  "ot_hbm_idx_score_hcol_h0_rb",
   "ot_hbm_idx_score_hcol_h1",
   "ot_hbm_idx_selector_static_sel",
   "ot_hbm_idx_tail_native",
   "ot_hbm_idx_topk_link_static",
   "ot_hbm_static_cfg_collar_idx256r",
+  "ot_hbm_su_pg_lane1_core",
   "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
   "ot_hbm_su_static_pgslice_lg__pretree",
   "ot_hbm_svc_sm_group_rel_id",
@@ -3463,14 +3118,17 @@
   "ot_hgi_sfu_core_split3__opstore_a",
   "ot_hgi_sfu_core_split3__opstore_b",
   "ot_hgi_sfu_programme_store_r10",
+  "ot_hgi_sfu_split3_lane_core_bk",
+  "ot_hgi_sfu_split3_lane_core_ex",
+  "ot_hgi_sfu_split3_lane_core_fr",
   "ot_hgi_sm_xload_cl2_ctlx",
   "ot_hnx_fused_hub_n4ext",
   "ot_pdie_serdes"
  ],
  "totals": {
-  "modules": 33,
-  "entries": 239,
-  "slots": 576,
+  "modules": 30,
+  "entries": 214,
+  "slots": 412,
   "kept_signed": []
  }
 }

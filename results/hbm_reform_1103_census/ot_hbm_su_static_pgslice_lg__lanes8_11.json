@@ -1,0 +1,110 @@
+{
+ "schema": "opentallas.prebuild_gate.v1",
+ "kit": "/home/ubuntu/scratch-root/claude/die-hbm-61-gate/kits/ot_hbm_su_static_pgslice_lg__lanes8_11",
+ "design": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+ "flow_status": [
+  "GATE_FLOW",
+  "stop=ok",
+  "GATE_STAGE",
+  "place_resized",
+  "GATE_STA",
+  "rc=0"
+ ],
+ "cells": 288781,
+ "macros": 24,
+ "stdcell_area_um2": 30677.2,
+ "sta_stage": "place_resized",
+ "period": 833.0,
+ "groups": {
+  "r2r": {
+   "slack": -164.9,
+   "start": "u_fcore.u_core.u_lane1.u_lane.u_d5.genblk1.g_line.line[274]$_DFF_P_/QN",
+   "end": "u_fcore.u_core.u_lane1.u_lane.u_me2.genblk1.g_l4.u.u.s1_rows[232]$_DFF_P_/D"
+  },
+  "in2reg": {
+   "slack": -224.4,
+   "start": "rst_lane_n[3]",
+   "end": "u_fcore.u_core.u_lane3.u_lane.u_m2.genblk1.g_l4.u.u.u_c3.q[13]$_DFF_PN0_/RESETN"
+  },
+  "reg2out": {
+   "slack": 580.5,
+   "start": "u_bout_g_bank_10_u_bank_read_data/q[62]$_DFF_P_/QN",
+   "end": "g_bank_10_u_bank_read_data[62]"
+  },
+  "in2out": null
+ },
+ "wns": -224.4,
+ "r2r_endpoints_stage_over_583": 12703,
+ "stage_ps": 997.9,
+ "stage_limit_ps": 583.1,
+ "setup_limit_ps": 83.3,
+ "checks": {
+  "timing": {
+   "ok": false,
+   "wns": -224.4,
+   "sta_stage": "place_resized"
+  },
+  "cells": {
+   "ok": false,
+   "cells": 288781
+  },
+  "memory": {
+   "ok": true,
+   "max_bits": 4096,
+   "largest": 0,
+   "over": []
+  },
+  "face": {
+   "ok": true,
+   "pin_unreg": 0,
+   "pins_registered": 3713,
+   "pins_to_macro": 0,
+   "unreg_head": [],
+   "unreg_buses": [],
+   "definition": "geom_rules.pin_reg_metrics (flop reachable through BUF/INV)",
+   "strict_face_guard": {
+    "fails": 0,
+    "fail_counts": {},
+    "fails_head": {}
+   }
+  },
+  "straps": {
+   "ok": true,
+   "strap_ports": [],
+   "leaked": []
+  },
+  "reset": {
+   "ok": false,
+   "resets": [
+    "rst_n",
+    "rst_lane_n[0]",
+    "rst_lane_n[1]",
+    "rst_lane_n[2]",
+    "rst_lane_n[3]"
+   ],
+   "landing_pins": {
+    "rst_n": 28,
+    "rst_lane_n[0]": 519,
+    "rst_lane_n[1]": 519,
+    "rst_lane_n[2]": 519,
+    "rst_lane_n[3]": 519
+   },
+   "unregistered": [
+    "rst_lane_n[0]",
+    "rst_lane_n[1]",
+    "rst_lane_n[2]",
+    "rst_lane_n[3]",
+    "rst_n"
+   ],
+   "max": 8
+  }
+ },
+ "advisory": true,
+ "verdict": "FAIL",
+ "fails": [
+  "timing",
+  "cells",
+  "reset"
+ ],
+ "needs_stage_cut": true
+}

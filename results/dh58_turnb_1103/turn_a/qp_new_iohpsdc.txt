@@ -1,0 +1,9 @@
+worst slack max -354.1
+QP fstart slack 165.847946 end u_cland_t_i/u_ring.g_wreg.sl[0].ch[7].u_wen/q$_DFF_P_/D
+QP t_i slack -354.059631 end u_cland_t_i/u_ring.s_d[0][267]$_DFFE_NP_/D
+QP dn_ready slack 183.147873 end u_cland_t_i/u_ring.s_d[2][566]$_DFFE_NP_/D
+QP worst slack 683.433716 start u_rrl_6/q$_DFF_P_/QN end u_ft_t_s0/eq$_DFF_PN0_/RESETN
+QP worst slack 155.006516 start u_cland_t_i/u_ring.ctl_w[0]$_SDFF_NN0_/QN end u_cland_t_i/lap_ok$_DFF_P_/D
+QP worst slack 177.025558 start u_cland_t_i/u_ring.oh[6]$_DFF_P_/QN end u_cland_t_i/u_ring.glo0$_DFF_N_/D
+QP worst slack -354.059631 start t_i[267] end u_cland_t_i/u_ring.s_d[0][267]$_DFFE_NP_/D
+QP worst slack 574.315796 start u_rrl_9/q$_DFF_P_/QN end rst_start_raw_2

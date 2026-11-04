@@ -1,0 +1,6 @@
+# mutant frgm seed 7 n=400
+ready_A=20439 ready_C=37239 fault_A=13206 fault_C=4852
+WREG_EQUIV cases=400 ready_cycles_AC=20439 match_AC=0 errors=76416 FAIL
+# mutant frgw seed 7 n=400
+ready_A=36567 ready_C=37239 fault_A=4780 fault_C=4852
+WREG_EQUIV cases=400 ready_cycles_AC=36567 match_AC=27489 errors=23546 FAIL

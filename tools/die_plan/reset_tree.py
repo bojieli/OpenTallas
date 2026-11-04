@@ -2069,19 +2069,27 @@ def tcl_text(T, native_paths=None):
     for c in T.get("core_resets", []):
         q = f"rst_n_t{c['tap']}"
         inst, pin = c["inst"], c["pin"]
+        # ODB getName escapes brackets (u_core.u.g_pp\\[0\\].u_pair); match on the plain Verilog form (hd_lep0N).
         names = [inst] + ([c["physical_inst"]] if c.get("physical_inst") else [])
         match = " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}" for x in names)
         t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
               "set rtr_cn {}; set rtr_ci {}",
               f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",
-              f"foreach i [$ff_blk getInsts] {{ set n [$i getName]; if {{{match}}} {{ lappend rtr_ci $i }} }}",
+              f"foreach i [$ff_blk getInsts] {{ set n [string map {{\\\\[ [ \\\\] ]}} [$i getName]]; if {{{match}}} {{ lappend rtr_ci $i }} }}",
               f"if {{[llength $rtr_cn] != 1 || [llength $rtr_ci] != 1}} {{ error {{OT_RESET_CORE unresolved {inst}.{pin} or {q}}} }}",
               f"set rtr_it [[lindex $rtr_ci 0] findITerm {{{pin}}}]",
               f"if {{$rtr_it eq \"NULL\"}} {{ error {{OT_RESET_CORE missing {inst}.{pin}}} }}",
-              f"if {{![rtr_reset_equiv [$rtr_it getNet] 0 {{}}]}} {{ error {{OT_RESET_CORE {inst}.{pin}: existing reset is not an equal-depth relay copy; preserve its RTL latency}} }}",
-              "$rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
-              f"dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
-              f"puts \"OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}\""]
+              # CLASS RESET-CORE 11-03 (DIE-S81-51): a core reset that is not an equal-depth relay copy (an RTL
+              # private pipeline, a frame reset-forest leaf or a lane-carried reset bit) keeps its RTL driver and
+              # latency: no rewire, recorded in ot_reset_core_kept.txt.  Only equal-depth copies are re-targeted.
+              f"if {{![rtr_reset_equiv [$rtr_it getNet] 0 {{}}]}} {{",
+              f"  puts {{OT_RESET_CORE_KEPT {inst}.{pin}: RTL reset kept (not an equal-depth relay copy; RTL latency preserved)}}",
+              f"  set rtr_kf [open $::env(RESULTS_DIR)/ot_reset_core_kept.txt a]; puts $rtr_kf {{{inst}.{pin}}}; close $rtr_kf",
+              "} else {",
+              "  $rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
+              f"  dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
+              f"  puts {{OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}}}",
+              "}"]
     edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
     edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
     t += ["close $rtr_fh",

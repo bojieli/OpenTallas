@@ -1,0 +1,5 @@
+read_verilog -sv new_nc.sv
+hierarchy -top qkd_kv_hbm_elastic_front_mc_nc
+proc; flatten; memory -nomap; memory_map; opt_clean; async2sync
+select -list w:g_ra[1]*
+sat -tempinduct -set-init-zero -seq 1  -prove g_ra[1].u_rp.q g_ra[0].u_rp.q -prove g_ra[2].u_rp.q g_ra[0].u_rp.q -prove g_ra[3].u_rp.q g_ra[0].u_rp.q -prove g_ra[4].u_rp.q g_ra[0].u_rp.q -prove g_ra[5].u_rp.q g_ra[0].u_rp.q -prove g_ra[6].u_rp.q g_ra[0].u_rp.q -prove g_ra[7].u_rp.q g_ra[0].u_rp.q -prove g_ra[8].u_rp.q g_ra[0].u_rp.q -prove g_ra[9].u_rp.q g_ra[0].u_rp.q -prove g_ra[10].u_rp.q g_ra[0].u_rp.q -prove g_ra[11].u_rp.q g_ra[0].u_rp.q -prove g_ra[12].u_rp.q g_ra[0].u_rp.q -prove g_ra[13].u_rp.q g_ra[0].u_rp.q -prove g_ra[14].u_rp.q g_ra[0].u_rp.q -prove g_ra[15].u_rp.q g_ra[0].u_rp.q -show-ports -verify

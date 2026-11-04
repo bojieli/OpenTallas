@@ -1,0 +1,51 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl5e017c6f/base/3_2_place_iop.odb
+Took 7 seconds: read_db /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl5e017c6f/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl5e017c6f/base/2_floorplan.sdc
+Took 6 seconds: read_sdc /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl5e017c6f/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/face_flops.tcl
+OT_FACE_FLOPS interior: 1 pin registers of interior pins at their pin (> 10.0 um from every core edge)
+OT_FACE_FLOPS placed 2523 pin registers FIRM at their faces (7367 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 4394 ft stations j>=1 FIRM on their routes (0 missing)
+OT_FACE_FLOPS landed ft slots: 24505 stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k
+OT_RESET_TREE entry relayed depth 4 (64 tree + 74 pad relays, planned max hop 379.3 um): placed 221 flops FIRM, placed max hop 380.4 um, 0 hops > 405 um: PASS (missing: 0 )
+OT_RESET_TAPS role mission
+OT_RESET_TAPS 57 taps (1 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 0 re-pointed to the nearest tap's synchroniser, 0 already there, 0 without a same-polarity net (kept); per tap: 
+OT_CLAND collector grow u_bound.u_cland_collect_rst_n_t10/fault_o$_SDFF_PN0_ (collector:rst_n_t10): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_n_t10/ready_o$_SDFF_PN0_ (collector:rst_n_t10): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_100/fault_o$_SDFF_PN0_ (collector:rst_rl_100): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_100/ready_o$_SDFF_PN0_ (collector:rst_rl_100): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_101/fault_o$_SDFF_PN0_ (collector:rst_rl_101): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_101/ready_o$_SDFF_PN0_ (collector:rst_rl_101): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_33/ready_o$_SDFF_PN0_ (collector:rst_rl_33): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_34/fault_o$_SDFF_PN0_ (collector:rst_rl_34): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_34/ready_o$_SDFF_PN0_ (collector:rst_rl_34): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_64/fault_o$_SDFF_PN0_ (collector:rst_rl_64): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_64/ready_o$_SDFF_PN0_ (collector:rst_rl_64): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_65/fault_o$_SDFF_PN0_ (collector:rst_rl_65): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_65/ready_o$_SDFF_PN0_ (collector:rst_rl_65): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_81/fault_o$_SDFF_PN0_ (collector:rst_rl_81): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_81/ready_o$_SDFF_PN0_ (collector:rst_rl_81): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_89/ready_o$_SDFF_PN0_ (collector:rst_rl_89): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_90/fault_o$_SDFF_PN0_ (collector:rst_rl_90): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_90/ready_o$_SDFF_PN0_ (collector:rst_rl_90): window x2 (+-4.32 um)
+OT_CLAND placed 164978 actual mapped cells FIRM in nonoverlapping reserved bands/relay sites
+OT_FACE_FLOPS landed line: 17572 stations of 6933 plan-siteless landed bits re-placed on their placed-ring -> out-pin lines (0 missing)
+OT_RESET_TAPS role mission
+OT_RESET_TAPS 57 taps (1 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 0 re-pointed to the nearest tap's synchroniser, 0 already there, 0 without a same-polarity net (kept); per tap: 
+Took 2038 seconds: source /work/face_flops.tcl
+[INFO RSZ-0026] Removed 952 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 9601 BUFx2_ASAP7_75t_R input buffers.

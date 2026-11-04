@@ -1,0 +1,11 @@
+rfd_gl4_1103 die-local plan delta (DIE-S81-51/RF-D 11-03, OWNER 18:57 conservative form; pin-latency unchanged: 0 cycles)
+
+plan_h2_2249_gl4.json.gz = plan_h2_2249.json + results/rfd_gl4_1103/delta_gl4.py (plan of record NOT edited):
+  gunit__t1 dsdv_gunit_l4: outline 345.6x64.8 -> 302.4x108 (fill <= 0.45, aspect 2.8), moved from (1270.08, 336.96) to
+  the free field (950.4, 233.28) (old slot cannot grow: l5 below, l0 above); pins / LEF = rfc_1103 set
+  (inputs/core_pins/rfc_1103/dsdv_gunit_l4.json, cores/legacy/lef/rfc_1103/dsdv_gunit_l4.lef); early core tap
+  u_gunit.u_l4.clk moved with the core (clk S-edge pin 155.052, 0.24); grid+explicit light tap clk_t50 moved out of the
+  new core box into the l4 / l1 street (1049.32, 289.32 -> 1049.32, 360.72).
+schema.validate on the uncompressed copy: PASS (0 errors).  No pin-latency change (OLAT 2 negedge out-face, RF 1 registered
+selects, 0 cycles), so no schedule update and no TOK-VERIFY delta.  Faces of l0 / l5 / l4r are registered both sides; the
+moved wires are <= ~450 um (one repeated M5/M6 leg each).

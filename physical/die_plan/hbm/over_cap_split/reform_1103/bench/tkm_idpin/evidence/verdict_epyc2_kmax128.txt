@@ -1,0 +1,13 @@
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-768694-1793733488 after 2 s
+mutn full128: TKM_SPLIT FAIL total=262 gold_ref=0 gold_split=246 lockstep=16 words=256/256 cycles=1199/1199 shift=0
+ot-run: RAN on epyc2 (unit oth-ubuntu-768694-1793733488): exit 0
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-768357-1793733488 after 1 s
+mutp2 full128: TKM_SPLIT FAIL total=259 gold_ref=0 gold_split=243 lockstep=16 words=256/256 cycles=1199/1227 shift=28
+ot-run: RAN on epyc2 (unit oth-ubuntu-768357-1793733488): exit 0
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-767625-1793733488 after 1 s
+mutp1 full128: TKM_SPLIT FAIL total=242 gold_ref=0 gold_split=226 lockstep=16 words=256/256 cycles=1199/1227 shift=28
+ot-run: RAN on epyc2 (unit oth-ubuntu-767625-1793733488): exit 0
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-768766-1793733488 after 106 s
+pos full128: TKM_SPLIT PASS words=256/256 cycles ref=1199 split=1227 shift=28 lockstep_edges=1252 split_writes=16
+pos part44: TKM_SPLIT PASS words=88/88 cycles ref=1136 split=1164 shift=28 lockstep_edges=1189 split_writes=6
+ot-run: RAN on epyc2 (unit oth-ubuntu-768766-1793733488): exit 0

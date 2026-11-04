@@ -148,11 +148,14 @@ def test_signoff_rebind_contract_per_corner():
     # record(): TT pin-flop mean 270 (250 / 290), FF 265 (250 / 280)
     rec = signoff.evaluate(_rebind(record(), tt=270.0, ff=265.0))
     assert rec["checks"]["clock"]["verdict"] == "PASS" and rec["verdict"] == "SIGNED"
+    # OWNER 11-03 19:12: out of the window = information for die STA, the core signs on its own sign-off
     rec = signoff.evaluate(_rebind(record(), tt=270.0, ff=219.0))          # FF routed I 46 ps off the bound value
-    assert rec["checks"]["clock"]["verdict"] == "FAIL"
-    assert any("FF pin-flop insertion" in p for p in rec["checks"]["clock"]["problems"])
+    assert rec["checks"]["clock"]["verdict"] == "PASS" and rec["verdict"] == "SIGNED"
+    assert any("FF pin-flop insertion" in p for p in rec["checks"]["clock"]["insertion_band_info"])
+    assert not rec["checks"]["clock"]["problems"]
     rec = signoff.evaluate(_rebind(record(), tt=313.7, ff=265.0))
-    assert any("TT pin-flop insertion" in p for p in rec["checks"]["clock"]["problems"])
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert any("TT pin-flop insertion" in p for p in rec["checks"]["clock"]["insertion_band_info"])
 
 
 def test_signoff_rebind_setup_uses_rebound_tt_and_requires_it():

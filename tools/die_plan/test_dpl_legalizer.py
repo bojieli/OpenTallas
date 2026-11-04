@@ -28,8 +28,8 @@ def test_other_values_fail():
 
 def test_config_mk_uses_it_once():
     src = (HERE / "gen_phys.py").read_text()
-    assert src.count("*_dpl_args(P.budgets, tn, dpl_diamond),") == 1
-    assert src.count("DETAIL_PLACEMENT_ARGS") == 2          # helper + docstring; no other writer of the ORFS var
+    assert src.count("*_dpl_args(P.budgets, tn, dpl_diamond, landing=") == 1
+    assert src.count("DETAIL_PLACEMENT_ARGS") == 3          # helper (2 return lines) + docstring; no other writer
 
 
 def test_per_type_opt_in():
@@ -46,3 +46,28 @@ def test_release_grown_hook_follows_the_refirm():
     assert src.count("+ CLAND_RELEASE_GROWN_TCL)") == 1
     t = gen_phys.CLAND_RELEASE_GROWN_TCL
     assert "u_cland_" in t and "setPlacementStatus PLACED" in t and "TAPCELL" not in t
+
+
+# DIE-QC-66/PLAN 11-03 DPL class: landing-band kits default to diamond DPL with a whole-kit search window
+WIN = "export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer -max_displacement {618 1335}"
+
+
+def test_landing_kit_defaults_to_diamond_whole_kit_window():
+    assert gen_phys._dpl_args({}, "slw_st_b_v2", landing=True, outline=[617.76, 1334.88]) == [WIN]
+    assert gen_phys._dpl_args({}, "slw_st_b_v2", landing=False, outline=[617.76, 1334.88]) == []   # no FIRM bands: unchanged
+
+
+def test_every_kit_diamond_call_gets_the_window():
+    o = [617.76, 1334.88]
+    assert gen_phys._dpl_args({"dpl_legalizer": "diamond"}, "x", outline=o) == [WIN]
+    assert gen_phys._dpl_args({"dpl_legalizer_types": ["x"]}, "x__cl1", outline=o) == [WIN]
+    assert gen_phys._dpl_args({}, "x", diamond=True, outline=o) == [WIN]
+
+
+def test_off_types_keep_orfs_default():
+    b = {"dpl_legalizer_off_types": ["coll_n"]}
+    assert gen_phys._dpl_args(b, "coll_n", landing=True, outline=[1, 1]) == []
+    assert gen_phys._dpl_args(b, "coll_n__cl9", landing=True, outline=[1, 1]) == []
+    assert gen_phys._dpl_args(b, "coll_s", landing=True, outline=[1, 1]) != []
+    assert "dpl_legalizer_off_types" not in schema.DEFAULT_BUDGETS
+    assert "dpl_legalizer_off_types" in (HERE / "die_plan.schema.json").read_text()

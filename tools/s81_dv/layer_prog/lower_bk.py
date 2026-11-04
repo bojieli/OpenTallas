@@ -56,8 +56,9 @@ OPS = [r'^attn\.idx\.(topk_local|topk_final)$', r'^attn\.cand\.(topk_local|merge
 INST = 'u_bk_sel'
 LW = 7                    # dsdv_bk_vout: CTL vo edge -> first window vo edge = LW + d
 RELAY = 1                 # dsdv_bk_sel u_rs / u_rn: +1 flop per direction
-FWD = 2                   # ot_dsdv_vstop forward: 2 flops (input, output)
-PIN_TO_PIN = RELAY + FWD - 1   # bench edge convention (value sampled at edge e -> vo after edge e + 2), measured
+FWD = 3                   # ot_dsdv_vstop forward: 3 flops (input, FPIPE decision, output; S81-RF1 RE-FORM dsdv_bk_g RF 1, was 2)
+OFACE = 1                 # dsdv_bk_g RF 4 (S81-062 form 5, 11-03): posedge out-face pin register on vo_s / vo_n
+PIN_TO_PIN = RELAY + FWD + OFACE - 1   # bench edge convention (value sampled at edge e -> vo after edge e + 2), measured
 # COORD ruling 2026-10-24 18:55: the BK addressed-drain sink is canonical (ot_dsdv_vstop BK_DRAIN_SINK=1): u_bk_sel's
 # rung stop consumes the drain CTL addressed to its uid, it is NOT forwarded to vo_s / the slices.  The legacy
 # transparent-forwarding expectation is retired; OT_BK_LEGACY_FWD=1 reproduces it for the old records only.

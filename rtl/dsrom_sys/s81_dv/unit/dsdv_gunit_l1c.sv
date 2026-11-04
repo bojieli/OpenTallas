@@ -26,9 +26,23 @@
 // LOGIC DEPTH) to CPS 2 (3 registered stages of 2 exchanges, each one compare deep: dsdv_sel_cx8_2).  Same six exchanges,
 // same records and order, bit for bit; +1 edge on i_v / i_ids / g_go / g_hit / g_a, hence on the gather reply (s_v / s_d)
 // and the L1 ids row: the compiler's static router latency (lower_gu RT_LAT_N / RT_LAT_S) is +1.  No stall, no handshake.
+// S81-RF1 RE-FORM (DIE-S81-51/RF-C 11-03, OWNER TWO-STRIKES: two ECO strikes EXHAUSTED TT -22.61 / -19.67, same path
+// fd -> u_m23.s1 = a two-exchange merge stage at ~850 ps).  RF = 1 (default): every merge is dsdv_sel_merge8_p4 (ONE
+// compare-exchange per registered stage, the same four levels bit for bit); the running top 8 becomes FOUR interleaved
+// accumulators (acc_t = top8(list_t U acc_{t-4}); beats 0..3 of a segment enter with empty, the beat position pos
+// saturating at 4 replaces fresh / single), and the final merge is a two-level tree over acc_T, acc_{T-1}, acc_{T-2},
+// acc_{T-3} (the ones older than the segment's first beat emptied).  Edges: lists E, level 1 E+4, level 2 E+8,
+// accumulator E+12, final tree E+16 / E+20, order sort E+23 (was E+11): +12 edges on i_v / i_ids / g_go / g_hit / g_a,
+// and the front-fault term of fault is delayed 12 edges with it (fault = the RF = 0 fault 12 edges later); s_v / s_d
+// (the gather reply, f_g / f_d -> one flop) are unchanged (+0 vs their inputs; the reply itself follows g_go, so it
+// lands +12 later in the schedule).  Compiler: lower_gu RT_LAT_N / RT_LAT_S +12.  OLAT = 1 (default, CLK crossing
+// table row 1): every output port leaves its flop through one transparent-low lockup latch (g_olat, 0 cycles).
+// Bench: results/rfc_gu_1103/l1c (RF 1 == RF 0 delayed 12 on the select ports, 0 on s_v / s_d; mutant caught).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l1c #(
-    parameter integer MUT = 0
+    parameter integer MUT  = 0,
+    parameter integer RF   = 1,
+    parameter integer OLAT = 1
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -37,12 +51,33 @@ module dsdv_gunit_l1c #(
     // those outputs open: one shared L1f master) and no f_d bit 205 of any front (L1f o_d is packed, 245 bits per front)
     input  wire [0:0]    f_v, input wire [0:0] f_f, input wire [0:0] f_l, input wire [0:0] f_g,
     input  wire [4*245-1:0] f_d, input wire [3:0] f_flt,
-    output reg           g_go, output reg [23:0] g_hit, output reg [41:0] g_a,
+    output wire          g_go, output wire [23:0] g_hit, output wire [41:0] g_a,
     // stack L1
-    output reg           i_v, output reg [53:0] i_ids,
-    output reg           s_v, output reg [191:0] s_d,
-    output reg           fault
+    output wire          i_v, output wire [53:0] i_ids,
+    output wire          s_v, output wire [191:0] s_d,
+    output wire          fault
 );
+    // output flops (RF-1: each drives its port through a lockup latch when OLAT = 1)
+    // kept: equal-valued pin flops (i_v / g_go, i_ids / g_a bits) and their latches must stay one per port bit (face_guard)
+    (* keep *) reg g_go_r; (* keep *) reg [23:0] g_hit_r; (* keep *) reg [41:0] g_a_r; (* keep *) reg i_v_r;
+    (* keep *) reg [53:0] i_ids_r; (* keep *) reg s_v_r; (* keep *) reg [191:0] s_d_r; (* keep *) reg fault_r;
+    // face lockup (OLAT): flop -> ONE latch transparent while clk is LOW -> port (no logic, no fan-out).  The port moves
+    // only after the falling edge (parent hold >= ~T/2 by construction); a rising-edge sampler sees the flop's value.
+    localparam integer OW = 1 + 24 + 42 + 1 + 54 + 1 + 192 + 1;
+    wire [OW-1:0] o_r = {g_go_r, g_hit_r, g_a_r, i_v_r, i_ids_r, s_v_r, s_d_r, fault_r};
+    // DIE-S81-51/NFF 11-03 (uniform out-face form ruling): OLAT = 2 = negative-EDGE flop (DFFLQN) per output bit, same
+    // T/2 hold window as the OLAT = 1 latch, 0 cycles; face_guard / face_flops / LEC treat it as a state element.
+    generate if (OLAT == 2) begin : g_onff
+        reg [OW-1:0] o_l;
+        always @(negedge clk) o_l <= o_r;
+        assign {g_go, g_hit, g_a, i_v, i_ids, s_v, s_d, fault} = o_l;
+    end else if (OLAT != 0) begin : g_olat
+        reg [OW-1:0] o_l;                 // not kept: a kept latch wire gets a dangling buffer load (face_guard shared)
+        always_latch if (!clk) o_l = o_r;
+        assign {g_go, g_hit, g_a, i_v, i_ids, s_v, s_d, fault} = o_l;
+    end else begin : g_oreg
+        assign {g_go, g_hit, g_a, i_v, i_ids, s_v, s_d, fault} = o_r;
+    end endgenerate
     localparam integer FE = 41, EW = 43, LW = 8 * EW, K = 6, XW = 11;
     wire [1:0] rq;                            // relayed resets: rq[0] the W half (inputs, merges), rq[1] the rest
     ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
@@ -71,29 +106,60 @@ module dsdv_gunit_l1c #(
     end
     // ---------------------------------------------------------------- per-beat merges (flags {l, f, v} of front 0)
     wire [2:0] fl0 = {fl[0], ff[0], fv[0]};
-    wire [LW-1:0] m01, m23, mb; wire [2:0] g01, g23, gb, gbn;
-    dsdv_sel_merge8 #(.EW(EW), .FW(3)) u_m01 (.clk(clk), .rst_n(rq[0]), .fi(fl0), .a(L[0 +: LW]), .b(L[LW +: LW]), .fo(g01), .q(m01), .fp());
-    dsdv_sel_merge8 #(.EW(EW), .FW(3)) u_m23 (.clk(clk), .rst_n(rq[0]), .fi(fl0), .a(L[2*LW +: LW]), .b(L[3*LW +: LW]), .fo(g23), .q(m23), .fp());
-    dsdv_sel_merge8 #(.EW(EW), .FW(3)) u_mb (.clk(clk), .rst_n(rq[0]), .fi(g01), .a(m01), .b(m23), .fo(gb), .q(mb), .fp(gbn));
-    // ---------------------------------------------------------------- running top 8: two interleaved accumulators
-    // beat t enters with acc_{t-2} (the merge's own output this cycle); beats 0 and 1 of a segment enter with empty.
-    wire [LW-1:0] acc; wire [3:0] ga_f;       // {single, l, f, v} at the accumulator output
-    // fresh = gb[1] || (gb[0] && gb[1] one cycle ago), registered one cycle ahead from u_mb's next flags
-    reg  fresh;
-    always @(posedge clk or negedge rq[1]) if (!rq[1]) fresh <= 1'b0; else fresh <= gbn[1] || (gb[0] && gb[1]);
+    wire [LW-1:0] m01, m23, mb, acc, fin; wire [2:0] g01, g23, gb, gbn; wire [0:0] gfv;
     // an empty operand: the fed-back list with its valid bits cleared (all invalid -> below every valid record)
     function automatic [LW-1:0] novalid(input [LW-1:0] x, input z);
         integer e;
         begin novalid = x; for (e = 0; e < 8; e = e + 1) novalid[EW * e + EW - 1] = x[EW * e + EW - 1] && !z; end
     endfunction
+    generate if (RF == 0) begin : g_rf0
+    dsdv_sel_merge8 #(.EW(EW), .FW(3)) u_m01 (.clk(clk), .rst_n(rq[0]), .fi(fl0), .a(L[0 +: LW]), .b(L[LW +: LW]), .fo(g01), .q(m01), .fp());
+    dsdv_sel_merge8 #(.EW(EW), .FW(3)) u_m23 (.clk(clk), .rst_n(rq[0]), .fi(fl0), .a(L[2*LW +: LW]), .b(L[3*LW +: LW]), .fo(g23), .q(m23), .fp());
+    dsdv_sel_merge8 #(.EW(EW), .FW(3)) u_mb (.clk(clk), .rst_n(rq[0]), .fi(g01), .a(m01), .b(m23), .fo(gb), .q(mb), .fp(gbn));
+    // ---------------------------------------------------------------- running top 8: two interleaved accumulators
+    // beat t enters with acc_{t-2} (the merge's own output this cycle); beats 0 and 1 of a segment enter with empty.
+    wire [3:0] ga_f;                          // {single, l, f, v} at the accumulator output
+    // fresh = gb[1] || (gb[0] && gb[1] one cycle ago), registered one cycle ahead from u_mb's next flags
+    reg  fresh;
+    always @(posedge clk or negedge rq[1]) if (!rq[1]) fresh <= 1'b0; else fresh <= gbn[1] || (gb[0] && gb[1]);
     dsdv_sel_merge8 #(.EW(EW), .FW(4)) u_acc (.clk(clk), .rst_n(rq[1]), .fi({gb[1] && gb[2], gb}), .a(mb),
         .b(novalid(acc, fresh)), .fo(ga_f), .q(acc), .fp());
     reg [LW-1:0] hold;                        // acc_{t-1}
     always @(posedge clk) hold <= acc;
     // ---------------------------------------------------------------- final merge of the two accumulators
-    wire [LW-1:0] fin; wire [0:0] gfv;
     dsdv_sel_merge8 #(.EW(EW), .FW(1)) u_fin (.clk(clk), .rst_n(rq[1]), .fi(ga_f[0] && ga_f[2]), .a(acc),
         .b(novalid(hold, ga_f[3])), .fo(gfv), .q(fin), .fp());
+    end else begin : g_rf1
+    // RF-1: one compare-exchange per registered stage (dsdv_sel_merge8_p4, 4 edges a merge)
+    dsdv_sel_merge8_p4 #(.EW(EW), .FW(3)) u_m01 (.clk(clk), .rst_n(rq[0]), .fi(fl0), .a(L[0 +: LW]), .b(L[LW +: LW]), .fo(g01), .q(m01), .fp());
+    dsdv_sel_merge8_p4 #(.EW(EW), .FW(3)) u_m23 (.clk(clk), .rst_n(rq[0]), .fi(fl0), .a(L[2*LW +: LW]), .b(L[3*LW +: LW]), .fo(g23), .q(m23), .fp());
+    dsdv_sel_merge8_p4 #(.EW(EW), .FW(3)) u_mb (.clk(clk), .rst_n(rq[0]), .fi(g01), .a(m01), .b(m23), .fo(gb), .q(mb), .fp(gbn));
+    // ---------------------------------------------------------------- running top 8: four interleaved accumulators
+    // beat t enters with acc_{t-4} (the merge's own output this cycle).  pos = position of the beat at u_mb's output in
+    // its segment, saturating at 4 (beats back to back within a segment, as in RF 0); beats 0..3 enter with empty.
+    reg  [2:0] pos;
+    always @(posedge clk or negedge rq[1])
+        if (!rq[1]) pos <= 3'd0; else pos <= gbn[1] ? 3'd0 : (pos[2] ? 3'd4 : pos + 3'd1);
+    wire [1:0] p3 = pos[2] ? 2'd3 : pos[1:0];  // min(pos, 3): how many older accumulators belong to the segment
+    wire [4:0] ga_f;                          // {p3[1:0], l, f, v} at the accumulator output
+    dsdv_sel_merge8_p4 #(.EW(EW), .FW(5)) u_acc (.clk(clk), .rst_n(rq[1]), .fi({p3, gb}), .a(mb),
+        .b(novalid(acc, !pos[2])), .fo(ga_f), .q(acc), .fp());
+    reg [LW-1:0] h1, h2, h3;                  // acc_{t-1}, acc_{t-2}, acc_{t-3}
+    always @(posedge clk) begin h1 <= acc; h2 <= h1; h3 <= h2; end
+    // ---------------------------------------------------------------- final tree over the four accumulators
+    wire [1:0] pp = ga_f[4:3];
+    wire [LW-1:0] fa, fb; wire [0:0] gfa;
+`ifdef OT_RF_MUT_L1C   // RF bench mutant: acc_{T-3} kept for a 3-beat segment (one older segment's chain leaks in)
+    wire e3 = pp < 2'd2;
+`else
+    wire e3 = pp < 2'd3;
+`endif
+    dsdv_sel_merge8_p4 #(.EW(EW), .FW(1)) u_fa (.clk(clk), .rst_n(rq[1]), .fi(ga_f[0] && ga_f[2]), .a(acc),
+        .b(novalid(h1, pp == 2'd0)), .fo(gfa), .q(fa), .fp());
+    dsdv_sel_merge8_p4 #(.EW(EW), .FW(1)) u_fb (.clk(clk), .rst_n(rq[1]), .fi(1'b0), .a(novalid(h2, pp < 2'd2)),
+        .b(novalid(h3, e3)), .fo(), .q(fb), .fp());
+    dsdv_sel_merge8_p4 #(.EW(EW), .FW(1)) u_fin (.clk(clk), .rst_n(rq[1]), .fi(gfa), .a(fa), .b(fb), .fo(gfv), .q(fin), .fp());
+    end endgenerate
     // ---------------------------------------------------------------- first K, ascending index (output register zeroed when idle)
     wire [8*XW-1:0] xd, xq, xn; wire xv, xnv;
     genvar l;
@@ -119,24 +185,33 @@ module dsdv_gunit_l1c #(
     // the order sort's fo (= xnv one edge later, same reset), so synthesis no longer folds fo into the g_go pin flop
     // (g_go fed the fault logic: face_guard 'shared').  0 cycles.
     (* keep *) reg flt_s; (* keep *) reg xv_k;
-    wire flt_n = flt_s | (|ft) | (xv_k && !allk);
+    // RF-1: the front-fault term rides the select's +12 edges (fault == the RF 0 fault 12 edges later)
+    wire [3:0] ftd;
+    generate if (RF == 0) begin : g_ft0
+        assign ftd = ft;
+    end else begin : g_ft1
+        reg [4*12-1:0] fts;
+        always @(posedge clk or negedge rq[1]) if (!rq[1]) fts <= {4*12{1'b0}}; else fts <= {fts[0 +: 4*11], ft};
+        assign ftd = fts[4*11 +: 4];
+    end endgenerate
+    wire flt_n = flt_s | (|ftd) | (xv_k && !allk);
     always @(posedge clk or negedge rq[1])
-        if (!rq[1]) begin i_v <= 1'b0; g_go <= 1'b0; g_hit <= 24'd0; s_v <= 1'b0; fault <= 1'b0; flt_s <= 1'b0; xv_k <= 1'b0; end
+        if (!rq[1]) begin i_v_r <= 1'b0; g_go_r <= 1'b0; g_hit_r <= 24'd0; s_v_r <= 1'b0; fault_r <= 1'b0; flt_s <= 1'b0; xv_k <= 1'b0; end
         else begin
-            i_v <= xnv; g_go <= xnv; xv_k <= xnv;
+            i_v_r <= xnv; g_go_r <= xnv; xv_k <= xnv;
             for (integer i = 0; i < 4; i = i + 1)
-                for (integer j = 0; j < K; j = j + 1) g_hit[6 * i + j] <= xnv && idn[9 * j + 4 +: 2] == i[1:0];
-            s_v <= fg[0];
+                for (integer j = 0; j < K; j = j + 1) g_hit_r[6 * i + j] <= xnv && idn[9 * j + 4 +: 2] == i[1:0];
+            s_v_r <= fg[0];
             flt_s <= flt_n;
 `ifdef OT_RTLB_PINFLOP_MUT
-            fault <= |ft;                                  // mutant: pin flop not sticky, check dropped
+            fault_r <= |ftd;                                  // mutant: pin flop not sticky, check dropped
 `else
-            fault <= flt_n;
+            fault_r <= flt_n;
 `endif
         end
     always @(posedge clk) begin
-        i_ids <= idn;
-        for (integer j = 0; j < K; j = j + 1) g_a[7 * j +: 7] <= {idn[9 * j + 6 +: 3], idn[9 * j +: 4]};
-        s_d <= fd[0 +: 192] | fd[246 +: 192] | fd[492 +: 192] | fd[738 +: 192];
+        i_ids_r <= idn;
+        for (integer j = 0; j < K; j = j + 1) g_a_r[7 * j +: 7] <= {idn[9 * j + 6 +: 3], idn[9 * j +: 4]};
+        s_d_r <= fd[0 +: 192] | fd[246 +: 192] | fd[492 +: 192] | fd[738 +: 192];
     end
 endmodule

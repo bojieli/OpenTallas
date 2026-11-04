@@ -610,6 +610,82 @@ def test_kit_rtl_spare_ft_bits_ride_stations(tmp_path):
     assert f"u_ft_spare_{n}_o_s0" in w and f"u_ft_spare_{n}_o_s1" in w and "'d0;  // spare plan bits" not in w
 
 
+def _widen_kit(tmp_path, edit):
+    plan = EX / "die_plan_lanes.json"
+    out = tmp_path / "o"
+    assert run(plan, out, "elab", "bind") == 0
+    P = json.loads(plan.read_text())
+    edit(P)
+    wide = tmp_path / "wide.json"
+    wide.write_text(json.dumps(P))
+    return P, wide, out
+
+
+def test_kit_rtl_narrow_input_spare_bits_declared_dead(tmp_path):
+    """DIE-S81-51/SPARE 11-03 (KW-FIX-4 face_guard 'dropped', S81 leaf dn_s_0N_L4 597 plan vs 595 bound): the spare
+    bits of a narrow plan INPUT stay unconnected and are declared dead with the generation receipt (wrapper sha256 +
+    narrow_buses); gen_phys copies the document into the kit dead_inputs.json, fail-closed on a changed wrapper."""
+    import hashlib
+    import gen_phys
+    import gen_rtl
+    import face_guard
+
+    def edit(P):
+        b = next(x for x in P["partition_types"]["ts"]["buses"] if x["name"] == "d0_i")
+        b["width"] += 2
+    P, wide, out = _widen_kit(tmp_path, edit)
+    kd = tmp_path / "kit"
+    assert bind.main(["kit-rtl", str(wide), "--out", str(out), "--type", "ts", "--kit", str(kd)]) == 0
+    man = json.loads((kd / "kit_rtl.json").read_text())
+    doc = man["dead_inputs"]
+    assert doc["bits"] == ["d0_i[8]", "d0_i[9]"], doc
+    assert face_guard.dead_input_list(doc) == doc["bits"]
+    rc = doc["proof"]["receipt"]
+    wf = kd / f"{P['partition_types']['ts']['module']}.sv"
+    assert doc["proof"]["method"] == bind.KIT_DEAD_METHOD and rc["wrapper"] == str(wf.resolve())
+    assert rc["sha256"] == hashlib.sha256(wf.read_bytes()).hexdigest()
+    assert rc["narrow_buses"] == [dict(port="d0_i", plan=10, bound=8)]
+    w = wf.read_text()
+    assert "d0_i[9:8]" not in w and "d0_i[8]" not in w and "d0_i[9]" not in w   # structurally unconnected
+    assert gen_phys.kit_dead_inputs(kd / "kit_rtl.f") == doc
+    wf.write_text(w.replace(".d0_i(", ".d0_i( "))                              # wrapper changed after the bind
+    with pytest.raises(gen_rtl.GenError):
+        gen_phys.kit_dead_inputs(kd / "kit_rtl.f")
+
+
+def test_kit_rtl_landed_ft_spare_bits_dead_and_tied(tmp_path, monkeypatch):
+    """DIE-S81-51/SPARE 11-03 (KW-FIX-4 face_guard 'land_slot', leaf__t17 ft2 597 vs 595): a narrow ft slot whose _i
+    feeds a landing ring gets NO spare station chain (1 station load != D slot flops); its spare _i bits are declared
+    dead and its spare _o bits tied 0 + listed spare_out.  A non-landing ft slot keeps the chain (test above)."""
+    def edit(P):
+        sl = P["partition_types"]["tf"]["ft_slots"][0]
+        sl["width"] += 2
+        sl["stations"] = 2
+    P, wide, out = _widen_kit(tmp_path, edit)
+    n = P["partition_types"]["tf"]["ft_slots"][0]["name"]
+    monkeypatch.setattr(bind, "kit_landed_ports", lambda txt: {f"{n}_i"})
+    kd = tmp_path / "kit"
+    assert bind.main(["kit-rtl", str(wide), "--out", str(out), "--type", "tf", "--kit", str(kd)]) == 0
+    man = json.loads((kd / "kit_rtl.json").read_text())
+    assert man["spare_ft_passthrough"] == [] and man["spare_ft_landed"] == [dict(slot=n, bits=2)], man
+    assert man["spare_out_bits"] == [dict(port=f"{n}_o", bits=2)], man
+    assert man["dead_inputs"]["bits"] == [f"{n}_i[8]", f"{n}_i[9]"], man["dead_inputs"]
+    w = (kd / f"{P['partition_types']['tf']['module']}.sv").read_text()
+    assert "u_ft_spare_" not in w and f"assign {n}_o[9:8] = 2'd0;  // spare plan bits" in w
+
+
+def test_kit_landed_ports_reads_ring_d_and_name():
+    txt = """
+    ot_dp_clk_landing #(.W(596), .WNEG(1)) u_cland_ft2_i (
+        .clk_s(fclk_in_ft2_i), .d(ft2_i), .q(ft2_i_l));
+    ot_dp_clk_landing_ca #(.W(4), .DEPTH(4)) u_cland_r0 (.clk_s(c), .d({a_i[3:0], b_i}), .q());
+    ot_dp_landing_collect #(.N(1)) u_cland_collect_rst_n_t18 (.i(x), .o(y));
+    ot_dp_st #(.W(2)) u_st (.clk(clk), .d(z_i), .q());
+"""
+    got = bind.kit_landed_ports(txt)
+    assert {"ft2_i", "a_i", "b_i", "r0"} <= got and "z_i" not in got and "x" not in got, got
+
+
 def test_kit_closure_needed_only_and_strip_dups(tmp_path):
     """QC-KITS 10-25: a file picked for one module must not drag in its unrelated siblings' instantiations, and a
     module defined in two kit files keeps the closure-picked definition only (sle_ctl ot_hdc_qadd)."""

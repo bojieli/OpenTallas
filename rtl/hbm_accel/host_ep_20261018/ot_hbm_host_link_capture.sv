@@ -83,7 +83,7 @@ module ot_hbm_host_link_pinreg_ctl #(parameter integer MUT=0)(
    wv<={wv[0],wr_v};wo<={wo[0],wr_observed_v};rv<={rv[0],rd_v};
   end
  end
- ot_hgi_coll_static_seq_ctl u_codec(
+ ot_hgi_coll_static_seq_ctl #(.RXPRE(1)) u_codec(   // RE-FORM C3 11-03: RX CRC compare one edge early, registered (0 cycles)
   .clk(clk),.q_data(stored[560:0]),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(epoch),
   .abort_in(abort_in),.abort_cause({epoch_bad,seq_bad}),.rd_seq(readseq[1]),.rx_expect_seq(rx_expect_seq),
   .wr_v(wv[1]),.wr_observed_v(wo[1]),.wr_slot(writeslot[1]),

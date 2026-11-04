@@ -1,0 +1,161 @@
+{
+ "schema": "opentallas.prebuild_gate.v1",
+ "kit": "/home/ubuntu/scratch-root/claude/die-hbm-61-gate/kits/ot_hbm_hc_subtree32_core",
+ "design": "ot_hbm_hc_subtree32_core",
+ "flow_status": [
+  "GATE_FLOW",
+  "stop=do-3_3_place_gp",
+  "GATE_STAGE",
+  "place_resized",
+  "GATE_STA",
+  "rc=0"
+ ],
+ "cells": 88089,
+ "macros": 0,
+ "stdcell_area_um2": 11435.7,
+ "sta_stage": "place_resized",
+ "period": 833.0,
+ "groups": {
+  "r2r": {
+   "slack": 110.6,
+   "start": "g_lvl_2__g_n_4__u_a._0751_[56]$_DFF_P_/QN",
+   "end": "g_lvl_2__g_n_4__u_a._0755_[1]$_DFF_P_/D"
+  },
+  "in2reg": {
+   "slack": 275.4,
+   "start": "data[574]",
+   "end": "g_lvl_1__g_n_8__u_a._0749_[14]$_DFF_P_/D"
+  },
+  "reg2out": {
+   "slack": 192.6,
+   "start": "g_lvl_2__g_n_7__u_a.valid_out$_DFF_PN0_/QN",
+   "end": "node_fault[22]"
+  },
+  "in2out": null
+ },
+ "wns": 110.6,
+ "r2r_endpoints_stage_over_583": 583,
+ "stage_ps": 722.4,
+ "stage_limit_ps": 583.1,
+ "setup_limit_ps": 83.3,
+ "checks": {
+  "timing": {
+   "ok": true,
+   "wns": 110.6,
+   "sta_stage": "place_resized"
+  },
+  "cells": {
+   "ok": true,
+   "cells": 88089
+  },
+  "memory": {
+   "ok": true,
+   "max_bits": 4096,
+   "largest": 0,
+   "over": []
+  },
+  "face": {
+   "ok": false,
+   "pin_unreg": 63,
+   "pins_registered": 1027,
+   "pins_to_macro": 0,
+   "unreg_head": [
+    "data[1015]",
+    "data[119]",
+    "data[151]",
+    "data[183]",
+    "data[215]",
+    "data[23]",
+    "data[247]",
+    "data[279]",
+    "data[311]",
+    "data[343]",
+    "data[375]",
+    "data[407]",
+    "data[439]",
+    "data[471]",
+    "data[503]",
+    "data[535]",
+    "data[55]",
+    "data[567]",
+    "data[599]",
+    "data[631]",
+    "data[663]",
+    "data[695]",
+    "data[727]",
+    "data[759]",
+    "data[791]",
+    "data[823]",
+    "data[855]",
+    "data[87]",
+    "data[887]",
+    "data[919]",
+    "data[951]",
+    "data[983]",
+    "node_fault[0]",
+    "node_fault[10]",
+    "node_fault[11]",
+    "node_fault[12]",
+    "node_fault[13]",
+    "node_fault[14]",
+    "node_fault[15]",
+    "node_fault[16]"
+   ],
+   "unreg_buses": [
+    "data",
+    "node_fault"
+   ],
+   "definition": "geom_rules.pin_reg_metrics (flop reachable through BUF/INV)",
+   "strict_face_guard": {
+    "fails": 1056,
+    "fail_counts": {
+     "shared": 1025,
+     "unregistered": 31
+    },
+    "fails_head": {
+     "shared": [
+      "valid_out: net _016770_ has 1 loads besides the port chain",
+      "data[1023]: 3 loads on data[1023]",
+      "data[1022]: 6 loads on data[1022]",
+      "data[1021]: 6 loads on data[1021]",
+      "data[1020]: 6 loads on data[1020]",
+      "data[1019]: 6 loads on data[1019]"
+     ],
+     "unregistered": [
+      "node_fault[30]: driven by AOI21x1_ASAP7_75t_R _130475_",
+      "node_fault[29]: driven by AOI21x1_ASAP7_75t_R _130505_",
+      "node_fault[28]: driven by AOI21x1_ASAP7_75t_R _130504_",
+      "node_fault[27]: driven by AOI21x1_ASAP7_75t_R _130503_",
+      "node_fault[26]: driven by AOI21x1_ASAP7_75t_R _130502_",
+      "node_fault[25]: driven by AOI21x1_ASAP7_75t_R _130501_"
+     ]
+    }
+   }
+  },
+  "straps": {
+   "ok": true,
+   "strap_ports": [],
+   "leaked": []
+  },
+  "reset": {
+   "ok": false,
+   "resets": [
+    "rst_n"
+   ],
+   "landing_pins": {
+    "rst_n": 35
+   },
+   "unregistered": [
+    "rst_n"
+   ],
+   "max": 8
+  }
+ },
+ "advisory": true,
+ "verdict": "FAIL",
+ "fails": [
+  "face",
+  "reset"
+ ],
+ "needs_stage_cut": true
+}

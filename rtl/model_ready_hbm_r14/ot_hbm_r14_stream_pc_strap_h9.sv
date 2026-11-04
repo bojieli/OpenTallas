@@ -89,7 +89,12 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
   // so the row decision starts from flops.  Same edges, same decisions (lockstep miter vs PHYS_WACT 0/1).
   parameter integer PHYS_WACT = 0,
   // Default off: caller supplies the separately qualified 833ps timing table.
-  parameter integer TIMING_833 = 0, T_CCDS = 1, COL_TDM = 0, ROW_CADENCE = 1
+  parameter integer TIMING_833 = 0, T_CCDS = 1, COL_TDM = 0, ROW_CADENCE = 1,
+  // WP_REG = 1 (DIE-HBM-61 RE-FORM 2026-11-03, cfg_h9b gate -266 ps: wq_n -> not-full -> push -> ~1000-load
+  // buffer tree -> wq_older): with PHYS_WACT != 0 the write pointer is a REGISTERED one-hot (== 1 << (rp + n))
+  // and not-full is a REGISTERED per-slot replica (== wq_n != WQ), loaded from the exact next-state values, so
+  // each slot's push enable is wr_v & two local flops.  Zero latency: same edges, same decisions (lockstep tb).
+  parameter integer WP_REG = 0
 )(
   input wire [7:0] reset_regions,
     input  wire        clk, rst_n,
@@ -172,6 +177,16 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     reg [4:0] hb, hc; reg [31:0] hb_oh;
     reg [WQW-1:0] wq_rp1;
     always @(posedge clk) if(!reset_regions[6]) wq_rp1<=1; else if(wr_ok) wq_rp1<=wq_rp1+1'b1;
+    // WP_REG: wp_oh == 1 << WQW'(wq_rp + wq_n) and every nf_rep bit == (wq_n != WQ) on every edge (both follow
+    // wq_n / wq_rp: region 0, loaded only when W).  wp advances by exactly the push (rp + wr_ok + n - wr_ok).
+    localparam WPR = W && (PHYS_WACT != 0) && (WP_REG != 0);
+    initial if (WPR && (WQ < 2 || (1 << WQW) != WQ)) $fatal(1, "WP_REG needs a power-of-two WQ");
+    (* keep = "true" *) reg [WQ-1:0] wp_oh;
+    (* keep = "true" *) reg [WQ-1:0] nf_rep;
+    wire wr_r_i = WPR ? nf_rep[0] : (wq_n != (WQW+1)'(WQ));
+    wire push_i = W && wr_v && wr_r_i;
+    wire [WQ-1:0] pe = WPR ? ({WQ{W && wr_v}} & nf_rep & wp_oh)          // per-slot push enable
+                           : (push_i ? (WQ'(1) << WQW'(wq_rp + wq_n)) : WQ'(0));
     wire [31:0] head_oh0=(PHYS_WACT!=0)?wq_boh[wq_rp]:(32'b1<<wq_bank[wq_rp]);
     wire [31:0] head_oh1=(PHYS_WACT!=0)?wq_boh[wq_rp1]:(32'b1<<wq_bank[wq_rp1]);
     wire [5*WQ-1:0] wq_bq;                            // queued write banks, oldest first
@@ -198,6 +213,17 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     localparam integer W_PHASE=(ROW_CADENCE==2)?2:1;
     reg [W_PHASE-1:0]phase;
     wire wr_ok;wire ccds_ready;
+    if (WPR) begin : wp_reg
+      wire [WQW:0] wq_n_nx = wq_n + (push_i ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+      always @(posedge clk)
+        if (!reset_regions[0]) begin wp_oh <= WQ'(1); nf_rep <= {WQ{1'b1}}; end
+        else begin
+          if (push_i) wp_oh <= {wp_oh[WQ-2:0], wp_oh[WQ-1]};
+          nf_rep <= {WQ{wq_n_nx != (WQW+1)'(WQ)}};
+        end
+    end else begin : no_wp_reg
+      always @* begin wp_oh = 0; nf_rep = 0; end
+    end
     wire column_slot=(COL_TDM==0)||(phase[0]==slot_parity);
     if(T_CCDS<=1)begin:g_legacy_ccds
       assign ccds_ready=1'b1;
@@ -507,16 +533,14 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     wire [31:0] bok_n = ~open_nx & ~blk_n & aok_zn & {8{rrdl_zn}};
     wire [31:0] bank_ok_n = bok_n & ~({32{REF_MODE != 0 && ref_lead_nx}} & (32'b1 << bsel_nx));
     if (PHYS_WACT == 2) begin : reg_wact
-      wire push_e = W && wr_v && wr_r;
-      wire [WQW-1:0] wp_e = WQW'(wq_rp + wq_n);
-      wire [WQ-1:0] pv_n = (wq_pv | (push_e ? (WQ'(1) << wp_e) : WQ'(0))) & ~((W && wr_ok) ? (WQ'(1) << wq_rp) : WQ'(0));
+      wire [WQ-1:0] pv_n = (wq_pv | pe) & ~((W && wr_ok) ? (WQ'(1) << wq_rp) : WQ'(0));
       wire [31:0] push_oh = 32'b1 << wr_bank;
       always @(posedge clk)
         if (!reset_regions[5]) begin bok_q <= 32'hffffffff; ent_q <= 0; end
         else begin
           bok_q <= bok_n;
           for (integer e = 0; e < WQ; e = e + 1)
-            ent_q[e] <= W && pv_n[e] && |(((push_e && wp_e == WQW'(e)) ? push_oh : wq_boh[e]) & bank_ok_n);
+            ent_q[e] <= W && pv_n[e] && |((pe[e] ? push_oh : wq_boh[e]) & bank_ok_n);
         end
     end else begin : no_reg_wact
       always @(posedge clk)
@@ -545,28 +569,28 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     assign row_row = row;
     assign col_v = rd_ok || (W && wr_ok); assign col_we = W && wr_ok && !(AQ && hr); assign col_aq = AQ && wr_ok && hr;
     assign col_bank = (W && wr_ok) ? hb : rd_bank; assign col_col = (W && wr_ok) ? hc : j[6:2];
-    assign wr_r = W && wq_n != (WQW+1)'(WQ);
+    assign wr_r = W && wr_r_i;
     assign desc_r = !streaming && !fault_r && !wq_ne;
     assign busy = streaming; assign ref_fault = fault_r;
     // The age matrix updates only at a push: the new slot is younger than
     // every surviving valid slot. Popped slots are masked by wq_pv. OH payload
     // and age bits need no reset because no invalid slot can become a candidate.
     if (PHYS_WACT != 0) begin : physical_write_act
-      wire [WQW-1:0] wp = WQW'(wq_rp + wq_n);
+      // pe[p] == (wr_v && wr_r && wp == p): each slot / age row writes on its own enable
       integer p, q;
       always @(posedge clk)
         if (!reset_regions[7]) wq_pv <= 0;
         else if (W) begin
-          wq_pv <= (wq_pv | ((wr_v && wr_r) ? (WQ'(1) << wp) : WQ'(0))) &
-                   ~(wr_ok ? (WQ'(1) << wq_rp) : WQ'(0));
-          if (wr_v && wr_r) begin
-            wq_boh[wp] <= 32'b1 << wr_bank;
-            wq_bgoh[wp] <= 4'b1 << wr_bank[1:0];
-            for (p = 0; p < WQ; p = p + 1)
-              for (q = 0; q < WQ; q = q + 1)
-                if (wp == WQW'(p)) wq_older[p*WQ + q] <= wq_pv[q] && q != p;
-                else if (wp == WQW'(q)) wq_older[p*WQ + q] <= 1'b0;
-          end
+          wq_pv <= (wq_pv | pe) & ~(wr_ok ? (WQ'(1) << wq_rp) : WQ'(0));
+          for (p = 0; p < WQ; p = p + 1)
+            if (pe[p]) begin
+              wq_boh[p] <= 32'b1 << wr_bank;
+              wq_bgoh[p] <= 4'b1 << wr_bank[1:0];
+            end
+          for (p = 0; p < WQ; p = p + 1)
+            for (q = 0; q < WQ; q = q + 1)
+              if (pe[p]) wq_older[p*WQ + q] <= wq_pv[q] && q != p;
+              else if (pe[q]) wq_older[p*WQ + q] <= 1'b0;
         end
     end
     always @(posedge clk) begin
@@ -584,11 +608,12 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
         if (W) begin
           if (rd_ok || (AQ && wr_ok && hr)) rtw_c <= W_RTW'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
           if (wr_ok && !(AQ && hr)) wtr_c <= W_WTR'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
-          if (wr_v && wr_r) begin
-            wq_bank[WQW'(wq_rp + wq_n)] <= wr_bank; wq_col[WQW'(wq_rp + wq_n)] <= wr_col;
-            if (AQ) wq_rd[WQW'(wq_rp + wq_n)] <= wr_rd;
-          end
-          wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+          for (integer e = 0; e < WQ; e = e + 1)
+            if (pe[e]) begin
+              wq_bank[e] <= wr_bank; wq_col[e] <= wr_col;
+              if (AQ) wq_rd[e] <= wr_rd;
+            end
+          wq_n <= wq_n + (push_i ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
           if (wr_ok) wq_rp <= WQW'(wq_rp + 1'b1);
           // next head: the entry after the popped one if it exists, else the entry pushed now
           begin : headn

@@ -1,0 +1,48 @@
+{
+ "_doc": "DIE-S81-51/RF-D 11-03 S81-RF1 RE-FORM recipes (OWNER TWO-STRIKES), plan of record plan_h2_2249 (outline / pins unchanged). dsdv_bk_g (S81-062): RF 1 = ot_dsdv_vstop FPIPE pipeline cut + negedge in/out faces. dsdv_gunit_l0r (S81-064): RF 1 = registered one-hot write slots + go +1. Regional taps: one clock entry per <= 5k sinks. Form 2 (11-03): dsdv_bk_g RF 2 + kit-local wider SRAM channel, kit suffix rfd2. dsdv_gunit_l0r RF 2 (negedge in-face), kit suffix rfd2.",
+ "dsdv_bk_g": {
+  "ref_tile": "physical/ref_tile/s81dvbk_g2",
+  "rtl_dirs": true,
+  "macro_sites": {
+   "ot_sram_1r1w_128x256_m1_r2c2": [
+    [
+     60.48,
+     27.024,
+     "R0"
+    ],
+    [
+     60.48,
+     102.672,
+     "R0"
+    ]
+   ]
+  },
+  "_pinev": "S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): spec.json at 45.36/86.448 left a 0.024-um stack gap; sites split -5.376/+5.424 um (whole M4 tracks) for a 10.824-um interior channel (kit_contract macro_channels >= 10.8) inside the 216x172.8 outline",
+  "params": {
+   "RF": 2
+  },
+  "regional_taps": {
+   "nx": 2,
+   "ny": 1,
+   "split": "count",
+   "win_ps": 20
+  },
+  "suffix": "rfd2",
+  "_rfd2": "RF-D form 2 11-03 (build 1 oth-ubuntu-1507608 GRT-0116 ov 227 at the 10.8-um interior channel mouths x 61-65 / 151-155, y 80-95, where both macros put their W-face rd/addr and E-face wd/mask pins): kit-local macro placement, outline / pins unchanged: lower SRAM -12.96 um, upper +10.8 um (whole 2.16-um grid steps): interior channel 10.824 -> 34.584 um, 24.9 um below / 26.9 um above the stack; RF 2 = RF 1 + dsdv_bk_vin LPIPE (CTS TT -152.5 u_vs.dl_n -> lane decode)"
+ },
+ "dsdv_gunit_l0r": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l0r",
+  "io_hold": "sender_min",
+  "params": {
+   "RF": 2
+  },
+  "regional_taps": {
+   "nx": 2,
+   "ny": 2,
+   "split": "count",
+   "win_ps": 20
+  },
+  "suffix": "rfd2",
+  "_rfd2": "RF-D form 2 11-03: RF 1 build oth-ubuntu-1507612 met setup (GRT SS ws +168.5) but stopped at OT_HOLD_STRUCTURAL GRT FF hold -154.31 / 408 ep on the input faces (core insertion ~281 ps vs vclk 250); RF 2 = RF 1 + negedge in-face (all inputs incl. rst_n, 0 cycles)"
+ }
+}

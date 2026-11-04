@@ -135,3 +135,133 @@ def test_phy_domain_content_without_macro_view_fails_closed():
         doms = [("phy_pg", "VDDPHY", "VSS", (0.0, 0.0, 20.0, 10.0), ["u_phy"])]
         with pytest.raises(ValueError, match=r"PG domain phy_pg \(hd\): powered content \['u_phy'\] has no macro view"):
             gen_phys.phy_pg_pdn(P, "hd", doms, mac, root=d)
+
+
+def test_default_on_when_unset_and_skips_unlandable_view():
+    """PG-CORECONN-2 11-03 class fix: unset core_pg_connect = ON (S81: 136/158 macro types never set it); explicit
+    false keeps the legacy bytes; the implicit default skips a view without PG geometry (comment), explicit true
+    still raises."""
+    with tempfile.TemporaryDirectory() as d:
+        P = _P(d)
+        del P.types["hd"]["core_pg_connect"]
+        mac = gen_phys.type_macros(P, "hd")
+        assert gen_phys.core_pg_on(P, "hd")
+        txt = "\n".join(gen_phys.core_pg_grids(P, "hd", mac))
+        assert "add_pdn_connect -grid {core_pg_M5} -layers {M5 M6}" in txt
+        P.types["hd"]["core_pg_connect"] = False
+        assert not gen_phys.core_pg_on(P, "hd") and gen_phys.core_pg_grids(P, "hd", mac) == []
+        Q = _P(d, vdd=None, vss=None)
+        del Q.types["hd"]["core_pg_connect"]
+        mq = gen_phys.type_macros(Q, "hd")
+        t = gen_phys.core_pg_grids(Q, "hd", mq)
+        assert any(s.startswith("# PG-CORECONN-2 (default-on): macro u_b.g_cv[0].u_eA skipped") for s in t)
+        assert "add_pdn_connect -grid {core_pg_M4} -layers {M4 M5}" in "\n".join(t)
+        assert gen_phys.core_pg_unconnected("\n".join(t), mq, strict=False) == []
+        Q.types["hd"]["core_pg_connect"] = True
+        with pytest.raises(ValueError):
+            gen_phys.core_pg_grids(Q, "hd", mq)
+
+
+def test_default_on_skips_buried_pg_view_explicit_keeps_it():
+    """PDN-0006 guard for the implicit default: a view whose M5 PG sits under an M6 OBS is skipped (comment) unless
+    the type explicitly opts in."""
+    with tempfile.TemporaryDirectory() as d:
+        P = _P(d)
+        del P.types["hd"]["core_pg_connect"]
+        lf = Path(d) / "core.lef"
+        lf.write_text(lf.read_text().replace("END core\n", "  OBS\n    LAYER M6 ;\n      RECT 0 0 20 10 ;\n  END\nEND core\n"))
+        assert gen_phys.macro_obs_layers(lf) == {"M6"}
+        mac = gen_phys.type_macros(P, "hd")
+        txt = "\n".join(gen_phys.core_pg_grids(P, "hd", mac))
+        assert "buried under OBS on M6" in txt
+        assert "-layers {M5 M6}" not in txt and "-layers {M4 M5}" in txt
+        assert gen_phys.core_pg_unconnected(txt, mac, strict=False) == []
+        P.types["hd"]["core_pg_connect"] = True          # explicit opt-in keeps the old (strict) landing
+        assert "-layers {M5 M6}" in "\n".join(gen_phys.core_pg_grids(P, "hd", mac))
+
+
+def _m7_lef(d, name="m7top", m6=False, obs_m7=True):
+    """M7-top view like S81 rom_elem_q (M6 PG under its own M7 OBS) / bf_col (M7 PG only): VSS left of VDD."""
+    def pin(p, use, x):
+        g = f"      LAYER M7 ;\n        RECT {x} 0.5 {x + 0.288} 9.5 ;\n        RECT {x + 10.8} 0.5 {x + 11.088} 9.5 ;\n"
+        if m6:
+            g += f"      LAYER M6 ;\n        RECT 0 {x} 0.032 {x + 0.288} ;\n"
+        return f"  PIN {p}\n    USE {use} ;\n    PORT\n{g}    END\n  END {p}\n"
+    obs = "  OBS\n    LAYER M7 ;\n      RECT 0 0 20 10 ;\n  END\n" if obs_m7 else ""
+    p = Path(d) / f"{name}.lef"
+    p.write_text(f"MACRO {name}\n  SIZE 20 BY 10 ;\n{pin('VDD', 'POWER', 1.24)}{pin('VSS', 'GROUND', 0.856)}{obs}END {name}\n")
+    return str(p)
+
+
+def test_m7_top_views_take_publish_mode():
+    """PG-CORECONN-3: M7-only PG and M6-PG-under-M7-OBS views are published (die M8 lands them); an M6 view with an
+    open M7 keeps the M6 -> M7 grid; a view with PG nowhere stays unlandable."""
+    with tempfile.TemporaryDirectory() as d:
+        assert gen_phys.core_pg_mode(_m7_lef(d, "a")) == ("publish", "M7")                  # bf_col / capc5r form
+        assert gen_phys.core_pg_mode(_m7_lef(d, "b", m6=True)) == ("publish", "M7")         # rom_elem_q form
+        assert gen_phys.core_pg_mode(_m7_lef(d, "b", m6=True), strict=False) == ("publish", "M7")
+        assert gen_phys.core_pg_mode(_m7_lef(d, "c", m6=True, obs_m7=False)) == ("grid", "M6", "M7")
+        assert gen_phys.core_pg_mode(_lef(d)) == ("grid", "M5", "M6")
+        with pytest.raises(ValueError):
+            gen_phys.core_pg_mode(_lef(d, "x", None, None))
+
+
+def _P7(d, explicit):
+    cores = [dict(inst="u_b.u_e0", module="m7top", lef=_m7_lef(d, "m7top", m6=True), origin_um=[10.0, 20.0]),
+             dict(inst="u_b.g[1].u_v", module="m7only", lef=_m7_lef(d, "m7only"), origin_um=[40.0, 20.0],
+                  orient="MY"),
+             dict(inst="u_b.u_eB", module="core4", lef=_lef(d, "core4", "M4", "M4"), origin_um=[70.0, 20.0])]
+    t = dict(outline_um=[100.0, 100.0], hard_cores=cores)
+    if explicit:
+        t["core_pg_connect"] = True
+    return SimpleNamespace(types={"hd": t})
+
+
+@pytest.mark.parametrize("explicit", [False, True])
+def test_publish_instead_of_skip_and_counted_landed(explicit):
+    with tempfile.TemporaryDirectory() as d:
+        P = _P7(d, explicit)
+        mac = gen_phys.type_macros(P, "hd")
+        t = gen_phys.core_pg_grids(P, "hd", mac)                 # explicit true no longer raises on M7-top views
+        txt = "\n".join(t)
+        assert "skipped" not in txt and "-layers {M6 M7}" not in txt
+        assert "# PG-CORECONN-3: macro u_b.u_e0 M7 PG straps published" in txt
+        assert "add_pdn_connect -grid {core_pg_M4} -layers {M4 M5}" in txt
+        pub = gen_phys.core_pg_published(P, "hd", mac)
+        assert pub == ["u_b.u_e0", "u_b.g[1].u_v"]
+        assert gen_phys.core_pg_unconnected(txt, mac, strict=explicit, published=set(pub)) == []
+        # mutant: a publish-mode macro left out of pg_publish.tcl is reported unconnected
+        bad = gen_phys.core_pg_unconnected(txt, mac, strict=explicit, published={"u_b.u_e0"})
+        assert bad == [("u_b.g[1].u_v", "M7", "die M8 (not published)")]
+        P.types["hd"]["core_pg_connect"] = False
+        assert gen_phys.core_pg_published(P, "hd", mac) == []
+
+
+def test_publish_tcl_net_from_master_use_and_overlap_guard():
+    tcl = gen_phys.core_pg_publish_tcl(["u_b.u_e0", "u_b.g[1].u_v"])
+    assert tcl.startswith("# GENERATED") and "uplevel #0 {" in tcl and tcl.rstrip().endswith("}")
+    assert r"pgp_publish {^u_b\.g\\\[1\\\]\.u_v$}" in tcl                          # same regex form as pdngen
+    assert "set use [$mt getSigType]" in tcl and "[$n getSigType] ne $use" in tcl     # VDD<-POWER, VSS<-GROUND
+    assert "findBTerm [$n getName]" in tcl                                            # bpin on the ITerm's own net
+    assert "proc pgp_check" in tcl and "overlaps" in tcl                              # other-net M7 overlap = error
+    assert 'error "OT_PG_PUBLISH: published $pgp_insts of 2 macros"' in tcl
+    assert tcl.count("{") == tcl.count("}")
+
+
+def test_kit_post_pdn_publish_and_composition(monkeypatch):
+    P1 = schema.Plan(copy.deepcopy(PAIR))
+    monkeypatch.setattr(gen_phys, "core_pg_published", lambda *a, **k: ["u_x"])
+    monkeypatch.setattr(gen_phys, "core_pg_unconnected", lambda *a, **k: [])
+    with tempfile.TemporaryDirectory() as d:
+        gen_phys.write_type_kit(P1, "fa", d, [])
+        k = Path(d) / "fa"
+        assert "pgp_publish {^u_x$}" in (k / "pg_publish.tcl").read_text()
+        assert "export POST_PDN_TCL = /work/pg_publish.tcl" in (k / "config.mk").read_text()
+        assert not (k / "post_pdn.tcl").exists()
+    monkeypatch.setattr(gen_phys, "pg_island_cuts", lambda *a, **k: [("u_x", "rst_n", (1.0, 2.0, 3.0, 4.0))])
+    with tempfile.TemporaryDirectory() as d:
+        gen_phys.write_type_kit(P1, "fa", d, [])
+        k = Path(d) / "fa"
+        assert "export POST_PDN_TCL = /work/post_pdn.tcl" in (k / "config.mk").read_text()
+        assert (k / "post_pdn.tcl").read_text().splitlines()[1:] == ["source /work/pg_island_cut.tcl",
+                                                                     "source /work/pg_publish.tcl"]

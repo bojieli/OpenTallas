@@ -55,6 +55,10 @@ def test_modern_vs_legacy_kit(tmp_path):
               "regional_taps_balance.tcl", "clock_spine_guard.tcl"):
         assert (mod / f).is_file(), f
     assert not (mod / "tap_balance.tcl").exists() and not (mod / "hold_budget.tcl").exists()
+    # CTS-DT-1: protected spine -> CTS root (tap) drivers held FIRM during clock_tree_synthesis, PLACED after
+    rtt = (mod / "regional_taps.tcl").read_text()
+    assert "rename clock_tree_synthesis ot_rt_cts_firm_orig" in rtt and "setPlacementStatus FIRM; lappend held" in rtt
+    assert rtt.index("ot_rt_cts_firm_orig") > rtt.index("OT_RT_PROTECT: planned spine protected")
     assert "post_grt_drv.tcl" in (mod / "grt_post_core.tcl").read_text()
     subprocess.run(["bash", "-n", str(mod / "run_kit.sh")], check=True)
     # modern without regional taps: tap balance stays, CTS repair is setup-only (hold only in the FF frame)

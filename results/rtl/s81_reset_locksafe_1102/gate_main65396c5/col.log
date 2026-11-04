@@ -1,0 +1,5 @@
+NATIVE_RELEASE COL=1 epoch=0 guard_edge=66 native_rck_edge=68
+NATIVE_RELEASE COL=1 epoch=1 guard_edge=66 native_rck_edge=68
+NATIVE_RELEASE COL=1 epoch=2 guard_edge=66 native_rck_edge=68
+LOCKSAFE_NATIVE PASS COL=1 default_checks=1011 actual_codec_and_fifo=1
+/home/ubuntu/scratch-root/claude/die-s81-50/reset/snap/rtl/dsrom_sys/s81_link/tb_pdie_locksafe_native.sv:66: $finish called at 432040225 (1fs)

@@ -1,0 +1,20 @@
+# DIE-S81-51/RF-B 11-03 xrt template pin-shape contract (trial, S81-RF1): only the GEOM-21 clock entry rectangle
+# (N face M5 0.048 x 0.48 on the M5 track at x 103.644); every other pin = the plan pin table centre with the kit
+# default shape (directions from the kit RTL, recipe rtl_dirs).
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+MACRO ot_s81sl_xrt3
+  CLASS BLOCK ;
+  ORIGIN 0 0 ;
+  SIZE 207.36 BY 164.16 ;
+  PIN clk
+    DIRECTION INPUT ;
+    USE CLOCK ;
+    PORT
+      LAYER M5 ;
+        RECT 103.62 163.68 103.668 164.16 ;
+    END
+  END clk
+END ot_s81sl_xrt3
+END LIBRARY

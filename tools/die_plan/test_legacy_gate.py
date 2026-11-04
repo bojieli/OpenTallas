@@ -113,6 +113,25 @@ def test_grt_requires_both_new_calibrated_corner_receipts(tmp_path, mutation):
         assert len(list(k.glob('postcts_gate_*.json.previous.*')))==2
 
 
+# KW-FIX-4 / OWNER 11-03 (only sign-off blocks): a measured band miss postcts_gate.tcl marked ADVISORY (verdict PASS)
+# is reported and the route continues; the same miss without the mark, or with OT_POSTCTS_BAND_GATE=1, still stops.
+@pytest.mark.parametrize('band_verdict,band_gate,rc', [('ADVISORY', None, 0), ('ADVISORY', '1', 6), (None, None, 6), ('FAIL', None, 6)])
+def test_grt_band_miss_is_advisory_only_when_marked(tmp_path, monkeypatch, capsys, band_verdict, band_gate, rc):
+    if band_gate is None: monkeypatch.delenv('OT_POSTCTS_BAND_GATE', raising=False)
+    else: monkeypatch.setenv('OT_POSTCTS_BAND_GATE', band_gate)
+    k=kit(tmp_path)
+    def execute(args, **kwargs):
+        c=kwargs['env']['OT_CORNER']
+        write_policy(k, c, kwargs)
+        d=passing(c); d['pinreg_mean_ps']=d['bound_ps']+43.4; d['dev_ps']=43.4; d['band_policy']='gate'
+        if band_verdict: d['band_verdict']=band_verdict
+        (k/f'postcts_gate_{c.lower()}.json').write_text(json.dumps(d))
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k,'grt',execute=execute) == rc
+    out=capsys.readouterr().out
+    assert ('OT_LEGACY_GATE ADVISORY TT insertion band dev 43.40 > tol 20.0' in out) == (rc == 0)
+
+
 def test_missing_calibrated_rc_stops_before_openroad(tmp_path):
     k=kit(tmp_path)
     (k/'setRC_rcx.tcl').unlink()
