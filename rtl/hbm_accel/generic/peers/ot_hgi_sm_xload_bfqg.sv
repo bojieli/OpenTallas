@@ -5,7 +5,12 @@
 // drive128 pins apiece. Literal per-bank input/clock pins belong beside that
 // bank's outer mask face. The caller supplies identical mask copies at the
 // same compiled edge; there is no arbitration or production backpressure.
-module ot_hgi_sm_xload_cl2_bfqg (
+// DIE-HBM-61/CUTS 11-03 (RF1 cut, census 710 ps: one rp_sel flop per tile drove the 256 read-capture ANDs through a
+// 5-deep buffer tree): RPR > 1 = RPR KEPT copies of rp_sel per tile (same D, same reset, same edge), copy k gating bits
+// [k*256/RPR +: 256/RPR] of cq. 0 added cycles, every port edge unchanged. RPR 1 (default) = the code as before.
+// RPMUT (bench): 1 = tile 2 copy 5 captures r_ce one edge early; 2 = tile 4 copy 9 stuck 1; 3 = tile 6 copy 0 from
+// tile 7's rp_ce.
+module ot_hgi_sm_xload_cl2_bfqg #(parameter integer RPR=1, RPMUT=0) (
     input wire clk, clk_n, clk_s, clk_ctrl,
     input wire clk_m0, clk_m1, clk_m2, clk_m3, clk_m4, clk_m5, clk_m6, clk_m7,
     input wire clk_l0, clk_l1, clk_l2, clk_l3, clk_l4, clk_l5, clk_l6, clk_l7,
@@ -44,10 +49,27 @@ module ot_hgi_sm_xload_cl2_bfqg (
         always @(posedge clk_ctrl) begin
             if (!rn_l[0]) rp_ce <= 1'b0; else rp_ce <= r_ce[gt];
         end
-        always @(posedge clk) begin
-            if (!rn_l[0]) rp_sel <= 1'b0; else rp_sel <= rp_ce;
-            cq <= rd & {256{rp_sel}};
+        wire [255:0] sel_v;
+        if (RPR > 1) begin:g_rpr
+            (* keep = 1 *) reg [RPR-1:0] rp_sel_r;
+            integer k;
+            always @(posedge clk) begin
+                if (!rn_l[0]) rp_sel_r <= {RPR{1'b0}};
+                else for (k=0;k<RPR;k=k+1) rp_sel_r[k] <=
+                    (RPMUT==1 && gt==2 && k==5) ? r_ce[gt] :
+                    (RPMUT==2 && gt==4 && k==9) ? 1'b1 :
+                    (RPMUT==3 && gt==6 && k==0) ? g_t[7].rp_ce : rp_ce;
+            end
+            for (genvar b=0;b<256;b=b+1) begin:g_b
+                assign sel_v[b] = rp_sel_r[(b*RPR)/256];
+            end
+        end else begin:g_rp1
+            always @(posedge clk) begin
+                if (!rn_l[0]) rp_sel <= 1'b0; else rp_sel <= rp_ce;
+            end
+            assign sel_v = {256{rp_sel}};
         end
+        always @(posedge clk) cq <= rd & sel_v;
         ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(cm[gt]),
             .r_ce_in(rp_ce),.r_addr_in(ra_q),.rd_out(rd),
             .w_ce_in(wce_q),.w_addr_in(wa_q),
