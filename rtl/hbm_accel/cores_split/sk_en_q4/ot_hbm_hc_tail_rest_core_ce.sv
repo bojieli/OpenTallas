@@ -30,7 +30,9 @@ module ot_hbm_hc_tail_static_rest_ce #(
     // LDQ: launch-load register (RE-FORM): launch and the launch data are registered at the face, so
     // t/b/s load one edge after launch and P1 starts one edge later.
     localparam integer OPQ=(REFORM!=0)?1:0, MXS=OPQ, LDQ=(REFORM!=0)?1:0;
-    localparam integer LMU=(REFORM!=0)?6:3, LAU=(REFORM!=0)?7:3, LEU=7*LMU+8*LAU+4, LDU=19;
+    // ETQ: the exp n-split register (RE-FORM, exp TQ=1) adds one edge to the exp latency.
+    localparam integer ETQ=(REFORM!=0)?1:0;
+    localparam integer LMU=(REFORM!=0)?6:3, LAU=(REFORM!=0)?7:3, LEU=7*LMU+8*LAU+4+ETQ, LDU=19;
     localparam integer P1=1+LDQ, P2=P1+24+LMU+OPQ, MAX=P2+24+LAU+OPQ, P3=MAX+1+MXS, P4=P3+16+LAU+OPQ,
         P5=P4+24+LEU+OPQ, P6=P5+8+LAU+OPQ, P7=P6+8+LDU+OPQ, EREADY=P7+8+((LAU>LMU)?LAU:LMU)+OPQ;
     reg active;
@@ -168,7 +170,7 @@ module ot_hbm_hc_tail_static_rest_ce #(
         assign mo=mvl[LMU]; assign ao=avl[LAU];
         ot_hbm_selected_c12__ot_hdc_qmul_lat #(.LAT(LMU)) mul(clk,rst_n,mv_u,ti_u,mb_u,my,mf);
         ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP(1),.LAT(LAU),.L7X(1)) add(clk,rst_n,av_u,ti_u,ab_u,ay,af);
-        ot_hbm_selected_c12__ot_hdc_v41x_exp #(.LM(LMU),.LA(LAU),.L7X(1),.NREP(8)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
+        ot_hbm_selected_c12__ot_hdc_v41x_exp #(.LM(LMU),.LA(LAU),.L7X(1),.NREP(8),.TQ(1)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
             .x({ti_u[31]^neg_u,ti_u[30:0]}),.y(ey),.vo(eo),.fault(ef));
         ot_hbm_selected_c12__ot_hdc_v41x_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv_u),.a(32'h3f800000),.b(ti_u),.y(dy),.vo(do_),.fault(df));
     end else begin:g_fast
@@ -254,7 +256,7 @@ module ot_hbm_hc_tail_rest_core_ce #(
     parameter integer PREDECODE_INDEX = 0,
     parameter integer REFORM = 1,     // RE-FORM 11-03 (0 = bench gold only)
     parameter integer REFORM_COMB = 0, // bench only (u_tail REFORM_COMB)
-    parameter integer TE = (REFORM != 0) ? 278 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)
+    parameter integer TE = (REFORM != 0) ? 279 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)
     parameter integer SKL = 198 + SDIV * ((TE + 1 - 198 + SDIV - 1) / SDIV),   // sink launch age: whole SDIV periods later
     parameter integer NSTA = 0,       // stations on the rest -> sk sk_en hop
     parameter integer MUT_EN = 0,     // bench only: 1 = sk_en one cycle early (must FAIL)

@@ -7,7 +7,7 @@ ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_in_ready,sk_out_valid,sk_fault,sk_
 ot_hbm_hc_root_static__tailx_rest__v4f4566	sk_en_sk	0	free-running 1-in-7 enable, unchanged
 ot_hbm_hc_root_static__tailx_rest__v4f4566	fault	+84	never earlier than before; equal at every result_v
 ot_hbm_hc_root_static__tailx_rest__v4f4566	launch,mixes,bases,scales	0	sampled on the launch edge (registered at the face, loaded one edge later; internal only), unchanged; min launch spacing (busy) 506 -> 590
-ot_hbm_hc_root_static__tailx_rest__v4f4566	(internal) u_tail EREADY	+81	197 -> 278: launch-load register (+1, P1 1 -> 2), operand register (+1/phase), c12 units mul LAT 3 -> 6, add LAT 3 -> 7 (opt-in _l7x cut set), exp 49 -> 102 (LA 7; n table from 8 kept n copies, +0), two-stage max4
+ot_hbm_hc_root_static__tailx_rest__v4f4566	(internal) u_tail EREADY	+82	197 -> 279: launch-load register (+1, P1 1 -> 2), operand register (+1/phase), c12 units mul LAT 3 -> 6, add LAT 3 -> 7 (opt-in _l7x cut set), exp 49 -> 103 (LA 7; n rounding split registered, +1; n table from 8 kept n copies, +0), two-stage max4
 ot_hbm_hc_root_static__tailx_rest__v6bc7f2	result_v	+84	exact, 84 edges later (lockstep vs pre-RE-FORM RTL); core latency L 506 -> 590 edges
 ot_hbm_hc_root_static__tailx_rest__v6bc7f2	result[767:0]	+84	exact, 84 edges later
 ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_valid	+84	sink launch age 198 -> SKL 282 (= 198 + 12 x SDIV 7, wrap-aligned so the shift is exact for every launch phase)
@@ -16,4 +16,4 @@ ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_in_ready,sk_out_valid,sk_fault,sk_
 ot_hbm_hc_root_static__tailx_rest__v6bc7f2	sk_en_sk	0	free-running 1-in-7 enable, unchanged
 ot_hbm_hc_root_static__tailx_rest__v6bc7f2	fault	+84	never earlier than before; equal at every result_v
 ot_hbm_hc_root_static__tailx_rest__v6bc7f2	launch,mixes,bases,scales	0	sampled on the launch edge (registered at the face, loaded one edge later; internal only), unchanged; min launch spacing (busy) 506 -> 590
-ot_hbm_hc_root_static__tailx_rest__v6bc7f2	(internal) u_tail EREADY	+81	197 -> 278: launch-load register (+1, P1 1 -> 2), operand register (+1/phase), c12 units mul LAT 3 -> 6, add LAT 3 -> 7 (opt-in _l7x cut set), exp 49 -> 102 (LA 7; n table from 8 kept n copies, +0), two-stage max4
+ot_hbm_hc_root_static__tailx_rest__v6bc7f2	(internal) u_tail EREADY	+82	197 -> 279: launch-load register (+1, P1 1 -> 2), operand register (+1/phase), c12 units mul LAT 3 -> 6, add LAT 3 -> 7 (opt-in _l7x cut set), exp 49 -> 103 (LA 7; n rounding split registered, +1; n table from 8 kept n copies, +0), two-stage max4
