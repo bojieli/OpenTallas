@@ -1,0 +1,8 @@
+======== ABC command line "source mutz.abc"
+[1;37m/srv/opentallas-scratch2/claude/dkv66/hr/prompt_proof/mutz:[0m i/o = 3418/    1  lat =24608  and = 146622  lev = 91
+[1;37m/srv/opentallas-scratch2/claude/dkv66/hr/prompt_proof/mutz:[0m i/o = 3418/    1  lat = 3294  and =  27616  lev = 52
+Running "bmc2". AIG:  PI/PO/Reg = 3418/1/3294.  Node =  27616. Lev =    52.
+Params: FramesMax = 20. NodesDelta = 2000. ConfMaxOne = 2000. ConfMaxAll = 0.
+   0 : F =   12. O =   0.  And =    1507. Var =     422. Conf =      0.    2 MB     0.01 sec
+Output 0 of miter "/srv/opentallas-scratch2/claude/dkv66/hr/prompt_proof/mutz" was asserted in frame 4. Time =     0.01 sec
+Networks are not equivalent.

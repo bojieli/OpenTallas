@@ -48,6 +48,31 @@ def test_fit_reserve_skips_obstacle_inside_reserve():
     assert _run(env) == [324, 0]
 
 
+def _run_tag(env, tag, sp):
+    proc = re.search(r"proc cland_put \{i rect tag \{sp \{\}\} \{cur 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    mock = MOCK.replace("cland_put ins {0 0 10 0.27} ring:x", f"cland_put ins {{0 0 10 0.27}} {tag} {sp}")
+    out = subprocess.run(["tclsh"], input=proc + mock, capture_output=True, text=True, env=env, check=True).stdout
+    return [int(v) for v in re.search(r"LOC (\S+) (\S+)", out).groups()]
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_ff_ring_fit_footprint_ignores_the_fill_spread():
+    """DIE-S81-53/BAND: S81 t4 ft5_i sp 6.4 asked 17.28 um free for a 1.08 um flop.  Here the obstacle starts at 540 dbu:
+    base reserve 432 fits at the corner, the sp 6.4 reserve 2592 would not."""
+    env = dict(os.environ, OT_CLAND_FIT_RESERVE="1")
+    mock_occ = "set cland_occ [dict create 0 [list [list 216 324]]]"
+    global MOCK
+    saved = MOCK
+    try:
+        MOCK = MOCK.replace(mock_occ, "set cland_occ [dict create 0 [list [list 540 648]]]")
+        assert _run_tag(env, "ring:x+ff", 6.4) == [0, 0]
+        assert _run_tag(env, "ring:x+ffr", 6.4) == [0, 0]
+        # a ring that is not +ff keeps the whole spread footprint (DIE-KV-33 form, byte-identical): past the obstacle
+        assert _run_tag(env, "ring:x", 6.4) == [648, 0]
+    finally:
+        MOCK = saved
+
+
 def test_fit_reserve_is_opt_in():
     assert 'if {[info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "1"}' in TCL
     assert "if {$x<$u && $x+$fw>$l}" in TCL and "set fw $w" in TCL

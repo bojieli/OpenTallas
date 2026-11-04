@@ -1,0 +1,25 @@
+read_json /srv/opentallas-scratch2/claude/dkv65/hr/fpjobs/qkd_hr_core_prompt/fp_stage1/pre.json
+memory_share
+memory_map
+rename qkd_hr_core_prompt gold
+design -stash g
+read_json /srv/opentallas-scratch2/claude/dkv65/hr/fpjobs/qkd_hr_core_prompt/fp_stage1/mut.json
+memory_share
+memory_map
+rename qkd_hr_core_prompt gate
+design -copy-from g -as gold gold
+expose -evert gold/t:ot_sram*
+expose -evert gate/t:ot_sram*
+delete t:ot_sram*
+async2sync
+miter -equiv -flatten gold gate m
+hierarchy -top m
+flatten
+setundef -init -zero
+formalff -clk2ff
+setundef -undriven -zero
+techmap; opt -fast
+abc -g AND
+opt_clean
+stat
+write_aiger -zinit /srv/opentallas-scratch2/claude/dkv66/hr/prompt_proof/mutz.aig

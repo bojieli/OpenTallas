@@ -558,6 +558,8 @@ SCHEMA = {
                         # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
                         # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density", "explicit", "grid+explicit"]}, "tap_radius_um": _pos,
+                        # opt-in per type: density taps as frozen plans solved them (pre-0ddc1ccd8c8 anchor lattice, see taps.density_taps)
+                        "tap_model": {"enum": ["consumed", "frozen_anchor"]},
                         # "grid+explicit" (DIE-S81-39 10-31, COORD 00:2x): the R4 grid unchanged + these ADDED light taps
                         # (names clk_t<n_grid+i> in order; taps.grid_explicit_taps validates each one)
                         "added_taps": {"type": "array", "items": {
@@ -2039,7 +2041,11 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False, *, pin_snap=N
     # a macro wholly inside a clock keepout blocks nothing the keepout does not (S81 PMA in the shore keepout): its box
     # would only add candidate edges and move grid taps that tie on the ring distance
     from placement_obstacles import placement_boxes
-    boxes = [m for m in placement_boxes(t, halo=clear).values()
+    if t.get("clock", {}).get("tap_model") == "frozen_anchor":
+        pool = placed_macro_boxes(t, halo=clear)
+    else:
+        pool = placement_boxes(t, halo=clear)
+    boxes = [m for m in pool.values()
              if not any(k[0] <= m[0] and k[1] <= m[1] and m[2] <= k[2] and m[3] <= k[3] for k in keep)] + keep
 
     def free(px, py):
