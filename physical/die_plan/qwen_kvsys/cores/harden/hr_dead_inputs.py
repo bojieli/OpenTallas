@@ -5,6 +5,12 @@ from pathlib import Path
 import re
 
 FP_PASS = ['post', 'rc=0', 'mut', 'rc=1', 'emitted_v', 'rc=0']
+FP_TAIL = ['mut', 'rc=1', 'emitted_v', 'rc=0']   # the legs that prove the kit RTL itself, plus the mutant control
+
+
+def stopped_post_only(rc):
+    """Post-JSON leg stopped with no result: pending, never accepted."""
+    return rc[:2] == ['post', 'stopped'] and rc[-4:] == FP_TAIL
 
 
 def exact_dead_bits(pre, module, candidates):
@@ -38,6 +44,12 @@ def emit(fp, module, kit, candidates):
     if not candidates or not (fp / 'pre.json').is_file():
         return []
     rc = (fp / 'eq_rc.txt').read_text().split()
+    if stopped_post_only(rc):
+        # COORD 11-04: a stopped leg is no proof. Recorded as pending, nothing is declared dead.
+        (kit / 'hr_dead_inputs_proof.json').write_text(json.dumps(dict(
+            verdict='PENDING', module=module, candidates=candidates, eq_rc=rc,
+            reason='post-JSON leg stopped with no result; no dead input declared until it returns'), indent=1) + '\n')
+        return []
     if rc != FP_PASS:
         raise ValueError('HR dead-input contract needs complete post/mutant/emitted proof')
     raw = (fp / 'pre.json').read_bytes()

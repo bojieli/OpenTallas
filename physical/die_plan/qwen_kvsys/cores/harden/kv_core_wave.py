@@ -226,14 +226,14 @@ def gen(a, extra):
     if e.get("hr"):
         for r in a.fp_root:
             d = Path(r) / m
-            if (d / "eq_rc.txt").is_file() and (d / "eq_rc.txt").read_text().split() == FP_PASS \
+            if (d / "eq_rc.txt").is_file() and (a.face_proof_pending or (d / "eq_rc.txt").read_text().split() == FP_PASS) \
                     and (d / f"{m}.v").is_file() and (d / "hr_face_ports.json").is_file():
                 fp = d
                 break
         if fp is None:
             sys.exit(f"NO_RECIPE {m}: no PASS hr face proof under {','.join(a.fp_root) or '(no --fp-root)'} "
                      f"(hr_face_ports.sh; results/kv_host_regen_1/fp_core.sh {m})")
-        cmd += ["--hr-face-ports", str(fp)]
+        cmd += ["--hr-face-ports", str(fp)] + (["--hr-face-proof-pending"] if a.face_proof_pending else [])
     cmd += module_recipe(m) + ["--plan-inst", inst] + list(extra)
     (out / "kv_core_wave.json").write_text(json.dumps(dict(view=a.view, module=m, core_json=str(cjw), face_proof=str(
         fp) if fp else None, face_proof_sha=hashlib.sha256((fp / "hr_face_ports.json").read_bytes()).hexdigest()[:16]
@@ -257,6 +257,8 @@ def main(argv=None):
     pg.add_argument("--kit-rtl", default="auto", help="kit_rtl dir (<type>/kit_rtl.json) or auto: hard_macros "
                     "from the core json memory black boxes (repo macro views)")
     pg.add_argument("--fp-root", action="append", default=[])
+    pg.add_argument("--face-proof-pending", action="store_true",
+                    help="opt-in: accept a face proof dir whose proof has not returned (kit records face_proof pending)")
     pg.add_argument("--repo", default=str(REPO))
     a, extra = ap.parse_known_args(argv)
     if a.cmd == "views":

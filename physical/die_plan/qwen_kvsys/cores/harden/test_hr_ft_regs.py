@@ -111,3 +111,14 @@ endmodule
     ft.write_text("# core kit: no ft slots\npair a o\n")
     good = FG.guard(net, top="c", ft1=FG.read_ft1(ft))
     assert not good["fail_counts"], good["fails"]
+
+
+def test_bits_register_only_declared_feedthrough_bits():
+    src = ("module m(ck, rn, a, y);\n  input ck;\n  input rn;\n  input [1:0] a;\n  output [2:0] y;\n"
+           "  assign y[0] = a[1];\n  assign y[2] = a[0];\n  assign y[1] = q;\nendmodule\n")
+    spec = dict(regs=[dict(out="y", bits=[0, 2], clock="ck", reset_n="rn", reset_value=0)], ruling="r", reason="w")
+    text, rep = _m().transform(src, spec)
+    assert "assign y[1] = q;" in text and "assign y[0] = a[1]" not in text
+    assert "ot_ftreg_y <= {a[0], a[1]};" in text
+    assert "assign y[0] = ot_ftreg_y[0];" in text and "assign y[2] = ot_ftreg_y[1];" in text
+    assert rep[0]["flops"] == 2 and rep[0]["added_edges"] == 1
