@@ -234,3 +234,4 @@ time	die	signed_types	signed_cores
 2026-11-03 18:34 PST	S81 0/205 31/54d	HEAD 1/25 4/4d	QC 0/119 11/16d	KV 0/56 16/32d	HBM 0/81 8/84d	total 70 (+1 QC su_lane l7). Kit FAIL since 17:3x: KV 400k native cap 5 (HG-SPLIT), S81 PDN-0006 2 (pgobs in I4), KV CLAND 2 + S81 CLAND 1 (hgicland approved), S81 FACE_GUARD 1, S81 kit_rtl 1, KV no-recipe 1. GEOM: HBM sfu_programme_store_r10 45-SRAM grid fill 0.12, 23,788 sinks on one clock entry (>5k target, advisory); HEAD hd_ctl_e 855x104 fill 0.005, logic ~800 um apart -> TT -29 sign-off fail -> RE-FORM. Disk intel2 97%/intel1 95%/epyc2 root 326 GB -> PRUNE-1103E. Waiters intel1 3 / localhost 8 / epyc4 8 / epyc2 0 (admits -9).
 2026-11-03 19:38 76 s81=32 head=4+1t qc=11 kv=20 hbm=9
 2026-11-03 20:36 85 s81=36 head=4+5t qc=11 kv=20 hbm=9
+2026-11-03 22:30 85 s81=36 head=4+5t qc=11 kv=20 hbm=9
