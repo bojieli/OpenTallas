@@ -42,6 +42,14 @@ def main():
                     pn["source_clock_tap"] = min(roots, key=lambda r: DT.L1((r[1], r[2]), pn["xy_um"]))[0]
         else:
             DT.apply(P, DT.derive(S.Plan(P, pout), P))
+            # the re-derive renames the collector nodes; a site override keyed on an old node is stale
+            lc1 = ck["landing_contract"]
+            nodes = {r["q"] for r in lc1["collector_tree"]["relays"]} | {lc1["collector_root_node"]}
+            over = {k: v for k, v in lc1.get("group_rects_um", {}).items() if k.removeprefix("u_cland_collect_") in nodes}
+            if "group_rects_um" in lc1:
+                lc1["group_rects_um"] = over
+                if not over:
+                    del lc1["group_rects_um"]
         taps1 = S.tap_grid(S.Plan(P, pout), t)
         lc = ck["landing_contract"]
         rep["types"][t] = dict(taps_old=len(taps0), taps_new=len(taps1), collector=lc0.get("collector_tree") is not None,
