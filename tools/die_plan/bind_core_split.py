@@ -11,6 +11,7 @@ reset_gate (DIE-KV-67 11-04, COORD LOOP-GAP 05:20 (4), option b): the PC reset p
 reset contract does not cover them. Each listed pin gets one ot_dp_rgate: q <= lane & local wavefront tap. Lane function kept,
 one edge later; while the die reset holds the tap low the pin is held low, so the wavefront proof covers it by construction.
 """
+import re
 from bind_elab import Cell
 
 
@@ -28,12 +29,14 @@ def gate_ports(specs):
     return out
 
 
-def gate_tap(relays, xy):
-    """the wavefront tap net (rst_n_t<k>) whose relay sits nearest to xy.  All taps of a type release on the same edge, so the
-    choice only sets the wire length."""
-    taps = [r for r in relays if str(r.get("q", "")).startswith("rst_n_t")]
+def gate_tap(relays, xy, consumer_taps):
+    """the wavefront tap net rst_n_t<k> nearest to xy, among the consumer taps k < consumer_taps.  Taps at or above
+    that are the type's registered reset outs: they are emitted as rr_t<k> face flops and may feed nothing else.  All
+    consumer taps release on the same edge, so the choice only sets the wire length."""
+    taps = [r for r in relays if re.fullmatch(r"rst_n_t\d+", str(r.get("q", "")))
+            and int(str(r["q"])[len("rst_n_t"):]) < consumer_taps]
     if not taps:
-        raise CoreSplitError("reset_gate: the type has no wavefront tap")
+        raise CoreSplitError("reset_gate: the type has no wavefront consumer tap")
     best = min(taps, key=lambda r: (abs(r["xy"][0] - xy[0]) + abs(r["xy"][1] - xy[1]), r["q"]))
     return best["q"]
 

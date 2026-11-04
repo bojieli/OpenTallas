@@ -3685,7 +3685,7 @@ class Binder:
                 w, h = hc["outline_um"]
                 o = hc["origin_um"]
                 try:
-                    tap_net = bind_core_split.gate_tap(rtree["relays"], (o[0] + w / 2, o[1] + h / 2))
+                    tap_net = bind_core_split.gate_tap(rtree["relays"], (o[0] + w / 2, o[1] + h / 2), RT.consumer_count(rtree))
                 except ValueError as exc:
                     raise BindError(f"CORE_SPLIT {tn}/{r}: {exc}") from exc
                 nm = short_id(f"prg_{sv_id(r)}_{len(core_gates)}", 100)

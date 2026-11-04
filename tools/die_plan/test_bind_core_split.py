@@ -74,7 +74,13 @@ def test_gate_ports_only_when_asked():
 
 def test_gate_tap_nearest_boot_tap():
     relays = [dict(q="rst_rl_0", xy=(0, 0)), dict(q="rst_n_t1", xy=(100, 0)), dict(q="rst_n_t0", xy=(10, 10))]
-    assert S.gate_tap(relays, (0, 0)) == "rst_n_t0"
-    assert S.gate_tap(relays, (90, 0)) == "rst_n_t1"
+    assert S.gate_tap(relays, (0, 0), 2) == "rst_n_t0"
+    assert S.gate_tap(relays, (90, 0), 2) == "rst_n_t1"
     with pytest.raises(S.CoreSplitError):
-        S.gate_tap(relays[:1], (0, 0))
+        S.gate_tap(relays[:1], (0, 0), 2)
+
+
+def test_gate_tap_skips_registered_reset_out():
+    # tap k >= consumer count is a reset out: emitted as rr_t<k>, no rst_n_t<k> net exists
+    relays = [dict(q="rst_n_t0", xy=[0, 0]), dict(q="rst_n_t1", xy=[100, 0])]
+    assert S.gate_tap(relays, (90, 0), 1) == "rst_n_t0"
