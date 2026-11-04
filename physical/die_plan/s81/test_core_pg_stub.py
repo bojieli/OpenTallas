@@ -43,10 +43,24 @@ def test_class_b_stubs_carry_native_m5_pg():
         assert not ({'M6', 'M7'} & _obs_layers(text)), s
 
 
+def test_signed_ln_stubs_carry_signed_view_pg():
+    # PG-CORECONN-3 11-03: S81-060/061 are SIGNED (eco_m0 i2/i3, t-s81 7af661c74dd8); their stubs carry the signed
+    # abstract's PIN VDD/VSS verbatim (24 M5 straps each, VSS y 4.297-108.023, VDD y 4.311-108.009), not the recipe
+    from pathlib import Path
+    root = Path(__file__).resolve().parent
+    for s in SIGNED_LN:
+        text = (root / s).read_text()
+        for net, (y0, y1) in (('VSS', ('4.297', '108.023')), ('VDD', ('4.311', '108.009'))):
+            body = text.split(f'PIN {net}\n', 1)[1].split(f'END {net}\n', 1)[0]
+            rects = [l.split() for l in body.splitlines() if l.strip().startswith('RECT')]
+            assert len(rects) == 24 and all(r[2] == y0 and r[4] == y1 for r in rects), (s, net)
+
+
 
 CLASS_B = ["cores/eng/lef/dsdv_eng_rr_h0.lef", "cores/eng/lef/dsdv_eng_rr_h1.lef",
            "cores/legacy/lef/dsdv_eng_rr_e_clkm5_1101.lef", "h2_2249/coll_w/lane.lef", "h2_2249/coll_e/lane.lef",
            "cores/h2/ot_s81_mu72_lnland/ot_s81_mu72_lnland.lef", "cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef"]
+SIGNED_LN = CLASS_B[5:]
 STUBS_M5 = ["cores/leaf/lef/ot_s81sl_ve_m_tpl.lef", "cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
             "cores/leaf/lef/ot_s81sl_ve_s_tpl_w1728.lef", "cores/leaf/lef/ot_s81sl_vn_a_tpl.lef",
             "cores/leaf/lef/ot_s81sl_vn_b_tpl.lef", "cores/leaf/lef/ot_s81sl_vq_tpl.lef", "cores/leaf/lef/ot_s81sl_vs_tpl.lef",

@@ -35,7 +35,8 @@ COORD GO 18:44 PST (one class lane, estimate first). DIE-S81-51 GO on both parts
 - Views: dsdv_eng_rr_h0/h1, dsdv_eng_rr_e_clkm5_1101, H2 coll_{w,e}/lane.lef, and the H2 ot_s81_mu72_lnland(_nst) LN stubs. The census found the LN stubs as the next raise in the same 4 LP types after lane.lef was fixed.
 - All 7 are plan stubs of unsigned cores. Their native recipe (gen_core_kit*.py) routes at most on M5, with pdn -pins M5. The routed H0 abstract (intel1 codex-s81-cohort-1101 dsdv_eng_rr_h0_ccA_g2typed) has VDD at x = 157.716, which is exactly this recipe.
 - Fix: a `core_pg_stub.refresh` text rewrite adds the native M5 PG pins. `clip_obs` drops OBS above M5 (on the E stub). refresh now inserts before `END <macro>` when a stub has no OBS, and it finds PG pins at any indent.
-- Result: 0 PG / M5-signal-pin conflicts at 0.072 spacing in all 7. The signed abstracts replace these stubs at sign-off.
+- The two LN stubs are SIGNED views (S81-060 mu72_lnland eco_m0/i2, S81-061 lnland_nst eco_m0/i3, re-sign on t-s81 7af661c74dd8). Their PIN VDD/VSS blocks are copied verbatim from the signed base abstracts (epyc4 .../sign/lnland{,_nst}_h2P/eco_m0/i{2,3}/run/results/.../base/*.lef), so the parent sees the real view's geometry: 24 M5 straps per net, same x as the recipe, VSS y 4.297-108.023, VDD y 4.311-108.009. The 5 unsigned stubs keep the M5 recipe.
+- Result: 0 PG / M5-signal-pin conflicts at 0.072 spacing, and 0 PG / M5-OBS overlaps, in all 7.
 
 ## Tests
 
