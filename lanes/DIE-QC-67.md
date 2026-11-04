@@ -1,0 +1,2 @@
+# DIE-QC-67 (QC die owner, succeeds DIE-QC-66; started 2026-11-03 22:33 PST)
+Jobs: l1 tagged re-sign epyc4 dq66-sul-l1eco/resign67.sh (status e1/resign_s_qc.status); l0 chain epyc2 scratch-root/claude/dq67-sul-l0; red2_leaf route epyc2 scratch-root/claude/dq67-red-route.sh (status dq67-red/status). NK p7r/p7s/p7c, NL v2 resume + v3 on epyc4, IREG on intel1 (DIE-QC-66 chains, status in die-qc-66-cores/nk_build, nl_build_e4, die-qc-66-nlcf). Helper /TYPES: tt_ctlm dup pin class + LEC-RANK-1D READY.
