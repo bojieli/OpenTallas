@@ -3,7 +3,7 @@
  "ot_v41_bf_col3_c": {
   "rtl_dirs": true,
   "hold_ff_margin": 0,
-  "suffix": "rfh4",
+  "suffix": "rfh5",
   "params": {
    "KEEP_XPOS": 1,
    "BRNECUT": 1
@@ -31,12 +31,13 @@
    "split": "count",
    "win_ps": 20
   },
-  "_why": "ROM pair at the old core-local sites (x 42.12, R180 / MY): read bits face both logic channels (W: half faces + capture, E: pin faces + FP lanes); 2x4 regions of ~2.4k sinks"
+  "_why": "ROM pair at the old core-local sites (x 42.12, R180 / MY): read bits face both logic channels (W: half faces + capture, E: pin faces + FP lanes); 2x4 regions of ~2.4k sinks",
+  "route_m6": true
  },
  "ot_v41_bf16_half": {
   "rtl_dirs": true,
   "hold_ff_margin": 0,
-  "suffix": "rfh4",
+  "suffix": "rfh5",
   "params": {},
   "ref_tile": "results/rfh_1103/bf_col3/specs/ot_v41_bf16_half",
   "util": 0.65,

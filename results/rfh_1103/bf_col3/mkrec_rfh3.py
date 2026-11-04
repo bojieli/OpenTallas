@@ -24,7 +24,7 @@ for m, s in (("ot_v41_bf_col3_c", c), ("ot_v41_bf16_half", h)):
     (D / m).mkdir(parents=True, exist_ok=True)
     (D / m / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
 rec = json.load(open("results/rfh_1103/bf_col/recipes_rfh_1103.json"))["ot_v41_bf_col"]
-common = {"rtl_dirs": True, "hold_ff_margin": 0, "suffix": "rfh4"}
+common = {"rtl_dirs": True, "hold_ff_margin": 0, "suffix": "rfh5"}
 R = {"_doc": "DIE-S81-51/RF-H 2026-11-03 3-core bf_col recipes (plan delta physical/die_plan/s81/rfh3/plan_h2_2249_rfh3_bfcol3.json.gz). "
              "Conservative form: each core <= 150k cells, own N-face clock entry, regional taps <= 5k sinks per region, "
              "registered faces on every inter-core cut. util: the unchanged slot cannot hold 3 cores at 0.45 "
@@ -32,7 +32,7 @@ R = {"_doc": "DIE-S81-51/RF-H 2026-11-03 3-core bf_col recipes (plan delta physi
      "ot_v41_bf_col3_c": dict(common, params={"KEEP_XPOS": 1, "BRNECUT": 1}, lec_hints=rec["lec_hints"],
                               ref_tile="results/rfh_1103/bf_col3/specs/ot_v41_bf_col3_c", util=0.62,
                               macro_sites=rec["macro_sites"],
-                              regional_taps={"nx": 2, "ny": 4, "split": "count", "win_ps": 20},
+                              regional_taps={"nx": 2, "ny": 4, "split": "count", "win_ps": 20}, route_m6=True,
                               _why="ROM pair at the old core-local sites (x 42.12, R180 / MY): read bits face both logic "
                                    "channels (W: half faces + capture, E: pin faces + FP lanes); 2x4 regions of ~2.4k sinks"),
      "ot_v41_bf16_half": dict(common, params={}, ref_tile="results/rfh_1103/bf_col3/specs/ot_v41_bf16_half", util=0.65,
