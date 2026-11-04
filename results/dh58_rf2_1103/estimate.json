@@ -1,0 +1,178 @@
+{
+ "schema": "opentallas.dh58_rf2_estimate.v1",
+ "event": "l48rf2",
+ "plan": "intel2:/srv/opentallas-scratch2/claude/dh58/rf2/prepared_l48rf2",
+ "plan_sha256": "8327f303db76f153f517d8bfc40a7a33c9f0ff276df382953e743f148c57e450",
+ "base": "intel2:/srv/opentallas-scratch2/claude/dh58/rfplan_work/prepared_l48rf (59c391855c18)",
+ "class_PLAIN_FT_FACE": {
+  "cause": "all violators are port -> u_ft_<slot>_s0 face register (zero logic, vclk 450): ft hop input max (1-0.16)T leaves ~130 ps for the hold pads in_min -90 needs; internal reg-to-reg pairs met (hd_ctl_e pair_skew min +56 ps), capture tap latency ~433 TT vs vclk 450 (trunk balanced) -> not SPREAD-STRIP",
+  "form": "clock.plain_seam_split {rx_in_max_ps 480, rx_in_raw_max_ps 580} unscoped (S81 class values, COORD 11-03 10:49); receivers = hd_ctl_e, hd_ctl_n, hd_host_n, hd_mesh_e, hd_spn_eshim_tx, hd_spn_wshim_tx; no sender cut (every sender is a gen_rtl u_bout face register on a plain non-ft bus, real arrival ~50-150 ps << 500-530 raw); hold model seam_ps 90 unchanged; 0 added cycles, no K delta",
+  "method": "window = worst setup + worst hold slack per corner (lower bound: worst bits differ); pad to FF hold 0 with HB4 TT/FF = 1.8",
+  "types": {
+   "hd_spn_eshim_tx": {
+    "source": "l48rf attempt_9",
+    "port": "link_i",
+    "sender": "hd_spn/hd_spn_end u_bout_xe_o",
+    "written_in_max_ps": [
+     669.72,
+     480
+    ],
+    "setup_gain_ps": 189.72,
+    "window_tt_ps": [
+     -73.05,
+     116.67
+    ],
+    "window_ff_ps": [
+     -38.53,
+     151.19
+    ],
+    "after_hold_repair": {
+     "pad_ff_ps": 36.88,
+     "pad_tt_ps": 66.38,
+     "setup_tt_ps": 60.0,
+     "setup_ff_ps": 151.19,
+     "hold_tt_ps": 56.67,
+     "hold_ff_ps": 0.0
+    },
+    "verdict": "CLOSES"
+   },
+   "hd_ctl_e": {
+    "source": "l48rf attempt_8",
+    "port": "n_tx_ft_i",
+    "sender": "hd_ctl u_bout_n_tx_o",
+    "written_in_max_ps": [
+     669.72,
+     480
+    ],
+    "setup_gain_ps": 189.72,
+    "window_tt_ps": [
+     -33.31,
+     156.41
+    ],
+    "window_ff_ps": [
+     -4.58,
+     185.14
+    ],
+    "after_hold_repair": {
+     "pad_ff_ps": 24.3,
+     "pad_tt_ps": 43.74,
+     "setup_tt_ps": 116.99,
+     "setup_ff_ps": 185.14,
+     "hold_tt_ps": 39.42,
+     "hold_ff_ps": 0.0
+    },
+    "verdict": "CLOSES"
+   },
+   "hd_spn_wshim_tx": {
+    "source": "l48h0 attempt_5",
+    "port": "link_i",
+    "sender": "hd_spn/hd_spn_end u_bout_xw_o",
+    "written_in_max_ps": [
+     679.72,
+     480
+    ],
+    "setup_gain_ps": 199.72,
+    "window_tt_ps": [
+     -90.8,
+     108.92
+    ],
+    "window_ff_ps": [
+     -161.42,
+     38.3
+    ],
+    "after_hold_repair": {
+     "pad_ff_ps": 48.14,
+     "pad_tt_ps": 86.65,
+     "setup_tt_ps": 48.08,
+     "setup_ff_ps": 38.3,
+     "hold_tt_ps": 60.84,
+     "hold_ff_ps": 0.0
+    },
+    "verdict": "CLOSES"
+   },
+   "hd_host_n": {
+    "source": "l48rf attempt_7",
+    "port": "h_rx_ft_i",
+    "sender": "hd_host u_bout_h_rx_o",
+    "written_in_max_ps": [
+     649.72,
+     480
+    ],
+    "setup_gain_ps": 169.72,
+    "window_tt_ps": [
+     -95.57,
+     74.15
+    ],
+    "window_ff_ps": [
+     -169.85,
+     -0.13
+    ],
+    "after_hold_repair": {
+     "pad_ff_ps": 75.5,
+     "pad_tt_ps": 135.9,
+     "setup_tt_ps": 8.12,
+     "setup_ff_ps": -0.13,
+     "hold_tt_ps": 66.03,
+     "hold_ff_ps": 0.0
+    },
+    "verdict": "MARGINAL"
+   },
+   "hd_ctl_n": {
+    "source": "l48rf attempt_7 (4_1_cts reset LEAF fail, no sign-off)",
+    "port": "lepf_ft_i, unit_ft_i",
+    "written_in_max_ps": [
+     659.72,
+     480.0
+    ],
+    "setup_gain_ps": 179.72,
+    "verdict": "NO SIGN-OFF DATA (gain only)"
+   },
+   "hd_mesh_e": {
+    "source": "no sign-off yet; sender_min attempt running (DIE-HEAD-58)",
+    "port": "m_rx_ft_i",
+    "written_in_max_ps": [
+     669.72,
+     480.0
+    ],
+    "setup_gain_ps": 189.72,
+    "note": "unscoped class applies automatically: the split supersedes sender_min for mesh_e in l48rf2; not in the relaunch batch"
+   }
+  }
+ },
+ "reset_hd_ctl_n": {
+  "local_tap_um": [
+   535.68,
+   622.08
+  ],
+  "cause": "w3d station epoch flops s2/s3 488.97/485.73 um from the nearest terminal (t0 667.44,126.63)",
+  "plan_interior_worst_um": [
+   660.8,
+   379.3
+  ],
+  "real_station_hop_um": {
+   "s2": 159.8,
+   "s3": 184.7
+  },
+  "tree": "depth unchanged; 4 raw START/landing refs renamed (u_rrl_N -> N+3), 0.0 um move, 0 depth delta"
+ },
+ "reset_hop_over_405": {
+  "l48rf": [
+   "hd_ctl_n",
+   "hd_host_n (est 431 line model; measured 363.04 PASS)",
+   "hd_serdes (est 665, 1 terminal, 422k cells, not in any kit wave)"
+  ],
+  "l48rf2": [
+   "hd_host_n (est only; measured PASS)",
+   "hd_serdes (est only; container type, not built)"
+  ]
+ },
+ "g0c": {
+  "tool": "rf2/hsrc (dh56-cland src 69e06c8b939 + turnb overlay + plain_seam overlay)",
+  "l48rf": "1 ERROR (reset native release qualification PENDING lk_E*, pre-existing) / 16 WARN",
+  "l48rf2": "identical 17 findings"
+ },
+ "plan_geom": {
+  "note": "advisory; same tool on both plans",
+  "delta": "only hd_ctl_n clock_reach 557.57 -> 559.23 um, clock_tap_sinks 1049 -> 1051 (two reset relays)"
+ }
+}
