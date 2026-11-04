@@ -2612,17 +2612,55 @@ def cone_sim(m, lits, fixed, words, seed):
 ZH = -2                                  # fsm_proposals: the zero-hot (all gate bits 0) state
 
 
+def _fsm_reset_controls(m, state, dl, n, words=1024):
+    """LEC-FSM-RESET (DH59-LEC 11-03): free inputs of the next-state cones that alone force one side's whole next state
+    constant from a random state (a reset, or one level of a registered relay tree: async2sync ANDs its parents in) ->
+    {var: inactive value}.  Candidate discovery only: the map proposed from them is still proved by induction."""
+    need, stack = set(), [l >> 1 for l in dl]
+    while stack:
+        v = stack.pop()
+        if v == 0 or v in need:
+            continue
+        need.add(v)
+        if v > m.ni:
+            k = v - m.ni - 1
+            stack += (m.ands[2 * k] >> 1, m.ands[2 * k + 1] >> 1)
+    ones = (1 << (64 * words)) - 1
+    inputs = sorted(x for x in need if x <= m.ni and x not in state)
+    # many lanes: forcing a data pin only looks constant while every lane is in reset through the OTHER controls
+    out = {}
+    for v in inputs:
+        for pol in (0, 1):
+            vals, mask = cone_sim(m, dl, {v: ones if pol else 0}, words, seed=2 * v + pol)
+            if all(x in (0, mask) for x in vals[:n]) or all(x in (0, mask) for x in vals[n:]):
+                out[v] = 1 - pol
+                break
+    return out
+
+
 def _fsm_search(m, var, gk, tk, dl, n, nt, zh, words, log, base):
     """fsm_proposals: score every (code -> gate bit) map on 64 x `words` random lanes per (code, bit) start state;
-    -> (ok, best, second, map): ok = a unique best map that explains a majority of all sampled transitions."""
+    -> (one-hot result, zero-hot result or None), each (ok, best, second, map): ok = a unique best map that explains
+    a majority of all sampled transitions.
+    LEC-FSM-RESET: 7/8 of the lanes hold every reset control inactive.  A control behind a relay tree of k registers
+    is released in only 1 / 2^k uniform lanes (HEAD u_gb.hunt k = 7: 127 of 128 lanes only showed reset -> (0, t0), so
+    every map binding those two tied, or a zero-hot map won on noise)."""
     import math
+    import random
     R = {}
+    lanes_ = 64 * words
+    ones = (1 << lanes_) - 1
+    slice_ = (1 << (lanes_ // 8)) - 1      # reset behaviour is still sampled here (it binds the reset state)
+    state = {var[("gold", k)] for k in gk} | {var[("gate", k)] for k in tk}
+    controls = _fsm_reset_controls(m, state, dl, n)
+    rnd_c = random.Random(words)
     for c in range(1 << n):
 
         for j in list(range(nt)) + ([ZH] if zh else []):
-            ones = (1 << (64 * words)) - 1
             fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
             fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
+            fixed.update({v: (ones if inactive else 0) ^ (rnd_c.getrandbits(lanes_) & slice_)
+                          for v, inactive in controls.items()})
             vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + (j if j >= 0 else 63))
             obs = collections.Counter()
             for lane in range(64 * words):
@@ -2654,15 +2692,14 @@ def _fsm_search(m, var, gk, tk, dl, n, nt, zh, words, log, base):
                         second = sc
         ok = pi is not None and best != second and 2 * best > len(pi) * lanes
         return ok, best, second, pi
-    ok, best, second, pi = search(False)
-    if not ok and zh:                  # only when no one-hot map is unique: earlier verdicts are unchanged
-        if math.comb(1 << n, nt) * math.factorial(nt) * ((1 << n) - nt) > 200000:
-            log.append(f"fsm: {base} ({n} gold / {nt} gate bits): zero-hot encoding search too large")
-        else:
-            okz, bz, sz, pz = search(True)
-            if okz:
-                ok, best, second, pi = okz, bz, sz, pz
-    return ok, best, second, pi
+    one = search(False)
+    ok, best, _, pi = one
+    if not zh or (ok and best == len(pi) * lanes):
+        return one, None               # a one-hot map that explains every lane: no zero-hot search, as before
+    if math.comb(1 << n, nt) * math.factorial(nt) * ((1 << n) - nt) > 200000:
+        log.append(f"fsm: {base} ({n} gold / {nt} gate bits): zero-hot encoding search too large")
+        return one, None
+    return one, search(True)
 
 
 def fsm_proposals(L, log, words=2, max_bits=4):
@@ -2704,10 +2741,19 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         # rare transitions (HBM kshare st 11-02: ISSUE->WAIT on j == 15, WAIT->NORM on got == 63) need more lanes than
         # the default sample: re-sample with 8x / 32x the lanes while the map is not unique (more evidence only; the
         # induction proof still decides)
+        # LEC-FSM-RESET: a zero-hot map (one code more, so it fits noise more easily) is taken over an unresolved one-hot
+        # search only when no lane count resolves it, and over a resolved one only when it explains more of the lanes
+        zero = None
         for w in (words, 8 * words, 32 * words):
-            ok, best, second, pi = _fsm_search(m, var, gk, tk, dl, n, nt, zh, w, log, base)
+            (ok, best, second, pi), z = _fsm_search(m, var, gk, tk, dl, n, nt, zh, w, log, base)
+            if ok and z and z[0] and z[1] * len(pi) > best * len(z[3]):
+                ok, best, second, pi = z
             if ok:
                 break
+            zero = z if z and z[0] else zero
+        else:
+            if zero:
+                ok, best, second, pi = zero
         if not ok:
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
                        f"{nt * 64 * w} transitions), none proposed")
