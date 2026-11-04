@@ -66,15 +66,38 @@ def build(src, out, zh_view, recip_view, repo):
     return kd, moved
 
 
+def swap_lef(kd, master, lef, repo):
+    """replace one child LEF in an existing kit and refresh its stamp.  Needed for the recip: the signed view's bloated
+    abstract (full M5/M6 OBS, top PG M6) leaves the AHUB M5-M6 macro grid no via site (PDN-0232/0233).  The stand-in is
+    write_abstract_lef of the same signed routed DB without bloat: same 69 signal pins and PG pins, real M5/M6 shapes."""
+    kd, lef, repo = Path(kd), Path(lef), Path(repo)
+    sys.path.insert(0, str(repo / "tools/die_plan"))
+    import lec as LEC
+    import gen_core_kit_kv as GEN
+    shutil.copyfile(lef, kd / "macros" / f"{master}.lef")
+    prov = LEC._repo_provenance(repo)
+    fz = json.loads((kd / "freeze.json").read_text())
+    fz["source_commit"] = prov.get("commit")
+    fz["ahub_cons"][f"{master}_lef"] = dict(source=str(lef), sha256=hashlib.sha256(lef.read_bytes()).hexdigest())
+    fz["kit_hash"] = GEN.kit_hash(kd)
+    (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
+    LEC.write_kit_provenance(kd, repo, provenance=prov)
+    return fz["kit_hash"]
+
+
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--from", dest="src", required=True)
-    ap.add_argument("--out", required=True)
-    ap.add_argument("--zh-view", required=True)
-    ap.add_argument("--recip-view", required=True)
+    ap.add_argument("--from", dest="src")
+    ap.add_argument("--out")
+    ap.add_argument("--zh-view")
+    ap.add_argument("--recip-view")
+    ap.add_argument("--swap-lef", nargs=3, metavar=("KIT", "MASTER", "LEF"), help="replace one child LEF in a built kit")
     ap.add_argument("--repo", default=str(Path(__file__).resolve().parents[5]))
     a = ap.parse_args()
+    if a.swap_lef:
+        print(swap_lef(a.swap_lef[0], a.swap_lef[1], a.swap_lef[2], a.repo))
+        raise SystemExit(0)
     kd, moved = build(a.src, a.out, a.zh_view, a.recip_view, a.repo)
     print(kd)
     print(json.dumps(moved))
