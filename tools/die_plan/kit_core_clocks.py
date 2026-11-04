@@ -50,6 +50,46 @@ def swap_native_cores(bound, hard_cores):
     return bound, receipt
 
 
+def adapt_core_ports(bound, hard_cores):
+    """-> (bound, receipt): a plan core with native_port_adapter has a different port form from the leaves the bind
+    wired (DIE-KV-69 11-04, kv3_astk).  In the private kit copy, each merge group becomes one connection, which must
+    be one net already, and each tie names a core input.  Same cycles; anything else fails closed."""
+    receipt = []
+    for core in hard_cores or []:
+        spec = core.get("native_port_adapter")
+        if not spec:
+            continue
+        inst, master = "u_" + core["inst"], core["module"]
+        heads = list(re.finditer(r"^([ \t]+)" + master + r"[ \t]+" + inst + r"[ \t]*\(", bound, re.M))
+        if len(heads) != 1:
+            raise ValueError(f"core {core['inst']}: expected one {master} {inst}, got {len(heads)}")
+        head = heads[0]
+        end = bound.find("\n" + head.group(1) + ");", head.end())
+        if end < 0:
+            raise ValueError(f"core {core['inst']}: unclosed instance")
+        body = bound[head.end():end]
+        rows = []
+        for port, names in spec.get("merge", {}).items():
+            nets = set()
+            for name in names:
+                body, n = re.subn(r"^[ \t]*\." + name + r"\(([^()]*)\),?[ \t]*\n?",
+                                  lambda m: nets.add(m.group(1).strip()) or "", body, flags=re.M)
+                if n != 1:
+                    raise ValueError(f"core {core['inst']}: merge pin {name} found {n} times")
+            if len(nets) != 1:
+                raise ValueError(f"core {core['inst']}: {port} merge group is not one net: {sorted(nets)}")
+            rows.append((port, nets.pop()))
+        for port, value in spec.get("tie", {}).items():
+            if re.search(r"\." + port + r"\(", body):
+                raise ValueError(f"core {core['inst']}: tie {port} is already connected")
+            rows.append((port, value))
+        body = body.rstrip().rstrip(",")
+        add = ",\n".join(f"{head.group(1)}    .{p}({v})" for p, v in rows)
+        bound = bound[:head.end()] + body + ",\n" + add + bound[end:]
+        receipt.append(dict(inst=core["inst"], module=master, ports=[p for p, _ in rows], cycles_changed=0))
+    return bound, receipt
+
+
 def wire(bound, module, rows):
     ports = {}
     receipt = []
