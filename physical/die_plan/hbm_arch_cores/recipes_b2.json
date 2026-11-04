@@ -728,6 +728,62 @@
   "read_at_commit": true,
   "asbuilt_inst": "pgp_NW"
  },
+ "ot_hbm_su_programme_pslice_c5__dcut3": {
+  "top": "ot_hbm_su_programme_pslice_c5",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+  ],
+  "defines": [],
+  "params": {
+   "SB": 2470,
+   "DRLY": 1,
+   "DBREG": 1,
+   "DGRP": 2
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "macro_inst_sub": [
+   [
+    "\\.u_c\\.u_p\\.",
+    ".u_c.g_p.u_p."
+   ]
+  ],
+  "source": "DIE-HBM-61/CUTS 11-03 pin-cycles cut (OWNER 18:5x): the d34578d6f cluster top with every leaf producer's dictionary path cut (DRLY 1 relay, DBREG 1 per-group read copies, DGRP 2 registered funnel), files from the tree; contract = the d34578d6f slice with every output +3 edges (start advance DEPTH+4 -> DEPTH+4+3; next start/config >= 3 edges later); bench results/hbm_cuts_1103/pslice/run_dcut_eq.sh; cycles physical/die_plan/hbm/reform_1103/cycles/cuts_pslice.tsv",
+  "source_commit": "d34578d6f",
+  "read_at_commit": false,
+  "asbuilt_inst": "pgp_NW"
+ },
+ "ot_hbm_su_programme_pslice_c5__dcut4": {
+  "top": "ot_hbm_su_programme_pslice_c5",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+  ],
+  "defines": [],
+  "params": {
+   "SB": 2470,
+   "DRLY": 2,
+   "DBREG": 1,
+   "DGRP": 2
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "macro_inst_sub": [
+   [
+    "\\.u_c\\.u_p\\.",
+    ".u_c.g_p.u_p."
+   ]
+  ],
+  "source": "DIE-HBM-61/CUTS 11-03 pin-cycles cut (OWNER 18:5x): the d34578d6f cluster top with every leaf producer's dictionary path cut (DRLY 2 relay, DBREG 1 per-group read copies, DGRP 2 registered funnel), files from the tree; contract = the d34578d6f slice with every output +4 edges (start advance DEPTH+4 -> DEPTH+4+4; next start/config >= 4 edges later); bench results/hbm_cuts_1103/pslice/run_dcut_eq.sh; cycles physical/die_plan/hbm/reform_1103/cycles/cuts_pslice.tsv",
+  "source_commit": "d34578d6f",
+  "read_at_commit": false,
+  "asbuilt_inst": "pgp_NW"
+ },
  "ot_hbm_su_static_qcore_r13": {
   "top": "ot_hbm_su_static_qcore_r13",
   "files": [

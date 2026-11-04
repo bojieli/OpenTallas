@@ -1,0 +1,10 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_su_programme_pslice_c5__dcut3	busy,valid,done,edge_index[15:0],command[2469:0],fault	+3	DRLY 1 + DBREG 1 + DGRP 2 (DK 3): exact, 3 edges later (lockstep vs the recipe pin d34578d6f slice, tb_pslice_dcut); the compiler start advance DEPTH+4 -> DEPTH+7 keeps every command bit on its consumer edge
+ot_hbm_su_programme_pslice_c5__dcut3	start,length,cfg_we,cfg_bank,cfg_row,cfg_data	0	sampled on the same edge as before (no ingress change); spacing: the next start >= 3 edges later than before after a programme ends (internal busy ends 3 edges later; a start inside that tail is rejected = sticky fault), config writes likewise only while idle
+ot_hbm_su_programme_pslice_c5__dcut3	rst_n (release)	0	unchanged (leaf/head relays +3, RF1 face relay +N as built)
+ot_hbm_su_programme_pslice_c5__dcut3	(internal) dictionary read -> command	+3	XD 1 -> 4: DRLY relay {d_ren_c,d_addr} (+1), mem_r4 BREG per-group read copies next to the macros (+1), registered dictionary funnel GRP 2 (+1); index path and config path unchanged
+ot_hbm_su_programme_pslice_c5__dcut4	busy,valid,done,edge_index[15:0],command[2469:0],fault	+4	DRLY 2 + DBREG 1 + DGRP 2 (DK 4): exact, 4 edges later; start advance DEPTH+4 -> DEPTH+8; spacing +4 as above (parallel variant, first to sign off wins)
+ot_hbm_su_programme_pslice_c5__dcut4	start,length,cfg_*	0	as dcut3
+ot_hbm_su_programme_pslice_c5__dcut4	(internal) dictionary read -> command	+4	XD 1 -> 5 (DRLY 2)
+ot_hbm_su_programme(PIPE 2, DRLY/DBREG/DGRP)	busy,valid,done,edge_index,command,fault	+DK	opt-in, DK = DRLY + DBREG + (DGRP>0); all 0 = unchanged for every other user (pgcol_s/l, part, root_h5, NCX producer refuses non-zero)
+ot_hbm_su_programme_pghead(XP)	fault	+DK	pslice_c5 sets XP 4+DK so the head's own fault stays on the leaves' fault edge

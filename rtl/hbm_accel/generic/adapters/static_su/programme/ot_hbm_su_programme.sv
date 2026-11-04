@@ -64,8 +64,12 @@ endmodule
 //     copies), so no c_bank compare or c_data net spans the tile.
 // Latency read -> data: 1 edge (GRP 0, as OREG 1) or 2 edges (GRP > 0). MUT 1 (bench): final mux on the live hit h1
 // instead of its registered copy (stale-select bug).
+// BREG (DIE-HBM-61/CUTS 11-03, default 0 = unchanged): 1 = every output-register group o gets its own registered copy
+// of {ren, addr} (ren_x/addr_x, kept); its macros' r_ce/r_addr compare and its sl/h1 select registers read that copy,
+// so the read issue register no longer drives every macro of the stack directly (RF1 census pslice_c5: d_addr ->
+// 13-macro r_ce_in 1385 ps). The read is one edge later: latency read -> data +1 edge.
 module ot_hbm_su_programme_mem_r4 #(
-  parameter integer BANKS=1, OG=2, GRP=0, RS=4, MUT=0
+  parameter integer BANKS=1, OG=2, GRP=0, RS=4, MUT=0, BREG=0
 )(input logic clk, input logic [BANKS-1:0] clk_macro, input logic ren, input logic [15:0] addr,
   input logic [BANKS-1:0] w_ce, input logic [7*BANKS-1:0] w_row, input logic [256*BANKS-1:0] w_data,
   output logic [255:0] data);
@@ -77,17 +81,28 @@ module ot_hbm_su_programme_mem_r4 #(
   initial if((1<<LOG)!=OG || SW*RS!=256 || BANKS<1) $fatal(1,"mem_r4: OG power of two, RS divides 256");
 `endif
   wire [256*BANKS-1:0] q;
-  wire [8:0] bank_a = addr[15:7];
+  // per output-register group read copies (BREG 1: registered, kept; BREG 0: the ports)
+  wire [NOG-1:0] ren_x; wire [16*NOG-1:0] addr_x;
+  generate if(BREG!=0) begin:g_breg
+    for(genvar bo=0;bo<NOG;bo=bo+1) begin:bq
+      (* keep *) logic ren_q; (* keep *) logic [15:0] addr_q;
+      always_ff @(posedge clk) begin ren_q<=ren; addr_q<=addr; end
+      assign ren_x[bo]=ren_q; assign addr_x[16*bo+:16]=addr_q;
+    end
+  end else begin:g_nbreg
+    assign ren_x={NOG{ren}}; assign addr_x={NOG{addr}};
+  end endgenerate
   logic [255:0] og_q [0:NOG-1];
   (* keep *) logic [RS-1:0] h1 [0:NOG-1];
   (* keep *) logic [RS-1:0] h2 [0:NOG-1];
   genvar o, r, bank, gg;
   generate for(o=0;o<NOG;o=o+1) begin:og
     localparam integer NB=((o+1)*OG<=BANKS)?OG:(BANKS-o*OG);
+    wire ren_o=ren_x[o]; wire [8:0] bank_a=addr_x[16*o+7+:9];
     if(LOG>0) begin:lsel
       (* keep *) logic [LOG-1:0] sl [0:RS-1];
       for(r=0;r<RS;r=r+1) begin:rs
-        always_ff @(posedge clk) if(ren) sl[r] <= bank_a[LOG-1:0];
+        always_ff @(posedge clk) if(ren_o) sl[r] <= bank_a[LOG-1:0];
         logic [SW-1:0] m;
         integer b;
         always_comb begin
@@ -100,7 +115,7 @@ module ot_hbm_su_programme_mem_r4 #(
       always_ff @(posedge clk) og_q[o] <= q[256*o+:256];
     end
     for(r=0;r<RS;r=r+1) begin:hr
-      always_ff @(posedge clk) if(ren) h1[o][r] <= (bank_a>>LOG)==o && bank_a<BANKS;
+      always_ff @(posedge clk) if(ren_o) h1[o][r] <= (bank_a>>LOG)==o && bank_a<BANKS;
       always_ff @(posedge clk) h2[o][r] <= h1[o][r];
     end
   end endgenerate
@@ -140,7 +155,8 @@ module ot_hbm_su_programme_mem_r4 #(
     wire [255:0] bank_q;
     assign q[256*bank+:256]=bank_q;
     ot_sram_1r1w_128x256_m1_r2c2 mem(
-      .clk(clk_macro[bank]), .r_ce_in(ren && bank_a==bank), .r_addr_in(addr[6:0]), .rd_out(bank_q),
+      .clk(clk_macro[bank]), .r_ce_in(ren_x[bank/OG] && addr_x[16*(bank/OG)+7+:9]==bank),
+      .r_addr_in(addr_x[16*(bank/OG)+:7]), .rd_out(bank_q),
       .w_ce_in(w_ce[bank]), .w_addr_in(w_row[7*bank+:7]),
       .wd_in(w_data[256*bank+:256]), .w_mask_in({256{1'b1}}),
       .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
@@ -180,7 +196,14 @@ module ot_hbm_su_programme #(
   parameter integer PIPE=0, MUT=0,
   parameter integer IOG=4, IGRP=4, DOG=2, RS=4, CFGR=4,  // PIPE 2 only
   parameter integer PIN_EXPORT=0,
-  parameter integer FADV=0                               // PIPE 2: fault reported FADV edges earlier (pgcol leaf: 1)
+  parameter integer FADV=0,                              // PIPE 2: fault reported FADV edges earlier (pgcol leaf: 1)
+  // DIE-HBM-61/CUTS 11-03 (PIPE 2 only, all 0 = unchanged): dictionary-path cuts. DRLY plain kept relay stages on the
+  // dictionary read issue {d_ren_c, d_addr} per column; DBREG 1 = mem_r4 BREG (per output-register read copies);
+  // DGRP > 0 = registered dictionary funnel (mem_r4 GRP). DK = DRLY + DBREG + (DGRP>0) edges are added to the
+  // dictionary path (XD 1 -> 1+DK) and to the v2/e2 -> command-valid chain, so busy/valid/done/edge_index/command/fault
+  // are cycle-identical to the DK=0 producer started DK edges later (start advance DEPTH+4 -> DEPTH+4+DK); internal busy
+  // ends DK edges later, so the next start / configuration write must come >= DK edges later than before.
+  parameter integer DRLY=0, DBREG=0, DGRP=0
 )(input logic clk, rst_n, input logic [MACROS-1:0] clk_macro,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
   input logic [255:0] cfg_data,
@@ -201,12 +224,14 @@ module ot_hbm_su_programme #(
   // 16:1 word select of the packed index row
   localparam integer XSTG=(IGRP>0 || INDEX_PACK>1)?1:0;
   localparam integer XI=(PIPE==2)?(2+XSTG):(PIPE!=0)?2:0; // extra index-path edges (pair/og reg [+ group] + indices_r)
-  localparam integer XD=(PIPE!=0)?1:0;          // extra dictionary-path edges (pair register)
+  localparam integer DK=DRLY+DBREG+((DGRP>0)?1:0); // CUTS: added dictionary-path edges (PIPE 2 only)
+  localparam integer XD=(PIPE!=0)?1+DK:0;       // extra dictionary-path edges (pair register [+ cuts])
   localparam integer XP=XI+XD;
 `ifndef SYNTHESIS
   initial if(MACROS!=TOTAL_BANKS) $fatal(1,"programme MACROS capacity mismatch");
   initial if(PIPE==1 && INDEX_PACK!=1) $fatal(1,"programme PIPE 1 requires unpacked indices");
   initial if(FADV<0 || (FADV!=0 && (PIPE!=2 || FADV>XP-1))) $fatal(1,"programme FADV only with PIPE 2, < XP");
+  initial if(DRLY<0 || DBREG<0 || DBREG>1 || DGRP<0 || (DK!=0 && PIPE!=2)) $fatal(1,"programme DRLY/DBREG/DGRP only with PIPE 2");
 `endif
   logic issue,v1,v2;
   logic [15:0] pc, count, e1,e2;
@@ -277,8 +302,20 @@ module ot_hbm_su_programme #(
         .w_data(w_data[256*g*INDEX_BANKS+:256*INDEX_BANKS]),.data(index_rows[g*256+:256]));
     end
     for(c=0;c<COLS;c=c+1) begin:dt
-      ot_hbm_su_programme_mem_r4 #(.BANKS(DICT_BANKS[32*c+:32]),.OG(DOG),.GRP(0),.RS(RS),.MUT(MUT==1)) mem(
-        .clk(clk),.clk_macro(clk_macro[dict_base(c)+:DICT_BANKS[32*c+:32]]),.ren(d_ren_c[c]),.addr(d_addr[c*16+:16]),
+      // CUTS DRLY: plain kept relay stages on this column's dictionary read issue (DRLY 0 = the ports)
+      wire [16:0] dq;
+      if(DRLY>0) begin:g_dr
+        (* keep *) logic [16:0] dr [0:DRLY-1];
+        always_ff @(posedge clk) dr[0] <= {d_ren_c[c],d_addr[c*16+:16]};
+        for(genvar k=1;k<DRLY;k=k+1) begin:g_k
+          always_ff @(posedge clk) dr[k] <= dr[k-1];
+        end
+        assign dq=dr[DRLY-1];
+      end else begin:g_ndr
+        assign dq={d_ren_c[c],d_addr[c*16+:16]};
+      end
+      ot_hbm_su_programme_mem_r4 #(.BANKS(DICT_BANKS[32*c+:32]),.OG(DOG),.GRP(DGRP),.RS(RS),.MUT(MUT==1),.BREG(DBREG)) mem(
+        .clk(clk),.clk_macro(clk_macro[dict_base(c)+:DICT_BANKS[32*c+:32]]),.ren(dq[16]),.addr(dq[15:0]),
         .w_ce(wce_r[dict_base(c)+:DICT_BANKS[32*c+:32]]),.w_row(w_row[7*dict_base(c)+:7*DICT_BANKS[32*c+:32]]),
         .w_data(w_data[256*dict_base(c)+:256*DICT_BANKS[32*c+:32]]),.data(templates[c*256+:256]));
     end
@@ -301,13 +338,26 @@ module ot_hbm_su_programme #(
     end else begin:g_upk
       always_ff @(posedge clk) indices_r<=indices;
     end
+    // CUTS: the dictionary-stage valid/edge (v2/e2) delayed DK edges (DK 0 = v2/e2)
+    wire v2k; wire [15:0] e2k;
+    if(DK>0) begin:g_dk
+      logic [DK-1:0] vk; logic [15:0] ek [0:DK-1];
+      always_ff @(posedge clk) if(!rst_n) vk<='0; else vk<={vk,v2};
+      always_ff @(posedge clk) ek[0]<=e2;
+      for(genvar k=1;k<DK;k=k+1) begin:g_ek
+        always_ff @(posedge clk) ek[k]<=ek[k-1];
+      end
+      assign v2k=vk[DK-1]; assign e2k=ek[DK-1];
+    end else begin:g_ndk
+      assign v2k=v2; assign e2k=e2;
+    end
     always_ff @(posedge clk) begin
-      ea<=e1; ei<=(XSTG>0)?eb:ea; eb<=ea; ed<=e2;
+      ea<=e1; ei<=(XSTG>0)?eb:ea; eb<=ea; ed<=e2k;
     end
     always_ff @(posedge clk) if(!rst_n) begin va<=0; vb<=0; vi<=0; vd<=0; vi_c<='0; vd_c<='0; end
       else begin
-        va<=v1; vb<=va; vi<=(XSTG>0)?vb:va; vd<=v2;
-        vi_c<={COLS{(XSTG>0)?vb:va}}; vd_c<={(COLS*RS){v2}};
+        va<=v1; vb<=va; vi<=(XSTG>0)?vb:va; vd<=v2k;
+        vi_c<={COLS{(XSTG>0)?vb:va}}; vd_c<={(COLS*RS){v2k}};
       end
     assign d_ren=vi; assign d_e=ei; assign d_addr=indices_r; assign d_ren_c=vi_c;
     assign c_v=vd; assign c_e=ed; assign c_v_c=vd_c;

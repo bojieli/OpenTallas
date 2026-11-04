@@ -1572,6 +1572,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         cm_rec = core_macros_placement(pdir / "core_macros.json", module, rec.get("macros", []))
         if cm_rec:
             rec["macro_placement"], rec["macro_placement_src"] = cm_rec
+            # DIE-HBM-61/CUTS 11-03 (opt-in recipe field, absent = unchanged): [[regex, repl], ...] applied to every
+            # plan macro instance path, for a recipe whose RTL scopes differ from the plan's as-built names (e.g. the
+            # tree pgcol wraps its r5 producer in generate g_p: u_c.u_p -> u_c.g_p.u_p)
+            for pat, repl in rec.get("macro_inst_sub", []):
+                for row in rec["macro_placement"]:
+                    row["inst"] = re.sub(pat, repl, row["inst"])
     if a.macro_placement:
         if not a.macro_inst_fmt:
             raise SystemExit("--macro-placement needs --macro-inst-fmt")

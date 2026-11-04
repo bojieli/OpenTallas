@@ -37,7 +37,8 @@ module ot_hbm_su_programme_pgcol #(
   parameter integer DB=3, EDGES=7111, CFGR=1, MUT=0, PMUT=0,
   parameter integer CPIN=0, RRLY=0, FADV=1,  // NATIVE-FIX3 (S/L masters: 1, 1, 2); defaults = the r5 leaf
   parameter integer START_CAPTURED=0, PIN_EXPORT=0,
-  parameter integer NCX=0                    // HBMb/IDXSU-PS15: 1 = ot_hbm_su_programme_nc producer (native census); 0 = r5
+  parameter integer NCX=0,                   // HBMb/IDXSU-PS15: 1 = ot_hbm_su_programme_nc producer (native census); 0 = r5
+  parameter integer DRLY=0, DBREG=0, DGRP=0  // DIE-HBM-61/CUTS: producer dictionary-path cuts (NCX 0 only; 0 = r5)
 )(input logic clk, rst_n,
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
@@ -89,11 +90,14 @@ module ot_hbm_su_programme_pgcol #(
   wire [15:0] p_bank=q_we ? {11'd0,q_bank} : 16'hffff;
   generate if(NCX==0) begin:g_p
   ot_hbm_su_programme #(.LINE_BITS(256),.EDGES(EDGES),.COLS(1),.INDEX_PACK(16),.DICT_BANKS(DB),.MACROS(MAC),
-    .PIPE(2),.CFGR(CFGR),.FADV(FADV),.MUT(MUT),.PIN_EXPORT(PIN_EXPORT)) u_p(
+    .PIPE(2),.CFGR(CFGR),.FADV(FADV),.MUT(MUT),.PIN_EXPORT(PIN_EXPORT),.DRLY(DRLY),.DBREG(DBREG),.DGRP(DGRP)) u_p(
     .clk(clk),.rst_n(rl[1]),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
     .start(s_in),.length(l_in),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),
     .command(command),.valid_pin(valid_pin),.edge_index_pin(edge_index_pin));
   end else begin:g_pn
+`ifndef SYNTHESIS
+  initial if(DRLY!=0 || DBREG!=0 || DGRP!=0) $fatal(1,"pgcol: DRLY/DBREG/DGRP cuts only with the r5 producer (NCX 0)");
+`endif
   ot_hbm_su_programme_nc #(.EDGES(EDGES),.INDEX_PACK(16),.DICT_BANKS(DB),.MACROS(MAC),.CFGR(CFGR),.FADV(FADV),.MUT(MUT),
     .IOG(4),.DOG(2),.RS(16),.NAI(4),.NAD(16),.NRX(8),.PIN_EXPORT(PIN_EXPORT)) u_p(
     .clk(clk),.rst_x(rl[NRL-1:1]),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
@@ -205,7 +209,12 @@ module ot_hbm_su_programme_pslice_c5 #(
   parameter [32*NC-1:0] DICT_CAP={32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3},
   parameter integer MUT=0, MUT_COL=1,
   parameter integer NATIVE_PINS=0, // opt-in: same-edge exclusive pin captures/exports, no shell cycles
-  parameter integer NCX=0   // PS15 bench switch: 1 = the L columns (DB 13) use the NCX producer as pgcol_l does
+  parameter integer NCX=0,  // PS15 bench switch: 1 = the L columns (DB 13) use the NCX producer as pgcol_l does
+  // DIE-HBM-61/CUTS 11-03 (all 0 = unchanged): every leaf producer's dictionary-path cuts (see ot_hbm_su_programme);
+  // DK = DRLY + DBREG + (DGRP>0) edges: busy/valid/done/edge_index/command/fault cycle-identical to the DK=0 slice
+  // started DK edges later (start advance +DK; the next start / configuration >= DK edges later than before). The
+  // head's own fault delay XP follows (4 + DK).
+  parameter integer DRLY=0, DBREG=0, DGRP=0
   // MUT (bench) 4: leaf reset relay bypassed; 5: leaf configuration pin stage dropped; 6: head export registers
   // dropped (o_we combinational); 7: head l_fault pin registers dropped; 8: head reset relay bypassed
 )(input logic clk, rst_n,
@@ -222,7 +231,8 @@ module ot_hbm_su_programme_pslice_c5 #(
   end else begin:g_original_start
     assign leaf_start=start;
   end endgenerate
-  ot_hbm_su_programme_pghead #(.NC(NC),.MUT(MUT==2),.OREG(MUT!=6),.FREG(MUT!=7),.CLAT(2),.HRLY(MUT!=8),.NATIVE_PIN(NATIVE_PINS)) u_h(.clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),
+  localparam integer DK=DRLY+DBREG+((DGRP>0)?1:0);
+  ot_hbm_su_programme_pghead #(.NC(NC),.XP(4+DK),.MUT(MUT==2),.OREG(MUT!=6),.FREG(MUT!=7),.CLAT(2),.HRLY(MUT!=8),.NATIVE_PIN(NATIVE_PINS)) u_h(.clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),
     .cfg_row(cfg_row),.cfg_data(cfg_data),.l_fault(l_fault),.l_valid(l_valid),.o_we(we),.o_any(any),.o_bank(bank),
     .o_row(row),.o_data(data),.fault(fault));
   genvar c;
@@ -233,7 +243,7 @@ module ot_hbm_su_programme_pslice_c5 #(
     // CPIN/RRLY/FADV = the S/L leaf masters' values
     ot_hbm_su_programme_pgcol #(.DB((CAP<=3)?3:13),.CFGR((CAP<=3)?1:2),.PMUT(MUT==1 && c==MUT_COL),
       .CPIN(MUT!=5),.RRLY(MUT!=4),.FADV(2),.NCX((CAP>3)?NCX:0),
-      .START_CAPTURED(NATIVE_PINS),.PIN_EXPORT((c==0)?NATIVE_PINS:0),
+      .START_CAPTURED(NATIVE_PINS),.PIN_EXPORT((c==0)?NATIVE_PINS:0),.DRLY(DRLY),.DBREG(DBREG),.DGRP(DGRP),
       .MUT((MUT==3 && c==MUT_COL)?1:0)) u_c(
       .clk(clk),.rst_n(rst_n),.cfg_we(we[c]),.cfg_any(any),.cfg_bank(bank),.cfg_row(row),.cfg_data(data),
       .start(leaf_start),.length(length),.busy(l_busy[c]),.valid(l_valid[c]),.done(l_done[c]),.fault(l_fault[c]),
