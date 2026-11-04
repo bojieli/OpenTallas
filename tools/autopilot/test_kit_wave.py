@@ -900,6 +900,13 @@ class AdoptedPlanAllowlist(unittest.TestCase):
         c["dies"]["qwen_kvsys"]["plan_items_from_allowlist"] = False
         self.assertEqual(KW.select([], c, "qwen_kvsys", {"items": {}}, {"kv3_new": "a"})[0], [])
 
+    def test_plan_core_items_only_named_and_in_plan(self):
+        c = cfg(kinds=["core"], only_items=["k_core", "k_type"], plan_core_items=["k_core", "k_gone"], pilot_first=False)
+        picks, _ = KW.select([], c, "qwen_kvsys", {"items": {}}, {"k_core": "a", "k_type": "b"})
+        self.assertEqual([(r["item"], r["kind"]) for r in picks], [("k_core", "core")])
+        c["dies"]["qwen_kvsys"]["plan_core_items"] = []
+        self.assertEqual(KW.select([], c, "qwen_kvsys", {"items": {}}, {"k_core": "a"})[0], [])
+
     def test_allowlist_retains_existing_live_claim(self):
         c = cfg(only_items=["kv3_io_cor_v1"], plan_items_from_allowlist=True)
         picks, skip = KW.select(KW.parse_owners(OWN), c, "qwen_kvsys", {"items": {}}, PLAN)
