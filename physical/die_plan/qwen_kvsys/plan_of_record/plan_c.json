@@ -969775,8 +969775,8 @@
       "name": "host__qkd_hr_cdc_pc.ck[0]",
       "kind": "core",
       "xy": [
-       185.784,
-       1015.2
+       116.664,
+       946.104
       ],
       "insertion_ps": 253.6,
       "budget_owner": "qkd_hr_cdc_pc",
@@ -969820,8 +969820,8 @@
       "name": "host__qkd_hr_core_guard.ck[0]",
       "kind": "core",
       "xy": [
-       155.544,
-       488.16
+       86.424,
+       423.384
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_core_guard",
@@ -969831,8 +969831,8 @@
       "name": "host__qkd_hr_core_queue.ck[0]",
       "kind": "core",
       "xy": [
-       1002.264,
-       492.48
+       950.424,
+       440.664
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_core_queue",
@@ -969854,8 +969854,8 @@
       "name": "host__qkd_hr_cdc_hi.ck[0]",
       "kind": "core",
       "xy": [
-       1019.544,
-       233.28
+       976.344,
+       190.104
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_cdc_hi",
@@ -969865,8 +969865,8 @@
       "name": "host__qkd_hr_cdc_ci.ck[0]",
       "kind": "core",
       "xy": [
-       777.624,
-       228.96
+       730.104,
+       185.784
       ],
       "insertion_ps": 250.0,
       "budget_owner": "qkd_hr_cdc_ci",
@@ -980591,8 +980591,8 @@
       855.36
      ],
      "outline_um": [
-      319.68,
-      319.68
+      181.44,
+      181.44
      ],
      "orient": "R0",
      "note": "qkd_host_rt cluster child qkd_hr_cdc_pc; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_rx', 'u_tx'] in u_host (obsx); lef/lib pending (CORE-KS harden) | KV-PLAN-DELTA-9: KV-HOST-REGEN-1 pin change (b3 bind of record)",
@@ -980600,7 +980600,7 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_cdc_pc_pins_r26q9.json"
+     "pins_file": "pins/rf_kv1/qkd_hr_cdc_pc_pins_rfkv1.json"
     },
     {
      "inst": "host__qkd_hr_core_peer",
@@ -980667,8 +980667,8 @@
       362.88
      ],
      "outline_um": [
-      259.2,
-      250.56
+      120.96,
+      120.96
      ],
      "orient": "R0",
      "note": "qkd_host_rt cluster child qkd_hr_core_guard; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_guard', 'u_native'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
@@ -980676,7 +980676,7 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_core_guard_pins_r26q5.json"
+     "pins_file": "pins/rf_kv1/qkd_hr_core_guard_pins_rfkv1.json"
     },
     {
      "inst": "host__qkd_hr_core_queue",
@@ -980686,8 +980686,8 @@
       371.52
      ],
      "outline_um": [
-      241.92,
-      241.92
+      138.24,
+      138.24
      ],
      "orient": "R0",
      "note": "qkd_host_rt cluster child qkd_hr_core_queue; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_bootbarrier', 'u_marker_consumer', 'u_queue'] in u_host (obsx); glue members glue:qm_core, glue:fence_core NOT in the core (stay hub_Wi partition glue, no RTL re-cut); lef/lib pending (CORE-KS harden)",
@@ -980695,7 +980695,7 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_core_queue_pins_r26q5.json"
+     "pins_file": "pins/rf_kv1/qkd_hr_core_queue_pins_rfkv1.json"
     },
     {
      "inst": "host__qkd_hr_core_prompt",
@@ -980724,8 +980724,8 @@
       120.96
      ],
      "outline_um": [
-      224.64,
-      224.64
+      138.24,
+      138.24
      ],
      "orient": "R0",
      "note": "qkd_host_rt cluster child qkd_hr_cdc_hi; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_cx', 'u_hx'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
@@ -980733,7 +980733,7 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_cdc_hi_pins_r26q5.json"
+     "pins_file": "pins/rf_kv1/qkd_hr_cdc_hi_pins_rfkv1.json"
     },
     {
      "inst": "host__qkd_hr_cdc_ci",
@@ -980743,8 +980743,8 @@
       120.96
      ],
      "outline_um": [
-      224.64,
-      216.0
+      129.6,
+      129.6
      ],
      "orient": "R0",
      "note": "qkd_host_rt cluster child qkd_hr_cdc_ci; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_ox', 'u_rx'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
@@ -980752,7 +980752,7 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_cdc_ci_pins_r26q5.json"
+     "pins_file": "pins/rf_kv1/qkd_hr_cdc_ci_pins_rfkv1.json"
     },
     {
      "inst": "host__qkd_hr_phy_pad",
