@@ -836370,11 +836370,11 @@
       [
        [
         1082.16,
-        225.99
+        256.23
        ],
        [
         1082.16,
-        226.26
+        256.5
        ]
       ],
       [
@@ -836421,7 +836421,7 @@
       ],
       [
        1082.862,
-       226.26
+       256.5
       ],
       [
        725.382,
@@ -891975,8 +891975,8 @@
       "name": "astk_EN.ck[None]",
       "kind": "core",
       "xy": [
-       1131.864,
-       1559.52
+       1118.904,
+       1544.4
       ],
       "insertion_ps": 250.0,
       "budget_owner": "kv3_astk",
@@ -891986,8 +891986,8 @@
       "name": "astk_ES.ck[None]",
       "kind": "core",
       "xy": [
-       1131.864,
-       116.64
+       1118.904,
+       131.76
       ],
       "insertion_ps": 250.0,
       "budget_owner": "kv3_astk",
@@ -900464,12 +900464,12 @@
      "inst": "astk_EN",
      "module": "kv3_astk",
      "origin_um": [
-      1036.8,
-      1468.8
+      1010.88,
+      1438.56
      ],
      "outline_um": [
-      190.08,
-      181.44
+      216.0,
+      211.68
      ],
      "orient": "R0",
      "track_offset_um": [
@@ -900477,7 +900477,7 @@
       0.0
      ],
      "pins_file": "pins/astk_index0.json",
-     "note": "astk_core: astk_EN__g_phys_fault_u_fault + astk_EN__u_strip_u_strip_g_zn_0__u_zn + astk_EN__u_strip_u_strip_g_zn_1__u_zn + astk_EN__u_strip_u_strip_g_zn_2__u_zn + astk_EN__u_strip_u_strip_g_zn_3__u_zn + astk_EN__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden) | v3.9f ASTK strap master kv3_astk (EN, R0, strap_corner=2'b11)",
+     "note": "astk_core: astk_EN__g_phys_fault_u_fault + astk_EN__u_strip_u_strip_g_zn_0__u_zn + astk_EN__u_strip_u_strip_g_zn_1__u_zn + astk_EN__u_strip_u_strip_g_zn_2__u_zn + astk_EN__u_strip_u_strip_g_zn_3__u_zn + astk_EN__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden) | v3.9f ASTK strap master kv3_astk (EN, R0, strap_corner=2'b11) | DIE-KV-69 11-04: slot 216x211.68, cons view pin table + native_port_adapter",
      "straps": [
       {
        "port": "strap_corner",
@@ -900485,18 +900485,47 @@
        "value": "2'b11",
        "note": "{E/W, N/S}: bit1 = E side, bit0 = N half (KV-CORE-RTL 10-25 07:09)"
       }
-     ]
+     ],
+     "native_port_adapter": {
+      "merge": {
+       "ck": [
+        "g_phys_fault_u_fault__ck",
+        "u_strip_u_strip_g_zn_0_u_zn__ck",
+        "u_strip_u_strip_g_zn_1_u_zn__ck",
+        "u_strip_u_strip_g_zn_2_u_zn__ck",
+        "u_strip_u_strip_g_zn_3_u_zn__ck",
+        "u_strip_u_strip_u_ctl__ck"
+       ],
+       "g_phys_fault_u_fault__rst_n": [
+        "g_phys_fault_u_fault__rst_n",
+        "u_strip_u_strip_g_zn_0_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_1_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_2_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_3_u_zn__rst_n",
+        "u_strip_u_strip_u_ctl__rst_n"
+       ]
+      },
+      "tie": {
+       "rst_n": "1'b1",
+       "u_strip_u_strip_g_zn_0_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_1_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_2_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_3_u_zn__tc": "15'd0"
+      },
+      "cycles": 0,
+      "note": "astk view ports vs native leaf ports (DIE-KV-69 11-04); tied inputs are unused in the core wrapper"
+     }
     },
     {
      "inst": "astk_ES",
      "module": "kv3_astk",
      "origin_um": [
-      1036.8,
+      1010.88,
       25.92
      ],
      "outline_um": [
-      190.08,
-      181.44
+      216.0,
+      211.68
      ],
      "orient": "MX",
      "track_offset_um": [
@@ -900504,7 +900533,7 @@
       0.0
      ],
      "pins_file": "pins/astk_index0.json",
-     "note": "astk_core: astk_ES__g_phys_fault_u_fault + astk_ES__u_strip_u_strip_g_zn_0__u_zn + astk_ES__u_strip_u_strip_g_zn_1__u_zn + astk_ES__u_strip_u_strip_g_zn_2__u_zn + astk_ES__u_strip_u_strip_g_zn_3__u_zn + astk_ES__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden) | v3.9f ASTK strap master kv3_astk (ES, MX, strap_corner=2'b10)",
+     "note": "astk_core: astk_ES__g_phys_fault_u_fault + astk_ES__u_strip_u_strip_g_zn_0__u_zn + astk_ES__u_strip_u_strip_g_zn_1__u_zn + astk_ES__u_strip_u_strip_g_zn_2__u_zn + astk_ES__u_strip_u_strip_g_zn_3__u_zn + astk_ES__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden) | v3.9f ASTK strap master kv3_astk (ES, MX, strap_corner=2'b10) | DIE-KV-69 11-04: slot 216x211.68, cons view pin table + native_port_adapter",
      "straps": [
       {
        "port": "strap_corner",
@@ -900512,7 +900541,36 @@
        "value": "2'b10",
        "note": "{E/W, N/S}: bit1 = E side, bit0 = N half (KV-CORE-RTL 10-25 07:09)"
       }
-     ]
+     ],
+     "native_port_adapter": {
+      "merge": {
+       "ck": [
+        "g_phys_fault_u_fault__ck",
+        "u_strip_u_strip_g_zn_0_u_zn__ck",
+        "u_strip_u_strip_g_zn_1_u_zn__ck",
+        "u_strip_u_strip_g_zn_2_u_zn__ck",
+        "u_strip_u_strip_g_zn_3_u_zn__ck",
+        "u_strip_u_strip_u_ctl__ck"
+       ],
+       "g_phys_fault_u_fault__rst_n": [
+        "g_phys_fault_u_fault__rst_n",
+        "u_strip_u_strip_g_zn_0_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_1_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_2_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_3_u_zn__rst_n",
+        "u_strip_u_strip_u_ctl__rst_n"
+       ]
+      },
+      "tie": {
+       "rst_n": "1'b1",
+       "u_strip_u_strip_g_zn_0_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_1_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_2_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_3_u_zn__tc": "15'd0"
+      },
+      "cycles": 0,
+      "note": "astk view ports vs native leaf ports (DIE-KV-69 11-04); tied inputs are unused in the core wrapper"
+     }
     }
    ],
    "internal_stations": [
@@ -900689,14 +900747,14 @@
      "regs_um": [
       [
        1039.08,
-       224.64
+       254.88
       ],
       [
-       1019.52,
-       224.64
+       993.6,
+       254.88
       ],
       [
-       1019.52,
+       993.6,
        31.264
       ],
       [
@@ -900737,12 +900795,12 @@
        6.06
       ],
       [
-       1019.52,
-       224.64
+       993.6,
+       254.88
       ],
       [
        1044.507,
-       224.64
+       254.88
       ]
      ],
      "bits": 35,
@@ -900763,11 +900821,11 @@
      "regs_um": [
       [
        1055.629,
-       224.64
+       254.88
       ],
       [
-       1019.52,
-       224.64
+       993.6,
+       254.88
       ],
       [
        1019.52,
@@ -900906,7 +900964,7 @@
        113.052
       ],
       [
-       1027.898,
+       1001.978,
        113.052
       ]
      ],
@@ -900974,7 +901032,7 @@
        124.133
       ],
       [
-       1026.627,
+       1000.707,
        124.133
       ]
      ],
@@ -901138,7 +901196,7 @@
        144.296
       ],
       [
-       1027.995,
+       1002.075,
        144.296
       ],
       [
@@ -901206,7 +901264,7 @@
        154.378
       ],
       [
-       1028.053,
+       1002.133,
        154.378
       ],
       [
@@ -901279,7 +901337,7 @@
       ],
       [
        1039.995,
-       217.528
+       247.768
       ],
       [
        1278.72,
@@ -901311,7 +901369,7 @@
       ],
       [
        1045.57,
-       217.528
+       247.768
       ],
       [
        1278.72,
@@ -1066277,11 +1066335,11 @@
       [
        [
         192.24,
-        1443.15
+        1412.91
        ],
        [
         192.24,
-        1442.88
+        1412.64
        ]
       ],
       [
@@ -1066356,7 +1066414,7 @@
       ],
       [
        192.942,
-       1443.15
+       1412.91
       ],
       [
        384.102,
@@ -1066403,8 +1066461,8 @@
       "name": "astk_WN.ck[None]",
       "kind": "core",
       "xy": [
-       146.856,
-       1559.52
+       159.816,
+       1544.4
       ],
       "insertion_ps": 250.0,
       "budget_owner": "kv3_astk",
@@ -1066414,8 +1066472,8 @@
       "name": "astk_WS.ck[None]",
       "kind": "core",
       "xy": [
-       146.856,
-       116.64
+       159.816,
+       131.76
       ],
       "insertion_ps": 250.0,
       "budget_owner": "kv3_astk",
@@ -1074797,11 +1074855,11 @@
      "module": "kv3_astk",
      "origin_um": [
       51.84,
-      1468.8
+      1438.56
      ],
      "outline_um": [
-      190.08,
-      181.44
+      216.0,
+      211.68
      ],
      "orient": "MY",
      "track_offset_um": [
@@ -1074809,7 +1074867,7 @@
       0.0
      ],
      "pins_file": "pins/astk_index0.json",
-     "note": "astk_core: astk_WN__g_phys_fault_u_fault + astk_WN__u_strip_u_strip_g_zn_0__u_zn + astk_WN__u_strip_u_strip_g_zn_1__u_zn + astk_WN__u_strip_u_strip_g_zn_2__u_zn + astk_WN__u_strip_u_strip_g_zn_3__u_zn + astk_WN__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden) | v3.9f ASTK strap master kv3_astk (WN, MY, strap_corner=2'b01)",
+     "note": "astk_core: astk_WN__g_phys_fault_u_fault + astk_WN__u_strip_u_strip_g_zn_0__u_zn + astk_WN__u_strip_u_strip_g_zn_1__u_zn + astk_WN__u_strip_u_strip_g_zn_2__u_zn + astk_WN__u_strip_u_strip_g_zn_3__u_zn + astk_WN__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden) | v3.9f ASTK strap master kv3_astk (WN, MY, strap_corner=2'b01) | DIE-KV-69 11-04: slot 216x211.68, cons view pin table + native_port_adapter",
      "straps": [
       {
        "port": "strap_corner",
@@ -1074817,7 +1074875,36 @@
        "value": "2'b01",
        "note": "{E/W, N/S}: bit1 = E side, bit0 = N half (KV-CORE-RTL 10-25 07:09)"
       }
-     ]
+     ],
+     "native_port_adapter": {
+      "merge": {
+       "ck": [
+        "g_phys_fault_u_fault__ck",
+        "u_strip_u_strip_g_zn_0_u_zn__ck",
+        "u_strip_u_strip_g_zn_1_u_zn__ck",
+        "u_strip_u_strip_g_zn_2_u_zn__ck",
+        "u_strip_u_strip_g_zn_3_u_zn__ck",
+        "u_strip_u_strip_u_ctl__ck"
+       ],
+       "g_phys_fault_u_fault__rst_n": [
+        "g_phys_fault_u_fault__rst_n",
+        "u_strip_u_strip_g_zn_0_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_1_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_2_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_3_u_zn__rst_n",
+        "u_strip_u_strip_u_ctl__rst_n"
+       ]
+      },
+      "tie": {
+       "rst_n": "1'b1",
+       "u_strip_u_strip_g_zn_0_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_1_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_2_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_3_u_zn__tc": "15'd0"
+      },
+      "cycles": 0,
+      "note": "astk view ports vs native leaf ports (DIE-KV-69 11-04); tied inputs are unused in the core wrapper"
+     }
     },
     {
      "inst": "astk_WS",
@@ -1074827,8 +1074914,8 @@
       25.92
      ],
      "outline_um": [
-      190.08,
-      181.44
+      216.0,
+      211.68
      ],
      "orient": "R180",
      "track_offset_um": [
@@ -1074836,7 +1074923,7 @@
       0.0
      ],
      "pins_file": "pins/astk_index0.json",
-     "note": "astk_core: astk_WS__g_phys_fault_u_fault + astk_WS__u_strip_u_strip_g_zn_0__u_zn + astk_WS__u_strip_u_strip_g_zn_1__u_zn + astk_WS__u_strip_u_strip_g_zn_2__u_zn + astk_WS__u_strip_u_strip_g_zn_3__u_zn + astk_WS__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden) | v3.9f ASTK strap master kv3_astk (WS, R180, strap_corner=2'b00)",
+     "note": "astk_core: astk_WS__g_phys_fault_u_fault + astk_WS__u_strip_u_strip_g_zn_0__u_zn + astk_WS__u_strip_u_strip_g_zn_1__u_zn + astk_WS__u_strip_u_strip_g_zn_2__u_zn + astk_WS__u_strip_u_strip_g_zn_3__u_zn + astk_WS__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden) | v3.9f ASTK strap master kv3_astk (WS, R180, strap_corner=2'b00) | DIE-KV-69 11-04: slot 216x211.68, cons view pin table + native_port_adapter",
      "straps": [
       {
        "port": "strap_corner",
@@ -1074844,7 +1074931,36 @@
        "value": "2'b00",
        "note": "{E/W, N/S}: bit1 = E side, bit0 = N half (KV-CORE-RTL 10-25 07:09)"
       }
-     ]
+     ],
+     "native_port_adapter": {
+      "merge": {
+       "ck": [
+        "g_phys_fault_u_fault__ck",
+        "u_strip_u_strip_g_zn_0_u_zn__ck",
+        "u_strip_u_strip_g_zn_1_u_zn__ck",
+        "u_strip_u_strip_g_zn_2_u_zn__ck",
+        "u_strip_u_strip_g_zn_3_u_zn__ck",
+        "u_strip_u_strip_u_ctl__ck"
+       ],
+       "g_phys_fault_u_fault__rst_n": [
+        "g_phys_fault_u_fault__rst_n",
+        "u_strip_u_strip_g_zn_0_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_1_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_2_u_zn__rst_n",
+        "u_strip_u_strip_g_zn_3_u_zn__rst_n",
+        "u_strip_u_strip_u_ctl__rst_n"
+       ]
+      },
+      "tie": {
+       "rst_n": "1'b1",
+       "u_strip_u_strip_g_zn_0_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_1_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_2_u_zn__tc": "15'd0",
+       "u_strip_u_strip_g_zn_3_u_zn__tc": "15'd0"
+      },
+      "cycles": 0,
+      "note": "astk view ports vs native leaf ports (DIE-KV-69 11-04); tied inputs are unused in the core wrapper"
+     }
     }
    ],
    "internal_stations": [
@@ -1075021,14 +1075137,14 @@
      "regs_um": [
       [
        239.64,
-       224.64
+       254.88
       ],
       [
-       259.2,
-       224.64
+       285.12,
+       254.88
       ],
       [
-       259.2,
+       285.12,
        31.264
       ],
       [
@@ -1075069,12 +1075185,12 @@
        6.06
       ],
       [
-       259.2,
-       224.64
+       285.12,
+       254.88
       ],
       [
        234.213,
-       224.64
+       254.88
       ]
      ],
      "bits": 35,
@@ -1075095,14 +1075211,14 @@
      "regs_um": [
       [
        223.091,
-       224.64
+       254.88
       ],
       [
-       259.2,
-       224.64
+       285.12,
+       254.88
       ],
       [
-       259.2,
+       285.12,
        36.896
       ],
       [
@@ -1075234,7 +1075350,7 @@
        109.067
       ],
       [
-       252.154,
+       278.074,
        109.067
       ]
      ],
@@ -1075302,7 +1075418,7 @@
        112.126
       ],
       [
-       251.728,
+       277.648,
        112.126
       ]
      ],
