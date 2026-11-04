@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-03 18:34 PST:** count 70 (+1: QC su_lane l7). S81 31/54, HEAD 4/4 + 1/25 types, QC 11/16, KV 16/32, HBM 8/84. RM-27: I1-I3 merged (main eaf46c760f8); I4 c82a6cde3a3 in tests (HEAD l48tb gate, lec-egn-1, pgobs, HBM hold/CLK-BAND, nff2/caprt); next: rfkv1fold, cts-dt-1, corepg2 (PG-CORECONN-2: 18,993 macro PG sets unconnected; signed-design sweep asked), QC DPL, KV CLAND, deltastale, pilotsrc. Stale plan-delta holds: 14 retired + class fix approved; 3 hung kits relaunched. KW-PROV-1 building provisional-view launch for ~139 WAIT-DEP types. DISK: intel2 97% / intel1 95% / epyc2 root 326 GB -> PRUNE-1103E (old superseded attempts, keep newest 2 + SIGNED).
+**Status 2026-11-03 19:38 PST:** count 76 (+6: S81 32/54, HEAD 4/4 + 1/25 types, QC 11/16, KV 20/32, HBM 9/84). Per-die failure classes in FAILURES below (auto hourly). RM-27: I4 MERGED b07b52ff0c7; I5 in test (corepg2, lockface, QC cland, tok-verify). Owner: conservative form now for hard cores; pin cycles are a cheap lever; post-CTS insertion band -> die STA. intel2 scratch2 99% -> PRUNE-1103F.
 
 <!-- BREAKDOWN BEGIN -->
 ## FAILURES · unsigned cores and types by class (auto, 2026-11-03 19:38 PST)
