@@ -15545,3 +15545,4 @@ RESET TRACE (i): value 0, 2 flop names per leaf (u_vp_src_dbb25ee21c9ecb8e6ac9_q
 - t6 parent s_0N_C dsdv_slice_lepw_mu_C__t1: bit = w_u_s_0N_u_sl_17_Y[0] = d6_u_s_0N_8_Y[0] = ot_dp_dly D=6 of w_u_s_0N_8_Y = rst_n [CHECKED]. Boot holds rst_n >=64 clk, so 6 delay stages settle inside the hold.
 - t47, t4, t71: same bit number as t11, each die-level hop not traced [inferred].
 Use: re-LEC per row at sign-off, no relaunch. Not a tool a running job reads until the tag.
+- 2026-11-04 12:59 PST RESULT [DIE-HBM-66 -> COORD] topk180: WATCHDOG stopped it at 12:53 [CHECKED WATCHDOG.log]. The stop was right: the copy lacked lec_async.sh, so the pre-route LEC ran inline and hung 2 h before GRT; no route read. Relaunched as topk180b with lec_async.sh in the copy, same 4_cts and stop -180, so LEC runs beside the route. The hang itself is unread; it may stop the routed LEC too.
