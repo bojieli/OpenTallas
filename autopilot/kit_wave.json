@@ -2457,12 +2457,12 @@
     "intel1",
     "epyc2"
    ],
-   "note": "KW-FIX-4 19:0x I4 batch: src kw-fix-4-hbmi4 = main b07b52ff0c7 (hold/CLK-BAND 9855c866403: multiport density + hard_core_latency default-on) | KW-FIX-4 11-03 12:0x (COORD 10:4x item 2, DIE-HBM-61 11:4x d44v_por FROZEN 8/84): d44o -> d44v (prev d44o /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json src 89eb1d03dba84a57aae71fa7c662ba005c8c6acc). KW-FIX-4-HBMV 2026-11-03 11:56 PST: d44o -> d44v (COORD 10:4x, DIE-HBM-61 11:0x). src claude/kw-fix-4-hbmv-1103@78e511e3a45 = main 5ef0158c8fa + gen_core_kit_hbm_rw.py (opt-in MEM recipe delta wrapper). RF1 item_args: --clock-regions 33 modules, --face-lockup '.*' 38 RF1 cores (census+regions), --rw-recipe-delta ['hfd_ep_static', 'ot_hbm_host_cp_rxs', 'ot_hnx_idxn_keybuf_slice'] (held until KNOWN RW rects: ['hfd_ep_static', 'ot_hbm_host_cp_rxs']), q3_edge on its current recipe. retry += 19 unchanged-key terminal records (move every row to d44v). | KW-FIX-3 2026-11-03 04:3x: retry += ot_hbm_idx_score_hcol_h1@1 (GEOM-111 class R member, pin_reg_max 156.3; fix merged 65396c58159, wave src rfh 53d3ca14368 carries the same face_flops change). The other 10 class R kits already run on rfh (KW-FIX-2 batch 00:0x), collected, not relaunched. | KW-FIX-2 11-03 00:0x (GEOM-111 class R, COORD 23:0x): src e96f241822a + reset-face-home (gen_core_kit_hbm skip set = clocks+straps; main branch claude/kw-fix-2-1102@d483825fd6e) = 53d3ca14368, locked sparse intel2 wt kit-wave-15-hbmtaps-rfh; 11 class-R holds released, batch retry item@last; retry q3_edge_core@2 / opstore_b@3 dropped (those attempts are RUNNING; kept they would HOLD at enqueue on the src change). | DIE-HBM-58/CORES 11-02 18:2x: take_states += REVIEW, KIT-PLACED so the 7 ccband CANCELLED-SOURCE rows (first_core, tailx_rest x2, lane_exp0_id, qcore_r13, xcal_rel_t, q2_reduce; OWNERS state REVIEW/KIT-PLACED) and never-waved bank128_pair_core / hcp_sys1 / tkm root relaunch on the fixed src (no-blind-retry guard still holds every other stored FAIL). | KIT-WAVE-15 18:3x ccband: src e5b857a7e34 (taps) + cherry-pick of ccband 0c1986bda = e96f241822a (branch pushed), new locked sparse intel2 wt kit-wave-15-hbmtaps (same cone as kit-wave-14-hbmtaps, which other procs still read). | KIT-WAVE-14 14:5x DIE-HBM-57 RULING (OWNER 12.23 fully automatic): the wave re-cuts the 21 lane-built single-root views on e5b857a7e34 whatever their OWNERS state: take_states += REVIEW/ROUTING/GEOM-REQ/KIT-PLACED/SIGNED-UNVERSIONED; the 13 other lane-built HBM items in those states held (hold_items) so only the 21 views are taken (hfd_hgi_vms_glue_nw_t ot_hbm_hc_bank128_pair_core ot_hbm_hc_bank128_pair_first_core ot_hbm_host_cp_rxs ot_hbm_idx_rootctl_static_am ot_hbm_idx_vm_query_static_n12 ot_hbm_su_static_cxport_ij_q ot_hbm_su_static_pgslice_lg__lane_exp0_id ot_hbm_su_static_qcore_r13 ot_hbm_svc_sm_xcal_rel_t ot_hfd_coll_q2_hard_v8g__reduce ot_hfd_coll_q2_hard_v8g__ring_ag ot_hgi_coll_gq_issue ot_hgi_coll_gq_land ot_hgi_coll_tkm_tp192_tile_core__idpin__strap ot_hgi_coll_tkm_t",
+   "note": "KW-FIX-4 19:5x HBM-RF1 (OWNER 18:57, COORD 19:04, DIE-HBM-61/RF1-BUILD): src kw-fix-4-hbmrf1 = d35a67594c7 (b07b52ff0c7 + q2_reduce oneclk / llr RW if-generate fixes, approved I6); RF1 item_args (util 0.40, face-reset-relay 2, regions rf1 69ed115a) on 6 not-in-flight items; the 6 in-flight RF1 items are launched by RF1-BUILD via ot-run (no double launch); old item_args in item_args_rf1prev | KW-FIX-4 19:0x I4 batch: src kw-fix-4-hbmi4 = main b07b52ff0c7 (hold/CLK-BAND 9855c866403: multiport density + hard_core_latency default-on) | KW-FIX-4 11-03 12:0x (COORD 10:4x item 2, DIE-HBM-61 11:4x d44v_por FROZEN 8/84): d44o -> d44v (prev d44o /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json src 89eb1d03dba84a57aae71fa7c662ba005c8c6acc). KW-FIX-4-HBMV 2026-11-03 11:56 PST: d44o -> d44v (COORD 10:4x, DIE-HBM-61 11:0x). src claude/kw-fix-4-hbmv-1103@78e511e3a45 = main 5ef0158c8fa + gen_core_kit_hbm_rw.py (opt-in MEM recipe delta wrapper). RF1 item_args: --clock-regions 33 modules, --face-lockup '.*' 38 RF1 cores (census+regions), --rw-recipe-delta ['hfd_ep_static', 'ot_hbm_host_cp_rxs', 'ot_hnx_idxn_keybuf_slice'] (held until KNOWN RW rects: ['hfd_ep_static', 'ot_hbm_host_cp_rxs']), q3_edge on its current recipe. retry += 19 unchanged-key terminal records (move every row to d44v). | KW-FIX-3 2026-11-03 04:3x: retry += ot_hbm_idx_score_hcol_h1@1 (GEOM-111 class R member, pin_reg_max 156.3; fix merged 65396c58159, wave src rfh 53d3ca14368 carries the same face_flops change). The other 10 class R kits already run on rfh (KW-FIX-2 batch 00:0x), collected, not relaunched. | KW-FIX-2 11-03 00:0x (GEOM-111 class R, COORD 23:0x): src e96f241822a + reset-face-home (gen_core_kit_hbm skip set = clocks+straps; main branch claude/kw-fix-2-1102@d483825fd6e) = 53d3ca14368, locked sparse intel2 wt kit-wave-15-hbmtaps-rfh; 11 class-R holds released, batch retry item@last; retry q3_edge_core@2 / opstore_b@3 dropped (those attempts are RUNNING; kept they would HOLD at enqueue on the src change). | DIE-HBM-58/CORES 11-02 18:2x: take_states += REVIEW, KIT-PLACED so the 7 ccband CANCELLED-SOURCE rows (first_core, tailx_rest x2, lane_exp0_id, qcore_r13, xcal_rel_t, q2_reduce; OWNERS state REVIEW/KIT-PLACED) and never-waved bank128_pair_core / hcp_sys1 / tkm root relaunch on the fixed src (no-blind-retry guard still holds every other stored FAIL). | KIT-WAVE-15 18:3x ccband: src e5b857a7e34 (taps) + cherry-pick of ccband 0c1986bda = e96f241822a (branch pushed), new locked sparse intel2 wt kit-wave-15-hbmtaps (same cone as kit-wave-14-hbmtaps, which other procs still read). | KIT-WAVE-14 14:5x DIE-HBM-57 RULING (OWNER 12.23 fully automatic): the wave re-cuts the 21 lane-built single-root views on e5b857a7e34 whatever their OWNERS state: take_states += REVIEW/ROUTING/GEOM-REQ/KIT-PLACED/SIGNED-UNVERSIONED; the 13 other lane-built HBM items in those states held (hold_items) so only the 21 views are taken (hfd_hgi_vms_glue_nw_t ot_hbm_hc_bank128_pair_core ot_hbm_hc_",
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/die_plan.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbmi4",
-   "src_sha": "b07b52ff0c7353bc1a15df6c141ec74fdb5c4b34",
+   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbmrf1",
+   "src_sha": "d35a67594c7f9cc177c7341635eeb2a1cfbc10a1",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -2522,16 +2522,24 @@
       ".*"
      ],
      "ot_hbm_hc_subtree32_core": [
-      "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
-      "--face-lockup",
-      ".*"
-     ],
-     "ot_hbm_host_cp_rxs": [
-      "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
       "--face-lockup",
       ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
+     ],
+     "ot_hbm_host_cp_rxs": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json",
       "--rw-recipe-delta",
       "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/mem_recipe_delta.json"
      ],
@@ -2590,16 +2598,24 @@
       ".*"
      ],
      "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": [
-      "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
       "--face-lockup",
-      ".*"
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
      ],
      "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": [
-      "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
       "--face-lockup",
-      ".*"
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
      ],
      "ot_hbm_su_static_qcore_r13": [
       "--clock-regions",
@@ -2626,10 +2642,14 @@
       ".*"
      ],
      "ot_hfd_coll_q2_hard_v8g__reduce": [
-      "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
       "--face-lockup",
-      ".*"
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
      ],
      "ot_hfd_coll_q2n2_vm_core": [
       "--clock-regions",
@@ -2686,10 +2706,14 @@
       ".*"
      ],
      "ot_hgi_sm_xload_cl2_bfqg": [
-      "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
       "--face-lockup",
-      ".*"
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
      ],
      "ot_hnx_idxn_keybuf_slice": [
       "--face-lockup",
@@ -2866,12 +2890,18 @@
     "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a@1",
     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16@4",
     "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@5",
-    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@3"
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@3",
+    "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77@5",
+    "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526@2",
+    "ot_hgi_sm_xload_cl2_bfqg@3",
+    "ot_hbm_hc_subtree32_core@4",
+    "ot_hfd_coll_q2_hard_v8g__reduce@2",
+    "ot_hbm_host_cp_rxs@3"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-61",
    "pilot_mode": "queue",
-   "queue_src": "main@b07b52ff0c7",
+   "queue_src": "claude/die-hbm-61-rf1-1103@d35a67594c7",
    "hold_items": {
     "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
     "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)"
@@ -2915,9 +2945,55 @@
     "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a@1": "I4 HOLD/CLK-BAND class 9855c866403 (main b07b52ff0c7, src kw-fix-4-hbmi4); KW-FIX-4 19:0x one batch",
     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16@4": "I4 HOLD/CLK-BAND class 9855c866403 (main b07b52ff0c7, src kw-fix-4-hbmi4); KW-FIX-4 19:0x one batch",
     "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@5": "I4 HOLD/CLK-BAND class 9855c866403 (main b07b52ff0c7, src kw-fix-4-hbmi4); KW-FIX-4 19:0x one batch",
-    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@3": "I4 HOLD/CLK-BAND class 9855c866403 (main b07b52ff0c7, src kw-fix-4-hbmi4); KW-FIX-4 19:0x one batch"
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@3": "I4 HOLD/CLK-BAND class 9855c866403 (main b07b52ff0c7, src kw-fix-4-hbmi4); KW-FIX-4 19:0x one batch",
+    "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77@5": "HBM-RF1 conservative form (OWNER 18:57/COORD 19:04): RF1 item_args + src d35a67594c7 (q2_reduce PORT_MISMATCH + host_cp_rxs MPL-0020 class fixes); KW-FIX-4 19:5x one batch, epyc4",
+    "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526@2": "HBM-RF1 conservative form (OWNER 18:57/COORD 19:04): RF1 item_args + src d35a67594c7 (q2_reduce PORT_MISMATCH + host_cp_rxs MPL-0020 class fixes); KW-FIX-4 19:5x one batch, epyc4",
+    "ot_hgi_sm_xload_cl2_bfqg@3": "HBM-RF1 conservative form (OWNER 18:57/COORD 19:04): RF1 item_args + src d35a67594c7 (q2_reduce PORT_MISMATCH + host_cp_rxs MPL-0020 class fixes); KW-FIX-4 19:5x one batch, epyc4",
+    "ot_hbm_hc_subtree32_core@4": "HBM-RF1 conservative form (OWNER 18:57/COORD 19:04): RF1 item_args + src d35a67594c7 (q2_reduce PORT_MISMATCH + host_cp_rxs MPL-0020 class fixes); KW-FIX-4 19:5x one batch, epyc4",
+    "ot_hfd_coll_q2_hard_v8g__reduce@2": "HBM-RF1 conservative form (OWNER 18:57/COORD 19:04): RF1 item_args + src d35a67594c7 (q2_reduce PORT_MISMATCH + host_cp_rxs MPL-0020 class fixes); KW-FIX-4 19:5x one batch, epyc4",
+    "ot_hbm_host_cp_rxs@3": "HBM-RF1 conservative form (OWNER 18:57/COORD 19:04): RF1 item_args + src d35a67594c7 (q2_reduce PORT_MISMATCH + host_cp_rxs MPL-0020 class fixes); KW-FIX-4 19:5x one batch, epyc4"
    },
-   "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | "
+   "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
+   "item_args_rf1prev": {
+    "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": [
+     "--clock-regions",
+     "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+     "--face-lockup",
+     ".*"
+    ],
+    "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": [
+     "--clock-regions",
+     "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+     "--face-lockup",
+     ".*"
+    ],
+    "ot_hgi_sm_xload_cl2_bfqg": [
+     "--clock-regions",
+     "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+     "--face-lockup",
+     ".*"
+    ],
+    "ot_hbm_hc_subtree32_core": [
+     "--clock-regions",
+     "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+     "--face-lockup",
+     ".*"
+    ],
+    "ot_hfd_coll_q2_hard_v8g__reduce": [
+     "--clock-regions",
+     "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+     "--face-lockup",
+     ".*"
+    ],
+    "ot_hbm_host_cp_rxs": [
+     "--clock-regions",
+     "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/core_clock_regions.json",
+     "--face-lockup",
+     ".*",
+     "--rw-recipe-delta",
+     "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/mem_recipe_delta.json"
+    ]
+   }
   }
  },
  "place_prefer": [
