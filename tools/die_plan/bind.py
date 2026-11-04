@@ -4924,6 +4924,7 @@ def cmd_kit_rtl(a):
     import kit_core_clocks
     try:
         btxt, kit_core_swaps = kit_core_clocks.swap_native_cores(btxt, t.get("hard_cores"))
+        btxt, kit_core_adapters = kit_core_clocks.adapt_core_ports(btxt, t.get("hard_cores"))
         # DIE-QC-69: a hard core nested in a bound leaf (QC RED u_u_red.u_core) declares its physical_inst in the plan
         phys = {c["inst"]: c["physical_inst"] for c in t.get("hard_cores", []) or [] if c.get("physical_inst")}
         core_rows = [(r[0], phys.get(r[1], r[1])) + tuple(r[2:]) for r in (gen_phys.core_tap_rows(P, tn) if P else [])]
@@ -5075,7 +5076,7 @@ def cmd_kit_rtl(a):
         spb_geometry = hbm_spb_native.kit_geometry(out, key, btxt, kd)
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
-    if bmod == mod or kit_core_swaps or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
+    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
         bfile, bmod = kd / f"{nb}.sv", nb
@@ -5091,9 +5092,10 @@ def cmd_kit_rtl(a):
             verdict="PASS", method=KIT_DEAD_METHOD,
             receipt=dict(wrapper=str(kd / f"{mod}.sv"), sha256=hashlib.sha256(txt.encode()).hexdigest(),
                          narrow_buses=[x for x in narrow if bmap[x["port"]][0] == "input"])))
-    if kit_core_clock_rows or kit_core_swaps:
+    if kit_core_clock_rows or kit_core_swaps or kit_core_adapters:
         (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0,
-                                                                 **({"native_core_swaps": kit_core_swaps} if kit_core_swaps else {})),
+                                                                 **({"native_core_swaps": kit_core_swaps} if kit_core_swaps else {}),
+                                                                 **({"native_port_adapters": kit_core_adapters} if kit_core_adapters else {})),
                                                             indent=1) + "\n")
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
     ab0 = raw["asbuilt"]

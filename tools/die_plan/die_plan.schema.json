@@ -3351,6 +3351,40 @@
          ],
          "type": "object"
         },
+        "native_port_adapter": {
+         "additionalProperties": false,
+         "properties": {
+          "merge": {
+           "additionalProperties": {
+            "items": {
+             "minLength": 1,
+             "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+           },
+           "type": "object"
+          },
+          "tie": {
+           "additionalProperties": {
+            "minLength": 1,
+            "type": "string"
+           },
+           "type": "object"
+          },
+          "cycles": {
+           "const": 0
+          },
+          "note": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "merge",
+          "cycles"
+         ],
+         "type": "object"
+        },
         "reset_from_master": {
          "additionalProperties": false,
          "properties": {

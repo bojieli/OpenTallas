@@ -1278,6 +1278,12 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}
 # DIE-HBM-25 (HBM-047/048): split piece of a reuse content bound whole -> where the piece reset comes from in the master
+# DIE-KV-69 11-04 (kv3_astk): core port form vs the native leaf ports the bind wires; kit_core_clocks.adapt_core_ports.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_port_adapter"] = {'additionalProperties': False,
+ 'properties': {'merge': {'additionalProperties': {'items': {'minLength': 1, 'type': 'string'}, 'minItems': 1, 'type': 'array'}, 'type': 'object'},
+                'tie': {'additionalProperties': {'minLength': 1, 'type': 'string'}, 'type': 'object'},
+                'cycles': {'const': 0}, 'note': {'type': 'string'}},
+ 'required': ['merge', 'cycles'], 'type': 'object'}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["reset_from_master"] = {'additionalProperties': False,
  'properties': {'kind': {'enum': ['port', 'internal']}, 'content': {'minLength': 1, 'type': 'string'},
                 'pin': {'const': 'rst_n'}, 'source': {'minLength': 1, 'type': 'string'}},
