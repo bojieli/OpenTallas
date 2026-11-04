@@ -1,0 +1,8 @@
+# DIE-S81-51/RF-H 11-03 ot_v41_bf_col3 vs ot_v41_bf_col lockstep (run3.sh <repo> <out> <mut> <seed> <free>), RTL @ this branch
+COL3 PASS cycles=100000 partials=16542 bf_words=33274 fp_words=33717 qy_bkf_rises=1 free=1 errors=0 mut=0 seed=1
+COL3 PASS cycles=100000 partials=16209 bf_words=33680 fp_words=34126 qy_bkf_rises=1 free=1 errors=0 mut=0 seed=7
+COL3 PASS cycles=100000 partials=9853 bf_words=19341 fp_words=19132 qy_bkf_rises=1 free=0 errors=0 mut=0 seed=1
+COL3 PASS cycles=100000 partials=9552 bf_words=19264 fp_words=18592 qy_bkf_rises=1 free=0 errors=0 mut=0 seed=7
+COL3 FAIL errors=3205 latency_off=1919 partials=3255/3222 bf_words=6683 fp_words=6795 mut=1 seed=1
+COL3 FAIL errors=3086 latency_off=3063 partials=3255/3117 bf_words=6683 fp_words=6795 mut=2 seed=1
+# expected: mut=0 PASS (seeds 1/7, free 1 = exact +3 latency, free 0 = legal gating), mut=1 RFH3_MUTANT_EQ FAIL, mut=2 RFH3_MUTANT_FACE FAIL (caught)
