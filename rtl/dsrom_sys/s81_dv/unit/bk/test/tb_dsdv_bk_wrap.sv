@@ -48,7 +48,9 @@ module tb_dsdv_bk_wrap #(
     localparam integer RL = (UNIT == 0) ? 2 : 0;
 `elsif OT_DSDV_BKG_RF4   // RF 4 (form 5): + the posedge out-face pin register, +1 more
     localparam integer RL = (UNIT == 0) ? 3 : 0;
-`else   // RF 5 (form 7a): = RF 4 edges
+`elsif OT_DSDV_BKG_RF5   // RF 5 (form 7a): = RF 4 edges
+    localparam integer RL = (UNIT == 0) ? 3 : 0;
+`else   // RF 6 (form 7): = RF 4 rung edges (the +1 lane stage is inside dsdv_bk_sel)
     localparam integer RL = (UNIT == 0) ? 3 : 0;
 `endif
 `endif   // S81-TILES8/bk 10-18: dsdv_bk_sel rung relays u_rs / u_rn = +1 rung

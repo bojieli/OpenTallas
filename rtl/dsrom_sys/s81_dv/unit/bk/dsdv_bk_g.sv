@@ -55,7 +55,11 @@ module dsdv_bk_g #(
     //           (rn_t / rn_s / rn_i / rn_o, same D as rs[1]: 0 edges) so each reset tree starts local.  (A negedge rn as
     //           on bksel_c is NOT used here: rn's recovery slack is +194 ps of a full cycle over a ~3k-load tree; half a
     //           cycle would cost ~416 ps of it.)  0 edges vs RF 4.  Mutant OT_RFD_MUT_SF5 (posedge strap face).
-    //   RF = 0: the old form.  dsdv_bk_sel passes RF 5; dsdv_bk_col (VD_PK 0) keeps RF 0.
+    //   RF = 6 (form 7, 11-03; owner: two strikes -> pay a cycle; rfd5 TT -17.79 u_vin pn_q -> lane words): RF 5 +
+    //           dsdv_bk_vin LPIPE 2 (one more per-lane register stage of the selected beat / valid / two-beat error):
+    //           ln0..ln3 and fault +1 edge vs RF 5 (V pin -> lane word 5 -> 6, inside dsdv_bk_sel); vo_s / vo_n and
+    //           the drain command unchanged (rung transit 5, RL 3: no parent constant changes).  Mutant OT_RFD_MUT_LPS.
+    //   RF = 0: the old form.  dsdv_bk_sel passes RF 6; dsdv_bk_col (VD_PK 0) keeps RF 0.
     parameter integer RF = 0
 ) (
     input  wire [0:0]        clk,
@@ -149,7 +153,7 @@ module dsdv_bk_g #(
         .vi_n(vi_n_f), .vo_s(vo_s_r), .dl_nv(dnv), .dl_n(dn), .dl_sv(dsv), .dl_s(ds),
         .in_nv(ov && egn_c), .in_n(ob), .in_sv(ov && !egn_c), .in_s(ob), .fault(vs_f));
     wire drv; wire [7:0] drn, drd;
-    dsdv_bk_vin #(.V(V), .MUT(MUT), .LPIPE((RF >= 2) ? 1 : 0)) u_vin (.clk(clk[0]), .rst_n(rn_i), .ik(ik_c), .uid(uid_c), .dl_nv(dnv), .dl_n(dn),
+    dsdv_bk_vin #(.V(V), .MUT(MUT), .LPIPE((RF >= 6) ? 2 : (RF >= 2) ? 1 : 0)) u_vin (.clk(clk[0]), .rst_n(rn_i), .ik(ik_c), .uid(uid_c), .dl_nv(dnv), .dl_n(dn),
         .dl_sv(dsv), .dl_s(ds), .lanes(ln), .dr_v(drv), .dr_n(drn), .dr_d(drd), .fault(vi_f));
     dsdv_bk_vout #(.V(V), .MUT(MUT)) u_vout (.clk(clk[0]), .rst_n(rn_o), .ek(ek_c), .w_v(vdv), .w_d(vdd),
         .dr_v(drv), .dr_n(drn), .dr_d(drd), .o_v(ov), .o_b(ob), .fault(vo_f));
