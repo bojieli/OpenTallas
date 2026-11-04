@@ -181,7 +181,9 @@
      "rst": "rst_n"
     }
    ]
-  }
+  },
+  "synth_keepdc": true,
+  "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl"
  },
  "qkd_kvs_ctl": {
   "synth_keepdc": true,
@@ -351,7 +353,9 @@
    ],
    "ruling": "DIE-KV-62/hr 11-02 (KV die-owner sub-lane; precedent COORD ruling 2 head_port_regs frontq fault pin flop +1 edge, OWNER CAP_ED +1 fault cycle 10-30): a wire feed-through is not a timed face; register it",
    "reason": "u_chain__chain_fault[3:0] = u_chain__chain_fault_i[3:0] is a pure wire across the core (face_guard feedthrough 8); it is the slice-chain fault status read by core_guard service_faults[19:16]: one face register (+1 fault edge, reset 0 = no fault) gives both pins a flop; mapped CORE_PREFLIGHT census epyc2 /home/ubuntu/scratch-root/claude/die-kv-62-hr/census/<core>.json (DIE-KV-61/hr efa6a9b9 kits)"
-  }
+  },
+  "synth_keepdc": true,
+  "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl"
  },
  "qkd_hr_core_prompt": {
   "timed_face": {
@@ -442,6 +446,99 @@
    ],
    "ruling": "DIE-KV-65/HR 11-03, same class as DIE-KV-62/hr core_order chain_fault (OWNER CAP_ED +1 fault cycle 10-30): a wire feed-through is not a timed face; register it",
    "reason": "17 of 32 fault_src bits are wires from fault/status inputs (physical_fault, transport_fault, kst8, tk8, crom_fault), face_guard feedthrough 17: one face register per bit, +1 fault edge, reset 0 = no fault"
-  }
+  },
+  "synth_keepdc": true,
+  "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl",
+  "reset_ports": "u_control__por_n",
+  "sigmax": "M7",
+  "source_1104_b": "DIE-KV-66/HR 11-04: plan pin table has 1500 M7 pins on the N face, MAX_ROUTING_LAYER M5 crashed DRT (initMazeIdx_connFig via no idx V5/V6, signal 6); por_n = typed power-on reset of u_control (LEC had no reset base for it)"
+ },
+ "qkd_hr_core_peer": {
+  "synth_keepdc": true,
+  "reset_ports": "u_coordinator__por_n,u_peer_codec__por_n,u_root_mux__por_n",
+  "timed_face": {
+   "buses": [
+    "u_coordinator__accepted_ranks",
+    "u_coordinator__allocated_delivered",
+    "u_coordinator__allocated_valid",
+    "u_coordinator__cohort_gen",
+    "u_coordinator__cohort_tag",
+    "u_coordinator__dispatch_valid",
+    "u_coordinator__dispatched",
+    "u_coordinator__engine_admit_ready",
+    "u_coordinator__engine_result_cause",
+    "u_coordinator__engine_result_cycles",
+    "u_coordinator__engine_result_done",
+    "u_coordinator__engine_result_fault",
+    "u_coordinator__engine_result_gen",
+    "u_coordinator__engine_result_tag",
+    "u_coordinator__engine_result_token",
+    "u_coordinator__engine_result_v",
+    "u_coordinator__engine_result_value",
+    "u_coordinator__fault",
+    "u_coordinator__identity_fault",
+    "u_coordinator__program_consensus",
+    "u_coordinator__token_grant_ready",
+    "u_coordinator__token_grant_tag",
+    "u_coordinator__token_grant_valid",
+    "u_coordinator__token_request_gen",
+    "u_coordinator__token_request_position",
+    "u_coordinator__token_request_ready",
+    "u_coordinator__token_request_token",
+    "u_coordinator__token_request_valid",
+    "u_peer__normal_rx_cr",
+    "u_peer__normal_tx_d",
+    "u_peer__normal_tx_v",
+    "u_peer__rx_d",
+    "u_peer__rx_v",
+    "u_peer__tx_cr",
+    "u_peer_codec__cancel_done",
+    "u_peer_codec__cancel_drained",
+    "u_peer_codec__cancel_fault",
+    "u_peer_codec__cancel_gen",
+    "u_peer_codec__cancel_released",
+    "u_peer_codec__cancel_tag",
+    "u_peer_codec__cancel_valid",
+    "u_peer_codec__certificate",
+    "u_peer_codec__certificate_prefix",
+    "u_peer_codec__certificate_v",
+    "u_peer_codec__context_owned",
+    "u_peer_codec__cq_client_tag",
+    "u_peer_codec__cq_commit_v",
+    "u_peer_codec__cq_pos",
+    "u_peer_codec__cq_slot",
+    "u_peer_codec__cq_token",
+    "u_peer_codec__drained",
+    "u_peer_codec__link_reset_seen",
+    "u_peer_codec__links_drained",
+    "u_peer_codec__native_ready",
+    "u_peer_codec__program_digest",
+    "u_peer_codec__program_epoch",
+    "u_peer_codec__program_ready",
+    "u_peer_codec__request_gen",
+    "u_peer_codec__request_pos",
+    "u_peer_codec__request_tag",
+    "u_peer_codec__request_token",
+    "u_peer_codec__request_trace",
+    "u_peer_codec__request_v",
+    "u_peer_codec__result_cr",
+    "u_peer_codec__retrained",
+    "u_peer_codec__service_epoch",
+    "u_peer_codec__service_ready",
+    "u_peer_codec__step_client_tag",
+    "u_peer_codec__step_issue_v",
+    "u_peer_codec__step_pos",
+    "u_peer_codec__step_retire_client_tag",
+    "u_peer_codec__step_retire_cq",
+    "u_peer_codec__step_retire_pos",
+    "u_peer_codec__step_retire_slot",
+    "u_peer_codec__step_retire_token",
+    "u_peer_codec__step_retire_v",
+    "u_peer_codec__step_slot"
+   ],
+   "ruling": "DIE-KV-66/HR 11-04 same class as COORD GRANT 19:2x of DIE-KV-61/hr and core_prompt (declared buses = timed faces, 166.6 ps kit IO budget, no mask, no added cycle)",
+   "reason": "mapped CORE_PREFLIGHT census intel1 /srv/opentallas-scratch2/claude/dkv66/hr/census/peer.json: unregistered 609 / shared 1307, 0 left with these buses timed plus the 3 por_n typed resets"
+  },
+  "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl"
  }
 }
