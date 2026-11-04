@@ -55,6 +55,17 @@ foreach {ot_dt_v ot_dt_i} {true 1 TRUE 1 yes 1 false 0 FALSE 0 no 0} {
   yosys setattr -mod -set dont_touch $ot_dt_i A:dont_touch=$ot_dt_v
 }
 yosys proc
+# KIT-TRIAGE-1/LEC d247e85de53 hook, opt-in here (DIE-KV-67/HR 11-04): OT_FSM_KEEP=1 keeps FSM state registers in their RTL
+# encoding.  Yosys `fsm` (inside synth) re-encodes every detected state register (qkd_hr_core_prompt: 23 registers, among
+# them st_h_arvalid.state 2 -> 3 bits; lec.py NOT EQUIVALENT, 74 differ) so the netlist has no name or bit correspondence.
+# fsm_encoding "none" on every register output wire without its own fsm_encoding, so fsm_detect skips it; function
+# unchanged, an RTL fsm_encoding still wins.  Unset = this hook does nothing, other kits unchanged.
+if {[info exists ::env(OT_FSM_KEEP)] && $::env(OT_FSM_KEEP) eq "1"} {
+  yosys select -set ot_fsmk {*}{t:$*dff* t:$*dlatch* %u %x:+[Q] w:* %i a:fsm_encoding %d}
+  set ot_fsmk_s [string trim [yosys tee -q -s result.string select -list {*}{@ot_fsmk}]]
+  yosys setattr -set fsm_encoding {"none"} {*}{@ot_fsmk}
+  puts "OT_FSM_KEEP: fsm_encoding none on [expr {$ot_fsmk_s eq "" ? 0 : [llength [split $ot_fsmk_s "\n"]]}] register wires"
+}
 yosys select -set ot_kw {*}{w:* a:keep %i}
 yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i}
 # a vector register is ONE multi-bit cell; techmap later splits it into per-bit cells WITHOUT the keep attribute and the

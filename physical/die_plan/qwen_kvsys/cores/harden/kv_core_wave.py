@@ -31,6 +31,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import hr_dead_inputs  # noqa: E402
 REPO = HERE.parents[4]
 CORE_ROOT_DEFAULT = "results/kv_host_regen_1/rtl"
 CORE_ROOT_NATIVE_EX = "results/kv_hg_ex_1101"
@@ -226,7 +228,7 @@ def gen(a, extra):
     if e.get("hr"):
         for r in a.fp_root:
             d = Path(r) / m
-            if (d / "eq_rc.txt").is_file() and (a.face_proof_pending or (d / "eq_rc.txt").read_text().split() == FP_PASS) \
+            if (d / "eq_rc.txt").is_file() and (a.face_proof_pending or hr_dead_inputs.proof_state(d, m) in ("pass", "named")) \
                     and (d / f"{m}.v").is_file() and (d / "hr_face_ports.json").is_file():
                 fp = d
                 break

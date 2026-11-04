@@ -1355,7 +1355,10 @@ def main():
             raise SystemExit("--hr-face-ports only applies to qkd_hr_* cores")
         fpd = Path(a.hr_face_ports)
         rc = (fpd / "eq_rc.txt").read_text().split()
-        if rc == ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
+        import hr_dead_inputs
+        # COORD 11-04 05:23: a stopped leg may return under its own name (named_legs.json); eq_rc.txt stays as it was
+        hr_face_state = hr_dead_inputs.proof_state(fpd, mod)
+        if hr_face_state in ("pass", "named"):
             a.hr_face_proof_pending = False          # a returned proof is never recorded as pending
         elif not a.hr_face_proof_pending:
             raise SystemExit(f"--hr-face-ports: proof not clean in {fpd}/eq_rc.txt: {rc}")
@@ -1498,8 +1501,10 @@ def main():
             listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
             **({"retimed_input_captures": fr["retimed_in"]} if fr.get("retimed_in") else {}),
             proof=("PENDING: " + " ".join((Path(a.hr_face_ports) / "eq_rc.txt").read_text().split()) if a.hr_face_proof_pending else
-                   "equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)")),
+                   hr_dead_inputs.proof_text(a.hr_face_ports, mod))),
             indent=1) + "\n")
+        if hr_face_state == "named":
+            shutil.copy2(Path(a.hr_face_ports) / "named_legs.json", kd / "hr_face_named_legs.json")
     # DIE-KV-61/hr 11-02: recipe-declared timed-face buses (face_guard timed_face.json) and tied spare outputs
     # (face_guard spare_out.json); both are read by the kit core_preflight / signoff face guard.
     if rec.get("timed_face"):
@@ -1919,6 +1924,8 @@ def main():
             raise SystemExit("--head-lane-taps chains face_flops.tcl; recipe face_flops=false is not supported")
         head_lane_taps(kd, tool)
         cfg += ["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels"]
+    if rec.get("fsm_keep"):    # DIE-KV-67/HR 11-04: physical/common_flow/ot_keep_regs.tcl keeps FSM state registers as written
+        cfg.append("export OT_FSM_KEEP = 1")
     synth_keepdc = bool(a.synth_keepdc or rec.get("synth_keepdc"))
     if synth_keepdc:
         # DIE-KV-60 ctlin / KV-FN-7 (COORD 11-01 09:1x): opt-in synth hook, -keepdc on opt_dff / wreduce only
@@ -2027,6 +2034,8 @@ def main():
         fz["reset_contract"] = reset_contract
     if a.hr_face_proof_pending:
         fz["face_proof"] = "pending"
+    elif a.hr_face_ports and hr_face_state == "named":
+        fz["face_proof"] = "named legs, hr_face_named_legs.json: " + hr_dead_inputs.proof_text(a.hr_face_ports, mod)
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     prov = LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
     if a.hr_face_proof_pending:
