@@ -13908,3 +13908,13 @@ make[1]: *** [Mak) job 3af265726b31; ot_hnx_fused_hub_n4ext queue FAIL FLOW (que
   (4) KW-FIX-7: thanks for the 06:58. 34th row is not worth chasing. 4 kept pending rows sit, as you say. epyc2 scratch 143 GB and rising: steer at 150 as ruled. kv3_sys_SD @4 kit_rtl rc 2: read it.
   (5) SS27-TOK: last post 06:27. Post state: hd_turn_b, cx4_i, sub5_d, q2r_d, rp3h_lc_i, adp, HBM-64 06:52 READY-COUNT.
   (6) KIT-WAVE launching 07:00, LAUNCH-SKIP 0. Waiters: epyc4 83, intel2 6, intel1 2, epyc2 0 (disk). Lanes: FLOW-28 done, FLOW-27 waiting on one admitted canary, others live.
+- 2026-11-04 07:02 PST STATE [SS27-TOK -> COORD, DIE-HBM-64, DIE-KV-67] Answer to your (5) [CHECKED signoff.json, lec.json, PROVENANCE.json at 06:46 + 07:02; re-signs on epyc2 ss27/resign, kits by copy where noted, cache 06:24 predates them all].
+  hd_turn_b_d: LOCAL_PASS_NEEDS_PARENT, local SIGNED, TT +101.42, FF +0.02, DRC 0, LEC EQUIVALENT 5197, PROVENANCE, flow-20261104-d-head, build fbebcbaef86.
+  sub5_d (hc_subtree32_core): SIGNED, TT +272.61, FF +0.65, DRC 0, LEC EQUIVALENT 34000, PROVENANCE, flow-20261104-d-hbm, build fdd22197cf3 (default, nobody corrected it).
+  q2r_d (coll_q2_hard_v8g__reduce): SIGNED, TT +78.76, FF +1.99, DRC 0, LEC EQUIVALENT 25658, PROVENANCE, flow-20261104-d-hbm, build 1cde774c151.
+  cx4_i (su_static_cxport_ij_q): SIGNED, TT +119.15, FF +0.10, DRC 0, LEC EQUIVALENT 18689, PROVENANCE, flow-20261104-i-hbm, build 2d0660db1b7.
+  rp3h_lc_i: SIGNED, TT +96.54, FF +2.11, DRC 0, LEC STILL RUNNING at 24 min, no PROVENANCE, flow-20261104-i-hbm. Does not count until both exist; watcher will write it.
+  Expect at 07:25 if rp3h_lc_i finishes: HEAD types 7 -> 8; HBM cores 14 -> 18 and designs by the same if each credits. Credit not read; the cache lists these 5 as unversioned only. c-tag waiters sub5_c, q2r_c cancelled by exact PID, they never ran. So sub5 and q2r are on d, not c; FLOW-27 per your 05:36 (3) covers d by ancestry of its newest tag read.
+  adp + hfd_ep_static (DIE-HBM-64 06:52): not started until now, my miss since I only watched my own monitor. Launching next on the newest tags, block follows. Neither counts yet.
+  red2_leaf count read per your 06:29 (5): LANDED at cache 06:24, QC 13/16, signed_cores [CHECKED].
+  q3vm rerun: 87 min, no output, no verdict. c46boot alive, no verdict. Budget: not over; PARKED when these read.
