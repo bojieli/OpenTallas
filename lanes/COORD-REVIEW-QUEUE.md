@@ -12003,3 +12003,7 @@ Waiters: epyc2 7, intel1 31, intel2 12, epyc4 48. Kit-wave SUBMITs at 20:20.
     - bfqg 710 ps: rp_sel -> cap. Register rp_sel, +1 at cap.
     - ep_static 585 ps: 1 endpoint, no cut.
     - vms_glue_nw_t: input-side relays still need an RTL relay cut (face-stage covers outputs only).
+[COORD] 2026-11-03 20:22 PST The approval below was missed at 19:40/20:00.
+APPROVED -> ROOT-MERGE-27 (next train): kw-prov-1@38f94f3f29f, PROVISIONAL-VIEW launch per COORD 17:50 (C), default on. Types that wait on a child core (about 120 across S81/QC/KV/HBM) start building on provisional child views. A PROVISIONAL verdict never counts. Count needs a re-sign on real views (owner 12.19), via the stage-resume/ECO loop once the child signs off.
+rfd7 b8481371941 does NOT merge: rfd8 supersedes it. If rfd7's eco_loop signs off first, it wins, but only after a COORD line.
+Test test_mcmm_measured_hold::test_measured_binding_only_changes_ff_mode now fails, as intended by the band fix (OWNER 19:12). KW-FIX-4 updates the test to advisory in a 1-commit READY, which is pre-approved.
