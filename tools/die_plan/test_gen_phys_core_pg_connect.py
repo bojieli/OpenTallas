@@ -135,3 +135,28 @@ def test_phy_domain_content_without_macro_view_fails_closed():
         doms = [("phy_pg", "VDDPHY", "VSS", (0.0, 0.0, 20.0, 10.0), ["u_phy"])]
         with pytest.raises(ValueError, match=r"PG domain phy_pg \(hd\): powered content \['u_phy'\] has no macro view"):
             gen_phys.phy_pg_pdn(P, "hd", doms, mac, root=d)
+
+
+def test_default_on_when_unset_and_skips_unlandable_view():
+    """PG-CORECONN-2 11-03 class fix: unset core_pg_connect = ON (S81: 136/158 macro types never set it); explicit
+    false keeps the legacy bytes; the implicit default skips a view without PG geometry (comment), explicit true
+    still raises."""
+    with tempfile.TemporaryDirectory() as d:
+        P = _P(d)
+        del P.types["hd"]["core_pg_connect"]
+        mac = gen_phys.type_macros(P, "hd")
+        assert gen_phys.core_pg_on(P, "hd")
+        txt = "\n".join(gen_phys.core_pg_grids(P, "hd", mac))
+        assert "add_pdn_connect -grid {core_pg_M5} -layers {M5 M6}" in txt
+        P.types["hd"]["core_pg_connect"] = False
+        assert not gen_phys.core_pg_on(P, "hd") and gen_phys.core_pg_grids(P, "hd", mac) == []
+        Q = _P(d, vdd=None, vss=None)
+        del Q.types["hd"]["core_pg_connect"]
+        mq = gen_phys.type_macros(Q, "hd")
+        t = gen_phys.core_pg_grids(Q, "hd", mq)
+        assert any(s.startswith("# PG-CORECONN-2 (default-on): macro u_b.g_cv[0].u_eA skipped") for s in t)
+        assert "add_pdn_connect -grid {core_pg_M4} -layers {M4 M5}" in "\n".join(t)
+        assert gen_phys.core_pg_unconnected("\n".join(t), mq, strict=False) == []
+        Q.types["hd"]["core_pg_connect"] = True
+        with pytest.raises(ValueError):
+            gen_phys.core_pg_grids(Q, "hd", mq)

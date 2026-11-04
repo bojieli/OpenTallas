@@ -2300,19 +2300,40 @@ def core_pg_connect_layer(lef):
     return pick["VDD"], CORE_PG_UP[pick["VDD"]]
 
 
+def core_pg_on(P, tn):
+    """PG-CORECONN-2 class fix (DIE-S81-51 11-03): core_pg_connect is DEFAULT-ON.  Unset -> True (implicit), explicit
+    false keeps the legacy kit bytes.  S81 plan_h2_2249: 136/158 macro-placing types never set it, so 18,993 placed
+    macro PG pin sets got no via from the tile grid (physical open; sign-off 'pg' is a logical ITerm->net census and
+    does not see it)."""
+    v = P.types[tn].get("core_pg_connect")
+    return True if v is None else bool(v)
+
+
+def _core_pg_strict(P, tn):
+    """explicit core_pg_connect: true keeps the hard error on a macro LEF without landable PG geometry; the implicit
+    default skips such a macro with a pdn.tcl comment (its view must be regenerated with PG pins)."""
+    return P.types[tn].get("core_pg_connect") is True
+
+
 def core_pg_grids(P, tn, macros, root=None, exclude=()):
     """pdn.tcl lines of an opt-in type (core_pg_connect): one CORE macro grid per PG pin layer over the type's placed
     macros (hard_cores + hardened contents, minus `exclude` = PHY-domain macros), add_pdn_connect pin layer -> tile
     strap layer.  [] when not opted in or the type places no macro."""
-    if not P.types[tn].get("core_pg_connect"):
+    if not core_pg_on(P, tn):
         return []
     import cores as C
-    groups = {}
+    groups, skipped = {}, []
     for inst, _mod, lef, *_ in macros:
         if inst in exclude:
             continue
-        groups.setdefault(core_pg_connect_layer(C.resolve(lef, root)), []).append(inst)
-    t = []
+        try:
+            groups.setdefault(core_pg_connect_layer(C.resolve(lef, root)), []).append(inst)
+        except ValueError as ex:
+            if _core_pg_strict(P, tn):
+                raise
+            skipped.append((inst, str(ex)))
+    t = [f"# PG-CORECONN-2 (default-on): macro {i} skipped, view has no landable PG geometry: {e[:160]}"
+         for i, e in skipped]
     for (lo, hi), insts in sorted(groups.items(), key=lambda kv: int(kv[0][0][1:])):
         g = f"core_pg_{lo}"
         t += [f"# PG-CORECONN-1 (core_pg_connect): {len(insts)} placed macro(s) with {lo} PG pins onto the tile {hi} straps",
@@ -2321,7 +2342,7 @@ def core_pg_grids(P, tn, macros, root=None, exclude=()):
     return t
 
 
-def core_pg_unconnected(pdn, macros, root=None, exclude=()):
+def core_pg_unconnected(pdn, macros, root=None, exclude=(), strict=True):
     """[(inst, pin_layer, tile_layer)] placed non-PHY macros of `macros` that no macro grid of the pdn.tcl text lands
     (no define_pdn_grid -macro whose -instances matches the instance with an add_pdn_connect on its LEF PG layer to
     the strap layer above).  [] = every macro PG pin layer is connected."""
@@ -2335,7 +2356,12 @@ def core_pg_unconnected(pdn, macros, root=None, exclude=()):
     for inst, _mod, lef, *_ in macros:
         if inst in exclude:
             continue
-        lo, hi = core_pg_connect_layer(C.resolve(lef, root))
+        try:
+            lo, hi = core_pg_connect_layer(C.resolve(lef, root))
+        except ValueError:
+            if strict:
+                raise
+            continue      # implicit default-on: unlandable view already listed as a pdn.tcl comment
         name = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
         if not any((lo, hi) in conns.get(g, ()) and any(r.match(name) for r in pats) for g, pats in grids.items()):
             bad.append((inst, lo, hi))
@@ -3063,15 +3089,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if phy_doms:
         # PATH-KV-SYSC 10-25 PHY PG hook: separate VDDPHY region(s) of die.pg.domains inside this type
         pdn = phy_pg_pdn(P, tn, phy_doms, macros, root=root,
-                         core_grids=bool(P.types[tn].get("core_pg_connect"))) + pdn[len(PDN):]
+                         core_grids=core_pg_on(P, tn)) + pdn[len(PDN):]
         (kd / "phy_pg.json").write_text(json.dumps([dict(name=d[0], power=d[1], ground=d[2], rect_type_um=d[3],
                                                           macros=d[4]) for d in phy_doms], indent=1) + "\n")
-    elif P.types[tn].get("core_pg_connect"):
+    elif core_pg_on(P, tn):
         cg = core_pg_grids(P, tn, macros, root)
         if cg:
             pdn += "\n".join(cg) + "\n"
-    if P.types[tn].get("core_pg_connect"):
-        bad = core_pg_unconnected(pdn, macros, root, exclude={i for d in phy_doms for i in d[4]})
+    if core_pg_on(P, tn):
+        bad = core_pg_unconnected(pdn, macros, root, exclude={i for d in phy_doms for i in d[4]},
+                                  strict=_core_pg_strict(P, tn))
         if bad:
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
     (kd / "pdn.tcl").write_text(pdn)

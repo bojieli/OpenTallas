@@ -2017,7 +2017,7 @@ def check_core_pg(P, R, plan_dir=None, strict=False, max_msgs=1000):
             continue
         out["types_with_macros"] += 1
         ninst = sum(1 for p in P.parts.values() if p["type"] == tn)
-        if not P.types[tn].get("core_pg_connect"):
+        if not GP.core_pg_on(P, tn):     # PG-CORECONN-2 11-03: default-on, only explicit false is missing
             out["types_missing"].append(tn)
             out["macro_insts_missing"] += len(mac) * max(ninst, 1)
             say(emit, f"type {tn}: {len(mac)} placed hard-core macro(s) ({mac[0][0]} ...) without core_pg_connect: true "
