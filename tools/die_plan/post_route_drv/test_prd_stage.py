@@ -90,4 +90,4 @@ def test_prd_mk_final_seed_and_list():
     t = (HERE / "prd_mk.sh").read_text()
     assert "final) SRC=6_final.odb" in t and 'prd_spef_insts.py" "$SPEF" $OUT/prd_spef_insts.tsv' in t
     r = (HERE / "prd_run.sh").read_text()
-    assert "[ $f = final ] && f=route" in r
+    assert "= final ] && OT_PRD_FROM=route" in r
