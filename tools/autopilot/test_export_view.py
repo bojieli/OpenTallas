@@ -84,6 +84,16 @@ class TestExportView(unittest.TestCase):
         self.assertIn("m_tt.lib", prov["export"]["lib_basis"])
         self.assertEqual((out / "m" / "m_ff.lib").read_text(), LIB)
 
+    def test_upper_case_ff_etm_is_used(self):
+        kit, _ = mk_run(self.tmp.name, kit_libs=False)
+        bc = next(kit.rglob("m_bc.lib"))
+        bc.rename(bc.with_name("m_BC.lib"))     # S81 kits write the FF ETM as <mod>_BC.lib
+        out = Path(self.tmp.name) / "views"
+        res = EV.export(str(kit), str(kit / "signoff" / "signoff.json"), str(out), "s81")
+        self.assertTrue(res["complete"], res["problems"])
+        self.assertEqual((out / "m" / "m_ff.lib").read_text(), LIB)
+        self.assertIn("m_BC.lib", json.loads((out / "m" / "provenance.json").read_text())["export"]["lib_basis"]["m_ff.lib"])
+
     def test_canonical_superset_coverage_and_legacy_fallback(self):
         cases = [({"superset_vec": {"all_shown": True}}, True),
                  ({"superset_vec": {"all_shown": False}, "all_shown": True}, False),
