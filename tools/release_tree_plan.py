@@ -231,6 +231,67 @@ def name_retired(r_, die, names, keys):
         if cut is None or t is None or t < cut:
             return 'name:%s:%s %s' % (die, k, why)
     return None
+# COUNT-REVOKED (COORD 2026-11-03 23:2x): one signed VIEW stops counting after a measured failure, and nothing else moves.
+# lanes/COUNT-REVOKED.tsv: '<die>\t<design/type>\t<key>\t<reason>\t<date>'; <key> = 'sha256:<hex of 6_final.v>' (any record
+# of that name on that netlist, wherever it was re-signed) or '<scan_host>:<view dir>' (a record there, or whose routed_db
+# is there).  A new signed view of the same type has another netlist and path, so it counts again.  The routed DB and its
+# signoff.json stay untouched; matches go to retired_records (visible).  <die> is documentation: name + key do the match.
+COUNT_REVOKED = pathlib.Path(__file__).resolve().parent.parent / 'lanes' / 'COUNT-REVOKED.tsv'
+
+
+def revoked_rows(path=None):
+    try: lines = pathlib.Path(path or COUNT_REVOKED).read_text().splitlines()
+    except Exception: return []
+    out = []
+    for ln in lines:
+        if not ln.strip() or ln.startswith('#'): continue
+        f = [x.strip() for x in ln.split('\t')]
+        if len(f) >= 3 and f[1] and f[2]:
+            out.append(dict(die=f[0], name=f[1], key=f[2], reason=f[3] if len(f) > 3 else '', date=f[4] if len(f) > 4 else ''))
+    return out
+
+
+def rec_netlist_sha(r):
+    """sha256 of the record's routed 6_final.v on its scan host; None when it cannot be read"""
+    h = r.get('scan_host')
+    if h == 'origin/main' or not r.get('path'): return None
+    if r.get('routed_db'): g = shlex_quote(os.path.dirname(r['routed_db'])) + '/6_final.v'
+    else: g = shlex_quote(os.path.dirname(os.path.dirname(r['path']))) + '/run/results/*/*/base/6_final.v'
+    c = 'sha256sum ' + g
+    try:
+        o = sh_ssh(['ssh', '-n', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', '-o', 'ConnectTimeout=20', h, c], 120) if h != 'local' else sh(['bash', '-c', c], 120)
+    except Exception:
+        return None
+    w = o.stdout.split() if o.returncode == 0 else []
+    return w[0] if len(w) == 2 else None   # two netlists under one kit: ambiguous, not a match
+
+
+def revoke_hit(r, rows, sha=rec_netlist_sha):
+    for row in rows:
+        if row['name'] not in rec_keys(r): continue
+        k = row['key']
+        if k.startswith('sha256:'):
+            if sha(r) == k[7:]: return row
+        else:
+            h, _, d = k.partition(':'); d = d.rstrip('/') + '/'
+            if h == r.get('scan_host') and any(str(r.get(a) or '').startswith(d) for a in ('path', 'routed_db')): return row
+    return None
+
+
+def split_revoked(recs, rows, sha=rec_netlist_sha):
+    """-> (kept, revoked)"""
+    if not rows: return recs, []
+    kept, gone = [], []
+    for r_ in recs:
+        row = revoke_hit(r_, rows, sha)
+        if row: gone.append(dict(r_, retired='COUNT-REVOKED %s %s %s %s' % (row['die'], row['name'], row['date'], row['reason'])))
+        else: kept.append(r_)
+    return kept, gone
+
+
+def revoked_module(m, rows):
+    """an unreachable host's credit of a revoked name is not carried: its netlist cannot be checked on this refresh"""
+    return any(row['name'] == m for row in rows)
 PROV_PY = r'''
 RESIGN_KEYS = ('src_commit', 'flow_tag', 'routed_db', 'build_commit', 'lec')
 def reloc(x, f):
@@ -1134,6 +1195,7 @@ def refresh(log=lambda *a: None):
         for r_ in recs:
             r_['legacy'] = is_legacy(r_, cutoff)
         recs, res['retired_records'] = split_retired(recs, retired_refs())
+        recs, gone = split_revoked(recs, revoked_rows()); res['retired_records'] += gone
         names = retired_names()
         res['signed_records'] = recs; res['scanned'] = scanned
         # match SIGNED records to plan types / hard cores
@@ -1218,6 +1280,7 @@ def carry_unreachable(new, old, retired=None, names=None):
             m = D[did].get('module')
             cut = (names.get((o.get('die') or ent.get('die'), m)) or (None, ''))[0] if names else None
             if cut is not None and cut > (old.get('generated') or 0): continue
+            if revoked_module(m, revoked_rows()): continue
             keep = [r if UNREACH_TAG in r else r + UNREACH_TAG + when + ']' for r in refs]
             sd[did] = keep
             (ent.get('design_unmatched') or {}).pop(m, None)

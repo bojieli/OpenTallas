@@ -79,3 +79,35 @@ def test_carry_unreachable_keeps_last_verified_credit():
     assert again['plans']['p']['signed_designs']['a'] == sd['a']
     # host readable again -> nothing carried
     assert rtp.carry_unreachable(dict(unreachable_hosts=[], plans={'p': dict(die='s81', designs=D, signed_designs={})}), old)['plans']['p']['signed_designs'] == {}
+
+
+REV = 'head\thd_turn_a\tsha256:aa\tfstart -55.8\t2026-11-03\nhead\thd_x\tintel2:/k/v/\twhy\t2026-11-03\n# c\n'
+
+
+def test_revoked_only_that_netlist_counts_new_view(tmp_path):
+    f = tmp_path / 'r.tsv'; f.write_text(REV)
+    rows = R.revoked_rows(f)
+    bad = dict(name='dp_hd_turn_a', top='ot_s81hd_turn_a', scan_host='intel2', path='/a/signoff/signoff.json', sha='aa')
+    resign = dict(bad, path='/b/signoff/signoff.json', routed_db='/k/6_final.odb')
+    fresh = dict(bad, path='/c/signoff/signoff.json', sha='bb')
+    other = dict(name='dp_hd_st_k5', top='ot_s81hd_st_k5', scan_host='intel2', path='/d/signoff/signoff.json', sha='aa')
+    kept, gone = R.split_revoked([bad, resign, fresh, other], rows[:1], sha=lambda r: r.get('sha'))
+    assert kept == [fresh, other] and len(gone) == 2 and gone[0]['retired'].startswith('COUNT-REVOKED head hd_turn_a')
+
+
+def test_revoked_view_path_covers_resign_of_that_db(tmp_path):
+    f = tmp_path / 'r.tsv'; f.write_text(REV)
+    rows = R.revoked_rows(f)[1:]
+    base = dict(name='dp_hd_x', top='ot_hd_x', scan_host='intel2')
+    view, resign = dict(base, path='/k/v/signoff/signoff.json'), dict(base, path='/s/signoff.json', routed_db='/k/v/run/6_final.odb')
+    sibling, host2 = dict(base, path='/k/v2/signoff/signoff.json'), dict(base, path='/k/v/signoff/signoff.json', scan_host='intel1')
+    kept, gone = R.split_revoked([view, resign, sibling, host2], rows)
+    assert kept == [sibling, host2] and len(gone) == 2
+
+
+def test_unreadable_netlist_stays_counted_no_rows_no_calls(tmp_path):
+    f = tmp_path / 'r.tsv'; f.write_text(REV)
+    r = dict(name='dp_hd_turn_a', top='ot_s81hd_turn_a', scan_host='intel2', path='/a/signoff/signoff.json')
+    assert R.split_revoked([r], R.revoked_rows(f)[:1], sha=lambda r: None) == ([r], [])
+    assert R.split_revoked([r], [], sha=lambda r: 1 / 0) == ([r], [])
+    assert R.revoked_rows(tmp_path / 'none.tsv') == []
