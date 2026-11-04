@@ -11509,3 +11509,4 @@ FAILED [AUTOPILOT 2a459ed89ca3] 2026-11-03 18:24:46 PST AUTOPILOT -> KIT-WAVE-1:
     - It is RUNNING d44v place since 18:04 and stays advisory.
     - Trigger: if it fails post-CTS hold/insertion, d44v part 6 (one block) adds ceil(23788/5000) = 5 regional entries via --clock-regions.
   - HBM area: no shrink this release (noted). Burn-down at ~20:00.
+- 2026-11-03 18:42 PST [COORD] OWNER asked QC die area (reticle). Answer: shrink2 merged I1 9abd6a2dfb0 (16:11): plan_qc52 outline 31216.32 x 25643.52 = 800.5 mm2, fits 26x33 reticle incl scribe + 103.68 seal ring (short-side margin ~47 um). 769 mm2 of slot area at fill <0.15; right-size-to-0.40 upper bound ~296 mm2 recoverable. Recommendation/default: no further QC shrink this release (plan frozen, closure first); post-release area pass. Owner may override.
