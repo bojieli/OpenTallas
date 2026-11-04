@@ -2611,6 +2611,10 @@
   "files_at": {
    "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_su_static_pgslice_lg__lanes8_11/ot_hbm_su_pg_lane1_core.sv": "8dd205e8bcc"
   },
-  "source": "DIE-HBM-63 d44v part 6: sub-core of the EQ-PASS ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 split (over_cap_split/reform_1103, 8dd205e8bcc); parent recipe file set + the split RTL, read at its pin."
+  "source": "DIE-HBM-63 d44v part 6: sub-core of the EQ-PASS ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 split (over_cap_split/reform_1103, 8dd205e8bcc); parent recipe file set + the split RTL, read at its pin.",
+  "rename_top": "ot_hbm_su_pg_lane1_core__mc",
+  "wrapper_by_pins_sha256": {
+   "f591eea96fcd5be525174dfe05407b58e98f7355705114a0b0c55c5ff2c220a8": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane1_core.sv"
+  }
  }
 }
