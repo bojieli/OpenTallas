@@ -158,7 +158,7 @@ def test_orphan_waiters():
 
 def test_spill_marked_host_is_no_gen_host():
     """COORD 14:2x INFRA class 2: an ot-run SPILL marker on the die lane root of a gen host -> ot-run NODIR for every
-    attempt dir there; gen_hosts drops that host (the configured gen_host stays), other dies keep it"""
+    attempt dir there; gen_hosts drops that host (the configured gen_host too while another stays), other dies keep it"""
     cfg = {"work_root": "/srv/opentallas-scratch2/claude/kit-wave",
            "dies": {"s81_head": {"gen_host": "intel2", "gen_hosts": ["epyc4", "intel2"],
                                  "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave"},
@@ -168,7 +168,9 @@ def test_spill_marked_host_is_no_gen_host():
     assert K.gen_hosts(cfg, "s81_head") == ["intel2"]
     assert K.gen_hosts(cfg, "hbm") == ["intel2", "epyc4"]
     cfg["_spill_marked"] = {"intel2": {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"}}
-    assert K.gen_hosts(cfg, "s81_head") == ["epyc4", "intel2"]          # the configured gen_host never drops
+    assert K.gen_hosts(cfg, "s81_head") == ["epyc4"]                    # KW-FIX-8: the configured gen_host leaves while another stays
+    cfg["_spill_marked"] = {h: {"/srv/opentallas-scratch2/claude/codex-head-wave-1131"} for h in ("epyc4", "intel2")}
+    assert K.gen_hosts(cfg, "s81_head") == ["intel2"]                   # none left: configured host, work_root_problem() says why
 
 
 def test_spill_marked_probe():
