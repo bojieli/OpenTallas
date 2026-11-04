@@ -4,11 +4,7 @@ s81	dsdv_gunit_l1c	re-sign/count	NEEDS_PARENT counts
 s81	dsdv_gunit_l0r	re-sign/count	NEEDS_PARENT counts
 s81	ot_s81_cfg7_seq_bfp	re-sign/count	NEEDS_PARENT counts
 s81	dsdv_eng_rr_h0	re-sign/count	ccA_g2typed SIGNED, routed LEC
-s81	ot_s81sl_xrt1	conservative build	RF-J (GRT-0232 x2)
-s81	ot_s81sl_xrt3	conservative build	RF-J (GRT-0232 x2)
 s81	ot_s81sl_eg	near (1 fix)	egn hold ECO FF -2.9
-s81	dsfd_bf_front_roots	near (1 fix)	rf1s TT -23 FF -16.6, eco_loop
-s81	ot_s81sl_vs	near (1 fix)	rf1s TT -69.8 FF -0.9, eco_loop
 s81	dsdv_bk_g	conservative build	form 8 per-slice hv
 s81	ot_s81sl_capc5r	conservative build	rfdc
 s81	dsdv_gunit_l4	conservative build	rfd-gl4
@@ -16,7 +12,6 @@ s81	dsdv_gunit_l5	conservative build	RF-D
 s81	ot_v41_bf_col	conservative build	split <=150k
 s81	dsdv_bksel_q	conservative build	RF-H + cts-dt-1
 s81	ot_s81dv_xfin	conservative build	99.5k cells fill .43
-s81	ot_v41_rom_elem_q_qxpq_w10_gb	conservative build	RF1 at GP
 s81	dsdv_eng_rr_e	conservative build	RF-G
 s81	dsdv_idx_tx_n32	conservative build	rf1t + cts-dt-1
 s81	dsdv_bksel_c	LEC	LEC-EGN-1 class
@@ -47,7 +42,7 @@ hbm	ot_hgi_sm_xload_cl2_ctlx	clock window -> resume	insertion advisory fix
 hbm	ot_hgi_coll_inj_idx_join_rg	clock window -> resume	insertion advisory fix
 hbm	ot_hbm_xp_aq_tree13_fmt	clock window -> resume	insertion advisory fix
 hbm	ot_hbm_su_static_pgslice_lg__lanes	conservative build	hold -184/-286, clock split
-hbm	ot_hbm_svc_vmdel_lane_n	conservative build	hold -114
+hbm	ot_hbm_svc_vmdel_lane_n	near (1 fix)	late ECO TT -0.46 FF +0.06 drv 8
 hbm	ot_hbm_hc_subtree32_core	conservative build	63 unreg pins
 hbm	ot_hbm_hc_root_static__tailx_rest	conservative build	pipeline cycles ~21:06
 hbm	ot_hfd_coll_q3_	conservative build	memory shape
@@ -58,7 +53,7 @@ hbm	ot_hgi_sfu_programme_store_r10	conservative build	memory shape
 hbm	ot_hbm_su_static_pgslice_lg__lanes8_11	conservative build	memory shape
 hbm	hnx_rp3lp3h_	conservative build	memory shape
 hbm	hnx_fused_lane	conservative build	shape
-hbm	ot_hbm_su_static_sfustore_hw	conservative build	shape
+hbm	ot_hbm_su_static_sfustore_hw	no form yet (ordered 22:5x)	old form resumed, FF -33.83
 hbm	hfd_hgi_vms_glue_nw_t	conservative build	relays
 hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	LEC	no owner yet
 hbm	ot_hbm_argmax_static_sw_vm_r2	LEC	no owner yet
@@ -67,3 +62,13 @@ hbm	hnx_vms_bank_q0_faces	not tried (census fix merged)	pin-table views
 hbm	ot_hbm_hc_bank128_pair_core	not tried (census fix merged)	pin-table views
 hbm	ot_hgi_coll_gq_	not tried (census fix merged)	pin-table views
 s81	ot_s81sl_rom_q	conservative build	RF-J (FF -239 structural)
+hbm	ot_hbm_sm_vm_wr_q_t_lanes4	no form yet (ordered 22:5x)	TT -122
+hbm	ot_hbm_svc_sm_xcal_rel_t	no form yet (ordered 22:5x)	congestion
+hbm	ot_hnx_fused_host_program	no form yet (ordered 22:5x)	congestion
+hbm	ot_hgi_coll_gq_land	no form yet (ordered 22:5x)	congestion, slew 899
+hbm	ot_hbm_svc_wb_kport_q	no form yet (ordered 22:5x)	474k cells
+hbm	ot_hgi_sm_xload_cl2_bdring	no form yet (ordered 22:5x)	drv 1222
+s81	ot_v41_rom_elem_q	form in bench, not launched	FF -239
+s81	ot_s81sl_xrt	form in bench, not launched	GRT-0232
+s81	dsfd_bf_front_roots	no form yet (ordered 22:5x)	TT -23
+s81	ot_s81sl_vs	form being written	TT -69.76
