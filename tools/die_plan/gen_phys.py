@@ -2136,12 +2136,23 @@ def content_physical_identity(c):
     return (inst, master) if inst is not None else (c["inst"], c["module"])
 
 
+_VIEW_LEF = {}
+
+
 def type_macros(P, tn):
     """content macros of a type the kit must place (COORD 10-23): hard_cores[] and contents[] that carry a hardened
     view (lef).  [(inst, module, lef, lib, x, y, orient)], type frame, origin + track offset.  A macro view without a
     placement is an error: G3 of a kit whose SRAM / ROM / cores float is meaningless."""
     t = P.types[tn]
     out = []
+
+    def own_lef(c):
+        # KW6-CODE 11-04: a lib with a view_lef receipt carries its signed view's LEF; the plan entry stays (no block key change)
+        k = (c["lef"], c.get("lib"))
+        if k not in _VIEW_LEF:
+            import view_lef as VL
+            _VIEW_LEF[k] = VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve)
+        return _VIEW_LEF[k]
     for c in t.get("hard_cores", []):
         if not c.get("lef"):
             continue
@@ -2149,20 +2160,20 @@ def type_macros(P, tn):
         # DIE-KV-49 10-31: optional kit-only physical identity (content_physical_identity form); default unchanged
         pinst, pmaster = content_physical_identity(c) if ("physical_inst" in c or "physical_master" in c) else \
             (c["inst"], c.get("module", c["inst"]))
-        out.append((pinst, pmaster, c["lef"], c.get("lib"), c["origin_um"][0] + ox,
+        out.append((pinst, pmaster, own_lef(c), c.get("lib"), c["origin_um"][0] + ox,
                     c["origin_um"][1] + oy, c.get("orient", "R0")))
     cores = {c["inst"] for c in t.get("hard_cores", [])}
     for c in t.get("contents", []):
         # S81-SERDES-PHY-1 10-31 (opt-in): one logical content placed as several hard leaves of the bound netlist
         for q in c.get("physical_parts", []) or []:
-            out.append((q["physical_inst"], q["physical_master"], q["lef"], q.get("lib"), q["origin_um"][0],
+            out.append((q["physical_inst"], q["physical_master"], own_lef(q), q.get("lib"), q["origin_um"][0],
                         q["origin_um"][1], q.get("orient", "R0")))
         if not c.get("lef") or c["inst"] in cores:
             continue
         if "origin_um" not in c:
             raise ValueError(f"type {tn}: macro content {c['inst']} ({c['module']}) has a lef but no origin_um")
         physical_inst, physical_master = content_physical_identity(c)
-        out.append((physical_inst, physical_master, c["lef"], c.get("lib"), c["origin_um"][0], c["origin_um"][1],
+        out.append((physical_inst, physical_master, own_lef(c), c.get("lib"), c["origin_um"][0], c["origin_um"][1],
                     c.get("orient", "R0")))
     return out
 
@@ -3311,6 +3322,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             # otherwise: native59 MPL-0020, PATH-QC-A0N59 10-25); escape the bare ones
             inst_db = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
             mplace.append(f"place_macro -macro_name {{{inst_db}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
+        # KW6-CODE 11-04: advisory LEF/lib compare; a view with no LEF of its own gets its staged copy pruned to the lib's
+        # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
+        import view_lef as _VL
+        _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports)
     srcs = []
     for f in rtl_files:
         dst = kd / "rtl" / Path(f).name
