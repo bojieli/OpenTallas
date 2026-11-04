@@ -604,7 +604,10 @@ endmodule
 // One chunk of the data-ring read: its own one-hot copy of the slot index (placed and advanced with rp), then a
 // one-hot AND-OR of the DEPTH slots.  Kept hierarchy keeps the replicated index registers from being merged.
 (* keep_hierarchy *)
-module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter bit REG = 0, parameter bit SPLIT = 0) (
+module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter bit REG = 0, parameter bit SPLIT = 0,
+                      // DSREP-1 (DIE-HEAD-58 TURNB): SREP kept copies of the one-hot select di, copy s drives bits
+                      // [s*W/SREP, (s+1)*W/SREP); same align/on/place, so every copy equals di.  1 = identical logic.
+                      parameter int SREP = 1) (
     input  logic                    clk,
     input  logic                    align,
     input  logic                    on,
@@ -618,9 +621,25 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
         else if (on) di <= {di[DEPTH-2:0], di[DEPTH-1]};
     end
     logic [W-1:0] y_c;
-    always_comb begin
-        y_c = '0;
-        for (int i = 0; i < DEPTH; i++) y_c = y_c | (sd[i*W +: W] & {W{di[i]}});
+    if (SREP > 1) begin : g_srep
+        localparam int SW = W / SREP;
+        if (SW * SREP != W) begin : g_bad $error("ot_meso_dsel: W %% SREP != 0"); end
+        wire [DEPTH-1:0] dr [SREP];
+        for (genvar r = 0; r < SREP; r++) begin : sr
+            (* keep = "true" *) ot_meso_dsel_sel #(.DEPTH(DEPTH)) u_sel (.clk(clk), .align(align), .on(on), .place(place),
+                                                                   .di(dr[r]));
+        end
+        always_comb begin
+            y_c = '0;
+            for (int i = 0; i < DEPTH; i++)
+                for (int b = 0; b < W; b++)
+                    y_c[b] = y_c[b] | (sd[i*W + b] & dr[b / SW][i]);
+        end
+    end else begin : g_s1
+        always_comb begin
+            y_c = '0;
+            for (int i = 0; i < DEPTH; i++) y_c = y_c | (sd[i*W +: W] & {W{di[i]}});
+        end
     end
     if (REG && SPLIT) begin : g_split
         // SPLIT: the crossing arc is slot -> one AO22 level -> a half-select flop (mcast_r6 Q1: m -> AO22 -> AO221 ->
@@ -663,5 +682,20 @@ module ot_meso_wch #(parameter int W = 64, parameter int DEPTH = 4) (
     for (genvar i = 0; i < DEPTH; i++) begin : sl
         always_ff @(posedge clk) if (we[i]) m[i] <= d;
         assign sd[i*W +: W] = m[i];
+    end
+endmodule
+
+// DSREP-1 select copy of ot_meso_dsel (same state machine as its di register); kept so the copies are not merged.
+(* keep_hierarchy, keep *)
+module ot_meso_dsel_sel #(parameter int DEPTH = 4) (
+    input  logic                     clk,
+    input  logic                     align,
+    input  logic                     on,
+    input  logic [$clog2(DEPTH)-1:0] place,
+    (* keep *) output logic [DEPTH-1:0] di
+);
+    always_ff @(posedge clk) begin
+        if (align) di <= DEPTH'(1) << place;
+        else if (on) di <= {di[DEPTH-2:0], di[DEPTH-1]};
     end
 endmodule

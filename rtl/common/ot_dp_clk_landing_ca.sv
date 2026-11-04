@@ -138,7 +138,21 @@ module ot_dp_clk_landing_cas #(
     // strap form: K is any value of strap_k, so the timeout covers the largest, 2^KW - 1 (D4 91, D8 171 cycles)
     parameter integer TIMEOUT  = (1 << ($clog2(DEPTH) + 4)) - 1 + ARM + 2 * DEPTH + 8,
     parameter bit CONTROL_STATUS_COPY = 0, // appended to preserve positional parameters
-    parameter bit WFALL = 0 // as ot_dp_clk_landing_ca
+    parameter bit WFALL = 0, // as ot_dp_clk_landing_ca
+    // WREG-1 (DIE-HEAD-58 TURNB, 11-03): 1 = the writer START t_rst_n is registered at the receiver face (one wclk edge,
+    // == landing_writer_start W=1: K_new = K_old + 1 at bind, count_align_bind.strap_ties) and every (slot, 64-bit chunk)
+    // write enable is its own register (fanout <= 64 per enable flop) instead of t_rst_n & slot-decode broadcast to W x
+    // DEPTH data flops.  Default 0 = identical logic.
+    parameter bit WREG = 0,
+    // DSREP-1: copies of each read-select one-hot register per 64-bit chunk (ot_meso_dsel SREP); 1 = identical logic
+    parameter integer DSREP = 1,
+    // FREG-1 (DIE-HEAD-58 ruling 11-03, hd_turn_a t_i): 1 = the bundle d AND the writer start t_rst_n are registered on
+    // the RISING fclk at the receiver face (full-period capture of the source-synchronous input), and the (WFALL) writer
+    // reads the registered copies over a local T/2 path.  Data and start move one fclk cycle together and the strap ties
+    // K + 1 (count_align_bind.strap_ties) to keep the ring window: q is the same word stream ONE clk cycle later (one
+    // added data cycle, results/dh58_turnb_1103/wreg_equiv TB_FREG).
+    // Default 0 = identical logic.
+    parameter bit FREG = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -164,6 +178,20 @@ module ot_dp_clk_landing_cas #(
     // WFALL = 1: the whole writer (slots, count, tags) runs on the opposite fclk edge, so a word launched on the sender's
     // rising edge is held T/2 by structure (FLOW-16 05:48).  Default 0 = no inverter, identical logic.
     wire wclk = WFALL ? ~fclk : fclk;
+    wire [W-1:0] d_w;
+    wire t_rst_w;
+    generate if (FREG) begin : g_freg
+        wire t_rst_f;
+        ot_meso_face_ff #(.W(W + 1)) u_face (.clk(fclk), .d({t_rst_n, d}), .q({t_rst_f, d_w}));
+`ifdef OT_MESO_CA_MUTANT_FREG
+        assign t_rst_w = t_rst_n;   // MUTANT: data registered at the face, writer start not (one-cycle misalignment)
+`else
+        assign t_rst_w = t_rst_f;
+`endif
+    end else begin : g_nofreg
+        assign d_w = d;
+        assign t_rst_w = t_rst_n;
+    end endgenerate
     reg seen;                       // first valid word consumed
     reg [CW-1:0] arm_cnt;
     wire armed = seen && (arm_cnt == CW'(ARM));
@@ -189,8 +217,8 @@ module ot_dp_clk_landing_cas #(
         end
     end
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY)) u_ring (
-        .tclk(wclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .DSREP(DSREP)) u_ring (
+        .tclk(wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
@@ -218,7 +246,9 @@ module ot_meso_ring_ca #(
     parameter int GUARD_HI = 4,
     parameter int LAPX     = 3,     // extra lap-tag bits per slot: a consumed word from the wrong lap is caught for
                                     // origin errors up to 2^(AW+1+LAPX) counts (the 1-bit lap aliases every 2*DEPTH)
-    parameter bit CONTROL_STATUS_COPY = 0
+    parameter bit CONTROL_STATUS_COPY = 0,
+    parameter bit WREG = 0,         // WREG-1: registered writer start + registered per-(slot, chunk) write enables
+    parameter int DSREP = 1         // DSREP-1: read-select register copies per chunk (ot_meso_dsel SREP)
 ) (
     input  logic         tclk,
     input  logic         t_rst_n,
@@ -254,20 +284,51 @@ module ot_meso_ring_ca #(
     // The CA crossing is the declared flop ring, including widths above the RAM guard.
     (* mem2reg *) logic [W-1:0]  s_d   [DEPTH];
     logic [DEPTH-1:0] s_w, s_lap;
+    // WREG-1: t_go = the writer start every slot/count/tag flop uses.  WREG 0: t_go = t_rst_n (identical logic).
+    // WREG 1: t_go = t_rst_n one wclk edge late (fs_q), and wen[i, c] = t_go && tc[slot] == i is precomputed one edge
+    // early from the port (fs_q ? tc + 1 : 0 is tc at the next edge), one kept flop per (slot, 64-bit chunk).
+    // Exactly the WREG 0 ring fed by t_rst_n through one flop (proof: results/dh58_turnb_1103/wreg_equiv).
+    localparam int WNC = (W % 64 == 0) ? W / 64 : 1;
+    localparam int WWC = W / WNC;
+    wire t_go;
+    wire [DEPTH*WNC-1:0] wen;
+    if (WREG) begin : g_wreg
+        logic fs_q;
+        always_ff @(posedge tclk) fs_q <= t_rst_n;
+        wire [AW-1:0] slot_nx = fs_q ? tc[AW-1:0] + 1'b1 : '0;
+        for (genvar i = 0; i < DEPTH; i++) begin : sl
+            for (genvar c = 0; c < WNC; c++) begin : ch
+                (* keep = "true" *) ot_meso_wen_ff u_wen (.clk(tclk), .d(t_rst_n && (slot_nx == AW'(i))),
+                                                         .q(wen[i * WNC + c]));
+            end
+        end
+        assign t_go = fs_q;
+    end else begin : g_wreg_off
+        assign t_go = t_rst_n;
+        assign wen = '0;
+    end
     always_ff @(posedge tclk) begin
 `ifdef OT_MESO_CA_MUTANT_FREERUN
         tc <= tc + 1'b1;                                // MUTANT: old free-running writer (no count origin)
         if (!CONTROL_STATUS_COPY) begin
-            if (!t_rst_n) s_w <= '0; else s_w[tc[AW-1:0]] <= 1'b1;
+            if (!t_go) s_w <= '0; else s_w[tc[AW-1:0]] <= 1'b1;
         end
 `else
-        if (!t_rst_n) begin tc <= '0; if (!CONTROL_STATUS_COPY) s_w <= '0; end
+        if (!t_go) begin tc <= '0; if (!CONTROL_STATUS_COPY) s_w <= '0; end
         else begin tc <= tc + 1'b1; if (!CONTROL_STATUS_COPY) s_w[tc[AW-1:0]] <= 1'b1; end
 `endif
-        if (t_rst_n) begin
+        if (t_go) begin
             if (!CONTROL_STATUS_COPY) s_lap[tc[AW-1:0]] <= tc[AW];
-            s_d[tc[AW-1:0]] <= t_d;
+            if (!WREG) s_d[tc[AW-1:0]] <= t_d;
         end
+        if (WREG)
+            for (int i = 0; i < DEPTH; i++)
+                for (int c = 0; c < WNC; c++)
+`ifdef OT_MESO_CA_MUTANT_WREG
+                    if (wen[i * WNC + c] && !(i == 0 && c == 0)) s_d[i][c * WWC +: WWC] <= t_d[c * WWC +: WWC]; // MUTANT
+`else
+                    if (wen[i * WNC + c]) s_d[i][c * WWC +: WWC] <= t_d[c * WWC +: WWC];
+`endif
     end
 
     // Private valid/lap status drivers separate their control decode from the
@@ -279,11 +340,11 @@ module ot_meso_ring_ca #(
         // alias through a frontend connection is insufficient for the canonical
         // hook's one-cell driver selection; it allowed the lap banks to merge.
         ot_meso_ca_status_copy #(.DEPTH(DEPTH)) u_guard_status (
-            .tclk(tclk), .t_rst_n(t_rst_n), .slot(tc[AW-1:0]),
+            .tclk(tclk), .t_rst_n(t_go), .slot(tc[AW-1:0]),
             .lap(tc[AW]), .written(s_w), .lap_q(s_lap)
         );
         ot_meso_ca_status_copy #(.DEPTH(DEPTH)) u_status (
-            .tclk(tclk), .t_rst_n(t_rst_n), .slot(tc[AW-1:0]),
+            .tclk(tclk), .t_rst_n(t_go), .slot(tc[AW-1:0]),
             .lap(tc[AW]), .written(ctl_w), .lap_q(ctl_lap)
         );
     end else begin : g_control_status_original
@@ -312,7 +373,7 @@ module ot_meso_ring_ca #(
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
         end
-        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0)) u_dsel (.clk(rclk), .align(!r_rst_n), .on(r_rst_n),
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP)) u_dsel (.clk(rclk), .align(!r_rst_n), .on(r_rst_n),
             .place(RP0[AW-1:0]), .sd(sd_c), .y(rd_q[c*WCH +: WCH]));
     end
     logic r_v_c, r_lap_c, r_lap1_c;
@@ -321,7 +382,7 @@ module ot_meso_ring_ca #(
     if (LAPX > 0) begin : g_tag
         // extended lap tag of every slot (written with the word); the consumed slot's tag must equal rp's upper bits
         (* mem2reg *) logic [LAPX-1:0] s_tag [DEPTH];
-        always_ff @(posedge tclk) if (t_rst_n) s_tag[tc[AW-1:0]] <= tc[TW-1:PW];
+        always_ff @(posedge tclk) if (t_go) s_tag[tc[AW-1:0]] <= tc[TW-1:PW];
         logic [LAPX-1:0] tag_c; logic w_c;
         always_comb begin
             tag_c = '0; w_c = 1'b0;
@@ -567,6 +628,27 @@ module ot_dp_landing_relay (
         if (!rst_raw_n) q <= 1'b0;
         else q <= d;
     end
+endmodule
+
+// FREG-1 receiver face register of ot_dp_clk_landing_cas (rising fclk): kept so synthesis does not retime or merge it
+// into the ring and the face-flop placement keeps it at the input pins.
+(* keep_hierarchy, keep *)
+module ot_meso_face_ff #(parameter integer W = 1) (
+    input wire clk,
+    input wire [W-1:0] d,
+    (* keep *) output reg [W-1:0] q
+);
+    always @(posedge clk) q <= d;
+endmodule
+
+// WREG-1 write-enable register of one (slot, 64-bit chunk) of ot_meso_ring_ca: kept so the per-chunk copies (same D)
+// are not merged back into one W x DEPTH broadcast.
+(* keep_hierarchy, keep *)
+module ot_meso_wen_ff (
+    input wire clk, d,
+    (* keep *) output reg q
+);
+    always @(posedge clk) q <= d;
 endmodule
 
 // Dedicated same-state slot status bank. The canonical keep-register hook
