@@ -5,10 +5,19 @@ man,mode=sys.argv[1:3]
 ROOT='/srv/opentallas-scratch2'; SIG=re.compile(r'"(verdict|status|result)"\s*:\s*"(SIGNED|LOCAL_PASS[A-Z_]*)"')
 # PRUNE-1103L: only a one-line KW-FIX spill-target marker is not protection (COORD 22:56 and 03:2x); empty or other text protects.
 SPILL=re.compile(r'^KW-FIX-\d+\b[^\n]*spill target[^\n]*$')
-def keep_protects(f):
+# COORD ruling 11-04: attempts only. a = codex-kv-wave-1131/.keep (idle>6h, uncited); b = empty kit-wave/.keep, kit-wave/hbm/.keep (idle>24h, no plan-cache citation). Env P1103L_RULE.
+RULE=os.environ.get('P1103L_RULE','').split(',')
+CITED=set(l.strip() for l in open('/tmp/p1103l_cited.txt')) if os.path.exists('/tmp/p1103l_cited.txt') else set()
+need24=[False]
+def keep_protects(f,cl='dir'):
     try: t=open(f,errors='replace').read().strip()
     except OSError: return True
-    return not SPILL.match(t)
+    if SPILL.match(t): return False
+    if cl=='attempt':
+        if 'a' in RULE and f==ROOT+'/claude/codex-kv-wave-1131/.keep': return False
+        if 'b' in RULE and t=='' and f in(ROOT+'/claude/kit-wave/.keep',ROOT+'/claude/kit-wave/hbm/.keep'):
+            need24[0]=True; return False
+    return True
 PROT=[]
 for pf in ('/tmp/p1103l_prot.txt',):
     for ln in open(pf,errors='replace'):
@@ -72,9 +81,11 @@ for r in rows:
     if cl not in('attempt','dir'): skip(p,'class'); continue
     if cl=='dir' and subprocess.run(['find',p,'-name','.git','-print','-quit'],capture_output=True,text=True).stdout.strip(): skip(p,'git'); continue
     if any(q==p or q.startswith(p+'/') for q in S) or (cl=='dir' and any(p.startswith(q+'/') and q.count('/')>4 for q in S)): skip(p,'open'); continue
+    need24[0]=False
+    if p in CITED: skip(p,'cited-text'); continue
     a=os.path.dirname(p); kp=False
     while a.startswith(ROOT+'/claude'):
-        if os.path.exists(a+'/.keep') and keep_protects(a+'/.keep'): kp=True
+        if os.path.exists(a+'/.keep') and keep_protects(a+'/.keep',cl): kp=True
         a=os.path.dirname(a)
     if kp: skip(p,'keep-ancestor'); continue
     if cl=='attempt':
@@ -85,7 +96,7 @@ for r in rows:
     nw,sz,sig,keep=scan(p)
     if sig: skip(p,'signed'); continue
     if keep: skip(p,'keep'); continue
-    lim=6*3600 if cl=='attempt' else 24*3600
+    lim=6*3600 if cl=='attempt' and not need24[0] else 24*3600
     if now-nw<lim: skip(p,'recent'); continue
     if mode=='del':
         shutil.rmtree(p,ignore_errors=True)

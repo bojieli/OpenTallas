@@ -368,3 +368,13 @@ epyc4	/srv/opentallas-scratch2/claude/dkv64-rfb/eco2_pcf_hhps	qwen_kvsys/qkd_kvs
 intel1	/srv/opentallas-scratch2/claude/dkv65/hr/kits/qkd_hr_cdc_ci__129.6x129.6/eco_20261104_003351_384812	qwen_kvsys/qkd_hr_cdc_ci routed ECO DB + kit (DIE-KV-66/HR 11-04)
 intel1	/srv/opentallas-scratch2/claude/dkv66/hr/resign/cci_x	qkd_hr_cdc_ci re-sign record (DIE-KV-66/HR 11-04)
 intel1	/srv/opentallas-scratch2/claude/dkv66/hr/tools_x_kv	tag tools of DIE-KV-66/HR re-signs (11-04)
+any	/srv/opentallas-scratch2/claude/ss25/resign/egn_r64_x	SS26-TOK egn r64 re-sign
+any	/srv/opentallas-scratch2/claude/die-s81-51/rfb-eg/gen/kits_t/ot_s81sl_egn_rf1_r64/eco_m0/i1	SS26-TOK egn r64 kit
+any	/srv/opentallas-scratch2/claude/ss25/resign/egg_r64_x	SS26-TOK egg r64 re-sign
+any	/srv/opentallas-scratch2/claude/die-s81-51/rfb-eg/gen/eco_egg_r64_s52c/i1	SS26-TOK egg r64 kit
+any	/srv/opentallas-scratch2/claude/ss26/views	SS26-TOK child views cap_rt egn
+any	/srv/opentallas-scratch2/claude/ss25/resign/keybuf_a	SS26-TOK keybuf_slice re-sign tag a
+any	/srv/opentallas-scratch2/claude/ss25/resign/sfustore_a	SS26-TOK sfustore_hw re-sign tag a
+any	/srv/opentallas-scratch2/claude/die-hbm-62/eco/keybuf3/run/i3	SS26-TOK keybuf_slice kit epyc2
+any	/srv/opentallas-scratch2/claude/die-hbm-62/eco/sfustore3/run/i2	SS26-TOK sfustore_hw kit epyc2
+any	/srv/opentallas-scratch2/claude/ss25/resign/tools_x_a_hbm	SS26-TOK tag a tools
