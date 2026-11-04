@@ -2413,9 +2413,16 @@ def renamed(L, log, words=4, packed=frozenset()):
             bases[mm.group(1)].append(k)
     hit = []
     for b, ks in bases.items():
+        bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
+        # one surviving gate bit of a narrowed vector (hcp nout_r = 24: gate nout_r[1] is the RTL's bit 4): no second bit
+        # to compare, so a lone disagreeing name with RTL bits the gate lacks is not trusted, packed or not.  Re-keying
+        # only proposes: every compare point is still proved, and the by-name pair stays a candidate at the fixpoint.
+        if len(bad) == 1 == len(ks) and any(IDX.match(g) and IDX.match(g).group(1) == b for g in L.gonly):
+            hit.append(b)
+            log.append(f"renamed: {b} (its only gate bit {bad[0]} disagrees and the gate lacks the other RTL bits)")
+            continue
         if b in packed:
             continue                           # declared packed bit indices are shared by both frontends
-        bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
         if len(bad) < 2:
             continue
         tsig = {}
@@ -5093,6 +5100,21 @@ def alias_arrays(L, log, words=4, work=None):
                           f"gate {len(t) - len(best[1])} left to correspondence" if common else ""))
 
 
+def merged_reproposals(L, log, tried):
+    """A merged twin whose proposal fell with a wrong constant (HBM kshare u_cmd.rd_bin[2], DIE-HBM-62: simulation never
+    fills the FIFO, so rd_gray[2] looks constant; that constant falls in round 0 and takes rd_bin[2] == rd_gray[2] with
+    it, and rd_bin[2] then stayed free -> rd_gray[1], rd_gray[2] differ).  Propose the pair again at the fixpoint, at
+    most twice per pair; the induction proves it like every other hypothesis.  -> any proposed."""
+    n = 0
+    for k, c in getattr(L, "merged_choice", {}).items():
+        if ("gold", k) not in L.hyp and tried[("gold", k, c, 0)] < 2:
+            L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+            n += 1
+    if n:
+        log.append(f"merged twins re-proposed at the fixpoint: {n}")
+    return n > 0
+
+
 def merged_proposals(L, log, cap=4096):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
@@ -5204,6 +5226,7 @@ def merged_proposals(L, log, cap=4096):
                 if not pending[k]:
                     del pending[k]                   # none agrees: keep the first (refinement drops it)
     n_dis = sum(1 for k, c in choice.items() if len(cands[k]) > 1 and c != cands[k][0])
+    L.merged_choice = {**getattr(L, "merged_choice", {}), **choice}
     for k, c in choice.items():
         L.hyp[("gold", k)] = ("eq", "gold", c, 0)
         n += 1
@@ -5697,6 +5720,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 continue
             if renamed_identity_closure(L, log, traces, tried) and surviving_change():
                 continue
+            if merged_reproposals(L, log, tried) and surviving_change():
+                continue
             if L.hyp == before or not adding:
                 return
             continue
@@ -5865,7 +5890,13 @@ def loaded_proposals(L, log, cands=None, cap=20000):
             continue
         val = 1 - rv                      # the guard value that is definitely false in the reset state
         nxt = _live_term(d, gc[g] ^ (val ^ 1))    # literal true iff g' == val
-        for leaf in _and_leaves(d, nxt, nodes=True):
+        leaves = _and_leaves(d, nxt, nodes=True)
+        # a leaf can itself be an async-reset mux (ldq_v <= ldp_v, read through rst_n ? ldp_v : 0): g' implies its term
+        for leaf in list(leaves):
+            live = _live_term(d, leaf)
+            if live != leaf:
+                leaves += _and_leaves(d, live, nodes=True)
+        for leaf in leaves:
             imp[leaf].append((g, val))    # g' == val -> leaf
             v = leaf >> 1
             if (leaf & 1) and v >= base:  # leaf = OR(NOT y_i): sticky form OR(g == val, en)
@@ -7021,6 +7052,25 @@ PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_CO
                  "OT_LEC_ENABLE_FILL_GUARD")
 
 
+def nowiden_retry(r, out, run):
+    """A failed run whose gold memories were widened (one word packs several RTL elements: pgslice lane_exp0_id r[1:DMAX],
+    gold r[1][b] pairs by name with another gate element) runs once more with one gold word per element.  Each run is
+    a complete proof of its own; the second verdict replaces the first only when it is EQUIVALENT."""
+    log = out / "gold.ys.log"
+    if r.get("verdict") != "NOT EQUIVALENT" or os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1" \
+            or not log.is_file() or "Merging ports" not in log.read_text(errors="replace"):
+        return r
+    os.environ["OT_LEC_GOLD_NOWIDEN"] = "1"
+    try:
+        r2 = run()
+    finally:
+        del os.environ["OT_LEC_GOLD_NOWIDEN"]
+    keep, other = (r2, r) if r2.get("verdict") == "EQUIVALENT" else (r, r2)
+    keep["nowiden_retry"] = dict(verdict=other.get("verdict"), counts=other.get("counts"), widened=keep is r)
+    (out / "lec.json").write_text(json.dumps(keep, indent=1) + "\n")
+    return keep
+
+
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
@@ -7062,7 +7112,8 @@ def main(argv=None):
                   f"({r.get('t_total_s')} s)")
         return rc
     pm = json.loads(Path(a.port_map).read_text()) if a.port_map else None
-    r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
+    run = lambda: check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
+    r = nowiden_retry(run(), Path(a.out or Path(a.kit) / "lec"), run)
     c = r.get("counts", {})
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "

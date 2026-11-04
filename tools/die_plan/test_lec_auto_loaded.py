@@ -161,6 +161,22 @@ def test_valid_with_clear_term_guards_the_load():
     assert lec.loaded_proposals(_L(d, v, k, dv, dk), []) == [["gold", "ff:k", ["loaded", 0, [[["ff:v", 1]]]]]]
 
 
+def test_delayed_guard_read_through_async_reset_mux_is_proposed():
+    """g_ld3k q2 form: e = rn ? lp : 0; lq <= rn ? e : 0; k <= e ? p : k.  The load enable is the live term of e, one
+    level below the leaf of D(lq).  Inputs rn=1; latches lq=2 k=3 lp=4 p=5."""
+    I, Lc, ands = 1, 4, []
+    rn, lq, k, lp, p = 2, 4, 6, 8, 10
+
+    def AND(x, y):
+        ands.extend((x, y))
+        return 2 * (I + Lc + len(ands) // 2)
+    e = AND(AND(lp, rn) ^ 1, AND(rn ^ 1, 0) ^ 1) ^ 1
+    dq = AND(AND(e, rn) ^ 1, AND(rn ^ 1, 0) ^ 1) ^ 1
+    dk = AND(AND(e, p) ^ 1, AND(e ^ 1, k) ^ 1) ^ 1
+    d = dict(I=I, L=Lc, O=0, A=len(ands) // 2, latches=[dq, dk, lp, p], outputs=[], ands=ands)
+    assert lec.loaded_proposals(_L(d, lq, k, dq, dk), []) == [["gold", "ff:k", ["loaded", 0, [[["ff:v", 1]]]]]]
+
+
 def test_live_term_keeps_two_live_or_terms():
     d, _, _, dv, _ = _async_reset_aig(reset_val=1)     # rn ? ld : 1 has two live terms: no single load condition
     assert lec._live_term(d, dv) == dv
