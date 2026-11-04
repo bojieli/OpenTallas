@@ -3493,7 +3493,8 @@
     "ot_hgi_sfu_core_split3__opstore_b@3",
     "ot_hbm_su_static_pgslice_lg__lane_exp0_id@3",
     "ot_hgi_coll_tkm_m_tp192__root@2",
-    "ot_hgi_coll_tkm_m_tp192__root@3"
+    "ot_hgi_coll_tkm_m_tp192__root@3",
+    "ot_hgi_dma_back_static_vp4_banks_cp@3"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-61",
@@ -3569,7 +3570,8 @@
     "ot_hgi_sfu_core_split3__opstore_b@3": "LEC classes a04433da484 (I20)",
     "ot_hbm_su_static_pgslice_lg__lane_exp0_id@3": "LEC classes a04433da484 (I20), OT_LEC_GOLD_NOWIDEN auto retry",
     "ot_hgi_coll_tkm_m_tp192__root@2": "tkm_root cut map 403c855c44e (I20): leaves hold, regenerates",
-    "ot_hgi_coll_tkm_m_tp192__root@3": "d44v10 core_macros has root rects (DIE-HBM-63 06:04, COORD 06:00 (7))"
+    "ot_hgi_coll_tkm_m_tp192__root@3": "d44v10 core_macros has root rects (DIE-HBM-63 06:04, COORD 06:00 (7))",
+    "ot_hgi_dma_back_static_vp4_banks_cp@3": "KW-FIX-7 11-04: main lec.py on @3 kit copy EQUIVALENT (epyc4 scratch3 kw-fix-6/lec, rc 0); src has the lec fix"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
