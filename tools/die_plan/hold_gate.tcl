@@ -96,6 +96,9 @@ puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin, tap window
 # contract (in_min, tap window W_t: the SDC shifts every such endpoint by the same amount), so it is never stricter
 # than main's limit: stop = OT_HOLD_STOP_PS + min(0, in_min + 40, -W_t).  OT_HOLD_PREROUTE_STOP=1 restores the old stop.
 set OT_HOLD_STOP_PS -150.0
+# DIE-HEAD-59 11-03 opt-in per kit (item_env): a kit whose only failures past the stop are a few measured port endpoints
+# that padding can fix (HEAD hd_ctl_n arst_n/start_i -214 ps, 2 of 1130) goes on to repair; sign-off still decides.
+if {[info exists ::env(OT_HOLD_STOP_PS)] && $::env(OT_HOLD_STOP_PS) ne ""} { set OT_HOLD_STOP_PS $::env(OT_HOLD_STOP_PS) }
 set hg_stop_lim [expr {$OT_HOLD_STOP_PS + min(0.0, $hg_cin + 40.0, -1.0 * $hg_win)}]
 set hg_stop [expr {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"}]
 set hg_screen [expr {$w < $hg_lim || ($hg_legacy && $n > 2000)}]

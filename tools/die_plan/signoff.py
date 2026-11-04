@@ -699,7 +699,18 @@ proc ot_lib_load {corner receipt {config /work/config.mk}} {
     lappend rows "{\"path\":[ot_lib_json_string $f],\"sha256\":[ot_lib_json_string $digest]}"
   }
   set digest [lindex [exec sha256sum -- $config] 0]
-  foreach f $files {read_liberty $f}
+  # KW-FIX-5 11-04: K/.busfit/<lib> = this lib plus the LEF pins the module does not have (no arcs); all_registers segfaults
+  # without them.  The receipt above and every view hash stay on the kit lib.
+  foreach f $files {
+    set g [file join [file dirname [file dirname $f]] .busfit [file tail $f]]
+    set use $f
+    if {[file exists $g]} {
+      # only a fit made from exactly this kit lib; a stale one would read old timing arcs under this lib's receipt
+      set c [open $g]; gets $c h; close $c
+      if {[string first [lindex [exec sha256sum -- $f] 0] $h] >= 0} {set use $g}
+    }
+    read_liberty $use
+  }
   set fp [open $receipt w]
   puts $fp "{\"status\":\"LOADED\",\"corner\":[ot_lib_json_string $corner],\"source\":\"ORFS make print corner LIB_FILES\",\"config\":[ot_lib_json_string $config],\"config_sha256\":[ot_lib_json_string $digest],\"libraries\":\[[join $rows ,]\]}"
   close $fp

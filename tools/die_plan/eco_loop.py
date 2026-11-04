@@ -267,6 +267,7 @@ def docker():
 ABSTRACT_SH = r'''set -uo pipefail
 D=$1; CPUS=$2; MEM=$3; IMAGE=$4; DK=$5; MM=$6
 PATCH=true; [ "$MM" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
+[ -f "$D/kwrs_busfit.py" ] && PATCH="python3 -I /work/kwrs_busfit.py patch /OpenROAD-flow-scripts/flow/scripts/util.tcl; $PATCH"
 $DK run --rm --name eco-abs-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
   "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-generate_abstract" > "$D/run_eco_abstract.log" 2>&1
@@ -317,6 +318,8 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         it["pass_dirs"].append(str(pd))
         # the first pass of the iteration keeps / re-routes per the DRC count; a later one starts from a fresh ECO route
         env = dict(os.environ, OT_PRD_FROM=mode if i == 0 else "route", OT_PRD_POST="0", OT_PRD_FINISH="1")
+        if (Path(kit) / "kwrs_busfit.py").is_file():  # KW-FIX-5: the kit's LEF-only pins (prd_run.sh busfit_prep)
+            env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
         if repair_rc:
             env["OT_PRD_REPAIR_RC"] = repair_rc
         stag = "" if len(vs) == 1 else "_" + v[0]

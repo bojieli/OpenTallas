@@ -98,3 +98,24 @@ def test_stage_eco_uses_lower_epyc2_scratch_floor():
     assert m.spill_dst_full("intel1", r60, r, eco)
     m.spill_lands_on_root = lambda host, roots: True
     assert m.spill_dst_full("epyc2", r60, r, eco)                      # the root floor stays
+
+
+def test_drop_keeps_a_copy_another_process_uses(tmp_path):
+    """DIE-KV-65 11-04: a stage dir another running job also staged stays; once that job ends the copy goes."""
+    import shlex, subprocess, time
+    m = load()
+    r = tmp_path / "lane" / "k"
+    r.mkdir(parents=True)
+    mk = tmp_path / "lane" / "mark"
+    mk.write_text("")
+    cmd = m.spill_drop_cmd(str(r), shlex.quote(str(mk)), shlex.quote(str(mk)))
+    other = subprocess.Popen(["sh", "-c", f": {r}; sleep 30"])
+    time.sleep(0.2)
+    try:
+        out = subprocess.run(["sh", "-c", cmd], capture_output=True, text=True).stdout
+        assert "DROPPED" not in out and r.is_dir()
+    finally:
+        other.kill()
+        other.wait()
+    out = subprocess.run(["sh", "-c", cmd], capture_output=True, text=True).stdout
+    assert "DROPPED" in out and not r.exists()
