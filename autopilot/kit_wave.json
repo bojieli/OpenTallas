@@ -1609,7 +1609,8 @@
    "hold_items": {
     "svc_lo_dsdv_svc_rs__t7": "S81/g0c owns exact current-source GEN/LINT/preflight canary; release after its terminal result, avoid duplicate while portable canary staged.",
     "slice_station__t51": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
-    "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event"
+    "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
+    "svc_lo_dsdv_svc_rs__t4": "COORD 11:0x: 42400-bit behavioural memory fails GEN_LINT every retry; release at svc MEM v2 event"
    },
    "queue_src": "claude/kw8-srcn-1104@90ad150b102e16940e6939cb09fd9074ff9f465d",
    "work_root": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave",
@@ -3115,6 +3116,7 @@
     "sle_hc2__cl9c4c4509__cl3edce1b8",
     "sle_hc2__cl9c4c4509__clf60c5152",
     "sle_hc2__clcc5e3e61",
+    "sle_sc_v3",
     "sle_su_c",
     "sle_su_l0__cl086d85ba",
     "sle_su_l0__cl7a55c676",
