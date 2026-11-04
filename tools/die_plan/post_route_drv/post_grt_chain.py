@@ -65,6 +65,21 @@ def stage(kit):
             chain = 'source /work/grt_post.tcl\n'
         else:
             chain = 'source /work/grt_post_core.tcl\n'
+            # DIE-KV-67/CL 11-04: the form core_flow.py writes on kits with NO post_grt_drv.tcl (kit hooks, grt_post.tcl,
+            # final repair; every native KV core).  The final repair's own global_route -end_incremental runs after
+            # ot_clk_freeze_post_grt and after route-keep re-attached the parked wires, so it destroys clock wires nothing
+            # restores and DRT re-routes them: CLK_GEOM_DIFF FAIL, route_rc 5 (KV astk 7, ZH 73, pcc_hhps 246 nets).
+            # Skipped alike; the gates in grt_post.tcl and the kit's hooks still run.
+            for final in sorted(FINAL_REPAIR_TAILS, key=len, reverse=True):
+                head = lines[:-len(final)]
+                if lines[-len(final):] == final and 'source /work/grt_post.tcl' in head \
+                        and (kit / 'core_final_repair.tcl').is_file():
+                    chain = '\n'.join(head) + '\n'
+                    rec.update(skipped_final_repair=True,
+                               reason='PRD hook already performs the selected TT/FF data repair before route accounting',
+                               wrapper_sha256=hashlib.sha256(core.read_bytes()).hexdigest(),
+                               final_repair_sha256=hashlib.sha256((kit / 'core_final_repair.tcl').read_bytes()).hexdigest())
+                    break
     (kit / 'prd_post_grt_chain.tcl').write_text(chain)
     (kit / 'PRD_POST_GRT_CHAIN.json').write_text(json.dumps(rec, indent=1) + '\n')
     return rec
