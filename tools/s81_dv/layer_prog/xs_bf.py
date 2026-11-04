@@ -341,20 +341,24 @@ def bf_plan(master, bf_pairs, rows_vals, s, n, meas=None, base=None, frame=None)
         return rec
     topo = frame_topology(master, frame)
     corr = meas.get('leaf_ret_corr') or {}
+    # DIE-S81-51/RF-H 11-03 (TOK-VERIFY-1): a BF column form that adds bf_add edges to the BF partials moves every
+    # measured partial edge by bf_add, unless the record was measured on that form (bf_col_form)
+    import bf_col_form as BFF
+    fshift = 0 if meas.get('bf_col_form', 'base') == BFF.form() else BFF.deltas()[0] - BFF.deltas(meas.get('bf_col_form', 'base'))[0]
     lv = {}
     for R in range(nsr):
         p = bf_pairs[R]
         for j in range(2):
             r = 2 * R + j
             if r < nr:
-                lv.setdefault(leaf(p, j), []).append((meas['pv'][leaf(p, j)][0] + corr.get(leaf(p, j), 0), C._mk((P.OPTAG << 14) | r, s, 0, n),
+                lv.setdefault(leaf(p, j), []).append((meas['pv'][leaf(p, j)][0] + corr.get(leaf(p, j), 0) + fshift, C._mk((P.OPTAG << 14) | r, s, 0, n),
                                                       rows_vals[r][s], 0))
     rep, ret = P.compose(topo, lv)
     desc = {}
     for R in range(nsr):
         d = dict(meas['fits'][str(bf_pairs[R])]['descriptor'], base=base[R])
         desc[str(bf_pairs[R])] = d
-    rec.update(calendar=meas.get('calendar', 'measured_shape'), desc=desc, nodes=rep, faults=P.nfaults(rep), ret=[list(w) for w in ret],
+    rec.update(calendar=meas.get('calendar', 'measured_shape'), bf_col_form=BFF.form(), bf_form_shift=fshift, desc=desc, nodes=rep, faults=P.nfaults(rep), ret=[list(w) for w in ret],
                ret_words=len(ret), emission=dict(rule='E(pair column) = measured partial edge of the shape (BF_LEGACY '
                                                       'trace); every BF phase of a master / lane latency has the same '
                                                       'BSEG stream', leaves={k: [w[0] for w in v] for k, v in lv.items()}))
