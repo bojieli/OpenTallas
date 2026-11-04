@@ -1,0 +1,51 @@
+{
+ "_doc": "DIE-S81-52/RF-J 11-03 conservative forms (first to sign off wins; merge only with the signed form). xrt: OT_S81SL_XRT_RFJ = RING_LAND 2 + FACE_LAND 2 (negedge pin flops, 0 cycles at rising-edge senders; eg_* / x_rb* stay posedge) + OLAT + PDC, regional taps 4x4. rom_q: IFN 1 + OLAT 1 (no keep), regional taps 4x4, lec_hints from the ck12R LEC-EQ kit. Benches: tools/s81_slice/xrt_rfj_eq.sh; tools/dsrom_qelem_cl/qxpq_go_boundary_bench.sh with TB_DUT_OLAT=1 TB_DUT_IFN=1 (mut_ifn).",
+ "ot_v41_rom_elem_q_qxpq_w10": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_elem_q_qxpq_w10",
+  "util": 0.6,
+  "macro_sites": {
+   "ot_rom_4096x274_m8": [
+    [
+     25.92,
+     43.392,
+     "R180"
+    ],
+    [
+     25.92,
+     115.008,
+     "MY"
+    ],
+    [
+     359.424,
+     43.392,
+     "MX"
+    ],
+    [
+     359.424,
+     115.008,
+     "R0"
+    ]
+   ]
+  },
+  "_why": "S81-CORES2/NC-H 10-25 F3/F6: g_mac[0] ROM pair on the W side (R180 below / MY above: clk/addr/130 rd on the E edge), g_mac[1] pair mirrored on the E side (MX / R0: clk/addr/130 rd on the W edge); every ROM pin band at the core centre y facing the centre logic (S/N plan pins x 136-375); the 144-bit rd edges face 26 um outer capture strips at the same y.",
+  "suffix": "rfj2",
+  "_lat": "S81-CORE-LAT/QB 2026-10-26 (OWNER 05:38 common core-pin latency 250 TT / 202.5 FF): recipe + spec adopted from codex/s81-legacy-0719 (S81-CORES2/NC-H 10-25) unchanged, LEGACY master (pins/outline/ABI = plan, efs view LEF). Synth+place only for GEOM review; CTS recipe (ICG clone per sink cluster, cg_pushdown form) is a separate pending item, no CTS/route before GEOM PASS.",
+  "master": {
+   "module": "ot_v41_rom_elem_q_qxpq_w10_gb",
+   "pins_file": "inputs/core_pins/ot_v41_rom_elem_q_qxpq_w10_gb.json"
+  },
+  "_gb": "S81-QX-GB 2026-10-26 (COORD 06:38 (a) _gb ADOPTED, 13:18 S81-CORE-LAT-R5 (a)): kit top = ot_v41_rom_elem_q_qxpq_w10_gb (go/go_tag pin capture +1 go edge, xs_sv[1:0] removed: 737 pins, other pins at plan positions) with CGR 8 = one ICG per in-core region (spec params); the legacy top fails raw face_guard (go shared, xs_sv dropped).",
+  "params": {
+   "OLAT": 0,
+   "IFN": 1
+  },
+  "regional_taps": {
+   "nx": 4,
+   "ny": 4,
+   "split": "count",
+   "win_ps": 20
+  },
+  "lec_hints": "physical/die_plan/s81/cores/legacy/profiles/rfj_1103/rom_q.lec_hints.json",
+  "_rfj2": "rfj (IFN 1 + OLAT 1) post-CTS: p50 insertion 653 ps, TT -306 at prow[11]: the negedge out-face launches T/2 + L at the parent capture T + 250. ROM insertion stays ~570-650 at any tap grid (ck12R 2x2: 567). At L >> 250 the posedge out-face is hold-safe by itself (launch L > parent capture 250), inputs need IFN. Same pins, same outline, 0 cycles."
+ }
+}
