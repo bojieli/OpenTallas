@@ -5313,13 +5313,43 @@
    "recipe_macros": []
   },
   "ot_hgi_coll_tkm_m_tp192__root": {
-   "status": "UNKNOWN",
+   "status": "KNOWN",
    "outline_um": [
     319.68,
-    345.6
+    389.664
    ],
-   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
-   "rejected": []
+   "basis": "DIE-HBM-62/FLOW d44v one-block event: root_core has 2 1024x256 buffers (u.u_buffer.g_bm[0..1].u_b); E column above and below the 5 pushdown islands, master W-edge pins face the logic column, W and N pin channels clear; outline and pins kept",
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[0].u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      136.08,
+      6.48,
+      310.824,
+      76.968
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[1].u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      136.08,
+      268.92,
+      310.824,
+      339.408
+     ]
+    }
+   ],
+   "previous": {
+    "status": "UNKNOWN",
+    "outline_um": [
+     319.68,
+     345.6
+    ],
+    "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
+    "rejected": []
+   }
   },
   "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
    "status": "UNKNOWN",
