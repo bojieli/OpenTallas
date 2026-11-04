@@ -1176717,8 +1176717,8 @@
       "ft19_i": {
        "rect_um": [
         963.4779,
-        36.72,
-        972.1179,
+        17.28,
+        973.1979,
         99.36
        ],
        "width": 61,
@@ -1176730,16 +1176730,16 @@
         "local_read_flops": 64
        },
        "max_pin_to_band_hop_um": 293.76,
-       "area_reserve_um2": 541.21,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft19_i",
        "resized_from_um": [
         963.4779,
-        54.0,
+        36.72,
         972.1179,
         99.36
        ],
-       "resize": "DIE-KV-50 in-place grow 1.35x (measured CA-ring need 1.29-1.30x; the ring_ff re-site added a G0C geom WARN)"
+       "resize": "DIE-KV-64 11-03 in-place grow to the DIE-KV-32 ring_ff reserve (713.9 um2; 541.2 um2 band failed OT_CLAND at ring bit s_d[3][53], 1657 cells placed): y down to 17.28 at the pin edge, x +1.08 (ft16_i blocks y>99.36)"
       },
       "ft1_i": {
        "rect_um": [
