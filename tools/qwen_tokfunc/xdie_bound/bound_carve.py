@@ -18,8 +18,8 @@ from pathlib import Path
 
 INST = re.compile(r'^\s*(\w+)\s*(#\(.*\))?\s+(\w+)\s*\($')
 CONN = re.compile(r'^\s*\.(\w+)\(([\w\[\]:\']*)\),?$')
-WIRE = re.compile(r'^\s*wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;\s*(//\s*lane\s+(\S+))?')
-TPORT = re.compile(r'^\s*input\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;')
+WIRE = re.compile(r'^\s*wire\s*(\[(\d+):(\d+)\])?\s*(\w+(?:\s*,\s*\w+)*)\s*;\s*(//\s*lane\s+(\S+))?')
+TPORT = re.compile(r'^\s*(?:input|output)\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;')
 PORT = re.compile(r'^\s*(input|output)\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)')
 
 
@@ -45,7 +45,10 @@ def parse_top(p: Path):
         m = WIRE.match(ln)
         if m:
             w = int(m.group(2)) - int(m.group(3)) + 1 if m.group(1) else 1
-            wires[m.group(4)] = dict(width=w, lane=m.group(6), decl=ln)
+            names = re.split(r'\s*,\s*', m.group(4))   # the bound top declares 'wire a, b;' since the collective landings
+            for n in names:
+                d = ln if len(names) == 1 else '    wire %s%s;' % (m.group(1) + ' ' if m.group(1) else '', n)
+                wires[n] = dict(width=w, lane=m.group(6), decl=d)
             continue
         m = TPORT.match(ln)
         if m:
