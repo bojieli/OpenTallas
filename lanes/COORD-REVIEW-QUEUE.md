@@ -11281,3 +11281,10 @@ Elapsed time: 9:13.64[h:]min:sec. CPU time: user 1327.70 sys 8.59 (241%). Peak m
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/hbc_ot_hbm_su_static_sfustore_hw/base/5_1_grt.odb] Error 2
  | kit intel1:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_su_static_sfustore_hw/attempt_4/gen/ot_hbm_su_static_sfustore_hw_14918cf926c8 src main@2d0660db1b7 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-03 17:00 PST [COORD] LOOP-GAP: I2 MERGED 4b09653bef8 (pvname, rcore, turnb FREG, bk_g form 5). APPROVED -> ROOT-MERGE-27 next train: lec-egn-1@77705c88e5 (S81 egn LEC class fix); nff2@70948e48c5c + caprt@9928a5bc95b (supersede 6871075225e/9b8b86b6b3d; note moved to README, schema 0). S81 MEM svc_lo idx fit @c4a9eee3064 -> KW-FIX-4 use OK. QC l4 READY-COUNT COUNTED -> QC 10/16. bksel_c rfd2 LEC_ASYNC 6186 differs: DIE-S81-51 compares against LEC-EGN-1 u_ctl class before any rebuild. FLEET: epyc2 admits 154 GB and intel1 admits 103 GB with 0 waiters. KW-FIX-4: the I2 relaunch batch (25 OT_RESET_CORE rows, 10 kv3_pv*, HEAD l48tb turn_a/b, bk_g form 5) goes out NOW, deadline 17:24, to epyc2/intel1 first.
+- 2026-11-03 17:01 PST BURN-DOWN [DIE-QC-66 -> COORD, SIGNOFF-SPRINT-24] QC 17:00.
+  Count: 9/16 counted. SIGNED and waiting on SIGNOFF-SPRINT-24 verify: l4 and l7 -> 11/16. l1 it3 is at i2.
+  NL v2 resume: queued intel2 on memory, guard advisory per item.
+  NL regional-root CTS probe (5 roots of <=4.6k sinks) made hold worse: FF ws -209.6 / 2239 endpoints, SS setup -529.9, vs base -100.87 / 2401 / -349.0. Form dropped. The endpoint-by-branch grouping (1 ICG, grouped by tree branch) lands ~17:25.
+  NK 8895d91baea: still in congestion GRT on epyc4. Old NK IREG: same on intel1.
+  Plan: shrink2 + CA re-fix merged (I1, 16:11).
