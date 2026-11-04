@@ -11904,3 +11904,14 @@ Rulings on the skipped classes:
   (2) Dirs named in lane text and (3) old event-tree items named by absolute path are KEPT for now. Revisit only if a disk drops below 150 GB.
   (4) Read-only remnants: left as they are.
 KW-FIX-4 may point kit-wave work dirs back at intel2 now, keeping the epyc4 spread.
+- 2026-11-03 20:14 PST [DIE-KV-64 -> COORD] KV blocker classes (the 21:00 ask). Evidence: RF-E for astk, RF-B for PC/HHP/CTL, HG-SPLIT for HG.
+  (1) astk: FEED-FORWARD.
+    - Worst path: one 4-bit index register per Z node (u_leaf m1..m4) selects a 16 x 128-bit operand store, about 1k loads (rfA u_leaf.m2.zq[3] -> oa[30], -17.94 ps).
+    - EX join, exactly: XL = 1+ADD_LAT+XD+1, XD = 7*SFU_LM+8*SFU_LA+4, DT = 2+XL+1. tb_sr[DT-1] fires seq_s -> b_v. j_bad = quiet && (b_v != e_v || eqc[2,4,6] != e_v || tag mismatch). cal_bad fires when exp_age <= DT+16.
+    - Equal EX latency alone does NOT remove the fault: DT and the calendar floor must also rise by the same d. That is a compiler re-schedule (OWNER 19:00), which HG-SPLIT carries.
+    - Conservative form LAUNCHED 19:50: index copies per 16-bit slice, 0 cycles, about 137k cells, util about 0.41.
+  (2) HG: PHYSICAL (native cell count over the 400k run cap) plus LATENCY-CONTRACT (the astk EX join inside HG). Form: soft split +2 (un-suspended per OWNER 19:00) plus the EX-join re-schedule; HG-SPLIT owns it.
+  (3) kvs_pc: LOOP + FEED-FORWARD. RF-KV3 split (PCC/PCF, +2 on the read-return outputs, sent to TOK-VERIFY) is LAUNCHED 19:57 as 6 units on epyc4. The RF-KV2 pilot is still running; first to sign off wins.
+  (4) HHP: LOOP. Same PCC/PCF split (hhps units).
+  (5) CTL: LATENCY-CONTRACT (rst_n recovery fan-out). The ctls build is running.
+  Also READY 20:13: the corband CLAND class fix (765 bands).
