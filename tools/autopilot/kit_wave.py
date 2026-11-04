@@ -147,7 +147,7 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
                # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
@@ -2249,6 +2249,15 @@ try:
     st = os.stat(a["plan"]); raw = open(a["plan"], "rb").read(); p = json.loads(raw)
     pt = p.get("partition_types") or {}; bud = p.get("budgets") if isinstance(p.get("budgets"), dict) else {}
     mode = a.get("block_identity", "raw")
+    # die option block_ignore (KW-FIX-6 11-04): plan-model metadata that moves no geometry, pin or net stays out of the
+    # block hash, so pinning a frozen plan to the models it was solved with does not supersede its live and signed kits
+    for dotted in a.get("block_ignore") or []:
+        sec, key = dotted.split(".", 1)
+        for v in pt.values():
+            if isinstance(v, dict) and isinstance(v.get(sec), dict):
+                v[sec].pop(key, None)
+                if not v[sec]:
+                    del v[sec]
     ids = identities(p, a["plan"], mode)
     blocks = {name: value["block_sha"] for name, value in ids.items()}
     baseline = None
@@ -2345,7 +2354,8 @@ def plan_names(AP, st, d):
     mode = d.get("block_identity", "raw")
     if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": d.get("prelint_cells_max")}
+    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": d.get("prelint_cells_max"),
+            "block_ignore": d.get("block_ignore")}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
     p = AP.rpy(d["gen_host"], PROBE_PLAN, args, timeout=600)
