@@ -732,7 +732,7 @@ RULES = [
     ("PLAN", None, r"differs from published source cohort|published wrapper changed|prepared plan changed",
      "HEAD prepared cohort stale vs current gen (re-prepare / republish the type wrapper)"),
     ("FLOW", r"^place$", r"OT_CLAND no legal nonoverlapping row/site in reserved band",
-     "clock-landing ring band capacity (pinslot form: plan budgets.cland_pinslot_types, FLOW-12)"),
+     "clock-landing band too small or blocked (band plan, or tool: this kit already reads its pinslot setting from spec cland_pinslot)"),
     # AUTOBUILD-PIPE-4 10-31 (KV core kits qkd_hr_ingest_eng / qkd_hr_core_order): design-side preflight results that
     # fell into the FLOW buckets -- an SRAM core with no static macro sites (rtl_macro_placer only: the plan names no
     # macro rect / hard_children block) and a core whose synthesized faces are not registered (core_preflight
@@ -766,7 +766,10 @@ def error_lines(text, n=16):
 # 'd on key-cardinal as oth-ubuntu-302855-... after 1 s Traceback ...' and hid the exception).  'RAN on ... exit N',
 # 'NOT RUN', 'NOT COMPLETED' and 'SSH probe exit 255' stay: the INFRA rules read them.
 ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b|wait\b)|"
-                       r"ot-heavy: (?:admitted|request|waiting|queued|charged|wait)\b|KW_SSH_RETRY\b)")
+                       r"ot-heavy: (?:admitted|request|waiting|queued|charged|wait)\b|KW_SSH_RETRY\b|"
+                       # OWNER 11-03: an advisory check is never the item's error (KW6-CLASS 11-04: "pins_canonical check
+                       # could not run: ModuleNotFoundError" hid a place failure on 3 rows)
+                       r"KIT_PREFLIGHT ADVISORY\b)")
 EXC_LINE = re.compile(r"^\s*(?:[A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt)(?::|$)|bind: ERROR|ERROR\b|Error:|"
                       r"[A-Z][A-Z0-9_]+ FAIL\b|FAIL_PREFLOOR\b)")
 ID_PARAM = re.compile(r"(?:_id|_tid|sidx|map_lane_j)$")
@@ -2428,6 +2431,15 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     return out, launch
 
 
+def _refused_class(attempt_dir):
+    """class a relaunch refusal carried over from the attempt it compared with (state rows hold FLOW for those)"""
+    try:
+        r = json.loads((Path(attempt_dir) / "result.json").read_text())
+    except (OSError, ValueError):
+        return ""
+    return r.get("class") if isinstance(r, dict) and r.get("stage") == "resume_nochange" else ""
+
+
 def resume_source(AP, prev):
     """KW-RESUME-1: where the previous attempt's checkpoint lives.  Candidates: the attempt's kit on its gen host and,
     for a kit the autopilot routed on another host (ot-run spill), that host's copy of the same path, which holds the
@@ -2436,7 +2448,11 @@ def resume_source(AP, prev):
     jd = Path(prev["dir"])
     out = {"attempt": prev.get("attempt"), "attempt_dir": str(jd), "candidates": [],
            "class": prev.get("q_class") or prev.get("class") or "",
-           "allow_nochange": prev.get("class") == "INFRA" or prev.get("status") == "RETRY-INFRA"}
+           "allow_nochange": prev.get("class") == "INFRA" or prev.get("status") == "RETRY-INFRA"
+                             # stopped, not failed: a queued volume released or a cancelled attempt has no failure a
+                             # same-input run would repeat (KW6-CLASS 11-04, S81 slice_station__t23/t44)
+                             or prev.get("status") == "CANCELLED" or prev.get("class") == "VOLUME"
+                             or _refused_class(jd) == "VOLUME"}
     try:
         out["gen_end"] = (jd / "gen.log").stat().st_mtime
     except OSError:
