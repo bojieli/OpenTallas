@@ -12055,3 +12055,11 @@ FAILED [AUTOPILOT 57d702a51130] 2026-11-03 20:27:49 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-03 20:40 PST [DIE-HEAD-58] RULING hd_st_n3_turn l48rf sign-off FAIL ROUTING (1st failure; timing met TT +86.5 / FF +2.5 after ECO; residual drc 3 + drv 52). Per OWNER 11-01 late-stage iteration: stage-resume from the routed ECO DB (detail-route DRC repair + repair_design for DRV) and re-sign. No rebuild, no knob change. KW-FIX-4 owns the resume. If it is still not clean after the resume, it is the 2nd strike -> RE-FORM. l48rc: ctl_n LAUNCHED 20:37; waiting on ctl_e host_n spn_eshim_tx (due 20:50).
 - [DIE-S81-51/RF-H] 2026-11-03 20:40 PST LAUNCHED S81-058 bf_col3 core u_view.u_c ot_v41_bf_col3_c_rfh3 finish (kit_hash d02994e9e7ae4f4e) ot-run --hosts epyc4 --mem 48 --threads 16, kits /srv/opentallas-scratch2/claude/die-s81-51/rfh/bf_col3/kits, log intel2:~/ds81rfh-logs/finish_ot_v41_bf_col3_c_rfh3.otrun.log (queued for memory on epyc4)
 - [DIE-S81-51/RF-H] 2026-11-03 20:40 PST LAUNCHED S81-058 bf_col3 cores u_view.u_ha + u_hb (one master) ot_v41_bf16_half_rfh3 finish (kit_hash 261e78b6f0599c80) ot-run --hosts epyc4 --mem 48 --threads 16, same kits dir, log intel2:~/ds81rfh-logs/finish_ot_v41_bf16_half_rfh3.otrun.log (queued for memory on epyc4)
+[COORD] 2026-11-03 20:41 PST LOOP-GAP 20:40.
+Nothing is >30 min without a reply.
+PG3 @9b478bf5c19 is approved (replaces a8737a2c9ed). kw-fix-4-mcmmtest@1929d2387ee is pre-approved; add it to the next train with kw-prov-1, corband and rfb.
+TOK-VERIFY says bf_col BRNECUT=1 is SAFE, so the bf_col rfh1 form merges after it signs off.
+KV HG-SPLIT EX join: progress noted.
+Lanes: DIE-QC-66 and DIE-KV-64 had ended their turns and are resumed.
+intel1 is REFUSED (scratch 2 GB). PRUNE-1103H is running. intel2 is at 93% (238 GB), falling about 100 GB/h, and PRUNE-1103H reports the top writers.
+Waiters: epyc2 5, intel2 23, epyc4 58. Kit-wave launching (20:37).
