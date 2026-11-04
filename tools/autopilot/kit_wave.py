@@ -1412,10 +1412,12 @@ def gen_hosts(cfg, die):
     hs = hs if d.get("gen_host") in hs else [d["gen_host"]] + hs
     # KW-FIX-4 11-03 (COORD 14:2x INFRA class 2): a host whose die lane root carries an ot-run SPILL marker treats
     # every --dir under it as a stale copy (ot-run probe NODIR -> "NOT RUN: no host qualifies"), although the wave's
-    # mkdir made the attempt dir there: such a host is no gen host for the die (the configured gen_host always stays)
+    # mkdir made the attempt dir there: such a host is no gen host for the die.  KW-FIX-8 11-04: this holds for the
+    # configured gen_host too while another host stays (QC 11:09, KV 06:12 lost a batch on it); with none left the list
+    # keeps the configured host and work_root_problem() turns the die's launches off with the reason
     marked = cfg.get("_spill_marked") or {}
     lane = lane_root(opt(cfg, die, "work_root"))
-    return [h for h in hs if h == d["gen_host"] or lane not in marked.get(h, ())]
+    return [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]]
 
 
 SPILL_MARK = ".ot-run-spill-copy"                  # ot-run SPILL copy marker (ot-run v14 mark_ancestors)
@@ -1435,8 +1437,8 @@ def spill_marked(AP, cfg):
     for die, d in (cfg.get("dies") or {}).items():
         if not isinstance(d, dict):
             continue
-        for h in d.get("gen_hosts") or []:
-            if h and h not in (hub, "localhost", d.get("gen_host")):
+        for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")]:
+            if h and h not in (hub, "localhost"):
                 roots.setdefault(h, set()).add(lane_root(opt(cfg, die, "work_root")))
     out = {}
     for h, rs in sorted(roots.items()):
@@ -1446,6 +1448,25 @@ def spill_marked(AP, cfg):
         if rc == 0:
             out[h] = {x for x in o.split() if x in rs}
     return out
+
+
+def work_root_problem(cfg, die, hub_isdir=os.path.isdir):
+    """KW-FIX-8 11-04 (COORD 11:4x): why no kit of this die can run under its work_root, read before any launch, else
+    None.  Two lost batches: every gen host carries the SPILL marker on the lane root (ot-run: NOT RUN: no host
+    qualifies; KV 06:12, QC 11:09), or the scratch mount is not on the hub (sync_hub mkdir: Permission denied; KV 07:00).
+    An unreachable host is unknown, never a problem."""
+    d = cfg["dies"][die]
+    root = str(opt(cfg, die, "work_root") or "")
+    lane = lane_root(root)
+    m = re.match(r"^(/srv/[^/]+)/", root)
+    if m and not hub_isdir(m.group(1)):
+        return f"work_root {root}: {m.group(1)} is not on the hub, sync_hub cannot mkdir there; set work_root"
+    marked = cfg.get("_spill_marked") or {}
+    hs = [h for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if h]
+    if hs and all(lane in marked.get(h, ()) for h in hs):
+        return (f"work_root lane {lane} carries {SPILL_MARK} on {' '.join(sorted(set(hs)))}: ot-run would say no host "
+                "qualifies for every kit; set work_root to an unmarked lane on the hub and these hosts")
+    return None
 
 
 def pick_gen_host(cfg, die, take=0):
@@ -2439,6 +2460,16 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     for die in sorted(set(list(cfg.get("dies") or {}) + list(GATE_EVENTS) + list(COORD_ONLY))):
         stop = stop_reason(cfg, die, AP.AP_DIR if AP else None)
         ok, why = (False, stop) if stop else gate(cfg, die, _descends(AP) if AP else None)
+        if ok and AP and probe:
+            if "_spill_marked" not in cfg:              # the dry plan does not pass the tick's probe
+                try:
+                    cfg["_spill_marked"] = spill_marked(AP, cfg)
+                except Exception as e:                  # a diagnostic probe never stops the plan
+                    log(f"KIT-WAVE spill-mark probe skipped: {e}")
+            bad = work_root_problem(cfg, die)
+            if bad:
+                ok, why = False, bad
+                AP.log(f"KIT-WAVE WORK-ROOT {die}: {bad}")
         picks, skip = [], {}
         if ok:
             d = cfg["dies"][die]
