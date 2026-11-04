@@ -317,5 +317,96 @@
    "ruling": "DIE-KV-62/hr 11-02 (KV die-owner sub-lane; precedent COORD ruling 2 head_port_regs frontq fault pin flop +1 edge, OWNER CAP_ED +1 fault cycle 10-30): a wire feed-through is not a timed face; register it",
    "reason": "u_chain__chain_fault[3:0] = u_chain__chain_fault_i[3:0] is a pure wire across the core (face_guard feedthrough 8); it is the slice-chain fault status read by core_guard service_faults[19:16]: one face register (+1 fault edge, reset 0 = no fault) gives both pins a flop; mapped CORE_PREFLIGHT census epyc2 /home/ubuntu/scratch-root/claude/die-kv-62-hr/census/<core>.json (DIE-KV-61/hr efa6a9b9 kits)"
   }
+ },
+ "qkd_hr_core_prompt": {
+  "timed_face": {
+   "buses": [
+    "u_control__crom_fault",
+    "u_control__die_id",
+    "u_control__fault_src",
+    "u_control__hc",
+    "u_control__host_idle",
+    "u_control__host_rst_n",
+    "u_control__kst8",
+    "u_control__m_rlast",
+    "u_control__m_rresp",
+    "u_control__peer_reset_request",
+    "u_control__physical_fault",
+    "u_control__por_n",
+    "u_control__s_araddr",
+    "u_control__s_awaddr",
+    "u_control__s_wstrb",
+    "u_control__step_retire_slot",
+    "u_control__step_slot",
+    "u_control__tk8",
+    "u_control__transport_fault",
+    "u_program__auth_digest",
+    "u_program__auth_epoch",
+    "u_program__auth_target",
+    "u_program__auth_v",
+    "u_program__begin_image",
+    "u_program__dw_count",
+    "u_program__execution_active",
+    "u_program__image_target",
+    "u_program__pw_count",
+    "u_records__auth_digest",
+    "u_records__auth_epoch",
+    "u_records__auth_v",
+    "u_records__authorized_footer",
+    "u_records__authorized_footer_valid",
+    "u_records__begin_v",
+    "u_records__expected_dw",
+    "u_records__expected_pw",
+    "u_records__fault",
+    "u_records__program_digest",
+    "u_records__program_epoch",
+    "u_records__program_ready",
+    "u_records__request_gen",
+    "u_records__request_position",
+    "u_records__request_tag",
+    "u_records__request_token",
+    "u_records__request_v",
+    "u_records__rx_record",
+    "u_records__rx_v",
+    "u_records__send_kind",
+    "u_records__token_epoch",
+    "u_records__token_epoch_valid",
+    "u_records__tx_record",
+    "u_records__witness_slot"
+   ],
+   "ruling": "DIE-KV-65/HR 11-03, same class as COORD GRANT 19:2x of DIE-KV-61/hr (declared buses = timed faces, 166.6 ps kit IO budget, no mask, no added cycle)",
+   "reason": "raw u_host member cut: control/program/records inputs read through logic or several flops, zero-cycle transform lists them as logic_in 610 / multi_in 404; mapped CORE_PREFLIGHT census 1893 bits on 52 buses, intel1 /srv/opentallas-scratch2/claude/dkv65/hr/census/prompt2.json"
+  },
+  "ft_face_regs": {
+   "regs": [
+    {
+     "out": "u_control__fault_src",
+     "bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      21
+     ],
+     "clock": "ck",
+     "reset_n": "u_control__por_n",
+     "reset_value": 0
+    }
+   ],
+   "ruling": "DIE-KV-65/HR 11-03, same class as DIE-KV-62/hr core_order chain_fault (OWNER CAP_ED +1 fault cycle 10-30): a wire feed-through is not a timed face; register it",
+   "reason": "17 of 32 fault_src bits are wires from fault/status inputs (physical_fault, transport_fault, kst8, tk8, crom_fault), face_guard feedthrough 17: one face register per bit, +1 fault edge, reset 0 = no fault"
+  }
  }
 }
