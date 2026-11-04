@@ -254,6 +254,17 @@ def io_tcl(pins, w, h, tag, clock_entry=None):
                              entry=[cx, cy]))
             continue
         f = face_of(p["x"], p["y"], w, h)
+        if clock_entry and p["layer"] == "M5" and f in "EW" and p.get("w") is None:
+            # DIE-HBM-62/FLOW class M5-EW-PIN (hnx_vms_bank_q0_faces v796f rst_n: DRT-0422/DRT-0074 no access point): M5
+            # tracks are vertical, so a face stub along x on an E/W face has no track through it.  Same y and face as the
+            # plan, in the proven on-track entry form that clock pins already use on those faces.
+            cx, cy, (sx, sy), f2 = clock_entry_pin(p, w, h, clock_entry["m5"])
+            out.append(f"place_pin -pin_name {{{p['name']}}} -layer M5 -location {{{cx:.4f} {cy:.4f}}} "
+                       f"-pin_size {{{sx:.4f} {sy:.4f}}}")
+            b, i = split_name(p["name"])
+            rows.append(dict(bus=b, bit=i, layer="M5", x=round(w if f == "E" else 0.0, 4), y=round(cy, 4), face=f, w=sx,
+                             h=sy, entry=[cx, cy]))
+            continue
         lw = LAYER_W.get(p["layer"], 0.04)
         # DIE-HBM-10 C25a (opt-in): a plan pin record with explicit w (across the face) and h (into the core) keeps that
         # size, e.g. the clock-class pins at M5 0.048 x 0.48 (GEOM-21 / KIT_PREFLIGHT clock_pin_geometry); records
@@ -1461,6 +1472,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="typed hard_core_latency clock contract in core.json (COORD 10-24; class CLK-BAND; default on)")
     ap.add_argument("--no-hard-core-latency", dest="hard_core_latency", action="store_false",
                     help="no typed clock contract (old default): plan insertion band gated post-CTS/GRT")
+    ap.add_argument("--gpl-no-routability", action="store_true",
+                    help="class GPL-SPIN (late_forms.py gpl): 3_3 global placement without -routability_driven")
     ap.add_argument("--multiport-density", default="auto", choices=["auto", "off"],
                     help="DIE-HBM-61/HOLD class MULTIPORT-HOLD: a native multi-port core without a reviewed contract "
                          "gets per-port density trees + common tap alignment (auto, default); off = old independent trees")
@@ -1988,6 +2001,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
     ff = face_flops_text((TOOL / "face_flops.tcl").read_text(), clks, rsts, kit_straps,
                          home_resets=not a.no_reset_face_home)
+    if a.gpl_no_routability:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import late_forms
+        (kd / "gpl_no_routability.tcl").write_text(late_forms.GPL)
+        ff = "source /work/gpl_no_routability.tcl\n" + ff
     (kd / "face_flops.tcl").write_text(ff)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl",
