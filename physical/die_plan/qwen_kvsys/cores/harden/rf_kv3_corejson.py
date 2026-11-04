@@ -40,6 +40,12 @@ def main(pc_json, src_dir, mod, pins_file, out_json, repo):
     for v in cls.values():
         counts[v] = counts.get(v, 0) + 1
     files = sorted(str(f.relative_to(repo)) for f in src_dir.iterdir() if f.suffix in (".sv", ".v"))
+    # memory black boxes: the repo macro view path of the PC core json (gen needs lef/lib next to it)
+    mem = {Path(f).name: f for f in pc["files"] if f.endswith("_bb.v")}
+    for i, f in enumerate(files):
+        if Path(f).name in mem:
+            (repo / f).unlink()
+            files[i] = mem[Path(f).name]
     tf = str((src_dir / f"{mod}.sv").relative_to(repo))
     files.remove(tf)
     files.insert(0, tf)
