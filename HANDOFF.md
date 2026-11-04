@@ -3137,3 +3137,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 - 2026-11-04 08:34 PST COORD hourly: count 103 (95+8t), bk_g landed. Lanes restarted after limit. Viewed iqf__t1@5 (fill 0.011), slw_su_l0@2 (fill 0.029): advisory.
 2026-11-04 09:35 PST COORD hourly: count 104; main d3001422956 (I35); I36 in test; QC 19 relaunched 09:34; DIE-HBM-66 replaced 65; intel1 128 GB, prune on source-follow gate; epyc2 root 441 GB under floor.
 2026-11-04 10:35 PST COORD hourly: count 109; main 56055ff212a (I38), I39 in test; form A stations + KV PV/PC launched; prune by inode, 47q freed 22 GB; intel1 126, epyc2 101 GB.
+2026-11-04 11:34 PST COORD hourly: count 111; main bf1e2233ce0 (I40), I41 test; I38 relaunch out; stale-RTL read 75/111 text diff, owners answering; intel2 235 GB after prune.
