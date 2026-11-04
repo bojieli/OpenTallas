@@ -16,3 +16,5 @@ if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "
 uplevel #0 [list source [file join $cp_dir pg_connect.tcl]]
 ot_pg_connect_all cts_post
 ot_pg_require_bound cts_post
+# FWDCLK-1: stop the kit here when a forwarded clock output lost its driver in CTS (generated per kit by gen_phys).
+if {[file exists [file join $cp_dir landing_export_check.tcl]]} { uplevel #0 [list source [file join $cp_dir landing_export_check.tcl]] }
