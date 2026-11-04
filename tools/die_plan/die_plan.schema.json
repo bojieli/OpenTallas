@@ -4589,6 +4589,11 @@
       },
       "minItems": 1
      },
+     "registered": {
+      "enum": [
+       "leaves"
+      ]
+     },
      "note": {
       "type": "string"
      }

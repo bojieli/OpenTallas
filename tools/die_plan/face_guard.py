@@ -732,7 +732,7 @@ def _spare_tie(F, drv, r, limit=16):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=()):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=(), leafreg=()):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -869,9 +869,17 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     if timed:
         res["timed_declared"] = []
 
+    leafreg = set(leafreg or ())
+    if leafreg:
+        res["leafreg_declared"] = []
+
     def fail(cls, b, why):
         if timed and cls in TIMED_CLASSES and re.sub(r"\[\d+\]$", "", str(b)) in timed:
             res["timed_declared"].append(f"{b}: {cls} {why}")   # DIE-KV-61/hr: declared timed-face bit
+            return
+        if leafreg and cls != "feedthrough" and re.sub(r"\[\d+\]$", "", str(b)) in leafreg:
+            # DIE-KV-64 11-03: a leaf-registered bus has no dedicated face flop; leaf_pinreg.py proves its bits
+            res["leafreg_declared"].append(f"{b}: {cls} {why}")
             return
         res["fails"][cls].append(f"{b}: {why}")
 
@@ -1779,10 +1787,24 @@ def main(argv=None):
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
     spl = kit_spare_list(Path(a.pins).parent) if a.pins else []
     tml = kit_timed_list(Path(a.pins).parent) if a.pins else []
+    lpf = Path(a.pins).with_name("leaf_pinreg.json") if a.pins else None
+    lrl = sorted(json.loads(lpf.read_text()).get("buses", {})) if lpf and lpf.is_file() else []
     pad_clocks, native_clock_pins = kit_pad_clocks(bd) if bd else ([], set())
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl, timed=tml,
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl, timed=tml, leafreg=lrl,
               types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
+    if lrl:
+        # DIE-KV-64 11-03: the leaf-registered buses' own proof (fail closed; a kit without the declaration skips it)
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import leaf_pinreg as LP
+            lr = LP.kit_check(lpf.parent, Path(a.netlist).read_text(), r["top"])
+        except Exception as e:           # noqa: BLE001  fail closed: a declared check that cannot run is a FAIL
+            lr = dict(verdict="FAIL", error=f"{type(e).__name__}: {e}")
+        r["leaf_pinreg"] = lr
+        if lr.get("verdict") != "PASS":
+            r["verdict"] = "FAIL"
+            r.setdefault("fail_counts", {})["leaf_pinreg"] = sum(lr.get("fail_counts", {}).values()) or 1
     if a.types_from:
         r["types_from"] = a.types_from
     if a.out:

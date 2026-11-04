@@ -876,6 +876,12 @@ SCHEMA = {
                            "beat_index_bits": {"type": "integer", "minimum": 0},
                            "reach_um": _pos, "param": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
                            "route_layers": {"type": "array", "items": _layer, "minItems": 1},
+                           # DIE-KV-64 11-03 (option 2, HG split): "leaves" = a flop-to-flop crossing wired straight
+                           # across -- no ot_dp_st boundary station on either side, 0 added cycles; the leaf flops ARE
+                           # the boundary registers (leaf_pinreg.py proves it on every kit netlist, fail closed) and
+                           # each side gets half the period as its IO budget.  One port, partition ends, no ft
+                           # stations / fixed_cycles / beats / clock landing.  Absent = the R2 boundary stations.
+                           "registered": {"enum": ["leaves"]},
                            "note": {"type": "string"}}}},
         # R8 (COORD 10-23): lanes that must arrive in the SAME cycle: the bits of one as-built bus (valid + data +
         # forwarded bits, groups from BINDER2) split over several lanes.  lane_latency() pads every member to the
@@ -1789,6 +1795,8 @@ class Plan:
         fixed = int(ln.get("fixed_cycles", 0))
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
+        if ln.get("registered") == "leaves":
+            bnd = 0                           # leaf-registered crossing: the leaf flops are the boundary registers
         d = dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
         if not hasattr(self,"_lane_clock_landing_cycles"):
             import clock_landings
@@ -1800,6 +1808,55 @@ class Plan:
         if ln.get("beats"):
             d["beats"] = int(ln["beats"])     # word_cycles (cycles + beats - 1) is added by lane_latency()
         return d
+
+
+def registered_lane_errors(ln, first, last):
+    """DIE-KV-64 11-03: shape rules of a lane marked registered "leaves" (0 added cycles, no station on either side):
+    exactly one port (no ft slot hop), both ends partitions (a die-IO end has no leaf flop of ours), no fixed_cycles /
+    beats (they need stages the lane no longer has).  The clock-landing and R8 pad cases are refused by bind.py (they
+    need the lane's latency table)."""
+    out = []
+    if len(ln["ports"]) != 1:
+        out.append(f"needs exactly one port (no ft slot hop), got {len(ln['ports'])}")
+    if first["src"]["part"] == DIE_PART or last["dst"]["part"] == DIE_PART:
+        out.append("needs partition ends on both sides (a die-IO end has no leaf register)")
+    for k in ("fixed_cycles", "beats", "word_bits", "beat_index_bits"):
+        if k in ln:
+            out.append(f"cannot carry {k} (no stage to put it in)")
+    return out
+
+
+def registered_buses(P, tn):
+    """{bus: "in"/"out"} of partition type tn whose lanes are ALL registered "leaves" (every instance of the type);
+    {} for a plan without the key.  A bus that is leaf-registered on one instance and stationed on another is a
+    conflict (registered_bus_conflicts) and is left out here."""
+    seen = {}
+    for lid, ln in P.lanes.items():
+        reg = ln.get("registered") == "leaves"
+        for x, end, d in ((P.ports[ln["ports"][0]], "src", "out"), (P.ports[ln["ports"][-1]], "dst", "in")):
+            part = x[end]["part"]
+            if part == DIE_PART or P.parts.get(part, {}).get("type") != tn:
+                continue
+            seen.setdefault((x[end]["bus"], d), set()).add(reg)
+    return {b: d for (b, d), v in sorted(seen.items()) if v == {True}}
+
+
+def registered_bus_conflicts(P):
+    """a partition type bus must be leaf-registered on every lane through it or on none (it is one hardened pin)."""
+    if not any(ln.get("registered") for ln in P.lanes.values()):
+        return []
+    seen = {}
+    for lid, ln in P.lanes.items():
+        if any(x not in P.ports for x in ln["ports"]):
+            continue
+        reg = ln.get("registered") == "leaves"
+        for x, end in ((P.ports[ln["ports"][0]], "src"), (P.ports[ln["ports"][-1]], "dst")):
+            part = x[end]["part"]
+            if part == DIE_PART or part not in P.parts:
+                continue
+            seen.setdefault((P.parts[part]["type"], x[end]["bus"]), {}).setdefault(reg, []).append(lid)
+    return [f"type {t} bus {b}: lanes {v[True][:3]} are registered \"leaves\" but {v[False][:3]} are not (one type "
+            "bus is one hardened pin: all or none)" for (t, b), v in sorted(seen.items()) if len(v) == 2]
 
 
 def tap_pitch(P, tn):
@@ -2452,10 +2509,13 @@ def validate(raw):
             errs.append(f"lane {lid}: starts at an ft slot output (lane must start at a functional bus)")
         if last["dst"]["part"] != DIE_PART and P.buses(last["dst"]["part"])[last["dst"]["bus"]].get("slot"):
             errs.append(f"lane {lid}: ends at an ft slot input (lane must end at a functional bus)")
+        if ln.get("registered"):
+            errs += [f"lane {lid}: registered \"leaves\" {m}" for m in registered_lane_errors(ln, first, last)]
     for pid in P.ports:
         n = len(inlane.get(pid, []))
         if n != 1:
             errs.append(f"port {pid}: in {n} lanes (each port belongs to exactly one lane)")
+    errs += registered_bus_conflicts(P)
     # reset / clock references
     for k in ("clock", "reset"):
         src = raw.get(k, {}).get("source")

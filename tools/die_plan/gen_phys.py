@@ -1928,6 +1928,42 @@ def _density_cfg(t):
     return out
 
 
+LEAF_PINREG_SCHEMA = "opentallas.kit_leaf_pinreg.v1"
+
+
+def regleaf_buses(P, tn):
+    """DIE-KV-64 11-03: {port: dict(dir, data_bits, epoch)} of type tn's buses on plan lanes registered "leaves"
+    (schema.registered_buses); {} without the key.  The epoch bit (index data_bits) carries no register on such a lane
+    (in: unread, out: the delivered reset level)."""
+    rb = S.registered_buses(P, tn)
+    if not rb:
+        return {}
+    import gen_rtl
+    eps = gen_rtl.bus_epochs(P)
+    bw = {b["name"]: b for b in P.types[tn].get("buses", [])}
+    return {gen_rtl.sv_id(b): dict(dir=d, data_bits=int(bw[b]["width"]),
+                                   epoch=bool(eps.get((tn, b), bw[b].get("kind", "data") in ("data", "ctl"))))
+            for b, d in sorted(rb.items()) if b in bw}
+
+
+def regleaf_sdc(P, tn, per, tw_in):
+    """half-period IO budget of the leaf-registered buses (overrides the IO_BUDGET max lines above; min lines
+    unchanged): the sender's leaf flop -> port in T/2, port -> the receiver's leaf flop in T/2.  '' without the key."""
+    rl = regleaf_buses(P, tn)
+    if not rl:
+        return ""
+    half = 0.5 * per
+    ins = [n + "[*]" for n, v in rl.items() if v["dir"] == "in"]
+    outs = [n + "[*]" for n, v in rl.items() if v["dir"] == "out"]
+    out = ("# DIE-KV-64 11-03: leaf-registered lanes (plan lane registered \"leaves\", leaf_pinreg.py): no boundary "
+           "station on either side, the leaf flops are the boundary registers; each side gets half the period\n")
+    if ins:
+        out += f"set_input_delay -max {half + t_lib(tw_in):.4f} -clock vclk [get_ports {{{' '.join(ins)}}}]\n"
+    if outs:
+        out += f"set_output_delay -max {half:.4f} -clock vclk [get_ports {{{' '.join(outs)}}}]\n"
+    return out
+
+
 def sdc(P, tn, pins):
     """kit SDC.  Bus ports: IO_BUDGET x T each side (both ends register at the face).  ft slot ports (COORD 10-23 R3,
     hop share): the last station drives its out port over the slot's last L/k segment, so the out port keeps only the
@@ -1968,6 +2004,7 @@ def sdc(P, tn, pins):
            "set non_clk_in [all_inputs -no_clocks]\n"
            f"set_input_delay -max {io + t_lib(tw_in):.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
+    out += regleaf_sdc(P, tn, per, tw_in)
     source_ports = set()
     if core_tap_rows(P, tn) or edge_clock_latency(P, tn):
         out += "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n"
@@ -3568,6 +3605,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "spare_out.json").write_text(json.dumps(dict(schema=SPARE_SCHEMA, bits=list(spare_out)), indent=1) + "\n")
     if dead_inputs:                             # DIE-S81-51/SPARE: narrow plan input bits kit-rtl leaves unconnected
         (kd / "dead_inputs.json").write_text(json.dumps(dead_inputs, indent=1) + "\n")
+    rl = regleaf_buses(P, tn)
+    if rl:                                      # DIE-KV-64 11-03: leaf-registered buses; face_guard runs leaf_pinreg
+        (kd / "leaf_pinreg.json").write_text(json.dumps(dict(
+            schema=LEAF_PINREG_SCHEMA, period_ps=P.die["period_ps"], io_budget_ps=0.5 * P.die["period_ps"],
+            buses=rl), indent=1) + "\n")
+        for f in ("leaf_pinreg.py", "hard_pinreg.py"):
+            shutil.copyfile(Path(__file__).with_name(f), kd / f)
     declared_straps = logical_strap_names(t)
     if declared_straps:
         # Logical declaration is required by synthesis/LEC gates even before physical strap sites are planned.

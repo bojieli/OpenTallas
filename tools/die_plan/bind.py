@@ -1437,8 +1437,9 @@ class Binder:
                 id=ln["id"], src=a["src"]["part"], dst=b["dst"]["part"], oname=a["src"]["bus"], iname=b["dst"]["bus"],
                 cap=min(int(x["width"]) for x in hp), sleaf=sb.get("leaf", ""), dleaf=db.get("leaf", ""), ft=ft,
                 hops=[(x["src"]["part"], x["src"]["bus"], x["dst"]["part"], x["dst"]["bus"]) for x in hp],
-                cycles=int(L.get("cycles", 2 + st)), clock_landing_cycles=landing,
-                param=L.get("param"), kind=a.get("kind", "data")))
+                cycles=int(L.get("cycles", (0 if ln.get("registered") == "leaves" else 2) + st)),
+                clock_landing_cycles=landing, param=L.get("param"), kind=a.get("kind", "data"),
+                **({"registered": ln["registered"]} if ln.get("registered") else {})))
         return by_pair
 
     @staticmethod
@@ -3408,6 +3409,12 @@ class Binder:
                 body.append(f"    assign {n}_q = {n}[{W - 1}:0];  // registered hard pin: the macro's input register is "
                             f"the boundary register (epoch [{W}] unread: no flop here)")
                 continue
+            if L.get("registered") == "leaves":
+                regleaf_check(L, p, "in")
+                decl.append(f"    wire [{W - 1}:0] {n}_q;")
+                body.append(f"    assign {n}_q = {n}[{W - 1}:0];  // leaf-registered lane {L['lane']}: the receiving "
+                            f"leaf flops are the boundary register (leaf_pinreg.py; epoch [{W}] unread: no flop here)")
+                continue
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
             pad = lane_pad(L)
             if pad > 0:
@@ -3459,6 +3466,15 @@ class Binder:
                 ports[-1] = f"    output wire [{W - 1}:0] {n}   // reset spine: {_bus_note(L, 'out')}"
                 d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
                 body.append(f"    assign {n} = {d};  // reset spine (async; landed by ot_dp_rsync in the sink)")
+                continue
+            if L.get("registered") == "leaves":
+                regleaf_check(L, p, "out")
+                if getattr(self, "ptree", None) is not None and any(self.ptree[(id(L), k)] for k in range(W)):
+                    raise BindError(f"registered leaves lane {L['lane']} ({p} out bus {n}): PAD_TREE taps need a "
+                                    "boundary flop the lane does not have")
+                d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
+                body.append(f"    assign {n} = {{rst_n, {d}}};  // leaf-registered lane {L['lane']}: the sending leaf "
+                            f"flops are the boundary register (leaf_pinreg.py); epoch [{W}] = the delivered reset level")
                 continue
             if L.get("plan"):
                 body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
@@ -3877,7 +3893,7 @@ class Binder:
         rh = getattr(self, "_reg_hard", None) or {}
         for L in self.links:
             st = L["stages"]
-            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
+            bound = L["cycles"] if L.get("spine") else (0 if L.get("registered") == "leaves" else 2) + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
@@ -5061,6 +5077,28 @@ def cmd_kit_rtl(a):
                           spare_out=sum(x["bits"] for x in spare), narrow=len(narrow), unbound=len(missing),
                           bound_only=[x["port"] for x in extra])))
     return 0
+
+
+def regleaf_check(L, p, side):
+    """DIE-KV-64 11-03: a lane marked registered "leaves" binds with NO station on either side, so it must need no
+    flop of ours: no ft station, no R8 / replica pad, no clock-landing ring, no plan-cell driver and no forwarded bit
+    (a forward would be a 0-cycle port-to-port feedthrough).  Fails closed (BindError)."""
+    bad = []
+    if L.get("ft"):
+        bad.append(f"{len(L['ft'])} ft slot hop(s)")
+    if int(L.get("cycles", 0)) != 0:
+        bad.append(f"latency table {L.get('cycles')} cycles (a leaf-registered lane adds 0: R8 pad / fixed cycles)")
+    if L.get("internal_source_cycles"):
+        bad.append(f"{L['internal_source_cycles']} internal source cycle(s)")
+    if L.get("clock_landing_cycles"):
+        bad.append(f"{L['clock_landing_cycles']} clock-landing cycle(s)")
+    if L.get("plan"):
+        bad.append("plan-cell driven")
+    if side == "out" and any(it[0] != "leaf" for it in L.get("items", [])):
+        bad.append(f"{sum(1 for it in L['items'] if it[0] != 'leaf')} forwarded bit(s)")
+    if bad:
+        raise BindError(f"registered leaves lane {L.get('lane')} ({p} {side} bus {L.get('oname' if side == 'out' else 'iname')}): "
+                        f"needs flops the lane does not have: {'; '.join(bad)}")
 
 
 def lane_pad(L):
