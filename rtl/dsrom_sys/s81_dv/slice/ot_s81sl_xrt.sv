@@ -81,6 +81,25 @@
 `else
 `define OT_S81SL_XRT_PDSK_DEF 15'o01234   // leaf 0..4 depth 4, 3, 2, 1, 0 (TOK-DS NORM-DESKEW 10-25)
 `endif
+// RF-B RE-FORM (DIE-S81-51/RF-B 11-03, S81-RF1): RING_LAND = 1 lands every ring / band input (dl_ev dl_e dl_wv dl_w
+// dl_vv dl_vb bi) in exactly one pin flop; the XR8 predecode (OT_S81SL_XR_PDC) then decodes from those landing flops,
+// never from the pins.  +1 cycle on every CTL / RD / V / SC / B consequence; default 0 (= previous module) until the
+// S81-RF1 batch adopts it with -DOT_S81SL_XRT_RLAND -DOT_S81SL_XR_PDC.
+`ifdef OT_S81SL_XRT_RLAND
+`define OT_S81SL_XRT_RLAND_DEF 1
+`else
+`define OT_S81SL_XRT_RLAND_DEF 0
+`endif
+// RF-B RE-FORM (DIE-S81-51/CLK crossing table row 1): OLAT = 1 puts a negative-EDGE lockup flop (DFFLQN) between every
+// output face flop and its port: face flop -> negedge flop -> port, no logic between.  Same cycle at the receiver (the
+// port changes at the falling edge, stable before the next rising edge): +half-period hold margin on every core ->
+// parent face.  11-03: was a negative-level latch; latch-on-port fails the RAW face_guard ('unregistered', no override),
+// the edge flop has the same T/2 hold window and keeps the port flop-driven (DIE-HBM-61/CLOCK face LOCKUP form).  Default 0 until S81-RF1 adopts it with -DOT_S81SL_XRT_OLAT.
+`ifdef OT_S81SL_XRT_OLAT
+`define OT_S81SL_XRT_OLAT_DEF 1
+`else
+`define OT_S81SL_XRT_OLAT_DEF 0
+`endif
 `ifdef OT_S81SL_XR_FOREG
 `define OT_S81SL_XR_FOREG_DEF 1
 `else
@@ -138,6 +157,7 @@ module ot_s81sl_xrt #(
     parameter [14:0] PDSK = 15'd0,
     parameter integer HB = 0,
     parameter integer FOREG = 0,          // XR6 fallback: dedicated fault output flop (+1 more fault-visibility cycle)
+    parameter integer RING_LAND = 0,      // RF-B RE-FORM 11-03: ring / band landing stage (+1 cycle, see header)
     parameter integer FACE_LAND = 1,      // S81-KITS-RTLB 10-24: lo / p / e leaf interface landing stage (+1 cycle, below);
                                           // S81-KITS-RTLC 10-24: default ON everywhere (slice / die / benches)
     parameter integer W  = 1104,
@@ -247,6 +267,34 @@ module ot_s81sl_xrt #(
         assign lo_v_i = lo_v; assign p_v_i = p_v; assign e_v_i = e_v; assign lo_d_i = lo_d; assign p_d_i = p_d;
         assign e_c_i = e_c; assign e_d_i = e_d;
     end endgenerate
+    // ---------------------------------------------------------------- ring / band landing (RF-B RE-FORM 11-03)
+    // RING_LAND = 1: one pin flop per ring / band input bit before anything else (no logic and no shared fan-out at the pin;
+    // the XR8 predecode reads these flops).  Pure delay, reset-free like the data pin flops (every consumer resets or is
+    // recomputed from reset state): the module = the RING_LAND = 0 module with these 7 inputs one edge later.
+    // Bench: tools/s81_slice/xrt_rland_eq.sh (RING_LAND = 1 + PDC vs origin/main fed the 7 inputs one edge later).
+    wire dl_ev_i, dl_wv_i, dl_vv_i; wire [W-29:1] dl_e_i, dl_w_i; wire [V-1:1] dl_vb_i; wire [W-59:0] bi_i;
+    generate if (RING_LAND != 0) begin : g_rland
+        reg ev_l, wv_l, vv_l; reg [W-29:1] e_l, w_l; reg [V-1:1] vb_l; reg [W-59:0] bi_l;
+        always @(posedge clk) begin
+`ifdef OT_S81SL_XRT_MUT_RLAND_WV
+            wv_l <= 1'b0;                                  // mutant: W ring valid landing stuck
+`else
+            wv_l <= dl_wv;
+`endif
+            ev_l <= dl_ev; vv_l <= dl_vv; e_l <= dl_e; w_l <= dl_w; vb_l <= dl_vb;
+            bi_l <= (HB != 0) ? bi : {(W-58){1'b0}};
+        end
+`ifdef OT_S81SL_XRT_MUT_RLAND_VPIN
+        assign dl_vb_i = dl_vb;                            // mutant: V word not landed (edge-misaligned with vv)
+`else
+        assign dl_vb_i = vb_l;
+`endif
+        assign dl_ev_i = ev_l; assign dl_wv_i = wv_l; assign dl_vv_i = vv_l; assign dl_e_i = e_l; assign dl_w_i = w_l;
+        assign bi_i = bi_l;
+    end else begin : g_rpin
+        assign dl_ev_i = dl_ev; assign dl_wv_i = dl_wv; assign dl_vv_i = dl_vv; assign dl_e_i = dl_e; assign dl_w_i = dl_w;
+        assign dl_vb_i = dl_vb; assign bi_i = bi;
+    end endgenerate
     // ---------------------------------------------------------------- norm partial deskew (TOK-DS NORM-DESKEW 10-25)
     // COORD ruling 2026-10-25 01:34 (staggered norm partials): the compiler issues the 5 per-leaf norm commands
     // (NORMR k, each with its own a1 = the leaf's XQ / XB beat index) on 5 consecutive CTL edges (one CTL a cycle), so the
@@ -306,7 +354,7 @@ module ot_s81sl_xrt #(
     always @(posedge clk) begin ec_c <= e_c_i; ed_c <= e_d_i; egc_c <= eg_c; egd_c <= eg_d; end
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin ev <= 1'b0; wv <= 1'b0; vv <= 1'b0; lov <= 5'd0; pv <= 5'd0; rbv <= 1'b0; end
-        else begin ev <= dl_ev; wv <= dl_wv; vv <= dl_vv; lov <= lo_v_i; pv <= p_v_s; rbv <= qrel_v; end
+        else begin ev <= dl_ev_i; wv <= dl_wv_i; vv <= dl_vv_i; lov <= lo_v_i; pv <= p_v_s; rbv <= qrel_v; end
     // XR5 (S81-SAFE-FIX 10-19, checklist item 3): kept copies of the lo_v input flop for each leaf's lo_d gate (lov[k]
     // drove 256 AND gates); same D, same edge -> function and cycles unchanged.  XR7: one per 16 bits (was 32: 37 pins),
     // reset-free (data gate only).  evd_c / pvd_c: kept copies of the e_v / p_v input flops, one per 8 bits of the eqd /
@@ -318,8 +366,8 @@ module ot_s81sl_xrt #(
         for (integer k = 0; k < 20; k = k + 1) pvd_c[k] <= p_v_s[k / 4];
     end
     always @(posedge clk) begin
-        eb <= {28'd0, dl_e, 1'b0}; wb <= {28'd0, dl_w, 1'b0}; vb <= {dl_vb, 1'b0};
-        bb <= (HB != 0) ? {28'd0, bi[W-59:7], 30'd0, bi[6:0]} : {W{1'b0}}; lod <= lo_d_i; pd <= p_d_s; rbd <= qrel_d;
+        eb <= {28'd0, dl_e_i, 1'b0}; wb <= {28'd0, dl_w_i, 1'b0}; vb <= {dl_vb_i, 1'b0};
+        bb <= (HB != 0) ? {28'd0, bi_i[W-59:7], 30'd0, bi_i[6:0]} : {W{1'b0}}; lod <= lo_d_i; pd <= p_d_s; rbd <= qrel_d;
         sid_c <= sid;
     end
     wire bv = (HB != 0) && bb[0];
@@ -344,29 +392,31 @@ module ot_s81sl_xrt #(
     (* keep *) reg pq_me_l, pq_me_h, pq_mw_l, pq_mw_h, pq_mv_l, pq_mv_h;
     wire pq_me = pq_me_l | pq_me_h, pq_mw = pq_mw_l | pq_mw_h, pq_mv = pq_mv_l | pq_mv_h;
     wire pq_vrdc, pq_vrdm;   // same-D copies behind keep_hierarchy (plain keep regs were merged: 36-42 loads)
-    ot_s81sl_xr_rcp #(.ID(1)) u_vrdc (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdc));
-    ot_s81sl_xr_rcp #(.ID(2)) u_vrdm (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdm));
+    ot_s81sl_xr_rcp #(.ID(1)) u_vrdc (.clk(clk), .rst_n(rs_c), .d(dl_vv_i && dl_vb_i[3:1] == K_RD), .q(pq_vrdc));
+    ot_s81sl_xr_rcp #(.ID(2)) u_vrdm (.clk(clk), .rst_n(rs_c), .d(dl_vv_i && dl_vb_i[3:1] == K_RD), .q(pq_vrdm));
     // xrt3p census #4 (sid_c 33-36, pq_vrdm 33): row-select copy for the stage-2 regs and two more strap captures
-    wire pq_vrdr; ot_s81sl_xr_rcp #(.ID(7)) u_vrdr (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdr));
+    wire pq_vrdr; ot_s81sl_xr_rcp #(.ID(7)) u_vrdr (.clk(clk), .rst_n(rs_c), .d(dl_vv_i && dl_vb_i[3:1] == K_RD), .q(pq_vrdr));
     wire [3:0] sid_t, sid_k;
-    ot_s81sl_xr_cp #(.W(4), .ID(5)) u_st (.clk(clk), .d(sid), .q(sid_t));   // transmit words (snd / so_b)
-    ot_s81sl_xr_cp #(.W(4), .ID(6)) u_sk (.clk(clk), .d(sid), .q(sid_k));   // RG-FFN / local transport checks
+    ot_s81sl_xr_cp #(.W(4), .ID(5)) u_st (.clk(clk), .d(sid_c), .q(sid_t));   // transmit words (snd / so_b)
+    ot_s81sl_xr_cp #(.W(4), .ID(6)) u_sk (.clk(clk), .d(sid_c), .q(sid_k));   // RG-FFN / local transport checks
     // own strap capture for the predecode (sid_c reached 44 loads when shared): sid is static from reset
+    // RF-B 11-03: the copies take sid_c (the one sid face flop; face_guard 'shared' when 4 copies sat on the pin):
+    // +1 edge on a strap that is static from reset (rst_n >= 64 clk), same values after reset.
     wire [3:0] sid_p, sid_p2; (* keep *) reg [15:0] sid_ohp;
-    ot_s81sl_xr_cp #(.W(4), .ID(3)) u_sp1 (.clk(clk), .d(sid), .q(sid_p));
-    ot_s81sl_xr_cp #(.W(4), .ID(4)) u_sp2 (.clk(clk), .d(sid), .q(sid_p2));
+    ot_s81sl_xr_cp #(.W(4), .ID(3)) u_sp1 (.clk(clk), .d(sid_c), .q(sid_p));
+    ot_s81sl_xr_cp #(.W(4), .ID(4)) u_sp2 (.clk(clk), .d(sid_c), .q(sid_p2));
     always @(posedge clk) begin sid_ohp[7:0] <= 8'(16'd1 << sid_p); sid_ohp[15:8] <= 8'((16'd1 << sid_p2) >> 8); end
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; end
         else begin
-            pq_ectl <= dl_ev && dl_e[3:1] == K_CTL; pq_wctl <= dl_wv && dl_w[3:1] == K_CTL; pq_vctl <= dl_vv && dl_vb[3:1] == K_CTL;
-            pq_erd <= dl_ev && (dl_e[3:1] == K_RD || dl_e[3:1] == K_CL); pq_wrd <= dl_wv && (dl_w[3:1] == K_RD || dl_w[3:1] == K_CL);
-            pq_vrd <= dl_vv && dl_vb[3:1] == K_RD;
+            pq_ectl <= dl_ev_i && dl_e_i[3:1] == K_CTL; pq_wctl <= dl_wv_i && dl_w_i[3:1] == K_CTL; pq_vctl <= dl_vv_i && dl_vb_i[3:1] == K_CTL;
+            pq_erd <= dl_ev_i && (dl_e_i[3:1] == K_RD || dl_e_i[3:1] == K_CL); pq_wrd <= dl_wv_i && (dl_w_i[3:1] == K_RD || dl_w_i[3:1] == K_CL);
+            pq_vrd <= dl_vv_i && dl_vb_i[3:1] == K_RD;
         end
     always @(posedge clk) begin
-        pq_me_l <= |(dl_e[28:21] & sid_ohp[7:0]);  pq_me_h <= |(dl_e[36:29] & sid_ohp[15:8]);
-        pq_mw_l <= |(dl_w[28:21] & sid_ohp[7:0]);  pq_mw_h <= |(dl_w[36:29] & sid_ohp[15:8]);
-        pq_mv_l <= |(dl_vb[28:21] & sid_ohp[7:0]); pq_mv_h <= |(dl_vb[36:29] & sid_ohp[15:8]);
+        pq_me_l <= |(dl_e_i[28:21] & sid_ohp[7:0]);  pq_me_h <= |(dl_e_i[36:29] & sid_ohp[15:8]);
+        pq_mw_l <= |(dl_w_i[28:21] & sid_ohp[7:0]);  pq_mw_h <= |(dl_w_i[36:29] & sid_ohp[15:8]);
+        pq_mv_l <= |(dl_vb_i[28:21] & sid_ohp[7:0]); pq_mv_h <= |(dl_vb_i[36:29] & sid_ohp[15:8]);
     end
     wire e_ctl = pq_ectl, w_ctl = pq_wctl, v_ctl = pq_vctl;
     wire e_rd = pq_erd, w_rd = pq_wrd;
@@ -915,6 +965,7 @@ endmodule
 // S81-KITS-RTLC 10-24 (OWNER DECISION 8): ring ports narrowed to the bits that are read / not constant (dl_e / dl_w
 // [1075:1], dl_vb [275:1], ci_b [1075:0], x_si [6:0], C3 bi packed {B[1075:37], B[6:0]}); FACE_LAND = 1 by default.
 module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = 1,
+    parameter integer RING_LAND = `OT_S81SL_XRT_RLAND_DEF, parameter integer OLAT = `OT_S81SL_XRT_OLAT_DEF,
     parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF, parameter [127:0] QDELAYS=`OT_S81SL_QREL_DELAYS) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire dl_ev, input wire [1075:1] dl_e, input wire dl_wv, input wire [1075:1] dl_w,
@@ -928,16 +979,68 @@ module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, paramet
     output wire [6:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
+    // RF-B OLAT: core outputs -> out-face lockup latches -> ports
+    wire [2:0] o_ci_dir;
+    wire [1075:0] o_ci_b;
+    wire [4:0] o_c_v;
+    wire [159:0] o_c_d;
+    wire [4:0] o_sw_v;
+    wire [49:0] o_sw_a;
+    wire [39:0] o_sw_m;
+    wire [1279:0] o_sw_d;
+    wire [0:0] o_rb_v;
+    wire [31:0] o_rb_d;
+    wire [0:0] o_g_v;
+    wire [1:0] o_g_c;
+    wire [31:0] o_g_d;
+    wire [0:0] o_x_go;
+    wire [0:0] o_x_mode;
+    wire [31:0] o_x_eps;
+    wire [31:0] o_x_scale;
+    wire [0:0] o_x_sv;
+    wire [6:0] o_x_si;
+    wire [31:0] o_x_s;
+    wire [0:0] o_is_v;
+    wire [159:0] o_is_d;
+    wire [0:0] o_cfg_v;
+    wire [159:0] o_cfg_d;
+    wire [0:0] o_fault;
+    ot_s81sl_xr_olat #(.W(3), .ON(OLAT)) l_ci_dir (.clk(clk), .d(o_ci_dir), .q(ci_dir));
+    ot_s81sl_xr_olat #(.W(1076), .ON(OLAT)) l_ci_b (.clk(clk), .d(o_ci_b), .q(ci_b));
+    ot_s81sl_xr_olat #(.W(5), .ON(OLAT)) l_c_v (.clk(clk), .d(o_c_v), .q(c_v));
+    ot_s81sl_xr_olat #(.W(160), .ON(OLAT)) l_c_d (.clk(clk), .d(o_c_d), .q(c_d));
+    ot_s81sl_xr_olat #(.W(5), .ON(OLAT)) l_sw_v (.clk(clk), .d(o_sw_v), .q(sw_v));
+    ot_s81sl_xr_olat #(.W(50), .ON(OLAT)) l_sw_a (.clk(clk), .d(o_sw_a), .q(sw_a));
+    ot_s81sl_xr_olat #(.W(40), .ON(OLAT)) l_sw_m (.clk(clk), .d(o_sw_m), .q(sw_m));
+    ot_s81sl_xr_olat #(.W(1280), .ON(OLAT)) l_sw_d (.clk(clk), .d(o_sw_d), .q(sw_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_rb_v (.clk(clk), .d(o_rb_v), .q(rb_v));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_rb_d (.clk(clk), .d(o_rb_d), .q(rb_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_g_v (.clk(clk), .d(o_g_v), .q(g_v));
+    ot_s81sl_xr_olat #(.W(2), .ON(OLAT)) l_g_c (.clk(clk), .d(o_g_c), .q(g_c));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_g_d (.clk(clk), .d(o_g_d), .q(g_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_x_go (.clk(clk), .d(o_x_go), .q(x_go));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_x_mode (.clk(clk), .d(o_x_mode), .q(x_mode));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_x_eps (.clk(clk), .d(o_x_eps), .q(x_eps));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_x_scale (.clk(clk), .d(o_x_scale), .q(x_scale));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_x_sv (.clk(clk), .d(o_x_sv), .q(x_sv));
+    ot_s81sl_xr_olat #(.W(7), .ON(OLAT)) l_x_si (.clk(clk), .d(o_x_si), .q(x_si));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_x_s (.clk(clk), .d(o_x_s), .q(x_s));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_is_v (.clk(clk), .d(o_is_v), .q(is_v));
+    ot_s81sl_xr_olat #(.W(160), .ON(OLAT)) l_is_d (.clk(clk), .d(o_is_d), .q(is_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_cfg_v (.clk(clk), .d(o_cfg_v), .q(cfg_v));
+    ot_s81sl_xr_olat #(.W(160), .ON(OLAT)) l_cfg_d (.clk(clk), .d(o_cfg_d), .q(cfg_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_fault (.clk(clk), .d(o_fault), .q(fault));
     wire [512:0] bo_unused;
-    ot_s81sl_xrt #(.HB(0), .FOREG(FOREG), .PDSK(PDSK), .QDELAYS(QDELAYS), .FACE_LAND(FACE_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
-        .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi({1046{1'b0}}), .bo(bo_unused), .c_v(c_v), .c_d(c_d),
-        .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
-        .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),
-        .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
-        .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
+    ot_s81sl_xrt #(.HB(0), .FOREG(FOREG), .PDSK(PDSK), .QDELAYS(QDELAYS), .FACE_LAND(FACE_LAND), .RING_LAND(RING_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+        .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(o_ci_dir), .ci_b(o_ci_b), .bi({1046{1'b0}}), .bo(bo_unused), .c_v(o_c_v), .c_d(o_c_d),
+        .sw_v(o_sw_v), .sw_a(o_sw_a), .sw_m(o_sw_m), .sw_d(o_sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(o_rb_v),
+        .rb_d(o_rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(o_g_v), .g_c(o_g_c),
+        .g_d(o_g_d), .x_go(o_x_go), .x_mode(o_x_mode), .x_eps(o_x_eps), .x_scale(o_x_scale), .x_sv(o_x_sv), .x_si(o_x_si), .x_s(o_x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
+        .is_v(o_is_v), .is_d(o_is_d), .cfg_v(o_cfg_v), .cfg_d(o_cfg_d), .fault(o_fault));
 endmodule
 
 module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = 1,
+    parameter integer RING_LAND = `OT_S81SL_XRT_RLAND_DEF, parameter integer OLAT = `OT_S81SL_XRT_OLAT_DEF,
     parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF, parameter [127:0] QDELAYS=`OT_S81SL_QREL_DELAYS) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire dl_ev, input wire [1075:1] dl_e, input wire dl_wv, input wire [1075:1] dl_w,
@@ -952,12 +1055,82 @@ module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, paramet
     output wire [6:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
-    ot_s81sl_xrt #(.HB(1), .FOREG(FOREG), .PDSK(PDSK), .QDELAYS(QDELAYS), .FACE_LAND(FACE_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
-        .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d),
-        .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
-        .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),
-        .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
-        .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
+    // RF-B OLAT: core outputs -> out-face lockup latches -> ports
+    wire [2:0] o_ci_dir;
+    wire [1075:0] o_ci_b;
+    wire [4:0] o_c_v;
+    wire [159:0] o_c_d;
+    wire [4:0] o_sw_v;
+    wire [49:0] o_sw_a;
+    wire [39:0] o_sw_m;
+    wire [1279:0] o_sw_d;
+    wire [0:0] o_rb_v;
+    wire [31:0] o_rb_d;
+    wire [0:0] o_g_v;
+    wire [1:0] o_g_c;
+    wire [31:0] o_g_d;
+    wire [0:0] o_x_go;
+    wire [0:0] o_x_mode;
+    wire [31:0] o_x_eps;
+    wire [31:0] o_x_scale;
+    wire [0:0] o_x_sv;
+    wire [6:0] o_x_si;
+    wire [31:0] o_x_s;
+    wire [0:0] o_is_v;
+    wire [159:0] o_is_d;
+    wire [0:0] o_cfg_v;
+    wire [159:0] o_cfg_d;
+    wire [0:0] o_fault;
+    wire [512:0] o_bo;
+    ot_s81sl_xr_olat #(.W(3), .ON(OLAT)) l_ci_dir (.clk(clk), .d(o_ci_dir), .q(ci_dir));
+    ot_s81sl_xr_olat #(.W(1076), .ON(OLAT)) l_ci_b (.clk(clk), .d(o_ci_b), .q(ci_b));
+    ot_s81sl_xr_olat #(.W(5), .ON(OLAT)) l_c_v (.clk(clk), .d(o_c_v), .q(c_v));
+    ot_s81sl_xr_olat #(.W(160), .ON(OLAT)) l_c_d (.clk(clk), .d(o_c_d), .q(c_d));
+    ot_s81sl_xr_olat #(.W(5), .ON(OLAT)) l_sw_v (.clk(clk), .d(o_sw_v), .q(sw_v));
+    ot_s81sl_xr_olat #(.W(50), .ON(OLAT)) l_sw_a (.clk(clk), .d(o_sw_a), .q(sw_a));
+    ot_s81sl_xr_olat #(.W(40), .ON(OLAT)) l_sw_m (.clk(clk), .d(o_sw_m), .q(sw_m));
+    ot_s81sl_xr_olat #(.W(1280), .ON(OLAT)) l_sw_d (.clk(clk), .d(o_sw_d), .q(sw_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_rb_v (.clk(clk), .d(o_rb_v), .q(rb_v));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_rb_d (.clk(clk), .d(o_rb_d), .q(rb_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_g_v (.clk(clk), .d(o_g_v), .q(g_v));
+    ot_s81sl_xr_olat #(.W(2), .ON(OLAT)) l_g_c (.clk(clk), .d(o_g_c), .q(g_c));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_g_d (.clk(clk), .d(o_g_d), .q(g_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_x_go (.clk(clk), .d(o_x_go), .q(x_go));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_x_mode (.clk(clk), .d(o_x_mode), .q(x_mode));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_x_eps (.clk(clk), .d(o_x_eps), .q(x_eps));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_x_scale (.clk(clk), .d(o_x_scale), .q(x_scale));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_x_sv (.clk(clk), .d(o_x_sv), .q(x_sv));
+    ot_s81sl_xr_olat #(.W(7), .ON(OLAT)) l_x_si (.clk(clk), .d(o_x_si), .q(x_si));
+    ot_s81sl_xr_olat #(.W(32), .ON(OLAT)) l_x_s (.clk(clk), .d(o_x_s), .q(x_s));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_is_v (.clk(clk), .d(o_is_v), .q(is_v));
+    ot_s81sl_xr_olat #(.W(160), .ON(OLAT)) l_is_d (.clk(clk), .d(o_is_d), .q(is_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_cfg_v (.clk(clk), .d(o_cfg_v), .q(cfg_v));
+    ot_s81sl_xr_olat #(.W(160), .ON(OLAT)) l_cfg_d (.clk(clk), .d(o_cfg_d), .q(cfg_d));
+    ot_s81sl_xr_olat #(.W(1), .ON(OLAT)) l_fault (.clk(clk), .d(o_fault), .q(fault));
+    ot_s81sl_xr_olat #(.W(513), .ON(OLAT)) l_bo (.clk(clk), .d(o_bo), .q(bo));
+    ot_s81sl_xrt #(.HB(1), .FOREG(FOREG), .PDSK(PDSK), .QDELAYS(QDELAYS), .FACE_LAND(FACE_LAND), .RING_LAND(RING_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+        .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(o_ci_dir), .ci_b(o_ci_b), .bi(bi), .bo(o_bo), .c_v(o_c_v), .c_d(o_c_d),
+        .sw_v(o_sw_v), .sw_a(o_sw_a), .sw_m(o_sw_m), .sw_d(o_sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(o_rb_v),
+        .rb_d(o_rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(o_g_v), .g_c(o_g_c),
+        .g_d(o_g_d), .x_go(o_x_go), .x_mode(o_x_mode), .x_eps(o_x_eps), .x_scale(o_x_scale), .x_sv(o_x_sv), .x_si(o_x_si), .x_s(o_x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
+        .is_v(o_is_v), .is_d(o_is_d), .cfg_v(o_cfg_v), .cfg_d(o_cfg_d), .fault(o_fault));
+endmodule
+
+// RF-B OLAT cell: ON = 1 -> negative-edge flop per bit (yosys $_DFF_N_ -> DFFLQNx1), ON = 0 -> wire.
+module ot_s81sl_xr_olat #(parameter integer W = 1, parameter integer ON = 0) (input wire clk, input wire [W-1:0] d,
+    output wire [W-1:0] q);
+    generate if (ON != 0) begin : g_l
+`ifdef OT_S81SL_XRT_MUT_OLAT_POS
+        reg [W-1:0] l; always @(posedge clk) l <= d;        // mutant: positive-edge flop (+1 cycle at the port)
+`elsif OT_S81SL_XRT_OLAT_LEVEL
+        reg [W-1:0] l; always @(*) if (!clk) l = d;         // DIE-S81-51/NFF 11-03: the transparent-low latch form, kept selectable
+`else
+        reg [W-1:0] l; always @(negedge clk) l <= d;
+`endif
+        assign q = l;
+    end else begin : g_w
+        assign q = d;
+    end endgenerate
 endmodule
 
 `ifdef OT_S81SL_XR_PDC

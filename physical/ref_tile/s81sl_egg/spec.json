@@ -1,0 +1,169 @@
+{
+ "name": "s81sl_egg",
+ "kind": "tile",
+ "top": "ot_s81sl_egg",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 155.52
+ },
+ "util": 0.4,
+ "layer_cap": "M5",
+ "recipe": 3,
+ "pins": {
+  "S": [
+   "n_v",
+   "n_f",
+   "n_rh",
+   "n_rk"
+  ],
+  "W": [
+   "g_v",
+   "g_c",
+   "g",
+   "fault",
+   "i_v",
+   "i_c",
+   "i_dd",
+   "scale"
+  ],
+  "N": [],
+  "E": []
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "why_floorplan": "S81-RF1 RE-FORM (DIE-S81-51/RF-B 11-03): products + gate of the split eg; the two egn faces land in face flops at the S face (nv_q/nf_q/rh_q/rk_q), parent inputs in pin flops at the W face (iv_q/ic_q/dd_q/sc_q), outputs g_v/g_c/g/fault launched from flops at the W face; one clock root",
+ "job": {
+  "owner": "Claude:die-s81-51-rfb",
+  "branch": "claude/die-s81-51-rfb-eg-1103",
+  "tag": "rf1",
+  "purpose": "S81-RF1 RE-FORM block ot_s81sl_egg of ot_s81sl_eg",
+  "benches": [
+   {
+    "name": "eg_exact_s1",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/eng/test/run_eg_bench.sh {RUN}/eg_p 0 3 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS ot_s81sl_eg [0-9]+ copies bit exact",
+    "min_count_regex": "PASS ot_s81sl_eg ([0-9]+) copies"
+   },
+   {
+    "name": "eg_exact_gap0",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/eng/test/run_eg_bench.sh {RUN}/eg_g0 0 0 4",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS ot_s81sl_eg [0-9]+ copies bit exact"
+   },
+   {
+    "name": "eg_mut1_sign",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/eng/test/run_eg_bench.sh {RUN}/eg_m1 1 3 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MUTANT 1 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/rtl_build_s81_1018/eg/mut1.log"
+   },
+   {
+    "name": "eg_mut2_rstd",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/eng/test/run_eg_bench.sh {RUN}/eg_m2 2 3 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MUTANT 2 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/rtl_build_s81_1018/eg/mut2.log"
+   },
+   {
+    "name": "eg_mut3_order",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/eng/test/run_eg_bench.sh {RUN}/eg_m3 3 3 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MUTANT 3 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/rtl_build_s81_1018/eg/mut3.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_eg/views",
+  "record_to": "results/rtl/ref_tile/s81sl_eg",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_dv",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "results/rtl/rtl_build_s81_1018/eg"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_s81sl_egg registers every input in a pin flop and launches every output from a flop in RTL (S81-RF1 face rule); the bench-measured fixed latency (tb_s81sl_eg 222) includes them; io_flop_at_pins places them at the faces."
+ }
+}

@@ -1,0 +1,16 @@
+DIE-S81-51/RF-D 11-03 S81-044 ot_s81sl_cap_rt RF2 (RF1 = 2) RE-FORM (RF1 ECO m0 / m1w / m2 exhausted TT -4.09, 16 ep).
+Failing classes in eco_m2/i1 sta_tt_max.rpt: (1) g_st[*].u_g/la_sl, lb_sl -> fa_ev / fb_ev / fb_es (raw -23..-29: 6-buffer
+select fanout + 256:1 ev / es read); (2) cb -> g_st[*].u_g key_g / ev_g / cnt_g (raw -26: cb -> NAND -> 48-load fanout ->
+group write decode).  (3) cw_s_d[152/154/163] out ports MET +79..+82 in this report (already a registered negedge out-face,
+no +1 added).  (4) ev_g / cnt_g endpoints in g_st[2/4/6]: from u_rr.rst_n[9] they are recovery checks MET +219; the
+violating ones start at cb (data, class 2).
+Form (0 edges moved; no latency contract change): per-group h-column pre-select of ev / es (next state, same-edge write
+forwarded) -> lookup = 8:1 on la_sl; registered decision selects sb_m / sb_d / sb_g[8] / rel_q (kept copies, reset rs_f)
+and per-side registered group one-hots gsa / gsb -> s_in / r_in from flops through one 2:1.
+Lockstep (Verilator 5.050, results/rfd_1103/caprt/run.sh; outputs + fa/fb kh / ev / es / cn every edge, 200k cycles):
+  RA 1 / RB 2 seed 1 PASS (key_hits 16010 inserts 879 merges 149), seed 5 PASS; RA 0 / RB 2 seed 3 PASS
+  mut 1 OT_RFD_MUT_CAP2 (column without the same-edge forward): FAIL 4 mismatches (caught)
+  mut 2 OT_RFD_MUT_CAP2B (A one-hot = B group): FAIL 197463 mismatches (caught)
+Kit ot_s81sl_cap_rt_rfd (recipes_rfd_caprt_1103.json = recipes.json rf1 entry + RF1 2; config identical to rf1 but
+VERILOG_TOP_PARAMS): GEN_LINT PASS issues 0 (pins_vs_plan PASS), KIT_PREFLIGHT PASS issues 0.  Estimate: rf1 synth
+66.5k cells (+~300 flops) <= 150k; util ~0.46 (rf1 placed 0.459, DRC 0) -- outline is the capc5r LEF contract, not grown.

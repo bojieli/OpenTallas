@@ -1,0 +1,7 @@
+{
+ "_doc": "DIE-S81-51/RF-B 11-03 RE-FORM recipes (S81-RF1): xrt1 + xrt3 = one xrt template (207.36x164.16, M3-M6 pins). RTL form: OT_S81SL_XRT_RLAND (ring / band inputs land in one pin flop, +1 cycle, XR8 predecode reads the landing flops), OT_S81SL_XR_PDC (kind / owner predicates registered at the landing edge: breaks the eb -> rwe_c / rwr_c 750-ps stage), OT_S81SL_XRT_OLAT (negative-level lockup latch on every output face, CLK crossing table row 1). Clock: one core entry, default TritonCTS (sink clustering), no clock_split_km. Bench tools/s81_slice/xrt_rland_eq.sh.",
+ "ot_s81sl_xrt1": {"ref_tile": "physical/ref_tile/s81sl_xrt1", "rtl_dirs": true, "suffix": "rf1",
+                   "defines": ["OT_S81SL_XR_PDC", "OT_S81SL_XRT_RLAND", "OT_S81SL_XRT_OLAT"]},
+ "ot_s81sl_xrt3": {"ref_tile": "physical/ref_tile/s81sl_xrt3_b", "rtl_dirs": true, "suffix": "rf1",
+                   "defines": ["OT_S81SL_XR_PDC", "OT_S81SL_XRT_RLAND", "OT_S81SL_XRT_OLAT"]}
+}
