@@ -97,3 +97,28 @@ Elapsed time: 1:02.84[h:]min:sec. CPU time: user 59.19 sys 1.86 (97%). Peak memo
 make[1]: *** [Makefile:548: do-4_1_cts] Error 1
 make: *** [Makefile:548: /work/run/results/asap7/dp_sle_st_a_v1__cl989804f6__cled3c1d7b/base/4_1_cts.odb] Error 2
  | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/sle_st_a_v1__cl989804f6__cled3c1d7b/attempt_5/gen/sle_st_a_v1__cl989804f6__cled3c1d7b src codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 11:36:34 PST AUTOPILOT -> KIT-WAVE-12: FAILED 3803a5ee77ae qwen_compute/slw_st_a_v1__clb036e152 (CRASH/flow-error):  alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 1:03.85[h:]min:sec. CPU time: user 60.54 sys 2.62 (98%). Peak memory: 1213348KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_a_v1__clb036e152/base/4_1_cts.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_a_v1__clb036e152/attempt_3/gen/slw_st_a_v1__clb036e152 src codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 11:36:44 PST AUTOPILOT -> KIT-WAVE-12: FAILED 454ec1fce6f0 qwen_compute/slw_fe_v2__cle312294d (CRASH/flow-error): d file "/work/grt_maxwire.tcl": no such file or directory
+Elapsed time: 0:12.92[h:]min:sec. CPU time: user 12.13 sys 0.76 (99%). Peak memory: 614144KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/dp_slw_fe_v2__cle312294d/base/5_1_grt.odb] Error 2
+ | kit intel1:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_fe_v2__cle312294d/attempt_4/gen/slw_fe_v2__cle312294d src claude/kw-fix-4-qcdpl-1103@d85db82cddb | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 11:36:54 PST AUTOPILOT -> KIT-WAVE-12: FAILED 6cbeb3546491 qwen_compute/slw_st_a_v1__clfc5867a6 (CRASH/flow-error):  alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 1:04.39[h:]min:sec. CPU time: user 62.31 sys 1.61 (99%). Peak memory: 1214172KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_a_v1__clfc5867a6/base/4_1_cts.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_a_v1__clfc5867a6/attempt_3/gen/slw_st_a_v1__clfc5867a6 src codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 11:37:00 PST AUTOPILOT -> KIT-WAVE-12: FAILED bdbb227e4523 qwen_compute/slw_fe_v1__cl95cd1d0c (CRASH/flow-error): d file "/work/grt_maxwire.tcl": no such file or directory
+Elapsed time: 0:12.31[h:]min:sec. CPU time: user 11.51 sys 0.74 (99%). Peak memory: 642408KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/dp_slw_fe_v1__cl95cd1d0c/base/5_1_grt.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_fe_v1__cl95cd1d0c/gen/slw_fe_v1__cl95cd1d0c src claude/kw-fix-4-qcdpl-1103@d85db82cddb | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 11:37:01 PST AUTOPILOT -> KIT-WAVE-12: FAILED cfdf06ae2e42 qwen_compute/slw_st_a_v2__clf4365a62 (CRASH/flow-error):  alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 1:09.21[h:]min:sec. CPU time: user 66.06 sys 2.61 (99%). Peak memory: 1185508KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_a_v2__clf4365a62/base/4_1_cts.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_a_v2__clf4365a62/attempt_3/gen/slw_st_a_v2__clf4365a62 src codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
