@@ -189,7 +189,17 @@
     "kv3_pc__cl254f2e73@1",
     "kv3_pc__cl5a95b461@1",
     "kv3_pc_v3@1",
-    "kv3_io_ft_v1@4"
+    "kv3_io_ft_v1@4",
+    "kv3_hg@4",
+    "kv3_hg_v3@4",
+    "kv3_pv_v2@4",
+    "kv3_pv_v2n@4",
+    "kv3_pv_v3@4",
+    "kv3_pv_v3n@4",
+    "kv3_pv_v4@4",
+    "kv3_pv_v4n@4",
+    "kv3_pv_v5@4",
+    "kv3_pv_v5n@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -334,7 +344,17 @@
     "kv3_pc__cl5a95b461@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pc_v3@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_sys_SD@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
-    "kv3_io_ft_v1@4": "ring ft form A + hold guard; hold lifted on FT-ROUTE-READ-1 05:50"
+    "kv3_io_ft_v1@4": "ring ft form A + hold guard; hold lifted on FT-ROUTE-READ-1 05:50",
+    "kv3_hg@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_hg_v3@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_pv_v2@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_pv_v2n@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_pv_v3@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_pv_v3n@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_pv_v4@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_pv_v4n@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_pv_v5@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_pv_v5n@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x"
    },
    "only_items": [
     "kv3_astk",
