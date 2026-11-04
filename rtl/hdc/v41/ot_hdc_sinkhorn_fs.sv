@@ -1129,14 +1129,17 @@ module ot_hdc_sinkhorn_fsr #(
                 localparam integer RR = k % 4, KK = k / 4, WI = 3 * KK + RR;   // 0..11
                 for (n = 0; n < 2; n = n + 1) begin : g_h
                     wire [7:0] s = qcb[8 * (2 * WI + n) +: 8];
-                    reg [15:0] h;
+                    // LEC-2 11-03: bit 31 of a landing word is 0 in both sources (z_out sign 0, qw = {0, q}), so there is no flop
+                    // for it: synthesis folded it anyway and the X-until-first-land gold flop was a false LEC difference.
+                    localparam integer HW = (n == 1) ? 15 : 16;
+                    reg [HW-1:0] h;
                     wire [31:0] qw = {1'b0, q[KK]};
 `ifdef OT_RFD_MUT_RB    // RF-D bench mutant: word 6 (row 2, k 1) misses its step-0 landing
-                    always @(posedge clk) if (s[RR] && k != 6) h <= z_out[KK][16*n +: 16]; else if (s[4 + RR]) h <= qw[16*n +: 16];
+                    always @(posedge clk) if (s[RR] && k != 6) h <= z_out[KK][16*n +: HW]; else if (s[4 + RR]) h <= qw[16*n +: HW];
 `else
-                    always @(posedge clk) if (s[RR]) h <= z_out[KK][16*n +: 16]; else if (s[4 + RR]) h <= qw[16*n +: 16];
+                    always @(posedge clk) if (s[RR]) h <= z_out[KK][16*n +: HW]; else if (s[4 + RR]) h <= qw[16*n +: HW];
 `endif
-                    assign rb[k][16*n +: 16] = h;
+                    assign rb[k][16*n +: 16] = 16'(h);
                 end
             end
         end
