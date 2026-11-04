@@ -370,14 +370,23 @@ module ot_s81sl_vs #(
     // copies of the arrival and flush counters, one per 64-b column group of the stash (keep: not merged by synthesis)
 
 `ifndef OT_S81SL_VS_SRAM
-    (* keep = "true" *) reg [7:0] ka_q [0:3];
-    (* keep = "true" *) reg [3:0] fl_q [0:3];
-    (* keep = "true" *) reg [3:0] eqp_q [0:3];
-    (* keep = "true" *) reg       ep_q [0:3];
+`ifdef OT_S81SL_VS_RS16
+    // S81-RF1 RS16 (DIE-S81-52 2026-11-03, 0 cycles): one stash read-select copy per 16 bits instead of per 64 bits, which
+    // removes one buffer level from the ka_q / fl_q -> row decode -> mux paths (ve_rh, ve_ah, x_wd TT -35 to -41).
+    // Only ka_q[3:0] is read, so the copies are 4 bits wide.
+    localparam integer RQN = 16; localparam integer KQW = 4;
+`else
+    localparam integer RQN = 4; localparam integer KQW = 8;
+`endif
+    localparam integer RQW = 256 / RQN;
+    (* keep = "true" *) reg [KQW-1:0] ka_q [0:RQN-1];
+    (* keep = "true" *) reg [3:0] fl_q [0:RQN-1];
+    (* keep = "true" *) reg [3:0] eqp_q [0:RQN-1];
+    (* keep = "true" *) reg       ep_q [0:RQN-1];
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) for (integer rq = 0; rq < 4; rq = rq + 1) ka_q[rq] <= 8'd0;
-        else for (integer rq = 0; rq < 4; rq = rq + 1)
-            if (acc_cmd) ka_q[rq] <= 8'd0; else if (arr) ka_q[rq] <= ka_q[rq] + 8'd1;
+        if (!rs_c) for (integer rq = 0; rq < RQN; rq = rq + 1) ka_q[rq] <= {KQW{1'b0}};
+        else for (integer rq = 0; rq < RQN; rq = rq + 1)
+            if (acc_cmd) ka_q[rq] <= {KQW{1'b0}}; else if (arr) ka_q[rq] <= ka_q[rq] + 1'b1;
 
 `endif
     // ================================================================ SW: groups to the lane sub-leaf
@@ -636,6 +645,25 @@ module ot_s81sl_vs #(
     always @(posedge clk) if (xqv_c) hwq_d <= xq_c;
 `endif
 `endif
+`ifdef OT_S81SL_VS_HAW
+`ifndef OT_S81SL_VS_SRAM
+    // S81-RF1 HAW (DIE-S81-52 2026-11-03, pipeline cut, 0 external cycles): the ADD-result stash write lands one edge later
+    // from registered copies, the same form as HWQ: haw_sel[4 r + k] = row r / copy k select (64 kept flops, each driving
+    // 64 stash bits) and haw_d = the h halves of voy_c.  This removes op / ko_e / voc_c -> decode -> enable fanout
+    // (TT -69.76, 138 of 230 failing endpoints).  Safe: copy k of a row pair is read once per sweep, before its result
+    // returns, and the flush reads row 0 first after ko_e == 31 while the last result lands in row pair 7.
+    `S81_VS_CONTROL_KEEP reg [63:0] haw_sel; reg [127:0] haw_d;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) haw_sel <= 64'd0;
+        else for (integer r = 0; r < 16; r = r + 1) for (integer k = 0; k < 4; k = k + 1)
+`ifdef OT_S81SL_VS_HAW_MUT
+            haw_sel[4 * r + k] <= vov_c && op == OP_ENG && ph && (r >> 1) == ko_e[2:0] && k == voc_c && !(r == 5 && k == 2);   // MUTANT: one row/copy lost
+`else
+            haw_sel[4 * r + k] <= vov_c && op == OP_ENG && ph && (r >> 1) == ko_e[2:0] && k == voc_c;
+`endif
+    always @(posedge clk) if (vov_c) for (integer w = 0; w < 8; w = w + 1) haw_d[16 * w +: 16] <= voy_c[32 * w + 16 +: 16];
+`endif
+`endif
     wire [7:0] er = ka - 8'd16;                      // REDUCE K / W arrival r (16 .. 79): K pair even r, W pair odd r
     `S81_VS_CONTROL_KEEP reg  [255:0] kst; reg [127:0] wst; (* keep *) reg epend;    // K pair stash, W upper half, second quad pending
     wire [5:0] eq0 = {er[6:4], er[3:1], 1'b0}; reg [5:0] eqp;
@@ -735,11 +763,11 @@ module ot_s81sl_vs #(
     always @(*) gsel = gsel_r;
 `else
     always @(*) begin
-        for (integer rq = 0; rq < 4; rq = rq + 1) begin
-            hrow[64 * rq +: 64] = hst[ep_q[rq] ? eqp_q[rq] : {ka_q[rq][3:1], 1'b0}][64 * rq +: 64];
-            hra[64 * rq +: 64] = hst[{ka_q[rq][2:0], 1'b0}][64 * rq +: 64];
-            hrb[64 * rq +: 64] = hst[{ka_q[rq][2:0], 1'b1}][64 * rq +: 64];
-            xwsel[64 * rq +: 64] = hst[fl_q[rq]][64 * rq +: 64];
+        for (integer rq = 0; rq < RQN; rq = rq + 1) begin
+            hrow[RQW * rq +: RQW] = hst[ep_q[rq] ? eqp_q[rq] : {ka_q[rq][3:1], 1'b0}][RQW * rq +: RQW];
+            hra[RQW * rq +: RQW] = hst[{ka_q[rq][2:0], 1'b0}][RQW * rq +: RQW];
+            hrb[RQW * rq +: RQW] = hst[{ka_q[rq][2:0], 1'b1}][RQW * rq +: RQW];
+            xwsel[RQW * rq +: RQW] = hst[fl_q[rq]][RQW * rq +: RQW];
         end
         gsel = gate[(MUT == 7) ? ka[4:3] ^ 2'd1 : ka[4:3]];
     end
@@ -757,7 +785,7 @@ module ot_s81sl_vs #(
         if (!rs_eng) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0;
 
 `ifndef OT_S81SL_VS_SRAM
-for (integer rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0;
+for (integer rq = 0; rq < RQN; rq = rq + 1) ep_q[rq] <= 1'b0;
 `endif
  end
         else begin
@@ -765,7 +793,7 @@ for (integer rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0;
             epend <= eng_r && ka >= 8'd16 && er[0];
 
 `ifndef OT_S81SL_VS_SRAM
-for (integer rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
+for (integer rq = 0; rq < RQN; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
 `endif
 
             ve_av <= eng_a;
@@ -799,7 +827,7 @@ for (integer rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er
         eqp <= eq0 | 6'd1;
 
 `ifndef OT_S81SL_VS_SRAM
-for (integer rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
+for (integer rq = 0; rq < RQN; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
 `endif
 
 `ifdef OT_S81SL_VS_SRAM
@@ -827,6 +855,13 @@ for (integer rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
         // ADD results: copy j's slots of half rows 2 s, 2 s + 1
         // (decoded constant-index slices: one-hot row pair x copy, no runtime part-select)
 `ifndef OT_S81SL_VS_SRAM
+`ifdef OT_S81SL_VS_HAW
+        for (integer i = 0; i < 16; i = i + 1)
+            for (integer k = 0; k < 4; k = k + 1)
+                if (haw_sel[4 * i + k])
+                    for (integer e2 = 0; e2 < 4; e2 = e2 + 1)
+                        hst[i][(4 * k + e2) * 16 +: 16] <= haw_d[16 * (4 * (i & 1) + e2) +: 16];
+`else
         if (vov_c && op == OP_ENG && ph)
             for (integer i = 0; i < 16; i = i + 1)
                 for (integer k = 0; k < 4; k = k + 1)
@@ -834,13 +869,14 @@ for (integer rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
                         for (integer e2 = 0; e2 < 4; e2 = e2 + 1)
                             hst[i][(4 * k + e2) * 16 +: 16] <= voy_c[32 * (4 * (i & 1) + e2) + 16 +: 16];
 `endif
+`endif
     end
     // partial triples out; result / flush counters
     always @(posedge clk or negedge rs_flush)
         if (!rs_flush) begin e_v <= 1'b0; kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
 
 `ifndef OT_S81SL_VS_SRAM
-for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
+for (integer rq = 0; rq < RQN; rq = rq + 1) fl_q[rq] <= 4'd0;
 `endif
  end
         else begin
@@ -848,7 +884,7 @@ for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
             if (`S81_VS_ACC(114)) begin kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
 
 `ifndef OT_S81SL_VS_SRAM
-for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
+for (integer rq = 0; rq < RQN; rq = rq + 1) fl_q[rq] <= 4'd0;
 `endif
  end
             else begin
@@ -857,7 +893,7 @@ for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0;
                 if (fl_on) begin fl_e <= fl_e + 5'd1; if (fl_e == 5'd15) fl_on <= 1'b0; end
 
 `ifndef OT_S81SL_VS_SRAM
-if (fl_on) for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
+if (fl_on) for (integer rq = 0; rq < RQN; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
 `endif
 
             end
