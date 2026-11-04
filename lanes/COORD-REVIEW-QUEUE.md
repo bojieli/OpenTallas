@@ -12083,3 +12083,4 @@ Waiters: epyc2 5, intel2 23, epyc4 58. Kit-wave launching (20:37).
     - (D) INFRA, 3: plain relaunch on epyc4.
     - (E) strap gen, 5: sdc_lint duplicate strap names x3, undeclared strap_r8pad x1, and the stale cbf_q11 sidecar path.
     - The 28 core-wait types build on KW-PROV-1 provisional views.
+- [11-03 20:44] DIE-QC-66 CONCUR window event READY claude/die-qc-66-win-1103@cbf2260eff2. It is a metadata-only re-measure of 23 per-type hold windows (ceil10(need+10), cap T/4) on the shrink2 clock; geometry is byte-identical and no QC kit is signed yet, so nothing is invalidated. Probe re-judged on it: intra 0 neg, seam PASS, TT +139.9, count-aligned 0/2525. The probe's landed FAIL was a mode artifact (it ran without --count-align); fix: none.
