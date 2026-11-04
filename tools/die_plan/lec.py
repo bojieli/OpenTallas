@@ -5352,6 +5352,15 @@ def merged_reproposals(L, log, tried):
     return n > 0
 
 
+def _same_reading_self(a, b, k, c):
+    """Do supports a and b agree when k and c both read as SELF?  Same answer as mapping both and comparing, without
+    rebuilding two sets per pair: 4096-bit supports times every gold-only member cost hours (KV core_peer 11-04)."""
+    if abs(len(a) - len(b)) > 2:
+        return False
+    two = {k, c, "SELF"}
+    return (a ^ b) <= two and bool(a & two) == bool(b & two)
+
+
 def merged_proposals(L, log, cap=4096):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
@@ -5425,9 +5434,7 @@ def merged_proposals(L, log, cap=4096):
         for k in [x for x in s_c if x in gset]:
             if ("gold", k) in L.hyp or c in cands.get(k, ()):
                 continue
-            two = (k, c)
-            if frozenset("SELF" if x in two else x for x in s_c) == \
-                    frozenset("SELF" if x in two else x for x in support(L.gc[k])):
+            if _same_reading_self(s_c, support(L.gc[k]), k, c):
                 cands[k].append(c)
     for k in gonly:
         if ("gold", k) in L.hyp:
@@ -5436,9 +5443,7 @@ def merged_proposals(L, log, cap=4096):
         for c in [x for x in s_k if isinstance(x, str) and x in L.matched and x.startswith("ff:") and x in L.gc]:
             if c in cands.get(k, ()):
                 continue
-            two = (k, c)
-            if frozenset("SELF" if x in two else x for x in s_k) == \
-                    frozenset("SELF" if x in two else x for x in support(L.gc[c])):
+            if _same_reading_self(s_k, support(L.gc[c]), k, c):
                 cands[k].append(c)
     choice = {k: cs[0] for k, cs in cands.items()}
     pending = {k: list(cs) for k, cs in cands.items() if len(cs) > 1}
