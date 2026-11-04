@@ -1287,6 +1287,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return ring_memo[R]
         cks, pars = set(), set()
         for rb in _bits_of(T, R):
+            if rb in dead:  # DIE-QC-69 11-04: a declared dead bit has no slot; the dead class below proves it has no load
+                continue
             why, ffs, _ = land_mux(rb, port_root[rb], int(land[R]))
             if why:
                 ring_memo[R] = (f"ring {R} slots do not prove ({rb}: {why})", None, None)
