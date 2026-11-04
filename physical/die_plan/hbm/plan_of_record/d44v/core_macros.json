@@ -592,16 +592,16 @@
     250.56,
     267.84
    ],
-   "basis": "explicit",
+   "basis": "DIE-HBM-61/B128 d44v p5: S-edge stack g_w[1] R180 / g_x[0] MY / g_w[0] MY, N band 38.6 um under the 563 N face pins (was 18.1), 1024 columns centred (W column 38.88 for 512 W + 415 macro-edge M4 pins); macro pins are W/E-edge M4, channels sized from pin count; clock entry (125.3, 133.9) clear; outline and pins kept",
    "macros": [
     {
      "name": "u_fcore.u_c.u_b.g_w[1].u_m",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
      "orient": "R180",
      "rect_um": [
-      21.6,
+      38.88,
       4.32,
-      196.344,
+      213.624,
       74.808
      ]
     },
@@ -611,9 +611,9 @@
      "orient": "MY",
      "rect_um": [
       21.6,
-      129.6,
+      108.0,
       116.424,
-      170.664
+      149.064
      ]
     },
     {
@@ -621,23 +621,68 @@
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
      "orient": "MY",
      "rect_um": [
-      21.6,
-      179.28,
-      196.344,
-      249.768
+      38.88,
+      158.76,
+      213.624,
+      229.248
      ]
     }
    ],
-   "sources": [
-    {
-     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_core_ba77076d4cc8/macro_placement.tcl",
-     "sha256": "00b12c93263db214e6e2d50b027600116184546129e3cd0f275fbfe488e76e5e"
-    },
-    {
-     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_core_ba77076d4cc8/placed.csv",
-     "sha256": "ba616b5b87bdd8b71c353e30a1a6e715f62c465a6a6d16e8747a56a6bfe158bf"
-    }
-   ],
+   "channel_rule_um": 10.8,
+   "previous": {
+    "status": "KNOWN",
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "basis": "explicit",
+    "macros": [
+     {
+      "name": "u_fcore.u_c.u_b.g_w[1].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "orient": "R180",
+      "rect_um": [
+       21.6,
+       4.32,
+       196.344,
+       74.808
+      ]
+     },
+     {
+      "name": "u_fcore.u_c.u_b.g_x[0].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "orient": "MY",
+      "rect_um": [
+       21.6,
+       129.6,
+       116.424,
+       170.664
+      ]
+     },
+     {
+      "name": "u_fcore.u_c.u_b.g_w[0].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "orient": "MY",
+      "rect_um": [
+       21.6,
+       179.28,
+       196.344,
+       249.768
+      ]
+     }
+    ],
+    "sources": [
+     {
+      "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_core_ba77076d4cc8/macro_placement.tcl",
+      "sha256": "00b12c93263db214e6e2d50b027600116184546129e3cd0f275fbfe488e76e5e"
+     },
+     {
+      "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_core_ba77076d4cc8/placed.csv",
+      "sha256": "ba616b5b87bdd8b71c353e30a1a6e715f62c465a6a6d16e8747a56a6bfe158bf"
+     }
+    ],
+    "recipe_macros": null
+   },
    "recipe_macros": null
   },
   "ot_hbm_hc_bank128_pair_first_core": {
@@ -646,16 +691,16 @@
     250.56,
     267.84
    ],
-   "basis": "explicit",
+   "basis": "DIE-HBM-61/B128 d44v p5: S-edge stack g_w[1] R180 / g_x[0] MY / g_w[0] MY, N band 38.6 um under the 563 N face pins (was 18.1), 1024 columns centred (W column 38.88 for 512 W + 415 macro-edge M4 pins); macro pins are W/E-edge M4, channels sized from pin count; clock entry (125.3, 133.9) clear; outline and pins kept",
    "macros": [
     {
      "name": "u_fcore.u_c.u_b.g_w[1].u_m",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
      "orient": "R180",
      "rect_um": [
-      21.6,
+      38.88,
       4.32,
-      196.344,
+      213.624,
       74.808
      ]
     },
@@ -665,9 +710,9 @@
      "orient": "MY",
      "rect_um": [
       21.6,
-      129.6,
+      108.0,
       116.424,
-      170.664
+      149.064
      ]
     },
     {
@@ -675,23 +720,68 @@
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
      "orient": "MY",
      "rect_um": [
-      21.6,
-      179.28,
-      196.344,
-      249.768
+      38.88,
+      158.76,
+      213.624,
+      229.248
      ]
     }
    ],
-   "sources": [
-    {
-     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_first_core_0c39789d46b1/macro_placement.tcl",
-     "sha256": "00b12c93263db214e6e2d50b027600116184546129e3cd0f275fbfe488e76e5e"
-    },
-    {
-     "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_first_core_0c39789d46b1/placed.csv",
-     "sha256": "71f7de7295d6e170d1f4aa23babab83ccd912ff52ac41ff32579ad805ece6868"
-    }
-   ],
+   "channel_rule_um": 10.8,
+   "previous": {
+    "status": "KNOWN",
+    "outline_um": [
+     250.56,
+     267.84
+    ],
+    "basis": "explicit",
+    "macros": [
+     {
+      "name": "u_fcore.u_c.u_b.g_w[1].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "orient": "R180",
+      "rect_um": [
+       21.6,
+       4.32,
+       196.344,
+       74.808
+      ]
+     },
+     {
+      "name": "u_fcore.u_c.u_b.g_x[0].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "orient": "MY",
+      "rect_um": [
+       21.6,
+       129.6,
+       116.424,
+       170.664
+      ]
+     },
+     {
+      "name": "u_fcore.u_c.u_b.g_w[0].u_m",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "orient": "MY",
+      "rect_um": [
+       21.6,
+       179.28,
+       196.344,
+       249.768
+      ]
+     }
+    ],
+    "sources": [
+     {
+      "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_first_core_0c39789d46b1/macro_placement.tcl",
+      "sha256": "00b12c93263db214e6e2d50b027600116184546129e3cd0f275fbfe488e76e5e"
+     },
+     {
+      "file": "/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/kits_v2/ot_hbm_hc_bank128_pair_first_core_0c39789d46b1/placed.csv",
+      "sha256": "71f7de7295d6e170d1f4aa23babab83ccd912ff52ac41ff32579ad805ece6868"
+     }
+    ],
+    "recipe_macros": null
+   },
    "recipe_macros": null
   },
   "ot_hbm_hc_root_static__hcp_sys1": {
