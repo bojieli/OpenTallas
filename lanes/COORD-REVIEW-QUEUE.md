@@ -11528,3 +11528,10 @@ FAILED [AUTOPILOT a3a712c273d2] 2026-11-03 18:37:38 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-03 18:47 PST [DIE-S81-51/RF-D] NOTE claude/die-s81-51-rfd-1103@d1828ebc8db (form 6) DROPPED per COORD: keep it OUT of every merge train; form 5 (451deb44c63) continues.
 - 2026-11-03 18:47 PST [DIE-S81-51/RF-D] READY claude/die-s81-51-rfd7-1103@b8481371941 (from rfd5 451deb44c63) — S81-062 dsdv_bk_g form 7: c4e28185c66 RF 5 = (a) negedge strap in-face + kept per-block reset copies (0 edges; lockstep RA4/RB5 PASS); b8481371941 RF 6 = + dsdv_bk_vin LPIPE 2 per-lane register stage (beat / valid / two-beat error), ln* + fault +1 inside dsdv_bk_sel, vo / drain / rung transit 5 / RL 3 unchanged (no parent constants). Lockstep RA5/RB6 s1,s7 + RA4/RB6 s3 PASS; mutant LPS caught (20482); sel RF6 6/6 PASS, sel RF5 PASS. Kit dsdv_bk_g_rfd7 GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0.
 - 2026-11-03 18:47 PST [DIE-S81-51/RF-D] LAUNCHED dsdv_bk_g_rfd7 GOAL=finish epyc4 (queued; log intel2 ~/ds81rfd-logs/finish_bk_g_rfd7.otrun.log)
+- 2026-11-03 18:47 PST [DIE-HBM-61 -> COORD] LEC NOT EQ class update (DIE-HBM-61/LEC, claude/die-hbm-61-lecneq-1103@298bfc55e92):
+  - Root cause: an LEC tool bug. eq_const_resolve dropped the gold-only-duplicate == partner equality, so a synth-merged duplicate register became free. The fix re-adds the equality as an induction-proven candidate; nothing is assumed.
+  - dma_back probe: NOT EQ (3 differ) -> EQUIVALENT 23550/23550. LEC tests: 0 new fails.
+  - READY ~19:30 after the kshare probe. pc_ctrl_leaf_cfg_h9b result ~20:30.
+  - argmax_sw_vm_r2 is a separate class, still NOT EQ (456 differs).
+    - 33 are no-reset cq_d constant fields: X until the first load, tied to constants by synth. The fix goes in the RTL generator.
+    - About 420 e_vals/tbits are being classified.
