@@ -51,3 +51,23 @@ make[1]: *** [Makefile:548: do-4_1_cts] Error 1
 make: *** [Makefile:548: /work/run/results/asap7/dp_sle_st_a_v2/base/4_1_cts.odb] Error 2
  | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/sle_st_a_v2/attempt_6/gen/sle_st_a_v2 src claude/kw-fix-4-qcdpl-1103@d85db82cddb | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 2026-11-04 10:36:23 PST AUTOPILOT -> KIT-WAVE-12: FAILED 7fedb6297e0f qwen_compute/coll_ft__cla4a25d77 (STRUCTURAL/post-cts-hold): FAIL_POSTCTS FAIL_POSTCTS FF structural hold gate: OT_HOLD_GATE FAIL FF wns_ps -268.22 endpoints 10104 (true negative slack): beyond the structural stop -195.0 ps (OT_HOLD_STOP_PS -150 from contract) | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/coll_ft__cla4a25d77/gen/coll_ft__cla4a25d77 src claude/kw-fix-4-qcdpl-1103@d85db82cddb | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 10:55:55 PST AUTOPILOT -> KIT-WAVE-12: FAILED 609fdd592722 qwen_compute/slw_st_b_v2 (CRASH/flow-error):  shared leaf alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 0:39.89[h:]min:sec. CPU time: user 37.63 sys 1.69 (98%). Peak memory: 1080816KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_b_v2/base/4_1_cts.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_b_v2/attempt_9/gen/slw_st_b_v2 src claude/kw-fix-4-qcdpl-1103@d85db82cddb | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 10:55:56 PST AUTOPILOT -> KIT-WAVE-12: FAILED 63683784d071 qwen_compute/slw_st_b_v1__cle6023ec2 (CRASH/flow-error):  alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 0:42.61[h:]min:sec. CPU time: user 40.68 sys 1.47 (98%). Peak memory: 1097264KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_b_v1__cle6023ec2/base/4_1_cts.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_b_v1__cle6023ec2/attempt_7/gen/slw_st_b_v1__cle6023ec2 src claude/kw-fix-4-qcdpl-1103@d85db82cddb | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 10:56:05 PST AUTOPILOT -> KIT-WAVE-12: FAILED cea88878e690 qwen_compute/slw_st_a_v2__cl9f076a5c (CRASH/flow-error):  alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 1:04.58[h:]min:sec. CPU time: user 62.54 sys 1.80 (99%). Peak memory: 1189072KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_a_v2__cl9f076a5c/base/4_1_cts.odb] Error 2
+ | kit intel1:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_a_v2__cl9f076a5c/attempt_4/gen/slw_st_a_v2__cl9f076a5c src claude/kw-fix-4-qcdpl-1103@d85db82cddb | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 10:56:11 PST AUTOPILOT -> KIT-WAVE-12: FAILED f6c516c172cc qwen_compute/slw_st_b_v1__cl6357f1cc (CRASH/flow-error):  alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 0:41.70[h:]min:sec. CPU time: user 39.84 sys 1.51 (99%). Peak memory: 1097432KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_b_v1__cl6357f1cc/base/4_1_cts.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_b_v1__cl6357f1cc/attempt_6/gen/slw_st_b_v1__cl6357f1cc src claude/kw-fix-4-qcdpl-1103@d85db82cddb | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
