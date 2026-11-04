@@ -1171,6 +1171,12 @@ def main():
     ap.add_argument("--astk-rf1", action="store_true",
                     help="DIE-KV-64/RF-E 11-03 RE-FORM RF-KV1 (two strikes): ctl zk / zh read selects as registered one-hot "
                          "replicas, <= 16 loads per select bit, 0 cycles (astk_rf1.py); with --astk-native-faces")
+    ap.add_argument("--lec-rawprefix-wall", default="", metavar="WALL_S[:BUDGET_S]",
+                    help="DIE-KV-64/RF-E 11-03: kit-local wall limit on the opt-in raw-prefix LEC base prove "
+                         "(lec_rawprefix_wall.py; expiry = undecided = no base; shared lec.py default unchanged)")
+    ap.add_argument("--astk-cons", action="store_true",
+                    help="DIE-KV-64/RF-E 11-03 CONSERVATIVE form (OWNER 19:00): Z-node operand store sliced 8 x 16 b with kept "
+                         "same-edge one-hot k / slot[0] / put replicas, 0 cycles (astk_cons.py); with --astk-rf1")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--astk-rep-split", action="store_true",
                     help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
@@ -1423,6 +1429,11 @@ def main():
             raise SystemExit("--astk-rf1 needs --astk-native-faces")
         import astk_rf1
         astk_rf1.apply_kit(kd, mod)
+    if a.astk_cons:
+        if not a.astk_rf1:
+            raise SystemExit("--astk-cons needs --astk-rf1")
+        import astk_cons
+        astk_cons.apply_kit(kd, mod)
     if a.astk_timing_regs:
         if not mod.startswith("kv3_astk_"):
             raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
@@ -1773,6 +1784,9 @@ def main():
     shutil.copyfile(Path(a.tool) / "adder_map_dontuse.py", kd / "adder_map_dontuse.py")
     shutil.copyfile(Path(a.tool) / "selrange_gate.py", kd / "selrange_gate.py")
     shutil.copyfile(Path(a.tool) / "lec.py", kd / "lec.py")       # LEC 10-24: RTL vs netlist after synth (run_kit_kv.sh)
+    if a.lec_rawprefix_wall:
+        import lec_rawprefix_wall
+        (kd / "lec_rawprefix_wall.json").write_text(json.dumps(lec_rawprefix_wall.apply(kd / "lec.py", a.lec_rawprefix_wall)) + "\n")
     shutil.copyfile(Path(a.tool) / "lec_async.sh", kd / "lec_async.sh")   # FLOW-21 11-01: pre-route LEC beside the flow
     if a.lec_hints:
         shutil.copyfile(a.lec_hints, kd / "lec_hints.json")         # lec.py reads KIT/lec_hints.json (PATH-KV-PC4)
