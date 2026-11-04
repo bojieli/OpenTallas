@@ -1,0 +1,32 @@
+== lane_exp canon: vs wrappers/ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691.sv
++input wire clk,
+-input wire [3:0] clk_insert,
+-input wire [5:0] clk_bank_macro,
+-input wire [7:0] clk_lane,
+-input wire clk_bank,
+-.bank_clk(clk_bank),
++.bank_clk(clk),
+-.bank_clk_macro(clk_bank_macro[5:0]),
++.bank_clk_macro({6{clk}}),
+-.lane_clk_stage(clk_lane[7:0]),
+-.lane_clk_insert(clk_insert[3:0]),
++.lane_clk_stage({8{clk}}),
++.lane_clk_insert({4{clk}}),
+OK changed lines 13 clock lines shown 13 off-rule 0
+== split3 ctl: vs the generated d44v kit wrapper (attempt: attempt_3)
+-input wire [3:0] clk_lg,
+-input wire clk_pe,
+-input wire clk_pw,
+-.clk_lg(clk_lg),
+-.clk_pe(clk_pe),
+-.clk_pw(clk_pw),
++.clk_lg({4{clk}}),
++.clk_pe(clk),
++.clk_pw(clk),
+OK changed lines 9 clock lines shown 9 off-rule 0
+== lane1: pass-through around the renamed top (no old wrapper)
+.bank0_clk(clk),
+.bank0_clk_macro({6{clk}}),
+.lane0_clk_stage({8{clk}}),
+.lane0_clk_insert({4{clk}}),
+OK connections checked 69 clock lines shown 4 off-rule 0

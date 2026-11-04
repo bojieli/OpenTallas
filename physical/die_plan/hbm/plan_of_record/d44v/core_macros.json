@@ -4234,45 +4234,45 @@
     {
      "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_hi",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-     "orient": "R0",
+     "orient": "MX",
      "rect_um": [
       33.588,
-      10.8,
+      8.64,
       208.332,
-      81.288
+      79.128
      ]
     },
     {
      "name": "u_fcore.u_xcal.u_cal.g_m2.u_program_lo",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-     "orient": "MX",
+     "orient": "R0",
      "rect_um": [
       33.588,
-      143.1,
+      149.76,
       208.332,
-      213.588
+      220.248
      ]
     },
     {
      "name": "u_fcore.u_xcal.g_t2.u_tab_lo",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
       15.12,
-      91.8,
+      93.96,
       109.944,
-      132.864
+      135.024
      ]
     },
     {
      "name": "u_fcore.u_xcal.g_t2.u_tab_hi",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "MY",
+     "orient": "R0",
      "rect_um": [
       131.976,
-      91.8,
+      93.96,
       226.8,
-      132.864
+      135.024
      ]
     }
    ],
@@ -7446,7 +7446,7 @@
    ],
    "macros": [
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[0].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[0].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7457,7 +7457,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[1].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[1].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7468,7 +7468,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[2].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[2].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7479,7 +7479,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[3].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[3].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7490,7 +7490,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[4].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[4].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
@@ -7501,7 +7501,7 @@
      ]
     },
     {
-     "name": "core.u_core.u_bank0.u_data.g_read[5].u_m",
+     "name": "u_core.u_bank0.u_data.g_read[5].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
