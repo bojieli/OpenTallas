@@ -11684,3 +11684,17 @@ FAILED [AUTOPILOT b134286de8db] 2026-11-03 19:28:17 PST AUTOPILOT -> KIT-WAVE-12
 - bf_col: hold -256.4 is PHYSICAL (single clock entry, 296k cells; insertion skew). Setup -69.8 is FEED-FORWARD (bf16 RNE encode+round in one stage). Form: split into 2 cores of at most 150k cells, each with its own clock entry of at most 5k sinks, plus a registered cut on RNE (+1 cycle). The split goes in as a die-local plan delta + schedule + TOK-VERIFY (RF-H).
 - eng_rr_h0: worst is in_w -> w_q, a PHYSICAL boundary window. Internal worst is FEED-FORWARD at +9.77 (passing). The intel1 view dsdv_eng_rr_h0_ccA_g2typed is locally SIGNED (TT +6.56, FF +5.95, DRC 0, face_guard 644/644). SS24 is re-signing it on flow-20261103-w-s81 with a routed LEC, to count under the 18:48 class. The conservative build is held unless SS24 rejects it.
 - bksel_q (extra): hold -131 is PHYSICAL (clock insertion 674 ps). Setup s0 -> b_val is a PHYSICAL broadcast with ~520 ps of fanout buffering. Rst recovery is -242. Form: regional clock entries of at most 5k sinks, a registered s0 broadcast with per-region copies, and per-region reset synchronizers (RF-H).
+- [DIE-S81-51/RF-D] 2026-11-03 19:33 PST RESULT [-> DIE-S81-51, COORD] bk_g rfd7 (form 7, RF 6; oth-ubuntu-1051779): NOT SIGNED.
+  - TT -6.86 / 5 ep: u_vin.g_lp.pn_q[0] -> 276-bit lb_r select fan-out. Form 8 removes this path; each slice now selects from its own pa/sa copy.
+  - FF hold -12.73 / 11 ep: u_vs jn_q2[41] -> vo_s[41]. This is a 1-gate path with a cross-region tap skew of ~66 ps (launch on h1_0, capture on h1_1). It is the same class as rfd6 (-12.02).
+  - Slew 40 TT / 9 FF on vo_n D pins.
+  - LEC 0, DRC 0, face_guard PASS, PIN_AUDIT PASS. Stops here per ruling (no rfd7 variant).
+- [DIE-S81-51/RF-D] 2026-11-03 19:33 PST ESTIMATE [-> DIE-S81-51, COORD] bk_g rfd8 (conservative form 8, claude/die-s81-51-rfd8-1103@3126ec031e5), from place-only copy kit rfd8p (3_place, ideal clock, placement RC docker probe):
+  - Synth: 34,241 cells (13.0k um2 incl. 2 SRAM macros).
+  - Place: 42.5k instances, util 0.395 (target 0.35-0.45), outline 216x172.8 (1.25:1).
+  - Place STA, internal reg->reg setup WS +146.1 ps (target +83; MET). Worst is u_vs jsv_q2 -> vo_s[1]; the vin lane paths are better. Same probe on rfd7: +89.4 at u_vin.lanes, which routed to -6.86.
+  - The flow 3_place WNS of -34.4 is the ideal-clock artifact on the negedge in-face (vi_n port -> a_n, vclk 250 + 166.6 vs fall 416.5 with 0 insertion). It is the same on rfd6 and rfd7 (-35.1 / -35.3) and goes away with real insertion.
+  - Pins: every output posedge-registered, every input negedge-registered.
+  - Clock entry: 4 regional taps, ~2.8k sinks each (<= 5k).
+  - Stages: the vin per-slice control fans out <= ~130 per copy.
+  - RISK carried: the u_vs jn_q2 -> vo_s cross-region hold class (rfd6/rfd7 -12) is not addressed by the RTL, and 2x2 taps add region boundaries. It is left to the flow's hold repair; if it remains, the post-route ECO loop gets 11-endpoint hold. Build already queued 19:11 (finish_bk_g_rfd8).
