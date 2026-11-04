@@ -7,7 +7,7 @@ the chain moving with no agent involved.  It is built only from existing tools: 
 tools/die_plan/signoff.py), ot-run (memory-only admission), signoff.json, tools/ref_tile/layout_dump.tcl+layout_png.py.
 
 OWNER RULE (2026-10-25): the autopilot NEVER alters a design.  It may only
-  (a) submit queued kits that carry a GEOM PASS (ot-run, honest --mem from the queue row, <= 400k cells),
+  (a) submit queued kits that carry a GEOM PASS (ot-run, honest --mem from the queue row, <= 517k cells),
   (b) classify finished runs: SIGNED / NEAR-MISS / STRUCTURAL / CRASH,
   (c) resubmit ONCE a run that crashed for infra reasons (OOM kill, host / ssh lost, never admitted),
   (d) archive SIGNED runs (closed copy + MD5SUMS + mirror) and append autopilot/signed.tsv,
@@ -25,7 +25,7 @@ Columns (TAB separated; '#' lines are comments):
   kit     HOST:/srv/opentallas-scratch*/claude/<lane>/.../<kit>   (a FRESH kit dir: config.mk, no run/ yet)
   src     branch@sha the kit was generated from
   geom    PASS | PASS-COND (GEOM-REVIEW verdict; anything else waits) ; geom_ref = where the verdict is recorded
-  mem_gb  honest ot-run --mem (peak of a comparable run + margin) ; cells = expected std cells (<= 400000)
+  mem_gb  honest ot-run --mem (peak of a comparable run + margin) ; cells = expected std cells (<= 517000)
   goal    route (default for run_kit.sh) | finish (default for run_kit_kv.sh / run_kit_hbm.sh)
   runner  path of the run script on the kit host (default: KIT/run_kit*.sh, else KIT/../run_kit*.sh)
 The last row for an id wins (id = sha1(kit|src|goal)); a new src for the same kit is a new job.
@@ -88,7 +88,7 @@ if HUB_NAME == "epyc1":
 else:
     MIRROR = {"localhost": "intel1", HUB_NAME: "intel1"}   # the hub's own archives mirror to intel1
     MIRROR_DEFAULT = "localhost"                        # every other host's archives mirror to the hub
-CELL_CAP = 400_000
+CELL_CAP = 517_000   # COORD 11-04 06:00 (2): 400k is advisory up to the largest closed run; the kit's native_cell_cap.tcl keeps 400k unless the kit opts in
 NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
 RENDER_MEM_GB = 8

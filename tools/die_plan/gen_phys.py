@@ -3266,7 +3266,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
                    cland_pinslot=(), spare_out=(), private_clock_mesh=None, region_guide=None, dpl_diamond=False,
-                   dead_inputs=None):
+                   dead_inputs=None, native_cell_cap=None):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -3414,7 +3414,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "io_hold.tcl").write_text(ioh)
     (kd / "prects_estimate.tcl").write_text(clock_phase_tcl(P, tn))
     shutil.copyfile(Path(__file__).with_name("native_cell_cap.tcl"), kd / "native_cell_cap.tcl")
-    (kd / "pre_floorplan_type.tcl").write_text("source /work/native_cell_cap.tcl\nsource /work/prects_estimate.tcl\n")
+    # COORD 11-04 06:00 (2): opt-in kit-level cap; without the option the file is byte-identical to before
+    (kd / "pre_floorplan_type.tcl").write_text((f"set ::ot_native_cell_limit {int(native_cell_cap)}\n" if native_cell_cap else "")
+                                               + "source /work/native_cell_cap.tcl\nsource /work/prects_estimate.tcl\n")
     import reset_tree as RT
     leaf_check = ""
     if RT.pipelined(P) or RT.wavefront(P):
@@ -4602,7 +4604,7 @@ def bound_parent_id_plan(raw, kit_rtl):
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
                rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None,
-               region_guide=None, dpl_diamond=()):
+               region_guide=None, dpl_diamond=(), native_cell_cap=None):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain).
     dpl_diamond: types whose kit legalizes with the diamond DPL (--dpl-diamond; FIRM landing-band DPL stall)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
@@ -4720,6 +4722,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
                                    gpl_plain=tn in (gpl_plain or ()),
                                    dpl_diamond=tn in (dpl_diamond or ()),
+                                   native_cell_cap=native_cell_cap,
                                    land_slots=(None if lands is None else
                                                kit_rtl_land_slots(lands, tn, mine) if land_decl_only else
                                                lands.land_slots(tn)),

@@ -303,6 +303,8 @@ class Classify(unittest.TestCase):
             ("preflight", "KIT_PREFLIGHT FAIL\nmissing staged file", "FLOW"),
             ("geom", "AP_AUTO_GEOM FAIL fill .0997 channel_h 1.065", "PLAN"),
             ("cells", "512000 cells", "PLAN"),
+            ("place", "Error: floorplan.tcl, 5 OT_NATIVE_CELL_CAP actual standard cell count 541583 above 517000 run cap", "PLAN"),
+            ("place", "ot-run: NOT COMPLETED client text\nError: floorplan.tcl, 5 OT_NATIVE_CELL_CAP actual standard cell count 500460 above 400000 run cap\nexit 143", "PLAN"),
             ("bind", "Traceback\nFileNotFoundError: [Errno 2] No such file or directory: 'kv36/x.json'", "FLOW"),
             ("bind", "bind of record not clean\nBIND errors 3", "PLAN"),
             ("bind", '{"errors": 0, "unbound": 0, "undriven": 0, "multiply_bound": 0}\nBIND errors 2', "PLAN"),
