@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """DIE-HBM-61/PLAN d44v: core clock regions (OWNER 11-03: one clock entry per <= 5k sinks; DIE-HBM-61/CLOCK).
-    python3 mk_clkreg.py PLAN_DIR GEOMCOLL.json [--keep MOD ...]  -> PLAN_DIR/core_clock_regions.json
+    python3 mk_clkreg.py PLAN_DIR GEOMCOLL.json [--extra SINKS.json] [--keep MOD ...]  -> PLAN_DIR/core_clock_regions.json
 Per hard-core module with N > 5000 clock sinks (d44o AUTO-GEOM clock_sinks): n = ceil(N/5000) regional clock entries on an
 r x c grid of the core outline (r*c >= n, tiles closest to square), entry = tile centre on the 4.32 lattice, moved to the
 nearest lattice point >= 4.32 um off every macro (12.8a); the plan centre entry (clock_entries.json) stays the root pin
@@ -8,6 +8,8 @@ that feeds the regional entries (kit/gen support: DIE-HBM-61/CLOCK).  Kept (sign
 import json, math, sys
 from pathlib import Path
 pd = Path(sys.argv[1]); G = json.load(open(sys.argv[2]))
+if '--extra' in sys.argv:      # part 7: sink counts of new split sub-cores (no d44o attempt yet)
+    i_ = sys.argv.index('--extra'); G.update(json.load(open(sys.argv[i_ + 1]))); del sys.argv[i_:i_ + 2]
 keep = set(sys.argv[sys.argv.index('--keep') + 1:]) if '--keep' in sys.argv else set()
 P = json.loads((pd / 'die_plan.json').read_text()); CM = json.loads((pd / 'core_macros.json').read_text())['cores']
 Q, LIM = 4.32, 5000
