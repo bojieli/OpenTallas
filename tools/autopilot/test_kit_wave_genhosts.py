@@ -199,3 +199,9 @@ def test_item_env():
         K.item_env({"item_env": {"x": {"PATH": "/tmp"}}}, "x")
     with pytest.raises(ValueError):
         K.item_env({"item_env": {"x": {"OT_A": "a; rm -rf /"}}}, "x")
+
+
+def test_place_service_asks_for_the_spill_handoff():
+    # SPILL-PROOF-1: an old ot-run ignores the variable, so ot-run and kit_wave deploy in either order
+    src = (Path(__file__).parent / "kit_wave.py").read_text()
+    assert "--setenv=OT_RUN_SPILL_HANDOFF=place" in src
