@@ -1999,7 +1999,7 @@
    "plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/physical/die_plan/qwen_compute/plan_of_record/plan_qc52_ucie1103.json",
    "gen_host": "intel2",
    "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-fl-qc2",
-   "src_sha": "1131a422d652b99416380c420f4a319ee4e17a64",
+   "src_sha": "d85db82cddb9246905fd4b285dea1b3da8545a57",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/results/qc_die57_1031/bind/final_asbuilt.json",
@@ -2023,7 +2023,7 @@
    "die_max_inflight": 60,
    "owner_lane": "DIE-QC-65",
    "lane": "KIT-WAVE-12",
-   "note": "KW-FIX-4 20:3x: fl-qc2 += cherry-pick 298bfc55e92 (lec.py LEC-EQCONST-RESTORE) -> 1131a422d65 | KW-FIX-4 19:1x: QC wave src kw-fix-4-fl-qc2 = fl-qc 335041a + DPL class port (main 42db137e7f2) | KW-FIX-4 08:4x: plan plan_qc52.json -> plan_qc52_ucie1103.json = delta_coll_ucie_physinst_1103.py (14c84655d0b, DIE-QC-66 07:45/07:59) applied, only coll_ucie changed (other blocks keep their keys); coll_ucie relaunch. | DIE-QC-65/KITS 2026-11-03 04:5x CLASS DPL-STALL (FIRM landing band): sle_hc2__clcc5e3e61@2 (--gpl-plain, GPL ok, resize +10k) negotiation DPL flat at 5,139 illegal cells for 1,400 it beside the 35,887-cell FIRM b_hw landing band (S face, 55 um deep > 27-um/100-row DPL reach) -> 'bad optional access' 1:11 h; sle_sc_v3@3 same stall -> DPL-0033. Probe (same 3_4 DBs, diamond legalizer): hc2 check_placement PASS 434 s (max disp 35.9 um, HPWL +4 pct), sc_v3 PASS 76 s; negotiation with max_displacement 500x400 still stalls. Fix = per-type opt-in gen phys --dpl-diamond (claude/die-qc-65-kits-1103@a589a3fea9 for main; wave src = d90 + port claude/kit-wave-qc-dpl-1103@f75b8a10890, plan/RTL/bind unchanged, event key d90 kept) on 30 non-station types (all --gpl-plain hc/st/sc + sle_sc_v3) + retry sle_sc_v3@3, sle_hc2__clcc5e3e61@2. In-flight attempts keep their launch spec. | DIE-QC-65/KITS 2026-11-03 03:5x GPL-LOOP stragglers (same class as 23:25): sle_stm_v1__clbe630b9c + sle_stm_v2__cl7b3062fa attempt 1 started 18:23, BEFORE the --gpl-plain type_args, so they run timing+routability GPL (8.2k Nesterov it, overflow 0.40-0.44 oscillating, 8 h); slw_stm_v1__cle34a73c3 (not in the 31) same mode 2.3k it 2.5 h -> +type_args --gpl-plain on cle34a73c3, stop the 3 exact dpkit containers (2-h watchdog), retry @1. | DIE-QC-64/KITS 2026-11-02 23:1x CLASS QC place GPL-LOOP (timing/routability-driven RePlAce never converges at util 5-6 %: Nesterov 2.7k-93k iterations, overflow flat 0.33-0.50 for 9-38 h; hc1 x4, hc2 x6, st_a x8, st_b x3, sc_v2) + hc0 DPL (1.37M resize buffers after that GPL, DPL 23-45 h then 'bad optional access') -> per-type --gpl-plain (AUTOBUILD-PIPE-4 opt-in) on 31 slice types; what-if slw_hc0__cl4f54b7a3 plain: GPL converged 506 it, resize +13k buffers, DPL 13.7 min, 0 overlaps/violations (epyc2 die-qc-63-kits/probe_hc0). Hung units stopped (exact dpkit-<type> containers), retry at their attempts; st_b_v1 x2 LEC NOT EQ = old kit lec.py false alarm (main lec.py EQUIVALENT 108503/108503, probe_stb) -> retry (future_lec snapshots main lec.py). Released 5 CORE_CAP holds (analytic 971-986k) on measured GPL instance counts 397-431k incl. ~113k fixed, same as their unheld siblings: slw_hc1__cl68f9248e__cl144ee7b3, sle_hc2__cl9c4c4509__cl3edce1b8/__clf60c5152, slw_hc2__cla3497502__cl16607c7a/__cldc737267. | KIT-WAVE-16 2026-11-01 20:0x (COORD 19:5x stale FAIL rows): CLASS QC place GPL-0305 x5 BATCH RELAUNCH: the 15:5x --gpl-plain type_args never relaunched (records are block-keyed, the d90 switch kept their keys, no retry entry) -> retry sle_fw_v2__c",
+   "note": "KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bound_r8_straps.py (fl-qc untracked module; 20:20 GEN ModuleNotFoundError x7 was my overlay miss, not the rows) | KW-FIX-4 20:3x: fl-qc2 += cherry-pick 298bfc55e92 (lec.py LEC-EQCONST-RESTORE) -> 1131a422d65 | KW-FIX-4 19:1x: QC wave src kw-fix-4-fl-qc2 = fl-qc 335041a + DPL class port (main 42db137e7f2) | KW-FIX-4 08:4x: plan plan_qc52.json -> plan_qc52_ucie1103.json = delta_coll_ucie_physinst_1103.py (14c84655d0b, DIE-QC-66 07:45/07:59) applied, only coll_ucie changed (other blocks keep their keys); coll_ucie relaunch. | DIE-QC-65/KITS 2026-11-03 04:5x CLASS DPL-STALL (FIRM landing band): sle_hc2__clcc5e3e61@2 (--gpl-plain, GPL ok, resize +10k) negotiation DPL flat at 5,139 illegal cells for 1,400 it beside the 35,887-cell FIRM b_hw landing band (S face, 55 um deep > 27-um/100-row DPL reach) -> 'bad optional access' 1:11 h; sle_sc_v3@3 same stall -> DPL-0033. Probe (same 3_4 DBs, diamond legalizer): hc2 check_placement PASS 434 s (max disp 35.9 um, HPWL +4 pct), sc_v3 PASS 76 s; negotiation with max_displacement 500x400 still stalls. Fix = per-type opt-in gen phys --dpl-diamond (claude/die-qc-65-kits-1103@a589a3fea9 for main; wave src = d90 + port claude/kit-wave-qc-dpl-1103@f75b8a10890, plan/RTL/bind unchanged, event key d90 kept) on 30 non-station types (all --gpl-plain hc/st/sc + sle_sc_v3) + retry sle_sc_v3@3, sle_hc2__clcc5e3e61@2. In-flight attempts keep their launch spec. | DIE-QC-65/KITS 2026-11-03 03:5x GPL-LOOP stragglers (same class as 23:25): sle_stm_v1__clbe630b9c + sle_stm_v2__cl7b3062fa attempt 1 started 18:23, BEFORE the --gpl-plain type_args, so they run timing+routability GPL (8.2k Nesterov it, overflow 0.40-0.44 oscillating, 8 h); slw_stm_v1__cle34a73c3 (not in the 31) same mode 2.3k it 2.5 h -> +type_args --gpl-plain on cle34a73c3, stop the 3 exact dpkit containers (2-h watchdog), retry @1. | DIE-QC-64/KITS 2026-11-02 23:1x CLASS QC place GPL-LOOP (timing/routability-driven RePlAce never converges at util 5-6 %: Nesterov 2.7k-93k iterations, overflow flat 0.33-0.50 for 9-38 h; hc1 x4, hc2 x6, st_a x8, st_b x3, sc_v2) + hc0 DPL (1.37M resize buffers after that GPL, DPL 23-45 h then 'bad optional access') -> per-type --gpl-plain (AUTOBUILD-PIPE-4 opt-in) on 31 slice types; what-if slw_hc0__cl4f54b7a3 plain: GPL converged 506 it, resize +13k buffers, DPL 13.7 min, 0 overlaps/violations (epyc2 die-qc-63-kits/probe_hc0). Hung units stopped (exact dpkit-<type> containers), retry at their attempts; st_b_v1 x2 LEC NOT EQ = old kit lec.py false alarm (main lec.py EQUIVALENT 108503/108503, probe_stb) -> retry (future_lec snapshots main lec.py). Released 5 CORE_CAP holds (analytic 971-986k) on measured GPL instance counts 397-431k incl. ~113k fixed, same as their unheld siblings: slw_hc1__cl68f9248e__cl144ee7b3, sle_hc2__cl9c4c4509__cl3edce1b8/__clf60c5152, slw_hc2__cla3497502__cl16607c7a/__cldc737267. | KIT-WAVE-16 2026-11-01 20:0x (COORD 19:5x stale FAIL rows): CLASS QC place GPL-0305 x5 BATCH R",
    "pilot_mode": "queue",
    "hold_items": {
     "sle_su_c": "SU clock-wrapper consumers missing planned clk_c; awaiting source2c7bbfb663e in immutable generation source",
@@ -2144,9 +2144,16 @@
     "sle_hc2__clcc5e3e61@4",
     "slw_hc1__cl3449ea95@3",
     "slw_hc2__cl6bcaba89@2",
-    "slw_hc2__cla3497502__cldc737267@2"
+    "slw_hc2__cla3497502__cldc737267@2",
+    "coll_n@6",
+    "sle_hc1__cl22c1ff36@6",
+    "sle_st_a_v1__cl989804f6__cl18eece69@7",
+    "sle_st_b_v2__cl14c98df5@6",
+    "slw_hc2__cla3497502__cl16607c7a@5",
+    "slw_st_b_v1__cle6023ec2@6",
+    "slw_st_b_v2@8"
    ],
-   "queue_src": "claude/kw-fix-4-qcdpl-1103@1131a422d65",
+   "queue_src": "claude/kw-fix-4-qcdpl-1103@d85db82cddb",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -2378,7 +2385,14 @@
     "sle_hc2__clcc5e3e61@4": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
     "slw_hc1__cl3449ea95@3": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
     "slw_hc2__cl6bcaba89@2": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
-    "slw_hc2__cla3497502__cldc737267@2": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)"
+    "slw_hc2__cla3497502__cldc737267@2": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
+    "coll_n@6": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
+    "sle_hc1__cl22c1ff36@6": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
+    "sle_st_a_v1__cl989804f6__cl18eece69@7": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
+    "sle_st_b_v2__cl14c98df5@6": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
+    "slw_hc2__cla3497502__cl16607c7a@5": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
+    "slw_st_b_v1__cle6023ec2@6": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
+    "slw_st_b_v2@8": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike"
    },
    "gen_hosts": [
     "intel2"
