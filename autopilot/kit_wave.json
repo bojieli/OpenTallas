@@ -209,7 +209,7 @@
     "kv3_phy",
     "kv3_phy_v1"
    ],
-   "note": "KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
+   "note": "KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
    "die_max_inflight": 60,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
@@ -226,12 +226,7 @@
     "kv3_pc": "PC6 unsigned child closure owned kv_pc_cores; release after real child views",
     "kv3_pc_v*": "PC6 unsigned child closure owned kv_pc_cores; release after real child views",
     "kv3_hub_C": "Known actual GEN_LINT OOM at8GB and measured16GB (rc137,16,726,636KiB); typed AHUB/CTL hard-child closure required, no blind memory escalation or same-flat-source retry.",
-    "qkd_hr_cdc_ci": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
-    "qkd_hr_cdc_hi": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
-    "qkd_hr_cdc_pc": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
-    "qkd_hr_core_queue": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
     "qkd_hr_ingest_eng": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
-    "qkd_hr_core_guard": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
     "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post",
     "qkd_hr_core_prompt": "DIE-KV-64 19:0x: NO_RECIPE no PASS hr face proof; proof re-run die-kv-64/fpjobs/qkd_hr_core_prompt; KW-FIX-4 adds --fp-root on PASS"
    },
@@ -400,7 +395,14 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "main@b07b52ff0c7"
+   "queue_src": "main@b07b52ff0c7",
+   "hold_items_released": {
+    "qkd_hr_cdc_ci": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+    "qkd_hr_cdc_hi": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+    "qkd_hr_cdc_pc": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+    "qkd_hr_core_queue": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch",
+    "qkd_hr_core_guard": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch"
+   }
   },
   "s81": {
    "enabled": true,
