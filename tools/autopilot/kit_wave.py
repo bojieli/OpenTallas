@@ -135,8 +135,10 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48h0 = DIE-HEAD-55 prepared_l48h0 on src claude/dh55-headsrc-1102@69e06c8b9 (COORD 11-03 00:2x (a) APPROVED)
                # l48h1 = DIE-HEAD-56 prep_v3 (plan 8e8ce514127b: l48h0 + hd_ctl_e/hd_ctl_n/hd_host_n cland republish), DIE-HEAD-56 RULING 11-03 04:5x
                # l48rf = DH58-RFPLAN RE-FORM plan event on l48h1 (head_rf_plan_delta.py 9bb4620c625, plan a09cd3ac1180), COORD 11-03 09:0x/09:20
+               # l48tb = DH58-TURNB FREG-1 on l48rf (hd_turn_a/hd_turn_b face register + strap K, plan f9623a82a239,
+               # claude/dh58-turnb-1103@67cc18d2e8e merged main 4b09653bef8, COORD 16:00 approved)
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
@@ -433,7 +435,7 @@ def select(rows, cfg, die, state, plan_types=None):
             why = "wave kit enqueued" + (" (queue FAIL; relaunch = retry item@attempt)" if rec.get("q_status") == "FAIL" else "")
         elif rec and rec.get("status") == "CANCELLED" and rec.get("volume") and (
                 rec["volume"] in pilot_classes_state(d, die, state)[0]
-                or pilot_fail_times(d, die, state).get(rec["volume"], 0.0) <= float(rec.get("started") or 0)):
+                or pilot_fail_times(d, die, state, d.get("src_sha") or "").get(rec["volume"], 0.0) <= float(rec.get("started") or 0)):
             pass        # queued volume cancelled by a failed pilot: class now proven, or no class FAIL stands any more
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
@@ -2404,7 +2406,15 @@ def is_wait_dep(r):
     return r.get("status") == "FAIL" and str(r.get("reason") or "").startswith("WAIT-DEP")
 
 
-def pilot_fail_times(d, die, state):
+def rec_src_sha(rec):
+    """the src_sha an attempt was generated from (its spec.json), '' when unknown"""
+    try:
+        return json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("src_sha") or ""
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+
+
+def pilot_fail_times(d, die, state, src_sha=""):
     """-> {class: latest pilot FAIL time} over the die's non-volume records.  KIT-WAVE-14 11-01: an AUTO-GEOM FAIL
     (stage 'geom') is a per-block geometry verdict -- GEOM review often releases it PASS-COND (fill/empty standing
     exceptions) and it says nothing about the other blocks of the class -- so it never stops the class volume
@@ -2420,6 +2430,11 @@ def pilot_fail_times(d, die, state):
             t = float(r.get("updated") or 0)
         elif r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL":
             t = float(r.get("q_updated") or r.get("updated") or 0)
+        # KW-FIX-4 11-03 (I2 RESET-CORE batch: old-src col_h9 attempts failing OT_RESET_CORE at 17:21 cancelled the
+        # class-fix volume just launched on the fixed src): with src_sha given, only a pilot FAIL generated from that
+        # same source counts -- a failure on a superseded source says nothing about volume on the current one
+        if t is not None and t > fail_t.get(c, 0.0) and src_sha and rec_src_sha(r) not in ("", src_sha):
+            t = None
         if t is not None:
             fail_t[c] = max(fail_t.get(c, 0.0), t)
     return fail_t
@@ -2444,7 +2459,7 @@ def cancel_class_volume(AP, cfg, st, notices):
         if not isinstance(d, dict) or not pilot_queue_mode(d, cfg):
             continue
         signed, _ = pilot_classes_state(d, die, st)
-        fail_t = pilot_fail_times(d, die, st)
+        fail_t = pilot_fail_times(d, die, st, d.get("src_sha") or "")
         for r in items.values():
             c = r.get("volume")
             if r.get("die") != die or r.get("status") != "RUNNING" or not c or c in signed:

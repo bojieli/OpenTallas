@@ -416,6 +416,30 @@ class QueueFill(unittest.TestCase):
             self.assertIn("kv3_st_t3", [p["item"] for p in picks])
 
 
+class VolumeSrcTest(unittest.TestCase):
+    def test_old_src_pilot_fail_does_not_cancel_new_src_volume(self):
+        """KW-FIX-4 11-03: a pilot FAIL generated from a superseded src never cancels volume on the current src"""
+        with tempfile.TemporaryDirectory() as d:
+            ap = FakeAP(d, "{}")
+            c = cfg(pilot_mode="queue")
+            c["dies"]["qwen_kvsys"]["src_sha"] = "new"
+            cls = "qwen_kvsys|type|kv#_st_t#"
+            now = time.time()
+            for n in ("p", "q"):
+                (Path(d) / n).mkdir()
+            (Path(d) / "p" / "spec.json").write_text(json.dumps({"src_sha": "old"}))
+            (Path(d) / "q" / "place.live.log").write_text("waiting for memory\n")
+            st = {"items": {
+                "p": {"die": "qwen_kvsys", "item": "kv3_st_t1", "status": "FAIL", "class": "PLAN", "updated": now,
+                      "dir": str(Path(d) / "p"), "reason": "OT_RESET_CORE"},
+                "q": {"die": "qwen_kvsys", "item": "kv3_st_t3", "status": "RUNNING", "volume": cls, "unit": "u3",
+                      "dir": str(Path(d) / "q"), "started": now - 60},
+            }}
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 0)
+            (Path(d) / "p" / "spec.json").write_text(json.dumps({"src_sha": "new"}))
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 1)
+
+
 class VolumeGeomTest(unittest.TestCase):
     def test_geom_fail_does_not_cancel_volume(self):
         with tempfile.TemporaryDirectory() as d:
