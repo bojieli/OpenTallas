@@ -19,6 +19,18 @@ import argparse, json, os, re, shutil, sys
 from pathlib import Path
 
 
+def sim_model_for_bb(files):
+    """-> (files, {bb: model}): an <m>_bb.v with a sibling behavioural <m>.v takes the model.  Verilator accepts the empty
+    black box and its outputs read 0 (KV veh60c45: ot_rom_64x32_m2_bb.v, D2D calibration profile all 0)."""
+    out, swapped = [], {}
+    for f in files:
+        g = f[:-len('_bb.v')] + '.v' if f.endswith('_bb.v') else f
+        if g != f and os.path.isfile(g):
+            swapped[f] = g; f = g
+        out.append(f)
+    return out, swapped
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('vdir'); ap.add_argument('tree'); ap.add_argument('--bench', nargs='*', default=[])
@@ -55,6 +67,8 @@ def main():
     cl, missing, macros = B.kit_closure(need, sub, prefer, picks, views={k: v for k, v in views.items() if k not in defined})
     sim = {m['bb']: m['model'] for m in macros.values() if m.get('bb') and m.get('model')}
     cl = [sim.get(f, f) for f in cl]
+    cl, swapped = sim_model_for_bb(cl)   # SS25-TOK 11-03: a _bb.v found through the rtl index, not a macro view (veh60c45 dcal ROM)
+    sim.update(swapped)
     pkgs = [str(p) for p in B.kit_packages([Path(f) for f in own + cl], ab.get('rtl_roots', ['rtl']), base)]
     have = {os.path.realpath(f) for f in own}
     haveb = {}
