@@ -982,6 +982,15 @@ def kit_context(P, tn):
         floor[p["name"]]=gen_phys.IO_BUDGET*per
     # S81-RINGHOLD-4 (a) falling-edge ring writers keep the plain IO budget floor (DH56-IOHP 11-03: the T/2 is the
     # capture edge itself, landing_contract.ring_input_sdc)
+    rh_ = P.clock.get("ring_hold") or {}
+    if rh_.get("ft_ring_max_ps") is not None:      # DIE-QC-67/STM: ft rings of fall types take the plan sender max
+        import landing_contract as LC_
+        fall_ = LC_.ring_fall_clocks(P, tn)
+        ft_ = {gen_rtl.sv_id(s["name"] + "_i") for s in t.get("ft_slots", [])}
+        for ck_, sel_ in LC_.ring_input_ports(P, tn):
+            for s_ in sel_:
+                if ck_ in fall_ and s_.split("[")[0] in ft_:
+                    floor[s_.split("[")[0]] = float(rh_["ft_ring_max_ps"])
     ib = gen_phys.insertion_binding(P, tn)
     pad = {"reset_pad_pins": RT.pad_false_path_pins(P, tn)} if RT.pad_false_path_pins(P, tn) else {}
     return dict(**pad, period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],
