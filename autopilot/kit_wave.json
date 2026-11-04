@@ -3112,7 +3112,8 @@
    "queue_src": "main@386f7a71f8a",
    "hold_items": {
     "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
-    "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)"
+    "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
+    "ot_hgi_coll_tkm_m_tp192__root": "DIE-HBM-62/FLOW 00:1x: MAP_AMBIGUOUS x_u_u_g_tiles_0_e86_u_tile_clr, hold until /FLOW posts"
    },
    "gen_hosts": [
     "epyc4"
