@@ -90,3 +90,11 @@ def test_status_loop_uses_the_grow_path_defined_before_it():
     loop = TCL[TCL.index("foreach spec $cland_status"):TCL.index("foreach spec $cland_optional_groups")]
     assert "cland_put_grow [lindex $drivers 0] $cland_sw status:$net status" in loop
     assert "} else { cland_put [lindex $drivers 0] $cland_sw status:$net }" in loop
+
+
+def test_status_pin_in_the_core_margin_takes_the_grow_path():
+    """DIE-S81-53/BAND (S81 leaf t56 landing_ready_ft9_i): pin y 0, core y 4.32: the +-2.16 um window misses the core but
+    the grown one reaches it, so a crowded slid window grows.  Only a point beyond the largest grown window stays plain."""
+    loop = TCL[TCL.index("foreach spec $cland_status"):TCL.index("foreach spec $cland_optional_groups")]
+    cond = re.search(r"if \{(\(\$x\+17\.28\).*?)\} \{\n  cland_put_grow", loop, re.S).group(1)
+    assert "($y-17.28)*$ff_dbu < $ff_y1" in cond and "cland_sw 3" not in cond
