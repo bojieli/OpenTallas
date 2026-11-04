@@ -818,6 +818,13 @@ class Binder:
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
+        if self.ab.get("core_splits"):
+            # DIE-KV-66 RF-KV3 (opt-in): one as-built hard leaf -> two hard leaves, before composition and drivers/loads
+            import bind_core_split
+            try:
+                self.core_split_receipts = bind_core_split.apply(self, self.ab["core_splits"])
+            except ValueError as exc:
+                raise BindError(f"CORE_SPLIT {exc}") from exc
         if self.ab.get("compose"):
             import bind_compose
             bind_compose.apply(self, self.ab["compose"])
@@ -3662,6 +3669,32 @@ class Binder:
                                 + ("fault OR" if k == "or" else "AND join"))
                 return orn[key]
             raise BindError(f"no expression for {d}")
+        # DIE-KV-67 PC reset safe form (opt-in core_splits[].reset_gate): pin <= lane & nearest wavefront tap, one flop per
+        # (leaf, driver); ot_dp_rgate traces through d, so the bind proof still sees the as-built driver.
+        core_gate_ports, core_gates = {}, {}
+        if self.ab.get("core_splits"):
+            import bind_core_split
+            core_gate_ports = bind_core_split.gate_ports(self.ab["core_splits"])
+
+        def core_reset_gate(x, c, r):
+            key = (r, x)
+            if key not in core_gates:
+                hc = next((h for h in t.get("hard_cores", []) if h["inst"] in (r, r.removeprefix("u_"))), None)
+                if rtree is None or hc is None:
+                    raise BindError(f"CORE_SPLIT reset_gate {tn}/{r}: needs a wavefront tree and a plan hard core row")
+                w, h = hc["outline_um"]
+                o = hc["origin_um"]
+                try:
+                    tap_net = bind_core_split.gate_tap(rtree["relays"], (o[0] + w / 2, o[1] + h / 2), RT.consumer_count(rtree))
+                except ValueError as exc:
+                    raise BindError(f"CORE_SPLIT {tn}/{r}: {exc}") from exc
+                nm = short_id(f"prg_{sv_id(r)}_{len(core_gates)}", 100)
+                core_gates[key] = nm
+                decl.append(f"    wire {nm};")
+                body.append(f"    ot_dp_rgate u_{nm} (.clk(clk), .d({x}), .run({tap_net}), .q({nm}));  "
+                            f"// PC reset safe form: lane & wavefront tap")
+            return core_gates[key]
+
         insts = []
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
             c = F.cells[ci]
@@ -3675,6 +3708,8 @@ class Binder:
                     conns.append((pn, drv_w[(ci, pn)]))
                 elif dd == "input":
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
+                    if pn in core_gate_ports.get(c.module, ()):
+                        e = [core_reset_gate(x, c, r) for x in e]
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
@@ -5060,6 +5095,12 @@ def cmd_kit_rtl(a):
     # not in the frozen bind source base: the base wins, the tool checkout only adds views the base lacks
     for m, d in macro_views(Path(__file__).resolve().parents[2]).items():
         views.setdefault(m, d)
+    # DIE-KV-67 11-04: a plan row that binds a view (a provisional overlay row) is a hard macro of this kit even when the
+    # module has no source under the manifest's RTL roots (KV PCC / PCF live in results/kv_host_regen_1/rtl_rf3)
+    for hc in t.get("hard_cores") or []:
+        lef = Path(str(hc.get("lef") or ""))
+        if isinstance(hc, dict) and lef.stem == hc.get("module") and lef.is_absolute() and lef.is_file():
+            views.setdefault(lef.stem, lef.parent)
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened,
                                          defines=ab0.get("defines", []))
     if widened:
