@@ -116,17 +116,23 @@ class T(unittest.TestCase):
             self.assertEqual(m.fit(k), {})
             self.assertFalse((k / ".busfit").exists())
 
-    def test_patch_is_idempotent_and_only_openroad_reader(self):
+    def test_patch_is_idempotent_and_guards_yosys(self):
         with tempfile.TemporaryDirectory() as d:
             m = load(d)
-            p = Path(d) / "read_liberty.tcl"
-            p.write_text("log_cmd read_liberty -corner $corner $libFile\nlog_cmd read_liberty $libFile\n")
+            p = Path(d) / "util.tcl"
+            p.write_text("proc log_cmd { cmd args } {}\n")
             m.patch(p)
             once = p.read_text()
             m.patch(p)
             self.assertEqual(p.read_text(), once)
-            self.assertEqual(once.count("[ot_busfit $libFile]"), 2)
-            self.assertIn("1_synth.odb", once)
+            self.assertIn("::sta::worst_slack_cmd", once)
+            self.assertIn("*.odb", once)
+
+    def test_eco_runners_carry_the_fit(self):
+        self.assertIn("busfit_prep", (HERE / "post_route_drv" / "prd_run.sh").read_text())
+        e = (HERE / "eco_loop.py").read_text()
+        self.assertIn("OT_BUSFIT_PY", e)
+        self.assertIn("kwrs_busfit.py patch", e)
 
     def test_runner_fingerprint_without_busfit_is_equal(self):
         import kit_resume as KR
