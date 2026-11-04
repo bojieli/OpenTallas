@@ -503,10 +503,13 @@ def select(rows, cfg, die, state, plan_types=None):
                     skip.setdefault("die-owned hold: " + hc, []).append(c)
                     blocked.append(c)
             cls = [c for c in cls if c not in blocked]
-            todo = [c for c in cls if not its.get(item_key(die, ev, c, blk(c)))
+            # KW-FIX-8 11-04: a class in flight is never picked again.  Without this a retry row naming the live attempt
+            # relaunched a RUNNING class (QC 11:30: 12 classes launched twice in one pass, a2 then a3)
+            cls_live = lambda c: (its.get(item_key(die, ev, c, blk(c))) or {}).get("status") in ("RUNNING", "LAUNCHING")
+            todo = [c for c in cls if not cls_live(c) and (not its.get(item_key(die, ev, c, blk(c)))
                     or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry
                     or (is_wait_dep(its[item_key(die, ev, c, blk(c))]) and not its[item_key(die, ev, c, blk(c))].get("provisional")
-                        and prov_item(d, c))]
+                        and prov_item(d, c)))]
             if not cls and blocked:
                 continue
             if not cls:

@@ -20,4 +20,14 @@ class ExactAllowlist(unittest.TestCase):
         p,s=KW.select(self.rows(),cfg(only_items=[]),"qwen_kvsys",{},None)
         self.assertEqual(p,[])
 
+    def test_class_in_flight_is_not_picked_by_its_retry_row(self):
+        # QC 11-04 11:30: retry rows @1 and @2 launched 12 RUNNING classes twice in one pass
+        names={"kv3_hg_v1__clgood":"a"*12}
+        key=KW.item_key("qwen_kvsys","e","kv3_hg_v1__clgood","a"*12)
+        for status,picked in (("RUNNING",[]),("LAUNCHING",[]),("FAIL",["kv3_hg_v1__clgood"])):
+            c=cfg(only_items=["kv3_hg_v1__clgood"],retry=["kv3_hg_v1__clgood@2"])
+            st={"items":{key:{"die":"qwen_kvsys","item":"kv3_hg_v1__clgood","attempt":2,"status":status}}}
+            p,s=KW.select(self.rows(),c,"qwen_kvsys",st,names)
+            self.assertEqual([r["item"] for r in p],picked,status)
+
 if __name__ == "__main__":unittest.main()
