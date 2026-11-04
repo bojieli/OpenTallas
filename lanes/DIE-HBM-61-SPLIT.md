@@ -8,3 +8,4 @@ Groups (helpers): hcol_h0 (me), split3_lane, lanes8_11, rp3lp3h_n/s, fused_lane,
 - 07:59 STOPPED on COORD cap; see queue PROGRESS; WIP @f12af1a5d97
 - 2026-11-03 09:38 PST rp3lp3h_n/s EQ-PASS @cc484e24be5 READY posted; tkm flat -O0 OOM at 250G, probing
 - 2026-11-03 11:15 PST q3_edge READY posted @cc484e24be5; tkm 2-tile reduced chain via ot-run epyc4
+- 2026-11-03 17:53 PST tkm EQ-PASS reduced chain @4835b1468df READY posted
