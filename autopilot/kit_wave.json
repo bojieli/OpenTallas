@@ -2572,7 +2572,10 @@
     "cbn_q01__clab6e67f2@2",
     "cbn_q01__cld9ff4c40@2",
     "cbx_q10__cl89936551@2",
-    "sle_su_l0__cl7a55c676@2"
+    "sle_su_l0__cl7a55c676@2",
+    "cbn_q01__cldd6ea846@2",
+    "sle_su_l1__cl5ea486db@2",
+    "sle_su_l1__clc6d66f5b@2"
    ],
    "queue_src": "claude/kw7-resetdot-1104@ccb4065691eba5f4b19f243fa2f18ed5bc038eb5",
    "type_args": {
@@ -2863,7 +2866,10 @@
     "cbn_q01__clab6e67f2@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
     "cbn_q01__cld9ff4c40@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
     "cbx_q10__cl89936551@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
-    "sle_su_l0__cl7a55c676@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved"
+    "sle_su_l0__cl7a55c676@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q01__cldd6ea846@2": "KW-FIX-7 11-04 same class: reset_tree ccb4065691e, flat core u_bound.<inst>",
+    "sle_su_l1__cl5ea486db@2": "KW-FIX-7 11-04 same class: reset_tree ccb4065691e, flat core u_bound.<inst>",
+    "sle_su_l1__clc6d66f5b@2": "KW-FIX-7 11-04 same class: reset_tree ccb4065691e, flat core u_bound.<inst>"
    },
    "gen_hosts": [
     "intel2"
