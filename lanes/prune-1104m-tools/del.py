@@ -15,6 +15,8 @@ def keep_protects(f,cl='dir'):
     if SPILL.match(t): return False
     if cl=='attempt':
         if 'a' in RULE and f==ROOT+'/claude/codex-kv-wave-1131/.keep': return False
+        # COORD 05:36 (2)(a): same form as (a); source, bind and canaries are not attempt rows
+        if 'c' in RULE and f==ROOT+'/claude/codex-s81-wave-1345/.keep' and t.startswith('Immutable S81 current-source'): return False
         if 'b' in RULE and t=='' and f in(ROOT+'/claude/kit-wave/.keep',ROOT+'/claude/kit-wave/hbm/.keep'):
             need24[0]=True; return False
     return True

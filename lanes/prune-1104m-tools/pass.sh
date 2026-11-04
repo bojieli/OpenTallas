@@ -3,7 +3,7 @@
 tag=$1; mode=$2; shift 2; T=~/coord/lanes/prune-1104m-tools; cd /tmp
 cat ~/coord/PROTECTED-DBS.txt ~/coord/lanes/PROTECTED-DBS.txt > /tmp/p1104m_prot.txt
 if [ $mode = list ]; then
- python3 $T/refs.py; cp $T/cmd.py /tmp/p1104m_cmd.py; python3 /tmp/p1104m_cmd.py > /tmp/p1104m_live_local.txt
+ python3 $T/refs.py; for h in "$@"; do python3 $T/term.py $h; done; cp $T/cmd.py /tmp/p1104m_cmd.py; python3 /tmp/p1104m_cmd.py > /tmp/p1104m_live_local.txt
  for h in intel1 intel2 epyc2; do scp -q -o ControlPath=none $T/cmd.py $h:/tmp/p1104m_cmd.py; ssh -n -o ControlPath=none $h 'python3 /tmp/p1104m_cmd.py' > /tmp/p1104m_live_$h.txt; done
 fi
 for h in "$@"; do
