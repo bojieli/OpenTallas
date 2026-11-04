@@ -21,21 +21,21 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kvi8/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
-   "gen_host": "intel1",
-   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kvi8",
-   "src_sha": "34659669869dcd7841e5a0dfee72b277ecc881ed",
+   "plan": "/srv/opentallas-scratch3/claude/kw-fix-6/kvsrc/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "gen_host": "epyc4",
+   "src": "/srv/opentallas-scratch3/claude/kw-fix-6/kvsrc",
+   "src_sha": "d0cddccfa24f5e90551797ba6ee227b1fe86d575",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
-    "note": "16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
-    "bind_out": "/srv/opentallas-scratch2/claude/die-kv-64/bind_pv2"
+    "asbuilt": "/srv/opentallas-scratch2/claude/dkv66/asbuilt_e.json",
+    "note": "KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
+    "bind_out": "/srv/opentallas-scratch2/claude/dkv66/bind_e2"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/wt/kw-fix-4-kvi8/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch3/claude/kw-fix-6/kvsrc/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -183,7 +183,10 @@
     "kv3_hub_Eo@3",
     "kv3_hub_Wo@3",
     "kv3_hgi_v4@6",
-    "kv3_hgi_v6@5"
+    "kv3_hgi_v6@5",
+    "kv3_pc__cl254f2e73@1",
+    "kv3_pc__cl5a95b461@1",
+    "kv3_pc_v3@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -213,7 +216,7 @@
     "kv3_phy",
     "kv3_phy_v1"
    ],
-   "note": "KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
+   "note": "KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
    "die_max_inflight": 60,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
@@ -229,34 +232,36 @@
    "hold_items": {
     "kv3_hub_C": "Known actual GEN_LINT OOM at8GB and measured16GB (rc137,16,726,636KiB); typed AHUB/CTL hard-child closure required, no blind memory escalation or same-flat-source retry.",
     "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post",
-    "qkd_hr_core_prompt": "DIE-KV-64 19:0x: NO_RECIPE no PASS hr face proof; proof re-run die-kv-64/fpjobs/qkd_hr_core_prompt; KW-FIX-4 adds --fp-root on PASS"
+    "qkd_hr_core_prompt": "DIE-KV-64 19:0x: NO_RECIPE no PASS hr face proof; proof re-run die-kv-64/fpjobs/qkd_hr_core_prompt; KW-FIX-4 adds --fp-root on PASS",
+    "kv3_io_ft": "COORD 05:20 (3): ring ft rows held until one pilot has a route read, either way (KV ioft_a2 / S81 t17_A)",
+    "kv3_io_ft_v1": "COORD 05:20 (3): ring ft rows held until one pilot has a route read, either way (KV ioft_a2 / S81 t17_A)"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
-    "kv3_io_cor_v1@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hg@1": "e6#341b SIGNED (ss24 06:20) + KV-028 strap tie-in 5ab1e935464 + PDN class C 82eacd7eac/50e5dda3118, all in source-follow src 70d93014a8dd (active 08:26); DIE-KV-64 08:10 release; KW-FIX-4 08:4x",
-    "kv3_hg_v3@1": "e6#341b SIGNED (ss24 06:20) + KV-028 strap tie-in 5ab1e935464 + PDN class C 82eacd7eac/50e5dda3118, all in source-follow src 70d93014a8dd (active 08:26); DIE-KV-64 08:10 release; KW-FIX-4 08:4x",
-    "kv3_hgi@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hgi_v3@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hgi_v4@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hgi_v5@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hgi_v6@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
+    "kv3_io_cor_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hg@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hg_v3@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hgi@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hgi_v3@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hgi_v4@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hgi_v5@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hgi_v6@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_hgi_v7@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hgi_v8@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hub_Eo@1": "e6#341b SIGNED (ss24 06:20) + KV-028 strap tie-in 5ab1e935464 + PDN class C 82eacd7eac/50e5dda3118, all in source-follow src 70d93014a8dd (active 08:26); DIE-KV-64 08:10 release; KW-FIX-4 08:4x (current attempt RUNNING on pre-fix src 54c3c7c9fe7: relaunches on a FAIL)",
-    "kv3_hub_Wo@1": "e6#341b SIGNED (ss24 06:20) + KV-028 strap tie-in 5ab1e935464 + PDN class C 82eacd7eac/50e5dda3118, all in source-follow src 70d93014a8dd (active 08:26); DIE-KV-64 08:10 release; KW-FIX-4 08:4x (current attempt RUNNING on pre-fix src 54c3c7c9fe7: relaunches on a FAIL)",
-    "kv3_pv@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v1@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v12@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v2@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v3@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v4@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v5@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v6@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v7@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v8@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v1n@1": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
+    "kv3_hgi_v8@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hub_Eo@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hub_Wo@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v12@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v2@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v3@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v4@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v5@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v6@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v7@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v8@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pv_v1n@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pv_v3@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
     "kv3_pv_v5@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
     "kv3_pv_v6@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
@@ -280,15 +285,15 @@
     "kv3_pv_v12@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_pv_v1n@2": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_pv_v2@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
-    "kv3_pv_v2n@1": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
+    "kv3_pv_v2n@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pv_v3@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
-    "kv3_pv_v3n@1": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
+    "kv3_pv_v3n@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pv_v4@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
-    "kv3_pv_v4n@1": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
+    "kv3_pv_v4n@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pv_v5@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
-    "kv3_pv_v5n@1": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
+    "kv3_pv_v5n@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pv_v6@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
-    "kv3_pv_v6n@1": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
+    "kv3_pv_v6n@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pv_v7@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_pv_v8@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_hgi_v1__cl141fc26e@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)",
@@ -307,7 +312,7 @@
     "qkd_hr_cdc_pc@3": "I4 RF-KV1 fold debc79c88f / HGICLAND 486b31b9ae (main b07b52ff0c7, src kw-fix-4-kvi4); KW-FIX-4 19:0x",
     "qkd_hr_core_queue@3": "I4 RF-KV1 fold debc79c88f / HGICLAND 486b31b9ae (main b07b52ff0c7, src kw-fix-4-kvi4); KW-FIX-4 19:0x",
     "qkd_hr_core_guard@3": "I4 RF-KV1 fold debc79c88f / HGICLAND 486b31b9ae (main b07b52ff0c7, src kw-fix-4-kvi4); KW-FIX-4 19:0x",
-    "kv3_hub_Wi@1": "I4 RF-KV1 fold debc79c88f / HGICLAND 486b31b9ae (main b07b52ff0c7, src kw-fix-4-kvi4); KW-FIX-4 19:0x",
+    "kv3_hub_Wi@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_hgi@3": "I4 RF-KV1 fold debc79c88f / HGICLAND 486b31b9ae (main b07b52ff0c7, src kw-fix-4-kvi4); KW-FIX-4 19:0x",
     "kv3_hgi_v3@3": "I4 RF-KV1 fold debc79c88f / HGICLAND 486b31b9ae (main b07b52ff0c7, src kw-fix-4-kvi4); KW-FIX-4 19:0x",
     "kv3_hgi_v4@3": "I4 RF-KV1 fold debc79c88f / HGICLAND 486b31b9ae (main b07b52ff0c7, src kw-fix-4-kvi4); KW-FIX-4 19:0x",
@@ -317,7 +322,12 @@
     "kv3_hub_Eo@3": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
     "kv3_hub_Wo@3": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
     "kv3_hgi_v4@6": "INFRA ENOSPC remainder (intel1 214 GB free)",
-    "kv3_hgi_v6@5": "INFRA ENOSPC remainder (intel1 214 GB free)"
+    "kv3_hgi_v6@5": "INFRA ENOSPC remainder (intel1 214 GB free)",
+    "kv3_hgi_v7@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pc__cl254f2e73@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pc__cl5a95b461@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pc_v3@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_sys_SD@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable"
    },
    "only_items": [
     "kv3_astk",
@@ -402,7 +412,7 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "main@34659669869",
+   "queue_src": "main@d0cddccfa24f5e90551797ba6ee227b1fe86d575",
    "hold_items_released": {
     "kv3_pc": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -414,9 +424,10 @@
     "qkd_hr_ingest_eng": "SUPERSEDED (COORD 11-02 19:2x): DIE-KV-61/hr builds these cores itself; kit wave does not relaunch"
    },
    "hosts": [
-    "epyc4",
-    "intel1",
-    "intel2"
+    "epyc4"
+   ],
+   "gen_hosts": [
+    "epyc4"
    ]
   },
   "s81": {
@@ -2240,7 +2251,7 @@
    "die_max_inflight": 60,
    "owner_lane": "DIE-QC-65",
    "lane": "KIT-WAVE-12",
-   "note": "KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
+   "note": "KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
    "pilot_mode": "queue",
    "hold_items": {
     "sle_sc_v2": "CORE_CAP 542365/400000 (measured): CORE_CAP: no materialized hard cores",
@@ -2674,8 +2685,7 @@
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
-    "epyc4",
-    "intel2"
+    "epyc4"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged."
   },
