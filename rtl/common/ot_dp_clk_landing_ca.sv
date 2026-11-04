@@ -101,7 +101,7 @@ module ot_dp_clk_landing_ca #(
     localparam integer KM  = ((K % KNT) + KNT) % KNT;
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY)) u_ring (
-        .tclk(wclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(KTW'(KM)),
+        .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
@@ -217,8 +217,8 @@ module ot_dp_clk_landing_cas #(
         end
     end
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .DSREP(DSREP)) u_ring (
-        .tclk(wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP)) u_ring (
+        .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
@@ -248,9 +248,11 @@ module ot_meso_ring_ca #(
                                     // origin errors up to 2^(AW+1+LAPX) counts (the 1-bit lap aliases every 2*DEPTH)
     parameter bit CONTROL_STATUS_COPY = 0,
     parameter bit WREG = 0,         // WREG-1: registered writer start + registered per-(slot, chunk) write enables
+    parameter bit WEN_NEG = 0,      // WREG with WFALL: write-enable flops on the falling edge of wen_clk (raw fclk)
     parameter int DSREP = 1         // DSREP-1: read-select register copies per chunk (ot_meso_dsel SREP)
 ) (
     input  logic         tclk,
+    input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
     input  logic         t_rst_n,
     input  logic [W-1:0] t_d,
     input  logic         rclk,
@@ -298,7 +300,7 @@ module ot_meso_ring_ca #(
         wire [AW-1:0] slot_nx = fs_q ? tc[AW-1:0] + 1'b1 : '0;
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             for (genvar c = 0; c < WNC; c++) begin : ch
-                (* keep = "true" *) ot_meso_wen_ff u_wen (.clk(tclk), .d(t_rst_n && (slot_nx == AW'(i))),
+                (* keep = "true" *) ot_meso_wen_ff #(.NEG(WEN_NEG)) u_wen (.clk(wen_clk), .d(t_rst_n && (slot_nx == AW'(i))),
                                                          .q(wen[i * WNC + c]));
             end
         end
@@ -643,12 +645,19 @@ endmodule
 
 // WREG-1 write-enable register of one (slot, 64-bit chunk) of ot_meso_ring_ca: kept so the per-chunk copies (same D)
 // are not merged back into one W x DEPTH broadcast.
+// NEG = 1 (DIE-QC-70, WFALL ring): the flop captures on the falling edge of clk, the raw fclk.  A kept module cannot
+// absorb the wclk inverter as the slot flops do, so posedge ~fclk here left one inverter per ring on the clock path
+// and the write enables on another clock net than the slots they enable.
 (* keep_hierarchy, keep *)
-module ot_meso_wen_ff (
+module ot_meso_wen_ff #(parameter bit NEG = 0) (
     input wire clk, d,
     (* keep *) output reg q
 );
-    always @(posedge clk) q <= d;
+    generate if (NEG) begin : g_neg
+        always @(negedge clk) q <= d;
+    end else begin : g_pos
+        always @(posedge clk) q <= d;
+    end endgenerate
 endmodule
 
 // Dedicated same-state slot status bank. The canonical keep-register hook
