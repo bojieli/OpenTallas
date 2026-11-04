@@ -671,6 +671,9 @@ RULES = [
     # KW-FIX-7 11-04: before INFRA. S81 serdes__t3/t4/t12-16 stopped on the cap with ot-run client text beside it, read as
     # INFRA and relaunched at the same cap.  The cap line is a verdict on the kit whatever surrounds it.
     ("PLAN", r"^place$", r"OT_NATIVE_CELL_CAP.*above \d+ run cap", "actual native standard-cell count above the kit run cap"),
+    # KW-FIX-8 11-04: same class.  serdes__t13 a6: MPL-0034 at 08:46, make stopped, a parallel LEC then idled until the
+    # watchdog stop 12:53, so the unit ended 143, read as INFRA and relaunched at the same macro position.
+    ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+137\b", "infra"),
