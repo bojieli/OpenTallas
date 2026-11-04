@@ -694,6 +694,21 @@ def test_explicit_typed_origin_start_and_mutants():
         assert r['verdict'] == 'FAIL' and 'land_slot' in r['fail_counts'], r['fails']
 
 
+
+def test_typed_regional_origin_preserves_sampler_guards():
+    # Regional outputs add downstream state, while original SF/S0 remain the
+    # only two samplers of the external START pin (proved regional mechanism).
+    spec = dict(RS, st={'form':'origin_start', 'origin':'u_cland_origin'})
+    text = _origin_only_net().replace('ot_dp_landing_origin_s', 'ot_dp_landing_origin_s_regional')
+    good = _rs(text, land=spec)
+    assert good['verdict'] == 'PASS', good['fails']
+    assert len(good['ring_start']['st']['sampler_flops']) == 2
+    for mutant in (text.replace('sf (.CLK(clk)', 'sf (.CLK(fclk)'),
+                   text.replace('ot_dp_landing_origin_s_regional', 'unrelated_regional_origin')):
+        bad = _rs(mutant, land=spec)
+        assert bad['verdict'] == 'FAIL' and 'land_slot' in bad['fail_counts'], bad['fails']
+
+
 def _flat_like_odb(text, top="top"):
     """Emit the hierarchical test netlist as ONE flat module with the same hierarchical instance paths (what an
     ODB write_verilog of the synthesized design looks like): module types are lost, paths kept."""
@@ -946,6 +961,103 @@ def test_registered_onehot_rejects_unmodeled_sequential_polarity_or_edge():
     assert r["verdict"] == "FAIL" and not r.get("registered_onehot")
 
 
+WREG4 = {"d": {"D": 4, "form": "hold_mux"}, "start": {"form": "ring_start", "ring": "d"}}
+
+
+def _wreg_vehicle(mutant=None, buffered=False):
+    """WREG-1 (ot_dp_clk_landing_ca g_wreg): kept per-slot write-enable flops, D = start && slot_nx == k,
+    slot_nx = fs_q ? tc + 1 : 0."""
+    ff = f"DFFHQNx{'2' if buffered else '1'}{_X}"
+    st = "start_b" if buffered else "start"
+    wen = (f"module ot_meso_wen_ff(clk, d, q); input clk; input d; output q;\n"
+           f" {ff} ff (.CLK(clk), .D(d), .QN(qn));\n INVx1{_X} qi (.A(qn), .Y(q));\nendmodule\n")
+    body = [f"DFFHQNx1{_X} fs (.CLK(fclk), .D({st}), .QN(fsn));", f"INVx1{_X} fi (.A(fsn), .Y(fsq));",
+            f"DFFHQNx1{_X} tq0 (.CLK(fclk), .D(nx0), .QN(t0n));", f"DFFHQNx1{_X} tq1 (.CLK(fclk), .D(nx1), .QN(t1n));",
+            f"INVx1{_X} it0 (.A(t0n), .Y(t0));",
+            f"AND2x2{_X} n0 (.A(fsq), .B(t0n), .Y(nx0));",
+            f"XNOR2xp5{_X} x1 (.A(t0), .B(t1n), .Y(xt1));", f"AND2x2{_X} n1 (.A(fsq), .B(xt1), .Y(nx1));",
+            f"INVx1{_X} nn0 (.A(nx0), .Y(z0));", f"INVx1{_X} nn1 (.A(nx1), .Y(z1));"]
+    if buffered:
+        body.append(f"BUFx2{_X} sb (.A(start), .Y(start_b));")
+    dec = {0: ("z1", "z0"), 1: ("z1", "nx0"), 2: ("nx1", "z0"), 3: ("nx1", "nx0")}
+    if mutant == "overlap":
+        dec[1] = ("z1", "z1")                 # slot_nx[0] dropped: wen 0 and 1 both set on slot_nx == 0
+    ports, decl = "", ""
+    for k in range(4):
+        hi, lo = dec[k]
+        if mutant == "no_reset" and k == 2:
+            body.append(f"AND2x2{_X} wg{k} (.A({hi}), .B({lo}), .Y(wd{k}));")
+        elif mutant == "stuck" and k == 3:
+            body.append(f"TIELOx1{_X} wg{k} (.L(wd{k}));")
+        else:
+            body.append(f"AND3x1{_X} wg{k} (.A({st}), .B({hi}), .C({lo}), .Y(wd{k}));")
+        ck = "fclk2" if mutant == "other_clock" and k == 1 else "fclk"
+        d = f"wd{k}"
+        if buffered:
+            body.append(f"BUFx2{_X} wb{k} (.A(wd{k}), .Y(wdb{k}));")
+            d = f"wdb{k}"
+        if mutant == "data_leaf" and k == 0:
+            body.append(f"AND2x2{_X} wx (.A({d}), .B(e), .Y(wde));")
+            d = "wde"
+            ports, decl = ", e", " input e;"
+        if mutant == "other_clock_leaf" and k == 0:
+            body += [f"DFFHQNx1{_X} xf (.CLK(fclk2), .D(fsq), .QN(xn));", f"AND2x2{_X} wx (.A({d}), .B(xn), .Y(wde));"]
+            d = "wde"
+        if mutant == "wide" and k == 0:
+            for j in range(12):
+                body += [f"DFFHQNx1{_X} wf{j} (.CLK(fclk), .D(fsq), .QN(wn{j}));",
+                         f"AND2x2{_X} wa{j} (.A({d}), .B(wn{j}), .Y(wc{j}));"]
+                d = f"wc{j}"
+        if mutant == "polarity" and k == 1:
+            body += [f"DFFLQNx1{_X} u_wen{k} (.CLK({ck}), .D({d}), .QN(wq{k}));", f"INVx1{_X} wi{k} (.A(wq{k}), .Y(w{k}));"]
+        else:
+            body.append(f"ot_meso_wen_ff u_wen{k} (.clk({ck}), .d({d}), .q(w{k}));")
+        w = f"w{k}"
+        if buffered:                          # one wen flop drives its slots through a repeater, as resizing inserts
+            body.append(f"BUFx4{_X} wr{k} (.A(w{k}), .Y(wbf{k}));")
+            w = f"wbf{k}"
+        body.append(f"INVx1{_X} wn_{k} (.A({w}), .Y(nw{k}));")
+        if mutant == "inverted_write":        # at-most-one state, but every idle slot writes: a real write conflict
+            body += _mux_slot(k, w=f"nw{k}", nw=w)
+        else:
+            body += _mux_slot(k, w=w, nw=f"nw{k}")
+    if mutant == "start_sink":
+        body.append(f"DFFHQNx1{_X} sink (.CLK(fclk2), .D(start), .QN(sinkq));")
+    return (wen + f"module top(fclk, fclk2, start, d{ports}); input fclk; input fclk2; input start; input d;{decl}\n"
+            + "\n".join(" " + b for b in body) + "\nendmodule\n")
+
+
+def _wreg_guard(text, land=WREG4):
+    return face_guard.guard(text, "top", clocks=["fclk", "fclk2"], land=land)
+
+
+@pytest.mark.parametrize("buffered", [False, True])
+def test_wreg_write_enable_flops_prove_at_most_one(buffered):
+    r = _wreg_guard(_wreg_vehicle(buffered=buffered))
+    assert r["verdict"] == "PASS", r["fails"]
+    assert not r.get("registered_onehot")
+    (proof,) = r["registered_atmost_one"].values()
+    assert proof["flops"] == [f"u_wen{k}/ff" for k in range(4)]
+    assert proof["start"] == "start" and proof["start_chain_edges"] == 0
+    # the wen flops are ring writers of the start, no origin sampler
+    assert r["ring_start"]["start"]["writer_flops"] == 5 and not r["ring_start"]["start"].get("sampler_flops")
+
+
+@pytest.mark.parametrize("mutant", ["overlap", "no_reset", "stuck", "other_clock", "other_clock_leaf", "data_leaf",
+                                    "wide", "polarity", "inverted_write", "start_sink"])
+def test_wreg_write_enable_mutants_fail_closed(mutant):
+    r = _wreg_guard(_wreg_vehicle(mutant))
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], (mutant, r)
+    if mutant not in ("inverted_write", "start_sink"):
+        assert not r.get("registered_atmost_one"), (mutant, r)
+
+
+def test_wreg_start_needs_a_declared_role():
+    land = {"d": {"D": 4, "form": "hold_mux"}}
+    r = _wreg_guard(_wreg_vehicle(), land=land)
+    assert r["verdict"] == "FAIL" and not r.get("registered_atmost_one")
+
+
 NET_SPARE = r"""
 module top(clk, a, o, s);
   input clk; input [1:0] a; output [1:0] o; output [1:0] s;
@@ -1001,3 +1113,160 @@ def test_gen_phys_spare_out_bits_from_kit_rtl(tmp_path):
                                   narrow_buses=[dict(port="unit_o4", plan=267, bound=265)])))
     with pytest.raises(gen_rtl.GenError):
         gen_phys.kit_spare_out_bits(fl)
+
+
+def test_declared_timed_face_buses(tmp_path):
+    """DIE-KV-61/hr 11-02: a declared timed-face bus turns unregistered/shared/dropped/const findings into
+    timed_declared; feedthrough and undeclared buses keep failing; the file is fail-closed."""
+    comb = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));",
+                          "NAND2x1_ASAP7_75t_R _3_ (.A(_1_), .B(_0_), .Y(o[1]));")
+    assert face_guard.guard(comb)["verdict"] == "FAIL"
+    r = face_guard.guard(comb, timed=["o"])
+    assert r["verdict"] == "PASS" and r["timed_declared"] and r["timed_declared"][0].startswith("o[1]"), r
+    assert face_guard.guard(comb, timed=["a"])["verdict"] == "FAIL"          # other bus declared: still fails
+    shared = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "INVx3_ASAP7_75t_R _3_ (.A(_0_), .Y(o[1]));")
+    assert face_guard.guard(shared, timed=["o"])["verdict"] == "PASS"
+    dropped = NET_OK.replace(".D(a[1])", ".D(q[0])")
+    assert face_guard.guard(dropped, timed=["a"])["verdict"] == "PASS"
+    feed = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "assign o[1] = a[1];")
+    assert "feedthrough" in face_guard.guard(feed, timed=["o", "a"])["fail_counts"]
+    doc = dict(schema=face_guard.TIMED_SCHEMA, buses=["o"], ruling="r", reason="x")
+    assert face_guard.timed_face_list(doc) == ["o"]
+    for bad in (dict(doc, schema="x"), dict(doc, buses=["o[1]"]), dict(doc, buses=[]), dict(doc, ruling=""),
+                dict(doc, buses=["o", "o"]), dict(doc, reason=None)):
+        with pytest.raises(ValueError):
+            face_guard.timed_face_list(bad)
+    (tmp_path / "timed_face.json").write_text(json.dumps(doc))
+    assert face_guard.kit_timed_list(tmp_path) == ["o"]
+    assert face_guard.kit_timed_list(tmp_path / "none") == []
+
+
+def test_face_lockup_latch_flop_latch_port():
+    """S81-RF1 (DIE-S81-51/CLK 11-03): flop -> ONE transparent-low latch (DLLx1 / $_DLATCH_N_) -> port is a registered
+    face; a second latch, a high-transparent latch or a latch with fan-out is not."""
+    lat = NET_OK.replace("INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));",
+                         "DLLx1_ASAP7_75t_R \\u_l.o_l[0]$_DLATCH_N_  (.CLK(clk), .D(_0_), .Q(o[0]));")
+    pins = [dict(bus="a", bit=0), dict(bus="a", bit=1), dict(bus="o", bit=0), dict(bus="o", bit=1)]
+    r = face_guard.guard(lat, pins=pins)
+    assert r["verdict"] == "PASS" and r["ok"] == 4 and r["face_lockup"] == ["o[0]"], r
+    yl = lat.replace("DLLx1_ASAP7_75t_R \\u_l.o_l[0]$_DLATCH_N_  (.CLK(clk), .D(_0_), .Q(o[0]));",
+                     "\\$_DLATCH_N_ \\u_l.o_l[0]  (.E(clk), .D(_0_), .Q(o[0]));")
+    assert face_guard.guard(yl, pins=pins)["verdict"] == "PASS"
+    hi = lat.replace("DLLx1_ASAP7_75t_R", "DHLx1_ASAP7_75t_R")
+    assert "unregistered" in face_guard.guard(hi, pins=pins)["fail_counts"]
+    two = lat.replace(".D(_0_), .Q(o[0]));", ".D(_9_), .Q(o[0]));\n  DLLx1_ASAP7_75t_R \\u_l2  (.CLK(clk), .D(_0_), .Q(_9_));") \
+        .replace("wire _0_;", "wire _0_; wire _9_;")
+    assert "unregistered" in face_guard.guard(two, pins=pins)["fail_counts"]
+    fan = lat.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));",
+                      "INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));\n  INVx1_ASAP7_75t_R _4_ (.A(o[0]), .Y(_8_));") \
+        .replace("wire _0_;", "wire _0_; wire _8_;")
+    assert face_guard.guard(fan, pins=pins)["verdict"] != "PASS"
+
+
+def test_face_lockup_latch_polarity_clock_and_logic_mutants():
+    """FLOW-LATCH-1 (11-03): the face lockup latch is accepted only transparent-low on the face flop's own clock
+    (DLL on clk, or DHL on INV(clk)); wrong polarity, another clock, a falling-edge face flop or logic between the
+    face flop and the latch are each unregistered."""
+    lat = NET_OK.replace("INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));",
+                         "DLLx1_ASAP7_75t_R \\u_l.o_l[0]  (.CLK(clk), .D(_0_), .Q(o[0]));")
+    pins = [dict(bus="a", bit=0), dict(bus="a", bit=1), dict(bus="o", bit=0), dict(bus="o", bit=1)]
+
+    def fails(net):
+        r = face_guard.guard(net, pins=pins)
+        return r["verdict"], [x for x in r["fails"].get("unregistered", []) if x.startswith("o[0]")]
+
+    assert fails(lat) == ("PASS", [])
+    # negative-level via a DHL on the inverted, buffered clock (how synthesis may fold `if (!clk)`)
+    inv = lat.replace("DLLx1_ASAP7_75t_R \\u_l.o_l[0]  (.CLK(clk),",
+                      "INVx1_ASAP7_75t_R ick (.A(clk), .Y(clk_n));\n  BUFx2_ASAP7_75t_R bck (.A(clk_n), .Y(clk_nb));\n"
+                      "  DHLx1_ASAP7_75t_R \\u_l.o_l[0]  (.CLK(clk_nb),").replace("wire _0_;", "wire _0_; wire clk_n, clk_nb;")
+    assert fails(inv) == ("PASS", []), face_guard.guard(inv, pins=pins)["fails"]
+    # WRONG POLARITY: DLL on the inverted clock = transparent while clk is high
+    wp = inv.replace("DHLx1_ASAP7_75t_R \\u_l.o_l[0]", "DLLx1_ASAP7_75t_R \\u_l.o_l[0]")
+    v, f = fails(wp)
+    assert v == "FAIL" and f and "transparent-high" in f[0], f
+    # WRONG POLARITY: DHL / $_DLATCH_P_ on clk
+    for hi in (lat.replace("DLLx1_ASAP7_75t_R", "DHLx1_ASAP7_75t_R"),
+               lat.replace("DLLx1_ASAP7_75t_R \\u_l.o_l[0]  (.CLK(clk),", "\\$_DLATCH_P_ \\u_l.o_l[0]  (.E(clk),")):
+        v, f = fails(hi)
+        assert v == "FAIL" and f and "transparent-high" in f[0], f
+    # ANOTHER CLOCK: latch enable is not the face flop clock
+    oc = lat.replace("input clk;", "input clk; input clk2;").replace("module top(clk, a, o);", "module top(clk, clk2, a, o);") \
+        .replace("(.CLK(clk), .D(_0_), .Q(o[0]))", "(.CLK(clk2), .D(_0_), .Q(o[0]))")
+    v, f = fails(oc)
+    assert v == "FAIL" and f and "not the face flop clock" in f[0], f
+    # FALLING-EDGE face flop behind the latch
+    fe = lat.replace("DFFHQNx1_ASAP7_75t_R \\u_bout_o.q[0]$_DFF_P_ ", "DFFLQNx1_ASAP7_75t_R \\u_bout_o.q[0]$_DFF_N_ ")
+    v, f = fails(fe)
+    assert v == "FAIL" and f and "not rising-edge" in f[0], f
+    # COMBINATIONAL LOGIC feeding the latch (flop -> AND -> latch -> port)
+    cl = lat.replace("(.CLK(clk), .D(_0_), .Q(o[0]))", "(.CLK(clk), .D(_7_), .Q(o[0]))") \
+        .replace("wire _0_;", "wire _0_; wire _7_;") \
+        .replace("endmodule", "  AND2x2_ASAP7_75t_R g7 (.A(_0_), .B(a[1]), .Y(_7_));\nendmodule")
+    v, f = fails(cl)
+    assert v == "FAIL" and f and "driven by AND2x2" in f[0], f
+
+
+# ---- DIE-S81-51/SPARE 11-03: spare plan bits of narrow buses (KW-FIX-4 'dropped' / 'land_slot' class) -------------
+NET_LAND_SPARE = r"""
+module top(ck, e, x, o, s);
+  input ck; input e; input [1:0] x; output o; output [1:0] s;
+  wire g0; wire g1; wire q0; wire q1; wire _0_; wire z; wire g;
+  ICGx1_ASAP7_75t_R u_cg0 (.CLK(ck), .ENA(e), .SE(1'b0), .GCLK(g0));
+  ICGx1_ASAP7_75t_R u_cg1 (.CLK(ck), .ENA(e), .SE(1'b0), .GCLK(g1));
+  DFFHQNx1_ASAP7_75t_R s0 (.CLK(g0), .D(x[0]), .QN(q0));
+  DFFHQNx1_ASAP7_75t_R s1 (.CLK(g1), .D(x[0]), .QN(q1));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q$_DFF_P_ (.CLK(ck), .D(q0), .QN(_0_));
+  INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o));
+  TIELOx1_ASAP7_75t_R _4_ (.L(z));
+  BUFx2_ASAP7_75t_R _6_ (.A(z), .Y(s[0]));
+  BUFx2_ASAP7_75t_R _7_ (.A(z), .Y(s[1]));
+endmodule
+"""
+
+
+def test_narrow_input_spare_bit_dead_declared_pass():
+    """narrow plan input: the spare bit a[1] has no load in the kit-rtl wrapper -> declared dead -> PASS."""
+    dropped = NET_OK.replace(".D(a[1])", ".D(q[0])")
+    assert face_guard.guard(dropped)["fail_counts"] == {"dropped": 1}
+    r = face_guard.guard(dropped, dead=["a[1]"])
+    assert r["verdict"] == "PASS" and r["dead_declared"] == ["a[1]"], r
+
+
+def test_narrow_landing_ft_spare_bits_dead_and_spare_out_pass():
+    """narrow ft slot on a declared LANDING bus x (D 2): spare _i bit x[1] unread (dead), spare _o bits s tied 0
+    (spare_out) -> PASS; undeclared it is the KW-FIX-4 land_slot class '0 loads on x[1], declared D 2'."""
+    r = face_guard.guard(NET_LAND_SPARE, "top", skip_re=SKIP_LAND, land={"x": 2})
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], r
+    r = face_guard.guard(NET_LAND_SPARE, "top", skip_re=SKIP_LAND, land={"x": 2}, dead=["x[1]"],
+                         spare=["s[0]", "s[1]"])
+    assert r["verdict"] == "PASS" and r["dead_declared"] == ["x[1]"] and r["land_slot_bits"] == 1, r.get("fails")
+
+
+@pytest.mark.parametrize("mut", [
+    "  AND2x2_ASAP7_75t_R _9_ (.A(x[1]), .B(q0), .Y(g));\n",                  # spare bit wired into logic
+    "  DFFHQNx1_ASAP7_75t_R s9 (.CLK(ck), .D(x[1]), .QN(g));\n",              # spare bit into a (station) flop
+])
+def test_declared_dead_spare_bit_with_a_load_fails(mut):
+    """a declared dead spare bit that still loads anything FAILs class dead (never a silent pass)."""
+    net = NET_LAND_SPARE.replace("endmodule", mut + "endmodule")
+    r = face_guard.guard(net, "top", skip_re=SKIP_LAND, land={"x": 2}, dead=["x[1]"], spare=["s[0]", "s[1]"])
+    assert r["verdict"] == "FAIL" and r["fail_counts"].get("dead") == 1 and r["dead_declared"] == [], r
+    dropped = NET_OK.replace(".D(a[1])", ".D(q[0])").replace("endmodule", mut.replace("x[1]", "a[1]") + "endmodule")
+    r = face_guard.guard(dropped, dead=["a[1]"])
+    assert r["verdict"] == "FAIL" and r["fail_counts"].get("dead") == 1, r
+
+
+def test_main_reads_generated_dead_inputs_beside_pins(tmp_path):
+    """face_guard CLI (run_kit.sh) reads the generated kit dead_inputs.json / spare_out.json beside pins.json."""
+    (tmp_path / "net.v").write_text(NET_OK.replace(".D(a[1])", ".D(q[0])"))
+    (tmp_path / "pins.json").write_text("[]")
+    fg = tmp_path / "fg.json"
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json"), "--out", str(fg)]) != 0
+    (tmp_path / "dead_inputs.json").write_text(json.dumps(dict(
+        schema=face_guard.DEAD_SCHEMA, bits=["a[1]"],
+        proof=dict(verdict="PASS", method="bind.py kit-rtl: plan bits beyond the bound payload width are not "
+                   "connected in the generated wrapper", receipt=dict(wrapper="w.sv", sha256="0" * 64,
+                                                                       narrow_buses=[dict(port="a", plan=2, bound=1)])))))
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json"), "--out", str(fg)]) == 0
+    assert json.loads(fg.read_text())["dead_declared"] == ["a[1]"]

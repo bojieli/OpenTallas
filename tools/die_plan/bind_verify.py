@@ -30,6 +30,8 @@ VERIFY_RULES = {
          "stages": 0, "stages_port": "strap_cnt"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
         {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
+        # CLK form #7 lockup relay: posedge state + negedge re-launch = still ONE cycle
+        {"module": "ot_dp_rrelay_nl", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
         # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
         {"module": "ot_dp_rgate", "map": {"q": "d"}, "drop_in": ["clk", "run"], "stages": 1},
     ],
@@ -73,7 +75,7 @@ DIRECTIVES = {"define", "undef", "undefineall", "ifdef", "ifndef", "elsif", "els
               "end_keywords", "unconnected_drive", "nounconnected_drive", "__FILE__", "__LINE__", "protect",
               "endprotect", "verilator_config", "systemc_header", "systemc_interface", "systemc_imp_header",
               "systemc_implementation", "systemc_ctor", "systemc_dtor"}
-BIND_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate",
+BIND_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate",
               "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"}
 
 

@@ -231,6 +231,33 @@ proc ot_ps_capture_only_input {pin} {
   return $result
 }
 
+proc ot_ps_source_from_tag {tag clock which} {
+  # The clock source belongs to this actual timing path, not to whichever
+  # source of a multi-source clock is geometrically closest to a register.
+  set at [lsearch -all -exact $tag clk_src]
+  if {[llength $at] != 1 || [lindex $tag 3] ne $clock || [lindex $tag 4] ni {^ v}} {
+    error "OT_PS_SOURCE: missing/nonunique actual clock-source tag: $tag"
+  }
+  set name [lindex $tag [expr {[lindex $at 0] + 1}]]
+  set clocks [get_clocks -quiet $clock]
+  if {[llength $clocks] != 1 || [get_full_name [lindex $clocks 0]] ne $clock} {
+    error "OT_PS_SOURCE: missing/nonunique clock $clock"
+  }
+  set matches {}
+  foreach pin [get_property [lindex $clocks 0] sources] {
+    if {[get_full_name $pin] eq $name} {lappend matches $pin}
+  }
+  if {[llength $matches] != 1} {
+    error "OT_PS_SOURCE: path source $name is not an exact source of $clock"
+  }
+  set rf [expr {[lindex $tag 4] eq "^" ? "rise" : "fall"}]
+  set value [ot_ps_ckarr [lindex $matches 0] [lindex $clocks 0] $which $rf]
+  if {$value eq "" || $::ot_ps_method ne "tag"} {
+    error "OT_PS_SOURCE: missing actual $which $rf insertion at $name"
+  }
+  return [list $name $rf $value]
+}
+
 proc ot_ps_add_clock {pin rf} {
   set full [get_full_name $pin]; set key [list $full $rf]
   if {[dict exists $::ot_ps_by_clock $key]} {return [dict get $::ot_ps_by_clock $key]}
@@ -240,7 +267,8 @@ proc ot_ps_add_clock {pin rf} {
   if {$a eq "" || $b eq ""} {incr ::ot_ps_noarr;return ""}
   set cn [get_full_name [lindex $cl 0]]
   set ik [expr {$rf eq "rise" ? $cn : "$cn fall"}]
-  if {![dict exists $::ot_ps_insertion $ik]} {
+  if {(![info exists ::ot_ps_source_by_path] || !$::ot_ps_source_by_path) &&
+      ![dict exists $::ot_ps_insertion $ik]} {
     set roots {}
     foreach src [get_property [lindex $cl 0] sources] {
       set late [ot_ps_ckarr $src [lindex $cl 0] max $rf];set early [ot_ps_ckarr $src [lindex $cl 0] min $rf]
@@ -263,10 +291,12 @@ proc ot_ps_add_clock {pin rf} {
 }
 proc ot_ps_regs {} {
   set ::ot_ps_R {};set ::ot_ps_by_clock {};set ::ot_ps_nonlaunch_cache {};set ::ot_ps_insertion {};set ::ot_ps_toff {};set ::ot_ps_tmatched {};set ::ot_ps_noarr 0
+  set ::ot_ps_source_witnesses {}
   foreach p [all_registers -clock_pins] {ot_ps_add_clock $p [ot_ps_edge $p]}
   return $::ot_ps_R
 }
 proc ot_ps_related {R} {
+  if {[info exists ::ot_ps_parent_targets]} {set ::ot_ps_parent_relations {}}
   set async {};foreach p [all_registers -async_pins] {dict set async [get_full_name $p] 1}
   set P {};set nx 0;set nd 0
   foreach d [all_registers -data_pins] {
@@ -291,6 +321,16 @@ proc ot_ps_related {R} {
       set l [ot_ps_add_clock {*}$launch]
       if {$l eq ""} continue
       lassign [dict get $::ot_ps_R $l] - lclk llate learly
+      if {[info exists ::ot_ps_parent_targets]} {
+        set sp [get_full_name $s]
+        foreach target $::ot_ps_parent_targets {
+          if {[string first "$target/" $sp] == 0 || [string first "$target/" $dn] == 0} {
+            set relation [list $sp $dn $l $cs $ch]
+            dict set ::ot_ps_parent_relations $relation $relation
+            break
+          }
+        }
+      }
       if {$lclk ne $cclk || $lclk ne $hclk} {incr nx;continue}
       set ds [expr {$llate-$cearly}];set dh [expr {$clate-$learly}]
       set k [list $l $cs $ch]
@@ -332,10 +372,19 @@ proc ot_ps_path {l dn dly} {
   # so both sides use full physical CK arrivals (including signed early taps).
   # (a fall-edge launch removes the source's FALL insertion: ot_ps_regs keys it "clock fall")
   lassign [dict get $::ot_ps_R $l] - lc - - lrf
-  set ik [expr {$lrf eq "fall" ? "$lc fall" : $lc}]
-  set ins_ps [lindex [dict get $::ot_ps_insertion $ik] [expr {$dly eq "max" ? 0 : 1}]]
+  if {[info exists ::ot_ps_source_by_path] && $::ot_ps_source_by_path} {
+    set source_tag [[$pe path] tag]
+    # Copy PathEnd values before arrival queries, which can invalidate it.
+    unset pes pe tp
+    set source [ot_ps_source_from_tag $source_tag $lc $dly]
+    set ins_ps [lindex $source 2]
+    dict set ::ot_ps_source_witnesses [list $l $dn $dly] $source
+  } else {
+    set ik [expr {$lrf eq "fall" ? "$lc fall" : $lc}]
+    set ins_ps [lindex [dict get $::ot_ps_insertion $ik] [expr {$dly eq "max" ? 0 : 1}]]
+    unset pes pe tp
+  }
   set sk [expr {$sk + $ins_ps * 1e-12}]
-  unset pes pe tp
   if {$role eq "setup"} {
     set x [expr {$req - $tarr + $mg}]
     set crpr [expr {$x - $per * round($x / $per)}]
@@ -408,6 +457,10 @@ proc ot_ps_measure {{credit_max 5000}} {
   set ::ot_ps_R [ot_ps_regs]
   set ::ot_ps_pc {}
   lassign [ot_ps_related $::ot_ps_R] P np nx nd
+  if {[info exists ::ot_ps_retain_graph] && $::ot_ps_retain_graph} {
+    set ::ot_ps_retained_pairs $P
+    set ::ot_ps_retained_counts [list $np $nx $nd]
+  }
   set out [dict create pairs $np inter_clock $nx data_pins $nd regs [dict size $::ot_ps_R] no_clock_arrival \
              $::ot_ps_noarr method $::ot_ps_method]
   foreach dly {max min} { dict set out $dly [ot_ps_check $P $dly $credit_max 0] }

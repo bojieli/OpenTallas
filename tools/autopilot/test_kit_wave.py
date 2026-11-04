@@ -76,10 +76,10 @@ class Gate(unittest.TestCase):
         for ev in ("l47k", "l47t"):                            # COORD 10-31 04:4x: l47k now, l47t after merge
             c["dies"]["s81_head"]["event"] = ev
             self.assertTrue(KW.gate(c, "s81_head")[0])
-        for ev in ("l48w", "l48x", "l48y"):                    # COORD 10-31 16:2x l48w; l48x pin fixes; l48y COORD 11-01 01:0x
+        for ev in ("l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf"):   # l48h0 COORD 11-03 00:2x (a); l48h1 DIE-HEAD-56 11-03 04:5x            # COORD 10-31 16:2x l48w; l48x pin fixes; l48y COORD 11-01 01:0x; l48z 11-01 14:0x
             c["dies"]["s81_head"]["event"] = ev
             self.assertTrue(KW.gate(c, "s81_head")[0])
-        for ev in ("l48", "l48z"):
+        for ev in ("l48", "l48q"):
             c["dies"]["s81_head"]["event"] = ev
             self.assertFalse(KW.gate(c, "s81_head")[0])
         c["dies"]["s81_head"]["event"] = "l48"
@@ -154,6 +154,41 @@ class Select(unittest.TestCase):
         self.assertEqual(skip["kind core not in wave"], ["qkd_hr_cdc_ci"])
         self.assertEqual(skip["not in plan of record"], ["kv3_gone"])
         self.assertNotIn("kv3_hroot", [p["item"] for p in picks])          # KIT-PLACED not in take_states
+
+    def test_own_wave_unit_on_parent_is_not_a_claim(self):
+        # DIE-QC-63/KITS 11-02: overlay_owners puts a sibling class's own wave unit on the parent row; the other
+        # classes (new or released retries) must still launch, the in-flight class must not relaunch
+        own = OWN + ("qwen_kvsys\tkv3_st\ttype\tNEEDS-KIT\tKIT-WAVE-1\tkit-wave unit kw-x-1 (geom)\t0m\tKIT-WAVE in flight"
+                     "\t\tKV-PLAN\t3\t\n")
+        rows = KW.parse_owners(own)
+        plan = {t: "b" + t[-1] * 12 for t in ("kv3_st__cla", "kv3_st__clb", "kv3_st__clc")}
+        st = {"items": {
+            KW.item_key("qwen_kvsys", "event28w_c", "kv3_st__cla", plan["kv3_st__cla"]):
+                {"status": "RUNNING", "attempt": 1, "item": "kv3_st__cla", "die": "qwen_kvsys"},
+            KW.item_key("qwen_kvsys", "event28w_c", "kv3_st__clb", plan["kv3_st__clb"]):
+                {"status": "FAIL", "attempt": 1, "item": "kv3_st__clb", "die": "qwen_kvsys"}}}
+        c = cfg(pilot_gate=False, retry=["kv3_st__clb@1"])
+        picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
+        got = sorted(p["item"] for p in picks if p["item"].startswith("kv3_st"))
+        self.assertEqual(got, ["kv3_st__clb", "kv3_st__clc"])
+        self.assertNotIn("kv3_st", skip.get("live job (another lane)", []))
+        # ownership.py 'ot-run pid' form of the wave's own job (last 70 chars of the kit dir) is not a claim either
+        for lj in ("ot-run pid 3472946 _st__cla/gen/kv3_st__cla", "ot-run pid 1069 9da87/items/kv3_st__cla/attempt_4"):
+            rows = KW.parse_owners(own.replace("kit-wave unit kw-x-1 (geom)", lj))
+            picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
+            self.assertNotIn("kv3_st", skip.get("live job (another lane)", []), lj)
+        rows = KW.parse_owners(own.replace("kit-wave unit kw-x-1 (geom)", "ot-run pid 9 /srv/other/kv3_pc/run"))
+        picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
+        self.assertIn("kv3_st", skip["live job (another lane)"])
+        # a die-owned hold naming one plan class holds that class (not only the parent row)
+        picks, skip = KW.select(KW.parse_owners(own), dict(c, dies={"qwen_kvsys": dict(c["dies"]["qwen_kvsys"],
+                                hold_items={"kv3_st__clc": "held"})}), "qwen_kvsys", st, plan)
+        self.assertEqual(sorted(p["item"] for p in picks if p["item"].startswith("kv3_st")), ["kv3_st__clb"])
+        self.assertEqual(skip["die-owned hold: held"], ["kv3_st__clc"])
+        # a foreign lane's live job still blocks
+        rows = KW.parse_owners(own.replace("KIT-WAVE-1\tkit-wave unit", "KV-KITS\tot-run pid 7"))
+        picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
+        self.assertIn("kv3_st", skip["live job (another lane)"])
 
     def test_wave_runner_lane_lines_are_not_claims(self):
         rows = KW.parse_owners(OWN.replace("kv3_pc\ttype\tNEEDS-KIT\tKV-KITS-W", "kv3_pc\ttype\tNEEDS-KIT\tKIT-WAVE-2"))
@@ -233,7 +268,7 @@ class Capacity(unittest.TestCase):
             "scratch 141 GB | intel1 admits 163 GB (avail 393, reserve 0, fresh 47.2, peak 118.5) load 185/112 waiters "
             "1:200 GB run 37 root 9% scratch 830 GB | localhost admits 329 GB (avail 479) load 249/112 run 43 root 14% "
             "scratch 731 GB | next 16-thread 32 GB job -> intel1")
-        self.assertEqual(s["intel1"], {"admit": 163, "load": 185.0, "cores": 112, "run": 37})
+        self.assertEqual(s["intel1"], {"admit": 163, "load": 185.0, "cores": 112, "run": 37, "wait_n": 1, "wait_gb": 200})
         self.assertEqual(s["epyc2"]["admit"], -29)
         self.assertEqual(s["localhost"]["run"], 43)
 
@@ -310,6 +345,13 @@ class GeomVerdict(unittest.TestCase):
         self.assertEqual(KW.geom_verdict(real2), ("PASS", ["empty", "fill"], "FILL-EXCEPTION"))
         self.assertEqual(KW.geom_verdict(L.format("FAIL", "pin_reg=FAIL(9)"))[0], "FAIL")
         self.assertEqual(KW.geom_verdict("AP_AUTO_GEOM_ERROR dump rc 1")[0], "FAIL")
+        # GEOM-111 class E: estimate congestion waived only when the measured GRT is 0 overflow
+        v, f, tag = KW.geom_verdict(L.format("FAIL", "fill=FAIL(0.1) col_v=FAIL(1.165) channel_v=FAIL(1.165) grt=ok(0)"))
+        self.assertEqual((v, f), ("PASS-COND", ["channel_v", "col_v", "fill"]))
+        self.assertIn("GEOM-111 class E", tag)
+        self.assertEqual(KW.geom_verdict(L.format("FAIL", "col_v=FAIL(1.05) grt=FAIL(4843)"))[0], "FAIL")
+        self.assertEqual(KW.geom_verdict(L.format("FAIL", "channel_h=FAIL(1.004) r2r=FAIL(435) grt=ok(0)"))[0], "FAIL")
+        self.assertEqual(KW.geom_verdict(L.format("FAIL", "channel_h=FAIL(1.004) grt=NA(None)"))[0], "FAIL")
 
 
 class QueueFill(unittest.TestCase):
@@ -354,6 +396,10 @@ class QueueFill(unittest.TestCase):
                       "dir": str(Path(d) / "s"), "started": now + 60},            # queued after the failure: kept
             }}
             notices = {}
+            # KW-FIX-1 11-02: a WAIT-DEP pilot record (child view not signed yet) never stops its class volume
+            st["items"]["p"]["reason"] = "WAIT-DEP child view (lef/lib) missing in the plan @gen: ValueError"
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 0)
+            st["items"]["p"]["reason"] = "AUTO-GEOM rule FAIL"
             self.assertEqual(KW.cancel_class_volume(ap, c, st, notices), 1)
             self.assertEqual(st["items"]["q"]["status"], "CANCELLED")
             self.assertEqual(st["items"]["r"]["status"], "RUNNING")             # admitted = running, never cancelled
@@ -368,6 +414,30 @@ class QueueFill(unittest.TestCase):
             st["items"][KW.item_key("qwen_kvsys", "event28w_c", "kv3_st_t3")] = st["items"].pop("q")
             picks, _ = KW.select(rows, c, "qwen_kvsys", st, PLAN | {"kv3_st_t3"})
             self.assertIn("kv3_st_t3", [p["item"] for p in picks])
+
+
+class VolumeSrcTest(unittest.TestCase):
+    def test_old_src_pilot_fail_does_not_cancel_new_src_volume(self):
+        """KW-FIX-4 11-03: a pilot FAIL generated from a superseded src never cancels volume on the current src"""
+        with tempfile.TemporaryDirectory() as d:
+            ap = FakeAP(d, "{}")
+            c = cfg(pilot_mode="queue")
+            c["dies"]["qwen_kvsys"]["src_sha"] = "new"
+            cls = "qwen_kvsys|type|kv#_st_t#"
+            now = time.time()
+            for n in ("p", "q"):
+                (Path(d) / n).mkdir()
+            (Path(d) / "p" / "spec.json").write_text(json.dumps({"src_sha": "old"}))
+            (Path(d) / "q" / "place.live.log").write_text("waiting for memory\n")
+            st = {"items": {
+                "p": {"die": "qwen_kvsys", "item": "kv3_st_t1", "status": "FAIL", "class": "PLAN", "updated": now,
+                      "dir": str(Path(d) / "p"), "reason": "OT_RESET_CORE"},
+                "q": {"die": "qwen_kvsys", "item": "kv3_st_t3", "status": "RUNNING", "volume": cls, "unit": "u3",
+                      "dir": str(Path(d) / "q"), "started": now - 60},
+            }}
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 0)
+            (Path(d) / "p" / "spec.json").write_text(json.dumps({"src_sha": "new"}))
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 1)
 
 
 class VolumeGeomTest(unittest.TestCase):
@@ -692,7 +762,8 @@ class RejudgeGeom(unittest.TestCase):
         self.assertEqual(KW.geom_verdict(KW.prects_clock_info("AUTO-GEOM FAIL x 3_place clock_reach=FAIL(300)"))[0], "PASS")
 
     def test_rows(self):
-        cfg = {"dies": {"d": {"gen_host": "h", "plan": "/p.json", "event": "e2"}}}
+        # hard-gate semantics (die opt geom_advisory false); the advisory default is test_kit_wave_geomadv.py
+        cfg = {"dies": {"d": {"gen_host": "h", "plan": "/p.json", "event": "e2", "geom_advisory": False}}}
         st = {"plans": {"h:/p.json|e2": {"blocks": {"a": "a" * 64, "b": "b" * 64, "c": "c" * 64}}}, "items": {}}
 
         def rec(item, blk, ev="e2", **kw):
@@ -804,6 +875,21 @@ class PreRouteHoldReason(unittest.TestCase):
         j = {"status": "DONE-STRUCTURAL", "kind": "routed-not-signed", "reasons": "hold_ff",
              "signoff": {"fails": ["hold_ff"], "tt_wns": 3.0, "ff_wns": -4.5}}
         self.assertIn("TT 3.0 FF -4.5 ps", KW.queue_class(j)[3])
+
+
+class LateEcoClass(unittest.TestCase):
+    # KW-ECO-1: a route/sign-off FAIL that went through the late-stage ECO loop names it in the class table
+    def test_exhausted_named(self):
+        j = {"status": "DONE-NEAR-MISS", "kind": "routed", "reasons": "hold_ff: FAIL",
+             "signoff": {"fails": ["hold_ff"], "tt_wns": 3.0, "ff_wns": -4.5},
+             "chain": {"eco": {"verdict": "EXHAUSTED", "summary": "late-ECO exhausted (2 it, 900 s): FF -6->-4.5"}}}
+        stage, st, cls, why = KW.queue_class(j)
+        self.assertEqual((st, cls), ("FAIL", "TIMING"))
+        self.assertIn("late-ECO exhausted (2 it", why)
+
+    def test_no_eco_unchanged(self):
+        j = {"status": "DONE-NEAR-MISS", "kind": "routed", "reasons": "hold_ff", "signoff": {"fails": ["hold_ff"]}}
+        self.assertNotIn("late-ECO", KW.queue_class(j)[3])
 
 
 class AdoptedPlanAllowlist(unittest.TestCase):

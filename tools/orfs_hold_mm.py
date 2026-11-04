@@ -62,6 +62,40 @@ def patch(scripts: Path, helper: str) -> dict:
     return out
 
 
+METRICS_POWER_START = '  report_puts "\\n=========================================================================="\n  report_puts "$when report_power"\n'
+METRICS_POWER_END = '\n  # TODO these only work to stdout, whereas we want to append to the $filename'
+METRICS_POWER_MARKER = "OT_INTERMEDIATE_POWER_SKIPPED"
+
+
+def patch_intermediate_power(scripts: Path) -> str:
+    """Skip only speculative power in intermediate report_metrics calls.
+
+    Stages 1..5 retain every timing/physical report. Stage 6, unknown/custom
+    stages, and all dedicated report_power/IR/sign-off commands retain power.
+    No power values are fabricated for skipped stages.
+    """
+    target = scripts / "report_metrics.tcl"
+    text = target.read_text()
+    if METRICS_POWER_MARKER in text:
+        if text.count(METRICS_POWER_MARKER) != 1:
+            raise SystemExit("orfs_hold_mm: duplicate intermediate power marker; refusing")
+        return "already patched"
+    if text.count(METRICS_POWER_START) != 1 or text.count(METRICS_POWER_END) != 1:
+        raise SystemExit("orfs_hold_mm: report_metrics power anchors not found exactly once; refusing")
+    start, end = text.index(METRICS_POWER_START), text.index(METRICS_POWER_END)
+    if end <= start:
+        raise SystemExit("orfs_hold_mm: report_metrics power anchors out of order; refusing")
+    power = text[start:end]
+    if power.count("report_power_metric") != 2 or power.count("report_power >>") != 1:
+        raise SystemExit("orfs_hold_mm: unrecognized report_metrics power body; refusing")
+    replacement = ('  if {$stage in {1 2 3 4 5}} {\n'
+                   '    puts "OT_INTERMEDIATE_POWER_SKIPPED stage $stage: power not measured; final reporting unchanged"\n'
+                   '    report_puts "$when power: NOT MEASURED (intermediate stage; final power/IR unchanged)"\n'
+                   '  } else {\n' + "".join("  " + ln + "\n" for ln in power.splitlines()) + '  }\n')
+    target.write_text(text[:start] + replacement + text[end:])
+    return "patched"
+
+
 # The detailed optimizer can create off-site cells after ordinary legalization
 # (Q-TILE45 r5: NK33/NL3 cells, almost all one DBU before a fence edge).
 # Run ordinary legalization after the final optimizer/mirroring mutation, before
@@ -249,7 +283,63 @@ def patch_abc_no_dch(scripts: Path, env=None) -> str:
     return "; ".join(out) or "no &dch found"
 
 
+GRT_BUDGET_ANCHOR = '    set cong_iters "-congestion_iterations 30"'
+GRT_BUDGET_BLOCK = '''    # OT_GRT_BUDGET: respect the caller's normal FastRoute iteration budget.
+    set ot_grt_budget 30
+    if {[info exists ::env(GRT_OVERFLOW_ITERS)]} {
+      set ot_grt_budget $::env(GRT_OVERFLOW_ITERS)
+      if {![string is integer -strict $ot_grt_budget] || $ot_grt_budget < 1} {
+        error "GRT_OVERFLOW_ITERS must be a positive integer: $ot_grt_budget"
+      }
+    }
+    set cong_iters "-congestion_iterations $ot_grt_budget"
+    # Q15 (FLOW-21 11-01, xfin relief probe ran "-congestion_iterations 30 -congestion_iterations 50"): global_route's
+    # parse_key_args keeps the LAST value, so an explicit budget in GLOBAL_ROUTE_ARGS already wins; drop the default
+    # so the command names the budget once
+    if {[info exists ::env(GLOBAL_ROUTE_ARGS)] && [lsearch -exact $::env(GLOBAL_ROUTE_ARGS) -congestion_iterations] >= 0} {
+      set cong_iters ""
+    }'''
+
+
+def patch_grt_budget(scripts: Path) -> str:
+    """Honor an explicit budget in disposable flow scripts; keep CUGR's own policy."""
+    target = scripts / "global_route.tcl"
+    if not target.is_file():
+        return "global_route.tcl absent"
+    text = target.read_text()
+    if GRT_BUDGET_BLOCK in text:
+        return "already patched"
+    if text.count(GRT_BUDGET_ANCHOR) != 1:
+        return "unrecognized global-route budget anchor; unchanged"
+    target.write_text(text.replace(GRT_BUDGET_ANCHOR, GRT_BUDGET_BLOCK, 1))
+    return "patched"
+
+
+FINAL_GUIDE_ANCHOR = "  source_step_tcl POST GLOBAL_ROUTE\n  orfs_write_db $::env(RESULTS_DIR)/5_1_grt.odb"
+FINAL_GUIDE_REPLACEMENT = "  source_step_tcl POST GLOBAL_ROUTE\n  # OT_FINAL_ROUTE_GUIDES: serialize the final post-hook DB guides.\n  write_guides $::env(RESULTS_DIR)/route.guide\n  orfs_write_db $::env(RESULTS_DIR)/5_1_grt.odb"
+
+
+def patch_final_guides(scripts):
+    target = Path(scripts) / "global_route.tcl"
+    text = target.read_text()
+    if "OT_FINAL_ROUTE_GUIDES" in text:
+        return "already patched"
+    if text.count(FINAL_GUIDE_ANCHOR) != 1:
+        return "unrecognized post-global-route guide anchor; unchanged"
+    target.write_text(text.replace(FINAL_GUIDE_ANCHOR, FINAL_GUIDE_REPLACEMENT, 1))
+    return "patched"
+
+
 if __name__ == "__main__":
+    print("orfs_hold_mm: final guides", patch_final_guides(Path(sys.argv[1])))
+    print("orfs_hold_mm: GRT budget", patch_grt_budget(Path(sys.argv[1])))
+    if len(sys.argv) > 2 and sys.argv[2] == "--metrics-only":
+        print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
+        sys.exit(0)
+    try:
+        print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
+    except SystemExit as ex:
+        print("orfs_hold_mm: intermediate power unchanged:", ex)
     print("orfs_hold_mm: final legalization", patch_final_dpl(Path(sys.argv[1])))
     print("orfs_hold_mm: stage SDC", patch_stage_sdc(Path(sys.argv[1])))
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))

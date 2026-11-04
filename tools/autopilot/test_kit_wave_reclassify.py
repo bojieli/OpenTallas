@@ -123,6 +123,11 @@ class Reclassify(unittest.TestCase):
             self.assertEqual((rec["class"], rec["status"], rec["attempt"]), ("PLAN", "FAIL", 1))
             self.assertIn("WAIT-DEP", Path(t, KW.STAGES_FILE).read_text())
             self.assertEqual(KW.reclassify(KW.load_state(t)), [])             # idempotent
+            # KW-FIX-1 11-02: a WAIT-DEP record is a dependency wait: PENDING-DEP in the stages table, not FAIL
+            row = [ln.split("\t") for ln in Path(t, KW.STAGES_FILE).read_text().splitlines() if "\tx\t" in ln][0]
+            self.assertEqual(row[KW.STAGE_COLS.index("status")], "PENDING-DEP")
+            self.assertTrue(KW.is_wait_dep(rec))
+            self.assertFalse(KW.is_wait_dep(dict(rec, reason="AUTO-GEOM rule FAIL (geometry)")))
 
     def test_record_from_another_result_is_left_alone(self):
         with tempfile.TemporaryDirectory() as t:

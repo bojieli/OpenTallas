@@ -25,6 +25,15 @@ def classify_log(stage, txt):
 
 
 class Classes(unittest.TestCase):
+    def test_advisory_line_is_never_the_reason(self):
+        # real kv3_pv_v12 a5 / S81 t27 a7 place.log (KW6-CLASS 11-04)
+        log = ("KIT_PREFLIGHT PASS issues 0\nKIT_PREFLIGHT ADVISORY pins_canonical check could not run: "
+               "ModuleNotFoundError: No module named 'pair_slack_gate'\nKW_PLACE_RC=1\n")
+        reason = classify_log("place", log)[1]
+        self.assertNotIn("ModuleNotFoundError", reason)
+        self.assertIn("KW_PLACE_RC=1", reason)
+        self.assertNotIn("ADVISORY", KW.decisive_line(log))
+
     def test_long_gen_log_missing_lib_is_plan_dep_not_unclassified(self):
         self.assertGreater(len(NOLIB.split("ValueError")[1]), 3000)       # the old tail never saw the exception
         self.assertEqual(KW.classify("gen", NOLIB[-3000:])[1][:12], "unclassified")
@@ -187,9 +196,55 @@ class Probe(unittest.TestCase):
             res = json.loads(out.stdout.split("AP_JSON ", 1)[1])
         self.assertEqual(res["flags"], {"a": "noview", "h": "hard"})
         self.assertEqual(res["deps"], {"a": ["rom_e"]})
-        d = {"_plan_flags": res["flags"]}
+        d = {"_plan_flags": res["flags"], "prov_view": False}           # KW-PROV-1 die opt-out: old WAIT-DEP hold
         self.assertIn("WAIT-DEP", KW.plan_entry_block(d, "a"))
         self.assertIsNone(KW.plan_entry_block(d, "b"))
+        # KW-PROV-1 default ON: the type launches on provisional child views
+        self.assertIsNone(KW.plan_entry_block({"_plan_flags": res["flags"]}, "a"))
+
+    def test_probe_flags_planned_core_types(self):
+        """DIE-KV-62/types 11-02 class A: a hard_cores[] entry with no lef (PLANNED core, view not bound) -> the type
+        waits (PENDING-DEP) instead of a flat kit that inlines the child RTL (ORD-2013 on the child's SRAMs)"""
+        plan = {"partition_types": {
+            "pv": {"hard_cores": [{"inst": "p0", "module": "kv3_pv_pair", "note": "PLANNED core: lef/lib pending"},
+                                  {"inst": "j0", "module": "pv_join", "lef": "j.lef", "lib": "j_tt.lib"}],
+                   "contents": [{"inst": "u_soft", "module": "soft_leaf"}]},
+            "hg": {"hard_cores": [{"inst": "e0", "module": "eighth", "lef": "e.lef", "lib": "e_tt.lib"}]},
+            "mix": {"hard_cores": [{"inst": "a", "module": "m_a", "lef": "a.lef"}, {"inst": "b", "module": "m_b"}]},
+            "flat": {"contents": [{"inst": "u", "module": "leaf"}]}}}
+        with tempfile.TemporaryDirectory() as d:
+            pp = Path(d) / "plan.json"
+            pp.write_text(json.dumps(plan))
+            import subprocess
+            out = subprocess.run([sys.executable, "-c", KW.PROBE_PLAN, json.dumps({"plan": str(pp)})],
+                                 capture_output=True, text=True, cwd=d)
+            res = json.loads(out.stdout.split("AP_JSON ", 1)[1])
+        # lef-without-lib (noview) keeps its own reason; a soft contents[] entry without lef is not a dependency
+        self.assertEqual(res["flags"], {"pv": "planned", "mix": "noview"})
+        self.assertEqual(res["deps"], {"pv": ["kv3_pv_pair"], "mix": ["m_a"]})
+        self.assertEqual(res["probe_v"], KW.PROBE_V)
+        self.assertEqual(res["prov_deps"], {"pv": ["kv3_pv_pair"], "mix": ["m_a", "m_b"]})
+        self.assertIsNone(KW.plan_entry_block({"_plan_flags": res["flags"]}, "pv"))    # KW-PROV-1 default ON
+        d = {"_plan_flags": res["flags"], "prov_view": False}
+        self.assertTrue(KW.plan_entry_block(d, "pv").startswith("WAIT-DEP"))
+        self.assertIsNone(KW.plan_entry_block(d, "hg"))
+        self.assertIsNone(KW.plan_entry_block(d, "flat"))
+        # die opt-out keeps the old flat build
+        self.assertIsNone(KW.plan_entry_block(dict(d, planned_core_flat=True), "pv"))
+
+    def test_plan_names_reprobes_older_probe_cache(self):
+        class AP:
+            calls = 0
+
+            def rpy(self, host, code, args, timeout=0):
+                AP.calls += 1
+                return {"blocks": {"t": "b1"}, "types": ["t"], "flags": {}, "probe_v": KW.PROBE_V}
+        import time as _t
+        d = {"gen_host": "h", "plan": "/p.json", "event": "e"}
+        st = {"plans": {"h:/p.json|e": {"blocks": {"t": "b0"}, "t": _t.time()}}}   # cached before PROBE_V
+        self.assertEqual(KW.plan_names(AP(), st, d)["blocks"], {"t": "b1"})
+        self.assertEqual(KW.plan_names(AP(), st, d)["blocks"], {"t": "b1"})
+        self.assertEqual(AP.calls, 1)
 
 
 if __name__ == "__main__":

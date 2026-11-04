@@ -23,13 +23,28 @@ if {[info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1"} {
   proc kit_modes_eco_done {} { ot_mm_unsync; puts "KIT_MODES eco done (mode ss never carried the FF vclk)" }
 } else {
   set km_cs [string tolower [expr {[info exists ::env(CORNERS)] ? $::env(CORNERS) : ""}]]
-  if {[llength $km_cs] != 1 || [lindex $km_cs 0] ne "bc"} {
-    error "KIT_MODES FAIL: single-mode ECO over corners '$km_cs' (two corners need OT_HOLD_MM=1, kit_modes.py stage)"
+  # KW-ECO-1 11-01: TT-only setup/DRV pass of a single-mode kit (post_route_drv variant t<N>, OT_PRD_NO_HOLD=1): the
+  # TT vclk is the setup frame and no hold repair runs in it (hold stays in the FF-only b<N> pass)
+  if {$km_cs eq "tc" && [info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
+    if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq "ff"} {
+      error "KIT_MODES FAIL: TT-only ECO with OT_VCLK_CORNER=ff (setup against the FF vclk)"
+    }
+    kit_modes_vclk_latency
+    puts "KIT_MODES eco TT-only (setup + DRV, no hold repair), vclk = TT"
+  } else {
+    if {[llength $km_cs] != 1 || [lindex $km_cs 0] ne "bc"} {
+      error "KIT_MODES FAIL: single-mode ECO over corners '$km_cs' (two corners need OT_HOLD_MM=1, kit_modes.py stage)"
+    }
+    if {![info exists ::env(OT_VCLK_CORNER)] || $::env(OT_VCLK_CORNER) ne "ff"} {
+      error "KIT_MODES FAIL: FF-only ECO without OT_VCLK_CORNER=ff (FF hold against the TT vclk)"
+    }
+    kit_modes_vclk_latency
+    puts "KIT_MODES eco FF-only, vclk = OT_VCLK_FF $::env(OT_VCLK_FF)"
   }
-  if {![info exists ::env(OT_VCLK_CORNER)] || $::env(OT_VCLK_CORNER) ne "ff"} {
-    error "KIT_MODES FAIL: FF-only ECO without OT_VCLK_CORNER=ff (FF hold against the TT vclk)"
+  # eco_loop.py eco_vclk_frame: repair against the IO frame sign-off measured on this DB (pin_flop_mean), not the plan bound
+  if {[info exists ::env(OT_ECO_VCLK_PS)] && $::env(OT_ECO_VCLK_PS) ne ""} {
+    set_clock_latency -source $::env(OT_ECO_VCLK_PS) [kit_modes_vclk_latency]
+    puts "KIT_MODES eco vclk = sign-off measured $::env(OT_ECO_VCLK_PS)"
   }
-  kit_modes_vclk_latency
-  puts "KIT_MODES eco FF-only, vclk = OT_VCLK_FF $::env(OT_VCLK_FF)"
   proc kit_modes_eco_done {} {}
 }

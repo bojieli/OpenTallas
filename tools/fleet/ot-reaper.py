@@ -45,6 +45,8 @@ HAND_ROOTS = ["/srv/opentallas/claude", "/srv/opentallas/scratch-overflow/claude
               "/srv/opentallas-scratch/claude", "/srv/opentallas-scratch/codex", "/srv/opentallas-scratch/opentallas/claude",
               "/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch2/codex",
               "/srv/opentallas-scratch2/scratch/claude", "/srv/opentallas-scratch2/scratch/codex",
+              # ROOTSCR_1101: epyc2 second scratch root on the root disk (bind mount of /home/ubuntu/scratch-root)
+              "/srv/opentallas-scratch3/claude", "/srv/opentallas-scratch3/codex",
               # GATE (ROOT 2026-10-15): pre_route_gate staging runs (<name>-<ts>/ + .tgz) were HAND_NEVER as a parent and
               # never reaped -- 1.18 TB on EPYC1.  Each run is judged like a hand-run dir (idle > 48 h, no process, no
               # .keep, not referenced by a live job); the committed gate_result.json keeps the record.
@@ -54,6 +56,7 @@ HAND_NEVER = ["closure-loop", "closure-loop-moved", "closed-archive-gds", "lost+
               # fleet flow snapshots every route's command picks (PATHPICK, ROOT-2130 10-18): never reaped as scratch
               "ttbatch", "flowhold", "ttviews"]
 HAND_IDLE_H = 48
+ROOTSCR_ALIAS = ("/home/ubuntu/scratch-root/", "/srv/opentallas-scratch3/")   # ROOTSCR_1101 real path -> mount path
 HOLDS = os.path.expanduser("~/.local/state/closure_loop/reaper_holds")        # touch <job name> to keep a job's files
 ADOPT_HOLDS = os.path.expanduser("~/.local/state/closure_loop/adoption_holds")
 POSTROUTE_STAGES = {"collect", "verdict", "meas_resta", "export", "record"}
@@ -329,6 +332,15 @@ def table():
     MENTIONS = mentions()
     live_txt += "\n" + MENTIONS                                 # pending_results / recent HANDOFF + lanes: /srv paths too
     REFS = sorted({m for m in re.findall(r"/srv/[\w.+/-]+", live_txt)})
+    # COORD 2026-11-01: counted routed DBs in coord lanes/PROTECTED-DBS.txt are never reaped (3 were lost 10-31);
+    # ROOTSCR_1101: rows naming the epyc2 root-disk path count under its /srv/opentallas-scratch3 mount path
+    try:
+        _prot = [l.split("\t")[1].strip() for l in open(os.path.expanduser("~/coord/lanes/PROTECTED-DBS.txt"))
+                 if not l.startswith("#") and l.count("\t") >= 1]
+    except OSError:
+        sys.exit("ot-reaper: PROTECTED-DBS.txt unreadable, refusing to run")
+    _prot = [ROOTSCR_ALIAS[1] + x[len(ROOTSCR_ALIAS[0]):] if x.startswith(ROOTSCR_ALIAS[0]) else x for x in _prot]
+    REFS = sorted(set(REFS) | {x for x in _prot if x.startswith("/srv/")})
     return out, sorted(r for r in roots if r.endswith("/closure-loop") and r.startswith("/srv/"))
 
 def mentions():

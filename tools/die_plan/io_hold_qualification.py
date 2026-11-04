@@ -1,6 +1,7 @@
 """Real-view evidence and the opt-in IO-HOLD A parent obligation."""
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 
@@ -86,6 +87,10 @@ def apply_obligation(record):
         covered={r.get('sv_bus',r.get('bus')) for r in rows if r.get('status')=='PASS'}
         if not set(policy['input_ports']) <= covered:
             why.append('parent does not cover every option-A input port')
+        if not rows or any(not isinstance(r.get('setup_tt_ps'),(int,float))
+                           or not math.isfinite(r['setup_tt_ps']) or r['setup_tt_ps'] < 0
+                           or r.get('setup_neg') != 0 for r in rows):
+            why.append('parent lacks passing actual TT setup evidence')
         v=(record.get('inputs') or {}).get('final_v')
         actual=digest(v) if v and Path(v).is_file() else None
         if not actual or any(r.get('receiver_netlist_sha256')!=actual for r in rows) or not rows:

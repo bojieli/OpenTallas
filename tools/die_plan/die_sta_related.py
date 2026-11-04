@@ -1500,6 +1500,49 @@ def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, mo
     return out
 
 
+def kit_port(port, row):
+    """the kit clock port name of a die tap row: die port t_<part>__<kit port> (die_clock_mesh / trial_tap_arrivals)."""
+    pre = f"t_{row.get('part')}__"
+    return port[len(pre):] if port.startswith(pre) else row.get("tap", port)
+
+
+def kit_port_needs(pair_lists, taps, rng, kit_offset=None):
+    """KW-FIX-4-SDC (COORD RULING 2026-11-03 10:49): {(part, kit port): need_ps} = the measured window each kit clock
+    port needs as the EARLY side of its cross-port pairs: max over the part's other taps q of
+    late(q) - early(p) - CPPR credit at the pair's last common node (+ the early-core-tap earliness offset), exactly
+    the kit-contract damage of time_class.  Same-root pairs (one cppr_node) get the region root's credit, cross-root
+    pairs (intra_cross_region) the die-root credit only.  A tap with no partner needs 0 (same-port pairs: CRPR)."""
+    need = {}
+    for p, r in taps.items():
+        if r.get("part") is not None:
+            need.setdefault((r["part"], kit_port(p, r)), 0.0)
+    for pl in pair_lists:
+        for a, b, _tag in pl:
+            A, B = taps[a], taps[b]
+            node = pair_node(A, B)
+            la, ea, lc, ec = arr4(A, B, node)
+            cr = credit(rng, node, la, ea, lc, ec)
+            ko = (kit_offset.get(b, 0.0) - kit_offset.get(a, 0.0)) if kit_offset else 0.0
+            k = (A["part"], kit_port(a, A))
+            need[k] = max(need.get(k, 0.0), lc - ea - cr + ko)
+    return need
+
+
+def kit_window_table(needs, plan):
+    """{type: {kit port: D_p}} from kit_port_needs of every corner: max over corners and over the type's regions,
+    ceil 1 ps (no margin, OWNER 11-02).  This is plan clock.tap_window.per_port_ps (gen_phys.tap_window_port_table)."""
+    ptype = {p["name"]: p["type"] for p in plan.get("partitions", [])}
+    out = {}
+    for nd in needs:
+        for (part, port), v in nd.items():
+            t = ptype.get(part)
+            if t is None:
+                continue
+            d = out.setdefault(t, {})
+            d[port] = max(d.get(port, 0.0), float(math.ceil(max(0.0, v) - 1e-9)))
+    return {t: dict(sorted(d.items())) for t, d in sorted(out.items())}
+
+
 def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
                ocv=None, views=None, rec=None, dd=None, kit_offset=None, missing=None):
     """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
@@ -1690,6 +1733,17 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                 window_needed_ps=round(max(0.0, m[0]), 2),
                 worst=dict(launch=m[1], capture=m[2], where=m[3], damage_ps=round(m[0], 2)),
                 verdict="PASS" if not neg else "FAIL", window_mode="per_type",
+                neg_regions=sorted({r[3] for r in neg}))
+        pp = hold_window.get("per_port")
+        if pp:
+            w_of = lambda r: (pp.get(r[3]) or {}).get(kit_port(r[1], taps[r[1]]), (pr or {}).get(r[3], w))
+            m = min(hd, key=lambda r: w_of(r) - r[0])
+            neg = [r for r in hd if r[0] > w_of(r)]
+            out["kit_contract_hold"].update(
+                window_ps=w_of(m), worst_hold_bound_ps=round(w_of(m) - m[0], 2), neg_pairs=len(neg),
+                window_needed_ps=round(max(0.0, m[0]), 2),
+                worst=dict(launch=m[1], capture=m[2], where=m[3], damage_ps=round(m[0], 2)),
+                verdict="PASS" if not neg else "FAIL", window_mode="per_port",
                 neg_regions=sorted({r[3] for r in neg}))
         if kit_offset:
             out["kit_contract_hold"]["core_tap_offset"] = dict(
@@ -2458,6 +2512,12 @@ def early_core_map(plan, taps, plan_path=None):
         if (P.types[tn].get("clock", {}) or {}).get("core_taps") != "early":
             continue
         hc = {h["inst"]: h for h in P.types[tn].get("hard_cores", []) or []}
+        # DIE-S81-50/diegrt 11-03: core_tap_rows names a core by its PHYSICAL identity (gen_phys.
+        # content_physical_identity: physical_inst, e.g. bound-native u_bound.u_u_rsv_..._u_c), so key those too --
+        # else every early tap of a bound-native type got module None and stayed unmeasured although its core is
+        # signed (S81 svc_lo_dsdv_svc_rs_w__t1: 1024 ot_s81c_attn_hcore taps, missing_views core:None).
+        for h in list(hc.values()):
+            hc.setdefault(G.content_physical_identity(h)[0], h)
         rows = {c: G.core_tap_rows(P, tn, c, pending=[]) for c in ("TT", "FF")}
         for (pn, inst, pin, e_tt, i_tt), (_, _, _, e_ff, i_ff) in zip(rows["TT"], rows["FF"]):
             port = byname.get(n, {}).get(pn)
@@ -2603,6 +2663,14 @@ def kit_windows(pc, intra_override=None, plan=None):
             wintra["per_region"] = {p["name"]: gen_phys.tap_window_ps(shim, p["type"])
                                     for p in plan.get("partitions", [])}
             wintra["basis"] += "; per region: its type's clock.tap_window.per_type_ps (else window_ps)"
+        ppt = pc["tap_window"].get("per_port_ps") or {}
+        if ppt and plan:
+            # KW-FIX-4-SDC: measured per-port kit windows; a pair is bounded by its EARLY-side (launch) port's D_p,
+            # ports not listed keep the region's W (gen_phys.port_window_ps fallback)
+            wintra["per_port"] = {p["name"]: {k: float(v) for k, v in ppt[p["type"]].items()}
+                                  for p in plan.get("partitions", []) if ppt.get(p["type"])}
+            if wintra["per_port"]:
+                wintra["basis"] += "; per port: its type's clock.tap_window.per_port_ps (early-side port of the pair)"
     else:
         wintra = dict(ps=0.0, basis="kit SDC: all taps of a partition on one ideal clock (no plan clock.tap_window)")
     hwin = dict(intra=wintra,
@@ -2684,6 +2752,10 @@ def main(argv=None):
                     help="HEAD-START-4 V1 (opt-in): MEASURED launch CLK -> capture D per dedicated start port "
                          "{ports: {port: [lo_ps, hi_ps]}} (count_align_plan --start-data-delay file); replaces the clk->Q "
                          "skew of each start port, a port without a row fails closed; default = unchanged")
+    ap.add_argument("--kit-window-out", metavar="JSON",
+                    help="KW-FIX-4-SDC (opt-in): write the measured per-port kit windows {per_port_ps: {type: {port: "
+                         "ps}}} (max over corners / regions of the cross-port damage with CPPR credit) for plan "
+                         "clock.tap_window.per_port_ps; default = not written")
     ap.add_argument("--intra-window-ps", type=float,
                     help="WHAT-IF override of the intra-partition kit window (default: the plan's clock.tap_window."
                          "window_ps, else 0 = the one-ideal-clock kit SDC)")
@@ -2810,6 +2882,7 @@ def main(argv=None):
     cov = None
     hbrec, hbbits = {}, None
     ecm, ci_recs = None, []
+    kw_needs = []
     for c in corners:
         meta, taps = load_taps(d, c)
         ccell, cbasis = resolve_clock_cell(a.clock_cell, d, meta)
@@ -2966,6 +3039,8 @@ def main(argv=None):
                       f"{rr['worst_hi_built']}) declared {rr['declared_ports']} (worst lo {rr['worst_lo_declared']} hi "
                       f"{rr['worst_hi_declared']})")
         vmiss = missing_views(views, taps, plan, ecm)
+        if a.kit_window_out:
+            kw_needs.append(kit_port_needs([pairs["intra"], pairs["intra_cross_region"]], taps, rng, kit_off))
         for k, pl in pairs.items():
             hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, unc_s, unc_h,
@@ -3008,7 +3083,7 @@ def main(argv=None):
             gate[k]["kit_contract_role"] = "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)"
             if kc["neg_pairs"]:
                 gate[k]["verdict"] = "FAIL"
-    for k in ("intra", "seam"):       # OWNER 12.25: FF hold >= +10 ps on the measured pairs
+    for k in ("intra", "seam"):       # OWNER 12.25/11-02: FF hold >= HOLD_MIN_PS (0) on the measured pairs
         hmar = gate[k].get("ff_hold_margin_ps")
         if isinstance(hmar, (int, float)) and hmar < PSG.HOLD_MIN_PS:
             gate[k]["verdict"] = "FAIL"
@@ -3069,6 +3144,14 @@ def main(argv=None):
             gate[k]["real_view"] = dict(pairs=f"{rs.get('pairs_with_real_endpoint', 0)}/{rs.get('pairs_total', 0)}",
                                         tt_setup_ps=rs.get("worst_setup_slack_ps"), ff_hold_ps=rh.get("worst_hold_slack_ps"))
         res["summary"].update(gate)
+    if a.kit_window_out:
+        kwt = kit_window_table(kw_needs, plan)
+        Path(a.kit_window_out).write_text(json.dumps(dict(
+            per_port_ps=kwt, plan_sha256=res["plan_sha256"], proof=res["proof"], corners=corners,
+            basis="die_sta_related.kit_port_needs: per kit clock port, max over corners / regions of late(q) - early(p) "
+                  "- CPPR credit (+ core-tap offset), ceil 1 ps; KW-FIX-4-SDC (COORD 11-03 10:49)"), indent=1) + "\n")
+        print(f"KIT-WINDOW per-port table: {len(kwt)} types, {sum(len(v) for v in kwt.values())} ports -> "
+              f"{a.kit_window_out}")
     (out / "die_sta_related.json").write_text(json.dumps(res, indent=1) + "\n")
     for c, cr in res["corners"].items():
         for k, v in cr["classes"].items():

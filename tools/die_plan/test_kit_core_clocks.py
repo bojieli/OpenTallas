@@ -17,6 +17,48 @@ SOURCE = """module top (
 endmodule
 """
 
+NATIVE = """module cb (
+    input wire clk,
+    input wire d
+);
+    qfd_tile_nk_rp2_romleaf_rr u_u_t_2_2 (
+        .ck(clk),
+        .ck_lu_b0_c5(clk),
+        .ck_xu(clk),
+        .d(d)
+    );
+endmodule
+"""
+
+
+class NativeCoreSwapTest(unittest.TestCase):
+    CORE = [dict(inst="u_t22", module="qfd_tile_nk_a0c")]
+
+    def test_native_leaf_becomes_planned_core(self):
+        text, receipt = K.swap_native_cores(NATIVE, self.CORE)
+        self.assertIn("qfd_tile_nk_a0c u_t22 (", text)
+        self.assertNotIn("u_u_t_2_2", text)
+        self.assertNotIn(".ck_", text)
+        self.assertIn(".ck(clk)", text)
+        self.assertIn(".d(d)", text)
+        self.assertEqual(receipt[0]["clock_entries_merged"], 3)
+        # the swapped text then takes the normal core clock wiring
+        wired, _ = K.wire(text, "cb", [("clk_c0", "u_t22", "ck", 0, 250)])
+        self.assertIn(".ck(clk_c0)", wired)
+
+    def test_other_cores_untouched(self):
+        hard = [dict(inst="u_lane0", module="x"), dict(inst="u_t22", module="other")]
+        self.assertEqual(K.swap_native_cores(NATIVE, hard), (NATIVE, []))
+
+    def test_fails_closed(self):
+        with self.assertRaisesRegex(ValueError, "expected one native leaf"):
+            K.swap_native_cores(NATIVE.replace("u_u_t_2_2", "u_u_t_2_3"), self.CORE)
+        with self.assertRaisesRegex(ValueError, "expected qfd_tile_nk_rp2_romleaf_rr"):
+            K.swap_native_cores(NATIVE.replace("qfd_tile_nk_rp2_romleaf_rr", "qfd_tile_other"), self.CORE)
+        with self.assertRaisesRegex(ValueError, "not one net"):
+            K.swap_native_cores(NATIVE.replace(".ck_xu(clk)", ".ck_xu(clk2)"), self.CORE)
+
+
 class CoreClockKitTest(unittest.TestCase):
     def test_real_consumer_and_idempotence(self):
         rows = [("clk_c0", "u_bound.u_leaf", "ck", 12.5, 250)]
@@ -40,6 +82,37 @@ class CoreClockKitTest(unittest.TestCase):
         row = ("clk_c0", "u_bound.u_leaf", "ck", 0, 250)
         with self.assertRaisesRegex(ValueError, "duplicate consumer"):
             K.wire(SOURCE, "top", [row, row])
+
+    def test_nested_leaf_keeps_bind_connection(self):
+        # NESTED_LEAF_1101: S81 core clocks that reach a leaf inside a bound child keep the bind's connection
+        for inst in ("u_r2.u_e10", "u_bound.u_lf.u_ve.u_m", "lf.ve.m"):
+            text, receipt = K.wire(SOURCE, "top", [("clk_c0", inst, "clk", 0, 250)])
+            self.assertEqual(text, SOURCE)
+            self.assertEqual(receipt[0]["mode"], "physical_tap")
+            self.assertFalse(K.rtl_wired(receipt))
+
+    def test_star_tap_keeps_bind_connection(self):
+        # LP_STAR_1104: `<inst>` with no pin is a legal plan tap: core_tap_rows gives "*", clock_taps.tcl hangs every pin
+        for inst in ("u_bound.u_leaf", "u_leaf", "u_bound.u_lf.u_m"):
+            text, receipt = K.wire(SOURCE, "top", [("clk_c0", inst, "*", 0, 250)])
+            self.assertEqual(text, SOURCE)
+            self.assertEqual((receipt[0]["mode"], receipt[0]["pin"]), ("physical_tap", "*"))
+            self.assertFalse(K.rtl_wired(receipt))
+
+    def test_star_mixed_with_explicit_pin_of_another_leaf(self):
+        rows = [("clk_c0", "u_bound.u_ln0", "*", 0, 250), ("clk_c1", "u_bound.u_leaf", "ck", 0, 250)]
+        text, receipt = K.wire(SOURCE, "top", rows)
+        self.assertIn(".ck(clk_c1)", text)
+        self.assertNotIn("clk_c0", text)
+        self.assertEqual([r["mode"] for r in receipt], ["physical_tap", "rtl"])
+
+    def test_mixed_nested_and_direct(self):
+        rows = [("clk_c0", "u_bound.u_leaf", "ck", 0, 250), ("clk_c1", "u_r2.u_e10", "clk", 0, 250)]
+        text, receipt = K.wire(SOURCE, "top", rows)
+        self.assertIn(".ck(clk_c0)", text)
+        self.assertNotIn("clk_c1", text)
+        self.assertEqual([r["mode"] for r in receipt], ["rtl", "physical_tap"])
+        self.assertTrue(K.rtl_wired(receipt))
 
     def test_physical_alias_retains_actual_corner_schedule(self):
         tp = dict(name="leaf.ck", insertion_ps=250, insertion_ff_ps=202.5)

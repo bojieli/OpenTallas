@@ -493,10 +493,11 @@ def cap_emit(XP, fx, ops, final_ffn=False):
         if key not in obase:                      # slice vp store: one 64-row-aligned region per matrix (allocation)
             if final_ffn and op == 'ffn.down':
                 # cap addresses WORDS, while final_ffn allocates four-word ROWS.
-                from layer_prog.final_ffn import CAPTURE, expert_slot
+                from layer_prog.final_ffn import CAPTURE, expert_slot, source_spans
                 slot = expert_slot(grp['expert'], fx.meta['experts'])
-                if span != 80 or grp['out'] != 'bf16':
-                    raise ValueError('final FFN requires actual output-sharded80-row BF16 down capture')
+                source_spans(per_slice)
+                if grp['out'] != 'bf16':
+                    raise ValueError('final FFN requires actual output-sharded BF16 down capture')
                 obase[key] = 4 * (CAPTURE + 16 * slot)
                 nxt += 64 * -(-span // 320)  # preserve every other matrix's canonical allocation
             else:

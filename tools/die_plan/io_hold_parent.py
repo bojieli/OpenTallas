@@ -15,8 +15,9 @@ STA flow on that parent:
 
 die_sta times every seam bit with each partition's own routed clock tree propagated, hold uncertainty 25 ps, CPPR on,
 and the related launch x capture register pairs of each seam with their CPPR credit (pairskew).  For every plan port
-into an A input this script requires, at FF: a timed hold path, worst seam hold slack >= 0, and the CPPR-credited
-related pair skew <= die_sta.SKEW_PS (80 ps) at TT and FF.  Ports whose sender or receiver is a budget stand-in
+into an A input this script requires real TT setup and FF hold paths with slack >= 0. Related-pair CPPR skew
+is measured at TT and FF; 80 ps is a design target/diagnostic (METHODOLOGY 12.4), not a separate failure gate.
+Ports whose sender or receiver is a budget stand-in
 (--standin-types) are not evidence: NOT_TIMED.  A kit signed off under option A counts only once every one of its A
 input ports is PASS here (COORD 10:23).
 
@@ -39,6 +40,7 @@ from io_hold_qualification import view_snapshot, plan_digest
 from schema import DIE_PART  # noqa: E402
 
 HOLD_CORNER = "FF"            # owner sign-off: hold at FF (setup TT); never SS
+SETUP_CORNER = "TT"
 PAIR_CORNERS = ("TT", "FF")
 
 
@@ -52,6 +54,14 @@ def _groups(corner):
     return out
 
 
+def _plan_ring_clocks(P, tn):
+    """{sv input port: forwarded write clock} of plan type tn's ring inputs ({} without a plan / rings)."""
+    if P is None or tn not in getattr(P, 'types', {}):
+        return {}
+    import landing_contract as LC
+    return {x.split('[')[0]: ck for ck, sel in LC.ring_input_ports(P, tn) for x in sel}
+
+
 def _all_seam_ports(sta):
     """--all-seams: one pseudo port per die_sta seam group (no plan; every crossing treated as an A crossing)."""
     keys = set()
@@ -60,7 +70,22 @@ def _all_seam_ports(sta):
     return [(f"{s}->{d}/{b}", dict(src=dict(part=s, bus=b), dst=dict(part=d, bus=b))) for s, d, b in sorted(keys)]
 
 
-def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_type=None, core_ports=()):
+def kit_ring_clocks(kit):
+    """{input port: forwarded write clock} of a receiver kit's source-synchronous ring inputs (constraint.sdc
+    landing_contract RING_INPUTS_TAG lines); {} without rings."""
+    import landing_contract as LC
+    sdc = Path(kit) / 'constraint.sdc'
+    out = {}
+    if sdc.is_file():
+        for line in sdc.read_text().splitlines():
+            if line.startswith(LC.RING_INPUTS_TAG + ' '):
+                ck, *sel = line[len(LC.RING_INPUTS_TAG):].split()
+                out.update({x.split('[')[0]: ck for x in sel})
+    return out
+
+
+def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_type=None, core_ports=(),
+          core_module=None, ring_clocks=None):
     """-> dict(verdict, counts, ports=[...]) for every partition->partition plan port into an option-A input
     (all_seams: every die_sta seam group, P may be None)."""
     if sta.get("mode") == "etm":
@@ -74,8 +99,13 @@ def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_ty
         value=sta.get(field)
         if not isinstance(value,(int,float)) or not math.isfinite(value) or not any(abs(value-e)<=0.0001 for e in expected):
             policy_problems.append(f'{field} must be '+ '/'.join(f'{e:g}' for e in expected))
+    # DH56-IOHP 11-03: an ideal die spine is exact for a source-synchronous ring input whose write clock is the
+    # SENDER's forwarded clock in this same parent (seam sender -> receiver fclk_in_<b> timed by die_sta): launch and
+    # capture both leave the die clock through the sender's tap, so the spine is common path (CPPR) and any die
+    # spine delay cancels (landing_contract.ring_input_sdc).  Every other port still needs a tree / routed spine.
+    spine_problem = None
     if sta.get('spine') not in ('tree','routed'):
-        policy_problems.append('actual parent clock-tree or routed clock evidence required')
+        spine_problem = 'actual parent clock-tree or routed clock evidence required'
     if sta.get('boundary_hold_contract') or sta.get('clock_latency_contract'):
         policy_problems.append('parent contains budget stand-in contract cells')
     views = dict(sta.get('view_evidence') or {})
@@ -98,7 +128,7 @@ def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_ty
         ports += [(f'missing->{core_receiver}/{bus}',
                    dict(src=dict(part='__missing_parent__', bus=bus), dst=dict(part=core_receiver, bus=bus)))
                   for bus in sorted(set(core_ports) - covered)]
-        if (sta.get('instances') or {}).get(core_receiver) != core_type:
+        if (sta.get('instances') or {}).get(core_receiver) not in {core_type, core_module} - {None}:
             policy_problems.append('receiver instance does not bind the requested core master')
     else:
         ports = _all_seam_ports(sta) if all_seams else sorted(P.ports.items())
@@ -129,6 +159,14 @@ def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_ty
         row['sender_netlist_sha256']=sv.get('netlist_sha256')
         row['receiver_spef_sha256']=dv.get('spef_sha256')
         why = list(policy_problems)
+        if spine_problem:
+            rck = (ring_clocks if ring_clocks is not None else _plan_ring_clocks(P, dt)).get(key[2])
+            fwd = rck and all((key[0], key[1], rck) in grp.get(c, {}) for c in (SETUP_CORNER,) + PAIR_CORNERS)
+            if fwd:
+                row['clock_basis'] = (f'ideal spine exact: ring input captured on {key[0]} forwarded clock {rck} '
+                                      f'(seam {key[0]}->{key[1]}/{rck} in this parent; spine common path)')
+            else:
+                why.append(spine_problem)
         for module,v in ((sm,sv),(dm,dv)):
             if v.get('kind')!='real' or not v.get('spef_present') or not v.get('netlist_sha256') or not v.get('spef_sha256'):
                 why.append(f'{module}: actual routed netlist/SPEF evidence missing or budget stand-in')
@@ -136,6 +174,16 @@ def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_ty
             why.append("budget stand-in view")
         if miss:
             why.append(f"corner(s) {','.join(miss)} not run")
+        setup = grp.get(SETUP_CORNER, {}).get(key)
+        if setup is None or not setup[0].get('max'):
+            why.append('no TT setup path in die_sta')
+        else:
+            t = setup[0]['max']
+            if not t.get('paths') or not isinstance(t.get('worst'),(int,float)) or not math.isfinite(t['worst']):
+                why.append('no finite timed TT setup paths')
+            else:
+                row.update(setup_tt_ps=t['worst'],setup_neg=t['neg'],setup_tns_ps=t['tns'],
+                           setup_worst_from=t['start'],setup_worst_to=t['end'])
         seam = grp.get(HOLD_CORNER, {}).get(key)
         if seam is None or not seam[0].get("min"):
             why.append("no FF hold path in die_sta")
@@ -157,14 +205,17 @@ def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_ty
             row.update(status="NOT_TIMED", why="; ".join(why))
         else:
             bad = []
+            if row['setup_tt_ps'] < 0 or row['setup_neg'] > 0:
+                bad.append(f"TT seam setup {row['setup_tt_ps']:g} ps / {row['setup_neg']} ep")
             if row["hold_ff_ps"] < 0 or row['neg'] > 0:
                 bad.append(f"FF seam hold {row['hold_ff_ps']:g} ps / {row['neg']} ep")
+            diagnostics = []
             for c in PAIR_CORNERS:
                 sk = [abs(v) for v in (row.get(f"pair_hold_skew_cppr_{c}"), row.get(f"pair_setup_skew_cppr_{c}"))
                       if v is not None]
                 if sk and max(sk) > die_sta.SKEW_PS:
-                    bad.append(f"{c} related pair skew (CPPR) {max(sk):g} > {die_sta.SKEW_PS:g} ps")
-            row.update(status="FAIL" if bad else "PASS", why="; ".join(bad))
+                    diagnostics.append(f"{c} related pair skew (CPPR) {max(sk):g} > design target {die_sta.SKEW_PS:g} ps")
+            row.update(status="FAIL" if bad else "PASS", why="; ".join(bad),diagnostics=diagnostics)
         rows.append(row)
     cnt = dict(a_ports=len(rows), pass_=sum(r["status"] == "PASS" for r in rows),
                fail=sum(r["status"] == "FAIL" for r in rows), not_timed=sum(r["status"] == "NOT_TIMED" for r in rows))
@@ -173,10 +224,11 @@ def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_ty
     worst = min((r for r in rows if "hold_ff_ps" in r), key=lambda r: r["hold_ff_ps"], default=None)
     return dict(schema="opentallas.io_hold_parent.v2", plan=P.name if P is not None else None, mode=sta.get("mode"), verdict=verdict,
                 counts=cnt, worst=worst, kit_types=sorted(a_cache), plan_sha256=plan_digest(P.raw) if P is not None else None,
-                gate=(f"every plan port into an IO-HOLD A input: FF seam hold >= 0 (25 ps unc, CPPR, real propagated "
-                      f"trees) and related pair skew with CPPR <= {die_sta.SKEW_PS:g} ps at TT and FF"),
+                gate=(f"every plan port into an IO-HOLD A input: TT seam setup >= 0 and FF seam hold >= 0 "
+                      f"(0/25 ps unc, CPPR, real propagated trees); related pair CPPR measured at TT/FF, "
+                      f"{die_sta.SKEW_PS:g} ps design target diagnostic"),
                 view_evidence=views, qualification=dict(complete=verdict=='PASS',
-                    requirements='833ps TT/FF nominal 0/25 (legacy setup 60 accepted); actual routed views and parent clock; finite hold/pair paths; no stand-ins'),
+                    requirements='833ps TT/FF nominal 0/25 (legacy setup 60 accepted); actual routed views and parent clock; TT setup and FF hold nonnegative; finite related-pair paths; no stand-ins'),
                 ports=rows)
 
 
@@ -200,7 +252,9 @@ def main(argv=None):
         policy = kit_policy(dict(kit=str(kd), sdc_lint_ctx=str(kd/'sdc_lint.json')))
         if not policy or policy['die'] != P.name or policy['plan_sha256'] != plan_digest(P.raw):
             ap.error('receiver kit lacks matching option-A die/plan metadata; regenerate it from this plan')
-        extra = dict(core_receiver=a.core_instance, core_type=policy['receiver_type'], core_ports=policy['input_ports'])
+        bud = json.loads((kd / 'budget.json').read_text())
+        extra = dict(core_receiver=a.core_instance, core_type=policy['receiver_type'], core_ports=policy['input_ports'],
+                     core_module=bud.get('module'), ring_clocks=kit_ring_clocks(kd))
     r = check(P, json.loads(Path(a.die_sta_json).read_text()),
               standin_types={x for x in a.standin_types.split(",") if x}, all_seams=a.all_seams, **extra)
     if a.out:

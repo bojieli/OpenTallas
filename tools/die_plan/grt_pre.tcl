@@ -4,3 +4,5 @@
 set gp_dir [file dirname [file normalize [info script]]]
 source [file join $gp_dir vclk_corner.tcl]
 if {[info exists ::env(OT_MAXWIRE_UM)] && $::env(OT_MAXWIRE_UM) ne ""} { source [file join $gp_dir grt_maxwire.tcl] }
+# FLOW-23 11-02 HOLD-GUARD-GRT: progress/time bound for the single-mode GRT hold repair (hold_guard_grt.tcl; OT_HOLD_GUARD=0 off)
+if {[file exists [file join $gp_dir hold_guard_grt.tcl]]} { source [file join $gp_dir hold_guard_grt.tcl] }

@@ -4,7 +4,8 @@
 # setRC_rcx.tcl by default), propagated clocks.  Pin-register set = the registers the sign-off clock check uses
 # (fanout of the data inputs, fanin of the outputs).  Writes /work/postcts_gate_<corner>.json:
 #   pin-reg CK arrival mean / min / max / n, bound I, |mean - bound|, setup / hold WNS (estimate), verdict.
-# Verdict FAIL when |mean - bound| > OT_POSTCTS_TOL (default 20 ps): the route would carry a wrong I into sign-off.
+# Band |mean - bound| > OT_POSTCTS_TOL (default 20 ps): ADVISORY since OWNER 11-03 (only sign-off blocks); FAIL only with
+# OT_POSTCTS_BAND_GATE=1 or when no pin register was measured.
 set C $::env(OT_CORNER)
 # outside make (runner calls openroad directly): take the kit exports from /work/config.mk
 if {[file exists /work/config.mk]} {
@@ -26,17 +27,12 @@ set ot_pg_C $C
 set ot_pg_c $c
 # The exact staged plan may declare the mean insertion band a design target
 # (12.3a); missing/malformed measurements remain fatal in either policy.
-set ot_pg_band_policy gate
-if {[file exists /work/master_slice.json]} {
-  set ot_pg_band_policy [exec python3 -c {
-import json, sys
-s = json.load(open(sys.argv[1]))
-p = s.get("core_tree", {}).get("model_qualification", {}).get("band_policy", "gate")
-if p not in ("gate", "info"):
-    raise ValueError("invalid model_qualification band_policy")
-print(p)
-} /work/master_slice.json]
-}
+set ot_pg_band_policy [exec python3 -c {
+import sys
+sys.path.insert(0, "/work")
+import core_clock_band
+print(core_clock_band.band_policy("/work"))
+}]
 # BEGIN embedded exact library selector
 # Resolve the exact libraries selected by this kit's ORFS make configuration.
 # No directory glob or installed-version fallback is permitted.
@@ -115,15 +111,33 @@ if {[llength $ot_core_tap_markers]} {
 
 set ot_pg_bound [expr {$ot_pg_C eq "FF" ? $::env(OT_VCLK_FF) : $::env(OT_VCLK_TT)}]
 set ot_pg_tol [expr {[info exists ::env(OT_POSTCTS_TOL)] ? $::env(OT_POSTCTS_TOL) : 20.0}]
+# SOURCE-ONLY opt-in proposal: preserve legacy behavior unless a caller pins an
+# exact ordinary-partition freeze. This resolves tolerance, never band authority.
+if {[info exists ::env(OT_POSTCTS_BINDING_TOL)] && $::env(OT_POSTCTS_BINDING_TOL) ni {0 1}} {error "postcts: invalid binding-tolerance opt-in"}
+if {[info exists ::env(OT_POSTCTS_BINDING_TOL)] && $::env(OT_POSTCTS_BINDING_TOL) eq "1"} {
+  foreach key {OT_POSTCTS_PARTITION_TYPE OT_POSTCTS_PARTITION_FREEZE_SHA256 OT_POSTCTS_PARTITION_BUDGET_SHA256 OT_POSTCTS_PARTITION_BINDING_SHA256} {
+    if {![info exists ::env($key)] || $::env($key) eq ""} {error "postcts: missing exact partition context $key"}
+  }
+  set ot_pg_binding_cmd [list python3 /work/partition_clock_binding.py --kit /work --corner $ot_pg_C --expected-type $::env(OT_POSTCTS_PARTITION_TYPE) --expected-freeze-sha256 $::env(OT_POSTCTS_PARTITION_FREEZE_SHA256) --expected-budget-sha256 $::env(OT_POSTCTS_PARTITION_BUDGET_SHA256) --expected-binding-sha256 $::env(OT_POSTCTS_PARTITION_BINDING_SHA256) --bound $ot_pg_bound --record /work/postcts_partition_binding_${ot_pg_c}.json]
+  if {[info exists ::env(OT_POSTCTS_TOL)]} {lappend ot_pg_binding_cmd --tolerance-env $::env(OT_POSTCTS_TOL)}
+  set ot_pg_tol [exec {*}$ot_pg_binding_cmd]
+  puts "OT_POSTCTS_PARTITION_BINDING exact source tolerance $ot_pg_tol; band policy $ot_pg_band_policy unchanged"
+}
 set bound $ot_pg_bound
 set tol $ot_pg_tol
 # Forwarded/landing clock roots are real clocks too. Select the IO reference by
 # its absent source rather than by excluding a single real clock named clk.
 set ot_pg_virtual {}
+set ot_pg_real {}
 foreach ot_pg_clock [all_clocks] {
-  if {![llength [get_property $ot_pg_clock sources]]} {lappend ot_pg_virtual $ot_pg_clock}
+  if {![llength [get_property $ot_pg_clock sources]]} {
+    lappend ot_pg_virtual $ot_pg_clock
+  } else {
+    lappend ot_pg_real $ot_pg_clock
+  }
 }
 if {[llength $ot_pg_virtual] != 1} {error "postcts: expected exactly one source-less virtual IO clock"}
+if {![llength $ot_pg_real]} {error "postcts: no declared real clock sources"}
 set_clock_latency -source $ot_pg_bound $ot_pg_virtual
 if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} {
   source $::env(LAYER_PARASITICS_FILE)
@@ -136,7 +150,19 @@ if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARA
 # first left the clock tree with no wire RC and read the pin-register CK ~55-62 ps early (KITS-SPARE ve_m 193 vs 316,
 # FLOW 09:41 10-25; the earlier "placement reads ~75 ps early" rr_h0 note was this).  FLOW-INFRA-2 A/B 10-25 on the
 # head + KV canary 5_1_grt.odb: -global_routing is order-independent (bit-identical); fixed placement reads +10..+13 ps.
-set_propagated_clock [get_clocks clk]
+# Optional source-profile diagnostic, default OFF: preserve the original
+# primary-clock-only context until an exact future event enables all real roots.
+if {[info exists ::env(OT_POSTCTS_REAL_CLOCK_PROFILE)] && $::env(OT_POSTCTS_REAL_CLOCK_PROFILE) ni {0 1}} {error "postcts: invalid real-clock profile opt-in"}
+set ot_pg_profile legacy_primary_only
+set ot_pg_propagate [get_clocks clk]
+if {[info exists ::env(OT_POSTCTS_REAL_CLOCK_PROFILE)] && $::env(OT_POSTCTS_REAL_CLOCK_PROFILE) eq "1"} {
+  set ot_pg_profile declared_all_real
+  set ot_pg_propagate $ot_pg_real
+}
+set_propagated_clock $ot_pg_propagate
+set ot_pg_real_names {}
+foreach ot_pg_clock $ot_pg_propagate {lappend ot_pg_real_names [get_full_name $ot_pg_clock]}
+puts "OT_POSTCTS_CLOCK_PROFILE profile=$ot_pg_profile propagated=$ot_pg_real_names ideal_io=[get_full_name $ot_pg_virtual]"
 # A saved ODB retains wires/guides, not STA parasitic annotations. Explicit
 # frozen-clock consumers must restore the qualified clock-only RC in THIS process.
 set ot_pg_frozen_rc [expr {[info exists ::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS)] && $::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS) ne ""}]
@@ -185,12 +211,18 @@ set ws [expr {[sta::worst_slack_cmd max] * 1e12}]
 set hs [expr {[sta::worst_slack_cmd min] * 1e12}]
 if {$::env(OT_CORNER) ne $ot_pg_C} {error "postcts: OT_CORNER changed during the gate ($ot_pg_C -> $::env(OT_CORNER))"}
 set dev [expr {$n ? abs($mean - $ot_pg_bound) : 1e9}]
-set ot_pg_band_verdict [expr {$dev <= $ot_pg_tol ? "PASS" : ($ot_pg_band_policy eq "info" ? "INFO" : "FAIL")}]
+# KW-FIX-4 / OWNER 11-03 (only sign-off blocks; COORD 12:01 ruling (2)): a MEASURED band miss (dev > tol) under the
+# "gate" policy is ADVISORY -- reported here and in the json, the flow routes on and sign-off TT/FF decides.
+# OT_POSTCTS_BAND_GATE=1 restores the blocking band (A/B only).  An empty or missing measurement still FAILs.
+set ot_pg_band_gate [expr {[info exists ::env(OT_POSTCTS_BAND_GATE)] && $::env(OT_POSTCTS_BAND_GATE) eq "1"}]
+set ot_pg_band_verdict [expr {$dev <= $ot_pg_tol ? "PASS" : ($ot_pg_band_policy eq "info" ? "INFO" : ($ot_pg_band_gate ? "FAIL" : "ADVISORY"))}]
 set v [expr {$n && $ot_pg_band_verdict ne "FAIL" ? "PASS" : "FAIL"}]
 set fh [open /work/postcts_gate_${ot_pg_c}.json w]
 puts $fh [format "{\"corner\": \"%s\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.2f, \"pinreg_min_ps\": %.2f, \"pinreg_max_ps\": %.2f, \"bound_ps\": %.2f, \"dev_ps\": %.2f, \"tol_ps\": %.1f, \"setup_wns_est_ps\": %.2f, \"hold_wns_est_ps\": %.2f, \"rc\": \"%s\", \"parasitics\": \"%s\", \"verdict\": \"%s\", \"band_policy\": \"%s\", \"band_verdict\": \"%s\"}" \
   $ot_pg_C $n $mean [expr {$n ? [lindex $arr 0] : -1}] [expr {$n ? [lindex $arr end] : -1}] $ot_pg_bound $dev $ot_pg_tol $ws $hs \
   [expr {[info exists ::env(LAYER_PARASITICS_FILE)] ? $::env(LAYER_PARASITICS_FILE) : "platform setRC.tcl"}] $ot_pg_mode $v $ot_pg_band_policy $ot_pg_band_verdict]
 close $fh
-puts [format "OT_POSTCTS_GATE %s (%s) pinreg n %d mean %.2f bound %.2f dev %.2f tol %.1f setup_est %.2f hold_est %.2f %s" \
-  $ot_pg_C $ot_pg_mode $n $mean $ot_pg_bound $dev $ot_pg_tol $ws $hs $v]
+# the last word stays the verdict (flow_canary baseline GATE_RE); an advisory band miss is named before it
+puts [format "OT_POSTCTS_GATE %s (%s) pinreg n %d mean %.2f bound %.2f dev %.2f tol %.1f setup_est %.2f hold_est %.2f %s%s" \
+  $ot_pg_C $ot_pg_mode $n $mean $ot_pg_bound $dev $ot_pg_tol $ws $hs \
+  [expr {$ot_pg_band_verdict eq "ADVISORY" ? "ADVISORY band dev > tol (not a gate, OWNER 11-03) " : ""}] $v]

@@ -5,21 +5,78 @@ clock consumer before synthesis, preserving the planned ABI without keep cells.
 """
 import re
 
+def rtl_wired(receipt):
+    """True when wire() changed the bound source (a private kit copy is needed)."""
+    return any(r.get("mode", "rtl") == "rtl" for r in receipt)
+
+
+# DIE-QC-68/TYPES 11-04 (QC CB kit_rtl "core clock clk_c0: expected one bound leaf u_t22, got 0", 17 types): the QC bind
+# flattens the as-built tile c16_E0_0.u_t_2_2 to the native leaf `qfd_tile_nk_rp2_romleaf_rr u_u_t_2_2`, with its 38
+# clock-entry ports all on clk, while the plan places the A0 hard core `u_t22` = qfd_tile_nk_a0c.  The core module is that
+# native body with the entries as internal nets of one `ck` (rtl/physical/a0_core/qfd_tile_nk_a0c.sv): same data ports,
+# same cycles.  In the private kit copy only (the source bind stays immutable) the native leaf becomes the planned core,
+# so a kit can never build around the native tile.  Exact master pairs only; anything else fails closed.
+NATIVE_CORE_BODY = {"qfd_tile_nk_a0c": "qfd_tile_nk_rp2_romleaf_rr", "qfd_tile_nl_a0c": "qfd_tile_nl_rp2_romleaf_rr"}
+
+
+def swap_native_cores(bound, hard_cores):
+    """-> (bound, receipt): each planned A0 core u_t<r><c> replaces its native bound leaf u_u_t_<r>_<c> (see above)."""
+    receipt = []
+    for core in hard_cores or []:
+        master, inst = core.get("module"), core.get("inst", "")
+        name = re.fullmatch(r"u_t(\d)(\d)", inst)
+        if master not in NATIVE_CORE_BODY or not name:
+            continue
+        leaf = f"u_u_t_{name.group(1)}_{name.group(2)}"
+        heads = list(re.finditer(r"^([ \t]+)(\w+)[ \t]+" + leaf + r"[ \t]*\(", bound, re.M))
+        if len(heads) != 1:
+            raise ValueError(f"core {inst}: expected one native leaf {leaf}, got {len(heads)}")
+        head = heads[0]
+        if head.group(2) != NATIVE_CORE_BODY[master]:
+            raise ValueError(f"core {inst} ({master}): native leaf {leaf} is {head.group(2)}, "
+                             f"expected {NATIVE_CORE_BODY[master]}")
+        end = bound.find("\n    );", head.end())
+        if end < 0:
+            raise ValueError(f"core {inst}: unclosed native leaf {leaf}")
+        body = bound[head.end():end]
+        clocks = re.findall(r"^[ \t]*\.(ck\w*)\(([^()]*)\),?[ \t]*$", body, re.M)
+        nets = {net.strip() for _, net in clocks}
+        if "ck" not in {pin for pin, _ in clocks} or len(nets) != 1:
+            raise ValueError(f"core {inst}: native clock entries of {leaf} are not one net: {sorted(nets)}")
+        body = re.sub(r"^[ \t]*\.ck_\w+\([^()]*\),?[ \t]*\n", "", body, flags=re.M)
+        bound = bound[:head.start()] + f"{head.group(1)}{master} {inst} (" + body + bound[end:]
+        receipt.append(dict(inst=inst, module=master, native_leaf=leaf, native_module=head.group(2),
+                            clock_entries_merged=len(clocks), clock_net=nets.pop(), cycles_changed=0))
+    return bound, receipt
+
+
 def wire(bound, module, rows):
     ports = {}
     receipt = []
     consumers = set()
     for port, physical_inst, pin, _early, _insertion in rows:
+        # LP_STAR_1104 (KW6-CLASS, S81 *_LP__t* kit_rtl): a plan tap `<inst>` with no pin takes every clock pin of the
+        # core (gen_phys.core_tap_rows, clock_taps.tcl `port inst *`).  No single RTL connection names that, so the kit
+        # source keeps the bind's clock connections and clock_taps.tcl hangs the pins on the wrapper port, as for a
+        # nested leaf below.
         if pin == "*":
-            raise ValueError(f"core clock {port}: explicit clock pin required")
+            receipt.append(dict(port=port, instance=physical_inst, pin=pin, previous_net=None, mode="physical_tap"))
+            continue
         # The plan wrapper owns u_bound. Physical specialization may name it;
         # otherwise the binder's native leaf instances have their standard u_ prefix.
         candidates = ([physical_inst[len("u_bound."):]] if physical_inst.startswith("u_bound.")
                       else [physical_inst, "u_" + physical_inst])
+        if all("." in c for c in candidates):
+            # NESTED_LEAF_1101 (FLOW-21, KIT-WAVE-14: S81 kit_rtl failed on every type whose core clock reaches a leaf
+            # inside a bound child, e.g. u_r2.u_e10 / u_lf.u_ve.u_m).  The pin sits in a child module shared with other
+            # instances, so the kit source keeps the bind's own clock connection (as before 66c713ed6); the planned
+            # early-core tap stays a wrapper port that clock_taps.tcl hangs the pin on, as for every kit before.
+            receipt.append(dict(port=port, instance=physical_inst, pin=pin, previous_net=None, mode="physical_tap"))
+            continue
         found = []
         for local in candidates:
             if "." in local:
-                raise ValueError(f"core clock {port}: nested leaf {physical_inst} needs an explicit bound-port adapter")
+                continue
             pat = re.compile(r"^[ \t]+\w+(?:[ \t]+#\([^\n]*\))?[ \t]+" +
                              re.escape(local) + r"[ \t]*\(", re.M)
             found.extend((local, h) for h in pat.finditer(bound))
@@ -51,7 +108,7 @@ def wire(bound, module, rows):
         ports[port] = "input"
         body = conn.sub(lambda m: m.group(1) + port + m.group(3), original_body, count=1)
         bound = bound[:body_start] + body + bound[body_end:]
-        receipt.append(dict(port=port, instance=local, pin=pin, previous_net=prior))
+        receipt.append(dict(port=port, instance=local, pin=pin, previous_net=prior, mode="rtl"))
     if ports:
         header = re.compile(r"(\bmodule\s+" + re.escape(module) + r"\s*(?:#\(.*?\)\s*)?\(\n)", re.S)
         if len(list(header.finditer(bound))) != 1:

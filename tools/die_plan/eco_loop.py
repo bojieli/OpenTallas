@@ -1,0 +1,569 @@
+#!/usr/bin/env python3
+"""eco_loop.py -- late-stage ECO loop on a ROUTED core / type DB (KW-ECO-1, OWNER 2026-11-01 ~20:0x: "for cores and
+types, enable iteration and fixing on late stages").
+
+A routed kit whose sign-off fails only on TIMING / DRV / a small DRC count is repaired on its own routed DB instead of
+being rebuilt from gen.  Every step is an existing, proven shared tool; this file only sequences them and decides when
+to stop.  Sign-off and LEC are unchanged (no gate, corner, derate or margin is touched), so a PASS here is an ordinary
+sign-off of a new routed DB.
+
+One iteration (at most MAX_ITER = 3), from the previous iteration's routed DB (iteration 1: the kit's):
+  1. prd_mk.sh SRC D <m|b|t><hold margin> SO   (tools/die_plan/post_route_drv; two-mode kit: m<N>; single-mode kit:
+     t<N> (TT setup + DRV, no hold) when TT fails, then b<N> (FF hold + DRV) from it when FF fails; OT_PRD_FROM=route when the DB has no DRC,
+     else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts;
+     final = route from the kit's signed 6_final.odb, retried once when the routed seed does not match the SPEF)
+  2. prd_run.sh D CPUS MEM 1 with OT_PRD_POST=0: the ECO hook prd_hook.tcl on the routed RCX SPEF (= measured arrivals)
+       repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 0 ps
+       (OWNER 11-02; was 12.19 measured arrivals + 10 ps) -> detailed_placement (legalises only what moved) ->
+       global_route -start_incremental/-end_incremental -> detailed_route (route-keep: only the dirty nets are ripped)
+     -> clk_freeze_check.sh (clock wires frozen) -> RCX + slew/cap count -> do-finish
+  3. the kit's own sign-off on D with the kit's ORIGINAL config.mk restored (the ECO overrides only steer the route):
+     the kit runner's GOAL=post when it has one (KV / HBM), else do-generate_abstract + signoff.py run exactly as
+     run_kit.sh calls it (--run-dir D/run --kit D --corners tt,ff --image IMAGE).
+Stop rules: sign-off SIGNED (or LOCAL_PASS_NEEDS_PARENT with local SIGNED) -> PASS; no improvement vs the previous
+result (negative-WNS sum gain < 1 ps and neither the DRV nor the DRC count falling) -> EXHAUSTED; an iteration that
+cannot route / finish / sign off -> stop with the best result so far; MAX_ITER reached -> EXHAUSTED.
+
+The post-route LEC is the caller's (signoff_chain.py runs its usual routed LEC on the PASS netlist; the CLI runs the
+kit's lec.py with --lec).  Result: ROOT/eco_loop.json {schema opentallas.eco_loop.v1, kind eco, verdict, base routed
+DB, iterations [commands, metrics, wall], best, flow sha}.
+
+    eco_loop.py run --kit K [--runner R] [--out ROOT] [--max-iter 3] [--hold-margin 0] [--mem 48] [--cpus 8] [--lec]
+    eco_loop.py check SIGNOFF.json        eligibility of a sign-off record (prints the class decision)
+Heavy: run through ot-run (--mem = honest peak, the ECO session + DRT + sign-off STA), never on localhost.
+    The ECO docker cap is max(--mem, ceil(1.5 x the kit's measured OpenROAD peak)) (ECO-OOM-1); a step killed for memory
+    (rc 137 / -9 / kill text) ends the loop as verdict ECO_OOM ("late-ECO OOM ... at <cap> GB"), re-run at a larger --mem.
+"""
+import argparse
+import hashlib
+import math
+import re
+import tempfile
+import json
+import os
+import shlex
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+PRD = HERE / "post_route_drv"
+SCHEMA = "opentallas.eco_loop.v1"
+MAX_ITER = 3
+HOLD_MARGIN_PS = 0            # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
+MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
+DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
+ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}
+IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
+# ECO machinery staged from the current tools (prd_mk.sh copies these from SO/tools/die_plan)
+ECO_TOOL_FILES = ("clk_freeze.tcl", "clk_dump_db.tcl", "clk_geom_diff.py", "clk_freeze_check.sh",
+                  "kit_modes_eco.tcl", "pg_connect.tcl")
+FLOW_FILES = ("post_route_drv/prd_mk.sh", "post_route_drv/prd_run.sh", "post_route_drv/prd_hook.tcl",
+              "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl",
+              "post_route_drv/prd_count.tcl", "post_route_drv/post_grt_chain.py", "post_route_drv/prd_seed.py",
+              "post_route_drv/prd_spef_insts.py", "eco_loop.py") + ECO_TOOL_FILES
+POST_RUNNERS = ("run_kit_hbm.sh", "run_kit_kv.sh", "run_kit.sh")
+# ECO-OOM-1 (DIE-S81-48 11-02, VEs autopilot 246986099dc1): the late ECO inherited the kit runner's ot-run memory (24 GB)
+# as its docker cap, but the ECO session holds the routed DB + the routed SPEF in TWO scenes + repair + DRT on top of what
+# the kit's own DRT needed (22.3 GB peak) -> docker SIGKILL rc 137 inside the first read_spef, reported as the generic
+# "route / clock-freeze check / finish failed".  Now: (1) the ECO docker cap is floored at ECO_MEM_FACTOR x the kit's
+# measured OpenROAD peak, (2) rc 137 / -9 or kill evidence in the step log = status ECO_OOM naming the cap.
+ECO_MEM_FACTOR = 1.5
+OOM_RCS = {137, -9}
+OOM_TEXT = re.compile(r"\bKilled\b|out of memory|OOMKilled|Cannot allocate memory|std::bad_alloc", re.I)
+PEAK_RES = (re.compile(r"peak = ([0-9.]+) \(MB\)"), 1.0 / 1024,
+            re.compile(r"Peak memory: ([0-9.]+)KB"), 1.0 / (1024 * 1024),
+            re.compile(r"MEM: ([0-9.]+) MB peak"), 1.0 / 1024)
+
+
+def measured_peak_gb(kit):
+    """max OpenROAD peak memory (GB) in the kit's own logs (run/logs/**/*.log + KIT/*.log); 0.0 when none"""
+    kit = Path(kit)
+    logs = list(kit.glob("*.log")) + list((kit / "run" / "logs").rglob("*.log"))
+    pats = [(PEAK_RES[i], PEAK_RES[i + 1]) for i in range(0, len(PEAK_RES), 2)]
+    peak = 0.0
+    for p in logs:
+        try:
+            t = p.read_text(errors="replace")
+        except OSError:
+            continue
+        for rx, scale in pats:
+            for m in rx.finditer(t):
+                try:
+                    peak = max(peak, float(m.group(1)) * scale)
+                except ValueError:
+                    pass
+    return round(peak, 2)
+
+
+def eco_mem(kit, mem):
+    """-> (docker cap GB for every ECO step, measured kit peak GB): max(mem, ceil(ECO_MEM_FACTOR x measured peak))"""
+    peak = measured_peak_gb(kit)
+    return max(int(mem), int(math.ceil(ECO_MEM_FACTOR * peak))), peak
+
+
+def oom_evidence(rc, *logs):
+    """True when a step was killed for memory: rc 137 / -9, or kill / OOM text in its log tail"""
+    if rc in OOM_RCS:
+        return True
+    for p in logs:
+        try:
+            t = Path(p).read_text(errors="replace")[-20000:]
+        except OSError:
+            continue
+        if OOM_TEXT.search(t):
+            return True
+    return False
+
+
+def load(p):
+    try:
+        return json.loads(Path(p).read_text())
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+# ------------------------------------------------------------------------------------------------ record reading
+def measured_vclk(ref):
+    """sign-off IO frame: 'applied mode pin_flop_mean clock vclk latency_ps 332.27 ...' -> 332.27, else None"""
+    m = re.match(r"applied mode pin_flop_mean .*\blatency_ps ([0-9.]+)", ref or "")
+    return float(m.group(1)) if m else None
+
+
+def eco_vclk_frame(pass_dir, variant, prev):
+    """Single-mode pass: repair against the IO frame sign-off measured, not the plan bound.  The session bound
+    OT_VCLK_FF (hd_ctl_e FF 342) while sign-off rebinds pin_flop_mean (332.27), so repair_timing saw no hold violation
+    at FF -4.17.  Steers this pass only (kit_modes_eco.tcl); eco_loop restores the kit config.mk after the pass.
+    OT_ECO_MEASURED_VCLK=0 = old frame.  -> ps written, or None."""
+    if os.environ.get("OT_ECO_MEASURED_VCLK", "1") == "0" or variant[0] not in "tb":
+        return None
+    ps = (prev or {}).get("vclk_tt" if variant[0] == "t" else "vclk_ff")
+    cfg = Path(pass_dir) / "config.mk"
+    if ps is None or not cfg.is_file():
+        return None
+    with open(cfg, "a") as f:
+        f.write(f"\nexport OT_ECO_VCLK_PS = {ps:.6f}\n")
+    return ps
+
+
+def metrics(rec):
+    """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}"""
+    c = rec.get("checks") or {}
+    by = {}
+    for k, v in ((c.get("drv") or {}).get("by_corner") or {}).items():
+        if isinstance(v, dict):
+            by[str(k).lower()] = sum(float(x or 0) for x in v.values())
+    drv = sum(by.values())
+    fails = sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL")
+    verdict = rec.get("verdict")
+    signed = verdict == "SIGNED" or (verdict == "LOCAL_PASS_NEEDS_PARENT" and rec.get("local_verdict") == "SIGNED")
+    return dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
+                ff=(c.get("hold_ff") or {}).get("wns_ps"), drv=int(drv), drc=int((c.get("drc") or {}).get("count") or 0),
+                drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails,
+                vclk_tt=measured_vclk((c.get("setup_tt") or {}).get("vclk_reference")),
+                vclk_ff=measured_vclk((c.get("hold_ff") or {}).get("ff_vclk_reference")))
+
+
+def passes(kit, prev, hm):
+    """ECO passes of one iteration.  Two-mode kit (OT_HOLD_MM=1): one m<N> pass (TT setup + BC hold in one session).
+    Single-mode kit: the session holds one corner (kit_modes_eco.tcl), so TT setup / TT DRV is a t<N> pass and FF hold /
+    FF DRV a b<N> pass started from it; each runs only when its corner fails (neither: b<N>, the DRC / fanout form)."""
+    if hold_mm(kit):
+        return ["m" + str(hm)]
+    tt, ff = prev.get("tt"), prev.get("ff")
+    need_t = (tt is not None and tt < 0) or prev.get("drv_tt", 0) > 0
+    need_b = (ff is not None and ff < 0) or prev.get("drv_ff", 0) > 0 or prev.get("drc", 0) > 0
+    out = (["t" + str(hm)] if need_t else []) + (["b" + str(hm)] if need_b or not need_t else [])
+    return out
+
+
+def eligible(rec):
+    """(ok, reason): a NOT SIGNED routed sign-off whose only FAILs are TIMING / DRV / small DRC"""
+    if not rec:
+        return False, "no sign-off record"
+    m = metrics(rec)
+    if m["signed"]:
+        return False, "already signed"
+    if not m["fails"]:
+        return False, "no FAIL gate (NOT RUN / parent-only reasons are not an ECO case)"
+    other = sorted(set(m["fails"]) - ECO_FAILS)
+    if other:
+        return False, "structural gate FAIL " + ",".join(other) + " (not an ECO class)"
+    if m["drc"] > DRC_SMALL:
+        return False, f"DRC {m['drc']} > {DRC_SMALL} (ROUTING class)"
+    return True, "ECO class: " + ",".join(m["fails"])
+
+
+def neg_sum(m):
+    return sum(min(float(w), 0.0) for w in (m.get("tt"), m.get("ff")) if w is not None)
+
+
+def improved(prev, cur):
+    """stop rule: True when cur is better than prev by >= 1 ps negative-WNS sum, or fewer DRV, or fewer DRC"""
+    gain = neg_sum(cur) - neg_sum(prev)
+    return gain >= MIN_WNS_GAIN_PS or cur["drv"] < prev["drv"] or cur["drc"] < prev["drc"]
+
+
+def better(a, b):
+    """is metrics a strictly better than b (signed first, then neg-WNS sum, DRV, DRC)"""
+    ka = (a["signed"], neg_sum(a), -a["drv"], -a["drc"])
+    kb = (b["signed"], neg_sum(b), -b["drv"], -b["drc"])
+    return ka > kb
+
+
+def newest_signoff(d, since=0.0):
+    recs = [p for p in Path(d).glob("signoff*/signoff.json") if p.stat().st_mtime >= since]
+    return max(recs, key=lambda p: p.stat().st_mtime) if recs else None
+
+
+def flow_sha(tools=HERE):
+    h = hashlib.sha256()
+    for rel in FLOW_FILES:
+        p = Path(tools) / rel
+        h.update(rel.encode() + b"\0")
+        h.update(p.read_bytes() if p.is_file() else b"MISSING")
+    out = dict(tools_sha256=h.hexdigest())
+    try:
+        r = subprocess.run(["git", "-C", str(tools), "rev-parse", "HEAD"], capture_output=True, text=True, timeout=30)
+        if r.returncode == 0:
+            out["git"] = r.stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        pass
+    b = load(Path(tools).parent / "BUNDLE.json")
+    if b.get("sha256"):
+        out["admission_bundle"] = b["sha256"]
+    return out
+
+
+# ------------------------------------------------------------------------------------------------ staging
+def hold_mm(kit):
+    mm = "0"
+    try:
+        for line in Path(kit, "config.mk").read_text().splitlines():
+            for pre in ("override export OT_HOLD_MM = ", "export OT_HOLD_MM = "):
+                if line.startswith(pre):
+                    mm = line[len(pre):].strip()
+    except OSError:
+        pass
+    return mm == "1"
+
+
+def stage_so(kit, root, tools=HERE):
+    """SO dir for prd_mk.sh: SO/tools/die_plan = the kit's OWN top-level tool files (its sign-off bundle stays
+    byte-identical in the pass dir) over the current tools, with the current ECO machinery (clock freeze, kit_modes_eco,
+    pg_connect) on top"""
+    so = Path(root) / "so"
+    dp = so / "tools" / "die_plan"
+    dp.mkdir(parents=True, exist_ok=True)
+    for p in Path(tools).iterdir():
+        if p.is_file():
+            shutil.copy2(p, dp / p.name)
+    for p in Path(kit).iterdir():
+        if p.is_file() and p.suffix in (".py", ".tcl", ".sh") and p.stat().st_size < (8 << 20):
+            shutil.copy2(p, dp / p.name)
+    for n in ECO_TOOL_FILES:
+        shutil.copy2(Path(tools) / n, dp / n)
+    for n in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):
+        for src in (Path(kit) / n, Path(tools).parent / n):
+            if src.is_file():
+                shutil.copy2(src, so / "tools" / n)
+                break
+    return so
+
+
+def post_runner(d, runner):
+    """the kit runner copied into the pass dir when it has a sign-off-only GOAL=post (KV / HBM), else None"""
+    names = [Path(runner).name] if runner else []
+    for n in names + list(POST_RUNNERS):
+        p = Path(d) / n
+        if p.is_file():
+            t = p.read_text(errors="replace")
+            if "GOAL=post" in t or "GOAL != post" in t or "GOAL!=post" in t or '"$GOAL" = post' in t:
+                return p
+    return None
+
+
+def docker():
+    return "docker" if subprocess.call(["docker", "ps"], stdout=subprocess.DEVNULL,
+                                       stderr=subprocess.DEVNULL) == 0 else "sudo docker"
+
+
+ABSTRACT_SH = r'''set -uo pipefail
+D=$1; CPUS=$2; MEM=$3; IMAGE=$4; DK=$5; MM=$6
+PATCH=true; [ "$MM" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
+[ -f "$D/kwrs_busfit.py" ] && PATCH="python3 -I /work/kwrs_busfit.py patch /OpenROAD-flow-scripts/flow/scripts/util.tcl; $PATCH"
+$DK run --rm --name eco-abs-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
+  "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
+  make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-generate_abstract" > "$D/run_eco_abstract.log" 2>&1
+rc=$?
+$DK run --rm -v "$D":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
+exit $rc
+'''
+
+
+# ------------------------------------------------------------------------------------------------ one iteration
+def flexpa_sig11(pd):
+    """the ECO session died with SIGSEGV inside DRT pin access (FlexPA) -- the incremental-GRT dirty-route class"""
+    try:
+        t = (Path(pd) / "run_prd.log").read_text(errors="replace")
+    except OSError:
+        return False
+    return "Signal 11 received" in t and "drt::FlexPA" in t
+
+
+def stage_mismatch(pd):
+    """the ECO hook found SPEF instances missing from the seed DB (prd_hook.tcl OT_PRD STAGE_MISMATCH): the kit's
+    6_final is a post-route ECO of its 5_2_route.odb (DIE-S81-50 11-03, S81 l4) -> seed with OT_PRD_FROM=final"""
+    try:
+        t = (Path(pd) / "run_prd.log").read_text(errors="replace")
+    except OSError:
+        return False
+    return "OT_PRD STAGE_MISMATCH" in t
+
+
+def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc=""):
+    """one ECO iteration from routed dir src into root/i<n><tag> (a single-mode kit's t<N> pass first into
+    root/i<n><tag>t); repair_rc 'placement' = OT_PRD_REPAIR_RC (FlexPA SIG11 class); -> iteration record (metrics None
+    when no sign-off)"""
+    d = Path(root) / f"i{n}{tag}"
+    t0 = time.time()
+    vs = passes(kit, prev or {}, hm)
+    it = dict(n=n, dir=str(d), source=str(src), mode=mode, variant="+".join(vs), started=t0, commands=[], rc={},
+              pass_dirs=[], repair_rc=repair_rc or "auto")
+
+    def step(name, cmd, **kw):
+        it["commands"].append(" ".join(shlex.quote(str(c)) for c in cmd))
+        rc = run([str(c) for c in cmd], **kw)
+        it["rc"][name] = rc
+        return rc
+
+    def end(status, reason=""):
+        it.update(status=status, reason=reason, finished=time.time(), wall_s=round(time.time() - t0, 1))
+        return it
+
+    def oom(rc, what, *logs):
+        if rc and oom_evidence(rc, *logs):
+            return end("ECO_OOM", f"{what} OOM-killed at {mem} GB docker cap (rc {rc})")
+        return None
+
+    s = src
+    for i, v in enumerate(vs):
+        pd = d if i == len(vs) - 1 else Path(root) / f"i{n}{tag}{v[0]}"
+        it["pass_dirs"].append(str(pd))
+        # the first pass of the iteration keeps / re-routes per the DRC count; a later one starts from a fresh ECO route
+        env = dict(os.environ, OT_PRD_FROM=mode if i == 0 else "route", OT_PRD_POST="0", OT_PRD_FINISH="1")
+        if (Path(kit) / "kwrs_busfit.py").is_file():  # KW-FIX-5: the kit's LEF-only pins (prd_run.sh busfit_prep)
+            env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
+        if repair_rc:
+            env["OT_PRD_REPAIR_RC"] = repair_rc
+        stag = "" if len(vs) == 1 else "_" + v[0]
+        if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
+            return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
+        it.setdefault("eco_vclk_ps", {})[v] = eco_vclk_frame(pd, v, prev)
+        rc = step("prd_run" + stag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
+        if rc:
+            hit = oom(rc, f"ECO {v} session", pd / "run_prd.log", pd / "run_prd_finish.log")
+            if hit:
+                return hit
+            if stage_mismatch(pd):
+                it["stage_mismatch"] = True
+                return end("ERROR", f"ECO {v} seed DB does not match the SPEF (OT_PRD STAGE_MISMATCH, run_prd.log)")
+            if flexpa_sig11(pd):
+                it["flexpa_sig11"] = True
+                return end("ERROR", f"ECO {v} session SIGSEGV in DRT pin access (FlexPA SIG11 class, run_prd.log)")
+            return end("ERROR", f"ECO {v} route / clock-freeze check / finish failed (prd_result.json)")
+        # the ECO overrides steer only the ECO route: the next pass and the sign-off start from the kit's own config
+        if (pd / "config.mk").is_file():
+            shutil.copy2(pd / "config.mk", pd / "config_eco.mk")
+        shutil.copy2(Path(kit) / "config.mk", pd / "config.mk")
+        s = pd
+    ts = time.time()
+    pr = post_runner(d, runner)
+    if pr:
+        step("signoff", ["bash", pr, d, "post", mem, cpus])
+    else:
+        rc = step("abstract", ["bash", "-c", ABSTRACT_SH, "eco_abstract", d, cpus, mem, image, docker(),
+                               "1" if hold_mm(kit) else "0"])
+        if rc:
+            hit = oom(rc, "ECO abstract", d / "run_eco_abstract.log")
+            if hit:
+                return hit
+            return end("ERROR", "do-generate_abstract failed (run_eco_abstract.log)")
+        step("signoff", [sys.executable, "-I", d / "signoff.py", "run", "--run-dir", d / "run", "--kit", d,
+                         "--out", d / "signoff", "--image", image, "--corners", "tt,ff"],
+             env=dict(os.environ, SIGNOFF_DOCKER=os.environ.get("SIGNOFF_DOCKER", "docker")))
+    so_rec = newest_signoff(d, ts - 1)
+    if not so_rec:
+        hit = oom(it["rc"].get("signoff"), "ECO sign-off")
+        if hit:
+            return hit
+        return end("ERROR", "sign-off wrote no record")
+    it["signoff"] = str(so_rec)
+    rec = load(so_rec)
+    it["base"] = (rec.get("inputs") or {}).get("base")
+    it["metrics"] = metrics(rec)
+    return end("SIGNED" if it["metrics"]["signed"] else "NOT_SIGNED")
+
+
+def prune(it, intermediate_only=False):
+    """drop the heavy ORFS run data of a superseded iteration (json / logs / sign-off stay as evidence); the best
+    iteration keeps its final dir and drops only its intermediate t<N> pass"""
+    dirs = [Path(p) for p in it.get("pass_dirs") or [] if p != it["dir"]]
+    if not intermediate_only:
+        dirs.append(Path(it["dir"]))
+    for d in dirs:
+        for sub in ("run/results", "run/objects"):
+            p = d / sub
+            if p.is_dir() and str(p.resolve()).startswith(str(d.resolve()) + os.sep):
+                shutil.rmtree(p, ignore_errors=True)
+    if not intermediate_only:
+        it["pruned"] = True
+
+
+# ------------------------------------------------------------------------------------------------ the loop
+def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
+             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc=""):
+    """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE"""
+    kit = Path(kit).resolve()
+    t0 = time.time()
+    base_rec = load(base_signoff)
+    root = Path(root or kit / ("eco_" + time.strftime("%Y%m%d_%H%M%S") + "_" + str(os.getpid())))
+    mem_in = mem
+    mem, peak = eco_mem(kit, mem)
+    res = dict(schema=SCHEMA, kind="eco", tool="tools/die_plan/eco_loop.py", kit=str(kit), root=str(root),
+               mem_requested_gb=mem_in, mem_gb=mem, kit_peak_gb=peak, mem_factor=ECO_MEM_FACTOR,
+               base_signoff=str(base_signoff), base_routed_db=(base_rec.get("inputs") or {}).get("odb"),
+               base_metrics=metrics(base_rec) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
+               started=t0, iterations=[], flow=flow_sha(tools), host=os.uname().nodename)
+    ok, why = eligible(base_rec)
+    res["eligibility"] = why
+
+    def done(verdict, reason):
+        res.update(verdict=verdict, reason=reason, finished=time.time(), wall_s=round(time.time() - t0, 1))
+        if root.is_dir():
+            (root / "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
+        return res
+
+    if not ok:
+        return done("NOT_ELIGIBLE", why)
+    root.mkdir(parents=True, exist_ok=False)
+    so = stage_so(kit, root, tools)
+    src, prev = kit, res["base_metrics"]
+    best = None
+    verdict, stop = "EXHAUSTED", f"{max_iter} iterations, still not signed"
+    for n in range(1, max_iter + 1):
+        mode = "route" if prev["drc"] == 0 else "grt"
+        it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
+                     repair_rc=repair_rc)
+        res["iterations"].append(it)
+        if it.get("flexpa_sig11") and not repair_rc:
+            # class retry (once per loop): the same iteration with placement-estimated ECO nets in a new dir
+            repair_rc = "placement"
+            res["repair_rc_retry"] = f"iteration {n}: FlexPA SIG11 -> OT_PRD_REPAIR_RC=placement"
+            it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
+                         tag="r", repair_rc=repair_rc)
+            res["iterations"].append(it)
+        if it.get("stage_mismatch") and n == 1 and mode == "route":
+            # class retry: the kit's routed seed predates its signed 6_final (post-route ECO kit) -> seed with 6_final
+            res["stage_retry"] = "iteration 1: OT_PRD STAGE_MISMATCH -> OT_PRD_FROM=final"
+            it = iterate(n, src, root, kit, runner, so, "final", hold_margin, mem, cpus, run, image, prev=prev,
+                         tag="f", repair_rc=repair_rc)
+            res["iterations"].append(it)
+        m = it.get("metrics")
+        if not m:
+            stop = f"iteration {n}: {it.get('reason')}"
+            if it.get("status") == "ECO_OOM":
+                verdict = "ECO_OOM"
+            break
+        if best is None or better(m, best["metrics"]):
+            best = it
+        if m["signed"]:
+            best, verdict, stop = it, "PASS", f"signed off after {n} ECO iteration(s)"
+            break
+        if not improved(prev, m):
+            stop = f"no improvement at iteration {n} (WNS gain < {MIN_WNS_GAIN_PS} ps, DRV/DRC not falling)"
+            break
+        src, prev = Path(it["dir"]), m
+    if best is None:
+        if verdict != "ECO_OOM":
+            verdict = "ERROR"
+    else:
+        res["best"] = dict(n=best["n"], dir=best["dir"], signoff=best["signoff"], base=best["base"],
+                           metrics=best["metrics"])
+    if not keep:
+        for it in res["iterations"]:
+            prune(it, intermediate_only=it is best)
+    return done(verdict, stop)
+
+
+def summary(res):
+    """one-line evidence for FAIL reasons / class tables"""
+    if not res:
+        return ""
+    b = (res.get("best") or {}).get("metrics") or {}
+    m0 = res.get("base_metrics") or {}
+    its = len(res.get("iterations") or [])
+    if res.get("verdict") == "NOT_ELIGIBLE":
+        return f"late-ECO not eligible: {res.get('reason')}"
+    tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM"}.get(res.get("verdict"), "late-ECO exhausted")
+    return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
+            f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
+
+
+def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call):
+    """Prove the actual ECO capsule; expose the fresh receipt for resign.py --lec."""
+    best = res.get("best") or {}
+    netlist = Path(best.get("base") or "") / "6_final.v"
+    tool = Path(lec_tool) if lec_tool else Path(kit) / "lec.py"
+    candidate = Path(best["dir"]).resolve()
+    out = Path(tempfile.mkdtemp(prefix="lec_postroute_", dir=candidate))
+    rc = run([sys.executable, str(tool), str(candidate), "--netlist", str(netlist), "--out", str(out), "--mem", str(mem),
+              "--jobs", str(cpus)], env=dict(os.environ, OT_LEC_SUPERSET_VEC="1"))
+    lec = load(out / "lec.json") if rc == 0 else {}
+    res["lec"] = dict(tool=str(tool), netlist=str(netlist), record=str(out / "lec.json"), exit=rc,
+                      verdict=lec.get("verdict"), all_shown=(lec.get("superset_vec") or {}).get("all_shown"))
+    Path(res["root"], "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
+    return rc == 0 and lec.get("verdict") == "EQUIVALENT"
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    r = sub.add_parser("run")
+    r.add_argument("--kit", required=True)
+    r.add_argument("--signoff", help="base sign-off record (default: newest KIT/signoff*/signoff.json)")
+    r.add_argument("--runner", help="the kit runner (its GOAL=post signs off a pass dir when supported)")
+    r.add_argument("--out", help="loop root (new dir; default KIT/eco_<ts>)")
+    r.add_argument("--max-iter", type=int, default=MAX_ITER)
+    r.add_argument("--hold-margin", type=int, default=HOLD_MARGIN_PS)
+    r.add_argument("--mem", type=int, default=48)
+    r.add_argument("--cpus", type=int, default=8)
+    r.add_argument("--keep", action="store_true", help="keep the run data of superseded iterations")
+    r.add_argument("--lec", action="store_true", help="run the kit's post-route LEC on a PASS (into BEST/lec)")
+    r.add_argument("--lec-tool")
+    r.add_argument("--repair-rc", choices=["placement", "grt"], default="",
+                   help="OT_PRD_REPAIR_RC from iteration 1 (default: the hook decides, a wired seed repairs on placement; a fresh one after a FlexPA SIG11)")
+    c = sub.add_parser("check")
+    c.add_argument("record")
+    a = ap.parse_args()
+    if a.cmd == "check":
+        ok, why = eligible(load(a.record))
+        print(("ECO_ELIGIBLE " if ok else "ECO_NOT_ELIGIBLE ") + why)
+        return 0 if ok else 1
+    base = Path(a.signoff) if a.signoff else newest_signoff(a.kit)
+    if not base:
+        print("ECO_LOOP FAIL: no sign-off record in the kit")
+        return 3
+    res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep,
+                   repair_rc=a.repair_rc)
+    if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
+        res["verdict"] = "LEC_FAIL"
+    print("ECO_LOOP " + res["verdict"] + ": " + summary(res))
+    print("ECO_LOOP record " + str(Path(res["root"]) / "eco_loop.json"))
+    return 0 if res["verdict"] == "PASS" else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1460,7 +1460,10 @@ def judge(m, template=None, outline=None, all_kits=False):
             if v is None:
                 continue
             at = f"at {m.get(key.replace('_max', '_at'))} ({m['demand_layers']}, est.)"
-            if v <= DEMAND_MAX:
+            if m.get("grt_cts_review") and grt_ok:
+                add(nm, "INFO", v, "measured native GRT 0 overflow", src,
+                    at + "; GEOM-106/108 GRT continuation: native routing overrides estimate")
+            elif v <= DEMAND_MAX:
                 add(nm, "PASS", v, f"<={DEMAND_MAX}", src, at)
             elif v <= DEMAND_HARD and grt_ok:
                 add(nm, "WARN", v, f"<={DEMAND_MAX} plan budget", src, at + "; GRT 0 overflow")
@@ -1592,15 +1595,21 @@ def _close_macros(a, b):
     return all(x[0] == y[0] and abs(x[1] - y[1]) <= OUTLINE_TOL and abs(x[2] - y[2]) <= OUTLINE_TOL for x, y in zip(a, b))
 
 
-def stage_of_odb(name):
-    """checkpoint stage from the ORFS file name: AUTO-GEOM judges only the pre-route review points (3_place / 4_cts);
-    GRT / routed checkpoints carry timing verdicts (GEOM-REVIEW 13:52 elemB_if2e 5_1_grt FAIL on clock timing)"""
+def stage_of_odb(name, clock_cells=0):
+    """Classify ordinary review points and a clock-built GRT continuation.
+
+    GEOM-106/108 2026-11-01: 5_1_grt retains CTS geometry after repair.
+    Its own native GRT log supplies overflow; this classification grants no timing pass.
+    Other routed checkpoints and GRT without a measured clock tree stay out of scope.
+    """
     b = (name or "").rsplit("/", 1)[-1]
+    if b.startswith("5_1_grt") and clock_cells > 0:
+        return "cts"
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
 def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None,
-            land_slots=None, face_guard=None):
+            land_slots=None, face_guard=None, reset_capture_kit=None, reset_capture_typed=None):
     D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
@@ -1624,6 +1633,15 @@ def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=Non
         m["land_ring"] = dict(buses=lr["buses"], pins=len(caps), clock_exports=lr["clock_exports"], errors=lr["errors"],
                               rejected=len(lr["rejected"]), rejected_sample=lr["rejected"][:8])
     m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | infra_pins | ring_clocks, caps))
+    if reset_capture_kit is not None or reset_capture_typed is not None:
+        try:
+            if reset_capture_kit is None or reset_capture_typed is None:
+                raise ValueError("reset capture review needs both actual kit and typed graph")
+            from reset_d_mask_review import review as reset_capture_review
+            m["reset_capture_review"] = reset_capture_review(Path(path).read_text(), reset_capture_kit, reset_capture_typed)
+        except (OSError, ValueError, TypeError, KeyError, AttributeError) as error:
+            m["reset_capture_review"] = dict(status="REJECTED", errors=[str(error)], registration_release=False,
+                gating_changed=False, raw_registration_failures_preserved=True)
     m.update(r2r_metrics(D))
     m.update(ck)
     m.update(macro_metrics(D))
@@ -1632,7 +1650,9 @@ def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=Non
     m.update(demand_metrics(D, max_layer or "M5"))
     m.update(clock_entry_metrics(D, ck))
     m.update(grt_metrics(grt_log))
-    st = stage_of_odb(odb)
+    st = stage_of_odb(odb, m.get("clock_cells", 0))
+    if (odb or "").rsplit("/", 1)[-1].startswith("5_1_grt") and st == "cts":
+        m["grt_cts_review"] = True
     if st:
         m["stage"] = st
     return m
@@ -1667,9 +1687,11 @@ def main(argv=None):
     ap.add_argument("--ft-ports", help="matching hash-checked scalar FT declaration")
     ap.add_argument("--land-slots", help="kit land_slots.json: declared landing ring (with --face-guard PASS) = registered capture")
     ap.add_argument("--face-guard", help="kit face_guard.json (verdict PASS) matching --land-slots")
+    ap.add_argument("--reset-capture-kit", help="opt-in BFQG source/capture review only; raw registration gates unchanged")
+    ap.add_argument("--reset-capture-typed", help="actual pin-typed OpenDB graph for --reset-capture-kit; mandatory pair")
     a = ap.parse_args(argv)
     m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports,
-                a.land_slots, a.face_guard)
+                a.land_slots, a.face_guard, a.reset_capture_kit, a.reset_capture_typed)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)

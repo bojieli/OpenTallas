@@ -187,6 +187,23 @@ def attach_mesh(spec, cells, nets, ports, out):
     return cells,keep,ports,out
 
 
+def cell_contacts(graph):
+    """Declared native buffer contacts; loads never become boundary ports.
+
+    The default mesh has output drivers only. A cell_loads entry adds actual
+    input A contacts under the same supported-master/pin-access rules.
+    """
+    seen=set()
+    for direction,key,pin in (("O","drivers","Y"),("I","cell_loads","A")):
+        for group in graph.get(key,[]):
+            for unit in group["units"]:
+                identity=(unit,pin)
+                if identity in seen:
+                    raise ValueError(f"duplicate mesh cell contact {unit}/{pin}")
+                seen.add(identity)
+                yield group["anchor"],unit,pin,direction
+
+
 def routed_mesh_tcl(L, w, cells, ports, buf, rec):
     """One regular FIXED dbWire: all mesh segments, one VIA89 per crossing.
 
@@ -229,23 +246,37 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
             if fresh:
                 seen.add(b);jid[b]=target;todo.append(b)
     if len(seen)!=len(graph) or nv!=g['vias']: raise ValueError('mesh encoder omitted conductor/via')
-    for d in g['drivers']:
-        at=tuple(d['anchor'])
-        for u in d['units']:
-            px,py=C.pin_point(cells,u,'Y',cells[u].get('lib',buf))
-            pts=C.stair(at[0],at[1],at[2],px,py)
-            L.append(f'$e newPath ${jid[at]} FIXED [RL {at[0]}]')
-            begin=len(L)
-            C._emit_steps(L,pts,split_down=True)
-            # The caller may substitute a wide top-tree via array globally.
-            # Mesh pin access is under the mesh's own NDR and keeps its tech via.
-            for j in range(begin,len(L)):
-                L[j]=L[j].replace('$e addTechVia [V VIA89]','$e addTechVia [V {VIA89}]')
-            for a,b in zip(pts,pts[1:]):
-                if a[0]==b[0] and a[0] in ('M8','M9') and a[1:]!=b[1:]:
-                    rec.setdefault('extra_top',[]).append((w['name'],a[0],a[1],a[2],b[1],b[2]))
-            L.append(f'$e addITerm [IT {u} Y]')
-            rec['pin_stairs']=rec.get('pin_stairs',0)+1
+    for anchor,u,pin,direction in cell_contacts(g):
+        at=tuple(anchor)
+        px,py=C.pin_point(cells,u,pin,cells[u].get('lib',buf))
+        pts=C.stair(at[0],at[1],at[2],px,py)
+        L.append(f'$e newPath ${jid[at]} FIXED [RL {at[0]}]')
+        begin=len(L)
+        C._emit_steps(L,pts,split_down=True)
+        # The caller may substitute a wide top-tree via array globally.
+        # Mesh pin access is under the mesh's own NDR and keeps its tech via.
+        for j in range(begin,len(L)):
+            L[j]=L[j].replace('$e addTechVia [V VIA89]','$e addTechVia [V {VIA89}]')
+        for a,b in zip(pts,pts[1:]):
+            if a[0]==b[0] and a[0] in ('M8','M9') and a[1:]!=b[1:]:
+                rec.setdefault('extra_top',[]).append((w['name'],a[0],a[1],a[2],b[1],b[2]))
+        L.append(f'$e addITerm [IT {u} {pin}]')
+        rec['pin_stairs']=rec.get('pin_stairs',0)+1
+    for native in g.get('native_inputs',[]):
+        import mesh_native_contact as N
+        if native.get('net')!=w['name']:
+            raise ValueError('native actual ITerm is not on this mesh net')
+        at=tuple(native['anchor'])
+        if at not in jid:raise ValueError('native clock contact anchor is absent from mesh conductor')
+        pts=N.access_path(native)
+        L.extend(N.validate_tcl(native,w['name']))
+        L.append(f'$e newPath ${jid[at]} FIXED [RL {at[0]}]')
+        C._emit_steps(L,pts,split_down=True)
+        L.append(f'$e addITerm [IT {{{native["inst"]}}} {{{native["pin"]}}}]')
+        for a,b in zip(pts,pts[1:]):
+            if a[0]==b[0] and a[0]in('M8','M9') and a[1:]!=b[1:]:
+                rec.setdefault('extra_top',[]).append((w['name'],a[0],a[1],a[2],b[1],b[2]))
+        rec['native_pin_stairs']=rec.get('native_pin_stairs',0)+1
     for t in g['taps']:
         at=tuple(t['port_node']);pn=t['port']
         L.extend([f'$e newPath ${jid[at]} FIXED [RL {at[0]}]',
@@ -259,13 +290,18 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
 
 def access_paths(w,cells,buf):
     import clock_routed as C
-    return [C.stair(d['anchor'][0],d['anchor'][1],d['anchor'][2],
-                    *C.pin_point(cells,u,'Y',cells[u].get('lib',buf)))
-            for d in w['mesh_graph']['drivers'] for u in d['units']]
+    return [C.stair(anchor[0],anchor[1],anchor[2],
+                    *C.pin_point(cells,u,pin,cells[u].get('lib',buf)))
+            for anchor,u,pin,_ in cell_contacts(w['mesh_graph'])] + native_access_paths(w)
+
+
+def native_access_paths(w):
+    import mesh_native_contact as N
+    return [N.access_path(native)for native in w['mesh_graph'].get('native_inputs',[])]
 
 
 def access_shapes(w,cells,buf):
-    """Actual driver access, included in the existing cross-net census."""
+    """Actual declared driver/load access, included in the cross-net census."""
     import clock_routed as C
     vr=C.via_rects();out=[]
     for pts in access_paths(w,cells,buf):
@@ -286,6 +322,8 @@ def mesh_spef_section(w,cells,buf,layer_rc,via_kohm):
     stack model as the legacy native SPEF. Extracted RC remains the timing basis.
     """
     from die_clock_mesh import NDR
+    if w['mesh_graph'].get('native_inputs'):
+        raise ValueError('native macro contacts require actual extracted SPEF')
     import clock_routed as C
     nd=NDR[w['ndr']];g=w['mesh_graph'];nm=w['name']
     ids={tuple(p):f'{nm}:{i+1}' for i,p in enumerate(g['nodes'])}
@@ -304,15 +342,14 @@ def mesh_spef_section(w,cells,buf,layer_rc,via_kohm):
             res.append((prev,cur,rr*nd['rf']*length/count))
             caps[prev]+=cc*nd['cf']*length/count/2;caps[cur]+=cc*nd['cf']*length/count/2
             prev=cur
-    for d in g['drivers']:
-        at=tuple(d['anchor'])
-        for u in d['units']:
-            pin=u+':Y';conn.append('*I '+pin+' O')
-            px,py=C.pin_point(cells,u,'Y',cells[u].get('lib',buf))
-            rr,cc=layer_rc[at[0]]
-            distance=abs(px-at[1])+abs(py-at[2])
-            res.append((pin,ids[at],via_kohm[at[0]]+rr*nd['rf']*distance))
-            caps[ids[at]]+=cc*nd['cf']*distance
+    for anchor,u,pin,direction in cell_contacts(g):
+        at=tuple(anchor)
+        terminal=u+':'+pin;conn.append('*I '+terminal+' '+direction)
+        px,py=C.pin_point(cells,u,pin,cells[u].get('lib',buf))
+        rr,cc=layer_rc[at[0]]
+        distance=abs(px-at[1])+abs(py-at[2])
+        res.append((terminal,ids[at],via_kohm[at[0]]+rr*nd['rf']*distance))
+        caps[ids[at]]+=cc*nd['cf']*distance
     for t in g['taps']:
         pin=t['port'];conn.append('*P '+pin+' O');res.append((ids[tuple(t['port_node'])],pin,1e-9))
     L=[f'*D_NET {nm} {sum(caps.values()):.6f}','*CONN']+conn+['*CAP']

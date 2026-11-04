@@ -127,10 +127,16 @@ def discover(plan_dir):
     if plan_dir is None:
         return []
     d = Path(plan_dir)
-    fs = [d / f for f in AUTO if (d / f).is_file()]
-    if (d / "cells").is_dir():
-        fs += sorted((d / "cells").glob("*.json")) + sorted((d / "cells").glob("*.stat"))
-        fs += sorted((d / "cells").glob("*.stat.txt")) + sorted((d / "cells").glob("*_stat.txt"))
+    # FLOW-22 11-02: a plan of record lives in <die>/plan_of_record/ while the die's evidence tables
+    # (QC plan_notes.json cells_per_type) stay in <die>/; read the die dir after the plan dir, so a POR
+    # copy sees the same evidence as the die owner's plan (QC qc52: 81 false 'no cell estimate' G0C errors).
+    dirs = [d] + ([d.parent] if d.name == "plan_of_record" else [])
+    fs = []
+    for e in dirs:
+        fs += [e / f for f in AUTO if (e / f).is_file()]
+        if (e / "cells").is_dir():
+            fs += sorted((e / "cells").glob("*.json")) + sorted((e / "cells").glob("*.stat"))
+            fs += sorted((e / "cells").glob("*.stat.txt")) + sorted((e / "cells").glob("*_stat.txt"))
     return fs
 
 

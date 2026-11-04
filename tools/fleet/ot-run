@@ -118,6 +118,8 @@ does not rescan it.  OT_RUN_NO_LOAD_SPILL=1 (or --no-spill / --hosts) disables i
 SIGNAL SENDER (v7, FLEET-143 2026-10-18: two agent `pkill -f 'ot-run --mem 24'`-style kills at 23:58 and 00:22 PDT
 cancelled ~30 gates of OTHER lanes, which reported "ot-run exit 143"): every SIGTERM/SIGINT/SIGHUP is taken with
 sigtimedwait, so the message names the SENDER (pid + command line), and one line goes to ~/.local/state/ot-run/signals.log.
+  ot-run --spill-handoff TAG [--goal G] [--dry-run]   one SPILL-PROOF hand-off for a running spilled client (spill_handoff):
+                         physical result + receipt to the source host, the proof stays; no unit or container is touched.
   ot-run --cancel SUBSTR [--all-dirs]   SIGTERMs the local ot-run clients whose arguments contain SUBSTR -- the ONLY way an
                          agent stops its own ot-run jobs besides `kill <exact pid>`.  It refuses (lists, kills nothing,
                          exit 2) when the matches span more than one --dir, so a flag pattern such as '--mem 24' cannot
@@ -125,14 +127,14 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["epyc2", "intel1", "intel2", "localhost"]   # FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["epyc2", "intel1", "localhost", "epyc4"]   # HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
 # "smalldisk" (FLEET-NEW2 2026-10-19: ot-epyc8 has only 2x 1 TB NVMe in RAID1, ~820 GB): die-level jobs (huge die-chain
 # scratch) skip it while another host qualifies; other work places normally.  ot-epyc9 (2x EPYC 7543, Zen 3) joins as
 # "throughput" when it is provisioned.
-HOST_ROLE = {"epyc2": "normal", "intel1": "normal", "intel2": "normal", "localhost": "normal", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
+HOST_ROLE = {"epyc2": "normal", "epyc4": "normal", "intel1": "normal", "intel2": "normal", "localhost": "normal", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
 # 2026-10-24 COORD (owner order): old-fleet nvme0n1 wiped -> /srv/opentallas-scratch2 (intel1/intel2 3.4 TB, epyc2 879 GB); intel1/intel2 no longer smalldisk.
 # FLEET-NEW3 2026-10-24: epyc2 (2x EPYC 7543) / epyc3 (2x EPYC 7443; RETIRED by the owner 2026-10-25 ~20:15, removed from every table) are the die-level hosts (normal); intel1/intel2
 # (2x Xeon Gold 6330, ~400 GB root disk) are smalldisk; localhost (EPYC 9754, shared with ~10 agent sessions) is "coord":
@@ -156,6 +158,14 @@ HOST_RESERVE = {"localhost": (8, 16)}   # 2026-10-24 ~21:00 COORD (owner: use ep
 DIE_DISK_GB = int(os.environ.get("OT_RUN_DIE_DISK_GB", "60"))   # estimated scratch of one die chain (measured 10-19:
 # die case dirs 0.7 GB at start, die chains 16-40 GB per lane); the default --disk of a die job
 DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for active die scopes
+
+
+def retryable_queued_probe_failures(first, previously_qualified, notes):
+    """Only known transport loss may keep an already-unstarted request queued."""
+    if first:
+        return []
+    transport = re.compile(r"kex_exchange_identification|Connection (?:reset|closed|timed out)|timed out after|SSH probe returned no admission JSON", re.I)
+    return [h for h in previously_qualified if transport.search(notes.get(h, ""))]
 
 
 def probe(host, d, spill_ok=False):
@@ -188,7 +198,20 @@ def probe(host, d, spill_ok=False):
 # root's claude/ dir sits on the ROOT filesystem (1) or on a separate disk (0), measured on <root>/claude (a symlinked
 # claude/ counts where it points); one OT_ROOTFS line gives the root fs use % and free GB, one OT_DIR_ONROOT line whether
 # the --dir itself is on the root fs.
-SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && "
+# ROOTSCR_1101 (OWNER 2026-11-01 19:0x, epyc2 REFUSED with scratch2 at its floor while the 3.5 TB root disk sat at 2 %):
+# a root-fs scratch root named in ROOT_SCRATCH_ROOTS (epyc2: /srv/opentallas-scratch3 = bind mount of
+# /home/ubuntu/scratch-root) is a SECOND scratch root.  New run dirs and OT_SCRATCH go there only when every separate
+# scratch disk on the host is below SCRATCH_DISK_FLOOR_GB, or when the build pins it (OT_RUN_SCRATCH_ROOT=<root>).  It
+# keeps ROOT_SCRATCH_FLOOR_GB free on the root fs: its usable free = root fs free - that floor.  Other root-fs roots
+# (/srv/opentallas-scratch on the scratch-disk hosts) stay excluded (v13).  Reaper, PROTECTED-DBS and .keep rules
+# cover the path like every /srv/opentallas-scratch* root.
+# Off by default (COORD 11-03 23:22: release scans miss scratch3): set OT_RUN_ROOT_SCRATCH_ROOTS=/srv/opentallas-scratch3 to turn it on.
+ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "").split(",") if x)
+ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "500"))
+SCRATCH_PIN = os.path.normpath(os.environ["OT_RUN_SCRATCH_ROOT"]) if os.environ.get("OT_RUN_SCRATCH_ROOT") else ""
+SCRATCH_ROOTS = ("/srv/opentallas-scratch", "/srv/opentallas-scratch2") + tuple(
+    r for r in ROOT_SCRATCH_ROOTS if r not in ("/srv/opentallas-scratch", "/srv/opentallas-scratch2"))
+SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "; do test -d $r/claude && "
                    "echo OT_SCRATCH_FREE $r $(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9) "
                    "$([ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && echo 1 || echo 0); done; "
                    "echo OT_ROOTFS $(df --output=pcent / | tail -1 | tr -dc 0-9) $(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
@@ -225,11 +248,19 @@ def scratch_disk(row, d, out):
             extra.update(rootfs_pct=int(f[1]), rootfs_free_gb=int(f[2]))
         elif len(f) == 2 and f[0] == "OT_DIR_ONROOT":
             extra["dir_onroot"] = f[1] == "1"
+    # ROOTSCR_1101: second roots (root fs, named in ROOT_SCRATCH_ROOTS) count with root free - ROOT_SCRATCH_FLOOR_GB
+    second = {r: max(0, roots.pop(r) - ROOT_SCRATCH_FLOOR_GB) for r in list(roots) if r in onroot and r in ROOT_SCRATCH_ROOTS}
+    onroot -= set(second)
     # v13 SCRATCH-DISK: a root on a separate disk exists -> only those roots count (never the root fs, even if emptier)
     disk_roots = {r: v for r, v in roots.items() if r not in onroot}
     if disk_roots and (onroot or "rootfs_pct" in extra):     # v13 probe: every root off the root fs = scratch disk
         extra.update(scratch_disk=max(disk_roots, key=disk_roots.get), scratch_disk_gb=max(disk_roots.values()))
         roots = disk_roots
+        sr = SCRATCH_PIN if SCRATCH_PIN in second else (max(second, key=second.get) if second else None)
+        if sr and (sr == SCRATCH_PIN or (extra["scratch_disk_gb"] < SCRATCH_DISK_FLOOR_GB
+                                         and second[sr] >= SCRATCH_DISK_FLOOR_GB)):
+            extra.update(scratch_disk=sr, scratch_disk_gb=second[sr], scratch_second=True)
+            roots = {sr: second[sr]}                          # new run dirs go to the second root
     row = dict(row, **extra)
     if not (scratch2_on() and d and SCRATCH_RE.match(os.path.normpath(d))):
         return row
@@ -248,6 +279,9 @@ def host_refusal(row):
         return ""
     pct = row.get("rootfs_pct")
     lim = ROOTFS_MAX_PCT_SCRATCH if row.get("scratch_disk") else ROOTFS_MAX_PCT
+    if row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
+        return (f"second scratch root {row['scratch_disk']} (root fs) has {row['scratch_disk_gb']} GB usable < floor "
+                f"{SCRATCH_DISK_FLOOR_GB} GB after keeping {ROOT_SCRATCH_FLOOR_GB} GB free on the root fs (ROOTSCR_1101)")
     if pct is not None and pct > lim:
         return (f"ROOT FS {pct}% full > {lim}% (DISK GUARD, owner 2026-10-24: never use root disks for work; "
                 f"move data to the scratch disk, OT_RUN_ROOTFS_MAX_PCT overrides)")
@@ -748,15 +782,29 @@ def cancel(sub, all_dirs):
 # v13 SCRATCH-DISK (FLEET-DISK 2026-10-24): roots whose claude/ is on the ROOT fs are skipped whenever another root is
 # on a separate disk (intel1/intel2/epyc2: always /srv/opentallas-scratch2, even when the root fs has more free space);
 # hosts with only the root fs (localhost/epyc3 md0) keep the most-free rule.
-SCRATCH_ENV = ("export OT_SCRATCH=$(rd=$(stat -c %d /); for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do "
+SCRATCH_ENV = ("export OT_SCRATCH=$(rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "; do "
                "test -d $r/claude || continue; o=0; [ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && o=1; "
-               "echo $o $(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9) $r; done | "
-               "awk '{k[NR]=$0; if ($1==0) d=1} END {for (i in k) {split(k[i],f,\" \"); if (!d || f[1]==0) print f[2], f[3]}}' "
+               "f=$(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9); "
+               # ROOTSCR_1101: a second root (root fs, ROOT_SCRATCH_ROOTS) is o=2 with usable free = free - root floor
+               "case ' " + " ".join(ROOT_SCRATCH_ROOTS) + " ' in *\" $r \"*) [ $o = 1 ] && { o=2; f=$((${f:-0}-"
+               + str(ROOT_SCRATCH_FLOOR_GB) + ")); };; esac; echo $o $f $r; done | "
+               "awk -v fl=" + str(SCRATCH_DISK_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
+               "'{o[NR]=$1; f[NR]=$2; r[NR]=$3; if ($1==0) {d=1; if ($2>bd) bd=$2} if ($1==2 && $2>bs) {bs=$2; bsr=$3} "
+               "if ($3==pin && ($1!=2 || $2>=fl)) pr=$3} "
+               "END {if (pr!=\"\") {print 0, pr; exit} if (d && bd<fl && bs>=fl) {print 0, bsr; exit} "
+               "for (i=1; i<=NR; i++) if (o[i]!=2 && (!d || o[i]==0)) print f[i], r[i]}' "
                "| sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; ")
 # v13 DISK GUARD on the job host (the client checked the probe; this re-checks at submission, so a stale probe or an
 # old client cannot start work on a full root fs, nor on a scratch-disk host whose disk is below its floor).
 def disk_guard_sh(tag):
-    return (f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); lim={ROOTFS_MAX_PCT}; sd0=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd0\" != \"$(stat -c %d /)\" ] && lim={ROOTFS_MAX_PCT_SCRATCH}; if [ \"${{p:-0}}\" -gt $lim ]; then "
+    sec = " ".join(ROOT_SCRATCH_ROOTS)
+    return (f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); lim={ROOTFS_MAX_PCT}; sd0=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd0\" != \"$(stat -c %d /)\" ] && lim={ROOTFS_MAX_PCT_SCRATCH}; "
+            # ROOTSCR_1101: OT_SCRATCH = a second root on the root fs: keep ROOT_SCRATCH_FLOOR_GB free on the root fs
+            f"case ' {sec} ' in *\" $OT_SCRATCH \"*) lim={ROOTFS_MAX_PCT_SCRATCH}; f=$(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
+            f"if [ $(( ${{f:-0}} - {ROOT_SCRATCH_FLOOR_GB} )) -lt {SCRATCH_DISK_FLOOR_GB} ]; then "
+            f"echo \"ot-run: second scratch root $OT_SCRATCH: root fs has ${{f}} GB free, keeps {ROOT_SCRATCH_FLOOR_GB} GB; "
+            f"usable < floor {SCRATCH_DISK_FLOOR_GB} GB on $(hostname -s)\" >&2; echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi;; esac; "
+            f"if [ \"${{p:-0}}\" -gt $lim ]; then "
             f"echo \"ot-run: DISK GUARD: root fs $p% full > $lim% on $(hostname -s); no new job admitted "
             f"(owner 2026-10-24: never use root disks for work)\" >&2; echo OT_RUN_ROOTFULL {tag} >&2; exit 97; fi; "
             f"if sd=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd\" != \"$(stat -c %d /)\" ]; then "
@@ -768,14 +816,17 @@ def disk_guard_sh(tag):
 # v12 SCRATCH2 (SCRATCH2-1021 2026-10-21): runs on the job host before `cd --dir`; see the header.  Never fails the job.
 SCRATCH_PLACE_PY = r'''
 import base64, json, os, re, sys
-ROOTS = ("/srv/opentallas-scratch", "/srv/opentallas-scratch2")
+ROOTS = tuple(os.environ.get("OT_RUN_PLACE_ROOTS", "/srv/opentallas-scratch /srv/opentallas-scratch2").split())
+SECOND = set(os.environ.get("OT_RUN_PLACE_SECOND", "").split())          # ROOTSCR_1101 second roots (root fs)
+RFLOOR = int(os.environ.get("OT_RUN_PLACE_RFLOOR") or 500) << 30
+PIN = os.environ.get("OT_RUN_PLACE_PIN", "")
 MARK, MARGIN = ".ot-run-spill-copy", 50 << 30
 LANE = re.compile(r"^(/srv/opentallas-scratch[^/]*)/claude/([A-Za-z0-9_+-][A-Za-z0-9_.+-]*)(?:/(.*))?$")
 SAFE = re.compile(r"^/srv/opentallas-scratch[^\s$*?{}\[\]`~\\'\"]*$")
 say = lambda m: print("ot-run: SCRATCH2: " + m, file=sys.stderr)
 d, cmd, dry = sys.argv[1], json.loads(base64.b64decode(sys.argv[2])), len(sys.argv) > 3
 FLOOR = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB") or 50) << 30
-free, devs, onroot = {}, set(), set()
+free, devs, onroot, second = {}, set(), set(), {}
 try:
     rdev = os.stat("/").st_dev
 except OSError:
@@ -783,6 +834,10 @@ except OSError:
 for r in ROOTS:
     try:
         st = os.stat(r + "/claude")            # v13: measured where claude/ really lives (a symlinked claude/ counts there)
+        if r in SECOND and st.st_dev == rdev and os.path.isdir(r + "/claude"):
+            v = os.statvfs(r + "/claude")       # ROOTSCR_1101: usable = root fs free - root floor
+            second[r] = v.f_bavail * v.f_frsize - RFLOOR
+            continue
         if os.path.isdir(r + "/claude") and st.st_dev not in devs:
             devs.add(st.st_dev)
             v = os.statvfs(r + "/claude")
@@ -794,6 +849,15 @@ for r in ROOTS:
 # v13 SCRATCH-DISK (FLEET-DISK 2026-10-24): when a root sits on a separate disk, the root-fs roots never get new run dirs
 disk = {r: v for r, v in free.items() if r not in onroot} if onroot and len(onroot) < len(free) else {}
 best = max(disk or free, key=(disk or free).get) if free else None
+# ROOTSCR_1101: a pinned root, or the second root when every scratch disk is below the floor, takes ALL new run dirs
+forced = None
+if PIN in second and second[PIN] >= FLOOR or PIN in free:
+    forced = PIN
+elif second and disk and max(disk.values()) < FLOOR and max(second.values()) >= FLOOR:
+    forced = max(second, key=second.get)
+if forced:
+    best = forced
+    free[forced] = second.get(forced, free.get(forced, 0))
 texts = [" ".join(cmd)]
 for t in list(dict.fromkeys(cmd + re.findall(r"/[^\s'\";|&()<>$]+\.sh(?![\w.])", texts[0])))[:20]:
     p = t if t.startswith("/") else os.path.join(d or "/", t)
@@ -838,6 +902,24 @@ for p in cands:
     # deeper is split off (`..` out of a moved dir resolves on the other root)
     if not os.path.lexists(nxt) and nxt not in placed:
         placed.add(nxt)
+        if forced and req != forced:             # ROOTSCR_1101: pinned / fallback second root
+            tgt = forced + nxt[len(req):]
+            if os.path.lexists(tgt):
+                say(f"NOT RUN: {nxt} would go to {forced} and {tgt} already exists; name {tgt} instead")
+                sys.exit(3)
+            if dry:
+                say(f"would place {nxt} on {forced} ({free[forced] >> 30} GB usable)")
+                continue
+            try:
+                os.makedirs(lroot, exist_ok=True)
+                os.makedirs(tgt)
+                os.symlink(tgt, nxt)
+                say(f"{nxt} -> {tgt} ({forced}: {free[forced] >> 30} GB usable; scratch disk below floor or pinned)")
+            except OSError as e:
+                if not (os.path.islink(nxt) and os.path.realpath(nxt) == os.path.realpath(tgt)):
+                    say(f"NOT RUN: {nxt}: cannot place on {forced} ({e})")
+                    sys.exit(3)
+            continue
         if disk and req in onroot:              # v13: must go to the scratch disk; never created on the root fs
             tgt = best + nxt[len(req):]
             if free[best] < FLOOR:
@@ -889,7 +971,9 @@ def scratch_place_sh(d, cmd, dry=False, tag="otrun"):
     arg = base64.b64encode(json.dumps(list(cmd)).encode()).decode()
     if len(arg) > 32000:          # the whole remote command is ONE argv string to the remote shell (<= 128 KiB)
         arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
-    return (f'pl=$(OT_RUN_SCRATCH_DISK_FLOOR_GB={SCRATCH_DISK_FLOOR_GB} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
+    pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(ROOT_SCRATCH_ROOTS))} '
+          f'OT_RUN_PLACE_RFLOOR={ROOT_SCRATCH_FLOOR_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
+    return (f'pl=$({pe}OT_RUN_SCRATCH_DISK_FLOOR_GB={SCRATCH_DISK_FLOOR_GB} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
             f'{shlex.quote(d or "")} {arg}' + (" dry" if dry else "") + ' 2>&1 >/dev/null); prc=$?; '
             '[ -n "$pl" ] && printf "%s\n" "$pl" | head -20 >&2; '
             f'[ $prc = 3 ] && {{ echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; }}; ')
@@ -901,11 +985,24 @@ def crit_job():
     return os.environ.get("OT_RUN_CRIT", "") not in ("", "0")
 
 
+# FLOW-21 SSHRETRY 11-01 (COORD 09:2x (3)): sshd resets new connections under load (intel2 load 380: "kex_exchange_
+# identification: read: Connection reset by peer"); the request never reached ot-heavy, yet ot-run ended NOT RUN 255 and
+# canary clients died.  A connection that failed before any remote output is retried with backoff, then fails as before.
+SSH_CONNFAIL = ("kex_exchange_identification", "Connection reset by", "Connection timed out", "Connection refused",
+                "Connection closed by", "banner exchange", "ssh_exchange_identification")
+SSH_RETRY_BACKOFF_S = tuple(int(x) for x in os.environ.get("OT_RUN_SSH_BACKOFF", "5,15,45").split(",") if x)
+LAST_RUN = dict(connfail=False)
+# DIE_RESERVE_1101 (FLOW-21): the waiter learns when this request was first made, so a REBALANCE re-try (a new ot-heavy
+# process every REQUEUE_S) keeps its age for the hub die reservation (ot-reserve / ot-heavy-reconcile --die-waiters).
+RUN_T0 = time.time()
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
     env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + env
+    env = f"OT_HEAVY_SHORT_SLOTS={16 if host in ('epyc2', 'epyc4') else 12} OT_HEAVY_THREADS={int(os.environ.get('OT_RUN_THREADS', THREADS))} OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
@@ -918,7 +1015,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
         + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
-    state = dict(started=False, rc=None, nocd=False, unit="?", refused=None)
+    state = dict(started=False, rc=None, nocd=False, unit="?", refused=None, connfail=False)
+    LAST_RUN["connfail"] = False
     unblock = lambda: signal.pthread_sigmask(signal.SIG_UNBLOCK, SIGS)
 
     def stop(sig, who):
@@ -959,6 +1057,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
             state["refused"] = ("root fs above %d%% (DISK GUARD)" % ROOTFS_MAX_PCT if "ROOTFULL" in ln
                                 else "scratch disk below its floor / new run dir could not be placed on it (root fs never used)")
             continue
+        if not state["started"] and any(k in ln for k in SSH_CONNFAIL):
+            state["connfail"] = True
         if "OT_RUN_START" in ln and tag in ln:
             state["started"] = True
             state["unit"] = next((w for w in ln.split() if w.startswith("oth-")), "?")
@@ -981,6 +1081,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         return (ssh_rc or 255), False
     why = state["refused"] if state["refused"] else f"cannot cd to {d}" if state["nocd"] else f"ot-heavy exit {state['rc']}" if state["rc"] is not None \
         else f"ssh ended with status {ssh_rc} before the command was admitted"
+    LAST_RUN["connfail"] = state["connfail"] and ssh_rc == 255 and state["rc"] is None
     if not (quiet_notrun and state["rc"] == 75):
         say(f"ot-run: NOT RUN on {host}: {why}")
     return (state["rc"] or ssh_rc or 255), False
@@ -1026,6 +1127,8 @@ def main():
         return status(HOSTS)
     if a[:1] == ["--spill-sweep"]:
         sys.exit(1 if spill_sweep(dry="--dry-run" in a[1:]) else 0)
+    if a[:1] == ["--spill-handoff"] and len(a) >= 2:
+        sys.exit(spill_handoff_cli(a[1], a[a.index("--goal") + 1] if "--goal" in a else "place", dry="--dry-run" in a))
     if a[:1] == ["--cancel"] and len(a) >= 2:
         sys.exit(cancel(a[1], "--all-dirs" in a[2:]))
     mem, d, disk, hosts, pick, max_wait, threads = None, None, None, HOSTS, False, None, THREADS
@@ -1056,6 +1159,7 @@ def main():
             os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         else: sys.exit(__doc__)
     cmd = a[1:]
+    os.environ["OT_RUN_THREADS"] = str(threads)
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
     held = held_hosts()
@@ -1073,6 +1177,8 @@ def main():
         trigger_sweep()
     t0 = time.time()
     first = True
+    conn_tries = 0
+    previously_qualified = set()
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
     disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
@@ -1086,6 +1192,7 @@ def main():
             hosts = [h for h in HOSTS if h not in held] or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
         ok = drop_low_disk(raw, die, disk, say if first else None)
+        previously_qualified.update(ok)
         if raw and not ok:              # DISK: every host with --dir lacks scratch for this die job -- spill, else wait
             best = max(raw, key=lambda h: raw[h].get("disk_gb", 0))
             plan = None
@@ -1140,6 +1247,13 @@ def main():
                     sys.exit(75)
                 spill = spill and not permanent
         if not best:
+            retry_hosts = retryable_queued_probe_failures(first, previously_qualified & set(hosts), PLACE_NOTES)
+            elapsed = time.time() - t0
+            if retry_hosts and not pick and (max_wait is None or elapsed < max_wait):
+                say("ot-run: RETRY: previously qualified host probe temporarily unavailable (" + ", ".join(sorted(retry_hosts)) + "); request remains unstarted")
+                time.sleep(REQUEUE_S if max_wait is None else max(1, min(REQUEUE_S, max_wait - elapsed)))
+                first = False
+                continue
             why = "; ".join(f"{h}: {PLACE_NOTES[h]}" for h in hosts if PLACE_NOTES.get(h)) or "no reachable host"
             sys.exit(f"ot-run: NOT RUN: no host qualifies ({why})")
         print(f"ot-run: -> {best}" + (f" (will queue: admits {ok[best].get('admit_gb', ok[best]['free_gb'])} GB < {mem} GB)" if queue else ""),
@@ -1154,6 +1268,14 @@ def main():
         if len(ok) > 1 or (spill and d) or not pinned:
             wait = REQUEUE_S if left is None else min(REQUEUE_S, left)
         rc, ran = run(best, mem, cmd, d, wait, quiet_notrun=(wait != left), disk=disk)
+        if not ran and LAST_RUN["connfail"] and conn_tries < len(SSH_RETRY_BACKOFF_S):
+            b = SSH_RETRY_BACKOFF_S[conn_tries]
+            conn_tries += 1
+            print(f"ot-run: RETRY {conn_tries}/{len(SSH_RETRY_BACKOFF_S)}: ssh to {best} failed before admission; "
+                  f"placing again in {b} s", file=sys.stderr)
+            time.sleep(b)
+            first = False
+            continue
         if ran or rc != 75 or wait == left:
             sys.exit(rc if ran else (rc or 255))
         print(f"ot-run: REBALANCE: not admitted on {best} within {wait} s; placing again", file=sys.stderr)
@@ -1189,6 +1311,46 @@ def trigger_reaper(host, why):
 
 SPILL_MARK = ".ot-run-spill-copy"
 SPILL_HOSTS_EXCLUDE = {"ot-pve1", "ot-agidock128"}          # small / shared hosts never receive spills
+# KW-FIX-5 2026-11-03 (COORD disk orders 22:5x + 23:0x): kit-wave spill copies wrote ~34 GB/h to the epyc2 root (lane symlinks
+# scratch2/claude/<lane> -> scratch-root) under the owner's 500 GB floor.  A spill whose lane lands on the root fs of a host named
+# here needs that much root free; any other spill needs the host's scratch disk above SPILL_DST_SCRATCH_FLOOR.  The host comes
+# back by itself once the disk has room; jobs whose --dir already lives there are unaffected; a probe without the field: not refused.
+SPILL_DST_ROOT_FLOOR = {"epyc2": 500}
+SPILL_DST_SCRATCH_FLOOR = {"epyc2": 80, "intel1": 100, "intel2": 100, "localhost": 100}
+# COORD 11-04 00:2x: epyc4 queue 53 waiters while epyc2 admits; a --stage ECO job may use the epyc2 scratch disk down to this floor.
+SPILL_DST_SCRATCH_FLOOR_ECO = {"epyc2": 50}
+SPILL_ECO_RE = re.compile(r"eco_loop|late_eco|(^|[/_.-])eco($|[/_.-]|\s)")
+
+
+def spill_is_eco(cmd):
+    """a --stage job that runs an ECO (eco_loop or an eco dir in its command)"""
+    return bool(STAGE) and bool(SPILL_ECO_RE.search(" ".join(cmd or ())))
+
+
+def spill_dst_full(host, row, roots=(), cmd=()):
+    """the disk a spill of these lane roots would write on host is below its floor"""
+    if not isinstance(row, dict):
+        return False
+    floor = SPILL_DST_ROOT_FLOOR.get(host)
+    if floor is not None and "rootfs_free_gb" in row and row["rootfs_free_gb"] < floor:
+        if not roots or spill_lands_on_root(host, roots):
+            return True
+    floor = SPILL_DST_SCRATCH_FLOOR.get(host)
+    if spill_is_eco(cmd):
+        floor = SPILL_DST_SCRATCH_FLOOR_ECO.get(host, floor)
+    return floor is not None and "scratch_disk_gb" in row and row["scratch_disk_gb"] < floor
+
+
+def spill_lands_on_root(host, roots):
+    """any lane root (/srv/opentallas-scratch*/claude/<lane>) that resolves to the host's root fs; unknown = True"""
+    lanes = sorted({m.group(1) if (m := SCRATCH_RE.match(r)) else r for r in roots})
+    q = " ".join(shlex.quote(x) for x in lanes)
+    try:
+        r = ssh_sh(host, f"rd=$(stat -c %d /); for l in {q}; do p=$l; [ -e $p ] || p=$(dirname $p); "
+                         f"[ \"$(stat -L -c %d $p)\" = \"$rd\" ] && echo ONROOT; done; echo OK", timeout=30)
+        return r.returncode != 0 or "OK" not in r.stdout or "ONROOT" in r.stdout
+    except Exception:
+        return True
 NO_AVX512 = {"epyc2", "ot-epyc7", "ot-epyc9"}                         # Zen 3: a -march=native build from Zen 4/5 would SIGILL there
 SCRATCH_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
 
@@ -1374,6 +1536,11 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
             missing, size_gb, sym, native, lanes = spill_scan(src, sorted(roots), strict=True)
         except Exception as e:
             return None, f"cannot scan {sorted(roots)} on {src}: {str(e)[:80]}", True
+        try:
+            if proof_away(src, STAGE):       # SPILL-PROOF-1: runs on src until the proof's verdict is back
+                return None, "its proof still runs on another host (hand-off)", False
+        except subprocess.SubprocessError as e:
+            return None, f"cannot check {src} for a proof hand-off: {str(e)[:80]}", False
         other = sorted(x for x in lanes if not under(x, STAGE) and not any(under(r, [x]) for r in STAGE))
         if other:
             say(f"ot-run: STAGE: the staged scripts name other lane(s) {', '.join(other[:4])}; not copied (--stage says the inputs are complete)")
@@ -1411,6 +1578,7 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
         res = dict(ex.map(lambda h: (h, [probe(h, b)[1] for b in bases]), cands))
     ok = {h: rs[0] for h, rs in res.items() if all(r and not r.get("error") for r in rs) and rs[0].get("ncpu")
           and min(r["disk_gb"] for r in rs) >= disk + size_gb and physically_capable(rs[0], mem) and not host_refusal(rs[0])
+          and not spill_dst_full(h, rs[0], roots, cmd)
           and (max_ratio is None or ratio(rs[0], threads) <= max_ratio)}
     dst, queue = choose(drop_low_disk(ok, die, disk + size_gb), mem, threads, die)
     if not dst or queue:
@@ -1555,12 +1723,14 @@ def spill_copy_fwd(src, dst, roots, stamp):
     return r
 
 
-def spill_back_cmd(src, dst, roots, stamp):
+def spill_back_cmd(src, dst, roots, stamp, only=None):
     """dst -> src: every file the run wrote (newer than the stamp).  The stamp is removed only after src extracted it
-    (v8 removed it on dst even when the src side failed, so a retry had nothing to compare against)."""
+    (v8 removed it on dst even when the src side failed, so a retry had nothing to compare against).
+    only (SPILL-PROOF-1, after a hand-off): exactly these paths, whatever their age; nothing else ever comes back."""
     rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
-    dcmd = (f"test -e {stamp} || {{ echo OT_SPILL_NOSTAMP >&2; exit 5; }}; cd / && find {rels} -newer {stamp} ! -name {SPILL_MARK} "
-            f"\\( -type f -o -type l \\) -print0 | tar --null -T - -cf - | zstd -q -1 -T8")
+    listing = (f"{{ {handoff_paths_listing(only)}; }}" if only else
+               f"find {rels} -newer {stamp} ! -name {SPILL_MARK} \\( -type f -o -type l \\) -print0")
+    dcmd = (f"test -e {stamp} || {{ echo OT_SPILL_NOSTAMP >&2; exit 5; }}; cd / && {listing} | tar --null -T - -cf - | zstd -q -1 -T8")
     scmd = tar_x(roots)
     return (f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote(dcmd)} | "
             f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(scmd)}")
@@ -1577,13 +1747,13 @@ def pending_write(rec):
         pass
 
 
-def spill_copy_back(src, dst, roots, stamp, say=lambda m: None):
+def spill_copy_back(src, dst, roots, stamp, say=lambda m: None, only=None):
     """-> (ok, error).  Retries; removes the dst stamp only after a successful copy."""
     err = ""
     for k in range(SPILL_BACK_TRIES):
-        b = subprocess.run(["bash", "-o", "pipefail", "-c", spill_back_cmd(src, dst, roots, stamp)], capture_output=True, text=True)
+        b = subprocess.run(["bash", "-o", "pipefail", "-c", spill_back_cmd(src, dst, roots, stamp, only)], capture_output=True, text=True)
         if not b.returncode:
-            ssh_sh(dst, f"rm -f {stamp}", timeout=60)
+            ssh_sh(dst, f"rm -f {stamp} {stamp}.next", timeout=60)
             return True, ""
         err = b.stderr.strip()[-300:]
         if "OT_SPILL_NOSTAMP" in err:
@@ -1592,6 +1762,184 @@ def spill_copy_back(src, dst, roots, stamp, say=lambda m: None):
             say(f"ot-run: SPILL back-copy {dst} -> {src} failed (try {k + 1}/{SPILL_BACK_TRIES}): {err[-160:]}; retrying")
             time.sleep(10 * (k + 1))
     return False, err
+
+
+# SPILL-PROOF-1 2026-11-04 (DIE-HBM-62/FLOW class SPILL-PROOF): a spilled PLACE client ends only when its proof-owner
+# container ends, so the place receipt (K/physical_completion, lec_async.sh phase_done) reached the gen host 5-14 h late and
+# route waited behind the pre-route LEC.  OT_RUN_SPILL_HANDOFF=<goal> (kit_wave PLACE; an old ot-run ignores it): the client
+# watches the spill copy for a fresh rc 0 receipt of that goal with its proof still pending and hands the PHYSICAL result to
+# the source host while the proof stays where it runs, admitted, in its own container:
+#   1. dst: touch stamp.next (before the copy, so nothing written during it is lost)
+#   2. every written file except the proof's own files and the receipts goes back, sub-second mtimes kept (--format=posix:
+#      the receipt binds the checkpoint's mtime_ns)
+#   3. src: K/.ot-run-proof-away, lec_async.pid removed (that pid is on dst; lec_async.sh finish then waits for lec_async.done
+#      instead of testing a foreign pid); the pending record gets late = the proof's files; dst: stamp.next -> stamp
+#   4. the receipts go last: their arrival is what releases the wave, so everything they name is already there
+# From then on the source copy is the kit's one physical /work and the spill copy holds only the proof.  The final back-copy
+# (client end or --spill-sweep) carries ONLY the proof's files, so it can never meet a route running on the source host.
+# While K/.ot-run-proof-away stands and K/lec_async.done has not come back, spill_plan refuses to move K: the route of this kit
+# runs on the source host (a spill to dst would be a second flow on the proof's /work; one elsewhere would never see the
+# verdict).  LEC identity, sign-off and the routed LEC are untouched; lec_async.sh start on the source host reuses the proof by
+# identity as on one host.  A proof that stops NOT EQUIVALENT reaches the source host at client end: the route is not stopped
+# mid-run, but lec_async.sh finish returns the stop rc and no sign-off follows.  `ot-run --spill-handoff TAG` does the same
+# hand-off once for a client already running (older code, same stamp semantics).
+HANDOFF_ENV = "OT_RUN_SPILL_HANDOFF"
+HANDOFF_POLL_S = float(os.environ.get("OT_RUN_SPILL_HANDOFF_POLL_S", "60"))
+HANDOFF_TRIES = 3
+PROOF_AWAY = ".ot-run-proof-away"
+PROOF_FILES = ("lec", "lec_run.log", "lec_async.log", "lec_async.rc", "lec_async.stop", "lec_async.done", "FAIL_PREFLOOR")
+HANDOFF_RECEIPTS = "physical_completion"
+HANDOFF_HELD = PROOF_FILES + ("lec_async.pid", "lec_async.lock", HANDOFF_RECEIPTS)
+HANDOFF_STOPS = ("lec_async.stop", "FAIL_PREFLOOR", "FAIL_POSTCTS")
+PAX_TAR = "tar --format=posix --pax-option=delete=atime,delete=ctime --null -T - -cf -"
+
+
+def handoff_state_cmd(kit, stamp):
+    """dst: NOSTAMP / STOP markers + every receipt of this run (newer than the stamp), one JSON document per line"""
+    q = shlex.quote(kit)
+    return (f"test -e {shlex.quote(stamp)} || echo OT_NOSTAMP; "
+            + "".join(f"test -e {q}/{m} && echo OT_STOP; " for m in HANDOFF_STOPS)
+            + f"test -d {q}/{HANDOFF_RECEIPTS} && find {q}/{HANDOFF_RECEIPTS} -maxdepth 1 -name '*.json' -newer {shlex.quote(stamp)} "
+              "-exec sh -c 'for f; do tr -d \"\\n\" < \"$f\"; echo; done' sh {} +; true")
+
+
+def handoff_due(out, goal):
+    """the hand-off is due: a fresh rc 0 receipt of goal with its proof still running, and nothing has stopped the kit.  A
+    finished proof means the client ends by itself and copies back as usual."""
+    due = False
+    for ln in (out or "").splitlines():
+        if ln.strip() in ("OT_NOSTAMP", "OT_STOP"):
+            return False
+        try:
+            r = json.loads(ln)
+        except ValueError:
+            continue
+        if (isinstance(r, dict) and r.get("schema") == "opentallas.physical_completion.v1" and r.get("goal") == goal
+                and r.get("rc") == 0 and r.get("proof_pending") is True):
+            due = True
+    return due
+
+
+def handoff_files_cmd(src, dst, roots, listing):
+    """dst -> src under the per-lane flock; listing prints NUL-separated paths relative to /.  pipefail on dst too: a file that
+    cannot be read fails this step instead of being left out silently."""
+    dcmd = f"set -o pipefail; cd / && {{ {listing}; }} | {PAX_TAR} | zstd -q -1 -T8"
+    return (f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote('bash -c ' + shlex.quote(dcmd))} | "
+            f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(tar_x(roots))}")
+
+
+def handoff_physical_listing(roots, kit, stamp):
+    """every file the run wrote, without the proof's files and the receipts"""
+    rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
+    k = kit.lstrip("/")
+    held = " ".join(f"! -path {shlex.quote(k + '/' + h)} ! -path {shlex.quote(k + '/' + h + '/*')}" for h in HANDOFF_HELD)
+    return f"find {rels} -newer {shlex.quote(stamp)} ! -name {SPILL_MARK} {held} \\( -type f -o -type l \\) -print0"
+
+
+def handoff_paths_listing(paths, older_than=None):
+    """the files below paths (absolute); older_than: only those not changed since that stamp"""
+    age = f"! -newer {shlex.quote(older_than)} " if older_than else ""
+    return "; ".join(f"if test -e {shlex.quote(p.lstrip('/'))}; then find {shlex.quote(p.lstrip('/'))} {age}! -name {SPILL_MARK} "
+                     "\\( -type f -o -type l \\) -print0; fi" for p in paths) + "; true"
+
+
+def handoff_pipe(cmd, what, say, tries=HANDOFF_TRIES):
+    err = ""
+    for k in range(tries):
+        b = subprocess.run(["bash", "-o", "pipefail", "-c", cmd], capture_output=True, text=True)
+        if not b.returncode:
+            return True
+        err = b.stderr.strip()[-200:]
+        if k + 1 < tries:
+            time.sleep(10 * (k + 1))
+    say(f"ot-run: SPILL hand-off: {what} failed: {err}")
+    return False
+
+
+def spill_handoff(src, dst, roots, kit, stamp, rec, say, snapshot=False):
+    """steps 1-4 above -> True when the receipts are on src.  False before step 3: src holds extra physical files only, no
+    receipt, nothing released, and the usual full back-copy still happens at client end.  snapshot (--spill-handoff, a client
+    whose final back-copy is 'newer than the stamp' only): the proof's files so far travel now as well."""
+    nxt, q = stamp + ".next", shlex.quote(kit)
+    if not rec.get("late"):
+        r = ssh_sh(dst, f"test -e {shlex.quote(stamp)} && touch {shlex.quote(nxt)}", timeout=120)
+        if r.returncode:
+            say(f"ot-run: SPILL hand-off: no stamp on {dst}: {r.stderr.strip()[-160:]}")
+            return False
+        if not handoff_pipe(handoff_files_cmd(src, dst, roots, handoff_physical_listing(roots, kit, stamp)), "physical copy", say):
+            return False
+        late = [os.path.join(kit, f) for f in PROOF_FILES]
+        if snapshot and not handoff_pipe(handoff_files_cmd(src, dst, roots, handoff_paths_listing(late, older_than=nxt)),
+                                         "proof snapshot", say):
+            return False
+        r = ssh_sh(src, f"echo {shlex.quote(dst)} > {q}/{PROOF_AWAY} && rm -f {q}/lec_async.pid", timeout=120)
+        if r.returncode:
+            say(f"ot-run: SPILL hand-off: cannot mark {kit} on {src}: {r.stderr.strip()[-160:]}")
+            return False
+        rec.update(late=late, kit=kit, handoff=int(time.time()))
+        pending_write(rec)
+        r = ssh_sh(dst, f"mv -f {shlex.quote(nxt)} {shlex.quote(stamp)}", timeout=120)
+        if r.returncode:
+            say(f"ot-run: SPILL hand-off: stamp not advanced on {dst}: {r.stderr.strip()[-160:]}")
+            return False
+    if not handoff_pipe(handoff_files_cmd(src, dst, roots, handoff_paths_listing([os.path.join(kit, HANDOFF_RECEIPTS)])),
+                        "receipt copy", say):
+        return False
+    say(f"ot-run: SPILL hand-off: physical result of {kit} on {src}; the proof stays on {dst}, its files follow at client end")
+    log_signal(f"SPILL-HANDOFF {kit} {dst} -> {src} pid {os.getpid()}")
+    return True
+
+
+def handoff_watch(src, dst, roots, kit, goal, stamp, rec, stop, say):
+    """client thread beside run(): at most HANDOFF_TRIES hand-off attempts; any doubt leaves the full back-copy at client end"""
+    tries = 0
+    while not stop.wait(HANDOFF_POLL_S):
+        try:
+            r = ssh_sh(dst, handoff_state_cmd(kit, stamp), timeout=120)
+            if r.returncode or not handoff_due(r.stdout, goal):
+                continue
+            if spill_handoff(src, dst, roots, kit, stamp, rec, say):
+                return
+            tries += 1
+            if tries >= HANDOFF_TRIES:
+                return
+        except Exception as e:
+            say(f"ot-run: SPILL hand-off check: {str(e)[:160]}")
+
+
+def proof_away(src, paths):
+    """a staged kit whose proof still runs on another host: never moved (fail closed on an unreachable source)"""
+    r = ssh_sh(src, "for p in " + " ".join(shlex.quote(x) for x in paths) + f"; do test -e $p/{PROOF_AWAY} && ! test -e $p/lec_async.done "
+                    "&& { cat $p/" + PROOF_AWAY + "; echo AWAY; }; done; echo OK", timeout=60)
+    return r.returncode != 0 or "OK" not in r.stdout or "AWAY" in r.stdout
+
+
+def spill_handoff_cli(tag, goal="place", dry=False, say=print):
+    """ot-run --spill-handoff TAG [--goal G] [--dry-run]: one hand-off for a running spilled client (its pending record on this
+    host).  Touches no unit and no container.  Only with the proof running and a fresh receipt; repeating it only re-sends the
+    receipts."""
+    p = os.path.join(SPILL_PENDING, tag + ".json")
+    try:
+        with open(p) as fh:
+            rec = json.load(fh)
+    except (OSError, ValueError) as e:
+        say(f"ot-run --spill-handoff: no record {tag}: {e}")
+        return 2
+    if not pid_alive(rec["pid"]):
+        say(f"ot-run --spill-handoff: client {rec['pid']} is gone: --spill-sweep owns this record")
+        return 2
+    src, dst, roots, stamp = rec["src"], rec["dst"], rec["roots"], rec["stamp"]
+    kit = rec.get("kit") or next((r for r in roots if not r.endswith(".sh")), roots[0])
+    r = ssh_sh(dst, handoff_state_cmd(kit, stamp), timeout=120)
+    if not rec.get("late") and (r.returncode or not handoff_due(r.stdout, goal)):
+        say(f"ot-run --spill-handoff: {tag}: not due on {dst} (no fresh rc 0 {goal} receipt with a pending proof, or a stop mark)")
+        return 3
+    if dry:
+        listing = handoff_physical_listing(roots, kit, stamp).replace("-print0", "-printf '%s\\n'")
+        c = ssh_sh(dst, f"cd / && {listing} | awk '{{n++; s+=$1}} END {{print n+0, s+0}}'", timeout=300)
+        say(f"ot-run --spill-handoff: {tag}: DRY {dst} -> {src} {kit}: physical files/bytes {c.stdout.strip()}, already handed off: {bool(rec.get('late'))}")
+        return 0
+    return 0 if spill_handoff(src, dst, roots, kit, stamp, rec, say, snapshot=True) else 1
 
 
 def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
@@ -1624,7 +1972,16 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     def on_start(unit):
         rec["unit"] = unit
         pending_write(rec)
+    stop_watch, watch = threading.Event(), None
+    goal = os.environ.get(HANDOFF_ENV)
+    if goal and d and under(d, roots):           # SPILL-PROOF-1: physical result to src while the proof stays here
+        watch = threading.Thread(target=handoff_watch, args=(src, dst, roots, os.path.normpath(d), goal, stamp, rec, stop_watch, say),
+                                 daemon=True)
+        watch.start()
     rc, ran = run(dst, mem, cmd, d, max_wait, on_start=on_start, disk=disk)
+    if watch:                                    # a hand-off in progress finishes before any back-copy
+        stop_watch.set()
+        watch.join()
     if not ran and rec["unit"] is None:          # never started: nothing to copy back
         ssh_sh(dst, f"rm -f {stamp}", timeout=60)
         try:
@@ -1635,7 +1992,7 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     if not ran:                                  # started, connection lost: it may still run; the sweep copies back later
         say(f"ot-run: SPILL: outputs stay on {dst} until the unit ends; `ot-run --spill-sweep` copies them back to {src}")
         return rc or 255
-    ok, err = spill_copy_back(src, dst, roots, stamp, say)
+    ok, err = spill_copy_back(src, dst, roots, stamp, say, only=rec.get("late"))
     if not ok:
         say(f"ot-run: SPILL back-copy {dst} -> {src} FAILED ({err[-200:]}); outputs are on {dst}: NOT COMPLETED "
             f"(recorded in {SPILL_STUCK_LOG}; `ot-run --spill-sweep` retries)")
@@ -1650,7 +2007,84 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     except OSError:
         pass
     say(f"ot-run: SPILL: outputs copied back {dst} -> {src}; RAN on {dst}: exit {rc}")
+    spill_drop_stage(dst, roots, say)
     return rc
+
+
+def spill_stage_protected(r):
+    """True when PROTECTED-DBS.txt names r, a path inside r or a parent of r.  Unreadable list = protected (keep the copy)."""
+    try:
+        lines = open(os.path.expanduser("~/coord/PROTECTED-DBS.txt")).read().splitlines()
+    except OSError:
+        return True
+    base = r.rstrip("/")
+    for ln in lines:
+        for w in ln.split():
+            w = w.split(":", 1)[1] if re.match(r"^[A-Za-z0-9_.-]+:/", w) else w
+            if w.startswith("/") and (w.rstrip("/") == base or w.startswith(base + "/") or base.startswith(w.rstrip("/") + "/")):
+                return True
+    return False
+
+
+# KW-FIX-5 11-04 (DIE-KV-65 read in the code): two jobs can --stage the same dir (a shared tools dir).  Keep the copy while any other
+# process names it in its command line or runs inside it, or a container mounts it; a docker that cannot answer keeps it too.
+SPILL_BUSY_PY = r"""
+import os, shutil, subprocess, sys
+r = sys.argv[1].rstrip("/")
+me, p = set(), os.getpid()
+while p > 1:
+    me.add(p)
+    try:
+        p = int(open(f"/proc/{p}/stat").read().rsplit(")", 1)[1].split()[1])
+    except (OSError, ValueError, IndexError):
+        break
+for d in os.listdir("/proc"):
+    if not d.isdigit() or int(d) in me:
+        continue
+    try:
+        cmd = open(f"/proc/{d}/cmdline", "rb").read()
+        cwd = os.readlink(f"/proc/{d}/cwd")
+    except OSError:
+        continue
+    if r.encode() in cmd or cwd == r or cwd.startswith(r + "/"):
+        sys.exit(1)
+if shutil.which("docker"):
+    q = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True)
+    if q.returncode:
+        sys.exit(1)
+    if q.stdout.split():
+        m = subprocess.run(["docker", "inspect", "-f", "{{range .Mounts}}{{.Source}}\\n{{end}}", *q.stdout.split()], capture_output=True, text=True)
+        if m.returncode or any(x == r or x.startswith(r + "/") for x in m.stdout.split()):
+            sys.exit(1)
+"""
+
+
+def spill_drop_cmd(r, mk, mk2):
+    """the remote command: no depth limit (ECO records sit at K/eco_<stamp>/i<n>/signoff/signoff.json), any .keep or SIGNED
+    signoff.json anywhere keeps the copy, and a find that fails keeps it too (fail closed)."""
+    q = shlex.quote(r)
+    return (f"test -d {q} && {{ test -e {mk} || test -e {mk2}; }} && "
+            f"o=$(find {q} \\( -name .keep -print \\) -o \\( -name signoff.json -exec sh -c 'grep -l SIGNED \"$@\"; test $? -le 1' sh {{}} + \\)) && test -z \"$o\" "
+            f"&& python3 -I -c {shlex.quote(SPILL_BUSY_PY)} {q} && rm -rf {q} && echo DROPPED")
+
+
+def spill_drop_stage(dst, roots, say=lambda m: None):
+    """KW-FIX-5 2026-11-03: a --stage copy is scratch once its outputs are back (kit-wave left ~2-30 GB per spilled kit on the
+    destination, COORD disk order).  Only --stage directories below a lane root that carries the spill marker, never one
+    holding a SIGNED signoff.json or a .keep at any depth, and never a PROTECTED-DBS entry (COORD 00:0x)."""
+    if not STAGE:
+        return
+    for r in roots:
+        m = SCRATCH_RE.match(r)
+        if not m or not m.group(2) or r.rstrip("/") == m.group(1) or spill_stage_protected(r):
+            continue
+        mk, mk2 = shlex.quote(m.group(1) + "/" + SPILL_MARK), shlex.quote(r + "/" + SPILL_MARK)
+        try:
+            if "DROPPED" in ssh_sh(dst, spill_drop_cmd(r, mk, mk2), timeout=300).stdout:
+                say(f"ot-run: SPILL: dropped the stage copy {r} on {dst}")
+                log_signal(f"SPILL-DROP {r} on {dst}")
+        except Exception:
+            pass
 
 
 def pid_alive(pid):
@@ -1686,7 +2120,7 @@ def spill_sweep(dry=False, say=print):
         if dry:
             left += 1
             continue
-        ok, err = spill_copy_back(rec["src"], rec["dst"], rec["roots"], rec["stamp"])
+        ok, err = spill_copy_back(rec["src"], rec["dst"], rec["roots"], rec["stamp"], only=rec.get("late"))
         if ok or "OT_SPILL_NOSTAMP" in err:
             os.replace(p, p[:-5] + (".done" if ok else ".nostamp"))
             say(f"ot-run --spill-sweep: {rec['tag']} " + ("copied back" if ok else "no stamp on dst (copied before?)"))

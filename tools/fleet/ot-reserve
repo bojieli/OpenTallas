@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+"""ot-reserve (DIE_RESERVE_1101, FLOW-21, COORD 11-01 16:1x): the hub tick of the bounded die-job memory reservation.
+
+Every minute (systemd user timer on the ot-run hub) it asks every fleet host for its waiting --priority die jobs
+(`ot-heavy-reconcile --die-waiters`).  At most ONE host is reserved fleet-wide: while no reservation is valid, the
+oldest die waiter that has waited > RESERVE_AFTER_S (60 min) gets one (`--reserve-set ID` on its host), and that host
+then admits no NEW non-die job until the waiter is admitted (the host releases it at once) or 6 h have passed.  Each
+waiter id is reserved at most once.  Running jobs are never touched and nothing is held on CPU load.
+
+usage: ot-reserve [--dry-run]     one tick; RESERVE / RELEASE lines go to ~/.local/state/ot-reserve.log
+"""
+import json
+import os
+import shlex
+import subprocess
+import sys
+import time
+
+HOSTS = [h for h in os.environ.get("OT_RESERVE_HOSTS", "epyc2,intel1,localhost").split(",") if h]
+AFTER_S = int(os.environ.get("OT_RESERVE_AFTER_S", "3600"))
+STATE = os.path.expanduser(os.environ.get("OT_RESERVE_STATE", "~/.local/state/ot-reserve.json"))
+LOG = os.path.expanduser(os.environ.get("OT_RESERVE_LOG", "~/.local/state/ot-reserve.log"))
+REC = os.environ.get("OT_RESERVE_REC", "/usr/local/bin/ot-heavy-reconcile")
+BACKOFF_S = (5, 15, 45)
+
+
+def remote(host, args, timeout=90):
+    """run REC on host; localhost runs directly (the hub's own sshd resets under load); ssh retried on 255/timeout"""
+    cmd = shlex.split(REC) + args if host == "localhost" else \
+        ["ssh", "-o", "ControlPath=none", "-o", "ConnectTimeout=30", "-o", "BatchMode=yes", host, " ".join([REC] + args)]
+    for k in range(len(BACKOFF_S) + 1):
+        try:
+            r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+            if not (host != "localhost" and r.returncode == 255 and not r.stdout):
+                return r.returncode, r.stdout
+        except subprocess.TimeoutExpired:
+            pass
+        if k < len(BACKOFF_S):
+            time.sleep(BACKOFF_S[k])
+    return None, ""
+
+
+def say(m):
+    line = f"{time.strftime('%Y-%m-%dT%H:%M:%S%z')} {m}"
+    print(line)
+    os.makedirs(os.path.dirname(LOG), exist_ok=True)
+    open(LOG, "a").write(line + "\n")
+
+
+def decide(reports, done, now, after_s=AFTER_S):
+    """(keep, release, reserve): keep = [(host, reservation)] the one valid reservation (oldest), release = extra hosts,
+    reserve = (host, waiter) to reserve now or None.  reports: {host: --die-waiters JSON}; unreachable hosts omitted."""
+    held = sorted(((h, r["reserve"]) for h, r in reports.items() if r.get("reserve")), key=lambda x: x[1].get("at", 0))
+    if held:
+        return held[:1], [h for h, _ in held[1:]], None
+    cands = sorted(((w["since"], h, w) for h, r in reports.items() for w in r.get("waiters", [])
+                    if w.get("reserve_eligible") is not False and now - w["since"] > after_s and f"{h}|{w['id']}" not in done), key=lambda x: x[0])
+    return [], [], ((cands[0][1], cands[0][2]) if cands else None)
+
+
+def main():
+    dry = "--dry-run" in sys.argv
+    try:
+        st = json.load(open(STATE))
+    except (OSError, ValueError):
+        st = {}
+    done = st.get("done", {})
+    reports = {}
+    for h in HOSTS:
+        rc, out = remote(h, ["--die-waiters"])
+        try:
+            reports[h] = json.loads(out)
+        except ValueError:
+            continue                                   # unreachable / old reconcile: never reserved by this tick
+    now = time.time()
+    keep, release, pick = decide(reports, done, now)
+    prev = st.get("active")
+    cur = f"{keep[0][0]}|{keep[0][1]['id']}" if keep else None
+    if prev and prev != cur and prev.split("|", 1)[0] in reports:
+        say(f"RELEASE {prev} (host released it: waiter admitted / gone, or 6 h)")
+    for h in release:
+        say(f"RELEASE {h} (second reservation; at most one fleet-wide)")
+        if not dry:
+            remote(h, ["--reserve-clear", "second-reservation-fleet-max-1"])
+    if pick:
+        h, w = pick
+        say(f"RESERVE {h}|{w['id']} charge {w['charge']} GB waited {(now - w['since']) / 60:.0f} min: {w['cmd'][:120]}")
+        if not dry:
+            rc, out = remote(h, ["--reserve-set", w["id"]])
+            if rc == 0:
+                cur = f"{h}|{w['id']}"
+                done[cur] = round(now)
+            else:
+                say(f"RESERVE {h}|{w['id']} not set (rc {rc}): {out.strip()[:200]}")
+    if not dry:
+        done = {k: v for k, v in done.items() if now - v < 7 * 86400}
+        os.makedirs(os.path.dirname(STATE), exist_ok=True)
+        json.dump(dict(active=cur, done=done, at=round(now)), open(STATE + ".tmp", "w"))
+        os.replace(STATE + ".tmp", STATE)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

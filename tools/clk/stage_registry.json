@@ -560,6 +560,67 @@
     -5e-06
    ],
    "coeff_sha": "f4af05bd9b7e20cb"
+  },
+  {
+   "id": "inv2_1x_qc_gen52b_grt1x",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "1x",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "QC gen52b die GRT (plan_qc52 native target, island abstracts), clock M8/M9 spacing-only NDR w0.04/s0.08 = the DRT-routable form (FLOW-15 (A) 10-31), placed-stage legs"
+   },
+   "basis": "ot_clk refit (qc qc52_last_event_b) of stack inv2/1x on routed legs /srv/opentallas-scratch2/claude/die-qc-52/r52/grt1x_<C>; TT 20998 legs rms 7.49 ps (old model 37.35), FF 20998 legs rms 6.61 ps (old model 25.5)",
+   "source": {
+    "file": "results/qc_die52_1031/inv2_1x_stage_cal_gen52b_grt1x.json",
+    "sha256": "f3e6848295a16882127a6b4d073882d4c0aa4cc8d887a224beec87f735fc5e47",
+    "tree": "/srv/opentallas-scratch2/claude/die-qc-52/gen52b/out/kit/clock/tree.json",
+    "arrivals": "/srv/opentallas-scratch2/claude/die-qc-52/r52/grt1x",
+    "rep_um": 250.0,
+    "even_legs": false,
+    "built_with": "die_trial STAGE_1X_TT (BUFx24 1x ladder, uncalibrated), fanout 0",
+    "tap_from": "--tap",
+    "placed_stages": true
+   },
+   "leg": [
+    13.455228,
+    0.152105,
+    0.000276,
+    4.129775
+   ],
+   "tap": [
+    0.04204,
+    5e-06
+   ],
+   "leg_FF": [
+    11.347113,
+    0.137391,
+    0.000257,
+    2.896018
+   ],
+   "tap_FF": [
+    0.04204,
+    5e-06
+   ],
+   "coeff_sha": "84feda27b9fd18f4",
+   "fit": {
+    "TT": {
+     "legs": 20998,
+     "rms_ps": 7.49,
+     "rms_built_ps": 37.35
+    },
+    "FF": {
+     "legs": 20998,
+     "rms_ps": 6.61,
+     "rms_built_ps": 25.5
+    }
+   }
   }
  ]
 }

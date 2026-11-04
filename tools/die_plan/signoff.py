@@ -252,16 +252,32 @@ def macro_libs(kit, corner):
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py")
+OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py")
+
+
+def _common_flow(source, name):
+    """physical/common_flow/<name> of the checkout that holds tools/die_plan `source`; a sparse checkout without
+    physical/common_flow reads it from git HEAD (common_flow_src.py, DIE-KV-62 11-02).  A standalone kit copy has no
+    common_flow_src.py: the plain path, as before."""
+    try:
+        from common_flow_src import common_flow_file
+    except ImportError:
+        return Path(source).parents[1] / "physical/common_flow" / name
+    return common_flow_file(name, Path(source).parents[1])
 
 
 def signoff_bundle_sources(source=HERE):
     source = Path(source)
     paths = {name: source / name for name in SIGNOFF_BUNDLE}
     if not paths["clock_family.tcl"].is_file():
-        paths["clock_family.tcl"] = source.parents[1] / "physical/common_flow/clock_family.tcl"
+        paths["clock_family.tcl"] = _common_flow(source, "clock_family.tcl")
     missing = [name for name, path in paths.items() if not path.is_file()]
     if missing:
         raise ValueError("signoff: incomplete tool bundle: " + ", ".join(missing))
+    for name in OPTIONAL_SIGNOFF_BUNDLE:
+        optional = source / name
+        if optional.is_file():
+            paths[name] = optional
     return paths
 
 
@@ -272,8 +288,11 @@ def require_signoff_bundle():
 # Dependencies of standalone kit hooks.  Existing custom hooks stay byte-identical;
 # their missing shared helpers are shipped by the same bundle as the sign-off tool.
 KIT_TOOL_DEPENDENCIES = {
+    "rtl_lint.py": ("hhp_clock_mesh_role.py",),
+    "ft_ports.py": ("hhp_clock_mesh_role.py",),
+    "hhp_clock_mesh_role.py": ("ft_ports.py", "sdc_lint.py"),
     "orfs_hold_mm.tcl": ("macro_cts_cluster.tcl",),
-    "die_sta_related.py": ("clock_components.py", "data_droop.py"),
+    "die_sta_related.py": ("clock_components.py", "data_droop.py", "pair_slack_gate.py", "die_sta.py"),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
                          "kit_contract.py", "die_sta_related.py", "data_droop.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
@@ -285,7 +304,7 @@ KIT_TOOL_DEPENDENCIES = {
     "hold_gate.tcl": ("vclk_corner.tcl",),
     "face_guard_core.py": ("face_guard.py",),
     "core_preflight.py": ("signoff.py", "face_guard.py"),
-    "kit_contract.py": ("core_io_reference.py",),
+    "kit_contract.py": ("core_io_reference.py", "bound_macro_paths.py"),
 }
 
 
@@ -308,7 +327,7 @@ def copy_signoff_bundle(destination, source=HERE, extra=()):
         if name not in paths and (name in requested or not (destination / name).is_file()):
             path = source / name
             if name in ("clock_family.tcl", "macro_cts_cluster.tcl") and not path.is_file():
-                path = source.parents[1] / "physical/common_flow" / name
+                path = _common_flow(source, name)
             paths[name] = path
         pending.extend(KIT_TOOL_DEPENDENCIES.get(name, ()))
     missing = [name for name, path in paths.items() if not path.is_file()]
@@ -425,7 +444,102 @@ def clock_model_coverage(library_files, instantiated_masters, expected_sha256=No
     return result
 
 
-def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0):
+# COORD ruling 11-02 19:2x (d) (FLOW-22): a composed-child parent counts the child endpoints through the child's SIGNED
+# ETM clock arrival (block arrival contract, OWNER 12.25; standard hierarchical STA) -- default-on.  A model is covered
+# only when ALL of this holds, else the coverage stays UNEXPANDED_CHILD_ETM / NOT RUN (fail closed):
+#   * the consumed Liberty sits next to the child's signed-view provenance (tools/autopilot/export_view.py):
+#     <libdir>/<master>.provenance.json, <libdir>/<master>/provenance.json or <libdir>/provenance.json (type = master;
+#     the Liberty's real path is searched too, so a kit symlink into the view dir works);
+#   * that provenance is a complete signed view (views_status 'signoff') whose files_sha256[<lib name>] is the sha256
+#     of the consumed Liberty (the ETM is the one exported from that child's sign-off);
+#   * its signoff.json exists, has the recorded sha256 and verdict SIGNED;
+#   * the child is signed at the SAME flow tag as this sign-off (OT_FLOW_TAG / --flow-tag, set by resign.py): the
+#     child's kind:resign PROVENANCE.json next to its signoff/ dir (else the view's own flow_tag), and its post-route
+#     LEC is EQUIVALENT.
+FLOW_TAG_ENV = 'OT_FLOW_TAG'
+
+
+def _sha_file(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as stream:
+        for chunk in iter(lambda: stream.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _child_view_provenance(liberty, master):
+    seen = []
+    for d in dict.fromkeys([Path(liberty).parent, Path(os.path.realpath(liberty)).parent]):
+        for f in (d / f'{master}.provenance.json', d / master / 'provenance.json', d / 'provenance.json'):
+            if f in seen or not f.is_file():
+                continue
+            seen.append(f)
+            x = json.loads(f.read_text())
+            if f.name == 'provenance.json' and f.parent == d and (x.get('type') or (x.get('kit') or {}).get('module')
+                                                                  or master) != master:
+                continue
+            return f, x
+    raise ValueError(f'no signed child view provenance next to {liberty}')
+
+
+def signed_child_etm(model, flow_tag):
+    """Evidence that one unexpanded child ETM is its SIGNED child's own export at this flow tag; raises ValueError."""
+    master, lib = model['master'], Path(model['liberty'])
+    if not flow_tag:
+        raise ValueError(f'parent flow tag unknown ({FLOW_TAG_ENV} / --flow-tag unset)')
+    pf, prov = _child_view_provenance(lib, master)
+    if prov.get('views_status') != 'signoff':
+        raise ValueError(f'{pf}: view status {prov.get("views_status")!r}, not a complete signed view')
+    ex = prov.get('export') or {}
+    files = ex.get('files_sha256') or prov.get('files_sha256') or {}
+    names = [k for k in files if Path(k).name == lib.name]
+    if not names or files[names[0]] != model['liberty_sha256']:
+        raise ValueError(f'{lib.name}: sha256 differs from the signed view export {pf}')
+    so = ex.get('signoff')
+    if not so or not Path(so).is_file():
+        raise ValueError(f'{pf}: child signoff.json {so} unavailable')
+    if ex.get('signoff_sha256') and _sha_file(so) != ex['signoff_sha256']:
+        raise ValueError(f'{so}: sha256 differs from the view export record')
+    sd = json.loads(Path(so).read_text())
+    if sd.get('verdict') != 'SIGNED':
+        raise ValueError(f'{so}: child verdict {sd.get("verdict")!r}')
+    rp = Path(so).parent.parent / 'PROVENANCE.json'
+    rec = json.loads(rp.read_text()) if rp.is_file() else {}
+    if rec.get('kind') == 'resign' and rec.get('verdict') in (None, 'SIGNED'):
+        tag, lec = rec.get('flow_tag'), rec.get('lec')
+        lec = lec if not lec or os.path.isabs(lec) else str(rp.parent / lec)
+        lv = json.loads(Path(lec).read_text()).get('verdict') if lec and Path(lec).is_file() else rec.get('lec_verdict')
+        basis = str(rp)
+    else:
+        tag, lv, basis = prov.get('flow_tag') or sd.get('flow_tag'), (prov.get('chain') or {}).get('lec_verdict'), str(pf)
+    if tag != flow_tag:
+        raise ValueError(f'child signed at flow tag {tag!r}, this sign-off at {flow_tag!r}')
+    if lv != 'EQUIVALENT':
+        raise ValueError(f'child post-route LEC {lv!r}')
+    return dict(view_provenance=str(pf), signoff=str(so), flow_tag=tag, flow_basis=basis, lec_verdict=lv)
+
+
+def apply_signed_child_etms(result, flow_tag):
+    """UNEXPANDED_CHILD_ETM -> SIGNED_CHILD_ETM (PASS) when every model is a signed child ETM at this flow tag."""
+    if result.get('status') != 'UNEXPANDED_CHILD_ETM':
+        return result
+    misses = []
+    for model in result['models']:
+        try:
+            model['signed_child_etm'] = signed_child_etm(model, flow_tag)
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            model['signed_child_etm_miss'] = str(error)
+            misses.append(f"{model.get('master')}: {error}")
+    result['signed_child_etm_rule'] = 'COORD 11-02 19:2x (d): child endpoints via the SIGNED child ETM at the same flow tag'
+    if misses:
+        result['signed_child_etm_misses'] = misses
+        return result
+    result.update(status='SIGNED_CHILD_ETM', verdict='PASS', flow_tag=flow_tag,
+                  expanded_child_flop_pairs='BLOCK_ARRIVAL_CONTRACT (signed child ETM)')
+    return result
+
+
+def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0, flow_tag=None):
     """Map exact container-library receipt paths to their immutable host inputs."""
     try:
         if mapping_errors != 0:
@@ -448,7 +562,7 @@ def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0)
         for model in result['models']:
             model['consumed_liberty'] = consumed[model['liberty']]
         result['library_receipt'] = str(receipt_path)
-        return result
+        return apply_signed_child_etms(result, os.environ.get(FLOW_TAG_ENV) if flow_tag is None else flow_tag)
     except (OSError, ValueError, TypeError, KeyError) as error:
         return dict(schema='opentallas.clock_endpoint_coverage.v1', status='UNAVAILABLE', verdict='NOT RUN',
                     raw_pair_basis='visible_clock_pins', expanded_child_flop_pairs='NOT RUN', models=[], reason=str(error))
@@ -585,7 +699,18 @@ proc ot_lib_load {corner receipt {config /work/config.mk}} {
     lappend rows "{\"path\":[ot_lib_json_string $f],\"sha256\":[ot_lib_json_string $digest]}"
   }
   set digest [lindex [exec sha256sum -- $config] 0]
-  foreach f $files {read_liberty $f}
+  # KW-FIX-5 11-04: K/.busfit/<lib> = this lib plus the LEF pins the module does not have (no arcs); all_registers segfaults
+  # without them.  The receipt above and every view hash stay on the kit lib.
+  foreach f $files {
+    set g [file join [file dirname [file dirname $f]] .busfit [file tail $f]]
+    set use $f
+    if {[file exists $g]} {
+      # only a fit made from exactly this kit lib; a stale one would read old timing arcs under this lib's receipt
+      set c [open $g]; gets $c h; close $c
+      if {[string first [lindex [exec sha256sum -- $f] 0] $h] >= 0} {set use $g}
+    }
+    read_liberty $use
+  }
   set fp [open $receipt w]
   puts $fp "{\"status\":\"LOADED\",\"corner\":[ot_lib_json_string $corner],\"source\":\"ORFS make print corner LIB_FILES\",\"config\":[ot_lib_json_string $config],\"config_sha256\":[ot_lib_json_string $digest],\"libraries\":\[[join $rows ,]\]}"
   close $fp
@@ -817,7 +942,7 @@ def ft_fill_model(decl, model, corners):
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None,
-                fwd_ring_min=None):
+                fwd_ring_min=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0):
     """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
     (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
     and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
@@ -891,6 +1016,36 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@PAIR_TGT_SO@", PAIR_TGT_SO_TCL if pair_targets else ""),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
+    if parent_boundary_instances:
+        if not retain_child_clock_witness:
+            raise ValueError("parent boundary observation requires native clock retention")
+        import parent_boundary as PB
+        targets = PB.targets_tcl(parent_boundary_instances)
+        observer = PB.std_tcl(parent_boundary_instances, parent_boundary_std_limit, corner)
+        if observer:
+            guarded = ("if {[catch {\n" + observer + "\n} pb_failure]} {\n"
+                       "  puts \"PARENT_BOUNDARY_STD " + corner + " FAILED $pb_failure\"\n}\n")
+            anchor = "unset ::ot_ps_lib_only\n"
+            if t.count(anchor) != 1:
+                raise ValueError("parent STD observer insertion point is ambiguous")
+            t = t.replace(anchor, anchor + guarded, 1)
+        t = t.replace("set so_pm [ot_ps_measure ", "set ::ot_ps_parent_targets " + targets + "\nset so_pm [ot_ps_measure ", 1)
+    if retain_child_clock_witness:
+        import child_clock_witness as CW
+        # Capture the graph already measured above, without another STA update,
+        # fanin walk, constraint change, or effect on signoff's native verdict.
+        t = t.replace(f"ot_lib_load {corner.upper()} /out/libraries.json", f"set so_witness_libs [ot_lib_load {corner.upper()} /out/libraries.json]", 1)
+        t = t.replace("set so_pm [ot_ps_measure ", "set ::ot_ps_retain_graph 1\nset so_pm [ot_ps_measure ", 1)
+        inputs = ["/sdc/golden.sdc"]
+        if corner == "ff" and core_taps_ff:
+            inputs.append("/sdc/core_taps_ff.sdc")
+        if pair_targets:
+            inputs.append("/sdc/pair_targets.txt")
+        witness = CW.tcl(HERE, corner, [], inputs, reuse_graph=True, library_variable="so_witness_libs")
+        capture = ("if {[catch {\n" + witness + "\n} so_witness_error]} {\n"
+                   "  puts \"CHILD_CLOCK_WITNESS_FAILED $so_witness_error\"\n}\n"
+                   "unset -nocomplain ::ot_ps_retained_pairs ::ot_ps_retained_counts ::ot_ps_retain_graph ::ot_ps_parent_targets ::ot_ps_parent_relations\n")
+        t = t.replace("so PAIR_DONE 1\n", "so PAIR_DONE 1\n" + capture, 1)
     return t
 
 
@@ -1267,7 +1422,7 @@ def pair_skew_result(kv):
 
 
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None,
-               margin_policy=None):
+               margin_policy=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0):
     od = Path(out) / corner
     od.mkdir(parents=True, exist_ok=True)
     mlibs, mmiss = macro_libs(disc["kit"], corner)
@@ -1298,7 +1453,10 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 pair_targets=ptf is not None,
                                                 fwd_ring=fwd_ring_inputs(Path(disc["sdc"]).read_text()),
                                                 fwd_ring_min=fwd_ring_min(Path(disc["sdc"]).read_text()),
-                                                margin_policy=margin_policy))
+                                                margin_policy=margin_policy,
+                                                retain_child_clock_witness=retain_child_clock_witness,
+                                                parent_boundary_instances=parent_boundary_instances,
+                                                parent_boundary_std_limit=parent_boundary_std_limit))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -1320,6 +1478,57 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
 
 
 # ---- record checks -------------------------------------------------------------------------------------------------
+INSERTION_BAND_SCHEMA = "opentallas.insertion_band.v1"
+
+
+def insertion_band_record(kit):
+    """KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the in-flow per-corner clock-insertion window is ADVISORY -- a core
+    stopped only by it routes on and counts on its own sign-off; the band moves to die STA (the die tap delay absorbs
+    it).  This collects what the flow measured so die STA can use it: postcts_gate_<tt|ff>.json (post-GRT pin-register
+    CK arrival mean vs the bound per corner, run_kit*.sh) and vclk_measured_band.json (the FF measured-reference band of
+    the coupled GRT repair, vclk_measured_hold.tcl).  Information only: never read by evaluate(), never a reason.
+    Returns None when the kit carries no in-flow band evidence."""
+    kd = Path(kit)
+    corners, sources = {}, []
+    for c in ("tt", "ff", "ss"):
+        f = kd / f"postcts_gate_{c}.json"
+        if not f.is_file():
+            continue
+        sources.append(f.name)
+        try:
+            d = json.loads(f.read_text())
+        except (OSError, ValueError) as exc:
+            corners[c] = dict(verdict="UNREADABLE", error=str(exc)[:200])
+            continue
+        mean, bound, tol = d.get("pinreg_mean_ps"), d.get("bound_ps"), d.get("tol_ps")
+        win = [round(bound - tol, 3), round(bound + tol, 3)] if all(
+            isinstance(v, (int, float)) for v in (bound, tol)) else None
+        corners[c] = dict(mean_ps=mean, min_ps=d.get("pinreg_min_ps"), max_ps=d.get("pinreg_max_ps"),
+                          n=d.get("pinreg_n"), bound_ps=bound, tol_ps=tol, window_ps=win, dev_ps=d.get("dev_ps"),
+                          in_window=(d.get("dev_ps") is not None and tol is not None and d["dev_ps"] <= tol
+                                     and (d.get("pinreg_n") or 0) > 0),
+                          gate_verdict=d.get("verdict"), band_verdict=d.get("band_verdict"),
+                          band_policy=d.get("band_policy"), parasitics=d.get("parasitics"),
+                          setup_wns_est_ps=d.get("setup_wns_est_ps"), hold_wns_est_ps=d.get("hold_wns_est_ps"))
+    grt_ff = None
+    f = kd / "vclk_measured_band.json"
+    if f.is_file():
+        sources.append(f.name)
+        try:
+            grt_ff = json.loads(f.read_text())
+        except (OSError, ValueError) as exc:
+            grt_ff = dict(band_verdict="UNREADABLE", error=str(exc)[:200])
+    if not corners and grt_ff is None:
+        return None
+    miss = sorted(c for c, v in corners.items() if not v.get("in_window"))
+    if grt_ff is not None and grt_ff.get("band_verdict") not in ("PASS", None):
+        miss.append("grt_ff")
+    return dict(schema=INSERTION_BAND_SCHEMA, verdict="ADVISORY" if miss else "PASS", outside=miss,
+                corners=corners, grt_measured_ff=grt_ff, sources=sources,
+                rule="OWNER 11-03 19:12: in-flow insertion window is advisory (not a stop, not a sign-off reason); "
+                     "the band is carried to die STA")
+
+
 def route_counts(disc):
     """DRC / antenna counts from the ORFS route metrics, else the gate record, else the DRC report."""
     r = dict(drc=None, antenna_nets=None, drc_source=None, antenna_source=None)
@@ -1473,6 +1682,23 @@ def run_internal_core_face_guard(disc, fz, contract):
                 guard_sha256=hashlib.sha256(src.read_bytes()).hexdigest())
 
 
+def synth_types(synth, synth_text):
+    """DIE-S81-50 11-03: the instance-path module types of the flat synth netlist, read from the hierarchical
+    1_2_yosys.v beside it, exactly as the kit's face_guard_core.py passes them (guard types=).  Without them the typed
+    proofs (land_slot registered one-hot write enable in ot_pl_land_local_kw, status copies, origins) cannot see the
+    module of a flattened path, so sign-off failed land_slot on netlists the kit gate proved (S81 lnland 1116 bits).
+    None when the hierarchical netlist is absent or names a different top (the guard then runs untyped, as before)."""
+    raw = Path(synth).with_name("1_2_yosys.v")
+    if not raw.is_file():
+        return None
+    try:
+        import face_guard
+        types = face_guard.hier_module_types(raw.read_text(errors="replace"))
+    except Exception:
+        return None
+    return types if re.search(r"^\s*module\s+\\?" + re.escape(types[0]) + r"\b", synth_text, re.M) else None
+
+
 def run_face_guard(disc, clock_ports=(), library_receipt=None):
     import face_guard
     if not disc.get("synth"):
@@ -1522,20 +1748,28 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         sl = face_guard.kit_strap_list(disc["kit"]) if disc.get("kit") else []
         # QK-CORES-5 10-27: declared proven-dead inputs (kit dead_inputs.json + proof receipt), verified unloaded
         dl = face_guard.kit_dead_list(disc["kit"]) if disc.get("kit") else []
+        # DIE-S81-46 spare (tied) outputs + DIE-KV-61/hr declared timed-face buses, as the face_guard CLI reads them
+        spl = face_guard.kit_spare_list(disc["kit"]) if disc.get("kit") else []
+        tml = face_guard.kit_timed_list(disc["kit"]) if disc.get("kit") else []
         # S81-CORE-LAT-R21: declared landing-ring slots (kit land_slots.json), as the kit face_guard_core / CLI pass them
         lf = Path(disc["kit"]) / "land_slots.json" if disc.get("kit") else None
         land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
         pad_clocks, native_clock_pins = face_guard.kit_pad_clocks(disc['kit'], library_receipt) if disc.get('kit') else ([], set())
         exports = face_guard.sdc_clock_exports(Path(disc['sdc']).read_text()) if pad_clocks else []
-        r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1,
-                             straps=sl, dead=dl, land=land, exports=exports,
+        synth_text = Path(disc["synth"]).read_text(errors="replace")
+        types = synth_types(disc["synth"], synth_text)
+        r = face_guard.guard(synth_text, pins=pins, skip_re=skip_re, ft1=ft1,
+                             straps=sl, dead=dl, land=land, exports=exports, spare=spl, timed=tml,
                              pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
-                             clocks=[p['name'] for p in pad_clocks if p['dir'] == 'in'])
+                             clocks=[p['name'] for p in pad_clocks if p['dir'] == 'in'], types=types)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),
                 fail_counts=r.get("fail_counts"), fails={k: v[:5] for k, v in (r.get("fails") or {}).items()},
                 dead_declared=r.get("dead_declared", []),
+                **({"spare_declared": len(r.get("spare_declared", []))} if spl else {}),
+                **({"timed_buses": tml, "timed_declared": len(r.get("timed_declared", [])),
+                    "timed_first": r.get("timed_declared", [])[:5]} if tml else {}),
                 netlist=disc["synth"], pins=disc.get("pins"), boundary_context=context,
                 one_station_ft_slots=sorted(ft1))
 
@@ -1752,6 +1986,7 @@ def evaluate(rec, insertion_target=None):
         if insertion_target is not None:
             bound["tt"] = insertion_target
         tol = float(bound.get("tol", INSERTION_TOL_PS))
+        band_info = []
         for c in ("tt", "ff"):          # FLOW 10-25: the routed I of each corner within tol of the bound I
             if bound.get(c) is None:
                 continue
@@ -1759,8 +1994,10 @@ def evaluate(rec, insertion_target=None):
             if not pf:
                 continue
             if abs(pf["mean"] - float(bound[c])) > tol:
-                why.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound {float(bound[c]):g} +- "
-                           f"{tol:g}")
+                # OWNER 11-03 19:12 (all dies): the insertion window moves to die STA (the die tap absorbs it); a core
+                # counts on its own sign-off.  Information here, never a reason (signoff.json insertion_band too).
+                band_info.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound "
+                                 f"{float(bound[c]):g} +- {tol:g}")
         raw_clock_verdict = "FAIL" if why else "PASS"
         coverage = {c: C[c]["clock_endpoint_coverage"] for c in SPREAD_CORNERS if C[c].get("clock_endpoint_coverage")}
         unqualified = {c: value for c, value in coverage.items() if value.get("verdict") != "PASS"}
@@ -1771,6 +2008,7 @@ def evaluate(rec, insertion_target=None):
             endpoint_model_coverage=coverage, raw_clock_verdict=raw_clock_verdict,
             raw_pair_basis="visible_clock_pins", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
             pair_skew_info_only=True, pair_skew_info=skew_info, by_corner=sp, problems=why,
+            insertion_band_info=band_info,
             insertion_target_ps=insertion_target, insertion_bound=bound or None)
     else:
         put("clock", "NOT RUN")
@@ -1883,6 +2121,22 @@ def cmd_run(a):
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     require_signoff_bundle()
+    retain_clock = getattr(a, "retain_child_clock_witness", False)
+    parent_targets = tuple(getattr(a, "parent_boundary_instance", ()) or ())
+    parent_std_limit = getattr(a, "parent_boundary_std_query_limit", 0)
+    if parent_targets:
+        if not retain_clock:
+            raise SystemExit("parent boundary observer requires --retain-child-clock-witness")
+        import parent_boundary as PB
+        PB.targets_tcl(parent_targets)
+        if parent_std_limit < 0:
+            raise SystemExit("parent boundary STD query budget must be nonnegative")
+    elif parent_std_limit:
+        raise SystemExit("parent boundary STD budget needs exact --parent-boundary-instance")
+    if retain_clock:
+        if set(a.corners.split(",")) != {"tt", "ff"}:
+            raise SystemExit("child-clock witness retention requires exactly TT,FF")
+        import child_clock_witness as CW
     disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
@@ -1927,6 +2181,8 @@ def cmd_run(a):
             a.ff_vclk_contract = a.ff_vclk_contract or f"kit per-corner insertion binding {bound['source']}"
     out.mkdir(parents=True, exist_ok=True)
     corners = [c for c in a.corners.split(",") if c]
+    if retain_clock:
+        (out / "child_clock_witness.json").unlink(missing_ok=True)
     mpol = _SL.margin_policy(getattr(a, "margin_policy", None))
     mrec = margin_policy_record(mpol, Path(disc["sdc"]).read_text())
     rec = dict(schema=SCHEMA, name=a.name or disc["design"] or base.name, generated=datetime.datetime.now()
@@ -1945,11 +2201,13 @@ def cmd_run(a):
                                        f"{mrec['uncertainty_hold_ps']:g} ps ({mpol}) / related pair skew CPPR INFO (target 80); "
                                        "spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"),
                tool_commit=_git_head())
+    if parent_targets:
+        rec["parent_boundary_request"] = {"instances": list(parent_targets), "std_query_limit": parent_std_limit}
     droop, dinfo = None, None
     if getattr(a, "droop_check", False):
         droop, dinfo = droop_check_tcl(disc)
     with cf.ThreadPoolExecutor(len(corners)) as ex:
-        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop, mpol) for c in corners}
+        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop, mpol, retain_clock, parent_targets, parent_std_limit) for c in corners}
         rec["corners"] = {c: f.result() for c, f in futs.items()}
     if dinfo is not None and "tt" in rec["corners"]:
         tt = rec["corners"]["tt"]
@@ -1979,14 +2237,26 @@ def cmd_run(a):
     rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()), out / "tt" / "libraries.json")
     rec["route"] = route_counts(disc)
     evaluate(rec, a.insertion_target)
+    band = insertion_band_record(disc["kit"]) if disc.get("kit") else None   # KW-FIX-4/BAND: information for die STA, not a reason
+    if band is not None:
+        rec["insertion_band"] = band
     if core_contract:
         rec["core_latency"] = dict(contract=core_contract, measured={
             c: rec["corners"][c].get("insertion_pinflops") for c in rec["corners"] if rec["corners"][c].get("done")})
         rec["checks"]["clock"]["core_latency_contract"] = core_contract.get("kind")
+    if retain_clock:
+        try:
+            rec["child_clock_witness"] = CW.record(out, base, rec["name"], rec, layout="signoff")
+            rec["child_clock_witness"]["status"] = "RETAINED"
+        except (OSError, ValueError, KeyError) as exc:
+            rec["child_clock_witness"] = {"status": "FAILED", "error": str(exc), "qualification": "NOT_ASSERTED"}
+            print(f"CHILD_CLOCK_WITNESS FAILED: {exc}")
     (out / "signoff.json").write_text(json.dumps(rec, indent=1) + "\n")
     print("SIGNOFF " + summary_line(rec))
     for r in rec["reasons"]:
         print(f"  - {r}")
+    if retain_clock and rec["child_clock_witness"]["status"] != "RETAINED":
+        return 2  # requested retention failed; native verdict/reasons are unchanged
     return 0 if rec["verdict"] == "SIGNED" else 1
 
 
@@ -2045,7 +2315,15 @@ def main(argv=None):
     r.add_argument("--ff-bound-ps", type=float,
                    help="bound-ff: declared FF IO insertion (ps) for an already-routed core kit whose sdc_lint ctx has no "
                         "insertion_ff_ps; requires --ff-vclk bound-ff and --ff-vclk-contract naming its source")
+    r.add_argument("--parent-boundary-instance", action="append", default=[],
+                   help="Exact actual histogram instance to retain before clock-reference dedup; no wildcards")
+    r.add_argument("--parent-boundary-std-query-limit", type=int, default=0,
+                   help="Opt-in bounded original-STD path queries for selected histogram interfaces;0 records no slack")
+    r.add_argument("--retain-child-clock-witness", action="store_true",
+                   help="Passively retain native TT/FF clock graph in these existing sessions; no coverage waiver")
     r.add_argument("--dry", action="store_true")
+    r.add_argument("--flow-tag", help="released flow tag of this sign-off (default $OT_FLOW_TAG; resign.py sets it): "
+                   "unexpanded child ETMs count when each is its signed child's export at the same tag")
     r.add_argument("--margin-policy", choices=_SL.MARGIN_POLICIES, default=None,
                    help="sign-off margin policy: nominal (default, OWNER 12.24b/c: setup clock uncertainty 0 applied "
                         "in-session, hold 25 unchanged) | legacy (SDC setup 60 / hold 25 as written; A/B and margin "
@@ -2074,6 +2352,8 @@ def main(argv=None):
     if a.cmd == "bundle":
         print("SIGNOFF_BUNDLE " + " ".join(copy_signoff_bundle(a.out, extra=a.extra)))
         return 0
+    if a.cmd == "run" and a.flow_tag:
+        os.environ[FLOW_TAG_ENV] = a.flow_tag
     if a.cmd == "run" and a.ff_bound_ps is not None and a.ff_vclk != "bound-ff":
         ap.error("--ff-bound-ps requires --ff-vclk bound-ff")
     if a.cmd == "run" and a.ff_bound_ps is not None and not (a.ff_vclk_contract or "").strip():

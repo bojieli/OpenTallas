@@ -187,11 +187,165 @@ def load(core, root=None, require_signed=True, plan_type=None):
     return out
 
 
+def _lib_groups(text, kind):
+    """Brace-matched Liberty groups, including unnamed memory/timing groups."""
+    for m in re.finditer(r"\b" + kind + r"\s*\(\s*([^)]*)\)\s*\{", text):
+        i, depth = m.end(), 1
+        while depth and i < len(text):
+            depth += (text[i] == '{') - (text[i] == '}')
+            i += 1
+        if depth:
+            raise ContractError(f'truncated Liberty {kind} group')
+        yield m.group(1).strip().strip('"'), text[m.end():i-1]
+
+
+def native_memory_clock_model(core, root=None):
+    """Reference a verified native SRAM CLK timing model, never a CTS mean.
+
+    Recognition requires the aligned-v2 producer's SRAM identity plus complete
+    TT/FF native memory interface arcs. Ordinary logic still needs measured means.
+    """
+    lib = C.resolve(core['lib'], root)
+    module = core.get('module', core['inst'])
+    meta = lib.parent / (module + '.json')
+    if not meta.is_file():
+        return None
+    aligned = json.loads(meta.read_text()).get('alignment_v2', {})
+    if aligned.get('kind') != 'sram':
+        return None
+    spec = aligned.get('spec', {})
+    if spec.get('name') != module or aligned.get('verification', {}).get('pass') is not True:
+        raise ContractError(f'{meta}: native SRAM identity/verification missing')
+    references = {}
+    clock_names = None
+    for corner in ('tt', 'ff'):
+        selected = lib if corner == 'tt' else lib.with_name(lib.name.replace('_tt.lib', '_ff.lib'))
+        if corner == 'tt' and not lib.name.endswith('_tt.lib'):
+            raise ContractError(f'{lib}: native SRAM requires explicit TT/FF selected views')
+        if not selected.is_file():
+            raise ContractError(f'{selected}: native SRAM selected corner absent')
+        text = selected.read_text()
+        cells = list(_lib_groups(text, 'cell'))
+        if len(cells) != 1 or cells[0][0] != module:
+            raise ContractError(f'{selected}: native SRAM cell identity mismatch')
+        body = cells[0][1]
+        memories = list(_lib_groups(body, 'memory'))
+        if len(memories) != 1 or not re.search(r'\btype\s*:\s*ram\s*;', memories[0][1]):
+            raise ContractError(f'{selected}: native SRAM memory group absent')
+        for key, expected in [('address_width', (int(spec['words'])-1).bit_length()), ('word_width', int(spec['bits']))]:
+            if not re.search(r'\b' + key + r'\s*:\s*' + str(expected) + r'\s*;', memories[0][1]):
+                raise ContractError(f'{selected}: native SRAM {key} mismatch')
+        pins = list(C._groups(body))
+        clocks = sorted({name for _, name, b in pins if re.search(r'\bclock\s*:\s*true\s*;', b)})
+        if len(clocks) != 1 or (clock_names is not None and clocks != clock_names):
+            raise ContractError(f'{selected}: native SRAM requires matching single clock pins')
+        clock_names = clocks
+        counts = dict(setup=0, hold=0, clk_to_q=0)
+        for _, name, b in pins:
+            direction = re.search(r'\bdirection\s*:\s*(input|output)\s*;', b)
+            if name in clocks or not direction:
+                continue
+            required = ('setup', 'hold') if direction[1] == 'input' else ('clk_to_q',)
+            found = set()
+            for _, arc in _lib_groups(b, 'timing'):
+                related = re.search(r'\brelated_pin\s*:\s*"?([^";\s]+)"?\s*;', arc)
+                typ = re.search(r'\btiming_type\s*:\s*(\w+)\s*;', arc)
+                if not related or related[1] != clocks[0] or not typ:
+                    continue
+                category = ('setup' if typ[1].startswith('setup_') else 'hold' if typ[1].startswith('hold_') else
+                            'clk_to_q' if typ[1] in ('rising_edge', 'falling_edge') else None)
+                if category not in required:
+                    continue
+                groups = ('cell_rise', 'cell_fall') if category == 'clk_to_q' else ('rise_constraint', 'fall_constraint')
+                for group in groups:
+                    tables = list(_lib_groups(arc, group))
+                    values = re.findall(r'\bvalues\s*\((.*?)\)\s*;', tables[0][1], re.S) if tables else []
+                    tokens = re.split(r'[\s,"\\]+', ''.join(values).strip())
+                    try:
+                        nums = [float(n) for n in tokens if n]
+                    except ValueError:
+                        nums = []
+                    if not nums or any(not math.isfinite(n) for n in nums):
+                        raise ContractError(f'{selected}:{name}: native {category} {group} table missing')
+                found.add(category)
+            if not set(required) <= found:
+                raise ContractError(f'{selected}:{name}: native interface arcs incomplete: {required}')
+            for category in found:
+                counts[category] += 1
+        if not all(counts.values()):
+            raise ContractError(f'{selected}: native SRAM interface arc census empty')
+        references[corner] = dict(lib=str(selected), sha256=digest(selected), arc_census=counts)
+    return dict(schema='opentallas.native_memory_clock_model.v1', inst=core['inst'], module=module,
+                clock_pins=clock_names, basis='native_liberty_clock_pin', metadata=str(meta),
+                metadata_sha256=digest(meta), corners=references)
+
+
+def native_clock_models(P, tn, root=None):
+    models = []
+    t = P.types[tn]
+    for core in t.get('hard_cores', []):
+        model = native_memory_clock_model(core, root)
+        if model is None:
+            continue
+        for tap in t.get('clock', {}).get('taps', []):
+            name = tap.get('name', '')
+            if tap.get('kind') == 'core' and (name == core['inst'] or name.startswith(core['inst'] + '.')):
+                raise ContractError(f"{tn}/{name}: native SRAM early compensation needs an explicit native-clock policy")
+        models.append(model)
+    return models
+
+
+def grid_core_estimate(t, core, root=None):
+    """KIT-TRIAGE-1/leafmean 11-01 (class, default-on; OWNER 12.28b closure first): a hard core of an unsigned
+    estimate-form kit that is NOT a die early tap (tap 'grid': the partition-local tree reaches its pin) and whose
+    selected view carries no contract, signoff or insertion record keeps the legacy kit row of every other unsigned
+    kit (DIE-KV-60/taps form): the selected view's liberty clock latency, basis legacy_etm_max_bound, labelled
+    signed=False / release_qualified=False.  It is never a mean and never feeds a die tap; SIGNED means replace it once
+    the core view is signed.  Rows for early-tap pins are never estimated here (the tap-vs-mean check stays)."""
+    if not core.get('lib'):
+        return None
+    lib = C.resolve(core['lib'], root)
+    if not lib.is_file() or any((lib.parent / f).is_file()
+                                for f in ('clock_contract.json', 'signoff.json', 'insertion.json')):
+        return None
+    tt = C.lib_clocks(lib)
+    if not tt or any(C.core_tap_of(t, core['inst'], pin) for pin in tt):
+        return None
+    ff_lib = lib.with_name(lib.name.replace('_tt.lib', '_ff.lib'))
+    ff = C.lib_clocks(ff_lib) if lib.name.endswith('_tt.lib') and ff_lib.is_file() else {}
+    src = f'{core["lib"]}: liberty clock latency (legacy ETM bound, estimate; no measured mean in the selected view)'
+    rows = []
+    for pin, v in sorted(tt.items()):
+        fv = ff.get(pin, v)
+        corners = {c: dict(mean_ps=round(float(x['rise']), 2), n=0, basis='legacy_etm_max_bound', source=src)
+                   for c, x in (('tt', v), ('ff', fv))}
+        rows.append(dict(inst=core['inst'], module=core.get('module', core['inst']), pin=pin,
+                         rise_ps=corners['tt']['mean_ps'], fall_ps=round(float(v['fall']), 2),
+                         corners=corners, basis='legacy_etm_max_bound', signed=False, release_qualified=False,
+                         contract_source=src, signoff_source=None, lib=core['lib'], tap='grid'))
+    return rows
+
+
 def latency_table(P, tn, root=None, require_signed=True):
     rows = []
     t = P.types[tn]
+    nolib = sorted(c.get('module', c['inst']) for c in t.get('hard_cores', []) if 'lib' not in c)
+    if nolib:
+        raise ContractError(f'{tn}: WAIT-DEP hard cores have no selected lib (no routed/provisional view yet): '
+                            + ', '.join(dict.fromkeys(nolib)))
+    native = {m['inst'] for m in native_clock_models(P, tn, root)}
     for core in t.get('hard_cores', []):
-        for pin, value in sorted(load(core, root, require_signed, plan_type=t).items()):
+        if core['inst'] in native:
+            continue
+        try:
+            loaded = load(core, root, require_signed, plan_type=t)
+        except ContractError:
+            est = None if require_signed else grid_core_estimate(t, core, root)
+            if est is None:
+                raise
+            rows.extend(est)
+            continue
+        for pin, value in sorted(loaded.items()):
             vals = value['corners']
             rows.append(dict(inst=core['inst'], module=core.get('module', core['inst']), pin=pin,
                              rise_ps=vals['tt']['mean_ps'], fall_ps=vals['tt']['mean_ps'],

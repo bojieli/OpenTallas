@@ -75,3 +75,76 @@ def test_opaque_library_body_change_keeps_interface_but_width_change_does_not(tm
     wider = 'module leaf(input wire [8:0] d, output wire [7:0] q); assign q=d[7:0]; endmodule'
     assert S.same_library_interface(bind_elab, old, body, tmp_path/'body')
     assert not S.same_library_interface(bind_elab, old, wider, tmp_path/'width')
+
+
+def test_exact_readset_does_not_expand_rtl_search_roots():
+    metadata={'full':['/old/wt/rtl/kv/full.sv'], 'lib':['/old/wt/rtl/kv/macro.sv']}
+    recipe={'rtl_roots':['rtl'], 'files':['rtl/kv/explicit.sv']}
+    used=S.used_hdl_paths(['/old/bind/structural_full/die.sv'],recipe,metadata)
+    assert used=={'rtl/kv/full.sv','rtl/kv/macro.sv','rtl/kv/explicit.sv'}
+    changed={'rtl/s81/unrelated.sv','rtl/hbm/unrelated.sv','rtl/kv/full.sv','rtl/kv/macro.sv'}
+    assert changed & used=={'rtl/kv/full.sv','rtl/kv/macro.sv'}
+
+
+def test_opaque_parameter_default_change_is_not_same_interface(tmp_path):
+    import sys
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'die_plan'))
+    import bind_elab
+    old='module leaf #(parameter W=8)(input wire [W-1:0] d, output wire [W-1:0] q); assign q=d; endmodule'
+    new=old.replace('W=8','W=9')
+    assert not S.same_library_interface(bind_elab,old,new,tmp_path/'param')
+
+
+def test_nominated_source_preparation_uses_crit_without_changing_memory(tmp_path, monkeypatch):
+    import types
+    calls=[]
+    def run(cmd,**kwargs):
+        calls.append(cmd)
+        return types.SimpleNamespace(returncode=0, stdout='AP_JSON {"verdict":"FAIL","reason":"fixture"}\n')
+    monkeypatch.setattr(S.subprocess,'run',run)
+    for critical in (False,True):
+        spec={'die':'qwen_kvsys','tip':'a'*40,'result':str(tmp_path/'result.json'),
+              'die_config':{'gen_host':'intel1','bind_mem_gb':12,'src_follow':{'critical':critical}}}
+        f=tmp_path/'spec.json';f.write_text(json.dumps(spec));S.worker(f)
+        cmd=calls[-1]
+        assert ('--crit' in cmd)==critical
+        assert cmd[cmd.index('--mem')+1]=='12'
+
+
+
+def test_unrelated_clock_mesh_contract_unchanged(tmp_path):
+    src=tmp_path/'src'; src.mkdir(); plan=src/'plan.json'
+    for mesh in ({'sites_file':'../outside.json'}, {'sites_file':'missing.json','sites_sha256':'other'}):
+        plan.write_text(json.dumps({'clock':{'mesh':mesh}}))
+        S.materialize_clock_mesh(src,plan,lambda _: (_ for _ in ()).throw(AssertionError('unrelated recovery')))
+
+
+def test_known_clock_mesh_recovery_stays_strict(tmp_path):
+    import gzip
+    import pytest
+    src=tmp_path/'src'; src.mkdir(); plan=src/'plan.json'
+    known='d25f60c6f22e6921a36d73a850b3bc8a3822f0e5545879ff05e84bd1755513db'
+    plan.write_text(json.dumps({'clock':{'mesh':{'sites_file':'sites.json','sites_sha256':known}}}))
+    with pytest.raises(ValueError,match='hash mismatch'):
+        S.materialize_clock_mesh(src,plan,lambda _:gzip.compress(b'mutant'))
+    assert not (src/'sites.json').exists()
+    plan.write_text(json.dumps({'clock':{'mesh':{'sites_file':'../outside.json','sites_sha256':known}}}))
+    with pytest.raises(ValueError,match='escapes'):
+        S.materialize_clock_mesh(src,plan,lambda _:b'')
+
+
+def test_untracked_base_inputs_copied_without_overwriting(tmp_path):
+    import subprocess
+    old, new = tmp_path / "old", tmp_path / "new"
+    for r in (old, new):
+        subprocess.run(["git", "init", "-q", str(r)], check=True)
+    (old / ".gitignore").write_text("*.pyc\n")
+    (old / "kv37").mkdir()
+    (old / "kv37" / "pads.json").write_text("{}")
+    (old / "keep.txt").write_text("old")
+    (old / "x.pyc").write_text("")
+    (new / "keep.txt").write_text("tracked-new")
+    got = S.copy_untracked_inputs(old, new)
+    assert (new / "kv37" / "pads.json").read_text() == "{}"
+    assert (new / "keep.txt").read_text() == "tracked-new"
+    assert "x.pyc" not in got and "kv37/pads.json" in got

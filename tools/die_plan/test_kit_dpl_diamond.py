@@ -34,9 +34,9 @@ def test_dpl_diamond_kit():
 
 
 def test_budget_form_unchanged():
-    assert gen_phys._dpl_args({}) == [] and gen_phys._dpl_args({}, True) == [LINE]
+    assert gen_phys._dpl_args({}) == [] and gen_phys._dpl_args({}, diamond=True) == [LINE]
     assert gen_phys._dpl_args({"dpl_legalizer": "diamond"}) == [LINE]
-    assert gen_phys._dpl_args({"dpl_legalizer": "diamond"}, True) == [LINE]
+    assert gen_phys._dpl_args({"dpl_legalizer": "diamond"}, diamond=True) == [LINE]
 
 
 def test_gen_phys_cli_dpl_diamond_only_named_types():

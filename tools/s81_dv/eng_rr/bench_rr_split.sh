@@ -7,6 +7,8 @@
 # Prints ENG_RR_SPLIT PASS <variant> or ENG_RR_SPLIT FAIL <variant>.  Run from the repo root.
 # SPLIT_SV=<file> (S81-KITS-RTLA 10-24) replaces dsdv_eng_rr_split.sv, e.g. the pre-fix split (H cores without the in_w
 # capture flop) as a negative control of the +1-edge crossing check: must FAIL.
+# XDEF="+define+..." (DIE-S81-51/RF-G 11-03) adds Verilator defines to the build (e.g. +define+OT_S81ENG_HXL = the E
+# hx_res landing stage; +define+OT_S81ENG_HXL_MUT = its negative control, must FAIL).
 set -u
 W=$(realpath -m ${1:?work}); V=${2:?variant}; shift 2; mkdir -p $W
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -17,13 +19,17 @@ print(' '.join(re.search(r'F=\((.*?)\)\n', open(sys.argv[1]).read(), re.S).group
 PY
 ))
 F=("${F[@]:0:${#F[@]}-1}" rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv
+   rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer_pr.sv
+   physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0_pc/ot_sram_1r1w_128x256_m1_r0c0_pc.v
+   physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0_pc/ot_sram_1r1w_512x128_m4_r0c0_pc.v
+   physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r0c0_pc/ot_sram_1r1w_64x512_m1_r0c0_pc.v
    rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv ${SPLIT_SV:-rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv} "${F[@]: -1}")
 case $V in base) G=();; sm1) G=(-GSPLIT_MUT=1);; sm2) G=(-GSPLIT_MUT=2);; *) echo "ENG_RR_SPLIT FAIL bad variant $V"; exit 2;; esac
 python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom > $W/prep.log 2>&1 || { echo "ENG_RR_SPLIT FAIL prep_rom"; exit 1; }
 $VL --version
 $VL --binary --timing -j ${J:-8} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
     -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 +define+OT_S81ENG_RR_N32 +define+OT_S81ENG_RR_MUL_N32 +define+OT_ENGRAM_CRCMAT \
-    +define+OT_S81ENG_RR_SPLIT_LOCKSTEP --top-module tb_dsdv_eng_rr "${G[@]}" "${F[@]}" --Mdir $W/obj -o sim > $W/build.log 2>&1 \
+    +define+OT_S81ENG_RR_SPLIT_LOCKSTEP ${XDEF:-} --top-module tb_dsdv_eng_rr "${G[@]}" "${F[@]}" --Mdir $W/obj -o sim > $W/build.log 2>&1 \
     || { tail -20 $W/build.log; echo "ENG_RR_SPLIT FAIL build"; exit 1; }
 $W/obj/sim +OT_ROM_DIR=$W/rom "$@" > $W/run.log 2>&1
 python3 tools/s81_dv/eng_rr/check_eng_rr.py $W/run.log $PWD >> $W/run.log 2>&1

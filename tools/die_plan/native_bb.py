@@ -8,6 +8,7 @@ only at actual instance parameters. This does not change hard macro timing.
 from pathlib import Path
 import argparse
 import json
+import os
 import re
 import sys
 
@@ -47,6 +48,11 @@ set ot_bbh {}
 foreach ot_f $::env(VERILOG_FILES) { if {[regexp {_bb[.](v|sv)$} $ot_f]} { lappend ot_bbh $ot_f } }
 if {[llength $ot_bbh]} {
   set ot_sp $::env(RESULTS_DIR)/1_2_yosys_signed_params
+  # KW-FIX-4 11-03: content labels (INSTANCE/VIAMAP strings) on EVERY header master, not only t:ot_rom_* (generated
+  # ROM elements ot_v41_rom_elem_* kept '#(.INSTANCE("..."))' -> STA-0171); the metadata JSON above keeps them
+  foreach {ot_t ot_ps} [exec python3 -I @SELF@ labels {*}$ot_bbh] {
+    foreach ot_p $ot_ps { yosys setparam -unset $ot_p t:$ot_t }
+  }
   set ot_types [exec python3 -I @SELF@ types {*}$ot_bbh]
   set ot_fh [open $ot_sp.tsv w]
   foreach {ot_t ot_ps} $ot_types {
@@ -142,8 +148,59 @@ def _decls(items, params):
             params[name[-1]] = parse_value(rhs)
 
 
-def header_params(text):
+def env_defines(env=None):
+    """macro names of the kit's VERILOG_DEFINES (ORFS config.mk export, '-DNAME' / '-DNAME=V' / '-D NAME')"""
+    toks = ((env if env is not None else os.environ).get("VERILOG_DEFINES") or "").split()
+    out, i = set(), 0
+    while i < len(toks):
+        t = toks[i]
+        if t == "-D" and i + 1 < len(toks):
+            out.add(toks[i + 1].split("=", 1)[0]); i += 2; continue
+        if t.startswith("-D") and len(t) > 2:
+            out.add(t[2:].split("=", 1)[0])
+        i += 1
+    return out
+
+
+_PP = re.compile(r"^\s*`(ifdef|ifndef|elsif|else|endif|define|undef)\b\s*([A-Za-z_]\w*)?")
+
+
+def preprocess(text, defines=()):
+    """KW-FIX-4 11-03 (S81 col dsfd_cfifo_crs4 LGATE): keep only the active branch of `ifdef/`ifndef/`elsif/`else/
+    `endif (with the kit's defines + header `define/`undef), as yosys reads the header.  A parameter declared in two
+    branches was 'unknown' and every override of it stopped synth (OT_SIGNED_PARAM_SERIALIZE)."""
+    defs, out, stack = set(defines), [], []          # stack: (this branch active, some branch taken, parent active)
+    for ln in text.splitlines():
+        m = _PP.match(ln)
+        act = all(a for a, _, _ in stack[-1:]) if stack else True
+        if not m:
+            out.append(ln if act else "")
+            continue
+        d, name = m.group(1), m.group(2)
+        if d in ("ifdef", "ifndef"):
+            par = act
+            on = par and ((name in defs) == (d == "ifdef"))
+            stack.append((on, on, par))
+        elif d == "elsif" and stack:
+            _, taken, par = stack.pop()
+            on = par and not taken and name in defs
+            stack.append((on, taken or on, par))
+        elif d == "else" and stack:
+            _, taken, par = stack.pop()
+            stack.append((par and not taken, True, par))
+        elif d == "endif" and stack:
+            stack.pop()
+        elif d == "define" and act and name:
+            defs.add(name)
+        elif d == "undef" and act and name:
+            defs.discard(name)
+        out.append("")
+    return "\n".join(out)
+
+
+def header_params(text, defines=None):
     """{module: {param: (kind, value)}} of every module in a *_bb.v header (port-list and body parameters)."""
+    text = preprocess(text, env_defines() if defines is None else defines)
     text = re.sub(r"/\*.*?\*/", " ", re.sub(r"//[^\n]*", " ", text), flags=re.S)
     text = re.sub(r"\(\*.*?\*\)", " ", text, flags=re.S)
     mods = {}
@@ -164,6 +221,17 @@ def header_params(text):
             _decls(_split_top(st.group(1)), params)
         mods[name] = params
     return mods
+
+
+def label_types(paths, names=("INSTANCE", "VIAMAP")):
+    """Tcl list 'type {params}' of header masters declaring a string content label (INSTANCE / VIAMAP)"""
+    hp = headers_params(paths)
+    parts = []
+    for mod in sorted(hp):
+        ps = sorted(p for p, (k, _) in hp[mod].items() if k == "str" and p in names)
+        if ps:
+            parts.append(f"{mod} {{{' '.join(ps)}}}")
+    return " ".join(parts)
 
 
 def headers_params(paths):
@@ -245,6 +313,9 @@ def main_plan(tsv, ys_out, json_out, headers):
     return 0
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "labels":
+        print(label_types(sys.argv[2:]))
+        sys.exit(0)
     if len(sys.argv) > 1 and sys.argv[1] == "types":
         print(numeric_types(sys.argv[2:]))
         sys.exit(0)

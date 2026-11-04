@@ -42,3 +42,13 @@ def test_actual_synth_stat_filename_is_read_as_stat_and_discovered(tmp_path):
 def test_pure_hierarchy_local_zero_dash_keeps_measured_total():
     text='=== top ===\n 38 1.0 - - cells\n=== design hierarchy ===\n 38 1.0 - - top\n'
     assert C.parse_stat(text)=={'top':38}
+
+
+def test_plan_of_record_dir_also_reads_die_dir_evidence(tmp_path):
+    """FLOW-22 11-02: QC plan_qc52 sits in qwen_compute/plan_of_record/, its cells_per_type in qwen_compute/plan_notes.json"""
+    por = tmp_path / "plan_of_record"; por.mkdir()
+    (tmp_path / "plan_notes.json").write_text('{"cells_per_type": {"a": {"cells": 5}}}')
+    (por / "cells_est.json").write_text('{}')
+    assert C.discover(por) == [por / "cells_est.json", tmp_path / "plan_notes.json"]
+    other = tmp_path / "d44c"; other.mkdir()
+    assert C.discover(other) == []

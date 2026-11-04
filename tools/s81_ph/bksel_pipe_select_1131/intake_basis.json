@@ -1,0 +1,21 @@
+{
+  "base_main": "eba87c10258f47b9146adcf7b0f7c1467bed4aa6",
+  "production_pipeline_sha256": "da2becfa97afb74a5d2c4767958d174a11865b2ba00ff1b25531e1329056ab29",
+  "proof_engine_sha256": "2f60d61b39dcade31d9ab3a07483cc150ac76cc1f4f9523dedef7ac0a9b74aa2",
+  "proof_engine_git": "65cf93316",
+  "current_main_engine_sha256": "2d45c7d81e77b24362dd5f535b46131e806ce0cce2aa402c3262e1bd879924e6",
+  "current_main_engine_change": "bb82da676 adds --single-unit to independent Slang replay when synthesis used read_verilog; original receipts identify the earlier frozen exact inputs/tool. Future GEN re-runs normal source gates.",
+  "already_main": [
+    "rtl_patches and lec_hints recipe support",
+    "normal inductive hint API",
+    "b66d3a792 validated final GRT estimator-state fix",
+    "2fe29a90f exact selected-corner ETM exporter",
+    "75a109ba1 / d2b562de1 unplaced setup guard and hook chaining"
+  ],
+  "not_adopted": [
+    "production/default recipes or RTL",
+    "any physical relocation/helper",
+    "LEF/LIB/DEF/ODB views",
+    "physical timing/routing/token qualification"
+  ]
+}

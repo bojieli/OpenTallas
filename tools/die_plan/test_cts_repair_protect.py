@@ -1,4 +1,5 @@
 """FLOW-20 11-01: cts_repair_protect.tcl keeps CTS-stage repair_timing off the clock tree (OpenSTA RequiredCmp assert)."""
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -57,4 +58,4 @@ def test_release_on_error():
 
 def test_gen_phys_wires_hook():
     src = Path(__file__).with_name('gen_phys.py').read_text()
-    assert '"cts_repair_protect.tcl", "pg_connect.tcl")' in src and 'source /work/cts_repair_protect.tcl' in src
+    assert re.search(r'"cts_repair_protect\.tcl", "pg_connect\.tcl"(, "[\w.]+")*\)', src) and 'source /work/cts_repair_protect.tcl' in src

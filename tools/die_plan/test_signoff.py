@@ -181,8 +181,9 @@ def test_session_measures_pairs_before_source_latency_zeroing():
 def test_insertion_target():
     rec = signoff.evaluate(record(), insertion_target=250.0)
     assert rec["checks"]["clock"]["verdict"] == "PASS"
-    rec = signoff.evaluate(record(), insertion_target=150.0)
-    assert rec["checks"]["clock"]["verdict"] == "FAIL"
+    rec = signoff.evaluate(record(), insertion_target=150.0)   # OWNER 11-03 19:12: window = information for die STA
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert any("pin-flop insertion" in p for p in rec["checks"]["clock"]["insertion_band_info"])
 
 
 def test_drv_unconstrained_drc_antenna():

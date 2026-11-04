@@ -30,6 +30,34 @@ def ring_write_fall(plan, tn=None):
     only = rh.get("write_fall_types")
     return tn is None or only is None or tn in only or tn.split("__")[0] in only
 
+def ring_write_reg(plan, tn, bus):
+    """WREG-1 (DIE-HEAD-58 TURNB 11-03): {"depth": 1, "dsrep": n} when receiver type tn opts bus into the registered
+    ring writer (partition_types[tn].clock.landing_ring_wreg = {"buses": [...], "dsrep": n}; a split copy
+    "<base>__<suffix>" reads its base): t_rst_n registered at the face + one write-enable flop per (slot, 64-bit chunk)
+    (ot_dp_clk_landing_cas WREG=1) and n read-select copies per chunk (DSREP).  The writer starts one fclk edge later, so
+    count_align_bind.strap_ties ties K + 1 (the landing_writer_start W=1 rule); the word stream q is unchanged.
+    None when absent."""
+    pt = plan.get("partition_types", {})
+    t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
+    cfg = (t.get("clock") or {}).get("landing_ring_wreg")
+    if not cfg:
+        return None
+    if not isinstance(cfg, dict) or not isinstance(cfg.get("buses"), list):
+        raise ValueError(f"{tn}: clock.landing_ring_wreg must be {{\"buses\": [...], \"dsrep\": n}}")
+    if bus not in cfg["buses"]:
+        return None
+    dsrep = cfg.get("dsrep", 1)
+    if isinstance(dsrep, bool) or not isinstance(dsrep, int) or dsrep < 1 or 64 % dsrep:
+        raise ValueError(f"{tn}: landing_ring_wreg.dsrep must divide 64")
+    # FREG-1 (DIE-HEAD-58 ruling 11-03): "freg": true adds the rising-fclk face register on d + t_rst_n (cas FREG=1):
+    # data and writer start one cycle later together -> one more K at bind (keeps the ring window) = ONE added data
+    # cycle on that crossing (q one clk later; TB_FREG bench)
+    freg = cfg.get("freg", False)
+    if not isinstance(freg, bool):
+        raise ValueError(f"{tn}: landing_ring_wreg.freg must be a boolean")
+    return dict(depth=1 + int(freg), dsrep=dsrep, freg=freg)
+
+
 def ring_taps(plan, tn):
     """[(x, y)] of the taps whose wavefront relays drive rst_n_t<i> in type tn (type frame): the index space a ring
     reset node rst_n_t<i> refers to.  A plan clock.taps list of kind 'core' entries (S81 12.8a plan-defined core
@@ -549,7 +577,7 @@ class Landings:
         taps = ring_taps(self.plan, key)
         tap = min(range(len(taps)), key=lambda i: abs(taps[i][0]-xy[0]) + abs(taps[i][1]-xy[1])) if taps else 0
         reset = f"rst_n_t{tap}"
-        relay = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
+        relay = re.search(r"ot_dp_r(gate|relay)(?:_nl)?\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
         if relay is None:
             raise LandingError(f"{tn}: timed local wavefront reset relay {reset} not found (region monitor)")
         if relay.group(1) == "gate":
@@ -736,7 +764,7 @@ class Landings:
                               r"\s*\)[^;]*?\.export_q\(\s*(" + re.escape(raw) + r"_reader_raw)\s*\)\s*\);", body, re.S)
             done = None if prior is None else dict(net=prior.group(2), instance=prior.group(1), port_net=raw,
                                                     added_flops=1, added_cycles=0)
-            registered = done is not None or re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
+            registered = done is not None or re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" +
                                    re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
             if not registered:
                 raise LandingError(f"{tn}.{bus}: reader START raw reset {raw} has no registered wavefront driver")
@@ -803,7 +831,7 @@ class Landings:
                 raise LandingError(f"{tn}.{bus}: writer START stage {i} needs finite xy_um")
             if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
                 raise LandingError(f"{tn}.{bus}: writer START stage {i} needs a local registered raw reset")
-            registered = re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
+            registered = re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" +
                                    re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
             if not registered:
                 raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} has no registered wavefront driver")
@@ -1044,6 +1072,15 @@ class Landings:
                 # (slots, count, tags, t_rst_n) on the falling fclk edge (ot_dp_clk_landing_ca/_cas WFALL, DIE-HEAD-48)
                 if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
                     ring_mod = ring_mod[:-1] + ", .WFALL(1))"
+                # WREG-1 (DIE-HEAD-58 TURNB): registered writer start + per-(slot, chunk) write-enable flops; strap form
+                # only (the strap K carries the +1, count_align_bind.strap_ties)
+                wreg = ring_write_reg(self.plan, key, b) or ring_write_reg(self.plan, tn, b)
+                if wreg:
+                    if not cat.get("straps"):
+                        raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
+                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (", .FREG(1))" if wreg["freg"] else ")")
+                    self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]),
+                                                        strap_k_delta=wreg["depth"])
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
@@ -1152,7 +1189,32 @@ class Landings:
         lines[-1] = code.rstrip() + "," + ((" //" + comment) if sep else "")
         head = "\n".join(lines) + "\n" + ",\n".join(extra)
         self.emitted_types.add(tn)
-        return head + marker + "\n".join(logic) + "\n" + body
+        emitted = head + marker + "\n".join(logic) + "\n" + body
+        return self._regional_origin_source(tn, key, emitted)
+
+    def _regional_origin_source(self, tn, key, text):
+        """Default-OFF selected TT_C source event; never grants global/physical credit."""
+        cfg = self.types[key].get('clock', {}).get('landing_regional_origin')
+        if not cfg or not cfg.get('enabled', False):
+            return text
+        if tn != 'tt_ctlm' or key != 'tt_ctlm':
+            raise LandingError('regional START event supports only the selected existing tt_ctlm type')
+        model_path = Path(cfg['model_file'])
+        if not model_path.is_absolute():
+            raise LandingError('regional START model_file must identify the exact absolute frozen snapshot')
+        data = model_path.read_bytes()
+        if hashlib.sha256(data).hexdigest() != cfg['model_sha256']:
+            raise LandingError('regional START model content differs from its paired source event')
+        from tt_regional_origin.generated_adapter import apply_generated_type
+        emitted, rec = apply_generated_type(tn, text, json.loads(data), enabled=True)
+        placements = self.reset_placements.setdefault(tn, {})
+        rec['original_count_origin'] = placements.get('count_origin')
+        placements['count_origin'] = rec
+        # Existing source verifiers/land_slots must explicitly consume this new
+        # kind; retaining pending consumers prevents a local source transform
+        # from masquerading as a complete global reset/clock derivation.
+        self.__dict__.setdefault('regional_source_pending', {})[tn] = rec['pending_consumers']
+        return emitted
 
     def _origin_clock_port(self, tn, role, head, type_key=None):
         key = type_key or tn
@@ -1475,7 +1537,7 @@ class Landings:
             if (not isinstance(xy, list) or len(xy) != 2 or
                     any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)):
                 raise LandingError(f"{tn}: landing_local_resets.{name} needs finite xy_um")
-            if not isinstance(raw, str) or not re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
+            if not isinstance(raw, str) or not re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
                                                           r"\s*\)[^;]*?\);", allrtl, re.S):
                 raise LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver")
             net, inst = f"cland_lrst_{name}", f"u_cland_lrst_{name}"
@@ -1834,6 +1896,11 @@ class Landings:
             return None
         buses = {}
         for b in sorted(ins):
+            # DIE-HEAD-59 11-03 (DH59-FG): FREG-1 puts one rising-fclk face flop in front of the ring, so d, the status
+            # pins and the start end in ordinary face registers (1 load each): no hold_mux / ring_start declaration.
+            wr = ring_write_reg(self.plan, tn, b)
+            if wr and wr["freg"]:
+                continue
             d = {"D": int(cat["rings"][b]["depth"]), "form": "hold_mux"}
             for n in [b] + ([f"cland_dn_ready_{b}", f"cland_dn_fault_{b}"] if self.dataflow else []):
                 buses[n] = dict(d)
@@ -1872,7 +1939,7 @@ class Landings:
         by_lane = defaultdict(int)
         for r in self.rows:
             by_lane[r["lane"]] += int(r["added_cycles"])
-        return dict(schema="opentallas.clock_landing_rtl.v1",
+        result = dict(schema="opentallas.clock_landing_rtl.v1",
                     implemented=self.emitted_top and self.emitted_types == set(self.types),
                     physical_qualified=False,
                     added_cycles_per_crossing="count_aligned (per crossing)" if self.ca else 3,
@@ -1887,6 +1954,12 @@ class Landings:
                     emitted_modules=getattr(self,"emitted_modules",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])
+        pending = getattr(self, "regional_source_pending", {})
+        if pending:
+            result["implemented"] = False
+            result["regional_source_pending"] = pending
+            result["remaining_gates"].append("regional source/global consumers listed in regional_source_pending")
+        return result
 
 
 if __name__ == "__main__":

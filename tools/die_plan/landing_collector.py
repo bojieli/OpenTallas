@@ -27,7 +27,7 @@ def raw_reset(tree, node, body):
     face = re.search(r"\bassign\s+rst_o_\d+\s*=\s*" + re.escape(reset) + r"\s*;", body)
     if node == "rst_root_n" or (declared(reset) and not face):
         return reset, [], []
-    boot = re.search(r"ot_dp_rrelay(?:_drive)?\s+\w+\s*\([^;]*\.q\("+re.escape(node)+r"\)\);", body)
+    boot = re.search(r"ot_dp_rrelay(?:_drive|_nl)?\s+\w+\s*\([^;]*\.q\("+re.escape(node)+r"\)\);", body)
     if boot:
         return node, [], []
     reset = "cland_reset_" + safe(node)

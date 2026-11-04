@@ -244,8 +244,12 @@ def _lpath(a, b, n):
     return pts
 
 
-def blockages(t, clear=CLEAR_UM):
-    """hard cores and macro leaves (contents with a lef) of a type, grown by `clear`: [(x0, y0, x1, y1)]."""
+def _lef_origin_boxes(t, clear=CLEAR_UM):
+    """Pre-74080dbb8 reset obstacle model (hard cores + LEF'd contents at their raw plan origin).
+
+    Opt-in per type (`reset.obstacle_model: "lef_origin"`) for frozen plans whose published reset
+    relay graphs / landing collector_tree snapshots were solved with it (KV plan_c, DIE-KV-61 11-02):
+    reproduces the as-planned relay graph exactly instead of re-solving it under a frozen plan."""
     out = []
     for c in list(t.get("hard_cores", []) or []) + [c for c in t.get("contents", []) or [] if c.get("lef")]:
         if "origin_um" not in c or "outline_um" not in c:
@@ -254,6 +258,20 @@ def blockages(t, clear=CLEAR_UM):
         if c.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
             cw, ch = ch, cw
         out.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+    return out
+
+
+def blockages(t, clear=CLEAR_UM):
+    """Canonical placed obstacle union with the unchanged reset clearance.
+
+    Match clock / G0 / physical placement: apply core track offsets once,
+    retain reuse leaves without LEFs, and keep split-container streets open.
+    """
+    if ((t.get("reset") or {}).get("obstacle_model")) == "lef_origin":
+        out = _lef_origin_boxes(t, clear)
+    else:
+        from placement_obstacles import placement_boxes
+        out = list(placement_boxes(t, halo=clear).values())
     # Analog/isolated-PG keepouts are uniform per type, shared with the clock
     # planner. Reset relay cells and wavefront port sites must not reoccupy a
     # domain from which the plan has removed clock taps.
@@ -768,8 +786,16 @@ def _plan_taps(P, tn):
     return _taps(P, tn)
 
 
+def bound_native_contract(P, tn):
+    """Validated, opt-in bound-kit contract installed by gen_phys, never inferred from a plan singleton."""
+    return getattr(P, "_bound_native_reset_contracts", {}).get(tn)
+
+
 def reset_pin(P, tn):
     """gen_phys.tap_points(P, tn)[1] (the arst_n tap, type frame) with the memoised tap grid."""
+    native = bound_native_contract(P, tn)
+    if native:
+        return tuple(native["tree"]["root"])
     import gen_phys
     S.tap_grid = _taps
     try:
@@ -821,6 +847,10 @@ def for_type(P, tn, reach=None):
     """the reset tree of a plan type in its own frame (taps = schema.tap_grid, entry = gen_phys reset tap).
     Pipelined plans: entry 'relayed', depth = the plan contract K.  Other plans (kit_rsync interim): entry 'sync', the
     type's own depth."""
+    native = bound_native_contract(P, tn)
+    if native:
+        import copy
+        return copy.deepcopy(native["tree"])
     reach = float(reach or relay_um(P))
     boot_buses, boot_contents = bootstrap_consumers(P, tn)
     if wavefront(P):
@@ -829,6 +859,8 @@ def for_type(P, tn, reach=None):
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
                  type=tn, start=start_broadcast(P), relay_driver=bool(P.reset.get("relay_driver")))
+        if relay_lockup(P, tn):
+            T["relay_lockup"] = "negedge"
         if T["entry"] == "sync" and lock_stages(P):
             lk = pad_spec(P)["lock"]
             T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
@@ -866,6 +898,8 @@ def for_type(P, tn, reach=None):
         T = _type_tree(P, tn, None, reach)
     T.update(entry=ent, sync_stages=sync_stages(P, tn), type=tn,
              relay_driver=bool(P.reset.get("relay_driver")))
+    if relay_lockup(P, tn):
+        T["relay_lockup"] = "negedge"
     if T["relay_driver"]:
         T["relay_pair_boxes"] = blockages(P.types[tn])
     return T
@@ -1221,11 +1255,16 @@ def wf_solve(P):
 
 def in_pin(P, tn):
     """the wavefront reset IN pin (arst_n) of a soft type (type frame)."""
+    native = bound_native_contract(P, tn)
+    if native:
+        return tuple(native["tree"]["root"])
     return tuple(wf_solve(P)["choice"][tn])
 
 
 def out_pins(P, tn):
     """[(port, x, y)] the registered reset outputs of a soft type (uniform per type: every site any instance uses)."""
+    if bound_native_contract(P, tn):
+        return []
     if not wavefront(P) or P.types[tn].get("hard"):
         return []
     sites = face_sites(P, tn)
@@ -1333,11 +1372,16 @@ def start_roles(P, tn):
 
 def start_in_pin(P, tn):
     """the START IN pin (start_i) of a soft type of a start-broadcast plan (type frame), beside arst_n."""
+    native = bound_native_contract(P, tn)
+    if native:
+        return tuple(native["tree"]["start_in"])
     return tuple(_start_sites(P, tn)[0])
 
 
 def start_out_pins(P, tn):
     """[(port, x, y)] registered START outs start_o_<k> (beside rst_o_<k>, same neighbour)."""
+    if bound_native_contract(P, tn):
+        return []
     if not start_broadcast(P) or P.types[tn].get("hard"):
         return []
     return list(_start_sites(P, tn)[1])
@@ -1421,6 +1465,10 @@ def core_reset_targets(P, tn):
             else:domain_root=None
             out.append(dict(inst=c["inst"], pin=name, pin_um=list(pin), xy=list(site),
                             internal_depth=int(c.get("reset", {}).get("depth", 1))))
+            if c.get("physical_inst") and c["physical_inst"] != c["inst"]:
+                # KW-FIX-1/S81PF 11-02: the kit netlist names the core by its declared physical identity (bound kit:
+                # u_bound.u_u_r0_u_e0 for plan u_r0.u_e0); reset_tree.tcl resolves either name
+                out[-1]["physical_inst"] = c["physical_inst"]
             if domain_root is not None:
                 out[-1]['native_clock_root']=domain_root
                 out[-1]['native_clock_status']='GEOMETRY PREP; period/reset phase qualification separate'
@@ -1765,7 +1813,29 @@ def relay_cell(T, r, gated=False):
     driven = T.get("relay_driver") and r.get("tap") not in external
     if gated:
         return "ot_dp_rgate_drive" if driven else "ot_dp_rgate"
+    if T.get("relay_lockup") and not driven and not str(r.get("q", "")).startswith("rst_n_t"):
+        return "ot_dp_rrelay_nl"     # CLK form #7: internal relay->relay hop only (gen_rtl.LOCKUP_CELLS)
     return "ot_dp_rrelay_drive" if driven else "ot_dp_rrelay"
+
+
+def relay_lockup(P, tn):
+    """CLK FORM #7 (opt-in): reset.relay_lockup = {"form": "negedge", "types": [type, ...]}.  True when type tn's
+    internal relays are ot_dp_rrelay_nl.  Absent = False (every tree and kit byte-identical)."""
+    cfg = P.reset.get("relay_lockup")
+    if not cfg:
+        return False
+    if not isinstance(cfg, dict) or cfg.get("form") != "negedge" or not isinstance(cfg.get("types"), list):
+        raise ResetError('reset.relay_lockup must be {"form": "negedge", "types": [type, ...]}')
+    bad = sorted(set(cfg["types"]) - set(P.types))
+    if bad:
+        raise ResetError(f"reset.relay_lockup names unknown types {bad[:5]}")
+    if tn not in cfg["types"]:
+        return False
+    if P.reset.get("relay_driver"):
+        raise ResetError(f"type {tn}: reset.relay_lockup and reset.relay_driver are exclusive")
+    if start_broadcast(P):
+        raise ResetError(f"type {tn}: reset.relay_lockup does not support START broadcast plans")
+    return True
 
 
 def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SRC):
@@ -1953,7 +2023,7 @@ proc rtr_reset_equiv {net parity seen} {
 """
 
 
-def tcl_text(T):
+def tcl_text(T, native_paths=None):
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
          f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
@@ -1999,17 +2069,27 @@ def tcl_text(T):
     for c in T.get("core_resets", []):
         q = f"rst_n_t{c['tap']}"
         inst, pin = c["inst"], c["pin"]
+        # ODB getName escapes brackets (u_core.u.g_pp\\[0\\].u_pair); match on the plain Verilog form (hd_lep0N).
+        names = [inst] + ([c["physical_inst"]] if c.get("physical_inst") else [])
+        match = " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}" for x in names)
         t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
               "set rtr_cn {}; set rtr_ci {}",
               f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",
-              f"foreach i [$ff_blk getInsts] {{ set n [$i getName]; if {{$n eq {{{inst}}} || [string range $n end-[string length {{{inst}}}] end] eq {{/{inst}}}}} {{ lappend rtr_ci $i }} }}",
+              f"foreach i [$ff_blk getInsts] {{ set n [string map {{\\\\[ [ \\\\] ]}} [$i getName]]; if {{{match}}} {{ lappend rtr_ci $i }} }}",
               f"if {{[llength $rtr_cn] != 1 || [llength $rtr_ci] != 1}} {{ error {{OT_RESET_CORE unresolved {inst}.{pin} or {q}}} }}",
               f"set rtr_it [[lindex $rtr_ci 0] findITerm {{{pin}}}]",
               f"if {{$rtr_it eq \"NULL\"}} {{ error {{OT_RESET_CORE missing {inst}.{pin}}} }}",
-              f"if {{![rtr_reset_equiv [$rtr_it getNet] 0 {{}}]}} {{ error {{OT_RESET_CORE {inst}.{pin}: existing reset is not an equal-depth relay copy; preserve its RTL latency}} }}",
-              "$rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
-              f"dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
-              f"puts \"OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}\""]
+              # CLASS RESET-CORE 11-03 (DIE-S81-51): a core reset that is not an equal-depth relay copy (an RTL
+              # private pipeline, a frame reset-forest leaf or a lane-carried reset bit) keeps its RTL driver and
+              # latency: no rewire, recorded in ot_reset_core_kept.txt.  Only equal-depth copies are re-targeted.
+              f"if {{![rtr_reset_equiv [$rtr_it getNet] 0 {{}}]}} {{",
+              f"  puts {{OT_RESET_CORE_KEPT {inst}.{pin}: RTL reset kept (not an equal-depth relay copy; RTL latency preserved)}}",
+              f"  set rtr_kf [open $::env(RESULTS_DIR)/ot_reset_core_kept.txt a]; puts $rtr_kf {{{inst}.{pin}}}; close $rtr_kf",
+              "} else {",
+              "  $rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
+              f"  dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
+              f"  puts {{OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}}}",
+              "}"]
     edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
     edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
     t += ["close $rtr_fh",
@@ -2027,7 +2107,14 @@ def tcl_text(T):
           f"planned max hop {T['max_hop_um']} um): placed $rtr_n flops FIRM, placed max hop "
           "[format %.1f [expr {$rtr_hmax / double($ff_dbu)}]] um, $rtr_hbad hops > "
           f"{T['reach_um']:g} um: $rtr_v (missing: [llength $rtr_miss] $rtr_miss)\""]
-    return "\n".join(t) + "\n"
+    text = "\n".join(t) + "\n"
+    if native_paths is not None:
+        for name, path in native_paths.items():
+            exact = "[./]".join(path.split(".")) + "[./]*"
+            text = text.replace("*" + name + "[./]*", exact)
+        if re.search(r"^rtr_place\s+\S+\s+\{\*", text, re.M):
+            raise ResetError("native reset placement contains an unverified wildcard instance")
+    return text
 
 
 def summary(T):

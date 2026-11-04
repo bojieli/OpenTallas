@@ -361,6 +361,11 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    # Default-off physical source PREP with unchanged native gold; actual parent/die
+                    # producers and expanded-child native EQ are required before any activation.
+                    "signed_parent_source": {"type": "object", "required": ["views"], "additionalProperties": False,
+                        "properties": {"views": {"type": "object", "minProperties": 1,
+                            "additionalProperties": {"type": "string", "minLength": 1}}}},
                     # Untrusted correspondence candidates; lec.py proves each relation inductively.
                     "lec_hints": {"type": "array", "items": {"type": "array", "minItems": 3}},
                     "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
@@ -518,6 +523,10 @@ SCHEMA = {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # Native START capture location used by physical source planning.
                         "start_capture_um": _xy,
+                        # FLOW-CANARY 10-25 opt-in GRT-RC tap pre-pass + pin-register pad (gen_phys._tap_grt_pre: type
+                        # clock.tap_grt_pre > plan clock.tap_grt_pre > OT_GEN_TAP_GRT_PRE > default off); DIE-HEAD-55
+                        # 11-02: the knob was read by gen_phys but refused here, so it could not be set from a plan
+                        "tap_grt_pre": {"type": "boolean"},
                         "landing_origin_clock_port": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                         "tap_pin_heights_um": {"type": "object", "additionalProperties": {
                             "type": "number", "minimum": 0.768}},
@@ -708,6 +717,9 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
+                        # reset relay obstacle model (reset_tree.blockages): default canonical placed union;
+                        # "lef_origin" = the frozen pre-11-02 model a published relay graph was solved with
+                        "obstacle_model": {"enum": ["canonical", "lef_origin"]},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
                         # Type-local control reset copies: emitted old net, equal published depth and core clock.
@@ -904,6 +916,7 @@ SCHEMA = {
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
+            "tap_grt_pre": {"type": "boolean"},   # die default of the type knob above (gen_phys._tap_grt_pre)
             # INFRA-FIRST-R4 kit hold window (COORD 10-26 11:24 ruling, opt-in, gen_phys.tap_window_ps): the die
             # delivers every grid tap of one partition within window_ps of each other ([-W, 0] source latency on each
             # real clock port in the kit SDC, CRPR credits same-tap); absent = all taps on one ideal clock (feature off).
@@ -912,7 +925,12 @@ SCHEMA = {
                            "properties": {"window_ps": _nonneg, "note": {"type": "string"},
                                           # DIE-S81-41 (COORD 2026-10-31 05:2x): per-type W override (measured
                                           # related-pair damage of the type's regions); unlisted types keep window_ps
-                                          "per_type_ps": {"type": "object", "additionalProperties": _nonneg}}},
+                                          "per_type_ps": {"type": "object", "additionalProperties": _nonneg},
+                                          # KW-FIX-4-SDC (COORD 11-03 10:49): measured per-port window {type: {kit
+                                          # clock port: D_p}} (die_sta_related --kit-window-out); gen_phys
+                                          # .tap_window_port_table; unlisted types / ports keep the flat W
+                                          "per_port_ps": {"type": "object", "additionalProperties": {
+                                              "type": "object", "additionalProperties": _nonneg}}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
@@ -925,7 +943,11 @@ SCHEMA = {
             # optional write_fall_types list limits the fall write to those receiver types (absent = every type).
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
                           "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
-                                         "write_fall_types": {"type": "array", "items": {"type": "string"}}}},
+                                         "write_fall_types": {"type": "array", "items": {"type": "string"}},
+                                         # DIE-QC-67/STM: sender data-vs-fclk max (ps) replacing the ft-hop -max on ft ring
+                                         # inputs of falling-edge writer types only: a (1-share) T budget cannot be captured
+                                         # at T/2 (landing_contract.ring_input_sdc); the real arrival is priced in die STA
+                                         "ft_ring_max_ps": {"type": "number", "exclusiveMinimum": 0}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
@@ -963,6 +985,12 @@ SCHEMA = {
             # ft seam budget split (COORD RULING 2026-10-24 12:37, S81): receiver share of T at the ft face (input delay
             # max (1 - share) T on ft_i, output delay max share T on ft_o); default gen_phys.FT_HOP_IN_SHARE (0.08)
             "ft_hop_in_share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 0.5},
+            # plain-lane input budget event (DIE-S81-51 11-03, COORD 10:49; gen_phys.plain_seam_split): plain ft-lane
+            # receiver input max <= rx_in_max_ps written (raw <= rx_in_raw_max_ps), cut taken from registered senders
+            "plain_seam_split": {"type": "object", "additionalProperties": False, "required": ["rx_in_max_ps"],
+                                 "properties": {"rx_in_max_ps": {"type": "number", "exclusiveMinimum": 0},
+                                                "rx_in_raw_max_ps": {"type": "number", "exclusiveMinimum": 0},
+                                                "note": {"type": "string"}}},
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,
@@ -996,6 +1024,11 @@ SCHEMA = {
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
+            # CLK FORM #7 (DIE-S81-51 11-03, opt-in; reset_tree.relay_lockup): internal relay->relay hops of the named
+            # types use ot_dp_rrelay_nl (posedge state flop + negedge re-launch, 1 cycle); absent = byte-identical
+            "relay_lockup": {"type": "object", "additionalProperties": False, "required": ["form", "types"],
+                             "properties": {"form": {"enum": ["negedge"]}, "types": {"type": "array", "items": _name},
+                                            "note": {"type": "string"}}},
             # KV-PLAN2 10-25 (opt-in, default false = main wall-only rule): every relay hop keeps one L route outside
             # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
             # through kvpc0 gave 1272 M3 overflow)
@@ -1041,6 +1074,9 @@ SCHEMA = {
             # sdpg 3_4: the default negotiation legalizer stalled at 902 illegal cells after 2847 s around 12308 FIRM
             # landing cells (fragmented 5/9-site gaps, 92.9 % fixed); diamond legalised in 44 s; unset = unchanged kits
             dpl_legalizer={"enum": ["diamond"]},
+            dpl_legalizer_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-QC-66/PLAN 11-03: landing-band kits default to diamond DPL with a whole-kit window; named types opt out
+            dpl_legalizer_off_types={"type": "array", "uniqueItems": True, "items": _name},
             # FLOW 10-30: only named types may move landing bands to avoid reset relay/collector sites.
             # Absent/empty preserves all existing bands; compose also accepts the unsplit base type name.
             cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name},
@@ -1050,10 +1086,15 @@ SCHEMA = {
             # AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): pinslot is DEFAULT-ON for every kit; these types (or unsplit base
             # names) keep the legacy band-cursor fill (explicit plan choice)
             cland_pinslot_off_types={"type": "array", "uniqueItems": True, "items": _name},
-            dpl_legalizer_off_types={"type": "array", "uniqueItems": True, "items": _name},
             # DIE-KV-56 10-31: these types (or unsplit base names) keep the legacy no-fit CLAND footprint while
             # budgets.cland_fit_resize stays default-on for every other type (gen_phys._cland_fit_mode)
-            cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-KV-62/stations 11-02 opt-in: these types (or unsplit base names) export OT_CLAND_PINSLOT_DENSE=1 (y-column
+            # pinslot rows pack the ring slot flops body to body); absent/empty = unchanged kits
+            cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-KV-64 11-03 opt-in: these types (or unsplit base names) tie their plan-declared hard-core ID straps
+            # inside the type (bind.emit_type; one value on every instance, else a bind gap); absent/empty = unchanged
+            id_straps_in_type_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 
@@ -1064,6 +1105,9 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
+# historical metadata when the cohort says mesh_status "historical".
+SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
 # Existing PHY pad clocks have an explicit period/source and physical role.
 # They are distinct from registered landing clocks and imply no CDC exception, unless an input pin opts in with
 # "cdc": "synchronized" + "cdc_evidence" (COORD 10-31 ruling (3), pad_clock.cdc_sdc; default off).
@@ -1087,6 +1131,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # Liberty arcs (island ft clock pass-through, e.g. ft_ck0_i) to its outputs instead of measuring it as a clock sink.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_passthrough"] = {
     "type": "boolean"}
+# DH59-TILE 11-03, both opt-in: OT_TAP_CORE_ETAP as a plan form (tap_balance.tcl early-source core re-hang, was C9-only) and
+# the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
 # HEAD START-export fanout: retained copies of existing data states, zero added cycles.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
 # Uniform, physically planned reader-only START delivery.  K is compensated
@@ -1117,6 +1165,15 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
                                          "items": {"type": "number"}},
                                "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+# WREG-1 (DIE-HEAD-58 TURNB 11-03, opt-in, default absent = byte-identical): receiver rings on the listed buses take
+# ot_dp_clk_landing_cas WREG=1 (writer START registered at the face + one write-enable flop per (slot, 64-bit chunk))
+# and DSREP read-select copies per chunk; strap K + 1 (count_align_bind.strap_ties), 0 data cycles.  "freg": true adds
+# the rising-fclk face register on data + start (FREG=1): one more K and ONE added data cycle on that crossing.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_ring_wreg"] = {
+    "type": "object", "additionalProperties": False, "required": ["buses"],
+    "properties": {"buses": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}},
+                   "dsrep": {"type": "integer", "enum": [1, 2, 4, 8, 16]},
+                   "freg": {"type": "boolean"}}}
 # DIE-HEAD-38 R2 (opt-in, default absent = byte-identical): registered 1-input status relays on ONE landed ring's
 # ready/fault before the N-input status collect of <target> ("agg" = the aggregate chain, or a local status output
 # bus), at planned sites; +len(stages) status cycles on that input only, 0 data cycles.  Anchors pin existing
@@ -1160,6 +1217,16 @@ _CKPROPS["landing_raw_branches"] = {
             "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
                           "items": {"type": "string", "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+)$"}}
         }}}
+
+# Default-OFF TT_C source-event PREP. This pointer is admitted only with exact
+# source/model identity; global source/slot/reset/clock consumers still gate it.
+_CKPROPS["landing_regional_origin"] = {
+    "type": "object", "additionalProperties": False,
+    "required": ["enabled", "model_file", "model_sha256"],
+    "properties": {
+        "enabled": {"type": "boolean", "default": False},
+        "model_file": {"type": "string", "pattern": "^/", "minLength": 2},
+        "model_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
 
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
@@ -1407,6 +1474,24 @@ class Plan:
             self.clock["insertion_ps"] = float(self.clock["common_latency_ps"])   # kit balances to + vclk latency
         self.reset = dict(DEFAULT_RESET, **raw.get("reset", {}))
         self.budgets = dict(DEFAULT_BUDGETS, **raw.get("budgets", {}))
+        self._separate_landing_pins()
+
+    def _separate_landing_pins(self):
+        """DIE-QC-67 PINDUP 11-03: two landing pins of a type on one site abort global route (GRT-0080).  Every tool
+        sees the separated sites through P.types; raw stays exactly as read, so plan digests and hashes do not move.
+        A plan without such a pair keeps P.types is raw["partition_types"], byte-identical."""
+        hit = [tn for tn, t in self.types.items() if t.get("clock", {}).get("landing_contract", {}).get("pins")]
+        if not hit:
+            return
+        if str(Path(__file__).resolve().parent) not in sys.path:
+            sys.path.append(str(Path(__file__).resolve().parent))
+        import landing_contract as LC
+        hit = [tn for tn in hit if LC.overlapping_pins(self, self.types[tn])]
+        if hit:
+            types = dict(self.types)
+            self.types = types
+            for tn in sorted(hit):
+                types[tn] = LC.separate_pins(self, tn)
 
     # -- port geometry from the type's bus declaration
     def _type_geom(self, part, bus):
@@ -1933,7 +2018,7 @@ TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step of
 TAP_STEP_UM = 2.16
 
 
-def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
+def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False, *, pin_snap=None, legal_axes=None):
     """S81-P8 10-23 (GEOM-REVIEW5 15:14 condition (b)): an R4 grid tap at a cell centre landed ON a ROM / hard-core
     macro in 4-10 of 10 interior pins of the S81 frame kits (h9_r1: all), so its root buffer sat on a macro.  Move the
     tap to the nearest point (rings of 2.16 um) that is >= `clear` from every hard_cores box of the type (a channel),
@@ -1941,24 +2026,44 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
     w, h = t["outline_um"]
+    # Density clock pins are consumed on PG-safe routing tracks. Their legal
+    # candidate axes come from gen_phys, rather than an anchor lattice that
+    # can disappear when the pin is snapped. Other callers retain the legacy
+    # anchor search. Keep both early-core anchors and consumed pins reserved.
+    if (pin_snap is None) != (legal_axes is None):
+        raise ValueError('consumed clock placement requires both pin_snap and legal_axes')
+    eps = 1e-8 if legal_axes is not None else 0.0
+    if pin_snap is not None:
+        taken = list(taken) + [pin_snap(a, b) for a, b in taken]
     keep = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in t.get("clock", {}).get("keepouts_um", [])]
     # a macro wholly inside a clock keepout blocks nothing the keepout does not (S81 PMA in the shore keepout): its box
     # would only add candidate edges and move grid taps that tie on the ring distance
-    boxes = [m for m in placed_macro_boxes(t, halo=clear).values()
+    from placement_obstacles import placement_boxes
+    boxes = [m for m in placement_boxes(t, halo=clear).values()
              if not any(k[0] <= m[0] and k[1] <= m[1] and m[2] <= k[2] and m[3] <= k[3] for k in keep)] + keep
 
     def free(px, py):
-        if not (clear <= px <= w - clear and clear <= py <= h - clear):
+        if not (clear - eps <= px <= w - clear + eps and clear - eps <= py <= h - clear + eps):
             return False
-        if any(abs(px - a) < clear and abs(py - b) < clear for a, b in taken):
+        if any(abs(px - a) < clear - eps and abs(py - b) < clear - eps for a, b in taken):
             return False
-        return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
-    if (not boxes and not strict) or free(x, y):
-        return x, y
+        return not any(x0 + eps < px < x1 - eps and y0 + eps < py < y1 - eps
+                       for x0, y0, x1, y1 in boxes)
+    consumed = pin_snap(x, y) if pin_snap is not None else (x, y)
+    if (not boxes and not strict) or free(*consumed):
+        return consumed
     # Legal regions have axis-aligned boundaries. Project each boundary onto the same origin-centred 2.16-um
     # lattice as the old expanding rings; their Cartesian product contains the nearest legal ring site. This
     # avoids enumerating millions of interior points when an analog window pushes a tap hundreds of um.
-    def candidates(origin, extent, edges):
+    def candidates(origin, extent, edges, axis):
+        if legal_axes is not None:
+            from bisect import bisect_left
+            tracks = legal_axes[axis]
+            values = set()
+            for edge in [origin, clear, extent - clear] + list(edges):
+                j = bisect_left(tracks, edge)
+                values.update(tracks[k] for k in (j - 1, j) if 0 <= k < len(tracks))
+            return values
         values = {origin}
         for edge in [clear, extent - clear] + list(edges):
             q = (edge - origin) / TAP_STEP_UM
@@ -1968,35 +2073,36 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
                     values.add(v)
         return values
     obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
-    xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)])
-    ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)])
+    xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)], 0)
+    ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)], 1)
     # Each obstacle blocks the same Y candidates for every X column. Compute
     # those exact comparisons once, then combine bitmasks per column instead
     # of scanning every obstacle at every Cartesian candidate. Keep abs() for
     # taken taps: rewriting it as interval bounds changes floating edge cases.
     ys = list(ys)
-    inside = sum(1 << i for i, py in enumerate(ys) if clear <= py <= h - clear)
-    blockers = [(x0, x1, sum(1 << i for i, py in enumerate(ys) if y0 < py < y1))
+    inside = sum(1 << i for i, py in enumerate(ys) if clear - eps <= py <= h - clear + eps)
+    blockers = [(x0, x1, sum(1 << i for i, py in enumerate(ys) if y0 + eps < py < y1 - eps))
                 for x0, y0, x1, y1 in boxes]
-    neighbours = [(a, sum(1 << i for i, py in enumerate(ys) if abs(py - b) < clear))
+    neighbours = [(a, sum(1 << i for i, py in enumerate(ys) if abs(py - b) < clear - eps))
                   for a, b in taken]
     def legal_candidates():
         for px in xs:
-            if not clear <= px <= w - clear:
+            if not clear - eps <= px <= w - clear + eps:
                 continue
             bits = inside
             for x0, x1, blocked in blockers:
-                if x0 < px < x1:
+                if x0 + eps < px < x1 - eps:
                     bits &= ~blocked
             for a, blocked in neighbours:
-                if abs(px - a) < clear:
+                if abs(px - a) < clear - eps:
                     bits &= ~blocked
             while bits:
                 low = bits & -bits
                 yield px, ys[low.bit_length() - 1]
                 bits ^= low
     ok = legal_candidates()
-    best = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
+    best = min(ok, key=lambda p: (round(abs(p[0] - x) + abs(p[1] - y) if legal_axes is not None
+                                      else max(abs(p[0] - x), abs(p[1] - y)), 7),
                                   (p[0] - x) ** 2 + (p[1] - y) ** 2, p), default=None)
     if best is not None:
         return round(best[0], 4), round(best[1], 4)

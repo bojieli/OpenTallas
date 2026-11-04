@@ -1,6 +1,7 @@
 """KIT-TRIAGE-1/G4 11-01: the OT_GPL_GUARD section of the shared face_flops.tcl (PRE_GLOBAL_PLACE of gen_phys type kits
 and of every core kit generator that copies it) is the default-on GPL-0305 class fix:
-  sparse kit (movable util < OT_GPL_SPARSE_UTIL, default 2 %) -> plain wirelength GPL (QC sle_fw_v1, 0.6 %);
+  sparse kit (movable util < OT_GPL_SPARSE_UTIL, default 2 %) -> routability mode off, timing-driven KEPT (QC sle_fw_v1,
+  0.6 %; FLOW-21 11-01: S81 hd_turn_a canary regressed when timing-driven was dropped too);
   routability/timing-driven GPL that diverges with GPL-0305 -> one plain retry (HBM q3_vm_core, programme_store_r10);
   every other kit / error unchanged.  OpenDB and global_placement are mocked in tclsh."""
 import re
@@ -52,6 +53,8 @@ set ::env(GPL_ROUTABILITY_DRIVEN) 1; set ::env(GPL_TIMING_DRIVEN) 1
 
 ARGS = ("-density 0.5 -pad_left 1 -pad_right 1 -routability_driven -random_seed 1 -timing_driven "
         "-keep_resize_below_overflow 0.3 -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.04")
+NOROUTE = ("-density 0.5 -pad_left 1 -pad_right 1 -random_seed 1 -timing_driven "
+           "-keep_resize_below_overflow 0.3 -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.04")
 PLAIN = "-density 0.5 -pad_left 1 -pad_right 1 -random_seed 1 -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.04"
 DENSE = [("FIRM", 500, 1000, 0, 0, 0), ("PLACED", 100, 500, 0, 0, 0)]     # 10 %
 SPARSE = [("FIRM", 500, 1000, 0, 0, 0), ("PLACED", 100, 50, 0, 0, 0)]     # 1 %
@@ -71,10 +74,25 @@ def test_guard_is_the_last_section_of_the_shared_hook():
 
 
 @needs_tcl
-def test_sparse_kit_goes_plain_without_a_modal_attempt():
+def test_sparse_kit_drops_routability_keeps_timing_driven():
     out = _run(SPARSE)
-    assert re.search(r"movable util 1\.000 %", out) and "plain wirelength GPL" in out, out
-    assert f"CALL 1: {PLAIN}\n" in out and "RC=0 RES=done CALLS=1 RD=0 TD=0" in out, out
+    assert re.search(r"movable util 1\.000 %", out) and "routability-driven GPL off" in out, out
+    assert f"CALL 1: {NOROUTE}\n" in out and "RC=0 RES=done CALLS=1 RD=0 TD=1" in out, out
+
+
+@needs_tcl
+def test_sparse_kit_divergence_still_falls_back_plain():
+    out = _run(SPARSE, "diverge_modal")
+    assert f"CALL 1: {NOROUTE}\n" in out and f"CALL 2: {PLAIN}\n" in out, out
+    assert "OT_GPL_FALLBACK GPL-0305" in out and "RC=0 RES=done CALLS=2 RD=0 TD=0" in out, out
+    out = _run(SPARSE, "diverge_modal", env="set ::env(OT_GPL_FALLBACK) 0")
+    assert "RC=1 RES=GPL-0305 CALLS=1 RD=0 TD=1" in out, out
+
+
+@needs_tcl
+def test_sparse_routability_only_call_runs_plain_once():
+    out = _run(SPARSE, "diverge_all", call="-density 0.5 -routability_driven -random_seed 1")
+    assert "CALL 1: -density 0.5 -random_seed 1\n" in out and "RC=1 RES=GPL-0305 CALLS=1 RD=0 TD=0" in out, out
 
 
 @needs_tcl
@@ -114,13 +132,13 @@ def test_switches_disable_each_rule():
     assert "RC=1 RES=GPL-0305 CALLS=1 RD=1 TD=1" in out, out
     insts = [("PLACED", 100, 50, 0, 0, 0)]                                                  # 0.5 %
     assert "CALLS=1 RD=1 TD=1" in _run(insts, env="set ::env(OT_GPL_SPARSE_UTIL) 0.004")
-    assert "CALLS=1 RD=0 TD=0" in _run(insts, env="set ::env(OT_GPL_SPARSE_UTIL) 0.01")
+    assert "CALLS=1 RD=0 TD=1" in _run(insts, env="set ::env(OT_GPL_SPARSE_UTIL) 0.01")
 
 
 @needs_tcl
 def test_firm_outside_core_and_movable_macro_ignored():
     out = _run([("FIRM", 500, 1000, 2000, 0, 0), ("UNPLACED", 900, 900, 0, 0, 1), ("PLACED", 100, 100, 0, 0, 0)])
-    assert re.search(r"movable util 1\.000 %", out) and "RD=0 TD=0" in out, out
+    assert re.search(r"movable util 1\.000 %", out) and "RD=0 TD=1" in out, out
 
 
 @needs_tcl

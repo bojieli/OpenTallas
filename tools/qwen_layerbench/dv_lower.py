@@ -135,7 +135,10 @@ def sc_down_edges(smap, k, m):
 
 
 # ------------------------------------------------------------------------------------------------ 2. ownership
-def ownership(plan=PLAN):
+def ownership(plan=PLAN, slice_rtl=None):
+    selected_rtl = SLICE_RTL if slice_rtl is None else slice_rtl
+    if selected_rtl not in ('slice2', 's8'):
+        raise LowerError('unknown slice RTL')
     p = json.loads((ROOT / plan).read_text())
     mats = {m['name']: m for m in p['layer_matrix_layout']}
     mats['lm_head'] = p['head_geometry']
@@ -161,8 +164,8 @@ def ownership(plan=PLAN):
             else:
                 # Bound west-row pair heads (W5/W3/W1) have no neighbour input.
                 # Their receivers are W4/W2/W0; the mirrored east row receives at E0/E2/E4.
-                s = ((1, 3, 5, 6, 8, 10)[t] if SLICE_RTL == 's8' else 2 * t)
-                pair, mode = None, (f'L9 receiver (sender {s ^ 1})' if SLICE_RTL == 's8' else 'L9 receiver (sender 2t+1)')
+                s = ((1, 3, 5, 6, 8, 10)[t] if selected_rtl == 's8' else 2 * t)
+                pair, mode = None, (f'L9 receiver (sender {s ^ 1})' if selected_rtl == 's8' else 'L9 receiver (sender 2t+1)')
             rows.append(dict(block=b, rows=[BLOCK * b, min(BLOCK * (b + 1), m['rows'])], slice=s, round=rnd, pair=pair,
                              mode=mode))
         out[name] = dict(split=m['split'], level=lv, tiles_per_round=T, rounds=m['rounds'], blocks=rows)
@@ -171,6 +174,8 @@ def ownership(plan=PLAN):
         raise LowerError('o and down own different row blocks: the residual add would not be slice-local')
     out['residual'] = dict(blocks_per_slice=own('o'), rule='= o / down ownership (residual add slice-local)')
     out['sources'] = {plan: sha(ROOT / plan)}
+    if slice_rtl is not None:
+        out['slice_rtl'] = selected_rtl
     return out
 
 

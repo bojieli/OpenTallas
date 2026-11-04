@@ -846,6 +846,30 @@
       "type": "string",
       "minLength": 1
      },
+     "signed_parent_source": {
+      "type": "object",
+      "required": [
+       "views"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "views": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      }
+     },
+     "lec_hints": {
+      "type": "array",
+      "items": {
+       "type": "array",
+       "minItems": 3
+      }
+     },
      "ft_full_stage_placement_file": {
       "type": "string",
       "minLength": 1
@@ -1621,6 +1645,9 @@
         },
         "minItems": 2,
         "maxItems": 2
+       },
+       "tap_grt_pre": {
+        "type": "boolean"
        },
        "landing_origin_clock_port": {
         "type": "string",
@@ -2401,6 +2428,12 @@
        "tap_passthrough": {
         "type": "boolean"
        },
+       "tap_core_etap": {
+        "type": "boolean"
+       },
+       "pregrt_ff_hold": {
+        "type": "boolean"
+       },
        "landing_origin_export_copy": {
         "type": "boolean"
        },
@@ -2516,6 +2549,36 @@
           }
          },
          "reuse_relay_origin": {
+          "type": "boolean"
+         }
+        }
+       },
+       "landing_ring_wreg": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "buses"
+        ],
+        "properties": {
+         "buses": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "string",
+           "pattern": "^[A-Za-z_]\\w*$"
+          }
+         },
+         "dsrep": {
+          "type": "integer",
+          "enum": [
+           1,
+           2,
+           4,
+           8,
+           16
+          ]
+         },
+         "freg": {
           "type": "boolean"
          }
         }
@@ -2661,6 +2724,30 @@
             "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+)$"
            }
           }
+         }
+        }
+       },
+       "landing_regional_origin": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "enabled",
+         "model_file",
+         "model_sha256"
+        ],
+        "properties": {
+         "enabled": {
+          "type": "boolean",
+          "default": false
+         },
+         "model_file": {
+          "type": "string",
+          "pattern": "^/",
+          "minLength": 2
+         },
+         "model_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
          }
         }
        },
@@ -3304,6 +3391,12 @@
        "sync_stages": {
         "type": "integer",
         "minimum": 2
+       },
+       "obstacle_model": {
+        "enum": [
+         "canonical",
+         "lef_origin"
+        ]
        },
        "leaf_um": {
         "type": "array",
@@ -4753,6 +4846,9 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "tap_grt_pre": {
+     "type": "boolean"
+    },
     "tap_window": {
      "type": "object",
      "additionalProperties": false,
@@ -4772,6 +4868,16 @@
        "additionalProperties": {
         "type": "number",
         "minimum": 0
+       }
+      },
+      "per_port_ps": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "number",
+         "minimum": 0
+        }
        }
       }
      }
@@ -4797,6 +4903,10 @@
        "items": {
         "type": "string"
        }
+      },
+      "ft_ring_max_ps": {
+       "type": "number",
+       "exclusiveMinimum": 0
       }
      }
     },
@@ -4918,6 +5028,26 @@
      "exclusiveMinimum": 0,
      "exclusiveMaximum": 0.5
     },
+    "plain_seam_split": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "rx_in_max_ps"
+     ],
+     "properties": {
+      "rx_in_max_ps": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "rx_in_raw_max_ps": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "face_xing": {
      "enum": [
       "budgeted",
@@ -5015,6 +5145,14 @@
     },
     "landing_network": {
      "type": "object"
+    },
+    "cohort": {
+     "type": "object",
+     "required": [
+      "id",
+      "authority",
+      "source"
+     ]
     }
    }
   },
@@ -5142,6 +5280,31 @@
       "none",
       "broadcast"
      ]
+    },
+    "relay_lockup": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "form",
+      "types"
+     ],
+     "properties": {
+      "form": {
+       "enum": [
+        "negedge"
+       ]
+      },
+      "types": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     }
     },
     "relay_avoid_cores": {
      "type": "boolean"
@@ -5328,6 +5491,22 @@
       "diamond"
      ]
     },
+    "dpl_legalizer_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "dpl_legalizer_off_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
     "cland_avoid_reset_types": {
      "type": "array",
      "uniqueItems": true,
@@ -5344,14 +5523,6 @@
       "minLength": 1
      }
     },
-    "dpl_legalizer_off_types": {
-     "type": "array",
-     "uniqueItems": true,
-     "items": {
-      "type": "string",
-      "minLength": 1
-     }
-    },
     "cland_pinslot_off_types": {
      "type": "array",
      "uniqueItems": true,
@@ -5361,6 +5532,22 @@
      }
     },
     "cland_fit_resize_off_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "cland_pinslot_dense_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "id_straps_in_type_types": {
      "type": "array",
      "uniqueItems": true,
      "items": {

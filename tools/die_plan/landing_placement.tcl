@@ -3,6 +3,31 @@
 if {![info exists ff_blk] || ![info exists ff_dbu]} { error "OT_CLAND missing face placement context" }
 set cland_occ {}; set cland_done {}; set cland_n 0
 proc cland_ours {name} { return [regexp {(^|[/.])u_cland_} $name] }
+# Ring/collector placement changes cell locations/status only. Start a fresh
+# instance epoch on every source (clock/reset synthesis may have changed the DB
+# before the hook); preserve original DB iteration order within each group.
+unset -nocomplain cland_instance_index
+proc cland_group_insts {prefix} {
+ global ff_blk cland_instance_index
+ if {![regexp {^[A-Za-z_][A-Za-z0-9_]*$} $prefix]} {
+  set hit {}
+  foreach i [$ff_blk getInsts] {
+   if {[regexp [format {(^|[/.])%s[/.]} $prefix] [$i getName]]} {lappend hit $i}
+  }
+  return $hit
+ }
+ if {![info exists cland_instance_index]} {
+  set cland_instance_index {}
+  foreach i [$ff_blk getInsts] {
+   # The final path component is the cell itself: the legacy regex requires
+   # a separator after the group name, so that component is not a group.
+   set groups [lrange [split [string map {. /} [$i getName]] /] 0 end-1]
+   foreach group [lsort -unique $groups] {dict lappend cland_instance_index $group $i}
+  }
+ }
+ if {[dict exists $cland_instance_index $prefix]} {return [dict get $cland_instance_index $prefix]}
+ return {}
+}
 proc cland_occupy {x y w h} {
  global cland_occ ff_y0 ff_rh
  set r0 [expr {int(floor(double($y-$ff_y0)/$ff_rh))}]
@@ -34,6 +59,24 @@ foreach i [$ff_blk getInsts] {
  set b [$i getBBox]
  cland_occupy [$b xMin] [$b yMin] [expr {[$b xMax]-[$b xMin]}] [expr {[$b yMax]-[$b yMin]}]
 }
+# KW6-CLASS 11-04 (S81 ot_s81sl_leaf__t34/t66 3_5 DPL-0033 "Placed in rows check failed", diamond 0 failures): the row
+# model ff_orient is per y only, so the row-cut halo around a macro (rows stop 2 um beside it, core 215.1 in a row ending
+# 214.11) was free space and FIRM ring/collector cells landed outside any row.  The x gaps of each row y are occupied.
+proc cland_occupy_row_gaps {rows} {
+ global ff_x0 ff_x1 ff_rh
+ set spans {}
+ foreach r $rows { set b [$r getBBox]; dict lappend spans [$b yMin] [list [$b xMin] [$b xMax]] }
+ dict for {y row_spans} $spans {
+  set at $ff_x0
+  foreach s [lsort -integer -index 0 $row_spans] {
+   lassign $s l u
+   if {$l > $at} { cland_occupy $at $y [expr {$l-$at}] $ff_rh }
+   set at [expr {max($at,$u)}]
+  }
+  if {$at < $ff_x1} { cland_occupy $at $y [expr {$ff_x1-$at}] $ff_rh }
+ }
+}
+cland_occupy_row_gaps [$ff_blk getRows]
 # Opt-in (gen_phys reserved_sites_um): die clock-tree reservations are occupied space for ring/status cells.
 if {[info exists ::cland_avoid_rects]} {
  foreach r $::cland_avoid_rects { lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}] }
@@ -45,6 +88,17 @@ if {[info exists ::cland_avoid_rects]} {
 set cland_hard {}
 set cland_avoid_db {}
 if {[info exists ::cland_avoid_rects]} { foreach r $::cland_avoid_rects { lappend cland_avoid_db [lmap v $r {expr {int($v)}}] } }
+# DIE-KV-64 11-03 (KV kv3_hgi_v5/v6/v7 "band overlaps hard placement blockage"): the die clock driver islands
+# (die_islands.tcl, global ::di_rects in DBU, one 2.7 x 0.81 um driver site each) are reserved clock sites like
+# ::cland_avoid_rects: occupied space the ring is packed around, not a band/blockage conflict.
+if {[info exists ::di_rects]} {
+ foreach r $::di_rects {
+  set r [lmap v $r {expr {int($v)}}]
+  if {$r in $cland_avoid_db} continue
+  lappend cland_avoid_db $r
+  lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}]
+ }
+}
 foreach bk [$ff_blk getBlockages] {
  if {[$bk isSoft]} continue
  set bb [$bk getBBox]; set hr [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
@@ -69,6 +123,16 @@ foreach spec $cland_groups {
   }
  }
 }
+# DIE-S81-47 11-01 (S81 "landing band absent", 17 bands in 11 svc/leaf types): a band with plan rects_um (2..N
+# disjoint rects, each within reach of its bus pin) is emitted as one cland_groups entry per rect, same prefix and ring
+# tag, nearest the pin first.  The ring is packed into the rects in that order (cland_put moves to the next rect when
+# one is full); plans whose ring tags each appear once (every band with a single rect_um) are unchanged.
+set cland_multi {}
+foreach spec $cland_groups {
+ lassign $spec prefix rect tag
+ if {[string match {ring:*} $tag]} { dict lappend cland_multi $tag $rect }
+}
+foreach k [dict keys $cland_multi] { if {[llength [dict get $cland_multi $k]] < 2} { dict unset cland_multi $k } }
 set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 # FLOW-6 10-30: widest master of a cell's drive family (OT_CLAND_FIT_RESERVE=resize), cached per master name.
 set cland_famw {}
@@ -143,6 +207,29 @@ proc cland_put_column {i ax ay bx by tag sp cur fw} {
 # site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
 proc cland_put {i rect tag {sp {}} {cur 0}} {
  global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_cursor
+ # multi-rect band (::cland_multi, called with its first rect): a cell with no site in the current rect goes to the
+ # next rect (the row cursors restart there); the rect index stays where the last cell went.  Any other error, and a
+ # cell that fits in no rect, fails closed.  Single-rect bands skip this block.
+ if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag]) && ![info exists ::cland_multi_in]
+     && [lmap v $rect {expr {double($v)}}] eq [lmap v [lindex [dict get $::cland_multi $tag] 0] {expr {double($v)}}]} {
+  set rects [dict get $::cland_multi $tag]
+  set k 0; if {[info exists ::cland_multi_at] && [dict exists $::cland_multi_at $tag]} { set k [dict get $::cland_multi_at $tag] }
+  for {} {$k < [llength $rects]} {incr k} {
+   set ::cland_multi_in 1
+   set rc [catch {cland_put $i [lindex $rects $k] $tag $sp $cur} err opts]
+   unset ::cland_multi_in
+   if {!$rc} {
+    if {!([info exists ::cland_multi_at] && [dict exists $::cland_multi_at $tag] && [dict get $::cland_multi_at $tag] == $k)} {
+     puts "OT_CLAND multi-rect $tag: rect [expr {$k+1}]/[llength $rects] {[lindex $rects $k]} from [$i getName]"
+    }
+    dict set ::cland_multi_at $tag $k
+    return
+   }
+   if {![string match {OT_CLAND no legal*} $err]} { return -options $opts $err }
+   set cland_cursor {}; set ::cland_col_cursor {}
+  }
+  error "OT_CLAND no legal nonoverlapping row/site in reserved band for [$i getName] ($tag, [llength $rects] rects)"
+ }
  set name [$i getName]
  if {[dict exists $cland_done $name]} { error "OT_CLAND duplicate placement $name" }
  lassign $rect ax ay bx by
@@ -360,9 +447,8 @@ foreach spec $cland_status {
 }
 foreach spec $cland_optional_groups {
  lassign $spec prefix rect tag
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   cland_put $i $rect $tag
  }
@@ -620,12 +706,26 @@ proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
  } finally { unset -nocomplain ::cland_pinslot_fit cland_col_reduce; set cland_col_cursor {} }
  return [list $n [llength $rest] "$face face strip [format %.2f [expr {double($s1-$s0)/$ff_dbu}]] um deep, $nc columns over pin x [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]], $nf by the whole band"]
 }
+# START is scalar, including the bound-wrapper singleton [0] spelling.  An
+# ambiguous or wider inventory is an ABI error, never a choice of nearest bit.
+proc cland_start_bterm_name {names bus} {
+ set scalar "cland_fstart_in_$bus"
+ set singleton "${scalar}\[0\]"
+ set found {}
+ foreach name $names {
+  if {$name eq $scalar || [string first "${scalar}\[" $name] == 0} { lappend found $name }
+ }
+ if {![llength $found]} { return {} }
+ if {[llength $found] != 1 || [lindex $found 0] ni [list $scalar $singleton]} {
+  error "OT_CLAND START is not a unique scalar/singleton: $scalar: $found"
+ }
+ return [lindex $found 0]
+}
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
@@ -639,6 +739,9 @@ proc cland_place_ff {prefix rect tag} {
  }
  if {![llength $ffs]} { return 0 }
  set wch [cland_dsel_wch [lmap pr $ffs {lindex $pr 0}]]
+# BEGIN NATIVE_ROLE_BANKS
+ if {[info exists ::cland_role_key_context] && [dict exists $::cland_role_key_context $prefix]} {set wch [dict get $::cland_role_key_context $prefix]}
+# END NATIVE_ROLE_BANKS
  set rev [string match {ring:*+ffr} $tag]
  set nbits 0; set bus ""
  if {$wch && [regexp {^ring:([^@+]+)} $tag -> bus]} {
@@ -651,10 +754,11 @@ proc cland_place_ff {prefix rect tag} {
  # START pin or without a storage bus keep the old keys.
  if {[regexp {^ring:([^@+]+)} $tag -> cbus]} {
   set sx {}; set bxy {}
+  set start_name [cland_start_bterm_name [lmap bt [$ff_blk getBTerms] {$bt getName}] $cbus]
   foreach bt [$ff_blk getBTerms] {
    set bn [$bt getName]; set bb [$bt getBBox]
    set cx [expr {([$bb xMin]+[$bb xMax])/2}]; set cy [expr {([$bb yMin]+[$bb yMax])/2}]
-   if {$bn eq "cland_fstart_in_$cbus"} { set sx [list $cx $cy] }
+   if {$bn eq $start_name} { set sx [list $cx $cy] }
    if {[regexp {^(.*)\[([0-9]+)\]$} $bn -> bbn bbi] && $bbn eq $cbus} { lappend bxy [list $bbi $cx $cy] }
   }
   set base {}
@@ -668,12 +772,16 @@ proc cland_place_ff {prefix rect tag} {
   }
  }
  if {$wch} { puts "OT_CLAND ring_place=ff $prefix: chunked read registers keyed to their word bits (chunk width $wch, bus $bus width $nbits)" }
+ # multi-rect band: the fill spread uses the summed area of its rects
+ set barea 0.0; set brects [list $rect]; if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag])} { set brects [dict get $::cland_multi $tag] }
+ foreach brect $brects { lassign $brect ax ay bx by; set barea [expr {$barea+($bx-$ax)*($by-$ay)}] }
  lassign $rect ax ay bx by
- set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
+ set sp [expr {max(1.0,$cland_ff_fill*$barea*$ff_dbu*$ff_dbu/$need)}]
  set cland_cursor {};set cland_col_cursor {}
  set ordered [lsort -dictionary -index 0 $ffs]
  set pinx {}
  if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1"
+     && !([info exists ::cland_multi] && [dict exists $::cland_multi $tag])
      && [regexp {^ring:([^@+]+)} $tag -> pbus] && [dict size [set ppins [cland_bus_pins $pbus]]]} {
   # FLOW-12 10-30: pins along x (N/S face) in key order -> face strip; anything else returns n=0 having placed nothing
   set psp 1.0
@@ -691,7 +799,7 @@ proc cland_place_ff {prefix rect tag} {
    foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
   } finally {unset -nocomplain cland_col_reduce}
  } elseif {[info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1" && [regexp {^ring:([^@+]+)} $tag -> pbus]
-            && [dict size [set ppins [cland_bus_pins $pbus]]]} {
+            && !([info exists ::cland_multi] && [dict exists $::cland_multi $tag]) && [dict size [set ppins [cland_bus_pins $pbus]]]} {
   # spread 1.0 (the base w/0.4 reserve): the band spread (tag @<spread>, fill-derived $sp) widens each footprint so a
   # low-corner pack fills its band; the stretched fill already spans the band along the pins, and a wider reserve only
   # pushes each row's later flops away from the face (turn_a what-ifs: fill spread 3.81 -> 3rd flop of a row 38 um
@@ -707,8 +815,14 @@ proc cland_place_ff {prefix rect tag} {
    lassign $pinx na nr how
    puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, +ff band as +x, spread [format %.4f $psp]), $nr by the band cursor"
   } else {
-  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $psp] na nr how
-  puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $psp]), $nr by the band cursor"
+  # DIE-KV-62/stations 11-02 opt-in OT_CLAND_PINSLOT_DENSE=1 (plan budgets.cland_pinslot_dense_types): the y-column
+  # rows reserve only each flop's own body (spread 0.4 = w/0.4*0.4), so the 5+ slot flops of a bit sit side by side
+  # from the pin-side edge instead of 2.5 bodies apart (KV kv3_io_ft_v1 E/W 523-bit rings, 8.4 flops per row: strip
+  # 22.7 -> 9 um, farthest-slot pin_reg p90 39.6 -> 27.3 um, wave synth+floorplan probe).  The widest-drive fit
+  # (cland_pinslot_fit) still keeps every in-place GPL upsize legal; the ring logic stays with GPL.  Unset = unchanged.
+  set ypsp [expr {[info exists ::env(OT_CLAND_PINSLOT_DENSE)] && $::env(OT_CLAND_PINSLOT_DENSE) eq "1" ? 0.4 : $psp}]
+  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $ypsp] na nr how
+  puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $ypsp]), $nr by the band cursor"
   }
  } else {
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
@@ -728,9 +842,8 @@ proc cland_band_fit {prefix rect tag} {
  global ff_blk ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done
  set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
  set need 0.0; set maxrw 0; set minw {}; set n 0
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} return
@@ -743,13 +856,16 @@ proc cland_band_fit {prefix rect tag} {
   incr n
  }
  if {!$n} return
- lassign $rect ax ay bx by
+ # multi-rect band: the upper bound is the sum over its rects (one rect: the loop body runs once, unchanged)
+ set cap 0.0
+ set brects [list $rect]; if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag])} { set brects [dict get $::cland_multi $tag] }
+ foreach brect $brects {
+ lassign $brect ax ay bx by
  set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
  set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
  if {$ax < $ff_x0 || $ay < $ff_y0 || $bx > $ff_x1 || $by > $ff_y1} return
  set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
  set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
- set cap 0.0
  for {set y $starty} {$y+$ff_rh<=$by} {incr y $ff_rh} {
   if {![dict exists $ff_orient $y]} continue
   set r [expr {int(($y-$ff_y0)/$ff_rh)}]
@@ -764,6 +880,7 @@ proc cland_band_fit {prefix rect tag} {
    if {$x >= $bx} break
   }
  }
+ }
  if {$need > $cap} {
   set a2 [expr {double($ff_dbu)*$ff_dbu}]
   error [format "OT_CLAND no legal nonoverlapping row/site in reserved band for %s (%s): %d cells reserve %.1f um2 > band upper bound %.1f um2 (ratio %.2f), checked before placement" $prefix $tag $n [expr {$need/$a2}] [expr {$cap/$a2}] [expr {$cap > 0 ? $need/$cap : 0}]]
@@ -776,8 +893,210 @@ proc cland_band_fit {prefix rect tag} {
 # centre x2, x4, x8 (<= +-17.28 um; a reset status hop, far below the 405 um relay reach); still none fails closed as
 # before.  Rings, status, start relays and every collector that fits its window are unchanged.
 proc cland_put_collector {i rect tag} { cland_put_grow $i $rect $tag collector }
+# BEGIN NATIVE_ROLE_BANKS
+# Opt-in native clock/data-role banks. All membership checks finish before any bank moves.
+proc cland_role_lib_clocks {i} {
+ global cland_role_lib_cache
+ set master [[$i getMaster] getName]
+ if {[dict exists $cland_role_lib_cache $master]} {return [dict get $cland_role_lib_cache $master]}
+ set cell [get_cells -quiet [list [$i getName]]]
+ if {[llength $cell] != 1} {error "OT_CLAND_ROLE ambiguous native STA cell [$i getName]"}
+ set lc [get_lib_cells -quiet -of_objects $cell]
+ if {[llength $lc] != 1} {error "OT_CLAND_ROLE missing native Liberty cell $master"}
+ set clocks {}
+ foreach lp [get_lib_pins -quiet -of_objects $lc] {
+  if {[get_property $lp is_clock]} {lappend clocks [get_property $lp name]}
+ }
+ dict set cland_role_lib_cache $master [lsort -unique $clocks]
+ return [dict get $cland_role_lib_cache $master]
+}
+proc cland_role_first_capture {net} {
+ global cland_role_capture_cache cland_role_capture_visiting cland_role_input_ports
+ if {$net eq "NULL" || $net eq ""} {error "OT_CLAND_ROLE disconnected data pin"}
+ if {[dict exists $cland_role_capture_cache $net]} {return [dict get $cland_role_capture_cache $net]}
+ if {[dict exists $cland_role_capture_visiting $net]} {error "OT_CLAND_ROLE combinational data cycle"}
+ dict set cland_role_capture_visiting $net 1
+ set drivers {}
+ foreach bt [$net getBTerms] {
+  if {[$bt getIoType] eq "INPUT"} {lappend drivers [list port $bt]}
+  if {[$bt getIoType] eq "INOUT"} {error "OT_CLAND_ROLE inout data source [$bt getName]"}
+ }
+ foreach it [$net getITerms] {
+  set mt [$it getMTerm]
+  if {[$mt getSigType] in {POWER GROUND}} continue
+  if {[$mt getIoType] eq "OUTPUT"} {lappend drivers [list inst [$it getInst]]}
+  if {[$mt getIoType] eq "INOUT"} {error "OT_CLAND_ROLE inout data pin [$mt getName]"}
+ }
+ if {[llength $drivers] != 1} {error "OT_CLAND_ROLE missing/multiple native data driver [$net getName]"}
+ lassign [lindex $drivers 0] kind obj
+ set ports {}
+ if {$kind eq "port"} {
+  set name [$obj getName]
+  if {[dict exists $cland_role_input_ports $name]} {lappend ports $name}
+ } elseif {![llength [cland_role_lib_clocks $obj]]} {
+  if {[[$obj getMaster] isBlock]} {error "OT_CLAND_ROLE opaque macro in first-capture cone [$obj getName]"}
+  foreach it [$obj getITerms] {
+   set mt [$it getMTerm]
+   if {[$mt getIoType] eq "INPUT" && [$mt getSigType] ni {POWER GROUND}} {
+    lappend ports {*}[cland_role_first_capture [$it getNet]]
+   }
+  }
+ }
+ dict unset cland_role_capture_visiting $net
+ dict set cland_role_capture_cache $net [lsort -unique $ports]
+ return [dict get $cland_role_capture_cache $net]
+}
+proc cland_role_prepare {prefix cfg} {
+ global ff_blk cland_done cland_role_input_ports cland_role_capture_cache cland_role_capture_visiting cland_role_seen
+ set roles [dict get $cfg roles];set bus [dict get $cfg bus]
+ set cland_role_input_ports {};set cland_role_capture_cache {};set cland_role_capture_visiting {}
+ foreach bt [$ff_blk getBTerms] {
+  if {[$bt getIoType] eq "INPUT" && [regexp [format {^%s\[[0-9]+\]$} $bus] [$bt getName]]} {
+   dict set cland_role_input_ports [$bt getName] 0
+  }
+ }
+ if {![dict size $cland_role_input_ports]} {error "OT_CLAND_ROLE missing actual input bus $bus"}
+ set held {};set sources {};set members {};set first {};set rectangles {}
+ foreach row [dict get $cfg held] {
+  lassign $row name master port
+  if {[dict exists $held $name]} {error "OT_CLAND_ROLE duplicate held member $name"}
+  dict set held $name [list $master $port]
+ }
+ foreach row [dict get $cfg banks] {
+  lassign $row name port filter expected expected_first rect qualified
+  dict set members $name {};dict set first $name 0;dict set rectangles $name $rect
+  dict set expected_native $name $qualified
+  dict set sources $port {}
+ }
+ dict for {name pair} $held {dict set sources [lindex $pair 1] {}}
+ dict for {port unused} $sources {
+  set bt [$ff_blk findBTerm $port]
+  if {$bt eq "NULL" || $bt eq "" || [$bt getIoType] ne "INPUT" || [$bt getNet] eq "NULL"} {
+   error "OT_CLAND_ROLE missing exact native clock source $port"
+  }
+  set net [$bt getNet]
+  dict for {other connected} $sources {
+   if {$other ne $port && $connected ne {} && $connected eq $net} {error "OT_CLAND_ROLE aliased native clock sources $port/$other"}
+  }
+  dict set sources $port $net
+ }
+ set all {};set found_held {};set first_ports {};set held_insts {}
+ set native_group [cland_group_insts $prefix]
+ foreach i $native_group {
+  set clocks [cland_role_lib_clocks $i]
+  if {![llength $clocks]} continue
+  set name [$i getName];set master [[$i getMaster] getName]
+  if {[dict exists $cland_role_seen $name]} {error "OT_CLAND_ROLE duplicate native member $name"}
+  dict set cland_role_seen $name $prefix
+  if {![dict exists $roles $master]} {error "OT_CLAND_ROLE unknown sequential master $master ($name)"}
+  if {![regexp {DFF|DHL|DLL|SDF} $master]} {error "OT_CLAND_ROLE unsupported legacy FF placer master $master"}
+  set role [dict get $roles $master];set cp [dict get $role clock]
+  if {$clocks ne [list $cp]} {error "OT_CLAND_ROLE unqualified clock-pin roles $name"}
+  set inputs {}
+  foreach it [$i getITerms] {
+   set mt [$it getMTerm]
+   if {[$mt getIoType] eq "INPUT" && [$mt getSigType] ni {POWER GROUND}} {lappend inputs [$mt getName]}
+  }
+  set expected [concat [list $cp] [dict get $role data] [dict get $role reset]]
+  if {[lsort $inputs] ne [lsort $expected]} {error "OT_CLAND_ROLE unqualified data/reset pin roles $name"}
+  set it [$i findITerm $cp];set net [$it getNet];set root {}
+  dict for {port connected} $sources {if {$net ne "NULL" && $net eq $connected} {lappend root $port}}
+  if {[llength $root] != 1} {error "OT_CLAND_ROLE unknown/buffered native clock source $name"}
+  set root [lindex $root 0];set capture {}
+  foreach dp [dict get $role data] {lappend capture {*}[cland_role_first_capture [[$i findITerm $dp] getNet]]}
+  set capture [lsort -unique $capture]
+  if {[llength $capture] > 1} {error "OT_CLAND_ROLE first capture spans multiple bus bits $name"}
+  lappend all $name
+  if {[dict exists $held $name]} {
+   if {[dict get $held $name] ne [list $master $root] || [llength $capture] || [$i getPlacementStatus] ni {FIRM LOCKED}} {
+    error "OT_CLAND_ROLE held status identity/role/placement mismatch $name"
+   }
+   dict set found_held $name 1;lappend held_insts $i;continue
+  }
+  if {[dict exists $cland_done $name]} {error "OT_CLAND_ROLE native member already placed $name"}
+  set matches {}
+  foreach row [dict get $cfg banks] {
+   lassign $row bank port filter expected expected_first rect qualified
+   if {$port eq $root && ($filter eq "any" || ($filter eq "present" && [llength $capture]) || ($filter eq "absent" && ![llength $capture]))} {lappend matches $bank}
+  }
+  if {[llength $matches] != 1} {error "OT_CLAND_ROLE unknown/duplicate bank membership $name"}
+  set bank [lindex $matches 0]
+  if {![dict exists $expected_native $bank $name] || [dict get $expected_native $bank $name] ne $master} {error "OT_CLAND_ROLE unknown/replaced native member $name"}
+  dict lappend members $bank $i
+  if {[llength $capture]} {dict incr first $bank;dict incr first_ports [lindex $capture 0]}
+ }
+ if {[llength $all] != [dict get $cfg total] || [dict size $found_held] != [dict size $held]} {
+  error "OT_CLAND_ROLE missing/extra qualified native or held members $prefix"
+ }
+ foreach row [dict get $cfg banks] {
+  lassign $row bank port filter expected expected_first rect qualified
+  if {[llength [dict get $members $bank]] != $expected || [dict get $first $bank] != $expected_first} {
+   error "OT_CLAND_ROLE qualified member/first-capture count mismatch $prefix/$bank"
+  }
+ }
+ dict for {port unused} $cland_role_input_ports {
+  if {![dict exists $first_ports $port] || [dict get $first_ports $port] != [dict get $cfg captures_per_port]} {
+   error "OT_CLAND_ROLE missing/duplicate first-capture slot for $port"
+  }
+ }
+ return [dict create members $members held $held_insts wch [cland_dsel_wch $all]]
+}
+proc cland_role_place {prefix tag} {
+ global cland_multi cland_done
+ set cfg [dict get $::cland_native_role_banks $prefix]
+ if {[dict exists $::cland_role_placed $prefix]} {error "OT_CLAND_ROLE duplicate bank placement $prefix"}
+ dict for {bank members} [dict get $::cland_role_prepared $prefix members] {
+  foreach i $members {if {[dict exists $cland_done [$i getName]]} {error "OT_CLAND_ROLE member placed before bank $prefix/[$i getName]"}}
+ }
+ rename cland_group_insts cland_role_unfiltered_group_insts
+ proc cland_group_insts {prefix} {
+  if {[info exists ::cland_role_active_members] && [dict exists $::cland_role_active_members $prefix]} {return [dict get $::cland_role_active_members $prefix]}
+  return [cland_role_unfiltered_group_insts $prefix]
+ }
+ set saved_multi $cland_multi
+ dict unset cland_multi $tag
+ dict set ::cland_role_key_context $prefix [dict get $::cland_role_prepared $prefix wch]
+ try {
+  foreach row [dict get $cfg banks] {
+   lassign $row bank port filter expected expected_first rect qualified
+   dict set ::cland_role_active_members $prefix [dict get $::cland_role_prepared $prefix members $bank]
+   if {[cland_place_ff $prefix $rect $tag] != $expected} {error "OT_CLAND_ROLE placed count mismatch $prefix/$bank"}
+   puts "OT_CLAND_ROLE $prefix/$bank: $expected native members ($expected_first first captures), source $port"
+  }
+ } finally {
+  set cland_multi $saved_multi
+  dict unset ::cland_role_key_context $prefix
+  dict unset ::cland_role_active_members $prefix
+  rename cland_group_insts {};rename cland_role_unfiltered_group_insts cland_group_insts
+ }
+ dict set ::cland_role_placed $prefix 1
+}
+if {[info exists ::cland_native_role_banks] && [dict size $::cland_native_role_banks]} {
+ set cland_role_lib_cache {};set cland_role_seen {};set cland_role_prepared {};set cland_role_placed {}
+ dict for {prefix cfg} $::cland_native_role_banks {dict set cland_role_prepared $prefix [cland_role_prepare $prefix $cfg]}
+ # Every bank is validated. Reserve the already-sited status FFs without moving them.
+ dict for {prefix prepared} $cland_role_prepared {
+  foreach i [dict get $prepared held] {
+   set bb [$i getBBox]
+   cland_occupy [$bb xMin] [$bb yMin] [expr {[$bb xMax]-[$bb xMin]}] [expr {[$bb yMax]-[$bb yMin]}]
+  }
+ }
+}
+# END NATIVE_ROLE_BANKS
+set cland_multi_seen {}
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
+# BEGIN NATIVE_ROLE_BANKS
+ if {[info exists ::cland_native_role_banks] && [dict exists $::cland_native_role_banks $prefix]} {
+  if {![dict exists $::cland_role_placed $prefix]} {cland_role_place $prefix $tag}
+  continue
+ }
+# END NATIVE_ROLE_BANKS
+ # multi-rect band: its first entry places the whole ring over all its rects; the later entries are the same group
+ if {[dict exists $cland_multi $tag]} {
+  if {[dict exists $cland_multi_seen $tag]} continue
+  dict set cland_multi_seen $tag 1
+ }
  set hit 0
  if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]} {
   if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
@@ -785,9 +1104,8 @@ foreach spec $cland_groups {
  }
  set coll [string match {collector:*} $tag]
  if {!$coll} { cland_band_fit $prefix $rect $tag }
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {$coll} { cland_put_collector $i $rect $tag } else { cland_put $i $rect $tag };incr hit

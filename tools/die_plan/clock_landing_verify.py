@@ -101,6 +101,87 @@ class Verification:
         if c.module!=module:self.fail(f'{path}: expected {module}, actual {c.module}')
         return c
 
+    def _regional_model(self,pn):
+        """Exact opt-in TT_C component contract; default source checks are unchanged."""
+        cache=self.__dict__.setdefault('_regional_models',{})
+        if pn in cache:return cache[pn]
+        tn=self.parts[pn]['type'];cfg=getattr(self,'raw',{}).get('partition_types',{}).get(tn,{}).get('clock',{}).get('landing_regional_origin')
+        if not cfg or not cfg.get('enabled',False):cache[pn]=None;return None
+        import hashlib,json
+        from pathlib import Path
+        if tn!='tt_ctlm':raise ValueError('regional source verifier is scoped to existing tt_ctlm')
+        path=Path(cfg['model_file'])
+        if not path.is_absolute():raise ValueError('regional source model needs exact absolute snapshot path')
+        data=path.read_bytes()
+        if hashlib.sha256(data).hexdigest()!=cfg['model_sha256']:raise ValueError('regional source model content changed')
+        model=json.loads(data)
+        if (model.get('type'),model.get('origin_padw'),model.get('parent_source'),model.get('raw_depth'))!=('tt_ctlm',1,'rst_rl_85',3):
+            raise ValueError('regional source model mechanism changed')
+        regions=model['qualified_regions']
+        mapping={n:r['region'] for r in regions for n in r['receivers']}
+        if [r['region'] for r in regions]!=[0,1,2,3] or len(mapping)!=37 or sum(len(r['receivers']) for r in regions)!=37:
+            raise ValueError('regional source model needs four regions and37 unique receivers')
+        if model['price']['added_state_ff']!=13 or model['price']['added_mission_cycles'] or model['price']['added_boot_cycles']:
+            raise ValueError('regional source model price changed')
+        model=dict(model,receiver_regions=mapping);cache[pn]=model;return model
+
+    def _regional_origin_module(self,pn):
+        return 'ot_dp_landing_origin_s_regional' if self._regional_model(pn) else ('ot_dp_landing_origin_s' if self.table['count_aligned'].get('strap_form') else 'ot_dp_landing_origin')
+
+    def _check_regional_origin(self,pn):
+        model=self._regional_model(pn)
+        if not model:return
+        checked=self.__dict__.setdefault('_regional_checked',set())
+        if pn in checked:return
+        checked.add(pn)
+        if not self.table['count_aligned'].get('strap_form') or self._strap_root(pn):
+            self.fail(pn+': regional origin requires selected non-root strap START form');return
+        prefix=ident(pn)+'.';path=prefix+'u_cland_origin';origin=self.instance(path,'ot_dp_landing_origin_s_regional')
+        if not origin:return
+        params=getattr(origin,'params',{})
+        def parameter(key,default):
+            value=params.get(key,default)
+            if isinstance(value,int):return value
+            if re.fullmatch(r'-?[0-9]+',str(value)):return int(value)
+            match=re.fullmatch(r"([0-9]+)'b([01]+)",str(value))
+            if match and len(match[2])==int(match[1]):return int(match[2],2)
+            return None
+        if [parameter(k,{'ENABLE':0,'PADW':1,'REGIONS':4}[k]) for k in ('ENABLE','PADW','REGIONS')]!=[1,1,4]:self.fail(path+': actual regional parameters differ')
+        self.clock(origin,pn)
+        if any(len(origin.ports.get(p,[]))!=4 for p in ('start_r','start_d_r','rst_region_raw_n')):
+            self.fail(path+': actual regional vector width differs')
+        self.equal_input(origin,'rst_raw_n',[self.output(prefix+'u_rrl_87','q')])
+        raws=[]
+        for r in range(4):
+            rp=prefix+f'g_tt_raw_regions.g_region[{r}].u_raw_copy';raw=self.instance(rp,'ot_dp_rrelay')
+            raws.append(self.output(rp,'q'))
+            if raw:
+                self.clock(raw,pn);self.equal_input(raw,'d',[self.output(prefix+'u_rrl_85','q')])
+        self.equal_input(origin,'rst_region_raw_n',raws)
+        expected_start=defaultdict(set);expected_d=defaultdict(set);expected_raw=defaultdict(set)
+        for full,r in model['receiver_regions'].items():
+            if not full.startswith('u_bound.u_cland_'):raise ValueError('regional receiver outside actual landing contract')
+            name=full[len('u_bound.'):];rp=prefix+name;forward=name.startswith('u_cland_fstart_')
+            c=self.instance(rp,'ot_dp_landing_relay' if forward else 'ot_dp_clk_landing_cas')
+            if c:
+                self.clock(c,pn)
+                if forward:
+                    self.equal_input(c,'d',[self.output(path,'start_d_r',r)]);self.equal_input(c,'rst_raw_n',[raws[r]])
+                else:self.equal_input(c,'rst_n',[self.output(path,'start_r',r)])
+            if forward:expected_d[r].add((rp,'d',0));expected_raw[r].add((rp,'rst_raw_n',0))
+            else:expected_start[r].add((rp,'rst_n',0))
+        def consumers(port,bit):
+            bits=origin.ports.get(port,[])
+            if bit>=len(bits):self.fail(path+': missing regional output '+port);return set()
+            return {(self.F.cells[i].path,p,b) for i,p,b in self.G.loads.get(bits[bit],[])}
+        for r in range(4):
+            if consumers('start_r',r)!=expected_start[r]:self.fail(path+f': unpriced regional START[{r}] consumers')
+            if consumers('start_d_r',r)!=expected_d[r]:self.fail(path+f': unpriced regional D[{r}] consumers')
+            rp=prefix+f'g_tt_raw_regions.g_region[{r}].u_raw_copy';c=self.byname.get(rp)
+            if c and len(c.ports.get('q',[]))==1:
+                actual={(self.F.cells[i].path,p,b) for i,p,b in self.G.loads.get(c.ports['q'][0],[])}
+                if actual!=expected_raw[r]|{(path,'rst_region_raw_n',r)}:self.fail(rp+': unpriced regional raw consumers')
+
     def equal_input(self,c,port,want):
         self.checks+=1
         got=[self.term(b) for b in c.ports.get(port,[])]
@@ -144,7 +225,7 @@ class Verification:
             allowed={prefix+row['name'],prefix+row['name']+'_r',prefix+'u_cland_reset_'+ident(n)}
             if extra:allowed.add(prefix+extra)
             if n in outq:allowed.add(prefix+row['name']+'_t')
-            if up.path not in allowed or up.module!='ot_dp_rrelay' or port!='q':return False
+            if up.path not in allowed or up.module not in('ot_dp_rrelay','ot_dp_rrelay_nl') or port!='q':return False
             ib=up.ports.get('d',[])
             return len(ib)==1 and walk(ib[0],row['d'],seen|{n})
         if not walk(bits[0],node,set()):
@@ -223,7 +304,7 @@ class Verification:
                     self.transport_stages[path]=int(cfg['sched_lat'])
                     # count-aligned (MESO-INTEG-1): read count from the receiver's origin, write count from the
                     # sender's origin forwarded beside the bus; the origins themselves are checked below
-                    self.equal_input(c,'rst_n',[self.start_net(r['dst'])])
+                    self.equal_input(c,'rst_n',[self.start_net(r['dst'],'u_cland_'+bus)])
                     self.equal_input(c,'t_rst_n',[self.fstart_net(r['src'],pr['src']['bus'])])
                 else:
                     self.check_reset(c,r['dst'],self.ring_reset_node(r['dst'],bus,info),'u_cland_rst_'+bus)
@@ -291,13 +372,20 @@ class Verification:
                     self.equal_input(c,port,list(reversed(want)))
         actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect','ot_dp_clk_landing_ca','ot_dp_landing_face',
                                                              'ot_dp_landing_origin','ot_dp_landing_root','ot_dp_landing_relay',
-                                                             'ot_dp_clk_landing_cas','ot_dp_landing_origin_s')}
+                                                             'ot_dp_clk_landing_cas','ot_dp_landing_origin_s','ot_dp_landing_origin_s_regional')}
+        actual|={c.path for c in self.F.cells if c.module=='ot_dp_rrelay' and re.fullmatch(r'.*\.g_tt_raw_regions\.g_region\[[0-9]+\]\.u_raw_copy',c.path)}
         for x in sorted(actual-self.expected):self.fail('unexpected/unpriced infrastructure '+x)
         for x in sorted(self.expected-actual):self.fail('missing infrastructure instance '+x)
 
-    def start_net(self,pn):
+    def start_net(self,pn,receiver=None):
         """a landed partition's count start: its origin's start, or (intra-region relay, DIE-KV-3/CAORIGIN) its rx
         relay flop's q"""
+        model=self._regional_model(pn)
+        if model:
+            self._check_regional_origin(pn)
+            r=model['receiver_regions'].get('u_bound.'+receiver) if receiver else 0
+            if r is None:self.fail(pn+': reader missing from regional model');r=0
+            return self.output(self._origin_path(pn),'start_r',r)
         parts=self.table['count_aligned'].get('parts') or {}
         if parts.get(pn,{}).get('role')=='relay':return self.output(ident(pn)+'.u_cland_rstart_rx','q')
         if self._strap_root(pn):return self.output(ident(pn)+'.u_cland_root','start')
@@ -322,6 +410,10 @@ class Verification:
         (ot_dp_landing_relay); checked here: region clock, d = the live origin's start_d, rst_raw_n = that origin's
         raw reset (its 0-cycle equality with start is the RTL proof fv_start_o.sh).  Otherwise the shared start."""
         ca=self.table.get('count_aligned') or {}
+        model=self._regional_model(pn)
+        if model:
+            self._check_regional_origin(pn)
+            return self.output(ident(pn)+'.u_cland_fstart_'+bus,'q')
         if not ca.get('strap_form') or (ca.get('parts') or {}).get(pn,{}).get('role')=='relay':return self.start_net(pn)
         path=ident(pn)+'.u_cland_fstart_'+bus
         if path not in self._fstart_checked:
@@ -373,6 +465,7 @@ class Verification:
                 if pn not in ps or roles[pn]!='origin' or sorted(q for q,v in roles.items() if v=='origin')!=[pn] or None in roles.values():
                     self.fail(f'count-aligned region {tag}: bind roles {roles} need exactly one origin {pn}');continue
             path=self._origin_path(pn)
+            self._check_regional_origin(pn)
             info=self.collector['types'][self.parts[pn]['type']]
             if ca.get('strap_form'):
                 self._strap_root(pn)
@@ -406,7 +499,7 @@ class Verification:
                 sp=ca['start_ports'][rg['tree_port']]
                 if (sp.get('dst_part') or sp.get('capture_part'))!=pn:
                     self.fail(f'count-aligned region {tag}: start port {rg["tree_port"]} does not start {pn}');continue
-                c=self.instance(path,'ot_dp_landing_origin_s' if ca.get('strap_form') else 'ot_dp_landing_origin')
+                c=self.instance(path,self._regional_origin_module(pn))
                 if c:
                     import clock_landings as CL
                     node,relay=self._raw_node(pn,ins,info)
@@ -421,7 +514,7 @@ class Verification:
                 b=ports[tp['port']]['dst']['bus']
                 if self.region.get(tp['src'])!=rg['parent']:
                     self.fail(f'count-aligned region {tag}: tree port sender {tp["src"]} is not in parent region {rg["parent"]}');continue
-                c=self.instance(path,'ot_dp_landing_origin_s' if ca.get('strap_form') else 'ot_dp_landing_origin')
+                c=self.instance(path,self._regional_origin_module(pn))
                 if c:
                     self.clock(c,pn);self.check_reset(c,pn,self.ring_reset_node(pn,b,info),'u_cland_rst_'+b,port='rst_raw_n')
                     self.equal_input(c,'p_start',[self.fstart_net(tp['src'],ports[tp['port']]['src']['bus'])])

@@ -192,6 +192,24 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    "5d01b8aa74dd7564d63a3335fefcfc4bdc9828f2": dict(kind="neutral", rule="final-native-guide-export", paths=("tools/orfs_hold_mm.py",),
+        what="native guide serialization after successful final POST hook; DB routing, PG, timing and constraints unchanged"),
+    "d5fe8b3a68c39ed9298e5131ce2877cea54610f2": dict(kind="neutral", rule="bound-singleton-start-placement", paths=("tools/die_plan/landing_placement.tcl",),
+        what="future placement resolves sole declared scalar[0] START; existing geometry/timing/clock acceptance gates unchanged"),
+    # Intermediate speculative power omission changes no final6 power/IR or saved gate verdict.
+    "033440178fb4ef77d3f3409c705a9a2cebbb9678": dict(kind="neutral", rule="intermediate-metrics-power", paths=("tools/orfs_hold_mm.py",),
+        what="stages1-5 metrics only; final6 power/IR and constraints unchanged; configured GRT budget preserved"),
+    "0f88303c53eccca35711edfb278f0b453346fd6b": dict(kind="neutral", rule="intermediate-metrics-power", paths=("tools/orfs_hold_mm.py",),
+        what="stages1-5 metrics only; final6 power/IR and constraints unchanged; configured GRT budget preserved"),
+    # Optional native graph retention changes no existing view-export/signoff verdict.
+    "9cd35448c0540069af487f8afbe78ac9bcdc63fd": dict(
+        kind="neutral", rule="optional-native-clock-retention", paths=("tools/tt_views/view_export.py",),
+        what="default-off graph retention; existing timing constraints and saved gates unchanged"),
+    # FastRoute's explicit iteration budget changes only disposable P&R execution.
+    # Existing saved geometry/timing verdicts and all sign-off limits are unchanged.
+    "f234e2a733c0013608bfa78334aa6450413a3b2b": dict(
+        kind="neutral", rule="explicit-grt-budget", paths=("tools/orfs_hold_mm.py",),
+        what="honor explicit FastRoute iteration budget; default30 and saved gates unchanged"),
     # OWNER/COORD 11-01 G5 changes only the P&R pre-repair screen, like f991d663c below.
     # Routed sign-off and saved gate verdicts do not read ot_hold_structural_gate; TT/FF
     # release limits stay unchanged. Preserve already-passed gates (OWNER older-pass rule).

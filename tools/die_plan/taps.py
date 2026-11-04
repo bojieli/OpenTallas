@@ -218,7 +218,7 @@ def sink_sites(P, tn, control=True):
         rows += json.loads((_root() / ck["sink_bins_file"]).read_text())["bins"]
         out = []
     else:
-        out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn)]
+        out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn, bit_sites=True)]
     out += [(float(r[0]), float(r[1]), float(r[2]) if len(r) > 2 else 1.0) for r in rows]
     if control and ck.get("control_sinks"):
         out += [(x, y, 1.0) for _, x, y in control_pin_sinks(P, tn)]
@@ -369,7 +369,8 @@ def explicit_tap_sites(P, tn):
         eps=1e-8
         clear=schema.TAP_CLEAR_UM
         typ=P.types[tn];w,h=typ["outline_um"]
-        boxes=list(schema.placed_macro_boxes(typ,halo=clear).values())
+        from placement_obstacles import placement_boxes
+        boxes=list(placement_boxes(typ,halo=clear).values())
         boxes += [(a-clear,b-clear,c+clear,d+clear) for a,b,c,d in ck.get("keepouts_um",[])]
         legal=(clear-eps<=x<=w-clear+eps and clear-eps<=y<=h-clear+eps
                and not any(abs(x-a)<clear-eps and abs(y-b)<clear-eps for a,b in taken)
@@ -418,7 +419,8 @@ def grid_explicit_sites(P, tn):
     clear = schema.TAP_CLEAR_UM
     typ = P.types[tn]
     w, h = typ["outline_um"]
-    boxes = list(schema.placed_macro_boxes(typ, halo=clear).values())
+    from placement_obstacles import placement_boxes
+    boxes = list(placement_boxes(typ, halo=clear).values())
     taken = [(x, y) for _, x, y in grid]
     out = list(grid)
     for p in table:
@@ -496,18 +498,22 @@ def density_taps(P, tn, control=True):
     taken = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)]
     if control:
         taken += [(x, y) for _, x, y in control_pin_sinks(P, tn)]
-    boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
-              c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", []) or []]
+    from placement_obstacles import placement_boxes
+    boxes = list(placement_boxes(t).values())
     blocked = lambda x, y: any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in boxes)
     min_sinks = int(ck.get("tap_min_sinks", max(1, target // 20)))
     leaves = sorted(_bisect(pts, target, radius, blocked, min_sinks), key=lambda a: (round(a[1], 3), round(a[0], 3)))
+
+    import gen_phys
+    legal_axes = gen_phys.clock_legal_axes(P, tn)
+    pin_snap = lambda x, y: gen_phys._snap_tap(P, x, y, pg_legal=not t.get('hard'))
 
     def place(cands):
         tk, xy = list(taken), []
         for x, y in cands:
             x = min(max(x, TAP_MARGIN_UM), w - TAP_MARGIN_UM)
             y = min(max(y, TAP_MARGIN_UM), h - TAP_MARGIN_UM)
-            x, y = schema.tap_clear(t, x, y, tk, strict=True)
+            x, y = schema.tap_clear(t, x, y, tk, strict=True, pin_snap=pin_snap, legal_axes=legal_axes)
             tk.append((x, y))
             xy.append((round(x, 4), round(y, 4)))
         return xy
@@ -600,7 +606,8 @@ def recentre_displaced(P, tn, grid, moved, iters=12):
     for p in pts:
         grp[min(range(len(xy)), key=lambda i: (abs(p[0] - xy[i][0]) + abs(p[1] - xy[i][1]), i))] += 1
     w, h = t["outline_um"]
-    boxes = list(schema.placed_macro_boxes(t).values()) + [tuple(b) for b in t.get("clock", {}).get("keepouts_um", [])]
+    from placement_obstacles import placement_boxes
+    boxes = list(placement_boxes(t).values()) + [tuple(b) for b in t.get("clock", {}).get("keepouts_um", [])]
 
     def dead(k):
         x0, y0, x1, y1 = cells[k]
@@ -740,9 +747,13 @@ def sink_taps(P, tn):
 
 def report(P, tn):
     """kit / G0 summary of the sink-anchored taps."""
-    taps = sink_taps(P, tn)
     ck = P.types[tn].get("clock", {})
-    dens = ck.get("tap_mode") == "density"
+    mode = ck.get("tap_mode")
+    # The kit uses the plan's frozen endpoints. Reporting them must not launch
+    # a second placement/discovery pass with a different tap count/geometry.
+    taps = (explicit_taps(P, tn) if mode == "explicit" else
+            grid_explicit_taps(P, tn) if mode == "grid+explicit" else sink_taps(P, tn))
+    dens = mode == "density"
     return dict(mode=ck.get("tap_mode", "sinks"), radius_um=float(ck.get("tap_radius_um", 200.0 if dens else 250.0)),
                 max_sinks=int(ck.get("tap_max_sinks", 1500)), n=len(taps), empty=sum(1 for t in taps if t[3] == 0),
                 taps=[dict(name=n, xy=[x, y], planned_sinks=s, radius_um=r) for n, x, y, s, r in taps])

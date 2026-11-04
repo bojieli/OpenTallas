@@ -18,7 +18,8 @@ def _procs():
     put = re.search(r"proc cland_put \{i rect tag \{sp \{\}\} \{cur 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     occ = re.search(r"proc cland_occupy \{x y w h\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     fit = re.search(r"proc cland_band_fit \{prefix rect tag\} \{\n.*?\n\}\n", TCL, re.S)
-    return occ + put + (fit.group(0) if fit else "proc cland_band_fit {args} {}\n")
+    match = re.search(r"proc cland_group_insts \{prefix\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    return match + occ + put + (fit.group(0) if fit else "proc cland_band_fit {args} {}\n")
 
 
 # 4 rows x 2000 dbu core, site 54, row 270; cells u_cland_g/c<k> of width W[k]; foreign occupancy from OBST
@@ -83,7 +84,7 @@ def test_bound_never_rejects_a_band_first_fit_fills():
 
 def test_all_cells_branch_checks_before_first_fit():
     # AUTOBUILD-PIPE-2: collector windows skip the band precheck (cland_put_collector grows them instead)
-    i = TCL.index("if {!$coll} { cland_band_fit $prefix $rect $tag }\n foreach i [$ff_blk getInsts]")
+    i = TCL.index("if {!$coll} { cland_band_fit $prefix $rect $tag }\n foreach i [cland_group_insts $prefix]")
     assert TCL.index("proc cland_band_fit") < i
     # the ring_place=ff branch and cland_put itself are untouched
     assert "if {$x<$u && $x+$fw>$l} { set skip [expr {max($skip,$u)}] }" in TCL

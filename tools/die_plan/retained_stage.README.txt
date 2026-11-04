@@ -1,0 +1,113 @@
+Default-OFF retained CTS continuation (no later-stage credit)
+
+retained_stage.py provides two explicit operations. Existing generated kit
+consumers are unchanged. This API never runs synthesis or LEC and never writes
+lec_async markers or a normal lec/lec.json receipt. It joins a completed normal
+standalone proof to exact retained source, raw/mapped synthesis, and reviewed
+3_place ODB/SDC in a fresh owned capsule. Historical provenance/reset limits stay
+in standalone_proof_join.json; its stage is CTS_ONLY_CONTINUATION and its
+source_qualified field is false.
+
+First reviewed consumer inputs (all on epyc2):
+  KIT=/srv/opentallas-scratch2/claude/codex-bksel-r1-fullcts-1604/kits/dsdv_bksel_c_pipe_ab_r1Q
+  PROOF=/srv/opentallas-scratch2/claude/codex-bksel-official-1323/kits/dsdv_bksel_c_pipe_ab_r1C
+  ODB=9e083b125cb3b1ba8029c46f71b0510bf279b99fce05bf1232f539af9e2487da
+  SDC=c91e8364c89169a644c3960d659419d037f2419e12f557c23bef3ae114faaa7f
+
+Prepare on the kit/proof host, using a NEW output path:
+  python3 -I tools/die_plan/retained_stage.py prepare --enable-retained-cts \
+    --kit "$KIT" --proof-kit "$PROOF" --out "$OUT" \
+    --place-sha256 "$ODB" --place-sdc-sha256 "$SDC" --threads 8
+
+Prepare validates and copies only; it launches no CAD. It refuses non-EQ or
+incomplete all-point/KEEP proof, debug-reset results, different proof hints,
+missing source/helper closure, changed input hashes, active native leases,
+async controller state, later physical outputs and existing output directories.
+The retained kit/proof remain untouched. The own output is:
+  OUT/kit/                          full retained kit snapshot
+  OUT/api/retained_stage.py          copied common consumer
+  OUT/api/core_flow.py               exact canonical MM patch accessor
+  OUT/api/kit_modes.py               common mode validator dependency
+  OUT/cts_runtime.sh                 SHA-bound runtime shell
+  OUT/standalone_proof_join.json     honest proof join and all file hashes
+No worktree or repository package is needed at execution. The descriptor pins
+an immutable local image ID; API files and runtime script are SHA-bound.
+
+Only AFTER ROOT reviews this helper/capsule, launch from the fleet hub with the
+owner's evidence-based MEM cap and matching eight admitted threads:
+  ot-run --mem "$MEM" --threads 8 --hosts epyc2 --no-spill --dir "$OUT" -- \
+    python3 -I "$OUT/api/retained_stage.py" run "$OUT" --mem "$MEM" --enable-retained-cts
+The consumer requires a real ot-heavy cgroup and refuses a container memory cap
+above that admitted scope. It locks its own lease, rechecks inputs, and runs one
+normal ORFS container with kit-local mode checks, core_flow.MM_PATCH_STEP, and
+the configured CTS hooks. Image inputs are not inherited from the host shell.
+
+The pinned ORFS Makefile is SHA256
+036a76c4b673214f346491ff548d7bd2af2ab74de0351975197d22f081ea3216.
+Its supported .PHONY do-cts target calls do-4_1_cts then do-4_cts. The first has
+only copyright.txt as a prerequisite; its canonical flow.sh invokes cts.tcl,
+which writes 4_1_cts.odb and 4_cts.sdc, with the configured POST_CTS_TCL. The
+second copies the ODB to 4_cts.odb. This dependency-free target is deliberate:
+ordinary `make cts` can rebuild GPL/synthesis when copied inputs have newer
+timestamps. The API NEVER uses that timestamp-sensitive target.
+
+cts_completion.json records the actual native rc plus any refusal, immutable
+4_cts ODB/SDC hashes, and the limited continuation scope. Every bound source,
+helper and stage1..3 result is checked after execution, including the reviewed
+3_place bytes. Unexpected stage5/6 outputs or a changed checkpoint refuse even
+when the native command returned zero. An interrupted scope cannot silently
+relaunch over partial stage4 outputs. There is no GRT/DRT/signoff entry.
+
+Shallow runtime import portability correction
+--------------------------------------------
+The first actual R1 consumer failed before bootstrap because importing
+core_flow.py at /retained-api evaluated its repository-only parents[2] path.
+The failed r1q_dry2 capsule and native rc1 receipt remain unchanged. The consumer
+now imports core_flow only while rendering the common shell prefix on the host;
+run/check-makefile never import generation-only staging paths. kit_modes already
+has a safe shallow-path check-mode fallback. No core_flow generation path or
+mode/hash/source policy was changed.
+
+The native shallow smoke mounted /retained-api and /work in the exact pinned
+image and ran the identical common prefix through Makefile verification, actual
+kit_modes CTS validation and actual MM patching. The final make command was
+omitted, so no EDA/CTS ran. Normal admitted unit oth-ubuntu-3493214-1793584289
+returned0; all86 bound input files and all API/runtime hashes remained exact,
+with no stage4+ artifacts. The receipt is retained_cts_shallow_smoke.json;
+protected native evidence is epyc2 codex-retained-cts-api/r1q_shallow_smoke1.
+A fresh actual CTS consumer still requires ROOT review/authorization; the smoke
+alone is not a physical stage or sign-off result.
+
+Explicit historical R2 adapter (requires ROOT review before use)
+--------------------------------------------------------------
+The frozen R2 SOURCE_EQ_GATE uses official_counts and omits the R1 gate digest
+and corrected_odb fields. It is not rewritten. The adapter still independently
+joins the actual completed receipt, identity.receipt_sha256,
+closure.official_eq_sha256 and source_proof copy, then requires exact full
+EQ/KEEP/counts/source/raw+mapped/SDC/helper hashes as above. A present gate digest
+must match; conflicting count fields or unsupported shapes refuse.
+
+R2's gate checkpoint_sha256=4eb3dd9aec4bf623d190841baa89d67aed3e419cab2ea81da0c0bc649c5c3924
+is an earlier3_3 checkpoint. It MUST NOT be equated to the later old3_place in the
+accepted frozen census. That separately ROOT-accepted c9103e4ca census records:
+  old3_place: 969fdb3e7d0f6b3aa58152d20eeb87706ee3d04d424af1e9588a6c0b34eb04df
+  new3_place: a3db31fecf1ec367b28e69ad84ef3a885f391f5b9afe2023b2412b1475d77840
+  native receipt: /srv/opentallas-scratch2/claude/codex-bksel-r2-census-1620/output/census_receipt.json
+  receipt SHA: 1899878ff5a46e7cda1c5103e9d71247f52c4b3bfdaa61bfd27d294b761ef462
+  stage SDC: c91e8364c89169a644c3960d659419d037f2419e12f557c23bef3ae114faaa7f
+
+The historical adapter therefore requires three additional explicit arguments:
+  --geometry-attestation /path/to/the/accepted/census_receipt.json
+  --geometry-attestation-sha256 1899878ff5a46e7cda1c5103e9d71247f52c4b3bfdaa61bfd27d294b761ef462
+  --geometry-before-sha256 969fdb3e7d0f6b3aa58152d20eeb87706ee3d04d424af1e9588a6c0b34eb04df
+The existing --place-sha256 must be the reviewed new3_place a3db31... and match
+closure.reviewed_3_place_sha256; --place-sdc-sha256 remains mandatory.
+
+The receipt must be PASS for the exact caller old/new hashes, nine complete
+frozen graph/clock/port/row/other-cell digest fields, unchanged mover identity
+and master/status/orientation except XY, and complete positive native census
+counts/outline. Missing, unsupported or tampered attestations refuse. The fresh
+capsule copies geometry_attestation.json and binds its exact SHA at runtime.
+standalone_proof_join.json records both the older gate checkpoint and the
+separate physical census transition, without inventing corrected_odb fields in
+any original file or upgrading source/native/timing qualification.

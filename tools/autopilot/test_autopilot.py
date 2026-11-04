@@ -109,6 +109,31 @@ class TestAdmissionBundle(unittest.TestCase):
             self.assertIn("HELPER_PASS",result.stdout)
             self.assertIn("CHAIN_PASS",result.stdout)
 
+    def test_bootstrap_names_no_srv_path_so_otrun_can_spill(self):
+        # KW-FIX-1 11-02: ot-run --stage SPILL refused every wave route ("command names /srv/opentallas-scratch outside
+        # the --stage paths") because this script carried that literal; jobs then queued on intel1 only
+        import autopilot
+        ap=importlib.reload(autopilot)
+        self.assertEqual(re.findall(r"/srv/[^\s'\";|&()<>]*", ap.ADMISSION_BOOTSTRAP), [])
+
+    def test_shared_clock_family_is_pinned_inside_standalone_bundle(self):
+        import autopilot
+        ap=importlib.reload(autopilot);ap.DRY=False
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);tools=root/"repo/tools/die_plan";tools.mkdir(parents=True)
+            common=root/"repo/physical/common_flow";common.mkdir(parents=True)
+            chain=root/"chain.py";chain.write_text("# chain")
+            (tools/"signoff.py").write_text("# checker")
+            family=common/"clock_family.tcl";family.write_text("# physical family1")
+            first=ap.stage_admission_tools(chain,tools,root/"scratch")
+            old=Path(first["dir"])/"die_plan/clock_family.tcl"
+            self.assertEqual(old.read_bytes(),family.read_bytes())
+            family.write_text("# physical family2")
+            second=ap.stage_admission_tools(chain,tools,root/"scratch")
+            self.assertNotEqual(first["dir"],second["dir"])
+            self.assertEqual(old.read_text(),"# physical family1")
+            self.assertEqual((Path(second["dir"])/"die_plan/clock_family.tcl").read_text(),"# physical family2")
+
     def test_source_changes_create_new_immutable_own_scratch_bundle(self):
         import autopilot
         ap = importlib.reload(autopilot)
@@ -1463,6 +1488,27 @@ class TestSharedShaRows(Base):
         rows = self.rows("btab", "prog")
         self.ap.resolve_geom(rows, w)
         self.assertEqual(self.geom(rows), {"qfd_dv_s8x_btab__s7": "FAIL", "qfd_dv_s8x_prog__s7": "REQ"})
+
+
+class LateEcoProvenance(Base):
+    # KW-ECO-1: an ECO'd sign-off names the loop in PROVENANCE (kind eco); FAIL reasons carry the ECO evidence
+    def test_eco_provenance_only_on_pass(self):
+        eco = {"verdict": "PASS", "base_routed_db": "/k/run/b/6_final.odb", "best": {"base": "/k/eco_1/i1/b"},
+               "iterations": [{"n": 1, "commands": ["bash prd_mk.sh"]}], "flow": {"tools_sha256": "ab"}, "wall_s": 9}
+        p = self.ap.eco_provenance({"chain": {"eco": eco}})
+        self.assertEqual(p["kind"], "eco")
+        self.assertEqual(p["eco"]["base_routed_db"], "/k/run/b/6_final.odb")
+        self.assertEqual(p["eco"]["routed_db"], "/k/eco_1/i1/b")
+        self.assertEqual(p["eco"]["iterations"][0]["commands"], ["bash prd_mk.sh"])
+        self.assertEqual(self.ap.eco_provenance({"chain": {"eco": dict(eco, verdict="EXHAUSTED")}}), {})
+        self.assertEqual(self.ap.eco_provenance({}), {})
+
+    def test_late_eco_cfg_opt_out(self):
+        self.assertTrue(self.ap.late_eco_on())
+        (Path(self.tmp.name) / "kit_wave.json").write_text(json.dumps({"late_eco": False}))
+        self.assertFalse(self.ap.late_eco_on())
+        (Path(self.tmp.name) / "kit_wave.json").write_text(json.dumps({"late_eco": True, "enabled": True}))
+        self.assertTrue(self.ap.late_eco_on())
 
 
 if __name__ == "__main__":

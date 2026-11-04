@@ -100,7 +100,7 @@ MOCK = r"""
 proc mk {o props} { set ::P($o) $props; proc $o {m args} [string map [list @O@ $o] { return [dict get $::P(@O@) $m] }] }
 mk bbx {xMin @X0@ yMin 50000 xMax 120000 yMax 60000}
 mk bk {getBBox bbx isSoft @SOFT@}
-mk blk {getInsts {} getBlockages {bk}}
+mk blk {getInsts {} getBlockages {bk} getRows {}}
 set ff_blk blk; set ff_dbu 1000
 set ff_x0 0; set ff_y0 0; set ff_x1 200000; set ff_y1 200000; set ff_rh 270; set ff_sw 54
 set ff_orient {}
@@ -134,3 +134,11 @@ def test_ring_band_clear_soft_or_packed_around_passes_the_check(tmp_path):
                dict(x0=105000, avoid="set ::cland_avoid_rects {{105000 50000 120000 60000}}")):
         r = _lp(tmp_path, **kw)
         assert r.returncode != 0 and "no mapped cells found under u_cland_rx_i" in r.stderr, (kw, r.stderr)
+
+
+def test_ring_band_packed_around_die_clock_island_passes_the_check(tmp_path):
+    # DIE-KV-64 11-03: a die clock driver island (die_islands.tcl ::di_rects, DBU) is a reserved site, not a conflict
+    r = _lp(tmp_path, 105000, avoid="set ::di_rects {{105000 50000 120000 60000}}")
+    assert r.returncode != 0 and "no mapped cells found under u_cland_rx_i" in r.stderr, r.stderr
+    r = _lp(tmp_path, 105000, avoid="set ::di_rects {{1 1 2 2}}")      # a different island does not exempt it
+    assert r.returncode != 0 and "overlaps hard placement blockage" in r.stderr, r.stderr

@@ -41,6 +41,15 @@ def test_early_core_map_reads_plan_insertion():
     assert R.early_core_map(_plan(early=False), _taps()) == {}
 
 
+def test_early_core_map_resolves_physical_inst_module():
+    # DIE-S81-50/diegrt 11-03: a bound-native core (physical_inst/physical_master) is named by core_tap_rows with its
+    # physical inst; the map must still carry its module (was None -> core:None, never measured)
+    raw = _plan()
+    raw["partition_types"]["fa"]["hard_cores"][0].update(physical_inst="u_bound.u_c", physical_master="cmod")
+    m = R.early_core_map(raw, _taps())
+    assert [(r["inst"], r["module"]) for r in m[CORE]] == [("u_bound.u_c", "cmod")]
+
+
 def _intra(views=None, kit_offset=None, corner="TT", core_early=None):
     taps = _taps(corner, core_early)
     pairs = [(a, b, "pfa") for a, b in ((CORE, PLAIN), (PLAIN, CORE))]

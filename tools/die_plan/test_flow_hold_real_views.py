@@ -163,14 +163,14 @@ def test_stage_opt_out_and_non_rebind_kits(tmp_path):
     assert kit_modes.MEASURED_FLAG not in (kd / "config.mk").read_text()
 
 
-def test_hold_ff_margin_default_is_10_everywhere(tmp_path):
+def test_hold_ff_margin_default_is_0_everywhere(tmp_path):
     import core_flow
     import gen_phys
     from pathlib import Path
-    assert core_flow.HOLD_FF_MARGIN_DEFAULT == gen_phys.HOLD_FF_MARGIN_DEFAULT == 10.0
+    assert core_flow.HOLD_FF_MARGIN_DEFAULT == gen_phys.HOLD_FF_MARGIN_DEFAULT == 0.0   # OWNER 11-02 (was 10)
     b = core_flow.binding(250.0, 202.5)
     cfg = core_flow.apply(tmp_path, b, "x", rc_cal=False)
-    assert "export OT_HOLD_FF_MARGIN = 10" in cfg
+    assert "export OT_HOLD_FF_MARGIN = 0" in cfg
     assert "export OT_HOLD_FF_MARGIN = 15" in core_flow.apply(tmp_path, b, "x", rc_cal=False, hold_ff_margin=15.0)
     root = Path(core_flow.__file__).resolve().parents[2] / "physical" / "die_plan"
     for f, needle in (("qwen_compute/cores/legacy/gen_core_kit_qc.py", 'rec.get("hold_ff_margin", core_flow.HOLD_FF_MARGIN_DEFAULT)'),

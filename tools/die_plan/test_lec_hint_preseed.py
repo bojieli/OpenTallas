@@ -45,7 +45,7 @@ def test_default_opt_in_and_final_hint_refinement_remain():
     s=inspect.getsource(lec.check)
     assert 'os.environ.get("OT_LEC_HINTS_PRESEED") == "1"' in s
     assert s.index('L.preseed_hints = supplied') < s.index('correspond(L, out')
-    assert s.index('correspond(L, out') < s.index('apply_hints(L, json.loads(hf.read_text())')
+    assert s.index('correspond(L, out') < s.index('apply_hints(L, supplied, out')
 
 
 def test_opt_in_is_forwarded_into_native_docker_run():

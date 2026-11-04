@@ -23,6 +23,18 @@ from tools.die_trial.legal_sites import RowAllocator
 CELL = (1.404, .27); CLEAR = 4.32
 FRAME = [0.0, 0.0]     # current type outline (main() sets it; layered() keeps stations inside the frame)
 
+def placement_boxes(t):
+    """Use the same physical obstacles as G0 and G2, including reuse leaves.
+
+    A reuse leaf without a LEF can still be an obstruction in the actual G2
+    placement. Split containers stay open between their individual hard cuts.
+    The placed-macro record wins on duplicate names so its track offset is
+    applied once, exactly as in check_ft_macro_sites.
+    """
+    from placement_obstacles import placement_boxes as canonical_boxes
+    return canonical_boxes(t)
+
+
 def inside(p, boxes):
     return any(x0 < p[0] < x1 and y0 < p[1] < y1 for x0, y0, x1, y1 in boxes)
 
@@ -98,7 +110,7 @@ def main():
     rep = []
     for tn in a.types.split(','):
         ty = raw['partition_types'][tn]; W, H = ty['outline_um']; FRAME[:] = [W, H]
-        gate = list(S.placed_macro_boxes(ty, halo=0.0).values())
+        gate = list(placement_boxes(ty).values())
         grow = [(x0-CLEAR, y0-CLEAR, x1+CLEAR, y1+CLEAR) for x0, y0, x1, y1 in gate]
         pins = {}
         for bus, bit, _l, x, y, face in type_pins(P, tn): pins.setdefault(bus, {})[bit] = (x, y, face)

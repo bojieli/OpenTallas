@@ -63,7 +63,7 @@ def test_kit_carries_the_binding_rc_basis_and_hooks():
                      "export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl",
                      "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl", "export OT_MAX_BUFFER_PERCENT = 100",
                      "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl", "export POST_CTS_TCL = /work/cts_post.tcl",
-                     "export OT_HOLD_FF_MARGIN = 10"):
+                     "export OT_HOLD_FF_MARGIN = 0"):
             assert line in cfg, line
         for f in ("vclk_corner.tcl", "grt_pre.tcl", "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl",
                   "setRC_rcx.tcl", "tap_balance.tcl", "hold_gate.tcl", "hold_repair_pre.tcl", "hold_pad_hb4.tcl"):
@@ -88,7 +88,7 @@ def test_stock_rc_opt_out_and_mcmm_opt_out():
 def test_gen_cli_defaults_are_the_flow_defaults():
     import gen
     src = Path(gen.__file__).read_text()
-    assert '"--hold-ff-margin", type=float, default=10.0' in src and "--hold-mcmm" in src and "--stock-rc" in src
+    assert '"--hold-ff-margin", type=float, default=0.0' in src and "--hold-mcmm" in src and "--stock-rc" in src
     assert gen_phys.write_phys.__defaults__ is not None
 
 
@@ -148,11 +148,14 @@ def test_signoff_rebind_contract_per_corner():
     # record(): TT pin-flop mean 270 (250 / 290), FF 265 (250 / 280)
     rec = signoff.evaluate(_rebind(record(), tt=270.0, ff=265.0))
     assert rec["checks"]["clock"]["verdict"] == "PASS" and rec["verdict"] == "SIGNED"
+    # OWNER 11-03 19:12: out of the window = information for die STA, the core signs on its own sign-off
     rec = signoff.evaluate(_rebind(record(), tt=270.0, ff=219.0))          # FF routed I 46 ps off the bound value
-    assert rec["checks"]["clock"]["verdict"] == "FAIL"
-    assert any("FF pin-flop insertion" in p for p in rec["checks"]["clock"]["problems"])
+    assert rec["checks"]["clock"]["verdict"] == "PASS" and rec["verdict"] == "SIGNED"
+    assert any("FF pin-flop insertion" in p for p in rec["checks"]["clock"]["insertion_band_info"])
+    assert not rec["checks"]["clock"]["problems"]
     rec = signoff.evaluate(_rebind(record(), tt=313.7, ff=265.0))
-    assert any("TT pin-flop insertion" in p for p in rec["checks"]["clock"]["problems"])
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert any("TT pin-flop insertion" in p for p in rec["checks"]["clock"]["insertion_band_info"])
 
 
 def test_signoff_rebind_setup_uses_rebound_tt_and_requires_it():

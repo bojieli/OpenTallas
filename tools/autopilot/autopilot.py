@@ -58,6 +58,7 @@ import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
 import kit_wave as KW  # noqa: E402
+import wave_jobs as WJ  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -488,6 +489,13 @@ out["route_runs_finish"] = any("do-finish" in l and "route" in l for l in rt)
 cfg = _txt(os.path.join(K, "config.mk"))
 out["gds_gap"] = (bool(re.search(r"^export ADDITIONAL_LEFS", cfg, re.M)) and "ADDITIONAL_GDS" not in cfg
                   and not re.search(r"^export GDS_ALLOW_EMPTY", cfg, re.M))
+# KW-RESUME-1: a kit-wave stage-resumed kit (K/resume.json: ORFS steps reused from the previous attempt) -> PROVENANCE
+try:
+    with open(os.path.join(K, "resume.json")) as f: rj = json.load(f)
+    out["resume"] = {k: rj.get(k) for k in ("schema", "start", "reused_steps", "source", "why", "applied", "n_link",
+                                            "n_copy", "bytes_link", "bytes_copy")}
+except Exception:
+    out["resume"] = None
 done()
 '''
 
@@ -526,6 +534,37 @@ if so:
         out["signoff"]["odb_bytes"] = os.path.getsize(out["signoff"]["odb"])
     except Exception:
         out["signoff"]["odb_bytes"] = 0
+    # KW-PROV-1 11-03 (COORD 17:50 (C)): a kit built on PROVISIONAL child views (kit_wave marker
+    # provisional_views.json) is never a sign-off for the count until every child is FINAL (signed child libs in
+    # macros/, sha-checked) and this record is the STA-only re-sign on them (newer than the final libs):
+    # SIGNED -> LOCAL_PASS_NEEDS_PARENT (WAIT-PARENT: provisional.tsv, no archive; retry_pending re-probes)
+    pv = jl(os.path.join(K, "provisional_views.json"))
+    if isinstance(pv, dict) and str(pv.get("schema", "")).startswith("opentallas.provisional_views"):
+        import hashlib
+        kids = pv.get("children") or {}
+        owed = sorted(m for m, v in kids.items() if not (isinstance(v, dict) and v.get("final")))
+        bad, newest = [], 0.0
+        for m, v in kids.items():
+            for n, h in ((v or {}).get("final_sha256") or {}).items():
+                f = os.path.join(K, "macros", n)
+                try:
+                    ok = hashlib.sha256(open(f, "rb").read()).hexdigest() == h
+                    newest = max(newest, os.path.getmtime(f))
+                except Exception:
+                    ok = False
+                if not ok:
+                    bad.append(n)
+        stale = bool(newest) and os.path.getmtime(so[-1]) < newest
+        s_ = out["signoff"]
+        s_["provisional"] = {"status": pv.get("status"), "owed": owed, "lib_mismatch": bad, "stale_signoff": stale}
+        if s_.get("verdict") == "SIGNED" and (pv.get("status") != "FINAL" or owed or bad or stale):
+            why = ("provisional_child_view: built on PROVISIONAL child views " + ",".join(
+                "%s:%s" % (m, (v or {}).get("source", "?")) for m, v in sorted(kids.items()))
+                + (" (owed %s)" % ",".join(owed) if owed else "") + (" (lib sha mismatch %s)" % ",".join(bad) if bad else "")
+                + (" (sign-off predates the final child libs)" if stale else "")
+                + "; STA-only re-sign on the signed child libs owed (KW-PROV-1)")
+            s_.update(verdict="LOCAL_PASS_NEEDS_PARENT", local_verdict="SIGNED", release_qualified=False,
+                      reasons=list(s_.get("reasons") or []) + [why[:400]])
 for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS"):
     p = os.path.join(K, f)
     if os.path.isfile(p) and os.path.getmtime(p) >= since:
@@ -653,7 +692,9 @@ if V.get("module"):
     vd = os.path.join(A, "view", V["module"])
     os.makedirs(vd, exist_ok=True)
     for rel, src in sorted((V.get("files") or {}).items()):
-        shutil.copy2(src, os.path.join(vd, rel))
+        target = os.path.join(vd, rel)
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        shutil.copy2(src, target)
     if V.get("core"):
         with open(os.path.join(vd, V["module"] + ".core.json"), "w") as f: json.dump(V["core"], f, indent=1)
     with open(os.path.join(vd, "provenance.json"), "w") as f: json.dump(V["provenance"], f, indent=1)
@@ -709,6 +750,43 @@ if mod:
             if os.path.isfile(c):
                 files[rel] = c; break
 out["files"] = files
+out["files_sha256"] = {rel: sha(path) for rel, path in files.items()}
+# Passive retention only: a missing/invalid graph never becomes clock coverage.
+W = a.get("clock_witness_dir") or S
+wp = os.path.join(W, "child_clock_witness.json")
+if os.path.isfile(wp) or a.get("clock_witness_dir"):
+    try:
+        wd = json.load(open(wp))
+        if wd.get("schema") != "opentallas.child_clock_witness.v1" or wd.get("qualification") != "NOT_ASSERTED":
+            raise ValueError("unknown child clock witness schema/qualification")
+        if not {"6_final.odb", "6_final.spef", "6_final.v"}.issubset(wd.get("native", {})):
+            raise ValueError("missing exact native source/ODB/SPEF identities")
+        for rel, digest in wd["native"].items():
+            if os.path.basename(rel) != rel or sha(os.path.join(B, rel)) != digest:
+                raise ValueError("native routed fixture identity mismatch: " + rel)
+        witness_files = {"child_clock_witness.json": wp}
+        for corner in ("tt", "ff"):
+            cr = wd["corners"][corner]
+            if cr["counts"]["missing"] or cr["counts"]["refs"] < 1:
+                raise ValueError("incomplete native child clock endpoints")
+            required = {"child_clock_" + corner + "_" + role + ".tsv" for role in ("endpoints", "pairs", "roots", "clocks", "masters", "counts", "inputs")}
+            if not required.issubset({os.path.basename(rel) for rel in cr["files"]}):
+                raise ValueError("missing full native endpoint/pair/identity payload")
+            if not any(os.path.basename(rel) in ("session.tcl", "export_" + corner + ".tcl") and digest == cr["extraction_tcl_sha256"] for rel, digest in cr["files"].items()):
+                raise ValueError("missing exact native extraction session")
+            for rel, digest in cr["files"].items():
+                if os.path.isabs(rel) or ".." in rel.split(os.sep):
+                    raise ValueError("unsafe witness payload path")
+                path = os.path.join(W, rel)
+                if sha(path) != digest:
+                    raise ValueError("child clock payload identity mismatch: " + rel)
+                witness_files[rel] = path
+        out["clock_witness"] = {"status": "RETAINED", "path": "child_clock_witness.json", "sha256": sha(wp),
+                                "qualification": "NOT_ASSERTED", "hierarchical_expansion": "NOT_ASSERTED",
+                                "expected_view_lib_sha256": {c: wd["corners"][c].get("exported_liberty_sha256") for c in ("tt", "ff")}}
+        files.update(witness_files)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        out["clock_witness"] = {"status": "FAILED", "error": str(exc), "qualification": "NOT_ASSERTED"}
 print("AP_JSON " + json.dumps(out))
 """
 
@@ -778,6 +856,17 @@ def view_payload(r, j, so):
     prov = dict(kit=kitblk, verdict="SIGNED (autopilot: signoff.py + routed LEC EQUIVALENT all_shown)",
                 views_status="signoff" if not problems else "incomplete: " + "; ".join(problems),
                 src=j["src"], src_commit=j.get("src_commit"), flow_tag=j.get("flow_tag"), autopilot_id=j["id"])
+    if r.get("clock_witness"):
+        witness = dict(r["clock_witness"])
+        if witness.get("status") == "RETAINED":
+            hashes = r.get("files_sha256") or {}
+            bindings = {c: hashes.get(f"{mod}_{c}.lib") for c in ("tt", "ff")}
+            expected = witness.pop("expected_view_lib_sha256", {})
+            if any(not digest or (expected.get(c) and expected[c] != digest) for c, digest in bindings.items()):
+                witness.update(status="FAILED", error="exported child Liberty identity is absent or mismatched")
+            else:
+                witness["view_lib_sha256"] = bindings
+        prov["child_clock_witness"] = witness
     if core:
         core = dict(core)
         cl = (so.get("core_latency") or {}).get("measured")
@@ -1136,7 +1225,8 @@ try:
     if not ready():
         if dest.exists():
             raise RuntimeError("existing admission bundle is incomplete or differs; retained for diagnosis")
-        if not str(dest).startswith("/srv/opentallas-scratch") or "/claude/" not in str(dest):
+        # no literal /srv path in this script: ot-run SPILL refuses a command naming /srv outside its --stage paths
+        if not str(dest).startswith("/"+"srv/opentallas-scratch") or "/claude/" not in str(dest):
             raise RuntimeError("admission bundle must be under an owned scratch lane")
         dest.parent.mkdir(parents=True,exist_ok=True)
         with tempfile.TemporaryDirectory(prefix=".fetch-",dir=dest.parent) as temporary:
@@ -1175,6 +1265,13 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
              not any(x in ("__pycache__", ".pytest_cache", ".git") for x in p.relative_to(tools).parts)]
     chain_bytes = chain.read_bytes()
     payload = {path.relative_to(tools): path.read_bytes() for path in sorted(files)}
+    # signoff.py also depends on this shared physical helper. Standalone admission
+    # bundles have no repository sibling tree, so place it beside signoff.py.
+    if (tools / "signoff.py").is_file() and Path("clock_family.tcl") not in payload:
+        clock_family = tools.parents[1] / "physical/common_flow/clock_family.tcl"
+        if not clock_family.is_file():
+            raise ValueError("admission tools incomplete: missing physical/common_flow/clock_family.tcl")
+        payload[Path("clock_family.tcl")] = clock_family.read_bytes()
     digest = hashlib.sha256(chain_bytes)
     for relative, content in payload.items():
         digest.update(str(relative).encode()+b"\0")
@@ -1201,12 +1298,77 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
                 preflight=str(dest / "die_plan/kit_preflight.py"), sha256=version)
 
 
+def late_eco_on():
+    """KW-ECO-1 late-stage ECO loop in signoff_chain.py: default ON; COORD opt-out = "late_eco": false in
+    autopilot/kit_wave.json (one coord commit); per kit: a KIT/late_eco.off marker"""
+    try:
+        return json.loads((AP_DIR / "kit_wave.json").read_text()).get("late_eco", True) is not False
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+NEAR_COUNT_FILE = "lanes/NEAR-COUNT.tsv"
+
+
+def parse_near_count(text):
+    """lanes/NEAR-COUNT.tsv (SIGNOFF-SPRINT-19; COORD 11-01 KIT-WAVE-16 (6)) -> {(die, name)} of cores/types one
+    step from the count: their builds get ot-run --priority die --crit on admission.  A header row names the columns
+    (die + item | type | core | module); without a header the first two columns are die, item.  '#' lines and blank
+    lines are skipped; die '*' matches every die."""
+    out = set()
+    cols = None
+    for ln in (text or "").splitlines():
+        if not ln.strip() or ln.lstrip().startswith("#"):
+            continue
+        f = [x.strip() for x in ln.split("\t")]
+        low = [x.lower() for x in f]
+        if cols is None and "die" in low and any(k in low for k in ("item", "type", "core", "module")):
+            name = next(k for k in ("item", "type", "core", "module") if k in low)
+            cols = (low.index("die"), low.index(name))
+            continue
+        di, ni = cols or (0, 1)
+        if len(f) > max(di, ni) and f[di] and f[ni]:
+            out.add((f[di], f[ni]))
+    return out
+
+
+def near_count_match(near, die, *names):
+    """True when (die or '*', name) is listed for any of the names (item, parent type, core module)"""
+    return any((d, n) in near for n in names if n for d in (die, "*"))
+
+
+def near_count_args(near, die, *names):
+    return ["--priority", "die", "--crit"] if near and near_count_match(near, die, *names) else []
+
+
+def wave_superseded(j):
+    """why the kit-wave no longer wants this job ('' = it does, or no wave row): a resubmit would only restart it on the
+    same kit (HUNG-1103: cancelled rows came back as a second container 5 min to 3 h after the cancel)"""
+    v = WJ.judge(WJ.load_rows(str(AP_DIR)), WJ.wave_id([j.get("path")]), j.get("started"))
+    return v[1] if v and v[0] == "STOP" else ""
+
+
+def stop_survivors(j):
+    """one flow container per kit (WATCHDOG-1 11-03): a resubmit resumes the run dir, and the previous attempt's container may
+    still run, on any host, after its ot-run client was lost (ot-run leaves a started command running)"""
+    res = WJ.stop_on_fleet(sh, HUB_NAME, [j.get("path")])
+    names = WJ.stopped_names(res)
+    if names:
+        log(f"STOP-SURVIVOR {j['id']} {j['die']}/{j['type']}: stopped {' '.join(names)[:400]} before attempt {j.get('attempts', 0) + 1}")
+    for h, v in res.items():
+        if v.get("error"):
+            log(f"STOP-SURVIVOR {j['id']}: {h} not checked: {v['error']} (watchdog duplicate check is the net)")
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
     logf = AP_DIR / "jobs" / j["id"] / f"a{n}.log"
     kit, runner, mem, thr = j["path"], j["runner"], j["mem_gb"], j["threads"]
     argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit]
+    # NEAR-COUNT (COORD 11-01): a core/type listed in lanes/NEAR-COUNT.tsv is admitted as a die-priority crit job
+    argv += near_count_args(parse_near_count(read_coord(NEAR_COUNT_FILE)), j.get("die"), j.get("type"),
+                            j.get("module"), j.get("item"))
     if not runner.startswith(kit + "/"):
         argv += ["--stage", runner]
     if j["goal"] not in ("cts", "grt"):
@@ -1216,7 +1378,7 @@ def submit(st, j, attempt_note=""):
         encoded = base64.b64encode(json.dumps(bundle).encode()).decode()
         # --stage is spill-only. Fetch the immutable tool bundle on the
         # actual selected worker before executing any frozen kit runner.
-        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded,
+        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded] + ([] if late_eco_on() else ["--no-late-eco"]) + [
                  runner, kit, j["goal"], str(mem), str(thr)]
         # chain v2 (AUTOPILOT-SIGNOFF-2): main lec.py + all_shown + mtime proof, FAILED notice + data delete.
         # Jobs launched by an earlier chain keep the earlier rules (no retroactive demotion or deletion).
@@ -1226,6 +1388,8 @@ def submit(st, j, attempt_note=""):
     if DRY:
         log(f"would SUBMIT {j['id']} {j['die']}/{j['type']} {attempt_note}: {' '.join(argv)}")
         return
+    if n > 1:
+        stop_survivors(j)
     if launch_unit(unit, logf, argv):
         j.pop("client_done_at", None)
         j.update(attempts=n, unit=unit, client_log=str(logf), started=time.time())
@@ -1326,30 +1490,89 @@ def parse_path_freeze(text):
     return gates, parts
 
 
-def parse_plan_delta(text):
+TS_RE = re.compile(r"(20\d\d-\d\d-\d\d)[ T]+(\d\d:\d\d)")
+
+
+def plan_of_record():
+    """-> {die: {"ids": set, "frozen": 'YYYY-MM-DD HH:MM' or ''}}: each die's current plan of record = the kit-wave plan
+    (autopilot/kit_wave.json dies[*]: 'event', the plan file stem, optional 'por_ids' list and 'por_frozen' date)"""
+    try:
+        cfg = json.loads((AP_DIR / "kit_wave.json").read_text())
+    except Exception:
+        return {}
+    out = {}
+    for key, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        ids = {str(x) for x in [d.get("event"), Path(str(d.get("plan") or "")).stem] + list(d.get("por_ids") or [])
+               if x and len(str(x)) >= 4 and str(x) not in ("die_plan", "source_plan", "plan", "plan_of_record")}
+        if ids:
+            por = out.setdefault(canonical_die(d.get("die") or key), {"ids": set(), "frozen": ""})
+            por["ids"] |= ids
+            por["frozen"] = max(por["frozen"], str(d.get("por_frozen") or ""))
+    return out
+
+
+PLAN_DELTA_IGNORED = []
+CLOSURE_IGNORED_LOGGED = []
+
+
+def parse_plan_delta(text, por=None):
     """-> {(die, type): delta id} of PENDING deltas: lines 'PENDING-DELTA <id> <die> type[,type ...]', closed by
-    'CLOSED-DELTA <id>' / 'MERGED-DELTA <id>' / 'DROPPED-DELTA <id>' (later lines win)"""
+    'CLOSED-DELTA <id>' / 'MERGED-DELTA <id>' / 'DROPPED-DELTA <id>' / 'RETIRED-DELTA <id>' (later lines win).
+    Class fix DELTA-STALE (COORD 2026-11-03 17:5x): with por = plan_of_record() (or 'PLAN-OF-RECORD <die> <id>
+    [YYYY-MM-DD HH:MM]' lines here), a PENDING delta of a die with a plan of record holds only if its line names one
+    of that plan's ids and it is dated (timestamp on the line, else the latest one above it) after the plan's freeze;
+    otherwise it is ignored and listed in PLAN_DELTA_IGNORED.  por=None keeps the legacy rule (every PENDING holds)."""
     pend = {}
+    por = {k: {"ids": set(v["ids"]), "frozen": v.get("frozen", "")} for k, v in (por or {}).items()} if por is not None \
+        else None
+    last_ts = ""
     for raw in (text or "").splitlines():
         line = raw.strip()
+        ts = [f"{a} {b}" for a, b in TS_RE.findall(line)]
+        m = re.match(r"^PLAN-OF-RECORD\s+(\S+)\s+(\S+)(.*)$", line)
+        if m and por is not None:
+            ent = por.setdefault(canonical_die(m.group(1)), {"ids": set(), "frozen": ""})
+            ent["ids"].add(m.group(2))
+            if ts:
+                ent["frozen"] = max(ent["frozen"], ts[0])
+            continue
         m = re.match(r"^PENDING-DELTA\s+(\S+)\s+(\S+)\s+(\S+)", line)
         if m:
-            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t})
-            continue
-        m = re.match(r"^(?:CLOSED|MERGED|DROPPED)-DELTA\s+(\S+)", line)
-        if m:
-            pend.pop(m.group(1), None)
+            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t},
+                                max(ts) if ts else last_ts, line)
+        else:
+            m = re.match(r"^(?:CLOSED|MERGED|DROPPED|RETIRED)-DELTA\s+(\S+)", line)
+            if m:
+                pend.pop(m.group(1), None)
+        if ts:
+            last_ts = max(ts)
     out = {}
-    for did, (die, types) in pend.items():
+    ignored = []
+    for did, (die, types, when, line) in pend.items():
+        ent = (por or {}).get(die)
+        if ent and ent["ids"]:
+            named = any(i in line for i in ent["ids"])
+            if not named or (ent["frozen"] and not (when and when > ent["frozen"])):
+                ignored.append((did, die, "names no current plan of record (" + ",".join(sorted(ent["ids"]))[:80] + ")"
+                                if not named else f"dated {when or 'undated'} <= plan freeze {ent['frozen']}"))
+                continue
         for t in types:
             out[(die, t)] = did
+    PLAN_DELTA_IGNORED[:] = ignored
     return out
 
 
 def load_closure():
     CLOSURE.clear()
     CLOSURE["gates"], CLOSURE["parts"] = parse_path_freeze(read_coord("lanes/PATH-FREEZE.md"))
-    CLOSURE["delta"] = parse_plan_delta(read_coord("lanes/PLAN-DELTA.md"))
+    CLOSURE["delta"] = parse_plan_delta(read_coord("lanes/PLAN-DELTA.md"), plan_of_record())
+    ign = sorted(PLAN_DELTA_IGNORED)
+    if ign and ign != CLOSURE_IGNORED_LOGGED[:]:
+        log("PLAN-DELTA stale ignored (DELTA-STALE: not on the die's plan of record / dated before its freeze): " +
+            "; ".join(f"{d} {die}: {why}" for d, die, why in ign)[:3000])
+    CLOSURE_IGNORED_LOGGED[:] = ign
 
 
 def _base_type(t):
@@ -1486,6 +1709,25 @@ def apply_legacy(j):
     return True
 
 
+def flow_changes(tag, full, watch, exclude, own):
+    """Memoize identical flow comparisons within this tick, keyed by resolved commits."""
+    rc, out, _ = sh(["git", "-C", str(REPO), "rev-parse", "-q", "--verify", tag + "^{commit}"], timeout=60)
+    if rc or not out.strip():
+        return rc or 1, []
+    tag_sha = out.strip().split()[0]
+    key = (tag_sha, full, tuple(watch), tuple(exclude), None if own is None else tuple(own))
+    cache = CLOSURE.setdefault("flow_changes", {})
+    if key not in cache:
+        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", tag_sha, full], timeout=120)
+        if rc:
+            return rc, []                         # transport/Git failures remain retryable
+        changed = tuple(p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
+                        and not any(fnmatch.fnmatch(p, x) for x in exclude)
+                        and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own))
+        cache[key] = changed
+    return 0, list(cache[key])
+
+
 def resolve_provenance(src, flow="", die=None):
     """-> {src_commit, flow_tag} or {..., error}: the full source commit of branch@sha (fetched on the hub repo when
     missing) and the flow release tag whose watched flow files (tools/flow_canary/canaries.json 'watch') are identical
@@ -1511,12 +1753,9 @@ def resolve_provenance(src, flow="", die=None):
             return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} does not cover die {die}"}
         return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} not found on origin"}
     for t in ([flow] if flow else tags):
-        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", t, full], timeout=120)
+        rc, changed = flow_changes(t, full, watch, exclude, own)
         if rc:
             continue
-        changed = [p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
-                   and not any(fnmatch.fnmatch(p, x) for x in exclude)
-                   and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own)]
         if not changed:
             return {"src_commit": full, "flow_tag": t}
         if flow:
@@ -1540,10 +1779,29 @@ done()
 '''
 
 
+def eco_provenance(j):
+    """KW-ECO-1: a sign-off reached through the late-stage ECO loop names it (kind eco, base routed DB, iterations with
+    their commands, flow sha); sign-off + routed LEC are the usual ones on the ECO'd routed DB.  {} otherwise."""
+    eco = (j.get("chain") or {}).get("eco") or {}
+    if eco.get("verdict") != "PASS":
+        return {}
+    return dict(kind="eco", eco=dict(tool="tools/die_plan/eco_loop.py", base_routed_db=eco.get("base_routed_db"),
+                                     base_signoff=eco.get("base_signoff"), base_metrics=eco.get("base_metrics"),
+                                     routed_db=(eco.get("best") or {}).get("base"), record=eco.get("record"),
+                                     iterations=eco.get("iterations"), flow=eco.get("flow"), wall_s=eco.get("wall_s")))
+
+
 def write_provenance(host, dest, j):
     prov = {k: j.get(k) for k in ("id", "die", "type", "src", "src_commit", "flow_tag", "lane")}
+    if j.get("stage_resume"):                           # KW-RESUME-1: ORFS steps reused from the source attempt
+        prov["stage_resume"] = j["stage_resume"]
     prov.update(schema="opentallas.provenance.v1", verdict="SIGNED" if j.get("flow_tag") and j.get("src_commit")
                 else "SIGNED-UNVERSIONED", why=j.get("prov_error", ""), written=now_s())
+    prov.update(eco_provenance(j))
+    if j.get("resign_carry"):                           # KW-FIX-4 11-03: counted through the RE-SIGN of its routed DB
+        prov.update(kind="resign-carry", resign_carry=j["resign_carry"],
+                    why=f"build flow untagged; same routed DB re-signed at {j['resign_carry']['flow_tag']} "
+                        f"({j['resign_carry']['host']}:{j['resign_carry']['record']})")
     return rpy(host, PROBE_PROVENANCE, {"dest": dest, "prov": prov}, timeout=120)
 
 
@@ -1561,17 +1819,99 @@ def record_signed(st, j, host, so):
     return False
 
 
+PROBE_ROUTED_SHA = r'''
+import hashlib, json, os, sys
+a = json.loads(sys.argv[1]); out = {}
+try:
+    x = json.load(open(a["prov"])) if a.get("prov") else {}
+    if a.get("prov") and x.get("kind") != "resign":
+        raise ValueError("%s is not a kind:resign record" % a["prov"])
+    out["sha"] = x.get("routed_db_sha256") or None
+    if not out["sha"]:
+        h = hashlib.sha256()
+        with open(a["db"], "rb") as f:
+            for b in iter(lambda: f.read(1 << 20), b""):
+                h.update(b)
+        out["sha"] = h.hexdigest()
+except Exception as e:
+    out["error"] = str(e)[:300]
+print("AP_JSON " + json.dumps(out))
+'''
+RESIGN_PROBES_PER_TICK = 6                              # routed-DB hash probes per tick (each reads one routed DB once)
+
+
+def _asap7_design(db):
+    """.../results/asap7/<design>/base/6_final.odb -> <design> ('' when the path has no such segment)"""
+    parts = str(db or "").split("/")
+    return parts[parts.index("asap7") + 1] if "asap7" in parts[:-1] else ""
+
+
+def resign_carry(j, cache=None, probe=None, budget=None):
+    """KW-FIX-4/HBMRS 11-03 (DIE-HBM-61, COORD 17:1x): a SIGNED-UNVERSIONED job whose SAME routed DB (sha256 equal: the
+    path itself or a byte copy) already has a valid RE-SIGN record (kind:resign PROVENANCE on a released flow tag
+    covering its die; release_tree_plan checked tag -> src_commit, post-route LEC EQUIVALENT and the DB) is carried by
+    that tag: the RE-SIGN is the 12.20 way to count a sign-off whose build flow no tag carries, and this run's sign-off
+    is the same routed DB.  -> {flow_tag, tag_commit, record, host, routed_db, routed_db_sha256} or None.  Never
+    guessed: no cache / no matching record / any hash unknown -> None (the job stays SIGNED-UNVERSIONED)."""
+    db = (j.get("signoff") or {}).get("odb")
+    jhosts = [h for h in dict.fromkeys((j.get("ran_on"), j.get("host"))) if h]   # the DB lives where the run ran
+    design = _asap7_design(db)
+    if not db or not jhosts or not design:
+        return None
+    if cache is None:
+        try:
+            cache = json.loads(RELEASE_CACHE.read_text())
+        except (OSError, ValueError):
+            return None
+    probe = probe or rpy
+    budget = budget if budget is not None else CLOSURE.setdefault("resign_probes", [RESIGN_PROBES_PER_TICK])
+    tags = {t for t, _ in _all_flow_tags()}
+    cands = [r for r in (cache or {}).get("signed_records") or []
+             if isinstance(r, dict) and r.get("resign") and r.get("versioned") and not r.get("resign_error")
+             and r.get("flow_tag") in tags and tag_covers(r.get("flow_tag"), j.get("die"))
+             and r.get("prov_file") and r.get("host") and _asap7_design(r.get("routed_db")) == design]
+    if not cands:
+        return None
+    memo = j.setdefault("resign_sha", {})                # host:path -> sha256 (routed DBs are immutable once signed)
+
+    def sha(host, path, prov=None):
+        k = f"{host}:{prov or path}"
+        if k not in memo:
+            if budget[0] <= 0:
+                return None
+            budget[0] -= 1
+            got = probe(host, PROBE_ROUTED_SHA, {"db": path, "prov": prov}, timeout=900)
+            if got.get("error") or not got.get("sha"):
+                return None
+            memo[k] = got["sha"]
+        return memo[k]
+    mine = next((x for x in (sha(h, db) for h in jhosts) if x), None)
+    if not mine:
+        return None
+    for r in sorted(cands, key=lambda r: r["flow_tag"], reverse=True):
+        if sha(r["host"], r["routed_db"], r["prov_file"]) == mine:
+            return dict(flow_tag=r["flow_tag"], tag_commit=r.get("src_commit"), record=r["prov_file"], host=r["host"],
+                        routed_db=r["routed_db"], routed_db_sha256=mine)
+    return None
+
+
 def retry_unversioned(st):
-    """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow"""
+    """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow, or (KW-FIX-4
+    11-03) once a valid RE-SIGN of its same routed DB on a released flow tag exists (resign_carry)"""
     for j in st["jobs"].values():
         if j.get("status") != "SIGNED-UNVERSIONED" or not j.get("archive"):
             continue
         prov = resolve_provenance(j["src"], j.get("flow", ""), j.get("die"))
         if prov.get("error"):
             j["prov_error"] = prov["error"]
-            if not apply_legacy(j):
-                continue
-            prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": LEGACY_TAG}
+            if apply_legacy(j):
+                prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": LEGACY_TAG}
+            else:
+                rc_ = resign_carry(j)
+                if not rc_:
+                    continue
+                j["resign_carry"] = rc_
+                prov = {"src_commit": prov.get("src_commit") or j.get("src_commit", ""), "flow_tag": rc_["flow_tag"]}
         j.update(src_commit=prov["src_commit"], flow_tag=prov["flow_tag"], prov_error="")
         host, dest = j["archive"].split(":", 1)
         if DRY:
@@ -1583,7 +1923,8 @@ def retry_unversioned(st):
             continue
         record_signed(st, j, host, j.get("signoff") or {})
         log(f"PROMOTE {j['id']} {j['die']}/{j['type']}: SIGNED-UNVERSIONED -> signed.tsv (src {j['src_commit'][:12]}, "
-            f"flow {j['flow_tag']})")
+            f"flow {j['flow_tag']}" + (f" via RE-SIGN {j['resign_carry']['host']}:{j['resign_carry']['record']}"
+                                       if j.get("resign_carry") else "") + ")")
 
 
 def canary_wave_gate(row):
@@ -1744,6 +2085,7 @@ def admit_new(st, rows):
             set_status(st, j, "REJECTED", why)
             continue
         j["runner"] = p["runner"]
+        j["stage_resume"] = p.get("resume")              # KW-RESUME-1: reused steps + source attempt (PROVENANCE)
         j.pop("hold_why", None)
         trial_why = ("mode trial" if r["mode"] == "trial" else f"goal {r.get('goal')} (diagnostic)" if r.get("goal") in ("cts", "grt")
                      else path_gate_hold(r))
@@ -1856,13 +2198,23 @@ def finish(st, j, c, client):
             cls, kind, reasons = "STRUCTURAL", "routed-lec", "autopilot chain incomplete: " + str(chain.get("reason") or "missing current routed LEC")
     if client.get("orphan") and cls == "CRASH" and kind not in ("tool-segfault",):
         kind, reasons = "infra-orphan", client["msg"]
+    eco = ((c.get("chain") or {}).get("eco") or {}) if (c.get("chain") or {}).get("started", 0) >= j.get("started", 0) - 120 else {}
+    if eco.get("summary") and cls not in ("SIGNED", "WAIT-PARENT"):
+        # KW-ECO-1: the FAIL evidence carries the late-stage ECO result (kit_wave class table "late-ECO exhausted")
+        reasons = f"{eco['summary'][:240]} | {reasons}"
     j.update(cls=cls, kind=kind, reasons=reasons[:600], probe=c.get("probe_host"),
              signoff=c.get("signoff"), finished=time.time())
     if c.get("chain"):
         j["chain"] = {k: c["chain"].get(k) for k in ("verdict", "reason", "gates", "lec", "lec_verdict",
-                                                   "lec_all_shown", "lec_tool", "signoff", "netlist")}
+                                                   "lec_all_shown", "lec_tool", "signoff", "netlist", "eco")}
     log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> {cls} ({kind}): {reasons[:240]}")
     if cls == "CRASH" and kind in INFRA_KINDS and not j.get("adopted"):
+        why = wave_superseded(j)
+        if why:
+            j.update(cls="CANCELLED", kind="cancelled")
+            log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> CANCELLED (not resubmitted): {why[:240]}")
+            set_status(st, j, "CANCELLED", f"wave no longer wants it: {why[:200]}")
+            return
         notrun = kind == "infra-notrun"
         if notrun and j.get("notrun_retries", 0) < MAX_NOTRUN:
             j["notrun_retries"] = j.get("notrun_retries", 0) + 1
@@ -2220,7 +2572,10 @@ def write_loop_gaps(st, rows, geom_text):
     jobs = list(st["jobs"].values())
     submitted_tags = {geom_tag(j.get("geom_ref", "")) for j in jobs
                       if j.get("status") not in ("WAIT-GEOM", "REJECTED", None) and (j.get("attempts") or j.get("adopted"))}
-    gaps = LG.gaps_geom(geom_text, now, submitted_tags, LG.parse_resolved(read_coord("autopilot/resolved.tsv")))
+    submitted_kits = {(j.get("die", ""), j.get("type", "")) for j in jobs
+                      if j.get("status") not in ("WAIT-GEOM", "REJECTED", None) and (j.get("attempts") or j.get("adopted"))}
+    gaps = LG.gaps_geom(geom_text, now, submitted_tags, LG.parse_resolved(read_coord("autopilot/resolved.tsv")),
+                        submitted_kits)
     gaps += LG.gaps_runs([j for j in jobs if j.get("status") == "RUNNING" or str(j.get("status")).startswith("REVIEW-")
                           or j.get("status") == "SIGNED"], now)
     trows = read_tsv_rows("review.tsv") + read_tsv_rows("structural.tsv")

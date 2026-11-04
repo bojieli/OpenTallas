@@ -222,6 +222,36 @@ class TestRules(unittest.TestCase):
         self.assertEqual(G.judge(G.metrics(p, odb="5_1_grt.odb"), {"metrics": t})[1], "FAIL")  # GRT: out of scope
         self.assertEqual(G.judge(G.metrics(p, odb="4_cts.odb"), {"metrics": t})[1], "FAIL")    # stage != template
 
+    def test_grt_with_actual_clock_tree_uses_cts_rules(self):
+        p = self.base(name="grt_tree.tsv")
+        text = p.read_text().replace("N\tCLOCK\tp0\ti1c\ti2c", "N\tCLOCK\tp0\ti60\nN\tCLOCK\ti60\ti1c\ti2c")
+        text += "C\t60\tB\tBUFx12_ASAP7_75t_R\t99\t99\t101\t101\tclkbuf\n"
+        p.write_text(text)
+        log = self.d / "native_grt.log"
+        log.write_text(GRT_OK)
+        m = G.metrics(str(p), odb="5_1_grt.odb", grt_log=str(log))
+        self.assertGreater(m["clock_cells"], 0)
+        self.assertEqual(m["stage"], "cts")
+        self.assertTrue(m["grt_cts_review"])
+        m["clock_reach_max"] = 500  # old nearest-entry proxy is not own-leaf reach
+        m["channel_h_max"] = 2.0
+        rules, _ = G.judge(m, None, [200, 200])
+        status = {r["rule"]: r["status"] for r in rules}
+        self.assertNotIn("checkpoint", status)
+        self.assertEqual(status["clock_reach"], "INFO")
+        self.assertEqual(status["channel_h"], "INFO")
+        self.assertEqual(status["grt"], "PASS")
+        m["clock_leaf_reach_max"] = 221
+        m["r2r_max"] = 406
+        m["grt_overflow"] = 1
+        rules, verdict = G.judge(m, None, [200, 200])
+        status = {r["rule"]: r["status"] for r in rules}
+        self.assertEqual(verdict, "FAIL")
+        for key in ("clock_leaf_reach", "r2r", "grt", "channel_h"):
+            self.assertEqual(status[key], "FAIL")
+        self.assertEqual(G.stage_of_odb("5_1_grt.odb", 0), "other")
+        self.assertEqual(G.stage_of_odb("5_route.odb", 1), "other")
+
     def test_outline_pin_table_and_macros_vs_template(self):
         t = G.metrics(str(self.base()), odb="3_place.odb")
         moved = dump(self.d / "m.tsv", flops=[(1, 2, 100), (2, 150, 100)], comb=[(50, 100, 100)] + fill_cells(100, 3600),
