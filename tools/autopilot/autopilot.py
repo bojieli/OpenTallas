@@ -1720,7 +1720,7 @@ def flow_changes(tag, full, watch, exclude, own):
     key = (tag_sha, full, tuple(watch), tuple(exclude), None if own is None else tuple(own))
     cache = CLOSURE.setdefault("flow_changes", {})
     if key not in cache:
-        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", tag_sha, full], timeout=120)
+        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--no-renames", "--name-only", tag_sha, full], timeout=120)
         if rc:
             return rc, []                         # transport/Git failures remain retryable
         changed = tuple(p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
