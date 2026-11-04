@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # PRUNE-1103K per-worktree checks a,b,d,e-local (read-only, runs on the host). usage: check.py name...  -> JSON lines
 import os,sys,re,json,subprocess,time
-ROOT='/home/ubuntu/scratch-root/claude/'
+ROOT=os.environ.get('WT_ROOT','/home/ubuntu/scratch-root/claude/')
 VIEW=re.compile(r'(^|/)([^/]*signoff\.json)$|\.(odb|spef|lef|lib)(\.gz)?$',re.I)
 def sh(*a,t=1800):
     p=subprocess.run(a,capture_output=True,text=True,timeout=t,errors='replace'); return p.returncode,p.stdout,p.stderr

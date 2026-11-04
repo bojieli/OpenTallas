@@ -4,7 +4,7 @@ import json,os,re,collections,sys
 c=json.load(open(os.path.expanduser('~/.local/state/fleet-viz/release_tree_plan_cache.json')))
 L={'epyc2':sys.argv[1:]}
 ALL={n for v in L.values() for n in v}
-ROOTS=('/home/ubuntu/scratch-root/claude/','/srv/opentallas-scratch3/claude/')
+ROOTS=('/home/ubuntu/scratch-root/claude/','/srv/opentallas-scratch3/claude/','/srv/opentallas-scratch2/claude/','/srv/opentallas-scratch/claude/')
 def nm(path):
     for r in ROOTS:
         if (path or '').startswith(r):

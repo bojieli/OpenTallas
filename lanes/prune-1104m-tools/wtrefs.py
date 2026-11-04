@@ -5,7 +5,7 @@ out=sys.argv[1]; names=sys.argv[2:]
 ROOTS=['/home/ubuntu/scratch-root/claude','/srv/opentallas-scratch2/claude']
 EXT=re.compile(r'(\.(f|json|sh|tcl|mk|env|yaml|yml|txt|py|sdc|cfg|tsv|manifest)|Makefile|config\.mk)$')
 pat=re.compile('|'.join(re.escape(n)+r'(?![\w.-])' for n in names).encode())
-self_=['/home/ubuntu/scratch-root/claude/'+n for n in names]
+self_=[r+'/'+n for r in ROOTS for n in names]
 o=open(out+'.tmp','w'); nf=0
 for R in ROOTS:
     dev=os.lstat(R).st_dev
