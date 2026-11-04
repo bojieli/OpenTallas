@@ -108,6 +108,23 @@ class T(unittest.TestCase):
             self.assertEqual(f.count("timing()"), LIB.count("timing()"))
             self.assertEqual(m.fit_text(f, m.lef_macros(LEF)["m"])[1], [])
 
+    def test_fit_is_bound_to_its_lib_and_stale_files_go(self):
+        with tempfile.TemporaryDirectory() as d:
+            import hashlib
+            m, k = load(d), self.kit(d)
+            m.fit(k)
+            h = (k / ".busfit" / "m_tt.lib").read_text().splitlines()[0]
+            self.assertIn(hashlib.sha256(LIB.encode()).hexdigest(), h)
+            (k / ".busfit" / "old_tt.lib").write_text("stale")
+            (k / "macros" / "m.lef").write_text("MACRO other\nEND other\n")
+            self.assertEqual(m.fit(k), {})
+            self.assertFalse((k / ".busfit").exists())
+
+    def test_readers_check_the_sha(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertIn("sha256sum", load(d).PROC)
+        self.assertIn("a stale one would read old timing arcs", (HERE / "signoff.py").read_text())
+
     def test_agreeing_lib_writes_nothing(self):
         with tempfile.TemporaryDirectory() as d:
             m = load(d)

@@ -4026,7 +4026,7 @@ cat > "$K/kwrs_busfit.py" <<'KWRS_BUSFIT'  # KWRS-BEGIN
 # K/.busfit/<lib> with those pins added, direction only and NO timing arcs; K/macros stays as it is, because Yosys and LEC read
 # it and a wider bus there would bind the black box to the wrong bits.  patch wraps read_liberty from ORFS util.tcl, in OpenROAD
 # only (not Yosys), once a stage ODB exists, so nothing links a netlist against a fit lib.  No fit file is written when LEF and lib agree.
-import hashlib, json, os, re, sys, tempfile
+import hashlib, json, os, re, shutil, sys, tempfile
 BUS = re.compile(r"^([^\[\]]+)\[(\d+)\]$")
 def lef_macros(text):
     out = {}
@@ -4120,6 +4120,7 @@ def fit_text(t, pins):
 def fit(k, out=None):
     k = str(k)
     mdir, out = os.path.join(k, "macros"), out or os.path.join(k, ".busfit")
+    shutil.rmtree(out, ignore_errors=True)  # never leave a fit from an older lib behind
     macros = {}
     if not os.path.isdir(mdir):
         return {}
@@ -4131,23 +4132,23 @@ def fit(k, out=None):
         if not n.endswith(".lib"):
             continue
         p = os.path.join(mdir, n)
-        t = open(p, errors="replace").read()
+        raw = open(p, "rb").read()
+        sha = hashlib.sha256(raw).hexdigest()
+        t = raw.decode(errors="replace")
         c = re.search(r"\bcell\s*\(\s*\"?([^\")\s]+)\"?\s*\)\s*\{", t)
         dst = os.path.join(out, n)
         if not c or c.group(1) not in macros:
             continue
         ft, added = fit_text(t, macros[c.group(1)])
         if not added:
-            if os.path.exists(dst):
-                os.remove(dst)
             continue
         os.makedirs(out, exist_ok=True)
         fd, tmp = tempfile.mkstemp(dir=out)
         with os.fdopen(fd, "w") as f:
-            f.write(ft)
+            f.write(f"/* OT_BUSFIT lib_sha256 {sha} */\n" + ft)
         os.chmod(tmp, 0o664)
         os.replace(tmp, dst)
-        report[n] = {"added": added, "lib_sha256": hashlib.sha256(t.encode()).hexdigest()}
+        report[n] = {"added": added, "lib_sha256": sha}
     if report:
         with open(os.path.join(out, "report.json"), "w") as f:
             json.dump(report, f, indent=1)
@@ -4158,7 +4159,11 @@ PROC = "\n".join((
     '  proc ::read_liberty { args } {',
     '    if { [info exists ::env(RESULTS_DIR)] && [llength [glob -nocomplain $::env(RESULTS_DIR)/*.odb]] } {',
     '      set g /work/.busfit/[file tail [lindex $args end]]',
-    '      if { [file exists $g] } { set args [lreplace $args end end $g] }',
+    '      set f [lindex $args end]',
+    '      if { [file exists $g] && [file exists $f] } {',
+    '        set c [open $g]; gets $c h; close $c',
+    '        if { [string first [lindex [exec sha256sum -- $f] 0] $h] >= 0 } { set args [lreplace $args end end $g] }',
+    '      }',
     '    }',
     '    uplevel 1 [list ::ot_busfit_read_liberty {*}$args]',
     '  }',
