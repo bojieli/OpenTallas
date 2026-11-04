@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.dh58_rf2_estimate.v1",
- "event": "l48rf2",
- "plan": "intel2:/srv/opentallas-scratch2/claude/dh58/rf2/prepared_l48rf2",
+ "event": "l48rc (OWNER CONSERVATIVE directive via DIE-HEAD-58 19:0x; plan = l48rf2 content, event key l48rc)",
+ "plan": "intel2:/srv/opentallas-scratch2/claude/dh58/rf2/prepared_l48rc (l48rf2 = same plan sha at rf2/prepared_l48rf2)",
  "plan_sha256": "8327f303db76f153f517d8bfc40a7a33c9f0ff276df382953e743f148c57e450",
  "base": "intel2:/srv/opentallas-scratch2/claude/dh58/rfplan_work/prepared_l48rf (59c391855c18)",
  "class_PLAIN_FT_FACE": {
@@ -169,10 +169,62 @@
  "g0c": {
   "tool": "rf2/hsrc (dh56-cland src 69e06c8b939 + turnb overlay + plain_seam overlay)",
   "l48rf": "1 ERROR (reset native release qualification PENDING lk_E*, pre-existing) / 16 WARN",
-  "l48rf2": "identical 17 findings"
+  "l48rf2": "identical 17 findings",
+  "l48rc_wave_src": "wsrc: l48rc = l48rf 17 findings identical (1 pre-existing reset-PENDING ERROR, 16 WARN)"
  },
  "plan_geom": {
   "note": "advisory; same tool on both plans",
   "delta": "only hd_ctl_n clock_reach 557.57 -> 559.23 um, clock_tap_sinks 1049 -> 1051 (two reset relays)"
+ },
+ "launch_src": "intel2:/srv/opentallas-scratch2/claude/dh58/rf2/wsrc = kw-fix-4-fl-head2@e20aedb65fe symlink farm + copied tools/ + kit_src_overlay_plain_seam_69e06c8b939.patch",
+ "conservative_form_targets": {
+  "note": "OWNER form targets (not gates). Cells / stages / clock-entry sinks met on all four; aspect and util are slot-geometry targets of transit strips (the strip spans its neighbours; util 0.35-0.45 would need slot shrink that breaks the abutment) -> not changed; faces already registered (station 0 = in-face flop, gen_rtl u_bout on senders) -> the measured lever is the io window (plain_seam_split) + capture latency vs vclk.",
+  "hd_ctl_e": {
+   "outline_um": [
+    855.36,
+    103.68
+   ],
+   "aspect": 8.25,
+   "gen_cells": 2,
+   "ft": "n_tx_ft/n_rx_ft 64b x 3 stations (registered mid-strip relays exist; hop ~214 um ~<120 ps << 580)",
+   "clock_reach_um": 197.89,
+   "tap_sinks": 139,
+   "added_cycles": 0,
+   "why_no_cycles": "all violators are port->s0 (65 bits); internal reg-to-reg pairs met (pair_skew min +56 ps, max_signed -65 met)"
+  },
+  "hd_ctl_n": {
+   "outline_um": [
+    1296.0,
+    708.48
+   ],
+   "aspect": 1.829,
+   "clock_reach_um": 559.23,
+   "clock_reach_note": "far sink = reset relay (l48rf 557.57 at another relay); CTS target only",
+   "tap_sinks": 1051,
+   "reset": "local tap [535.68,622.08] -> plan interior worst 379.3 um",
+   "added_cycles": 0
+  },
+  "hd_host_n": {
+   "outline_um": [
+    1442.88,
+    656.64
+   ],
+   "aspect": 2.197,
+   "clock_reach_um": 568.55,
+   "tap_sinks": 562,
+   "added_cycles": 0,
+   "risk": "FF window est -0.13 ps (worst setup bit 199 + worst hold bit 150, lower bound); PATHCLS: vclk FF mean 288 vs face-flop clk 260, pair skew 137 -> if it fails: per-type tap window / sender-side delay contract next"
+  },
+  "hd_spn_eshim_tx": {
+   "outline_um": [
+    95.04,
+    1036.8
+   ],
+   "aspect": 10.909,
+   "clock_reach_um": 165.73,
+   "tap_sinks": 582,
+   "ft": "link 565b x 1 station across the 95-um width (no long hop)",
+   "added_cycles": 0
+  }
  }
 }
