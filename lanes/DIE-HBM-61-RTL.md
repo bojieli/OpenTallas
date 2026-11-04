@@ -3,3 +3,4 @@
 - [CHECKED] predecessor probe.sh STA rc 1: probe_sta.tcl reads ::env(ODB) but probe.sh exports NET (sta_only.sh passes ODB and worked).
 - 2026-11-03 13:59 PST READY part 2 posted @071148bbd84 (tailx r1 merged). Open: tailx r2 c12 opt-in cuts (fork ac1c4900, uncommitted).
 - 2026-11-03 16:37 PST READY GEN_LINT fix @8ddb49948e4 -> ROOT-MERGE-27 (recipes_b2 c12 files for tailx_rest).
+- 2026-11-03 16:38 PST PARKED (DIE-HBM-61 ruling): tailx round 2 WIP at claude/die-hbm-61-reform-rtl-tailx2-wip-1103@023d9a52c70 (not EQ-gated, do not merge). TRIGGER: v6bc7f2 setup miss at sign-off after the 8ddb49948e4 relaunch -> finish round 2 (~2 h: EQ + mutants + gate both cores, opt-in default byte-identical) and post READY. Successor: DIE-HBM-61 owns the trigger check.
