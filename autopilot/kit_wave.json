@@ -253,7 +253,7 @@
     "kv3_phy",
     "kv3_phy_v1"
    ],
-   "note": "KW-FIX-7 06:4x: src main 5405676ba19 (tag j, plan and sidecar blobs identical to d0cddccfa24 [git rev-parse]), --native-cell-cap 517000 (COORD 06:00 (2)). | KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
+   "note": "KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-7 06:4x: src main 5405676ba19 (tag j, plan and sidecar blobs identical to d0cddccfa24 [git rev-parse]), --native-cell-cap 517000 (COORD 06:00 (2)). | KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
    "die_max_inflight": 60,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
@@ -500,10 +500,14 @@
     "kv3_io_ft_v1": "lifted 11-04 05:5x on FT-ROUTE-READ-1 (DIE-KV-67 05:50), COORD 05:20 (3); was: COORD 05:20 (3): ring ft rows held until one pilot has a route read, either way (KV ioft_a2 / S81 t17_A)"
    },
    "hosts": [
-    "epyc4"
+    "epyc4",
+    "epyc2"
    ],
    "gen_hosts": [
     "epyc4"
+   ],
+   "place_prefer": [
+    "epyc2"
    ]
   },
   "s81": {
@@ -2420,7 +2424,7 @@
    "die_max_inflight": 60,
    "owner_lane": "DIE-QC-65",
    "lane": "KIT-WAVE-12",
-   "note": "KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
+   "note": "KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
    "pilot_mode": "queue",
    "hold_items": {
     "sle_sc_v2": "CORE_CAP 542365/400000 (measured): CORE_CAP: no materialized hard cores",
@@ -2876,9 +2880,13 @@
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
-    "epyc4"
+    "epyc4",
+    "epyc2"
    ],
-   "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged."
+   "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
+   "place_prefer": [
+    "epyc2"
+   ]
   },
   "hbm": {
    "enabled": true,
