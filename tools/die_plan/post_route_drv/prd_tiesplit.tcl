@@ -54,16 +54,28 @@ proc ot_prd_tie_split {} {
   }
   puts "OT_PRD_TARGETED tie nets split $split, tie cells added $made"
 }
-# The split runs before global_route -start_incremental, so GRT does not see these nets as dirty and leaves them without
-# guides (half: detail_route "Global routing failed"). Reconnecting each tie output inside the window marks them dirty.
+# GRT indexes nets when global_route -start_incremental runs from those with guides; a net created before that, with no guide, is
+# unknown to it, and reconnecting a pin does not add it (half3, bf_col3c3: the new tie nets ended with no guide, have_routes 0).
+# So recreate each new tie net inside the window: the create callback adds it. Same name, same pins.
 proc ot_prd_tie_mark_dirty {} {
+  set block [ord::get_db_block]; set again 0
   foreach it $::ot_prd_tie_drivers {
-    set net [$it getNet]; set inst [$it getInst]; set dt [$inst isDoNotTouch]
-    $inst setDoNotTouch 0
-    $it disconnect
-    $it connect $net
-    $inst setDoNotTouch $dt
+    set net [$it getNet]; set name [$net getName]
+    if {![string match ot_prd_tie_*_n $name]} {
+      set inst [$it getInst]; set dt [$inst isDoNotTouch]
+      $inst setDoNotTouch 0
+      $it disconnect
+      $it connect $net
+      $inst setDoNotTouch $dt
+      continue
+    }
+    set pins [$net getITerms]; set dts {}
+    foreach p $pins { set i [$p getInst]; lappend dts [$i isDoNotTouch]; $i setDoNotTouch 0; $p disconnect }
+    odb::dbNet_destroy $net
+    set nn [odb::dbNet_create $block $name]
+    foreach p $pins d $dts { $p connect $nn; [$p getInst] setDoNotTouch $d }
+    incr again
   }
-  puts "OT_PRD_TARGETED tie nets marked dirty [llength $::ot_prd_tie_drivers]"
+  puts "OT_PRD_TARGETED tie nets marked dirty [llength $::ot_prd_tie_drivers], recreated $again"
 }
 if {![info exists ::env(OT_PRD_TIE_SPLIT)] || $::env(OT_PRD_TIE_SPLIT) ne "0"} { ot_prd_tie_split }
