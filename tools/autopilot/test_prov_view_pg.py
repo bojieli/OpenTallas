@@ -57,3 +57,14 @@ def test_extra_signal_port_still_fails(tmp_path):
 def test_missing_signal_port_still_fails(tmp_path):
     ok, why = view(tmp_path, ["VDD", "VSS"], False)
     assert not ok and "ports != LEF ports" in why
+
+
+def test_stamp_views_every_instance_of_a_repeated_module():
+    # DIE-QC-69 11-04: cbf_q00_s2 has 4 nk hard cores; one stamped entry left 3 floating in rtl_macro_placer
+    hc = [{"inst": f"u_t{i}", "module": "nk", "origin_um": [i, 0]} for i in range(4)] + [{"inst": "u_o", "module": "nl", "lef": "own.lef"}]
+    plan = {"partition_types": {"t": {"hard_cores": hc, "contents": [{"inst": "u_t0", "module": "soft"}]}}}
+    assert [c["inst"] for c, _ in PV.needed(plan, "t")] == ["u_t0", "u_o"]
+    PV.stamp_views(plan, "t", {"nk": {"lef": "nk.lef", "tt": "nk_tt.lib"}, "nl": {"lef": "nl.lef", "tt": "nl_tt.lib"}})
+    assert [(c.get("lef"), c.get("lib")) for c in hc] == [("nk.lef", "nk_tt.lib")] * 4 + [("own.lef", "nl_tt.lib")]
+    assert PV.needed(plan, "t") == []
+    assert "lef" not in plan["partition_types"]["t"]["contents"][0]

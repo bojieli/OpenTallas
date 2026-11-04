@@ -591,6 +591,17 @@ def _rs(net, land=RS, straps=("strap_efall",)):
     return face_guard.guard(net, "top", clocks=["fclk"], land=land, straps=list(straps))
 
 
+def test_ring_start_ring_with_declared_dead_bit():
+    # DIE-QC-69 11-04 (QC su_c x_su_l0_p1_i[449]): a declared dead ring bit has no slot, the live bits prove the ring
+    net = _rs_net().replace("input d; input st; input strap_efall", "input [1:0] d; input st; input strap_efall") \
+        .replace(".d(d)", ".d(d[0])")
+    land = RS
+    r = face_guard.guard(net, "top", clocks=["fclk"], land=land, straps=["strap_efall"], dead=["d[1]"])
+    assert r["verdict"] == "PASS" and r["dead_declared"] == ["d[1]"] and r["ring_start_bits"] == 1, r["fails"]
+    r = face_guard.guard(net, "top", clocks=["fclk"], land=land, straps=["strap_efall"])
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"]
+
+
 def test_ring_start_positive_and_default_unchanged():
     r = _rs(_rs_net())
     assert r["verdict"] == "PASS" and r["ring_start_bits"] == 1 and r["land_mux_bits"] == 1, r["fails"]
