@@ -170,14 +170,16 @@ proc ot_prd_dtoff_restore {} {
 # placement while repairing (every existing net keeps its routed RCX SPEF, re-read after each estimate as before); the
 # legalized result is routed by the same incremental GRT + DRT and signed off on its own RCX, so no check changes.
 # FLOW-25 11-03 (RSZ-0074 class, default on): a seed that carries routed data wires (OT_PRD_FROM=route|final, or a grt
-# pass whose seed is a route-keeping pass's 5_1_grt.odb) leaves GRT with no route for those nets: GRT skips a net with
-# wires (hasWires), so "global_route" routes only the ripped ones (n3_turn i2t: 390 of 45721 nets).  With the GRT source
-# repair_design then builds BufferedNet trees from those routes for EVERY driver it visits, violating or not.  No route +
-# driver alone in its GCell = nullptr, silent Steiner fallback; no route + driver sharing its GCell and layer with some
-# loads = a partial tree = RSZ-0074 "found route to 1 pins, expected 2", on any net, at chance (measured 7 days, all
-# hosts: 15 of ~480 wired sessions, 0 of 72 fresh ones; the same seeds pass with placement: pcf, egg).  Such a seed
-# therefore always repairs on the placement source above: Steiner trees, existing nets keep the routed SPEF.
-# OT_PRD_REPAIR_RC=grt keeps the GRT source (A/B only).  Fresh seeds are unchanged; so are all checks and margins.
+# pass whose seed is a route-keeping pass's 5_1_grt.odb) is not routed by GRT: nets with wires are skipped (n3_turn i2t:
+# 390 of 45721 routed; KV pcf: 0).  With the GRT source repair_design still builds a BufferedNet tree from GRT's routes
+# for EVERY driver it visits, violating or not, and those routes do not match the pins:
+#   no route for the net (n3_turn _172_): driver alone in its GCell = nullptr + silent Steiner fallback; driver sharing
+#     GCell and layer with some loads = partial tree = RSZ-0074 "found route to 1 pins, expected 2";
+#   route rebuilt from the guides in the DB (KV pcf net4170): the M1 stub ends one GCell from the pin's on-grid position
+#     of this session = RSZ-0074 "found route to 36 pins, expected 37", deterministic on that DB.
+# Raw run_prd.log counts, 7 days, 4 hosts, scratch copies not deduplicated: 15 of 479 wired/mixed sessions, 0 of 72 fresh.
+# Such a seed therefore always repairs on the placement source above: Steiner trees, no GRT tree is built, existing nets
+# keep the routed SPEF.  OT_PRD_REPAIR_RC=grt keeps the GRT source (A/B only).  Fresh seeds, checks and margins unchanged.
 proc ot_prd_wired_data_nets {} {
   set clk [dict create]
   foreach n [ot_clk_dbnets] { dict set clk [$n getName] 1 }
