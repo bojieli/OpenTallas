@@ -205,7 +205,8 @@ def probe(host, d, spill_ok=False):
 # keeps ROOT_SCRATCH_FLOOR_GB free on the root fs: its usable free = root fs free - that floor.  Other root-fs roots
 # (/srv/opentallas-scratch on the scratch-disk hosts) stay excluded (v13).  Reaper, PROTECTED-DBS and .keep rules
 # cover the path like every /srv/opentallas-scratch* root.
-ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "/srv/opentallas-scratch3").split(",") if x)
+# Off by default (COORD 11-03 23:22: release scans miss scratch3): set OT_RUN_ROOT_SCRATCH_ROOTS=/srv/opentallas-scratch3 to turn it on.
+ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "").split(",") if x)
 ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "500"))
 SCRATCH_PIN = os.path.normpath(os.environ["OT_RUN_SCRATCH_ROOT"]) if os.environ.get("OT_RUN_SCRATCH_ROOT") else ""
 SCRATCH_ROOTS = ("/srv/opentallas-scratch", "/srv/opentallas-scratch2") + tuple(
@@ -1001,7 +1002,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
     env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + env
-    env = f"OT_HEAVY_SHORT_SLOTS={16 if host == 'epyc2' else 12} OT_HEAVY_THREADS={int(os.environ.get('OT_RUN_THREADS', THREADS))} OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
+    env = f"OT_HEAVY_SHORT_SLOTS={16 if host in ('epyc2', 'epyc4') else 12} OT_HEAVY_THREADS={int(os.environ.get('OT_RUN_THREADS', THREADS))} OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
