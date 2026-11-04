@@ -241,7 +241,7 @@ def item_c():
             r = dict(zip(hdr, l))
             ac = str(r.get('added_cycles') or '0'); mm = re.match(r'\s*([+-]?\d+)', ac)
             cyc = int(mm.group(1)) if mm else 0
-            internal = r.get('dir') in ('cut', 'seam') or 'compensated' in ac     # inside the core, not at its ports
+            internal = r.get('dir') in ('cut', 'seam', 'reset') or 'compensated' in ac     # inside the core, not at its ports
             rows.append(dict(kind='core_internal', id=f"{r.get('core')}#{k}", core=r.get('core'), sub_block=r.get('sub_block'),
                              port=r.get('port_or_bus'), dir=r.get('dir'), cycles=cyc, stations=0, added_plan_cycles=0,
                              added_rtl_cycles=0 if internal else cyc, internal_cut_cycles=cyc if internal else 0,
