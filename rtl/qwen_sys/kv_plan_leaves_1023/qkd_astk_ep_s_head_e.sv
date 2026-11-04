@@ -7,10 +7,20 @@
 `ifndef KVD_STMUT
 `define KVD_STMUT 0
 `endif
+// HG-SPLIT EX join (DIE-KV-64 ruling 11-03): EX_ADD0..3 = the round-trip cycles added on EX lane k (xa out + xe back,
+// e.g. 4 when bind registers a die-plan cut crossing both ways); EX_PAD = a common floor (equal DT on every ep of the chain).
+// EXM = max(EX_PAD, EX_ADDk): lane k's return word is padded by EXM - EX_ADDk kept flop stages behind its pin flops and
+// DT = 2 + XL + 1 + EXM, so b_v (tb_sr[DT-1]) meets the four EX valids again; cal_bad / stl move with DT (the compiler's
+// exp_age floor rises by EXM).  Mutants KVD_STMUT 6 (DT not raised) / 7 (no pad).  All zero (default): no stage, DT unchanged, the netlist of the pre-11-03 module.
 // eo: port removed; eo = EO_E e + EO_RL (e + e / 2), e = sq[2:0] (qkd_astk_strip_st: 9 e + RL (e + e / 2), RL 3).
 module qkd_astk_ep_s_head_e #(
     parameter integer EO_E = 9,
     parameter integer EO_RL = 3,
+    parameter integer EX_ADD0 = 0,
+    parameter integer EX_ADD1 = 0,
+    parameter integer EX_ADD2 = 0,
+    parameter integer EX_ADD3 = 0,
+    parameter integer EX_PAD = 0,
     // COORD ruling 2 (10-25; KV-TOK 05:36 g == 0 for every scheduled op): QI_G_PIN=0 drops the ASTK qo copy of the hub's
     // constant am g bit (old qi[537]) from the port (qi 571 b, old b -> b-1 above 537) and supplies G_CONST instead.
     parameter integer QI_G_PIN = 1,
@@ -37,7 +47,10 @@ module qkd_astk_ep_s_head_e #(
     localparam integer ADD_LAT = 7, SFU_LA = 7, SFU_LM = 7;
     localparam integer XD = 7 * SFU_LM + 8 * SFU_LA + 4;
     localparam integer XL = 1 + ADD_LAT + XD + 1;      // qkd_astk_ex
-    localparam integer DT = 2 + XL + 1;                // sequence word -> SRAM -> xa -> ex -> the xe pin flop
+    localparam integer EXM01 = (EX_ADD0 > EX_ADD1) ? EX_ADD0 : EX_ADD1, EXM23 = (EX_ADD2 > EX_ADD3) ? EX_ADD2 : EX_ADD3;
+    localparam integer EXM4 = (EXM01 > EXM23) ? EXM01 : EXM23;
+    localparam integer EXM = (EX_PAD > EXM4) ? EX_PAD : EXM4;   // the padded EX round trip (HG-SPLIT)
+    localparam integer DT = 2 + XL + 1 + ((`KVD_STMUT == 6) ? 0 : EXM);   // sequence word -> SRAM -> xa -> ex -> the xe pin flop (+ EXM)
     (* keep *) reg rn_q;
     always @(posedge ck) rn_q <= rst_n;
     localparam integer STATIC_SCHEDULE = 1, HEADS = 1;
@@ -58,19 +71,41 @@ module qkd_astk_ep_s_head_e #(
     reg [266:0] xq;   // constant (plan variant): not kept, folded
     reg [650:0] zq;   // constant (plan variant): not kept, folded
     (* keep *) reg [521:0] rq;
-    (* keep *) reg [135:0] eq;
-    (* keep *) reg [7:0]   eqc;                        // the four leaves' {fault, v}
+    (* keep *) reg [135:0] eq_p;
+    (* keep *) reg [7:0]   eqc_p;                      // the four leaves' {fault, v} (pin flops)
+    wire [135:0] eq;                                   // lane k behind EXM - EX_ADDk pad stages (HG-SPLIT)
+    wire [7:0]   eqc;
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin so_q[0] <= 1'b0; so_q[13] <= 1'b0; so_q[424] <= 1'b0; qq[0] <= 1'b0; qq[15] <= 1'b0; qq[536:534] <= 3'd0; xq[10:0] <= 11'd0;
-                         zq[1:0] <= 2'b00; rq[0] <= 1'b0; eqc <= 8'd0; end
+                         zq[1:0] <= 2'b00; rq[0] <= 1'b0; eqc_p <= 8'd0; end
         else begin so_q[0] <= so[0]; so_q[13] <= so[13]; so_q[424] <= so_x[424]; qq[0] <= qi_x[0]; qq[15] <= qi_x[15]; qq[536:534] <= qi_x[536:534];
                    xq[10:0] <= xi[10:0]; zq[1:0] <= zi[1:0]; rq[0] <= ri[0];
-                   eqc <= {xe[103:102], xe[69:68], xe[35:34], xe[1:0]}; end
+                   eqc_p <= {xe[103:102], xe[69:68], xe[35:34], xe[1:0]}; end
     always @(posedge ck) begin
         so_q[12:1] <= so[12:1]; so_q[411:14] <= so[411:14];
         qq[14:1] <= qi_x[14:1]; qq[533:16] <= qi_x[533:16]; qq[571:537] <= qi_x[571:537]; xq[266:11] <= xi[266:11];
-        zq[650:2] <= zi[650:2]; rq[521:1] <= ri[521:1]; eq <= xe;
+        zq[650:2] <= zi[650:2]; rq[521:1] <= ri[521:1]; eq_p <= xe;
     end
+    genvar gl;
+    generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_expad
+        localparam integer P = (`KVD_STMUT == 7) ? 0 : EXM - ((gl == 0) ? EX_ADD0 : (gl == 1) ? EX_ADD1 : (gl == 2) ? EX_ADD2 : EX_ADD3);
+        if (P == 0) begin : g_0
+            assign eq[34*gl +: 34] = eq_p[34*gl +: 34];
+            assign eqc[2*gl +: 2] = eqc_p[2*gl +: 2];
+        end else begin : g_pad
+            (* keep *) reg [32*P-1:0] pq;                  // data stages (no reset, like eq; e = its [33:2])
+            (* keep *) reg [2*P-1:0]  pc;                  // {fault, v} stages (reset, like eqc)
+            if (P == 1) begin : g_1
+                always @(posedge ck) pq <= eq_p[34*gl + 2 +: 32];
+                always @(posedge ck or negedge rn_q) if (!rn_q) pc <= 2'd0; else pc <= eqc_p[2*gl +: 2];
+            end else begin : g_n
+                always @(posedge ck) pq <= {pq[32*P-33:0], eq_p[34*gl + 2 +: 32]};
+                always @(posedge ck or negedge rn_q) if (!rn_q) pc <= {(2*P){1'b0}}; else pc <= {pc[2*P-3:0], eqc_p[2*gl +: 2]};
+            end
+            assign eq[34*gl +: 34] = {pq[32*P-1 -: 32], pc[2*P-1 -: 2]};
+            assign eqc[2*gl +: 2] = pc[2*P-1 -: 2];
+        end
+    end endgenerate
     wire         start = qq[0];
     wire [13:0]  T = qq[14:1];
     // Compiler ages are measured in edges AFTER the local start edge.
