@@ -791,6 +791,15 @@ def test_kit_closure_expands_object_macro_masters(tmp_path):
     assert sorted(macros) == ["sram_m1"]
     assert bind.kit_object_defines("`define A B\n`ifdef Q\n`define A C\n`elsif R\n`define A D\n`endif\n", ["R"])["A"] == "D"
     assert bind.expand_object_macros("`A u (.x(1));", {"A": "`B", "B": "m"}) == "m u (.x(1));"
+    fn = {}
+    txt = "`ifdef S\n`define R(n) rom_s\n`else\n`define R(n) rom_x #(.I(n))\n`endif\n`define G(a) gone\n`undef G\n"
+    bind.kit_object_defines(txt, ["S"], func=fn)
+    assert fn == {"R": "rom_s", "G": "gone"}
+    assert bind.expand_function_macros('`R("a)b") u (.x(f(1)));', fn) == "rom_s u (.x(f(1)));"
+    assert bind.expand_function_macros("`Q(1) u ();", fn) == "`Q(1) u ();"
+    fn = {}
+    bind.kit_object_defines(txt, [], func=fn)
+    assert bind.expand_function_macros('`R("a") u ();', fn) == 'rom_x #(.I(n)) u ();'
 
 
 def test_kit_inline_includes(tmp_path):
