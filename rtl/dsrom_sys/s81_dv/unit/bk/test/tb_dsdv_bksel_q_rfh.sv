@@ -15,8 +15,16 @@ module tb_dsdv_bksel_q_rfh;
     reg          f_cr = 1'b0;
     wire [864:0] tsa, tsb; wire [353:0] toa, tob;
     always @(posedge ck) rst_d <= rst;
+`ifdef OT_RFH_B2
+    // DIE-S81-53 rfh3: RFH 1 fed every input one edge late vs RFH 2 (stage inside): equal on every edge.
+    reg [514:0] lane_d; reg [65:0] f_c_d; reg f_cr_d;
+    always @(posedge ck) begin lane_d <= lane; f_c_d <= f_c; f_cr_d <= f_cr; end
+    dsdv_bksel_q #(.OLL(2), .RFH(1)) ua (.ck(ck), .rst(rst_d), .lane(lane_d), .f_c(f_c_d), .f_cr(f_cr_d), .t_s(tsa), .t_o(toa));
+    dsdv_bksel_q #(.OLL(2), .RFH(2)) ub (.ck(ck), .rst(rst),   .lane(lane),   .f_c(f_c),   .f_cr(f_cr),   .t_s(tsb), .t_o(tob));
+`else
     dsdv_bksel_q #(.OLL(2), .RFH(0)) ua (.ck(ck), .rst(rst_d), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(tsa), .t_o(toa));
     dsdv_bksel_q #(.OLL(2), .RFH(1)) ub (.ck(ck), .rst(rst),   .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(tsb), .t_o(tob));
+`endif
     integer cyc = 0, err = 0, tog = 0, ncmp = 0, ncyc = 4000, seed = 1, j, nbeat = 0;
     reg [1218:0] prev;
     reg [3:0] ty;

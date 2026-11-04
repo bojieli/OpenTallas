@@ -69,17 +69,30 @@ module dsdv_bksel_q #(
 `else
     always @(negedge ck) begin lane_nf <= lane; f_c_nf <= f_c; f_cr_nf <= f_cr; rst_nf <= rst; end
 `endif
-    wire [514:0] lane_i = RFH != 0 ? lane_nf : lane;
-    wire [65:0]  f_c_i  = RFH != 0 ? f_c_nf : f_c;
-    wire         f_cr_i = RFH != 0 ? f_cr_nf : f_cr;
-    wire         rst_i  = RFH != 0 ? rst_nf : rst;
+    // DIE-S81-53 11-04 (rfh3, rfh2 stopped at GRT TT -64.75 on 59 eps: negedge lane face -> long wire + type decode -> g_fr /
+    // s0c / s0d in T/2, with the 145-ps tree gap between pin flops and core): RFH 2 = RFH 1 + one rising-edge stage on every
+    // input (lane, f_c, f_cr, rst), +1 cycle lane / f_c / f_cr -> outputs (owner 11-03: core-pin cycles are a lever).
+    reg [514:0] lane_p; reg [65:0] f_c_p; reg f_cr_p, rst_p;
+`ifdef OT_RFH_MUT_P2     // bench mutant: f_cr and lane bypass the added stage (beats=0 in this bench: f_cr alone is not observable)
+    always @(posedge ck) begin lane_p <= lane_nf; f_c_p <= f_c_nf; f_cr_p <= f_cr_nf; rst_p <= rst_nf; end
+    wire f_cr_pm = f_cr_nf;
+    wire [514:0] lane_pm = lane_nf;
+`else
+    always @(posedge ck) begin lane_p <= lane_nf; f_c_p <= f_c_nf; f_cr_p <= f_cr_nf; rst_p <= rst_nf; end
+    wire f_cr_pm = f_cr_p;
+    wire [514:0] lane_pm = lane_p;
+`endif
+    wire [514:0] lane_i = RFH == 2 ? lane_pm : RFH != 0 ? lane_nf : lane;
+    wire [65:0]  f_c_i  = RFH == 2 ? f_c_p : RFH != 0 ? f_c_nf : f_c;
+    wire         f_cr_i = RFH == 2 ? f_cr_pm : RFH != 0 ? f_cr_nf : f_cr;
+    wire         rst_i  = RFH == 2 ? rst_p : RFH != 0 ? rst_nf : rst;
     dsdv_bk_oll #(.W(865 + 354), .EN(OLL)) u_oll (.ck(ck), .d({t_s_f, t_o_f}), .q({t_s, t_o}));
 `ifdef OT_S81PH_SEL_HQ
     // S81-TOPK7 hierarchical quarter (ot_s81ph_hq_tile.sv): same ports / function / edges, native-census-clean structure
 `ifndef OT_S81PH_SEL_HQ_MUT
 `define OT_S81PH_SEL_HQ_MUT 0
 `endif
-    dsfd_selt_q_hq #(.DM(4), .MUT(`OT_S81PH_SEL_HQ_MUT), .FACE(RFH)) u_q (.ck(ck), .rst(rst_i), .lane(lane_i), .f_c(f_c_i),
+    dsfd_selt_q_hq #(.DM(4), .MUT(`OT_S81PH_SEL_HQ_MUT), .FACE(RFH != 0)) u_q (.ck(ck), .rst(rst_i), .lane(lane_i), .f_c(f_c_i),
         .f_cr(f_cr_i), .t_s(t_s_f), .t_o(t_o_f));
 `else
     dsfd_selt_q2 #(.DM(4), .CMP_RETIME(1), .PIPE2(1), .QIO(1), .ILD(1), .FRPR(1)) u_q (.ck(ck), .rst(rst_i), .lane(lane_i),
