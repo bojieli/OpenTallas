@@ -11984,3 +11984,22 @@ Waiters: epyc2 7, intel1 31, intel2 12, epyc4 48. Kit-wave SUBMITs at 20:20.
 - 2026-11-03 20:22 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED ot_hbm_hc_subtree32_core RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency; wave src kw-fix-4-hbmrf1 = d35a67594c7; RE-FORM netlist with its own face regs, 4 regions). Estimate: census WNS +110.6 / stage 722 ps; last routed TT +272.75, FF -6.41. Job: wave attempt_5, host epyc4.
 - 2026-11-03 20:22 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED ot_hfd_coll_q2_hard_v8g__reduce RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency; wave src kw-fix-4-hbmrf1 = d35a67594c7; oneclk wrapper fix, 5 regions). Estimate: census WNS +66.8 / stage 766 ps. Job: wave attempt_3, host epyc4.
 - 2026-11-03 20:22 PST [DIE-HBM-61/RF1-BUILD] LAUNCHED ot_hbm_host_cp_rxs RF1 (util 0.40, face-shell + face-lockup .*, face-reset-relay 2, clock-regions rf1, hard_core_latency; wave src kw-fix-4-hbmrf1 = d35a67594c7; + rw-recipe-delta, llr name fix, 2 regions). Estimate: census WNS +51.9 / stage 781 ps. Job: wave attempt_4, host epyc4.
+- 2026-11-03 20:22 PST RESULT [DIE-HBM-61/RF1-BUILD -> DIE-HBM-61, COORD, KW-FIX-4, ROOT-MERGE-27] HBM-RF1: 12 of 12 in-scope cores LAUNCHED once each (lines above; estimates are advisory census/baseline values).
+  - Recipe: util 0.40 (glue 0.35); face-shell + face-lockup .*; face-reset-relay 2; clock-regions rf1 (d44v + 4 derived); hard_core_latency on; src d35a67594c7.
+  - Launched by me via ot-run --hosts epyc4 (intel2 pids 2134578-83; q3_vm admitted as oth-ubuntu-3965259, the other 5 are queued for memory): ep_static, pslice_c5, xp_aq_tree13_fmt, programme_store_r10, vms_glue_nw_t (+face-stage .*=1), q3_vm.
+  - Launched by the wave, KW-FIX-4 retries at 20:07 on epyc4: lanes canon a6, lanes_plain a3, bfqg a4, subtree32 a5, q2_reduce a3, host_cp_rxs a4.
+  - Branch claude/die-hbm-61-rf1-1103@d35a67594c7 (approved for I6) has 2 class fixes: q2_reduce oneclk wrapper sha, and the llr RW if-generate macro names (EQ proven).
+  - NOT launched, with reasons:
+    - Clock-band only, resumed from CTS (OWNER 19:12 / KW-FIX-4 20:08): vm_query_n12, vmdel_lane_n, qcore_r13, sfustore_hw, ctlx, cxport_ij_q.
+    - LEC trio: after lecneq 298bfc55e92 merges, KW-FIX-4 relaunches them with the RF1 args + core_clock_regions_rf1b.json (adds argmax 2 entries). Asked 20:0x.
+    - SPLIT cores and tailx_rest: owned by other helpers.
+  - Stage > 583 ps, no RTL cut yet (cycles are cheap; plan delta + schedule + TOK-VERIFY):
+    - pslice_c5 1385 ps: d_addr -> SRAM r_ce_in. Register addr/ce at the macro, +1 read cycle at the programme port.
+    - q3_vm 930 ps: writer a1 -> used_q. +1 stage in the writer occupancy update (writer input port).
+    - xp_aq 785 ps: s10_c -> y. Split the format stage, +1 on y.
+    - cp_rxs 781 ps: codec rf -> p_tx_v. Register the codec decision, +1 at the tx port.
+    - q2_reduce 766 ps: pub_tag -> lane state. Register the tag match, +1 at the pub ports.
+    - subtree32 722 ps: an internal level. +1 level register.
+    - bfqg 710 ps: rp_sel -> cap. Register rp_sel, +1 at cap.
+    - ep_static 585 ps: 1 endpoint, no cut.
+    - vms_glue_nw_t: input-side relays still need an RTL relay cut (face-stage covers outputs only).
