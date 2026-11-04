@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-**Status 2026-11-04 10:35 PST:** count 109 (101 cores + 8 types), up 5 from 104 at 09:35: QC su_lane_w l0; KV astk-class row; HBM tx5, ctlx class rows. S81 38/54, HEAD 4/4 + 8/25 types, QC 14/16, KV 22/32, HBM 23/91. Next to land: S81 xrt1 re-sign running, xrt3 LEC; KV astk, AHUB re-signs. Main 56055ff212a: I36-I38 merged 09:42-10:30 (QC event, HBM parts 9-10, phymid, CAPEND, RF-EG). I39 in test (ring key, FLOW-32, qw_dec). Launched 10:10-10:30: S81 form A stations, KV PV + PC. Disks: intel1 126, epyc2 101, intel2 178, epyc4 574 GB; worktree prune by inode under way.
+**Status 2026-11-04 10:35 PST:** count 109 (101 cores + 8 types), up 5 from 104 at 09:35. S81 38/54, HEAD 4/4 + 8/25 types, QC 14/16, KV 22/32, HBM 23/91. Next to land: S81 xrt1 re-sign running, xrt3 LEC; KV astk, AHUB re-signs. Main 56055ff212a: I36-I38 merged 09:42-10:30 (QC event, HBM parts 9-10, phymid, CAPEND, RF-EG). I39 in test (ring key, FLOW-32, qw_dec). Launched 10:10-10:30: S81 form A stations, KV PV + PC. Disks: intel1 126, epyc2 101, intel2 178, epyc4 574 GB; worktree prune by inode under way.
 
 <!-- BREAKDOWN BEGIN -->
 ## FAILURES · unsigned cores and types by class (auto, 2026-11-04 10:34 PST)
