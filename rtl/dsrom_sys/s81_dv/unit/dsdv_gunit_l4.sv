@@ -35,10 +35,15 @@
 // every edge; mutant caught).
 // S81-RF1 conservative form (DIE-S81-51/RF-D 11-03, OWNER 18:57): OLAT = 2 (default) = negedge out-face flops (0 cycles);
 // outline 302.4x108 (fill <= 0.45, aspect 2.8) moved to a free gunit__t1 slot (die-local plan delta, results/rfd_gl4_1103).
+// RF = 2 (default, RF-D 11-03 conservative form 2: rfd quick-place reg->reg -172.5 ps, all 138 violators in qadd stage 1
+// (u_k1) of the T levels; the A-tree u_a2 stage 1 from flops alone is 820 ps): RF 1 + every adder LAT 4 -> 5
+// (ot_hdc_qadd_lat KEEP 1 LAT 5 = ot_hdc_fp32_add_f12_l5x: operand mux + decode + exponent differences | compare, alignments,
+// swap | add, LZC | shift, round | encode; same f12 arithmetic).  Every delay line follows LA, so the leaf is self-timed:
+// +1 edge per adder level on the HC chain (valid-driven; the mix phase / launch follow r_ok and the last mix).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l4 #(
     parameter integer MUT  = 0,
-    parameter integer RF   = 1,
+    parameter integer RF   = 2,
     parameter integer OLAT = 2
 ) (
     input  wire          clk,
@@ -106,7 +111,7 @@ module dsdv_gunit_l4 #(
         assign {rs_o, hct_v, hct_b, mix_go_s, launch_s, fault, rn_o, launch, mx_v, mx_i, mx_y, t_set, t_w, t_row, t_lm, t_sm, cwo_v, cwo_a, cwo_d, sid_o, ss_v, ss, eps_c} = o_r;
     end endgenerate
 
-    localparam integer V = 276, LA = 4, LM = 5, NACC = 25, NSET = 2;
+    localparam integer V = 276, LA = (RF >= 2) ? 5 : 4, LM = 5, NACC = 25, NSET = 2;
     // reset relay (S81U-GUNIT4): the rst_n port drives only ot_rst_relay; 4 kept region copies (each <= ~256
     // reset loads, no port net spans the leaf).  Release is 3 edges after the port (transaction-level exact).
     wire [3:0] rq;
