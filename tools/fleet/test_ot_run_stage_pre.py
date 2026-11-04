@@ -74,6 +74,14 @@ class StagePre(unittest.TestCase):
         self.assertEqual(self.pre([self.kit, self.run]).returncode, 0)
         self.assertFalse(os.path.exists(self.lane + "/" + MARK))
 
+    def test_only_a_real_refusal_marks_the_client(self):
+        for err, real in (("OT_SPILL_REAL /x", True), ("ssh: connection reset", False)):
+            copied = mock.Mock(returncode=3, stderr=err, sent=0)
+            with mock.patch.object(m, "spill_copy_fwd", return_value=copied), mock.patch.object(m, "log_signal"), \
+                    mock.patch.object(m, "SPILL_COPY_TRIES", 1), mock.patch.object(m.time, "sleep"):
+                self.assertIsNone(m.spill_run("a", "b", [self.kit], 1.0, 8, ["true"], self.kit, None, lambda s: None))
+            self.assertEqual(m.SPILL_REFUSED_REAL, real, err)
+
 
 if __name__ == "__main__":
     unittest.main()
