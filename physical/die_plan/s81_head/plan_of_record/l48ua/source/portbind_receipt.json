@@ -1,6 +1,6 @@
 {
  "verdict": "PASS",
- "die_sha256": "913cad01dbd2bf3332db4b7b16274ecb9f5ba6563e5d0e17084a5a39009140bc",
+ "die_sha256": "4e1fae60939e98cba95e669621d55447861c249655516e17d6063c0f56385396",
  "summary": {
   "masters": 26,
   "instances": 358,
@@ -21,7 +21,7 @@
   "params_not_in_rtl": 0,
   "strap_ports": 119,
   "pad_bits": 0,
-  "spare_out_bits": 2950,
+  "spare_out_bits": 2951,
   "unresolved_children": 0,
   "ambiguous_children": 0,
   "variant_children": 0,
@@ -31,5 +31,5 @@
  "tie_audit": "PASS",
  "count_audit": "PASS",
  "module_check": "PASS",
- "tools_rev": "297b48c0178c5cc5ed917a8e7de0a603f546dbd1"
+ "tools_rev": "297b48c0178"
 }
