@@ -266,13 +266,14 @@ def out_slice(decl, conn, sp, ck, gates):
         if decl.get(p, ("",))[0] != d or width(decl[p][1]) != 1:
             raise SystemExit(f"rf_wrap out_slice: {p} is not a 1-bit {d}")
     rr = conn[rst]; rr1 = rr.strip("{}") if rr != rst else f"{rst}[0]"
-    # (* keep *): the port flop and its internal twin share one next state; unkept, opt_merge folds them into one
-    # flop whose Q loads the port and the slice logic (face_guard shared)
-    L = [f"  wire rf_cwv; (* keep = 1 *) reg rf_ov; (* keep = 1 *) reg rf_pv;",
-         f"  wire rf_cwrdy = !rf_ov || {rdy}[0];",
+    # the port flop and its internal twin: the twin holds the INVERTED state (rf_on = !occupied, reset 1), so the two
+    # cells differ structurally and opt_merge cannot fold them (an equal-D (* keep *) pair was still folded, and a kept
+    # port-side wire survives flatten behind a buffer on the face net: face_guard shared); the fwft rf_pe pattern
+    L = [f"  wire rf_cwv; reg rf_on; reg rf_pv;",
+         f"  wire rf_cwrdy = rf_on || {rdy}[0];",
          f"  wire rf_ld = rf_cwv && rf_cwrdy;",
-         f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_ov <= 1'b0; rf_pv <= 1'b0; end",
-         f"    else begin rf_ov <= rf_ld ? 1'b1 : ({rdy}[0] ? 1'b0 : rf_ov); rf_pv <= rf_ld ? 1'b1 : ({rdy}[0] ? 1'b0 : rf_ov); end",
+         f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_on <= 1'b1; rf_pv <= 1'b0; end",
+         f"    else begin rf_on <= rf_ld ? 1'b0 : ({rdy}[0] ? 1'b1 : rf_on); rf_pv <= rf_ld ? 1'b1 : ({rdy}[0] ? 1'b0 : !rf_on); end",
          f"  assign {v} = {{rf_pv}};"]
     conn[v] = "{rf_cwv}"; conn[rdy] = "{rf_cwrdy}"
     added = 2; buses = []
@@ -298,14 +299,14 @@ def out_slice(decl, conn, sp, ck, gates):
             raise SystemExit("rf_wrap out_slice: done depth must be a power of two >= 2")
         L += [f"  wire rf_cdv; wire [{wt-1}:0] rf_ctg; wire [{wc-1}:0] rf_ccn;",
               f"  reg [{wt-1}:0] rf_qtg [0:{D-1}]; reg [{wc-1}:0] rf_qcn [0:{D-1}]; reg [{la}:0] rf_qn; reg [{la-1}:0] rf_qw, rf_qr;",
-              f"  wire rf_rel = (rf_qn != 0) && (!rf_ov || {rdy}[0]);",
+              f"  wire rf_rel = (rf_qn != 0) && (rf_on || {rdy}[0]);",
               f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_qn <= 0; rf_qw <= 0; rf_qr <= 0; end",
               f"    else begin rf_qn <= rf_qn + (rf_cdv ? 1'b1 : 1'b0) - (rf_rel ? 1'b1 : 1'b0);",
               f"      if (rf_cdv) rf_qw <= rf_qw + 1'b1; if (rf_rel) rf_qr <= rf_qr + 1'b1; end",
               f"  always @(posedge {ck}) if (rf_cdv) begin rf_qtg[rf_qw] <= rf_ctg; rf_qcn[rf_qw] <= rf_ccn; end",
-              f"  (* keep = 1 *) reg rf_dv; (* keep = 1 *) reg rf_dvi; (* keep = 1 *) reg [{wt-1}:0] rf_dtg; (* keep = 1 *) reg [{wc-1}:0] rf_dcn;",
-              f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_dv <= 1'b0; rf_dvi <= 1'b0; end",
-              f"    else begin rf_dv <= rf_rel; rf_dvi <= rf_rel; end",
+              f"  reg rf_dv; reg rf_dvn; (* keep = 1 *) reg [{wt-1}:0] rf_dtg; (* keep = 1 *) reg [{wc-1}:0] rf_dcn;",
+              f"  always @(posedge {ck} or negedge {rr1}) if (!{rr1}) begin rf_dv <= 1'b0; rf_dvn <= 1'b1; end",  # rf_dvn = inverted internal twin
+              f"    else begin rf_dv <= rf_rel; rf_dvn <= !rf_rel; end",
               # tag / count ports: the head entry, loaded every edge (the parent samples them with done_v only)
               f"  always @(posedge {ck}) begin rf_dtg <= rf_qtg[rf_qr]; rf_dcn <= rf_qcn[rf_qr]; end",
               f"  assign {dv} = {{rf_dv}}; assign {tg} = rf_dtg; assign {cn} = rf_dcn;"]
@@ -333,7 +334,7 @@ def out_slice(decl, conn, sp, ck, gates):
         if decl.get(bz, ("",))[0] != "output" or width(decl[bz][1]) != 1:
             raise SystemExit(f"rf_wrap out_slice: busy {bz} is not a 1-bit output")
         L += [f"  wire rf_cbusy;", f"  assign rf_cbusy_g = rf_cbusy;" if dn and dn.get("gate") else "",
-              f"  assign {bz} = {{rf_cbusy || rf_ov{' || (rf_qn != 0) || rf_dvi' if dn else ''}}};"]
+              f"  assign {bz} = {{rf_cbusy || !rf_on{' || (rf_qn != 0) || !rf_dvn' if dn else ''}}};"]
         conn[bz] = "{rf_cbusy}"
     return L, dict(v=v, rdy=rdy, data=buses, done=bool(dn), busy=bz, write_added_cycles=1, done_added_cycles="1..2 (held until its last sector left the slice)",
                    throughput="1/cycle", rdy_face="combinational (timed face: slice load enable)", added_flops=added)

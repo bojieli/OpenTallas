@@ -44,13 +44,13 @@ def test_out_slice_private_port_banks_and_gates():
         assert f".{b}(rf_c_{b})" in top
     assert "assign w_v = {rf_pv};" in top and "rf_pv <=" in top
     # port flops and their internal twins are kept (else opt_merge folds them: face_guard shared)
-    assert "(* keep = 1 *) reg rf_ov; (* keep = 1 *) reg rf_pv;" in top
-    assert "(* keep = 1 *) reg rf_dv; (* keep = 1 *) reg rf_dvi;" in top
+    assert "reg rf_on; reg rf_pv;" in top and "(* keep = 1 *) reg rf_pv" not in top
+    assert "reg rf_dv; reg rf_dvn;" in top and "rf_dvn <= !rf_rel" in top
     # done released only when the slice is empty or transferring; registered port flops
-    assert "wire rf_rel = (rf_qn != 0) && (!rf_ov || w_rdy[0]);" in top
+    assert "wire rf_rel = (rf_qn != 0) && (rf_on || w_rdy[0]);" in top
     assert "rf_dv <= rf_rel" in top and "assign done_v = {rf_dv};" in top
     # busy covers the slice and pending dones
-    assert "assign busy = {rf_cbusy || rf_ov || (rf_qn != 0) || rf_dvi};" in top
+    assert "assign busy = {rf_cbusy || !rf_on || (rf_qn != 0) || !rf_dvn};" in top
     # descriptor gate: done bound + reset relay; payload gate: reset relay
     assert "assign rf_hold_d_rdy = rf_dhold || !rf_rst_q__rst_n;" in top
     assert "assign rf_hold_in_rdy = !rf_rst_q__rst_n;" in top
