@@ -1277,7 +1277,7 @@ def main():
                 rc = spill_run(best, *plan, mem, cmd, d, left, say, disk=disk)
                 if rc is not None:
                     sys.exit(rc)
-                spill = False
+                spill = not SPILL_REFUSED_REAL   # KW-FIX-8 11-04: only a real-data refusal ends SPILL for this client; a failed copy retries next re-place
             else:
                 if first or permanent:
                     say(f"ot-run: SPILL not possible: {why}")
@@ -1355,7 +1355,7 @@ SPILL_HOSTS_EXCLUDE = {"ot-pve1", "ot-agidock128"}          # small / shared hos
 # here needs that much root free; any other spill needs the host's scratch disk above SPILL_DST_SCRATCH_FLOOR.  The host comes
 # back by itself once the disk has room; jobs whose --dir already lives there are unaffected; a probe without the field: not refused.
 SPILL_DST_ROOT_FLOOR = {"epyc2": 500}
-SPILL_DST_SCRATCH_FLOOR = {"epyc2": 80, "intel1": 100, "intel2": 100, "localhost": 100}
+SPILL_DST_SCRATCH_FLOOR = {"epyc2": 140, "intel1": 100, "intel2": 100, "localhost": 100}   # epyc2 80 -> 140 KW-FIX-8 11-04 (COORD: scratch2 118 GB, 30 GB/h)
 # COORD 11-04 00:2x: epyc4 queue 53 waiters while epyc2 admits; a --stage ECO job may use the epyc2 scratch disk down to this floor.
 SPILL_DST_SCRATCH_FLOOR_ECO = {"epyc2": 50}
 SPILL_ECO_RE = re.compile(r"eco_loop|late_eco|(^|[/_.-])eco($|[/_.-]|\s)")
@@ -1986,6 +1986,9 @@ def spill_handoff_cli(tag, goal="place", dry=False, say=print):
     return 0 if spill_handoff(src, dst, roots, kit, stamp, rec, say, snapshot=True) else 1
 
 
+SPILL_REFUSED_REAL = False   # the last forward copy was refused with OT_SPILL_REAL
+
+
 def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     """copy the roots src->dst, run there, copy the files the run wrote back to src.  Returns the exit status, or None
     when the copy failed (nothing ran).  v10: the forward copy is marked first, serialised per lane and retried; a
@@ -2002,6 +2005,8 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
         if k + 1 < SPILL_COPY_TRIES:
             say(f"ot-run: SPILL copy {src} -> {dst} failed (try {k + 1}/{SPILL_COPY_TRIES}): {r.stderr.strip()[-160:]}; retrying")
             time.sleep(5 * (k + 1))
+    global SPILL_REFUSED_REAL
+    SPILL_REFUSED_REAL = "OT_SPILL_REAL" in r.stderr
     if r.returncode:
         say(f"ot-run: SPILL copy {src} -> {dst} FAILED ({r.stderr.strip()[-200:]}); NOT RUN there (the partial copy on {dst} "
             f"is marked {SPILL_MARK}, so no job is placed on it)")
