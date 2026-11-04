@@ -85,6 +85,59 @@ def swap_lef(kd, master, lef, repo):
     return fz["kit_hash"]
 
 
+# ZH footprints: old and RF-CONS (x0, y0), with the axis direction each one grows in.
+ZH_OLD = {"g_zh0": (25.908, 69.108), "g_zh1": (198.732, 69.108), "g_zh2": (25.908, 263.532), "g_zh3": (198.732, 263.532)}
+ZH_DIR = {"g_zh0": (-1, -1), "g_zh1": (1, -1), "g_zh2": (-1, 1), "g_zh3": (1, 1)}
+OLD_SIDE, HALO, FF_W = 151.2, 4.32, 1.5
+
+
+def anchor_move(x, y):
+    """an anchor in an old ZH's halo on a grown side moves out with that edge (10.8 = 200 sites = 40 rows: same row
+    orientation).  Returns (x, y) or None when it is clear of the grown footprint."""
+    for k, (x0, y0) in ZH_OLD.items():
+        sx, sy = ZH_DIR[k]
+        xa, xb, ya, yb = x0 - HALO, x0 + OLD_SIDE + HALO, y0 - HALO, y0 + OLD_SIDE + HALO
+        if not (xa - FF_W <= x <= xb and ya - 0.27 <= y <= yb):
+            continue
+        beyond_x = x + FF_W > x0 + OLD_SIDE if sx > 0 else x < x0
+        beyond_y = y + 0.27 > y0 + OLD_SIDE if sy > 0 else y < y0
+        if beyond_x or beyond_y:
+            return (round(x + (sx * D if beyond_x else 0), 3), round(y + (sy * D if beyond_y else 0), 3))
+    return None
+
+
+def fix_anchors(kd, repo, release=()):
+    """move the planned stages next to a grown ZH face and let DPL legalize those (PLACED, not FIRM): they may land on a
+    tap or the new macro padding.  `release` names further anchors to hand to DPL (DPL-0033 tap overlaps)."""
+    kd, repo = Path(kd), Path(repo)
+    pat = re.compile(r"set c \[\$b findInst \{(\S+)\}\]\n(.*?)set ay \[expr \{round\(([\d.]+) \* \$u\)\}\]\n(.*?)"
+                     r"\$c setLocation \[expr \{round\(([\d.]+) \* \$u\)\}\] \$ay\n\$c setPlacementStatus FIRM\n", re.S)
+    moved = []
+
+    def sub(m):
+        name, x, y = m.group(1), float(m.group(5)), float(m.group(3))
+        n = anchor_move(x, y)
+        if n is None and name not in release:
+            return m.group(0)
+        nx, ny = n or (x, y)
+        moved.append(dict(name=name, old=[x, y], new=[nx, ny]))
+        return (f"set c [$b findInst {{{name}}}]\n{m.group(2)}set ay [expr {{round({ny:.6f} * $u)}}]\n{m.group(4)}"
+                f"$c setLocation [expr {{round({nx:.6f} * $u)}}] $ay\n$c setPlacementStatus PLACED\n")
+    tcl = kd / "ahub_pre_dpl.tcl"
+    tcl.write_text(pat.sub(sub, tcl.read_text()))
+    sys.path.insert(0, str(repo / "tools/die_plan"))
+    import lec as LEC
+    import gen_core_kit_kv as GEN
+    prov = LEC._repo_provenance(repo)
+    fz = json.loads((kd / "freeze.json").read_text())
+    fz["source_commit"] = prov.get("commit")
+    fz["ahub_cons"]["anchors_moved"] = moved
+    fz["kit_hash"] = GEN.kit_hash(kd)
+    (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
+    LEC.write_kit_provenance(kd, repo, provenance=prov)
+    return moved
+
+
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -94,7 +147,12 @@ if __name__ == "__main__":
     ap.add_argument("--recip-view")
     ap.add_argument("--swap-lef", nargs=3, metavar=("KIT", "MASTER", "LEF"), help="replace one child LEF in a built kit")
     ap.add_argument("--repo", default=str(Path(__file__).resolve().parents[5]))
+    ap.add_argument("--fix-anchors", metavar="KIT", help="move the planned stages off the grown ZH faces")
+    ap.add_argument("--release", nargs="*", default=[], help="anchors handed to DPL without a move")
     a = ap.parse_args()
+    if a.fix_anchors:
+        print(json.dumps(fix_anchors(a.fix_anchors, a.repo, set(a.release))))
+        raise SystemExit(0)
     if a.swap_lef:
         print(swap_lef(a.swap_lef[0], a.swap_lef[1], a.swap_lef[2], a.repo))
         raise SystemExit(0)
