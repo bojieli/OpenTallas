@@ -554,7 +554,7 @@ def pilot_classes_state(d, die, state):
         c = pilot_key(d, die, r.get("item"), r.get("kind") or "type")
         if r.get("q_status") == "SIGNED":
             signed.add(c)
-        elif r.get("status") in ("RUNNING", "LAUNCHING") or (
+        elif r.get("status") in ("RUNNING", "LAUNCHING") or r.get("enqueue_pending") or (
                 r.get("status") == "ENQUEUED" and r.get("q_status") not in ("FAIL", "SIGNED")):
             live[c] = live.get(c, 0) + 1
     return signed, live
@@ -2647,11 +2647,29 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))
         return
-    rc, out, err = AP.sh(argv, timeout=300)
+    if cfg.get("_enqueue_down"):                         # the coord remote failed earlier this tick: do not repeat the backoff
+        rc, out, err = 1, "", "enqueue: NOT SUBMITTED: " + cfg["_enqueue_down"]
+    else:
+        rc, out, err = AP.sh(argv, timeout=300)
+    if rc and (rc == 124 or "NOT SUBMITTED" in f"{err}{out}"):
+        # KW6-CODE 11-04: the row did not reach coord/state (a transport error, not a verdict on the kit). The kit
+        # stays PASS and retry_enqueue() sends it on a later tick; publish is idempotent, so a lost reply cannot
+        # duplicate the row.
+        why = (err or out)[-200:]
+        cfg["_enqueue_down"] = why
+        if not rec.get("enqueue_pending"):
+            notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS, enqueue not submitted; retried next tick ({why[:120]})")
+        rec.update(status="PASS", enqueue_pending=int(rec.get("enqueue_pending") or 0) + 1, **{"class": ""},
+                   reason=f"enqueue pending, rc {rc}: {why}", updated=time.time())
+        AP.log(f"KIT-WAVE ENQUEUE-PENDING {rec['die']}/{rec['item']}@{rec.get('attempt')} try {rec['enqueue_pending']}: {why}")
+        return
     if rc:
+        rec.pop("enqueue_pending", None)
         rec.update(status="FAIL", **{"class": "FLOW"}, reason=f"enqueue rc {rc}: {(err or out)[-200:]}")
         notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS but enqueue failed rc {rc}")
         return
+    if rec.pop("enqueue_pending", None):
+        rec.update(reason="", updated=time.time())
     rec["status"] = "ENQUEUED"
     st["pass_n"] = int(st.get("pass_n", 0)) + 1
     msg = f"{rec['item']} AUTO-GEOM PASS{' ' + rec['geom_tag'] if rec.get('geom_tag') else ''} -> enqueued ({rec['kit']})"
@@ -2663,6 +2681,31 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         msg += " + GEOM REQ sample"
     notices.setdefault(rec["die"], []).append(msg)
     AP.log(f"KIT-WAVE ENQUEUE {rec['die']}/{rec['item']} {rec['kit']} geom {rec.get('geom', '')[:120]}")
+
+
+def retry_enqueue(AP, cfg, st, notices):
+    """send the kits enqueue_pass() kept PASS on a transport failure. Only records it marked: old FAIL FLOW rows whose
+    reason reads NOT SUBMITTED stay with the operator (some hold kits older than a class fix). A die stop or a
+    hold_items match waits; a block that left the current plan is closed, not sent."""
+    import fnmatch
+    n = 0
+    for rec in (st.get("items") or {}).values():
+        if rec.get("status") != "PASS" or not rec.get("enqueue_pending") or not rec.get("kit"):
+            continue
+        d = (cfg.get("dies") or {}).get(rec.get("die"))
+        if not isinstance(d, dict) or stop_reason(cfg, rec["die"], cfg.get("_ap_dir") or AP.AP_DIR):
+            continue
+        if any(fnmatch.fnmatchcase(rec["item"], pat) for pat in (d.get("hold_items") or {})):
+            continue
+        if _plan_current(cfg, st, rec) is False:
+            rec.pop("enqueue_pending", None)
+            rec.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=time.time(),
+                       reason="enqueue pending on a superseded plan block (plan_current=no); not sent")
+            notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} SUPERSEDED: pending enqueue not sent")
+            continue
+        enqueue_pass(AP, cfg, st, rec, notices)
+        n += 1
+    return n
 
 
 # ------------------------------------------------------------------------------------------------ past GEOM
@@ -2945,6 +2988,7 @@ def _step(AP, ap_dir):
     st.setdefault("items", {})
     notices = {}
     collect(AP, cfg, st, notices)
+    retry_enqueue(AP, cfg, st, notices)
     follow_queue(st, ap_dir, notices)
     auto_rejudge(AP, cfg, st, notices)
     try:
