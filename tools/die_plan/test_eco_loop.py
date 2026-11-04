@@ -326,3 +326,22 @@ def test_non_sig11_route_failure_not_retried(tmp_path):
     k = kit(tmp_path)
     res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=Fake([None]), tools=Path(E.HERE))
     assert res["verdict"] == "ERROR" and len(res["iterations"]) == 1 and "repair_rc_retry" not in res
+
+
+def test_eco_vclk_frame_uses_signoff_measured(tmp_path, monkeypatch):
+    ref = "applied mode pin_flop_mean clock vclk latency_ps 332.271532 samples 232 missing 0 clocks 1"
+    assert E.measured_vclk(ref) == pytest.approx(332.271532)
+    assert E.measured_vclk("applied mode bound_ff clock vclk latency_ps 342") is None
+    assert E.measured_vclk(None) is None
+    r = rec(1, -4)
+    r["checks"]["hold_ff"]["ff_vclk_reference"] = ref
+    r["checks"]["setup_tt"]["vclk_reference"] = ref.replace("332.271532", "437.8")
+    prev = E.metrics(r)
+    (tmp_path / "config.mk").write_text("export OT_VCLK_FF = 342\n")
+    assert E.eco_vclk_frame(tmp_path, "b10", prev) == pytest.approx(332.271532)
+    assert "OT_ECO_VCLK_PS = 332.271532" in (tmp_path / "config.mk").read_text()
+    assert E.eco_vclk_frame(tmp_path, "t10", prev) == pytest.approx(437.8)
+    assert E.eco_vclk_frame(tmp_path, "m10", prev) is None             # two-mode has its own measured frame
+    assert E.eco_vclk_frame(tmp_path, "b10", E.metrics(rec(1, -4))) is None  # unmeasured: kit bound stays
+    monkeypatch.setenv("OT_ECO_MEASURED_VCLK", "0")
+    assert E.eco_vclk_frame(tmp_path, "b10", prev) is None
