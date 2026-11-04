@@ -75,7 +75,7 @@ l_sites = [(lx0, y) for y in ly] + [(lx1, y) for y in ly[:8]]
 l_m = [rect(n, *q) for n, q in zip(l_names, l_sites)]
 spec = [dict(core=CORE, sha="pcol", part="p8", glue=f"{CORE}__p8glue.sv", conn=f"{CORE}.conn.json",
              subs=[dict(module="ot_hbm_su_pcol_s", cells=8000), dict(module="ot_hbm_su_pcol_l", cells=14000), dict(module="ot_hbm_su_pcol_h", cells=5000)],
-             added_cycles="start/length/cfg inputs +2, command/busy/valid/done/edge_index +2, fault +4; reform_1103/cycles/pcol.tsv (TOK-VERIFY batch)",
+             added_cycles="start, length and cfg to command, busy, valid, done, edge_index +2 end to end; to fault +4 end to end; both against the kit base form; reform_1103/cycles/pcol.tsv (TOK-VERIFY batch)",
              boundary_sub=PRE + "u_h", hub_sub=PRE + "u_h", keep_face=True, layout=lay,
              clock_entry={"ot_hbm_su_pcol_s": [60.48, 190.08]},
              macros=dict(ot_hbm_su_pcol_s=s_m, ot_hbm_su_pcol_l=l_m),

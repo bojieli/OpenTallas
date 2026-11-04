@@ -19,7 +19,7 @@
     "cells": 5000
    }
   ],
-  "added_cycles": "start/length/cfg inputs +2, command/busy/valid/done/edge_index +2, fault +4; reform_1103/cycles/pcol.tsv (TOK-VERIFY batch)",
+  "added_cycles": "start, length and cfg to command, busy, valid, done, edge_index +2 end to end; to fault +4 end to end; both against the kit base form; reform_1103/cycles/pcol.tsv (TOK-VERIFY batch)",
   "boundary_sub": "u_fcore.u_core.u_h",
   "hub_sub": "u_fcore.u_core.u_h",
   "keep_face": true,

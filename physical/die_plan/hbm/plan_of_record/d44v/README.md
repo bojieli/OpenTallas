@@ -217,7 +217,7 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
 Builder step `mk_split.py p/b3 split_p8/split_p8.json split_p8`, after the part 7 step. Inputs in results/die_hbm_1103/reform/split_p8/.
 ot_hbm_su_programme_pslice_c5 (4 inst, q_hub_nw/ne.u_pgp_Q__q0/q1) becomes ot_hbm_su_pcol_s x7 (118.8x336.96, 7 macros), _l x3 (257.04x423.36,
 17 macros) and head _h (136.08x216, no macro). Registered faces, per-column start/length relay with no shared flop, registered command funnel.
-Slice latency: inputs +2, command/busy/valid/done/edge_index +2, fault +4, physical/die_plan/hbm/reform_1103/cycles/pcol.tsv.
+Slice latency against the kit base form, end to end: start/length/cfg to command/busy/valid/done/edge_index +2, to fault +4, physical/die_plan/hbm/reform_1103/cycles/pcol.tsv.
 mk_split options keep_face and hub_sub are part 8 only. Every sub keeps its full RTL pin list (conn_union.py): status outputs only column 0 drives
 stay as free pins on the other columns. Bench: split_p8/run_eq.sh (lockstep against d34578d6f plus the kit shell and declared shift, 8 mutants killed).
 

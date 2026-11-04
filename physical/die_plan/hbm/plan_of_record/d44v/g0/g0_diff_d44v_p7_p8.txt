@@ -1,0 +1,7 @@
+by check: {'core_faces': (8, 11), 'hops': (2, 2), 'reach': (9, 9), 'stations': (3, 3), 'street_die_leg': (2, 2)}
+gone 1 new 4
+NEW core_faces type q_hub_nw core u_pgp_Q__q0__c1 port edge_index: 16 pins on face S face away from its partner(s) u_obs_Q: mean cos -0.82, 16 pins on the far side (re-pin to face N)
+NEW core_faces type q_hub_nw core u_pgp_Q__q0__c2 port edge_index: 16 pins on face S face away from its partner(s) u_obs_Q: mean cos -0.90, 16 pins on the far side (re-pin to face N)
+NEW core_faces type q_hub_nw core u_pgp_Q__q0__c3 port edge_index: 16 pins on face S face away from its partner(s) u_obs_Q: mean cos -0.96, 16 pins on the far side (re-pin to face N)
+NEW core_faces type q_hub_ne: 16 core ports face away from their partners (11 more not listed)
+GONE core_faces type q_hub_ne: 13 core ports face away from their partners (8 more not listed)
