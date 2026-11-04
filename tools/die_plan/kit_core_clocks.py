@@ -15,8 +15,13 @@ def wire(bound, module, rows):
     receipt = []
     consumers = set()
     for port, physical_inst, pin, _early, _insertion in rows:
+        # LP_STAR_1104 (KW6-CLASS, S81 *_LP__t* kit_rtl): a plan tap `<inst>` with no pin takes every clock pin of the
+        # core (gen_phys.core_tap_rows, clock_taps.tcl `port inst *`).  No single RTL connection names that, so the kit
+        # source keeps the bind's clock connections and clock_taps.tcl hangs the pins on the wrapper port, as for a
+        # nested leaf below.
         if pin == "*":
-            raise ValueError(f"core clock {port}: explicit clock pin required")
+            receipt.append(dict(port=port, instance=physical_inst, pin=pin, previous_net=None, mode="physical_tap"))
+            continue
         # The plan wrapper owns u_bound. Physical specialization may name it;
         # otherwise the binder's native leaf instances have their standard u_ prefix.
         candidates = ([physical_inst[len("u_bound."):]] if physical_inst.startswith("u_bound.")
