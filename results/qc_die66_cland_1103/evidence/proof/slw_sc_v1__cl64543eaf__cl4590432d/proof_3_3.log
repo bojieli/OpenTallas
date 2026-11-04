@@ -1,0 +1,132 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl4590432d/base/3_2_place_iop.odb
+Took 6 seconds: read_db /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl4590432d/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl4590432d/base/2_floorplan.sdc
+Took 6 seconds: read_sdc /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl4590432d/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/face_flops.tcl
+OT_FACE_FLOPS placed 2521 pin registers FIRM at their faces (7366 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 4394 ft stations j>=1 FIRM on their routes (0 missing)
+OT_FACE_FLOPS landed ft slots: 24505 stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k
+OT_RESET_TREE entry relayed depth 4 (64 tree + 74 pad relays, planned max hop 379.3 um): placed 221 flops FIRM, placed max hop 380.4 um, 0 hops > 405 um: PASS (missing: 0 )
+OT_RESET_TAPS role mission
+OT_RESET_TAPS 57 taps (1 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 0 re-pointed to the nearest tap's synchroniser, 0 already there, 0 without a same-polarity net (kept); per tap: 
+OT_CLAND collector grow u_bound.u_cland_collect_rst_n_t10/fault_o$_SDFF_PN0_ (collector:rst_n_t10): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_n_t10/ready_o$_SDFF_PN0_ (collector:rst_n_t10): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_100/fault_o$_SDFF_PN0_ (collector:rst_rl_100): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_100/ready_o$_SDFF_PN0_ (collector:rst_rl_100): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_101/fault_o$_SDFF_PN0_ (collector:rst_rl_101): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_101/ready_o$_SDFF_PN0_ (collector:rst_rl_101): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_33/ready_o$_SDFF_PN0_ (collector:rst_rl_33): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_34/fault_o$_SDFF_PN0_ (collector:rst_rl_34): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_34/ready_o$_SDFF_PN0_ (collector:rst_rl_34): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_64/fault_o$_SDFF_PN0_ (collector:rst_rl_64): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_64/ready_o$_SDFF_PN0_ (collector:rst_rl_64): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_65/fault_o$_SDFF_PN0_ (collector:rst_rl_65): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_65/ready_o$_SDFF_PN0_ (collector:rst_rl_65): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_81/fault_o$_SDFF_PN0_ (collector:rst_rl_81): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_81/ready_o$_SDFF_PN0_ (collector:rst_rl_81): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_89/ready_o$_SDFF_PN0_ (collector:rst_rl_89): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_90/fault_o$_SDFF_PN0_ (collector:rst_rl_90): window x2 (+-4.32 um)
+OT_CLAND collector grow u_bound.u_cland_collect_rst_rl_90/ready_o$_SDFF_PN0_ (collector:rst_rl_90): window x2 (+-4.32 um)
+OT_CLAND placed 164988 actual mapped cells FIRM in nonoverlapping reserved bands/relay sites
+OT_FACE_FLOPS landed line: 17572 stations of 6933 plan-siteless landed bits re-placed on their placed-ring -> out-pin lines (0 missing)
+OT_RESET_TAPS role mission
+OT_RESET_TAPS 57 taps (1 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 0 re-pointed to the nearest tap's synchroniser, 0 already there, 0 without a same-polarity net (kept); per tap: 
+Took 2004 seconds: source /work/face_flops.tcl
+[INFO RSZ-0026] Removed 968 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 9599 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 9376 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+OT_GPL_SPARSE movable util 5.998 % (threshold 2.000 %): GPL modes unchanged
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  4.320  4.320 ) ( 609.120 1334.880 ) um
+[INFO GPL-0016] Core area:                  804722.688 um^2
+[INFO GPL-0036] Movable instances area:      46313.049 um^2
+[INFO GPL-0037] Total instances area:        78926.526 um^2
+[INFO GPL-0035] Pin density area adjust:       851.634 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            675358
+[INFO GPL-0007] Movable instances:              409718
+[INFO GPL-0008] Fixed instances:                265640
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                 620242
+[INFO GPL-0011] Number of pins:                1748320
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 613.440 1339.200 ) um
+[INFO GPL-0013] Placement BBox: (  4.320  4.320 ) ( 609.120 1334.880 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                804722.688 um^2
+[INFO GPL-0017] Fixed instances area:        32613.477 um^2
+[INFO GPL-0018] Movable instances area:      47164.683 um^2
+[INFO GPL-0019] Utilization:                     6.109 %
+[INFO GPL-0020] Standard cells area:         47164.683 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 409718	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00034270 HPWL: 73514434180
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00001349 HPWL: 16757405836
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000856 HPWL: 16513299780
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000657 HPWL: 16488802625
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000688 HPWL: 16475351063
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.115 um^2
+[INFO GPL-0025] Ideal bin area:                  0.230 um^2
+[INFO GPL-0026] Ideal bin count:               3495329
+[INFO GPL-0027] Total bin area:             804722.688 um^2
+[INFO GPL-0028] Bin count (X, Y):        1024 ,   2048
+[INFO GPL-0029] Bin size (W * H):       0.591 *  0.650 um
+[INFO GPL-0030] Number of bins:                2097152
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9382 |  1.598608e+07 |   +0.00% |  1.52e-14 |      
+       10 |   0.9361 |  1.607548e+07 |   +0.56% |  2.43e-14 |      
+       20 |   0.9342 |  1.604202e+07 |   -0.21% |  3.96e-14 |      
+       30 |   0.9320 |  1.605102e+07 |   +0.06% |  6.43e-14 |      
+       40 |   0.9301 |  1.604226e+07 |   -0.05% |  1.04e-13 |      
+       50 |   0.9279 |  1.605146e+07 |   +0.06% |  1.70e-13 |      
+       60 |   0.9256 |  1.607209e+07 |   +0.13% |  2.75e-13 |      
+       70 |   0.9240 |  1.605280e+07 |   -0.12% |  4.49e-13 |      
+       80 |   0.9217 |  1.605696e+07 |   +0.03% |  7.30e-13 |      
+       90 |   0.9199 |  1.606323e+07 |   +0.04% |  1.19e-12 |      
+      100 |   0.9181 |  1.607025e+07 |   +0.04% |  1.93e-12 |      
+      110 |   0.9163 |  1.607724e+07 |   +0.04% |  3.15e-12 |      
+      120 |   0.9148 |  1.608434e+07 |   +0.04% |  5.13e-12 |      
+      130 |   0.9139 |  1.609159e+07 |   +0.05% |  8.34e-12 |      
+      140 |   0.9126 |  1.609985e+07 |   +0.05% |  1.36e-11 |      
+      150 |   0.9113 |  1.611013e+07 |   +0.06% |  2.21e-11 |      
+      160 |   0.9081 |  1.612486e+07 |   +0.09% |  3.59e-11 |      
+      170 |   0.9032 |  1.614658e+07 |   +0.13% |  5.84e-11 |      
+      180 |   0.8953 |  1.618017e+07 |   +0.21% |  9.48e-11 |      
+      190 |   0.8837 |  1.623129e+07 |   +0.32% |  1.54e-10 |      
+      200 |   0.8687 |  1.630307e+07 |   +0.44% |  2.48e-10 |      
+      210 |   0.8497 |  1.640347e+07 |   +0.62% |  4.00e-10 |      
+      220 |   0.8274 |  1.653412e+07 |   +0.80% |  6.42e-10 |      
+      230 |   0.8013 |  1.669396e+07 |   +0.97% |  1.03e-09 |      
+      240 |   0.7592 |  1.702885e+07 |   +2.01% |  1.62e-09 |      
+      250 |   0.6910 |  1.752157e+07 |   +2.89% |  2.43e-09 |      
+      260 |   0.6798 |  1.745255e+07 |   -0.39% |  3.92e-09 |      
+      270 |   0.6915 |  1.709718e+07 |   -2.04% |  6.39e-09 |      
+      280 |   0.6808 |  1.690636e+07 |   -1.12% |  1.04e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 287, overflow: 0.625, keep resizer changes at: 1, HPWL: 17292250688
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    620242
