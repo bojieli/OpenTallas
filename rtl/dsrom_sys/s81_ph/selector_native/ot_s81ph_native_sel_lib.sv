@@ -440,8 +440,32 @@ module ot_s81ph_native_sel_pack #(
             end
             reg [W*CE-1:0] q;
             reg [LW:0]     qc;
+            wire [W*CE-1:0] a2_q;
+`ifdef OT_S81PH_PACK_Z0FOLD
+            // DIE-S81-52/RF-H 11-03 (LEC class 'synthesis-folded registers made structural'): after group 0 lane 0 holds an
+            // entry of lanes 0..3 only, whose shift count zz = LANE - below <= 3, so its z MSB is 0 by construction (synthesis
+            // folds this flop; the reset-state constant proof does not reach it through the unreset s1_e).  The D is a literal
+            // 0 here: same function, both LEC sides see the constant.  Proof: run_bksel_q_rfh.sh zfold; sim check below.
+            if (gr == 0 && LW >= 3) begin : g_z0
+                assign a2_q = {a2[W*CE-1:PW+LW], 1'b0, a2[PW+LW-2:0]};
+`ifndef SYNTHESIS
+                reg chk_live = 1'b0;
+                always @(posedge clk) begin
+                    chk_live <= rst_n && s1_v;
+                    if (chk_live && a2[PW+LW-1] === 1'b1) $fatal(1, "OT_S81PH_PACK_Z0FOLD: lane 0 z MSB set after group 0");
+`ifdef OT_RFH_MUT_ZCHK   // bench mutant: the same check on lane 0 z LSB, which is NOT constant: must fire when entries move
+                    if (chk_live && a2[PW] === 1'b1) $fatal(1, "OT_RFH_MUT_ZCHK fired");
+`endif
+                end
+`endif
+            end else begin : g_nz0
+                assign a2_q = a2;
+            end
+`else
+            assign a2_q = a2;
+`endif
             always @(posedge clk) begin
-                q  <= a2;
+                q  <= a2_q;
                 qc <= (gr == 0) ? s1_cnt : crc[(LW+1)*(gr == 0 ? 0 : gr - 1) +: LW+1];
             end
             assign crf[W*CE*gr +: W*CE] = q;

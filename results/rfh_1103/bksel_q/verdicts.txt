@@ -7,3 +7,12 @@ rtl/dsrom_sys/s81_dv/unit/bk/test/run_bksel_q_rfh.sh  lockstep RFH 0 (RF-C form,
   Note: random commands/credits give beats=0 on t_o valid; equivalence covers status t_s (toggling every edge) and t_o.
 Kit dsdv_bksel_q_rfh (plan copy rfc_bk_1103, recipes rfh_bk_1103): GEN_LINT PASS 0, KIT_PREFLIGHT PASS 0; regional_taps.tcl = main (CTS-DT-1).
 Parent contract: no pin-latency change (0 data edges); reset +1 edge inside the core; inputs on the legacy IO contract.
+
+r2 DIE-S81-52/RF-H 11-03 (LEC class + IO reference class; run_bksel_q_rfh.sh, defines + OT_S81PH_PACK_Z0FOLD):
+  BKSELQ_RFH PASS cycles=4000 compared=3987 toggling_edges=3922 beats=0 errors=0 mut=none seed=1
+  BKSELQ_RFH PASS cycles=4000 compared=3987 toggling_edges=3922 beats=0 errors=0 mut=none seed=7
+  BKSELQ_RFH FAIL cycles=4000 compared=3987 toggling_edges=3922 beats=0 errors=3922 mut=face seed=1
+  BKSELQ_RFH FAIL cycles=4000 compared=3987 toggling_edges=3922 beats=0 errors=23 mut=sel seed=1
+  mut zchk (OT_RFH_MUT_ZCHK, the Z0FOLD sim check on lane 0 z LSB): fired, $fatal at cycle 79 (caught; expected non-zero run)
+  zfold (yosys sat, pack W=16 WITHOUT the define, undefined init, free inputs, prove after 5 steps): PW=6 q[9] SUCCESS, control q[6] FAIL; PW=7 q[10] SUCCESS, control q[7] FAIL: ZFOLD PASS
+  3_place probe of the rfh DB (t_o[203]): clk fall -> Q -> INV -> BUF = 84 ps, no logic; old vclk 250 with tree max 1063: -647; vclk 975: +78 at max, +165 at p50.

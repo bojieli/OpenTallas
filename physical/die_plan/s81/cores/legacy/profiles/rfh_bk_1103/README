@@ -10,3 +10,10 @@ release +1 edge (synchronous).  IO contract: plan-of-record legacy (in_min -40 /
 sender lockup latch; the RF-C half_cycle_inputs recipe is not used).
 Recipes: recipes.json (OLL 2, RFH 1, regional taps 4x4, M6).  Bench: rtl/dsrom_sys/s81_dv/unit/bk/test/run_bksel_q_rfh.sh;
 verdicts results/rfh_1103/bksel_q/verdicts.txt.
+
+rfh2 (DIE-S81-52/RF-H 11-03), kit dsdv_bksel_q_rfh2:
+  LEC: OT_S81PH_PACK_Z0FOLD (rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv, default off) ties lane 0 z MSB after group 0
+  to a literal 0: lanes 0..3 only feed it, so zz <= 3.  Proof: run_bksel_q_rfh.sh <out> zfold.  Sim check + mutant zchk.
+  IO reference: recipe insertion_ps 975 (FF 789.8 = ratio 0.81) = measured rfh 4_1_cts p50 974.5; the -720 ps t_o was vclk 250 against that tree
+  (84 ps clk-to-pin, no logic).  Advisory: KIT_PREFLIGHT corner_modes/ff_binding report vclk != 250 (target).  Open for the die: an early tap of
+  ~725 ps vs the 250 ps plan reference (band checked in die STA, OWNER 11-03).

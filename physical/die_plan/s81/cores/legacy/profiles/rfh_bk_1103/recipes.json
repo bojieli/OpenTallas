@@ -3,7 +3,8 @@
  "dsdv_bksel_q": {
   "ref_tile": "physical/die_plan/s81/cores/legacy/profiles/rfh_bk_1103/spec",
   "defines": [
-   "OT_HB_PINCOPY"
+   "OT_HB_PINCOPY",
+   "OT_S81PH_PACK_Z0FOLD"
   ],
   "params": {
    "OLL": 2,
@@ -19,6 +20,8 @@
    "SYNTH_BLACKBOXES": "ot_s81ph_native_sel_hist_bank",
    "MAX_ROUTING_LAYER": "M6"
   },
-  "suffix": "rfh"
+  "suffix": "rfh2",
+  "insertion_ps": 975.0,
+  "insertion_basis": "measured core: rfh 4_1_cts OT_RT_INS all registers p50 974.5 ps (TT placement RC, 33723 regs), FF = FF_TT_INSERTION_RATIO; -720 ps t_o = IO reference class (vclk 250 vs measured tree), same netlist; band checked in die STA (OWNER 11-03)"
  }
 }
