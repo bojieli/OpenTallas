@@ -846,12 +846,14 @@ class Binder:
         import dead_inputs
         try:
             self.proven_dead = dead_inputs.ProvenDead(self.ab, E.REPO, self.types)
+            self.declared_ties = dead_inputs.DeclaredTies(self.ab)
         except ValueError as exc:
             raise BindError(str(exc)) from exc
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
         self.tied_pins = defaultdict(list)   # (path, port) -> [(bit, value, source)]; every tied bit, uncapped
+        self.declared_tied = defaultdict(list)   # (type, module, port) -> bits, manifest declared_ties (reported, not errors)
         self.rewire, self.rewire_stats = {}, {}
         # as-built die-port names of RTL ports (GEN bundle-wrapper masters renamed 1:1), for plan-name affinity
         self.die_port_name = {}
@@ -1322,6 +1324,10 @@ class Binder:
             if self.proven_dead.allows(self.parts[p]["type"], cell, pn, i,
                     self.param_defaults.get((cell.ytype, cell.module), {})):
                 cnt["proven_dead"] += 1
+                return ("literal", s[1])
+            if self.declared_ties.allows(self.parts[p]["type"], cell.module, pn, i, s[1]):
+                cnt["declared_tie"] += 1
+                self.declared_tied[(self.parts[p]["type"], cell.module, pn)].append(i)
                 return ("literal", s[1])
             if self.R.is_strap(pin):
                 cnt["strap"] += 1
@@ -4266,6 +4272,9 @@ def cmd_bind(a):
     (out / "bind_tied.json").write_text(json.dumps(
         [dict(path=k[0], port=k[1], module=k[2], bits=[b[0] for b in v], values="".join(str(b[1]) for b in v),
               sources=sorted({b[2] for b in v})) for k, v in sorted(B.tied_pins.items())], indent=0) + "\n")
+    (out / "bind_declared_ties.json").write_text(json.dumps(
+        [dict(type=k[0], module=k[1], port=k[2], bits=sorted(set(v)), n=len(v)) for k, v in sorted(B.declared_tied.items())],
+        indent=0) + "\n")
     rep, lat = B.report()
     if B.instance_path_params:
         rep["instance_path_params"] = B.instance_path_params

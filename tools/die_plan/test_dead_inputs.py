@@ -47,3 +47,20 @@ def test_exact_type_parameter_source_and_bit(tmp_path):
 def test_no_unknown_direction_assumption():
  m=dict(ports={'a':dict(direction='input',bits=[2])},cells={'child':dict(connections={'unknown':[2]},port_directions={})})
  assert dead_bits(m,'a')==set()
+
+
+def test_declared_ties_exact():
+    from dead_inputs import DeclaredTies
+    d = DeclaredTies({"declared_ties": [dict(types=["T1"], module="m", port="rt_e", bits=[140, 279], value="0", proof="p.sh")]})
+    assert d.allows("T1", "m", "rt_e", 140, "0") and d.allows("T1", "m", "rt_e", 279, "0")
+    assert not d.allows("T1", "m", "rt_e", 139, "0") and not d.allows("T2", "m", "rt_e", 200, "0")
+    assert not d.allows("T1", "m", "rt_w", 200, "0") and not d.allows("T1", "m", "rt_e", 200, "1") and not d.allows("T1", "x", "rt_e", 200, "0")
+
+
+def test_declared_ties_rejects_loose_row():
+    import pytest
+    from dead_inputs import DeclaredTies
+    with pytest.raises(ValueError):
+        DeclaredTies({"declared_ties": [dict(types=[], module="m", port="p", bits=[0, 1], value="0", proof="x")]})
+    with pytest.raises(ValueError):
+        DeclaredTies({"declared_ties": [dict(types=["T"], module="m", port="p", bits=[0, 1], value="0")]})
