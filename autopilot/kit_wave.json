@@ -273,7 +273,10 @@
     "kv3_hroot": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_hub_Ei": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
-    "kv3_io_ft_v1": "KW-FIX-7 06:3x COORD: Ring FT no release until DIE-KV-67 posts the guard 0 vs gate -90 cause; do not launch"
+    "kv3_io_ft_v1": "KW-FIX-7 06:3x COORD: Ring FT no release until DIE-KV-67 posts the guard 0 vs gate -90 cause; do not launch",
+    "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
+    "kv3_hub_Eo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ",
+    "kv3_hub_Wo": "DIE-KV-69 09:08: no retry, astk port mismatch, waits for astk plan event after astk LEC EQ"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1104/kit-wave",
    "retry_fix": {
@@ -2149,7 +2152,8 @@
     "hd_spn_eshim_rx@2",
     "hd_spn_wshim_rx@2",
     "hd_spn_wshim_tx@5",
-    "hd_st_n4@1"
+    "hd_st_n4@1",
+    "hd_turn_a@4"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -2236,7 +2240,8 @@
     "hd_spn_eshim_rx@2": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
     "hd_spn_wshim_rx@2": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
     "hd_spn_wshim_tx@5": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
-    "hd_st_n4@1": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41"
+    "hd_st_n4@1": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
+    "hd_turn_a@4": "KW-FIX-8 09:2x COORD 07:34 (3) pilot read on l48ua: same plan block as l48tb attempt 4 (GRT-0183, net558); new sidecar + tools main fe4a38b9337; no named GRT-0183 fix, this reads whether they clear it"
    },
    "gen_hosts": [
     "intel2"
