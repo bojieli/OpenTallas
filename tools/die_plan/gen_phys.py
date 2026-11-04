@@ -661,6 +661,7 @@ def clock_tap_pin_metadata(P, tn):
 
 
 CLOCK_PIN_ALIASES = ("clk", "ck")
+_VIEW_CLOCK_PINS = {}
 
 
 def bound_core_clock_pins(P, tn, inst, pin):
@@ -674,7 +675,10 @@ def bound_core_clock_pins(P, tn, inst, pin):
     core = next((c for c in P.types[tn].get("hard_cores", []) or [] if c.get("inst") == inst), None)
     if core is None or pin == "*":
         return None
-    ck = C.clock_pins(core, None)
+    key = (core.get("lib"), core.get("lef"), core.get("module"))
+    if key not in _VIEW_CLOCK_PINS:     # core_tap_rows is called many times per kit; a view is parsed once
+        _VIEW_CLOCK_PINS[key] = C.clock_pins(core, None)
+    ck = _VIEW_CLOCK_PINS[key]
     if not ck or pin in ck:
         return None
     bits = sorted(p for p in ck if p.startswith(pin + "["))

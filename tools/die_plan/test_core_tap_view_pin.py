@@ -16,6 +16,7 @@ LIB = """library(x) { time_unit : "1ps";
 def plan(tmp_path, view_ps, tap_name="u_c.ck", tt=419.0):
     raw = pair_with_core(tt, None)
     raw["partition_types"]["fa"]["clock"]["taps"][0]["name"] = tap_name
+    G._VIEW_CLOCK_PINS.clear()
     lib = tmp_path / "m.lib"
     lib.write_text(LIB.replace("VIEW", str(view_ps)))
     raw["partition_types"]["fa"]["hard_cores"] = [{"inst": "u_c", "module": "m", "lib": str(lib)}]
