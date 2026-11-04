@@ -116,6 +116,34 @@ if {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_S
 # net during ECO (e.g. three tiny QUERY terminals coalesced into one GCell).
 # This changes repair eligibility only; normal STA/DRV and frozen-clock checks
 # still decide the result. Exact names only, and never a clock or supply net.
+# DIE-HEAD-59 11-03 (opt-in, DRC class Rect Only on a wide landing pin): landing_contract.io_tcl draws scalar landing
+# pins 0.080 wide on M7; a 0.032 DRT stub entering such a pin from outside makes a non-rectangular shape, RECTONLY M7
+# (hd_st_n3_turn rst_start_raw_2 + hd_host_n rst_start_raw_0: same 3 markers through a full re-route).
+# OT_PRD_NARROW_PINS = exact port names: same centre, same length, layer default width; the net is re-routed.
+set ::ot_prd_force_rip {}
+if {[info exists ::env(OT_PRD_NARROW_PINS)] && $::env(OT_PRD_NARROW_PINS) ne ""} {
+  foreach _pn $::env(OT_PRD_NARROW_PINS) {
+    set _bt [[ord::get_db_block] findBTerm $_pn]
+    if {$_bt eq "NULL" || $_bt eq ""} { error "OT_PRD_NARROW_PINS requires an exact existing port: $_pn" }
+    foreach _bp [$_bt getBPins] {
+      foreach _bx [$_bp getBoxes] {
+        set _ly [$_bx getTechLayer]; set _w [$_ly getWidth]
+        set _x0 [$_bx xMin]; set _x1 [$_bx xMax]; set _y0 [$_bx yMin]; set _y1 [$_bx yMax]
+        if {[$_ly getDirection] eq "VERTICAL"} {
+          if {$_x1 - $_x0 <= $_w} continue
+          set _c [expr {($_x0 + $_x1) / 2}]; set _x0 [expr {$_c - $_w / 2}]; set _x1 [expr {$_x0 + $_w}]
+        } else {
+          if {$_y1 - $_y0 <= $_w} continue
+          set _c [expr {($_y0 + $_y1) / 2}]; set _y0 [expr {$_c - $_w / 2}]; set _y1 [expr {$_y0 + $_w}]
+        }
+        odb::dbBox_destroy $_bx
+        odb::dbBox_create $_bp $_ly $_x0 $_y0 $_x1 $_y1
+        puts "OT_PRD_NARROW_PINS $_pn [$_ly getName] -> $_x0 $_y0 $_x1 $_y1 (dbu)"
+      }
+    }
+    lappend ::ot_prd_force_rip [[$_bt getNet] getName]
+  }
+}
 if {[info exists ::env(OT_PRD_PROTECT_NETS)] && $::env(OT_PRD_PROTECT_NETS) ne ""} {
   foreach name $::env(OT_PRD_PROTECT_NETS) {
     set dbnet [[ord::get_db_block] findNet $name]

@@ -1,0 +1,31 @@
+read_json /srv/opentallas-scratch2/claude/dkv65/hr/fpjobs/qkd_hr_core_peer/fp_stage1/pre.json
+memory_share
+memory_map
+rename qkd_hr_core_peer gold
+design -stash g
+read_verilog -sv /srv/opentallas-scratch2/claude/dkv65/hr/fpjobs/qkd_hr_core_peer/fp_stage1/mut_emit.v
+read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v /srv/opentallas-scratch2/claude/dkv65/hr/wt/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v
+hierarchy -top qkd_hr_core_peer
+proc
+memory_collect
+memory_share
+memory_map
+rename -hide w:_*_
+opt_clean
+rename qkd_hr_core_peer gate
+design -copy-from g -as gold gold
+expose -evert gold/t:ot_sram*
+expose -evert gate/t:ot_sram*
+delete t:ot_sram*
+async2sync
+miter -equiv -flatten gold gate m
+hierarchy -top m
+flatten
+setundef -init -zero
+formalff -clk2ff
+setundef -undriven -zero
+techmap; opt -fast
+abc -g AND
+opt_clean
+stat
+write_aiger -zinit /srv/opentallas-scratch2/claude/dkv66/hr/peer_proof/mutvz.aig

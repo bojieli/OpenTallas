@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.hr_named_proof_legs.v1",
+ "module": "qkd_hr_core_peer",
+ "legs": {
+  "emitted_v": {
+   "module": "qkd_hr_core_peer",
+   "engine": "yosys miter -equiv + write_aiger -zinit, then ABC strash; scorr; dprove",
+   "initial_state": "zero",
+   "srams": "ports",
+   "limit": "state outside zero init is not proved",
+   "result": "UNSATISFIABLE",
+   "gold": "pre.json",
+   "gold_sha256": "f597e3dc736ca4d0c1a82d7934a73928f6909fa9396e69f2489c1f04de4f439f",
+   "gate": "qkd_hr_core_peer.v",
+   "gate_sha256": "3d5a838248c0aea6f038c46d842c2ad47c6ffe4936f0047072f88fc09724926b",
+   "before": {
+    "latches": 36384,
+    "ands": 293326
+   },
+   "after": {
+    "latches": 0,
+    "ands": 0
+   },
+   "script_sha256": "e4395a8fd6e0d6395f83f62639491aafa9c1b83023aee2eeb43bb578652d6674",
+   "log_sha256": "312ad46545354e046b42b26653204694e6ba51f44480e35c9a4f87c0924c0dbc",
+   "source": {
+    "script": "/srv/opentallas-scratch2/claude/dkv66/hr/peer_proof/vz.ys",
+    "log": "/srv/opentallas-scratch2/claude/dkv66/hr/peer_proof/vz.abc.log"
+   },
+   "mutant": {
+    "result": "NOT_EQUIVALENT",
+    "frame": 1,
+    "gate": "mut_emit.v",
+    "gate_sha256": "fb09b376f3d8477a372afa569e07262a9509189b0709927779c210f1356d1875",
+    "script_sha256": "1b0576199106f4fa547be2974a4355c3cba8565219ccf14be9f603090eec6d0c",
+    "log_sha256": "993ebaf2db1bbf78f9b109b7a94c533100e118b86aef220b6f2eb9c7d0648517",
+    "source": {
+     "script": "/srv/opentallas-scratch2/claude/dkv66/hr/peer_proof/mutvz.ys",
+     "log": "/srv/opentallas-scratch2/claude/dkv66/hr/peer_proof/mutvz.abc.log"
+    }
+   },
+   "ruling": "COORD 2026-11-04 05:23 PST LOOP-GAP 05:20 item 5",
+   "note": "DIE-KV-67/HR: ABC scorr on zero-init miter, yosys equiv leg stopped by DIE-KV-65 without result; recoded by LOOP-GAP item 4"
+  },
+  "post": {
+   "module": "qkd_hr_core_peer",
+   "engine": "yosys miter -equiv + write_aiger -zinit, then ABC strash; scorr; dprove",
+   "initial_state": "zero",
+   "srams": "ports",
+   "limit": "state outside zero init is not proved",
+   "result": "UNSATISFIABLE",
+   "gold": "pre.json",
+   "gold_sha256": "f597e3dc736ca4d0c1a82d7934a73928f6909fa9396e69f2489c1f04de4f439f",
+   "gate": "post.json",
+   "gate_sha256": "ca4f0d1f20425cfb379406dd738fc1ae15c5e19ca03ff7eb2a14e50f66aa7784",
+   "before": {
+    "latches": 36384,
+    "ands": 297225
+   },
+   "after": {
+    "latches": 0,
+    "ands": 0
+   },
+   "script_sha256": "3344d47a56dd36c8b40fefc6a9f6c3d4b52b9644731a4c0dba2ef1481615bf05",
+   "log_sha256": "014a53ca54e8825b84f3f33156fb35223d8a7058a85c17bd9cd7679d96acdb03",
+   "source": {
+    "script": "/srv/opentallas-scratch2/claude/dkv67/hr/peer_proof/postz.ys",
+    "log": "/srv/opentallas-scratch2/claude/dkv67/hr/peer_proof/postz.abc.log"
+   },
+   "mutant": {
+    "result": "NOT_EQUIVALENT",
+    "frame": 1,
+    "gate": "mut.json",
+    "gate_sha256": "c4a24a87f521cfad3d3e3e8442900cca99c33ef80f8c5506cf89b907028d3832",
+    "script_sha256": "cd6f8ad8cecd2f23c71f3868b3f68da027223267ebaa24b877f7750faf0ba5c0",
+    "log_sha256": "aeec7dfbfdc16d2be20a2dcf08f401c9a8d72a629b7fe0581f91680a5faa6e93",
+    "source": {
+     "script": "/srv/opentallas-scratch2/claude/dkv67/hr/peer_proof/mutz.ys",
+     "log": "/srv/opentallas-scratch2/claude/dkv67/hr/peer_proof/mutz.abc.log"
+    }
+   },
+   "ruling": "COORD 2026-11-04 05:23 PST LOOP-GAP 05:20 item 5",
+   "note": "DIE-KV-67/HR: ABC scorr on zero-init miter; yosys post leg stopped by DIE-KV-65 without result; COORD 05:23 item 4"
+  }
+ }
+}

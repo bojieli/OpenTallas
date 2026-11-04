@@ -113,3 +113,24 @@ def test_two_mode_generated_repair_body_skipped_alike(tmp_path):
     (tmp_path / 'prd_post_grt_chain.tcl').unlink()
     with pytest.raises(ValueError, match='unrecognized'):
         C.stage(tmp_path)
+
+
+def test_core_flow_form_without_post_grt_drv_skips_final_repair_only(tmp_path):
+    """DIE-KV-67/CL 11-04: native KV core kits: no post_grt_drv.tcl; hooks + gate chain stay, final repair goes."""
+    (tmp_path / 'grt_post_core.tcl').write_text('# generated\nsource /work/kit_hook.tcl\nsource /work/grt_post.tcl\n'
+                                                'source /work/core_final_repair.tcl\n')
+    (tmp_path / 'grt_post.tcl').write_text('ot_vclk_bind tt\n')
+    (tmp_path / 'core_final_repair.tcl').write_text('repair_timing -setup\n')
+    rec = C.stage(tmp_path)
+    assert rec['skipped_final_repair'] and not rec['skipped_generated_repair']
+    assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/kit_hook.tcl\nsource /work/grt_post.tcl\n'
+
+
+def test_core_flow_form_without_gate_chain_or_repair_file_unchanged(tmp_path):
+    (tmp_path / 'grt_post_core.tcl').write_text('source /work/core_final_repair.tcl\n')
+    (tmp_path / 'core_final_repair.tcl').write_text('repair_timing -setup\n')
+    assert 'skipped_final_repair' not in C.stage(tmp_path)
+    assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post_core.tcl\n'
+    (tmp_path / 'grt_post_core.tcl').write_text('source /work/grt_post.tcl\nsource /work/core_final_repair.tcl\n')
+    (tmp_path / 'core_final_repair.tcl').unlink()
+    assert 'skipped_final_repair' not in C.stage(tmp_path)

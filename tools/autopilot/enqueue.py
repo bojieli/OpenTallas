@@ -28,7 +28,7 @@ mode trial (closure order rule 1, owner 2026-10-25): a part of a path whose die 
   signed.tsv.  Rows touching a 'PENDING-DELTA <id> <die> <types>' line of lanes/PLAN-DELTA.md wait (WAIT-PLAN-DELTA).
 --flow: the flow release tag the kit was built with (rule 3).  Empty = derived: the newest flow-* tag whose watched flow
   files equal the src commit's.  A sign-off with no src commit + flow tag is SIGNED-UNVERSIONED (not counted).
---mem is the honest ot-run admission (peak of a comparable run + margin); --cells the expected std cells (<= 400000).
+--mem is the honest ot-run admission (peak of a comparable run + margin); --cells the expected std cells (<= 517000).
 Publication uses a temporary git index and a queue-only remote commit; the shared coord checkout/index is untouched.
 """
 import argparse

@@ -9,6 +9,10 @@ wrote that file by hand (or forgot it: KV PHY103 10-30 13:0x).  This tool makes 
 
   resign.py run        --kit K --tag TAG --tools T --out D [--run-dir R] [--lec-netlist V] ...   (sign-off + LEC + record)
   resign.py provenance --kit K --tag TAG --dir D [--tools T] ...                                   (record only)
+  resign.py run --auto ...   the unattended form the autopilot uses (tools/autopilot/auto_resign.py): LOCAL_PASS_NEEDS_PARENT
+                             counts as the counter counts it, the routed LEC runs with OT_LEC_SUPERSET_VEC=1 and must be
+                             all_shown, every signoff_chain gate must be PASS, and .keep goes in the kit and re-sign dirs.
+                             --repo may name a tag manifest JSON (written by the hub) on hosts with no repo.
 
 The record is written only when every check passes (fail closed, nothing written otherwise):
   * TAG is a flow release tag name (flow-YYYYMMDD-x[-die]) that resolves in the repo; src_commit = its commit;
@@ -33,6 +37,9 @@ TAG_RE = re.compile(r'^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$')  # = releas
 SHA_RE = re.compile(r'^[0-9a-f]{40}$')
 TOOLS = ('signoff.py', 'lec.py')
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+MANIFEST_SCHEMA = 'opentallas.resign_tag_manifest.v1'
+# = signoff_chain.REQUIRED_GATES: the gates a SIGNED record must carry PASS; a missing gate is NOT RUN, never PASS
+REQUIRED_GATES = ('setup_tt', 'hold_ff', 'drv', 'clock', 'drc', 'antenna', 'pg')
 RULE = 'COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks'
 
 
@@ -47,10 +54,40 @@ def git(repo, *args):
     return p.stdout
 
 
+def manifest(repo):
+    """the tag manifest when repo names one, else None (repo is a git checkout).  The hub writes it from git, so a
+    fleet host checks the same bytes without holding the repo."""
+    if not str(repo).endswith('.json'):
+        return None
+    try:
+        m = load(repo)
+    except Exception as e:
+        raise ResignError('unreadable tag manifest %s (%s)' % (repo, e))
+    if m.get('schema') != MANIFEST_SCHEMA or not SHA_RE.match(str(m.get('commit'))):
+        raise ResignError('%s is not a tag manifest' % repo)
+    return m
+
+
 def tag_commit(repo, tag):
     if not TAG_RE.match(tag or ''):
         raise ResignError('%r is not a flow release tag name (flow-YYYYMMDD-x[-die])' % tag)
+    m = manifest(repo)
+    if m is not None:
+        if m.get('tag') != tag:
+            raise ResignError('manifest %s is for %s, not %s' % (repo, m.get('tag'), tag))
+        return m['commit']
     return git(repo, 'rev-parse', '--verify', tag + '^{commit}').decode().strip()
+
+
+def tag_file_sha(repo, tag, rel):
+    """sha256 of TAG:rel, None when the tag has no such file"""
+    m = manifest(repo)
+    if m is not None:
+        return (m.get('files') or {}).get(rel)
+    try:
+        return hashlib.sha256(git(repo, 'show', '%s:%s' % (tag, rel))).hexdigest()
+    except ResignError:
+        return None
 
 
 def sha256(path):
@@ -67,7 +104,9 @@ def check_tools(repo, tag, tools):
         p = os.path.join(tools, n)
         if not os.path.isfile(p):
             raise ResignError('tag tools dir %s has no %s' % (tools, n))
-        want = hashlib.sha256(git(repo, 'show', '%s:tools/die_plan/%s' % (tag, n))).hexdigest()
+        want = tag_file_sha(repo, tag, 'tools/die_plan/%s' % n)
+        if want is None:
+            raise ResignError('%s has no tools/die_plan/%s' % (tag, n))
         got = sha256(p)
         if got != want:
             raise ResignError('%s sha256 %s != %s:tools/die_plan/%s %s' % (p, got[:12], tag, n, want[:12]))
@@ -85,25 +124,25 @@ def export_clock_family(repo, tag, tools):
     sign-off failed before STA ('incomplete tool bundle').  The file is taken from the TAG (tools/die_plan first, then
     physical/common_flow, as signoff.py looks): written into the tools dir when signoff.py would not find it, byte-
     checked when it would.  A tag without the file, or a different copy in place, fails here before any run."""
-    want = None
+    rel, want = None, None
     for rel in CLOCK_FAMILY_TAG:
-        try:
-            want = git(repo, 'show', '%s:%s' % (tag, rel))
+        want = tag_file_sha(repo, tag, rel)
+        if want:
             break
-        except ResignError:
-            continue
-    if want is None:
+    if not want:
         raise ResignError('%s has no %s (signoff.py needs it in its tool bundle)' % (tag, ' or '.join(CLOCK_FAMILY_TAG)))
     tools = os.path.abspath(tools)
     for p in (os.path.join(tools, CLOCK_FAMILY),
               os.path.join(os.path.dirname(os.path.dirname(tools)), 'physical', 'common_flow', CLOCK_FAMILY)):
         if os.path.isfile(p):
-            if sha256(p) != hashlib.sha256(want).hexdigest():
+            if sha256(p) != want:
                 raise ResignError('%s differs from %s clock_family.tcl (signoff.py would read it)' % (p, tag))
             return p
+    if manifest(repo) is not None:
+        raise ResignError('%s not staged in %s (a manifest holds shas, not bytes)' % (CLOCK_FAMILY, tools))
     p = os.path.join(tools, CLOCK_FAMILY)
     with open(p, 'wb') as f:
-        f.write(want)
+        f.write(git(repo, 'show', '%s:%s' % (tag, rel)))
     return p
 
 
@@ -129,14 +168,36 @@ def kit_build_commit(kit):
     return None
 
 
+def needs_parent_only(so):
+    """= release_tree_plan.counts_signed (COORD 11-03 18:48 + OWNER 18:49, standing, every die): local sign-off SIGNED and
+    io_hold_parent the only open reason.  The receipt moves to the die STA FF row."""
+    return (so.get('verdict') == 'LOCAL_PASS_NEEDS_PARENT' and so.get('local_verdict') == 'SIGNED' and
+            all(str(r).startswith('io_hold_parent') for r in (so.get('reasons') or [])))
+
+
+def signoff_gates(so):
+    """= signoff_chain.signoff_gates: required gate -> verdict; a missing gate or corner is NOT RUN"""
+    checks = so.get('checks') or {}
+    out = {}
+    for k in REQUIRED_GATES:
+        v = checks.get(k)
+        out[k] = (v.get('verdict') or 'NOT RUN') if isinstance(v, dict) else str(v) if v else 'NOT RUN'
+    corners = so.get('corners') or {}
+    for c in ('tt', 'ff'):
+        if corners and not (corners.get(c) or {}).get('done'):
+            out['corner_' + c] = 'NOT RUN'
+    return out
+
+
 def find_lec(d):
     p = os.path.join(d, 'lec', 'lec.json')  # lec.py's verdict file; other lec/*.json are its work files
     return p if os.path.isfile(p) else None
 
 
 def build_record(d, kit, tag, repo=REPO, tools=None, build_commit=None, routed_db=None, lec=None, src_commit=None,
-                 lane=None, note=None, pincmp=None, hash_db=True):
-    """validate one re-sign dir and return its PROVENANCE dict; raises ResignError on any failed check."""
+                 lane=None, note=None, pincmp=None, hash_db=True, auto=False):
+    """validate one re-sign dir and return its PROVENANCE dict; raises ResignError on any failed check.
+    auto: the unattended form, see the module doc: adds the chain's gate and all_shown checks, never removes one."""
     d, kit = os.path.abspath(d), os.path.abspath(kit)
     full = tag_commit(repo, tag)
     if src_commit and not full.startswith(src_commit):
@@ -146,17 +207,25 @@ def build_record(d, kit, tag, repo=REPO, tools=None, build_commit=None, routed_d
         so = load(so_p)
     except Exception as e:
         raise ResignError('no readable re-sign %s (%s)' % (so_p, e))
-    if so.get('verdict') != 'SIGNED':
+    np = auto and needs_parent_only(so)
+    if so.get('verdict') != 'SIGNED' and not np:
         raise ResignError('re-sign %s verdict %s, not SIGNED' % (so_p, so.get('verdict')))
+    if auto:
+        bad = sorted(k for k, v in signoff_gates(so).items() if v != 'PASS')
+        if bad:
+            raise ResignError('re-sign %s gates not PASS: %s' % (so_p, ','.join(bad)))
     lec = os.path.abspath(lec) if lec else find_lec(d)
     if not lec:
         raise ResignError('no post-route lec.json under %s/lec' % d)
     try:
-        lv = load(lec).get('verdict')
+        lec_rec = load(lec)
+        lv = lec_rec.get('verdict')
     except Exception as e:
         raise ResignError('unreadable %s (%s)' % (lec, e))
     if lv != 'EQUIVALENT':
         raise ResignError('post-route LEC %s verdict %s, not EQUIVALENT' % (lec, lv))
+    if auto and (lec_rec.get('superset_vec') or {}).get('all_shown') is not True:
+        raise ResignError('post-route LEC %s superset check: all_shown must be true (OT_LEC_SUPERSET_VEC=1)' % lec)
     read_db = (so.get('inputs') or {}).get('odb')
     if not read_db:
         raise ResignError('%s names no inputs.odb (cannot prove the same routed DB)' % so_p)
@@ -175,6 +244,9 @@ def build_record(d, kit, tag, repo=REPO, tools=None, build_commit=None, routed_d
                host=socket.gethostname(), created=time.strftime('%Y-%m-%d %H:%M %Z'))
     if hash_db:
         rec['routed_db_sha256'] = sha256(read_db)
+    if np:
+        rec['verdict_basis'] = ('LOCAL_PASS_NEEDS_PARENT (local SIGNED, only io_hold_parent open) counts SIGNED per COORD '
+                                '2026-11-03 18:48 ruling / OWNER 18:49; io_hold_parent receipt moves to die STA FF')
     if tool_sha:
         rec['tag_tools'] = dict(dir=os.path.abspath(tools), sha256=tool_sha, checked='byte-identical to %s' % tag)
     for k, v in (('lane', lane), ('as_run_note', note), ('pincmp', pincmp)):
@@ -193,7 +265,16 @@ def write_record(d, rec):
     return p
 
 
-def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8):
+def mark_keep(rec, *dirs):
+    """one line in DIR/.keep naming the signed DB and the lane; the reaper and prune rules read it.  An existing .keep
+    is added to, never replaced."""
+    line = 'signed DB %s %s %s %s\n' % (rec['routed_db'], rec['flow_tag'], rec.get('lane') or 'resign.py', rec['created'])
+    for d in dirs:
+        with open(os.path.join(d, '.keep'), 'a') as f:
+            f.write(line)
+
+
+def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False):
     """the two commands of one re-sign (same as the lane scripts resign3.sh / tag_signoff_lec.sh)."""
     kit, run_dir, tools, out = map(os.path.abspath, (kit, run_dir, tools, out))
     so = [sys.executable, '-I', os.path.join(tools, 'signoff.py'), 'run', '--run-dir', run_dir, '--kit', kit,
@@ -209,7 +290,8 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         if not vs[0].startswith(kit + os.sep):
             raise ResignError('6_final.v %s is outside the kit %s (LEC mounts the kit)' % (vs[0], kit))
         mounts, net_in = [], '/work/' + os.path.relpath(vs[0], kit)
-    lec = ['docker', 'run', '--rm', '--name', 'resign-%s-lec' % name, '--memory=%s' % mem, '--cpus=%d' % cpus,
+    lec = ['docker', 'run', '--rm', '--name', 'resign-%s-lec' % name, '--memory=%s' % mem, '--cpus=%d' % cpus] + (
+           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + [
            '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + [
            image, 'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; '
            'python3 -I /m/lec.py /work --netlist %s --out /eco/lec' % net_in]
@@ -239,6 +321,8 @@ def main(argv=None):
             s.add_argument('--image', default='openroad/orfs:asap7lock')
             s.add_argument('--name', default=None, help='docker container suffix')
             s.add_argument('--dry-run', action='store_true', help='print the commands only')
+            s.add_argument('--auto', action='store_true', help='the unattended form (module doc)')
+            s.add_argument('--lec-mem', default='32g', help='LEC container memory')
         else:
             s.add_argument('--dir', required=True, help='re-sign dir holding signoff/signoff.json + lec/lec.json')
             s.add_argument('--tools', help='tag tools dir to verify against TAG (recommended)')
@@ -252,7 +336,7 @@ def main(argv=None):
             print('clock_family.tcl from %s: %s' % (a.tag, export_clock_family(a.repo, a.tag, a.tools)), file=sys.stderr)
             name = a.name or re.sub(r'[^A-Za-z0-9_.-]', '_', os.path.basename(os.path.abspath(a.out)))
             so, lec = run_cmds(a.kit, a.run_dir or os.path.join(a.kit, 'run'), a.tools, a.out, a.image, name,
-                               a.lec_netlist)
+                               a.lec_netlist, mem=a.lec_mem, superset=a.auto)
             if a.dry_run:
                 print(' '.join(so)); print(' '.join(lec)); return 0
             env = dict(os.environ, SIGNOFF_DOCKER=os.environ.get('SIGNOFF_DOCKER', 'docker'),
@@ -261,17 +345,26 @@ def main(argv=None):
                 with open(os.path.join(a.out, n + '.log'), 'w') as log:
                     rc = subprocess.call(cmd, stdout=log, stderr=subprocess.STDOUT, env=env)
                 print('%s rc=%d %s' % (n, rc, time.strftime('%H:%M:%S')))
+                if n == 'signoff' and a.auto:   # no LEC slot on a re-sign that did not pass; the record says why
+                    try:
+                        so_rec = load(os.path.join(a.out, 'signoff', 'signoff.json'))
+                    except Exception as e:
+                        raise ResignError('no sign-off record (%s)' % e)
+                    if so_rec.get('verdict') != 'SIGNED' and not needs_parent_only(so_rec):
+                        raise ResignError('re-sign verdict %s, LEC not run' % so_rec.get('verdict'))
             d, lec_p = a.out, None
         else:
             d, lec_p = a.dir, a.lec
         rec = build_record(d, a.kit, a.tag, repo=a.repo, tools=a.tools, build_commit=a.build_commit,
                            routed_db=a.routed_db, lec=lec_p, lane=a.lane, note=a.note, pincmp=a.pincmp,
-                           hash_db=not a.no_db_hash)
+                           hash_db=not a.no_db_hash, auto=a.cmd == 'run' and a.auto)
     except ResignError as e:
         print('RESIGN NOT RECORDED: %s' % e, file=sys.stderr)
         return 1
-    print('RESIGN RECORDED %s (%s %s, LEC %s)' % (write_record(d, rec), rec['flow_tag'], rec['src_commit'][:12],
-                                                  rec['lec_verdict']))
+    print('RESIGN RECORDED %s (%s %s, LEC %s%s)' % (write_record(d, rec), rec['flow_tag'], rec['src_commit'][:12],
+                                                    rec['lec_verdict'], ', NEEDS_PARENT basis' if rec.get('verdict_basis') else ''))
+    if a.cmd == 'run' and a.auto:
+        mark_keep(rec, d, a.kit)
     return 0
 
 

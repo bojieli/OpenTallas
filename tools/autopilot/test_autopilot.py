@@ -72,9 +72,11 @@ class TestQueue(Base):
         self.assertEqual(seen[0][pos + 4], "cts")
 
     def test_cell_cap_and_mem_and_paths(self):
-        bad = {6: "500000", 5: "lots"}
-        r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["500000"] + ROW[8:])).values())[0]
-        self.assertIn("400000", r["error"])
+        bad = {6: "517001", 5: "lots"}
+        r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["517001"] + ROW[8:])).values())[0]
+        self.assertIn("517000", r["error"])
+        r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["517000"] + ROW[8:])).values())[0]
+        self.assertEqual(r["error"], "")
         r = list(self.ap.parse_queue("\t".join(ROW[:6] + ["lots"] + ROW[7:])).values())[0]
         self.assertIn("mem_gb", r["error"])
         r = list(self.ap.parse_queue("\t".join(ROW[:2] + ["epyc2:/home/ubuntu/kit"] + ROW[3:])).values())[0]
@@ -325,7 +327,7 @@ class TestClassify(Base):
         self.assertEqual(self.ap.classify({"hold_structural": "OT_HOLD_STRUCTURAL stage=grt"}, {"exit": 2})[0],
                          "STRUCTURAL")
         self.assertEqual(self.ap.classify({"congestion": "GRT-0116"}, {"exit": 2})[1], "grt-overflow")
-        self.assertEqual(self.ap.classify({"cells": 400001}, {"exit": 2})[1], "cell-cap")
+        self.assertEqual(self.ap.classify({"cells": 517001}, {"exit": 2})[1], "cell-cap")
 
     def test_crash_kinds(self):
         C = self.ap.classify
