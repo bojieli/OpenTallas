@@ -262,6 +262,96 @@ class PerRootReservation(unittest.TestCase):
         self.assertIn(f'OT_DIR_DEV {dev}', r.stdout.splitlines())
 
 
+class RunningCharge(unittest.TestCase):
+    """FLOW-32: a running scope past the young window is charged 1/4; queued launchers in full; real-free floor."""
+    # epyc2 scratch2, 09:45: 8 scopes x 20 GB, 121 GB free
+    EPYC2 = ''.join(f'DIEDISK oth-{i}.scope 20\nDIEDEV oth-{i}.scope 66\nDIEAGE oth-{i}.scope 3600\n' for i in range(8))
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        patch = mock.patch.object(m, 'DAEMON_JOBS', self.tmp.name)
+        patch.start()
+        self.addCleanup(patch.stop)
+
+    def stub(self, output):
+        return mock.patch.object(m.subprocess, 'run', return_value=types.SimpleNamespace(returncode=0, stdout=output))
+
+    def reserved(self, output, dev='66'):
+        with self.stub(output):
+            return m.die_disk_reserved('epyc2', dev)
+
+    def test_blocked_case_admits(self):
+        rows = {'epyc2': dict(disk_gb=121, disk_dev='66')}
+        self.assertEqual(self.reserved(self.EPYC2 + 'DIEDISK_DONE\n'), 40)
+        with self.stub(self.EPYC2 + 'DIEDISK_DONE\n'):
+            self.assertEqual(m.drop_low_disk(rows, True, 20), rows)
+
+    def test_age_boundary_and_round_up(self):
+        for age, want in [(0, 60), (899, 60), (900, 15), (86400, 15)]:
+            self.assertEqual(self.reserved(f'DIEDISK oth-a.scope 60\nDIEAGE oth-a.scope {age}\nDIEDISK_DONE\n'), want, age)
+        self.assertEqual(self.reserved('DIEDISK oth-a.scope 21\nDIEAGE oth-a.scope 900\nDIEDISK_DONE\n'), 6)
+        self.assertEqual(self.reserved('DIEDISK oth-a.scope 1\nDIEAGE oth-a.scope 900\nDIEDISK_DONE\n'), 1)
+
+    def test_no_age_or_bad_age_stays_full(self):
+        self.assertEqual(self.reserved('DIEDISK oth-a.scope 20\nDIEDISK_DONE\n'), 20)
+        for bad in ('-5', 'x', ''):
+            self.assertEqual(self.reserved(f'DIEDISK oth-a.scope 20\nDIEAGE oth-a.scope {bad}\nDIEDISK_DONE\n'), 20, bad)
+
+    def test_queued_waiter_stays_full_and_unknown_is_60_then_15(self):
+        self.assertEqual(self.reserved('DIEDISK waiter-9 40\nDIEDISK_DONE\n'), 40)
+        self.assertEqual(self.reserved('DIEDISK oth-a.scope unknown\nDIEAGE oth-a.scope 3600\nDIEDISK_DONE\n'), 15)
+
+    def test_other_root_still_not_charged(self):
+        self.assertEqual(self.reserved('DIEDISK oth-a.scope 20\nDIEDEV oth-a.scope 77\nDIEAGE oth-a.scope 3600\nDIEDISK_DONE\n'), 0)
+
+    def test_young_scopes_still_hold_the_root(self):
+        out = ''.join(f'DIEDISK oth-{i}.scope 20\nDIEAGE oth-{i}.scope 60\n' for i in range(8)) + 'DIEDISK_DONE\n'
+        said = []
+        with self.stub(out):
+            self.assertEqual(m.drop_low_disk({'epyc2': dict(disk_gb=121, disk_dev='66')}, True, 20, said.append), {})
+        self.assertIn('121 GB free - 160 GB running/queued', said[0])
+
+    def test_real_free_floor(self):
+        said = []
+        with self.stub('DIEDISK_DONE\n'):
+            self.assertEqual(m.drop_low_disk({'h': dict(disk_gb=79)}, True, 20, said.append), {})
+            rows = {'h': dict(disk_gb=80)}
+            self.assertEqual(m.drop_low_disk(rows, True, 20, said.append), rows)
+        self.assertEqual(len(said), 1)
+        self.assertIn('79 GB free - 20 GB this job < 60 GB real-free floor', said[0])
+        # tile jobs are not die admission: unchanged
+        self.assertEqual(m.drop_low_disk({'h': dict(disk_gb=10)}, False, 20), {'h': dict(disk_gb=10)})
+
+    def test_floor_also_holds_when_the_reservation_query_is_skipped(self):
+        with mock.patch.object(m, 'die_disk_reserved', side_effect=AssertionError('unexpected query')):
+            self.assertEqual(m.drop_low_disk({'h': dict(disk_gb=100)}, True, 60), {})
+
+    def test_real_shell_emits_age_for_scopes_only(self):
+        root = Path(self.tmp.name)
+        (root / 'systemctl').write_text('#!/bin/sh\ncase "$*" in\n*list-units*) printf "oth-a.scope active\\noth-b.scope active\\n";;\n'
+                                        '*Monotonic*oth-a*) echo 5000000000;;\n*Monotonic*oth-b*) echo 0;;\n'
+                                        '*oth-a*) echo /a;;\n*oth-b*) echo /b;;\nesac\n')
+        (root / 'pgrep').write_text('#!/bin/sh\necho 20\n')
+        for tool in ('systemctl', 'pgrep'):
+            (root / tool).chmod(0o755)
+        for key, pid in (('a', 10), ('b', 11)):
+            (root / 'cgroup' / key).mkdir(parents=True)
+            (root / 'cgroup' / key / 'cgroup.procs').write_text(str(pid))
+        for pid in (10, 11, 20):
+            (root / 'proc' / str(pid)).mkdir(parents=True)
+            (root / 'proc' / str(pid) / 'environ').write_bytes(b'OT_HEAVY_PRIO=die\0OT_HEAVY_DISK_GB=20\0')
+        (root / 'proc' / 'uptime').write_text('8600.25 1.0\n')
+        script = m.DIE_DISK_UNITS_SH.replace('/sys/fs/cgroup', str(root / 'cgroup')).replace('/proc/', str(root / 'proc') + '/')
+        r = subprocess.run(['bash', '-c', script], env=dict(os.environ, PATH=str(root) + ':' + os.environ['PATH']),
+                           text=True, capture_output=True, check=True)
+        lines = r.stdout.splitlines()
+        self.assertIn('DIEAGE oth-a.scope 3600', lines)
+        self.assertFalse([x for x in lines if x.startswith('DIEAGE') and 'oth-a' not in x], lines)
+        # a 5 + b 20 + waiter 20
+        self.assertEqual(self.reserved(r.stdout, None), 45)
+
+
 class WrapperAndDisplay(unittest.TestCase):
     def test_remote_wrapper_carries_explicit_declared_disk(self):
         class Captured(Exception):
