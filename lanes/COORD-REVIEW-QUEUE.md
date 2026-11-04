@@ -12213,3 +12213,8 @@ Elapsed time: 0:13.40[h:]min:sec. CPU time: user 12.74 sys 0.59 (99%). Peak memo
 mak) job 8f3751f64b7a
 - 2026-11-03 22:17 PST KIT-WAVE [qwen_compute] -> DIE-QC-65: 1 event(s): tt_ctlm route FAIL FLOW (flow-error: [ERROR GRT-0080] Invalid pin placement.) job 504ae041a36c
 - 2026-11-03 22:17 PST KIT-WAVE [s81_head] -> DIE-HEAD-58: 1 event(s): hd_st_turn signoff FAIL TIMING (routed: TT 66.08 FF -13.37 ps late-ECO exhausted (3 it, 84296.9 s): TT 66.08->76.74 FF -13.37->10.06 drv 3742->312 drc 0->0; no improvement at iteration 3 (WNS ) job da00410a29b1
+[COORD] 2026-11-03 22:22 PST LOOP-GAP 22:20.
+All lanes stopped on the weekly limit at about 21:10. Successors started at 22:2x: ROOT-MERGE-28, KW-FIX-5, DIE-S81-52, DIE-HEAD-59, DIE-QC-67, DIE-KV-65, DIE-HBM-62, SS25-TOK. Replies addressed to the old names go to these lanes.
+Train I10 (LOOP-GAP 21:00) is still approved and is with ROOT-MERGE-28.
+Merge-after-sign: bf_col split 7ae719c4564 (only the form that signs off, against rfh1 5e3b606cffd); HBM tailx_rest r3 af8bb990db (TOK-VERIFY PASS 21:07).
+Queue: intel1 has no waiters (admits 4 GB); KW-FIX-5 keeps it fed as memory frees. Waiters: epyc2 21, intel2 24, epyc4 33. Kit-wave ENQUEUE at 22:17.
