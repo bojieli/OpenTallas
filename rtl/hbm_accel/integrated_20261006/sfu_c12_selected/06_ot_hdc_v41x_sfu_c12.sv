@@ -44,7 +44,10 @@
 // a 254-entry table holding the golden's own products.
 module ot_hbm_selected_c12__ot_hdc_v41x_exp #(
     parameter integer LM = 3,                   // multiplier latency (ot_hbm_selected_c12__ot_hdc_qmul_lat)
-    parameter integer LA = 3                    // add latency (ot_hbm_selected_c12__ot_hdc_qadd_lat: 3, or 4 input cut)
+    parameter integer LA = 3,                   // add latency (ot_hbm_selected_c12__ot_hdc_qadd_lat: 3, or 4 input cut)
+    parameter integer L7X = 0,                  // 11-03 opt-in: adders at LA 7 use the _l7x cut set (default: unchanged)
+    parameter integer NREP = 1,                 // 11-03 opt-in: n table lookup from NREP kept copies of n (64 % NREP == 0)
+    parameter integer TQ = 0                    // 11-03 opt-in: register the rounding split of n (+1 latency; default: unchanged)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -54,7 +57,7 @@ module ot_hbm_selected_c12__ot_hdc_v41x_exp #(
     output wire        vo,
     output wire        fault
 );
-    localparam integer T_N = 1 + LM + 1;        // n registered
+    localparam integer T_N = 1 + LM + 1 + TQ;   // n registered (TQ: one more edge for the split register)
     localparam integer T_K = T_N + 1;           // table products registered
     localparam integer T_R1 = T_K + LA;
     localparam integer T_R = T_R1 + LA;
@@ -357,17 +360,50 @@ module ot_hbm_selected_c12__ot_hdc_v41x_exp #(
     wire        thalf = tm[trb];
     wire        tstk = |(tm & ~({24{1'b1}} << trb));
     wire [7:0]  tmag = (te < 8'd126) ? 8'd0 : (tip[7:0] + {7'd0, thalf && (tstk || tip[0])});
+    // TQ = 0: n is formed from t in one edge.  TQ = 1: the shift/round split {sign, n == 0, int part, round up}
+    // is registered first, so the round-up add and negate sit in the next edge with the n registers.
+    wire        tsg;
+    wire [7:0]  tmn;
+    generate if (TQ == 0) begin : g_tq0
+        assign tsg = t[31];
+        assign tmn = tmag;
+    end else begin : g_tq1
+        (* keep = "true" *) reg sg_q, z_q, rb_q;
+        (* keep = "true" *) reg [7:0] ip_q;
+        always @(posedge clk) begin
+            sg_q <= t[31];
+            z_q  <= te < 8'd126;
+            ip_q <= tip[7:0];
+            rb_q <= thalf && (tstk || tip[0]);
+        end
+        assign tsg = sg_q;
+        assign tmn = z_q ? 8'd0 : (ip_q + {7'd0, rb_q});
+    end endgenerate
     reg  [8:0]  nint;
-    always @(posedge clk) nint <= t[31] ? -{1'b0, tmag} : {1'b0, tmag};
+    always @(posedge clk) nint <= tsg ? -{1'b0, tmn} : {1'b0, tmn};
 
     reg [31:0] a_hi, a_lo;
-    always @(posedge clk) {a_hi, a_lo} <= ln2_nk(nint[7:0]);
+    generate if (NREP <= 1) begin : g_tab1
+        always @(posedge clk) {a_hi, a_lo} <= ln2_nk(nint[7:0]);
+    end else begin : g_tabn
+        // Same registered value as g_tab1, but each 64/NREP-bit slice of the table reads its own kept copy of n, so
+        // no n bit fans out to the whole 256-entry table.  Same latency (the copies load where nint loads).
+        localparam integer TW = 64 / NREP;
+        (* keep = "true" *) reg [7:0] nint_r [0:NREP-1];
+        always @(posedge clk) for (integer q = 0; q < NREP; q = q + 1) nint_r[q] <= tsg ? 8'(-{1'b0, tmn}) : tmn;
+        reg [63:0] tab;
+        always @* begin
+            tab = 64'd0;
+            for (integer q = 0; q < NREP; q = q + 1) tab[q*TW +: TW] = ln2_nk(nint_r[q]) >> (q*TW);
+        end
+        always @(posedge clk) {a_hi, a_lo} <= tab;
+    end endgenerate
 
     wire [31:0] r1, r, xc_d, lo_d;
     ot_hbm_selected_c12__ot_hdc_delay #(.W(32), .D(T_K - 1)) d_x (clk, rst_n, xc, xc_d);
-    ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+    ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA), .L7X(L7X)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
     ot_hbm_selected_c12__ot_hdc_delay #(.W(32), .D(LA)) d_lo (clk, rst_n, a_lo, lo_d);
-    ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+    ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA), .L7X(L7X)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
 
     // Horner: p = C0; six times p = p*r + C[k]; r travels in (LM+LA)-cycle hops.
     wire [31:0] rd [0:6];
@@ -383,7 +419,7 @@ module ot_hbm_selected_c12__ot_hdc_v41x_exp #(
                 ot_hbm_selected_c12__ot_hdc_delay #(.W(32), .D(LM + LA)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
             ot_hbm_selected_c12__ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
-            ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+            ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA), .L7X(L7X)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
         end
     endgenerate
 
