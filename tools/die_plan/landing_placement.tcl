@@ -514,6 +514,20 @@ proc cland_ctl_rekey {ffs base kb nbb rev} {
  }]
  return [list $nc $out]
 }
+# FREG-1 (DIE-HEAD-60 11-04, hd_turn_a GRT-0183): a registered face's g_freg.u_face/q[N] has no [slot][bit] index, so
+# cland_ctl_rekey took all 566 as control registers and packed them at the START-pin bit: y 820..880 against pins
+# 700..1010, median pin-to-flop 104 um, max 196 um, one net boxed in.  q[N] registers bus bit N: key it first in that bit,
+# on the pin side.  N at or above the bus width (status / start bits) stays control.
+proc cland_freg_rekey {ffs base nbb rev} {
+ set nf 0
+ set out [lmap pr $ffs {
+  set k [lindex $pr 0]
+  if {$k eq [lindex [split $k |] 0] && [regexp {g_freg\.u_face/q\\?\[([0-9]+)\\?\]} $k -> b] && $b < $nbb} {
+   incr nf; list [format {%s|%09d|%09d|!freg} $base [expr {$rev ? 999999999-$b : $b}] 0] [lindex $pr 1]
+  } else { set pr }
+ }]
+ return [list $nf $out]
+}
 proc cland_dsel_wch {names} {
  set w 0
  foreach nm $names {
@@ -771,6 +785,11 @@ proc cland_place_ff {prefix rect tag} {
   }
   set base {}
   foreach pr $ffs { set k [lindex $pr 0]; if {[regexp {^([^|]+s_d)\|} $k -> b0]} { set base $b0; break } }
+  if {[llength $bxy] && $base ne {}} {
+   set nfb 0; foreach e $bxy { set nfb [expr {max($nfb,[lindex $e 0]+1)}] }
+   lassign [cland_freg_rekey $ffs $base $nfb $rev] nfr ffs
+   if {$nfr} { puts "OT_CLAND fregkey $prefix: $nfr face registers keyed to their own bus bit" }
+  }
   if {[llength $sx] && [llength $bxy] && $base ne {}} {
    lassign [cland_nearest_bit $sx $bxy] best bd
    set kb [expr {$rev ? 999999999-$best : $best}]

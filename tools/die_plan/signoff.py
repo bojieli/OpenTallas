@@ -608,6 +608,8 @@ if {[llength [all_outputs]]} {
 set so_ff_sum 0.0
 set so_ff_n 0
 set so_ff_bad 0
+set so_ff_clk_sum 0.0
+set so_ff_clk_n 0
 set so_ff_clocks {}
 if {[llength [info commands ot_cf_refresh]]} { catch {ot_cf_refresh} }
 dict for {i unused} $so_ff_bnd {
@@ -622,11 +624,24 @@ dict for {i unused} $so_ff_bnd {
   if {![string is double -strict $a] || [regexp -nocase {inf|nan} $a]} { incr so_ff_bad; continue }
   set so_ff_sum [expr {$so_ff_sum + $a}]
   incr so_ff_n
+  if {[llength $cl] == 1 && [get_full_name [lindex $cl 0]] eq "clk"} {
+    set so_ff_clk_sum [expr {$so_ff_clk_sum + $a}]
+    incr so_ff_clk_n
+  }
+}
+# FLOW-30 11-04: vclk stands for the local clock.  Registers on a forwarded clock (S81 station u_cland_monitor_N rings:
+# no OT_FWD_RING_INPUTS tag, so _fwd_ring_tcl keeps them) are not in its reference; with clk present the mean is over clk.
+set so_ff_other 0
+if {[dict size $so_ff_clocks] > 1 && [dict exists $so_ff_clocks clk] && $so_ff_clk_n > 0} {
+  set so_ff_other [expr {$so_ff_n - $so_ff_clk_n}]
+  set so_ff_sum $so_ff_clk_sum
+  set so_ff_n $so_ff_clk_n
+  set so_ff_clocks [dict create clk 1]
 }
 if {[llength $so_vclk] == 1 && $so_ff_n > 0 && $so_ff_bad == 0 && [dict size $so_ff_clocks] == 1} {
   set so_ff_mean [expr {$so_ff_sum / $so_ff_n}]
   set_clock_latency -source $so_ff_mean [lindex $so_vclk 0]
-  so FF_VCLK applied mode pin_flop_mean clock [get_full_name [lindex $so_vclk 0]] latency_ps [format %.6f $so_ff_mean] samples $so_ff_n missing $so_ff_bad clocks [dict size $so_ff_clocks]
+  so FF_VCLK applied mode pin_flop_mean clock [get_full_name [lindex $so_vclk 0]] latency_ps [format %.6f $so_ff_mean] samples $so_ff_n missing $so_ff_bad clocks [dict size $so_ff_clocks] forwarded_excluded $so_ff_other
 } else {
   set so_reference_ok 0
   so FF_VCLK unavailable mode pin_flop_mean vclks [llength $so_vclk] samples $so_ff_n missing $so_ff_bad

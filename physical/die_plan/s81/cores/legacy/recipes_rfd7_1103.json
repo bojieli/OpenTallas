@@ -1,0 +1,36 @@
+{
+ "_doc": "DIE-S81-51/RF-D form 7 (dsdv_bk_g only; plan of record plan_h2_2249, outline / pins unchanged)",
+ "dsdv_bk_g": {
+  "ref_tile": "physical/ref_tile/s81dvbk_g2",
+  "rtl_dirs": true,
+  "macro_sites": {
+   "ot_sram_1r1w_128x256_m1_r2c2": [
+    [
+     60.48,
+     39.984,
+     "R0"
+    ],
+    [
+     60.48,
+     91.872,
+     "R0"
+    ]
+   ]
+  },
+  "_pinev": "S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): spec.json at 45.36/86.448 left a 0.024-um stack gap; sites split -5.376/+5.424 um (whole M4 tracks) for a 10.824-um interior channel (kit_contract macro_channels >= 10.8) inside the 216x172.8 outline",
+  "params": {
+   "RF": 6
+  },
+  "regional_taps": {
+   "nx": 2,
+   "ny": 1,
+   "split": "count",
+   "win_ps": 20
+  },
+  "suffix": "rfd7",
+  "_rfd3": "RF-D form 3 11-03: form 2 (34.6-um channel, rfd2 oth-ubuntu-3049984) GRT ov 2418 (vs 227 at 10.8 um, demand +11%): hotspots along both macro pin faces (x 60-65 / 140-155, y 50-120), not the channel; the wider channel only stretched the logic.  Back to the 10.824-um plan sites (_pinev 10-29); RF 2 RTL. Variant A: both R0.",
+  "_rfd4": "RF-D form 4 11-03 (owner pick a): rfd3a sites (10.824-um channel, both R0) + RF 3 = RF 2 without the negedge out-face (rfd3a setup_tt -26.76 at the output ports).",
+  "_rfd5": "RF-D form 5 11-03 (owner pick): RF 4 = RF 2 core + posedge per-face pin registers on every output (+1 cycle, rung transit 5), placed at the pins by face_flops.tcl (GEOM pin_reg p90 <= 30 um); rfd3a plan sites; rfd4 (RF 3, GRT-0183) not retried.",
+  "_rfd7": "RF-D form 7 11-03 (owner, two strikes -> pay a cycle; COORD: form 6 dropped, branch from rfd5): RF 6 = RF 4 + (a) negedge strap in-face + kept per-block reset copies (RF 5, 0 edges) + dsdv_bk_vin LPIPE 2 = one more per-lane register stage of the selected beat / valid / two-beat error.  Latency contract: ln0..ln3 + fault +1 edge (V pin -> lane word 5 -> 6, internal to dsdv_bk_sel); vo / drain / rung transit 5 / RL 3 unchanged; no parent constant changes."
+ }
+}

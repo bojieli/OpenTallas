@@ -196,7 +196,7 @@ def test_explicit_info_band_requires_matching_plan_and_measured_receipt(tmp_path
     assert gate.run(k,'grt',execute=execute)==expected
 
 
-@pytest.mark.parametrize('mutation', ['TT-negative','STD-FF-negative','overlay-missing','pair-nan','old-band-only','pair-missing','coverage-nan','clock-nan'])
+@pytest.mark.parametrize('mutation', ['TT-negative','overlay-missing','pair-nan','old-band-only','pair-missing','coverage-nan','clock-nan'])
 def test_grt_policy_blocks_data_or_clock_failure_even_when_band_passes(tmp_path, mutation):
     k=kit(tmp_path)
     def execute(args, **kwargs):
@@ -205,6 +205,42 @@ def test_grt_policy_blocks_data_or_clock_failure_even_when_band_passes(tmp_path,
         if mutation != 'old-band-only':write_policy(k,c,kwargs,mutation)
         return SimpleNamespace(returncode=0)
     assert gate.run(k,'grt',execute=execute)==6
+
+
+# FLOW-30 11-04 (COORD 06:35 (1), OWNER 11-03 only sign-off blocks): G2 hold_ff is advisory, the measurement still exists
+# in the receipt and the log; OT_G2_HOLD_GATE=1 (env or config.mk) restores the stop.  TT setup is unchanged (above).
+@pytest.mark.parametrize('how,rc', [(None, 0), ('env', 6), ('config', 6)])
+def test_grt_policy_ff_hold_advisory_unless_restored(tmp_path, monkeypatch, capsys, how, rc):
+    monkeypatch.delenv('OT_G2_HOLD_GATE', raising=False)
+    k=kit(tmp_path)
+    if how == 'env': monkeypatch.setenv('OT_G2_HOLD_GATE', '1')
+    if how == 'config':
+        with (k/'config.mk').open('a') as f: f.write('export OT_G2_HOLD_GATE = 1\n')
+    def execute(args, **kwargs):
+        c=kwargs['env']['OT_CORNER']
+        (k/f'postcts_gate_{c.lower()}.json').write_text(json.dumps(passing(c)))
+        write_policy(k,c,kwargs,'STD-FF-negative')
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k,'grt',execute=execute)==rc
+    receipt=json.loads((k/'grt_policy.json').read_text())
+    assert receipt['checks']['hold_ff']['verdict']=='FAIL'
+    assert receipt['verdict']==('PASS' if rc==0 else 'FAIL')
+    assert receipt['advisory']==(['hold_ff'] if rc==0 else [])
+    out=capsys.readouterr()
+    assert ('OT_LEGACY_GATE ADVISORY G2 hold_ff' in out.out)==(rc==0)
+    assert (k/'FAIL_POSTCTS').exists()==(rc!=0)
+
+
+@pytest.mark.parametrize('corner,restore,stop', [('TT',False,'G2_REQUIRED_FAIL setup_tt'),('TT',True,'G2_REQUIRED_FAIL setup_tt'),
+                                                 ('FF',False,None),('FF',True,'G2_REQUIRED_FAIL hold_ff')])
+def test_grt_session_early_stop_only_where_blocking(tmp_path, monkeypatch, corner, restore, stop):
+    monkeypatch.delenv('OT_G2_HOLD_GATE', raising=False)
+    if restore: monkeypatch.setenv('OT_G2_HOLD_GATE', '1')
+    k=kit(tmp_path)
+    disc,ctx,policy=gate.policy_context(k,next((k/'run/results/asap7').glob('*/base')),dict(OT_VCLK_TT='250',OT_VCLK_FF='190'))
+    text=gate.policy_session(k,corner,None,disc,ctx,policy)
+    if stop: assert f'so {stop}' in text
+    else: assert 'so G2_REQUIRED_FAIL' not in text
 
 
 def test_grt_policy_pair_skew_over_target_is_info(tmp_path):

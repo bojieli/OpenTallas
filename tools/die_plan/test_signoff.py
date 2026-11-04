@@ -382,6 +382,15 @@ def test_ff_vclk_optin_keeps_raw_and_shared_io_contract():
     assert 'set so_reference_ok 0' in enabled
 
 
+def test_ff_vclk_reference_excludes_forwarded_boundary_regs():
+    # FLOW-30 11-04: the mean is over clk; forwarded-clock regs in the boundary set must not turn it NOT RUN or move it.
+    t = signoff.FF_VCLK_TCL
+    assert '[dict size $so_ff_clocks] > 1 && [dict exists $so_ff_clocks clk] && $so_ff_clk_n > 0' in t
+    assert 'set so_ff_clocks [dict create clk 1]' in t
+    assert '$so_ff_bad == 0 && [dict size $so_ff_clocks] == 1' in t      # no clk among them: still unavailable
+    assert 'set_clock_uncertainty' not in t
+
+
 def test_ff_vclk_missing_measurement_blocks_optimistic_mutant():
     # A checker mutant could retain a positive STD slack after dropping the
     # measurement.  It must remain NOT RUN even with every other gate clean.

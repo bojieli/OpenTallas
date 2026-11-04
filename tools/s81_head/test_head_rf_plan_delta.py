@@ -65,3 +65,17 @@ def test_rf2_reset_taps_and_plain_seam_split():
     assert plan['clock']['plain_seam_split'] == {'rx_in_max_ps': 480, 'rx_in_raw_max_ps': 580}
     spec['plain_seam_split']['rx_in_max_ps'] = 1                       # deep copy: spec edits do not leak
     assert plan['clock']['plain_seam_split']['rx_in_max_ps'] == 480
+
+
+def test_prepare_never_writes_through_a_shared_published_symlink(tmp_path):
+    spec2 = importlib.util.spec_from_file_location('rfp', Path(__file__).with_name('head_rf_prepare.py'))
+    rfp = importlib.util.module_from_spec(spec2)
+    spec2.loader.exec_module(rfp)
+    shared = tmp_path / 'shared'; shared.mkdir(); (shared / 'w.sv').write_text('old')
+    out = tmp_path / 'out'; out.mkdir(); (out / 'published').symlink_to(shared)
+    rfp.own_published(out)
+    assert not (out / 'published').is_symlink()
+    (out / 'published' / 'w.sv').write_text('new')
+    assert (shared / 'w.sv').read_text() == 'old'
+    rfp.own_published(out)                                               # a real dir stays as it is
+    assert (out / 'published' / 'w.sv').read_text() == 'new'

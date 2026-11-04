@@ -1917,6 +1917,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               "lec.py", "lec_async.sh", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py",
               "pinreg_measure.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
+    sys.path.insert(0, str(TOOL)); import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run
     # HBM-CORES-KITS-20 10-29 DRV basis (= KV gen_core_kit_kv.py FLOW 10-25 / S81 / QC: SLEW/CAP margin 20, fanout cap 64 =
     # shared signoff FANOUT_MAX at every repair_design).  HBM kits had none: bdring _k18 routed RCX slew 7496 vs 0 on the
     # GRT estimate (wire C SPEF/GRT p50 1.69); fo64+margin20 -> 3455 / setup -22.43 -> +6.30, margin30 -> 1538 / +11.07.

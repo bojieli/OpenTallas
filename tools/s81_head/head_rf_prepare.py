@@ -23,6 +23,16 @@ def digest(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+def own_published(out):
+    """DIE-HEAD-61 11-04: a base prepared dir may hold published/ as a symlink to an older event.  REPUBLISH writes into
+    published/, so a symlink would overwrite the wrappers of every event sharing it (their receipts then fail)."""
+    pub = Path(out) / "published"
+    if pub.is_symlink():
+        target = pub.resolve()
+        pub.unlink()
+        shutil.copytree(target, pub)
+
+
 def rect(plan, p):
     w, h = plan["partition_types"][p["type"]]["outline_um"]
     return [p["origin_um"][0], p["origin_um"][1], round(p["origin_um"][0] + w, 3), round(p["origin_um"][1] + h, 3)]
@@ -82,6 +92,7 @@ def main(argv=None):
         CL.writable(a.out)
         shutil.rmtree(a.out)
     shutil.copytree(a.base, a.out, symlinks=True)
+    own_published(a.out)
     CL.writable(a.out)
     for f in a.out.glob("republish_*.log"):
         f.unlink()
