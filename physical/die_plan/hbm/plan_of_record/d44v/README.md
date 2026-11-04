@@ -1,4 +1,4 @@
-# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-6 (DIE-HBM-61/PLAN + /SPLIT, 2026-11-03)
+# HBM plan event d44v = the HBM RE-FORM batch plan event, parts 1-7 (DIE-HBM-61/PLAN + /SPLIT, DIE-HBM-62/BIG, 2026-11-03)
 
 OWNER 11-03: TWO-STRIKES -> RE-FORM, ONE batch per die. Rules are design targets: plan GEOM, fill, aspect and channels
 are ADVISORY. Only sign-off blocks.
@@ -211,6 +211,44 @@ All numbers are advisory (OWNER 11-03). Each step writes an event file into this
   | alt g_w[0] R180 (pins up) | 0 | 41.3% | 1.03 | 2 (434 um) |
 
   The r2r hits are one lane -> `lf` fan-in (advisory).
+
+## Part 7 (conservative form, OWNER 18:57: the huge rp3lp3h n/s and fused_lane cores become plan sub-core designs; DIE-HBM-62/BIG)
+
+Builder step `mk_split.py p/b3 split_p7/split_p7.json split_p7`, right after the part 6 step (build_d44v.sh). Inputs are in
+results/die_hbm_1103/reform/split_p7/. `gen_p7.py` writes the composition with flat instances (u_ln<p>_tl0/tl1/lc, u_p<q>)
+and the glue. `p7_check.py` proves its wiring identical to the EQ-proven reform_1103 composition: DIFF 0 on 25473 (n),
+23504 (s) and 5610 (fused) bits. The RTL and EQ proofs are on main: rtl/hbm_accel/cores_split/reform_1103 and
+physical/die_plan/hbm/over_cap_split/reform_1103.
+
+| core (EQ sha) | inst | slot | sub-core designs (tile, pins, instances in the die) |
+|---|---|---|---|
+| hnx_rp3lp3h_n (c37ffbb6c4) | 64 | 630.72 x 1209.6 | gn 630.72 x 345.6 (9573, 64); xs 630.72 x 216 (7785); 3 x lc 198.72 x 216 (1671); 6 x tl 95.04 x 155.52 (517) |
+| hnx_rp3lp3h_s | 64 | 630.72 x 1036.8 | gs 630.72 x 345.6 (7604, 64); the same xs, lc, tl masters, MX in the s slot |
+| hnx_fused_lane | 32 | 345.6 x 518.4 | c 345.6 x 103.68 (2995, 32); 4 x elp 172.8 x 198.72 (653, 128) |
+
+The shared masters place xs 128, lc 384 and tl 768 times. Designs: 87 -> **91** (-3, +7).
+
+- **Layout.** Explicit tiles in the spec (`layout`), every edge on the 8.64 lattice. rp3 stack away from the n/s seam:
+  glue -> xs -> lc -> tl. Fused: c at the south, 2 x 2 elp above it, all elp pins on the S face (the upper pair's wires
+  pass over the lower pair).
+- **Pins.** Seam pins are per-peer blocks in natural order on the N/S faces. A shared master has one pin table across
+  cores (asserted: outline, ports, clock entry). Bus-level station refs and partner connections go to `boundary_sub`.
+- **mk_split fixes.** The swap loop finds hard_cores by instance name (earlier swaps shift indices). split_event.json
+  keeps the core_faces moves of earlier parts.
+- **Fill targets.** ORFS synth area / tile area: tl 41%, lc 37%, gn/gs below 40%; xs below 40% with macros; fused c 46%
+  and elp 47%, a little over the 0.45 target because the slot is fixed. Fused kits use util 0.5. These are targets only.
+- **Added cycles (TOK-VERIFY batch).** rp3: leaf result +7 edges, xs->glue act mask +2/+3 pure delay. Fused: up chunk sum
+  +4, wq/fin HC_POST +4, HC_PRE_NORM +8, flt +4; rq, scalar up and inputs 0. Tables: over_cap_split/reform_1103 latency/.
+- **Reset.** The kit face shell adds a face flop + lockup on rst_lf/rst_ln outputs; xs/lc/tl reset inputs pass through;
+  gn/gs/c/elp rst_n get relay 2. Only release timing differs from the bench model (rst_n is held >= 64 clk, owner rule).
+- **Clock regions.** mk_clkreg `--extra split_p7/sinks.json` (ORFS FF counts): xs 8, lc 5, tl 2, gn 6, gs 4, c 3, elp 4
+  entries. The part 6 subs still have no sink data.
+- **Checks.**
+  - G0+G0C: errors gone 0, **new 0**, by check core_faces 8, hops 2, reach 9, stations 3, street_die_leg 2 (same as part 6).
+  - Plan-time GEOM: FAIL 225 -> 225, **new 0, worse 0**.
+  - Count: all signed records still in the record set MATCH. The query_static table is byte-identical to part 6a; its
+    q7b2 record is not in the 8-record input this time, so the count has no line for it.
+  - Diffs: g0/g0_diff_d44v_p6_p7.txt, geom/geom_diff_d44v_p6_p7.txt, g0/count_check.txt.
 
 ## Part 6a (one-block plan pin event: query_static q7b2 mesh-island ft pins; builder step after mk_cefix)
 

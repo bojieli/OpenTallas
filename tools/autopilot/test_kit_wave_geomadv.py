@@ -24,6 +24,11 @@ class GeomAdvisory(unittest.TestCase):
         line = "AP_AUTO_GEOM AUTO-GEOM PASS x outline=ok(1x1)"
         self.assertEqual(K.geom_gate(line), K.geom_verdict(line))
 
+    def test_grt_wall_default_and_override(self):
+        # 11-04: S81 probes hit the old 2 h limit and gave grt NA; route GRT measures overflow anyway.
+        self.assertEqual(K.opt({"dies": {"d": {}}}, "d", "geom_grt_wall_s"), 1800)
+        self.assertEqual(K.opt({"dies": {"d": {"geom_grt_wall_s": 0}}}, "d", "geom_grt_wall_s"), 0)
+
     def test_spec_carries_option(self):
         cfg = {"dies": {"d": {"geom_advisory": False}}}
         self.assertFalse(K.opt(cfg, "d", "geom_advisory") is not False)

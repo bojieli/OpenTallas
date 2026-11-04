@@ -49,6 +49,21 @@ class CoreClockKitTest(unittest.TestCase):
             self.assertEqual(receipt[0]["mode"], "physical_tap")
             self.assertFalse(K.rtl_wired(receipt))
 
+    def test_star_tap_keeps_bind_connection(self):
+        # LP_STAR_1104: `<inst>` with no pin is a legal plan tap: core_tap_rows gives "*", clock_taps.tcl hangs every pin
+        for inst in ("u_bound.u_leaf", "u_leaf", "u_bound.u_lf.u_m"):
+            text, receipt = K.wire(SOURCE, "top", [("clk_c0", inst, "*", 0, 250)])
+            self.assertEqual(text, SOURCE)
+            self.assertEqual((receipt[0]["mode"], receipt[0]["pin"]), ("physical_tap", "*"))
+            self.assertFalse(K.rtl_wired(receipt))
+
+    def test_star_mixed_with_explicit_pin_of_another_leaf(self):
+        rows = [("clk_c0", "u_bound.u_ln0", "*", 0, 250), ("clk_c1", "u_bound.u_leaf", "ck", 0, 250)]
+        text, receipt = K.wire(SOURCE, "top", rows)
+        self.assertIn(".ck(clk_c1)", text)
+        self.assertNotIn("clk_c0", text)
+        self.assertEqual([r["mode"] for r in receipt], ["physical_tap", "rtl"])
+
     def test_mixed_nested_and_direct(self):
         rows = [("clk_c0", "u_bound.u_leaf", "ck", 0, 250), ("clk_c1", "u_r2.u_e10", "clk", 0, 250)]
         text, receipt = K.wire(SOURCE, "top", rows)

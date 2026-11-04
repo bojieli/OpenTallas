@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DIE-HBM-61/SPLIT d44v part 6/7: the SPLIT cores become plan designs inside their parent slots (OWNER 18:57: build
+"""DIE-HBM-61/SPLIT d44v part 6, DIE-HBM-62/BIG part 7: the SPLIT cores become plan designs inside their parent slots (OWNER 18:57: build
 the conservative form now).
 
 Per split core (SPEC entry; connectivity = split_conn.py on the thin parent glue <core>__p6glue.sv, which maps every
@@ -31,6 +31,13 @@ sub-core port bit to the parent plan pins it reaches and to the peer sub-cores i
         a bare <inst> goes to the sub tile nearest the station end point.
       - core_macros.json: the sub macro sites (spec 'macros').
       - parent_id_straps: move to the sub that owns those pins.
+Part 7 spec options (cores with too many subs for the permutation search, masters shared between slots):
+  * layout {sub inst: {xy, wh, orient}}: explicit tiles in the core frame.  orient R0 / MX / MY / R180 mirrors the sub
+    inside the slot and composes with the parent orient.  Seam pins go on the N / S face toward the peer, one group per
+    peer in natural bit order, so tile-to-tile wires do not cross.
+  * a module used by several cores gets ONE pin table: wants of all its instances, in the sub frame.  Outlines must match.
+  * boundary_sub: the sub holding the core's outer interface; bus-level station refs and partner conns go to it.
+  * the core_faces pass does not move pins of layout cores: the layout already sets the faces.
 The registered faces are the sub kit face shells: +1 in and +1 out per sub pin.  The cycles they add are the SPLIT EQ
 shift maps (SPEC added_cycles; latency tables on claude/die-hbm-61-split-1103).
     python3 mk_split.py PLAN_DIR SPEC.json SPEC_DIR [--only core,...]       (in place; writes split_event.json)"""
@@ -54,6 +61,23 @@ CEF = d / "clock_entries.json"; CE = json.loads(CEF.read_text()) if CEF.exists()
 CCF = d / "core_conns.json"; CC = json.loads(CCF.read_text()) if CCF.exists() else {}
 event = dict(schema="opentallas.hbm_split_event.v1", cores=[])
 OPP = dict(N="S", S="N", E="W", W="E")
+
+
+def compose(a, b):                     # orient of a sub (b, in the core frame) in a core placed with orient a
+    fx = (a in ("MY", "R180")) != (b in ("MY", "R180")); fy = (a in ("MX", "R180")) != (b in ("MX", "R180"))
+    return {(0, 0): "R0", (1, 0): "MY", (0, 1): "MX", (1, 1): "R180"}[(int(fx), int(fy))]
+
+
+def to_sub(o, f, x, y, w, h):          # tile-relative core-frame face + point -> sub-frame face + point
+    if o in ("MX", "R180"):
+        y = h - y; f = OPP[f] if f in "NS" else f
+    if o in ("MY", "R180"):
+        x = w - x; f = OPP[f] if f in "EW" else f
+    return f, x, y
+
+
+def natkey(n):
+    return [int(t) if t.isdigit() else t for t in re.split(r"(\d+)", n)]
 
 
 def tf_face(o, f):                     # core-frame face -> type-frame face
@@ -171,8 +195,15 @@ for sp in SPEC:
     mod_of = {s["inst"]: s["module"] for s in subs}
     cells = {s["module"]: s["cells"] for s in sp["subs"]}
     names = [s["inst"] for s in subs]
+    lay = sp.get("layout")
     best = None
-    for perm in ([names] if sp.get("replicas") else itertools.permutations(names)):
+    if lay:
+        assert set(lay) == set(names), (core, sorted(set(lay) ^ set(names)))
+        for n_, v_ in lay.items():
+            for c_ in (v_["xy"][0], v_["xy"][1], W - v_["xy"][0] - v_["wh"][0], H - v_["xy"][1] - v_["wh"][1]):
+                assert c_ >= -1e-6 and abs(c_ / G - round(c_ / G)) < 1e-6, (core, n_, "tile edge off the lattice", c_)
+        best = (0.0, {n_: (list(v_["xy"]), list(v_["wh"])) for n_, v_ in lay.items()})
+    for perm in ([] if lay else [names] if sp.get("replicas") else itertools.permutations(names)):
         bx = tiles_rep(W, H, len(perm)) if sp.get("replicas") else tiles_1d(W, H, [cells[mod_of[n]] for n in perm], mir)
         tb = dict(zip(perm, bx))
         cost = 0.0
@@ -186,6 +217,7 @@ for sp in SPEC:
         if best is None or cost < best[0] - 1e-6:
             best = (cost, tb)
     tb = best[1]
+    sub_or = {n_: (lay[n_].get("orient", "R0") if lay else "R0") for n_ in names}
     tag = {s["inst"]: s["inst"].split(".")[-1].removeprefix("u_") for s in subs}
     rep = collections.OrderedDict()
     for s in subs:
@@ -215,10 +247,17 @@ for sp in SPEC:
                     f = max(set(f for f in fs if f), key=fs.count)
                     if f not in of:
                         f = min(of or list("NSEW"), key=lambda F: dict(W=abs(x), E=abs(w - x), S=abs(y), N=abs(h - y))[F])
+                f, x, y = to_sub(sub_or[s["inst"]], f, x, y, w, h)
                 wm[nm] = (f, (x, y))
             elif b["peer"]:
                 q = b["peer"][0]; po, pwh = tb[q]
                 f = toward(o, wh, po, pwh)
+                if lay:
+                    f = "N" if po[1] + pwh[1] / 2 > o[1] + h / 2 else "S"
+                    lo_, hi_ = max(o[0], po[0]), min(o[0] + w, po[0] + pwh[0])
+                    f, m, _ = to_sub(sub_or[s["inst"]], f, (lo_ + hi_) / 2 - o[0], 0.0, w, h)
+                    wm[nm] = (f, (m, 0.0), q if len(rep[s["module"]]) == 1 else mod_of[q])
+                    continue
                 if f in "WE":
                     lo_, hi_ = max(o[1], po[1]), min(o[1] + h, po[1] + pwh[1]); m = ((lo_ + hi_) / 2 - o[1])
                     wm[nm] = (f, (0.0, m), q)
@@ -228,18 +267,23 @@ for sp in SPEC:
             else:
                 wm[nm] = ("F", None)
     cores[core] = dict(sp=sp, insts=insts, W=W, H=H, subs=subs, tb=tb, tag=tag, rep=rep, entry=entry, want=want,
-                       cost=best[0], force={})
+                       cost=best[0], force={}, sub_or=sub_or, lay=bool(lay))
 
 
 def build_tables(core):
-    S = cores[core]; tb, rep, want, entry, force = S["tb"], S["rep"], S["want"], S["entry"], S["force"]
+    S = cores[core]; tb, rep, entry, force = S["tb"], S["rep"], S["entry"], S["force"]
     tables = {}
     for mod, ins in rep.items():
         o, wh = tb[ins[0]]; w, h = wh
         bits = list(next(s for s in S["subs"] if s["inst"] == ins[0])["bits"])
         faces = {f: [] for f in "NSEW"}; clk = []; free = []
+        shared = [(c_, i_) for c_, S_ in cores.items() for i_ in S_["rep"].get(mod, [])]
+        for c_, i_ in shared:
+            assert cores[c_]["tb"][i_][1] == wh, (mod, c_, i_, "shared master outline differs")
+            assert sorted(next(s for s in cores[c_]["subs"] if s["inst"] == i_)["bits"]) == sorted(bits), (mod, c_, "ports")
+            assert tuple(cores[c_]["entry"][mod]) == tuple(entry[mod]), (mod, c_, "clock entry differs")
         for nm in bits:
-            ws = [want[i][nm] for i in ins]
+            ws = [cores[c_]["want"][i_][nm] for c_, i_ in shared]
             kinds = [x[0] for x in ws]
             k = max(set(kinds), key=kinds.count)
             sel = [x for x in ws if x[0] == k]
@@ -249,16 +293,35 @@ def build_tables(core):
                 free.append(nm); continue
             x = sum(v[1][0] for v in sel) / len(sel); y = sum(v[1][1] for v in sel) / len(sel)
             f = force.get((mod, base(nm)), k)
-            faces[f].append(((x if f in "NS" else y), nm, len(sel[0]) > 2 and f == k))
+            faces[f].append(((x if f in "NS" else y), nm, len(sel[0]) > 2 and f == k, sel[0][2] if len(sel[0]) > 2 else None))
         # seam pins: per face, in name order around the shared-edge midpoint (both ends use the same order)
         for f in faces:
             sm = [it for it in faces[f] if it[2]]
+            if sm and S["lay"]:
+                # one block per peer, in natural bit order, centred on the peer and packed without overlap
+                L, grp = (w if f in "NS" else h), collections.defaultdict(list)
+                for c_, nm, _, q_ in sm:
+                    grp[q_].append((c_, nm))
+                blocks = sorted((sum(c_ for c_, _ in v) / len(v), q_, sorted((nm for _, nm in v), key=natkey)) for q_, v in grp.items())
+                st_, placed, end = 2 * PITCH, [], 0.0
+                for mid, _, nms in blocks:
+                    a_ = max(mid - st_ * len(nms) / 2, end)
+                    placed.append((a_, nms)); end = a_ + st_ * len(nms)
+                over = max(0.0, end - (L - 1.0))
+                seam = []
+                for a_, nms in placed:
+                    seam += [(a_ - over + st_ * j, nm) for j, nm in enumerate(nms)]
+                faces[f] = [it[:2] for it in faces[f] if not it[2]] + seam
+                continue
             if sm:
-                mid = sum(c for c, _, _ in sm) / len(sm); span = 2 * PITCH * len(sm)
-                order = {nm: j for j, nm in enumerate(sorted(nm for _, nm, _ in sm))}
-                faces[f] = [it for it in faces[f] if not it[2]] + [(mid - span / 2 + 2 * PITCH * order[nm], nm, True) for _, nm, _ in sm]
-            faces[f] = [(c, nm) for c, nm, _ in faces[f]]
-        of = [f for f in "NSEW" if all(f in outer_faces(*tb[i], S["W"], S["H"]) for i in ins)] or list("NSEW")
+                mid = sum(it[0] for it in sm) / len(sm); span = 2 * PITCH * len(sm)
+                order = {nm: j for j, nm in enumerate(sorted(it[1] for it in sm))}
+                faces[f] = [it for it in faces[f] if not it[2]] + [(mid - span / 2 + 2 * PITCH * order[it[1]], it[1], True) for it in sm]
+            faces[f] = [it[:2] for it in faces[f]]
+        def sub_outer(c_, i_):
+            S_ = cores[c_]
+            return {to_sub(S_["sub_or"][i_], f_, 0.0, 0.0, 1.0, 1.0)[0] for f_ in outer_faces(*S_["tb"][i_], S_["W"], S_["H"])}
+        of = [f for f in "NSEW" if all(f in sub_outer(c_, i_) for c_, i_ in shared)] or list("NSEW")
         for nm in free:
             f = min(of, key=lambda F: len(faces[F]) / (w if F in "NS" else h))
             faces[f].append(((w if f in "NS" else h) / 2, nm))
@@ -308,6 +371,7 @@ for core, S in cores.items():
     for tn, i, h in sorted(S["insts"], key=lambda x: (x[0], -x[1])):
         T = P["partition_types"][tn]
         hc = T["hard_cores"]
+        i = next(k for k, x in enumerate(hc) if x["inst"] == h["inst"])    # earlier swaps of this pass shift the indices
         old = hc.pop(i)
         I = old["inst"]; ox, oy = old["origin_um"]; orr = old.get("orient", "R0")
         ox, oy = ox + old.get("track_offset_um", [0.0, 0.0])[0], oy + old.get("track_offset_um", [0.0, 0.0])[1]
@@ -317,6 +381,7 @@ for core, S in cores.items():
             if orr in ("MY", "R180"): x0 = W - x0 - w
             if orr in ("MX", "R180"): y0 = H - y0 - hh
             X, Y = ox + x0, oy + y0
+            so = compose(orr, S["sub_or"][s["inst"]])
             gx, gy = round(X / G) * G, round(Y / G) * G               # nearest lattice point, |offset| < 2.16
             sn = f"{I}__{tag[s['inst']]}"
             boxes[sn] = (X, Y, w, hh)
@@ -324,7 +389,7 @@ for core, S in cores.items():
                      track_offset_um=[r3(X - gx), r3(Y - gy)], pins_file=S["tables"][s["module"]]["pins_file"],
                      physical_inst=f"{I}.{s['inst']}", physical_master=s["module"],
                      note=f"DIE-HBM-61/SPLIT d44v p6: sub-core {s['inst']} of {core} (SPLIT {sp['sha']}; glue {sp['glue']})")
-            if orr != "R0": e["orient"] = orr
+            if so != "R0": e["orient"] = so
             if "obs_max" in old: e["obs_max"] = old["obs_max"]
             st = old.get("parent_id_straps")
             if st:
@@ -362,7 +427,7 @@ for core, S in cores.items():
             ce_t[sn] = ent
             if ot:
                 (bx, by, bw, bh) = boxes[sn]
-                px, py = tf_pt(orr, ex, ey, bw, bh)
+                px, py = tf_pt(compose(orr, S["sub_or"][s["inst"]]), ex, ey, bw, bh)
                 tp = {k: v for k, v in ot.items() if k not in ("merged_clock_ports",)}
                 tp.update(name=tname, xy=[r3(bx + px), r3(by + py)],
                           note=f"DIE-HBM-61/SPLIT p6: sub-core tap of {I} (was {ot['name']}) | " + ot.get("note", "")[:200])
@@ -373,6 +438,7 @@ for core, S in cores.items():
             T["clock"]["taps"] = keep_taps
         # internal stations
         memo = {}
+        st_sub = sp.get("boundary_sub")     # the sub that owns the core's outer interface (bus-level station refs)
         def remap(ref, xy):
             if not isinstance(ref, str) or not (ref == I or ref.startswith(I + ".")):
                 return ref
@@ -380,7 +446,7 @@ for core, S in cores.items():
             if key in memo:
                 return memo[key]
             if ref == I:
-                out = nearest(list(boxes), xy, boxes)
+                out = sub_of[st_sub] if st_sub else nearest(list(boxes), xy, boxes)
             else:
                 p = ref[len(I) + 1:]
                 cands = {sub_of[s["inst"]]: portmap[s["inst"]][p] for s in subs if portmap[s["inst"]].get(p)}
@@ -389,7 +455,7 @@ for core, S in cores.items():
                     sn = nearest([k for k, c in cands.items() if sum(c.values()) == mx], xy, boxes)
                     out = sn + "." + cands[sn].most_common(1)[0][0]
                 else:
-                    out = nearest(list(boxes), xy, boxes) + "." + p; n_st["dead-port"] += 1
+                    out = (sub_of[st_sub] if st_sub else nearest(list(boxes), xy, boxes)) + "." + p; n_st["dead-port"] += 1
             memo[key] = out
             return out
         for stn in T.get("internal_stations") or []:
@@ -423,7 +489,8 @@ for core, S in cores.items():
                     continue
                 for lp, lst in ports.items():
                     if "core:" + I in lst:
-                        hit = [sub_of[s["inst"]] for s in subs if portmap[s["inst"]].get(lp)] or list(sub_of.values())
+                        hit = ([sub_of[s["inst"]] for s in subs if portmap[s["inst"]].get(lp)] or
+                               ([sub_of[sp["boundary_sub"]]] if sp.get("boundary_sub") else list(sub_of.values())))
                         ports[lp] = sorted((set(lst) - {"core:" + I}) | {"core:" + x for x in hit})
     S["stations"] = dict(n_st)
     for mod, mm in (S["sp"].get("macros") or {}).items():
@@ -449,6 +516,8 @@ write_all()
 # ---------------------------------------------------------------- core_faces pass (check.py model, as mk_repin)
 subset = {}
 for core, S in cores.items():
+    if S["lay"]:
+        continue
     for tn, I, orr, sub_of, boxes in S["placed"]:
         for si, sn in sub_of.items():
             subset[(tn, sn)] = (core, next(s["module"] for s in S["subs"] if s["inst"] == si), orr, si)
@@ -488,8 +557,8 @@ for core, S in cores.items():
                                tiles={s["inst"]: S["tb"][s["inst"]] for s in S["subs"]}, tables=S["tables"],
                                added_cycles=S["sp"].get("added_cycles"), pin_displacement_um=round(S["cost"], 1),
                                stations_repointed=S["stations"], designs_removed=[core], designs_added=sorted(S["tables"])))
-event["core_faces_moves"] = moved
 old = json.loads((d / "split_event.json").read_text()) if (d / "split_event.json").exists() else dict(cores=[])
+event["core_faces_moves"] = old.get("core_faces_moves", []) + moved
 event["cores"] = [c for c in old.get("cores", []) if c["core"] not in cores] + event["cores"]
 (d / "split_event.json").unlink(missing_ok=True); (d / "split_event.json").write_text(json.dumps(event, indent=1) + "\n")
 for c in event["cores"]:

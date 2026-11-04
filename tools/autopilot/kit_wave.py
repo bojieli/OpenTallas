@@ -147,7 +147,7 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
                # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
@@ -155,7 +155,7 @@ GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be P
 # or FAIL_PREBUILD before route.  Class default ON; a die opts out with "relay_bay_re": "".
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
-            "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
+            "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24, "geom_grt_wall_s": 1800,
             "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2", "epyc4"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
             # KW-RESUME-1 (OWNER 11-01 19:5x / COORD 20:0x default-on): a relaunch reuses the previous attempt's ORFS
@@ -732,7 +732,7 @@ RULES = [
     ("PLAN", None, r"differs from published source cohort|published wrapper changed|prepared plan changed",
      "HEAD prepared cohort stale vs current gen (re-prepare / republish the type wrapper)"),
     ("FLOW", r"^place$", r"OT_CLAND no legal nonoverlapping row/site in reserved band",
-     "clock-landing ring band capacity (pinslot form: plan budgets.cland_pinslot_types, FLOW-12)"),
+     "clock-landing band too small or blocked (band plan, or tool: this kit already reads its pinslot setting from spec cland_pinslot)"),
     # AUTOBUILD-PIPE-4 10-31 (KV core kits qkd_hr_ingest_eng / qkd_hr_core_order): design-side preflight results that
     # fell into the FLOW buckets -- an SRAM core with no static macro sites (rtl_macro_placer only: the plan names no
     # macro rect / hard_children block) and a core whose synthesized faces are not registered (core_preflight
@@ -766,7 +766,10 @@ def error_lines(text, n=16):
 # 'd on key-cardinal as oth-ubuntu-302855-... after 1 s Traceback ...' and hid the exception).  'RAN on ... exit N',
 # 'NOT RUN', 'NOT COMPLETED' and 'SSH probe exit 255' stay: the INFRA rules read them.
 ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b|wait\b)|"
-                       r"ot-heavy: (?:admitted|request|waiting|queued|charged|wait)\b|KW_SSH_RETRY\b)")
+                       r"ot-heavy: (?:admitted|request|waiting|queued|charged|wait)\b|KW_SSH_RETRY\b|"
+                       # OWNER 11-03: an advisory check is never the item's error (KW6-CLASS 11-04: "pins_canonical check
+                       # could not run: ModuleNotFoundError" hid a place failure on 3 rows)
+                       r"KIT_PREFLIGHT ADVISORY\b)")
 EXC_LINE = re.compile(r"^\s*(?:[A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt)(?::|$)|bind: ERROR|ERROR\b|Error:|"
                       r"[A-Z][A-Z0-9_]+ FAIL\b|FAIL_PREFLOOR\b)")
 ID_PARAM = re.compile(r"(?:_id|_tid|sidx|map_lane_j)$")
@@ -1081,7 +1084,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "cland_pinslot": cland_pinslot_arg(d),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
-            "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
+            "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "geom_grt_wall_s": int(opt(cfg, die, "geom_grt_wall_s")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
@@ -1757,7 +1760,7 @@ def run_item(spec_path):
         _, ol = run("outline", remote(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
         chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
-               "grt": True, "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
+               "grt": True, "grt_wall_s": int(sp.get("geom_grt_wall_s", 1800)), "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
                + ["--title", f"{T} KIT-WAVE {sp['event']} 3_place"]}
         gd = f"{W}/geom"
         rc, txt = run("geom_cfg", idempotent=True, argv=remote(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
@@ -2428,6 +2431,15 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     return out, launch
 
 
+def _refused_class(attempt_dir):
+    """class a relaunch refusal carried over from the attempt it compared with (state rows hold FLOW for those)"""
+    try:
+        r = json.loads((Path(attempt_dir) / "result.json").read_text())
+    except (OSError, ValueError):
+        return ""
+    return r.get("class") if isinstance(r, dict) and r.get("stage") == "resume_nochange" else ""
+
+
 def resume_source(AP, prev):
     """KW-RESUME-1: where the previous attempt's checkpoint lives.  Candidates: the attempt's kit on its gen host and,
     for a kit the autopilot routed on another host (ot-run spill), that host's copy of the same path, which holds the
@@ -2436,7 +2448,11 @@ def resume_source(AP, prev):
     jd = Path(prev["dir"])
     out = {"attempt": prev.get("attempt"), "attempt_dir": str(jd), "candidates": [],
            "class": prev.get("q_class") or prev.get("class") or "",
-           "allow_nochange": prev.get("class") == "INFRA" or prev.get("status") == "RETRY-INFRA"}
+           "allow_nochange": prev.get("class") == "INFRA" or prev.get("status") == "RETRY-INFRA"
+                             # stopped, not failed: a queued volume released or a cancelled attempt has no failure a
+                             # same-input run would repeat (KW6-CLASS 11-04, S81 slice_station__t23/t44)
+                             or prev.get("status") == "CANCELLED" or prev.get("class") == "VOLUME"
+                             or _refused_class(jd) == "VOLUME"}
     try:
         out["gen_end"] = (jd / "gen.log").stat().st_mtime
     except OSError:

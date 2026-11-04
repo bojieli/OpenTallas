@@ -2136,12 +2136,23 @@ def content_physical_identity(c):
     return (inst, master) if inst is not None else (c["inst"], c["module"])
 
 
+_VIEW_LEF = {}
+
+
 def type_macros(P, tn):
     """content macros of a type the kit must place (COORD 10-23): hard_cores[] and contents[] that carry a hardened
     view (lef).  [(inst, module, lef, lib, x, y, orient)], type frame, origin + track offset.  A macro view without a
     placement is an error: G3 of a kit whose SRAM / ROM / cores float is meaningless."""
     t = P.types[tn]
     out = []
+
+    def own_lef(c):
+        # KW6-CODE 11-04: a lib with a view_lef receipt carries its signed view's LEF; the plan entry stays (no block key change)
+        k = (c["lef"], c.get("lib"))
+        if k not in _VIEW_LEF:
+            import view_lef as VL
+            _VIEW_LEF[k] = VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve)
+        return _VIEW_LEF[k]
     for c in t.get("hard_cores", []):
         if not c.get("lef"):
             continue
@@ -2149,20 +2160,20 @@ def type_macros(P, tn):
         # DIE-KV-49 10-31: optional kit-only physical identity (content_physical_identity form); default unchanged
         pinst, pmaster = content_physical_identity(c) if ("physical_inst" in c or "physical_master" in c) else \
             (c["inst"], c.get("module", c["inst"]))
-        out.append((pinst, pmaster, c["lef"], c.get("lib"), c["origin_um"][0] + ox,
+        out.append((pinst, pmaster, own_lef(c), c.get("lib"), c["origin_um"][0] + ox,
                     c["origin_um"][1] + oy, c.get("orient", "R0")))
     cores = {c["inst"] for c in t.get("hard_cores", [])}
     for c in t.get("contents", []):
         # S81-SERDES-PHY-1 10-31 (opt-in): one logical content placed as several hard leaves of the bound netlist
         for q in c.get("physical_parts", []) or []:
-            out.append((q["physical_inst"], q["physical_master"], q["lef"], q.get("lib"), q["origin_um"][0],
+            out.append((q["physical_inst"], q["physical_master"], own_lef(q), q.get("lib"), q["origin_um"][0],
                         q["origin_um"][1], q.get("orient", "R0")))
         if not c.get("lef") or c["inst"] in cores:
             continue
         if "origin_um" not in c:
             raise ValueError(f"type {tn}: macro content {c['inst']} ({c['module']}) has a lef but no origin_um")
         physical_inst, physical_master = content_physical_identity(c)
-        out.append((physical_inst, physical_master, c["lef"], c.get("lib"), c["origin_um"][0], c["origin_um"][1],
+        out.append((physical_inst, physical_master, own_lef(c), c.get("lib"), c["origin_um"][0], c["origin_um"][1],
                     c.get("orient", "R0")))
     return out
 
@@ -3311,6 +3322,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             # otherwise: native59 MPL-0020, PATH-QC-A0N59 10-25); escape the bare ones
             inst_db = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
             mplace.append(f"place_macro -macro_name {{{inst_db}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
+        # KW6-CODE 11-04: advisory LEF/lib compare; a view with no LEF of its own gets its staged copy pruned to the lib's
+        # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
+        import view_lef as _VL
+        _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports)
     srcs = []
     for f in rtl_files:
         dst = kd / "rtl" / Path(f).name
@@ -3624,6 +3639,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-GEN-2 (opt-in clock.tap_passthrough): hard-core island ft clock pass-through inputs are followed, not
         # measured as tap sinks (tap_balance.tcl tb_passthru)
         cfg.append("export OT_TAP_PASSTHRU = 1")
+    if t.get("clock", {}).get("tap_core_etap"):
+        # HEAD-TILE-ETAP as a plan form (DH59-TILE 11-03, opt-in clock.tap_core_etap): tap_balance.tcl early-source core re-hang
+        cfg.append("export OT_TAP_CORE_ETAP = 1")
+    if t.get("clock", {}).get("pregrt_ff_hold"):
+        # HEAD-TILE-PREGRT-HOLD (DH59-TILE 11-03, opt-in clock.pregrt_ff_hold): pregrt_ff_hold.py, run_kit.sh step below
+        cfg.append("export OT_PREGRT_FF_HOLD = 1")
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
@@ -3918,6 +3939,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # HEAD-TILE-C9: reviewed canonical placement, scoped to s81_head hd_tile and guarded by recipe/netlist identity.
     import head_tile_c9
     head_tile_c9.install(P, tn, kd)
+    import pregrt_ff_hold
+    pregrt_ff_hold.install(t, kd)
     planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
     # pins.json remains the boundary-flop contract consumed by face_guard.
     # The physical audit also checks all other non-exempt declared ABI pins.
@@ -4269,6 +4292,14 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
+  if [ \$rc = 0 ] && [ $GOAL = route ] && grep -q '^export OT_PREGRT_FF_HOLD = 1' /work/config.mk; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
+    PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
+      OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
+      OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
+      OT_TAP_WINDOW=\$(sed -n 's/^export OT_TAP_WINDOW = //p' /work/config.mk) \
+      LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
+      openroad -exit /work/pregrt_ff_hold.tcl > /work/pregrt_ff_hold.log 2>&1; rc=\$?; grep -h OT_PREGRT_FF_HOLD /work/pregrt_ff_hold.log | tail -3; \
+    if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS pre-GRT FF hold step (pregrt_ff_hold.log)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \

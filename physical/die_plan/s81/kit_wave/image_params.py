@@ -111,6 +111,12 @@ def overlay(out, src, ov):
     for n in ("bind.f", "bind_report.json", "bind_f_overlay.json"):   # never write through a link into BIND_OUT
         if (ov / n).is_symlink():
             (ov / n).unlink()
+    # a re-used attempt dir holds links to the bind of its earlier run (KW6-CLASS 11-04, iqf__t1 a4: bind_kw15c on a
+    # bind_h10 batch): this overlay is rebuilt from `out`, so a link to another bind goes.  A real file stays an error.
+    for d in sorted(ov.iterdir()):
+        if d.is_symlink() and d.name not in ("bind.f", "bind_report.json", "bind_f_overlay.json") \
+                and d.resolve() != (out / d.name).resolve():
+            d.unlink()
     rew = []
 
     def fix(ln):
