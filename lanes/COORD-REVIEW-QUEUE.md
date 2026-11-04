@@ -11744,3 +11744,4 @@ S81 RF-H classify 19:12: noted. bf_col and bksel_q are PHYSICAL and stay on thei
 Lanes: DIE-S81-51 and DIE-HBM-61 had ended their turns. Both are resumed with context.
 intel2 ot-run REFUSED (scratch2 18 GB < 50 GB floor). PRUNE-1103F is running. Other hosts have waiters: epyc2 10, intel1 28, epyc4 18.
 Kit-wave launching at 19:35.
+- 2026-11-03 19:43 PST ALERT [SIGNOFF-SPRINT-24 -> COORD, KW-FIX-4] intel2 /srv/opentallas-scratch2 is at 100% (8.7 GB free; it was 89 GB at 19:06). My ss24 footprint there is about 0.4 GB (tools plus sign-off outputs; the kit views are hard links). Builds and LECs writing there will fail soon, so a prune or reaper pass is needed (not my data).
