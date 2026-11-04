@@ -1,0 +1,131 @@
+[
+ {
+  "core": "ot_hbm_idx_score_hcol_h0",
+  "sha": "c4237519789",
+  "glue": "ot_hbm_idx_score_hcol_h0__p6glue.sv",
+  "conn": "hcol_h0.conn.json",
+  "subs": [
+   {
+    "module": "ot_hbm_idx_score_hcol_h0_ra",
+    "cells": 97320
+   },
+   {
+    "module": "ot_hbm_idx_score_hcol_h0_rb",
+    "cells": 103151
+   }
+  ],
+  "added_cycles": "0 on every port (latency/ot_hbm_idx_score_hcol_h0.tsv)"
+ },
+ {
+  "core": "ot_hgi_sfu_split3_lane_core__idpin",
+  "sha": "273120b2730",
+  "glue": "ot_hgi_sfu_split3_lane_core__idpin__p6glue.sv",
+  "conn": "split3.conn.json",
+  "subs": [
+   {
+    "module": "ot_hgi_sfu_split3_lane_core_fr",
+    "cells": 102247
+   },
+   {
+    "module": "ot_hgi_sfu_split3_lane_core_ex",
+    "cells": 77664
+   },
+   {
+    "module": "ot_hgi_sfu_split3_lane_core_bk",
+    "cells": 130108
+   }
+  ],
+  "added_cycles": "+4 on sfu_vm_*/sfu_kv_*/sfu_ro_*/sfu_fault/sfu_coll outputs, 0 elsewhere (split record shift_map)"
+ },
+ {
+  "core": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+  "sha": "8dd205e8bcc",
+  "glue": "ot_hbm_su_static_pgslice_lg__lanes8_11__p6glue.sv",
+  "conn": "lanes.conn.json",
+  "subs": [
+   {
+    "module": "ot_hbm_su_pg_lane1_core",
+    "cells": 86270
+   }
+  ],
+  "macros": {
+   "ot_hbm_su_pg_lane1_core": [
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      8.22,
+      135.972,
+      49.284
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      49.308,
+      135.972,
+      90.372
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      114.396,
+      135.972,
+      155.46
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      155.484,
+      135.972,
+      196.548
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      220.572,
+      135.972,
+      261.636
+     ]
+    },
+    {
+     "name": "core.u_core.u_bank0.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.148,
+      261.66,
+      135.972,
+      302.724
+     ]
+    }
+   ]
+  },
+  "macro_basis": "DIE-HBM-61/SPLIT p6: the uncut 6x4 grid row b = bank b -> one bank per lane1 tile, 6 reads as one column (pairs abutted, 24.024 channel as the uncut rows), x 41.148 ; clock entry (164.16, 155.52) in the 54-um macro-free E strip (cefix rule: entry off macros)",
+  "added_cycles": "0 on every port",
+  "replicas": true,
+  "clock_entry": {
+   "ot_hbm_su_pg_lane1_core": [
+    164.16,
+    155.52
+   ]
+  }
+ }
+]

@@ -1,0 +1,348 @@
+{
+ "schema": "opentallas.hbm_split_event.v1",
+ "cores": [
+  {
+   "core": "ot_hbm_idx_score_hcol_h0",
+   "sha": "c4237519789",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_idx_score_hcol_h0__p6glue.sv",
+   "slot_um": [
+    218.592,
+    187.488
+   ],
+   "instances": 128,
+   "types": [
+    "q_b000",
+    "q_b000__physical_v1",
+    "q_b001",
+    "q_b001__physical_v1",
+    "q_b010",
+    "q_b010__physical_v1",
+    "q_b011",
+    "q_b011__physical_v1",
+    "q_b100",
+    "q_b100__physical_v1",
+    "q_b101",
+    "q_b101_nw",
+    "q_b102",
+    "q_b102__physical_v1",
+    "q_b103",
+    "q_b103__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_ra": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      106.272,
+      187.488
+     ]
+    ],
+    "u_fcore.u_core.u_rb": [
+     [
+      112.32,
+      0.0
+     ],
+     [
+      106.272,
+      187.488
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hbm_idx_score_hcol_h0_ra": {
+     "pins_file": "cores/ot_hbm_idx_score_hcol_h0_ra__106.272x187.488__d44v_split.json",
+     "outline_um": [
+      106.272,
+      187.488
+     ],
+     "pins": 1165,
+     "clock_pins": 1,
+     "clock_entry": [
+      51.84,
+      95.04
+     ],
+     "faces": {
+      "E": 33,
+      "I": 1,
+      "N": 1131
+     }
+    },
+    "ot_hbm_idx_score_hcol_h0_rb": {
+     "pins_file": "cores/ot_hbm_idx_score_hcol_h0_rb__106.272x187.488__d44v_split.json",
+     "outline_um": [
+      106.272,
+      187.488
+     ],
+     "pins": 1198,
+     "clock_pins": 1,
+     "clock_entry": [
+      51.84,
+      95.04
+     ],
+     "faces": {
+      "I": 1,
+      "N": 1164,
+      "W": 33
+     }
+    }
+   },
+   "added_cycles": "0 on every port (latency/ot_hbm_idx_score_hcol_h0.tsv)",
+   "pin_displacement_um": 320315.5,
+   "stations_repointed": {
+    "stations": 11208,
+    "dead-port": 132
+   },
+   "designs_removed": [
+    "ot_hbm_idx_score_hcol_h0"
+   ],
+   "designs_added": [
+    "ot_hbm_idx_score_hcol_h0_ra",
+    "ot_hbm_idx_score_hcol_h0_rb"
+   ]
+  },
+  {
+   "core": "ot_hgi_sfu_split3_lane_core__idpin",
+   "sha": "273120b2730",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hgi_sfu_split3_lane_core__idpin__p6glue.sv",
+   "slot_um": [
+    388.8,
+    345.6
+   ],
+   "instances": 32,
+   "types": [
+    "q_b110",
+    "q_b110__physical_v1",
+    "q_b111",
+    "q_b111__physical_v1",
+    "q_b112",
+    "q_b112__physical_v1",
+    "q_b113",
+    "q_b113__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_bk": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      155.52,
+      345.6
+     ]
+    ],
+    "u_fcore.u_core.u_ex": [
+     [
+      293.76,
+      0.0
+     ],
+     [
+      95.04,
+      345.6
+     ]
+    ],
+    "u_fcore.u_core.u_fr": [
+     [
+      164.16,
+      0.0
+     ],
+     [
+      120.96,
+      345.6
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hgi_sfu_split3_lane_core_bk": {
+     "pins_file": "cores/ot_hgi_sfu_split3_lane_core_bk__155.52x345.6__d44v_split.json",
+     "outline_um": [
+      155.52,
+      345.6
+     ],
+     "pins": 385,
+     "clock_pins": 1,
+     "clock_entry": [
+      77.76,
+      172.8
+     ],
+     "faces": {
+      "E": 234,
+      "I": 1,
+      "S": 58,
+      "W": 92
+     }
+    },
+    "ot_hgi_sfu_split3_lane_core_ex": {
+     "pins_file": "cores/ot_hgi_sfu_split3_lane_core_ex__95.04x345.6__d44v_split.json",
+     "outline_um": [
+      95.04,
+      345.6
+     ],
+     "pins": 68,
+     "clock_pins": 1,
+     "clock_entry": [
+      47.52,
+      172.8
+     ],
+     "faces": {
+      "I": 1,
+      "S": 1,
+      "W": 66
+     }
+    },
+    "ot_hgi_sfu_split3_lane_core_fr": {
+     "pins_file": "cores/ot_hgi_sfu_split3_lane_core_fr__120.96x345.6__d44v_split.json",
+     "outline_um": [
+      120.96,
+      345.6
+     ],
+     "pins": 1557,
+     "clock_pins": 2,
+     "clock_entry": [
+      60.48,
+      172.8
+     ],
+     "faces": {
+      "E": 33,
+      "I": 2,
+      "N": 708,
+      "S": 613,
+      "W": 201
+     }
+    }
+   },
+   "added_cycles": "+4 on sfu_vm_*/sfu_kv_*/sfu_ro_*/sfu_fault/sfu_coll outputs, 0 elsewhere (split record shift_map)",
+   "pin_displacement_um": 157106.7,
+   "stations_repointed": {
+    "stations": 474
+   },
+   "designs_removed": [
+    "ot_hgi_sfu_split3_lane_core__idpin"
+   ],
+   "designs_added": [
+    "ot_hgi_sfu_split3_lane_core_bk",
+    "ot_hgi_sfu_split3_lane_core_ex",
+    "ot_hgi_sfu_split3_lane_core_fr"
+   ]
+  },
+  {
+   "core": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+   "sha": "8dd205e8bcc",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_su_static_pgslice_lg__lanes8_11__p6glue.sv",
+   "slot_um": [
+    760.32,
+    311.04
+   ],
+   "instances": 4,
+   "types": [
+    "q_su20",
+    "q_su20__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_p0": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      190.08,
+      311.04
+     ]
+    ],
+    "u_fcore.u_core.u_p1": [
+     [
+      190.08,
+      0.0
+     ],
+     [
+      190.08,
+      311.04
+     ]
+    ],
+    "u_fcore.u_core.u_p2": [
+     [
+      380.16,
+      0.0
+     ],
+     [
+      190.08,
+      311.04
+     ]
+    ],
+    "u_fcore.u_core.u_p3": [
+     [
+      570.24,
+      0.0
+     ],
+     [
+      190.08,
+      311.04
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hbm_su_pg_lane1_core": {
+     "pins_file": "cores/ot_hbm_su_pg_lane1_core__190.08x311.04__d44v_split.json",
+     "outline_um": [
+      190.08,
+      311.04
+     ],
+     "pins": 2035,
+     "clock_pins": 19,
+     "clock_entry": [
+      164.16,
+      155.52
+     ],
+     "faces": {
+      "I": 19,
+      "N": 1077,
+      "S": 939
+     }
+    }
+   },
+   "added_cycles": "0 on every port",
+   "pin_displacement_um": 7162745.9,
+   "stations_repointed": {
+    "stations": 14
+   },
+   "designs_removed": [
+    "ot_hbm_su_static_pgslice_lg__lanes8_11"
+   ],
+   "designs_added": [
+    "ot_hbm_su_pg_lane1_core"
+   ]
+  }
+ ],
+ "core_faces_moves": [
+  {
+   "core": "ot_hbm_idx_score_hcol_h0",
+   "module": "ot_hbm_idx_score_hcol_h0_rb",
+   "port": "cf_out",
+   "to": "N",
+   "mean_before": -0.098,
+   "score_after": 0.984
+  },
+  {
+   "core": "ot_hbm_idx_score_hcol_h0",
+   "module": "ot_hbm_idx_score_hcol_h0_rb",
+   "port": "cs_out",
+   "to": "N",
+   "mean_before": -0.098,
+   "score_after": 0.984
+  },
+  {
+   "core": "ot_hbm_idx_score_hcol_h0",
+   "module": "ot_hbm_idx_score_hcol_h0_rb",
+   "port": "prdy",
+   "to": "N",
+   "mean_before": -0.0,
+   "score_after": 0.984
+  }
+ ]
+}

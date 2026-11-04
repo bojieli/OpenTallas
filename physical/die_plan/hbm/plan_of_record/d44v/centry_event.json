@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_clock_entry_pin_event.v1",
  "plan": "p/b3/die_plan.json",
- "plan_sha256": "b117a7de1a9853b6571fe56a62931945450174e279aadcba8d3115c043225b3d",
- "clock_entries_sha256": "a045dee33b82a1ae9faf631a40b79bbd03ac32db1a0135e6cd2e31d06f3848ec",
+ "plan_sha256": "93c039aac5806b8d182e2b7c89c46dfce08d43839017e52c21945a48767bcf7b",
+ "clock_entries_sha256": "087f32384d9d77fb38d8a5da96feebf8a3b2e6576de6aee9ba03443775ba17c9",
  "keep": [
   "ot_hbm_idx_qctl_static",
   "ot_hbm_idx_score_hcol_h1",
@@ -15,8 +15,8 @@
  ],
  "rule": "METHODOLOGY 12.8a plan clock entry; gen_core_kit_hbm plan_clock_entries + clock_entry_pin (DIE-HBM-60, COORD 11-03 00:2x (4))",
  "summary": {
-  "tables": 84,
-  "moved": 53,
+  "tables": 87,
+  "moved": 51,
   "kept": 6,
   "refused": 0,
   "missing": 0,
@@ -28,9 +28,14 @@
    "pins_file": "cores/ot_hbm_hc_bank128_pair_first_core_pins.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
-  "ot_hbm_idx_score_hcol_h0|cores/ot_hbm_idx_score_hcol_h0__218.592x187.488__canon__c25c_native__d16f__codex_g21.json": {
-   "module": "ot_hbm_idx_score_hcol_h0",
-   "pins_file": "cores/ot_hbm_idx_score_hcol_h0__218.592x187.488__canon__c25c_native__d16f__codex_g21.json",
+  "ot_hbm_idx_score_hcol_h0_ra|cores/ot_hbm_idx_score_hcol_h0_ra__106.272x187.488__d44v_split.json": {
+   "module": "ot_hbm_idx_score_hcol_h0_ra",
+   "pins_file": "cores/ot_hbm_idx_score_hcol_h0_ra__106.272x187.488__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "ot_hbm_idx_score_hcol_h0_rb|cores/ot_hbm_idx_score_hcol_h0_rb__106.272x187.488__d44v_split.json": {
+   "module": "ot_hbm_idx_score_hcol_h0_rb",
+   "pins_file": "cores/ot_hbm_idx_score_hcol_h0_rb__106.272x187.488__d44v_split.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
   "ot_hbm_idx_score_hcol_h1|cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21__mpisl.json": {
@@ -58,35 +63,20 @@
    "pins_file": "cores/ot_hbm_idx_score_quarter_static__tail1__218.592x187.488__q_b103_u_hb_idx__s_Q_tail1__c25c_native.json",
    "status": "UNCHANGED (table at entry or no entry)"
   },
-  "ot_hgi_sfu_split3_lane_core__idpin|cores/ot_hgi_sfu_split3_lane_core__idpin__master__codex_g21.json": {
-   "module": "ot_hgi_sfu_split3_lane_core__idpin",
-   "pins_file": "cores/ot_hgi_sfu_split3_lane_core__idpin__master__codex_g21.json",
-   "new_pins_file": "cores/ot_hgi_sfu_split3_lane_core__idpin__master__codex_g21__centry.json",
-   "status": "MOVED",
-   "moved": {
-    "map_clk": [
-     194.424,
-     172.8
-    ],
-    "sfu_clk": [
-     194.52,
-     172.8
-    ]
-   },
-   "old": {
-    "sfu_clk": [
-     194.424,
-     345.36
-    ],
-    "map_clk": [
-     194.328,
-     172.8
-    ]
-   },
-   "entry": [
-    194.4,
-    172.8
-   ]
+  "ot_hgi_sfu_split3_lane_core_bk|cores/ot_hgi_sfu_split3_lane_core_bk__155.52x345.6__d44v_split.json": {
+   "module": "ot_hgi_sfu_split3_lane_core_bk",
+   "pins_file": "cores/ot_hgi_sfu_split3_lane_core_bk__155.52x345.6__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "ot_hgi_sfu_split3_lane_core_ex|cores/ot_hgi_sfu_split3_lane_core_ex__95.04x345.6__d44v_split.json": {
+   "module": "ot_hgi_sfu_split3_lane_core_ex",
+   "pins_file": "cores/ot_hgi_sfu_split3_lane_core_ex__95.04x345.6__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
+  },
+  "ot_hgi_sfu_split3_lane_core_fr|cores/ot_hgi_sfu_split3_lane_core_fr__120.96x345.6__d44v_split.json": {
+   "module": "ot_hgi_sfu_split3_lane_core_fr",
+   "pins_file": "cores/ot_hgi_sfu_split3_lane_core_fr__120.96x345.6__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
   },
   "ot_hgi_sfu_core_split3__opstore_a|cores/ot_hgi_sfu_core_split3__opstore_a__760.32x483.84__d30o.json": {
    "module": "ot_hgi_sfu_core_split3__opstore_a",
@@ -1664,627 +1654,10 @@
     362.88
    ]
   },
-  "ot_hbm_su_static_pgslice_lg__lanes8_11|cores/ot_hbm_su_static_pgslice_lg__lanes8_11__760.32x311.04__canon__d16f__codex_g21.json": {
-   "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
-   "pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes8_11__760.32x311.04__canon__d16f__codex_g21.json",
-   "new_pins_file": "cores/ot_hbm_su_static_pgslice_lg__lanes8_11__760.32x311.04__canon__d16f__codex_g21__centry.json",
-   "status": "MOVED",
-   "moved": {
-    "clk_bank[0]": [
-     376.632,
-     155.52
-    ],
-    "clk_bank[1]": [
-     376.728,
-     155.52
-    ],
-    "clk_bank[2]": [
-     376.824,
-     155.52
-    ],
-    "clk_bank[3]": [
-     376.92,
-     155.52
-    ],
-    "clk_bank_macro[0]": [
-     377.016,
-     155.52
-    ],
-    "clk_bank_macro[10]": [
-     377.112,
-     155.52
-    ],
-    "clk_bank_macro[11]": [
-     377.208,
-     155.52
-    ],
-    "clk_bank_macro[12]": [
-     377.304,
-     155.52
-    ],
-    "clk_bank_macro[13]": [
-     377.4,
-     155.52
-    ],
-    "clk_bank_macro[14]": [
-     377.496,
-     155.52
-    ],
-    "clk_bank_macro[15]": [
-     377.592,
-     155.52
-    ],
-    "clk_bank_macro[16]": [
-     377.688,
-     155.52
-    ],
-    "clk_bank_macro[17]": [
-     377.784,
-     155.52
-    ],
-    "clk_bank_macro[18]": [
-     377.88,
-     155.52
-    ],
-    "clk_bank_macro[19]": [
-     377.976,
-     155.52
-    ],
-    "clk_bank_macro[1]": [
-     378.072,
-     155.52
-    ],
-    "clk_bank_macro[20]": [
-     378.168,
-     155.52
-    ],
-    "clk_bank_macro[21]": [
-     378.264,
-     155.52
-    ],
-    "clk_bank_macro[22]": [
-     378.36,
-     155.52
-    ],
-    "clk_bank_macro[23]": [
-     378.456,
-     155.52
-    ],
-    "clk_bank_macro[2]": [
-     378.552,
-     155.52
-    ],
-    "clk_bank_macro[3]": [
-     378.648,
-     155.52
-    ],
-    "clk_bank_macro[4]": [
-     378.744,
-     155.52
-    ],
-    "clk_bank_macro[5]": [
-     378.84,
-     155.52
-    ],
-    "clk_bank_macro[6]": [
-     378.936,
-     155.52
-    ],
-    "clk_bank_macro[7]": [
-     379.032,
-     155.52
-    ],
-    "clk_bank_macro[8]": [
-     379.128,
-     155.52
-    ],
-    "clk_bank_macro[9]": [
-     379.224,
-     155.52
-    ],
-    "clk_insert[0]": [
-     379.32,
-     155.52
-    ],
-    "clk_insert[10]": [
-     379.416,
-     155.52
-    ],
-    "clk_insert[11]": [
-     379.512,
-     155.52
-    ],
-    "clk_insert[12]": [
-     379.608,
-     155.52
-    ],
-    "clk_insert[13]": [
-     379.704,
-     155.52
-    ],
-    "clk_insert[14]": [
-     379.8,
-     155.52
-    ],
-    "clk_insert[15]": [
-     379.896,
-     155.52
-    ],
-    "clk_insert[1]": [
-     379.992,
-     155.52
-    ],
-    "clk_insert[2]": [
-     380.088,
-     155.52
-    ],
-    "clk_insert[3]": [
-     380.184,
-     155.52
-    ],
-    "clk_insert[4]": [
-     380.28,
-     155.52
-    ],
-    "clk_insert[5]": [
-     380.376,
-     155.52
-    ],
-    "clk_insert[6]": [
-     380.472,
-     155.52
-    ],
-    "clk_insert[7]": [
-     380.568,
-     155.52
-    ],
-    "clk_insert[8]": [
-     380.664,
-     155.52
-    ],
-    "clk_insert[9]": [
-     380.76,
-     155.52
-    ],
-    "clk_lane[0]": [
-     380.856,
-     155.52
-    ],
-    "clk_lane[10]": [
-     380.952,
-     155.52
-    ],
-    "clk_lane[11]": [
-     381.048,
-     155.52
-    ],
-    "clk_lane[12]": [
-     381.144,
-     155.52
-    ],
-    "clk_lane[13]": [
-     381.24,
-     155.52
-    ],
-    "clk_lane[14]": [
-     381.336,
-     155.52
-    ],
-    "clk_lane[15]": [
-     381.432,
-     155.52
-    ],
-    "clk_lane[16]": [
-     381.528,
-     155.52
-    ],
-    "clk_lane[17]": [
-     381.624,
-     155.52
-    ],
-    "clk_lane[18]": [
-     381.72,
-     155.52
-    ],
-    "clk_lane[19]": [
-     381.816,
-     155.52
-    ],
-    "clk_lane[1]": [
-     381.912,
-     155.52
-    ],
-    "clk_lane[20]": [
-     382.008,
-     155.52
-    ],
-    "clk_lane[21]": [
-     382.104,
-     155.52
-    ],
-    "clk_lane[22]": [
-     382.2,
-     155.52
-    ],
-    "clk_lane[23]": [
-     382.296,
-     155.52
-    ],
-    "clk_lane[24]": [
-     382.392,
-     155.52
-    ],
-    "clk_lane[25]": [
-     382.488,
-     155.52
-    ],
-    "clk_lane[26]": [
-     382.584,
-     155.52
-    ],
-    "clk_lane[27]": [
-     382.68,
-     155.52
-    ],
-    "clk_lane[28]": [
-     382.776,
-     155.52
-    ],
-    "clk_lane[29]": [
-     382.872,
-     155.52
-    ],
-    "clk_lane[2]": [
-     382.968,
-     155.52
-    ],
-    "clk_lane[30]": [
-     383.064,
-     155.52
-    ],
-    "clk_lane[31]": [
-     383.16,
-     155.52
-    ],
-    "clk_lane[3]": [
-     383.256,
-     155.52
-    ],
-    "clk_lane[4]": [
-     383.352,
-     155.52
-    ],
-    "clk_lane[5]": [
-     383.448,
-     155.52
-    ],
-    "clk_lane[6]": [
-     383.544,
-     155.52
-    ],
-    "clk_lane[7]": [
-     383.64,
-     155.52
-    ],
-    "clk_lane[8]": [
-     383.736,
-     155.52
-    ],
-    "clk_lane[9]": [
-     383.832,
-     155.52
-    ]
-   },
-   "old": {
-    "clk_bank[0]": [
-     759.288,
-     0.24
-    ],
-    "clk_bank[1]": [
-     759.192,
-     0.24
-    ],
-    "clk_bank[2]": [
-     759.096,
-     0.24
-    ],
-    "clk_bank[3]": [
-     759.0,
-     0.24
-    ],
-    "clk_insert[0]": [
-     758.904,
-     0.24
-    ],
-    "clk_insert[1]": [
-     758.808,
-     0.24
-    ],
-    "clk_insert[2]": [
-     758.712,
-     0.24
-    ],
-    "clk_insert[3]": [
-     758.616,
-     0.24
-    ],
-    "clk_insert[4]": [
-     758.52,
-     0.24
-    ],
-    "clk_insert[5]": [
-     758.424,
-     0.24
-    ],
-    "clk_insert[6]": [
-     758.328,
-     0.24
-    ],
-    "clk_insert[7]": [
-     758.232,
-     0.24
-    ],
-    "clk_insert[8]": [
-     758.136,
-     0.24
-    ],
-    "clk_insert[9]": [
-     758.04,
-     0.24
-    ],
-    "clk_insert[10]": [
-     757.944,
-     0.24
-    ],
-    "clk_insert[11]": [
-     757.848,
-     0.24
-    ],
-    "clk_insert[12]": [
-     757.752,
-     0.24
-    ],
-    "clk_insert[13]": [
-     757.656,
-     0.24
-    ],
-    "clk_insert[14]": [
-     757.56,
-     0.24
-    ],
-    "clk_insert[15]": [
-     757.464,
-     0.24
-    ],
-    "clk_bank_macro[0]": [
-     757.368,
-     0.24
-    ],
-    "clk_bank_macro[1]": [
-     757.272,
-     0.24
-    ],
-    "clk_bank_macro[2]": [
-     757.176,
-     0.24
-    ],
-    "clk_bank_macro[3]": [
-     757.08,
-     0.24
-    ],
-    "clk_bank_macro[4]": [
-     756.984,
-     0.24
-    ],
-    "clk_bank_macro[5]": [
-     756.888,
-     0.24
-    ],
-    "clk_bank_macro[6]": [
-     756.792,
-     0.24
-    ],
-    "clk_bank_macro[7]": [
-     756.696,
-     0.24
-    ],
-    "clk_bank_macro[8]": [
-     756.6,
-     0.24
-    ],
-    "clk_bank_macro[9]": [
-     756.504,
-     0.24
-    ],
-    "clk_bank_macro[10]": [
-     756.408,
-     0.24
-    ],
-    "clk_bank_macro[11]": [
-     756.312,
-     0.24
-    ],
-    "clk_bank_macro[12]": [
-     756.216,
-     0.24
-    ],
-    "clk_bank_macro[13]": [
-     756.12,
-     0.24
-    ],
-    "clk_bank_macro[14]": [
-     756.024,
-     0.24
-    ],
-    "clk_bank_macro[15]": [
-     755.928,
-     0.24
-    ],
-    "clk_bank_macro[16]": [
-     755.832,
-     0.24
-    ],
-    "clk_bank_macro[17]": [
-     755.736,
-     0.24
-    ],
-    "clk_bank_macro[18]": [
-     755.64,
-     0.24
-    ],
-    "clk_bank_macro[19]": [
-     755.544,
-     0.24
-    ],
-    "clk_bank_macro[20]": [
-     755.448,
-     0.24
-    ],
-    "clk_bank_macro[21]": [
-     755.352,
-     0.24
-    ],
-    "clk_bank_macro[22]": [
-     755.256,
-     0.24
-    ],
-    "clk_bank_macro[23]": [
-     755.16,
-     0.24
-    ],
-    "clk_lane[0]": [
-     755.064,
-     0.24
-    ],
-    "clk_lane[1]": [
-     754.968,
-     0.24
-    ],
-    "clk_lane[2]": [
-     754.872,
-     0.24
-    ],
-    "clk_lane[3]": [
-     754.776,
-     0.24
-    ],
-    "clk_lane[4]": [
-     754.68,
-     0.24
-    ],
-    "clk_lane[5]": [
-     754.584,
-     0.24
-    ],
-    "clk_lane[6]": [
-     754.488,
-     0.24
-    ],
-    "clk_lane[7]": [
-     754.392,
-     0.24
-    ],
-    "clk_lane[8]": [
-     754.296,
-     0.24
-    ],
-    "clk_lane[9]": [
-     754.2,
-     0.24
-    ],
-    "clk_lane[10]": [
-     754.104,
-     0.24
-    ],
-    "clk_lane[11]": [
-     754.008,
-     0.24
-    ],
-    "clk_lane[12]": [
-     753.912,
-     0.24
-    ],
-    "clk_lane[13]": [
-     753.816,
-     0.24
-    ],
-    "clk_lane[14]": [
-     753.72,
-     0.24
-    ],
-    "clk_lane[15]": [
-     753.624,
-     0.24
-    ],
-    "clk_lane[16]": [
-     753.528,
-     0.24
-    ],
-    "clk_lane[17]": [
-     753.432,
-     0.24
-    ],
-    "clk_lane[18]": [
-     753.336,
-     0.24
-    ],
-    "clk_lane[19]": [
-     753.24,
-     0.24
-    ],
-    "clk_lane[20]": [
-     753.144,
-     0.24
-    ],
-    "clk_lane[21]": [
-     753.048,
-     0.24
-    ],
-    "clk_lane[22]": [
-     752.952,
-     0.24
-    ],
-    "clk_lane[23]": [
-     752.856,
-     0.24
-    ],
-    "clk_lane[24]": [
-     752.76,
-     0.24
-    ],
-    "clk_lane[25]": [
-     752.664,
-     0.24
-    ],
-    "clk_lane[26]": [
-     752.568,
-     0.24
-    ],
-    "clk_lane[27]": [
-     752.472,
-     0.24
-    ],
-    "clk_lane[28]": [
-     752.376,
-     0.24
-    ],
-    "clk_lane[29]": [
-     752.28,
-     0.24
-    ],
-    "clk_lane[30]": [
-     752.184,
-     0.24
-    ],
-    "clk_lane[31]": [
-     752.088,
-     0.24
-    ]
-   },
-   "entry": [
-    380.16,
-    155.52
-   ]
+  "ot_hbm_su_pg_lane1_core|cores/ot_hbm_su_pg_lane1_core__190.08x311.04__d44v_split.json": {
+   "module": "ot_hbm_su_pg_lane1_core",
+   "pins_file": "cores/ot_hbm_su_pg_lane1_core__190.08x311.04__d44v_split.json",
+   "status": "UNCHANGED (table at entry or no entry)"
   },
   "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap|cores/ot_hgi_coll_tkm_tp192_tile_core__idpin__chain__po.json": {
    "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
@@ -3623,10 +2996,10 @@
    "pins_file": "cores/ot_hbm_idx_qctl_static__194.832x82.08__canon__d16f__codex_g21.json",
    "status": "KEPT (signed record)"
   },
-  "ot_hbm_idx_query_static|cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q.json": {
+  "ot_hbm_idx_query_static|cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q__mpisl.json": {
    "module": "ot_hbm_idx_query_static",
-   "pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q.json",
-   "new_pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q__centry.json",
+   "pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q__mpisl.json",
+   "new_pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28__d32q__mpisl__centry.json",
    "status": "MOVED",
    "moved": {
     "clk": [
