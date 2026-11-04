@@ -199,7 +199,30 @@
     "kv3_pv_v4@4",
     "kv3_pv_v4n@4",
     "kv3_pv_v5@4",
-    "kv3_pv_v5n@4"
+    "kv3_pv_v5n@4",
+    "kv3_hgi_v3@4",
+    "kv3_hgi_v4@4",
+    "kv3_hgi_v6@4",
+    "kv3_hgi_v7@4",
+    "kv3_hgi_v8@4",
+    "kv3_hgi@4",
+    "kv3_hub_Eo@4",
+    "kv3_hub_Wi@4",
+    "kv3_hub_Wo@4",
+    "kv3_io_cor_v1@4",
+    "kv3_pc__cl254f2e73@4",
+    "kv3_pc__cl5a95b461@4",
+    "kv3_pc_v3@4",
+    "kv3_pv_v12@4",
+    "kv3_pv_v1n@4",
+    "kv3_pv_v1@4",
+    "kv3_pv_v6n@4",
+    "kv3_pv_v6@4",
+    "kv3_pv_v7@4",
+    "kv3_pv_v8@4",
+    "kv3_pv@4",
+    "kv3_hgi_v5@4",
+    "kv3_sys_SD@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -252,7 +275,7 @@
     "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_io_ft_v1": "KW-FIX-7 06:3x COORD: Ring FT no release until DIE-KV-67 posts the guard 0 vs gate -90 cause; do not launch"
    },
-   "work_root": "/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1104/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
     "kv3_io_cor_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
@@ -354,7 +377,31 @@
     "kv3_pv_v4@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
     "kv3_pv_v4n@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
     "kv3_pv_v5@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
-    "kv3_pv_v5n@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x"
+    "kv3_pv_v5n@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
+    "kv3_hgi_v3@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hgi_v4@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hgi_v6@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hgi_v7@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hgi_v8@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hgi@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hub_Eo@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hub_Wi@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hub_Wo@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_io_cor_v1@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_io_cor@1": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pc__cl254f2e73@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pc__cl5a95b461@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pc_v3@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pv_v12@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pv_v1n@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pv_v1@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pv_v6n@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pv_v6@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pv_v7@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pv_v8@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pv@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_hgi_v5@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_sys_SD@4": "KW-FIX-7 11-04: @4 kit_rtl PHY view lookup on the old src; src_j + plan_c there carries the whole w522 view [CHECKED resolve], retry is the read"
    },
    "only_items": [
     "kv3_astk",
@@ -1968,7 +2015,8 @@
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
    "hosts": [
-    "epyc4"
+    "epyc4",
+    "epyc2"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
@@ -2005,7 +2053,11 @@
      "--native-cell-cap",
      "517000"
     ]
-   }
+   },
+   "place_prefer": [
+    "epyc2"
+   ],
+   "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4."
   },
   "s81_head": {
    "enabled": true,
@@ -2340,8 +2392,8 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/physical/die_plan/qwen_compute/plan_of_record/plan_qc52_ucie1103.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-6-qcd",
-   "src_sha": "1ed4353aa1188a62f4b78bb00e250bb0eb76aad4",
+   "src": "/srv/opentallas-scratch2/claude/wt/kw-fix-7-qcd",
+   "src_sha": "ccb4065691eba5f4b19f243fa2f18ed5bc038eb5",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/results/qc_die57_1031/bind/final_asbuilt.json",
@@ -2512,9 +2564,17 @@
     "slw_su_l0__cl1e5219ea@1",
     "slw_su_l0__cl76fb247e@1",
     "slw_su_l1__cla2a78701@1",
-    "slw_su_l1__clcc9d0155@1"
+    "slw_su_l1__clcc9d0155@1",
+    "cbf_q00__cl1b5a6458@3",
+    "cbf_q11@3",
+    "cbn_q00__cl622f65d2@2",
+    "cbn_q00__cldbcda913@2",
+    "cbn_q01__clab6e67f2@2",
+    "cbn_q01__cld9ff4c40@2",
+    "cbx_q10__cl89936551@2",
+    "sle_su_l0__cl7a55c676@2"
    ],
-   "queue_src": "claude/kw6-qcd-1104@1ed4353aa1188a62f4b78bb00e250bb0eb76aad4",
+   "queue_src": "claude/kw7-resetdot-1104@ccb4065691eba5f4b19f243fa2f18ed5bc038eb5",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -2795,7 +2855,15 @@
     "slw_su_l0__cl1e5219ea@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
     "slw_su_l0__cl76fb247e@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
     "slw_su_l1__cla2a78701@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
-    "slw_su_l1__clcc9d0155@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools"
+    "slw_su_l1__clcc9d0155@1": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
+    "cbf_q00__cl1b5a6458@3": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbf_q11@3": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q00__cl622f65d2@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q00__cldbcda913@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q01__clab6e67f2@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbn_q01__cld9ff4c40@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "cbx_q10__cl89936551@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved",
+    "sle_su_l0__cl7a55c676@2": "KW-FIX-7 11-04 reset_tree ccb4065691e: u_bound.<inst> flat core name accepted in OT_RESET_CORE match; src moved"
    },
    "gen_hosts": [
     "intel2"
@@ -3425,7 +3493,8 @@
     "ot_hgi_sfu_core_split3__opstore_b@3",
     "ot_hbm_su_static_pgslice_lg__lane_exp0_id@3",
     "ot_hgi_coll_tkm_m_tp192__root@2",
-    "ot_hgi_coll_tkm_m_tp192__root@3"
+    "ot_hgi_coll_tkm_m_tp192__root@3",
+    "ot_hgi_dma_back_static_vp4_banks_cp@3"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-61",
@@ -3501,7 +3570,8 @@
     "ot_hgi_sfu_core_split3__opstore_b@3": "LEC classes a04433da484 (I20)",
     "ot_hbm_su_static_pgslice_lg__lane_exp0_id@3": "LEC classes a04433da484 (I20), OT_LEC_GOLD_NOWIDEN auto retry",
     "ot_hgi_coll_tkm_m_tp192__root@2": "tkm_root cut map 403c855c44e (I20): leaves hold, regenerates",
-    "ot_hgi_coll_tkm_m_tp192__root@3": "d44v10 core_macros has root rects (DIE-HBM-63 06:04, COORD 06:00 (7))"
+    "ot_hgi_coll_tkm_m_tp192__root@3": "d44v10 core_macros has root rects (DIE-HBM-63 06:04, COORD 06:00 (7))",
+    "ot_hgi_dma_back_static_vp4_banks_cp@3": "KW-FIX-7 11-04: main lec.py on @3 kit copy EQUIVALENT (epyc4 scratch3 kw-fix-6/lec, rc 0); src has the lec fix"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {

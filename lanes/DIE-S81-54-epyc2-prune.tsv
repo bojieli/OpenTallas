@@ -1,0 +1,10 @@
+# DIE-S81-54 epyc2, COORD 06:29 + 06:5x ask. Gates read 2026-11-04 06:55-07:0x PST: no signoff with SIGNED/LOCAL_PASS, no .keep, no PROTECTED-DBS row, no plan-cache hit, no tracked ref on origin/main, no wave ref, no symlink, no open file, no hardlink.
+# file list: epyc2 /home/ubuntu/scratch-root/claude/die-s81-54/removed-1104-filelist.txt.gz
+# path	GB	newest	what	decision
+/srv/opentallas-scratch2/claude/s81ck12t	7.1	11-03 15:33	dsdv_gunit_l3_ck12T + other ck12 experiments; its one signoff.json is not SIGNED	REMOVE
+/srv/opentallas-scratch2/claude/s81ck12nk	3.9	11-03 22:44	S81-CORES-KITS-12/nk experiments, no signoff	REMOVE
+/srv/opentallas-scratch2/claude/die-s81-51/rfa/bench	5.3	11-03 08:26	eng/olat benches + mutants, no signoff	REMOVE
+/srv/opentallas-scratch2/claude/die-s81-48/gen/kits	4.5	11-02 22:33	g48 kits, no signoff; 4 autopilot jobs on it all WITHDRAWN (queue.tsv rows remain, inert); die-s81-50 gen_lint.json only cites it	REMOVE
+/srv/opentallas-scratch2/claude/s81ck12	25.9	11-01 22:56	plan-cache 11 hits, tracked refs in main (views provenance, plan_h2_2249)	KEEP
+/srv/opentallas-scratch2/claude/s81ck13/rxsf	4.6	11-01 22:00	plan-cache 18 hits, .keep	KEEP
+/srv/opentallas-scratch2/claude/die-s81-48/gunit_l5	11.8	11-03 10:04	.keep inside	KEEP
