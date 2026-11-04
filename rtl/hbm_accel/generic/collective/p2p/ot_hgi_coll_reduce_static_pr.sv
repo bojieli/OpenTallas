@@ -52,7 +52,7 @@ module ot_hgi_coll_reduce_static_pr #(parameter integer MUT_TAG=0,MUT_BF16=0,MUT
  // same reset class), each driving one lane of ot_hgi_coll_reduce_static_lr. Census 766 ps (pub_tag_a_q fanout into 16
  // lanes' 16:1 read muxes) -> one lane per copy. 0 added cycles, every port edge unchanged.
  // LMUT (bench): 1 = lane 8 pub_tag_a copy captures pub_tag_b; 2 = lane 3 load_v copy one edge late; 3 = lane 5 read_tag
- // copy holds its value while add_read is low (enable bug); 4 = lane 12 add_issue copy stuck 0.
+ // copy holds its value while add_read is low (equivalent mutant: bench cannot see it); 4 = lane 12 add_issue copy stuck 0.
  localparam integer LMUT=
 `ifdef OT_HBM_REDUCE_LMUT
  `OT_HBM_REDUCE_LMUT
