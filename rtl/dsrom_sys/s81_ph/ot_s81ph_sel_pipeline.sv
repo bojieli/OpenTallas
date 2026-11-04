@@ -243,7 +243,7 @@ module ot_s81ph_sel_ctl_pipe #(
     output reg                     c_stop,
     output reg                     c_p2,
     output reg                     c_p3,
-    output reg                     c_rep,
+    output wire                    c_rep,       // = ovf (LEC-EGN-1: one flop, see below)
     output reg  [15:0]             c_st,
     output reg  [Q*(KW+1)-1:0]     c_rem,
     output reg                     c_hclr,
@@ -287,7 +287,11 @@ module ot_s81ph_sel_ctl_pipe #(
         .clk(clk), .gs(s_gf), .bs(s_bf), .q(qf), .g_out(c_fg),
         .res_b(fres_b), .res_above(fres_above), .res_ok(fres_ok), .res_eq(fres_eq));
 
-    reg  [2:0]    st;
+    // LEC-EGN-1 11-03: c_rep was a second flop updated exactly like ovf (reset 0, |st_ovf in C_FL, 0 in C_CLR);
+    // synthesis merged the twins and the LEC saw c_rep removed.  It is now ovf itself.  st keeps its binary
+    // encoding (no FSM recode), so the LEC pairs st by name instead of losing it to a one-hot re-encoding.
+    assign c_rep = ovf;
+    (* fsm_encoding = "none" *) reg  [2:0]    st;
     reg  [TW-1:0] wcnt, hold_c, hold_f;
     reg           kseen, hf_seen, bs_done;
     reg  [7:0]    bs, ls;
@@ -348,7 +352,7 @@ module ot_s81ph_sel_ctl_pipe #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= C_CLR; wcnt <= CLRW[TW-1:0]; c_T <= 0; c_Bt <= 0; c_fclr <= 1'b0; c_ing <= 1'b0; c_stop <= 1'b0;
-            c_p2 <= 1'b0; c_p3 <= 1'b0; c_rep <= 1'b0; c_st <= 0; c_rem <= 0; c_hclr <= 1'b0; rep_req <= 1'b0;
+            c_p2 <= 1'b0; c_p3 <= 1'b0; c_st <= 0; c_rem <= 0; c_hclr <= 1'b0; rep_req <= 1'b0;
             ovf <= 1'b0; kq <= 0; qf <= QINV; hold_c <= 0; hold_f <= 0; kseen <= 1'b0; hf_seen <= 1'b0;
             bs_done <= 1'b0; bs <= 0; ls <= 0; m <= 0; t <= 0; eq <= 0;
         end else begin
@@ -379,7 +383,7 @@ module ot_s81ph_sel_ctl_pipe #(
                         bs_done <= 1'b1; bs <= cres_b; m <= kq - cab[QC-1:0];
                     end
                     if (bs_done && (&st_stopped)) begin
-                        st <= C_P2; c_rep <= |st_ovf; ovf <= |st_ovf; rep_req <= |st_ovf;
+                        st <= C_P2; ovf <= |st_ovf; rep_req <= |st_ovf;
 `ifdef S81PH_MUT_REPLAY
                         rep_req <= 1'b0;
 `endif
@@ -405,7 +409,7 @@ module ot_s81ph_sel_ctl_pipe #(
                     if (&st_emitted) begin st <= C_CLR; c_hclr <= 1'b1; wcnt <= CLRW[TW-1:0]; end
                 end
                 default: begin                     // C_CLR: the slices clear; stale search results drain
-                    c_T <= 0; c_Bt <= 0; qf <= QINV; kseen <= 1'b0; c_rep <= 1'b0; c_stop <= 1'b0; ovf <= 1'b0;
+                    c_T <= 0; c_Bt <= 0; qf <= QINV; kseen <= 1'b0; c_stop <= 1'b0; ovf <= 1'b0;
                     if (wcnt == 0) begin st <= C_ING; c_ing <= 1'b1; end
                 end
             endcase
