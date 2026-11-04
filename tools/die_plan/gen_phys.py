@@ -3715,6 +3715,10 @@ RUN_KIT = r"""#!/bin/bash
 # the SIGABRT in sta::RequiredCmp::requiredSet on HEAD hd_st_str / hd_st_n3_transit) is a tool failure, not a design
 # verdict: 4_cts.odb is restored from the pre-pass copy and the kit takes the plain GRT path (OT_TAPBAL_FALLBACK line,
 # tapbal_fallback.log).  'export OT_TAPBAL_FALLBACK = 0' in config.mk keeps the old FAIL_POSTCTS stop.
+# KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the pre-route insertion gate (post-CTS gate TT/FF on 5_1_grt.odb) is
+# ADVISORY: a FAIL line prints OT_POSTCTS_ADVISORY (postcts_advisory.log), no FAIL_POSTCTS / rc 6, the kit routes on and
+# signoff.py records the band as signoff.json insertion_band.  'export OT_POSTCTS_BAND_GATE = 1' restores the stop.
+# The FF structural hold gate (OT_HOLD_GATE, rc 4) is unchanged.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
 if [ -f "$K/signed_parent_source.json" ]; then
@@ -3849,10 +3853,12 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
-    for c in TT FF; do OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
+    BG=\$(grep -c '^export OT_POSTCTS_BAND_GATE = 1' /work/config.mk); rm -f /work/postcts_advisory.log; \
+    for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log || echo \"OT_POSTCTS_GATE \$c no result FAIL\" | tee -a /work/postcts_gate_\$c.log; done; \
     if grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
-      grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; fi; fi; \
+      if [ \$BG != 0 ]; then grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; \
+      else grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/OT_POSTCTS_ADVISORY pre-route insertion gate (not a stop, OWNER 11-03 19:12; signoff.json insertion_band): /' | tee -a /work/postcts_advisory.log; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     if [ -z \"\$HM\" ] || [ $GOAL = finish ]; then \$M grt; rc=\$?; fi; \
     if [ \$rc = 0 ]; then python3 -I /work/legacy_gate.py /work grt; rc=\$?; \
