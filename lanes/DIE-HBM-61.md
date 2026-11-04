@@ -28,3 +28,5 @@
   - Regional die clock build to replace C12e (rebuild has 1507 violations).
   - MEM class 3: q3_vm serialisation.
   - q_sm1/3 439-um reset last mile.
+
+- 2026-11-03 19:00 PST OWNER correction: extra cycles at core pins + static re-schedule are a cheap lever. Default first fix for setup misses = add declared cycles (plan delta + schedule + TOK-VERIFY, no ask).
