@@ -90,7 +90,9 @@ module ot_s81dv_rsqrt_n32 #(
                 ot_hdc_delay #(.W(32), .D(IT)) d_h (clk, rst_n, hd[k], hd[k+1]);
             end
             ot_s81dv_qmul_n32 #(LM) m_yy (clk, rst_n, vd[1 + IT*k],             yi[k], yi[k], yy[k], f[4*k]);
-            ot_s81dv_qmul_n32 #(LM) m_hm (clk, rst_n, vd[1 + IT*k + LM],        hd[k], yy[k], hm[k], f[4*k+1]);
+            // LEC-EGN-1 11-03: m_yy squares yi[k], so yy[k][31] = yi[k][31] ^ yi[k][31] = 0 on every path (finite, zero,
+            // inf / NaN bypass, overflow: y = +0; else sign a ^ b); hm reads the constant so RTL and synthesis agree.
+            ot_s81dv_qmul_n32 #(LM) m_hm (clk, rst_n, vd[1 + IT*k + LM],        hd[k], {1'b0, yy[k][30:0]}, hm[k], f[4*k+1]);
             ot_s81dv_qadd_n32 #(.LAT(LA)) a_s  (clk, rst_n, vd[1 + IT*k + 2*LM],      32'h3FC00000, {~hm[k][31], hm[k][30:0]}, s[k], f[4*k+2]);
             ot_hdc_delay #(.W(32), .D(2*LM + LA)) d_y (clk, rst_n, yi[k], yd[k]);
             ot_s81dv_qmul_n32 #(LM) m_y  (clk, rst_n, vd[1 + IT*k + 2*LM + LA], yd[k], s[k], yi[k+1], f[4*k+3]);
