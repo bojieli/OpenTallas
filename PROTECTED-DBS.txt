@@ -80,3 +80,18 @@ epyc2:/home/ubuntu/scratch-root/claude/die-qc-65-sul/l4/eco/i2 SIGNOFF-SPRINT-24
 epyc2:/srv/opentallas-scratch2/claude/die-kv-64-rfc/chi.eco/i1 SIGNOFF-SPRINT-24 KV chi counted-pending
 epyc2:/srv/opentallas-scratch2/claude/die-kv-64-rfc/cpc.eco/i1 SIGNOFF-SPRINT-24 KV cpc counted-pending
 intel1:/srv/opentallas-scratch2/claude/die-qc-65-sul/l7/eco/i1 SIGNOFF-SPRINT-24 QC l7 counted
+epyc4:/srv/opentallas-scratch2/claude/die-s81-51/rfc-gu/kits/dsdv_gunit_l1c_rf1 SIGNOFF-SPRINT-24 S81 gunit_l1c counted (NEEDS_PARENT rule)
+epyc4:/srv/opentallas-scratch2/claude/die-s81-51/rfd/kits/dsdv_gunit_l0r_rfd3 SIGNOFF-SPRINT-24 S81 gunit_l0r_rfd3
+intel1:/srv/opentallas-scratch2/claude/die-s81-51/sign/cfg7_seq_bfp/kitR SIGNOFF-SPRINT-24 S81 cfg7_seq_bfp
+intel1:/srv/opentallas-scratch2/claude/codex-s81-cohort-1101/kits/dsdv_eng_rr_h0_ccA_g2typed SIGNOFF-SPRINT-24 S81 rr_h0
+epyc2:/home/ubuntu/scratch-root/claude/ss24/ves_kit SIGNOFF-SPRINT-24 S81 ve_s byte copy
+intel2:/srv/opentallas-scratch2/claude/dh55/eco/hd_st_k5_D_p2/i1 SIGNOFF-SPRINT-24 HEAD hd_st_k5 (+ ss24/hd_k5_view hard-link copy)
+intel2:/srv/opentallas-scratch2/claude/dh55/eco/hd_st_turn_D_p2/i1 SIGNOFF-SPRINT-24 HEAD hd_st_turn (+ ss24/hd_turn_view)
+intel2:/srv/opentallas-scratch2/claude/head-ringhold-2/prd_l48x_D SIGNOFF-SPRINT-24 HEAD hd_turn_a
+intel2:/srv/opentallas-scratch2/claude/die-head-48/dh53/ftpin/prd_mesh_e_e_D2 SIGNOFF-SPRINT-24 HEAD hd_mesh_e
+intel2:/srv/opentallas-scratch2/claude/ss24 SIGNOFF-SPRINT-24 re-sign dirs
+intel1:/srv/opentallas-scratch2/claude/ss24 SIGNOFF-SPRINT-24 re-sign dirs
+epyc4:/srv/opentallas-scratch2/claude/ss24 SIGNOFF-SPRINT-24 re-sign dirs
+epyc2:/srv/opentallas-scratch2/claude/ss24 SIGNOFF-SPRINT-24 re-sign dirs
+epyc2:/srv/opentallas-scratch3/claude/die-hbm-60-leafslew/cal_sg.eco/i2 SIGNOFF-SPRINT-24 HBM calendar_f20
+epyc2:/srv/opentallas-scratch2/claude/codex-hbm-cores-1101/query/q7b2 SIGNOFF-SPRINT-24 HBM idx_query_static
