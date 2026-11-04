@@ -510,3 +510,25 @@ def test_eco_cap(ap, tmp_path, monkeypatch):
     ap.unit_active = lambda u: True
     AR.step(ap)
     assert len(ap.launched) == AR.MAX_ECO_INFLIGHT
+
+
+def test_hub_kit_uses_the_name_ot_run_knows(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    ap.ssh_host = lambda h: "localhost" if h == "intel2" else h
+    register(ap, make_kit(tmp_path), host="intel2")
+    AR.step(ap)
+    argv = ap.launched[0][1]
+    assert argv[argv.index("--hosts") + 1] == "localhost"
+
+
+def test_stage_tools_leaves_a_ready_export_alone(ap, monkeypatch):
+    monkeypatch.undo()
+    calls = []
+
+    def sh(cmd, timeout=300, input=None):
+        calls.append(cmd)
+        return (0, "", "")
+    ap.sh = sh
+    d, err = AR.stage_tools(ap, "h1", "/r", "flow-20261104-h-kv", {})
+    assert d == "/r/claude/auto-resign/tools/flow-20261104-h-kv" and not err
+    assert len(calls) == 1 and "test -f" in calls[0][-1]
