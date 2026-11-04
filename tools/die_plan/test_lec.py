@@ -1404,3 +1404,22 @@ def test_singleton_narrowed_memory_tail_paired_by_function_and_mutant_fails(tmp_
         m, _ = L.build(with_compare=True, with_hyp=True)
         st = _sim_prove(m)
         assert (set(st.values()) == {"proved"}) != mutant, st
+
+
+def test_kept_copy_takes_representatives_renamed_gate_flop(tmp_path):
+    """link_gbx g_pc[c].ps: a kept copy whose gate flop took another name and is paired to the class representative."""
+    keep = tmp_path / 'gold.keep'
+    keep.write_text("lec_top/u_dut.copy0" + chr(10) + "lec_top/u_dut.copy1" + chr(10))
+    keep.with_suffix('.aliases.json').write_text(json.dumps({'modules': {lec.WRAP: {'netnames': {
+        'u_dut.copy0': {'bits': [10]}, 'u_dut.copy1': {'bits': [11]}}}}}))
+    def build(both):
+        g, gm = _seq(tmp_path, 'rpgold', ['d'], ['copy0', 'copy1'], lambda m, x: {'copy0': x['d'], 'copy1': x['d']})
+        names = ['copy0', 'a0'] if both else ['copy0']
+        t, tm = _seq(tmp_path, 'rpgate', ['d'], names, lambda m, x: {n: x['d'] for n in names})
+        L = lec.Lec(g, gm, t, tm)
+        L.hyp[('gold', 'ff:u_dut.copy1')] = ('eq', 'gold', 'ff:u_dut.copy0', 0)
+        if both:
+            L.hyp[('gate', 'ff:u_dut.a0')] = ('eq', 'gold', 'ff:u_dut.copy0', 0)
+        return L
+    assert not lec.kept_registers(build(True), keep)[1]
+    assert lec.kept_registers(build(False), keep)[1]      # no second gate flop: one kept bit stays missing
