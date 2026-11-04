@@ -10,9 +10,10 @@ import importlib.util, json, re, sys
 REPO=Path(__file__).resolve().parents[2]
 HERE=REPO/"physical/die_plan/hbm_arch_cores"
 CE=REPO/"rtl/hbm_accel/cores_split/sk_en_q4"
-# RE-FORM 11-03: the rest core (REFORM=1) launches its sink and returns 70 edges later (SKL 268 vs 198).
-REFORM_SHIFT=70
+# RE-FORM 11-03: the rest core (REFORM=1) launches its sink and returns 84 edges later (SKL 282 vs 198).
+REFORM_SHIFT=84
 C12="rtl/hbm_accel/integrated_20261006/sfu_c12_selected/"
+RELAY="rtl/lib/ot_rst_relay.sv"   # REFORM=1 core reset relay
 C12_FILES=("00_ot_hdc_fastfp_lat_c12.sv","01_ot_hdc_fp32_f12.sv","02_ot_hdc_prefix.sv","03_ot_dsrom_su_add6.sv","04_ot_dsrom_su_f12.sv",
            "05_ot_hdc_fsqrt_c12.sv","06_ot_hdc_v41x_sfu_c12.sv","08_ot_hdc_delay.sv","09_ot_hdc_sfu.sv","14_ot_hdc_fastfp.sv")
 
@@ -78,7 +79,7 @@ def rest_source():
     // LDQ: launch-load register (RE-FORM): launch and the launch data are registered at the face, so
     // t/b/s load one edge after launch and P1 starts one edge later.
     localparam integer OPQ=(REFORM!=0)?1:0, MXS=OPQ, LDQ=(REFORM!=0)?1:0;
-    localparam integer LMU=(REFORM!=0)?6:3, LAU=(REFORM!=0)?6:3, LEU=7*LMU+8*LAU+4, LDU=19;
+    localparam integer LMU=(REFORM!=0)?6:3, LAU=(REFORM!=0)?7:3, LEU=7*LMU+8*LAU+4, LDU=19;
     localparam integer P1=1+LDQ, P2=P1+24+LMU+OPQ, MAX=P2+24+LAU+OPQ, P3=MAX+1+MXS, P4=P3+16+LAU+OPQ,
         P5=P4+24+LEU+OPQ, P6=P5+8+LAU+OPQ, P7=P6+8+LDU+OPQ, EREADY=P7+8+((LAU>LMU)?LAU:LMU)+OPQ;
 """)
@@ -188,7 +189,7 @@ def rest_source():
     wire mo,ao,eo,do_,ef,df,mf,af;
     wire [4:0] mi,ai,ei,di;
     generate if (REFORM != 0) begin:g_c12
-        // RE-FORM units: the namespaced 1.2 GHz c12 library (rtl/hbm_accel/integrated_20261006/sfu_c12_selected;
+        // RE-FORM units (add LAT 7 = c12 _l7x opt-in cut set, exp n table from 8 kept n copies): the namespaced 1.2 GHz c12 library (rtl/hbm_accel/integrated_20261006/sfu_c12_selected;
         // bit-identical to the fast units, closed at SS in the routed SU/SFU lanes): mul/add LAT 6, exp LM 6/LA 6.
         reg [LMU:1] mvl; reg [LAU:1] avl;
         always @(posedge clk or negedge rst_n)
@@ -196,8 +197,8 @@ def rest_source():
             else begin mvl<={mvl[LMU-1:1],mv_u};avl<={avl[LAU-1:1],av_u};end
         assign mo=mvl[LMU]; assign ao=avl[LAU];
         ot_hbm_selected_c12__ot_hdc_qmul_lat #(.LAT(LMU)) mul(clk,rst_n,mv_u,ti_u,mb_u,my,mf);
-        ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP(1),.LAT(LAU)) add(clk,rst_n,av_u,ti_u,ab_u,ay,af);
-        ot_hbm_selected_c12__ot_hdc_v41x_exp #(.LM(LMU),.LA(LAU)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
+        ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP(1),.LAT(LAU),.L7X(1)) add(clk,rst_n,av_u,ti_u,ab_u,ay,af);
+        ot_hbm_selected_c12__ot_hdc_v41x_exp #(.LM(LMU),.LA(LAU),.L7X(1),.NREP(8)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
             .x({ti_u[31]^neg_u,ti_u[30:0]}),.y(ey),.vo(eo),.fault(ef));
         ot_hbm_selected_c12__ot_hdc_v41x_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv_u),.a(32'h3f800000),.b(ti_u),.y(dy),.vo(do_),.fault(df));
     end else begin:g_fast
@@ -236,11 +237,23 @@ def rest_source():
     b=must(b,"    parameter integer NSTA = 0,", "    parameter integer PREDECODE_INDEX = 0,\n    parameter integer NSTA = 0,")
     b=must(b,".NSTA(NSTA)) u_tail", ".NSTA(NSTA), .PREDECODE_INDEX(PREDECODE_INDEX), .REFORM(REFORM), .REFORM_COMB(REFORM_COMB)) u_tail")
     b=must(b,"    parameter integer PREDECODE_INDEX = 0,\n", "    parameter integer PREDECODE_INDEX = 0,\n    parameter integer REFORM = 1,     // RE-FORM 11-03 (0 = bench gold only)\n    parameter integer REFORM_COMB = 0, // bench only (u_tail REFORM_COMB)\n"
-        "    parameter integer TE = (REFORM != 0) ? 266 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)\n"
+        "    parameter integer TE = (REFORM != 0) ? 278 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)\n"
         "    parameter integer SKL = 198 + SDIV * ((TE + 1 - 198 + SDIV - 1) / SDIV),   // sink launch age: whole SDIV periods later\n")
     b=must(b,"    parameter integer L = 198 + SDIV + CAP + 2", "    parameter integer L = SKL + SDIV + CAP + 2")
     b=must(b,"age >= 10'd198 && wrap","age >= 10'(SKL) && wrap")
     b=must(b,"first wrap edge at age >= 198,","first wrap edge at age >= SKL,")
+    k=b.index("    input wire [511:0] sk_y\n);\n")+len("    input wire [511:0] sk_y\n);\n")
+    body=b[k:].replace("negedge rst_n","negedge rst_c").replace("(!rst_n)","(!rst_c)").replace(".rst_n(rst_n)",".rst_n(rst_c)")
+    assert "(rst_n)" not in body and "negedge rst_n" not in body and "!rst_n" not in body
+    b=b[:k]+"""    // RE-FORM registered reset relay (rtl/lib/ot_rst_relay.sv): the rst_n port lands only on 2 synchroniser + SDIV-2
+    // relay flops (assert async, release SDIV edges later), so the 1-in-SDIV enable phase is the same as from the port.
+    wire rst_c;
+    generate if (REFORM != 0) begin : g_rst_relay
+        ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(SDIV - 2)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_c));
+    end else begin : g_rst_port
+        assign rst_c = rst_n;
+    end endgenerate
+"""+body
     return "// GENERATED by tools/hbm_b2/sk_ce_kit.py: QUAD5 CE remainder, Sinkhorn cut only.\n`timescale 1ns/1ps\n`default_nettype none\n"+a+"\n\n"+b+"\n`default_nettype wire\n"
 
 def rest_wrapper(module, tail, contract):
@@ -276,6 +289,7 @@ def recipes(contract):
         r["files"]=[x if not x.endswith("/ot_hbm_hc_tail_rest_core.sv") else "rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv" for x in r["files"]]
         # RE-FORM 11-03: the REFORM=1 tail units come from the namespaced c12 1.2 GHz library.
         r["files"]=r["files"]+[C12+f for f in C12_FILES if C12+f not in r["files"]]
+        if RELAY not in r["files"]: r["files"]=r["files"]+[RELAY]
         out[module]=r
     return out
 

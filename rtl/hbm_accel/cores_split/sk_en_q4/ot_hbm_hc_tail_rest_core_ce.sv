@@ -30,7 +30,7 @@ module ot_hbm_hc_tail_static_rest_ce #(
     // LDQ: launch-load register (RE-FORM): launch and the launch data are registered at the face, so
     // t/b/s load one edge after launch and P1 starts one edge later.
     localparam integer OPQ=(REFORM!=0)?1:0, MXS=OPQ, LDQ=(REFORM!=0)?1:0;
-    localparam integer LMU=(REFORM!=0)?6:3, LAU=(REFORM!=0)?6:3, LEU=7*LMU+8*LAU+4, LDU=19;
+    localparam integer LMU=(REFORM!=0)?6:3, LAU=(REFORM!=0)?7:3, LEU=7*LMU+8*LAU+4, LDU=19;
     localparam integer P1=1+LDQ, P2=P1+24+LMU+OPQ, MAX=P2+24+LAU+OPQ, P3=MAX+1+MXS, P4=P3+16+LAU+OPQ,
         P5=P4+24+LEU+OPQ, P6=P5+8+LAU+OPQ, P7=P6+8+LDU+OPQ, EREADY=P7+8+((LAU>LMU)?LAU:LMU)+OPQ;
     reg active;
@@ -159,7 +159,7 @@ module ot_hbm_hc_tail_static_rest_ce #(
     wire mo,ao,eo,do_,ef,df,mf,af;
     wire [4:0] mi,ai,ei,di;
     generate if (REFORM != 0) begin:g_c12
-        // RE-FORM units: the namespaced 1.2 GHz c12 library (rtl/hbm_accel/integrated_20261006/sfu_c12_selected;
+        // RE-FORM units (add LAT 7 = c12 _l7x opt-in cut set, exp n table from 8 kept n copies): the namespaced 1.2 GHz c12 library (rtl/hbm_accel/integrated_20261006/sfu_c12_selected;
         // bit-identical to the fast units, closed at SS in the routed SU/SFU lanes): mul/add LAT 6, exp LM 6/LA 6.
         reg [LMU:1] mvl; reg [LAU:1] avl;
         always @(posedge clk or negedge rst_n)
@@ -167,8 +167,8 @@ module ot_hbm_hc_tail_static_rest_ce #(
             else begin mvl<={mvl[LMU-1:1],mv_u};avl<={avl[LAU-1:1],av_u};end
         assign mo=mvl[LMU]; assign ao=avl[LAU];
         ot_hbm_selected_c12__ot_hdc_qmul_lat #(.LAT(LMU)) mul(clk,rst_n,mv_u,ti_u,mb_u,my,mf);
-        ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP(1),.LAT(LAU)) add(clk,rst_n,av_u,ti_u,ab_u,ay,af);
-        ot_hbm_selected_c12__ot_hdc_v41x_exp #(.LM(LMU),.LA(LAU)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
+        ot_hbm_selected_c12__ot_hdc_qadd_lat #(.KEEP(1),.LAT(LAU),.L7X(1)) add(clk,rst_n,av_u,ti_u,ab_u,ay,af);
+        ot_hbm_selected_c12__ot_hdc_v41x_exp #(.LM(LMU),.LA(LAU),.L7X(1),.NREP(8)) exp_(.clk(clk),.rst_n(rst_n),.v(ev_u),
             .x({ti_u[31]^neg_u,ti_u[30:0]}),.y(ey),.vo(eo),.fault(ef));
         ot_hbm_selected_c12__ot_hdc_v41x_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv_u),.a(32'h3f800000),.b(ti_u),.y(dy),.vo(do_),.fault(df));
     end else begin:g_fast
@@ -254,7 +254,7 @@ module ot_hbm_hc_tail_rest_core_ce #(
     parameter integer PREDECODE_INDEX = 0,
     parameter integer REFORM = 1,     // RE-FORM 11-03 (0 = bench gold only)
     parameter integer REFORM_COMB = 0, // bench only (u_tail REFORM_COMB)
-    parameter integer TE = (REFORM != 0) ? 266 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)
+    parameter integer TE = (REFORM != 0) ? 278 : 197,   // u_tail EREADY (the bench checks it equals u_tail.EREADY)
     parameter integer SKL = 198 + SDIV * ((TE + 1 - 198 + SDIV - 1) / SDIV),   // sink launch age: whole SDIV periods later
     parameter integer NSTA = 0,       // stations on the rest -> sk sk_en hop
     parameter integer MUT_EN = 0,     // bench only: 1 = sk_en one cycle early (must FAIL)
@@ -272,10 +272,18 @@ module ot_hbm_hc_tail_rest_core_ce #(
     input wire sk_in_ready, sk_out_valid, sk_fault,
     input wire [511:0] sk_y
 );
+    // RE-FORM registered reset relay (rtl/lib/ot_rst_relay.sv): the rst_n port lands only on 2 synchroniser + SDIV-2
+    // relay flops (assert async, release SDIV edges later), so the 1-in-SDIV enable phase is the same as from the port.
+    wire rst_c;
+    generate if (REFORM != 0) begin : g_rst_relay
+        ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(SDIV - 2)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_c));
+    end else begin : g_rst_port
+        assign rst_c = rst_n;
+    end endgenerate
     localparam integer CW = $clog2(SDIV);
     reg [CW-1:0] cnt; reg sclk;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cnt <= 0; sclk <= 1'b0; end
+    always @(posedge clk or negedge rst_c)
+        if (!rst_c) begin cnt <= 0; sclk <= 1'b0; end
         else begin cnt <= (cnt == SDIV - 1) ? {CW{1'b0}} : cnt + 1'b1; sclk <= (cnt == SDIV - 1); end
     wire wrap = (cnt == SDIV - 1);                 // the edge on which sclk rises
     // sclk is no longer a clock: it is the rest-local 1-in-SDIV enable (high in the cycle after each wrap edge).
@@ -283,19 +291,19 @@ module ot_hbm_hc_tail_rest_core_ce #(
     localparam integer LEAD = 1 + NSTA + MUT_EN;
     localparam integer EPH = ((SDIV - 1 - LEAD) % SDIV + SDIV) % SDIV;
     reg sk_en_o;
-    always @(posedge clk or negedge rst_n) if (!rst_n) sk_en_o <= 1'b0; else sk_en_o <= (cnt == CW'(EPH));
+    always @(posedge clk or negedge rst_c) if (!rst_c) sk_en_o <= 1'b0; else sk_en_o <= (cnt == CW'(EPH));
     reg active, sl, armed; reg [9:0] age, sage;
     wire tv; wire tf;
     reg capture_q;
-    ot_hbm_hc_tail_static_rest_ce #(.MUT_PRE(MUT_PRE), .NSTA(NSTA), .PREDECODE_INDEX(PREDECODE_INDEX), .REFORM(REFORM), .REFORM_COMB(REFORM_COMB)) u_tail (.clk(clk), .sk_en(sclk), .sk_en_sk(sk_en_o), .rst_n(rst_n), .launch(launch),
+    ot_hbm_hc_tail_static_rest_ce #(.MUT_PRE(MUT_PRE), .NSTA(NSTA), .PREDECODE_INDEX(PREDECODE_INDEX), .REFORM(REFORM), .REFORM_COMB(REFORM_COMB)) u_tail (.clk(clk), .sk_en(sclk), .sk_en_sk(sk_en_o), .rst_n(rst_c), .launch(launch),
         .mixes(mixes), .bases(bases), .scales(scales), .sink_launch(sl), .sink_capture(capture_q),
         .e_ready(), .result_v(tv), .result(result), .fault(tf),
         .sk_in_e(sk_in_e), .sk_in_ready(sk_in_ready), .sk_out_valid(sk_out_valid), .sk_fault(sk_fault), .sk_y(sk_y));
     assign sk_en_sk = sk_en_o; assign sk_in_valid = sl;
     reg own_fault, captured;
     assign fault = own_fault | tf;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin active <= 0; sl <= 0; armed <= 0; age <= 0; sage <= 0; capture_q <= 0; result_v <= 0;
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) begin active <= 0; sl <= 0; armed <= 0; age <= 0; sage <= 0; capture_q <= 0; result_v <= 0;
                           own_fault <= 0; captured <= 0; end
         else begin
             capture_q <= 1'b0; result_v <= 1'b0;

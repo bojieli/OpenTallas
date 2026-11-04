@@ -16,6 +16,7 @@ def test_reform_default_on():
     assert "g_operand_q" in t and "g_c12" in t and "P3=MAX+1+MXS," in t and "age==MAX+1)for" in t
     assert "D(LMU+OPQ)) mt" in t and "D(LEU+OPQ)) et" in t and "D(LDU+OPQ)) dt" in t
     assert "age >= 10'(SKL) && wrap" in t and "parameter integer L = SKL + SDIV + CAP + 2" in t
+    assert ".L7X(1)) add(" in t and ".L7X(1),.NREP(8)) exp_(" in t and "g_rst_relay" in t and "negedge rst_n" not in t.split("module ot_hbm_hc_tail_rest_core_ce")[1]
     assert "g_launch_q" in t and "P1=1+LDQ," in t and "g_onehot_q" in t and "oh_q<=onehot(i_nx)" in t and "ti_q<=t_sel" in t
 
 def test_recipes_carry_c12_files():
@@ -27,3 +28,4 @@ def test_recipes_carry_c12_files():
         files = r[core]["files"]
         for f in m.C12_FILES:
             assert (m.C12 + f) in files and (REPO / m.C12 / f).is_file()
+        assert m.RELAY in files and (REPO / m.RELAY).is_file()
