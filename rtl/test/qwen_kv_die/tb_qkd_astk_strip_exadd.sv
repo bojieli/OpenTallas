@@ -13,6 +13,7 @@
 `endif
 module tb_qkd_astk_strip_exadd #(parameter integer CD = 2, parameter integer FIX = 1, parameter integer PADX = 0);
  localparam integer EXM = (PADX > 2*CD) ? PADX : 2*CD;
+ localparam integer SW = 16;   // >= the aq -> ep start latency + the xd -> si register pair
  localparam integer EXP_AGE=500, LMAX_AGE=350, Z_AGE=1000, Z_STRIDE=16;
  function automatic [31:0] score_word(input integer eng,addr,head);
   score_word=32'h30000000 | (eng<<12) | (addr<<2) | head;
@@ -37,7 +38,10 @@ module tb_qkd_astk_strip_exadd #(parameter integer CD = 2, parameter integer FIX
  always @(negedge ck)if(rst_n)begin
   cycle=cycle+1;
   if((si_b&~FM)!==(si_a&~FM))begin m_si=m_si+1;if(m_si<4)$display("MISMATCH cycle=%0d si (non-flag)",cycle);end
-  if(cycle>EXM+2 && since_start>EXM+1 && (si_b&FM)!==(sia_d[EXM-1]&FM))begin m_fl=m_fl+1;if(m_fl<4)$display("MISMATCH cycle=%0d si committed flags (A delayed %0d)",cycle,EXM);end
+  // a start clears xd on both at the ep's own start edge (aq -> ep start latency SW): within SW + EXM edges of a start the
+  // EXM-delayed reference still shows the pre-start flags, so there B's flags need only be a subset of A's (no stray set)
+  if(cycle>EXM+2 && since_start>SW+EXM && (si_b&FM)!==(sia_d[EXM-1]&FM))begin m_fl=m_fl+1;if(m_fl<4)$display("MISMATCH cycle=%0d si committed flags (A delayed %0d)",cycle,EXM);end
+  if(cycle>EXM+2 && since_start<=SW+EXM && (si_b&FM&~sia_d[EXM-1])!==0)begin m_fl=m_fl+1;if(m_fl<4)$display("MISMATCH cycle=%0d si committed flag set on B only near a start",cycle);end
   if(ap_b!==ap_a)begin m_ap=m_ap+1;if(m_ap<4)$display("MISMATCH cycle=%0d ap a=%h b=%h",cycle,ap_a,ap_b);end
   // the join / adder faults leave EXM edges later on B (its join is EXM later); the others at the same edge
   if(af_b!==af_a && af_b!==afa_d[EXM-1])begin m_af=m_af+1;if(m_af<4)$display("MISMATCH cycle=%0d af a=%b b=%b",cycle,af_a,af_b);end
