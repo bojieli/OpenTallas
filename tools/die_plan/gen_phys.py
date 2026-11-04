@@ -3715,7 +3715,7 @@ RUN_KIT = r"""#!/bin/bash
 # the SIGABRT in sta::RequiredCmp::requiredSet on HEAD hd_st_str / hd_st_n3_transit) is a tool failure, not a design
 # verdict: 4_cts.odb is restored from the pre-pass copy and the kit takes the plain GRT path (OT_TAPBAL_FALLBACK line,
 # tapbal_fallback.log).  'export OT_TAPBAL_FALLBACK = 0' in config.mk keeps the old FAIL_POSTCTS stop.
-# KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the pre-route insertion gate (postcts_gate.tcl TT/FF on 5_1_grt.odb) is
+# KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the pre-route insertion gate (post-CTS gate TT/FF on 5_1_grt.odb) is
 # ADVISORY: a FAIL line prints OT_POSTCTS_ADVISORY (postcts_advisory.log), no FAIL_POSTCTS / rc 6, the kit routes on and
 # signoff.py records the band as signoff.json insertion_band.  'export OT_POSTCTS_BAND_GATE = 1' restores the stop.
 # The FF structural hold gate (OT_HOLD_GATE, rc 4) is unchanged.
