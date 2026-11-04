@@ -4106,7 +4106,7 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                     copies.append(cp)
                 v["copies"] = copies
     # a FREG-1 ring is behind ordinary face registers (Landings.land_slots declares nothing for it)
-    freg = {r for r in built if (clock_landings.ring_write_reg(lands.plan, tn, r) or {}).get("freg")}
+    freg = {r for r in built if (clock_landings.ring_write_reg(getattr(lands, "plan", None) or {}, tn, r) or {}).get("freg")}
     extra = sorted(set(built) - set(rings) - freg)
     if extra:
         raise gen_rtl.GenError(f"type {tn}: bound count-aligned rings not declared by the landing sidecar: {extra[:5]}")
