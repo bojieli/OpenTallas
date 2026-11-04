@@ -454,7 +454,6 @@
   "source_1104_b": "DIE-KV-66/HR 11-04: plan pin table has 1500 M7 pins on the N face, MAX_ROUTING_LAYER M5 crashed DRT (initMazeIdx_connFig via no idx V5/V6, signal 6); por_n = typed power-on reset of u_control (LEC had no reset base for it)"
  },
  "qkd_hr_core_peer": {
-  "synth_keepdc": true,
   "reset_ports": "u_coordinator__por_n,u_peer_codec__por_n,u_root_mux__por_n",
   "timed_face": {
    "buses": [

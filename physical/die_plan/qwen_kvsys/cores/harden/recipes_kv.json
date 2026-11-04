@@ -323,7 +323,6 @@
   "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl"
  },
  "qkd_hr_core_peer": {
-  "synth_keepdc": true,
   "reset_ports": "u_coordinator__por_n,u_peer_codec__por_n,u_root_mux__por_n",
   "timed_face": {
    "buses": [
