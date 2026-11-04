@@ -114,6 +114,42 @@ def test_mutant_noreset_hold_register_still_differs(tmp_path, monkeypatch):
     assert st["ff:u_dut.o"] == "differs" and not any(h[0] == "loaded" for h in L.hyp.values())
 
 
+def _async_reset_aig(sticky=False, reset_val=0):
+    """The AIG shape of an async-reset guard after async2sync + aigmap (HBM g_ld3k ldp_v): the AND with constant 0 is
+    kept.  Inputs rn=1 ld=2; latches v=3 k=4.  k has no reset, k <= ld ? 0 : k; v <= rn ? (ld or v | ld) : reset_val."""
+    I, Lc = 2, 2
+    rn, ld, v, k = 2, 4, 6, 8
+    ands = []
+
+    def AND(a, b):
+        ands.extend((a, b))
+        return 2 * (I + Lc + len(ands) // 2)
+    live = (AND(v ^ 1, ld ^ 1) ^ 1) if sticky else ld
+    dv = AND(AND(live, rn) ^ 1, AND(rn ^ 1, reset_val) ^ 1) ^ 1
+    dk = AND(AND(ld, 0) ^ 1, AND(ld ^ 1, k) ^ 1) ^ 1
+    return dict(I=I, L=Lc, O=0, A=len(ands) // 2, latches=[dv, dk], outputs=[], ands=ands), v, k, dv, dk
+
+
+class _L:
+    def __init__(self, d, v, k, dv, dk, reset_val=0):
+        self.gold, self.gonly = d, ["ff:k"]
+        self.gp, self.gc = {"ff:v": v, "ff:k": k}, {"ff:v": dv, "ff:k": dk}
+        self.rst_val = {("gold", "ff:v"): (reset_val, 1)}
+        self.noreset_dropped = {("gold", "ff:k"): 0}
+
+
+def test_async_reset_guard_behind_constant_mux_arm_is_proposed():
+    for sticky in (False, True):
+        log = []
+        assert lec.loaded_proposals(_L(*_async_reset_aig(sticky)), log) == \
+            [["gold", "ff:k", ["loaded", 0, [[["ff:v", 1]]]]]], log
+
+
+def test_live_term_keeps_two_live_or_terms():
+    d, _, _, dv, _ = _async_reset_aig(reset_val=1)     # rn ? ld : 1 has two live terms: no single load condition
+    assert lec._live_term(d, dv) == dv
+
+
 def test_run_calls_auto_loaded_with_opt_out():
     src = Path(lec.__file__).read_text()
     i = src.index('if os.environ.get("OT_LEC_AUTO_LOADED", "1") != "0":')

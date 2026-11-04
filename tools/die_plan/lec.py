@@ -5808,6 +5808,21 @@ def _and_leaves(d, lit, cap=64, nodes=False):
     return out + inner if nodes else out
 
 
+def _live_term(d, lit, cap=16):
+    """An OR literal with exactly one term that is not structurally false -> that term.  An async-reset flop after
+    async2sync reads D = OR(AND(rst_n, ld), AND(!rst_n, 0)) and aigmap keeps the AND with 0, so its load condition
+    sits behind an inverted node that _and_leaves does not expand."""
+    base = d["I"] + d["L"] + 1
+    for _ in range(cap):
+        if not (lit & 1) or (lit >> 1) < base:
+            return lit
+        live = [t for t in (y ^ 1 for y in _and_leaves(d, lit ^ 1)) if 0 not in _and_leaves(d, t)]
+        if len(live) != 1:
+            return lit
+        lit = live[0]
+    return lit
+
+
 def loaded_proposals(L, log, cands=None, cap=20000):
     """Automatic loaded-valid hints (KIT-WAVE-16 11-01, LEC NOT EQUIVALENT class x10: HBM g_ld3k p1/p2/q2, kshare,
     QC coll_n e3, HEAD beat_link hold).  A gold-only RTL register with no reset that holds itself until a load with
@@ -5844,7 +5859,7 @@ def loaded_proposals(L, log, cands=None, cap=20000):
         if rv not in (0, 1):
             continue
         val = 1 - rv                      # the guard value that is definitely false in the reset state
-        nxt = gc[g] ^ (val ^ 1)           # literal true iff g' == val
+        nxt = _live_term(d, gc[g] ^ (val ^ 1))    # literal true iff g' == val
         for leaf in _and_leaves(d, nxt, nodes=True):
             imp[leaf].append((g, val))    # g' == val -> leaf
             v = leaf >> 1
