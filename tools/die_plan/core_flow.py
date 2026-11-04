@@ -155,6 +155,13 @@ def binding(tt_ps, ff_ps=None, tol_ps=40.0, basis_tt="plan clock", basis_ff=None
     return dict(tt=tt, ff=ff, tol=float(tol_ps), basis=dict(tt=basis_tt, ff=bf))
 
 
+def stage_grt183(kd):
+    """FLOW-28 11-04: every kit carries the GRT-0183 fresh-process re-run its runner's make goes through (grt183_make.sh,
+    grt183_resume.tcl, ROOT 10-15).  Inert unless an incremental GRT-0183 kills stage 5_1_grt."""
+    for f in ("grt183_make.sh", "grt183_resume.tcl"):
+        shutil.copyfile(_common_flow_file(f, TOOL.parents[1]), Path(kd) / f)
+
+
 def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, grt_pre_extra=(),
           grt_post_extra=()):
     """copy the flow helpers into kit dir kd and return the config.mk lines (FLOW defaults).  grt_pre_extra /
@@ -162,6 +169,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     chained after main's grt_pre.tcl / grt_post.tcl in a generated grt_pre_core.tcl / grt_post_core.tcl)."""
     kd = Path(kd)
     shutil.copyfile(TOOL.parent / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
+    stage_grt183(kd)
     for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "hold_guard_grt.tcl", "grt_post.tcl", "pg_connect.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
         shutil.copyfile(TOOL / f, kd / f)
     # KIT-TRIAGE-1/G5 11-01 (COORD 05:0x: extend the HBM-CORES-KITS-40 HB4 hook b26a827db45 to the S81 / KV / QC core

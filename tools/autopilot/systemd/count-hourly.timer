@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly release count at :05 (COORD's own refresh sits near :30, the render timer at :40)
+
+[Timer]
+OnCalendar=*:05
+AccuracySec=30s
+Persistent=false
+
+[Install]
+WantedBy=timers.target

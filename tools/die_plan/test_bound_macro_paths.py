@@ -104,7 +104,7 @@ def test_reset_tcl_resolves_physical_name():
     assert "$n eq {u_r0.u_e0}" in line and "$n eq {u_bound.u_u_r0_u_e0}" in line
     T["core_resets"][0].pop("physical_inst")
     line = next(x for x in RT.tcl_text(T).splitlines() if "lappend rtr_ci" in x)
-    assert line == ("foreach i [$ff_blk getInsts] { set n [$i getName]; if {$n eq {u_r0.u_e0} || [string range $n "
+    assert line == ("foreach i [$ff_blk getInsts] { set n [string map {\\\\[ [ \\\\] ]} [$i getName]]; if {$n eq {u_r0.u_e0} || [string range $n "
                     "end-[string length {u_r0.u_e0}] end] eq {/u_r0.u_e0}} { lappend rtr_ci $i } }")   # unchanged form
 
 

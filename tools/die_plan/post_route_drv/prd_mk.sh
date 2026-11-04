@@ -157,6 +157,7 @@ done
 # Shell-quote the Tcl list once so exact net names survive both shell sourcing
 # and a second ECO pass. Never eval the supplied list.
 [ -z "${OT_PRD_PROTECT_NETS:-}" ] || printf 'OT_PRD_PROTECT_NETS=%q\n' "$OT_PRD_PROTECT_NETS" >> $OUT/variant.env
+[ -z "${OT_PRD_NARROW_PINS:-}" ] || printf 'OT_PRD_NARROW_PINS=%q\n' "$OT_PRD_NARROW_PINS" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGETED:-}" ] || printf 'OT_PRD_TARGETED=%q\n' "$OT_PRD_TARGETED" >> $OUT/variant.env
 # DIE-S81-48 11-02: OT_PRD_REPAIR_RC=placement = repair on placement estimates for ECO nets (FlexPA SIG11 class)
 # FLOW-25 11-03: unset = the hook decides (a seed with routed data wires repairs on placement, RSZ-0074 class); grt = A/B

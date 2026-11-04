@@ -606,7 +606,61 @@ def run_yosys(script_path, log_path, mounts, mem_gb=32):
         raise ElabError(f"yosys failed (rc {r.returncode}):\n{tail}")
 
 
-def structural_sources(files, keep, out):
+def stage_keyer(base, out, pins=None):
+    """Key that names a staged source file: the file's place under the source base or the elab out dir, never the
+    absolute path.  The key's digest ends up in the staged file name, so in every yosys src attribute and, through
+    asbuilt.glue_source_names, in the $src_ digest that orders collector bits: an absolute path made two binds of one
+    plan differ by worktree location (DIE-S81-54 11-04, CAPEND normdiff3).
+
+    pins = asbuilt.stage_hash_roots {"base": path, "out": path}: the roots of a published bind, so a rebind anywhere
+    reproduces that bind's digests byte for byte.  A root without a pin keys by "<base|out>:<relative path>".
+    A file under neither root keeps its absolute path as key; elab records those in stage_outside_roots."""
+    pins = pins or {}
+    bad = sorted(set(pins) - {"base", "out"})
+    if bad or any(not isinstance(v, str) or not v for v in pins.values()):
+        raise ElabError(f"asbuilt.stage_hash_roots takes non-empty string base/out only: {pins}")
+    roots = [("out", Path(out).resolve()), ("base", Path(base).resolve())]    # out first: it may sit under base
+    outside = set()
+
+    def key(source):
+        p = Path(source)
+        for tag, root in roots:
+            for cand in (p, p.resolve()):
+                try:
+                    rel = cand.relative_to(root)
+                except ValueError:
+                    continue
+                return f"{pins[tag]}/{rel}" if tag in pins else f"{tag}:{rel}"
+        outside.add(str(source))
+        return str(source)
+    key.outside = outside
+    return key
+
+
+def stage_src_key(base, out, pins=None):
+    """Same place-not-path rule for a yosys src attribute: slang writes a file reached through `include relative to its
+    cwd (the elab out dir), e.g. ../../wt/rtl/x.svh:3.1-3.9, so that text moves with the checkout.  A span under the base
+    becomes base-relative, or with asbuilt.stage_hash_roots the exact text the published bind saw."""
+    pins = pins or {}
+    base, out = Path(base).resolve(), Path(out).resolve()
+
+    def one(span):
+        m = re.fullmatch(r"(.*?)(:[0-9][0-9.\-]*)?", span)
+        path, pos = m.group(1), m.group(2) or ""
+        if not (path.startswith("../") or path.startswith("/")):
+            return span
+        try:
+            rel = Path(os.path.normpath(out / path)).relative_to(base)
+        except ValueError:
+            return span
+        if "base" in pins and "out" in pins:
+            return os.path.relpath(f"{pins['base']}/{rel}", pins["out"]) + pos
+        return f"base:{rel}{pos}"
+
+    return lambda src: "|".join(one(s) for s in src.split("|")) if isinstance(src, str) else src
+
+
+def structural_sources(files, keep, out, key=str):
     """Interface-only leaf bodies even when co-hosted with structural wrappers.
 
     Slang resolves missing private-body references before applying its blackbox
@@ -631,13 +685,13 @@ def structural_sources(files, keep, out):
                 edits.append((match.start(), end, stubs[match.group(1)]))
         for start, end, replacement in reversed(edits):
             text = text[:start] + replacement + text[end:]
-        dest = out / (hashlib.sha256(str(source).encode()).hexdigest()[:12] + "_" + source.name)
+        dest = out / (hashlib.sha256(key(source).encode()).hexdigest()[:12] + "_" + source.name)
         dest.write_text(text)
         staged.append(str(dest))
     return staged
 
 
-def string_parameter_compat(files, out):
+def string_parameter_compat(files, out, key=str):
     """Stage typed string parameters for native Yosys, preserving literal defaults.
 
     Enabled only by asbuilt.string_parameter_compat; real verification sources
@@ -653,7 +707,7 @@ def string_parameter_compat(files, out):
             staged.append(str(f))
             continue
         out.mkdir(parents=True, exist_ok=True)
-        dest = out / (hashlib.sha256(str(f).encode()).hexdigest()[:12] + "_" + f.name)
+        dest = out / (hashlib.sha256(key(f).encode()).hexdigest()[:12] + "_" + f.name)
         dest.write_text(fixed)
         staged.append(str(dest))
         record.append(dict(original=str(f), staged=str(dest)))
@@ -710,16 +764,17 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
     elif ab.get("hard_params"):
         raise ElabError("hard_params needs lib_stubs (the real leaf files would elaborate with RTL defaults)")
     parse_tops, parse_full, parse_lib = tops, full, ylib
+    stage_key = stage_keyer(base, out, ab.get("stage_hash_roots"))
     if ab.get("frontend", "native") == "slang":
         keep_bodies = ({ab['top'], ab.get('_elab_top', ab['top'])} | set(ab.get('dissolve', []))
                        | set(ab.get('substitute', {})) | set(pvar))
-        parse_tops = structural_sources(tops, keep_bodies, out / "structural_tops")
-        parse_full = structural_sources(full, keep_bodies, out / "structural_full")
+        parse_tops = structural_sources(tops, keep_bodies, out / "structural_tops", key=stage_key)
+        parse_full = structural_sources(full, keep_bodies, out / "structural_full", key=stage_key)
     if ab.get("string_parameter_compat", False):
         compat = out / "string_parameter_compat"
-        parse_tops, rt = string_parameter_compat(parse_tops, compat)
-        parse_full, rf = string_parameter_compat(parse_full, compat)
-        parse_lib, rl = string_parameter_compat(parse_lib, compat)
+        parse_tops, rt = string_parameter_compat(parse_tops, compat, key=stage_key)
+        parse_full, rf = string_parameter_compat(parse_full, compat, key=stage_key)
+        parse_lib, rl = string_parameter_compat(parse_lib, compat, key=stage_key)
         rec["string_parameter_compat"] = rt + rf + rl
     if ab.get("slang_parameterized_blackboxes"):
         if ab.get("frontend", "native") != "slang":
@@ -730,11 +785,13 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
         nt, nf = len(parse_tops), len(parse_full)
         try:
             staged, records = ABI.stage(parse_tops + parse_full + parse_lib, keep,
-                ab["slang_parameterized_blackboxes"], out / "parameterized_interfaces", MOD_RE, _strip, _match)
+                ab["slang_parameterized_blackboxes"], out / "parameterized_interfaces", MOD_RE, _strip, _match,
+                key=stage_key)
         except ValueError as e:
             raise ElabError(str(e)) from e
         parse_tops, parse_full, parse_lib = staged[:nt], staged[nt:nt+nf], staged[nt+nf:]
         rec["parameterized_interfaces"] = records
+    rec["stage_outside_roots"] = sorted(stage_key.outside)
     rec["selected_parameter_overrides"] = validate_selected_parameters(parse_tops, parse_full, parse_lib,
                                                                        ab.get("defines", []))
     sc.write_text(yosys_script(ab, parse_tops, parse_full, parse_lib, js, inc_files=lib + tops + full))

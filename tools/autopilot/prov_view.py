@@ -74,20 +74,40 @@ def split_bit(n):
 
 
 # ------------------------------------------------------------------------------------------------------ plan side
-def needed(plan, tn):
-    """[(entry, kind)] of type tn that wait for a view: kind 'noview' (lef, no lib) or 'planned' (hard core, no lef)"""
+def waiting(plan, tn):
+    """[(entry, kind)] of EVERY entry of type tn that waits for a view: kind 'noview' (lef, no lib) or 'planned' (hard core, no lef)"""
     t = plan["partition_types"][tn]
-    out, seen = [], set()
+    out = []
     hard = t.get("hard_cores") or []
     for c in hard + (t.get("contents") or []):
         if not isinstance(c, dict):
             continue
-        m = str(c.get("module") or c.get("inst"))
         kind = "noview" if c.get("lef") and not c.get("lib") else "planned" if (c in hard and not c.get("lef")) else None
-        if kind and m not in seen:
+        if kind:
+            out.append((c, kind))
+    return out
+
+
+def needed(plan, tn):
+    """waiting() with one entry per module: the entries a view is built for"""
+    out, seen = [], set()
+    for c, kind in waiting(plan, tn):
+        m = str(c.get("module") or c.get("inst"))
+        if m not in seen:
             seen.add(m)
             out.append((c, kind))
     return out
+
+
+def stamp_views(plan, tn, children):
+    """overlay plan: only type tn's waiting entries change (lef when missing, lib = provisional TT view).
+    DIE-QC-69 11-04: every instance, not one per module: an unstamped repeat of a module has no site in macro_place.tcl,
+    floats to rtl_macro_placer (MPL-0040 on cbf_q0x_s2) and has no physical_inst receipt for OT_RESET_CORE."""
+    for c, _kind in waiting(plan, tn):
+        v = children[str(c.get("module") or c.get("inst"))]
+        if not c.get("lef"):
+            c["lef"] = v["lef"]
+        c["lib"] = v["tt"]
 
 
 def resolve(path, roots):
@@ -204,6 +224,11 @@ def lib_cell_ports(path, cell):
 
 def signal_bases(pins):
     return {split_bit(n)[0] for n, v in pins.items() if v[1] not in ("POWER", "GROUND")}
+
+
+def lib_signal_ports(got, pins):
+    """lib port names without PG pins: a signed-view lib may list VDD/VSS as pins, also when the LEF has none"""
+    return got - ({"VDD", "VSS"} | {split_bit(n)[0] for n, v in pins.items() if v[1] in ("POWER", "GROUND")})
 
 
 # ------------------------------------------------------------------------------------------------------ RTL directions
@@ -429,6 +454,7 @@ def check_routed(cdir, module, entry, ppins, plan_lef):
         got = lib_cell_ports(f, module)
         if got is None:
             return False, f"{os.path.basename(f)}: no cell ({module})"
+        got = lib_signal_ports(got, lp)
         if got != want:
             return False, f"{os.path.basename(f)} ports != LEF ports (+{sorted(got - want)[:2]} -{sorted(want - got)[:2]})"
     return True, "ok"
@@ -535,12 +561,7 @@ def make(a):
         print("PROV_FAIL " + " | ".join(errors))
         print("PROV_JSON " + json.dumps(dict(ok=False, errors=errors, children={k: v["source"] for k, v in children.items()})))
         return 3
-    # overlay plan: only type tn's waiting entries change (lef when missing, lib = provisional TT view)
-    for c, _kind in needed(plan, tn):
-        v = children[str(c.get("module") or c.get("inst"))]
-        if not c.get("lef"):
-            c["lef"] = v["lef"]
-        c["lib"] = v["tt"]
+    stamp_views(plan, tn, children)
     # the overlay dir links every entry of the plan dir, so plan-relative paths still resolve -- except '../'
     # paths (they would resolve against the overlay's parent): make those absolute
     def absup(o):

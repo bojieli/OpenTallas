@@ -52,6 +52,7 @@ Run inside the ORFS image (run_kit.sh does), or from a host with docker: lec.py 
 import argparse
 import collections
 import gzip
+import itertools
 import json
 import hashlib
 import os
@@ -3256,6 +3257,13 @@ def kept_wire_alias_copies(L, declared, aliases_file):
         if k in gate:
             choices.add(k)
         choices.update(renamed[k])
+        # s81 link_gbx g_pc[c].ps (DIE-HEAD-61 11-04): slotv[0] = 1 makes a term the bare kept bit, so the gate flop is
+        # named g_b[i].a0 and paired to the kept class's gold representative, not to this copy.  The gate flop proved
+        # equal to the representative also stands for k when k's own hypothesis ties it to that representative with
+        # the same polarity; the one-distinct-gate-FF-per-kept-bit matching below stays the proof.
+        h = L.hyp.get(("gold", k))
+        if h and h[0] == "eq" and h[1] == "gold" and not h[3]:
+            choices.update(c for c in renamed[h[2]] if not L.hyp[("gate", c)][3])
         candidates[k] = choices
     assigned = {}
     def assign(k, seen):
@@ -3502,6 +3510,19 @@ def structural_twin_closure(L, log):
                 c = closest(k, [q for q, _ in choices])[0]
                 dc = dict(choices)[c]
                 new.append((("gate", k), ("eq", "gold", c, (d ^ dc) & 1)))
+        # LEC-MATCHED-TWIN: two matched registers with one next-state literal on BOTH sides are one value, and each side's
+        # logic may read either copy (ctl: h_e[20] reads eid_p[6] in the RTL, epc_p[7] in the netlist; both load r1[32]).
+        # Each pair is proposed once and proved by the same induction with its own reset state.
+        done = L.__dict__.setdefault("matched_twin_tried", set())
+        reps = {}
+        for k in sorted(L.matched):
+            g, t = L.dlit.get(("gold", k), 0), L.dlit.get(("gate", k), 0)
+            if not k.startswith("ff:") or g <= 1 or g != t or ("both", k) in L.hyp:
+                continue
+            r = reps.setdefault(g >> 1, (k, g))
+            if r[0] != k and (k, r[0]) not in done:
+                done.add((k, r[0]))
+                new.append((("both", k), ("eq", "gold", r[0], (g ^ r[1]) & 1)))
         if not new:
             break
         L.hyp.update(new)
@@ -3510,6 +3531,182 @@ def structural_twin_closure(L, log):
         log.append(f"structural twin closure: {total} relations proposed")
     return total
 
+
+
+SELFTWIN_NEAR_DEPTH = 6
+SELFTWIN_RANK_CAP = 4096
+SELFTWIN_TRIES = 3
+
+
+def self_hold_twin_closure(L, log, tried, words=8, seed=7171):
+    """Propose unpaired registers that are copies of each other through their OWN hold term (LEC-SELFTWIN, DIE-KV-65/LEC
+    11-03, qkd_kvs_ctl 444 false differs).  k <= en ? d : k and c <= en ? d : c have different next-state functions
+    (each reads its own Q), so literal identity (structural_twin_closure) and random signatures never pair them, and
+    seq_traces see a rare load as constant.  ctl: synthesis merged r0[72] / r0[77] (one group bit loaded twice into one
+    select chunk) into gate dest_pc[14], gold r0[77] stayed free; gate q#t vs gold q of a config field, never pairable.
+    Every unpaired register is held at 0, then at 1 (L.build free_const, so each reads the same value for its own Q):
+    twins have the same next state under both.  A pair that only ever holds (0 / all ones under both) carries no
+    evidence and is skipped.  Candidates only: each enters the same induction proof and is dropped when refuted, at
+    most 2 tries per pair; nothing is assumed.  -> number of relations proposed."""
+    sig = {}
+    for fc in (0, 1):
+        m, kind = L.build(with_compare=False, with_hyp=False, free_const=fc)
+        val, mask = m.simulate(words, seed=seed + fc)
+        for hk, lit in L.dlit.items():
+            sig.setdefault(hk, []).append(lit_val(val, mask, lit))
+    L.build(with_compare=False, with_hyp=False)
+    roots = {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and h[1] == "gold" and sd == "gate"}
+    free = lambda side, k: k.startswith("ff:") and (side, k) not in L.hyp and (side, k) in sig
+    live = lambda hk: not all(v in (0, mask) for v in sig[hk])
+    # A rare load leaves only the reset term in the signature, so a class can hold every field on one reset copy (ctl:
+    # all 32 g_ef fields): the signature only narrows, the name orders, and a pair the proof refuted is not tried again.
+    # LEC-SELFTWIN-NEAR: a rare load leaves only the reset term in the signature, and a data source that is itself unpaired
+    # is held too, so a class holds every field of every lane (ctl: all 1024 es_data bits; 256 lane-1 pairs drew es_p[257],
+    # lane-0 bits, ... for rounds on end).  What tells two fields apart is what the D reads next to its hold mux: the same
+    # (paired or matched) data input.  The class narrows, the near inputs rank, the name breaks ties; a register gets at
+    # most SELFTWIN_TRIES candidates so a register with no partner cannot keep the fixpoint open.
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    near_memo = {}
+
+    def near(hk):
+        if hk not in near_memo:
+            near_memo[hk] = frozenset(v for v in m.near_inputs(L.dlit[hk], SELFTWIN_NEAR_DEPTH)
+                                      if kind.get(v, ("", None))[1] != hk[1])
+        return near_memo[hk]
+
+    def ranked(side, k, cs):
+        if len(cs) > SELFTWIN_RANK_CAP:
+            return closest(k, cs)
+        nk = near((side, k))
+        return sorted(cs, key=lambda c: (len(nk ^ near(("gold", c))), name_dist(k, c)))
+
+    groups = collections.defaultdict(list)    # (s0, s1) -> free gold registers
+    for k in sorted(L.gonly):
+        if free("gold", k) and live(("gold", k)):
+            groups[tuple(sig[("gold", k)])].append(k)
+    new, taken = [], set()
+    bound = bound_keys(L)
+    for k in sorted(L.tonly):
+        if not free("gate", k) or k in bound or not live(("gate", k)):
+            continue
+        s0, s1 = sig[("gate", k)]
+        # the frontends named one register twice: gate q#t[i] is gold q[i] (its own hypothesis, if any, chains through)
+        name = k.replace("#t", "")
+        if name != k and name in L.gp and name not in L.tp and L.hyp.get(("gold", name), ("",))[0] != "const" \
+                and not tried[("gate", k, name, 0)]:
+            new.append((("gate", k), ("eq", "gold", name, 0)))
+            taken.add(name)
+            continue
+        if tried[("selftwin", "gate", k)] >= SELFTWIN_TRIES:
+            continue
+        for inv, t in ((0, (s0, s1)), (1, (s1 ^ mask, s0 ^ mask))):
+            cs = [c for c in groups.get(t, ()) if c not in taken and not tried[("gate", k, c, inv)]]
+            c = name if name in cs else (ranked("gate", k, cs)[0] if cs else None)
+            if c is not None:
+                new.append((("gate", k), ("eq", "gold", c, inv)))
+                taken.add(c)
+                tried[("selftwin", "gate", k)] += 1
+                break
+    reps = roots | taken
+    for t, ks in groups.items():
+        cand = [c for c in ks if c in reps] or ks[:1]
+        for k in ks:
+            if k in reps or k == cand[0] or tried[("selftwin", "gold", k)] >= SELFTWIN_TRIES:
+                continue
+            cs = [c for c in cand if not tried[("gold", k, c, 0)]]
+            # gold twins come from one RTL: a true copy reads the same inputs around its hold mux
+            cs = [c for c in cs if near(("gold", c)) == near(("gold", k))]
+            if cs:
+                new.append((("gold", k), ("eq", "gold", closest(k, cs)[0], 0)))
+                tried[("selftwin", "gold", k)] += 1
+    L.hyp.update(new)
+    if new:
+        log.append(f"self-hold twin closure: {len(new)} relations proposed")
+    return len(new)
+
+
+CONEDIFF_INPUTS = 6       # at most this many unshared inputs per side of one compare point
+CONEDIFF_CONE = 256
+CONEDIFF_COMBOS = 512
+CONEDIFF_TRIES = 3
+
+
+def cone_diff_closure(L, log, tried, words=4, seed=9191):
+    """LEC-CONE-DIFF: a compare point that differs only in unshared inputs names its own missing relation.  A free gold-only
+    register in the gold cone, and a register in the gate cone only, are what synthesis merged even when every signature
+    and support test misses it (KV pcc: gold static_owner_q <= static_cmd_owner, gate <= active_row[6], loaded together
+    with 1 and (64 + layer)[6], different support, so no twin closure sees it; left 155 differs on 4 such registers).
+    Candidates are the assignments of the gold cone's unshared registers to the gate cone's (either polarity) or a
+    constant under which the two cones simulate equal; candidates only, each enters the same induction proof and is
+    dropped when refuted, at most CONEDIFF_TRIES per register.  -> number of relations proposed."""
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    free = {v: k for v, (t, k) in kind.items() if t == "gold_only" and k.startswith("ff:") and ("gold", k) not in L.hyp}
+    free = {v: k for v, k in free.items() if tried[("conediff", k)] < CONEDIFF_TRIES}
+    if not free:
+        return 0
+    val, mask = m.simulate(words, seed=seed)
+    base, ands = m.ni + 1, m.ands
+
+    def evaluate(lit, over, memo):
+        st = [lit >> 1]
+        while st:
+            v = st[-1]
+            if v in memo:
+                st.pop()
+            elif v < base:
+                memo[v] = over.get(v, val[v])
+                st.pop()
+            else:
+                a, b = ands[2 * (v - base)], ands[2 * (v - base) + 1]
+                need = [x >> 1 for x in (a, b) if (x >> 1) not in memo]
+                if need:
+                    st += need
+                else:
+                    memo[v] = (memo[a >> 1] ^ (mask if a & 1 else 0)) & (memo[b >> 1] ^ (mask if b & 1 else 0))
+                    st.pop()
+        return memo[lit >> 1] ^ (mask if lit & 1 else 0)
+    votes = collections.Counter()
+    for p in sorted(L.matched):
+        g, t = L.dlit.get(("gold", p), 0), L.dlit.get(("gate", p), 0)
+        if not p.startswith("ff:") or g == t or ("both", p) in L.hyp:
+            continue
+        cg = m.cone_inputs(g)
+        if not any(v in free for v in cg):
+            continue
+        ct = m.cone_inputs(t)
+        G, T = sorted(cg - ct), sorted(ct - cg)
+        if not all(v in free for v in G) or not G or len(T) > CONEDIFF_INPUTS or len(G) > CONEDIFF_INPUTS \
+                or len(cg | ct) > CONEDIFF_CONE:
+            continue
+        T = [v for v in T if kind.get(v, ("", ""))[0] in ("matched", "paired", "gate_only")]
+        opts = [(c, inv) for c in T for inv in (0, 1)] + [(None, 0), (None, 1)]
+        if len(opts) ** len(G) > CONEDIFF_COMBOS:
+            continue
+        for combo in itertools.product(opts, repeat=len(G)):
+            over = {v: (val[c] ^ (mask if inv else 0)) if c is not None else (mask if inv else 0)
+                    for v, (c, inv) in zip(G, combo)}
+            memo = {0: 0}
+            if evaluate(g, over, memo) == evaluate(t, over, memo):
+                votes.update((free[v], kind[c][1] if c is not None else None, kind[c][0] if c is not None else "const", inv)
+                             for v, (c, inv) in zip(G, combo))
+    new = {}
+    for (k, c, how, inv), _ in sorted(votes.items(), key=lambda e: (-e[1], repr(e[0]))):
+        if k in new:
+            continue
+        if how == "const":
+            if not tried[("gold", k, "c")]:
+                new[k] = (("gold", k), ("const", inv))
+        elif how == "gate_only":
+            if not tried[("gate", c, k, inv)] and ("gate", c) not in L.hyp:
+                new[k] = (("gate", c), ("eq", "gold", k, inv))
+        elif not tried[("gold", k, c, inv)]:
+            new[k] = (("gold", k), ("eq", "gold" if c in L.gp else "gate", c, inv))   # 'paired' may name the gate key
+    for k, (hk, h) in new.items():
+        L.hyp[hk] = h
+        tried[("conediff", k)] += 1
+    if new:
+        log.append(f"cone diff closure: {len(new)} relations proposed: {sorted(new)[:8]}")
+    return len(new)
 
 
 def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
@@ -5162,6 +5359,15 @@ def merged_reproposals(L, log, tried):
     return n > 0
 
 
+def _same_reading_self(a, b, k, c):
+    """Do supports a and b agree when k and c both read as SELF?  Same answer as mapping both and comparing, without
+    rebuilding two sets per pair: 4096-bit supports times every gold-only member cost hours (KV core_peer 11-04)."""
+    if abs(len(a) - len(b)) > 2:
+        return False
+    two = {k, c, "SELF"}
+    return (a ^ b) <= two and bool(a & two) == bool(b & two)
+
+
 def merged_proposals(L, log, cap=4096):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
@@ -5235,9 +5441,7 @@ def merged_proposals(L, log, cap=4096):
         for k in [x for x in s_c if x in gset]:
             if ("gold", k) in L.hyp or c in cands.get(k, ()):
                 continue
-            two = (k, c)
-            if frozenset("SELF" if x in two else x for x in s_c) == \
-                    frozenset("SELF" if x in two else x for x in support(L.gc[k])):
+            if _same_reading_self(s_c, support(L.gc[k]), k, c):
                 cands[k].append(c)
     for k in gonly:
         if ("gold", k) in L.hyp:
@@ -5246,9 +5450,7 @@ def merged_proposals(L, log, cap=4096):
         for c in [x for x in s_k if isinstance(x, str) and x in L.matched and x.startswith("ff:") and x in L.gc]:
             if c in cands.get(k, ()):
                 continue
-            two = (k, c)
-            if frozenset("SELF" if x in two else x for x in s_k) == \
-                    frozenset("SELF" if x in two else x for x in support(L.gc[c])):
+            if _same_reading_self(s_k, support(L.gc[c]), k, c):
                 cands[k].append(c)
     choice = {k: cs[0] for k, cs in cands.items()}
     pending = {k: list(cs) for k, cs in cands.items() if len(cs) > 1}
@@ -5388,6 +5590,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     expired, sup = False, {}
     seen_proved = collections.Counter()   # proved-set signature -> rounds proved
     early_compare_tried = False
+    late_merged = 0
     for rnd in range(rounds + 1000):
         # LEC-REFINE-BUDGET-RAW (DIE-KV-65/LEC 11-03, KV ctl): raw base sweep time is not refine time.  ctl paid the whole
         # budget in 6 raw prefix walls (5400 s of 7059 s), expired at the first check (round 64), and the monotone finish
@@ -5771,6 +5974,20 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             if renamed_identity_closure(L, log, traces, tried) and surviving_change():
                 continue
             if merged_reproposals(L, log, tried) and surviving_change():
+                continue
+            if os.environ.get("OT_LEC_SELF_TWINS", "1") != "0" and self_hold_twin_closure(L, log, tried) \
+                    and surviving_change():
+                continue
+            # LEC-LATE-MERGED: a pair refuted while its neighbours were still wrong is free for good once its tries are
+            # spent (KV pcc: static_cmd_owner, merged into active_row[6] = (64 + layer)[6], failed twice in early rounds
+            # and left 155 differs).  Re-propose the free gold-only registers against the final proved set, twice at
+            # most; each is proved by the same induction and dropped if refuted.
+            if os.environ.get("OT_LEC_SELF_TWINS", "1") != "0" and late_merged < 2:
+                late_merged += 1
+                merged_proposals(L, log)
+                if surviving_change():
+                    continue
+            if os.environ.get("OT_LEC_SELF_TWINS", "1") != "0" and cone_diff_closure(L, log, tried) and surviving_change():
                 continue
             if L.hyp == before or not adding:
                 return
@@ -6964,6 +7181,8 @@ def via_docker(args, image, mem):
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
+    if os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1":   # a proof option: same forward as the two above
+        cmd += ["-e", "OT_LEC_ENABLE_FILL_GUARD=1"]
     if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
         cmd += ["-e", "OT_LEC_HINTS_PRESEED=1"]
     if os.environ.get("OT_LEC_EARLY_COMPARE") == "1":
