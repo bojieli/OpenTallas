@@ -1676,7 +1676,7 @@ for root in sys.argv[1:]:
     return f"flock {spill_lock(roots)} bash -c {shlex.quote(setup + TAR_X)}"
 
 
-STAGE_FILES = set()   # v14: --stage paths that are files on the source host (no marker inside; parent dir created)
+STAGE_FILES = set()   # v14: --stage paths that are files on the source host (no marker inside; parent dir created and marked)
 
 
 def stage_pre(src, r):
@@ -1693,7 +1693,11 @@ def stage_pre(src, r):
         s += (f"if ! test -e {shlex.quote(lane)}; then mkdir -p {shlex.quote(lane)} && "
               f"echo {src} > {shlex.quote(lane + '/' + SPILL_MARK)} || exit 4; fi; ")
     if r in STAGE_FILES:
-        return s + f"mkdir -p {shlex.quote(os.path.dirname(r))} || exit 4;"
+        # KW-FIX-8 11-04: a parent this spill creates holds only copies, so it carries the marker; without one the next
+        # spill to this host read the copied file as real data (47 rows refused).  A parent that already exists is never
+        # marked, whatever it holds: real data stays real and a file there still refuses as above.
+        d = shlex.quote(os.path.dirname(r))
+        return s + f"if ! test -e {d}; then mkdir -p {d} && echo {src} > {shlex.quote(os.path.dirname(r) + '/' + SPILL_MARK)} || exit 4; fi;"
     return s + f"mkdir -p {q} && echo {src} > {shlex.quote(r + '/' + SPILL_MARK)} || exit 4;"
 
 
@@ -1705,7 +1709,8 @@ def spill_fwd_cmd(src, dst, roots, stamp, listed=False):
     rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
     pre = " ".join(f"if test -e {shlex.quote(r)} && ! test -e {shlex.quote(r + '/' + SPILL_MARK)}; then echo OT_SPILL_REAL "
                    f"{shlex.quote(r)} >&2; exit 3; fi; mkdir -p {shlex.quote(r)} && echo {src} > {shlex.quote(r + '/' + SPILL_MARK)} || exit 4;"
-                   if spill_root(r) == os.path.normpath(r) else stage_pre(src, r) for r in roots)
+                   if spill_root(r) == os.path.normpath(r) else stage_pre(src, r)
+                   for r in sorted(roots, key=lambda x: os.path.normpath(x) not in STAGE_FILES))   # files first: a staged dir's mkdir -p must not create a file's parent
     dcmd = f"{pre} {tar_x(roots)} && touch {stamp}"
     stc = "cd / && tar --null --no-recursion -T - -cf - | zstd -q -1 -T8" if listed else f"tar -C / -cf - {rels} | zstd -q -1 -T8"
     return (f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(stc)}" + (f" < {shlex.quote(listed)}" if listed else "") + " | "
