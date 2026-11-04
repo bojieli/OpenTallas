@@ -2384,6 +2384,27 @@ def plan_names(AP, st, d):
     return p
 
 
+def ensure_plan_view(AP, st, d):
+    """The INFRA relaunch loop runs before plan_dies, on a fresh config: a launch there saw no _plan_flags, so a type
+    with planned child cores got no provisional views and its kit tried the child bodies (11-04, 16 QC cb rows + the
+    su_c pilot).  Read the plan first, cached like plan_dies.  False when the plan cannot be read."""
+    if d is None:
+        return False
+    if "_plan_flags" in d:
+        return True
+    pn = plan_names(AP, st, d)
+    if pn.get("error"):
+        return False
+    d["_plan_sha"] = pn.get("plan_sha")
+    d["_plan_flags"] = pn.get("flags") or {}
+    d["_plan_deps"] = pn.get("deps") or {}
+    d["_prov_deps"] = pn.get("prov_deps") or {}
+    d["_prov_keys"] = pn.get("prov_keys") or {}
+    d["_prov_bound"] = pn.get("bound") or {}
+    d["_plan_dir"] = pn.get("plan_dir") or ""
+    return True
+
+
 def core_view_names(names, core_views):
     """a hard-core module with several plan pin tables is one wave item per table: '<module>__v<sha12>' (select()
     expands an OWNERS row named by the module into these classes); a module with one table keeps its name"""
@@ -3084,6 +3105,8 @@ def _step(AP, ap_dir):
         # old pending retry before plan_dies has had a chance to hold it.
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
         if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
+            if not ensure_plan_view(AP, st, cfg["dies"].get(rec["die"])):
+                continue                                 # plan unreadable: stays RETRY-INFRA, next tick
             rec["status"] = "FAIL"
             launch_safe(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
