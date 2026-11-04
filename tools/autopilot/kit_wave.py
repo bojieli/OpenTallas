@@ -2522,7 +2522,12 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         return None
     key = item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
-    attempt = int(prev.get("attempt", 0)) + 1
+    # The attempt dir is per item and event, not per plan block: number across every block's records, or a new block's
+    # attempt N lands in an older block's attempt_N, whose results make "make place" a no-op (t14@4, t17@5, COORD 11-04).
+    event = cfg["dies"][die]["event"]
+    attempt = max([int(prev.get("attempt", 0))] + [int(v.get("attempt", 0)) for v in st["items"].values()
+                                                  if v.get("die") == die and v.get("event") == event
+                                                  and v.get("item") == r["item"]]) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
     sp["start_delay_s"] = round(float(delay_s), 1)
