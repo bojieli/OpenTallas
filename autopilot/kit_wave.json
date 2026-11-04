@@ -1160,7 +1160,13 @@
     "ot_s81sl_leaf__t44__clf6cf8492@7",
     "ot_s81sl_leaf__t54__cl706d9749@10",
     "ot_s81sl_leaf__t6@5",
-    "ot_s81sl_leaf__t69@5"
+    "ot_s81sl_leaf__t69@5",
+    "col_h10_r1__t1__cl95b37463@7",
+    "col_h10_r1__t1__cld01bb4ae@9",
+    "col_h10_r2__t1__cl1f5d6c2a@10",
+    "col_h10_r2__t1__cl8b686b3e@9",
+    "col_h10_r2__t1__clac068e56@7",
+    "col_h9_r2__t1__clc9ad8f7e@8"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1563,7 +1569,13 @@
     "ot_s81sl_leaf__t54__cl706d9749@10": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
     "ot_s81sl_leaf__t6@5": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
     "ot_s81sl_leaf__t69@5": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
-    "__batch_i2_rcore": "25 rows: CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)"
+    "__batch_i2_rcore": "25 rows: CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
+    "col_h10_r1__t1__cl95b37463@7": "I2-1103 RESET-CORE row CANCEL-VOLUME 17:21 by an OLD-src (39a2) col_h9_r1 OT_RESET_CORE fail (no old-src col/leaf attempt left running); relaunch on 4b09653bef8; class fix claude/kw-fix-4-pilotsrc-1103@6314af9340 (KW-FIX-4 17:27)",
+    "col_h10_r1__t1__cld01bb4ae@9": "I2-1103 RESET-CORE row CANCEL-VOLUME 17:21 by an OLD-src (39a2) col_h9_r1 OT_RESET_CORE fail (no old-src col/leaf attempt left running); relaunch on 4b09653bef8; class fix claude/kw-fix-4-pilotsrc-1103@6314af9340 (KW-FIX-4 17:27)",
+    "col_h10_r2__t1__cl1f5d6c2a@10": "I2-1103 RESET-CORE row CANCEL-VOLUME 17:21 by an OLD-src (39a2) col_h9_r1 OT_RESET_CORE fail (no old-src col/leaf attempt left running); relaunch on 4b09653bef8; class fix claude/kw-fix-4-pilotsrc-1103@6314af9340 (KW-FIX-4 17:27)",
+    "col_h10_r2__t1__cl8b686b3e@9": "I2-1103 RESET-CORE row CANCEL-VOLUME 17:21 by an OLD-src (39a2) col_h9_r1 OT_RESET_CORE fail (no old-src col/leaf attempt left running); relaunch on 4b09653bef8; class fix claude/kw-fix-4-pilotsrc-1103@6314af9340 (KW-FIX-4 17:27)",
+    "col_h10_r2__t1__clac068e56@7": "I2-1103 RESET-CORE row CANCEL-VOLUME 17:21 by an OLD-src (39a2) col_h9_r1 OT_RESET_CORE fail (no old-src col/leaf attempt left running); relaunch on 4b09653bef8; class fix claude/kw-fix-4-pilotsrc-1103@6314af9340 (KW-FIX-4 17:27)",
+    "col_h9_r2__t1__clc9ad8f7e@8": "I2-1103 RESET-CORE row CANCEL-VOLUME 17:21 by an OLD-src (39a2) col_h9_r1 OT_RESET_CORE fail (no old-src col/leaf attempt left running); relaunch on 4b09653bef8; class fix claude/kw-fix-4-pilotsrc-1103@6314af9340 (KW-FIX-4 17:27)"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
