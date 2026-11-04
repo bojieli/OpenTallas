@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # DIE-S81-51/RF-D 11-03 S81-044 cap_rt RF2: run.sh <out> [mut 0|1|2] [seed] [RA] [RB]  (from the source root; exit 0 = expected)
-#   mut 1 = OT_RFD_MUT_CAP2 (h column misses the same-edge write), mut 2 = OT_RFD_MUT_CAP2B (A one-hot = B group)
+#   mut 1 = OT_RFD_MUT_CAP2 (h column misses the same-edge write), mut 2 = OT_RFD_MUT_CAP2B (A one-hot = B group), mut 3 = OT_RFD_MUT_CAP3 (RF1 3: cnt lookup misses the pending write)
 set -u
 OUT=$1; MUT=${2:-0}; SEED=${3:-1}; RA=${4:-1}; RB=${5:-2}; mkdir -p "$OUT"
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
-D=""; [ "$MUT" = 1 ] && D="+define+OT_RFD_MUT_CAP2"; [ "$MUT" = 2 ] && D="+define+OT_RFD_MUT_CAP2B"
+D=""; [ "$MUT" = 1 ] && D="+define+OT_RFD_MUT_CAP2"; [ "$MUT" = 2 ] && D="+define+OT_RFD_MUT_CAP2B"; [ "$MUT" = 3 ] && D="+define+OT_RFD_MUT_CAP3"
 S=rtl/dsrom_sys/s81_dv/slice
 $V --binary --timing -j "${JOBS:-8}" -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD +define+OT_S81_CAP_RT_RF1 +define+OT_S81_CAP_RT_FACE_REGS $D \
   -GRA=$RA -GRB=$RB -GSEED=$SEED -GN=${N:-200000} --top-module tb_ot_s81sl_cap_rt_rf1 -Mdir "$OUT/obj$MUT.$RA$RB.$SEED" \
