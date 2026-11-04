@@ -14,7 +14,7 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "event28x_c",
+   "event": "event28w_c",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -63,7 +63,7 @@
    },
    "owner_lane": "DIE-KV-63",
    "lane": "KIT-WAVE-1",
-   "plan_note": "DIE-KV-61 11-02: source 54c3c7c9f (main 1770163a8 + rtobs). OWNER 11-02: hold gate FF>=0, --hold-ff-margin 0. CODEX1131 adopt efa macro/G0C/PG/PHY/HP/recipe source after actual fresh strict0 and full117-path closure. HG8 overcap/EX-cut hold and PC6 unsigned-child holds remain; HGI normal gates proceed. hub_C actual flat16GB OOM held pending typed AHUB/CTL closure.",
+   "plan_note": "KW-FIX-8 14:4x: event label back to event28w_c, the COORD plan of record in GATE_EVENTS; my 14:08 label event28x_c turned KV OFF. Plan file stays src_s plan_c (I46). | DIE-KV-61 11-02: source 54c3c7c9f (main 1770163a8 + rtobs). OWNER 11-02: hold gate FF>=0, --hold-ff-margin 0. CODEX1131 adopt efa macro/G0C/PG/PHY/HP/recipe source after actual fresh strict0 and full117-path closure. HG8 overcap/EX-cut hold and PC6 unsigned-child holds remain; HGI normal gates proceed. hub_C actual flat16GB OOM held pending typed AHUB/CTL closure.",
    "retry": [
     "qkd_hr_cdc_hi@1",
     "kv3_hub_Ei@1",
