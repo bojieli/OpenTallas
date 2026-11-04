@@ -1,0 +1,29 @@
+root	die	hex	GB	idle_h	ancestor	modified	untracked	signed	untracked_signed	not_equal_main	named_live	named_term_latest	named_other	gate
+source-follow	s81	a84c3cde972d	38.9	75.6	True	0	0	40	0	1	0	0		STAY newest usable s81; 1 signed differs from main
+source-follow	s81	d6fb0583c998	0.0	74.5	None	None	None	0	0	0	0	0	sfstate	STAY empty 16K, named by follow state
+source-follow	qwen_kvsys	1923c5d8459b	34.3	34.0	True	0	5	45	0	1	0	48	plans,queue.tsv,structural.tsv	STAY named
+source-follow	qwen_kvsys	06ed3c3a4895	34.4	23.2	True	0	5	45	0	0	0	8	plans	STAY named
+source-follow	qwen_kvsys	086b173865eb	34.4	20.1	True	0	5	47	0	0	0	12	plans,queue.tsv	STAY named
+source-follow	qwen_kvsys	c54262dcc2a7	34.4	22.6	True	0	5	47	0	0	0	48	plans,queue.tsv,structural.tsv	STAY named
+source-follow	qwen_kvsys	06a3d7e0268c	34.4	21.2	True	0	5	47	0	0	0	10	plans	STAY named
+source-follow	qwen_kvsys	39a2fae86679	34.4	16.8	True	0	5	47	0	0	1	32	plans,queue.tsv,structural.tsv	STAY named
+source-follow	qwen_kvsys	88f2e7ecac18	34.4	20.3	True	0	5	47	0	0	0	4	cfg,plans	STAY named
+source-follow	qwen_kvsys	4b0a73deb5f9	34.4	19.9	True	0	5	47	0	0	0	15	cfg,plans	STAY named
+source-follow-kv64	qwen_kvsys	2d0660db1b76	34.4	17.3	True	0	6	47	0	0	4	53	plans,queue.tsv,structural.tsv	STAY named
+source-follow-kv64	qwen_kvsys	9abd6a2dfb07	34.4	17.1	True	0	6	47	0	0	0	6	plans	STAY named
+source-follow-kv64	qwen_kvsys	4b09653bef8f	34.4	16.4	True	0	6	47	0	0	1	55		STAY named
+source-follow-kv64-pv2	qwen_kvsys	eaf46c760f81	34.4	14.2	True	0	6	47	0	0	0	22	plans	STAY named
+source-follow-kv64-pv2	qwen_kvsys	b07b52ff0c73	34.4	14.4	True	0	6	47	0	0	4	32		STAY named
+source-follow-kv64-pv2	qwen_kvsys	53d889820811	33.9	13.2	True	0	2	47	0	0	0	4		STAY named
+source-follow-kv64-pv2	qwen_kvsys	34659669869d	33.9	12.8	True	0	2	47	0	0	18	47	sfstate	STAY named
+source-follow-kv64-pv2	qwen_kvsys	6ed5d9580372	33.9	12.1	True	0	2	47	0	0	1	10		STAY named
+source-follow-kv64-pv2	qwen_kvsys	bdc3e312436f	33.9	10.7	True	0	2	47	0	0	4	11		STAY named
+source-follow-kv64-pv2	qwen_kvsys	0e644c316d52	33.9	9.9	True	0	2	47	0	0	3	4		STAY named
+source-follow-kv64-pv2	qwen_kvsys	fbebcbaef86e	33.9	9.7	True	0	2	47	0	0	14	8		STAY named
+source-follow-kv64-pv2	qwen_kvsys	386f7a71f8a6	33.9	9.2	True	0	2	47	0	0	4	8		STAY named
+source-follow-kv64-pv2	qwen_kvsys	aa641a705d44	33.9	8.9	True	0	2	47	0	0	1	0		STAY named
+source-follow-kv64-pv2	qwen_kvsys	9c9a0737761a	33.6	8.3	True	0	2	47	0	0	1	0		STAY named
+source-follow-kv64-pv2	qwen_kvsys	0be1c7b1db08	33.6	7.6	True	0	2	47	0	0	0	0		PASS
+source-follow-kv64-pv2	qwen_kvsys	013b33ef3269	33.6	7.4	True	0	2	47	0	0	17	11	sfstate	STAY named
+source-follow-kv64-pv2	qwen_kvsys	4f2f4d2758f8	33.6	5.6	True	0	2	47	0	0	0	1		STAY named
+source-follow-kv64-pv2	qwen_kvsys	902085405d85	33.6	5.3	True	0	2	47	0	0	202	47	sfstate,queue.tsv,structural.tsv	STAY newest+named
