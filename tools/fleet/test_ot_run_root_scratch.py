@@ -17,13 +17,24 @@ from unittest import mock
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from test_ot_run_scratch_disk import fake_bin, load  # noqa: E402
 
-m = load()
 S3 = '/srv/opentallas-scratch3'
+with mock.patch.dict(os.environ, {'OT_RUN_ROOT_SCRATCH_ROOTS': S3}):   # off by default, on here
+    m = load()
 
 
 def probe_out(s2, root_free, pct=2):
     return ('OT_SCRATCH_FREE /srv/opentallas-scratch %d 1\nOT_SCRATCH_FREE /srv/opentallas-scratch2 %d 0\n'
             'OT_SCRATCH_FREE %s %d 1\nOT_ROOTFS %d %d\nOT_DIR_ONROOT 0\n' % (root_free, s2, S3, root_free, pct, root_free))
+
+
+class OffByDefault(unittest.TestCase):
+    def test_default_has_only_the_two_scratch_roots(self):
+        env = {k: v for k, v in os.environ.items() if k != 'OT_RUN_ROOT_SCRATCH_ROOTS'}
+        with mock.patch.dict(os.environ, env, clear=True):
+            off = load()
+        self.assertEqual(off.ROOT_SCRATCH_ROOTS, ())
+        self.assertEqual(off.SCRATCH_ROOTS, ('/srv/opentallas-scratch', '/srv/opentallas-scratch2'))
+        self.assertNotIn(S3, off.SCRATCH_ENV)
 
 
 class ProbeRows(unittest.TestCase):
