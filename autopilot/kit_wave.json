@@ -1548,7 +1548,9 @@
     "slice_station__t7__cl945bc067@11",
     "gunit__t1@3",
     "ot_s81sl_leaf__t32@11",
-    "bk_sel__t2@2"
+    "bk_sel__t2@2",
+    "gunit__t1@1",
+    "slice_station__t17@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2135,7 +2137,9 @@
     "slice_station__t7__cl945bc067@11": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)",
     "gunit__t1@3": "RM-31 09:42 (c) small b51373145a5 on tag n-s81",
     "ot_s81sl_leaf__t32@11": "RM-31 09:42 (c) small b51373145a5 on tag n-s81",
-    "bk_sel__t2@2": "RM-31 09:42 (d) selt b979201e97 on tag n-s81"
+    "bk_sel__t2@2": "RM-31 09:42 (d) selt b979201e97 on tag n-s81",
+    "gunit__t1@1": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)",
+    "slice_station__t17@4": "COORD 08:54 (1) form A batch, tag n-s81 6c547da940f + key ft_ring_max_ps 166.6 (block keys 0 moved)"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
