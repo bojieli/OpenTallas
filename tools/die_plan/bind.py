@@ -1239,6 +1239,7 @@ class Binder:
         G, F = self.G, self.F
         self.cross = defaultdict(lambda: defaultdict(set))   # (src part, dst part) -> {(src ci, port): {bits}}
         self.cross_sinks = defaultdict(set)                  # (sp, dp, src ci, port) -> {(dst rel, dst port)}
+        self.cross_sink_alias = {}                           # composite (dst rel, port) -> member (rel, port)
         self.cross_stages = defaultdict(list)                # (sp, dp, src ci, port) -> [as-built stages]
         self.intra_dly = defaultdict(set)                    # part -> {(src ci, port, stages)}
         self.clk_dom = defaultdict(set)                      # part -> {domain}
@@ -1280,7 +1281,13 @@ class Binder:
                 cnt["intra"] += 1
                 return ("int", sci, spn, sb, st)
             self.cross[(sp, p)][(sci, spn)].add(sb)
-            self.cross_sinks[(sp, p, sci, spn)].add(self._sink_name(ci, pn))
+            # DIE-KV-64 11-03 (sinkname): the sink set keeps the partition-relative names (ordering, lane scoring and the
+            # smallest-sink choice are unchanged); only a NAME chosen from a composite sink takes its member alias
+            sk = (self.rel_of(ci), pn)
+            self.cross_sinks[(sp, p, sci, spn)].add(sk)
+            al = self._sink_name(ci, pn)
+            if al != sk:
+                self.cross_sink_alias[sk] = al
             self.cross_stages[(sp, p, sci, spn)].append(st)
             cnt["crossing"] += 1
             return ("x", sp, sci, spn, sb, st, p)
@@ -1634,6 +1641,7 @@ class Binder:
         dl = []
         for sp, dp, sci, spn, bl in direct:
             dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            dr, dpn = self.cross_sink_alias.get((dr, dpn), (dr, dpn))
             D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
                      cycles=2, unplanned=use_lanes, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
                      stages=self.cross_stages[(sp, dp, sci, spn)])
@@ -1642,6 +1650,7 @@ class Binder:
             dl.append(D)
         for sp, dp, sci, spn, bl, ns in spine:
             dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            dr, dpn = self.cross_sink_alias.get((dr, dpn), (dr, dpn))
             D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
                      cycles=ns, spine=True, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
                      stages=self.cross_stages[(sp, dp, sci, spn)])
