@@ -47,6 +47,11 @@ module dsdv_bk_vin #(
     // + pre-decoded one-hot lane hits pn / ps), so the lane mux selects from flops.  Lane words (incl. live and the
     // sticky fault) leave +1 edge (V pin -> lane word 3 -> 4); the drain command (dr_*) timing is UNCHANGED (window LW,
     // CTL-relative, unchanged).  0 = the old form.
+    // LPIPE 2 (S81-062 form 7, 11-03, owner: two strikes -> pay a cycle; rfd5 TT -17.79 pn_q[l] -> 515-b lane word
+    // through ~600 ps of select fanout): LPIPE 1 + ONE more per-lane register stage: the selected beat (pn ? bn : bs),
+    // its valid (pn | ps) and the two-beat error (pn & ps) are registered per lane (lb_r / lv_r / l2_r) next to the lane
+    // logic, so the lane word / hd / part-0 logic and their 512-b fanout start from per-lane flops.  Lane words, live and
+    // the sticky fault leave +1 edge more (V pin -> lane word +1, inside dsdv_bk_sel); the drain command (dr_*) unchanged.
     parameter integer LPIPE = 0
 ) (
     input  wire              clk,
@@ -88,6 +93,25 @@ module dsdv_bk_vin #(
         end
         assign bn = dl_n; assign bs = dl_s; assign cc = cn && cs;
     end endgenerate
+    // per-lane view of the deliveries: valid, two beats, the beat (LPIPE 2: one more register stage)
+    wire [3:0] lvw, l2w; wire [V-1:0] lbw [0:3]; wire ccw;
+    generate if (LPIPE >= 2) begin : g_l2
+        reg [3:0] lv_r, l2_r; reg cc_r; reg [V-1:0] lb_r [0:3];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin lv_r <= 4'd0; l2_r <= 4'd0; cc_r <= 1'b0; end
+            else begin lv_r <= pn | ps; l2_r <= pn & ps; cc_r <= cc; end
+        always @(posedge clk) for (integer l = 0; l < 4; l = l + 1) lb_r[l] <= pn[l] ? bn : bs;
+`ifdef OT_RFD_MUT_LPS   // bench mutant: lane 0 valid bypasses the stage (one edge early against its beat)
+        assign lvw = {lv_r[3:1], pn[0] | ps[0]};
+`else
+        assign lvw = lv_r;
+`endif
+        assign l2w = l2_r; assign ccw = cc_r;
+        for (genvar l = 0; l < 4; l = l + 1) begin : g_b assign lbw[l] = lb_r[l]; end
+    end else begin : g_l0
+        assign lvw = pn | ps; assign l2w = pn & ps; assign ccw = cc;
+        for (genvar l = 0; l < 4; l = l + 1) begin : g_b assign lbw[l] = pn[l] ? bn : bs; end
+    end endgenerate
     reg [3:0]   hv;                       // part 0 held per lane
     reg [255:0] hd [0:3];
     reg [3:0]   wv, err;                  // this cycle: word complete / protocol error, per lane
@@ -96,10 +120,10 @@ module dsdv_bk_vin #(
     always @(*) begin
         for (integer l = 0; l < 4; l = l + 1) begin : g_ln
             reg [V-1:0] b;                    // the lane beat, assigned on every pass (comb temporary, no latch)
-            b = pn[l] ? bn : bs;
+            b = lbw[l];
             wv[l] = 1'b0; err[l] = 1'b0; wf[l] = 1'b0; wd[l] = 512'd0;
-            if (pn[l] || ps[l]) begin
-                if (pn[l] && ps[l]) err[l] = 1'b1;                              // two beats of one lane in a cycle
+            if (lvw[l]) begin
+                if (l2w[l]) err[l] = 1'b1;                              // two beats of one lane in a cycle
                 if (!b[6]) begin
                     if (b[7]) begin
                         wv[l] = 1'b1;
@@ -118,10 +142,10 @@ module dsdv_bk_vin #(
     reg [4*515-1:0] lq;                   // lane registers; bit 515*l+513 (live) comes from lv_q[l] instead
     // S81-KITS-RTLC 10-25: one KEPT live chain per lane (the 4 identical chains were merged into one flop that fed all
     // four ln*[513] pins); the data bits load the word and are 0 when no word arrives (no hold self-loop at the pin)
-    (* keep = "true" *) reg [3:0] lv_0, lv_1, lv_q;   // LPIPE 1: one more live stage (lane words +1 edge)
+    (* keep = "true" *) reg [3:0] lv_0, lv_1, lv_2, lv_q;   // LPIPE 1: one more live stage (lane words +1 edge)
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin lv_0 <= 4'd0; lv_1 <= 4'd0; lv_q <= 4'd0; end
-        else begin lv_0 <= 4'hf; lv_1 <= lv_0; lv_q <= (LPIPE != 0) ? lv_1 : lv_0; end
+        if (!rst_n) begin lv_0 <= 4'd0; lv_1 <= 4'd0; lv_2 <= 4'd0; lv_q <= 4'd0; end
+        else begin lv_0 <= 4'hf; lv_1 <= lv_0; lv_2 <= lv_1; lv_q <= (LPIPE >= 2) ? lv_2 : (LPIPE != 0) ? lv_1 : lv_0; end
     genvar gl;
     generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_live
         assign lanes[515 * gl +: 515] = {lq[515 * gl + 514], lv_q[gl], lq[515 * gl + 1 +: 512], lq[515 * gl]};
@@ -138,9 +162,9 @@ module dsdv_bk_vin #(
             for (integer l = 0; l < 4; l = l + 1) begin lq[515 * l] <= 1'b0; lq[515 * l + 514] <= 1'b0; end
         end else begin
             dr_v <= cn | cs;
-            if (cc || err != 4'd0) fault <= 1'b1;
+            if (ccw || err != 4'd0) fault <= 1'b1;
             for (integer l = 0; l < 4; l = l + 1) begin
-                if ((pn[l] && !bn[6] && !bn[7]) || (!pn[l] && ps[l] && !bs[6] && !bs[7]))
+                if (lvw[l] && !lbw[l][6] && !lbw[l][7])
                     hv[l] <= 1'b1;
                 else if (wv[l]) hv[l] <= 1'b0;
                 lq[515 * l]       <= wv[l];
@@ -156,8 +180,8 @@ module dsdv_bk_vin #(
 `else
             lq[515 * l + 1 +: 512] <= wv[l] ? wd[l] : 512'd0;     // wd[l] is 0 when !wv[l] (comb default)
 `endif
-            if ((pn[l] && !bn[6]) || (!pn[l] && ps[l] && !bs[6]))
-                hd[l] <= pn[l] ? bn[275:20] : bs[275:20];
+            if (lvw[l] && !lbw[l][6])
+                hd[l] <= lbw[l][275:20];
         end
     end
 endmodule

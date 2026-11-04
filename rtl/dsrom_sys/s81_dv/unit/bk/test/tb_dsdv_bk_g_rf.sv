@@ -9,7 +9,7 @@
 // vi_s / vi_n, random vd words.  +define+OT_RFD_MUT_BKG (vstop mutant) must FAIL.  Verdict line "BKG_RF PASS|FAIL".
 module tb_dsdv_bk_g_rf #(parameter integer RA = 0, parameter integer RB = 1);
     localparam integer V = 276;
-    localparam integer DVO = (RB >= 1) + (RB >= 4) - (RA >= 1) - (RA >= 4), DLN = (RB >= 2) + (RB >= 4) - (RA >= 2) - (RA >= 4);  // RF 4 / 5: +1 out-face
+    localparam integer DVO = (RB >= 1) + (RB >= 4) - (RA >= 1) - (RA >= 4), DLN = (RB >= 2) + (RB >= 4) + (RB >= 6) - (RA >= 2) - (RA >= 4) - (RA >= 6);  // RF 4 / 5: +1 out-face
     reg clk = 0; always #0.4165 clk = ~clk;
     reg rst_n = 0;
     reg [V-1:0] vi_s = 0, vi_n = 0; reg [366:0] vd = 0;
@@ -57,7 +57,7 @@ module tb_dsdv_bk_g_rf #(parameter integer RA = 0, parameter integer RB = 1);
             vd <= {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom};
         end
         // checks (pre-edge values)
-        if (cyc > 30 && !(cyc >= ncyc / 2 && cyc <= ncyc / 2 + 2)) begin   // RF 1 samples rst_n at the negedge: assertion lands half an edge later (held 64)
+        if (cyc > 30 && !(cyc >= ncyc / 2 && cyc <= ncyc / 2 + 2 + ((RB >= 6) != (RA >= 6)))) begin   // RF 1 samples rst_n at the negedge: assertion lands half an edge later (held 64); RF 6 lane stage: +1 (valid-0 data residue of the word in flight at the reset assertion)
             ncmp = ncmp + 1;
             if ((DVO ? {vo_s1, vo_n1} !== {ps0, pn0} : {vo_s1, vo_n1} !== {vo_s0, vo_n0})) begin err = err + 1; if (err < 6) $display("MISMATCH vo cyc %0d", cyc); end
             if ({b0, b1, b2, b3} !== (DLN ? pl0 : {a0, a1, a2, a3})) begin err = err + 1; if (err < 6) $display("MISMATCH ln cyc %0d", cyc); end
