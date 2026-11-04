@@ -1470,6 +1470,24 @@ class Plan:
             self.clock["insertion_ps"] = float(self.clock["common_latency_ps"])   # kit balances to + vclk latency
         self.reset = dict(DEFAULT_RESET, **raw.get("reset", {}))
         self.budgets = dict(DEFAULT_BUDGETS, **raw.get("budgets", {}))
+        self._separate_landing_pins()
+
+    def _separate_landing_pins(self):
+        """DIE-QC-67 PINDUP 11-03: two landing pins of a type on one site abort global route (GRT-0080).  Every tool
+        sees the separated sites through P.types; raw stays exactly as read, so plan digests and hashes do not move.
+        A plan without such a pair keeps P.types is raw["partition_types"], byte-identical."""
+        hit = [tn for tn, t in self.types.items() if t.get("clock", {}).get("landing_contract", {}).get("pins")]
+        if not hit:
+            return
+        if str(Path(__file__).resolve().parent) not in sys.path:
+            sys.path.append(str(Path(__file__).resolve().parent))
+        import landing_contract as LC
+        hit = [tn for tn in hit if LC.overlapping_pins(self, self.types[tn])]
+        if hit:
+            types = dict(self.types)
+            self.types = types
+            for tn in sorted(hit):
+                types[tn] = LC.separate_pins(self, tn)
 
     # -- port geometry from the type's bus declaration
     def _type_geom(self, part, bus):
