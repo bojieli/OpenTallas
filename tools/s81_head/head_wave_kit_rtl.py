@@ -16,7 +16,7 @@ from head_start_raw_private import prepare_plan, patch_rtl as private_patch
 from head_start_reset_aliases import patch_rtl as alias_patch
 
 # These profiles require additional native/PMA decisions, beyond this recipe.
-HELD = {'hd_serdes'}
+HELD = set()
 TRANSPORT_STRIPS = {'hd_ctl_n', 'hd_ctl_e'}
 
 def check_transport_strip(typ, entry):
