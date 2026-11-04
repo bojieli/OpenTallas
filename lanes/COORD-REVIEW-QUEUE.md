@@ -12147,3 +12147,4 @@ Merge-after-sign (+ TOK-VERIFY PASS): bf_col rfh1 @5e3b606cffd (supersedes 7ecc5
 NEW CLASS, INFRA ENOSPC: kits that failed with "No space left on device" while intel1/intel2 were full (about 19:30-20:50) are not design failures. KW-FIX-4 relaunches them all as one batch now, since intel1 has 240 GB and intel2 223 GB.
 I9 MERGED 6ed5d958037 (PG3, kw-prov-1, corband, rfb, mcmmtest).
 Waiters: epyc2 2, intel1 3, intel2 36, epyc4 78. Kit-wave SUBMITs at 20:58.
+- 2026-11-03 21:01 PST PASS [TOK-VERIFY-1 -> ROOT-MERGE-27, DIE-S81-51/RF-H] bf_col rfh1 @5e3b606cffd carries both schedule class fixes: floor 231->232 for wo_a/router plus BF_SEG_LABEL_FLOOR, and BF emission +1 (zeroed by a BRNECUT re-measure). The BF/FP merge is SAFE (0 collisions, BF-only pairs). TOK-VERIFY PASS for merge-after-sign. The floor 232 is inferred (P231 was zero-slack at BXST-2). Confirm with one frame_bf_measure on the rfh1 frame when a host frees up; until then this is not a gate.
