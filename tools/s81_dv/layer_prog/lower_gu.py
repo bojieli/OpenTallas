@@ -64,7 +64,9 @@ JOB_LEAD = 8                    # job at the cw pin this many edges before the f
 NE, NEMAX, K = 384, 448, 6
 # fixed latencies, measured on the RTL of record by run_gu_bench.sh (asserted there: any drift fails the bench)
 #   from the edge the LAST beat is on vi_n (the matching S beat is on vi_s 2 edges later; both reach the stop together)
-HC_LAT_N, HC_LAT_S = 1019, 1017  # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge; S81-RF1 11-03: +1, l0r RE-FORM RF 1)
+HC_LAT_N, HC_LAT_S = 1140, 1138  # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge; S81-RF1 11-03: +1, l0r RE-FORM RF 1)
+#   DIE-S81-51/RF-D 11-03: +121, gunit_l5 conservative form (RFD 1: registered Sinkhorn fault zeroing +1; row-pipelined
+#   Sinkhorn ot_hdc_sinkhorn_fsr: D0 18 -> 21, DS 16 -> 19, LAT 642 -> 762 = +120); run_gunit_bench hc_lat 1008 -> 1129
 # TOK-ALL-16 10-27: re-measured on current main (gunit parent with the bound native-32 L5 127356adf2 + 10-24 pin-register
 # stations; identical with and without the GUNIT_* defines): HC 759/757 -> 1018/1016 (+259), router ids 68/66 -> 50/48
 # (-18), RW_GAP 121 -> 101; every value bit-exact (results/token_pass/tok16_dsl0_1027/gu)

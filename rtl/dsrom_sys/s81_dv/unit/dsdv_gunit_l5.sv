@@ -36,7 +36,7 @@
 `define OT_S81_GUNIT_NAT32 0
 `endif
 `ifndef OT_S81_GUNIT_RFD
-`define OT_S81_GUNIT_RFD 0
+`define OT_S81_GUNIT_RFD 1
 `endif
 // S81-GUNIT whole model (10-19, FANOUT_SAFE, default 0 = legacy): (1) the 3,072-bit base table lives in 12 native
 // ot_sram_1r1w2c_32x64_m1 banks (rows {set, which}, bank b = base words 2b, 2b + 1); each bank reads continuously
@@ -61,7 +61,7 @@ module dsdv_gunit_l5 #(
     // master fault, HC result + 1 edge (tail SKFQ; result_v / ct rows are valid-driven, no pin contract moves);
     // (2) base-bank write port (shared wd / wv / wa flops -> 3 banks each, 170-um wire into the SRAM 124-ps setup, TT
     // -15.21): per-bank KEPT write registers (wce / wrow / 64-bit wd) loaded from the cw pin registers on the same edge as
-    // wv / wa / wd (0 edges).  0 = the reviewed form.
+    // wv / wa / wd (0 edges).  0 = the reviewed form; default 1 (RF-D 11-03 conservative form, RTL of record).
     parameter integer RFD = `OT_S81_GUNIT_RFD
 ) (
     input  wire          clk,
