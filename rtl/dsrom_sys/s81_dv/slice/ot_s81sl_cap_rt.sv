@@ -39,6 +39,17 @@
 // wire -> group -> group-wide write nets (fo 13 x 24) -> ~1.5k array D inputs.  0 edges moved: each group loads this edge's
 // write command into PENDING flops and writes its arrays one edge later from them; every lookup read forwards the
 // pending write through registered one-hot selects (lockstep tb_ot_s81sl_cap_rt_rf1 -GRA=2 -GRB=3, mutant OT_RFD_MUT_CAP3).
+// S81-RF4 (DIE-S81-51/RF-D 11-03, OWNER 18:57 conservative form): RF1 = 4.  rfd2 (RF1 = 3) place estimate: the store
+// decision broadcast (sb_m -> decision -> 8 groups' pending / column-forward D, ~830 ps) and the B look-ahead decode
+// (u_std -> norm -> slot add / hof -> 8 groups, place ws -171.7 into cb_es) are the > 580 ps stages.  0 edges moved:
+//   * the decision's store write command is REGISTERED at the top (t_* = the forwarding copy, g_st[*].g_td per-group
+//     kept copies on the group's clock entry) and the groups see each command one edge later; every top lookup
+//     (fa_* / fb_*) forwards the registered command behind this edge's decision (delayed write + forward, 2 deep);
+//   * the store-open flag (F11) is an exact top counter of nonzero slots (nopen, updated from the decision's own
+//     old / new counts), registered one edge late = the old any_g timing (the groups' any_o lags one more edge);
+//   * the B look-ahead decode (norm / slot / h of the re-entry tag) is computed at the INPUT of the 5-edge tag delay
+//     line (from the m3_t flop) and delayed with it (u_stx), so re_tn / nb_sln / nb_hn leave flops.
+// Lockstep tb_ot_s81sl_cap_rt_rf1 -GRA=3 -GRB=4 (and 1 / 4); mutant OT_RFD_MUT_CAP4 (cnt lookup misses t_*) must FAIL.
 // S81-RF2 (DIE-S81-51/RF-D 11-03, S81-044 TWO-STRIKES RE-FORM; RF1 ECO m0 / m1w / m2 exhausted at TT -4.09, raw
 // -23..-29 on la_sl / lb_sl -> fa_ev / fb_ev / fb_es and on cb -> slot-group key_g / ev_g / cnt_g writes): RF1 = 2.
 // 0 edges moved (same values at the same edges as RF1 = 1; lockstep bench tb_ot_s81sl_cap_rt_rf1 -GRA=1 -GRB=2):
@@ -244,7 +255,8 @@ module ot_s81sl_cap_rt #(
     // key [slot] {pos, row, nseg}, es [slot] entry side (lo[k] of the waiting child), cnt [slot], ev [slot] entry valid
     // bit h: all in the slot groups g_st[slot / 8]
     wire [7:0]  any_g;                                    // registered OR of cnt != 0 per slot group (F11)
-    wire        any_open = |any_g;
+    reg         nz_q;                                     // S81-RF4: registered store-open flag (nopen != 0)
+    wire        any_open = (RF1 >= 4) ? nz_q : |any_g;
     // registered look-ahead lookups of the F1 words' slots (loaded with fa_* / fb_*, see below)
     reg  [5:0]  fa_cn, fb_cn; reg fa_kh, fb_kh, fa_ev, fb_ev, fa_es, fb_es;
     wire [5:0]  s_cn = sb ? fb_cn : fa_cn;                // = cnt[s_slot]
@@ -276,11 +288,14 @@ module ot_s81sl_cap_rt #(
     (* keep = "true" *) reg [5:0] na_sl, nb_sl;
     (* keep = "true" *) reg [4:0] na_h, nb_h;
     (* keep = "true" *) reg [2:0] la_gs, lb_gs;          // group select copies for the across-group 8:1
-    wire [31:0] re_tn = norm(st_q);                       // = re_t at the next edge
-    wire [5:0]  na_sln = slotof(n6r_t), nb_sln = slotof(re_tn);
+    // S81-RF4: stx = {hof, slotof, norm} of the re-entry tag, decoded before the u_std delay line (RF1 >= 4)
+    wire [42:0] stx;
+    wire [31:0] re_tn = (RF1 >= 4) ? stx[31:0] : norm(st_q);   // = re_t at the next edge
+    wire [5:0]  na_sln = slotof(n6r_t), nb_sln = (RF1 >= 4) ? stx[37:32] : slotof(re_tn);
+    wire [4:0]  nb_hx = (RF1 >= 4) ? stx[42:38] : hof(re_tn);
     always @(posedge clk) begin
         na_sl <= na_sln; na_h <= hof(n6r_t); la_gs <= na_sln[5:3];
-        nb_sl <= nb_sln; nb_h <= hof(re_tn); lb_gs <= nb_sln[5:3];
+        nb_sl <= nb_sln; nb_h <= nb_hx; lb_gs <= nb_sln[5:3];
     end
     // group-local lookups (g_st), selected across groups
     wire [5:0]  ga_cn [0:7], gb_cn [0:7];
@@ -292,42 +307,100 @@ module ot_s81sl_cap_rt #(
     // la_gs -> fa_kh).  Same value at the same edge: ga_kh[g] == (ga_key[g] == na_key), gb_kh[g] == (gb_key[g] == nb_key).
     wire [7:0]  ga_kh, gb_kh;
     wire [23:0] na_keyn = {n6r_t[31:13], n6r_t[4:0]};   // = na_key at the next edge (n6t_q <= n6r_t)
-    wire [23:0] nb_keyn = {st_q[31:13], st_q[4:0]};     // = nb_key at the next edge (re_t <= norm(st_q); norm keeps these bits)
+    wire [23:0] nb_keyn = {re_tn[31:13], re_tn[4:0]};   // = nb_key at the next edge (re_t <= norm(st_q); norm keeps these bits)
     wire [23:0] na_key = {n6_t[31:13], n6_t[4:0]}, nb_key = {re_t[31:13], re_t[4:0]};
     wire        upd = do_ins || do_mrg;
     wire        kwr = do_ins && !slot_busy;               // key[s_slot] <= s_key at this edge
     wire        a_ss = s_slot == na_sl, b_ss = s_slot == nb_sl;
+    // S81-RF4: the registered store write command (the groups apply it one edge later) = forwarding tier 2
+    reg         t_ins, t_mrg, t_rel, t_busy, t_side; reg [5:0] t_sl, t_rsl, t_cs, t_cr; reg [4:0] t_h; reg [23:0] t_key;
+    always @(posedge clk or negedge rs_f) if (!rs_f) begin t_ins <= 1'b0; t_mrg <= 1'b0; t_rel <= 1'b0; end
+                                         else begin t_ins <= do_ins; t_mrg <= do_mrg; t_rel <= do_rel; end
     always @(posedge clk) begin
-        fa_cn <= (upd && a_ss) ? cnt_s : (do_rel && r_slot == na_sl) ? cnt_r : ga_cn[la_gs];
-        fb_cn <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
-`ifdef OT_S81_CAP_RT_FACE_REGS
-        fb_cn_l <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
-        fb_cn_g <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
-`endif
-        fa_kh <= (kwr && a_ss) ? (s_key == na_key) : (RF1 != 0) ? ga_kh[la_gs] : (ga_key[la_gs] == na_key);
-        fb_kh <= (kwr && b_ss) ? (s_key == nb_key) : (RF1 != 0) ? gb_kh[lb_gs] : (gb_key[lb_gs] == nb_key);
-        fa_ev <= (upd && a_ss && s_h == na_h) ? do_ins : ga_ev[la_gs];
-        fb_ev <= (upd && b_ss && s_h == nb_h) ? do_ins : gb_ev[lb_gs];
-        fa_es <= (do_ins && a_ss && s_h == na_h) ? s_side : ga_es[la_gs];
-        fb_es <= (do_ins && b_ss && s_h == nb_h) ? s_side : gb_es[lb_gs];
+        t_sl <= s_slot; t_rsl <= r_slot; t_h <= s_h; t_key <= s_key; t_cs <= cnt_s; t_cr <= cnt_r; t_busy <= slot_busy;
+        t_side <= s_side;
     end
-    wire [4:0]  na_hn = hof(n6r_t), nb_hn = hof(re_tn);
+    wire        t_on = RF1 >= 4;
+    wire        t_upd = t_on && (t_ins || t_mrg), t_kw = t_on && t_ins && !t_busy, t_es = t_on && t_ins;
+`ifdef OT_RFD_MUT_CAP4   // bench mutant: the cnt lookup misses the registered command
+    wire        t_cu = 1'b0, t_rl = 1'b0;
+`else
+    wire        t_cu = t_upd, t_rl = t_on && t_rel;
+`endif
+    wire        ta_ss = t_sl == na_sl, tb_ss = t_sl == nb_sl;
+    wire [5:0]  gna = (t_cu && ta_ss) ? t_cs : (t_rl && t_rsl == na_sl) ? t_cr : ga_cn[la_gs];
+    wire [5:0]  gnb = (t_cu && tb_ss) ? t_cs : (t_rl && t_rsl == nb_sl) ? t_cr : gb_cn[lb_gs];
+    wire        gka = (t_kw && ta_ss) ? (t_key == na_key) : (RF1 != 0) ? ga_kh[la_gs] : (ga_key[la_gs] == na_key);
+    wire        gkb = (t_kw && tb_ss) ? (t_key == nb_key) : (RF1 != 0) ? gb_kh[lb_gs] : (gb_key[lb_gs] == nb_key);
+    wire        gea = (t_upd && ta_ss && t_h == na_h) ? t_ins : ga_ev[la_gs];
+    wire        geb = (t_upd && tb_ss && t_h == nb_h) ? t_ins : gb_ev[lb_gs];
+    wire        gsa_ = (t_es && ta_ss && t_h == na_h) ? t_side : ga_es[la_gs];
+    wire        gsb_ = (t_es && tb_ss && t_h == nb_h) ? t_side : gb_es[lb_gs];
+    always @(posedge clk) begin
+        fa_cn <= (upd && a_ss) ? cnt_s : (do_rel && r_slot == na_sl) ? cnt_r : gna;
+        fb_cn <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gnb;
+`ifdef OT_S81_CAP_RT_FACE_REGS
+        fb_cn_l <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gnb;
+        fb_cn_g <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gnb;
+`endif
+        fa_kh <= (kwr && a_ss) ? (s_key == na_key) : gka;
+        fb_kh <= (kwr && b_ss) ? (s_key == nb_key) : gkb;
+        fa_ev <= (upd && a_ss && s_h == na_h) ? do_ins : gea;
+        fb_ev <= (upd && b_ss && s_h == nb_h) ? do_ins : geb;
+        fa_es <= (do_ins && a_ss && s_h == na_h) ? s_side : gsa_;
+        fb_es <= (do_ins && b_ss && s_h == nb_h) ? s_side : gsb_;
+    end
+    // S81-RF4: exact count of nonzero slots, from this decision's old (s_cn / fb_cn) and new (cnt_s / cnt_r) counts
+    reg  [6:0]  nopen;
+    wire        rl_eff = do_rel && !(upd && r_slot == s_slot);
+    wire [6:0]  op_up = {6'd0, upd && cnt_s != 6'd0 && s_cn == 6'd0} + {6'd0, rl_eff && cnt_r != 6'd0 && fb_cn == 6'd0};
+    wire [6:0]  op_dn = {6'd0, upd && cnt_s == 6'd0 && s_cn != 6'd0} + {6'd0, rl_eff && cnt_r == 6'd0 && fb_cn != 6'd0};
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin nopen <= 7'd0; nz_q <= 1'b0; end
+        else begin nopen <= nopen + op_up - op_dn; nz_q <= nopen != 7'd0; end
+    wire [4:0]  na_hn = hof(n6r_t), nb_hn = nb_hx;
     wire        rs_same = r_slot == s_slot;
     genvar gs;
     generate for (gs = 0; gs < 8; gs = gs + 1) begin : g_st
 `ifdef OT_S81_CAP_RT_RF1
       if (RF1 != 0) begin : g_rf1
+        // the group's write command: this edge's decision (RF1 <= 3) or its registered copy (S81-RF4 g_td, kept,
+        // on the group's clock entry: the decision fans out to 8 x ~50 flops, the groups load flops only)
+        wire        c_sin = (RF1 >= 2) ? (sb_g[gs] ? gsb[gs] : gsa[gs]) : (s_slot[5:3] == gs);
+        wire        c_rin = (RF1 >= 2) ? gsb[gs] : (r_slot[5:3] == gs);
+`ifdef OT_S81_CAP_RT_FACE_REGS
+        wire [5:0]  c_cr = (gs < 4) ? cnt_r_l : cnt_r_g;
+`else
+        wire [5:0]  c_cr = cnt_r;
+`endif
+        wire        gck = (gs < 4) ? clk_g0 : clk_g1;
+        wire        x_sin, x_rin, x_ins, x_mrg, x_rel, x_rss, x_side, x_busy;
+        wire [2:0]  x_sl, x_rsl; wire [4:0] x_h; wire [23:0] x_key; wire [5:0] x_cs, x_cr;
+        if (RF1 >= 4) begin : g_td
+            (* keep = "true" *) reg td_sin, td_rin, td_ins, td_mrg, td_rel, td_rss, td_side, td_busy;
+            (* keep = "true" *) reg [2:0] td_sl, td_rsl; (* keep = "true" *) reg [4:0] td_h;
+            (* keep = "true" *) reg [23:0] td_key; (* keep = "true" *) reg [5:0] td_cs, td_cr;
+            always @(posedge gck or negedge rs_s[2 * gs + 1])
+                if (!rs_s[2 * gs + 1]) begin td_ins <= 1'b0; td_mrg <= 1'b0; td_rel <= 1'b0; end
+                else begin td_ins <= do_ins; td_mrg <= do_mrg; td_rel <= do_rel; end
+            always @(posedge gck) begin
+                td_sin <= c_sin; td_rin <= c_rin; td_rss <= rs_same; td_side <= s_side; td_busy <= slot_busy;
+                td_sl <= s_slot[2:0]; td_rsl <= r_slot[2:0]; td_h <= s_h; td_key <= s_key; td_cs <= cnt_s; td_cr <= c_cr;
+            end
+            assign x_sin = td_sin, x_rin = td_rin, x_ins = td_ins, x_mrg = td_mrg, x_rel = td_rel, x_rss = td_rss;
+            assign x_side = td_side, x_busy = td_busy, x_sl = td_sl, x_rsl = td_rsl, x_h = td_h, x_key = td_key;
+            assign x_cs = td_cs, x_cr = td_cr;
+        end else begin : g_ntd
+            assign x_sin = c_sin, x_rin = c_rin, x_ins = do_ins, x_mrg = do_mrg, x_rel = do_rel, x_rss = rs_same;
+            assign x_side = s_side, x_busy = slot_busy, x_sl = s_slot[2:0], x_rsl = r_slot[2:0], x_h = s_h, x_key = s_key;
+            assign x_cs = cnt_s, x_cr = c_cr;
+        end
         ot_s81sl_cap_grp_rf1 #(.CS(RF1 >= 2), .WD(RF1 >= 3)) u_g (.clk((gs < 4) ? clk_g0 : clk_g1), .ka_d(na_keyn), .kb_d(nb_keyn),
             .a_kh(ga_kh[gs]), .b_kh(gb_kh[gs]), .rs_e(rs_s[2 * gs + 1]), .rs_c(rs_s[2 * gs]),
             .la_d(na_sln[2:0]), .ha_d(na_hn), .lb_d(nb_sln[2:0]), .hb_d(nb_hn),
-            .s_in((RF1 >= 2) ? (sb_g[gs] ? gsb[gs] : gsa[gs]) : (s_slot[5:3] == gs)),
-            .r_in((RF1 >= 2) ? gsb[gs] : (r_slot[5:3] == gs)), .do_ins(do_ins), .do_mrg(do_mrg), .do_rel(do_rel),
-            .rs_same(rs_same), .s_sl(s_slot[2:0]), .r_sl(r_slot[2:0]), .s_h(s_h), .s_side(s_side), .s_key(s_key),
-`ifdef OT_S81_CAP_RT_FACE_REGS
-            .slot_busy(slot_busy), .cnt_s(cnt_s), .cnt_r((gs < 4) ? cnt_r_l : cnt_r_g),
-`else
-            .slot_busy(slot_busy), .cnt_s(cnt_s), .cnt_r(cnt_r),
-`endif
+            .s_in(x_sin), .r_in(x_rin), .do_ins(x_ins), .do_mrg(x_mrg), .do_rel(x_rel),
+            .rs_same(x_rss), .s_sl(x_sl), .r_sl(x_rsl), .s_h(x_h), .s_side(x_side), .s_key(x_key),
+            .slot_busy(x_busy), .cnt_s(x_cs), .cnt_r(x_cr),
             .a_cn(ga_cn[gs]), .a_key(ga_key[gs]), .a_ev(ga_ev[gs]), .a_es(ga_es[gs]),
             .b_cn(gb_cn[gs]), .b_key(gb_key[gs]), .b_ev(gb_ev[gs]), .b_es(gb_es[gs]), .any_o(any_g[gs]));
       end else begin : g_r0
@@ -387,6 +460,13 @@ module ot_s81sl_cap_rt #(
                                 .y(sum), .err(serr), .valid_out(sv));
     wire [31:0] st_q;
     ot_hdc_delay #(.W(32), .D(5)) u_std (.clk(clk), .rst_n(rs_f), .d(m3_t), .q(st_q));
+    // S81-RF4: the B look-ahead decode moved before the delay line (same values at the same edges as from st_q)
+    generate if (RF1 >= 4) begin : g_stx
+        wire [31:0] m3_tn = norm(m3_t);
+        ot_hdc_delay #(.W(43), .D(5)) u_stx (.clk(clk), .rst_n(rs_f), .d({hof(m3_tn), slotof(m3_tn), m3_tn}), .q(stx));
+    end else begin : g_nstx
+        assign stx = 43'd0;
+    end endgenerate
     always @(posedge clk or negedge rs_f) if (!rs_f) re_v <= 1'b0; else re_v <= sv;
     always @(posedge clk) begin re_t <= re_tn; re_d <= sum; re_e <= serr != 2'd0; end
 

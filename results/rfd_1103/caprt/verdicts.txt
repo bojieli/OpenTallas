@@ -32,3 +32,7 @@ S81-044 ot_s81sl_cap_rt RF1 = 3 (ot_s81sl_cap_grp_rf1 WD): per group, PENDING wr
   run.sh lockstep RA 2 / RB 3: seed 1 PASS (key_hits 16010, merges 149), seed 5 PASS; RA 1 / RB 3 seed 3 PASS
           mut 3 (OT_RFD_MUT_CAP3, cnt lookup misses the pending write) RA 2 / RB 3: FAIL mismatches 8982 (caught)
           mut 1 (OT_RFD_MUT_CAP2) RA 1 / RB 3: FAIL mismatches 4 (caught)
+
+== S81-RF4 conservative form (RF1 4, OWNER 18:57), 2026-11-03 19:1x PST, branch claude/die-s81-51-rfd-capc-1103
+lockstep tb_ot_s81sl_cap_rt_rf1 (N 200000): RA3/RB4 s1 PASS (0 mism, kh 16010, ins 879, mrg 149); RA3/RB4 s5 PASS; RA1/RB4 s3 PASS
+mutant OT_RFD_MUT_CAP4 (cnt lookup misses the registered command) RA3/RB4 s1: FAIL 8991 mismatches (caught)
