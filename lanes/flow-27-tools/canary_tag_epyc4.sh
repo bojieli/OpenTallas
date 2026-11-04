@@ -21,10 +21,12 @@ DIES=(); for d in "$@"; do DIES+=(--die "$d"); done
 python3 -I "$SRC/tools/flow_canary/canary.py" submit --dry --src "$SRC" --root "$RUNS" "${DIES[@]}" > "$T/out"
 cat "$T/out" | grep -v '^  DRY' || true
 python3 -I - "$T/out" "$SRC" <<'PY'
-import json, re, sys
+import json, os, re, sys
 for line in open(sys.argv[1]):
     m = re.match(r"CANARY (\S+) .*: (/\S+)$", line.strip())
     if m:
+        # --dry writes canary_meta.dry.json so a dry run cannot look live; this run is real, the tick drives it now.
+        os.rename(m.group(2) + "/canary_meta.dry.json", m.group(2) + "/canary_meta.json")
         spec = json.load(open(m.group(2) + "/canary_meta.json"))["spec"]
         print("RUN", m.group(1), m.group(2), spec["mem_gb"], spec.get("threads", 8), sys.argv[2] if "{src}" in spec.get("run", "") else "-", sep="\t")
 PY
