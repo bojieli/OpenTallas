@@ -376,6 +376,7 @@ def ring_input_sdc(P,tn):
     A=G.input_hold_min(P,tn)
     dd=G.die_sta_hold_demand(P,tn) or {}
     rh=P.clock.get("ring_hold")   # opt-in measured sender data-vs-fclk min at the sender port (S81-RINGHOLD-3)
+    fall=ring_fall_clocks(P,tn)
     out=[]
     for ck,sel in rows:
         if any(s.split("[")[0] in (dd.get("inputs") or {}) for s in sel):
@@ -386,6 +387,10 @@ def ring_input_sdc(P,tn):
             bus=s.split("[")[0]
             # no tap-window shift: the ring write clock carries no window (gen_phys.tap_window_ports, S81-RINGHOLD-3)
             mx=(1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per
+            # DIE-QC-67/STM: ft-hop budget + falling writer = no eye (max + min spread above T/2 capture).  Opt-in sender
+            # max on ft rings of fall types; rise types, non-ft rings and plans without the key are unchanged.
+            if bus in ft and ck in fall and rh is not None and rh.get("ft_ring_max_ps") is not None:
+                mx=float(rh["ft_ring_max_ps"])
             # DH56-IOHP 11-03: NO T/2 shift for a falling-edge writer.  The sender launches on the forwarded RISE and
             # STA already captures at the fall T/2 later, so the max stays the IO budget (real internal budget T/2 -
             # budget).  The old 'mx -= T/2' restored full-cycle slack: HEAD hd_turn_a kit fstart -max -249.9 passed

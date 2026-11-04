@@ -157,3 +157,58 @@ def test_fall_ca_start_input_timed_on_forwarded_clock():
     assert f"set_input_delay -max {gen_phys.IO_BUDGET * per:.4f} -clock {ck} [get_ports {{{fs}}}]" in sr
     assert f"-clock vclk [get_ports {{{fs}}}]" not in sr
     assert _errs(sr, sdc_lint.kit_context(Pr, tn)) == []
+
+
+def _ft_ring_plan(max_ps=None, edge="fall", ft=True):
+    """the tiny ring kit with its ring bus also declared an ft slot input (ring_input_sdc reads ft_slots by port name)."""
+    P0, tn, b, _w = _ring_kit()
+    raw = copy.deepcopy(P0.raw)
+    raw["clock"]["seam_hold"] = dict(sender_ps=25, seam_ps=80)
+    raw["clock"]["ring_hold"] = dict(sender_ps=-85, write_edge=edge, **({} if max_ps is None else {"ft_ring_max_ps": max_ps}))
+    if ft:
+        raw["partition_types"][tn]["ft_slots"] = list(raw["partition_types"][tn].get("ft_slots", [])) + [
+            dict(name=b, width=2)]
+    return schema.Plan(raw), tn, b + "_i" if ft else b, raw
+
+
+def _ft_port(monkeypatch, b):
+    """the ring captures the ft slot input port (a real kit: x_fe_fw_i on fclk_in_x_fe_fw_i)."""
+    monkeypatch.setattr(LC, "ring_input_ports", lambda _P, _t: [(f"fclk_in_{b}", [f"{b}[*]"])])
+
+
+def _ring_max(P, tn, b):
+    txt = LC.ring_input_sdc(P, tn)
+    return next(float(ln.split()[2]) for ln in txt.splitlines() if ln.startswith("set_input_delay -max") and f"{{{b}" in ln)
+
+
+def test_ft_ring_max_replaces_the_ft_budget_on_fall_types_and_is_the_lint_floor(monkeypatch):
+    P, tn, b, _raw = _ft_ring_plan(350.0)
+    _ft_port(monkeypatch, b)
+    assert abs(_ring_max(P, tn, b) - 350.0) < 1e-6
+    assert abs(sdc_lint.kit_context(P, tn)["io_floor_ps"][b] - 350.0) < 1e-6
+
+
+def test_ft_ring_max_absent_or_rise_keeps_the_ft_budget(monkeypatch):
+    for mx, edge in ((None, "fall"), (350.0, "rise")):
+        P, tn, b, _raw = _ft_ring_plan(mx, edge)
+        _ft_port(monkeypatch, b)
+        per = gen_phys.t_lib(P.die["period_ps"])
+        assert abs(_ring_max(P, tn, b) - (1 - gen_phys.ft_hop_in_share(P)) * per) < 1e-3
+
+
+def test_ft_ring_max_non_ft_ring_keeps_the_io_budget():
+    P, tn, b, _raw = _ft_ring_plan(350.0, ft=False)
+    assert abs(_ring_max(P, tn, b) - gen_phys.IO_BUDGET * gen_phys.t_lib(P.die["period_ps"])) < 1e-3
+
+
+def test_ft_ring_max_scoped_by_write_fall_types(monkeypatch):
+    P, tn, b, raw = _ft_ring_plan(350.0)
+    _ft_port(monkeypatch, b)
+    raw["clock"]["ring_hold"]["write_fall_types"] = ["some_other_type"]
+    P2 = schema.Plan(raw)
+    assert abs(_ring_max(P2, tn, b) - (1 - gen_phys.ft_hop_in_share(P2)) * gen_phys.t_lib(P2.die["period_ps"])) < 1e-3
+
+
+def test_ft_ring_max_schema_rejects_non_positive():
+    ok = schema.SCHEMA["properties"]["clock"]["properties"]["ring_hold"]["properties"]["ft_ring_max_ps"]
+    assert ok["exclusiveMinimum"] == 0 and ok["type"] == "number"
