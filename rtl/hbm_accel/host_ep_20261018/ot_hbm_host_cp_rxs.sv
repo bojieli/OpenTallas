@@ -30,7 +30,8 @@
 // counters (COLL behaviour).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_host_cp_rxs #(parameter integer TXLAT=9, parameter integer RXLAT=6, parameter integer TXGAP=12,
- parameter integer MUT=0
+ parameter integer MUT=0,
+ parameter integer CRCSPLIT=0   // DIE-HBM-61/CUTS 11-03 opt-in: 1 = link CRC chunk-syndrome split (0 cycles); 0 = unchanged
 )(
  input wire clk,rst_n,
  input wire [7:0] session,
@@ -67,7 +68,7 @@ module ot_hbm_host_cp_rxs #(parameter integer TXLAT=9, parameter integer RXLAT=6
   .ep_release_v(ep_rx_release_v),.ep_release_bank(ep_rx_release_bank),
   .ep_slot_v(ep_rx_slot_v),.ep_slot_bank(ep_rx_slot_bank),.ep_slot_index(ep_rx_slot_index),
   .ep_block_ready(ep_rx_block_ready),.ep_phy_up(ep_phy_up),.seq_fault(seq_fault));
- ot_hbm_host_link_capture #(.MUT(MUT==5?1:0)) u_link(
+ ot_hbm_host_link_capture #(.MUT(MUT==5?1:0),.CRCSPLIT(CRCSPLIT)) u_link(
   .clk(clk),.rst_n(rr[0]),.epoch_begin(eb),.epoch(ses_q),
   .wr_v(wr_v),.wr_observed_v(wr_v),.wr_seq(wr_seq),.wr_flit(wr_flit),.rd_v(rd_v),.rd_seq(rd_seq),
   .rx_expect_v(xv),.rx_expect_seq(xseq),.phy_up(lup),.tx_pin_v(ep_tx_v),.tx_pin_flit(ep_tx_frame),

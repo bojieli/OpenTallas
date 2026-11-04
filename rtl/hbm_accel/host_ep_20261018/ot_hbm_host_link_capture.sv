@@ -15,7 +15,9 @@
 // rx_v 3 edges.
 // MUT (bench only): 1 = saturating counters (COLL behaviour; a session longer than 65,536 frames aborts).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_hbm_host_link_pinreg_ctl #(parameter integer MUT=0)(
+// CRCSPLIT (DIE-HBM-61/CUTS 11-03, opt-in, default 0 = unchanged): 1 = codec RXPRE 2 / TXPRE 1 (registered CRC chunk
+// syndromes; rx_pin_flit is then the RAW link input, one edge before the pin flop, which the codec owns). 0 cycles.
+module ot_hbm_host_link_pinreg_ctl #(parameter integer MUT=0, parameter integer CRCSPLIT=0, parameter integer CMUT=0)(
  input wire clk,
  input wire rst_n,epoch_begin,
  input wire [7:0] epoch,
@@ -83,7 +85,7 @@ module ot_hbm_host_link_pinreg_ctl #(parameter integer MUT=0)(
    wv<={wv[0],wr_v};wo<={wo[0],wr_observed_v};rv<={rv[0],rd_v};
   end
  end
- ot_hgi_coll_static_seq_ctl #(.RXPRE(1)) u_codec(   // RE-FORM C3 11-03: RX CRC compare one edge early, registered (0 cycles)
+ ot_hgi_coll_static_seq_ctl #(.RXPRE((CRCSPLIT!=0)?2:1),.TXPRE((CRCSPLIT!=0)?1:0),.CMUT(CMUT)) u_codec(   // RE-FORM C3 11-03: RX CRC compare one edge early, registered (0 cycles)
   .clk(clk),.q_data(stored[560:0]),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(epoch),
   .abort_in(abort_in),.abort_cause({epoch_bad,seq_bad}),.rd_seq(readseq[1]),.rx_expect_seq(rx_expect_seq),
   .wr_v(wv[1]),.wr_observed_v(wo[1]),.wr_slot(writeslot[1]),
@@ -93,7 +95,9 @@ module ot_hbm_host_link_pinreg_ctl #(parameter integer MUT=0)(
   .epoch_abort(epoch_abort),.fault_cause(fault_cause));
 endmodule
 
-module ot_hbm_host_link_capture #(parameter integer MUT=0)(
+// CRCSPLIT 1 (DIE-HBM-61/CUTS 11-03, opt-in): the raw rx_pin_flit goes to the codec, whose own RX pin flop replaces
+// rx_pin_flit_pin (same edge); every output identical on every edge (0 cycles). Default 0 = unchanged.
+module ot_hbm_host_link_capture #(parameter integer MUT=0, parameter integer CRCSPLIT=0, parameter integer CMUT=0)(
  input wire clk,
  input wire rst_n,epoch_begin,
  input wire [7:0] epoch,
@@ -135,12 +139,12 @@ module ot_hbm_host_link_capture #(parameter integer MUT=0)(
    .din(bank_data[b*141+:141]),.dout(stored[b*141+:141]));
  end
  wire retry_unused;
- ot_hbm_host_link_pinreg_ctl #(.MUT(MUT)) u_core(
+ ot_hbm_host_link_pinreg_ctl #(.MUT(MUT),.CRCSPLIT(CRCSPLIT),.CMUT(CMUT)) u_core(
   .clk(clk),.rst_n(rst_n),.epoch_begin(epoch_begin_pin),.epoch(epoch_pin),
   .wr_v(wr_v_pin),.wr_observed_v(wr_observed_v_pin),.wr_seq(wr_seq_pin),.wr_flit(wr_flit_pin),
   .rd_v(rd_v_pin),.rd_seq(rd_seq_pin),.rx_expect_v(rx_expect_v_pin),.rx_expect_seq(rx_expect_seq_pin),
   .phy_up(phy_up_pin),.tx_pin_v(tx_pin_v),.tx_pin_flit(tx_pin_flit),
-  .rx_pin_v(rx_pin_v_pin),.rx_pin_flit(rx_pin_flit_pin),.rx_v(rx_v),.rx_flit(rx_flit),
+  .rx_pin_v(rx_pin_v_pin),.rx_pin_flit((CRCSPLIT!=0)?rx_pin_flit:rx_pin_flit_pin),.rx_v(rx_v),.rx_flit(rx_flit),
   .epoch_abort(epoch_abort),.retry_requested(retry_unused),.fault_cause(fault_cause),
   .bank_we(bank_we),.bank_wa(bank_wa),.bank_ra(bank_ra),.bank_data(bank_data),.stored(stored));
 endmodule

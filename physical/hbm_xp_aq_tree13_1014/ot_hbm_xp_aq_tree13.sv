@@ -41,7 +41,13 @@
 // 2->1 and the floor; S3-S7 the scale multiply; S8 e; S9 per-element shift
 // amounts; S10 round; S11 encode (output registers).  LATENCY = 13 cycles.
 // ---------------------------------------------------------------------------
-module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
+// YCUT (DIE-HBM-61/CUTS 11-03, opt-in, default 0 = unchanged): 1 = the S11 encode is split in two register stages
+// (the census path s10_c -> p -> be add -> range compare -> y was 785 ps of the 833 ps period). S10 also registers the
+// per-element exponent base b0 = g - (fp4 ? 1 : 3) + e + 127 (same 12-bit two's-complement sum as be/shs, in parallel
+// with the rounding shift); S11a registers be = b0 + p, cn, sub, c==0, the codes q, e, vo, fault; S11b selects y and
+// presents q/e/vo/fault. Every output is exactly the YCUT 0 output one edge later: LATENCY 13 -> 14 (II 1 unchanged).
+// YMUT (bench only, YCUT 1): 1 = sub uses b0 + 5 (shs off by one); 2 = y overflow test >= 254; 3 = q not delayed.
+module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0, parameter integer YCUT=0, parameter integer YMUT=0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
@@ -232,6 +238,7 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
     reg [6:0]         sub;
     reg signed [11:0] shs;
     reg [3:0]         g4;
+    generate if (YCUT == 0) begin : g_s11
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; end
         else begin vo <= s10_v; fault <= s10_v && s10_nf; end
@@ -263,4 +270,59 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
             else                     y[16*i +: 16] <= {s10_sgn[i], 8'd0, sub};
         end
     end
+    end else begin : g_s11c
+    // S10 side: exponent base per element (registered with s10_c / s10_g)
+    reg signed [11:0] b0 [0:31];
+    always @(posedge clk)
+        for (i = 0; i < 32; i = i + 1)
+            b0[i] <= s9_g[i] - (s9_fp4 ? 12'sd1 : 12'sd3) + s9_e + 12'sd127;
+    // S11a
+    reg               vo_a, fault_a;
+    reg [255:0]       q_a;
+    reg signed [9:0]  e_a;
+    reg [31:0]        sgn_a, cz_a;
+    reg signed [11:0] be_a [0:31];
+    reg [6:0]         cn_a [0:31];
+    reg [6:0]         sub_a [0:31];
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin vo_a <= 1'b0; fault_a <= 1'b0; vo <= 1'b0; fault <= 1'b0; end
+        else begin vo_a <= s10_v; fault_a <= s10_v && s10_nf; vo <= vo_a; fault <= fault_a; end
+    end
+    always @(posedge clk) begin
+        e_a <= s10_e; sgn_a <= s10_sgn;
+        for (i = 0; i < 32; i = i + 1) begin
+            c = s10_c[i];
+            g4 = s10_g[i][3:0];
+            if (!s10_fp4) begin
+                if (c[4])      q_a[8*i +: 8] <= {s10_sgn[i], g4 + 4'd8, 3'd0};
+                else if (c[3]) q_a[8*i +: 8] <= {s10_sgn[i], g4 + 4'd7, c[2:0]};
+                else           q_a[8*i +: 8] <= {s10_sgn[i], 4'd0, c[2:0]};
+            end else begin
+                if (c[2])      q_a[8*i +: 8] <= {4'd0, s10_sgn[i], g4[1:0] + 2'd2, 1'b0};
+                else if (c[1]) q_a[8*i +: 8] <= {4'd0, s10_sgn[i], g4[1:0] + 2'd1, c[0]};
+                else           q_a[8*i +: 8] <= {4'd0, s10_sgn[i], 2'd0, c[0]};
+            end
+            p = c[4] ? 3'd4 : c[3] ? 3'd3 : c[2] ? 3'd2 : c[1] ? 3'd1 : 3'd0;
+            be_a[i] <= $signed({9'd0, p}) + b0[i];
+            cn = {3'd0, c} << (3'd7 - p);
+            cn_a[i] <= cn[6:0];
+            shs = b0[i] + ((YMUT == 1) ? 12'sd5 : 12'sd6);
+            sub = (shs < 12'sd0) ? 7'd0 : ({2'd0, c} << shs[3:0]);
+            sub_a[i] <= sub;
+            cz_a[i] <= (c == 5'd0);
+        end
+    end
+    // S11b
+    always @(posedge clk) begin
+        e <= e_a;
+        q <= (YMUT == 3) ? {q_a[255:8], q_a[7:0] ^ {7'd0, vo_a}} : q_a;
+        for (i = 0; i < 32; i = i + 1) begin
+            if (cz_a[i])                                          y[16*i +: 16] <= {sgn_a[i], 15'd0};
+            else if (be_a[i] >= ((YMUT == 2) ? 12'sd254 : 12'sd255)) y[16*i +: 16] <= {sgn_a[i], 8'hFF, 7'd0};
+            else if (be_a[i] >= 12'sd1)                           y[16*i +: 16] <= {sgn_a[i], be_a[i][7:0], cn_a[i]};
+            else                                                  y[16*i +: 16] <= {sgn_a[i], 8'd0, sub_a[i]};
+        end
+    end
+    end endgenerate
+
 endmodule

@@ -8,7 +8,8 @@
 // the CLOSED tile ot_hbm_xp_aq_tree13 unchanged (S0 input / output registers at its pins, 13 edges); with FP4 constant
 // synthesis drops the fp4 pipeline bits: the hgi_xp_aq kit must be re-hardened under this name (no new arithmetic).
 module ot_hbm_xp_aq_tree13_fmt #(parameter integer FP4=0, parameter integer MUT=0,
-    parameter integer RSMUT=0) (   // RSMUT bench only: 1 = a mid-run reset does not reach the body (power-on reset only)
+    parameter integer RSMUT=0,     // RSMUT bench only: 1 = a mid-run reset does not reach the body (power-on reset only)
+    parameter integer YCUT=0) (    // DIE-HBM-61/CUTS 11-03 opt-in: 1 = body S11 split (every output +1 edge, 13 -> 14); 0 = unchanged
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
@@ -35,7 +36,7 @@ module ot_hbm_xp_aq_tree13_fmt #(parameter integer FP4=0, parameter integer MUT=
     end else begin : g_rsync
         assign rst_q_n = rsync[1];
     end endgenerate
-    ot_hbm_xp_aq_tree13 #(.MUT(MUT)) u_aq (.clk(clk), .rst_n(rst_q_n), .v(v), .fp4(MODE), .x(x),
+    ot_hbm_xp_aq_tree13 #(.MUT(MUT), .YCUT(YCUT)) u_aq (.clk(clk), .rst_n(rst_q_n), .v(v), .fp4(MODE), .x(x),
         .vo(vo), .q(q), .e(e), .y(y), .fault(fault));
 endmodule
 `default_nettype wire

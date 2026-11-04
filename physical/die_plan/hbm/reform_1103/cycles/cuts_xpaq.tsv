@@ -1,0 +1,2 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_xp_aq_tree13_fmt	vo,q,e,y,fault (all outputs)	1	recipe ot_hbm_xp_aq_tree13_fmt__cut1 (YCUT=1): S11 format stage split; every output +1 edge, LATENCY 13 -> 14, II 1; inputs v/x unchanged; rst_n unchanged
