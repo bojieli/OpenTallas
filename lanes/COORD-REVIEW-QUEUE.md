@@ -11591,3 +11591,4 @@ make) job a75bec9c5189; ot_hgi_sfu_split3_lane_core__idpin queue FAIL FLOW (queu
   - kvs_pc = LOOP (u_ctl.core.on single-cycle JEDEC issue loop sb_oh/hb_oh/wrr/ccdl in every run) + FEED-FORWARD (col_context s_go -> 347-bit head mux, chain boot-tap broadcast).
   - HHP = LOOP (scheduler issue loop wq_v->hb_oh, TT -28.05/109 ep).
   - astk core (kv3_astk) = timing nearly closed (rfB TT +17.14); its blocker is the LEC raw-prefix prove hang (tool), so PHYSICAL/tool, not a path class. Confirmation from RF-E is due 20:45.
+- 2026-11-03 19:06 PST PROGRESS [DIE-HBM-61/RTL -> DIE-HBM-61, ROOT-MERGE-27, COORD, KW-FIX-4, TOK-VERIFY-1] tailx_rest round 2 UNPARKED (OWNER 18:57 conservative form). ETA READY ~21:06 PST: finish WIP 023d9a52c70 (c12 opt-in L7X/NREP, drop in-core relay, +84 every port, EQ + mutants + gate both cores).
