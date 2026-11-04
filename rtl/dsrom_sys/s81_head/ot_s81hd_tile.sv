@@ -68,7 +68,9 @@ module ot_s81hd_tile #(
         row0_q <= row0; ten_q <= ten;
     end
     // E-face output register of the x stream (second pass-through stage)
-    reg [511:0] xo_q;
+    // DH59-TILE 11-03: own kept register, 0 cycles.  As a plain reg Yosys opt_merge folded it with the bundle's u_x first stage
+    // (same D, same clock), so one flop served the E face and the hub 700 um apart (l48x: 578 pairs over 405 um).
+    wire [511:0] xo_q;
     reg         goo_q, xvo_q;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin goo_q <= 1'b0; xvo_q <= 1'b0; end
@@ -77,7 +79,7 @@ module ot_s81hd_tile #(
 `else
         else begin goo_q <= go_q; xvo_q <= xv_q; end
 `endif
-    always @(posedge ck) xo_q <= x_q;
+    ot_s81hd_kreg #(.W(512)) u_xo (.clk(ck), .d(x_q), .q(xo_q));
 
     // ---------------- bundle -----------------------------------------------------------------------------------------
     wire        b_go = go_q & ten_q;
