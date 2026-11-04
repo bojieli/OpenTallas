@@ -45,7 +45,8 @@ def test_class_b_stubs_carry_native_m5_pg():
 
 
 CLASS_B = ["cores/eng/lef/dsdv_eng_rr_h0.lef", "cores/eng/lef/dsdv_eng_rr_h1.lef",
-           "cores/legacy/lef/dsdv_eng_rr_e_clkm5_1101.lef", "h2_2249/coll_w/lane.lef", "h2_2249/coll_e/lane.lef"]
+           "cores/legacy/lef/dsdv_eng_rr_e_clkm5_1101.lef", "h2_2249/coll_w/lane.lef", "h2_2249/coll_e/lane.lef",
+           "cores/h2/ot_s81_mu72_lnland/ot_s81_mu72_lnland.lef", "cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef"]
 STUBS_M5 = ["cores/leaf/lef/ot_s81sl_ve_m_tpl.lef", "cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
             "cores/leaf/lef/ot_s81sl_ve_s_tpl_w1728.lef", "cores/leaf/lef/ot_s81sl_vn_a_tpl.lef",
             "cores/leaf/lef/ot_s81sl_vn_b_tpl.lef", "cores/leaf/lef/ot_s81sl_vq_tpl.lef", "cores/leaf/lef/ot_s81sl_vs_tpl.lef",

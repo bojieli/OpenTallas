@@ -2293,9 +2293,21 @@ def _macro_pg_layers(lef):
 CORE_PG_UP = {"M4": "M5", "M5": "M6", "M6": "M7"}
 
 
+_LEF_TEXT = {}
+
+
+def _lef_text(lef):
+    """LEF text, cached by (path, mtime, size): the S81 views are 3-8 MB and every macro use re-reads them."""
+    st = Path(lef).stat()
+    k = (str(lef), st.st_mtime_ns, st.st_size)
+    if k not in _LEF_TEXT:
+        _LEF_TEXT[k] = Path(lef).read_text(errors="replace")
+    return _LEF_TEXT[k]
+
+
 def macro_pg_pin_layers(lef):
     """{'VDD': {layers}, 'VSS': {layers}} of a macro LEF (PIN VDD / PIN VSS PORT geometry; missing pin -> empty)."""
-    text = Path(lef).read_text(errors="replace")
+    text = _lef_text(lef)
     out = {}
     for pin in ("VDD", "VSS"):
         block = re.search(r"\bPIN\s+" + pin + r"\b(.*?)\bEND\s+" + pin + r"\b", text, re.S)
@@ -2321,7 +2333,7 @@ def core_pg_connect_layer(lef):
 
 def macro_obs_layers(lef):
     """set of routing layers named in the macro LEF OBS sections."""
-    text = Path(lef).read_text(errors="replace")
+    text = _lef_text(lef)
     out = set()
     for blk in re.findall(r"\bOBS\b(.*?)\bEND\b", text, re.S):
         out |= set(re.findall(r"\bLAYER\s+(M[0-9]+)\s*;", blk))
