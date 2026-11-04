@@ -101,44 +101,52 @@ S81-PROUTE-2	abb9cce4f69efc86e	DONE (not running at 19:4x; was: LIVE)
 PRUNE-1103A	afe3fc62092fdc4da	DONE (not running at 19:4x; was: LIVE)
 DIE-S81-43	a625e68636435812d	DONE (not running at 19:4x; was: done)
 ROOT-MERGE-25	a20671ec3cd407d74	DONE (not running at 19:4x; was: LIVE $d)
-KW-FIX-4	aab9b68e84038ed82	LIVE $d
-SIGNOFF-SPRINT-24	a93df90d9335f529f	LIVE $d
+KW-FIX-4	aab9b68e84038ed82	DONE stopped on weekly limit ~21:10 11-03
+SIGNOFF-SPRINT-24	a93df90d9335f529f	DONE stopped on weekly limit ~21:10 11-03
 SAFE-STATION-1	a9a919c2f59f78781	DONE (not running at 19:4x; was: LIVE $d)
 DIE-S81-51	acca05138075cef31	DONE (not running at 19:4x; was: LIVE $d)
-DIE-HEAD-58	aaeca83f2f127f78e	LIVE $d
-DIE-QC-66	a5bea930c861b942f	LIVE $d
-DIE-KV-64	aff57aade191e7006	LIVE 2026-11-03 06:07
+DIE-HEAD-58	aaeca83f2f127f78e	DONE stopped on weekly limit ~21:10 11-03
+DIE-QC-66	a5bea930c861b942f	DONE stopped on weekly limit ~21:10 11-03
+DIE-KV-64	aff57aade191e7006	DONE stopped on weekly limit ~21:10 11-03
 DIE-HBM-61	a40f11f73e5918ee4	DONE (not running at 19:4x; was: LIVE $d)
 ROOT-MERGE-26	ad3290d6d994d2090	DONE (not running at 19:4x; was: DONE 14:3x)
 FLEET-BAL-1	afaee587be1f8135c	DONE (not running at 19:4x; was: LIVE)
 PRUNE-1103D	ad101da738e7e7482	DONE (not running at 19:4x; was: DONE 11:4x)
-ROOT-MERGE-27	ac89fa83e22953b62	LIVE 2026-11-03 14:4x
+ROOT-MERGE-27	ac89fa83e22953b62	DONE stopped on weekly limit ~21:10 11-03
 LEC-KEEP-1	a1aa2690ff0785350	DONE (not running at 19:4x; was: LIVE 2026-11-03 12:4x)
 PRUNE-1103E	a405a8295339b196e	DONE (not running at 19:4x; was: DONE waiting QC-66 ruling (default 18:3x))
 PRUNE-1103C	ae4ebffcb1c156bf0	DONE (not running at 19:4x; was: DONE)
 PRUNE-1103F	a9bd1b7b8a05336af	DONE 20:3x freed 330 GB, intel2 388 GB free
-TOK-VERIFY-1	a55a637ccad993385	LIVE token exactness
-RF-B	a412862b7d3c4d61d	LIVE KV kvs_pc re-form
-RF-E	a70d0be91aadb4fdb	LIVE KV astk/ahub re-form
-RF-D	a424bd4c35728d988	LIVE S81 bk_g/gunit re-form
-LEC-EGN-1	a9008c971b5d187a9	LIVE S81 LEC
-HBM-LEC-REBASE	ae7e5f35d5bb0c22a	LIVE HBM LEC bound branch
-NK-PIPE-EST	a3b016cda2ab25fac	LIVE QC NK estimate
-KV-HG-SPLIT	a5580b15628fcf2e5	LIVE KV hg 400k split
-DH58-RF2	a35e902987f3403ff	LIVE HEAD l48rf2
-HBM-RF-SPLIT	a4210ad422c3c1891	LIVE HBM >150k splits
-QC-RF-PLAN	a2f15df148bf9ffac	LIVE QC re-form plan event
-PG-CORECONN-3	ac8a6dd5e4de6255a	LIVE PG class
+TOK-VERIFY-1	a55a637ccad993385	DONE stopped on weekly limit ~21:10 11-03
+RF-B	a412862b7d3c4d61d	DONE stopped on weekly limit ~21:10 11-03
+RF-E	a70d0be91aadb4fdb	DONE stopped on weekly limit ~21:10 11-03
+RF-D	a424bd4c35728d988	DONE stopped on weekly limit ~21:10 11-03
+LEC-EGN-1	a9008c971b5d187a9	DONE stopped on weekly limit ~21:10 11-03
+HBM-LEC-REBASE	ae7e5f35d5bb0c22a	DONE stopped on weekly limit ~21:10 11-03
+NK-PIPE-EST	a3b016cda2ab25fac	DONE stopped on weekly limit ~21:10 11-03
+KV-HG-SPLIT	a5580b15628fcf2e5	DONE stopped on weekly limit ~21:10 11-03
+DH58-RF2	a35e902987f3403ff	DONE stopped on weekly limit ~21:10 11-03
+HBM-RF-SPLIT	a4210ad422c3c1891	DONE stopped on weekly limit ~21:10 11-03
+QC-RF-PLAN	a2f15df148bf9ffac	DONE stopped on weekly limit ~21:10 11-03
+PG-CORECONN-3	ac8a6dd5e4de6255a	DONE stopped on weekly limit ~21:10 11-03
 RF-CAPRT	afb62dd79c0f130b1	DONE 20:00 (cap_rt now under DIE-S81-51 rfdc2)
-RF-GL5	a8134015fffbface0	LIVE S81 gunit_l5
+RF-GL5	a8134015fffbface0	DONE stopped on weekly limit ~21:10 11-03
 QC-CLK-EST	a1ef7a08e37724ca0	DONE 20:00 (QC-66 owns follow-up)
-HBM-RF1	a54e3a2a4fda85eab	LIVE HBM RF1 builds
-RF-H-BFCOL	a0521356414119486	LIVE S81 bf_col
+HBM-RF1	a54e3a2a4fda85eab	DONE stopped on weekly limit ~21:10 11-03
+RF-H-BFCOL	a0521356414119486	DONE stopped on weekly limit ~21:10 11-03
 KW-INS-FIX	abff33cea4faf7507	DONE merged 466b42259c6
-KW-PROV-1	a3c736586d8671beb	LIVE waits merge (bg work)
-HBM-TAILX-RF	ac1c4900bab36a11e	LIVE HBM tailx_rest RTL (equiv running)
-UNKNOWN-1	acd5b819a84eaf800	LIVE spawned 19:57 (check)
-UNKNOWN-2	a94c3003e5666e97d	LIVE Explore 19:59 (check)
-HBM-RF-RTL3	a50dbccbb660f63ca	LIVE HBM tailx round 3 (r2 READY fcb2f44b16b)
-PRUNE-1103G	a5f1a4c9fe9217990	LIVE epyc2 root 390 GB
+KW-PROV-1	a3c736586d8671beb	DONE stopped on weekly limit ~21:10 11-03
+HBM-TAILX-RF	ac1c4900bab36a11e	DONE stopped on weekly limit ~21:10 11-03
+UNKNOWN-1	acd5b819a84eaf800	DONE stopped on weekly limit ~21:10 11-03
+UNKNOWN-2	a94c3003e5666e97d	DONE stopped on weekly limit ~21:10 11-03
+HBM-RF-RTL3	a50dbccbb660f63ca	DONE stopped on weekly limit ~21:10 11-03
+PRUNE-1103G	a5f1a4c9fe9217990	DONE stopped on weekly limit ~21:10 11-03
 PRUNE-1103H	a8135c2595ca55123	DONE 21:0x intel1 234 GB free
+ROOT-MERGE-28	a7a99f14ed13a23c4	LIVE 22:2x
+KW-FIX-5	a225b31602b33f447	LIVE 22:2x
+DIE-S81-52	a674a2d5c39a392a3	LIVE 22:2x
+DIE-HBM-62	a4aca4a6511d87141	LIVE 22:2x
+DIE-KV-65	a54299b1c8ac5e6ca	LIVE 22:2x
+DIE-QC-67	a78a95a7d538145f2	LIVE 22:2x
+DIE-HEAD-59	afbc7c310dee37930	LIVE 22:2x
+SS25-TOK	a449ac39ac63d1cf3	LIVE 22:2x
