@@ -1497,7 +1497,7 @@ def main():
             added_cycles=0, private_port_flops=len(fr["private_out"]), merged_input_captures=len(fr["merged_in"]),
             listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
             **({"retimed_input_captures": fr["retimed_in"]} if fr.get("retimed_in") else {}),
-            proof=("PENDING: no proof leg has returned for this kit RTL" if a.hr_face_proof_pending else
+            proof=("PENDING: " + " ".join((Path(a.hr_face_ports) / "eq_rc.txt").read_text().split()) if a.hr_face_proof_pending else
                    "equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)")),
             indent=1) + "\n")
     # DIE-KV-61/hr 11-02: recipe-declared timed-face buses (face_guard timed_face.json) and tied spare outputs
