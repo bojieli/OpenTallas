@@ -34,8 +34,19 @@
 // fault timing (C+1) are unchanged.
 // (2) rst_n reaches exactly one pin flop (async assert, sync deassert);
 // every other reset flop is reset from that register.
+// CUT (DIE-HBM-61/CUTS 11-03, OWNER pin-cycles lever; default 0 = the logic
+// above, every other user unchanged). CUT 1 = the schedule check runs one
+// edge later from registers: the per-lane bank one-hots of the check (low
+// sector = a0 bank, high sector = a1 bank + 1 with the +1 formed from a0 on the
+// edge a1 loads, hb1) are registered first (ck_lo/ck_hi), used/multi/owner are
+// decoded from those registers into used_q/multi_q/bown_q, and the captured
+// reservation (sv_q/so_q) and addr_bad are delayed one edge to stay paired.
+// Census 11-03: a1 -> +1 adder -> 10-way bank decode -> used_q 930 ps stage.
+// Contract: fault = the CUT 0 fault one edge later (sticky, async clear on
+// rst_q unchanged); kq, launch_done and every other output edge unchanged.
 module ot_hgi_coll_static_vmwrite_roots_v6 #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer CUT = 0
 ) (
     input wire clk_rgx_data0, clk_rgx_data1, clk_rgx_data2, clk_rgx_data3,
     input wire clk_rgx_ctrl, clk_tkw, clk_meta, clk_body,
@@ -94,6 +105,13 @@ module ot_hgi_coll_static_vmwrite_roots_v6 #(
     reg [7:0] used_q, multi_q;
     reg [31:0] bown_q;
     reg addr_bad, sched_bad_q, addr_bad_q;
+    // CUT 1 check pipeline registers
+    reg [39:0] ck_lo, ck_hi;
+    reg [14:0] hb1;
+    reg [7:0] sv_q2; reg [31:0] so_q2; reg addr_bad_d;
+    reg [7:0] used_c, multi_c; reg [31:0] bown_c;
+    reg schedule_bad_c;
+    reg [3:0] owner_c;
     always @* begin
         used = '0; schedule_bad = 1'b0; bank_owner = '0; bank_multi = '0;
         // Constant destination slices avoid a 2,248-bit dynamic scatter
@@ -143,6 +161,23 @@ module ot_hgi_coll_static_vmwrite_roots_v6 #(
                 (a0[l*40+18] ? a0[l*40+16 +: 2] != 0 : a0[l*40+16 +: 2] != sid_q) || &a0[l*40+3 +: 13]))
                 addr_bad = 1'b1;
     end
+    // CUT 1: decode from the registered one-hots (no adder, no a1 fan-out)
+    always @* begin
+        used_c = '0; multi_c = '0; bown_c = '0;
+        for (b = 0; b < 8; b = b + 1)
+          for (h = 0; h < 2; h = h + 1)
+            for (l = 0; l < 5; l = l + 1) begin
+                owner_c = 4'(l + 5*h);
+                if (h == 0 ? ck_lo[l*8+b] : ck_hi[l*8+b]) begin
+                    if (used_c[b]) multi_c[b] = 1'b1;
+                    bown_c[b*4 +: 4] = bown_c[b*4 +: 4] | owner_c;
+                    used_c[b] = 1'b1;
+                end
+            end
+        schedule_bad_c = (|multi_q) || (used_q != sv_q2);
+        for (b = 0; b < 8; b = b + 1)
+            if (used_q[b] && bown_q[b*4 +: 4] != so_q2[b*4 +: 4]) schedule_bad_c = 1'b1;
+    end
 
     // Sixteen related phase-0 entries. The die delivers each at phi-R for
     // its OWN measured tree; no generated/gated clock or execution delay.
@@ -177,7 +212,11 @@ module ot_hgi_coll_static_vmwrite_roots_v6 #(
         else begin islot_q <= ingress_slot; sv_q <= slot_valid; end
     end
     always @(posedge clk_body) begin
-        a1 <= a0; d1 <= d0; m1 <= m0; bown_q <= bank_owner;
+        a1 <= a0; d1 <= d0; m1 <= m0; bown_q <= (CUT != 0) ? bown_c : bank_owner;
+        if (CUT != 0) begin
+            for (l=0; l<5; l=l+1) hb1[l*3 +: 3] <= a0[l*40+3 +: 3] + 3'd1;
+            sv_q2 <= sv_q; so_q2 <= so_q;
+        end
         for (l=0; l<5; l=l+1) begin
             sec_lo[l*16 +: 16] <= a0[l*40+3 +: 16];
             sec_hi[l*16 +: 16] <= a1[l*40+3 +: 16] + 16'd1;
@@ -192,7 +231,8 @@ module ot_hgi_coll_static_vmwrite_roots_v6 #(
             v1 <= 0; v2r <= 0; launch_done <= 0; fault <= 0;
             sel_lo <= 0; sel_hi <= 0;
             used_q <= 0; multi_q <= 0; sched_bad_q <= 0; addr_bad_q <= 0;
-        end else begin
+            if (CUT != 0) begin ck_lo <= 0; ck_hi <= 0; addr_bad_d <= 0; end
+        end else if (CUT == 0) begin
             v1 <= v0; v2r <= v1; launch_done <= v2r;
             sel_lo <= dsel_lo; sel_hi <= dsel_hi;
             used_q <= used; multi_q <= bank_multi;
@@ -200,6 +240,21 @@ module ot_hgi_coll_static_vmwrite_roots_v6 #(
             if (MUT == 3) begin
                 if (sched_bad_q || addr_bad_q) fault <= 1;
             end else if ((schedule_bad && MUT != 2) || addr_bad) fault <= 1;
+        end else begin
+            v1 <= v0; v2r <= v1; launch_done <= v2r;
+            sel_lo <= dsel_lo; sel_hi <= dsel_hi;
+            for (l = 0; l < 5; l = l + 1)
+                for (b = 0; b < 8; b = b + 1) begin
+                    ck_lo[l*8+b] <= v0[l] && a0[l*40+3 +: 3] == 3'(b);
+                    // MUT 6 (bench, CUT 1): high-sector check bank without the +1
+                    ck_hi[l*8+b] <= v1[l] && (MUT == 6 ? a1[l*40+3 +: 3] : hb1[l*3 +: 3]) == 3'(b);
+                end
+            used_q <= used_c; multi_q <= multi_c;
+            addr_bad_d <= addr_bad;
+            sched_bad_q <= schedule_bad_c; addr_bad_q <= addr_bad_d;
+            if (MUT == 3) begin
+                if (sched_bad_q || addr_bad_q) fault <= 1;
+            end else if ((schedule_bad_c && MUT != 2) || addr_bad_d) fault <= 1;
         end
     end
     generate for (g=0; g<8; g=g+1) begin: BANK_EGRESS

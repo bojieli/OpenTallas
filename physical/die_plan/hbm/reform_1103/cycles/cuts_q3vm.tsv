@@ -1,0 +1,7 @@
+core	port_or_bus	plus_cycles	note
+ot_hfd_coll_q3_vm_core	writer_fault	+1	WCUT 1 (recipe ot_hfd_coll_q3_vm_core__cut1, define OT_Q3VM_WCUT): schedule/address check one edge later from registers (ck_lo/ck_hi bank one-hots, hb1 = a0 bank + 1 formed on the a1 edge; sv_q/so_q/addr_bad delayed 1); new(t) = old(t-1), sticky, async clear unchanged; diagnostic only, never steers execution
+ot_hfd_coll_q3_vm_core	writer_kq0..7	0	data/launch path untouched (sel_lo/sel_hi relay unchanged); compiler calendar unchanged
+ot_hfd_coll_q3_vm_core	vmasm_as_il	0	VOH 1 (define OT_Q3VM_VOH): sp[8] fields as registered one-hots (loaded from sp[7]), AND-OR select; same value every edge
+ot_hfd_coll_q3_vm_core	all inputs, writer_rst_n	0	unchanged; no new spacing contract
+ot_hgi_coll_static_vmwrite_roots_v6(CUT=1)	fault	+1	opt-in; CUT 0 default = main netlist (yosys equiv) for every other user
+ot_hgi_coll_vmasm_slice16(OHSEL=1)	as_il	0	opt-in; OHSEL 0 default unchanged

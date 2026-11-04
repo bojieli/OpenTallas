@@ -5,7 +5,24 @@
 // Wired bit-exactly as the as-built master netlist (split_conn.py); straps = replica constants tied at the parent.
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hfd_coll_q3_vm_core (
+// DIE-HBM-61/CUTS 11-03 (opt-in, defaults = the generated core unchanged): WCUT = u_writer CUT (schedule check one edge
+// later from registers: writer_fault +1 edge, every other port unchanged); VOH = u_vmasm OHSEL (registered one-hot
+// selects, 0 port cycles). Kit recipes set them through the defines OT_Q3VM_WCUT / OT_Q3VM_VOH (the hand clock wrapper
+// instantiates this top without parameters).
+`ifdef OT_Q3VM_WCUT
+`define OT_Q3VM_WCUT_V 1
+`else
+`define OT_Q3VM_WCUT_V 0
+`endif
+`ifdef OT_Q3VM_VOH
+`define OT_Q3VM_VOH_V 1
+`else
+`define OT_Q3VM_VOH_V 0
+`endif
+module ot_hfd_coll_q3_vm_core #(
+    parameter integer WCUT = `OT_Q3VM_WCUT_V,
+    parameter integer VOH = `OT_Q3VM_VOH_V
+) (
     input wire [15:0] vmasm_clk,
     input wire [23:0] vmasm_sel,
     input wire [2047:0] vmasm_rd_il,
@@ -54,7 +71,7 @@ module ot_hfd_coll_q3_vm_core (
     wire [23:0] u_vmasm__sel;
     wire [2047:0] u_vmasm__rd_il;
     wire [2047:0] u_vmasm__as_il;
-    ot_hgi_coll_vmasm_sliced_v7 u_vmasm (
+    ot_hgi_coll_vmasm_sliced_v7 #(.OHSEL(VOH)) u_vmasm (
         .clk(u_vmasm__clk),
         .sel(u_vmasm__sel),
         .rd_il(u_vmasm__rd_il),
@@ -99,7 +116,7 @@ module ot_hfd_coll_q3_vm_core (
     wire [280:0] u_writer__kq7;
     wire [4:0] u_writer__launch_done;
     wire u_writer__fault;
-    ot_hgi_coll_static_vmwrite_roots_v6_physical u_writer (
+    ot_hgi_coll_static_vmwrite_roots_v6_physical #(.CUT(WCUT)) u_writer (
         .clk_rgx_data0(u_writer__clk_rgx_data0),
         .clk_rgx_data1(u_writer__clk_rgx_data1),
         .clk_rgx_data2(u_writer__clk_rgx_data2),

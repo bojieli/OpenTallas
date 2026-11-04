@@ -1665,6 +1665,24 @@
   "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE): q3 five-core cohort (83f10270495, TOK-HBM q3_producer_native = body+edge+vm+q2 reduce+q2 ring_ag) vm cut; closure = yosys hierarchy -check (same 3 generic files as the q2n2 vm recipe); -DOT_COLL_ISSUER256_NATIVE32 as the q3_hard_v8x_s build; plan pin table has one clk: hand wrapper wrappers/ot_hfd_coll_q3_vm_core.sv drives the 17 RTL clock ports, RTL top renamed rename_top in the kit copy",
   "rename_top": "ot_hfd_coll_q3_vm_core__mc"
  },
+ "ot_hfd_coll_q3_vm_core__cut1": {
+  "top": "ot_hfd_coll_q3_vm_core",
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_vm_core.sv"
+  ],
+  "defines": [
+   "OT_COLL_ISSUER256_NATIVE32",
+   "OT_Q3VM_WCUT",
+   "OT_Q3VM_VOH"
+  ],
+  "params": {},
+  "macros": [],
+  "source": "DIE-HBM-61/CUTS 11-03 (OWNER pin-cycles lever): q3_vm cut form = the ot_hfd_coll_q3_vm_core recipe + defines OT_Q3VM_WCUT (u_writer CUT 1: schedule check one edge later from registered bank one-hots, writer_fault +1 edge) and OT_Q3VM_VOH (u_vmasm OHSEL 1: registered one-hot selects, 0 cycles); files from the tree; cycles physical/die_plan/hbm/reform_1103/cycles/cuts_q3vm.tsv; EQ results/hbm_cuts_1103/q3vm/ (lockstep vs main 3465966986 + mutants); same hand clock wrapper wrappers/ot_hfd_coll_q3_vm_core.sv",
+  "rename_top": "ot_hfd_coll_q3_vm_core__mc"
+ },
  "ot_hfd_coll_q3_edge_core": {
   "top": "ot_hfd_coll_q3_edge_core",
   "files": [

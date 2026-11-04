@@ -4,7 +4,8 @@
 // Same16scalar clocks, zero added FF/logic/edges; original vector ABI remains
 // on the proven core. Every related-clock crossing keeps normal setup/hold.
 module ot_hgi_coll_static_vmwrite_roots_v6_physical #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer CUT = 0   // DIE-HBM-61/CUTS: core CUT (0 = unchanged)
 ) (
     input wire clk_rgx_data0, clk_rgx_data1, clk_rgx_data2, clk_rgx_data3,
     input wire clk_rgx_ctrl, clk_tkw, clk_meta, clk_body,
@@ -35,7 +36,7 @@ module ot_hgi_coll_static_vmwrite_roots_v6_physical #(
     output wire [4:0] launch_done,
     output wire fault
 );
- ot_hgi_coll_static_vmwrite_roots_v6 #(.MUT(MUT)) core(
+ ot_hgi_coll_static_vmwrite_roots_v6 #(.MUT(MUT), .CUT(CUT)) core(
   .clk_rgx_data0(clk_rgx_data0),
   .clk_rgx_data1(clk_rgx_data1),
   .clk_rgx_data2(clk_rgx_data2),

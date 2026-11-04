@@ -18,8 +18,30 @@ module ot_hgi_coll_upipe_sliced_v7(input wire [15:0] clk,input wire [1535:0] d1,
 endmodule
 // Sixteen adjacent bit columns: 128 data bits in/out, eight bank choices per column.
 // Replicated select pipes avoid a 2048-bit global mux fabric. Capture and output edges match V6.
-module ot_hgi_coll_vmasm_slice16(input wire clk,input wire [23:0] sel,input wire [127:0] rd_il,output reg [127:0] as_il);
+// OHSEL (DIE-HBM-61/CUTS 11-03, default 0 = unchanged): 1 = each 3-bit select field of sp[8] also exists as a
+// registered one-hot (oh, loaded from sp[7] on the edge sp[8] loads), and as_il is an AND-OR of raw with oh: same value
+// on every edge (0 port cycles); removes the 8:1 mux decode from the raw -> as_il stage.
+module ot_hgi_coll_vmasm_slice16 #(parameter integer OHSEL=0)(input wire clk,input wire [23:0] sel,input wire [127:0] rd_il,output reg [127:0] as_il);
  reg [23:0] sp[0:8];reg [127:0] raw;
+ generate if(OHSEL!=0) begin:g_oh
+ reg [63:0] oh; reg [127:0] ao;
+ always @* begin
+  ao='0;
+  for(integer i=0;i<16;i=i+1)for(integer f=0;f<8;f=f+1)for(integer k=0;k<8;k=k+1)
+`ifdef OT_COLL_SLICE_MUT_ONEHOT
+   if(oh[f*8+((k==7)?0:k)]) ao[i*8+((f%2==0)?2*(f/2):2*(f/2)+1)]=ao[i*8+((f%2==0)?2*(f/2):2*(f/2)+1)]|raw[i*8+k];
+`else
+   if(oh[f*8+k]) ao[i*8+((f%2==0)?2*(f/2):2*(f/2)+1)]=ao[i*8+((f%2==0)?2*(f/2):2*(f/2)+1)]|raw[i*8+k];
+`endif
+ end
+ always @(posedge clk) begin
+  sp[0]<=sel;for(integer k=1;k<9;k=k+1)sp[k]<=sp[k-1];
+  raw<=rd_il;
+  // field f = select bits [f*3 +: 3] (f even -> as_il bit 2j, f odd -> 2j+1, j=f/2), as sp[8][j*6 +: 3] / [j*6+3 +: 3]
+  for(integer f=0;f<8;f=f+1)for(integer k=0;k<8;k=k+1) oh[f*8+k]<=(sp[7][f*3+:3]==3'(k));
+  as_il<=ao;
+ end
+ end else begin:g_mux
  always @(posedge clk) begin
   sp[0]<=sel;for(integer k=1;k<9;k=k+1)sp[k]<=sp[k-1];
   raw<=rd_il;
@@ -33,10 +55,11 @@ module ot_hgi_coll_vmasm_slice16(input wire clk,input wire [23:0] sel,input wire
 `endif
   end
  end
+ end endgenerate
 endmodule
-module ot_hgi_coll_vmasm_sliced_v7(input wire [15:0] clk,input wire [23:0] sel,input wire [2047:0] rd_il,output wire [2047:0] as_il);
+module ot_hgi_coll_vmasm_sliced_v7 #(parameter integer OHSEL=0)(input wire [15:0] clk,input wire [23:0] sel,input wire [2047:0] rd_il,output wire [2047:0] as_il);
  for(genvar s=0;s<16;s=s+1)begin:SL
-  ot_hgi_coll_vmasm_slice16 u(.clk(clk[s]),.sel(sel),.rd_il(rd_il[s*128+:128]),.as_il(as_il[s*128+:128]));
+  ot_hgi_coll_vmasm_slice16 #(.OHSEL(OHSEL)) u(.clk(clk[s]),.sel(sel),.rd_il(rd_il[s*128+:128]),.as_il(as_il[s*128+:128]));
  end
 endmodule
 `default_nettype wire
