@@ -79,7 +79,12 @@ module ot_s81ph_sel_ctl_pp #(
     end
 
     // the two searches
-    reg  [QC-1:0] kq;
+    // LEC-EGN-1 11-03: kq <= min(k_in, KQ) and KQ = K < 2^KW, so the top quota bit is the constant 0: a wire, not
+    // a flop whose constancy needs the comparator (synthesis folded it and its u_cs q pipeline copies; the LEC
+    // reported kq[10] / u_cs.q3[10] / q_b3[10] removed although not constant).
+    reg  [QC-2:0] kq_l;
+    wire [QC-1:0] kq = {1'b0, kq_l};
+    initial if (KQ[QC-1]) $fatal(1, "ot_s81ph_sel_ctl: K must be below 2**KW (kq top bit is the constant 0)");
     reg  [XW-1:0] qf;
     wire [7:0]    cres_b, fres_b;
     wire [XW-1:0] cres_above, fres_above;
@@ -140,7 +145,7 @@ module ot_s81ph_sel_ctl_pp #(
         if (!rst_n) begin
             st <= C_CLR; wcnt <= CLRW[TW-1:0]; c_T <= 0; c_Bt <= 0; c_fclr <= 1'b0; c_ing <= 1'b0; c_stop <= 1'b0;
             c_p2 <= 1'b0; c_p3 <= 1'b0; c_st <= 0; c_rem <= 0; c_hclr <= 1'b0; rep_req <= 1'b0;
-            ovf <= 1'b0; kq <= 0; qf <= QINV; hold_c <= 0; hold_f <= 0; kseen <= 1'b0; hf_seen <= 1'b0;
+            ovf <= 1'b0; kq_l <= 0; qf <= QINV; hold_c <= 0; hold_f <= 0; kseen <= 1'b0; hf_seen <= 1'b0;
             bs_done <= 1'b0; bs <= 0; ls <= 0; m <= 0; t <= 0; eq <= 0;
         end else begin
             c_fclr <= 1'b0; c_p2 <= 1'b0; c_p3 <= 1'b0; c_hclr <= 1'b0; rep_req <= 1'b0;
@@ -150,7 +155,7 @@ module ot_s81ph_sel_ctl_pp #(
             case (st)
                 C_ING: begin
                     if (k_ld && !kseen) begin
-                        kseen <= 1'b1; kq <= kin_c; hold_c <= HC0[TW-1:0]; hold_f <= HF0[TW-1:0];
+                        kseen <= 1'b1; kq_l <= kin_c[QC-2:0]; hold_c <= HC0[TW-1:0]; hold_f <= HF0[TW-1:0];
                     end
                     // the running bound
                     if (use_c) begin

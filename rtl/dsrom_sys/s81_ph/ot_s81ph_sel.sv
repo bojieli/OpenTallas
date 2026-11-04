@@ -222,7 +222,10 @@ module ot_s81ph_sel_core #(
     reg                 seg_open;
     reg  [KW-1:0]       seg_k;
     reg  [7:0]          seg_tag;
-    reg  [4:0]          flt;
+    // LEC-EGN-1 11-03: fault bit 4 is never set (flt only ORs in {1'b0, ...}); it is the constant 0, not a flop
+    // (synthesis folded flt[4] / flt_rep[4]; the LEC reported them removed although not constant).
+    reg  [3:0]          flt_l;
+    wire [4:0]          flt = {1'b0, flt_l};
     reg                 e_coll, e_kt, e_over;
     integer q, s;
     // AND-OR crossbar (combinational), registered into the sel ports
@@ -296,7 +299,8 @@ module ot_s81ph_sel_core #(
     reg  [1:0] cq;           // quarter being drained
     reg        done_pend;
     reg  [9:0] cnt;
-    reg  [4:0] flt_rep;      // fault bits already reported
+    reg  [3:0] flt_rep_l;    // fault bits already reported (bit 4: constant 0, as flt)
+    wire [4:0] flt_rep = {1'b0, flt_rep_l};
     reg  [$clog2(PACE+1)-1:0] pc;
     wire       slot = (pc == 0);
     wire [4:0] flt_new = flt & ~flt_rep;
@@ -316,9 +320,9 @@ module ot_s81ph_sel_core #(
     wire take = |(o_valid & o_ready);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            x_v <= {Q{1'b0}}; seg_open <= 1'b0; seg_k <= {KW{1'b0}}; seg_tag <= 8'd0; flt <= 5'd0;
+            x_v <= {Q{1'b0}}; seg_open <= 1'b0; seg_k <= {KW{1'b0}}; seg_tag <= 8'd0; flt_l <= 4'd0;
             ovf_seen <= 1'b0; rep_pend <= 2'd0; rep_n <= 1'b0; cq <= 2'd0; done_pend <= 1'b1; cnt <= 10'd0;
-            flt_rep <= 5'd0; pc <= 0; o_v <= 1'b0; o_d <= 512'd0; e_coll <= 1'b0; e_kt <= 1'b0; e_over <= 1'b0;
+            flt_rep_l <= 4'd0; pc <= 0; o_v <= 1'b0; o_d <= 512'd0; e_coll <= 1'b0; e_kt <= 1'b0; e_over <= 1'b0;
         end else begin
             // beats into the sel: a beat on a quarter that is not ready is an overrun (dropped, fail closed)
             x_v <= xv_n;
@@ -336,7 +340,7 @@ module ot_s81ph_sel_core #(
                     end
                 seg_open <= op; seg_k <= kk; seg_tag <= tt;
             end
-            flt <= flt | {1'b0, |e_link, e_kt, (|e_fmt) | e_coll, e_over};
+            flt_l <= flt_l | {|e_link, e_kt, (|e_fmt) | e_coll, e_over};
             if (ovf) ovf_seen <= 1'b1;
             // output word (one every PACE cycles): FAULT > REP > IDX > DONE
             pc <= (pc == PACE - 1) ? 0 : pc + 1'b1;
@@ -345,7 +349,7 @@ module ot_s81ph_sel_core #(
             if (slot) begin
                 if (|flt_new) begin
                     o_v <= 1'b1; o_d <= {4'd5, seg_tag, 484'd0, flt, 11'd0};
-                    flt_rep <= flt;
+                    flt_rep_l <= flt_l;
                 end else if (rep_pend != 0 && &s_ready) begin
                     o_v <= 1'b1; o_d <= {4'd7, seg_tag, 499'd0, rep_n};
                     rep_n <= ~rep_n;
