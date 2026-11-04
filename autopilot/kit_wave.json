@@ -160,7 +160,14 @@
     "kv3_hgi_v1__cl141fc26e@1",
     "kv3_hgi_v1__cl42bc8b12@1",
     "kv3_hgi_v2__cl2862d491@1",
-    "kv3_hgi_v2__cle0015330@1"
+    "kv3_hgi_v2__cle0015330@1",
+    "qkd_ahub@1",
+    "qkd_hr_core_prompt@2",
+    "qkd_kvs_ctl@3",
+    "qkd_kvs_pc__v4128d4b721bf@1",
+    "qkd_kvs_pc__vc499977aa713@1",
+    "qkd_hr_core_order@2",
+    "qkd_hr_phy_adp@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -278,7 +285,14 @@
     "kv3_hgi_v1__cl141fc26e@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)",
     "kv3_hgi_v1__cl42bc8b12@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)",
     "kv3_hgi_v2__cl2862d491@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)",
-    "kv3_hgi_v2__cle0015330@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)"
+    "kv3_hgi_v2__cle0015330@1": "DIE-KV-64 PDN-0006 CORRECTION 17:2x: failure came from the old plan-stub head_eighth LEF (full-rect M6/M7 OBS); current hgclk_1030 views fix it (kv3_hgi_v4 a3 PDN pass); batch I2-KVHGI (KW-FIX-4 17:27)",
+    "qkd_ahub@1": "DIE-KV-64 CORE_VIEW/NO_RECIPE stale (17:4x): on main 4b09653bef8 each has exactly 1 view, 0 missing core-json sources; batch I2-KVCORE (KW-FIX-4 17:37)",
+    "qkd_hr_core_prompt@2": "DIE-KV-64 CORE_VIEW/NO_RECIPE stale (17:4x): on main 4b09653bef8 each has exactly 1 view, 0 missing core-json sources; batch I2-KVCORE (KW-FIX-4 17:37)",
+    "qkd_kvs_ctl@3": "DIE-KV-64 CORE_VIEW/NO_RECIPE stale (17:4x): on main 4b09653bef8 each has exactly 1 view, 0 missing core-json sources; batch I2-KVCORE (KW-FIX-4 17:37)",
+    "qkd_kvs_pc__v4128d4b721bf@1": "DIE-KV-64 CORE_VIEW/NO_RECIPE stale (17:4x): on main 4b09653bef8 each has exactly 1 view, 0 missing core-json sources; batch I2-KVCORE (KW-FIX-4 17:37)",
+    "qkd_kvs_pc__vc499977aa713@1": "DIE-KV-64 CORE_VIEW/NO_RECIPE stale (17:4x): on main 4b09653bef8 each has exactly 1 view, 0 missing core-json sources; batch I2-KVCORE (KW-FIX-4 17:37)",
+    "qkd_hr_core_order@2": "DIE-KV-64 CORE_VIEW/NO_RECIPE stale (17:4x): on main 4b09653bef8 each has exactly 1 view, 0 missing core-json sources; batch I2-KVCORE (KW-FIX-4 17:37)",
+    "qkd_hr_phy_adp@1": "DIE-KV-64 CORE_VIEW/NO_RECIPE stale (17:4x): on main 4b09653bef8 each has exactly 1 view, 0 missing core-json sources; batch I2-KVCORE (KW-FIX-4 17:37)"
    },
    "only_items": [
     "kv3_astk",
