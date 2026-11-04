@@ -143,13 +143,13 @@
   "designs_cut_if_variants_unified": 32
  },
  "c": {
-  "crossings": 21132,
+  "crossings": 21184,
   "by_kind": {
    "die_lane": 357,
    "type_internal": 20743,
-   "core_internal": 32
+   "core_internal": 84
   },
-  "hard_core_face_crossings_instances": 1156,
+  "hard_core_face_crossings_instances": 4048,
   "die_lane_cycles_total": 4035,
   "type_internal_cycles_total": 91793,
   "added_plan_cycles_total": 44,
@@ -174,23 +174,34 @@
    "L736",
    "L736m",
    "L96",
-   "q_b102#u_hb_idx__s_Q_r1c0_k0h0.key|u_hb_idx__s_Q_r1c0_k2h1#1372",
-   "q_b102#u_hb_idx__s_Q_r1c0_k2h1.key|u_hb_idx__s_Q_r1c0_k0h0#428",
-   "q_b102__physical_v1#u_hb_idx__s_Q_r1c0_k0h0.key|u_hb_idx__s_Q_r1c0_k2h1#1372",
-   "q_b102__physical_v1#u_hb_idx__s_Q_r1c0_k2h1.key|u_hb_idx__s_Q_r1c0_k0h0#428"
+   "q_b102#u_hb_idx__s_Q_r1c0_k0h0__ra.key|u_hb_idx__s_Q_r1c0_k2h1#1372",
+   "q_b102#u_hb_idx__s_Q_r1c0_k2h1.key|u_hb_idx__s_Q_r1c0_k0h0__ra#428",
+   "q_b102__physical_v1#u_hb_idx__s_Q_r1c0_k0h0__ra.key|u_hb_idx__s_Q_r1c0_k2h1#1372",
+   "q_b102__physical_v1#u_hb_idx__s_Q_r1c0_k2h1.key|u_hb_idx__s_Q_r1c0_k0h0__ra#428"
   ],
-  "added_rtl_cycles_total": 16,
+  "added_rtl_cycles_total": 944,
   "lockup_relay_crossings": 4,
-  "core_internal_rows": 32,
+  "core_internal_rows": 84,
   "core_internal_added_port_cycles": {
    "hfd_ep_static": 0,
+   "hfd_hgi_vm_calendar_f20": 0,
+   "hfd_hgi_vms_glue_nw_t": 1,
+   "hnx_fused_lane": 8,
+   "hnx_rp3lp3h_n": 7,
+   "hnx_rp3lp3h_s": 7,
+   "ot_hbm_hc_root_static": 0,
+   "ot_hbm_hc_root_static__tailx_rest__v4f4566": 70,
+   "ot_hbm_hc_root_static__tailx_rest__v6bc7f2": 70,
+   "ot_hbm_hc_subtree32_core": 17,
    "ot_hbm_host_cp_rxs": 0,
    "ot_hbm_idx_score_hcol_h0": 0,
    "ot_hbm_sm_vm_wr_q_t_lanes4": 0,
    "ot_hbm_su_programme_pslice_c5": 0,
    "ot_hbm_su_static_pgslice_lg__lanes8_11": 0,
    "ot_hbm_su_static_sfustore_hw": 0,
+   "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": 0,
    "ot_hfd_coll_q3_edge_core": 0,
+   "ot_hgi_qw_dec": 0,
    "ot_hgi_sfu_split3_lane_core__idpin": 4,
    "ot_hnx_idxn_keybuf_slice": 0
   },

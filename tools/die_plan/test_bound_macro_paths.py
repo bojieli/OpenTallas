@@ -106,3 +106,21 @@ def test_reset_tcl_resolves_physical_name():
     line = next(x for x in RT.tcl_text(T).splitlines() if "lappend rtr_ci" in x)
     assert line == ("foreach i [$ff_blk getInsts] { set n [$i getName]; if {$n eq {u_r0.u_e0} || [string range $n "
                     "end-[string length {u_r0.u_e0}] end] eq {/u_r0.u_e0}} { lappend rtr_ci $i } }")   # unchanged form
+
+
+def test_flat_core_names_resolve_inside_wrapper():
+    t = {"hard_cores": [_core("u_lane0", "qfd_lane"), _core("u_t22", "qfd_tile_nk_a0c"), _core("u_bt", "qfd_rom"),
+                         _core("u_missing", "qfd_x"), _core("u_other", "qfd_y")]}
+    bound = """module top ();
+    qfd_lane u_lane0 (.a(a));
+    qfd_tile_nk_a0c u_t22 (.a(a));
+    qfd_rom #(.W(4)) u_u_bt (.a(a));
+    qfd_wrong u_other (.a(a));
+endmodule
+"""
+    rows = {r["inst"]: r for r in BMP.resolve(t, bound)}
+    assert rows["u_lane0"]["physical_inst"] == "u_bound.u_lane0"
+    assert rows["u_t22"]["physical_inst"] == "u_bound.u_t22"
+    assert rows["u_bt"]["physical_inst"] == "u_bound.u_u_bt"
+    assert rows["u_bt"]["physical_master"] == "qfd_rom"
+    assert "u_missing" not in rows and "u_other" not in rows

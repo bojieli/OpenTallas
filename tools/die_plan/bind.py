@@ -4868,6 +4868,7 @@ def cmd_kit_rtl(a):
     import gen_phys
     import kit_core_clocks
     try:
+        btxt, kit_core_swaps = kit_core_clocks.swap_native_cores(btxt, t.get("hard_cores"))
         btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, gen_phys.core_tap_rows(P, tn) if P else [])
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
@@ -5016,7 +5017,7 @@ def cmd_kit_rtl(a):
         spb_geometry = hbm_spb_native.kit_geometry(out, key, btxt, kd)
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
-    if bmod == mod or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
+    if bmod == mod or kit_core_swaps or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
         bfile, bmod = kd / f"{nb}.sv", nb
@@ -5032,8 +5033,10 @@ def cmd_kit_rtl(a):
             verdict="PASS", method=KIT_DEAD_METHOD,
             receipt=dict(wrapper=str(kd / f"{mod}.sv"), sha256=hashlib.sha256(txt.encode()).hexdigest(),
                          narrow_buses=[x for x in narrow if bmap[x["port"]][0] == "input"])))
-    if kit_core_clock_rows:
-        (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0), indent=1) + "\n")
+    if kit_core_clock_rows or kit_core_swaps:
+        (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0,
+                                                                 **({"native_core_swaps": kit_core_swaps} if kit_core_swaps else {})),
+                                                            indent=1) + "\n")
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
     ab0 = raw["asbuilt"]
     base = plan_base(a.plan, raw)

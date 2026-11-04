@@ -1,0 +1,5 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hbm_sm_vm_wr_q_t_lanes4		*	port	0	last/pop from next-state flops; per-chunk kept wsel/pop/emit copies (ot_hbm_sm_vm_wr_q_lanes_n); every edge unchanged
+ot_hnx_idxn_keybuf_slice		*	port	0	RS=1: replay select = registered PRE strobe (5 kept copies), tag from pre_iq; key_out same on every edge of a correct schedule (REPLAY one edge after PRE); NEW fault class: PRE without REPLAY on the next edge; ot_hnx_idxn_quarter_with_keybuf_sliced np4 now RS=1
+hfd_hgi_vm_calendar_f20		*	port	0	ot_static_program_target FREE_PAYLOAD=1 (cfg payload captured every edge, read only under program_cfg_we) + SCAN_REP=16 (kept scan_row copies); every edge unchanged
+ot_hbm_host_cp_rxs		*	port	0	ot_hgi_coll_static_seq_ctl RXPRE=1 (via ot_hbm_host_link_capture): RX CRC from p_rx_flit, mismatch registered; every edge unchanged
