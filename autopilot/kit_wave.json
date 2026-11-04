@@ -1520,7 +1520,8 @@
    "hold_items": {
     "svc_lo_dsdv_svc_rs__t7": "S81/g0c owns exact current-source GEN/LINT/preflight canary; release after its terminal result, avoid duplicate while portable canary staged.",
     "slice_station__t51": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
-    "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event"
+    "slice_station__t41": "GEOM-112 03:41 (KW-FIX-3 hold): unchanged-plan re-attempt (t51 attempt_3 byte-identical to attempt_2, GRT 4843); class G+S station fix = DIE-S81-50 stnbank ft2_i/ft3_i pin delta; release on that plan event",
+    "slice_station__*": "KW-FIX-8 2026-11-04 09:0x COORD 08:54 (1): S81 ring-FT form A batch launches as one at the first tag with flow-30 + DIE-KV-69 guard fix, 13 bind_kw15d rows regenerated on bind_h10 first; old retry rows otherwise relaunch stations on a src without them. Remove at that tag."
    },
    "queue_src": "main@48b8d51c9fecca8d6629fc07e4a3bbacddbca648",
    "work_root": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave",
