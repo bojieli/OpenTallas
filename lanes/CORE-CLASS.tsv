@@ -1,4 +1,29 @@
 # die	core(prefix ok)	class	note   (COORD-maintained override for lane-built cores; refresh hourly)
+hbm	ot_hbm_idx_score_hcol_h0	form running	superseded by hcol_h0_ra/rb, hand flows
+hbm	ot_hnx_idxn_keybuf_slice	re-sign/count	SIGNED, re-sign running
+hbm	ot_hbm_su_static_sfustore_hw	re-sign/count	SIGNED, re-sign running
+hbm	ot_hbm_sm_vm_wr_q_t_lanes4	re-sign/count	SIGNED, re-sign owed
+hbm	hbc_ot_hbm_sm_vm_wr_q_t_lanes4	re-sign/count	SIGNED, re-sign owed
+hbm	hnx_rp3h_tl	re-sign/count	SIGNED, counts after BIG
+hbm	ot_hbm_idx_vm_query_static_n12	running	live epyc2
+hbm	hfd_ep_static	rebind form running	FORMS 03:47
+hbm	ot_hbm_su_static_qcore_r13	ECO after route	live epyc2
+hbm	ot_hbm_su_static_cxport_ij_q	ECO after route	cx4 live
+hbm	ot_hgi_coll_inj_idx_join_rg	ECO after route	live
+hbm	ot_hbm_xp_aq_tree13_fmt	ECO after route	xp_aq QL fix branch
+hbm	ot_hgi_sm_xload_cl2_ctlx	ECO after route	ctlx2 live
+hbm	ot_hgi_coll_tkm_tp192_tile_core	running	live intel2/epyc4
+hbm	hnx_vms_bank_q0_faces	rebind form running	v796f routed, ECO
+hbm	hc_bank128_pair	rebind form running	v7d live, v9bf routed
+hbm	ot_hbm_hc_bank128_pair	rebind form running	v7d live, v9bf routed
+hbm	hgi_coll_gq_issue	form running	v42a live, v9a8 resumed
+hbm	ot_hgi_coll_gq_issue	form running	v42a live, v9a8 resumed
+hbm	ot_hgi_coll_gq_land	ECO after route	gql5 + gql25778 live
+hbm	hgi_coll_gq_land	ECO after route	gql5 + gql25778 live
+hbm	ot_hgi_sfu_split3_lane_core	form running	part 6 hand flows 04:14
+hbm	hgi_sfu_split3_lane_core	form running	part 6 hand flows 04:14
+s81	ot_s81sl_eg	form being written	dissolve into egn+egg, plan delta
+s81	ot_s81sl_capc5r	parent kit running	cap_rt signed, CTS relaunch 04:32
 s81	ot_s81sl_ve_s	re-sign/count	t-s81 re-sign
 s81	dsdv_gunit_l1c	re-sign/count	NEEDS_PARENT counts
 s81	dsdv_gunit_l0r	re-sign/count	NEEDS_PARENT counts
