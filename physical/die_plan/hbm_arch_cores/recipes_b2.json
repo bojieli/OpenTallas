@@ -1973,7 +1973,7 @@
    "rtl/hbm_next/sm/hnx_rp4_leafh.sv",
    "rtl/hbm_next/sm/hnx_rp4l_children.sv",
    "rtl/hbm_next/sm/hnx_xs4.sv",
-   "rtl/hbm_next/sm/hnx_xs3.sv",
+   "rtl/hbm_accel/cores_split/reform_1103/hnx_rp3lp3h/hnx_xs3.sv",
    "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv",
    "rtl/hbm_next/common/hnx_pl_pad_sram.sv",
    "rtl/hbm_accel/cores_split/reform_1103/hnx_rp3lp3h/hnx_rp3h_split.sv"
@@ -2005,6 +2005,7 @@
   "util": 0.5,
   "source": "DIE-HBM-62/BIG d44v part 7: sub-core of the EQ-PASS hnx_rp3lp3h split (over_cap_split/reform_1103); defines and leaf RTL of the uncut halves, read at their pin; same file set as bench rp3lp3h_n.",
   "files_at": {
+   "rtl/hbm_accel/cores_split/reform_1103/hnx_rp3lp3h/hnx_xs3.sv": "2eb53224ff",
    "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv": "4673cf757e",
    "rtl/hbm_accel/cores_split/reform_1103/hnx_rp3lp3h/hnx_rp3h_split.sv": "f12af1a5d9"
   },
