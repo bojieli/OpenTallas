@@ -353,6 +353,27 @@ if {[info exists ::env(OT_RT_PROTECT_SPINE)] && $::env(OT_RT_PROTECT_SPINE)} {
   }
   close $fp
   puts "OT_RT_PROTECT: planned spine protected; local tap nets remain CTS-enabled"
+  # CTS-DT-1 (11-03): hold the CTS root drivers (regional/macro tap buffers, ICG tap clones) FIRM while
+  # clock_tree_synthesis runs. TritonCTS cloneClockGaters() clones the driver of every -clk_nets root whose
+  # Steiner tree has an edge >= max wirelength and connects the clone input to the driver's input net, which is
+  # a dont_touch planned spine net here -> ODB-0373 (S81 bksel_q m26, idx_tx m9/m10, eng_rr_e m3). A fixed driver
+  # is skipped by that cloning (the planned tap stays the single root, as protected); CTS still builds the local
+  # tree under it. Status returns to PLACED right after, so detailed_placement legalizes the taps as before.
+  set ::ot_rt_cts_roots $ti
+  if {[info commands ot_rt_cts_firm_orig] eq "" && [info commands clock_tree_synthesis] ne ""} {
+    rename clock_tree_synthesis ot_rt_cts_firm_orig
+    proc clock_tree_synthesis {args} {
+      set blk [ord::get_db_block]; set held {}
+      foreach nm $::ot_rt_cts_roots {
+        set i [$blk findInst $nm]
+        if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "PLACED"} { $i setPlacementStatus FIRM; lappend held $i }
+      }
+      puts "OT_RT_PROTECT: [llength $held] tap drivers FIRM during clock_tree_synthesis (no clock-gater clone onto the spine)"
+      set rc [catch {uplevel 1 [list ot_rt_cts_firm_orig {*}$args]} msg opts]
+      foreach i $held { $i setPlacementStatus PLACED }
+      return -options $opts $msg
+    }
+  }
 }
 
 }
