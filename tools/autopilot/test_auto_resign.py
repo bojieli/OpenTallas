@@ -418,35 +418,121 @@ def test_held_design_gets_no_eco(ap, tmp_path, monkeypatch):
     assert "HELD" in only_item(ap)["why"] and not ap.launched
 
 
-@pytest.mark.parametrize("how", ["output", "prior"])
-def test_no_second_chained_loop(ap, tmp_path, monkeypatch, how):
+def _hand_loop(kit, base, best=None, loop_kit=None):
+    """kit is the best iteration of a finished hand loop ROOT/iN"""
+    rec = kit / "signoff" / "signoff.json"
+    best = best or json.loads(rec.read_text())
+    (kit.parent / "eco_loop.json").write_text(json.dumps(dict(verdict="EXHAUSTED", kit=str(loop_kit or "/none/k"),
+                                                              base_metrics=base, best=dict(signoff=str(rec), metrics=best))))
+
+
+NEAR = dict(tt=5.0, ff=-1.5, drv=0, drc=0, fails=["hold_ff"])
+
+
+@pytest.mark.parametrize("base,best,launch,word", [
+    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR, True, "second loop"),                                   # the rule
+    (dict(tt=5.0, ff=0.0, drv=9, drc=0), dict(tt=5.0, ff=0.0, drv=3, drc=0, fails=["drv"]), True, "second loop"),      # DRV-only
+    (dict(tt=None, ff=None, drv=9, drc=0), dict(tt=None, ff=None, drv=3, drc=0, fails=["drv"]), True, "second loop"),  # DRV-only, no timing read
+    (dict(tt=5.0, ff=-1.5, drv=0, drc=0), NEAR, False, "did not improve"),
+    (dict(tt=5.0, ff=-0.5, drv=0, drc=0), NEAR, False, "did not improve"),
+    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), dict(tt=5.0, ff=-5.5, drv=0, drc=0, fails=["hold_ff"]), False, "outside"),
+    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), dict(tt=5.0, ff=-5.5, drv=2, drc=0, fails=["hold_ff", "drv"]), False, "outside"),
+])
+def test_second_loop_rule_on_a_hand_loop(ap, tmp_path, monkeypatch, base, best, launch, word):
     roots_ok(monkeypatch, tmp_path)
     monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
     kit = eco_kit(tmp_path)
-    if how == "output":
-        (kit.parent / "eco_loop.json").write_text("{}")
-    else:
-        odb = next(kit.rglob("6_final.odb"))
-        (kit / "eco_1").mkdir()
-        (kit / "eco_1" / "eco_loop.json").write_text(json.dumps({"base_routed_db": str(odb)}))
+    _hand_loop(kit, base, best)
+    register(ap, kit)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    it = only_item(ap)
+    assert it["status"] == ("ECO" if launch else "LANE") and word in it["why"] and bool(ap.launched) == launch
+    if not launch:
+        assert any(word in x for x in ap.lines)
+
+
+def test_no_third_loop_after_a_chained_hand_loop(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    first = tmp_path / "first" / "i3"
+    first.mkdir(parents=True)
+    (first.parent / "eco_loop.json").write_text("{}")
+    kit = eco_kit(tmp_path)
+    _hand_loop(kit, dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR, loop_kit=first)
     register(ap, kit)
     AR.step(ap)
-    assert only_item(ap)["status"] == "LANE" and "second chained loop" in only_item(ap)["why"] and not ap.launched
-    assert any("second chained loop" in x for x in ap.lines)
+    assert only_item(ap)["status"] == "LANE" and "no third" in only_item(ap)["why"] and not ap.launched
 
 
-def test_late_eco_off_marker_and_config(ap, tmp_path, monkeypatch):
+def test_loop_that_started_from_this_db_goes_on_from_its_best(ap, tmp_path, monkeypatch):
     roots_ok(monkeypatch, tmp_path)
     monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
     kit = eco_kit(tmp_path)
+    odb = next(kit.rglob("6_final.odb"))
+    (tmp_path / "it2").mkdir()
+    best = eco_kit(tmp_path / "it2", ff=-0.5)
+    rec = best / "signoff" / "signoff.json"
+    (kit / "eco_1").mkdir()
+    (kit / "eco_1" / "eco_loop.json").write_text(json.dumps(dict(kit=str(kit), base_routed_db=str(odb), base_metrics=dict(tt=5.0, ff=-1.5, drv=0, drc=0),
+                                                                 best=dict(signoff=str(rec), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0, fails=["hold_ff"])))))
     register(ap, kit)
-    (ap.apd / "kit_wave.json").write_text(json.dumps({"late_eco": False}))
+    ap.unit_active = lambda u: True
     AR.step(ap)
-    assert not ap.launched
-    (ap.apd / "kit_wave.json").write_text("{}")
-    (kit / "late_eco.off").write_text("")
+    assert only_item(ap)["status"] == "ECO"
+    argv = ap.launched[0][1]
+    assert argv[argv.index("--signoff") + 1] == str(rec) and argv[argv.index("--kit") + 1] == json.loads(rec.read_text())["inputs"]["kit"]
+
+
+@pytest.mark.parametrize("how", ["empty", "garbled"])
+def test_unreadable_loop_stays_for_a_lane(ap, tmp_path, monkeypatch, how):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path)
+    (kit.parent / "eco_loop.json").write_text("{}" if how == "empty" else "{not json")
+    register(ap, kit)
     AR.step(ap)
-    assert not ap.launched and "late_eco.off" in only_item(ap)["why"]
+    assert only_item(ap)["status"] == "LANE" and "not readable" in only_item(ap)["why"] and not ap.launched
+
+
+def test_held_design_gets_no_second_loop(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path, name="dp_kv_astk_a")
+    _hand_loop(kit, dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR)
+    register(ap, kit, name="kv_astk_a")
+    AR.step(ap)
+    assert "HELD" in only_item(ap)["why"] and not ap.launched
+
+
+def test_own_loop_gets_one_second_loop_then_stops(ap, tmp_path, monkeypatch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path, ff=-9.0))
+    AR.step(ap)
+    assert len(ap.launched) == 1
+    out1 = tmp_path / "loop1"
+    (out1).mkdir()
+    i1 = eco_kit(out1, ff=-1.5)
+    next(i1.rglob("6_final.odb")).write_bytes(b"odb after loop 1")
+    (i1.parent / "eco_loop.json").write_text(json.dumps(dict(kit="/none/k", base_metrics=dict(tt=5.0, ff=-9.0, drv=0, drc=0),
+                                                             best=dict(signoff=str(i1 / "signoff" / "signoff.json"), metrics=NEAR))))
+    _eco_result(ap, dict(verdict="EXHAUSTED", reason="no gain", best_signoff=str(i1 / "signoff" / "signoff.json"), best_dir=str(i1), metrics=dict(tt=5.0, ff=-1.5, drv=0, drc=0)))
+    AR.step(ap)                                      # poll reads the result, the same tick goes on
+    assert len(ap.launched) == 2 and only_item(ap)["status"] == "ECO"
+    argv = ap.launched[1][1]
+    assert argv[argv.index("--signoff") + 1] == str(i1 / "signoff" / "signoff.json")
+    assert argv[argv.index("--out") + 1] != ap.launched[0][1][ap.launched[0][1].index("--out") + 1]
+    out2 = tmp_path / "loop2"
+    out2.mkdir()
+    i2 = eco_kit(out2, ff=-0.5)
+    next(i2.rglob("6_final.odb")).write_bytes(b"odb after loop 2")
+    (i2.parent / "eco_loop.json").write_text(json.dumps(dict(kit=str(i1), base_metrics=NEAR,
+                                                             best=dict(signoff=str(i2 / "signoff" / "signoff.json"), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0, fails=["hold_ff"])))))
+    _eco_result(ap, dict(verdict="EXHAUSTED", reason="no gain", best_signoff=str(i2 / "signoff" / "signoff.json"), best_dir=str(i2), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0)))
+    AR.step(ap)
+    assert len(ap.launched) == 2 and only_item(ap)["status"] == "LANE" and "no third" in only_item(ap)["why"]
+    assert any("no third" in x for x in ap.lines)
 
 
 def _eco_result(ap, r):
@@ -471,7 +557,7 @@ def test_pass_goes_to_the_re_sign_on_the_best_dir(ap, tmp_path, monkeypatch):
     assert "--auto" in argv and argv[argv.index("--routed-db") + 1].startswith(str(best))
 
 
-def test_exhausted_stays_for_a_lane(ap, tmp_path, monkeypatch):
+def test_loop_with_no_best_record_stays_for_a_lane(ap, tmp_path, monkeypatch):
     roots_ok(monkeypatch, tmp_path)
     monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
     register(ap, eco_kit(tmp_path))
@@ -480,7 +566,7 @@ def test_exhausted_stays_for_a_lane(ap, tmp_path, monkeypatch):
     AR.step(ap)
     n = len(ap.launched)
     AR.step(ap)
-    assert only_item(ap)["status"] == "LANE" and "second loop" in only_item(ap)["why"] and len(ap.launched) == n == 1
+    assert only_item(ap)["status"] == "LANE" and "no best record" in only_item(ap)["why"] and len(ap.launched) == n == 1
     assert any("EXHAUSTED" in x for x in ap.lines)
 
 
