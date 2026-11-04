@@ -2413,7 +2413,7 @@
     "slw_su_l1__cla2a78701": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
     "slw_su_l1__clcc9d0155": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
    "retry": [
     "sle_fw_v1__cl9d029624@2",
