@@ -5092,6 +5092,12 @@ def cmd_kit_rtl(a):
     # not in the frozen bind source base: the base wins, the tool checkout only adds views the base lacks
     for m, d in macro_views(Path(__file__).resolve().parents[2]).items():
         views.setdefault(m, d)
+    # DIE-KV-67 11-04: a plan row that binds a view (a provisional overlay row) is a hard macro of this kit even when the
+    # module has no source under the manifest's RTL roots (KV PCC / PCF live in results/kv_host_regen_1/rtl_rf3)
+    for hc in t.get("hard_cores") or []:
+        lef = Path(str(hc.get("lef") or ""))
+        if isinstance(hc, dict) and lef.stem == hc.get("module") and lef.is_absolute() and lef.is_file():
+            views.setdefault(lef.stem, lef.parent)
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened,
                                          defines=ab0.get("defines", []))
     if widened:

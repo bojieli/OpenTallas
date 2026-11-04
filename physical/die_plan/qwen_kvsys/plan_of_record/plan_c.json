@@ -1236224,7 +1236224,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc0",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc0_f",
@@ -1236243,7 +1236245,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc0_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc1",
@@ -1236262,7 +1236266,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc1",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc1_f",
@@ -1236281,7 +1236287,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc1_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc2",
@@ -1236300,7 +1236308,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc2",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc2_f",
@@ -1236319,7 +1236329,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc2_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc3",
@@ -1236338,7 +1236350,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc3",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc3_f",
@@ -1236357,7 +1236371,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc3_f",
+     "physical_master": "qkd_kvs_pcf"
     }
    ],
    "internal_stations": [
@@ -2178740,7 +2178756,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc0",
+     "physical_master": "qkd_kvs_pcc_h_head_p"
     },
     {
      "inst": "kvpc0_f",
@@ -2178759,7 +2178777,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc0_f",
+     "physical_master": "qkd_kvs_pcf_h_head_p"
     },
     {
      "inst": "kvpc1",
@@ -2178778,7 +2178798,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc1",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc1_f",
@@ -2178797,7 +2178819,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc1_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc2",
@@ -2178816,7 +2178840,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc2",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc2_f",
@@ -2178835,7 +2178861,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc2_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc3",
@@ -2178854,7 +2178882,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc3",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc3_f",
@@ -2178873,7 +2178903,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc3_f",
+     "physical_master": "qkd_kvs_pcf"
     }
    ],
    "face_pins_per_um": 12.1,
@@ -2182922,7 +2182954,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc0",
+     "physical_master": "qkd_kvs_pcc_h_head_p"
     },
     {
      "inst": "kvpc0_f",
@@ -2182941,7 +2182975,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc0_f",
+     "physical_master": "qkd_kvs_pcf_h_head_p"
     },
     {
      "inst": "kvpc1",
@@ -2182960,7 +2182996,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc1",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc1_f",
@@ -2182979,7 +2183017,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc1_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc2",
@@ -2182998,7 +2183038,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc2",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc2_f",
@@ -2183017,7 +2183059,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc2_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc3",
@@ -2183036,7 +2183080,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc3",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc3_f",
@@ -2183055,7 +2183101,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc3_f",
+     "physical_master": "qkd_kvs_pcf"
     }
    ],
    "face_pins_per_um": 12.1,
@@ -2189337,7 +2189385,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc0",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc0_f",
@@ -2189356,7 +2189406,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc0_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc1",
@@ -2189375,7 +2189427,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc1",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc1_f",
@@ -2189394,7 +2189448,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc1_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc2",
@@ -2189413,7 +2189469,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc2",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc2_f",
@@ -2189432,7 +2189490,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc2_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc3",
@@ -2189451,7 +2189511,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc3",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc3_f",
@@ -2189470,7 +2189532,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc3_f",
+     "physical_master": "qkd_kvs_pcf"
     }
    ],
    "internal_stations": [
@@ -2195811,7 +2195875,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc0",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc0_f",
@@ -2195830,7 +2195896,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc0_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc1",
@@ -2195849,7 +2195917,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc1",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc1_f",
@@ -2195868,7 +2195938,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc1_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc2",
@@ -2195887,7 +2195959,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc2",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc2_f",
@@ -2195906,7 +2195980,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc2_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc3",
@@ -2195925,7 +2196001,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc3",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc3_f",
@@ -2195944,7 +2196022,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc3_f",
+     "physical_master": "qkd_kvs_pcf"
     }
    ],
    "internal_stations": [
@@ -2202059,7 +2202139,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc0",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc0_f",
@@ -2202078,7 +2202160,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc0_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc1",
@@ -2202097,7 +2202181,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc1",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc1_f",
@@ -2202116,7 +2202202,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc1_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc2",
@@ -2202135,7 +2202223,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc2",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc2_f",
@@ -2202154,7 +2202244,9 @@
       -0.384,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc2_f",
+     "physical_master": "qkd_kvs_pcf"
     },
     {
      "inst": "kvpc3",
@@ -2202173,7 +2202265,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json",
+     "physical_inst": "u_bound.u_kvpc3",
+     "physical_master": "qkd_kvs_pcc"
     },
     {
      "inst": "kvpc3_f",
@@ -2202192,7 +2202286,9 @@
       -0.96,
       0.0
      ],
-     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+     "pins_file": "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json",
+     "physical_inst": "u_bound.u_kvpc3_f",
+     "physical_master": "qkd_kvs_pcf"
     }
    ],
    "internal_stations": [
