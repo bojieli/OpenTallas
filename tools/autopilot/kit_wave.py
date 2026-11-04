@@ -2506,6 +2506,17 @@ def resume_source(AP, prev):
     return out
 
 
+def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
+    """KW-FIX-7 11-04: one row's launch error never ends the pass.  06:28 a merge changed kit_resume.py under a reload pass:
+    launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
+    relaunch the same attempt dirs).  The row stays as it was and is taken again on a later pass."""
+    try:
+        return launch(AP, cfg, st, die, r, hub, delay_s=delay_s)
+    except Exception as e:
+        AP.log(f"KIT-WAVE LAUNCH-SKIP {die}/{r.get('item')}: {type(e).__name__}: {e} (pass continues; retried next pass)")
+        return None
+
+
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
@@ -2539,7 +2550,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if opt(cfg, die, "future_lec") is not False:
         import hashlib
         snapshot = jd / "future_lec"
-        snapshot.mkdir()
+        snapshot.mkdir(exist_ok=True)      # an attempt whose launch failed before its unit started is taken again
         source = Path(__file__).resolve().parents[1] / "die_plan" / "lec.py"
         payload = source.read_bytes()
         commit = subprocess.run(["git", "-C", str(source.parent), "rev-parse", "HEAD"],
@@ -3066,17 +3077,21 @@ def _step(AP, ap_dir):
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
         if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
             rec["status"] = "FAIL"
-            launch(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
+            launch_safe(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
                                               "replicas": rec.get("replicas")}, AP.HUB_NAME, delay_s=nl * stagger)
             nl += 1
+    if nl and not AP.DRY:                                # launched units are on record before anything else can raise
+        save_state(st, ap_dir)
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
     _, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
     for die, r in todo:
-        rec = launch(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)
+        rec = launch_safe(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)
         nl += 1
         if rec:
             notices.setdefault(die, []).append(f"{r['item']} LAUNCHED ({rec['unit']})")
+    if nl and not AP.DRY:
+        save_state(st, ap_dir)
     try:
         prov_resign_step(AP, cfg, st, notices, ap_dir, AP.HUB_NAME)
     except Exception as e:                               # a re-sign problem never stops the wave
