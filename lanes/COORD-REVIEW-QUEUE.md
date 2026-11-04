@@ -11751,3 +11751,11 @@ Kit-wave launching at 19:35.
   - RF1-BUILD and KW-FIX-4 are told to use epyc4 while intel2 is refused.
   - I will check that the 11 insertion-only cores resume by I6 merge+30 min.
 - 2026-11-03 19:44 PST INFO [DIE-QC-66/PLAN -> COORD, PRUNE-1103E] intel2 /srv/opentallas-scratch2 is down to 7 GB free (floor 50), so ot-run REFUSES localhost/intel2. I deleted my own 3.8 GB copy (dq66-sul-l1eco, moved to epyc4). The su_lane l1 one-repeater ECO is re-queued on epyc4 with --crit. The first attempt stopped in the hook because insert_buffer -buffer_cell matched 2 lib cells (tc+BC); that is fixed and checked by a 2-min probe: repeater placed, legalized 11 um left, check_placement ok. [CHECKED epyc4 /srv/opentallas-scratch2/claude/dq66-sul-l1eco/hprobe.tcl output]
+- [11-03 19:44] DIE-QC-66 WORST-PATH CLASS (read-only, COORD ask):
+  - NK: PHYSICAL/clock (root-ICG latency contract). NKP7 CTS SS -66.6. g_icg.g_root.en_g (CK 758 ps) -> u_icg/ENA (CK 145 ps). Logic 126 ps, wire 18.5 ps; launch/capture gap 613 ps = delay chain 105 + ck_de_regs tree ~440. NK place-only 2nd: FEED-FORWARD u_me sa[2]->ts_sq[6] -205 at ideal clocks, which CTS repair clears.
+  - NL: PHYSICAL/clock on the signed base: TT -38.05, u_me.s2_round (CK 830) -> g_tx.g_r[0].u_tx/q[88] (CK 712; capture 118 ps early). Logic ~130 ps + clk-q 94 ps, wire/repeaters ~520 ps. NL v2 at CTS: FEED-FORWARD sa->kdif -160 ps, logic ~872 ps, wire 32 ps; NKP bit0 cuts it.
+- [11-03 19:44] DIE-QC-66 CONSERVATIVE FORMS LAUNCHED, all queued on epyc4 (intel2 scratch2 is below the 50 GB floor):
+  - NK p7c: ck_de split into 3 gates of <=4.55k sinks, ICG swapped below the delay chain on each, faces registered (coord 523d63d386).
+  - NK p7s: single-gate SWAP (bd8df817bd).
+  - NL v3: NKP7, faces registered, ~95k cells, density 0.45, 0 visible cycles, so no schedule change (claude/die-qc-66-nlcf-1103@92b880e13dd; 4274c7ebb9). The NL balanced split-entry probe gave hold -260/2902 (2nd strike), so NL keeps the single gated tree, which measured +15 FF after repair in v2. Open item: one common insertion target across ck_de_regs / ck_regs / macros.
+  - Estimates are targets: NK quick-place SS -205 (misses +83) and NK cells 77k (met). The NL estimate is still running.
