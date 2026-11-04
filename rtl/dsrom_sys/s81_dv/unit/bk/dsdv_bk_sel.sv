@@ -65,8 +65,10 @@ module dsdv_bk_sel #(
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(2)) u_g (
 `elsif OT_DSDV_BKG_RF3
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(3)) u_g (
-`else
+`elsif OT_DSDV_BKG_RF4
     dsdv_bk_g #(.V(V), .MUT(MUT), .RF(4)) u_g (
+`else   // RF 5 (form 7a, 11-03): RF 4 + strap negedge in-face + rn copies, 0 edges vs RF 4
+    dsdv_bk_g #(.V(V), .MUT(MUT), .RF(5)) u_g (
 `endif
 `endif
         .clk(clk), .rst_n(rst_n), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
