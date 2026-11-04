@@ -11603,3 +11603,19 @@ make) job a75bec9c5189; ot_hgi_sfu_split3_lane_core__idpin queue FAIL FLOW (queu
 - 2026-11-03 19:07 PST [DIE-KV-64/HG-SPLIT] PARKED claude/die-kv-64-regleaf-1103@2dab798a4a. Per the DIE-KV-64 ruling after the owner directive (18:57/19:00), the option-2 tool lane is paused: do not merge it, no tool change. The READY above stays on record as a parked branch with tested opt-in code. HG-SPLIT now builds the soft split with the standard bind +2 boundary cycles and the ep EX join fix (parameter only, DT shift).
 [COORD] 2026-11-03 19:07 PST HBM quick wins: (1) SS24 counts calendar_f20 (SIGNED leafslew ECO, not counted) and idx_tail_native #6b24/#b5e0 (signed v9496/vf56d views, re-sign on the current tag if pins equal). (2) hbmcensus@9f32bab31b7 into the next RM-27 train. (3) keybuf_slice: ONE hold ECO (FF -5.34 x15, TT +129). (4) OWNER QUESTION: cores stopped only by the post-CTS clock-insertion window continue to sign-off, and the band moves to die STA (die tap delay absorbs it). Recommendation yes, default yes at 20:00.
 - 2026-11-03 19:07 PST READY [TOK-VERIFY-1 -> ROOT-MERGE-27] claude/tok-verify-1-1103@2221bcac20e (merge-tree vs main clean; tools + results only). reform_rebaseline.py now reads lanes without a cycles key (the new registered:leaves 0-cycle lanes) as 0 instead of raising KeyError. Selftest PASS. Also includes e6c25ce62ac (HBM d44v price results), if not merged yet.
+- 2026-11-03 19:11 PST [DIE-HBM-61 -> COORD] (1) keybuf_slice quick win: ONE late-ECO iteration launched. eco_loop.py run --max-iter 1 --hold-margin 0 --lec on the routed DB epyc4 .../d44v/items/ot_hnx_idxn_keybuf_slice/attempt_4 (TT +129.56, FF -5.34 on 15 endpoints, DRV slew 89/78). Via ot-run --hosts epyc4 --mem 48 (data locality; epyc4 has 14 waiters), out epyc4:/srv/opentallas-scratch2/claude/dh61-keybuf-eco. Note: eco_loop does not bypass the clock-insertion structural gate, so a PASS on hold/DRV becomes SIGNED only if the band moves to die STA.
+  (2) HBM d44v cores stopped ONLY on the clock-insertion band, not on a sign-off fail (kit_wave_stages.tsv, 11):
+    - post-CTS per-corner insertion gate:
+      - ot_hbm_idx_score_hcol_h0 (TT)
+      - ot_hbm_idx_vm_query_static_n12 (TT + FF)
+      - ot_hbm_svc_vmdel_lane_n (TT)
+      - ot_hgi_coll_inj_idx_join_rg (TT)
+    - GRT 'sign-off band FAIL; fix the clock, not the hold':
+      - hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a and __v512b2172bf16
+      - ot_hbm_su_static_cxport_ij_q
+      - ot_hbm_su_static_qcore_r13
+      - ot_hbm_su_static_sfustore_hw
+      - ot_hgi_sm_xload_cl2_ctlx
+    - routed, sign-off clock gate: ot_hnx_idxn_keybuf_slice
+  - The hold fix 9855c866403 (merged I4) already makes the insertion band INFO via default hard_core_latency for newly generated kits. vm_query_n12, vmdel_lane_n, vms v32e0/v512b are in KW-FIX-4's relaunch batch.
+  - If the owner moves the band to die STA, the rest can continue from their existing DBs (stage-resume): hcol_h0, inj_idx_join_rg, cxport_ij_q, qcore_r13, sfustore_hw, xload_ctlx, keybuf.
