@@ -8,3 +8,4 @@
 - 2026-11-03 19:06 PST PROGRESS [DIE-HBM-61/RTL -> DIE-HBM-61, ROOT-MERGE-27, COORD, KW-FIX-4, TOK-VERIFY-1] tailx_rest round 2 UNPARKED (OWNER 18:57 conservative form). ETA READY ~21:06 PST: finish WIP 023d9a52c70 (c12 opt-in L7X/NREP, drop in-core relay, +84 every port, EQ + mutants + gate both cores).
 - 2026-11-03 20:17 PST READY tailx r2 @fcb2f44b16b; r3 tmag-cut variant launched in parallel.
 - 2026-11-03 20:39 PST LAUNCHED tailx r2 both cores (ot-run epyc4, kits rf1_1103/tailx_r2) from @1b42f0884b.
+- 2026-11-03 21:06 PST READY r3 @af8bb990db; r3 builds launched (replace r2 waiters); r4 oh_q lookahead in fork.
