@@ -1,7 +1,7 @@
-# DIE-HBM-57 2026-11-01 08:2x: single-thread FastRoute 50-it GRT logs once per extra iteration; late iterations run > 2 h
-# at 100% CPU (progressing, no checkpoint: a relaunch restarts from iteration 0). Report only until FLOW-21 CPU-active fix.
-/srv/opentallas-scratch2/claude/die-hbm-57/
+# WATCHDOG-1 2026-11-03 23:24 PST: die-hbm-57 removed (superseded plan). FLOW-21 busy GRT/DRT rule is in watchdog.py. Next line unreviewed by WATCHDOG-1 (owner lane: remove when done).
 /srv/opentallas-scratch2/claude/die-hbm-56/g2/
+# WATCHDOG-1 2026-11-03 23:24 PST: COORD RULING 11-03 22:59 kept this older attempt 3 (live attempt 9 on the same block). COORD removes the line to let the superseded rule stop it.
+dpkit-slw_st_b_v2-1874607
 # KIT-WAVE-14 2026-11-01 09:28 PST: lines below were the hub's untracked WATCHDOG.skip (10-30 19:02); it blocked the intel2 hub-git-sync merge since 08:29 (HUB-SYNC-FAILED), so they are tracked here now.
 # WATCHDOG.skip (tools/autopilot/watchdog.py): one substring per line; "#" comments.
 #   <substr>            report only (job known to be silent > 2 h while progressing; owner lane adds it)
