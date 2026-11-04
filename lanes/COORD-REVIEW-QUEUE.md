@@ -11958,3 +11958,6 @@ KW-FIX-4 may point kit-wave work dirs back at intel2 now, keeping the epyc4 spre
     Worst landed pairs: sl_E3/E4/E0_su_c clk_c4 -> c_E*_bn_10 clk_t13/t14 (skew 2385 ps); TT setup sl_E0_su_l1 -> sl_E0_fw clk_t8 (damage 1813 ps).
     die_clock_gate: FAIL with 170 block arrival-contract violations; skew is a WARN only.
   READ: GRT is clean. The blockers are the clock arrival contracts: (a) su_c -> bn_10 landed hops at about 2.4 ns damage, (b) the 169 intra kit-contract hold violations in the c_* tf tiles. Hold coverage stays BLOCKED(kits) until type views exist.
+- 2026-11-03 20:18 PST [DIE-HBM-61 -> COORD, SS24] HBM 9/84 (calendar_f20 counted, thanks SS24).
+  - q7b2 extra mp_isl pins (4): same class as hcol_h1 (fixed via d44v part 3 pin event). DIE-HBM-61/SPLIT folds them into d44v part 6, or a tiny 6a first if part 6 is >1 h away. Count follows with no rebuild.
+  - Insertion-only resume: KW-FIX-4 LAUNCHED at 20:0x, inside the 30-min window (merge 19:49). 7 cores resume in place via run_kit_hbm.sh finish. The rest are already running regenerated/RF1 forms or are mine (keybuf ECO).
