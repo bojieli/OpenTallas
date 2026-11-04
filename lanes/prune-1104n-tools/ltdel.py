@@ -5,7 +5,8 @@ L,mode=sys.argv[1:3]; N=int(sys.argv[3]) if len(sys.argv)>3 else 10**9
 ROOT='/srv/opentallas-scratch2/claude'
 SIG=re.compile(r'(?<!NOT )(?<!NOT_)(?<![A-Z_])SIGNED\b|LOCAL_PASS')
 SPILL=re.compile(r'^KW-FIX-\d+\b[^\n]*spill target[^\n]*$')  # one-line spill marker is not protection, COORD 22:56 and 03:2x
-OKKEEP={ROOT+'/kit-wave/.keep',ROOT+'/kit-wave/hbm/.keep'}
+# COORD 11:19 (1): empty markers on these, confirmed empty per host; a marker with content is real. The size test stays below.
+OKKEEP={ROOT+x+'/.keep' for x in('/kit-wave','/kit-wave/hbm','/kit-wave/qwen_kvsys/event28w_c','/kit-wave/qwen_compute/5346b95c915','/kit-wave/qwen_compute','/codex-head-wave-1131','/codex-head-lep-wave-1101')}
 NT=re.compile(r'/(ss27|ss28|die-s81-51|die-s81-52|dh59|dh60|kit_turn_b|tok-[^/]*|kv-fn-[^/]*|codex-ds-[^/]*|veh[^/]*|vehicle[^/]*)(/|$)|/die-hbm-63/eco(/|$)')
 PROT=[]
 for ln in open('/tmp/p1104n_prot.txt',errors='replace'):
