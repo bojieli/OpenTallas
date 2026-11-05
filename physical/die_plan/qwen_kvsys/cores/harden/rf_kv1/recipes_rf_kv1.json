@@ -183,7 +183,10 @@
    ]
   },
   "synth_keepdc": true,
-  "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl"
+  "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl",
+  "sigmax": "M7",
+  "util": 0.4,
+  "source_ing_1104": "DIE-KV-70/ING 11-04: kit failed GRT 128244 overflow on M2-M5 over the 32 macros, TT -972 from RTL depth: M7, placement density 0.40, engine re-form results/kv_ing_rf_1104"
  },
  "qkd_kvs_ctl": {
   "synth_keepdc": true,
