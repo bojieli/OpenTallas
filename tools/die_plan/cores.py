@@ -178,6 +178,45 @@ def fill_views(raw, root):
 REPO_TOP_DIRS = ("physical", "results", "rtl", "tools", "configs", "opentools", "schemas")
 
 
+def _git_link_bytes(git, base, top, d, sha, hops=8):
+    """KW-FIX-16 11-05 (DIE-HEAD-70 hd_tile 'VDD has no PG pin geometry'): a symlink blob (mode 120000) in a view
+    directory holds the link TARGET text.  Follow it (relative to the link's directory, chains up to `hops`) to the
+    target file on disk under the checkout top, else at HEAD in the object store, or an absolute path on disk; return
+    the target's bytes.  None when it leaves the repository, dangles, or names a directory."""
+    import os
+    import posixpath
+    import subprocess
+
+    def blob(s):
+        r = subprocess.run(["git", "-C", str(base), "cat-file", "blob", s], capture_output=True)
+        return r.stdout if r.returncode == 0 else None
+
+    cur, link = d, sha
+    for _ in range(hops):
+        t = blob(link)
+        if t is None:
+            return None
+        t = t.decode("utf-8", "surrogateescape")
+        if os.path.isabs(t):
+            return Path(t).read_bytes() if Path(t).is_file() else None
+        path = posixpath.normpath(posixpath.join(cur if cur != "." else "", t))
+        if path == ".." or path.startswith("../"):
+            return None
+        disk = Path(top) / path
+        if disk.is_file():
+            return disk.read_bytes()
+        ent = git("ls-tree", "HEAD", "--", path)
+        if not ent:
+            return None
+        mode, kind, osha = ent.split("\t", 1)[0].split()[:3]
+        if kind != "blob":
+            return None
+        if mode != "120000":
+            return blob(osha)
+        cur, link = posixpath.dirname(path) or ".", osha
+    return None
+
+
 def _git_view(base, rel):
     """DIE-KV-60/adp 11-01: the file `rel` (relative to `base`) read from the git object store of the checkout that
     holds `base` (its HEAD, i.e. the pinned source commit), when the working tree does not carry it (a sparse checkout
@@ -203,7 +242,8 @@ def _git_view(base, rel):
     tree = git("rev-parse", f"HEAD:{d}" if d != "." else "HEAD^{tree}")
     if not tree:
         return None
-    cache = Path(os.environ.get("OT_VIEW_CACHE") or Path.home() / ".cache/opentallas/views") / tree
+    # "<tree>.l1" (KW-FIX-16 11-05 symlink-blob fix): caches written before it may hold link-text stubs; never reused
+    cache = Path(os.environ.get("OT_VIEW_CACHE") or Path.home() / ".cache/opentallas/views") / f"{tree}.l1"
     # <tree>/<view dir name>/<files>: keeps the view directory name (view_root / master layouts, specialize_serdes_phy)
     leaf = relp.parent.name or "_"
     if not (cache / leaf / relp.name).is_file():
@@ -213,18 +253,25 @@ def _git_view(base, rel):
         blobs = []
         for ent in filter(None, listing.split("\0")):
             meta, name = ent.split("\t", 1)
-            if meta.split()[1] == "blob":
-                blobs.append((meta.split()[2], Path(name).name))
-        if relp.name not in {n for _, n in blobs}:
+            mode, kind, sha = meta.split()[:3]
+            if kind == "blob":
+                blobs.append((mode, sha, Path(name).name))
+        if relp.name not in {n for _, _, n in blobs}:
             return None
         cache.parent.mkdir(parents=True, exist_ok=True)
         tmp = Path(tempfile.mkdtemp(prefix=f".{tree}.", dir=cache.parent))
         (tmp / leaf).mkdir()
-        for sha, name in blobs:
-            r = subprocess.run(["git", "-C", str(base), "cat-file", "blob", sha], capture_output=True)
-            if r.returncode != 0:
-                return None
-            (tmp / leaf / name).write_bytes(r.stdout)
+        for mode, sha, name in blobs:
+            if mode == "120000":                  # symlink blob: its content is the link target text, not the view
+                data = _git_link_bytes(git, base, top, d, sha)
+                if data is None:                  # dangling / out-of-repo / directory link: left out, never a stub
+                    continue
+            else:
+                r = subprocess.run(["git", "-C", str(base), "cat-file", "blob", sha], capture_output=True)
+                if r.returncode != 0:
+                    return None
+                data = r.stdout
+            (tmp / leaf / name).write_bytes(data)
         cache.mkdir(parents=True, exist_ok=True)
         try:
             os.rename(tmp / leaf, cache / leaf)   # atomic publish; a concurrent writer may have won (same tree = same bytes)
