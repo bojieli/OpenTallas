@@ -3211,10 +3211,14 @@ def strip_module_definition(text, mod):
     return "".join(out), cnt
 
 
-def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
+def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, signed_params=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
     and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
-    <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
+    <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits).
+    signed_params (opt-in, DIE-S81-59 11-05, S81 bk_sel__t2): {module: {param: value}}, the signed kit's top parameters
+    as declared on the plan's hard_cores row.  They win over the instance identity, which cannot see a parameter that an
+    `ifdef chain selects (.RF(0)..(7)) or a parent forwards (.SRAM_MACRO(TX_SRAM)).  OT_SIGNED_PARAM_SERIALIZE still checks
+    each elaborated override against them, so a parent that builds another form stops at synth as before."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
                        if Path(f).suffix in (".sv", ".v") and Path(f).is_file())
@@ -3244,7 +3248,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
         # The RTL defaults (PINREG 0) are not the configuration the one signed view was built with; every staged
         # instance giving the same numeric literal is.  Parameters the instances disagree on keep the RTL default
         # (a non-default override still stops synth there, as before).
-        hdr, ident = _header_with_defaults(hdr, macro_instance_identity(staged, mod))
+        hdr, ident = _header_with_defaults(hdr, {**macro_instance_identity(staged, mod), **((signed_params or {}).get(mod) or {})})
         note = ("// signed identity from the staged instances: " + ", ".join(f"{k}={v}" for k, v in sorted(ident.items()))
                 + "\n") if ident else ""
         dst = rtl_dir / f"{mod}_bb.v"
@@ -3339,7 +3343,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # g_pp[k].u_pair = ot_s81hd_lep_pair #(.CHB(..))) has only a Liberty cell, which declares no parameters, so
     # yosys elaboration (GEN_LINT rtl_check, synth) stops with "does not have a parameter named ..".  Stage a
     # header-only blackbox <module>_bb.v (the native_bb form, read -lib -overwrite like the SRAM _bb views).
-    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root):
+    signed_params = {c.get("module", c["inst"]): c["signed_params"] for c in t.get("hard_cores", []) if c.get("signed_params")}
+    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root, signed_params=signed_params):
         srcs.append(f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")

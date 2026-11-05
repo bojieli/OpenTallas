@@ -113,6 +113,24 @@ class MacroParamBB(unittest.TestCase):
         self.assertEqual(G.macro_instance_identity(txt2 + "m_x #(.A(3)) u3 ();", "m_x"), {})
         self.assertEqual(G.macro_instance_identity("m_x #(5) u0 ();", "m_x"), {})
 
+    def test_signed_params_win_over_blind_instances(self):
+        (self.t / "src" / "m_g.sv").write_text("module m_g #(parameter integer RF = 0, parameter bit S = 0, parameter integer V = 1)(input wire a);\nendmodule\n")
+        top = self.t / "src" / "top2.sv"
+        top.write_text("module top2 #(parameter bit TX = 1)(input wire a);\n`ifdef R0\n m_g #(.RF(0), .S(TX), .V(2)) u (.a(a));\n`else\n"
+                       " m_g #(.RF(7), .S(TX), .V(2)) u (.a(a));\n`endif\nendmodule\n")
+        macros = [("u", "m_g", "", "", 0, 0, "N")]
+        kit0 = self.t / "kit0"
+        kit0.mkdir()
+        txt0 = G.macro_param_blackboxes(macros, [top], kit0, None)[0].read_text()
+        self.assertIn("RF = 0", txt0)                  # default: no plan key, byte-identical to before
+        self.assertIn("S = 0", txt0)
+        kit1 = self.t / "kit1"
+        kit1.mkdir()
+        txt1 = G.macro_param_blackboxes(macros, [top], kit1, None, signed_params={"m_g": {"RF": 7, "S": 1}})[0].read_text()
+        self.assertIn("RF = 7", txt1)
+        self.assertIn("S = 1", txt1)
+        self.assertIn("V = 2", txt1)                   # the instance identity still applies to the rest
+
 
 if __name__ == "__main__":
     unittest.main()
