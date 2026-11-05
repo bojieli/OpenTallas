@@ -3146,3 +3146,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 2026-11-04 17:39 PST COORD hourly: count 120 (S81 41, HEAD 4+9t, QC 14, KV 24, HBM 28), +3. I53 on main, I54 in test. QC relaunched on tip bind 17:32; 5 KV rows move to bind_v; KW-FIX-8 sweeps bound parts on all dies. PRUNE-1104R running, epyc4 scratch 179 GB. Next hourly 18:25.
 - 2026-11-04 18:35 PST COORD hourly: count 120, flat in the hour. QC batch of 14 launched 18:32; l48ub on main, hd_mesh next; writer-stage class fix in replay; GRT loop read 19:15.
 - 2026-11-04 19:36 PST COORD hourly: count 121, first S81 type (slice_station t7). Census 87 unsigned cores: 37 on target forms, 54 running, 24 failed, 9 signed off not counted. I57 merged, QC batch launching. Hold class read ordered.
+- 2026-11-04 20:41 COORD hourly: count 124 (+3 S81 xrt1, xrt3, bk_sel_c). Parts 13 + 8 approved, I60/I61 in test. fused_host_program unmatched on clk pin, DIE-HBM-66 owns.
