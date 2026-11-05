@@ -85,3 +85,12 @@ def test_ctl_e_bit_sites_hops(tmp_path):
     c1, c2 = s[0][0][0] + w / 2, s[1][0][0] + w / 2
     assert c1 - 6.0 <= 400.0 and c2 - c1 <= 400.0 and 855.36 - c2 < 60.0
     assert len({tuple(p) for p in s[0]}) == 65                                       # one site per bit
+
+
+def test_rrl_from_rtl_reads_raw_relays_and_exports(tmp_path):
+    f = tmp_path / "w.sv"
+    f.write_text("    ot_dp_rrelay u_rrl_0 (.clk(clk), .d(rst_root_n), .q(rst_rl_0));  // raw pad tap 2 depth 1 @ (453.1, 17.3)\n"
+                 "    ot_dp_rgate u_rrl_3 (.clk(clk), .d(rst_rl_2), .run(r), .q(rst_n_t2));  // gated pad tap 2 depth 4 @ (453.1, 17.3)\n"
+                 "    ot_dp_rrelay u_rrl_6 (.clk(clk), .d(rst_rl_2), .q(rr_t28));  // raw tap tap 28 depth 4 @ (150.7, 8.6)\n"
+                 "    assign rst_start_raw_1 = rr_t28;\n")
+    assert D.rrl_from_rtl(f) == [("rst_rl_0", 1, 453.1, 17.3, 0), ("rr_t28", 4, 150.7, 8.6, 1)]
