@@ -58,6 +58,7 @@ class RelayBay(unittest.TestCase):
             self.assertEqual(len(hops), 4 + 4)
             self.assertTrue(all(float(h[3]) <= 300.0 and float(h[7]) >= 83.3 and float(h[8]) >= 83.3 for h in hops))
             self.assertRegex(open(K + "/config.mk").read(), r"OT_MAXWIRE_UM = (50|62|75|100)\n")
+            self.assertTrue(os.path.isfile(K + "/grt_maxwire.tcl"))  # grt_pre.tcl sources it when the env is set
             # idempotent: a second run re-checks only
             self.assertEqual(RB.main([K]), 0)
             self.assertEqual(len(re.findall(r"u_ft_fb_o_\d", open(K + "/rtl/t_bound.sv").read())), 5)

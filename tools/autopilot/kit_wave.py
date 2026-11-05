@@ -2046,7 +2046,7 @@ def run_item(spec_path):
             return fail("relay_bay", txt)
         dest = staged + "/" if G in ("localhost", hub) else f"{G}:{staged}/"
         rc, txt = run("relay_bay_copy", ["rsync", "-a", "-e", "ssh -o BatchMode=yes -o ControlPath=none",
-            str(rbd / "relay_bay.py"), str(rbd / "relay_bay_hop_rows.json"), dest], idempotent=True)
+            str(rbd / "relay_bay.py"), str(rbd / "relay_bay_hop_rows.json"), str(rbd / "grt_maxwire.tcl"), dest], idempotent=True)
         if rc:
             return fail("relay_bay", txt)
         rc, txt = run("relay_bay", remote(f"python3 -I {q(staged)}/relay_bay.py {q(K)} --rows {q(staged)}/relay_bay_hop_rows.json"))
