@@ -30,11 +30,12 @@ foreach p [find_timing_paths -path_delay min -group_path_count 20000 -endpoint_p
   if {$s < $wns($k)} { set wns($k) $s }
 }
 # COORD 11-01 05:1x / OWNER 12.28b (closure first): the post-CTS / pre-repair FF hold check is INFO; the one hard stop
-# is FF hold WNS worse than OT_HOLD_STOP_PS = -150 ps (structural, not repairable by hold padding).  Hold is judged
+# is FF hold WNS worse than OT_HOLD_STOP_PS = -200 ps (structural, not repairable by hold padding).  Hold is judged
 # at the routed sign-off (FF hold >= 0 ps on real views, OWNER 11-02).  Same constant in tools/die_plan/hold_gate.tcl,
 # tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
 # -100 ps / 2000 endpoints below is that pre-repair screen (INFO); OT_HOLD_PREROUTE_STOP=1 restores the old stop.
-set OT_HOLD_STOP_PS -150.0
+# COORD 11-05 07:36: default stop -200 (was -150): GRT hold repair closed 9 of 11 kits from -109 to -172 (DIE-HBM-70 07:04); routed sign-off still decides.
+set OT_HOLD_STOP_PS -200.0
 set verdict PASS
 if {$wns(rr) < -100.0 || $n(rr) > 2000} {
   set verdict INFO

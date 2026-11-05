@@ -1,0 +1,2756 @@
+[
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "hfd_vms_bank_native_q0_faces",
+  "port": "dq",
+  "bits": [
+   0,
+   280
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 07:3x: C4b/C4c/C5 S-role idle, SS33-TOK token bit-exact pending"
+ },
+ {
+  "types": [
+   "NE_io",
+   "NW_io",
+   "PHY_NC",
+   "PHY_NE",
+   "PHY_NW",
+   "q_b000",
+   "q_b000__physical_v1",
+   "q_b001",
+   "q_b001__physical_v1",
+   "q_b002",
+   "q_b002__physical_v1",
+   "q_b003",
+   "q_b003__physical_v1",
+   "q_b010",
+   "q_b010__physical_v1",
+   "q_b011",
+   "q_b011__physical_v1",
+   "q_b012",
+   "q_b012__physical_v1",
+   "q_b013",
+   "q_b013__physical_v1",
+   "q_b100",
+   "q_b100__physical_v1",
+   "q_b101",
+   "q_b101_nw",
+   "q_b102",
+   "q_b102__physical_v1",
+   "q_b103",
+   "q_b103__physical_v1",
+   "q_b110",
+   "q_b110__physical_v1",
+   "q_b111",
+   "q_b111__physical_v1",
+   "q_b112",
+   "q_b112__physical_v1",
+   "q_b113",
+   "q_b113__physical_v1",
+   "q_hub_ne",
+   "q_hub_nw",
+   "q_mca",
+   "q_mcb",
+   "q_sm0",
+   "q_sm1",
+   "q_sm2",
+   "q_sm3",
+   "q_spb0",
+   "q_spb0__physical_v1",
+   "q_spb1",
+   "q_spb2",
+   "q_spb2__physical_v1",
+   "q_spt0",
+   "q_spt0__physical_v1",
+   "q_spt1",
+   "q_spt2",
+   "q_spu0",
+   "q_spu0__physical_v1",
+   "q_spu1",
+   "q_spu1__physical_v1",
+   "q_su00",
+   "q_su00__physical_v1",
+   "q_su01",
+   "q_su01__physical_v1",
+   "q_su10",
+   "q_su10__physical_v1",
+   "q_su11",
+   "q_su11__physical_v1",
+   "q_su20",
+   "q_su20__physical_v1",
+   "q_su21",
+   "q_su21__physical_v1",
+   "q_su30",
+   "q_su30__physical_v1",
+   "q_su31",
+   "q_su31__physical_v1",
+   "root",
+   "vsN0",
+   "vsN1",
+   "vsN2",
+   "vsN4",
+   "vsN5",
+   "vsN6"
+  ],
+  "module": "ot_hnx_idxn_keybuf_slice",
+  "port": "key_in",
+  "bits": [
+   0,
+   1098
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 07:3x: C1 single-row calendar, RS=1 miter pending"
+ },
+ {
+  "types": [
+   "NE_io",
+   "NW_io",
+   "PHY_NC",
+   "PHY_NE",
+   "PHY_NW",
+   "q_b000",
+   "q_b000__physical_v1",
+   "q_b001",
+   "q_b001__physical_v1",
+   "q_b002",
+   "q_b002__physical_v1",
+   "q_b003",
+   "q_b003__physical_v1",
+   "q_b010",
+   "q_b010__physical_v1",
+   "q_b011",
+   "q_b011__physical_v1",
+   "q_b012",
+   "q_b012__physical_v1",
+   "q_b013",
+   "q_b013__physical_v1",
+   "q_b100",
+   "q_b100__physical_v1",
+   "q_b101",
+   "q_b101_nw",
+   "q_b102",
+   "q_b102__physical_v1",
+   "q_b103",
+   "q_b103__physical_v1",
+   "q_b110",
+   "q_b110__physical_v1",
+   "q_b111",
+   "q_b111__physical_v1",
+   "q_b112",
+   "q_b112__physical_v1",
+   "q_b113",
+   "q_b113__physical_v1",
+   "q_hub_ne",
+   "q_hub_nw",
+   "q_mca",
+   "q_mcb",
+   "q_sm0",
+   "q_sm1",
+   "q_sm2",
+   "q_sm3",
+   "q_spb0",
+   "q_spb0__physical_v1",
+   "q_spb1",
+   "q_spb2",
+   "q_spb2__physical_v1",
+   "q_spt0",
+   "q_spt0__physical_v1",
+   "q_spt1",
+   "q_spt2",
+   "q_spu0",
+   "q_spu0__physical_v1",
+   "q_spu1",
+   "q_spu1__physical_v1",
+   "q_su00",
+   "q_su00__physical_v1",
+   "q_su01",
+   "q_su01__physical_v1",
+   "q_su10",
+   "q_su10__physical_v1",
+   "q_su11",
+   "q_su11__physical_v1",
+   "q_su20",
+   "q_su20__physical_v1",
+   "q_su21",
+   "q_su21__physical_v1",
+   "q_su30",
+   "q_su30__physical_v1",
+   "q_su31",
+   "q_su31__physical_v1",
+   "root",
+   "vsN0",
+   "vsN1",
+   "vsN2",
+   "vsN4",
+   "vsN5",
+   "vsN6"
+  ],
+  "module": "ot_hnx_idxn_keybuf_slice",
+  "port": "pre_index",
+  "bits": [
+   0,
+   7
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 07:3x: C1 single-row calendar, RS=1 miter pending"
+ },
+ {
+  "types": [
+   "NE_io",
+   "NW_io",
+   "PHY_NC",
+   "PHY_NE",
+   "PHY_NW",
+   "q_b000",
+   "q_b000__physical_v1",
+   "q_b001",
+   "q_b001__physical_v1",
+   "q_b002",
+   "q_b002__physical_v1",
+   "q_b003",
+   "q_b003__physical_v1",
+   "q_b010",
+   "q_b010__physical_v1",
+   "q_b011",
+   "q_b011__physical_v1",
+   "q_b012",
+   "q_b012__physical_v1",
+   "q_b013",
+   "q_b013__physical_v1",
+   "q_b100",
+   "q_b100__physical_v1",
+   "q_b101",
+   "q_b101_nw",
+   "q_b102",
+   "q_b102__physical_v1",
+   "q_b103",
+   "q_b103__physical_v1",
+   "q_b110",
+   "q_b110__physical_v1",
+   "q_b111",
+   "q_b111__physical_v1",
+   "q_b112",
+   "q_b112__physical_v1",
+   "q_b113",
+   "q_b113__physical_v1",
+   "q_hub_ne",
+   "q_hub_nw",
+   "q_mca",
+   "q_mcb",
+   "q_sm0",
+   "q_sm1",
+   "q_sm2",
+   "q_sm3",
+   "q_spb0",
+   "q_spb0__physical_v1",
+   "q_spb1",
+   "q_spb2",
+   "q_spb2__physical_v1",
+   "q_spt0",
+   "q_spt0__physical_v1",
+   "q_spt1",
+   "q_spt2",
+   "q_spu0",
+   "q_spu0__physical_v1",
+   "q_spu1",
+   "q_spu1__physical_v1",
+   "q_su00",
+   "q_su00__physical_v1",
+   "q_su01",
+   "q_su01__physical_v1",
+   "q_su10",
+   "q_su10__physical_v1",
+   "q_su11",
+   "q_su11__physical_v1",
+   "q_su20",
+   "q_su20__physical_v1",
+   "q_su21",
+   "q_su21__physical_v1",
+   "q_su30",
+   "q_su30__physical_v1",
+   "q_su31",
+   "q_su31__physical_v1",
+   "root",
+   "vsN0",
+   "vsN1",
+   "vsN2",
+   "vsN4",
+   "vsN5",
+   "vsN6"
+  ],
+  "module": "ot_hnx_idxn_keybuf_slice",
+  "port": "pre_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 07:3x: C1 single-row calendar, RS=1 miter pending"
+ },
+ {
+  "types": [
+   "NE_io",
+   "NW_io",
+   "PHY_NC",
+   "PHY_NE",
+   "PHY_NW",
+   "q_b000",
+   "q_b000__physical_v1",
+   "q_b001",
+   "q_b001__physical_v1",
+   "q_b002",
+   "q_b002__physical_v1",
+   "q_b003",
+   "q_b003__physical_v1",
+   "q_b010",
+   "q_b010__physical_v1",
+   "q_b011",
+   "q_b011__physical_v1",
+   "q_b012",
+   "q_b012__physical_v1",
+   "q_b013",
+   "q_b013__physical_v1",
+   "q_b100",
+   "q_b100__physical_v1",
+   "q_b101",
+   "q_b101_nw",
+   "q_b102",
+   "q_b102__physical_v1",
+   "q_b103",
+   "q_b103__physical_v1",
+   "q_b110",
+   "q_b110__physical_v1",
+   "q_b111",
+   "q_b111__physical_v1",
+   "q_b112",
+   "q_b112__physical_v1",
+   "q_b113",
+   "q_b113__physical_v1",
+   "q_hub_ne",
+   "q_hub_nw",
+   "q_mca",
+   "q_mcb",
+   "q_sm0",
+   "q_sm1",
+   "q_sm2",
+   "q_sm3",
+   "q_spb0",
+   "q_spb0__physical_v1",
+   "q_spb1",
+   "q_spb2",
+   "q_spb2__physical_v1",
+   "q_spt0",
+   "q_spt0__physical_v1",
+   "q_spt1",
+   "q_spt2",
+   "q_spu0",
+   "q_spu0__physical_v1",
+   "q_spu1",
+   "q_spu1__physical_v1",
+   "q_su00",
+   "q_su00__physical_v1",
+   "q_su01",
+   "q_su01__physical_v1",
+   "q_su10",
+   "q_su10__physical_v1",
+   "q_su11",
+   "q_su11__physical_v1",
+   "q_su20",
+   "q_su20__physical_v1",
+   "q_su21",
+   "q_su21__physical_v1",
+   "q_su30",
+   "q_su30__physical_v1",
+   "q_su31",
+   "q_su31__physical_v1",
+   "root",
+   "vsN0",
+   "vsN1",
+   "vsN2",
+   "vsN4",
+   "vsN5",
+   "vsN6"
+  ],
+  "module": "ot_hnx_idxn_keybuf_slice",
+  "port": "replay_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 07:3x: C1 single-row calendar; RS=1 run NP4_RUN_PASS, not a formal miter"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_idx_vm_share2_static_r",
+  "port": "a_rq",
+  "bits": [
+   0,
+   135
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rdata_s0",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rdata_s1",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rdata_s2",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rdata_s3",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rrow_s0",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rrow_s1",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rrow_s2",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rrow_s3",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rv_s0",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rv_s1",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rv_s2",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "rv_s3",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "smf_s0",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "smf_s1",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "smf_s2",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "smf_s3",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "sms_s0",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "sms_s1",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "sms_s2",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "port": "sms_s3",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "port": "inj_q0",
+  "bits": [
+   0,
+   1023
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "port": "inj_q1",
+  "bits": [
+   0,
+   1023
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "port": "inj_q2",
+  "bits": [
+   0,
+   1023
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "port": "inj_q3",
+  "bits": [
+   0,
+   1023
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "port": "ins_coll",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "port": "jb0",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "port": "jb1",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_cxport_ij_q",
+  "port": "sfault_s",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l00_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l00_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l00_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l00_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l00_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l01_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l01_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l01_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l01_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l01_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l02_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l02_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l02_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l02_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l02_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l03_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l03_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l03_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l03_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l03_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l04_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l04_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l04_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l04_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l04_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l05_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l05_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l05_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l05_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l05_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l06_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l06_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l06_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l06_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l06_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l07_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l07_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l07_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l07_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l07_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l08_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l08_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l08_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l08_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l08_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l09_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l09_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l09_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l09_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l09_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l10_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l10_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l10_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l10_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l10_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l11_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l11_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l11_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l11_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l11_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l12_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l12_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l12_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l12_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l12_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l13_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l13_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l13_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l13_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l13_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l14_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l14_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l14_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l14_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l14_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l15_kv_waddr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l15_kv_wdata",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l15_kv_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l15_vi_addr",
+  "bits": [
+   0,
+   23
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_su_static_sfustore_hw",
+  "port": "l15_vi_re",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_svc_wb_kport_q",
+  "port": "w_k_rdy",
+  "bits": [
+   0,
+   15
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hbm_svc_wb_kport_q",
+  "port": "w_k_wr_done",
+  "bits": [
+   0,
+   15
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_issue",
+  "port": "isa_lp_data",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_issue",
+  "port": "isa_ring",
+  "bits": [
+   0,
+   57
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_land",
+  "port": "pa_d",
+  "bits": [
+   0,
+   511
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_land",
+  "port": "pa_src",
+  "bits": [
+   0,
+   3
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_land",
+  "port": "pa_tag",
+  "bits": [
+   0,
+   5
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_land",
+  "port": "pa_v",
+  "bits": [
+   0,
+   1
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_land",
+  "port": "pb_d",
+  "bits": [
+   0,
+   511
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_land",
+  "port": "pb_src",
+  "bits": [
+   0,
+   3
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_land",
+  "port": "pb_tag",
+  "bits": [
+   0,
+   5
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_gq_land",
+  "port": "pb_v",
+  "bits": [
+   0,
+   1
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "port": "inj_addr",
+  "bits": [
+   0,
+   159
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "port": "inj_addr_r1",
+  "bits": [
+   0,
+   159
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "port": "inj_idx",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "port": "inj_idx_r1",
+  "bits": [
+   0,
+   31
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "port": "inj_rd",
+  "bits": [
+   0,
+   1
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "port": "inj_rd_r1",
+  "bits": [
+   0,
+   1
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "port": "su_inj_d_r0",
+  "bits": [
+   0,
+   511
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_inj_idx_join_rg",
+  "port": "su_inj_d_r1",
+  "bits": [
+   0,
+   511
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_coll_kq_share2_leaf",
+  "port": "a_kq",
+  "bits": [
+   0,
+   561
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "cfg_addr",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "cfg_data",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "cfg_target",
+  "bits": [
+   0,
+   7
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "cfg_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "desc_base",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "desc_limit",
+  "bits": [
+   0,
+   12
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "desc_loops",
+  "bits": [
+   0,
+   15
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "desc_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "port": "launch_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_qw_dec",
+  "port": "header",
+  "bits": [
+   0,
+   127
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_qw_dec",
+  "port": "v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_qw_dec",
+  "port": "x",
+  "bits": [
+   0,
+   1023
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "cfg_addr",
+  "bits": [
+   0,
+   10
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "cfg_data",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "cfg_stripe",
+  "bits": [
+   0,
+   2
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "cfg_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "io_cfg_addr",
+  "bits": [
+   0,
+   10
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "io_cfg_data",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "io_cfg_stripe",
+  "bits": [
+   0,
+   1
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "io_cfg_we",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "io_start_base",
+  "bits": [
+   0,
+   10
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "io_start_limit",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "io_start_loops",
+  "bits": [
+   0,
+   15
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "io_start_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "start_base",
+  "bits": [
+   0,
+   10
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "start_limit",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "port": "start_loops",
+  "bits": [
+   0,
+   15
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "cfg_addr",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "cfg_data",
+  "bits": [
+   0,
+   255
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "cfg_target",
+  "bits": [
+   0,
+   7
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "cfg_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "desc_base",
+  "bits": [
+   0,
+   11
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "desc_limit",
+  "bits": [
+   0,
+   12
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "desc_loops",
+  "bits": [
+   0,
+   15
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "desc_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "launch_v",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "qf_hi",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "qf_lo",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "qo_hi",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ },
+ {
+  "types": [
+   "q_hub_ne",
+   "q_hub_nw"
+  ],
+  "module": "ot_hgi_sm_xload_cl2_ctlx",
+  "port": "qo_lo",
+  "bits": [
+   0,
+   0
+  ],
+  "value": "0",
+  "proof": "UNPROVEN candidate, COORD ruling 08:0x: q0 boundary with no planned S provider; token run on first bind vehicle pending"
+ }
+]
