@@ -23,8 +23,13 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
  wire pending=count!=0;
  reg[293:0]q[0:7];       // {data256,row19,col5,bank5,pc5,stack2,good,mark}
  reg[8:0]hd;             // {pc5,stack2,good,mark} of q[rp]
- wire[293:0]word=q[rp];
- wire[255:0]data=word[293:38];wire[18:0]row=word[37:19];wire[4:0]col=word[18:14],bank=word[13:9];
+ // DIE-KV-70 HR order form 11-04 (route TT -136.9: rp -> q[rp] -> out/chain_f, 18 levels): hw = the whole word of q[rp], write-bypassed,
+ // same form and same update as hd above, so emit data comes from a register. Cycle-exact; no added latency.
+ reg[293:0]hw;
+ wire[293:0]word=hw;
+ // DIE-KV-70 11-04: every d_row load is below 2**15 (largest 24682), so row[17:15] read 0 here: synthesis removes those q bits, the RTL
+ // kept them as unreset state (X until the first load), LEC class of the PC ties.
+ wire[255:0]data=word[293:38];wire[18:0]row={word[37],3'b000,word[33:19]};wire[4:0]col=word[18:14],bank=word[13:9];
  wire[4:0]pc=hd[8:4];wire[1:0]stack=hd[3:2];wire good=hd[1],hmark=hd[0];
  reg[2:0]credits[0:127];reg marker_credit;
  // Enqueue-side decode of the registered input word (the previous head-side decode, unchanged).
@@ -81,6 +86,8 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
   if(wr)q[wp]<=iq_dec;
   if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q[rp1][8:0];
   else hd<=(wr&&wp==rp)?iq_dec[8:0]:q[rp][8:0];
+  if(adv)hw<=(wr&&wp==rp1)?iq_dec:q[rp1];
+  else hw<=(wr&&wp==rp)?iq_dec:q[rp];
  end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin

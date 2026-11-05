@@ -27,7 +27,12 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
  wire i_good=i_we&&(i_marker||(i_embed?(i_addr[30:25]==0&&i_le<25'd19588376):(i_addr[30:24]==0)));
  wire[9:0]id_dec={i_target,i_good,i_embed,i_marker};
  reg[9:0]qd[0:7];reg[9:0]hd;
- wire[289:0]head=q[rp];wire[24:0]logical_e=head[26:2];
+ // DIE-KV-70 HR order form 11-04 (route: rp -> q[rp] -> kv/hb): hw = the whole word of q[rp], write-bypassed, same update as hd. Cycle-exact.
+ // Target twin: id_dec target == addr[6:0] for every address (19447808 has 7 low zero bits), so each pair is read from one flop:
+ // word bits [7:2] from qd[8:3], target msb from word[8]; synthesis keeps one of each twin, the RTL kept both (LEC class of the PC ties).
+ reg[289:0]hw;
+ wire[289:0]id_w={id_q[289:8],id_dec[8:3],id_q[1:0]};
+ wire[289:0]head=hw;wire[24:0]logical_e=head[26:2];
  wire marker=hd[0],embed=hd[1],good=hd[2];wire[6:0]target=hd[9:3];
  wire send=count!=0&&!fault&&(!boot_hold||MUT==2)&&good&&(marker?(issued==landed&&kc!=0&&(!image_dirty||hc!=0)):(oc!=0&&(embed?hc!=0:kc!=0)));
  reg issue_v;reg[6:0]issue_pc;wire order_fault;
@@ -36,8 +41,10 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
  wire wr=iv_q&&count<8;wire[2:0]rp1=rp+3'd1;
  always @(posedge ck)begin
   id_q<=ing;if(wr)begin q[wp]<=id_q;qd[wp]<=id_dec;end
-  if(send)hd<=(wr&&wp==rp1)?id_dec:qd[rp1];
-  else hd<=(wr&&wp==rp)?id_dec:qd[rp];
+  if(send)hd<=(wr&&wp==rp1)?id_dec:{q[rp1][8],qd[rp1][8:0]};
+  else hd<=(wr&&wp==rp)?id_dec:{q[rp][8],qd[rp][8:0]};
+  if(send)hw<=(wr&&wp==rp1)?id_w:{q[rp1][289:8],qd[rp1][8:3],q[rp1][1:0]};
+  else hw<=(wr&&wp==rp)?id_w:{q[rp][289:8],qd[rp][8:3],q[rp][1:0]};
  end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin wp<=0;rp<=0;count<=0;kc<=8;hc<=4;oc<=256;iv_q<=0;kcr_q<=0;hcr_q<=0;ff<=0;boot_hold<=0;image_dirty<=0;image_check<=0;ing_cr<=0;kv<=0;hb<=0;issued<=0;issue_v<=0;issue_pc<=0;end
