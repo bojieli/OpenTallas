@@ -7986,9 +7986,9 @@
      "orient": "R0",
      "rect_um": [
       60.0,
-      8.4,
+      54.0,
       238.632,
-      89.4
+      135.0
      ]
     },
     {
@@ -7997,14 +7997,14 @@
      "orient": "R0",
      "rect_um": [
       60.0,
-      105.0,
+      151.2,
       237.768,
-      186.0
+      232.2
      ]
     }
    ],
    "channel_rule_um": 10.8,
-   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+   "basis": "DIE-HBM-61/SPLIT d44v part 6 | HBM-GAPS-2 rxmac 11-05: both macros up ~46 um: the S face (875 M5 pins, x 0-197.6) had no flop band under u_dmem (y 8.4), DPL-0033 in rxm6 and B5 f27c; S band now 49.7 um, N band 104.8 um"
   },
   "ot_hidx_s3_q": {
    "status": "KNOWN",
