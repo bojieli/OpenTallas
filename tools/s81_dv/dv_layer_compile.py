@@ -74,7 +74,9 @@ BEAT = dict(go_to_partial=112, go_to_partial_normr=115, rstd_to_y0=18, rstd_to_x
             hload_slot=40, gain_slot=20)
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
-XFIN = dict(dl=4, collector=5, last_partial_to_rstd=234, rstd_to_xq_ring=59 + 16 + 4)
+# FORM-NF 11-05 (DIE-S81-56): norm_finish hard core, last_partial -> rstd 234 + 14; r_v shift varies by arrival order, the
+# static row takes the max seen (rtl/test/s81_lec_xfin/run_nf.sh, 3 seeds: max_shift 14, go->r_v max 259 -> 272).
+XFIN = dict(dl=4, collector=5, last_partial_to_rstd=248, rstd_to_xq_ring=59 + 16 + 4)
 # TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34; claude/s81-norm-deskew-1025): ot_s81sl_xrt1 / xrt3 PDSK = leaf 0..4
 # depth 4, 3, 2, 1, 0 -- the per-leaf NORMRs must reach the slice on 5 consecutive edges in leaf order (lower_norm_smoke
 # issues them on t .. t + 4) and the partial set leaves xr 4 edges after the first one would have.

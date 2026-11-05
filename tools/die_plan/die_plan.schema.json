@@ -3412,6 +3412,23 @@
           "source"
          ],
          "type": "object"
+        },
+        "params": {
+         "type": "object",
+         "minProperties": 1,
+         "additionalProperties": {
+          "type": [
+           "integer",
+           "string"
+          ]
+         }
+        },
+        "cells": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "cells_basis": {
+         "type": "string"
         }
        }
       }

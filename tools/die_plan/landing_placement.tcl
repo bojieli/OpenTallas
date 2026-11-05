@@ -458,7 +458,9 @@ foreach spec $cland_optional_groups {
  foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
   if {[dict exists $cland_done $nm]} continue
-  cland_put $i $rect $tag
+  # DIE-QC-73 11-05 (QC su_c, su_l1): a single reset copy whose 4.32 um window lies in a ring band the FIRM fill took
+  # had no site and stopped global placement; same grow as status and collector cells, same fail-closed error.
+  cland_put_grow $i $rect $tag raw-copy
  }
 }
 # DIE-HEAD-13 10-28 opt-in ring_place=ff (tag suffix +ff, compose(band_ring="ff")): only the ring's SEQUENTIAL cells are

@@ -1290,6 +1290,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
  'properties': {'kind': {'enum': ['port', 'internal']}, 'content': {'minLength': 1, 'type': 'string'},
                 'pin': {'const': 'rst_n'}, 'source': {'minLength': 1, 'type': 'string'}},
  'required': ['kind', 'content', 'source'], 'type': 'object'}
+# DIE-QC-63/SC 11-02 (opt-in, QC SC event): explicit source parameters of a hardened leaf (the bind applies them to
+# the bound leaf through the die param_regen hook; the core build uses them as top params) + its measured std cells
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["params"] = {"type": "object", "minProperties": 1, "additionalProperties": {"type": ["integer", "string"]}}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells"] = {"type": "integer", "minimum": 0}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells_basis"] = {"type": "string"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}

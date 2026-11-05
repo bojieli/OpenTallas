@@ -143,7 +143,11 @@ module ot_s81sl_slice_w3 #(
     ot_s81sl_rly #(.W(3 * 70), .D(DR)) u_rt (.clk(clk), .d(rt), .q(rt_q));
     // cap ports (e979ee6a7): rt_w = lanes 0..3 (W frame column), rt_e = lanes 4..7; capture writes to leaves 0..2 on its
     // S face and leaves 3, 4 on its N face, 2 ports a leaf (leaf-major, as cw_*_x)
-    ot_s81sl_capc2_w3 u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q), .cfg_v(cfg_v), .cfg_d(cfg_d),
+    // DIE-S81-56/IQKV 11-04: the one plan master capc5r, as CAPEND did for the landed row-end slices. Single clock and reset on
+    // its 5 region ports, lanes 3..7 tied 0. Capture stream = capc2_w3 + 6 edges (tools/s81_slice/cap_end/c2c5_lag.sh).
+    ot_s81sl_capc5r u_cap (.ck_rt(clk), .ck_cw(clk), .ck_ce(clk), .ck_rn(clk), .ck_rs(clk),
+        .rst_n_rt(rst_n), .rst_n_cw(rst_n), .rst_n_ce(rst_n), .rst_n_rn(rst_n), .rst_n_rs(rst_n),
+        .rt_w({70'd0, rt_q}), .rt_e(280'd0), .cfg_v(cfg_v), .cfg_d(cfg_d),
         .cw_s_v(cw_v_x[5:0]), .cw_s_a(cw_a_x[71:0]), .cw_s_d(cw_d_x[191:0]),
         .cw_n_v(cw_v_x[9:6]), .cw_n_a(cw_a_x[119:72]), .cw_n_d(cw_d_x[319:192]), .fault(f_cap));
     // x chains: the frame cfifo ingress word (dsfd_cfifo_crs): xd = {record xw[564:0], marker} (566 b, lanes 0..2),

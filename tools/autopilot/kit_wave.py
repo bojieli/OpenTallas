@@ -2747,6 +2747,12 @@ def infra_relaunch_due(cfg, rec):
     """an INFRA failure the wave relaunches: RETRY-INFRA, or a FAIL INFRA record left by the old 2-attempt limit"""
     if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
         return False
+    # KW-FIX-10 11-05: a held item stays held here too.  serdes__t4 a1, stopped and held 11-04 23:37, came back as a2 at
+    # 23:44 through this path, which is not plan_dies and never read hold_items.
+    import fnmatch
+    if any(fnmatch.fnmatchcase(rec.get("item", ""), pat)
+           for pat in (((cfg.get("dies") or {}).get(rec["die"]) or {}).get("hold_items") or {})):
+        return False
     if rec.get("status") == "RETRY-INFRA":
         return True
     return (rec.get("status") == "FAIL" and rec.get("class") == "INFRA"

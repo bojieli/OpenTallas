@@ -631,7 +631,9 @@ module ot_s81sl_vs #(
 `else
             hwq_sel[4 * r + qq] <= eng_r && ka < 8'd16 && ka[3:0] == r[3:0];
 `endif
-    always @(posedge clk) hwq_d <= xq_c;
+    // hwq_d loads on xqv_c (every hwq_sel is set only one edge after an xqv_c arrival): a plain copy of xq_c would be
+    // merged by synthesis with the ve_aval output face flop (same D, same clock) and share that port's face (face_guard)
+    always @(posedge clk) if (xqv_c) hwq_d <= xq_c;
 `endif
 `endif
     wire [7:0] er = ka - 8'd16;                      // REDUCE K / W arrival r (16 .. 79): K pair even r, W pair odd r

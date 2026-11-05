@@ -1,0 +1,16 @@
+[{"core": "ot_hbm_idx_selector_static_sel", "sha": "p21", "part": "p21", "glue": "ot_hbm_idx_selector_static_sel__p21glue.sv", "conn": "ot_hbm_idx_selector_static_sel.conn.json",
+  "subs": [{"module": "ot_hidx_s3_ctl", "cells": 3000}, {"module": "ot_hidx_s3_q", "cells": 80000}],
+  "added_cycles": "registered_s3fs against registered_s3: sel_in 7 same, sel_in_line 2->3, sel_out 1->2, sel_choose_rt 8->6; cycles/selector.tsv",
+  "sub_face": {"ot_hidx_s3_q": {"in_line": "N", "selected_line_o": "W", "selected_v_o": "W"}},
+  "boundary_sub": "u_fcore.u_core.u_ctl", "hub_sub": "u_fcore.u_core.u_ctl",
+  "layout": {
+    "u_fcore.u_core.u_q0": {"xy": [0.0, 233.28], "wh": [259.2, 216.0], "orient": "R0"},
+    "u_fcore.u_core.u_q1": {"xy": [336.96, 233.28], "wh": [259.2, 216.0], "orient": "MY"},
+    "u_fcore.u_core.u_q2": {"xy": [0.0, 0.0], "wh": [259.2, 216.0], "orient": "MX"},
+    "u_fcore.u_core.u_q3": {"xy": [336.96, 0.0], "wh": [259.2, 216.0], "orient": "R180"},
+    "u_fcore.u_core.u_ctl": {"xy": [276.48, 207.36], "wh": [43.2, 34.56]}},
+  "clock_entry": {"ot_hidx_s3_q": [30.24, 151.2], "ot_hidx_s3_ctl": [21.6, 17.28]},
+  "macros": {"ot_hidx_s3_q": [
+    {"name": "u_fcore.gm[0].mem", "master": "ot_sram_1r1w_256x256_m2_r2c2", "orient": "R0", "rect_um": [64.8, 8.64, 237.624, 49.704]},
+    {"name": "u_fcore.gm[1].mem", "master": "ot_sram_1r1w_256x256_m2_r2c2", "orient": "R0", "rect_um": [64.8, 49.728, 237.624, 90.792]},
+    {"name": "u_fcore.gm[2].mem", "master": "ot_sram_1r1w_256x256_m2_r2c2", "orient": "R0", "rect_um": [64.8, 90.816, 237.624, 131.88]}]}}]

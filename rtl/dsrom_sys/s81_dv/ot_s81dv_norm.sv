@@ -67,15 +67,38 @@ module ot_s81dv_norm_finish #(
     always @(posedge clk or negedge rst_n) if (!rst_n) rsr <= {NRS{1'b0}}; else rsr <= {NRS{rs[0]}};
     reg go_t;
     always @(posedge clk or negedge rstn) if (!rstn) go_t <= 1'b0; else go_t <= go;
-    reg [P-1:0] iv; reg [P*8-1:0] ib; reg [P*K*32-1:0] id; reg [31:0] eps_c;
-    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t ? {P{1'b0}} : f_v;
+    // FORM-NF 11-04 (DIE-S81-56, OWNER conservative form, as ot_s81dv_eng_finish form 4; xfin dissolved, this block is its own
+    // hard core): f_v lands raw in its face flop; go clear after the flop (iv = old go_t ? 0 : f_v register).  One kept select
+    // flop per leaf, id one stage later (+1 cycle): a leaf only has its AND-OR.  Flit bases are sid * K by construction (xfin
+    // sbase), so leaf IX is only ever slot IX % K (3:1 leaf mux instead of 15:1).
+    reg [P-1:0] iv_r; reg go_q; reg [P*8-1:0] ib; reg [P*K*32-1:0] id; reg [31:0] eps_c;
+    always @(posedge clk or negedge rstn) if (!rstn) begin iv_r <= {P{1'b0}}; go_q <= 1'b0; end
+                                         else begin iv_r <= f_v; go_q <= go_t; end
+    wire [P-1:0] iv = iv_r & {P{~go_q}};
     always @(posedge clk) begin ib <= f_base; id <= f_d; eps_c <= eps; end
+    wire [P*NV-1:0] sel_q;
+    reg  [P*K*32-1:0] id_q;
+`ifdef OT_S81DV_MUT_NFQ     // bench mutant: leaf data not delayed with its select
+    always @* id_q = id;
+`else
+    always @(posedge clk) id_q <= id;
+`endif
+    genvar sp, sb;
+    generate for (sp = 0; sp < P; sp = sp + 1) begin : g_sp
+        for (sb = 0; sb < NV; sb = sb + 1) begin : g_sb
+            (* keep = "true" *) reg q;
+            always @(posedge clk or negedge rsr[(sp + sb) % NRS])
+                if (!rsr[(sp + sb) % NRS]) q <= 1'b0;
+                else q <= iv[sp] && !go_t && ib[sp * 8 +: 8] == (sb / K) * K;
+            assign sel_q[sp * NV + sb] = q;
+        end
+    end endgenerate
     // ---------------------------------------------------------------- node values: leaves (beats) and add nodes
     wire [31:0] V  [1:2*NVP-1];
     wire        VD [1:2*NVP-1];
     wire [NVP-1:0] dup;
-    wire        wr_v;                   // adder result write-back
-    wire [7:0]  wr_n;
+    wire        wr_v, wr_v1;            // adder result write-back; _1 = the tag one stage before the result
+    wire [7:0]  wr_n, wr_n1;
     wire [31:0] wr_d;
     genvar n, p, k;
     generate
@@ -95,12 +118,12 @@ module ot_s81dv_norm_finish #(
 `else
                         localparam integer IXM = IX;
 `endif
-                        if (IXM - k >= 0) begin : g_m
-                            assign m[p * K + k] = iv[p] && (ib[p * 8 +: 8] == IXM - k);
+                        if (k == IXM % K) begin : g_m
+                            assign m[p * K + k] = sel_q[p * NV + IXM];
                         end else begin : g_n
                             assign m[p * K + k] = 1'b0;
                         end
-                        assign mv[p * K + k + 1] = mv[p * K + k] | ({32{m[p * K + k]}} & id[(p * K + k) * 32 +: 32]);
+                        assign mv[p * K + k + 1] = mv[p * K + k] | ({32{m[p * K + k]}} & id_q[(p * K + k) * 32 +: 32]);
                     end
                 end
                 wire hit = |m;
@@ -109,7 +132,8 @@ module ot_s81dv_norm_finish #(
                     if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (hit) vld <= 1'b1;
                 always @(posedge clk) if (hit) val <= mv[P * K];
                 assign dup[IX] = hit && (vld || ((m & (m - 1)) != 0));
-                assign V[n] = val; assign VD[n] = vld;
+                // leaf value masked by its reset valid (read only when vld = 1): no free initial value in LEC, as eng_finish
+                assign V[n] = val & {32{vld}}; assign VD[n] = vld;
             end else begin : g_pad
                 assign dup[IX] = 1'b0;
                 assign V[n] = 32'd0; assign VD[n] = 1'b0;
@@ -118,9 +142,13 @@ module ot_s81dv_norm_finish #(
         for (n = 1; n < NVP; n = n + 1) begin : g_node
             if (isadd(n)) begin : g_add
                 reg [31:0] val; reg vld;
+                // FORM-NF: registered one-hot write enable pre-decoded one stage early; we_r == (wr_v && wr_n == n), cycle-exact
+                reg we_r;
                 always @(posedge clk or negedge rsr[n % NRS])
-                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (wr_v && wr_n == n) vld <= 1'b1;
-                always @(posedge clk) if (wr_v && wr_n == n) val <= wr_d;
+                    if (!rsr[n % NRS]) we_r <= 1'b0; else we_r <= wr_v1 && wr_n1 == n;
+                always @(posedge clk or negedge rsr[n % NRS])
+                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (we_r) vld <= 1'b1;
+                always @(posedge clk) if (we_r) val <= wr_d;
                 assign V[n] = val; assign VD[n] = vld;
             end else begin : g_pass
                 assign V[n] = V[2 * n]; assign VD[n] = VD[2 * n];
@@ -159,37 +187,85 @@ module ot_s81dv_norm_finish #(
             assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r;
         end
     endgenerate
-    wire [NG8-1:0] gs = ga1 & ~(ga1 - {{(NG8-1){1'b0}}, 1'b1});   // lowest non-empty group (16-bit)
+    // FORM-NF: lowest non-empty group by a log-depth OR prefix, same one-hot, 0 cycles (as eng_finish LEC-EGN-1)
+    localparam integer LG8 = (NG8 > 1) ? $clog2(NG8) : 1;
+    wire [NG8-1:0] gpo [0:LG8];
+    assign gpo[0] = ga1;
+    genvar gl, gi;
+    generate for (gl = 0; gl < LG8; gl = gl + 1) begin : g_gpo
+        for (gi = 0; gi < NG8; gi = gi + 1) begin : g_b
+            if (gi >= (1 << gl)) begin : g_o
+                assign gpo[gl + 1][gi] = gpo[gl][gi] | gpo[gl][gi - (1 << gl)];
+            end else begin : g_p
+                assign gpo[gl + 1][gi] = gpo[gl][gi];
+            end
+        end
+    end endgenerate
+    wire [NG8-1:0] gs = ga1 & ~{gpo[LG8][NG8-2:0], 1'b0};
     wire [NVP-1:0] win;
     generate
         for (n = 0; n < NVP; n = n + 1) begin : g_win
             assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n] && !go_t;
         end
     endgenerate
-    wire fire = |win;
-    wire [31:0] oa [0:NVP], ob [0:NVP];
-    wire [7:0]  ot [0:NVP];
-    assign oa[0] = 32'd0; assign ob[0] = 32'd0; assign ot[0] = 8'd0;
-    generate
-        for (n = 1; n <= NVP; n = n + 1) begin : g_mux
-            if (n < NVP && isadd(n)) begin : g_m
-                assign oa[n] = oa[n - 1] | ({32{win[n]}} & V[2 * n]);
-                assign ob[n] = ob[n - 1] | ({32{win[n]}} & V[2 * n + 1]);
-                assign ot[n] = ot[n - 1] | ({8{win[n]}} & n[7:0]);
-            end else begin : g_z
-                assign oa[n] = oa[n - 1]; assign ob[n] = ob[n - 1]; assign ot[n] = ot[n - 1];
-            end
+    // FORM-NF: the operand mux takes a registered win (+1 cycle) and a stage per 32 candidates (+1 cycle), then a 4:1 OR into
+    // a_q / b_q / t_q.  f_q moves with them, so the result tag line stays aligned.  The children V are stable those cycles:
+    // written once per go, cleared only on go_t, which already blocks win.  The issue loop keeps the unregistered win.
+    reg [NVP-1:0] win_op_q;
+    always @(posedge clk or negedge rstn) if (!rstn) win_op_q <= {NVP{1'b0}}; else win_op_q <= win;
+    localparam integer OGS = 32;
+    localparam integer NOG = NVP / OGS;
+    wire [31:0] tma [0:NVP-1], tmb [0:NVP-1];
+    wire [7:0]  tmt [0:NVP-1];
+    generate for (n = 0; n < NVP; n = n + 1) begin : g_mux
+        if (n >= 1 && isadd(n)) begin : g_m
+            assign tma[n] = {32{win_op_q[n]}} & V[2 * n];
+            assign tmb[n] = {32{win_op_q[n]}} & V[2 * n + 1];
+            assign tmt[n] = {8{win_op_q[n]}} & n[7:0];
+        end else begin : g_z
+            assign tma[n] = 32'd0; assign tmb[n] = 32'd0; assign tmt[n] = 8'd0;
         end
-    endgenerate
+    end endgenerate
+    wire [31:0] ga_q [0:NOG], gb_q [0:NOG];
+    wire [7:0]  gt_q [0:NOG];
+    assign ga_q[0] = 32'd0; assign gb_q[0] = 32'd0; assign gt_q[0] = 8'd0;
+    genvar og, oi;
+    generate for (og = 0; og < NOG; og = og + 1) begin : g_og
+        wire [31:0] ca_ [0:OGS], cb_ [0:OGS];
+        wire [7:0]  ct_ [0:OGS];
+        assign ca_[0] = 32'd0; assign cb_[0] = 32'd0; assign ct_[0] = 8'd0;
+        for (oi = 0; oi < OGS; oi = oi + 1) begin : g_oi
+            assign ca_[oi + 1] = ca_[oi] | tma[og * OGS + oi];
+            assign cb_[oi + 1] = cb_[oi] | tmb[og * OGS + oi];
+            assign ct_[oi + 1] = ct_[oi] | tmt[og * OGS + oi];
+        end
+        reg [31:0] ra, rb; reg [7:0] rt;
+        always @(posedge clk) begin ra <= ca_[OGS]; rb <= cb_[OGS]; rt <= ct_[OGS]; end
+        assign ga_q[og + 1] = ga_q[og] | ra;
+        assign gb_q[og + 1] = gb_q[og] | rb;
+        assign gt_q[og + 1] = gt_q[og] | rt;
+    end endgenerate
+    reg  fire_g;
+    always @(posedge clk or negedge rstn) if (!rstn) fire_g <= 1'b0; else fire_g <= |win_op_q;
     reg  f_q; reg [31:0] a_q, b_q; reg [7:0] t_q;      // operand stage (registered: issue mux -> adder)
-    always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire;
-    always @(posedge clk) begin a_q <= oa[NVP]; b_q <= ob[NVP]; t_q <= ot[NVP]; end
+`ifdef OT_S81DV_MUT_NFOPG   // bench mutant: valid not moved with the operand stage
+    always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= |win_op_q;
+`else
+    always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire_g;
+`endif
+    always @(posedge clk) begin a_q <= ga_q[NOG]; b_q <= gb_q[NOG]; t_q <= gt_q[NOG]; end
     wire [LAV:0] av;
     wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rstn), .v(f_q), .vd(av));
     ot_dsrom_qadd #(.LAT(LAV)) u_a (clk, rstn, f_q, a_q, b_q, wr_d, f_add);
-    ot_hdc_delay #(.W(8), .D(LAV)) u_t (.clk(clk), .rst_n(rstn), .d(t_q), .q(wr_n));
+    // tag line split LAV-1 + 1 (same LAV flops)
+    ot_hdc_delay #(.W(8), .D(LAV - 1)) u_t (.clk(clk), .rst_n(rstn), .d(t_q), .q(wr_n1));
+    ot_hdc_delay #(.W(8), .D(1)) u_t1 (.clk(clk), .rst_n(rstn), .d(wr_n1), .q(wr_n));
+    assign wr_v1 = av[LAV - 1];
     assign wr_v = av[LAV];
+    // FORM-NF: dup OR gets a stage (fault +1 cycle, sticky until go; cleared by go_t so a dup in the go_t cycle stays ignored)
+    reg dup_t;
+    always @(posedge clk or negedge rstn) if (!rstn) dup_t <= 1'b0; else dup_t <= !go_t && |dup;
     // ---------------------------------------------------------------- tail: / D, + eps, rsqrt (ot_dsrom_su_norm)
     reg ssr_v; reg [31:0] ssr;
     always @(posedge clk or negedge rstn) if (!rstn) ssr_v <= 1'b0; else ssr_v <= wr_v && wr_n == 8'd1 && !go_t;
@@ -202,16 +278,22 @@ module ot_s81dv_norm_finish #(
     ot_dsrom_qadd #(.LAT(LA)) u_eps (clk, rstn, mq_v, mq, eps_c, me, f_eps);
     assign me_v = ve[LA];
     ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rstn), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
-    reg r_v_o; reg [31:0] r_o; reg flt;
+    // FORM-NF: uniform out face as eng_finish: face flop -> negative-edge flop -> port (same T/2 hold window, 0 cycles).
+    // fault = its own face flop loading the next state of the kept sticky flt (no output pin flop reads itself).
+    reg r_v_q; reg [31:0] r_q; (* keep = "true" *) reg flt; reg flt_o;
+    wire flt_set = f_add || f_div || f_eps || f_rsq || dup_t;
     always @(posedge clk or negedge rstn)
-        if (!rstn) begin r_v_o <= 1'b0; flt <= 1'b0; end
+        if (!rstn) begin r_v_q <= 1'b0; flt <= 1'b0; flt_o <= 1'b0; end
         else begin
-            r_v_o <= rr_v;
+            r_v_q <= rr_v;
+            flt_o <= go_t ? 1'b0 : (flt | flt_set);
             if (go_t) flt <= 1'b0;
-            else if (f_add || f_div || f_eps || f_rsq || (|dup)) flt <= 1'b1;
+            else if (flt_set) flt <= 1'b1;
         end
-    always @(posedge clk) r_o <= rr;
-    assign r_v = r_v_o; assign r = r_o; assign fault = flt;
+    always @(posedge clk) r_q <= rr;
+    reg r_v_n, flt_n; reg [31:0] r_n;
+    always @(negedge clk) begin r_v_n <= r_v_q; r_n <= r_q; flt_n <= flt_o; end
+    assign r_v = r_v_n; assign r = r_n; assign fault = flt_n;
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -287,6 +369,43 @@ module ot_s81dv_eng_finish #(
                                          else begin iv_r <= f_v; go_q <= go_t; end
     wire [P-1:0] iv = iv_r & {P{~go_q}};
     always @(posedge clk) begin it <= f_t; ib <= f_base; id <= f_d; end
+    // DIE-S81-52 11-04 (xfin form 3, form 2 routed TT -254 on 2789 g_leaf val/D: ib/it/iv compare in every leaf -> enable +
+    // data mux in one cycle): +1 cycle at the input.  One registered one-hot select per port x tree x base group (K
+    // leaves each) and id one stage later, so a leaf only has its AND-OR.  iv is blocked by go_t here so a flit that the
+    // old form lost to the go_t clear priority is still lost.  OT_S81DV_EF_NOLEAFQ = form 2.
+    // DIE-S81-54/ECO 11-04 (form 4, form 3 routed TT -66.73 on 153 ep: one group select drove 5 leaves x 32 enable + AND-OR
+    // through 4 fanout buffers).  One kept select flop per leaf, same D as its group, 0 cycles.
+    // OT_S81DV_EF_GROUPSEL = form 3.
+`ifndef OT_S81DV_EF_NOLEAFQ
+`ifdef OT_S81DV_EF_GROUPSEL
+    localparam integer NBG = (NV + K - 1) / K;
+    localparam integer SGK = K;
+    localparam integer SGD = 1;
+`else
+    localparam integer NBG = NV;
+    localparam integer SGK = 1;
+    localparam integer SGD = K;
+`endif
+    wire [P*T*NBG-1:0] sel_q;
+    reg  [P*K*32-1:0] id_q;
+`ifdef OT_S81DV_MUT_LEAFQ   // bench mutant: leaf data not delayed with its select
+    always @* id_q = id;
+`else
+    always @(posedge clk) id_q <= id;
+`endif
+    genvar sp, st, sb;
+    generate for (sp = 0; sp < P; sp = sp + 1) begin : g_sp
+        for (st = 0; st < T; st = st + 1) begin : g_st
+            for (sb = 0; sb < NBG; sb = sb + 1) begin : g_sb
+                (* keep = "true" *) reg q;
+                always @(posedge clk or negedge rsr[(sp + sb) % NRS])
+                    if (!rsr[(sp + sb) % NRS]) q <= 1'b0;
+                    else q <= iv[sp] && !go_t && it[sp * 2 +: 2] == st && ib[sp * 8 +: 8] == (sb / SGD) * K;
+                assign sel_q[(sp * T + st) * NBG + sb] = q;
+            end
+        end
+    end endgenerate
+`endif
     wire        wr_v, wr_v1;
     wire [CW-1:0] wr_n, wr_n1;
     wire [31:0] wr_d;
@@ -307,11 +426,19 @@ module ot_s81dv_eng_finish #(
                         // ENG flit bases are sid * K by construction (xfin fb), so leaf IX is only ever slot IX % K:
                         // the other slots are not wired (3:1 leaf mux instead of 15:1)
                         if (k == IX % K) begin : g_m
+`ifdef OT_S81DV_EF_NOLEAFQ
                             assign m[p * K + k] = iv[p] && it[p * 2 +: 2] == t && (ib[p * 8 +: 8] == IX - k);
+`else
+                            assign m[p * K + k] = sel_q[(p * T + t) * NBG + IX / SGK];
+`endif
                         end else begin : g_n
                             assign m[p * K + k] = 1'b0;
                         end
+`ifdef OT_S81DV_EF_NOLEAFQ
                         assign mv[p * K + k + 1] = mv[p * K + k] | ({32{m[p * K + k]}} & id[(p * K + k) * 32 +: 32]);
+`else
+                        assign mv[p * K + k + 1] = mv[p * K + k] | ({32{m[p * K + k]}} & id_q[(p * K + k) * 32 +: 32]);
+`endif
                     end
                 end
                 wire hit = |m;
@@ -320,7 +447,11 @@ module ot_s81dv_eng_finish #(
                     if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (hit) vld <= 1'b1;
                 always @(posedge clk) if (hit) val <= mv[P * K];
                 assign dup[t * NVP + IX] = hit && (vld || ((m & (m - 1)) != 0));
-                assign V[t][n] = val; assign VD[t][n] = vld;
+                // LEC-EGN-1 11-03: the leaf value is masked by its (reset) valid bit.  val has no reset and is read only
+                // when vld = 1 (rdy needs both children valid), so V is unchanged wherever it is observed; the mask makes
+                // V a defined 0 before the first load, so the LEC need not pair free initial values of val (kit
+                // ot_s81dv_eng_finish_rf1_r64 was UNPROVEN on a_q / b_q through V[137..] vs g_leaf[138].g_live.val).
+                assign V[t][n] = val & {32{vld}}; assign VD[t][n] = vld;
             end else begin : g_pad
                 assign dup[t * NVP + IX] = 1'b0;
                 assign V[t][n] = 32'd0; assign VD[t][n] = 1'b0;
@@ -374,11 +505,44 @@ module ot_s81dv_eng_finish #(
             else begin o_r <= o8; g_r <= |r8; end
         assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r;
     end endgenerate
+    // LEC-EGN-1 11-03 (OWNER conservative form, xfin S81-046): lowest non-empty group by a log-depth OR prefix
+    // (Kogge-Stone, $clog2(NG8) levels) instead of the ga1 - 1 borrow chain (96-bit, ~545 ps of the placed -165 ps
+    // g_r -> a_q path).  gs = ga1 & ~(OR of all lower groups): the same one-hot lowest set bit, 0 cycles.
+    localparam integer LG8 = (NG8 > 1) ? $clog2(NG8) : 1;
+    wire [NG8-1:0] gpo [0:LG8];
+    assign gpo[0] = ga1;
+    genvar gl, gi;
+    generate for (gl = 0; gl < LG8; gl = gl + 1) begin : g_gpo
+        for (gi = 0; gi < NG8; gi = gi + 1) begin : g_b
+            if (gi >= (1 << gl)) begin : g_o
+                assign gpo[gl + 1][gi] = gpo[gl][gi] | gpo[gl][gi - (1 << gl)];
+            end else begin : g_p
+                assign gpo[gl + 1][gi] = gpo[gl][gi];
+            end
+        end
+    end endgenerate
+`ifdef OT_S81DV_EF_GSCHAIN
     wire [NG8-1:0] gs = ga1 & ~(ga1 - {{(NG8-1){1'b0}}, 1'b1});
+`else
+    wire [NG8-1:0] gs = ga1 & ~{gpo[LG8][NG8-2:0], 1'b0};
+`endif
     generate for (n = 0; n < NC; n = n + 1) begin : g_win
         assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n] && !go_t;
     end endgenerate
-    wire fire = |win;
+    // LEC-EGN-1 11-03 (OWNER conservative form): the operand mux takes a REGISTERED copy of win (win_op_q), so the
+    // feed-forward select -> 768:1 AND-OR -> a_q / b_q / t_q branch gets its own stage.  The issue loop (win -> iss ->
+    // rdy) keeps the unregistered win (its 2-cycle timing is unchanged).  Cost: +1 cycle from issue to the adder
+    // operands (f_q / a_q / b_q / t_q move together, so the result tag line stays aligned).  The children V of a
+    // winner are stable that extra cycle: each node / leaf value is written once per tile and cleared only on go_t,
+    // which already blocks win.
+`ifdef OT_S81DV_EF_NOWINQ
+    wire [NC-1:0] win_op_q = win;
+`else
+    reg  [NC-1:0] win_op_q;
+    always @(posedge clk or negedge rstn) if (!rstn) win_op_q <= {NC{1'b0}}; else win_op_q <= win;
+`endif
+`ifdef OT_S81DV_EF_NOOPG
+    wire fire = |win_op_q;
     wire [31:0] oa [0:NC], ob [0:NC];
     wire [CW-1:0] ot [0:NC];
     assign oa[0] = 32'd0; assign ob[0] = 32'd0; assign ot[0] = {CW{1'b0}};
@@ -386,9 +550,9 @@ module ot_s81dv_eng_finish #(
         for (n = 0; n < NVP; n = n + 1) begin : g_mux
             localparam integer C = t * NVP + n;
             if (n >= 1 && isadd(n)) begin : g_m
-                assign oa[C + 1] = oa[C] | ({32{win[C]}} & V[t][ca(n)]);
-                assign ob[C + 1] = ob[C] | ({32{win[C]}} & V[t][cb(n)]);
-                assign ot[C + 1] = ot[C] | ({CW{win[C]}} & C[CW-1:0]);
+                assign oa[C + 1] = oa[C] | ({32{win_op_q[C]}} & V[t][ca(n)]);
+                assign ob[C + 1] = ob[C] | ({32{win_op_q[C]}} & V[t][cb(n)]);
+                assign ot[C + 1] = ot[C] | ({CW{win_op_q[C]}} & C[CW-1:0]);
             end else begin : g_z
                 assign oa[C + 1] = oa[C]; assign ob[C + 1] = ob[C]; assign ot[C + 1] = ot[C];
             end
@@ -397,6 +561,55 @@ module ot_s81dv_eng_finish #(
     reg  f_q; reg [31:0] a_q, b_q; reg [CW-1:0] t_q;
     always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) begin a_q <= oa[NC]; b_q <= ob[NC]; t_q <= ot[NC]; end
+`else
+    // DIE-S81-52 11-04 (xfin form 3, form 2 routed TT -257 win_op_q -> OR tree -> a_q): the operand AND-OR gets a stage
+    // per 32 candidates, then a 12:1 OR into a_q / b_q / t_q.  +1 cycle per issue on top of win_op_q; f_q moves with them,
+    // so the result tag line stays aligned.  Children V stay stable the extra cycle, as for win_op_q.
+    localparam integer OGS = 32;
+    localparam integer NOG = NC / OGS;
+    wire [31:0] tma [0:NC-1], tmb [0:NC-1];
+    wire [CW-1:0] tmt [0:NC-1];
+    generate for (t = 0; t < T; t = t + 1) begin : g_mt
+        for (n = 0; n < NVP; n = n + 1) begin : g_mux
+            localparam integer C = t * NVP + n;
+            if (n >= 1 && isadd(n)) begin : g_m
+                assign tma[C] = {32{win_op_q[C]}} & V[t][ca(n)];
+                assign tmb[C] = {32{win_op_q[C]}} & V[t][cb(n)];
+                assign tmt[C] = {CW{win_op_q[C]}} & C[CW-1:0];
+            end else begin : g_z
+                assign tma[C] = 32'd0; assign tmb[C] = 32'd0; assign tmt[C] = {CW{1'b0}};
+            end
+        end
+    end endgenerate
+    wire [31:0] ga_q [0:NOG], gb_q [0:NOG];
+    wire [CW-1:0] gt_q [0:NOG];
+    assign ga_q[0] = 32'd0; assign gb_q[0] = 32'd0; assign gt_q[0] = {CW{1'b0}};
+    genvar og, oi;
+    generate for (og = 0; og < NOG; og = og + 1) begin : g_og
+        wire [31:0] ca_ [0:OGS], cb_ [0:OGS];
+        wire [CW-1:0] ct_ [0:OGS];
+        assign ca_[0] = 32'd0; assign cb_[0] = 32'd0; assign ct_[0] = {CW{1'b0}};
+        for (oi = 0; oi < OGS; oi = oi + 1) begin : g_oi
+            assign ca_[oi + 1] = ca_[oi] | tma[og * OGS + oi];
+            assign cb_[oi + 1] = cb_[oi] | tmb[og * OGS + oi];
+            assign ct_[oi + 1] = ct_[oi] | tmt[og * OGS + oi];
+        end
+        reg [31:0] ra, rb; reg [CW-1:0] rt;
+        always @(posedge clk) begin ra <= ca_[OGS]; rb <= cb_[OGS]; rt <= ct_[OGS]; end
+        assign ga_q[og + 1] = ga_q[og] | ra;
+        assign gb_q[og + 1] = gb_q[og] | rb;
+        assign gt_q[og + 1] = gt_q[og] | rt;
+    end endgenerate
+    reg  fire_g;
+    always @(posedge clk or negedge rstn) if (!rstn) fire_g <= 1'b0; else fire_g <= |win_op_q;
+    reg  f_q; reg [31:0] a_q, b_q; reg [CW-1:0] t_q;
+`ifdef OT_S81DV_MUT_OPG     // bench mutant: valid not moved with the operand stage
+    always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= |win_op_q;
+`else
+    always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire_g;
+`endif
+    always @(posedge clk) begin a_q <= ga_q[NOG]; b_q <= gb_q[NOG]; t_q <= gt_q[NOG]; end
+`endif
     wire [LAV:0] av; wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rstn), .v(f_q), .vd(av));
     ot_dsrom_qadd #(.LAT(LAV)) u_a (clk, rstn, f_q, a_q, b_q, wr_d, f_add);
@@ -405,6 +618,18 @@ module ot_s81dv_eng_finish #(
     ot_hdc_delay #(.W(CW), .D(1)) u_t1 (.clk(clk), .rst_n(rstn), .d(wr_n1), .q(wr_n));
     assign wr_v1 = av[LAV - 1];
     assign wr_v = av[LAV];
+    // DIE-S81-52 11-04 (xfin form 3, flt -90 through the 240-bit dup OR): one stage per tree; fault +1 cycle, sticky until
+    // go, cleared by go_t as flt so a dup in the go_t cycle stays ignored.  OT_S81DV_EF_NOLEAFQ = form 2.
+`ifdef OT_S81DV_EF_NOLEAFQ
+    wire dup_any = |dup;
+`else
+    reg [T-1:0] dup_t;
+    integer dti;
+    always @(posedge clk or negedge rstn)
+        if (!rstn) dup_t <= {T{1'b0}};
+        else for (dti = 0; dti < T; dti = dti + 1) dup_t[dti] <= !go_t && |dup[dti * NVP +: NVP];
+    wire dup_any = |dup_t;
+`endif
     // roots: node 1 of each tree
     reg [T-1:0] dn; (* keep = "true" *) reg flt;
     reg r_v_q; reg [31:0] r_hh_q, r_kk_q, r_dd_q;   // RF-B: the face flops (ports = their lockup latches)
@@ -419,7 +644,7 @@ module ot_s81dv_eng_finish #(
                 if (wr_v && wr_n == 2 * NVP + 1)     dn[2] <= 1'b1;
                 if (dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
                     == {T{1'b1}}) r_v_q <= 1'b1;
-                if (f_add || (|dup)) flt <= 1'b1;
+                if (f_add || dup_any) flt <= 1'b1;
             end
         end
     // S81-CORES-KITS-9 10-31 (hard child face rule: no output pin flop reads itself): the root values are held in
@@ -439,7 +664,7 @@ module ot_s81dv_eng_finish #(
     end
     reg flt_o;
     always @(posedge clk or negedge rstn)
-        if (!rstn) flt_o <= 1'b0; else flt_o <= go_t ? 1'b0 : (flt | f_add | (|dup));
+        if (!rstn) flt_o <= 1'b0; else flt_o <= go_t ? 1'b0 : (flt | f_add | dup_any);
     // RF-B 11-03 (S81-RF1 RE-FORM, DIE-S81-51/CLK crossing table row 1): every output face = face flop -> negative-level
     // lockup latch -> port, no logic between (core-owned hold-safe face: the port moves at the falling edge, half a
     // period after the flop; a transparent-low latch between rising-edge flops is a wire in the cycle model).

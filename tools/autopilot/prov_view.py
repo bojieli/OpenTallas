@@ -14,7 +14,7 @@ such child, so type-level place / route failures surface early.  Still a hard vi
                       with the same port base names.  A plan entry that already names a lef (noview) keeps that plan
                       LEF; only the routed lib is taken (port names checked against the plan LEF).
             contract  blackbox LEF from the plan outline + pins_file (pin directions: pins_file dir, plan LEF, child
-                      RTL header) with OBS M1..obs_max (default M7, a superset of any plan-obeying child), VDD/VSS
+                      RTL header) with OBS M1..obs_max (default M7, a superset of any plan-obeying child) less pin windows, VDD/VSS
                       stripes; budget lib (TT/FF) from the plan arrival contracts: both faces registered, IO_BUDGET x T
                       each side (gen_phys.sdc), clock pins carry the plan core-tap insertion as max/min_clock_tree_path.
           writes D/views/M/{M.lef, M_tt.lib, M_ff.lib}, the overlay plan dir D/plan (links to every entry of the plan
@@ -49,6 +49,7 @@ RULE = ("COORD 2026-11-03 17:50 (C) PROVISIONAL-VIEW launch (KW-PROV-1): built o
 IO_BUDGET = 0.2                 # = gen_phys.IO_BUDGET: each side of a registered seam
 OUT_SLEW_PS = 20.0
 IN_CAP_FF = 1.0
+PIN_ACCESS_BAND = 0.24  # um: smallest tested form with planar and via access on M4/M5 edge pins
 RECT = {"M2": (0.072, 0.018), "M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084), "M6": (0.112, 0.032),
         "M7": (0.032, 0.112), "M8": (0.16, 0.08), "M9": (0.08, 0.16)}
 CLOCK_RE = re.compile(r"^(clk|ck|clock)(_[A-Za-z0-9]+)*$|_(clk|ck)$", re.I)
@@ -317,6 +318,43 @@ def name_dir(n):
 
 
 # ------------------------------------------------------------------------------------------------------ writers
+def contract_obs(w, h, pins, obs_top):
+    """OBS lines: blanket M1..obs_top, except an edge window PIN_ACCESS_BAND deep and +- that wide around each pin
+    on its own layer and the layer above. A blanket on the pin layer leaves no access point at all (DRT-0073 on
+    whichever pin of the master comes first), so the parent stops at pin_access. The rest of the edge band stays
+    blocked, so a parent cannot run wires over a child that may use those layers. A pin further than the band
+    from every edge gets no window."""
+    b = PIN_ACCESS_BAND
+    open_at = {}  # layer index -> {edge: [(lo, hi)]}
+    for p in pins:
+        n = int(str(p.get("layer") or "M4").lstrip("Mm"))
+        x, y = float(p["x"]), float(p["y"])
+        for edge, dist, along in (("W", x, y), ("E", w - x, y), ("S", y, x), ("N", h - y, x)):
+            if dist <= b:
+                for i in (n, n + 1):
+                    open_at.setdefault(i, {}).setdefault(edge, []).append((along - b, along + b))
+    out = []
+    for i in range(1, obs_top + 1):
+        out.append(f"    LAYER M{i} ;")
+        edges = open_at.get(i)
+        if not edges:
+            out.append(f"      RECT 0 0 {w:.4f} {h:.4f} ;")
+            continue
+        rects = [(b, b, w - b, h - b)]
+        for edge, lo, hi in (("S", 0.0, w), ("N", 0.0, w), ("W", b, h - b), ("E", b, h - b)):
+            at = lo
+            spans = []
+            for a, c in sorted(edges.get(edge, [])) + [(hi, hi)]:
+                if a > at:
+                    spans.append((at, min(a, hi)))
+                at = max(at, c)
+            for a, c in spans:
+                rects.append({"S": (a, 0.0, c, b), "N": (a, h - b, c, h),
+                              "W": (0.0, a, b, c), "E": (w - b, a, w, c)}[edge])
+        out += ["      RECT " + " ".join(f"{v:.4f}" for v in r) + " ;" for r in rects]
+    return out
+
+
 def contract_lef(module, w, h, pins, dirs, obs_top):
     """blackbox LEF: plan pins (centre x/y, layer) with plan directions, OBS M1..obs_top, VDD/VSS M5/M4 stripes"""
     L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {module}", "  CLASS BLOCK ;",
@@ -341,8 +379,7 @@ def contract_lef(module, w, h, pins, dirs, obs_top):
             L.append("        RECT " + " ".join(f"{v:.4f}" for v in r) + " ;")
         L += ["    END", f"  END {net}"]
     L.append("  OBS")
-    for i in range(1, obs_top + 1):
-        L += [f"    LAYER M{i} ;", f"      RECT 0 0 {w:.4f} {h:.4f} ;"]
+    L += contract_obs(w, h, pins, obs_top)
     L += ["  END", f"END {module}", "END LIBRARY", ""]
     return "\n".join(L)
 
