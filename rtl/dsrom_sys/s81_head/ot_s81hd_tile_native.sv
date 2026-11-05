@@ -43,6 +43,7 @@ module ot_s81hd_tile_native #(
     //                   the capture / fire state waits the same number of cycles (+CMP_STAGES a tile on the chain)
     parameter integer A_INPUT_STAGES = 0,
     parameter integer MERGE_HOP = 0,
+    parameter integer ROW_IN_REG = 0,           // DIE-HEAD-69 11-05: bundle row_in register (static strap, 0 TOK)
     parameter integer CMP_STAGES = 0
 ) (
     input wire hci0_ck0_i,
@@ -136,7 +137,7 @@ module ot_s81hd_tile_native #(
     wire [127:0] nc_hd;
     wire [67:0]  nc_hr;
     ot_s81hd_bundle_native #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4), .CV(CV),
-                     .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP)) u_b (
+                     .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP), .ROW_IN_REG(ROW_IN_REG)) u_b (
         .hci0_ck0_i(hci0_ck0_i), .hci0_ck1_i(hci0_ck1_i), .hci0_mesh_i(hci0_mesh_i), .hci0_rst_i(hci0_rst_i), .hci0_ck0_o(hci0_ck0_o), .hci0_ck1_o(hci0_ck1_o), .hci0_mesh_o(hci0_mesh_o), .hci0_rst_o(hci0_rst_o), .hci1_ck0_i(hci1_ck0_i), .hci1_ck1_i(hci1_ck1_i), .hci1_mesh_i(hci1_mesh_i), .hci1_rst_i(hci1_rst_i), .hci1_ck0_o(hci1_ck0_o), .hci1_ck1_o(hci1_ck1_o), .hci1_mesh_o(hci1_mesh_o), .hci1_rst_o(hci1_rst_o), .hci2_ck0_i(hci2_ck0_i), .hci2_ck1_i(hci2_ck1_i), .hci2_mesh_i(hci2_mesh_i), .hci2_rst_i(hci2_rst_i), .hci2_ck0_o(hci2_ck0_o), .hci2_ck1_o(hci2_ck1_o), .hci2_mesh_o(hci2_mesh_o), .hci2_rst_o(hci2_rst_o), .hci3_ck0_i(hci3_ck0_i), .hci3_ck1_i(hci3_ck1_i), .hci3_mesh_i(hci3_mesh_i), .hci3_rst_i(hci3_rst_i), .hci3_ck0_o(hci3_ck0_o), .hci3_ck1_o(hci3_ck1_o), .hci3_mesh_o(hci3_mesh_o), .hci3_rst_o(hci3_rst_o), .hci4_ck0_i(hci4_ck0_i), .hci4_ck1_i(hci4_ck1_i), .hci4_mesh_i(hci4_mesh_i), .hci4_rst_i(hci4_rst_i), .hci4_ck0_o(hci4_ck0_o), .hci4_ck1_o(hci4_ck1_o), .hci4_mesh_o(hci4_mesh_o), .hci4_rst_o(hci4_rst_o),
         .clk(ck), .rst_n(rst_n),
 `ifdef OT_S81HD_MUT_TEN_IGNORED
