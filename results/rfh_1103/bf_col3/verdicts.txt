@@ -1,0 +1,17 @@
+# DIE-S81-51/RF-H 11-03 ot_v41_bf_col3 vs ot_v41_bf_col lockstep (run3.sh <repo> <out> <mut> <seed> <free>), RTL @ this branch
+COL3 PASS cycles=100000 partials=16542 bf_words=33274 fp_words=33717 qy_bkf_rises=1 free=1 errors=0 mut=0 seed=1
+COL3 PASS cycles=100000 partials=16209 bf_words=33680 fp_words=34126 qy_bkf_rises=1 free=1 errors=0 mut=0 seed=7
+COL3 PASS cycles=100000 partials=9853 bf_words=19341 fp_words=19132 qy_bkf_rises=1 free=0 errors=0 mut=0 seed=1
+COL3 PASS cycles=100000 partials=9552 bf_words=19264 fp_words=18592 qy_bkf_rises=1 free=0 errors=0 mut=0 seed=7
+COL3 FAIL errors=3205 latency_off=1919 partials=3255/3222 bf_words=6683 fp_words=6795 mut=1 seed=1
+COL3 FAIL errors=3086 latency_off=3063 partials=3255/3117 bf_words=6683 fp_words=6795 mut=2 seed=1
+# expected: mut=0 PASS (seeds 1/7, free 1 = exact +3 latency, free 0 = legal gating), mut=1 RFH3_MUTANT_EQ FAIL, mut=2 RFH3_MUTANT_FACE FAIL (caught)
+# DIE-S81-52/RF-H 11-03 r2 (face_guard fix: ze_d r_ze -> r_ze_a/b out-face flops; half in-face capture u_ze_f of ze_c), run3.sh, tb strict +3 also under free 0, RTL @ this branch
+COL3 PASS cycles=100000 partials=16542 bf_words=33274 fp_words=33717 qy_bkf_rises=1 free=1 errors=0 mut=0 seed=1
+COL3 FAIL errors=16588 latency_off=3455 partials=16542/16638 bf_words=33274 fp_words=33717 mut=1 seed=1
+COL3 FAIL errors=16068 latency_off=16040 partials=16542/16107 bf_words=33274 fp_words=33717 mut=2 seed=1
+COL3 FAIL errors=9677 latency_off=9673 partials=9853/9743 bf_words=19341 fp_words=19132 mut=3 seed=1
+COL3 PASS cycles=100000 partials=16209 bf_words=33680 fp_words=34126 qy_bkf_rises=1 free=1 errors=0 mut=0 seed=7
+COL3 PASS cycles=100000 partials=9853 bf_words=19341 fp_words=19132 qy_bkf_rises=1 free=0 errors=0 mut=0 seed=1
+COL3 PASS cycles=100000 partials=9552 bf_words=19264 fp_words=18592 qy_bkf_rises=1 free=0 errors=0 mut=0 seed=7
+# expected: mut=0 PASS (seeds 1/7, free 1|0, exact +3 latency in both), mut=1 EQ FAIL, mut=2 FACE FAIL, mut=3 RFH3_MUTANT_ZE=8 free 0 FAIL (caught; proves the free 0 bench sees a late half gate)

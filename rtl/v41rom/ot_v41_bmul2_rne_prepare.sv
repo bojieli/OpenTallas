@@ -14,6 +14,8 @@ module ot_v41_bmul2_rne_prepare #(
     // after the operand decode (stage 1 = exponent add only), after the partial-product add (stage 3 = normalise
     // select only) and after the subnormal RNE encode (stage 4 = result select only).  Routed BF HITFIX GRT at SS:
     // s1_e -212, s3_f -121, s4_y -224 ps.
+    // XS = 2 (RF-H bf_col conservative form, 2026-11-03): as XS = 1 plus one register cut inside the subnormal RNE
+    // encode (ot_v41_bmul_subnormal_rne_cut, below) and one matching stage on every other stage-4 field: latency 8 -> 9.
     parameter integer XS = 0
 ) (
     input  wire        clk,
@@ -120,7 +122,9 @@ module ot_v41_bmul2_rne_prepare #(
     wire [3:0]  sub_sh = 4'd1 - s3_be[3:0];
     wire [23:0] sub_v = sig24 >> sub_sh;
     wire [31:0] gradual_y;
-    generate if (GRADUAL_RNE != 0) begin : g_gradual
+    generate if (GRADUAL_RNE != 0 && XS >= 2) begin : g_gradual_cut
+        ot_v41_bmul_subnormal_rne_cut u_encode (.clk(clk), .sign_i(s3_s), .biased_i(s3_be), .sig_i(sig24), .y(gradual_y));
+    end else if (GRADUAL_RNE != 0) begin : g_gradual
         ot_v41_bmul_subnormal_rne_prepare u_encode (.sign_i(s3_s), .biased_i(s3_be), .sig_i(sig24), .y(gradual_y));
     end else begin : g_baseline
         assign gradual_y = 32'd0;
@@ -130,7 +134,19 @@ module ot_v41_bmul2_rne_prepare #(
     wire signed [10:0] k_be;
     wire [22:0] k_f, k_sub;
     wire [31:0] k_gy;
-    if (XS != 0) begin : g_x4
+    if (XS >= 2) begin : g_x4c
+        // stage A: every stage-3 field registered beside the encoder's internal cut; stage B: all registered again with
+        // the encoder output (gradual_y is already one cycle late, so r_gy is registered once, at stage B)
+        reg r_v, r_s, r_z, r_nf; reg signed [10:0] r_be; reg [22:0] r_f, r_sub;
+        reg q_v, q_s, q_z, q_nf; reg signed [10:0] q_be; reg [22:0] q_f, q_sub; reg [31:0] q_gy;
+        always @(posedge clk or negedge rst_n) if (!rst_n) begin r_v <= 1'b0; q_v <= 1'b0; end else begin r_v <= s3_v; q_v <= r_v; end
+        always @(posedge clk) begin
+            r_s <= s3_s; r_z <= s3_z; r_nf <= s3_nf; r_be <= s3_be; r_sub <= sub_v[22:0]; r_f <= s3_f;
+            q_s <= r_s; q_z <= r_z; q_nf <= r_nf; q_be <= r_be; q_sub <= r_sub; q_f <= r_f; q_gy <= gradual_y;
+        end
+        assign k_v = q_v; assign k_s = q_s; assign k_z = q_z; assign k_nf = q_nf; assign k_be = q_be; assign k_f = q_f;
+        assign k_sub = q_sub; assign k_gy = q_gy;
+    end else if (XS != 0) begin : g_x4
         reg r_v, r_s, r_z, r_nf; reg signed [10:0] r_be; reg [22:0] r_f, r_sub; reg [31:0] r_gy;
         always @(posedge clk or negedge rst_n) if (!rst_n) r_v <= 1'b0; else r_v <= s3_v;
         always @(posedge clk) begin
@@ -166,3 +182,43 @@ module ot_v41_bmul2_rne_prepare #(
     end
 endmodule
 
+
+// ot_v41_bmul_subnormal_rne_cut (RF-H bf_col conservative form, 2026-11-03): ot_v41_bmul_subnormal_rne_prepare with one
+// register cut between the shift / guard / sticky classification and the round increment + result select.  Same function,
+// one cycle later (y is the prepare encoder output of the inputs one clock earlier).  The single-cycle encode was the
+// routed bf_col worst setup path (s3_be -> u_encode -> g_x4.r_gy, ~906 ps of logic against the 833 ps clock).
+module ot_v41_bmul_subnormal_rne_cut (
+    input  wire               clk,
+    input  wire               sign_i,
+    input  wire signed [10:0] biased_i,
+    input  wire [23:0]        sig_i,
+    output wire [31:0]        y
+);
+    wire signed [10:0] shift_full = 11'sd1 - biased_i;
+    wire in_range = shift_full >= 11'sd1 && shift_full <= 11'sd24;
+    wire [4:0] shift_q = in_range ? shift_full[4:0] : 5'd1;
+    wire [4:0] guard_index = shift_q - 5'd1;
+    wire [23:0] retained = in_range ? (sig_i >> shift_q) : 24'd0;
+    wire guard_bit = in_range && sig_i[guard_index];
+    wire [23:0] sticky_terms;
+    genvar k;
+    generate for (k = 0; k < 24; k = k + 1) begin : g_sticky
+        assign sticky_terms[k] = in_range && (k < guard_index) && sig_i[k];
+    end endgenerate
+    // cut: classification registered
+    reg        c_s, c_in, c_g, c_st;
+    reg [23:0] c_ret;
+    always @(posedge clk) begin
+        c_s <= sign_i; c_in <= in_range; c_g <= guard_bit; c_st <= |sticky_terms;
+`ifdef RFH_MUTANT_RNECUT
+        c_ret <= retained ^ 24'd1;   // negative control: retained LSB flipped in the added stage
+`else
+        c_ret <= retained;
+`endif
+    end
+    wire increment = c_g && (c_st || c_ret[0]);
+    wire [23:0] rounded;
+    wire rounded_co;
+    ot_v41_inc #(.W(24)) u_round (.a(c_ret), .inc(increment), .y(rounded), .co(rounded_co));
+    assign y = (!c_in || rounded == 24'd0) ? 32'd0 : {c_s, 7'd0, rounded};
+endmodule
