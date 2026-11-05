@@ -190,7 +190,7 @@ def main(kit, pcc_out, pcf_out, top):
     src[tf] = s
     pcc_src = lec_twin_ties(src)
     if top == "qkd_kvs_pc_h_head_p":   # DIE-KV-71/HHP 11-05 form: this core only
-        pcc_src = hhp_form_1105(pcc_src)
+        pcc_src = hhp_form_1105(pcc_src, tf)
     for n, t in pcc_src.items():   # the PCF copies below read src, unpatched
         (pcc_out / (pcc_top + ".sv" if n == tf else n)).write_text(t)
 
