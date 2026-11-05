@@ -798,6 +798,15 @@ class RejudgeGeom(unittest.TestCase):
         self.assertEqual({r["key"]: r for r in KW.rejudge_rows(cfg, st, probe3)}[kc]["new"], "FAIL")
 
 
+class SignedParamClassKW8(unittest.TestCase):
+    def test_named_not_unclassified(self):
+        raw = ("OT_SIGNED_PARAM_SERIALIZE ERROR: ot_s81sl_xrt1 top/u_x: .OLAT(0) has no verifiable numeric header default\n"
+               "ERROR: TCL interpreter returned an error: child process exited abnormally\n")
+        cls, why = KW.classify("place", raw)
+        self.assertEqual(cls, "PLAN")
+        self.assertIn("signed child parameter", why)
+
+
 if __name__ == "__main__":
     unittest.main()
 

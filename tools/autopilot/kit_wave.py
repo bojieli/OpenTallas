@@ -759,6 +759,10 @@ RULES = [
      "macro core has no static macro sites (plan core macro rects / hard_children block)"),
     ("PLAN", None, r"CORE_PREFLIGHT FAIL",
      "core faces not registered (CORE_PREFLIGHT shared/feedthrough/unregistered ports): core cut / RTL owner"),
+    # KW-FIX-8 11-04 (S81 14 dsdv_slice_*_C rows 'unclassified', COORD 17:2x): yosys Tcl exec of native_bb stops on a signed
+    # child's *_bb.v parameter default it cannot read, or on an override that differs from it (STA-0171): view/plan side, not flow
+    ("PLAN", None, r"OT_SIGNED_PARAM_SERIALIZE ERROR",
+     "signed child parameter override not provable against its *_bb.v header default (view or plan owner)"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
     # KIT-TRIAGE-1/G26 11-01 (KV qkd_hr_core_peer gen): a tool input path that does not exist (a cached views file /
     # recipe naming a removed lane worktree) is the flow's, and is named as such instead of a generic traceback
