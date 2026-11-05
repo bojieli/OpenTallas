@@ -103,6 +103,18 @@ class MacroParamBB(unittest.TestCase):
         self.assertIn("`else\n    parameter integer B = 0\n`endif", out)
         self.assertIn("A = 1", out)
 
+    def test_macro_with_fallback_default_takes_identity(self):
+        hdr = ("module m_c #(parameter integer A =\n`ifdef A_DEF\n    `A_DEF\n`else\n    0\n`endif\n,\n"
+               " parameter integer B =\n`ifdef B_DEF\n    `B_DEF\n`else\n    0\n`endif\n) (input wire a);")
+        out, done = G._header_with_defaults(hdr, {"A": "1"})
+        self.assertEqual(done, {"A": "1"})
+        self.assertIn("A = 1", out)
+        self.assertNotIn("`A_DEF", out)
+        self.assertIn("`B_DEF", out)              # no identity: stays
+        # another macro in the ifdef branch is a real selection, kept
+        other = "module m_c #(parameter integer A =\n`ifdef X\n    `Y\n`else\n    0\n`endif\n) (input wire a);"
+        self.assertEqual(G._header_with_defaults(other, {"A": "1"}), (other, {}))
+
     def test_instance_identity_parse(self):
         txt = ("m_x #(.A(2), .B(P_INST), .C(\"s\")) u0 (.a(b));\n// m_x #(.A(9)) u9 ();\n"
                "m_x #(.A(2), .B(P2), .C(\"s\")) u1 (.a(b));\n")

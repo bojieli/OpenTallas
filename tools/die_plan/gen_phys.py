@@ -3161,7 +3161,10 @@ def _header_with_defaults(hdr, ident):
     for it in _top_items(hdr[i + 1:j]):
         # a `ifdef-selected declaration stays as written; a bare macro default (`X_DEF) takes the identity: the bb reads alone,
         # so the macro is undefined there and native_bb cannot verify it (DIE-S81-56 11-04, S81 xrt1/xrt3).
-        if "=" in it and ("`" not in it or re.fullmatch(r"\s*`\w+\s*", it.split("=", 1)[1])):
+        # So does a macro-with-fallback default (`ifdef M `M `else 0 `endif, QC qfd_dv_s5_sc2_leaf HARD_PINREG): the bb reads
+        # alone, M is undefined there, native_bb reads the fallback (DIE-QC-74 11-05, 9 SC types).
+        if "=" in it and ("`" not in it or re.fullmatch(r"\s*`\w+\s*", it.split("=", 1)[1])
+                          or re.fullmatch(r"\s*`ifdef\s+(\w+)\s+`\1\s+`else\s+[^`]*`endif\s*", it.split("=", 1)[1])):
             lhs, rhs = it.split("=", 1)
             names = re.findall(r"[A-Za-z_]\w*", lhs)
             if names and names[-1] in ident and names[-1] not in done:
