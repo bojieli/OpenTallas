@@ -28,7 +28,9 @@ module dsdv_gunit_tail_fs #(
     // 0 edges added; 0 = the reviewed L5 ro3 source.
     parameter integer NAT32 = 0,
     // S81-KITS-RTLC 10-24: seam stages of the L5f round trip (operand out .. result in); L5 lands ye/yd in a pin register (+1)
-    parameter integer XS = 3
+    parameter integer XS = 3,
+    // DIE-S81-51/RF-D 11-03: Sinkhorn FQ (registered fault zeroing, LAT + 1): the calendar (SLAT, CAP, L) moves with it
+    parameter integer SKFQ = 0
 ) (
     input  wire          clk, rst_n,
     input  wire [7:0]    rst_v,
@@ -42,47 +44,57 @@ module dsdv_gunit_tail_fs #(
     output wire          xe_v, output wire [31:0] xe_x, input wire [3:0] xe_vo, input wire [31:0] xe_y, input wire xe_f,
     output wire          xd_v, output wire [31:0] xd_b, input wire [3:0] xd_vo, input wire [31:0] xd_y, input wire xd_f
 );
+    // DIE-S81-51/RF-D 11-03 (OWNER 18:57 conservative form): default (11-03 RF-D, RTL of record) = row-pipelined Sinkhorn
+    // (ot_hdc_sinkhorn_fsr, row-pipelined, LAT 762) with 12-bit age / capture counters; `define OT_S81_GUNIT_SKFS = ot_hdc_sinkhorn_fs, 10-bit counters,
+    // hierarchy unchanged (a define, not a parameter, so the reviewed u_sinkh / u_en instance paths stay as they are)
+`ifndef OT_S81_GUNIT_SKFS
+    localparam integer SKRS = 1;
+`else
+    localparam integer SKRS = 0;
+`endif
+    localparam integer AW = SKRS ? 12 : 10;                   // age / sage width (L < 2^AW)
     localparam integer LM = 5, LA = 4, LE = 7 * LM + 6 * LA + 2 * 6 + 5 + XS, LD = 21 + XS;
     localparam integer LMe = LM + 1, LAe = LA + 1, LEe = LE + 1, LDe = LD + 1;
     localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 2, P4 = P3 + 16 + LAe;
     localparam integer P5 = P4 + 24 + LEe, P6 = P5 + 8 + LAe, P7 = P6 + 8 + LDe;
     localparam integer EREADY = P7 + 8 + ((LMe > LAe) ? LMe : LAe);
-    localparam integer SLAT = 18 + (2 * ITERS - 1) * 16;     // ot_hdc_sinkhorn_fs LAT (Q4: D0 18, DS 16): 642
+    localparam integer SLAT = (SKRS ? 21 + (2 * ITERS - 1) * 19 : 18 + (2 * ITERS - 1) * 16) + SKFQ;  // fs 642 / fsr 762 (+ FQ)
     localparam integer CAP = SLAT + 1;
     localparam integer L = EREADY + CAP + 3;
+    localparam [AW-1:0] CAPW = CAP;
     localparam integer NA = 272;                               // decoded ages 0 .. NA-1 (every issue / write-back age)
     genvar b, h, k, a;
 
     // ---------------------------------------------------------------- age counter: master + two decode replicas
-    reg active; reg [9:0] age;
-    reg sl, armed, captured, capture_q, flt; reg [9:0] sage;
-    function automatic [10:0] nxt(input act, input [9:0] ag, input ln);      // {active, age} next, as dsdv_gunit_tail
-        reg na; reg [9:0] nag;
+    reg active; reg [AW-1:0] age;
+    reg sl, armed, captured, capture_q, flt; reg [AW-1:0] sage;
+    function automatic [AW:0] nxt(input act, input [AW-1:0] ag, input ln);      // {active, age} next, as dsdv_gunit_tail
+        reg na; reg [AW-1:0] nag;
         begin
             na = act; nag = ag;
-            if (act) nag = ag + 10'd1;
-            if (ln) begin na = 1'b1; nag = 10'd1; end
-            if (act && ag == 10'(L - 1)) na = 1'b0;
+            if (act) nag = ag + 1'b1;
+            if (ln) begin na = 1'b1; nag = 1; end
+            if (act && ag == (L - 1)) na = 1'b0;
             nxt = {na, nag};
         end
     endfunction
     // replica A: decodes the NEXT state (registered selects for the next edge); replica B: the CURRENT state
-    reg actA, actB; reg [9:0] ageA, ageB;
+    reg actA, actB; reg [AW-1:0] ageA, ageB;
     // launch copies (== launch: launch_pre[8..10] registered once more), one per counter
     wire lnA, lnB, lnM;
     (* keep = 1 *) ot_skf_kr #(.W(1)) u_lnA (.clk(clk), .d(launch_pre[8]), .q(lnA));
     (* keep = 1 *) ot_skf_kr #(.W(1)) u_lnB (.clk(clk), .d(launch_pre[9]), .q(lnB));
     (* keep = 1 *) ot_skf_kr #(.W(1)) u_lnM (.clk(clk), .d(launch_pre[10]), .q(lnM));
-    wire [10:0] nA = nxt(actA, ageA, lnA), nB = nxt(actB, ageB, lnB);
+    wire [AW:0] nA = nxt(actA, ageA, lnA), nB = nxt(actB, ageB, lnB);
     always @(posedge clk or negedge rst_v[1])
-        if (!rst_v[1]) begin actA <= 1'b0; ageA <= 10'd0; actB <= 1'b0; ageB <= 10'd0; end
+        if (!rst_v[1]) begin actA <= 1'b0; ageA <= 0; actB <= 1'b0; ageB <= 0; end
         else begin {actA, ageA} <= nA; {actB, ageB} <= nB; end
     wire [15:0] loA, loB; wire [63:0] hiA, hiB;
     generate for (k = 0; k < 16; k = k + 1) begin : g_lo
         assign loA[k] = (nA[3:0] == 4'(k)); assign loB[k] = (ageB[3:0] == 4'(k));
     end
     for (k = 0; k < 64; k = k + 1) begin : g_hi
-        assign hiA[k] = nA[10] && (nA[9:4] == 6'(k)); assign hiB[k] = actB && (ageB[9:4] == 6'(k));
+        assign hiA[k] = nA[AW] && (nA[AW-1:4] == k); assign hiB[k] = actB && (ageB[AW-1:4] == k);
     end endgenerate
     wire [NA-1:0] dA, dB;                       // dA[x]: active && age == x at the NEXT edge; dB[x]: now
     generate for (a = 0; a < NA; a = a + 1) begin : g_age
@@ -153,10 +165,10 @@ module dsdv_gunit_tail_fs #(
     assign result = final_result;
 
     // ---------------------------------------------------------------- operand registers (one stage in front of every unit)
-    wire mv = (age >= 10'(P1) && age < 10'(P1 + 24)) || (age >= 10'(P7 + 4) && age < 10'(P7 + 8));
-    wire av = (age >= 10'(P2) && age < 10'(P2 + 24)) || (age >= 10'(P3) && age < 10'(P3 + 16)) ||
-              (age >= 10'(P5) && age < 10'(P5 + 8))  || (age >= 10'(P7) && age < 10'(P7 + 4));
-    wire p4 = age >= 10'(P4) && age < 10'(P4 + 24), p6 = age >= 10'(P6) && age < 10'(P6 + 8);
+    wire mv = (age >= (P1) && age < (P1 + 24)) || (age >= (P7 + 4) && age < (P7 + 8));
+    wire av = (age >= (P2) && age < (P2 + 24)) || (age >= (P3) && age < (P3 + 16)) ||
+              (age >= (P5) && age < (P5 + 8))  || (age >= (P7) && age < (P7 + 4));
+    wire p4 = age >= (P4) && age < (P4 + 24), p6 = age >= (P6) && age < (P6 + 8);
     reg mv_q, av_q, ev_q, dv_q; reg [31:0] ma_q, mb_q, aa_q, ab_q;
     wire [31:0] ex_q, db_q;
     always @(posedge clk or negedge rst_n)
@@ -292,46 +304,56 @@ module dsdv_gunit_tail_fs #(
     // ---------------------------------------------------------------- Sinkhorn (fanout-safe), 8 kept valid copies
     wire [511:0] se, sy; wire sr, sv, sf, sbusy;
     generate for (k = 0; k < 16; k = k + 1) begin : g_se assign se[32 * k +: 32] = t[k + 8]; end endgenerate
-    wire sl_d = active && !armed && age == 10'(EREADY + 1);
+    wire sl_d = active && !armed && age == (EREADY + 1);
     wire [7:0] slc;
     generate for (k = 0; k < 8; k = k + 1) begin : g_slc
         (* keep = 1 *) ot_skf_kr #(.W(1)) u_s (.clk(clk), .d(sl_d), .q(slc[k]));
     end endgenerate
-    ot_hdc_sinkhorn_fs #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .NVIN(8), .OH(NAT32)) u_sinkh (.clk(clk), .rst_n(rst_v[3]), .rst_n2(rst_v[4]),
+`ifndef OT_S81_GUNIT_SKFS
+    ot_hdc_sinkhorn_fsr #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .NVIN(8), .OH(NAT32), .FQ(SKFQ)) u_sinkh (.clk(clk), .rst_n(rst_v[3]), .rst_n2(rst_v[4]),
         .in_valid(sl), .vin(slc), .in_ready(sr), .in_e(se), .out_valid(sv), .y(sy), .fault(sf), .busy(sbusy));
+`else
+    ot_hdc_sinkhorn_fs #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .NVIN(8), .OH(NAT32), .FQ(SKFQ)) u_sinkh (.clk(clk), .rst_n(rst_v[3]), .rst_n2(rst_v[4]),
+        .in_valid(sl), .vin(slc), .in_ready(sr), .in_e(se), .out_valid(sv), .y(sy), .fault(sf), .busy(sbusy));
+`endif
 
     // ---------------------------------------------------------------- control, fixed latency (dsdv_gunit_tail)
     assign fault = flt;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            active <= 1'b0; age <= 10'd0; sl <= 1'b0; armed <= 1'b0; captured <= 1'b0; capture_q <= 1'b0;
+            active <= 1'b0; age <= 0; sl <= 1'b0; armed <= 1'b0; captured <= 1'b0; capture_q <= 1'b0;
             result_v <= 1'b0; flt <= 1'b0;
         end else begin
             capture_q <= 1'b0; result_v <= 1'b0;
             if (active) age <= age + 1'b1;
             if (lnM) begin
                 if (active) flt <= 1'b1;
-                active <= 1'b1; age <= 10'd1; armed <= 1'b0; captured <= 1'b0;
+                active <= 1'b1; age <= 1; armed <= 1'b0; captured <= 1'b0;
             end
             if ((mo && mf) || (ao && af) || (eo && xe_f) || (do_ && xd_f)) flt <= 1'b1;
             if (sl && !sr) flt <= 1'b1;
             if (sl_d) begin sl <= 1'b1; armed <= 1'b1; end
             else sl <= 1'b0;
-            if (armed && !captured && sage == 10'(CAP)) begin capture_q <= 1'b1; captured <= 1'b1; end
+            if (armed && !captured && sage == (CAP)) begin capture_q <= 1'b1; captured <= 1'b1; end
             if (capture_q && (!sv || sf)) flt <= 1'b1;
-            if (active && age == 10'(L - 1)) begin
+            if (active && age == (L - 1)) begin
                 result_v <= 1'b1; active <= 1'b0;
                 if (!captured) flt <= 1'b1;
             end
         end
     always @(posedge clk or negedge rst_v[0])
-        if (!rst_v[0]) sage <= 10'd0;
-        else if (sl_d) sage <= 10'd1;
+        if (!rst_v[0]) sage <= 0;
+        else if (sl_d) sage <= 1;
         else if (armed && !captured) sage <= sage + 1'b1;
     wire [47:0] capture_local;
     generate for (k = 0; k < 2; k = k + 1) begin : g_capture
+`ifndef OT_S81_GUNIT_SKFS
+        (* keep = 1 *) dsdv_gunit_capture_bank24w #(.W(AW)) u_en (.clk(clk), .armed(armed), .captured(captured),
+            .sage(sage), .deadline(CAPW), .q(capture_local[24*k +: 24]));
+`else
         (* keep = 1 *) dsdv_gunit_capture_bank24 u_en (.clk(clk), .armed(armed), .captured(captured),
             .sage(sage), .deadline(10'(CAP)), .q(capture_local[24*k +: 24]));
+`endif
     end endgenerate
     generate for (k = 0; k < 48; k = k + 1) begin : g_result
         if (k < 16) begin : g_t
@@ -351,5 +373,13 @@ endmodule
     assign gt = (a[30:0] == 31'd0 && c[30:0] == 31'd0) ? 1'b0 :
                 (a[31] != c[31]) ? !a[31] :
                 a[31] ? (a[30:0] < c[30:0]) : (a[30:0] > c[30:0]);
+endmodule
+// DIE-S81-51/RF-D 11-03: dsdv_gunit_capture_bank24 with a W-bit capture age (row-serial Sinkhorn calendar)
+(* keep_hierarchy = 1 *) module dsdv_gunit_capture_bank24w #(parameter integer W = 12) (
+    input wire clk, armed, captured, input wire [W-1:0] sage, deadline, output wire [23:0] q);
+    wire fire = armed && !captured && sage == deadline;
+    for (genvar k = 0; k < 24; k = k + 1) begin : g_q
+        (* keep = 1 *) dsdv_gunit_control_bit u_q (.clk(clk), .d(fire), .q(q[k]));
+    end
 endmodule
 `default_nettype wire
