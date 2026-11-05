@@ -88,6 +88,7 @@ module ot_hdc_v41x_hcp_sys1_static #(
     // builds the remaining LW - TPRE levels, and SYS_LAT counts to the arrival of those subtree sums.  Same pairs, same
     // order, so the run sums are bit-identical to TPRE = 0.
     parameter integer TPRE = 0,
+    parameter integer OM_LAT = 3,       // output scale multiplier latency; 3 = fast form, >= 5 cuts the s1_rows -> s2_prod sum (result 2 edges later)
     parameter integer CMD_RST = 0,      // HBM-CORE-LAT-R5: 1 = async reset on the command / issue registers
     parameter integer PW   = (PMAX > 1) ? $clog2(PMAX) : 1,
     parameter integer OXW  = (OMAX > 1) ? $clog2(OMAX) : 1
@@ -554,9 +555,14 @@ module ot_hdc_v41x_hcp_sys1_static #(
     wire [1:0]  oerr;
     wire        ovo;
     wire [OTW-1:0] otag;
+    generate if (OM_LAT == 3) begin : g_om_f
     ot_hdc_fp32_mul_fast u_om (.clk(scalar_clk), .rst_n(rst_n), .valid_in(ov_in), .a(oa), .b(ob), .y(oy), .err(oerr),
                                .valid_out(ovo));
-    ot_hdc_delay #(.W(OTW), .D(3)) u_otag (.clk(scalar_clk), .rst_n(rst_n), .d(otag_in), .q(otag));
+    end else begin : g_om_l
+    ot_hdc_fp32_mul_lat #(.LAT(OM_LAT)) u_om (.clk(scalar_clk), .rst_n(rst_n), .valid_in(ov_in), .a(oa), .b(ob), .y(oy), .err(oerr),
+                               .valid_out(ovo));
+    end endgenerate
+    ot_hdc_delay #(.W(OTW), .D(OM_LAT)) u_otag (.clk(scalar_clk), .rst_n(rst_n), .d(otag_in), .q(otag));
     reg  [OTW+31:0] oq [0:OQ-1];
     reg  [3:0]      oq_wp, oq_rp;
     wire            oq_ne = (oq_wp != oq_rp);

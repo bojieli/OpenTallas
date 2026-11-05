@@ -2806,5 +2806,25 @@
   "source": "DIE-HBM-66 11-05 COORD ruling A: S81 row Sinkhorn on HBM tail; lockstep results/die_hbm_1105/sk_fsr (FSR_EQ PASS, mutants FAIL).",
   "top": "ot_hbm_hc_tail_rest_core_fsr",
   "synth_memory_max_bits": 16384
+ },
+ "ot_hbm_hc_root_static__hcp_sys1": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_root_static/ot_hbm_hc_root_hcp_sys1_core.sv"
+  ],
+  "functional_type": "hc_hcp_sys1",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_root_hcp_sys1_core ports; cut pin -> canonical map in canonical_ports_split.json types.hc_hcp_sys1.type_ids[\"ot_hbm_hc_root_static__hcp_sys1__155.52x172.8\"]",
+  "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static_s.sv u_core (die params QDRLY 2, QCHX 11 from r18h5 views.json -> SYS_LAT = 100 + 46 = 146); constant command fields tied inside as in the master",
+  "top": "ot_hbm_hc_root_hcp_sys1_core"
  }
 }
