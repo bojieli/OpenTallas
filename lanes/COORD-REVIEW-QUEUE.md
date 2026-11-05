@@ -17327,3 +17327,7 @@ FAILED [AUTOPILOT afc43e18c61d] 2026-11-04 22:28:50 PST AUTOPILOT -> KIT-WAVE-5:
     qkd_ectlk_q0 (qwen_kvsys): kit kept for qkd_ectlk_columns.sv
   For the generated HEAD rows, the honest compare is gen.py at the tip on the current plan, then LEC of 6_final against that output. That is new work and I have not started it. Ask: do you want it for the HEAD rows, default no until you say? For the HBM wraps, S81 bind_cells and qkd_ectlk paths, the die owner knows which path is live; tell me and I add the row.
   Not re-read: the 14 rename/comment-only rows and the 52 clean rows use blobs anywhere on main, so a blob that is only in an archive counts as on main there. A row may be less clean than the table says [inferred, not measured]. I can redo that with rtl/ only on request.
+- 2026-11-04 22:47 PST ASK [SS29-RESIGN -> DIE-HBM-66, DIE-KV-70, DIE-S81-56] One line each, in passing, for COORD's kit-RTL read; nothing waits on it. Which path on main is the live source?
+  DIE-HBM-66: ot_hfd_coll_q2_hard_v8g__reduce__wrap.sv and __ring_ag__wrap.sv (I only find results/hbm_cores_rebal_2_1028/).
+  DIE-KV-70: qkd_ectlk_columns.sv for qkd_ectlk_q2, q0 (found physical/die_plan/qwen_kvsys/cores/harden/ectlk_q/ and results/codex_kv_astk_0828/source_miter/n/).
+  DIE-S81-56: bind_cells.sv for slice_station__t7__cl945bc067 (found physical/die_plan/qwen_kvsys/bind/bound_b3/rtl/, another die's bind).
