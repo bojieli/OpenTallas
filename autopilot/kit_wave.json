@@ -210,7 +210,7 @@
     "kv3_pc_v1__cl7f648944": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
     "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1105f2/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1105e4/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
     "kv3_io_cor_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
@@ -1482,7 +1482,7 @@
     "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)"
    },
    "queue_src": "",
-   "work_root": "/srv/opentallas-scratch2/claude/s81-wave-1105f2/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
     "__batch_kwfix3_0450": "101 rows appended 04:5x = KW-FIX-3 S81 KIT_PREFLIGHT class fix, merged main 3fe3f58473f (b15ddb969a4 bound macro paths, 19e83948214, b213d81bfd7 clock_entry_clear/macro_channels), in wave src 84291033b77; tools gen_phys/kit_contract change every macro-bearing kit; the CANCELLED-VOLUME leaf rows are the same leaf class with the same macro inputs; the KW-RESUME nochange guard refuses any kit whose inputs did not change",
@@ -2285,7 +2285,7 @@
      "ref": "COORD 11-01 09:2x: aspect = plan slot shape, granted by exception (12.28b), no reshape; DIE-HEAD-53"
     }
    ],
-   "work_root": "/srv/opentallas-scratch2/claude/head-wave-1105f2/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/head-wave-1105e4/kit-wave",
    "hold_items": {},
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
@@ -2560,7 +2560,7 @@
     "coll_ftn": "KW-FIX-12 08:5x brief: coll_ftn stays held, DIE-QC-75 form; was eligible in the wave with no hold",
     "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1105f2/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
    "retry": [
     "sle_st_a_v1__cl67389ecd@1",
@@ -3997,7 +3997,7 @@
    "plan_core_items": [
     "hnx_rp3h_xs"
    ],
-   "work_root": "/srv/opentallas-scratch2/claude/hbm-wave-1105f2/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/hbm-wave-1105e4/kit-wave",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
   }
  },
