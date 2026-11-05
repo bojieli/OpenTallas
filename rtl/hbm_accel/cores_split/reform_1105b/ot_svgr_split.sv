@@ -368,7 +368,7 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
  output wire [1023:0] k_wdata,output wire [127:0] k_wstrb,input wire [3:0] k_wr_done,
  input wire [3:0] kr_v,output wire [3:0] kr_rdy,input wire [67:0] kr_tag,input wire [15:0] kr_beat,input wire [1023:0] kr_data
 );
- wire [3:0] i_k_v,i_k_rdy,i_kr_v;wire [119:0] i_k_addr;wire [15:0] i_k_len;wire [67:0] i_k_tag;reg [3:0] i_kr_rdy;wire [67:0] i_kr_tag;wire [15:0] i_kr_beat;wire [1023:0] i_kr_data;
+ wire [3:0] i_k_v,i_k_rdy,i_kr_v;wire [119:0] i_k_addr;wire [15:0] i_k_len;wire [67:0] i_k_tag;wire [3:0] i_kr_rdy;wire [67:0] i_kr_tag;wire [15:0] i_kr_beat;wire [1023:0] i_kr_data;
  reg [1:0] stack_h;always @(posedge hbm_clk)stack_h<=id_stack;
  localparam integer T0=16+LB,A0=28+LB,S0=58+LB,R0=60+LB,P0=75+LB,DW=95+LB,IW=283+LB;
  wire reset_both=stream_rst_n&&hbm_rst_n;wire srst,hrst;
@@ -384,7 +384,7 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
  reg h_active;reg [LB-1:0] h_bank;reg [15:0] h_epoch;reg [29:0] h_base;reg [11:0] h_total;reg [19:0] h_pcs;reg [14:0] h_row_base;
  reg [11:0] rx_left[0:LBANKS-1];reg h_fresh;wire [3:0] issue_done;integer rb;
  wire [3:0] pc_fault,response_ok;wire [LB-1:0] response_bank[0:3];wire [10:0] response_ordinal[0:3];wire [15:0] response_epoch[0:3];
- reg [3:0] response_accepted;
+ reg [3:0] response_accepted;wire [3:0] dec_ok,dec_fire;wire [LB-1:0] dec_bank[0:3];wire [10:0] dec_ordinal[0:3];wire [15:0] dec_epoch[0:3];wire [1023:0] sk_data;
  wire descriptor_fire=desc_rd_valid&&desc_rd_ready;
  reg rx_any;always @*begin rx_any=0;for(rb=0;rb<LBANKS;rb=rb+1)if(rx_left[rb]!=0)rx_any=1;end
  assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid&&rx_left[desc_data[T0-1:16]]==0;
@@ -401,14 +401,23 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
    .block_active(h_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
    .block_bank(h_bank),.block_epoch(h_epoch),.stop(hbm_fault),
    .k_ready(i_k_rdy[pc]),.kr_v(i_kr_v[pc]),.kr_tag(i_kr_tag[17*pc+:17]),
-   .kr_beat(i_kr_beat[4*pc+:4]),.response_take(response_accepted[pc]),
+   .kr_beat(i_kr_beat[4*pc+:4]),.response_take(dec_fire[pc]),
    .k_v(i_k_v[pc]),.k_addr(i_k_addr[30*pc+:30]),.k_len(i_k_len[4*pc+:4]),.k_tag(i_k_tag[17*pc+:17]),
-   .response_ok(response_ok[pc]),.response_ordinal(response_ordinal[pc]),
-   .response_epoch(response_epoch[pc]),.response_bank(response_bank[pc]),.fault(pc_fault[pc]),.issue_done(issue_done[pc]));
+   .response_ok(dec_ok[pc]),.response_ordinal(dec_ordinal[pc]),
+   .response_epoch(dec_epoch[pc]),.response_bank(dec_bank[pc]),.fault(pc_fault[pc]),.issue_done(issue_done[pc]));
   ot_svgr_k_out #(.W(51),.MUT(MUT==3?1:0)) u_k_out(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.i_v(i_k_v[pc]),.i_rdy(i_k_rdy[pc]),.i_d({i_k_addr[30*pc+:30],i_k_len[4*pc+:4],i_k_tag[17*pc+:17]}),
    .p_v(k_v[pc]),.p_rdy(k_rdy[pc]),.p_d({k_addr[30*pc+:30],k_len[4*pc+:4],k_tag[17*pc+:17]}));
   ot_svgr_kr_in #(.W(277),.MUT(MUT==4?1:0)) u_kr_in(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.p_v(kr_v[pc]),.p_rdy(kr_rdy[pc]),.p_d({kr_tag[17*pc+:17],kr_beat[4*pc+:4],kr_data[256*pc+:256]}),
    .i_v(i_kr_v[pc]),.i_rdy(i_kr_rdy[pc]),.i_d({i_kr_tag[17*pc+:17],i_kr_beat[4*pc+:4],i_kr_data[256*pc+:256]}));
+  reg [256+11+16+LB-1:0] sk_m[0:1];reg sk_wp,sk_rp;reg [1:0] sk_n;
+  assign dec_fire[pc]=dec_ok[pc]&&sk_n!=(MUT==5?2'd3:2'd2);assign i_kr_rdy[pc]=dec_fire[pc];
+  assign response_ok[pc]=sk_n!=0&&!hbm_fault;
+  assign {sk_data[256*pc+:256],response_ordinal[pc],response_epoch[pc],response_bank[pc]}=sk_m[sk_rp];
+  always @(posedge hbm_pc_clk[pc])if(dec_fire[pc])sk_m[sk_wp]<={i_kr_data[256*pc+:256],dec_ordinal[pc],dec_epoch[pc],dec_bank[pc]};
+  always @(posedge hbm_pc_clk[pc] or negedge hrst)begin
+   if(!hrst)begin sk_wp<=0;sk_rp<=0;sk_n<=0;end
+   else begin if(dec_fire[pc])sk_wp<=~sk_wp;if(response_accepted[pc])sk_rp<=~sk_rp;sk_n<=sk_n+2'(dec_fire[pc])-2'(response_accepted[pc]);end
+  end
  end endgenerate
  reg [1:0] arb_cursor[0:7];reg [1:0] arb_selected[0:7];
  generate for(g=0;g<8;g=g+1)begin:response_fairness
@@ -432,14 +441,14 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
   end
  end
  always @*begin
-  i_kr_rdy=0;bk_in_v=0;response_accepted=0;
+  bk_in_v=0;response_accepted=0;
   for(l=0;l<8;l=l+1)begin
    fifo_wr_data[l]=0;arb_selected[l]=0;
    for(offset=0;offset<4;offset=offset+1)begin
     p=(arb_cursor[l]+offset)&3;
     if(response_ok[p]&&response_ordinal[p][2:0]==l&&!bk_in_v[l]&&fifo_wr_ready[l])begin
-     i_kr_rdy[p]=1;bk_in_v[l]=1;arb_selected[l]=p;response_accepted[p]=1;
-     fifo_wr_data[l]={response_ordinal[p],response_bank[p],response_epoch[p],i_kr_data[256*p+:256]};
+     bk_in_v[l]=1;arb_selected[l]=p;response_accepted[p]=1;
+     fifo_wr_data[l]={response_ordinal[p],response_bank[p],response_epoch[p],sk_data[256*p+:256]};
     end
    end
   end
