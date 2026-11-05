@@ -402,6 +402,13 @@ def _own_wave_unit(r):
     lj = str(r.get("live_job", ""))
     if lj.startswith("kit-wave unit"):
         return True
+    # KW-FIX-12 11-05: the queue form 'ap-<id>-a<n> <id>[; ot-run pid N <dir tail>]' on a KIT-WAVE row is the wave's own
+    # routed kit of one sibling class; it blocked released retries of the other classes (QC 11-05: 26 parents, sle_su_l1).
+    m = re.match(r"ap-[0-9a-f]+-a\d+ [0-9a-f]+(?:; )?(.*)", lj)
+    if m:
+        if not m.group(1):
+            return True
+        lj = m.group(1)
     # ownership.py form 'ot-run pid N <last 70 chars of the job dir>': the wave's own place/geom job of this item or
     # one of its classes (wave kit dirs end .../items/<class>/[attempt_n/]gen/<class>)
     if not lj.startswith("ot-run pid"):
