@@ -17,6 +17,9 @@ import shutil
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from rf_kv3_hhp_1105 import hhp_form_1105
+
 # o_grp bit -> owner (from the leaf concat {return_idle_hbm .. actual_data})
 OG_PCC = [289, 290, 291, 292, 293, 294, 299, 300]
 OG_PCF = list(range(0, 289)) + [295, 296, 297, 298, 301, 302, 303, 304]
@@ -185,7 +188,10 @@ def main(kit, pcc_out, pcf_out, top):
     regs = "".join(f"    (* keep *) ot_kvpc_pin_dff u_pcfx_{k} (.ck(ck[0]), .d(pcf_x_d[{k}]), .q(pcf_x[{k}]));\n" for k in range(298))
     s = s.replace("\nendmodule", "\n    // RF-B split: PCC -> PCF face launch flops (+1 edge)\n" + regs + "endmodule", 1)
     src[tf] = s
-    for n, t in lec_twin_ties(src).items():   # the PCF copies below read src, unpatched
+    pcc_src = lec_twin_ties(src)
+    if top == "qkd_kvs_pc_h_head_p":   # DIE-KV-71/HHP 11-05 form: this core only
+        pcc_src = hhp_form_1105(pcc_src)
+    for n, t in pcc_src.items():   # the PCF copies below read src, unpatched
         (pcc_out / (pcc_top + ".sv" if n == tf else n)).write_text(t)
 
     # ---- PCF top

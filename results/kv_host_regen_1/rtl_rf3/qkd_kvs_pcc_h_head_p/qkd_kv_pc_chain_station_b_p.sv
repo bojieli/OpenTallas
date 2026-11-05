@@ -102,12 +102,9 @@ module qkd_kv_pc_chain_station_b_p #(
     //      boot stream; note.md).
     wire [4:0] bpm = (MUT == 6) ? 5'h0f : 5'h1f;
     wire bh = bt && ((c[F_PC0 +: 5] & bpm) == (spc & bpm));
-    // KV-CORE-RTL/PC 10-25: land_es[287:1] private port flops (no hold loop on the pin flop): next state from the
-    // internal copy les_i (port <= bh ? new : les_i), equal on every edge (0 cycles)
-    (* keep *) reg [287:1] les_i;
-    wire [287:1] les_n = {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};
-    always @(posedge ck) if (bh) les_i <= les_n;
-    always @(posedge ck) land_es[287:1] <= (bh ? les_n : les_i);
+    // DIE-KV-71/HHP 11-05: no hold on land_es[287:1] (was les_i + bh mux): read only behind land_es[0], X before the
+    // first word.  {1,1} -> {bh,bh}: 1 in every valid word, and the face flops stay flops (a constant D folds).
+    always @(posedge ck) land_es[287:1] <= {bh, bh, c[F_AD +: 29], c[F_D0 +: 256]};
     always @(posedge ck or negedge rs_q) if (!rs_q) land_es[0] <= 1'b0; else land_es[0] <= bh;
     (* keep *) reg ler_v, ler_cr, ler_f;
     always @(posedge ck or negedge rs_q)

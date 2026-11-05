@@ -33,10 +33,12 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0, COR
  assign static_cmd_owner=active_row[6];
  reg [15:0] wait_q[0:N-1];reg [9:0] left_q[0:N-1];reg [3:0] burst_q[0:N-1];
  wire [N-1:0] fire,live;
+ // DIE-KV-71/HHP 11-05: live_r[i]==(left_q[i]!=0), wz_r[i]==(wait_q[i]==0), registered from the next state
+ reg [N-1:0] live_r,wz_r;
  genvar g;
  generate for(g=0;g<N;g=g+1)begin:events
- assign live[g]=left_q[g]!=0;
- assign fire[g]=live[g]&&(wait_q[g]==0);
+ assign live[g]=live_r[g];
+ assign fire[g]=live_r[g]&&wz_r[g];
  end endgenerate
  reg [42:0] event_cmd;reg [2:0] event_mask;
  reg static_read;integer fires,i;
@@ -61,7 +63,7 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0, COR
  low_seen<=0;high_seen<=0;sealed<=0;active_epoch<=0;active_row<=0;
  static_cmd<=0;reserved_rd<=0;reserved_static_col<=0;reserved_write_col<=0;
  static_epoch<=0;static_read_q<=0;fault<=0;idle<=1;
- for(i=0;i<N;i=i+1)begin wait_q[i]<=0;left_q[i]<=0;burst_q[i]<=0;end
+ for(i=0;i<N;i=i+1)begin wait_q[i]<=0;left_q[i]<=0;burst_q[i]<=0;live_r[i]<=0;wz_r[i]<=1;end
  end else begin
  static_cmd<=event_cmd;reserved_rd<=event_mask[0];reserved_static_col<=event_mask[1];reserved_write_col<=event_mask[2];
  static_epoch<=active_epoch;static_read_q<=static_read;idle<=!(|live);
@@ -78,14 +80,15 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0, COR
  active_epoch<=epoch_q;active_row<=19'(ROW0)+{13'b0,layer_q};idle<=0;
  for(i=0;i<N;i=i+1)begin
  wait_q[i]<=image[i][15:0]+16'(MUT==1);left_q[i]<=image[i][25:16];burst_q[i]<=0;
+ wz_r[i]<=(16'(image[i][15:0]+16'(MUT==1))==16'd0);live_r[i]<=(image[i][25:16]!=10'd0);
  end
  end
  end else for(i=0;i<N;i=i+1)if(live[i])begin
  if(fire[i])begin
- left_q[i]<=left_q[i]-10'd1;
- if(burst_q[i]==image[i][29:26])begin wait_q[i]<= (MUT==2)?16'd0:{8'b0,image[i][37:30]};burst_q[i]<=0;end
- else begin wait_q[i]<=0;burst_q[i]<=burst_q[i]+4'd1;end
- end else wait_q[i]<=wait_q[i]-16'd1;
+ left_q[i]<=left_q[i]-10'd1;live_r[i]<=(left_q[i]!=10'd1);
+ if(burst_q[i]==image[i][29:26])begin wait_q[i]<= (MUT==2)?16'd0:{8'b0,image[i][37:30]};burst_q[i]<=0;wz_r[i]<=(MUT==2)||(image[i][37:30]==8'd0);end
+ else begin wait_q[i]<=0;burst_q[i]<=burst_q[i]+4'd1;wz_r[i]<=1;end
+ end else begin wait_q[i]<=wait_q[i]-16'd1;wz_r[i]<=(wait_q[i]==16'd1);end
  end
  end
 endmodule

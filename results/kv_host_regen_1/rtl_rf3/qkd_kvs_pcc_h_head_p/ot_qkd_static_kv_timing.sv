@@ -183,7 +183,10 @@ module ot_qkd_static_kv_timing #(
     reg so_v; reg [4:0] so_b; reg [18:0] so_row;
     reg [7:0] swait;
     reg c_s, c_sp; reg [18:0] c_srow;                 // the registered row command is a static ACT / static PRE
-    wire sprio = sq_ne && swait >= 8'(S_STARVE);
+    // DIE-KV-71/HHP 11-05: swait_ge == (swait >= S_STARVE), registered from the next swait
+    reg swait_ge;
+    initial if(S_STARVE<1)$fatal(1,"swait_ge needs S_STARVE>=1");
+    wire sprio = sq_ne && swait_ge;
     // RF-KV2: registered head flags (declared here, computed after the bank state): h_X == |(sb_oh & X) on every cycle,
     // h_so == (so_v && so_b == sb && so_row == srw), r_rdy == |(rd_oh & open & ~stale & rcd_z & ~blk),
     // h_wrdy == |(hb_oh & write_ready_bank)
@@ -198,7 +201,10 @@ module ot_qkd_static_kv_timing #(
     reg  phase;                                       // cycle parity; this PC's row slot when == PC[0]
     wire slot_next = (phase != 1'(PC % 2));           // the next cycle is this PC's row slot
     wire [RW-1:0] ref_n = ref_due ? RW'(PERIOD - 1) : ref_c - 1'b1;   // ref_c of the next cycle
-    wire ref_due_n = (ref_n == 0);
+    // DIE-KV-71/HHP 11-05: ref_n == 0 <=> ref_c == 1 (PERIOD >= 2); ref_is1 == (ref_c == 1), registered
+    reg ref_is1;
+    initial if(PERIOD<2)$fatal(1,"ref_is1 needs PERIOD>=2");
+    wire ref_due_n = ref_is1;
     wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
                               : (ref_n <= RW'(T_RP + T_RAS + 2));
     wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
@@ -230,6 +236,7 @@ module ot_qkd_static_kv_timing #(
       (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;
     for (genvar b = 0; b < 32; b = b + 1) begin : bank
       reg [4:0] rcd; reg [RAS_W-1:0] ras; reg [8:0] aok; reg [2:0] rtp; reg aok_zr, rcd_zr;   // == 0 flags, registered
+      reg ras_zr, rtp_zr;   // DIE-KV-71/HHP 11-05: ras == 0, rtp == 0 && (!W || wrr == 0), registered from the next state
       reg [WRR_W-1:0] wrr;
       wire wr_e = (W && wr_ok && hb_oh[b] && !(AQ && hr)) || (s_go && swe && sb_oh[b]);
       wire act_e = row_fire && c_op == ACT && c_oh[b];
@@ -238,9 +245,11 @@ module ot_qkd_static_kv_timing #(
       wire rfp_e = row_fire && c_op == REFPB && c_oh[b];
       wire rd_e  = (rd_ok && rd_oh[b]) || (AQ && wr_ok && hr && hb_oh[b]) || (s_go && !swe && sb_oh[b]);
       always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; aok_zr <= 1'b1; rcd_zr <= 1'b1; wrr <= 0; end
+        if (!rst_n) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; aok_zr <= 1'b1; rcd_zr <= 1'b1; wrr <= 0; ras_zr <= 1'b1; rtp_zr <= 1'b1; end
         else begin
           rcd_zr <= rcd_zn[b];
+          ras_zr <= ras_zn[b];
+          rtp_zr <= (rd_e ? (T_RTP - 1 == 0) : rtp_le1[b]) && (!W || (wr_e ? (T_WRR - 1 == 0) : wrr_le1[b]));
           if (wr_e) wrr <= WRR_W'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
           if (act_e) begin rcd <= 5'(T_RCD - 1); ras <= RAS_W'(T_RAS - 1); end
           else begin if (rcd != 0) rcd <= rcd - 1'b1; if (ras != 0) ras <= ras - 1'b1; end
@@ -269,7 +278,7 @@ module ot_qkd_static_kv_timing #(
           else write_ready_bank[b] <= open_nx[b] && !ready_stale_next[b] &&
             !ready_blk_next[b] && rcdw_next;
       end
-      assign rcd_z[b] = rcd_zr; assign rcdw_z[b] = (rcd <= 5'(T_RCD - T_RCDW)); assign ras_z[b] = (ras == 0); assign rtp_z[b] = (rtp == 0) && (!W || wrr == 0);
+      assign rcd_z[b] = rcd_zr; assign rcdw_z[b] = (rcd <= 5'(T_RCD - T_RCDW)); assign ras_z[b] = ras_zr; assign rtp_z[b] = rtp_zr;
       assign aok_z[b] = aok_zr; assign aok_busy[b] = (aok > 9'(LEAD));
       // REFpb key: 127 refreshed; streaming/posted: open 24 (finished) / 32, protected (needed
       // within the next two sets) 16..18 farthest first, upcoming = distance, passed 8 + set;
@@ -358,21 +367,23 @@ module ot_qkd_static_kv_timing #(
     // static column command: the head hit (its bank open on its row), tRCD (write: tRCDW), tCCD_L, tWTR (read) / tRTW
     // (write), the bank not chosen for refresh.  Background (a cycle neither the stream nor the KV queue uses) until it
     // starves.  s_pblk: the bank a static PRE was just decided for / is issuing takes no column command meanwhile.
-    reg [31:0] s_pblk;
+    // DIE-KV-71/HHP 11-05: s_pblk = (rp_sp ? sb_oh : 0) | (cp_sp ? c_oh : 0), written out on each head so that no
+    // act / pre candidate reaches the column decision: r_oh == sb_oh whenever r_sp.
+    wire rp_sp, cp_sp;
     wire s_col_ok = LA ? (s_hit && ccdl_z[sb[1:0]] && !h_blk && !rd_block &&
                           (swe ? (W && h_rcdw && rtw_c == 0) : (h_rcd && wtr_c == 0))) :
                     (s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0)));
     wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
     assign s_go = legal_static && (PROFILE == 1 || reserved_static_col || boot_static_col);
-    wire legal_rd = rd_ok0 && !s_go && !(|(rd_oh & s_pblk));
+    wire legal_rd = rd_ok0 && !s_go && !((rp_sp && |(rd_oh & sb_oh)) || (cp_sp && |(rd_oh & c_oh)));
     assign rd_ok = legal_rd && (PROFILE == 1 || reserved_rd);
     reg fault_schedule;
     assign schedule_fault = fault_schedule;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) fault_schedule <= 0;
       else if (PROFILE == 0 && ((reserved_rd && !legal_rd) || (reserved_static_col && !legal_static) || (reserved_write_col && !legal_write) || (({1'b0,reserved_rd}+{1'b0,reserved_static_col}+{1'b0,reserved_write_col})>1))) fault_schedule <= 1;
-    wire legal_write = wr_ok0 && !s_go && !(|(hb_oh & s_pblk));
+    wire legal_write = wr_ok0 && !s_go && !((rp_sp && |(hb_oh & sb_oh)) || (cp_sp && |(hb_oh & c_oh)));
     assign wr_ok = legal_write && (PROFILE == 1 || reserved_write_col);
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
@@ -553,7 +564,10 @@ module ot_qkd_static_kv_timing #(
     end
     assign row_v = c_v; assign row_prio = c_prio; assign row_op = c_op; assign row_bank = c_bank;
     assign row_row = (S && c_s) ? c_srow : row;
-    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? r_oh : 32'b0) | ((S && c_v && c_sp) ? c_oh : 32'b0);
+    // the static-PRE branch of the row decision above, with every branch ahead of it
+    assign rp_sp = S && slot_next && sprio && s_pre_ok && !(REF_MODE && ref_due_n && ref_pend) &&
+                   !(!REF_MODE && ref_due_n) && !preall_ok && !ep_rdy && !forced_pre;
+    assign cp_sp = S && c_v && c_sp;
     assign col_v = rd_ok || (W && wr_ok) || s_go; assign col_we = (W && wr_ok && !(AQ && hr)) || (s_go && swe);
     assign col_aq = AQ && wr_ok && hr; assign col_sr = s_go;
     assign col_bank = s_go ? sb : (W && wr_ok) ? hb : rd_bank; assign col_col = s_go ? sc : (W && wr_ok) ? hc : j[6:2];
@@ -567,9 +581,9 @@ module ot_qkd_static_kv_timing #(
         streaming <= 0;v_consumer_order<=0;context_active<=0;context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last_q <= 0; nm1 <= 0;
         j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0;
-        ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
+        ref_c <= RW'(RPH + PERIOD); ref_is1 <= (RW'(RPH + PERIOD) == RW'(1)); running <= 0; phase <= 0;
         c_v <= 0; c_prio <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_s <= 0; c_sp <= 0; c_srow <= 0;
-        sq_n <= 0; sq_rp <= 0; sb <= 0; sc <= 0; srw <= 0; swe <= 0; sb_oh <= 0; sfl <= 0; scm <= 0; swait <= 0;
+        sq_n <= 0; sq_rp <= 0; sb <= 0; sc <= 0; srw <= 0; swe <= 0; sb_oh <= 0; sfl <= 0; scm <= 0; swait <= 0; swait_ge <= 0;
         so_v <= 0; so_b <= 0; so_row <= 0;
         koh <= 8'b1; k1v <= 1'b0; rd_oh <= 32'b1; rd_bgoh <= 4'b1;
         wq_n <= 0; wq_rp <= 0; wq_rp1 <= WQW'(1); wq_v <= '0; rtw_c <= 0; wtr_c <= 0; wopen <= 0; c_w <= 0; hb <= 0; hc <= 0; hb_oh <= 0; hr <= 0;
@@ -621,10 +635,10 @@ module ot_qkd_static_kv_timing #(
         if (noact_c != 0) noact_c <= noact_c - 1'b1;
 
         // refresh schedule
-        ref_c <= ref_n; phase <= ~phase;
+        ref_c <= ref_n; ref_is1 <= (ref_n == RW'(1)); phase <= ~phase;
         // register the row decision for this PC's next slot (an off-slot cycle issues nothing)
         c_v <= slot_next && r_v; c_prio <= r_prio; c_op <= r_op; c_bank <= r_bank; c_oh <= r_oh; c_w <= W && r_w;
-        c_s <= S && slot_next && r_v && r_s; c_sp <= S && slot_next && r_v && r_sp; c_srow <= srw;
+        c_s <= S && slot_next && r_v && r_s; c_sp <= rp_sp; c_srow <= srw;
         // ---- static queue: push, pop, head (registered), twin switch, commit, wait counter, static-open bank
         if (S) begin : sq
           reg [SQW-1:0] rpn; reg chg;
@@ -648,6 +662,7 @@ module ot_qkd_static_kv_timing #(
             sb <= sb ^ 5'd2; srw <= 19'(srw + 19'(TWIN_ROFF)); sb_oh <= ab_oh; sfl <= 1'b1;
           end else if (s_hit || (row_fire && c_op == ACT && c_s)) scm <= 1'b1;
           if (!sq_ne || chg || s_sw) swait <= 0; else if (swait != 8'hff) swait <= swait + 1'b1;
+          swait_ge <= !(!sq_ne || chg || s_sw) && swait >= 8'(S_STARVE - 1);
           if (row_fire && c_op == ACT && c_s) begin so_v <= 1'b1; so_b <= c_bank; so_row <= c_srow; end
           else if (row_fire && (c_op == PREALL || (c_op == PRE && c_bank == so_b))) so_v <= 1'b0;
         end
