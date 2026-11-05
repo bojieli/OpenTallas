@@ -88,6 +88,14 @@ module ot_hdc_v41x_hcp_sys1_static #(
     // builds the remaining LW - TPRE levels, and SYS_LAT counts to the arrival of those subtree sums.  Same pairs, same
     // order, so the run sums are bit-identical to TPRE = 0.
     parameter integer TPRE = 0,
+    parameter integer SM_LAT = 3,       // scale-engine multiplier latency; 3 = fast form, 4 cuts s2_sh -> y (each scale multiply 1 edge later; handshaken by mvo)
+    parameter integer OM_LAT = 3,       // output scale multiplier latency; 3 = fast form, >= 5 cuts the s1_rows -> s2_prod sum (result 2 edges later)
+    // NF_TIED = 1: the parent ties cmd_nf to one build constant (the split cores and the HC root master do), so the
+    // divider reads that constant wire as its divisor.  Every divide follows a command, and every command loads
+    // nf_r <= cmd_nf, so db == cmd_nf at each divide: same results.  The divisor registers (db, u_div d_mb/r_mb)
+    // and nf_r then fold to constants in synthesis and in the LEC gold alike (COORD 10-27: remove the dead loads
+    // from the tied cmd_nf).  0 = the runtime divisor path, unchanged.
+    parameter integer NF_TIED = 0,
     parameter integer CMD_RST = 0,      // HBM-CORE-LAT-R5: 1 = async reset on the command / issue registers
     parameter integer PW   = (PMAX > 1) ? $clog2(PMAX) : 1,
     parameter integer OXW  = (OMAX > 1) ? $clog2(OMAX) : 1
@@ -483,11 +491,17 @@ module ot_hdc_v41x_hcp_sys1_static #(
     wire [31:0] dy, ay, my;
     wire        dvo, avo, mvo, dfl;
     wire [1:0]  aerr, merr;
-    ot_hdc_fdiv u_div (.clk(scalar_clk), .rst_n(rst_n), .v(dv), .a(da), .b(db), .y(dy), .vo(dvo), .fault(dfl));
+    wire [31:0] div_b = (NF_TIED != 0) ? cmd_nf : db;
+    ot_hdc_fdiv u_div (.clk(scalar_clk), .rst_n(rst_n), .v(dv), .a(da), .b(div_b), .y(dy), .vo(dvo), .fault(dfl));
     ot_hdc_fp32_add_fast u_sa (.clk(scalar_clk), .rst_n(rst_n), .valid_in(av), .a(aa), .b(ab), .y(ay), .err(aerr),
                                .valid_out(avo));
+    generate if (SM_LAT == 3) begin : g_sm_f
     ot_hdc_fp32_mul_fast u_sm (.clk(scalar_clk), .rst_n(rst_n), .valid_in(mv), .a(ma), .b(mb), .y(my), .err(merr),
                                .valid_out(mvo));
+    end else begin : g_sm_l
+    ot_hdc_fp32_mul_lat #(.LAT(SM_LAT)) u_sm (.clk(scalar_clk), .rst_n(rst_n), .valid_in(mv), .a(ma), .b(mb), .y(my), .err(merr),
+                               .valid_out(mvo));
+    end endgenerate
     wire rs_fault = (dvo && dfl) || (avo && (|aerr)) || (mvo && (|merr));
     always @(posedge scalar_clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -554,9 +568,14 @@ module ot_hdc_v41x_hcp_sys1_static #(
     wire [1:0]  oerr;
     wire        ovo;
     wire [OTW-1:0] otag;
+    generate if (OM_LAT == 3) begin : g_om_f
     ot_hdc_fp32_mul_fast u_om (.clk(scalar_clk), .rst_n(rst_n), .valid_in(ov_in), .a(oa), .b(ob), .y(oy), .err(oerr),
                                .valid_out(ovo));
-    ot_hdc_delay #(.W(OTW), .D(3)) u_otag (.clk(scalar_clk), .rst_n(rst_n), .d(otag_in), .q(otag));
+    end else begin : g_om_l
+    ot_hdc_fp32_mul_lat #(.LAT(OM_LAT)) u_om (.clk(scalar_clk), .rst_n(rst_n), .valid_in(ov_in), .a(oa), .b(ob), .y(oy), .err(oerr),
+                               .valid_out(ovo));
+    end endgenerate
+    ot_hdc_delay #(.W(OTW), .D(OM_LAT)) u_otag (.clk(scalar_clk), .rst_n(rst_n), .d(otag_in), .q(otag));
     reg  [OTW+31:0] oq [0:OQ-1];
     reg  [3:0]      oq_wp, oq_rp;
     wire            oq_ne = (oq_wp != oq_rp);
