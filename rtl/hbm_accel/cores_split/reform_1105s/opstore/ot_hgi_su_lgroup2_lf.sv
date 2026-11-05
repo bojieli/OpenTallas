@@ -221,9 +221,8 @@ module ot_hgi_su_lgroup2_lf #(
         wire k_re, k_we; wire [RB-1:0] k_ra, k_wa; wire [31:0] k_wd;
         if (BREG != 0) begin : g_breg
             reg q_re, q_we; reg [RB-1:0] q_ra, q_wa; reg [31:0] q_wd;
-            always @(posedge clk or negedge rst_n)
-                if (!rst_n) begin q_re <= 1'b0; q_we <= 1'b0; end else begin q_re <= b_re[gb]; q_we <= b_we[gb]; end
-            always @(posedge clk) begin q_ra <= b_ra[gb]; q_wa <= b_wa[gb]; q_wd <= b_wd[gb]; end
+            // no reset: the uncut bank takes every op issued before a reset edge, so the delayed op must land too
+            always @(posedge clk) begin q_re <= b_re[gb]; q_we <= b_we[gb]; q_ra <= b_ra[gb]; q_wa <= b_wa[gb]; q_wd <= b_wd[gb]; end
             assign k_re = q_re; assign k_we = q_we; assign k_ra = q_ra; assign k_wa = q_wa; assign k_wd = q_wd;
         end else begin : g_nobreg
             assign k_re = b_re[gb]; assign k_we = b_we[gb]; assign k_ra = b_ra[gb]; assign k_wa = b_wa[gb]; assign k_wd = b_wd[gb];

@@ -1,0 +1,18 @@
+# HBM-REFORM-B9 BREG form lock-step results (2026-11-05 22:27 PST, epyc4, 3000 cycles)
+## opstore_b (run_p27_b9.sh, opsb_group rd +1)
+1
+MUT 0: LOCKSTEP PASS checks=19950 toggled_out_bits=1541
+MUT 1: LOCKSTEP FAIL errs=225846 checks=19950 toggled_out_bits=1541
+MUT 2: LOCKSTEP FAIL errs=80005 checks=19950 toggled_out_bits=1541
+MUT 3: LOCKSTEP FAIL errs=695906 checks=19950 toggled_out_bits=1541
+## opstore_a (run_p27a_b9.sh, rd_q +1)
+SCEN R MUT 3: LOCKSTEP FAIL errs=354456 checks=17100 toggled_out_bits=2096 FAULT ref=1 dut=1
+SCEN F0 MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=1040 FAULT ref=1 dut=1
+SCEN F1 MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=1040 FAULT ref=1 dut=1
+SCEN R MUT 1: LOCKSTEP FAIL errs=621657 checks=17100 toggled_out_bits=2096 FAULT ref=1 dut=1
+SCEN R MUT 2: LOCKSTEP FAIL errs=1243314 checks=17100 toggled_out_bits=2096 FAULT ref=1 dut=1
+SCEN R MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=2096 FAULT ref=1 dut=1
+SCEN F1 MUT 5: LOCKSTEP FAIL errs=2850 checks=17100 toggled_out_bits=1040 FAULT ref=1 dut=0
+SCEN F0 MUT 4: LOCKSTEP FAIL errs=2850 checks=17100 toggled_out_bits=1040 FAULT ref=1 dut=0
+## unit: lgroup2_lf BREG=1 vs BREG=0 (+1 edge), opsb params, real lbank + bench SRAM, 200k cycles, reset every 64: PASS errs=0
+## note: first BREG form reset q_re/q_we -> ops issued during reset were lost (opstore_b FAIL); bank input regs now carry no reset
