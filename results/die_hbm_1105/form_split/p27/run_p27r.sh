@@ -62,6 +62,7 @@ def one(kind):
         if kind=='SB' and n.endswith('rd_src'): st[n]="{"+",".join(f"2'({int(i==BIT)} * ($urandom & 3))" for i in range(w//2-1,-1,-1))+"}"
         if kind=='SR' and n.endswith('rd_addr'): st[n]="{"+",".join(("24'($urandom)" if i==BIT else "24'($urandom & 32'h1f)") for i in range(w//24-1,-1,-1))+"}"
         if kind=='SS' and n.endswith('scalar_load'): st[n]=f"{w}'d0"
+        if kind=='SS' and n=='glue': st[n]=f"{w}'d{1<<(BIT%4)}"  # scalar_enable[BIT%4] on, nothing loaded, so scalar_valid stays 0
     json.dump(spec(st,CYC),open(O+f'/spec_{kind}.json','w'),indent=1)
 for k in ('SB','SR','SS'): one(k)
 P
@@ -80,6 +81,8 @@ run() { # scenario mutant
   $V --binary -j 12 -Wno-fatal -Wno-lint -Wno-style -DOT_MUT=$M --top-module tb -Mdir $D -o sim $O/tb_$S.sv $KR/*.sv $SM $RT/ot_hgi_sfu_opsa_group.sv $O/rest_b.sv $H/opstore_a__comp.sv $O/group0__fs.sv $O/group1__fs.sv $O/rest__fs.sv $O/dut_top.sv $O/dut_fcore.sv $O/face_wire.sv > $O/build_${S}_m$M.log 2>&1 || { tail -12 $O/build_${S}_m$M.log | cut -c1-240; return 2; }
   $D/sim > $O/sim_${S}_m$M.log 2>&1; echo "SCEN $S MUT $M: $(grep -E 'LOCKSTEP' $O/sim_${S}_m$M.log | cut -c1-170) $(grep FAULT $O/sim_${S}_m$M.log | tail -1)"
 }
+if [ -n "${ONLY:-}" ]; then for x in $ONLY; do run ${x%:*} ${x#*:} & done; wait; else
 for x in "R 0" "R 1" "R 2" "R 3" "F0 0" "F0 4" "F1 0" "F1 5"; do run $x & done; wait
 for x in "SB 0" "SB 6" "SB 9" "SR 0" "SR 7" "SS 0" "SS 8"; do run $x & done; wait
+fi
 sha256sum $KR/*.sv $RT/ot_hgi_sfu_opsa_*.sv $SM > $O/sources_a.sha256

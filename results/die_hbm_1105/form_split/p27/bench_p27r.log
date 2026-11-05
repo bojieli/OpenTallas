@@ -1,0 +1,15 @@
+SCEN R MUT 1: LOCKSTEP FAIL errs=625363 checks=17100 toggled_out_bits=2096 FAULT ref=1 dut=1
+SCEN R MUT 2: LOCKSTEP FAIL errs=1250726 checks=17100 toggled_out_bits=2096 FAULT ref=1 dut=1
+SCEN R MUT 3: LOCKSTEP FAIL errs=358711 checks=17100 toggled_out_bits=2096 FAULT ref=1 dut=1
+SCEN F1 MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=1040 FAULT ref=1 dut=1
+SCEN F0 MUT 4: LOCKSTEP FAIL errs=2850 checks=17100 toggled_out_bits=1040 FAULT ref=1 dut=0
+SCEN F1 MUT 5: LOCKSTEP FAIL errs=2850 checks=17100 toggled_out_bits=1040 FAULT ref=1 dut=0
+SCEN R MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=2096 FAULT ref=1 dut=1
+SCEN F0 MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=1040 FAULT ref=1 dut=1
+SCEN SS MUT 8: LOCKSTEP PASS checks=17100 toggled_out_bits=1032 FAULT ref=0 dut=0
+SCEN SR MUT 7: LOCKSTEP FAIL errs=2850 checks=17100 toggled_out_bits=1096 FAULT ref=1 dut=0
+SCEN SB MUT 6: LOCKSTEP FAIL errs=2850 checks=17100 toggled_out_bits=1032 FAULT ref=1 dut=0
+SCEN SR MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=1096 FAULT ref=1 dut=1
+SCEN SS MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=1032 FAULT ref=0 dut=0
+SCEN SB MUT 0: LOCKSTEP PASS checks=17100 toggled_out_bits=1032 FAULT ref=1 dut=1
+SCEN SB MUT 9: LOCKSTEP FAIL errs=2850 checks=17100 toggled_out_bits=1032 FAULT ref=1 dut=0
