@@ -2591,7 +2591,10 @@
     "slw_fw_v1__clf51c11d8__clc7ddab13@1",
     "slw_fe_v2__clf110fab2@1",
     "coll_s@1",
-    "native59@1"
+    "native59@1",
+    "sle_fe_v2@1",
+    "sle_fe_v3@1",
+    "slw_sc_v2@2"
    ],
    "queue_src": "claude/kw8-grtallow-1104@86bdf75874227ccd8a5483c678c3902e36830101",
    "type_args": {
@@ -3022,7 +3025,9 @@
     "coll_ftn",
     "slw_fe_v2__clf110fab2",
     "coll_s",
-    "native59"
+    "native59",
+    "sle_fe_v2",
+    "sle_fe_v3"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
