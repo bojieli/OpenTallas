@@ -70,3 +70,11 @@ def test_idx_fit_renames_svc_lo_reader_and_sizes_masters():
     assert c.idx_fit(hi, files)[1:] == ({}, {}, None)         # svc_hi: no reader, untouched
     with pytest.raises(ValueError, match="not a proven source"):
         idx.fit_source(src.read_text().replace("lw_h1[u] <= !sc && bt[0];", "lw_h1[u] <= !sc;"))
+
+
+def test_rebase_source_renames_tokens_and_refuses_unknown():
+    rm = dict(hash={'a' * 20: 'b' * 20}, att={'719': '720', '558': '559'}, eng={'111': '112'}, procmux={'69496': '69497'})
+    src = "P+'719_Y[0]' E+'111_Y' 'src_%s_Y' procmux_69496 ['558'] 0_Y" % ('a' * 20)
+    assert c.rebase_source(src, rm) == "P+'720_Y[0]' E+'112_Y' 'src_%s_Y' procmux_69497 ['559'] 0_Y" % ('b' * 20)
+    with pytest.raises(ValueError, match='not in the regenerated map'):
+        c.rebase_source("P+'733_Y'", rm)

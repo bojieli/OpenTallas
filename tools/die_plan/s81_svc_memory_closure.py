@@ -82,6 +82,12 @@ def idx_fit(closed, files, rtl=None):
 
 
 REF_GZ = ROOT / 'results/rtl/s81_T7_pmem_bound_cut_0900/native_parent.sv.gz'   # T7 original bound 61c902f1
+# Regenerated reference (s81_svc_ref_regen.py): a current T7 bound + the map from the 61c902f1 names the transforms use
+CUR_REF = ROOT / 'results/rtl/s81_svc_memory_fit_1103/ref_1105'
+RE_HASH = re.compile(r'src_([0-9a-f]{20})')
+RE_PROC = re.compile(r'procmux_(\d+)')
+RE_ENG = re.compile(r"E\+'(\d+)_Y")
+RE_ATT = re.compile(r"(?<![\w$])(?<!E\+')(\d+)_Y\b|'(\d{2,3})'")
 NATIVE = ('ot_bind_native_193c9bdc13b0c4251a5bbbc4', 'ot_bind_native_9c28130c03bbd6a26f6fd9a5',
           'ot_bind_native_4c805a5536bda0930879099e', 'ot_hdc_v41x_attn_staging')
 T7_ORIG = '61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a'
@@ -167,16 +173,41 @@ def port_source(src, tn, nmap, ref_head='u_rsv_14_'):
     return out, used
 
 
+def cur_ref():
+    """(current T7 bound, token map), or (None, None) before a reference is regenerated."""
+    if not (CUR_REF / 'ref_map.json').exists(): return None, None
+    j = json.loads((CUR_REF / 'ref_map.json').read_text()); s = gzip.decompress((CUR_REF / 'ref_t7_bound.sv.gz').read_bytes()).decode()
+    if sha(s) != j['reference']: raise ValueError('regenerated reference hash')
+    return s, j['map']
+
+
+def rebase_source(src, rm):
+    """A reference transform written for 61c902f1 -> the same transform on the regenerated reference: only net names
+    change, in one pass.  A token the map does not have refuses."""
+    def sub(k, t):
+        if t not in rm[k]:
+            raise ValueError('reference %s token %s not in the regenerated map' % (k, t))
+        return rm[k][t]
+    def one(m):
+        if m['h']: return 'src_' + sub('hash', m['h'])
+        if m['p']: return 'procmux_' + sub('procmux', m['p'])
+        if m['e']: return "E+'" + sub('eng', m['e']) + '_Y'
+        if m['a']: return (sub('att', m['a']) if m['a'] not in ('0', '1') else m['a']) + '_Y'
+        return "'" + sub('att', m['q']) + "'"
+    return re.sub(r"src_(?P<h>[0-9a-f]{20})|procmux_(?P<p>\d+)|E\+'(?P<e>\d+)_Y|(?<![\w$])(?P<a>\d+)_Y\b|'(?P<q>\d{2,3})'", one, src)
+
+
 def load(src):
     g = {'__name__': 's81_ported', '__file__': '<ported>'}; exec(compile(src, '<ported>', 'exec'), g); return g
 
 
-def close_type(s, ref_s):
+def close_type(s, ref_s, rm=None):
     rn, tn, nmap = name_map(ref_s, s)
     rep = dict(rsv=tn, before_sha256=sha(s), mapped_nets=len(nmap), steps=[])
     cur = s; t0 = time.time()
     for step in ('pmem', 'pvq', 'land', 'stage'):
-        src, used = port_source(REF[step].read_text(), tn, nmap, rn)
+        src = REF[step].read_text()
+        src, used = port_source(rebase_source(src, rm) if rm else src, tn, nmap, rn)
         g = load(src)
         if step == 'stage': new = g['flip'](cur)[0]
         else: new = g['transform'](cur)[0]
@@ -189,14 +220,14 @@ def close_type(s, ref_s):
 
 
 def _one(args):
-    f, ref_s = args; f = Path(f)
+    f, ref_s, rm = args; f = Path(f) if f else None
     threading.stack_size(512 * 1024 * 1024); box = {}
     def run():
         try:
-            new, rep = close_type(f.read_text(), ref_s); rep['status'] = 'CLOSED'; box['r'] = (new, rep)
+            new, rep = close_type(f.read_text() if f else ref_s, ref_s, rm); rep['status'] = 'CLOSED'; box['r'] = (new, rep)
         except Exception as e:
             box['r'] = (None, dict(status='REFUSED', reason=str(e)[:300]))
-    t = threading.Thread(target=run); t.start(); t.join(); return f.name, box['r']
+    t = threading.Thread(target=run); t.start(); t.join(); return (f.name if f else 'T7'), box['r']
 
 
 def ref_text(path=None):
@@ -210,7 +241,7 @@ def applies(bound_text):
     return all(re.search(r'^\s*' + m + r'\b', bound_text, re.M) for m in NATIVE)
 
 
-def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2'):
+def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     """Kit-RTL application (same recipe as the T7 canary3): replace s81p_<type>_bound.sv by its closure and list the
     three capture children right after it in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json files. Writes
     memory_closure.json receipt. `closed` = a precomputed closed bound text (else computed here)."""
@@ -222,7 +253,7 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2'):
     if not applies(s): return dict(status='NOT_APPLICABLE')
     if closed is None:
         box = {}
-        def run(): box['r'] = close_type(s, ref_s or ref_text())
+        def run(): box['r'] = close_type(s, ref_s or ref_text(), rm)
         threading.stack_size(512 * 1024 * 1024); t = threading.Thread(target=run); t.start(); t.join()
         if 'r' not in box: raise RuntimeError('closure failed for ' + str(bound))
         closed, rep = box['r']
@@ -288,7 +319,7 @@ def main():
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--skip-self-check', action='store_true', help='only when the self-check already ran on this tool sha')
     a = ap.parse_args()
-    ref_s = ref_text(a.ref)
+    ref_s = ref_text(a.ref); cur_s, rm = cur_ref()
     if a.kit_rtl:
         for d in a.kit_rtl:
             closed = None
@@ -300,15 +331,15 @@ def main():
                     cd = Path(a.closed_dir); gz = cd / "closed" / (b.name + ".gz")
                     closed = gzip.decompress(gz.read_bytes()).decode() if gz.exists() else (cd / b.name).read_text()
                     if sha(closed) != r['after_sha256']: sys.exit('closed bound sha mismatch ' + t)
-            print(d, json.dumps({k: v for k, v in apply_kit(d, ref_s, closed, a.form).items() if k in ('status', 'after_sha256')}), flush=True)
+            print(d, json.dumps({k: v for k, v in apply_kit(d, cur_s or ref_s, closed, a.form, rm).items() if k in ('status', 'after_sha256')}), flush=True)
         return
     out = Path(a.out)
     if out.exists(): sys.exit('refusing existing ' + str(out))
     out.mkdir(parents=True)
     jobs = [(str(ref_s_path), ref_s) for ref_s_path in []]
-    todo = ([] if a.skip_self_check else [a.ref]) + list(a.bound)
+    todo = ([] if a.skip_self_check else [(a.ref, ref_s, None)]) + [(f, cur_s or ref_s, rm) for f in a.bound]
     with ProcessPoolExecutor(max_workers=a.jobs) as ex:
-        res = list(ex.map(_one, [(f, ref_s) for f in todo]))
+        res = list(ex.map(_one, todo))
     report = dict(types={})
     if not a.skip_self_check:
         _, (t7, r7) = res.pop(0)
