@@ -2558,7 +2558,8 @@
     "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-8 17:5x COORD: stale row stopped; other hc wait one proof row past CTS with no big-tap failure",
     "sle_fe_v3": "KW-FIX-11 07:2x COORD 07:21: DIE-QC-75-R stopped it 07:07, autopilot revived 07:17 on pre-fix tick; DIE-QC-75 ring_place=ff pilot on dq75/fe3ff is the path; release on its read",
     "coll_ftn": "KW-FIX-12 08:5x brief: coll_ftn stays held, DIE-QC-75 form; was eligible in the wave with no hold",
-    "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts"
+    "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts",
+    "coll_s": "KW-FIX-16 13:0x COORD: no wave recut of coll_s (12 GRT restarts, overflow ~105k); DIE-QC-79 re-forms it; release on that form"
    },
    "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1105f2/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
