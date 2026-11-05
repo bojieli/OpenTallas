@@ -322,7 +322,7 @@ module ot_s81hd_lep_core_nr #(
     wire [31:0] window_count;
     wire wopen, wab; wire [32:0] wtag; wire terr;       // window open, pair B, {pos, user, land, 1}
     generate if (MU_EN != 0) begin : g_mtx
-    reg [33:0] mcq; reg [NBW-1:0] wn; reg w_ab, te; reg [32:0] w_t;
+    reg [33:0] mcq; reg [NBW-1:0] wn; reg w_ab, te; reg [32:1] w_t;
     for(genvar mb=0;mb<34;mb=mb+1) begin:g_command_reset
         wire command_reset=(RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+mb/24]:rn;
         always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mc_x[mb];
@@ -336,7 +336,7 @@ module ot_s81hd_lep_core_nr #(
         else begin
             if (mcv) begin
                 if (wn != '0 && !(rov && wn == NBW'(1))) te <= 1'b1;     // a window while one is open
-                wn <= NBW'(NB); w_ab <= mcq[1] && ab_ok; if(NATIVE32==0 || RX_SRAM==0) w_t <= {mcq[33:13], mcq[12:3], mcq[2], 1'b1};
+                wn <= NBW'(NB); w_ab <= mcq[1] && ab_ok; if(NATIVE32==0 || RX_SRAM==0) w_t <= {mcq[33:13], mcq[12:3], mcq[2]};
                 if (mcq[1] && !ab_ok) te <= 1'b1;                        // ab with user 0 / without pair B
             end else if (rov && wn != '0) wn <= wn - 1'b1;
             if (rov && wn != '0 && roq[3:1] != K_XB && roq[3:1] != K_XQ) te <= 1'b1;   // non-h beat inside a window
@@ -344,14 +344,14 @@ module ot_s81hd_lep_core_nr #(
     if(NATIVE32!=0 && RX_SRAM!=0) begin:g_tag_payload_regions
       wire [32:0] tag_in={mcq[33:13],mcq[12:3],mcq[2],1'b1};
       for(genvar wt=0;wt<4;wt=wt+1) begin:g_group
-        localparam integer LO=wt*9,W=(33-LO<9)?33-LO:9;
+        localparam integer LO0=wt*9,W0=(33-LO0<9)?33-LO0:9,LO=(LO0==0)?1:LO0,W=(LO0==0)?W0-1:W0;
         wire load_tag;
         (* keep=1 *) ot_s81sl_lep_host_enable u_load(.ne0(tag_state_reset),.ne1(mcv),.hit(1'b1),.en(load_tag));
         always @(posedge clk) if(load_tag) w_t[LO+:W]<=tag_in[LO+:W];
       end
     end
     assign window_count=32'(wn);
-    assign wopen = wn != '0; assign wtag = w_t; assign terr = te;
+    assign wopen = wn != '0; assign wtag = {w_t, 1'b1}; assign terr = te;
 `ifdef OT_S81SL_LEP_MUT_WRONGCOPY
     assign wab = 1'b0;                                 // MUTANT: copy select ignored
 `else
