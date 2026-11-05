@@ -67,6 +67,35 @@ class Candidates(unittest.TestCase):
         r["evidence"] = "epyc4:/home/ubuntu/x/attempt_1"
         self.assertEqual(SP.candidates({"items": {"a": r}}), [])
 
+    def test_protected_union_root_space_rows(self):
+        lanes = "# h\nepyc4\t/srv/a/b\tx\n"
+        root = "# root\nintel2 /srv/opentallas-scratch2/claude/codex-kv CODEX keep\nepyc4 /srv/r/only/  note\n\n"
+        self.assertEqual(SP.protected_for(lanes + "\n" + root, "epyc4"), ["/srv/a/b", "/srv/r/only"])
+
+    def test_root_list_only_row_skipped_in_tick(self):
+        with tempfile.TemporaryDirectory() as t:
+            d, base = attempt(t)
+            st = {"items": {"k": {"die": "s81", "event": "ev", "item": "x", "attempt": "2", "status": "FAIL",
+                                  "updated": 0, "evidence": "intel2:" + d}}}
+            files = {"lanes/PROTECTED-DBS.txt": "intel2\t/srv/other\tx\n",
+                     "PROTECTED-DBS.txt": f"intel2 {d}  root-list only\n"}
+            orig = SP.candidates
+            SP.candidates = lambda s, *a, **k: [] if s["items"]["k"].get("substep_pruned") else [("k", "intel2", d)]
+            try:
+                ap = Tick.AP()
+                SP.tick(ap, {"dies": {}}, st, t, lambda h: [], files.get, _live=[])
+                self.assertTrue((base / "2_1_floorplan.odb").exists())
+                self.assertTrue(st["items"]["k"]["substep_pruned"].startswith("skip:protected"))
+                # a missing root list stops the tick: nothing removed, nothing marked
+                st["items"]["k"].pop("substep_pruned")
+                SP.tick(ap, {"dies": {}}, st, t, lambda h: [], {"lanes/PROTECTED-DBS.txt": "intel2\t/srv/o\tx\n"}.get,
+                        _live=[])
+                self.assertTrue((base / "2_1_floorplan.odb").exists())
+                self.assertNotIn("substep_pruned", st["items"]["k"])
+                self.assertTrue(any("PROTECTED-DBS.txt unreadable" in m for m in ap.logs), ap.logs)
+            finally:
+                SP.candidates = orig
+
     def test_protected_for_host(self):
         txt = "# h\nepyc4\t/srv/a/b\tx\nintel2\t/srv/c\ty\n"
         self.assertEqual(SP.protected_for(txt, "epyc4"), ["/srv/a/b"])
@@ -155,8 +184,8 @@ class Tick(unittest.TestCase):
                                                 if not r.get("substep_pruned") and not r.get("substep_checked")]
             try:
                 ap = self.AP()
-                SP.tick(ap, {"dies": {"s81": {}}}, st, t, lambda h: [], lambda: "intel2\t/srv/zz\tx\n", _live=[])
-                SP.tick(ap, {"dies": {"s81": {}}}, st, t, lambda h: [], lambda: "intel2\t/srv/zz\tx\n", _live=[])
+                SP.tick(ap, {"dies": {"s81": {}}}, st, t, lambda h: [], lambda rel: "intel2\t/srv/zz\tx\n", _live=[])
+                SP.tick(ap, {"dies": {"s81": {}}}, st, t, lambda h: [], lambda rel: "intel2\t/srv/zz\tx\n", _live=[])
                 self.assertFalse((base / "2_1_floorplan.odb").exists())
                 self.assertTrue((b2 / "2_1_floorplan.odb").exists())          # idle: kept, not marked, re-checked
                 self.assertTrue(st["items"]["k1"]["substep_pruned"].startswith("done"))
@@ -170,7 +199,7 @@ class Tick(unittest.TestCase):
                 self.assertTrue(any("SUBSTEP-1 intel2: 2 sub-step ODBs" in m for m in ap.logs), ap.logs)
                 # switched off
                 st["items"]["k2"].pop("substep_checked", None)
-                SP.tick(ap, {"substep_prune": False, "dies": {}}, st, t, lambda h: [], lambda: "x", _live=[])
+                SP.tick(ap, {"substep_prune": False, "dies": {}}, st, t, lambda h: [], lambda rel: "x", _live=[])
                 self.assertTrue((b2 / "2_1_floorplan.odb").exists())
             finally:
                 SP.candidates = orig

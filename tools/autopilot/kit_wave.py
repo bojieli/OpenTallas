@@ -3149,7 +3149,7 @@ def _step(AP, ap_dir):
     try:                                        # SUBSTEP-1 (COORD 11-05 10:53): sub-step ODBs of terminal attempts
         import substep_prune
         substep_prune.tick(AP, cfg, st, ap_dir, lambda h: _ssh(h, AP.HUB_NAME),
-                           lambda: AP.read_coord("lanes/PROTECTED-DBS.txt"))
+                           AP.read_coord)
     except Exception as e:                      # disk hygiene never stops the tick
         AP.log(f"KIT-WAVE SUBSTEP-1 skipped: {type(e).__name__}: {e}")
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
