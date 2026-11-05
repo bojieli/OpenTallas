@@ -38,13 +38,19 @@ def raw_reset(tree, node, body):
         raise ValueError(f"collector {node}: reset-tree relay absent")
     edge = relays[node]
     parent = raw(edge["d"])
+    up_lines, up_insts = [], []
     if edge["d"] != "rst_root_n" and not declared(parent):
-        raise ValueError(f"collector {node}: raw reset parent {parent} absent")
-    lines = [f"    wire {reset};",
+        # DIE-S81-62 11-05 (S81 cem drop, iq_C/kv512_C rst_rl_197/rst_rl_41): the wrapper no longer emits a pure wire
+        # relay whose other consumers left with u_em; copy it too at its own relay site (same depth, cycle-equal),
+        # recursively up to a declared ancestor. A parent that is no reset-tree relay still fails closed.
+        if edge["d"] not in relays:
+            raise ValueError(f"collector {node}: raw reset parent {parent} absent")
+        parent, up_lines, up_insts = raw_reset(tree, edge["d"], body)
+    lines = up_lines + [f"    wire {reset};",
              f"    ot_dp_rrelay u_{reset} (.clk(clk), .d({parent}), .q({reset}));"]
     inst = dict(name="u_"+reset, module="ot_dp_rrelay", xy_um=edge["xy"],
                 flops=1, role="raw pre-START reset copy")
-    return reset, lines, [inst]
+    return reset, lines, up_insts + [inst]
 
 
 def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):

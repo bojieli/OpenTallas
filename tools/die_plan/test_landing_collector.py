@@ -72,3 +72,18 @@ def test_raw_reset_never_reuses_a_registered_reset_out_face_flop():
     assert rtl == ["    wire cland_reset_rst_n_t1;",
                    "    ot_dp_rrelay u_cland_reset_rst_n_t1 (.clk(clk), .d(rst_rl_5), .q(cland_reset_rst_n_t1));"]
     assert raw_reset(t, "rst_n_t1", face + "\n".join(rtl)) == (name, [], [])  # second consumer shares the copy
+
+
+def test_raw_reset_copies_an_undeclared_wire_relay_parent_chain():
+    from landing_collector import raw_reset
+    tree=dict(relays=[dict(q="rst_rl_1", d="rst_n_t0", xy=[1,2]), dict(q="rst_rl_2", d="rst_rl_1", xy=[3,4]),
+                      dict(q="rst_rl_3", d="rst_rl_2", xy=[5,6])])
+    name,rtl,inst=raw_reset(tree,"rst_rl_3","wire rr_t0;\nwire rst_rl_1;")
+    assert name=="cland_reset_rst_rl_3"
+    assert [i["xy_um"] for i in inst]==[[3,4],[5,6]]
+    text="\n".join(rtl)
+    assert ".d(rst_rl_1), .q(cland_reset_rst_rl_2)" in text
+    assert ".d(cland_reset_rst_rl_2), .q(cland_reset_rst_rl_3)" in text
+    body="wire rr_t0;\nwire rst_rl_1;\n"+text
+    assert raw_reset(tree,"rst_rl_3",body)==(name,[],[])
+    assert raw_reset(tree,"rst_rl_2",body)==("cland_reset_rst_rl_2",[],[])
