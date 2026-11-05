@@ -949,8 +949,12 @@ def classify(c, client):
         return "CRASH", "infra-notrun", client.get("msg", "ot-run NOT RUN")
     if client.get("not_completed"):
         return "CRASH", "infra-lost", client.get("msg", "ot-run NOT COMPLETED")
-    if c.get("oom") or client.get("exit") in (137, 143):
-        return "CRASH", "infra-oom", c.get("oom") or f"exit {client.get('exit')}"
+    if c.get("oom"):
+        return "CRASH", "infra-oom", c["oom"]
+    if client.get("exit") in (137, 143):
+        # COORD 11-05 07:01: exit 137/143 with no memory line in the logs is a signal from outside, usually a lane's
+        # docker stop, not an OOM (opstore_b stopped by ruling 06:51 came back 06:58). Not in INFRA_KINDS: no retry.
+        return "CRASH", "infra-stopped", f"exit {client['exit']}, no OOM line in the run logs: stopped from outside"
     if client.get("exit") == 0 and c.get("goal") == "grt" and c.get("grt_odb"):
         if c.get("grt_overflow") not in (None, 0):
             return "STRUCTURAL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"
