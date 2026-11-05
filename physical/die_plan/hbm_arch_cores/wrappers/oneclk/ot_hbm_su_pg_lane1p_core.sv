@@ -1,4 +1,4 @@
-// DIE-HBM-63/REFORM 11-04: planned common-root wiring; pin table 2e2e8a811eb396282897cefd29ce8e786e5af25744d0cd1da23803fe750ae2ac.
+// DIE-HBM-63/REFORM 11-04: planned common-root wiring; pin table 09e2439b7779198d22cd7330957431b4f8f9ad442661ad0d8f6d6243ae6fa170.
 // Clock replicas bank0_clk, bank0_clk_macro, lane0_clk_insert, lane0_clk_stage all from clk (one 1.2-GHz domain, clock_entries merged_clock_ports); no other wiring changed.
 `default_nettype none
 module ot_hbm_su_pg_lane1p_core (

@@ -2759,10 +2759,10 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "HBM-REFORM-A d44v part 17: lane1 text with the module renamed, lanes_plain tile 216 x 224.64 (lockstep receipt in results/die_hbm_1104/reform_a/part17)",
+  "source": "HBM-REFORM-A d44v part 17: lane1 text with the module renamed, lanes_plain tile 440.64 x 112.32 (lockstep receipt in results/die_hbm_1104/reform_a/part17)",
   "rename_top": "ot_hbm_su_pg_lane1p_core__mc",
   "wrapper_by_pins_sha256": {
-   "2e2e8a811eb396282897cefd29ce8e786e5af25744d0cd1da23803fe750ae2ac": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane1p_core.sv"
+   "09e2439b7779198d22cd7330957431b4f8f9ad442661ad0d8f6d6243ae6fa170": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane1p_core.sv"
   }
  }
 }

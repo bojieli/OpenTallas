@@ -10,7 +10,7 @@ r = json.loads(json.dumps(R[L1]))
 r["top"] = LP; r["rename_top"] = LP + "__mc"
 r["files"] = [x for x in r["files"] if not x.endswith(L1 + ".sv")] + [new]
 r.pop("files_at", None)
-r["source"] = "HBM-REFORM-A d44v part 17: lane1 text with the module renamed, lanes_plain tile 216 x 224.64 (lockstep receipt in results/die_hbm_1104/reform_a/part17)"
+r["source"] = "HBM-REFORM-A d44v part 17: lane1 text with the module renamed, lanes_plain tile 440.64 x 112.32 (lockstep receipt in results/die_hbm_1104/reform_a/part17)"
 r["wrapper_by_pins_sha256"] = {sha: "physical/die_plan/hbm_arch_cores/wrappers/oneclk/" + LP + ".sv"}
 R[LP] = r
 t = f.with_suffix(".tmp"); t.write_text(json.dumps(R, indent=1) + "\n"); os.replace(t, f)

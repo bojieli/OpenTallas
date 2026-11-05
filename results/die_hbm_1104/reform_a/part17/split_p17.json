@@ -77,8 +77,8 @@
   "layout": "LEAST_DISPLACEMENT",
   "clock_entry": {
    "ot_hbm_su_pg_lane1p_core": [
-    108.0,
-    82.08
+    220.32,
+    95.04
    ]
   },
   "macros": {
@@ -88,10 +88,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      7.776,
-      29.16,
-      102.6,
-      70.224
+      28.944,
+      5.4,
+      123.768,
+      46.464
      ]
     },
     {
@@ -99,10 +99,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      113.4,
-      29.16,
-      208.224,
-      70.224
+      173.016,
+      5.4,
+      267.84,
+      46.464
      ]
     },
     {
@@ -110,10 +110,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      7.776,
-      91.8,
-      102.6,
-      132.864
+      317.088,
+      5.4,
+      411.912,
+      46.464
      ]
     },
     {
@@ -121,10 +121,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      113.4,
-      91.8,
-      208.224,
-      132.864
+      28.944,
+      46.488,
+      123.768,
+      87.552
      ]
     },
     {
@@ -132,10 +132,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      7.776,
-      154.44,
-      102.6,
-      195.504
+      173.016,
+      46.488,
+      267.84,
+      87.552
      ]
     },
     {
@@ -143,14 +143,14 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      113.4,
-      154.44,
-      208.224,
-      195.504
+      317.088,
+      46.488,
+      411.912,
+      87.552
      ]
     }
    ]
   },
-  "macro_basis": "HBM-REFORM-A d44v part 17: 2 x 3 grid in the 216 x 224.64 tile, column channel 10.8, row channels 21.576; W/E bands 7.776 (advisory), 4 full-width cell bands; clock entry in the first row channel"
+  "macro_basis": "HBM-REFORM-A d44v part 17: 3 x 2 grid in the 440.64 x 112.32 tile, 4 stacked in the slot; W/E bands 24.6, 49.2, 49.2, 24.6, top cell strip 20.4; clock entry in the top strip"
  }
 ]

@@ -2,5 +2,5 @@ top keys ['schema', 'plan', 'types'] types 74 74
 FAIL count 225 -> 225 | types FAIL 74 -> 74
 NEW 0 []
 GONE 0 []
-WORSE 9 [('q_su00', 'clock_tap_sinks', 9223.0, 9227.0), ('q_su00__physical_v1', 'clock_tap_sinks', 9223.0, 9227.0), ('q_su21', 'clock_reach', 381.58, 382.51), ('q_su21', 'clock_tap_sinks', 7901.0, 10785.0), ('q_su21__physical_v1', 'clock_reach', 381.58, 382.51), ('q_su21__physical_v1', 'clock_tap_si
-BETTER 13 [('q_su01', 'clock_tap_sinks', 9194.0, 9193.0), ('q_su01__physical_v1', 'clock_tap_sinks', 9194.0, 9193.0), ('q_su11', 'clock_tap_sinks', 5654.0, 5652.0), ('q_su11__physical_v1', 'clock_tap_sinks', 6403.0, 6401.0), ('q_su20', 'clock_reach', 461.46, 357.1), ('q_su20', 'clock_tap_sinks', 427
+WORSE 7 [('q_su21', 'clock_reach', 381.58, 382.51), ('q_su21', 'clock_tap_sinks', 7901.0, 10785.0), ('q_su21__physical_v1', 'clock_reach', 381.58, 382.51), ('q_su21__physical_v1', 'clock_tap_sinks', 7901.0, 10785.0), ('q_su30__physical_v1', 'clock_tap_sinks', 4168.0, 4437.0), ('q_su31', 'clock_reach
+BETTER 11 [('q_su01', 'clock_tap_sinks', 9194.0, 9192.0), ('q_su01__physical_v1', 'clock_tap_sinks', 9194.0, 9192.0), ('q_su20', 'clock_reach', 461.46, 357.1), ('q_su20', 'clock_tap_sinks', 4274.0, 2597.0), ('q_su20__physical_v1', 'clock_reach', 461.46, 357.1), ('q_su20__physical_v1', 'clock_tap_sin
