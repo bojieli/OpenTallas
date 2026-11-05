@@ -626,11 +626,9 @@
     "slice_station__t27@4",
     "seqhost__t1@1",
     "seqhost__t1@2",
-    "serdes__t15__cla3d02796@1",
     "serdes__t16@1",
     "serdes__t1__clb45db5be@1",
     "serdes__t1__clfe1f0815@1",
-    "serdes__t2@1",
     "serdes__t3@1",
     "col_h10_r0_p4__t1@2",
     "col_h9_r0_p1__t1@1",
@@ -1434,7 +1432,9 @@
     "serdes__t12": "KW-FIX-8 15:5x COORD 14:42 (3): cap row, not relaunched on d0d788a6fcf; stays with DIE-S81-56 for the kp4_dchn form",
     "serdes__t14": "KW-FIX-8 15:5x COORD 14:42 (3): cap row, not relaunched on d0d788a6fcf; stays with DIE-S81-56 for the kp4_dchn form",
     "serdes__t15__cla2127225": "KW-FIX-8 15:5x COORD 14:42 (3): cap row, not relaunched on d0d788a6fcf; stays with DIE-S81-56 for the kp4_dchn form",
-    "serdes__t16": "KW-FIX-8 15:5x COORD 14:42 (3): cap row, not relaunched on d0d788a6fcf; stays with DIE-S81-56 for the kp4_dchn form"
+    "serdes__t16": "KW-FIX-8 15:5x COORD 14:42 (3): cap row, not relaunched on d0d788a6fcf; stays with DIE-S81-56 for the kp4_dchn form",
+    "serdes__t15__cla3d02796": "KW-FIX-8 17:5x cap row: actual native cells above run cap at floorplan (541796 > 517000), a repeat fails the same; with DIE-S81-56 for the kp4_dchn form like t3/t12",
+    "serdes__t2": "KW-FIX-8 17:5x cap row: actual native cells above run cap at floorplan (459972 > 400000), a repeat fails the same; with DIE-S81-56 for the kp4_dchn form like t3/t12"
    },
    "queue_src": "claude/kw8-grtallow-1104@86bdf75874227ccd8a5483c678c3902e36830101",
    "work_root": "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave",
