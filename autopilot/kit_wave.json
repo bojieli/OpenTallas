@@ -2636,7 +2636,8 @@
     "slw_sc_v3@1",
     "slw_hc1__cl68f9248e__cle683a076@4",
     "cbf_q11@2",
-    "cbf_q00__cl870de686@6"
+    "cbf_q00__cl870de686@6",
+    "cbx_q10__cl89936551@7"
    ],
    "queue_src": "",
    "type_args": {
@@ -2981,7 +2982,8 @@
     "slw_stm_v1__cle34a73c3@4": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
     "sle_st_a_v2@10": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
     "slw_fe_v1__clfe325744__cldb4efe33@2": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
-    "slw_hc1__cl68f9248e__cle683a076@4": "I88 30eaca7cc3e landing window x16, x32"
+    "slw_hc1__cl68f9248e__cle683a076@4": "I88 30eaca7cc3e landing window x16, x32",
+    "cbx_q10__cl89936551@7": "DRT-0073 class I74+ prov view: a7 launched 04:33 on pre-fix source (qc-wave-1105e4 LEF with blanket OBS), same class as cbx_q10__cl94a12200"
    },
    "gen_hosts": [
     "epyc4"
