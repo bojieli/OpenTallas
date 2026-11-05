@@ -137,12 +137,6 @@ module ot_qkd_static_kv_timing #(
     wire wq_ne = W && wq_n != 0;
     // the head write's bank/column are REGISTERED copies (hb_oh one-hot), kept off the queue index
     reg [4:0] hb, hc; reg [31:0] hb_oh;
-    wire [5*WQ-1:0] wq_bq;                            // queued write banks, oldest first
-    wire [WQ-1:0] wq_in;                              // queue entry valid
-    for (genvar i = 0; i < WQ; i = i + 1) begin : wqe
-      assign wq_bq[i*5 +: 5] = wq_bank[WQW'(wq_rp + i)];
-      assign wq_in[i] = W && i < wq_n;
-    end
     reg [31:0] hold_n, hold;                          // banks a queued write needs (never precharged;
     integer hi;                                       // registered: one cycle behind the queue)
     reg [31:0] hold_all, hold_wo_head;                // RF-KV2: the set of every queued entry / every entry but the head
@@ -170,12 +164,17 @@ module ot_qkd_static_kv_timing #(
     reg [4:0] sq_bank [0:SQD-1]; reg [4:0] sq_col [0:SQD-1]; reg [18:0] sq_row [0:SQD-1]; reg sq_we [0:SQD-1];
     reg [SQW:0] sq_n; reg [SQW-1:0] sq_rp;
     reg [346:0] sq_context[0:SQD-1];
-    // RF-KV2 (b): the static head context IS the queue entry at sq_rp whenever the queue holds one (push and head take the
-    // same s_context; a pop moves both to sq_rp+1), and the last s_context while it is empty -- no s_go-selected
-    // 347-bit head register.
-    reg [346:0] s_empty_context;
-    always @(posedge clk) s_empty_context <= s_context;
-    assign col_context = (sq_n != 0) ? sq_context[sq_rp] : s_empty_context;
+    // DIE-KV-71/HHP 11-05 form B: col_context is the head entry one edge later, split across this output and the plain
+    // flop stage after it (the caller's own col_context flop is gone, so the same edge as before).  Read only with a
+    // static column, which needs a head, so the empty-queue value (s_empty_context) is dropped.
+    initial if(SQD!=4)$fatal(1,"context split assumes SQD==4");
+    reg [346:0] ctx_lo, ctx_hi; reg ctx_sel;
+    always @(posedge clk) begin
+      ctx_lo <= sq_rp[0] ? sq_context[1] : sq_context[0];
+      ctx_hi <= sq_rp[0] ? sq_context[3] : sq_context[2];
+      ctx_sel <= sq_rp[1];
+    end
+    assign col_context = ctx_sel ? ctx_hi : ctx_lo;
     wire sq_ne = S && sq_n != 0;
     // the head, REGISTERED (sb_oh one-hot): bank, column, row, direction; scm: committed (its ACT issued or it hit);
     // sfl: switched to the twin once.  so_*: the newest static-opened bank and its row (cleared by its PRE).
@@ -375,16 +374,22 @@ module ot_qkd_static_kv_timing #(
                     (s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0)));
     wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
-    assign s_go = legal_static && (PROFILE == 1 || reserved_static_col || boot_static_col);
-    wire legal_rd = rd_ok0 && !s_go && !((rp_sp && |(rd_oh & sb_oh)) || (cp_sp && |(rd_oh & c_oh)));
-    assign rd_ok = legal_rd && (PROFILE == 1 || reserved_rd);
+    // DIE-KV-71/HHP 11-05 form B: in production the state machine advances on the compiled slot flop alone, so no JEDEC check
+    // (open, blk, rcd, ccdl ...) reaches the bank, queue and head state.  A slot without permission still sets the same sticky
+    // fault on the same edge and is still kept off the pins (s_go_pin / rd_pin / wr_pin); only state after that fault differs.
+    assign s_go = (PROFILE == 1) ? legal_static : (reserved_static_col || (boot_static_col && legal_static));
+    wire s_go_pin = s_go && legal_static;
+    wire legal_rd = rd_ok0 && !s_go_pin && !((rp_sp && |(rd_oh & sb_oh)) || (cp_sp && |(rd_oh & c_oh)));
+    assign rd_ok = (PROFILE == 1) ? legal_rd : reserved_rd;
+    wire rd_pin = rd_ok && legal_rd;
     reg fault_schedule;
     assign schedule_fault = fault_schedule;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) fault_schedule <= 0;
       else if (PROFILE == 0 && ((reserved_rd && !legal_rd) || (reserved_static_col && !legal_static) || (reserved_write_col && !legal_write) || (({1'b0,reserved_rd}+{1'b0,reserved_static_col}+{1'b0,reserved_write_col})>1))) fault_schedule <= 1;
-    wire legal_write = wr_ok0 && !s_go && !((rp_sp && |(hb_oh & sb_oh)) || (cp_sp && |(hb_oh & c_oh)));
-    assign wr_ok = legal_write && (PROFILE == 1 || reserved_write_col);
+    wire legal_write = wr_ok0 && !s_go_pin && !((rp_sp && |(hb_oh & sb_oh)) || (cp_sp && |(hb_oh & c_oh)));
+    assign wr_ok = (PROFILE == 1) ? legal_write : reserved_write_col;
+    wire wr_pin = wr_ok && legal_write;
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
       act_bank = {(c >= 4) ? (context_active ? (kk ^ 3'd1) : kk + 3'd1) : kk, 2'(c & 3)};
@@ -441,27 +446,27 @@ module ot_qkd_static_kv_timing #(
     wire [7:0] koh_n = desc_acc ? (8'b1 << first_sector[9:7]) : context_active&&rd_ok ? (8'b1 << j_p1[9:7]) : v_set_flip ? {koh[6],koh[7],koh[4],koh[5],koh[2],koh[3],koh[0],koh[1]} : k_step ? {koh[6:0],koh[7]} : koh;
     // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
-    wire [WQ-1:0] wq_act;
+    // DIE-KV-71/HHP 11-05 form B: eligibility per physical slot (wq_v == the entry is queued), then the oldest eligible slot.
+    wire [WQ-1:0] sl_act;
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqa
-      wire [4:0] bq = wq_bq[i*5 +: 5];
-      assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
-                         !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+      assign sl_act[i] = W && wq_v[i] && !(|(wq_oh[i] & (open | blk))) && (|(wq_oh[i] & aok_z)) && rrdl_z[wq_bank[i][1:0]] &&
+                         !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wq_bank[i] == bsel);
     end
     // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
     // against the current bank state with one-hot reductions, keeping the queue indexing and the
     // bank-state muxes off the row-decision path.
-    reg wcand; reg [4:0] wab_n; reg wcrd_n;
+    reg wcand; reg [4:0] wab_n; reg wcrd_n; reg [31:0] wab_oh_n;
     integer ai;
     always @* begin
-      wcand = 1'b0; wab_n = 0; wcrd_n = 1'b0;
-      for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (wq_act[ai]) begin
-        wcand = 1'b1; wab_n = wq_bq[ai*5 +: 5]; wcrd_n = AQ && wq_rd[WQW'(wq_rp + ai)];
+      wcand = 1'b0; wab_n = 0; wcrd_n = 1'b0; wab_oh_n = 32'b1;
+      for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (sl_act[WQW'(wq_rp + ai)]) begin
+        wcand = 1'b1; wab_n = wq_bank[WQW'(wq_rp + ai)]; wab_oh_n = wq_oh[WQW'(wq_rp + ai)]; wcrd_n = AQ && wq_rd[WQW'(wq_rp + ai)];
       end
     end
     reg wcand_q; reg [4:0] wab; reg [31:0] wab_oh; reg wcrd_q;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin wcand_q <= 1'b0; wab <= 0; wab_oh <= 0; wcrd_q <= 1'b0; end
-      else begin wcand_q <= W && wcand; wab <= wab_n; wab_oh <= 32'b1 << wab_n; wcrd_q <= wcrd_n; end
+      else begin wcand_q <= W && wcand; wab <= wab_n; wab_oh <= wab_oh_n; wcrd_q <= wcrd_n; end
     wire wact_ok = wcand_q && !(|(wab_oh & (open | blk))) && (|(wab_oh & aok_z)) && rrdl_z[wab[1:0]] &&
                    !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wab == bsel) &&
                    !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
@@ -568,10 +573,10 @@ module ot_qkd_static_kv_timing #(
     assign rp_sp = S && slot_next && sprio && s_pre_ok && !(REF_MODE && ref_due_n && ref_pend) &&
                    !(!REF_MODE && ref_due_n) && !preall_ok && !ep_rdy && !forced_pre;
     assign cp_sp = S && c_v && c_sp;
-    assign col_v = rd_ok || (W && wr_ok) || s_go; assign col_we = (W && wr_ok && !(AQ && hr)) || (s_go && swe);
-    assign col_aq = AQ && wr_ok && hr; assign col_sr = s_go;
+    assign col_v = rd_pin || (W && wr_pin) || s_go_pin; assign col_we = (W && wr_pin && !(AQ && hr)) || (s_go_pin && swe);
+    assign col_aq = AQ && wr_pin && hr; assign col_sr = s_go_pin;
     assign col_bank = s_go ? sb : (W && wr_ok) ? hb : rd_bank; assign col_col = s_go ? sc : (W && wr_ok) ? hc : j[6:2];
-    assign s_r = S && sq_n != (SQW+1)'(SQD); assign s_pop = s_go;
+    assign s_r = S && sq_n != (SQW+1)'(SQD); assign s_pop = s_go_pin;
     assign wr_r = W && wq_n != (WQW+1)'(WQ);
     assign desc_r = !streaming && !fault_r && !wq_ne;
     assign phase_idle = !streaming && !wq_ne && !sq_ne;
