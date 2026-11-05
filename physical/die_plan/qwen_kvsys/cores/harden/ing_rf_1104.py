@@ -15,10 +15,8 @@ for port in ("clk_bank", "clk_out", "r_v", "r_rdy", "r_addr", "rd_v", "rd_data",
     assert n == 1, port
 t, n = re.subn(r"^\s*wire n\d+;\n", "", t, flags=re.M)
 assert n > 0
-t, n = re.subn(r",\n(\s*\);\s*\nendmodule)", r"\n\1", t)
-if n != 1:
-    t, n = re.subn(r"(\.n_sectors\(.*\)),?\n\s*\);", r"\1\n    );", t)
-    assert n == 1
+t, n = re.subn(r"(\.n_sectors\(.*\)),\n", r"\1);\n", t)
+assert n == 1
 t, n = re.subn(r"\nendmodule", "\n    assign r_v[0] = 1'b0;\n    assign r_addr = 32'd0;\nendmodule", t)
 assert n == 1
 t = t.replace("do not edit.", "do not edit. DIE-KV-70/ING 11-04: engine = qkd_host_native_engine_ing1, see its header.", 1)
