@@ -2446,7 +2446,8 @@
     "slw_hc2__cl6bcaba89": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "slw_hc2__cla3497502__cldc737267": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "slw_hc3__cld86a7ad4": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure"
+    "slw_hc3__cld86a7ad4": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
+    "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-8 17:5x COORD: stale row stopped; other hc wait one proof row past CTS with no big-tap failure"
    },
    "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -2579,7 +2580,18 @@
     "slw_stm_v2__cl9beb65e6@1",
     "coll_ftm@1",
     "sle_stm_v3@1",
-    "slw_su_c__cl92142dac@6"
+    "slw_su_c__cl92142dac@6",
+    "sle_fw_v1__cl9d029624@4",
+    "sle_fw_v3@1",
+    "sle_fw_v2__cl6740750e@2",
+    "sle_fw_v2__cl69f5e854@2",
+    "coll_ft__cl78c7b300@1",
+    "slw_fw_v1__cl51d45468@2",
+    "coll_ftn@1",
+    "slw_fw_v1__clf51c11d8__clc7ddab13@1",
+    "slw_fe_v2__clf110fab2@1",
+    "coll_s@1",
+    "native59@1"
    ],
    "queue_src": "claude/kw8-grtallow-1104@86bdf75874227ccd8a5483c678c3902e36830101",
    "type_args": {
@@ -3004,7 +3016,13 @@
     "slw_sc_v2",
     "slw_st_a_v1__clfc5867a6",
     "slw_st_a_v2__cl9f076a5c",
-    "slw_st_a_v2__clf4365a62"
+    "slw_st_a_v2__clf4365a62",
+    "sle_fw_v1__cl9d029624",
+    "sle_fw_v2__cl6740750e",
+    "coll_ftn",
+    "slw_fe_v2__clf110fab2",
+    "coll_s",
+    "native59"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
