@@ -10,7 +10,7 @@
       "name": "fault",
       "dir": "out",
       "face": "N",
-      "x": 0.012,
+      "x": 0.108,
       "y": 514.032,
       "layer": "M5"
     },
@@ -1347,7 +1347,7 @@
       "dir": "out",
       "face": "E",
       "x": 244.518,
-      "y": 0.012,
+      "y": 2.316,
       "layer": "M4"
     },
     {
@@ -4199,5 +4199,5 @@
       "layer": "M5"
     }
   ],
-  "note": "DIE-QC-63/SC 11-02: chain-end variant pin table = qfd_dv_s5_sc2_leaf HARD1 table (codex-qc-sc-currentgen-1810/pins.json sha256 4a2a3eb4b830...) minus the absent port dn_i; same outline/positions | DIE-QC-63/SC 11-02: ck moved from the interior centre entry (face C 122.268,257.04, which needs the Codex hand core_tree master slice) to the S edge at x 122.412 (rst_n M5 track grid 0.108+k*0.192, free S span 106.14-230.03): the normal kit CTS builds the core tree; every other pin unchanged from codex-qc-sc-currentgen-1810/pins.json (sha256 4a2a3eb4b830...)"
+  "note": "DIE-QC-63/SC 11-02: chain-end variant pin table = qfd_dv_s5_sc2_leaf HARD1 table (codex-qc-sc-currentgen-1810/pins.json sha256 4a2a3eb4b830...) minus the absent port dn_i; same outline/positions | DIE-QC-63/SC 11-02: ck moved from the interior centre entry (face C 122.268,257.04, which needs the Codex hand core_tree master slice) to the S edge at x 122.412 (rst_n M5 track grid 0.108+k*0.192, free S span 106.14-230.03): the normal kit CTS builds the core tree; every other pin unchanged from codex-qc-sc-currentgen-1810/pins.json (sha256 4a2a3eb4b830...) DIE-QC-72 11-05: fault x 0.012 -> 0.108 and up_o[0] y 0.012 -> 2.316, off the first M5 / M4 track at the die edge (DRT-0255 on fault in all 3 leaves); other pins unchanged."
 }
