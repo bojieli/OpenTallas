@@ -153,7 +153,7 @@ module ot_host_if_pb2_observed #(
     output reg  [NW-1:0]      eng_token,
     output reg  [NW-1:0]      eng_pos,
     output reg  [SB-1:0]      eng_slot,
-    output reg  [AW-1:0]      kv_base,
+    output wire [AW-1:0]      kv_base,   // DIE-KV-70 prompt form: wires from eng_slot (was a flop twin of eng_slot)
     input  wire               eng_done,
     input  wire [NW-1:0]      eng_next_token,
     input  wire [31:0]        eng_cycles,
@@ -208,12 +208,14 @@ module ot_host_if_pb2_observed #(
     reg          msi_en;
     reg          sticky_fault, sticky_dma;
     reg [63:0]   c_cycles, c_busy;
+    reg          cc_f0, cc_f1, cb_f0, cb_f1;   // registered all-ones flags: low 16 / mid 16 chunks (same count, no 64-bit carry path)
     reg [31:0]   c_tokens, c_steps, c_reqs, c_msis, c_rd, c_wr, c_cqfull;
     reg          ev_ovf;
     // MODE 0 issue state and MODE 1 batch state (declared before the register mux)
     localparam [2:0] I_IDLE = 0, I_CLR = 1, I_RD = 2, I_WAIT = 3, I_GO = 4, I_RUN = 5, I_PB_WAIT = 6;
     reg [2:0]    i_st;
     reg          inflight;
+    reg          w_prompt; reg [NW-1:0] w_tok;   // I_RD: the token source of the step, read one state before I_WAIT
     // MU_OUT state (unused, constant and removed when MU_OUT == 0)
     localparam integer MQ  = (MU_OUT != 0) ? NSLOT : 1;
     localparam integer MQB = (MQ > 1) ? $clog2(MQ) : 1;
@@ -348,14 +350,48 @@ module ot_host_if_pb2_observed #(
         if (ENG_CTX == 1 && own_v && sl_st[own] == SL_RUN) begin pick_v = 1'b1; pick = own; end
     end
     wire [SB-1:0] mq_head = mq_slot[mq_r];
-    wire          step_done = (MODE == 0) && ((MU_OUT != 0) ? (eng_done && mq_n != 0) : (inflight && eng_done && !eng_start));
-    wire [SB-1:0] d_slot = (MU_OUT != 0) ? mq_head : eng_slot;
-    wire [NW-1:0] d_pos  = (MU_OUT != 0) ? sl_pos[mq_head] : eng_pos;
-    wire          d_gen  = d_pos + 1'b1 >= sl_plen[d_slot];                  // output is a generated token
-    wire [NW-1:0] d_ngen = sl_ngen[d_slot] + 1'b1;
-    wire          d_eos  = sl_eos[d_slot] && (eng_next_token == sl_eos0[d_slot] || eng_next_token == sl_eos1[d_slot]);
-    wire          d_last = eng_fault || (d_gen && (d_eos || d_ngen == sl_max[d_slot]));
-    wire [3:0]    d_stat = eng_fault ? ST_FAULT : d_eos ? ST_EOS : ST_LENGTH;
+    // DIE-KV-70 prompt form (two strikes, RE-FORM): MU_OUT retires in TWO stages.  Stage A (rt_take, the engine's done
+    // edge) reads the FIFO head's slot fields and advances the FIFO; stage B (rt_v, one edge later) updates the slot and
+    // pushes the event from registers.  The fields read at A cannot change before B: a slot with a step outstanding is not
+    // issued (sl_inf is cleared at B), and MU_OUT retires are in issue order.
+    wire          rt_take = (MODE == 0) && (MU_OUT != 0) && eng_done && mq_n != 0;
+    reg           rt_v, rt_fault, rt_gen, rt_eos, rt_maxeq;
+    reg  [SB-1:0] rt_slot;
+    reg  [NW-1:0] rt_pos, rt_tok, rt_ngen, rt_ncur;
+    reg  [31:0]   rt_cyc;
+    reg  [15:0]   rt_tag;
+    wire [NW-1:0] a_pos  = sl_pos[mq_head];
+    wire [NW-1:0] a_ncur = sl_ngen[mq_head];
+    wire [NW-1:0] a_ngen = a_ncur + 1'b1;
+    wire          a_gen  = a_pos + 1'b1 >= sl_plen[mq_head];
+    wire          a_eos  = sl_eos[mq_head] && (eng_next_token == sl_eos0[mq_head] || eng_next_token == sl_eos1[mq_head]);
+    wire          a_maxeq = a_ngen == sl_max[mq_head];
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            rt_v <= 1'b0; rt_fault <= 1'b0; rt_gen <= 1'b0; rt_eos <= 1'b0; rt_maxeq <= 1'b0; rt_slot <= 0;
+            rt_pos <= 0; rt_tok <= 0; rt_ngen <= 0; rt_ncur <= 0; rt_cyc <= 0; rt_tag <= 0;
+        end else begin
+            rt_v <= rt_take; rt_fault <= eng_fault; rt_gen <= a_gen; rt_eos <= a_eos; rt_maxeq <= a_maxeq; rt_slot <= mq_head;
+            rt_pos <= a_pos; rt_tok <= eng_next_token; rt_ngen <= a_ngen; rt_ncur <= a_ncur; rt_cyc <= eng_cycles;
+            rt_tag <= sl_tag[mq_head];
+        end
+    wire          step_done = (MODE == 0) && ((MU_OUT != 0) ? rt_v : (inflight && eng_done && !eng_start));
+    wire [SB-1:0] d_slot = (MU_OUT != 0) ? rt_slot : eng_slot;
+    wire [NW-1:0] d_pos  = (MU_OUT != 0) ? rt_pos : eng_pos;
+    wire          d_fault = (MU_OUT != 0) ? rt_fault : eng_fault;
+    wire [NW-1:0] d_tok  = (MU_OUT != 0) ? rt_tok : eng_next_token;
+    wire [31:0]   d_cyc  = (MU_OUT != 0) ? rt_cyc : eng_cycles;
+    wire [15:0]   d_tag  = (MU_OUT != 0) ? rt_tag : sl_tag[eng_slot];
+    wire [NW-1:0] d_ncur = (MU_OUT != 0) ? rt_ncur : sl_ngen[eng_slot];
+    wire          d_gen  = (MU_OUT != 0) ? rt_gen : (eng_pos + 1'b1 >= sl_plen[eng_slot]); // output is a generated token
+    wire [NW-1:0] d_ngen = (MU_OUT != 0) ? rt_ngen : (sl_ngen[eng_slot] + 1'b1);
+    wire          d_eos  = (MU_OUT != 0) ? rt_eos :
+                           (sl_eos[eng_slot] && (eng_next_token == sl_eos0[eng_slot] || eng_next_token == sl_eos1[eng_slot]));
+    wire          d_maxeq = (MU_OUT != 0) ? rt_maxeq : (d_ngen == sl_max[eng_slot]);
+    wire          d_last = d_fault || (d_gen && (d_eos || d_maxeq));
+    wire [3:0]    d_stat = d_fault ? ST_FAULT : d_eos ? ST_EOS : ST_LENGTH;
+    // kv_base is the slot number scaled: a wire from eng_slot, no second flop
+    assign        kv_base = (ENG_CTX == 1 || MODE != 0) ? {AW{1'b0}} : AW'(eng_slot) * AW'(KVW);
 
     // -- MODE 1: batch control ----------------------------------------------------------------
     wire [SB-1:0] t_slot = tok_user[SB-1:0];
@@ -381,6 +417,7 @@ module ot_host_if_pb2_observed #(
     reg [3:0]    d_st;
     reg [1:0]    dw;                     // descriptor word / prompt token in word
     reg [63:0]   dsc0, dsc1, dsc2, dsc3;
+    reg [NW-1:0] pr_i1;                  // pr_i + 1, registered
     reg [NW-1:0] pr_i;                   // prompt tokens loaded
     reg [63:0]   pr_word;
     reg [3:0]    err_st;
@@ -392,7 +429,11 @@ module ot_host_if_pb2_observed #(
     wire [7:0]    q_slot = dsc2[7:0];
     wire [SB-1:0] q_s    = q_slot[SB-1:0];
     wire [NW+1:0] q_span = q_plen + q_max;
-    wire [63:0]   cq_entry = {cq_base + {44'd0, cq_tail, 4'd0}};
+    // cq_entry registered; D_IDLE skips the one edge after a tail move so the register has settled
+    reg  [63:0]   cq_entry; reg cq_settle;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cq_entry <= 0; cq_settle <= 1'b0; end
+        else begin cq_entry <= cq_base + {44'd0, cq_tail, 4'd0}; cq_settle <= d_st == D_CQ0_B && m_bvalid; end
     wire          cq_room  = ((cq_tail + 16'd1) & cq_mask) != cq_head;
     assign ev_pop = (d_st == D_CQ0_B) && m_bvalid;
 
@@ -409,19 +450,19 @@ module ot_host_if_pb2_observed #(
             sq_tail <= 0; sq_head <= 0; cq_head <= 0; cq_tail <= 0; cq_phase <= 1'b1;
             irq_status <= 0; irq_mask <= 0; msi_data <= 0; msi_en <= 1'b0;
             sticky_fault <= 1'b0; sticky_dma <= 1'b0;
-            c_cycles <= 0; c_busy <= 0; c_tokens <= 0; c_steps <= 0; c_reqs <= 0; c_msis <= 0;
+            c_cycles <= 0; c_busy <= 0; cc_f0 <= 1'b0; cc_f1 <= 1'b0; cb_f0 <= 1'b0; cb_f1 <= 1'b0; c_tokens <= 0; c_steps <= 0; c_reqs <= 0; c_msis <= 0;
             c_rd <= 0; c_wr <= 0; c_cqfull <= 0;
             s_bvalid <= 1'b0; s_rvalid <= 1'b0; s_rdata <= 0;
             batch_go <= 1'b0; batch_n <= 0;
             m_arvalid <= 1'b0; m_araddr <= 0; m_awvalid <= 1'b0; m_awaddr <= 0;
             m_wvalid <= 1'b0; m_wdata <= 0; m_wstrb <= 0;
             pb_we <= 1'b0; pb_waddr <= 0; pb_wdata <= 0;
-            d_st <= D_IDLE; dw <= 0; dsc0 <= 0; dsc1 <= 0; dsc2 <= 0; dsc3 <= 0; ev_ovf <= 1'b0; pr_i <= 0; pr_word <= 0; err_st <= 0;
+            d_st <= D_IDLE; dw <= 0; dsc0 <= 0; dsc1 <= 0; dsc2 <= 0; dsc3 <= 0; ev_ovf <= 1'b0; pr_i <= 0; pr_i1 <= 1; pr_word <= 0; err_st <= 0;
             ev_w <= 0; ev_r <= 0; ev_n <= 0;
             pb_wait_edges <= 0; i_st <= I_IDLE; inflight <= 1'b0; rr <= 0; own_v <= 1'b0; own <= 0;
             sl_inf <= 0; mq_w <= 0; mq_r <= 0; mq_n <= 0; mu_fault <= 1'b0;
             for (j = 0; j < MQ; j = j + 1) mq_slot[j] <= 0;
-            eng_start <= 1'b0; eng_token <= 0; eng_pos <= 0; eng_slot <= 0; kv_base <= 0; eng_clr_req <= 1'b0;
+            eng_start <= 1'b0; eng_token <= 0; eng_pos <= 0; eng_slot <= 0; w_prompt <= 1'b0; w_tok <= 0; eng_clr_req <= 1'b0;
             b_st <= B_IDLE; b_err <= 0; b_cnt <= 0;
             arr_rst_n <= 1'b0; cfg_users <= 0; cfg_prompt_len <= 0; cfg_gen_len <= 0;
             for (j = 0; j < NSLOT; j = j + 1) begin
@@ -431,8 +472,20 @@ module ot_host_if_pb2_observed #(
             end
         end else begin
             // ---- counters
-            if (enable) c_cycles <= c_cycles + 1'b1;
-            if (inflight || b_st == B_RUN) c_busy <= c_busy + 1'b1;
+            if (enable) begin
+                c_cycles[15:0] <= c_cycles[15:0] + 1'b1; cc_f0 <= c_cycles[15:0] == 16'hFFFE;
+                if (cc_f0) begin
+                    c_cycles[31:16] <= c_cycles[31:16] + 1'b1; cc_f1 <= c_cycles[31:16] == 16'hFFFE;
+                    if (cc_f1) c_cycles[63:32] <= c_cycles[63:32] + 1'b1;
+                end
+            end
+            if (inflight || b_st == B_RUN) begin
+                c_busy[15:0] <= c_busy[15:0] + 1'b1; cb_f0 <= c_busy[15:0] == 16'hFFFE;
+                if (cb_f0) begin
+                    c_busy[31:16] <= c_busy[31:16] + 1'b1; cb_f1 <= c_busy[31:16] == 16'hFFFE;
+                    if (cb_f1) c_busy[63:32] <= c_busy[63:32] + 1'b1;
+                end
+            end
             if (ev_n != 0 && !cq_room) c_cqfull <= c_cqfull + 1'b1;
 
             // ---- AXI4-Lite
@@ -479,7 +532,8 @@ module ot_host_if_pb2_observed #(
             if ((m_rvalid && m_rresp[1]) || (m_bvalid && m_bresp[1])) sticky_dma <= 1'b1;
             case (d_st)
                 D_IDLE:
-                    if (ev_n != 0 && cq_room) begin
+                    if (cq_settle) begin end
+                    else if (ev_n != 0 && cq_room) begin
                         // post the head event: w1 first, then w0 with the phase bit
                         m_awvalid <= 1'b1; m_awaddr <= cq_entry + 64'd8;
                         m_wvalid <= 1'b1; m_wdata <= cq_w1; m_wstrb <= 8'hFF;
@@ -522,7 +576,7 @@ module ot_host_if_pb2_observed #(
                         sl_pos[q_s] <= 0; sl_ngen[q_s] <= 0; sl_eos[q_s] <= q_fl[1];
                         sl_eos0[q_s] <= dsc3[NW-1:0]; sl_eos1[q_s] <= (FMT != 0) ? dsc3[32 +: NW] : dsc3[16 +: NW];
                         sl_t[q_s] <= c_cycles[31:0];
-                        pr_i <= 0;
+                        pr_i <= 0; pr_i1 <= 1;
                         m_arvalid <= 1'b1; m_araddr <= dsc1;
                         d_st <= D_PR_AR;
                     end
@@ -532,14 +586,14 @@ module ot_host_if_pb2_observed #(
                     pb_we <= 1'b1;
                     pb_waddr <= {q_s, pr_i[PLB-1:0]};
                     pb_wdata <= (FMT != 0) ? pr_word[32*dw[0] +: NW] : pr_word[16*dw +: NW];
-                    pr_i <= pr_i + 1'b1;
+                    pr_i <= pr_i1; pr_i1 <= pr_i1 + 1'b1;
                     dw <= dw + 1'b1;
-                    if (pr_i + 1'b1 == q_plen) begin
+                    if (pr_i1 == q_plen) begin
                         sl_st[q_s] <= SL_RUN;
                         d_st <= D_IDLE;
                     end else if ((FMT != 0) ? dw[0] : (dw == 2'd3)) begin
                         m_arvalid <= 1'b1;
-                        m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+                        m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i1, 2'b0}) : dsc1 + {47'd0, pr_i1, 1'b0};
                         d_st <= D_PR_AR;
                     end
                 end
@@ -587,7 +641,7 @@ module ot_host_if_pb2_observed #(
             // ---- interrupts: a posted entry sets bit 0, a fault bit 1; write 1 to clear
             if (wr_go && s_awaddr[11:2] == 10'h00E) irq_status <= irq_status & ~s_wdata[1:0];
             if (d_st == D_CQ0_B && m_bvalid) irq_status[0] <= 1'b1;
-            if ((step_done && eng_fault) || (MODE == 1 && arr_fault)) begin
+            if ((step_done && d_fault) || (MODE == 1 && arr_fault)) begin
                 irq_status[1] <= 1'b1; sticky_fault <= 1'b1;
             end
 
@@ -597,9 +651,8 @@ module ot_host_if_pb2_observed #(
                 case (i_st)
                     I_IDLE:
                         // MU_OUT: room for the event of every outstanding step and of this one
-                        if (pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n < EQD - 2) : (ev_n < EQD - 2))) begin
+                        if (pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n + rt_v < EQD - 2) : (ev_n < EQD - 2))) begin
                             eng_slot <= pick;
-                            kv_base <= (ENG_CTX == 1) ? {AW{1'b0}} : pick * KVW;
                             if (ENG_CTX == 1 && (!own_v || own != pick)) begin
                                 own_v <= 1'b1; own <= pick; eng_clr_req <= 1'b1; i_st <= I_CLR;
                             end else
@@ -607,13 +660,14 @@ module ot_host_if_pb2_observed #(
                         end
                     I_CLR: if (eng_clr_ack) begin eng_clr_req <= 1'b0; i_st <= I_RD; end
                     I_RD: begin
+                        w_prompt <= sl_pos[eng_slot] < sl_plen[eng_slot]; w_tok <= sl_tok[eng_slot];
                         pb_wait_edges <= PB_READ_PIPE;
                         i_st <= (PB_READ_PIPE && sl_pos[eng_slot] < sl_plen[eng_slot]) ? I_PB_WAIT : I_WAIT;
                     end
                     I_PB_WAIT: if(pb_wait_edges<=1) i_st<=I_WAIT; else pb_wait_edges<=pb_wait_edges-1'b1; // complete row/lane/valid capture before ECC
                     I_WAIT: begin
                         eng_pos <= sl_pos[eng_slot];
-                        eng_token <= (sl_pos[eng_slot] < sl_plen[eng_slot]) ? pb_q : sl_tok[eng_slot];
+                        eng_token <= w_prompt ? pb_q : w_tok;
                         i_st <= I_GO;
                     end
                     I_GO: begin
@@ -643,15 +697,15 @@ module ot_host_if_pb2_observed #(
                 if (MU_OUT != 0) begin
                     if (step_done) begin
                         sl_pos[d_slot] <= d_pos + 1'b1;
-                        sl_tok[d_slot] <= eng_next_token;
+                        sl_tok[d_slot] <= d_tok;
                         if (d_gen) sl_ngen[d_slot] <= d_ngen;
                         if (d_last) sl_st[d_slot] <= SL_DRAIN;
                         sl_inf[d_slot] <= 1'b0;
-                        mq_r <= mq_r + 1'b1;
                     end
+                    if (rt_take) mq_r <= mq_r + 1'b1;
                     if (eng_done && mq_n == 0) begin mu_fault <= 1'b1; sticky_fault <= 1'b1; irq_status[1] <= 1'b1; end
-                    mq_n <= mq_n + ((i_st == I_GO) ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
-                    inflight <= (mq_n + ((i_st == I_GO) ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+                    mq_n <= mq_n + ((i_st == I_GO) ? 1'b1 : 1'b0) - (rt_take ? 1'b1 : 1'b0);
+                    inflight <= (mq_n + ((i_st == I_GO) ? 1'b1 : 1'b0) - (rt_take ? 1'b1 : 1'b0)) != 0;
                 end
             end
 
@@ -695,11 +749,11 @@ module ot_host_if_pb2_observed #(
     // -- event pushes ---------------------------------------------------------------------
     always @(*) begin
         ep_v = 1'b0; ep_d = {EVW{1'b0}};
-        if (MODE == 0 && (MU_OUT != 0 || i_st == I_RUN) && step_done && (d_gen || eng_fault)) begin
+        if (MODE == 0 && (MU_OUT != 0 || i_st == I_RUN) && step_done && (d_gen || d_fault)) begin
             ep_v = 1'b1;
             ep_d = ev(d_last ? EV_LAST : EV_TOKEN, d_last ? d_stat : ST_OK, {{(8-SB){1'b0}}, d_slot},
-                      sl_tag[d_slot], d_pos, eng_next_token,
-                      eng_cycles, d_gen ? d_ngen : sl_ngen[d_slot]);
+                      d_tag, d_pos, d_tok,
+                      d_cyc, d_gen ? d_ngen : d_ncur);
         end
         if (MODE == 1 && t_ok && t_gen) begin
             ep_v = 1'b1;
@@ -728,9 +782,9 @@ module ot_host_if_pb2_observed #(
   if(!rst_n)begin cq_commit_v<=0;cq_client_tag<=0;cq_slot<=0;cq_pos<=0;cq_token<=0;cq_kind<=0;cq_status<=0;step_issue_v<=0;step_client_tag<=0;step_slot<=0;step_pos<=0;host_idle<=0;host_observer_fault<=0;step_retire_v<=0;step_retire_cq<=0;step_retire_client_tag<=0;step_retire_slot<=0;step_retire_pos<=0;step_retire_token<=0;end
   else begin
    cq_commit_v<=ev_pop&&m_bresp==0;host_observer_fault<=sticky_dma||sticky_fault||ev_ovf;cq_client_tag<=eh_tag;cq_slot<=eh_slot8;cq_pos<=18'(eh_pos);cq_token<=18'(eh_tok);cq_kind<=eh_kind;cq_status<=eh_st;
-   step_retire_v<=step_done&&(MU_OUT!=0||i_st==I_RUN);step_retire_cq<=d_gen||eng_fault;step_retire_client_tag<=sl_tag[d_slot];step_retire_slot<=8'(d_slot);step_retire_pos<=18'(d_pos);step_retire_token<=eng_next_token;
+   step_retire_v<=step_done&&(MU_OUT!=0||i_st==I_RUN);step_retire_cq<=d_gen||d_fault;step_retire_client_tag<=d_tag;step_retire_slot<=8'(d_slot);step_retire_pos<=18'(d_pos);step_retire_token<=d_tok;
    step_issue_v<=eng_start;step_client_tag<=sl_tag[eng_slot];step_slot<=8'(eng_slot);step_pos<=18'(eng_pos);
-   host_idle<=!inflight&&i_st==I_IDLE&&d_st==D_IDLE&&ev_n==0&&!m_arvalid&&!m_rready&&!m_awvalid&&!m_wvalid&&!m_bready&&sq_head==sq_tail;
+   host_idle<=!inflight&&!rt_v&&i_st==I_IDLE&&d_st==D_IDLE&&ev_n==0&&!m_arvalid&&!m_rready&&!m_awvalid&&!m_wvalid&&!m_bready&&sq_head==sq_tail;
   end
  end
 endmodule

@@ -110,7 +110,7 @@ initial begin
  for(i=0;i<2048;i=i+1) mem[i]=0;
  for(u=0;u<NU;u=u+1) begin nxt[u]=0; busy[u]=0; ngen[u]=0; ent_seen[u]=0; end
  repeat(8) tick; por_n=1; repeat(12) tick; link_up=63; repeat(15) tick;
- boot_done=255; boot_ok=255; repeat(12) tick; if(!sys_ready) $fatal(1,"boot did not ready");
+ boot_done=255; boot_ok=255; n=0; while(!sys_ready && n<2000) begin tick; n=n+1; end if(!sys_ready) $fatal(1,"boot did not ready");
  rd(13'h0004,v); $display("CAPS %h", v);
  // SQ at 0x100 (32 B entries), prompts at 0x400 + 0x40*u, CQ at 0x800 (16 B entries)
  for(u=0;u<NU;u=u+1) begin

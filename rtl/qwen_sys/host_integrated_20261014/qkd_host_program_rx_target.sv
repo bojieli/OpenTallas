@@ -22,19 +22,23 @@ module qkd_host_program_rx_target #(parameter integer MUT=0)(
  wire[7:0]op=rd[7:0];
  wire clean=rd[523:512]==0&&((op==1&&rd[511:43]==0&&rd[42:39]<=13)||(op==2&&rd[511:83]==0)||(op==3&&rd[511:8]==0)||(op==4&&rd[511:92]==0&&rd[91:88]<=13));
  wire emit=returns!=0;wire[7:0]next_returns={1'b0,returns}+8'(ncq)+8'(pop)-8'(emit);
- always @(posedge ck)begin rd<=rx_d;normal_d<=rd;end
+ // DIE-KV-70 prompt form: program decode one edge after the frame register (rd -> p1 -> outputs), all ops alike, so the
+ // order is kept; the credit return and the normal path keep their timing.
+ reg p1_v,p1_clean;reg[7:0]p1_op;reg[91:8]p1_d;
+ always @(posedge ck)begin rd<=rx_d;normal_d<=rd;p1_op<=op;p1_d<=rd[91:8];end
  always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin rv<=0;ncq<=0;returns<=0;rx_cr<=0;normal_v<=0;begin_image<=0;image_epoch<=0;image_target<=0;auth_target<=0;pw_count<=0;dw_count<=0;word_v<=0;word_desc<=0;word_addr<=0;word_data<=0;seal<=0;auth_v<=0;auth_epoch<=0;auth_digest<=0;fault<=0;end
+  if(!rst_n)begin p1_v<=0;p1_clean<=0;rv<=0;ncq<=0;returns<=0;rx_cr<=0;normal_v<=0;begin_image<=0;image_epoch<=0;image_target<=0;auth_target<=0;pw_count<=0;dw_count<=0;word_v<=0;word_desc<=0;word_addr<=0;word_data<=0;seal<=0;auth_v<=0;auth_epoch<=0;auth_digest<=0;fault<=0;end
   else begin
    rv<=rx_v;ncq<=normal_cr;rx_cr<=emit;returns<=next_returns[6:0];if(next_returns[7])fault<=1;
    normal_v<=rv&&!is_program&&!fault;begin_image<=0;word_v<=0;seal<=0;auth_v<=0;
-   if(pop&&!fault)begin
-    if(!clean)fault<=1;
-    else case(op)
-     1:begin begin_image<=1;image_target<=rd[42:39];image_epoch<=rd[23:8];pw_count<=rd[34:24];dw_count<=rd[38:35];end
-     2:begin word_v<=1;word_desc<=rd[8];word_addr<=rd[18:9];word_data<=rd[82:19]^64'(MUT==1);end
+   p1_v<=pop;p1_clean<=clean;
+   if(p1_v&&!fault)begin
+    if(!p1_clean)fault<=1;
+    else case(p1_op)
+     1:begin begin_image<=1;image_target<=p1_d[42:39];image_epoch<=p1_d[23:8];pw_count<=p1_d[34:24];dw_count<=p1_d[38:35];end
+     2:begin word_v<=1;word_desc<=p1_d[8];word_addr<=p1_d[18:9];word_data<=p1_d[82:19]^64'(MUT==1);end
      3:seal<=1;
-     4:begin auth_v<=1;auth_target<=rd[91:88];auth_epoch<=rd[23:8];auth_digest<=rd[87:24];end
+     4:begin auth_v<=1;auth_target<=p1_d[91:88];auth_epoch<=p1_d[23:8];auth_digest<=p1_d[87:24];end
      default:fault<=1;
     endcase
    end

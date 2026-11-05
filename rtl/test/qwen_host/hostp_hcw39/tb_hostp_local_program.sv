@@ -46,7 +46,7 @@ module tb_hostp_local_program;
    word_v=1;word_desc=i>=1024;word_addr=10'(i>=1024?i-1024:i);
    word_data=i>=1024?64'h5678000000000000+(i-1024):64'h1234000000000000+i;tick();
   end
-  word_v=0;tick();seal=1;tick();seal=0;tick();
+  word_v=0;tick();seal=1;tick();seal=0;repeat(3)tick();
   repeat(6)tick();if(p||d||program_ready||authorized_footer_valid)$fatal(1,"unauthorized image emitted");
   auth_digest=digest;auth_v=1;tick();auth_v=0;
   wait(program_ready);repeat(5)tick();
@@ -55,7 +55,7 @@ module tb_hostp_local_program;
   // Fresh transaction invalidates readiness; stale external authorization fails.
   begin_image=1;image_epoch=10;pw_count=1;dw_count=1;tick();begin_image=0;
   word_v=1;word_desc=0;word_addr=0;word_data=1;tick();word_desc=1;word_data=2;tick();word_v=0;
-  tick();seal=1;tick();seal=0;tick();auth_digest=digest;auth_epoch=9;auth_v=1;tick();auth_v=0;tick();
+  tick();seal=1;tick();seal=0;repeat(3)tick();auth_digest=digest;auth_epoch=9;auth_v=1;tick();auth_v=0;repeat(3)tick();
   if(!fault||program_ready||authorized_footer_valid)$fatal(1,"stale auth accepted");
   $display("HOSTP_LOCAL PASS target0 production1024pw8dw fixed1032cycles localHC allwrites noBroadcastCredit staleauth");$finish;
  end

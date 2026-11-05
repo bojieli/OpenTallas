@@ -75,8 +75,14 @@ end else begin : g_mu
         .request_position(request_position),.token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),
         .program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_epoch(program_epoch),
         .program_digest(program_digest),.tx_v(cv),.tx_observed_v(co),.tx_record(cr),.fault(cf));
-    qkd_program_witness_rx u_witness(.ck(ck),.rst_n(rst_n),.program_begin_v(begin_v),.receive_slot(witness_slot),.rx_v(rx_v&&witness_slot),
-        .rx_record(rx_record),.expected_epoch(auth_epoch),.expected_digest(auth_digest),
+    // DIE-KV-70 prompt form: the witness record is checked one edge after the pin (a pin register, slot and record alike)
+    reg wslot_q, wrx_q; reg [547:0] wrec_q;
+    always @(posedge ck) wrec_q <= rx_record;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin wslot_q <= 1'b0; wrx_q <= 1'b0; end
+        else begin wslot_q <= witness_slot; wrx_q <= rx_v && witness_slot; end
+    qkd_program_witness_rx u_witness(.ck(ck),.rst_n(rst_n),.program_begin_v(begin_v),.receive_slot(wslot_q),.rx_v(wrx_q),
+        .rx_record(wrec_q),.expected_epoch(auth_epoch),.expected_digest(auth_digest),
         .authorized_footer_valid(authorized_footer_valid),.authorized_footer(authorized_footer),
         .program_commit_v(commit_v),.program_commit_epoch(commit_epoch),.program_commit_digest(commit_digest),
         .program_installed_valid(installed_valid),.installed_fusedcap(installed_fusedcap),.fault(wf));
