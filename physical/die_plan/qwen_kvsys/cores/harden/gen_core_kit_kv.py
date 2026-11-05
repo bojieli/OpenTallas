@@ -1943,6 +1943,20 @@ def main():
                 *([] if "CTS_ARGS" in rec.get("orfs_vars", {}) or any(kv.split("=", 1)[0].strip() == "CTS_ARGS"
                                                                       for kv in a.orfs_var) else
                   ["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5"])]
+    if rec.get("macro_place"):
+        # DIE-KV-78 11-05 (DIE-KV-74 k4 form, prompt k3 DPL-0033/0036): fixed sites for the core's own SRAM macros, so the
+        # auto macro placer cannot park one under a dense pin face.  Rows {inst, x, y, orient} -> place_macro lines.
+        if hard_children or not lefs:
+            raise SystemExit(f"{tid}: recipe macro_place needs plain hard macros (no --hard-children)")
+        mp = ["# GENERATED (gen_core_kit_kv.py recipe macro_place): fixed sites of the core's SRAM macros"]
+        for b in rec["macro_place"]:
+            if b.get("orient") not in ("R0", "R180", "MX", "MY"):
+                raise SystemExit(f"{tid}: macro_place {b.get('inst')}: orient must be R0/R180/MX/MY")
+            inst = str(b["inst"]).replace("[", "\\[").replace("]", "\\]")
+            mp.append(f"place_macro -macro_name {{{inst}}} -location {{{float(b['x'])} {float(b['y'])}}} "
+                      f"-orientation {b['orient']}")
+        (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
+        cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_place.tcl")
     if ifp_standins:   # DIE-KV-60/adp 11-01: rotated-only-fit hard children (IFP-0002), chained before other hooks
         pre = [l for l in cfg if l.startswith("export PRE_FLOORPLAN_TCL = ")]
         cfg = [l for l in cfg if not l.startswith("export PRE_FLOORPLAN_TCL = ")]

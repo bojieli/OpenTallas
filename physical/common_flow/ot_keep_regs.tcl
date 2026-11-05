@@ -121,3 +121,22 @@ if {[info exists ::env(OT_LANDING_FF)] && $::env(OT_LANDING_FF) eq "1"} {
   foreach l [split $ot_lf_s "\n"] { if {[string trim $l] ne "" && [string first "/" $l] < 0} { incr ot_lf_n } }
   puts "OT_LANDING_FF: landing-ring memories mapped to flip-flops in $ot_lf_n landing module(s)"
 }
+# DIE-KV-78 11-05 (COORD 12:22 ruling): constant tables stay logic.  A constant table read through a registered index
+# (prompt u_program: 16 x 11 target_words read by s1_image_target) becomes a read-only memory in the frontend; synth's
+# MEMORY_DFF then merges the index register into a sync-read ROM and memory_map rebuilds it as 11 extra output flops,
+# so the gate holds flops the RTL has not (kit LEC s3_begin_bad differ).  OT_ROM_LOGIC=1 maps ONLY read-only memories
+# (no write port) to logic here, before synth's memory passes: async read -> constant mux tree, no flop moved.  Other
+# memories are returned unpacked, as synth would see them.  Function unchanged (memory_map is what synth does to every
+# small memory); unset / 0 = nothing below runs.
+if {[info exists ::env(OT_ROM_LOGIC)] && $::env(OT_ROM_LOGIC) eq "1"} {
+  yosys proc
+  yosys memory_collect
+  yosys select -set ot_rom {*}{t:$mem_v2 r:WR_PORTS=0}
+  set ot_rom_n [lindex [string trim [yosys tee -q -s result.string select -count {*}{@ot_rom}]] 0]
+  yosys memory_map {*}{@ot_rom}
+  yosys select -clear
+  set ot_rom_left [lindex [string trim [yosys tee -q -s result.string select -count {*}{t:$mem_v2 r:WR_PORTS=0}]] 0]
+  if {$ot_rom_left != 0} { error "OT_ROM_LOGIC: $ot_rom_left read-only memories left after memory_map" }
+  yosys memory_unpack
+  puts "OT_ROM_LOGIC: $ot_rom_n read-only memories mapped to logic before memory_dff"
+}

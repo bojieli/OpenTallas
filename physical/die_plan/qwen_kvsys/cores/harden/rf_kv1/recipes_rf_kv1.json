@@ -454,7 +454,44 @@
   "source_1104": "DIE-KV-66/HR 11-04: X-refinement LEC class (no-reset constant-loaded registers folded by opt_dff: core_order 59 differ twice, ingest_eng 5499, prompt gold_x cones); same keepdc hook as qkd_kvs_ctl",
   "reset_ports": "u_control__por_n",
   "sigmax": "M7",
-  "source_1104_b": "DIE-KV-66/HR 11-04: plan pin table has 1500 M7 pins on the N face, MAX_ROUTING_LAYER M5 crashed DRT (initMazeIdx_connFig via no idx V5/V6, signal 6); por_n = typed power-on reset of u_control (LEC had no reset base for it)"
+  "source_1104_b": "DIE-KV-66/HR 11-04: plan pin table has 1500 M7 pins on the N face, MAX_ROUTING_LAYER M5 crashed DRT (initMazeIdx_connFig via no idx V5/V6, signal 6); por_n = typed power-on reset of u_control (LEC had no reset base for it)",
+  "orfs_vars": {
+   "OT_ROM_LOGIC": 1,
+   "DETAIL_PLACEMENT_ARGS": "-use_diamond_legalizer"
+  },
+  "macro_place": [
+   {
+    "inst": "u_control.u_prompt.u_core.u_sram",
+    "x": 28.786,
+    "y": 119.046,
+    "orient": "R180"
+   },
+   {
+    "inst": "u_program.g_pm[0].u_pm",
+    "x": 153.205,
+    "y": 4.38,
+    "orient": "R180"
+   },
+   {
+    "inst": "u_program.g_pm[1].u_pm",
+    "x": 8.64,
+    "y": 4.38,
+    "orient": "MX"
+   },
+   {
+    "inst": "u_program.g_pm[2].u_pm",
+    "x": 153.205,
+    "y": 40.14,
+    "orient": "MY"
+   },
+   {
+    "inst": "u_program.g_pm[3].u_pm",
+    "x": 153.205,
+    "y": 22.236,
+    "orient": "R180"
+   }
+  ],
+  "source_1105_k5": "DIE-KV-78 11-05 (COORD 12:22): k4 kit LEC 1 differ s3_begin_bad = the 16x11 target_words table read by registered s1_image_target became a sync-read ROM (MEMORY_DFF) with 11 gate-only flops; OT_ROM_LOGIC=1 keeps read-only memories as logic (ot_keep_regs.tcl), function unchanged. macro_place + diamond legalizer = DIE-KV-74 k4 form (k3 DPL-0033/0036: auto-placed u_sram 1.36 um under 3002 N pins), now generated instead of hand-edited."
  },
  "qkd_hr_core_peer": {
   "reset_ports": "u_coordinator__por_n,u_peer_codec__por_n,u_root_mux__por_n",
