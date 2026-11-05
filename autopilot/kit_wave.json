@@ -2180,7 +2180,8 @@
    ],
    "work_root": "/srv/opentallas-scratch2/claude/head-wave-1104/kit-wave",
    "hold_items": {
-    "hd_mesh_e": "DIE-HEAD-58 20:1x: COUNTED (SS24 20:16); running builds may finish, no relaunch"
+    "hd_mesh_e": "DIE-HEAD-58 20:1x: COUNTED (SS24 20:16); running builds may finish, no relaunch",
+    "hd_mesh": "KW-FIX-8 17:4x COORD: l48ua carries no lec_hints for hd_mesh; kit dir not written by hand; held until the event with hints_hd_mesh_v2.json (DIE-HEAD-62)"
    },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
