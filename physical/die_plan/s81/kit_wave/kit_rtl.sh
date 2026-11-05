@@ -28,6 +28,11 @@ python3 -I "$HERE/image_params.py" image "$OV" "$PLAN" "$TYPE" > "$OUT/image_par
 INST=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["instance"] or "")' "$OUT/image_params.json")
 python3 -I tools/die_plan/bind.py kit-rtl "$PLAN" --out "$OV" --asbuilt "$ASBUILT" --type "$TYPE" --kit "$OUT" \
     ${INST:+--instance "$INST"}
+# COORD 07:34 (5), S81 svc plan event (delta_svc_band_1104): every svc type closes its native memories to the MEM v2
+# macros the plan places (T7 class port + idx fit, tools/die_plan/s81_svc_memory_closure.py); other types do not apply.
+case "$TYPE" in
+    svc_*) python3 -I tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$OUT" ;;
+esac
 python3 -I - "$OUT" <<'PY'
 import json, sys
 from pathlib import Path

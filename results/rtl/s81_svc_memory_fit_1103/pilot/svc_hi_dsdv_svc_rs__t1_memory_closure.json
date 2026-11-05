@@ -1,0 +1,21 @@
+{
+ "before_sha256": "0e213bd0c29e2fdb6303afd69ab5e228f03b8dcb6acee5fcac6a3a772e29d29e",
+ "after_sha256": "a27ede12df45b489ed341390161102dc90e0f7fb5cf93cfc858f8e95853fc65b",
+ "v1_after_sha256": "a27ede12df45b489ed341390161102dc90e0f7fb5cf93cfc858f8e95853fc65b",
+ "status": "APPLIED",
+ "event": "S81-066 svc memory closure (T7 12605dc2 class port)",
+ "bound": "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_v2/svc_hi_dsdv_svc_rs__t1/rtl/s81p_svc_hi_dsdv_svc_rs__t1_bound.sv",
+ "children": [
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_v2/svc_hi_dsdv_svc_rs__t1/rtl/ot_t7_pmem_capture_v2.sv",
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_v2/svc_hi_dsdv_svc_rs__t1/rtl/ot_t7_pvq_capture_v2.sv",
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_v2/svc_hi_dsdv_svc_rs__t1/rtl/ot_t7_land_capture_v2.sv",
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_v2/svc_hi_dsdv_svc_rs__t1/rtl/ot_hdc_v41x_attn_staging_fit.sv"
+ ],
+ "form": "v2",
+ "macros_added": {
+  "ot_sram_1r1w_160x256_m1_r0c0": 12,
+  "ot_sram_1r1w_160x265_m1_r0c0": 8,
+  "ot_sram_1r1w_256x256_m1_r0c0": 4,
+  "ot_sram_1r1w_32x128_m1_r0c0": 17
+ }
+}

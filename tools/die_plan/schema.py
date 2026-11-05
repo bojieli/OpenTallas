@@ -1023,6 +1023,8 @@ SCHEMA = {
             # IN pin; root_part names the root partition (default: the one at the die rst_n pin).
             "release": {"enum": ["counted", "pipelined", "wavefront"]}, "relay_um": _pos, "hop_um": _pos,
             "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
+            "parent_pins": {"type": "object", "additionalProperties": {"oneOf": [_name, {"type": "array", "minItems": 2, "maxItems": 2}]}},
+            "keep_outs": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "integer"}}},
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
