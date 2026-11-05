@@ -85,6 +85,15 @@ foreach net [$rt_blk getNets] {
     dict set rt_named_nets $i $net
   } elseif {[regexp {(^|[/.])rst_n$} $name]} { lappend rt_zero_aliases $net }
 }
+# DIE-QC-73 11-05 (QC st_a): nets of child instances also end in .rst_n, so the partition's own alias was not unique and
+# never bound to its tap after placement. Only the shallowest name(s) are the partition's alias.
+if {[llength $rt_zero_aliases] > 1} {
+  set rt_min_depth [tcl::mathfunc::min {*}[lmap rt_a $rt_zero_aliases {regexp -all {\.} [$rt_a getName]}]]
+  set rt_zero_aliases [lmap rt_a $rt_zero_aliases {
+    if {[regexp -all {\.} [$rt_a getName]] != $rt_min_depth} continue
+    set rt_a
+  }]
+}
 # Yosys may keep the shared leaf alias rst_n and drop rst_n_t<leaf>,
 # which is often a central tap rather than tap0. Use the generated identity;
 # old kits are recoverable only if exactly one clock tap is missing its net.
