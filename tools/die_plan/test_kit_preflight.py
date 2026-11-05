@@ -84,6 +84,15 @@ proc sta::time_sta_ui {x} {return $x}
     assert ('OT_HOLD_GATE PASS' if not failed else 'OT_HOLD_GATE FAIL' if (stop or hard) else 'OT_HOLD_GATE INFO') in r.stdout
 
 
+def test_item_env_synth_args_is_opt_in(tmp_path,monkeypatch):
+    import schema
+    p=schema.Plan(json.loads((Path(__file__).parent/'examples/tiny_plan.json').read_text()))
+    monkeypatch.delenv('OT_SYNTH_ARGS',raising=False)
+    assert 'SYNTH_ARGS' not in (gen_phys.write_type_kit(p,'src',tmp_path/'off',[])/'config.mk').read_text()
+    monkeypatch.setenv('OT_SYNTH_ARGS','-noshare,-nofsm')
+    assert 'export SYNTH_ARGS = -noshare -nofsm\n' in (gen_phys.write_type_kit(p,'src',tmp_path/'on',[])/'config.mk').read_text()
+
+
 def test_stage_only_clock_estimate_keeps_golden_and_core_contract(tmp_path,monkeypatch):
     import schema
     raw=json.loads((Path(__file__).parent/'examples/tiny_plan.json').read_text())
