@@ -22,7 +22,7 @@
 //  7 Exact     read select: per-quadrant AND-OR register as the e1 stage (same edges as e1), local K/V pick from a per-bank
 //              flag; 4096 macro capture bits reach 8 x 128 quadrant bits instead of a central 32:1 pair of muxes.
 //  8 Credit    qp_room from a counter instead of a 5-term sum.
-//  9 V/R safe  stream address = source APIPE 3: three bubble edges a ROWS / IKEY row; n_sectors from a registered write fire,
+//  9 V/R safe  stream address = source APIPE 3 plus a stage after each product (stack x stride, local x pitch): five bubble edges a ROWS / IKEY row; n_sectors from a registered write fire,
 //              done one edge later (the source's APIPE 2 rule).  ap_* with reset and without hold enable (they settle before
 //              ap_ok, hold was not needed).
 // 10 V/R safe  ROWS / IKEY half rate: step condition, take, row end, address and shifted head registered with one bubble
@@ -30,7 +30,7 @@
 // 11 Exact     fq_a / s*_a without the constant bits 31:24 and 15 (nt[13]); w_addr gets them back on read (LEC X class by construction).
 //    Exact     busy also covers done_r, done_q, wf_q (cut 9 must not let a marker pass a pending done).
 // TOK-VERIFY cycle list: QKV beat -> bank write +1 (cut 5); drain, FIFO +0; done / n_sectors +1 (cut 9); RAW, ROWS, IKEY write
-//  +1 (cut 4); ROWS / IKEY +3 a row and half rate (cuts 9, 10).  Sustained QKV (1 beat a cycle) and RAW (1 sector a cycle) unchanged.
+//  +1 (cut 4); ROWS / IKEY +5 a row and half rate (cuts 9, 10).  Sustained QKV (1 beat a cycle) and RAW (1 sector a cycle) unchanged.
 module qkd_host_native_engine_ing1 (
     input  wire         clk,
     input  wire         rst_n,
@@ -304,7 +304,12 @@ module qkd_host_native_engine_ing1 (
     wire [31:0]  s_local = (s_ring != 0) ? (st_row & (s_ring - 32'd1)) : ((s_gs << 4) | (st_row & 32'd15));
     wire [15:0]  s_rb = st_d[183:168];
     wire [4:0]   s_pitch = st_d[84:80];
-    reg          ap_ok, ap_ok0, ap_ok1;
+    reg          ap_ok, ap_ok0, ap_ok0m, ap_ok1, ap_ok1m;
+    reg  [31:0]  ap0m_base, ap0m_prod, ap0m_local, ap0m_gs, ap0m_row;
+    reg  [4:0]   ap0m_pitch;
+    reg          ap0m_mine;
+    reg  [31:0]  ap1m_rbase, ap1m_prod, ap1m_gs, ap1m_row;
+    reg          ap1m_mine;
     reg  [31:0]  ap0_base, ap0_stride, ap0_local, ap0_gs, ap0_row;
     reg  [2:0]   ap0_stk;
     reg  [4:0]   ap0_pitch;
@@ -314,11 +319,11 @@ module qkd_host_native_engine_ing1 (
     reg          ap1_mine;
     reg  [31:0]  ap_raddr, ap_kcode, ap_kscal;
     reg          ap_mine;
-    wire [31:0]  a2_sb    = ap1_gs >> 6;
-    wire [5:0]   a2_q     = ap1_gs[5:0];
-    wire [31:0]  a2_blk   = ap1_rbase + (a2_sb << 11) + (a2_sb << 7);
-    wire [31:0]  a2_raddr = ap1_rbase + ap1_local * ap1_pitch;
-    wire [31:0]  a2_kcode = a2_blk + ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
+    wire [31:0]  a2_sb    = ap1m_gs >> 6;
+    wire [5:0]   a2_q     = ap1m_gs[5:0];
+    wire [31:0]  a2_blk   = ap1m_rbase + (a2_sb << 11) + (a2_sb << 7);
+    wire [31:0]  a2_raddr = ap1m_rbase + ap1m_prod;
+    wire [31:0]  a2_kcode = a2_blk + ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1m_row & 32'd15) << 1);
     wire [31:0]  a2_kscal = a2_blk + ({26'd0, a2_q} << 1);
     wire         ap_go = ap_ok;
     // one step: RAW direct, ROWS / IKEY from registers loaded one edge after the previous step (cut 10)
@@ -495,7 +500,9 @@ module qkd_host_native_engine_ing1 (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             done_q <= 1'b0; dtag_q <= 8'd0; wf_q <= 1'b0;
-            ap_ok0 <= 1'b0; ap_ok1 <= 1'b0; ap_ok <= 1'b0;
+            ap_ok0 <= 1'b0; ap_ok0m <= 1'b0; ap_ok1 <= 1'b0; ap_ok1m <= 1'b0; ap_ok <= 1'b0;
+            ap0m_base <= 32'd0; ap0m_prod <= 32'd0; ap0m_local <= 32'd0; ap0m_gs <= 32'd0; ap0m_row <= 32'd0; ap0m_pitch <= 5'd0; ap0m_mine <= 1'b0;
+            ap1m_rbase <= 32'd0; ap1m_prod <= 32'd0; ap1m_gs <= 32'd0; ap1m_row <= 32'd0; ap1m_mine <= 1'b0;
             ap0_base <= 32'd0; ap0_stride <= 32'd0; ap0_local <= 32'd0; ap0_gs <= 32'd0; ap0_row <= 32'd0; ap0_stk <= 3'd0;
             ap0_pitch <= 5'd0; ap0_mine <= 1'b0; ap0_ringz <= 1'b0;
             ap1_rbase <= 32'd0; ap1_local <= 32'd0; ap1_gs <= 32'd0; ap1_row <= 32'd0; ap1_pitch <= 5'd0; ap1_mine <= 1'b0;
@@ -503,13 +510,18 @@ module qkd_host_native_engine_ing1 (
         end else begin
             done_q <= done_r; dtag_q <= dtag_r; wf_q <= w_fire;
             ap_ok0 <= !ap_inval && st_act;
-            ap_ok1 <= !ap_inval && st_act && ap_ok0;
-            ap_ok  <= !ap_inval && st_act && ap_ok1;
+            ap_ok0m <= !ap_inval && st_act && ap_ok0;
+            ap_ok1 <= !ap_inval && st_act && ap_ok0m;
+            ap_ok1m <= !ap_inval && st_act && ap_ok1;
+            ap_ok  <= !ap_inval && st_act && ap_ok1m;
             ap0_base <= st_d[47:16]; ap0_stride <= st_d[79:48]; ap0_ringz <= s_ring == 32'd0; ap0_stk <= s_stk;
             ap0_local <= s_local; ap0_gs <= s_gs; ap0_row <= st_row; ap0_pitch <= s_pitch; ap0_mine <= s_mine;
-            ap1_rbase <= ap0_base + (ap0_ringz ? ap0_stk * ap0_stride : 32'd0); ap1_local <= ap0_local; ap1_gs <= ap0_gs;
-            ap1_row <= ap0_row; ap1_pitch <= ap0_pitch; ap1_mine <= ap0_mine;
-            ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine;
+            ap0m_base <= ap0_base; ap0m_prod <= ap0_ringz ? ap0_stk * ap0_stride : 32'd0; ap0m_local <= ap0_local; ap0m_gs <= ap0_gs;
+            ap0m_row <= ap0_row; ap0m_pitch <= ap0_pitch; ap0m_mine <= ap0_mine;
+            ap1_rbase <= ap0m_base + ap0m_prod; ap1_local <= ap0m_local; ap1_gs <= ap0m_gs;
+            ap1_row <= ap0m_row; ap1_pitch <= ap0m_pitch; ap1_mine <= ap0m_mine;
+            ap1m_rbase <= ap1_rbase; ap1m_prod <= ap1_local * ap1_pitch; ap1m_gs <= ap1_gs; ap1m_row <= ap1_row; ap1m_mine <= ap1_mine;
+            ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1m_mine;
         end
     end
 endmodule

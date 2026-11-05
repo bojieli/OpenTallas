@@ -21,7 +21,7 @@ case $CASE in
  m_shstale) sub $E "always @(posedge clk) sh_r <= ra_sh[255:0];" "always @(posedge clk) if (st_go || !st_ok_r && !ap_go) sh_r <= ra_sh[255:0];";;
  m_nowait) sub $E "st_ok_r <= st_run && !is_raw && ap_go && !st_go && need_ok;" "st_ok_r <= st_run && !is_raw && ap_go && need_ok;";;
  m_pushq) sub $E "(ra_room && beats_nz && !push_q)" "(ra_room && beats_nz)"; sub $E "ra_room && beats_nz && !push_q;" "ra_room && beats_nz;";;
- m_apskip) sub $E "ap_ok1 <= !ap_inval && st_act && ap_ok0;" "ap_ok1 <= !ap_inval && st_act;";;
+ m_apskip) sub $E "ap_ok1m <= !ap_inval && st_act && ap_ok1;" "ap_ok1m <= !ap_inval && st_act;";;
  m_last) sub $E "qo_s[1:0] == 2'd3 && t5 == od_thim1" "qo_s[1:0] == 2'd2 && t5 == od_thim1";;
  m_cred) sub $E "wire         q_iss = qo_act && !cred[3];" "wire         q_iss = qo_act && !(cred[3] && cred[0]);";;
  m_kvswap) sub $E "kr <= q_iss && !qo_v; vr <= q_iss && qo_v;" "kr <= q_iss && qo_v; vr <= q_iss && !qo_v;";;
