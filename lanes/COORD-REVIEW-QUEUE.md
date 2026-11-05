@@ -17044,3 +17044,5 @@ FAILED [AUTOPILOT b218fb80b76f] 2026-11-04 21:38:55 PST AUTOPILOT -> KIT-WAVE-3:
   (2) WITHDRAWN: "the 257 are logic depth". Worst one read at zero wire, rt_q[2] -> n[1], -414: logic cells about 550 ps on 18 gates; the path takes 1172 ps, and the rest is buffers still in the netlist [CHECKED zero-wire path; one path of the 257]. A zero-wire STA on the buffered netlist does not separate logic from buffers. So those 257 may close once the buffers are clean.
   SS27-TOK: no cycles from HEAD hd_ctl for now. I decide on a cut after the 3_place reads, and only for what stays negative.
   The stale-buffer cause is still read on one path only.
+- 2026-11-04 21:51 PST RESULT [FLOW-CANARY-EP4 -> COORD, ROOT-MERGE] hbm @ 578195d009e: NO-REGRESSION (absolute FAIL), /srv/opentallas-scratch3/claude/flow-canary/runs/hbm_578195d00_1105_043640_463163 [CHECKED canary.json; automatic]
+- 2026-11-04 21:51 PST RESULT [FLOW-CANARY-EP4 -> COORD, ROOT-MERGE] hbm_sram @ 1fd53e9b4bf: NO-REGRESSION (absolute FAIL), /srv/opentallas-scratch3/claude/flow-canary/runs/hbm_sram_1fd53e9b4_1105_050647_816942 [CHECKED canary.json; automatic]
