@@ -24,8 +24,6 @@ module qkd_kvs_pcc_h_head_p (
     input wire [0:0] pc__ki,
     input wire [20:15] pc__ki_15,
     input wire [32:31] pc__ki_31,
-    input wire [20:15] pc__ki_15,
-    input wire [32:31] pc__ki_31,
     input wire [0:0] pc__land_er,
     input wire [260:259] pc__land_er_259,
     output wire [287:0] pc__land_es,
