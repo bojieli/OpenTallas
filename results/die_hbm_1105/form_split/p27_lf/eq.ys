@@ -1,0 +1,11 @@
+read_verilog -sv lbank_fake.sv lg2_orig.sv gold_top.sv
+hierarchy -top gold_top; proc; flatten; async2sync; opt_clean; memory -nomap; opt_clean; rename gold_top gold; design -stash gold
+read_verilog -sv lbank_fake.sv ot_hgi_su_lgroup2_lf.sv gate_top.sv
+hierarchy -top gate_top; proc; flatten; async2sync; opt_clean; memory -nomap; opt_clean; rename gate_top gate; design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 1
+equiv_induct
+equiv_status -assert
