@@ -116,6 +116,11 @@ class Stop(unittest.TestCase):
             self.assertIn("disabled", KW.stop_reason(KW.load_config(""), "qwen_kvsys", d))
 
 
+def kit_own_hd(KW):
+    return KW._own_wave_unit({"owner": "KIT-WAVE-5", "item": "hd_mesh", "live_job":
+                              "ap-68bf0d080dcd-a1 68bf0d080dcd; ot-run pid 324465 1105f2/kit-wave/s81_head/l48ub/items/hd_mesh_e/attempt_3/gen/hd_mesh_e (+3)"})
+
+
 class Select(unittest.TestCase):
     def test_pilot_first_caps_unproven_class(self):
         # OWNER 12.27a: an unproven die x kit class has at most 2 kits in flight; in-flight kits count, none killed
@@ -161,6 +166,8 @@ class Select(unittest.TestCase):
         self.assertTrue(own("ap-7aaad3d48876-a1 7aaad3d48876; ot-run pid 2830758 36e864/items/sle_su_l1__cl5ea486db/gen/sle_su_l1__cl5ea486db"))
         self.assertFalse(own("ap-7aaad3d48876-a1 7aaad3d48876; ot-run pid 2830758 scratch/lane/run/other_dir"))
         self.assertFalse(own("ap-7aaad3d48876-a1 7aaad3d48876", owner="DIE-QC-75"))
+        # KW-FIX-12 11-05: OWNERS folds hd_mesh_e under hd_mesh; its routed wave kit blocked hd_mesh on a new plan block
+        self.assertTrue(kit_own_hd(KW))
 
     def test_own_wave_unit_on_parent_is_not_a_claim(self):
         # DIE-QC-63/KITS 11-02: overlay_owners puts a sibling class's own wave unit on the parent row; the other

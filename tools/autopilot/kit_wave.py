@@ -414,7 +414,7 @@ def _own_wave_unit(r):
     if not lj.startswith("ot-run pid"):
         return False
     segs = re.split(r"[/\s]+", lj.split(None, 3)[-1]) if len(lj.split(None, 3)) == 4 else []
-    return ("gen" in segs or "items" in segs) and any(x == r["item"] or x.startswith(r["item"] + "__") for x in segs)
+    return ("gen" in segs or "items" in segs) and any(x == r["item"] or x.startswith(r["item"] + "_") for x in segs)
 
 
 def select(rows, cfg, die, state, plan_types=None):
