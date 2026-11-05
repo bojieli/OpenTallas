@@ -3142,3 +3142,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 2026-11-04 13:34 PST COORD hourly: count 112 (HBM bfqg); main 7e4dc3113a2 (I45), I46 test; serdes MPL delta split out first; re-signs half, bf_front_roots, n3_turn on prdtie tags; epyc2 scratch 134 GB after reserve.
 2026-11-04 14:35 PST COORD hourly: count 115 (+fr, astk, n3_turn); main 468ce5a00c5 (I47), I48 test, I49 next; epyc4 113 waiters, restart test on stuck route jobs; epyc2 scratch 122 GB, prune lane about 18:30.
 2026-11-04 15:38 PST COORD hourly: count 117 (S81 41, HEAD 4+9t, QC 14, KV 23, HBM 26). I49 on main, I50 serdes + base recipes in test. PRUNE-1104Q running for epyc2 scratch 107 GB. Next hourly 16:25.
+2026-11-04 16:38 PST COORD hourly: count 117 flat (S81 41, HEAD 4+9t, QC 14, KV 23, HBM 26). I51 on main, I52 in test. Stale QC bind class: tip bind direct on epyc4, all-die read by KW-FIX-8. 4 signed cores wait plan events. Next hourly 17:25.
