@@ -1,0 +1,10 @@
+base main origin/main 4c5c5878a7a vs gqmx
+by check: {'clock': (15, 15), 'hops': (2, 2), 'reset': (1, 1), 'stations': (3, 3)}
+gone 0 new 0
+top keys ['schema', 'plan', 'types'] types 74 74
+FAIL count 225 -> 225 | types FAIL 74 -> 74
+NEW 0 []
+GONE 0 []
+WORSE 0 []
+BETTER 0 []
+views 102 -> 101: ot_hgi_coll_gq_land@bfcd846691ef gone; @ac72b8c34f86 instances q_hub_nw.u_hcollgl_Q__q1 + q_hub_ne.u_hcollgl_Q__q1

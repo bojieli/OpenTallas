@@ -148,10 +148,11 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48ub = DIE-HEAD-62 l48ua + plan-carried lec_hints on hd_host, hd_mesh only (plan 3e4c1adfbb4e, sidecar same)
                # l48uc = DIE-HEAD-65 l48ub + DIE-HEAD-38 landing staging knobs on hd_mesh, hd_host only (head_cland_stage_delta.py, plan 2255e92faccc, sidecar same)
                # l48ud = DIE-HEAD-66 l48uc + landing stage/copy sites off the macros on hd_host, hd_mesh (xy only, plan d8d8a0cac25e, sidecar same)
+               # l48ue = DIE-HEAD-68 l48ud + measured per-port tap window (clock.tap_window.per_port_ps) on 9 open types (SDC only, plan 9a2186d89486, sidecar same)
                # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
                # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg", "l48ua", "l48ub", "l48uc", "l48ud")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg", "l48ua", "l48ub", "l48uc", "l48ud", "l48ue")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
@@ -3145,6 +3146,12 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    try:                                        # SUBSTEP-1 (COORD 11-05 10:53): sub-step ODBs of terminal attempts
+        import substep_prune
+        substep_prune.tick(AP, cfg, st, ap_dir, lambda h: _ssh(h, AP.HUB_NAME),
+                           AP.read_coord)
+    except Exception as e:                      # disk hygiene never stops the tick
+        AP.log(f"KIT-WAVE SUBSTEP-1 skipped: {type(e).__name__}: {e}")
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
