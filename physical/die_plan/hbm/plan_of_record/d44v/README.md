@@ -424,3 +424,9 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 - **ot_hgi_sfu_core_split3__ctl** (74.5k logic, 32k FF, no macros, 8.5% util, TT -148 from spread) goes from 669.6x626.4 to 427.68x453.6 by mk_reform.py (centre kept, pins repacked, pin pitch 0.096, W edge 3819 pins). RTL unchanged, 0 cycles.
 - **Wrapper**: recipes_b2 entry ot_hgi_sfu_core_split3__ctl pins physical/die_plan/hbm_arch_cores/wrappers/oneclk for this pin table only.
 - **Scripts**: results/die_hbm_1104/reform_b/split_p24/ (ov_p24.json, mk_p24.py).
+
+## Part 25 (ot_hbm_svc_wb_kport_q split, 4 instances; HBM-REFORM-B4)
+
+- **ot_hbm_svc_wb_kport_q** (flat 374k) keeps its 475.2x475.2 slot and becomes one switch tile **ot_wbq_sw** 77.76x475.2 and four root tiles **ot_wbq_root** 388.8x112.32 (2 lane groups each, 2x4 128x256 payload macros), all with registered faces, one clock.
+- **Form**: root pushes sectors with a credit of 4 per group; sw queues per group and switches onto 16 K ports at most 8 per edge (flat 16). Order on K changes; each PC still gets its sectors in stream order per group.
+- **Cycles**: physical/die_plan/hbm/reform_1103/cycles/wb_kport.tsv. Scripts results/die_hbm_1104/reform_b/split_p25/.

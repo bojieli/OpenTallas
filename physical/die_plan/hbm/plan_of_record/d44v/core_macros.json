@@ -8024,6 +8024,105 @@
    ],
    "channel_rule_um": 10.8,
    "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_wbq_root": {
+   "status": "KNOWN",
+   "outline_um": [
+    388.8,
+    112.32
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.g_lane[0].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      4.32,
+      12.96,
+      99.144,
+      54.0
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[1].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      99.36,
+      12.96,
+      194.184,
+      54.0
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[2].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      194.4,
+      12.96,
+      289.224,
+      54.0
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[3].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      289.44,
+      12.96,
+      384.264,
+      54.0
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[4].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      4.32,
+      64.8,
+      99.144,
+      105.84
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[5].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      99.36,
+      64.8,
+      194.184,
+      105.84
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[6].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      194.4,
+      64.8,
+      289.224,
+      105.84
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[7].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      289.44,
+      64.8,
+      384.264,
+      105.84
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"
