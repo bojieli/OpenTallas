@@ -31,6 +31,8 @@ sub-core port bit to the parent plan pins it reaches and to the peer sub-cores i
         a bare <inst> goes to the sub tile nearest the station end point.
       - core_macros.json: the sub macro sites (spec 'macros').
       - parent_id_straps: move to the sub that owns those pins.
+Part 8 spec options: keep_face = a sub inside the slot keeps a parent pin's face (its wires pass over the tile on that side);
+  hub_sub = a net shared by several subs places its seam pin toward this sub.
 Part 7 spec options (cores with too many subs for the permutation search, masters shared between slots):
   * layout {sub inst: {xy, wh, orient}}: explicit tiles in the core frame.  orient R0 / MX / MY / R180 mirrors the sub
     inside the slot and composes with the parent orient.  Seam pins go on the N / S face toward the peer, one group per
@@ -245,12 +247,12 @@ for sp in SPEC:
                     f = min(of or list("NSEW"), key=lambda F: dict(W=abs(x), E=abs(w - x), S=abs(y), N=abs(h - y))[F])
                 else:
                     f = max(set(f for f in fs if f), key=fs.count)
-                    if f not in of:
+                    if f not in of and not sp.get("keep_face"):
                         f = min(of or list("NSEW"), key=lambda F: dict(W=abs(x), E=abs(w - x), S=abs(y), N=abs(h - y))[F])
                 f, x, y = to_sub(sub_or[s["inst"]], f, x, y, w, h)
                 wm[nm] = (f, (x, y))
             elif b["peer"]:
-                q = b["peer"][0]; po, pwh = tb[q]
+                q = next((p_ for p_ in b["peer"] if p_ == sp.get("hub_sub")), b["peer"][0]); po, pwh = tb[q]
                 f = toward(o, wh, po, pwh)
                 if lay:
                     f = "N" if po[1] + pwh[1] / 2 > o[1] + h / 2 else "S"
