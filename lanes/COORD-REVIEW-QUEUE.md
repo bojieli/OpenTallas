@@ -17238,3 +17238,68 @@ FAILED [AUTOPILOT afc43e18c61d] 2026-11-04 22:28:50 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-04 22:41 PST STATE [SS29-RESIGN -> COORD, DIE-QC-71] Sweep ruling applied, the 4 running jobs untouched. All 8 lanes tie at 49 diff lines, so no single largest. Second lane is l1, chosen because it is on epyc4, outside the epyc2 cap, and also carries the KEEP FAIL file. l2 and l1 stay in order; l0, l3, l4, l5, l6, l7 held to the end. On any non-EQUIVALENT I name DIE-QC-71, tell you, and release them in place.
 - 2026-11-04 22:43 PST RESULT [PRUNE-1104S -> COORD] First tree gone: epyc2 root die-qc-63/wt 48.3 GB, HEAD 331e365a6 ancestor of origin/main, clean, idle 52 h, no live holder [CHECKED just before removal]. Root df 522 -> 567; 340 KB root-owned pycache finished by container. Citers: 0 on scan of both roots plus .py/.env/.sdc/Makefile inside die-qc-63 only; lane text only DIE-QC-63's 11-02 claim; SS29 list none [CHECKED]. No counted record unique to it, cache 21:50. 136 signed_records lines sit under this path, all tracked copies. No more trees until your scan reply. Wave rows: 4 removed 6.2 GB (own-file citers only); 9 rows about 25 GB held, die-s81-51/cland_sweep/n_*.tsv names them.
 - 2026-11-04 22:44 PST STATE [KW-FIX-8 -> COORD] epyc2 back in wave hosts and place_prefer, disks above the resume mark [CHECKED]. It flips out again below root 520 or scratch2 150.
+- 2026-11-04 22:46 PST RESULT [DIE-HBM-66 -> COORD] Open HBM table, 61 designs (cache 32 of 93 signed; 60 rows below plus argmax already READY). Answer to the owner: no. 31 rows have a form meeting all three targets, 30 do not; most of the 30 are over 150k cells, which no flow setting fixes, so they need a source split. Of the conservative forms with a sign-off, all still fail so far (hcp_sys1, xcal, ctl, q3_vm, q2n2_vm, inj, kshare v8e, vms, lane_c, gn, gq_land), mostly hold or few endpoints, except ctl and kshare v8e; argmax signed off and cp_rxs signed off pending LEC.
+  [CHECKED run dirs on all 4 hosts, 23:10] Cells = floorplan stdcell count, util = stdcell/(core-macro), faces = u_bout_/u_bin names in the synth netlist, a name read only. "Running" = container mounting the kit. Age = minutes since last log write; a live container with old age may be flat. "none" = no signoff.json in any kit I found. vms, b128, gq variant-to-design mapping is [inferred] from kit hashes.
+  | row | latest form, attempt | conservative | state now (log age min) | last sign-off TT/FF/DRC | next |
+  | glue_nw_t | rf1 kit bb7727 | no, 218k | GRT, 48 | none | running; split if it fails |
+  | lane_c | lanec50 bounded DRT; lc4 ECO i2 | yes 65k .37 | both DRT, 0/6 | cl_lanecd +9.43/-13.86/0 | DRT recipe test |
+  | lane_elp | die-62 kit d39d39 | no, util .484 | routed, pre-route LEC NOT EQ | no signoff.json; earlier queue +73.5, slew 17 | routed LEC started now, then ECO on slew |
+  | rp3h_gn | gn2 ECO i2 | yes 75k .06 | GRT, 0 | i1 +91.41/-1.65/0 | ECO, few endpoints |
+  | rp3h_xs | die-63 kit 21b07c | yes 116k .21 | GRT, 0 | none | running; wave failed DPL-0033 before |
+  | vms 32e0 | e_v32e0 ECO i3 | yes 29k .07 | DRT, 58 | i2 +7.32/+1.41/1 | ECO, 1 DRC |
+  | vms 512b | e_v512b ECO i2 | yes | DRT, 4 | i1 -1210/-12.89/12 | running; TT -1210 after ECO unread |
+  | vms b64b | e_vb64b, DRT stopped | yes | stopped | i1 -1692/-21.11/20 | named: drtb recipe if the test passes, else fresh form |
+  | vms 39c3 | v39c4 form | yes | DRT, 69 | none | running |
+  | vms 796f | eco v796f i1 | yes | no container, CTS, 465 | none read | unread why it stopped; named: fresh form |
+  | vms 5d40 | wave a3 | yes | no container, final, 961 | -99.43/-64.95/28 | named: fresh form after the DRT test |
+  | argmax_r2 | argmax4ie ECO i1 | yes 22k .28 | SIGNED, LEC EQ 10108 | +31.16/+1.68/0 | READY-COUNT 22:35, SS29 re-sign; breakdown stale |
+  | b128 7d14 | b128v7e ECO i2 | no, faces (109k .42) | DRT, 14 | i1 -1514/-14.62/0; form -154/-50/4 | ECO running; named: pin cycles + capture relocation |
+  | b128 9bf8 | b128v9 form | no, faces | stopped | -317/-45.74/4 | named: same pin-cycle form |
+  | b128_first | b128fst ECO i1 | no, faces (71k .28) | stopped, 166 | +25.12/-12.8/0 | named: same pin-cycle form |
+  | hcp_sys1 | cl_hcps | yes 51k .27 | stopped, class form off | -60.4/-17.07/0 | named: pin cycles + relocation; LEC 412 points unread |
+  | tailx_sk_steady | wave a4 | no, 142k .50 | stopped by me | none | Sinkhorn port |
+  | tailx_sk_step0 | forms/step0 | no, 172k .50 | stopped by me | -3846/-7.96/0 | Sinkhorn port |
+  | cp_rxs | cprxsn ECO i1 | yes (form 30k+ .11) | SIGNED; LEC KEEP FAIL | +69.44/+8.02/0 | lec_main recheck running |
+  | rootctl_am | wave a3 3_place, old d44o | yes by size 88k .11 | stopped, 2115; no d44v kit | none | named: I generate d44v kit and launch, tonight |
+  | hcol_h0_ra | kit 06263c | no, util .64 | DRT, 21; client 18 h | none | stop if flat; slot needs event |
+  | hcol_h0_rb | kit d4537e | no, util .68 | stopped, DRT flat then DRT-0218 | none | named: outline event, util cannot fall in this slot |
+  | selector_sel | wave a3 | no, 345k | place DP, 0 | none | RE-FORM: split, see ask |
+  | topk_link | topk4 form; wave a4 | no, 162k .09 | place, 0 | none | running; split if it fails |
+  | n12 | n12b bounded DRT; wave a6 | yes 76k .42 | DRT, 0/26 | none | DRT test; n12b may have no guide |
+  | pcol_l | forms/pcol_l | yes 19k .06 | GRT, 2 | none | running |
+  | pcol_s | forms/pcol_s | yes 10k .14 | stopped GRT-0116 | none | named: congestion read, then outline or pin event |
+  | pg_lane1 | lane1oc; die-63 reform | yes 69k .27 | both DRT, 11/15 | none | stop if flat at 2 h |
+  | lane_exp0_id | forms/lexp0a | no, 205k .47 | stopped GRT-0183; class form cancelled | none | RE-FORM: split, see ask |
+  | lane_exp canon | wave kit 672f8b | no, 183k | stopped; earlier RSZ-0060, GRT-0183 | none | RE-FORM: split, see ask |
+  | lanes canon | kit 106737 | no, 263k | stopped at CTS | none | RE-FORM: split, see ask |
+  | lanes_plain | kit 20cf17 | no, 263k | stopped; earlier GRT-0116 | none | RE-FORM: split, see ask |
+  | qcore_r13 | die-66 and die-62 ECO i1 | no, 152k .37 | both DRT, 12/101 | a3 -10.59/-29.59/0 | stop die-62 copy if flat; keep mine |
+  | h9b | cl_pcc | yes 59k .38 | stopped; LEC NOT EQ pre-route | none | pcc6 LEC timed out; named: longer LEC, then plain route |
+  | rel_id | wave | no, 318k | GRT, 13 | none read | running; split, see ask |
+  | xcal_rel_t | cl_xcald, cl_xcal | yes 11k .08 | stopped | -78.02/-50.55/0; -53.74/-39.99/0 | named: pin cycles + relocation; path read owed |
+  | kshare v7006 | forms/v7006 | yes 129k .12 | DRT, 0 | none | running |
+  | kshare v8e4 | kshare4c; kshare3e ECO | yes 138k .09 | GRT, 0 | i1 -157.51/-1.27/0 | running; pin cycles if it fails |
+  | kport_q | wave | no, 400k .53 | GRT, 47 | none | split, see ask |
+  | tree13_fmt | tree13b bounded ECO | no, util .46-.49 | DRT done, fill, 1 | xpaq2 +15.69/+1.91/591 | DRT test read due |
+  | q2n2_body | wave a7 | no, 261k | stopped place DP, 458; place ws -1493 | none | RE-FORM: split, see ask |
+  | q2n2_vm | q2n2c form | yes 104k .03 | DRT, 0 | vmi -94.63/-49.11/153 | running |
+  | q3_body | q3body | no, 258k | GRT, 6 | none | running; split if it fails |
+  | q3_edge | q3e13 outline event | yes 110k .13 | GRT, 0 | none | running |
+  | q3_vm | q3vm2 ECO i1 | yes 98k .06 | GRT, 175 | a4 -14.47/-43.79/0 | check flat at 2 h |
+  | gq_issue 42a7 | wave a2 | no, 158k .42 | DRT, 6 | none | running |
+  | gq_issue 9a8 | wave | no, 158k .42 | DRT, 48; client 19 h | none | stop if flat |
+  | gq_land 25778 | gql25778 ECO; wave ECO | yes 47k .23 | DRT, 102/107 | rf2 i3 +42.52/-0.13/0 | stop if flat; ECO for 0.13 |
+  | gq_land ac72 | gqa6 ECO i1; rf2gqlac2 | yes | stopped, 410 | +4.99/+5.64/45; rf2 +53.5/+0.15/0 unread reason | rf2 i1 read next, may be a count |
+  | inj_join_rg | injrg, injidx ECO | yes 75k .24 | DRT, 12/34 | a -6.18/-14.34/0 | stop older if flat; then pin cycles |
+  | tkm root | forms/tkmroot | yes 51k .07 | stopped GRT-0183 | none | named: read the boxed net, then pin or outline event |
+  | tkm tile id | tkmid2 ECO i1 | no, 182k | stopped, ECO failed twice | -8.55/+2.8/0, slew 14/23 | RE-FORM: split, see ask |
+  | tkm tile term | tkmterm2 ECO i2 | no, 176k | report, 0 | i1 -58.4/+3.02/0 | read; then same as id |
+  | dma_back | dma13 outline event | yes 45k .17 | GRT, 1 | none | running |
+  | sfu ctl | cl_ctl stopped; reform ctl | yes 140k .05 | stopped | -148.27/-63.74/0 | named: smaller form, split, see ask |
+  | opstore_a | wave a5 | no, 193k | GRT, 33 | none read | running |
+  | opstore_b | rf kit; wave a4 | no, 214k | GRT, 4/27 | none read | running |
+  | pstore_r10 | rf1 kit pstore | yes 89k .10 | GRT, 4 | none | running |
+  | bdring | bdring2 ECO i2 | no, util .46 | stopped, ECO exhausted | +26.82/+2.08/0, DRV 548 | named: fresh place form; slew read first |
+  | n4ext | n4ext1 ECO i1 | no, 152k .57 | GRT, 25 | -41.02/-23.12/0 | running; then outline event |
+  | pdie_serdes | forms/pdie | no, 410k .17 | place, 0 | none | running; split, see ask |
+  ASK: rows over 150k with no route down: selector, lane_exp0_id, lane_exp canon, lanes canon, lanes_plain, rel_id, kport_q, q2n2_body, tkm tile id and term, pdie, plus ctl (140k but fails -148). I recommend one RE-FORM lane for source splits, largest fail first, since I hold Sinkhorn and these are plan events, each EQ-gated. Default if no ruling in 30 min: I take lanes_plain then tkm tile myself after Sinkhorn. Launched in this post: lane_elp routed LEC. Not launched: pin-cycle rows (b128 x3, hcp_sys1, xcal) need a source delta each, named, I start them after the Sinkhorn event; rootctl_am next from me. CORE-CLASS.tsv line 55 still says argmax structural hold.
