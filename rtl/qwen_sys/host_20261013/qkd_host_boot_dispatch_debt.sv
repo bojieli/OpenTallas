@@ -34,9 +34,11 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
  wire[289:0]id_w={id_q[289:8],id_dec[8:3],id_q[1:0]};
  wire[289:0]head=hw;wire[24:0]logical_e=head[26:2];
  wire marker=hd[0],embed=hd[1],good=hd[2];wire[6:0]target=hd[9:3];
- wire send=count!=0&&!fault&&(!boot_hold||MUT==2)&&good&&(marker?(issued==landed&&kc!=0&&(!image_dirty||hc!=0)):(oc!=0&&(embed?hc!=0:kc!=0)));
+ // DIE-KV-72 form o3 11-05 (o2 census TT: issued -> 32-bit compare -> send -> kv, hb, hw enables): iss_eq=issued==landed, from next-state values; cycle-exact.
+ reg iss_eq;wire prefix_inc;
+ wire send=count!=0&&!fault&&(!boot_hold||MUT==2)&&good&&(marker?(iss_eq&&kc!=0&&(!image_dirty||hc!=0)):(oc!=0&&(embed?hc!=0:kc!=0)));
  reg issue_v;reg[6:0]issue_pc;wire order_fault;
- qkd_host_commit_order_debt #(.MUT(MUT))u_order(.ck(ck_order),.rst_n(rst_n),.issue_v(issue_v),.issue_pc(issue_pc),.acks(acks),.prefix_v(prefix_v),.prefix_count(landed),.fault(order_fault),.order_quiet(order_quiet));
+ qkd_host_commit_order_debt #(.MUT(MUT))u_order(.ck(ck_order),.rst_n(rst_n),.issue_v(issue_v),.issue_pc(issue_pc),.acks(acks),.prefix_v(prefix_v),.prefix_count(landed),.fault(order_fault),.order_quiet(order_quiet),.prefix_inc(prefix_inc));
  assign fault=ff|order_fault;
  wire wr=iv_q&&count<8;wire[2:0]rp1=rp+3'd1;
  always @(posedge ck)begin
@@ -47,8 +49,9 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
   else hw<=(wr&&wp==rp)?id_w:{q[rp][289:8],qd[rp][8:3],q[rp][1:0]};
  end
  always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin wp<=0;rp<=0;count<=0;kc<=8;hc<=4;oc<=256;iv_q<=0;kcr_q<=0;hcr_q<=0;ff<=0;boot_hold<=0;image_dirty<=0;image_check<=0;ing_cr<=0;kv<=0;hb<=0;issued<=0;issue_v<=0;issue_pc<=0;end
+  if(!rst_n)begin iss_eq<=1;wp<=0;rp<=0;count<=0;kc<=8;hc<=4;oc<=256;iv_q<=0;kcr_q<=0;hcr_q<=0;ff<=0;boot_hold<=0;image_dirty<=0;image_check<=0;ing_cr<=0;kv<=0;hb<=0;issued<=0;issue_v<=0;issue_pc<=0;end
   else begin
+   case({send&&!marker,prefix_inc})2'b10:iss_eq<=(issued+32'd1)==landed;2'b01:iss_eq<=(landed+32'd1)==issued;default:;endcase
    iv_q<=ing[0];kcr_q<=kv_cr;hcr_q<=hb_cr;ing_cr<=send;kv[0]<=0;hb[0]<=0;issue_v<=0;
    if(iv_q)begin if(count==8&&!send)ff<=1;else wp<=wp+1'b1;end
    if(boot_release)begin if(!boot_hold)ff<=1;else begin boot_hold<=0;image_dirty<=0;end end

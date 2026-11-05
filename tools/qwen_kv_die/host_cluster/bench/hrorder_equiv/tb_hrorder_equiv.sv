@@ -8,7 +8,7 @@
 module tb_hrorder_equiv;
  reg ck=0,rst_n=0;
  always #1 ck=~ck;
- integer seed,cycles,cyc=0,errs=0,emits=0,pops=0,sends=0,dpops=0,faults_seen=0,fm=0,fo=0,fd=0,resets=0,i,k;
+ integer narrow=0,seed,cycles,cyc=0,errs=0,emits=0,pops=0,sends=0,dpops=0,faults_seen=0,fm=0,fo=0,fd=0,resets=0,i,k;
  reg d_hold;
  // ---------------- map ----------------
  reg[289:0]m_ing;reg[127:0]m_out_cr;reg[7:0]m_ack_n;reg m_marker_cr,m_ord_cr;
@@ -59,6 +59,8 @@ module tb_hrorder_equiv;
  initial begin
   if(!$value$plusargs("seed=%d",seed))seed=1;
   if(!$value$plusargs("cycles=%d",cycles))cycles=100000;
+  // +narrow=1: few local PCs and slow credit returns, so per-PC credits reach 0 and return (DIE-KV-72, o3 flags)
+  if(!$value$plusargs("narrow=%d",narrow))narrow=0;
   void'($urandom(seed));
   for(i=0;i<128;i++)begin m_cr_due[i]=0;o_out[i]=0;d_out[i]=0;end
   m_ord_due=0;m_ack_due=0;m_in_cr=8;d_in_cr=8;d_kv_due=0;d_hb_due=0;o_issued_tot=0;d_hold=0;
@@ -90,10 +92,11 @@ module tb_hrorder_equiv;
    m_ing=0;
    if(m_in_cr>0&&($urandom%4)!=0)begin
     m_ing[0]=1;m_ing[1]=($urandom%1024)!=0;m_ing[33:2]=rnd_addr($urandom);
+    if(narrow!=0&&!m_ing[33]&&m_ing[33:2]!=32'hffffffff)m_ing[8:2]=7'($urandom%4);
     for(k=34;k<290;k+=32)m_ing[k+:32]=$urandom;
     if(($urandom%4096)!=0)m_in_cr--;            // rarely overrun the input credit (fault path)
    end
-   m_out_cr=0;for(i=0;i<128;i++)if(m_cr_due[i]>0&&($urandom%3)==0)begin m_out_cr[i]=1;m_cr_due[i]--;end
+   m_out_cr=0;for(i=0;i<128;i++)if(m_cr_due[i]>0&&($urandom%(narrow!=0?24:3))==0)begin m_out_cr[i]=1;m_cr_due[i]--;end
    if(($urandom%50000)==0)m_out_cr[$urandom%128]=1;                  // spurious credit (overflow fault)
    m_ord_cr=0;if(m_ord_due>0&&($urandom%3)==0)begin m_ord_cr=1;m_ord_due--;end
    m_ack_n=0;if(m_ack_due>0&&($urandom%2)==0)begin m_ack_n=1+$urandom%((m_ack_due>3)?3:m_ack_due);m_ack_due-=m_ack_n;end

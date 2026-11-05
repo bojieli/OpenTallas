@@ -23,7 +23,18 @@ MUTANTS = {
     'map_hold_bypass': ('qkd_host_ingest_map.sv', 'else hd<=(wr&&wp==rp)?iq_dec[8:0]:q[rp][8:0];', 'else hd<=q[rp][8:0];'),
     'map_hw_hold': ('qkd_host_ingest_map.sv', 'else hw<=(wr&&wp==rp)?iq_dec:q[rp];', 'else hw<=q[rp];'),
     'map_hw_adv': ('qkd_host_ingest_map.sv', 'if(adv)hw<=(wr&&wp==rp1)?iq_dec:q[rp1];', 'if(adv)hw<=q[rp1];'),
-    'map_row_bit': ('qkd_host_ingest_map.sv', "{word[37],3'b000,word[33:19]}", "{word[37],3'b001,word[33:19]}"),
+    'map_row_bit': ('qkd_host_ingest_map.sv', "{word[37],3'b000,word[33:32],{5{word[31]}},word[26:19]}", "{word[37],3'b001,word[33:32],{5{word[31]}},word[26:19]}"),
+    'map_row_twin': ('qkd_host_ingest_map.sv', "{5{word[31]}}", "{{4{word[31]}},1'b0}"),
+    'map_nz_hold': ('qkd_host_ingest_map.sv', 'wire nz0=crq[ns0]||cnz[ns0];', 'wire nz0=cnz[ns0];'),
+    'map_nz_adv': ('qkd_host_ingest_map.sv', "(emit&&ns1==sel)?credits[sel]!=1:cnz[ns1]", "cnz[ns1]"),
+    'map_nz_bypass': ('qkd_host_ingest_map.sv', 'nh0=(wr&&wp==rp)?iq_dec[8:0]:q[rp][8:0]', 'nh0=q[rp][8:0]'),
+    'map_iss_eq': ('qkd_host_ingest_map.sv', "iss_eq<=emit?(issued+32'd1)==sum[31:0]:issued==sum[31:0];", "iss_eq<=issued==sum[31:0];"),
+    'map_ord_nz': ('qkd_host_ingest_map.sv', 'ord_nz<=ord_credit!=1;', 'ord_nz<=1;'),
+    'order_nz_same': ('qkd_host_commit_order.sv', '|pending[h7][8:1]', 'pnz[head_adv]'),
+    'order_nz_aq': ('qkd_host_commit_order.sv', '(aq[head_hold]||pnz[head_hold])', 'pnz[head_hold]'),
+    'disp_order_nz_same': ('qkd_host_commit_order_debt.sv', '|pending[h7][8:1]', 'pnz[head_adv]'),
+    'disp_iss_eq': ('qkd_host_boot_dispatch_debt.sv', "2'b10:iss_eq<=(issued+32'd1)==landed;", "2'b10:;"),
+    'disp_iss_eq2': ('qkd_host_boot_dispatch_debt.sv', "2'b01:iss_eq<=(landed+32'd1)==issued;", "2'b01:;"),
     'disp_hw_hold': ('qkd_host_boot_dispatch_debt.sv', 'else hw<=(wr&&wp==rp)?id_w:{q[rp][289:8],qd[rp][8:3],q[rp][1:0]};', 'else hw<={q[rp][289:8],qd[rp][8:3],q[rp][1:0]};'),
     'disp_hw_adv': ('qkd_host_boot_dispatch_debt.sv', 'if(send)hw<=(wr&&wp==rp1)?id_w:{q[rp1][289:8],qd[rp1][8:3],q[rp1][1:0]};', 'if(send)hw<={q[rp1][289:8],qd[rp1][8:3],q[rp1][1:0]};'),
     'map_adv_bypass': ('qkd_host_ingest_map.sv', 'if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q[rp1][8:0];', 'if(adv)hd<=q[rp1][8:0];'),
@@ -32,7 +43,7 @@ MUTANTS = {
     'disp_hold_bypass': ('qkd_host_boot_dispatch_debt.sv', 'else hd<=(wr&&wp==rp)?id_dec:qd[rp];', 'else hd<=qd[rp];'),
     'disp_order_adv': ('qkd_host_commit_order_debt.sv', 'head_adv=(v3&&fw==fr1)?s3:front[fr1]', 'head_adv=front[fr]'),
 }
-SEEDS = [1, 2, 3]
+SEEDS = [1, 2, 3, -1, -2, -3]  # negative: same seed with +narrow=1
 
 
 def main():
@@ -66,7 +77,7 @@ def main():
         sys.exit('HRORDER_EQUIV ERROR verilator:\n' + (out / 'vl.log').read_text()[-3000:])
     npass = 0
     for s in SEEDS:
-        r = subprocess.run([str(out / 'obj' / 'tb'), f'+seed={s}', f'+cycles={a.cycles}'], capture_output=True, text=True)
+        r = subprocess.run([str(out / 'obj' / 'tb'), f'+seed={abs(s)}', f'+cycles={a.cycles}', f'+narrow={int(s < 0)}'], capture_output=True, text=True)
         txt = r.stdout + r.stderr
         print(txt.strip(), flush=True)
         m = re.search(r'HRORDER_EQUIV (PASS|FAIL) seed=\d+ cycles=(\d+) mismatches=\d+ map_emits=(\d+) order_pops=(\d+) '

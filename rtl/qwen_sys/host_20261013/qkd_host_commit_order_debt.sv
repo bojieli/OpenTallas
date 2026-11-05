@@ -6,7 +6,7 @@
 // Control FF storage and <=8:1 registered stages; no unprotected SRAM.
 module qkd_host_commit_order_debt #(parameter integer MUT=0)(
  input wire ck,rst_n,input wire issue_v,input wire[6:0]issue_pc,input wire[127:0]acks,
- output reg prefix_v,output reg[31:0]prefix_count,output reg fault,output reg order_quiet
+ output reg prefix_v,output reg[31:0]prefix_count,output reg fault,output reg order_quiet,output wire prefix_inc
 );
  always @(posedge ck or negedge rst_n)
   if(!rst_n)order_quiet<=0;
@@ -21,15 +21,18 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0)(
  // HRORDER 10-18 (route qkd_hr_core_order-r2-c420f015e TT -30 ps: fr -> front[fr] -> 128 compares -> pop -> pending):
  // head_oh = one-hot of front[fr], a register kept exact by write-bypass whenever fc!=0 (pop and consume only use it
  // then). Cycle-exact with the previous form (bench tools/qwen_kv_die/host_cluster/bench/hrorder_equiv).
- reg[127:0]head_oh;
- wire[127:0]head_ready;
- for(genvar k=0;k<128;k++)begin:g_ready
-  assign head_ready[k]=head_oh[k]&&pending[k]!=0;
- end
- wire pop=fc!=0&&!fault&&((|head_ready)||MUT==1);
+ // DIE-KV-72 form o3 11-05 (o2 census TT: pending -> 128 compares -> OR -> pop -> pending and head_oh, 20 levels): pnz[k]=pending[k]!=0 and
+ // head_nz=pnz of the head PC, both from next-state values and exact whenever fc!=0, like head_oh. h7 = the binary of head_oh. Cycle-exact.
+ reg[127:0]head_oh;reg[127:0]pnz;reg head_nz;reg[6:0]h7;
+ wire pop=fc!=0&&!fault&&(head_nz||MUT==1);
+ assign prefix_inc=pop;
  wire[2:0]fr1=fr+3'd1;
  wire[6:0]head_adv=(v3&&fw==fr1)?s3:front[fr1],head_hold=(v3&&fw==fr)?s3:front[fr];
- always @(posedge ck)head_oh<=pop?(128'd1<<head_adv):(128'd1<<head_hold);
+ always @(posedge ck)begin
+  head_oh<=pop?(128'd1<<head_adv):(128'd1<<head_hold);
+  h7<=pop?head_adv:head_hold;
+  head_nz<=pop?((head_adv==h7)?(aq[head_adv]?pnz[head_adv]:|pending[h7][8:1]):(aq[head_adv]||pnz[head_adv])):(aq[head_hold]||pnz[head_hold]);
+ end
  wire take=iqv&&!fault&&total<256;
  always @(posedge ck)begin
   iqpc<=issue_pc;
@@ -47,10 +50,10 @@ module qkd_host_commit_order_debt #(parameter integer MUT=0)(
  for(genvar k=0;k<128;k++)begin:g_pc
   wire add=take&&iqpc==7'(k),physical=aq[k],consume=pop&&head_oh[k];
   always @(posedge ck or negedge rst_n)begin
-   if(!rst_n)begin outstanding[k]<=0;pending[k]<=0;end
+   if(!rst_n)begin outstanding[k]<=0;pending[k]<=0;pnz[k]<=0;end
    else begin
     case({add,physical})2'b10:outstanding[k]<=outstanding[k]+1'b1;2'b01:if(outstanding[k]!=0)outstanding[k]<=outstanding[k]-1'b1;default:;endcase
-    case({physical,consume})2'b10:pending[k]<=pending[k]+1'b1;2'b01:if(pending[k]!=0)pending[k]<=pending[k]-1'b1;default:;endcase
+    case({physical,consume})2'b10:begin pending[k]<=pending[k]+1'b1;pnz[k]<=1;end 2'b01:if(pending[k]!=0)begin pending[k]<=pending[k]-1'b1;pnz[k]<=|pending[k][8:1];end default:;endcase
    end
   end
  end
