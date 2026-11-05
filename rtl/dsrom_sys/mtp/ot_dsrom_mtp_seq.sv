@@ -53,7 +53,10 @@ module ot_dsrom_mtp_seq #(
     parameter integer MAXU   = 8,       // users with MTP state (others pass through)
     parameter integer G      = 5,       // gamma (DSpark block 5)
     parameter integer SRC_ID = 0,       // header SRC of the DRAFT flit
-    parameter integer TOK_DEST = 0      // header DEST of the DRAFT flit (S0)
+    parameter integer TOK_DEST = 0,     // header DEST of the DRAFT flit (S0)
+    parameter integer WB_STAGE = 0      // 1: EX decisions are registered and every write and push applies one cycle
+                                        // later, in S_WB; state seen at the next S_RD and relv seen at S_SEL are
+                                        // unchanged, t / s / h / acc / fault leave one cycle later (DIE-HEAD-63)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -158,6 +161,9 @@ module ot_dsrom_mtp_seq #(
     // precomputed (PRE)
     reg [NW-1:0] x_i;  reg x_lo, x_ilt, x_ieq, x_igt, x_dm, x_last, x_pl; reg [NW-1:0] x_b1, x_rem; reg x_fin1;
     reg [NW-1:0] x_nrow;
+    // WB_STAGE: hold-queue addresses, precomputed from the registered record
+    localparam integer HQA = $clog2(MAXU * HD);
+    reg [HQA-1:0] x_hwa, x_hra;                       // write slot behind the held entries / read slot
 
     // release candidates: users in P_REL with every squashed result back (registered vector)
     reg [MAXU-1:0] relv;
@@ -245,12 +251,53 @@ module ot_dsrom_mtp_seq #(
         end
     endfunction
     assign e_dflit = dflit(eu, r_b + 1'b1, r_ep, r_g, r_d);
-    wire e_push = st == S_EX && (ek == E_PASS || e_fwd0 || e_bad || e_acc || e_reld || e_relh
+    wire e_push_d = ek == E_PASS || e_fwd0 || e_bad || e_acc || e_reld || e_relh
 `ifdef OT_MTPSEQ_MUT_NOHOLD
                                  || e_close
 `endif
-                                 );
-    wire [FLIT-1:0] e_flit = e_reld ? e_dflit : e_relh ? (rflit(eu, r_hh) | {{(FLIT-16){1'b0}}, hdr_ds}) : ef;
+                                 ;
+    // ---------------------------------------------------------------- apply stage
+    // WB_STAGE = 0 applies in S_EX on the combinational decisions.  WB_STAGE = 1 registers those decisions at the end
+    // of S_EX and applies in S_WB.  ek, eu, ei, ef, ep_, et_, ej, r_* and x_* only change in S_SEL / S_RD / S_PRE, so
+    // the data they carry is the same in both states.
+    localparam [2:0] S_APPLY = (WB_STAGE != 0) ? S_WB : S_EX;
+    wire e_cmp   = (ef & RMASK) != rflit(eu, e_h);
+    wire e_dsne  = ef[HDR_DEST +: 16] != hdr_ds;
+    wire e_sqf   = r_sqs == r_sqn || r_hn == HD[HB:0];
+    wire e_rowb  = eu >= MAXU || r_ph != P_DRAFT || r_rw;
+    wire e_dhb   = eu >= MAXU || r_ph != P_DRAFT || !r_rw || ej != r_j;
+    wire e_dhm   = ej < r_g;
+    wire e_rel0  = ek == E_REL && !r_dr && r_hn == 0;
+    wire e_rell  = r_hn == 1;
+    wire e_isrow = ek == E_ROW;
+    wire e_isdh  = ek == E_DH;
+    reg  w_push, w_bad, w_sq, w_close, w_reld, w_relh, w_cmp, w_dsne, w_sqf, w_rowb, w_dhb, w_dhm, w_rel0, w_rell, w_isrow, w_isdh;
+    reg  [3:0] w_nep; reg [2:0] w_gn;
+    always @(posedge clk) if (st == S_EX) begin
+        w_push <= e_push_d; w_bad <= e_bad; w_sq <= e_sq; w_close <= e_close; w_reld <= e_reld; w_relh <= e_relh;
+        w_cmp <= e_cmp; w_dsne <= e_dsne; w_sqf <= e_sqf; w_rowb <= e_rowb; w_dhb <= e_dhb; w_dhm <= e_dhm;
+        w_rel0 <= e_rel0; w_rell <= e_rell; w_isrow <= e_isrow; w_isdh <= e_isdh; w_nep <= e_nep; w_gn <= e_gn;
+    end
+    wire a_ws    = WB_STAGE != 0;
+    wire a_bad   = a_ws ? w_bad   : e_bad;
+    wire a_sq    = a_ws ? w_sq    : e_sq;
+    wire a_close = a_ws ? w_close : e_close;
+    wire a_reld  = a_ws ? w_reld  : e_reld;
+    wire a_relh  = a_ws ? w_relh  : e_relh;
+    wire a_cmp   = a_ws ? w_cmp   : e_cmp;
+    wire a_dsne  = a_ws ? w_dsne  : e_dsne;
+    wire a_sqf   = a_ws ? w_sqf   : e_sqf;
+    wire a_rowb  = a_ws ? w_rowb  : e_rowb;
+    wire a_dhb   = a_ws ? w_dhb   : e_dhb;
+    wire a_dhm   = a_ws ? w_dhm   : e_dhm;
+    wire a_rel0  = a_ws ? w_rel0  : e_rel0;
+    wire a_rell  = a_ws ? w_rell  : e_rell;
+    wire a_isrow = a_ws ? w_isrow : e_isrow;
+    wire a_isdh  = a_ws ? w_isdh  : e_isdh;
+    wire [3:0] a_nep = a_ws ? w_nep : e_nep;
+    wire [2:0] a_gn  = a_ws ? w_gn  : e_gn;
+    wire e_push = st == S_APPLY && (a_ws ? w_push : e_push_d);
+    wire [FLIT-1:0] e_flit = a_reld ? e_dflit : a_relh ? (rflit(eu, r_hh) | {{(FLIT-16){1'b0}}, hdr_ds}) : ef;
     wire e_pop = t_valid && t_ready;
 
     integer i;
@@ -292,7 +339,7 @@ module ot_dsrom_mtp_seq #(
                 r_lc <= u_lc[eu[UB-1:0]]; r_y <= u_y[eu[UB-1:0]]; r_j <= u_j[eu[UB-1:0]]; r_rw <= u_rw[eu[UB-1:0]];
                 r_sqn <= u_sqn[eu[UB-1:0]]; r_sqs <= u_sqs[eu[UB-1:0]]; r_dr <= u_dr[eu[UB-1:0]];
                 r_hn <= u_hn[eu[UB-1:0]]; r_hr <= u_hr[eu[UB-1:0]];
-                r_hh <= u_hq[eu[UB-1:0] * HD + u_hr[eu[UB-1:0]]];
+                if (WB_STAGE == 0) r_hh <= u_hq[eu[UB-1:0] * HD + u_hr[eu[UB-1:0]]];
                 st <= S_PRE;
             end
             S_PRE: begin
@@ -302,56 +349,60 @@ module ot_dsrom_mtp_seq #(
                 x_rem  <= steps_q - 1'b1 - (ep_ + 1'b1);                  // steps - 1 - b'
                 x_fin1 <= (ep_ + 1'b1) >= steps_q;
                 x_nrow <= ep_ + 1'b1 - r_lc;
+                if (WB_STAGE != 0) r_hh <= u_hq[ei * HD + r_hr];   // no write between S_RD and here
+                x_hwa  <= HQA'(ei * HD + ((r_hr + r_hn[HB-1:0]) % HD));
+                x_hra  <= HQA'(ei * HD + r_hr);
                 st <= S_EX;
             end
             S_WB:  st <= S_WB2;                          // the write-back reaches the registered release vector
             S_WB2: st <= S_SEL;
-            S_EX: begin
-                st <= S_WB;
-                if (e_bad) fault <= 1'b1;
-                if (e_sq) begin
+            S_EX: st <= S_WB;
+            endcase
+            if (st == S_APPLY) begin
+                if (a_bad) fault <= 1'b1;
+                if (a_sq) begin
                     // a squashed result (the WFC discards it): held behind the closing one
-                    if (r_sqs == r_sqn || r_hn == HD[HB:0]) fault <= 1'b1;
-                    u_hq[ei * HD + ((r_hr + r_hn[HB-1:0]) % HD)] <= e_h;
+                    if (a_sqf) fault <= 1'b1;
+                    if (WB_STAGE != 0) u_hq[x_hwa] <= e_h; else u_hq[ei * HD + ((r_hr + r_hn[HB-1:0]) % HD)] <= e_h;
                     u_hn[ei] <= r_hn + 1'b1; u_sqs[ei] <= r_sqs + 1'b1;
-                    if (ef[HDR_DEST +: 16] != hdr_ds || (ef & RMASK) != rflit(eu, e_h)) fault <= 1'b1;
+                    if (a_dsne || a_cmp) fault <= 1'b1;
                 end
-                if (e_close) begin
+                if (a_close) begin
                     acc_v <= 1'b1; acc_u <= eu; acc_a <= x_i[2:0]; acc_c <= ep_; acc_y <= et_;
                     if (!hdr_ds_v) begin hdr_ds <= ef[HDR_DEST +: 16]; hdr_ds_v <= 1'b1; end
-                    else if (ef[HDR_DEST +: 16] != hdr_ds) fault <= 1'b1;
-                    if ((ef & RMASK) != rflit(eu, e_h)) fault <= 1'b1;
+                    else if (a_dsne) fault <= 1'b1;
+                    if (a_cmp) fault <= 1'b1;
 `ifdef OT_MTPSEQ_MUT_NOHOLD
                     u_hn[ei] <= 0;
 `else
-                    u_hq[ei * HD + r_hr] <= e_h;
+                    if (WB_STAGE != 0) u_hq[x_hra] <= e_h; else u_hq[ei * HD + r_hr] <= e_h;
                     u_hn[ei] <= 1;
 `endif
                     u_pf[ei] <= 1'b0;
                     u_sqn[ei] <= r_g - x_i[2:0]; u_sqs[ei] <= 3'd0;
-                    u_ep[ei] <= e_nep;
-                    u_b[ei] <= x_b1; u_g[ei] <= e_gn; u_y[ei] <= et_; u_fin[ei] <= x_fin1;
-                    u_j[ei] <= 3'd0; u_rw[ei] <= 1'b0; u_dr[ei] <= e_gn != 0;
-                    if (e_gn != 0) begin
+                    u_ep[ei] <= a_nep;
+                    u_b[ei] <= x_b1; u_g[ei] <= a_gn; u_y[ei] <= et_; u_fin[ei] <= x_fin1;
+                    u_j[ei] <= 3'd0; u_rw[ei] <= 1'b0; u_dr[ei] <= a_gn != 0;
+                    if (a_gn != 0) begin
                         u_ph[ei] <= P_DRAFT;
-                        sq_v <= 1'b1; sq_d <= {eu, ep_, x_nrow, et_, e_nep};
+                        sq_v <= 1'b1; sq_d <= {eu, ep_, x_nrow, et_, a_nep};
                         u_lc[ei] <= x_b1;
                     end else begin
                         u_ph[ei] <= P_REL;
                     end
                 end
-                if (ek == E_ROW) begin
-                    if (eu >= MAXU || r_ph != P_DRAFT || r_rw) fault <= 1'b1;
+                if (a_isrow) begin
+                    if (a_rowb) fault <= 1'b1;
                     else begin
                         u_rw[ei] <= 1'b1; u_j[ei] <= 3'd1;
                         hq_v <= 1'b1; hq_d <= {eu, 3'd1, r_y};
                     end
                 end
-                if (ek == E_DH) begin
-                    if (eu >= MAXU || r_ph != P_DRAFT || !r_rw || ej != r_j) fault <= 1'b1;
+                if (a_isdh) begin
+                    if (a_dhb) fault <= 1'b1;
                     else begin
                         u_d[ei][(ej - 1) * NW +: NW] <= et_;
-                        if (ej < r_g) begin
+                        if (a_dhm) begin
                             u_j[ei] <= ej + 1'b1;
                             hq_v <= 1'b1;
 `ifdef OT_MTPSEQ_MUT_PREV
@@ -364,14 +415,13 @@ module ot_dsrom_mtp_seq #(
                         end
                     end
                 end
-                if (e_reld) u_dr[ei] <= 1'b0;
-                if (e_relh) begin
+                if (a_reld) u_dr[ei] <= 1'b0;
+                if (a_relh) begin
                     u_hr[ei] <= (r_hr == HD - 1) ? 0 : r_hr + 1'b1; u_hn[ei] <= r_hn - 1'b1;
-                    if (r_hn == 1) u_ph[ei] <= P_RUN;
+                    if (a_rell) u_ph[ei] <= P_RUN;
                 end
-                if (ek == E_REL && !r_dr && r_hn == 0) begin u_ph[ei] <= P_RUN; fault <= 1'b1; end
+                if (a_rel0) begin u_ph[ei] <= P_RUN; fault <= 1'b1; end
             end
-            endcase
         end
     end
 endmodule
