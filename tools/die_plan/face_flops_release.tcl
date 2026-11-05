@@ -33,3 +33,16 @@ if {[file exists $ff_f]} {
   close $fh
   puts "OT_RELAY_MID released $ff_m relay flops for DPL"
 }
+# DIE-HEAD-69 11-05: core_out_land.tcl landing flops
+set ff_f $::env(RESULTS_DIR)/ot_core_out_land.txt
+if {[file exists $ff_f]} {
+  set ff_m 0
+  set fh [open $ff_f r]
+  foreach n [split [read $fh] "\n"] {
+    if {$n eq ""} continue
+    set i [$ff_blk findInst $n]
+    if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED; incr ff_m }
+  }
+  close $fh
+  puts "OT_CORE_OUT_LAND released $ff_m landing flops for DPL"
+}

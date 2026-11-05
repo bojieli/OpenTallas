@@ -932,7 +932,9 @@ SCHEMA = {
                                           # clock port: D_p}} (die_sta_related --kit-window-out); gen_phys
                                           # .tap_window_port_table; unlisted types / ports keep the flat W
                                           "per_port_ps": {"type": "object", "additionalProperties": {
-                                              "type": "object", "additionalProperties": _nonneg}}}},
+                                              "type": "object", "additionalProperties": _nonneg}},
+                                          # DIE-HEAD-70 11-05: free-text provenance of per_port_ps (HEAD l48ue carries it)
+                                          "per_port_note": {"type": "string"}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
