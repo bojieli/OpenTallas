@@ -69,6 +69,7 @@ def test_reloaded_from_a_reset_register_is_proved(tmp_path, monkeypatch):
 
 
 def test_mutant_hold_register_observed_before_its_load_fails(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     L = _design(tmp_path, "hold")
     st, log = _verdict(tmp_path, monkeypatch, L)
     assert st == "differs" and ("gold", "ff:u_dut.k1") not in L.hyp
@@ -77,12 +78,14 @@ def test_mutant_hold_register_observed_before_its_load_fails(tmp_path, monkeypat
 
 
 def test_unobserved_hold_register_needs_no_constant(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     L = _design(tmp_path, "hold", observed=False)
     st, _ = _verdict(tmp_path, monkeypatch, L)
     assert st == "proved" and ("gold", "ff:u_dut.k1") not in L.hyp
 
 
 def test_legacy_opt_out_cannot_restore_an_x_power_up_assumption(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     monkeypatch.setenv("OT_LEC_NORESET_CONST", "0")
     L = _design(tmp_path, "hold")
     st, _ = _verdict(tmp_path, monkeypatch, L)
@@ -116,6 +119,7 @@ def test_reset_state_is_constant_propagation_only():
 
 
 def test_rejected_closure_constant_does_not_restart_proved_rounds(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     L = _design(tmp_path, "hold")
     proposed = ("gold", "ff:u_dut.k1")
     calls = []
@@ -162,6 +166,7 @@ def test_pin_reset_loads_gated_unreset_constant_before_release(tmp_path, monkeyp
 
 
 def test_pin_reset_wrong_enable_polarity_keeps_difference(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     inputs = ["rst_n_pin", "en"]
     g, gm = _seq(tmp_path, "gold", inputs, ["ze", "p", "o"], lambda m, l: {
         # MUTANT: enable resets to zero, so p is still unknown throughout reset.
@@ -214,6 +219,7 @@ def test_fsm_constraint_cannot_establish_an_unknown_initial_constant(tmp_path, m
 
 
 def test_user_hint_cannot_assume_an_observed_unreset_hold_is_constant(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     L = _design(tmp_path, 'hold')
     monkeypatch.setattr(lec, 'prove', _sim_prove)
     lec.apply_hints(L, [['gold', 'ff:u_dut.k1', ['const', 0]]], tmp_path, 100, [])

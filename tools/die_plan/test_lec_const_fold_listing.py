@@ -69,6 +69,7 @@ def test_listing_is_uncapped(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("kind", ["data", "hold", "rst0"])
 def test_mutants_are_not_folded(tmp_path, monkeypatch, kind):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     L, res, rep, lst, rows = _run(tmp_path, monkeypatch, kind)
     assert res["ff:u_dut.op0"] == "differs"                  # the difference is reported, never assumed away
     assert L.hyp.get(("gold", "ff:u_dut.p0"), ("none",))[0] != "const"

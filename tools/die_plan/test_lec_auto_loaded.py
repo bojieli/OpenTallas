@@ -8,6 +8,8 @@ Never X == c: a read outside the guard still differs.  Mutants: observed outside
 the LEC-TOOL-4 'hold' register, a data (non-constant) load, auto proposals disabled.
     python3 -m pytest -q tools/die_plan/test_lec_auto_loaded.py"""
 import collections
+
+import pytest
 import sys
 from pathlib import Path
 
@@ -17,6 +19,12 @@ import lec  # noqa: E402
 from test_lec_memory_layout import _seq, _sim_prove  # noqa: E402
 
 IN = ["rn", "ld", "a"]
+
+
+@pytest.fixture(autouse=True)
+def _pre_seq_constant_rule(monkeypatch):
+    """these designs are seq constants (COORD 11-05): pin the loaded-hint path under the pre-11-05 rule"""
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")
 
 
 def _mux(m, s, a, b):                     # s ? a : b

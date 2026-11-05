@@ -64,6 +64,7 @@ def _gate(m, l):                         # synthesis removed c1 as the constant 
     ("loadb", "differs"),    # MUTANT loads an input: not a constant
 ])
 def test_constant_one_from_hold(tmp_path, monkeypatch, kind, want):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     monkeypatch.setattr(lec, "prove", _sim_prove)
     g, gm = _seq(tmp_path, "g", IN, ["c1", "r"], _gold(kind))
     t, tm = _seq(tmp_path, "t", IN, ["r"], _gate)

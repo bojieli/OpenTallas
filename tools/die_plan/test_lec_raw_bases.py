@@ -72,6 +72,7 @@ def test_wrong_constant_control_is_refuted(tmp_path, monkeypatch):
 
 
 def test_undecided_never_establishes_a_base(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     L = _case(tmp_path)
     monkeypatch.setattr(lec, "prove", lambda m, *a, **k: {n: "undecided" for n in m.onames})
     lec.noreset_filter(L, [], collections.Counter(), tmp_path, 100)
@@ -97,6 +98,7 @@ def test_cached_status_is_reused_without_another_solver(tmp_path, monkeypatch):
 def test_raw_base_sweep_has_wall_and_timeout_proves_nothing(tmp_path, monkeypatch):
     """FLOW-LATCH-1 11-03: the universal raw-D base sweep gets the OT_LEC_RAWPREFIX_S wall backstop; an overrun
     (prove -> all undecided + SWEEP_TIMEOUT) establishes no base and is recorded in raw_prefix_bounded."""
+    monkeypatch.setenv("OT_LEC_SEQ_CONSTANT", "0")   # pins the pre-11-05 rule (seq constants: test_lec_seq_constant.py)
     monkeypatch.setenv("OT_LEC_RAWPREFIX_S", "7")
     monkeypatch.setenv("OT_LEC_RAW_BASE_STEPS", "0")
     L = _case(tmp_path)

@@ -46,6 +46,12 @@ Verdict (DIR/lec.json; DIR defaults to KITDIR/lec):
                   difference depends on a gate register with no RTL counterpart / an X (don't-care) source, i.e. a
                   sequential optimisation (FSM recoding, retiming) this check cannot certify: reason recorded;
                   run_kit.sh warns and continues.
+Seq constants (COORD 11-05 15:41, DIE-HEAD-71; supersedes the LEC-TOOL-4 'no X == c' rule for this one shape):
+        a gold-only RTL register with no reset whose every load is the same constant c (D = c, or D = en ? c : Q,
+        exhaustively: with Q == c the next state is c for every input and state) holds c forever from a power-up
+        value of c; synthesis folds it to c, which refines the RTL's X power-up.  Its constant hypothesis takes a
+        power-up base case (basis 'seq_constant', listed per register in lec.json); a register that can load any
+        other value (D = en ? data : Q) never qualifies and still differs.  OT_LEC_SEQ_CONSTANT=0 = the old rule.
 Kit flows never retime registers (retiming = UNPROVEN by construction: register keys would not match).
 Run inside the ORFS image (run_kit.sh does), or from a host with docker: lec.py re-invokes itself in --image.
 """
@@ -4404,6 +4410,105 @@ def read_async_resets(*logs):
     return out
 
 
+SEQ_CONST_SUPPORT = 16       # exhaustive (bit-parallel) over at most this many free support variables
+SEQ_CONST_CONE = 5000
+
+
+def seq_const_enabled():
+    return os.environ.get("OT_LEC_SEQ_CONSTANT", "1") != "0"
+
+
+def seq_const_hold(d, qlit, nlit, c, fixed=None, max_support=SEQ_CONST_SUPPORT, max_cone=SEQ_CONST_CONE):
+    """COORD 11-05 seq constant: qlit = a register's Q literal, nlit its next-state literal, c the constant.
+    True when, with Q == c and every var in fixed ({var: value}, other seq constants) at its value, the next state is
+    c for EVERY value of the remaining support (inputs, other registers, X sources): every load is c (D = c, or
+    D = en ? c : Q), so a power-up value of c holds forever.  Exhaustive, bit-parallel over the free support; a
+    cone over max_cone ANDs or max_support free variables is refused (False), never assumed."""
+    I, NL, a, nand = d["I"], d["L"], d["ands"], d["A"]
+    base, q = I + NL + 1, qlit >> 1
+    if not I < q < base:
+        return False
+    fixed = dict(fixed or {})
+    fixed[q] = c ^ (qlit & 1)
+    cone, support, todo = set(), set(), [nlit >> 1]
+    while todo:
+        v = todo.pop()
+        if v == 0 or v in cone or v in support:
+            continue
+        if v < base:
+            support.add(v)
+        else:
+            cone.add(v)
+            if len(cone) > max_cone:
+                return False
+            todo += [a[2 * (v - base)] >> 1, a[2 * (v - base) + 1] >> 1]
+    if q not in support:
+        return False                          # D does not read Q: the universal raw-D base case owns it
+    free = sorted(support - set(fixed))
+    if len(free) > max_support:
+        return False
+    n = 1 << len(free)
+    mask = (1 << n) - 1
+    val = {0: 0}
+    for i, v in enumerate(free):              # truth-table column of var i over all 2^len(free) assignments
+        blk, per = ((1 << (1 << i)) - 1) << (1 << i), 1 << (i + 1)
+        pat = blk
+        while per < n:
+            pat |= pat << per
+            per <<= 1
+        val[v] = pat & mask
+    want = mask if c else 0
+
+    def next_state(qv):
+        for v in support & set(fixed):
+            val[v] = mask if fixed[v] else 0
+        val[q] = mask if qv else 0
+        for v in sorted(cone):                # AIG ands are numbered in topological order
+            r0, r1 = a[2 * (v - base)], a[2 * (v - base) + 1]
+            x = val[r0 >> 1] ^ (mask if r0 & 1 else 0)
+            y = val[r1 >> 1] ^ (mask if r1 & 1 else 0)
+            val[v] = x & y
+        return val[nlit >> 1] ^ (mask if nlit & 1 else 0)
+    if next_state(fixed[q]) != want:
+        return False                          # a load of another value (D = en ? data : Q)
+    # a register that is never loaded (D = Q) has no load to be constant: an uninitialised read, not a seq constant
+    return next_state(fixed[q] ^ 1) != (mask ^ want)
+
+
+def seq_constants(L, consts):
+    """{(gold, key): c} of the gold-only constant hypotheses that are seq constants (seq_const_hold), as a fixpoint:
+    a register whose every load is c given other seq constants at their values (a chain of constant-only no-reset
+    registers).  Only registers the reset state leaves X (no reset: rst_val None) and that no gate register matches;
+    a register the reset state gives another value, a matched compare point, or any gate register never qualifies."""
+    if not seq_const_enabled():
+        return {}
+    matched = set(L.matched)
+    cand = {k: c for (sd, k), c in consts.items() if sd == "gold" and k not in matched and k in L.gp and k in L.gc
+            and c in (0, 1) and L.rst_val.get(("gold", k), (None, None))[0] is None}
+    cache = L.__dict__.setdefault("_seq_const_cache", {})
+    out = {}
+    while True:
+        fixed = {L.gp[k] >> 1: c ^ (L.gp[k] & 1) for k, c in out.items()}
+        new = {}
+        for k, c in cand.items():
+            if k in out:
+                continue
+            key = (k, c)
+            hit = cache.get(key)
+            if hit is True or (hit is not None and hit >= len(fixed)):
+                if hit is True:
+                    new[k] = c
+                continue
+            ok = seq_const_hold(L.gold, L.gp[k], L.gc[k], c, fixed)
+            cache[key] = True if ok else len(fixed)
+            if ok:
+                new[k] = c
+        if not new:
+            break
+        out.update(new)
+    return {("gold", k): c for k, c in out.items()}
+
+
 def _noreset_self_hold(L, s, k, c):
     """self_hold_reset for one hypothesis, cached; a hit is recorded for lec.json: L.noreset_self_hold[(side, key)]"""
     cache = L.__dict__.setdefault("_self_hold_cache", {})
@@ -4424,6 +4529,8 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
     unmatched registers not in `banned`."""
     held = {}                                 # (side, key) -> edge, per side
     matched = set(L.matched)
+    seqc = seq_constants(L, consts)
+    L.seq_constant = seqc
     for (sd, k), c in consts.items():
         for s in sides(sd):
             v, e = L.rst_val.get((s, k), (None, None))
@@ -4439,6 +4546,8 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
                 if sh:
                     L.__dict__.setdefault("noreset_self_hold", {})[(s, k)] = sh
                     edges.append(1)
+            if not edges and seqc.get((s, k)) == c:
+                edges.append(1)               # COORD 11-05 seq constant: power-up value c, every load c
             if edges:
                 held[(s, k)] = min(edges)
     hyp_side = lambda s, j: (("both", j) in consts) or ((s, j) in consts)
@@ -4721,8 +4830,9 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     observe it before that load.  A constant hypothesis is kept only when noreset_sound shows it holds within
     OT_LEC_RESET_CYCLES edges of reset (the register resets to c, or is reloaded every cycle from registers that
     do); the others are dropped and never re-proposed (the register stays a free input, so an observable difference
-    is reported, never assumed away). There is no switch to assume an unknown
-    power-up value equals a constant. -> number dropped."""
+    is reported, never assumed away).  The one exception (COORD 11-05 15:41, default-on, OT_LEC_SEQ_CONSTANT=0 =
+    off): a gold-only no-reset register whose every load is c (seq_constants) takes c as its power-up value, listed
+    in lec.json noreset_constants.seq_constant. -> number dropped."""
     eq_const_resolve(L, log)
     t_raw = time.time()
     if work is not None:
@@ -4780,12 +4890,15 @@ def noreset_report(L):
         prefix = all(getattr(L, "raw_prefix_edges", {}).get((s, k, h[1])) == edge for s in sides)
         sh = getattr(L, "noreset_self_hold", {})
         hold = (not raw and not prefix and all((s, k) in sh for s in sides))
+        seqc = (not raw and not prefix and not hold and sd == "gold"
+                and getattr(L, "seq_constant", {}).get((sd, k)) == h[1])
         kept.append(dict(register=k, side=sd, value=h[1], edge=edge,
                          **(dict(reset_net=sh[(sides[0], k)]["reset_net"], forces_at=sh[(sides[0], k)]["forces_at"],
                                   async_net=sh[(sides[0], k)].get("async_net")) if hold else {}),
                          basis="universal_raw_D" if raw else
                                "universal_raw_prefix" if prefix else
                                "self_hold_reset" if hold else
+                               "seq_constant" if seqc else
                                "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
@@ -4806,6 +4919,9 @@ def noreset_report(L):
                 universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
                 n_self_hold=sum(1 for e in kept if e["basis"] == "self_hold_reset"),
                 self_hold=[e for e in kept if e["basis"] == "self_hold_reset"][:500],
+                seq_constant_enabled=seq_const_enabled(),
+                n_seq_constant=sum(1 for e in kept if e["basis"] == "seq_constant"),
+                seq_constant=[e for e in kept if e["basis"] == "seq_constant"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
                 n_dropped=len(dropped), reloaded=[e for e in kept if e["basis"] == "reloaded"][:500],
                 dropped=dropped[:500],
@@ -4813,7 +4929,9 @@ def noreset_report(L):
                        "reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic "
                        "reload is inductively constant from already established constants, or (self_hold, COORD "
                        "11-04) the register has no load path and one net forces the constant, listed per register "
-                       "with that net, which must be asserted before use; equality/FSM "
+                       "with that net, which must be asserted before use; or (seq_constant, COORD 11-05) a gold-only "
+                       "no-reset register whose every load is that constant takes it as its power-up value; "
+                       "equality/FSM "
                        "assumptions never establish a constant's base case"))
 
 
