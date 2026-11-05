@@ -398,3 +398,9 @@ physical sub-core path is `<inst>.u_fcore.u_core.<u_sub>`.
 ot_hbm_su_programme_pslice_c5 (4 inst, q_hub_nw/ne.u_pgp_Q__q0/q1) becomes ot_hbm_su_pcol_s x7 (118.8x336.96, 7 macros), _l x3 (257.04x423.36, 17 macros) and head _h (136.08x216, no macro). Registered faces, per-column start/length relay with no shared flop, registered command funnel.
 Slice latency against the kit base form, end to end: start/length/cfg to command/busy/valid/done/edge_index +2, to fault +4, physical/die_plan/hbm/reform_1103/cycles/pcol.tsv. Bench: split_p8/run_eq.sh (lockstep, 8 mutants killed).
 Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is a 3-way JSON merge onto this tree (0 conflicts, q_hub_nw/ne only). **Checks** against part 13: G0 errors new 0, gone 0; warnings 1940 -> 1972 (the part's core_faces rows, as in its own p7-p8 diff). GEOM advisory 225 -> 225, new 0, worse 0, clock_reach better on q_hub_ne/nw. su_pcol_h signed off and routed LEC EQUIVALENT; _s and _l forms still running.
+
+## Part 14 (fused host program clk pin to the signed location; DIE-HBM-66, COORD 20:4x)
+
+- **ot_hnx_fused_host_program** `clk` M5 (103.704, 64.8) -> (103.704, 129.36), N face, table `__p14`; the other 561 pins unmoved. Signed DB kept (re-signed on flow-20261105-i-hbm). The kit was generated without `--clock-pin-entry on`, so the centre entry went to the N face; the plan now follows it. Gen on a stage with the flag: rc 0, all 562 pins equal the signed kit.
+- **Parent clock tap**: `u_mu_fused_program.clk` (838.08, 5404.32) -> (838.08, 5468.88), same x. The `root` clock entry row follows (xy 103.68, 129.36; island kept 8.64 um square, clipped to the N edge).
+- **Checks**: plan diff 3 fields on `root` plus 4 on its clock entry. G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0. 0 cycles, no RTL. No `asbuilt` key, so bind.py does not apply.
