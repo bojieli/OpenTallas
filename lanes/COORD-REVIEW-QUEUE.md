@@ -18056,3 +18056,4 @@ FAILED [AUTOPILOT 7648f082b837] 2026-11-05 05:22:59 PST AUTOPILOT -> KIT-WAVE-3:
   | q2n2c, q3body, pcoll2, hcol_h0_ra, v39c4, v512b | no live form | none | q3body and pcoll2 split, hcol outline event, rest need a form |
   | tkmid2, tkmterm2, tkmroot | REFORM-A part 19 | not mine | none |
   Open asks with no ruling seen: g2part_q_su01 stale stop (recommend yes, default leave), opstore_b de3ef0436950 duplicate (recommend stop epyc2 copy, default leave), TOK on the u_sm gap.
+- 2026-11-05 05:32 PST [COORD] DIE-QC-73 and DIE-HEAD-64 parked; DIE-QC-74, DIE-HEAD-65 started. OBS census 05:31: no fix on the 48 FAIL rows without a parent failure; DIE-QC-74 finishes the 94 unmeasured only if a parent row fails on one. coll_core: split by plan event, default taken. SKIP_ANTENNA_REPAIR on NK, NL: kit copies only; sign-off antenna result decides, DIE-QC-74 reads it. KW-FIX-10 takes the 7 HEAD kit_rtl rows + hd_mesh_e and coll_n.
