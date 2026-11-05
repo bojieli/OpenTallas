@@ -3258,5 +3258,83 @@
    "ot_sram_1r1w_256x256_m2_r2c2",
    "ot_sram_1rw_256x64_m4_r2c2"
   ]
+ },
+ "ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hbm_accel/cores_split/sk_fsr_1105/ot_hbm_hc_tail_rest_core_fsr.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/00_ot_hdc_fastfp_lat_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/01_ot_hdc_fp32_f12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/02_ot_hdc_prefix.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/03_ot_dsrom_su_add6.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/04_ot_dsrom_su_f12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/05_ot_hdc_fsqrt_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/06_ot_hdc_v41x_sfu_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/08_ot_hdc_delay.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/09_ot_hdc_sfu.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/14_ot_hdc_fastfp.sv"
+  ],
+  "functional_type": "hc_tail_rest",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_tail_rest_core ports; cut pin -> canonical map in canonical_ports_split.json types.hc_tail_rest.type_ids[\"ot_hbm_hc_root_static__tail1_rest__155.52x172.8\"]",
+  "source": "DIE-HBM-66 11-05 COORD ruling A: S81 row Sinkhorn on HBM tail; lockstep results/die_hbm_1105/sk_fsr (FSR_EQ PASS, mutants FAIL).",
+  "top": "ot_hbm_hc_tail_rest_core_fsr",
+  "synth_memory_max_bits": 16384
+ },
+ "ot_hbm_hc_root_static__tailx_sk_fsr": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+   "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+   "rtl/hdc/v41/ot_hdc_skf_predecode.sv",
+   "rtl/hdc/v41/ot_hdc_sinkhorn_fs.sv",
+   "rtl/hbm_accel/cores_split/sk_fsr_1105/ot_hbm_hc_tail_sk_fsr.sv"
+  ],
+  "functional_type": "hc_sk_fsr",
+  "macros": [],
+  "params": {},
+  "source": "DIE-HBM-66 11-05 COORD ruling A: S81 row Sinkhorn on HBM tail; lockstep results/die_hbm_1105/sk_fsr (FSR_EQ PASS, mutants FAIL).",
+  "top": "ot_hbm_hc_tail_sk_fsr",
+  "synth_memory_max_bits": 35328
+ },
+ "ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hbm_accel/cores_split/sk_fsr_1105/ot_hbm_hc_tail_rest_core_fsr.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/00_ot_hdc_fastfp_lat_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/01_ot_hdc_fp32_f12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/02_ot_hdc_prefix.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/03_ot_dsrom_su_add6.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/04_ot_dsrom_su_f12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/05_ot_hdc_fsqrt_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/06_ot_hdc_v41x_sfu_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/08_ot_hdc_delay.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/09_ot_hdc_sfu.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/14_ot_hdc_fastfp.sv"
+  ],
+  "functional_type": "hc_tail_rest",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_tail_rest_core ports; cut pin -> canonical map in canonical_ports_split.json types.hc_tail_rest.type_ids[\"ot_hbm_hc_root_static__tail0_rest__155.52x172.8\"]",
+  "source": "DIE-HBM-66 11-05 COORD ruling A: S81 row Sinkhorn on HBM tail; lockstep results/die_hbm_1105/sk_fsr (FSR_EQ PASS, mutants FAIL).",
+  "top": "ot_hbm_hc_tail_rest_core_fsr",
+  "synth_memory_max_bits": 16384
  }
 }
