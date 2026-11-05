@@ -43,6 +43,28 @@ class MacroParamBB(unittest.TestCase):
         self.assertNotIn("always", txt)
         self.assertTrue(txt.rstrip().endswith("endmodule"))
 
+    def test_identity_reads_the_active_ifdef_branch(self):
+        # KW-FIX-9 11-05 S81 bk_sel__t2: the RF(0)..RF(7) branch chain, as yosys reads it
+        text = ("module p;\n`ifdef RF0\n  m #(.RF(0)) u (.a(a));\n`elsif RF1\n  m #(.RF(1)) u (.a(a));\n"
+                "`else\n  m #(.RF(7)) u (.a(a));\n`endif\nendmodule\n")
+        self.assertEqual(G.macro_instance_identity(text, "m"), {"RF": "7"})
+        self.assertEqual(G.macro_instance_identity(text, "m", ["RF1"]), {"RF": "1"})
+
+    def test_identity_reads_a_bare_parent_parameter_default(self):
+        # KW-FIX-9 11-05 S81 bk_sel__t2: dsdv_idx_tx_n32 #(.SRAM_MACRO(TX_SRAM)) in a parent with TX_SRAM = 1
+        text = "module p #(parameter bit TX_SRAM = 1, parameter W = N+1)(); m #(.S(TX_SRAM), .W(W), .Q(Z)) u (); endmodule\n"
+        self.assertEqual(G.macro_instance_identity(text, "m"), {"S": "1"})   # expression and undeclared: no identity
+
+    def test_identity_literal_wins_over_parent_default(self):
+        text = ("module p #(parameter S = 0)(); m #(.S(S)) u (); endmodule\n"
+                "module q(); m #(.S(1)) u (); endmodule\n")
+        self.assertEqual(G.macro_instance_identity(text, "m"), {"S": "1"})
+
+    def test_identity_parent_defaults_that_disagree_give_none(self):
+        text = ("module p #(parameter S = 0)(); m #(.S(S)) u (); endmodule\n"
+                "module q #(parameter S = 1)(); m #(.S(S)) u (); endmodule\n")
+        self.assertEqual(G.macro_instance_identity(text, "m"), {})
+
     def test_exact_staged_multimodule_header_precedes_filename_fallback(self):
         packaged = self.t / "src" / "engines.sv"
         (self.t / "src" / "m_pair.sv").rename(packaged)

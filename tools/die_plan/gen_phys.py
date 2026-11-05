@@ -30,7 +30,10 @@ import shutil
 import sys
 from pathlib import Path
 
+import bisect
+
 import cores as _CR
+import native_bb as _NB
 import schema as S
 import taps as T
 from schema import DIE_PART
@@ -3122,11 +3125,16 @@ def _top_items(text):
 _INT_LIT = re.compile(r"[+-]?\d[\d_]*|(?:\d+\s*)?'s?[bodh]\s*[0-9a-fA-F_]+")
 
 
-def macro_instance_identity(text, mod):
+def macro_instance_identity(text, mod, defines=()):
     """{param: value} of the numeric-literal overrides that EVERY `mod #(...)` instance in text gives the same value
-    (the configuration the macro's single signed view was built with).  Positional overrides -> {}."""
+    (the configuration the macro's single signed view was built with).  Positional overrides -> {}.
+    KW-FIX-9 11-05 (S81 bk_sel__t2, dsdv_bk_g .RF(7), dsdv_idx_tx_n32 .SRAM_MACRO(TX_SRAM)): only the active `ifdef
+    branch counts, as yosys reads it (an RF(0)..RF(7) branch chain disagreed with itself); a parameter that no instance
+    gives as a literal takes the literal default of a bare parent parameter.  OT_SIGNED_PARAM_SERIALIZE still compares
+    the elaborated value with this header at synth, so a wrong read stops there, as before."""
     text = re.sub(r"//[^\n]*|/\*[\s\S]*?\*/", "", text)
-    seen, n = {}, 0
+    text = _NB.preprocess(text, defines)
+    seen, parent, starts = {}, {}, None
     for m in re.finditer(r"(?<![\w$.])" + re.escape(mod) + r"\s*#\s*\(", text):
         if re.search(r"(?<![\w$])module\s+$", text[max(0, m.start() - 64):m.start()]):
             continue                                   # the definition's own parameter list, not an instance
@@ -3134,19 +3142,28 @@ def macro_instance_identity(text, mod):
         j = _paren_end(text, i)
         if j < 0:
             return {}
-        n += 1
         for it in _top_items(text[i + 1:j]):
             a = re.fullmatch(r"\s*\.\s*([A-Za-z_]\w*)\s*\((.*)\)\s*", it, re.S)
             if not a:
                 return {}
-            seen.setdefault(a.group(1), []).append(a.group(2).strip())
-    # a non-literal override (.QX(QX) inside another macro's RTL, a parent parameter) says nothing about the identity:
-    # OT_SIGNED_PARAM_SERIALIZE still checks its elaborated value at synth.  Literals must all agree.
+            val = a.group(2).strip()
+            seen.setdefault(a.group(1), []).append(val)
+            if re.fullmatch(r"[A-Za-z_]\w*", val):
+                if starts is None:
+                    starts = [x.start() for x in re.finditer(r"(?<![\w$])module\s+[A-Za-z_]", text)]
+                at = bisect.bisect_right(starts, m.start()) - 1
+                d = re.search(r"\bparameter\b[^;,=()]*?\b" + val + r"\s*=\s*([^\s,;)]+)",
+                              text[starts[at]:m.start()]) if at >= 0 else None
+                parent.setdefault(a.group(1), set()).add(d.group(1) if d and _INT_LIT.fullmatch(d.group(1)) else None)
+    # any other non-literal override says nothing about the identity: OT_SIGNED_PARAM_SERIALIZE still checks its
+    # elaborated value at synth.  Literals must all agree.
     out = {}
     for k, v in seen.items():
         lit = {x for x in v if _INT_LIT.fullmatch(x)}
         if len(lit) == 1:
             out[k] = lit.pop()
+        elif not lit and len(parent.get(k, ())) == 1 and None not in parent[k]:
+            out[k] = next(iter(parent[k]))
     return out
 
 
@@ -3211,7 +3228,7 @@ def strip_module_definition(text, mod):
     return "".join(out), cnt
 
 
-def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
+def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, defines=()):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
     and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
     <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
@@ -3244,7 +3261,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
         # The RTL defaults (PINREG 0) are not the configuration the one signed view was built with; every staged
         # instance giving the same numeric literal is.  Parameters the instances disagree on keep the RTL default
         # (a non-default override still stops synth there, as before).
-        hdr, ident = _header_with_defaults(hdr, macro_instance_identity(staged, mod))
+        hdr, ident = _header_with_defaults(hdr, macro_instance_identity(staged, mod, defines))
         note = ("// signed identity from the staged instances: " + ", ".join(f"{k}={v}" for k, v in sorted(ident.items()))
                 + "\n") if ident else ""
         dst = rtl_dir / f"{mod}_bb.v"
@@ -3339,7 +3356,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # g_pp[k].u_pair = ot_s81hd_lep_pair #(.CHB(..))) has only a Liberty cell, which declares no parameters, so
     # yosys elaboration (GEN_LINT rtl_check, synth) stops with "does not have a parameter named ..".  Stage a
     # header-only blackbox <module>_bb.v (the native_bb form, read -lib -overwrite like the SRAM _bb views).
-    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root):
+    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root,
+                                    [d[2:] for d in type_verilog_defines(t, kit_defines)]):
         srcs.append(f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")

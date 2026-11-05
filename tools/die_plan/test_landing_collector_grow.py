@@ -98,3 +98,11 @@ def test_status_pin_in_the_core_margin_takes_the_grow_path():
     loop = TCL[TCL.index("foreach spec $cland_status"):TCL.index("foreach spec $cland_optional_groups")]
     cond = re.search(r"if \{(\(\$x\+17\.28\).*?)\} \{\n  cland_put_grow", loop, re.S).group(1)
     assert "($y-17.28)*$ff_dbu < $ff_y1" in cond and "cland_sw 3" not in cond
+
+
+def test_optional_raw_copy_loop_takes_the_grow_path():
+    """KW-FIX-9 11-05 (QC su_l1 / su_c): FIRM landed ft stations fill a raw reset copy's +-2.16 um relay window."""
+    tail = TCL[TCL.index("foreach spec $cland_optional_groups"):]
+    loop = tail[:tail.index("\n}\n")]
+    assert "cland_put_grow $i $rect $tag raw-copy" in loop
+    assert TCL.index("proc cland_put_grow") < TCL.index("foreach spec $cland_optional_groups")
