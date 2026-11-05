@@ -559,7 +559,13 @@ module ot_dsrom_mtp_seq_fan #(
     reg [NW-1:0] x_nrow;
     // WB_STAGE: hold-queue addresses, precomputed from the registered record
     localparam integer HQA = $clog2(MAXU * HD);
-    reg [HQA-1:0] x_hwa, x_hra;                       // write slot behind the held entries / read slot
+    reg [HQA-1:0] x_hwa;                              // write slot behind the held entries
+    reg [MAXU*HD-1:0] x_hrs;                          // one-hot read slot of the hold queues
+    reg [HW-1:0] m_hh; integer mh;
+    always @(*) begin
+        m_hh = 0;
+        for (mh = 0; mh < MAXU * HD; mh = mh + 1) m_hh = m_hh | (u_hq[mh] & {HW{x_hrs[mh]}});
+    end
     reg [MAXU-1:0] x_u;                               // one-hot selected user, from S_RD0
     // the selected record as an AND-OR of the one-hot select
     reg [1:0] m_ph; reg m_pf, m_fin, m_rw, m_dr; reg [NW-1:0] m_b, m_lc, m_y; reg [2:0] m_g, m_j, m_sqn, m_sqs;
@@ -709,7 +715,7 @@ module ot_dsrom_mtp_seq_fan #(
         for (wk = 0; wk < MAXU * HD; wk = wk + 1)
             w_hw[wk] <= st == S_EX && ((e_sq && x_hwa == HQA'(wk))
 `ifndef OT_MTPSEQ_MUT_NOHOLD
-                                       || (e_close && x_hra == HQA'(wk))
+                                       || (e_close && x_hrs[wk])
 `endif
                                       );
         for (wk = 0; wk < 4; wk = wk + 1) w_tq[wk] <= st == S_EX && e_push_d && tq_w == 2'(wk);
@@ -766,11 +772,11 @@ module ot_dsrom_mtp_seq_fan #(
                 x_fin1 <= (ep_ + 1'b1) >= steps_q;
                 x_nrow <= ep_ + 1'b1 - r_lc;
                 x_hwa  <= HQA'(ei * HD + ((r_hr + r_hn[HB-1:0]) % HD));
-                x_hra  <= HQA'(ei * HD + r_hr);
+                for (i = 0; i < MAXU * HD; i = i + 1) x_hrs[i] <= x_u[i / HD] && r_hr == HB'(i % HD);
                 st <= S_EX;
             end
             S_EX: begin
-                r_hh <= u_hq[x_hra];                                      // no write between S_RD and S_WB
+                r_hh <= m_hh;                                            // no write between S_RD and S_WB
                 st <= S_WB;
             end
             S_WB:  st <= S_WB2;                          // the write-back reaches the registered release vector
