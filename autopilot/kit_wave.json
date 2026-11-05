@@ -2354,7 +2354,10 @@
     "slw_sc_v1__cl63e5a7a2": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
     "slw_sc_v2": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
     "slw_sc_v3": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "slw_su_c__cl92142dac": "KW-FIX-8 21:0x: OT_CLAND reset_rst_n_t21 same error a7-a8, INFRA label masked it; no blind retry, DIE-QC-71 form"
+    "slw_su_c__cl92142dac": "KW-FIX-8 21:0x: OT_CLAND reset_rst_n_t21 same error a7-a8, INFRA label masked it; no blind retry, DIE-QC-71 form",
+    "cbx_q10__cl89936551": "KW-FIX-8 22:4x COORD: QC collector class, waits dq71-collector-nodes merge, then the 14 as one batch",
+    "slw_hc3__clccfc3e6b": "KW-FIX-8 22:4x COORD: QC collector class, waits dq71-collector-nodes merge, then the 14 as one batch",
+    "sle_hc1__cl7d360508": "KW-FIX-8 22:4x COORD: QC collector class, waits dq71-collector-nodes merge, then the 14 as one batch"
    },
    "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1104s2/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
