@@ -73,7 +73,7 @@ module ot_hbm_svc_wb_kport_q #(parameter integer WOPEN=0, parameter integer MUT=
  // ---------------------------------------------------------------- write-back block (quadrant mode)
  wire reserve_ready,fill_done,done_v,done_bank,blk_fault;wire[15:0]done_epoch;wire[11:0]done_sectors;wire[1:0]owned;
  wire[15:0]k_v,k_rdy,k_we,k_wr_done_q;wire[479:0]k_addr;wire[4095:0]k_wdata;wire[63:0]k_len;wire[271:0]k_tag;wire[511:0]k_wstrb;
- ot_hbm_svc_wb_cutthrough_cdc #(.STACK(2'd0),.NPC(16),.QFOLD(1)) u_wb(
+ ot_hbm_svc_wb_cutthrough_cdc #(.STACK(2'd0),.NPC(16),.QFOLD(1),.ACK_PIPE(1)) u_wb(
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_fifo_clk(stream_fifo_clk),
   .reserve_v(rv_q),.reserve_ready(reserve_ready),.reserve_bank(rb_q),.reserve_epoch(re_q),.reserve_base({2'b00,rbase_q[29:0]}),
   .reserve_total(rt_q),.fill_start(fs_q),.fill_start_bank(fb_q),.fill_start_epoch(fe_q),.wd(wd_l),
