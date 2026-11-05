@@ -16,8 +16,8 @@ set -euo pipefail
 P=$1; OUT=$(mkdir -p "$2" && cd "$2" && pwd); C=${3:-HEAD}
 R=$(git -C "$(dirname "$0")" rev-parse --show-toplevel); SHA=$(git -C "$R" rev-parse --short=10 "$C")
 case $P in
-  plain) TOP=ot_hbm_hc_bankq_static;  G="-G W=128 -G CPI=1 -G CPO=1";  M=ot_hbm_hc_bank128_pair_core;;
-  first) TOP=ot_hbm_hc_bankq0_static; G="-G W=128 -G DRLY=2 -G CPO=1"; M=ot_hbm_hc_bank128_pair_first_core;;
+  plain) TOP=ot_hbm_hc_bankq_static;  G="-G W=128 -G CPI=1 -G CPO=1 -G LFR=1";  M=ot_hbm_hc_bank128_pair_core;;
+  first) TOP=ot_hbm_hc_bankq0_static; G="-G W=128 -G DRLY=2 -G CPO=1 -G LFR=1"; M=ot_hbm_hc_bank128_pair_first_core;;
   *) echo "profile plain|first" >&2; exit 2;;
 esac
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH

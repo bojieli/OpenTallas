@@ -16,6 +16,7 @@
 // data is captured raw next to the macros (memory latency ML = 2: address flop -> macro -> capture flop).
 // MUT (bench): 1 = weight write slice rotated by one group.
 module ot_hbm_hc_bank_static #(
+    parameter integer LFR = 0,
     parameter integer W   = 256,
     parameter integer AW  = 10,
     parameter integer LM  = 8,
@@ -61,7 +62,7 @@ module ot_hbm_hc_bank_static #(
     // ---- the lane stage
     wire w_re, x_re; wire [AW-1:0] w_addr, x_addr;
     reg [W*32-1:0] wdat; reg [W*16-1:0] xdat;
-    ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(2), .NVW(NVW), .LM(LM), .LA(LA), .SOR(1), .LRST(1), .ADRST(0), .LG(8)) u_st (
+    ot_hdc_v41x_hcp_stage #(.LFR(LFR), .W(W), .AW(AW), .ML(2), .NVW(NVW), .LM(LM), .LA(LA), .SOR(1), .LRST(1), .ADRST(0), .LG(8)) u_st (
         .clk(clk), .rst_n(rn_st), .first(first),
         .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv), .o_wa(o_wa),
         .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out), .w_re(w_re), .w_addr(w_addr),

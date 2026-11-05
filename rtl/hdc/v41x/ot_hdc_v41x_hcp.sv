@@ -624,6 +624,7 @@ module ot_hdc_v41x_hcp_stage #(
     // and the multipliers too (.DRST(ADRST), HBM-W128 2026-10-25: data FFs unreset, valid bits only)
     parameter integer SOR = 0,
     parameter integer LRST = 0,
+    parameter integer LFR = 0,
     parameter integer ADRST = 1,
     // el1011-hbm-hcvm/hc round 4 (hc_tile-sys-faa39cbe9-b EARLY_FAIL_HOLD: ONE clock root over 56,560 sinks, avg sink wire
     // 538 um, FF insertion 415..682 ps -> hold stuck at -165 ps inside u_mul pipes; textbook REFUSE > 15k sinks/root):
@@ -742,7 +743,7 @@ module ot_hdc_v41x_hcp_stage #(
         wire [NG-1:0] lfg;
         for (genvar gg = 0; gg < NG; gg = gg + 1) begin : g_grp
             // hard child: instantiated WITHOUT parameter overrides (its defaults are the hardened configuration)
-            ot_hdc_v41x_hcp_lanes u_lg (.clk(clk), .rst_n(rst_n), .fst(first), .gov_i(ov_r), .lv_i(lvs[gg*LG +: LG]),
+            ot_hdc_v41x_hcp_lanes #(.LFR(LFR)) u_lg (.clk(clk), .rst_n(rst_n), .fst(first), .gov_i(ov_r), .lv_i(lvs[gg*LG +: LG]),
                 .ss_i(sss[gg*LG +: LG]), .w_i(w_data[gg*LG*32 +: LG*32]), .x_i(x_data[gg*LG*16 +: LG*16]),
                 .s_i(sum_in[gg*LG*32 +: LG*32]), .y(sum_out[gg*LG*32 +: LG*32]), .lf(lfg[gg]));
         end
@@ -763,7 +764,8 @@ module ot_hdc_v41x_hcp_lanes #(
     parameter integer LA    = 7,
     parameter integer SOR   = 1,
     parameter integer LRST  = 1,
-    parameter integer ADRST = 0
+    parameter integer ADRST = 0,
+    parameter integer LFR   = 0   // 1: per-lane fault flop before lf (fault one edge later), lf and gov reset from the local lane relay
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -783,7 +785,7 @@ module ot_hdc_v41x_hcp_lanes #(
     always @(posedge clk) begin
         w_in <= w_i; x_in <= x_i; sum_q <= s_i; lv_r <= lv_i; ss_r <= ss_i; fst_q <= fst;
     end
-    wire [G-1:0] lfl;
+    wire [G-1:0] lfl, lrnv;
     wire [G*32-1:0] y_l;
     generate if (SOR != 0) begin : g_sor
         reg [G*32-1:0] so_q; always @(posedge clk) so_q <= y_l; assign y = so_q;
@@ -812,8 +814,16 @@ module ot_hdc_v41x_hcp_lanes #(
                                     .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]), .b(prod), .y(y_l[32*gl +: 32]), .err(e1),
                                     .valid_out(v1));
         assign lfl[gl] = (v0 && (|e0)) || (v1 && (|e1));
+        assign lrnv[gl] = lrn;
     end endgenerate
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin gov <= 1'b0; lf <= 1'b0; end else begin gov <= gov_i; lf <= |lfl; end
+    generate if (LFR != 0) begin : g_lfr
+        reg [G-1:0] lfq;
+        always @(posedge clk or negedge lrnv[0])
+            if (!lrnv[0]) begin lfq <= {G{1'b0}}; gov <= 1'b0; lf <= 1'b0; end
+            else begin lfq <= lfl; gov <= gov_i; lf <= |lfq; end
+    end else begin : g_nlfr
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin gov <= 1'b0; lf <= 1'b0; end else begin gov <= gov_i; lf <= |lfl; end
+    end endgenerate
 endmodule
 
