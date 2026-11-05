@@ -253,11 +253,15 @@ module ot_s81ph_link_ep_safe4 #(
     //      reverse frame applied every other cycle at most; ACKs and freed counts are cumulative, so merging is exact
     //      for the protocol (go-back-N recovers any NAK merged into a newer ACK)
     //  (4) index registers are seq[IW-1:0] (RP a power of two): una_i_n = ack[IW-1:0], no add
-    reg             rdy_r, rep_r;
+    (* keep = "true" *) reg [3:0] rdy_k;
+    (* keep = "true" *) reg [1:0] rep_ra;
+    // LEC-COLL-1 11-03: same-D / same-reset-leaf duplicates are wires from the kept copy (synthesis merged them, the
+    // LEC then paired the gold-only duplicate with a different sibling); 0 cycles, identical function from reset.
+    wire            rdy_r = rdy_k[0], rep_r = rep_ra[0];
     wire            replaying = PIPE ? rep_r : (snd != nxt);
     // safe4: in_ready is a kept copy of rdy_r (the caller's pop), and accept is evaluated per consumer group from
     // kept rdy_r copies (a: snd / snd_i / rdy / rep, b: nxt / credits, c: launch / pace / faults) -- same edge, same D.
-    (* keep = "true" *) reg [3:0] rdy_k;
+    // (rdy_k declared above)
     assign in_ready = rdy_k[3];
     wire            accept_a = in_valid && rdy_k[0], accept_b = in_valid && rdy_k[1], accept_c = in_valid && rdy_k[2];
     wire            accept = accept_c;
@@ -290,7 +294,7 @@ module ot_s81ph_link_ep_safe4 #(
     end
     // a_rep: kept copies, one per ARS payload bits, from two kept copies of rep_r (same D as rep_r)
     localparam integer NAR = (W + 1 + ARS - 1) / ARS;
-    (* keep = "true" *) reg [1:0] rep_ra;
+    // (rep_ra declared above)
     generate for (genvar ar = 0; ar < NAR; ar = ar + 1) begin : g_arep
         localparam integer LO = ar * ARS, HI = ((ar + 1) * ARS > W + 1) ? W + 1 : (ar + 1) * ARS;
         (* keep = "true" *) reg a_rep_c, a_in_c;   // one-hot {replay, in} select copies: one AND-OR term per bit each
@@ -316,10 +320,10 @@ module ot_s81ph_link_ep_safe4 #(
     ot_link_crc32 #(.W(FPW)) u_crc_zero (.d({FPW{1'b0}}), .crc(crc_zero));
 
     // reverse-frame receive register; (T) its CRC check is computed on the input and registered beside it
-    reg             rr_v;
+    // LEC-COLL-1 11-03: rr_v / rr_crc_ok = kept copy bit 0 (same D, same reset leaf rst_v[8]); 0 cycles
     (* keep = "true" *) reg [1:0] rrv_k, rrc_k;    // safe4: kept copies of rr_v / rr_crc_ok for the pending-slot enables
     reg  [RFW-1:0]  rr_f;
-    reg             rr_crc_ok;
+    wire            rr_v = rrv_k[0], rr_crc_ok = rrc_k[0];
     wire [31:0]     r_rx_crc;
     ot_link_crc32 #(.W(RVW)) u_rv_crc_chk (.d(r_rx[RFW-1:32]), .crc(r_rx_crc));
     wire            rr_ok0  = rr_v && rr_crc_ok;
@@ -331,13 +335,15 @@ module ot_s81ph_link_ep_safe4 #(
     wire [SEQW-1:0] rr_ack0 = rr_fs[RFW-2 -: SEQW];
     wire [CW-1:0]   rr_fr0  = rr_fs[32 +: CW];
     // PIPE: pending slot P and decode stage S2
-    reg             pv, s2v, pnak, s2nak, s2bad; reg [SEQW-1:0] pack, s2ack, s2dack; reg [CW-1:0] pfr, s2fr, s2dfr;
+    (* keep = "true" *) reg ok_f;
+    wire            s2v = ok_f;                  // LEC-COLL-1 11-03: same D (p_take) / reset leaf rst_v[0] as the kept ok_f
+    reg             pv, pnak, s2nak, s2bad; reg [SEQW-1:0] pack, s2ack, s2dack; reg [CW-1:0] pfr, s2fr, s2dfr;
     wire            p_take = pv && !s2v;
     // kept registered copies, same edge as s2v: ok_u = ack_ok for una / una_i; ok_c = ack_ok for control; ok_f = rr_ok
     // for the freed-credit path.  una_s = kept copy of una for the S2 subtracts.
     // ok_u / ok_v / ok_c: same-edge copies of (p_take && !p_bad), each in its own kept hierarchy (ot_s81ph_kff4_1):
     // the (* keep *) regs were partially merged by Yosys (mapped census 10-19: ok_u 37 loads)
-    wire ok_u, ok_v, ok_c; (* keep = "true" *) reg ok_f;
+    wire ok_u, ok_v, ok_c;   // (ok_f declared above)
     (* keep = "true" *) reg [SEQW-1:0] una_s;
     wire [SEQW-1:0] p_dack = pack - una_s;
     wire            p_bad  = p_dack > (nxt_rw - una_s);
@@ -378,9 +384,9 @@ module ot_s81ph_link_ep_safe4 #(
     wire ok_ready=ok_c;
 `endif
     always @(posedge clk or negedge rst_v[0])
-        if (!rst_v[0]) begin pv <= 1'b0; s2v <= 1'b0; pnak <= 1'b0; ok_f <= 1'b0; una_s <= 0; end
+        if (!rst_v[0]) begin pv <= 1'b0; pnak <= 1'b0; ok_f <= 1'b0; una_s <= 0; end
         else begin
-            s2v <= p_take; ok_f <= p_take;
+            ok_f <= p_take;
             una_s <= una_n;
             if (rr_ok0) begin pv <= 1'b1; pnak <= rr_nak0 | (pv && !p_take && pnak); end
             else if (p_take) begin pv <= 1'b0; pnak <= 1'b0; end
@@ -882,12 +888,12 @@ module ot_s81ph_link_ep_safe4 #(
 
     // safe4 state: the original single reset process split per reset leaf (same statements, PIPE 2 / MWR 1 only)
     always @(posedge clk or negedge rst_v[2])
-        if (!rst_v[2]) begin una <= 0; una_i <= 0; rdy_r <= 1'b1; rdy_k <= 4'hf; rep_r <= 1'b0; rep_ra <= 2'b00; end
+        if (!rst_v[2]) begin una <= 0; una_i <= 0; rdy_k <= 4'hf; rep_ra <= 2'b00; end
         else begin
             una <= una_n; una_i <= una_i_n;
-            rdy_r <= accept_a ? rdy_1k : rdy_0k;
+            
             rdy_k <= {4{accept_a ? rdy_1k : rdy_0k}};
-            rep_r <= accept_a ? rep_1 : rep_0;
+            
             rep_ra <= {2{accept_a ? rep_1 : rep_0}};
         end
     always @(posedge clk or negedge rst_v[3])
@@ -922,9 +928,9 @@ module ot_s81ph_link_ep_safe4 #(
             else if (!pace_ok) begin pace <= pace + PNUM_W;           pace_ok_r <= pace_ok_inc;    end
         end
     always @(posedge clk or negedge rst_v[8])
-        if (!rst_v[8]) begin rr_v <= 1'b0; rr_crc_ok <= 1'b0; rrv_k <= 2'b00; rrc_k <= 2'b00; rg_v <= 1'b0; fault <= 1'b0; fault_code <= 4'd0; tx_ack <= 0; end
+        if (!rst_v[8]) begin rrv_k <= 2'b00; rrc_k <= 2'b00; rg_v <= 1'b0; fault <= 1'b0; fault_code <= 4'd0; tx_ack <= 0; end
         else begin
-            rr_v <= r_rx_v; rr_crc_ok <= (r_rx_crc == r_rx[31:0]);
+            
             rrv_k <= {2{r_rx_v}}; rrc_k <= {2{r_rx_crc == r_rx[31:0]}};
             rg_v <= rg_need;
             if (rg_need) tx_ack <= exp_seq;

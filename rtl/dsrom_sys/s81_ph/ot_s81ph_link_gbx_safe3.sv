@@ -114,12 +114,12 @@ module ot_s81ph_link_gbx_safe3 #(
             if (!rst_n[OP + c / KP]) ps <= 6'd0;   // reset state: take 0, ph 0
             else ps <= psel_n;
         for (i = LO; i < HI; i = i + 1) begin : g_b
-            wire a0 = ps[5] & slotv[i];
-            wire a1 = (i >= K1)     ? (ps[4] & slotv[(i >= K1) ? i - K1 : 0])         : (ps[2] & rem[(i < K1) ? i + 2 * K1 : 0]);
-            wire a2 = (i >= 2 * K1) ? (ps[3] & slotv[(i >= 2 * K1) ? i - 2 * K1 : 0]) :
-                                      (ps[1] & rem[(i < 2 * K1) ? i + K1 : 0]);
-            wire a3 = (i < 3 * K1)  ? (ps[0] & rem[(i < 3 * K1) ? i : 0]) : 1'b0;
-            assign gpay[i] = a0 | a1 | a2 | a3;
+            // LEC-COLL-1 11-03: one expression, no named a0..a3 terms: where slotv[.] = 1 (slot valid bit 0) a term is the
+            // kept ps bit itself, and the named wire took over the flop's name (KEEP FAIL ps[5]/[4]/[3] -> a0/a1/a2).
+            assign gpay[i] = (ps[5] & slotv[i])
+                           | ((i >= K1)     ? (ps[4] & slotv[(i >= K1) ? i - K1 : 0])         : (ps[2] & rem[(i < K1) ? i + 2 * K1 : 0]))
+                           | ((i >= 2 * K1) ? (ps[3] & slotv[(i >= 2 * K1) ? i - 2 * K1 : 0]) : (ps[1] & rem[(i < 2 * K1) ? i + K1 : 0]))
+                           | ((i < 3 * K1)  ? (ps[0] & rem[(i < 3 * K1) ? i : 0]) : 1'b0);
         end
     end endgenerate
     // rem (original: if (!idle_q && need) rem <= slot): original bit j = RLO + k
