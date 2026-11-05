@@ -1,0 +1,19 @@
+{
+ "unplanned_bits": 36467,
+ "unplanned_pairs": 44,
+ "open_inputs_bits": {
+  "reset/clock (reset tree, not data)": 130,
+  "host session": 8,
+  "C0 die IO": 2725
+ },
+ "open_inputs_ports": {
+  "reset/clock (reset tree, not data)": 130,
+  "host session": 1,
+  "C0 die IO": 10
+ },
+ "candidate_ties_unproven_bits": 13288,
+ "errors": {
+  "UNPLANNED": 44
+ },
+ "u_closed": false
+}
