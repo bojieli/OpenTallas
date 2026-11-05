@@ -7,3 +7,4 @@ hbm	ot_hbm_svc_sm_xcal_rel_t	intel2	/srv/opentallas-scratch2/claude/die-hbm-71/e
 hbm	ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	intel1	/srv/opentallas-scratch2/claude/die-hbm-70/eco/rfsr6e3/run/i1	-	DIE-HBM-72	rfsr6e3 i1 SIGNED, routed LEC EQ 27175; plan module arrives with part 16
 qwen_kvsys	qkd_kvs_pcc_h_head_p	epyc4	/srv/opentallas-scratch3/claude/dkv78/hhp/k4u/i1	-	DIE-KV-78	hhp k4u i1 SIGNED TT +38.87 FF +1.01 (14:17); routed LEC running in the loop; kit commit in no KV tag
 qwen_kvsys	qkd_kvs_pcc	epyc2	/srv/opentallas-scratch2/claude/dkv72/pcc/eco2/i2	-	DIE-KV-78	pcc eco2 i2 SIGNED TT +11.27 FF +2.02 (13:47); routed LEC running in the loop
+qwen_kvsys	qkd_kvs_pcc_h_head_p	epyc4	/srv/opentallas-scratch3/claude/dkv78/hhp/k3f/i1	-	DIE-KV-78	hhp k3f i1 SIGNED TT +18.58 FF +1.03 (15:10), OT_PRD_TARGET_FANOUT=16; routed LEC running; same type as k4u row, first record that counts wins
