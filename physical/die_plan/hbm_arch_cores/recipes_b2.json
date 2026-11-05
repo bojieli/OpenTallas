@@ -723,7 +723,7 @@
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "source": "d4g as-built die_r18h5.v instance smw_NW (module ot_hbm_sm_vm_wr_q_t_lanes4); files = closure of ot_hbm_sm_vm_wr_q_t_lanes4 at d34578d6f",
-  "source_commit": "d34578d6f",
+  "source_commit": "aa36dd563f",
   "read_at_commit": true,
   "files_at": {
    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "8e7f8a9f05"
