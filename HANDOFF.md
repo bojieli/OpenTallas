@@ -3153,3 +3153,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 2026-11-05 04:11 PST COORD hourly: count 135 (+4), clean scan, tracked-SIGNED tree compare passed. Limit gaps 23:45-00:50 and 01:10-04:00, successors running. I67 on main. Epyc4 scratch2 0 GB, docker on it; prune top item; wave stopped.
 2026-11-05 04:35 PST COORD hourly: count 138 (+3: S81 +1t, HEAD +2t); wave back 04:24, 12 launches per tick; intel1 scratch 75 GB admits again; next read 06:05 KV G0.
 2026-11-05 06:05 PST COORD hourly: count 142, 0 unreachable; every-core safe-form lanes started; epyc4 root 527 under prune.
+- 2026-11-05 06:40 PST COORD hourly: count 142 (flat since 06:03; 3 re-signs in LEC, ETA 07:05). Epyc4 root 505, floor 500: scratch3 writers told to move. CORE-FORMS gaps all owned.
