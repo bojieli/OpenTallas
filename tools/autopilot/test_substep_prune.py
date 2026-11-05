@@ -70,7 +70,8 @@ class Candidates(unittest.TestCase):
     def test_protected_union_root_space_rows(self):
         lanes = "# h\nepyc4\t/srv/a/b\tx\n"
         root = "# root\nintel2 /srv/opentallas-scratch2/claude/codex-kv CODEX keep\nepyc4 /srv/r/only/  note\n\n"
-        self.assertEqual(SP.protected_for(lanes + "\n" + root, "epyc4"), ["/srv/a/b", "/srv/r/only"])
+        root += "epyc4:/srv/r/colon/i1 S81 kit\nintel2:/srv/q x\n"
+        self.assertEqual(SP.protected_for(lanes + "\n" + root, "epyc4"), ["/srv/a/b", "/srv/r/only", "/srv/r/colon/i1"])
 
     def test_root_list_only_row_skipped_in_tick(self):
         with tempfile.TemporaryDirectory() as t:

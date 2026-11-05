@@ -73,12 +73,14 @@ PROTECTED_FILES = ("lanes/PROTECTED-DBS.txt", "PROTECTED-DBS.txt")   # the PROTE
 
 def protected_for(text, host):
     """PROTECTED-DBS rows of this host -> [path].  text may be several files joined; a row is host<sep>path[<sep>note],
-    sep a TAB (lanes/ list) or spaces (root list)."""
+    sep a TAB (lanes/ list), spaces or ':' (root list)."""
     out = []
     for ln in (text or "").splitlines():
         if ln.lstrip().startswith("#"):
             continue
         f = ln.split()
+        if f and ":/" in f[0]:                  # root list also writes host:/path in one token
+            f = f[0].split(":", 1) + f[1:]
         if len(f) >= 2 and f[0] == host and f[1].startswith("/"):
             out.append(f[1].rstrip("/"))
     return out
