@@ -3376,7 +3376,6 @@
     "ot_hgi_sfu_programme_store_r10@1",
     "ot_hgi_sfu_split3_lane_core__idpin@1",
     "ot_hgi_sm_xload_cl2_bfqg@1",
-    "ot_hnx_fused_host_program@1",
     "ot_hnx_fused_hub_n4ext@1",
     "hnx_rp3lp3h_s@2",
     "ot_hgi_sfu_core_split3__opstore_a@2",
@@ -3406,7 +3405,6 @@
     "ot_hbm_svc_vm_kshare_splitstrap__v700685@1",
     "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@1",
     "ot_hfd_coll_q3_edge_core@1",
-    "ot_hnx_fused_host_program@2",
     "ot_hnx_fused_hub_n4ext@2",
     "ot_hnx_fused_tnode@1",
     "ot_hbm_su_programme_pslice_c5@2",
@@ -3548,7 +3546,8 @@
     "ot_hgi_sfu_split3_lane_core_fr": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
     "ot_hbm_idx_query_static": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
     "ot_hbm_idx_score_hcol_h1": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
-    "hfd_ep_static": "KW-FIX-6 06:1x: DIE-HBM-63 06:04 ECO on routed ep is live; hand flow, not relaunched by the wave"
+    "hfd_ep_static": "KW-FIX-6 06:1x: DIE-HBM-63 06:04 ECO on routed ep is live; hand flow, not relaunched by the wave",
+    "ot_hnx_fused_host_program": "COORD 11-04: signed off (ss29/resign/fhp_i); I62 part 14 only makes the plan match that build; no wave relaunch"
    },
    "gen_hosts": [
     "epyc4"
