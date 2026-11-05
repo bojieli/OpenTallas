@@ -2728,5 +2728,58 @@
   "source_commit": "09c5053d5aa7ebe944abc2fea80773b562069a7e",
   "read_at_commit": true,
   "util": 0.4
+ },
+ "ot_pdie_serdes_tx": {
+  "top": "ot_pdie_serdes_tx",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+   "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh",
+  "source_commit": "c7546b975b1504036f1b513d28e5dc1675ed9e57",
+  "read_at_commit": true,
+  "util": 0.4
+ },
+ "ot_pdie_serdes_rx": {
+  "top": "ot_pdie_serdes_rx",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+   "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w2c_64x546_m1",
+   "ot_sram_1r1w_32x546_m1"
+  ],
+  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh",
+  "source_commit": "c7546b975b1504036f1b513d28e5dc1675ed9e57",
+  "read_at_commit": true,
+  "util": 0.4
  }
 }

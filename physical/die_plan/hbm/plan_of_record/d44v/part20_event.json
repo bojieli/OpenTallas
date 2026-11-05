@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.hbm_plan_event.part20",
+ "core": "ot_pdie_serdes",
+ "outline": {
+  "from": [
+   600.048,
+   600.48
+  ],
+  "to": [
+   596.16,
+   596.16
+  ]
+ },
+ "subs": [
+  "ot_pdie_serdes_tx",
+  "ot_pdie_serdes_rx",
+  "ot_s81_kp4_dchn"
+ ],
+ "dchn_pins_file": "cores/ot_s81_kp4_dchn__276.48x138.24__signed.json",
+ "rows": 5,
+ "cycles": "pma_rx to rx +2; uncorrectable to st[0] +2; e_flt to st[0] +2; pma_tx, tx, st[1] 0 (cycles/pdie.tsv)",
+ "open": "rate matcher timed as synchronous on one SDC clock; the real CDC is proved in simulation only; die-level PMA clock note stays open"
+}
