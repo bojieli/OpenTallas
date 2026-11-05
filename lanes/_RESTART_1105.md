@@ -43,3 +43,6 @@ COORD rules at once. On an ASK, state a recommendation and a default. Keep posts
 ## Update 11-05 04:05 PST (second stop)
 Successor lanes stopped about 01:10 on the second account's limit, which reset at 04:00. No Claude lane ran 01:10-04:00. Predecessors named in your brief posted little after 01:05; read their last posts and rulings at 01:0x. Rulings at 01:0x stand: I67 not held for the SC pin fix; S81 xfin approved after I67, before svc; prune class extended to dh<NN>*, die-kv-*, die-qc-*.
 Disk at 04:00: epyc4 scratch2 0 GB (ot-run refuses the host), intel1 56, intel2 109, epyc2 188, epyc2 root 507 (floor 500). Runs that failed on ENOSPC or the scratch floor are INFRA, not design failures: do not count them as strikes and do not re-form on them. New trees use hardlink copies only.
+
+## Update 11-05 06:3x PST: owner's checkout
+Agent shells START in /home/ubuntu/OpenTallas on localhost: that is the owner's checkout. Two lanes ran git fetch there today by mistake. First command: cd elsewhere. Never run git or anything else in that directory, not even read-only. Use git -C on your own worktrees on the hub (intel2) or epyc4.
