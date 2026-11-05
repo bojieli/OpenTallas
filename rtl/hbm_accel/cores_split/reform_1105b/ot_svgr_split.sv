@@ -484,16 +484,24 @@ module ot_svgr_landing #(parameter integer LBANKS=4,parameter integer LB=2,param
  output wire complete_v,output wire [LB-1:0] complete_bank,output wire fault,
  input wire read_v,input wire [LB-1:0] read_bank,input wire [5:0] read_row,output wire [255:0] read_data
 );
- wire packet_v,packet_take,full,empty;wire [IW-1:0] packet;wire [2:0] rf;reg ov;
+ // HBM-REFORM-B8 head register: the FIFO read (rbin -> 8-entry mux) and the identity/seen check sit in separate stream cycles.
+ // landing write, complete and fault come one stream cycle later; credits return no later; FIFO pops only into a free head.
+ wire packet_v,packet_take,fifo_pop,full,empty;wire [IW-1:0] fifo_q;reg [IW-1:0] packet;reg head_v;wire [2:0] rf;reg ov;
  ot_hbm_accel_cdc_fifo #(.W(IW),.AW(3)) u_response(.wclk(hbm_clk),.wrst_n(hbm_rst_n),.we(in_v),.wdata(in_data),.full(full),.rd_freed(rf),
-  .rclk(stream_clk),.rrst_n(stream_rst_n),.re(packet_take),.rdata(packet),.empty(empty));
- assign packet_v=!empty;assign freed=rf[1:0];
+  .rclk(stream_clk),.rrst_n(stream_rst_n),.re(fifo_pop),.rdata(fifo_q),.empty(empty));
+ assign packet_v=head_v;assign freed=rf[1:0];
  reg [LBANKS-1:0] valid_q;reg [15:0] epoch_q[0:LBANKS-1];reg [6:0] count_q[0:LBANKS-1],received_q[0:LBANKS-1];
  reg [63:0] seen_q[0:LBANKS-1];reg sticky;
  wire [10:0] ordinal=packet[IW-1:IW-11];wire [LB-1:0] bank=packet[271+LB:272];wire [15:0] epoch=packet[271:256];wire [5:0] row=ordinal[8:3];
  wire identity_ok=valid_q[bank]&&epoch_q[bank]==epoch&&ordinal[2:0]==bank_id&&{1'b0,row}<count_q[bank]&&!seen_q[bank][row];
  wire landing_write=packet_v&&!stop&&!sticky&&identity_ok;
  assign packet_take=packet_v&&!stop&&!sticky;
+ assign fifo_pop=!empty&&!stop&&!sticky&&(!head_v||(packet_take&&identity_ok));
+ always @(posedge stream_clk or negedge stream_rst_n)begin
+  if(!stream_rst_n)begin head_v<=0;packet<=0;end
+  else if(fifo_pop)begin head_v<=1;packet<=fifo_q;end
+  else if(packet_take)head_v<=0;
+ end
  assign complete_v=landing_write&&received_q[bank]+1'b1==count_q[bank];
  assign complete_bank=bank;assign fault=sticky||ov;
  always @(posedge hbm_clk or negedge hbm_rst_n)if(!hbm_rst_n)ov<=0;else if(in_v&&full)ov<=1;
