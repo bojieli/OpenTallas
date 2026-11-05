@@ -1540,6 +1540,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         raise SystemExit(f"NO_RECIPE {a.view}" + (f" (recipes with top {module} differ in build content: {rk_cands})"
                                                    if rk_cands else ""))
     rec = dict(R[rk])
+    # HBM-FORM-CONG-2 11-05: recipe key sigmax raises the signal ceiling for one row (macro wall at M5, default off).
+    if rec.get("sigmax"):
+        a.sigmax = max([a.sigmax, rec["sigmax"]], key=lambda L: int(L[1:]))
     # A native cut can have both legacy multi-port and planned common-root pin
     # tables. Select a reviewed wiring wrapper only for its exact pin-table SHA.
     if a.wrapper is None:
