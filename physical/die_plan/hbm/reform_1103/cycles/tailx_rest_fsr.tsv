@@ -1,0 +1,18 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566	result_v	+462	tail launch -> result_v 592 -> 1054 edges, launch edge counted as 1 [MEASURED lockstep bench results/die_hbm_1105/sk_fsr, g1 t3, tail unit only]; base is tailx_rest__ with its +84
+ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566	result[767:0]	+462	same edge as result_v, value FSR_EQ 60/60 mixed and 60/60 no-fault
+ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566	sk_in_valid	-2	sink launch age SKL 282 -> 280 = TE+1, no enable wrap [from RTL parameters, not measured separately]
+ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566	sk_in_e[511:0]	-2	exact on every sk_in_valid edge
+ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566	sk_in_ready,sk_out_valid,sk_fault,sk_y	see note	sink calendar CAP 299 -> 769 edges from sk_in_valid, row core tailx_sk_fsr; sink launch -> out_valid at this core
+ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566	sk_en_sk	removed use	pin kept in the rest table, driven 0, no load at the parent
+ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566	fault	+462	never earlier than before; equal at every result_v [inferred from the same L shift]
+ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566	launch,mixes,bases,scales	0	sampled on the launch edge, unchanged
+ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	result_v	+462	tail launch -> result_v 592 -> 1054 edges, launch edge counted as 1 [MEASURED lockstep bench results/die_hbm_1105/sk_fsr, g1 t3, tail unit only]; base is tailx_rest__ with its +84
+ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	result[767:0]	+462	same edge as result_v, value FSR_EQ 60/60 mixed and 60/60 no-fault
+ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	sk_in_valid	-2	sink launch age SKL 282 -> 280 = TE+1, no enable wrap [from RTL parameters, not measured separately]
+ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	sk_in_e[511:0]	-2	exact on every sk_in_valid edge
+ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	sk_in_ready,sk_out_valid,sk_fault,sk_y	see note	sink calendar CAP 299 -> 769 edges from sk_in_valid, row core tailx_sk_fsr; sink launch -> out_valid at this core
+ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	sk_en_sk	removed use	pin kept in the rest table, driven 0, no load at the parent
+ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	fault	+462	never earlier than before; equal at every result_v [inferred from the same L shift]
+ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2	launch,mixes,bases,scales	0	sampled on the launch edge, unchanged
+ot_hbm_hc_root_static__tailx_sk_fsr	out_valid,y	new core	replaces tailx_sk_step0 + tailx_sk_steady; sink segment 312 -> 774 edges inside the tail [MEASURED, same bench]
