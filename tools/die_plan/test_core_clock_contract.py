@@ -41,6 +41,19 @@ def test_selected_mean_is_not_etm_max(tmp_path):
     assert E.add_from_means(dict(hard_cores=[c],clock={}))==[]
 
 
+def test_local_pass_needs_parent_counts_signed(tmp_path):
+    """OWNER 11-03: LOCAL_PASS_NEEDS_PARENT counts as signed; other verdicts still refuse."""
+    c=core(tmp_path)
+    rec=signed(); rec['verdict']='LOCAL_PASS_NEEDS_PARENT'
+    (tmp_path/'signoff.json').write_text(json.dumps(rec))
+    v=CC.load(c)['clk']
+    assert v['signed'] and v['corners']['tt']['mean_ps']==245.9
+    rec['verdict']='FAIL'
+    (tmp_path/'signoff.json').write_text(json.dumps(rec))
+    with pytest.raises(CC.ContractError, match='not SIGNED'):
+        CC.load(c)
+
+
 def test_signed_claim_missing_mean_fails(tmp_path):
     c=core(tmp_path);r=signed();del r['corners']['ff']['insertion_pinflops']['mean']
     (tmp_path/'signoff.json').write_text(json.dumps(r))

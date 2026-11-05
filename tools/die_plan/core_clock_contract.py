@@ -16,6 +16,11 @@ import cores as C
 SCHEMA = 'opentallas.core_clock_contract.v1'
 
 
+# OWNER 11-03: a local-pass core whose only open item is the parent io_hold receipt counts as signed; its numbers are the
+# same routed sign-off measurement.
+SIGNED_VERDICTS = frozenset({'SIGNED', 'LOCAL_PASS_NEEDS_PARENT'})
+
+
 class ContractError(ValueError):
     pass
 
@@ -36,7 +41,7 @@ def _mean(stat, where):
 def from_signoff(lib, record, source, pin_names=None):
     """Export a single-clock SIGNED view; per-clock records are required for multiple pins."""
     names = sorted(pin_names if pin_names is not None else C.lib_clocks(lib))
-    if record.get('verdict') != 'SIGNED':
+    if record.get('verdict') not in SIGNED_VERDICTS:
         raise ContractError(f'{source}: core is not SIGNED')
     if not names:
         raise ContractError(f'{lib}: no clock pins')
@@ -82,7 +87,7 @@ def from_budget(lib, pins, source):
 def _validate(raw, lib, pins, source, release):
     if raw.get('schema') != SCHEMA or raw.get('view_lib_sha256') != digest(lib):
         raise ContractError(f'{source}: wrong schema or selected liberty does not match clock contract')
-    if release and (raw.get('signed') is not True or raw.get('signoff_verdict') != 'SIGNED'):
+    if release and (raw.get('signed') is not True or raw.get('signoff_verdict') not in SIGNED_VERDICTS):
         raise ContractError(f'{source}: missing SIGNED clock contract')
     out = {}
     for pin in pins:

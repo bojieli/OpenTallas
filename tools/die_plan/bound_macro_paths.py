@@ -71,6 +71,7 @@ def resolve(t, bound_text):
                                  physical_master=c["module"], asbuilt=head) for c, rest in members)
             continue
         if len(common) != 1:
+            rows.extend(_resolve_scoped(members, ab))
             continue
         root = next(iter(common))
         for c, rest in members:
@@ -87,6 +88,33 @@ def resolve(t, bound_text):
             phys = "u_bound." + inst + ("." + ".".join(rest[j:]) if j < len(rest) else "")
             rows.append(dict(inst=c["inst"], physical_inst=phys, physical_master=c["module"],
                              asbuilt=root + "." + ".".join(rest[:j])))
+    return rows
+
+
+def _strip_scope(prefix):
+    """as-built prefix without its trailing generate blocks: u_s_3S.u_sl.g_c3 -> u_s_3S.u_sl."""
+    parts = prefix.split(".")
+    while parts and re.fullmatch(r"g_\w+", parts[-1]):
+        parts.pop()
+    return ".".join(parts)
+
+
+def _resolve_scoped(members, ab):
+    """DIE-S81-56/IQKV 11-04: siblings of one content root where some sit under a generate block of that root (slice_w3:
+    u_sl.u_cap, u_sl.g_c3.u_xr), so no single prefix fits.  Exact-module full-path hits must all reduce to one root; a macro
+    without exactly one such hit gets no row, and preflight reports it."""
+    cands = []
+    for c, rest in members:
+        tail = "." + ".".join(rest)
+        cands.append([a for a in ab if a.endswith(tail) and len(a) > len(tail) and ab[a][1] == c.get("module")])
+    roots = {_strip_scope(a[:-len("." + ".".join(rest))]) for (c, rest), hits in zip(members, cands) for a in hits}
+    if len(roots) != 1:
+        return []
+    rows = []
+    for (c, rest), hits in zip(members, cands):
+        if len(hits) == 1:
+            rows.append(dict(inst=c["inst"], physical_inst="u_bound." + ab[hits[0]][0], physical_master=c["module"],
+                             asbuilt=hits[0]))
     return rows
 
 
