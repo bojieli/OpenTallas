@@ -792,7 +792,10 @@ ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b
                        r"ot-heavy: (?:admitted|request|waiting|queued|charged|wait)\b|KW_SSH_RETRY\b|"
                        # OWNER 11-03: an advisory check is never the item's error (KW6-CLASS 11-04: "pins_canonical check
                        # could not run: ModuleNotFoundError" hid a place failure on 3 rows)
-                       r"KIT_PREFLIGHT ADVISORY\b)")
+                       r"KIT_PREFLIGHT ADVISORY\b|"
+                       # KW-FIX-8 11-04: the kill of the pre-route LEC beside a stopped flow; its exit 137 read as INFRA and
+                       # relaunched 9 KV rows on the same PDN-0006 / OT_CLAND error.  The flow's own error decides.
+                       r"LEC_ASYNC \S+ \S+ aborted with its flow\b)")
 EXC_LINE = re.compile(r"^\s*(?:[A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt)(?::|$)|bind: ERROR|ERROR\b|Error:|"
                       r"[A-Z][A-Z0-9_]+ FAIL\b|FAIL_PREFLOOR\b)")
 ID_PARAM = re.compile(r"(?:_id|_tid|sidx|map_lane_j)$")
@@ -2043,7 +2046,7 @@ def run_item(spec_path):
             return fail("relay_bay", txt)
         dest = staged + "/" if G in ("localhost", hub) else f"{G}:{staged}/"
         rc, txt = run("relay_bay_copy", ["rsync", "-a", "-e", "ssh -o BatchMode=yes -o ControlPath=none",
-            str(rbd / "relay_bay.py"), str(rbd / "relay_bay_hop_rows.json"), dest], idempotent=True)
+            str(rbd / "relay_bay.py"), str(rbd / "relay_bay_hop_rows.json"), str(rbd / "grt_maxwire.tcl"), dest], idempotent=True)
         if rc:
             return fail("relay_bay", txt)
         rc, txt = run("relay_bay", remote(f"python3 -I {q(staged)}/relay_bay.py {q(K)} --rows {q(staged)}/relay_bay_hop_rows.json"))

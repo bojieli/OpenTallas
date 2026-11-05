@@ -1,0 +1,6 @@
+read_verilog -lib /o/icg_stub.v
+read_verilog -DSYNTHESIS -sv /r/rtl/common/ot_prefix.sv /r/rtl/hdc/ot_hdc_cg.sv /r/rtl/hdc/ot_hdc_delay.sv /r/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /r/rtl/hdc/ot_hdc_fpu.sv /r/rtl/proto/ot_fp32_add_rne_pipe.sv /r/rtl/v41rom/ot_v41_bmul2.sv /r/rtl/v41rom/ot_v41_fadd.sv /r/rtl/v41rom/ot_v41_bmul2_rne_prepare.sv /r/rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv /r/rtl/v41rom/ot_v41_chain2u2.sv /r/rtl/v41rom/ot_v41_kreg.sv /r/rtl/v41rom/ot_v41_chain2.sv /r/rtl/v41rom/ot_v41_chain3.sv /r/rtl/v41rom/ot_v41_chain4.sv /r/rtl/v41rom/ot_v41_fadd2.sv /r/rtl/v41rom/ot_v41_bterm4_w10.sv /r/rtl/v41rom/ot_v41_bf16_lanes3.sv /r/rtl/v41rom/ot_v41_tile_clk.sv /r/rtl/v41rom/ot_bf_hdly.sv /r/rtl/v41rom/ot_v41_bf_col.sv /r/rtl/v41rom/ot_v41_segtree5.sv /r/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v /r/rtl/v41rom/ot_v41_bterm.sv /r/rtl/v41rom/ot_v41_bf16_half.sv /r/results/rfh_1103/bf_col3/est_h_wrap.sv
+hierarchy -top est_h
+synth -flatten -top est_h
+abc -g AND,NAND,OR,NOR,XOR,XNOR,ANDNOT,ORNOT,MUX
+tee -o /o/h.stat stat

@@ -1,0 +1,63 @@
+DIE-S81-51/RF-H 11-03 S81-058 ot_v41_bf_col 3-CORE SPLIT (conservative form; runs in parallel with the single-core rfh1,
+first to sign off wins)
+
+RTL (rtl/v41rom):
+  ot_v41_bf_col3.sv     wires-only wrapper, same ports + parameters as ot_v41_bf_col (TCG/BF16/FAST/QBF>=2/HDLY 0/BXST 2)
+  ot_v41_bf_col3_c.sv   column core u_c = ot_v41_bf_col with the BF16 lanes moved out: pins, ROM pair, FP lanes, chains,
+                        pair, segment tree, outputs, the BF root adder (lanes3 tree level 4) on its own tile, out-faces to
+                        the halves (u_fva/u_fvb/u_fa/u_fb = lanes3 XST stage 1), in-faces from them (u_rv/u_rd), face
+                        copies of g_pin.r_rst / r_ze per half (h_rst_*/h_ze_*), FP partials delayed DEQ = 2 + BRNECUT
+  ot_v41_bf16_half.sv   one BF16 half (8 lanes, tree levels 1-3, RNECUT encode cut); in-face = lanes3 XST stage 2,
+                        out-face registered; one master for u_ha (lanes 0-7) and u_hb (lanes 8-15)
+  ot_v41_bf_col3_hw.sv  parameter-free hardened config for the die bind (synthesis: the 3 black-box cores)
+  rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col3_kit.sv  = dsfd_bf_col_kit.sv with u_view = ot_v41_bf_col3_hw
+Latency: every BF sum +2 (H out-face + C in-face) +BRNECUT (1) = +3 gated edges; FP partials +DEQ = 3: the BF / FP
+partial spacing at the merge (b_v = qq_v | bf_v) is the original one, so no new same-cycle BF/FP pair (by construction).
+
+Bench (results/rfh_1103/bf_col3: tb_col3.sv, run3.sh, verdicts.txt): old ot_v41_bf_col (BRNECUT 0) vs ot_v41_bf_col3
+(BRNECUT 1) on the same pins, same random ROM via maps, S81 g48 parameters; scoreboard = the partial sequence
+{pval, prow, pseg, pnseg, perr, ppos} + qy_bkf; free=1 (ze_d 1) also checks every partial exactly +3 cycles;
+free=0 = legal element gating (bursts, gate held 150 cycles after the last word).  Mutants RFH3_MUTANT_EQ (FP data one
+cycle off its valid) and RFH3_MUTANT_FACE (half drops slot-1 valids) must FAIL.
+
+Estimate (results/rfh_1103/bf_col3/est.sh, docker yosys, memory-capped): generic cells old 237,788 (ASAP7 synth
+296,270 -> x1.246), C 77,272 (~96k ASAP7; direct ASAP7 abc map 84,840, 10,427 um2 + 2 ROMs), H 81,231 (~101k; map
+85,717, 10,158 um2); flops C ~19k, H ~18.3k: every core <= 150k.
+
+Plan delta (die-local; physical/die_plan/s81/rfh3/plan_h2_2249_rfh3_bfcol3.json.gz + .README, mkplan_rfh3.py):
+  the 56 ot_v41_bf_col hard cores -> u_view.u_c / u_view.u_ha / u_view.u_hb inside the unchanged 450.168 x 198.72 slot
+  (old-frame C x [241.92, 450.168] full height; H [0, 241.92] x [0, 95.04] and x [103.68, 198.72], 8.64-um channel);
+  split coordinates on the 8.64 lattice (whole tracks of every layer, both orients R0/MY; MY half sub-lattice x 0.888
+  in track_offset_um); C keeps all 842 pins (E-face M4 pins on the default edge rectangle, 0.012 um onto it); 315
+  inter-core M4 pins per half at 0.192 pitch on the facing W(C)/E(H) faces; one M5 N-face clk entry per core
+  (contract LEFs rfh3/*_contract.lef); 26 col types: sources dsfd_bf_col_kit.sv -> ot_v41_bf_col3_hw.sv +
+  dsfd_bf_col3_kit.sv.  schema.validate PASS 0.  Plan-time GEOM (plan_geom.py, the 26 col types) = the base plan
+  except col_h10_r2__t1__cl8b686b3e clock_reach 175.7 -> 185.3 (PASS); pre-existing FAILs (partial_face 26,
+  clock_reach 10, pin_reg_p90 5, r2r 4) unchanged, none new.
+Kits (recipes_rfh3.json, specs/): ot_v41_bf_col3_c_rfh3 (kit_hash d02994e9e7ae4f4e; ROM sites as the old core-local
+  ones; regional taps 2x4; PD 0.62) and ot_v41_bf16_half_rfh3 (261e78b6f0599c80; taps 4x2; PD 0.65): GEN_LINT PASS 0,
+  KIT_PREFLIGHT PASS 0.  util: the unchanged slot cannot hold three cores at 0.45 (est. C ~0.53 / H ~0.57 of the core
+  rows), a target only.  Finish builds: ot-run --hosts epyc4, logs intel2:~/ds81rfh-logs/finish_<kit>.otrun.log.
+
+Adoption (with sign-off of this form): the die bind takes dsfd_bf_col3_kit.sv (plan delta sources) and the plan copy
+replaces the 56 bf_col rows; the hard-core views of u_c / u_ha / u_hb replace ot_v41_bf_col's.
+
+Schedule (TOK-VERIFY-1 ruling via DIE-S81-51 20:41, form-driven, tools/s81_dv/layer_prog/bf_col_form.py DEFAULT_FORM
+'rfh3'): bf_add = fp_add = 2 + BRNECUT = 3: BF_SEG_LABEL_FLOOR and the attn.wo_a / ffn.router floors 231 -> 234 (first
+FAIL / span tails +3; predicted, FLOOR_MEASURED replaces it after a measure on a 3-core frame); BF return calendar
+emission +3 (xs_bf.bf_plan) unless the measurement record carries bf_col_form rfh3.  FP +3 moves no BF calendar (BF
+pairs carry only BF16 ops).  test_bf_col_form / test_dv_layer_compile (L0) / test_xs_asb_profile / selftest PASS.
+
+r2 (DIE-S81-52/RF-H 11-03, FACE_GUARD raw stop of the rfh3 kits: ze_d 3 loads / ze_c 16 loads): one capture flop per
+  input pin.  C: r_ze captures ze_d; r_ze_a/r_ze_b are out-face flops after it (+1 edge).  H: u_ze_f captures ze_c
+  (AR, reset value 1) and fans out to the 16 tile u_ze (+1 edge).  ze is DYNAMIC (go || drain), so the halves' gate
+  enable moves +2 edges vs the column tiles, opening and closing.  Bench raises ze_d in the same cycle as the first
+  issue and checks exact +3 with gating: PASS seeds 1/7 free 0|1; mut 3 (ZE +8) caught, so the check sees a late gate.
+  No schedule change beyond rfh3.  Kits rfh4 (recipes_rfh3.json suffix; rfh3 kits kept as the failed record).
+
+rfh5 (DIE-S81-52/RF-H 11-03, rfh4: C and H LEC NOT EQUIVALENT, C GRT-0183):
+  LEC: the fadd er[1] and bterm4 p3_b low-bit chains are folded by synthesis stage by stage; the reset-state proof ran out at 4 edges
+  (no reset_contract.json in the kit: the new modules were not listed).  Both modules added to physical/die_plan/s81/reset_contract.json
+  (64-edge die proof, same as ot_v41_bf_col; C's r_rst face copy and H's flops are synchronous stages, width-preserving).
+  C GRT-0183 on ot_rt_trunk_r1_n: the ROM pair (x 42-167, y 31-168, OBS M1-M4) walls E-W routing on M2/M4; only ~47 um of bands remain
+  (C 74 % with the ROMs).  Recipe route_m6 = signal M6 inside the plan grant obs_max M7 (no M6 pin, no plan change).  H keeps M5 (H reached GRT final).

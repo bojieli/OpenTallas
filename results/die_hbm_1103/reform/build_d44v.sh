@@ -20,6 +20,7 @@ python3 $R/mk_cefix.py p/b3
 python3 $R/mk_mpisl_q.py p/b3
 python3 $R/mk_split.py p/b3 $R/split_p6/split_p6.json $R/split_p6 > split_p6.log; cut -c1-300 split_p6.log
 python3 $R/mk_split.py p/b3 $R/split_p7/split_p7.json $R/split_p7 > split_p7.log; cut -c1-400 split_p7.log
+python3 $R/mk_split.py p/b3 $R/split_p8/split_p8.json $R/split_p8 > split_p8.log; cut -c1-300 split_p8.log
 python3 $R/mk_smrst.py p/b3 $T | cut -c1-300
 cp p/b3/die_plan.json h61_lat_before.json
 python3 $R/mk_bays.py p/b3 $S0

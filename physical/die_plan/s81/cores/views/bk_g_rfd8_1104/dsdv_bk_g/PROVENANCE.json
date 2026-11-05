@@ -1,0 +1,30 @@
+{
+ "as_run_note": "SS29-RESIGN: run launched by SS28-RESIGN 07:41, its provenance step refused build_commit unknown; written 08:3x. Copy of intel1 die-s81-54-eco/run/bk_g2/i1, odb sha 449a377934ec equal. Build commit from byte compare of kit rtl/ with git: 5efc9dccc4f (form 8) equal on all 3 RTL files; kit freeze.json repo_rev 1618684382d is the parent and differs on 2 files. DIE-S81-54 07:37 READY-COUNT",
+ "build_commit": "5efc9dccc4f0617866f649f9c856322b0b582010",
+ "created": "2026-11-04 08:24 PST",
+ "flow_tag": "flow-20261104-k-s81",
+ "host": "dear-crayfish",
+ "kind": "resign",
+ "kit": "/srv/opentallas-scratch2/claude/ss28/resign/kit_bk_g",
+ "lane": "SS29-RESIGN",
+ "lec": "/srv/opentallas-scratch2/claude/ss28/resign/bk_g_k/lecrun/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "name": "kl_dsdv_bk_g_rfd8",
+ "original_signoff": "/srv/opentallas-scratch2/claude/ss28/resign/kit_bk_g/signoff/signoff.json",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/ss28/resign/bk_g_k/signoff/signoff.json",
+ "routed_db": "/srv/opentallas-scratch2/claude/ss28/resign/kit_bk_g/run/results/asap7/kl_dsdv_bk_g_rfd8/base/6_final.odb",
+ "routed_db_sha256": "449a377934ec1686db79b558db313f37814d356408b9e1b3787fe5b536296bea",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "schema": "opentallas.resign_qualification.v1",
+ "src_commit": "2c628df1c182277336659b90604817c24d972713",
+ "tag_tools": {
+  "checked": "byte-identical to flow-20261104-k-s81",
+  "dir": "/srv/opentallas-scratch2/claude/ss28/resign/tools_k_s81/tools/die_plan",
+  "sha256": {
+   "lec.py": "642665edaf0d05d9dfc6c5802eb9ebacfac3b58a20d544964de47f020372aba2",
+   "signoff.py": "a227bdd9ffe1e359347d579d3b4feb4829bfbfbaa738673674f3924d497635a6"
+  }
+ },
+ "verdict": "SIGNED",
+ "writer": "tools/die_plan/resign.py"
+}

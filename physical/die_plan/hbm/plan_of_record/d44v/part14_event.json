@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.hbm_plan_event.part14",
+ "core": "ot_hnx_fused_host_program",
+ "pins_file": "cores/ot_hnx_fused_host_program__276.48x129.6__c25b__centry__p10__p14.json",
+ "rows": 1,
+ "clk": {
+  "from": [
+   103.704,
+   64.8
+  ],
+  "to": [
+   103.704,
+   129.36
+  ],
+  "layer": "M5"
+ },
+ "tap": [
+  [
+   838.08,
+   5404.32
+  ],
+  [
+   838.08,
+   5468.88
+  ]
+ ],
+ "clock_entries": [
+  "root/u_mu_fused_program"
+ ],
+ "cycles": 0
+}

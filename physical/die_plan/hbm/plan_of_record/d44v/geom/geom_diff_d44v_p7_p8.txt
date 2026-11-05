@@ -1,0 +1,6 @@
+top keys ['schema', 'plan', 'types'] types 74 74
+FAIL count 225 -> 225 | types FAIL 74 -> 74
+NEW 0 []
+GONE 0 []
+WORSE 0 []
+BETTER 3 [('q_hub_ne', 'clock_reach', 526.16, 389.97), ('q_hub_nw', 'clock_reach', 530.38, 400.15), ('q_spu1__physical_v1', 'clock_tap_sinks', 6614.0, 6605.0)]

@@ -1132,83 +1132,6 @@
     }
    ]
   },
-  "ot_hbm_su_programme_pslice_c5": {
-   "sinks": 23473,
-   "entries": 5,
-   "grid": [
-    1,
-    5
-   ],
-   "outline_um": [
-    939.6,
-    760.32
-   ],
-   "instances": 4,
-   "kept_signed": false,
-   "sinks_per_entry": 4695,
-   "regional_entries": [
-    {
-     "xy_um": [
-      95.04,
-      380.16
-     ],
-     "region_um": [
-      0.0,
-      0.0,
-      187.92,
-      760.32
-     ]
-    },
-    {
-     "xy_um": [
-      280.8,
-      380.16
-     ],
-     "region_um": [
-      187.92,
-      0.0,
-      375.84,
-      760.32
-     ]
-    },
-    {
-     "xy_um": [
-      470.88,
-      380.16
-     ],
-     "region_um": [
-      375.84,
-      0.0,
-      563.76,
-      760.32
-     ]
-    },
-    {
-     "xy_um": [
-      656.64,
-      380.16
-     ],
-     "region_um": [
-      563.76,
-      0.0,
-      751.68,
-      760.32
-     ]
-    },
-    {
-     "xy_um": [
-      846.72,
-      380.16
-     ],
-     "region_um": [
-      751.68,
-      0.0,
-      939.6,
-      760.32
-     ]
-    }
-   ]
-  },
   "ot_hbm_su_static_cxport_ij_q": {
    "sinks": 13217,
    "entries": 3,
@@ -2102,7 +2025,7 @@
     1
    ],
    "outline_um": [
-    216.0,
+    276.48,
     1054.08
    ],
    "instances": 1,
@@ -2111,73 +2034,73 @@
    "regional_entries": [
     {
      "xy_um": [
-      108.0,
+      168.48,
       21.6
      ],
      "region_um": [
       0.0,
       0.0,
-      216.0,
+      276.48,
       175.68
      ]
     },
     {
      "xy_um": [
-      108.0,
+      168.48,
       190.08
      ],
      "region_um": [
       0.0,
       175.68,
-      216.0,
+      276.48,
       351.36
      ]
     },
     {
      "xy_um": [
-      108.0,
+      168.48,
       522.72
      ],
      "region_um": [
       0.0,
       351.36,
-      216.0,
+      276.48,
       527.04
      ]
     },
     {
      "xy_um": [
-      108.0,
+      168.48,
       531.36
      ],
      "region_um": [
       0.0,
       527.04,
-      216.0,
+      276.48,
       702.72
      ]
     },
     {
      "xy_um": [
-      108.0,
+      168.48,
       864.0
      ],
      "region_um": [
       0.0,
       702.72,
-      216.0,
+      276.48,
       878.4
      ]
     },
     {
      "xy_um": [
-      108.0,
+      168.48,
       1032.48
      ],
      "region_um": [
       0.0,
       878.4,
-      216.0,
+      276.48,
       1054.08
      ]
     }
@@ -2590,6 +2513,9 @@
   "ot_hbm_idx_tail_native",
   "ot_hbm_idx_topk_link_static",
   "ot_hbm_static_cfg_collar_idx256r",
+  "ot_hbm_su_pcol_h",
+  "ot_hbm_su_pcol_l",
+  "ot_hbm_su_pcol_s",
   "ot_hbm_su_pg_lane1_core",
   "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
   "ot_hbm_su_static_pgslice_lg__pretree",
@@ -2618,9 +2544,9 @@
   "ot_pdie_serdes"
  ],
  "totals": {
-  "modules": 34,
-  "entries": 166,
-  "slots": 1820,
+  "modules": 33,
+  "entries": 161,
+  "slots": 1816,
   "kept_signed": []
  }
 }

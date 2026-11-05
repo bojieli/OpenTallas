@@ -67,6 +67,9 @@ module ot_v41_bf_col #(
     // BF lane latency, transaction-level exact).
     parameter integer TCG = 0,
     parameter integer BXST = 0,
+    // BRNECUT (RF-H conservative form, 2026-11-03; default 0 = unchanged): ot_v41_bf16_lanes3 RNECUT -- one more register
+    // cut in the BF16 subnormal RNE encode + round, BF lane latency +1 cycle (transaction level, as one more BXST stage).
+    parameter integer BRNECUT = 0,
     parameter integer FXST = 0,         // TCG only: pipelined FP8/FP4 lane input stages (+FXST cycles; see g_l3)
     parameter integer GRADUAL_RNE = 0,
     parameter INSTANCE = "",
@@ -601,7 +604,7 @@ module ot_v41_bf_col #(
     if (BF16 != 0) begin : g_bf
         if (FAST != 0 && QBF != 0 && TCG != 0) begin : g_fqt
         // TCG: the BF lanes as per-lane clock / reset tiles (+ BXST pipelined input stages)
-        ot_v41_bf16_lanes3 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0), .XST(BXST), .TNODE(RCG), .TAG_GROUPS(TAG_GROUPS)) u_bf (
+        ot_v41_bf16_lanes3 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT), .GRADUAL_RNE(GRADUAL_RNE), .RC(QBF >= 3 ? 2 : QBF >= 2 ? 1 : 0), .XST(BXST), .TNODE(RCG), .TAG_GROUPS(TAG_GROUPS), .RNECUT(BRNECUT)) u_bf (
             .fclk(clk), .rst_pin(b_rst), .ze_d(b_ze), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(mz_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
