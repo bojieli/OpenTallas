@@ -34,7 +34,8 @@ def comp(name, fs):
     else:
         rp = ""; w = {}
     g = lambda n: w.get(n, n)
-    t += [f"    ot_pdie_serdes_tx{sfx} u_tx (.clk(clk), .rst(rst), .tx(tx), .pma_tx(pma_tx), .pma_tck(pma_tck), .e_flt_o(ef));",
+    t += [f"    ot_pdie_serdes_tx{sfx} u_tx (.clk(clk), .rst(rst), .tx(tx), .pma_tx(pma_tx), .e_flt_o(ef));",
+          "    assign pma_tck = clk;",
           f"    ot_pdie_serdes_rx{sfx} {rp}u_rx (.clk(clk), .rck_clk(pma_rck), .rst(rst), .rx(rx), .st(st), .pma_rx(pma_rx), .e_flt_i({g('ef')}),",
           "        .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),",
           f"        .cw_q({g('cw_q')}), .apply({g('apply')}), .o_unc({g('o_unc')}), .o_ne(o_ne), .fs({g('fs')}));",

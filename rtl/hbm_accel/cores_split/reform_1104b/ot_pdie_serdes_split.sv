@@ -13,6 +13,8 @@
 //     (tx out + 1, rx in + 1) reaches st[0] 2 edges later.  pma_tx, the tx input and st[1] (lock) do not move.
 //   * the recovered clock port is named rck_clk so the kit passes it as a clock pin (COORD ruling 11-04 23:2x).  The
 //     HBM kit carries one core clock (face_shell.apply), so all three designs run on the slot's clock entry.
+//   * pma_tck leaves tx: it is the core clock with no die-level consumer, and a tile output pin would be shelled as
+//     data (OT_CLOCK_FAMILY stop at CTS).  The composition keeps ot_pdie_serdes.pma_tck = clk, wire only.
 // The face registers are the kit's; this file adds none.  dchn rst_n is the slot reset (no consumer before k_v).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0) (
@@ -20,7 +22,6 @@ module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT
     input  wire          rst,
     input  wire [511:0]  tx,
     output wire [543:0]  pma_tx,
-    output wire          pma_tck,
     output wire          e_flt_o
 );
     reg [1:0] rs_t;
@@ -29,7 +30,6 @@ module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT
     wire e_v; wire [543:0] e_d;
     ot_s81_kp4_enc #(.MUT(EMUT)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt_o));
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
-    assign pma_tck = clk;
 endmodule
 
 module ot_pdie_serdes_rx #(parameter integer PMA_LAT = 4, parameter integer DMUT = 0, parameter integer SEAM = 2) (

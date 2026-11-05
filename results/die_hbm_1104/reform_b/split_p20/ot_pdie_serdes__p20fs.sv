@@ -15,7 +15,8 @@ module ot_pdie_serdes__p20fs #(parameter integer SMUT = 0) (
     wire fs_m = (SMUT == 7) ? fs_d : fs;
     wire o_unc_m = (SMUT == 8) ? 1'b0 : o_unc;
     wire [309:0] k_lo_m = (SMUT == 9) ? {k_lo[309:1], ~k_lo[0]} : k_lo;
-    ot_pdie_serdes_tx__fs u_tx (.clk(clk), .rst(rst), .tx(tx), .pma_tx(pma_tx), .pma_tck(pma_tck), .e_flt_o(ef));
+    ot_pdie_serdes_tx__fs u_tx (.clk(clk), .rst(rst), .tx(tx), .pma_tx(pma_tx), .e_flt_o(ef));
+    assign pma_tck = clk;
     ot_pdie_serdes_rx__fs #(.SEAM((SMUT == 1) ? 0 : 2)) u_rx (.clk(clk), .rck_clk(pma_rck), .rst(rst), .rx(rx), .st(st), .pma_rx(pma_rx), .e_flt_i(ef_m),
         .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),
         .cw_q(cw_m), .apply(apply_m), .o_unc(o_unc_m), .o_ne(o_ne), .fs(fs_m));

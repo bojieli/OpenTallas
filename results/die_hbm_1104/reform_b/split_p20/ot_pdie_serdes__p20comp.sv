@@ -5,7 +5,8 @@ module ot_pdie_serdes__p20comp (
     output wire [543:0] pma_tx, output wire pma_tck, input wire [543:0] pma_rx, input wire pma_rck);
     wire ef; wire [3:0] k_v; wire [309:0] k_lo; wire [4:0] k_L; wire k_any;
     wire [543:0] cw_q; wire [7:0] apply; wire o_unc; wire [4:0] o_ne; wire fs;
-    ot_pdie_serdes_tx u_tx (.clk(clk), .rst(rst), .tx(tx), .pma_tx(pma_tx), .pma_tck(pma_tck), .e_flt_o(ef));
+    ot_pdie_serdes_tx u_tx (.clk(clk), .rst(rst), .tx(tx), .pma_tx(pma_tx), .e_flt_o(ef));
+    assign pma_tck = clk;
     ot_pdie_serdes_rx u_rx (.clk(clk), .rck_clk(pma_rck), .rst(rst), .rx(rx), .st(st), .pma_rx(pma_rx), .e_flt_i(ef),
         .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),
         .cw_q(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs));
