@@ -404,3 +404,10 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 - **ot_hnx_fused_host_program** `clk` M5 (103.704, 64.8) -> (103.704, 129.36), N face, table `__p14`; the other 561 pins unmoved. Signed DB kept (re-signed on flow-20261105-i-hbm). The kit was generated without `--clock-pin-entry on`, so the centre entry went to the N face; the plan now follows it. Gen on a stage with the flag: rc 0, all 562 pins equal the signed kit.
 - **Parent clock tap**: `u_mu_fused_program.clk` (838.08, 5404.32) -> (838.08, 5468.88), same x. The `root` clock entry row follows (xy 103.68, 129.36; island kept 8.64 um square, clipped to the N edge).
 - **Checks**: plan diff 3 fields on `root` plus 4 on its clock entry. G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0. 0 cycles, no RTL. No `asbuilt` key, so bind.py does not apply.
+
+## Part 17 (lanes canon and lanes_plain -> 4 x lane; HBM-REFORM-A, HBM-REFORM-A2)
+
+- **lanes canon**, 14 rows, 760.32x725.76 slot: 4 x existing ot_hbm_su_pg_lane1_core, 190.08x311.04 strip, 0 cycles. Same cut as part 6 on lanes8_11.
+- **lanes_plain**, 8 rows, 440.64x457.92 slot: 4 x new ot_hbm_su_pg_lane1p_core, 216x224.64, 2 x 2, 0 cycles. Same RTL text as lane1; the plain slot cannot hold 2 x 2 lane1. Macros 2 x 3; one clock pin.
+- **Bench**: results/die_hbm_1104/reform_a/part17, lockstep on both rows, mutant 0 PASS, 3 mutants FAIL. Straps: parent_id_straps lane0_lane_id = {lane_lane_id, k}.
+- **Checks** against part 14: G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0. Clock_tap_sinks and clock_reach move both ways (9 worse, 13 better), see geom/geom_diff_d44v_p14_p17.txt.

@@ -7946,6 +7946,83 @@
    ],
    "channel_rule_um": 10.8,
    "basis": "DIE-HBM-62/CUTS d44v part 8: column stacks with the d44v pair pitch 41.112 / stride 93.024; W and E macro pin channels >= 10.8"
+  },
+  "ot_hbm_su_pg_lane1p_core": {
+   "status": "KNOWN",
+   "outline_um": [
+    216.0,
+    224.64
+   ],
+   "macros": [
+    {
+     "name": "u_core.u_bank0.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      7.776,
+      29.16,
+      102.6,
+      70.224
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      113.4,
+      29.16,
+      208.224,
+      70.224
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      7.776,
+      91.8,
+      102.6,
+      132.864
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      113.4,
+      91.8,
+      208.224,
+      132.864
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      7.776,
+      154.44,
+      102.6,
+      195.504
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      113.4,
+      154.44,
+      208.224,
+      195.504
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-REFORM-A d44v part 17: 2 x 3 grid in the 216 x 224.64 tile, column channel 10.8, row channels 21.576; W/E bands 7.776 (advisory), 4 full-width cell bands; clock entry in the first row channel"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"
