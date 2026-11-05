@@ -98,3 +98,34 @@ def test_splice_flags_detail_from_other_odb(tmp_path):
     b.write_text(BASE)
     other = _detail(tmp_path, BASE.replace("SIZE 100 BY 50", "SIZE 100 BY 51"))
     assert A.main(["splice", "--base", str(b), "--detail", str(other), "--out", str(tmp_path / "n.lef")]) == 1
+
+
+def test_clear_pins_cuts_own_metal_and_near_wire_only():
+    base = """  PIN a
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0 1 0.084 1.024 ;
+    END
+  END a
+  PIN VSS
+    USE GROUND ;
+    PORT
+      LAYER M4 ;
+        RECT 5 5 6 6 ;
+    END
+  END VSS
+""".splitlines(keepends=True)
+    det = {"M4": ["        RECT 0.06 1 0.2 1.024 ;\n",   # own stub: only the part under the pin leaves
+                  "        RECT 0.1 1.05 0.3 1.07 ;\n",  # neighbour 26 nm away, x from 0.1: inside the 0.048 grow
+                  "        RECT 5.5 5.5 5.6 5.6 ;\n",    # under a PG pin: untouched
+                  "        RECT 3 3 4 4 ;\n"],
+           "M5": ["        RECT 0 1 0.084 1.024 ;\n"]}
+    new, rep = A.clear_pins(det, base, 0.048, ["M4"])
+    r4 = [tuple(float(v) for v in l.split()[1:5]) for l in new["M4"]]
+    assert (5.5, 5.5, 5.6, 5.6) in r4 and (3, 3, 4, 4) in r4
+    assert (0.132, 1, 0.2, 1.024) in r4                     # stub keeps what is beyond the grown box
+    assert (0.132, 1.05, 0.3, 1.07) in r4
+    assert rep["M4"]["rects_cut"] == 2 and rep["M4"]["overlap_own_pin"] == 1
+    assert new["M5"] == det["M5"]                           # no pin on M5: untouched
