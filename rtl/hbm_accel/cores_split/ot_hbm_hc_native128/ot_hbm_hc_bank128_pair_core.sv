@@ -4850,20 +4850,20 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire [255:0] s_i;
   output lf;
   reg lf;
-  wire [31:0] _00000_;
-  wire [31:0] _00001_;
+  wire _00000_;
+  wire _00001_;
   wire [31:0] _00002_;
-  wire _00003_;
+  wire [31:0] _00003_;
   wire [31:0] _00004_;
-  wire _00005_;
+  wire [31:0] _00005_;
   wire _00006_;
   wire _00007_;
-  wire [31:0] _00008_;
-  wire [31:0] _00009_;
+  wire _00008_;
+  wire _00009_;
   wire [31:0] _00010_;
   wire [31:0] _00011_;
-  wire _00012_;
-  wire _00013_;
+  wire [31:0] _00012_;
+  wire [31:0] _00013_;
   wire _00014_;
   wire _00015_;
   wire _00016_;
@@ -4871,39 +4871,39 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire _00018_;
   wire _00019_;
   wire _00020_;
-  wire [31:0] _00021_;
-  wire [31:0] _00022_;
+  wire _00021_;
+  wire _00022_;
   wire [31:0] _00023_;
-  wire _00024_;
-  wire _00025_;
+  wire [31:0] _00024_;
+  wire [31:0] _00025_;
   wire _00026_;
   wire _00027_;
-  wire [31:0] _00028_;
-  wire [31:0] _00029_;
+  wire _00028_;
+  wire _00029_;
   wire [31:0] _00030_;
-  wire _00031_;
-  wire _00032_;
+  wire [31:0] _00031_;
+  wire [31:0] _00032_;
   wire _00033_;
   wire _00034_;
-  wire [31:0] _00035_;
-  wire [31:0] _00036_;
+  wire _00035_;
+  wire _00036_;
   wire [31:0] _00037_;
-  wire _00038_;
-  wire _00039_;
+  wire [31:0] _00038_;
+  wire [31:0] _00039_;
   wire _00040_;
   wire _00041_;
-  wire [31:0] _00042_;
-  wire [31:0] _00043_;
+  wire _00042_;
+  wire _00043_;
   wire [31:0] _00044_;
-  wire _00045_;
-  wire _00046_;
+  wire [31:0] _00045_;
+  wire [31:0] _00046_;
   wire _00047_;
   wire _00048_;
-  wire [31:0] _00049_;
-  wire [31:0] _00050_;
+  wire _00049_;
+  wire _00050_;
   wire [31:0] _00051_;
-  wire _00052_;
-  wire _00053_;
+  wire [31:0] _00052_;
+  wire [31:0] _00053_;
   wire _00054_;
   wire _00055_;
   wire [31:0] _00056_;
@@ -16490,7 +16490,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire \g_lane[0].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[0].u_mul.u_c7.d ;
   wire [68:0] \g_lane[0].u_mul.u_c7.q ;
-  reg \g_lane[0].u_mul.u_c7.rst_n ;
+  wire \g_lane[0].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[0].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[0].u_mul.u_cpa.b ;
   wire \g_lane[0].u_mul.u_cpa.cin ;
@@ -16923,7 +16923,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire \g_lane[1].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[1].u_mul.u_c7.d ;
   wire [68:0] \g_lane[1].u_mul.u_c7.q ;
-  reg \g_lane[1].u_mul.u_c7.rst_n ;
+  wire \g_lane[1].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[1].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[1].u_mul.u_cpa.b ;
   wire \g_lane[1].u_mul.u_cpa.cin ;
@@ -17356,7 +17356,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire \g_lane[2].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[2].u_mul.u_c7.d ;
   wire [68:0] \g_lane[2].u_mul.u_c7.q ;
-  reg \g_lane[2].u_mul.u_c7.rst_n ;
+  wire \g_lane[2].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[2].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[2].u_mul.u_cpa.b ;
   wire \g_lane[2].u_mul.u_cpa.cin ;
@@ -17789,7 +17789,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire \g_lane[3].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[3].u_mul.u_c7.d ;
   wire [68:0] \g_lane[3].u_mul.u_c7.q ;
-  reg \g_lane[3].u_mul.u_c7.rst_n ;
+  wire \g_lane[3].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[3].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[3].u_mul.u_cpa.b ;
   wire \g_lane[3].u_mul.u_cpa.cin ;
@@ -18222,7 +18222,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire \g_lane[4].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[4].u_mul.u_c7.d ;
   wire [68:0] \g_lane[4].u_mul.u_c7.q ;
-  reg \g_lane[4].u_mul.u_c7.rst_n ;
+  wire \g_lane[4].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[4].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[4].u_mul.u_cpa.b ;
   wire \g_lane[4].u_mul.u_cpa.cin ;
@@ -18655,7 +18655,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire \g_lane[5].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[5].u_mul.u_c7.d ;
   wire [68:0] \g_lane[5].u_mul.u_c7.q ;
-  reg \g_lane[5].u_mul.u_c7.rst_n ;
+  wire \g_lane[5].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[5].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[5].u_mul.u_cpa.b ;
   wire \g_lane[5].u_mul.u_cpa.cin ;
@@ -19088,7 +19088,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire \g_lane[6].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[6].u_mul.u_c7.d ;
   wire [68:0] \g_lane[6].u_mul.u_c7.q ;
-  reg \g_lane[6].u_mul.u_c7.rst_n ;
+  wire \g_lane[6].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[6].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[6].u_mul.u_cpa.b ;
   wire \g_lane[6].u_mul.u_cpa.cin ;
@@ -19521,7 +19521,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   wire \g_lane[7].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[7].u_mul.u_c7.d ;
   wire [68:0] \g_lane[7].u_mul.u_c7.q ;
-  reg \g_lane[7].u_mul.u_c7.rst_n ;
+  wire \g_lane[7].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[7].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[7].u_mul.u_cpa.b ;
   wire \g_lane[7].u_mul.u_cpa.cin ;
@@ -19572,154 +19572,159 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   reg \g_lane[7].v0 ;
   reg \g_lane[7].v1 ;
   wire [31:0] \g_lane[7].xw ;
+  reg [7:0] \g_lfr.lfq ;
   wire [255:0] \g_sor.so_q ;
   reg gov;
   wire [7:0] lfl;
+  reg [7:0] lrnv;
   reg [7:0] lv_r;
   reg [7:0] ss_r;
   reg [255:0] sum_q;
   reg [255:0] w_in;
   reg [127:0] x_in;
   reg [255:0] y_l;
-  assign _00004_ = ss_r[0] ? { x_in[15:0], 16'h0000 } : w_in[31:0];
-  assign _00000_ = lv_r[6] ? { x_in[111:96], 16'h0000 } : 32'd0;
-  assign _00001_ = ss_r[6] ? { x_in[111:96], 16'h0000 } : w_in[223:192];
-  assign _00002_ = lv_r[6] ? _00001_ : 32'd0;
+  assign _00002_ = ss_r[0] ? { x_in[15:0], 16'h0000 } : w_in[31:0];
+  assign _00000_ = | \g_lane[5].u_add.err ;
+  assign _00001_ = \g_lane[5].v1  && _00000_;
+  assign lfl[5] = _00055_ || _00001_;
+  assign _00010_ = lv_r[0] ? _00002_ : 32'd0;
+  assign _00003_ = lv_r[6] ? { x_in[111:96], 16'h0000 } : 32'd0;
+  assign _00004_ = ss_r[6] ? { x_in[111:96], 16'h0000 } : w_in[223:192];
+  assign _00005_ = lv_r[6] ? _00004_ : 32'd0;
   assign { \g_lane[6].u_add.u_ca.d [81], \g_lane[6].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[223:192];
-  assign _00003_ = | \g_lane[6].u_mul.err ;
-  assign _00008_ = lv_r[0] ? _00004_ : 32'd0;
-  assign _00005_ = \g_lane[6].v0  && _00003_;
-  assign _00006_ = | \g_lane[6].u_add.err ;
-  assign _00007_ = \g_lane[6].v1  && _00006_;
-  assign lfl[6] = _00005_ || _00007_;
+  assign _00006_ = | \g_lane[6].u_mul.err ;
+  assign _00007_ = \g_lane[6].v0  && _00006_;
+  assign _00008_ = | \g_lane[6].u_add.err ;
+  assign _00009_ = \g_lane[6].v1  && _00008_;
+  assign lfl[6] = _00007_ || _00009_;
   assign { \g_lane[0].u_add.u_ca.d [81], \g_lane[0].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[31:0];
-  assign _00009_ = lv_r[7] ? { x_in[127:112], 16'h0000 } : 32'd0;
-  assign _00010_ = ss_r[7] ? { x_in[127:112], 16'h0000 } : w_in[255:224];
-  assign _00011_ = lv_r[7] ? _00010_ : 32'd0;
+  assign _00011_ = lv_r[7] ? { x_in[127:112], 16'h0000 } : 32'd0;
+  assign _00012_ = ss_r[7] ? { x_in[127:112], 16'h0000 } : w_in[255:224];
+  assign _00018_ = | \g_lane[0].u_mul.err ;
+  assign _00013_ = lv_r[7] ? _00012_ : 32'd0;
   assign { \g_lane[7].u_add.u_ca.d [81], \g_lane[7].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[255:224];
-  assign _00012_ = | \g_lane[7].u_mul.err ;
-  assign _00013_ = \g_lane[7].v0  && _00012_;
-  assign _00014_ = | \g_lane[7].u_add.err ;
-  assign _00015_ = \g_lane[7].v1  && _00014_;
-  assign lfl[7] = _00013_ || _00015_;
-  assign _00017_ = | \g_lane[0].u_mul.err ;
-  assign _00016_ = | lfl;
-  assign _00018_ = \g_lane[0].v0  && _00017_;
-  assign _00019_ = | \g_lane[0].u_add.err ;
-  assign _00020_ = \g_lane[0].v1  && _00019_;
-  assign lfl[0] = _00018_ || _00020_;
-  assign _00021_ = lv_r[1] ? { x_in[31:16], 16'h0000 } : 32'd0;
-  assign _00022_ = ss_r[1] ? { x_in[31:16], 16'h0000 } : w_in[63:32];
-  assign _00023_ = lv_r[1] ? _00022_ : 32'd0;
+  assign _00014_ = | \g_lane[7].u_mul.err ;
+  assign _00015_ = \g_lane[7].v0  && _00014_;
+  assign _00016_ = | \g_lane[7].u_add.err ;
+  assign _00017_ = \g_lane[7].v1  && _00016_;
+  assign lfl[7] = _00015_ || _00017_;
+  assign _00020_ = \g_lane[0].v0  && _00018_;
+  assign _00019_ = | \g_lfr.lfq ;
+  assign _00021_ = | \g_lane[0].u_add.err ;
+  assign _00022_ = \g_lane[0].v1  && _00021_;
+  assign lfl[0] = _00020_ || _00022_;
+  assign _00023_ = lv_r[1] ? { x_in[31:16], 16'h0000 } : 32'd0;
+  assign _00024_ = ss_r[1] ? { x_in[31:16], 16'h0000 } : w_in[63:32];
+  assign _00025_ = lv_r[1] ? _00024_ : 32'd0;
   assign { \g_lane[1].u_add.u_ca.d [81], \g_lane[1].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[63:32];
-  assign _00024_ = | \g_lane[1].u_mul.err ;
-  assign _00025_ = \g_lane[1].v0  && _00024_;
-  assign _00026_ = | \g_lane[1].u_add.err ;
-  assign _00027_ = \g_lane[1].v1  && _00026_;
-  assign lfl[1] = _00025_ || _00027_;
-  assign _00028_ = lv_r[2] ? { x_in[47:32], 16'h0000 } : 32'd0;
-  assign _00029_ = ss_r[2] ? { x_in[47:32], 16'h0000 } : w_in[95:64];
-  assign _00030_ = lv_r[2] ? _00029_ : 32'd0;
+  assign _00026_ = | \g_lane[1].u_mul.err ;
+  assign _00027_ = \g_lane[1].v0  && _00026_;
+  assign _00028_ = | \g_lane[1].u_add.err ;
+  assign _00029_ = \g_lane[1].v1  && _00028_;
+  assign lfl[1] = _00027_ || _00029_;
+  assign _00030_ = lv_r[2] ? { x_in[47:32], 16'h0000 } : 32'd0;
+  assign _00031_ = ss_r[2] ? { x_in[47:32], 16'h0000 } : w_in[95:64];
+  assign _00032_ = lv_r[2] ? _00031_ : 32'd0;
   assign { \g_lane[2].u_add.u_ca.d [81], \g_lane[2].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[95:64];
-  assign _00031_ = | \g_lane[2].u_mul.err ;
-  assign _00032_ = \g_lane[2].v0  && _00031_;
-  assign _00033_ = | \g_lane[2].u_add.err ;
-  assign _00034_ = \g_lane[2].v1  && _00033_;
-  assign lfl[2] = _00032_ || _00034_;
-  assign _00035_ = lv_r[3] ? { x_in[63:48], 16'h0000 } : 32'd0;
-  assign _00036_ = ss_r[3] ? { x_in[63:48], 16'h0000 } : w_in[127:96];
-  assign _00037_ = lv_r[3] ? _00036_ : 32'd0;
+  assign _00033_ = | \g_lane[2].u_mul.err ;
+  assign _00034_ = \g_lane[2].v0  && _00033_;
+  assign _00035_ = | \g_lane[2].u_add.err ;
+  assign _00036_ = \g_lane[2].v1  && _00035_;
+  assign lfl[2] = _00034_ || _00036_;
+  assign _00037_ = lv_r[3] ? { x_in[63:48], 16'h0000 } : 32'd0;
+  assign _00038_ = ss_r[3] ? { x_in[63:48], 16'h0000 } : w_in[127:96];
+  assign _00039_ = lv_r[3] ? _00038_ : 32'd0;
   assign { \g_lane[3].u_add.u_ca.d [81], \g_lane[3].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[127:96];
-  assign _00038_ = | \g_lane[3].u_mul.err ;
-  assign _00039_ = \g_lane[3].v0  && _00038_;
-  assign _00040_ = | \g_lane[3].u_add.err ;
-  assign _00041_ = \g_lane[3].v1  && _00040_;
-  assign lfl[3] = _00039_ || _00041_;
-  assign _00042_ = lv_r[4] ? { x_in[79:64], 16'h0000 } : 32'd0;
-  assign _00043_ = ss_r[4] ? { x_in[79:64], 16'h0000 } : w_in[159:128];
-  assign _00044_ = lv_r[4] ? _00043_ : 32'd0;
+  assign _00040_ = | \g_lane[3].u_mul.err ;
+  assign _00041_ = \g_lane[3].v0  && _00040_;
+  assign _00042_ = | \g_lane[3].u_add.err ;
+  assign _00043_ = \g_lane[3].v1  && _00042_;
+  assign lfl[3] = _00041_ || _00043_;
+  assign _00044_ = lv_r[4] ? { x_in[79:64], 16'h0000 } : 32'd0;
+  assign _00045_ = ss_r[4] ? { x_in[79:64], 16'h0000 } : w_in[159:128];
+  assign _00046_ = lv_r[4] ? _00045_ : 32'd0;
   assign { \g_lane[4].u_add.u_ca.d [81], \g_lane[4].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[159:128];
-  assign _00045_ = | \g_lane[4].u_mul.err ;
-  assign _00046_ = \g_lane[4].v0  && _00045_;
-  assign _00047_ = | \g_lane[4].u_add.err ;
-  assign _00048_ = \g_lane[4].v1  && _00047_;
-  assign lfl[4] = _00046_ || _00048_;
-  assign _00049_ = lv_r[5] ? { x_in[95:80], 16'h0000 } : 32'd0;
+  assign _00047_ = | \g_lane[4].u_mul.err ;
+  assign _00048_ = \g_lane[4].v0  && _00047_;
+  assign _00049_ = | \g_lane[4].u_add.err ;
+  assign _00050_ = \g_lane[4].v1  && _00049_;
+  assign lfl[4] = _00048_ || _00050_;
   assign _00056_ = lv_r[0] ? { x_in[15:0], 16'h0000 } : 32'd0;
-  assign _00050_ = ss_r[5] ? { x_in[95:80], 16'h0000 } : w_in[191:160];
-  assign _00051_ = lv_r[5] ? _00050_ : 32'd0;
+  assign _00051_ = lv_r[5] ? { x_in[95:80], 16'h0000 } : 32'd0;
+  assign _00052_ = ss_r[5] ? { x_in[95:80], 16'h0000 } : w_in[191:160];
+  assign _00053_ = lv_r[5] ? _00052_ : 32'd0;
   assign { \g_lane[5].u_add.u_ca.d [81], \g_lane[5].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[191:160];
-  assign _00052_ = | \g_lane[5].u_mul.err ;
-  assign _00053_ = \g_lane[5].v0  && _00052_;
-  assign _00054_ = | \g_lane[5].u_add.err ;
-  assign _00055_ = \g_lane[5].v1  && _00054_;
-  assign lfl[5] = _00053_ || _00055_;
+  assign _00054_ = | \g_lane[5].u_mul.err ;
+  assign _00055_ = \g_lane[5].v0  && _00054_;
   always @(posedge clk)
     fst_q <= fst;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[0].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[0].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[0] <= 1'h0;
+    else lrnv[0] <= 1'h1;
   always @(posedge clk)
-    \g_lane[0].u_mul.x_a  <= _00008_;
+    \g_lane[0].u_mul.x_a  <= _00010_;
   always @(posedge clk)
     \g_lane[0].u_mul.x_b  <= _00056_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[1].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[1].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[1] <= 1'h0;
+    else lrnv[1] <= 1'h1;
   always @(posedge clk)
-    \g_lane[1].u_mul.x_a  <= _00023_;
+    \g_lane[1].u_mul.x_a  <= _00025_;
   always @(posedge clk)
-    \g_lane[1].u_mul.x_b  <= _00021_;
+    \g_lane[1].u_mul.x_b  <= _00023_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[2].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[2].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[2] <= 1'h0;
+    else lrnv[2] <= 1'h1;
   always @(posedge clk)
-    \g_lane[2].u_mul.x_a  <= _00030_;
+    \g_lane[2].u_mul.x_a  <= _00032_;
   always @(posedge clk)
-    \g_lane[2].u_mul.x_b  <= _00028_;
+    \g_lane[2].u_mul.x_b  <= _00030_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[3].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[3].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[3] <= 1'h0;
+    else lrnv[3] <= 1'h1;
   always @(posedge clk)
-    \g_lane[3].u_mul.x_a  <= _00037_;
+    \g_lane[3].u_mul.x_a  <= _00039_;
   always @(posedge clk)
-    \g_lane[3].u_mul.x_b  <= _00035_;
+    \g_lane[3].u_mul.x_b  <= _00037_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[4].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[4].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[4] <= 1'h0;
+    else lrnv[4] <= 1'h1;
   always @(posedge clk)
-    \g_lane[4].u_mul.x_a  <= _00044_;
+    \g_lane[4].u_mul.x_a  <= _00046_;
   always @(posedge clk)
-    \g_lane[4].u_mul.x_b  <= _00042_;
+    \g_lane[4].u_mul.x_b  <= _00044_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[5].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[5].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[5] <= 1'h0;
+    else lrnv[5] <= 1'h1;
   always @(posedge clk)
-    \g_lane[5].u_mul.x_a  <= _00051_;
+    \g_lane[5].u_mul.x_a  <= _00053_;
   always @(posedge clk)
-    \g_lane[5].u_mul.x_b  <= _00049_;
+    \g_lane[5].u_mul.x_b  <= _00051_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[6].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[6].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[6] <= 1'h0;
+    else lrnv[6] <= 1'h1;
   always @(posedge clk)
-    \g_lane[6].u_mul.x_a  <= _00002_;
+    \g_lane[6].u_mul.x_a  <= _00005_;
   always @(posedge clk)
-    \g_lane[6].u_mul.x_b  <= _00000_;
+    \g_lane[6].u_mul.x_b  <= _00003_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[7].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[7].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[7] <= 1'h0;
+    else lrnv[7] <= 1'h1;
   always @(posedge clk)
-    \g_lane[7].u_mul.x_a  <= _00011_;
+    \g_lane[7].u_mul.x_a  <= _00013_;
   always @(posedge clk)
-    \g_lane[7].u_mul.x_b  <= _00009_;
+    \g_lane[7].u_mul.x_b  <= _00011_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lfr.lfq  <= 8'h00;
+    else \g_lfr.lfq  <= lfl;
   always @(posedge clk)
     y <= y_l;
-  always @(posedge clk, negedge rst_n)
-    if (!rst_n) gov <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) gov <= 1'h0;
     else gov <= gov_i;
-  always @(posedge clk, negedge rst_n)
-    if (!rst_n) lf <= 1'h0;
-    else lf <= _00016_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) lf <= 1'h0;
+    else lf <= _00019_;
   always @(posedge clk)
     lv_r <= lv_i;
   always @(posedge clk)
@@ -19803,26 +19808,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_add.u_rnd.g [0] = \g_lane[0].u_add.s2_val [2] && _00099_;
   always @(posedge clk)
     \g_lane[0].u_add.err  <= _00102_;
-  reg [23:0] _11435_;
+  reg [23:0] _11436_;
   always @(posedge clk)
-    _11435_ <= _00088_;
-  assign \g_lane[0].u_add.u_sum.a [26:3] = _11435_;
+    _11436_ <= _00088_;
+  assign \g_lane[0].u_add.u_sum.a [26:3] = _11436_;
   reg \g_lane_reg[0].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cb.d[100]  <= \g_lane[0].u_add.x_byp ;
   assign \g_lane[0].u_add.u_cb.d [100] = \g_lane_reg[0].u_add.u_cb.d[100] ;
-  reg [31:0] _11437_;
+  reg [31:0] _11438_;
   always @(posedge clk)
-    _11437_ <= \g_lane[0].u_add.x_code ;
-  assign \g_lane[0].u_add.u_cb.d [95:64] = _11437_;
-  reg [1:0] _11438_;
+    _11438_ <= \g_lane[0].u_add.x_code ;
+  assign \g_lane[0].u_add.u_cb.d [95:64] = _11438_;
+  reg [1:0] _11439_;
   always @(posedge clk)
-    _11438_ <= \g_lane[0].u_add.x_err ;
-  assign \g_lane[0].u_add.u_cb.d [97:96] = _11438_;
-  reg [7:0] _11439_;
+    _11439_ <= \g_lane[0].u_add.x_err ;
+  assign \g_lane[0].u_add.u_cb.d [97:96] = _11439_;
+  reg [7:0] _11440_;
   always @(posedge clk)
-    _11439_ <= _00087_;
-  assign \g_lane[0].u_add.u_cb.d [63:56] = _11439_;
+    _11440_ <= _00087_;
+  assign \g_lane[0].u_add.u_cb.d [63:56] = _11440_;
   reg \g_lane_reg[0].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cb.d[98]  <= _00086_;
@@ -19834,45 +19839,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[0].u_add.u_cb.d[99]  <= \g_lane[0].u_add.x_sub ;
   assign \g_lane[0].u_add.u_cb.d [99] = \g_lane_reg[0].u_add.u_cb.d[99] ;
   reg \g_lane_reg[0].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[0].u_add.u_cb.d[101]  <= \g_lane[0].u_add.x_v ;
   assign \g_lane[0].u_add.u_cb.d [101] = \g_lane_reg[0].u_add.u_cb.d[101] ;
   reg \g_lane_reg[0].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cc.d[69]  <= \g_lane[0].u_add.w_byp ;
   assign \g_lane[0].u_add.u_cc.d [69] = \g_lane_reg[0].u_add.u_cc.d[69] ;
-  reg [31:0] _11445_;
+  reg [31:0] _11446_;
   always @(posedge clk)
-    _11445_ <= \g_lane[0].u_add.w_code ;
-  assign \g_lane[0].u_add.u_cc.d [64:33] = _11445_;
-  reg [1:0] _11446_;
+    _11446_ <= \g_lane[0].u_add.w_code ;
+  assign \g_lane[0].u_add.u_cc.d [64:33] = _11446_;
+  reg [1:0] _11447_;
   always @(posedge clk)
-    _11446_ <= \g_lane[0].u_add.w_err ;
-  assign { \g_lane[0].u_add.s2_err [1], \g_lane[0].u_add.u_cc.d [65] } = _11446_;
-  reg [7:0] _11447_;
+    _11447_ <= \g_lane[0].u_add.w_err ;
+  assign { \g_lane[0].u_add.s2_err [1], \g_lane[0].u_add.u_cc.d [65] } = _11447_;
+  reg [7:0] _11448_;
   always @(posedge clk)
-    _11447_ <= _00096_;
-  assign \g_lane[0].u_add.u_cc.d [32:25] = _11447_;
+    _11448_ <= _00096_;
+  assign \g_lane[0].u_add.u_cc.d [32:25] = _11448_;
   reg \g_lane_reg[0].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cc.d[67]  <= \g_lane[0].u_add.w_sign ;
   assign \g_lane[0].u_add.u_cc.d [67] = \g_lane_reg[0].u_add.u_cc.d[67] ;
   reg \g_lane_reg[0].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[0].u_add.u_cc.d[70]  <= \g_lane[0].u_add.w_v ;
   assign \g_lane[0].u_add.u_cc.d [70] = \g_lane_reg[0].u_add.u_cc.d[70] ;
-  reg [26:0] _11450_;
+  reg [26:0] _11451_;
   always @(posedge clk)
-    _11450_ <= _00097_;
-  assign { \g_lane[0].u_add.u_rnd.a , \g_lane[0].u_add.s2_val [2:0] } = _11450_;
+    _11451_ <= _00097_;
+  assign { \g_lane[0].u_add.u_rnd.a , \g_lane[0].u_add.s2_val [2:0] } = _11451_;
   reg \g_lane_reg[0].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cc.d[68]  <= _00095_;
   assign \g_lane[0].u_add.u_cc.d [68] = \g_lane_reg[0].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].v1  <= 1'h0;
     else \g_lane[0].v1  <= \g_lane[0].u_add.u_v ;
   always @(posedge clk)
     y_l[31:0] <= _00111_;
@@ -19890,35 +19895,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _00111_ = \g_lane[0].u_add.u_cc.q [69] ? \g_lane[0].u_add.u_code  : _00110_;
   assign \g_lane[0].u_add.small_b  = _00077_ ? { 27'h0000000, _00078_ } : _00084_;
   assign \g_lane[0].u_add.small_a  = _00069_ ? { 27'h0000000, _00070_ } : _00076_;
-  reg [119:0] _11468_;
+  reg [119:0] _11469_;
   always @(posedge clk)
-    _11468_ <= { \g_lane[0].u_add.u_ca.d [119], \g_lane[0].v0 , \g_lane[0].u_add.u_ca.d [117:81], \g_lane[0].u_mul.y [31], \g_lane[0].u_add.u_dab.a , \g_lane[0].u_add.u_dba.a , \g_lane[0].u_add.u_ca.d [63], \g_lane[0].u_add.u_cmp.a [22:0], \g_lane[0].u_add.u_ca.d [39], \g_lane[0].u_mul.y [22:0], \g_lane[0].u_add.u_dab.s , \g_lane[0].u_add.u_dba.s  };
-  assign { \g_lane[0].u_add.x_swap , \g_lane[0].u_add.u_ca.g_rv.rd [118], \g_lane[0].u_add.x_byp , \g_lane[0].u_add.x_err , \g_lane[0].u_add.x_code , \g_lane[0].u_add.x_sub , \g_lane[0].u_add.x_as , \g_lane[0].u_add.x_bs , \g_lane[0].u_add.x_aexp , \g_lane[0].u_add.x_bexp , \g_lane[0].u_add.x_aman , \g_lane[0].u_add.x_bman , \g_lane[0].u_add.x_dab , \g_lane[0].u_add.x_dba  } = _11468_;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].u_add.x_v  <= 1'h0;
+    _11469_ <= { \g_lane[0].u_add.u_ca.d [119], \g_lane[0].v0 , \g_lane[0].u_add.u_ca.d [117:81], \g_lane[0].u_mul.y [31], \g_lane[0].u_add.u_dab.a , \g_lane[0].u_add.u_dba.a , \g_lane[0].u_add.u_ca.d [63], \g_lane[0].u_add.u_cmp.a [22:0], \g_lane[0].u_add.u_ca.d [39], \g_lane[0].u_mul.y [22:0], \g_lane[0].u_add.u_dab.s , \g_lane[0].u_add.u_dba.s  };
+  assign { \g_lane[0].u_add.x_swap , \g_lane[0].u_add.u_ca.g_rv.rd [118], \g_lane[0].u_add.x_byp , \g_lane[0].u_add.x_err , \g_lane[0].u_add.x_code , \g_lane[0].u_add.x_sub , \g_lane[0].u_add.x_as , \g_lane[0].u_add.x_bs , \g_lane[0].u_add.x_aexp , \g_lane[0].u_add.x_bexp , \g_lane[0].u_add.x_aman , \g_lane[0].u_add.x_bman , \g_lane[0].u_add.x_dab , \g_lane[0].u_add.x_dba  } = _11469_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].u_add.x_v  <= 1'h0;
     else \g_lane[0].u_add.x_v  <= \g_lane[0].v0 ;
-  reg [101:0] _11470_;
+  reg [101:0] _11471_;
   always @(posedge clk)
-    _11470_ <= { \g_lane[0].u_add.u_cb.d [101:56], \g_lane[0].u_add.u_sum.s , \g_lane[0].u_add.u_dif.s  };
-  assign { \g_lane[0].u_add.u_cb.g_rv.rd [101], \g_lane[0].u_add.u_cd.d [106:62], \g_lane[0].u_add.u_cd.d [0], \g_lane[0].u_add.u_cb.q [54:28], \g_lane[0].u_add.u_cd.d [34:7] } = _11470_;
+    _11471_ <= { \g_lane[0].u_add.u_cb.d [101:56], \g_lane[0].u_add.u_sum.s , \g_lane[0].u_add.u_dif.s  };
+  assign { \g_lane[0].u_add.u_cb.g_rv.rd [101], \g_lane[0].u_add.u_cd.d [106:62], \g_lane[0].u_add.u_cd.d [0], \g_lane[0].u_add.u_cb.q [54:28], \g_lane[0].u_add.u_cd.d [34:7] } = _11471_;
   reg \g_lane_reg[0].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[0].u_add.u_cd.d[107]  <= \g_lane[0].u_add.u_cb.d [101];
   assign \g_lane[0].u_add.u_cd.d [107] = \g_lane_reg[0].u_add.u_cd.d[107] ;
-  reg [70:0] _11472_;
+  reg [70:0] _11473_;
   always @(posedge clk)
-    _11472_ <= { \g_lane[0].u_add.u_cc.d [70:67], 1'h0, \g_lane[0].u_add.u_cc.d [65:25], \g_lane[0].u_add.u_rnd.s , \g_lane[0].u_add.u_rnd.g [24] };
-  assign { \g_lane[0].u_add.u_cc.g_rv.rd [70], \g_lane[0].u_add.u_cc.q [69], \g_lane[0].u_add.u_zero , \g_lane[0].u_add.u_sign , \g_lane[0].u_add.u_err , \g_lane[0].u_add.u_code , \g_lane[0].u_add.u_exp , \g_lane[0].u_add.u_cc.q [24:0] } = _11472_;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].u_add.u_v  <= 1'h0;
+    _11473_ <= { \g_lane[0].u_add.u_cc.d [70:67], 1'h0, \g_lane[0].u_add.u_cc.d [65:25], \g_lane[0].u_add.u_rnd.s , \g_lane[0].u_add.u_rnd.g [24] };
+  assign { \g_lane[0].u_add.u_cc.g_rv.rd [70], \g_lane[0].u_add.u_cc.q [69], \g_lane[0].u_add.u_zero , \g_lane[0].u_add.u_sign , \g_lane[0].u_add.u_err , \g_lane[0].u_add.u_code , \g_lane[0].u_add.u_exp , \g_lane[0].u_add.u_cc.q [24:0] } = _11473_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].u_add.u_v  <= 1'h0;
     else \g_lane[0].u_add.u_v  <= \g_lane[0].u_add.u_cc.d [70];
-  reg [107:0] _11474_;
+  reg [107:0] _11475_;
   always @(posedge clk)
-    _11474_ <= { \g_lane[0].u_add.u_cd.d [107:7], \g_lane[0].u_add.u_lzc.n , \g_lane[0].u_add.u_cd.d [0] };
-  assign { \g_lane[0].u_add.u_cd.g_rv.rd [107], \g_lane[0].u_add.w_byp , \g_lane[0].u_add.w_sub , \g_lane[0].u_add.w_sign , \g_lane[0].u_add.w_err , \g_lane[0].u_add.w_code , \g_lane[0].u_add.w_exp , \g_lane[0].u_add.w_add , \g_lane[0].u_add.w_dif , \g_lane[0].u_add.u_cd.q [6:1], \g_lane[0].u_add.w_carry  } = _11474_;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].u_add.w_v  <= 1'h0;
+    _11475_ <= { \g_lane[0].u_add.u_cd.d [107:7], \g_lane[0].u_add.u_lzc.n , \g_lane[0].u_add.u_cd.d [0] };
+  assign { \g_lane[0].u_add.u_cd.g_rv.rd [107], \g_lane[0].u_add.w_byp , \g_lane[0].u_add.w_sub , \g_lane[0].u_add.w_sign , \g_lane[0].u_add.w_err , \g_lane[0].u_add.w_code , \g_lane[0].u_add.w_exp , \g_lane[0].u_add.w_add , \g_lane[0].u_add.w_dif , \g_lane[0].u_add.u_cd.q [6:1], \g_lane[0].u_add.w_carry  } = _11475_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].u_add.w_v  <= 1'h0;
     else \g_lane[0].u_add.w_v  <= \g_lane[0].u_add.u_cd.d [107];
   assign \g_lane[0].u_add.u_cmp.g [191:161] = \g_lane[0].u_add.u_cmp.a  & \g_lane[0].u_add.u_cmp.b ;
   assign _00112_ = \g_lane[0].u_add.u_cmp.p [180] & \g_lane[0].u_add.u_cmp.g [179];
@@ -21917,10 +21922,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane_reg[0].u_mul.u_c2.d[227]  <= \g_lane[0].u_mul.u_c1.q [75];
   assign \g_lane[0].u_mul.u_c2.d [227] = \g_lane_reg[0].u_mul.u_c2.d[227] ;
-  reg [1:0] _13469_;
+  reg [1:0] _13470_;
   always @(posedge clk)
-    _13469_ <= \g_lane[0].u_mul.u_c1.q [74:73];
-  assign \g_lane[0].u_mul.u_c2.d [226:225] = _13469_;
+    _13470_ <= \g_lane[0].u_mul.u_c1.q [74:73];
+  assign \g_lane[0].u_mul.u_c2.d [226:225] = _13470_;
   always @(posedge clk)
     \g_lane[0].u_mul.s1_power  <= \g_lane[0].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -21930,18 +21935,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[0].u_mul.u_c2.d[224]  <= \g_lane[0].u_mul.u_c1.q [72];
   assign \g_lane[0].u_mul.u_c2.d [224] = \g_lane_reg[0].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[0].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c2.d[228]  <= \g_lane[0].u_mul.u_c1.q [76];
   assign \g_lane[0].u_mul.u_c2.d [228] = \g_lane_reg[0].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[0].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[0].u_mul.u_c3.d[41]  <= \g_lane[0].u_mul.u_c2.q [227];
   assign \g_lane[0].u_mul.u_c3.d [41] = \g_lane_reg[0].u_mul.u_c3.d[41] ;
-  reg [1:0] _13475_;
+  reg [1:0] _13476_;
   always @(posedge clk)
-    _13475_ <= \g_lane[0].u_mul.u_c2.q [226:225];
-  assign \g_lane[0].u_mul.u_c3.d [40:39] = _13475_;
+    _13476_ <= \g_lane[0].u_mul.u_c2.q [226:225];
+  assign \g_lane[0].u_mul.u_c3.d [40:39] = _13476_;
   always @(posedge clk)
     \g_lane[0].u_mul.s2_fl46  <= \g_lane[0].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -21950,10 +21955,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane[0].u_mul.s2_mr  <= \g_lane[0].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[0].u_mul.s2_ms  <= \g_lane[0].u_mul.u_c2.q [47:0];
-  reg [47:0] _13480_;
+  reg [47:0] _13481_;
   always @(posedge clk)
-    _13480_ <= \g_lane[0].u_mul.u_cpa.s ;
-  assign { \g_lane[0].u_mul.top , \g_lane[0].u_mul.s2_prod [46:0] } = _13480_;
+    _13481_ <= \g_lane[0].u_mul.u_cpa.s ;
+  assign { \g_lane[0].u_mul.top , \g_lane[0].u_mul.s2_prod [46:0] } = _13481_;
   always @(posedge clk)
     \g_lane[0].u_mul.s2_sh  <= \g_lane[0].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[0].u_mul.u_c3.d[38] ;
@@ -21965,12 +21970,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane[0].u_mul.s2_sub47  <= \g_lane[0].u_mul.u_c2.q [127];
   reg \g_lane_reg[0].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c3.d[42]  <= \g_lane[0].u_mul.u_c2.q [228];
   assign \g_lane[0].u_mul.u_c3.d [42] = \g_lane_reg[0].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].v0  <= 1'h0;
     else \g_lane[0].v0  <= \g_lane[0].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[0].u_mul.y  <= _00873_;
@@ -22116,49 +22121,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _00967_ = _00965_ | _00966_;
   assign _00968_ = { 17'h00000, \g_lane[0].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[0].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _00969_[47], \g_lane[0].u_mul.g_nokcp.u_rows.l1 [287:241] } = _00967_ | _00968_;
-  reg [76:0] _13630_;
+  reg [76:0] _13631_;
   always @(posedge clk)
-    _13630_ <= { \g_lane[0].u_mul.u_c5.q [86:82], \g_lane[0].u_mul.u_c1.d [71:24], \g_lane[0].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[0].u_mul.u_c1.g_rv.rd [76], \g_lane[0].u_mul.u_c1.q [75:24], \g_lane[0].u_mul.u_pw.a , \g_lane[0].u_mul.u_pw.b  } = _13630_;
+    _13631_ <= { \g_lane[0].u_mul.u_c5.q [86:82], \g_lane[0].u_mul.u_c1.d [71:24], \g_lane[0].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[0].u_mul.u_c1.g_rv.rd [76], \g_lane[0].u_mul.u_c1.q [75:24], \g_lane[0].u_mul.u_pw.a , \g_lane[0].u_mul.u_pw.b  } = _13631_;
   reg \g_lane_reg[0].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c1.q[76]  <= \g_lane[0].u_mul.u_c5.q [86];
   assign \g_lane[0].u_mul.u_c1.q [76] = \g_lane_reg[0].u_mul.u_c1.q[76] ;
-  reg [228:0] _13632_;
+  reg [228:0] _13633_;
   always @(posedge clk)
-    _13632_ <= { \g_lane[0].u_mul.u_c2.d [228:177], 1'h0, \g_lane[0].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[0].u_mul.u_c2.g_rv.rd [228], \g_lane[0].u_mul.u_c2.q [227:224], \g_lane[0].u_mul.u_cpa.b , \g_lane[0].u_mul.u_cpa.a , \g_lane[0].u_mul.u_c2.q [127:0] } = _13632_;
+    _13633_ <= { \g_lane[0].u_mul.u_c2.d [228:177], 1'h0, \g_lane[0].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[0].u_mul.u_c2.g_rv.rd [228], \g_lane[0].u_mul.u_c2.q [227:224], \g_lane[0].u_mul.u_cpa.b , \g_lane[0].u_mul.u_cpa.a , \g_lane[0].u_mul.u_c2.q [127:0] } = _13633_;
   reg \g_lane_reg[0].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c2.q[228]  <= \g_lane[0].u_mul.u_c2.d [228];
   assign \g_lane[0].u_mul.u_c2.q [228] = \g_lane_reg[0].u_mul.u_c2.q[228] ;
-  reg [42:0] _13634_;
+  reg [42:0] _13635_;
   always @(posedge clk)
-    _13634_ <= \g_lane[0].u_mul.u_c3.d ;
-  assign { \g_lane[0].u_mul.u_c3.g_rv.rd [42], \g_lane[0].u_mul.u_c4.d [41:25], \g_lane[0].u_mul.u_rnd.a , \g_lane[0].u_mul.u_rnd.g [0] } = _13634_;
+    _13635_ <= \g_lane[0].u_mul.u_c3.d ;
+  assign { \g_lane[0].u_mul.u_c3.g_rv.rd [42], \g_lane[0].u_mul.u_c4.d [41:25], \g_lane[0].u_mul.u_rnd.a , \g_lane[0].u_mul.u_rnd.g [0] } = _13635_;
   reg \g_lane_reg[0].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c4.d[42]  <= \g_lane[0].u_mul.u_c3.d [42];
   assign \g_lane[0].u_mul.u_c4.d [42] = \g_lane_reg[0].u_mul.u_c4.d[42] ;
-  reg [42:0] _13636_;
+  reg [42:0] _13637_;
   always @(posedge clk)
-    _13636_ <= { \g_lane[0].u_mul.u_c4.d [42:25], \g_lane[0].u_mul.u_rnd.s , \g_lane[0].u_mul.u_rnd.g [24] };
-  assign { \g_lane[0].u_mul.u_c4.g_rv.rd [42], \g_lane[0].u_mul.u_c6.q [35:33], \g_lane[0].u_mul.u_c4.q [38:0] } = _13636_;
+    _13637_ <= { \g_lane[0].u_mul.u_c4.d [42:25], \g_lane[0].u_mul.u_rnd.s , \g_lane[0].u_mul.u_rnd.g [24] };
+  assign { \g_lane[0].u_mul.u_c4.g_rv.rd [42], \g_lane[0].u_mul.u_c6.q [35:33], \g_lane[0].u_mul.u_c4.q [38:0] } = _13637_;
   reg \g_lane_reg[0].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c6.q[36]  <= \g_lane[0].u_mul.u_c4.d [42];
   assign \g_lane[0].u_mul.u_c6.q [36] = \g_lane_reg[0].u_mul.u_c6.q[36] ;
-  reg [86:0] _13638_;
+  reg [86:0] _13639_;
   always @(posedge clk)
-    _13638_ <= { gov, \g_lane[0].u_mul.u_c5.d [85:82], \g_lane[0].u_mul.u_la.x [31], \g_lane[0].u_mul.x_a [22:0], \g_lane[0].u_mul.u_lb.x [31], \g_lane[0].u_mul.x_b [22:0], \g_lane[0].u_mul.u_la.n [4:0], \g_lane[0].u_mul.u_lb.n [4:0], \g_lane[0].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[0].u_mul.u_c5.g_rv.rd [86], \g_lane[0].u_mul.u_c5.q [85:0] } = _13638_;
+    _13639_ <= { gov, \g_lane[0].u_mul.u_c5.d [85:82], \g_lane[0].u_mul.u_la.x [31], \g_lane[0].u_mul.x_a [22:0], \g_lane[0].u_mul.u_lb.x [31], \g_lane[0].u_mul.x_b [22:0], \g_lane[0].u_mul.u_la.n [4:0], \g_lane[0].u_mul.u_lb.n [4:0], \g_lane[0].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[0].u_mul.u_c5.g_rv.rd [86], \g_lane[0].u_mul.u_c5.q [85:0] } = _13639_;
   reg \g_lane_reg[0].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[0].u_mul.u_c5.q [86] = \g_lane_reg[0].u_mul.u_c5.q[86] ;
   assign \g_lane[0].u_mul.u_cpa.g [342:295] = \g_lane[0].u_mul.u_cpa.a  & \g_lane[0].u_mul.u_cpa.b ;
@@ -23458,26 +23463,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_add.u_rnd.g [0] = \g_lane[1].u_add.s2_val [2] && _01499_;
   always @(posedge clk)
     \g_lane[1].u_add.err  <= _01502_;
-  reg [23:0] _14936_;
+  reg [23:0] _14937_;
   always @(posedge clk)
-    _14936_ <= _01488_;
-  assign \g_lane[1].u_add.u_sum.a [26:3] = _14936_;
+    _14937_ <= _01488_;
+  assign \g_lane[1].u_add.u_sum.a [26:3] = _14937_;
   reg \g_lane_reg[1].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cb.d[100]  <= \g_lane[1].u_add.x_byp ;
   assign \g_lane[1].u_add.u_cb.d [100] = \g_lane_reg[1].u_add.u_cb.d[100] ;
-  reg [31:0] _14938_;
+  reg [31:0] _14939_;
   always @(posedge clk)
-    _14938_ <= \g_lane[1].u_add.x_code ;
-  assign \g_lane[1].u_add.u_cb.d [95:64] = _14938_;
-  reg [1:0] _14939_;
+    _14939_ <= \g_lane[1].u_add.x_code ;
+  assign \g_lane[1].u_add.u_cb.d [95:64] = _14939_;
+  reg [1:0] _14940_;
   always @(posedge clk)
-    _14939_ <= \g_lane[1].u_add.x_err ;
-  assign \g_lane[1].u_add.u_cb.d [97:96] = _14939_;
-  reg [7:0] _14940_;
+    _14940_ <= \g_lane[1].u_add.x_err ;
+  assign \g_lane[1].u_add.u_cb.d [97:96] = _14940_;
+  reg [7:0] _14941_;
   always @(posedge clk)
-    _14940_ <= _01487_;
-  assign \g_lane[1].u_add.u_cb.d [63:56] = _14940_;
+    _14941_ <= _01487_;
+  assign \g_lane[1].u_add.u_cb.d [63:56] = _14941_;
   reg \g_lane_reg[1].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cb.d[98]  <= _01486_;
@@ -23489,45 +23494,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[1].u_add.u_cb.d[99]  <= \g_lane[1].u_add.x_sub ;
   assign \g_lane[1].u_add.u_cb.d [99] = \g_lane_reg[1].u_add.u_cb.d[99] ;
   reg \g_lane_reg[1].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[1].u_add.u_cb.d[101]  <= \g_lane[1].u_add.x_v ;
   assign \g_lane[1].u_add.u_cb.d [101] = \g_lane_reg[1].u_add.u_cb.d[101] ;
   reg \g_lane_reg[1].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cc.d[69]  <= \g_lane[1].u_add.w_byp ;
   assign \g_lane[1].u_add.u_cc.d [69] = \g_lane_reg[1].u_add.u_cc.d[69] ;
-  reg [31:0] _14946_;
+  reg [31:0] _14947_;
   always @(posedge clk)
-    _14946_ <= \g_lane[1].u_add.w_code ;
-  assign \g_lane[1].u_add.u_cc.d [64:33] = _14946_;
-  reg [1:0] _14947_;
+    _14947_ <= \g_lane[1].u_add.w_code ;
+  assign \g_lane[1].u_add.u_cc.d [64:33] = _14947_;
+  reg [1:0] _14948_;
   always @(posedge clk)
-    _14947_ <= \g_lane[1].u_add.w_err ;
-  assign { \g_lane[1].u_add.s2_err [1], \g_lane[1].u_add.u_cc.d [65] } = _14947_;
-  reg [7:0] _14948_;
+    _14948_ <= \g_lane[1].u_add.w_err ;
+  assign { \g_lane[1].u_add.s2_err [1], \g_lane[1].u_add.u_cc.d [65] } = _14948_;
+  reg [7:0] _14949_;
   always @(posedge clk)
-    _14948_ <= _01496_;
-  assign \g_lane[1].u_add.u_cc.d [32:25] = _14948_;
+    _14949_ <= _01496_;
+  assign \g_lane[1].u_add.u_cc.d [32:25] = _14949_;
   reg \g_lane_reg[1].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cc.d[67]  <= \g_lane[1].u_add.w_sign ;
   assign \g_lane[1].u_add.u_cc.d [67] = \g_lane_reg[1].u_add.u_cc.d[67] ;
   reg \g_lane_reg[1].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[1].u_add.u_cc.d[70]  <= \g_lane[1].u_add.w_v ;
   assign \g_lane[1].u_add.u_cc.d [70] = \g_lane_reg[1].u_add.u_cc.d[70] ;
-  reg [26:0] _14951_;
+  reg [26:0] _14952_;
   always @(posedge clk)
-    _14951_ <= _01497_;
-  assign { \g_lane[1].u_add.u_rnd.a , \g_lane[1].u_add.s2_val [2:0] } = _14951_;
+    _14952_ <= _01497_;
+  assign { \g_lane[1].u_add.u_rnd.a , \g_lane[1].u_add.s2_val [2:0] } = _14952_;
   reg \g_lane_reg[1].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cc.d[68]  <= _01495_;
   assign \g_lane[1].u_add.u_cc.d [68] = \g_lane_reg[1].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].v1  <= 1'h0;
     else \g_lane[1].v1  <= \g_lane[1].u_add.u_v ;
   always @(posedge clk)
     y_l[63:32] <= _01511_;
@@ -23545,35 +23550,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _01511_ = \g_lane[1].u_add.u_cc.q [69] ? \g_lane[1].u_add.u_code  : _01510_;
   assign \g_lane[1].u_add.small_b  = _01477_ ? { 27'h0000000, _01478_ } : _01484_;
   assign \g_lane[1].u_add.small_a  = _01469_ ? { 27'h0000000, _01470_ } : _01476_;
-  reg [119:0] _14969_;
+  reg [119:0] _14970_;
   always @(posedge clk)
-    _14969_ <= { \g_lane[1].u_add.u_ca.d [119], \g_lane[1].v0 , \g_lane[1].u_add.u_ca.d [117:81], \g_lane[1].u_mul.y [31], \g_lane[1].u_add.u_dab.a , \g_lane[1].u_add.u_dba.a , \g_lane[1].u_add.u_ca.d [63], \g_lane[1].u_add.u_cmp.a [22:0], \g_lane[1].u_add.u_ca.d [39], \g_lane[1].u_mul.y [22:0], \g_lane[1].u_add.u_dab.s , \g_lane[1].u_add.u_dba.s  };
-  assign { \g_lane[1].u_add.x_swap , \g_lane[1].u_add.u_ca.g_rv.rd [118], \g_lane[1].u_add.x_byp , \g_lane[1].u_add.x_err , \g_lane[1].u_add.x_code , \g_lane[1].u_add.x_sub , \g_lane[1].u_add.x_as , \g_lane[1].u_add.x_bs , \g_lane[1].u_add.x_aexp , \g_lane[1].u_add.x_bexp , \g_lane[1].u_add.x_aman , \g_lane[1].u_add.x_bman , \g_lane[1].u_add.x_dab , \g_lane[1].u_add.x_dba  } = _14969_;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].u_add.x_v  <= 1'h0;
+    _14970_ <= { \g_lane[1].u_add.u_ca.d [119], \g_lane[1].v0 , \g_lane[1].u_add.u_ca.d [117:81], \g_lane[1].u_mul.y [31], \g_lane[1].u_add.u_dab.a , \g_lane[1].u_add.u_dba.a , \g_lane[1].u_add.u_ca.d [63], \g_lane[1].u_add.u_cmp.a [22:0], \g_lane[1].u_add.u_ca.d [39], \g_lane[1].u_mul.y [22:0], \g_lane[1].u_add.u_dab.s , \g_lane[1].u_add.u_dba.s  };
+  assign { \g_lane[1].u_add.x_swap , \g_lane[1].u_add.u_ca.g_rv.rd [118], \g_lane[1].u_add.x_byp , \g_lane[1].u_add.x_err , \g_lane[1].u_add.x_code , \g_lane[1].u_add.x_sub , \g_lane[1].u_add.x_as , \g_lane[1].u_add.x_bs , \g_lane[1].u_add.x_aexp , \g_lane[1].u_add.x_bexp , \g_lane[1].u_add.x_aman , \g_lane[1].u_add.x_bman , \g_lane[1].u_add.x_dab , \g_lane[1].u_add.x_dba  } = _14970_;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].u_add.x_v  <= 1'h0;
     else \g_lane[1].u_add.x_v  <= \g_lane[1].v0 ;
-  reg [101:0] _14971_;
+  reg [101:0] _14972_;
   always @(posedge clk)
-    _14971_ <= { \g_lane[1].u_add.u_cb.d [101:56], \g_lane[1].u_add.u_sum.s , \g_lane[1].u_add.u_dif.s  };
-  assign { \g_lane[1].u_add.u_cb.g_rv.rd [101], \g_lane[1].u_add.u_cd.d [106:62], \g_lane[1].u_add.u_cd.d [0], \g_lane[1].u_add.u_cb.q [54:28], \g_lane[1].u_add.u_cd.d [34:7] } = _14971_;
+    _14972_ <= { \g_lane[1].u_add.u_cb.d [101:56], \g_lane[1].u_add.u_sum.s , \g_lane[1].u_add.u_dif.s  };
+  assign { \g_lane[1].u_add.u_cb.g_rv.rd [101], \g_lane[1].u_add.u_cd.d [106:62], \g_lane[1].u_add.u_cd.d [0], \g_lane[1].u_add.u_cb.q [54:28], \g_lane[1].u_add.u_cd.d [34:7] } = _14972_;
   reg \g_lane_reg[1].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[1].u_add.u_cd.d[107]  <= \g_lane[1].u_add.u_cb.d [101];
   assign \g_lane[1].u_add.u_cd.d [107] = \g_lane_reg[1].u_add.u_cd.d[107] ;
-  reg [70:0] _14973_;
+  reg [70:0] _14974_;
   always @(posedge clk)
-    _14973_ <= { \g_lane[1].u_add.u_cc.d [70:67], 1'h0, \g_lane[1].u_add.u_cc.d [65:25], \g_lane[1].u_add.u_rnd.s , \g_lane[1].u_add.u_rnd.g [24] };
-  assign { \g_lane[1].u_add.u_cc.g_rv.rd [70], \g_lane[1].u_add.u_cc.q [69], \g_lane[1].u_add.u_zero , \g_lane[1].u_add.u_sign , \g_lane[1].u_add.u_err , \g_lane[1].u_add.u_code , \g_lane[1].u_add.u_exp , \g_lane[1].u_add.u_cc.q [24:0] } = _14973_;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].u_add.u_v  <= 1'h0;
+    _14974_ <= { \g_lane[1].u_add.u_cc.d [70:67], 1'h0, \g_lane[1].u_add.u_cc.d [65:25], \g_lane[1].u_add.u_rnd.s , \g_lane[1].u_add.u_rnd.g [24] };
+  assign { \g_lane[1].u_add.u_cc.g_rv.rd [70], \g_lane[1].u_add.u_cc.q [69], \g_lane[1].u_add.u_zero , \g_lane[1].u_add.u_sign , \g_lane[1].u_add.u_err , \g_lane[1].u_add.u_code , \g_lane[1].u_add.u_exp , \g_lane[1].u_add.u_cc.q [24:0] } = _14974_;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].u_add.u_v  <= 1'h0;
     else \g_lane[1].u_add.u_v  <= \g_lane[1].u_add.u_cc.d [70];
-  reg [107:0] _14975_;
+  reg [107:0] _14976_;
   always @(posedge clk)
-    _14975_ <= { \g_lane[1].u_add.u_cd.d [107:7], \g_lane[1].u_add.u_lzc.n , \g_lane[1].u_add.u_cd.d [0] };
-  assign { \g_lane[1].u_add.u_cd.g_rv.rd [107], \g_lane[1].u_add.w_byp , \g_lane[1].u_add.w_sub , \g_lane[1].u_add.w_sign , \g_lane[1].u_add.w_err , \g_lane[1].u_add.w_code , \g_lane[1].u_add.w_exp , \g_lane[1].u_add.w_add , \g_lane[1].u_add.w_dif , \g_lane[1].u_add.u_cd.q [6:1], \g_lane[1].u_add.w_carry  } = _14975_;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].u_add.w_v  <= 1'h0;
+    _14976_ <= { \g_lane[1].u_add.u_cd.d [107:7], \g_lane[1].u_add.u_lzc.n , \g_lane[1].u_add.u_cd.d [0] };
+  assign { \g_lane[1].u_add.u_cd.g_rv.rd [107], \g_lane[1].u_add.w_byp , \g_lane[1].u_add.w_sub , \g_lane[1].u_add.w_sign , \g_lane[1].u_add.w_err , \g_lane[1].u_add.w_code , \g_lane[1].u_add.w_exp , \g_lane[1].u_add.w_add , \g_lane[1].u_add.w_dif , \g_lane[1].u_add.u_cd.q [6:1], \g_lane[1].u_add.w_carry  } = _14976_;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].u_add.w_v  <= 1'h0;
     else \g_lane[1].u_add.w_v  <= \g_lane[1].u_add.u_cd.d [107];
   assign \g_lane[1].u_add.u_cmp.g [191:161] = \g_lane[1].u_add.u_cmp.a  & \g_lane[1].u_add.u_cmp.b ;
   assign _01512_ = \g_lane[1].u_add.u_cmp.p [180] & \g_lane[1].u_add.u_cmp.g [179];
@@ -25572,10 +25577,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane_reg[1].u_mul.u_c2.d[227]  <= \g_lane[1].u_mul.u_c1.q [75];
   assign \g_lane[1].u_mul.u_c2.d [227] = \g_lane_reg[1].u_mul.u_c2.d[227] ;
-  reg [1:0] _16970_;
+  reg [1:0] _16971_;
   always @(posedge clk)
-    _16970_ <= \g_lane[1].u_mul.u_c1.q [74:73];
-  assign \g_lane[1].u_mul.u_c2.d [226:225] = _16970_;
+    _16971_ <= \g_lane[1].u_mul.u_c1.q [74:73];
+  assign \g_lane[1].u_mul.u_c2.d [226:225] = _16971_;
   always @(posedge clk)
     \g_lane[1].u_mul.s1_power  <= \g_lane[1].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -25585,18 +25590,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[1].u_mul.u_c2.d[224]  <= \g_lane[1].u_mul.u_c1.q [72];
   assign \g_lane[1].u_mul.u_c2.d [224] = \g_lane_reg[1].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[1].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c2.d[228]  <= \g_lane[1].u_mul.u_c1.q [76];
   assign \g_lane[1].u_mul.u_c2.d [228] = \g_lane_reg[1].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[1].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[1].u_mul.u_c3.d[41]  <= \g_lane[1].u_mul.u_c2.q [227];
   assign \g_lane[1].u_mul.u_c3.d [41] = \g_lane_reg[1].u_mul.u_c3.d[41] ;
-  reg [1:0] _16976_;
+  reg [1:0] _16977_;
   always @(posedge clk)
-    _16976_ <= \g_lane[1].u_mul.u_c2.q [226:225];
-  assign \g_lane[1].u_mul.u_c3.d [40:39] = _16976_;
+    _16977_ <= \g_lane[1].u_mul.u_c2.q [226:225];
+  assign \g_lane[1].u_mul.u_c3.d [40:39] = _16977_;
   always @(posedge clk)
     \g_lane[1].u_mul.s2_fl46  <= \g_lane[1].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -25605,10 +25610,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane[1].u_mul.s2_mr  <= \g_lane[1].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[1].u_mul.s2_ms  <= \g_lane[1].u_mul.u_c2.q [47:0];
-  reg [47:0] _16981_;
+  reg [47:0] _16982_;
   always @(posedge clk)
-    _16981_ <= \g_lane[1].u_mul.u_cpa.s ;
-  assign { \g_lane[1].u_mul.top , \g_lane[1].u_mul.s2_prod [46:0] } = _16981_;
+    _16982_ <= \g_lane[1].u_mul.u_cpa.s ;
+  assign { \g_lane[1].u_mul.top , \g_lane[1].u_mul.s2_prod [46:0] } = _16982_;
   always @(posedge clk)
     \g_lane[1].u_mul.s2_sh  <= \g_lane[1].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[1].u_mul.u_c3.d[38] ;
@@ -25620,12 +25625,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane[1].u_mul.s2_sub47  <= \g_lane[1].u_mul.u_c2.q [127];
   reg \g_lane_reg[1].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c3.d[42]  <= \g_lane[1].u_mul.u_c2.q [228];
   assign \g_lane[1].u_mul.u_c3.d [42] = \g_lane_reg[1].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].v0  <= 1'h0;
     else \g_lane[1].v0  <= \g_lane[1].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[1].u_mul.y  <= _02273_;
@@ -25771,49 +25776,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _02367_ = _02365_ | _02366_;
   assign _02368_ = { 17'h00000, \g_lane[1].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[1].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _02369_[47], \g_lane[1].u_mul.g_nokcp.u_rows.l1 [287:241] } = _02367_ | _02368_;
-  reg [76:0] _17131_;
+  reg [76:0] _17132_;
   always @(posedge clk)
-    _17131_ <= { \g_lane[1].u_mul.u_c5.q [86:82], \g_lane[1].u_mul.u_c1.d [71:24], \g_lane[1].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[1].u_mul.u_c1.g_rv.rd [76], \g_lane[1].u_mul.u_c1.q [75:24], \g_lane[1].u_mul.u_pw.a , \g_lane[1].u_mul.u_pw.b  } = _17131_;
+    _17132_ <= { \g_lane[1].u_mul.u_c5.q [86:82], \g_lane[1].u_mul.u_c1.d [71:24], \g_lane[1].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[1].u_mul.u_c1.g_rv.rd [76], \g_lane[1].u_mul.u_c1.q [75:24], \g_lane[1].u_mul.u_pw.a , \g_lane[1].u_mul.u_pw.b  } = _17132_;
   reg \g_lane_reg[1].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c1.q[76]  <= \g_lane[1].u_mul.u_c5.q [86];
   assign \g_lane[1].u_mul.u_c1.q [76] = \g_lane_reg[1].u_mul.u_c1.q[76] ;
-  reg [228:0] _17133_;
+  reg [228:0] _17134_;
   always @(posedge clk)
-    _17133_ <= { \g_lane[1].u_mul.u_c2.d [228:177], 1'h0, \g_lane[1].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[1].u_mul.u_c2.g_rv.rd [228], \g_lane[1].u_mul.u_c2.q [227:224], \g_lane[1].u_mul.u_cpa.b , \g_lane[1].u_mul.u_cpa.a , \g_lane[1].u_mul.u_c2.q [127:0] } = _17133_;
+    _17134_ <= { \g_lane[1].u_mul.u_c2.d [228:177], 1'h0, \g_lane[1].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[1].u_mul.u_c2.g_rv.rd [228], \g_lane[1].u_mul.u_c2.q [227:224], \g_lane[1].u_mul.u_cpa.b , \g_lane[1].u_mul.u_cpa.a , \g_lane[1].u_mul.u_c2.q [127:0] } = _17134_;
   reg \g_lane_reg[1].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c2.q[228]  <= \g_lane[1].u_mul.u_c2.d [228];
   assign \g_lane[1].u_mul.u_c2.q [228] = \g_lane_reg[1].u_mul.u_c2.q[228] ;
-  reg [42:0] _17135_;
+  reg [42:0] _17136_;
   always @(posedge clk)
-    _17135_ <= \g_lane[1].u_mul.u_c3.d ;
-  assign { \g_lane[1].u_mul.u_c3.g_rv.rd [42], \g_lane[1].u_mul.u_c4.d [41:25], \g_lane[1].u_mul.u_rnd.a , \g_lane[1].u_mul.u_rnd.g [0] } = _17135_;
+    _17136_ <= \g_lane[1].u_mul.u_c3.d ;
+  assign { \g_lane[1].u_mul.u_c3.g_rv.rd [42], \g_lane[1].u_mul.u_c4.d [41:25], \g_lane[1].u_mul.u_rnd.a , \g_lane[1].u_mul.u_rnd.g [0] } = _17136_;
   reg \g_lane_reg[1].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c4.d[42]  <= \g_lane[1].u_mul.u_c3.d [42];
   assign \g_lane[1].u_mul.u_c4.d [42] = \g_lane_reg[1].u_mul.u_c4.d[42] ;
-  reg [42:0] _17137_;
+  reg [42:0] _17138_;
   always @(posedge clk)
-    _17137_ <= { \g_lane[1].u_mul.u_c4.d [42:25], \g_lane[1].u_mul.u_rnd.s , \g_lane[1].u_mul.u_rnd.g [24] };
-  assign { \g_lane[1].u_mul.u_c4.g_rv.rd [42], \g_lane[1].u_mul.u_c6.q [35:33], \g_lane[1].u_mul.u_c4.q [38:0] } = _17137_;
+    _17138_ <= { \g_lane[1].u_mul.u_c4.d [42:25], \g_lane[1].u_mul.u_rnd.s , \g_lane[1].u_mul.u_rnd.g [24] };
+  assign { \g_lane[1].u_mul.u_c4.g_rv.rd [42], \g_lane[1].u_mul.u_c6.q [35:33], \g_lane[1].u_mul.u_c4.q [38:0] } = _17138_;
   reg \g_lane_reg[1].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c6.q[36]  <= \g_lane[1].u_mul.u_c4.d [42];
   assign \g_lane[1].u_mul.u_c6.q [36] = \g_lane_reg[1].u_mul.u_c6.q[36] ;
-  reg [86:0] _17139_;
+  reg [86:0] _17140_;
   always @(posedge clk)
-    _17139_ <= { gov, \g_lane[1].u_mul.u_c5.d [85:82], \g_lane[1].u_mul.u_la.x [31], \g_lane[1].u_mul.x_a [22:0], \g_lane[1].u_mul.u_lb.x [31], \g_lane[1].u_mul.x_b [22:0], \g_lane[1].u_mul.u_la.n [4:0], \g_lane[1].u_mul.u_lb.n [4:0], \g_lane[1].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[1].u_mul.u_c5.g_rv.rd [86], \g_lane[1].u_mul.u_c5.q [85:0] } = _17139_;
+    _17140_ <= { gov, \g_lane[1].u_mul.u_c5.d [85:82], \g_lane[1].u_mul.u_la.x [31], \g_lane[1].u_mul.x_a [22:0], \g_lane[1].u_mul.u_lb.x [31], \g_lane[1].u_mul.x_b [22:0], \g_lane[1].u_mul.u_la.n [4:0], \g_lane[1].u_mul.u_lb.n [4:0], \g_lane[1].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[1].u_mul.u_c5.g_rv.rd [86], \g_lane[1].u_mul.u_c5.q [85:0] } = _17140_;
   reg \g_lane_reg[1].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[1].u_mul.u_c5.q [86] = \g_lane_reg[1].u_mul.u_c5.q[86] ;
   assign \g_lane[1].u_mul.u_cpa.g [342:295] = \g_lane[1].u_mul.u_cpa.a  & \g_lane[1].u_mul.u_cpa.b ;
@@ -27113,26 +27118,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_add.u_rnd.g [0] = \g_lane[2].u_add.s2_val [2] && _02899_;
   always @(posedge clk)
     \g_lane[2].u_add.err  <= _02902_;
-  reg [23:0] _18437_;
+  reg [23:0] _18438_;
   always @(posedge clk)
-    _18437_ <= _02888_;
-  assign \g_lane[2].u_add.u_sum.a [26:3] = _18437_;
+    _18438_ <= _02888_;
+  assign \g_lane[2].u_add.u_sum.a [26:3] = _18438_;
   reg \g_lane_reg[2].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cb.d[100]  <= \g_lane[2].u_add.x_byp ;
   assign \g_lane[2].u_add.u_cb.d [100] = \g_lane_reg[2].u_add.u_cb.d[100] ;
-  reg [31:0] _18439_;
+  reg [31:0] _18440_;
   always @(posedge clk)
-    _18439_ <= \g_lane[2].u_add.x_code ;
-  assign \g_lane[2].u_add.u_cb.d [95:64] = _18439_;
-  reg [1:0] _18440_;
+    _18440_ <= \g_lane[2].u_add.x_code ;
+  assign \g_lane[2].u_add.u_cb.d [95:64] = _18440_;
+  reg [1:0] _18441_;
   always @(posedge clk)
-    _18440_ <= \g_lane[2].u_add.x_err ;
-  assign \g_lane[2].u_add.u_cb.d [97:96] = _18440_;
-  reg [7:0] _18441_;
+    _18441_ <= \g_lane[2].u_add.x_err ;
+  assign \g_lane[2].u_add.u_cb.d [97:96] = _18441_;
+  reg [7:0] _18442_;
   always @(posedge clk)
-    _18441_ <= _02887_;
-  assign \g_lane[2].u_add.u_cb.d [63:56] = _18441_;
+    _18442_ <= _02887_;
+  assign \g_lane[2].u_add.u_cb.d [63:56] = _18442_;
   reg \g_lane_reg[2].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cb.d[98]  <= _02886_;
@@ -27144,45 +27149,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[2].u_add.u_cb.d[99]  <= \g_lane[2].u_add.x_sub ;
   assign \g_lane[2].u_add.u_cb.d [99] = \g_lane_reg[2].u_add.u_cb.d[99] ;
   reg \g_lane_reg[2].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[2].u_add.u_cb.d[101]  <= \g_lane[2].u_add.x_v ;
   assign \g_lane[2].u_add.u_cb.d [101] = \g_lane_reg[2].u_add.u_cb.d[101] ;
   reg \g_lane_reg[2].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cc.d[69]  <= \g_lane[2].u_add.w_byp ;
   assign \g_lane[2].u_add.u_cc.d [69] = \g_lane_reg[2].u_add.u_cc.d[69] ;
-  reg [31:0] _18447_;
+  reg [31:0] _18448_;
   always @(posedge clk)
-    _18447_ <= \g_lane[2].u_add.w_code ;
-  assign \g_lane[2].u_add.u_cc.d [64:33] = _18447_;
-  reg [1:0] _18448_;
+    _18448_ <= \g_lane[2].u_add.w_code ;
+  assign \g_lane[2].u_add.u_cc.d [64:33] = _18448_;
+  reg [1:0] _18449_;
   always @(posedge clk)
-    _18448_ <= \g_lane[2].u_add.w_err ;
-  assign { \g_lane[2].u_add.s2_err [1], \g_lane[2].u_add.u_cc.d [65] } = _18448_;
-  reg [7:0] _18449_;
+    _18449_ <= \g_lane[2].u_add.w_err ;
+  assign { \g_lane[2].u_add.s2_err [1], \g_lane[2].u_add.u_cc.d [65] } = _18449_;
+  reg [7:0] _18450_;
   always @(posedge clk)
-    _18449_ <= _02896_;
-  assign \g_lane[2].u_add.u_cc.d [32:25] = _18449_;
+    _18450_ <= _02896_;
+  assign \g_lane[2].u_add.u_cc.d [32:25] = _18450_;
   reg \g_lane_reg[2].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cc.d[67]  <= \g_lane[2].u_add.w_sign ;
   assign \g_lane[2].u_add.u_cc.d [67] = \g_lane_reg[2].u_add.u_cc.d[67] ;
   reg \g_lane_reg[2].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[2].u_add.u_cc.d[70]  <= \g_lane[2].u_add.w_v ;
   assign \g_lane[2].u_add.u_cc.d [70] = \g_lane_reg[2].u_add.u_cc.d[70] ;
-  reg [26:0] _18452_;
+  reg [26:0] _18453_;
   always @(posedge clk)
-    _18452_ <= _02897_;
-  assign { \g_lane[2].u_add.u_rnd.a , \g_lane[2].u_add.s2_val [2:0] } = _18452_;
+    _18453_ <= _02897_;
+  assign { \g_lane[2].u_add.u_rnd.a , \g_lane[2].u_add.s2_val [2:0] } = _18453_;
   reg \g_lane_reg[2].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cc.d[68]  <= _02895_;
   assign \g_lane[2].u_add.u_cc.d [68] = \g_lane_reg[2].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].v1  <= 1'h0;
     else \g_lane[2].v1  <= \g_lane[2].u_add.u_v ;
   always @(posedge clk)
     y_l[95:64] <= _02911_;
@@ -27200,35 +27205,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _02911_ = \g_lane[2].u_add.u_cc.q [69] ? \g_lane[2].u_add.u_code  : _02910_;
   assign \g_lane[2].u_add.small_b  = _02877_ ? { 27'h0000000, _02878_ } : _02884_;
   assign \g_lane[2].u_add.small_a  = _02869_ ? { 27'h0000000, _02870_ } : _02876_;
-  reg [119:0] _18470_;
+  reg [119:0] _18471_;
   always @(posedge clk)
-    _18470_ <= { \g_lane[2].u_add.u_ca.d [119], \g_lane[2].v0 , \g_lane[2].u_add.u_ca.d [117:81], \g_lane[2].u_mul.y [31], \g_lane[2].u_add.u_dab.a , \g_lane[2].u_add.u_dba.a , \g_lane[2].u_add.u_ca.d [63], \g_lane[2].u_add.u_cmp.a [22:0], \g_lane[2].u_add.u_ca.d [39], \g_lane[2].u_mul.y [22:0], \g_lane[2].u_add.u_dab.s , \g_lane[2].u_add.u_dba.s  };
-  assign { \g_lane[2].u_add.x_swap , \g_lane[2].u_add.u_ca.g_rv.rd [118], \g_lane[2].u_add.x_byp , \g_lane[2].u_add.x_err , \g_lane[2].u_add.x_code , \g_lane[2].u_add.x_sub , \g_lane[2].u_add.x_as , \g_lane[2].u_add.x_bs , \g_lane[2].u_add.x_aexp , \g_lane[2].u_add.x_bexp , \g_lane[2].u_add.x_aman , \g_lane[2].u_add.x_bman , \g_lane[2].u_add.x_dab , \g_lane[2].u_add.x_dba  } = _18470_;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].u_add.x_v  <= 1'h0;
+    _18471_ <= { \g_lane[2].u_add.u_ca.d [119], \g_lane[2].v0 , \g_lane[2].u_add.u_ca.d [117:81], \g_lane[2].u_mul.y [31], \g_lane[2].u_add.u_dab.a , \g_lane[2].u_add.u_dba.a , \g_lane[2].u_add.u_ca.d [63], \g_lane[2].u_add.u_cmp.a [22:0], \g_lane[2].u_add.u_ca.d [39], \g_lane[2].u_mul.y [22:0], \g_lane[2].u_add.u_dab.s , \g_lane[2].u_add.u_dba.s  };
+  assign { \g_lane[2].u_add.x_swap , \g_lane[2].u_add.u_ca.g_rv.rd [118], \g_lane[2].u_add.x_byp , \g_lane[2].u_add.x_err , \g_lane[2].u_add.x_code , \g_lane[2].u_add.x_sub , \g_lane[2].u_add.x_as , \g_lane[2].u_add.x_bs , \g_lane[2].u_add.x_aexp , \g_lane[2].u_add.x_bexp , \g_lane[2].u_add.x_aman , \g_lane[2].u_add.x_bman , \g_lane[2].u_add.x_dab , \g_lane[2].u_add.x_dba  } = _18471_;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].u_add.x_v  <= 1'h0;
     else \g_lane[2].u_add.x_v  <= \g_lane[2].v0 ;
-  reg [101:0] _18472_;
+  reg [101:0] _18473_;
   always @(posedge clk)
-    _18472_ <= { \g_lane[2].u_add.u_cb.d [101:56], \g_lane[2].u_add.u_sum.s , \g_lane[2].u_add.u_dif.s  };
-  assign { \g_lane[2].u_add.u_cb.g_rv.rd [101], \g_lane[2].u_add.u_cd.d [106:62], \g_lane[2].u_add.u_cd.d [0], \g_lane[2].u_add.u_cb.q [54:28], \g_lane[2].u_add.u_cd.d [34:7] } = _18472_;
+    _18473_ <= { \g_lane[2].u_add.u_cb.d [101:56], \g_lane[2].u_add.u_sum.s , \g_lane[2].u_add.u_dif.s  };
+  assign { \g_lane[2].u_add.u_cb.g_rv.rd [101], \g_lane[2].u_add.u_cd.d [106:62], \g_lane[2].u_add.u_cd.d [0], \g_lane[2].u_add.u_cb.q [54:28], \g_lane[2].u_add.u_cd.d [34:7] } = _18473_;
   reg \g_lane_reg[2].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[2].u_add.u_cd.d[107]  <= \g_lane[2].u_add.u_cb.d [101];
   assign \g_lane[2].u_add.u_cd.d [107] = \g_lane_reg[2].u_add.u_cd.d[107] ;
-  reg [70:0] _18474_;
+  reg [70:0] _18475_;
   always @(posedge clk)
-    _18474_ <= { \g_lane[2].u_add.u_cc.d [70:67], 1'h0, \g_lane[2].u_add.u_cc.d [65:25], \g_lane[2].u_add.u_rnd.s , \g_lane[2].u_add.u_rnd.g [24] };
-  assign { \g_lane[2].u_add.u_cc.g_rv.rd [70], \g_lane[2].u_add.u_cc.q [69], \g_lane[2].u_add.u_zero , \g_lane[2].u_add.u_sign , \g_lane[2].u_add.u_err , \g_lane[2].u_add.u_code , \g_lane[2].u_add.u_exp , \g_lane[2].u_add.u_cc.q [24:0] } = _18474_;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].u_add.u_v  <= 1'h0;
+    _18475_ <= { \g_lane[2].u_add.u_cc.d [70:67], 1'h0, \g_lane[2].u_add.u_cc.d [65:25], \g_lane[2].u_add.u_rnd.s , \g_lane[2].u_add.u_rnd.g [24] };
+  assign { \g_lane[2].u_add.u_cc.g_rv.rd [70], \g_lane[2].u_add.u_cc.q [69], \g_lane[2].u_add.u_zero , \g_lane[2].u_add.u_sign , \g_lane[2].u_add.u_err , \g_lane[2].u_add.u_code , \g_lane[2].u_add.u_exp , \g_lane[2].u_add.u_cc.q [24:0] } = _18475_;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].u_add.u_v  <= 1'h0;
     else \g_lane[2].u_add.u_v  <= \g_lane[2].u_add.u_cc.d [70];
-  reg [107:0] _18476_;
+  reg [107:0] _18477_;
   always @(posedge clk)
-    _18476_ <= { \g_lane[2].u_add.u_cd.d [107:7], \g_lane[2].u_add.u_lzc.n , \g_lane[2].u_add.u_cd.d [0] };
-  assign { \g_lane[2].u_add.u_cd.g_rv.rd [107], \g_lane[2].u_add.w_byp , \g_lane[2].u_add.w_sub , \g_lane[2].u_add.w_sign , \g_lane[2].u_add.w_err , \g_lane[2].u_add.w_code , \g_lane[2].u_add.w_exp , \g_lane[2].u_add.w_add , \g_lane[2].u_add.w_dif , \g_lane[2].u_add.u_cd.q [6:1], \g_lane[2].u_add.w_carry  } = _18476_;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].u_add.w_v  <= 1'h0;
+    _18477_ <= { \g_lane[2].u_add.u_cd.d [107:7], \g_lane[2].u_add.u_lzc.n , \g_lane[2].u_add.u_cd.d [0] };
+  assign { \g_lane[2].u_add.u_cd.g_rv.rd [107], \g_lane[2].u_add.w_byp , \g_lane[2].u_add.w_sub , \g_lane[2].u_add.w_sign , \g_lane[2].u_add.w_err , \g_lane[2].u_add.w_code , \g_lane[2].u_add.w_exp , \g_lane[2].u_add.w_add , \g_lane[2].u_add.w_dif , \g_lane[2].u_add.u_cd.q [6:1], \g_lane[2].u_add.w_carry  } = _18477_;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].u_add.w_v  <= 1'h0;
     else \g_lane[2].u_add.w_v  <= \g_lane[2].u_add.u_cd.d [107];
   assign \g_lane[2].u_add.u_cmp.g [191:161] = \g_lane[2].u_add.u_cmp.a  & \g_lane[2].u_add.u_cmp.b ;
   assign _02912_ = \g_lane[2].u_add.u_cmp.p [180] & \g_lane[2].u_add.u_cmp.g [179];
@@ -29227,10 +29232,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane_reg[2].u_mul.u_c2.d[227]  <= \g_lane[2].u_mul.u_c1.q [75];
   assign \g_lane[2].u_mul.u_c2.d [227] = \g_lane_reg[2].u_mul.u_c2.d[227] ;
-  reg [1:0] _20471_;
+  reg [1:0] _20472_;
   always @(posedge clk)
-    _20471_ <= \g_lane[2].u_mul.u_c1.q [74:73];
-  assign \g_lane[2].u_mul.u_c2.d [226:225] = _20471_;
+    _20472_ <= \g_lane[2].u_mul.u_c1.q [74:73];
+  assign \g_lane[2].u_mul.u_c2.d [226:225] = _20472_;
   always @(posedge clk)
     \g_lane[2].u_mul.s1_power  <= \g_lane[2].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -29240,18 +29245,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[2].u_mul.u_c2.d[224]  <= \g_lane[2].u_mul.u_c1.q [72];
   assign \g_lane[2].u_mul.u_c2.d [224] = \g_lane_reg[2].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[2].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c2.d[228]  <= \g_lane[2].u_mul.u_c1.q [76];
   assign \g_lane[2].u_mul.u_c2.d [228] = \g_lane_reg[2].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[2].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[2].u_mul.u_c3.d[41]  <= \g_lane[2].u_mul.u_c2.q [227];
   assign \g_lane[2].u_mul.u_c3.d [41] = \g_lane_reg[2].u_mul.u_c3.d[41] ;
-  reg [1:0] _20477_;
+  reg [1:0] _20478_;
   always @(posedge clk)
-    _20477_ <= \g_lane[2].u_mul.u_c2.q [226:225];
-  assign \g_lane[2].u_mul.u_c3.d [40:39] = _20477_;
+    _20478_ <= \g_lane[2].u_mul.u_c2.q [226:225];
+  assign \g_lane[2].u_mul.u_c3.d [40:39] = _20478_;
   always @(posedge clk)
     \g_lane[2].u_mul.s2_fl46  <= \g_lane[2].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -29260,10 +29265,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane[2].u_mul.s2_mr  <= \g_lane[2].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[2].u_mul.s2_ms  <= \g_lane[2].u_mul.u_c2.q [47:0];
-  reg [47:0] _20482_;
+  reg [47:0] _20483_;
   always @(posedge clk)
-    _20482_ <= \g_lane[2].u_mul.u_cpa.s ;
-  assign { \g_lane[2].u_mul.top , \g_lane[2].u_mul.s2_prod [46:0] } = _20482_;
+    _20483_ <= \g_lane[2].u_mul.u_cpa.s ;
+  assign { \g_lane[2].u_mul.top , \g_lane[2].u_mul.s2_prod [46:0] } = _20483_;
   always @(posedge clk)
     \g_lane[2].u_mul.s2_sh  <= \g_lane[2].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[2].u_mul.u_c3.d[38] ;
@@ -29275,12 +29280,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane[2].u_mul.s2_sub47  <= \g_lane[2].u_mul.u_c2.q [127];
   reg \g_lane_reg[2].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c3.d[42]  <= \g_lane[2].u_mul.u_c2.q [228];
   assign \g_lane[2].u_mul.u_c3.d [42] = \g_lane_reg[2].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].v0  <= 1'h0;
     else \g_lane[2].v0  <= \g_lane[2].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[2].u_mul.y  <= _03673_;
@@ -29426,49 +29431,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _03767_ = _03765_ | _03766_;
   assign _03768_ = { 17'h00000, \g_lane[2].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[2].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _03769_[47], \g_lane[2].u_mul.g_nokcp.u_rows.l1 [287:241] } = _03767_ | _03768_;
-  reg [76:0] _20632_;
+  reg [76:0] _20633_;
   always @(posedge clk)
-    _20632_ <= { \g_lane[2].u_mul.u_c5.q [86:82], \g_lane[2].u_mul.u_c1.d [71:24], \g_lane[2].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[2].u_mul.u_c1.g_rv.rd [76], \g_lane[2].u_mul.u_c1.q [75:24], \g_lane[2].u_mul.u_pw.a , \g_lane[2].u_mul.u_pw.b  } = _20632_;
+    _20633_ <= { \g_lane[2].u_mul.u_c5.q [86:82], \g_lane[2].u_mul.u_c1.d [71:24], \g_lane[2].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[2].u_mul.u_c1.g_rv.rd [76], \g_lane[2].u_mul.u_c1.q [75:24], \g_lane[2].u_mul.u_pw.a , \g_lane[2].u_mul.u_pw.b  } = _20633_;
   reg \g_lane_reg[2].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c1.q[76]  <= \g_lane[2].u_mul.u_c5.q [86];
   assign \g_lane[2].u_mul.u_c1.q [76] = \g_lane_reg[2].u_mul.u_c1.q[76] ;
-  reg [228:0] _20634_;
+  reg [228:0] _20635_;
   always @(posedge clk)
-    _20634_ <= { \g_lane[2].u_mul.u_c2.d [228:177], 1'h0, \g_lane[2].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[2].u_mul.u_c2.g_rv.rd [228], \g_lane[2].u_mul.u_c2.q [227:224], \g_lane[2].u_mul.u_cpa.b , \g_lane[2].u_mul.u_cpa.a , \g_lane[2].u_mul.u_c2.q [127:0] } = _20634_;
+    _20635_ <= { \g_lane[2].u_mul.u_c2.d [228:177], 1'h0, \g_lane[2].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[2].u_mul.u_c2.g_rv.rd [228], \g_lane[2].u_mul.u_c2.q [227:224], \g_lane[2].u_mul.u_cpa.b , \g_lane[2].u_mul.u_cpa.a , \g_lane[2].u_mul.u_c2.q [127:0] } = _20635_;
   reg \g_lane_reg[2].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c2.q[228]  <= \g_lane[2].u_mul.u_c2.d [228];
   assign \g_lane[2].u_mul.u_c2.q [228] = \g_lane_reg[2].u_mul.u_c2.q[228] ;
-  reg [42:0] _20636_;
+  reg [42:0] _20637_;
   always @(posedge clk)
-    _20636_ <= \g_lane[2].u_mul.u_c3.d ;
-  assign { \g_lane[2].u_mul.u_c3.g_rv.rd [42], \g_lane[2].u_mul.u_c4.d [41:25], \g_lane[2].u_mul.u_rnd.a , \g_lane[2].u_mul.u_rnd.g [0] } = _20636_;
+    _20637_ <= \g_lane[2].u_mul.u_c3.d ;
+  assign { \g_lane[2].u_mul.u_c3.g_rv.rd [42], \g_lane[2].u_mul.u_c4.d [41:25], \g_lane[2].u_mul.u_rnd.a , \g_lane[2].u_mul.u_rnd.g [0] } = _20637_;
   reg \g_lane_reg[2].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c4.d[42]  <= \g_lane[2].u_mul.u_c3.d [42];
   assign \g_lane[2].u_mul.u_c4.d [42] = \g_lane_reg[2].u_mul.u_c4.d[42] ;
-  reg [42:0] _20638_;
+  reg [42:0] _20639_;
   always @(posedge clk)
-    _20638_ <= { \g_lane[2].u_mul.u_c4.d [42:25], \g_lane[2].u_mul.u_rnd.s , \g_lane[2].u_mul.u_rnd.g [24] };
-  assign { \g_lane[2].u_mul.u_c4.g_rv.rd [42], \g_lane[2].u_mul.u_c6.q [35:33], \g_lane[2].u_mul.u_c4.q [38:0] } = _20638_;
+    _20639_ <= { \g_lane[2].u_mul.u_c4.d [42:25], \g_lane[2].u_mul.u_rnd.s , \g_lane[2].u_mul.u_rnd.g [24] };
+  assign { \g_lane[2].u_mul.u_c4.g_rv.rd [42], \g_lane[2].u_mul.u_c6.q [35:33], \g_lane[2].u_mul.u_c4.q [38:0] } = _20639_;
   reg \g_lane_reg[2].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c6.q[36]  <= \g_lane[2].u_mul.u_c4.d [42];
   assign \g_lane[2].u_mul.u_c6.q [36] = \g_lane_reg[2].u_mul.u_c6.q[36] ;
-  reg [86:0] _20640_;
+  reg [86:0] _20641_;
   always @(posedge clk)
-    _20640_ <= { gov, \g_lane[2].u_mul.u_c5.d [85:82], \g_lane[2].u_mul.u_la.x [31], \g_lane[2].u_mul.x_a [22:0], \g_lane[2].u_mul.u_lb.x [31], \g_lane[2].u_mul.x_b [22:0], \g_lane[2].u_mul.u_la.n [4:0], \g_lane[2].u_mul.u_lb.n [4:0], \g_lane[2].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[2].u_mul.u_c5.g_rv.rd [86], \g_lane[2].u_mul.u_c5.q [85:0] } = _20640_;
+    _20641_ <= { gov, \g_lane[2].u_mul.u_c5.d [85:82], \g_lane[2].u_mul.u_la.x [31], \g_lane[2].u_mul.x_a [22:0], \g_lane[2].u_mul.u_lb.x [31], \g_lane[2].u_mul.x_b [22:0], \g_lane[2].u_mul.u_la.n [4:0], \g_lane[2].u_mul.u_lb.n [4:0], \g_lane[2].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[2].u_mul.u_c5.g_rv.rd [86], \g_lane[2].u_mul.u_c5.q [85:0] } = _20641_;
   reg \g_lane_reg[2].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[2].u_mul.u_c5.q [86] = \g_lane_reg[2].u_mul.u_c5.q[86] ;
   assign \g_lane[2].u_mul.u_cpa.g [342:295] = \g_lane[2].u_mul.u_cpa.a  & \g_lane[2].u_mul.u_cpa.b ;
@@ -30768,26 +30773,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_add.u_rnd.g [0] = \g_lane[3].u_add.s2_val [2] && _04299_;
   always @(posedge clk)
     \g_lane[3].u_add.err  <= _04302_;
-  reg [23:0] _21938_;
+  reg [23:0] _21939_;
   always @(posedge clk)
-    _21938_ <= _04288_;
-  assign \g_lane[3].u_add.u_sum.a [26:3] = _21938_;
+    _21939_ <= _04288_;
+  assign \g_lane[3].u_add.u_sum.a [26:3] = _21939_;
   reg \g_lane_reg[3].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cb.d[100]  <= \g_lane[3].u_add.x_byp ;
   assign \g_lane[3].u_add.u_cb.d [100] = \g_lane_reg[3].u_add.u_cb.d[100] ;
-  reg [31:0] _21940_;
+  reg [31:0] _21941_;
   always @(posedge clk)
-    _21940_ <= \g_lane[3].u_add.x_code ;
-  assign \g_lane[3].u_add.u_cb.d [95:64] = _21940_;
-  reg [1:0] _21941_;
+    _21941_ <= \g_lane[3].u_add.x_code ;
+  assign \g_lane[3].u_add.u_cb.d [95:64] = _21941_;
+  reg [1:0] _21942_;
   always @(posedge clk)
-    _21941_ <= \g_lane[3].u_add.x_err ;
-  assign \g_lane[3].u_add.u_cb.d [97:96] = _21941_;
-  reg [7:0] _21942_;
+    _21942_ <= \g_lane[3].u_add.x_err ;
+  assign \g_lane[3].u_add.u_cb.d [97:96] = _21942_;
+  reg [7:0] _21943_;
   always @(posedge clk)
-    _21942_ <= _04287_;
-  assign \g_lane[3].u_add.u_cb.d [63:56] = _21942_;
+    _21943_ <= _04287_;
+  assign \g_lane[3].u_add.u_cb.d [63:56] = _21943_;
   reg \g_lane_reg[3].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cb.d[98]  <= _04286_;
@@ -30799,45 +30804,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[3].u_add.u_cb.d[99]  <= \g_lane[3].u_add.x_sub ;
   assign \g_lane[3].u_add.u_cb.d [99] = \g_lane_reg[3].u_add.u_cb.d[99] ;
   reg \g_lane_reg[3].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[3].u_add.u_cb.d[101]  <= \g_lane[3].u_add.x_v ;
   assign \g_lane[3].u_add.u_cb.d [101] = \g_lane_reg[3].u_add.u_cb.d[101] ;
   reg \g_lane_reg[3].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cc.d[69]  <= \g_lane[3].u_add.w_byp ;
   assign \g_lane[3].u_add.u_cc.d [69] = \g_lane_reg[3].u_add.u_cc.d[69] ;
-  reg [31:0] _21948_;
+  reg [31:0] _21949_;
   always @(posedge clk)
-    _21948_ <= \g_lane[3].u_add.w_code ;
-  assign \g_lane[3].u_add.u_cc.d [64:33] = _21948_;
-  reg [1:0] _21949_;
+    _21949_ <= \g_lane[3].u_add.w_code ;
+  assign \g_lane[3].u_add.u_cc.d [64:33] = _21949_;
+  reg [1:0] _21950_;
   always @(posedge clk)
-    _21949_ <= \g_lane[3].u_add.w_err ;
-  assign { \g_lane[3].u_add.s2_err [1], \g_lane[3].u_add.u_cc.d [65] } = _21949_;
-  reg [7:0] _21950_;
+    _21950_ <= \g_lane[3].u_add.w_err ;
+  assign { \g_lane[3].u_add.s2_err [1], \g_lane[3].u_add.u_cc.d [65] } = _21950_;
+  reg [7:0] _21951_;
   always @(posedge clk)
-    _21950_ <= _04296_;
-  assign \g_lane[3].u_add.u_cc.d [32:25] = _21950_;
+    _21951_ <= _04296_;
+  assign \g_lane[3].u_add.u_cc.d [32:25] = _21951_;
   reg \g_lane_reg[3].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cc.d[67]  <= \g_lane[3].u_add.w_sign ;
   assign \g_lane[3].u_add.u_cc.d [67] = \g_lane_reg[3].u_add.u_cc.d[67] ;
   reg \g_lane_reg[3].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[3].u_add.u_cc.d[70]  <= \g_lane[3].u_add.w_v ;
   assign \g_lane[3].u_add.u_cc.d [70] = \g_lane_reg[3].u_add.u_cc.d[70] ;
-  reg [26:0] _21953_;
+  reg [26:0] _21954_;
   always @(posedge clk)
-    _21953_ <= _04297_;
-  assign { \g_lane[3].u_add.u_rnd.a , \g_lane[3].u_add.s2_val [2:0] } = _21953_;
+    _21954_ <= _04297_;
+  assign { \g_lane[3].u_add.u_rnd.a , \g_lane[3].u_add.s2_val [2:0] } = _21954_;
   reg \g_lane_reg[3].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cc.d[68]  <= _04295_;
   assign \g_lane[3].u_add.u_cc.d [68] = \g_lane_reg[3].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].v1  <= 1'h0;
     else \g_lane[3].v1  <= \g_lane[3].u_add.u_v ;
   always @(posedge clk)
     y_l[127:96] <= _04311_;
@@ -30855,35 +30860,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _04311_ = \g_lane[3].u_add.u_cc.q [69] ? \g_lane[3].u_add.u_code  : _04310_;
   assign \g_lane[3].u_add.small_b  = _04277_ ? { 27'h0000000, _04278_ } : _04284_;
   assign \g_lane[3].u_add.small_a  = _04269_ ? { 27'h0000000, _04270_ } : _04276_;
-  reg [119:0] _21971_;
+  reg [119:0] _21972_;
   always @(posedge clk)
-    _21971_ <= { \g_lane[3].u_add.u_ca.d [119], \g_lane[3].v0 , \g_lane[3].u_add.u_ca.d [117:81], \g_lane[3].u_mul.y [31], \g_lane[3].u_add.u_dab.a , \g_lane[3].u_add.u_dba.a , \g_lane[3].u_add.u_ca.d [63], \g_lane[3].u_add.u_cmp.a [22:0], \g_lane[3].u_add.u_ca.d [39], \g_lane[3].u_mul.y [22:0], \g_lane[3].u_add.u_dab.s , \g_lane[3].u_add.u_dba.s  };
-  assign { \g_lane[3].u_add.x_swap , \g_lane[3].u_add.u_ca.g_rv.rd [118], \g_lane[3].u_add.x_byp , \g_lane[3].u_add.x_err , \g_lane[3].u_add.x_code , \g_lane[3].u_add.x_sub , \g_lane[3].u_add.x_as , \g_lane[3].u_add.x_bs , \g_lane[3].u_add.x_aexp , \g_lane[3].u_add.x_bexp , \g_lane[3].u_add.x_aman , \g_lane[3].u_add.x_bman , \g_lane[3].u_add.x_dab , \g_lane[3].u_add.x_dba  } = _21971_;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].u_add.x_v  <= 1'h0;
+    _21972_ <= { \g_lane[3].u_add.u_ca.d [119], \g_lane[3].v0 , \g_lane[3].u_add.u_ca.d [117:81], \g_lane[3].u_mul.y [31], \g_lane[3].u_add.u_dab.a , \g_lane[3].u_add.u_dba.a , \g_lane[3].u_add.u_ca.d [63], \g_lane[3].u_add.u_cmp.a [22:0], \g_lane[3].u_add.u_ca.d [39], \g_lane[3].u_mul.y [22:0], \g_lane[3].u_add.u_dab.s , \g_lane[3].u_add.u_dba.s  };
+  assign { \g_lane[3].u_add.x_swap , \g_lane[3].u_add.u_ca.g_rv.rd [118], \g_lane[3].u_add.x_byp , \g_lane[3].u_add.x_err , \g_lane[3].u_add.x_code , \g_lane[3].u_add.x_sub , \g_lane[3].u_add.x_as , \g_lane[3].u_add.x_bs , \g_lane[3].u_add.x_aexp , \g_lane[3].u_add.x_bexp , \g_lane[3].u_add.x_aman , \g_lane[3].u_add.x_bman , \g_lane[3].u_add.x_dab , \g_lane[3].u_add.x_dba  } = _21972_;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].u_add.x_v  <= 1'h0;
     else \g_lane[3].u_add.x_v  <= \g_lane[3].v0 ;
-  reg [101:0] _21973_;
+  reg [101:0] _21974_;
   always @(posedge clk)
-    _21973_ <= { \g_lane[3].u_add.u_cb.d [101:56], \g_lane[3].u_add.u_sum.s , \g_lane[3].u_add.u_dif.s  };
-  assign { \g_lane[3].u_add.u_cb.g_rv.rd [101], \g_lane[3].u_add.u_cd.d [106:62], \g_lane[3].u_add.u_cd.d [0], \g_lane[3].u_add.u_cb.q [54:28], \g_lane[3].u_add.u_cd.d [34:7] } = _21973_;
+    _21974_ <= { \g_lane[3].u_add.u_cb.d [101:56], \g_lane[3].u_add.u_sum.s , \g_lane[3].u_add.u_dif.s  };
+  assign { \g_lane[3].u_add.u_cb.g_rv.rd [101], \g_lane[3].u_add.u_cd.d [106:62], \g_lane[3].u_add.u_cd.d [0], \g_lane[3].u_add.u_cb.q [54:28], \g_lane[3].u_add.u_cd.d [34:7] } = _21974_;
   reg \g_lane_reg[3].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[3].u_add.u_cd.d[107]  <= \g_lane[3].u_add.u_cb.d [101];
   assign \g_lane[3].u_add.u_cd.d [107] = \g_lane_reg[3].u_add.u_cd.d[107] ;
-  reg [70:0] _21975_;
+  reg [70:0] _21976_;
   always @(posedge clk)
-    _21975_ <= { \g_lane[3].u_add.u_cc.d [70:67], 1'h0, \g_lane[3].u_add.u_cc.d [65:25], \g_lane[3].u_add.u_rnd.s , \g_lane[3].u_add.u_rnd.g [24] };
-  assign { \g_lane[3].u_add.u_cc.g_rv.rd [70], \g_lane[3].u_add.u_cc.q [69], \g_lane[3].u_add.u_zero , \g_lane[3].u_add.u_sign , \g_lane[3].u_add.u_err , \g_lane[3].u_add.u_code , \g_lane[3].u_add.u_exp , \g_lane[3].u_add.u_cc.q [24:0] } = _21975_;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].u_add.u_v  <= 1'h0;
+    _21976_ <= { \g_lane[3].u_add.u_cc.d [70:67], 1'h0, \g_lane[3].u_add.u_cc.d [65:25], \g_lane[3].u_add.u_rnd.s , \g_lane[3].u_add.u_rnd.g [24] };
+  assign { \g_lane[3].u_add.u_cc.g_rv.rd [70], \g_lane[3].u_add.u_cc.q [69], \g_lane[3].u_add.u_zero , \g_lane[3].u_add.u_sign , \g_lane[3].u_add.u_err , \g_lane[3].u_add.u_code , \g_lane[3].u_add.u_exp , \g_lane[3].u_add.u_cc.q [24:0] } = _21976_;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].u_add.u_v  <= 1'h0;
     else \g_lane[3].u_add.u_v  <= \g_lane[3].u_add.u_cc.d [70];
-  reg [107:0] _21977_;
+  reg [107:0] _21978_;
   always @(posedge clk)
-    _21977_ <= { \g_lane[3].u_add.u_cd.d [107:7], \g_lane[3].u_add.u_lzc.n , \g_lane[3].u_add.u_cd.d [0] };
-  assign { \g_lane[3].u_add.u_cd.g_rv.rd [107], \g_lane[3].u_add.w_byp , \g_lane[3].u_add.w_sub , \g_lane[3].u_add.w_sign , \g_lane[3].u_add.w_err , \g_lane[3].u_add.w_code , \g_lane[3].u_add.w_exp , \g_lane[3].u_add.w_add , \g_lane[3].u_add.w_dif , \g_lane[3].u_add.u_cd.q [6:1], \g_lane[3].u_add.w_carry  } = _21977_;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].u_add.w_v  <= 1'h0;
+    _21978_ <= { \g_lane[3].u_add.u_cd.d [107:7], \g_lane[3].u_add.u_lzc.n , \g_lane[3].u_add.u_cd.d [0] };
+  assign { \g_lane[3].u_add.u_cd.g_rv.rd [107], \g_lane[3].u_add.w_byp , \g_lane[3].u_add.w_sub , \g_lane[3].u_add.w_sign , \g_lane[3].u_add.w_err , \g_lane[3].u_add.w_code , \g_lane[3].u_add.w_exp , \g_lane[3].u_add.w_add , \g_lane[3].u_add.w_dif , \g_lane[3].u_add.u_cd.q [6:1], \g_lane[3].u_add.w_carry  } = _21978_;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].u_add.w_v  <= 1'h0;
     else \g_lane[3].u_add.w_v  <= \g_lane[3].u_add.u_cd.d [107];
   assign \g_lane[3].u_add.u_cmp.g [191:161] = \g_lane[3].u_add.u_cmp.a  & \g_lane[3].u_add.u_cmp.b ;
   assign _04312_ = \g_lane[3].u_add.u_cmp.p [180] & \g_lane[3].u_add.u_cmp.g [179];
@@ -32882,10 +32887,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane_reg[3].u_mul.u_c2.d[227]  <= \g_lane[3].u_mul.u_c1.q [75];
   assign \g_lane[3].u_mul.u_c2.d [227] = \g_lane_reg[3].u_mul.u_c2.d[227] ;
-  reg [1:0] _23972_;
+  reg [1:0] _23973_;
   always @(posedge clk)
-    _23972_ <= \g_lane[3].u_mul.u_c1.q [74:73];
-  assign \g_lane[3].u_mul.u_c2.d [226:225] = _23972_;
+    _23973_ <= \g_lane[3].u_mul.u_c1.q [74:73];
+  assign \g_lane[3].u_mul.u_c2.d [226:225] = _23973_;
   always @(posedge clk)
     \g_lane[3].u_mul.s1_power  <= \g_lane[3].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -32895,18 +32900,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[3].u_mul.u_c2.d[224]  <= \g_lane[3].u_mul.u_c1.q [72];
   assign \g_lane[3].u_mul.u_c2.d [224] = \g_lane_reg[3].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[3].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c2.d[228]  <= \g_lane[3].u_mul.u_c1.q [76];
   assign \g_lane[3].u_mul.u_c2.d [228] = \g_lane_reg[3].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[3].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[3].u_mul.u_c3.d[41]  <= \g_lane[3].u_mul.u_c2.q [227];
   assign \g_lane[3].u_mul.u_c3.d [41] = \g_lane_reg[3].u_mul.u_c3.d[41] ;
-  reg [1:0] _23978_;
+  reg [1:0] _23979_;
   always @(posedge clk)
-    _23978_ <= \g_lane[3].u_mul.u_c2.q [226:225];
-  assign \g_lane[3].u_mul.u_c3.d [40:39] = _23978_;
+    _23979_ <= \g_lane[3].u_mul.u_c2.q [226:225];
+  assign \g_lane[3].u_mul.u_c3.d [40:39] = _23979_;
   always @(posedge clk)
     \g_lane[3].u_mul.s2_fl46  <= \g_lane[3].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -32915,10 +32920,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane[3].u_mul.s2_mr  <= \g_lane[3].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[3].u_mul.s2_ms  <= \g_lane[3].u_mul.u_c2.q [47:0];
-  reg [47:0] _23983_;
+  reg [47:0] _23984_;
   always @(posedge clk)
-    _23983_ <= \g_lane[3].u_mul.u_cpa.s ;
-  assign { \g_lane[3].u_mul.top , \g_lane[3].u_mul.s2_prod [46:0] } = _23983_;
+    _23984_ <= \g_lane[3].u_mul.u_cpa.s ;
+  assign { \g_lane[3].u_mul.top , \g_lane[3].u_mul.s2_prod [46:0] } = _23984_;
   always @(posedge clk)
     \g_lane[3].u_mul.s2_sh  <= \g_lane[3].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[3].u_mul.u_c3.d[38] ;
@@ -32930,12 +32935,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane[3].u_mul.s2_sub47  <= \g_lane[3].u_mul.u_c2.q [127];
   reg \g_lane_reg[3].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c3.d[42]  <= \g_lane[3].u_mul.u_c2.q [228];
   assign \g_lane[3].u_mul.u_c3.d [42] = \g_lane_reg[3].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].v0  <= 1'h0;
     else \g_lane[3].v0  <= \g_lane[3].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[3].u_mul.y  <= _05073_;
@@ -33081,49 +33086,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _05167_ = _05165_ | _05166_;
   assign _05168_ = { 17'h00000, \g_lane[3].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[3].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _05169_[47], \g_lane[3].u_mul.g_nokcp.u_rows.l1 [287:241] } = _05167_ | _05168_;
-  reg [76:0] _24133_;
+  reg [76:0] _24134_;
   always @(posedge clk)
-    _24133_ <= { \g_lane[3].u_mul.u_c5.q [86:82], \g_lane[3].u_mul.u_c1.d [71:24], \g_lane[3].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[3].u_mul.u_c1.g_rv.rd [76], \g_lane[3].u_mul.u_c1.q [75:24], \g_lane[3].u_mul.u_pw.a , \g_lane[3].u_mul.u_pw.b  } = _24133_;
+    _24134_ <= { \g_lane[3].u_mul.u_c5.q [86:82], \g_lane[3].u_mul.u_c1.d [71:24], \g_lane[3].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[3].u_mul.u_c1.g_rv.rd [76], \g_lane[3].u_mul.u_c1.q [75:24], \g_lane[3].u_mul.u_pw.a , \g_lane[3].u_mul.u_pw.b  } = _24134_;
   reg \g_lane_reg[3].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c1.q[76]  <= \g_lane[3].u_mul.u_c5.q [86];
   assign \g_lane[3].u_mul.u_c1.q [76] = \g_lane_reg[3].u_mul.u_c1.q[76] ;
-  reg [228:0] _24135_;
+  reg [228:0] _24136_;
   always @(posedge clk)
-    _24135_ <= { \g_lane[3].u_mul.u_c2.d [228:177], 1'h0, \g_lane[3].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[3].u_mul.u_c2.g_rv.rd [228], \g_lane[3].u_mul.u_c2.q [227:224], \g_lane[3].u_mul.u_cpa.b , \g_lane[3].u_mul.u_cpa.a , \g_lane[3].u_mul.u_c2.q [127:0] } = _24135_;
+    _24136_ <= { \g_lane[3].u_mul.u_c2.d [228:177], 1'h0, \g_lane[3].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[3].u_mul.u_c2.g_rv.rd [228], \g_lane[3].u_mul.u_c2.q [227:224], \g_lane[3].u_mul.u_cpa.b , \g_lane[3].u_mul.u_cpa.a , \g_lane[3].u_mul.u_c2.q [127:0] } = _24136_;
   reg \g_lane_reg[3].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c2.q[228]  <= \g_lane[3].u_mul.u_c2.d [228];
   assign \g_lane[3].u_mul.u_c2.q [228] = \g_lane_reg[3].u_mul.u_c2.q[228] ;
-  reg [42:0] _24137_;
+  reg [42:0] _24138_;
   always @(posedge clk)
-    _24137_ <= \g_lane[3].u_mul.u_c3.d ;
-  assign { \g_lane[3].u_mul.u_c3.g_rv.rd [42], \g_lane[3].u_mul.u_c4.d [41:25], \g_lane[3].u_mul.u_rnd.a , \g_lane[3].u_mul.u_rnd.g [0] } = _24137_;
+    _24138_ <= \g_lane[3].u_mul.u_c3.d ;
+  assign { \g_lane[3].u_mul.u_c3.g_rv.rd [42], \g_lane[3].u_mul.u_c4.d [41:25], \g_lane[3].u_mul.u_rnd.a , \g_lane[3].u_mul.u_rnd.g [0] } = _24138_;
   reg \g_lane_reg[3].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c4.d[42]  <= \g_lane[3].u_mul.u_c3.d [42];
   assign \g_lane[3].u_mul.u_c4.d [42] = \g_lane_reg[3].u_mul.u_c4.d[42] ;
-  reg [42:0] _24139_;
+  reg [42:0] _24140_;
   always @(posedge clk)
-    _24139_ <= { \g_lane[3].u_mul.u_c4.d [42:25], \g_lane[3].u_mul.u_rnd.s , \g_lane[3].u_mul.u_rnd.g [24] };
-  assign { \g_lane[3].u_mul.u_c4.g_rv.rd [42], \g_lane[3].u_mul.u_c6.q [35:33], \g_lane[3].u_mul.u_c4.q [38:0] } = _24139_;
+    _24140_ <= { \g_lane[3].u_mul.u_c4.d [42:25], \g_lane[3].u_mul.u_rnd.s , \g_lane[3].u_mul.u_rnd.g [24] };
+  assign { \g_lane[3].u_mul.u_c4.g_rv.rd [42], \g_lane[3].u_mul.u_c6.q [35:33], \g_lane[3].u_mul.u_c4.q [38:0] } = _24140_;
   reg \g_lane_reg[3].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c6.q[36]  <= \g_lane[3].u_mul.u_c4.d [42];
   assign \g_lane[3].u_mul.u_c6.q [36] = \g_lane_reg[3].u_mul.u_c6.q[36] ;
-  reg [86:0] _24141_;
+  reg [86:0] _24142_;
   always @(posedge clk)
-    _24141_ <= { gov, \g_lane[3].u_mul.u_c5.d [85:82], \g_lane[3].u_mul.u_la.x [31], \g_lane[3].u_mul.x_a [22:0], \g_lane[3].u_mul.u_lb.x [31], \g_lane[3].u_mul.x_b [22:0], \g_lane[3].u_mul.u_la.n [4:0], \g_lane[3].u_mul.u_lb.n [4:0], \g_lane[3].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[3].u_mul.u_c5.g_rv.rd [86], \g_lane[3].u_mul.u_c5.q [85:0] } = _24141_;
+    _24142_ <= { gov, \g_lane[3].u_mul.u_c5.d [85:82], \g_lane[3].u_mul.u_la.x [31], \g_lane[3].u_mul.x_a [22:0], \g_lane[3].u_mul.u_lb.x [31], \g_lane[3].u_mul.x_b [22:0], \g_lane[3].u_mul.u_la.n [4:0], \g_lane[3].u_mul.u_lb.n [4:0], \g_lane[3].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[3].u_mul.u_c5.g_rv.rd [86], \g_lane[3].u_mul.u_c5.q [85:0] } = _24142_;
   reg \g_lane_reg[3].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[3].u_mul.u_c5.q [86] = \g_lane_reg[3].u_mul.u_c5.q[86] ;
   assign \g_lane[3].u_mul.u_cpa.g [342:295] = \g_lane[3].u_mul.u_cpa.a  & \g_lane[3].u_mul.u_cpa.b ;
@@ -34423,26 +34428,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_add.u_rnd.g [0] = \g_lane[4].u_add.s2_val [2] && _05699_;
   always @(posedge clk)
     \g_lane[4].u_add.err  <= _05702_;
-  reg [23:0] _25439_;
+  reg [23:0] _25440_;
   always @(posedge clk)
-    _25439_ <= _05688_;
-  assign \g_lane[4].u_add.u_sum.a [26:3] = _25439_;
+    _25440_ <= _05688_;
+  assign \g_lane[4].u_add.u_sum.a [26:3] = _25440_;
   reg \g_lane_reg[4].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cb.d[100]  <= \g_lane[4].u_add.x_byp ;
   assign \g_lane[4].u_add.u_cb.d [100] = \g_lane_reg[4].u_add.u_cb.d[100] ;
-  reg [31:0] _25441_;
+  reg [31:0] _25442_;
   always @(posedge clk)
-    _25441_ <= \g_lane[4].u_add.x_code ;
-  assign \g_lane[4].u_add.u_cb.d [95:64] = _25441_;
-  reg [1:0] _25442_;
+    _25442_ <= \g_lane[4].u_add.x_code ;
+  assign \g_lane[4].u_add.u_cb.d [95:64] = _25442_;
+  reg [1:0] _25443_;
   always @(posedge clk)
-    _25442_ <= \g_lane[4].u_add.x_err ;
-  assign \g_lane[4].u_add.u_cb.d [97:96] = _25442_;
-  reg [7:0] _25443_;
+    _25443_ <= \g_lane[4].u_add.x_err ;
+  assign \g_lane[4].u_add.u_cb.d [97:96] = _25443_;
+  reg [7:0] _25444_;
   always @(posedge clk)
-    _25443_ <= _05687_;
-  assign \g_lane[4].u_add.u_cb.d [63:56] = _25443_;
+    _25444_ <= _05687_;
+  assign \g_lane[4].u_add.u_cb.d [63:56] = _25444_;
   reg \g_lane_reg[4].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cb.d[98]  <= _05686_;
@@ -34454,45 +34459,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[4].u_add.u_cb.d[99]  <= \g_lane[4].u_add.x_sub ;
   assign \g_lane[4].u_add.u_cb.d [99] = \g_lane_reg[4].u_add.u_cb.d[99] ;
   reg \g_lane_reg[4].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[4].u_add.u_cb.d[101]  <= \g_lane[4].u_add.x_v ;
   assign \g_lane[4].u_add.u_cb.d [101] = \g_lane_reg[4].u_add.u_cb.d[101] ;
   reg \g_lane_reg[4].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cc.d[69]  <= \g_lane[4].u_add.w_byp ;
   assign \g_lane[4].u_add.u_cc.d [69] = \g_lane_reg[4].u_add.u_cc.d[69] ;
-  reg [31:0] _25449_;
+  reg [31:0] _25450_;
   always @(posedge clk)
-    _25449_ <= \g_lane[4].u_add.w_code ;
-  assign \g_lane[4].u_add.u_cc.d [64:33] = _25449_;
-  reg [1:0] _25450_;
+    _25450_ <= \g_lane[4].u_add.w_code ;
+  assign \g_lane[4].u_add.u_cc.d [64:33] = _25450_;
+  reg [1:0] _25451_;
   always @(posedge clk)
-    _25450_ <= \g_lane[4].u_add.w_err ;
-  assign { \g_lane[4].u_add.s2_err [1], \g_lane[4].u_add.u_cc.d [65] } = _25450_;
-  reg [7:0] _25451_;
+    _25451_ <= \g_lane[4].u_add.w_err ;
+  assign { \g_lane[4].u_add.s2_err [1], \g_lane[4].u_add.u_cc.d [65] } = _25451_;
+  reg [7:0] _25452_;
   always @(posedge clk)
-    _25451_ <= _05696_;
-  assign \g_lane[4].u_add.u_cc.d [32:25] = _25451_;
+    _25452_ <= _05696_;
+  assign \g_lane[4].u_add.u_cc.d [32:25] = _25452_;
   reg \g_lane_reg[4].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cc.d[67]  <= \g_lane[4].u_add.w_sign ;
   assign \g_lane[4].u_add.u_cc.d [67] = \g_lane_reg[4].u_add.u_cc.d[67] ;
   reg \g_lane_reg[4].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[4].u_add.u_cc.d[70]  <= \g_lane[4].u_add.w_v ;
   assign \g_lane[4].u_add.u_cc.d [70] = \g_lane_reg[4].u_add.u_cc.d[70] ;
-  reg [26:0] _25454_;
+  reg [26:0] _25455_;
   always @(posedge clk)
-    _25454_ <= _05697_;
-  assign { \g_lane[4].u_add.u_rnd.a , \g_lane[4].u_add.s2_val [2:0] } = _25454_;
+    _25455_ <= _05697_;
+  assign { \g_lane[4].u_add.u_rnd.a , \g_lane[4].u_add.s2_val [2:0] } = _25455_;
   reg \g_lane_reg[4].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cc.d[68]  <= _05695_;
   assign \g_lane[4].u_add.u_cc.d [68] = \g_lane_reg[4].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].v1  <= 1'h0;
     else \g_lane[4].v1  <= \g_lane[4].u_add.u_v ;
   always @(posedge clk)
     y_l[159:128] <= _05711_;
@@ -34510,35 +34515,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _05711_ = \g_lane[4].u_add.u_cc.q [69] ? \g_lane[4].u_add.u_code  : _05710_;
   assign \g_lane[4].u_add.small_b  = _05677_ ? { 27'h0000000, _05678_ } : _05684_;
   assign \g_lane[4].u_add.small_a  = _05669_ ? { 27'h0000000, _05670_ } : _05676_;
-  reg [119:0] _25472_;
+  reg [119:0] _25473_;
   always @(posedge clk)
-    _25472_ <= { \g_lane[4].u_add.u_ca.d [119], \g_lane[4].v0 , \g_lane[4].u_add.u_ca.d [117:81], \g_lane[4].u_mul.y [31], \g_lane[4].u_add.u_dab.a , \g_lane[4].u_add.u_dba.a , \g_lane[4].u_add.u_ca.d [63], \g_lane[4].u_add.u_cmp.a [22:0], \g_lane[4].u_add.u_ca.d [39], \g_lane[4].u_mul.y [22:0], \g_lane[4].u_add.u_dab.s , \g_lane[4].u_add.u_dba.s  };
-  assign { \g_lane[4].u_add.x_swap , \g_lane[4].u_add.u_ca.g_rv.rd [118], \g_lane[4].u_add.x_byp , \g_lane[4].u_add.x_err , \g_lane[4].u_add.x_code , \g_lane[4].u_add.x_sub , \g_lane[4].u_add.x_as , \g_lane[4].u_add.x_bs , \g_lane[4].u_add.x_aexp , \g_lane[4].u_add.x_bexp , \g_lane[4].u_add.x_aman , \g_lane[4].u_add.x_bman , \g_lane[4].u_add.x_dab , \g_lane[4].u_add.x_dba  } = _25472_;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].u_add.x_v  <= 1'h0;
+    _25473_ <= { \g_lane[4].u_add.u_ca.d [119], \g_lane[4].v0 , \g_lane[4].u_add.u_ca.d [117:81], \g_lane[4].u_mul.y [31], \g_lane[4].u_add.u_dab.a , \g_lane[4].u_add.u_dba.a , \g_lane[4].u_add.u_ca.d [63], \g_lane[4].u_add.u_cmp.a [22:0], \g_lane[4].u_add.u_ca.d [39], \g_lane[4].u_mul.y [22:0], \g_lane[4].u_add.u_dab.s , \g_lane[4].u_add.u_dba.s  };
+  assign { \g_lane[4].u_add.x_swap , \g_lane[4].u_add.u_ca.g_rv.rd [118], \g_lane[4].u_add.x_byp , \g_lane[4].u_add.x_err , \g_lane[4].u_add.x_code , \g_lane[4].u_add.x_sub , \g_lane[4].u_add.x_as , \g_lane[4].u_add.x_bs , \g_lane[4].u_add.x_aexp , \g_lane[4].u_add.x_bexp , \g_lane[4].u_add.x_aman , \g_lane[4].u_add.x_bman , \g_lane[4].u_add.x_dab , \g_lane[4].u_add.x_dba  } = _25473_;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].u_add.x_v  <= 1'h0;
     else \g_lane[4].u_add.x_v  <= \g_lane[4].v0 ;
-  reg [101:0] _25474_;
+  reg [101:0] _25475_;
   always @(posedge clk)
-    _25474_ <= { \g_lane[4].u_add.u_cb.d [101:56], \g_lane[4].u_add.u_sum.s , \g_lane[4].u_add.u_dif.s  };
-  assign { \g_lane[4].u_add.u_cb.g_rv.rd [101], \g_lane[4].u_add.u_cd.d [106:62], \g_lane[4].u_add.u_cd.d [0], \g_lane[4].u_add.u_cb.q [54:28], \g_lane[4].u_add.u_cd.d [34:7] } = _25474_;
+    _25475_ <= { \g_lane[4].u_add.u_cb.d [101:56], \g_lane[4].u_add.u_sum.s , \g_lane[4].u_add.u_dif.s  };
+  assign { \g_lane[4].u_add.u_cb.g_rv.rd [101], \g_lane[4].u_add.u_cd.d [106:62], \g_lane[4].u_add.u_cd.d [0], \g_lane[4].u_add.u_cb.q [54:28], \g_lane[4].u_add.u_cd.d [34:7] } = _25475_;
   reg \g_lane_reg[4].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[4].u_add.u_cd.d[107]  <= \g_lane[4].u_add.u_cb.d [101];
   assign \g_lane[4].u_add.u_cd.d [107] = \g_lane_reg[4].u_add.u_cd.d[107] ;
-  reg [70:0] _25476_;
+  reg [70:0] _25477_;
   always @(posedge clk)
-    _25476_ <= { \g_lane[4].u_add.u_cc.d [70:67], 1'h0, \g_lane[4].u_add.u_cc.d [65:25], \g_lane[4].u_add.u_rnd.s , \g_lane[4].u_add.u_rnd.g [24] };
-  assign { \g_lane[4].u_add.u_cc.g_rv.rd [70], \g_lane[4].u_add.u_cc.q [69], \g_lane[4].u_add.u_zero , \g_lane[4].u_add.u_sign , \g_lane[4].u_add.u_err , \g_lane[4].u_add.u_code , \g_lane[4].u_add.u_exp , \g_lane[4].u_add.u_cc.q [24:0] } = _25476_;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].u_add.u_v  <= 1'h0;
+    _25477_ <= { \g_lane[4].u_add.u_cc.d [70:67], 1'h0, \g_lane[4].u_add.u_cc.d [65:25], \g_lane[4].u_add.u_rnd.s , \g_lane[4].u_add.u_rnd.g [24] };
+  assign { \g_lane[4].u_add.u_cc.g_rv.rd [70], \g_lane[4].u_add.u_cc.q [69], \g_lane[4].u_add.u_zero , \g_lane[4].u_add.u_sign , \g_lane[4].u_add.u_err , \g_lane[4].u_add.u_code , \g_lane[4].u_add.u_exp , \g_lane[4].u_add.u_cc.q [24:0] } = _25477_;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].u_add.u_v  <= 1'h0;
     else \g_lane[4].u_add.u_v  <= \g_lane[4].u_add.u_cc.d [70];
-  reg [107:0] _25478_;
+  reg [107:0] _25479_;
   always @(posedge clk)
-    _25478_ <= { \g_lane[4].u_add.u_cd.d [107:7], \g_lane[4].u_add.u_lzc.n , \g_lane[4].u_add.u_cd.d [0] };
-  assign { \g_lane[4].u_add.u_cd.g_rv.rd [107], \g_lane[4].u_add.w_byp , \g_lane[4].u_add.w_sub , \g_lane[4].u_add.w_sign , \g_lane[4].u_add.w_err , \g_lane[4].u_add.w_code , \g_lane[4].u_add.w_exp , \g_lane[4].u_add.w_add , \g_lane[4].u_add.w_dif , \g_lane[4].u_add.u_cd.q [6:1], \g_lane[4].u_add.w_carry  } = _25478_;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].u_add.w_v  <= 1'h0;
+    _25479_ <= { \g_lane[4].u_add.u_cd.d [107:7], \g_lane[4].u_add.u_lzc.n , \g_lane[4].u_add.u_cd.d [0] };
+  assign { \g_lane[4].u_add.u_cd.g_rv.rd [107], \g_lane[4].u_add.w_byp , \g_lane[4].u_add.w_sub , \g_lane[4].u_add.w_sign , \g_lane[4].u_add.w_err , \g_lane[4].u_add.w_code , \g_lane[4].u_add.w_exp , \g_lane[4].u_add.w_add , \g_lane[4].u_add.w_dif , \g_lane[4].u_add.u_cd.q [6:1], \g_lane[4].u_add.w_carry  } = _25479_;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].u_add.w_v  <= 1'h0;
     else \g_lane[4].u_add.w_v  <= \g_lane[4].u_add.u_cd.d [107];
   assign \g_lane[4].u_add.u_cmp.g [191:161] = \g_lane[4].u_add.u_cmp.a  & \g_lane[4].u_add.u_cmp.b ;
   assign _05712_ = \g_lane[4].u_add.u_cmp.p [180] & \g_lane[4].u_add.u_cmp.g [179];
@@ -36537,10 +36542,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane_reg[4].u_mul.u_c2.d[227]  <= \g_lane[4].u_mul.u_c1.q [75];
   assign \g_lane[4].u_mul.u_c2.d [227] = \g_lane_reg[4].u_mul.u_c2.d[227] ;
-  reg [1:0] _27473_;
+  reg [1:0] _27474_;
   always @(posedge clk)
-    _27473_ <= \g_lane[4].u_mul.u_c1.q [74:73];
-  assign \g_lane[4].u_mul.u_c2.d [226:225] = _27473_;
+    _27474_ <= \g_lane[4].u_mul.u_c1.q [74:73];
+  assign \g_lane[4].u_mul.u_c2.d [226:225] = _27474_;
   always @(posedge clk)
     \g_lane[4].u_mul.s1_power  <= \g_lane[4].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -36550,18 +36555,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[4].u_mul.u_c2.d[224]  <= \g_lane[4].u_mul.u_c1.q [72];
   assign \g_lane[4].u_mul.u_c2.d [224] = \g_lane_reg[4].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[4].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c2.d[228]  <= \g_lane[4].u_mul.u_c1.q [76];
   assign \g_lane[4].u_mul.u_c2.d [228] = \g_lane_reg[4].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[4].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[4].u_mul.u_c3.d[41]  <= \g_lane[4].u_mul.u_c2.q [227];
   assign \g_lane[4].u_mul.u_c3.d [41] = \g_lane_reg[4].u_mul.u_c3.d[41] ;
-  reg [1:0] _27479_;
+  reg [1:0] _27480_;
   always @(posedge clk)
-    _27479_ <= \g_lane[4].u_mul.u_c2.q [226:225];
-  assign \g_lane[4].u_mul.u_c3.d [40:39] = _27479_;
+    _27480_ <= \g_lane[4].u_mul.u_c2.q [226:225];
+  assign \g_lane[4].u_mul.u_c3.d [40:39] = _27480_;
   always @(posedge clk)
     \g_lane[4].u_mul.s2_fl46  <= \g_lane[4].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -36570,10 +36575,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane[4].u_mul.s2_mr  <= \g_lane[4].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[4].u_mul.s2_ms  <= \g_lane[4].u_mul.u_c2.q [47:0];
-  reg [47:0] _27484_;
+  reg [47:0] _27485_;
   always @(posedge clk)
-    _27484_ <= \g_lane[4].u_mul.u_cpa.s ;
-  assign { \g_lane[4].u_mul.top , \g_lane[4].u_mul.s2_prod [46:0] } = _27484_;
+    _27485_ <= \g_lane[4].u_mul.u_cpa.s ;
+  assign { \g_lane[4].u_mul.top , \g_lane[4].u_mul.s2_prod [46:0] } = _27485_;
   always @(posedge clk)
     \g_lane[4].u_mul.s2_sh  <= \g_lane[4].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[4].u_mul.u_c3.d[38] ;
@@ -36585,12 +36590,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane[4].u_mul.s2_sub47  <= \g_lane[4].u_mul.u_c2.q [127];
   reg \g_lane_reg[4].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c3.d[42]  <= \g_lane[4].u_mul.u_c2.q [228];
   assign \g_lane[4].u_mul.u_c3.d [42] = \g_lane_reg[4].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].v0  <= 1'h0;
     else \g_lane[4].v0  <= \g_lane[4].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[4].u_mul.y  <= _06473_;
@@ -36736,49 +36741,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _06567_ = _06565_ | _06566_;
   assign _06568_ = { 17'h00000, \g_lane[4].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[4].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _06569_[47], \g_lane[4].u_mul.g_nokcp.u_rows.l1 [287:241] } = _06567_ | _06568_;
-  reg [76:0] _27634_;
+  reg [76:0] _27635_;
   always @(posedge clk)
-    _27634_ <= { \g_lane[4].u_mul.u_c5.q [86:82], \g_lane[4].u_mul.u_c1.d [71:24], \g_lane[4].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[4].u_mul.u_c1.g_rv.rd [76], \g_lane[4].u_mul.u_c1.q [75:24], \g_lane[4].u_mul.u_pw.a , \g_lane[4].u_mul.u_pw.b  } = _27634_;
+    _27635_ <= { \g_lane[4].u_mul.u_c5.q [86:82], \g_lane[4].u_mul.u_c1.d [71:24], \g_lane[4].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[4].u_mul.u_c1.g_rv.rd [76], \g_lane[4].u_mul.u_c1.q [75:24], \g_lane[4].u_mul.u_pw.a , \g_lane[4].u_mul.u_pw.b  } = _27635_;
   reg \g_lane_reg[4].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c1.q[76]  <= \g_lane[4].u_mul.u_c5.q [86];
   assign \g_lane[4].u_mul.u_c1.q [76] = \g_lane_reg[4].u_mul.u_c1.q[76] ;
-  reg [228:0] _27636_;
+  reg [228:0] _27637_;
   always @(posedge clk)
-    _27636_ <= { \g_lane[4].u_mul.u_c2.d [228:177], 1'h0, \g_lane[4].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[4].u_mul.u_c2.g_rv.rd [228], \g_lane[4].u_mul.u_c2.q [227:224], \g_lane[4].u_mul.u_cpa.b , \g_lane[4].u_mul.u_cpa.a , \g_lane[4].u_mul.u_c2.q [127:0] } = _27636_;
+    _27637_ <= { \g_lane[4].u_mul.u_c2.d [228:177], 1'h0, \g_lane[4].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[4].u_mul.u_c2.g_rv.rd [228], \g_lane[4].u_mul.u_c2.q [227:224], \g_lane[4].u_mul.u_cpa.b , \g_lane[4].u_mul.u_cpa.a , \g_lane[4].u_mul.u_c2.q [127:0] } = _27637_;
   reg \g_lane_reg[4].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c2.q[228]  <= \g_lane[4].u_mul.u_c2.d [228];
   assign \g_lane[4].u_mul.u_c2.q [228] = \g_lane_reg[4].u_mul.u_c2.q[228] ;
-  reg [42:0] _27638_;
+  reg [42:0] _27639_;
   always @(posedge clk)
-    _27638_ <= \g_lane[4].u_mul.u_c3.d ;
-  assign { \g_lane[4].u_mul.u_c3.g_rv.rd [42], \g_lane[4].u_mul.u_c4.d [41:25], \g_lane[4].u_mul.u_rnd.a , \g_lane[4].u_mul.u_rnd.g [0] } = _27638_;
+    _27639_ <= \g_lane[4].u_mul.u_c3.d ;
+  assign { \g_lane[4].u_mul.u_c3.g_rv.rd [42], \g_lane[4].u_mul.u_c4.d [41:25], \g_lane[4].u_mul.u_rnd.a , \g_lane[4].u_mul.u_rnd.g [0] } = _27639_;
   reg \g_lane_reg[4].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c4.d[42]  <= \g_lane[4].u_mul.u_c3.d [42];
   assign \g_lane[4].u_mul.u_c4.d [42] = \g_lane_reg[4].u_mul.u_c4.d[42] ;
-  reg [42:0] _27640_;
+  reg [42:0] _27641_;
   always @(posedge clk)
-    _27640_ <= { \g_lane[4].u_mul.u_c4.d [42:25], \g_lane[4].u_mul.u_rnd.s , \g_lane[4].u_mul.u_rnd.g [24] };
-  assign { \g_lane[4].u_mul.u_c4.g_rv.rd [42], \g_lane[4].u_mul.u_c6.q [35:33], \g_lane[4].u_mul.u_c4.q [38:0] } = _27640_;
+    _27641_ <= { \g_lane[4].u_mul.u_c4.d [42:25], \g_lane[4].u_mul.u_rnd.s , \g_lane[4].u_mul.u_rnd.g [24] };
+  assign { \g_lane[4].u_mul.u_c4.g_rv.rd [42], \g_lane[4].u_mul.u_c6.q [35:33], \g_lane[4].u_mul.u_c4.q [38:0] } = _27641_;
   reg \g_lane_reg[4].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c6.q[36]  <= \g_lane[4].u_mul.u_c4.d [42];
   assign \g_lane[4].u_mul.u_c6.q [36] = \g_lane_reg[4].u_mul.u_c6.q[36] ;
-  reg [86:0] _27642_;
+  reg [86:0] _27643_;
   always @(posedge clk)
-    _27642_ <= { gov, \g_lane[4].u_mul.u_c5.d [85:82], \g_lane[4].u_mul.u_la.x [31], \g_lane[4].u_mul.x_a [22:0], \g_lane[4].u_mul.u_lb.x [31], \g_lane[4].u_mul.x_b [22:0], \g_lane[4].u_mul.u_la.n [4:0], \g_lane[4].u_mul.u_lb.n [4:0], \g_lane[4].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[4].u_mul.u_c5.g_rv.rd [86], \g_lane[4].u_mul.u_c5.q [85:0] } = _27642_;
+    _27643_ <= { gov, \g_lane[4].u_mul.u_c5.d [85:82], \g_lane[4].u_mul.u_la.x [31], \g_lane[4].u_mul.x_a [22:0], \g_lane[4].u_mul.u_lb.x [31], \g_lane[4].u_mul.x_b [22:0], \g_lane[4].u_mul.u_la.n [4:0], \g_lane[4].u_mul.u_lb.n [4:0], \g_lane[4].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[4].u_mul.u_c5.g_rv.rd [86], \g_lane[4].u_mul.u_c5.q [85:0] } = _27643_;
   reg \g_lane_reg[4].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[4].u_mul.u_c5.q [86] = \g_lane_reg[4].u_mul.u_c5.q[86] ;
   assign \g_lane[4].u_mul.u_cpa.g [342:295] = \g_lane[4].u_mul.u_cpa.a  & \g_lane[4].u_mul.u_cpa.b ;
@@ -38078,26 +38083,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_add.u_rnd.g [0] = \g_lane[5].u_add.s2_val [2] && _07099_;
   always @(posedge clk)
     \g_lane[5].u_add.err  <= _07102_;
-  reg [23:0] _28940_;
+  reg [23:0] _28941_;
   always @(posedge clk)
-    _28940_ <= _07088_;
-  assign \g_lane[5].u_add.u_sum.a [26:3] = _28940_;
+    _28941_ <= _07088_;
+  assign \g_lane[5].u_add.u_sum.a [26:3] = _28941_;
   reg \g_lane_reg[5].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cb.d[100]  <= \g_lane[5].u_add.x_byp ;
   assign \g_lane[5].u_add.u_cb.d [100] = \g_lane_reg[5].u_add.u_cb.d[100] ;
-  reg [31:0] _28942_;
+  reg [31:0] _28943_;
   always @(posedge clk)
-    _28942_ <= \g_lane[5].u_add.x_code ;
-  assign \g_lane[5].u_add.u_cb.d [95:64] = _28942_;
-  reg [1:0] _28943_;
+    _28943_ <= \g_lane[5].u_add.x_code ;
+  assign \g_lane[5].u_add.u_cb.d [95:64] = _28943_;
+  reg [1:0] _28944_;
   always @(posedge clk)
-    _28943_ <= \g_lane[5].u_add.x_err ;
-  assign \g_lane[5].u_add.u_cb.d [97:96] = _28943_;
-  reg [7:0] _28944_;
+    _28944_ <= \g_lane[5].u_add.x_err ;
+  assign \g_lane[5].u_add.u_cb.d [97:96] = _28944_;
+  reg [7:0] _28945_;
   always @(posedge clk)
-    _28944_ <= _07087_;
-  assign \g_lane[5].u_add.u_cb.d [63:56] = _28944_;
+    _28945_ <= _07087_;
+  assign \g_lane[5].u_add.u_cb.d [63:56] = _28945_;
   reg \g_lane_reg[5].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cb.d[98]  <= _07086_;
@@ -38109,45 +38114,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[5].u_add.u_cb.d[99]  <= \g_lane[5].u_add.x_sub ;
   assign \g_lane[5].u_add.u_cb.d [99] = \g_lane_reg[5].u_add.u_cb.d[99] ;
   reg \g_lane_reg[5].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[5].u_add.u_cb.d[101]  <= \g_lane[5].u_add.x_v ;
   assign \g_lane[5].u_add.u_cb.d [101] = \g_lane_reg[5].u_add.u_cb.d[101] ;
   reg \g_lane_reg[5].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cc.d[69]  <= \g_lane[5].u_add.w_byp ;
   assign \g_lane[5].u_add.u_cc.d [69] = \g_lane_reg[5].u_add.u_cc.d[69] ;
-  reg [31:0] _28950_;
+  reg [31:0] _28951_;
   always @(posedge clk)
-    _28950_ <= \g_lane[5].u_add.w_code ;
-  assign \g_lane[5].u_add.u_cc.d [64:33] = _28950_;
-  reg [1:0] _28951_;
+    _28951_ <= \g_lane[5].u_add.w_code ;
+  assign \g_lane[5].u_add.u_cc.d [64:33] = _28951_;
+  reg [1:0] _28952_;
   always @(posedge clk)
-    _28951_ <= \g_lane[5].u_add.w_err ;
-  assign { \g_lane[5].u_add.s2_err [1], \g_lane[5].u_add.u_cc.d [65] } = _28951_;
-  reg [7:0] _28952_;
+    _28952_ <= \g_lane[5].u_add.w_err ;
+  assign { \g_lane[5].u_add.s2_err [1], \g_lane[5].u_add.u_cc.d [65] } = _28952_;
+  reg [7:0] _28953_;
   always @(posedge clk)
-    _28952_ <= _07096_;
-  assign \g_lane[5].u_add.u_cc.d [32:25] = _28952_;
+    _28953_ <= _07096_;
+  assign \g_lane[5].u_add.u_cc.d [32:25] = _28953_;
   reg \g_lane_reg[5].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cc.d[67]  <= \g_lane[5].u_add.w_sign ;
   assign \g_lane[5].u_add.u_cc.d [67] = \g_lane_reg[5].u_add.u_cc.d[67] ;
   reg \g_lane_reg[5].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[5].u_add.u_cc.d[70]  <= \g_lane[5].u_add.w_v ;
   assign \g_lane[5].u_add.u_cc.d [70] = \g_lane_reg[5].u_add.u_cc.d[70] ;
-  reg [26:0] _28955_;
+  reg [26:0] _28956_;
   always @(posedge clk)
-    _28955_ <= _07097_;
-  assign { \g_lane[5].u_add.u_rnd.a , \g_lane[5].u_add.s2_val [2:0] } = _28955_;
+    _28956_ <= _07097_;
+  assign { \g_lane[5].u_add.u_rnd.a , \g_lane[5].u_add.s2_val [2:0] } = _28956_;
   reg \g_lane_reg[5].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cc.d[68]  <= _07095_;
   assign \g_lane[5].u_add.u_cc.d [68] = \g_lane_reg[5].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].v1  <= 1'h0;
     else \g_lane[5].v1  <= \g_lane[5].u_add.u_v ;
   always @(posedge clk)
     y_l[191:160] <= _07111_;
@@ -38165,35 +38170,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _07111_ = \g_lane[5].u_add.u_cc.q [69] ? \g_lane[5].u_add.u_code  : _07110_;
   assign \g_lane[5].u_add.small_b  = _07077_ ? { 27'h0000000, _07078_ } : _07084_;
   assign \g_lane[5].u_add.small_a  = _07069_ ? { 27'h0000000, _07070_ } : _07076_;
-  reg [119:0] _28973_;
+  reg [119:0] _28974_;
   always @(posedge clk)
-    _28973_ <= { \g_lane[5].u_add.u_ca.d [119], \g_lane[5].v0 , \g_lane[5].u_add.u_ca.d [117:81], \g_lane[5].u_mul.y [31], \g_lane[5].u_add.u_dab.a , \g_lane[5].u_add.u_dba.a , \g_lane[5].u_add.u_ca.d [63], \g_lane[5].u_add.u_cmp.a [22:0], \g_lane[5].u_add.u_ca.d [39], \g_lane[5].u_mul.y [22:0], \g_lane[5].u_add.u_dab.s , \g_lane[5].u_add.u_dba.s  };
-  assign { \g_lane[5].u_add.x_swap , \g_lane[5].u_add.u_ca.g_rv.rd [118], \g_lane[5].u_add.x_byp , \g_lane[5].u_add.x_err , \g_lane[5].u_add.x_code , \g_lane[5].u_add.x_sub , \g_lane[5].u_add.x_as , \g_lane[5].u_add.x_bs , \g_lane[5].u_add.x_aexp , \g_lane[5].u_add.x_bexp , \g_lane[5].u_add.x_aman , \g_lane[5].u_add.x_bman , \g_lane[5].u_add.x_dab , \g_lane[5].u_add.x_dba  } = _28973_;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].u_add.x_v  <= 1'h0;
+    _28974_ <= { \g_lane[5].u_add.u_ca.d [119], \g_lane[5].v0 , \g_lane[5].u_add.u_ca.d [117:81], \g_lane[5].u_mul.y [31], \g_lane[5].u_add.u_dab.a , \g_lane[5].u_add.u_dba.a , \g_lane[5].u_add.u_ca.d [63], \g_lane[5].u_add.u_cmp.a [22:0], \g_lane[5].u_add.u_ca.d [39], \g_lane[5].u_mul.y [22:0], \g_lane[5].u_add.u_dab.s , \g_lane[5].u_add.u_dba.s  };
+  assign { \g_lane[5].u_add.x_swap , \g_lane[5].u_add.u_ca.g_rv.rd [118], \g_lane[5].u_add.x_byp , \g_lane[5].u_add.x_err , \g_lane[5].u_add.x_code , \g_lane[5].u_add.x_sub , \g_lane[5].u_add.x_as , \g_lane[5].u_add.x_bs , \g_lane[5].u_add.x_aexp , \g_lane[5].u_add.x_bexp , \g_lane[5].u_add.x_aman , \g_lane[5].u_add.x_bman , \g_lane[5].u_add.x_dab , \g_lane[5].u_add.x_dba  } = _28974_;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].u_add.x_v  <= 1'h0;
     else \g_lane[5].u_add.x_v  <= \g_lane[5].v0 ;
-  reg [101:0] _28975_;
+  reg [101:0] _28976_;
   always @(posedge clk)
-    _28975_ <= { \g_lane[5].u_add.u_cb.d [101:56], \g_lane[5].u_add.u_sum.s , \g_lane[5].u_add.u_dif.s  };
-  assign { \g_lane[5].u_add.u_cb.g_rv.rd [101], \g_lane[5].u_add.u_cd.d [106:62], \g_lane[5].u_add.u_cd.d [0], \g_lane[5].u_add.u_cb.q [54:28], \g_lane[5].u_add.u_cd.d [34:7] } = _28975_;
+    _28976_ <= { \g_lane[5].u_add.u_cb.d [101:56], \g_lane[5].u_add.u_sum.s , \g_lane[5].u_add.u_dif.s  };
+  assign { \g_lane[5].u_add.u_cb.g_rv.rd [101], \g_lane[5].u_add.u_cd.d [106:62], \g_lane[5].u_add.u_cd.d [0], \g_lane[5].u_add.u_cb.q [54:28], \g_lane[5].u_add.u_cd.d [34:7] } = _28976_;
   reg \g_lane_reg[5].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[5].u_add.u_cd.d[107]  <= \g_lane[5].u_add.u_cb.d [101];
   assign \g_lane[5].u_add.u_cd.d [107] = \g_lane_reg[5].u_add.u_cd.d[107] ;
-  reg [70:0] _28977_;
+  reg [70:0] _28978_;
   always @(posedge clk)
-    _28977_ <= { \g_lane[5].u_add.u_cc.d [70:67], 1'h0, \g_lane[5].u_add.u_cc.d [65:25], \g_lane[5].u_add.u_rnd.s , \g_lane[5].u_add.u_rnd.g [24] };
-  assign { \g_lane[5].u_add.u_cc.g_rv.rd [70], \g_lane[5].u_add.u_cc.q [69], \g_lane[5].u_add.u_zero , \g_lane[5].u_add.u_sign , \g_lane[5].u_add.u_err , \g_lane[5].u_add.u_code , \g_lane[5].u_add.u_exp , \g_lane[5].u_add.u_cc.q [24:0] } = _28977_;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].u_add.u_v  <= 1'h0;
+    _28978_ <= { \g_lane[5].u_add.u_cc.d [70:67], 1'h0, \g_lane[5].u_add.u_cc.d [65:25], \g_lane[5].u_add.u_rnd.s , \g_lane[5].u_add.u_rnd.g [24] };
+  assign { \g_lane[5].u_add.u_cc.g_rv.rd [70], \g_lane[5].u_add.u_cc.q [69], \g_lane[5].u_add.u_zero , \g_lane[5].u_add.u_sign , \g_lane[5].u_add.u_err , \g_lane[5].u_add.u_code , \g_lane[5].u_add.u_exp , \g_lane[5].u_add.u_cc.q [24:0] } = _28978_;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].u_add.u_v  <= 1'h0;
     else \g_lane[5].u_add.u_v  <= \g_lane[5].u_add.u_cc.d [70];
-  reg [107:0] _28979_;
+  reg [107:0] _28980_;
   always @(posedge clk)
-    _28979_ <= { \g_lane[5].u_add.u_cd.d [107:7], \g_lane[5].u_add.u_lzc.n , \g_lane[5].u_add.u_cd.d [0] };
-  assign { \g_lane[5].u_add.u_cd.g_rv.rd [107], \g_lane[5].u_add.w_byp , \g_lane[5].u_add.w_sub , \g_lane[5].u_add.w_sign , \g_lane[5].u_add.w_err , \g_lane[5].u_add.w_code , \g_lane[5].u_add.w_exp , \g_lane[5].u_add.w_add , \g_lane[5].u_add.w_dif , \g_lane[5].u_add.u_cd.q [6:1], \g_lane[5].u_add.w_carry  } = _28979_;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].u_add.w_v  <= 1'h0;
+    _28980_ <= { \g_lane[5].u_add.u_cd.d [107:7], \g_lane[5].u_add.u_lzc.n , \g_lane[5].u_add.u_cd.d [0] };
+  assign { \g_lane[5].u_add.u_cd.g_rv.rd [107], \g_lane[5].u_add.w_byp , \g_lane[5].u_add.w_sub , \g_lane[5].u_add.w_sign , \g_lane[5].u_add.w_err , \g_lane[5].u_add.w_code , \g_lane[5].u_add.w_exp , \g_lane[5].u_add.w_add , \g_lane[5].u_add.w_dif , \g_lane[5].u_add.u_cd.q [6:1], \g_lane[5].u_add.w_carry  } = _28980_;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].u_add.w_v  <= 1'h0;
     else \g_lane[5].u_add.w_v  <= \g_lane[5].u_add.u_cd.d [107];
   assign \g_lane[5].u_add.u_cmp.g [191:161] = \g_lane[5].u_add.u_cmp.a  & \g_lane[5].u_add.u_cmp.b ;
   assign _07112_ = \g_lane[5].u_add.u_cmp.p [180] & \g_lane[5].u_add.u_cmp.g [179];
@@ -40192,10 +40197,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane_reg[5].u_mul.u_c2.d[227]  <= \g_lane[5].u_mul.u_c1.q [75];
   assign \g_lane[5].u_mul.u_c2.d [227] = \g_lane_reg[5].u_mul.u_c2.d[227] ;
-  reg [1:0] _30974_;
+  reg [1:0] _30975_;
   always @(posedge clk)
-    _30974_ <= \g_lane[5].u_mul.u_c1.q [74:73];
-  assign \g_lane[5].u_mul.u_c2.d [226:225] = _30974_;
+    _30975_ <= \g_lane[5].u_mul.u_c1.q [74:73];
+  assign \g_lane[5].u_mul.u_c2.d [226:225] = _30975_;
   always @(posedge clk)
     \g_lane[5].u_mul.s1_power  <= \g_lane[5].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -40205,18 +40210,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[5].u_mul.u_c2.d[224]  <= \g_lane[5].u_mul.u_c1.q [72];
   assign \g_lane[5].u_mul.u_c2.d [224] = \g_lane_reg[5].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[5].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c2.d[228]  <= \g_lane[5].u_mul.u_c1.q [76];
   assign \g_lane[5].u_mul.u_c2.d [228] = \g_lane_reg[5].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[5].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[5].u_mul.u_c3.d[41]  <= \g_lane[5].u_mul.u_c2.q [227];
   assign \g_lane[5].u_mul.u_c3.d [41] = \g_lane_reg[5].u_mul.u_c3.d[41] ;
-  reg [1:0] _30980_;
+  reg [1:0] _30981_;
   always @(posedge clk)
-    _30980_ <= \g_lane[5].u_mul.u_c2.q [226:225];
-  assign \g_lane[5].u_mul.u_c3.d [40:39] = _30980_;
+    _30981_ <= \g_lane[5].u_mul.u_c2.q [226:225];
+  assign \g_lane[5].u_mul.u_c3.d [40:39] = _30981_;
   always @(posedge clk)
     \g_lane[5].u_mul.s2_fl46  <= \g_lane[5].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -40225,10 +40230,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane[5].u_mul.s2_mr  <= \g_lane[5].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[5].u_mul.s2_ms  <= \g_lane[5].u_mul.u_c2.q [47:0];
-  reg [47:0] _30985_;
+  reg [47:0] _30986_;
   always @(posedge clk)
-    _30985_ <= \g_lane[5].u_mul.u_cpa.s ;
-  assign { \g_lane[5].u_mul.top , \g_lane[5].u_mul.s2_prod [46:0] } = _30985_;
+    _30986_ <= \g_lane[5].u_mul.u_cpa.s ;
+  assign { \g_lane[5].u_mul.top , \g_lane[5].u_mul.s2_prod [46:0] } = _30986_;
   always @(posedge clk)
     \g_lane[5].u_mul.s2_sh  <= \g_lane[5].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[5].u_mul.u_c3.d[38] ;
@@ -40240,12 +40245,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane[5].u_mul.s2_sub47  <= \g_lane[5].u_mul.u_c2.q [127];
   reg \g_lane_reg[5].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c3.d[42]  <= \g_lane[5].u_mul.u_c2.q [228];
   assign \g_lane[5].u_mul.u_c3.d [42] = \g_lane_reg[5].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].v0  <= 1'h0;
     else \g_lane[5].v0  <= \g_lane[5].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[5].u_mul.y  <= _07873_;
@@ -40391,49 +40396,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _07967_ = _07965_ | _07966_;
   assign _07968_ = { 17'h00000, \g_lane[5].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[5].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _07969_[47], \g_lane[5].u_mul.g_nokcp.u_rows.l1 [287:241] } = _07967_ | _07968_;
-  reg [76:0] _31135_;
+  reg [76:0] _31136_;
   always @(posedge clk)
-    _31135_ <= { \g_lane[5].u_mul.u_c5.q [86:82], \g_lane[5].u_mul.u_c1.d [71:24], \g_lane[5].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[5].u_mul.u_c1.g_rv.rd [76], \g_lane[5].u_mul.u_c1.q [75:24], \g_lane[5].u_mul.u_pw.a , \g_lane[5].u_mul.u_pw.b  } = _31135_;
+    _31136_ <= { \g_lane[5].u_mul.u_c5.q [86:82], \g_lane[5].u_mul.u_c1.d [71:24], \g_lane[5].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[5].u_mul.u_c1.g_rv.rd [76], \g_lane[5].u_mul.u_c1.q [75:24], \g_lane[5].u_mul.u_pw.a , \g_lane[5].u_mul.u_pw.b  } = _31136_;
   reg \g_lane_reg[5].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c1.q[76]  <= \g_lane[5].u_mul.u_c5.q [86];
   assign \g_lane[5].u_mul.u_c1.q [76] = \g_lane_reg[5].u_mul.u_c1.q[76] ;
-  reg [228:0] _31137_;
+  reg [228:0] _31138_;
   always @(posedge clk)
-    _31137_ <= { \g_lane[5].u_mul.u_c2.d [228:177], 1'h0, \g_lane[5].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[5].u_mul.u_c2.g_rv.rd [228], \g_lane[5].u_mul.u_c2.q [227:224], \g_lane[5].u_mul.u_cpa.b , \g_lane[5].u_mul.u_cpa.a , \g_lane[5].u_mul.u_c2.q [127:0] } = _31137_;
+    _31138_ <= { \g_lane[5].u_mul.u_c2.d [228:177], 1'h0, \g_lane[5].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[5].u_mul.u_c2.g_rv.rd [228], \g_lane[5].u_mul.u_c2.q [227:224], \g_lane[5].u_mul.u_cpa.b , \g_lane[5].u_mul.u_cpa.a , \g_lane[5].u_mul.u_c2.q [127:0] } = _31138_;
   reg \g_lane_reg[5].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c2.q[228]  <= \g_lane[5].u_mul.u_c2.d [228];
   assign \g_lane[5].u_mul.u_c2.q [228] = \g_lane_reg[5].u_mul.u_c2.q[228] ;
-  reg [42:0] _31139_;
+  reg [42:0] _31140_;
   always @(posedge clk)
-    _31139_ <= \g_lane[5].u_mul.u_c3.d ;
-  assign { \g_lane[5].u_mul.u_c3.g_rv.rd [42], \g_lane[5].u_mul.u_c4.d [41:25], \g_lane[5].u_mul.u_rnd.a , \g_lane[5].u_mul.u_rnd.g [0] } = _31139_;
+    _31140_ <= \g_lane[5].u_mul.u_c3.d ;
+  assign { \g_lane[5].u_mul.u_c3.g_rv.rd [42], \g_lane[5].u_mul.u_c4.d [41:25], \g_lane[5].u_mul.u_rnd.a , \g_lane[5].u_mul.u_rnd.g [0] } = _31140_;
   reg \g_lane_reg[5].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c4.d[42]  <= \g_lane[5].u_mul.u_c3.d [42];
   assign \g_lane[5].u_mul.u_c4.d [42] = \g_lane_reg[5].u_mul.u_c4.d[42] ;
-  reg [42:0] _31141_;
+  reg [42:0] _31142_;
   always @(posedge clk)
-    _31141_ <= { \g_lane[5].u_mul.u_c4.d [42:25], \g_lane[5].u_mul.u_rnd.s , \g_lane[5].u_mul.u_rnd.g [24] };
-  assign { \g_lane[5].u_mul.u_c4.g_rv.rd [42], \g_lane[5].u_mul.u_c6.q [35:33], \g_lane[5].u_mul.u_c4.q [38:0] } = _31141_;
+    _31142_ <= { \g_lane[5].u_mul.u_c4.d [42:25], \g_lane[5].u_mul.u_rnd.s , \g_lane[5].u_mul.u_rnd.g [24] };
+  assign { \g_lane[5].u_mul.u_c4.g_rv.rd [42], \g_lane[5].u_mul.u_c6.q [35:33], \g_lane[5].u_mul.u_c4.q [38:0] } = _31142_;
   reg \g_lane_reg[5].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c6.q[36]  <= \g_lane[5].u_mul.u_c4.d [42];
   assign \g_lane[5].u_mul.u_c6.q [36] = \g_lane_reg[5].u_mul.u_c6.q[36] ;
-  reg [86:0] _31143_;
+  reg [86:0] _31144_;
   always @(posedge clk)
-    _31143_ <= { gov, \g_lane[5].u_mul.u_c5.d [85:82], \g_lane[5].u_mul.u_la.x [31], \g_lane[5].u_mul.x_a [22:0], \g_lane[5].u_mul.u_lb.x [31], \g_lane[5].u_mul.x_b [22:0], \g_lane[5].u_mul.u_la.n [4:0], \g_lane[5].u_mul.u_lb.n [4:0], \g_lane[5].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[5].u_mul.u_c5.g_rv.rd [86], \g_lane[5].u_mul.u_c5.q [85:0] } = _31143_;
+    _31144_ <= { gov, \g_lane[5].u_mul.u_c5.d [85:82], \g_lane[5].u_mul.u_la.x [31], \g_lane[5].u_mul.x_a [22:0], \g_lane[5].u_mul.u_lb.x [31], \g_lane[5].u_mul.x_b [22:0], \g_lane[5].u_mul.u_la.n [4:0], \g_lane[5].u_mul.u_lb.n [4:0], \g_lane[5].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[5].u_mul.u_c5.g_rv.rd [86], \g_lane[5].u_mul.u_c5.q [85:0] } = _31144_;
   reg \g_lane_reg[5].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[5].u_mul.u_c5.q [86] = \g_lane_reg[5].u_mul.u_c5.q[86] ;
   assign \g_lane[5].u_mul.u_cpa.g [342:295] = \g_lane[5].u_mul.u_cpa.a  & \g_lane[5].u_mul.u_cpa.b ;
@@ -41733,26 +41738,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_add.u_rnd.g [0] = \g_lane[6].u_add.s2_val [2] && _08499_;
   always @(posedge clk)
     \g_lane[6].u_add.err  <= _08502_;
-  reg [23:0] _32441_;
+  reg [23:0] _32442_;
   always @(posedge clk)
-    _32441_ <= _08488_;
-  assign \g_lane[6].u_add.u_sum.a [26:3] = _32441_;
+    _32442_ <= _08488_;
+  assign \g_lane[6].u_add.u_sum.a [26:3] = _32442_;
   reg \g_lane_reg[6].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cb.d[100]  <= \g_lane[6].u_add.x_byp ;
   assign \g_lane[6].u_add.u_cb.d [100] = \g_lane_reg[6].u_add.u_cb.d[100] ;
-  reg [31:0] _32443_;
+  reg [31:0] _32444_;
   always @(posedge clk)
-    _32443_ <= \g_lane[6].u_add.x_code ;
-  assign \g_lane[6].u_add.u_cb.d [95:64] = _32443_;
-  reg [1:0] _32444_;
+    _32444_ <= \g_lane[6].u_add.x_code ;
+  assign \g_lane[6].u_add.u_cb.d [95:64] = _32444_;
+  reg [1:0] _32445_;
   always @(posedge clk)
-    _32444_ <= \g_lane[6].u_add.x_err ;
-  assign \g_lane[6].u_add.u_cb.d [97:96] = _32444_;
-  reg [7:0] _32445_;
+    _32445_ <= \g_lane[6].u_add.x_err ;
+  assign \g_lane[6].u_add.u_cb.d [97:96] = _32445_;
+  reg [7:0] _32446_;
   always @(posedge clk)
-    _32445_ <= _08487_;
-  assign \g_lane[6].u_add.u_cb.d [63:56] = _32445_;
+    _32446_ <= _08487_;
+  assign \g_lane[6].u_add.u_cb.d [63:56] = _32446_;
   reg \g_lane_reg[6].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cb.d[98]  <= _08486_;
@@ -41764,45 +41769,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[6].u_add.u_cb.d[99]  <= \g_lane[6].u_add.x_sub ;
   assign \g_lane[6].u_add.u_cb.d [99] = \g_lane_reg[6].u_add.u_cb.d[99] ;
   reg \g_lane_reg[6].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[6].u_add.u_cb.d[101]  <= \g_lane[6].u_add.x_v ;
   assign \g_lane[6].u_add.u_cb.d [101] = \g_lane_reg[6].u_add.u_cb.d[101] ;
   reg \g_lane_reg[6].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cc.d[69]  <= \g_lane[6].u_add.w_byp ;
   assign \g_lane[6].u_add.u_cc.d [69] = \g_lane_reg[6].u_add.u_cc.d[69] ;
-  reg [31:0] _32451_;
+  reg [31:0] _32452_;
   always @(posedge clk)
-    _32451_ <= \g_lane[6].u_add.w_code ;
-  assign \g_lane[6].u_add.u_cc.d [64:33] = _32451_;
-  reg [1:0] _32452_;
+    _32452_ <= \g_lane[6].u_add.w_code ;
+  assign \g_lane[6].u_add.u_cc.d [64:33] = _32452_;
+  reg [1:0] _32453_;
   always @(posedge clk)
-    _32452_ <= \g_lane[6].u_add.w_err ;
-  assign { \g_lane[6].u_add.s2_err [1], \g_lane[6].u_add.u_cc.d [65] } = _32452_;
-  reg [7:0] _32453_;
+    _32453_ <= \g_lane[6].u_add.w_err ;
+  assign { \g_lane[6].u_add.s2_err [1], \g_lane[6].u_add.u_cc.d [65] } = _32453_;
+  reg [7:0] _32454_;
   always @(posedge clk)
-    _32453_ <= _08496_;
-  assign \g_lane[6].u_add.u_cc.d [32:25] = _32453_;
+    _32454_ <= _08496_;
+  assign \g_lane[6].u_add.u_cc.d [32:25] = _32454_;
   reg \g_lane_reg[6].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cc.d[67]  <= \g_lane[6].u_add.w_sign ;
   assign \g_lane[6].u_add.u_cc.d [67] = \g_lane_reg[6].u_add.u_cc.d[67] ;
   reg \g_lane_reg[6].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[6].u_add.u_cc.d[70]  <= \g_lane[6].u_add.w_v ;
   assign \g_lane[6].u_add.u_cc.d [70] = \g_lane_reg[6].u_add.u_cc.d[70] ;
-  reg [26:0] _32456_;
+  reg [26:0] _32457_;
   always @(posedge clk)
-    _32456_ <= _08497_;
-  assign { \g_lane[6].u_add.u_rnd.a , \g_lane[6].u_add.s2_val [2:0] } = _32456_;
+    _32457_ <= _08497_;
+  assign { \g_lane[6].u_add.u_rnd.a , \g_lane[6].u_add.s2_val [2:0] } = _32457_;
   reg \g_lane_reg[6].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cc.d[68]  <= _08495_;
   assign \g_lane[6].u_add.u_cc.d [68] = \g_lane_reg[6].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].v1  <= 1'h0;
     else \g_lane[6].v1  <= \g_lane[6].u_add.u_v ;
   always @(posedge clk)
     y_l[223:192] <= _08511_;
@@ -41820,35 +41825,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _08511_ = \g_lane[6].u_add.u_cc.q [69] ? \g_lane[6].u_add.u_code  : _08510_;
   assign \g_lane[6].u_add.small_b  = _08477_ ? { 27'h0000000, _08478_ } : _08484_;
   assign \g_lane[6].u_add.small_a  = _08469_ ? { 27'h0000000, _08470_ } : _08476_;
-  reg [119:0] _32474_;
+  reg [119:0] _32475_;
   always @(posedge clk)
-    _32474_ <= { \g_lane[6].u_add.u_ca.d [119], \g_lane[6].v0 , \g_lane[6].u_add.u_ca.d [117:81], \g_lane[6].u_mul.y [31], \g_lane[6].u_add.u_dab.a , \g_lane[6].u_add.u_dba.a , \g_lane[6].u_add.u_ca.d [63], \g_lane[6].u_add.u_cmp.a [22:0], \g_lane[6].u_add.u_ca.d [39], \g_lane[6].u_mul.y [22:0], \g_lane[6].u_add.u_dab.s , \g_lane[6].u_add.u_dba.s  };
-  assign { \g_lane[6].u_add.x_swap , \g_lane[6].u_add.u_ca.g_rv.rd [118], \g_lane[6].u_add.x_byp , \g_lane[6].u_add.x_err , \g_lane[6].u_add.x_code , \g_lane[6].u_add.x_sub , \g_lane[6].u_add.x_as , \g_lane[6].u_add.x_bs , \g_lane[6].u_add.x_aexp , \g_lane[6].u_add.x_bexp , \g_lane[6].u_add.x_aman , \g_lane[6].u_add.x_bman , \g_lane[6].u_add.x_dab , \g_lane[6].u_add.x_dba  } = _32474_;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].u_add.x_v  <= 1'h0;
+    _32475_ <= { \g_lane[6].u_add.u_ca.d [119], \g_lane[6].v0 , \g_lane[6].u_add.u_ca.d [117:81], \g_lane[6].u_mul.y [31], \g_lane[6].u_add.u_dab.a , \g_lane[6].u_add.u_dba.a , \g_lane[6].u_add.u_ca.d [63], \g_lane[6].u_add.u_cmp.a [22:0], \g_lane[6].u_add.u_ca.d [39], \g_lane[6].u_mul.y [22:0], \g_lane[6].u_add.u_dab.s , \g_lane[6].u_add.u_dba.s  };
+  assign { \g_lane[6].u_add.x_swap , \g_lane[6].u_add.u_ca.g_rv.rd [118], \g_lane[6].u_add.x_byp , \g_lane[6].u_add.x_err , \g_lane[6].u_add.x_code , \g_lane[6].u_add.x_sub , \g_lane[6].u_add.x_as , \g_lane[6].u_add.x_bs , \g_lane[6].u_add.x_aexp , \g_lane[6].u_add.x_bexp , \g_lane[6].u_add.x_aman , \g_lane[6].u_add.x_bman , \g_lane[6].u_add.x_dab , \g_lane[6].u_add.x_dba  } = _32475_;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].u_add.x_v  <= 1'h0;
     else \g_lane[6].u_add.x_v  <= \g_lane[6].v0 ;
-  reg [101:0] _32476_;
+  reg [101:0] _32477_;
   always @(posedge clk)
-    _32476_ <= { \g_lane[6].u_add.u_cb.d [101:56], \g_lane[6].u_add.u_sum.s , \g_lane[6].u_add.u_dif.s  };
-  assign { \g_lane[6].u_add.u_cb.g_rv.rd [101], \g_lane[6].u_add.u_cd.d [106:62], \g_lane[6].u_add.u_cd.d [0], \g_lane[6].u_add.u_cb.q [54:28], \g_lane[6].u_add.u_cd.d [34:7] } = _32476_;
+    _32477_ <= { \g_lane[6].u_add.u_cb.d [101:56], \g_lane[6].u_add.u_sum.s , \g_lane[6].u_add.u_dif.s  };
+  assign { \g_lane[6].u_add.u_cb.g_rv.rd [101], \g_lane[6].u_add.u_cd.d [106:62], \g_lane[6].u_add.u_cd.d [0], \g_lane[6].u_add.u_cb.q [54:28], \g_lane[6].u_add.u_cd.d [34:7] } = _32477_;
   reg \g_lane_reg[6].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[6].u_add.u_cd.d[107]  <= \g_lane[6].u_add.u_cb.d [101];
   assign \g_lane[6].u_add.u_cd.d [107] = \g_lane_reg[6].u_add.u_cd.d[107] ;
-  reg [70:0] _32478_;
+  reg [70:0] _32479_;
   always @(posedge clk)
-    _32478_ <= { \g_lane[6].u_add.u_cc.d [70:67], 1'h0, \g_lane[6].u_add.u_cc.d [65:25], \g_lane[6].u_add.u_rnd.s , \g_lane[6].u_add.u_rnd.g [24] };
-  assign { \g_lane[6].u_add.u_cc.g_rv.rd [70], \g_lane[6].u_add.u_cc.q [69], \g_lane[6].u_add.u_zero , \g_lane[6].u_add.u_sign , \g_lane[6].u_add.u_err , \g_lane[6].u_add.u_code , \g_lane[6].u_add.u_exp , \g_lane[6].u_add.u_cc.q [24:0] } = _32478_;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].u_add.u_v  <= 1'h0;
+    _32479_ <= { \g_lane[6].u_add.u_cc.d [70:67], 1'h0, \g_lane[6].u_add.u_cc.d [65:25], \g_lane[6].u_add.u_rnd.s , \g_lane[6].u_add.u_rnd.g [24] };
+  assign { \g_lane[6].u_add.u_cc.g_rv.rd [70], \g_lane[6].u_add.u_cc.q [69], \g_lane[6].u_add.u_zero , \g_lane[6].u_add.u_sign , \g_lane[6].u_add.u_err , \g_lane[6].u_add.u_code , \g_lane[6].u_add.u_exp , \g_lane[6].u_add.u_cc.q [24:0] } = _32479_;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].u_add.u_v  <= 1'h0;
     else \g_lane[6].u_add.u_v  <= \g_lane[6].u_add.u_cc.d [70];
-  reg [107:0] _32480_;
+  reg [107:0] _32481_;
   always @(posedge clk)
-    _32480_ <= { \g_lane[6].u_add.u_cd.d [107:7], \g_lane[6].u_add.u_lzc.n , \g_lane[6].u_add.u_cd.d [0] };
-  assign { \g_lane[6].u_add.u_cd.g_rv.rd [107], \g_lane[6].u_add.w_byp , \g_lane[6].u_add.w_sub , \g_lane[6].u_add.w_sign , \g_lane[6].u_add.w_err , \g_lane[6].u_add.w_code , \g_lane[6].u_add.w_exp , \g_lane[6].u_add.w_add , \g_lane[6].u_add.w_dif , \g_lane[6].u_add.u_cd.q [6:1], \g_lane[6].u_add.w_carry  } = _32480_;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].u_add.w_v  <= 1'h0;
+    _32481_ <= { \g_lane[6].u_add.u_cd.d [107:7], \g_lane[6].u_add.u_lzc.n , \g_lane[6].u_add.u_cd.d [0] };
+  assign { \g_lane[6].u_add.u_cd.g_rv.rd [107], \g_lane[6].u_add.w_byp , \g_lane[6].u_add.w_sub , \g_lane[6].u_add.w_sign , \g_lane[6].u_add.w_err , \g_lane[6].u_add.w_code , \g_lane[6].u_add.w_exp , \g_lane[6].u_add.w_add , \g_lane[6].u_add.w_dif , \g_lane[6].u_add.u_cd.q [6:1], \g_lane[6].u_add.w_carry  } = _32481_;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].u_add.w_v  <= 1'h0;
     else \g_lane[6].u_add.w_v  <= \g_lane[6].u_add.u_cd.d [107];
   assign \g_lane[6].u_add.u_cmp.g [191:161] = \g_lane[6].u_add.u_cmp.a  & \g_lane[6].u_add.u_cmp.b ;
   assign _08512_ = \g_lane[6].u_add.u_cmp.p [180] & \g_lane[6].u_add.u_cmp.g [179];
@@ -43847,10 +43852,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane_reg[6].u_mul.u_c2.d[227]  <= \g_lane[6].u_mul.u_c1.q [75];
   assign \g_lane[6].u_mul.u_c2.d [227] = \g_lane_reg[6].u_mul.u_c2.d[227] ;
-  reg [1:0] _34475_;
+  reg [1:0] _34476_;
   always @(posedge clk)
-    _34475_ <= \g_lane[6].u_mul.u_c1.q [74:73];
-  assign \g_lane[6].u_mul.u_c2.d [226:225] = _34475_;
+    _34476_ <= \g_lane[6].u_mul.u_c1.q [74:73];
+  assign \g_lane[6].u_mul.u_c2.d [226:225] = _34476_;
   always @(posedge clk)
     \g_lane[6].u_mul.s1_power  <= \g_lane[6].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -43860,18 +43865,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[6].u_mul.u_c2.d[224]  <= \g_lane[6].u_mul.u_c1.q [72];
   assign \g_lane[6].u_mul.u_c2.d [224] = \g_lane_reg[6].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[6].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c2.d[228]  <= \g_lane[6].u_mul.u_c1.q [76];
   assign \g_lane[6].u_mul.u_c2.d [228] = \g_lane_reg[6].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[6].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[6].u_mul.u_c3.d[41]  <= \g_lane[6].u_mul.u_c2.q [227];
   assign \g_lane[6].u_mul.u_c3.d [41] = \g_lane_reg[6].u_mul.u_c3.d[41] ;
-  reg [1:0] _34481_;
+  reg [1:0] _34482_;
   always @(posedge clk)
-    _34481_ <= \g_lane[6].u_mul.u_c2.q [226:225];
-  assign \g_lane[6].u_mul.u_c3.d [40:39] = _34481_;
+    _34482_ <= \g_lane[6].u_mul.u_c2.q [226:225];
+  assign \g_lane[6].u_mul.u_c3.d [40:39] = _34482_;
   always @(posedge clk)
     \g_lane[6].u_mul.s2_fl46  <= \g_lane[6].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -43880,10 +43885,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane[6].u_mul.s2_mr  <= \g_lane[6].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[6].u_mul.s2_ms  <= \g_lane[6].u_mul.u_c2.q [47:0];
-  reg [47:0] _34486_;
+  reg [47:0] _34487_;
   always @(posedge clk)
-    _34486_ <= \g_lane[6].u_mul.u_cpa.s ;
-  assign { \g_lane[6].u_mul.top , \g_lane[6].u_mul.s2_prod [46:0] } = _34486_;
+    _34487_ <= \g_lane[6].u_mul.u_cpa.s ;
+  assign { \g_lane[6].u_mul.top , \g_lane[6].u_mul.s2_prod [46:0] } = _34487_;
   always @(posedge clk)
     \g_lane[6].u_mul.s2_sh  <= \g_lane[6].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[6].u_mul.u_c3.d[38] ;
@@ -43895,12 +43900,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane[6].u_mul.s2_sub47  <= \g_lane[6].u_mul.u_c2.q [127];
   reg \g_lane_reg[6].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c3.d[42]  <= \g_lane[6].u_mul.u_c2.q [228];
   assign \g_lane[6].u_mul.u_c3.d [42] = \g_lane_reg[6].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].v0  <= 1'h0;
     else \g_lane[6].v0  <= \g_lane[6].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[6].u_mul.y  <= _09273_;
@@ -44046,49 +44051,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _09367_ = _09365_ | _09366_;
   assign _09368_ = { 17'h00000, \g_lane[6].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[6].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _09369_[47], \g_lane[6].u_mul.g_nokcp.u_rows.l1 [287:241] } = _09367_ | _09368_;
-  reg [76:0] _34636_;
+  reg [76:0] _34637_;
   always @(posedge clk)
-    _34636_ <= { \g_lane[6].u_mul.u_c5.q [86:82], \g_lane[6].u_mul.u_c1.d [71:24], \g_lane[6].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[6].u_mul.u_c1.g_rv.rd [76], \g_lane[6].u_mul.u_c1.q [75:24], \g_lane[6].u_mul.u_pw.a , \g_lane[6].u_mul.u_pw.b  } = _34636_;
+    _34637_ <= { \g_lane[6].u_mul.u_c5.q [86:82], \g_lane[6].u_mul.u_c1.d [71:24], \g_lane[6].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[6].u_mul.u_c1.g_rv.rd [76], \g_lane[6].u_mul.u_c1.q [75:24], \g_lane[6].u_mul.u_pw.a , \g_lane[6].u_mul.u_pw.b  } = _34637_;
   reg \g_lane_reg[6].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c1.q[76]  <= \g_lane[6].u_mul.u_c5.q [86];
   assign \g_lane[6].u_mul.u_c1.q [76] = \g_lane_reg[6].u_mul.u_c1.q[76] ;
-  reg [228:0] _34638_;
+  reg [228:0] _34639_;
   always @(posedge clk)
-    _34638_ <= { \g_lane[6].u_mul.u_c2.d [228:177], 1'h0, \g_lane[6].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[6].u_mul.u_c2.g_rv.rd [228], \g_lane[6].u_mul.u_c2.q [227:224], \g_lane[6].u_mul.u_cpa.b , \g_lane[6].u_mul.u_cpa.a , \g_lane[6].u_mul.u_c2.q [127:0] } = _34638_;
+    _34639_ <= { \g_lane[6].u_mul.u_c2.d [228:177], 1'h0, \g_lane[6].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[6].u_mul.u_c2.g_rv.rd [228], \g_lane[6].u_mul.u_c2.q [227:224], \g_lane[6].u_mul.u_cpa.b , \g_lane[6].u_mul.u_cpa.a , \g_lane[6].u_mul.u_c2.q [127:0] } = _34639_;
   reg \g_lane_reg[6].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c2.q[228]  <= \g_lane[6].u_mul.u_c2.d [228];
   assign \g_lane[6].u_mul.u_c2.q [228] = \g_lane_reg[6].u_mul.u_c2.q[228] ;
-  reg [42:0] _34640_;
+  reg [42:0] _34641_;
   always @(posedge clk)
-    _34640_ <= \g_lane[6].u_mul.u_c3.d ;
-  assign { \g_lane[6].u_mul.u_c3.g_rv.rd [42], \g_lane[6].u_mul.u_c4.d [41:25], \g_lane[6].u_mul.u_rnd.a , \g_lane[6].u_mul.u_rnd.g [0] } = _34640_;
+    _34641_ <= \g_lane[6].u_mul.u_c3.d ;
+  assign { \g_lane[6].u_mul.u_c3.g_rv.rd [42], \g_lane[6].u_mul.u_c4.d [41:25], \g_lane[6].u_mul.u_rnd.a , \g_lane[6].u_mul.u_rnd.g [0] } = _34641_;
   reg \g_lane_reg[6].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c4.d[42]  <= \g_lane[6].u_mul.u_c3.d [42];
   assign \g_lane[6].u_mul.u_c4.d [42] = \g_lane_reg[6].u_mul.u_c4.d[42] ;
-  reg [42:0] _34642_;
+  reg [42:0] _34643_;
   always @(posedge clk)
-    _34642_ <= { \g_lane[6].u_mul.u_c4.d [42:25], \g_lane[6].u_mul.u_rnd.s , \g_lane[6].u_mul.u_rnd.g [24] };
-  assign { \g_lane[6].u_mul.u_c4.g_rv.rd [42], \g_lane[6].u_mul.u_c6.q [35:33], \g_lane[6].u_mul.u_c4.q [38:0] } = _34642_;
+    _34643_ <= { \g_lane[6].u_mul.u_c4.d [42:25], \g_lane[6].u_mul.u_rnd.s , \g_lane[6].u_mul.u_rnd.g [24] };
+  assign { \g_lane[6].u_mul.u_c4.g_rv.rd [42], \g_lane[6].u_mul.u_c6.q [35:33], \g_lane[6].u_mul.u_c4.q [38:0] } = _34643_;
   reg \g_lane_reg[6].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c6.q[36]  <= \g_lane[6].u_mul.u_c4.d [42];
   assign \g_lane[6].u_mul.u_c6.q [36] = \g_lane_reg[6].u_mul.u_c6.q[36] ;
-  reg [86:0] _34644_;
+  reg [86:0] _34645_;
   always @(posedge clk)
-    _34644_ <= { gov, \g_lane[6].u_mul.u_c5.d [85:82], \g_lane[6].u_mul.u_la.x [31], \g_lane[6].u_mul.x_a [22:0], \g_lane[6].u_mul.u_lb.x [31], \g_lane[6].u_mul.x_b [22:0], \g_lane[6].u_mul.u_la.n [4:0], \g_lane[6].u_mul.u_lb.n [4:0], \g_lane[6].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[6].u_mul.u_c5.g_rv.rd [86], \g_lane[6].u_mul.u_c5.q [85:0] } = _34644_;
+    _34645_ <= { gov, \g_lane[6].u_mul.u_c5.d [85:82], \g_lane[6].u_mul.u_la.x [31], \g_lane[6].u_mul.x_a [22:0], \g_lane[6].u_mul.u_lb.x [31], \g_lane[6].u_mul.x_b [22:0], \g_lane[6].u_mul.u_la.n [4:0], \g_lane[6].u_mul.u_lb.n [4:0], \g_lane[6].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[6].u_mul.u_c5.g_rv.rd [86], \g_lane[6].u_mul.u_c5.q [85:0] } = _34645_;
   reg \g_lane_reg[6].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[6].u_mul.u_c5.q [86] = \g_lane_reg[6].u_mul.u_c5.q[86] ;
   assign \g_lane[6].u_mul.u_cpa.g [342:295] = \g_lane[6].u_mul.u_cpa.a  & \g_lane[6].u_mul.u_cpa.b ;
@@ -45388,26 +45393,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_add.u_rnd.g [0] = \g_lane[7].u_add.s2_val [2] && _09899_;
   always @(posedge clk)
     \g_lane[7].u_add.err  <= _09902_;
-  reg [23:0] _35942_;
+  reg [23:0] _35943_;
   always @(posedge clk)
-    _35942_ <= _09888_;
-  assign \g_lane[7].u_add.u_sum.a [26:3] = _35942_;
+    _35943_ <= _09888_;
+  assign \g_lane[7].u_add.u_sum.a [26:3] = _35943_;
   reg \g_lane_reg[7].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cb.d[100]  <= \g_lane[7].u_add.x_byp ;
   assign \g_lane[7].u_add.u_cb.d [100] = \g_lane_reg[7].u_add.u_cb.d[100] ;
-  reg [31:0] _35944_;
+  reg [31:0] _35945_;
   always @(posedge clk)
-    _35944_ <= \g_lane[7].u_add.x_code ;
-  assign \g_lane[7].u_add.u_cb.d [95:64] = _35944_;
-  reg [1:0] _35945_;
+    _35945_ <= \g_lane[7].u_add.x_code ;
+  assign \g_lane[7].u_add.u_cb.d [95:64] = _35945_;
+  reg [1:0] _35946_;
   always @(posedge clk)
-    _35945_ <= \g_lane[7].u_add.x_err ;
-  assign \g_lane[7].u_add.u_cb.d [97:96] = _35945_;
-  reg [7:0] _35946_;
+    _35946_ <= \g_lane[7].u_add.x_err ;
+  assign \g_lane[7].u_add.u_cb.d [97:96] = _35946_;
+  reg [7:0] _35947_;
   always @(posedge clk)
-    _35946_ <= _09887_;
-  assign \g_lane[7].u_add.u_cb.d [63:56] = _35946_;
+    _35947_ <= _09887_;
+  assign \g_lane[7].u_add.u_cb.d [63:56] = _35947_;
   reg \g_lane_reg[7].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cb.d[98]  <= _09886_;
@@ -45419,45 +45424,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[7].u_add.u_cb.d[99]  <= \g_lane[7].u_add.x_sub ;
   assign \g_lane[7].u_add.u_cb.d [99] = \g_lane_reg[7].u_add.u_cb.d[99] ;
   reg \g_lane_reg[7].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[7].u_add.u_cb.d[101]  <= \g_lane[7].u_add.x_v ;
   assign \g_lane[7].u_add.u_cb.d [101] = \g_lane_reg[7].u_add.u_cb.d[101] ;
   reg \g_lane_reg[7].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cc.d[69]  <= \g_lane[7].u_add.w_byp ;
   assign \g_lane[7].u_add.u_cc.d [69] = \g_lane_reg[7].u_add.u_cc.d[69] ;
-  reg [31:0] _35952_;
+  reg [31:0] _35953_;
   always @(posedge clk)
-    _35952_ <= \g_lane[7].u_add.w_code ;
-  assign \g_lane[7].u_add.u_cc.d [64:33] = _35952_;
-  reg [1:0] _35953_;
+    _35953_ <= \g_lane[7].u_add.w_code ;
+  assign \g_lane[7].u_add.u_cc.d [64:33] = _35953_;
+  reg [1:0] _35954_;
   always @(posedge clk)
-    _35953_ <= \g_lane[7].u_add.w_err ;
-  assign { \g_lane[7].u_add.s2_err [1], \g_lane[7].u_add.u_cc.d [65] } = _35953_;
-  reg [7:0] _35954_;
+    _35954_ <= \g_lane[7].u_add.w_err ;
+  assign { \g_lane[7].u_add.s2_err [1], \g_lane[7].u_add.u_cc.d [65] } = _35954_;
+  reg [7:0] _35955_;
   always @(posedge clk)
-    _35954_ <= _09896_;
-  assign \g_lane[7].u_add.u_cc.d [32:25] = _35954_;
+    _35955_ <= _09896_;
+  assign \g_lane[7].u_add.u_cc.d [32:25] = _35955_;
   reg \g_lane_reg[7].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cc.d[67]  <= \g_lane[7].u_add.w_sign ;
   assign \g_lane[7].u_add.u_cc.d [67] = \g_lane_reg[7].u_add.u_cc.d[67] ;
   reg \g_lane_reg[7].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[7].u_add.u_cc.d[70]  <= \g_lane[7].u_add.w_v ;
   assign \g_lane[7].u_add.u_cc.d [70] = \g_lane_reg[7].u_add.u_cc.d[70] ;
-  reg [26:0] _35957_;
+  reg [26:0] _35958_;
   always @(posedge clk)
-    _35957_ <= _09897_;
-  assign { \g_lane[7].u_add.u_rnd.a , \g_lane[7].u_add.s2_val [2:0] } = _35957_;
+    _35958_ <= _09897_;
+  assign { \g_lane[7].u_add.u_rnd.a , \g_lane[7].u_add.s2_val [2:0] } = _35958_;
   reg \g_lane_reg[7].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cc.d[68]  <= _09895_;
   assign \g_lane[7].u_add.u_cc.d [68] = \g_lane_reg[7].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].v1  <= 1'h0;
     else \g_lane[7].v1  <= \g_lane[7].u_add.u_v ;
   always @(posedge clk)
     y_l[255:224] <= _09911_;
@@ -45475,35 +45480,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _09911_ = \g_lane[7].u_add.u_cc.q [69] ? \g_lane[7].u_add.u_code  : _09910_;
   assign \g_lane[7].u_add.small_b  = _09877_ ? { 27'h0000000, _09878_ } : _09884_;
   assign \g_lane[7].u_add.small_a  = _09869_ ? { 27'h0000000, _09870_ } : _09876_;
-  reg [119:0] _35975_;
+  reg [119:0] _35976_;
   always @(posedge clk)
-    _35975_ <= { \g_lane[7].u_add.u_ca.d [119], \g_lane[7].v0 , \g_lane[7].u_add.u_ca.d [117:81], \g_lane[7].u_mul.y [31], \g_lane[7].u_add.u_dab.a , \g_lane[7].u_add.u_dba.a , \g_lane[7].u_add.u_ca.d [63], \g_lane[7].u_add.u_cmp.a [22:0], \g_lane[7].u_add.u_ca.d [39], \g_lane[7].u_mul.y [22:0], \g_lane[7].u_add.u_dab.s , \g_lane[7].u_add.u_dba.s  };
-  assign { \g_lane[7].u_add.x_swap , \g_lane[7].u_add.u_ca.g_rv.rd [118], \g_lane[7].u_add.x_byp , \g_lane[7].u_add.x_err , \g_lane[7].u_add.x_code , \g_lane[7].u_add.x_sub , \g_lane[7].u_add.x_as , \g_lane[7].u_add.x_bs , \g_lane[7].u_add.x_aexp , \g_lane[7].u_add.x_bexp , \g_lane[7].u_add.x_aman , \g_lane[7].u_add.x_bman , \g_lane[7].u_add.x_dab , \g_lane[7].u_add.x_dba  } = _35975_;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].u_add.x_v  <= 1'h0;
+    _35976_ <= { \g_lane[7].u_add.u_ca.d [119], \g_lane[7].v0 , \g_lane[7].u_add.u_ca.d [117:81], \g_lane[7].u_mul.y [31], \g_lane[7].u_add.u_dab.a , \g_lane[7].u_add.u_dba.a , \g_lane[7].u_add.u_ca.d [63], \g_lane[7].u_add.u_cmp.a [22:0], \g_lane[7].u_add.u_ca.d [39], \g_lane[7].u_mul.y [22:0], \g_lane[7].u_add.u_dab.s , \g_lane[7].u_add.u_dba.s  };
+  assign { \g_lane[7].u_add.x_swap , \g_lane[7].u_add.u_ca.g_rv.rd [118], \g_lane[7].u_add.x_byp , \g_lane[7].u_add.x_err , \g_lane[7].u_add.x_code , \g_lane[7].u_add.x_sub , \g_lane[7].u_add.x_as , \g_lane[7].u_add.x_bs , \g_lane[7].u_add.x_aexp , \g_lane[7].u_add.x_bexp , \g_lane[7].u_add.x_aman , \g_lane[7].u_add.x_bman , \g_lane[7].u_add.x_dab , \g_lane[7].u_add.x_dba  } = _35976_;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].u_add.x_v  <= 1'h0;
     else \g_lane[7].u_add.x_v  <= \g_lane[7].v0 ;
-  reg [101:0] _35977_;
+  reg [101:0] _35978_;
   always @(posedge clk)
-    _35977_ <= { \g_lane[7].u_add.u_cb.d [101:56], \g_lane[7].u_add.u_sum.s , \g_lane[7].u_add.u_dif.s  };
-  assign { \g_lane[7].u_add.u_cb.g_rv.rd [101], \g_lane[7].u_add.u_cd.d [106:62], \g_lane[7].u_add.u_cd.d [0], \g_lane[7].u_add.u_cb.q [54:28], \g_lane[7].u_add.u_cd.d [34:7] } = _35977_;
+    _35978_ <= { \g_lane[7].u_add.u_cb.d [101:56], \g_lane[7].u_add.u_sum.s , \g_lane[7].u_add.u_dif.s  };
+  assign { \g_lane[7].u_add.u_cb.g_rv.rd [101], \g_lane[7].u_add.u_cd.d [106:62], \g_lane[7].u_add.u_cd.d [0], \g_lane[7].u_add.u_cb.q [54:28], \g_lane[7].u_add.u_cd.d [34:7] } = _35978_;
   reg \g_lane_reg[7].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[7].u_add.u_cd.d[107]  <= \g_lane[7].u_add.u_cb.d [101];
   assign \g_lane[7].u_add.u_cd.d [107] = \g_lane_reg[7].u_add.u_cd.d[107] ;
-  reg [70:0] _35979_;
+  reg [70:0] _35980_;
   always @(posedge clk)
-    _35979_ <= { \g_lane[7].u_add.u_cc.d [70:67], 1'h0, \g_lane[7].u_add.u_cc.d [65:25], \g_lane[7].u_add.u_rnd.s , \g_lane[7].u_add.u_rnd.g [24] };
-  assign { \g_lane[7].u_add.u_cc.g_rv.rd [70], \g_lane[7].u_add.u_cc.q [69], \g_lane[7].u_add.u_zero , \g_lane[7].u_add.u_sign , \g_lane[7].u_add.u_err , \g_lane[7].u_add.u_code , \g_lane[7].u_add.u_exp , \g_lane[7].u_add.u_cc.q [24:0] } = _35979_;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].u_add.u_v  <= 1'h0;
+    _35980_ <= { \g_lane[7].u_add.u_cc.d [70:67], 1'h0, \g_lane[7].u_add.u_cc.d [65:25], \g_lane[7].u_add.u_rnd.s , \g_lane[7].u_add.u_rnd.g [24] };
+  assign { \g_lane[7].u_add.u_cc.g_rv.rd [70], \g_lane[7].u_add.u_cc.q [69], \g_lane[7].u_add.u_zero , \g_lane[7].u_add.u_sign , \g_lane[7].u_add.u_err , \g_lane[7].u_add.u_code , \g_lane[7].u_add.u_exp , \g_lane[7].u_add.u_cc.q [24:0] } = _35980_;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].u_add.u_v  <= 1'h0;
     else \g_lane[7].u_add.u_v  <= \g_lane[7].u_add.u_cc.d [70];
-  reg [107:0] _35981_;
+  reg [107:0] _35982_;
   always @(posedge clk)
-    _35981_ <= { \g_lane[7].u_add.u_cd.d [107:7], \g_lane[7].u_add.u_lzc.n , \g_lane[7].u_add.u_cd.d [0] };
-  assign { \g_lane[7].u_add.u_cd.g_rv.rd [107], \g_lane[7].u_add.w_byp , \g_lane[7].u_add.w_sub , \g_lane[7].u_add.w_sign , \g_lane[7].u_add.w_err , \g_lane[7].u_add.w_code , \g_lane[7].u_add.w_exp , \g_lane[7].u_add.w_add , \g_lane[7].u_add.w_dif , \g_lane[7].u_add.u_cd.q [6:1], \g_lane[7].u_add.w_carry  } = _35981_;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].u_add.w_v  <= 1'h0;
+    _35982_ <= { \g_lane[7].u_add.u_cd.d [107:7], \g_lane[7].u_add.u_lzc.n , \g_lane[7].u_add.u_cd.d [0] };
+  assign { \g_lane[7].u_add.u_cd.g_rv.rd [107], \g_lane[7].u_add.w_byp , \g_lane[7].u_add.w_sub , \g_lane[7].u_add.w_sign , \g_lane[7].u_add.w_err , \g_lane[7].u_add.w_code , \g_lane[7].u_add.w_exp , \g_lane[7].u_add.w_add , \g_lane[7].u_add.w_dif , \g_lane[7].u_add.u_cd.q [6:1], \g_lane[7].u_add.w_carry  } = _35982_;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].u_add.w_v  <= 1'h0;
     else \g_lane[7].u_add.w_v  <= \g_lane[7].u_add.u_cd.d [107];
   assign \g_lane[7].u_add.u_cmp.g [191:161] = \g_lane[7].u_add.u_cmp.a  & \g_lane[7].u_add.u_cmp.b ;
   assign _09912_ = \g_lane[7].u_add.u_cmp.p [180] & \g_lane[7].u_add.u_cmp.g [179];
@@ -47502,10 +47507,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane_reg[7].u_mul.u_c2.d[227]  <= \g_lane[7].u_mul.u_c1.q [75];
   assign \g_lane[7].u_mul.u_c2.d [227] = \g_lane_reg[7].u_mul.u_c2.d[227] ;
-  reg [1:0] _37976_;
+  reg [1:0] _37977_;
   always @(posedge clk)
-    _37976_ <= \g_lane[7].u_mul.u_c1.q [74:73];
-  assign \g_lane[7].u_mul.u_c2.d [226:225] = _37976_;
+    _37977_ <= \g_lane[7].u_mul.u_c1.q [74:73];
+  assign \g_lane[7].u_mul.u_c2.d [226:225] = _37977_;
   always @(posedge clk)
     \g_lane[7].u_mul.s1_power  <= \g_lane[7].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -47515,18 +47520,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane_reg[7].u_mul.u_c2.d[224]  <= \g_lane[7].u_mul.u_c1.q [72];
   assign \g_lane[7].u_mul.u_c2.d [224] = \g_lane_reg[7].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[7].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c2.d[228]  <= \g_lane[7].u_mul.u_c1.q [76];
   assign \g_lane[7].u_mul.u_c2.d [228] = \g_lane_reg[7].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[7].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[7].u_mul.u_c3.d[41]  <= \g_lane[7].u_mul.u_c2.q [227];
   assign \g_lane[7].u_mul.u_c3.d [41] = \g_lane_reg[7].u_mul.u_c3.d[41] ;
-  reg [1:0] _37982_;
+  reg [1:0] _37983_;
   always @(posedge clk)
-    _37982_ <= \g_lane[7].u_mul.u_c2.q [226:225];
-  assign \g_lane[7].u_mul.u_c3.d [40:39] = _37982_;
+    _37983_ <= \g_lane[7].u_mul.u_c2.q [226:225];
+  assign \g_lane[7].u_mul.u_c3.d [40:39] = _37983_;
   always @(posedge clk)
     \g_lane[7].u_mul.s2_fl46  <= \g_lane[7].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -47535,10 +47540,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
     \g_lane[7].u_mul.s2_mr  <= \g_lane[7].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[7].u_mul.s2_ms  <= \g_lane[7].u_mul.u_c2.q [47:0];
-  reg [47:0] _37987_;
+  reg [47:0] _37988_;
   always @(posedge clk)
-    _37987_ <= \g_lane[7].u_mul.u_cpa.s ;
-  assign { \g_lane[7].u_mul.top , \g_lane[7].u_mul.s2_prod [46:0] } = _37987_;
+    _37988_ <= \g_lane[7].u_mul.u_cpa.s ;
+  assign { \g_lane[7].u_mul.top , \g_lane[7].u_mul.s2_prod [46:0] } = _37988_;
   always @(posedge clk)
     \g_lane[7].u_mul.s2_sh  <= \g_lane[7].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[7].u_mul.u_c3.d[38] ;
@@ -47550,12 +47555,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   always @(posedge clk)
     \g_lane[7].u_mul.s2_sub47  <= \g_lane[7].u_mul.u_c2.q [127];
   reg \g_lane_reg[7].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c3.d[42]  <= \g_lane[7].u_mul.u_c2.q [228];
   assign \g_lane[7].u_mul.u_c3.d [42] = \g_lane_reg[7].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].v0  <= 1'h0;
     else \g_lane[7].v0  <= \g_lane[7].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[7].u_mul.y  <= _10673_;
@@ -47701,49 +47706,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign _10767_ = _10765_ | _10766_;
   assign _10768_ = { 17'h00000, \g_lane[7].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[7].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _10769_[47], \g_lane[7].u_mul.g_nokcp.u_rows.l1 [287:241] } = _10767_ | _10768_;
-  reg [76:0] _38137_;
+  reg [76:0] _38138_;
   always @(posedge clk)
-    _38137_ <= { \g_lane[7].u_mul.u_c5.q [86:82], \g_lane[7].u_mul.u_c1.d [71:24], \g_lane[7].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[7].u_mul.u_c1.g_rv.rd [76], \g_lane[7].u_mul.u_c1.q [75:24], \g_lane[7].u_mul.u_pw.a , \g_lane[7].u_mul.u_pw.b  } = _38137_;
+    _38138_ <= { \g_lane[7].u_mul.u_c5.q [86:82], \g_lane[7].u_mul.u_c1.d [71:24], \g_lane[7].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[7].u_mul.u_c1.g_rv.rd [76], \g_lane[7].u_mul.u_c1.q [75:24], \g_lane[7].u_mul.u_pw.a , \g_lane[7].u_mul.u_pw.b  } = _38138_;
   reg \g_lane_reg[7].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c1.q[76]  <= \g_lane[7].u_mul.u_c5.q [86];
   assign \g_lane[7].u_mul.u_c1.q [76] = \g_lane_reg[7].u_mul.u_c1.q[76] ;
-  reg [228:0] _38139_;
+  reg [228:0] _38140_;
   always @(posedge clk)
-    _38139_ <= { \g_lane[7].u_mul.u_c2.d [228:177], 1'h0, \g_lane[7].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[7].u_mul.u_c2.g_rv.rd [228], \g_lane[7].u_mul.u_c2.q [227:224], \g_lane[7].u_mul.u_cpa.b , \g_lane[7].u_mul.u_cpa.a , \g_lane[7].u_mul.u_c2.q [127:0] } = _38139_;
+    _38140_ <= { \g_lane[7].u_mul.u_c2.d [228:177], 1'h0, \g_lane[7].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[7].u_mul.u_c2.g_rv.rd [228], \g_lane[7].u_mul.u_c2.q [227:224], \g_lane[7].u_mul.u_cpa.b , \g_lane[7].u_mul.u_cpa.a , \g_lane[7].u_mul.u_c2.q [127:0] } = _38140_;
   reg \g_lane_reg[7].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c2.q[228]  <= \g_lane[7].u_mul.u_c2.d [228];
   assign \g_lane[7].u_mul.u_c2.q [228] = \g_lane_reg[7].u_mul.u_c2.q[228] ;
-  reg [42:0] _38141_;
+  reg [42:0] _38142_;
   always @(posedge clk)
-    _38141_ <= \g_lane[7].u_mul.u_c3.d ;
-  assign { \g_lane[7].u_mul.u_c3.g_rv.rd [42], \g_lane[7].u_mul.u_c4.d [41:25], \g_lane[7].u_mul.u_rnd.a , \g_lane[7].u_mul.u_rnd.g [0] } = _38141_;
+    _38142_ <= \g_lane[7].u_mul.u_c3.d ;
+  assign { \g_lane[7].u_mul.u_c3.g_rv.rd [42], \g_lane[7].u_mul.u_c4.d [41:25], \g_lane[7].u_mul.u_rnd.a , \g_lane[7].u_mul.u_rnd.g [0] } = _38142_;
   reg \g_lane_reg[7].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c4.d[42]  <= \g_lane[7].u_mul.u_c3.d [42];
   assign \g_lane[7].u_mul.u_c4.d [42] = \g_lane_reg[7].u_mul.u_c4.d[42] ;
-  reg [42:0] _38143_;
+  reg [42:0] _38144_;
   always @(posedge clk)
-    _38143_ <= { \g_lane[7].u_mul.u_c4.d [42:25], \g_lane[7].u_mul.u_rnd.s , \g_lane[7].u_mul.u_rnd.g [24] };
-  assign { \g_lane[7].u_mul.u_c4.g_rv.rd [42], \g_lane[7].u_mul.u_c6.q [35:33], \g_lane[7].u_mul.u_c4.q [38:0] } = _38143_;
+    _38144_ <= { \g_lane[7].u_mul.u_c4.d [42:25], \g_lane[7].u_mul.u_rnd.s , \g_lane[7].u_mul.u_rnd.g [24] };
+  assign { \g_lane[7].u_mul.u_c4.g_rv.rd [42], \g_lane[7].u_mul.u_c6.q [35:33], \g_lane[7].u_mul.u_c4.q [38:0] } = _38144_;
   reg \g_lane_reg[7].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c6.q[36]  <= \g_lane[7].u_mul.u_c4.d [42];
   assign \g_lane[7].u_mul.u_c6.q [36] = \g_lane_reg[7].u_mul.u_c6.q[36] ;
-  reg [86:0] _38145_;
+  reg [86:0] _38146_;
   always @(posedge clk)
-    _38145_ <= { gov, \g_lane[7].u_mul.u_c5.d [85:82], \g_lane[7].u_mul.u_la.x [31], \g_lane[7].u_mul.x_a [22:0], \g_lane[7].u_mul.u_lb.x [31], \g_lane[7].u_mul.x_b [22:0], \g_lane[7].u_mul.u_la.n [4:0], \g_lane[7].u_mul.u_lb.n [4:0], \g_lane[7].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[7].u_mul.u_c5.g_rv.rd [86], \g_lane[7].u_mul.u_c5.q [85:0] } = _38145_;
+    _38146_ <= { gov, \g_lane[7].u_mul.u_c5.d [85:82], \g_lane[7].u_mul.u_la.x [31], \g_lane[7].u_mul.x_a [22:0], \g_lane[7].u_mul.u_lb.x [31], \g_lane[7].u_mul.x_b [22:0], \g_lane[7].u_mul.u_la.n [4:0], \g_lane[7].u_mul.u_lb.n [4:0], \g_lane[7].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[7].u_mul.u_c5.g_rv.rd [86], \g_lane[7].u_mul.u_c5.q [85:0] } = _38146_;
   reg \g_lane_reg[7].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[7].u_mul.u_c5.q [86] = \g_lane_reg[7].u_mul.u_c5.q[86] ;
   assign \g_lane[7].u_mul.u_cpa.g [342:295] = \g_lane[7].u_mul.u_cpa.a  & \g_lane[7].u_mul.u_cpa.b ;
@@ -57366,7 +57371,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].e0 [0] = \g_lane[0].u_mul.err [0];
   assign \g_lane[0].e1 [1] = \g_lane[0].u_add.err [1];
   assign \g_lane[0].e1 [0] = \g_lane[0].u_add.err [0];
-  assign \g_lane[0].g_lr.r  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].g_lr.r  = lrnv[0];
   assign \g_lane[0].gw [31] = \g_lane[0].u_mul.x_a [31];
   assign \g_lane[0].gw [30] = \g_lane[0].u_mul.x_a [30];
   assign \g_lane[0].gw [29] = \g_lane[0].u_mul.x_a [29];
@@ -57431,7 +57436,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].gx [2] = \g_lane[0].u_mul.x_b [2];
   assign \g_lane[0].gx [1] = \g_lane[0].u_mul.x_b [1];
   assign \g_lane[0].gx [0] = \g_lane[0].u_mul.x_b [0];
-  assign \g_lane[0].lrn  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].lrn  = lrnv[0];
   assign \g_lane[0].prod [31] = \g_lane[0].u_mul.y [31];
   assign \g_lane[0].prod [30] = \g_lane[0].u_mul.y [30];
   assign \g_lane[0].prod [29] = \g_lane[0].u_mul.y [29];
@@ -58400,7 +58405,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_add.rnd_w [2] = \g_lane[0].u_add.u_rnd.s [2];
   assign \g_lane[0].u_add.rnd_w [1] = \g_lane[0].u_add.u_rnd.s [1];
   assign \g_lane[0].u_add.rnd_w [0] = \g_lane[0].u_add.u_rnd.s [0];
-  assign \g_lane[0].u_add.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.s1_big [23] = \g_lane[0].u_add.u_sum.a [26];
   assign \g_lane[0].u_add.s1_big [22] = \g_lane[0].u_add.u_sum.a [25];
   assign \g_lane[0].u_add.s1_big [21] = \g_lane[0].u_add.u_sum.a [24];
@@ -58995,7 +59000,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_add.u_ca.q [2] = \g_lane[0].u_add.x_dba [2];
   assign \g_lane[0].u_add.u_ca.q [1] = \g_lane[0].u_add.x_dba [1];
   assign \g_lane[0].u_add.u_ca.q [0] = \g_lane[0].u_add.x_dba [0];
-  assign \g_lane[0].u_add.u_ca.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.u_ca.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.u_cb.clk  = clk;
   assign \g_lane[0].u_add.u_cb.d [55] = \g_lane[0].u_add.u_sum.s [27];
   assign \g_lane[0].u_add.u_cb.d [54] = \g_lane[0].u_add.u_sum.s [26];
@@ -59230,7 +59235,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_add.u_cb.q [2] = \g_lane[0].u_add.u_cd.d [9];
   assign \g_lane[0].u_add.u_cb.q [1] = \g_lane[0].u_add.u_cd.d [8];
   assign \g_lane[0].u_add.u_cb.q [0] = \g_lane[0].u_add.u_cd.d [7];
-  assign \g_lane[0].u_add.u_cb.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.u_cb.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.u_cc.clk  = clk;
   assign \g_lane[0].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[0].u_add.u_cc.d [24] = \g_lane[0].u_add.u_rnd.s [23];
@@ -59374,7 +59379,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_add.u_cc.q [27] = \g_lane[0].u_add.u_exp [2];
   assign \g_lane[0].u_add.u_cc.q [26] = \g_lane[0].u_add.u_exp [1];
   assign \g_lane[0].u_add.u_cc.q [25] = \g_lane[0].u_add.u_exp [0];
-  assign \g_lane[0].u_add.u_cc.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.u_cc.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.u_cd.clk  = clk;
   assign \g_lane[0].u_add.u_cd.d [6] = \g_lane[0].u_add.u_lzc.n [5];
   assign \g_lane[0].u_add.u_cd.d [5] = \g_lane[0].u_add.u_lzc.n [4];
@@ -59592,7 +59597,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_add.u_cd.q [8] = \g_lane[0].u_add.w_dif [1];
   assign \g_lane[0].u_add.u_cd.q [7] = \g_lane[0].u_add.w_dif [0];
   assign \g_lane[0].u_add.u_cd.q [0] = \g_lane[0].u_add.w_carry ;
-  assign \g_lane[0].u_add.u_cd.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.u_cd.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[0].u_add.u_cmp.cout  = \g_lane[0].u_add.u_cmp.g [31];
   assign \g_lane[0].u_add.u_cmp.g [160] = 1'h1;
@@ -63589,7 +63594,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_mul.rows [240] = 1'h0;
   assign \g_lane[0].u_mul.rows [144] = 1'h0;
   assign \g_lane[0].u_mul.rows [48] = 1'h0;
-  assign \g_lane[0].u_mul.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.s1_byp  = \g_lane[0].u_mul.u_c2.d [227];
   assign \g_lane[0].u_mul.s1_err [1] = \g_lane[0].u_mul.u_c2.d [226];
   assign \g_lane[0].u_mul.s1_err [0] = \g_lane[0].u_mul.u_c2.d [225];
@@ -63762,7 +63767,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_mul.u_c1.q [2] = \g_lane[0].u_mul.u_pw.b [2];
   assign \g_lane[0].u_mul.u_c1.q [1] = \g_lane[0].u_mul.u_pw.b [1];
   assign \g_lane[0].u_mul.u_c1.q [0] = \g_lane[0].u_mul.u_pw.b [0];
-  assign \g_lane[0].u_mul.u_c1.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c1.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c2.clk  = clk;
   assign \g_lane[0].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[0].u_mul.u_c2.g_rv.rd [227] = \g_lane[0].u_mul.u_c2.q [227];
@@ -64090,7 +64095,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_mul.u_c2.q [130] = \g_lane[0].u_mul.u_cpa.a [2];
   assign \g_lane[0].u_mul.u_c2.q [129] = \g_lane[0].u_mul.u_cpa.a [1];
   assign \g_lane[0].u_mul.u_c2.q [128] = \g_lane[0].u_mul.u_cpa.a [0];
-  assign \g_lane[0].u_mul.u_c2.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c2.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c3.clk  = clk;
   assign \g_lane[0].u_mul.u_c3.g_rv.rd [41] = \g_lane[0].u_mul.u_c4.d [41];
   assign \g_lane[0].u_mul.u_c3.g_rv.rd [40] = \g_lane[0].u_mul.u_c4.d [40];
@@ -64178,7 +64183,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_mul.u_c3.q [2] = \g_lane[0].u_mul.u_rnd.a [1];
   assign \g_lane[0].u_mul.u_c3.q [1] = \g_lane[0].u_mul.u_rnd.a [0];
   assign \g_lane[0].u_mul.u_c3.q [0] = \g_lane[0].u_mul.u_rnd.g [0];
-  assign \g_lane[0].u_mul.u_c3.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c3.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c4.clk  = clk;
   assign \g_lane[0].u_mul.u_c4.d [24] = \g_lane[0].u_mul.u_rnd.s [23];
   assign \g_lane[0].u_mul.u_c4.d [23] = \g_lane[0].u_mul.u_rnd.s [22];
@@ -64252,7 +64257,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_mul.u_c4.q [41] = \g_lane[0].u_mul.u_c6.q [35];
   assign \g_lane[0].u_mul.u_c4.q [40] = \g_lane[0].u_mul.u_c6.q [34];
   assign \g_lane[0].u_mul.u_c4.q [39] = \g_lane[0].u_mul.u_c6.q [33];
-  assign \g_lane[0].u_mul.u_c4.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c4.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c5.clk  = clk;
   assign \g_lane[0].u_mul.u_c5.d [86] = gov;
   assign \g_lane[0].u_mul.u_c5.d [81] = \g_lane[0].u_mul.u_la.x [31];
@@ -64400,7 +64405,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_mul.u_c5.g_rv.rd [1] = \g_lane[0].u_mul.u_c5.q [1];
   assign \g_lane[0].u_mul.u_c5.g_rv.rd [0] = \g_lane[0].u_mul.u_c5.q [0];
   assign \g_lane[0].u_mul.u_c5.g_rv.rv  = \g_lane[0].u_mul.u_c5.q [86];
-  assign \g_lane[0].u_mul.u_c5.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c5.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c6.clk  = clk;
   assign \g_lane[0].u_mul.u_c6.d [36] = \g_lane[0].u_mul.u_c6.q [36];
   assign \g_lane[0].u_mul.u_c6.d [35] = \g_lane[0].u_mul.u_c6.q [35];
@@ -64439,7 +64444,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_mul.u_c6.d [2] = \g_lane[0].u_mul.u_c6.q [2];
   assign \g_lane[0].u_mul.u_c6.d [1] = \g_lane[0].u_mul.u_c6.q [1];
   assign \g_lane[0].u_mul.u_c6.d [0] = \g_lane[0].u_mul.u_c6.q [0];
-  assign \g_lane[0].u_mul.u_c6.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c6.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c7.clk  = clk;
   assign \g_lane[0].u_mul.u_c7.d [68] = gov;
   assign \g_lane[0].u_mul.u_c7.d [67] = \g_lane[0].u_mul.x_a [31];
@@ -64578,6 +64583,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[0].u_mul.u_c7.q [3] = \g_lane[0].u_mul.x_afz ;
   assign \g_lane[0].u_mul.u_c7.q [2] = \g_lane[0].u_mul.x_bfz ;
   assign \g_lane[0].u_mul.u_c7.q [0] = \g_lane[0].u_mul.zero ;
+  assign \g_lane[0].u_mul.u_c7.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[0].u_mul.u_cpa.cout  = \g_lane[0].u_mul.unused_cout ;
   assign \g_lane[0].u_mul.u_cpa.g [294] = 1'h0;
@@ -65817,7 +65823,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].e0 [0] = \g_lane[1].u_mul.err [0];
   assign \g_lane[1].e1 [1] = \g_lane[1].u_add.err [1];
   assign \g_lane[1].e1 [0] = \g_lane[1].u_add.err [0];
-  assign \g_lane[1].g_lr.r  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].g_lr.r  = lrnv[1];
   assign \g_lane[1].gw [31] = \g_lane[1].u_mul.x_a [31];
   assign \g_lane[1].gw [30] = \g_lane[1].u_mul.x_a [30];
   assign \g_lane[1].gw [29] = \g_lane[1].u_mul.x_a [29];
@@ -65882,7 +65888,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].gx [2] = \g_lane[1].u_mul.x_b [2];
   assign \g_lane[1].gx [1] = \g_lane[1].u_mul.x_b [1];
   assign \g_lane[1].gx [0] = \g_lane[1].u_mul.x_b [0];
-  assign \g_lane[1].lrn  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].lrn  = lrnv[1];
   assign \g_lane[1].prod [31] = \g_lane[1].u_mul.y [31];
   assign \g_lane[1].prod [30] = \g_lane[1].u_mul.y [30];
   assign \g_lane[1].prod [29] = \g_lane[1].u_mul.y [29];
@@ -66851,7 +66857,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_add.rnd_w [2] = \g_lane[1].u_add.u_rnd.s [2];
   assign \g_lane[1].u_add.rnd_w [1] = \g_lane[1].u_add.u_rnd.s [1];
   assign \g_lane[1].u_add.rnd_w [0] = \g_lane[1].u_add.u_rnd.s [0];
-  assign \g_lane[1].u_add.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.s1_big [23] = \g_lane[1].u_add.u_sum.a [26];
   assign \g_lane[1].u_add.s1_big [22] = \g_lane[1].u_add.u_sum.a [25];
   assign \g_lane[1].u_add.s1_big [21] = \g_lane[1].u_add.u_sum.a [24];
@@ -67446,7 +67452,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_add.u_ca.q [2] = \g_lane[1].u_add.x_dba [2];
   assign \g_lane[1].u_add.u_ca.q [1] = \g_lane[1].u_add.x_dba [1];
   assign \g_lane[1].u_add.u_ca.q [0] = \g_lane[1].u_add.x_dba [0];
-  assign \g_lane[1].u_add.u_ca.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.u_ca.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.u_cb.clk  = clk;
   assign \g_lane[1].u_add.u_cb.d [55] = \g_lane[1].u_add.u_sum.s [27];
   assign \g_lane[1].u_add.u_cb.d [54] = \g_lane[1].u_add.u_sum.s [26];
@@ -67681,7 +67687,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_add.u_cb.q [2] = \g_lane[1].u_add.u_cd.d [9];
   assign \g_lane[1].u_add.u_cb.q [1] = \g_lane[1].u_add.u_cd.d [8];
   assign \g_lane[1].u_add.u_cb.q [0] = \g_lane[1].u_add.u_cd.d [7];
-  assign \g_lane[1].u_add.u_cb.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.u_cb.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.u_cc.clk  = clk;
   assign \g_lane[1].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[1].u_add.u_cc.d [24] = \g_lane[1].u_add.u_rnd.s [23];
@@ -67825,7 +67831,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_add.u_cc.q [27] = \g_lane[1].u_add.u_exp [2];
   assign \g_lane[1].u_add.u_cc.q [26] = \g_lane[1].u_add.u_exp [1];
   assign \g_lane[1].u_add.u_cc.q [25] = \g_lane[1].u_add.u_exp [0];
-  assign \g_lane[1].u_add.u_cc.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.u_cc.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.u_cd.clk  = clk;
   assign \g_lane[1].u_add.u_cd.d [6] = \g_lane[1].u_add.u_lzc.n [5];
   assign \g_lane[1].u_add.u_cd.d [5] = \g_lane[1].u_add.u_lzc.n [4];
@@ -68043,7 +68049,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_add.u_cd.q [8] = \g_lane[1].u_add.w_dif [1];
   assign \g_lane[1].u_add.u_cd.q [7] = \g_lane[1].u_add.w_dif [0];
   assign \g_lane[1].u_add.u_cd.q [0] = \g_lane[1].u_add.w_carry ;
-  assign \g_lane[1].u_add.u_cd.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.u_cd.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[1].u_add.u_cmp.cout  = \g_lane[1].u_add.u_cmp.g [31];
   assign \g_lane[1].u_add.u_cmp.g [160] = 1'h1;
@@ -72040,7 +72046,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_mul.rows [240] = 1'h0;
   assign \g_lane[1].u_mul.rows [144] = 1'h0;
   assign \g_lane[1].u_mul.rows [48] = 1'h0;
-  assign \g_lane[1].u_mul.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.s1_byp  = \g_lane[1].u_mul.u_c2.d [227];
   assign \g_lane[1].u_mul.s1_err [1] = \g_lane[1].u_mul.u_c2.d [226];
   assign \g_lane[1].u_mul.s1_err [0] = \g_lane[1].u_mul.u_c2.d [225];
@@ -72213,7 +72219,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_mul.u_c1.q [2] = \g_lane[1].u_mul.u_pw.b [2];
   assign \g_lane[1].u_mul.u_c1.q [1] = \g_lane[1].u_mul.u_pw.b [1];
   assign \g_lane[1].u_mul.u_c1.q [0] = \g_lane[1].u_mul.u_pw.b [0];
-  assign \g_lane[1].u_mul.u_c1.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c1.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c2.clk  = clk;
   assign \g_lane[1].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[1].u_mul.u_c2.g_rv.rd [227] = \g_lane[1].u_mul.u_c2.q [227];
@@ -72541,7 +72547,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_mul.u_c2.q [130] = \g_lane[1].u_mul.u_cpa.a [2];
   assign \g_lane[1].u_mul.u_c2.q [129] = \g_lane[1].u_mul.u_cpa.a [1];
   assign \g_lane[1].u_mul.u_c2.q [128] = \g_lane[1].u_mul.u_cpa.a [0];
-  assign \g_lane[1].u_mul.u_c2.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c2.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c3.clk  = clk;
   assign \g_lane[1].u_mul.u_c3.g_rv.rd [41] = \g_lane[1].u_mul.u_c4.d [41];
   assign \g_lane[1].u_mul.u_c3.g_rv.rd [40] = \g_lane[1].u_mul.u_c4.d [40];
@@ -72629,7 +72635,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_mul.u_c3.q [2] = \g_lane[1].u_mul.u_rnd.a [1];
   assign \g_lane[1].u_mul.u_c3.q [1] = \g_lane[1].u_mul.u_rnd.a [0];
   assign \g_lane[1].u_mul.u_c3.q [0] = \g_lane[1].u_mul.u_rnd.g [0];
-  assign \g_lane[1].u_mul.u_c3.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c3.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c4.clk  = clk;
   assign \g_lane[1].u_mul.u_c4.d [24] = \g_lane[1].u_mul.u_rnd.s [23];
   assign \g_lane[1].u_mul.u_c4.d [23] = \g_lane[1].u_mul.u_rnd.s [22];
@@ -72703,7 +72709,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_mul.u_c4.q [41] = \g_lane[1].u_mul.u_c6.q [35];
   assign \g_lane[1].u_mul.u_c4.q [40] = \g_lane[1].u_mul.u_c6.q [34];
   assign \g_lane[1].u_mul.u_c4.q [39] = \g_lane[1].u_mul.u_c6.q [33];
-  assign \g_lane[1].u_mul.u_c4.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c4.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c5.clk  = clk;
   assign \g_lane[1].u_mul.u_c5.d [86] = gov;
   assign \g_lane[1].u_mul.u_c5.d [81] = \g_lane[1].u_mul.u_la.x [31];
@@ -72851,7 +72857,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_mul.u_c5.g_rv.rd [1] = \g_lane[1].u_mul.u_c5.q [1];
   assign \g_lane[1].u_mul.u_c5.g_rv.rd [0] = \g_lane[1].u_mul.u_c5.q [0];
   assign \g_lane[1].u_mul.u_c5.g_rv.rv  = \g_lane[1].u_mul.u_c5.q [86];
-  assign \g_lane[1].u_mul.u_c5.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c5.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c6.clk  = clk;
   assign \g_lane[1].u_mul.u_c6.d [36] = \g_lane[1].u_mul.u_c6.q [36];
   assign \g_lane[1].u_mul.u_c6.d [35] = \g_lane[1].u_mul.u_c6.q [35];
@@ -72890,7 +72896,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_mul.u_c6.d [2] = \g_lane[1].u_mul.u_c6.q [2];
   assign \g_lane[1].u_mul.u_c6.d [1] = \g_lane[1].u_mul.u_c6.q [1];
   assign \g_lane[1].u_mul.u_c6.d [0] = \g_lane[1].u_mul.u_c6.q [0];
-  assign \g_lane[1].u_mul.u_c6.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c6.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c7.clk  = clk;
   assign \g_lane[1].u_mul.u_c7.d [68] = gov;
   assign \g_lane[1].u_mul.u_c7.d [67] = \g_lane[1].u_mul.x_a [31];
@@ -73029,6 +73035,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[1].u_mul.u_c7.q [3] = \g_lane[1].u_mul.x_afz ;
   assign \g_lane[1].u_mul.u_c7.q [2] = \g_lane[1].u_mul.x_bfz ;
   assign \g_lane[1].u_mul.u_c7.q [0] = \g_lane[1].u_mul.zero ;
+  assign \g_lane[1].u_mul.u_c7.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[1].u_mul.u_cpa.cout  = \g_lane[1].u_mul.unused_cout ;
   assign \g_lane[1].u_mul.u_cpa.g [294] = 1'h0;
@@ -74268,7 +74275,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].e0 [0] = \g_lane[2].u_mul.err [0];
   assign \g_lane[2].e1 [1] = \g_lane[2].u_add.err [1];
   assign \g_lane[2].e1 [0] = \g_lane[2].u_add.err [0];
-  assign \g_lane[2].g_lr.r  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].g_lr.r  = lrnv[2];
   assign \g_lane[2].gw [31] = \g_lane[2].u_mul.x_a [31];
   assign \g_lane[2].gw [30] = \g_lane[2].u_mul.x_a [30];
   assign \g_lane[2].gw [29] = \g_lane[2].u_mul.x_a [29];
@@ -74333,7 +74340,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].gx [2] = \g_lane[2].u_mul.x_b [2];
   assign \g_lane[2].gx [1] = \g_lane[2].u_mul.x_b [1];
   assign \g_lane[2].gx [0] = \g_lane[2].u_mul.x_b [0];
-  assign \g_lane[2].lrn  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].lrn  = lrnv[2];
   assign \g_lane[2].prod [31] = \g_lane[2].u_mul.y [31];
   assign \g_lane[2].prod [30] = \g_lane[2].u_mul.y [30];
   assign \g_lane[2].prod [29] = \g_lane[2].u_mul.y [29];
@@ -75302,7 +75309,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_add.rnd_w [2] = \g_lane[2].u_add.u_rnd.s [2];
   assign \g_lane[2].u_add.rnd_w [1] = \g_lane[2].u_add.u_rnd.s [1];
   assign \g_lane[2].u_add.rnd_w [0] = \g_lane[2].u_add.u_rnd.s [0];
-  assign \g_lane[2].u_add.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.s1_big [23] = \g_lane[2].u_add.u_sum.a [26];
   assign \g_lane[2].u_add.s1_big [22] = \g_lane[2].u_add.u_sum.a [25];
   assign \g_lane[2].u_add.s1_big [21] = \g_lane[2].u_add.u_sum.a [24];
@@ -75897,7 +75904,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_add.u_ca.q [2] = \g_lane[2].u_add.x_dba [2];
   assign \g_lane[2].u_add.u_ca.q [1] = \g_lane[2].u_add.x_dba [1];
   assign \g_lane[2].u_add.u_ca.q [0] = \g_lane[2].u_add.x_dba [0];
-  assign \g_lane[2].u_add.u_ca.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.u_ca.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.u_cb.clk  = clk;
   assign \g_lane[2].u_add.u_cb.d [55] = \g_lane[2].u_add.u_sum.s [27];
   assign \g_lane[2].u_add.u_cb.d [54] = \g_lane[2].u_add.u_sum.s [26];
@@ -76132,7 +76139,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_add.u_cb.q [2] = \g_lane[2].u_add.u_cd.d [9];
   assign \g_lane[2].u_add.u_cb.q [1] = \g_lane[2].u_add.u_cd.d [8];
   assign \g_lane[2].u_add.u_cb.q [0] = \g_lane[2].u_add.u_cd.d [7];
-  assign \g_lane[2].u_add.u_cb.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.u_cb.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.u_cc.clk  = clk;
   assign \g_lane[2].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[2].u_add.u_cc.d [24] = \g_lane[2].u_add.u_rnd.s [23];
@@ -76276,7 +76283,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_add.u_cc.q [27] = \g_lane[2].u_add.u_exp [2];
   assign \g_lane[2].u_add.u_cc.q [26] = \g_lane[2].u_add.u_exp [1];
   assign \g_lane[2].u_add.u_cc.q [25] = \g_lane[2].u_add.u_exp [0];
-  assign \g_lane[2].u_add.u_cc.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.u_cc.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.u_cd.clk  = clk;
   assign \g_lane[2].u_add.u_cd.d [6] = \g_lane[2].u_add.u_lzc.n [5];
   assign \g_lane[2].u_add.u_cd.d [5] = \g_lane[2].u_add.u_lzc.n [4];
@@ -76494,7 +76501,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_add.u_cd.q [8] = \g_lane[2].u_add.w_dif [1];
   assign \g_lane[2].u_add.u_cd.q [7] = \g_lane[2].u_add.w_dif [0];
   assign \g_lane[2].u_add.u_cd.q [0] = \g_lane[2].u_add.w_carry ;
-  assign \g_lane[2].u_add.u_cd.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.u_cd.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[2].u_add.u_cmp.cout  = \g_lane[2].u_add.u_cmp.g [31];
   assign \g_lane[2].u_add.u_cmp.g [160] = 1'h1;
@@ -80491,7 +80498,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_mul.rows [240] = 1'h0;
   assign \g_lane[2].u_mul.rows [144] = 1'h0;
   assign \g_lane[2].u_mul.rows [48] = 1'h0;
-  assign \g_lane[2].u_mul.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.s1_byp  = \g_lane[2].u_mul.u_c2.d [227];
   assign \g_lane[2].u_mul.s1_err [1] = \g_lane[2].u_mul.u_c2.d [226];
   assign \g_lane[2].u_mul.s1_err [0] = \g_lane[2].u_mul.u_c2.d [225];
@@ -80664,7 +80671,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_mul.u_c1.q [2] = \g_lane[2].u_mul.u_pw.b [2];
   assign \g_lane[2].u_mul.u_c1.q [1] = \g_lane[2].u_mul.u_pw.b [1];
   assign \g_lane[2].u_mul.u_c1.q [0] = \g_lane[2].u_mul.u_pw.b [0];
-  assign \g_lane[2].u_mul.u_c1.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c1.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c2.clk  = clk;
   assign \g_lane[2].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[2].u_mul.u_c2.g_rv.rd [227] = \g_lane[2].u_mul.u_c2.q [227];
@@ -80992,7 +80999,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_mul.u_c2.q [130] = \g_lane[2].u_mul.u_cpa.a [2];
   assign \g_lane[2].u_mul.u_c2.q [129] = \g_lane[2].u_mul.u_cpa.a [1];
   assign \g_lane[2].u_mul.u_c2.q [128] = \g_lane[2].u_mul.u_cpa.a [0];
-  assign \g_lane[2].u_mul.u_c2.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c2.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c3.clk  = clk;
   assign \g_lane[2].u_mul.u_c3.g_rv.rd [41] = \g_lane[2].u_mul.u_c4.d [41];
   assign \g_lane[2].u_mul.u_c3.g_rv.rd [40] = \g_lane[2].u_mul.u_c4.d [40];
@@ -81080,7 +81087,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_mul.u_c3.q [2] = \g_lane[2].u_mul.u_rnd.a [1];
   assign \g_lane[2].u_mul.u_c3.q [1] = \g_lane[2].u_mul.u_rnd.a [0];
   assign \g_lane[2].u_mul.u_c3.q [0] = \g_lane[2].u_mul.u_rnd.g [0];
-  assign \g_lane[2].u_mul.u_c3.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c3.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c4.clk  = clk;
   assign \g_lane[2].u_mul.u_c4.d [24] = \g_lane[2].u_mul.u_rnd.s [23];
   assign \g_lane[2].u_mul.u_c4.d [23] = \g_lane[2].u_mul.u_rnd.s [22];
@@ -81154,7 +81161,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_mul.u_c4.q [41] = \g_lane[2].u_mul.u_c6.q [35];
   assign \g_lane[2].u_mul.u_c4.q [40] = \g_lane[2].u_mul.u_c6.q [34];
   assign \g_lane[2].u_mul.u_c4.q [39] = \g_lane[2].u_mul.u_c6.q [33];
-  assign \g_lane[2].u_mul.u_c4.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c4.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c5.clk  = clk;
   assign \g_lane[2].u_mul.u_c5.d [86] = gov;
   assign \g_lane[2].u_mul.u_c5.d [81] = \g_lane[2].u_mul.u_la.x [31];
@@ -81302,7 +81309,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_mul.u_c5.g_rv.rd [1] = \g_lane[2].u_mul.u_c5.q [1];
   assign \g_lane[2].u_mul.u_c5.g_rv.rd [0] = \g_lane[2].u_mul.u_c5.q [0];
   assign \g_lane[2].u_mul.u_c5.g_rv.rv  = \g_lane[2].u_mul.u_c5.q [86];
-  assign \g_lane[2].u_mul.u_c5.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c5.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c6.clk  = clk;
   assign \g_lane[2].u_mul.u_c6.d [36] = \g_lane[2].u_mul.u_c6.q [36];
   assign \g_lane[2].u_mul.u_c6.d [35] = \g_lane[2].u_mul.u_c6.q [35];
@@ -81341,7 +81348,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_mul.u_c6.d [2] = \g_lane[2].u_mul.u_c6.q [2];
   assign \g_lane[2].u_mul.u_c6.d [1] = \g_lane[2].u_mul.u_c6.q [1];
   assign \g_lane[2].u_mul.u_c6.d [0] = \g_lane[2].u_mul.u_c6.q [0];
-  assign \g_lane[2].u_mul.u_c6.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c6.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c7.clk  = clk;
   assign \g_lane[2].u_mul.u_c7.d [68] = gov;
   assign \g_lane[2].u_mul.u_c7.d [67] = \g_lane[2].u_mul.x_a [31];
@@ -81480,6 +81487,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[2].u_mul.u_c7.q [3] = \g_lane[2].u_mul.x_afz ;
   assign \g_lane[2].u_mul.u_c7.q [2] = \g_lane[2].u_mul.x_bfz ;
   assign \g_lane[2].u_mul.u_c7.q [0] = \g_lane[2].u_mul.zero ;
+  assign \g_lane[2].u_mul.u_c7.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[2].u_mul.u_cpa.cout  = \g_lane[2].u_mul.unused_cout ;
   assign \g_lane[2].u_mul.u_cpa.g [294] = 1'h0;
@@ -82719,7 +82727,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].e0 [0] = \g_lane[3].u_mul.err [0];
   assign \g_lane[3].e1 [1] = \g_lane[3].u_add.err [1];
   assign \g_lane[3].e1 [0] = \g_lane[3].u_add.err [0];
-  assign \g_lane[3].g_lr.r  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].g_lr.r  = lrnv[3];
   assign \g_lane[3].gw [31] = \g_lane[3].u_mul.x_a [31];
   assign \g_lane[3].gw [30] = \g_lane[3].u_mul.x_a [30];
   assign \g_lane[3].gw [29] = \g_lane[3].u_mul.x_a [29];
@@ -82784,7 +82792,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].gx [2] = \g_lane[3].u_mul.x_b [2];
   assign \g_lane[3].gx [1] = \g_lane[3].u_mul.x_b [1];
   assign \g_lane[3].gx [0] = \g_lane[3].u_mul.x_b [0];
-  assign \g_lane[3].lrn  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].lrn  = lrnv[3];
   assign \g_lane[3].prod [31] = \g_lane[3].u_mul.y [31];
   assign \g_lane[3].prod [30] = \g_lane[3].u_mul.y [30];
   assign \g_lane[3].prod [29] = \g_lane[3].u_mul.y [29];
@@ -83753,7 +83761,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_add.rnd_w [2] = \g_lane[3].u_add.u_rnd.s [2];
   assign \g_lane[3].u_add.rnd_w [1] = \g_lane[3].u_add.u_rnd.s [1];
   assign \g_lane[3].u_add.rnd_w [0] = \g_lane[3].u_add.u_rnd.s [0];
-  assign \g_lane[3].u_add.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.s1_big [23] = \g_lane[3].u_add.u_sum.a [26];
   assign \g_lane[3].u_add.s1_big [22] = \g_lane[3].u_add.u_sum.a [25];
   assign \g_lane[3].u_add.s1_big [21] = \g_lane[3].u_add.u_sum.a [24];
@@ -84348,7 +84356,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_add.u_ca.q [2] = \g_lane[3].u_add.x_dba [2];
   assign \g_lane[3].u_add.u_ca.q [1] = \g_lane[3].u_add.x_dba [1];
   assign \g_lane[3].u_add.u_ca.q [0] = \g_lane[3].u_add.x_dba [0];
-  assign \g_lane[3].u_add.u_ca.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.u_ca.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.u_cb.clk  = clk;
   assign \g_lane[3].u_add.u_cb.d [55] = \g_lane[3].u_add.u_sum.s [27];
   assign \g_lane[3].u_add.u_cb.d [54] = \g_lane[3].u_add.u_sum.s [26];
@@ -84583,7 +84591,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_add.u_cb.q [2] = \g_lane[3].u_add.u_cd.d [9];
   assign \g_lane[3].u_add.u_cb.q [1] = \g_lane[3].u_add.u_cd.d [8];
   assign \g_lane[3].u_add.u_cb.q [0] = \g_lane[3].u_add.u_cd.d [7];
-  assign \g_lane[3].u_add.u_cb.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.u_cb.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.u_cc.clk  = clk;
   assign \g_lane[3].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[3].u_add.u_cc.d [24] = \g_lane[3].u_add.u_rnd.s [23];
@@ -84727,7 +84735,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_add.u_cc.q [27] = \g_lane[3].u_add.u_exp [2];
   assign \g_lane[3].u_add.u_cc.q [26] = \g_lane[3].u_add.u_exp [1];
   assign \g_lane[3].u_add.u_cc.q [25] = \g_lane[3].u_add.u_exp [0];
-  assign \g_lane[3].u_add.u_cc.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.u_cc.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.u_cd.clk  = clk;
   assign \g_lane[3].u_add.u_cd.d [6] = \g_lane[3].u_add.u_lzc.n [5];
   assign \g_lane[3].u_add.u_cd.d [5] = \g_lane[3].u_add.u_lzc.n [4];
@@ -84945,7 +84953,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_add.u_cd.q [8] = \g_lane[3].u_add.w_dif [1];
   assign \g_lane[3].u_add.u_cd.q [7] = \g_lane[3].u_add.w_dif [0];
   assign \g_lane[3].u_add.u_cd.q [0] = \g_lane[3].u_add.w_carry ;
-  assign \g_lane[3].u_add.u_cd.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.u_cd.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[3].u_add.u_cmp.cout  = \g_lane[3].u_add.u_cmp.g [31];
   assign \g_lane[3].u_add.u_cmp.g [160] = 1'h1;
@@ -88942,7 +88950,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_mul.rows [240] = 1'h0;
   assign \g_lane[3].u_mul.rows [144] = 1'h0;
   assign \g_lane[3].u_mul.rows [48] = 1'h0;
-  assign \g_lane[3].u_mul.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.s1_byp  = \g_lane[3].u_mul.u_c2.d [227];
   assign \g_lane[3].u_mul.s1_err [1] = \g_lane[3].u_mul.u_c2.d [226];
   assign \g_lane[3].u_mul.s1_err [0] = \g_lane[3].u_mul.u_c2.d [225];
@@ -89115,7 +89123,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_mul.u_c1.q [2] = \g_lane[3].u_mul.u_pw.b [2];
   assign \g_lane[3].u_mul.u_c1.q [1] = \g_lane[3].u_mul.u_pw.b [1];
   assign \g_lane[3].u_mul.u_c1.q [0] = \g_lane[3].u_mul.u_pw.b [0];
-  assign \g_lane[3].u_mul.u_c1.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c1.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c2.clk  = clk;
   assign \g_lane[3].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[3].u_mul.u_c2.g_rv.rd [227] = \g_lane[3].u_mul.u_c2.q [227];
@@ -89443,7 +89451,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_mul.u_c2.q [130] = \g_lane[3].u_mul.u_cpa.a [2];
   assign \g_lane[3].u_mul.u_c2.q [129] = \g_lane[3].u_mul.u_cpa.a [1];
   assign \g_lane[3].u_mul.u_c2.q [128] = \g_lane[3].u_mul.u_cpa.a [0];
-  assign \g_lane[3].u_mul.u_c2.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c2.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c3.clk  = clk;
   assign \g_lane[3].u_mul.u_c3.g_rv.rd [41] = \g_lane[3].u_mul.u_c4.d [41];
   assign \g_lane[3].u_mul.u_c3.g_rv.rd [40] = \g_lane[3].u_mul.u_c4.d [40];
@@ -89531,7 +89539,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_mul.u_c3.q [2] = \g_lane[3].u_mul.u_rnd.a [1];
   assign \g_lane[3].u_mul.u_c3.q [1] = \g_lane[3].u_mul.u_rnd.a [0];
   assign \g_lane[3].u_mul.u_c3.q [0] = \g_lane[3].u_mul.u_rnd.g [0];
-  assign \g_lane[3].u_mul.u_c3.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c3.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c4.clk  = clk;
   assign \g_lane[3].u_mul.u_c4.d [24] = \g_lane[3].u_mul.u_rnd.s [23];
   assign \g_lane[3].u_mul.u_c4.d [23] = \g_lane[3].u_mul.u_rnd.s [22];
@@ -89605,7 +89613,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_mul.u_c4.q [41] = \g_lane[3].u_mul.u_c6.q [35];
   assign \g_lane[3].u_mul.u_c4.q [40] = \g_lane[3].u_mul.u_c6.q [34];
   assign \g_lane[3].u_mul.u_c4.q [39] = \g_lane[3].u_mul.u_c6.q [33];
-  assign \g_lane[3].u_mul.u_c4.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c4.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c5.clk  = clk;
   assign \g_lane[3].u_mul.u_c5.d [86] = gov;
   assign \g_lane[3].u_mul.u_c5.d [81] = \g_lane[3].u_mul.u_la.x [31];
@@ -89753,7 +89761,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_mul.u_c5.g_rv.rd [1] = \g_lane[3].u_mul.u_c5.q [1];
   assign \g_lane[3].u_mul.u_c5.g_rv.rd [0] = \g_lane[3].u_mul.u_c5.q [0];
   assign \g_lane[3].u_mul.u_c5.g_rv.rv  = \g_lane[3].u_mul.u_c5.q [86];
-  assign \g_lane[3].u_mul.u_c5.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c5.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c6.clk  = clk;
   assign \g_lane[3].u_mul.u_c6.d [36] = \g_lane[3].u_mul.u_c6.q [36];
   assign \g_lane[3].u_mul.u_c6.d [35] = \g_lane[3].u_mul.u_c6.q [35];
@@ -89792,7 +89800,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_mul.u_c6.d [2] = \g_lane[3].u_mul.u_c6.q [2];
   assign \g_lane[3].u_mul.u_c6.d [1] = \g_lane[3].u_mul.u_c6.q [1];
   assign \g_lane[3].u_mul.u_c6.d [0] = \g_lane[3].u_mul.u_c6.q [0];
-  assign \g_lane[3].u_mul.u_c6.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c6.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c7.clk  = clk;
   assign \g_lane[3].u_mul.u_c7.d [68] = gov;
   assign \g_lane[3].u_mul.u_c7.d [67] = \g_lane[3].u_mul.x_a [31];
@@ -89931,6 +89939,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[3].u_mul.u_c7.q [3] = \g_lane[3].u_mul.x_afz ;
   assign \g_lane[3].u_mul.u_c7.q [2] = \g_lane[3].u_mul.x_bfz ;
   assign \g_lane[3].u_mul.u_c7.q [0] = \g_lane[3].u_mul.zero ;
+  assign \g_lane[3].u_mul.u_c7.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[3].u_mul.u_cpa.cout  = \g_lane[3].u_mul.unused_cout ;
   assign \g_lane[3].u_mul.u_cpa.g [294] = 1'h0;
@@ -91170,7 +91179,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].e0 [0] = \g_lane[4].u_mul.err [0];
   assign \g_lane[4].e1 [1] = \g_lane[4].u_add.err [1];
   assign \g_lane[4].e1 [0] = \g_lane[4].u_add.err [0];
-  assign \g_lane[4].g_lr.r  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].g_lr.r  = lrnv[4];
   assign \g_lane[4].gw [31] = \g_lane[4].u_mul.x_a [31];
   assign \g_lane[4].gw [30] = \g_lane[4].u_mul.x_a [30];
   assign \g_lane[4].gw [29] = \g_lane[4].u_mul.x_a [29];
@@ -91235,7 +91244,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].gx [2] = \g_lane[4].u_mul.x_b [2];
   assign \g_lane[4].gx [1] = \g_lane[4].u_mul.x_b [1];
   assign \g_lane[4].gx [0] = \g_lane[4].u_mul.x_b [0];
-  assign \g_lane[4].lrn  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].lrn  = lrnv[4];
   assign \g_lane[4].prod [31] = \g_lane[4].u_mul.y [31];
   assign \g_lane[4].prod [30] = \g_lane[4].u_mul.y [30];
   assign \g_lane[4].prod [29] = \g_lane[4].u_mul.y [29];
@@ -92204,7 +92213,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_add.rnd_w [2] = \g_lane[4].u_add.u_rnd.s [2];
   assign \g_lane[4].u_add.rnd_w [1] = \g_lane[4].u_add.u_rnd.s [1];
   assign \g_lane[4].u_add.rnd_w [0] = \g_lane[4].u_add.u_rnd.s [0];
-  assign \g_lane[4].u_add.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.s1_big [23] = \g_lane[4].u_add.u_sum.a [26];
   assign \g_lane[4].u_add.s1_big [22] = \g_lane[4].u_add.u_sum.a [25];
   assign \g_lane[4].u_add.s1_big [21] = \g_lane[4].u_add.u_sum.a [24];
@@ -92799,7 +92808,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_add.u_ca.q [2] = \g_lane[4].u_add.x_dba [2];
   assign \g_lane[4].u_add.u_ca.q [1] = \g_lane[4].u_add.x_dba [1];
   assign \g_lane[4].u_add.u_ca.q [0] = \g_lane[4].u_add.x_dba [0];
-  assign \g_lane[4].u_add.u_ca.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.u_ca.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.u_cb.clk  = clk;
   assign \g_lane[4].u_add.u_cb.d [55] = \g_lane[4].u_add.u_sum.s [27];
   assign \g_lane[4].u_add.u_cb.d [54] = \g_lane[4].u_add.u_sum.s [26];
@@ -93034,7 +93043,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_add.u_cb.q [2] = \g_lane[4].u_add.u_cd.d [9];
   assign \g_lane[4].u_add.u_cb.q [1] = \g_lane[4].u_add.u_cd.d [8];
   assign \g_lane[4].u_add.u_cb.q [0] = \g_lane[4].u_add.u_cd.d [7];
-  assign \g_lane[4].u_add.u_cb.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.u_cb.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.u_cc.clk  = clk;
   assign \g_lane[4].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[4].u_add.u_cc.d [24] = \g_lane[4].u_add.u_rnd.s [23];
@@ -93178,7 +93187,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_add.u_cc.q [27] = \g_lane[4].u_add.u_exp [2];
   assign \g_lane[4].u_add.u_cc.q [26] = \g_lane[4].u_add.u_exp [1];
   assign \g_lane[4].u_add.u_cc.q [25] = \g_lane[4].u_add.u_exp [0];
-  assign \g_lane[4].u_add.u_cc.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.u_cc.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.u_cd.clk  = clk;
   assign \g_lane[4].u_add.u_cd.d [6] = \g_lane[4].u_add.u_lzc.n [5];
   assign \g_lane[4].u_add.u_cd.d [5] = \g_lane[4].u_add.u_lzc.n [4];
@@ -93396,7 +93405,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_add.u_cd.q [8] = \g_lane[4].u_add.w_dif [1];
   assign \g_lane[4].u_add.u_cd.q [7] = \g_lane[4].u_add.w_dif [0];
   assign \g_lane[4].u_add.u_cd.q [0] = \g_lane[4].u_add.w_carry ;
-  assign \g_lane[4].u_add.u_cd.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.u_cd.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[4].u_add.u_cmp.cout  = \g_lane[4].u_add.u_cmp.g [31];
   assign \g_lane[4].u_add.u_cmp.g [160] = 1'h1;
@@ -97393,7 +97402,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_mul.rows [240] = 1'h0;
   assign \g_lane[4].u_mul.rows [144] = 1'h0;
   assign \g_lane[4].u_mul.rows [48] = 1'h0;
-  assign \g_lane[4].u_mul.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.s1_byp  = \g_lane[4].u_mul.u_c2.d [227];
   assign \g_lane[4].u_mul.s1_err [1] = \g_lane[4].u_mul.u_c2.d [226];
   assign \g_lane[4].u_mul.s1_err [0] = \g_lane[4].u_mul.u_c2.d [225];
@@ -97566,7 +97575,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_mul.u_c1.q [2] = \g_lane[4].u_mul.u_pw.b [2];
   assign \g_lane[4].u_mul.u_c1.q [1] = \g_lane[4].u_mul.u_pw.b [1];
   assign \g_lane[4].u_mul.u_c1.q [0] = \g_lane[4].u_mul.u_pw.b [0];
-  assign \g_lane[4].u_mul.u_c1.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c1.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c2.clk  = clk;
   assign \g_lane[4].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[4].u_mul.u_c2.g_rv.rd [227] = \g_lane[4].u_mul.u_c2.q [227];
@@ -97894,7 +97903,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_mul.u_c2.q [130] = \g_lane[4].u_mul.u_cpa.a [2];
   assign \g_lane[4].u_mul.u_c2.q [129] = \g_lane[4].u_mul.u_cpa.a [1];
   assign \g_lane[4].u_mul.u_c2.q [128] = \g_lane[4].u_mul.u_cpa.a [0];
-  assign \g_lane[4].u_mul.u_c2.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c2.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c3.clk  = clk;
   assign \g_lane[4].u_mul.u_c3.g_rv.rd [41] = \g_lane[4].u_mul.u_c4.d [41];
   assign \g_lane[4].u_mul.u_c3.g_rv.rd [40] = \g_lane[4].u_mul.u_c4.d [40];
@@ -97982,7 +97991,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_mul.u_c3.q [2] = \g_lane[4].u_mul.u_rnd.a [1];
   assign \g_lane[4].u_mul.u_c3.q [1] = \g_lane[4].u_mul.u_rnd.a [0];
   assign \g_lane[4].u_mul.u_c3.q [0] = \g_lane[4].u_mul.u_rnd.g [0];
-  assign \g_lane[4].u_mul.u_c3.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c3.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c4.clk  = clk;
   assign \g_lane[4].u_mul.u_c4.d [24] = \g_lane[4].u_mul.u_rnd.s [23];
   assign \g_lane[4].u_mul.u_c4.d [23] = \g_lane[4].u_mul.u_rnd.s [22];
@@ -98056,7 +98065,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_mul.u_c4.q [41] = \g_lane[4].u_mul.u_c6.q [35];
   assign \g_lane[4].u_mul.u_c4.q [40] = \g_lane[4].u_mul.u_c6.q [34];
   assign \g_lane[4].u_mul.u_c4.q [39] = \g_lane[4].u_mul.u_c6.q [33];
-  assign \g_lane[4].u_mul.u_c4.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c4.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c5.clk  = clk;
   assign \g_lane[4].u_mul.u_c5.d [86] = gov;
   assign \g_lane[4].u_mul.u_c5.d [81] = \g_lane[4].u_mul.u_la.x [31];
@@ -98204,7 +98213,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_mul.u_c5.g_rv.rd [1] = \g_lane[4].u_mul.u_c5.q [1];
   assign \g_lane[4].u_mul.u_c5.g_rv.rd [0] = \g_lane[4].u_mul.u_c5.q [0];
   assign \g_lane[4].u_mul.u_c5.g_rv.rv  = \g_lane[4].u_mul.u_c5.q [86];
-  assign \g_lane[4].u_mul.u_c5.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c5.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c6.clk  = clk;
   assign \g_lane[4].u_mul.u_c6.d [36] = \g_lane[4].u_mul.u_c6.q [36];
   assign \g_lane[4].u_mul.u_c6.d [35] = \g_lane[4].u_mul.u_c6.q [35];
@@ -98243,7 +98252,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_mul.u_c6.d [2] = \g_lane[4].u_mul.u_c6.q [2];
   assign \g_lane[4].u_mul.u_c6.d [1] = \g_lane[4].u_mul.u_c6.q [1];
   assign \g_lane[4].u_mul.u_c6.d [0] = \g_lane[4].u_mul.u_c6.q [0];
-  assign \g_lane[4].u_mul.u_c6.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c6.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c7.clk  = clk;
   assign \g_lane[4].u_mul.u_c7.d [68] = gov;
   assign \g_lane[4].u_mul.u_c7.d [67] = \g_lane[4].u_mul.x_a [31];
@@ -98382,6 +98391,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[4].u_mul.u_c7.q [3] = \g_lane[4].u_mul.x_afz ;
   assign \g_lane[4].u_mul.u_c7.q [2] = \g_lane[4].u_mul.x_bfz ;
   assign \g_lane[4].u_mul.u_c7.q [0] = \g_lane[4].u_mul.zero ;
+  assign \g_lane[4].u_mul.u_c7.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[4].u_mul.u_cpa.cout  = \g_lane[4].u_mul.unused_cout ;
   assign \g_lane[4].u_mul.u_cpa.g [294] = 1'h0;
@@ -99621,7 +99631,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].e0 [0] = \g_lane[5].u_mul.err [0];
   assign \g_lane[5].e1 [1] = \g_lane[5].u_add.err [1];
   assign \g_lane[5].e1 [0] = \g_lane[5].u_add.err [0];
-  assign \g_lane[5].g_lr.r  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].g_lr.r  = lrnv[5];
   assign \g_lane[5].gw [31] = \g_lane[5].u_mul.x_a [31];
   assign \g_lane[5].gw [30] = \g_lane[5].u_mul.x_a [30];
   assign \g_lane[5].gw [29] = \g_lane[5].u_mul.x_a [29];
@@ -99686,7 +99696,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].gx [2] = \g_lane[5].u_mul.x_b [2];
   assign \g_lane[5].gx [1] = \g_lane[5].u_mul.x_b [1];
   assign \g_lane[5].gx [0] = \g_lane[5].u_mul.x_b [0];
-  assign \g_lane[5].lrn  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].lrn  = lrnv[5];
   assign \g_lane[5].prod [31] = \g_lane[5].u_mul.y [31];
   assign \g_lane[5].prod [30] = \g_lane[5].u_mul.y [30];
   assign \g_lane[5].prod [29] = \g_lane[5].u_mul.y [29];
@@ -100655,7 +100665,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_add.rnd_w [2] = \g_lane[5].u_add.u_rnd.s [2];
   assign \g_lane[5].u_add.rnd_w [1] = \g_lane[5].u_add.u_rnd.s [1];
   assign \g_lane[5].u_add.rnd_w [0] = \g_lane[5].u_add.u_rnd.s [0];
-  assign \g_lane[5].u_add.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.s1_big [23] = \g_lane[5].u_add.u_sum.a [26];
   assign \g_lane[5].u_add.s1_big [22] = \g_lane[5].u_add.u_sum.a [25];
   assign \g_lane[5].u_add.s1_big [21] = \g_lane[5].u_add.u_sum.a [24];
@@ -101250,7 +101260,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_add.u_ca.q [2] = \g_lane[5].u_add.x_dba [2];
   assign \g_lane[5].u_add.u_ca.q [1] = \g_lane[5].u_add.x_dba [1];
   assign \g_lane[5].u_add.u_ca.q [0] = \g_lane[5].u_add.x_dba [0];
-  assign \g_lane[5].u_add.u_ca.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.u_ca.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.u_cb.clk  = clk;
   assign \g_lane[5].u_add.u_cb.d [55] = \g_lane[5].u_add.u_sum.s [27];
   assign \g_lane[5].u_add.u_cb.d [54] = \g_lane[5].u_add.u_sum.s [26];
@@ -101485,7 +101495,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_add.u_cb.q [2] = \g_lane[5].u_add.u_cd.d [9];
   assign \g_lane[5].u_add.u_cb.q [1] = \g_lane[5].u_add.u_cd.d [8];
   assign \g_lane[5].u_add.u_cb.q [0] = \g_lane[5].u_add.u_cd.d [7];
-  assign \g_lane[5].u_add.u_cb.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.u_cb.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.u_cc.clk  = clk;
   assign \g_lane[5].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[5].u_add.u_cc.d [24] = \g_lane[5].u_add.u_rnd.s [23];
@@ -101629,7 +101639,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_add.u_cc.q [27] = \g_lane[5].u_add.u_exp [2];
   assign \g_lane[5].u_add.u_cc.q [26] = \g_lane[5].u_add.u_exp [1];
   assign \g_lane[5].u_add.u_cc.q [25] = \g_lane[5].u_add.u_exp [0];
-  assign \g_lane[5].u_add.u_cc.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.u_cc.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.u_cd.clk  = clk;
   assign \g_lane[5].u_add.u_cd.d [6] = \g_lane[5].u_add.u_lzc.n [5];
   assign \g_lane[5].u_add.u_cd.d [5] = \g_lane[5].u_add.u_lzc.n [4];
@@ -101847,7 +101857,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_add.u_cd.q [8] = \g_lane[5].u_add.w_dif [1];
   assign \g_lane[5].u_add.u_cd.q [7] = \g_lane[5].u_add.w_dif [0];
   assign \g_lane[5].u_add.u_cd.q [0] = \g_lane[5].u_add.w_carry ;
-  assign \g_lane[5].u_add.u_cd.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.u_cd.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[5].u_add.u_cmp.cout  = \g_lane[5].u_add.u_cmp.g [31];
   assign \g_lane[5].u_add.u_cmp.g [160] = 1'h1;
@@ -105844,7 +105854,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_mul.rows [240] = 1'h0;
   assign \g_lane[5].u_mul.rows [144] = 1'h0;
   assign \g_lane[5].u_mul.rows [48] = 1'h0;
-  assign \g_lane[5].u_mul.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.s1_byp  = \g_lane[5].u_mul.u_c2.d [227];
   assign \g_lane[5].u_mul.s1_err [1] = \g_lane[5].u_mul.u_c2.d [226];
   assign \g_lane[5].u_mul.s1_err [0] = \g_lane[5].u_mul.u_c2.d [225];
@@ -106017,7 +106027,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_mul.u_c1.q [2] = \g_lane[5].u_mul.u_pw.b [2];
   assign \g_lane[5].u_mul.u_c1.q [1] = \g_lane[5].u_mul.u_pw.b [1];
   assign \g_lane[5].u_mul.u_c1.q [0] = \g_lane[5].u_mul.u_pw.b [0];
-  assign \g_lane[5].u_mul.u_c1.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c1.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c2.clk  = clk;
   assign \g_lane[5].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[5].u_mul.u_c2.g_rv.rd [227] = \g_lane[5].u_mul.u_c2.q [227];
@@ -106345,7 +106355,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_mul.u_c2.q [130] = \g_lane[5].u_mul.u_cpa.a [2];
   assign \g_lane[5].u_mul.u_c2.q [129] = \g_lane[5].u_mul.u_cpa.a [1];
   assign \g_lane[5].u_mul.u_c2.q [128] = \g_lane[5].u_mul.u_cpa.a [0];
-  assign \g_lane[5].u_mul.u_c2.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c2.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c3.clk  = clk;
   assign \g_lane[5].u_mul.u_c3.g_rv.rd [41] = \g_lane[5].u_mul.u_c4.d [41];
   assign \g_lane[5].u_mul.u_c3.g_rv.rd [40] = \g_lane[5].u_mul.u_c4.d [40];
@@ -106433,7 +106443,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_mul.u_c3.q [2] = \g_lane[5].u_mul.u_rnd.a [1];
   assign \g_lane[5].u_mul.u_c3.q [1] = \g_lane[5].u_mul.u_rnd.a [0];
   assign \g_lane[5].u_mul.u_c3.q [0] = \g_lane[5].u_mul.u_rnd.g [0];
-  assign \g_lane[5].u_mul.u_c3.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c3.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c4.clk  = clk;
   assign \g_lane[5].u_mul.u_c4.d [24] = \g_lane[5].u_mul.u_rnd.s [23];
   assign \g_lane[5].u_mul.u_c4.d [23] = \g_lane[5].u_mul.u_rnd.s [22];
@@ -106507,7 +106517,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_mul.u_c4.q [41] = \g_lane[5].u_mul.u_c6.q [35];
   assign \g_lane[5].u_mul.u_c4.q [40] = \g_lane[5].u_mul.u_c6.q [34];
   assign \g_lane[5].u_mul.u_c4.q [39] = \g_lane[5].u_mul.u_c6.q [33];
-  assign \g_lane[5].u_mul.u_c4.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c4.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c5.clk  = clk;
   assign \g_lane[5].u_mul.u_c5.d [86] = gov;
   assign \g_lane[5].u_mul.u_c5.d [81] = \g_lane[5].u_mul.u_la.x [31];
@@ -106655,7 +106665,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_mul.u_c5.g_rv.rd [1] = \g_lane[5].u_mul.u_c5.q [1];
   assign \g_lane[5].u_mul.u_c5.g_rv.rd [0] = \g_lane[5].u_mul.u_c5.q [0];
   assign \g_lane[5].u_mul.u_c5.g_rv.rv  = \g_lane[5].u_mul.u_c5.q [86];
-  assign \g_lane[5].u_mul.u_c5.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c5.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c6.clk  = clk;
   assign \g_lane[5].u_mul.u_c6.d [36] = \g_lane[5].u_mul.u_c6.q [36];
   assign \g_lane[5].u_mul.u_c6.d [35] = \g_lane[5].u_mul.u_c6.q [35];
@@ -106694,7 +106704,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_mul.u_c6.d [2] = \g_lane[5].u_mul.u_c6.q [2];
   assign \g_lane[5].u_mul.u_c6.d [1] = \g_lane[5].u_mul.u_c6.q [1];
   assign \g_lane[5].u_mul.u_c6.d [0] = \g_lane[5].u_mul.u_c6.q [0];
-  assign \g_lane[5].u_mul.u_c6.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c6.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c7.clk  = clk;
   assign \g_lane[5].u_mul.u_c7.d [68] = gov;
   assign \g_lane[5].u_mul.u_c7.d [67] = \g_lane[5].u_mul.x_a [31];
@@ -106833,6 +106843,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[5].u_mul.u_c7.q [3] = \g_lane[5].u_mul.x_afz ;
   assign \g_lane[5].u_mul.u_c7.q [2] = \g_lane[5].u_mul.x_bfz ;
   assign \g_lane[5].u_mul.u_c7.q [0] = \g_lane[5].u_mul.zero ;
+  assign \g_lane[5].u_mul.u_c7.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[5].u_mul.u_cpa.cout  = \g_lane[5].u_mul.unused_cout ;
   assign \g_lane[5].u_mul.u_cpa.g [294] = 1'h0;
@@ -108072,7 +108083,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].e0 [0] = \g_lane[6].u_mul.err [0];
   assign \g_lane[6].e1 [1] = \g_lane[6].u_add.err [1];
   assign \g_lane[6].e1 [0] = \g_lane[6].u_add.err [0];
-  assign \g_lane[6].g_lr.r  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].g_lr.r  = lrnv[6];
   assign \g_lane[6].gw [31] = \g_lane[6].u_mul.x_a [31];
   assign \g_lane[6].gw [30] = \g_lane[6].u_mul.x_a [30];
   assign \g_lane[6].gw [29] = \g_lane[6].u_mul.x_a [29];
@@ -108137,7 +108148,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].gx [2] = \g_lane[6].u_mul.x_b [2];
   assign \g_lane[6].gx [1] = \g_lane[6].u_mul.x_b [1];
   assign \g_lane[6].gx [0] = \g_lane[6].u_mul.x_b [0];
-  assign \g_lane[6].lrn  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].lrn  = lrnv[6];
   assign \g_lane[6].prod [31] = \g_lane[6].u_mul.y [31];
   assign \g_lane[6].prod [30] = \g_lane[6].u_mul.y [30];
   assign \g_lane[6].prod [29] = \g_lane[6].u_mul.y [29];
@@ -109106,7 +109117,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_add.rnd_w [2] = \g_lane[6].u_add.u_rnd.s [2];
   assign \g_lane[6].u_add.rnd_w [1] = \g_lane[6].u_add.u_rnd.s [1];
   assign \g_lane[6].u_add.rnd_w [0] = \g_lane[6].u_add.u_rnd.s [0];
-  assign \g_lane[6].u_add.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.s1_big [23] = \g_lane[6].u_add.u_sum.a [26];
   assign \g_lane[6].u_add.s1_big [22] = \g_lane[6].u_add.u_sum.a [25];
   assign \g_lane[6].u_add.s1_big [21] = \g_lane[6].u_add.u_sum.a [24];
@@ -109701,7 +109712,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_add.u_ca.q [2] = \g_lane[6].u_add.x_dba [2];
   assign \g_lane[6].u_add.u_ca.q [1] = \g_lane[6].u_add.x_dba [1];
   assign \g_lane[6].u_add.u_ca.q [0] = \g_lane[6].u_add.x_dba [0];
-  assign \g_lane[6].u_add.u_ca.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.u_ca.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.u_cb.clk  = clk;
   assign \g_lane[6].u_add.u_cb.d [55] = \g_lane[6].u_add.u_sum.s [27];
   assign \g_lane[6].u_add.u_cb.d [54] = \g_lane[6].u_add.u_sum.s [26];
@@ -109936,7 +109947,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_add.u_cb.q [2] = \g_lane[6].u_add.u_cd.d [9];
   assign \g_lane[6].u_add.u_cb.q [1] = \g_lane[6].u_add.u_cd.d [8];
   assign \g_lane[6].u_add.u_cb.q [0] = \g_lane[6].u_add.u_cd.d [7];
-  assign \g_lane[6].u_add.u_cb.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.u_cb.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.u_cc.clk  = clk;
   assign \g_lane[6].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[6].u_add.u_cc.d [24] = \g_lane[6].u_add.u_rnd.s [23];
@@ -110080,7 +110091,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_add.u_cc.q [27] = \g_lane[6].u_add.u_exp [2];
   assign \g_lane[6].u_add.u_cc.q [26] = \g_lane[6].u_add.u_exp [1];
   assign \g_lane[6].u_add.u_cc.q [25] = \g_lane[6].u_add.u_exp [0];
-  assign \g_lane[6].u_add.u_cc.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.u_cc.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.u_cd.clk  = clk;
   assign \g_lane[6].u_add.u_cd.d [6] = \g_lane[6].u_add.u_lzc.n [5];
   assign \g_lane[6].u_add.u_cd.d [5] = \g_lane[6].u_add.u_lzc.n [4];
@@ -110298,7 +110309,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_add.u_cd.q [8] = \g_lane[6].u_add.w_dif [1];
   assign \g_lane[6].u_add.u_cd.q [7] = \g_lane[6].u_add.w_dif [0];
   assign \g_lane[6].u_add.u_cd.q [0] = \g_lane[6].u_add.w_carry ;
-  assign \g_lane[6].u_add.u_cd.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.u_cd.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[6].u_add.u_cmp.cout  = \g_lane[6].u_add.u_cmp.g [31];
   assign \g_lane[6].u_add.u_cmp.g [160] = 1'h1;
@@ -114295,7 +114306,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_mul.rows [240] = 1'h0;
   assign \g_lane[6].u_mul.rows [144] = 1'h0;
   assign \g_lane[6].u_mul.rows [48] = 1'h0;
-  assign \g_lane[6].u_mul.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.s1_byp  = \g_lane[6].u_mul.u_c2.d [227];
   assign \g_lane[6].u_mul.s1_err [1] = \g_lane[6].u_mul.u_c2.d [226];
   assign \g_lane[6].u_mul.s1_err [0] = \g_lane[6].u_mul.u_c2.d [225];
@@ -114468,7 +114479,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_mul.u_c1.q [2] = \g_lane[6].u_mul.u_pw.b [2];
   assign \g_lane[6].u_mul.u_c1.q [1] = \g_lane[6].u_mul.u_pw.b [1];
   assign \g_lane[6].u_mul.u_c1.q [0] = \g_lane[6].u_mul.u_pw.b [0];
-  assign \g_lane[6].u_mul.u_c1.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c1.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c2.clk  = clk;
   assign \g_lane[6].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[6].u_mul.u_c2.g_rv.rd [227] = \g_lane[6].u_mul.u_c2.q [227];
@@ -114796,7 +114807,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_mul.u_c2.q [130] = \g_lane[6].u_mul.u_cpa.a [2];
   assign \g_lane[6].u_mul.u_c2.q [129] = \g_lane[6].u_mul.u_cpa.a [1];
   assign \g_lane[6].u_mul.u_c2.q [128] = \g_lane[6].u_mul.u_cpa.a [0];
-  assign \g_lane[6].u_mul.u_c2.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c2.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c3.clk  = clk;
   assign \g_lane[6].u_mul.u_c3.g_rv.rd [41] = \g_lane[6].u_mul.u_c4.d [41];
   assign \g_lane[6].u_mul.u_c3.g_rv.rd [40] = \g_lane[6].u_mul.u_c4.d [40];
@@ -114884,7 +114895,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_mul.u_c3.q [2] = \g_lane[6].u_mul.u_rnd.a [1];
   assign \g_lane[6].u_mul.u_c3.q [1] = \g_lane[6].u_mul.u_rnd.a [0];
   assign \g_lane[6].u_mul.u_c3.q [0] = \g_lane[6].u_mul.u_rnd.g [0];
-  assign \g_lane[6].u_mul.u_c3.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c3.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c4.clk  = clk;
   assign \g_lane[6].u_mul.u_c4.d [24] = \g_lane[6].u_mul.u_rnd.s [23];
   assign \g_lane[6].u_mul.u_c4.d [23] = \g_lane[6].u_mul.u_rnd.s [22];
@@ -114958,7 +114969,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_mul.u_c4.q [41] = \g_lane[6].u_mul.u_c6.q [35];
   assign \g_lane[6].u_mul.u_c4.q [40] = \g_lane[6].u_mul.u_c6.q [34];
   assign \g_lane[6].u_mul.u_c4.q [39] = \g_lane[6].u_mul.u_c6.q [33];
-  assign \g_lane[6].u_mul.u_c4.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c4.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c5.clk  = clk;
   assign \g_lane[6].u_mul.u_c5.d [86] = gov;
   assign \g_lane[6].u_mul.u_c5.d [81] = \g_lane[6].u_mul.u_la.x [31];
@@ -115106,7 +115117,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_mul.u_c5.g_rv.rd [1] = \g_lane[6].u_mul.u_c5.q [1];
   assign \g_lane[6].u_mul.u_c5.g_rv.rd [0] = \g_lane[6].u_mul.u_c5.q [0];
   assign \g_lane[6].u_mul.u_c5.g_rv.rv  = \g_lane[6].u_mul.u_c5.q [86];
-  assign \g_lane[6].u_mul.u_c5.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c5.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c6.clk  = clk;
   assign \g_lane[6].u_mul.u_c6.d [36] = \g_lane[6].u_mul.u_c6.q [36];
   assign \g_lane[6].u_mul.u_c6.d [35] = \g_lane[6].u_mul.u_c6.q [35];
@@ -115145,7 +115156,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_mul.u_c6.d [2] = \g_lane[6].u_mul.u_c6.q [2];
   assign \g_lane[6].u_mul.u_c6.d [1] = \g_lane[6].u_mul.u_c6.q [1];
   assign \g_lane[6].u_mul.u_c6.d [0] = \g_lane[6].u_mul.u_c6.q [0];
-  assign \g_lane[6].u_mul.u_c6.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c6.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c7.clk  = clk;
   assign \g_lane[6].u_mul.u_c7.d [68] = gov;
   assign \g_lane[6].u_mul.u_c7.d [67] = \g_lane[6].u_mul.x_a [31];
@@ -115284,6 +115295,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[6].u_mul.u_c7.q [3] = \g_lane[6].u_mul.x_afz ;
   assign \g_lane[6].u_mul.u_c7.q [2] = \g_lane[6].u_mul.x_bfz ;
   assign \g_lane[6].u_mul.u_c7.q [0] = \g_lane[6].u_mul.zero ;
+  assign \g_lane[6].u_mul.u_c7.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[6].u_mul.u_cpa.cout  = \g_lane[6].u_mul.unused_cout ;
   assign \g_lane[6].u_mul.u_cpa.g [294] = 1'h0;
@@ -116523,7 +116535,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].e0 [0] = \g_lane[7].u_mul.err [0];
   assign \g_lane[7].e1 [1] = \g_lane[7].u_add.err [1];
   assign \g_lane[7].e1 [0] = \g_lane[7].u_add.err [0];
-  assign \g_lane[7].g_lr.r  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].g_lr.r  = lrnv[7];
   assign \g_lane[7].gw [31] = \g_lane[7].u_mul.x_a [31];
   assign \g_lane[7].gw [30] = \g_lane[7].u_mul.x_a [30];
   assign \g_lane[7].gw [29] = \g_lane[7].u_mul.x_a [29];
@@ -116588,7 +116600,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].gx [2] = \g_lane[7].u_mul.x_b [2];
   assign \g_lane[7].gx [1] = \g_lane[7].u_mul.x_b [1];
   assign \g_lane[7].gx [0] = \g_lane[7].u_mul.x_b [0];
-  assign \g_lane[7].lrn  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].lrn  = lrnv[7];
   assign \g_lane[7].prod [31] = \g_lane[7].u_mul.y [31];
   assign \g_lane[7].prod [30] = \g_lane[7].u_mul.y [30];
   assign \g_lane[7].prod [29] = \g_lane[7].u_mul.y [29];
@@ -117557,7 +117569,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_add.rnd_w [2] = \g_lane[7].u_add.u_rnd.s [2];
   assign \g_lane[7].u_add.rnd_w [1] = \g_lane[7].u_add.u_rnd.s [1];
   assign \g_lane[7].u_add.rnd_w [0] = \g_lane[7].u_add.u_rnd.s [0];
-  assign \g_lane[7].u_add.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.s1_big [23] = \g_lane[7].u_add.u_sum.a [26];
   assign \g_lane[7].u_add.s1_big [22] = \g_lane[7].u_add.u_sum.a [25];
   assign \g_lane[7].u_add.s1_big [21] = \g_lane[7].u_add.u_sum.a [24];
@@ -118152,7 +118164,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_add.u_ca.q [2] = \g_lane[7].u_add.x_dba [2];
   assign \g_lane[7].u_add.u_ca.q [1] = \g_lane[7].u_add.x_dba [1];
   assign \g_lane[7].u_add.u_ca.q [0] = \g_lane[7].u_add.x_dba [0];
-  assign \g_lane[7].u_add.u_ca.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.u_ca.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.u_cb.clk  = clk;
   assign \g_lane[7].u_add.u_cb.d [55] = \g_lane[7].u_add.u_sum.s [27];
   assign \g_lane[7].u_add.u_cb.d [54] = \g_lane[7].u_add.u_sum.s [26];
@@ -118387,7 +118399,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_add.u_cb.q [2] = \g_lane[7].u_add.u_cd.d [9];
   assign \g_lane[7].u_add.u_cb.q [1] = \g_lane[7].u_add.u_cd.d [8];
   assign \g_lane[7].u_add.u_cb.q [0] = \g_lane[7].u_add.u_cd.d [7];
-  assign \g_lane[7].u_add.u_cb.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.u_cb.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.u_cc.clk  = clk;
   assign \g_lane[7].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[7].u_add.u_cc.d [24] = \g_lane[7].u_add.u_rnd.s [23];
@@ -118531,7 +118543,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_add.u_cc.q [27] = \g_lane[7].u_add.u_exp [2];
   assign \g_lane[7].u_add.u_cc.q [26] = \g_lane[7].u_add.u_exp [1];
   assign \g_lane[7].u_add.u_cc.q [25] = \g_lane[7].u_add.u_exp [0];
-  assign \g_lane[7].u_add.u_cc.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.u_cc.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.u_cd.clk  = clk;
   assign \g_lane[7].u_add.u_cd.d [6] = \g_lane[7].u_add.u_lzc.n [5];
   assign \g_lane[7].u_add.u_cd.d [5] = \g_lane[7].u_add.u_lzc.n [4];
@@ -118749,7 +118761,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_add.u_cd.q [8] = \g_lane[7].u_add.w_dif [1];
   assign \g_lane[7].u_add.u_cd.q [7] = \g_lane[7].u_add.w_dif [0];
   assign \g_lane[7].u_add.u_cd.q [0] = \g_lane[7].u_add.w_carry ;
-  assign \g_lane[7].u_add.u_cd.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.u_cd.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[7].u_add.u_cmp.cout  = \g_lane[7].u_add.u_cmp.g [31];
   assign \g_lane[7].u_add.u_cmp.g [160] = 1'h1;
@@ -122746,7 +122758,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_mul.rows [240] = 1'h0;
   assign \g_lane[7].u_mul.rows [144] = 1'h0;
   assign \g_lane[7].u_mul.rows [48] = 1'h0;
-  assign \g_lane[7].u_mul.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.s1_byp  = \g_lane[7].u_mul.u_c2.d [227];
   assign \g_lane[7].u_mul.s1_err [1] = \g_lane[7].u_mul.u_c2.d [226];
   assign \g_lane[7].u_mul.s1_err [0] = \g_lane[7].u_mul.u_c2.d [225];
@@ -122919,7 +122931,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_mul.u_c1.q [2] = \g_lane[7].u_mul.u_pw.b [2];
   assign \g_lane[7].u_mul.u_c1.q [1] = \g_lane[7].u_mul.u_pw.b [1];
   assign \g_lane[7].u_mul.u_c1.q [0] = \g_lane[7].u_mul.u_pw.b [0];
-  assign \g_lane[7].u_mul.u_c1.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c1.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c2.clk  = clk;
   assign \g_lane[7].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[7].u_mul.u_c2.g_rv.rd [227] = \g_lane[7].u_mul.u_c2.q [227];
@@ -123247,7 +123259,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_mul.u_c2.q [130] = \g_lane[7].u_mul.u_cpa.a [2];
   assign \g_lane[7].u_mul.u_c2.q [129] = \g_lane[7].u_mul.u_cpa.a [1];
   assign \g_lane[7].u_mul.u_c2.q [128] = \g_lane[7].u_mul.u_cpa.a [0];
-  assign \g_lane[7].u_mul.u_c2.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c2.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c3.clk  = clk;
   assign \g_lane[7].u_mul.u_c3.g_rv.rd [41] = \g_lane[7].u_mul.u_c4.d [41];
   assign \g_lane[7].u_mul.u_c3.g_rv.rd [40] = \g_lane[7].u_mul.u_c4.d [40];
@@ -123335,7 +123347,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_mul.u_c3.q [2] = \g_lane[7].u_mul.u_rnd.a [1];
   assign \g_lane[7].u_mul.u_c3.q [1] = \g_lane[7].u_mul.u_rnd.a [0];
   assign \g_lane[7].u_mul.u_c3.q [0] = \g_lane[7].u_mul.u_rnd.g [0];
-  assign \g_lane[7].u_mul.u_c3.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c3.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c4.clk  = clk;
   assign \g_lane[7].u_mul.u_c4.d [24] = \g_lane[7].u_mul.u_rnd.s [23];
   assign \g_lane[7].u_mul.u_c4.d [23] = \g_lane[7].u_mul.u_rnd.s [22];
@@ -123409,7 +123421,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_mul.u_c4.q [41] = \g_lane[7].u_mul.u_c6.q [35];
   assign \g_lane[7].u_mul.u_c4.q [40] = \g_lane[7].u_mul.u_c6.q [34];
   assign \g_lane[7].u_mul.u_c4.q [39] = \g_lane[7].u_mul.u_c6.q [33];
-  assign \g_lane[7].u_mul.u_c4.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c4.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c5.clk  = clk;
   assign \g_lane[7].u_mul.u_c5.d [86] = gov;
   assign \g_lane[7].u_mul.u_c5.d [81] = \g_lane[7].u_mul.u_la.x [31];
@@ -123557,7 +123569,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_mul.u_c5.g_rv.rd [1] = \g_lane[7].u_mul.u_c5.q [1];
   assign \g_lane[7].u_mul.u_c5.g_rv.rd [0] = \g_lane[7].u_mul.u_c5.q [0];
   assign \g_lane[7].u_mul.u_c5.g_rv.rv  = \g_lane[7].u_mul.u_c5.q [86];
-  assign \g_lane[7].u_mul.u_c5.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c5.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c6.clk  = clk;
   assign \g_lane[7].u_mul.u_c6.d [36] = \g_lane[7].u_mul.u_c6.q [36];
   assign \g_lane[7].u_mul.u_c6.d [35] = \g_lane[7].u_mul.u_c6.q [35];
@@ -123596,7 +123608,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_mul.u_c6.d [2] = \g_lane[7].u_mul.u_c6.q [2];
   assign \g_lane[7].u_mul.u_c6.d [1] = \g_lane[7].u_mul.u_c6.q [1];
   assign \g_lane[7].u_mul.u_c6.d [0] = \g_lane[7].u_mul.u_c6.q [0];
-  assign \g_lane[7].u_mul.u_c6.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c6.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c7.clk  = clk;
   assign \g_lane[7].u_mul.u_c7.d [68] = gov;
   assign \g_lane[7].u_mul.u_c7.d [67] = \g_lane[7].u_mul.x_a [31];
@@ -123735,6 +123747,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].
   assign \g_lane[7].u_mul.u_c7.q [3] = \g_lane[7].u_mul.x_afz ;
   assign \g_lane[7].u_mul.u_c7.q [2] = \g_lane[7].u_mul.x_bfz ;
   assign \g_lane[7].u_mul.u_c7.q [0] = \g_lane[7].u_mul.zero ;
+  assign \g_lane[7].u_mul.u_c7.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[7].u_mul.u_cpa.cout  = \g_lane[7].u_mul.unused_cout ;
   assign \g_lane[7].u_mul.u_cpa.g [294] = 1'h0;
@@ -125251,20 +125264,20 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire [255:0] s_i;
   output lf;
   reg lf;
-  wire [31:0] _00000_;
-  wire [31:0] _00001_;
+  wire _00000_;
+  wire _00001_;
   wire [31:0] _00002_;
-  wire _00003_;
+  wire [31:0] _00003_;
   wire [31:0] _00004_;
-  wire _00005_;
+  wire [31:0] _00005_;
   wire _00006_;
   wire _00007_;
-  wire [31:0] _00008_;
-  wire [31:0] _00009_;
+  wire _00008_;
+  wire _00009_;
   wire [31:0] _00010_;
   wire [31:0] _00011_;
-  wire _00012_;
-  wire _00013_;
+  wire [31:0] _00012_;
+  wire [31:0] _00013_;
   wire _00014_;
   wire _00015_;
   wire _00016_;
@@ -125272,39 +125285,39 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire _00018_;
   wire _00019_;
   wire _00020_;
-  wire [31:0] _00021_;
-  wire [31:0] _00022_;
+  wire _00021_;
+  wire _00022_;
   wire [31:0] _00023_;
-  wire _00024_;
-  wire _00025_;
+  wire [31:0] _00024_;
+  wire [31:0] _00025_;
   wire _00026_;
   wire _00027_;
-  wire [31:0] _00028_;
-  wire [31:0] _00029_;
+  wire _00028_;
+  wire _00029_;
   wire [31:0] _00030_;
-  wire _00031_;
-  wire _00032_;
+  wire [31:0] _00031_;
+  wire [31:0] _00032_;
   wire _00033_;
   wire _00034_;
-  wire [31:0] _00035_;
-  wire [31:0] _00036_;
+  wire _00035_;
+  wire _00036_;
   wire [31:0] _00037_;
-  wire _00038_;
-  wire _00039_;
+  wire [31:0] _00038_;
+  wire [31:0] _00039_;
   wire _00040_;
   wire _00041_;
-  wire [31:0] _00042_;
-  wire [31:0] _00043_;
+  wire _00042_;
+  wire _00043_;
   wire [31:0] _00044_;
-  wire _00045_;
-  wire _00046_;
+  wire [31:0] _00045_;
+  wire [31:0] _00046_;
   wire _00047_;
   wire _00048_;
-  wire [31:0] _00049_;
-  wire [31:0] _00050_;
+  wire _00049_;
+  wire _00050_;
   wire [31:0] _00051_;
-  wire _00052_;
-  wire _00053_;
+  wire [31:0] _00052_;
+  wire [31:0] _00053_;
   wire _00054_;
   wire _00055_;
   wire [31:0] _00056_;
@@ -136891,7 +136904,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire \g_lane[0].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[0].u_mul.u_c7.d ;
   wire [68:0] \g_lane[0].u_mul.u_c7.q ;
-  reg \g_lane[0].u_mul.u_c7.rst_n ;
+  wire \g_lane[0].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[0].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[0].u_mul.u_cpa.b ;
   wire \g_lane[0].u_mul.u_cpa.cin ;
@@ -137324,7 +137337,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire \g_lane[1].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[1].u_mul.u_c7.d ;
   wire [68:0] \g_lane[1].u_mul.u_c7.q ;
-  reg \g_lane[1].u_mul.u_c7.rst_n ;
+  wire \g_lane[1].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[1].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[1].u_mul.u_cpa.b ;
   wire \g_lane[1].u_mul.u_cpa.cin ;
@@ -137757,7 +137770,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire \g_lane[2].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[2].u_mul.u_c7.d ;
   wire [68:0] \g_lane[2].u_mul.u_c7.q ;
-  reg \g_lane[2].u_mul.u_c7.rst_n ;
+  wire \g_lane[2].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[2].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[2].u_mul.u_cpa.b ;
   wire \g_lane[2].u_mul.u_cpa.cin ;
@@ -138190,7 +138203,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire \g_lane[3].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[3].u_mul.u_c7.d ;
   wire [68:0] \g_lane[3].u_mul.u_c7.q ;
-  reg \g_lane[3].u_mul.u_c7.rst_n ;
+  wire \g_lane[3].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[3].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[3].u_mul.u_cpa.b ;
   wire \g_lane[3].u_mul.u_cpa.cin ;
@@ -138623,7 +138636,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire \g_lane[4].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[4].u_mul.u_c7.d ;
   wire [68:0] \g_lane[4].u_mul.u_c7.q ;
-  reg \g_lane[4].u_mul.u_c7.rst_n ;
+  wire \g_lane[4].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[4].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[4].u_mul.u_cpa.b ;
   wire \g_lane[4].u_mul.u_cpa.cin ;
@@ -139056,7 +139069,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire \g_lane[5].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[5].u_mul.u_c7.d ;
   wire [68:0] \g_lane[5].u_mul.u_c7.q ;
-  reg \g_lane[5].u_mul.u_c7.rst_n ;
+  wire \g_lane[5].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[5].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[5].u_mul.u_cpa.b ;
   wire \g_lane[5].u_mul.u_cpa.cin ;
@@ -139489,7 +139502,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire \g_lane[6].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[6].u_mul.u_c7.d ;
   wire [68:0] \g_lane[6].u_mul.u_c7.q ;
-  reg \g_lane[6].u_mul.u_c7.rst_n ;
+  wire \g_lane[6].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[6].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[6].u_mul.u_cpa.b ;
   wire \g_lane[6].u_mul.u_cpa.cin ;
@@ -139922,7 +139935,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   wire \g_lane[7].u_mul.u_c7.clk ;
   wire [68:0] \g_lane[7].u_mul.u_c7.d ;
   wire [68:0] \g_lane[7].u_mul.u_c7.q ;
-  reg \g_lane[7].u_mul.u_c7.rst_n ;
+  wire \g_lane[7].u_mul.u_c7.rst_n ;
   wire [47:0] \g_lane[7].u_mul.u_cpa.a ;
   wire [47:0] \g_lane[7].u_mul.u_cpa.b ;
   wire \g_lane[7].u_mul.u_cpa.cin ;
@@ -139973,154 +139986,159 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   reg \g_lane[7].v0 ;
   reg \g_lane[7].v1 ;
   wire [31:0] \g_lane[7].xw ;
+  reg [7:0] \g_lfr.lfq ;
   wire [255:0] \g_sor.so_q ;
   reg gov;
   wire [7:0] lfl;
+  reg [7:0] lrnv;
   reg [7:0] lv_r;
   reg [7:0] ss_r;
   reg [255:0] sum_q;
   reg [255:0] w_in;
   reg [127:0] x_in;
   reg [255:0] y_l;
-  assign _00004_ = ss_r[0] ? { x_in[15:0], 16'h0000 } : w_in[31:0];
-  assign _00000_ = lv_r[6] ? { x_in[111:96], 16'h0000 } : 32'd0;
-  assign _00001_ = ss_r[6] ? { x_in[111:96], 16'h0000 } : w_in[223:192];
-  assign _00002_ = lv_r[6] ? _00001_ : 32'd0;
+  assign _00002_ = ss_r[0] ? { x_in[15:0], 16'h0000 } : w_in[31:0];
+  assign _00000_ = | \g_lane[5].u_add.err ;
+  assign _00001_ = \g_lane[5].v1  && _00000_;
+  assign lfl[5] = _00055_ || _00001_;
+  assign _00010_ = lv_r[0] ? _00002_ : 32'd0;
+  assign _00003_ = lv_r[6] ? { x_in[111:96], 16'h0000 } : 32'd0;
+  assign _00004_ = ss_r[6] ? { x_in[111:96], 16'h0000 } : w_in[223:192];
+  assign _00005_ = lv_r[6] ? _00004_ : 32'd0;
   assign { \g_lane[6].u_add.u_ca.d [81], \g_lane[6].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[223:192];
-  assign _00003_ = | \g_lane[6].u_mul.err ;
-  assign _00008_ = lv_r[0] ? _00004_ : 32'd0;
-  assign _00005_ = \g_lane[6].v0  && _00003_;
-  assign _00006_ = | \g_lane[6].u_add.err ;
-  assign _00007_ = \g_lane[6].v1  && _00006_;
-  assign lfl[6] = _00005_ || _00007_;
+  assign _00006_ = | \g_lane[6].u_mul.err ;
+  assign _00007_ = \g_lane[6].v0  && _00006_;
+  assign _00008_ = | \g_lane[6].u_add.err ;
+  assign _00009_ = \g_lane[6].v1  && _00008_;
+  assign lfl[6] = _00007_ || _00009_;
   assign { \g_lane[0].u_add.u_ca.d [81], \g_lane[0].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[31:0];
-  assign _00009_ = lv_r[7] ? { x_in[127:112], 16'h0000 } : 32'd0;
-  assign _00010_ = ss_r[7] ? { x_in[127:112], 16'h0000 } : w_in[255:224];
-  assign _00011_ = lv_r[7] ? _00010_ : 32'd0;
+  assign _00011_ = lv_r[7] ? { x_in[127:112], 16'h0000 } : 32'd0;
+  assign _00012_ = ss_r[7] ? { x_in[127:112], 16'h0000 } : w_in[255:224];
+  assign _00018_ = | \g_lane[0].u_mul.err ;
+  assign _00013_ = lv_r[7] ? _00012_ : 32'd0;
   assign { \g_lane[7].u_add.u_ca.d [81], \g_lane[7].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[255:224];
-  assign _00012_ = | \g_lane[7].u_mul.err ;
-  assign _00013_ = \g_lane[7].v0  && _00012_;
-  assign _00014_ = | \g_lane[7].u_add.err ;
-  assign _00015_ = \g_lane[7].v1  && _00014_;
-  assign lfl[7] = _00013_ || _00015_;
-  assign _00017_ = | \g_lane[0].u_mul.err ;
-  assign _00016_ = | lfl;
-  assign _00018_ = \g_lane[0].v0  && _00017_;
-  assign _00019_ = | \g_lane[0].u_add.err ;
-  assign _00020_ = \g_lane[0].v1  && _00019_;
-  assign lfl[0] = _00018_ || _00020_;
-  assign _00021_ = lv_r[1] ? { x_in[31:16], 16'h0000 } : 32'd0;
-  assign _00022_ = ss_r[1] ? { x_in[31:16], 16'h0000 } : w_in[63:32];
-  assign _00023_ = lv_r[1] ? _00022_ : 32'd0;
+  assign _00014_ = | \g_lane[7].u_mul.err ;
+  assign _00015_ = \g_lane[7].v0  && _00014_;
+  assign _00016_ = | \g_lane[7].u_add.err ;
+  assign _00017_ = \g_lane[7].v1  && _00016_;
+  assign lfl[7] = _00015_ || _00017_;
+  assign _00020_ = \g_lane[0].v0  && _00018_;
+  assign _00019_ = | \g_lfr.lfq ;
+  assign _00021_ = | \g_lane[0].u_add.err ;
+  assign _00022_ = \g_lane[0].v1  && _00021_;
+  assign lfl[0] = _00020_ || _00022_;
+  assign _00023_ = lv_r[1] ? { x_in[31:16], 16'h0000 } : 32'd0;
+  assign _00024_ = ss_r[1] ? { x_in[31:16], 16'h0000 } : w_in[63:32];
+  assign _00025_ = lv_r[1] ? _00024_ : 32'd0;
   assign { \g_lane[1].u_add.u_ca.d [81], \g_lane[1].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[63:32];
-  assign _00024_ = | \g_lane[1].u_mul.err ;
-  assign _00025_ = \g_lane[1].v0  && _00024_;
-  assign _00026_ = | \g_lane[1].u_add.err ;
-  assign _00027_ = \g_lane[1].v1  && _00026_;
-  assign lfl[1] = _00025_ || _00027_;
-  assign _00028_ = lv_r[2] ? { x_in[47:32], 16'h0000 } : 32'd0;
-  assign _00029_ = ss_r[2] ? { x_in[47:32], 16'h0000 } : w_in[95:64];
-  assign _00030_ = lv_r[2] ? _00029_ : 32'd0;
+  assign _00026_ = | \g_lane[1].u_mul.err ;
+  assign _00027_ = \g_lane[1].v0  && _00026_;
+  assign _00028_ = | \g_lane[1].u_add.err ;
+  assign _00029_ = \g_lane[1].v1  && _00028_;
+  assign lfl[1] = _00027_ || _00029_;
+  assign _00030_ = lv_r[2] ? { x_in[47:32], 16'h0000 } : 32'd0;
+  assign _00031_ = ss_r[2] ? { x_in[47:32], 16'h0000 } : w_in[95:64];
+  assign _00032_ = lv_r[2] ? _00031_ : 32'd0;
   assign { \g_lane[2].u_add.u_ca.d [81], \g_lane[2].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[95:64];
-  assign _00031_ = | \g_lane[2].u_mul.err ;
-  assign _00032_ = \g_lane[2].v0  && _00031_;
-  assign _00033_ = | \g_lane[2].u_add.err ;
-  assign _00034_ = \g_lane[2].v1  && _00033_;
-  assign lfl[2] = _00032_ || _00034_;
-  assign _00035_ = lv_r[3] ? { x_in[63:48], 16'h0000 } : 32'd0;
-  assign _00036_ = ss_r[3] ? { x_in[63:48], 16'h0000 } : w_in[127:96];
-  assign _00037_ = lv_r[3] ? _00036_ : 32'd0;
+  assign _00033_ = | \g_lane[2].u_mul.err ;
+  assign _00034_ = \g_lane[2].v0  && _00033_;
+  assign _00035_ = | \g_lane[2].u_add.err ;
+  assign _00036_ = \g_lane[2].v1  && _00035_;
+  assign lfl[2] = _00034_ || _00036_;
+  assign _00037_ = lv_r[3] ? { x_in[63:48], 16'h0000 } : 32'd0;
+  assign _00038_ = ss_r[3] ? { x_in[63:48], 16'h0000 } : w_in[127:96];
+  assign _00039_ = lv_r[3] ? _00038_ : 32'd0;
   assign { \g_lane[3].u_add.u_ca.d [81], \g_lane[3].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[127:96];
-  assign _00038_ = | \g_lane[3].u_mul.err ;
-  assign _00039_ = \g_lane[3].v0  && _00038_;
-  assign _00040_ = | \g_lane[3].u_add.err ;
-  assign _00041_ = \g_lane[3].v1  && _00040_;
-  assign lfl[3] = _00039_ || _00041_;
-  assign _00042_ = lv_r[4] ? { x_in[79:64], 16'h0000 } : 32'd0;
-  assign _00043_ = ss_r[4] ? { x_in[79:64], 16'h0000 } : w_in[159:128];
-  assign _00044_ = lv_r[4] ? _00043_ : 32'd0;
+  assign _00040_ = | \g_lane[3].u_mul.err ;
+  assign _00041_ = \g_lane[3].v0  && _00040_;
+  assign _00042_ = | \g_lane[3].u_add.err ;
+  assign _00043_ = \g_lane[3].v1  && _00042_;
+  assign lfl[3] = _00041_ || _00043_;
+  assign _00044_ = lv_r[4] ? { x_in[79:64], 16'h0000 } : 32'd0;
+  assign _00045_ = ss_r[4] ? { x_in[79:64], 16'h0000 } : w_in[159:128];
+  assign _00046_ = lv_r[4] ? _00045_ : 32'd0;
   assign { \g_lane[4].u_add.u_ca.d [81], \g_lane[4].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[159:128];
-  assign _00045_ = | \g_lane[4].u_mul.err ;
-  assign _00046_ = \g_lane[4].v0  && _00045_;
-  assign _00047_ = | \g_lane[4].u_add.err ;
-  assign _00048_ = \g_lane[4].v1  && _00047_;
-  assign lfl[4] = _00046_ || _00048_;
-  assign _00049_ = lv_r[5] ? { x_in[95:80], 16'h0000 } : 32'd0;
+  assign _00047_ = | \g_lane[4].u_mul.err ;
+  assign _00048_ = \g_lane[4].v0  && _00047_;
+  assign _00049_ = | \g_lane[4].u_add.err ;
+  assign _00050_ = \g_lane[4].v1  && _00049_;
+  assign lfl[4] = _00048_ || _00050_;
   assign _00056_ = lv_r[0] ? { x_in[15:0], 16'h0000 } : 32'd0;
-  assign _00050_ = ss_r[5] ? { x_in[95:80], 16'h0000 } : w_in[191:160];
-  assign _00051_ = lv_r[5] ? _00050_ : 32'd0;
+  assign _00051_ = lv_r[5] ? { x_in[95:80], 16'h0000 } : 32'd0;
+  assign _00052_ = ss_r[5] ? { x_in[95:80], 16'h0000 } : w_in[191:160];
+  assign _00053_ = lv_r[5] ? _00052_ : 32'd0;
   assign { \g_lane[5].u_add.u_ca.d [81], \g_lane[5].u_add.u_cmp.a  } = fst_q ? 32'd0 : sum_q[191:160];
-  assign _00052_ = | \g_lane[5].u_mul.err ;
-  assign _00053_ = \g_lane[5].v0  && _00052_;
-  assign _00054_ = | \g_lane[5].u_add.err ;
-  assign _00055_ = \g_lane[5].v1  && _00054_;
-  assign lfl[5] = _00053_ || _00055_;
+  assign _00054_ = | \g_lane[5].u_mul.err ;
+  assign _00055_ = \g_lane[5].v0  && _00054_;
   always @(posedge clk)
     fst_q <= fst;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[0].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[0].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[0] <= 1'h0;
+    else lrnv[0] <= 1'h1;
   always @(posedge clk)
-    \g_lane[0].u_mul.x_a  <= _00008_;
+    \g_lane[0].u_mul.x_a  <= _00010_;
   always @(posedge clk)
     \g_lane[0].u_mul.x_b  <= _00056_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[1].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[1].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[1] <= 1'h0;
+    else lrnv[1] <= 1'h1;
   always @(posedge clk)
-    \g_lane[1].u_mul.x_a  <= _00023_;
+    \g_lane[1].u_mul.x_a  <= _00025_;
   always @(posedge clk)
-    \g_lane[1].u_mul.x_b  <= _00021_;
+    \g_lane[1].u_mul.x_b  <= _00023_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[2].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[2].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[2] <= 1'h0;
+    else lrnv[2] <= 1'h1;
   always @(posedge clk)
-    \g_lane[2].u_mul.x_a  <= _00030_;
+    \g_lane[2].u_mul.x_a  <= _00032_;
   always @(posedge clk)
-    \g_lane[2].u_mul.x_b  <= _00028_;
+    \g_lane[2].u_mul.x_b  <= _00030_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[3].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[3].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[3] <= 1'h0;
+    else lrnv[3] <= 1'h1;
   always @(posedge clk)
-    \g_lane[3].u_mul.x_a  <= _00037_;
+    \g_lane[3].u_mul.x_a  <= _00039_;
   always @(posedge clk)
-    \g_lane[3].u_mul.x_b  <= _00035_;
+    \g_lane[3].u_mul.x_b  <= _00037_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[4].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[4].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[4] <= 1'h0;
+    else lrnv[4] <= 1'h1;
   always @(posedge clk)
-    \g_lane[4].u_mul.x_a  <= _00044_;
+    \g_lane[4].u_mul.x_a  <= _00046_;
   always @(posedge clk)
-    \g_lane[4].u_mul.x_b  <= _00042_;
+    \g_lane[4].u_mul.x_b  <= _00044_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[5].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[5].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[5] <= 1'h0;
+    else lrnv[5] <= 1'h1;
   always @(posedge clk)
-    \g_lane[5].u_mul.x_a  <= _00051_;
+    \g_lane[5].u_mul.x_a  <= _00053_;
   always @(posedge clk)
-    \g_lane[5].u_mul.x_b  <= _00049_;
+    \g_lane[5].u_mul.x_b  <= _00051_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[6].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[6].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[6] <= 1'h0;
+    else lrnv[6] <= 1'h1;
   always @(posedge clk)
-    \g_lane[6].u_mul.x_a  <= _00002_;
+    \g_lane[6].u_mul.x_a  <= _00005_;
   always @(posedge clk)
-    \g_lane[6].u_mul.x_b  <= _00000_;
+    \g_lane[6].u_mul.x_b  <= _00003_;
   always @(posedge clk, negedge rst_n)
-    if (!rst_n) \g_lane[7].u_mul.u_c7.rst_n  <= 1'h0;
-    else \g_lane[7].u_mul.u_c7.rst_n  <= 1'h1;
+    if (!rst_n) lrnv[7] <= 1'h0;
+    else lrnv[7] <= 1'h1;
   always @(posedge clk)
-    \g_lane[7].u_mul.x_a  <= _00011_;
+    \g_lane[7].u_mul.x_a  <= _00013_;
   always @(posedge clk)
-    \g_lane[7].u_mul.x_b  <= _00009_;
+    \g_lane[7].u_mul.x_b  <= _00011_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lfr.lfq  <= 8'h00;
+    else \g_lfr.lfq  <= lfl;
   always @(posedge clk)
     y <= y_l;
-  always @(posedge clk, negedge rst_n)
-    if (!rst_n) gov <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) gov <= 1'h0;
     else gov <= gov_i;
-  always @(posedge clk, negedge rst_n)
-    if (!rst_n) lf <= 1'h0;
-    else lf <= _00016_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) lf <= 1'h0;
+    else lf <= _00019_;
   always @(posedge clk)
     lv_r <= lv_i;
   always @(posedge clk)
@@ -140204,26 +140222,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_add.u_rnd.g [0] = \g_lane[0].u_add.s2_val [2] && _00099_;
   always @(posedge clk)
     \g_lane[0].u_add.err  <= _00102_;
-  reg [23:0] _11435_;
+  reg [23:0] _11436_;
   always @(posedge clk)
-    _11435_ <= _00088_;
-  assign \g_lane[0].u_add.u_sum.a [26:3] = _11435_;
+    _11436_ <= _00088_;
+  assign \g_lane[0].u_add.u_sum.a [26:3] = _11436_;
   reg \g_lane_reg[0].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cb.d[100]  <= \g_lane[0].u_add.x_byp ;
   assign \g_lane[0].u_add.u_cb.d [100] = \g_lane_reg[0].u_add.u_cb.d[100] ;
-  reg [31:0] _11437_;
+  reg [31:0] _11438_;
   always @(posedge clk)
-    _11437_ <= \g_lane[0].u_add.x_code ;
-  assign \g_lane[0].u_add.u_cb.d [95:64] = _11437_;
-  reg [1:0] _11438_;
+    _11438_ <= \g_lane[0].u_add.x_code ;
+  assign \g_lane[0].u_add.u_cb.d [95:64] = _11438_;
+  reg [1:0] _11439_;
   always @(posedge clk)
-    _11438_ <= \g_lane[0].u_add.x_err ;
-  assign \g_lane[0].u_add.u_cb.d [97:96] = _11438_;
-  reg [7:0] _11439_;
+    _11439_ <= \g_lane[0].u_add.x_err ;
+  assign \g_lane[0].u_add.u_cb.d [97:96] = _11439_;
+  reg [7:0] _11440_;
   always @(posedge clk)
-    _11439_ <= _00087_;
-  assign \g_lane[0].u_add.u_cb.d [63:56] = _11439_;
+    _11440_ <= _00087_;
+  assign \g_lane[0].u_add.u_cb.d [63:56] = _11440_;
   reg \g_lane_reg[0].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cb.d[98]  <= _00086_;
@@ -140235,45 +140253,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[0].u_add.u_cb.d[99]  <= \g_lane[0].u_add.x_sub ;
   assign \g_lane[0].u_add.u_cb.d [99] = \g_lane_reg[0].u_add.u_cb.d[99] ;
   reg \g_lane_reg[0].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[0].u_add.u_cb.d[101]  <= \g_lane[0].u_add.x_v ;
   assign \g_lane[0].u_add.u_cb.d [101] = \g_lane_reg[0].u_add.u_cb.d[101] ;
   reg \g_lane_reg[0].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cc.d[69]  <= \g_lane[0].u_add.w_byp ;
   assign \g_lane[0].u_add.u_cc.d [69] = \g_lane_reg[0].u_add.u_cc.d[69] ;
-  reg [31:0] _11445_;
+  reg [31:0] _11446_;
   always @(posedge clk)
-    _11445_ <= \g_lane[0].u_add.w_code ;
-  assign \g_lane[0].u_add.u_cc.d [64:33] = _11445_;
-  reg [1:0] _11446_;
+    _11446_ <= \g_lane[0].u_add.w_code ;
+  assign \g_lane[0].u_add.u_cc.d [64:33] = _11446_;
+  reg [1:0] _11447_;
   always @(posedge clk)
-    _11446_ <= \g_lane[0].u_add.w_err ;
-  assign { \g_lane[0].u_add.s2_err [1], \g_lane[0].u_add.u_cc.d [65] } = _11446_;
-  reg [7:0] _11447_;
+    _11447_ <= \g_lane[0].u_add.w_err ;
+  assign { \g_lane[0].u_add.s2_err [1], \g_lane[0].u_add.u_cc.d [65] } = _11447_;
+  reg [7:0] _11448_;
   always @(posedge clk)
-    _11447_ <= _00096_;
-  assign \g_lane[0].u_add.u_cc.d [32:25] = _11447_;
+    _11448_ <= _00096_;
+  assign \g_lane[0].u_add.u_cc.d [32:25] = _11448_;
   reg \g_lane_reg[0].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cc.d[67]  <= \g_lane[0].u_add.w_sign ;
   assign \g_lane[0].u_add.u_cc.d [67] = \g_lane_reg[0].u_add.u_cc.d[67] ;
   reg \g_lane_reg[0].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[0].u_add.u_cc.d[70]  <= \g_lane[0].u_add.w_v ;
   assign \g_lane[0].u_add.u_cc.d [70] = \g_lane_reg[0].u_add.u_cc.d[70] ;
-  reg [26:0] _11450_;
+  reg [26:0] _11451_;
   always @(posedge clk)
-    _11450_ <= _00097_;
-  assign { \g_lane[0].u_add.u_rnd.a , \g_lane[0].u_add.s2_val [2:0] } = _11450_;
+    _11451_ <= _00097_;
+  assign { \g_lane[0].u_add.u_rnd.a , \g_lane[0].u_add.s2_val [2:0] } = _11451_;
   reg \g_lane_reg[0].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[0].u_add.u_cc.d[68]  <= _00095_;
   assign \g_lane[0].u_add.u_cc.d [68] = \g_lane_reg[0].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].v1  <= 1'h0;
     else \g_lane[0].v1  <= \g_lane[0].u_add.u_v ;
   always @(posedge clk)
     y_l[31:0] <= _00111_;
@@ -140291,35 +140309,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _00111_ = \g_lane[0].u_add.u_cc.q [69] ? \g_lane[0].u_add.u_code  : _00110_;
   assign \g_lane[0].u_add.small_b  = _00077_ ? { 27'h0000000, _00078_ } : _00084_;
   assign \g_lane[0].u_add.small_a  = _00069_ ? { 27'h0000000, _00070_ } : _00076_;
-  reg [119:0] _11468_;
+  reg [119:0] _11469_;
   always @(posedge clk)
-    _11468_ <= { \g_lane[0].u_add.u_ca.d [119], \g_lane[0].v0 , \g_lane[0].u_add.u_ca.d [117:81], \g_lane[0].u_mul.y [31], \g_lane[0].u_add.u_dab.a , \g_lane[0].u_add.u_dba.a , \g_lane[0].u_add.u_ca.d [63], \g_lane[0].u_add.u_cmp.a [22:0], \g_lane[0].u_add.u_ca.d [39], \g_lane[0].u_mul.y [22:0], \g_lane[0].u_add.u_dab.s , \g_lane[0].u_add.u_dba.s  };
-  assign { \g_lane[0].u_add.x_swap , \g_lane[0].u_add.u_ca.g_rv.rd [118], \g_lane[0].u_add.x_byp , \g_lane[0].u_add.x_err , \g_lane[0].u_add.x_code , \g_lane[0].u_add.x_sub , \g_lane[0].u_add.x_as , \g_lane[0].u_add.x_bs , \g_lane[0].u_add.x_aexp , \g_lane[0].u_add.x_bexp , \g_lane[0].u_add.x_aman , \g_lane[0].u_add.x_bman , \g_lane[0].u_add.x_dab , \g_lane[0].u_add.x_dba  } = _11468_;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].u_add.x_v  <= 1'h0;
+    _11469_ <= { \g_lane[0].u_add.u_ca.d [119], \g_lane[0].v0 , \g_lane[0].u_add.u_ca.d [117:81], \g_lane[0].u_mul.y [31], \g_lane[0].u_add.u_dab.a , \g_lane[0].u_add.u_dba.a , \g_lane[0].u_add.u_ca.d [63], \g_lane[0].u_add.u_cmp.a [22:0], \g_lane[0].u_add.u_ca.d [39], \g_lane[0].u_mul.y [22:0], \g_lane[0].u_add.u_dab.s , \g_lane[0].u_add.u_dba.s  };
+  assign { \g_lane[0].u_add.x_swap , \g_lane[0].u_add.u_ca.g_rv.rd [118], \g_lane[0].u_add.x_byp , \g_lane[0].u_add.x_err , \g_lane[0].u_add.x_code , \g_lane[0].u_add.x_sub , \g_lane[0].u_add.x_as , \g_lane[0].u_add.x_bs , \g_lane[0].u_add.x_aexp , \g_lane[0].u_add.x_bexp , \g_lane[0].u_add.x_aman , \g_lane[0].u_add.x_bman , \g_lane[0].u_add.x_dab , \g_lane[0].u_add.x_dba  } = _11469_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].u_add.x_v  <= 1'h0;
     else \g_lane[0].u_add.x_v  <= \g_lane[0].v0 ;
-  reg [101:0] _11470_;
+  reg [101:0] _11471_;
   always @(posedge clk)
-    _11470_ <= { \g_lane[0].u_add.u_cb.d [101:56], \g_lane[0].u_add.u_sum.s , \g_lane[0].u_add.u_dif.s  };
-  assign { \g_lane[0].u_add.u_cb.g_rv.rd [101], \g_lane[0].u_add.u_cd.d [106:62], \g_lane[0].u_add.u_cd.d [0], \g_lane[0].u_add.u_cb.q [54:28], \g_lane[0].u_add.u_cd.d [34:7] } = _11470_;
+    _11471_ <= { \g_lane[0].u_add.u_cb.d [101:56], \g_lane[0].u_add.u_sum.s , \g_lane[0].u_add.u_dif.s  };
+  assign { \g_lane[0].u_add.u_cb.g_rv.rd [101], \g_lane[0].u_add.u_cd.d [106:62], \g_lane[0].u_add.u_cd.d [0], \g_lane[0].u_add.u_cb.q [54:28], \g_lane[0].u_add.u_cd.d [34:7] } = _11471_;
   reg \g_lane_reg[0].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[0].u_add.u_cd.d[107]  <= \g_lane[0].u_add.u_cb.d [101];
   assign \g_lane[0].u_add.u_cd.d [107] = \g_lane_reg[0].u_add.u_cd.d[107] ;
-  reg [70:0] _11472_;
+  reg [70:0] _11473_;
   always @(posedge clk)
-    _11472_ <= { \g_lane[0].u_add.u_cc.d [70:67], 1'h0, \g_lane[0].u_add.u_cc.d [65:25], \g_lane[0].u_add.u_rnd.s , \g_lane[0].u_add.u_rnd.g [24] };
-  assign { \g_lane[0].u_add.u_cc.g_rv.rd [70], \g_lane[0].u_add.u_cc.q [69], \g_lane[0].u_add.u_zero , \g_lane[0].u_add.u_sign , \g_lane[0].u_add.u_err , \g_lane[0].u_add.u_code , \g_lane[0].u_add.u_exp , \g_lane[0].u_add.u_cc.q [24:0] } = _11472_;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].u_add.u_v  <= 1'h0;
+    _11473_ <= { \g_lane[0].u_add.u_cc.d [70:67], 1'h0, \g_lane[0].u_add.u_cc.d [65:25], \g_lane[0].u_add.u_rnd.s , \g_lane[0].u_add.u_rnd.g [24] };
+  assign { \g_lane[0].u_add.u_cc.g_rv.rd [70], \g_lane[0].u_add.u_cc.q [69], \g_lane[0].u_add.u_zero , \g_lane[0].u_add.u_sign , \g_lane[0].u_add.u_err , \g_lane[0].u_add.u_code , \g_lane[0].u_add.u_exp , \g_lane[0].u_add.u_cc.q [24:0] } = _11473_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].u_add.u_v  <= 1'h0;
     else \g_lane[0].u_add.u_v  <= \g_lane[0].u_add.u_cc.d [70];
-  reg [107:0] _11474_;
+  reg [107:0] _11475_;
   always @(posedge clk)
-    _11474_ <= { \g_lane[0].u_add.u_cd.d [107:7], \g_lane[0].u_add.u_lzc.n , \g_lane[0].u_add.u_cd.d [0] };
-  assign { \g_lane[0].u_add.u_cd.g_rv.rd [107], \g_lane[0].u_add.w_byp , \g_lane[0].u_add.w_sub , \g_lane[0].u_add.w_sign , \g_lane[0].u_add.w_err , \g_lane[0].u_add.w_code , \g_lane[0].u_add.w_exp , \g_lane[0].u_add.w_add , \g_lane[0].u_add.w_dif , \g_lane[0].u_add.u_cd.q [6:1], \g_lane[0].u_add.w_carry  } = _11474_;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].u_add.w_v  <= 1'h0;
+    _11475_ <= { \g_lane[0].u_add.u_cd.d [107:7], \g_lane[0].u_add.u_lzc.n , \g_lane[0].u_add.u_cd.d [0] };
+  assign { \g_lane[0].u_add.u_cd.g_rv.rd [107], \g_lane[0].u_add.w_byp , \g_lane[0].u_add.w_sub , \g_lane[0].u_add.w_sign , \g_lane[0].u_add.w_err , \g_lane[0].u_add.w_code , \g_lane[0].u_add.w_exp , \g_lane[0].u_add.w_add , \g_lane[0].u_add.w_dif , \g_lane[0].u_add.u_cd.q [6:1], \g_lane[0].u_add.w_carry  } = _11475_;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].u_add.w_v  <= 1'h0;
     else \g_lane[0].u_add.w_v  <= \g_lane[0].u_add.u_cd.d [107];
   assign \g_lane[0].u_add.u_cmp.g [191:161] = \g_lane[0].u_add.u_cmp.a  & \g_lane[0].u_add.u_cmp.b ;
   assign _00112_ = \g_lane[0].u_add.u_cmp.p [180] & \g_lane[0].u_add.u_cmp.g [179];
@@ -142318,10 +142336,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane_reg[0].u_mul.u_c2.d[227]  <= \g_lane[0].u_mul.u_c1.q [75];
   assign \g_lane[0].u_mul.u_c2.d [227] = \g_lane_reg[0].u_mul.u_c2.d[227] ;
-  reg [1:0] _13469_;
+  reg [1:0] _13470_;
   always @(posedge clk)
-    _13469_ <= \g_lane[0].u_mul.u_c1.q [74:73];
-  assign \g_lane[0].u_mul.u_c2.d [226:225] = _13469_;
+    _13470_ <= \g_lane[0].u_mul.u_c1.q [74:73];
+  assign \g_lane[0].u_mul.u_c2.d [226:225] = _13470_;
   always @(posedge clk)
     \g_lane[0].u_mul.s1_power  <= \g_lane[0].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -142331,18 +142349,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[0].u_mul.u_c2.d[224]  <= \g_lane[0].u_mul.u_c1.q [72];
   assign \g_lane[0].u_mul.u_c2.d [224] = \g_lane_reg[0].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[0].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c2.d[228]  <= \g_lane[0].u_mul.u_c1.q [76];
   assign \g_lane[0].u_mul.u_c2.d [228] = \g_lane_reg[0].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[0].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[0].u_mul.u_c3.d[41]  <= \g_lane[0].u_mul.u_c2.q [227];
   assign \g_lane[0].u_mul.u_c3.d [41] = \g_lane_reg[0].u_mul.u_c3.d[41] ;
-  reg [1:0] _13475_;
+  reg [1:0] _13476_;
   always @(posedge clk)
-    _13475_ <= \g_lane[0].u_mul.u_c2.q [226:225];
-  assign \g_lane[0].u_mul.u_c3.d [40:39] = _13475_;
+    _13476_ <= \g_lane[0].u_mul.u_c2.q [226:225];
+  assign \g_lane[0].u_mul.u_c3.d [40:39] = _13476_;
   always @(posedge clk)
     \g_lane[0].u_mul.s2_fl46  <= \g_lane[0].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -142351,10 +142369,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane[0].u_mul.s2_mr  <= \g_lane[0].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[0].u_mul.s2_ms  <= \g_lane[0].u_mul.u_c2.q [47:0];
-  reg [47:0] _13480_;
+  reg [47:0] _13481_;
   always @(posedge clk)
-    _13480_ <= \g_lane[0].u_mul.u_cpa.s ;
-  assign { \g_lane[0].u_mul.top , \g_lane[0].u_mul.s2_prod [46:0] } = _13480_;
+    _13481_ <= \g_lane[0].u_mul.u_cpa.s ;
+  assign { \g_lane[0].u_mul.top , \g_lane[0].u_mul.s2_prod [46:0] } = _13481_;
   always @(posedge clk)
     \g_lane[0].u_mul.s2_sh  <= \g_lane[0].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[0].u_mul.u_c3.d[38] ;
@@ -142366,12 +142384,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane[0].u_mul.s2_sub47  <= \g_lane[0].u_mul.u_c2.q [127];
   reg \g_lane_reg[0].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c3.d[42]  <= \g_lane[0].u_mul.u_c2.q [228];
   assign \g_lane[0].u_mul.u_c3.d [42] = \g_lane_reg[0].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane[0].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane[0].v0  <= 1'h0;
     else \g_lane[0].v0  <= \g_lane[0].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[0].u_mul.y  <= _00873_;
@@ -142517,49 +142535,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _00967_ = _00965_ | _00966_;
   assign _00968_ = { 17'h00000, \g_lane[0].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[0].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _00969_[47], \g_lane[0].u_mul.g_nokcp.u_rows.l1 [287:241] } = _00967_ | _00968_;
-  reg [76:0] _13630_;
+  reg [76:0] _13631_;
   always @(posedge clk)
-    _13630_ <= { \g_lane[0].u_mul.u_c5.q [86:82], \g_lane[0].u_mul.u_c1.d [71:24], \g_lane[0].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[0].u_mul.u_c1.g_rv.rd [76], \g_lane[0].u_mul.u_c1.q [75:24], \g_lane[0].u_mul.u_pw.a , \g_lane[0].u_mul.u_pw.b  } = _13630_;
+    _13631_ <= { \g_lane[0].u_mul.u_c5.q [86:82], \g_lane[0].u_mul.u_c1.d [71:24], \g_lane[0].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[0].u_mul.u_c1.g_rv.rd [76], \g_lane[0].u_mul.u_c1.q [75:24], \g_lane[0].u_mul.u_pw.a , \g_lane[0].u_mul.u_pw.b  } = _13631_;
   reg \g_lane_reg[0].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c1.q[76]  <= \g_lane[0].u_mul.u_c5.q [86];
   assign \g_lane[0].u_mul.u_c1.q [76] = \g_lane_reg[0].u_mul.u_c1.q[76] ;
-  reg [228:0] _13632_;
+  reg [228:0] _13633_;
   always @(posedge clk)
-    _13632_ <= { \g_lane[0].u_mul.u_c2.d [228:177], 1'h0, \g_lane[0].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[0].u_mul.u_c2.g_rv.rd [228], \g_lane[0].u_mul.u_c2.q [227:224], \g_lane[0].u_mul.u_cpa.b , \g_lane[0].u_mul.u_cpa.a , \g_lane[0].u_mul.u_c2.q [127:0] } = _13632_;
+    _13633_ <= { \g_lane[0].u_mul.u_c2.d [228:177], 1'h0, \g_lane[0].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[0].u_mul.u_c2.g_rv.rd [228], \g_lane[0].u_mul.u_c2.q [227:224], \g_lane[0].u_mul.u_cpa.b , \g_lane[0].u_mul.u_cpa.a , \g_lane[0].u_mul.u_c2.q [127:0] } = _13633_;
   reg \g_lane_reg[0].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c2.q[228]  <= \g_lane[0].u_mul.u_c2.d [228];
   assign \g_lane[0].u_mul.u_c2.q [228] = \g_lane_reg[0].u_mul.u_c2.q[228] ;
-  reg [42:0] _13634_;
+  reg [42:0] _13635_;
   always @(posedge clk)
-    _13634_ <= \g_lane[0].u_mul.u_c3.d ;
-  assign { \g_lane[0].u_mul.u_c3.g_rv.rd [42], \g_lane[0].u_mul.u_c4.d [41:25], \g_lane[0].u_mul.u_rnd.a , \g_lane[0].u_mul.u_rnd.g [0] } = _13634_;
+    _13635_ <= \g_lane[0].u_mul.u_c3.d ;
+  assign { \g_lane[0].u_mul.u_c3.g_rv.rd [42], \g_lane[0].u_mul.u_c4.d [41:25], \g_lane[0].u_mul.u_rnd.a , \g_lane[0].u_mul.u_rnd.g [0] } = _13635_;
   reg \g_lane_reg[0].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c4.d[42]  <= \g_lane[0].u_mul.u_c3.d [42];
   assign \g_lane[0].u_mul.u_c4.d [42] = \g_lane_reg[0].u_mul.u_c4.d[42] ;
-  reg [42:0] _13636_;
+  reg [42:0] _13637_;
   always @(posedge clk)
-    _13636_ <= { \g_lane[0].u_mul.u_c4.d [42:25], \g_lane[0].u_mul.u_rnd.s , \g_lane[0].u_mul.u_rnd.g [24] };
-  assign { \g_lane[0].u_mul.u_c4.g_rv.rd [42], \g_lane[0].u_mul.u_c6.q [35:33], \g_lane[0].u_mul.u_c4.q [38:0] } = _13636_;
+    _13637_ <= { \g_lane[0].u_mul.u_c4.d [42:25], \g_lane[0].u_mul.u_rnd.s , \g_lane[0].u_mul.u_rnd.g [24] };
+  assign { \g_lane[0].u_mul.u_c4.g_rv.rd [42], \g_lane[0].u_mul.u_c6.q [35:33], \g_lane[0].u_mul.u_c4.q [38:0] } = _13637_;
   reg \g_lane_reg[0].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c6.q[36]  <= \g_lane[0].u_mul.u_c4.d [42];
   assign \g_lane[0].u_mul.u_c6.q [36] = \g_lane_reg[0].u_mul.u_c6.q[36] ;
-  reg [86:0] _13638_;
+  reg [86:0] _13639_;
   always @(posedge clk)
-    _13638_ <= { gov, \g_lane[0].u_mul.u_c5.d [85:82], \g_lane[0].u_mul.u_la.x [31], \g_lane[0].u_mul.x_a [22:0], \g_lane[0].u_mul.u_lb.x [31], \g_lane[0].u_mul.x_b [22:0], \g_lane[0].u_mul.u_la.n [4:0], \g_lane[0].u_mul.u_lb.n [4:0], \g_lane[0].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[0].u_mul.u_c5.g_rv.rd [86], \g_lane[0].u_mul.u_c5.q [85:0] } = _13638_;
+    _13639_ <= { gov, \g_lane[0].u_mul.u_c5.d [85:82], \g_lane[0].u_mul.u_la.x [31], \g_lane[0].u_mul.x_a [22:0], \g_lane[0].u_mul.u_lb.x [31], \g_lane[0].u_mul.x_b [22:0], \g_lane[0].u_mul.u_la.n [4:0], \g_lane[0].u_mul.u_lb.n [4:0], \g_lane[0].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[0].u_mul.u_c5.g_rv.rd [86], \g_lane[0].u_mul.u_c5.q [85:0] } = _13639_;
   reg \g_lane_reg[0].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[0].u_mul.u_c7.rst_n )
-    if (!\g_lane[0].u_mul.u_c7.rst_n ) \g_lane_reg[0].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[0])
+    if (!lrnv[0]) \g_lane_reg[0].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[0].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[0].u_mul.u_c5.q [86] = \g_lane_reg[0].u_mul.u_c5.q[86] ;
   assign \g_lane[0].u_mul.u_cpa.g [342:295] = \g_lane[0].u_mul.u_cpa.a  & \g_lane[0].u_mul.u_cpa.b ;
@@ -143859,26 +143877,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_add.u_rnd.g [0] = \g_lane[1].u_add.s2_val [2] && _01499_;
   always @(posedge clk)
     \g_lane[1].u_add.err  <= _01502_;
-  reg [23:0] _14936_;
+  reg [23:0] _14937_;
   always @(posedge clk)
-    _14936_ <= _01488_;
-  assign \g_lane[1].u_add.u_sum.a [26:3] = _14936_;
+    _14937_ <= _01488_;
+  assign \g_lane[1].u_add.u_sum.a [26:3] = _14937_;
   reg \g_lane_reg[1].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cb.d[100]  <= \g_lane[1].u_add.x_byp ;
   assign \g_lane[1].u_add.u_cb.d [100] = \g_lane_reg[1].u_add.u_cb.d[100] ;
-  reg [31:0] _14938_;
+  reg [31:0] _14939_;
   always @(posedge clk)
-    _14938_ <= \g_lane[1].u_add.x_code ;
-  assign \g_lane[1].u_add.u_cb.d [95:64] = _14938_;
-  reg [1:0] _14939_;
+    _14939_ <= \g_lane[1].u_add.x_code ;
+  assign \g_lane[1].u_add.u_cb.d [95:64] = _14939_;
+  reg [1:0] _14940_;
   always @(posedge clk)
-    _14939_ <= \g_lane[1].u_add.x_err ;
-  assign \g_lane[1].u_add.u_cb.d [97:96] = _14939_;
-  reg [7:0] _14940_;
+    _14940_ <= \g_lane[1].u_add.x_err ;
+  assign \g_lane[1].u_add.u_cb.d [97:96] = _14940_;
+  reg [7:0] _14941_;
   always @(posedge clk)
-    _14940_ <= _01487_;
-  assign \g_lane[1].u_add.u_cb.d [63:56] = _14940_;
+    _14941_ <= _01487_;
+  assign \g_lane[1].u_add.u_cb.d [63:56] = _14941_;
   reg \g_lane_reg[1].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cb.d[98]  <= _01486_;
@@ -143890,45 +143908,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[1].u_add.u_cb.d[99]  <= \g_lane[1].u_add.x_sub ;
   assign \g_lane[1].u_add.u_cb.d [99] = \g_lane_reg[1].u_add.u_cb.d[99] ;
   reg \g_lane_reg[1].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[1].u_add.u_cb.d[101]  <= \g_lane[1].u_add.x_v ;
   assign \g_lane[1].u_add.u_cb.d [101] = \g_lane_reg[1].u_add.u_cb.d[101] ;
   reg \g_lane_reg[1].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cc.d[69]  <= \g_lane[1].u_add.w_byp ;
   assign \g_lane[1].u_add.u_cc.d [69] = \g_lane_reg[1].u_add.u_cc.d[69] ;
-  reg [31:0] _14946_;
+  reg [31:0] _14947_;
   always @(posedge clk)
-    _14946_ <= \g_lane[1].u_add.w_code ;
-  assign \g_lane[1].u_add.u_cc.d [64:33] = _14946_;
-  reg [1:0] _14947_;
+    _14947_ <= \g_lane[1].u_add.w_code ;
+  assign \g_lane[1].u_add.u_cc.d [64:33] = _14947_;
+  reg [1:0] _14948_;
   always @(posedge clk)
-    _14947_ <= \g_lane[1].u_add.w_err ;
-  assign { \g_lane[1].u_add.s2_err [1], \g_lane[1].u_add.u_cc.d [65] } = _14947_;
-  reg [7:0] _14948_;
+    _14948_ <= \g_lane[1].u_add.w_err ;
+  assign { \g_lane[1].u_add.s2_err [1], \g_lane[1].u_add.u_cc.d [65] } = _14948_;
+  reg [7:0] _14949_;
   always @(posedge clk)
-    _14948_ <= _01496_;
-  assign \g_lane[1].u_add.u_cc.d [32:25] = _14948_;
+    _14949_ <= _01496_;
+  assign \g_lane[1].u_add.u_cc.d [32:25] = _14949_;
   reg \g_lane_reg[1].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cc.d[67]  <= \g_lane[1].u_add.w_sign ;
   assign \g_lane[1].u_add.u_cc.d [67] = \g_lane_reg[1].u_add.u_cc.d[67] ;
   reg \g_lane_reg[1].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[1].u_add.u_cc.d[70]  <= \g_lane[1].u_add.w_v ;
   assign \g_lane[1].u_add.u_cc.d [70] = \g_lane_reg[1].u_add.u_cc.d[70] ;
-  reg [26:0] _14951_;
+  reg [26:0] _14952_;
   always @(posedge clk)
-    _14951_ <= _01497_;
-  assign { \g_lane[1].u_add.u_rnd.a , \g_lane[1].u_add.s2_val [2:0] } = _14951_;
+    _14952_ <= _01497_;
+  assign { \g_lane[1].u_add.u_rnd.a , \g_lane[1].u_add.s2_val [2:0] } = _14952_;
   reg \g_lane_reg[1].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[1].u_add.u_cc.d[68]  <= _01495_;
   assign \g_lane[1].u_add.u_cc.d [68] = \g_lane_reg[1].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].v1  <= 1'h0;
     else \g_lane[1].v1  <= \g_lane[1].u_add.u_v ;
   always @(posedge clk)
     y_l[63:32] <= _01511_;
@@ -143946,35 +143964,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _01511_ = \g_lane[1].u_add.u_cc.q [69] ? \g_lane[1].u_add.u_code  : _01510_;
   assign \g_lane[1].u_add.small_b  = _01477_ ? { 27'h0000000, _01478_ } : _01484_;
   assign \g_lane[1].u_add.small_a  = _01469_ ? { 27'h0000000, _01470_ } : _01476_;
-  reg [119:0] _14969_;
+  reg [119:0] _14970_;
   always @(posedge clk)
-    _14969_ <= { \g_lane[1].u_add.u_ca.d [119], \g_lane[1].v0 , \g_lane[1].u_add.u_ca.d [117:81], \g_lane[1].u_mul.y [31], \g_lane[1].u_add.u_dab.a , \g_lane[1].u_add.u_dba.a , \g_lane[1].u_add.u_ca.d [63], \g_lane[1].u_add.u_cmp.a [22:0], \g_lane[1].u_add.u_ca.d [39], \g_lane[1].u_mul.y [22:0], \g_lane[1].u_add.u_dab.s , \g_lane[1].u_add.u_dba.s  };
-  assign { \g_lane[1].u_add.x_swap , \g_lane[1].u_add.u_ca.g_rv.rd [118], \g_lane[1].u_add.x_byp , \g_lane[1].u_add.x_err , \g_lane[1].u_add.x_code , \g_lane[1].u_add.x_sub , \g_lane[1].u_add.x_as , \g_lane[1].u_add.x_bs , \g_lane[1].u_add.x_aexp , \g_lane[1].u_add.x_bexp , \g_lane[1].u_add.x_aman , \g_lane[1].u_add.x_bman , \g_lane[1].u_add.x_dab , \g_lane[1].u_add.x_dba  } = _14969_;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].u_add.x_v  <= 1'h0;
+    _14970_ <= { \g_lane[1].u_add.u_ca.d [119], \g_lane[1].v0 , \g_lane[1].u_add.u_ca.d [117:81], \g_lane[1].u_mul.y [31], \g_lane[1].u_add.u_dab.a , \g_lane[1].u_add.u_dba.a , \g_lane[1].u_add.u_ca.d [63], \g_lane[1].u_add.u_cmp.a [22:0], \g_lane[1].u_add.u_ca.d [39], \g_lane[1].u_mul.y [22:0], \g_lane[1].u_add.u_dab.s , \g_lane[1].u_add.u_dba.s  };
+  assign { \g_lane[1].u_add.x_swap , \g_lane[1].u_add.u_ca.g_rv.rd [118], \g_lane[1].u_add.x_byp , \g_lane[1].u_add.x_err , \g_lane[1].u_add.x_code , \g_lane[1].u_add.x_sub , \g_lane[1].u_add.x_as , \g_lane[1].u_add.x_bs , \g_lane[1].u_add.x_aexp , \g_lane[1].u_add.x_bexp , \g_lane[1].u_add.x_aman , \g_lane[1].u_add.x_bman , \g_lane[1].u_add.x_dab , \g_lane[1].u_add.x_dba  } = _14970_;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].u_add.x_v  <= 1'h0;
     else \g_lane[1].u_add.x_v  <= \g_lane[1].v0 ;
-  reg [101:0] _14971_;
+  reg [101:0] _14972_;
   always @(posedge clk)
-    _14971_ <= { \g_lane[1].u_add.u_cb.d [101:56], \g_lane[1].u_add.u_sum.s , \g_lane[1].u_add.u_dif.s  };
-  assign { \g_lane[1].u_add.u_cb.g_rv.rd [101], \g_lane[1].u_add.u_cd.d [106:62], \g_lane[1].u_add.u_cd.d [0], \g_lane[1].u_add.u_cb.q [54:28], \g_lane[1].u_add.u_cd.d [34:7] } = _14971_;
+    _14972_ <= { \g_lane[1].u_add.u_cb.d [101:56], \g_lane[1].u_add.u_sum.s , \g_lane[1].u_add.u_dif.s  };
+  assign { \g_lane[1].u_add.u_cb.g_rv.rd [101], \g_lane[1].u_add.u_cd.d [106:62], \g_lane[1].u_add.u_cd.d [0], \g_lane[1].u_add.u_cb.q [54:28], \g_lane[1].u_add.u_cd.d [34:7] } = _14972_;
   reg \g_lane_reg[1].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[1].u_add.u_cd.d[107]  <= \g_lane[1].u_add.u_cb.d [101];
   assign \g_lane[1].u_add.u_cd.d [107] = \g_lane_reg[1].u_add.u_cd.d[107] ;
-  reg [70:0] _14973_;
+  reg [70:0] _14974_;
   always @(posedge clk)
-    _14973_ <= { \g_lane[1].u_add.u_cc.d [70:67], 1'h0, \g_lane[1].u_add.u_cc.d [65:25], \g_lane[1].u_add.u_rnd.s , \g_lane[1].u_add.u_rnd.g [24] };
-  assign { \g_lane[1].u_add.u_cc.g_rv.rd [70], \g_lane[1].u_add.u_cc.q [69], \g_lane[1].u_add.u_zero , \g_lane[1].u_add.u_sign , \g_lane[1].u_add.u_err , \g_lane[1].u_add.u_code , \g_lane[1].u_add.u_exp , \g_lane[1].u_add.u_cc.q [24:0] } = _14973_;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].u_add.u_v  <= 1'h0;
+    _14974_ <= { \g_lane[1].u_add.u_cc.d [70:67], 1'h0, \g_lane[1].u_add.u_cc.d [65:25], \g_lane[1].u_add.u_rnd.s , \g_lane[1].u_add.u_rnd.g [24] };
+  assign { \g_lane[1].u_add.u_cc.g_rv.rd [70], \g_lane[1].u_add.u_cc.q [69], \g_lane[1].u_add.u_zero , \g_lane[1].u_add.u_sign , \g_lane[1].u_add.u_err , \g_lane[1].u_add.u_code , \g_lane[1].u_add.u_exp , \g_lane[1].u_add.u_cc.q [24:0] } = _14974_;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].u_add.u_v  <= 1'h0;
     else \g_lane[1].u_add.u_v  <= \g_lane[1].u_add.u_cc.d [70];
-  reg [107:0] _14975_;
+  reg [107:0] _14976_;
   always @(posedge clk)
-    _14975_ <= { \g_lane[1].u_add.u_cd.d [107:7], \g_lane[1].u_add.u_lzc.n , \g_lane[1].u_add.u_cd.d [0] };
-  assign { \g_lane[1].u_add.u_cd.g_rv.rd [107], \g_lane[1].u_add.w_byp , \g_lane[1].u_add.w_sub , \g_lane[1].u_add.w_sign , \g_lane[1].u_add.w_err , \g_lane[1].u_add.w_code , \g_lane[1].u_add.w_exp , \g_lane[1].u_add.w_add , \g_lane[1].u_add.w_dif , \g_lane[1].u_add.u_cd.q [6:1], \g_lane[1].u_add.w_carry  } = _14975_;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].u_add.w_v  <= 1'h0;
+    _14976_ <= { \g_lane[1].u_add.u_cd.d [107:7], \g_lane[1].u_add.u_lzc.n , \g_lane[1].u_add.u_cd.d [0] };
+  assign { \g_lane[1].u_add.u_cd.g_rv.rd [107], \g_lane[1].u_add.w_byp , \g_lane[1].u_add.w_sub , \g_lane[1].u_add.w_sign , \g_lane[1].u_add.w_err , \g_lane[1].u_add.w_code , \g_lane[1].u_add.w_exp , \g_lane[1].u_add.w_add , \g_lane[1].u_add.w_dif , \g_lane[1].u_add.u_cd.q [6:1], \g_lane[1].u_add.w_carry  } = _14976_;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].u_add.w_v  <= 1'h0;
     else \g_lane[1].u_add.w_v  <= \g_lane[1].u_add.u_cd.d [107];
   assign \g_lane[1].u_add.u_cmp.g [191:161] = \g_lane[1].u_add.u_cmp.a  & \g_lane[1].u_add.u_cmp.b ;
   assign _01512_ = \g_lane[1].u_add.u_cmp.p [180] & \g_lane[1].u_add.u_cmp.g [179];
@@ -145973,10 +145991,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane_reg[1].u_mul.u_c2.d[227]  <= \g_lane[1].u_mul.u_c1.q [75];
   assign \g_lane[1].u_mul.u_c2.d [227] = \g_lane_reg[1].u_mul.u_c2.d[227] ;
-  reg [1:0] _16970_;
+  reg [1:0] _16971_;
   always @(posedge clk)
-    _16970_ <= \g_lane[1].u_mul.u_c1.q [74:73];
-  assign \g_lane[1].u_mul.u_c2.d [226:225] = _16970_;
+    _16971_ <= \g_lane[1].u_mul.u_c1.q [74:73];
+  assign \g_lane[1].u_mul.u_c2.d [226:225] = _16971_;
   always @(posedge clk)
     \g_lane[1].u_mul.s1_power  <= \g_lane[1].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -145986,18 +146004,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[1].u_mul.u_c2.d[224]  <= \g_lane[1].u_mul.u_c1.q [72];
   assign \g_lane[1].u_mul.u_c2.d [224] = \g_lane_reg[1].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[1].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c2.d[228]  <= \g_lane[1].u_mul.u_c1.q [76];
   assign \g_lane[1].u_mul.u_c2.d [228] = \g_lane_reg[1].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[1].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[1].u_mul.u_c3.d[41]  <= \g_lane[1].u_mul.u_c2.q [227];
   assign \g_lane[1].u_mul.u_c3.d [41] = \g_lane_reg[1].u_mul.u_c3.d[41] ;
-  reg [1:0] _16976_;
+  reg [1:0] _16977_;
   always @(posedge clk)
-    _16976_ <= \g_lane[1].u_mul.u_c2.q [226:225];
-  assign \g_lane[1].u_mul.u_c3.d [40:39] = _16976_;
+    _16977_ <= \g_lane[1].u_mul.u_c2.q [226:225];
+  assign \g_lane[1].u_mul.u_c3.d [40:39] = _16977_;
   always @(posedge clk)
     \g_lane[1].u_mul.s2_fl46  <= \g_lane[1].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -146006,10 +146024,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane[1].u_mul.s2_mr  <= \g_lane[1].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[1].u_mul.s2_ms  <= \g_lane[1].u_mul.u_c2.q [47:0];
-  reg [47:0] _16981_;
+  reg [47:0] _16982_;
   always @(posedge clk)
-    _16981_ <= \g_lane[1].u_mul.u_cpa.s ;
-  assign { \g_lane[1].u_mul.top , \g_lane[1].u_mul.s2_prod [46:0] } = _16981_;
+    _16982_ <= \g_lane[1].u_mul.u_cpa.s ;
+  assign { \g_lane[1].u_mul.top , \g_lane[1].u_mul.s2_prod [46:0] } = _16982_;
   always @(posedge clk)
     \g_lane[1].u_mul.s2_sh  <= \g_lane[1].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[1].u_mul.u_c3.d[38] ;
@@ -146021,12 +146039,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane[1].u_mul.s2_sub47  <= \g_lane[1].u_mul.u_c2.q [127];
   reg \g_lane_reg[1].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c3.d[42]  <= \g_lane[1].u_mul.u_c2.q [228];
   assign \g_lane[1].u_mul.u_c3.d [42] = \g_lane_reg[1].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane[1].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane[1].v0  <= 1'h0;
     else \g_lane[1].v0  <= \g_lane[1].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[1].u_mul.y  <= _02273_;
@@ -146172,49 +146190,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _02367_ = _02365_ | _02366_;
   assign _02368_ = { 17'h00000, \g_lane[1].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[1].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _02369_[47], \g_lane[1].u_mul.g_nokcp.u_rows.l1 [287:241] } = _02367_ | _02368_;
-  reg [76:0] _17131_;
+  reg [76:0] _17132_;
   always @(posedge clk)
-    _17131_ <= { \g_lane[1].u_mul.u_c5.q [86:82], \g_lane[1].u_mul.u_c1.d [71:24], \g_lane[1].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[1].u_mul.u_c1.g_rv.rd [76], \g_lane[1].u_mul.u_c1.q [75:24], \g_lane[1].u_mul.u_pw.a , \g_lane[1].u_mul.u_pw.b  } = _17131_;
+    _17132_ <= { \g_lane[1].u_mul.u_c5.q [86:82], \g_lane[1].u_mul.u_c1.d [71:24], \g_lane[1].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[1].u_mul.u_c1.g_rv.rd [76], \g_lane[1].u_mul.u_c1.q [75:24], \g_lane[1].u_mul.u_pw.a , \g_lane[1].u_mul.u_pw.b  } = _17132_;
   reg \g_lane_reg[1].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c1.q[76]  <= \g_lane[1].u_mul.u_c5.q [86];
   assign \g_lane[1].u_mul.u_c1.q [76] = \g_lane_reg[1].u_mul.u_c1.q[76] ;
-  reg [228:0] _17133_;
+  reg [228:0] _17134_;
   always @(posedge clk)
-    _17133_ <= { \g_lane[1].u_mul.u_c2.d [228:177], 1'h0, \g_lane[1].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[1].u_mul.u_c2.g_rv.rd [228], \g_lane[1].u_mul.u_c2.q [227:224], \g_lane[1].u_mul.u_cpa.b , \g_lane[1].u_mul.u_cpa.a , \g_lane[1].u_mul.u_c2.q [127:0] } = _17133_;
+    _17134_ <= { \g_lane[1].u_mul.u_c2.d [228:177], 1'h0, \g_lane[1].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[1].u_mul.u_c2.g_rv.rd [228], \g_lane[1].u_mul.u_c2.q [227:224], \g_lane[1].u_mul.u_cpa.b , \g_lane[1].u_mul.u_cpa.a , \g_lane[1].u_mul.u_c2.q [127:0] } = _17134_;
   reg \g_lane_reg[1].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c2.q[228]  <= \g_lane[1].u_mul.u_c2.d [228];
   assign \g_lane[1].u_mul.u_c2.q [228] = \g_lane_reg[1].u_mul.u_c2.q[228] ;
-  reg [42:0] _17135_;
+  reg [42:0] _17136_;
   always @(posedge clk)
-    _17135_ <= \g_lane[1].u_mul.u_c3.d ;
-  assign { \g_lane[1].u_mul.u_c3.g_rv.rd [42], \g_lane[1].u_mul.u_c4.d [41:25], \g_lane[1].u_mul.u_rnd.a , \g_lane[1].u_mul.u_rnd.g [0] } = _17135_;
+    _17136_ <= \g_lane[1].u_mul.u_c3.d ;
+  assign { \g_lane[1].u_mul.u_c3.g_rv.rd [42], \g_lane[1].u_mul.u_c4.d [41:25], \g_lane[1].u_mul.u_rnd.a , \g_lane[1].u_mul.u_rnd.g [0] } = _17136_;
   reg \g_lane_reg[1].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c4.d[42]  <= \g_lane[1].u_mul.u_c3.d [42];
   assign \g_lane[1].u_mul.u_c4.d [42] = \g_lane_reg[1].u_mul.u_c4.d[42] ;
-  reg [42:0] _17137_;
+  reg [42:0] _17138_;
   always @(posedge clk)
-    _17137_ <= { \g_lane[1].u_mul.u_c4.d [42:25], \g_lane[1].u_mul.u_rnd.s , \g_lane[1].u_mul.u_rnd.g [24] };
-  assign { \g_lane[1].u_mul.u_c4.g_rv.rd [42], \g_lane[1].u_mul.u_c6.q [35:33], \g_lane[1].u_mul.u_c4.q [38:0] } = _17137_;
+    _17138_ <= { \g_lane[1].u_mul.u_c4.d [42:25], \g_lane[1].u_mul.u_rnd.s , \g_lane[1].u_mul.u_rnd.g [24] };
+  assign { \g_lane[1].u_mul.u_c4.g_rv.rd [42], \g_lane[1].u_mul.u_c6.q [35:33], \g_lane[1].u_mul.u_c4.q [38:0] } = _17138_;
   reg \g_lane_reg[1].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c6.q[36]  <= \g_lane[1].u_mul.u_c4.d [42];
   assign \g_lane[1].u_mul.u_c6.q [36] = \g_lane_reg[1].u_mul.u_c6.q[36] ;
-  reg [86:0] _17139_;
+  reg [86:0] _17140_;
   always @(posedge clk)
-    _17139_ <= { gov, \g_lane[1].u_mul.u_c5.d [85:82], \g_lane[1].u_mul.u_la.x [31], \g_lane[1].u_mul.x_a [22:0], \g_lane[1].u_mul.u_lb.x [31], \g_lane[1].u_mul.x_b [22:0], \g_lane[1].u_mul.u_la.n [4:0], \g_lane[1].u_mul.u_lb.n [4:0], \g_lane[1].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[1].u_mul.u_c5.g_rv.rd [86], \g_lane[1].u_mul.u_c5.q [85:0] } = _17139_;
+    _17140_ <= { gov, \g_lane[1].u_mul.u_c5.d [85:82], \g_lane[1].u_mul.u_la.x [31], \g_lane[1].u_mul.x_a [22:0], \g_lane[1].u_mul.u_lb.x [31], \g_lane[1].u_mul.x_b [22:0], \g_lane[1].u_mul.u_la.n [4:0], \g_lane[1].u_mul.u_lb.n [4:0], \g_lane[1].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[1].u_mul.u_c5.g_rv.rd [86], \g_lane[1].u_mul.u_c5.q [85:0] } = _17140_;
   reg \g_lane_reg[1].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[1].u_mul.u_c7.rst_n )
-    if (!\g_lane[1].u_mul.u_c7.rst_n ) \g_lane_reg[1].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[1])
+    if (!lrnv[1]) \g_lane_reg[1].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[1].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[1].u_mul.u_c5.q [86] = \g_lane_reg[1].u_mul.u_c5.q[86] ;
   assign \g_lane[1].u_mul.u_cpa.g [342:295] = \g_lane[1].u_mul.u_cpa.a  & \g_lane[1].u_mul.u_cpa.b ;
@@ -147514,26 +147532,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_add.u_rnd.g [0] = \g_lane[2].u_add.s2_val [2] && _02899_;
   always @(posedge clk)
     \g_lane[2].u_add.err  <= _02902_;
-  reg [23:0] _18437_;
+  reg [23:0] _18438_;
   always @(posedge clk)
-    _18437_ <= _02888_;
-  assign \g_lane[2].u_add.u_sum.a [26:3] = _18437_;
+    _18438_ <= _02888_;
+  assign \g_lane[2].u_add.u_sum.a [26:3] = _18438_;
   reg \g_lane_reg[2].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cb.d[100]  <= \g_lane[2].u_add.x_byp ;
   assign \g_lane[2].u_add.u_cb.d [100] = \g_lane_reg[2].u_add.u_cb.d[100] ;
-  reg [31:0] _18439_;
+  reg [31:0] _18440_;
   always @(posedge clk)
-    _18439_ <= \g_lane[2].u_add.x_code ;
-  assign \g_lane[2].u_add.u_cb.d [95:64] = _18439_;
-  reg [1:0] _18440_;
+    _18440_ <= \g_lane[2].u_add.x_code ;
+  assign \g_lane[2].u_add.u_cb.d [95:64] = _18440_;
+  reg [1:0] _18441_;
   always @(posedge clk)
-    _18440_ <= \g_lane[2].u_add.x_err ;
-  assign \g_lane[2].u_add.u_cb.d [97:96] = _18440_;
-  reg [7:0] _18441_;
+    _18441_ <= \g_lane[2].u_add.x_err ;
+  assign \g_lane[2].u_add.u_cb.d [97:96] = _18441_;
+  reg [7:0] _18442_;
   always @(posedge clk)
-    _18441_ <= _02887_;
-  assign \g_lane[2].u_add.u_cb.d [63:56] = _18441_;
+    _18442_ <= _02887_;
+  assign \g_lane[2].u_add.u_cb.d [63:56] = _18442_;
   reg \g_lane_reg[2].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cb.d[98]  <= _02886_;
@@ -147545,45 +147563,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[2].u_add.u_cb.d[99]  <= \g_lane[2].u_add.x_sub ;
   assign \g_lane[2].u_add.u_cb.d [99] = \g_lane_reg[2].u_add.u_cb.d[99] ;
   reg \g_lane_reg[2].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[2].u_add.u_cb.d[101]  <= \g_lane[2].u_add.x_v ;
   assign \g_lane[2].u_add.u_cb.d [101] = \g_lane_reg[2].u_add.u_cb.d[101] ;
   reg \g_lane_reg[2].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cc.d[69]  <= \g_lane[2].u_add.w_byp ;
   assign \g_lane[2].u_add.u_cc.d [69] = \g_lane_reg[2].u_add.u_cc.d[69] ;
-  reg [31:0] _18447_;
+  reg [31:0] _18448_;
   always @(posedge clk)
-    _18447_ <= \g_lane[2].u_add.w_code ;
-  assign \g_lane[2].u_add.u_cc.d [64:33] = _18447_;
-  reg [1:0] _18448_;
+    _18448_ <= \g_lane[2].u_add.w_code ;
+  assign \g_lane[2].u_add.u_cc.d [64:33] = _18448_;
+  reg [1:0] _18449_;
   always @(posedge clk)
-    _18448_ <= \g_lane[2].u_add.w_err ;
-  assign { \g_lane[2].u_add.s2_err [1], \g_lane[2].u_add.u_cc.d [65] } = _18448_;
-  reg [7:0] _18449_;
+    _18449_ <= \g_lane[2].u_add.w_err ;
+  assign { \g_lane[2].u_add.s2_err [1], \g_lane[2].u_add.u_cc.d [65] } = _18449_;
+  reg [7:0] _18450_;
   always @(posedge clk)
-    _18449_ <= _02896_;
-  assign \g_lane[2].u_add.u_cc.d [32:25] = _18449_;
+    _18450_ <= _02896_;
+  assign \g_lane[2].u_add.u_cc.d [32:25] = _18450_;
   reg \g_lane_reg[2].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cc.d[67]  <= \g_lane[2].u_add.w_sign ;
   assign \g_lane[2].u_add.u_cc.d [67] = \g_lane_reg[2].u_add.u_cc.d[67] ;
   reg \g_lane_reg[2].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[2].u_add.u_cc.d[70]  <= \g_lane[2].u_add.w_v ;
   assign \g_lane[2].u_add.u_cc.d [70] = \g_lane_reg[2].u_add.u_cc.d[70] ;
-  reg [26:0] _18452_;
+  reg [26:0] _18453_;
   always @(posedge clk)
-    _18452_ <= _02897_;
-  assign { \g_lane[2].u_add.u_rnd.a , \g_lane[2].u_add.s2_val [2:0] } = _18452_;
+    _18453_ <= _02897_;
+  assign { \g_lane[2].u_add.u_rnd.a , \g_lane[2].u_add.s2_val [2:0] } = _18453_;
   reg \g_lane_reg[2].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[2].u_add.u_cc.d[68]  <= _02895_;
   assign \g_lane[2].u_add.u_cc.d [68] = \g_lane_reg[2].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].v1  <= 1'h0;
     else \g_lane[2].v1  <= \g_lane[2].u_add.u_v ;
   always @(posedge clk)
     y_l[95:64] <= _02911_;
@@ -147601,35 +147619,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _02911_ = \g_lane[2].u_add.u_cc.q [69] ? \g_lane[2].u_add.u_code  : _02910_;
   assign \g_lane[2].u_add.small_b  = _02877_ ? { 27'h0000000, _02878_ } : _02884_;
   assign \g_lane[2].u_add.small_a  = _02869_ ? { 27'h0000000, _02870_ } : _02876_;
-  reg [119:0] _18470_;
+  reg [119:0] _18471_;
   always @(posedge clk)
-    _18470_ <= { \g_lane[2].u_add.u_ca.d [119], \g_lane[2].v0 , \g_lane[2].u_add.u_ca.d [117:81], \g_lane[2].u_mul.y [31], \g_lane[2].u_add.u_dab.a , \g_lane[2].u_add.u_dba.a , \g_lane[2].u_add.u_ca.d [63], \g_lane[2].u_add.u_cmp.a [22:0], \g_lane[2].u_add.u_ca.d [39], \g_lane[2].u_mul.y [22:0], \g_lane[2].u_add.u_dab.s , \g_lane[2].u_add.u_dba.s  };
-  assign { \g_lane[2].u_add.x_swap , \g_lane[2].u_add.u_ca.g_rv.rd [118], \g_lane[2].u_add.x_byp , \g_lane[2].u_add.x_err , \g_lane[2].u_add.x_code , \g_lane[2].u_add.x_sub , \g_lane[2].u_add.x_as , \g_lane[2].u_add.x_bs , \g_lane[2].u_add.x_aexp , \g_lane[2].u_add.x_bexp , \g_lane[2].u_add.x_aman , \g_lane[2].u_add.x_bman , \g_lane[2].u_add.x_dab , \g_lane[2].u_add.x_dba  } = _18470_;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].u_add.x_v  <= 1'h0;
+    _18471_ <= { \g_lane[2].u_add.u_ca.d [119], \g_lane[2].v0 , \g_lane[2].u_add.u_ca.d [117:81], \g_lane[2].u_mul.y [31], \g_lane[2].u_add.u_dab.a , \g_lane[2].u_add.u_dba.a , \g_lane[2].u_add.u_ca.d [63], \g_lane[2].u_add.u_cmp.a [22:0], \g_lane[2].u_add.u_ca.d [39], \g_lane[2].u_mul.y [22:0], \g_lane[2].u_add.u_dab.s , \g_lane[2].u_add.u_dba.s  };
+  assign { \g_lane[2].u_add.x_swap , \g_lane[2].u_add.u_ca.g_rv.rd [118], \g_lane[2].u_add.x_byp , \g_lane[2].u_add.x_err , \g_lane[2].u_add.x_code , \g_lane[2].u_add.x_sub , \g_lane[2].u_add.x_as , \g_lane[2].u_add.x_bs , \g_lane[2].u_add.x_aexp , \g_lane[2].u_add.x_bexp , \g_lane[2].u_add.x_aman , \g_lane[2].u_add.x_bman , \g_lane[2].u_add.x_dab , \g_lane[2].u_add.x_dba  } = _18471_;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].u_add.x_v  <= 1'h0;
     else \g_lane[2].u_add.x_v  <= \g_lane[2].v0 ;
-  reg [101:0] _18472_;
+  reg [101:0] _18473_;
   always @(posedge clk)
-    _18472_ <= { \g_lane[2].u_add.u_cb.d [101:56], \g_lane[2].u_add.u_sum.s , \g_lane[2].u_add.u_dif.s  };
-  assign { \g_lane[2].u_add.u_cb.g_rv.rd [101], \g_lane[2].u_add.u_cd.d [106:62], \g_lane[2].u_add.u_cd.d [0], \g_lane[2].u_add.u_cb.q [54:28], \g_lane[2].u_add.u_cd.d [34:7] } = _18472_;
+    _18473_ <= { \g_lane[2].u_add.u_cb.d [101:56], \g_lane[2].u_add.u_sum.s , \g_lane[2].u_add.u_dif.s  };
+  assign { \g_lane[2].u_add.u_cb.g_rv.rd [101], \g_lane[2].u_add.u_cd.d [106:62], \g_lane[2].u_add.u_cd.d [0], \g_lane[2].u_add.u_cb.q [54:28], \g_lane[2].u_add.u_cd.d [34:7] } = _18473_;
   reg \g_lane_reg[2].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[2].u_add.u_cd.d[107]  <= \g_lane[2].u_add.u_cb.d [101];
   assign \g_lane[2].u_add.u_cd.d [107] = \g_lane_reg[2].u_add.u_cd.d[107] ;
-  reg [70:0] _18474_;
+  reg [70:0] _18475_;
   always @(posedge clk)
-    _18474_ <= { \g_lane[2].u_add.u_cc.d [70:67], 1'h0, \g_lane[2].u_add.u_cc.d [65:25], \g_lane[2].u_add.u_rnd.s , \g_lane[2].u_add.u_rnd.g [24] };
-  assign { \g_lane[2].u_add.u_cc.g_rv.rd [70], \g_lane[2].u_add.u_cc.q [69], \g_lane[2].u_add.u_zero , \g_lane[2].u_add.u_sign , \g_lane[2].u_add.u_err , \g_lane[2].u_add.u_code , \g_lane[2].u_add.u_exp , \g_lane[2].u_add.u_cc.q [24:0] } = _18474_;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].u_add.u_v  <= 1'h0;
+    _18475_ <= { \g_lane[2].u_add.u_cc.d [70:67], 1'h0, \g_lane[2].u_add.u_cc.d [65:25], \g_lane[2].u_add.u_rnd.s , \g_lane[2].u_add.u_rnd.g [24] };
+  assign { \g_lane[2].u_add.u_cc.g_rv.rd [70], \g_lane[2].u_add.u_cc.q [69], \g_lane[2].u_add.u_zero , \g_lane[2].u_add.u_sign , \g_lane[2].u_add.u_err , \g_lane[2].u_add.u_code , \g_lane[2].u_add.u_exp , \g_lane[2].u_add.u_cc.q [24:0] } = _18475_;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].u_add.u_v  <= 1'h0;
     else \g_lane[2].u_add.u_v  <= \g_lane[2].u_add.u_cc.d [70];
-  reg [107:0] _18476_;
+  reg [107:0] _18477_;
   always @(posedge clk)
-    _18476_ <= { \g_lane[2].u_add.u_cd.d [107:7], \g_lane[2].u_add.u_lzc.n , \g_lane[2].u_add.u_cd.d [0] };
-  assign { \g_lane[2].u_add.u_cd.g_rv.rd [107], \g_lane[2].u_add.w_byp , \g_lane[2].u_add.w_sub , \g_lane[2].u_add.w_sign , \g_lane[2].u_add.w_err , \g_lane[2].u_add.w_code , \g_lane[2].u_add.w_exp , \g_lane[2].u_add.w_add , \g_lane[2].u_add.w_dif , \g_lane[2].u_add.u_cd.q [6:1], \g_lane[2].u_add.w_carry  } = _18476_;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].u_add.w_v  <= 1'h0;
+    _18477_ <= { \g_lane[2].u_add.u_cd.d [107:7], \g_lane[2].u_add.u_lzc.n , \g_lane[2].u_add.u_cd.d [0] };
+  assign { \g_lane[2].u_add.u_cd.g_rv.rd [107], \g_lane[2].u_add.w_byp , \g_lane[2].u_add.w_sub , \g_lane[2].u_add.w_sign , \g_lane[2].u_add.w_err , \g_lane[2].u_add.w_code , \g_lane[2].u_add.w_exp , \g_lane[2].u_add.w_add , \g_lane[2].u_add.w_dif , \g_lane[2].u_add.u_cd.q [6:1], \g_lane[2].u_add.w_carry  } = _18477_;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].u_add.w_v  <= 1'h0;
     else \g_lane[2].u_add.w_v  <= \g_lane[2].u_add.u_cd.d [107];
   assign \g_lane[2].u_add.u_cmp.g [191:161] = \g_lane[2].u_add.u_cmp.a  & \g_lane[2].u_add.u_cmp.b ;
   assign _02912_ = \g_lane[2].u_add.u_cmp.p [180] & \g_lane[2].u_add.u_cmp.g [179];
@@ -149628,10 +149646,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane_reg[2].u_mul.u_c2.d[227]  <= \g_lane[2].u_mul.u_c1.q [75];
   assign \g_lane[2].u_mul.u_c2.d [227] = \g_lane_reg[2].u_mul.u_c2.d[227] ;
-  reg [1:0] _20471_;
+  reg [1:0] _20472_;
   always @(posedge clk)
-    _20471_ <= \g_lane[2].u_mul.u_c1.q [74:73];
-  assign \g_lane[2].u_mul.u_c2.d [226:225] = _20471_;
+    _20472_ <= \g_lane[2].u_mul.u_c1.q [74:73];
+  assign \g_lane[2].u_mul.u_c2.d [226:225] = _20472_;
   always @(posedge clk)
     \g_lane[2].u_mul.s1_power  <= \g_lane[2].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -149641,18 +149659,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[2].u_mul.u_c2.d[224]  <= \g_lane[2].u_mul.u_c1.q [72];
   assign \g_lane[2].u_mul.u_c2.d [224] = \g_lane_reg[2].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[2].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c2.d[228]  <= \g_lane[2].u_mul.u_c1.q [76];
   assign \g_lane[2].u_mul.u_c2.d [228] = \g_lane_reg[2].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[2].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[2].u_mul.u_c3.d[41]  <= \g_lane[2].u_mul.u_c2.q [227];
   assign \g_lane[2].u_mul.u_c3.d [41] = \g_lane_reg[2].u_mul.u_c3.d[41] ;
-  reg [1:0] _20477_;
+  reg [1:0] _20478_;
   always @(posedge clk)
-    _20477_ <= \g_lane[2].u_mul.u_c2.q [226:225];
-  assign \g_lane[2].u_mul.u_c3.d [40:39] = _20477_;
+    _20478_ <= \g_lane[2].u_mul.u_c2.q [226:225];
+  assign \g_lane[2].u_mul.u_c3.d [40:39] = _20478_;
   always @(posedge clk)
     \g_lane[2].u_mul.s2_fl46  <= \g_lane[2].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -149661,10 +149679,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane[2].u_mul.s2_mr  <= \g_lane[2].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[2].u_mul.s2_ms  <= \g_lane[2].u_mul.u_c2.q [47:0];
-  reg [47:0] _20482_;
+  reg [47:0] _20483_;
   always @(posedge clk)
-    _20482_ <= \g_lane[2].u_mul.u_cpa.s ;
-  assign { \g_lane[2].u_mul.top , \g_lane[2].u_mul.s2_prod [46:0] } = _20482_;
+    _20483_ <= \g_lane[2].u_mul.u_cpa.s ;
+  assign { \g_lane[2].u_mul.top , \g_lane[2].u_mul.s2_prod [46:0] } = _20483_;
   always @(posedge clk)
     \g_lane[2].u_mul.s2_sh  <= \g_lane[2].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[2].u_mul.u_c3.d[38] ;
@@ -149676,12 +149694,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane[2].u_mul.s2_sub47  <= \g_lane[2].u_mul.u_c2.q [127];
   reg \g_lane_reg[2].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c3.d[42]  <= \g_lane[2].u_mul.u_c2.q [228];
   assign \g_lane[2].u_mul.u_c3.d [42] = \g_lane_reg[2].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane[2].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane[2].v0  <= 1'h0;
     else \g_lane[2].v0  <= \g_lane[2].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[2].u_mul.y  <= _03673_;
@@ -149827,49 +149845,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _03767_ = _03765_ | _03766_;
   assign _03768_ = { 17'h00000, \g_lane[2].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[2].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _03769_[47], \g_lane[2].u_mul.g_nokcp.u_rows.l1 [287:241] } = _03767_ | _03768_;
-  reg [76:0] _20632_;
+  reg [76:0] _20633_;
   always @(posedge clk)
-    _20632_ <= { \g_lane[2].u_mul.u_c5.q [86:82], \g_lane[2].u_mul.u_c1.d [71:24], \g_lane[2].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[2].u_mul.u_c1.g_rv.rd [76], \g_lane[2].u_mul.u_c1.q [75:24], \g_lane[2].u_mul.u_pw.a , \g_lane[2].u_mul.u_pw.b  } = _20632_;
+    _20633_ <= { \g_lane[2].u_mul.u_c5.q [86:82], \g_lane[2].u_mul.u_c1.d [71:24], \g_lane[2].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[2].u_mul.u_c1.g_rv.rd [76], \g_lane[2].u_mul.u_c1.q [75:24], \g_lane[2].u_mul.u_pw.a , \g_lane[2].u_mul.u_pw.b  } = _20633_;
   reg \g_lane_reg[2].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c1.q[76]  <= \g_lane[2].u_mul.u_c5.q [86];
   assign \g_lane[2].u_mul.u_c1.q [76] = \g_lane_reg[2].u_mul.u_c1.q[76] ;
-  reg [228:0] _20634_;
+  reg [228:0] _20635_;
   always @(posedge clk)
-    _20634_ <= { \g_lane[2].u_mul.u_c2.d [228:177], 1'h0, \g_lane[2].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[2].u_mul.u_c2.g_rv.rd [228], \g_lane[2].u_mul.u_c2.q [227:224], \g_lane[2].u_mul.u_cpa.b , \g_lane[2].u_mul.u_cpa.a , \g_lane[2].u_mul.u_c2.q [127:0] } = _20634_;
+    _20635_ <= { \g_lane[2].u_mul.u_c2.d [228:177], 1'h0, \g_lane[2].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[2].u_mul.u_c2.g_rv.rd [228], \g_lane[2].u_mul.u_c2.q [227:224], \g_lane[2].u_mul.u_cpa.b , \g_lane[2].u_mul.u_cpa.a , \g_lane[2].u_mul.u_c2.q [127:0] } = _20635_;
   reg \g_lane_reg[2].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c2.q[228]  <= \g_lane[2].u_mul.u_c2.d [228];
   assign \g_lane[2].u_mul.u_c2.q [228] = \g_lane_reg[2].u_mul.u_c2.q[228] ;
-  reg [42:0] _20636_;
+  reg [42:0] _20637_;
   always @(posedge clk)
-    _20636_ <= \g_lane[2].u_mul.u_c3.d ;
-  assign { \g_lane[2].u_mul.u_c3.g_rv.rd [42], \g_lane[2].u_mul.u_c4.d [41:25], \g_lane[2].u_mul.u_rnd.a , \g_lane[2].u_mul.u_rnd.g [0] } = _20636_;
+    _20637_ <= \g_lane[2].u_mul.u_c3.d ;
+  assign { \g_lane[2].u_mul.u_c3.g_rv.rd [42], \g_lane[2].u_mul.u_c4.d [41:25], \g_lane[2].u_mul.u_rnd.a , \g_lane[2].u_mul.u_rnd.g [0] } = _20637_;
   reg \g_lane_reg[2].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c4.d[42]  <= \g_lane[2].u_mul.u_c3.d [42];
   assign \g_lane[2].u_mul.u_c4.d [42] = \g_lane_reg[2].u_mul.u_c4.d[42] ;
-  reg [42:0] _20638_;
+  reg [42:0] _20639_;
   always @(posedge clk)
-    _20638_ <= { \g_lane[2].u_mul.u_c4.d [42:25], \g_lane[2].u_mul.u_rnd.s , \g_lane[2].u_mul.u_rnd.g [24] };
-  assign { \g_lane[2].u_mul.u_c4.g_rv.rd [42], \g_lane[2].u_mul.u_c6.q [35:33], \g_lane[2].u_mul.u_c4.q [38:0] } = _20638_;
+    _20639_ <= { \g_lane[2].u_mul.u_c4.d [42:25], \g_lane[2].u_mul.u_rnd.s , \g_lane[2].u_mul.u_rnd.g [24] };
+  assign { \g_lane[2].u_mul.u_c4.g_rv.rd [42], \g_lane[2].u_mul.u_c6.q [35:33], \g_lane[2].u_mul.u_c4.q [38:0] } = _20639_;
   reg \g_lane_reg[2].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c6.q[36]  <= \g_lane[2].u_mul.u_c4.d [42];
   assign \g_lane[2].u_mul.u_c6.q [36] = \g_lane_reg[2].u_mul.u_c6.q[36] ;
-  reg [86:0] _20640_;
+  reg [86:0] _20641_;
   always @(posedge clk)
-    _20640_ <= { gov, \g_lane[2].u_mul.u_c5.d [85:82], \g_lane[2].u_mul.u_la.x [31], \g_lane[2].u_mul.x_a [22:0], \g_lane[2].u_mul.u_lb.x [31], \g_lane[2].u_mul.x_b [22:0], \g_lane[2].u_mul.u_la.n [4:0], \g_lane[2].u_mul.u_lb.n [4:0], \g_lane[2].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[2].u_mul.u_c5.g_rv.rd [86], \g_lane[2].u_mul.u_c5.q [85:0] } = _20640_;
+    _20641_ <= { gov, \g_lane[2].u_mul.u_c5.d [85:82], \g_lane[2].u_mul.u_la.x [31], \g_lane[2].u_mul.x_a [22:0], \g_lane[2].u_mul.u_lb.x [31], \g_lane[2].u_mul.x_b [22:0], \g_lane[2].u_mul.u_la.n [4:0], \g_lane[2].u_mul.u_lb.n [4:0], \g_lane[2].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[2].u_mul.u_c5.g_rv.rd [86], \g_lane[2].u_mul.u_c5.q [85:0] } = _20641_;
   reg \g_lane_reg[2].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[2].u_mul.u_c7.rst_n )
-    if (!\g_lane[2].u_mul.u_c7.rst_n ) \g_lane_reg[2].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[2])
+    if (!lrnv[2]) \g_lane_reg[2].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[2].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[2].u_mul.u_c5.q [86] = \g_lane_reg[2].u_mul.u_c5.q[86] ;
   assign \g_lane[2].u_mul.u_cpa.g [342:295] = \g_lane[2].u_mul.u_cpa.a  & \g_lane[2].u_mul.u_cpa.b ;
@@ -151169,26 +151187,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_add.u_rnd.g [0] = \g_lane[3].u_add.s2_val [2] && _04299_;
   always @(posedge clk)
     \g_lane[3].u_add.err  <= _04302_;
-  reg [23:0] _21938_;
+  reg [23:0] _21939_;
   always @(posedge clk)
-    _21938_ <= _04288_;
-  assign \g_lane[3].u_add.u_sum.a [26:3] = _21938_;
+    _21939_ <= _04288_;
+  assign \g_lane[3].u_add.u_sum.a [26:3] = _21939_;
   reg \g_lane_reg[3].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cb.d[100]  <= \g_lane[3].u_add.x_byp ;
   assign \g_lane[3].u_add.u_cb.d [100] = \g_lane_reg[3].u_add.u_cb.d[100] ;
-  reg [31:0] _21940_;
+  reg [31:0] _21941_;
   always @(posedge clk)
-    _21940_ <= \g_lane[3].u_add.x_code ;
-  assign \g_lane[3].u_add.u_cb.d [95:64] = _21940_;
-  reg [1:0] _21941_;
+    _21941_ <= \g_lane[3].u_add.x_code ;
+  assign \g_lane[3].u_add.u_cb.d [95:64] = _21941_;
+  reg [1:0] _21942_;
   always @(posedge clk)
-    _21941_ <= \g_lane[3].u_add.x_err ;
-  assign \g_lane[3].u_add.u_cb.d [97:96] = _21941_;
-  reg [7:0] _21942_;
+    _21942_ <= \g_lane[3].u_add.x_err ;
+  assign \g_lane[3].u_add.u_cb.d [97:96] = _21942_;
+  reg [7:0] _21943_;
   always @(posedge clk)
-    _21942_ <= _04287_;
-  assign \g_lane[3].u_add.u_cb.d [63:56] = _21942_;
+    _21943_ <= _04287_;
+  assign \g_lane[3].u_add.u_cb.d [63:56] = _21943_;
   reg \g_lane_reg[3].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cb.d[98]  <= _04286_;
@@ -151200,45 +151218,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[3].u_add.u_cb.d[99]  <= \g_lane[3].u_add.x_sub ;
   assign \g_lane[3].u_add.u_cb.d [99] = \g_lane_reg[3].u_add.u_cb.d[99] ;
   reg \g_lane_reg[3].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[3].u_add.u_cb.d[101]  <= \g_lane[3].u_add.x_v ;
   assign \g_lane[3].u_add.u_cb.d [101] = \g_lane_reg[3].u_add.u_cb.d[101] ;
   reg \g_lane_reg[3].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cc.d[69]  <= \g_lane[3].u_add.w_byp ;
   assign \g_lane[3].u_add.u_cc.d [69] = \g_lane_reg[3].u_add.u_cc.d[69] ;
-  reg [31:0] _21948_;
+  reg [31:0] _21949_;
   always @(posedge clk)
-    _21948_ <= \g_lane[3].u_add.w_code ;
-  assign \g_lane[3].u_add.u_cc.d [64:33] = _21948_;
-  reg [1:0] _21949_;
+    _21949_ <= \g_lane[3].u_add.w_code ;
+  assign \g_lane[3].u_add.u_cc.d [64:33] = _21949_;
+  reg [1:0] _21950_;
   always @(posedge clk)
-    _21949_ <= \g_lane[3].u_add.w_err ;
-  assign { \g_lane[3].u_add.s2_err [1], \g_lane[3].u_add.u_cc.d [65] } = _21949_;
-  reg [7:0] _21950_;
+    _21950_ <= \g_lane[3].u_add.w_err ;
+  assign { \g_lane[3].u_add.s2_err [1], \g_lane[3].u_add.u_cc.d [65] } = _21950_;
+  reg [7:0] _21951_;
   always @(posedge clk)
-    _21950_ <= _04296_;
-  assign \g_lane[3].u_add.u_cc.d [32:25] = _21950_;
+    _21951_ <= _04296_;
+  assign \g_lane[3].u_add.u_cc.d [32:25] = _21951_;
   reg \g_lane_reg[3].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cc.d[67]  <= \g_lane[3].u_add.w_sign ;
   assign \g_lane[3].u_add.u_cc.d [67] = \g_lane_reg[3].u_add.u_cc.d[67] ;
   reg \g_lane_reg[3].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[3].u_add.u_cc.d[70]  <= \g_lane[3].u_add.w_v ;
   assign \g_lane[3].u_add.u_cc.d [70] = \g_lane_reg[3].u_add.u_cc.d[70] ;
-  reg [26:0] _21953_;
+  reg [26:0] _21954_;
   always @(posedge clk)
-    _21953_ <= _04297_;
-  assign { \g_lane[3].u_add.u_rnd.a , \g_lane[3].u_add.s2_val [2:0] } = _21953_;
+    _21954_ <= _04297_;
+  assign { \g_lane[3].u_add.u_rnd.a , \g_lane[3].u_add.s2_val [2:0] } = _21954_;
   reg \g_lane_reg[3].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[3].u_add.u_cc.d[68]  <= _04295_;
   assign \g_lane[3].u_add.u_cc.d [68] = \g_lane_reg[3].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].v1  <= 1'h0;
     else \g_lane[3].v1  <= \g_lane[3].u_add.u_v ;
   always @(posedge clk)
     y_l[127:96] <= _04311_;
@@ -151256,35 +151274,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _04311_ = \g_lane[3].u_add.u_cc.q [69] ? \g_lane[3].u_add.u_code  : _04310_;
   assign \g_lane[3].u_add.small_b  = _04277_ ? { 27'h0000000, _04278_ } : _04284_;
   assign \g_lane[3].u_add.small_a  = _04269_ ? { 27'h0000000, _04270_ } : _04276_;
-  reg [119:0] _21971_;
+  reg [119:0] _21972_;
   always @(posedge clk)
-    _21971_ <= { \g_lane[3].u_add.u_ca.d [119], \g_lane[3].v0 , \g_lane[3].u_add.u_ca.d [117:81], \g_lane[3].u_mul.y [31], \g_lane[3].u_add.u_dab.a , \g_lane[3].u_add.u_dba.a , \g_lane[3].u_add.u_ca.d [63], \g_lane[3].u_add.u_cmp.a [22:0], \g_lane[3].u_add.u_ca.d [39], \g_lane[3].u_mul.y [22:0], \g_lane[3].u_add.u_dab.s , \g_lane[3].u_add.u_dba.s  };
-  assign { \g_lane[3].u_add.x_swap , \g_lane[3].u_add.u_ca.g_rv.rd [118], \g_lane[3].u_add.x_byp , \g_lane[3].u_add.x_err , \g_lane[3].u_add.x_code , \g_lane[3].u_add.x_sub , \g_lane[3].u_add.x_as , \g_lane[3].u_add.x_bs , \g_lane[3].u_add.x_aexp , \g_lane[3].u_add.x_bexp , \g_lane[3].u_add.x_aman , \g_lane[3].u_add.x_bman , \g_lane[3].u_add.x_dab , \g_lane[3].u_add.x_dba  } = _21971_;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].u_add.x_v  <= 1'h0;
+    _21972_ <= { \g_lane[3].u_add.u_ca.d [119], \g_lane[3].v0 , \g_lane[3].u_add.u_ca.d [117:81], \g_lane[3].u_mul.y [31], \g_lane[3].u_add.u_dab.a , \g_lane[3].u_add.u_dba.a , \g_lane[3].u_add.u_ca.d [63], \g_lane[3].u_add.u_cmp.a [22:0], \g_lane[3].u_add.u_ca.d [39], \g_lane[3].u_mul.y [22:0], \g_lane[3].u_add.u_dab.s , \g_lane[3].u_add.u_dba.s  };
+  assign { \g_lane[3].u_add.x_swap , \g_lane[3].u_add.u_ca.g_rv.rd [118], \g_lane[3].u_add.x_byp , \g_lane[3].u_add.x_err , \g_lane[3].u_add.x_code , \g_lane[3].u_add.x_sub , \g_lane[3].u_add.x_as , \g_lane[3].u_add.x_bs , \g_lane[3].u_add.x_aexp , \g_lane[3].u_add.x_bexp , \g_lane[3].u_add.x_aman , \g_lane[3].u_add.x_bman , \g_lane[3].u_add.x_dab , \g_lane[3].u_add.x_dba  } = _21972_;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].u_add.x_v  <= 1'h0;
     else \g_lane[3].u_add.x_v  <= \g_lane[3].v0 ;
-  reg [101:0] _21973_;
+  reg [101:0] _21974_;
   always @(posedge clk)
-    _21973_ <= { \g_lane[3].u_add.u_cb.d [101:56], \g_lane[3].u_add.u_sum.s , \g_lane[3].u_add.u_dif.s  };
-  assign { \g_lane[3].u_add.u_cb.g_rv.rd [101], \g_lane[3].u_add.u_cd.d [106:62], \g_lane[3].u_add.u_cd.d [0], \g_lane[3].u_add.u_cb.q [54:28], \g_lane[3].u_add.u_cd.d [34:7] } = _21973_;
+    _21974_ <= { \g_lane[3].u_add.u_cb.d [101:56], \g_lane[3].u_add.u_sum.s , \g_lane[3].u_add.u_dif.s  };
+  assign { \g_lane[3].u_add.u_cb.g_rv.rd [101], \g_lane[3].u_add.u_cd.d [106:62], \g_lane[3].u_add.u_cd.d [0], \g_lane[3].u_add.u_cb.q [54:28], \g_lane[3].u_add.u_cd.d [34:7] } = _21974_;
   reg \g_lane_reg[3].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[3].u_add.u_cd.d[107]  <= \g_lane[3].u_add.u_cb.d [101];
   assign \g_lane[3].u_add.u_cd.d [107] = \g_lane_reg[3].u_add.u_cd.d[107] ;
-  reg [70:0] _21975_;
+  reg [70:0] _21976_;
   always @(posedge clk)
-    _21975_ <= { \g_lane[3].u_add.u_cc.d [70:67], 1'h0, \g_lane[3].u_add.u_cc.d [65:25], \g_lane[3].u_add.u_rnd.s , \g_lane[3].u_add.u_rnd.g [24] };
-  assign { \g_lane[3].u_add.u_cc.g_rv.rd [70], \g_lane[3].u_add.u_cc.q [69], \g_lane[3].u_add.u_zero , \g_lane[3].u_add.u_sign , \g_lane[3].u_add.u_err , \g_lane[3].u_add.u_code , \g_lane[3].u_add.u_exp , \g_lane[3].u_add.u_cc.q [24:0] } = _21975_;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].u_add.u_v  <= 1'h0;
+    _21976_ <= { \g_lane[3].u_add.u_cc.d [70:67], 1'h0, \g_lane[3].u_add.u_cc.d [65:25], \g_lane[3].u_add.u_rnd.s , \g_lane[3].u_add.u_rnd.g [24] };
+  assign { \g_lane[3].u_add.u_cc.g_rv.rd [70], \g_lane[3].u_add.u_cc.q [69], \g_lane[3].u_add.u_zero , \g_lane[3].u_add.u_sign , \g_lane[3].u_add.u_err , \g_lane[3].u_add.u_code , \g_lane[3].u_add.u_exp , \g_lane[3].u_add.u_cc.q [24:0] } = _21976_;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].u_add.u_v  <= 1'h0;
     else \g_lane[3].u_add.u_v  <= \g_lane[3].u_add.u_cc.d [70];
-  reg [107:0] _21977_;
+  reg [107:0] _21978_;
   always @(posedge clk)
-    _21977_ <= { \g_lane[3].u_add.u_cd.d [107:7], \g_lane[3].u_add.u_lzc.n , \g_lane[3].u_add.u_cd.d [0] };
-  assign { \g_lane[3].u_add.u_cd.g_rv.rd [107], \g_lane[3].u_add.w_byp , \g_lane[3].u_add.w_sub , \g_lane[3].u_add.w_sign , \g_lane[3].u_add.w_err , \g_lane[3].u_add.w_code , \g_lane[3].u_add.w_exp , \g_lane[3].u_add.w_add , \g_lane[3].u_add.w_dif , \g_lane[3].u_add.u_cd.q [6:1], \g_lane[3].u_add.w_carry  } = _21977_;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].u_add.w_v  <= 1'h0;
+    _21978_ <= { \g_lane[3].u_add.u_cd.d [107:7], \g_lane[3].u_add.u_lzc.n , \g_lane[3].u_add.u_cd.d [0] };
+  assign { \g_lane[3].u_add.u_cd.g_rv.rd [107], \g_lane[3].u_add.w_byp , \g_lane[3].u_add.w_sub , \g_lane[3].u_add.w_sign , \g_lane[3].u_add.w_err , \g_lane[3].u_add.w_code , \g_lane[3].u_add.w_exp , \g_lane[3].u_add.w_add , \g_lane[3].u_add.w_dif , \g_lane[3].u_add.u_cd.q [6:1], \g_lane[3].u_add.w_carry  } = _21978_;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].u_add.w_v  <= 1'h0;
     else \g_lane[3].u_add.w_v  <= \g_lane[3].u_add.u_cd.d [107];
   assign \g_lane[3].u_add.u_cmp.g [191:161] = \g_lane[3].u_add.u_cmp.a  & \g_lane[3].u_add.u_cmp.b ;
   assign _04312_ = \g_lane[3].u_add.u_cmp.p [180] & \g_lane[3].u_add.u_cmp.g [179];
@@ -153283,10 +153301,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane_reg[3].u_mul.u_c2.d[227]  <= \g_lane[3].u_mul.u_c1.q [75];
   assign \g_lane[3].u_mul.u_c2.d [227] = \g_lane_reg[3].u_mul.u_c2.d[227] ;
-  reg [1:0] _23972_;
+  reg [1:0] _23973_;
   always @(posedge clk)
-    _23972_ <= \g_lane[3].u_mul.u_c1.q [74:73];
-  assign \g_lane[3].u_mul.u_c2.d [226:225] = _23972_;
+    _23973_ <= \g_lane[3].u_mul.u_c1.q [74:73];
+  assign \g_lane[3].u_mul.u_c2.d [226:225] = _23973_;
   always @(posedge clk)
     \g_lane[3].u_mul.s1_power  <= \g_lane[3].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -153296,18 +153314,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[3].u_mul.u_c2.d[224]  <= \g_lane[3].u_mul.u_c1.q [72];
   assign \g_lane[3].u_mul.u_c2.d [224] = \g_lane_reg[3].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[3].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c2.d[228]  <= \g_lane[3].u_mul.u_c1.q [76];
   assign \g_lane[3].u_mul.u_c2.d [228] = \g_lane_reg[3].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[3].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[3].u_mul.u_c3.d[41]  <= \g_lane[3].u_mul.u_c2.q [227];
   assign \g_lane[3].u_mul.u_c3.d [41] = \g_lane_reg[3].u_mul.u_c3.d[41] ;
-  reg [1:0] _23978_;
+  reg [1:0] _23979_;
   always @(posedge clk)
-    _23978_ <= \g_lane[3].u_mul.u_c2.q [226:225];
-  assign \g_lane[3].u_mul.u_c3.d [40:39] = _23978_;
+    _23979_ <= \g_lane[3].u_mul.u_c2.q [226:225];
+  assign \g_lane[3].u_mul.u_c3.d [40:39] = _23979_;
   always @(posedge clk)
     \g_lane[3].u_mul.s2_fl46  <= \g_lane[3].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -153316,10 +153334,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane[3].u_mul.s2_mr  <= \g_lane[3].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[3].u_mul.s2_ms  <= \g_lane[3].u_mul.u_c2.q [47:0];
-  reg [47:0] _23983_;
+  reg [47:0] _23984_;
   always @(posedge clk)
-    _23983_ <= \g_lane[3].u_mul.u_cpa.s ;
-  assign { \g_lane[3].u_mul.top , \g_lane[3].u_mul.s2_prod [46:0] } = _23983_;
+    _23984_ <= \g_lane[3].u_mul.u_cpa.s ;
+  assign { \g_lane[3].u_mul.top , \g_lane[3].u_mul.s2_prod [46:0] } = _23984_;
   always @(posedge clk)
     \g_lane[3].u_mul.s2_sh  <= \g_lane[3].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[3].u_mul.u_c3.d[38] ;
@@ -153331,12 +153349,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane[3].u_mul.s2_sub47  <= \g_lane[3].u_mul.u_c2.q [127];
   reg \g_lane_reg[3].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c3.d[42]  <= \g_lane[3].u_mul.u_c2.q [228];
   assign \g_lane[3].u_mul.u_c3.d [42] = \g_lane_reg[3].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane[3].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane[3].v0  <= 1'h0;
     else \g_lane[3].v0  <= \g_lane[3].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[3].u_mul.y  <= _05073_;
@@ -153482,49 +153500,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _05167_ = _05165_ | _05166_;
   assign _05168_ = { 17'h00000, \g_lane[3].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[3].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _05169_[47], \g_lane[3].u_mul.g_nokcp.u_rows.l1 [287:241] } = _05167_ | _05168_;
-  reg [76:0] _24133_;
+  reg [76:0] _24134_;
   always @(posedge clk)
-    _24133_ <= { \g_lane[3].u_mul.u_c5.q [86:82], \g_lane[3].u_mul.u_c1.d [71:24], \g_lane[3].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[3].u_mul.u_c1.g_rv.rd [76], \g_lane[3].u_mul.u_c1.q [75:24], \g_lane[3].u_mul.u_pw.a , \g_lane[3].u_mul.u_pw.b  } = _24133_;
+    _24134_ <= { \g_lane[3].u_mul.u_c5.q [86:82], \g_lane[3].u_mul.u_c1.d [71:24], \g_lane[3].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[3].u_mul.u_c1.g_rv.rd [76], \g_lane[3].u_mul.u_c1.q [75:24], \g_lane[3].u_mul.u_pw.a , \g_lane[3].u_mul.u_pw.b  } = _24134_;
   reg \g_lane_reg[3].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c1.q[76]  <= \g_lane[3].u_mul.u_c5.q [86];
   assign \g_lane[3].u_mul.u_c1.q [76] = \g_lane_reg[3].u_mul.u_c1.q[76] ;
-  reg [228:0] _24135_;
+  reg [228:0] _24136_;
   always @(posedge clk)
-    _24135_ <= { \g_lane[3].u_mul.u_c2.d [228:177], 1'h0, \g_lane[3].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[3].u_mul.u_c2.g_rv.rd [228], \g_lane[3].u_mul.u_c2.q [227:224], \g_lane[3].u_mul.u_cpa.b , \g_lane[3].u_mul.u_cpa.a , \g_lane[3].u_mul.u_c2.q [127:0] } = _24135_;
+    _24136_ <= { \g_lane[3].u_mul.u_c2.d [228:177], 1'h0, \g_lane[3].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[3].u_mul.u_c2.g_rv.rd [228], \g_lane[3].u_mul.u_c2.q [227:224], \g_lane[3].u_mul.u_cpa.b , \g_lane[3].u_mul.u_cpa.a , \g_lane[3].u_mul.u_c2.q [127:0] } = _24136_;
   reg \g_lane_reg[3].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c2.q[228]  <= \g_lane[3].u_mul.u_c2.d [228];
   assign \g_lane[3].u_mul.u_c2.q [228] = \g_lane_reg[3].u_mul.u_c2.q[228] ;
-  reg [42:0] _24137_;
+  reg [42:0] _24138_;
   always @(posedge clk)
-    _24137_ <= \g_lane[3].u_mul.u_c3.d ;
-  assign { \g_lane[3].u_mul.u_c3.g_rv.rd [42], \g_lane[3].u_mul.u_c4.d [41:25], \g_lane[3].u_mul.u_rnd.a , \g_lane[3].u_mul.u_rnd.g [0] } = _24137_;
+    _24138_ <= \g_lane[3].u_mul.u_c3.d ;
+  assign { \g_lane[3].u_mul.u_c3.g_rv.rd [42], \g_lane[3].u_mul.u_c4.d [41:25], \g_lane[3].u_mul.u_rnd.a , \g_lane[3].u_mul.u_rnd.g [0] } = _24138_;
   reg \g_lane_reg[3].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c4.d[42]  <= \g_lane[3].u_mul.u_c3.d [42];
   assign \g_lane[3].u_mul.u_c4.d [42] = \g_lane_reg[3].u_mul.u_c4.d[42] ;
-  reg [42:0] _24139_;
+  reg [42:0] _24140_;
   always @(posedge clk)
-    _24139_ <= { \g_lane[3].u_mul.u_c4.d [42:25], \g_lane[3].u_mul.u_rnd.s , \g_lane[3].u_mul.u_rnd.g [24] };
-  assign { \g_lane[3].u_mul.u_c4.g_rv.rd [42], \g_lane[3].u_mul.u_c6.q [35:33], \g_lane[3].u_mul.u_c4.q [38:0] } = _24139_;
+    _24140_ <= { \g_lane[3].u_mul.u_c4.d [42:25], \g_lane[3].u_mul.u_rnd.s , \g_lane[3].u_mul.u_rnd.g [24] };
+  assign { \g_lane[3].u_mul.u_c4.g_rv.rd [42], \g_lane[3].u_mul.u_c6.q [35:33], \g_lane[3].u_mul.u_c4.q [38:0] } = _24140_;
   reg \g_lane_reg[3].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c6.q[36]  <= \g_lane[3].u_mul.u_c4.d [42];
   assign \g_lane[3].u_mul.u_c6.q [36] = \g_lane_reg[3].u_mul.u_c6.q[36] ;
-  reg [86:0] _24141_;
+  reg [86:0] _24142_;
   always @(posedge clk)
-    _24141_ <= { gov, \g_lane[3].u_mul.u_c5.d [85:82], \g_lane[3].u_mul.u_la.x [31], \g_lane[3].u_mul.x_a [22:0], \g_lane[3].u_mul.u_lb.x [31], \g_lane[3].u_mul.x_b [22:0], \g_lane[3].u_mul.u_la.n [4:0], \g_lane[3].u_mul.u_lb.n [4:0], \g_lane[3].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[3].u_mul.u_c5.g_rv.rd [86], \g_lane[3].u_mul.u_c5.q [85:0] } = _24141_;
+    _24142_ <= { gov, \g_lane[3].u_mul.u_c5.d [85:82], \g_lane[3].u_mul.u_la.x [31], \g_lane[3].u_mul.x_a [22:0], \g_lane[3].u_mul.u_lb.x [31], \g_lane[3].u_mul.x_b [22:0], \g_lane[3].u_mul.u_la.n [4:0], \g_lane[3].u_mul.u_lb.n [4:0], \g_lane[3].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[3].u_mul.u_c5.g_rv.rd [86], \g_lane[3].u_mul.u_c5.q [85:0] } = _24142_;
   reg \g_lane_reg[3].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[3].u_mul.u_c7.rst_n )
-    if (!\g_lane[3].u_mul.u_c7.rst_n ) \g_lane_reg[3].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[3])
+    if (!lrnv[3]) \g_lane_reg[3].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[3].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[3].u_mul.u_c5.q [86] = \g_lane_reg[3].u_mul.u_c5.q[86] ;
   assign \g_lane[3].u_mul.u_cpa.g [342:295] = \g_lane[3].u_mul.u_cpa.a  & \g_lane[3].u_mul.u_cpa.b ;
@@ -154824,26 +154842,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_add.u_rnd.g [0] = \g_lane[4].u_add.s2_val [2] && _05699_;
   always @(posedge clk)
     \g_lane[4].u_add.err  <= _05702_;
-  reg [23:0] _25439_;
+  reg [23:0] _25440_;
   always @(posedge clk)
-    _25439_ <= _05688_;
-  assign \g_lane[4].u_add.u_sum.a [26:3] = _25439_;
+    _25440_ <= _05688_;
+  assign \g_lane[4].u_add.u_sum.a [26:3] = _25440_;
   reg \g_lane_reg[4].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cb.d[100]  <= \g_lane[4].u_add.x_byp ;
   assign \g_lane[4].u_add.u_cb.d [100] = \g_lane_reg[4].u_add.u_cb.d[100] ;
-  reg [31:0] _25441_;
+  reg [31:0] _25442_;
   always @(posedge clk)
-    _25441_ <= \g_lane[4].u_add.x_code ;
-  assign \g_lane[4].u_add.u_cb.d [95:64] = _25441_;
-  reg [1:0] _25442_;
+    _25442_ <= \g_lane[4].u_add.x_code ;
+  assign \g_lane[4].u_add.u_cb.d [95:64] = _25442_;
+  reg [1:0] _25443_;
   always @(posedge clk)
-    _25442_ <= \g_lane[4].u_add.x_err ;
-  assign \g_lane[4].u_add.u_cb.d [97:96] = _25442_;
-  reg [7:0] _25443_;
+    _25443_ <= \g_lane[4].u_add.x_err ;
+  assign \g_lane[4].u_add.u_cb.d [97:96] = _25443_;
+  reg [7:0] _25444_;
   always @(posedge clk)
-    _25443_ <= _05687_;
-  assign \g_lane[4].u_add.u_cb.d [63:56] = _25443_;
+    _25444_ <= _05687_;
+  assign \g_lane[4].u_add.u_cb.d [63:56] = _25444_;
   reg \g_lane_reg[4].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cb.d[98]  <= _05686_;
@@ -154855,45 +154873,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[4].u_add.u_cb.d[99]  <= \g_lane[4].u_add.x_sub ;
   assign \g_lane[4].u_add.u_cb.d [99] = \g_lane_reg[4].u_add.u_cb.d[99] ;
   reg \g_lane_reg[4].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[4].u_add.u_cb.d[101]  <= \g_lane[4].u_add.x_v ;
   assign \g_lane[4].u_add.u_cb.d [101] = \g_lane_reg[4].u_add.u_cb.d[101] ;
   reg \g_lane_reg[4].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cc.d[69]  <= \g_lane[4].u_add.w_byp ;
   assign \g_lane[4].u_add.u_cc.d [69] = \g_lane_reg[4].u_add.u_cc.d[69] ;
-  reg [31:0] _25449_;
+  reg [31:0] _25450_;
   always @(posedge clk)
-    _25449_ <= \g_lane[4].u_add.w_code ;
-  assign \g_lane[4].u_add.u_cc.d [64:33] = _25449_;
-  reg [1:0] _25450_;
+    _25450_ <= \g_lane[4].u_add.w_code ;
+  assign \g_lane[4].u_add.u_cc.d [64:33] = _25450_;
+  reg [1:0] _25451_;
   always @(posedge clk)
-    _25450_ <= \g_lane[4].u_add.w_err ;
-  assign { \g_lane[4].u_add.s2_err [1], \g_lane[4].u_add.u_cc.d [65] } = _25450_;
-  reg [7:0] _25451_;
+    _25451_ <= \g_lane[4].u_add.w_err ;
+  assign { \g_lane[4].u_add.s2_err [1], \g_lane[4].u_add.u_cc.d [65] } = _25451_;
+  reg [7:0] _25452_;
   always @(posedge clk)
-    _25451_ <= _05696_;
-  assign \g_lane[4].u_add.u_cc.d [32:25] = _25451_;
+    _25452_ <= _05696_;
+  assign \g_lane[4].u_add.u_cc.d [32:25] = _25452_;
   reg \g_lane_reg[4].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cc.d[67]  <= \g_lane[4].u_add.w_sign ;
   assign \g_lane[4].u_add.u_cc.d [67] = \g_lane_reg[4].u_add.u_cc.d[67] ;
   reg \g_lane_reg[4].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[4].u_add.u_cc.d[70]  <= \g_lane[4].u_add.w_v ;
   assign \g_lane[4].u_add.u_cc.d [70] = \g_lane_reg[4].u_add.u_cc.d[70] ;
-  reg [26:0] _25454_;
+  reg [26:0] _25455_;
   always @(posedge clk)
-    _25454_ <= _05697_;
-  assign { \g_lane[4].u_add.u_rnd.a , \g_lane[4].u_add.s2_val [2:0] } = _25454_;
+    _25455_ <= _05697_;
+  assign { \g_lane[4].u_add.u_rnd.a , \g_lane[4].u_add.s2_val [2:0] } = _25455_;
   reg \g_lane_reg[4].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[4].u_add.u_cc.d[68]  <= _05695_;
   assign \g_lane[4].u_add.u_cc.d [68] = \g_lane_reg[4].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].v1  <= 1'h0;
     else \g_lane[4].v1  <= \g_lane[4].u_add.u_v ;
   always @(posedge clk)
     y_l[159:128] <= _05711_;
@@ -154911,35 +154929,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _05711_ = \g_lane[4].u_add.u_cc.q [69] ? \g_lane[4].u_add.u_code  : _05710_;
   assign \g_lane[4].u_add.small_b  = _05677_ ? { 27'h0000000, _05678_ } : _05684_;
   assign \g_lane[4].u_add.small_a  = _05669_ ? { 27'h0000000, _05670_ } : _05676_;
-  reg [119:0] _25472_;
+  reg [119:0] _25473_;
   always @(posedge clk)
-    _25472_ <= { \g_lane[4].u_add.u_ca.d [119], \g_lane[4].v0 , \g_lane[4].u_add.u_ca.d [117:81], \g_lane[4].u_mul.y [31], \g_lane[4].u_add.u_dab.a , \g_lane[4].u_add.u_dba.a , \g_lane[4].u_add.u_ca.d [63], \g_lane[4].u_add.u_cmp.a [22:0], \g_lane[4].u_add.u_ca.d [39], \g_lane[4].u_mul.y [22:0], \g_lane[4].u_add.u_dab.s , \g_lane[4].u_add.u_dba.s  };
-  assign { \g_lane[4].u_add.x_swap , \g_lane[4].u_add.u_ca.g_rv.rd [118], \g_lane[4].u_add.x_byp , \g_lane[4].u_add.x_err , \g_lane[4].u_add.x_code , \g_lane[4].u_add.x_sub , \g_lane[4].u_add.x_as , \g_lane[4].u_add.x_bs , \g_lane[4].u_add.x_aexp , \g_lane[4].u_add.x_bexp , \g_lane[4].u_add.x_aman , \g_lane[4].u_add.x_bman , \g_lane[4].u_add.x_dab , \g_lane[4].u_add.x_dba  } = _25472_;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].u_add.x_v  <= 1'h0;
+    _25473_ <= { \g_lane[4].u_add.u_ca.d [119], \g_lane[4].v0 , \g_lane[4].u_add.u_ca.d [117:81], \g_lane[4].u_mul.y [31], \g_lane[4].u_add.u_dab.a , \g_lane[4].u_add.u_dba.a , \g_lane[4].u_add.u_ca.d [63], \g_lane[4].u_add.u_cmp.a [22:0], \g_lane[4].u_add.u_ca.d [39], \g_lane[4].u_mul.y [22:0], \g_lane[4].u_add.u_dab.s , \g_lane[4].u_add.u_dba.s  };
+  assign { \g_lane[4].u_add.x_swap , \g_lane[4].u_add.u_ca.g_rv.rd [118], \g_lane[4].u_add.x_byp , \g_lane[4].u_add.x_err , \g_lane[4].u_add.x_code , \g_lane[4].u_add.x_sub , \g_lane[4].u_add.x_as , \g_lane[4].u_add.x_bs , \g_lane[4].u_add.x_aexp , \g_lane[4].u_add.x_bexp , \g_lane[4].u_add.x_aman , \g_lane[4].u_add.x_bman , \g_lane[4].u_add.x_dab , \g_lane[4].u_add.x_dba  } = _25473_;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].u_add.x_v  <= 1'h0;
     else \g_lane[4].u_add.x_v  <= \g_lane[4].v0 ;
-  reg [101:0] _25474_;
+  reg [101:0] _25475_;
   always @(posedge clk)
-    _25474_ <= { \g_lane[4].u_add.u_cb.d [101:56], \g_lane[4].u_add.u_sum.s , \g_lane[4].u_add.u_dif.s  };
-  assign { \g_lane[4].u_add.u_cb.g_rv.rd [101], \g_lane[4].u_add.u_cd.d [106:62], \g_lane[4].u_add.u_cd.d [0], \g_lane[4].u_add.u_cb.q [54:28], \g_lane[4].u_add.u_cd.d [34:7] } = _25474_;
+    _25475_ <= { \g_lane[4].u_add.u_cb.d [101:56], \g_lane[4].u_add.u_sum.s , \g_lane[4].u_add.u_dif.s  };
+  assign { \g_lane[4].u_add.u_cb.g_rv.rd [101], \g_lane[4].u_add.u_cd.d [106:62], \g_lane[4].u_add.u_cd.d [0], \g_lane[4].u_add.u_cb.q [54:28], \g_lane[4].u_add.u_cd.d [34:7] } = _25475_;
   reg \g_lane_reg[4].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[4].u_add.u_cd.d[107]  <= \g_lane[4].u_add.u_cb.d [101];
   assign \g_lane[4].u_add.u_cd.d [107] = \g_lane_reg[4].u_add.u_cd.d[107] ;
-  reg [70:0] _25476_;
+  reg [70:0] _25477_;
   always @(posedge clk)
-    _25476_ <= { \g_lane[4].u_add.u_cc.d [70:67], 1'h0, \g_lane[4].u_add.u_cc.d [65:25], \g_lane[4].u_add.u_rnd.s , \g_lane[4].u_add.u_rnd.g [24] };
-  assign { \g_lane[4].u_add.u_cc.g_rv.rd [70], \g_lane[4].u_add.u_cc.q [69], \g_lane[4].u_add.u_zero , \g_lane[4].u_add.u_sign , \g_lane[4].u_add.u_err , \g_lane[4].u_add.u_code , \g_lane[4].u_add.u_exp , \g_lane[4].u_add.u_cc.q [24:0] } = _25476_;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].u_add.u_v  <= 1'h0;
+    _25477_ <= { \g_lane[4].u_add.u_cc.d [70:67], 1'h0, \g_lane[4].u_add.u_cc.d [65:25], \g_lane[4].u_add.u_rnd.s , \g_lane[4].u_add.u_rnd.g [24] };
+  assign { \g_lane[4].u_add.u_cc.g_rv.rd [70], \g_lane[4].u_add.u_cc.q [69], \g_lane[4].u_add.u_zero , \g_lane[4].u_add.u_sign , \g_lane[4].u_add.u_err , \g_lane[4].u_add.u_code , \g_lane[4].u_add.u_exp , \g_lane[4].u_add.u_cc.q [24:0] } = _25477_;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].u_add.u_v  <= 1'h0;
     else \g_lane[4].u_add.u_v  <= \g_lane[4].u_add.u_cc.d [70];
-  reg [107:0] _25478_;
+  reg [107:0] _25479_;
   always @(posedge clk)
-    _25478_ <= { \g_lane[4].u_add.u_cd.d [107:7], \g_lane[4].u_add.u_lzc.n , \g_lane[4].u_add.u_cd.d [0] };
-  assign { \g_lane[4].u_add.u_cd.g_rv.rd [107], \g_lane[4].u_add.w_byp , \g_lane[4].u_add.w_sub , \g_lane[4].u_add.w_sign , \g_lane[4].u_add.w_err , \g_lane[4].u_add.w_code , \g_lane[4].u_add.w_exp , \g_lane[4].u_add.w_add , \g_lane[4].u_add.w_dif , \g_lane[4].u_add.u_cd.q [6:1], \g_lane[4].u_add.w_carry  } = _25478_;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].u_add.w_v  <= 1'h0;
+    _25479_ <= { \g_lane[4].u_add.u_cd.d [107:7], \g_lane[4].u_add.u_lzc.n , \g_lane[4].u_add.u_cd.d [0] };
+  assign { \g_lane[4].u_add.u_cd.g_rv.rd [107], \g_lane[4].u_add.w_byp , \g_lane[4].u_add.w_sub , \g_lane[4].u_add.w_sign , \g_lane[4].u_add.w_err , \g_lane[4].u_add.w_code , \g_lane[4].u_add.w_exp , \g_lane[4].u_add.w_add , \g_lane[4].u_add.w_dif , \g_lane[4].u_add.u_cd.q [6:1], \g_lane[4].u_add.w_carry  } = _25479_;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].u_add.w_v  <= 1'h0;
     else \g_lane[4].u_add.w_v  <= \g_lane[4].u_add.u_cd.d [107];
   assign \g_lane[4].u_add.u_cmp.g [191:161] = \g_lane[4].u_add.u_cmp.a  & \g_lane[4].u_add.u_cmp.b ;
   assign _05712_ = \g_lane[4].u_add.u_cmp.p [180] & \g_lane[4].u_add.u_cmp.g [179];
@@ -156938,10 +156956,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane_reg[4].u_mul.u_c2.d[227]  <= \g_lane[4].u_mul.u_c1.q [75];
   assign \g_lane[4].u_mul.u_c2.d [227] = \g_lane_reg[4].u_mul.u_c2.d[227] ;
-  reg [1:0] _27473_;
+  reg [1:0] _27474_;
   always @(posedge clk)
-    _27473_ <= \g_lane[4].u_mul.u_c1.q [74:73];
-  assign \g_lane[4].u_mul.u_c2.d [226:225] = _27473_;
+    _27474_ <= \g_lane[4].u_mul.u_c1.q [74:73];
+  assign \g_lane[4].u_mul.u_c2.d [226:225] = _27474_;
   always @(posedge clk)
     \g_lane[4].u_mul.s1_power  <= \g_lane[4].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -156951,18 +156969,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[4].u_mul.u_c2.d[224]  <= \g_lane[4].u_mul.u_c1.q [72];
   assign \g_lane[4].u_mul.u_c2.d [224] = \g_lane_reg[4].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[4].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c2.d[228]  <= \g_lane[4].u_mul.u_c1.q [76];
   assign \g_lane[4].u_mul.u_c2.d [228] = \g_lane_reg[4].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[4].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[4].u_mul.u_c3.d[41]  <= \g_lane[4].u_mul.u_c2.q [227];
   assign \g_lane[4].u_mul.u_c3.d [41] = \g_lane_reg[4].u_mul.u_c3.d[41] ;
-  reg [1:0] _27479_;
+  reg [1:0] _27480_;
   always @(posedge clk)
-    _27479_ <= \g_lane[4].u_mul.u_c2.q [226:225];
-  assign \g_lane[4].u_mul.u_c3.d [40:39] = _27479_;
+    _27480_ <= \g_lane[4].u_mul.u_c2.q [226:225];
+  assign \g_lane[4].u_mul.u_c3.d [40:39] = _27480_;
   always @(posedge clk)
     \g_lane[4].u_mul.s2_fl46  <= \g_lane[4].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -156971,10 +156989,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane[4].u_mul.s2_mr  <= \g_lane[4].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[4].u_mul.s2_ms  <= \g_lane[4].u_mul.u_c2.q [47:0];
-  reg [47:0] _27484_;
+  reg [47:0] _27485_;
   always @(posedge clk)
-    _27484_ <= \g_lane[4].u_mul.u_cpa.s ;
-  assign { \g_lane[4].u_mul.top , \g_lane[4].u_mul.s2_prod [46:0] } = _27484_;
+    _27485_ <= \g_lane[4].u_mul.u_cpa.s ;
+  assign { \g_lane[4].u_mul.top , \g_lane[4].u_mul.s2_prod [46:0] } = _27485_;
   always @(posedge clk)
     \g_lane[4].u_mul.s2_sh  <= \g_lane[4].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[4].u_mul.u_c3.d[38] ;
@@ -156986,12 +157004,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane[4].u_mul.s2_sub47  <= \g_lane[4].u_mul.u_c2.q [127];
   reg \g_lane_reg[4].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c3.d[42]  <= \g_lane[4].u_mul.u_c2.q [228];
   assign \g_lane[4].u_mul.u_c3.d [42] = \g_lane_reg[4].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane[4].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane[4].v0  <= 1'h0;
     else \g_lane[4].v0  <= \g_lane[4].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[4].u_mul.y  <= _06473_;
@@ -157137,49 +157155,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _06567_ = _06565_ | _06566_;
   assign _06568_ = { 17'h00000, \g_lane[4].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[4].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _06569_[47], \g_lane[4].u_mul.g_nokcp.u_rows.l1 [287:241] } = _06567_ | _06568_;
-  reg [76:0] _27634_;
+  reg [76:0] _27635_;
   always @(posedge clk)
-    _27634_ <= { \g_lane[4].u_mul.u_c5.q [86:82], \g_lane[4].u_mul.u_c1.d [71:24], \g_lane[4].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[4].u_mul.u_c1.g_rv.rd [76], \g_lane[4].u_mul.u_c1.q [75:24], \g_lane[4].u_mul.u_pw.a , \g_lane[4].u_mul.u_pw.b  } = _27634_;
+    _27635_ <= { \g_lane[4].u_mul.u_c5.q [86:82], \g_lane[4].u_mul.u_c1.d [71:24], \g_lane[4].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[4].u_mul.u_c1.g_rv.rd [76], \g_lane[4].u_mul.u_c1.q [75:24], \g_lane[4].u_mul.u_pw.a , \g_lane[4].u_mul.u_pw.b  } = _27635_;
   reg \g_lane_reg[4].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c1.q[76]  <= \g_lane[4].u_mul.u_c5.q [86];
   assign \g_lane[4].u_mul.u_c1.q [76] = \g_lane_reg[4].u_mul.u_c1.q[76] ;
-  reg [228:0] _27636_;
+  reg [228:0] _27637_;
   always @(posedge clk)
-    _27636_ <= { \g_lane[4].u_mul.u_c2.d [228:177], 1'h0, \g_lane[4].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[4].u_mul.u_c2.g_rv.rd [228], \g_lane[4].u_mul.u_c2.q [227:224], \g_lane[4].u_mul.u_cpa.b , \g_lane[4].u_mul.u_cpa.a , \g_lane[4].u_mul.u_c2.q [127:0] } = _27636_;
+    _27637_ <= { \g_lane[4].u_mul.u_c2.d [228:177], 1'h0, \g_lane[4].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[4].u_mul.u_c2.g_rv.rd [228], \g_lane[4].u_mul.u_c2.q [227:224], \g_lane[4].u_mul.u_cpa.b , \g_lane[4].u_mul.u_cpa.a , \g_lane[4].u_mul.u_c2.q [127:0] } = _27637_;
   reg \g_lane_reg[4].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c2.q[228]  <= \g_lane[4].u_mul.u_c2.d [228];
   assign \g_lane[4].u_mul.u_c2.q [228] = \g_lane_reg[4].u_mul.u_c2.q[228] ;
-  reg [42:0] _27638_;
+  reg [42:0] _27639_;
   always @(posedge clk)
-    _27638_ <= \g_lane[4].u_mul.u_c3.d ;
-  assign { \g_lane[4].u_mul.u_c3.g_rv.rd [42], \g_lane[4].u_mul.u_c4.d [41:25], \g_lane[4].u_mul.u_rnd.a , \g_lane[4].u_mul.u_rnd.g [0] } = _27638_;
+    _27639_ <= \g_lane[4].u_mul.u_c3.d ;
+  assign { \g_lane[4].u_mul.u_c3.g_rv.rd [42], \g_lane[4].u_mul.u_c4.d [41:25], \g_lane[4].u_mul.u_rnd.a , \g_lane[4].u_mul.u_rnd.g [0] } = _27639_;
   reg \g_lane_reg[4].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c4.d[42]  <= \g_lane[4].u_mul.u_c3.d [42];
   assign \g_lane[4].u_mul.u_c4.d [42] = \g_lane_reg[4].u_mul.u_c4.d[42] ;
-  reg [42:0] _27640_;
+  reg [42:0] _27641_;
   always @(posedge clk)
-    _27640_ <= { \g_lane[4].u_mul.u_c4.d [42:25], \g_lane[4].u_mul.u_rnd.s , \g_lane[4].u_mul.u_rnd.g [24] };
-  assign { \g_lane[4].u_mul.u_c4.g_rv.rd [42], \g_lane[4].u_mul.u_c6.q [35:33], \g_lane[4].u_mul.u_c4.q [38:0] } = _27640_;
+    _27641_ <= { \g_lane[4].u_mul.u_c4.d [42:25], \g_lane[4].u_mul.u_rnd.s , \g_lane[4].u_mul.u_rnd.g [24] };
+  assign { \g_lane[4].u_mul.u_c4.g_rv.rd [42], \g_lane[4].u_mul.u_c6.q [35:33], \g_lane[4].u_mul.u_c4.q [38:0] } = _27641_;
   reg \g_lane_reg[4].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c6.q[36]  <= \g_lane[4].u_mul.u_c4.d [42];
   assign \g_lane[4].u_mul.u_c6.q [36] = \g_lane_reg[4].u_mul.u_c6.q[36] ;
-  reg [86:0] _27642_;
+  reg [86:0] _27643_;
   always @(posedge clk)
-    _27642_ <= { gov, \g_lane[4].u_mul.u_c5.d [85:82], \g_lane[4].u_mul.u_la.x [31], \g_lane[4].u_mul.x_a [22:0], \g_lane[4].u_mul.u_lb.x [31], \g_lane[4].u_mul.x_b [22:0], \g_lane[4].u_mul.u_la.n [4:0], \g_lane[4].u_mul.u_lb.n [4:0], \g_lane[4].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[4].u_mul.u_c5.g_rv.rd [86], \g_lane[4].u_mul.u_c5.q [85:0] } = _27642_;
+    _27643_ <= { gov, \g_lane[4].u_mul.u_c5.d [85:82], \g_lane[4].u_mul.u_la.x [31], \g_lane[4].u_mul.x_a [22:0], \g_lane[4].u_mul.u_lb.x [31], \g_lane[4].u_mul.x_b [22:0], \g_lane[4].u_mul.u_la.n [4:0], \g_lane[4].u_mul.u_lb.n [4:0], \g_lane[4].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[4].u_mul.u_c5.g_rv.rd [86], \g_lane[4].u_mul.u_c5.q [85:0] } = _27643_;
   reg \g_lane_reg[4].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[4].u_mul.u_c7.rst_n )
-    if (!\g_lane[4].u_mul.u_c7.rst_n ) \g_lane_reg[4].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[4])
+    if (!lrnv[4]) \g_lane_reg[4].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[4].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[4].u_mul.u_c5.q [86] = \g_lane_reg[4].u_mul.u_c5.q[86] ;
   assign \g_lane[4].u_mul.u_cpa.g [342:295] = \g_lane[4].u_mul.u_cpa.a  & \g_lane[4].u_mul.u_cpa.b ;
@@ -158479,26 +158497,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_add.u_rnd.g [0] = \g_lane[5].u_add.s2_val [2] && _07099_;
   always @(posedge clk)
     \g_lane[5].u_add.err  <= _07102_;
-  reg [23:0] _28940_;
+  reg [23:0] _28941_;
   always @(posedge clk)
-    _28940_ <= _07088_;
-  assign \g_lane[5].u_add.u_sum.a [26:3] = _28940_;
+    _28941_ <= _07088_;
+  assign \g_lane[5].u_add.u_sum.a [26:3] = _28941_;
   reg \g_lane_reg[5].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cb.d[100]  <= \g_lane[5].u_add.x_byp ;
   assign \g_lane[5].u_add.u_cb.d [100] = \g_lane_reg[5].u_add.u_cb.d[100] ;
-  reg [31:0] _28942_;
+  reg [31:0] _28943_;
   always @(posedge clk)
-    _28942_ <= \g_lane[5].u_add.x_code ;
-  assign \g_lane[5].u_add.u_cb.d [95:64] = _28942_;
-  reg [1:0] _28943_;
+    _28943_ <= \g_lane[5].u_add.x_code ;
+  assign \g_lane[5].u_add.u_cb.d [95:64] = _28943_;
+  reg [1:0] _28944_;
   always @(posedge clk)
-    _28943_ <= \g_lane[5].u_add.x_err ;
-  assign \g_lane[5].u_add.u_cb.d [97:96] = _28943_;
-  reg [7:0] _28944_;
+    _28944_ <= \g_lane[5].u_add.x_err ;
+  assign \g_lane[5].u_add.u_cb.d [97:96] = _28944_;
+  reg [7:0] _28945_;
   always @(posedge clk)
-    _28944_ <= _07087_;
-  assign \g_lane[5].u_add.u_cb.d [63:56] = _28944_;
+    _28945_ <= _07087_;
+  assign \g_lane[5].u_add.u_cb.d [63:56] = _28945_;
   reg \g_lane_reg[5].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cb.d[98]  <= _07086_;
@@ -158510,45 +158528,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[5].u_add.u_cb.d[99]  <= \g_lane[5].u_add.x_sub ;
   assign \g_lane[5].u_add.u_cb.d [99] = \g_lane_reg[5].u_add.u_cb.d[99] ;
   reg \g_lane_reg[5].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[5].u_add.u_cb.d[101]  <= \g_lane[5].u_add.x_v ;
   assign \g_lane[5].u_add.u_cb.d [101] = \g_lane_reg[5].u_add.u_cb.d[101] ;
   reg \g_lane_reg[5].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cc.d[69]  <= \g_lane[5].u_add.w_byp ;
   assign \g_lane[5].u_add.u_cc.d [69] = \g_lane_reg[5].u_add.u_cc.d[69] ;
-  reg [31:0] _28950_;
+  reg [31:0] _28951_;
   always @(posedge clk)
-    _28950_ <= \g_lane[5].u_add.w_code ;
-  assign \g_lane[5].u_add.u_cc.d [64:33] = _28950_;
-  reg [1:0] _28951_;
+    _28951_ <= \g_lane[5].u_add.w_code ;
+  assign \g_lane[5].u_add.u_cc.d [64:33] = _28951_;
+  reg [1:0] _28952_;
   always @(posedge clk)
-    _28951_ <= \g_lane[5].u_add.w_err ;
-  assign { \g_lane[5].u_add.s2_err [1], \g_lane[5].u_add.u_cc.d [65] } = _28951_;
-  reg [7:0] _28952_;
+    _28952_ <= \g_lane[5].u_add.w_err ;
+  assign { \g_lane[5].u_add.s2_err [1], \g_lane[5].u_add.u_cc.d [65] } = _28952_;
+  reg [7:0] _28953_;
   always @(posedge clk)
-    _28952_ <= _07096_;
-  assign \g_lane[5].u_add.u_cc.d [32:25] = _28952_;
+    _28953_ <= _07096_;
+  assign \g_lane[5].u_add.u_cc.d [32:25] = _28953_;
   reg \g_lane_reg[5].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cc.d[67]  <= \g_lane[5].u_add.w_sign ;
   assign \g_lane[5].u_add.u_cc.d [67] = \g_lane_reg[5].u_add.u_cc.d[67] ;
   reg \g_lane_reg[5].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[5].u_add.u_cc.d[70]  <= \g_lane[5].u_add.w_v ;
   assign \g_lane[5].u_add.u_cc.d [70] = \g_lane_reg[5].u_add.u_cc.d[70] ;
-  reg [26:0] _28955_;
+  reg [26:0] _28956_;
   always @(posedge clk)
-    _28955_ <= _07097_;
-  assign { \g_lane[5].u_add.u_rnd.a , \g_lane[5].u_add.s2_val [2:0] } = _28955_;
+    _28956_ <= _07097_;
+  assign { \g_lane[5].u_add.u_rnd.a , \g_lane[5].u_add.s2_val [2:0] } = _28956_;
   reg \g_lane_reg[5].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[5].u_add.u_cc.d[68]  <= _07095_;
   assign \g_lane[5].u_add.u_cc.d [68] = \g_lane_reg[5].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].v1  <= 1'h0;
     else \g_lane[5].v1  <= \g_lane[5].u_add.u_v ;
   always @(posedge clk)
     y_l[191:160] <= _07111_;
@@ -158566,35 +158584,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _07111_ = \g_lane[5].u_add.u_cc.q [69] ? \g_lane[5].u_add.u_code  : _07110_;
   assign \g_lane[5].u_add.small_b  = _07077_ ? { 27'h0000000, _07078_ } : _07084_;
   assign \g_lane[5].u_add.small_a  = _07069_ ? { 27'h0000000, _07070_ } : _07076_;
-  reg [119:0] _28973_;
+  reg [119:0] _28974_;
   always @(posedge clk)
-    _28973_ <= { \g_lane[5].u_add.u_ca.d [119], \g_lane[5].v0 , \g_lane[5].u_add.u_ca.d [117:81], \g_lane[5].u_mul.y [31], \g_lane[5].u_add.u_dab.a , \g_lane[5].u_add.u_dba.a , \g_lane[5].u_add.u_ca.d [63], \g_lane[5].u_add.u_cmp.a [22:0], \g_lane[5].u_add.u_ca.d [39], \g_lane[5].u_mul.y [22:0], \g_lane[5].u_add.u_dab.s , \g_lane[5].u_add.u_dba.s  };
-  assign { \g_lane[5].u_add.x_swap , \g_lane[5].u_add.u_ca.g_rv.rd [118], \g_lane[5].u_add.x_byp , \g_lane[5].u_add.x_err , \g_lane[5].u_add.x_code , \g_lane[5].u_add.x_sub , \g_lane[5].u_add.x_as , \g_lane[5].u_add.x_bs , \g_lane[5].u_add.x_aexp , \g_lane[5].u_add.x_bexp , \g_lane[5].u_add.x_aman , \g_lane[5].u_add.x_bman , \g_lane[5].u_add.x_dab , \g_lane[5].u_add.x_dba  } = _28973_;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].u_add.x_v  <= 1'h0;
+    _28974_ <= { \g_lane[5].u_add.u_ca.d [119], \g_lane[5].v0 , \g_lane[5].u_add.u_ca.d [117:81], \g_lane[5].u_mul.y [31], \g_lane[5].u_add.u_dab.a , \g_lane[5].u_add.u_dba.a , \g_lane[5].u_add.u_ca.d [63], \g_lane[5].u_add.u_cmp.a [22:0], \g_lane[5].u_add.u_ca.d [39], \g_lane[5].u_mul.y [22:0], \g_lane[5].u_add.u_dab.s , \g_lane[5].u_add.u_dba.s  };
+  assign { \g_lane[5].u_add.x_swap , \g_lane[5].u_add.u_ca.g_rv.rd [118], \g_lane[5].u_add.x_byp , \g_lane[5].u_add.x_err , \g_lane[5].u_add.x_code , \g_lane[5].u_add.x_sub , \g_lane[5].u_add.x_as , \g_lane[5].u_add.x_bs , \g_lane[5].u_add.x_aexp , \g_lane[5].u_add.x_bexp , \g_lane[5].u_add.x_aman , \g_lane[5].u_add.x_bman , \g_lane[5].u_add.x_dab , \g_lane[5].u_add.x_dba  } = _28974_;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].u_add.x_v  <= 1'h0;
     else \g_lane[5].u_add.x_v  <= \g_lane[5].v0 ;
-  reg [101:0] _28975_;
+  reg [101:0] _28976_;
   always @(posedge clk)
-    _28975_ <= { \g_lane[5].u_add.u_cb.d [101:56], \g_lane[5].u_add.u_sum.s , \g_lane[5].u_add.u_dif.s  };
-  assign { \g_lane[5].u_add.u_cb.g_rv.rd [101], \g_lane[5].u_add.u_cd.d [106:62], \g_lane[5].u_add.u_cd.d [0], \g_lane[5].u_add.u_cb.q [54:28], \g_lane[5].u_add.u_cd.d [34:7] } = _28975_;
+    _28976_ <= { \g_lane[5].u_add.u_cb.d [101:56], \g_lane[5].u_add.u_sum.s , \g_lane[5].u_add.u_dif.s  };
+  assign { \g_lane[5].u_add.u_cb.g_rv.rd [101], \g_lane[5].u_add.u_cd.d [106:62], \g_lane[5].u_add.u_cd.d [0], \g_lane[5].u_add.u_cb.q [54:28], \g_lane[5].u_add.u_cd.d [34:7] } = _28976_;
   reg \g_lane_reg[5].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[5].u_add.u_cd.d[107]  <= \g_lane[5].u_add.u_cb.d [101];
   assign \g_lane[5].u_add.u_cd.d [107] = \g_lane_reg[5].u_add.u_cd.d[107] ;
-  reg [70:0] _28977_;
+  reg [70:0] _28978_;
   always @(posedge clk)
-    _28977_ <= { \g_lane[5].u_add.u_cc.d [70:67], 1'h0, \g_lane[5].u_add.u_cc.d [65:25], \g_lane[5].u_add.u_rnd.s , \g_lane[5].u_add.u_rnd.g [24] };
-  assign { \g_lane[5].u_add.u_cc.g_rv.rd [70], \g_lane[5].u_add.u_cc.q [69], \g_lane[5].u_add.u_zero , \g_lane[5].u_add.u_sign , \g_lane[5].u_add.u_err , \g_lane[5].u_add.u_code , \g_lane[5].u_add.u_exp , \g_lane[5].u_add.u_cc.q [24:0] } = _28977_;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].u_add.u_v  <= 1'h0;
+    _28978_ <= { \g_lane[5].u_add.u_cc.d [70:67], 1'h0, \g_lane[5].u_add.u_cc.d [65:25], \g_lane[5].u_add.u_rnd.s , \g_lane[5].u_add.u_rnd.g [24] };
+  assign { \g_lane[5].u_add.u_cc.g_rv.rd [70], \g_lane[5].u_add.u_cc.q [69], \g_lane[5].u_add.u_zero , \g_lane[5].u_add.u_sign , \g_lane[5].u_add.u_err , \g_lane[5].u_add.u_code , \g_lane[5].u_add.u_exp , \g_lane[5].u_add.u_cc.q [24:0] } = _28978_;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].u_add.u_v  <= 1'h0;
     else \g_lane[5].u_add.u_v  <= \g_lane[5].u_add.u_cc.d [70];
-  reg [107:0] _28979_;
+  reg [107:0] _28980_;
   always @(posedge clk)
-    _28979_ <= { \g_lane[5].u_add.u_cd.d [107:7], \g_lane[5].u_add.u_lzc.n , \g_lane[5].u_add.u_cd.d [0] };
-  assign { \g_lane[5].u_add.u_cd.g_rv.rd [107], \g_lane[5].u_add.w_byp , \g_lane[5].u_add.w_sub , \g_lane[5].u_add.w_sign , \g_lane[5].u_add.w_err , \g_lane[5].u_add.w_code , \g_lane[5].u_add.w_exp , \g_lane[5].u_add.w_add , \g_lane[5].u_add.w_dif , \g_lane[5].u_add.u_cd.q [6:1], \g_lane[5].u_add.w_carry  } = _28979_;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].u_add.w_v  <= 1'h0;
+    _28980_ <= { \g_lane[5].u_add.u_cd.d [107:7], \g_lane[5].u_add.u_lzc.n , \g_lane[5].u_add.u_cd.d [0] };
+  assign { \g_lane[5].u_add.u_cd.g_rv.rd [107], \g_lane[5].u_add.w_byp , \g_lane[5].u_add.w_sub , \g_lane[5].u_add.w_sign , \g_lane[5].u_add.w_err , \g_lane[5].u_add.w_code , \g_lane[5].u_add.w_exp , \g_lane[5].u_add.w_add , \g_lane[5].u_add.w_dif , \g_lane[5].u_add.u_cd.q [6:1], \g_lane[5].u_add.w_carry  } = _28980_;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].u_add.w_v  <= 1'h0;
     else \g_lane[5].u_add.w_v  <= \g_lane[5].u_add.u_cd.d [107];
   assign \g_lane[5].u_add.u_cmp.g [191:161] = \g_lane[5].u_add.u_cmp.a  & \g_lane[5].u_add.u_cmp.b ;
   assign _07112_ = \g_lane[5].u_add.u_cmp.p [180] & \g_lane[5].u_add.u_cmp.g [179];
@@ -160593,10 +160611,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane_reg[5].u_mul.u_c2.d[227]  <= \g_lane[5].u_mul.u_c1.q [75];
   assign \g_lane[5].u_mul.u_c2.d [227] = \g_lane_reg[5].u_mul.u_c2.d[227] ;
-  reg [1:0] _30974_;
+  reg [1:0] _30975_;
   always @(posedge clk)
-    _30974_ <= \g_lane[5].u_mul.u_c1.q [74:73];
-  assign \g_lane[5].u_mul.u_c2.d [226:225] = _30974_;
+    _30975_ <= \g_lane[5].u_mul.u_c1.q [74:73];
+  assign \g_lane[5].u_mul.u_c2.d [226:225] = _30975_;
   always @(posedge clk)
     \g_lane[5].u_mul.s1_power  <= \g_lane[5].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -160606,18 +160624,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[5].u_mul.u_c2.d[224]  <= \g_lane[5].u_mul.u_c1.q [72];
   assign \g_lane[5].u_mul.u_c2.d [224] = \g_lane_reg[5].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[5].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c2.d[228]  <= \g_lane[5].u_mul.u_c1.q [76];
   assign \g_lane[5].u_mul.u_c2.d [228] = \g_lane_reg[5].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[5].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[5].u_mul.u_c3.d[41]  <= \g_lane[5].u_mul.u_c2.q [227];
   assign \g_lane[5].u_mul.u_c3.d [41] = \g_lane_reg[5].u_mul.u_c3.d[41] ;
-  reg [1:0] _30980_;
+  reg [1:0] _30981_;
   always @(posedge clk)
-    _30980_ <= \g_lane[5].u_mul.u_c2.q [226:225];
-  assign \g_lane[5].u_mul.u_c3.d [40:39] = _30980_;
+    _30981_ <= \g_lane[5].u_mul.u_c2.q [226:225];
+  assign \g_lane[5].u_mul.u_c3.d [40:39] = _30981_;
   always @(posedge clk)
     \g_lane[5].u_mul.s2_fl46  <= \g_lane[5].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -160626,10 +160644,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane[5].u_mul.s2_mr  <= \g_lane[5].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[5].u_mul.s2_ms  <= \g_lane[5].u_mul.u_c2.q [47:0];
-  reg [47:0] _30985_;
+  reg [47:0] _30986_;
   always @(posedge clk)
-    _30985_ <= \g_lane[5].u_mul.u_cpa.s ;
-  assign { \g_lane[5].u_mul.top , \g_lane[5].u_mul.s2_prod [46:0] } = _30985_;
+    _30986_ <= \g_lane[5].u_mul.u_cpa.s ;
+  assign { \g_lane[5].u_mul.top , \g_lane[5].u_mul.s2_prod [46:0] } = _30986_;
   always @(posedge clk)
     \g_lane[5].u_mul.s2_sh  <= \g_lane[5].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[5].u_mul.u_c3.d[38] ;
@@ -160641,12 +160659,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane[5].u_mul.s2_sub47  <= \g_lane[5].u_mul.u_c2.q [127];
   reg \g_lane_reg[5].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c3.d[42]  <= \g_lane[5].u_mul.u_c2.q [228];
   assign \g_lane[5].u_mul.u_c3.d [42] = \g_lane_reg[5].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane[5].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane[5].v0  <= 1'h0;
     else \g_lane[5].v0  <= \g_lane[5].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[5].u_mul.y  <= _07873_;
@@ -160792,49 +160810,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _07967_ = _07965_ | _07966_;
   assign _07968_ = { 17'h00000, \g_lane[5].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[5].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _07969_[47], \g_lane[5].u_mul.g_nokcp.u_rows.l1 [287:241] } = _07967_ | _07968_;
-  reg [76:0] _31135_;
+  reg [76:0] _31136_;
   always @(posedge clk)
-    _31135_ <= { \g_lane[5].u_mul.u_c5.q [86:82], \g_lane[5].u_mul.u_c1.d [71:24], \g_lane[5].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[5].u_mul.u_c1.g_rv.rd [76], \g_lane[5].u_mul.u_c1.q [75:24], \g_lane[5].u_mul.u_pw.a , \g_lane[5].u_mul.u_pw.b  } = _31135_;
+    _31136_ <= { \g_lane[5].u_mul.u_c5.q [86:82], \g_lane[5].u_mul.u_c1.d [71:24], \g_lane[5].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[5].u_mul.u_c1.g_rv.rd [76], \g_lane[5].u_mul.u_c1.q [75:24], \g_lane[5].u_mul.u_pw.a , \g_lane[5].u_mul.u_pw.b  } = _31136_;
   reg \g_lane_reg[5].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c1.q[76]  <= \g_lane[5].u_mul.u_c5.q [86];
   assign \g_lane[5].u_mul.u_c1.q [76] = \g_lane_reg[5].u_mul.u_c1.q[76] ;
-  reg [228:0] _31137_;
+  reg [228:0] _31138_;
   always @(posedge clk)
-    _31137_ <= { \g_lane[5].u_mul.u_c2.d [228:177], 1'h0, \g_lane[5].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[5].u_mul.u_c2.g_rv.rd [228], \g_lane[5].u_mul.u_c2.q [227:224], \g_lane[5].u_mul.u_cpa.b , \g_lane[5].u_mul.u_cpa.a , \g_lane[5].u_mul.u_c2.q [127:0] } = _31137_;
+    _31138_ <= { \g_lane[5].u_mul.u_c2.d [228:177], 1'h0, \g_lane[5].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[5].u_mul.u_c2.g_rv.rd [228], \g_lane[5].u_mul.u_c2.q [227:224], \g_lane[5].u_mul.u_cpa.b , \g_lane[5].u_mul.u_cpa.a , \g_lane[5].u_mul.u_c2.q [127:0] } = _31138_;
   reg \g_lane_reg[5].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c2.q[228]  <= \g_lane[5].u_mul.u_c2.d [228];
   assign \g_lane[5].u_mul.u_c2.q [228] = \g_lane_reg[5].u_mul.u_c2.q[228] ;
-  reg [42:0] _31139_;
+  reg [42:0] _31140_;
   always @(posedge clk)
-    _31139_ <= \g_lane[5].u_mul.u_c3.d ;
-  assign { \g_lane[5].u_mul.u_c3.g_rv.rd [42], \g_lane[5].u_mul.u_c4.d [41:25], \g_lane[5].u_mul.u_rnd.a , \g_lane[5].u_mul.u_rnd.g [0] } = _31139_;
+    _31140_ <= \g_lane[5].u_mul.u_c3.d ;
+  assign { \g_lane[5].u_mul.u_c3.g_rv.rd [42], \g_lane[5].u_mul.u_c4.d [41:25], \g_lane[5].u_mul.u_rnd.a , \g_lane[5].u_mul.u_rnd.g [0] } = _31140_;
   reg \g_lane_reg[5].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c4.d[42]  <= \g_lane[5].u_mul.u_c3.d [42];
   assign \g_lane[5].u_mul.u_c4.d [42] = \g_lane_reg[5].u_mul.u_c4.d[42] ;
-  reg [42:0] _31141_;
+  reg [42:0] _31142_;
   always @(posedge clk)
-    _31141_ <= { \g_lane[5].u_mul.u_c4.d [42:25], \g_lane[5].u_mul.u_rnd.s , \g_lane[5].u_mul.u_rnd.g [24] };
-  assign { \g_lane[5].u_mul.u_c4.g_rv.rd [42], \g_lane[5].u_mul.u_c6.q [35:33], \g_lane[5].u_mul.u_c4.q [38:0] } = _31141_;
+    _31142_ <= { \g_lane[5].u_mul.u_c4.d [42:25], \g_lane[5].u_mul.u_rnd.s , \g_lane[5].u_mul.u_rnd.g [24] };
+  assign { \g_lane[5].u_mul.u_c4.g_rv.rd [42], \g_lane[5].u_mul.u_c6.q [35:33], \g_lane[5].u_mul.u_c4.q [38:0] } = _31142_;
   reg \g_lane_reg[5].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c6.q[36]  <= \g_lane[5].u_mul.u_c4.d [42];
   assign \g_lane[5].u_mul.u_c6.q [36] = \g_lane_reg[5].u_mul.u_c6.q[36] ;
-  reg [86:0] _31143_;
+  reg [86:0] _31144_;
   always @(posedge clk)
-    _31143_ <= { gov, \g_lane[5].u_mul.u_c5.d [85:82], \g_lane[5].u_mul.u_la.x [31], \g_lane[5].u_mul.x_a [22:0], \g_lane[5].u_mul.u_lb.x [31], \g_lane[5].u_mul.x_b [22:0], \g_lane[5].u_mul.u_la.n [4:0], \g_lane[5].u_mul.u_lb.n [4:0], \g_lane[5].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[5].u_mul.u_c5.g_rv.rd [86], \g_lane[5].u_mul.u_c5.q [85:0] } = _31143_;
+    _31144_ <= { gov, \g_lane[5].u_mul.u_c5.d [85:82], \g_lane[5].u_mul.u_la.x [31], \g_lane[5].u_mul.x_a [22:0], \g_lane[5].u_mul.u_lb.x [31], \g_lane[5].u_mul.x_b [22:0], \g_lane[5].u_mul.u_la.n [4:0], \g_lane[5].u_mul.u_lb.n [4:0], \g_lane[5].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[5].u_mul.u_c5.g_rv.rd [86], \g_lane[5].u_mul.u_c5.q [85:0] } = _31144_;
   reg \g_lane_reg[5].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[5].u_mul.u_c7.rst_n )
-    if (!\g_lane[5].u_mul.u_c7.rst_n ) \g_lane_reg[5].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[5])
+    if (!lrnv[5]) \g_lane_reg[5].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[5].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[5].u_mul.u_c5.q [86] = \g_lane_reg[5].u_mul.u_c5.q[86] ;
   assign \g_lane[5].u_mul.u_cpa.g [342:295] = \g_lane[5].u_mul.u_cpa.a  & \g_lane[5].u_mul.u_cpa.b ;
@@ -162134,26 +162152,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_add.u_rnd.g [0] = \g_lane[6].u_add.s2_val [2] && _08499_;
   always @(posedge clk)
     \g_lane[6].u_add.err  <= _08502_;
-  reg [23:0] _32441_;
+  reg [23:0] _32442_;
   always @(posedge clk)
-    _32441_ <= _08488_;
-  assign \g_lane[6].u_add.u_sum.a [26:3] = _32441_;
+    _32442_ <= _08488_;
+  assign \g_lane[6].u_add.u_sum.a [26:3] = _32442_;
   reg \g_lane_reg[6].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cb.d[100]  <= \g_lane[6].u_add.x_byp ;
   assign \g_lane[6].u_add.u_cb.d [100] = \g_lane_reg[6].u_add.u_cb.d[100] ;
-  reg [31:0] _32443_;
+  reg [31:0] _32444_;
   always @(posedge clk)
-    _32443_ <= \g_lane[6].u_add.x_code ;
-  assign \g_lane[6].u_add.u_cb.d [95:64] = _32443_;
-  reg [1:0] _32444_;
+    _32444_ <= \g_lane[6].u_add.x_code ;
+  assign \g_lane[6].u_add.u_cb.d [95:64] = _32444_;
+  reg [1:0] _32445_;
   always @(posedge clk)
-    _32444_ <= \g_lane[6].u_add.x_err ;
-  assign \g_lane[6].u_add.u_cb.d [97:96] = _32444_;
-  reg [7:0] _32445_;
+    _32445_ <= \g_lane[6].u_add.x_err ;
+  assign \g_lane[6].u_add.u_cb.d [97:96] = _32445_;
+  reg [7:0] _32446_;
   always @(posedge clk)
-    _32445_ <= _08487_;
-  assign \g_lane[6].u_add.u_cb.d [63:56] = _32445_;
+    _32446_ <= _08487_;
+  assign \g_lane[6].u_add.u_cb.d [63:56] = _32446_;
   reg \g_lane_reg[6].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cb.d[98]  <= _08486_;
@@ -162165,45 +162183,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[6].u_add.u_cb.d[99]  <= \g_lane[6].u_add.x_sub ;
   assign \g_lane[6].u_add.u_cb.d [99] = \g_lane_reg[6].u_add.u_cb.d[99] ;
   reg \g_lane_reg[6].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[6].u_add.u_cb.d[101]  <= \g_lane[6].u_add.x_v ;
   assign \g_lane[6].u_add.u_cb.d [101] = \g_lane_reg[6].u_add.u_cb.d[101] ;
   reg \g_lane_reg[6].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cc.d[69]  <= \g_lane[6].u_add.w_byp ;
   assign \g_lane[6].u_add.u_cc.d [69] = \g_lane_reg[6].u_add.u_cc.d[69] ;
-  reg [31:0] _32451_;
+  reg [31:0] _32452_;
   always @(posedge clk)
-    _32451_ <= \g_lane[6].u_add.w_code ;
-  assign \g_lane[6].u_add.u_cc.d [64:33] = _32451_;
-  reg [1:0] _32452_;
+    _32452_ <= \g_lane[6].u_add.w_code ;
+  assign \g_lane[6].u_add.u_cc.d [64:33] = _32452_;
+  reg [1:0] _32453_;
   always @(posedge clk)
-    _32452_ <= \g_lane[6].u_add.w_err ;
-  assign { \g_lane[6].u_add.s2_err [1], \g_lane[6].u_add.u_cc.d [65] } = _32452_;
-  reg [7:0] _32453_;
+    _32453_ <= \g_lane[6].u_add.w_err ;
+  assign { \g_lane[6].u_add.s2_err [1], \g_lane[6].u_add.u_cc.d [65] } = _32453_;
+  reg [7:0] _32454_;
   always @(posedge clk)
-    _32453_ <= _08496_;
-  assign \g_lane[6].u_add.u_cc.d [32:25] = _32453_;
+    _32454_ <= _08496_;
+  assign \g_lane[6].u_add.u_cc.d [32:25] = _32454_;
   reg \g_lane_reg[6].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cc.d[67]  <= \g_lane[6].u_add.w_sign ;
   assign \g_lane[6].u_add.u_cc.d [67] = \g_lane_reg[6].u_add.u_cc.d[67] ;
   reg \g_lane_reg[6].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[6].u_add.u_cc.d[70]  <= \g_lane[6].u_add.w_v ;
   assign \g_lane[6].u_add.u_cc.d [70] = \g_lane_reg[6].u_add.u_cc.d[70] ;
-  reg [26:0] _32456_;
+  reg [26:0] _32457_;
   always @(posedge clk)
-    _32456_ <= _08497_;
-  assign { \g_lane[6].u_add.u_rnd.a , \g_lane[6].u_add.s2_val [2:0] } = _32456_;
+    _32457_ <= _08497_;
+  assign { \g_lane[6].u_add.u_rnd.a , \g_lane[6].u_add.s2_val [2:0] } = _32457_;
   reg \g_lane_reg[6].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[6].u_add.u_cc.d[68]  <= _08495_;
   assign \g_lane[6].u_add.u_cc.d [68] = \g_lane_reg[6].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].v1  <= 1'h0;
     else \g_lane[6].v1  <= \g_lane[6].u_add.u_v ;
   always @(posedge clk)
     y_l[223:192] <= _08511_;
@@ -162221,35 +162239,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _08511_ = \g_lane[6].u_add.u_cc.q [69] ? \g_lane[6].u_add.u_code  : _08510_;
   assign \g_lane[6].u_add.small_b  = _08477_ ? { 27'h0000000, _08478_ } : _08484_;
   assign \g_lane[6].u_add.small_a  = _08469_ ? { 27'h0000000, _08470_ } : _08476_;
-  reg [119:0] _32474_;
+  reg [119:0] _32475_;
   always @(posedge clk)
-    _32474_ <= { \g_lane[6].u_add.u_ca.d [119], \g_lane[6].v0 , \g_lane[6].u_add.u_ca.d [117:81], \g_lane[6].u_mul.y [31], \g_lane[6].u_add.u_dab.a , \g_lane[6].u_add.u_dba.a , \g_lane[6].u_add.u_ca.d [63], \g_lane[6].u_add.u_cmp.a [22:0], \g_lane[6].u_add.u_ca.d [39], \g_lane[6].u_mul.y [22:0], \g_lane[6].u_add.u_dab.s , \g_lane[6].u_add.u_dba.s  };
-  assign { \g_lane[6].u_add.x_swap , \g_lane[6].u_add.u_ca.g_rv.rd [118], \g_lane[6].u_add.x_byp , \g_lane[6].u_add.x_err , \g_lane[6].u_add.x_code , \g_lane[6].u_add.x_sub , \g_lane[6].u_add.x_as , \g_lane[6].u_add.x_bs , \g_lane[6].u_add.x_aexp , \g_lane[6].u_add.x_bexp , \g_lane[6].u_add.x_aman , \g_lane[6].u_add.x_bman , \g_lane[6].u_add.x_dab , \g_lane[6].u_add.x_dba  } = _32474_;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].u_add.x_v  <= 1'h0;
+    _32475_ <= { \g_lane[6].u_add.u_ca.d [119], \g_lane[6].v0 , \g_lane[6].u_add.u_ca.d [117:81], \g_lane[6].u_mul.y [31], \g_lane[6].u_add.u_dab.a , \g_lane[6].u_add.u_dba.a , \g_lane[6].u_add.u_ca.d [63], \g_lane[6].u_add.u_cmp.a [22:0], \g_lane[6].u_add.u_ca.d [39], \g_lane[6].u_mul.y [22:0], \g_lane[6].u_add.u_dab.s , \g_lane[6].u_add.u_dba.s  };
+  assign { \g_lane[6].u_add.x_swap , \g_lane[6].u_add.u_ca.g_rv.rd [118], \g_lane[6].u_add.x_byp , \g_lane[6].u_add.x_err , \g_lane[6].u_add.x_code , \g_lane[6].u_add.x_sub , \g_lane[6].u_add.x_as , \g_lane[6].u_add.x_bs , \g_lane[6].u_add.x_aexp , \g_lane[6].u_add.x_bexp , \g_lane[6].u_add.x_aman , \g_lane[6].u_add.x_bman , \g_lane[6].u_add.x_dab , \g_lane[6].u_add.x_dba  } = _32475_;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].u_add.x_v  <= 1'h0;
     else \g_lane[6].u_add.x_v  <= \g_lane[6].v0 ;
-  reg [101:0] _32476_;
+  reg [101:0] _32477_;
   always @(posedge clk)
-    _32476_ <= { \g_lane[6].u_add.u_cb.d [101:56], \g_lane[6].u_add.u_sum.s , \g_lane[6].u_add.u_dif.s  };
-  assign { \g_lane[6].u_add.u_cb.g_rv.rd [101], \g_lane[6].u_add.u_cd.d [106:62], \g_lane[6].u_add.u_cd.d [0], \g_lane[6].u_add.u_cb.q [54:28], \g_lane[6].u_add.u_cd.d [34:7] } = _32476_;
+    _32477_ <= { \g_lane[6].u_add.u_cb.d [101:56], \g_lane[6].u_add.u_sum.s , \g_lane[6].u_add.u_dif.s  };
+  assign { \g_lane[6].u_add.u_cb.g_rv.rd [101], \g_lane[6].u_add.u_cd.d [106:62], \g_lane[6].u_add.u_cd.d [0], \g_lane[6].u_add.u_cb.q [54:28], \g_lane[6].u_add.u_cd.d [34:7] } = _32477_;
   reg \g_lane_reg[6].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[6].u_add.u_cd.d[107]  <= \g_lane[6].u_add.u_cb.d [101];
   assign \g_lane[6].u_add.u_cd.d [107] = \g_lane_reg[6].u_add.u_cd.d[107] ;
-  reg [70:0] _32478_;
+  reg [70:0] _32479_;
   always @(posedge clk)
-    _32478_ <= { \g_lane[6].u_add.u_cc.d [70:67], 1'h0, \g_lane[6].u_add.u_cc.d [65:25], \g_lane[6].u_add.u_rnd.s , \g_lane[6].u_add.u_rnd.g [24] };
-  assign { \g_lane[6].u_add.u_cc.g_rv.rd [70], \g_lane[6].u_add.u_cc.q [69], \g_lane[6].u_add.u_zero , \g_lane[6].u_add.u_sign , \g_lane[6].u_add.u_err , \g_lane[6].u_add.u_code , \g_lane[6].u_add.u_exp , \g_lane[6].u_add.u_cc.q [24:0] } = _32478_;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].u_add.u_v  <= 1'h0;
+    _32479_ <= { \g_lane[6].u_add.u_cc.d [70:67], 1'h0, \g_lane[6].u_add.u_cc.d [65:25], \g_lane[6].u_add.u_rnd.s , \g_lane[6].u_add.u_rnd.g [24] };
+  assign { \g_lane[6].u_add.u_cc.g_rv.rd [70], \g_lane[6].u_add.u_cc.q [69], \g_lane[6].u_add.u_zero , \g_lane[6].u_add.u_sign , \g_lane[6].u_add.u_err , \g_lane[6].u_add.u_code , \g_lane[6].u_add.u_exp , \g_lane[6].u_add.u_cc.q [24:0] } = _32479_;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].u_add.u_v  <= 1'h0;
     else \g_lane[6].u_add.u_v  <= \g_lane[6].u_add.u_cc.d [70];
-  reg [107:0] _32480_;
+  reg [107:0] _32481_;
   always @(posedge clk)
-    _32480_ <= { \g_lane[6].u_add.u_cd.d [107:7], \g_lane[6].u_add.u_lzc.n , \g_lane[6].u_add.u_cd.d [0] };
-  assign { \g_lane[6].u_add.u_cd.g_rv.rd [107], \g_lane[6].u_add.w_byp , \g_lane[6].u_add.w_sub , \g_lane[6].u_add.w_sign , \g_lane[6].u_add.w_err , \g_lane[6].u_add.w_code , \g_lane[6].u_add.w_exp , \g_lane[6].u_add.w_add , \g_lane[6].u_add.w_dif , \g_lane[6].u_add.u_cd.q [6:1], \g_lane[6].u_add.w_carry  } = _32480_;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].u_add.w_v  <= 1'h0;
+    _32481_ <= { \g_lane[6].u_add.u_cd.d [107:7], \g_lane[6].u_add.u_lzc.n , \g_lane[6].u_add.u_cd.d [0] };
+  assign { \g_lane[6].u_add.u_cd.g_rv.rd [107], \g_lane[6].u_add.w_byp , \g_lane[6].u_add.w_sub , \g_lane[6].u_add.w_sign , \g_lane[6].u_add.w_err , \g_lane[6].u_add.w_code , \g_lane[6].u_add.w_exp , \g_lane[6].u_add.w_add , \g_lane[6].u_add.w_dif , \g_lane[6].u_add.u_cd.q [6:1], \g_lane[6].u_add.w_carry  } = _32481_;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].u_add.w_v  <= 1'h0;
     else \g_lane[6].u_add.w_v  <= \g_lane[6].u_add.u_cd.d [107];
   assign \g_lane[6].u_add.u_cmp.g [191:161] = \g_lane[6].u_add.u_cmp.a  & \g_lane[6].u_add.u_cmp.b ;
   assign _08512_ = \g_lane[6].u_add.u_cmp.p [180] & \g_lane[6].u_add.u_cmp.g [179];
@@ -164248,10 +164266,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane_reg[6].u_mul.u_c2.d[227]  <= \g_lane[6].u_mul.u_c1.q [75];
   assign \g_lane[6].u_mul.u_c2.d [227] = \g_lane_reg[6].u_mul.u_c2.d[227] ;
-  reg [1:0] _34475_;
+  reg [1:0] _34476_;
   always @(posedge clk)
-    _34475_ <= \g_lane[6].u_mul.u_c1.q [74:73];
-  assign \g_lane[6].u_mul.u_c2.d [226:225] = _34475_;
+    _34476_ <= \g_lane[6].u_mul.u_c1.q [74:73];
+  assign \g_lane[6].u_mul.u_c2.d [226:225] = _34476_;
   always @(posedge clk)
     \g_lane[6].u_mul.s1_power  <= \g_lane[6].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -164261,18 +164279,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[6].u_mul.u_c2.d[224]  <= \g_lane[6].u_mul.u_c1.q [72];
   assign \g_lane[6].u_mul.u_c2.d [224] = \g_lane_reg[6].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[6].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c2.d[228]  <= \g_lane[6].u_mul.u_c1.q [76];
   assign \g_lane[6].u_mul.u_c2.d [228] = \g_lane_reg[6].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[6].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[6].u_mul.u_c3.d[41]  <= \g_lane[6].u_mul.u_c2.q [227];
   assign \g_lane[6].u_mul.u_c3.d [41] = \g_lane_reg[6].u_mul.u_c3.d[41] ;
-  reg [1:0] _34481_;
+  reg [1:0] _34482_;
   always @(posedge clk)
-    _34481_ <= \g_lane[6].u_mul.u_c2.q [226:225];
-  assign \g_lane[6].u_mul.u_c3.d [40:39] = _34481_;
+    _34482_ <= \g_lane[6].u_mul.u_c2.q [226:225];
+  assign \g_lane[6].u_mul.u_c3.d [40:39] = _34482_;
   always @(posedge clk)
     \g_lane[6].u_mul.s2_fl46  <= \g_lane[6].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -164281,10 +164299,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane[6].u_mul.s2_mr  <= \g_lane[6].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[6].u_mul.s2_ms  <= \g_lane[6].u_mul.u_c2.q [47:0];
-  reg [47:0] _34486_;
+  reg [47:0] _34487_;
   always @(posedge clk)
-    _34486_ <= \g_lane[6].u_mul.u_cpa.s ;
-  assign { \g_lane[6].u_mul.top , \g_lane[6].u_mul.s2_prod [46:0] } = _34486_;
+    _34487_ <= \g_lane[6].u_mul.u_cpa.s ;
+  assign { \g_lane[6].u_mul.top , \g_lane[6].u_mul.s2_prod [46:0] } = _34487_;
   always @(posedge clk)
     \g_lane[6].u_mul.s2_sh  <= \g_lane[6].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[6].u_mul.u_c3.d[38] ;
@@ -164296,12 +164314,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane[6].u_mul.s2_sub47  <= \g_lane[6].u_mul.u_c2.q [127];
   reg \g_lane_reg[6].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c3.d[42]  <= \g_lane[6].u_mul.u_c2.q [228];
   assign \g_lane[6].u_mul.u_c3.d [42] = \g_lane_reg[6].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane[6].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane[6].v0  <= 1'h0;
     else \g_lane[6].v0  <= \g_lane[6].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[6].u_mul.y  <= _09273_;
@@ -164447,49 +164465,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _09367_ = _09365_ | _09366_;
   assign _09368_ = { 17'h00000, \g_lane[6].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[6].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _09369_[47], \g_lane[6].u_mul.g_nokcp.u_rows.l1 [287:241] } = _09367_ | _09368_;
-  reg [76:0] _34636_;
+  reg [76:0] _34637_;
   always @(posedge clk)
-    _34636_ <= { \g_lane[6].u_mul.u_c5.q [86:82], \g_lane[6].u_mul.u_c1.d [71:24], \g_lane[6].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[6].u_mul.u_c1.g_rv.rd [76], \g_lane[6].u_mul.u_c1.q [75:24], \g_lane[6].u_mul.u_pw.a , \g_lane[6].u_mul.u_pw.b  } = _34636_;
+    _34637_ <= { \g_lane[6].u_mul.u_c5.q [86:82], \g_lane[6].u_mul.u_c1.d [71:24], \g_lane[6].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[6].u_mul.u_c1.g_rv.rd [76], \g_lane[6].u_mul.u_c1.q [75:24], \g_lane[6].u_mul.u_pw.a , \g_lane[6].u_mul.u_pw.b  } = _34637_;
   reg \g_lane_reg[6].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c1.q[76]  <= \g_lane[6].u_mul.u_c5.q [86];
   assign \g_lane[6].u_mul.u_c1.q [76] = \g_lane_reg[6].u_mul.u_c1.q[76] ;
-  reg [228:0] _34638_;
+  reg [228:0] _34639_;
   always @(posedge clk)
-    _34638_ <= { \g_lane[6].u_mul.u_c2.d [228:177], 1'h0, \g_lane[6].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[6].u_mul.u_c2.g_rv.rd [228], \g_lane[6].u_mul.u_c2.q [227:224], \g_lane[6].u_mul.u_cpa.b , \g_lane[6].u_mul.u_cpa.a , \g_lane[6].u_mul.u_c2.q [127:0] } = _34638_;
+    _34639_ <= { \g_lane[6].u_mul.u_c2.d [228:177], 1'h0, \g_lane[6].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[6].u_mul.u_c2.g_rv.rd [228], \g_lane[6].u_mul.u_c2.q [227:224], \g_lane[6].u_mul.u_cpa.b , \g_lane[6].u_mul.u_cpa.a , \g_lane[6].u_mul.u_c2.q [127:0] } = _34639_;
   reg \g_lane_reg[6].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c2.q[228]  <= \g_lane[6].u_mul.u_c2.d [228];
   assign \g_lane[6].u_mul.u_c2.q [228] = \g_lane_reg[6].u_mul.u_c2.q[228] ;
-  reg [42:0] _34640_;
+  reg [42:0] _34641_;
   always @(posedge clk)
-    _34640_ <= \g_lane[6].u_mul.u_c3.d ;
-  assign { \g_lane[6].u_mul.u_c3.g_rv.rd [42], \g_lane[6].u_mul.u_c4.d [41:25], \g_lane[6].u_mul.u_rnd.a , \g_lane[6].u_mul.u_rnd.g [0] } = _34640_;
+    _34641_ <= \g_lane[6].u_mul.u_c3.d ;
+  assign { \g_lane[6].u_mul.u_c3.g_rv.rd [42], \g_lane[6].u_mul.u_c4.d [41:25], \g_lane[6].u_mul.u_rnd.a , \g_lane[6].u_mul.u_rnd.g [0] } = _34641_;
   reg \g_lane_reg[6].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c4.d[42]  <= \g_lane[6].u_mul.u_c3.d [42];
   assign \g_lane[6].u_mul.u_c4.d [42] = \g_lane_reg[6].u_mul.u_c4.d[42] ;
-  reg [42:0] _34642_;
+  reg [42:0] _34643_;
   always @(posedge clk)
-    _34642_ <= { \g_lane[6].u_mul.u_c4.d [42:25], \g_lane[6].u_mul.u_rnd.s , \g_lane[6].u_mul.u_rnd.g [24] };
-  assign { \g_lane[6].u_mul.u_c4.g_rv.rd [42], \g_lane[6].u_mul.u_c6.q [35:33], \g_lane[6].u_mul.u_c4.q [38:0] } = _34642_;
+    _34643_ <= { \g_lane[6].u_mul.u_c4.d [42:25], \g_lane[6].u_mul.u_rnd.s , \g_lane[6].u_mul.u_rnd.g [24] };
+  assign { \g_lane[6].u_mul.u_c4.g_rv.rd [42], \g_lane[6].u_mul.u_c6.q [35:33], \g_lane[6].u_mul.u_c4.q [38:0] } = _34643_;
   reg \g_lane_reg[6].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c6.q[36]  <= \g_lane[6].u_mul.u_c4.d [42];
   assign \g_lane[6].u_mul.u_c6.q [36] = \g_lane_reg[6].u_mul.u_c6.q[36] ;
-  reg [86:0] _34644_;
+  reg [86:0] _34645_;
   always @(posedge clk)
-    _34644_ <= { gov, \g_lane[6].u_mul.u_c5.d [85:82], \g_lane[6].u_mul.u_la.x [31], \g_lane[6].u_mul.x_a [22:0], \g_lane[6].u_mul.u_lb.x [31], \g_lane[6].u_mul.x_b [22:0], \g_lane[6].u_mul.u_la.n [4:0], \g_lane[6].u_mul.u_lb.n [4:0], \g_lane[6].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[6].u_mul.u_c5.g_rv.rd [86], \g_lane[6].u_mul.u_c5.q [85:0] } = _34644_;
+    _34645_ <= { gov, \g_lane[6].u_mul.u_c5.d [85:82], \g_lane[6].u_mul.u_la.x [31], \g_lane[6].u_mul.x_a [22:0], \g_lane[6].u_mul.u_lb.x [31], \g_lane[6].u_mul.x_b [22:0], \g_lane[6].u_mul.u_la.n [4:0], \g_lane[6].u_mul.u_lb.n [4:0], \g_lane[6].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[6].u_mul.u_c5.g_rv.rd [86], \g_lane[6].u_mul.u_c5.q [85:0] } = _34645_;
   reg \g_lane_reg[6].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[6].u_mul.u_c7.rst_n )
-    if (!\g_lane[6].u_mul.u_c7.rst_n ) \g_lane_reg[6].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[6])
+    if (!lrnv[6]) \g_lane_reg[6].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[6].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[6].u_mul.u_c5.q [86] = \g_lane_reg[6].u_mul.u_c5.q[86] ;
   assign \g_lane[6].u_mul.u_cpa.g [342:295] = \g_lane[6].u_mul.u_cpa.a  & \g_lane[6].u_mul.u_cpa.b ;
@@ -165789,26 +165807,26 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_add.u_rnd.g [0] = \g_lane[7].u_add.s2_val [2] && _09899_;
   always @(posedge clk)
     \g_lane[7].u_add.err  <= _09902_;
-  reg [23:0] _35942_;
+  reg [23:0] _35943_;
   always @(posedge clk)
-    _35942_ <= _09888_;
-  assign \g_lane[7].u_add.u_sum.a [26:3] = _35942_;
+    _35943_ <= _09888_;
+  assign \g_lane[7].u_add.u_sum.a [26:3] = _35943_;
   reg \g_lane_reg[7].u_add.u_cb.d[100] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cb.d[100]  <= \g_lane[7].u_add.x_byp ;
   assign \g_lane[7].u_add.u_cb.d [100] = \g_lane_reg[7].u_add.u_cb.d[100] ;
-  reg [31:0] _35944_;
+  reg [31:0] _35945_;
   always @(posedge clk)
-    _35944_ <= \g_lane[7].u_add.x_code ;
-  assign \g_lane[7].u_add.u_cb.d [95:64] = _35944_;
-  reg [1:0] _35945_;
+    _35945_ <= \g_lane[7].u_add.x_code ;
+  assign \g_lane[7].u_add.u_cb.d [95:64] = _35945_;
+  reg [1:0] _35946_;
   always @(posedge clk)
-    _35945_ <= \g_lane[7].u_add.x_err ;
-  assign \g_lane[7].u_add.u_cb.d [97:96] = _35945_;
-  reg [7:0] _35946_;
+    _35946_ <= \g_lane[7].u_add.x_err ;
+  assign \g_lane[7].u_add.u_cb.d [97:96] = _35946_;
+  reg [7:0] _35947_;
   always @(posedge clk)
-    _35946_ <= _09887_;
-  assign \g_lane[7].u_add.u_cb.d [63:56] = _35946_;
+    _35947_ <= _09887_;
+  assign \g_lane[7].u_add.u_cb.d [63:56] = _35947_;
   reg \g_lane_reg[7].u_add.u_cb.d[98] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cb.d[98]  <= _09886_;
@@ -165820,45 +165838,45 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[7].u_add.u_cb.d[99]  <= \g_lane[7].u_add.x_sub ;
   assign \g_lane[7].u_add.u_cb.d [99] = \g_lane_reg[7].u_add.u_cb.d[99] ;
   reg \g_lane_reg[7].u_add.u_cb.d[101] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_add.u_cb.d[101]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_add.u_cb.d[101]  <= 1'h0;
     else \g_lane_reg[7].u_add.u_cb.d[101]  <= \g_lane[7].u_add.x_v ;
   assign \g_lane[7].u_add.u_cb.d [101] = \g_lane_reg[7].u_add.u_cb.d[101] ;
   reg \g_lane_reg[7].u_add.u_cc.d[69] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cc.d[69]  <= \g_lane[7].u_add.w_byp ;
   assign \g_lane[7].u_add.u_cc.d [69] = \g_lane_reg[7].u_add.u_cc.d[69] ;
-  reg [31:0] _35952_;
+  reg [31:0] _35953_;
   always @(posedge clk)
-    _35952_ <= \g_lane[7].u_add.w_code ;
-  assign \g_lane[7].u_add.u_cc.d [64:33] = _35952_;
-  reg [1:0] _35953_;
+    _35953_ <= \g_lane[7].u_add.w_code ;
+  assign \g_lane[7].u_add.u_cc.d [64:33] = _35953_;
+  reg [1:0] _35954_;
   always @(posedge clk)
-    _35953_ <= \g_lane[7].u_add.w_err ;
-  assign { \g_lane[7].u_add.s2_err [1], \g_lane[7].u_add.u_cc.d [65] } = _35953_;
-  reg [7:0] _35954_;
+    _35954_ <= \g_lane[7].u_add.w_err ;
+  assign { \g_lane[7].u_add.s2_err [1], \g_lane[7].u_add.u_cc.d [65] } = _35954_;
+  reg [7:0] _35955_;
   always @(posedge clk)
-    _35954_ <= _09896_;
-  assign \g_lane[7].u_add.u_cc.d [32:25] = _35954_;
+    _35955_ <= _09896_;
+  assign \g_lane[7].u_add.u_cc.d [32:25] = _35955_;
   reg \g_lane_reg[7].u_add.u_cc.d[67] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cc.d[67]  <= \g_lane[7].u_add.w_sign ;
   assign \g_lane[7].u_add.u_cc.d [67] = \g_lane_reg[7].u_add.u_cc.d[67] ;
   reg \g_lane_reg[7].u_add.u_cc.d[70] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_add.u_cc.d[70]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_add.u_cc.d[70]  <= 1'h0;
     else \g_lane_reg[7].u_add.u_cc.d[70]  <= \g_lane[7].u_add.w_v ;
   assign \g_lane[7].u_add.u_cc.d [70] = \g_lane_reg[7].u_add.u_cc.d[70] ;
-  reg [26:0] _35957_;
+  reg [26:0] _35958_;
   always @(posedge clk)
-    _35957_ <= _09897_;
-  assign { \g_lane[7].u_add.u_rnd.a , \g_lane[7].u_add.s2_val [2:0] } = _35957_;
+    _35958_ <= _09897_;
+  assign { \g_lane[7].u_add.u_rnd.a , \g_lane[7].u_add.s2_val [2:0] } = _35958_;
   reg \g_lane_reg[7].u_add.u_cc.d[68] ;
   always @(posedge clk)
     \g_lane_reg[7].u_add.u_cc.d[68]  <= _09895_;
   assign \g_lane[7].u_add.u_cc.d [68] = \g_lane_reg[7].u_add.u_cc.d[68] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].v1  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].v1  <= 1'h0;
     else \g_lane[7].v1  <= \g_lane[7].u_add.u_v ;
   always @(posedge clk)
     y_l[255:224] <= _09911_;
@@ -165876,35 +165894,35 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _09911_ = \g_lane[7].u_add.u_cc.q [69] ? \g_lane[7].u_add.u_code  : _09910_;
   assign \g_lane[7].u_add.small_b  = _09877_ ? { 27'h0000000, _09878_ } : _09884_;
   assign \g_lane[7].u_add.small_a  = _09869_ ? { 27'h0000000, _09870_ } : _09876_;
-  reg [119:0] _35975_;
+  reg [119:0] _35976_;
   always @(posedge clk)
-    _35975_ <= { \g_lane[7].u_add.u_ca.d [119], \g_lane[7].v0 , \g_lane[7].u_add.u_ca.d [117:81], \g_lane[7].u_mul.y [31], \g_lane[7].u_add.u_dab.a , \g_lane[7].u_add.u_dba.a , \g_lane[7].u_add.u_ca.d [63], \g_lane[7].u_add.u_cmp.a [22:0], \g_lane[7].u_add.u_ca.d [39], \g_lane[7].u_mul.y [22:0], \g_lane[7].u_add.u_dab.s , \g_lane[7].u_add.u_dba.s  };
-  assign { \g_lane[7].u_add.x_swap , \g_lane[7].u_add.u_ca.g_rv.rd [118], \g_lane[7].u_add.x_byp , \g_lane[7].u_add.x_err , \g_lane[7].u_add.x_code , \g_lane[7].u_add.x_sub , \g_lane[7].u_add.x_as , \g_lane[7].u_add.x_bs , \g_lane[7].u_add.x_aexp , \g_lane[7].u_add.x_bexp , \g_lane[7].u_add.x_aman , \g_lane[7].u_add.x_bman , \g_lane[7].u_add.x_dab , \g_lane[7].u_add.x_dba  } = _35975_;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].u_add.x_v  <= 1'h0;
+    _35976_ <= { \g_lane[7].u_add.u_ca.d [119], \g_lane[7].v0 , \g_lane[7].u_add.u_ca.d [117:81], \g_lane[7].u_mul.y [31], \g_lane[7].u_add.u_dab.a , \g_lane[7].u_add.u_dba.a , \g_lane[7].u_add.u_ca.d [63], \g_lane[7].u_add.u_cmp.a [22:0], \g_lane[7].u_add.u_ca.d [39], \g_lane[7].u_mul.y [22:0], \g_lane[7].u_add.u_dab.s , \g_lane[7].u_add.u_dba.s  };
+  assign { \g_lane[7].u_add.x_swap , \g_lane[7].u_add.u_ca.g_rv.rd [118], \g_lane[7].u_add.x_byp , \g_lane[7].u_add.x_err , \g_lane[7].u_add.x_code , \g_lane[7].u_add.x_sub , \g_lane[7].u_add.x_as , \g_lane[7].u_add.x_bs , \g_lane[7].u_add.x_aexp , \g_lane[7].u_add.x_bexp , \g_lane[7].u_add.x_aman , \g_lane[7].u_add.x_bman , \g_lane[7].u_add.x_dab , \g_lane[7].u_add.x_dba  } = _35976_;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].u_add.x_v  <= 1'h0;
     else \g_lane[7].u_add.x_v  <= \g_lane[7].v0 ;
-  reg [101:0] _35977_;
+  reg [101:0] _35978_;
   always @(posedge clk)
-    _35977_ <= { \g_lane[7].u_add.u_cb.d [101:56], \g_lane[7].u_add.u_sum.s , \g_lane[7].u_add.u_dif.s  };
-  assign { \g_lane[7].u_add.u_cb.g_rv.rd [101], \g_lane[7].u_add.u_cd.d [106:62], \g_lane[7].u_add.u_cd.d [0], \g_lane[7].u_add.u_cb.q [54:28], \g_lane[7].u_add.u_cd.d [34:7] } = _35977_;
+    _35978_ <= { \g_lane[7].u_add.u_cb.d [101:56], \g_lane[7].u_add.u_sum.s , \g_lane[7].u_add.u_dif.s  };
+  assign { \g_lane[7].u_add.u_cb.g_rv.rd [101], \g_lane[7].u_add.u_cd.d [106:62], \g_lane[7].u_add.u_cd.d [0], \g_lane[7].u_add.u_cb.q [54:28], \g_lane[7].u_add.u_cd.d [34:7] } = _35978_;
   reg \g_lane_reg[7].u_add.u_cd.d[107] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_add.u_cd.d[107]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_add.u_cd.d[107]  <= 1'h0;
     else \g_lane_reg[7].u_add.u_cd.d[107]  <= \g_lane[7].u_add.u_cb.d [101];
   assign \g_lane[7].u_add.u_cd.d [107] = \g_lane_reg[7].u_add.u_cd.d[107] ;
-  reg [70:0] _35979_;
+  reg [70:0] _35980_;
   always @(posedge clk)
-    _35979_ <= { \g_lane[7].u_add.u_cc.d [70:67], 1'h0, \g_lane[7].u_add.u_cc.d [65:25], \g_lane[7].u_add.u_rnd.s , \g_lane[7].u_add.u_rnd.g [24] };
-  assign { \g_lane[7].u_add.u_cc.g_rv.rd [70], \g_lane[7].u_add.u_cc.q [69], \g_lane[7].u_add.u_zero , \g_lane[7].u_add.u_sign , \g_lane[7].u_add.u_err , \g_lane[7].u_add.u_code , \g_lane[7].u_add.u_exp , \g_lane[7].u_add.u_cc.q [24:0] } = _35979_;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].u_add.u_v  <= 1'h0;
+    _35980_ <= { \g_lane[7].u_add.u_cc.d [70:67], 1'h0, \g_lane[7].u_add.u_cc.d [65:25], \g_lane[7].u_add.u_rnd.s , \g_lane[7].u_add.u_rnd.g [24] };
+  assign { \g_lane[7].u_add.u_cc.g_rv.rd [70], \g_lane[7].u_add.u_cc.q [69], \g_lane[7].u_add.u_zero , \g_lane[7].u_add.u_sign , \g_lane[7].u_add.u_err , \g_lane[7].u_add.u_code , \g_lane[7].u_add.u_exp , \g_lane[7].u_add.u_cc.q [24:0] } = _35980_;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].u_add.u_v  <= 1'h0;
     else \g_lane[7].u_add.u_v  <= \g_lane[7].u_add.u_cc.d [70];
-  reg [107:0] _35981_;
+  reg [107:0] _35982_;
   always @(posedge clk)
-    _35981_ <= { \g_lane[7].u_add.u_cd.d [107:7], \g_lane[7].u_add.u_lzc.n , \g_lane[7].u_add.u_cd.d [0] };
-  assign { \g_lane[7].u_add.u_cd.g_rv.rd [107], \g_lane[7].u_add.w_byp , \g_lane[7].u_add.w_sub , \g_lane[7].u_add.w_sign , \g_lane[7].u_add.w_err , \g_lane[7].u_add.w_code , \g_lane[7].u_add.w_exp , \g_lane[7].u_add.w_add , \g_lane[7].u_add.w_dif , \g_lane[7].u_add.u_cd.q [6:1], \g_lane[7].u_add.w_carry  } = _35981_;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].u_add.w_v  <= 1'h0;
+    _35982_ <= { \g_lane[7].u_add.u_cd.d [107:7], \g_lane[7].u_add.u_lzc.n , \g_lane[7].u_add.u_cd.d [0] };
+  assign { \g_lane[7].u_add.u_cd.g_rv.rd [107], \g_lane[7].u_add.w_byp , \g_lane[7].u_add.w_sub , \g_lane[7].u_add.w_sign , \g_lane[7].u_add.w_err , \g_lane[7].u_add.w_code , \g_lane[7].u_add.w_exp , \g_lane[7].u_add.w_add , \g_lane[7].u_add.w_dif , \g_lane[7].u_add.u_cd.q [6:1], \g_lane[7].u_add.w_carry  } = _35982_;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].u_add.w_v  <= 1'h0;
     else \g_lane[7].u_add.w_v  <= \g_lane[7].u_add.u_cd.d [107];
   assign \g_lane[7].u_add.u_cmp.g [191:161] = \g_lane[7].u_add.u_cmp.a  & \g_lane[7].u_add.u_cmp.b ;
   assign _09912_ = \g_lane[7].u_add.u_cmp.p [180] & \g_lane[7].u_add.u_cmp.g [179];
@@ -167903,10 +167921,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane_reg[7].u_mul.u_c2.d[227]  <= \g_lane[7].u_mul.u_c1.q [75];
   assign \g_lane[7].u_mul.u_c2.d [227] = \g_lane_reg[7].u_mul.u_c2.d[227] ;
-  reg [1:0] _37976_;
+  reg [1:0] _37977_;
   always @(posedge clk)
-    _37976_ <= \g_lane[7].u_mul.u_c1.q [74:73];
-  assign \g_lane[7].u_mul.u_c2.d [226:225] = _37976_;
+    _37977_ <= \g_lane[7].u_mul.u_c1.q [74:73];
+  assign \g_lane[7].u_mul.u_c2.d [226:225] = _37977_;
   always @(posedge clk)
     \g_lane[7].u_mul.s1_power  <= \g_lane[7].u_mul.u_pw.s ;
   always @(posedge clk)
@@ -167916,18 +167934,18 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane_reg[7].u_mul.u_c2.d[224]  <= \g_lane[7].u_mul.u_c1.q [72];
   assign \g_lane[7].u_mul.u_c2.d [224] = \g_lane_reg[7].u_mul.u_c2.d[224] ;
   reg \g_lane_reg[7].u_mul.u_c2.d[228] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c2.d[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c2.d[228]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c2.d[228]  <= \g_lane[7].u_mul.u_c1.q [76];
   assign \g_lane[7].u_mul.u_c2.d [228] = \g_lane_reg[7].u_mul.u_c2.d[228] ;
   reg \g_lane_reg[7].u_mul.u_c3.d[41] ;
   always @(posedge clk)
     \g_lane_reg[7].u_mul.u_c3.d[41]  <= \g_lane[7].u_mul.u_c2.q [227];
   assign \g_lane[7].u_mul.u_c3.d [41] = \g_lane_reg[7].u_mul.u_c3.d[41] ;
-  reg [1:0] _37982_;
+  reg [1:0] _37983_;
   always @(posedge clk)
-    _37982_ <= \g_lane[7].u_mul.u_c2.q [226:225];
-  assign \g_lane[7].u_mul.u_c3.d [40:39] = _37982_;
+    _37983_ <= \g_lane[7].u_mul.u_c2.q [226:225];
+  assign \g_lane[7].u_mul.u_c3.d [40:39] = _37983_;
   always @(posedge clk)
     \g_lane[7].u_mul.s2_fl46  <= \g_lane[7].u_mul.u_c2.q [113:102];
   always @(posedge clk)
@@ -167936,10 +167954,10 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
     \g_lane[7].u_mul.s2_mr  <= \g_lane[7].u_mul.u_c2.q [95:48];
   always @(posedge clk)
     \g_lane[7].u_mul.s2_ms  <= \g_lane[7].u_mul.u_c2.q [47:0];
-  reg [47:0] _37987_;
+  reg [47:0] _37988_;
   always @(posedge clk)
-    _37987_ <= \g_lane[7].u_mul.u_cpa.s ;
-  assign { \g_lane[7].u_mul.top , \g_lane[7].u_mul.s2_prod [46:0] } = _37987_;
+    _37988_ <= \g_lane[7].u_mul.u_cpa.s ;
+  assign { \g_lane[7].u_mul.top , \g_lane[7].u_mul.s2_prod [46:0] } = _37988_;
   always @(posedge clk)
     \g_lane[7].u_mul.s2_sh  <= \g_lane[7].u_mul.u_c2.q [101:96];
   reg \g_lane_reg[7].u_mul.u_c3.d[38] ;
@@ -167951,12 +167969,12 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   always @(posedge clk)
     \g_lane[7].u_mul.s2_sub47  <= \g_lane[7].u_mul.u_c2.q [127];
   reg \g_lane_reg[7].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c3.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c3.d[42]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c3.d[42]  <= \g_lane[7].u_mul.u_c2.q [228];
   assign \g_lane[7].u_mul.u_c3.d [42] = \g_lane_reg[7].u_mul.u_c3.d[42] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane[7].v0  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane[7].v0  <= 1'h0;
     else \g_lane[7].v0  <= \g_lane[7].u_mul.u_c6.q [36];
   always @(posedge clk)
     \g_lane[7].u_mul.y  <= _10673_;
@@ -168102,49 +168120,49 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign _10767_ = _10765_ | _10766_;
   assign _10768_ = { 17'h00000, \g_lane[7].u_mul.g_nokcp.u_rows.l0 [366:343], 7'h00 } & { 16'h0000, \g_lane[7].u_mul.g_nokcp.u_rows.l0 [415:392], 8'h00 };
   assign { _10769_[47], \g_lane[7].u_mul.g_nokcp.u_rows.l1 [287:241] } = _10767_ | _10768_;
-  reg [76:0] _38137_;
+  reg [76:0] _38138_;
   always @(posedge clk)
-    _38137_ <= { \g_lane[7].u_mul.u_c5.q [86:82], \g_lane[7].u_mul.u_c1.d [71:24], \g_lane[7].u_mul.u_c5.q [23:0] };
-  assign { \g_lane[7].u_mul.u_c1.g_rv.rd [76], \g_lane[7].u_mul.u_c1.q [75:24], \g_lane[7].u_mul.u_pw.a , \g_lane[7].u_mul.u_pw.b  } = _38137_;
+    _38138_ <= { \g_lane[7].u_mul.u_c5.q [86:82], \g_lane[7].u_mul.u_c1.d [71:24], \g_lane[7].u_mul.u_c5.q [23:0] };
+  assign { \g_lane[7].u_mul.u_c1.g_rv.rd [76], \g_lane[7].u_mul.u_c1.q [75:24], \g_lane[7].u_mul.u_pw.a , \g_lane[7].u_mul.u_pw.b  } = _38138_;
   reg \g_lane_reg[7].u_mul.u_c1.q[76] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c1.q[76]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c1.q[76]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c1.q[76]  <= \g_lane[7].u_mul.u_c5.q [86];
   assign \g_lane[7].u_mul.u_c1.q [76] = \g_lane_reg[7].u_mul.u_c1.q[76] ;
-  reg [228:0] _38139_;
+  reg [228:0] _38140_;
   always @(posedge clk)
-    _38139_ <= { \g_lane[7].u_mul.u_c2.d [228:177], 1'h0, \g_lane[7].u_mul.u_c2.d [175:0] };
-  assign { \g_lane[7].u_mul.u_c2.g_rv.rd [228], \g_lane[7].u_mul.u_c2.q [227:224], \g_lane[7].u_mul.u_cpa.b , \g_lane[7].u_mul.u_cpa.a , \g_lane[7].u_mul.u_c2.q [127:0] } = _38139_;
+    _38140_ <= { \g_lane[7].u_mul.u_c2.d [228:177], 1'h0, \g_lane[7].u_mul.u_c2.d [175:0] };
+  assign { \g_lane[7].u_mul.u_c2.g_rv.rd [228], \g_lane[7].u_mul.u_c2.q [227:224], \g_lane[7].u_mul.u_cpa.b , \g_lane[7].u_mul.u_cpa.a , \g_lane[7].u_mul.u_c2.q [127:0] } = _38140_;
   reg \g_lane_reg[7].u_mul.u_c2.q[228] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c2.q[228]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c2.q[228]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c2.q[228]  <= \g_lane[7].u_mul.u_c2.d [228];
   assign \g_lane[7].u_mul.u_c2.q [228] = \g_lane_reg[7].u_mul.u_c2.q[228] ;
-  reg [42:0] _38141_;
+  reg [42:0] _38142_;
   always @(posedge clk)
-    _38141_ <= \g_lane[7].u_mul.u_c3.d ;
-  assign { \g_lane[7].u_mul.u_c3.g_rv.rd [42], \g_lane[7].u_mul.u_c4.d [41:25], \g_lane[7].u_mul.u_rnd.a , \g_lane[7].u_mul.u_rnd.g [0] } = _38141_;
+    _38142_ <= \g_lane[7].u_mul.u_c3.d ;
+  assign { \g_lane[7].u_mul.u_c3.g_rv.rd [42], \g_lane[7].u_mul.u_c4.d [41:25], \g_lane[7].u_mul.u_rnd.a , \g_lane[7].u_mul.u_rnd.g [0] } = _38142_;
   reg \g_lane_reg[7].u_mul.u_c4.d[42] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c4.d[42]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c4.d[42]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c4.d[42]  <= \g_lane[7].u_mul.u_c3.d [42];
   assign \g_lane[7].u_mul.u_c4.d [42] = \g_lane_reg[7].u_mul.u_c4.d[42] ;
-  reg [42:0] _38143_;
+  reg [42:0] _38144_;
   always @(posedge clk)
-    _38143_ <= { \g_lane[7].u_mul.u_c4.d [42:25], \g_lane[7].u_mul.u_rnd.s , \g_lane[7].u_mul.u_rnd.g [24] };
-  assign { \g_lane[7].u_mul.u_c4.g_rv.rd [42], \g_lane[7].u_mul.u_c6.q [35:33], \g_lane[7].u_mul.u_c4.q [38:0] } = _38143_;
+    _38144_ <= { \g_lane[7].u_mul.u_c4.d [42:25], \g_lane[7].u_mul.u_rnd.s , \g_lane[7].u_mul.u_rnd.g [24] };
+  assign { \g_lane[7].u_mul.u_c4.g_rv.rd [42], \g_lane[7].u_mul.u_c6.q [35:33], \g_lane[7].u_mul.u_c4.q [38:0] } = _38144_;
   reg \g_lane_reg[7].u_mul.u_c6.q[36] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c6.q[36]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c6.q[36]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c6.q[36]  <= \g_lane[7].u_mul.u_c4.d [42];
   assign \g_lane[7].u_mul.u_c6.q [36] = \g_lane_reg[7].u_mul.u_c6.q[36] ;
-  reg [86:0] _38145_;
+  reg [86:0] _38146_;
   always @(posedge clk)
-    _38145_ <= { gov, \g_lane[7].u_mul.u_c5.d [85:82], \g_lane[7].u_mul.u_la.x [31], \g_lane[7].u_mul.x_a [22:0], \g_lane[7].u_mul.u_lb.x [31], \g_lane[7].u_mul.x_b [22:0], \g_lane[7].u_mul.u_la.n [4:0], \g_lane[7].u_mul.u_lb.n [4:0], \g_lane[7].u_mul.u_c5.d [23:0] };
-  assign { \g_lane[7].u_mul.u_c5.g_rv.rd [86], \g_lane[7].u_mul.u_c5.q [85:0] } = _38145_;
+    _38146_ <= { gov, \g_lane[7].u_mul.u_c5.d [85:82], \g_lane[7].u_mul.u_la.x [31], \g_lane[7].u_mul.x_a [22:0], \g_lane[7].u_mul.u_lb.x [31], \g_lane[7].u_mul.x_b [22:0], \g_lane[7].u_mul.u_la.n [4:0], \g_lane[7].u_mul.u_lb.n [4:0], \g_lane[7].u_mul.u_c5.d [23:0] };
+  assign { \g_lane[7].u_mul.u_c5.g_rv.rd [86], \g_lane[7].u_mul.u_c5.q [85:0] } = _38146_;
   reg \g_lane_reg[7].u_mul.u_c5.q[86] ;
-  always @(posedge clk, negedge \g_lane[7].u_mul.u_c7.rst_n )
-    if (!\g_lane[7].u_mul.u_c7.rst_n ) \g_lane_reg[7].u_mul.u_c5.q[86]  <= 1'h0;
+  always @(posedge clk, negedge lrnv[7])
+    if (!lrnv[7]) \g_lane_reg[7].u_mul.u_c5.q[86]  <= 1'h0;
     else \g_lane_reg[7].u_mul.u_c5.q[86]  <= gov;
   assign \g_lane[7].u_mul.u_c5.q [86] = \g_lane_reg[7].u_mul.u_c5.q[86] ;
   assign \g_lane[7].u_mul.u_cpa.g [342:295] = \g_lane[7].u_mul.u_cpa.a  & \g_lane[7].u_mul.u_cpa.b ;
@@ -177767,7 +177785,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].e0 [0] = \g_lane[0].u_mul.err [0];
   assign \g_lane[0].e1 [1] = \g_lane[0].u_add.err [1];
   assign \g_lane[0].e1 [0] = \g_lane[0].u_add.err [0];
-  assign \g_lane[0].g_lr.r  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].g_lr.r  = lrnv[0];
   assign \g_lane[0].gw [31] = \g_lane[0].u_mul.x_a [31];
   assign \g_lane[0].gw [30] = \g_lane[0].u_mul.x_a [30];
   assign \g_lane[0].gw [29] = \g_lane[0].u_mul.x_a [29];
@@ -177832,7 +177850,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].gx [2] = \g_lane[0].u_mul.x_b [2];
   assign \g_lane[0].gx [1] = \g_lane[0].u_mul.x_b [1];
   assign \g_lane[0].gx [0] = \g_lane[0].u_mul.x_b [0];
-  assign \g_lane[0].lrn  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].lrn  = lrnv[0];
   assign \g_lane[0].prod [31] = \g_lane[0].u_mul.y [31];
   assign \g_lane[0].prod [30] = \g_lane[0].u_mul.y [30];
   assign \g_lane[0].prod [29] = \g_lane[0].u_mul.y [29];
@@ -178801,7 +178819,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_add.rnd_w [2] = \g_lane[0].u_add.u_rnd.s [2];
   assign \g_lane[0].u_add.rnd_w [1] = \g_lane[0].u_add.u_rnd.s [1];
   assign \g_lane[0].u_add.rnd_w [0] = \g_lane[0].u_add.u_rnd.s [0];
-  assign \g_lane[0].u_add.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.s1_big [23] = \g_lane[0].u_add.u_sum.a [26];
   assign \g_lane[0].u_add.s1_big [22] = \g_lane[0].u_add.u_sum.a [25];
   assign \g_lane[0].u_add.s1_big [21] = \g_lane[0].u_add.u_sum.a [24];
@@ -179396,7 +179414,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_add.u_ca.q [2] = \g_lane[0].u_add.x_dba [2];
   assign \g_lane[0].u_add.u_ca.q [1] = \g_lane[0].u_add.x_dba [1];
   assign \g_lane[0].u_add.u_ca.q [0] = \g_lane[0].u_add.x_dba [0];
-  assign \g_lane[0].u_add.u_ca.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.u_ca.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.u_cb.clk  = clk;
   assign \g_lane[0].u_add.u_cb.d [55] = \g_lane[0].u_add.u_sum.s [27];
   assign \g_lane[0].u_add.u_cb.d [54] = \g_lane[0].u_add.u_sum.s [26];
@@ -179631,7 +179649,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_add.u_cb.q [2] = \g_lane[0].u_add.u_cd.d [9];
   assign \g_lane[0].u_add.u_cb.q [1] = \g_lane[0].u_add.u_cd.d [8];
   assign \g_lane[0].u_add.u_cb.q [0] = \g_lane[0].u_add.u_cd.d [7];
-  assign \g_lane[0].u_add.u_cb.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.u_cb.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.u_cc.clk  = clk;
   assign \g_lane[0].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[0].u_add.u_cc.d [24] = \g_lane[0].u_add.u_rnd.s [23];
@@ -179775,7 +179793,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_add.u_cc.q [27] = \g_lane[0].u_add.u_exp [2];
   assign \g_lane[0].u_add.u_cc.q [26] = \g_lane[0].u_add.u_exp [1];
   assign \g_lane[0].u_add.u_cc.q [25] = \g_lane[0].u_add.u_exp [0];
-  assign \g_lane[0].u_add.u_cc.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.u_cc.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.u_cd.clk  = clk;
   assign \g_lane[0].u_add.u_cd.d [6] = \g_lane[0].u_add.u_lzc.n [5];
   assign \g_lane[0].u_add.u_cd.d [5] = \g_lane[0].u_add.u_lzc.n [4];
@@ -179993,7 +180011,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_add.u_cd.q [8] = \g_lane[0].u_add.w_dif [1];
   assign \g_lane[0].u_add.u_cd.q [7] = \g_lane[0].u_add.w_dif [0];
   assign \g_lane[0].u_add.u_cd.q [0] = \g_lane[0].u_add.w_carry ;
-  assign \g_lane[0].u_add.u_cd.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_add.u_cd.rst_n  = lrnv[0];
   assign \g_lane[0].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[0].u_add.u_cmp.cout  = \g_lane[0].u_add.u_cmp.g [31];
   assign \g_lane[0].u_add.u_cmp.g [160] = 1'h1;
@@ -183990,7 +184008,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_mul.rows [240] = 1'h0;
   assign \g_lane[0].u_mul.rows [144] = 1'h0;
   assign \g_lane[0].u_mul.rows [48] = 1'h0;
-  assign \g_lane[0].u_mul.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.s1_byp  = \g_lane[0].u_mul.u_c2.d [227];
   assign \g_lane[0].u_mul.s1_err [1] = \g_lane[0].u_mul.u_c2.d [226];
   assign \g_lane[0].u_mul.s1_err [0] = \g_lane[0].u_mul.u_c2.d [225];
@@ -184163,7 +184181,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_mul.u_c1.q [2] = \g_lane[0].u_mul.u_pw.b [2];
   assign \g_lane[0].u_mul.u_c1.q [1] = \g_lane[0].u_mul.u_pw.b [1];
   assign \g_lane[0].u_mul.u_c1.q [0] = \g_lane[0].u_mul.u_pw.b [0];
-  assign \g_lane[0].u_mul.u_c1.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c1.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c2.clk  = clk;
   assign \g_lane[0].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[0].u_mul.u_c2.g_rv.rd [227] = \g_lane[0].u_mul.u_c2.q [227];
@@ -184491,7 +184509,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_mul.u_c2.q [130] = \g_lane[0].u_mul.u_cpa.a [2];
   assign \g_lane[0].u_mul.u_c2.q [129] = \g_lane[0].u_mul.u_cpa.a [1];
   assign \g_lane[0].u_mul.u_c2.q [128] = \g_lane[0].u_mul.u_cpa.a [0];
-  assign \g_lane[0].u_mul.u_c2.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c2.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c3.clk  = clk;
   assign \g_lane[0].u_mul.u_c3.g_rv.rd [41] = \g_lane[0].u_mul.u_c4.d [41];
   assign \g_lane[0].u_mul.u_c3.g_rv.rd [40] = \g_lane[0].u_mul.u_c4.d [40];
@@ -184579,7 +184597,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_mul.u_c3.q [2] = \g_lane[0].u_mul.u_rnd.a [1];
   assign \g_lane[0].u_mul.u_c3.q [1] = \g_lane[0].u_mul.u_rnd.a [0];
   assign \g_lane[0].u_mul.u_c3.q [0] = \g_lane[0].u_mul.u_rnd.g [0];
-  assign \g_lane[0].u_mul.u_c3.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c3.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c4.clk  = clk;
   assign \g_lane[0].u_mul.u_c4.d [24] = \g_lane[0].u_mul.u_rnd.s [23];
   assign \g_lane[0].u_mul.u_c4.d [23] = \g_lane[0].u_mul.u_rnd.s [22];
@@ -184653,7 +184671,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_mul.u_c4.q [41] = \g_lane[0].u_mul.u_c6.q [35];
   assign \g_lane[0].u_mul.u_c4.q [40] = \g_lane[0].u_mul.u_c6.q [34];
   assign \g_lane[0].u_mul.u_c4.q [39] = \g_lane[0].u_mul.u_c6.q [33];
-  assign \g_lane[0].u_mul.u_c4.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c4.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c5.clk  = clk;
   assign \g_lane[0].u_mul.u_c5.d [86] = gov;
   assign \g_lane[0].u_mul.u_c5.d [81] = \g_lane[0].u_mul.u_la.x [31];
@@ -184801,7 +184819,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_mul.u_c5.g_rv.rd [1] = \g_lane[0].u_mul.u_c5.q [1];
   assign \g_lane[0].u_mul.u_c5.g_rv.rd [0] = \g_lane[0].u_mul.u_c5.q [0];
   assign \g_lane[0].u_mul.u_c5.g_rv.rv  = \g_lane[0].u_mul.u_c5.q [86];
-  assign \g_lane[0].u_mul.u_c5.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c5.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c6.clk  = clk;
   assign \g_lane[0].u_mul.u_c6.d [36] = \g_lane[0].u_mul.u_c6.q [36];
   assign \g_lane[0].u_mul.u_c6.d [35] = \g_lane[0].u_mul.u_c6.q [35];
@@ -184840,7 +184858,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_mul.u_c6.d [2] = \g_lane[0].u_mul.u_c6.q [2];
   assign \g_lane[0].u_mul.u_c6.d [1] = \g_lane[0].u_mul.u_c6.q [1];
   assign \g_lane[0].u_mul.u_c6.d [0] = \g_lane[0].u_mul.u_c6.q [0];
-  assign \g_lane[0].u_mul.u_c6.rst_n  = \g_lane[0].u_mul.u_c7.rst_n ;
+  assign \g_lane[0].u_mul.u_c6.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_c7.clk  = clk;
   assign \g_lane[0].u_mul.u_c7.d [68] = gov;
   assign \g_lane[0].u_mul.u_c7.d [67] = \g_lane[0].u_mul.x_a [31];
@@ -184979,6 +184997,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[0].u_mul.u_c7.q [3] = \g_lane[0].u_mul.x_afz ;
   assign \g_lane[0].u_mul.u_c7.q [2] = \g_lane[0].u_mul.x_bfz ;
   assign \g_lane[0].u_mul.u_c7.q [0] = \g_lane[0].u_mul.zero ;
+  assign \g_lane[0].u_mul.u_c7.rst_n  = lrnv[0];
   assign \g_lane[0].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[0].u_mul.u_cpa.cout  = \g_lane[0].u_mul.unused_cout ;
   assign \g_lane[0].u_mul.u_cpa.g [294] = 1'h0;
@@ -186218,7 +186237,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].e0 [0] = \g_lane[1].u_mul.err [0];
   assign \g_lane[1].e1 [1] = \g_lane[1].u_add.err [1];
   assign \g_lane[1].e1 [0] = \g_lane[1].u_add.err [0];
-  assign \g_lane[1].g_lr.r  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].g_lr.r  = lrnv[1];
   assign \g_lane[1].gw [31] = \g_lane[1].u_mul.x_a [31];
   assign \g_lane[1].gw [30] = \g_lane[1].u_mul.x_a [30];
   assign \g_lane[1].gw [29] = \g_lane[1].u_mul.x_a [29];
@@ -186283,7 +186302,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].gx [2] = \g_lane[1].u_mul.x_b [2];
   assign \g_lane[1].gx [1] = \g_lane[1].u_mul.x_b [1];
   assign \g_lane[1].gx [0] = \g_lane[1].u_mul.x_b [0];
-  assign \g_lane[1].lrn  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].lrn  = lrnv[1];
   assign \g_lane[1].prod [31] = \g_lane[1].u_mul.y [31];
   assign \g_lane[1].prod [30] = \g_lane[1].u_mul.y [30];
   assign \g_lane[1].prod [29] = \g_lane[1].u_mul.y [29];
@@ -187252,7 +187271,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_add.rnd_w [2] = \g_lane[1].u_add.u_rnd.s [2];
   assign \g_lane[1].u_add.rnd_w [1] = \g_lane[1].u_add.u_rnd.s [1];
   assign \g_lane[1].u_add.rnd_w [0] = \g_lane[1].u_add.u_rnd.s [0];
-  assign \g_lane[1].u_add.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.s1_big [23] = \g_lane[1].u_add.u_sum.a [26];
   assign \g_lane[1].u_add.s1_big [22] = \g_lane[1].u_add.u_sum.a [25];
   assign \g_lane[1].u_add.s1_big [21] = \g_lane[1].u_add.u_sum.a [24];
@@ -187847,7 +187866,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_add.u_ca.q [2] = \g_lane[1].u_add.x_dba [2];
   assign \g_lane[1].u_add.u_ca.q [1] = \g_lane[1].u_add.x_dba [1];
   assign \g_lane[1].u_add.u_ca.q [0] = \g_lane[1].u_add.x_dba [0];
-  assign \g_lane[1].u_add.u_ca.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.u_ca.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.u_cb.clk  = clk;
   assign \g_lane[1].u_add.u_cb.d [55] = \g_lane[1].u_add.u_sum.s [27];
   assign \g_lane[1].u_add.u_cb.d [54] = \g_lane[1].u_add.u_sum.s [26];
@@ -188082,7 +188101,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_add.u_cb.q [2] = \g_lane[1].u_add.u_cd.d [9];
   assign \g_lane[1].u_add.u_cb.q [1] = \g_lane[1].u_add.u_cd.d [8];
   assign \g_lane[1].u_add.u_cb.q [0] = \g_lane[1].u_add.u_cd.d [7];
-  assign \g_lane[1].u_add.u_cb.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.u_cb.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.u_cc.clk  = clk;
   assign \g_lane[1].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[1].u_add.u_cc.d [24] = \g_lane[1].u_add.u_rnd.s [23];
@@ -188226,7 +188245,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_add.u_cc.q [27] = \g_lane[1].u_add.u_exp [2];
   assign \g_lane[1].u_add.u_cc.q [26] = \g_lane[1].u_add.u_exp [1];
   assign \g_lane[1].u_add.u_cc.q [25] = \g_lane[1].u_add.u_exp [0];
-  assign \g_lane[1].u_add.u_cc.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.u_cc.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.u_cd.clk  = clk;
   assign \g_lane[1].u_add.u_cd.d [6] = \g_lane[1].u_add.u_lzc.n [5];
   assign \g_lane[1].u_add.u_cd.d [5] = \g_lane[1].u_add.u_lzc.n [4];
@@ -188444,7 +188463,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_add.u_cd.q [8] = \g_lane[1].u_add.w_dif [1];
   assign \g_lane[1].u_add.u_cd.q [7] = \g_lane[1].u_add.w_dif [0];
   assign \g_lane[1].u_add.u_cd.q [0] = \g_lane[1].u_add.w_carry ;
-  assign \g_lane[1].u_add.u_cd.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_add.u_cd.rst_n  = lrnv[1];
   assign \g_lane[1].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[1].u_add.u_cmp.cout  = \g_lane[1].u_add.u_cmp.g [31];
   assign \g_lane[1].u_add.u_cmp.g [160] = 1'h1;
@@ -192441,7 +192460,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_mul.rows [240] = 1'h0;
   assign \g_lane[1].u_mul.rows [144] = 1'h0;
   assign \g_lane[1].u_mul.rows [48] = 1'h0;
-  assign \g_lane[1].u_mul.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.s1_byp  = \g_lane[1].u_mul.u_c2.d [227];
   assign \g_lane[1].u_mul.s1_err [1] = \g_lane[1].u_mul.u_c2.d [226];
   assign \g_lane[1].u_mul.s1_err [0] = \g_lane[1].u_mul.u_c2.d [225];
@@ -192614,7 +192633,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_mul.u_c1.q [2] = \g_lane[1].u_mul.u_pw.b [2];
   assign \g_lane[1].u_mul.u_c1.q [1] = \g_lane[1].u_mul.u_pw.b [1];
   assign \g_lane[1].u_mul.u_c1.q [0] = \g_lane[1].u_mul.u_pw.b [0];
-  assign \g_lane[1].u_mul.u_c1.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c1.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c2.clk  = clk;
   assign \g_lane[1].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[1].u_mul.u_c2.g_rv.rd [227] = \g_lane[1].u_mul.u_c2.q [227];
@@ -192942,7 +192961,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_mul.u_c2.q [130] = \g_lane[1].u_mul.u_cpa.a [2];
   assign \g_lane[1].u_mul.u_c2.q [129] = \g_lane[1].u_mul.u_cpa.a [1];
   assign \g_lane[1].u_mul.u_c2.q [128] = \g_lane[1].u_mul.u_cpa.a [0];
-  assign \g_lane[1].u_mul.u_c2.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c2.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c3.clk  = clk;
   assign \g_lane[1].u_mul.u_c3.g_rv.rd [41] = \g_lane[1].u_mul.u_c4.d [41];
   assign \g_lane[1].u_mul.u_c3.g_rv.rd [40] = \g_lane[1].u_mul.u_c4.d [40];
@@ -193030,7 +193049,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_mul.u_c3.q [2] = \g_lane[1].u_mul.u_rnd.a [1];
   assign \g_lane[1].u_mul.u_c3.q [1] = \g_lane[1].u_mul.u_rnd.a [0];
   assign \g_lane[1].u_mul.u_c3.q [0] = \g_lane[1].u_mul.u_rnd.g [0];
-  assign \g_lane[1].u_mul.u_c3.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c3.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c4.clk  = clk;
   assign \g_lane[1].u_mul.u_c4.d [24] = \g_lane[1].u_mul.u_rnd.s [23];
   assign \g_lane[1].u_mul.u_c4.d [23] = \g_lane[1].u_mul.u_rnd.s [22];
@@ -193104,7 +193123,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_mul.u_c4.q [41] = \g_lane[1].u_mul.u_c6.q [35];
   assign \g_lane[1].u_mul.u_c4.q [40] = \g_lane[1].u_mul.u_c6.q [34];
   assign \g_lane[1].u_mul.u_c4.q [39] = \g_lane[1].u_mul.u_c6.q [33];
-  assign \g_lane[1].u_mul.u_c4.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c4.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c5.clk  = clk;
   assign \g_lane[1].u_mul.u_c5.d [86] = gov;
   assign \g_lane[1].u_mul.u_c5.d [81] = \g_lane[1].u_mul.u_la.x [31];
@@ -193252,7 +193271,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_mul.u_c5.g_rv.rd [1] = \g_lane[1].u_mul.u_c5.q [1];
   assign \g_lane[1].u_mul.u_c5.g_rv.rd [0] = \g_lane[1].u_mul.u_c5.q [0];
   assign \g_lane[1].u_mul.u_c5.g_rv.rv  = \g_lane[1].u_mul.u_c5.q [86];
-  assign \g_lane[1].u_mul.u_c5.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c5.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c6.clk  = clk;
   assign \g_lane[1].u_mul.u_c6.d [36] = \g_lane[1].u_mul.u_c6.q [36];
   assign \g_lane[1].u_mul.u_c6.d [35] = \g_lane[1].u_mul.u_c6.q [35];
@@ -193291,7 +193310,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_mul.u_c6.d [2] = \g_lane[1].u_mul.u_c6.q [2];
   assign \g_lane[1].u_mul.u_c6.d [1] = \g_lane[1].u_mul.u_c6.q [1];
   assign \g_lane[1].u_mul.u_c6.d [0] = \g_lane[1].u_mul.u_c6.q [0];
-  assign \g_lane[1].u_mul.u_c6.rst_n  = \g_lane[1].u_mul.u_c7.rst_n ;
+  assign \g_lane[1].u_mul.u_c6.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_c7.clk  = clk;
   assign \g_lane[1].u_mul.u_c7.d [68] = gov;
   assign \g_lane[1].u_mul.u_c7.d [67] = \g_lane[1].u_mul.x_a [31];
@@ -193430,6 +193449,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[1].u_mul.u_c7.q [3] = \g_lane[1].u_mul.x_afz ;
   assign \g_lane[1].u_mul.u_c7.q [2] = \g_lane[1].u_mul.x_bfz ;
   assign \g_lane[1].u_mul.u_c7.q [0] = \g_lane[1].u_mul.zero ;
+  assign \g_lane[1].u_mul.u_c7.rst_n  = lrnv[1];
   assign \g_lane[1].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[1].u_mul.u_cpa.cout  = \g_lane[1].u_mul.unused_cout ;
   assign \g_lane[1].u_mul.u_cpa.g [294] = 1'h0;
@@ -194669,7 +194689,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].e0 [0] = \g_lane[2].u_mul.err [0];
   assign \g_lane[2].e1 [1] = \g_lane[2].u_add.err [1];
   assign \g_lane[2].e1 [0] = \g_lane[2].u_add.err [0];
-  assign \g_lane[2].g_lr.r  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].g_lr.r  = lrnv[2];
   assign \g_lane[2].gw [31] = \g_lane[2].u_mul.x_a [31];
   assign \g_lane[2].gw [30] = \g_lane[2].u_mul.x_a [30];
   assign \g_lane[2].gw [29] = \g_lane[2].u_mul.x_a [29];
@@ -194734,7 +194754,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].gx [2] = \g_lane[2].u_mul.x_b [2];
   assign \g_lane[2].gx [1] = \g_lane[2].u_mul.x_b [1];
   assign \g_lane[2].gx [0] = \g_lane[2].u_mul.x_b [0];
-  assign \g_lane[2].lrn  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].lrn  = lrnv[2];
   assign \g_lane[2].prod [31] = \g_lane[2].u_mul.y [31];
   assign \g_lane[2].prod [30] = \g_lane[2].u_mul.y [30];
   assign \g_lane[2].prod [29] = \g_lane[2].u_mul.y [29];
@@ -195703,7 +195723,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_add.rnd_w [2] = \g_lane[2].u_add.u_rnd.s [2];
   assign \g_lane[2].u_add.rnd_w [1] = \g_lane[2].u_add.u_rnd.s [1];
   assign \g_lane[2].u_add.rnd_w [0] = \g_lane[2].u_add.u_rnd.s [0];
-  assign \g_lane[2].u_add.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.s1_big [23] = \g_lane[2].u_add.u_sum.a [26];
   assign \g_lane[2].u_add.s1_big [22] = \g_lane[2].u_add.u_sum.a [25];
   assign \g_lane[2].u_add.s1_big [21] = \g_lane[2].u_add.u_sum.a [24];
@@ -196298,7 +196318,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_add.u_ca.q [2] = \g_lane[2].u_add.x_dba [2];
   assign \g_lane[2].u_add.u_ca.q [1] = \g_lane[2].u_add.x_dba [1];
   assign \g_lane[2].u_add.u_ca.q [0] = \g_lane[2].u_add.x_dba [0];
-  assign \g_lane[2].u_add.u_ca.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.u_ca.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.u_cb.clk  = clk;
   assign \g_lane[2].u_add.u_cb.d [55] = \g_lane[2].u_add.u_sum.s [27];
   assign \g_lane[2].u_add.u_cb.d [54] = \g_lane[2].u_add.u_sum.s [26];
@@ -196533,7 +196553,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_add.u_cb.q [2] = \g_lane[2].u_add.u_cd.d [9];
   assign \g_lane[2].u_add.u_cb.q [1] = \g_lane[2].u_add.u_cd.d [8];
   assign \g_lane[2].u_add.u_cb.q [0] = \g_lane[2].u_add.u_cd.d [7];
-  assign \g_lane[2].u_add.u_cb.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.u_cb.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.u_cc.clk  = clk;
   assign \g_lane[2].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[2].u_add.u_cc.d [24] = \g_lane[2].u_add.u_rnd.s [23];
@@ -196677,7 +196697,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_add.u_cc.q [27] = \g_lane[2].u_add.u_exp [2];
   assign \g_lane[2].u_add.u_cc.q [26] = \g_lane[2].u_add.u_exp [1];
   assign \g_lane[2].u_add.u_cc.q [25] = \g_lane[2].u_add.u_exp [0];
-  assign \g_lane[2].u_add.u_cc.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.u_cc.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.u_cd.clk  = clk;
   assign \g_lane[2].u_add.u_cd.d [6] = \g_lane[2].u_add.u_lzc.n [5];
   assign \g_lane[2].u_add.u_cd.d [5] = \g_lane[2].u_add.u_lzc.n [4];
@@ -196895,7 +196915,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_add.u_cd.q [8] = \g_lane[2].u_add.w_dif [1];
   assign \g_lane[2].u_add.u_cd.q [7] = \g_lane[2].u_add.w_dif [0];
   assign \g_lane[2].u_add.u_cd.q [0] = \g_lane[2].u_add.w_carry ;
-  assign \g_lane[2].u_add.u_cd.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_add.u_cd.rst_n  = lrnv[2];
   assign \g_lane[2].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[2].u_add.u_cmp.cout  = \g_lane[2].u_add.u_cmp.g [31];
   assign \g_lane[2].u_add.u_cmp.g [160] = 1'h1;
@@ -200892,7 +200912,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_mul.rows [240] = 1'h0;
   assign \g_lane[2].u_mul.rows [144] = 1'h0;
   assign \g_lane[2].u_mul.rows [48] = 1'h0;
-  assign \g_lane[2].u_mul.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.s1_byp  = \g_lane[2].u_mul.u_c2.d [227];
   assign \g_lane[2].u_mul.s1_err [1] = \g_lane[2].u_mul.u_c2.d [226];
   assign \g_lane[2].u_mul.s1_err [0] = \g_lane[2].u_mul.u_c2.d [225];
@@ -201065,7 +201085,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_mul.u_c1.q [2] = \g_lane[2].u_mul.u_pw.b [2];
   assign \g_lane[2].u_mul.u_c1.q [1] = \g_lane[2].u_mul.u_pw.b [1];
   assign \g_lane[2].u_mul.u_c1.q [0] = \g_lane[2].u_mul.u_pw.b [0];
-  assign \g_lane[2].u_mul.u_c1.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c1.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c2.clk  = clk;
   assign \g_lane[2].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[2].u_mul.u_c2.g_rv.rd [227] = \g_lane[2].u_mul.u_c2.q [227];
@@ -201393,7 +201413,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_mul.u_c2.q [130] = \g_lane[2].u_mul.u_cpa.a [2];
   assign \g_lane[2].u_mul.u_c2.q [129] = \g_lane[2].u_mul.u_cpa.a [1];
   assign \g_lane[2].u_mul.u_c2.q [128] = \g_lane[2].u_mul.u_cpa.a [0];
-  assign \g_lane[2].u_mul.u_c2.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c2.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c3.clk  = clk;
   assign \g_lane[2].u_mul.u_c3.g_rv.rd [41] = \g_lane[2].u_mul.u_c4.d [41];
   assign \g_lane[2].u_mul.u_c3.g_rv.rd [40] = \g_lane[2].u_mul.u_c4.d [40];
@@ -201481,7 +201501,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_mul.u_c3.q [2] = \g_lane[2].u_mul.u_rnd.a [1];
   assign \g_lane[2].u_mul.u_c3.q [1] = \g_lane[2].u_mul.u_rnd.a [0];
   assign \g_lane[2].u_mul.u_c3.q [0] = \g_lane[2].u_mul.u_rnd.g [0];
-  assign \g_lane[2].u_mul.u_c3.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c3.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c4.clk  = clk;
   assign \g_lane[2].u_mul.u_c4.d [24] = \g_lane[2].u_mul.u_rnd.s [23];
   assign \g_lane[2].u_mul.u_c4.d [23] = \g_lane[2].u_mul.u_rnd.s [22];
@@ -201555,7 +201575,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_mul.u_c4.q [41] = \g_lane[2].u_mul.u_c6.q [35];
   assign \g_lane[2].u_mul.u_c4.q [40] = \g_lane[2].u_mul.u_c6.q [34];
   assign \g_lane[2].u_mul.u_c4.q [39] = \g_lane[2].u_mul.u_c6.q [33];
-  assign \g_lane[2].u_mul.u_c4.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c4.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c5.clk  = clk;
   assign \g_lane[2].u_mul.u_c5.d [86] = gov;
   assign \g_lane[2].u_mul.u_c5.d [81] = \g_lane[2].u_mul.u_la.x [31];
@@ -201703,7 +201723,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_mul.u_c5.g_rv.rd [1] = \g_lane[2].u_mul.u_c5.q [1];
   assign \g_lane[2].u_mul.u_c5.g_rv.rd [0] = \g_lane[2].u_mul.u_c5.q [0];
   assign \g_lane[2].u_mul.u_c5.g_rv.rv  = \g_lane[2].u_mul.u_c5.q [86];
-  assign \g_lane[2].u_mul.u_c5.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c5.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c6.clk  = clk;
   assign \g_lane[2].u_mul.u_c6.d [36] = \g_lane[2].u_mul.u_c6.q [36];
   assign \g_lane[2].u_mul.u_c6.d [35] = \g_lane[2].u_mul.u_c6.q [35];
@@ -201742,7 +201762,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_mul.u_c6.d [2] = \g_lane[2].u_mul.u_c6.q [2];
   assign \g_lane[2].u_mul.u_c6.d [1] = \g_lane[2].u_mul.u_c6.q [1];
   assign \g_lane[2].u_mul.u_c6.d [0] = \g_lane[2].u_mul.u_c6.q [0];
-  assign \g_lane[2].u_mul.u_c6.rst_n  = \g_lane[2].u_mul.u_c7.rst_n ;
+  assign \g_lane[2].u_mul.u_c6.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_c7.clk  = clk;
   assign \g_lane[2].u_mul.u_c7.d [68] = gov;
   assign \g_lane[2].u_mul.u_c7.d [67] = \g_lane[2].u_mul.x_a [31];
@@ -201881,6 +201901,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[2].u_mul.u_c7.q [3] = \g_lane[2].u_mul.x_afz ;
   assign \g_lane[2].u_mul.u_c7.q [2] = \g_lane[2].u_mul.x_bfz ;
   assign \g_lane[2].u_mul.u_c7.q [0] = \g_lane[2].u_mul.zero ;
+  assign \g_lane[2].u_mul.u_c7.rst_n  = lrnv[2];
   assign \g_lane[2].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[2].u_mul.u_cpa.cout  = \g_lane[2].u_mul.unused_cout ;
   assign \g_lane[2].u_mul.u_cpa.g [294] = 1'h0;
@@ -203120,7 +203141,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].e0 [0] = \g_lane[3].u_mul.err [0];
   assign \g_lane[3].e1 [1] = \g_lane[3].u_add.err [1];
   assign \g_lane[3].e1 [0] = \g_lane[3].u_add.err [0];
-  assign \g_lane[3].g_lr.r  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].g_lr.r  = lrnv[3];
   assign \g_lane[3].gw [31] = \g_lane[3].u_mul.x_a [31];
   assign \g_lane[3].gw [30] = \g_lane[3].u_mul.x_a [30];
   assign \g_lane[3].gw [29] = \g_lane[3].u_mul.x_a [29];
@@ -203185,7 +203206,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].gx [2] = \g_lane[3].u_mul.x_b [2];
   assign \g_lane[3].gx [1] = \g_lane[3].u_mul.x_b [1];
   assign \g_lane[3].gx [0] = \g_lane[3].u_mul.x_b [0];
-  assign \g_lane[3].lrn  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].lrn  = lrnv[3];
   assign \g_lane[3].prod [31] = \g_lane[3].u_mul.y [31];
   assign \g_lane[3].prod [30] = \g_lane[3].u_mul.y [30];
   assign \g_lane[3].prod [29] = \g_lane[3].u_mul.y [29];
@@ -204154,7 +204175,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_add.rnd_w [2] = \g_lane[3].u_add.u_rnd.s [2];
   assign \g_lane[3].u_add.rnd_w [1] = \g_lane[3].u_add.u_rnd.s [1];
   assign \g_lane[3].u_add.rnd_w [0] = \g_lane[3].u_add.u_rnd.s [0];
-  assign \g_lane[3].u_add.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.s1_big [23] = \g_lane[3].u_add.u_sum.a [26];
   assign \g_lane[3].u_add.s1_big [22] = \g_lane[3].u_add.u_sum.a [25];
   assign \g_lane[3].u_add.s1_big [21] = \g_lane[3].u_add.u_sum.a [24];
@@ -204749,7 +204770,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_add.u_ca.q [2] = \g_lane[3].u_add.x_dba [2];
   assign \g_lane[3].u_add.u_ca.q [1] = \g_lane[3].u_add.x_dba [1];
   assign \g_lane[3].u_add.u_ca.q [0] = \g_lane[3].u_add.x_dba [0];
-  assign \g_lane[3].u_add.u_ca.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.u_ca.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.u_cb.clk  = clk;
   assign \g_lane[3].u_add.u_cb.d [55] = \g_lane[3].u_add.u_sum.s [27];
   assign \g_lane[3].u_add.u_cb.d [54] = \g_lane[3].u_add.u_sum.s [26];
@@ -204984,7 +205005,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_add.u_cb.q [2] = \g_lane[3].u_add.u_cd.d [9];
   assign \g_lane[3].u_add.u_cb.q [1] = \g_lane[3].u_add.u_cd.d [8];
   assign \g_lane[3].u_add.u_cb.q [0] = \g_lane[3].u_add.u_cd.d [7];
-  assign \g_lane[3].u_add.u_cb.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.u_cb.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.u_cc.clk  = clk;
   assign \g_lane[3].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[3].u_add.u_cc.d [24] = \g_lane[3].u_add.u_rnd.s [23];
@@ -205128,7 +205149,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_add.u_cc.q [27] = \g_lane[3].u_add.u_exp [2];
   assign \g_lane[3].u_add.u_cc.q [26] = \g_lane[3].u_add.u_exp [1];
   assign \g_lane[3].u_add.u_cc.q [25] = \g_lane[3].u_add.u_exp [0];
-  assign \g_lane[3].u_add.u_cc.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.u_cc.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.u_cd.clk  = clk;
   assign \g_lane[3].u_add.u_cd.d [6] = \g_lane[3].u_add.u_lzc.n [5];
   assign \g_lane[3].u_add.u_cd.d [5] = \g_lane[3].u_add.u_lzc.n [4];
@@ -205346,7 +205367,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_add.u_cd.q [8] = \g_lane[3].u_add.w_dif [1];
   assign \g_lane[3].u_add.u_cd.q [7] = \g_lane[3].u_add.w_dif [0];
   assign \g_lane[3].u_add.u_cd.q [0] = \g_lane[3].u_add.w_carry ;
-  assign \g_lane[3].u_add.u_cd.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_add.u_cd.rst_n  = lrnv[3];
   assign \g_lane[3].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[3].u_add.u_cmp.cout  = \g_lane[3].u_add.u_cmp.g [31];
   assign \g_lane[3].u_add.u_cmp.g [160] = 1'h1;
@@ -209343,7 +209364,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_mul.rows [240] = 1'h0;
   assign \g_lane[3].u_mul.rows [144] = 1'h0;
   assign \g_lane[3].u_mul.rows [48] = 1'h0;
-  assign \g_lane[3].u_mul.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.s1_byp  = \g_lane[3].u_mul.u_c2.d [227];
   assign \g_lane[3].u_mul.s1_err [1] = \g_lane[3].u_mul.u_c2.d [226];
   assign \g_lane[3].u_mul.s1_err [0] = \g_lane[3].u_mul.u_c2.d [225];
@@ -209516,7 +209537,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_mul.u_c1.q [2] = \g_lane[3].u_mul.u_pw.b [2];
   assign \g_lane[3].u_mul.u_c1.q [1] = \g_lane[3].u_mul.u_pw.b [1];
   assign \g_lane[3].u_mul.u_c1.q [0] = \g_lane[3].u_mul.u_pw.b [0];
-  assign \g_lane[3].u_mul.u_c1.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c1.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c2.clk  = clk;
   assign \g_lane[3].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[3].u_mul.u_c2.g_rv.rd [227] = \g_lane[3].u_mul.u_c2.q [227];
@@ -209844,7 +209865,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_mul.u_c2.q [130] = \g_lane[3].u_mul.u_cpa.a [2];
   assign \g_lane[3].u_mul.u_c2.q [129] = \g_lane[3].u_mul.u_cpa.a [1];
   assign \g_lane[3].u_mul.u_c2.q [128] = \g_lane[3].u_mul.u_cpa.a [0];
-  assign \g_lane[3].u_mul.u_c2.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c2.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c3.clk  = clk;
   assign \g_lane[3].u_mul.u_c3.g_rv.rd [41] = \g_lane[3].u_mul.u_c4.d [41];
   assign \g_lane[3].u_mul.u_c3.g_rv.rd [40] = \g_lane[3].u_mul.u_c4.d [40];
@@ -209932,7 +209953,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_mul.u_c3.q [2] = \g_lane[3].u_mul.u_rnd.a [1];
   assign \g_lane[3].u_mul.u_c3.q [1] = \g_lane[3].u_mul.u_rnd.a [0];
   assign \g_lane[3].u_mul.u_c3.q [0] = \g_lane[3].u_mul.u_rnd.g [0];
-  assign \g_lane[3].u_mul.u_c3.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c3.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c4.clk  = clk;
   assign \g_lane[3].u_mul.u_c4.d [24] = \g_lane[3].u_mul.u_rnd.s [23];
   assign \g_lane[3].u_mul.u_c4.d [23] = \g_lane[3].u_mul.u_rnd.s [22];
@@ -210006,7 +210027,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_mul.u_c4.q [41] = \g_lane[3].u_mul.u_c6.q [35];
   assign \g_lane[3].u_mul.u_c4.q [40] = \g_lane[3].u_mul.u_c6.q [34];
   assign \g_lane[3].u_mul.u_c4.q [39] = \g_lane[3].u_mul.u_c6.q [33];
-  assign \g_lane[3].u_mul.u_c4.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c4.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c5.clk  = clk;
   assign \g_lane[3].u_mul.u_c5.d [86] = gov;
   assign \g_lane[3].u_mul.u_c5.d [81] = \g_lane[3].u_mul.u_la.x [31];
@@ -210154,7 +210175,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_mul.u_c5.g_rv.rd [1] = \g_lane[3].u_mul.u_c5.q [1];
   assign \g_lane[3].u_mul.u_c5.g_rv.rd [0] = \g_lane[3].u_mul.u_c5.q [0];
   assign \g_lane[3].u_mul.u_c5.g_rv.rv  = \g_lane[3].u_mul.u_c5.q [86];
-  assign \g_lane[3].u_mul.u_c5.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c5.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c6.clk  = clk;
   assign \g_lane[3].u_mul.u_c6.d [36] = \g_lane[3].u_mul.u_c6.q [36];
   assign \g_lane[3].u_mul.u_c6.d [35] = \g_lane[3].u_mul.u_c6.q [35];
@@ -210193,7 +210214,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_mul.u_c6.d [2] = \g_lane[3].u_mul.u_c6.q [2];
   assign \g_lane[3].u_mul.u_c6.d [1] = \g_lane[3].u_mul.u_c6.q [1];
   assign \g_lane[3].u_mul.u_c6.d [0] = \g_lane[3].u_mul.u_c6.q [0];
-  assign \g_lane[3].u_mul.u_c6.rst_n  = \g_lane[3].u_mul.u_c7.rst_n ;
+  assign \g_lane[3].u_mul.u_c6.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_c7.clk  = clk;
   assign \g_lane[3].u_mul.u_c7.d [68] = gov;
   assign \g_lane[3].u_mul.u_c7.d [67] = \g_lane[3].u_mul.x_a [31];
@@ -210332,6 +210353,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[3].u_mul.u_c7.q [3] = \g_lane[3].u_mul.x_afz ;
   assign \g_lane[3].u_mul.u_c7.q [2] = \g_lane[3].u_mul.x_bfz ;
   assign \g_lane[3].u_mul.u_c7.q [0] = \g_lane[3].u_mul.zero ;
+  assign \g_lane[3].u_mul.u_c7.rst_n  = lrnv[3];
   assign \g_lane[3].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[3].u_mul.u_cpa.cout  = \g_lane[3].u_mul.unused_cout ;
   assign \g_lane[3].u_mul.u_cpa.g [294] = 1'h0;
@@ -211571,7 +211593,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].e0 [0] = \g_lane[4].u_mul.err [0];
   assign \g_lane[4].e1 [1] = \g_lane[4].u_add.err [1];
   assign \g_lane[4].e1 [0] = \g_lane[4].u_add.err [0];
-  assign \g_lane[4].g_lr.r  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].g_lr.r  = lrnv[4];
   assign \g_lane[4].gw [31] = \g_lane[4].u_mul.x_a [31];
   assign \g_lane[4].gw [30] = \g_lane[4].u_mul.x_a [30];
   assign \g_lane[4].gw [29] = \g_lane[4].u_mul.x_a [29];
@@ -211636,7 +211658,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].gx [2] = \g_lane[4].u_mul.x_b [2];
   assign \g_lane[4].gx [1] = \g_lane[4].u_mul.x_b [1];
   assign \g_lane[4].gx [0] = \g_lane[4].u_mul.x_b [0];
-  assign \g_lane[4].lrn  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].lrn  = lrnv[4];
   assign \g_lane[4].prod [31] = \g_lane[4].u_mul.y [31];
   assign \g_lane[4].prod [30] = \g_lane[4].u_mul.y [30];
   assign \g_lane[4].prod [29] = \g_lane[4].u_mul.y [29];
@@ -212605,7 +212627,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_add.rnd_w [2] = \g_lane[4].u_add.u_rnd.s [2];
   assign \g_lane[4].u_add.rnd_w [1] = \g_lane[4].u_add.u_rnd.s [1];
   assign \g_lane[4].u_add.rnd_w [0] = \g_lane[4].u_add.u_rnd.s [0];
-  assign \g_lane[4].u_add.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.s1_big [23] = \g_lane[4].u_add.u_sum.a [26];
   assign \g_lane[4].u_add.s1_big [22] = \g_lane[4].u_add.u_sum.a [25];
   assign \g_lane[4].u_add.s1_big [21] = \g_lane[4].u_add.u_sum.a [24];
@@ -213200,7 +213222,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_add.u_ca.q [2] = \g_lane[4].u_add.x_dba [2];
   assign \g_lane[4].u_add.u_ca.q [1] = \g_lane[4].u_add.x_dba [1];
   assign \g_lane[4].u_add.u_ca.q [0] = \g_lane[4].u_add.x_dba [0];
-  assign \g_lane[4].u_add.u_ca.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.u_ca.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.u_cb.clk  = clk;
   assign \g_lane[4].u_add.u_cb.d [55] = \g_lane[4].u_add.u_sum.s [27];
   assign \g_lane[4].u_add.u_cb.d [54] = \g_lane[4].u_add.u_sum.s [26];
@@ -213435,7 +213457,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_add.u_cb.q [2] = \g_lane[4].u_add.u_cd.d [9];
   assign \g_lane[4].u_add.u_cb.q [1] = \g_lane[4].u_add.u_cd.d [8];
   assign \g_lane[4].u_add.u_cb.q [0] = \g_lane[4].u_add.u_cd.d [7];
-  assign \g_lane[4].u_add.u_cb.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.u_cb.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.u_cc.clk  = clk;
   assign \g_lane[4].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[4].u_add.u_cc.d [24] = \g_lane[4].u_add.u_rnd.s [23];
@@ -213579,7 +213601,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_add.u_cc.q [27] = \g_lane[4].u_add.u_exp [2];
   assign \g_lane[4].u_add.u_cc.q [26] = \g_lane[4].u_add.u_exp [1];
   assign \g_lane[4].u_add.u_cc.q [25] = \g_lane[4].u_add.u_exp [0];
-  assign \g_lane[4].u_add.u_cc.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.u_cc.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.u_cd.clk  = clk;
   assign \g_lane[4].u_add.u_cd.d [6] = \g_lane[4].u_add.u_lzc.n [5];
   assign \g_lane[4].u_add.u_cd.d [5] = \g_lane[4].u_add.u_lzc.n [4];
@@ -213797,7 +213819,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_add.u_cd.q [8] = \g_lane[4].u_add.w_dif [1];
   assign \g_lane[4].u_add.u_cd.q [7] = \g_lane[4].u_add.w_dif [0];
   assign \g_lane[4].u_add.u_cd.q [0] = \g_lane[4].u_add.w_carry ;
-  assign \g_lane[4].u_add.u_cd.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_add.u_cd.rst_n  = lrnv[4];
   assign \g_lane[4].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[4].u_add.u_cmp.cout  = \g_lane[4].u_add.u_cmp.g [31];
   assign \g_lane[4].u_add.u_cmp.g [160] = 1'h1;
@@ -217794,7 +217816,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_mul.rows [240] = 1'h0;
   assign \g_lane[4].u_mul.rows [144] = 1'h0;
   assign \g_lane[4].u_mul.rows [48] = 1'h0;
-  assign \g_lane[4].u_mul.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.s1_byp  = \g_lane[4].u_mul.u_c2.d [227];
   assign \g_lane[4].u_mul.s1_err [1] = \g_lane[4].u_mul.u_c2.d [226];
   assign \g_lane[4].u_mul.s1_err [0] = \g_lane[4].u_mul.u_c2.d [225];
@@ -217967,7 +217989,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_mul.u_c1.q [2] = \g_lane[4].u_mul.u_pw.b [2];
   assign \g_lane[4].u_mul.u_c1.q [1] = \g_lane[4].u_mul.u_pw.b [1];
   assign \g_lane[4].u_mul.u_c1.q [0] = \g_lane[4].u_mul.u_pw.b [0];
-  assign \g_lane[4].u_mul.u_c1.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c1.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c2.clk  = clk;
   assign \g_lane[4].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[4].u_mul.u_c2.g_rv.rd [227] = \g_lane[4].u_mul.u_c2.q [227];
@@ -218295,7 +218317,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_mul.u_c2.q [130] = \g_lane[4].u_mul.u_cpa.a [2];
   assign \g_lane[4].u_mul.u_c2.q [129] = \g_lane[4].u_mul.u_cpa.a [1];
   assign \g_lane[4].u_mul.u_c2.q [128] = \g_lane[4].u_mul.u_cpa.a [0];
-  assign \g_lane[4].u_mul.u_c2.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c2.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c3.clk  = clk;
   assign \g_lane[4].u_mul.u_c3.g_rv.rd [41] = \g_lane[4].u_mul.u_c4.d [41];
   assign \g_lane[4].u_mul.u_c3.g_rv.rd [40] = \g_lane[4].u_mul.u_c4.d [40];
@@ -218383,7 +218405,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_mul.u_c3.q [2] = \g_lane[4].u_mul.u_rnd.a [1];
   assign \g_lane[4].u_mul.u_c3.q [1] = \g_lane[4].u_mul.u_rnd.a [0];
   assign \g_lane[4].u_mul.u_c3.q [0] = \g_lane[4].u_mul.u_rnd.g [0];
-  assign \g_lane[4].u_mul.u_c3.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c3.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c4.clk  = clk;
   assign \g_lane[4].u_mul.u_c4.d [24] = \g_lane[4].u_mul.u_rnd.s [23];
   assign \g_lane[4].u_mul.u_c4.d [23] = \g_lane[4].u_mul.u_rnd.s [22];
@@ -218457,7 +218479,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_mul.u_c4.q [41] = \g_lane[4].u_mul.u_c6.q [35];
   assign \g_lane[4].u_mul.u_c4.q [40] = \g_lane[4].u_mul.u_c6.q [34];
   assign \g_lane[4].u_mul.u_c4.q [39] = \g_lane[4].u_mul.u_c6.q [33];
-  assign \g_lane[4].u_mul.u_c4.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c4.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c5.clk  = clk;
   assign \g_lane[4].u_mul.u_c5.d [86] = gov;
   assign \g_lane[4].u_mul.u_c5.d [81] = \g_lane[4].u_mul.u_la.x [31];
@@ -218605,7 +218627,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_mul.u_c5.g_rv.rd [1] = \g_lane[4].u_mul.u_c5.q [1];
   assign \g_lane[4].u_mul.u_c5.g_rv.rd [0] = \g_lane[4].u_mul.u_c5.q [0];
   assign \g_lane[4].u_mul.u_c5.g_rv.rv  = \g_lane[4].u_mul.u_c5.q [86];
-  assign \g_lane[4].u_mul.u_c5.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c5.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c6.clk  = clk;
   assign \g_lane[4].u_mul.u_c6.d [36] = \g_lane[4].u_mul.u_c6.q [36];
   assign \g_lane[4].u_mul.u_c6.d [35] = \g_lane[4].u_mul.u_c6.q [35];
@@ -218644,7 +218666,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_mul.u_c6.d [2] = \g_lane[4].u_mul.u_c6.q [2];
   assign \g_lane[4].u_mul.u_c6.d [1] = \g_lane[4].u_mul.u_c6.q [1];
   assign \g_lane[4].u_mul.u_c6.d [0] = \g_lane[4].u_mul.u_c6.q [0];
-  assign \g_lane[4].u_mul.u_c6.rst_n  = \g_lane[4].u_mul.u_c7.rst_n ;
+  assign \g_lane[4].u_mul.u_c6.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_c7.clk  = clk;
   assign \g_lane[4].u_mul.u_c7.d [68] = gov;
   assign \g_lane[4].u_mul.u_c7.d [67] = \g_lane[4].u_mul.x_a [31];
@@ -218783,6 +218805,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[4].u_mul.u_c7.q [3] = \g_lane[4].u_mul.x_afz ;
   assign \g_lane[4].u_mul.u_c7.q [2] = \g_lane[4].u_mul.x_bfz ;
   assign \g_lane[4].u_mul.u_c7.q [0] = \g_lane[4].u_mul.zero ;
+  assign \g_lane[4].u_mul.u_c7.rst_n  = lrnv[4];
   assign \g_lane[4].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[4].u_mul.u_cpa.cout  = \g_lane[4].u_mul.unused_cout ;
   assign \g_lane[4].u_mul.u_cpa.g [294] = 1'h0;
@@ -220022,7 +220045,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].e0 [0] = \g_lane[5].u_mul.err [0];
   assign \g_lane[5].e1 [1] = \g_lane[5].u_add.err [1];
   assign \g_lane[5].e1 [0] = \g_lane[5].u_add.err [0];
-  assign \g_lane[5].g_lr.r  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].g_lr.r  = lrnv[5];
   assign \g_lane[5].gw [31] = \g_lane[5].u_mul.x_a [31];
   assign \g_lane[5].gw [30] = \g_lane[5].u_mul.x_a [30];
   assign \g_lane[5].gw [29] = \g_lane[5].u_mul.x_a [29];
@@ -220087,7 +220110,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].gx [2] = \g_lane[5].u_mul.x_b [2];
   assign \g_lane[5].gx [1] = \g_lane[5].u_mul.x_b [1];
   assign \g_lane[5].gx [0] = \g_lane[5].u_mul.x_b [0];
-  assign \g_lane[5].lrn  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].lrn  = lrnv[5];
   assign \g_lane[5].prod [31] = \g_lane[5].u_mul.y [31];
   assign \g_lane[5].prod [30] = \g_lane[5].u_mul.y [30];
   assign \g_lane[5].prod [29] = \g_lane[5].u_mul.y [29];
@@ -221056,7 +221079,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_add.rnd_w [2] = \g_lane[5].u_add.u_rnd.s [2];
   assign \g_lane[5].u_add.rnd_w [1] = \g_lane[5].u_add.u_rnd.s [1];
   assign \g_lane[5].u_add.rnd_w [0] = \g_lane[5].u_add.u_rnd.s [0];
-  assign \g_lane[5].u_add.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.s1_big [23] = \g_lane[5].u_add.u_sum.a [26];
   assign \g_lane[5].u_add.s1_big [22] = \g_lane[5].u_add.u_sum.a [25];
   assign \g_lane[5].u_add.s1_big [21] = \g_lane[5].u_add.u_sum.a [24];
@@ -221651,7 +221674,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_add.u_ca.q [2] = \g_lane[5].u_add.x_dba [2];
   assign \g_lane[5].u_add.u_ca.q [1] = \g_lane[5].u_add.x_dba [1];
   assign \g_lane[5].u_add.u_ca.q [0] = \g_lane[5].u_add.x_dba [0];
-  assign \g_lane[5].u_add.u_ca.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.u_ca.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.u_cb.clk  = clk;
   assign \g_lane[5].u_add.u_cb.d [55] = \g_lane[5].u_add.u_sum.s [27];
   assign \g_lane[5].u_add.u_cb.d [54] = \g_lane[5].u_add.u_sum.s [26];
@@ -221886,7 +221909,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_add.u_cb.q [2] = \g_lane[5].u_add.u_cd.d [9];
   assign \g_lane[5].u_add.u_cb.q [1] = \g_lane[5].u_add.u_cd.d [8];
   assign \g_lane[5].u_add.u_cb.q [0] = \g_lane[5].u_add.u_cd.d [7];
-  assign \g_lane[5].u_add.u_cb.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.u_cb.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.u_cc.clk  = clk;
   assign \g_lane[5].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[5].u_add.u_cc.d [24] = \g_lane[5].u_add.u_rnd.s [23];
@@ -222030,7 +222053,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_add.u_cc.q [27] = \g_lane[5].u_add.u_exp [2];
   assign \g_lane[5].u_add.u_cc.q [26] = \g_lane[5].u_add.u_exp [1];
   assign \g_lane[5].u_add.u_cc.q [25] = \g_lane[5].u_add.u_exp [0];
-  assign \g_lane[5].u_add.u_cc.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.u_cc.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.u_cd.clk  = clk;
   assign \g_lane[5].u_add.u_cd.d [6] = \g_lane[5].u_add.u_lzc.n [5];
   assign \g_lane[5].u_add.u_cd.d [5] = \g_lane[5].u_add.u_lzc.n [4];
@@ -222248,7 +222271,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_add.u_cd.q [8] = \g_lane[5].u_add.w_dif [1];
   assign \g_lane[5].u_add.u_cd.q [7] = \g_lane[5].u_add.w_dif [0];
   assign \g_lane[5].u_add.u_cd.q [0] = \g_lane[5].u_add.w_carry ;
-  assign \g_lane[5].u_add.u_cd.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_add.u_cd.rst_n  = lrnv[5];
   assign \g_lane[5].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[5].u_add.u_cmp.cout  = \g_lane[5].u_add.u_cmp.g [31];
   assign \g_lane[5].u_add.u_cmp.g [160] = 1'h1;
@@ -226245,7 +226268,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_mul.rows [240] = 1'h0;
   assign \g_lane[5].u_mul.rows [144] = 1'h0;
   assign \g_lane[5].u_mul.rows [48] = 1'h0;
-  assign \g_lane[5].u_mul.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.s1_byp  = \g_lane[5].u_mul.u_c2.d [227];
   assign \g_lane[5].u_mul.s1_err [1] = \g_lane[5].u_mul.u_c2.d [226];
   assign \g_lane[5].u_mul.s1_err [0] = \g_lane[5].u_mul.u_c2.d [225];
@@ -226418,7 +226441,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_mul.u_c1.q [2] = \g_lane[5].u_mul.u_pw.b [2];
   assign \g_lane[5].u_mul.u_c1.q [1] = \g_lane[5].u_mul.u_pw.b [1];
   assign \g_lane[5].u_mul.u_c1.q [0] = \g_lane[5].u_mul.u_pw.b [0];
-  assign \g_lane[5].u_mul.u_c1.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c1.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c2.clk  = clk;
   assign \g_lane[5].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[5].u_mul.u_c2.g_rv.rd [227] = \g_lane[5].u_mul.u_c2.q [227];
@@ -226746,7 +226769,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_mul.u_c2.q [130] = \g_lane[5].u_mul.u_cpa.a [2];
   assign \g_lane[5].u_mul.u_c2.q [129] = \g_lane[5].u_mul.u_cpa.a [1];
   assign \g_lane[5].u_mul.u_c2.q [128] = \g_lane[5].u_mul.u_cpa.a [0];
-  assign \g_lane[5].u_mul.u_c2.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c2.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c3.clk  = clk;
   assign \g_lane[5].u_mul.u_c3.g_rv.rd [41] = \g_lane[5].u_mul.u_c4.d [41];
   assign \g_lane[5].u_mul.u_c3.g_rv.rd [40] = \g_lane[5].u_mul.u_c4.d [40];
@@ -226834,7 +226857,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_mul.u_c3.q [2] = \g_lane[5].u_mul.u_rnd.a [1];
   assign \g_lane[5].u_mul.u_c3.q [1] = \g_lane[5].u_mul.u_rnd.a [0];
   assign \g_lane[5].u_mul.u_c3.q [0] = \g_lane[5].u_mul.u_rnd.g [0];
-  assign \g_lane[5].u_mul.u_c3.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c3.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c4.clk  = clk;
   assign \g_lane[5].u_mul.u_c4.d [24] = \g_lane[5].u_mul.u_rnd.s [23];
   assign \g_lane[5].u_mul.u_c4.d [23] = \g_lane[5].u_mul.u_rnd.s [22];
@@ -226908,7 +226931,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_mul.u_c4.q [41] = \g_lane[5].u_mul.u_c6.q [35];
   assign \g_lane[5].u_mul.u_c4.q [40] = \g_lane[5].u_mul.u_c6.q [34];
   assign \g_lane[5].u_mul.u_c4.q [39] = \g_lane[5].u_mul.u_c6.q [33];
-  assign \g_lane[5].u_mul.u_c4.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c4.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c5.clk  = clk;
   assign \g_lane[5].u_mul.u_c5.d [86] = gov;
   assign \g_lane[5].u_mul.u_c5.d [81] = \g_lane[5].u_mul.u_la.x [31];
@@ -227056,7 +227079,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_mul.u_c5.g_rv.rd [1] = \g_lane[5].u_mul.u_c5.q [1];
   assign \g_lane[5].u_mul.u_c5.g_rv.rd [0] = \g_lane[5].u_mul.u_c5.q [0];
   assign \g_lane[5].u_mul.u_c5.g_rv.rv  = \g_lane[5].u_mul.u_c5.q [86];
-  assign \g_lane[5].u_mul.u_c5.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c5.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c6.clk  = clk;
   assign \g_lane[5].u_mul.u_c6.d [36] = \g_lane[5].u_mul.u_c6.q [36];
   assign \g_lane[5].u_mul.u_c6.d [35] = \g_lane[5].u_mul.u_c6.q [35];
@@ -227095,7 +227118,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_mul.u_c6.d [2] = \g_lane[5].u_mul.u_c6.q [2];
   assign \g_lane[5].u_mul.u_c6.d [1] = \g_lane[5].u_mul.u_c6.q [1];
   assign \g_lane[5].u_mul.u_c6.d [0] = \g_lane[5].u_mul.u_c6.q [0];
-  assign \g_lane[5].u_mul.u_c6.rst_n  = \g_lane[5].u_mul.u_c7.rst_n ;
+  assign \g_lane[5].u_mul.u_c6.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_c7.clk  = clk;
   assign \g_lane[5].u_mul.u_c7.d [68] = gov;
   assign \g_lane[5].u_mul.u_c7.d [67] = \g_lane[5].u_mul.x_a [31];
@@ -227234,6 +227257,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[5].u_mul.u_c7.q [3] = \g_lane[5].u_mul.x_afz ;
   assign \g_lane[5].u_mul.u_c7.q [2] = \g_lane[5].u_mul.x_bfz ;
   assign \g_lane[5].u_mul.u_c7.q [0] = \g_lane[5].u_mul.zero ;
+  assign \g_lane[5].u_mul.u_c7.rst_n  = lrnv[5];
   assign \g_lane[5].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[5].u_mul.u_cpa.cout  = \g_lane[5].u_mul.unused_cout ;
   assign \g_lane[5].u_mul.u_cpa.g [294] = 1'h0;
@@ -228473,7 +228497,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].e0 [0] = \g_lane[6].u_mul.err [0];
   assign \g_lane[6].e1 [1] = \g_lane[6].u_add.err [1];
   assign \g_lane[6].e1 [0] = \g_lane[6].u_add.err [0];
-  assign \g_lane[6].g_lr.r  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].g_lr.r  = lrnv[6];
   assign \g_lane[6].gw [31] = \g_lane[6].u_mul.x_a [31];
   assign \g_lane[6].gw [30] = \g_lane[6].u_mul.x_a [30];
   assign \g_lane[6].gw [29] = \g_lane[6].u_mul.x_a [29];
@@ -228538,7 +228562,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].gx [2] = \g_lane[6].u_mul.x_b [2];
   assign \g_lane[6].gx [1] = \g_lane[6].u_mul.x_b [1];
   assign \g_lane[6].gx [0] = \g_lane[6].u_mul.x_b [0];
-  assign \g_lane[6].lrn  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].lrn  = lrnv[6];
   assign \g_lane[6].prod [31] = \g_lane[6].u_mul.y [31];
   assign \g_lane[6].prod [30] = \g_lane[6].u_mul.y [30];
   assign \g_lane[6].prod [29] = \g_lane[6].u_mul.y [29];
@@ -229507,7 +229531,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_add.rnd_w [2] = \g_lane[6].u_add.u_rnd.s [2];
   assign \g_lane[6].u_add.rnd_w [1] = \g_lane[6].u_add.u_rnd.s [1];
   assign \g_lane[6].u_add.rnd_w [0] = \g_lane[6].u_add.u_rnd.s [0];
-  assign \g_lane[6].u_add.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.s1_big [23] = \g_lane[6].u_add.u_sum.a [26];
   assign \g_lane[6].u_add.s1_big [22] = \g_lane[6].u_add.u_sum.a [25];
   assign \g_lane[6].u_add.s1_big [21] = \g_lane[6].u_add.u_sum.a [24];
@@ -230102,7 +230126,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_add.u_ca.q [2] = \g_lane[6].u_add.x_dba [2];
   assign \g_lane[6].u_add.u_ca.q [1] = \g_lane[6].u_add.x_dba [1];
   assign \g_lane[6].u_add.u_ca.q [0] = \g_lane[6].u_add.x_dba [0];
-  assign \g_lane[6].u_add.u_ca.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.u_ca.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.u_cb.clk  = clk;
   assign \g_lane[6].u_add.u_cb.d [55] = \g_lane[6].u_add.u_sum.s [27];
   assign \g_lane[6].u_add.u_cb.d [54] = \g_lane[6].u_add.u_sum.s [26];
@@ -230337,7 +230361,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_add.u_cb.q [2] = \g_lane[6].u_add.u_cd.d [9];
   assign \g_lane[6].u_add.u_cb.q [1] = \g_lane[6].u_add.u_cd.d [8];
   assign \g_lane[6].u_add.u_cb.q [0] = \g_lane[6].u_add.u_cd.d [7];
-  assign \g_lane[6].u_add.u_cb.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.u_cb.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.u_cc.clk  = clk;
   assign \g_lane[6].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[6].u_add.u_cc.d [24] = \g_lane[6].u_add.u_rnd.s [23];
@@ -230481,7 +230505,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_add.u_cc.q [27] = \g_lane[6].u_add.u_exp [2];
   assign \g_lane[6].u_add.u_cc.q [26] = \g_lane[6].u_add.u_exp [1];
   assign \g_lane[6].u_add.u_cc.q [25] = \g_lane[6].u_add.u_exp [0];
-  assign \g_lane[6].u_add.u_cc.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.u_cc.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.u_cd.clk  = clk;
   assign \g_lane[6].u_add.u_cd.d [6] = \g_lane[6].u_add.u_lzc.n [5];
   assign \g_lane[6].u_add.u_cd.d [5] = \g_lane[6].u_add.u_lzc.n [4];
@@ -230699,7 +230723,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_add.u_cd.q [8] = \g_lane[6].u_add.w_dif [1];
   assign \g_lane[6].u_add.u_cd.q [7] = \g_lane[6].u_add.w_dif [0];
   assign \g_lane[6].u_add.u_cd.q [0] = \g_lane[6].u_add.w_carry ;
-  assign \g_lane[6].u_add.u_cd.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_add.u_cd.rst_n  = lrnv[6];
   assign \g_lane[6].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[6].u_add.u_cmp.cout  = \g_lane[6].u_add.u_cmp.g [31];
   assign \g_lane[6].u_add.u_cmp.g [160] = 1'h1;
@@ -234696,7 +234720,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_mul.rows [240] = 1'h0;
   assign \g_lane[6].u_mul.rows [144] = 1'h0;
   assign \g_lane[6].u_mul.rows [48] = 1'h0;
-  assign \g_lane[6].u_mul.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.s1_byp  = \g_lane[6].u_mul.u_c2.d [227];
   assign \g_lane[6].u_mul.s1_err [1] = \g_lane[6].u_mul.u_c2.d [226];
   assign \g_lane[6].u_mul.s1_err [0] = \g_lane[6].u_mul.u_c2.d [225];
@@ -234869,7 +234893,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_mul.u_c1.q [2] = \g_lane[6].u_mul.u_pw.b [2];
   assign \g_lane[6].u_mul.u_c1.q [1] = \g_lane[6].u_mul.u_pw.b [1];
   assign \g_lane[6].u_mul.u_c1.q [0] = \g_lane[6].u_mul.u_pw.b [0];
-  assign \g_lane[6].u_mul.u_c1.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c1.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c2.clk  = clk;
   assign \g_lane[6].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[6].u_mul.u_c2.g_rv.rd [227] = \g_lane[6].u_mul.u_c2.q [227];
@@ -235197,7 +235221,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_mul.u_c2.q [130] = \g_lane[6].u_mul.u_cpa.a [2];
   assign \g_lane[6].u_mul.u_c2.q [129] = \g_lane[6].u_mul.u_cpa.a [1];
   assign \g_lane[6].u_mul.u_c2.q [128] = \g_lane[6].u_mul.u_cpa.a [0];
-  assign \g_lane[6].u_mul.u_c2.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c2.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c3.clk  = clk;
   assign \g_lane[6].u_mul.u_c3.g_rv.rd [41] = \g_lane[6].u_mul.u_c4.d [41];
   assign \g_lane[6].u_mul.u_c3.g_rv.rd [40] = \g_lane[6].u_mul.u_c4.d [40];
@@ -235285,7 +235309,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_mul.u_c3.q [2] = \g_lane[6].u_mul.u_rnd.a [1];
   assign \g_lane[6].u_mul.u_c3.q [1] = \g_lane[6].u_mul.u_rnd.a [0];
   assign \g_lane[6].u_mul.u_c3.q [0] = \g_lane[6].u_mul.u_rnd.g [0];
-  assign \g_lane[6].u_mul.u_c3.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c3.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c4.clk  = clk;
   assign \g_lane[6].u_mul.u_c4.d [24] = \g_lane[6].u_mul.u_rnd.s [23];
   assign \g_lane[6].u_mul.u_c4.d [23] = \g_lane[6].u_mul.u_rnd.s [22];
@@ -235359,7 +235383,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_mul.u_c4.q [41] = \g_lane[6].u_mul.u_c6.q [35];
   assign \g_lane[6].u_mul.u_c4.q [40] = \g_lane[6].u_mul.u_c6.q [34];
   assign \g_lane[6].u_mul.u_c4.q [39] = \g_lane[6].u_mul.u_c6.q [33];
-  assign \g_lane[6].u_mul.u_c4.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c4.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c5.clk  = clk;
   assign \g_lane[6].u_mul.u_c5.d [86] = gov;
   assign \g_lane[6].u_mul.u_c5.d [81] = \g_lane[6].u_mul.u_la.x [31];
@@ -235507,7 +235531,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_mul.u_c5.g_rv.rd [1] = \g_lane[6].u_mul.u_c5.q [1];
   assign \g_lane[6].u_mul.u_c5.g_rv.rd [0] = \g_lane[6].u_mul.u_c5.q [0];
   assign \g_lane[6].u_mul.u_c5.g_rv.rv  = \g_lane[6].u_mul.u_c5.q [86];
-  assign \g_lane[6].u_mul.u_c5.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c5.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c6.clk  = clk;
   assign \g_lane[6].u_mul.u_c6.d [36] = \g_lane[6].u_mul.u_c6.q [36];
   assign \g_lane[6].u_mul.u_c6.d [35] = \g_lane[6].u_mul.u_c6.q [35];
@@ -235546,7 +235570,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_mul.u_c6.d [2] = \g_lane[6].u_mul.u_c6.q [2];
   assign \g_lane[6].u_mul.u_c6.d [1] = \g_lane[6].u_mul.u_c6.q [1];
   assign \g_lane[6].u_mul.u_c6.d [0] = \g_lane[6].u_mul.u_c6.q [0];
-  assign \g_lane[6].u_mul.u_c6.rst_n  = \g_lane[6].u_mul.u_c7.rst_n ;
+  assign \g_lane[6].u_mul.u_c6.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_c7.clk  = clk;
   assign \g_lane[6].u_mul.u_c7.d [68] = gov;
   assign \g_lane[6].u_mul.u_c7.d [67] = \g_lane[6].u_mul.x_a [31];
@@ -235685,6 +235709,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[6].u_mul.u_c7.q [3] = \g_lane[6].u_mul.x_afz ;
   assign \g_lane[6].u_mul.u_c7.q [2] = \g_lane[6].u_mul.x_bfz ;
   assign \g_lane[6].u_mul.u_c7.q [0] = \g_lane[6].u_mul.zero ;
+  assign \g_lane[6].u_mul.u_c7.rst_n  = lrnv[6];
   assign \g_lane[6].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[6].u_mul.u_cpa.cout  = \g_lane[6].u_mul.unused_cout ;
   assign \g_lane[6].u_mul.u_cpa.g [294] = 1'h0;
@@ -236924,7 +236949,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].e0 [0] = \g_lane[7].u_mul.err [0];
   assign \g_lane[7].e1 [1] = \g_lane[7].u_add.err [1];
   assign \g_lane[7].e1 [0] = \g_lane[7].u_add.err [0];
-  assign \g_lane[7].g_lr.r  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].g_lr.r  = lrnv[7];
   assign \g_lane[7].gw [31] = \g_lane[7].u_mul.x_a [31];
   assign \g_lane[7].gw [30] = \g_lane[7].u_mul.x_a [30];
   assign \g_lane[7].gw [29] = \g_lane[7].u_mul.x_a [29];
@@ -236989,7 +237014,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].gx [2] = \g_lane[7].u_mul.x_b [2];
   assign \g_lane[7].gx [1] = \g_lane[7].u_mul.x_b [1];
   assign \g_lane[7].gx [0] = \g_lane[7].u_mul.x_b [0];
-  assign \g_lane[7].lrn  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].lrn  = lrnv[7];
   assign \g_lane[7].prod [31] = \g_lane[7].u_mul.y [31];
   assign \g_lane[7].prod [30] = \g_lane[7].u_mul.y [30];
   assign \g_lane[7].prod [29] = \g_lane[7].u_mul.y [29];
@@ -237958,7 +237983,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_add.rnd_w [2] = \g_lane[7].u_add.u_rnd.s [2];
   assign \g_lane[7].u_add.rnd_w [1] = \g_lane[7].u_add.u_rnd.s [1];
   assign \g_lane[7].u_add.rnd_w [0] = \g_lane[7].u_add.u_rnd.s [0];
-  assign \g_lane[7].u_add.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.s1_big [23] = \g_lane[7].u_add.u_sum.a [26];
   assign \g_lane[7].u_add.s1_big [22] = \g_lane[7].u_add.u_sum.a [25];
   assign \g_lane[7].u_add.s1_big [21] = \g_lane[7].u_add.u_sum.a [24];
@@ -238553,7 +238578,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_add.u_ca.q [2] = \g_lane[7].u_add.x_dba [2];
   assign \g_lane[7].u_add.u_ca.q [1] = \g_lane[7].u_add.x_dba [1];
   assign \g_lane[7].u_add.u_ca.q [0] = \g_lane[7].u_add.x_dba [0];
-  assign \g_lane[7].u_add.u_ca.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.u_ca.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.u_cb.clk  = clk;
   assign \g_lane[7].u_add.u_cb.d [55] = \g_lane[7].u_add.u_sum.s [27];
   assign \g_lane[7].u_add.u_cb.d [54] = \g_lane[7].u_add.u_sum.s [26];
@@ -238788,7 +238813,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_add.u_cb.q [2] = \g_lane[7].u_add.u_cd.d [9];
   assign \g_lane[7].u_add.u_cb.q [1] = \g_lane[7].u_add.u_cd.d [8];
   assign \g_lane[7].u_add.u_cb.q [0] = \g_lane[7].u_add.u_cd.d [7];
-  assign \g_lane[7].u_add.u_cb.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.u_cb.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.u_cc.clk  = clk;
   assign \g_lane[7].u_add.u_cc.d [66] = 1'h0;
   assign \g_lane[7].u_add.u_cc.d [24] = \g_lane[7].u_add.u_rnd.s [23];
@@ -238932,7 +238957,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_add.u_cc.q [27] = \g_lane[7].u_add.u_exp [2];
   assign \g_lane[7].u_add.u_cc.q [26] = \g_lane[7].u_add.u_exp [1];
   assign \g_lane[7].u_add.u_cc.q [25] = \g_lane[7].u_add.u_exp [0];
-  assign \g_lane[7].u_add.u_cc.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.u_cc.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.u_cd.clk  = clk;
   assign \g_lane[7].u_add.u_cd.d [6] = \g_lane[7].u_add.u_lzc.n [5];
   assign \g_lane[7].u_add.u_cd.d [5] = \g_lane[7].u_add.u_lzc.n [4];
@@ -239150,7 +239175,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_add.u_cd.q [8] = \g_lane[7].u_add.w_dif [1];
   assign \g_lane[7].u_add.u_cd.q [7] = \g_lane[7].u_add.w_dif [0];
   assign \g_lane[7].u_add.u_cd.q [0] = \g_lane[7].u_add.w_carry ;
-  assign \g_lane[7].u_add.u_cd.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_add.u_cd.rst_n  = lrnv[7];
   assign \g_lane[7].u_add.u_cmp.cin  = 1'h1;
   assign \g_lane[7].u_add.u_cmp.cout  = \g_lane[7].u_add.u_cmp.g [31];
   assign \g_lane[7].u_add.u_cmp.g [160] = 1'h1;
@@ -243147,7 +243172,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_mul.rows [240] = 1'h0;
   assign \g_lane[7].u_mul.rows [144] = 1'h0;
   assign \g_lane[7].u_mul.rows [48] = 1'h0;
-  assign \g_lane[7].u_mul.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.s1_byp  = \g_lane[7].u_mul.u_c2.d [227];
   assign \g_lane[7].u_mul.s1_err [1] = \g_lane[7].u_mul.u_c2.d [226];
   assign \g_lane[7].u_mul.s1_err [0] = \g_lane[7].u_mul.u_c2.d [225];
@@ -243320,7 +243345,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_mul.u_c1.q [2] = \g_lane[7].u_mul.u_pw.b [2];
   assign \g_lane[7].u_mul.u_c1.q [1] = \g_lane[7].u_mul.u_pw.b [1];
   assign \g_lane[7].u_mul.u_c1.q [0] = \g_lane[7].u_mul.u_pw.b [0];
-  assign \g_lane[7].u_mul.u_c1.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c1.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c2.clk  = clk;
   assign \g_lane[7].u_mul.u_c2.d [176] = 1'h0;
   assign \g_lane[7].u_mul.u_c2.g_rv.rd [227] = \g_lane[7].u_mul.u_c2.q [227];
@@ -243648,7 +243673,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_mul.u_c2.q [130] = \g_lane[7].u_mul.u_cpa.a [2];
   assign \g_lane[7].u_mul.u_c2.q [129] = \g_lane[7].u_mul.u_cpa.a [1];
   assign \g_lane[7].u_mul.u_c2.q [128] = \g_lane[7].u_mul.u_cpa.a [0];
-  assign \g_lane[7].u_mul.u_c2.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c2.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c3.clk  = clk;
   assign \g_lane[7].u_mul.u_c3.g_rv.rd [41] = \g_lane[7].u_mul.u_c4.d [41];
   assign \g_lane[7].u_mul.u_c3.g_rv.rd [40] = \g_lane[7].u_mul.u_c4.d [40];
@@ -243736,7 +243761,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_mul.u_c3.q [2] = \g_lane[7].u_mul.u_rnd.a [1];
   assign \g_lane[7].u_mul.u_c3.q [1] = \g_lane[7].u_mul.u_rnd.a [0];
   assign \g_lane[7].u_mul.u_c3.q [0] = \g_lane[7].u_mul.u_rnd.g [0];
-  assign \g_lane[7].u_mul.u_c3.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c3.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c4.clk  = clk;
   assign \g_lane[7].u_mul.u_c4.d [24] = \g_lane[7].u_mul.u_rnd.s [23];
   assign \g_lane[7].u_mul.u_c4.d [23] = \g_lane[7].u_mul.u_rnd.s [22];
@@ -243810,7 +243835,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_mul.u_c4.q [41] = \g_lane[7].u_mul.u_c6.q [35];
   assign \g_lane[7].u_mul.u_c4.q [40] = \g_lane[7].u_mul.u_c6.q [34];
   assign \g_lane[7].u_mul.u_c4.q [39] = \g_lane[7].u_mul.u_c6.q [33];
-  assign \g_lane[7].u_mul.u_c4.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c4.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c5.clk  = clk;
   assign \g_lane[7].u_mul.u_c5.d [86] = gov;
   assign \g_lane[7].u_mul.u_c5.d [81] = \g_lane[7].u_mul.u_la.x [31];
@@ -243958,7 +243983,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_mul.u_c5.g_rv.rd [1] = \g_lane[7].u_mul.u_c5.q [1];
   assign \g_lane[7].u_mul.u_c5.g_rv.rd [0] = \g_lane[7].u_mul.u_c5.q [0];
   assign \g_lane[7].u_mul.u_c5.g_rv.rv  = \g_lane[7].u_mul.u_c5.q [86];
-  assign \g_lane[7].u_mul.u_c5.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c5.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c6.clk  = clk;
   assign \g_lane[7].u_mul.u_c6.d [36] = \g_lane[7].u_mul.u_c6.q [36];
   assign \g_lane[7].u_mul.u_c6.d [35] = \g_lane[7].u_mul.u_c6.q [35];
@@ -243997,7 +244022,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_mul.u_c6.d [2] = \g_lane[7].u_mul.u_c6.q [2];
   assign \g_lane[7].u_mul.u_c6.d [1] = \g_lane[7].u_mul.u_c6.q [1];
   assign \g_lane[7].u_mul.u_c6.d [0] = \g_lane[7].u_mul.u_c6.q [0];
-  assign \g_lane[7].u_mul.u_c6.rst_n  = \g_lane[7].u_mul.u_c7.rst_n ;
+  assign \g_lane[7].u_mul.u_c6.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_c7.clk  = clk;
   assign \g_lane[7].u_mul.u_c7.d [68] = gov;
   assign \g_lane[7].u_mul.u_c7.d [67] = \g_lane[7].u_mul.x_a [31];
@@ -244136,6 +244161,7 @@ module \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].
   assign \g_lane[7].u_mul.u_c7.q [3] = \g_lane[7].u_mul.x_afz ;
   assign \g_lane[7].u_mul.u_c7.q [2] = \g_lane[7].u_mul.x_bfz ;
   assign \g_lane[7].u_mul.u_c7.q [0] = \g_lane[7].u_mul.zero ;
+  assign \g_lane[7].u_mul.u_c7.rst_n  = lrnv[7];
   assign \g_lane[7].u_mul.u_cpa.cin  = 1'h0;
   assign \g_lane[7].u_mul.u_cpa.cout  = \g_lane[7].u_mul.unused_cout ;
   assign \g_lane[7].u_mul.u_cpa.g [294] = 1'h0;
