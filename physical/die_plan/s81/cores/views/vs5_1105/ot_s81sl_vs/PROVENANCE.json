@@ -1,0 +1,30 @@
+{
+ "as_run_note": "SS32-RESIGN re-sign flow-20261105-s-s81; DIE-S81-56 vs5 i1 (intel1), copied to intel2; same routed DB; vs line merged I77",
+ "build_commit": "f7d2a61a64f",
+ "created": "2026-11-05 07:16 PST",
+ "flow_tag": "flow-20261105-s-s81",
+ "host": "tolerant-swine",
+ "kind": "resign",
+ "kit": "/srv/opentallas-scratch2/claude/ss32/resign/kit_vs5",
+ "lane": "SS32-RESIGN",
+ "lec": "/srv/opentallas-scratch2/claude/ss32/resign/vs5_s/lecrun/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "name": "kl_ot_s81sl_vs_rf1s",
+ "original_signoff": "/srv/opentallas-scratch2/claude/ss32/resign/kit_vs5/signoff/signoff.json",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/ss32/resign/vs5_s/signoff/signoff.json",
+ "routed_db": "/srv/opentallas-scratch2/claude/ss32/resign/kit_vs5/run/results/asap7/kl_ot_s81sl_vs_rf1s/base/6_final.odb",
+ "routed_db_sha256": "812b98c5fe770eb5d3af4df1775068771b4f253d83d5a9c8f5010ffda3b15a8e",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "schema": "opentallas.resign_qualification.v1",
+ "src_commit": "a516b899874b38794d018f6a824a949b9d4e0179",
+ "tag_tools": {
+  "checked": "byte-identical to flow-20261105-s-s81",
+  "dir": "/srv/opentallas-scratch2/claude/ss32/resign/repo_s/tools/die_plan",
+  "sha256": {
+   "lec.py": "255c25662adf373858f16dbb404c20e75880cc7da9ef3c6ae816c86f46a2798f",
+   "signoff.py": "a88907bee0469982f950c87a42d71c896ddbbc0aaeac52fcc32b5358351b4663"
+  }
+ },
+ "verdict": "SIGNED",
+ "writer": "tools/die_plan/resign.py"
+}

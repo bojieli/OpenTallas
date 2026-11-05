@@ -723,7 +723,7 @@
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "source": "d4g as-built die_r18h5.v instance smw_NW (module ot_hbm_sm_vm_wr_q_t_lanes4); files = closure of ot_hbm_sm_vm_wr_q_t_lanes4 at d34578d6f",
-  "source_commit": "d34578d6f",
+  "source_commit": "aa36dd563f",
   "read_at_commit": true,
   "files_at": {
    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "8e7f8a9f05"
@@ -3005,5 +3005,258 @@
   "source_commit": "c3199719170d92b299edd36599d6b8f35df82902",
   "read_at_commit": true,
   "util": 0.45
+ },
+ "ot_hgi_sfu_opsb_group": {
+  "defines": [],
+  "params": {},
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsb_group",
+  "util": 0.45
+ },
+ "ot_hgi_sfu_opsa_rest": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_rest",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_rest.sv"
+  ]
+ },
+ "ot_hbm_idx_topk_store": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 30: tile of ot_hbm_idx_topk_link_static; bench results/die_hbm_1105/form_split/p30",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "top": "ot_hbm_idx_topk_store",
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "ot_hbm_idx_topk_ingest": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 30: tile of ot_hbm_idx_topk_link_static; bench results/die_hbm_1105/form_split/p30",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "top": "ot_hbm_idx_topk_ingest",
+  "macros": []
+ },
+ "ot_hgi_sfu_opsb_output": {
+  "defines": [],
+  "params": {},
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsb_output",
+  "util": 0.45
+ },
+ "ot_hgi_sfu_opsa_group1": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_group1",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
+  ]
+ },
+ "ot_hgi_sfu_opsa_group0": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_group0",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
+  ]
+ },
+ "ot_hgi_coll_gqi_issue": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 29: tile of ot_hgi_coll_gq_issue; bench results/die_hbm_1105/form_split/p29",
+  "top": "ot_hgi_coll_gqi_issue",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/gq/ot_hgi_coll_gqi_issue.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ]
+ },
+ "ot_hgi_gq_aq_tile": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 29: tile of ot_hgi_coll_gq_issue; bench results/die_hbm_1105/form_split/p29",
+  "top": "ot_hgi_gq_aq_tile",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/gq/ot_hgi_gq_aq_tile.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ]
+ },
+ "ot_q2nf_rest": {
+  "top": "ot_q2nf_rest",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_q2nf_rest.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1r1w_64x512_m1_r2c2",
+   "ot_sram_1rw_256x64_m4_r2c2"
+  ],
+  "defines": [],
+  "params": {},
+  "source": "HBM-REFORM-B5 d44v part 33 tile of ot_hfd_coll_q2n2_body_core; bench results/die_hbm_1104/reform_b/split_p33/",
+  "source_commit": "7b542aa63fa34be4292360da286a76cca3487451",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_q2nf_qout": {
+  "top": "ot_q2nf_qout",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_q2nf_split.sv"
+  ],
+  "macros": [],
+  "defines": [],
+  "params": {},
+  "source": "HBM-REFORM-B5 d44v part 33 tile of ot_hfd_coll_q2n2_body_core; bench results/die_hbm_1104/reform_b/split_p33/",
+  "source_commit": "7b542aa63fa34be4292360da286a76cca3487451",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_top": {
+  "top": "ot_svgr_top",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {
+   "LBANKS": 4,
+   "NID": 6,
+   "IDW": 9,
+   "PAW": 11,
+   "PREL": 1,
+   "DD": 256,
+   "ID_COHORT": 1,
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "9410cf281442cefc6a9e7e406136ad535118f779",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_own": {
+  "top": "ot_svgr_own",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {},
+  "macros": [],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_bk": {
+  "top": "ot_svgr_bk",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_hfd_coll_q3_qcol4": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 28: tile of ot_hfd_coll_q3_body_core; bench results/die_hbm_1105/form_split/p28",
+  "top": "ot_hfd_coll_q3_qcol4",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_body_core/ot_hfd_coll_q3_qcol4.sv"
+  ],
+  "macros": []
+ },
+ "ot_hfd_coll_q3_body_ctl": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 28: tile of ot_hfd_coll_q3_body_core; bench results/die_hbm_1105/form_split/p28",
+  "top": "ot_hfd_coll_q3_body_ctl",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/q3/ot_hfd_coll_q3_body_ctl.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1rw_256x64_m4_r2c2"
+  ]
  }
 }

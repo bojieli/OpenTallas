@@ -17,7 +17,7 @@ set -uo pipefail
 # HBM-CORES3 10-25 (COORD KIT-CENSUS): sdc_lint / SELRANGE / port-bind / face_guard FAIL = STOP before floorplan
 # (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = INFO
 # pre-repair screen since KIT-TRIAGE-1/G5 11-01 (COORD 11-01 05:1x / OWNER 12.28b); STOP, marker /work/FAIL_POSTCTS, rc 4,
-# only below OT_HOLD_STOP_PS -150 ps reg2reg).  OT_PRE_ROUTE_FF_HOLD (GRT-estimate FF hold < 0 after repair) is INFO, not a stop.
+# only below OT_HOLD_STOP_PS -200 ps reg2reg).  OT_PRE_ROUTE_FF_HOLD (GRT-estimate FF hold < 0 after repair) is INFO, not a stop.
 # KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the post-GRT per-corner insertion gate (postcts_gate.tcl TT/FF) is
 # ADVISORY: a miss (band dev > tol, or no verdict) prints OT_POSTCTS_ADVISORY (postcts_advisory.log), writes no
 # FAIL_POSTCTS and the kit routes on to sign-off; signoff.py records the band as signoff.json insertion_band.

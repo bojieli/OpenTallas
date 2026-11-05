@@ -446,3 +446,12 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 - **ot_hbm_svc_wb_kport_q** (flat 374k), slot 475.2x475.2 grows to 527.04x544.32, u_wbk_Q__q1 origin y -8.64 (gaps at q1: E 17.28, N 8.64, S 21.6). It becomes one switch tile **ot_wbq_sw** 86.4x544.32 (160k cells at kit synth, over the 150k target) and four root tiles **ot_wbq_root** 432x129.6 (57k cells, 2 lane groups each, 8 128x256 payload macros), all with registered faces, one clock.
 - **Form**: root pushes sectors with a credit of 4 per group; sw queues per group and switches onto 16 K ports at most 8 per edge (flat 16). Order on K changes; each PC still gets its sectors in stream order per group.
 - **Cycles**: physical/die_plan/hbm/reform_1103/cycles/wb_kport.tsv. Scripts results/die_hbm_1104/reform_b/split_p25/ (mk_p25.py pre, then mk_split.py).
+
+Parts 27, 29 (HBM-FORM-SPLIT, 11-05): ot_hgi_sfu_core_split3__opstore_b -> 2 x opsb_group + opsb_output; opstore_a -> opsa_group0 + opsa_group1 + opsa_rest, slot 760.32 x 552.96 (origin kept, grows die north); ot_hgi_coll_gq_issue -> gqi_issue + 2 x gq_aq_tile, slot 328.32 x 233.28 (origin kept, grows die east). Util 0.45, registered faces. Added cycles: opstore_a engine fault +2 from operand groups 0,1 only; everything else 0. Benches and replay: results/die_hbm_1105/form_split.
+
+
+Part 26 (HBM-REFORM-B5): ot_hbm_svc_sm_group_rel_id -> ot_svgr_top + ot_svgr_own + 2 x ot_svgr_bk inside the old slot, registered faces. SM command, packet and GO slots unchanged (bench: 29/29 exact, results bit-equal). Seam edges in results/die_hbm_1104/reform_b/split_p26/cycles/rel_id_split.tsv. 298 station ends moved to the tile pins, register counts unchanged. ot_wbq_root macros moved 15.12 um off the W seam (DPL-0033 on the k3 build).
+
+Part 33 (HBM-REFORM-B5): ot_hfd_coll_q2n2_body_core -> ot_q2nf_rest + ot_q2nf_qout, 0 added data cycles, select/unavailable faults +2. results/die_hbm_1104/reform_b/split_p33/.
+
+Part 28 (HBM-FORM-SPLIT-2, 11-05): ot_hfd_coll_q3_body_core -> ot_hfd_coll_q3_body_ctl + 4 x ot_hfd_coll_q3_qcol4, same slot, util 0.45, registered faces, 0 added cycles. Replay results/die_hbm_1105/form_split/replay_p28.sh.

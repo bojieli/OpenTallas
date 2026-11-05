@@ -1817,6 +1817,324 @@
    "designs_added": [
     "ot_hgi_coll_tkm_tp192_htile_core"
    ]
+  },
+  {
+   "core": "ot_hgi_sfu_core_split3__opstore_b",
+   "sha": "p27",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hgi_sfu_core_split3__opstore_b__p27glue.sv",
+   "slot_um": [
+    760.32,
+    691.2
+   ],
+   "instances": 2,
+   "types": [
+    "q_b113",
+    "q_b113__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_g0": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      760.32,
+      233.28
+     ]
+    ],
+    "u_fcore.u_core.u_g1": [
+     [
+      0.0,
+      457.92
+     ],
+     [
+      760.32,
+      233.28
+     ]
+    ],
+    "u_fcore.u_core.u_o": [
+     [
+      0.0,
+      233.28
+     ],
+     [
+      760.32,
+      224.64
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hgi_sfu_opsb_group": {
+     "pins_file": "cores/ot_hgi_sfu_opsb_group__760.32x233.28__d44v_split.json",
+     "outline_um": [
+      760.32,
+      233.28
+     ],
+     "pins": 3155,
+     "clock_pins": 1,
+     "clock_entry": [
+      380.16,
+      61.68
+     ],
+     "faces": {
+      "E": 2533,
+      "I": 1,
+      "S": 384,
+      "W": 237
+     }
+    },
+    "ot_hgi_sfu_opsb_output": {
+     "pins_file": "cores/ot_hgi_sfu_opsb_output__760.32x224.64__d44v_split.json",
+     "outline_um": [
+      760.32,
+      224.64
+     ],
+     "pins": 1461,
+     "clock_pins": 1,
+     "clock_entry": [
+      380.16,
+      59.84
+     ],
+     "faces": {
+      "E": 649,
+      "I": 1,
+      "W": 811
+     }
+    }
+   },
+   "added_cycles": "0 at every plan pin: each tile's kit face shell is +1 in and +1 out like the uncut core's; no seam between tiles",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 48
+   },
+   "designs_removed": [
+    "ot_hgi_sfu_core_split3__opstore_b"
+   ],
+   "designs_added": [
+    "ot_hgi_sfu_opsb_group",
+    "ot_hgi_sfu_opsb_output"
+   ]
+  },
+  {
+   "core": "ot_hgi_sfu_core_split3__opstore_a",
+   "sha": "p27",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hgi_sfu_core_split3__opstore_a__p27glue.sv",
+   "slot_um": [
+    760.32,
+    552.96
+   ],
+   "instances": 2,
+   "types": [
+    "q_b113",
+    "q_b113__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_g0": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      760.32,
+      233.28
+     ]
+    ],
+    "u_fcore.u_core.u_g1": [
+     [
+      0.0,
+      233.28
+     ],
+     [
+      760.32,
+      233.28
+     ]
+    ],
+    "u_fcore.u_core.u_r": [
+     [
+      0.0,
+      466.56
+     ],
+     [
+      760.32,
+      86.4
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hgi_sfu_opsa_group0": {
+     "pins_file": "cores/ot_hgi_sfu_opsa_group0__760.32x233.28__d44v_split.json",
+     "outline_um": [
+      760.32,
+      233.28
+     ],
+     "pins": 3173,
+     "clock_pins": 1,
+     "clock_entry": [
+      380.16,
+      61.68
+     ],
+     "faces": {
+      "E": 460,
+      "I": 1,
+      "N": 1,
+      "S": 2049,
+      "W": 662
+     }
+    },
+    "ot_hgi_sfu_opsa_group1": {
+     "pins_file": "cores/ot_hgi_sfu_opsa_group1__760.32x233.28__d44v_split.json",
+     "outline_um": [
+      760.32,
+      233.28
+     ],
+     "pins": 3173,
+     "clock_pins": 1,
+     "clock_entry": [
+      380.16,
+      61.68
+     ],
+     "faces": {
+      "E": 1486,
+      "I": 1,
+      "N": 1,
+      "W": 1685
+     }
+    },
+    "ot_hgi_sfu_opsa_rest": {
+     "pins_file": "cores/ot_hgi_sfu_opsa_rest__760.32x86.4__d44v_split.json",
+     "outline_um": [
+      760.32,
+      86.4
+     ],
+     "pins": 4336,
+     "clock_pins": 1,
+     "clock_entry": [
+      380.16,
+      43.2
+     ],
+     "faces": {
+      "E": 124,
+      "I": 1,
+      "N": 4053,
+      "S": 2,
+      "W": 156
+     }
+    }
+   },
+   "added_cycles": "u_engine fault +2 from operand groups 0,1 only (sticky error flag, group_fault seam through 2 faces); every read, stage and scalar date 0: both tiles take uncut-core pins only",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 48
+   },
+   "designs_removed": [
+    "ot_hgi_sfu_core_split3__opstore_a"
+   ],
+   "designs_added": [
+    "ot_hgi_sfu_opsa_group0",
+    "ot_hgi_sfu_opsa_group1",
+    "ot_hgi_sfu_opsa_rest"
+   ]
+  },
+  {
+   "core": "ot_hgi_coll_gq_issue",
+   "sha": "p29",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hgi_coll_gq_issue__p29glue.sv",
+   "slot_um": [
+    328.32,
+    233.28
+   ],
+   "instances": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_a0": [
+     [
+      172.8,
+      0.0
+     ],
+     [
+      155.52,
+      112.32
+     ]
+    ],
+    "u_fcore.u_core.u_a1": [
+     [
+      172.8,
+      120.96
+     ],
+     [
+      155.52,
+      112.32
+     ]
+    ],
+    "u_fcore.u_core.u_i": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      172.8,
+      233.28
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hgi_gq_aq_tile": {
+     "pins_file": "cores/ot_hgi_gq_aq_tile__155.52x112.32__d44v_split.json",
+     "outline_um": [
+      155.52,
+      112.32
+     ],
+     "pins": 1295,
+     "clock_pins": 1,
+     "clock_entry": [
+      77.76,
+      56.16
+     ],
+     "faces": {
+      "I": 1,
+      "S": 269,
+      "W": 1025
+     }
+    },
+    "ot_hgi_coll_gqi_issue": {
+     "pins_file": "cores/ot_hgi_coll_gqi_issue__172.8x233.28__d44v_split.json",
+     "outline_um": [
+      172.8,
+      233.28
+     ],
+     "pins": 6618,
+     "clock_pins": 1,
+     "clock_entry": [
+      86.4,
+      116.64
+     ],
+     "faces": {
+      "E": 2050,
+      "I": 1,
+      "N": 1036,
+      "S": 1397,
+      "W": 2134
+     }
+    }
+   },
+   "added_cycles": "0 at every plan pin and in the quantiser path: the issue out face and tile in face replace aq_x and S0, the tile out face and issue in face replace S11 and aq_q_q",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 0
+   },
+   "designs_removed": [
+    "ot_hgi_coll_gq_issue"
+   ],
+   "designs_added": [
+    "ot_hgi_coll_gqi_issue",
+    "ot_hgi_gq_aq_tile"
+   ]
   }
  ],
  "core_faces_moves": [
