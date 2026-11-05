@@ -1351,6 +1351,10 @@ def main():
             mplace[master].append((x, y, o))
     # pins: exact plan centres + plan shapes, on the kit tracks
     m6_off = m6_pin_grant(pins, hc, plan)
+    # DIE-S81-52/RF-H 11-03: recipe route_m6 = signal routing up to M6 inside a plan grant obs_max >= M6, no M6 pin (ROM walls block M1-M4)
+    route_m6 = bool(rec.get("route_m6"))
+    if route_m6 and hc.get("obs_max") not in ("M6", "M7"):
+        raise SystemExit(f"{hc['module']}: recipe route_m6 but the plan grants obs_max {hc.get('obs_max')!r}")
     bad = []
     for q in pins:
         L, x, y = q["layer"], q["x"], q["y"]
@@ -1692,7 +1696,7 @@ def main():
            "export PDN_TCL = /work/pdn.tcl",
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
-           f"export MAX_ROUTING_LAYER = {'M5' if m6_off is None else 'M6'}",   # M6 only under the plan M6 pin grant
+           f"export MAX_ROUTING_LAYER = {'M5' if m6_off is None and not route_m6 else 'M6'}",   # M6 only under the plan M6 pin grant or recipe route_m6 (plan obs_max >= M6)
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",

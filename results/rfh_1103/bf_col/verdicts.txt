@@ -1,0 +1,26 @@
+DIE-S81-51/RF-H 11-03 S81-058 ot_v41_bf_col conservative form (epyc2, Verilator 5.050; outputs /srv/opentallas-scratch2/claude/die-s81-51/rfh/bf_col/bench)
+Form rfh1 (single core; directive fallback, the >=2-core split was not ready by 21:00):
+  RTL  BRNECUT 1 (ot_v41_bf_col -> ot_v41_bf16_lanes3 RNECUT 1 -> ot_v41_bmul2_rne_prepare XS 2 -> ot_v41_bmul_subnormal_rne_cut):
+       one register cut between the subnormal shift/guard/sticky classification and the round increment + result
+       select (routed g48 worst setup s3_be -> u_encode -> g_x4.r_gy, ~906 ps of logic at 833 ps); every other stage-4
+       field gets one matching stage; product latency 8 -> 9, lane tag delay PL 8 -> 9; BF lane latency +1 cycle.
+       All defaults 0 = unchanged RTL for every other user.
+  kit  regional_taps 4x4 count split (16 clock entries, ~3.4k sinks each vs 54.4k flops on one centre entry:
+       insertion 497 ps / hold -256 ps on g48), PLACE_DENSITY 0.6 -> 0.45, hold_ff_margin 0, outline/pins/ROM sites unchanged.
+results/rfh_1103/bf_col/run.sh lockstep (tb_rnecut.sv): (1) bmul2 XS 1 vs XS 2, y/fault exactly +1 cycle; (2) lanes3
+  RNECUT 0 vs 1 at the bf_col parameters (NCHB 8, RC 1, XST 2, TNODE 1, GRADUAL_RNE 1), every output exactly +1 cycle;
+  half of the operands drawn from a small-exponent band so products hit the gradual-underflow range:
+    seed 1: RNECUT PASS cycles=200000 lane_out=70810 prim_subnormal_y=16510 errors=0
+    seed 7: RNECUT PASS cycles=200000 lane_out=71100 prim_subnormal_y=16409 errors=0
+    mut (RFH_MUTANT_RNECUT, retained LSB flipped in the added stage): RNECUT FAIL errors=16509 (caught)
+  Bench limit: ungated clock (ze_d = 1); the +1 relation is per gated edge, and the tile clocks are unchanged.
+Kit: epyc4 /srv/opentallas-scratch2/claude/die-s81-51/rfh/bf_col/kits/ot_v41_bf_col_rfh1 (kit_hash 47e9eea14ce19b57)
+  GEN_LINT PASS issues 0 pins_vs_plan=PASS clock_export_form=NA macro_tcl=PASS rtl_check=PASS memory_bits=PASS
+  KIT_PREFLIGHT PASS issues 0
+Column contract: BF partials leave the column 1 cycle later (as one more BXST stage); FP partials unchanged. The column
+  merges BF and FP partials into one segment tree (b_v = qq_v | bf_v, BF wins), so the token-level check must confirm no
+  BF/FP partial pair becomes same-cycle under the +1 shift -> sent to TOK-VERIFY-1. Plan JSON unchanged (no outline,
+  pin, lane or plan-latency field changes; the core-internal BF depth is not a plan field), see README.
+Split plan (follow-on plan event): BF lanes hold 36.5k of 54.4k flops (~2/3 of the 296k cells, >150k alone), so the
+  >=2-core form is 3 cores: bf_col_bl/bf_col_bh (8 BF lanes + half tree each, registered faces) + bf_col_a (pins, ROMs
+  on W edge, FP lanes, chains, pair, segment tree, outputs), each <=150k with its own clock entry.

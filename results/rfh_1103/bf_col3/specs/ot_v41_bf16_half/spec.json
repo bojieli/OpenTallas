@@ -1,0 +1,49 @@
+{
+ "top": "ot_v41_bf16_half",
+ "sources": [
+  "rtl/common/ot_prefix.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_chain2u2.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+  "rtl/v41rom/ot_v41_tile_clk.sv",
+  "rtl/v41rom/ot_bf_hdly.sv",
+  "rtl/v41rom/ot_v41_bf_col.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bf16_half.sv"
+ ],
+ "params": {
+  "NCHB": 8,
+  "GRADUAL_RNE": 1,
+  "TRW": 7,
+  "RC": 1,
+  "TNODE": 1,
+  "RNECUT": 1
+ },
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_c"
+ ],
+ "macros": [],
+ "route": {
+  "pd": 0.65
+ },
+ "children": [],
+ "notes": "DIE-S81-51/RF-H 2026-11-03 3-core bf_col: one BF16 half (8 lanes, tree levels 1-3) of ot_v41_bf16_lanes3 at the S81 bf_col parameters (TRW = HTG = 7, RC = 1 for QBF 2, TNODE = RCG = 1, RNECUT = BRNECUT = 1); rst_c / ze_c = the column core's face copies of g_pin.r_rst / r_ze. One master for u_ha and u_hb.",
+ "provenance": "RF-H 3-core split of physical/die_plan/s81/cores/legacy/specs/ot_v41_bf_col (results/rfh_1103/bf_col3)"
+}

@@ -1,0 +1,20 @@
+# DIE-S81-51/RF-H 11-03 ot_v41_bf16_half pin-shape contract (3-core bf_col, plan rfh3 delta): only the GEOM-21 clock
+# entry rectangle (N face M5 0.048 x 0.48 on the M5 track at x 120.972); every other pin = the plan pin table
+# centre with the kit default shape (directions from the kit RTL, recipe rtl_dirs).
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+MACRO ot_v41_bf16_half
+  CLASS BLOCK ;
+  ORIGIN 0 0 ;
+  SIZE 241.92 BY 95.04 ;
+  PIN clk
+    DIRECTION INPUT ;
+    USE CLOCK ;
+    PORT
+      LAYER M5 ;
+        RECT 120.948 94.560 120.996 95.04 ;
+    END
+  END clk
+END ot_v41_bf16_half
+END LIBRARY

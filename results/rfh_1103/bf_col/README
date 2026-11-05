@@ -1,0 +1,22 @@
+DIE-S81-51/RF-H 11-03 S81-058 ot_v41_bf_col rfh1 -- die-local delta notes (no plan JSON copy)
+
+The conservative single-core form changes no plan field: outline 450.168x198.72, origins/orients of the 56 uses, pins
+file inputs/core_pins/ot_v41_bf_col.json (842 pins), plan LEF, obs_max M7 and the ROM macro sites are all unchanged, so
+no plan_h2_2249 copy (.json.gz) is needed and schema.validate is unaffected.
+Changed: kit recipe (recipes_rfh_1103.json: params BRNECUT 1, regional_taps 4x4 count, util 0.45, hold_ff_margin 0,
+suffix rfh1) and the BF partial latency at the column pins (+1 cycle, BF16 partials only; FP4/FP8 partials unchanged).
+Schedule: the column and its parent are valid-driven (no fixed BF column latency constant in tools/s81_dv), so the
+schedule change is the +1 BF partial latency itself; TOK-VERIFY-1 checks token exactness with it.
+
+Schedule (TOK-VERIFY-1 verdict 11-03 20:3x, ruling via DIE-S81-51 20:41: the schedule change rides the form's READY).
+The BF/FP merge is safe (BF pairs carry only BF16 ops; real 13-phase BF bench TXN MATCH, 0 collisions; BF 60 -> 61,
+FP 31). Two zero-slack compiler constants move, now FORM-DRIVEN (tools/s81_dv/layer_prog/bf_col_form.py; DEFAULT_FORM
+'rfh1' on this branch, OT_S81_BF_COL_FORM=base|rfh1|rfh3 overrides; deltas from the recipe BRNECUT):
+  (1) BF -> BF seg-label floor xs_field_calendar.BF_SEG_LABEL_FLOOR and the attn.wo_a / ffn.router measured floors:
+      231 -> 232 (first FAIL 230 -> 231, span tails +1); predicted shift, FLOOR_MEASURED replaces it once a BRNECUT
+      frame is measured.
+  (2) BF return calendar: xs_bf.bf_plan moves every measured BF column partial edge by bf_add (+1) unless the
+      measurement record carries bf_col_form == the active form (a re-measure on a BRNECUT=1 frame,
+      tools/s81_dv/frame_bf_measure.sh + xs_bf.py measure, then tags the record and the shift is 0).
+Tests: test_bf_col_form.py PASS (rfh1 and base), test_dv_layer_compile.py PASS (L0), test_xs_asb_profile PASS,
+xs_field_calendar selftest PASS 23.  These merge only with the form that signs off.
