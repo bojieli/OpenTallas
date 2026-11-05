@@ -26,7 +26,7 @@ S81-05	S81	DIE-S81-56 20:4x	norm_finish FORM-NF: go->r_v max 259->272, varies by
 S81-06	S81	DIE-S81-53 07:1x	bkq RFH3: +1 lane, f_c, f_cr	+1	no	c3fb92ddf12	pending	no	pending	note text; not read in RTL	14249,14265
 S81-07	S81	DIE-S81-56 20:59	iqkv capc5r slices sid//2==3 capture	+6 edges on source	no	fcb3f692be2	pending	no: final_ffn_source_1131 still names capc2_w3	pending	poster CHECKED; merges with xfin event	16862,16889,16891
 S81-08	S81	DIE-S81-53 05:40, DIE-S81-56 09:45	RF-EG: eg split, +1 i_v->g_v (222)	+1	yes	dca4a89229f, 56055ff212a	pending	not read	pending	note owed since 05:40	14761,14766
-S81-09	S81	DIE-S81-53 09:23	capend capc5r on c1x_C	capture lag not stated	yes	482a925cd41 (25a3afa5927)	no	not read	pending	to read	
+S81-09	S81	DIE-S81-53 09:23	capend capc5r on c1x_C	+12 edges per source comment; compiler default 0	yes	482a925cd41 (25a3afa5927)	no: see S81-13	no	pending	source comment + grep CHECKED; +12 itself not measured by me	
 S81-10	S81	rfj; xrt3	xrt/rom_q 0 cycles; xrt3 FOREG fault +1	0; fault only	yes	5440cdcc4a9	n/a 0	n/a	0	READY text	
 S81-11	S81	DIE-S81-51 12:13 11-03; hold 15:36	relay-bay k->k' 170 lanes +444, kit declared; plan LAT not carrying. OPEN FUNCTIONAL	+1,+2 per lane	event yes, LAT no	721f34fddf0	yes	no	-0.11% (+1518), TOK-VERIFY-1 11-03	MEASURED composer by TOK-VERIFY-1; all 170 differ CHECKED	
 S81-99	S81	SS30 23:0x	plan lane table base->main	0 changed; AR 847.2, MTP 2725.7	yes	cb98b2e2324	yes	n/a	847.2/2725.7 lanes only, core cycles not added yet	MEASURED composer lanes	
@@ -49,7 +49,7 @@ QC-03	QC	DIE-QC-71 22:33	collector nodes plan only	0	yes	5ac414b53e3	n/a 0	n/a	0
 QC-04	QC	DIE-QC-70 08:52..; COORD 08:54, 09:0x	QC vehicle pair carve: dry carve, no compile; event now on main	vehicle	n/a	epyc2 die-qc-70 carve2	no	no owner -> SS30 can run it	none	queue	14496,14502,14548,14577
 KV-08	KV	SS32 04:2x reading ss30-kvnw A/B	NOWAIT A: d2d_fault 42341, slice sfo all 32 by 42691, abort 44312. Same numbers as KV-FN-7 11-01: far KVN fixture word_generation 0 vs host gen 1. Fix 1cf1044d9 not on main, not in c47. Rerun G0: same binary, +HOST_TOKEN_GEN=0, real vectors, epyc4 scratch3 ss30-tok/kvnw/runs/G0, scope ss32-kvnw-G0	bench	n/a	fix 1cf1044d9 off main	no	no	no token result; 4403.2 model stands	logs and source CHECKED; cause inferred from identical cycles; G0 running	
 QC-06	QC	SS31 file, SS32 04:2x	OPEN FUNCTIONAL torn R8: 15 buses where relay stations split sibling lanes (x_fw_ctl_p1/p2 spread up to 3, x_ctl_fw_p1 spread 1) at u_rp, u_fdn; not landed bundles; no compiler row can fix. Class fix: station cycles per R8 group	spread 1-3 edges	no	none	no	no	n/a functional	file CHECKED; effect inferred, no sim; S81 sweep on bind3: 0 newly torn CHECKED	
-S81-12	S81	SS32 04:2x	S81 relay-bay 170 lanes against xfev bind3 bus_groups: 0 buses newly torn. Open question to owner: 13 replica_unequal, xr c_d/g_*/rb_* to L0-L4 on slices 3N, 3S depth 5,2,9,9,13 and 5,2,11,12,17	question	n/a	none	n/a	no	n/a	bus_groups CHECKED; whether compiler covers it not read	
+S81-12	S81	SS32 04:2x	S81 relay-bay 170 lanes against xfev bind3 bus_groups: 0 buses newly torn. Replica question closed: all 16 slices carry per-leaf dn_/up_ lanes, read by leaf-route tools; 3N, 3S only show as replica sets	0	n/a	none	n/a	no	n/a	bus_groups + plan lanes CHECKED; tools grep CHECKED; no bench run by me	
 MAP-14249	-	queue line 14249	SS27 park list: rows HEAD-01, S81-04, S81-06, HBM-09, HBM-03								
 MAP-14268	-	queue line 14268	S81-04								
 MAP-14279	-	queue line 14279	park order								
@@ -58,3 +58,4 @@ MAP-14303	-	queue line 14303	KV count row macro_place sweep, not a cycle row: no
 MAP-14629	-	queue line 14629	KV relay_sites 0 cycles; +1 only if estimate fails: no row								
 MAP-15264	-	queue line 15264	QC su_lane_w sync/async: 0 data cycles, no row								
 MAP-16862	-	queue line 16862	S81-07								
+S81-13	S81	SS32 04:4x	OT_S81_CAP5_C opt-in unset in all token compile scripts while the bind carries cap5r: dependent ops issue on capc2 timing	+12 per capture op; AR 854210 -> 857666, MTP 1202307 -> 1205943	no	tools/s81_dv/dv_layer_compile.py:355	no	no	-0.40% AR, -0.30% MTP in the p4l model [ESTIMATE]	schedule delta run CHECKED; fault effect inferred, no sim	
