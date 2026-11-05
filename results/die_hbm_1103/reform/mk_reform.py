@@ -143,6 +143,8 @@ def taps_of(PP):
 
 
 old_taps = taps_of(P)
+for o_ in OV.values():
+    if o_.get("pin_pitch"): HR.PIN_PITCH = o_["pin_pitch"]      # part 24: the pin count sets the face, tighter pitch on request
 rep = HR.run(plan, out, [], spec, log=print)
 P2 = json.loads((out / 'die_plan.json').read_text())
 for tn, t in P2['partition_types'].items():

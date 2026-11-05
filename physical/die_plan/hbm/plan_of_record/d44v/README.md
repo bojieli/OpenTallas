@@ -418,3 +418,9 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 - **Clocks**: u_ctl on `clk_ctl`, u_q<q> on `clk_q[q]`. `clk_mem[11:0]` stays a master port with no load; each SRAM runs on its quadrant clock.
 - **Cycles**: `reform_1103/cycles/selector.tsv`; schedule table sel_in 7, sel_in_line 3, sel_out 2, sel_core_out 2, sel_scan_drain 2, sel_choose_rt 6. The compiler on main has none of the s3 keys; the TOK lane adds the table.
 - **Bench**: `results/die_hbm_1104/reform_b/split_p21/run_eq.sh`: tb_selector_s3 full-shape checks on the composition with kit face shells modelled by `ot_hbm_face_reg`.
+
+## Part 24 (ot_hgi_sfu_core_split3__ctl smaller tile; HBM-REFORM-B3)
+
+- **ot_hgi_sfu_core_split3__ctl** (74.5k logic, 32k FF, no macros, 8.5% util, TT -148 from spread) goes from 669.6x626.4 to 427.68x453.6 by mk_reform.py (centre kept, pins repacked, pin pitch 0.096, W edge 3819 pins). RTL unchanged, 0 cycles.
+- **Wrapper**: recipes_b2 entry ot_hgi_sfu_core_split3__ctl pins physical/die_plan/hbm_arch_cores/wrappers/oneclk for this pin table only.
+- **Scripts**: results/die_hbm_1104/reform_b/split_p24/ (ov_p24.json, mk_p24.py).
