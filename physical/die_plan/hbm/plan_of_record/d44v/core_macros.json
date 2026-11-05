@@ -8280,6 +8280,105 @@
    ],
    "channel_rule_um": 10.8,
    "basis": "HBM-REFORM-A3 d44v part 18: 2 x 3 grid, W/E bands 30.2, 60.7, 30.4, row channels 21.576; clock entry in the first row channel"
+  },
+  "ot_wbq_root": {
+   "status": "KNOWN",
+   "outline_um": [
+    432.0,
+    129.6
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.g_lane[0].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      4.32,
+      8.64,
+      99.144,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[1].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      112.32,
+      8.64,
+      207.144,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[2].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      220.32,
+      8.64,
+      315.144,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[3].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      328.32,
+      8.64,
+      423.144,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[4].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      4.32,
+      73.44,
+      99.144,
+      114.48
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[5].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      112.32,
+      73.44,
+      207.144,
+      114.48
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[6].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      220.32,
+      73.44,
+      315.144,
+      114.48
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[7].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      328.32,
+      73.44,
+      423.144,
+      114.48
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"
