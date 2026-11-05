@@ -379,3 +379,56 @@ def test_eco_vclk_frame_uses_signoff_measured(tmp_path, monkeypatch):
     assert E.eco_vclk_frame(tmp_path, "b10", E.metrics(rec(1, -4))) is None  # unmeasured: kit bound stays
     monkeypatch.setenv("OT_ECO_MEASURED_VCLK", "0")
     assert E.eco_vclk_frame(tmp_path, "b10", prev) is None
+
+
+# KW-FIX-16 11-05 (COORD URGENT, intel2 scratch2 ~1 GB/min): once a later ECO pass is staged, every earlier finished
+# pass drops 5_route / 5_3_fillcell / 6_1_fill odbs; 6_final, seeds (5_2_route / 5_1_grt), SIGNED passes stay.
+class OdbFake(Fake):
+    def __call__(self, cmd, **kw):
+        rc = super().__call__(cmd, **kw)
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh") and rc == 0:
+            b = Path(cmd[2]) / "run/results/asap7/n/base"
+            for f in ("5_1_grt.odb", "5_2_route.odb", "5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb", "6_final.odb"):
+                (b / f).write_text("odb")
+        return rc
+
+
+def test_superseded_pass_odbs_trimmed_when_next_pass_staged(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED", raising=False)
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(-6, -2, slew=0))
+    f = OdbFake([rec(-3, -1), rec(-1, -1), rec(1, 2)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    assert r["verdict"] == "PASS" and len(r["iterations"]) == 3
+    trimmed = [x for it in r["iterations"] for x in it.get("trimmed", [])]
+    by = {}
+    for x in trimmed:
+        by.setdefault(Path(x).parents[5].name, set()).add(Path(x).name)
+    assert by == {d: {"5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"} for d in ("i1t", "i1", "i2t", "i2", "i3t")}
+    last = Path(r["root"]) / "i3" / "run/results/asap7/n/base"
+    assert {p.name for p in last.iterdir()} >= {"5_route.odb", "6_1_fill.odb", "6_final.odb"}
+    # keep (debug runs) keeps everything
+    k2 = kit(tmp_path / "k2", mm=False)
+    r2 = E.run_loop(k2, base_rec(k2, rec(-6, -2, slew=0)), run=OdbFake([rec(-3, -1), rec(1, 2)]), mem=8, cpus=2, keep=True)
+    assert not any(it.get("trimmed") for it in r2["iterations"])
+    assert (Path(r2["root"]) / "i1t/run/results/asap7/n/base/5_route.odb").exists()
+
+
+def test_trim_skips_signed_unfinished_and_switch(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED", raising=False)
+    root = tmp_path / "eco"
+    names = ("5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb")
+    for d, final, signed in (("i1", True, True), ("i2", False, False), ("i3", True, False), ("i4", True, False)):
+        b = root / d / "run/results/asap7/n/base"
+        b.mkdir(parents=True)
+        for n in names + (("6_final.odb",) if final else ()):
+            (b / n).write_text("x")
+        if signed:
+            (root / d / "signoff").mkdir()
+            (root / d / "signoff/signoff.json").write_text(json.dumps(rec(1, 1)))
+    monkeypatch.setenv("OT_ECO_KEEP_ROUTED", "1")
+    assert E.trim_superseded(root, root / "i4") == []
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED")
+    gone = E.trim_superseded(root, root / "i4")
+    assert sorted(Path(g).parent.parent.parent.parent.parent.parent.name for g in gone) == ["i3"] * 3
+    assert all((root / d / "run/results/asap7/n/base" / n).exists() for d in ("i1", "i2", "i4") for n in names)
