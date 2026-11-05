@@ -1,0 +1,190 @@
+NE_su0	dn	calendar.lg_local_read	7	12	5
+NE_su0	dn	calendar.lg_local_write	7	12	5
+NE_su0	dn	cic.inj_addr_o	18	12	-6
+NE_su0	dn	cic.inj_rd_o	18	12	-6
+NE_su0	dn	forward.L23m	14	None	
+NE_su0	dn	forward.L5034	None	28	
+NE_su0	dn	hb_coll.CUT.del_flit	18	12	-6
+NE_su0	dn	hb_coll.CUT.del_valid	18	12	-6
+NE_su0	dn	hb_coll.CUT.hgi_del_obase	18	12	-6
+NE_su0	dn	hc.u_q.lg_rq	18	12	-6
+NE_su0	dn	hc.u_q.lg_wq	18	12	-6
+NE_su0	dn	pgp.command	14	42	28
+NE_su0	dn	sucore.rf_bcmd	None	8	
+NE_su0	dn	sucore.rf_bword	None	9	
+NE_su0	dn	sucore.rf_dsec	None	9	
+NE_su0	dn	vmb.rr0	None	41	
+NE_su0	dn	vmb.wq_done0	None	41	
+NE_su0	up	cxdl_q.fault	8	20	12
+NE_su0	up	hc.c_rr	8	20	12
+NE_su0	up	hc.c_w_done	8	20	12
+NE_su0	up	su.CUT.bank_read_data	2	44	42
+NE_su0	up	su.CUT.pretree_tree_o	None	24	
+NE_su0	up	su.g_tap_r8b.u_tap.near_rq	None	24	
+NE_su0	up	su.g_tap_r8b.u_tap.near_wq	None	24	
+NE_su0	up	su.u_slice.$procdff$67621.Q	None	11	
+NE_su1	dn	calendar.lg_local_read	2	2	0
+NE_su1	dn	calendar.lg_local_write	2	2	0
+NE_su1	dn	cic.inj_addr_o	2	2	0
+NE_su1	dn	cic.inj_rd_o	2	2	0
+NE_su1	dn	hb_coll.CUT.del_flit	2	2	0
+NE_su1	dn	hb_coll.CUT.del_valid	2	2	0
+NE_su1	dn	hb_coll.CUT.hgi_del_obase	2	2	0
+NE_su1	dn	hc.u_q.lg_rq	2	2	0
+NE_su1	dn	hc.u_q.lg_wq	2	2	0
+NE_su1	dn	pgp.command	2	2	0
+NE_su1	dn	sucore.rf_bcmd	2	2	0
+NE_su1	dn	sucore.rf_bword	2	2	0
+NE_su1	dn	sucore.rf_dsec	2	2	0
+NE_su1	dn	vmb.rr0	2	2	0
+NE_su1	dn	vmb.wq_done0	2	2	0
+NE_su1	up	cxdl_q.fault	2	2	0
+NE_su1	up	hc.c_rr	2	2	0
+NE_su1	up	hc.c_w_done	2	2	0
+NE_su1	up	su.CUT.bank_read_data	2	2	0
+NE_su1	up	su.CUT.pretree_tree_o	2	2	0
+NE_su1	up	su.g_tap_r8b.u_tap.near_rq	2	2	0
+NE_su1	up	su.g_tap_r8b.u_tap.near_wq	2	2	0
+NE_su1	up	su.u_slice.$procdff$68150.Q	2	2	0
+NE_su2	dn	calendar.lg_local_read	8	12	4
+NE_su2	dn	calendar.lg_local_write	8	12	4
+NE_su2	dn	cic.inj_addr_o	9	12	3
+NE_su2	dn	cic.inj_rd_o	9	12	3
+NE_su2	dn	hb_coll.CUT.del_flit	9	13	4
+NE_su2	dn	hb_coll.CUT.del_valid	9	13	4
+NE_su2	dn	hb_coll.CUT.hgi_del_obase	9	13	4
+NE_su2	dn	hc.u_q.lg_rq	9	13	4
+NE_su2	dn	hc.u_q.lg_wq	9	18	9
+NE_su2	dn	pgp.command	6	31	25
+NE_su2	dn	sucore.rf_bcmd	None	12	
+NE_su2	dn	sucore.rf_bword	None	12	
+NE_su2	dn	sucore.rf_dsec	None	23	
+NE_su2	dn	vmb.rr0	None	31	
+NE_su2	dn	vmb.wq_done0	None	31	
+NE_su2	up	cxdl_q.fault	8	24	16
+NE_su2	up	hc.c_rr	8	24	16
+NE_su2	up	hc.c_w_done	8	24	16
+NE_su2	up	su.CUT.bank_read_data	2	24	22
+NE_su2	up	su.CUT.pretree_tree_o	None	26	
+NE_su2	up	su.g_tap_r8b.u_tap.near_rq	None	26	
+NE_su2	up	su.g_tap_r8b.u_tap.near_wq	None	26	
+NE_su2	up	su.u_slice.$procdff$68719.Q	None	16	
+NE_su3	dn	calendar.lg_local_read	2	2	0
+NE_su3	dn	calendar.lg_local_write	2	2	0
+NE_su3	dn	cic.inj_addr_o	2	2	0
+NE_su3	dn	cic.inj_rd_o	2	2	0
+NE_su3	dn	hb_coll.CUT.del_flit	2	2	0
+NE_su3	dn	hb_coll.CUT.del_valid	2	2	0
+NE_su3	dn	hb_coll.CUT.hgi_del_obase	2	2	0
+NE_su3	dn	hc.u_q.lg_rq	2	2	0
+NE_su3	dn	hc.u_q.lg_wq	2	2	0
+NE_su3	dn	pgp.command	2	2	0
+NE_su3	dn	sucore.rf_bcmd	2	2	0
+NE_su3	dn	sucore.rf_bword	2	2	0
+NE_su3	dn	sucore.rf_dsec	2	2	0
+NE_su3	dn	vmb.rr0	2	2	0
+NE_su3	dn	vmb.wq_done0	2	2	0
+NE_su3	up	cxdl_q.fault	2	2	0
+NE_su3	up	fl.fault	2	2	0
+NE_su3	up	hc.c_rr	5	2	-3
+NE_su3	up	hc.c_w_done	5	2	-3
+NE_su3	up	su.CUT.bank_read_data	5	2	-3
+NE_su3	up	su.CUT.pretree_tree_o	2	2	0
+NE_su3	up	su.g_tap_r8b.u_tap.near_rq	5	2	-3
+NE_su3	up	su.g_tap_r8b.u_tap.near_wq	5	2	-3
+NE_su3	up	su.u_slice.$procdff$69248.Q	2	2	0
+NW_su0	dn	calendar.lg_local_read	7	25	18
+NW_su0	dn	calendar.lg_local_write	7	25	18
+NW_su0	dn	cic.inj_addr_o	18	25	7
+NW_su0	dn	cic.inj_rd_o	18	25	7
+NW_su0	dn	forward.L1234	None	36	
+NW_su0	dn	forward.L23	14	None	
+NW_su0	dn	hb_coll.CUT.del_flit	18	25	7
+NW_su0	dn	hb_coll.CUT.del_valid	18	25	7
+NW_su0	dn	hb_coll.CUT.hgi_del_obase	18	25	7
+NW_su0	dn	hc.u_q.lg_rq	18	25	7
+NW_su0	dn	hc.u_q.lg_wq	18	25	7
+NW_su0	dn	pgp.command	14	49	35
+NW_su0	dn	sucore.rf_bcmd	None	8	
+NW_su0	dn	sucore.rf_bword	None	8	
+NW_su0	dn	sucore.rf_dsec	None	8	
+NW_su0	dn	vmb.rr0	None	36	
+NW_su0	dn	vmb.wq_done0	None	36	
+NW_su0	up	cxdl_q.fault	8	12	4
+NW_su0	up	hc.c_rr	8	12	4
+NW_su0	up	hc.c_w_done	8	12	4
+NW_su0	up	su.CUT.bank_read_data	2	60	58
+NW_su0	up	su.CUT.pretree_tree_o	None	17	
+NW_su0	up	su.g_tap_r8b.u_tap.near_rq	None	17	
+NW_su0	up	su.g_tap_r8b.u_tap.near_wq	None	17	
+NW_su0	up	su.u_slice.$procdff$69880.Q	None	8	
+NW_su1	dn	calendar.lg_local_read	2	2	0
+NW_su1	dn	calendar.lg_local_write	2	2	0
+NW_su1	dn	cic.inj_addr_o	2	2	0
+NW_su1	dn	cic.inj_rd_o	2	2	0
+NW_su1	dn	hb_coll.CUT.del_flit	2	2	0
+NW_su1	dn	hb_coll.CUT.del_valid	2	2	0
+NW_su1	dn	hb_coll.CUT.hgi_del_obase	2	2	0
+NW_su1	dn	hc.u_q.lg_rq	2	2	0
+NW_su1	dn	hc.u_q.lg_wq	2	2	0
+NW_su1	dn	pgp.command	2	2	0
+NW_su1	dn	sucore.rf_bcmd	2	2	0
+NW_su1	dn	sucore.rf_bword	2	2	0
+NW_su1	dn	sucore.rf_dsec	2	2	0
+NW_su1	dn	vmb.rr0	2	2	0
+NW_su1	dn	vmb.wq_done0	2	2	0
+NW_su1	up	cxdl_q.fault	2	2	0
+NW_su1	up	hc.c_rr	2	2	0
+NW_su1	up	hc.c_w_done	2	2	0
+NW_su1	up	su.CUT.bank_read_data	2	2	0
+NW_su1	up	su.CUT.pretree_tree_o	2	2	0
+NW_su1	up	su.g_tap_r8b.u_tap.near_rq	2	2	0
+NW_su1	up	su.g_tap_r8b.u_tap.near_wq	2	2	0
+NW_su1	up	su.u_slice.$procdff$70409.Q	2	2	0
+NW_su2	dn	calendar.lg_local_read	8	10	2
+NW_su2	dn	calendar.lg_local_write	8	10	2
+NW_su2	dn	cic.inj_addr_o	9	10	1
+NW_su2	dn	cic.inj_rd_o	9	10	1
+NW_su2	dn	hb_coll.CUT.del_flit	9	12	3
+NW_su2	dn	hb_coll.CUT.del_valid	9	12	3
+NW_su2	dn	hb_coll.CUT.hgi_del_obase	9	12	3
+NW_su2	dn	hc.u_q.lg_rq	9	12	3
+NW_su2	dn	hc.u_q.lg_wq	9	25	16
+NW_su2	dn	pgp.command	6	96	90
+NW_su2	dn	sucore.rf_bcmd	None	96	
+NW_su2	dn	sucore.rf_bword	None	96	
+NW_su2	dn	sucore.rf_dsec	None	20	
+NW_su2	dn	vmb.rr0	None	25	
+NW_su2	dn	vmb.wq_done0	None	25	
+NW_su2	up	cxdl_q.fault	8	48	40
+NW_su2	up	hc.c_rr	8	48	40
+NW_su2	up	hc.c_w_done	8	48	40
+NW_su2	up	su.CUT.bank_read_data	2	48	46
+NW_su2	up	su.CUT.pretree_tree_o	None	29	
+NW_su2	up	su.g_tap_r8b.u_tap.near_rq	None	29	
+NW_su2	up	su.g_tap_r8b.u_tap.near_wq	None	29	
+NW_su2	up	su.u_slice.$procdff$70978.Q	None	29	
+NW_su3	dn	calendar.lg_local_read	2	2	0
+NW_su3	dn	calendar.lg_local_write	2	2	0
+NW_su3	dn	cic.inj_addr_o	2	2	0
+NW_su3	dn	cic.inj_rd_o	2	2	0
+NW_su3	dn	hb_coll.CUT.del_flit	2	2	0
+NW_su3	dn	hb_coll.CUT.del_valid	2	2	0
+NW_su3	dn	hb_coll.CUT.hgi_del_obase	2	2	0
+NW_su3	dn	hc.u_q.lg_rq	2	2	0
+NW_su3	dn	hc.u_q.lg_wq	2	2	0
+NW_su3	dn	pgp.command	2	2	0
+NW_su3	dn	sucore.rf_bcmd	2	2	0
+NW_su3	dn	sucore.rf_bword	2	2	0
+NW_su3	dn	sucore.rf_dsec	2	2	0
+NW_su3	dn	vmb.rr0	2	2	0
+NW_su3	dn	vmb.wq_done0	2	2	0
+NW_su3	up	cxdl_q.fault	2	2	0
+NW_su3	up	fl.fault	2	2	0
+NW_su3	up	hc.c_rr	6	2	-4
+NW_su3	up	hc.c_w_done	6	2	-4
+NW_su3	up	su.CUT.bank_read_data	6	2	-4
+NW_su3	up	su.CUT.pretree_tree_o	2	2	0
+NW_su3	up	su.g_tap_r8b.u_tap.near_rq	6	2	-4
+NW_su3	up	su.g_tap_r8b.u_tap.near_wq	6	2	-4
+NW_su3	up	su.u_slice.$procdff$71507.Q	2	2	0
