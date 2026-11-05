@@ -8,8 +8,8 @@ STEP_LOGS, run_kit resumes step-level from the previous boundary ODB (PRUNE-1108
 An attempt qualifies (hub side, candidates()) when its state row is FAIL or CANCELLED, or its queue verdict is
 FAIL/CANCELLED/REJECTED, or it is not the newest attempt of its item (superseded), and it was last updated >= 6 h ago.
 Per attempt dir, ON THE HOST (remote_main(), re-checked at removal):
-  - skipped when the dir or any ancestor holds .keep; when the dir is, holds, or lies under a PROTECTED-DBS.txt path
-    of that host; when any signoff.json under it reads SIGNED, LOCAL_PASS or NEEDS_PARENT; when any file under it was
+  - skipped when the dir or any ancestor holds .keep; when the dir is, holds, or lies under a PROTECTED-DBS path
+    of that host (union of lanes/PROTECTED-DBS.txt and the root PROTECTED-DBS.txt); when any signoff.json under it reads SIGNED, LOCAL_PASS or NEEDS_PARENT; when any file under it was
     modified < idle_h ago; when a running container mounts it (or a parent/child) or a process has its cwd there;
   - a file goes only if its name matches, st_nlink == 1, and the boundary ODB in the same dir exists, is non-empty
     and is not older than the file.
@@ -68,15 +68,21 @@ def candidates(st, now=None, idle_h=IDLE_H):
     return out
 
 
+PROTECTED_FILES = ("lanes/PROTECTED-DBS.txt", "PROTECTED-DBS.txt")   # the PROTECTED union (COORD 11-05 11:1x)
+
+
 def protected_for(text, host):
-    """PROTECTED-DBS.txt rows (host<TAB>path<TAB>...) of this host -> [path]."""
+    """PROTECTED-DBS rows of this host -> [path].  text may be several files joined; a row is host<sep>path[<sep>note],
+    sep a TAB (lanes/ list), spaces or ':' (root list)."""
     out = []
     for ln in (text or "").splitlines():
-        if ln.startswith("#") or ln.count("\t") < 1:
+        if ln.lstrip().startswith("#"):
             continue
-        h, p = ln.split("\t")[:2]
-        if h.strip() == host and p.strip().startswith("/"):
-            out.append(p.strip().rstrip("/"))
+        f = ln.split()
+        if f and ":/" in f[0]:                  # root list also writes host:/path in one token
+            f = f[0].split(":", 1) + f[1:]
+        if len(f) >= 2 and f[0] == host and f[1].startswith("/"):
+            out.append(f[1].rstrip("/"))
     return out
 
 
@@ -189,17 +195,20 @@ def remote_main(argv=None):
 
 
 def tick(AP, cfg, st, ap_dir, ssh_argv, read_protected, _live=None):
-    """hub side, once per wave tick.  ssh_argv(host) -> argv prefix ([] = local); read_protected() -> text."""
+    """hub side, once per wave tick.  ssh_argv(host) -> argv prefix ([] = local); read_protected(rel) -> text of a
+    coord/state file; every file of PROTECTED_FILES must read non-empty, else nothing is removed this tick."""
     if cfg.get("substep_prune") is False:
         return
     cand = [c for c in candidates(st) if ((cfg.get("dies") or {}).get(st["items"][c[0]].get("die")) or {})
             .get("substep_prune", True) is not False][:MAX_DIRS_PER_TICK]
     if not cand:
         return
-    prot_txt = read_protected()
-    if not prot_txt.strip():
-        AP.log("KIT-WAVE SUBSTEP-1 skipped: PROTECTED-DBS.txt unreadable or empty")
+    texts = {rel: read_protected(rel) or "" for rel in PROTECTED_FILES}
+    empty = [rel for rel, t in texts.items() if not t.strip()]
+    if empty:
+        AP.log(f"KIT-WAVE SUBSTEP-1 skipped: {', '.join(empty)} unreadable or empty")
         return
+    prot_txt = "\n".join(texts.values())
     with open(os.path.abspath(__file__)) as fh:
         code = fh.read()
     by_host = {}
