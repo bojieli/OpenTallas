@@ -3475,6 +3475,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
            f"export MAX_ROUTING_LAYER = {top}",
+           # KW-FIX-8 11-04 (COORD 16:5x, S81 GRT-0116 near misses): opt-in per row through wave item_env, off by default.
+           # GRT overflow is not a sign-off gate; with this flag the kit continues to detail route and routed DRC decides.
+           # The first two arguments are the ORFS GLOBAL_ROUTE_ARGS default, which this variable replaces.
+           *(["export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose -allow_congestion"]
+             if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" else []),
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
