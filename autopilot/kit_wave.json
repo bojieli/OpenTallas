@@ -2286,7 +2286,9 @@
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/head-wave-1105e4/kit-wave",
-   "hold_items": {},
+   "hold_items": {
+    "hd_spn_eshim_rx": "KW-FIX-16 13:5x: G2 setup_tt -5.7 small miss; wait for the g2setup merge tag (src with new legacy_gate), then relaunch on it (else it fails G2 again)"
+   },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
     "hd_spn_wshim_tx@2": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
