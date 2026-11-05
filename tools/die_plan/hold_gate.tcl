@@ -89,13 +89,14 @@ set hg_lim [expr {-100.0 + min(0.0, $hg_cin + 40.0, -1.0 * $hg_win)}]
 set hg_legacy [expr {$hg_cin >= -40.0 && $hg_win <= 20.0}]
 puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin, tap window $hg_win, endpoint cap [expr {$hg_legacy ? 2000 : {none}}])"
 # COORD 11-01 05:1x / OWNER 12.28b (closure first): the post-CTS / pre-repair FF hold check is INFO; the one hard stop
-# is FF hold WNS worse than OT_HOLD_STOP_PS = -150 ps (structural, not repairable by hold padding).  Hold is judged
+# is FF hold WNS worse than OT_HOLD_STOP_PS = -200 ps (structural, not repairable by hold padding).  Hold is judged
 # at the routed sign-off (FF hold >= 0 ps on real views, OWNER 11-02).  Same constant in tools/die_plan/hold_gate.tcl,
 # tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
 # The limit/cap above is that pre-repair screen (reported).  Like the FLOW-19 limit, the stop counts from the kit's
 # contract (in_min, tap window W_t: the SDC shifts every such endpoint by the same amount), so it is never stricter
 # than main's limit: stop = OT_HOLD_STOP_PS + min(0, in_min + 40, -W_t).  OT_HOLD_PREROUTE_STOP=1 restores the old stop.
-set OT_HOLD_STOP_PS -150.0
+# COORD 11-05 07:36: default stop -200 (was -150): GRT hold repair closed 9 of 11 kits from -109 to -172 (DIE-HBM-70 07:04); routed sign-off still decides.
+set OT_HOLD_STOP_PS -200.0
 # DIE-HEAD-59 11-03 opt-in per kit (item_env): a kit whose only failures past the stop are a few measured port endpoints
 # that padding can fix (HEAD hd_ctl_n arst_n/start_i -214 ps, 2 of 1130) goes on to repair; sign-off still decides.
 if {[info exists ::env(OT_HOLD_STOP_PS)] && $::env(OT_HOLD_STOP_PS) ne ""} { set OT_HOLD_STOP_PS $::env(OT_HOLD_STOP_PS) }
