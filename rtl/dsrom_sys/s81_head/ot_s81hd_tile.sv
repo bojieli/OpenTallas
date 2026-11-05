@@ -45,15 +45,21 @@ module ot_s81hd_tile #(
     parameter integer CMP_STAGES = 0,
     // DIE-HEAD-70 11-05 (hd_tile long hops, COORD 12:12: pin cycles are the lever), every option default 0 = unchanged:
     //   ROW_IN_REG: bundle registers row_in = row0 + 32q per A core (row0 is the ID strap: 0 data cycles)
-    //   TEN_HOP:    one kept register between the ten pin register and its users (b_en / b_go: fired, own_have, sel_v,
-    //               better, bflt, bundle go); ten is a static strap (rst_n held >= 64 clk), so 0 data cycles
+    //   TEN_HOP:    N kept registers in a chain between the ten pin register and its users (b_en / b_go: fired,
+    //               own_have, sel_v, better, bflt, bundle go); ten is a static strap (rst_n held >= 64 clk), so 0 data
+    //               cycles.  11-05 tile4 estimate: ten_q sits on the pin face (y 4 um), its users ~620 um up, one hop
+    //               register was -187 ps TT at CTS, so the form is 2 (each hop <= ~450 um)
+    //   KEY_HOP:    (CMP_STAGES >= 2) the operand hop registers carry the order key okey(bits) instead of the raw
+    //               bits: the sign broadcast / -0 detect moves before the hop, the half compares see plain keys.
+    //               Same function, 0 cycles (tile4: kl_gt -279 ps from rb_h[31] fan-out across the 16-b compare)
     //   FLT_XHOP:   bundle third fault hop (MERGE_HOP only); the fault is sticky until the next go: 0 result cycles
     //   BST:        bundle x / go broadcast depth (2 = original); +1 = one more x / go stage before the skew line,
     //               +1 cycle on the tile's own result (once per position on the chain)
     parameter integer ROW_IN_REG = 0,
     parameter integer TEN_HOP = 0,
     parameter integer FLT_XHOP = 0,
-    parameter integer BST = 2
+    parameter integer BST = 2,
+    parameter integer KEY_HOP = 0
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -95,7 +101,12 @@ module ot_s81hd_tile #(
     // ---------------- bundle -----------------------------------------------------------------------------------------
     wire        ten_m;                       // TEN_HOP: kept hop register next to the control / compare logic
     generate if (TEN_HOP != 0) begin : g_tenh
-        ot_s81hd_kreg #(.W(1)) u_tenh (.clk(ck), .d(ten_q), .q(ten_m));
+        wire [TEN_HOP:0] tch;
+        assign tch[0] = ten_q;
+        for (genvar t = 0; t < TEN_HOP; t = t + 1) begin : g_t
+            ot_s81hd_kreg #(.W(1)) u_tenh (.clk(ck), .d(tch[t]), .q(tch[t+1]));
+        end
+        assign ten_m = tch[TEN_HOP];
     end else begin : g_ten0
         assign ten_m = ten_q;
     end endgenerate
@@ -172,10 +183,14 @@ module ot_s81hd_tile #(
     // CMP_STAGES 2: operand hop registers (bundle result / chain hold may sit ~350 um from the compare)
     reg [16:0] rr_h, cr_h;
     reg [31:0] rb_h, cb_h;
-    always @(posedge ck) begin rr_h <= res_row; rb_h <= res_bits; cr_h <= ch_row; cb_h <= ch_bits; end
+    always @(posedge ck) begin
+        rr_h <= res_row; cr_h <= ch_row;
+        rb_h <= KEY_HOP != 0 ? okey(res_bits) : res_bits; cb_h <= KEY_HOP != 0 ? okey(ch_bits) : ch_bits;
+    end
     wire [16:0] c_rr = CMP_STAGES >= 2 ? rr_h : res_row, c_cr = CMP_STAGES >= 2 ? cr_h : ch_row;
     wire [31:0] c_rb = CMP_STAGES >= 2 ? rb_h : res_bits, c_cb = CMP_STAGES >= 2 ? cb_h : ch_bits;
-    wire [31:0] k_own = okey(c_rb), k_ch = okey(c_cb);
+    wire        kh = KEY_HOP != 0 && CMP_STAGES >= 2;      // hop registers already hold the keys
+    wire [31:0] k_own = kh ? c_rb : okey(c_rb), k_ch = kh ? c_cb : okey(c_cb);
 `ifdef OT_S81HD_MUT_TIE_FLIP
     wire row_lt = c_rr > c_cr;                                                        // MUTANT: highest id on ties
 `else
