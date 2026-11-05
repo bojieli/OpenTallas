@@ -753,6 +753,41 @@ def rtl_port_dirs(kd, srcs, top, params, defines):
     return out
 
 
+DEFAULT_PLAN = S81 / "plan_h2_2249.json"   # S81 plan of record; die_plan.json is the frozen 10-29 pre-h2 plan
+STALE_PLAN = S81 / "die_plan.json"
+
+
+def plan_has_module(plan_file, module):
+    plan = json.load(open(plan_file))
+    return any(h["module"] == module for v in plan["partition_types"].values() for h in v.get("hard_cores", []))
+
+
+def resolve_plan(explicit, rec, module):
+    """-> (plan path, one line for stderr).  FORM-S81-2 11-05 class fix: without --plan the generator built silently on
+    the stale die_plan.json (ck on M3, old pins), which three lanes hit.  Order: recipe 'plan' (it always won), --plan,
+    the plan of record, and die_plan.json only for a module the plan of record lacks.  Every stale use says so."""
+    if rec.get("plan"):
+        return REPO / rec["plan"], f"KIT PLAN: {rec['plan']} (recipe plan)"
+    if explicit:
+        p = Path(explicit)
+        if p.resolve() == STALE_PLAN.resolve():
+            return p, f"WARNING KIT PLAN STALE: {p} was named explicitly; the plan of record is {DEFAULT_PLAN.name}"
+        return p, f"KIT PLAN: {p} (--plan)"
+    module = rec.get("plan_module", module)
+    if rec.get("child_of") or rec.get("lef_contract") or plan_has_module(DEFAULT_PLAN, module):
+        return DEFAULT_PLAN, f"KIT PLAN: {DEFAULT_PLAN.name} (plan of record, default)"
+    return STALE_PLAN, (f"WARNING KIT PLAN STALE: {module} is not a hard core of {DEFAULT_PLAN.name}; falling back to "
+                        f"{STALE_PLAN.name}; name --plan or the recipe 'plan' if this is not what you want")
+
+
+def default_master_slice(rec, module):
+    """A recipe's own ref_tile/slices/<module>.json, the only legal contract for an interior clock pin; None if absent."""
+    if not rec.get("ref_tile"):
+        return None
+    d = REPO / rec["ref_tile"] / "slices"
+    return str(d) if (d / f"{module}.json").is_file() else None
+
+
 def plan_core(plan, module, pins_file=None):
     # S81-CORES2/NC 10-25: one module can have several plan pin views (vs lfp / xm x-mirror): recipe plan_pins_file picks one
     for t, v in plan["partition_types"].items():
@@ -1181,7 +1216,8 @@ def main():
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
     ap.add_argument("--recipes", default=str(HERE / "recipes.json"))
     ap.add_argument("--out", default=str(HERE / "kits"))
-    ap.add_argument("--plan", default=str(S81 / "die_plan.json"))
+    ap.add_argument("--plan", default=None,
+                    help="plan json; default = the plan of record (DEFAULT_PLAN), see resolve_plan; a recipe 'plan' wins")
     ap.add_argument("--legacy-flow", action="store_true",
                     help="old kit (opt-out): stock setRC, one fixed plan-insertion vclk for TT and FF, MCMM CTS hold repair, "
                          "no rtl_lint / reg_fanout / FF-only GRT hold step")
@@ -1193,9 +1229,9 @@ def main():
     a = ap.parse_args()
     modern = not a.legacy_flow
     rec = json.load(open(a.recipes))[a.module]
-    plan = json.load(open(a.plan))
-    if rec.get("plan"):
-        plan = json.load(open(REPO / rec["plan"]))
+    plan_path, plan_note = resolve_plan(a.plan, rec, a.module)
+    print(plan_note, file=sys.stderr)
+    plan = json.load(open(plan_path))
     if rec.get("child_of"):
         # KITS-SPARE-2/HB 10-25 (COORD ruling 10:23 item 3): a HARD CHILD master of a plan hard core (e.g. the 16
         # hist_bank children of dsdv_bksel_q) gets ONE kit before its parent.  Pin contract = the child view LEF the
@@ -1371,6 +1407,14 @@ def main():
     # A declared interior clock is legal only at the explicit shared slice entry.
     # Signals and clocks without that contract retain the exact edge-rectangle gate.
     interior_clocks = {}
+    if not a.master_slice:
+        # FORM-S81-2 11-05: an interior clock pin refuses without its slice (coll_lane: ck[0] 147.9 um off its "W edge"),
+        # so taking the recipe's own slice changes no kit that could be generated before.
+        site = one_bit_clock_pin(pins, spec["clock_port"])
+        pin = next((q for q in pins if q["name"] == site), None)
+        if pin is not None and core_pin_sites_gate.face(pin, w, h) == "C" and default_master_slice(rec, mod):
+            a.master_slice = default_master_slice(rec, mod)
+            print(f"KIT SLICE: interior clock {site} uses recipe slice {a.master_slice}", file=sys.stderr)
     if a.master_slice:
         _, clock_slice = MS.resolve(a.master_slice, mod, [w, h], plan, a.trial, kind="core")
         declared = MS.slice_placements(kd, clock_slice, spec["clock_port"])
