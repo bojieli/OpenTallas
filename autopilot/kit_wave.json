@@ -2283,21 +2283,21 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged."
    },
-   "plan": "/srv/opentallas-scratch3/claude/kw-fix-8/src_v/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw-fix-8/src_w/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_v",
-   "src_sha": "86bdf75874227ccd8a5483c678c3902e36830101",
+   "src": "/srv/opentallas-scratch2/claude/kw-fix-8/src_w",
+   "src_sha": "627772841061681b5d79d22de3acfb21bad0103f",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch3/claude/kw-fix-8/src_v/results/qc_die66_shrink2_1103/bind/final_asbuilt.json",
-    "bind_out": "/srv/opentallas-scratch3/claude/dq71/bind_tip",
-    "note": "KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation."
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw-fix-8/src_w/results/qc_die66_shrink2_1103/bind/final_asbuilt.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw-fix-8/bind_tip_i57",
+    "note": "KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation."
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch3/claude/kw-fix-8/src_v/results/qc_die66_shrink2_1103/bind/sidecar.json"
+    "/srv/opentallas-scratch2/claude/kw-fix-8/src_w/results/qc_die66_shrink2_1103/bind/sidecar.json"
    ],
    "kinds": [
     "type"
@@ -2316,7 +2316,7 @@
    "die_max_inflight": 60,
    "owner_lane": "DIE-QC-65",
    "lane": "KIT-WAVE-12",
-   "note": "KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 16:4x COORD stale bind: hold hc1-3, stm, coll_ftm, su until DIE-QC-71 tip bind passes; then bind_out in one change | KW-FIX-8 14:1x I46 tag w-qc: src_s, W1 + R8 straps + coll_ucie event efdb36e864; W1 list from q70/ws_report.json added to only_items | KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
+   "note": "KW-FIX-8 19:1x I57 writer guard class relaunch, src_w on epyc4+intel1. KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 16:4x COORD stale bind: hold hc1-3, stm, coll_ftm, su until DIE-QC-71 tip bind passes; then bind_out in one change | KW-FIX-8 14:1x I46 tag w-qc: src_s, W1 + R8 straps + coll_ucie event efdb36e864; W1 list from q70/ws_report.json added to only_items | KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
    "pilot_mode": "queue",
    "hold_items": {
     "sle_sc_v2": "CORE_CAP 542365/400000 (measured): CORE_CAP: no materialized hard cores",
@@ -2450,9 +2450,29 @@
     "slw_stm_v2__cl9beb65e6@1",
     "coll_ftm@1",
     "sle_stm_v3@1",
-    "slw_su_c__cl92142dac@6"
+    "slw_su_c__cl92142dac@6",
+    "sle_hc1__cl7d360508@3",
+    "sle_sc_v1__cl7479a5ec@1",
+    "sle_stm_v1__clbe630b9c@3",
+    "sle_stm_v2__cl55be2264@2",
+    "slw_fw_v2__cl8537f156@1",
+    "slw_hc3__clccfc3e6b@3",
+    "slw_st_a_v2__cl9f076a5c@2",
+    "slw_st_a_v2__clf4365a62@2",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9@3",
+    "slw_stm_v2__cl9beb65e6@2",
+    "sle_fw_v1__clf58b4dfb@1",
+    "sle_fw_v2__cl69f5e854@1",
+    "sle_fw_v3@1",
+    "sle_st_a_v1__cl67389ecd@3",
+    "sle_st_a_v1__cl989804f6__cled3c1d7b@4",
+    "sle_st_a_v2@4",
+    "slw_fw_v1__cl51d45468@1",
+    "slw_fw_v1__clf51c11d8__clc7ddab13@1",
+    "slw_sc_v2@1",
+    "slw_st_a_v1__clfc5867a6@2"
    ],
-   "queue_src": "claude/kw8-grtallow-1104@86bdf75874227ccd8a5483c678c3902e36830101",
+   "queue_src": "",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -2790,11 +2810,12 @@
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
     "epyc4",
+    "intel1",
     "epyc2"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
-    "epyc2"
+    "intel1"
    ],
    "cancel_superseded": false,
    "only_items": [
