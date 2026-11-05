@@ -4,12 +4,15 @@
 # moves it on in a second flop (MERGE_HOP: flt_q <= core fault; flt_h <= flt_q).  Nothing placed the landing flop, so a
 # wirelength GPL left u_b.flt_q[0] 789 um and flt_q[1] 386 um from their eA0/eA1 fault pins: core clk->fault 355 ps +
 # 765 ps of buffered wire in ONE cycle (TT -184 ps) while the next hop had a whole cycle.  Rule: a flop whose D is
-# driven by a hard-core output pin through <= 4 BUF/INV/HB cells and whose Q has exactly ONE load (the pair shape; a
+# driven by a hard-core output pin through <= 4 BUF/INV/HB cells, is that pin's only load, and whose Q has exactly ONE load (the pair shape; a
 # landing flop broadcast to several consumers, e.g. bd_r -> 4 A cores, is left to GPL) is placed FIRM at the nearest
 # free point outside every hard-core halo next to that pin; face_flops_release.tcl releases it to PLACED before DPL.
-# Flops already FIRM / LOCKED (face flops, rings, relay_mid stations) are untouched.  OT_CORE_OUT_LAND=0 turns it off.
+# Flops already FIRM / LOCKED (face flops, rings, relay_mid stations) are untouched.
+# OPT-IN (estimate first): runs only with OT_CORE_OUT_LAND=1 in the kit config.mk, which gen_phys writes when the GEN
+# environment sets OT_CORE_OUT_LAND=1 (wave item_env, per row) or the plan lists the type in budgets.core_out_land_types.
+# Measured reach: hd_tile 333 flops (flt_q[0] 789 -> 168 um), hd_lep0N 5359 (not yet timed): so no default-on yet.
 uplevel #0 {
-if {![info exists ::env(OT_CORE_OUT_LAND)] || $::env(OT_CORE_OUT_LAND) ne "0"} {
+if {[info exists ::env(OT_CORE_OUT_LAND)] && $::env(OT_CORE_OUT_LAND) eq "1"} {
 set col_blk [ord::get_db_block]
 set col_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set col_core [$col_blk getCoreArea]
@@ -69,46 +72,53 @@ foreach i [$col_blk getInsts] {
     set net [$it getNet]; if {$net eq "NULL"} continue
     lassign [$it getAvgXY] ok px py
     if {!$ok} { set b [$i getBBox]; set px [expr {([$b xMin]+[$b xMax])/2}]; set py [expr {([$b yMin]+[$b yMax])/2}] }
+    # every leaf load of the pin through <= 4 BUF/INV/HB; a landing flop is the pin's ONLY leaf load (a pin broadcast to
+    # several flops, e.g. hd_lep0N k_lo_r -> 100+ credit_pin_r, is not a landing pair and stays with GPL)
+    set leaves {}
     set front [list [list $net 0]]; set seen {}
     while {[llength $front]} {
       lassign [lindex $front 0] nt d; set front [lrange $front 1 end]
       if {[dict exists $seen $nt]} continue
       dict set seen $nt 1
+      if {[llength [$nt getBTerms]]} { lappend leaves PORT }
       foreach s [$nt getITerms] {
         if {![$s isInputSignal]} continue
-        set f [$s getInst]; set m [$f getMaster]
-        if {[$m isBlock]} continue
-        if {[string match "*DFF*" [$m getName]] && [[$s getMTerm] getName] eq "D"} {
-          if {[$f getPlacementStatus] in {FIRM LOCKED COVER}} continue
-          if {[col_q_loads $f] != 1} { incr col_skip; continue }
-          set w [$m getWidth]
-          set best {}
-          for {set r 0} {$r < 400 && $best eq {}} {incr r} {
-            set dd [expr {$r * $col_step}]
-            foreach {dx dy} [list 0 0 0 $dd 0 -$dd $dd 0 -$dd 0 $dd $dd -$dd $dd $dd -$dd -$dd -$dd] {
-              set cx [expr {$col_x0 + (($px + $dx - $col_x0) / $col_sw) * $col_sw}]
-              set cy [expr {$col_y0 + (($py + $dy - $col_y0) / $col_rh) * $col_rh}]
-              if {[dict exists $col_occ "$cx,$cy"] || ![col_free $cx $cy $w]} continue
-              set best [list $cx $cy]; break
-            }
-          }
-          if {$best eq {}} { incr col_skip; continue }
-          lassign $best cx cy
-          # one landing flop per 24-site slot of a row (room for its D/Q buffers)
-          for {set k -24} {$k <= 36} {incr k} { dict set col_occ "[expr {$cx + $k * $col_sw}],$cy" 1 }
-          $f setLocation $cx $cy
-          if {[dict exists $col_orient $cy]} { $f setOrient [dict get $col_orient $cy] }
-          $f setPlacementStatus FIRM
-          puts $col_out [$f getName]
-          incr col_n
-        } elseif {$d < 4 && [col_isbuf $f]} {
+        set f [$s getInst]
+        if {$d < 4 && ![[$f getMaster] isBlock] && [col_isbuf $f]} {
           foreach o [$f getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend front [list [$o getNet] [expr {$d + 1}]] } }
-        }
+        } else { lappend leaves $s }
       }
     }
+    if {[llength $leaves] != 1} continue
+    set s [lindex $leaves 0]
+    if {$s eq "PORT"} continue
+    set f [$s getInst]; set m [$f getMaster]
+    if {[$m isBlock] || ![string match "*DFF*" [$m getName]] || [[$s getMTerm] getName] ne "D"} continue
+    if {[$f getPlacementStatus] in {FIRM LOCKED COVER}} continue
+    if {[col_q_loads $f] != 1} { incr col_skip; continue }
+    set w [$m getWidth]
+    set best {}
+    for {set r 0} {$r < 400 && $best eq {}} {incr r} {
+      set dd [expr {$r * $col_step}]
+      foreach {dx dy} [list 0 0 0 $dd 0 -$dd $dd 0 -$dd 0 $dd $dd -$dd $dd $dd -$dd -$dd -$dd] {
+        set cx [expr {$col_x0 + (($px + $dx - $col_x0) / $col_sw) * $col_sw}]
+        set cy [expr {$col_y0 + (($py + $dy - $col_y0) / $col_rh) * $col_rh}]
+        if {[dict exists $col_occ "$cx,$cy"] || ![col_free $cx $cy $w]} continue
+        set best [list $cx $cy]; break
+      }
+    }
+    if {$best eq {}} { incr col_skip; continue }
+    lassign $best cx cy
+    # one landing flop per row slot (room for its D/Q buffers)
+    for {set k -24} {$k <= 36} {incr k} { dict set col_occ "[expr {$cx + $k * $col_sw}],$cy" 1 }
+    $f setLocation $cx $cy
+    if {[dict exists $col_orient $cy]} { $f setOrient [dict get $col_orient $cy] }
+    $f setPlacementStatus FIRM
+    puts $col_out [$f getName]
+    incr col_n
   }
 }
 close $col_out
-puts "OT_CORE_OUT_LAND placed $col_n core-output landing flops FIRM at their hard-core pins ($col_skip left to GPL: fan-out > 1 or no free site)"
+puts "OT_CORE_OUT_LAND placed $col_n core-output landing flops FIRM at their hard-core pins ($col_skip single-load pins left to GPL: flop fan-out > 1 or no free site)"
 }
 }
