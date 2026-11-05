@@ -17,6 +17,10 @@ pins (same ODB).
          merge (fewer parent slivers; same PG access as 0 on HEAD lep_pair)
   python3 -I abstract_detail.py splice --base signed.lef --detail detail.lef --out new.lef [--layers M6,M7]
       -> new.lef + JSON report on stdout (layers default: OBS layers above the highest PG pin layer)
+      [--pin-clear-um 0.048 --pin-clear-layers M4]: DRT-0073 form. Always with this flag: metal under a signal pin
+      leaves the OBS (it is that pin's own conductor, so nothing is lost); and detail OBS on --pin-clear-layers within
+      the distance of a signal pin is cut, because the neighbouring wire there stops pin access.  Geometry under that
+      cut is NOT modeled for the parent: the report counts it, and --pin-clear-layers should stay the pin's own layer.
   python3 -I abstract_detail.py check --base signed.lef --new new.lef
       -> exit 0 iff everything except OBS of the replaced layers is identical
 Die-agnostic: any single-MACRO abstract (HEAD lep_pair, KV head_eighth, ...).
@@ -155,6 +159,88 @@ def splice(base_lines, detail_obs, layers):
     return head + out_body + tail
 
 
+_RECT = re.compile(r"(\s*)RECT\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)")
+
+
+def signal_pin_rects(base_lines):
+    """{layer: [rect]} of every non-PG pin shape in the base view."""
+    out, name, skip, layer = {}, None, False, None
+    for line in base_lines:
+        m = re.match(r"\s*PIN (\S+)", line)
+        if m:
+            name, skip, layer = m.group(1), False, None
+            continue
+        if name is None:
+            continue
+        if re.match(r"\s*END %s\s*$" % re.escape(name), line):
+            name = None
+        elif re.search(r"USE (POWER|GROUND)", line):
+            skip = True
+        elif re.match(r"\s*LAYER (\S+)", line):
+            layer = re.match(r"\s*LAYER (\S+)", line).group(1)
+        elif not skip:
+            m = _RECT.match(line)
+            if m and layer:
+                out.setdefault(layer, []).append(tuple(float(x) for x in m.groups()[1:]))
+    return out
+
+
+def _subtract(r, p):
+    a, b, c, d = r
+    e, f, g, h = p
+    res = []
+    if f > b:
+        res.append((a, b, c, f))
+    if h < d:
+        res.append((a, h, c, d))
+    if e > a:
+        res.append((a, max(b, f), e, min(d, h)))
+    if g < c:
+        res.append((g, max(b, f), c, min(d, h)))
+    return [q for q in res if q[2] > q[0] and q[3] > q[1]]
+
+
+def clear_pins(detail_obs, base_lines, clear_um=0.0, clear_layers=()):
+    """Cut pin shapes (all layers) and, on clear_layers, pin shapes grown by clear_um out of detail OBS lines.
+    -> (new detail_obs, {layer: {own_rects, cleared_rects, cleared_um2}})"""
+    pins, grid, new, rep = signal_pin_rects(base_lines), 1.0, {}, {}
+    for layer, lines in detail_obs.items():
+        grow = clear_um if layer in clear_layers else 0.0
+        boxes = [(r, (r[0] - grow, r[1] - grow, r[2] + grow, r[3] + grow)) for r in pins.get(layer, [])]
+        idx = {}
+        for _, b in boxes:
+            for x in range(int(b[0] // grid), int(b[2] // grid) + 1):
+                for y in range(int(b[1] // grid), int(b[3] // grid) + 1):
+                    idx.setdefault((x, y), []).append(b)
+        out, own, cut, area = [], 0, 0, 0.0
+        for line in lines:
+            m = _RECT.match(line)
+            if not m:
+                out.append(line)
+                continue
+            r = tuple(float(x) for x in m.groups()[1:])
+            cand = set()
+            for x in range(int(r[0] // grid), int(r[2] // grid) + 1):
+                for y in range(int(r[1] // grid), int(r[3] // grid) + 1):
+                    cand.update(idx.get((x, y), ()))
+            rs = [r]
+            for b in cand:
+                nr = []
+                for q in rs:
+                    nr += _subtract(q, b) if (q[0] < b[2] and q[2] > b[0] and q[1] < b[3] and q[3] > b[1]) else [q]
+                rs = nr
+            if rs == [r]:
+                out.append(line)
+                continue
+            own += any(r[0] < p[2] and r[2] > p[0] and r[1] < p[3] and r[3] > p[1] for p in pins.get(layer, []))
+            cut += 1
+            area += (r[2] - r[0]) * (r[3] - r[1]) - sum((q[2] - q[0]) * (q[3] - q[1]) for q in rs)
+            out += ["%sRECT %.3f %.3f %.3f %.3f ;\n" % (m.group(1), q[0], q[1], q[2], q[3]) for q in rs]
+        new[layer] = out
+        rep[layer] = {"rects_cut": cut, "overlap_own_pin": own, "um2_cut": round(area, 4)}
+    return new, rep
+
+
 def check(base_lines, new_lines, layers):
     """Everything but OBS of `layers` identical.  -> (ok, problems)."""
     probs = []
@@ -193,6 +279,8 @@ def main(argv=None):
     s.add_argument("--detail", required=True)
     s.add_argument("--out", required=True)
     s.add_argument("--layers", default="")
+    s.add_argument("--pin-clear-um", type=float, default=None)
+    s.add_argument("--pin-clear-layers", default="")
     c = sub.add_parser("check")
     c.add_argument("--base", required=True)
     c.add_argument("--new", required=True)
@@ -206,6 +294,9 @@ def main(argv=None):
     if a.cmd == "splice":
         same_pins = _head_stream(a.detail) == _pin_section(base)
         det = _iter_obs_layers(a.detail, set(layers))
+        cleared = None
+        if a.pin_clear_um is not None:
+            det, cleared = clear_pins(det, base, a.pin_clear_um, [l for l in a.pin_clear_layers.split(",") if l])
         new = splice(base, det, layers)
         with open(a.out, "w") as fh:
             fh.writelines(new)
@@ -213,6 +304,7 @@ def main(argv=None):
         rep = {"base": a.base, "base_sha256": _sha(a.base), "detail": a.detail, "out": a.out,
                "out_sha256": _sha(a.out), "layers_detailed": layers,
                "rects": {l: len(det.get(l, [])) for l in layers},
+               "pin_clear_um": a.pin_clear_um, "pin_clear": cleared,
                "pg_pin_layers": {k: sorted(v) for k, v in pg_pin_layers(base).items()},
                "detail_pins_equal_base": same_pins, "check_ok": ok and same_pins, "problems": probs
                + ([] if same_pins else ["detailed export PIN section != base (different ODB?)"])}

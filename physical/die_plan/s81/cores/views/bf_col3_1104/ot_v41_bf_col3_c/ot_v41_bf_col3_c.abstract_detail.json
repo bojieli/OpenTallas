@@ -1,0 +1,50 @@
+{
+ "base": "ot_v41_bf_col3_c.lef (signed, blanket OBS)",
+ "base_sha256": "ec1f85fe1c0080dad26fe3d9ab5d8a95a48e7128d8c9c7de828e0602026cdd77",
+ "detail": "write_abstract_lef -bloat_factor 0 of signed 6_final.odb",
+ "out": "ot_v41_bf_col3_c.lef",
+ "out_sha256": "e4d242448770775b961e69ebac8449f17887f9420e2e8ddbaec992653c0227cd",
+ "layers_detailed": [
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "rects": {
+  "M4": 80172,
+  "M5": 20726,
+  "M6": 6766
+ },
+ "pin_clear_um": 0.048,
+ "pin_clear": {
+  "M4": {
+   "rects_cut": 1416,
+   "overlap_own_pin": 1398,
+   "um2_cut": 2.4521
+  },
+  "M5": {
+   "rects_cut": 65,
+   "overlap_own_pin": 65,
+   "um2_cut": 0.1057
+  },
+  "M6": {
+   "rects_cut": 0,
+   "overlap_own_pin": 0,
+   "um2_cut": 0.0
+  }
+ },
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": [],
+ "odb_sha256_prefix": "9228721635f51686",
+ "odb": "intel1 die-s81-56/eco/run/col3c6/i1/run/results/asap7/kl_ot_v41_bf_col3_c_rfh6/base/6_final.odb",
+ "why": "DRT-0073 on 3 col type families; exact detail alone still fails pin access, 48 nm M4 clear passes minimal block; no re-route, libs/netlist/signoff unchanged",
+ "not_modeled": "18 M4 rects of neighbouring wires are cut within 48 nm of a signal pin (rects_cut minus overlap_own_pin); a parent M4 wire inside that cut is not seen by parent DRC"
+}
