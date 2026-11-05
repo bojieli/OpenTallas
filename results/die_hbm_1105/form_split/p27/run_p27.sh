@@ -3,11 +3,11 @@
 # shell turn into wires in the DUT, each tile carries its own. run_p27.sh KITRTL OUT [CYCLES]; MUT 0 must PASS, MUT 1/2/3 must FAIL.
 set -u
 KR=$1; O=$2; CYC=${3:-3000}; H=$(cd "$(dirname "$0")" && pwd); W=$H/../../../..
-RT=$W/rtl/hbm_accel/cores_split/reform_1105s/opstore; BB=$W/physical/die_plan/hbm/over_cap_split/reform_1103; SM=${SRAM_MODEL:-$H/sram_256x256_bench.sv}
+RT=$W/rtl/hbm_accel/cores_split/reform_1105s/opstore; BB=$W/physical/die_plan/hbm/over_cap_split/reform_1103; SM=${SRAM_MODEL:-$H/sram_256x256_bench.sv}; FW=$H/sram_256x256_bench.sv  # facewrap needs ports only: yosys does not fit the real macro model (46 GB, no output, 80 min)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/bin/verilator}; mkdir -p "$O"
 T=ot_hgi_sfu_core_split3__opstore_b; LEAF=$KR/ot_hgi_su_unit.sv
-for M in group output; do python3 -I $BB/facewrap.py --top ot_hgi_sfu_opsb_$M --clk-re '^clk$' --rst-re '^rst_n$' --out $O/${M}__fs.sv $RT/ot_hgi_sfu_opsb_tiles.sv $LEAF $SM > $O/$M.json || exit 1; done
-python3 -I $BB/facewrap.py --top $T --out $O/ref_unused.sv $KR/*.sv $SM > $O/ref_ports.json || exit 1
+for M in group output; do python3 -I $BB/facewrap.py --top ot_hgi_sfu_opsb_$M --clk-re '^clk$' --rst-re '^rst_n$' --out $O/${M}__fs.sv $RT/ot_hgi_sfu_opsb_tiles.sv $LEAF $FW > $O/$M.json || exit 1; done
+python3 -I $BB/facewrap.py --top $T --out $O/ref_unused.sv $KR/*.sv $FW > $O/ref_ports.json || exit 1
 sed -e "s/^module $T (/module ${T}__split (/" -e "s/ot_hbm_face_reg #/ot_hbm_face_wire #/" -e "s/${T}__fcore u_fcore/${T}__fcore_split u_fcore/" $KR/${T}__fshell.sv > $O/dut_top.sv
 sed -e "s/module ${T}__fcore (/module ${T}__fcore_split (/" -e "s/ot_hgi_sfu_split3_opstore_b_core u_core/ot_hgi_sfu_opsb__comp #(.MUT(\`OT_MUT)) u_core/" $KR/${T}__wrap.sv > $O/dut_fcore.sv
 grep -c "ot_hgi_sfu_opsb__comp" $O/dut_fcore.sv
