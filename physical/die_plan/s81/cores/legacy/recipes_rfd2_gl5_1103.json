@@ -1,0 +1,20 @@
+{
+ "_doc": "DIE-S81-51/RF-D gunit_l5 conservative form (plan of record plan_h2_2249, outline / pins unchanged)",
+ "dsdv_gunit_l5": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l5_n32",
+  "spec_git": "1766568f01:physical/ref_tile/dsdv_gunit_l5_n32/spec.json",
+  "suffix": "rfd2",
+  "lec_hints": "physical/die_plan/s81/cores/legacy/lec_hints/dsdv_gunit_l5_rfd2.json",
+  "params": {
+   "RFD": 1
+  },
+  "regional_taps": {
+   "nx": 4,
+   "ny": 2,
+   "split": "count",
+   "win_ps": 20,
+   "protect_spine": 1
+  },
+  "_rfd2": "DIE-S81-51/RF-D 11-03 OWNER 18:57 conservative form (<= 150k cells): RFD 1 (registered Sinkhorn fault zeroing, per-bank kept SRAM write registers) + row-pipelined Sinkhorn ot_hdc_sinkhorn_fsr (one row datapath: 16 -> 4 quotients, 24 -> 6 row adds, 4 -> 1 seed / predecode; rows issue on 4 consecutive edges, every skip read realigned; D0 18 -> 21, DS 16 -> 19, HC +121 edges incl FQ; generic gates 700,665 -> 234,003). Clock / IO reference / M6 as rfd."
+ }
+}
