@@ -43,7 +43,18 @@ module ot_s81hd_tile_native #(
     //                   the capture / fire state waits the same number of cycles (+CMP_STAGES a tile on the chain)
     parameter integer A_INPUT_STAGES = 0,
     parameter integer MERGE_HOP = 0,
-    parameter integer CMP_STAGES = 0
+    parameter integer CMP_STAGES = 0,
+    // DIE-HEAD-70 11-05 (hd_tile long hops, COORD 12:12: pin cycles are the lever), every option default 0 = unchanged:
+    //   ROW_IN_REG: bundle registers row_in = row0 + 32q per A core (row0 is the ID strap: 0 data cycles)
+    //   TEN_HOP:    one kept register between the ten pin register and its users (b_en / b_go: fired, own_have, sel_v,
+    //               better, bflt, bundle go); ten is a static strap (rst_n held >= 64 clk), so 0 data cycles
+    //   FLT_XHOP:   bundle third fault hop (MERGE_HOP only); the fault is sticky until the next go: 0 result cycles
+    //   BST:        bundle x / go broadcast depth (2 = original); +1 = one more x / go stage before the skew line,
+    //               +1 cycle on the tile's own result (once per position on the chain)
+    parameter integer ROW_IN_REG = 0,
+    parameter integer TEN_HOP = 0,
+    parameter integer FLT_XHOP = 0,
+    parameter integer BST = 2
 ) (
     input wire hci0_ck0_i,
     input wire hci0_ck1_i,
@@ -123,11 +134,17 @@ module ot_s81hd_tile_native #(
     ot_s81hd_kreg #(.W(512)) u_xo (.clk(ck), .d(x_q), .q(xo_q));
 
     // ---------------- bundle -----------------------------------------------------------------------------------------
-    wire        b_go = go_q & ten_q;
+    wire        ten_m;                       // TEN_HOP: kept hop register next to the control / compare logic
+    generate if (TEN_HOP != 0) begin : g_tenh
+        ot_s81hd_kreg #(.W(1)) u_tenh (.clk(ck), .d(ten_q), .q(ten_m));
+    end else begin : g_ten0
+        assign ten_m = ten_q;
+    end endgenerate
+    wire        b_go = go_q & ten_m;
 `ifdef OT_S81HD_MUT_TEN_IGNORED
     wire        b_en = 1'b1;                 // MUTANT: ten ignored (bundle always runs and merges)
 `else
-    wire        b_en = ten_q;
+    wire        b_en = ten_m;
 `endif
     wire        res_v, b_fault;
     wire [16:0] res_row;
@@ -136,7 +153,8 @@ module ot_s81hd_tile_native #(
     wire [127:0] nc_hd;
     wire [67:0]  nc_hr;
     ot_s81hd_bundle_native #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4), .CV(CV),
-                     .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP)) u_b (
+                     .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP),
+                     .ROW_IN_REG(ROW_IN_REG), .FLT_XHOP(FLT_XHOP), .BST(BST)) u_b (
         .hci0_ck0_i(hci0_ck0_i), .hci0_ck1_i(hci0_ck1_i), .hci0_mesh_i(hci0_mesh_i), .hci0_rst_i(hci0_rst_i), .hci0_ck0_o(hci0_ck0_o), .hci0_ck1_o(hci0_ck1_o), .hci0_mesh_o(hci0_mesh_o), .hci0_rst_o(hci0_rst_o), .hci1_ck0_i(hci1_ck0_i), .hci1_ck1_i(hci1_ck1_i), .hci1_mesh_i(hci1_mesh_i), .hci1_rst_i(hci1_rst_i), .hci1_ck0_o(hci1_ck0_o), .hci1_ck1_o(hci1_ck1_o), .hci1_mesh_o(hci1_mesh_o), .hci1_rst_o(hci1_rst_o), .hci2_ck0_i(hci2_ck0_i), .hci2_ck1_i(hci2_ck1_i), .hci2_mesh_i(hci2_mesh_i), .hci2_rst_i(hci2_rst_i), .hci2_ck0_o(hci2_ck0_o), .hci2_ck1_o(hci2_ck1_o), .hci2_mesh_o(hci2_mesh_o), .hci2_rst_o(hci2_rst_o), .hci3_ck0_i(hci3_ck0_i), .hci3_ck1_i(hci3_ck1_i), .hci3_mesh_i(hci3_mesh_i), .hci3_rst_i(hci3_rst_i), .hci3_ck0_o(hci3_ck0_o), .hci3_ck1_o(hci3_ck1_o), .hci3_mesh_o(hci3_mesh_o), .hci3_rst_o(hci3_rst_o), .hci4_ck0_i(hci4_ck0_i), .hci4_ck1_i(hci4_ck1_i), .hci4_mesh_i(hci4_mesh_i), .hci4_rst_i(hci4_rst_i), .hci4_ck0_o(hci4_ck0_o), .hci4_ck1_o(hci4_ck1_o), .hci4_mesh_o(hci4_mesh_o), .hci4_rst_o(hci4_rst_o),
         .clk(ck), .rst_n(rst_n),
 `ifdef OT_S81HD_MUT_TEN_IGNORED

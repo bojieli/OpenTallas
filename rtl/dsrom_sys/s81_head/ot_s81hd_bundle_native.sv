@@ -38,6 +38,12 @@ module ot_s81hd_bundle_native #(
     // from cores 350-700 um apart): 1 = a hop register before each compare level (pk_q -> pk_h -> c1 -> c1_h -> res),
     // so a stage does EITHER the ~350-um hop OR the 81-b pick.  +2 cycles on the result; 0 = unchanged.
     parameter integer MERGE_HOP = 0,
+    // DIE-HEAD-70 11-05 (hd_tile row0_q -> u_ad1 -115 ps): 1 registers row_in = row0 + 32q per A core before the A input
+    // copies.  row0 is the ID strap (static, rst_n held >= 64 clk), so the added edge costs 0 data cycles.
+    parameter integer ROW_IN_REG = 0,
+    // DIE-HEAD-70 11-05 (hd_tile flt_q[0] -> flt_h[0] -74 ps, eA0 fault pin ~1 mm from the OR): 1 = a third fault hop
+    // (MERGE_HOP only).  The fault is sticky until the next go, so +1 is free like the first two.
+    parameter integer FLT_XHOP = 0,
     // CV (S81-HEAD 10-24): 1 = the elements are the CLOSED views (physical/dsrom_fh_safe/closed/elem{A,B}) as the hard
     // macros ot_s81hd_elemA_cv (u_eA0..3) / ot_s81hd_elemB_cv (u_eB) in the labelled block g_cv (no generate index in
     // their paths); they are the closed parameter point (CUT 0x1ff, SPLIT9 1, IOREG 1, SAFE 1), checked below.
@@ -152,7 +158,15 @@ module ot_s81hd_bundle_native #(
     generate for (q = 0; q < 4; q = q + 1) begin : g_a
         wire ov, lv;
         wire [31:0] od, ld;
-        wire [16:0] row_in = row0 + 17'd32 * q;
+        wire [16:0] row_in_c = row0 + 17'd32 * q;
+        wire [16:0] row_in;
+        if (ROW_IN_REG != 0) begin : g_rir
+            reg [16:0] rir_q;
+            always @(posedge clk) rir_q <= row_in_c;
+            assign row_in = rir_q;
+        end else begin : g_rin
+            assign row_in = row_in_c;
+        end
         // All 307 bits use the same depth. Validity alone resets; payload
         // travels continuously, retaining the original systolic and B join alignment.
         // Physical implementation must land these groups at the actual A faces.
@@ -254,9 +268,9 @@ module ot_s81hd_bundle_native #(
     end
     // MERGE_HOP: the five element fault pins are landed next to their element and hopped (2 stages each) before the OR
     // (tile_prev2: eA1 fault -> tile bflt_q crossed the tile in one cycle, -224 ps).  The fault is sticky, +2 is free.
-    reg [4:0] flt_q, flt_h;
-    always @(posedge clk) begin flt_q <= {b_fault, a_fault}; flt_h <= flt_q; end
-    assign fault = MERGE_HOP ? (|flt_h) : (b_fault | (|a_fault));
+    reg [4:0] flt_q, flt_h, flt_x;
+    always @(posedge clk) begin flt_q <= {b_fault, a_fault}; flt_h <= flt_q; flt_x <= flt_h; end
+    assign fault = MERGE_HOP ? (FLT_XHOP != 0 ? (|flt_x) : (|flt_h)) : (b_fault | (|a_fault));
 endmodule
 
 // S81-HEAD 10-24 (hd_tile tile_prev2 placement STA: Yosys opt_merge folded the four per-A-core input copies back into
