@@ -4,7 +4,7 @@
 // Issue authority is compiled START dates; physical codecs are in ot_s81hd_ctl_core.
 // The current spine root already merges north/south; feeding both comparison inputs the same
 // root record preserves that record exactly and retains the established two-edge pick latency.
-module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0) (
+module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0) (
     input wire start_i, input wire adapter_fault,
     output wire job_active_o,
     input  wire              ck,
@@ -444,10 +444,17 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     // CSR 8 run = 1 after writing plen / glen (run = 0 resets it again for the next request)
     reg seq_rn;
     always @(posedge ck or negedge rr[9]) if (!rr[9]) seq_rn <= 1'b0; else seq_rn <= c_run;
+    generate if (SEQ_FAN != 0) begin : g_seqf
+    dsfd_mtp_seq_fan u_seq (.ck(ck), .rst(seq_rn), .f_cfg({c_glen, c_plen}),
+        .f_rv(f_rv), .f_rd(f_rd), .t_rg(t_rg), .t_tv(t_tv), .t_td(t_td), .f_tg(f_tg),
+        .t_sv(t_sv), .t_sd(t_sd), .f_sg(f_sg), .f_wv(f_wv), .f_wd(f_wd), .t_wg(t_wg),
+        .t_hv(t_hv), .t_hd(t_hd), .f_hg(f_hg), .f_qv(f_qv), .f_qd(f_qd), .t_qg(t_qg), .t_acc(t_acc));
+    end else begin : g_seqb
     dsfd_mtp_seq #(.WB_STAGE(SEQ_WB)) u_seq (.ck(ck), .rst(seq_rn), .f_cfg({c_glen, c_plen}),
         .f_rv(f_rv), .f_rd(f_rd), .t_rg(t_rg), .t_tv(t_tv), .t_td(t_td), .f_tg(f_tg),
         .t_sv(t_sv), .t_sd(t_sd), .f_sg(f_sg), .f_wv(f_wv), .f_wd(f_wd), .t_wg(t_wg),
         .t_hv(t_hv), .t_hd(t_hd), .f_hg(f_hg), .f_qv(f_qv), .f_qd(f_qd), .t_qg(t_qg), .t_acc(t_acc));
+    end endgenerate
     // grant receivers (one grant in flight, one holding register; grant only while the holding register is empty)
     wire tk_hv, sd_hv, hs_hv; wire tk_pop, sd_pop, hs_pop;
     wire [511:0] tk_q; wire [SW-1:0] sd_q; wire [DW-1:0] hs_q;

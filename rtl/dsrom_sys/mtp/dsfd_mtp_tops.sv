@@ -216,3 +216,53 @@ module dsfd_drf_fan #(parameter integer FLIT = 512, parameter integer N = 4) (
         .ch_in_valid(f_civ), .ch_in_ready(t_cir), .ch_in_data(f_cid), .fault(fl));
     assign t_ft = fl;
 endmodule
+
+// dsfd_mtp_seq with the fan-cut sequencer core; hd_ctl form only (DIE-HEAD-65).
+module dsfd_mtp_seq_fan #(
+    parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
+    parameter integer MAXU = 8, parameter integer G = 5,
+    parameter integer SW = USER_W + 3 * NW + 4, parameter integer DW = USER_W + 3 + NW
+) (
+    input  wire [0:0]        ck,
+    input  wire [0:0]        rst,
+    input  wire [2*NW-1:0]   f_cfg,          // {glen, plen} (static)
+    input  wire [0:0]        f_rv,  input  wire [FLIT-1:0] f_rd,  output wire [0:0] t_rg,   // RESULT in
+    output wire [0:0]        t_tv,  output wire [FLIT-1:0] t_td,  input  wire [0:0] f_tg,   // token return out
+    output wire [0:0]        t_sv,  output wire [SW-1:0]   t_sd,  input  wire [0:0] f_sg,   // seed out
+    input  wire [0:0]        f_wv,  input  wire [USER_W-1:0] f_wd, output wire [0:0] t_wg,  // rows ready in
+    output wire [0:0]        t_hv,  output wire [DW-1:0]   t_hd,  input  wire [0:0] f_hg,   // draft-head step out
+    input  wire [0:0]        f_qv,  input  wire [DW-1:0]   f_qd,  output wire [0:0] t_qg,   // draft-head result in
+    output wire [2*NW+USER_W+4:0] t_acc      // {fault, acc_v, acc_u, acc_a, acc_c, acc_y} (from flops)
+);
+    wire clk = ck[0];
+    wire rn;
+    ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn));
+    reg [2*NW-1:0] cfg_q; always @(posedge clk) cfg_q <= f_cfg;
+    wire rv, rr; wire [FLIT-1:0] rd;
+    ot_dsrom_mtp_lrx #(.W(FLIT)) u_r (.clk(clk), .rst_n(rn), .l_valid(f_rv[0]), .l_ready(t_rg[0]), .l_data(f_rd),
+        .c_valid(rv), .c_ready(rr), .c_data(rd));
+    wire tv, tr; wire [FLIT-1:0] td;
+    ot_dsrom_mtp_ltx #(.W(FLIT)) u_t (.clk(clk), .rst_n(rn), .c_valid(tv), .c_ready(tr), .c_data(td),
+        .l_valid(t_tv[0]), .l_ready(f_tg[0]), .l_data(t_td));
+    wire sv, sr; wire [SW-1:0] sd;
+    ot_dsrom_mtp_ltx #(.W(SW)) u_s (.clk(clk), .rst_n(rn), .c_valid(sv), .c_ready(sr), .c_data(sd),
+        .l_valid(t_sv[0]), .l_ready(f_sg[0]), .l_data(t_sd));
+    wire wv, wr; wire [USER_W-1:0] wd;
+    ot_dsrom_mtp_lrx #(.W(USER_W)) u_w (.clk(clk), .rst_n(rn), .l_valid(f_wv[0]), .l_ready(t_wg[0]), .l_data(f_wd),
+        .c_valid(wv), .c_ready(wr), .c_data(wd));
+    wire hv, hr; wire [DW-1:0] hd;
+    ot_dsrom_mtp_ltx #(.W(DW)) u_h (.clk(clk), .rst_n(rn), .c_valid(hv), .c_ready(hr), .c_data(hd),
+        .l_valid(t_hv[0]), .l_ready(f_hg[0]), .l_data(t_hd));
+    wire qv, qr; wire [DW-1:0] qd;
+    ot_dsrom_mtp_lrx #(.W(DW)) u_q (.clk(clk), .rst_n(rn), .l_valid(f_qv[0]), .l_ready(t_qg[0]), .l_data(f_qd),
+        .c_valid(qv), .c_ready(qr), .c_data(qd));
+    wire av, fl; wire [USER_W-1:0] au; wire [2:0] aa; wire [NW-1:0] ac, ay;
+    ot_dsrom_mtp_seq_fan #(.FLIT(FLIT), .NW(NW), .USER_W(USER_W), .MAXU(MAXU), .G(G)) u_seq (
+        .clk(clk), .rst_n(rn), .cfg_plen(cfg_q[NW-1:0]), .cfg_glen(cfg_q[2*NW-1:NW]),
+        .r_valid(rv), .r_ready(rr), .r_data(rd), .t_valid(tv), .t_ready(tr), .t_data(td),
+        .s_valid(sv), .s_ready(sr), .s_data(sd), .w_valid(wv), .w_ready(wr), .w_user(wd),
+        .h_valid(hv), .h_ready(hr), .h_data(hd), .q_valid(qv), .q_ready(qr), .q_data(qd),
+        .acc_v(av), .acc_u(au), .acc_a(aa), .acc_c(ac), .acc_y(ay), .fault(fl));
+    reg [2*NW+USER_W+4:0] acc_q; always @(posedge clk) acc_q <= {fl, av, au, aa, ac, ay};
+    assign t_acc = acc_q;
+endmodule
