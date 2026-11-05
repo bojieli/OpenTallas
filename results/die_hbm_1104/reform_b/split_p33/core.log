@@ -1,0 +1,2 @@
+macros /srv/opentallas-scratch3/claude/hbm-reform-b3/wt/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v /srv/opentallas-scratch3/claude/hbm-reform-b3/wt/physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v /srv/opentallas-scratch3/claude/hbm-reform-b3/wt/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+m0 expect=PASS got=FAIL BAD | DIFF fault_cause cyc 68 DIFF fault_cause cyc 69 CORE cycles 2000 nonzero_out 76315 errors 2 
