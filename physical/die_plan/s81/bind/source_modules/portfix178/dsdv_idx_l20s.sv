@@ -923,9 +923,14 @@ module dsdv_bk_selids #(
             end
             o[0] <= (wv && cnt != 5'd0) | w1v; w1v <= wv && cnt != 5'd0;   // an empty word (lv 0) sends nothing
         end
+    // DIE-S81-59 11-05: b1 has a reset, 0 cycles.  A held register whose constant bits (b[18], b[189]) never load before the
+    // first wv: synth folds them, a free-init gold flop does not, so LEC read NOT EQUIVALENT with nothing different in
+    // function: o reads b1 only on w1v, which follows the wv that loads it.
+    always @(posedge ck or negedge rst)
+        if (!rst) b1 <= {V{1'b0}};
+        else if (wv) b1 <= beat(w, 1'b1, rk, cnt, msk);
     always @(posedge ck) begin
         if (jctl) begin k_n <= cp[40:31]; ot <= cp[68:61]; msk <= cp[72:69]; end
-        if (wv) b1 <= beat(w, 1'b1, rk, cnt, msk);
         o[V-1:1] <= (wv && cnt != 5'd0) ? beat(w, 1'b0, rk, cnt, msk) >> 1 : w1v ? b1 >> 1 : {(V-1){1'b0}};
     end
 endmodule
