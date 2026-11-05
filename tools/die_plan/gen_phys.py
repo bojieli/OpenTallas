@@ -3480,6 +3480,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # The first two arguments are the ORFS GLOBAL_ROUTE_ARGS default, which this variable replaces.
            *(["export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose -allow_congestion"]
              if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" else []),
+           # KW-FIX-8 11-04 (COORD GRT loop ruling): opt-in per row through wave item_env, off by default.  TritonCTS by
+           # default sets CTS_NDR_0 on part of the clock tree (260 of 2462 clock nets on s81sl_leaf t32); GRT then drops it
+           # net by net and restarts its 30 iterations each time.  CTS_ARGS replaces the ORFS argument list, so this is
+           # the logged default list plus the flag.
+           *(["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -apply_ndr none"]
+             if os.environ.get("OT_CTS_NO_NDR") == "1" else []),
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
