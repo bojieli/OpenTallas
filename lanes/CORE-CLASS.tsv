@@ -52,7 +52,7 @@ hbm	ot_hbm_idx_topk_link_static	running, no result	outside target
 hbm	ot_hbm_idx_selector_static_sel	running, no result	outside target
 hbm	ot_hbm_host_cp_rxs	small miss few endpoints	meets stdcell target
 hbm	ot_hbm_idx_rootctl_static_am	LEC	meets stdcell target
-hbm	ot_hbm_argmax_static_sw_vm_r2	structural hold	meets stdcell target
+hbm	ot_hbm_argmax_static_sw_vm_r2	signed off, not counted	meets stdcell target; argmax4ie 22:35, re-sign running
 hbm	ot_hnx_fused_hub_n4ext	running, no result	outside target
 hbm	ot_hnx_fused_host_program	running, no result	meets stdcell target
 hbm	ot_hbm_svc_sm_group_rel_id	running, no result	outside target
