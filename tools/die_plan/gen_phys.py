@@ -4383,7 +4383,7 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                 if r not in rings:
                     raise gen_rtl.GenError(f"type {tn}: land_slots {b}: ring_start of undeclared ring {r}")
         elif v.get("form") == "origin_start":
-            module = r"ot_dp_landing_relay" if v.get("copies") else r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay)"
+            module = r"ot_dp_landing_relay" if v.get("copies") or v.get("stages") else r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay)"
             path = _kit_inst_path(txt, v["origin"], module)
             if path is None:
                 raise gen_rtl.GenError(f"type {tn}: land_slots {b}: origin {v['origin']} is not one bound "
@@ -4397,6 +4397,14 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                         raise gen_rtl.GenError(f"type {tn}: land_slots {b}: copy {copy} is not one bound relay instance")
                     copies.append(cp)
                 v["copies"] = copies
+            if v.get("stages"):
+                stages = []
+                for stage in v["stages"]:
+                    sp = _kit_inst_path(txt, stage, r"ot_dp_landing_relay")
+                    if sp is None:
+                        raise gen_rtl.GenError(f"type {tn}: land_slots {b}: stage {stage} is not one bound relay instance")
+                    stages.append(sp)
+                v["stages"] = stages
     # a FREG-1 ring is behind ordinary face registers (Landings.land_slots declares nothing for it)
     freg = {r for r in built if (clock_landings.ring_write_reg(getattr(lands, "plan", None) or {}, tn, r) or {}).get("freg")}
     extra = sorted(set(built) - set(rings) - freg)

@@ -908,6 +908,59 @@ def test_unloaded_removed_origin_keeps_copy_proofs():
     assert face_guard.guard(bad, "top", land=spec)["verdict"] == "FAIL"
 
 
+def _writer_stage_vehicle():
+    """QC W1 on a relay type: stage0 samples the origin's input on its own raw reset and feeds the far FSTART relay."""
+    text, spec = _relay_copy_vehicle()
+    text = text.replace("module top(clk, rst_n, st, mission, o0, o1);", "module top(clk, rst_n, st, mission, o0, o1, o2);")
+    text = text.replace("output o1;\n", "output o1; output o2;\n")
+    text = text.replace("endmodule\n", "@@", 1).replace("endmodule\n", f"""DFFHQNx1{_X} reset_far (.CLK(clk), .D(rq), .QN(rq2));
+ot_dp_landing_relay stage0 (.clk(clk), .st(st), .rq(rq2), .q(s0));
+ot_dp_landing_relay far (.clk(clk), .st(s0), .rq(rq), .q(o2));
+endmodule
+""").replace("@@", "endmodule\n")
+    return text, {"st": dict(spec["st"], stages=["stage0"])}
+
+
+def test_writer_stage_is_own_kind_not_a_copy():
+    text, spec = _writer_stage_vehicle()
+    got = face_guard.guard(text, "top", land=spec)
+    assert got["verdict"] == "PASS", got["fails"]
+    rec = got["ring_start"]["st"]
+    assert rec["writer_stages"] == {"stage0": "far"} and rec["face_copies"] == {"copy0": "o0", "copy1": "o1"}
+    # the same flop declared as a copy keeps the old full proof, and an undeclared stage is an extra sampler
+    as_copy = {"st": dict(spec["st"], copies=["copy0", "copy1", "stage0"])}
+    as_copy["st"].pop("stages")
+    assert face_guard.guard(text, "top", land=as_copy)["verdict"] == "FAIL"
+    undeclared = {"st": {k: v for k, v in spec["st"].items() if k != "stages"}}
+    assert face_guard.guard(text, "top", land=undeclared)["verdict"] == "FAIL"
+
+
+@pytest.mark.parametrize("a,b", [
+    ("stage0 (.clk(clk), .st(st), .rq(rq2), .q(s0));", f"stage0 (.clk(clk), .st(st), .rq(1'b1), .q(s0));"),
+    ("stage0 (.clk(clk), .st(st)", "stage0 (.clk(clk), .st(rq)"),
+    ("stage0 (.clk(clk)", "stage0 (.clk(st)"),
+    ("far (.clk(clk), .st(s0), .rq(rq), .q(o2));", f"far (.clk(clk), .st(s0), .rq(rq), .q(o2)); DFFHQNx1{_X} leak (.CLK(clk), .D(s0), .QN(lq));"),
+    ("far (.clk(clk), .st(s0), .rq(rq), .q(o2));", "far (.clk(clk), .st(rq), .rq(rq), .q(o2)); assign o2 = s0;"),
+])
+def test_writer_stage_mutants_fail_closed(a, b):
+    text, spec = _writer_stage_vehicle()
+    assert a in text
+    assert face_guard.guard(text.replace(a, b), "top", land=spec)["verdict"] == "FAIL", a
+
+
+def test_writer_stage_wrong_next_type_fails_closed():
+    text, spec = _writer_stage_vehicle()
+    other = text[:text.index("module top")].replace("module ot_dp_landing_relay", "module unrelated_relay")
+    bad = other + text.replace("ot_dp_landing_relay far", "unrelated_relay far")
+    assert face_guard.guard(bad, "top", land=spec)["verdict"] == "FAIL"
+
+
+def test_origin_stage_spec_refuses_ambiguous_declarations():
+    for st in ([], ["origin"], ["copy0"], ["a", "a"], "stage0"):
+        with pytest.raises(ValueError):
+            face_guard.origin_spec({"form": "origin_start", "origin": "origin", "copies": ["copy0"], "stages": st})
+
+
 def test_present_but_unreached_origin_still_fails():
     text, spec = _relay_copy_vehicle()
     text = text.replace("origin (.clk(clk), .st(st)", "origin (.clk(clk), .st(rst_n)")

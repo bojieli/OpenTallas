@@ -1919,18 +1919,21 @@ class Landings:
             # transport changes the direct D loads; the final FSTART face flop
             # is no longer a same-D copy after an explicit writer branch.
             cfg = self.types[tn].get("clock", {}).get("landing_writer_start") or {}
-            copies = []
+            copies, stages = [], []
             for b in sorted(self.by_type[tn]["outputs"]):
                 if b not in cfg.get("branches", {}):
                     copies.append(f"u_cland_fstart_{b}")
                 elif not cfg.get("reuse_relay_origin", False):
-                    copies.append(f"u_cland_writer_start_{ident(b)}_0")
+                    # Samples the same input, but on its own local raw reset and feeding the next relay: not a copy.
+                    stages.append(f"u_cland_writer_start_{ident(b)}_0")
             if self.tstart and self.tstart["type_pins"].get(tn, {}).get(START_PIN_OUT):
                 copies.append("u_cland_tstart_o")
             if copies:
                 # Every named private export is a physical same-D/reset/clock
                 # copy of the typed origin, never an arbitrary extra sampler.
                 buses["cland_rstart_in"]["copies"] = copies
+            if stages:
+                buses["cland_rstart_in"]["stages"] = stages
         if origin:
             buses[START_PIN_IN] = {"form": "origin_start", "origin": origin}
         return {"schema": LAND_SLOTS_SCHEMA, "buses": buses} if buses else None

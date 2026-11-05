@@ -28,6 +28,20 @@ def test_relay_copy_uses_existing_rx_D_and_raw_reset_without_delay():
     assert '.d(cland_rstart_in), .q(cland_start));' in s
 
 
+def test_writer_branch_first_stage_is_declared_a_stage_not_a_copy():
+    c=fixture(True)
+    c.by_type['C']['outputs']=['w','z_far']
+    c.types['C'].setdefault('clock',{})['landing_writer_start']=dict(
+        depth=1,branches={'z_far':dict(stages=[dict(xy_um=[1.,1.],raw_reset='rst_n')])})
+    assert c.land_slots('C')['buses']['cland_rstart_in']==dict(
+        form='origin_start',origin='u_cland_rstart_rx',copies=['u_cland_fstart_w'],
+        stages=['u_cland_writer_start_z_far_0'])
+    # all outputs on a branch: no copies key at all, only the stage
+    c.by_type['C']['outputs']=['z_far']
+    assert c.land_slots('C')['buses']['cland_rstart_in']==dict(
+        form='origin_start',origin='u_cland_rstart_rx',stages=['u_cland_writer_start_z_far_0'])
+
+
 def test_default_keeps_previous_relay_hardware_and_metadata():
     c=fixture(False);s=c.type_rtl('C',C_BODY)
     assert 'assign cland_fstart_out_w = cland_start;' in s
