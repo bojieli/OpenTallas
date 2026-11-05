@@ -25,6 +25,8 @@ module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter 
     input  wire          clk_xfold0, clk_xfold1, clk_xfold2, clk_xfold3,
     input wire clk_pring0,clk_pring1,clk_sring0,clk_sring1,clk_sring2,clk_sring3,clk_sring4,clk_rring0,clk_rring1,
     input  wire          rst_n,
+    input  wire          rst_pfold0, rst_pfold1, rst_pfold2, rst_pfold3,   // DIE-QC-76 11-05: one die reset tap per hard fold slice, as clk_pfold*
+    input  wire          rst_xfold0, rst_xfold1, rst_xfold2, rst_xfold3,
     input  wire [1:0]    pkg_s,
     input  wire          die_ps,
     input  wire          cmd_v,
@@ -70,11 +72,12 @@ module qfd_io_collective_static #(parameter integer LU = `OT_QFDS_LU, parameter 
     (* keep *) reg [31:0] ct_pin;
     always @(posedge clk)begin cm_pin<=cmd_mode;cw_pin<=cmd_words;ct_pin<=cmd_tag;end
     always @(posedge clk or negedge rst_n)if(!rst_n)cv_pin<=0;else cv_pin<=cmd_v;
-    ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(LU), .LS(LS), .GC(8), .CCLK(1)) u_coll (
+    ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(LU), .LS(LS), .GC(8), .CCLK(1), .FSRST(1)) u_coll (
         .clk_mem({clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring1,clk_pring0}),
         .clk(clk), .clk_pfold({clk_pfold3, clk_pfold2, clk_pfold1, clk_pfold0}),
         .clk_xfold({clk_xfold3, clk_xfold2, clk_xfold1, clk_xfold0}),
-        .rst_n(rst_n), .pkg_s(pkg_s), .die_ps(die_ps),
+        .rst_n(rst_n), .rst_pfold({rst_pfold3, rst_pfold2, rst_pfold1, rst_pfold0}),
+        .rst_xfold({rst_xfold3, rst_xfold2, rst_xfold1, rst_xfold0}), .pkg_s(pkg_s), .die_ps(die_ps),
         `ifdef OT_TP8S_MUT_CMDPIN
         .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
 `else
