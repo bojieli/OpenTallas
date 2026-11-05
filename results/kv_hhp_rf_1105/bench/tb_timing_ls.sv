@@ -20,6 +20,8 @@ module tb_timing_ls;
   wire [640:0] nv={n_desc_r,n_row_v,n_row_prio,n_col_v,n_sf,n_idle,n_busy,n_rf,n_wr_r,n_col_we,n_col_aq,n_s_r,n_col_sr,n_s_pop,n_row_op,n_row_bank,n_col_bank,n_col_col,n_row_row};
   integer seed=1, cycles=400000, cyc=0, sincerst=0, prd=30, prs=20, prw=10, pwr=5, psv=20, pgo=20, bset=4;
   longint c_rd=0,c_wr=0,c_s=0,c_sp=0,c_pblk_rd=0,c_pblk_wr=0,c_fp=0,c_ref=0,c_act=0,c_pre=0;
+  reg faulted=0; integer fcyc=0; reg [346:0] o_ctx_q=0; reg sqne_q=0; longint c_fault=0,c_ill=0;
+  wire ill=PROFILE_P==0 && ((rrd&&!old.on.legal_rd)||(rs&&!old.on.legal_static)||(rw&&!old.on.legal_write)||(int'(rrd)+int'(rs)+int'(rw)>1));
   function automatic int r(int m); return $urandom_range(m-1,0); endfunction
   initial begin
     if(!$value$plusargs("seed=%d",seed)) seed=1; if(!$value$plusargs("cycles=%d",cycles)) cycles=400000;
@@ -29,9 +31,15 @@ module tb_timing_ls;
       cyc++; sincerst++;
       if(sincerst%3000==1) begin prd=r(100); prs=r(40); prw=r(40); pwr=r(30); psv=r(60); pgo=r(100); bset=1+r(32);
         if(r(2)==0) begin prd=90; prs=r(3); prw=r(3); pwr=r(3); psv=40; pgo=90; bset=4; end end
-      if(sincerst>20000 || (n_rf && sincerst>4000)) begin rst_n=0; sincerst=0; end
+      if(sincerst>20000 || (n_rf && sincerst>4000) || (faulted && sincerst>fcyc+30)) begin rst_n=0; sincerst=0; faulted=0; end
       else if(sincerst>4) rst_n=1;
-      rrd=r(100)<prd; rs=r(100)<prs; rw=r(100)<prw; boot=r(100)<3; go=r(100)<pgo;
+      boot=r(100)<3; go=r(100)<pgo; rrd=0; rs=0; rw=0;
+      // PROFILE 0: slots follow the OLD core's own permission, as a compiled calendar does; a rare injected slot must fault the same
+      if(PROFILE_P==0) begin
+        #1 rs=r(100)<prs && old.on.legal_static;
+        #1 rrd=r(100)<prd && old.on.legal_rd; rw=!rrd && r(100)<prw && old.on.legal_write;
+        if(r(3000)==0 && !faulted) case(r(3)) 0:rrd=1; 1:rs=1; 2:rw=1; endcase
+      end else begin rrd=r(100)<prd; rs=r(100)<prs; rw=r(100)<prw; end
       if(!desc_v || n_desc_r) begin
         desc_v=r(100)<40; dc=CTX!=0 && r(2)==1; dv=r(2)==1; dk=r(2)==1; k0=r(64);
         desc_row=64+r(4); desc_n=dc?(1+r(128)):(1+r(512)); desc_first=dc?r(64):r(int'(desc_n));
@@ -40,19 +48,27 @@ module tb_timing_ls;
       s_v=r(100)<psv; s_we=r(4)==0; s_bank=r(bset); s_col=r(32); s_row=64+r(3); for(int i=0;i<11;i++) s_ctx[i*32+:32]=$urandom;
     end
   end
-  always @(posedge clk) if(rst_n) begin
+  always @(posedge clk) begin o_ctx_q<=o_ctx; sqne_q<=rst_n && old.on.sq_n!=0; end
+  always @(posedge clk) if(rst_n && !faulted && ill) begin
+    faulted<=1; fcyc<=sincerst; c_ill++;
+    if({o_col_v,o_col_we,o_col_sr,o_s_pop}!=={n_col_v,n_col_we,n_col_sr,n_s_pop}) begin $display("FAIL cycle %0d slot-fault pins old %b new %b",cyc,{o_col_v,o_col_we,o_col_sr,o_s_pop},{n_col_v,n_col_we,n_col_sr,n_s_pop}); $finish; end
+  end else if(rst_n && faulted) begin
+    if(o_sf!==n_sf) begin $display("FAIL cycle %0d sticky fault old %b new %b",cyc,o_sf,n_sf); $finish; end
+    if(o_sf!==1'b1 && sincerst>fcyc+1) begin $display("FAIL cycle %0d injected slot did not fault",cyc); $finish; end
+  end else if(rst_n) begin
     if(old.on.s_pblk!==((dut.on.rp_sp?dut.on.sb_oh:32'b0)|(dut.on.cp_sp?dut.on.c_oh:32'b0)) || old.on.c_sp!==dut.on.c_sp ||
        old.on.sprio!==dut.on.sprio || old.on.ref_due_n!==dut.on.ref_due_n || old.on.ras_z!==dut.on.ras_z || old.on.rtp_z!==dut.on.rtp_z ||
+       old.on.wcand_q!==dut.on.wcand_q || (old.on.wcand_q && (old.on.wab!==dut.on.wab || old.on.wab_oh!==dut.on.wab_oh)) ||
        old.on.legal_rd!==dut.on.legal_rd || old.on.legal_static!==dut.on.legal_static) begin
       $display("FAIL cycle %0d internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal",cyc); $finish; end
-    if(ov!==nv || (n_col_v && o_ctx!==n_ctx)) begin
-      $display("FAIL cycle %0d since_rst %0d old %h new %h ctx_diff %0d",cyc,sincerst,ov,nv,o_ctx!==n_ctx); $finish; end
+    if(ov!==nv || (sqne_q && o_ctx_q!==n_ctx)) begin
+      $display("FAIL cycle %0d since_rst %0d old %h new %h ctx_diff %0d",cyc,sincerst,ov,nv,o_ctx_q!==n_ctx); $finish; end
     c_rd+=dut.on.rd_ok; c_wr+=dut.on.wr_ok; c_s+=dut.on.s_go; c_sp+=dut.on.rp_sp; c_fp+=dut.on.forced_pre;
     c_pblk_rd+=dut.on.rd_ok0 && !dut.on.s_go && ((dut.on.rp_sp && |(dut.on.rd_oh & dut.on.sb_oh)) || (dut.on.cp_sp && |(dut.on.rd_oh & dut.on.c_oh)));
     c_pblk_wr+=dut.on.wr_ok0 && !dut.on.s_go && ((dut.on.rp_sp && |(dut.on.hb_oh & dut.on.sb_oh)) || (dut.on.cp_sp && |(dut.on.hb_oh & dut.on.c_oh)));
     c_ref+=n_row_v && n_row_op==6; c_act+=n_row_v && n_row_op==1; c_pre+=n_row_v && n_row_op==0;
     if(cyc>=cycles) begin
-      $display("PASS cycles %0d rd %0d wr %0d s_go %0d rp_sp %0d forced_pre %0d pblk_rd %0d pblk_wr %0d ref %0d act %0d pre %0d",cyc,c_rd,c_wr,c_s,c_sp,c_fp,c_pblk_rd,c_pblk_wr,c_ref,c_act,c_pre);
+      $display("PASS injected %0d cycles %0d rd %0d wr %0d s_go %0d rp_sp %0d forced_pre %0d pblk_rd %0d pblk_wr %0d ref %0d act %0d pre %0d",c_ill,cyc,c_rd,c_wr,c_s,c_sp,c_fp,c_pblk_rd,c_pblk_wr,c_ref,c_act,c_pre);
       $finish; end
   end
 endmodule
