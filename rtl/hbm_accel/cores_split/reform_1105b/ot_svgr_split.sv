@@ -94,6 +94,15 @@ module ot_svgr_feed #(
  wire reserve_fire=reserve_v&&reserve_ready;
  reg[6:0]rows_q[0:LBANKS-1];reg[9:0]tag_q[0:LBANKS-1];reg open_q;reg[LB-1:0]open_land_q;reg[15:0]open_epoch_q;integer qb;
  wire open_bank_q=open_land_q[0];
+ localparam integer OPEN_DLY=4;
+ reg[OPEN_DLY-1:0]od_v,od_bank;reg[15:0]od_epoch[0:OPEN_DLY-1];reg[6:0]od_count[0:OPEN_DLY-1];reg[9:0]od_tag[0:OPEN_DLY-1];integer od;
+ always @(posedge stream_clk)begin
+  od_bank<={od_bank[OPEN_DLY-2:0],open_bank_q};od_epoch[0]<=open_epoch_q;od_count[0]<=rows_q[open_land_q];od_tag[0]<=tag_q[open_land_q];
+  for(od=1;od<OPEN_DLY;od=od+1)begin od_epoch[od]<=od_epoch[od-1];od_count[od]<=od_count[od-1];od_tag[od]<=od_tag[od-1];end
+ end
+ always @(posedge stream_clk or negedge stream_rst_n)if(!stream_rst_n)od_v<=0;else od_v<={od_v[OPEN_DLY-2:0],open_q};
+ wire[1:0]cache_owned_c;
+ assign cache_owned=cache_owned_c|((open_q?(2'b01<<open_bank_q):2'b00)|(od_v[0]?(2'b01<<od_bank[0]):2'b00)|(od_v[1]?(2'b01<<od_bank[1]):2'b00)|(od_v[2]?(2'b01<<od_bank[2]):2'b00)|(od_v[3]?(2'b01<<od_bank[3]):2'b00));
  always @(posedge stream_clk or negedge stream_rst_n)begin
   if(!stream_rst_n)begin descriptor_fault<=0;open_q<=0;open_land_q<=0;open_epoch_q<=0;for(qb=0;qb<LBANKS;qb=qb+1)begin rows_q[qb]<=0;tag_q[qb]<=0;end end
   else begin
@@ -121,7 +130,7 @@ module ot_svgr_feed #(
  // writes its last row and clears running over the next two edges. Include that
  // real consumer completion and the registered open already in flight; never
  // alter a cache fault or delay a programme GO to hide a missed compiled slot.
- assign block_ready=(OPEN_IL!=0)?(producer_ready&{LBANKS{!cache_busy&&!open_q}}):producer_ready;
+ assign block_ready=(OPEN_IL!=0)?(producer_ready&{LBANKS{!cache_busy&&!open_q&&od_v==0}}):producer_ready;
  ot_smh_calendar_static_x #(.W(135),.AW(PAW),.XW(CTXW)) programme_leaf(
   .clk(stream_clk),.rst_n(stream_rst_n),.cfg_we(program_cfg_we),.cfg_addr(program_cfg_addr),.cfg_data(program_cfg_data),
   .start_v(program_start_v),.start_base(program_start_base),.start_limit(program_start_limit),.start_loops(program_start_loops),
@@ -196,11 +205,11 @@ module ot_svgr_feed #(
  assign programme_observe=programme;
  assign sm_command=programme[82:0];
  ot_hbm_svc_static_sm_packed136 #(.PACKED136(1)) rows(
-  .clk(stream_clk),.rst_n(stream_rst_n),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[open_land_q]),.open_tag_base(tag_q[open_land_q]),
+  .clk(stream_clk),.rst_n(stream_rst_n),.open_v(od_v[OPEN_DLY-1]),.open_bank(od_bank[OPEN_DLY-1]),.open_epoch(od_epoch[OPEN_DLY-1]),.open_count(od_count[OPEN_DLY-1]),.open_tag_base(od_tag[OPEN_DLY-1]),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
-  .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
+  .block_ready(cache_ready),.bank_owned(cache_owned_c),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
  // HBM-QINT8: the packet the SM front sees (the raw packet when no INT8 mark is in flight)
  wire[1098:0]s1_packet={i8_conv||(raw_v&&!i8_c),i8_conv?i8_t2:raw_tag,packet_observe[1087:0]};
  // HBM-PV-ATTMARK: an attention word's issue bit is not a normal-mode issue (no packet implied); at_c = 0 without ATT_MARK
@@ -248,7 +257,6 @@ module ot_svgr_prod_s #(parameter integer LBANKS=4,parameter integer LB=(LBANKS>
  assign seam_res_v=reserve_fire;
  assign seam_res_word={reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch};
  reg draining;reg [LB-1:0] drain_bank;reg [10:0] drain_ordinal;reg [10:0] read_ordinal_q;reg [2:0] drain_phase;
- assign block_ready=(OPEN_IL!=0)?(ready_q&{LBANKS{~draining}}):ready_q;
  wire [2:0] drain_count=drain_phase==4?3'd1:3'd4;
  assign seam_read_bank=drain_bank;
  generate for(g=0;g<8;g=g+1)begin:ordinal_bank
@@ -264,6 +272,7 @@ module ot_svgr_prod_s #(parameter integer LBANKS=4,parameter integer LB=(LBANKS>
  always @(posedge stream_clk)if(seam_complete[2])mc<=mc+1;
  reg o_v;reg [3:0] o_mask;reg [10:0] o_ord,o_rq;reg [LB-1:0] o_bank;reg [15:0] o_epoch;reg o_last;
  reg [DLY-1:0] p_v,p_last;reg [3:0] p_mask[0:DLY-1];reg [10:0] p_ord[0:DLY-1];reg [LB-1:0] p_bank[0:DLY-1];reg [15:0] p_ep[0:DLY-1];reg [10:0] p_rq[0:DLY-1];
+ assign block_ready=(OPEN_IL!=0)?(ready_q&{LBANKS{~draining&&!o_v&&p_v==0}}):ready_q;
  integer d;
  always @(posedge stream_clk or negedge srst)begin
   if(!srst)begin p_v<=0;p_last<=0;for(d=0;d<DLY;d=d+1)begin p_mask[d]<=0;p_ord[d]<=0;p_bank[d]<=0;p_ep[d]<=0;p_rq[d]<=0;end end

@@ -23,6 +23,25 @@ a = f.index(" input wire [1:0]stream_bank_clk,hbm_fifo_clk,input wire[3:0]hbm_pc
 f = f.replace(" input wire [1:0] id_stack,input wire [2:0] id_sm,\n input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,\n", " input wire [1:0] id_stack,input wire [2:0] id_sm,\n input wire stream_clk,stream_rst_n,hbm_rst_n,\n" + SEAM_D, 1)
 a = f.index(" output wire[3:0]k_v,input wire[3:0]k_rdy"); b = f.index(");\n wire cdc_ready")
 hdr = f[a:b]; f = f[:a].rstrip().rstrip(",") + "\n" + f[b:]
+# The read data crosses the bank tiles, so out_* is DLY = 4 edges late; packed136 expects its 4,4,4,4,1 sectors from the edge it runs, so the open moves with them.
+# rows and tag are read at the first stage as before: a reserve may rewrite that landing bank once the last drain word has left. The issuer sees an open in flight as owned.
+def rp(s, o, n):
+    assert s.count(o) == 1, o
+    return s.replace(o, n)
+f = rp(f, " wire open_bank_q=open_land_q[0];\n", """ wire open_bank_q=open_land_q[0];
+ localparam integer OPEN_DLY=4;
+ reg[OPEN_DLY-1:0]od_v,od_bank;reg[15:0]od_epoch[0:OPEN_DLY-1];reg[6:0]od_count[0:OPEN_DLY-1];reg[9:0]od_tag[0:OPEN_DLY-1];integer od;
+ always @(posedge stream_clk)begin
+  od_bank<={od_bank[OPEN_DLY-2:0],open_bank_q};od_epoch[0]<=open_epoch_q;od_count[0]<=rows_q[open_land_q];od_tag[0]<=tag_q[open_land_q];
+  for(od=1;od<OPEN_DLY;od=od+1)begin od_epoch[od]<=od_epoch[od-1];od_count[od]<=od_count[od-1];od_tag[od]<=od_tag[od-1];end
+ end
+ always @(posedge stream_clk or negedge stream_rst_n)if(!stream_rst_n)od_v<=0;else od_v<={od_v[OPEN_DLY-2:0],open_q};
+ wire[1:0]cache_owned_c;
+ assign cache_owned=cache_owned_c|((open_q?(2'b01<<open_bank_q):2'b00)|(od_v[0]?(2'b01<<od_bank[0]):2'b00)|(od_v[1]?(2'b01<<od_bank[1]):2'b00)|(od_v[2]?(2'b01<<od_bank[2]):2'b00)|(od_v[3]?(2'b01<<od_bank[3]):2'b00));
+""")
+f = rp(f, "{LBANKS{!cache_busy&&!open_q}}", "{LBANKS{!cache_busy&&!open_q&&od_v==0}}")
+f = rp(f, ".open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[open_land_q]),.open_tag_base(tag_q[open_land_q]),", ".open_v(od_v[OPEN_DLY-1]),.open_bank(od_bank[OPEN_DLY-1]),.open_epoch(od_epoch[OPEN_DLY-1]),.open_count(od_count[OPEN_DLY-1]),.open_tag_base(od_tag[OPEN_DLY-1]),")
+f = rp(f, ".bank_owned(cache_owned),", ".bank_owned(cache_owned_c),")
 a = f.index(" ot_hbm_svc_sm4pc_cdc_rel_id #("); b = f.index(" wire[95:0]indices")
 f = f[:a] + """ ot_svgr_prod_s #(.LBANKS(LBANKS),.OPEN_IL(OPEN_IL)) producer(.id_stack(id_stack),.id_sm(id_sm),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_rst_n(hbm_rst_n),
   """ + SEAM_C + """

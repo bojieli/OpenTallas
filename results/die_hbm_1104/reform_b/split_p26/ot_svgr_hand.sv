@@ -36,7 +36,6 @@ module ot_svgr_prod_s #(parameter integer LBANKS=4,parameter integer LB=(LBANKS>
  assign seam_res_v=reserve_fire;
  assign seam_res_word={reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch};
  reg draining;reg [LB-1:0] drain_bank;reg [10:0] drain_ordinal;reg [10:0] read_ordinal_q;reg [2:0] drain_phase;
- assign block_ready=(OPEN_IL!=0)?(ready_q&{LBANKS{~draining}}):ready_q;
  wire [2:0] drain_count=drain_phase==4?3'd1:3'd4;
  assign seam_read_bank=drain_bank;
  generate for(g=0;g<8;g=g+1)begin:ordinal_bank
@@ -52,6 +51,7 @@ module ot_svgr_prod_s #(parameter integer LBANKS=4,parameter integer LB=(LBANKS>
  always @(posedge stream_clk)if(seam_complete[2])mc<=mc+1;
  reg o_v;reg [3:0] o_mask;reg [10:0] o_ord,o_rq;reg [LB-1:0] o_bank;reg [15:0] o_epoch;reg o_last;
  reg [DLY-1:0] p_v,p_last;reg [3:0] p_mask[0:DLY-1];reg [10:0] p_ord[0:DLY-1];reg [LB-1:0] p_bank[0:DLY-1];reg [15:0] p_ep[0:DLY-1];reg [10:0] p_rq[0:DLY-1];
+ assign block_ready=(OPEN_IL!=0)?(ready_q&{LBANKS{~draining&&!o_v&&p_v==0}}):ready_q;
  integer d;
  always @(posedge stream_clk or negedge srst)begin
   if(!srst)begin p_v<=0;p_last<=0;for(d=0;d<DLY;d=d+1)begin p_mask[d]<=0;p_ord[d]<=0;p_bank[d]<=0;p_ep[d]<=0;p_rq[d]<=0;end end
