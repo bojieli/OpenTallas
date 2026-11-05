@@ -21,9 +21,7 @@ def sub_once(s, old, new, what):
 
 def dedupe_ki_ports(t):
     """The split top declares pc__ki_15 / pc__ki_31 twice: yosys-slang asserts on it (rtlil.cc:2888), so the kit LEC never ran here."""
-    d = "    input wire [20:15] pc__ki_15,
-    input wire [32:31] pc__ki_31,
-"
+    d = "    input wire [20:15] pc__ki_15,\n    input wire [32:31] pc__ki_31,\n"
     return t.replace(d + d, d, 1)
 
 
