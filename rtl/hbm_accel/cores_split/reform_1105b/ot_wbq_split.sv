@@ -205,13 +205,14 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
   end
  end
  // ---- group queues (root sends only with a credit, so never full)
- reg [285:0] qm[0:7][0:CRED-1];reg [1:0] qw[0:7],qr[0:7];reg [2:0] qn[0:7];reg qov;
+ reg [1:0] qw[0:7],qr[0:7];reg [2:0] qn[0:7];
  wire [7:0] head_v;wire [285:0] head[0:7];wire [4:0] head_pc[0:7];
  assign g_credit=pop;
  genvar g;
  generate for(g=0;g<8;g=g+1)begin:g_q
-  assign head_v[g]=qn[g]!=0;assign head[g]=qm[g][qr[g]];assign head_pc[g]=sector_pc(head[g][285:256]);
-  always @(posedge hbm_clk)if(g_v[g])qm[g][qw[g]]<=g_d[286*g+:286];
+  reg [285:0] qm[0:CRED-1];
+  assign head_v[g]=qn[g]!=0;assign head[g]=qm[qr[g]];assign head_pc[g]=sector_pc(head[g][285:256]);
+  always @(posedge hbm_clk)if(g_v[g])qm[qw[g]]<=g_d[286*g+:286];
   always @(posedge hbm_clk or negedge hrst)begin
    if(!hrst)begin qw[g]<=0;qr[g]<=0;qn[g]<=0;end
    else begin
