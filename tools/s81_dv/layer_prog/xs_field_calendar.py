@@ -61,7 +61,10 @@ import xs_calendar as XC  # noqa: E402
 import xs_flags as XO  # noqa: E402  S81-ROMOPT-A: release defaults
 
 CFG_LEAD = 52
-BF_SEG_LABEL_FLOOR = 231
+# DIE-S81-51/RF-H 11-03 (TOK-VERIFY-1): the BF -> BF floor follows the BF column form (bf_col_form: 231 + bf_add)
+import bf_col_form as BFF  # noqa: E402
+_BF_ADD = BFF.deltas()[0]
+BF_SEG_LABEL_FLOOR = BFF.seg_label_floor()
 FLOORS = {     # op: (family, measured floor period, first FAIL, span tail (go0 -> last RET beyond (n-1) P), evidence)
     'attn.wq_b': ('fp8', 126, 124, 223, 'claude/s81-ratefix-1019@ff8fa3745 p126c52 PASS / p124c50 FAIL; claude/s81-wqbp-1020'),
     'attn.idx.q': ('fp8', 126, 125, 295, 'claude/toksim-s81c-fseq-1019 (lanes/TOKSIM-S81C-FSEQ.md: 6-phase PASS 8/8 to P126, P125 FAULT)'),
@@ -69,8 +72,8 @@ FLOORS = {     # op: (family, measured floor period, first FAIL, span tail (go0 
     'ffn.shared_gu': ('fp8', 146, 145, 360, 'results/rtl/toksim_s81b_fgu_1019/job5 P146 PASS 798, job4 P145 FAIL'),
     'ffn.experts_gu': ('fp8', 145, 144, 345, 'TOKSIM-S81B/FGU + S81C/FSGU: 24 phases P145 3680, P144 FAULT'),
     'ffn.down': ('fp8', 130, 125, 289, 'TOKSIM-S81B/FDOWN + S81C/FSDN: 21 phases P130 2889, P125 FAULT 11'),
-    'attn.wo_a': ('bf16', 231, 230, 352, 'results/rtl/s81_wqbp_1020/pipe3: 12 phases P231 2893 / 2886 PASS, P230 FAIL'),
-    'ffn.router': ('bf16', 231, 230, 345, 'TOKSIM-S81C/FSEQ: 5 phases P231 1269 PASS 6/6 frames, P230 FAIL'),
+    'attn.wo_a': ('bf16', BF_SEG_LABEL_FLOOR, 230 + _BF_ADD, 352 + _BF_ADD, 'results/rtl/s81_wqbp_1020/pipe3: 12 phases P231 2893 / 2886 PASS, P230 FAIL'),
+    'ffn.router': ('bf16', BF_SEG_LABEL_FLOOR, 230 + _BF_ADD, 345 + _BF_ADD, 'TOKSIM-S81C/FSEQ: 5 phases P231 1269 PASS 6/6 frames, P230 FAIL'),
 }
 # S81-ROMOPT-C (O3, OT_XS_KSLOT=k): an op compiled with k segment classes per element has its OWN measured floor / tail
 # (release FSEQ frame exes, results/rtl/s81_romopt_1020/c); a k-class op without an entry is a compile fault.
