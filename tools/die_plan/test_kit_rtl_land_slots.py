@@ -91,3 +91,12 @@ def test_relay_copy_instance_paths_are_declared_and_qualified():
     got = run(ls, text)
     assert got["buses"]["cland_start_in"]["copies"] == ["u_bound.u_copy"]
     assert refused(ls, text.replace("ot_dp_landing_relay u_copy", "unrelated_relay u_copy"))
+
+
+def test_relay_stage_instance_paths_are_declared_and_qualified():
+    text = RTL.replace("ot_dp_landing_origin_s #(.PADW(1))", "ot_dp_landing_relay")
+    text = text.replace("ot_dp_clk_landing #(.W(3))", "ot_dp_landing_relay u_stage (.clk(clk));\n    ot_dp_clk_landing #(.W(3))")
+    ls = spec(); ls["buses"]["cland_start_in"]["stages"] = ["u_stage"]
+    got = run(ls, text)
+    assert got["buses"]["cland_start_in"]["stages"] == ["u_bound.u_stage"]
+    assert refused(ls, text.replace("ot_dp_landing_relay u_stage", "unrelated_relay u_stage"))

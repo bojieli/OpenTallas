@@ -471,7 +471,7 @@ def ring_spec(v):
 
 def origin_spec(v):
     """One explicitly emitted count origin; its module type and clock are proved below."""
-    if (not {"form", "origin"} <= set(v) or set(v) - {"form", "origin", "copies"}
+    if (not {"form", "origin"} <= set(v) or set(v) - {"form", "origin", "copies", "stages"}
             or not isinstance(v.get("origin"), str) or not v["origin"]):
         raise ValueError(f"land_slots origin_start spec {v}: want exactly {{form: origin_start, origin: <instance>}}")
     if "copies" in v:
@@ -479,6 +479,13 @@ def origin_spec(v):
         if (not isinstance(cp, list) or not cp or not all(isinstance(x, str) and x for x in cp)
                 or len(set(cp)) != len(cp) or v["origin"] in cp):
             raise ValueError(f"land_slots origin_start copies {cp}: want distinct nonempty instance names")
+    if "stages" in v:
+        # Writer START transport (clock.landing_writer_start on a relay type): the first registered stage samples the
+        # same input as the origin, on its own local raw reset, and hands on to the next relay; never a face copy.
+        st = v["stages"]
+        if (not isinstance(st, list) or not st or not all(isinstance(x, str) and x for x in st)
+                or len(set(st)) != len(st) or v["origin"] in st or set(st) & set(v.get("copies", ()))):
+            raise ValueError(f"land_slots origin_start stages {st}: want distinct nonempty instance names")
     return v["origin"]
 
 
@@ -770,6 +777,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     {form: origin_start, origin: <instance>} instead requires the same <=2 sampler proof in that exact instance,
     whose original module type must be ot_dp_landing_origin[_s] or the one-flop ot_dp_landing_relay; no ring writer is required for this separate input.
     Dedicated origin export copies are still checked independently as ordinary exclusive registered output pins.
+    A "stages" list names writer START first stages on the same input (clock.landing_writer_start on a relay type):
+    typed relay, one sampler, same clock, start reset-masked on its own raw reset, sole load the next typed relay.
     Anything else fails class "land_slot". Matched flops: res["ring_start"].
     exports: declared forwarded clock outputs [(T, S)] (kit SDC create_generated_clock -source [get_ports S] -divide_by 1
     [get_ports T], DIE-HEAD-9 FACE (c)): T is an output port wired from clock port S through single-driver,
@@ -1332,7 +1341,32 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             net = F.find(outs[0][0])
         return None
 
-    def ring_start(b, r, rings, origin=None, copies=()):
+    def _stage_next_relay(ci):
+        """A writer START stage's sole output reaches, through private BUF/INV cells, one typed relay and nothing else."""
+        outs = [F.find(v[0]) for _, (dd, v) in F.cells[ci][2].items() if dd == "out" and len(v) == 1]
+        if len(outs) != 1:
+            return None
+        own = _parent(F.cells[ci][1])
+        net, seen = outs[0], set()
+        while net not in seen:
+            seen.add(net)
+            if net in roots_ports or len(loads[net]) != 1 or len(drv[net]) != 1:
+                return None
+            cj, _ = loads[net][0]
+            nxt = _parent(F.cells[cj][1])
+            if nxt != own and nxt and _module_is(nxt, "ot_dp_landing_relay"):
+                return nxt      # the relay's own reset-mask gate or flop D; the sampler proof covers that relay's cone
+            if not is_buf(F.cells[cj][0]):
+                return None
+            pp = F.cells[cj][2]
+            ins = [v for _, (dd, v) in pp.items() if dd == "in"]
+            outs = [v for _, (dd, v) in pp.items() if dd == "out"]
+            if len(ins) != 1 or len(ins[0]) != 1 or len(outs) != 1 or len(outs[0]) != 1:
+                return None
+            net = F.find(outs[0][0])
+        return None
+
+    def ring_start(b, r, rings, origin=None, copies=(), stages=()):
         """(None, record) = OK, else (failure text, None)."""
         if drv[r]:
             return f"ring start net also driven by {F.cells[drv[r][0][0]][1]}", None
@@ -1369,23 +1403,28 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         if origin is not None and not samplers:
             return "origin start reaches no sampler flops", None
         origin_removed = None
-        if (origin is not None and copies and origin not in F.module_types
+        origin_is_stage = False
+        if (origin is not None and (copies or stages) and origin not in F.module_types
                 and not any(_parent(c[1]) == origin or c[1].startswith(origin + "/") for c in F.cells)):
             # DIE-QC-59 11-01: a relay partition whose own start (the typed origin's q) has no local consumer -- synthesis
             # removes the unloaded origin flop.  The declared same-D face copies are then the only samplers; the first
             # copy stands as the typed origin and every proof below (typed relay, one sampler each, same D/reset/clock
             # signature, private face port) still runs on all of them.  An origin that exists but is not reached FAILs.
-            origin_removed, origin, copies = origin, copies[0], tuple(copies[1:])
+            if copies:
+                origin_removed, origin, copies = origin, copies[0], tuple(copies[1:])
+            else:
+                # every output of the relay type has a writer branch: the first stage stands as the sampler
+                origin_removed, origin, stages, origin_is_stage = origin, stages[0], tuple(stages[1:]), True
         sp = sorted(F.cells[ci][1] for ci in samplers)
         if samplers:
             par = {_parent(p) for p in sp}
             sck = {_ckpin(ci) for ci in samplers}
             if origin is not None:
-                declared = {origin, *copies}
+                declared = {origin, *copies, *stages}
                 if par != declared or not any(_module_is(origin, t) for t in
                                               ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_origin_s_regional", "ot_dp_landing_relay")):
                     return f"origin start reaches {sp[:3]} outside declared typed origin {origin}", None
-                if copies and not all(_module_is(x, "ot_dp_landing_relay") for x in declared):
+                if (copies or stages) and not all(_module_is(x, "ot_dp_landing_relay") for x in declared):
                     return "origin face copies require actual typed relay instances", None
                 if _module_is(origin, "ot_dp_landing_relay"):
                     for parent in declared:
@@ -1394,7 +1433,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                             return f"relay start {parent} reaches {n} sampler flops (want exactly one)", None
             if origin is None and (len(par) != 1 or "origin" not in next(iter(par)).rsplit("/", 1)[-1]):
                 return f"ring start reaches non-writer flops {sp[:3]} outside one origin instance", None
-            if not copies and len(samplers) > 2:
+            if not (copies or stages) and len(samplers) > 2:
                 return f"ring start reaches {len(samplers)} origin flops {sp[:3]} (want <= 2 sampler flops)", None
             if len(sck) != 1 or not (sck <= clock_port_roots) or sck & rck:
                 return f"origin sampler flops {sp} on clock(s) {sorted(map(str, sck))} (want one clock port, not the ring clock)", None
@@ -1438,7 +1477,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 if not samp:
                     return f"origin sampler {path}: D never equals the start (not a sampler)", None
         face_copies = {}
-        if origin_removed is not None:
+        if origin_removed is not None and not origin_is_stage:
             output = _private_copy_output(next(ci for ci in samplers if _parent(F.cells[ci][1]) == origin))
             if output is None:
                 return f"relay copy {origin}: output is not one private face port (origin {origin_removed} removed)", None
@@ -1473,6 +1512,28 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 if output is None or output in face_copies.values():
                     return f"relay copy {parent}: output is not one private face port", None
                 face_copies[parent] = output
+        writer_stages = {}
+        if stages or origin_is_stage:
+            sm = F.cells[next(ci for ci in samplers if _parent(F.cells[ci][1]) == origin)][0]
+            for parent in ((origin,) if origin_is_stage else ()) + tuple(stages):
+                ci = next(ci for ci in samplers if _parent(F.cells[ci][1]) == parent)
+                if _cell_base(F.cells[ci][0]) != _cell_base(sm):
+                    return f"writer stage {parent}: flop differs from origin", None
+                # own raw reset, so not compared to the origin's, but it must mask the start: the sampler proof above
+                # only showed D is never the inverted start
+                dnet = F.find(next(v for k, (dd_, v) in F.cells[ci][2].items() if k == "D" and len(v) == 1)[0])
+                ctl = sorted(x for x in _leaves(dnet) if x != r and not x.startswith("CONST_"))
+                try:
+                    masked = ctl and any(not _ev(dnet, dict(zip(ctl, vals), **{r: True}), {})
+                                         for vals in itertools.product((False, True), repeat=len(ctl)))
+                except KeyError as e:
+                    return f"writer stage {parent}: D cone {e.args[0]}", None
+                if not masked:
+                    return f"writer stage {parent}: start is not reset-masked", None
+                nxt = _stage_next_relay(ci)
+                if nxt is None:
+                    return f"writer stage {parent}: output is not one private typed relay", None
+                writer_stages[parent] = nxt
         groups = defaultdict(int)
         for ci in writers:
             groups[re.sub(r"\[\d+\]", "[N]", F.cells[ci][1])] += 1
@@ -1481,6 +1542,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                           sampler_clock=(str(_ckpin(next(iter(samplers)))) if samplers else None))
         if face_copies:
             record["face_copies"] = face_copies
+        if writer_stages:
+            record["writer_stages"] = writer_stages
         if origin_removed is not None:
             record["origin_removed_unloaded"] = origin_removed
         return None, record
@@ -1704,7 +1767,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             elif p in land and land_form[p] in ("ring_start", "origin_start"):
                 origin = origin_spec(land_raw[p]) if land_form[p] == "origin_start" else None
                 copies = land_raw[p].get("copies", ()) if origin is not None else ()
-                why, rec = ring_start(b, r, [] if origin else ring_spec(land_raw[p]), origin, copies)
+                stages = land_raw[p].get("stages", ()) if origin is not None else ()
+                why, rec = ring_start(b, r, [] if origin else ring_spec(land_raw[p]), origin, copies, stages)
                 if why:
                     fail("land_slot", b, why)
                     continue
