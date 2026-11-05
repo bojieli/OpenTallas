@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.hbm_plan_event.part12",
+ "core": "ot_hgi_qw_dec",
+ "pins_file": "cores/ot_hgi_qw_dec__260x173.6__c25c__codex_g21__centry__p12.json",
+ "rows": 2,
+ "clk": {
+  "from": [
+   129.624,
+   86.4
+  ],
+  "to": [
+   129.624,
+   0.24
+  ],
+  "layer": "M5"
+ },
+ "taps": {
+  "u_hb_quant_Q__u_dec__q0": [
+   [
+    164.16,
+    1650.24
+   ],
+   [
+    164.16,
+    1564.08
+   ]
+  ],
+  "u_hb_quant_Q__u_dec__q1": [
+   [
+    4121.28,
+    2592.0
+   ],
+   [
+    4121.28,
+    2505.84
+   ]
+  ]
+ },
+ "clock_entries": [
+  "q_hub_nw/u_hb_quant_Q__u_dec",
+  "q_hub_ne/u_hb_quant_Q__u_dec"
+ ],
+ "cycles": 0
+}

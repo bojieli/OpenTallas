@@ -379,3 +379,9 @@ physical sub-core path is `<inst>.u_fcore.u_core.<u_sub>`.
 - **u_mu_fused_program** (`ot_hnx_fused_host_program`): 207.36 x 129.6 -> 276.48 x 129.6 (35832 um2), fill 0.65 -> 0.43 (1273 std + 14194 macro) for the owner-rule conservative form (fhp7 failed on the old outline). All growth on E, 69.12 um, origin (734.4, 5339.52) kept. Pin table `__p10`: same 562 pins, N and S faces only, same core and die position; both SRAMs and the clock island unchanged; no parent wire moves.
 - **Why E only**: the first trial grew 34.56 W and E; G0 flagged L9x1 stage 10 bit sites (x up to 747.36) against W (428 cells), new error. E is free: `part10_event.json` slot_hits [] including actual bit sites, hard cores, contents, channels, internal stations.
 - **Checks**: G0+G0C 24 -> 24, new 0, gone 0 (`g0/g0_diff_d44v_p9_p10.txt`). Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0 (`geom/geom_diff_d44v_p9_p10.txt`). Gen trial of the core rc 0, DIE 276.48 x 129.6. Designs stay 91. Stacks on part 9.
+
+## Part 12 (qw_dec clk pin to the signed location; DIE-HBM-66, COORD 15:56)
+
+- **ot_hgi_qw_dec** `clk` M5 (129.624, 86.4) -> (129.624, 0.24), S face, table `__p12`; the other 1669 pins unmoved. Signed DB kept (re-signed on flow-20261104-k-hbm); the table now equals the signed kit's 1670 pins. Two `q_hub_nw` rows take it.
+- **Parent clock taps**: `u_hb_quant_Q__u_dec__q0` (164.16, 1650.24) -> (164.16, 1564.08), `__q1` (4121.28, 2592.0) -> (4121.28, 2505.84); same x. The two clock entry rows follow (xy 129.6, 0.24; island kept 8.64 um square, clipped to the S edge).
+- **Checks**: G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0. 0 cycles, no RTL. The plan has no `asbuilt` key, so bind.py does not apply; pin names are unchanged.
