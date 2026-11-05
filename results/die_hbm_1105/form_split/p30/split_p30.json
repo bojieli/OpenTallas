@@ -1,0 +1,142 @@
+[
+ {
+  "core": "ot_hbm_idx_topk_link_static",
+  "sha": "p30",
+  "part": "p30",
+  "glue": "ot_hbm_idx_topk_link_static__p30glue.sv",
+  "conn": "topk.conn.json",
+  "subs": [
+   {
+    "module": "ot_hbm_idx_topk_ingest",
+    "cells": 115000
+   },
+   {
+    "module": "ot_hbm_idx_topk_store",
+    "cells": 40000
+   }
+  ],
+  "added_cycles": "SRAM write visibility +2 edges vs WRITE_PIPE_STAGES=0, same as the opt-in writer of topk5; every pin date 0",
+  "layout": {
+   "u_fcore.u_core.u_ing": {
+    "xy": [
+     0.0,
+     0.0
+    ],
+    "wh": [
+     648.0,
+     233.28
+    ]
+   },
+   "u_fcore.u_core.u_sto": {
+    "xy": [
+     0.0,
+     233.28
+    ],
+    "wh": [
+     648.0,
+     259.2
+    ]
+   }
+  },
+  "boundary_sub": "u_fcore.u_core.u_sto",
+  "clock_entry": {
+   "ot_hbm_idx_topk_store": [
+    222.0,
+    87.48
+   ]
+  },
+  "macros": {
+   "ot_hbm_idx_topk_store": [
+    {
+     "name": "u_fcore.gm[0].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      33.534,
+      6.48,
+      204.822,
+      84.264
+     ]
+    },
+    {
+     "name": "u_fcore.gm[1].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      238.356,
+      6.48,
+      409.644,
+      84.264
+     ]
+    },
+    {
+     "name": "u_fcore.gm[2].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      443.178,
+      6.48,
+      614.466,
+      84.264
+     ]
+    },
+    {
+     "name": "u_fcore.gm[3].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      33.534,
+      90.72,
+      204.822,
+      168.504
+     ]
+    },
+    {
+     "name": "u_fcore.gm[4].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      238.356,
+      90.72,
+      409.644,
+      168.504
+     ]
+    },
+    {
+     "name": "u_fcore.gm[5].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      443.178,
+      90.72,
+      614.466,
+      168.504
+     ]
+    },
+    {
+     "name": "u_fcore.gm[6].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      33.534,
+      174.96,
+      204.822,
+      252.744
+     ]
+    },
+    {
+     "name": "u_fcore.gm[7].mem",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      238.356,
+      174.96,
+      409.644,
+      252.744
+     ]
+    }
+   ]
+  },
+  "macro_basis": "HBM-FORM-SPLIT part 30: 3 x 3 grid, 8 sites, channels 33.5 um x, 6.5 um y"
+ }
+]

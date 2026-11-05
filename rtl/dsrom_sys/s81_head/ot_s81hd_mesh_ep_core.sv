@@ -104,9 +104,27 @@ module ot_s81hd_mesh_ep_core #(
     ot_s81hd_mesh_lane u_lb (.ck(ck), .rst_n(rst_n), .chb(CH_B[1]), .rx(coll_ib), .tx(coll_ob),
         .tx_v(tv_b), .tx_d(own_frame), .rx_v(rv_b), .rx_d(rd_b), .flt(fl_b));
     // ------------------------------------------------------------------ RX: canonical BEST -> copy slots
-    wire can_a = rd_a[552] && rd_a[3:0] == 4'd1 && !(|rd_a[551:97]);
-    wire can_b = rd_b[552] && rd_b[3:0] == 4'd1 && !(|rd_b[551:97]);
-    wire en_a = rv_a && can_a, en_b = rv_b && can_b;
+    // DIE-HEAD-65: the canonical test crossed the whole lane register (455-bit zero test, 6 wire buffers, l48ub GRT -100).
+    // One registered RX stage: header and 8 zero-test bands register next to their bits, the decision and the landing
+    // register take the next edge. +1 RX data cycle on m_rx_o, one more edge before the slot edges below.
+    localparam integer NZB = 8;
+    reg  [NZB-1:0] nz_a, nz_b;
+    reg  hdr_a, hdr_b, v0_a, v0_b;
+    reg  [96:0] l0_a, l0_b;
+    integer zk;
+    always @(posedge ck) begin
+        hdr_a <= rd_a[552] && rd_a[3:0] == 4'd1;
+        hdr_b <= rd_b[552] && rd_b[3:0] == 4'd1;
+        for (zk = 0; zk < NZB; zk = zk + 1) begin
+            nz_a[zk] <= |(rd_a[97 + zk * 57 +: 57] & ((zk == NZB - 1) ? 57'h0ffffffffffffff : 57'h1ffffffffffffff));
+            nz_b[zk] <= |(rd_b[97 + zk * 57 +: 57] & ((zk == NZB - 1) ? 57'h0ffffffffffffff : 57'h1ffffffffffffff));
+        end
+        l0_a <= rd_a[96:0];
+        l0_b <= rd_b[96:0];
+    end
+    wire can_a = hdr_a && !(|nz_a);
+    wire can_b = hdr_b && !(|nz_b);
+    wire en_a = v0_a && can_a, en_b = v0_b && can_b;
     // HEAD-RTL-4 (RULING HEAD-RTL-3 ASK2): per-copy BURST FIFO of BQ records (was a 1-entry hold slot).  After a lane
     // replay the link delivers the replayed backlog back to back (lsc_r0m li_r = li_v registered, gearbox 3 flits / 4
     // edges) while the shared word port drains one word per 2 edges, A first; BQ = the worst replay backlog of
@@ -120,7 +138,7 @@ module ot_s81hd_mesh_ep_core #(
     localparam integer BCW = $clog2(BQE + 1);
     reg  la, lb;                              // landed enables (aligned with the landing registers)
     reg  [96:0] ld_a, ld_b;                   // landing registers (data, unreset)
-    always @(posedge ck) begin ld_a <= rd_a[96:0]; ld_b <= rd_b[96:0]; end
+    always @(posedge ck) begin ld_a <= l0_a; ld_b <= l0_b; end
     reg  [96:0] fq_a [0:BQE-1];
     reg  [96:0] fq_b [0:BQE-1];
     reg  [BQE-1:0] wp_a, wp_b, rp_a, rp_b;    // one-hot pointers
@@ -134,6 +152,7 @@ module ot_s81hd_mesh_ep_core #(
     wire wa = la && ((na - (tk_a ? 1'b1 : 1'b0)) < BQE);   // room after this edge's read
     wire wb = lb && ((nb - (tk_b ? 1'b1 : 1'b0)) < BQE);
     reg  [11:0] fv;
+    reg  [8:0]  ff_q;
     reg  ovw_q, ncan_q;
     function automatic [BQE-1:0] rot(input [BQE-1:0] p);
         rot = (BQE == 1) ? p : {p[BQE-2:0], p[BQE-1]};
@@ -155,10 +174,10 @@ module ot_s81hd_mesh_ep_core #(
     always @(posedge ck) if (dec) ow <= tk_a ? pick(fa_flat, rp_a) : pick(fb_flat, rp_b);
     always @(posedge ck or negedge r_rx)
         if (!r_rx) begin
-            la <= 1'b0; lb <= 1'b0; na <= 0; nb <= 0; iss_q <= 1'b0; selb <= 4'd0; ovw_q <= 1'b0; ncan_q <= 1'b0;
+            v0_a <= 1'b0; v0_b <= 1'b0; la <= 1'b0; lb <= 1'b0; na <= 0; nb <= 0; iss_q <= 1'b0; selb <= 4'd0; ovw_q <= 1'b0; ncan_q <= 1'b0;
             wp_a <= 1; wp_b <= 1; rp_a <= 1; rp_b <= 1;
         end else begin
-            la <= en_a; lb <= en_b;
+            v0_a <= rv_a; v0_b <= rv_b; la <= en_a; lb <= en_b;
             na <= na + (wa ? 1'b1 : 1'b0) - (tk_a ? 1'b1 : 1'b0);
             nb <= nb + (wb ? 1'b1 : 1'b0) - (tk_b ? 1'b1 : 1'b0);
             if (wa) wp_a <= rot(wp_a);
@@ -168,7 +187,7 @@ module ot_s81hd_mesh_ep_core #(
             iss_q <= dec;
             if (dec) selb <= {4{tk_b}};
             ovw_q  <= (la && !wa) || (lb && !wb);
-            ncan_q <= (rv_a && !can_a) || (rv_b && !can_b);
+            ncan_q <= (v0_a && !can_a) || (v0_b && !can_b);
         end
     // ------------------------------------------------------------------ word to hd_ctl
     wire [96:0] body = {ow[96:84] ^ ((MUT == 2 && selb[3]) ? 13'h1000 : 13'h0), ow[83:0]};
@@ -178,8 +197,11 @@ module ot_s81hd_mesh_ep_core #(
     ot_s81hd_beat_tx #(.W(WW), .N(2), .P(62), .IDLE_ZERO(1)) u_wtx (.ck(ck), .rn(r_rx), .v(iss_q), .d({fv_word, copy, body}),
         .o(m_rx_o), .fault(wf));
     always @(posedge ck or negedge r_rx)
-        if (!r_rx) fv <= 12'd0;
-        else fv <= fv | {wf, ovw_q, ncan_q, own_f, fl_b, fl_a};
+        if (!r_rx) begin fv <= 12'd0; ff_q <= 9'd0; end
+        else begin
+            ff_q <= {own_f, fl_b, fl_a};  // DIE-HEAD-65: same +1 as the RX data, in-band fault position unchanged
+            fv <= fv | {wf, ovw_q, ncan_q, ff_q};
+        end
 endmodule
 
 // hd_ctl-side receiver of m_rx_o (one per peer): copy A / copy B valids on the shared 553-b canonical frame, exactly the

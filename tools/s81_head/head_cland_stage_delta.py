@@ -34,7 +34,7 @@ from pathlib import Path
 
 HMAX = 370.0          # planned hop (plan reach 405, 35 um left for placement scatter)
 COPY_REACH = 370.0    # raw -> local copy and copy -> consumer
-TYPES = ("hd_ctl_n", "hd_ctl_e", "hd_host_n")
+TYPES = ("hd_ctl_n", "hd_ctl_e", "hd_host_n", "hd_mesh", "hd_host")
 CTL_E_SITE_X = (401.5, 801.0)   # hd_ctl_e n_tx_ft s1/s2 cell centres (hop <= 400 planned, 405 measured reach)
 
 # reset-tree raw relays (net, depth, x, y, exported) from the frozen 703c07481 GEN of prepared_mesh_y864
@@ -60,10 +60,26 @@ RRL = {
                   ("rr_t12", 4, 1434.7, 492.6, 0)],
 }
 # landing-control reset depth of the type (every ring reset relay u_cland_rst_<b> = rrelay(depth-3 / depth-1 tap) + 1)
-CTRL_DEPTH = {"hd_ctl_n": 4, "hd_ctl_e": 2, "hd_host_n": 4}
+CTRL_DEPTH = {"hd_ctl_n": 4, "hd_ctl_e": 2, "hd_host_n": 4, "hd_mesh": 4, "hd_host": 4}
 # agg_1 plan point (inside reach of the near rings / face status flops; far rings get status relays)
 AGG1 = {"hd_ctl_n": (90.0, 300.0), "hd_ctl_e": (735.0, 74.0), "hd_host_n": (420.0, 290.0)}
+# DIE-HEAD-65 l48uc: hd_mesh / hd_host relay table and agg_1 point are read, not typed: --rrl-from T=<wave wrapper .sv> and
+# the mid point of the landed rings.
 ORIGIN_EXT = 5.0
+
+
+def rrl_from_rtl(path):
+    """(net, depth, x, y, exported) of every raw relay in one GEN wrapper ('// raw ... depth D @ (x, y)' comments)."""
+    t = Path(path).read_text()
+    out = []
+    for m in re.finditer(r"ot_dp_rrelay\s+\w+\s*\(.*?\.q\((\w+)\)\);\s*//\s*raw .*?depth (\d+) @ \(([\d.]+), ([\d.]+)\)", t):
+        net = m.group(1)
+        exp = int(bool(re.search(r"assign\s+rst_start_raw\w*\s*=\s*" + net + r"\b", t) or
+                       re.search(r"\.rst_start_raw\w*\(" + net + r"\)", t)))
+        out.append((net, int(m.group(2)), float(m.group(3)), float(m.group(4)), exp))
+    if not out:
+        raise ValueError(f"no raw relays in {path}")
+    return out
 
 
 def md(a, b):
@@ -181,7 +197,7 @@ def type_delta(tn, T, coll):
     rep["writer_start_depth"] = W
     rep["writer_buses_receiver_K_delta"] = {b: +W for b in far}
     # ---- aggregate anchors: agg_1 at the plan point, agg_2.. on the line to the tree output register ----
-    a1 = AGG1[tn]
+    a1 = AGG1.get(tn) or tuple(sum(bands[b][0][i] for b in rings) / len(rings) for i in (0, 1))
     anchors = {"u_cland_agg_1": a1}
     for k in range(2, ndep):
         t = (k - 1) / (ndep - 1)
@@ -320,9 +336,13 @@ def main(argv=None):
                     help="tools root for Landings.strap_expected (die-top straps)")
     ap.add_argument("--knobs-from", type=Path, help="a HEAD source dir (no landing_contract in its plan): compute the "
                     "knobs on this prepared dir's plan and add the same clock keys to SRC (die-top straps follow)")
+    ap.add_argument("--rrl-from", action="append", default=[], help="T=wrapper.sv: reset relay table of T read from GEN RTL")
     ap.add_argument("--republish", type=Path, help="prepared dir: tools root whose gen.py regenerates published/")
     a = ap.parse_args(argv)
     types = a.types.split(",")
+    for x in a.rrl_from:
+        tn, p = x.split("=", 1)
+        RRL[tn] = rrl_from_rtl(p)
     assert set(types) <= set(TYPES), types
     plan = json.loads((a.src / "source_plan.json").read_text())
     side = json.loads((a.src / "source_sidecar.json").read_text())

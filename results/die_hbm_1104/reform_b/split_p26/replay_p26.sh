@@ -42,7 +42,7 @@ python3 -I $Q/relax_p26.py $W/new '^u_svg_Q\d+__(t|o|b0|b1)$'
 sed -i '/ot_svgr_\|ot_q2nf_/d' $D/SHA256SUMS
 python3 -I /srv/opentallas-scratch3/claude/hbm-reform-b3/pk.py $W/new $W/base $D | cut -c1-300
 python3 -I results/die_hbm_1103/reform/package.py $W/new $W/base $D | tail -1 | cut -c1-80
-cp $D/split_event.json $D/part33_event.json; cp $TMP/part26_event.json $D/part26_event.json; git show $TGT:$D/split_event.json > $D/split_event.json
+cp $D/split_event.json $D/part33_event.json; cp $TMP/part26_event.json $D/part26_event.json; rm -f $D/split_event.json $D/core_macros.json.gz; sed -i "/  split_event.json$/d" $D/SHA256SUMS
 python3 -I - <<'E'
 import hashlib
 D='physical/die_plan/hbm/plan_of_record/d44v/'
@@ -51,7 +51,7 @@ L=[l.split(None,1) for l in open(D+'SHA256SUMS').read().splitlines() if l.strip(
 N=[n for a,n in L]
 for e in ('part26_event.json','part33_event.json'):
     if e not in N: L.append(('',e))
-open(D+'SHA256SUMS','w').write(''.join(f'{h(n) if n in("split_event.json","part26_event.json","part33_event.json") else a}  {n}\n' for a,n in L))
+open(D+'SHA256SUMS','w').write(''.join(f'{h(n) if n in("part26_event.json","part33_event.json") else a}  {n}\n' for a,n in L))
 E
 (cd $D; for n in die_plan.json core_conns.json clock_entries.json; do a=$(zcat $n.gz | sha256sum | cut -c1-64); grep -q "^$a  $n$" SHA256SUMS && echo ok $n || echo BAD $n; done)
 python3 physical/die_plan/hbm_arch_cores/views_b2r2.py --plan $W/new/die_plan.json --out $W/views.json 2>&1 | tail -1 | cut -c1-60

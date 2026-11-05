@@ -1,0 +1,37 @@
+{
+ "before_sha256": "42c5d994feba47d3371c0fb2e26208fbcddf89f9d93518f19d14690b854c637d",
+ "after_sha256": "16ba13b2ff660f0f1cf8a1e9bdb32b1d0391a5b5b187f3f53c465dce66192a73",
+ "v1_after_sha256": "1bf9e2c249537a93464c2a9e418811f12784b78adb86c81f6f341b2e3224bde5",
+ "v2_after_sha256": "1bf9e2c249537a93464c2a9e418811f12784b78adb86c81f6f341b2e3224bde5",
+ "idx_fit": {
+  "source": "/srv/opentallas-scratch2/claude/wt/kit-wave-14d-s81/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv",
+  "source_sha": "54e3d3ebf8a9",
+  "fit_sha": "c1c73d3df883",
+  "renamed": 1,
+  "dropped": [
+   "/srv/opentallas-scratch2/claude/wt/kit-wave-14d-s81/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv"
+  ]
+ },
+ "status": "APPLIED",
+ "event": "S81-066 svc memory closure (T7 12605dc2 class port)",
+ "bound": "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_idx2/svc_lo_dsdv_svc_rs__t1/rtl/s81p_svc_lo_dsdv_svc_rs__t1_bound.sv",
+ "children": [
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_idx2/svc_lo_dsdv_svc_rs__t1/rtl/ot_t7_pmem_capture_v2.sv",
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_idx2/svc_lo_dsdv_svc_rs__t1/rtl/ot_t7_pvq_capture_v2.sv",
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_idx2/svc_lo_dsdv_svc_rs__t1/rtl/ot_t7_land_capture_v2.sv",
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_idx2/svc_lo_dsdv_svc_rs__t1/rtl/ot_hdc_v41x_attn_staging_fit.sv",
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_idx2/svc_lo_dsdv_svc_rs__t1/rtl/dsdv_idx_fit_mem.sv",
+  "/srv/opentallas-scratch2/claude/die-s81-51/mem/pilot_idx2/svc_lo_dsdv_svc_rs__t1/rtl/dsdv_idx_rg3_fit.sv"
+ ],
+ "form": "v2",
+ "macros_added": {
+  "ot_sram_1r1w_160x256_m1_r0c0": 12,
+  "ot_sram_1r1w_160x265_m1_r0c0": 8,
+  "ot_sram_1r1w_256x256_m1_r0c0": 10,
+  "ot_sram_1r1w_32x128_m1_r0c0": 17,
+  "ot_sram_1r1w_768x256_m2_r0c0": 4,
+  "ot_sram_1r1w_1024x35_m4_r0c0": 1,
+  "ot_sram_1r1w_1024x39_m4_r0c0": 1,
+  "ot_sram_1r1w_128x23_m1_r0c0": 1
+ }
+}
