@@ -392,3 +392,9 @@ physical sub-core path is `<inst>.u_fcore.u_core.<u_sub>`.
 - **ot_hgi_dma_back_static_vp4_banks_cp** +60.48 um on local E, 239.976 -> 300.456 x 275.4. Reason: M2 114%, M3 116%, macros 59%. Second macro column +30.24; `__q0` copies keep origin and pins; `__q1` (mirrored) copies keep their die W edge, so pins and tap move +60.48 um in die x.
 - **ot_hcol h0_rb** out: 0.68 stdcell utilization, room only +7.56 x +1.08 um; next form follows h0_ra.
 - **Checks**: G0 compare errors new 0, gone 0; warnings 1950 -> 1940, new 0 (the 10 gone were missing-pins warnings on these rows). Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0 at +64.8; not rerun at +60.48, plan_geom reads non-hard types only, so these two outlines are not in it. Slot hits 0. 0 cycles, no RTL.
+
+## Part 8 (pslice_c5 per-column sub-cores; DIE-HBM-63/CUTS, replayed by DIE-HBM-66 on part 13, COORD 20:2x)
+
+ot_hbm_su_programme_pslice_c5 (4 inst, q_hub_nw/ne.u_pgp_Q__q0/q1) becomes ot_hbm_su_pcol_s x7 (118.8x336.96, 7 macros), _l x3 (257.04x423.36, 17 macros) and head _h (136.08x216, no macro). Registered faces, per-column start/length relay with no shared flop, registered command funnel.
+Slice latency against the kit base form, end to end: start/length/cfg to command/busy/valid/done/edge_index +2, to fault +4, physical/die_plan/hbm/reform_1103/cycles/pcol.tsv. Bench: split_p8/run_eq.sh (lockstep, 8 mutants killed).
+Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is a 3-way JSON merge onto this tree (0 conflicts, q_hub_nw/ne only). **Checks** against part 13: G0 errors new 0, gone 0; warnings 1940 -> 1972 (the part's core_faces rows, as in its own p7-p8 diff). GEOM advisory 225 -> 225, new 0, worse 0, clock_reach better on q_hub_ne/nw. su_pcol_h signed off and routed LEC EQUIVALENT; _s and _l forms still running.
