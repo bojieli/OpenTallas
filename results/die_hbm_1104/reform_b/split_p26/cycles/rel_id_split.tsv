@@ -1,0 +1,10 @@
+path	added_edges	evidence
+sm_command, sm_packet, GO slot	0	go_slots_exact True, 29/29, rc equal to flat [CHECKED smoke]
+seam descriptor stream->hbm	+2	out face + in face
+seam read landing	+2	out face + in face
+seam complete hbm->stream	+2	out face + in face
+drain word, data with it	+4	DLY 4, 2 edges each way
+cache open after start	+4	OPEN_DLY 4, first sector meets the first running cycle
+start -> cache_ready	+4	S to C: flat 53 edges, split 57 [CHECKED run.log L00]
+K request rate	at most 1 per 3 edges	ot_svgr_k_out shell handshake
+row data to DRAM order	0 results differ	results 81, dram_reads 5988, all ops PASS bit for bit
