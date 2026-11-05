@@ -13,7 +13,7 @@ module tb_emb_ls;
   ot_qkd_static_ctrl_pc_emb     #(.CORE_CLOCK(1),.ENABLE(1),.PROFILE(1),.CONTEXT_DESC(CTX),.STATIC_REFRESH(SR)) dut(`PORTS(n_));
   wire [63:0] ov={o_credit,o_row_v,o_col_v,o_col_we,o_busy,o_fault,o_idle,o_s_cr,o_col_sr,o_boot,o_row_op,o_row_bank,o_col_bank,o_col_col,o_row_row};
   wire [63:0] nv={n_credit,n_row_v,n_col_v,n_col_we,n_busy,n_fault,n_idle,n_s_cr,n_col_sr,n_boot,n_row_op,n_row_bank,n_col_bank,n_col_col,n_row_row};
-  integer seed=1, cycles=400000, cyc=0, sincerst=0, pc=30, psv=10, pbad=2, out=0, s_out=0;
+  integer seed=1, cycles=400000, cyc=0, sincerst=0, pc=30, psv=10, pbad=2, out=0, s_out=0, need_go=0;
   longint c_cred=0,c_col=0,c_fault=0,c_sr=0;
   function automatic int r(int m); return $urandom_range(m-1,0); endfunction
   initial begin
@@ -29,10 +29,11 @@ module tb_emb_ls;
         automatic int t=r(100);
         automatic logic [10:0] n; automatic logic [9:0] f;
         cmd_v=1; out++;
-        if(t<20) begin n=1+r(300); f=r(int'(n)); if(r(100)<pbad) begin case(r(3)) 0:n=0; 1:n=1025+r(100); 2:f=n; endcase end cmd={2'b00,n,19'(64+r(4))}; first=f; end
+        if(need_go) begin need_go=0; cmd={2'b01,30'(r(1000))}; first=r(1024); end
+        else if(t<20) begin need_go=1; n=1+r(40); f=r(int'(n)); if(r(100)<pbad) begin case(r(3)) 0:n=0; 1:n=1025+r(100); 2:f=n; endcase end cmd={2'b00,n,19'(64+r(4))}; first=f; end
         else if(t<40) begin cmd={2'b01,30'(r(1000))}; first=r(1024); end
         else if(t<70) begin cmd={2'b10,17'(r(1000)),5'(r(32)),5'(r(8))}; first=r(1024); end
-        else begin automatic logic [8:0] m=1+r(256); f=r(129); if(r(100)<pbad) begin case(r(3)) 0:m=257+r(200); 1:f=r(2)?129:129+r(200); 2:f=128; endcase end cmd={2'b11,1'(r(2)),1'(r(2)),m,19'(64+r(4))}; first=f; end
+        else begin automatic logic [8:0] m=1+r(r(4)==0?256:16); need_go=1; f=r(129); if(r(100)<pbad) begin case(r(3)) 0:m=r(2)?256:257+r(200); 1:f=r(2)?129:129+r(200); 2:f=128; endcase end cmd={2'b11,1'(r(2)),1'(r(2)),m,19'(64+r(4))}; first=f; end
       end
       if(n_s_cr && s_out>0) s_out--; s_v=r(100)<psv && s_out<3; if(s_v) s_out++; s_we=r(4)==0; s_bank=r(8); s_col=r(32); s_row=64+r(3); for(int i=0;i<11;i++) s_ctx[i*32+:32]=$urandom;
     end

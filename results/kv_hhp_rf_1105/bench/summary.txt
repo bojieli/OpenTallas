@@ -1,13 +1,26 @@
+CAUGHT m_boot FAIL cycle 539 since_rst 539 old 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000029261e0000041 new 0
 CAUGHT m_burst FAIL cycle 47 old 0000000003d3fff3f26fdfe07b new 0000000002100000000000e07b
 CAUGHT m_cnt FAIL cycle 46 old 0000000003d3fff7f26fdfe07b new 0000000003d7ffffffffffe07b
 CAUGHT m_csp FAIL cycle 14527 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
-CAUGHT m_fp FAIL cycle 659420 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
+CAUGHT m_ctxhi FAIL cycle 49 since_rst 49 old 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000021485cbf80041 new 000
+CAUGHT m_ctxlo FAIL cycle 7 since_rst 7 old 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000214840bf80041 new 00000
+CAUGHT m_ctxsel FAIL cycle 35 since_rst 35 old 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014000bf80041 new 000
+CAUGHT m_fp FAIL cycle 1064753 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
 CAUGHT m_gap FAIL cycle 57 old 0000000002d65dffb000d6e07b new 0000000002d254e12000d6e07b
 CAUGHT m_land1 FAIL cycle 11 reader word cf7a536e1e18222a66612ad786070e107ea61f8ffe11eee691e4f429e5a1a13c6c858fdb vs 8f7a536e1e18222a66612ad786070e107ea61f8ffe11eee691e4f429e5a1a13c6c858fdb
 CAUGHT m_land2 FAIL cycle 11 reader word cf7a536e1e18222a66612ad786070e107ea61f8ffe11eee691e4f429e5a1a13c6c858fdb vs cf7a536fba4aa27f5cd1a8b6a8a848043af39e14685672834290f987452663e98123b447
 CAUGHT m_land3 FAIL cycle 11 reader word cf7a536e1e18222a66612ad786070e107ea61f8ffe11eee691e4f429e5a1a13c6c858fdb vs f52c63dc1e18222a66612ad786070e107ea61f8ffe11eee691e4f429e5a1a13c6c858fdb
 CAUGHT m_left FAIL cycle 50 old 0000000002100000000000e07b new 000000000211e242526fdce07b
+CAUGHT m_live FAIL cycle 16 since_rst 16 old 0000040000280043 new 0000440000280043 ctxdiff 0
 CAUGHT m_load FAIL cycle 46 old 0000000003d3fff7f26fdfe07b new 0000000003d7ffffffffffe07b
+CAUGHT m_mal0 FAIL cycle 20 since_rst 20 old 0000060000280043 new 0000040000280043 ctxdiff 0
+CAUGHT m_mal1 FAIL cycle 158962 since_rst 1513 old 0000440040000043 new 0000040040000043 ctxdiff 0
+CAUGHT m_mal2 FAIL cycle 437325 since_rst 21 old 0000440010000043 new 0000040010000043 ctxdiff 1
+CAUGHT m_mal3 FAIL cycle 25103 since_rst 11 old 0000400000000000 new 0000410000000000 ctxdiff 1
+CAUGHT m_malf FAIL cycle 64971 since_rst 2732 old 0000640402100042 new 0000240402100042 ctxdiff 0
+CAUGHT m_pinrd FAIL cycle 15459 slot-fault pins old 0000 new 1000
+CAUGHT m_pins FAIL cycle 7040 slot-fault pins old 1000 new 1011
+CAUGHT m_pinwr FAIL cycle 10407 slot-fault pins old 0000 new 1100
 CAUGHT m_ras FAIL cycle 8 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
 CAUGHT m_rdcp FAIL cycle 185746 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
 CAUGHT m_rdrp FAIL cycle 185745 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
@@ -18,7 +31,12 @@ CAUGHT m_rtpw FAIL cycle 45 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/le
 CAUGHT m_swait FAIL cycle 14 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
 CAUGHT m_swait2 FAIL cycle 7 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
 CAUGHT m_wait FAIL cycle 53 old 0000000003d5841a8388cee07b new 0000000002100000000000e07b
-MISSED m_wrcp PASS cycles 1500000 rd 159288 wr 1051 s_go 4145 rp_sp 1772 forced_pre 9254 pblk_rd 6 pblk_wr 0 ref 10350 act 25355 pre 24753
+CAUGHT m_wqoh FAIL cycle 7466 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
+CAUGHT m_wqord FAIL cycle 7466 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
+CAUGHT m_wqref FAIL cycle 735389 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
+CAUGHT m_wqv FAIL cycle 7077 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
+CAUGHT m_wrcp FAIL cycle 1160264 internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal
+CAUGHT m_wrslot FAIL cycle 7332 since_rst 261 old 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000960002b80040 new 
 PASS c_m1_s1 PASS cycles 300000 go 4482 fires 311612
 PASS c_m1_s2 PASS cycles 300000 go 4402 fires 313756
 PASS c_m1_s3 PASS cycles 300000 go 4523 fires 313893
@@ -28,18 +46,24 @@ PASS c_m2_s3 PASS cycles 300000 go 6819 fires 486973
 PASS c_s1 PASS cycles 1500000 go 22589 fires 1607283
 PASS c_s2 PASS cycles 1500000 go 23038 fires 1631935
 PASS c_s3 PASS cycles 1500000 go 23086 fires 1621872
+PASS e_c0_s1 PASS cycles 1500000 credit 8535 col 41611 col_sr 29322 fault_cycles 41802
+PASS e_c0_s2 PASS cycles 1500000 credit 6873 col 38874 col_sr 30513 fault_cycles 32768
+PASS e_c0_s3 PASS cycles 1500000 credit 8733 col 40299 col_sr 30410 fault_cycles 42258
+PASS e_c1_s1 PASS cycles 1500000 credit 2119 col 46828 col_sr 28338 fault_cycles 4891
+PASS e_c1_s2 PASS cycles 1500000 credit 2164 col 50969 col_sr 28965 fault_cycles 4866
+PASS e_c1_s3 PASS cycles 1500000 credit 2342 col 52424 col_sr 27881 fault_cycles 4585
 PASS h_0_s1 PASS cycles 1000000 land words 104442
 PASS h_0_s2 PASS cycles 1000000 land words 108324
 PASS h_0_s3 PASS cycles 1000000 land words 106309
 PASS h_5_s1 PASS cycles 1000000 land words 104538
 PASS h_5_s2 PASS cycles 1000000 land words 108326
 PASS h_5_s3 PASS cycles 1000000 land words 106140
-PASS t_p0c0r0_s1 PASS cycles 1500000 rd 93398 wr 1384 s_go 2808 rp_sp 1237 forced_pre 5695 pblk_rd 38 pblk_wr 1 ref 10350 act 14887 pre 14339
-PASS t_p0c0r0_s2 PASS cycles 1500000 rd 126113 wr 1564 s_go 3142 rp_sp 1216 forced_pre 6170 pblk_rd 30 pblk_wr 0 ref 10350 act 15800 pre 15207
-PASS t_p0c0r0_s3 PASS cycles 1500000 rd 104904 wr 1333 s_go 2934 rp_sp 1324 forced_pre 5760 pblk_rd 18 pblk_wr 0 ref 10350 act 14256 pre 13700
-PASS t_p0c1r1_s1 PASS cycles 1500000 rd 116627 wr 912 s_go 2747 rp_sp 866 forced_pre 8954 pblk_rd 19 pblk_wr 0 ref 10350 act 22746 pre 22181
-PASS t_p0c1r1_s2 PASS cycles 1500000 rd 95909 wr 901 s_go 2971 rp_sp 1094 forced_pre 8992 pblk_rd 21 pblk_wr 0 ref 10350 act 21548 pre 20960
-PASS t_p0c1r1_s3 PASS cycles 1500000 rd 108949 wr 885 s_go 2864 rp_sp 960 forced_pre 9282 pblk_rd 24 pblk_wr 0 ref 10350 act 19586 pre 18999
-PASS t_p1c1r1_s1 PASS cycles 1500000 rd 159288 wr 1051 s_go 4145 rp_sp 1772 forced_pre 9254 pblk_rd 6 pblk_wr 0 ref 10350 act 25355 pre 24753
-PASS t_p1c1r1_s2 PASS cycles 1500000 rd 155649 wr 760 s_go 3896 rp_sp 1852 forced_pre 9230 pblk_rd 10 pblk_wr 0 ref 10350 act 27516 pre 26941
-PASS t_p1c1r1_s3 PASS cycles 1500000 rd 162342 wr 1098 s_go 4131 rp_sp 1763 forced_pre 9127 pblk_rd 18 pblk_wr 0 ref 10350 act 27336 pre 26750
+PASS t_p0c0r0_s1 PASS injected 433 cycles 1500000 rd 124205 wr 5278 s_go 5268 rp_sp 2856 forced_pre 3029 pblk_rd 60 pblk_wr 1 ref 10098 act 22323 pre 19289
+PASS t_p0c0r0_s2 PASS injected 448 cycles 1500000 rd 148392 wr 4177 s_go 5441 rp_sp 2594 forced_pre 3010 pblk_rd 87 pblk_wr 0 ref 10090 act 24816 pre 21693
+PASS t_p0c0r0_s3 PASS injected 445 cycles 1500000 rd 141637 wr 4918 s_go 5465 rp_sp 2885 forced_pre 3012 pblk_rd 66 pblk_wr 0 ref 10083 act 23997 pre 20859
+PASS t_p0c1r1_s1 PASS injected 436 cycles 1500000 rd 147516 wr 3190 s_go 4868 rp_sp 2090 forced_pre 10776 pblk_rd 39 pblk_wr 0 ref 10090 act 32215 pre 28928
+PASS t_p0c1r1_s2 PASS injected 433 cycles 1500000 rd 119293 wr 3230 s_go 5290 rp_sp 2143 forced_pre 10798 pblk_rd 56 pblk_wr 1 ref 10075 act 29686 pre 26498
+PASS t_p0c1r1_s3 PASS injected 424 cycles 1500000 rd 127253 wr 3152 s_go 5731 rp_sp 2479 forced_pre 10742 pblk_rd 44 pblk_wr 0 ref 10100 act 29024 pre 25924
+PASS t_p1c1r1_s1 PASS injected 0 cycles 1500000 rd 159536 wr 1048 s_go 4153 rp_sp 1768 forced_pre 9244 pblk_rd 6 pblk_wr 0 ref 10350 act 25375 pre 24768
+PASS t_p1c1r1_s2 PASS injected 0 cycles 1500000 rd 155719 wr 769 s_go 3695 rp_sp 1646 forced_pre 9080 pblk_rd 9 pblk_wr 0 ref 10350 act 26313 pre 25758
+PASS t_p1c1r1_s3 PASS injected 0 cycles 1500000 rd 153203 wr 1030 s_go 3589 rp_sp 1695 forced_pre 9289 pblk_rd 8 pblk_wr 0 ref 10350 act 24872 pre 24284

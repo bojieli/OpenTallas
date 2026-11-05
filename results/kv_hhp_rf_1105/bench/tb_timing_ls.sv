@@ -59,7 +59,7 @@ module tb_timing_ls;
     if(old.on.s_pblk!==((dut.on.rp_sp?dut.on.sb_oh:32'b0)|(dut.on.cp_sp?dut.on.c_oh:32'b0)) || old.on.c_sp!==dut.on.c_sp ||
        old.on.sprio!==dut.on.sprio || old.on.ref_due_n!==dut.on.ref_due_n || old.on.ras_z!==dut.on.ras_z || old.on.rtp_z!==dut.on.rtp_z ||
        old.on.wcand_q!==dut.on.wcand_q || (old.on.wcand_q && (old.on.wab!==dut.on.wab || old.on.wab_oh!==dut.on.wab_oh)) ||
-       old.on.legal_rd!==dut.on.legal_rd || old.on.legal_static!==dut.on.legal_static) begin
+       old.on.legal_rd!==dut.on.legal_rd || old.on.legal_write!==dut.on.legal_write || old.on.legal_static!==dut.on.legal_static) begin
       $display("FAIL cycle %0d internal: s_pblk/c_sp/sprio/ref_due_n/ras_z/rtp_z/legal",cyc); $finish; end
     if(ov!==nv || (sqne_q && o_ctx_q!==n_ctx)) begin
       $display("FAIL cycle %0d since_rst %0d old %h new %h ctx_diff %0d",cyc,sincerst,ov,nv,o_ctx_q!==n_ctx); $finish; end
