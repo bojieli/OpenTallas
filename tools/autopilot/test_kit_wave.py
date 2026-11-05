@@ -155,6 +155,13 @@ class Select(unittest.TestCase):
         self.assertEqual(skip["not in plan of record"], ["kv3_gone"])
         self.assertNotIn("kv3_hroot", [p["item"] for p in picks])          # KIT-PLACED not in take_states
 
+    def test_own_queue_job_on_parent_is_not_a_claim(self):
+        own = lambda lj, owner="KIT-WAVE-12": KW._own_wave_unit({"owner": owner, "item": "sle_su_l1", "live_job": lj})
+        self.assertTrue(own("ap-7aaad3d48876-a1 7aaad3d48876"))
+        self.assertTrue(own("ap-7aaad3d48876-a1 7aaad3d48876; ot-run pid 2830758 36e864/items/sle_su_l1__cl5ea486db/gen/sle_su_l1__cl5ea486db"))
+        self.assertFalse(own("ap-7aaad3d48876-a1 7aaad3d48876; ot-run pid 2830758 scratch/lane/run/other_dir"))
+        self.assertFalse(own("ap-7aaad3d48876-a1 7aaad3d48876", owner="DIE-QC-75"))
+
     def test_own_wave_unit_on_parent_is_not_a_claim(self):
         # DIE-QC-63/KITS 11-02: overlay_owners puts a sibling class's own wave unit on the parent row; the other
         # classes (new or released retries) must still launch, the in-flight class must not relaunch
