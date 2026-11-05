@@ -1315,8 +1315,8 @@
    "status": "SPLIT -> PLAN DESIGNS",
    "glue": "ot_hbm_svc_wb_kport_q__p25glue.sv",
    "slot_um": [
-    475.2,
-    475.2
+    527.04,
+    544.32
    ],
    "instances": 4,
    "types": [
@@ -1326,42 +1326,42 @@
    "tiles": {
     "u_fcore.u_core.u_r0": [
      [
-      86.4,
+      95.04,
       0.0
      ],
      [
-      388.8,
-      112.32
+      432.0,
+      129.6
      ]
     ],
     "u_fcore.u_core.u_r1": [
      [
-      86.4,
-      120.96
+      95.04,
+      138.24
      ],
      [
-      388.8,
-      112.32
+      432.0,
+      129.6
      ]
     ],
     "u_fcore.u_core.u_r2": [
      [
-      86.4,
-      241.92
+      95.04,
+      276.48
      ],
      [
-      388.8,
-      112.32
+      432.0,
+      129.6
      ]
     ],
     "u_fcore.u_core.u_r3": [
      [
-      86.4,
-      362.88
+      95.04,
+      414.72
      ],
      [
-      388.8,
-      112.32
+      432.0,
+      129.6
      ]
     ],
     "u_fcore.u_core.u_sw": [
@@ -1370,23 +1370,23 @@
       0.0
      ],
      [
-      77.76,
-      475.2
+      86.4,
+      544.32
      ]
     ]
    },
    "tables": {
     "ot_wbq_root": {
-     "pins_file": "cores/ot_wbq_root__388.8x112.32__d44v_split.json",
+     "pins_file": "cores/ot_wbq_root__432x129.6__d44v_split.json",
      "outline_um": [
-      388.8,
-      112.32
+      432.0,
+      129.6
      ],
      "pins": 2689,
      "clock_pins": 2,
      "clock_entry": [
-      194.4,
-      60.48
+      216.0,
+      64.8
      ],
      "faces": {
       "I": 2,
@@ -1395,16 +1395,16 @@
      }
     },
     "ot_wbq_sw": {
-     "pins_file": "cores/ot_wbq_sw__77.76x475.2__d44v_split.json",
+     "pins_file": "cores/ot_wbq_sw__86.4x544.32__d44v_split.json",
      "outline_um": [
-      77.76,
-      475.2
+      86.4,
+      544.32
      ],
      "pins": 7352,
      "clock_pins": 2,
      "clock_entry": [
-      38.88,
-      237.6
+      43.2,
+      272.16
      ],
      "faces": {
       "E": 2320,

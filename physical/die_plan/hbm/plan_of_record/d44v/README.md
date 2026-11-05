@@ -427,6 +427,6 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 
 ## Part 25 (ot_hbm_svc_wb_kport_q split, 4 instances; HBM-REFORM-B4)
 
-- **ot_hbm_svc_wb_kport_q** (flat 374k) keeps its 475.2x475.2 slot and becomes one switch tile **ot_wbq_sw** 77.76x475.2 and four root tiles **ot_wbq_root** 388.8x112.32 (2 lane groups each, 2x4 128x256 payload macros), all with registered faces, one clock.
+- **ot_hbm_svc_wb_kport_q** (flat 374k), slot 475.2x475.2 grows to 527.04x544.32, u_wbk_Q__q1 origin y -8.64 (gaps at q1: E 17.28, N 8.64, S 21.6). It becomes one switch tile **ot_wbq_sw** 86.4x544.32 (160k cells at kit synth, over the 150k target) and four root tiles **ot_wbq_root** 432x129.6 (57k cells, 2 lane groups each, 8 128x256 payload macros), all with registered faces, one clock.
 - **Form**: root pushes sectors with a credit of 4 per group; sw queues per group and switches onto 16 K ports at most 8 per edge (flat 16). Order on K changes; each PC still gets its sectors in stream order per group.
-- **Cycles**: physical/die_plan/hbm/reform_1103/cycles/wb_kport.tsv. Scripts results/die_hbm_1104/reform_b/split_p25/.
+- **Cycles**: physical/die_plan/hbm/reform_1103/cycles/wb_kport.tsv. Scripts results/die_hbm_1104/reform_b/split_p25/ (mk_p25.py pre, then mk_split.py).
