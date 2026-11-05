@@ -94,7 +94,17 @@ module ot_s81ph_link_ep_safe4 #(
     // The logical occupancy fill (c_full / overflow) still counts c_acc at once; the physical occupancy fillw / tail /
     // drain count the landed write (acc_p = c_acc 2 edges later), so a read never precedes its landed write (OLD-read
     // forwarding unchanged).  Credits return 2 edges later (freed counts drains).  +2 receive edges, priced in the kit.
-    parameter integer WRL = 0
+    parameter integer WRL = 0,
+    // RBL (FORM-COLL 11-05, opt-in, default 0 = unchanged netlist): REPLAY BUFFER LANDING, the whole replay memory subsystem
+    // one registered edge behind the central send control, so the next-state cone (credits / una / nxt -> rdy, snd_i) stops
+    // at the central flops and no longer crosses the tile to the 18 replay address groups (rf4 TT: 16 of 32 setup misses
+    // ended on g_address.ready_r, -82.7, ~280 ps of it this broadcast).  Each group holds: ready_r = accept one edge late
+    // (the group write enable), rp_r = snd_i one edge late, wp_r = local count of that enable; write data = a_in (already
+    // {in_last,in_data} one edge late).  Every memory input is its RBL = 0 value delayed by exactly one edge, so rb_q is the
+    // RBL = 0 rb_q one edge late; the TX pipe stage A outputs (a_v, a_snd, a_in, a_rep selects) take one more edge to stay
+    // aligned.  Central control state is cycle-identical to RBL = 0 from the same inputs.  +1 TX edge (launch -> f_tx), in the
+    // TOK ledger.  ATO deliberately keeps its RBL = 0 value: its margin (2 * KEEPALIVE + 32) absorbs the extra edge.
+    parameter integer RBL = 0
 ) (
     input  wire                     clk,
     input  wire [RN-1:0]            rst_v,
@@ -263,10 +273,20 @@ module ot_s81ph_link_ep_safe4 #(
     wire [FPW-1:0]  l_pay  = {snd, l_last, l_data};
     // PIPE TX stages A (launch, replay select, in word) / B (payload from the registered replay read)
     reg             a_v, b_v; reg [SEQW-1:0] a_snd; reg [W:0] a_in; reg [FPW-1:0] b_pay;
-    always @(posedge clk or negedge rst_v[0]) if (!rst_v[0]) begin a_v <= 1'b0; b_v <= 1'b0; end else begin a_v <= launch; b_v <= a_v; end
+    // RBL: a0_* = the extra landing edge after stage A (RBL = 0: not used, ax_* = stage A)
+    reg             a0_v; reg [SEQW-1:0] a0_snd; reg [W:0] a0_in;
+    wire            ax_v   = (RBL != 0) ? a0_v : a_v;
+    wire [SEQW-1:0] ax_snd = (RBL != 0) ? a0_snd : a_snd;
+`ifdef OT_COLL_RBL_MUT_IN
+    wire [W:0]      ax_in  = a_in;     // mutant: the fresh-word path misses the landing edge
+`else
+    wire [W:0]      ax_in  = (RBL != 0) ? a0_in : a_in;
+`endif
+    always @(posedge clk or negedge rst_v[0]) if (!rst_v[0]) begin a_v <= 1'b0; b_v <= 1'b0; a0_v <= 1'b0; end else begin a_v <= launch; b_v <= ax_v; a0_v <= (RBL != 0) && a_v; end
     always @(posedge clk) begin
         a_snd <= snd; a_in <= {in_last, in_data};
-        b_pay[FPW-1 -: SEQW] <= a_snd;
+        a0_snd <= (RBL != 0) ? a_snd : {SEQW{1'b0}}; a0_in <= (RBL != 0) ? a_in : {(W+1){1'b0}};
+        b_pay[FPW-1 -: SEQW] <= ax_snd;
     end
     // a_rep: kept copies, one per ARS payload bits, from two kept copies of rep_r (same D as rep_r)
     localparam integer NAR = (W + 1 + ARS - 1) / ARS;
@@ -274,10 +294,17 @@ module ot_s81ph_link_ep_safe4 #(
     generate for (genvar ar = 0; ar < NAR; ar = ar + 1) begin : g_arep
         localparam integer LO = ar * ARS, HI = ((ar + 1) * ARS > W + 1) ? W + 1 : (ar + 1) * ARS;
         (* keep = "true" *) reg a_rep_c, a_in_c;   // one-hot {replay, in} select copies: one AND-OR term per bit each
+        reg a0_rep_c, a0_in_c;                     // RBL: the selects land with rb_q one edge later
+`ifdef OT_COLL_RBL_MUT_SEL
+        wire ax_rep = a_rep_c, ax_inc = a_in_c;    // mutant: the selects miss the landing edge
+`else
+        wire ax_rep = (RBL != 0) ? a0_rep_c : a_rep_c, ax_inc = (RBL != 0) ? a0_in_c : a_in_c;
+`endif
         always @(posedge clk) begin
             a_rep_c <= rep_ra[(2 * ar) / NAR];
             a_in_c  <= !rep_ra[(2 * ar) / NAR];
-            b_pay[HI-1:LO] <= ({(HI-LO){a_rep_c}} & rb_q[HI-1:LO]) | ({(HI-LO){a_in_c}} & a_in[HI-1:LO]);
+            a0_rep_c <= (RBL != 0) && a_rep_c; a0_in_c <= (RBL != 0) && a_in_c;
+            b_pay[HI-1:LO] <= ({(HI-LO){ax_rep}} & rb_q[HI-1:LO]) | ({(HI-LO){ax_inc}} & ax_in[HI-1:LO]);
         end
     end endgenerate
     wire [FPW-1:0]  t_pay    = PIPE ? b_pay : l_pay;
@@ -429,23 +456,35 @@ module ot_s81ph_link_ep_safe4 #(
             (* keep="true" *) reg [IW-1:0] wp_r,rp_r;
             (* keep="true" *) reg ready_r;
 `ifdef OT_COLL_NATIVE32_OFF
-            assign wr_raw[mg]=in_valid && ready_r;
-            wire wr=wr_kp[mg];
+            assign wr_raw[mg]=(RBL != 0) ? 1'b0 : (in_valid && ready_r);
+            wire wr=(RBL != 0) ? ready_r : wr_kp[mg];
 `else
             wire wr=in_valid && ready_r;
 `endif
             assign wr_group[mg]=wr;
             assign wa_copy[IW*mg+:IW]=wp_r;
             assign ra_copy[IW*mg+:IW]=rp_r;
+            // RBL: ready_r holds the landed write enable (accept one edge late), rp_r the landed read index (snd_i one edge
+            // late); both D are central registered / accept terms, no next-state cone.
+`ifdef OT_COLL_RBL_MUT_WR
+            wire rbl_wr_d = (mg == 0) ? 1'b0 : accept;     // mutant: group 0 never writes
+`else
+            wire rbl_wr_d = accept;
+`endif
+`ifdef OT_COLL_RBL_MUT_RP
+            wire [IW-1:0] rbl_rp_d = accept_a ? sndinx_1k : sndinx_0k;     // mutant: the read index misses the landing edge
+`else
+            wire [IW-1:0] rbl_rp_d = snd_i;
+`endif
             always @(posedge clk or negedge mem_rst_n[MEM_NS+mg])
-              if(!mem_rst_n[MEM_NS+mg]) begin wp_r<=0;rp_r<=0;ready_r<=1;end
+              if(!mem_rst_n[MEM_NS+mg]) begin wp_r<=0;rp_r<=0;ready_r<=(RBL == 0);end
               else begin
                 wp_r<=wp_r+IW'(wr);
-                rp_r<=wr?sndinx_1k:sndinx_0k;
-                ready_r<=wr?rdy_1k:rdy_0k;
+                rp_r<=(RBL != 0) ? rbl_rp_d : (wr?sndinx_1k:sndinx_0k);
+                ready_r<=(RBL != 0) ? rbl_wr_d : (wr?rdy_1k:rdy_0k);
               end
 `ifndef SYNTHESIS
-            always @(posedge clk) if(rst_n && mem_rst_n[MEM_NS+mg])
+            always @(posedge clk) if(RBL == 0 && rst_n && mem_rst_n[MEM_NS+mg])
               if({wp_r,rp_r,ready_r,wr,rdy_k} !== {nxt_i,snd_i,rdy_r,accept,{4{rdy_r}}})
                 $fatal(1,"COLL replay group state differs group%0d",mg);
 `endif
@@ -459,7 +498,7 @@ module ot_s81ph_link_ep_safe4 #(
           .MUT(0)
 `endif
         ) u_m(.clk(clk),.rst_n(mem_rst_n[0+:MEM_NS]),.we(accept),.we_group(wr_group),
-          .wa(wa_copy),.wd({in_last,in_data}),.re(1'b1),.re_group({MEM_NA{1'b1}}),.ra(ra_copy),.q(rb_q));
+          .wa(wa_copy),.wd((RBL != 0) ? a_in : {in_last,in_data}),.re(1'b1),.re_group({MEM_NA{1'b1}}),.ra(ra_copy),.q(rb_q));
     end else begin:g_rb_legacy
     ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(RP), .SRAM(SRAM), .WREG(MWR)) u_rb (.clk(clk), .rst_n(rst_n),
         .we(accept), .wa(nxt_i), .wd({in_last, in_data}), .re(1'b1), .ra(PIPE ? snd_i : snd_i_nx), .q(rb_q));

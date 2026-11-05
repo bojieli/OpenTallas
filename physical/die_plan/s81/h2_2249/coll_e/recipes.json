@@ -28,7 +28,15 @@
    }
   ],
   "orfs_vars": {
-   "OT_FSM_NONE_WIRES": "hunt"
-  }
+   "OT_FSM_NONE_WIRES": "hunt",
+   "OT_CKKM_K": "32",
+   "OT_CKKM_PORT": "ck[0]",
+   "PRE_CTS_TCL": "/work/form_pre_cts.tcl",
+   "CTS_ARGS": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5 -root_buf BUFx24_ASAP7_75t_R -buf_list BUFx12_ASAP7_75t_R"
+  },
+  "pre_cts_extra": "physical/common_flow/clock_split_km.tcl",
+  "insertion_ps": 405.0,
+  "insertion_ff_ps": 340.0,
+  "insertion_basis": "FORM-COLL 11-05 estimate: km32 + BUFx12 tree placement-RC p50 377, rf4 routed/placement delta +42; FF ratio 0.84 measured on rf4 pin flops; re-bound to the measured post-CTS pin-flop p50 if it differs"
  }
 }

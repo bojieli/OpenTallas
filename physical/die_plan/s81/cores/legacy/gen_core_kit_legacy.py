@@ -1736,6 +1736,11 @@ def main():
              if rt else []),
            # FLOW-FIX 10-25 (core_flow, LAST so its override PRE/POST_GLOBAL_ROUTE_TCL win)
            *(flow_cfg if modern else [])]
+    if rec.get("pre_cts_extra"):
+        # FORM-COLL 11-05, opt-in: a spec pre_cts_extra clock split staged and sourced after the kit's own PRE_CTS hook.
+        extra = Path(rec["pre_cts_extra"]).name
+        shutil.copy2(REPO / rec["pre_cts_extra"], kd / extra)
+        (kd / "form_pre_cts.tcl").write_text(f"source /work/hold_budget.tcl\nsource /work/{extra}\n")
     if rt:
         (kd / "regional_pre_cts.tcl").write_text("source /work/face_capture_release.tcl\nsource /work/regional_taps.tcl\n")
         cfg += ["export PRE_CTS_TCL = /work/regional_pre_cts.tcl"]

@@ -15,7 +15,8 @@
   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
  ],
  "params": {
-  "CORE_CRED": 12
+  "CORE_CRED": 12,
+  "RBL": 1
  },
  "clock_port": "ck",
  "reset_ports": [
@@ -32,7 +33,7 @@
    "inst": "*u_gb.u_sf.g_bank?0?.u_m",
    "at": [
     15.552,
-    21.6
+    16.32
    ],
    "orient": "MX"
   },
@@ -42,7 +43,7 @@
    "inst": "*u_gb.u_sf.g_bank?1?.u_m",
    "at": [
     61.128,
-    21.6
+    16.32
    ],
    "orient": "MX"
   },
@@ -52,7 +53,7 @@
    "inst": "*u_gb.u_sf.g_bank?2?.u_m",
    "at": [
     106.704,
-    21.6
+    16.32
    ],
    "orient": "MX"
   },
@@ -62,7 +63,7 @@
    "inst": "*u_gb.u_sf.g_bank?3?.u_m",
    "at": [
     154.656,
-    21.6
+    16.32
    ],
    "orient": "MX"
   },
@@ -72,7 +73,7 @@
    "inst": "*u_gb.u_sf.g_bank?4?.u_m",
    "at": [
     200.232,
-    21.6
+    16.32
    ],
    "orient": "MX"
   },
@@ -82,7 +83,7 @@
    "inst": "*u_gb.u_sf.g_bank?5?.u_m",
    "at": [
     245.808,
-    21.6
+    16.32
    ],
    "orient": "MX"
   },
@@ -92,7 +93,7 @@
    "inst": "*u_gb.u_sf.g_bank?6?.u_m",
    "at": [
     15.552,
-    47.52
+    42.24
    ],
    "orient": "MX"
   },
@@ -102,7 +103,7 @@
    "inst": "*u_gb.u_sf.g_bank?7?.u_m",
    "at": [
     61.128,
-    47.52
+    42.24
    ],
    "orient": "MX"
   },
@@ -112,7 +113,7 @@
    "inst": "*u_gb.u_sf.g_bank?8?.u_m",
    "at": [
     106.704,
-    47.52
+    42.24
    ],
    "orient": "MX"
   },
@@ -122,7 +123,7 @@
    "inst": "*u_gb.u_sf.g_bank?9?.u_m",
    "at": [
     154.656,
-    47.52
+    42.24
    ],
    "orient": "MX"
   },
@@ -132,7 +133,7 @@
    "inst": "*u_ski.u_head.g_bank?0?.u_m",
    "at": [
     15.552,
-    232.752
+    227.472
    ],
    "orient": "R0"
   },
@@ -142,7 +143,7 @@
    "inst": "*u_ski.u_head.g_bank?1?.u_m",
    "at": [
     61.128,
-    232.752
+    227.472
    ],
    "orient": "R0"
   },
@@ -152,7 +153,7 @@
    "inst": "*u_ski.u_head.g_bank?2?.u_m",
    "at": [
     106.704,
-    232.752
+    227.472
    ],
    "orient": "R0"
   },
@@ -162,7 +163,7 @@
    "inst": "*u_ski.u_head.g_bank?3?.u_m",
    "at": [
     154.656,
-    232.752
+    227.472
    ],
    "orient": "R0"
   },
@@ -172,7 +173,7 @@
    "inst": "*u_ski.u_head.g_bank?4?.u_m",
    "at": [
     200.232,
-    232.752
+    227.472
    ],
    "orient": "R0"
   },
@@ -182,7 +183,7 @@
    "inst": "*u_ski.u_head.g_bank?5?.u_m",
    "at": [
     245.808,
-    232.752
+    227.472
    ],
    "orient": "R0"
   },
@@ -192,7 +193,7 @@
    "inst": "*u_ski.u_head.g_bank?6?.u_m",
    "at": [
     15.552,
-    258.672
+    253.392
    ],
    "orient": "R0"
   },
@@ -202,7 +203,7 @@
    "inst": "*u_ski.u_head.g_bank?7?.u_m",
    "at": [
     61.128,
-    258.672
+    253.392
    ],
    "orient": "R0"
   },
@@ -212,7 +213,7 @@
    "inst": "*u_ski.u_head.g_bank?8?.u_m",
    "at": [
     106.704,
-    258.672
+    253.392
    ],
    "orient": "R0"
   },
@@ -222,7 +223,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?0?.g_depth?0?.g_256.u_m",
    "at": [
     15.552,
-    286.992
+    281.712
    ],
    "orient": "MX"
   },
@@ -232,7 +233,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?0?.g_depth?1?.g_256.u_m",
    "at": [
     61.128,
-    286.992
+    281.712
    ],
    "orient": "MX"
   },
@@ -242,7 +243,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?1?.g_depth?0?.g_256.u_m",
    "at": [
     106.704,
-    286.992
+    281.712
    ],
    "orient": "MX"
   },
@@ -252,7 +253,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?1?.g_depth?1?.g_256.u_m",
    "at": [
     154.656,
-    286.992
+    281.712
    ],
    "orient": "MX"
   },
@@ -262,7 +263,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?2?.g_depth?0?.g_256.u_m",
    "at": [
     200.232,
-    286.992
+    281.712
    ],
    "orient": "MX"
   },
@@ -272,7 +273,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?2?.g_depth?1?.g_256.u_m",
    "at": [
     245.808,
-    286.992
+    281.712
    ],
    "orient": "MX"
   },
@@ -282,7 +283,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?3?.g_depth?0?.g_256.u_m",
    "at": [
     15.552,
-    339.264
+    333.984
    ],
    "orient": "MX"
   },
@@ -292,7 +293,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?3?.g_depth?1?.g_256.u_m",
    "at": [
     61.128,
-    339.264
+    333.984
    ],
    "orient": "MX"
   },
@@ -302,7 +303,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?4?.g_depth?0?.g_256.u_m",
    "at": [
     106.704,
-    339.264
+    333.984
    ],
    "orient": "MX"
   },
@@ -312,7 +313,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?4?.g_depth?1?.g_256.u_m",
    "at": [
     154.656,
-    339.264
+    333.984
    ],
    "orient": "MX"
   },
@@ -322,7 +323,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?5?.g_depth?0?.g_256.u_m",
    "at": [
     200.232,
-    339.264
+    333.984
    ],
    "orient": "MX"
   },
@@ -332,7 +333,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?5?.g_depth?1?.g_256.u_m",
    "at": [
     245.808,
-    339.264
+    333.984
    ],
    "orient": "MX"
   },
@@ -342,7 +343,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?6?.g_depth?0?.g_256.u_m",
    "at": [
     15.552,
-    391.536
+    386.256
    ],
    "orient": "MX"
   },
@@ -352,7 +353,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?6?.g_depth?1?.g_256.u_m",
    "at": [
     61.128,
-    391.536
+    386.256
    ],
    "orient": "MX"
   },
@@ -362,7 +363,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?7?.g_depth?0?.g_256.u_m",
    "at": [
     106.704,
-    391.536
+    386.256
    ],
    "orient": "MX"
   },
@@ -372,7 +373,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?7?.g_depth?1?.g_256.u_m",
    "at": [
     154.656,
-    391.536
+    386.256
    ],
    "orient": "MX"
   },
@@ -382,7 +383,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?8?.g_depth?0?.g_256.u_m",
    "at": [
     200.232,
-    391.536
+    386.256
    ],
    "orient": "MX"
   },
@@ -392,7 +393,7 @@
    "inst": "*u_ep.g_fifo_safe.u_m.g_bank?8?.g_depth?1?.g_256.u_m",
    "at": [
     245.808,
-    391.536
+    386.256
    ],
    "orient": "MX"
   },
@@ -402,7 +403,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?0?.g_depth?0?.g_256.u_m",
    "at": [
     15.552,
-    75.84
+    70.56
    ],
    "orient": "MX"
   },
@@ -412,7 +413,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?0?.g_depth?1?.g_256.u_m",
    "at": [
     61.128,
-    75.84
+    70.56
    ],
    "orient": "MX"
   },
@@ -422,7 +423,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?1?.g_depth?0?.g_256.u_m",
    "at": [
     106.704,
-    75.84
+    70.56
    ],
    "orient": "MX"
   },
@@ -432,7 +433,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?1?.g_depth?1?.g_256.u_m",
    "at": [
     154.656,
-    75.84
+    70.56
    ],
    "orient": "MX"
   },
@@ -442,7 +443,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?2?.g_depth?0?.g_256.u_m",
    "at": [
     200.232,
-    75.84
+    70.56
    ],
    "orient": "MX"
   },
@@ -452,7 +453,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?2?.g_depth?1?.g_256.u_m",
    "at": [
     245.808,
-    75.84
+    70.56
    ],
    "orient": "MX"
   },
@@ -462,7 +463,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?3?.g_depth?0?.g_256.u_m",
    "at": [
     15.552,
-    128.112
+    122.832
    ],
    "orient": "MX"
   },
@@ -472,7 +473,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?3?.g_depth?1?.g_256.u_m",
    "at": [
     61.128,
-    128.112
+    122.832
    ],
    "orient": "MX"
   },
@@ -482,7 +483,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?4?.g_depth?0?.g_256.u_m",
    "at": [
     106.704,
-    128.112
+    122.832
    ],
    "orient": "MX"
   },
@@ -492,7 +493,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?4?.g_depth?1?.g_256.u_m",
    "at": [
     154.656,
-    128.112
+    122.832
    ],
    "orient": "MX"
   },
@@ -502,7 +503,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?5?.g_depth?0?.g_256.u_m",
    "at": [
     200.232,
-    128.112
+    122.832
    ],
    "orient": "MX"
   },
@@ -512,7 +513,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?5?.g_depth?1?.g_256.u_m",
    "at": [
     245.808,
-    128.112
+    122.832
    ],
    "orient": "MX"
   },
@@ -522,7 +523,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?6?.g_depth?0?.g_256.u_m",
    "at": [
     15.552,
-    180.384
+    175.104
    ],
    "orient": "MX"
   },
@@ -532,7 +533,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?6?.g_depth?1?.g_256.u_m",
    "at": [
     61.128,
-    180.384
+    175.104
    ],
    "orient": "MX"
   },
@@ -542,7 +543,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?7?.g_depth?0?.g_256.u_m",
    "at": [
     106.704,
-    180.384
+    175.104
    ],
    "orient": "MX"
   },
@@ -552,7 +553,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?7?.g_depth?1?.g_256.u_m",
    "at": [
     154.656,
-    180.384
+    175.104
    ],
    "orient": "MX"
   },
@@ -562,7 +563,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?8?.g_depth?0?.g_256.u_m",
    "at": [
     200.232,
-    180.384
+    175.104
    ],
    "orient": "MX"
   },
@@ -572,7 +573,7 @@
    "inst": "*u_ep.g_rb_safe.u_m.g_bank?8?.g_depth?1?.g_256.u_m",
    "at": [
     245.808,
-    180.384
+    175.104
    ],
    "orient": "MX"
   }
@@ -771,7 +772,7 @@
   "OT_COLL_NATIVE32",
   "OT_COLL_NATIVE32_OFF"
  ],
- "structural_change": "H2 authorized LP hard-child: same55SRAM lattice, N-band crop, exactCRED12/sourceinterface; no RTL/cycle change. | event3-h2fix-1030: macro list in name order (FIFO N / replay S as declared), 6 in-core clock islands, family s81_coll.",
+ "structural_change": "H2 authorized LP hard-child: same55SRAM lattice, N-band crop, exactCRED12/sourceinterface; no RTL/cycle change. | event3-h2fix-1030: macro list in name order (FIFO N / replay S as declared), 6 in-core clock islands, family s81_coll. | FORM-COLL 11-05: RBL = 1 replay buffer landing (+1 TX edge); macro stack y -5.28 um (same lattice, N band 7.74 -> 13.02 um, S band 21.6 -> 16.32), 1370 N-face flops had 3.4 um of placeable band.",
  "pre_cts_extra": [
   "physical/common_flow/clock_split_km.tcl"
  ],
