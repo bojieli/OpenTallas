@@ -1,0 +1,50 @@
+row	die	source_post	change	cycles_or_edges	on_main	sha	priced	vehicle_updated	tok_s_effect	basis	queue_lines
+HBM-00	HBM	TOK-VERIFY-1 11-03 21:07; reproduced by SS30 11-04	reference and lane table: d44x_expected; main lanes = d44v2 (IDX+1, sfu+7) reform_rebaseline 0 changed base->main	lanes 0 changed since 07:35	yes	cb98b2e2324	yes	n/a	1667.99 ref; 1664.25 d44v2 lanes; 1660.13 +SFU4+subtree17	MEASURED model S2 hbm_price_d44t, base+record asserted; no token sim	
+HBM-01	HBM	DIE-HBM-61 11-03; merged 11:39 ruling, I43	tailx_rest r3 port +84 (was +70)	+84 result_v, sk_in_*; L 506->590	yes	866789f062c	yes	no: compiler emits 507	0 on S2 at +70, +84: 1654.05 both; bound -2.39% FUSED charge from SS26	MEASURED model (HC_MIX_POST slack); RTL table CHECKED	15197,15206,15249
+HBM-02	HBM	DIE-HBM-66 22:54, 23:06	Sinkhorn part 16 port (A): tail launch->result_v 592->1054, Sinkhorn segment 312->774	+462 per tail unit	no	local claude/die-hbm-66-skfsr-1105	running	no	pending; see HBM-99 rows	bench CHECKED by DIE-HBM-66; price SS30 running	17122,17349,17361
+HBM-03	HBM	DIE-HBM-66 20:32, I61	pcol part 8: command +2, fault +4 end to end	SU +2; fault +4 sticky	yes	b582e074635 (I61 1fd53e9b4bf)	yes	no: layer_images START_ADVANCE still 9	-0.31% alone; 1654.05->1648.90 cumulative; SU+4 bound 1643.78	MEASURED model; mapping SS27; kit-shell limit open	14249,16811
+HBM-04	HBM	DIE-HBM-61 11-03 corelat fold	fold: SM+7, HC_PRE_NORM+8, HC_POST+4	per compiler_core_delta S2	yes	d44v on main	yes	no: no compiler reads core tables	1660.13->1654.05 (-0.37%)	MEASURED model	
+HBM-05	HBM	DIE-HBM-61 11-03	subtree32 +17 qps due; root absorbs as XRU+17	SYS_LAT +17, compiler RAW0 +17	yes	d44v on main	yes (in IDX+18)	no: hc_safe2 XRD=XRU=0; no bind sets XRU	in 1660.13	MEASURED model; compiler read CHECKED	
+HBM-06	HBM	DIE-HBM-66 11:39 etc, I47	cuts-rdbf q2 reduce: 0 declared	0 declared	yes	468ce5a00c5, a3c0913a272	n/a 0	n/a	0	table declared; sim_recipe not read by me	15198,15249
+HBM-07	HBM	DIE-HBM-66 20:22, 20:5x	p9/p13/p14 topk fix, outlines	0 cycles (topk is a miscompile fix)	yes	8484b5fdb0b, cac53040be6, 987b6c73126, 75cf723824d	n/a 0	n/a	0	READY text; not re-derived	
+HBM-08	HBM	DIE-HBM-66	xp_aq cuts-xprx SM+1, needs QL 13->14	SM +1	no	166b824c5c5	yes bound	no	-0.032% bound	SS27 model, not re-run	
+HBM-09	HBM	DIE-HBM-6x / REFORM-B 23:07	kport RE-FORM and K-side switch	unknown	no	08090ef9ad0	no: no per-K counter	no	unpriced	stated reason: S2 has no K-port term	14249
+HBM-10	HBM	HBM-REFORM-B 23:07; DIE-HBM-66 22:53	REFORM-A/B splits (pdie, selector, kport, rel_id, q2n2, ctl, glue_nw_t, topk_link, q3_body, opstore, gq_issue)	none posted yet; selector, rel_id need pipelining	no	none	no	no	pending cycles; notes to SS30-TOK	REFORM-B text; estimates only	17370
+HBM-11	HBM	DIE-HBM-66 16:51, 10:04	kshare4c fills +1 hbm edge; qw_dec C4 BQPIPE	+1 fill; qw_dec unread	no / partly	none read	no	no	unpriced	queue only	
+HBM-99a	HBM	SS30 23:1x	main now cumulative: IDX+18 SM+7 SU+2 HC_PRE_NORM+8 HC_POST+4 tail+84, sfu+11	all merged HBM cycles in the model	yes	cb98b2e2324	yes	no	1648.90 (-1.145% vs 1667.99)	MEASURED model, not a token sim	
+HBM-99b	HBM	SS30 23:1x	main now bound: + glue+1, IDX+19 SM+8 SU+3 COLL+1 FUSED+1	bound	yes	cb98b2e2324	yes	no	1643.46 (-1.471%)	MEASURED model bound	
+S81-01	S81	DIE-S81-56 20:06, I60	gl5: HC_LAT 1028/1026->1149/1147	+121 (gl4 +9 earlier, delta 130)	yes	57480a143ff (fa6ffab1b05)	pending	yes: lower_gu read RTL define; bench rerun by SS30	pending	tree.txt 1149 1147 CHECKED; L0 bench reading	16699,16748,16749,16794,16856,16857
+S81-02	S81	DIE-S81-56 21:2x, I63	bf_col3 rfh3: BF floor 231->234, BF emission +3, FP DEQ 3	+3 BF sums	yes	a9c706bd90e	pending	yes: bf_col_form DEFAULT_FORM rfh3, FLOOR_MEASURED empty	pending	import CHECKED; 234 is predicted	16984
+S81-03	S81	DIE-S81-54 07:37, I35	bk_g RF7/form 8	0 vs RF6; RF6 lane word +1 inside bk_sel, V pin->lane 5->6; rung transit 5 unchanged	yes	d3001422956	n/a 0 vs RF6	yes: BKSEL_TRANSIT=5 agrees	0	constant read CHECKED; run_bk_bench not run	14258
+S81-04	S81	DIE-S81-54 06:4x, DIE-S81-56 18:5x	xfin form 4 eng_finish: go->r_v 469->485	+16 bench	no	local b338548d57 absent on hub	pending	no	pending	bench reading, DS54; event READY coming	14249,14265,14268,16588
+S81-05	S81	DIE-S81-56 20:4x	norm_finish FORM-NF: go->r_v 259->272	about +13, bench read, not a bound	no	xfin event branch	pending	no	pending	bench seed 1 only; poster says not a bound	16791
+S81-06	S81	DIE-S81-53 07:1x	bkq RFH3: +1 lane, f_c, f_cr	+1	no	c3fb92ddf12	pending	no	pending	note text; not read in RTL	14249,14265
+S81-07	S81	DIE-S81-56 20:59	iqkv capc5r slices sid//2==3 capture	+6 edges on source	no	fcb3f692be2	pending	no: final_ffn_source_1131 still names capc2_w3	pending	poster CHECKED; merges with xfin event	16862,16889,16891
+S81-08	S81	DIE-S81-53 05:40, DIE-S81-56 09:45	RF-EG: eg split, +1 i_v->g_v (222)	+1	yes	dca4a89229f, 56055ff212a	pending	not read	pending	note owed since 05:40	14761,14766
+S81-09	S81	DIE-S81-53 09:23	capend capc5r on c1x_C	capture lag not stated	yes	482a925cd41 (25a3afa5927)	no	not read	pending	to read	
+S81-10	S81	rfj; xrt3	xrt/rom_q 0 cycles; xrt3 FOREG fault +1	0; fault only	yes	5440cdcc4a9	n/a 0	n/a	0	READY text	
+S81-99	S81	SS30 23:0x	plan lane table base->main	0 changed; AR 847.2, MTP 2725.7	yes	cb98b2e2324	yes	n/a	847.2/2725.7 lanes only, core cycles not added yet	MEASURED composer lanes	
+HEAD-01	HEAD	DIE-HEAD-61 07:43; l48ub POR	l48ua/l48ub K delta: 24 straps turn*a t_i 60->62, turn*b 59->60	K +2, +1 at turn	yes	76e84977538, 0cdf615e684	yes bound	no: DIE_SPINE is pre-l48x	-0.0002% as l48tb (turn_a +1 data)	l48tb price not re-run	14249,14305,14308
+HEAD-02	HEAD	DIE-HEAD 11-04	meshidle IDLE_ZERO	0 cycles	yes	b54e4943154	n/a 0	n/a	0	bench PASS by poster	
+HEAD-03	HEAD	DIE-HEAD-62 21:42, 21:49	hd_ctl forms	none for now; cut decided after 3_place	no	none	no	no	0 for now	poster text	17020,17025,17043,17045
+HEAD-04	HEAD	SS27-TOK; DIE-HEAD-61 07:43	DIE_SPINE vehicle port l48ub, 16->25 wrappers	n/a vehicle	no	none	no	no: no owner	no token on current RTL; 1258.9 serial model stands	0.5-1 lane-day estimate, inferred	14313,14396
+KV-01	KV	DIE-KV-69 09:32, 09:41	peer pl2 mux: rank RX +1, TX +1 + up to 1 grant, status +1, reset +1	class9 lifecycle	no	dd798fe502d	stated: not per token	no	0 expected per token; confirm from source pending	source read by poster; SS30 confirm pending	14282,14284,14632,14633,14640,14701,14704,14727,14728
+KV-02	KV	DIE-KV-70/PEER 21:46	PEER-RF3: link rx class9 +2, TX +1, status +1, alloc +1, frame +1, class5 +1, lifecycle, cancel, join, dispatch rows	full list in 21:46; unsigned	no	707540ce39e	no	no	pending read of the list	poster CHECKED	17039
+KV-03	KV	DIE-KV-6x I59	pcties LEC tie forms	0 bit-exact after reset/first load	yes	578195d009e	n/a 0	n/a	0	READY text	
+KV-04	KV	DIE-KV-67 06:33	PC split rf3s; rgate reset; OT_KV_PC_FORM=rf3s named for TOK	0 data claimed; vehicle env needs form	yes	8b6c251e5de	no	no: vehicle c46/c47 env to check	0 expected	READY text	
+KV-05	KV	DIE-KV-70 14:53, 13:xx	io_cor, hub_Ei, sys_c, ftwreg: boot cycles from START W+R, 0 data	boot only	yes	7616b705f9, f4b597df4c	n/a boot	n/a	0 per token	READY text	15694
+KV-06	KV	DIE-KV-69 13:xx	ectlk q0 cfg_q +1 on cfg, static strap	0 data; load one edge later	kit only	none	n/a	n/a	0	DIE-KV-69 LEC read	
+KV-07	KV	DIE-KV-68/69	KV whole-die vehicle veh60c46 boot PASS, token abort first_fault 39946; veh60c47 running	vehicle	n/a	intel1 dkv69/veh	no token result	in progress: DIE-KV-69	4403.2 Qwen ROM model stands, no token sim	queue read; rerun not read by me	
+KV-99	KV	SS30 23:0x	plan lane table base->main	0 changed	yes	cb98b2e2324	yes	n/a	4403.2 serial bound unchanged	MEASURED rebaseline	
+QC-01	QC	DIE-QC-71 20:54	SC carve event: 98 lanes +cycles (11-03 plan measure); xh2.s_d bound 26 vs 25	98 lanes	no	local claude/dq71-sc-event-1104	no: lanes not final	no	pending; re-baseline when READY	poster measure, 11-03 plan	16869,16874
+QC-02	QC	DIE-QC-70 event; fall	WFALL ring K+1 on 24 straps slw_stm_v2 WREG; pinreg param; red2; hctap; wstart	K+1 on 24 straps; 0 data inferred	yes	cff1c655a56, bf1e2233ce0, 91ac681d921	no	no: no QC vehicle compile	0 lanes changed; 4403.2 stands	rebaseline MEASURED; data inferred	14475,14496,14502,14548,14577
+QC-03	QC	DIE-QC-71 22:33	collector nodes plan only	0	yes	5ac414b53e3	n/a 0	n/a	0	READY keys	
+QC-04	QC	DIE-QC-70 08:52..; COORD 08:54, 09:0x	QC vehicle pair carve: dry carve, no compile; event now on main	vehicle	n/a	epyc2 die-qc-70 carve2	no	no owner -> SS30 can run it	none	queue	14496,14502,14548,14577
+MAP-14249	-	queue line 14249	SS27 park list: rows HEAD-01, S81-04, S81-06, HBM-09, HBM-03								
+MAP-14268	-	queue line 14268	S81-04								
+MAP-14279	-	queue line 14279	park order								
+MAP-14292	-	queue line 14292	SS28-RESIGN start, no cycles								
+MAP-14303	-	queue line 14303	KV count row macro_place sweep, not a cycle row: not TOK, no row								
+MAP-14629	-	queue line 14629	KV relay_sites 0 cycles; +1 only if estimate fails: no row								
+MAP-15264	-	queue line 15264	QC su_lane_w sync/async: 0 data cycles, no row								
+MAP-16862	-	queue line 16862	S81-07								
