@@ -786,6 +786,15 @@ def edge_clock_pins(P, tn):
             for e in P.types[tn].get("clock", {}).get("edge_clocks", [])]
 
 
+# DIE-QC-75 11-05 (QC coll_s FF hold -320 ps): plain PHY-edge clocks (clk_coll, clk_serdes, clk_d2d: one die-period port with
+# no forwarded ring, unlike fclk_in_*) get one tree per region of the same size as the clk taps, balanced to the same plan
+# insertion: clock_edge_split.tcl (pre-CTS root buffers) + clock_edge_balance.tcl (POST_CTS pad).  The kit decides by sink
+# count, so a small domain is left alone.  Types without such a port generate byte-identical kits.
+def edge_split_ports(P, tn):
+    return [n for n, _x, _y, m in edge_clock_pins(P, tn) if m == 1 and not n.startswith("fclk_in")
+            and not edge_source_latency(P, tn, n)]
+
+
 # DIE-HEAD-21 (opt-in plan clock.edge_clocks[].source_latency_ps): a source-forwarded edge clock (count-aligned ring
 # write clock) reaches its port at the SENDER's export arrival + wire, not at 0 while its data inputs are timed on the
 # vclk insertion (DH19: 2272 ring writers -130.6 ps at source latency 0).  The measured range is a source latency on
@@ -794,6 +803,10 @@ def edge_clock_pins(P, tn):
 # both checks within a corner.  The corner itself cannot share one SDC (same reason as the vclk, ruling 9.7): TT goes
 # into constraint.sdc, FF into the core_taps_ff.sdc corner overlay (OT_CORE_TAP_CORNER_FILE, read by vclk_corner.tcl
 # ff / postcts FF gate / sign-off FF; vclk_corner.tcl tt re-applies the constraint.sdc lines).  Absent: no line.
+def edge_source_latency(P, tn, port):
+    return any(e["port"] == port and "source_latency_ps" in e for e in P.types[tn].get("clock", {}).get("edge_clocks", []))
+
+
 def edge_clock_latency(P, tn):
     """[(port, {"tt": (early, late), "ff": (early, late)}, basis)] for the type's edge clocks with source_latency_ps."""
     out = []
@@ -2857,7 +2870,8 @@ def clock_phase_tcl(P, tn, before_cts=False):
                 f"unset_clock_latency -clock clk [get_ports {{{ports}}}]\n"
                 + ("# plan clock.tap_window: restore the golden per-tap window before the tree (propagated + CRPR)\n"
                    + tap_window_tcl(P, tn) if tap_window_ps(P, tn) else "") +
-                "source /work/clock_taps.tcl\n")
+                "source /work/clock_taps.tcl\n"
+                + ("source /work/clock_edge_split.tcl\n" if edge_split_ports(P, tn) else ""))
     return ("# Pre-CTS ideal LOCAL tree insertion, matching the virtual neighbour clock budget.\n"
             "# Stage-only: pre_cts.tcl removes it before tree construction. Golden SDC stays unchanged.\n"
             f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n"
@@ -3598,6 +3612,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
+           *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
            # FLOW 10-25 F4: zero-logic register pairs onto one leaf (leaf_affinity.tcl; OT_LEAF_AFFINITY=0 = off)
            "export POST_CTS_TCL = /work/cts_post.tcl",
@@ -3714,6 +3729,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                 reset_prefix += "set rt_consumer_taps_um {" + " ".join(
                     f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
             hook.write_text(reset_prefix + hook.read_text())
+    if edge_split_ports(P, tn):
+        for f in ("clock_edge_split.tcl", "clock_edge_balance.tcl"):
+            shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        hook = kd / "cts_post.tcl"
+        line = "uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]\n"
+        body = hook.read_text()
+        assert body.count(line) == 1, "cts_post.tcl: tap_balance line"
+        hook.write_text(body.replace(line, line + "uplevel #0 [list source [file join $cp_dir clock_edge_balance.tcl]]\n"))
     islands = die_islands_tcl(P, tn)
     if islands:
         (kd / "die_islands.tcl").write_text(islands)
