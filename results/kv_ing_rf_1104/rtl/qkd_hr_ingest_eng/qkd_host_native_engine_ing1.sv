@@ -308,7 +308,7 @@ module qkd_host_native_engine_ing1 (
     reg  [31:0]  ap0m_base, ap0m_prod, ap0m_local, ap0m_gs, ap0m_row;
     reg  [4:0]   ap0m_pitch;
     reg          ap0m_mine;
-    reg  [31:0]  ap1m_rbase, ap1m_prod, ap1m_gs, ap1m_row;
+    reg  [31:0]  ap1m_rbase, ap1m_p0, ap1m_p1, ap1m_gs, ap1m_row;
     reg          ap1m_mine;
     reg  [31:0]  ap0_base, ap0_stride, ap0_local, ap0_gs, ap0_row;
     reg  [2:0]   ap0_stk;
@@ -322,7 +322,7 @@ module qkd_host_native_engine_ing1 (
     wire [31:0]  a2_sb    = ap1m_gs >> 6;
     wire [5:0]   a2_q     = ap1m_gs[5:0];
     wire [31:0]  a2_blk   = ap1m_rbase + (a2_sb << 11) + (a2_sb << 7);
-    wire [31:0]  a2_raddr = ap1m_rbase + ap1m_prod;
+    wire [31:0]  a2_raddr = ap1m_rbase + ap1m_p0 + ap1m_p1;   // local x pitch in two partial products
     wire [31:0]  a2_kcode = a2_blk + ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1m_row & 32'd15) << 1);
     wire [31:0]  a2_kscal = a2_blk + ({26'd0, a2_q} << 1);
     wire         ap_go = ap_ok;
@@ -502,7 +502,7 @@ module qkd_host_native_engine_ing1 (
             done_q <= 1'b0; dtag_q <= 8'd0; wf_q <= 1'b0;
             ap_ok0 <= 1'b0; ap_ok0m <= 1'b0; ap_ok1 <= 1'b0; ap_ok1m <= 1'b0; ap_ok <= 1'b0;
             ap0m_base <= 32'd0; ap0m_prod <= 32'd0; ap0m_local <= 32'd0; ap0m_gs <= 32'd0; ap0m_row <= 32'd0; ap0m_pitch <= 5'd0; ap0m_mine <= 1'b0;
-            ap1m_rbase <= 32'd0; ap1m_prod <= 32'd0; ap1m_gs <= 32'd0; ap1m_row <= 32'd0; ap1m_mine <= 1'b0;
+            ap1m_rbase <= 32'd0; ap1m_p0 <= 32'd0; ap1m_p1 <= 32'd0; ap1m_gs <= 32'd0; ap1m_row <= 32'd0; ap1m_mine <= 1'b0;
             ap0_base <= 32'd0; ap0_stride <= 32'd0; ap0_local <= 32'd0; ap0_gs <= 32'd0; ap0_row <= 32'd0; ap0_stk <= 3'd0;
             ap0_pitch <= 5'd0; ap0_mine <= 1'b0; ap0_ringz <= 1'b0;
             ap1_rbase <= 32'd0; ap1_local <= 32'd0; ap1_gs <= 32'd0; ap1_row <= 32'd0; ap1_pitch <= 5'd0; ap1_mine <= 1'b0;
@@ -520,7 +520,7 @@ module qkd_host_native_engine_ing1 (
             ap0m_row <= ap0_row; ap0m_pitch <= ap0_pitch; ap0m_mine <= ap0_mine;
             ap1_rbase <= ap0m_base + ap0m_prod; ap1_local <= ap0m_local; ap1_gs <= ap0m_gs;
             ap1_row <= ap0m_row; ap1_pitch <= ap0m_pitch; ap1_mine <= ap0m_mine;
-            ap1m_rbase <= ap1_rbase; ap1m_prod <= ap1_local * ap1_pitch; ap1m_gs <= ap1_gs; ap1m_row <= ap1_row; ap1m_mine <= ap1_mine;
+            ap1m_rbase <= ap1_rbase; ap1m_p0 <= ap1_local * ap1_pitch[2:0]; ap1m_p1 <= (ap1_local * ap1_pitch[4:3]) << 3; ap1m_gs <= ap1_gs; ap1m_row <= ap1_row; ap1m_mine <= ap1_mine;
             ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1m_mine;
         end
     end
