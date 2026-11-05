@@ -1,7 +1,7 @@
 {
  "enabled": true,
  "max_inflight": 300,
- "max_launch_per_tick": 24,
+ "max_launch_per_tick": 12,
  "geom_sample": 5,
  "hosts": [
   "intel1",
@@ -3867,6 +3867,6 @@
  "queue_fill": true,
  "note_onboard_epyc4": "ONBOARD-1 2026-11-03 07:4x (COORD: fill epyc4, 0 waiters at 628 GB admits / load 7/256): PLACE hosts += epyc4 (Cherry 1052890, 256T/755 GiB, scratch2 3.5 TB, selftest PASS); hbm place_prefer += epyc4 first. Pinned waiters already queued are left as they are (no kill/relaunch).",
  "note_place_prefer": "KW-FIX-5 2026-11-03 23:0x (COORD 22:5x disk order): PLACE prefers epyc4; epyc2 removed from place_prefer and die hosts (root 291 GB < owner 500 floor, kit-wave ~45 GB/h). ot-run SPILL_DST_FLOOR refuses spills to epyc2 root <500, intel scratch2 <300. Previous: KW-FIX-4 2026-11-03 18:5x (COORD 18:40 loop-gap: epyc2 thinnest, 1 waiter): PLACE goes to epyc2 first whenever it admits place_mem_gb now (kit pulled back to gen host, epyc2 copy cleaned); gen stays o",
- "note_hosts_1105": "KW-FIX-10 05:1x COORD: new units intel1+epyc4, epyc2 out; max_launch_per_tick 24 while scratch >150 GB on those hosts, else back to 12 | KW-FIX-10 05:4x COORD 05:3x: new attempts off epyc4 root: work_root 1105f2 real scratch2 dirs (1105e4 on epyc4 is a symlink to scratch3 on root)",
+ "note_hosts_1105": "KW-FIX-10 05:1x COORD: new units intel1+epyc4, epyc2 out; max_launch_per_tick 24 while scratch >150 GB on those hosts, else back to 12 | KW-FIX-10 05:4x COORD 05:3x: new attempts off epyc4 root: work_root 1105f2 real scratch2 dirs (1105e4 on epyc4 is a symlink to scratch3 on root) | KW-FIX-10 06:2x COORD: 12 per tick, epyc2 out; host <100 GB no new unit there; all <100 kit_wave.stop, rows wait",
  "note_src_1105": "KW-FIX-10 05:5x COORD: QC, HEAD, S81 on src_e main 99b3ee3b181 (tags u-qc, s-head, t-s81); s81+qc stage_resume false for the DRT-0073 fresh batch, remove after launch; S81 bind_sa stays for non-C types (key compare src_a to src_e: exactly 16 C types) | KW-FIX-10 06:1x COORD: QC src_f main e99e7043f48 (I85, tag v-qc) on real scratch2, sparse without physical/ref_tile which is a symlink to src_e (no diff there); stage_resume false for SC batch"
 }
