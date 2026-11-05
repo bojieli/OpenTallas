@@ -807,6 +807,20 @@ class SignedParamClassKW8(unittest.TestCase):
         self.assertIn("signed child parameter", why)
 
 
+
+class BindAdvisoryKW8(unittest.TestCase):
+    def test_bind_out_sources(self):
+        self.assertEqual(KW.bind_out_of({"bind_out": "/b"}), "/b")
+        self.assertEqual(KW.bind_out_of({"script": "x"}, "export S81_BIND_OUT=/srv/b\n"), "/srv/b")
+        self.assertIsNone(KW.bind_out_of({"script": "x"}, "python3 head_wave_kit_rtl.py"))
+
+    def test_lines(self):
+        self.assertIsNone(KW.bind_advisory_line("d", "/b", "/s", "COMMIT abc\n"))
+        l = KW.bind_advisory_line("d", "/b", "/s", "COMMIT abcdef0123456\nplan/p.json\n")
+        self.assertIn("older than src /s for: plan/p.json", l)
+        self.assertIn("not compared", KW.bind_advisory_line("d", "/b", "/s", "NOPROV\n"))
+        self.assertIn("not in /s", KW.bind_advisory_line("d", "/b", "/s", "NOCOMMIT abc\n"))
+
 if __name__ == "__main__":
     unittest.main()
 

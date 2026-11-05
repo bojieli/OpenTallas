@@ -3381,6 +3381,60 @@ def _why(reason):
     return re.split(r" @\w+", reason or "", maxsplit=1)[0][:90]
 
 
+BIND_ADVISORY_RE = re.compile(r"S81_BIND_OUT=(\S+)")
+
+
+def bind_out_of(kr, script_text=""):
+    """The bind directory a wave's kit_rtl reads: kit_rtl.bind_out, or S81_BIND_OUT named in its script; else None."""
+    kr = kr or {}
+    if kr.get("bind_out"):
+        return kr["bind_out"]
+    m = BIND_ADVISORY_RE.search(script_text or "")
+    return m.group(1) if m else None
+
+
+def bind_advisory_cmd(src, plan, bind):
+    """Shell for the gen host: the plan-dir files that differ between the bind's commit and src HEAD (read only)."""
+    rel = f"$(realpath --relative-to={shlex.quote(src)} {shlex.quote(str(Path(plan).parent))})"
+    py = "import json,sys; print(json.load(open(sys.argv[1]))['provenance']['commit'])"
+    return (f"c=$(python3 -I -c {shlex.quote(py)} {shlex.quote(bind)}/provenance_bind.json) || {{ echo NOPROV; exit 0; }}; "
+            f"git -C {shlex.quote(src)} cat-file -e $c^{{commit}} 2>/dev/null || {{ echo NOCOMMIT $c; exit 0; }}; "
+            f"echo COMMIT $c; git -C {shlex.quote(src)} diff --name-only $c HEAD -- \"{rel}\" | grep -E '\\.json$' | head -8")
+
+
+def bind_advisory_line(die, bind, src, out):
+    """One advisory line (never a block) when a wave's bind_out is older than a plan or sidecar change in its src."""
+    ls = [x.strip() for x in (out or "").splitlines() if x.strip()]
+    if not ls or ls[0].startswith("NOPROV"):
+        return f"  BIND-ADVISORY {die}: no provenance_bind.json in {bind}: not compared"
+    if ls[0].startswith("NOCOMMIT"):
+        return f"  BIND-ADVISORY {die}: bind commit {ls[0].split()[-1][:11]} of {bind} is not in {src}: not compared"
+    if len(ls) > 1:
+        return f"  BIND-ADVISORY {die}: bind_out {bind} ({ls[0].split()[-1][:11]}) is older than src {src} for: " + " ".join(ls[1:])
+    return None
+
+
+def bind_advisories(AP, cfg, res):
+    """COORD 11-04: dry run prints a mismatch when src moved a plan or sidecar and bind_out did not move. No block."""
+    out = []
+    for die, ok, *_ in res:
+        d = cfg["dies"].get(die) or {}
+        kr, src, plan, gh = d.get("kit_rtl") or {}, d.get("src"), d.get("plan"), d.get("gen_host")
+        if not (ok and src and plan and gh and kr):
+            continue
+        txt = ""
+        if kr.get("script"):
+            _, txt, _ = AP.sh(["ssh", "-o", "ControlPath=none", gh, "cat " + shlex.quote(kr["script"])], timeout=30)
+        bind = bind_out_of(kr, txt)
+        if not bind:
+            continue
+        _, o, _ = AP.sh(["ssh", "-o", "ControlPath=none", gh, bind_advisory_cmd(src, plan, bind)], timeout=60)
+        line = bind_advisory_line(die, bind, src, o)
+        if line:
+            out.append(line)
+    return out
+
+
 def cmd_reclassify(a):
     import collections
     import fcntl
@@ -3773,6 +3827,8 @@ def main(argv=None):
             print(f"  eligible {len(picks)}: " + " ".join(f"{p['item']}({p['kind']},x{p['replicas']})" for p in picks[:40]))
             for w, its in sorted(skip.items(), key=lambda kv: -len(kv[1])):
                 print(f"  skip {len(its)} [{w}]: " + " ".join(its[:12]) + (" ..." if len(its) > 12 else ""))
+    for line in bind_advisories(AP, cfg, res):
+        print(line)
     print(f"would launch now ({len(todo)}): " + " ".join(f"{d}/{r['item']}" for d, r in todo))
     return 0
 
