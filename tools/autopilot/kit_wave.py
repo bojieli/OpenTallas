@@ -3145,6 +3145,12 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    try:                                        # SUBSTEP-1 (COORD 11-05 10:53): sub-step ODBs of terminal attempts
+        import substep_prune
+        substep_prune.tick(AP, cfg, st, ap_dir, lambda h: _ssh(h, AP.HUB_NAME),
+                           lambda: AP.read_coord("lanes/PROTECTED-DBS.txt"))
+    except Exception as e:                      # disk hygiene never stops the tick
+        AP.log(f"KIT-WAVE SUBSTEP-1 skipped: {type(e).__name__}: {e}")
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
