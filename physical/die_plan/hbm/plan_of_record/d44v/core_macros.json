@@ -5313,13 +5313,38 @@
    "recipe_macros": []
   },
   "ot_hgi_coll_tkm_m_tp192__root": {
-   "status": "UNKNOWN",
+   "status": "KNOWN",
    "outline_um": [
     319.68,
     345.6
    ],
-   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
-   "rejected": []
+   "basis": "plan_part19",
+   "macros": [
+    {
+     "name": "u_x.u.u_buffer.g_bm[0].u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      72.576,
+      68.31,
+      247.32,
+      138.798
+     ]
+    },
+    {
+     "name": "u_x.u.u_buffer.g_bm[1].u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      72.576,
+      206.82,
+      247.32,
+      277.308
+     ]
+    }
+   ],
+   "sources": [],
+   "recipe_macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ]
   },
   "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
    "status": "UNKNOWN",
