@@ -59,6 +59,8 @@ class Candidates(unittest.TestCase):
         got = sorted(k for k, _, _ in SP.candidates(st, now))
         self.assertEqual(got, ["a", "b", "e"])
         self.assertEqual(SP.candidates(st, now)[0][1], "epyc4")
+        st["items"]["b"]["evidence"] += "/geom/auto_geom.json"
+        self.assertIn(("b", "epyc4", "/srv/s/kit-wave/s81/e/items/x/attempt_2"), SP.candidates(st, now))
 
     def test_non_wave_evidence_ignored(self):
         r = self.row(1, "FAIL", 0)

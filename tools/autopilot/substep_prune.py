@@ -29,6 +29,7 @@ MANIFEST = "kit_wave_substep_prune.tsv"
 SIGNED_RE = re.compile(r'"\w*(?:status|verdict|result)"\s*:\s*"(SIGNED|LOCAL_PASS\w*|NEEDS_PARENT)"')
 SUB_RE = {"2": re.compile(r"^2_[1-4]_.*\.odb$"), "3": re.compile(r"^3_[1-5]_.*\.odb$")}
 BOUNDARY = {"2": "2_floorplan.odb", "3": "3_place.odb"}
+ATTEMPT_RE = re.compile(r"^(/srv/.*/kit-wave/.*/attempt_\d+)(?:/|$)")
 TERMINAL_Q = ("FAIL", "CANCELLED", "REJECTED")
 PERMANENT = ("keep", "protected", "signed", "missing")   # skip reasons that never change: not re-checked
 
@@ -61,7 +62,9 @@ def candidates(st, now=None, idle_h=IDLE_H):
         host, sep, path = ev.partition(":")
         if not sep or not path.startswith("/srv/") or "/kit-wave/" not in path or "/attempt_" not in path:
             continue
-        out.append((key, host, path.rstrip("/")))
+        m = ATTEMPT_RE.match(path)              # evidence may name a file inside the attempt (geom/auto_geom.json)
+        if m:
+            out.append((key, host, m.group(1)))
     return out
 
 
