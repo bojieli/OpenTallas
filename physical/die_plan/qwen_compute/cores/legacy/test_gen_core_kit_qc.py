@@ -123,6 +123,11 @@ class GeneratedKit(unittest.TestCase):
         self.assertIn("source /work/drv.tcl", pre)
         post = (self.kd / "grt_post_core.tcl").read_text()
         self.assertLess(post.index("post_grt_drv.tcl"), post.index("source /work/grt_post.tcl"))
+        # DIE-QC-80 11-05: the post-GRT hold pass is the MM-wrapped body post_grt_chain.py recognizes (no raw
+        # repair_timing -hold after ot_mm_unsync in two-mode kits)
+        sys.path.insert(0, str(HERE.parents[4] / "tools/die_plan/post_route_drv"))
+        import post_grt_chain as PGC
+        self.assertEqual(PGC.commands(self.kd / "post_grt_drv.tcl"), PGC.LEGACY_REPAIR_MM)
 
 
 
