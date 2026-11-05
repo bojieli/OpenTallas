@@ -33,6 +33,7 @@ import argparse, hashlib, json, math, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 HMAX = 370.0          # planned hop (plan reach 405, 35 um left for placement scatter)
+PLAN_REACH = 405.0    # the reach HMAX leaves 35 um under: a snapped site may use some of it, the report names the hop
 COPY_REACH = 370.0    # raw -> local copy and copy -> consumer
 TYPES = ("hd_ctl_n", "hd_ctl_e", "hd_host_n", "hd_mesh", "hd_host")
 CTL_E_SITE_X = (401.5, 801.0)   # hd_ctl_e n_tx_ft s1/s2 cell centres (hop <= 400 planned, 405 measured reach)
@@ -239,6 +240,98 @@ def type_delta(tn, T, coll):
     return add, rep
 
 
+# DIE-HEAD-66 l48ud: the straight-line sites above were written for 0-macro strips; on hd_host/hd_mesh (110 SRAMs) 11 of 47
+# bands fell on a macro and OT_CLAND stopped 3_3 ("band upper bound 0.0").  Every site is moved, only if it must be, to the
+# nearest point where its plan band plus the row-cut halo is clear of each macro.  Raw resets and all depths stay.
+SITE_BAND_HALF = 2.16     # landing_placement band half-size of a stage / copy site (4.32 um square)
+MACRO_KEEP = 2.5          # row-cut halo beside a macro (2 um) + one row
+
+
+def site_clear(p, rects, outline=None, ext=SITE_BAND_HALF + MACRO_KEEP):
+    if outline and not (ext <= p[0] <= outline[0] - ext and ext <= p[1] <= outline[1] - ext):
+        return False
+    return not any(r[0] - ext < p[0] < r[2] + ext and r[1] - ext < p[1] < r[3] + ext for r in rects)
+
+
+def snap_point(p, rects, outline=None, ext=SITE_BAND_HALF + MACRO_KEEP):
+    """nearest (Manhattan) clear point; it lies on p's own x or y or on a keep-out edge, so that finite set is complete"""
+    if not any(r[0] - ext < p[0] < r[2] + ext and r[1] - ext < p[1] < r[3] + ext for r in rects):
+        return tuple(p)                  # a site clear of macros stays exactly where the plan has it
+    e = 0.01
+    xs = {p[0]} | {v for r in rects for v in (r[0] - ext - e, r[2] + ext + e)}
+    ys = {p[1]} | {v for r in rects for v in (r[1] - ext - e, r[3] + ext + e)}
+    best = min(((abs(x - p[0]) + abs(y - p[1]), x, y) for x in xs for y in ys if site_clear((x, y), rects, outline, ext)),
+               default=None)
+    if best is None:
+        raise ValueError(f"no macro-free site for {p}")
+    return (best[1], best[2])
+
+
+def _clock_sites(c):
+    """every stage / anchor / copy site dict-and-key of the landing control keys (writable in place)"""
+    for k in ("landing_reader_start", "landing_writer_start"):
+        for br in c.get(k, {}).get("branches", {}).values():
+            for st in br["stages"]:
+                yield st, "xy_um"
+    for rr in c.get("landing_status_input_stages", {}).values():
+        for stages in rr.values():
+            for st in stages:
+                yield st, "xy_um"
+    anchors = c.get("landing_status_anchors", {})
+    for k in anchors:
+        yield anchors, k
+    for cp in c.get("landing_local_resets", []):
+        yield cp, "xy_um"
+
+
+def snap_clock_sites(T, rects):
+    """move the landing sites of one type off its macros, in place; returns [(old, new)] of the distinct moved sites"""
+    outline = T.get("outline_um")
+    moved = {}
+    for d, k in _clock_sites(T["clock"]):
+        old = tuple(d[k])
+        new = moved.get(old) or snap_point(old, rects, outline)
+        if tuple(new) != old:
+            moved[old] = new
+            d[k] = rnd(new)
+    return sorted(moved.items())
+
+
+def site_hops(T, coll):
+    """(name, hop um) of every planned hop of the landing control graph, band extents charged as in stages_needed"""
+    c = T["clock"]
+    pins = pins_of(T)
+    origin = tuple(c["start_capture_um"])
+    bands = {b: band_geom(v["rect_um"]) for b, v in c["landing_contract"]["bands"].items()}
+    out = []
+
+    def walk(name, a, ea, pts, b, eb):
+        seq = [(tuple(a), ea)] + [(tuple(p), 0.0) for p in pts] + [(tuple(b), eb)]
+        out.extend((f"{name}.{i}", md(seq[i][0], seq[i + 1][0]) + seq[i][1] + seq[i + 1][1]) for i in range(len(seq) - 1))
+
+    for b, br in c.get("landing_reader_start", {}).get("branches", {}).items():
+        walk(f"reader:{b}", origin, ORIGIN_EXT, [s["xy_um"] for s in br["stages"]], *bands[b])
+    for b, br in c.get("landing_writer_start", {}).get("branches", {}).items():
+        walk(f"writer:{b}", origin, ORIGIN_EXT, [s["xy_um"] for s in br["stages"]], tuple(pins[f"cland_fstart_out_{b}"]), 0.0)
+    a = c.get("landing_status_anchors", {})
+    for tgt, rr in c.get("landing_status_input_stages", {}).items():
+        tp = a["u_cland_agg_1"] if tgt == "agg" else pins[f"cland_up_ready_{tgt}"]
+        for r, stages in rr.items():
+            walk(f"sin:{tgt}:{r}", bands[r][0], bands[r][1], [s["xy_um"] for s in stages], tuple(tp), 0.0)
+    if a:
+        names = sorted(a, key=lambda n: int(n.rsplit("_", 1)[1]))
+        walk("agg", a[names[0]], 0.0, [a[n] for n in names[1:]], tuple(coll["collector_root_xy"]), 0.0)
+    return out
+
+
+def snap_rects_arg(items):
+    out = {}
+    for x in items:
+        tn, p = x.split("=", 1)
+        out[tn] = json.loads(Path(p).read_text())["rects_um"]
+    return out
+
+
 def ctl_e_bit_sites(T, geom_tsv):
     """hd_ctl_e n_tx_ft (W->E, 3 stations over 855.36 um): s1/s2 per-bit sites on each bit's pin row (mesh_e l48z
     form, ASAP7 site grid X0=Y0=4.32, SW 0.054, RH 0.27, DFF 1.404x0.27): s0 W face flop ~6 -> s1 401.5 -> s2 801.0
@@ -338,6 +431,9 @@ def main(argv=None):
                     "knobs on this prepared dir's plan and add the same clock keys to SRC (die-top straps follow)")
     ap.add_argument("--rrl-from", action="append", default=[], help="T=wrapper.sv: reset relay table of T read from GEN RTL")
     ap.add_argument("--republish", type=Path, help="prepared dir: tools root whose gen.py regenerates published/")
+    ap.add_argument("--macro-rects", action="append", default=[], help="T=rects.json {rects_um:[[x0,y0,x1,y1],..]}: "
+                    "landing sites of T move to the nearest macro-free point")
+    ap.add_argument("--snap-only", action="store_true", help="SRC already carries the stage keys: move sites only, no new key")
     a = ap.parse_args(argv)
     types = a.types.split(",")
     for x in a.rrl_from:
@@ -353,15 +449,26 @@ def main(argv=None):
         import clock_landings as CL
         old_k = CL.Landings(json.loads(json.dumps(plan)), side).strap_expected()
     rep = {}
+    rects = snap_rects_arg(a.macro_rects)
     kplan = json.loads((a.knobs_from / "source_plan.json").read_text()) if a.knobs_from else plan
     kside = json.loads((a.knobs_from / "source_sidecar.json").read_text()) if a.knobs_from else side
     for tn in types:
         T = plan["partition_types"][tn]
         KT = json.loads(json.dumps(kplan["partition_types"][tn]))
-        add, r = type_delta(tn, KT, kside["collector"]["types"][tn])
+        if a.snap_only:
+            add, r = {}, dict(type=tn, snap_only=True)
+        else:
+            add, r = type_delta(tn, KT, kside["collector"]["types"][tn])
         if a.knobs_from:
             assert T.get("buses") == KT.get("buses") and T.get("ft_slots") == kplan["partition_types"][tn].get("ft_slots"), tn
         T["clock"].update(add)
+        if tn in rects:
+            moved = snap_clock_sites(T, rects[tn])
+            hops = site_hops(T, side["collector"]["types"][tn])
+            worst = max(hops, key=lambda h: h[1])
+            assert worst[1] <= PLAN_REACH, (tn, "hop after macro snap", worst)     # HMAX is the target, reported below
+            r["macro_sites_moved"] = [[rnd(o), rnd(n)] for o, n in moved]
+            r["max_hop_um"] = [worst[0], round(worst[1], 1)]
         if tn == "hd_ctl_e" and a.ctl_e_geom:
             r["ft_bit_sites"] = ctl_e_bit_sites(T, a.ctl_e_geom)
             if a.knobs_from:
@@ -377,10 +484,13 @@ def main(argv=None):
     ch = strap_update(a.out, a.repo, plan, side, old_k) if has_top else None
     if a.republish:
         republish(a.out, a.republish.resolve(), types, a.out / "source_sidecar.json")
-    report = dict(event="l48h-cland", tool="tools/s81_head/head_cland_stage_delta.py", hmax_um=HMAX, types=rep,
+    report = dict(event=("l48ud-macro-snap" if a.snap_only else "l48h-cland"), tool="tools/s81_head/head_cland_stage_delta.py", hmax_um=HMAX, types=rep,
                   strap_changes=ch, sidecar_changed=False, data_cycles_added=0)
     (a.out / "cland_report.json").write_text(json.dumps(report, indent=1) + "\n")
     for tn, r in rep.items():
+        if a.snap_only:
+            print(tn, "moved", len(r.get("macro_sites_moved", [])), "max hop", r.get("max_hop_um"))
+            continue
         print(tn, "R", r["reader_start_depth"], "W", r["writer_start_depth"], "sin", r["status_relays"],
               "lrst", r["local_reset_copies"], r.get("ft_bit_sites", ""))
     if ch is not None:
