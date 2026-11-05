@@ -3122,9 +3122,8 @@ def _top_items(text):
 _INT_LIT = re.compile(r"[+-]?\d[\d_]*|(?:\d+\s*)?'s?[bodh]\s*[0-9a-fA-F_]+")
 
 
-def macro_instance_identity(text, mod):
-    """{param: value} of the numeric-literal overrides that EVERY `mod #(...)` instance in text gives the same value
-    (the configuration the macro's single signed view was built with).  Positional overrides -> {}."""
+def _macro_instance_overrides(text, mod):
+    """{param: [override text, one per named override]} of every `mod #(...)` instance in text.  Positional -> {}."""
     text = re.sub(r"//[^\n]*|/\*[\s\S]*?\*/", "", text)
     seen, n = {}, 0
     for m in re.finditer(r"(?<![\w$.])" + re.escape(mod) + r"\s*#\s*\(", text):
@@ -3140,6 +3139,13 @@ def macro_instance_identity(text, mod):
             if not a:
                 return {}
             seen.setdefault(a.group(1), []).append(a.group(2).strip())
+    return seen
+
+
+def macro_instance_identity(text, mod):
+    """{param: value} of the numeric-literal overrides that EVERY `mod #(...)` instance in text gives the same value
+    (the configuration the macro's single signed view was built with).  Positional overrides -> {}."""
+    seen = _macro_instance_overrides(text, mod)
     # a non-literal override (.QX(QX) inside another macro's RTL, a parent parameter) says nothing about the identity:
     # OT_SIGNED_PARAM_SERIALIZE still checks its elaborated value at synth.  Literals must all agree.
     out = {}
@@ -3147,6 +3153,25 @@ def macro_instance_identity(text, mod):
         lit = {x for x in v if _INT_LIT.fullmatch(x)}
         if len(lit) == 1:
             out[k] = lit.pop()
+    return out
+
+
+def macro_spec_identity(root, mod, text, settled):
+    """{param: value} from the core's own legacy kit spec, for parameters the staged instances override without settling a
+    literal (.SRAM_MACRO(TX_SRAM) on dsdv_idx_tx_n32, FORM-IDX 11-05): that spec is what the one signed view was built with,
+    and the instance text cannot say.  native_bb still compares the ELABORATED override with this default at synth, so a
+    parent that really differs from the view still stops; nothing here is taken on trust.  No spec: {} (as before)."""
+    if not root:
+        return {}
+    out = {}
+    for spec in sorted(Path(root).glob(f"physical/die_plan/*/cores/legacy/specs/{mod}/spec.json")):
+        try:
+            params = json.loads(spec.read_text()).get("params") or {}
+        except (OSError, ValueError):
+            continue
+        for k in _macro_instance_overrides(text, mod):
+            if k not in settled and isinstance(params.get(k), int):
+                out[k] = str(int(params[k]))
     return out
 
 
@@ -3161,7 +3186,10 @@ def _header_with_defaults(hdr, ident):
     for it in _top_items(hdr[i + 1:j]):
         # a `ifdef-selected declaration stays as written; a bare macro default (`X_DEF) takes the identity: the bb reads alone,
         # so the macro is undefined there and native_bb cannot verify it (DIE-S81-56 11-04, S81 xrt1/xrt3).
-        if "=" in it and ("`" not in it or re.fullmatch(r"\s*`\w+\s*", it.split("=", 1)[1])):
+        # So does a macro-with-fallback default (`ifdef M `M `else 0 `endif, QC qfd_dv_s5_sc2_leaf HARD_PINREG): the bb reads
+        # alone, M is undefined there, native_bb reads the fallback (DIE-QC-74 11-05, 9 SC types).
+        if "=" in it and ("`" not in it or re.fullmatch(r"\s*`\w+\s*", it.split("=", 1)[1])
+                          or re.fullmatch(r"\s*`ifdef\s+(\w+)\s+`\1\s+`else\s+[^`]*`endif\s*", it.split("=", 1)[1])):
             lhs, rhs = it.split("=", 1)
             names = re.findall(r"[A-Za-z_]\w*", lhs)
             if names and names[-1] in ident and names[-1] not in done:
@@ -3211,14 +3239,10 @@ def strip_module_definition(text, mod):
     return "".join(out), cnt
 
 
-def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, signed_params=None):
+def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
     and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
-    <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits).
-    signed_params (opt-in, DIE-S81-59 11-05, S81 bk_sel__t2): {module: {param: value}}, the signed kit's top parameters
-    as declared on the plan's hard_cores row.  They win over the instance identity, which cannot see a parameter that an
-    `ifdef chain selects (.RF(0)..(7)) or a parent forwards (.SRAM_MACRO(TX_SRAM)).  OT_SIGNED_PARAM_SERIALIZE still checks
-    each elaborated override against them, so a parent that builds another form stops at synth as before."""
+    <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
                        if Path(f).suffix in (".sv", ".v") and Path(f).is_file())
@@ -3248,9 +3272,17 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, signed_params=
         # The RTL defaults (PINREG 0) are not the configuration the one signed view was built with; every staged
         # instance giving the same numeric literal is.  Parameters the instances disagree on keep the RTL default
         # (a non-default override still stops synth there, as before).
-        hdr, ident = _header_with_defaults(hdr, {**macro_instance_identity(staged, mod), **((signed_params or {}).get(mod) or {})})
-        note = ("// signed identity from the staged instances: " + ", ".join(f"{k}={v}" for k, v in sorted(ident.items()))
-                + "\n") if ident else ""
+        lit = macro_instance_identity(staged, mod)
+        spec_id = macro_spec_identity(root, mod, staged, lit)
+        # byte-identical kits: a spec value equal to the RTL default is no change (.V(V) = 276, .MUT(X) = 0)
+        spec_id = {k: v for k, v in spec_id.items()
+                   if not re.search(r"(?<![\w$])" + re.escape(k) + r"\s*=\s*" + re.escape(v) + r"\s*(?:,|\)|//|\n)", hdr)}
+        hdr, ident = _header_with_defaults(hdr, {**lit, **spec_id})
+        from_inst = {k: v for k, v in ident.items() if k not in spec_id}
+        note = ("// signed identity from the staged instances: " + ", ".join(f"{k}={v}" for k, v in sorted(from_inst.items()))
+                + "\n") if from_inst else ""
+        if spec_id:
+            note += "// signed identity from the core's kit spec: " + ", ".join(f"{k}={v}" for k, v in sorted(spec_id.items())) + "\n"
         dst = rtl_dir / f"{mod}_bb.v"
         dst.write_text(f"// GENERATED by gen_phys.macro_param_blackboxes: header-only view of hard macro {mod}\n"
                        f"{note}(* blackbox *)\n{hdr}\nendmodule\n")
@@ -3343,8 +3375,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # g_pp[k].u_pair = ot_s81hd_lep_pair #(.CHB(..))) has only a Liberty cell, which declares no parameters, so
     # yosys elaboration (GEN_LINT rtl_check, synth) stops with "does not have a parameter named ..".  Stage a
     # header-only blackbox <module>_bb.v (the native_bb form, read -lib -overwrite like the SRAM _bb views).
-    signed_params = {c.get("module", c["inst"]): c["signed_params"] for c in t.get("hard_cores", []) if c.get("signed_params")}
-    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root, signed_params=signed_params):
+    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root):
         srcs.append(f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")

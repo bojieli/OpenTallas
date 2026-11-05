@@ -1,0 +1,7 @@
+FIT_FAIL PVQ edge=5
+FIT_FAIL PVQ edge=9
+FIT_FAIL PVQ edge=10
+FIT_FAIL total=16116
+[16681000] %Fatal: tb.sv:96: Assertion failed in tb
+%Error: /srv/opentallas-scratch2/claude/die-s81-51/mem/wt/results/rtl/s81_svc_memory_fit_1103/tb.sv:96: Verilog $stop
+Aborting...

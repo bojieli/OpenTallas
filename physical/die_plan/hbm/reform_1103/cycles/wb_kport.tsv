@@ -1,0 +1,5 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_svc_wb_kport_q	wb_ready, wbw_*, wa value, fault	0	same edge at the kit faces on the part 25 bench for wb_ready at fill start and wbw_*; wa has the same values in the same order, later
+ot_hbm_svc_wb_kport_q	fill start to first K write	+4 hbm edges or more	root -> sw seam: root out face, sw in face, group queue, then the K skid
+ot_hbm_svc_wb_kport_q	done (wa) against flat	+46 mean, +156 max edges on K rdy 75%; +1106 mean, +2427 max on K rdy about 6%	variable, bench run_eq m0 and slow, 48 blocks; form drains 8 sectors per edge at most (flat 16)
+ot_hbm_svc_wb_kport_q	K write order per PC	changes	same set of sector, data, PC; order inside a block is not preserved

@@ -21,6 +21,8 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 sys.setrecursionlimit(1000000); threading.stack_size(512 * 1024 * 1024)
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import s81_svc_idx_fit as IDX   # MEM idx fit (svc_lo dsdv_idx_rg3 -> dsdv_idx_rg3_fit), gate s81_svc_idx_fit_1103
 REF = {
     'pmem': ROOT / 'results/rtl/s81_T7_pmem_bound_cut_0900/transform.py',
     'pvq': ROOT / 'results/rtl/s81_T7_pvq_bound_cut_1040/transform.py',
@@ -32,7 +34,60 @@ CHILDREN = {
     'ot_t7_pvq_capture_candidate.sv': ('results/rtl/s81_T7_pvq_bound_cut_1040/ot_t7_pvq_capture_candidate.sv', '80367218'),
     'ot_t7_land_capture_candidate.sv': ('results/rtl/s81_T7_LAND_bound_cut_1102/ot_t7_land_capture_candidate.sv', '64e23cf3'),
 }
+# MEM v2 (svc fit, 2026-11-03): right-sized children, gate results/rtl/s81_svc_memory_fit_1103/run.sh
+CHILDREN_V2 = {
+    'ot_t7_pmem_capture_v2.sv': ('results/rtl/s81_svc_memory_fit_1103/ot_t7_pmem_capture_v2.sv', None),
+    'ot_t7_pvq_capture_v2.sv': ('results/rtl/s81_svc_memory_fit_1103/ot_t7_pvq_capture_v2.sv', None),
+    'ot_t7_land_capture_v2.sv': ('results/rtl/s81_svc_memory_fit_1103/ot_t7_land_capture_v2.sv', None),
+    'ot_hdc_v41x_attn_staging_fit.sv': ('results/rtl/s81_svc_memory_fit_1103/ot_hdc_v41x_attn_staging_fit.sv', None),
+}
+MACROS = {'v1': {'ot_sram_1r1w_256x256_m2_r2c2': 32, 'ot_sram_1r1w_32x64_m1': 34},
+          'v2': {'ot_sram_1r1w_160x256_m1_r0c0': 12, 'ot_sram_1r1w_160x265_m1_r0c0': 8,
+                 'ot_sram_1r1w_256x256_m1_r0c0': 4, 'ot_sram_1r1w_32x128_m1_r0c0': 17}}
+FIT_RE = [(re.compile(r'^(\s*)ot_t7_(land|pmem|pvq)_capture_candidate( \w+ \()$', re.M), r'\1ot_t7_\2_capture_v2\3', 3),
+          (re.compile(r"^(\s*)ot_hdc_v41x_attn_staging( #\(\.D\(32\), \.NL\(4\), \.SRAM_MACRO\(1'b1\), \.TROWS\(640\)\) "
+                      r"\w+_g_stage2_u_stage[01] \()$", re.M), r'\1ot_hdc_v41x_attn_staging_fit\2', 2)]
+
+
+def fit_v2(closed):
+    """MEM v2: the v1 closed bound with its 3 capture children and 2 staging instances bound to the right-sized
+    children (port-identical, gated against the v1 children in s81_svc_memory_fit_1103)."""
+    if re.search(r'^\s*ot_t7_land_capture_v2 ', closed, re.M): return closed   # already v2 (v2 packet)
+    for rx, rep, n in FIT_RE:
+        closed, k = rx.subn(rep, closed)
+        if k != n: raise ValueError('MEM v2: expected %d instances of %s, found %d' % (n, rx.pattern[:40], k))
+    return closed
+
+
+def children(form):
+    return CHILDREN if form == 'v1' else CHILDREN_V2
+
+
+def idx_fit(closed, files, rtl=None):
+    """MEM idx fit (v2 only): rename the svc_lo dsdv_idx_rg3 instance to dsdv_idx_rg3_fit and generate that child
+    from the dsdv_idx_rg3.sv the kit lists (`files`; sha-checked + proof preconditions in s81_svc_idx_fit).
+    Returns (closed, {child name: text}, macros, receipt) - no children / macros when the bound has no reader."""
+    closed, n = IDX.fit_bound(closed)
+    if not n and not re.search(r'^\s*dsdv_idx_rg3_fit #\(', closed, re.M): return closed, {}, {}, None
+    srcs = [f for f in files if Path(f).name == 'dsdv_idx_rg3.sv']
+    if len(srcs) != 1: raise ValueError('idx fit: %d dsdv_idx_rg3.sv in the kit file list' % len(srcs))
+    src = Path(srcs[0]).read_text(); fit = IDX.fit_source(src)
+    kids = {'dsdv_idx_fit_mem.sv': (ROOT / IDX.FIT_MEM).read_text(), 'dsdv_idx_rg3_fit.sv': fit}
+    # the original reader leaves the kit lists when nothing else instantiates it (bound now binds the fit child)
+    users = [f for f in files if f.endswith('.sv') and f != srcs[0] and Path(f).exists()
+             and re.search(r'^\s*dsdv_idx_rg3\s+#\(', Path(f).read_text(), re.M)]
+    if rtl is not None: users = [f for f in users if Path(f).resolve() != Path(rtl).resolve()]
+    return closed, kids, IDX.MACROS, dict(source=srcs[0], source_sha=IDX.sha12(src), fit_sha=IDX.sha12(fit), renamed=n,
+                                          dropped=[] if users else [srcs[0]])
+
+
 REF_GZ = ROOT / 'results/rtl/s81_T7_pmem_bound_cut_0900/native_parent.sv.gz'   # T7 original bound 61c902f1
+# Regenerated reference (s81_svc_ref_regen.py): a current T7 bound + the map from the 61c902f1 names the transforms use
+CUR_REF = ROOT / 'results/rtl/s81_svc_memory_fit_1103/ref_1105'
+RE_HASH = re.compile(r'src_([0-9a-f]{20})')
+RE_PROC = re.compile(r'procmux_(\d+)')
+RE_ENG = re.compile(r"E\+'(\d+)_Y")
+RE_ATT = re.compile(r"(?<![\w$])(?<!E\+')(\d+)_Y\b|'(\d{2,3})'")
 NATIVE = ('ot_bind_native_193c9bdc13b0c4251a5bbbc4', 'ot_bind_native_9c28130c03bbd6a26f6fd9a5',
           'ot_bind_native_4c805a5536bda0930879099e', 'ot_hdc_v41x_attn_staging')
 T7_ORIG = '61c902f184b49e231c34de041d0f1832a4117749592f81fa3bf42d6ff4df504a'
@@ -118,16 +173,41 @@ def port_source(src, tn, nmap, ref_head='u_rsv_14_'):
     return out, used
 
 
+def cur_ref():
+    """(current T7 bound, token map), or (None, None) before a reference is regenerated."""
+    if not (CUR_REF / 'ref_map.json').exists(): return None, None
+    j = json.loads((CUR_REF / 'ref_map.json').read_text()); s = gzip.decompress((CUR_REF / 'ref_t7_bound.sv.gz').read_bytes()).decode()
+    if sha(s) != j['reference']: raise ValueError('regenerated reference hash')
+    return s, j['map']
+
+
+def rebase_source(src, rm):
+    """A reference transform written for 61c902f1 -> the same transform on the regenerated reference: only net names
+    change, in one pass.  A token the map does not have refuses."""
+    def sub(k, t):
+        if t not in rm[k]:
+            raise ValueError('reference %s token %s not in the regenerated map' % (k, t))
+        return rm[k][t]
+    def one(m):
+        if m['h']: return 'src_' + sub('hash', m['h'])
+        if m['p']: return 'procmux_' + sub('procmux', m['p'])
+        if m['e']: return "E+'" + sub('eng', m['e']) + '_Y'
+        if m['a']: return (sub('att', m['a']) if m['a'] not in ('0', '1') else m['a']) + '_Y'
+        return "'" + sub('att', m['q']) + "'"
+    return re.sub(r"src_(?P<h>[0-9a-f]{20})|procmux_(?P<p>\d+)|E\+'(?P<e>\d+)_Y|(?<![\w$])(?P<a>\d+)_Y\b|'(?P<q>\d{2,3})'", one, src)
+
+
 def load(src):
     g = {'__name__': 's81_ported', '__file__': '<ported>'}; exec(compile(src, '<ported>', 'exec'), g); return g
 
 
-def close_type(s, ref_s):
+def close_type(s, ref_s, rm=None):
     rn, tn, nmap = name_map(ref_s, s)
     rep = dict(rsv=tn, before_sha256=sha(s), mapped_nets=len(nmap), steps=[])
     cur = s; t0 = time.time()
     for step in ('pmem', 'pvq', 'land', 'stage'):
-        src, used = port_source(REF[step].read_text(), tn, nmap, rn)
+        src = REF[step].read_text()
+        src, used = port_source(rebase_source(src, rm) if rm else src, tn, nmap, rn)
         g = load(src)
         if step == 'stage': new = g['flip'](cur)[0]
         else: new = g['transform'](cur)[0]
@@ -140,14 +220,14 @@ def close_type(s, ref_s):
 
 
 def _one(args):
-    f, ref_s = args; f = Path(f)
+    f, ref_s, rm = args; f = Path(f) if f else None
     threading.stack_size(512 * 1024 * 1024); box = {}
     def run():
         try:
-            new, rep = close_type(f.read_text(), ref_s); rep['status'] = 'CLOSED'; box['r'] = (new, rep)
+            new, rep = close_type(f.read_text() if f else ref_s, ref_s, rm); rep['status'] = 'CLOSED'; box['r'] = (new, rep)
         except Exception as e:
             box['r'] = (None, dict(status='REFUSED', reason=str(e)[:300]))
-    t = threading.Thread(target=run); t.start(); t.join(); return f.name, box['r']
+    t = threading.Thread(target=run); t.start(); t.join(); return (f.name if f else 'T7'), box['r']
 
 
 def ref_text(path=None):
@@ -161,7 +241,7 @@ def applies(bound_text):
     return all(re.search(r'^\s*' + m + r'\b', bound_text, re.M) for m in NATIVE)
 
 
-def apply_kit(rtl_dir, ref_s=None, closed=None):
+def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     """Kit-RTL application (same recipe as the T7 canary3): replace s81p_<type>_bound.sv by its closure and list the
     three capture children right after it in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json files. Writes
     memory_closure.json receipt. `closed` = a precomputed closed bound text (else computed here)."""
@@ -173,28 +253,56 @@ def apply_kit(rtl_dir, ref_s=None, closed=None):
     if not applies(s): return dict(status='NOT_APPLICABLE')
     if closed is None:
         box = {}
-        def run(): box['r'] = close_type(s, ref_s or ref_text())
+        def run(): box['r'] = close_type(s, ref_s or ref_text(), rm)
         threading.stack_size(512 * 1024 * 1024); t = threading.Thread(target=run); t.start(); t.join()
         if 'r' not in box: raise RuntimeError('closure failed for ' + str(bound))
         closed, rep = box['r']
     else:
         rep = dict(before_sha256=sha(s), after_sha256=sha(closed))
+    if form == 'v2':
+        rep['v1_after_sha256'] = sha(closed); closed = fit_v2(closed); rep['after_sha256'] = sha(closed)
+    idx_kids, idx_macros, drop = {}, {}, []
+    if form == 'v2':
+        closed, idx_kids, idx_macros, idx_rep = idx_fit(closed, kr['files'], bound)
+        if idx_rep:
+            rep['v2_after_sha256'] = rep['after_sha256']; rep['after_sha256'] = sha(closed); rep['idx_fit'] = idx_rep
+            drop = idx_rep['dropped']
     kids = []
-    for c, (p, h) in CHILDREN.items():
+    for c, (p, h) in children(form).items():
         b = (ROOT / p).read_bytes()
-        if hashlib.sha256(b).hexdigest()[:8] != h: raise ValueError('child hash ' + c)
+        if h and hashlib.sha256(b).hexdigest()[:8] != h: raise ValueError('child hash ' + c)
         (rtl / c).write_bytes(b); kids.append(str(rtl / c))
+    for c, t in idx_kids.items(): (rtl / c).write_text(t); kids.append(str(rtl / c))
+    macros = {m: MACROS[form].get(m, 0) + idx_macros.get(m, 0) for m in {**MACROS[form], **idx_macros}}
+    # macro views the closure instantiates and bind did not see (bind runs before this event): black box in
+    # kit_rtl.f / files, behavioural model in kit_rtl_sim.f, lef + libs in hard_macros (same form as bind)
+    hm = kr.setdefault('hard_macros', {}); bbs, models = [], []
+    for mac in macros:
+        if mac in hm: continue
+        d = next((ROOT / md / mac for md in ('physical/asap7_memory_macros_v2', 'physical/asap7_memory_macros')
+                  if (ROOT / md / mac / (mac + '.lef')).exists()), None)
+        if d is None: raise ValueError('MEM: no macro view for ' + mac)
+        hm[mac] = dict(dir=str(d), lef=str(d / (mac + '.lef')),
+                       libs=[str(d / ('%s_%s.lib' % (mac, c))) for c in ('ff', 'ss', 'tt')],
+                       bb=str(d / (mac + '_bb.v')), model=str(d / (mac + '.v')))
+        bbs.append(hm[mac]['bb']); models.append(hm[mac]['model'])
     edits = {}
     for fl in ('kit_rtl.f', 'kit_rtl_sim.f'):
         p = rtl / fl
         if not p.exists(): continue
-        L = p.read_text().split('\n'); i = L.index(str(bound)); L[i + 1:i + 1] = kids; edits[p] = '\n'.join(L)
-    i = kr['files'].index(str(bound)); kr['files'][i + 1:i + 1] = kids
+        L = p.read_text().split('\n'); i = L.index(str(bound))
+        for x in drop: i -= L.index(x) < i; L.remove(x)
+        L[i + 1:i + 1] = kids + (models if fl == 'kit_rtl_sim.f' else bbs); edits[p] = '\n'.join(L)
+    for x in drop: kr['files'].remove(x)
+    if 'sim_files' in kr: kr['sim_files'] = [x for x in kr['sim_files'] if x not in drop]
+    i = kr['files'].index(str(bound)); kr['files'][i + 1:i + 1] = kids + bbs
+    if 'sim_files' in kr and str(bound) in kr['sim_files']:
+        i = kr['sim_files'].index(str(bound)); kr['sim_files'][i + 1:i + 1] = kids + models
     edits[rtl / 'kit_rtl.json'] = json.dumps(kr, indent=1)
     for p, t in edits.items(): p.write_text(t)
     bound.write_text(closed)
     rep.update(status='APPLIED', event='S81-066 svc memory closure (T7 12605dc2 class port)', bound=str(bound),
-               children=kids, macros_added={'ot_sram_1r1w_256x256_m2_r2c2': 32, 'ot_sram_1r1w_32x64_m1': 34})
+               children=kids, form=form, macros_added=macros)
     (rtl / 'memory_closure.json').write_text(json.dumps(rep, indent=1) + '\n')
     return rep
 
@@ -206,10 +314,12 @@ def main():
     ap.add_argument('--out', help='fresh output dir')
     ap.add_argument('--kit-rtl', nargs='+', help='apply in place to kit rtl dirs (kit_rtl.json/.f); with --closed-dir reuse closed bounds')
     ap.add_argument('--closed-dir', help='packet dir (closure.json + closed/<bound>.sv.gz) or a dir of closed bounds; used only when the kit bound sha equals the recorded before sha, else the closure is computed')
+    ap.add_argument('--form', choices=('v1', 'v2'), default='v2', help='v2 (default) = right-sized children '
+                    '(MEM v2 svc fit); v1 = the 12605dc2 class port with 256x256_m2 / 32x64 masters')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--skip-self-check', action='store_true', help='only when the self-check already ran on this tool sha')
     a = ap.parse_args()
-    ref_s = ref_text(a.ref)
+    ref_s = ref_text(a.ref); cur_s, rm = cur_ref()
     if a.kit_rtl:
         for d in a.kit_rtl:
             closed = None
@@ -221,15 +331,15 @@ def main():
                     cd = Path(a.closed_dir); gz = cd / "closed" / (b.name + ".gz")
                     closed = gzip.decompress(gz.read_bytes()).decode() if gz.exists() else (cd / b.name).read_text()
                     if sha(closed) != r['after_sha256']: sys.exit('closed bound sha mismatch ' + t)
-            print(d, json.dumps({k: v for k, v in apply_kit(d, ref_s, closed).items() if k in ('status', 'after_sha256')}), flush=True)
+            print(d, json.dumps({k: v for k, v in apply_kit(d, cur_s or ref_s, closed, a.form, rm).items() if k in ('status', 'after_sha256')}), flush=True)
         return
     out = Path(a.out)
     if out.exists(): sys.exit('refusing existing ' + str(out))
     out.mkdir(parents=True)
     jobs = [(str(ref_s_path), ref_s) for ref_s_path in []]
-    todo = ([] if a.skip_self_check else [a.ref]) + list(a.bound)
+    todo = ([] if a.skip_self_check else [(a.ref, ref_s, None)]) + [(f, cur_s or ref_s, rm) for f in a.bound]
     with ProcessPoolExecutor(max_workers=a.jobs) as ex:
-        res = list(ex.map(_one, [(f, ref_s) for f in todo]))
+        res = list(ex.map(_one, todo))
     report = dict(types={})
     if not a.skip_self_check:
         _, (t7, r7) = res.pop(0)
@@ -238,12 +348,14 @@ def main():
         print('SELF-CHECK', 'PASS' if ok else 'FAIL', report['self_check']['t7'][:8], flush=True)
         if not ok:
             (out / 'closure.json').write_text(json.dumps(report, indent=1) + '\n'); sys.exit(2)
-    for c, (p, h) in CHILDREN.items():
+    for c, (p, h) in children(a.form).items():
         b = (ROOT / p).read_bytes()
-        if hashlib.sha256(b).hexdigest()[:8] != h: sys.exit('child hash ' + c)
+        if h and hashlib.sha256(b).hexdigest()[:8] != h: sys.exit('child hash ' + c)
         (out / c).write_bytes(b)
     for name, (new, rep) in res:
         typ = re.sub(r'^s81p_|_bound\.sv$', '', name)
+        if new is not None and a.form == 'v2':
+            rep['v1_after_sha256'] = rep['after_sha256']; new = fit_v2(new); rep['after_sha256'] = sha(new)
         if new is not None: (out / name).write_text(new)
         report['types'][typ] = rep; print(typ, rep['status'], rep.get('reason', rep.get('after_sha256', '')[:8]), flush=True)
     (out / 'closure.json').write_text(json.dumps(report, indent=1) + '\n')

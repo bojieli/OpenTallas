@@ -1023,6 +1023,8 @@ SCHEMA = {
             # IN pin; root_part names the root partition (default: the one at the die rst_n pin).
             "release": {"enum": ["counted", "pipelined", "wavefront"]}, "relay_um": _pos, "hop_um": _pos,
             "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
+            "parent_pins": {"type": "object", "additionalProperties": {"oneOf": [_name, {"type": "array", "minItems": 2, "maxItems": 2}]}},
+            "keep_outs": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "integer"}}},
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
@@ -1284,8 +1286,6 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                 'tie': {'additionalProperties': {'minLength': 1, 'type': 'string'}, 'type': 'object'},
                 'cycles': {'const': 0}, 'note': {'type': 'string'}},
  'required': ['merge', 'cycles'], 'type': 'object'}
-# DIE-S81-59 11-05: the signed kit's top parameters of this hard core (bk_sel__t2 RF 7, SRAM_MACRO 1); gen_phys.macro_param_blackboxes
-SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["signed_params"] = {'type': 'object', 'additionalProperties': {'type': 'integer'}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["reset_from_master"] = {'additionalProperties': False,
  'properties': {'kind': {'enum': ['port', 'internal']}, 'content': {'minLength': 1, 'type': 'string'},
                 'pin': {'const': 'rst_n'}, 'source': {'minLength': 1, 'type': 'string'}},

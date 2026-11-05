@@ -439,3 +439,10 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 - **Part 18 (HBM-REFORM-A2/A3, 11-05):** lane_exp canon (60) -> lane_exp_x + sfu_s, lane_exp0_id (4) -> lane_full_x + sfu_s, row grows 414.72 -> 440.64 on local E. S chain moved to a shared SFU core, seam 101 bits with face flops. SFU_EXP, SFU_SIGM, SFU_SILU +4 edges, S-chain fault +4, others 0. Macros 2 x 3, W/E bands 30.2, 60.7, 30.4. Bench eq_x: PASS and 5 mutants FAIL on both rows. G0 new 0, gone 0. GEOM advisory 225 -> 225, new 0.
 
 - **Part 19 (HBM-REFORM-A3, 11-05):** tkm tile (both id forms) -> 2 x ot_hgi_coll_tkm_tp192_htile_core stacked Y (319.68x172.8 each), chain PTILE 32, NT 64. TKM op +448 edges, down +5, clr_o +3, conv_o +2, up_out +2. Root re-extracted on PTILE 32 with the same _x ports (recipe file replaced). Corridor clock buffers now drive __ha + __hb. G0: 15 new clock lines, advisory: direct leg 410-462 um > reach 405 (repeater segments pass), geometry of the split, not of the logic. GEOM 225 -> 225, new 0. EQ: reduced chain KMAX 128 bench, positive PASS, 3 mutants FAIL; full chain not run.
+
+
+## Part 25 (ot_hbm_svc_wb_kport_q split, 4 instances; HBM-REFORM-B4)
+
+- **ot_hbm_svc_wb_kport_q** (flat 374k), slot 475.2x475.2 grows to 527.04x544.32, u_wbk_Q__q1 origin y -8.64 (gaps at q1: E 17.28, N 8.64, S 21.6). It becomes one switch tile **ot_wbq_sw** 86.4x544.32 (160k cells at kit synth, over the 150k target) and four root tiles **ot_wbq_root** 432x129.6 (57k cells, 2 lane groups each, 8 128x256 payload macros), all with registered faces, one clock.
+- **Form**: root pushes sectors with a credit of 4 per group; sw queues per group and switches onto 16 K ports at most 8 per edge (flat 16). Order on K changes; each PC still gets its sectors in stream order per group.
+- **Cycles**: physical/die_plan/hbm/reform_1103/cycles/wb_kport.tsv. Scripts results/die_hbm_1104/reform_b/split_p25/ (mk_p25.py pre, then mk_split.py).
