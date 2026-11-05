@@ -196,3 +196,66 @@ ATTEMPT-LATEST-OTHERHOST-RECORD	/srv/opentallas-scratch2/claude/codex-qc-wave-11
 ATTEMPT-LATEST-OTHERHOST-RECORD	/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/sle_st_a_v1__cl989804f6__cled3c1d7b/attempt_5	LATEST
 TREE	die-s81-51/lecegn	77705c88e5c7330e3661e43774b503a99604539c
 TREE	dkv65/lecwt_base	bdc3e312436fdde20584ddc4d0846ef98085fe9d
+ATTEMPT-QUEUE-ONLY	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_su_programme_pslice_c5/attempt_4	LATEST
+ATTEMPT-QUEUE-ONLY	/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave/qwen_compute/5bcec8dc59/items/sle_hc2__cl9c4c4509__cl3edce1b8/attempt_3	LATEST
+ATTEMPT-QUEUE-ONLY	/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave/qwen_compute/5bcec8dc59/items/sle_hc2__clcc5e3e61/attempt_4	LATEST
+ATTEMPT-QUEUE-ONLY	/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave/qwen_compute/5bcec8dc59/items/slw_hc1__cl3449ea95/attempt_3	LATEST
+ATTEMPT-QUEUE-ONLY	/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave/qwen_compute/5bcec8dc59/items/slw_hc1__cl68f9248e__cl144ee7b3/attempt_3	LATEST
+FLOW-CANARY-RUN	epyc4-scratch3	hbm_bbb54bc8c_1104_233641_037710
+FLOW-CANARY-RUN	epyc4-scratch3	hbm_c512ffc3a_1104_222113_310696
+FLOW-CANARY-RUN	epyc4-scratch3	hbm_sram_468ce5a00_1104_225134_412976
+FLOW-CANARY-RUN	epyc4-scratch3	hbm_sram_a3c0913a2_1104_235126_967727
+FLOW-CANARY-RUN	epyc4-scratch3	qwen_kvsys_c512ffc3a_1104_222113_310696
+FLOW-CANARY-RUN	epyc4-scratch3	qwen_kvsys_core_c512ffc3a_1104_220636_689860
+FLOW-CANARY-RUN	epyc4-scratch3	s81_c512ffc3a_1104_222113_310696
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg/attempt_4	180224	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v3/attempt_4	38178816	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi/attempt_4	106496	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v3/attempt_4	23392256	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v4/attempt_4	180224	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v5/attempt_4	23621632	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v6/attempt_4	200704	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v7/attempt_4	188416	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v8/attempt_4	204800	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hub_Eo/attempt_4	11522048	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hub_Wi/attempt_4	782336	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_hub_Wo/attempt_4	11489280	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor_v1/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pc__cl254f2e73/attempt_4	7237632	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pc__cl5a95b461/attempt_4	139264	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pc_v3/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v1/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v12/attempt_4	1441792	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v1n/attempt_4	21364736	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v2/attempt_4	1679360	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v2n/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v3/attempt_4	23588864	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v3n/attempt_4	1265664	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v4/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v4n/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v5/attempt_4	23785472	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v5n/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v6/attempt_4	1744896	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v6n/attempt_4	1728512	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v7/attempt_4	1380352	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v8/attempt_4	0	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/kv-wave-1104/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_SD/attempt_4	49152	23
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_fw_v2__cl69f5e854/attempt_2	11481088	8
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_fw_v3/attempt_2	0	11
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_fw_v3/attempt_3	11026432	8
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_hc1__cl7d360508/attempt_4	2639306752	8
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_sc_v1__cl7479a5ec/attempt_2	1085304832	9
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v1__cl67389ecd/attempt_4	10244096	10
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v1__cl989804f6__cled3c1d7b/attempt_5	10227712	10
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v2/attempt_5	0	11
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v2/attempt_6	10326016	10
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/sle_stm_v1__clbe630b9c/attempt_4	12214272	8
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_fw_v1__cl51d45468/attempt_2	10895360	8
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_fw_v2__cl8537f156/attempt_2	10756096	8
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_hc1__cl68f9248e__cle683a076/gen	5013504	9
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_hc3__clccfc3e6b/attempt_4	5267456	10
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_sc_v2/attempt_2	32538624	10
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_stm_v1__cl05fc43f7__cl389df4e9/attempt_4	11968512	8
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_su_c__cl92142dac/attempt_9	44707840	9
+ATTEMPT-SUPERSEDED	epyc4-scratch3	/srv/opentallas-scratch3/claude/s81-wave-1104s3/kit-wave/s81/bf1e2233ce05/items/bk_sel__t2/gen	24682496	9
