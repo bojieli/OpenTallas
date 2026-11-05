@@ -1,0 +1,8 @@
+m0 expect=PASS got=PASS OK | Q2N MUT=0 BAD=0 cycles 3000 valid_edges 2941 errors 0 sf 0 uf 0 cf 0 
+bs expect=PASS got=PASS OK | Q2N MUT=0 BAD=2 cycles 3000 valid_edges 2943 errors 0 sf 1 uf 0 cf 0 
+bu expect=PASS got=PASS OK | Q2N MUT=0 BAD=1 cycles 3000 valid_edges 2943 errors 0 sf 0 uf 1 cf 0 
+bc expect=PASS got=PASS OK | Q2N MUT=0 BAD=3 cycles 3000 valid_edges 2943 errors 0 sf 0 uf 0 cf 1 
+s1 expect=FAIL got=FAIL OK | pin_d 9 link 9 
+s2 expect=FAIL got=FAIL OK | link 9 link 10 
+s3 expect=FAIL got=FAIL OK | fault 1437 0 0 0 1 Q2N MUT=3 BAD=1 cycles 3000 valid_edges 2943 errors 1 sf 0 uf 1 cf 0 
+EQ_EXIT 0

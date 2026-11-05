@@ -1092,7 +1092,7 @@ AUTO_MULTIPORT_NOTE = (
 def multiport_density_auto(clocks, explicit_contract, source_profile, clock_sites, clock_taps, mode="auto"):
     """True when a plain native multi-port core takes the automatic multi-port density form (default-on class fix)."""
     return (mode == "auto" and len(set(clocks)) > 1 and not explicit_contract and source_profile is None
-            and not clock_sites and clock_taps == "off")
+            and not clock_sites and clock_taps in ("off", "density"))
 
 
 def auto_multiport_density_contract(module, clocks):
