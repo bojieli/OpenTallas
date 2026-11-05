@@ -1193,6 +1193,123 @@
    ]
   },
   {
+   "core": "ot_hbm_idx_selector_static_sel",
+   "sha": "p21",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_idx_selector_static_sel__p21glue.sv",
+   "slot_um": [
+    596.16,
+    449.28
+   ],
+   "instances": 1,
+   "types": [
+    "root"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_ctl": [
+     [
+      276.48,
+      207.36
+     ],
+     [
+      43.2,
+      34.56
+     ]
+    ],
+    "u_fcore.u_core.u_q0": [
+     [
+      0.0,
+      233.28
+     ],
+     [
+      259.2,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_q1": [
+     [
+      336.96,
+      233.28
+     ],
+     [
+      259.2,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_q2": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      259.2,
+      216.0
+     ]
+    ],
+    "u_fcore.u_core.u_q3": [
+     [
+      336.96,
+      0.0
+     ],
+     [
+      259.2,
+      216.0
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hidx_s3_ctl": {
+     "pins_file": "cores/ot_hidx_s3_ctl__43.2x34.56__d44v_split.json",
+     "outline_um": [
+      43.2,
+      34.56
+     ],
+     "pins": 217,
+     "clock_pins": 1,
+     "clock_entry": [
+      21.6,
+      17.28
+     ],
+     "faces": {
+      "I": 1,
+      "N": 125,
+      "S": 91
+     }
+    },
+    "ot_hidx_s3_q": {
+     "pins_file": "cores/ot_hidx_s3_q__259.2x216__d44v_split.json",
+     "outline_um": [
+      259.2,
+      216.0
+     ],
+     "pins": 1257,
+     "clock_pins": 1,
+     "clock_entry": [
+      30.24,
+      151.2
+     ],
+     "faces": {
+      "I": 1,
+      "N": 592,
+      "S": 70,
+      "W": 594
+     }
+    }
+   },
+   "added_cycles": "registered_s3fs against registered_s3: sel_in 7 same, sel_in_line 2->3, sel_out 1->2, sel_choose_rt 8->6; cycles/selector.tsv",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 7
+   },
+   "designs_removed": [
+    "ot_hbm_idx_selector_static_sel"
+   ],
+   "designs_added": [
+    "ot_hidx_s3_ctl",
+    "ot_hidx_s3_q"
+   ]
+  },
+  {
    "core": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
    "sha": "8dd205e8bcc",
    "status": "SPLIT -> PLAN DESIGNS",
@@ -1268,11 +1385,11 @@
       155.52
      ],
      "faces": {
-      "E": 322,
+      "E": 260,
       "I": 19,
-      "N": 832,
+      "N": 889,
       "S": 569,
-      "W": 293
+      "W": 298
      }
     }
    },
@@ -1364,9 +1481,9 @@
       95.04
      ],
      "faces": {
-      "E": 1585,
+      "E": 1465,
       "I": 19,
-      "W": 431
+      "W": 551
      }
     }
    },

@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.hbm_plan_event.part21",
+ "core": "ot_hbm_idx_selector_static_sel",
+ "outline": {
+  "from": [
+   600.048,
+   450.36
+  ],
+  "to": [
+   596.16,
+   449.28
+  ]
+ },
+ "subs": [
+  "ot_hidx_s3_ctl",
+  "ot_hidx_s3_q x4"
+ ],
+ "unloaded": "clk_mem stays a master port with no load: each SRAM runs on its quadrant clock",
+ "cycles": "registered_s3fs: sel_in 7, sel_in_line 3, sel_out 2, sel_choose_rt 6, sel_scan_drain as the q tile (cycles/selector.tsv)"
+}

@@ -98,3 +98,10 @@ def test_status_pin_in_the_core_margin_takes_the_grow_path():
     loop = TCL[TCL.index("foreach spec $cland_status"):TCL.index("foreach spec $cland_optional_groups")]
     cond = re.search(r"if \{(\(\$x\+17\.28\).*?)\} \{\n  cland_put_grow", loop, re.S).group(1)
     assert "($y-17.28)*$ff_dbu < $ff_y1" in cond and "cland_sw 3" not in cond
+
+
+def test_optional_group_cells_take_the_grow_path():
+    """DIE-QC-73 11-05: raw-copy-optional cells (reset copies) grow like collectors, no plain cland_put."""
+    body = TCL.split("foreach spec $cland_optional_groups {", 1)[1].split("\n}\n", 1)[0]
+    assert "cland_put_grow $i $rect $tag raw-copy" in body
+    assert "\n  cland_put $i" not in body
