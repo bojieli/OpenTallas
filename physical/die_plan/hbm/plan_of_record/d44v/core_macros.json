@@ -5321,7 +5321,7 @@
    "basis": "plan_part19",
    "macros": [
     {
-     "name": "u_x.u.u_buffer.g_bm[0].u_b",
+     "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[0].u_b",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
      "rect_um": [
       72.576,
@@ -5331,7 +5331,7 @@
      ]
     },
     {
-     "name": "u_x.u.u_buffer.g_bm[1].u_b",
+     "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[1].u_b",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
      "rect_um": [
       72.576,
@@ -7971,6 +7971,39 @@
    ],
    "channel_rule_um": 10.8,
    "basis": "DIE-HBM-62/CUTS d44v part 8: column stacks with the d44v pair pitch 41.112 / stride 93.024; W and E macro pin channels >= 10.8"
+  },
+  "ot_pdie_serdes_rx": {
+   "status": "KNOWN",
+   "outline_um": [
+    302.4,
+    345.6
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_dly.u_dmem",
+     "master": "ot_sram_1r1w2c_64x546_m1",
+     "orient": "R0",
+     "rect_um": [
+      60.0,
+      8.4,
+      238.632,
+      89.4
+     ]
+    },
+    {
+     "name": "u_fcore.u_out.u_cmem",
+     "master": "ot_sram_1r1w_32x546_m1",
+     "orient": "R0",
+     "rect_um": [
+      60.0,
+      105.0,
+      237.768,
+      186.0
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
   },
   "ot_hbm_su_pg_lane1p_core": {
    "status": "KNOWN",

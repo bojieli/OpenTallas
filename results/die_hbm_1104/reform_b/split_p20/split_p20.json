@@ -1,0 +1,11 @@
+[{"core": "ot_pdie_serdes", "sha": "p20", "part": "p20", "glue": "ot_pdie_serdes__p20glue.sv", "conn": "ot_pdie_serdes.conn.json",
+  "subs": [{"module": "ot_pdie_serdes_tx", "cells": 72000}, {"module": "ot_pdie_serdes_rx", "cells": 146000}, {"module": "ot_s81_kp4_dchn", "cells": 189510}],
+  "added_cycles": "pma_rx to rx +2 (ddly DD 57); uncorrectable to st[0] +2; e_flt to st[0] +2; tx, pma_tx, st[1] 0; reform_1103/cycles/pdie.tsv",
+  "boundary_sub": "u_fcore.u_core.u_rx", "hub_sub": "u_fcore.u_core.u_rx",
+  "layout": {"u_fcore.u_core.u_rx": {"xy": [0.0, 250.56], "wh": [302.4, 345.6]},
+             "u_fcore.u_core.u_tx": {"xy": [311.04, 440.64], "wh": [285.12, 155.52]},
+             "u_fcore.u_core.u_chn": {"xy": [17.28, 103.68], "wh": [276.48, 138.24]}},
+  "clock_entry": {"ot_pdie_serdes_rx": [146.88, 263.52], "ot_s81_kp4_dchn": [138.24, 69.12]},
+  "macros": {"ot_pdie_serdes_rx": [
+    {"name": "u_fcore.u_dly.u_dmem", "master": "ot_sram_1r1w2c_64x546_m1", "orient": "R0", "rect_um": [60.0, 8.4, 238.632, 89.4]},
+    {"name": "u_fcore.u_out.u_cmem", "master": "ot_sram_1r1w_32x546_m1", "orient": "R0", "rect_um": [60.0, 105.0, 237.768, 186.0]}]}}]

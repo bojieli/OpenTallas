@@ -3,7 +3,13 @@
 // = qfd_dv_s5_sc2 #(LA 7, LM 9) through tools/qwen_dv/bound_math_netlist.py --load-cap 8 --transparent-inverters --retain-mux
 // --shared-helpers --retain-keep (rtl/test/qwen_dv/s5_scred2/native_k.sh).  Ports = the instantiated qfd_dv_s5_sc.
 // OT_S5_SCRED2_MUT_NETLIST (bench only): the constructed mutant netlist instead.
-module qfd_dv_s5_sc2_leaf (
+module qfd_dv_s5_sc2_leaf #(parameter integer HARD_PINREG =
+`ifdef OT_QC_HARD_PINREG
+    `OT_QC_HARD_PINREG
+`else
+    0
+`endif
+) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire [100:0]    sc_cfg,
@@ -35,7 +41,7 @@ module qfd_dv_s5_sc2_leaf (
 `ifdef OT_S5_SCRED2_MUT_NETLIST
     qfd_dv_s5_sc2_k79_mut u (
 `else
-    qfd_dv_s5_sc2_k79 u (
+    qfd_dv_s5_sc2_k79 #(.HARD_PINREG(HARD_PINREG)) u (
 `endif
         .ck(ck), .rst_n(rst_n), .sc_cfg(sc_cfg), .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .red_we(red_we), .red_addr(red_addr), .red_data(red_data), .vm_we(vm_we), .vm_win0(vm_win0), .vm_wdata0(vm_wdata0), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u), .w1_we(w1_we), .w1_addr(w1_addr), .w1_data(w1_data), .tok_v(tok_v), .tok_idx(tok_idx), .tok_own(tok_own), .tok_val(tok_val), .tok_user(tok_user), .busy(busy), .fault(fault));
 endmodule

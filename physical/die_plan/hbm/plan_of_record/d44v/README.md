@@ -405,6 +405,14 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 - **Parent clock tap**: `u_mu_fused_program.clk` (838.08, 5404.32) -> (838.08, 5468.88), same x. The `root` clock entry row follows (xy 103.68, 129.36; island kept 8.64 um square, clipped to the N edge).
 - **Checks**: plan diff 3 fields on `root` plus 4 on its clock entry. G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0. 0 cycles, no RTL. No `asbuilt` key, so bind.py does not apply.
 
+## Part 20 (ot_pdie_serdes conservative form; HBM-REFORM-B/B2, OWNER 11-03 two strikes)
+
+- **ot_pdie_serdes** (276k + kept kp4_inv 128.8k) becomes three plan designs inside its slot: `ot_pdie_serdes_tx` 285.12x155.52 (72.2k cells), `ot_pdie_serdes_rx` 302.4x345.6 (145.2k, 2 SRAM), and the signed `ot_s81_kp4_dchn` 276.48x138.24, pins = the signed table. Outline 600.048x600.48 -> 596.16x596.16, origin kept (8.64 lattice). Rows: `u_lk_*` in NW_io, NE_io, q_spb0 and siblings, 5 slots.
+- **Cycles**: `reform_1103/cycles/pdie.tsv`: pma_rx -> rx +2 (ddly DD 55 -> 57), uncorrectable and e_flt -> st[0] +2, pma_tx, tx, st[1] 0.
+- **Clock (COORD ruling 11-04 23:2x)**: the recovered clock enters rx on `rck_clk`; one SDC clock on `clk` and `rck_clk`, so the rate matcher is timed as synchronous. The real CDC is proved in simulation only (plesiochronous bench modes). The die-level PMA clock note stays open.
+- **Bench**: `results/die_hbm_1104/reform_b/split_p20/run_eq.sh`, kit face shells modelled by `ot_hbm_face_reg`.
+
+
 ## Part 17 (lanes canon and lanes_plain -> 4 x lane; HBM-REFORM-A, HBM-REFORM-A2)
 
 - **lanes canon**, 14 rows, 760.32x725.76 slot: 4 x existing ot_hbm_su_pg_lane1_core, 190.08x311.04 strip, 0 cycles. Same cut as part 6 on lanes8_11.
