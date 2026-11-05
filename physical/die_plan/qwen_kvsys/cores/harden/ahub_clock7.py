@@ -16,9 +16,12 @@ usage: clock_split7.py REPO OUT    (REPO = repo root; writes OUT/{qkd_ahub.sv, q
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import ahub_form_fgc  # noqa: E402
 
 # ---- qkd_ahub_static_core_la -> _ck7: am output pin registers on their own clock (clk_am) ----
 CORE_SUBS = [
@@ -112,7 +115,7 @@ def prepare(core, out):
     assert txt.count('qkd_ahub_static_dw #(') == 1 and txt.count('.ck(ck[0]),') == 1
     txt = txt.replace('qkd_ahub_static_dw #(', 'qkd_ahub_static_dw_ck7 #(', 1)
     txt = txt.replace('.ck(ck[0]),', '.ck(ck[0]), .ck_zh(ck[2:1]), .ck_ent(ck[6:3]),', 1)
-    core7 = apply(module(original, 'qkd_ahub_static_core_la'), CORE_SUBS)
+    core7 = ahub_form_fgc.apply_fgc(apply(module(original, 'qkd_ahub_static_core_la'), CORE_SUBS))
     dw7 = apply(module(original, 'qkd_ahub_static_dw'), DW_SUBS)
     new_wrap, new_dw = out / wrap.name, out / dw.name
     new_wrap.write_text(txt)
@@ -126,6 +129,7 @@ def prepare(core, out):
     core['report']['stale'] = [v for v in core['report'].get('stale', []) if not v['pin'].startswith('ck[')]
     core['report']['clock_nets'] = {'clk': 'ck[6:0]'}
     core['boundary_role'] = {'ck': 'clk', 'rst_n': 'reset'}
+    core['form'] = 'fgc'
     core['clock_split'] = dict(native_roles=7, cycles_added=0,
         source='Existing KV-KITS-21 clock_split7 CORE_SUBS/DW_SUBS; reverse restores current canonical RTL byte-exact')
     return core
