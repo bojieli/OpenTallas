@@ -677,7 +677,14 @@ class TestTick(TickBase):
                             f"(python3 ot-run --cancel y; parent 8 (bash)) -> ot-run pid 7 host h tag t STARTED unit u "
                             f"dir {path}_other: bash\n")
         self._cancel_case("ot-run: RAN on epyc2: exit 143\nAP_RC=143\n", sig)
-        self.assertEqual(len(self.f.launched), 2)            # exit 143 without a matching cancel: infra-oom resubmit
+        self.assertEqual(len(self.f.launched), 1)            # exit 143, no matching cancel, no OOM line: stopped, no retry
+
+    def test_outside_stop_is_not_retried_real_oom_is(self):
+        C = lambda c, cl: self.ap.classify(c, cl)[:2]
+        for rc in (137, 143):
+            self.assertEqual(C({}, {"exit": rc}), ("CRASH", "infra-stopped"))
+            self.assertNotIn("infra-stopped", self.ap.INFRA_KINDS)
+            self.assertEqual(C({"oom": "make: *** [x] Error 137"}, {"exit": rc}), ("CRASH", "infra-oom"))
 
     def test_signoff_bundle_gap_rejected_before_route(self):
         self.f.kits["/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"] = {"signoff_missing": ["pair_skew.tcl"]}
