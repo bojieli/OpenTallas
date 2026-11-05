@@ -435,7 +435,8 @@ module dsdv_idx_tx_n32 #(
     end else begin : g_face0
         assign vi_p = vi; assign vo_p = vo;
     end endgenerate
-    reg [V-1:0] vi_r, vo_r;
+    // rf1y: keep, so the 23 unread pin bits have a load in the raw netlist; synth_odb removes the unread flops and the face hook adds the capture flop
+    (* keep *) reg [V-1:0] vi_r, vo_r;
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) begin vi_r[0] <= 1'b0; vo_r[0] <= 1'b0; end
         else begin vi_r[0] <= vi_p[0]; vo_r[0] <= vo_p[0]; end
@@ -639,7 +640,8 @@ module dsdv_idx_tx_n32 #(
     // ------------------------------------------------------------------ window store (2 buffers) + beat descriptor
     reg         wv;                          // a window is open (in buffer act)
     reg         act;                         // buffer of the open window
-    reg  [19:0] w0c;                         // the open window's base
+    reg  [15:0] w0c_h;                       // the open window's base, 16-aligned: no state for the zero low bits (LEC: unreset constants)
+    wire [19:0] w0c = {w0c_h, 4'd0};
     wire [19:0] w0b [0:1]; wire [15:0] wlvb [0:1]; wire [255:0] wscb [0:1];
     reg  [19:0] lcur;                        // the parent lane's cursor
     reg  [2:0]  bq_n;                        // beats left in the descriptor
@@ -790,7 +792,7 @@ module dsdv_idx_tx_n32 #(
             if (ib_push) ib_w <= ib_w + 1'b1;
         end
     always @(posedge ck) begin
-        act <= nx_act; w0c <= nx_w0c; tc <= nx_tc; rc <= nx_rc; sn <= nx_sn; bix <= nx_bix; lcur <= nx_lcur_private;
+        act <= nx_act; w0c_h <= nx_w0c[19:4]; tc <= nx_tc; rc <= nx_rc; sn <= nx_sn; bix <= nx_bix; lcur <= nx_lcur_private;
         d_h <= nx_d_h; d_buf <= nx_d_buf; d_rb <= nx_d_rb; d_em <= nx_d_em; d_last <= nx_d_last;
     end
     // window buffers: field f of buffer b written with the result score when the result lands in b
