@@ -193,10 +193,11 @@ PIECES = {
         master='ot_hbm_hc_root_static', top='ot_hbm_hc_root_hcp_sys1_core', pieces=hcp_sys1,
         rtl={'u_core': ('ot_hdc_v41x_hcp_sys1_static',
                         '#(.W(256),.TL(4),.PMAX(8),.OMAX(32),.AW(10),.CW(16),.ML(2),.DF(32),.STATIC_CALENDAR(1),.SYS(1),'
-                        '.SYS_LAT(146),.TPRE(6))')},
+                        '.SYS_LAT(146),.TPRE(6),.CMD_RST(1),.SM_LAT(4),.OM_LAT(5),.NF_TIED(1))')},
         straps=[],
         src='rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static_s.sv u_core (die params QDRLY 2, QCHX 11 from '
-            'r18h5 views.json -> SYS_LAT = 100 + 46 = 146); constant command fields tied inside as in the master'),
+            'r18h5 views.json -> SYS_LAT = 100 + 46 = 146); constant command fields tied inside as in the master; '
+            'hcpom4 form: CMD_RST 1, SM_LAT 4, OM_LAT 5, NF_TIED 1 (u_div divisor = tied cmd_nf)'),
     'coll_q2_ring_ag': dict(
         master='ot_hfd_coll_q2_hard_v8g', top='ot_hfd_coll_q2_ring_ag_core', pieces=coll_one(r'coll_ring_ag$', 'ring_ag'),
         rtl={'u_ring': ('ot_hgi_coll_ring_ag', '#(.SPLIT_CLOCKS(1),.AG(1))')}, straps=[],
