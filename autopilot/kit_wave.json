@@ -1344,7 +1344,8 @@
     "ot_s81sl_kv_leaf__t2": "KW-FIX-8 21:4x COORD: yosys SHARE stall, 13 h CPU; stopped; DIE-S81-56 names the form (share pass off in synth, or bank macro carve)",
     "dsdv_bk_g": "KW-FIX-8 23:2x I64: signed dsdv_bk_g, ruled not a stop, no rebuild (RM-31 22:03)",
     "ot_v41_bf16_half": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
-    "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)"
+    "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
+    "serdes__t4": "KW-FIX-8 23:3x sweep: detail place DPL-1101 diamond search silent 2 h 37 at one core; stopped under flat >2 h; no relaunch on same recipe, with DIE-S81-56 for the form"
    },
    "queue_src": "",
    "work_root": "/srv/opentallas-scratch2/claude/s81-wave-1104s2/kit-wave",
