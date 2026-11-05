@@ -3154,3 +3154,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 2026-11-05 06:05 PST COORD hourly: count 142, 0 unreachable; every-core safe-form lanes started; epyc4 root 527 under prune.
 - 2026-11-05 06:40 PST COORD hourly: count 142 (flat since 06:03; 3 re-signs in LEC, ETA 07:05). Epyc4 root 505, floor 500: scratch3 writers told to move. CORE-FORMS gaps all owned.
 2026-11-05 06:51 PDT DIE-CI LATEST: /srv/opentallas-scratch/claude/die-ci/results/die_ci/2026-11-01_6defc3c23069/SUMMARY.md (FAIL, main 6defc3c230, nightly; branch claude/die-ci-results)
+2026-11-05 07:33 PST [COORD] hourly: count 143 at 07:30 scan. vs recorded but pins mismatch plan (495 pins) -> DIE-S81-60. Approved AHUB fgc, HBM parts 27,29. Removals stopped pending PRUNE-1106 recheck. eng_finish LEC running.
