@@ -459,14 +459,6 @@
 "u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_stream2",
 "u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_stream3"
 ],
-"ot_sram_1r1w2c_128x64_m1": [
-"u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank[0].g_ex[0].u_em",
-"u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank[0].g_ex[1].u_em",
-"u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank[1].g_ex[0].u_em",
-"u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank[1].g_ex[1].u_em",
-"u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank[2].g_ex[0].u_em",
-"u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank[2].g_ex[1].u_em"
-],
 "ot_sram_1r1w_128x256_m1_r2c2": [
 "u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank[0].g_mac[0].u_mem",
 "u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank[0].g_mac[1].u_mem",
@@ -503,14 +495,6 @@
 "u_bound.u_u_s_3N_u_slice_u_xg.u_s.u_stream1",
 "u_bound.u_u_s_3N_u_slice_u_xg.u_s.u_stream2",
 "u_bound.u_u_s_3N_u_slice_u_xg.u_s.u_stream3"
-],
-"ot_sram_1r1w2c_128x64_m1": [
-"u_bound.u_u_s_3N_u_slice_u_xg.u_s.g_bank[0].g_ex[0].u_em",
-"u_bound.u_u_s_3N_u_slice_u_xg.u_s.g_bank[0].g_ex[1].u_em",
-"u_bound.u_u_s_3N_u_slice_u_xg.u_s.g_bank[1].g_ex[0].u_em",
-"u_bound.u_u_s_3N_u_slice_u_xg.u_s.g_bank[1].g_ex[1].u_em",
-"u_bound.u_u_s_3N_u_slice_u_xg.u_s.g_bank[2].g_ex[0].u_em",
-"u_bound.u_u_s_3N_u_slice_u_xg.u_s.g_bank[2].g_ex[1].u_em"
 ],
 "ot_sram_1r1w_128x256_m1_r2c2": [
 "u_bound.u_u_s_3N_u_slice_u_xg.u_s.g_bank[0].g_mac[0].u_mem",
