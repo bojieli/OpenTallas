@@ -168,7 +168,12 @@
     "kv3_pc_v3@5",
     "kv3_pc_v1__cl23f6a148@1",
     "kv3_pc_v1__cl4ea58a5c@1",
-    "kv3_pc_v1__cl7f648944@1"
+    "kv3_pc_v1__cl7f648944@1",
+    "kv3_hub_Ei@4",
+    "kv3_sys_c@1",
+    "kv3_io_ft@4",
+    "kv3_io_ft_v1@5",
+    "kv3_io_cor_v1@6"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -200,7 +205,7 @@
     "kv3_phy",
     "kv3_phy_v1"
    ],
-   "note": "KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 14:1x I46 tag x-kv: src_s, event28x_c astk Eo+Wo, prov_first_re ^kv3_pc, PC holds lifted, Wi held; kv3_hgi_v6@7 armed row dropped: add it when a7 fails | KW-FIX-8 10:1x I37 tag p-kv: src_o, kv3_phy pilot alone (phymid); kv3_phy_v1 held for its G2 read | KW-FIX-8 10:0x I36: src_n main 6c547da940f, PV 16 + PC 6 one class; hubs held, kv3_phy waits phymid | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-7 06:4x: src main 5405676ba19 (tag j, plan and sidecar blobs identical to d0cddccfa24 [git rev-parse]), --native-cell-cap 517000 (COORD 06:00 (2)). | KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
+   "note": "KW-FIX-8 17:2x COORD 17:3x: five stale-part rows relaunch once on bind_v. | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 14:1x I46 tag x-kv: src_s, event28x_c astk Eo+Wo, prov_first_re ^kv3_pc, PC holds lifted, Wi held; kv3_hgi_v6@7 armed row dropped: add it when a7 fails | KW-FIX-8 10:1x I37 tag p-kv: src_o, kv3_phy pilot alone (phymid); kv3_phy_v1 held for its G2 read | KW-FIX-8 10:0x I36: src_n main 6c547da940f, PV 16 + PC 6 one class; hubs held, kv3_phy waits phymid | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-7 06:4x: src main 5405676ba19 (tag j, plan and sidecar blobs identical to d0cddccfa24 [git rev-parse]), --native-cell-cap 517000 (COORD 06:00 (2)). | KW-FIX-6 05:4x COORD 05:20 (2): KV event plan_c c3ca3c1de69f, src main d0cddccfa24 (tag flow-20261104-e-kv), gen + place epyc4 only, kit_rtl bind_e2, ft held. | KW-FIX-5: INFRA ENOSPC remainder (intel1 214 GB free) | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-kvi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE) | KW-FIX-4 20:1x KV-RFKV1: released the 11-02 SUPERSEDED holds on qkd_hr_cdc_ci/hi/pc + core_queue/core_guard (DIE-KV-64 now asks the wave to build them on src kvi4 b07b52ff0c7); qkd_hr_core_prompt stays held | KW-FIX-4 19:0x I4 batch: src kw-fix-4-kvi4 = main b07b52ff0c7 (RF-KV1 fold debc79c88f, HGICLAND 486b31b9ae, RF-B e41aedea924) |  | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
    "die_max_inflight": 60,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
