@@ -8,11 +8,15 @@
 //   Commands: weight ops (round 0 / 1) and KV ops (wsrc 1, ragged K -> K-limit masks, K <= S -> a round boundary
 //   every IL cycles = earliest first use of tstep_r), x with low mantissa bits (BF16 round) and negative windows.
 // +MUT=1: u_k1 K-limit pad mask kdm_q (group 0) forced 0     -> must FAIL
+// +MUT=7 (-DOT_NKP_BIT3): u_k1 registered rows trf_q forced 0 -> must FAIL
 // +MUT=2: u_k1 registered round-step carry-save sum ts_sq forced 0 -> must FAIL
 // +MUT=3: u_k1 leaf 0 group 0 BF16 round carry cy forced 0    -> must FAIL
 // +MUT=4: u_k1 ICG_IDLE_RT idle_r forced 1 (engine never busy to the gate) -> must FAIL
 // +MUT=5: u_k1 ICG_IDLE_RT drain counter dr_x forced 0 (the one-edge idle_r lag uncovered, no drain) -> must FAIL
 // +MUT=6 (bench adds +ICG_MUT=16): u_k1 lagged-busy reload = ICG_DRAIN instead of ICG_DRAIN - 1 (gating one edge late) -> must FAIL
+`ifndef OT_NKP_V
+`define OT_NKP_V 7
+`endif
 `ifndef OT_NKP_IRT
 `define OT_NKP_IRT 1
 `endif
@@ -30,7 +34,7 @@ wire [513:0] t0, t1, y0, y1;
 wire h0, l0, h1, l1;
 qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(0), .ROM_TILE(48)) u_k0 (
   .ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(h0), .tie_lo(l0), .tap(tap), .t_out(t0), .n_a(na), .n_b(nb), .n_y(y0));
-qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(7), .ICG_IDLE_RT(`OT_NKP_IRT), .ROM_TILE(48)) u_k1 (
+qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(`OT_NKP_V), .ICG_IDLE_RT(`OT_NKP_IRT), .ROM_TILE(48)) u_k1 (
   .ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(h1), .tie_lo(l1), .tap(tap), .t_out(t1), .n_a(na), .n_b(nb), .n_y(y1));
 `define ME0 u_k0.u_g.u_tile.u_tile.u_logic.u_me
 `define ME1 u_k1.u_g.u_tile.u_tile.u_logic.u_me
@@ -71,6 +75,9 @@ wire [1023:0] st1 = {`ME1.active, `ME1.pend, `ME1.cur, `ME1.base_k, `ME1.base_t,
 initial begin
   if (MUT == 1) force `ME1.g_gm_fast.g_kl[0].g_k7p.kdm_q = 0;
   if (MUT == 2) force `ME1.g_issue_fast.g_terms7p.g_ts1.ts_sq = 0;
+`ifdef OT_NKP_BIT3
+  if (MUT == 7) force `ME1.g_issue_fast.g_terms7p.g_ts1.g_rq.trf_q = 0;
+`endif
   if (MUT == 3) force `ME1.g_hier.g_sl[0].g_hd.g_tx.g_lx.g_x[0].cy = 1'b0;
 `ifdef OT_NKP_IRT_MUT
   if (MUT == 4) force u_k1.g_icg.g_root.g_erx.idle_r = 1'b1;

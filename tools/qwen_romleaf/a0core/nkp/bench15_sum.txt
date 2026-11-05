@@ -1,0 +1,13 @@
+BUILD_OK
+NKP_COUNTS MUT=0 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_PASS MUT=0 checks=14000 strict_out=0 engine_state=0
+NKP_IMISMATCH cyc930 engine state differs (e_gm k0 0000 k1 0000 cur k0 000278 k1 000200)
+NKP_IMISMATCH cyc931 engine state differs (e_gm k0 1111 k1 1111 cur k0 000279 k1 000201)
+NKP_IMISMATCH cyc932 engine state differs (e_gm k0 1111 k1 1111 cur k0 00027a k1 000202)
+NKP_COUNTS MUT=2 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=2 strict_out_errors=0 first=-1 engine_state_errors=5923 first=930 checks=14000
+NKP_IMISMATCH cyc930 engine state differs (e_gm k0 0000 k1 0000 cur k0 000278 k1 000200)
+NKP_IMISMATCH cyc931 engine state differs (e_gm k0 1111 k1 1111 cur k0 000279 k1 000201)
+NKP_IMISMATCH cyc932 engine state differs (e_gm k0 1111 k1 1111 cur k0 00027a k1 000202)
+NKP_COUNTS MUT=7 checks=14000 cmds=24 t_valid=3155 t_nonzero=2643 kv_elems=512 kv_masked_elems=128
+NKP_FAIL MUT=7 strict_out_errors=0 first=-1 engine_state_errors=5923 first=930 checks=14000
