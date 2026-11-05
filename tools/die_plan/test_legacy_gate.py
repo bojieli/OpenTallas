@@ -42,7 +42,7 @@ def test_stale_equivalent_cannot_pass_without_new_receipt(tmp_path):
 
 def policy_log(corner, mutation=None):
     bound = 250 if corner == 'TT' else 190
-    setup = -15 if mutation == 'TT-negative' and corner == 'TT' else 12
+    setup = (-15 if mutation == 'TT-negative' else -80 if mutation == 'TT-deep' else 12) if corner == 'TT' else 12
     hold = -3 if mutation == 'STD-FF-negative' and corner == 'FF' else 10
     overlay = 'skipped vclks 0' if mutation == 'overlay-missing' else 'applied vclk in_min -40 out_min 0'
     pair = 'nan' if mutation == 'pair-nan' else ('81' if mutation == 'pair-high' else '5')
@@ -196,7 +196,7 @@ def test_explicit_info_band_requires_matching_plan_and_measured_receipt(tmp_path
     assert gate.run(k,'grt',execute=execute)==expected
 
 
-@pytest.mark.parametrize('mutation', ['TT-negative','overlay-missing','pair-nan','old-band-only','pair-missing','coverage-nan','clock-nan'])
+@pytest.mark.parametrize('mutation', ['TT-deep','overlay-missing','pair-nan','old-band-only','pair-missing','coverage-nan','clock-nan'])
 def test_grt_policy_blocks_data_or_clock_failure_even_when_band_passes(tmp_path, mutation):
     k=kit(tmp_path)
     def execute(args, **kwargs):
@@ -282,3 +282,51 @@ def test_standalone_isolated_python_finds_staged_signoff(tmp_path):
     script="import runpy,sys;from pathlib import Path;m=runpy.run_path(sys.argv[1],run_name='gate_test');k=Path(sys.argv[2]);m['policy_context'](k,k/'run/results/asap7/design/base',{'OT_VCLK_TT':'250','OT_VCLK_FF':'190'})"
     r=subprocess.run([sys.executable,'-I','-c',script,str(source),str(k)],capture_output=True,text=True)
     assert r.returncode==0,r.stderr
+
+
+# KW-FIX-16 11-05 (COORD class G2-TT-SETUP, OWNER 11-03 targets not gates): a TT setup miss on GRT RC within
+# setup_continue_ps (default 50) is advisory and recorded; deeper misses, OT_G2_SETUP_GATE=1 or a smaller window stop.
+@pytest.mark.parametrize('mutation,how,rc', [('TT-negative', None, 0), ('TT-negative', 'env', 6), ('TT-negative', 'config', 6),
+                                             ('TT-negative', 'window10', 6), ('TT-deep', None, 6), ('TT-deep', 'window100', 0)])
+def test_grt_policy_small_tt_setup_miss_is_advisory(tmp_path, monkeypatch, capsys, mutation, how, rc):
+    for v in ('OT_G2_SETUP_GATE', 'OT_G2_SETUP_CONTINUE_PS', 'OT_G2_HOLD_GATE'): monkeypatch.delenv(v, raising=False)
+    k=kit(tmp_path)
+    if how == 'env': monkeypatch.setenv('OT_G2_SETUP_GATE', '1')
+    if how == 'config':
+        with (k/'config.mk').open('a') as f: f.write('export OT_G2_SETUP_GATE = 1\n')
+    if how == 'window10': monkeypatch.setenv('OT_G2_SETUP_CONTINUE_PS', '10')
+    if how == 'window100':
+        with (k/'config.mk').open('a') as f: f.write('export OT_G2_SETUP_CONTINUE_PS = 100\n')
+    def execute(args, **kwargs):
+        c=kwargs['env']['OT_CORNER']
+        (k/f'postcts_gate_{c.lower()}.json').write_text(json.dumps(passing(c)))
+        write_policy(k,c,kwargs,mutation)
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k,'grt',execute=execute)==rc
+    receipt=json.loads((k/'grt_policy.json').read_text())
+    assert receipt['checks']['setup_tt']['verdict']=='FAIL'
+    assert receipt['verdict']==('PASS' if rc==0 else 'FAIL')
+    assert ('setup_tt' in receipt['advisory'])==(rc==0)
+    assert ('OT_LEGACY_GATE ADVISORY G2 setup_tt' in capsys.readouterr().out)==(rc==0)
+    assert (k/'FAIL_POSTCTS').exists()==(rc!=0)
+
+
+@pytest.mark.parametrize('how,thr', [(None, '-50.00'), ('gate', '-0.00'), ('window', '-12.50')])
+def test_grt_tt_session_stops_only_beyond_window(tmp_path, monkeypatch, how, thr):
+    for v in ('OT_G2_SETUP_GATE', 'OT_G2_SETUP_CONTINUE_PS'): monkeypatch.delenv(v, raising=False)
+    if how == 'gate': monkeypatch.setenv('OT_G2_SETUP_GATE', '1')
+    if how == 'window': monkeypatch.setenv('OT_G2_SETUP_CONTINUE_PS', '12.5')
+    k=kit(tmp_path)
+    disc,ctx,policy=gate.policy_context(k,next((k/'run/results/asap7').glob('*/base')),dict(OT_VCLK_TT='250',OT_VCLK_FF='190'))
+    text=gate.policy_session(k,'TT',None,disc,ctx,policy)
+    assert 'set ot_g2_wns [so_ps [sta::worst_slack_cmd max]]' in text
+    assert f'if {{$ot_g2_wns ne "nan" && $ot_g2_wns < {thr}}}' in text
+    assert text.index('so G2_REQUIRED_FAIL setup_tt') > text.index('so_timing STD')
+
+
+@pytest.mark.parametrize('bad', ['-5', 'x', 'nan'])
+def test_setup_window_bad_value_fails_closed(tmp_path, monkeypatch, bad):
+    monkeypatch.delenv('OT_G2_SETUP_GATE', raising=False)
+    monkeypatch.setenv('OT_G2_SETUP_CONTINUE_PS', bad)
+    with pytest.raises(ValueError):
+        gate.setup_continue_ps(kit(tmp_path))
