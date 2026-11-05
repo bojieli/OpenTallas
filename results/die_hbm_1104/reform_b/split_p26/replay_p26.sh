@@ -42,7 +42,7 @@ python3 -I $Q/relax_p26.py $W/new '^u_svg_Q\d+__(t|o|b0|b1)$'
 sed -i '/ot_svgr_\|ot_q2nf_/d' $D/SHA256SUMS
 python3 -I /srv/opentallas-scratch3/claude/hbm-reform-b3/pk.py $W/new $W/base $D | cut -c1-300
 python3 -I results/die_hbm_1103/reform/package.py $W/new $W/base $D | tail -1 | cut -c1-80
-cp $D/split_event.json $D/part33_event.json; cp $TMP/part26_event.json $D/part26_event.json; rm -f $D/split_event.json $D/core_macros.json.gz; sed -i "/  split_event.json$/d" $D/SHA256SUMS
+cp $D/split_event.json $D/part33_event.json; cp $TMP/part26_event.json $D/part26_event.json; rm -f $D/split_event.json $D/core_macros.json.gz; cp $W/new/core_macros.json $D/core_macros.json; sed -i "/  split_event.json$/d" $D/SHA256SUMS
 python3 -I - <<'E'
 import hashlib
 D='physical/die_plan/hbm/plan_of_record/d44v/'
