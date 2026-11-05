@@ -149,11 +149,7 @@
     "kv3_pc_v3@4",
     "kv3_sys_SD@4",
     "kv3_pc__cl254f2e73@5",
-    "kv3_pc_v3@5",
-    "kv3_pc_v1__cl23f6a148@1",
-    "kv3_pc_v1__cl4ea58a5c@1",
-    "kv3_pc_v1__cl7f648944@1",
-    "kv3_sys_c@1"
+    "kv3_pc_v3@5"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -204,7 +200,11 @@
     "kv3_hroot": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
-    "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read"
+    "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
+    "kv3_pc_v1__cl23f6a148": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
+    "kv3_pc_v1__cl4ea58a5c": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
+    "kv3_pc_v1__cl7f648944": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
+    "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1104/kit-wave",
    "retry_fix": {
@@ -491,14 +491,14 @@
     "clock": "PASS",
     "evidence": "KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch3/claude/kw-fix-8/src_v/physical/die_plan/s81/plan_h2_2249.json",
+   "plan": "/srv/opentallas-scratch3/claude/kw-fix-8/src_x/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_v",
-   "src_sha": "86bdf75874227ccd8a5483c678c3902e36830101",
+   "src": "/srv/opentallas-scratch3/claude/kw-fix-8/src_x",
+   "src_sha": "4a4356e476f858e01b07c8d70e8540f1083c45a7",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch3/claude/kw-fix-8/kit_rtl_v.sh",
-    "note": "KW-FIX-8 11-04 18:1x: bind_out bind_sv (src_v 86bdf758742), 365/365 sv equal bind_sp. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: S81 on src_q main bf1e2233ce0 with strict bind_sp (src_p; bind inputs same, ring-only delta), 16 C types | 17:03 KW-FIX-4 I2 batch: src kw-fix-4-s81i2 = main 4b09653bef8 (RESET-CORE ef3c0b855a4 + RF-D form 5 451deb44c63 + KV pvname + HEAD turnb), bind_h10 unchanged (plan_h2_2249 unchanged 39a2->4b09) | KW-FIX-4 15:0x: S81-RF1 batch = main 39a2fae866 (RF1 06a3d7e0268 + RF-D d4fe8ba0063 + plain-lane budget 721f34fddf0); strict bind bind_h10 (elab+bind --strict on plan_h2_2249 @39a2fae866, asbuilt asbuilt_b178_coll_h2_2249) errors 0 | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KIT-WAVE-15 19:1x: kw15d = kw15b recipe on the second locked sparse intel1 wt kit-wave-15-s81b @ main 6defc3c2306 (stnbank f6fd665d117 + col2 d451a87c958 on ccband 99172ad7946); wt kit-wave-15-s81 (99172) is still read by in-flight items, so the two wts alternate (one per die in use + one being prepared). Smoke kw15d kit_rtl+gen 4/4 PASS. | KIT-WAVE-15 18:3x ccband: same recipe as kw15b on the same locked wt kit-wave-15-s81, updated in place to main 99172ad7946 (ccband 0c1986bda + leafmean 0f7194720bb + sfuntracked). Smoke kw15c kit_rtl+gen 4/4 PASS; every smoke kit stages core_clock_band.py. | KIT-WAVE-15 17:2x (collect 1 of KIT-WAVE-14): canonical strict bind die-s81-47/bind_ev2 + current readset overlay (108 remapped; CHANGED rtl/dsdv_svc_sx.sv = main 3d45bed4e gout fix) on locked sparse intel1 wt kit-wave-15-s81 @ main 951cc627353 (kcc 0179511885c nested-leaf fix, leafmean 884eca70689, canreg, KV adp, HBM d44q, samplegap, 9cc"
+    "script": "/srv/opentallas-scratch3/claude/kw-fix-8/kit_rtl_x.sh",
+    "note": "KW-FIX-8 20:1x I58 xrt event: src_x main 4a4356e476f tag flow-20261105-j-s81, bind_out die-s81-56/plan/xr/bind_event (built at 41d92173aa, tip diff tools only). | KW-FIX-8 11-04 18:1x: bind_out bind_sv (src_v 86bdf758742), 365/365 sv equal bind_sp. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: S81 on src_q main bf1e2233ce0 with strict bind_sp (src_p; bind inputs same, ring-only delta), 16 C types | 17:03 KW-FIX-4 I2 batch: src kw-fix-4-s81i2 = main 4b09653bef8 (RESET-CORE ef3c0b855a4 + RF-D form 5 451deb44c63 + KV pvname + HEAD turnb), bind_h10 unchanged (plan_h2_2249 unchanged 39a2->4b09) | KW-FIX-4 15:0x: S81-RF1 batch = main 39a2fae866 (RF1 06a3d7e0268 + RF-D d4fe8ba0063 + plain-lane budget 721f34fddf0); strict bind bind_h10 (elab+bind --strict on plan_h2_2249 @39a2fae866, asbuilt asbuilt_b178_coll_h2_2249) errors 0 | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KIT-WAVE-15 19:1x: kw15d = kw15b recipe on the second locked sparse intel1 wt kit-wave-15-s81b @ main 6defc3c2306 (stnbank f6fd665d117 + col2 d451a87c958 on ccband 99172ad7946); wt kit-wave-15-s81 (99172) is still read by in-flight items, so the two wts alternate (one per die in use + one being prepared). Smoke kw15d kit_rtl+gen 4/4 PASS. | KIT-WAVE-15 18:3x ccband: same recipe as kw15b on the same locked wt kit-wave-15-s81, updated in place to main 99172ad7946 (ccband 0c1986bda + leafmean 0f7194720bb + sfuntracked). Smoke kw15c kit_rtl+gen 4/4 PASS; every smoke kit stages core_clock_band.py. | KIT-WAVE-15 17:2x (collect 1 of KIT-WAVE-14): canonical strict bind die-s81-47/bind_ev2 + current readset overlay (108 remapped; CHANGED rtl/dsdv_svc_sx.sv = main 3d45bed4e gout fix) on locked sparse intel1 wt kit-wave-15-s81 @ main 951cc627353 (kcc 0179511885c nested-leaf fix, leafmean 884eca70689, canreg, KV adp, HBM d44q, samplegap, 9cc"
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -506,7 +506,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch3/claude/kw-fix-8/src_v/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+    "/srv/opentallas-scratch3/claude/kw-fix-8/src_x/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
    ],
    "owner_lane": "DIE-S81-50",
    "lane": "KIT-WAVE-3",
@@ -1256,7 +1256,8 @@
     "ot_s81sl_leaf__t11@9",
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@6",
     "ot_s81sl_leaf__t44__clf4ea6d4b@13",
-    "ot_s81sl_leaf__t25__cl55642d17@21"
+    "ot_s81sl_leaf__t25__cl55642d17@21",
+    "gunit__t1@2"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1335,9 +1336,12 @@
     "ot_s81sl_leaf__t43": "KW-FIX-8 18:5x COORD GRT loop ruling: stopped at 2+ restarts, S81 restarted 0/10; waits DIE-S81-56 class form (C or RE-FORM), no retry, no normal wave",
     "ot_s81sl_leaf__t71": "KW-FIX-8 18:5x COORD GRT loop ruling: stopped at 2+ restarts, S81 restarted 0/10; waits DIE-S81-56 class form (C or RE-FORM), no retry, no normal wave",
     "ot_s81sl_leaf__t23": "KW-FIX-8 18:5x COORD GRT loop ruling: stopped at 2+ restarts, S81 restarted 0/10; waits DIE-S81-56 class form (C or RE-FORM), no retry, no normal wave",
-    "ot_s81sl_leaf__t3": "KW-FIX-8 18:5x COORD GRT loop ruling: stopped at 2+ restarts, S81 restarted 0/10; waits DIE-S81-56 class form (C or RE-FORM), no retry, no normal wave"
+    "ot_s81sl_leaf__t3": "KW-FIX-8 18:5x COORD GRT loop ruling: stopped at 2+ restarts, S81 restarted 0/10; waits DIE-S81-56 class form (C or RE-FORM), no retry, no normal wave",
+    "ot_s81sl_xrt1": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
+    "ot_s81sl_xrt3": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
+    "dsdv_bksel_c": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view"
    },
-   "queue_src": "claude/kw8-grtallow-1104@86bdf75874227ccd8a5483c678c3902e36830101",
+   "queue_src": "",
    "work_root": "/srv/opentallas-scratch2/claude/s81-wave-1104s3/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
