@@ -1,7 +1,7 @@
 {
  "enabled": true,
  "max_inflight": 300,
- "max_launch_per_tick": 40,
+ "max_launch_per_tick": 12,
  "geom_sample": 5,
  "hosts": [
   "intel2",
@@ -1253,7 +1253,28 @@
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@6",
     "ot_s81sl_leaf__t44__clf4ea6d4b@13",
     "ot_s81sl_leaf__t25__cl55642d17@21",
-    "gunit__t1@2"
+    "gunit__t1@2",
+    "col_h10_r0_p1__t1__cl574cc59d@3",
+    "col_h10_r0_p1__t1__cl911743eb@4",
+    "col_h10_r1__t1__cl95b37463@4",
+    "col_h10_r1__t1__cld01bb4ae@4",
+    "col_h10_r2__t1__cl1f5d6c2a@6",
+    "col_h10_r2__t1__cl8b686b3e@6",
+    "col_h10_r2__t1__cl99efd374@5",
+    "col_h10_r2__t1__clac068e56@5",
+    "col_h9_r0_p1__t1@5",
+    "col_h9_r0_p2__t1__cl0045af7b@6",
+    "col_h9_r0_p2__t1__cl9f71e63d@4",
+    "col_h9_r0_p3__t1__cl0cd90c0e@5",
+    "col_h9_r0_p3__t1__cl31d0dc4b@4",
+    "col_h9_r0_p3__t1__cl8ce97bcb@4",
+    "col_h9_r0_p4__t1__cl8ef405e8@6",
+    "col_h9_r0_p4__t1__clcb2fbfe8@4",
+    "col_h9_r0_p5__t1@6",
+    "col_h9_r0_p6__t1@5",
+    "col_h9_r1__t1__cl49d7a23e@4",
+    "col_h9_r1__t1__clf32cde8d@5",
+    "col_h9_r2__t1__clce45cab5@5"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1949,7 +1970,8 @@
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
-   "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250."
+   "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250.",
+   "note_infra_batch_1105": "KW-FIX-10 04:2x COORD: INFRA batch, no strikes, S81 first then QC; max_launch_per_tick 40 -> 12 so epyc4 root carries it (floor 550)."
   },
   "s81_head": {
    "enabled": true,
