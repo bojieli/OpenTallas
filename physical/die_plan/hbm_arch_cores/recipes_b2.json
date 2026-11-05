@@ -2744,13 +2744,17 @@
    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
    "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
-   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_la.sv",
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_la2_mat.svh"
   ],
   "defines": [],
-  "params": {},
+  "params": {
+   "ELA": 2
+  },
   "macros": [],
-  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh",
-  "source_commit": "c7546b975b1504036f1b513d28e5dc1675ed9e57",
+  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh; HBM-GAPS-3 11-05 ELA=2 (two-step KP4 parity lookahead, +1 edge, tb_kp4_enc_la.sv / tb_pdie_tx_ela.sv)",
+  "source_commit": "3dd2c0739e5b01f687de50f282ca6fb8c42f407d",
   "read_at_commit": true,
   "util": 0.4
  },
