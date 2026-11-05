@@ -2,3 +2,4 @@
 # die <TAB> name (plan module or type) <TAB> host <TAB> dir holding signoff/signoff.json (glob OK: .../run/i*) <TAB> build commit or - (read from the kit) <TAB> lane <TAB> note
 s81	slice_station__t7__cl503f4913	epyc4	/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t7__cl503f4913/attempt_9/gen/slice_station__t7__cl503f4913/eco_20261104_214447_4021784/i2	-	KW-FIX-10	ECO i2 local pass; job row read the pre-ECO top signoff; i2 restored from epyc2 11-05
 hbm	ot_hbm_su_pg_sfu_s_core	epyc2	/srv/opentallas-scratch2/claude/die-hbm-66/eco/sfuse/run/i1	-	DIE-HBM-71	sfuse i1 SIGNED, routed LEC EQ 12477; DIE-HBM-71 READY-COUNT 08:2x
+hbm	ot_hgi_coll_tkm_tp192_htile_core	epyc2	/srv/opentallas-scratch2/claude/die-hbm-66/eco/htilee/run/i2	-	DIE-HBM-71	htilee i2 SIGNED, routed LEC EQ 14677
