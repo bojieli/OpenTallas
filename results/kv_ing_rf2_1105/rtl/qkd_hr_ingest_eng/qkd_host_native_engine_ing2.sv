@@ -323,6 +323,7 @@ module qkd_host_native_engine_ing2 (
     wire [2:0]   ra_wq = ra_wp + 3'd1;
     wire [2047:0] ra_all = {ra[7], ra[6], ra[5], ra[4], ra[3], ra[2], ra[1], ra[0]};
     wire [7:0]   ra_rp_n;                       // ra_rp next state
+    wire [2:0]   ra_w1_n;                       // w1 next state, late-select form: no adder after ra_adv
     reg  [255:0] wq0, wq1;                      // word registers (cut 14)
     wire [255:0] ra_word, ra_wnext;
     wire [255:0] ra_sh;
@@ -333,7 +334,7 @@ module qkd_host_native_engine_ing2 (
         (* keep = 1 *) reg [4:0] off;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin w0 <= 3'd0; w1 <= 3'd1; end
-            else begin w0 <= ra_rp_n[7:5]; w1 <= ra_rp_n[7:5] + 3'd1; end
+            else begin w0 <= ra_rp_n[7:5]; w1 <= ra_w1_n; end
         always @(posedge clk) off <= ra_rp[4:0];
         wire [63:0] by0, by1;
         assign ra_word[gy*8 +: 8]  = ra_all[{w0, 8'd0} + gy*8 +: 8];
@@ -428,7 +429,9 @@ module qkd_host_native_engine_ing2 (
     generate for (gw = 0; gw < 32; gw = gw + 1) begin : g_wd
         assign w_data[gw*8 +: 8] = qk_s[gw] ? qp_wd[gw*8 +: 8] : st_wd[gw*8 +: 8];
     end endgenerate
-    assign ra_rp_n = st_pad ? 8'd0 : ra_adv ? ra_rp + {2'd0, st_pop} : ra_rp;
+    wire [7:0]   ra_rp_a = ra_rp + {2'd0, st_pop};
+    assign ra_rp_n = st_pad ? 8'd0 : ra_adv ? ra_rp_a : ra_rp;
+    assign ra_w1_n = st_pad ? 3'd1 : ra_adv ? ra_rp_a[7:5] + 3'd1 : ra_rp[7:5] + 3'd1;
     wire   w_fire = w_v && w_rdy;
     reg          done_r, done_q, wf_q;
     reg  [7:0]   dtag_r, dtag_q;
