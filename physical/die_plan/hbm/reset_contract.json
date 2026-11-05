@@ -46,6 +46,10 @@
   "ot_hbm_su_pcol_l",
   "ot_hbm_su_pcol_s",
   "ot_hbm_su_pg_lane1_core",
+  "ot_hbm_su_pg_lane1p_core",
+  "ot_hbm_su_pg_lane_exp_x_core",
+  "ot_hbm_su_pg_lane_full_x_core",
+  "ot_hbm_su_pg_sfu_s_core",
   "ot_hbm_su_programme_pslice_c5",
   "ot_hbm_su_static_cxport_ij_q",
   "ot_hbm_su_static_pgslice_lg__lane_exp0",
@@ -112,7 +116,7 @@
  },
  "generator": "rtl/hbm_accel/control/hfd_ckgen.sv hfd_ckgen_rel HOLD=64: async assert on por_n & locked; release on own-clock edge 2+HOLD = 66 after re-arm; every re-arm (power-on, mid-run por_n pulse of any width, PLL lock loss) restarts the window",
  "sinks": "Every HBM core reset pin is driven by (1) the regional reset forest from hb_ckgen por_<domain> (hbfd_rrl tiles: async assert, release only later), (2) bridge_rst_n (ot_hbm_su_bridge_release: async-cleared by rst_stream_n, released only after the SU programme starts), or (3) pc_rst_n (ot_hbm_pc_refresh_cfg: async-asserted by rst_hbm_n, released after the row load). Each holds reset at least as long as the hb_ckgen window, with the domain clock running (arm includes PLL lock).",
- "modules_basis": "every hard-core module of the HBM plan C22b (DIE-HBM-10); a kit LEC may use OT_LEC_RESET_CYCLES <= 64 d44v part 7 sub-cores (DIE-HBM-62/BIG): the 7 sub-cores of hnx_rp3lp3h_n/s and hnx_fused_lane take their reset pins from the same parent reset, through relays or wires only, so they hold reset at least as long as the parent. d44v part 8 sub-cores (DIE-HBM-63/CUTS): ot_hbm_su_pcol_s/l/h of ot_hbm_su_programme_pslice_c5 take their reset pins from the parent reset, through relays or wires only, so they hold reset at least as long as the parent. d44v part 20 sub-cores (HBM-REFORM-B): ot_pdie_serdes_tx, _rx and ot_s81_kp4_dchn take rst from the parent slot reset of ot_pdie_serdes. d44v part 21 tiles of the IDX selector: reset from the same parent rst_n, tile ot_rst_relay inside",
+ "modules_basis": "every hard-core module of the HBM plan C22b (DIE-HBM-10); a kit LEC may use OT_LEC_RESET_CYCLES <= 64 d44v part 7 sub-cores (DIE-HBM-62/BIG): the 7 sub-cores of hnx_rp3lp3h_n/s and hnx_fused_lane take their reset pins from the same parent reset, through relays or wires only, so they hold reset at least as long as the parent. d44v part 8 sub-cores (DIE-HBM-63/CUTS): ot_hbm_su_pcol_s/l/h of ot_hbm_su_programme_pslice_c5 take their reset pins from the parent reset, through relays or wires only, so they hold reset at least as long as the parent. d44v part 20 sub-cores (HBM-REFORM-B): ot_pdie_serdes_tx, _rx and ot_s81_kp4_dchn take rst from the parent slot reset of ot_pdie_serdes. d44v part 21 tiles of the IDX selector: reset from the same parent rst_n, tile ot_rst_relay inside d44v part 17: lane1p as lane1 (same RTL text), reset pins from the same parent reset through wires only. d44v part 18: lane_exp_x, lane_full_x, sfu_s reset pins from the same parent lane reset through wires only.",
  "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative), or set OT_LEC_RESET_CONTRACT to this file (FLOW-GEN-2 adds the lec.py kit field)",
  "scope": "mid-run reset re-assertion follows the same contract (bench: 8 por_n glitches 0.05..1.94 ns + 2 lock losses)"
 }

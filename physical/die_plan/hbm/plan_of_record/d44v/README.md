@@ -424,3 +424,18 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 - **ot_hgi_sfu_core_split3__ctl** (74.5k logic, 32k FF, no macros, 8.5% util, TT -148 from spread) goes from 669.6x626.4 to 427.68x453.6 by mk_reform.py (centre kept, pins repacked, pin pitch 0.096, W edge 3819 pins). RTL unchanged, 0 cycles.
 - **Wrapper**: recipes_b2 entry ot_hgi_sfu_core_split3__ctl pins physical/die_plan/hbm_arch_cores/wrappers/oneclk for this pin table only.
 - **Scripts**: results/die_hbm_1104/reform_b/split_p24/ (ov_p24.json, mk_p24.py).
+
+
+
+## Part 17 (lanes canon and lanes_plain -> 4 x lane; HBM-REFORM-A, HBM-REFORM-A2)
+
+- **lanes canon**, 14 rows, 760.32x725.76 slot: 4 x existing ot_hbm_su_pg_lane1_core, 190.08x311.04 strip, 0 cycles. Same cut as part 6 on lanes8_11.
+- **lanes_plain**, 8 rows, 440.64x457.92 slot: 4 x new ot_hbm_su_pg_lane1p_core, 216x224.64, 2 x 2, 0 cycles. Same RTL text as lane1; the plain slot cannot hold 2 x 2 lane1. Macros 2 x 3; one clock pin.
+- **Bench**: results/die_hbm_1104/reform_a/part17, lockstep on both rows, mutant 0 PASS, 3 mutants FAIL. Straps: parent_id_straps lane0_lane_id = {lane_lane_id, k}.
+- **Checks** against part 14: G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0. Clock_tap_sinks and clock_reach move both ways (9 worse, 13 better), see geom/geom_diff_d44v_p14_p17.txt.
+
+- **Part 17 rework (HBM-REFORM-A3, 11-05):** lanes_plain tile 216x224.64 (2x2, W/E macro bands 3.5, mid 10.8) stopped at GRT-0116 on the first form: 40141 overflow, M3 33006, CTS 72% with macros. Macro pins are W/E on M4 and need a band per column edge. New tile 440.64x112.32, 4 stacked in the 440.64x457.92 slot; 3 x 2 macros, bands 24.6/49.2/49.2/24.4, top cell strip 20.4. W/E faces M4 only, so ld_c[840:255] moved E to W: W 1136, E 880. 0 added cycles, same RTL and lockstep. G0 new 0, gone 0. GEOM advisory 225 -> 225, new 0.
+
+- **Part 18 (HBM-REFORM-A2/A3, 11-05):** lane_exp canon (60) -> lane_exp_x + sfu_s, lane_exp0_id (4) -> lane_full_x + sfu_s, row grows 414.72 -> 440.64 on local E. S chain moved to a shared SFU core, seam 101 bits with face flops. SFU_EXP, SFU_SIGM, SFU_SILU +4 edges, S-chain fault +4, others 0. Macros 2 x 3, W/E bands 30.2, 60.7, 30.4. Bench eq_x: PASS and 5 mutants FAIL on both rows. G0 new 0, gone 0. GEOM advisory 225 -> 225, new 0.
+
+- **Part 19 (HBM-REFORM-A3, 11-05):** tkm tile (both id forms) -> 2 x ot_hgi_coll_tkm_tp192_htile_core stacked Y (319.68x172.8 each), chain PTILE 32, NT 64. TKM op +448 edges, down +5, clr_o +3, conv_o +2, up_out +2. Root re-extracted on PTILE 32 with the same _x ports (recipe file replaced). Corridor clock buffers now drive __ha + __hb. G0: 15 new clock lines, advisory: direct leg 410-462 um > reach 405 (repeater segments pass), geometry of the split, not of the logic. GEOM 225 -> 225, new 0. EQ: reduced chain KMAX 128 bench, positive PASS, 3 mutants FAIL; full chain not run.

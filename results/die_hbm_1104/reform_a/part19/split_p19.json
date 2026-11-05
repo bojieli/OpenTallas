@@ -1,0 +1,86 @@
+[
+ {
+  "core": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+  "sha": "p19",
+  "part": "p19",
+  "glue": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__p19glue.sv",
+  "conn": "id.conn.json",
+  "subs": [
+   {
+    "module": "ot_hgi_coll_tkm_tp192_htile_core",
+    "cells": 137216
+   }
+  ],
+  "added_cycles": "down +5, clr_o +3, conv_o +2, up_out +2 on conv; TKM op +448 edges (latency/ tsv of reform_1103)",
+  "layout": {
+   "u_fcore.u_core.u_ha": {
+    "xy": [
+     0.0,
+     0.0
+    ],
+    "wh": [
+     319.68,
+     172.8
+    ]
+   },
+   "u_fcore.u_core.u_hb": {
+    "xy": [
+     0.0,
+     172.8
+    ],
+    "wh": [
+     319.68,
+     172.8
+    ]
+   }
+  },
+  "clock_entry": {
+   "ot_hgi_coll_tkm_tp192_htile_core": [
+    159.84,
+    86.4
+   ]
+  }
+ },
+ {
+  "core": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+  "sha": "p19",
+  "part": "p19",
+  "glue": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__p19glue.sv",
+  "conn": "term.conn.json",
+  "subs": [
+   {
+    "module": "ot_hgi_coll_tkm_tp192_htile_core",
+    "cells": 137216
+   }
+  ],
+  "added_cycles": "down +5, clr_o +3, conv_o +2, up_out +2 on conv; TKM op +448 edges (latency/ tsv of reform_1103)",
+  "layout": {
+   "u_fcore.u_core.u_ha": {
+    "xy": [
+     0.0,
+     0.0
+    ],
+    "wh": [
+     319.68,
+     172.8
+    ]
+   },
+   "u_fcore.u_core.u_hb": {
+    "xy": [
+     0.0,
+     172.8
+    ],
+    "wh": [
+     319.68,
+     172.8
+    ]
+   }
+  },
+  "clock_entry": {
+   "ot_hgi_coll_tkm_tp192_htile_core": [
+    159.84,
+    86.4
+   ]
+  }
+ }
+]
