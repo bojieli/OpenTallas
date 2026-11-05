@@ -1,5 +1,5 @@
 // Generated fixed production-shape math. No extra arithmetic edges.
-module qfd_dv_s5_sc2_k79_dn0(ck,rst_n,sc_cfg,dn_o,up_i,up_o,red_we,red_addr,red_data,vm_we,vm_win0,vm_wdata0,am_v,am_idx,am_val,am_u,w1_we,w1_addr,w1_data,tok_v,tok_idx,tok_own,tok_val,tok_user,busy,fault);
+module qfd_dv_s5_sc2_k79_dn0 #(parameter integer HARD_PINREG=0) (ck,rst_n,sc_cfg,dn_o,up_i,up_o,red_we,red_addr,red_data,vm_we,vm_win0,vm_wdata0,am_v,am_idx,am_val,am_u,w1_we,w1_addr,w1_data,tok_v,tok_idx,tok_own,tok_val,tok_user,busy,fault);
 input wire [0:0] ck;
 input wire [0:0] rst_n;
 input wire [100:0] sc_cfg;
@@ -26,6 +26,78 @@ output wire [31:0] tok_val;
 output wire [1:0] tok_user;
 output wire [0:0] busy;
 output wire [0:0] fault;
+// Declare shared pin captures before every generate use (slang lexical scope).
+wire sc_pin_cap_0;
+wire sc_pin_cap_1;
+wire sc_pin_cap_2;
+wire sc_pin_cap_3;
+wire sc_pin_cap_4;
+wire sc_pin_cap_5;
+wire sc_pin_cap_6;
+wire sc_pin_cap_7;
+wire sc_pin_cap_8;
+wire sc_pin_cap_9;
+wire sc_pin_cap_10;
+wire sc_pin_cap_11;
+wire sc_pin_cap_12;
+wire sc_pin_cap_13;
+wire sc_pin_cap_14;
+wire sc_pin_cap_15;
+wire sc_pin_cap_16;
+wire sc_pin_cap_17;
+wire sc_pin_cap_18;
+wire sc_pin_cap_19;
+wire sc_pin_cap_20;
+wire sc_pin_cap_21;
+wire sc_pin_cap_22;
+wire sc_pin_cap_23;
+wire sc_pin_cap_24;
+wire sc_pin_cap_25;
+wire sc_pin_cap_26;
+wire sc_pin_cap_27;
+wire sc_pin_cap_28;
+wire sc_pin_cap_29;
+wire sc_pin_cap_30;
+wire sc_pin_cap_31;
+wire sc_pin_cap_32;
+wire sc_pin_cap_33;
+wire sc_pin_cap_34;
+wire sc_pin_cap_35;
+wire sc_pin_cap_36;
+wire sc_pin_cap_37;
+wire sc_pin_cap_38;
+wire sc_pin_cap_39;
+wire sc_pin_cap_40;
+wire sc_pin_cap_41;
+wire sc_pin_cap_42;
+wire sc_pin_cap_43;
+wire sc_pin_cap_44;
+wire sc_pin_cap_45;
+wire sc_pin_cap_46;
+wire sc_pin_cap_47;
+wire sc_pin_cap_48;
+wire sc_pin_cap_49;
+wire sc_pin_cap_50;
+wire sc_pin_cap_51;
+wire sc_pin_cap_52;
+wire sc_pin_cap_53;
+wire sc_pin_cap_54;
+wire sc_pin_cap_55;
+wire sc_pin_cap_56;
+wire sc_pin_cap_57;
+wire sc_pin_cap_58;
+wire sc_pin_cap_59;
+wire sc_pin_cap_60;
+wire sc_pin_cap_61;
+wire sc_pin_cap_62;
+wire sc_pin_cap_63;
+wire sc_pin_cap_64;
+wire sc_pin_cap_65;
+wire sc_pin_cap_66;
+wire sc_pin_cap_67;
+wire sc_pin_rstcap_0;
+wire sc_pin_rstcap_1;
+wire sc_pin_rstcap_2;
 wire n_0, n_1, n_2, n_3, n_4, n_5, n_6, n_7, n_8, n_9, n_10, n_11, n_12, n_13, n_14, n_15, n_16, n_17, n_18, n_19, n_20, n_21, n_22, n_23, n_24, n_25, n_26, n_27, n_28, n_29, n_30, n_31, n_32, n_33, n_34, n_35, n_36, n_37, n_38, n_39, n_40, n_41, n_42, n_43, n_44, n_45, n_46, n_47, n_48, n_49, n_50, n_51, n_52, n_53, n_54, n_55, n_56, n_57, n_58, n_59, n_60, n_61, n_62, n_63;
 wire n_64, n_65, n_66, n_67, n_68, n_69, n_70, n_71, n_72, n_73, n_74, n_75, n_76, n_77, n_78, n_79, n_80, n_81, n_82, n_83, n_84, n_85, n_86, n_87, n_88, n_89, n_90, n_91, n_92, n_93, n_94, n_95, n_96, n_97, n_98, n_99, n_100, n_101, n_102, n_103, n_104, n_105, n_106, n_107, n_108, n_109, n_110, n_111, n_112, n_113, n_114, n_115, n_116, n_117, n_118, n_119, n_120, n_121, n_122, n_123, n_124, n_125, n_126, n_127;
 wire n_128, n_129, n_130, n_131, n_132, n_133, n_134, n_135, n_136, n_137, n_138, n_139, n_140, n_141, n_142, n_143, n_144, n_145, n_146, n_147, n_148, n_149, n_150, n_151, n_152, n_153, n_154, n_155, n_156, n_157, n_158, n_159, n_160, n_161, n_162, n_163, n_164, n_165, n_166, n_167, n_168, n_169, n_170, n_171, n_172, n_173, n_174, n_175, n_176, n_177, n_178, n_179, n_180, n_181, n_182, n_183, n_184, n_185, n_186, n_187, n_188, n_189, n_190, n_191;
@@ -19075,9 +19147,13 @@ assign fault = n_525;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15303(.C(n_2),.D(1'b1),.Q(n_28269),.R(n_28267));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15304(.C(n_2),.D(1'b1),.Q(n_28270),.R(n_28269));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15305(.C(n_2),.D(1'b1),.Q(n_27324),.R(n_28270));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15306(.C(n_2),.D(n_104),.Q(n_28271),.R(n_237096));
+wire sc_pin_flag_u_15306;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15306(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_104),.Q(sc_pin_flag_u_15306),.R(n_237096));
+assign n_28271 = HARD_PINREG ? (sc_pin_rstcap_0 & sc_pin_flag_u_15306) : sc_pin_flag_u_15306;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15307(.C(n_2),.D(n_28271),.Q(n_28272),.R(n_237096));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15308(.C(n_2),.D(n_200),.Q(n_28273),.R(n_237096));
+wire sc_pin_flag_u_15308;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15308(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_200),.Q(sc_pin_flag_u_15308),.R(n_237096));
+assign n_28273 = HARD_PINREG ? (sc_pin_rstcap_1 & sc_pin_flag_u_15308) : sc_pin_flag_u_15308;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15309(.C(n_2),.D(n_249),.Q(n_28274),.R(n_237096));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15310(.C(n_2),.D(n_306),.Q(n_28275),.R(n_237096));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15311(.C(n_2),.D(n_307),.Q(n_28276),.R(n_237096));
@@ -19087,7 +19163,9 @@ assign fault = n_525;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15315(.C(n_2),.D(n_311),.Q(n_28280),.R(n_237097));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15316(.C(n_2),.D(n_312),.Q(n_28281),.R(n_237097));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15317(.C(n_2),.D(n_313),.Q(n_28282),.R(n_237097));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15318(.C(n_2),.D(n_348),.Q(n_28283),.R(n_237097));
+wire sc_pin_flag_u_15318;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15318(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_348),.Q(sc_pin_flag_u_15318),.R(n_237097));
+assign n_28283 = HARD_PINREG ? (sc_pin_rstcap_2 & sc_pin_flag_u_15318) : sc_pin_flag_u_15318;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15319(.C(n_2),.D(n_4),.Q(n_28284));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15320(.C(n_2),.D(n_5),.Q(n_28285));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15321(.C(n_2),.D(n_6),.Q(n_28286));
@@ -19288,41 +19366,286 @@ assign fault = n_525;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15516(.C(n_2),.D(n_28381),.Q(n_28481));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15517(.C(n_2),.D(n_28382),.Q(n_28482));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15518(.C(n_2),.D(n_28383),.Q(n_28483));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15519(.C(n_2),.D(n_153),.Q(n_28484));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15520(.C(n_2),.D(n_154),.Q(n_28485));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15521(.C(n_2),.D(n_155),.Q(n_28486));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15522(.C(n_2),.D(n_156),.Q(n_28487));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15523(.C(n_2),.D(n_157),.Q(n_28488));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15524(.C(n_2),.D(n_158),.Q(n_28489));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15525(.C(n_2),.D(n_159),.Q(n_28490));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15526(.C(n_2),.D(n_160),.Q(n_28491));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15527(.C(n_2),.D(n_161),.Q(n_28492));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15528(.C(n_2),.D(n_162),.Q(n_28493));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15529(.C(n_2),.D(n_163),.Q(n_28494));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15530(.C(n_2),.D(n_164),.Q(n_28495));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15531(.C(n_2),.D(n_165),.Q(n_28496));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15532(.C(n_2),.D(n_166),.Q(n_28497));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15533(.C(n_2),.D(n_167),.Q(n_28498));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15534(.C(n_2),.D(n_168),.Q(n_28499));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15535(.C(n_2),.D(n_169),.Q(n_28500));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15536(.C(n_2),.D(n_170),.Q(n_28501));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15537(.C(n_2),.D(n_171),.Q(n_28502));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15538(.C(n_2),.D(n_172),.Q(n_28503));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15539(.C(n_2),.D(n_173),.Q(n_28504));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15540(.C(n_2),.D(n_174),.Q(n_28505));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15541(.C(n_2),.D(n_175),.Q(n_28506));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15542(.C(n_2),.D(n_176),.Q(n_28507));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15543(.C(n_2),.D(n_177),.Q(n_28508));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15544(.C(n_2),.D(n_178),.Q(n_28509));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15545(.C(n_2),.D(n_179),.Q(n_28510));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15546(.C(n_2),.D(n_180),.Q(n_28511));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15547(.C(n_2),.D(n_181),.Q(n_28512));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15548(.C(n_2),.D(n_182),.Q(n_28513));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15549(.C(n_2),.D(n_183),.Q(n_28514));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15550(.C(n_2),.D(n_184),.Q(n_28515));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15551(.C(n_2),.D(n_185),.Q(n_28516));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15552(.C(n_2),.D(n_186),.Q(n_28517));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15553(.C(n_2),.D(n_187),.Q(n_28518));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15519(.C(n_2),.D(n_153),.Q(sc_pin_cap_0));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15519
+wire sc_pin_inv_u_15519;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000000)) u_b0 (.A(sc_pin_cap_0),.Y(sc_pin_inv_u_15519));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000001)) u_b1 (.A(sc_pin_inv_u_15519),.Y(n_28484));
+end else begin : g_sc_legacy_u_15519
+assign n_28484 = sc_pin_cap_0;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15520(.C(n_2),.D(n_154),.Q(sc_pin_cap_1));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15520
+wire sc_pin_inv_u_15520;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000010)) u_b0 (.A(sc_pin_cap_1),.Y(sc_pin_inv_u_15520));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000011)) u_b1 (.A(sc_pin_inv_u_15520),.Y(n_28485));
+end else begin : g_sc_legacy_u_15520
+assign n_28485 = sc_pin_cap_1;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15521(.C(n_2),.D(n_155),.Q(sc_pin_cap_2));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15521
+wire sc_pin_inv_u_15521;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000020)) u_b0 (.A(sc_pin_cap_2),.Y(sc_pin_inv_u_15521));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000021)) u_b1 (.A(sc_pin_inv_u_15521),.Y(n_28486));
+end else begin : g_sc_legacy_u_15521
+assign n_28486 = sc_pin_cap_2;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15522(.C(n_2),.D(n_156),.Q(sc_pin_cap_3));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15522
+wire sc_pin_inv_u_15522;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000030)) u_b0 (.A(sc_pin_cap_3),.Y(sc_pin_inv_u_15522));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000031)) u_b1 (.A(sc_pin_inv_u_15522),.Y(n_28487));
+end else begin : g_sc_legacy_u_15522
+assign n_28487 = sc_pin_cap_3;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15523(.C(n_2),.D(n_157),.Q(sc_pin_cap_4));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15523
+wire sc_pin_inv_u_15523;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000040)) u_b0 (.A(sc_pin_cap_4),.Y(sc_pin_inv_u_15523));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000041)) u_b1 (.A(sc_pin_inv_u_15523),.Y(n_28488));
+end else begin : g_sc_legacy_u_15523
+assign n_28488 = sc_pin_cap_4;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15524(.C(n_2),.D(n_158),.Q(sc_pin_cap_5));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15524
+wire sc_pin_inv_u_15524;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000050)) u_b0 (.A(sc_pin_cap_5),.Y(sc_pin_inv_u_15524));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000051)) u_b1 (.A(sc_pin_inv_u_15524),.Y(n_28489));
+end else begin : g_sc_legacy_u_15524
+assign n_28489 = sc_pin_cap_5;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15525(.C(n_2),.D(n_159),.Q(sc_pin_cap_6));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15525
+wire sc_pin_inv_u_15525;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000060)) u_b0 (.A(sc_pin_cap_6),.Y(sc_pin_inv_u_15525));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000061)) u_b1 (.A(sc_pin_inv_u_15525),.Y(n_28490));
+end else begin : g_sc_legacy_u_15525
+assign n_28490 = sc_pin_cap_6;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15526(.C(n_2),.D(n_160),.Q(sc_pin_cap_7));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15526
+wire sc_pin_inv_u_15526;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000070)) u_b0 (.A(sc_pin_cap_7),.Y(sc_pin_inv_u_15526));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000071)) u_b1 (.A(sc_pin_inv_u_15526),.Y(n_28491));
+end else begin : g_sc_legacy_u_15526
+assign n_28491 = sc_pin_cap_7;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15527(.C(n_2),.D(n_161),.Q(sc_pin_cap_8));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15527
+wire sc_pin_inv_u_15527;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000080)) u_b0 (.A(sc_pin_cap_8),.Y(sc_pin_inv_u_15527));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000081)) u_b1 (.A(sc_pin_inv_u_15527),.Y(n_28492));
+end else begin : g_sc_legacy_u_15527
+assign n_28492 = sc_pin_cap_8;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15528(.C(n_2),.D(n_162),.Q(sc_pin_cap_9));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15528
+wire sc_pin_inv_u_15528;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000090)) u_b0 (.A(sc_pin_cap_9),.Y(sc_pin_inv_u_15528));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000091)) u_b1 (.A(sc_pin_inv_u_15528),.Y(n_28493));
+end else begin : g_sc_legacy_u_15528
+assign n_28493 = sc_pin_cap_9;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15529(.C(n_2),.D(n_163),.Q(sc_pin_cap_10));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15529
+wire sc_pin_inv_u_15529;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000100)) u_b0 (.A(sc_pin_cap_10),.Y(sc_pin_inv_u_15529));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000101)) u_b1 (.A(sc_pin_inv_u_15529),.Y(n_28494));
+end else begin : g_sc_legacy_u_15529
+assign n_28494 = sc_pin_cap_10;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15530(.C(n_2),.D(n_164),.Q(sc_pin_cap_11));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15530
+wire sc_pin_inv_u_15530;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000110)) u_b0 (.A(sc_pin_cap_11),.Y(sc_pin_inv_u_15530));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000111)) u_b1 (.A(sc_pin_inv_u_15530),.Y(n_28495));
+end else begin : g_sc_legacy_u_15530
+assign n_28495 = sc_pin_cap_11;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15531(.C(n_2),.D(n_165),.Q(sc_pin_cap_12));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15531
+wire sc_pin_inv_u_15531;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000120)) u_b0 (.A(sc_pin_cap_12),.Y(sc_pin_inv_u_15531));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000121)) u_b1 (.A(sc_pin_inv_u_15531),.Y(n_28496));
+end else begin : g_sc_legacy_u_15531
+assign n_28496 = sc_pin_cap_12;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15532(.C(n_2),.D(n_166),.Q(sc_pin_cap_13));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15532
+wire sc_pin_inv_u_15532;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000130)) u_b0 (.A(sc_pin_cap_13),.Y(sc_pin_inv_u_15532));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000131)) u_b1 (.A(sc_pin_inv_u_15532),.Y(n_28497));
+end else begin : g_sc_legacy_u_15532
+assign n_28497 = sc_pin_cap_13;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15533(.C(n_2),.D(n_167),.Q(sc_pin_cap_14));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15533
+wire sc_pin_inv_u_15533;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000140)) u_b0 (.A(sc_pin_cap_14),.Y(sc_pin_inv_u_15533));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000141)) u_b1 (.A(sc_pin_inv_u_15533),.Y(n_28498));
+end else begin : g_sc_legacy_u_15533
+assign n_28498 = sc_pin_cap_14;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15534(.C(n_2),.D(n_168),.Q(sc_pin_cap_15));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15534
+wire sc_pin_inv_u_15534;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000150)) u_b0 (.A(sc_pin_cap_15),.Y(sc_pin_inv_u_15534));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000151)) u_b1 (.A(sc_pin_inv_u_15534),.Y(n_28499));
+end else begin : g_sc_legacy_u_15534
+assign n_28499 = sc_pin_cap_15;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15535(.C(n_2),.D(n_169),.Q(sc_pin_cap_16));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15535
+wire sc_pin_inv_u_15535;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000160)) u_b0 (.A(sc_pin_cap_16),.Y(sc_pin_inv_u_15535));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000161)) u_b1 (.A(sc_pin_inv_u_15535),.Y(n_28500));
+end else begin : g_sc_legacy_u_15535
+assign n_28500 = sc_pin_cap_16;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15536(.C(n_2),.D(n_170),.Q(sc_pin_cap_17));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15536
+wire sc_pin_inv_u_15536;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000170)) u_b0 (.A(sc_pin_cap_17),.Y(sc_pin_inv_u_15536));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000171)) u_b1 (.A(sc_pin_inv_u_15536),.Y(n_28501));
+end else begin : g_sc_legacy_u_15536
+assign n_28501 = sc_pin_cap_17;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15537(.C(n_2),.D(n_171),.Q(sc_pin_cap_18));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15537
+wire sc_pin_inv_u_15537;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000180)) u_b0 (.A(sc_pin_cap_18),.Y(sc_pin_inv_u_15537));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000181)) u_b1 (.A(sc_pin_inv_u_15537),.Y(n_28502));
+end else begin : g_sc_legacy_u_15537
+assign n_28502 = sc_pin_cap_18;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15538(.C(n_2),.D(n_172),.Q(sc_pin_cap_19));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15538
+wire sc_pin_inv_u_15538;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000190)) u_b0 (.A(sc_pin_cap_19),.Y(sc_pin_inv_u_15538));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000191)) u_b1 (.A(sc_pin_inv_u_15538),.Y(n_28503));
+end else begin : g_sc_legacy_u_15538
+assign n_28503 = sc_pin_cap_19;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15539(.C(n_2),.D(n_173),.Q(sc_pin_cap_20));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15539
+wire sc_pin_inv_u_15539;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000200)) u_b0 (.A(sc_pin_cap_20),.Y(sc_pin_inv_u_15539));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000201)) u_b1 (.A(sc_pin_inv_u_15539),.Y(n_28504));
+end else begin : g_sc_legacy_u_15539
+assign n_28504 = sc_pin_cap_20;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15540(.C(n_2),.D(n_174),.Q(sc_pin_cap_21));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15540
+wire sc_pin_inv_u_15540;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000210)) u_b0 (.A(sc_pin_cap_21),.Y(sc_pin_inv_u_15540));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000211)) u_b1 (.A(sc_pin_inv_u_15540),.Y(n_28505));
+end else begin : g_sc_legacy_u_15540
+assign n_28505 = sc_pin_cap_21;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15541(.C(n_2),.D(n_175),.Q(sc_pin_cap_22));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15541
+wire sc_pin_inv_u_15541;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000220)) u_b0 (.A(sc_pin_cap_22),.Y(sc_pin_inv_u_15541));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000221)) u_b1 (.A(sc_pin_inv_u_15541),.Y(n_28506));
+end else begin : g_sc_legacy_u_15541
+assign n_28506 = sc_pin_cap_22;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15542(.C(n_2),.D(n_176),.Q(sc_pin_cap_23));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15542
+wire sc_pin_inv_u_15542;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000230)) u_b0 (.A(sc_pin_cap_23),.Y(sc_pin_inv_u_15542));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000231)) u_b1 (.A(sc_pin_inv_u_15542),.Y(n_28507));
+end else begin : g_sc_legacy_u_15542
+assign n_28507 = sc_pin_cap_23;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15543(.C(n_2),.D(n_177),.Q(sc_pin_cap_24));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15543
+wire sc_pin_inv_u_15543;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000240)) u_b0 (.A(sc_pin_cap_24),.Y(sc_pin_inv_u_15543));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000241)) u_b1 (.A(sc_pin_inv_u_15543),.Y(n_28508));
+end else begin : g_sc_legacy_u_15543
+assign n_28508 = sc_pin_cap_24;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15544(.C(n_2),.D(n_178),.Q(sc_pin_cap_25));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15544
+wire sc_pin_inv_u_15544;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000250)) u_b0 (.A(sc_pin_cap_25),.Y(sc_pin_inv_u_15544));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000251)) u_b1 (.A(sc_pin_inv_u_15544),.Y(n_28509));
+end else begin : g_sc_legacy_u_15544
+assign n_28509 = sc_pin_cap_25;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15545(.C(n_2),.D(n_179),.Q(sc_pin_cap_26));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15545
+wire sc_pin_inv_u_15545;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000260)) u_b0 (.A(sc_pin_cap_26),.Y(sc_pin_inv_u_15545));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000261)) u_b1 (.A(sc_pin_inv_u_15545),.Y(n_28510));
+end else begin : g_sc_legacy_u_15545
+assign n_28510 = sc_pin_cap_26;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15546(.C(n_2),.D(n_180),.Q(sc_pin_cap_27));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15546
+wire sc_pin_inv_u_15546;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000270)) u_b0 (.A(sc_pin_cap_27),.Y(sc_pin_inv_u_15546));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000271)) u_b1 (.A(sc_pin_inv_u_15546),.Y(n_28511));
+end else begin : g_sc_legacy_u_15546
+assign n_28511 = sc_pin_cap_27;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15547(.C(n_2),.D(n_181),.Q(sc_pin_cap_28));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15547
+wire sc_pin_inv_u_15547;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000280)) u_b0 (.A(sc_pin_cap_28),.Y(sc_pin_inv_u_15547));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000281)) u_b1 (.A(sc_pin_inv_u_15547),.Y(n_28512));
+end else begin : g_sc_legacy_u_15547
+assign n_28512 = sc_pin_cap_28;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15548(.C(n_2),.D(n_182),.Q(sc_pin_cap_29));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15548
+wire sc_pin_inv_u_15548;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000290)) u_b0 (.A(sc_pin_cap_29),.Y(sc_pin_inv_u_15548));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000291)) u_b1 (.A(sc_pin_inv_u_15548),.Y(n_28513));
+end else begin : g_sc_legacy_u_15548
+assign n_28513 = sc_pin_cap_29;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15549(.C(n_2),.D(n_183),.Q(sc_pin_cap_30));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15549
+wire sc_pin_inv_u_15549;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000300)) u_b0 (.A(sc_pin_cap_30),.Y(sc_pin_inv_u_15549));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000301)) u_b1 (.A(sc_pin_inv_u_15549),.Y(n_28514));
+end else begin : g_sc_legacy_u_15549
+assign n_28514 = sc_pin_cap_30;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15550(.C(n_2),.D(n_184),.Q(sc_pin_cap_31));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15550
+wire sc_pin_inv_u_15550;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000310)) u_b0 (.A(sc_pin_cap_31),.Y(sc_pin_inv_u_15550));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000311)) u_b1 (.A(sc_pin_inv_u_15550),.Y(n_28515));
+end else begin : g_sc_legacy_u_15550
+assign n_28515 = sc_pin_cap_31;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15551(.C(n_2),.D(n_185),.Q(sc_pin_cap_32));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15551
+wire sc_pin_inv_u_15551;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000320)) u_b0 (.A(sc_pin_cap_32),.Y(sc_pin_inv_u_15551));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000321)) u_b1 (.A(sc_pin_inv_u_15551),.Y(n_28516));
+end else begin : g_sc_legacy_u_15551
+assign n_28516 = sc_pin_cap_32;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15552(.C(n_2),.D(n_186),.Q(sc_pin_cap_33));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15552
+wire sc_pin_inv_u_15552;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000324)) u_b0 (.A(sc_pin_cap_33),.Y(sc_pin_inv_u_15552));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000325)) u_b1 (.A(sc_pin_inv_u_15552),.Y(n_28517));
+end else begin : g_sc_legacy_u_15552
+assign n_28517 = sc_pin_cap_33;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15553(.C(n_2),.D(n_187),.Q(sc_pin_cap_34));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15553
+wire sc_pin_inv_u_15553;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000328)) u_b0 (.A(sc_pin_cap_34),.Y(sc_pin_inv_u_15553));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000329)) u_b1 (.A(sc_pin_inv_u_15553),.Y(n_28518));
+end else begin : g_sc_legacy_u_15553
+assign n_28518 = sc_pin_cap_34;
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15554(.C(n_2),.D(n_188),.Q(n_28519));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15555(.C(n_2),.D(n_189),.Q(n_28520));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15556(.C(n_2),.D(n_190),.Q(n_28521));
@@ -19337,7 +19660,14 @@ assign fault = n_525;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15565(.C(n_2),.D(n_199),.Q(n_28530));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15566(.C(n_2),.D(n_250),.Q(n_28531));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15567(.C(n_2),.D(n_251),.Q(n_28532));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15568(.C(n_2),.D(n_252),.Q(n_28533));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15568(.C(n_2),.D(n_252),.Q(sc_pin_cap_35));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15568
+wire sc_pin_inv_u_15568;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000332)) u_b0 (.A(sc_pin_cap_35),.Y(sc_pin_inv_u_15568));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000333)) u_b1 (.A(sc_pin_inv_u_15568),.Y(n_28533));
+end else begin : g_sc_legacy_u_15568
+assign n_28533 = sc_pin_cap_35;
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15569(.C(n_2),.D(n_253),.Q(n_28534));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15570(.C(n_2),.D(n_254),.Q(n_28535));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15571(.C(n_2),.D(n_255),.Q(n_28536));
@@ -19359,38 +19689,262 @@ assign fault = n_525;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15587(.C(n_2),.D(n_271),.Q(n_28552));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15588(.C(n_2),.D(n_272),.Q(n_28553));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15589(.C(n_2),.D(n_273),.Q(n_28554));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15590(.C(n_2),.D(n_274),.Q(n_28555));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15591(.C(n_2),.D(n_275),.Q(n_28556));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15592(.C(n_2),.D(n_276),.Q(n_28557));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15593(.C(n_2),.D(n_277),.Q(n_28558));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15594(.C(n_2),.D(n_278),.Q(n_28559));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15595(.C(n_2),.D(n_279),.Q(n_28560));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15596(.C(n_2),.D(n_280),.Q(n_28561));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15597(.C(n_2),.D(n_281),.Q(n_28562));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15598(.C(n_2),.D(n_282),.Q(n_28563));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15599(.C(n_2),.D(n_283),.Q(n_28564));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15600(.C(n_2),.D(n_284),.Q(n_28565));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15601(.C(n_2),.D(n_285),.Q(n_28566));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15602(.C(n_2),.D(n_286),.Q(n_28567));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15603(.C(n_2),.D(n_287),.Q(n_28568));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15604(.C(n_2),.D(n_288),.Q(n_28569));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15605(.C(n_2),.D(n_289),.Q(n_28570));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15606(.C(n_2),.D(n_290),.Q(n_28571));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15607(.C(n_2),.D(n_291),.Q(n_28572));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15608(.C(n_2),.D(n_292),.Q(n_28573));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15609(.C(n_2),.D(n_293),.Q(n_28574));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15610(.C(n_2),.D(n_294),.Q(n_28575));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15611(.C(n_2),.D(n_295),.Q(n_28576));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15612(.C(n_2),.D(n_296),.Q(n_28577));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15613(.C(n_2),.D(n_297),.Q(n_28578));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15614(.C(n_2),.D(n_298),.Q(n_28579));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15615(.C(n_2),.D(n_299),.Q(n_28580));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15616(.C(n_2),.D(n_300),.Q(n_28581));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15617(.C(n_2),.D(n_301),.Q(n_28582));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15618(.C(n_2),.D(n_302),.Q(n_28583));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15619(.C(n_2),.D(n_303),.Q(n_28584));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15620(.C(n_2),.D(n_304),.Q(n_28585));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15621(.C(n_2),.D(n_305),.Q(n_28586));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15590(.C(n_2),.D(n_274),.Q(sc_pin_cap_36));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15590
+wire sc_pin_inv_u_15590;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000336)) u_b0 (.A(sc_pin_cap_36),.Y(sc_pin_inv_u_15590));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000337)) u_b1 (.A(sc_pin_inv_u_15590),.Y(n_28555));
+end else begin : g_sc_legacy_u_15590
+assign n_28555 = sc_pin_cap_36;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15591(.C(n_2),.D(n_275),.Q(sc_pin_cap_37));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15591
+wire sc_pin_inv_u_15591;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000346)) u_b0 (.A(sc_pin_cap_37),.Y(sc_pin_inv_u_15591));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000347)) u_b1 (.A(sc_pin_inv_u_15591),.Y(n_28556));
+end else begin : g_sc_legacy_u_15591
+assign n_28556 = sc_pin_cap_37;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15592(.C(n_2),.D(n_276),.Q(sc_pin_cap_38));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15592
+wire sc_pin_inv_u_15592;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000356)) u_b0 (.A(sc_pin_cap_38),.Y(sc_pin_inv_u_15592));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000357)) u_b1 (.A(sc_pin_inv_u_15592),.Y(n_28557));
+end else begin : g_sc_legacy_u_15592
+assign n_28557 = sc_pin_cap_38;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15593(.C(n_2),.D(n_277),.Q(sc_pin_cap_39));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15593
+wire sc_pin_inv_u_15593;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000366)) u_b0 (.A(sc_pin_cap_39),.Y(sc_pin_inv_u_15593));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000367)) u_b1 (.A(sc_pin_inv_u_15593),.Y(n_28558));
+end else begin : g_sc_legacy_u_15593
+assign n_28558 = sc_pin_cap_39;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15594(.C(n_2),.D(n_278),.Q(sc_pin_cap_40));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15594
+wire sc_pin_inv_u_15594;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000376)) u_b0 (.A(sc_pin_cap_40),.Y(sc_pin_inv_u_15594));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000377)) u_b1 (.A(sc_pin_inv_u_15594),.Y(n_28559));
+end else begin : g_sc_legacy_u_15594
+assign n_28559 = sc_pin_cap_40;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15595(.C(n_2),.D(n_279),.Q(sc_pin_cap_41));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15595
+wire sc_pin_inv_u_15595;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000386)) u_b0 (.A(sc_pin_cap_41),.Y(sc_pin_inv_u_15595));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000387)) u_b1 (.A(sc_pin_inv_u_15595),.Y(n_28560));
+end else begin : g_sc_legacy_u_15595
+assign n_28560 = sc_pin_cap_41;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15596(.C(n_2),.D(n_280),.Q(sc_pin_cap_42));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15596
+wire sc_pin_inv_u_15596;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000396)) u_b0 (.A(sc_pin_cap_42),.Y(sc_pin_inv_u_15596));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000397)) u_b1 (.A(sc_pin_inv_u_15596),.Y(n_28561));
+end else begin : g_sc_legacy_u_15596
+assign n_28561 = sc_pin_cap_42;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15597(.C(n_2),.D(n_281),.Q(sc_pin_cap_43));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15597
+wire sc_pin_inv_u_15597;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000406)) u_b0 (.A(sc_pin_cap_43),.Y(sc_pin_inv_u_15597));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000407)) u_b1 (.A(sc_pin_inv_u_15597),.Y(n_28562));
+end else begin : g_sc_legacy_u_15597
+assign n_28562 = sc_pin_cap_43;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15598(.C(n_2),.D(n_282),.Q(sc_pin_cap_44));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15598
+wire sc_pin_inv_u_15598;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000416)) u_b0 (.A(sc_pin_cap_44),.Y(sc_pin_inv_u_15598));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000417)) u_b1 (.A(sc_pin_inv_u_15598),.Y(n_28563));
+end else begin : g_sc_legacy_u_15598
+assign n_28563 = sc_pin_cap_44;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15599(.C(n_2),.D(n_283),.Q(sc_pin_cap_45));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15599
+wire sc_pin_inv_u_15599;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000426)) u_b0 (.A(sc_pin_cap_45),.Y(sc_pin_inv_u_15599));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000427)) u_b1 (.A(sc_pin_inv_u_15599),.Y(n_28564));
+end else begin : g_sc_legacy_u_15599
+assign n_28564 = sc_pin_cap_45;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15600(.C(n_2),.D(n_284),.Q(sc_pin_cap_46));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15600
+wire sc_pin_inv_u_15600;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000436)) u_b0 (.A(sc_pin_cap_46),.Y(sc_pin_inv_u_15600));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000437)) u_b1 (.A(sc_pin_inv_u_15600),.Y(n_28565));
+end else begin : g_sc_legacy_u_15600
+assign n_28565 = sc_pin_cap_46;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15601(.C(n_2),.D(n_285),.Q(sc_pin_cap_47));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15601
+wire sc_pin_inv_u_15601;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000446)) u_b0 (.A(sc_pin_cap_47),.Y(sc_pin_inv_u_15601));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000447)) u_b1 (.A(sc_pin_inv_u_15601),.Y(n_28566));
+end else begin : g_sc_legacy_u_15601
+assign n_28566 = sc_pin_cap_47;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15602(.C(n_2),.D(n_286),.Q(sc_pin_cap_48));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15602
+wire sc_pin_inv_u_15602;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000456)) u_b0 (.A(sc_pin_cap_48),.Y(sc_pin_inv_u_15602));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000457)) u_b1 (.A(sc_pin_inv_u_15602),.Y(n_28567));
+end else begin : g_sc_legacy_u_15602
+assign n_28567 = sc_pin_cap_48;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15603(.C(n_2),.D(n_287),.Q(sc_pin_cap_49));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15603
+wire sc_pin_inv_u_15603;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000466)) u_b0 (.A(sc_pin_cap_49),.Y(sc_pin_inv_u_15603));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000467)) u_b1 (.A(sc_pin_inv_u_15603),.Y(n_28568));
+end else begin : g_sc_legacy_u_15603
+assign n_28568 = sc_pin_cap_49;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15604(.C(n_2),.D(n_288),.Q(sc_pin_cap_50));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15604
+wire sc_pin_inv_u_15604;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000476)) u_b0 (.A(sc_pin_cap_50),.Y(sc_pin_inv_u_15604));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000477)) u_b1 (.A(sc_pin_inv_u_15604),.Y(n_28569));
+end else begin : g_sc_legacy_u_15604
+assign n_28569 = sc_pin_cap_50;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15605(.C(n_2),.D(n_289),.Q(sc_pin_cap_51));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15605
+wire sc_pin_inv_u_15605;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000486)) u_b0 (.A(sc_pin_cap_51),.Y(sc_pin_inv_u_15605));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000487)) u_b1 (.A(sc_pin_inv_u_15605),.Y(n_28570));
+end else begin : g_sc_legacy_u_15605
+assign n_28570 = sc_pin_cap_51;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15606(.C(n_2),.D(n_290),.Q(sc_pin_cap_52));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15606
+wire sc_pin_inv_u_15606;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000496)) u_b0 (.A(sc_pin_cap_52),.Y(sc_pin_inv_u_15606));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000497)) u_b1 (.A(sc_pin_inv_u_15606),.Y(n_28571));
+end else begin : g_sc_legacy_u_15606
+assign n_28571 = sc_pin_cap_52;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15607(.C(n_2),.D(n_291),.Q(sc_pin_cap_53));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15607
+wire sc_pin_inv_u_15607;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000506)) u_b0 (.A(sc_pin_cap_53),.Y(sc_pin_inv_u_15607));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000507)) u_b1 (.A(sc_pin_inv_u_15607),.Y(n_28572));
+end else begin : g_sc_legacy_u_15607
+assign n_28572 = sc_pin_cap_53;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15608(.C(n_2),.D(n_292),.Q(sc_pin_cap_54));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15608
+wire sc_pin_inv_u_15608;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000516)) u_b0 (.A(sc_pin_cap_54),.Y(sc_pin_inv_u_15608));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000517)) u_b1 (.A(sc_pin_inv_u_15608),.Y(n_28573));
+end else begin : g_sc_legacy_u_15608
+assign n_28573 = sc_pin_cap_54;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15609(.C(n_2),.D(n_293),.Q(sc_pin_cap_55));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15609
+wire sc_pin_inv_u_15609;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000526)) u_b0 (.A(sc_pin_cap_55),.Y(sc_pin_inv_u_15609));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000527)) u_b1 (.A(sc_pin_inv_u_15609),.Y(n_28574));
+end else begin : g_sc_legacy_u_15609
+assign n_28574 = sc_pin_cap_55;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15610(.C(n_2),.D(n_294),.Q(sc_pin_cap_56));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15610
+wire sc_pin_inv_u_15610;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000536)) u_b0 (.A(sc_pin_cap_56),.Y(sc_pin_inv_u_15610));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000537)) u_b1 (.A(sc_pin_inv_u_15610),.Y(n_28575));
+end else begin : g_sc_legacy_u_15610
+assign n_28575 = sc_pin_cap_56;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15611(.C(n_2),.D(n_295),.Q(sc_pin_cap_57));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15611
+wire sc_pin_inv_u_15611;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000546)) u_b0 (.A(sc_pin_cap_57),.Y(sc_pin_inv_u_15611));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000547)) u_b1 (.A(sc_pin_inv_u_15611),.Y(n_28576));
+end else begin : g_sc_legacy_u_15611
+assign n_28576 = sc_pin_cap_57;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15612(.C(n_2),.D(n_296),.Q(sc_pin_cap_58));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15612
+wire sc_pin_inv_u_15612;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000556)) u_b0 (.A(sc_pin_cap_58),.Y(sc_pin_inv_u_15612));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000557)) u_b1 (.A(sc_pin_inv_u_15612),.Y(n_28577));
+end else begin : g_sc_legacy_u_15612
+assign n_28577 = sc_pin_cap_58;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15613(.C(n_2),.D(n_297),.Q(sc_pin_cap_59));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15613
+wire sc_pin_inv_u_15613;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000566)) u_b0 (.A(sc_pin_cap_59),.Y(sc_pin_inv_u_15613));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000567)) u_b1 (.A(sc_pin_inv_u_15613),.Y(n_28578));
+end else begin : g_sc_legacy_u_15613
+assign n_28578 = sc_pin_cap_59;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15614(.C(n_2),.D(n_298),.Q(sc_pin_cap_60));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15614
+wire sc_pin_inv_u_15614;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000576)) u_b0 (.A(sc_pin_cap_60),.Y(sc_pin_inv_u_15614));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000577)) u_b1 (.A(sc_pin_inv_u_15614),.Y(n_28579));
+end else begin : g_sc_legacy_u_15614
+assign n_28579 = sc_pin_cap_60;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15615(.C(n_2),.D(n_299),.Q(sc_pin_cap_61));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15615
+wire sc_pin_inv_u_15615;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000586)) u_b0 (.A(sc_pin_cap_61),.Y(sc_pin_inv_u_15615));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000587)) u_b1 (.A(sc_pin_inv_u_15615),.Y(n_28580));
+end else begin : g_sc_legacy_u_15615
+assign n_28580 = sc_pin_cap_61;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15616(.C(n_2),.D(n_300),.Q(sc_pin_cap_62));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15616
+wire sc_pin_inv_u_15616;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000596)) u_b0 (.A(sc_pin_cap_62),.Y(sc_pin_inv_u_15616));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000597)) u_b1 (.A(sc_pin_inv_u_15616),.Y(n_28581));
+end else begin : g_sc_legacy_u_15616
+assign n_28581 = sc_pin_cap_62;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15617(.C(n_2),.D(n_301),.Q(sc_pin_cap_63));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15617
+wire sc_pin_inv_u_15617;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000606)) u_b0 (.A(sc_pin_cap_63),.Y(sc_pin_inv_u_15617));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000607)) u_b1 (.A(sc_pin_inv_u_15617),.Y(n_28582));
+end else begin : g_sc_legacy_u_15617
+assign n_28582 = sc_pin_cap_63;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15618(.C(n_2),.D(n_302),.Q(sc_pin_cap_64));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15618
+wire sc_pin_inv_u_15618;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000616)) u_b0 (.A(sc_pin_cap_64),.Y(sc_pin_inv_u_15618));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000617)) u_b1 (.A(sc_pin_inv_u_15618),.Y(n_28583));
+end else begin : g_sc_legacy_u_15618
+assign n_28583 = sc_pin_cap_64;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15619(.C(n_2),.D(n_303),.Q(sc_pin_cap_65));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15619
+wire sc_pin_inv_u_15619;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000626)) u_b0 (.A(sc_pin_cap_65),.Y(sc_pin_inv_u_15619));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000627)) u_b1 (.A(sc_pin_inv_u_15619),.Y(n_28584));
+end else begin : g_sc_legacy_u_15619
+assign n_28584 = sc_pin_cap_65;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15620(.C(n_2),.D(n_304),.Q(sc_pin_cap_66));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15620
+wire sc_pin_inv_u_15620;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000636)) u_b0 (.A(sc_pin_cap_66),.Y(sc_pin_inv_u_15620));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000637)) u_b1 (.A(sc_pin_inv_u_15620),.Y(n_28585));
+end else begin : g_sc_legacy_u_15620
+assign n_28585 = sc_pin_cap_66;
+end endgenerate
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15621(.C(n_2),.D(n_305),.Q(sc_pin_cap_67));
+generate if (HARD_PINREG) begin : g_sc_pin_u_15621
+wire sc_pin_inv_u_15621;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000646)) u_b0 (.A(sc_pin_cap_67),.Y(sc_pin_inv_u_15621));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000647)) u_b1 (.A(sc_pin_inv_u_15621),.Y(n_28586));
+end else begin : g_sc_legacy_u_15621
+assign n_28586 = sc_pin_cap_67;
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15622(.C(n_2),.D(n_314),.Q(n_28587));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15623(.C(n_2),.D(n_315),.Q(n_28588));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15624(.C(n_2),.D(n_316),.Q(n_28589));
@@ -223657,134 +224211,902 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_219885(.A(n_236658),.B(n_1836),.Y(n_231953));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_219886(.A(n_236688),.B(n_1601),.Y(n_231954));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_219887(.A(n_236688),.B(n_1601),.Y(n_231955));
+generate if (HARD_PINREG) begin : g_sc_pin_u_219888
+wire sc_pin_inv_u_219888;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000648)) u_b0 (.A(sc_pin_cap_67),.Y(sc_pin_inv_u_219888));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000649)) u_b1 (.A(sc_pin_inv_u_219888),.Y(n_231956));
+end else begin : g_sc_legacy_u_219888
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219888(.C(n_2),.D(n_305),.Q(n_231956));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219889
+wire sc_pin_inv_u_219889;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000650)) u_b0 (.A(sc_pin_cap_67),.Y(sc_pin_inv_u_219889));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000651)) u_b1 (.A(sc_pin_inv_u_219889),.Y(n_231957));
+end else begin : g_sc_legacy_u_219889
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219889(.C(n_2),.D(n_305),.Q(n_231957));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219890
+wire sc_pin_inv_u_219890;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000652)) u_b0 (.A(sc_pin_cap_67),.Y(sc_pin_inv_u_219890));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000653)) u_b1 (.A(sc_pin_inv_u_219890),.Y(n_231958));
+end else begin : g_sc_legacy_u_219890
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219890(.C(n_2),.D(n_305),.Q(n_231958));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219891
+wire sc_pin_inv_u_219891;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000654)) u_b0 (.A(sc_pin_cap_67),.Y(sc_pin_inv_u_219891));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000655)) u_b1 (.A(sc_pin_inv_u_219891),.Y(n_231959));
+end else begin : g_sc_legacy_u_219891
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219891(.C(n_2),.D(n_305),.Q(n_231959));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219892
+wire sc_pin_inv_u_219892;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000638)) u_b0 (.A(sc_pin_cap_66),.Y(sc_pin_inv_u_219892));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000639)) u_b1 (.A(sc_pin_inv_u_219892),.Y(n_231960));
+end else begin : g_sc_legacy_u_219892
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219892(.C(n_2),.D(n_304),.Q(n_231960));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219893
+wire sc_pin_inv_u_219893;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000640)) u_b0 (.A(sc_pin_cap_66),.Y(sc_pin_inv_u_219893));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000641)) u_b1 (.A(sc_pin_inv_u_219893),.Y(n_231961));
+end else begin : g_sc_legacy_u_219893
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219893(.C(n_2),.D(n_304),.Q(n_231961));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219894
+wire sc_pin_inv_u_219894;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000642)) u_b0 (.A(sc_pin_cap_66),.Y(sc_pin_inv_u_219894));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000643)) u_b1 (.A(sc_pin_inv_u_219894),.Y(n_231962));
+end else begin : g_sc_legacy_u_219894
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219894(.C(n_2),.D(n_304),.Q(n_231962));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219895
+wire sc_pin_inv_u_219895;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000644)) u_b0 (.A(sc_pin_cap_66),.Y(sc_pin_inv_u_219895));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000645)) u_b1 (.A(sc_pin_inv_u_219895),.Y(n_231963));
+end else begin : g_sc_legacy_u_219895
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219895(.C(n_2),.D(n_304),.Q(n_231963));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219896
+wire sc_pin_inv_u_219896;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000628)) u_b0 (.A(sc_pin_cap_65),.Y(sc_pin_inv_u_219896));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000629)) u_b1 (.A(sc_pin_inv_u_219896),.Y(n_231964));
+end else begin : g_sc_legacy_u_219896
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219896(.C(n_2),.D(n_303),.Q(n_231964));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219897
+wire sc_pin_inv_u_219897;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000630)) u_b0 (.A(sc_pin_cap_65),.Y(sc_pin_inv_u_219897));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000631)) u_b1 (.A(sc_pin_inv_u_219897),.Y(n_231965));
+end else begin : g_sc_legacy_u_219897
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219897(.C(n_2),.D(n_303),.Q(n_231965));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219898
+wire sc_pin_inv_u_219898;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000632)) u_b0 (.A(sc_pin_cap_65),.Y(sc_pin_inv_u_219898));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000633)) u_b1 (.A(sc_pin_inv_u_219898),.Y(n_231966));
+end else begin : g_sc_legacy_u_219898
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219898(.C(n_2),.D(n_303),.Q(n_231966));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219899
+wire sc_pin_inv_u_219899;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000634)) u_b0 (.A(sc_pin_cap_65),.Y(sc_pin_inv_u_219899));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000635)) u_b1 (.A(sc_pin_inv_u_219899),.Y(n_231967));
+end else begin : g_sc_legacy_u_219899
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219899(.C(n_2),.D(n_303),.Q(n_231967));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219900
+wire sc_pin_inv_u_219900;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000618)) u_b0 (.A(sc_pin_cap_64),.Y(sc_pin_inv_u_219900));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000619)) u_b1 (.A(sc_pin_inv_u_219900),.Y(n_231968));
+end else begin : g_sc_legacy_u_219900
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219900(.C(n_2),.D(n_302),.Q(n_231968));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219901
+wire sc_pin_inv_u_219901;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000620)) u_b0 (.A(sc_pin_cap_64),.Y(sc_pin_inv_u_219901));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000621)) u_b1 (.A(sc_pin_inv_u_219901),.Y(n_231969));
+end else begin : g_sc_legacy_u_219901
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219901(.C(n_2),.D(n_302),.Q(n_231969));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219902
+wire sc_pin_inv_u_219902;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000622)) u_b0 (.A(sc_pin_cap_64),.Y(sc_pin_inv_u_219902));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000623)) u_b1 (.A(sc_pin_inv_u_219902),.Y(n_231970));
+end else begin : g_sc_legacy_u_219902
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219902(.C(n_2),.D(n_302),.Q(n_231970));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219903
+wire sc_pin_inv_u_219903;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000624)) u_b0 (.A(sc_pin_cap_64),.Y(sc_pin_inv_u_219903));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000625)) u_b1 (.A(sc_pin_inv_u_219903),.Y(n_231971));
+end else begin : g_sc_legacy_u_219903
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219903(.C(n_2),.D(n_302),.Q(n_231971));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219904
+wire sc_pin_inv_u_219904;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000608)) u_b0 (.A(sc_pin_cap_63),.Y(sc_pin_inv_u_219904));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000609)) u_b1 (.A(sc_pin_inv_u_219904),.Y(n_231972));
+end else begin : g_sc_legacy_u_219904
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219904(.C(n_2),.D(n_301),.Q(n_231972));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219905
+wire sc_pin_inv_u_219905;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000610)) u_b0 (.A(sc_pin_cap_63),.Y(sc_pin_inv_u_219905));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000611)) u_b1 (.A(sc_pin_inv_u_219905),.Y(n_231973));
+end else begin : g_sc_legacy_u_219905
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219905(.C(n_2),.D(n_301),.Q(n_231973));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219906
+wire sc_pin_inv_u_219906;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000612)) u_b0 (.A(sc_pin_cap_63),.Y(sc_pin_inv_u_219906));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000613)) u_b1 (.A(sc_pin_inv_u_219906),.Y(n_231974));
+end else begin : g_sc_legacy_u_219906
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219906(.C(n_2),.D(n_301),.Q(n_231974));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219907
+wire sc_pin_inv_u_219907;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000614)) u_b0 (.A(sc_pin_cap_63),.Y(sc_pin_inv_u_219907));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000615)) u_b1 (.A(sc_pin_inv_u_219907),.Y(n_231975));
+end else begin : g_sc_legacy_u_219907
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219907(.C(n_2),.D(n_301),.Q(n_231975));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219908
+wire sc_pin_inv_u_219908;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000598)) u_b0 (.A(sc_pin_cap_62),.Y(sc_pin_inv_u_219908));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000599)) u_b1 (.A(sc_pin_inv_u_219908),.Y(n_231976));
+end else begin : g_sc_legacy_u_219908
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219908(.C(n_2),.D(n_300),.Q(n_231976));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219909
+wire sc_pin_inv_u_219909;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000600)) u_b0 (.A(sc_pin_cap_62),.Y(sc_pin_inv_u_219909));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000601)) u_b1 (.A(sc_pin_inv_u_219909),.Y(n_231977));
+end else begin : g_sc_legacy_u_219909
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219909(.C(n_2),.D(n_300),.Q(n_231977));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219910
+wire sc_pin_inv_u_219910;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000602)) u_b0 (.A(sc_pin_cap_62),.Y(sc_pin_inv_u_219910));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000603)) u_b1 (.A(sc_pin_inv_u_219910),.Y(n_231978));
+end else begin : g_sc_legacy_u_219910
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219910(.C(n_2),.D(n_300),.Q(n_231978));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219911
+wire sc_pin_inv_u_219911;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000604)) u_b0 (.A(sc_pin_cap_62),.Y(sc_pin_inv_u_219911));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000605)) u_b1 (.A(sc_pin_inv_u_219911),.Y(n_231979));
+end else begin : g_sc_legacy_u_219911
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219911(.C(n_2),.D(n_300),.Q(n_231979));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219912
+wire sc_pin_inv_u_219912;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000588)) u_b0 (.A(sc_pin_cap_61),.Y(sc_pin_inv_u_219912));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000589)) u_b1 (.A(sc_pin_inv_u_219912),.Y(n_231980));
+end else begin : g_sc_legacy_u_219912
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219912(.C(n_2),.D(n_299),.Q(n_231980));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219913
+wire sc_pin_inv_u_219913;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000590)) u_b0 (.A(sc_pin_cap_61),.Y(sc_pin_inv_u_219913));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000591)) u_b1 (.A(sc_pin_inv_u_219913),.Y(n_231981));
+end else begin : g_sc_legacy_u_219913
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219913(.C(n_2),.D(n_299),.Q(n_231981));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219914
+wire sc_pin_inv_u_219914;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000592)) u_b0 (.A(sc_pin_cap_61),.Y(sc_pin_inv_u_219914));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000593)) u_b1 (.A(sc_pin_inv_u_219914),.Y(n_231982));
+end else begin : g_sc_legacy_u_219914
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219914(.C(n_2),.D(n_299),.Q(n_231982));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219915
+wire sc_pin_inv_u_219915;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000594)) u_b0 (.A(sc_pin_cap_61),.Y(sc_pin_inv_u_219915));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000595)) u_b1 (.A(sc_pin_inv_u_219915),.Y(n_231983));
+end else begin : g_sc_legacy_u_219915
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219915(.C(n_2),.D(n_299),.Q(n_231983));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219916
+wire sc_pin_inv_u_219916;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000578)) u_b0 (.A(sc_pin_cap_60),.Y(sc_pin_inv_u_219916));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000579)) u_b1 (.A(sc_pin_inv_u_219916),.Y(n_231984));
+end else begin : g_sc_legacy_u_219916
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219916(.C(n_2),.D(n_298),.Q(n_231984));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219917
+wire sc_pin_inv_u_219917;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000580)) u_b0 (.A(sc_pin_cap_60),.Y(sc_pin_inv_u_219917));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000581)) u_b1 (.A(sc_pin_inv_u_219917),.Y(n_231985));
+end else begin : g_sc_legacy_u_219917
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219917(.C(n_2),.D(n_298),.Q(n_231985));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219918
+wire sc_pin_inv_u_219918;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000582)) u_b0 (.A(sc_pin_cap_60),.Y(sc_pin_inv_u_219918));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000583)) u_b1 (.A(sc_pin_inv_u_219918),.Y(n_231986));
+end else begin : g_sc_legacy_u_219918
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219918(.C(n_2),.D(n_298),.Q(n_231986));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219919
+wire sc_pin_inv_u_219919;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000584)) u_b0 (.A(sc_pin_cap_60),.Y(sc_pin_inv_u_219919));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000585)) u_b1 (.A(sc_pin_inv_u_219919),.Y(n_231987));
+end else begin : g_sc_legacy_u_219919
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219919(.C(n_2),.D(n_298),.Q(n_231987));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219920
+wire sc_pin_inv_u_219920;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000568)) u_b0 (.A(sc_pin_cap_59),.Y(sc_pin_inv_u_219920));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000569)) u_b1 (.A(sc_pin_inv_u_219920),.Y(n_231988));
+end else begin : g_sc_legacy_u_219920
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219920(.C(n_2),.D(n_297),.Q(n_231988));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219921
+wire sc_pin_inv_u_219921;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000570)) u_b0 (.A(sc_pin_cap_59),.Y(sc_pin_inv_u_219921));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000571)) u_b1 (.A(sc_pin_inv_u_219921),.Y(n_231989));
+end else begin : g_sc_legacy_u_219921
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219921(.C(n_2),.D(n_297),.Q(n_231989));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219922
+wire sc_pin_inv_u_219922;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000572)) u_b0 (.A(sc_pin_cap_59),.Y(sc_pin_inv_u_219922));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000573)) u_b1 (.A(sc_pin_inv_u_219922),.Y(n_231990));
+end else begin : g_sc_legacy_u_219922
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219922(.C(n_2),.D(n_297),.Q(n_231990));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219923
+wire sc_pin_inv_u_219923;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000574)) u_b0 (.A(sc_pin_cap_59),.Y(sc_pin_inv_u_219923));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000575)) u_b1 (.A(sc_pin_inv_u_219923),.Y(n_231991));
+end else begin : g_sc_legacy_u_219923
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219923(.C(n_2),.D(n_297),.Q(n_231991));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219924
+wire sc_pin_inv_u_219924;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000558)) u_b0 (.A(sc_pin_cap_58),.Y(sc_pin_inv_u_219924));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000559)) u_b1 (.A(sc_pin_inv_u_219924),.Y(n_231992));
+end else begin : g_sc_legacy_u_219924
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219924(.C(n_2),.D(n_296),.Q(n_231992));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219925
+wire sc_pin_inv_u_219925;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000560)) u_b0 (.A(sc_pin_cap_58),.Y(sc_pin_inv_u_219925));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000561)) u_b1 (.A(sc_pin_inv_u_219925),.Y(n_231993));
+end else begin : g_sc_legacy_u_219925
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219925(.C(n_2),.D(n_296),.Q(n_231993));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219926
+wire sc_pin_inv_u_219926;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000562)) u_b0 (.A(sc_pin_cap_58),.Y(sc_pin_inv_u_219926));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000563)) u_b1 (.A(sc_pin_inv_u_219926),.Y(n_231994));
+end else begin : g_sc_legacy_u_219926
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219926(.C(n_2),.D(n_296),.Q(n_231994));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219927
+wire sc_pin_inv_u_219927;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000564)) u_b0 (.A(sc_pin_cap_58),.Y(sc_pin_inv_u_219927));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000565)) u_b1 (.A(sc_pin_inv_u_219927),.Y(n_231995));
+end else begin : g_sc_legacy_u_219927
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219927(.C(n_2),.D(n_296),.Q(n_231995));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219928
+wire sc_pin_inv_u_219928;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000548)) u_b0 (.A(sc_pin_cap_57),.Y(sc_pin_inv_u_219928));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000549)) u_b1 (.A(sc_pin_inv_u_219928),.Y(n_231996));
+end else begin : g_sc_legacy_u_219928
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219928(.C(n_2),.D(n_295),.Q(n_231996));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219929
+wire sc_pin_inv_u_219929;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000550)) u_b0 (.A(sc_pin_cap_57),.Y(sc_pin_inv_u_219929));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000551)) u_b1 (.A(sc_pin_inv_u_219929),.Y(n_231997));
+end else begin : g_sc_legacy_u_219929
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219929(.C(n_2),.D(n_295),.Q(n_231997));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219930
+wire sc_pin_inv_u_219930;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000552)) u_b0 (.A(sc_pin_cap_57),.Y(sc_pin_inv_u_219930));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000553)) u_b1 (.A(sc_pin_inv_u_219930),.Y(n_231998));
+end else begin : g_sc_legacy_u_219930
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219930(.C(n_2),.D(n_295),.Q(n_231998));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219931
+wire sc_pin_inv_u_219931;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000554)) u_b0 (.A(sc_pin_cap_57),.Y(sc_pin_inv_u_219931));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000555)) u_b1 (.A(sc_pin_inv_u_219931),.Y(n_231999));
+end else begin : g_sc_legacy_u_219931
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219931(.C(n_2),.D(n_295),.Q(n_231999));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219932
+wire sc_pin_inv_u_219932;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000538)) u_b0 (.A(sc_pin_cap_56),.Y(sc_pin_inv_u_219932));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000539)) u_b1 (.A(sc_pin_inv_u_219932),.Y(n_232000));
+end else begin : g_sc_legacy_u_219932
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219932(.C(n_2),.D(n_294),.Q(n_232000));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219933
+wire sc_pin_inv_u_219933;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000540)) u_b0 (.A(sc_pin_cap_56),.Y(sc_pin_inv_u_219933));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000541)) u_b1 (.A(sc_pin_inv_u_219933),.Y(n_232001));
+end else begin : g_sc_legacy_u_219933
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219933(.C(n_2),.D(n_294),.Q(n_232001));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219934
+wire sc_pin_inv_u_219934;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000542)) u_b0 (.A(sc_pin_cap_56),.Y(sc_pin_inv_u_219934));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000543)) u_b1 (.A(sc_pin_inv_u_219934),.Y(n_232002));
+end else begin : g_sc_legacy_u_219934
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219934(.C(n_2),.D(n_294),.Q(n_232002));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219935
+wire sc_pin_inv_u_219935;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000544)) u_b0 (.A(sc_pin_cap_56),.Y(sc_pin_inv_u_219935));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000545)) u_b1 (.A(sc_pin_inv_u_219935),.Y(n_232003));
+end else begin : g_sc_legacy_u_219935
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219935(.C(n_2),.D(n_294),.Q(n_232003));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219936
+wire sc_pin_inv_u_219936;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000528)) u_b0 (.A(sc_pin_cap_55),.Y(sc_pin_inv_u_219936));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000529)) u_b1 (.A(sc_pin_inv_u_219936),.Y(n_232004));
+end else begin : g_sc_legacy_u_219936
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219936(.C(n_2),.D(n_293),.Q(n_232004));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219937
+wire sc_pin_inv_u_219937;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000530)) u_b0 (.A(sc_pin_cap_55),.Y(sc_pin_inv_u_219937));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000531)) u_b1 (.A(sc_pin_inv_u_219937),.Y(n_232005));
+end else begin : g_sc_legacy_u_219937
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219937(.C(n_2),.D(n_293),.Q(n_232005));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219938
+wire sc_pin_inv_u_219938;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000532)) u_b0 (.A(sc_pin_cap_55),.Y(sc_pin_inv_u_219938));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000533)) u_b1 (.A(sc_pin_inv_u_219938),.Y(n_232006));
+end else begin : g_sc_legacy_u_219938
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219938(.C(n_2),.D(n_293),.Q(n_232006));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219939
+wire sc_pin_inv_u_219939;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000534)) u_b0 (.A(sc_pin_cap_55),.Y(sc_pin_inv_u_219939));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000535)) u_b1 (.A(sc_pin_inv_u_219939),.Y(n_232007));
+end else begin : g_sc_legacy_u_219939
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219939(.C(n_2),.D(n_293),.Q(n_232007));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219940
+wire sc_pin_inv_u_219940;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000518)) u_b0 (.A(sc_pin_cap_54),.Y(sc_pin_inv_u_219940));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000519)) u_b1 (.A(sc_pin_inv_u_219940),.Y(n_232008));
+end else begin : g_sc_legacy_u_219940
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219940(.C(n_2),.D(n_292),.Q(n_232008));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219941
+wire sc_pin_inv_u_219941;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000520)) u_b0 (.A(sc_pin_cap_54),.Y(sc_pin_inv_u_219941));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000521)) u_b1 (.A(sc_pin_inv_u_219941),.Y(n_232009));
+end else begin : g_sc_legacy_u_219941
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219941(.C(n_2),.D(n_292),.Q(n_232009));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219942
+wire sc_pin_inv_u_219942;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000522)) u_b0 (.A(sc_pin_cap_54),.Y(sc_pin_inv_u_219942));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000523)) u_b1 (.A(sc_pin_inv_u_219942),.Y(n_232010));
+end else begin : g_sc_legacy_u_219942
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219942(.C(n_2),.D(n_292),.Q(n_232010));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219943
+wire sc_pin_inv_u_219943;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000524)) u_b0 (.A(sc_pin_cap_54),.Y(sc_pin_inv_u_219943));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000525)) u_b1 (.A(sc_pin_inv_u_219943),.Y(n_232011));
+end else begin : g_sc_legacy_u_219943
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219943(.C(n_2),.D(n_292),.Q(n_232011));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219944
+wire sc_pin_inv_u_219944;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000508)) u_b0 (.A(sc_pin_cap_53),.Y(sc_pin_inv_u_219944));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000509)) u_b1 (.A(sc_pin_inv_u_219944),.Y(n_232012));
+end else begin : g_sc_legacy_u_219944
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219944(.C(n_2),.D(n_291),.Q(n_232012));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219945
+wire sc_pin_inv_u_219945;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000510)) u_b0 (.A(sc_pin_cap_53),.Y(sc_pin_inv_u_219945));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000511)) u_b1 (.A(sc_pin_inv_u_219945),.Y(n_232013));
+end else begin : g_sc_legacy_u_219945
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219945(.C(n_2),.D(n_291),.Q(n_232013));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219946
+wire sc_pin_inv_u_219946;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000512)) u_b0 (.A(sc_pin_cap_53),.Y(sc_pin_inv_u_219946));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000513)) u_b1 (.A(sc_pin_inv_u_219946),.Y(n_232014));
+end else begin : g_sc_legacy_u_219946
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219946(.C(n_2),.D(n_291),.Q(n_232014));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219947
+wire sc_pin_inv_u_219947;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000514)) u_b0 (.A(sc_pin_cap_53),.Y(sc_pin_inv_u_219947));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000515)) u_b1 (.A(sc_pin_inv_u_219947),.Y(n_232015));
+end else begin : g_sc_legacy_u_219947
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219947(.C(n_2),.D(n_291),.Q(n_232015));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219948
+wire sc_pin_inv_u_219948;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000498)) u_b0 (.A(sc_pin_cap_52),.Y(sc_pin_inv_u_219948));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000499)) u_b1 (.A(sc_pin_inv_u_219948),.Y(n_232016));
+end else begin : g_sc_legacy_u_219948
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219948(.C(n_2),.D(n_290),.Q(n_232016));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219949
+wire sc_pin_inv_u_219949;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000500)) u_b0 (.A(sc_pin_cap_52),.Y(sc_pin_inv_u_219949));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000501)) u_b1 (.A(sc_pin_inv_u_219949),.Y(n_232017));
+end else begin : g_sc_legacy_u_219949
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219949(.C(n_2),.D(n_290),.Q(n_232017));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219950
+wire sc_pin_inv_u_219950;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000502)) u_b0 (.A(sc_pin_cap_52),.Y(sc_pin_inv_u_219950));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000503)) u_b1 (.A(sc_pin_inv_u_219950),.Y(n_232018));
+end else begin : g_sc_legacy_u_219950
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219950(.C(n_2),.D(n_290),.Q(n_232018));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219951
+wire sc_pin_inv_u_219951;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000504)) u_b0 (.A(sc_pin_cap_52),.Y(sc_pin_inv_u_219951));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000505)) u_b1 (.A(sc_pin_inv_u_219951),.Y(n_232019));
+end else begin : g_sc_legacy_u_219951
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219951(.C(n_2),.D(n_290),.Q(n_232019));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219952
+wire sc_pin_inv_u_219952;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000488)) u_b0 (.A(sc_pin_cap_51),.Y(sc_pin_inv_u_219952));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000489)) u_b1 (.A(sc_pin_inv_u_219952),.Y(n_232020));
+end else begin : g_sc_legacy_u_219952
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219952(.C(n_2),.D(n_289),.Q(n_232020));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219953
+wire sc_pin_inv_u_219953;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000490)) u_b0 (.A(sc_pin_cap_51),.Y(sc_pin_inv_u_219953));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000491)) u_b1 (.A(sc_pin_inv_u_219953),.Y(n_232021));
+end else begin : g_sc_legacy_u_219953
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219953(.C(n_2),.D(n_289),.Q(n_232021));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219954
+wire sc_pin_inv_u_219954;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000492)) u_b0 (.A(sc_pin_cap_51),.Y(sc_pin_inv_u_219954));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000493)) u_b1 (.A(sc_pin_inv_u_219954),.Y(n_232022));
+end else begin : g_sc_legacy_u_219954
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219954(.C(n_2),.D(n_289),.Q(n_232022));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219955
+wire sc_pin_inv_u_219955;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000494)) u_b0 (.A(sc_pin_cap_51),.Y(sc_pin_inv_u_219955));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000495)) u_b1 (.A(sc_pin_inv_u_219955),.Y(n_232023));
+end else begin : g_sc_legacy_u_219955
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219955(.C(n_2),.D(n_289),.Q(n_232023));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219956
+wire sc_pin_inv_u_219956;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000478)) u_b0 (.A(sc_pin_cap_50),.Y(sc_pin_inv_u_219956));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000479)) u_b1 (.A(sc_pin_inv_u_219956),.Y(n_232024));
+end else begin : g_sc_legacy_u_219956
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219956(.C(n_2),.D(n_288),.Q(n_232024));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219957
+wire sc_pin_inv_u_219957;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000480)) u_b0 (.A(sc_pin_cap_50),.Y(sc_pin_inv_u_219957));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000481)) u_b1 (.A(sc_pin_inv_u_219957),.Y(n_232025));
+end else begin : g_sc_legacy_u_219957
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219957(.C(n_2),.D(n_288),.Q(n_232025));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219958
+wire sc_pin_inv_u_219958;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000482)) u_b0 (.A(sc_pin_cap_50),.Y(sc_pin_inv_u_219958));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000483)) u_b1 (.A(sc_pin_inv_u_219958),.Y(n_232026));
+end else begin : g_sc_legacy_u_219958
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219958(.C(n_2),.D(n_288),.Q(n_232026));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219959
+wire sc_pin_inv_u_219959;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000484)) u_b0 (.A(sc_pin_cap_50),.Y(sc_pin_inv_u_219959));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000485)) u_b1 (.A(sc_pin_inv_u_219959),.Y(n_232027));
+end else begin : g_sc_legacy_u_219959
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219959(.C(n_2),.D(n_288),.Q(n_232027));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219960
+wire sc_pin_inv_u_219960;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000468)) u_b0 (.A(sc_pin_cap_49),.Y(sc_pin_inv_u_219960));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000469)) u_b1 (.A(sc_pin_inv_u_219960),.Y(n_232028));
+end else begin : g_sc_legacy_u_219960
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219960(.C(n_2),.D(n_287),.Q(n_232028));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219961
+wire sc_pin_inv_u_219961;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000470)) u_b0 (.A(sc_pin_cap_49),.Y(sc_pin_inv_u_219961));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000471)) u_b1 (.A(sc_pin_inv_u_219961),.Y(n_232029));
+end else begin : g_sc_legacy_u_219961
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219961(.C(n_2),.D(n_287),.Q(n_232029));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219962
+wire sc_pin_inv_u_219962;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000472)) u_b0 (.A(sc_pin_cap_49),.Y(sc_pin_inv_u_219962));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000473)) u_b1 (.A(sc_pin_inv_u_219962),.Y(n_232030));
+end else begin : g_sc_legacy_u_219962
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219962(.C(n_2),.D(n_287),.Q(n_232030));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219963
+wire sc_pin_inv_u_219963;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000474)) u_b0 (.A(sc_pin_cap_49),.Y(sc_pin_inv_u_219963));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000475)) u_b1 (.A(sc_pin_inv_u_219963),.Y(n_232031));
+end else begin : g_sc_legacy_u_219963
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219963(.C(n_2),.D(n_287),.Q(n_232031));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219964
+wire sc_pin_inv_u_219964;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000458)) u_b0 (.A(sc_pin_cap_48),.Y(sc_pin_inv_u_219964));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000459)) u_b1 (.A(sc_pin_inv_u_219964),.Y(n_232032));
+end else begin : g_sc_legacy_u_219964
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219964(.C(n_2),.D(n_286),.Q(n_232032));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219965
+wire sc_pin_inv_u_219965;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000460)) u_b0 (.A(sc_pin_cap_48),.Y(sc_pin_inv_u_219965));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000461)) u_b1 (.A(sc_pin_inv_u_219965),.Y(n_232033));
+end else begin : g_sc_legacy_u_219965
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219965(.C(n_2),.D(n_286),.Q(n_232033));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219966
+wire sc_pin_inv_u_219966;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000462)) u_b0 (.A(sc_pin_cap_48),.Y(sc_pin_inv_u_219966));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000463)) u_b1 (.A(sc_pin_inv_u_219966),.Y(n_232034));
+end else begin : g_sc_legacy_u_219966
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219966(.C(n_2),.D(n_286),.Q(n_232034));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219967
+wire sc_pin_inv_u_219967;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000464)) u_b0 (.A(sc_pin_cap_48),.Y(sc_pin_inv_u_219967));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000465)) u_b1 (.A(sc_pin_inv_u_219967),.Y(n_232035));
+end else begin : g_sc_legacy_u_219967
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219967(.C(n_2),.D(n_286),.Q(n_232035));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219968
+wire sc_pin_inv_u_219968;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000448)) u_b0 (.A(sc_pin_cap_47),.Y(sc_pin_inv_u_219968));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000449)) u_b1 (.A(sc_pin_inv_u_219968),.Y(n_232036));
+end else begin : g_sc_legacy_u_219968
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219968(.C(n_2),.D(n_285),.Q(n_232036));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219969
+wire sc_pin_inv_u_219969;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000450)) u_b0 (.A(sc_pin_cap_47),.Y(sc_pin_inv_u_219969));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000451)) u_b1 (.A(sc_pin_inv_u_219969),.Y(n_232037));
+end else begin : g_sc_legacy_u_219969
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219969(.C(n_2),.D(n_285),.Q(n_232037));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219970
+wire sc_pin_inv_u_219970;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000452)) u_b0 (.A(sc_pin_cap_47),.Y(sc_pin_inv_u_219970));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000453)) u_b1 (.A(sc_pin_inv_u_219970),.Y(n_232038));
+end else begin : g_sc_legacy_u_219970
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219970(.C(n_2),.D(n_285),.Q(n_232038));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219971
+wire sc_pin_inv_u_219971;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000454)) u_b0 (.A(sc_pin_cap_47),.Y(sc_pin_inv_u_219971));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000455)) u_b1 (.A(sc_pin_inv_u_219971),.Y(n_232039));
+end else begin : g_sc_legacy_u_219971
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219971(.C(n_2),.D(n_285),.Q(n_232039));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219972
+wire sc_pin_inv_u_219972;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000438)) u_b0 (.A(sc_pin_cap_46),.Y(sc_pin_inv_u_219972));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000439)) u_b1 (.A(sc_pin_inv_u_219972),.Y(n_232040));
+end else begin : g_sc_legacy_u_219972
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219972(.C(n_2),.D(n_284),.Q(n_232040));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219973
+wire sc_pin_inv_u_219973;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000440)) u_b0 (.A(sc_pin_cap_46),.Y(sc_pin_inv_u_219973));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000441)) u_b1 (.A(sc_pin_inv_u_219973),.Y(n_232041));
+end else begin : g_sc_legacy_u_219973
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219973(.C(n_2),.D(n_284),.Q(n_232041));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219974
+wire sc_pin_inv_u_219974;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000442)) u_b0 (.A(sc_pin_cap_46),.Y(sc_pin_inv_u_219974));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000443)) u_b1 (.A(sc_pin_inv_u_219974),.Y(n_232042));
+end else begin : g_sc_legacy_u_219974
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219974(.C(n_2),.D(n_284),.Q(n_232042));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219975
+wire sc_pin_inv_u_219975;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000444)) u_b0 (.A(sc_pin_cap_46),.Y(sc_pin_inv_u_219975));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000445)) u_b1 (.A(sc_pin_inv_u_219975),.Y(n_232043));
+end else begin : g_sc_legacy_u_219975
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219975(.C(n_2),.D(n_284),.Q(n_232043));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219976
+wire sc_pin_inv_u_219976;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000428)) u_b0 (.A(sc_pin_cap_45),.Y(sc_pin_inv_u_219976));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000429)) u_b1 (.A(sc_pin_inv_u_219976),.Y(n_232044));
+end else begin : g_sc_legacy_u_219976
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219976(.C(n_2),.D(n_283),.Q(n_232044));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219977
+wire sc_pin_inv_u_219977;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000430)) u_b0 (.A(sc_pin_cap_45),.Y(sc_pin_inv_u_219977));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000431)) u_b1 (.A(sc_pin_inv_u_219977),.Y(n_232045));
+end else begin : g_sc_legacy_u_219977
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219977(.C(n_2),.D(n_283),.Q(n_232045));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219978
+wire sc_pin_inv_u_219978;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000432)) u_b0 (.A(sc_pin_cap_45),.Y(sc_pin_inv_u_219978));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000433)) u_b1 (.A(sc_pin_inv_u_219978),.Y(n_232046));
+end else begin : g_sc_legacy_u_219978
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219978(.C(n_2),.D(n_283),.Q(n_232046));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219979
+wire sc_pin_inv_u_219979;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000434)) u_b0 (.A(sc_pin_cap_45),.Y(sc_pin_inv_u_219979));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000435)) u_b1 (.A(sc_pin_inv_u_219979),.Y(n_232047));
+end else begin : g_sc_legacy_u_219979
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219979(.C(n_2),.D(n_283),.Q(n_232047));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219980
+wire sc_pin_inv_u_219980;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000418)) u_b0 (.A(sc_pin_cap_44),.Y(sc_pin_inv_u_219980));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000419)) u_b1 (.A(sc_pin_inv_u_219980),.Y(n_232048));
+end else begin : g_sc_legacy_u_219980
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219980(.C(n_2),.D(n_282),.Q(n_232048));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219981
+wire sc_pin_inv_u_219981;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000420)) u_b0 (.A(sc_pin_cap_44),.Y(sc_pin_inv_u_219981));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000421)) u_b1 (.A(sc_pin_inv_u_219981),.Y(n_232049));
+end else begin : g_sc_legacy_u_219981
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219981(.C(n_2),.D(n_282),.Q(n_232049));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219982
+wire sc_pin_inv_u_219982;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000422)) u_b0 (.A(sc_pin_cap_44),.Y(sc_pin_inv_u_219982));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000423)) u_b1 (.A(sc_pin_inv_u_219982),.Y(n_232050));
+end else begin : g_sc_legacy_u_219982
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219982(.C(n_2),.D(n_282),.Q(n_232050));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219983
+wire sc_pin_inv_u_219983;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000424)) u_b0 (.A(sc_pin_cap_44),.Y(sc_pin_inv_u_219983));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000425)) u_b1 (.A(sc_pin_inv_u_219983),.Y(n_232051));
+end else begin : g_sc_legacy_u_219983
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219983(.C(n_2),.D(n_282),.Q(n_232051));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219984
+wire sc_pin_inv_u_219984;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000408)) u_b0 (.A(sc_pin_cap_43),.Y(sc_pin_inv_u_219984));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000409)) u_b1 (.A(sc_pin_inv_u_219984),.Y(n_232052));
+end else begin : g_sc_legacy_u_219984
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219984(.C(n_2),.D(n_281),.Q(n_232052));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219985
+wire sc_pin_inv_u_219985;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000410)) u_b0 (.A(sc_pin_cap_43),.Y(sc_pin_inv_u_219985));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000411)) u_b1 (.A(sc_pin_inv_u_219985),.Y(n_232053));
+end else begin : g_sc_legacy_u_219985
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219985(.C(n_2),.D(n_281),.Q(n_232053));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219986
+wire sc_pin_inv_u_219986;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000412)) u_b0 (.A(sc_pin_cap_43),.Y(sc_pin_inv_u_219986));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000413)) u_b1 (.A(sc_pin_inv_u_219986),.Y(n_232054));
+end else begin : g_sc_legacy_u_219986
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219986(.C(n_2),.D(n_281),.Q(n_232054));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219987
+wire sc_pin_inv_u_219987;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000414)) u_b0 (.A(sc_pin_cap_43),.Y(sc_pin_inv_u_219987));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000415)) u_b1 (.A(sc_pin_inv_u_219987),.Y(n_232055));
+end else begin : g_sc_legacy_u_219987
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219987(.C(n_2),.D(n_281),.Q(n_232055));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219988
+wire sc_pin_inv_u_219988;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000398)) u_b0 (.A(sc_pin_cap_42),.Y(sc_pin_inv_u_219988));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000399)) u_b1 (.A(sc_pin_inv_u_219988),.Y(n_232056));
+end else begin : g_sc_legacy_u_219988
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219988(.C(n_2),.D(n_280),.Q(n_232056));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219989
+wire sc_pin_inv_u_219989;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000400)) u_b0 (.A(sc_pin_cap_42),.Y(sc_pin_inv_u_219989));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000401)) u_b1 (.A(sc_pin_inv_u_219989),.Y(n_232057));
+end else begin : g_sc_legacy_u_219989
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219989(.C(n_2),.D(n_280),.Q(n_232057));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219990
+wire sc_pin_inv_u_219990;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000402)) u_b0 (.A(sc_pin_cap_42),.Y(sc_pin_inv_u_219990));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000403)) u_b1 (.A(sc_pin_inv_u_219990),.Y(n_232058));
+end else begin : g_sc_legacy_u_219990
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219990(.C(n_2),.D(n_280),.Q(n_232058));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219991
+wire sc_pin_inv_u_219991;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000404)) u_b0 (.A(sc_pin_cap_42),.Y(sc_pin_inv_u_219991));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000405)) u_b1 (.A(sc_pin_inv_u_219991),.Y(n_232059));
+end else begin : g_sc_legacy_u_219991
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219991(.C(n_2),.D(n_280),.Q(n_232059));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219992
+wire sc_pin_inv_u_219992;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000388)) u_b0 (.A(sc_pin_cap_41),.Y(sc_pin_inv_u_219992));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000389)) u_b1 (.A(sc_pin_inv_u_219992),.Y(n_232060));
+end else begin : g_sc_legacy_u_219992
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219992(.C(n_2),.D(n_279),.Q(n_232060));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219993
+wire sc_pin_inv_u_219993;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000390)) u_b0 (.A(sc_pin_cap_41),.Y(sc_pin_inv_u_219993));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000391)) u_b1 (.A(sc_pin_inv_u_219993),.Y(n_232061));
+end else begin : g_sc_legacy_u_219993
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219993(.C(n_2),.D(n_279),.Q(n_232061));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219994
+wire sc_pin_inv_u_219994;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000392)) u_b0 (.A(sc_pin_cap_41),.Y(sc_pin_inv_u_219994));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000393)) u_b1 (.A(sc_pin_inv_u_219994),.Y(n_232062));
+end else begin : g_sc_legacy_u_219994
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219994(.C(n_2),.D(n_279),.Q(n_232062));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219995
+wire sc_pin_inv_u_219995;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000394)) u_b0 (.A(sc_pin_cap_41),.Y(sc_pin_inv_u_219995));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000395)) u_b1 (.A(sc_pin_inv_u_219995),.Y(n_232063));
+end else begin : g_sc_legacy_u_219995
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219995(.C(n_2),.D(n_279),.Q(n_232063));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219996
+wire sc_pin_inv_u_219996;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000378)) u_b0 (.A(sc_pin_cap_40),.Y(sc_pin_inv_u_219996));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000379)) u_b1 (.A(sc_pin_inv_u_219996),.Y(n_232064));
+end else begin : g_sc_legacy_u_219996
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219996(.C(n_2),.D(n_278),.Q(n_232064));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219997
+wire sc_pin_inv_u_219997;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000380)) u_b0 (.A(sc_pin_cap_40),.Y(sc_pin_inv_u_219997));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000381)) u_b1 (.A(sc_pin_inv_u_219997),.Y(n_232065));
+end else begin : g_sc_legacy_u_219997
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219997(.C(n_2),.D(n_278),.Q(n_232065));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219998
+wire sc_pin_inv_u_219998;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000382)) u_b0 (.A(sc_pin_cap_40),.Y(sc_pin_inv_u_219998));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000383)) u_b1 (.A(sc_pin_inv_u_219998),.Y(n_232066));
+end else begin : g_sc_legacy_u_219998
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219998(.C(n_2),.D(n_278),.Q(n_232066));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_219999
+wire sc_pin_inv_u_219999;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000384)) u_b0 (.A(sc_pin_cap_40),.Y(sc_pin_inv_u_219999));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000385)) u_b1 (.A(sc_pin_inv_u_219999),.Y(n_232067));
+end else begin : g_sc_legacy_u_219999
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_219999(.C(n_2),.D(n_278),.Q(n_232067));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220000
+wire sc_pin_inv_u_220000;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000368)) u_b0 (.A(sc_pin_cap_39),.Y(sc_pin_inv_u_220000));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000369)) u_b1 (.A(sc_pin_inv_u_220000),.Y(n_232068));
+end else begin : g_sc_legacy_u_220000
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220000(.C(n_2),.D(n_277),.Q(n_232068));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220001
+wire sc_pin_inv_u_220001;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000370)) u_b0 (.A(sc_pin_cap_39),.Y(sc_pin_inv_u_220001));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000371)) u_b1 (.A(sc_pin_inv_u_220001),.Y(n_232069));
+end else begin : g_sc_legacy_u_220001
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220001(.C(n_2),.D(n_277),.Q(n_232069));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220002
+wire sc_pin_inv_u_220002;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000372)) u_b0 (.A(sc_pin_cap_39),.Y(sc_pin_inv_u_220002));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000373)) u_b1 (.A(sc_pin_inv_u_220002),.Y(n_232070));
+end else begin : g_sc_legacy_u_220002
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220002(.C(n_2),.D(n_277),.Q(n_232070));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220003
+wire sc_pin_inv_u_220003;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000374)) u_b0 (.A(sc_pin_cap_39),.Y(sc_pin_inv_u_220003));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000375)) u_b1 (.A(sc_pin_inv_u_220003),.Y(n_232071));
+end else begin : g_sc_legacy_u_220003
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220003(.C(n_2),.D(n_277),.Q(n_232071));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220004
+wire sc_pin_inv_u_220004;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000358)) u_b0 (.A(sc_pin_cap_38),.Y(sc_pin_inv_u_220004));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000359)) u_b1 (.A(sc_pin_inv_u_220004),.Y(n_232072));
+end else begin : g_sc_legacy_u_220004
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220004(.C(n_2),.D(n_276),.Q(n_232072));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220005
+wire sc_pin_inv_u_220005;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000360)) u_b0 (.A(sc_pin_cap_38),.Y(sc_pin_inv_u_220005));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000361)) u_b1 (.A(sc_pin_inv_u_220005),.Y(n_232073));
+end else begin : g_sc_legacy_u_220005
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220005(.C(n_2),.D(n_276),.Q(n_232073));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220006
+wire sc_pin_inv_u_220006;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000362)) u_b0 (.A(sc_pin_cap_38),.Y(sc_pin_inv_u_220006));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000363)) u_b1 (.A(sc_pin_inv_u_220006),.Y(n_232074));
+end else begin : g_sc_legacy_u_220006
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220006(.C(n_2),.D(n_276),.Q(n_232074));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220007
+wire sc_pin_inv_u_220007;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000364)) u_b0 (.A(sc_pin_cap_38),.Y(sc_pin_inv_u_220007));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000365)) u_b1 (.A(sc_pin_inv_u_220007),.Y(n_232075));
+end else begin : g_sc_legacy_u_220007
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220007(.C(n_2),.D(n_276),.Q(n_232075));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220008
+wire sc_pin_inv_u_220008;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000348)) u_b0 (.A(sc_pin_cap_37),.Y(sc_pin_inv_u_220008));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000349)) u_b1 (.A(sc_pin_inv_u_220008),.Y(n_232076));
+end else begin : g_sc_legacy_u_220008
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220008(.C(n_2),.D(n_275),.Q(n_232076));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220009
+wire sc_pin_inv_u_220009;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000350)) u_b0 (.A(sc_pin_cap_37),.Y(sc_pin_inv_u_220009));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000351)) u_b1 (.A(sc_pin_inv_u_220009),.Y(n_232077));
+end else begin : g_sc_legacy_u_220009
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220009(.C(n_2),.D(n_275),.Q(n_232077));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220010
+wire sc_pin_inv_u_220010;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000352)) u_b0 (.A(sc_pin_cap_37),.Y(sc_pin_inv_u_220010));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000353)) u_b1 (.A(sc_pin_inv_u_220010),.Y(n_232078));
+end else begin : g_sc_legacy_u_220010
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220010(.C(n_2),.D(n_275),.Q(n_232078));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220011
+wire sc_pin_inv_u_220011;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000354)) u_b0 (.A(sc_pin_cap_37),.Y(sc_pin_inv_u_220011));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000355)) u_b1 (.A(sc_pin_inv_u_220011),.Y(n_232079));
+end else begin : g_sc_legacy_u_220011
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220011(.C(n_2),.D(n_275),.Q(n_232079));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220012
+wire sc_pin_inv_u_220012;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000338)) u_b0 (.A(sc_pin_cap_36),.Y(sc_pin_inv_u_220012));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000339)) u_b1 (.A(sc_pin_inv_u_220012),.Y(n_232080));
+end else begin : g_sc_legacy_u_220012
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220012(.C(n_2),.D(n_274),.Q(n_232080));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220013
+wire sc_pin_inv_u_220013;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000340)) u_b0 (.A(sc_pin_cap_36),.Y(sc_pin_inv_u_220013));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000341)) u_b1 (.A(sc_pin_inv_u_220013),.Y(n_232081));
+end else begin : g_sc_legacy_u_220013
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220013(.C(n_2),.D(n_274),.Q(n_232081));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220014
+wire sc_pin_inv_u_220014;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000342)) u_b0 (.A(sc_pin_cap_36),.Y(sc_pin_inv_u_220014));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000343)) u_b1 (.A(sc_pin_inv_u_220014),.Y(n_232082));
+end else begin : g_sc_legacy_u_220014
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220014(.C(n_2),.D(n_274),.Q(n_232082));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_220015
+wire sc_pin_inv_u_220015;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000344)) u_b0 (.A(sc_pin_cap_36),.Y(sc_pin_inv_u_220015));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000345)) u_b1 (.A(sc_pin_inv_u_220015),.Y(n_232083));
+end else begin : g_sc_legacy_u_220015
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_220015(.C(n_2),.D(n_274),.Q(n_232083));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220016(.A(n_236678),.B(n_1286),.Y(n_232084));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220017(.A(n_236678),.B(n_1286),.Y(n_232085));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_220018(.A(n_163735),.B(n_163736),.Y(n_232086));
@@ -224418,11 +225740,21 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_220646(.A(n_177160),.B(n_177161),.Y(n_232714));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_220647(.A(n_177160),.B(n_177161),.Y(n_232715));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_220648(.A(n_177160),.B(n_177161),.Y(n_232716));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220649(.C(n_2),.D(n_348),.Q(n_232717),.R(n_237120));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220650(.C(n_2),.D(n_348),.Q(n_232718),.R(n_237120));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220651(.C(n_2),.D(n_348),.Q(n_232719),.R(n_237784));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220652(.C(n_2),.D(n_348),.Q(n_232720),.R(n_237784));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220653(.C(n_2),.D(n_348),.Q(n_232721),.R(n_237784));
+wire sc_pin_flag_u_220649;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220649(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_348),.Q(sc_pin_flag_u_220649),.R(n_237120));
+assign n_232717 = HARD_PINREG ? (sc_pin_rstcap_2 & sc_pin_flag_u_220649) : sc_pin_flag_u_220649;
+wire sc_pin_flag_u_220650;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220650(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_348),.Q(sc_pin_flag_u_220650),.R(n_237120));
+assign n_232718 = HARD_PINREG ? (sc_pin_rstcap_2 & sc_pin_flag_u_220650) : sc_pin_flag_u_220650;
+wire sc_pin_flag_u_220651;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220651(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_348),.Q(sc_pin_flag_u_220651),.R(n_237784));
+assign n_232719 = HARD_PINREG ? (sc_pin_rstcap_2 & sc_pin_flag_u_220651) : sc_pin_flag_u_220651;
+wire sc_pin_flag_u_220652;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220652(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_348),.Q(sc_pin_flag_u_220652),.R(n_237784));
+assign n_232720 = HARD_PINREG ? (sc_pin_rstcap_2 & sc_pin_flag_u_220652) : sc_pin_flag_u_220652;
+wire sc_pin_flag_u_220653;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220653(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_348),.Q(sc_pin_flag_u_220653),.R(n_237784));
+assign n_232721 = HARD_PINREG ? (sc_pin_rstcap_2 & sc_pin_flag_u_220653) : sc_pin_flag_u_220653;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_220654(.A(n_232721),.Y(n_232722));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220655(.A(n_28274),.B(n_176561),.Y(n_232723));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220656(.A(n_28274),.B(n_176561),.Y(n_232724));
@@ -224434,7 +225766,9 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220662(.A(n_164540),.B(n_176562),.Y(n_232730));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220663(.A(n_164540),.B(n_176562),.Y(n_232731));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220664(.A(n_164540),.B(n_176562),.Y(n_232732));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220665(.C(n_2),.D(n_200),.Q(n_232733),.R(n_237784));
+wire sc_pin_flag_u_220665;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_220665(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_200),.Q(sc_pin_flag_u_220665),.R(n_237784));
+assign n_232733 = HARD_PINREG ? (sc_pin_rstcap_1 & sc_pin_flag_u_220665) : sc_pin_flag_u_220665;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220666(.A(n_232733),.B(n_176914),.Y(n_232734));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220667(.A(n_232733),.B(n_176914),.Y(n_232735));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_220668(.A(n_232733),.B(n_176914),.Y(n_232736));
@@ -225911,9 +227245,21 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222139(.C(n_2),.D(n_6582),.Q(n_234207));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222140(.C(n_2),.D(n_6582),.Q(n_234208));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_222141(.A(n_235833),.B(n_129554),.Y(n_234209));
+generate if (HARD_PINREG) begin : g_sc_pin_u_222142
+wire sc_pin_inv_u_222142;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000334)) u_b0 (.A(sc_pin_cap_35),.Y(sc_pin_inv_u_222142));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000335)) u_b1 (.A(sc_pin_inv_u_222142),.Y(n_234210));
+end else begin : g_sc_legacy_u_222142
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222142(.C(n_2),.D(n_252),.Q(n_234210));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_222143(.A(n_234210),.Y(n_234211));
+generate if (HARD_PINREG) begin : g_sc_pin_u_222144
+wire sc_pin_inv_u_222144;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000330)) u_b0 (.A(sc_pin_cap_34),.Y(sc_pin_inv_u_222144));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000331)) u_b1 (.A(sc_pin_inv_u_222144),.Y(n_234212));
+end else begin : g_sc_legacy_u_222144
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222144(.C(n_2),.D(n_187),.Q(n_234212));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_222145(.A(n_234212),.Y(n_234213));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222146(.C(n_2),.D(n_6444),.Q(n_234214));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222147(.C(n_2),.D(n_6444),.Q(n_234215));
@@ -228125,38 +229471,230 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224353(.C(n_2),.D(n_44419),.Q(n_236421));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224354(.C(n_2),.D(n_44419),.Q(n_236422));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224355(.C(n_2),.D(n_44419),.Q(n_236423));
+generate if (HARD_PINREG) begin : g_sc_pin_u_224356
+wire sc_pin_inv_u_224356;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000242)) u_b0 (.A(sc_pin_cap_24),.Y(sc_pin_inv_u_224356));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000243)) u_b1 (.A(sc_pin_inv_u_224356),.Y(n_236424));
+end else begin : g_sc_legacy_u_224356
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224356(.C(n_2),.D(n_177),.Q(n_236424));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224357
+wire sc_pin_inv_u_224357;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000244)) u_b0 (.A(sc_pin_cap_24),.Y(sc_pin_inv_u_224357));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000245)) u_b1 (.A(sc_pin_inv_u_224357),.Y(n_236425));
+end else begin : g_sc_legacy_u_224357
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224357(.C(n_2),.D(n_177),.Q(n_236425));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224358
+wire sc_pin_inv_u_224358;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000246)) u_b0 (.A(sc_pin_cap_24),.Y(sc_pin_inv_u_224358));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000247)) u_b1 (.A(sc_pin_inv_u_224358),.Y(n_236426));
+end else begin : g_sc_legacy_u_224358
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224358(.C(n_2),.D(n_177),.Q(n_236426));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224359
+wire sc_pin_inv_u_224359;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000248)) u_b0 (.A(sc_pin_cap_24),.Y(sc_pin_inv_u_224359));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000249)) u_b1 (.A(sc_pin_inv_u_224359),.Y(n_236427));
+end else begin : g_sc_legacy_u_224359
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224359(.C(n_2),.D(n_177),.Q(n_236427));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224360
+wire sc_pin_inv_u_224360;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000252)) u_b0 (.A(sc_pin_cap_25),.Y(sc_pin_inv_u_224360));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000253)) u_b1 (.A(sc_pin_inv_u_224360),.Y(n_236428));
+end else begin : g_sc_legacy_u_224360
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224360(.C(n_2),.D(n_178),.Q(n_236428));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224361
+wire sc_pin_inv_u_224361;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000254)) u_b0 (.A(sc_pin_cap_25),.Y(sc_pin_inv_u_224361));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000255)) u_b1 (.A(sc_pin_inv_u_224361),.Y(n_236429));
+end else begin : g_sc_legacy_u_224361
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224361(.C(n_2),.D(n_178),.Q(n_236429));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224362
+wire sc_pin_inv_u_224362;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000256)) u_b0 (.A(sc_pin_cap_25),.Y(sc_pin_inv_u_224362));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000257)) u_b1 (.A(sc_pin_inv_u_224362),.Y(n_236430));
+end else begin : g_sc_legacy_u_224362
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224362(.C(n_2),.D(n_178),.Q(n_236430));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224363
+wire sc_pin_inv_u_224363;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000258)) u_b0 (.A(sc_pin_cap_25),.Y(sc_pin_inv_u_224363));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000259)) u_b1 (.A(sc_pin_inv_u_224363),.Y(n_236431));
+end else begin : g_sc_legacy_u_224363
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224363(.C(n_2),.D(n_178),.Q(n_236431));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224364
+wire sc_pin_inv_u_224364;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000262)) u_b0 (.A(sc_pin_cap_26),.Y(sc_pin_inv_u_224364));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000263)) u_b1 (.A(sc_pin_inv_u_224364),.Y(n_236432));
+end else begin : g_sc_legacy_u_224364
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224364(.C(n_2),.D(n_179),.Q(n_236432));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224365
+wire sc_pin_inv_u_224365;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000264)) u_b0 (.A(sc_pin_cap_26),.Y(sc_pin_inv_u_224365));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000265)) u_b1 (.A(sc_pin_inv_u_224365),.Y(n_236433));
+end else begin : g_sc_legacy_u_224365
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224365(.C(n_2),.D(n_179),.Q(n_236433));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224366
+wire sc_pin_inv_u_224366;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000266)) u_b0 (.A(sc_pin_cap_26),.Y(sc_pin_inv_u_224366));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000267)) u_b1 (.A(sc_pin_inv_u_224366),.Y(n_236434));
+end else begin : g_sc_legacy_u_224366
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224366(.C(n_2),.D(n_179),.Q(n_236434));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224367
+wire sc_pin_inv_u_224367;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000268)) u_b0 (.A(sc_pin_cap_26),.Y(sc_pin_inv_u_224367));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000269)) u_b1 (.A(sc_pin_inv_u_224367),.Y(n_236435));
+end else begin : g_sc_legacy_u_224367
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224367(.C(n_2),.D(n_179),.Q(n_236435));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224368
+wire sc_pin_inv_u_224368;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000272)) u_b0 (.A(sc_pin_cap_27),.Y(sc_pin_inv_u_224368));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000273)) u_b1 (.A(sc_pin_inv_u_224368),.Y(n_236436));
+end else begin : g_sc_legacy_u_224368
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224368(.C(n_2),.D(n_180),.Q(n_236436));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224369
+wire sc_pin_inv_u_224369;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000274)) u_b0 (.A(sc_pin_cap_27),.Y(sc_pin_inv_u_224369));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000275)) u_b1 (.A(sc_pin_inv_u_224369),.Y(n_236437));
+end else begin : g_sc_legacy_u_224369
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224369(.C(n_2),.D(n_180),.Q(n_236437));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224370
+wire sc_pin_inv_u_224370;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000276)) u_b0 (.A(sc_pin_cap_27),.Y(sc_pin_inv_u_224370));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000277)) u_b1 (.A(sc_pin_inv_u_224370),.Y(n_236438));
+end else begin : g_sc_legacy_u_224370
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224370(.C(n_2),.D(n_180),.Q(n_236438));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224371
+wire sc_pin_inv_u_224371;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000278)) u_b0 (.A(sc_pin_cap_27),.Y(sc_pin_inv_u_224371));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000279)) u_b1 (.A(sc_pin_inv_u_224371),.Y(n_236439));
+end else begin : g_sc_legacy_u_224371
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224371(.C(n_2),.D(n_180),.Q(n_236439));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224372
+wire sc_pin_inv_u_224372;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000282)) u_b0 (.A(sc_pin_cap_28),.Y(sc_pin_inv_u_224372));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000283)) u_b1 (.A(sc_pin_inv_u_224372),.Y(n_236440));
+end else begin : g_sc_legacy_u_224372
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224372(.C(n_2),.D(n_181),.Q(n_236440));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224373
+wire sc_pin_inv_u_224373;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000284)) u_b0 (.A(sc_pin_cap_28),.Y(sc_pin_inv_u_224373));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000285)) u_b1 (.A(sc_pin_inv_u_224373),.Y(n_236441));
+end else begin : g_sc_legacy_u_224373
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224373(.C(n_2),.D(n_181),.Q(n_236441));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224374
+wire sc_pin_inv_u_224374;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000286)) u_b0 (.A(sc_pin_cap_28),.Y(sc_pin_inv_u_224374));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000287)) u_b1 (.A(sc_pin_inv_u_224374),.Y(n_236442));
+end else begin : g_sc_legacy_u_224374
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224374(.C(n_2),.D(n_181),.Q(n_236442));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224375
+wire sc_pin_inv_u_224375;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000288)) u_b0 (.A(sc_pin_cap_28),.Y(sc_pin_inv_u_224375));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000289)) u_b1 (.A(sc_pin_inv_u_224375),.Y(n_236443));
+end else begin : g_sc_legacy_u_224375
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224375(.C(n_2),.D(n_181),.Q(n_236443));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224376
+wire sc_pin_inv_u_224376;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000292)) u_b0 (.A(sc_pin_cap_29),.Y(sc_pin_inv_u_224376));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000293)) u_b1 (.A(sc_pin_inv_u_224376),.Y(n_236444));
+end else begin : g_sc_legacy_u_224376
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224376(.C(n_2),.D(n_182),.Q(n_236444));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224377
+wire sc_pin_inv_u_224377;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000294)) u_b0 (.A(sc_pin_cap_29),.Y(sc_pin_inv_u_224377));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000295)) u_b1 (.A(sc_pin_inv_u_224377),.Y(n_236445));
+end else begin : g_sc_legacy_u_224377
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224377(.C(n_2),.D(n_182),.Q(n_236445));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224378
+wire sc_pin_inv_u_224378;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000296)) u_b0 (.A(sc_pin_cap_29),.Y(sc_pin_inv_u_224378));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000297)) u_b1 (.A(sc_pin_inv_u_224378),.Y(n_236446));
+end else begin : g_sc_legacy_u_224378
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224378(.C(n_2),.D(n_182),.Q(n_236446));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224379
+wire sc_pin_inv_u_224379;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000298)) u_b0 (.A(sc_pin_cap_29),.Y(sc_pin_inv_u_224379));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000299)) u_b1 (.A(sc_pin_inv_u_224379),.Y(n_236447));
+end else begin : g_sc_legacy_u_224379
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224379(.C(n_2),.D(n_182),.Q(n_236447));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224380
+wire sc_pin_inv_u_224380;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000302)) u_b0 (.A(sc_pin_cap_30),.Y(sc_pin_inv_u_224380));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000303)) u_b1 (.A(sc_pin_inv_u_224380),.Y(n_236448));
+end else begin : g_sc_legacy_u_224380
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224380(.C(n_2),.D(n_183),.Q(n_236448));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224381
+wire sc_pin_inv_u_224381;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000304)) u_b0 (.A(sc_pin_cap_30),.Y(sc_pin_inv_u_224381));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000305)) u_b1 (.A(sc_pin_inv_u_224381),.Y(n_236449));
+end else begin : g_sc_legacy_u_224381
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224381(.C(n_2),.D(n_183),.Q(n_236449));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224382
+wire sc_pin_inv_u_224382;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000306)) u_b0 (.A(sc_pin_cap_30),.Y(sc_pin_inv_u_224382));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000307)) u_b1 (.A(sc_pin_inv_u_224382),.Y(n_236450));
+end else begin : g_sc_legacy_u_224382
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224382(.C(n_2),.D(n_183),.Q(n_236450));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224383
+wire sc_pin_inv_u_224383;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000308)) u_b0 (.A(sc_pin_cap_30),.Y(sc_pin_inv_u_224383));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000309)) u_b1 (.A(sc_pin_inv_u_224383),.Y(n_236451));
+end else begin : g_sc_legacy_u_224383
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224383(.C(n_2),.D(n_183),.Q(n_236451));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224384
+wire sc_pin_inv_u_224384;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000312)) u_b0 (.A(sc_pin_cap_31),.Y(sc_pin_inv_u_224384));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000313)) u_b1 (.A(sc_pin_inv_u_224384),.Y(n_236452));
+end else begin : g_sc_legacy_u_224384
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224384(.C(n_2),.D(n_184),.Q(n_236452));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224385
+wire sc_pin_inv_u_224385;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000314)) u_b0 (.A(sc_pin_cap_31),.Y(sc_pin_inv_u_224385));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000315)) u_b1 (.A(sc_pin_inv_u_224385),.Y(n_236453));
+end else begin : g_sc_legacy_u_224385
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224385(.C(n_2),.D(n_184),.Q(n_236453));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224386
+wire sc_pin_inv_u_224386;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000316)) u_b0 (.A(sc_pin_cap_31),.Y(sc_pin_inv_u_224386));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000317)) u_b1 (.A(sc_pin_inv_u_224386),.Y(n_236454));
+end else begin : g_sc_legacy_u_224386
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224386(.C(n_2),.D(n_184),.Q(n_236454));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224387
+wire sc_pin_inv_u_224387;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000318)) u_b0 (.A(sc_pin_cap_31),.Y(sc_pin_inv_u_224387));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000319)) u_b1 (.A(sc_pin_inv_u_224387),.Y(n_236455));
+end else begin : g_sc_legacy_u_224387
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224387(.C(n_2),.D(n_184),.Q(n_236455));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224388(.A(n_176571),.B(n_164491),.Y(n_236456));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224389(.A(n_176571),.B(n_164491),.Y(n_236457));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224390(.A(n_176571),.B(n_164491),.Y(n_236458));
@@ -228427,10 +229965,34 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224655(.A(n_164523),.B(n_657),.Y(n_236723));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_224656(.C(n_2),.D(n_27757),.Q(n_236724),.R(n_237785));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_224657(.A(n_236724),.Y(n_236725));
+generate if (HARD_PINREG) begin : g_sc_pin_u_224658
+wire sc_pin_inv_u_224658;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000232)) u_b0 (.A(sc_pin_cap_23),.Y(sc_pin_inv_u_224658));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000233)) u_b1 (.A(sc_pin_inv_u_224658),.Y(n_236726));
+end else begin : g_sc_legacy_u_224658
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224658(.C(n_2),.D(n_176),.Q(n_236726));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224659
+wire sc_pin_inv_u_224659;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000234)) u_b0 (.A(sc_pin_cap_23),.Y(sc_pin_inv_u_224659));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000235)) u_b1 (.A(sc_pin_inv_u_224659),.Y(n_236727));
+end else begin : g_sc_legacy_u_224659
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224659(.C(n_2),.D(n_176),.Q(n_236727));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224660
+wire sc_pin_inv_u_224660;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000236)) u_b0 (.A(sc_pin_cap_23),.Y(sc_pin_inv_u_224660));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000237)) u_b1 (.A(sc_pin_inv_u_224660),.Y(n_236728));
+end else begin : g_sc_legacy_u_224660
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224660(.C(n_2),.D(n_176),.Q(n_236728));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224661
+wire sc_pin_inv_u_224661;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000238)) u_b0 (.A(sc_pin_cap_23),.Y(sc_pin_inv_u_224661));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000239)) u_b1 (.A(sc_pin_inv_u_224661),.Y(n_236729));
+end else begin : g_sc_legacy_u_224661
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224661(.C(n_2),.D(n_176),.Q(n_236729));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224662(.A(n_170341),.B(n_233465),.Y(n_236730));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224663(.A(n_170341),.B(n_233465),.Y(n_236731));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224664(.A(n_170341),.B(n_233465),.Y(n_236732));
@@ -228532,100 +230094,652 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_224760(.C(n_2),.D(n_27385),.Q(n_236828),.R(n_237786));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_224761(.C(n_2),.D(n_27385),.Q(n_236829),.R(n_237786));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_224762(.A(n_236829),.Y(n_236830));
+generate if (HARD_PINREG) begin : g_sc_pin_u_224763
+wire sc_pin_inv_u_224763;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000002)) u_b0 (.A(sc_pin_cap_0),.Y(sc_pin_inv_u_224763));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000003)) u_b1 (.A(sc_pin_inv_u_224763),.Y(n_236831));
+end else begin : g_sc_legacy_u_224763
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224763(.C(n_2),.D(n_153),.Q(n_236831));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224764
+wire sc_pin_inv_u_224764;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000004)) u_b0 (.A(sc_pin_cap_0),.Y(sc_pin_inv_u_224764));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000005)) u_b1 (.A(sc_pin_inv_u_224764),.Y(n_236832));
+end else begin : g_sc_legacy_u_224764
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224764(.C(n_2),.D(n_153),.Q(n_236832));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224765
+wire sc_pin_inv_u_224765;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000006)) u_b0 (.A(sc_pin_cap_0),.Y(sc_pin_inv_u_224765));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000007)) u_b1 (.A(sc_pin_inv_u_224765),.Y(n_236833));
+end else begin : g_sc_legacy_u_224765
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224765(.C(n_2),.D(n_153),.Q(n_236833));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224766
+wire sc_pin_inv_u_224766;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000008)) u_b0 (.A(sc_pin_cap_0),.Y(sc_pin_inv_u_224766));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000009)) u_b1 (.A(sc_pin_inv_u_224766),.Y(n_236834));
+end else begin : g_sc_legacy_u_224766
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224766(.C(n_2),.D(n_153),.Q(n_236834));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224767
+wire sc_pin_inv_u_224767;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000012)) u_b0 (.A(sc_pin_cap_1),.Y(sc_pin_inv_u_224767));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000013)) u_b1 (.A(sc_pin_inv_u_224767),.Y(n_236835));
+end else begin : g_sc_legacy_u_224767
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224767(.C(n_2),.D(n_154),.Q(n_236835));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224768
+wire sc_pin_inv_u_224768;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000014)) u_b0 (.A(sc_pin_cap_1),.Y(sc_pin_inv_u_224768));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000015)) u_b1 (.A(sc_pin_inv_u_224768),.Y(n_236836));
+end else begin : g_sc_legacy_u_224768
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224768(.C(n_2),.D(n_154),.Q(n_236836));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224769
+wire sc_pin_inv_u_224769;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000016)) u_b0 (.A(sc_pin_cap_1),.Y(sc_pin_inv_u_224769));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000017)) u_b1 (.A(sc_pin_inv_u_224769),.Y(n_236837));
+end else begin : g_sc_legacy_u_224769
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224769(.C(n_2),.D(n_154),.Q(n_236837));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224770
+wire sc_pin_inv_u_224770;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000018)) u_b0 (.A(sc_pin_cap_1),.Y(sc_pin_inv_u_224770));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000019)) u_b1 (.A(sc_pin_inv_u_224770),.Y(n_236838));
+end else begin : g_sc_legacy_u_224770
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224770(.C(n_2),.D(n_154),.Q(n_236838));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224771
+wire sc_pin_inv_u_224771;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000022)) u_b0 (.A(sc_pin_cap_2),.Y(sc_pin_inv_u_224771));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000023)) u_b1 (.A(sc_pin_inv_u_224771),.Y(n_236839));
+end else begin : g_sc_legacy_u_224771
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224771(.C(n_2),.D(n_155),.Q(n_236839));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224772
+wire sc_pin_inv_u_224772;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000024)) u_b0 (.A(sc_pin_cap_2),.Y(sc_pin_inv_u_224772));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000025)) u_b1 (.A(sc_pin_inv_u_224772),.Y(n_236840));
+end else begin : g_sc_legacy_u_224772
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224772(.C(n_2),.D(n_155),.Q(n_236840));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224773
+wire sc_pin_inv_u_224773;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000026)) u_b0 (.A(sc_pin_cap_2),.Y(sc_pin_inv_u_224773));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000027)) u_b1 (.A(sc_pin_inv_u_224773),.Y(n_236841));
+end else begin : g_sc_legacy_u_224773
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224773(.C(n_2),.D(n_155),.Q(n_236841));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224774
+wire sc_pin_inv_u_224774;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000028)) u_b0 (.A(sc_pin_cap_2),.Y(sc_pin_inv_u_224774));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000029)) u_b1 (.A(sc_pin_inv_u_224774),.Y(n_236842));
+end else begin : g_sc_legacy_u_224774
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224774(.C(n_2),.D(n_155),.Q(n_236842));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224775
+wire sc_pin_inv_u_224775;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000032)) u_b0 (.A(sc_pin_cap_3),.Y(sc_pin_inv_u_224775));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000033)) u_b1 (.A(sc_pin_inv_u_224775),.Y(n_236843));
+end else begin : g_sc_legacy_u_224775
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224775(.C(n_2),.D(n_156),.Q(n_236843));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224776
+wire sc_pin_inv_u_224776;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000034)) u_b0 (.A(sc_pin_cap_3),.Y(sc_pin_inv_u_224776));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000035)) u_b1 (.A(sc_pin_inv_u_224776),.Y(n_236844));
+end else begin : g_sc_legacy_u_224776
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224776(.C(n_2),.D(n_156),.Q(n_236844));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224777
+wire sc_pin_inv_u_224777;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000036)) u_b0 (.A(sc_pin_cap_3),.Y(sc_pin_inv_u_224777));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000037)) u_b1 (.A(sc_pin_inv_u_224777),.Y(n_236845));
+end else begin : g_sc_legacy_u_224777
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224777(.C(n_2),.D(n_156),.Q(n_236845));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224778
+wire sc_pin_inv_u_224778;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000038)) u_b0 (.A(sc_pin_cap_3),.Y(sc_pin_inv_u_224778));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000039)) u_b1 (.A(sc_pin_inv_u_224778),.Y(n_236846));
+end else begin : g_sc_legacy_u_224778
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224778(.C(n_2),.D(n_156),.Q(n_236846));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224779
+wire sc_pin_inv_u_224779;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000042)) u_b0 (.A(sc_pin_cap_4),.Y(sc_pin_inv_u_224779));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000043)) u_b1 (.A(sc_pin_inv_u_224779),.Y(n_236847));
+end else begin : g_sc_legacy_u_224779
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224779(.C(n_2),.D(n_157),.Q(n_236847));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224780
+wire sc_pin_inv_u_224780;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000044)) u_b0 (.A(sc_pin_cap_4),.Y(sc_pin_inv_u_224780));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000045)) u_b1 (.A(sc_pin_inv_u_224780),.Y(n_236848));
+end else begin : g_sc_legacy_u_224780
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224780(.C(n_2),.D(n_157),.Q(n_236848));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224781
+wire sc_pin_inv_u_224781;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000046)) u_b0 (.A(sc_pin_cap_4),.Y(sc_pin_inv_u_224781));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000047)) u_b1 (.A(sc_pin_inv_u_224781),.Y(n_236849));
+end else begin : g_sc_legacy_u_224781
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224781(.C(n_2),.D(n_157),.Q(n_236849));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224782
+wire sc_pin_inv_u_224782;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000048)) u_b0 (.A(sc_pin_cap_4),.Y(sc_pin_inv_u_224782));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000049)) u_b1 (.A(sc_pin_inv_u_224782),.Y(n_236850));
+end else begin : g_sc_legacy_u_224782
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224782(.C(n_2),.D(n_157),.Q(n_236850));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224783
+wire sc_pin_inv_u_224783;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000052)) u_b0 (.A(sc_pin_cap_5),.Y(sc_pin_inv_u_224783));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000053)) u_b1 (.A(sc_pin_inv_u_224783),.Y(n_236851));
+end else begin : g_sc_legacy_u_224783
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224783(.C(n_2),.D(n_158),.Q(n_236851));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224784
+wire sc_pin_inv_u_224784;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000054)) u_b0 (.A(sc_pin_cap_5),.Y(sc_pin_inv_u_224784));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000055)) u_b1 (.A(sc_pin_inv_u_224784),.Y(n_236852));
+end else begin : g_sc_legacy_u_224784
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224784(.C(n_2),.D(n_158),.Q(n_236852));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224785
+wire sc_pin_inv_u_224785;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000056)) u_b0 (.A(sc_pin_cap_5),.Y(sc_pin_inv_u_224785));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000057)) u_b1 (.A(sc_pin_inv_u_224785),.Y(n_236853));
+end else begin : g_sc_legacy_u_224785
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224785(.C(n_2),.D(n_158),.Q(n_236853));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224786
+wire sc_pin_inv_u_224786;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000058)) u_b0 (.A(sc_pin_cap_5),.Y(sc_pin_inv_u_224786));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000059)) u_b1 (.A(sc_pin_inv_u_224786),.Y(n_236854));
+end else begin : g_sc_legacy_u_224786
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224786(.C(n_2),.D(n_158),.Q(n_236854));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224787
+wire sc_pin_inv_u_224787;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000062)) u_b0 (.A(sc_pin_cap_6),.Y(sc_pin_inv_u_224787));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000063)) u_b1 (.A(sc_pin_inv_u_224787),.Y(n_236855));
+end else begin : g_sc_legacy_u_224787
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224787(.C(n_2),.D(n_159),.Q(n_236855));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224788
+wire sc_pin_inv_u_224788;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000064)) u_b0 (.A(sc_pin_cap_6),.Y(sc_pin_inv_u_224788));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000065)) u_b1 (.A(sc_pin_inv_u_224788),.Y(n_236856));
+end else begin : g_sc_legacy_u_224788
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224788(.C(n_2),.D(n_159),.Q(n_236856));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224789
+wire sc_pin_inv_u_224789;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000066)) u_b0 (.A(sc_pin_cap_6),.Y(sc_pin_inv_u_224789));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000067)) u_b1 (.A(sc_pin_inv_u_224789),.Y(n_236857));
+end else begin : g_sc_legacy_u_224789
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224789(.C(n_2),.D(n_159),.Q(n_236857));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224790
+wire sc_pin_inv_u_224790;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000068)) u_b0 (.A(sc_pin_cap_6),.Y(sc_pin_inv_u_224790));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000069)) u_b1 (.A(sc_pin_inv_u_224790),.Y(n_236858));
+end else begin : g_sc_legacy_u_224790
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224790(.C(n_2),.D(n_159),.Q(n_236858));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224791
+wire sc_pin_inv_u_224791;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000072)) u_b0 (.A(sc_pin_cap_7),.Y(sc_pin_inv_u_224791));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000073)) u_b1 (.A(sc_pin_inv_u_224791),.Y(n_236859));
+end else begin : g_sc_legacy_u_224791
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224791(.C(n_2),.D(n_160),.Q(n_236859));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224792
+wire sc_pin_inv_u_224792;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000074)) u_b0 (.A(sc_pin_cap_7),.Y(sc_pin_inv_u_224792));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000075)) u_b1 (.A(sc_pin_inv_u_224792),.Y(n_236860));
+end else begin : g_sc_legacy_u_224792
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224792(.C(n_2),.D(n_160),.Q(n_236860));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224793
+wire sc_pin_inv_u_224793;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000076)) u_b0 (.A(sc_pin_cap_7),.Y(sc_pin_inv_u_224793));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000077)) u_b1 (.A(sc_pin_inv_u_224793),.Y(n_236861));
+end else begin : g_sc_legacy_u_224793
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224793(.C(n_2),.D(n_160),.Q(n_236861));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224794
+wire sc_pin_inv_u_224794;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000078)) u_b0 (.A(sc_pin_cap_7),.Y(sc_pin_inv_u_224794));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000079)) u_b1 (.A(sc_pin_inv_u_224794),.Y(n_236862));
+end else begin : g_sc_legacy_u_224794
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224794(.C(n_2),.D(n_160),.Q(n_236862));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224795
+wire sc_pin_inv_u_224795;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000082)) u_b0 (.A(sc_pin_cap_8),.Y(sc_pin_inv_u_224795));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000083)) u_b1 (.A(sc_pin_inv_u_224795),.Y(n_236863));
+end else begin : g_sc_legacy_u_224795
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224795(.C(n_2),.D(n_161),.Q(n_236863));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224796
+wire sc_pin_inv_u_224796;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000084)) u_b0 (.A(sc_pin_cap_8),.Y(sc_pin_inv_u_224796));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000085)) u_b1 (.A(sc_pin_inv_u_224796),.Y(n_236864));
+end else begin : g_sc_legacy_u_224796
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224796(.C(n_2),.D(n_161),.Q(n_236864));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224797
+wire sc_pin_inv_u_224797;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000086)) u_b0 (.A(sc_pin_cap_8),.Y(sc_pin_inv_u_224797));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000087)) u_b1 (.A(sc_pin_inv_u_224797),.Y(n_236865));
+end else begin : g_sc_legacy_u_224797
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224797(.C(n_2),.D(n_161),.Q(n_236865));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224798
+wire sc_pin_inv_u_224798;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000088)) u_b0 (.A(sc_pin_cap_8),.Y(sc_pin_inv_u_224798));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000089)) u_b1 (.A(sc_pin_inv_u_224798),.Y(n_236866));
+end else begin : g_sc_legacy_u_224798
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224798(.C(n_2),.D(n_161),.Q(n_236866));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224799
+wire sc_pin_inv_u_224799;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000092)) u_b0 (.A(sc_pin_cap_9),.Y(sc_pin_inv_u_224799));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000093)) u_b1 (.A(sc_pin_inv_u_224799),.Y(n_236867));
+end else begin : g_sc_legacy_u_224799
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224799(.C(n_2),.D(n_162),.Q(n_236867));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224800
+wire sc_pin_inv_u_224800;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000094)) u_b0 (.A(sc_pin_cap_9),.Y(sc_pin_inv_u_224800));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000095)) u_b1 (.A(sc_pin_inv_u_224800),.Y(n_236868));
+end else begin : g_sc_legacy_u_224800
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224800(.C(n_2),.D(n_162),.Q(n_236868));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224801
+wire sc_pin_inv_u_224801;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000096)) u_b0 (.A(sc_pin_cap_9),.Y(sc_pin_inv_u_224801));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000097)) u_b1 (.A(sc_pin_inv_u_224801),.Y(n_236869));
+end else begin : g_sc_legacy_u_224801
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224801(.C(n_2),.D(n_162),.Q(n_236869));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224802
+wire sc_pin_inv_u_224802;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000098)) u_b0 (.A(sc_pin_cap_9),.Y(sc_pin_inv_u_224802));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000099)) u_b1 (.A(sc_pin_inv_u_224802),.Y(n_236870));
+end else begin : g_sc_legacy_u_224802
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224802(.C(n_2),.D(n_162),.Q(n_236870));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224803
+wire sc_pin_inv_u_224803;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000102)) u_b0 (.A(sc_pin_cap_10),.Y(sc_pin_inv_u_224803));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000103)) u_b1 (.A(sc_pin_inv_u_224803),.Y(n_236871));
+end else begin : g_sc_legacy_u_224803
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224803(.C(n_2),.D(n_163),.Q(n_236871));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224804
+wire sc_pin_inv_u_224804;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000104)) u_b0 (.A(sc_pin_cap_10),.Y(sc_pin_inv_u_224804));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000105)) u_b1 (.A(sc_pin_inv_u_224804),.Y(n_236872));
+end else begin : g_sc_legacy_u_224804
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224804(.C(n_2),.D(n_163),.Q(n_236872));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224805
+wire sc_pin_inv_u_224805;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000106)) u_b0 (.A(sc_pin_cap_10),.Y(sc_pin_inv_u_224805));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000107)) u_b1 (.A(sc_pin_inv_u_224805),.Y(n_236873));
+end else begin : g_sc_legacy_u_224805
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224805(.C(n_2),.D(n_163),.Q(n_236873));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224806
+wire sc_pin_inv_u_224806;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000108)) u_b0 (.A(sc_pin_cap_10),.Y(sc_pin_inv_u_224806));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000109)) u_b1 (.A(sc_pin_inv_u_224806),.Y(n_236874));
+end else begin : g_sc_legacy_u_224806
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224806(.C(n_2),.D(n_163),.Q(n_236874));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224807
+wire sc_pin_inv_u_224807;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000112)) u_b0 (.A(sc_pin_cap_11),.Y(sc_pin_inv_u_224807));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000113)) u_b1 (.A(sc_pin_inv_u_224807),.Y(n_236875));
+end else begin : g_sc_legacy_u_224807
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224807(.C(n_2),.D(n_164),.Q(n_236875));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224808
+wire sc_pin_inv_u_224808;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000114)) u_b0 (.A(sc_pin_cap_11),.Y(sc_pin_inv_u_224808));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000115)) u_b1 (.A(sc_pin_inv_u_224808),.Y(n_236876));
+end else begin : g_sc_legacy_u_224808
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224808(.C(n_2),.D(n_164),.Q(n_236876));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224809
+wire sc_pin_inv_u_224809;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000116)) u_b0 (.A(sc_pin_cap_11),.Y(sc_pin_inv_u_224809));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000117)) u_b1 (.A(sc_pin_inv_u_224809),.Y(n_236877));
+end else begin : g_sc_legacy_u_224809
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224809(.C(n_2),.D(n_164),.Q(n_236877));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224810
+wire sc_pin_inv_u_224810;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000118)) u_b0 (.A(sc_pin_cap_11),.Y(sc_pin_inv_u_224810));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000119)) u_b1 (.A(sc_pin_inv_u_224810),.Y(n_236878));
+end else begin : g_sc_legacy_u_224810
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224810(.C(n_2),.D(n_164),.Q(n_236878));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224811
+wire sc_pin_inv_u_224811;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000122)) u_b0 (.A(sc_pin_cap_12),.Y(sc_pin_inv_u_224811));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000123)) u_b1 (.A(sc_pin_inv_u_224811),.Y(n_236879));
+end else begin : g_sc_legacy_u_224811
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224811(.C(n_2),.D(n_165),.Q(n_236879));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224812
+wire sc_pin_inv_u_224812;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000124)) u_b0 (.A(sc_pin_cap_12),.Y(sc_pin_inv_u_224812));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000125)) u_b1 (.A(sc_pin_inv_u_224812),.Y(n_236880));
+end else begin : g_sc_legacy_u_224812
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224812(.C(n_2),.D(n_165),.Q(n_236880));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224813
+wire sc_pin_inv_u_224813;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000126)) u_b0 (.A(sc_pin_cap_12),.Y(sc_pin_inv_u_224813));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000127)) u_b1 (.A(sc_pin_inv_u_224813),.Y(n_236881));
+end else begin : g_sc_legacy_u_224813
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224813(.C(n_2),.D(n_165),.Q(n_236881));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224814
+wire sc_pin_inv_u_224814;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000128)) u_b0 (.A(sc_pin_cap_12),.Y(sc_pin_inv_u_224814));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000129)) u_b1 (.A(sc_pin_inv_u_224814),.Y(n_236882));
+end else begin : g_sc_legacy_u_224814
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224814(.C(n_2),.D(n_165),.Q(n_236882));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224815
+wire sc_pin_inv_u_224815;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000132)) u_b0 (.A(sc_pin_cap_13),.Y(sc_pin_inv_u_224815));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000133)) u_b1 (.A(sc_pin_inv_u_224815),.Y(n_236883));
+end else begin : g_sc_legacy_u_224815
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224815(.C(n_2),.D(n_166),.Q(n_236883));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224816
+wire sc_pin_inv_u_224816;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000134)) u_b0 (.A(sc_pin_cap_13),.Y(sc_pin_inv_u_224816));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000135)) u_b1 (.A(sc_pin_inv_u_224816),.Y(n_236884));
+end else begin : g_sc_legacy_u_224816
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224816(.C(n_2),.D(n_166),.Q(n_236884));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224817
+wire sc_pin_inv_u_224817;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000136)) u_b0 (.A(sc_pin_cap_13),.Y(sc_pin_inv_u_224817));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000137)) u_b1 (.A(sc_pin_inv_u_224817),.Y(n_236885));
+end else begin : g_sc_legacy_u_224817
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224817(.C(n_2),.D(n_166),.Q(n_236885));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224818
+wire sc_pin_inv_u_224818;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000138)) u_b0 (.A(sc_pin_cap_13),.Y(sc_pin_inv_u_224818));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000139)) u_b1 (.A(sc_pin_inv_u_224818),.Y(n_236886));
+end else begin : g_sc_legacy_u_224818
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224818(.C(n_2),.D(n_166),.Q(n_236886));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224819
+wire sc_pin_inv_u_224819;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000142)) u_b0 (.A(sc_pin_cap_14),.Y(sc_pin_inv_u_224819));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000143)) u_b1 (.A(sc_pin_inv_u_224819),.Y(n_236887));
+end else begin : g_sc_legacy_u_224819
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224819(.C(n_2),.D(n_167),.Q(n_236887));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224820
+wire sc_pin_inv_u_224820;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000144)) u_b0 (.A(sc_pin_cap_14),.Y(sc_pin_inv_u_224820));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000145)) u_b1 (.A(sc_pin_inv_u_224820),.Y(n_236888));
+end else begin : g_sc_legacy_u_224820
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224820(.C(n_2),.D(n_167),.Q(n_236888));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224821
+wire sc_pin_inv_u_224821;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000146)) u_b0 (.A(sc_pin_cap_14),.Y(sc_pin_inv_u_224821));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000147)) u_b1 (.A(sc_pin_inv_u_224821),.Y(n_236889));
+end else begin : g_sc_legacy_u_224821
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224821(.C(n_2),.D(n_167),.Q(n_236889));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224822
+wire sc_pin_inv_u_224822;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000148)) u_b0 (.A(sc_pin_cap_14),.Y(sc_pin_inv_u_224822));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000149)) u_b1 (.A(sc_pin_inv_u_224822),.Y(n_236890));
+end else begin : g_sc_legacy_u_224822
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224822(.C(n_2),.D(n_167),.Q(n_236890));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224823
+wire sc_pin_inv_u_224823;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000152)) u_b0 (.A(sc_pin_cap_15),.Y(sc_pin_inv_u_224823));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000153)) u_b1 (.A(sc_pin_inv_u_224823),.Y(n_236891));
+end else begin : g_sc_legacy_u_224823
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224823(.C(n_2),.D(n_168),.Q(n_236891));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224824
+wire sc_pin_inv_u_224824;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000154)) u_b0 (.A(sc_pin_cap_15),.Y(sc_pin_inv_u_224824));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000155)) u_b1 (.A(sc_pin_inv_u_224824),.Y(n_236892));
+end else begin : g_sc_legacy_u_224824
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224824(.C(n_2),.D(n_168),.Q(n_236892));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224825
+wire sc_pin_inv_u_224825;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000156)) u_b0 (.A(sc_pin_cap_15),.Y(sc_pin_inv_u_224825));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000157)) u_b1 (.A(sc_pin_inv_u_224825),.Y(n_236893));
+end else begin : g_sc_legacy_u_224825
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224825(.C(n_2),.D(n_168),.Q(n_236893));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224826
+wire sc_pin_inv_u_224826;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000158)) u_b0 (.A(sc_pin_cap_15),.Y(sc_pin_inv_u_224826));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000159)) u_b1 (.A(sc_pin_inv_u_224826),.Y(n_236894));
+end else begin : g_sc_legacy_u_224826
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224826(.C(n_2),.D(n_168),.Q(n_236894));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224827
+wire sc_pin_inv_u_224827;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000162)) u_b0 (.A(sc_pin_cap_16),.Y(sc_pin_inv_u_224827));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000163)) u_b1 (.A(sc_pin_inv_u_224827),.Y(n_236895));
+end else begin : g_sc_legacy_u_224827
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224827(.C(n_2),.D(n_169),.Q(n_236895));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224828
+wire sc_pin_inv_u_224828;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000164)) u_b0 (.A(sc_pin_cap_16),.Y(sc_pin_inv_u_224828));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000165)) u_b1 (.A(sc_pin_inv_u_224828),.Y(n_236896));
+end else begin : g_sc_legacy_u_224828
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224828(.C(n_2),.D(n_169),.Q(n_236896));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224829
+wire sc_pin_inv_u_224829;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000166)) u_b0 (.A(sc_pin_cap_16),.Y(sc_pin_inv_u_224829));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000167)) u_b1 (.A(sc_pin_inv_u_224829),.Y(n_236897));
+end else begin : g_sc_legacy_u_224829
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224829(.C(n_2),.D(n_169),.Q(n_236897));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224830
+wire sc_pin_inv_u_224830;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000168)) u_b0 (.A(sc_pin_cap_16),.Y(sc_pin_inv_u_224830));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000169)) u_b1 (.A(sc_pin_inv_u_224830),.Y(n_236898));
+end else begin : g_sc_legacy_u_224830
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224830(.C(n_2),.D(n_169),.Q(n_236898));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224831
+wire sc_pin_inv_u_224831;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000172)) u_b0 (.A(sc_pin_cap_17),.Y(sc_pin_inv_u_224831));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000173)) u_b1 (.A(sc_pin_inv_u_224831),.Y(n_236899));
+end else begin : g_sc_legacy_u_224831
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224831(.C(n_2),.D(n_170),.Q(n_236899));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224832
+wire sc_pin_inv_u_224832;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000174)) u_b0 (.A(sc_pin_cap_17),.Y(sc_pin_inv_u_224832));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000175)) u_b1 (.A(sc_pin_inv_u_224832),.Y(n_236900));
+end else begin : g_sc_legacy_u_224832
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224832(.C(n_2),.D(n_170),.Q(n_236900));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224833
+wire sc_pin_inv_u_224833;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000176)) u_b0 (.A(sc_pin_cap_17),.Y(sc_pin_inv_u_224833));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000177)) u_b1 (.A(sc_pin_inv_u_224833),.Y(n_236901));
+end else begin : g_sc_legacy_u_224833
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224833(.C(n_2),.D(n_170),.Q(n_236901));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224834
+wire sc_pin_inv_u_224834;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000178)) u_b0 (.A(sc_pin_cap_17),.Y(sc_pin_inv_u_224834));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000179)) u_b1 (.A(sc_pin_inv_u_224834),.Y(n_236902));
+end else begin : g_sc_legacy_u_224834
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224834(.C(n_2),.D(n_170),.Q(n_236902));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224835
+wire sc_pin_inv_u_224835;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000182)) u_b0 (.A(sc_pin_cap_18),.Y(sc_pin_inv_u_224835));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000183)) u_b1 (.A(sc_pin_inv_u_224835),.Y(n_236903));
+end else begin : g_sc_legacy_u_224835
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224835(.C(n_2),.D(n_171),.Q(n_236903));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224836
+wire sc_pin_inv_u_224836;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000184)) u_b0 (.A(sc_pin_cap_18),.Y(sc_pin_inv_u_224836));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000185)) u_b1 (.A(sc_pin_inv_u_224836),.Y(n_236904));
+end else begin : g_sc_legacy_u_224836
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224836(.C(n_2),.D(n_171),.Q(n_236904));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224837
+wire sc_pin_inv_u_224837;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000186)) u_b0 (.A(sc_pin_cap_18),.Y(sc_pin_inv_u_224837));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000187)) u_b1 (.A(sc_pin_inv_u_224837),.Y(n_236905));
+end else begin : g_sc_legacy_u_224837
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224837(.C(n_2),.D(n_171),.Q(n_236905));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224838
+wire sc_pin_inv_u_224838;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000188)) u_b0 (.A(sc_pin_cap_18),.Y(sc_pin_inv_u_224838));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000189)) u_b1 (.A(sc_pin_inv_u_224838),.Y(n_236906));
+end else begin : g_sc_legacy_u_224838
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224838(.C(n_2),.D(n_171),.Q(n_236906));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224839
+wire sc_pin_inv_u_224839;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000192)) u_b0 (.A(sc_pin_cap_19),.Y(sc_pin_inv_u_224839));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000193)) u_b1 (.A(sc_pin_inv_u_224839),.Y(n_236907));
+end else begin : g_sc_legacy_u_224839
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224839(.C(n_2),.D(n_172),.Q(n_236907));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224840
+wire sc_pin_inv_u_224840;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000194)) u_b0 (.A(sc_pin_cap_19),.Y(sc_pin_inv_u_224840));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000195)) u_b1 (.A(sc_pin_inv_u_224840),.Y(n_236908));
+end else begin : g_sc_legacy_u_224840
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224840(.C(n_2),.D(n_172),.Q(n_236908));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224841
+wire sc_pin_inv_u_224841;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000196)) u_b0 (.A(sc_pin_cap_19),.Y(sc_pin_inv_u_224841));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000197)) u_b1 (.A(sc_pin_inv_u_224841),.Y(n_236909));
+end else begin : g_sc_legacy_u_224841
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224841(.C(n_2),.D(n_172),.Q(n_236909));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224842
+wire sc_pin_inv_u_224842;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000198)) u_b0 (.A(sc_pin_cap_19),.Y(sc_pin_inv_u_224842));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000199)) u_b1 (.A(sc_pin_inv_u_224842),.Y(n_236910));
+end else begin : g_sc_legacy_u_224842
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224842(.C(n_2),.D(n_172),.Q(n_236910));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224843
+wire sc_pin_inv_u_224843;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000202)) u_b0 (.A(sc_pin_cap_20),.Y(sc_pin_inv_u_224843));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000203)) u_b1 (.A(sc_pin_inv_u_224843),.Y(n_236911));
+end else begin : g_sc_legacy_u_224843
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224843(.C(n_2),.D(n_173),.Q(n_236911));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224844
+wire sc_pin_inv_u_224844;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000204)) u_b0 (.A(sc_pin_cap_20),.Y(sc_pin_inv_u_224844));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000205)) u_b1 (.A(sc_pin_inv_u_224844),.Y(n_236912));
+end else begin : g_sc_legacy_u_224844
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224844(.C(n_2),.D(n_173),.Q(n_236912));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224845
+wire sc_pin_inv_u_224845;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000206)) u_b0 (.A(sc_pin_cap_20),.Y(sc_pin_inv_u_224845));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000207)) u_b1 (.A(sc_pin_inv_u_224845),.Y(n_236913));
+end else begin : g_sc_legacy_u_224845
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224845(.C(n_2),.D(n_173),.Q(n_236913));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224846
+wire sc_pin_inv_u_224846;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000208)) u_b0 (.A(sc_pin_cap_20),.Y(sc_pin_inv_u_224846));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000209)) u_b1 (.A(sc_pin_inv_u_224846),.Y(n_236914));
+end else begin : g_sc_legacy_u_224846
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224846(.C(n_2),.D(n_173),.Q(n_236914));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224847
+wire sc_pin_inv_u_224847;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000212)) u_b0 (.A(sc_pin_cap_21),.Y(sc_pin_inv_u_224847));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000213)) u_b1 (.A(sc_pin_inv_u_224847),.Y(n_236915));
+end else begin : g_sc_legacy_u_224847
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224847(.C(n_2),.D(n_174),.Q(n_236915));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224848
+wire sc_pin_inv_u_224848;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000214)) u_b0 (.A(sc_pin_cap_21),.Y(sc_pin_inv_u_224848));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000215)) u_b1 (.A(sc_pin_inv_u_224848),.Y(n_236916));
+end else begin : g_sc_legacy_u_224848
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224848(.C(n_2),.D(n_174),.Q(n_236916));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224849
+wire sc_pin_inv_u_224849;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000216)) u_b0 (.A(sc_pin_cap_21),.Y(sc_pin_inv_u_224849));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000217)) u_b1 (.A(sc_pin_inv_u_224849),.Y(n_236917));
+end else begin : g_sc_legacy_u_224849
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224849(.C(n_2),.D(n_174),.Q(n_236917));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224850
+wire sc_pin_inv_u_224850;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000218)) u_b0 (.A(sc_pin_cap_21),.Y(sc_pin_inv_u_224850));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000219)) u_b1 (.A(sc_pin_inv_u_224850),.Y(n_236918));
+end else begin : g_sc_legacy_u_224850
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224850(.C(n_2),.D(n_174),.Q(n_236918));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_224851(.A(n_177147),.B(n_27758),.Y(n_236919));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_and #(.ID(0)) u_224852(.A(n_177147),.B(n_27758),.Y(n_236920));
+generate if (HARD_PINREG) begin : g_sc_pin_u_224853
+wire sc_pin_inv_u_224853;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000222)) u_b0 (.A(sc_pin_cap_22),.Y(sc_pin_inv_u_224853));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000223)) u_b1 (.A(sc_pin_inv_u_224853),.Y(n_236921));
+end else begin : g_sc_legacy_u_224853
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224853(.C(n_2),.D(n_175),.Q(n_236921));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224854
+wire sc_pin_inv_u_224854;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000224)) u_b0 (.A(sc_pin_cap_22),.Y(sc_pin_inv_u_224854));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000225)) u_b1 (.A(sc_pin_inv_u_224854),.Y(n_236922));
+end else begin : g_sc_legacy_u_224854
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224854(.C(n_2),.D(n_175),.Q(n_236922));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224855
+wire sc_pin_inv_u_224855;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000226)) u_b0 (.A(sc_pin_cap_22),.Y(sc_pin_inv_u_224855));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000227)) u_b1 (.A(sc_pin_inv_u_224855),.Y(n_236923));
+end else begin : g_sc_legacy_u_224855
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224855(.C(n_2),.D(n_175),.Q(n_236923));
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_pin_u_224856
+wire sc_pin_inv_u_224856;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000228)) u_b0 (.A(sc_pin_cap_22),.Y(sc_pin_inv_u_224856));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000229)) u_b1 (.A(sc_pin_inv_u_224856),.Y(n_236924));
+end else begin : g_sc_legacy_u_224856
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224856(.C(n_2),.D(n_175),.Q(n_236924));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224857(.A(n_237744),.B(n_39756),.Y(n_236925));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224858(.A(n_237744),.B(n_39756),.Y(n_236926));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_224859(.A(n_237745),.B(n_237615),.Y(n_236927));
@@ -228746,9 +230860,21 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224974(.C(n_2),.D(n_41669),.Q(n_237042));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224975(.C(n_2),.D(n_41669),.Q(n_237043));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224976(.C(n_2),.D(n_41669),.Q(n_237044));
+generate if (HARD_PINREG) begin : g_sc_pin_u_224977
+wire sc_pin_inv_u_224977;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000326)) u_b0 (.A(sc_pin_cap_33),.Y(sc_pin_inv_u_224977));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000327)) u_b1 (.A(sc_pin_inv_u_224977),.Y(n_237045));
+end else begin : g_sc_legacy_u_224977
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224977(.C(n_2),.D(n_186),.Q(n_237045));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_224978(.A(n_237045),.Y(n_237046));
+generate if (HARD_PINREG) begin : g_sc_pin_u_224979
+wire sc_pin_inv_u_224979;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000322)) u_b0 (.A(sc_pin_cap_32),.Y(sc_pin_inv_u_224979));
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(1000323)) u_b1 (.A(sc_pin_inv_u_224979),.Y(n_237047));
+end else begin : g_sc_legacy_u_224979
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224979(.C(n_2),.D(n_185),.Q(n_237047));
+end endgenerate
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_224980(.A(n_237047),.Y(n_237048));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_224981(.C(n_2),.D(n_32060),.Q(n_237049),.R(n_237789));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_224982(.C(n_2),.D(n_32060),.Q(n_237050),.R(n_237789));
@@ -229476,9 +231602,15 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_mux #(.ID(0)) u_225704(.A(1'b1),.B(n_35973),.S(n_237801),.Y(n_237772));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_225705(.A(n_237772),.Y(n_237773));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225706(.C(n_2),.D(n_35611),.Q(n_237774),.R(n_237820));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225707(.C(n_2),.D(n_104),.Q(n_237775),.R(n_237821));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225708(.C(n_2),.D(n_104),.Q(n_237776),.R(n_237821));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225709(.C(n_2),.D(n_104),.Q(n_237777),.R(n_237821));
+wire sc_pin_flag_u_225707;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225707(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_104),.Q(sc_pin_flag_u_225707),.R(n_237821));
+assign n_237775 = HARD_PINREG ? (sc_pin_rstcap_0 & sc_pin_flag_u_225707) : sc_pin_flag_u_225707;
+wire sc_pin_flag_u_225708;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225708(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_104),.Q(sc_pin_flag_u_225708),.R(n_237821));
+assign n_237776 = HARD_PINREG ? (sc_pin_rstcap_0 & sc_pin_flag_u_225708) : sc_pin_flag_u_225708;
+wire sc_pin_flag_u_225709;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225709(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_104),.Q(sc_pin_flag_u_225709),.R(n_237821));
+assign n_237777 = HARD_PINREG ? (sc_pin_rstcap_0 & sc_pin_flag_u_225709) : sc_pin_flag_u_225709;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225710(.C(n_2),.D(1'b1),.Q(n_237778),.R(n_28269));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225711(.C(n_2),.D(1'b1),.Q(n_237779),.R(n_28269));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225712(.C(n_2),.D(1'b1),.Q(n_237780),.R(n_28269));
@@ -229528,9 +231660,28 @@ assign n_228410 = (n_228778) | (n_228770);
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225756(.C(n_2),.D(1'b1),.Q(n_237824),.R(n_237831));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225757(.C(n_2),.D(1'b1),.Q(n_237825),.R(n_237831));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225758(.C(n_2),.D(1'b1),.Q(n_237826),.R(n_237831));
-(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225759(.C(n_2),.D(n_104),.Q(n_237827),.R(n_237821));
+wire sc_pin_flag_u_225759;
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225759(.C(n_2),.D(HARD_PINREG ? 1'b1 : n_104),.Q(sc_pin_flag_u_225759),.R(n_237821));
+assign n_237827 = HARD_PINREG ? (sc_pin_rstcap_0 & sc_pin_flag_u_225759) : sc_pin_flag_u_225759;
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_mux #(.ID(0)) u_225760(.A(1'b1),.B(n_133360),.S(n_237830),.Y(n_237828));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_not #(.ID(0)) u_225761(.A(n_237828),.Y(n_237829));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_or #(.ID(0)) u_225762(.A(n_65449),.B(n_65450),.Y(n_237830));
 (* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_225763(.C(n_2),.D(1'b1),.Q(n_237831),.R(n_28267));
+
+// Optional registered hard-boundary specialization; zero added arithmetic edges.
+generate if (HARD_PINREG) begin : g_sc_shared_rst_0
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(1000656)) u_pin (.C(n_2),.D(sc_cfg[100]),.Q(sc_pin_rstcap_0));
+end else begin : g_sc_no_shared_rst_0
+assign sc_pin_rstcap_0=1'b0;
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_shared_rst_1
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(1000657)) u_pin (.C(n_2),.D(up_i[47]),.Q(sc_pin_rstcap_1));
+end else begin : g_sc_no_shared_rst_1
+assign sc_pin_rstcap_1=1'b0;
+end endgenerate
+generate if (HARD_PINREG) begin : g_sc_shared_rst_2
+(* keep=1, keep_hierarchy="yes" *) qfd_s2_bmath_dff_p #(.ID(1000658)) u_pin (.C(n_2),.D(am_v[0]),.Q(sc_pin_rstcap_2));
+end else begin : g_sc_no_shared_rst_2
+assign sc_pin_rstcap_2=1'b0;
+end endgenerate
 endmodule
