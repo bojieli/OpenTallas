@@ -723,7 +723,7 @@
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "source": "d4g as-built die_r18h5.v instance smw_NW (module ot_hbm_sm_vm_wr_q_t_lanes4); files = closure of ot_hbm_sm_vm_wr_q_t_lanes4 at d34578d6f",
-  "source_commit": "d34578d6f",
+  "source_commit": "aa36dd563f",
   "read_at_commit": true,
   "files_at": {
    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "8e7f8a9f05"
@@ -2728,5 +2728,613 @@
   "source_commit": "09c5053d5aa7ebe944abc2fea80773b562069a7e",
   "read_at_commit": true,
   "util": 0.4
+ },
+ "ot_pdie_serdes_tx": {
+  "top": "ot_pdie_serdes_tx",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+   "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh",
+  "source_commit": "c7546b975b1504036f1b513d28e5dc1675ed9e57",
+  "read_at_commit": true,
+  "util": 0.4
+ },
+ "ot_pdie_serdes_rx": {
+  "top": "ot_pdie_serdes_rx",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+   "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w2c_64x546_m1",
+   "ot_sram_1r1w_32x546_m1"
+  ],
+  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh",
+  "source_commit": "c7546b975b1504036f1b513d28e5dc1675ed9e57",
+  "read_at_commit": true,
+  "util": 0.4
+ },
+ "ot_hidx_s3_ctl": {
+  "top": "ot_hidx_s3_ctl",
+  "files": [
+   "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-REFORM-B d44v part 21 tile of ot_hbm_idx_selector_static_sel; bench results/die_hbm_1104/reform_b/split_p21/run_eq.sh",
+  "source_commit": "b6e90b734ac5f1f5aa89e8e86cf1d3b23a7b7912",
+  "read_at_commit": true,
+  "util": 0.4
+ },
+ "ot_hidx_s3_q": {
+  "top": "ot_hidx_s3_q",
+  "files": [
+   "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-REFORM-B d44v part 21 tile of ot_hbm_idx_selector_static_sel; bench results/die_hbm_1104/reform_b/split_p21/run_eq.sh",
+  "source_commit": "b6e90b734ac5f1f5aa89e8e86cf1d3b23a7b7912",
+  "read_at_commit": true,
+  "util": 0.4
+ },
+ "ot_hgi_sfu_core_split3__ctl": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_core.sv"
+  ],
+  "functional_type": "sfu_ctl",
+  "macros": [],
+  "params": {},
+  "port_map_note": "remainder core (unique): pin COUNT equals the cut; cut pin -> port map by name / unique width where derivable (canonical_ports_split.json)",
+  "source": "rest_extract.sh: ot_hgi_sfu_core_split3 #(LWB 15, LG_PATH 31) minus the 16 lanes (u_sfu + u_map) and u_memory (vm bridge, control register, glue flattened); rest_wrap.py: io_word bit the master never reads tied 0; stage_mask[63:0] driven 64'hffff.. (the vm bridge constant the cut carries)",
+  "top": "ot_hgi_sfu_split3_ctl_core",
+  "wrapper_by_pins_sha256": {
+   "006d8646f4e799a89dc16ff2fe00c49b964922f6491495693f9e04805f94970f": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hgi_sfu_core_split3__ctl.sv"
+  }
+ },
+ "ot_hgi_coll_tkm_tp192_htile_core": {
+  "top": "ot_hgi_coll_tkm_tp192_htile_core",
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/cores_split/reform_1103/tkm_tile/ot_hgi_coll_tkm_tp192_htile_core.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-REFORM-A3 d44v part 19: half tile, the chain element at PT 32 (reform_1103 reduced-chain receipt); plan pins == RTL top ports"
+ },
+ "ot_hbm_su_pg_lane1p_core": {
+  "top": "ot_hbm_su_pg_lane1p_core",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv",
+   "rtl/hbm_accel/cores_split/reform_1104a/lanes4/ot_hbm_su_pg_lane1p_core.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "HBM-REFORM-A d44v part 17: lane1 text with the module renamed, lanes_plain tile 440.64 x 112.32 (lockstep receipt in results/die_hbm_1104/reform_a/part17)",
+  "rename_top": "ot_hbm_su_pg_lane1p_core__mc",
+  "wrapper_by_pins_sha256": {
+   "09e2439b7779198d22cd7330957431b4f8f9ad442661ad0d8f6d6243ae6fa170": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane1p_core.sv"
+  }
+ },
+ "ot_hbm_su_pg_lane_exp_x_core": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/reform_1104a/lane_x/ot_hbm_su_static_lane_x.sv",
+   "rtl/hbm_accel/cores_split/reform_1104a/lane_x/ot_hbm_su_static_lane_pinreg_x.sv",
+   "rtl/hbm_accel/cores_split/reform_1104a/lane_x/ot_hbm_su_pg_lane_exp_x_core.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "params": {},
+  "source": "HBM-REFORM-A d44v part 18: S chain of ot_hbm_su_pg_lane_exp_core moved to ot_hbm_su_pg_sfu_s_core; bench results/die_hbm_1104/reform_a/part18",
+  "top": "ot_hbm_su_pg_lane_exp_x_core",
+  "alias_of": "ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92",
+  "synth_memory_max_bits": 16384,
+  "wrapper_by_pins_sha256": {
+   "a8815b8d3cb406d898097fcf0e7a8286c0868a0c7f0d9a9aad6518da76d87674": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane_exp_x_core.sv"
+  },
+  "rename_top": "ot_hbm_su_pg_lane_exp_x_core__mc"
+ },
+ "ot_hbm_su_pg_sfu_s_core": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/reform_1104a/lane_x/ot_hbm_su_pg_sfu_s_core.sv"
+  ],
+  "macros": [],
+  "params": {},
+  "source": "HBM-REFORM-A d44v part 18: exp, +1, divide chain of the KIND 1/2 SU lane, verbatim",
+  "top": "ot_hbm_su_pg_sfu_s_core",
+  "alias_of": "ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92",
+  "synth_memory_max_bits": 16384
+ },
+ "ot_hbm_su_pg_lane_full_x_core": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/reform_1104a/lane_x/ot_hbm_su_static_lane_x.sv",
+   "rtl/hbm_accel/cores_split/reform_1104a/lane_x/ot_hbm_su_static_lane_pinreg_x.sv",
+   "rtl/hbm_accel/cores_split/reform_1104a/lane_x/ot_hbm_su_pg_lane_full_x_core.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "params": {},
+  "source": "HBM-REFORM-A d44v part 18: S chain of ot_hbm_su_pg_lane_full_core moved to ot_hbm_su_pg_sfu_s_core; bench results/die_hbm_1104/reform_a/part18",
+  "top": "ot_hbm_su_pg_lane_full_x_core",
+  "wrapper_by_pins_sha256": {
+   "b3b8cc8e09a33fde8726158f062ac704e9b689b48ee25df193c7963fcdd6214f": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane_full_x_core.sv"
+  },
+  "rename_top": "ot_hbm_su_pg_lane_full_x_core__mc"
+ },
+ "ot_wbq_sw": {
+  "top": "ot_wbq_sw",
+  "macros": [],
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "source": "HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh",
+  "source_commit": "69d1b175663e0b62a3c8c2883404342f3b2e22b9",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_wbq_root": {
+  "top": "ot_wbq_root",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "source": "HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh",
+  "source_commit": "c3199719170d92b299edd36599d6b8f35df82902",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_hgi_sfu_opsb_group": {
+  "defines": [],
+  "params": {},
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsb_group",
+  "util": 0.45
+ },
+ "ot_hgi_sfu_opsa_rest": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_rest",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_rest.sv"
+  ]
+ },
+ "ot_hbm_idx_topk_store": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 30: tile of ot_hbm_idx_topk_link_static; bench results/die_hbm_1105/form_split/p30",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "top": "ot_hbm_idx_topk_store",
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "ot_hbm_idx_topk_ingest": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 30: tile of ot_hbm_idx_topk_link_static; bench results/die_hbm_1105/form_split/p30",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "top": "ot_hbm_idx_topk_ingest",
+  "macros": []
+ },
+ "ot_hgi_sfu_opsb_output": {
+  "defines": [],
+  "params": {},
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsb_output",
+  "util": 0.45
+ },
+ "ot_hgi_sfu_opsa_group1": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_group1",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
+  ]
+ },
+ "ot_hgi_sfu_opsa_group0": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_group0",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
+  ]
+ },
+ "ot_hgi_coll_gqi_issue": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 29: tile of ot_hgi_coll_gq_issue; bench results/die_hbm_1105/form_split/p29",
+  "top": "ot_hgi_coll_gqi_issue",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/gq/ot_hgi_coll_gqi_issue.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ]
+ },
+ "ot_hgi_gq_aq_tile": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 29: tile of ot_hgi_coll_gq_issue; bench results/die_hbm_1105/form_split/p29",
+  "top": "ot_hgi_gq_aq_tile",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/gq/ot_hgi_gq_aq_tile.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ]
+ },
+ "ot_q2nf_rest": {
+  "top": "ot_q2nf_rest",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_q2nf_rest.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1r1w_64x512_m1_r2c2",
+   "ot_sram_1rw_256x64_m4_r2c2"
+  ],
+  "defines": [],
+  "params": {},
+  "source": "HBM-REFORM-B5 d44v part 33 tile of ot_hfd_coll_q2n2_body_core; bench results/die_hbm_1104/reform_b/split_p33/",
+  "source_commit": "7b542aa63fa34be4292360da286a76cca3487451",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_q2nf_qout": {
+  "top": "ot_q2nf_qout",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_q2nf_split.sv"
+  ],
+  "macros": [],
+  "defines": [],
+  "params": {},
+  "source": "HBM-REFORM-B5 d44v part 33 tile of ot_hfd_coll_q2n2_body_core; bench results/die_hbm_1104/reform_b/split_p33/",
+  "source_commit": "7b542aa63fa34be4292360da286a76cca3487451",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_top": {
+  "top": "ot_svgr_top",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {
+   "LBANKS": 4,
+   "NID": 6,
+   "IDW": 9,
+   "PAW": 11,
+   "PREL": 1,
+   "DD": 256,
+   "ID_COHORT": 1,
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "9410cf281442cefc6a9e7e406136ad535118f779",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_own": {
+  "top": "ot_svgr_own",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {},
+  "macros": [],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_bk": {
+  "top": "ot_svgr_bk",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_hfd_coll_q3_qcol4": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 28: tile of ot_hfd_coll_q3_body_core; bench results/die_hbm_1105/form_split/p28",
+  "top": "ot_hfd_coll_q3_qcol4",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_body_core/ot_hfd_coll_q3_qcol4.sv"
+  ],
+  "macros": []
+ },
+ "ot_hfd_coll_q3_body_ctl": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 28: tile of ot_hfd_coll_q3_body_core; bench results/die_hbm_1105/form_split/p28",
+  "top": "ot_hfd_coll_q3_body_ctl",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/q3/ot_hfd_coll_q3_body_ctl.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1rw_256x64_m4_r2c2"
+  ]
+ },
+ "ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hbm_accel/cores_split/sk_fsr_1105/ot_hbm_hc_tail_rest_core_fsr.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/00_ot_hdc_fastfp_lat_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/01_ot_hdc_fp32_f12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/02_ot_hdc_prefix.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/03_ot_dsrom_su_add6.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/04_ot_dsrom_su_f12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/05_ot_hdc_fsqrt_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/06_ot_hdc_v41x_sfu_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/08_ot_hdc_delay.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/09_ot_hdc_sfu.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/14_ot_hdc_fastfp.sv"
+  ],
+  "functional_type": "hc_tail_rest",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_tail_rest_core ports; cut pin -> canonical map in canonical_ports_split.json types.hc_tail_rest.type_ids[\"ot_hbm_hc_root_static__tail1_rest__155.52x172.8\"]",
+  "source": "DIE-HBM-66 11-05 COORD ruling A: S81 row Sinkhorn on HBM tail; lockstep results/die_hbm_1105/sk_fsr (FSR_EQ PASS, mutants FAIL).",
+  "top": "ot_hbm_hc_tail_rest_core_fsr",
+  "synth_memory_max_bits": 16384
+ },
+ "ot_hbm_hc_root_static__tailx_sk_fsr": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+   "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+   "rtl/hdc/v41/ot_hdc_skf_predecode.sv",
+   "rtl/hdc/v41/ot_hdc_sinkhorn_fs.sv",
+   "rtl/hbm_accel/cores_split/sk_fsr_1105/ot_hbm_hc_tail_sk_fsr.sv"
+  ],
+  "functional_type": "hc_sk_fsr",
+  "macros": [],
+  "params": {},
+  "source": "DIE-HBM-66 11-05 COORD ruling A: S81 row Sinkhorn on HBM tail; lockstep results/die_hbm_1105/sk_fsr (FSR_EQ PASS, mutants FAIL).",
+  "top": "ot_hbm_hc_tail_sk_fsr",
+  "synth_memory_max_bits": 35328
+ },
+ "ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hbm_accel/cores_split/sk_fsr_1105/ot_hbm_hc_tail_rest_core_fsr.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/00_ot_hdc_fastfp_lat_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/01_ot_hdc_fp32_f12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/02_ot_hdc_prefix.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/03_ot_dsrom_su_add6.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/04_ot_dsrom_su_f12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/05_ot_hdc_fsqrt_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/06_ot_hdc_v41x_sfu_c12.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/08_ot_hdc_delay.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/09_ot_hdc_sfu.sv",
+   "rtl/hbm_accel/integrated_20261006/sfu_c12_selected/14_ot_hdc_fastfp.sv"
+  ],
+  "functional_type": "hc_tail_rest",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_tail_rest_core ports; cut pin -> canonical map in canonical_ports_split.json types.hc_tail_rest.type_ids[\"ot_hbm_hc_root_static__tail0_rest__155.52x172.8\"]",
+  "source": "DIE-HBM-66 11-05 COORD ruling A: S81 row Sinkhorn on HBM tail; lockstep results/die_hbm_1105/sk_fsr (FSR_EQ PASS, mutants FAIL).",
+  "top": "ot_hbm_hc_tail_rest_core_fsr",
+  "synth_memory_max_bits": 16384
  }
 }

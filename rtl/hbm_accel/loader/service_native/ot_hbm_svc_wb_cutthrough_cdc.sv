@@ -9,7 +9,10 @@
 //    PHY PC is 16Q + (o[5:2]^o[9:6]^o[14:11]).  This block works in ordinal space and drives local PC index
 //    k = o[5:2]^o[9:6]^o[14:11] on K port k with k_addr = o; the quadrant wrapper (ot_hbm_svc_wb_kport_q) applies the
 //    fold with its quad strap in front of its K pin skids.  Payload SRAMs, FIFOs and the stream side are unchanged.
-module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0, parameter integer NPC=32, parameter integer QFOLD=0)(
+module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0, parameter integer NPC=32, parameter integer QFOLD=0,
+  // HBM-REFORM-B3 part 22: ACK_PIPE=1 registers the per-PC accepted-ack bits before the count. The block's done moves 1 hbm edge
+  // later (it sits behind the variable HBM wait); no K request changes.  0 = the old same-edge count.
+  parameter integer ACK_PIPE=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [3:0] stream_fifo_clk,
  input wire reserve_v,output wire reserve_ready,input wire reserve_bank,
@@ -137,7 +140,7 @@ module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0, parameter integer
  assign fifo_re=pop;
  assign k_we=k_v;assign k_len={NPC{4'd1}};assign k_tag={NPC{{meta_q[28],meta_q[27:12]}}};assign k_wstrb={(32*NPC){1'b1}};
  always @*begin
-  pick_v=0;pop=0;k_v=0;k_addr=0;k_wdata=0;acks=0;
+  pick_v=0;pop=0;k_v=0;k_addr=0;k_wdata=0;ack_now=0;
   for(pc=0;pc<NPC;pc=pc+1)begin
    pick_lane[pc]=0;
    for(l=0;l<32;l=l+1)if(!pick_v[pc]&&!fifo_empty[l]&&fifo_pc[l]==pc)begin pick_v[pc]=1;pick_lane[pc]=l;end
@@ -147,8 +150,14 @@ module ot_hbm_svc_wb_cutthrough_cdc #(parameter [1:0] STACK=0, parameter integer
     k_v[pc]=1;k_addr[30*pc+:30]=fifo_head[selected_lane[pc]][285:256];k_wdata[256*pc+:256]=fifo_head[selected_lane[pc]][255:0];
     if(k_rdy[pc])pop[selected_lane[pc]]=1;
    end
-   if(k_wr_done[pc]&&(outstanding[pc]!=0||(k_v[pc]&&k_rdy[pc])))acks=acks+1;
+   if(k_wr_done[pc]&&(outstanding[pc]!=0||(k_v[pc]&&k_rdy[pc])))ack_now[pc]=1;
   end
+ end
+ reg [NPC-1:0] ack_now,ack_q;integer ack_i;
+ always @(posedge hbm_clk or negedge hrst)if(!hrst)ack_q<=0;else ack_q<=(meta_active&&!hbm_fault)?ack_now:{NPC{1'b0}};
+ always @*begin
+  acks=0;
+  for(ack_i=0;ack_i<NPC;ack_i=ack_i+1)if((ACK_PIPE!=0)?ack_q[ack_i]:ack_now[ack_i])acks=acks+1;
  end
  integer h;
  always @(posedge hbm_clk or negedge hrst)begin

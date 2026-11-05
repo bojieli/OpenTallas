@@ -146,10 +146,15 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48tb = DH58-TURNB FREG-1 on l48rf (hd_turn_a/hd_turn_b face register + strap K, plan f9623a82a239,
                # claude/dh58-turnb-1103@67cc18d2e8e merged main 4b09653bef8, COORD 16:00 approved)
                # l48ub = DIE-HEAD-62 l48ua + plan-carried lec_hints on hd_host, hd_mesh only (plan 3e4c1adfbb4e, sidecar same)
+               # l48uc = DIE-HEAD-65 l48ub + DIE-HEAD-38 landing staging knobs on hd_mesh, hd_host only (head_cland_stage_delta.py, plan 2255e92faccc, sidecar same)
+               # l48ud = DIE-HEAD-66 l48uc + landing stage/copy sites off the macros on hd_host, hd_mesh (xy only, plan d8d8a0cac25e, sidecar same)
+               # l48ue = DIE-HEAD-68 l48ud + measured per-port tap window (clock.tap_window.per_port_ps) on 9 open types (SDC only, plan 9a2186d89486, sidecar same)
+               # l48uf = DIE-HEAD-70 l48ue + hd_tile u_core long-hop params ROW_IN_REG/TEN_HOP/FLT_XHOP 1, BST 3 (head_tile_hop_delta.py, plan 69ce0830f6e4, sidecar same)
+               # l48ug = DIE-HEAD-70 l48uf + hd_tile u_core TEN_HOP 2, KEY_HOP 1 (tile4 CTS: ten hop -187, kl_gt -279; 0 cycles; plan 2a0980eb4a82, sidecar same)
                # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
                # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg", "l48ua", "l48ub")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg", "l48ua", "l48ub", "l48uc", "l48ud", "l48ue", "l48uf", "l48ug")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
@@ -400,12 +405,19 @@ def _own_wave_unit(r):
     lj = str(r.get("live_job", ""))
     if lj.startswith("kit-wave unit"):
         return True
+    # KW-FIX-12 11-05: the queue form 'ap-<id>-a<n> <id>[; ot-run pid N <dir tail>]' on a KIT-WAVE row is the wave's own
+    # routed kit of one sibling class; it blocked released retries of the other classes (QC 11-05: 26 parents, sle_su_l1).
+    m = re.match(r"ap-[0-9a-f]+-a\d+ [0-9a-f]+(?:; )?(.*)", lj)
+    if m:
+        if not m.group(1):
+            return True
+        lj = m.group(1)
     # ownership.py form 'ot-run pid N <last 70 chars of the job dir>': the wave's own place/geom job of this item or
     # one of its classes (wave kit dirs end .../items/<class>/[attempt_n/]gen/<class>)
     if not lj.startswith("ot-run pid"):
         return False
     segs = re.split(r"[/\s]+", lj.split(None, 3)[-1]) if len(lj.split(None, 3)) == 4 else []
-    return ("gen" in segs or "items" in segs) and any(x == r["item"] or x.startswith(r["item"] + "__") for x in segs)
+    return ("gen" in segs or "items" in segs) and any(x == r["item"] or x.startswith(r["item"] + "_") for x in segs)
 
 
 def select(rows, cfg, die, state, plan_types=None):
@@ -2747,6 +2759,12 @@ def infra_relaunch_due(cfg, rec):
     """an INFRA failure the wave relaunches: RETRY-INFRA, or a FAIL INFRA record left by the old 2-attempt limit"""
     if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
         return False
+    # KW-FIX-10 11-05: a held item stays held here too.  serdes__t4 a1, stopped and held 11-04 23:37, came back as a2 at
+    # 23:44 through this path, which is not plan_dies and never read hold_items.
+    import fnmatch
+    if any(fnmatch.fnmatchcase(rec.get("item", ""), pat)
+           for pat in (((cfg.get("dies") or {}).get(rec["die"]) or {}).get("hold_items") or {})):
+        return False
     if rec.get("status") == "RETRY-INFRA":
         return True
     return (rec.get("status") == "FAIL" and rec.get("class") == "INFRA"
@@ -3130,6 +3148,12 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    try:                                        # SUBSTEP-1 (COORD 11-05 10:53): sub-step ODBs of terminal attempts
+        import substep_prune
+        substep_prune.tick(AP, cfg, st, ap_dir, lambda h: _ssh(h, AP.HUB_NAME),
+                           AP.read_coord)
+    except Exception as e:                      # disk hygiene never stops the tick
+        AP.log(f"KIT-WAVE SUBSTEP-1 skipped: {type(e).__name__}: {e}")
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir

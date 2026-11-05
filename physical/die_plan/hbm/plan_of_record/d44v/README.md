@@ -404,3 +404,60 @@ Built by `mk_split.py` at 3ea69acee2a on the older chain; here its plan delta is
 - **ot_hnx_fused_host_program** `clk` M5 (103.704, 64.8) -> (103.704, 129.36), N face, table `__p14`; the other 561 pins unmoved. Signed DB kept (re-signed on flow-20261105-i-hbm). The kit was generated without `--clock-pin-entry on`, so the centre entry went to the N face; the plan now follows it. Gen on a stage with the flag: rc 0, all 562 pins equal the signed kit.
 - **Parent clock tap**: `u_mu_fused_program.clk` (838.08, 5404.32) -> (838.08, 5468.88), same x. The `root` clock entry row follows (xy 103.68, 129.36; island kept 8.64 um square, clipped to the N edge).
 - **Checks**: plan diff 3 fields on `root` plus 4 on its clock entry. G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0. 0 cycles, no RTL. No `asbuilt` key, so bind.py does not apply.
+
+## Part 20 (ot_pdie_serdes conservative form; HBM-REFORM-B/B2, OWNER 11-03 two strikes)
+
+- **ot_pdie_serdes** (276k + kept kp4_inv 128.8k) becomes three plan designs inside its slot: `ot_pdie_serdes_tx` 285.12x155.52 (72.2k cells), `ot_pdie_serdes_rx` 302.4x345.6 (145.2k, 2 SRAM), and the signed `ot_s81_kp4_dchn` 276.48x138.24, pins = the signed table. Outline 600.048x600.48 -> 596.16x596.16, origin kept (8.64 lattice). Rows: `u_lk_*` in NW_io, NE_io, q_spb0 and siblings, 5 slots.
+- **Cycles**: `reform_1103/cycles/pdie.tsv`: pma_rx -> rx +2 (ddly DD 55 -> 57), uncorrectable and e_flt -> st[0] +2, pma_tx, tx, st[1] 0.
+- **Clock (COORD ruling 11-04 23:2x)**: the recovered clock enters rx on `rck_clk`; one SDC clock on `clk` and `rck_clk`, so the rate matcher is timed as synchronous. The real CDC is proved in simulation only (plesiochronous bench modes). The die-level PMA clock note stays open.
+- **Bench**: `results/die_hbm_1104/reform_b/split_p20/run_eq.sh`, kit face shells modelled by `ot_hbm_face_reg`.
+
+## Part 21 (ot_hbm_idx_selector_static_sel conservative form; HBM-REFORM-B3, OWNER 11-03 two strikes)
+
+- **ot_hbm_idx_selector_static_sel** (322.7k, STRUCT=0, ws -46931) becomes the proven s3 cluster, wires-only: `ot_hidx_s3_ctl` 43.2x34.56 + 4 x `ot_hidx_s3_q` 259.2x216 (3 SRAMs each, macros 12 as before), in a 596.16x449.28 slot (was 600.048x450.36, origin kept; mk_split needs the 8.64 lattice). The landed parent of claude/hbm-idx-sel-c14-1021 is not used: the kit face shells are the registered crossings.
+- **Clocks**: u_ctl on `clk_ctl`, u_q<q> on `clk_q[q]`. `clk_mem[11:0]` stays a master port with no load; each SRAM runs on its quadrant clock.
+- **Cycles**: `reform_1103/cycles/selector.tsv`; schedule table sel_in 7, sel_in_line 3, sel_out 2, sel_core_out 2, sel_scan_drain 2, sel_choose_rt 6. The compiler on main has none of the s3 keys; the TOK lane adds the table.
+- **Bench**: `results/die_hbm_1104/reform_b/split_p21/run_eq.sh`: tb_selector_s3 full-shape checks on the composition with kit face shells modelled by `ot_hbm_face_reg`.
+
+## Part 24 (ot_hgi_sfu_core_split3__ctl smaller tile; HBM-REFORM-B3)
+
+- **ot_hgi_sfu_core_split3__ctl** (74.5k logic, 32k FF, no macros, 8.5% util, TT -148 from spread) goes from 669.6x626.4 to 427.68x453.6 by mk_reform.py (centre kept, pins repacked, pin pitch 0.096, W edge 3819 pins). RTL unchanged, 0 cycles.
+- **Wrapper**: recipes_b2 entry ot_hgi_sfu_core_split3__ctl pins physical/die_plan/hbm_arch_cores/wrappers/oneclk for this pin table only.
+- **Scripts**: results/die_hbm_1104/reform_b/split_p24/ (ov_p24.json, mk_p24.py).
+
+
+
+## Part 17 (lanes canon and lanes_plain -> 4 x lane; HBM-REFORM-A, HBM-REFORM-A2)
+
+- **lanes canon**, 14 rows, 760.32x725.76 slot: 4 x existing ot_hbm_su_pg_lane1_core, 190.08x311.04 strip, 0 cycles. Same cut as part 6 on lanes8_11.
+- **lanes_plain**, 8 rows, 440.64x457.92 slot: 4 x new ot_hbm_su_pg_lane1p_core, 216x224.64, 2 x 2, 0 cycles. Same RTL text as lane1; the plain slot cannot hold 2 x 2 lane1. Macros 2 x 3; one clock pin.
+- **Bench**: results/die_hbm_1104/reform_a/part17, lockstep on both rows, mutant 0 PASS, 3 mutants FAIL. Straps: parent_id_straps lane0_lane_id = {lane_lane_id, k}.
+- **Checks** against part 14: G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0. Clock_tap_sinks and clock_reach move both ways (9 worse, 13 better), see geom/geom_diff_d44v_p14_p17.txt.
+
+- **Part 17 rework (HBM-REFORM-A3, 11-05):** lanes_plain tile 216x224.64 (2x2, W/E macro bands 3.5, mid 10.8) stopped at GRT-0116 on the first form: 40141 overflow, M3 33006, CTS 72% with macros. Macro pins are W/E on M4 and need a band per column edge. New tile 440.64x112.32, 4 stacked in the 440.64x457.92 slot; 3 x 2 macros, bands 24.6/49.2/49.2/24.4, top cell strip 20.4. W/E faces M4 only, so ld_c[840:255] moved E to W: W 1136, E 880. 0 added cycles, same RTL and lockstep. G0 new 0, gone 0. GEOM advisory 225 -> 225, new 0.
+
+- **Part 18 (HBM-REFORM-A2/A3, 11-05):** lane_exp canon (60) -> lane_exp_x + sfu_s, lane_exp0_id (4) -> lane_full_x + sfu_s, row grows 414.72 -> 440.64 on local E. S chain moved to a shared SFU core, seam 101 bits with face flops. SFU_EXP, SFU_SIGM, SFU_SILU +4 edges, S-chain fault +4, others 0. Macros 2 x 3, W/E bands 30.2, 60.7, 30.4. Bench eq_x: PASS and 5 mutants FAIL on both rows. G0 new 0, gone 0. GEOM advisory 225 -> 225, new 0.
+
+- **Part 19 (HBM-REFORM-A3, 11-05):** tkm tile (both id forms) -> 2 x ot_hgi_coll_tkm_tp192_htile_core stacked Y (319.68x172.8 each), chain PTILE 32, NT 64. TKM op +448 edges, down +5, clr_o +3, conv_o +2, up_out +2. Root re-extracted on PTILE 32 with the same _x ports (recipe file replaced). Corridor clock buffers now drive __ha + __hb. G0: 15 new clock lines, advisory: direct leg 410-462 um > reach 405 (repeater segments pass), geometry of the split, not of the logic. GEOM 225 -> 225, new 0. EQ: reduced chain KMAX 128 bench, positive PASS, 3 mutants FAIL; full chain not run.
+
+
+## Part 25 (ot_hbm_svc_wb_kport_q split, 4 instances; HBM-REFORM-B4)
+
+- **ot_hbm_svc_wb_kport_q** (flat 374k), slot 475.2x475.2 grows to 527.04x544.32, u_wbk_Q__q1 origin y -8.64 (gaps at q1: E 17.28, N 8.64, S 21.6). It becomes one switch tile **ot_wbq_sw** 86.4x544.32 (160k cells at kit synth, over the 150k target) and four root tiles **ot_wbq_root** 432x129.6 (57k cells, 2 lane groups each, 8 128x256 payload macros), all with registered faces, one clock.
+- **Form**: root pushes sectors with a credit of 4 per group; sw queues per group and switches onto 16 K ports at most 8 per edge (flat 16). Order on K changes; each PC still gets its sectors in stream order per group.
+- **Cycles**: physical/die_plan/hbm/reform_1103/cycles/wb_kport.tsv. Scripts results/die_hbm_1104/reform_b/split_p25/ (mk_p25.py pre, then mk_split.py).
+
+Parts 27, 29 (HBM-FORM-SPLIT, 11-05): ot_hgi_sfu_core_split3__opstore_b -> 2 x opsb_group + opsb_output; opstore_a -> opsa_group0 + opsa_group1 + opsa_rest, slot 760.32 x 552.96 (origin kept, grows die north); ot_hgi_coll_gq_issue -> gqi_issue + 2 x gq_aq_tile, slot 328.32 x 233.28 (origin kept, grows die east). Util 0.45, registered faces. Added cycles: opstore_a engine fault +2 from operand groups 0,1 only; everything else 0. Benches and replay: results/die_hbm_1105/form_split.
+
+
+Part 26 (HBM-REFORM-B5): ot_hbm_svc_sm_group_rel_id -> ot_svgr_top + ot_svgr_own + 2 x ot_svgr_bk inside the old slot, registered faces. SM command, packet and GO slots unchanged (bench: 29/29 exact, results bit-equal). Seam edges in results/die_hbm_1104/reform_b/split_p26/cycles/rel_id_split.tsv. 298 station ends moved to the tile pins, register counts unchanged. ot_wbq_root macros moved 15.12 um off the W seam (DPL-0033 on the k3 build).
+
+Part 33 (HBM-REFORM-B5): ot_hfd_coll_q2n2_body_core -> ot_q2nf_rest + ot_q2nf_qout, 0 added data cycles, select/unavailable faults +2. results/die_hbm_1104/reform_b/split_p33/.
+
+Part 28 (HBM-FORM-SPLIT-2, 11-05): ot_hfd_coll_q3_body_core -> ot_hfd_coll_q3_body_ctl + 4 x ot_hfd_coll_q3_qcol4, same slot, util 0.45, registered faces, 0 added cycles. Replay results/die_hbm_1105/form_split/replay_p28.sh.
+
+- **Part 16 (DIE-HBM-69, from DIE-HBM-66/68, 11-05):** tailx_sk_step0 + tailx_sk_steady -> ot_hbm_hc_root_static__tailx_sk_fsr; tailx_rest -> tailx_rest_fsr, forms v6bc7f2 and v4f4566. Row Sinkhorn with a free-running stage shift, no enable fan-out. Tail launch -> result_v 592 -> 1054 edges [MEASURED, lockstep bench results/die_hbm_1105/sk_fsr, value FSR_EQ 60/60]; every pin in reform_1103/cycles/tailx_rest_fsr.tsv. Reset contract 64 cycles for both fsr tops. **Checks** against main's plan with parts 17-19: 43 stations dropped; G0 compare new 0, gone 0; plan-time GEOM advisory FAIL 225 -> 225, new 0 (geom/geom_diff_d44v_p24_p16.txt). Replay: results/die_hbm_1105/sk_fsr/mk_p16.py. Token calendars: +462 on these pins, next token lane.
+
+Event gqmx (HBM-GAPS-2, COORD 11-05 12:00 ruling B): q_hub_nw u_hcollgl_Q__q1 (ot_hgi_coll_gq_land) takes the o_MX pin table placed MX, as q_hub_ne q1 already does; the o_R0 table (view bfcd846691ef, its DRT stuck in the NW corner) leaves the plan. Signed view ac72b8c34f86 (gqac2) now serves both q1 rows. Same module, origin, outline and 3880 pin names; clock entry at the core centre is unchanged under MX. In core frame W/E pins are identical in both tables, so under MX the q_hub_nw W/E pin order flips in y (as in q_hub_ne). G0 new 0 gone 0; plan-time GEOM advisory 225 -> 225, new 0 (geom/geom_diff_d44v_gqmx.txt). Replay: results/die_hbm_1105/gq_land_mx/run_gqmx.sh.
+
+Event ev74 (DIE-HBM-74/75, COORD 11-05 12:38/12:40/12:42/12:51): idx score hcol_h0 ra/rb split pieces +102.816 um tall (106.272x290.304), moved as rigid ra|rb row units on the 8.64 lattice (142 hard cores pushed by collision, 10 units grow down; q_b000/001/010/011 bank128 pair gaps compacted); opsb_output 760.32x280.8 (macro rows with 21.6-um y gaps; q_b113 opsb_group g1 -56.16); topk_link_static 650.16x535.68 (+35.64, rows 3 x 11.88 gaps; root rootctl + argmax +34.56); q_sm0 L29_i +69.168 on the S face and q_su01 L29x1 out window with it; xcal_rel_t rst_n -> M5 (121.032, 224.544) = signed 6_final.def (all 507 pins = signed kit). Station cells under moved cores re-sited by tools/die_plan/ft_nudge.py, then tools/die_plan/ft_reach_fix.py re-sites the S1 bits nudged past 405 um (1122 bits). Replay results/die_hbm_1105/ev74/run_ev74.sh. G0 vs base: new 5 = q_b011 L15x1 S0->S1 473 um (167 bits the band has no free site for; 2 hops + 2 stations rows, NW/NE) + NW_b101 horizontal cut 5750 ratio 0.84 (taller cores now span the old row gap), advisory; GEOM FAIL 225 -> 225, new 0 (g0/g0_diff_d44v_ev74.txt, geom/geom_diff_d44v_ev74.txt). 26 types change. topk_store has no slot in d44v (part-30 split piece), its +35.64 stays kit-local.

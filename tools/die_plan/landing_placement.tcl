@@ -371,14 +371,14 @@ proc cland_drivers {n} {
  return $d
 }
 # AUTOBUILD-PIPE-2 10-31 (collectors) + KIT-TRIAGE-1/G4 11-01 (status): a cell with no free site in its +-2.16 um window
-# takes the window grown about the same centre x2, x4, x8 (<= +-17.28 um); still none fails closed with the same
-# error.  KV kv3_io_cor@4 (3_3 'no legal ... (status:landing_ready_ft10_i)'): the ready/fault status stages of a ring
+# takes the window grown about the same centre x2, x4, x8, x16, x32 (<= +-69.12 um); still none fails closed with the
+# same error.  QC slw_hc1 11-05: collector point inside ring band rs_n0, x8 had no site.  KV kv3_io_cor@4 (3_3 'no legal ... (status:landing_ready_ft10_i)'): the ready/fault status stages of a ring
 # share ONE plan point on the S face, inside the FIRM pin-register strip of the neighbouring bus bits, so the 4.32 um
 # window had no site; a registered status output 17 um from its pin is far inside any timing / reach budget.
 proc cland_put_grow {i rect tag kind} {
  lassign $rect ax ay bx by
  set cx [expr {($ax+$bx)/2.0}]; set cy [expr {($ay+$by)/2.0}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
- foreach g {1 2 4 8} {
+ foreach g {1 2 4 8 16 32} {
   set w [list [expr {$cx-$hx*$g}] [expr {$cy-$hy*$g}] [expr {$cx+$hx*$g}] [expr {$cy+$hy*$g}]]
   if {![catch {cland_put $i $w $tag} err]} {
    if {$g > 1} { puts "OT_CLAND $kind grow [$i getName] ($tag): window x$g (+-[format %.2f [expr {$hx*$g}]] um)" }
@@ -458,7 +458,9 @@ foreach spec $cland_optional_groups {
  foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
   if {[dict exists $cland_done $nm]} continue
-  cland_put $i $rect $tag
+  # DIE-QC-73 11-05 (QC su_c, su_l1): a single reset copy whose 4.32 um window lies in a ring band the FIRM fill took
+  # had no site and stopped global placement; same grow as status and collector cells, same fail-closed error.
+  cland_put_grow $i $rect $tag raw-copy
  }
 }
 # DIE-HEAD-13 10-28 opt-in ring_place=ff (tag suffix +ff, compose(band_ring="ff")): only the ring's SEQUENTIAL cells are

@@ -29,7 +29,15 @@ proc ot_prd_repair_targeted {drv_args} {
     lappend guards $net
   }
   puts "OT_PRD_TARGETED repair nets [dict size $keep] guards [llength $guards]: [lrange [dict keys $keep] 0 199]"
+  # (4) OT_PRD_TARGET_FANOUT=N (default off): split the loads of the SELECTED nets only, set after the selection
+  #     so other high-fanout nets are neither selected nor touched (all of them are guarded). For a violator whose
+  #     driver is already the largest size (hhp k3t net20393: BUFx24, 56 loads, routed slew 347 ps): repair_design
+  #     resized/buffered nothing there, so the slew came back after every DRT. Sign-off limits unchanged.
+  set _fo [expr {[info exists ::env(OT_PRD_TARGET_FANOUT)] ? $::env(OT_PRD_TARGET_FANOUT) : 0}]
+  if {![string is integer -strict $_fo] || $_fo < 0} {error "OT_PRD_TARGET_FANOUT invalid: $_fo"}
+  if {$_fo > 0} { set_max_fanout $_fo [current_design]; puts "OT_PRD_TARGETED max_fanout $_fo on the selected nets only" }
   try {repair_design {*}$drv_args} finally {
+    if {$_fo > 0} { set_max_fanout 1e6 [current_design] }
     foreach net $guards {$net setDoNotTouch 0}
   }
 }

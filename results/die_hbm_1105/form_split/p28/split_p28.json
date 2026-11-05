@@ -1,0 +1,223 @@
+[
+ {
+  "core": "ot_hfd_coll_q3_body_core",
+  "sha": "p28",
+  "part": "p28",
+  "glue": "ot_hfd_coll_q3_body_core__p28glue.sv",
+  "conn": "ot_hfd_coll_q3_body_core.conn.json",
+  "subs": [
+   {
+    "module": "ot_hfd_coll_q3_body_ctl",
+    "cells": 100803
+   },
+   {
+    "module": "ot_hfd_coll_q3_qcol4",
+    "cells": 42905
+   },
+   {
+    "module": "ot_hfd_coll_q3_qcol4",
+    "cells": 42905
+   },
+   {
+    "module": "ot_hfd_coll_q3_qcol4",
+    "cells": 42905
+   },
+   {
+    "module": "ot_hfd_coll_q3_qcol4",
+    "cells": 42905
+   }
+  ],
+  "added_cycles": "0 at every plan pin; seam ctl_sel_d2 (64 b, u_ctl to u_col0..3): its 2 face flops replace the uncut sink_select_p + inst_d3 stage, net 0",
+  "layout": {
+   "u_fcore.u_core.u_ctl": {
+    "xy": [
+     0.0,
+     0.0
+    ],
+    "wh": [
+     578.88,
+     259.2
+    ]
+   },
+   "u_fcore.u_core.u_col3": {
+    "xy": [
+     0.0,
+     388.8
+    ],
+    "wh": [
+     578.88,
+     69.12
+    ]
+   },
+   "u_fcore.u_core.u_col2": {
+    "xy": [
+     0.0,
+     587.52
+    ],
+    "wh": [
+     578.88,
+     69.12
+    ]
+   },
+   "u_fcore.u_core.u_col0": {
+    "xy": [
+     0.0,
+     786.24
+    ],
+    "wh": [
+     578.88,
+     69.12
+    ]
+   },
+   "u_fcore.u_core.u_col1": {
+    "xy": [
+     0.0,
+     984.96
+    ],
+    "wh": [
+     578.88,
+     69.12
+    ]
+   }
+  },
+  "boundary_sub": "u_fcore.u_core.u_ctl",
+  "hub_sub": "u_fcore.u_core.u_ctl",
+  "clock_entry": {
+   "ot_hfd_coll_q3_body_ctl": [
+    289.44,
+    129.6
+   ],
+   "ot_hfd_coll_q3_qcol4": [
+    289.44,
+    34.56
+   ]
+  },
+  "macros": {
+   "ot_hfd_coll_q3_body_ctl": [
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      20.52,
+      230.424,
+      61.584
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      20.52,
+      521.304,
+      61.584
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      83.16,
+      230.424,
+      124.224
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      83.16,
+      521.304,
+      124.224
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      145.8,
+      230.424,
+      186.864
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      145.8,
+      521.304,
+      186.864
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[0].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.04,
+      208.44,
+      107.352,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[1].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      148.392,
+      208.44,
+      214.704,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[2].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      255.744,
+      208.44,
+      322.056,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[3].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      363.096,
+      208.44,
+      429.408,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_q3.n_u_fj.u_fj.u.u_program.g_fsram.u_flow",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      470.448,
+      208.44,
+      536.76,
+      226.272
+     ]
+    }
+   ]
+  },
+  "macro_basis": "HBM-FORM-SPLIT d44v q3 body: 2 x 3 1r1w grid, W/E bands 57.6, 118.1, 57.6 (mid holds 6 macro edges, A3 class), row channels 21.6; 5 x 1rw row y=208.44 with 41 um gaps; clock entry in the mid band",
+  "keep_face": true
+ }
+]

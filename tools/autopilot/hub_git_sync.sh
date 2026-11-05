@@ -22,7 +22,7 @@
 set -uo pipefail
 C=${HUB_SYNC_COORD:-$HOME/coord}; R=${HUB_SYNC_REPO:-$HOME/OpenTallas}; B=${HUB_SYNC_BRANCH:-coord/state}
 URL=git@github.com:bojieli/OpenTallas.git
-APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|autopilot/(queue|resolved)\.tsv)$'
+APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/SIGN-RATE\.tsv|autopilot/(queue|resolved)\.tsv)$'
 say() { echo "hub-git-sync $1: $2"; }
 now() { date '+%Y-%m-%d %H:%M %Z'; }
 

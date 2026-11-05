@@ -35,3 +35,46 @@ def test_head_detects_wrapper_level():
 
 def test_not_applicable_without_helpers():
     assert not c.applies('module m; endmodule\n')
+
+
+def test_fit_v2_rebinds_children_and_is_idempotent():
+    import gzip, json
+    pk = c.ROOT / "results/rtl/s81_svc_memory_fit_1103"
+    v1 = c.ROOT / "results/rtl/s81_svc_memory_closure_1103/closed/s81p_svc_hi_dsdv_svc_rs__t1_bound.sv.gz"
+    s1 = gzip.decompress(v1.read_bytes()).decode()
+    s2 = c.fit_v2(s1)
+    assert c.fit_v2(s2) == s2
+    assert s2.count("ot_hdc_v41x_attn_staging_fit #(") == 2 and "ot_t7_land_capture_candidate " not in s2
+    rec = json.loads((pk / "closure.json").read_text())["types"]["svc_hi_dsdv_svc_rs__t1"]
+    assert c.sha(s2) == rec["after_sha256"] and c.sha(s1) == rec["v1_after_sha256"]
+    for name, (p, _) in c.CHILDREN_V2.items():
+        assert (c.ROOT / p).exists(), name
+    with pytest.raises(ValueError):
+        c.fit_v2(s1.replace("ot_t7_pvq_capture_candidate ", "ot_t7_pvq_capture_x "))
+
+
+def test_idx_fit_renames_svc_lo_reader_and_sizes_masters():
+    import gzip
+    import s81_svc_idx_fit as idx
+    pk = c.ROOT / "results/rtl/s81_svc_memory_fit_1103/closed"
+    lo = gzip.decompress((pk / "s81p_svc_lo_dsdv_svc_rs__t1_bound.sv.gz").read_bytes()).decode()
+    hi = gzip.decompress((pk / "s81p_svc_hi_dsdv_svc_rs__t1_bound.sv.gz").read_bytes()).decode()
+    src = c.ROOT / "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv"
+    files = ["/x/rtl/dsdv_idx_rg2.sv", str(src)]
+    s2, kids, macros, rep = c.idx_fit(lo, files)
+    assert s2.count("dsdv_idx_rg3_fit #(") == 1 and rep["renamed"] == 1 and set(kids) == {"dsdv_idx_fit_mem.sv", "dsdv_idx_rg3_fit.sv"}
+    assert c.idx_fit(s2, files)[0] == s2                      # idempotent
+    fit = kids["dsdv_idx_rg3_fit.sv"]
+    assert "dsdv_idx_rg2_m1k #(" not in fit and fit.count("dsdv_idx_fit_mem #(") == 6 and ".WORDS(128), .BITS(MW + 1)) u_mq" in fit
+    assert sum(macros.values()) == 13
+    assert c.idx_fit(hi, files)[1:] == ({}, {}, None)         # svc_hi: no reader, untouched
+    with pytest.raises(ValueError, match="not a proven source"):
+        idx.fit_source(src.read_text().replace("lw_h1[u] <= !sc && bt[0];", "lw_h1[u] <= !sc;"))
+
+
+def test_rebase_source_renames_tokens_and_refuses_unknown():
+    rm = dict(hash={'a' * 20: 'b' * 20}, att={'719': '720', '558': '559'}, eng={'111': '112'}, procmux={'69496': '69497'})
+    src = "P+'719_Y[0]' E+'111_Y' 'src_%s_Y' procmux_69496 ['558'] 0_Y" % ('a' * 20)
+    assert c.rebase_source(src, rm) == "P+'720_Y[0]' E+'112_Y' 'src_%s_Y' procmux_69497 ['559'] 0_Y" % ('b' * 20)
+    with pytest.raises(ValueError, match='not in the regenerated map'):
+        c.rebase_source("P+'733_Y'", rm)

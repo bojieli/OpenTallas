@@ -1418,7 +1418,7 @@
    "status": "KNOWN",
    "outline_um": [
     650.16,
-    500.04
+    535.68
    ],
    "basis": "rule",
    "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
@@ -1429,9 +1429,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "rect_um": [
       81.81,
-      155.496,
+      167.376,
       253.098,
-      233.28
+      245.16
      ],
      "orient": "R0"
     },
@@ -1451,9 +1451,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "rect_um": [
       81.81,
-      244.128,
+      267.888,
       253.098,
-      321.912
+      345.672
      ],
      "orient": "R0"
     },
@@ -1462,9 +1462,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "rect_um": [
       81.81,
-      321.96,
+      357.6,
       253.098,
-      399.744
+      435.384
      ],
      "orient": "R0"
     },
@@ -1473,9 +1473,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "rect_um": [
       397.17,
-      155.496,
+      167.376,
       568.458,
-      233.28
+      245.16
      ],
      "orient": "R0"
     },
@@ -1495,9 +1495,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "rect_um": [
       397.17,
-      244.128,
+      267.888,
       568.458,
-      321.912
+      345.672
      ],
      "orient": "R0"
     },
@@ -1506,9 +1506,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "rect_um": [
       397.17,
-      321.96,
+      357.6,
       568.458,
-      399.744
+      435.384
      ],
      "orient": "R0"
     }
@@ -5313,13 +5313,38 @@
    "recipe_macros": []
   },
   "ot_hgi_coll_tkm_m_tp192__root": {
-   "status": "UNKNOWN",
+   "status": "KNOWN",
    "outline_um": [
     319.68,
     345.6
    ],
-   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
-   "rejected": []
+   "basis": "plan_part19",
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[0].u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      72.576,
+      68.31,
+      247.32,
+      138.798
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[1].u_b",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "rect_um": [
+      72.576,
+      206.82,
+      247.32,
+      277.308
+     ]
+    }
+   ],
+   "sources": [],
+   "recipe_macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ]
   },
   "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
    "status": "UNKNOWN",
@@ -5478,11 +5503,12 @@
   "ot_hgi_sfu_core_split3__ctl": {
    "status": "NONE",
    "outline_um": [
-    669.6,
-    626.4
+    427.68,
+    453.6
    ],
    "basis": "recipe macros []",
-   "macros": []
+   "macros": [],
+   "note": " | DIE-HBM-61 d44v RE-FORM 669.6x626.4 -> 427.68x453.6 (centre kept, rects shifted)"
   },
   "ot_hgi_sfu_core_split3__opstore_a": {
    "status": "KNOWN",
@@ -7946,6 +7972,1678 @@
    ],
    "channel_rule_um": 10.8,
    "basis": "DIE-HBM-62/CUTS d44v part 8: column stacks with the d44v pair pitch 41.112 / stride 93.024; W and E macro pin channels >= 10.8"
+  },
+  "ot_pdie_serdes_rx": {
+   "status": "KNOWN",
+   "outline_um": [
+    302.4,
+    345.6
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_dly.u_dmem",
+     "master": "ot_sram_1r1w2c_64x546_m1",
+     "orient": "R0",
+     "rect_um": [
+      60.0,
+      8.4,
+      238.632,
+      89.4
+     ]
+    },
+    {
+     "name": "u_fcore.u_out.u_cmem",
+     "master": "ot_sram_1r1w_32x546_m1",
+     "orient": "R0",
+     "rect_um": [
+      60.0,
+      105.0,
+      237.768,
+      186.0
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_hidx_s3_q": {
+   "status": "KNOWN",
+   "outline_um": [
+    259.2,
+    216.0
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.gm[0].mem",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      64.8,
+      8.64,
+      237.624,
+      49.704
+     ]
+    },
+    {
+     "name": "u_fcore.gm[1].mem",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      64.8,
+      49.728,
+      237.624,
+      90.792
+     ]
+    },
+    {
+     "name": "u_fcore.gm[2].mem",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      64.8,
+      90.816,
+      237.624,
+      131.88
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_hbm_su_pg_lane1p_core": {
+   "status": "KNOWN",
+   "outline_um": [
+    440.64,
+    112.32
+   ],
+   "macros": [
+    {
+     "name": "u_core.u_bank0.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      28.944,
+      5.4,
+      123.768,
+      46.464
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      173.016,
+      5.4,
+      267.84,
+      46.464
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      317.088,
+      5.4,
+      411.912,
+      46.464
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      28.944,
+      46.488,
+      123.768,
+      87.552
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      173.016,
+      46.488,
+      267.84,
+      87.552
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      317.088,
+      46.488,
+      411.912,
+      87.552
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-REFORM-A d44v part 17: 3 x 2 grid in the 440.64 x 112.32 tile, 4 stacked in the slot; W/E bands 24.6, 49.2, 49.2, 24.6, top cell strip 20.4; clock entry in the top strip"
+  },
+  "ot_hbm_su_pg_lane_exp_x_core": {
+   "status": "KNOWN",
+   "outline_um": [
+    319.68,
+    207.36
+   ],
+   "macros": [
+    {
+     "name": "u_core.u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      20.52,
+      129.384,
+      61.584
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      190.08,
+      20.52,
+      284.904,
+      61.584
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      83.16,
+      129.384,
+      124.224
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      190.08,
+      83.16,
+      284.904,
+      124.224
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      145.8,
+      129.384,
+      186.864
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      190.08,
+      145.8,
+      284.904,
+      186.864
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-REFORM-A3 d44v part 18: 2 x 3 grid, W/E bands 30.2, 60.7, 30.4, row channels 21.576; clock entry in the first row channel"
+  },
+  "ot_hbm_su_pg_lane_full_x_core": {
+   "status": "KNOWN",
+   "outline_um": [
+    319.68,
+    207.36
+   ],
+   "macros": [
+    {
+     "name": "u_core.u_bank.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      20.52,
+      129.384,
+      61.584
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      190.08,
+      20.52,
+      284.904,
+      61.584
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      83.16,
+      129.384,
+      124.224
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      190.08,
+      83.16,
+      284.904,
+      124.224
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      34.56,
+      145.8,
+      129.384,
+      186.864
+     ]
+    },
+    {
+     "name": "u_core.u_bank.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      190.08,
+      145.8,
+      284.904,
+      186.864
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-REFORM-A3 d44v part 18: 2 x 3 grid, W/E bands 30.2, 60.7, 30.4, row channels 21.576; clock entry in the first row channel"
+  },
+  "ot_wbq_root": {
+   "status": "KNOWN",
+   "outline_um": [
+    432.0,
+    129.6
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.g_lane[0].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      15.12,
+      8.64,
+      109.944,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[1].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      120.96,
+      8.64,
+      215.784,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[2].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      226.8,
+      8.64,
+      321.624,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[3].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      332.64,
+      8.64,
+      427.464,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[4].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      15.12,
+      73.44,
+      109.944,
+      114.48
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[5].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      120.96,
+      73.44,
+      215.784,
+      114.48
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[6].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      226.8,
+      73.44,
+      321.624,
+      114.48
+     ]
+    },
+    {
+     "name": "u_fcore.g_lane[7].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      332.64,
+      73.44,
+      427.464,
+      114.48
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_hgi_sfu_opsb_group": {
+   "status": "KNOWN",
+   "outline_um": [
+    760.32,
+    233.28
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_g.g_bank[0].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      13.77,
+      186.648,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[1].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      68.58,
+      186.648,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[2].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      123.66,
+      186.648,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[3].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      178.47,
+      186.648,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[4].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      13.77,
+      373.272,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[5].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      68.58,
+      373.272,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[6].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      123.66,
+      373.272,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[7].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      178.47,
+      373.272,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[8].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      13.77,
+      559.896,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[9].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      68.58,
+      559.896,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[10].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      123.66,
+      559.896,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[11].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      178.47,
+      559.896,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[12].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      13.77,
+      746.52,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[13].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      68.58,
+      746.52,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[14].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      123.66,
+      746.52,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[15].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      178.47,
+      746.52,
+      219.534
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-FORM-SPLIT part 27: 4 x 4 grid per tile, even gaps both ways instead of 12 um columns with 0 um rows: the uncut form failed GRT-0116, 70 / 110 max overflow, macro W/E M4 pins with no H route between rows"
+  },
+  "ot_hgi_sfu_opsb_output": {
+   "status": "KNOWN",
+   "outline_um": [
+    760.32,
+    280.8
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_g.g_bank[0].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      12.15,
+      186.648,
+      53.214
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[1].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      75.06,
+      186.648,
+      116.124
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[2].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      137.97,
+      186.648,
+      179.034
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[3].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      200.88,
+      186.648,
+      241.944
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[4].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      12.15,
+      373.272,
+      53.214
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[5].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      75.06,
+      373.272,
+      116.124
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[6].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      137.97,
+      373.272,
+      179.034
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[7].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      200.88,
+      373.272,
+      241.944
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[8].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      12.15,
+      559.896,
+      53.214
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[9].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      75.06,
+      559.896,
+      116.124
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[10].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      137.97,
+      559.896,
+      179.034
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[11].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      200.88,
+      559.896,
+      241.944
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[12].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      12.15,
+      746.52,
+      53.214
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[13].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      75.06,
+      746.52,
+      116.124
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[14].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      137.97,
+      746.52,
+      179.034
+     ]
+    },
+    {
+     "name": "u_fcore.u_g.g_bank[15].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      200.88,
+      746.52,
+      241.944
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-FORM-SPLIT part 27: 4 x 4 grid per tile, even gaps both ways instead of 12 um columns with 0 um rows: the uncut form failed GRT-0116, 70 / 110 max overflow, macro W/E M4 pins with no H route between rows"
+  },
+  "ot_hgi_sfu_opsa_group0": {
+   "status": "KNOWN",
+   "outline_um": [
+    760.32,
+    233.28
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[0].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      13.77,
+      186.648,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[1].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      68.58,
+      186.648,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[2].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      123.66,
+      186.648,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[3].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      178.47,
+      186.648,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[4].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      13.77,
+      373.272,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[5].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      68.58,
+      373.272,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[6].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      123.66,
+      373.272,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[7].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      178.47,
+      373.272,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[8].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      13.77,
+      559.896,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[9].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      68.58,
+      559.896,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[10].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      123.66,
+      559.896,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[11].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      178.47,
+      559.896,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[12].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      13.77,
+      746.52,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[13].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      68.58,
+      746.52,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[14].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      123.66,
+      746.52,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[15].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      178.47,
+      746.52,
+      219.534
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-FORM-SPLIT part 27: as opstore_b; slot grows 483.84 -> 552.96 um north into free q_b113 outline for the rest tile"
+  },
+  "ot_hgi_sfu_opsa_group1": {
+   "status": "KNOWN",
+   "outline_um": [
+    760.32,
+    233.28
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[0].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      13.77,
+      186.648,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[1].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      68.58,
+      186.648,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[2].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      123.66,
+      186.648,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[3].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      13.824,
+      178.47,
+      186.648,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[4].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      13.77,
+      373.272,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[5].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      68.58,
+      373.272,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[6].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      123.66,
+      373.272,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[7].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      200.448,
+      178.47,
+      373.272,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[8].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      13.77,
+      559.896,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[9].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      68.58,
+      559.896,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[10].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      123.66,
+      559.896,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[11].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      387.072,
+      178.47,
+      559.896,
+      219.534
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[12].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      13.77,
+      746.52,
+      54.834
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[13].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      68.58,
+      746.52,
+      109.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[14].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      123.66,
+      746.52,
+      164.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_t.u_g.g_bank[15].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      573.696,
+      178.47,
+      746.52,
+      219.534
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-FORM-SPLIT part 27: as opstore_b; slot grows 483.84 -> 552.96 um north into free q_b113 outline for the rest tile"
+  },
+  "ot_svgr_top": {
+   "status": "KNOWN",
+   "outline_um": [
+    302.4,
+    639.36
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.feed.rows.g_on.g_cache[0].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      8.64,
+      17.28,
+      103.464,
+      58.32
+     ]
+    },
+    {
+     "name": "u_fcore.feed.rows.g_on.g_cache[1].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      8.64,
+      138.24,
+      103.464,
+      179.28
+     ]
+    },
+    {
+     "name": "u_fcore.feed.rows.g_on.g_cache[2].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      8.64,
+      259.2,
+      103.464,
+      300.24
+     ]
+    },
+    {
+     "name": "u_fcore.feed.rows.g_on.g_cache[3].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      8.64,
+      380.16,
+      103.464,
+      421.2
+     ]
+    },
+    {
+     "name": "u_fcore.feed.rows.g_on.g_cache[4].u_payload",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      8.64,
+      501.12,
+      103.464,
+      542.16
+     ]
+    },
+    {
+     "name": "u_fcore.feed.programme_leaf.g_m2.u_program_lo",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      116.64,
+      8.64,
+      291.384,
+      79.11
+     ]
+    },
+    {
+     "name": "u_fcore.feed.programme_leaf.g_m2.u_program_hi",
+     "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      116.64,
+      552.96,
+      291.384,
+      623.43
+     ]
+    },
+    {
+     "name": "u_fcore.issuer.g_t2.u_desc_lo",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      116.64,
+      250.56,
+      211.464,
+      291.6
+     ]
+    },
+    {
+     "name": "u_fcore.issuer.g_t2.u_desc_hi",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      116.64,
+      345.6,
+      211.464,
+      386.64
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_svgr_bk": {
+   "status": "KNOWN",
+   "outline_um": [
+    259.2,
+    207.36
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u[0].u_bank.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      43.2,
+      8.64,
+      216.024,
+      49.68
+     ]
+    },
+    {
+     "name": "u_fcore.u[1].u_bank.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      43.2,
+      56.16,
+      216.024,
+      97.2
+     ]
+    },
+    {
+     "name": "u_fcore.u[2].u_bank.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      43.2,
+      103.68,
+      216.024,
+      144.72
+     ]
+    },
+    {
+     "name": "u_fcore.u[3].u_bank.u_payload",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      43.2,
+      151.2,
+      216.024,
+      192.24
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_q2nf_rest": {
+   "status": "KNOWN",
+   "outline_um": [
+    786.24,
+    622.08
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      321.804,
+      479.496,
+      362.868
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      280.668,
+      479.496,
+      321.732
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta[1].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      262.764,
+      426.216,
+      280.596
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta[0].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      244.86,
+      426.216,
+      262.692
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      380.172,
+      479.496,
+      421.236
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      421.308,
+      479.496,
+      462.372
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      462.444,
+      479.496,
+      503.508
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      503.58,
+      479.496,
+      544.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta[2].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      544.716,
+      426.216,
+      562.548
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta[3].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      562.62,
+      426.216,
+      580.452
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_q2.n_u_fj.u_fj.u.u_program.g_fsram.u_flow",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      580.524,
+      426.216,
+      598.356
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[0].u_link.g_bank[0].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      75.552,
+      210.492,
+      246.84,
+      288.276
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[0].u_link.g_bank[1].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      75.552,
+      288.348,
+      246.84,
+      366.132
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[0].u_link.g_bank[2].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      75.552,
+      377.004,
+      246.84,
+      454.788
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[0].u_link.g_bank[3].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      75.552,
+      454.86,
+      246.84,
+      532.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[1].u_link.g_bank[0].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      539.328,
+      210.492,
+      710.616,
+      288.276
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[1].u_link.g_bank[1].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      539.328,
+      288.348,
+      710.616,
+      366.132
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[1].u_link.g_bank[2].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      539.328,
+      377.004,
+      710.616,
+      454.788
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[1].u_link.g_bank[3].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      539.328,
+      454.86,
+      710.616,
+      532.644
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_hfd_coll_q3_body_ctl": {
+   "status": "KNOWN",
+   "outline_um": [
+    578.88,
+    259.2
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      20.52,
+      230.424,
+      61.584
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      20.52,
+      521.304,
+      61.584
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      83.16,
+      230.424,
+      124.224
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      83.16,
+      521.304,
+      124.224
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      145.8,
+      230.424,
+      186.864
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      145.8,
+      521.304,
+      186.864
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[0].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.04,
+      208.44,
+      107.352,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[1].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      148.392,
+      208.44,
+      214.704,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[2].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      255.744,
+      208.44,
+      322.056,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[3].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      363.096,
+      208.44,
+      429.408,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_q3.n_u_fj.u_fj.u.u_program.g_fsram.u_flow",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      470.448,
+      208.44,
+      536.76,
+      226.272
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-FORM-SPLIT d44v q3 body: 2 x 3 1r1w grid, W/E bands 57.6, 118.1, 57.6 (mid holds 6 macro edges, A3 class), row channels 21.6; 5 x 1rw row y=208.44 with 41 um gaps; clock entry in the mid band"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"

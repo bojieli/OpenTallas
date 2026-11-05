@@ -276,7 +276,7 @@ module tb_coll_tp8_static_links #(
                 .clk(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk),
                 .clk_xfold0(clk), .clk_xfold1(clk), .clk_xfold2(clk), .clk_xfold3(clk),
                 .clk_pring0(clk),.clk_pring1(clk),.clk_sring0(clk),.clk_sring1(clk),.clk_sring2(clk),.clk_sring3(clk),.clk_sring4(clk),.clk_rring0(clk),.clk_rring1(clk),
-                .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
+                .rst_n(rst_n), .rst_pfold0(rst_n), .rst_pfold1(rst_n), .rst_pfold2(rst_n), .rst_pfold3(rst_n), .rst_xfold0(rst_n), .rst_xfold1(rst_n), .rst_xfold2(rst_n), .rst_xfold3(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
                 .cmd_v(icv[g]), .cmd_mode(imode[g]), .cmd_words(iwords[g*16 +: 16]), .cmd_tag(itag[g*TAGW +: TAGW]),
                 .in_valid(iv[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]), .in_tag(it[g*TAGW +: TAGW]),
                 .up_valid(upv[g]), .up_rec(uprec[g*PW +: PW]), .dp_valid(dpv[g]), .dp_rec(dprec[g*PW +: PW]),

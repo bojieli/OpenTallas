@@ -7516,13 +7516,16 @@
   "rtl_lint_errors": 0
  },
  "rf_kv1": {
-  "form": "registered-face wrapper (face reset = local ot_reset_sync of rst_n)",
+  "form": "registered-face wrapper (face reset = local ot_reset_sync of rst_n + 2-level registered tree)",
   "tool": "ctl_rf1_face_wrap.py",
   "source_top": "results/kv_host_regen_1/rtl/qkd_kvs_ctl/qkd_kvs_ctl.sv",
   "face_flops_in": 2018,
   "face_flops_out": 5055,
   "dead_inputs": 0,
   "cycles_in": 1,
-  "cycles_out": 1
+  "cycles_out": 1,
+  "face_reset_extra_edges": 2,
+  "face_reset_leaves": 102,
+  "face_reset_mids": 7
  }
 }

@@ -1,0 +1,9 @@
+{
+ "name": "dsdv_bk_g_rfd8",
+ "top": "dsdv_bk_g",
+ "kind": "tile",
+ "note": "DIE-S81-59 11-05: only what macro_spec_identity reads. The bk_sel__t2 instance overrides .RF with a local parameter the text cannot settle; the signed view was built with VERILOG_TOP_PARAMS RF 7. native_bb still compares the elaborated override at synth.",
+ "params": {
+  "RF": 7
+ }
+}

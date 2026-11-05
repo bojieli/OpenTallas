@@ -685,7 +685,7 @@ SCHEMA = {
                                        # core by its bound-netlist path (e.g. u_bound.u_head0_e0); inst keeps binding
                                        "physical_inst": _name, "physical_master": _name,
                                        "straps": _core_id_straps,
-                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"}, "sub_core_parent": {"type": "string", "minLength": 1}, "sub_core_leaf_pin": {"type": "string", "minLength": 1},
                                        "physical_id_alias": _physical_id_alias,
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
@@ -764,7 +764,7 @@ SCHEMA = {
                                        # edge (shore PHY): kit_contract.macro_channels accepts a 0-um gap on these sides
                                        "abut_core_edge": {"type": "array", "uniqueItems": True, "minItems": 1,
                                                           "items": {"enum": ["W", "E"]}},
-                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"}, "sub_core_parent": {"type": "string", "minLength": 1}, "sub_core_leaf_pin": {"type": "string", "minLength": 1},
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
@@ -932,7 +932,9 @@ SCHEMA = {
                                           # clock port: D_p}} (die_sta_related --kit-window-out); gen_phys
                                           # .tap_window_port_table; unlisted types / ports keep the flat W
                                           "per_port_ps": {"type": "object", "additionalProperties": {
-                                              "type": "object", "additionalProperties": _nonneg}}}},
+                                              "type": "object", "additionalProperties": _nonneg}},
+                                          # DIE-HEAD-70 11-05: free-text provenance of per_port_ps (HEAD l48ue carries it)
+                                          "per_port_note": {"type": "string"}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
@@ -1023,6 +1025,8 @@ SCHEMA = {
             # IN pin; root_part names the root partition (default: the one at the die rst_n pin).
             "release": {"enum": ["counted", "pipelined", "wavefront"]}, "relay_um": _pos, "hop_um": _pos,
             "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
+            "parent_pins": {"type": "object", "additionalProperties": {"oneOf": [_name, {"type": "array", "minItems": 2, "maxItems": 2}]}},
+            "keep_outs": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "integer"}}},
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
@@ -1288,6 +1292,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
  'properties': {'kind': {'enum': ['port', 'internal']}, 'content': {'minLength': 1, 'type': 'string'},
                 'pin': {'const': 'rst_n'}, 'source': {'minLength': 1, 'type': 'string'}},
  'required': ['kind', 'content', 'source'], 'type': 'object'}
+# DIE-QC-63/SC 11-02 (opt-in, QC SC event): explicit source parameters of a hardened leaf (the bind applies them to
+# the bound leaf through the die param_regen hook; the core build uses them as top params) + its measured std cells
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["params"] = {"type": "object", "minProperties": 1, "additionalProperties": {"type": ["integer", "string"]}}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells"] = {"type": "integer", "minimum": 0}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells_basis"] = {"type": "string"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}

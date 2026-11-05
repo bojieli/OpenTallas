@@ -1,0 +1,20 @@
+{
+"tag": "final",
+"built": 83,
+"bits": 79099,
+"flops": 656144,
+"maxcyc": 96,
+"left": {
+"NW_hub->NW_su01": 739,
+"NW_hub->NW_su21": 899,
+"NW_su21->NW_hub": 512,
+"NW_su20->NW_su31": 1,
+"NW_b113->NW_b110": 944,
+"NW_b113->NW_su31": 596,
+"NW_su31->NW_b113": 516
+},
+"base_flops": {
+"rip": 182261,
+"keep": 309850
+}
+}

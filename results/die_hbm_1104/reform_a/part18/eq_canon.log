@@ -1,0 +1,22 @@
+post_in ['g_lane_k0_g_plain_u_lane_ce_e2', 'g_lane_k0_g_plain_u_lane_ce_imm1', 'g_lane_k0_g_plain_u_lane_co_dst', 'g_lane_k0_g_plain_u_lane_co_rnd', 'g_lane_k0_g_plain_u_lane_cs_e1', 'g_lane_k0_g_plain_u_lane_cs_imm2', 'g_lane_k0_g_plain_u_lane_cs_sfu', 'g_lane_k0_g_plain_u_lane_side_y'] post_out 8 ins 49 outs 16
+MUT 0: 0 XEQ PASS checks=600000 errs=0 deep_writes=442 shallow_writes=129 fault_pulses=1355 sfu_fault_pulses=294
+MUT 1: 11 XEQ FAIL checks=600000 errs=8271 deep_writes=442 shallow_writes=129 fault_pulses=1355 sfu_fault_pulses=294
+MISMATCH g_lane_k0_g_plain_u_lane_ro_v cyc=2340 ep=1 kind=1 deep=1
+MISMATCH g_lane_k0_g_plain_u_lane_kv_waddr cyc=2341 ep=1 kind=1 deep=1
+MISMATCH g_lane_k0_g_plain_u_lane_kv_wdata cyc=2341 ep=1 kind=1 deep=1
+MUT 2: 11 XEQ FAIL checks=600000 errs=2611 deep_writes=442 shallow_writes=129 fault_pulses=1355 sfu_fault_pulses=294
+MISMATCH g_lane_k0_g_plain_u_lane_kv_wdata cyc=2341 ep=1 kind=1 deep=1
+MISMATCH g_lane_k0_g_plain_u_lane_ro_x cyc=2341 ep=1 kind=1 deep=1
+MISMATCH g_lane_k0_g_plain_u_lane_ro_x cyc=2366 ep=1 kind=1 deep=1
+MUT 3: 11 XEQ FAIL checks=600000 errs=152 deep_writes=442 shallow_writes=129 fault_pulses=1355 sfu_fault_pulses=294
+MISMATCH g_lane_k0_g_plain_u_lane_ro_x cyc=2405 ep=1 kind=1 deep=1
+MISMATCH g_lane_k0_g_plain_u_lane_ro_x cyc=2543 ep=1 kind=1 deep=1
+MISMATCH g_lane_k0_g_plain_u_lane_ro_x cyc=5165 ep=3 kind=5 deep=1
+MUT 4: 11 XEQ FAIL checks=600000 errs=1283 deep_writes=442 shallow_writes=129 fault_pulses=1355 sfu_fault_pulses=294
+MISMATCH g_lane_k0_g_plain_u_lane_kv_wdata cyc=5138 ep=3 kind=5 deep=1
+MISMATCH g_lane_k0_g_plain_u_lane_ro_x cyc=5138 ep=3 kind=5 deep=1
+MISMATCH g_lane_k0_g_plain_u_lane_ro_x cyc=5165 ep=3 kind=5 deep=1
+MUT 5: 11 XEQ FAIL checks=600000 errs=573 deep_writes=442 shallow_writes=129 fault_pulses=1355 sfu_fault_pulses=294
+MISMATCH f_sfu cyc=33134 ep=23 kind=5 deep=1
+MISMATCH fault ref cyc=33138 ep=23 kind=5 deep=1
+MISMATCH f_sfu cyc=33141 ep=23 kind=5 deep=1

@@ -1342,6 +1342,30 @@ def test_nowiden_retry_only_after_a_widened_failure(tmp_path, monkeypatch):
     assert "OT_LEC_GOLD_NOWIDEN" not in os.environ
 
 
+def test_commonshape_retry_only_after_a_failure_that_took_the_map(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_LEC_COMMON_SHAPE", raising=False)
+    seen = []
+    def run(verdict):
+        def f():
+            seen.append(os.environ.get("OT_LEC_COMMON_SHAPE"))
+            return {"verdict": verdict, "counts": {"differs": 0 if verdict == "EQUIVALENT" else 9}}
+        return f
+    bad = {"verdict": "NOT EQUIVALENT", "counts": {"differs": 521}}
+    # map refused or absent, or already proved: no second run
+    (tmp_path / "lec.log").write_text("alias array: gate mem#t (260 b) -> gold mem REFUSED: best of 2 layouts\n")
+    assert lec.commonshape_retry(dict(bad), tmp_path, run("EQUIVALENT"))["verdict"] == "NOT EQUIVALENT" and not seen
+    (tmp_path / "lec.log").write_text("alias array: gate mem#t (260 b) -> gold mem (268 b); common shape 256 b\n")
+    assert lec.commonshape_retry({"verdict": "EQUIVALENT"}, tmp_path, run("EQUIVALENT")) == {"verdict": "EQUIVALENT"} and not seen
+    # the proof without the map replaces the failure
+    r = lec.commonshape_retry(dict(bad), tmp_path, run("EQUIVALENT"))
+    assert r["verdict"] == "EQUIVALENT" and r["commonshape_retry"]["verdict"] == "NOT EQUIVALENT" and seen == ["0"]
+    assert json.loads((tmp_path / "lec.json").read_text())["verdict"] == "EQUIVALENT"
+    # a genuine difference stays NOT EQUIVALENT with the first run's points
+    r = lec.commonshape_retry(dict(bad), tmp_path, run("NOT EQUIVALENT"))
+    assert r["verdict"] == "NOT EQUIVALENT" and r["counts"]["differs"] == 521 and r["commonshape_retry"]["common_shape"] is True
+    assert "OT_LEC_COMMON_SHAPE" not in os.environ
+
+
 def test_merged_twin_is_reproposed_after_its_constant_falls():
     from types import SimpleNamespace
     L = SimpleNamespace(hyp={}, merged_choice={"ff:u.rd_bin[2]": "ff:u.rd_gray[2]"})

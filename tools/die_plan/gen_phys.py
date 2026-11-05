@@ -786,6 +786,22 @@ def edge_clock_pins(P, tn):
             for e in P.types[tn].get("clock", {}).get("edge_clocks", [])]
 
 
+# DIE-QC-75 11-05 (QC coll_s FF hold -320 ps): plain PHY-edge clocks (clk_coll, clk_serdes, clk_d2d: one die-period port with
+# no forwarded ring, unlike fclk_in_*) get one tree per region of the same size as the clk taps, balanced to the same plan
+# insertion: clock_edge_split.tcl (pre-CTS root buffers) + clock_edge_balance.tcl (POST_CTS pad).  The kit decides by sink
+# count, so a small domain is left alone.  Types without such a port generate byte-identical kits.
+# Opt-in per die (COORD 11-05): QC only.  KV kv3_sys_SD (clk_clk_phy) has the same port shape; its owner adds the die after
+# its own estimate.
+EDGE_SPLIT_DIES = {"qwen_compute"}
+
+
+def edge_split_ports(P, tn):
+    if P.die.get("name") not in EDGE_SPLIT_DIES:
+        return []
+    return [n for n, _x, _y, m in edge_clock_pins(P, tn) if m == 1 and not n.startswith("fclk_in")
+            and not edge_source_latency(P, tn, n)]
+
+
 # DIE-HEAD-21 (opt-in plan clock.edge_clocks[].source_latency_ps): a source-forwarded edge clock (count-aligned ring
 # write clock) reaches its port at the SENDER's export arrival + wire, not at 0 while its data inputs are timed on the
 # vclk insertion (DH19: 2272 ring writers -130.6 ps at source latency 0).  The measured range is a source latency on
@@ -794,6 +810,10 @@ def edge_clock_pins(P, tn):
 # both checks within a corner.  The corner itself cannot share one SDC (same reason as the vclk, ruling 9.7): TT goes
 # into constraint.sdc, FF into the core_taps_ff.sdc corner overlay (OT_CORE_TAP_CORNER_FILE, read by vclk_corner.tcl
 # ff / postcts FF gate / sign-off FF; vclk_corner.tcl tt re-applies the constraint.sdc lines).  Absent: no line.
+def edge_source_latency(P, tn, port):
+    return any(e["port"] == port and "source_latency_ps" in e for e in P.types[tn].get("clock", {}).get("edge_clocks", []))
+
+
 def edge_clock_latency(P, tn):
     """[(port, {"tt": (early, late), "ff": (early, late)}, basis)] for the type's edge clocks with source_latency_ps."""
     out = []
@@ -2857,7 +2877,8 @@ def clock_phase_tcl(P, tn, before_cts=False):
                 f"unset_clock_latency -clock clk [get_ports {{{ports}}}]\n"
                 + ("# plan clock.tap_window: restore the golden per-tap window before the tree (propagated + CRPR)\n"
                    + tap_window_tcl(P, tn) if tap_window_ps(P, tn) else "") +
-                "source /work/clock_taps.tcl\n")
+                "source /work/clock_taps.tcl\n"
+                + ("source /work/clock_edge_split.tcl\n" if edge_split_ports(P, tn) else ""))
     return ("# Pre-CTS ideal LOCAL tree insertion, matching the virtual neighbour clock budget.\n"
             "# Stage-only: pre_cts.tcl removes it before tree construction. Golden SDC stays unchanged.\n"
             f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n"
@@ -3122,9 +3143,8 @@ def _top_items(text):
 _INT_LIT = re.compile(r"[+-]?\d[\d_]*|(?:\d+\s*)?'s?[bodh]\s*[0-9a-fA-F_]+")
 
 
-def macro_instance_identity(text, mod):
-    """{param: value} of the numeric-literal overrides that EVERY `mod #(...)` instance in text gives the same value
-    (the configuration the macro's single signed view was built with).  Positional overrides -> {}."""
+def _macro_instance_overrides(text, mod):
+    """{param: [override text, one per named override]} of every `mod #(...)` instance in text.  Positional -> {}."""
     text = re.sub(r"//[^\n]*|/\*[\s\S]*?\*/", "", text)
     seen, n = {}, 0
     for m in re.finditer(r"(?<![\w$.])" + re.escape(mod) + r"\s*#\s*\(", text):
@@ -3140,6 +3160,13 @@ def macro_instance_identity(text, mod):
             if not a:
                 return {}
             seen.setdefault(a.group(1), []).append(a.group(2).strip())
+    return seen
+
+
+def macro_instance_identity(text, mod):
+    """{param: value} of the numeric-literal overrides that EVERY `mod #(...)` instance in text gives the same value
+    (the configuration the macro's single signed view was built with).  Positional overrides -> {}."""
+    seen = _macro_instance_overrides(text, mod)
     # a non-literal override (.QX(QX) inside another macro's RTL, a parent parameter) says nothing about the identity:
     # OT_SIGNED_PARAM_SERIALIZE still checks its elaborated value at synth.  Literals must all agree.
     out = {}
@@ -3147,6 +3174,25 @@ def macro_instance_identity(text, mod):
         lit = {x for x in v if _INT_LIT.fullmatch(x)}
         if len(lit) == 1:
             out[k] = lit.pop()
+    return out
+
+
+def macro_spec_identity(root, mod, text, settled):
+    """{param: value} from the core's own legacy kit spec, for parameters the staged instances override without settling a
+    literal (.SRAM_MACRO(TX_SRAM) on dsdv_idx_tx_n32, FORM-IDX 11-05): that spec is what the one signed view was built with,
+    and the instance text cannot say.  native_bb still compares the ELABORATED override with this default at synth, so a
+    parent that really differs from the view still stops; nothing here is taken on trust.  No spec: {} (as before)."""
+    if not root:
+        return {}
+    out = {}
+    for spec in sorted(Path(root).glob(f"physical/die_plan/*/cores/legacy/specs/{mod}/spec.json")):
+        try:
+            params = json.loads(spec.read_text()).get("params") or {}
+        except (OSError, ValueError):
+            continue
+        for k in _macro_instance_overrides(text, mod):
+            if k not in settled and isinstance(params.get(k), int):
+                out[k] = str(int(params[k]))
     return out
 
 
@@ -3161,7 +3207,10 @@ def _header_with_defaults(hdr, ident):
     for it in _top_items(hdr[i + 1:j]):
         # a `ifdef-selected declaration stays as written; a bare macro default (`X_DEF) takes the identity: the bb reads alone,
         # so the macro is undefined there and native_bb cannot verify it (DIE-S81-56 11-04, S81 xrt1/xrt3).
-        if "=" in it and ("`" not in it or re.fullmatch(r"\s*`\w+\s*", it.split("=", 1)[1])):
+        # So does a macro-with-fallback default (`ifdef M `M `else 0 `endif, QC qfd_dv_s5_sc2_leaf HARD_PINREG): the bb reads
+        # alone, M is undefined there, native_bb reads the fallback (DIE-QC-74 11-05, 9 SC types).
+        if "=" in it and ("`" not in it or re.fullmatch(r"\s*`\w+\s*", it.split("=", 1)[1])
+                          or re.fullmatch(r"\s*`ifdef\s+(\w+)\s+`\1\s+`else\s+[^`]*`endif\s*", it.split("=", 1)[1])):
             lhs, rhs = it.split("=", 1)
             names = re.findall(r"[A-Za-z_]\w*", lhs)
             if names and names[-1] in ident and names[-1] not in done:
@@ -3244,9 +3293,17 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
         # The RTL defaults (PINREG 0) are not the configuration the one signed view was built with; every staged
         # instance giving the same numeric literal is.  Parameters the instances disagree on keep the RTL default
         # (a non-default override still stops synth there, as before).
-        hdr, ident = _header_with_defaults(hdr, macro_instance_identity(staged, mod))
-        note = ("// signed identity from the staged instances: " + ", ".join(f"{k}={v}" for k, v in sorted(ident.items()))
-                + "\n") if ident else ""
+        lit = macro_instance_identity(staged, mod)
+        spec_id = macro_spec_identity(root, mod, staged, lit)
+        # byte-identical kits: a spec value equal to the RTL default is no change (.V(V) = 276, .MUT(X) = 0)
+        spec_id = {k: v for k, v in spec_id.items()
+                   if not re.search(r"(?<![\w$])" + re.escape(k) + r"\s*=\s*" + re.escape(v) + r"\s*(?:,|\)|//|\n)", hdr)}
+        hdr, ident = _header_with_defaults(hdr, {**lit, **spec_id})
+        from_inst = {k: v for k, v in ident.items() if k not in spec_id}
+        note = ("// signed identity from the staged instances: " + ", ".join(f"{k}={v}" for k, v in sorted(from_inst.items()))
+                + "\n") if from_inst else ""
+        if spec_id:
+            note += "// signed identity from the core's kit spec: " + ", ".join(f"{k}={v}" for k, v in sorted(spec_id.items())) + "\n"
         dst = rtl_dir / f"{mod}_bb.v"
         dst.write_text(f"// GENERATED by gen_phys.macro_param_blackboxes: header-only view of hard macro {mod}\n"
                        f"{note}(* blackbox *)\n{hdr}\nendmodule\n")
@@ -3562,6 +3619,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
+           *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
            # FLOW 10-25 F4: zero-logic register pairs onto one leaf (leaf_affinity.tcl; OT_LEAF_AFFINITY=0 = off)
            "export POST_CTS_TCL = /work/cts_post.tcl",
@@ -3575,6 +3633,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            # DIE-HEAD-59 11-03: opt-in per item (item_env, commas for spaces): keep these FSM wires in their RTL encoding
            *([f"export OT_FSM_NONE_WIRES = {os.environ['OT_FSM_NONE_WIRES'].replace(',', ' ')}"] if os.environ.get("OT_FSM_NONE_WIRES") else []),
+           # KW-FIX-13 11-05: opt-in per item (item_env, commas for spaces), e.g. -noshare where yosys share does not finish
+           *([f"export SYNTH_ARGS = {os.environ['OT_SYNTH_ARGS'].replace(',', ' ')}"] if os.environ.get("OT_SYNTH_ARGS") else []),
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
            # DIE-HEAD-59 11-03: opt-in per item (kit_wave item_env reaches gen only): hold_gate.tcl stop base
            *([f"export OT_HOLD_STOP_PS = {os.environ['OT_HOLD_STOP_PS']}"] if os.environ.get("OT_HOLD_STOP_PS") else []),
@@ -3603,6 +3663,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
+           # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
+           *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
+                                                       or tn in (P.budgets.get("core_out_land_types") or ())) else []),
            # PATH-QC-A0N59 10-25: macro kits had no BC_LIB_FILES, so the post-CTS FF hold gate stopped NOT RUN
            # ("hold gate: BC_LIB_FILES missing", native59).  Per-corner gate/sign-off lists only (implementation
            # corner unchanged): std cells of the corner + each macro's sibling corner view copied into macros/.
@@ -3668,7 +3731,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
@@ -3678,6 +3741,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                 reset_prefix += "set rt_consumer_taps_um {" + " ".join(
                     f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
             hook.write_text(reset_prefix + hook.read_text())
+    if edge_split_ports(P, tn):
+        for f in ("clock_edge_split.tcl", "clock_edge_balance.tcl"):
+            shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        hook = kd / "cts_post.tcl"
+        line = "uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]\n"
+        body = hook.read_text()
+        assert body.count(line) == 1, "cts_post.tcl: tap_balance line"
+        hook.write_text(body.replace(line, line + "uplevel #0 [list source [file join $cp_dir clock_edge_balance.tcl]]\n"))
     islands = die_islands_tcl(P, tn)
     if islands:
         (kd / "die_islands.tcl").write_text(islands)
@@ -3804,6 +3875,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
+        # DIE-HEAD-69 11-05 (COORD ruling (1), hd_tile flt_q): core-output landing flops at their pins (core_out_land.tcl)
+        shutil.copyfile(Path(__file__).with_name("core_out_land.tcl"), kd / "core_out_land.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
     ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]
     for s_ in t.get("ft_slots", []):

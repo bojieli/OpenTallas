@@ -278,6 +278,35 @@ class Apply(unittest.TestCase):
         self.assertTrue(KR.release(str(self.nK)))
         self.assertFalse((self.oK / ".keep").exists())
 
+    def test_stale_step_markers_dropped(self):
+        # COORD 11-05 class fix: a cp -al copy carries .kwrs_done.<ppid>; the old run's steps must not read as done
+        for d in (self.nK, self.oK, self.oK / "run"):
+            (d / ".kwrs_done.7").write_text("do-floorplan\ndo-place\ndo-cts\ndo-grt\n")
+        os.link(self.oK / ".kwrs_done.7", self.nK / ".kwrs_done.8")
+        rec = KR.apply(str(self.nK), str(self.oK), self.dec, self.meta)
+        self.assertEqual(sorted(os.path.basename(p) for p in rec["markers_dropped"]), [".kwrs_done.7", ".kwrs_done.8"])
+        self.assertEqual([p for p in os.listdir(self.nK) if p.startswith(".kwrs_done")], [])
+        self.assertFalse((self.nK / "run" / ".kwrs_done.7").exists())        # not carried by link_plan
+        self.assertTrue((self.oK / ".kwrs_done.7").exists())                  # source untouched
+        self.assertNotIn("run/.kwrs_done.7", {x["rel"] for x in rec["links"]})
+
+    def test_clean_cli_after_cp_al(self):
+        cp = Path(self.d) / "copy"
+        shutil.copytree(self.oK, cp, copy_function=os.link)
+        (self.oK / ".kwrs_done.12").write_text("do-grt\n")
+        os.link(self.oK / ".kwrs_done.12", cp / ".kwrs_done.12")
+        (cp / "run" / ".kwrs_done.12").write_text("do-cts\n")
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            self.assertEqual(KR.main(["clean", str(cp)]), 0)
+        self.assertIn("KW_RESUME_CLEAN", buf.getvalue())
+        self.assertEqual(sorted(json.loads(buf.getvalue().split(" ", 1)[1])["removed"]),
+                         sorted([str(cp / ".kwrs_done.12"), str(cp / "run" / ".kwrs_done.12")]))
+        self.assertTrue((self.oK / ".kwrs_done.12").exists())
+        self.assertEqual(KR.drop_markers(str(cp)), [])
+
     def test_existing_keep_not_removed(self):
         (self.oK / ".keep").write_text("owner keep\n")
         KR.apply(str(self.nK), str(self.oK), self.dec, self.meta)

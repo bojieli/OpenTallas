@@ -1,0 +1,280 @@
+[
+ {
+  "core": "ot_hfd_coll_q2n2_body_core",
+  "sha": "p33",
+  "part": "p33",
+  "glue": "ot_hfd_coll_q2n2_body_core__p33glue.sv",
+  "conn": "ot_hfd_coll_q2n2_body_core.conn.json",
+  "subs": [
+   {
+    "module": "ot_q2nf_rest",
+    "cells": 125000
+   },
+   {
+    "module": "ot_q2nf_qout",
+    "cells": 100000
+   }
+  ],
+  "added_cycles": "0 data cycles: the kit face flops are the flat qslots registers; select_fault / unavailable_fault +2 edges (sticky fault only). cycles/q2n2_split.tsv",
+  "keep_face": true,
+  "sub_face": {
+   "ot_q2nf_qout": {
+    "pin_d": "N",
+    "captured": "S",
+    "cap_slot": "S",
+    "sink_slot": "S",
+    "sink_select": "S",
+    "lk_d": "S",
+    "select_fault": "S",
+    "unavailable_fault": "S"
+   }
+  },
+  "boundary_sub": "u_fcore.u_core.u_r",
+  "hub_sub": "u_fcore.u_core.u_r",
+  "layout": {
+   "u_fcore.u_core.u_r": {
+    "xy": [
+     0.0,
+     0.0
+    ],
+    "wh": [
+     786.24,
+     622.08
+    ]
+   },
+   "u_fcore.u_core.u_q": {
+    "xy": [
+     0.0,
+     630.72
+    ],
+    "wh": [
+     786.24,
+     112.32
+    ]
+   }
+  },
+  "clock_entry": {
+   "ot_q2nf_rest": [
+    747.36,
+    311.04
+   ],
+   "ot_q2nf_qout": [
+    393.12,
+    56.16
+   ]
+  },
+  "macros": {
+   "ot_q2nf_rest": [
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      321.804,
+      479.496,
+      362.868
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      280.668,
+      479.496,
+      321.732
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta[1].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      262.764,
+      426.216,
+      280.596
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta[0].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      244.86,
+      426.216,
+      262.692
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      380.172,
+      479.496,
+      421.236
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      421.308,
+      479.496,
+      462.372
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      462.444,
+      479.496,
+      503.508
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      306.672,
+      503.58,
+      479.496,
+      544.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta[2].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      544.716,
+      426.216,
+      562.548
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta[3].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      562.62,
+      426.216,
+      580.452
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_q2.n_u_fj.u_fj.u.u_program.g_fsram.u_flow",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      359.904,
+      580.524,
+      426.216,
+      598.356
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[0].u_link.g_bank[0].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      75.552,
+      210.492,
+      246.84,
+      288.276
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[0].u_link.g_bank[1].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      75.552,
+      288.348,
+      246.84,
+      366.132
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[0].u_link.g_bank[2].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      75.552,
+      377.004,
+      246.84,
+      454.788
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[0].u_link.g_bank[3].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      75.552,
+      454.86,
+      246.84,
+      532.644
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[1].u_link.g_bank[0].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      539.328,
+      210.492,
+      710.616,
+      288.276
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[1].u_link.g_bank[1].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      539.328,
+      288.348,
+      710.616,
+      366.132
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[1].u_link.g_bank[2].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      539.328,
+      377.004,
+      710.616,
+      454.788
+     ]
+    },
+    {
+     "name": "u_fcore.u_x.u_body.g_link[1].u_link.g_bank[3].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      539.328,
+      454.86,
+      710.616,
+      532.644
+     ]
+    }
+   ]
+  }
+ }
+]

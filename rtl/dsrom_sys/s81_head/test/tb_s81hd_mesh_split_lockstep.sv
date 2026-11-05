@@ -4,8 +4,8 @@
 // SerDes pairs cross-connected, impaired beats on lane b both ways, a directed out-of-order m_tx beat on X):
 //   R: X = unsplit core fed m_tx_i delayed 2 edges, Y = unsplit
 //   S: X = split (a + b) fed m_tx_i undelayed,       Y = unsplit
-// Checked every edge: S.X.coll_oa/coll_ob == R.X.coll_oa/coll_ob, S.Y.* == R.Y.*, S.X.m_rx_o(t) == R.X.m_rx_o(t-2)
-// (the declared +2/+2 seam latency), and the traffic is not vacuous (both copies of >= NREC records reach S.X's ctl).
+// Checked every edge: S.X.coll_oa/coll_ob == R.X.coll_oa/coll_ob, S.Y.* == R.Y.*, S.X.m_rx_o(t) == R.X.m_rx_o(t-1)
+// (declared +2/+2 seam latency, less the +1 RX stage the core gained in DIE-HEAD-65; split not in the plan), and the traffic is not vacuous (both copies of >= NREC records reach S.X's ctl).
 // Phase 3 (fault paths, so that every seam bit toggles): at P2+600 Y sends one record whose frame bit 552 is forced
 // low in both Y's (a non-canonical record on both X lanes: ncan fault, the can_b seam term); [P2+1000, P2+1040) the
 // SerDes fault bit of X lane b and [P2+1200, P2+1240) of X lane a are raised in both worlds (lane flt seam bits); a
@@ -66,7 +66,7 @@ module tb_s81hd_mesh_split_lockstep;
         if (soa[0] !== roa[0]) begin ea = ea + 1; if (first < 0) first = c; end
         if (sob[0] !== rob[0]) begin eb = eb + 1; if (first < 0) first = c; end
         if (soa[1] !== roa[1] || sob[1] !== rob[1] || smrx[1] !== rmrx[1]) begin ey = ey + 1; if (first < 0) first = c; end
-        if (c > 2 && smrx[0] !== rm2) begin em = em + 1; if (first < 0) first = c; end
+        if (c > 2 && smrx[0] !== rm1) begin em = em + 1; if (first < 0) first = c; end
         if (smrx[0] != 0) nw = nw + 1;
         rm2 = rm1; rm1 = rmrx[0];
         if (rst_n) begin if (va) na = na + 1; if (vb) nb = nb + 1; end

@@ -85,3 +85,38 @@ def test_ctl_e_bit_sites_hops(tmp_path):
     c1, c2 = s[0][0][0] + w / 2, s[1][0][0] + w / 2
     assert c1 - 6.0 <= 400.0 and c2 - c1 <= 400.0 and 855.36 - c2 < 60.0
     assert len({tuple(p) for p in s[0]}) == 65                                       # one site per bit
+
+
+def test_rrl_from_rtl_reads_raw_relays_and_exports(tmp_path):
+    f = tmp_path / "w.sv"
+    f.write_text("    ot_dp_rrelay u_rrl_0 (.clk(clk), .d(rst_root_n), .q(rst_rl_0));  // raw pad tap 2 depth 1 @ (453.1, 17.3)\n"
+                 "    ot_dp_rgate u_rrl_3 (.clk(clk), .d(rst_rl_2), .run(r), .q(rst_n_t2));  // gated pad tap 2 depth 4 @ (453.1, 17.3)\n"
+                 "    ot_dp_rrelay u_rrl_6 (.clk(clk), .d(rst_rl_2), .q(rr_t28));  // raw tap tap 28 depth 4 @ (150.7, 8.6)\n"
+                 "    assign rst_start_raw_1 = rr_t28;\n")
+    assert D.rrl_from_rtl(f) == [("rst_rl_0", 1, 453.1, 17.3, 0), ("rr_t28", 4, 150.7, 8.6, 1)]
+
+
+def test_snap_moves_only_sites_on_macros_to_nearest_clear_point():
+    rects = [[100.0, 100.0, 134.6, 141.4], [100.0, 151.84, 134.6, 193.2]]             # two SRAMs, 10.44 um channel
+    assert D.snap_point((50.0, 50.0), rects) == (50.0, 50.0)                            # clear: untouched
+    p = D.snap_point((120.0, 120.0), rects)
+    assert D.site_clear(p, rects) and p != (120.0, 120.0)
+    q = D.snap_point((120.0, 145.0), rects)                                             # on the channel, band does not fit?
+    assert D.site_clear(q, rects)
+    assert abs(q[0] - 120.0) + abs(q[1] - 145.0) < 4.0                                  # the channel holds it
+
+
+def test_snap_clock_sites_keeps_raw_and_depth(setup):
+    T, coll = fake_type()
+    add, _ = D.type_delta("t", T, coll)
+    T["clock"].update(add)
+    T["outline_um"] = [1296.0, 700.0]
+    before = json.loads(json.dumps(T["clock"]))
+    site = before["landing_reader_start"]["branches"]["a_i"]["stages"][0]["xy_um"]
+    rects = [[site[0] - 20, site[1] - 20, site[0] + 20, site[1] + 20]]
+    moved = D.snap_clock_sites(T, rects)
+    assert moved and all(D.site_clear(n, rects) for _, n in moved)
+    st = T["clock"]["landing_reader_start"]["branches"]["a_i"]["stages"][0]
+    assert st["xy_um"] != site and st["raw_reset"] == before["landing_reader_start"]["branches"]["a_i"]["stages"][0]["raw_reset"]
+    assert T["clock"]["landing_reader_start"]["depth"] == before["landing_reader_start"]["depth"]
+    assert all(h <= D.HMAX + 40 for _, h in D.site_hops(T, coll))

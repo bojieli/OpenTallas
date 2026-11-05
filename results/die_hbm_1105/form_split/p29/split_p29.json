@@ -1,0 +1,87 @@
+[
+ {
+  "core": "ot_hgi_coll_gq_issue",
+  "sha": "p29",
+  "part": "p29",
+  "glue": "ot_hgi_coll_gq_issue__p29glue.sv",
+  "conn": "gq_issue.conn.json",
+  "subs": [
+   {
+    "module": "ot_hgi_coll_gqi_issue",
+    "cells": 42000
+   },
+   {
+    "module": "ot_hgi_gq_aq_tile",
+    "cells": 57000
+   },
+   {
+    "module": "ot_hgi_gq_aq_tile",
+    "cells": 57000
+   }
+  ],
+  "added_cycles": "0 at every plan pin and in the quantiser path: the issue out face and tile in face replace aq_x and S0, the tile out face and issue in face replace S11 and aq_q_q",
+  "layout": {
+   "u_fcore.u_core.u_i": {
+    "xy": [
+     0.0,
+     0.0
+    ],
+    "wh": [
+     172.8,
+     233.28
+    ]
+   },
+   "u_fcore.u_core.u_a0": {
+    "xy": [
+     172.8,
+     0.0
+    ],
+    "wh": [
+     155.52,
+     112.32
+    ]
+   },
+   "u_fcore.u_core.u_a1": {
+    "xy": [
+     172.8,
+     120.96
+    ],
+    "wh": [
+     155.52,
+     112.32
+    ],
+    "orient": "MX"
+   }
+  },
+  "boundary_sub": "u_fcore.u_core.u_i",
+  "hub_sub": "u_fcore.u_core.u_i",
+  "sub_face": {
+   "ot_hgi_gq_aq_tile": {
+    "x": "W",
+    "v": "W",
+    "q": "S",
+    "e": "S",
+    "vo": "S",
+    "fault": "S"
+   },
+   "ot_hgi_coll_gqi_issue": {
+    "aq0_x": "E",
+    "aq1_x": "E",
+    "aq0_v": "E",
+    "aq1_v": "E",
+    "aq0_q": "S",
+    "aq0_e": "S",
+    "aq0_vo": "S",
+    "aq0_fault": "S",
+    "aq1_q": "N",
+    "aq1_e": "N",
+    "aq1_vo": "N",
+    "aq1_fault": "N",
+    "ra_lp_data": "N"
+   }
+  },
+  "clock_entry": {},
+  "macros": {},
+  "macro_basis": "no macros"
+ }
+]

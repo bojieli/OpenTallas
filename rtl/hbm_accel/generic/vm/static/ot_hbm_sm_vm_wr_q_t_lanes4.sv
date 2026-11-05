@@ -64,12 +64,18 @@ module ot_hbm_sm_vm_wr_q_t_lanes4 #(parameter integer DEPTH = 4, parameter integ
     always @(posedge clk or negedge rst_n)
         if (!rst_n) rst_q <= 1'b0;
         else        rst_q <= 1'b1;
+    // RE-FORM RF2 11-03: command target clears from its own second stage, so its async-clear recovery does not hang on the
+    // whole-core rst_q tree (a4 TT -122 ps rst_q -> u_tgt.cyc[4]). Release one cycle later; the hub rs2 chain still releases after it.
+    reg rst_tgt_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) rst_tgt_q <= 1'b0;
+        else        rst_tgt_q <= rst_q;
     wire cmd_v, w_busy, w_fault;
     wire [26:0] cmd;
     wire t_rce; wire [6:0] t_ra, t_wa; wire [0:0] t_wce; wire [255:0] t_wd, t_rd;
     ot_static_cmd_target_core #(.TARGET(8'hff), .MODE(1), .CW(27), .RELF(0), .NA(1), .NF(1),
         .MUT((MUT == 4) ? 1 : 0), .TGT_PIN(1)) u_tgt (
-        .clk(clk), .rst_n(rst_q), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
+        .clk(clk), .rst_n(rst_tgt_q), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .tgt_active(w_busy), .tgt_fault(w_fault),
         .a_we(), .a_addr(), .a_data(), .b_we(), .b_addr(), .b_data(), .run_v(), .run_base(), .run_count(),

@@ -2,12 +2,18 @@
 // registered-face wrapper of qkd_kvs_ctl__rf1_inner; one private face flop per port bit (in 2018, out 5055),
 // +1 edge per crossing direction; face flops reset on face_rst_n (local ot_reset_sync of rst_n: async assert, sync
 // release, so the rst_n PIN lands on 2 sync flops, never on the ~7k face flops -- RF-KV1c 11-03: ctlr routed TT
-// -70 ps was only the rst_n input -> face flop recovery); clocks/resets straight; dead input bits unregistered.  Do not edit.
+// -70 ps was only the rst_n input -> face flop recovery); DIE-KV-67 11-04: ctls routed TT -87 ps was that sync flop
+// -> face flop recovery, so face_rst_n reaches the flops through two registered levels, <= 128 flops per leaf,
+// release +2 edges, every face flop on the same edge; clocks/resets straight; dead input bits unregistered.  Do not edit.
 `timescale 1ns/1ps
 `default_nettype none
 // single-bit kept face flop (keep_hierarchy: opt_merge / constant folding cannot share or fold a face bit)
 (* keep_hierarchy *) module ot_ctl_face_dff(input wire ck, input wire rst_n, input wire d, output reg q);
   always @(posedge ck or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+// one registered copy of the face reset (keep_hierarchy: opt_merge cannot fold the tree back into one flop)
+(* keep_hierarchy *) module ot_ctl_face_rst_relay(input wire ck, input wire d, output reg q);
+  always @(posedge ck) q <= d;
 endmodule
 module qkd_kvs_ctl (
     output wire [1117:0] o_hroot_WS,
@@ -74,211 +80,219 @@ module qkd_kvs_ctl (
 );
   wire face_rst_n;
   ot_reset_sync #(.ASYNC_STAGES(2)) u_face_rst (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(face_rst_n));
+  wire [6:0] face_rst_mid;
+  wire [101:0] face_rst_leaf;
+  for (genvar m = 0; m < 7; m = m + 1) begin : g_frm
+    (* keep *) ot_ctl_face_rst_relay u_r (.ck(ck), .d(face_rst_n), .q(face_rst_mid[m]));
+  end
+  for (genvar l = 0; l < 102; l = l + 1) begin : g_frl
+    (* keep *) ot_ctl_face_rst_relay u_r (.ck(ck), .d(face_rst_mid[l / 16]), .q(face_rst_leaf[l]));
+  end
   wire [1117:0] o_hroot_WS__i;
   for (genvar b = 0; b <= 1117; b = b + 1) begin : go_o_hroot_WS
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(o_hroot_WS__i[b]), .q(o_hroot_WS[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[0 + (b - 0) / 128]), .d(o_hroot_WS__i[b]), .q(o_hroot_WS[b]));
   end
   wire [1117:0] o_hroot_WN__i;
   for (genvar b = 0; b <= 1117; b = b + 1) begin : go_o_hroot_WN
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(o_hroot_WN__i[b]), .q(o_hroot_WN[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[9 + (b - 0) / 128]), .d(o_hroot_WN__i[b]), .q(o_hroot_WN[b]));
   end
   wire [143:0] i_hroot_WS__i;
   for (genvar b = 0; b <= 143; b = b + 1) begin : gi_i_hroot_WS
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(i_hroot_WS[b]), .q(i_hroot_WS__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[18 + (b - 0) / 128]), .d(i_hroot_WS[b]), .q(i_hroot_WS__i[b]));
   end
   wire [143:0] i_hroot_WN__i;
   for (genvar b = 0; b <= 143; b = b + 1) begin : gi_i_hroot_WN
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(i_hroot_WN[b]), .q(i_hroot_WN__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[20 + (b - 0) / 128]), .d(i_hroot_WN[b]), .q(i_hroot_WN__i[b]));
   end
   wire [1117:0] o_hroot_ES__i;
   for (genvar b = 0; b <= 1117; b = b + 1) begin : go_o_hroot_ES
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(o_hroot_ES__i[b]), .q(o_hroot_ES[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[22 + (b - 0) / 128]), .d(o_hroot_ES__i[b]), .q(o_hroot_ES[b]));
   end
   wire [1117:0] o_hroot_EN__i;
   for (genvar b = 0; b <= 1117; b = b + 1) begin : go_o_hroot_EN
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(o_hroot_EN__i[b]), .q(o_hroot_EN[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[31 + (b - 0) / 128]), .d(o_hroot_EN__i[b]), .q(o_hroot_EN[b]));
   end
   wire [143:0] i_hroot_EN__i;
   for (genvar b = 0; b <= 143; b = b + 1) begin : gi_i_hroot_EN
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(i_hroot_EN[b]), .q(i_hroot_EN__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[40 + (b - 0) / 128]), .d(i_hroot_EN[b]), .q(i_hroot_EN__i[b]));
   end
   wire [143:0] i_hroot_ES__i;
   for (genvar b = 0; b <= 143; b = b + 1) begin : gi_i_hroot_ES
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(i_hroot_ES[b]), .q(i_hroot_ES__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[42 + (b - 0) / 128]), .d(i_hroot_ES[b]), .q(i_hroot_ES__i[b]));
   end
   wire [292:0] embgw__bw__i;
   for (genvar b = 0; b <= 292; b = b + 1) begin : gi_embgw__bw
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(embgw__bw[b]), .q(embgw__bw__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[44 + (b - 0) / 128]), .d(embgw__bw[b]), .q(embgw__bw__i[b]));
   end
   wire [72:0] o_emb__i;
   for (genvar b = 0; b <= 72; b = b + 1) begin : go_o_emb
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(o_emb__i[b]), .q(o_emb[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[47 + (b - 0) / 128]), .d(o_emb__i[b]), .q(o_emb[b]));
   end
   wire [173:0] d2d__svc__i;
   for (genvar b = 0; b <= 173; b = b + 1) begin : gi_d2d__svc
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(d2d__svc[b]), .q(d2d__svc__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[48 + (b - 0) / 128]), .d(d2d__svc[b]), .q(d2d__svc__i[b]));
   end
   wire [521:0] d2d__srx__i;
   for (genvar b = 0; b <= 521; b = b + 1) begin : gi_d2d__srx
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(d2d__srx[b]), .q(d2d__srx__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[50 + (b - 0) / 128]), .d(d2d__srx[b]), .q(d2d__srx__i[b]));
   end
   wire [11:0] d2d__skw__i;
   for (genvar b = 0; b <= 11; b = b + 1) begin : gi_d2d__skw
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(d2d__skw[b]), .q(d2d__skw__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[55 + (b - 0) / 128]), .d(d2d__skw[b]), .q(d2d__skw__i[b]));
   end
   wire [58:0] d2d__kvn_word_identity__i;
   for (genvar b = 0; b <= 58; b = b + 1) begin : gi_d2d__kvn_word_identity
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(d2d__kvn_word_identity[b]), .q(d2d__kvn_word_identity__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[56 + (b - 0) / 128]), .d(d2d__kvn_word_identity[b]), .q(d2d__kvn_word_identity__i[b]));
   end
   wire [108:0] o_attn__i;
   for (genvar b = 0; b <= 108; b = b + 1) begin : go_o_attn
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(o_attn__i[b]), .q(o_attn[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[57 + (b - 0) / 128]), .d(o_attn__i[b]), .q(o_attn[b]));
   end
   wire cf_root__fault__i;
-  (* keep *) ot_ctl_face_dff uo_cf_root__fault (.ck(ck), .rst_n(face_rst_n), .d(cf_root__fault__i), .q(cf_root__fault));
+  (* keep *) ot_ctl_face_dff uo_cf_root__fault (.ck(ck), .rst_n(face_rst_leaf[58]), .d(cf_root__fault__i), .q(cf_root__fault));
   wire [1:0] chg__i;
   for (genvar b = 0; b <= 1; b = b + 1) begin : gi_chg
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(chg[b]), .q(chg__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[59 + (b - 0) / 128]), .d(chg[b]), .q(chg__i[b]));
   end
   wire [58:0] cht__i;
   for (genvar b = 0; b <= 58; b = b + 1) begin : gi_cht
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(cht[b]), .q(cht__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[60 + (b - 0) / 128]), .d(cht[b]), .q(cht__i[b]));
   end
   wire [20:0] lp__i;
   for (genvar b = 0; b <= 20; b = b + 1) begin : go_lp
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(lp__i[b]), .q(lp[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[61 + (b - 0) / 128]), .d(lp__i[b]), .q(lp[b]));
   end
   wire [1:0] d2d__kvn_word_generation__i;
   for (genvar b = 0; b <= 1; b = b + 1) begin : gi_d2d__kvn_word_generation
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(d2d__kvn_word_generation[b]), .q(d2d__kvn_word_generation__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[62 + (b - 0) / 128]), .d(d2d__kvn_word_generation[b]), .q(d2d__kvn_word_generation__i[b]));
   end
   wire [63:0] boot__boot_image_digest__i;
   for (genvar b = 0; b <= 63; b = b + 1) begin : gi_boot__boot_image_digest
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(boot__boot_image_digest[b]), .q(boot__boot_image_digest__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[63 + (b - 0) / 128]), .d(boot__boot_image_digest[b]), .q(boot__boot_image_digest__i[b]));
   end
   wire [15:0] boot__boot_image_epoch__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : gi_boot__boot_image_epoch
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(boot__boot_image_epoch[b]), .q(boot__boot_image_epoch__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[64 + (b - 0) / 128]), .d(boot__boot_image_epoch[b]), .q(boot__boot_image_epoch__i[b]));
   end
   wire [142:0] boot__boot_pr__i;
   for (genvar b = 0; b <= 142; b = b + 1) begin : gi_boot__boot_pr
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(boot__boot_pr[b]), .q(boot__boot_pr__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[65 + (b - 0) / 128]), .d(boot__boot_pr[b]), .q(boot__boot_pr__i[b]));
   end
   wire [5:0] boot__link_cfg_addr__i;
   for (genvar b = 0; b <= 5; b = b + 1) begin : go_boot__link_cfg_addr
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(boot__link_cfg_addr__i[b]), .q(boot__link_cfg_addr[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[67 + (b - 0) / 128]), .d(boot__link_cfg_addr__i[b]), .q(boot__link_cfg_addr[b]));
   end
   wire [31:0] boot__link_cfg_data__i;
   for (genvar b = 0; b <= 31; b = b + 1) begin : go_boot__link_cfg_data
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(boot__link_cfg_data__i[b]), .q(boot__link_cfg_data[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[68 + (b - 0) / 128]), .d(boot__link_cfg_data__i[b]), .q(boot__link_cfg_data[b]));
   end
   wire boot__link_cfg_rx_we__i;
-  (* keep *) ot_ctl_face_dff uo_boot__link_cfg_rx_we (.ck(ck), .rst_n(face_rst_n), .d(boot__link_cfg_rx_we__i), .q(boot__link_cfg_rx_we));
+  (* keep *) ot_ctl_face_dff uo_boot__link_cfg_rx_we (.ck(ck), .rst_n(face_rst_leaf[69]), .d(boot__link_cfg_rx_we__i), .q(boot__link_cfg_rx_we));
   wire boot__link_cfg_tx_we__i;
-  (* keep *) ot_ctl_face_dff uo_boot__link_cfg_tx_we (.ck(ck), .rst_n(face_rst_n), .d(boot__link_cfg_tx_we__i), .q(boot__link_cfg_tx_we));
+  (* keep *) ot_ctl_face_dff uo_boot__link_cfg_tx_we (.ck(ck), .rst_n(face_rst_leaf[70]), .d(boot__link_cfg_tx_we__i), .q(boot__link_cfg_tx_we));
   wire boot__setup_ready__i;
-  (* keep *) ot_ctl_face_dff uo_boot__setup_ready (.ck(ck), .rst_n(face_rst_n), .d(boot__setup_ready__i), .q(boot__setup_ready));
+  (* keep *) ot_ctl_face_dff uo_boot__setup_ready (.ck(ck), .rst_n(face_rst_leaf[71]), .d(boot__setup_ready__i), .q(boot__setup_ready));
   wire boot__boot_image_fault__i;
-  (* keep *) ot_ctl_face_dff ui_boot__boot_image_fault_s (.ck(ck), .rst_n(face_rst_n), .d(boot__boot_image_fault), .q(boot__boot_image_fault__i));
+  (* keep *) ot_ctl_face_dff ui_boot__boot_image_fault_s (.ck(ck), .rst_n(face_rst_leaf[72]), .d(boot__boot_image_fault), .q(boot__boot_image_fault__i));
   wire boot__boot_image_ready__i;
-  (* keep *) ot_ctl_face_dff ui_boot__boot_image_ready_s (.ck(ck), .rst_n(face_rst_n), .d(boot__boot_image_ready), .q(boot__boot_image_ready__i));
+  (* keep *) ot_ctl_face_dff ui_boot__boot_image_ready_s (.ck(ck), .rst_n(face_rst_leaf[73]), .d(boot__boot_image_ready), .q(boot__boot_image_ready__i));
   wire [3:0] boot__boot_image_target__i;
   for (genvar b = 0; b <= 3; b = b + 1) begin : gi_boot__boot_image_target
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(boot__boot_image_target[b]), .q(boot__boot_image_target__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[74 + (b - 0) / 128]), .d(boot__boot_image_target[b]), .q(boot__boot_image_target__i[b]));
   end
   wire [60:0] kvi__i;
   for (genvar b = 0; b <= 60; b = b + 1) begin : go_kvi
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(kvi__i[b]), .q(kvi[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[75 + (b - 0) / 128]), .d(kvi__i[b]), .q(kvi[b]));
   end
   wire [81:0] auth__i;
   for (genvar b = 0; b <= 81; b = b + 1) begin : gi_auth
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(auth[b]), .q(auth__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[76 + (b - 0) / 128]), .d(auth[b]), .q(auth__i[b]));
   end
   wire oobs__host_launch_quiet__i;
-  (* keep *) ot_ctl_face_dff ui_oobs__host_launch_quiet_s (.ck(ck), .rst_n(face_rst_n), .d(oobs__host_launch_quiet), .q(oobs__host_launch_quiet__i));
+  (* keep *) ot_ctl_face_dff ui_oobs__host_launch_quiet_s (.ck(ck), .rst_n(face_rst_leaf[77]), .d(oobs__host_launch_quiet), .q(oobs__host_launch_quiet__i));
   wire [5:0] oobs__host_upstream_quiet__i;
   for (genvar b = 0; b <= 5; b = b + 1) begin : gi_oobs__host_upstream_quiet
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(oobs__host_upstream_quiet[b]), .q(oobs__host_upstream_quiet__i[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[78 + (b - 0) / 128]), .d(oobs__host_upstream_quiet[b]), .q(oobs__host_upstream_quiet__i[b]));
   end
   wire oobs__kv_active_local__i;
-  (* keep *) ot_ctl_face_dff uo_oobs__kv_active_local (.ck(ck), .rst_n(face_rst_n), .d(oobs__kv_active_local__i), .q(oobs__kv_active_local));
+  (* keep *) ot_ctl_face_dff uo_oobs__kv_active_local (.ck(ck), .rst_n(face_rst_leaf[79]), .d(oobs__kv_active_local__i), .q(oobs__kv_active_local));
   wire oobs__kv_drained_local__i;
-  (* keep *) ot_ctl_face_dff uo_oobs__kv_drained_local (.ck(ck), .rst_n(face_rst_n), .d(oobs__kv_drained_local__i), .q(oobs__kv_drained_local));
+  (* keep *) ot_ctl_face_dff uo_oobs__kv_drained_local (.ck(ck), .rst_n(face_rst_leaf[80]), .d(oobs__kv_drained_local__i), .q(oobs__kv_drained_local));
   wire oobs__kv_flush_local__i;
-  (* keep *) ot_ctl_face_dff uo_oobs__kv_flush_local (.ck(ck), .rst_n(face_rst_n), .d(oobs__kv_flush_local__i), .q(oobs__kv_flush_local));
+  (* keep *) ot_ctl_face_dff uo_oobs__kv_flush_local (.ck(ck), .rst_n(face_rst_leaf[81]), .d(oobs__kv_flush_local__i), .q(oobs__kv_flush_local));
   wire own__native_reserved__i;
-  (* keep *) ot_ctl_face_dff uo_own__native_reserved (.ck(ck), .rst_n(face_rst_n), .d(own__native_reserved__i), .q(own__native_reserved));
+  (* keep *) ot_ctl_face_dff uo_own__native_reserved (.ck(ck), .rst_n(face_rst_leaf[82]), .d(own__native_reserved__i), .q(own__native_reserved));
   wire own__ownership_valid__i;
-  (* keep *) ot_ctl_face_dff uo_own__ownership_valid (.ck(ck), .rst_n(face_rst_n), .d(own__ownership_valid__i), .q(own__ownership_valid));
+  (* keep *) ot_ctl_face_dff uo_own__ownership_valid (.ck(ck), .rst_n(face_rst_leaf[83]), .d(own__ownership_valid__i), .q(own__ownership_valid));
   wire st__i;
-  (* keep *) ot_ctl_face_dff ui_st_s (.ck(ck), .rst_n(face_rst_n), .d(st), .q(st__i));
+  (* keep *) ot_ctl_face_dff ui_st_s (.ck(ck), .rst_n(face_rst_leaf[84]), .d(st), .q(st__i));
   wire [15:0] dcfg__age_pv__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_pv
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_pv__i[b]), .q(dcfg__age_pv[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[85 + (b - 0) / 128]), .d(dcfg__age_pv__i[b]), .q(dcfg__age_pv[b]));
   end
   wire [15:0] dcfg__age_vport__0_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__0_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__0_16__i[b]), .q(dcfg__age_vport__0_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[86 + (b - 0) / 128]), .d(dcfg__age_vport__0_16__i[b]), .q(dcfg__age_vport__0_16[b]));
   end
   wire [15:0] dcfg__age_vport__112_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__112_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__112_16__i[b]), .q(dcfg__age_vport__112_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[87 + (b - 0) / 128]), .d(dcfg__age_vport__112_16__i[b]), .q(dcfg__age_vport__112_16[b]));
   end
   wire [15:0] dcfg__age_vport__128_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__128_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__128_16__i[b]), .q(dcfg__age_vport__128_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[88 + (b - 0) / 128]), .d(dcfg__age_vport__128_16__i[b]), .q(dcfg__age_vport__128_16[b]));
   end
   wire [15:0] dcfg__age_vport__144_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__144_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__144_16__i[b]), .q(dcfg__age_vport__144_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[89 + (b - 0) / 128]), .d(dcfg__age_vport__144_16__i[b]), .q(dcfg__age_vport__144_16[b]));
   end
   wire [15:0] dcfg__age_vport__160_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__160_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__160_16__i[b]), .q(dcfg__age_vport__160_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[90 + (b - 0) / 128]), .d(dcfg__age_vport__160_16__i[b]), .q(dcfg__age_vport__160_16[b]));
   end
   wire [15:0] dcfg__age_vport__16_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__16_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__16_16__i[b]), .q(dcfg__age_vport__16_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[91 + (b - 0) / 128]), .d(dcfg__age_vport__16_16__i[b]), .q(dcfg__age_vport__16_16[b]));
   end
   wire [15:0] dcfg__age_vport__176_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__176_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__176_16__i[b]), .q(dcfg__age_vport__176_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[92 + (b - 0) / 128]), .d(dcfg__age_vport__176_16__i[b]), .q(dcfg__age_vport__176_16[b]));
   end
   wire [15:0] dcfg__age_vport__192_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__192_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__192_16__i[b]), .q(dcfg__age_vport__192_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[93 + (b - 0) / 128]), .d(dcfg__age_vport__192_16__i[b]), .q(dcfg__age_vport__192_16[b]));
   end
   wire [15:0] dcfg__age_vport__208_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__208_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__208_16__i[b]), .q(dcfg__age_vport__208_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[94 + (b - 0) / 128]), .d(dcfg__age_vport__208_16__i[b]), .q(dcfg__age_vport__208_16[b]));
   end
   wire [15:0] dcfg__age_vport__224_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__224_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__224_16__i[b]), .q(dcfg__age_vport__224_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[95 + (b - 0) / 128]), .d(dcfg__age_vport__224_16__i[b]), .q(dcfg__age_vport__224_16[b]));
   end
   wire [15:0] dcfg__age_vport__240_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__240_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__240_16__i[b]), .q(dcfg__age_vport__240_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[96 + (b - 0) / 128]), .d(dcfg__age_vport__240_16__i[b]), .q(dcfg__age_vport__240_16[b]));
   end
   wire [15:0] dcfg__age_vport__32_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__32_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__32_16__i[b]), .q(dcfg__age_vport__32_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[97 + (b - 0) / 128]), .d(dcfg__age_vport__32_16__i[b]), .q(dcfg__age_vport__32_16[b]));
   end
   wire [15:0] dcfg__age_vport__48_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__48_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__48_16__i[b]), .q(dcfg__age_vport__48_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[98 + (b - 0) / 128]), .d(dcfg__age_vport__48_16__i[b]), .q(dcfg__age_vport__48_16[b]));
   end
   wire [15:0] dcfg__age_vport__64_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__64_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__64_16__i[b]), .q(dcfg__age_vport__64_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[99 + (b - 0) / 128]), .d(dcfg__age_vport__64_16__i[b]), .q(dcfg__age_vport__64_16[b]));
   end
   wire [15:0] dcfg__age_vport__80_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__80_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__80_16__i[b]), .q(dcfg__age_vport__80_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[100 + (b - 0) / 128]), .d(dcfg__age_vport__80_16__i[b]), .q(dcfg__age_vport__80_16[b]));
   end
   wire [15:0] dcfg__age_vport__96_16__i;
   for (genvar b = 0; b <= 15; b = b + 1) begin : go_dcfg__age_vport__96_16
-    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_n), .d(dcfg__age_vport__96_16__i[b]), .q(dcfg__age_vport__96_16[b]));
+    (* keep *) ot_ctl_face_dff u_f (.ck(ck), .rst_n(face_rst_leaf[101 + (b - 0) / 128]), .d(dcfg__age_vport__96_16__i[b]), .q(dcfg__age_vport__96_16[b]));
   end
   qkd_kvs_ctl__rf1_inner u_rf1_core (
     .o_hroot_WS(o_hroot_WS__i),

@@ -162,15 +162,15 @@ puts "REPAIRS $::repairs"
         self.assertNotIn('OT_HOLD_STRUCTURAL', out)
         self.assertIn('REPAIR_REACHED', out)
 
-    # COORD 11-01 05:1x / OWNER 12.28b: the one default stop is FF hold WNS below OT_HOLD_STOP_PS = -150 ps
+    # COORD 11-01 05:1x / OWNER 12.28b: the one default stop is FF hold WNS below OT_HOLD_STOP_PS = -200 ps
     def test_below_minus_150_still_stops(self):
-        out, _ = self.run_case(-150.01, 10, '-hold -hold_margin 10', stop=None, period=833)
+        out, _ = self.run_case(-200.01, 10, '-hold -hold_margin 10', stop=None, period=833)
         self.assertIn('OT_HOLD_STRUCTURAL', out)
-        self.assertIn('beyond the structural stop OT_HOLD_STOP_PS -150 ps', out)
+        self.assertIn('beyond the structural stop OT_HOLD_STOP_PS -200 ps', out)
         self.assertNotIn('REPAIR_REACHED', out)
 
     def test_at_minus_150_is_info(self):
-        out, _ = self.run_case(-150, 10, '-hold -hold_margin 10', stop=None, period=833)
+        out, _ = self.run_case(-200, 10, '-hold -hold_margin 10', stop=None, period=833)
         self.assertIn('OT_HOLD_PREREPAIR INFO', out)
         self.assertIn('REPAIR_REACHED', out)
 
@@ -181,7 +181,7 @@ puts "REPAIRS $::repairs"
         for rel in ('tools/orfs_hold_mm.tcl', 'tools/die_plan/hold_gate.tcl', 'physical/die_plan/hbm_arch_cores/hold_gate.tcl'):
             m = re.findall(r'^set (?:::)?OT_HOLD_STOP_PS (\S+)$', (root / rel).read_text(), re.M)
             vals[rel] = m
-        self.assertEqual(vals, {k: ['-150.0'] for k in vals})
+        self.assertEqual(vals, {k: ['-200.0'] for k in vals})
 
     def test_unsynchronized_ff_still_fails_closed_by_default(self):
         out, _ = self.run_case(20, 0, '-hold', synced=False, stop=None)

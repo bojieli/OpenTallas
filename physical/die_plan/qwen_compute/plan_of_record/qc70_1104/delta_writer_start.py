@@ -65,7 +65,10 @@ for tn in sorted({p["type"] for p in P.parts.values()}):
     w = t["outline_um"][0]
     boxes = RT.blockages(t)
     T = RT.for_type(P, tn)
-    raws = [r for r in (RT.start_relays(T) if T.get("start") else T["relays"]) if r.get("role") == "raw"]
+    # DIE-QC-71 11-04: rr_t<i> of an rst_o tap drives its output port; a port flop feeds only its port (clock_landings EMIT)
+    nck = RT.consumer_count(T)
+    port_q = {f"rr_t{i}" for i in range(nck, nck + len(T.get("outs", [])))}
+    raws = [r for r in (RT.start_relays(T) if T.get("start") else T["relays"]) if r.get("role") == "raw" and r["q"] not in port_q]
     assert raws, tn
     branches, hops = {}, []
     for b, d in sorted(far.items()):
