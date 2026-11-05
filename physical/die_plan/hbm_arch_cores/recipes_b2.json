@@ -3125,5 +3125,30 @@
    "rtl/hdc/ot_hdc_delay.sv",
    "rtl/lib/ot_rst_relay.sv"
   ]
+ },
+ "ot_hfd_coll_q3_body_ctl": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 28: tile of ot_hfd_coll_q3_body_core; bench results/die_hbm_1105/form_split/p28",
+  "top": "ot_hfd_coll_q3_body_ctl",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/q3/ot_hfd_coll_q3_body_ctl.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1rw_256x64_m4_r2c2"
+  ]
+ },
+ "ot_hfd_coll_q3_qcol4": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 28: tile of ot_hfd_coll_q3_body_core; bench results/die_hbm_1105/form_split/p28",
+  "top": "ot_hfd_coll_q3_qcol4",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_body_core/ot_hfd_coll_q3_qcol4.sv"
+  ],
+  "macros": []
  }
 }

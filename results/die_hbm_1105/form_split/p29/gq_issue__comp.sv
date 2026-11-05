@@ -64,6 +64,11 @@ module ot_hgi_gqi__comp #(parameter integer MUT = 0, parameter integer VM_RT = 0
         .aq0_v(v0), .aq1_v(v1), .aq0_x(x0), .aq1_x(x1), .aq0_vo(vo0), .aq1_vo(vo1), .aq0_fault(f0), .aq1_fault(f1),
         .aq0_q(MUT == 11 ? q1 : q0), .aq1_q(q1), .aq0_e(e0), .aq1_e(MUT == 12 ? e0 : e1));
     ot_hgi_gq_aq_tile__fs u_a0 (.clk(clk), .rst_n(rst_n), .v(v0), .x(x0), .vo(vo0), .q(q0), .e(e0), .fault(f0));
-    ot_hgi_gq_aq_tile__fs u_a1 (.clk(clk), .rst_n(rst_n), .v(MUT == 13 ? v0 : v1), .x(x1), .vo(vo1), .q(q1), .e(e1), .fault(f1));
+    // MUT 14, 15: quantiser 1 input all NaN on edges where only quantiser 0 has valid (row with r2 = 0).  MUT 14 keeps v1: the poison must stay
+    // unseen.  MUT 15 drives v0: quantiser 1 then raises fault on a block it was never given.  Valid gates only vo and fault in the tile, q and e are
+    // data pipes, so a wrong valid is visible only through fault, and only on a nonfinite input: this is why MUT 13 alone stayed silent.
+    wire v0only = v0 && !v1;
+    wire [1023:0] x1p = ((MUT == 14 || MUT == 15) && v0only) ? {32{32'h7fc00000}} : x1;
+    ot_hgi_gq_aq_tile__fs u_a1 (.clk(clk), .rst_n(rst_n), .v((MUT == 13 || MUT == 15) ? v0 : v1), .x(x1p), .vo(vo1), .q(q1), .e(e1), .fault(f1));
 endmodule
 `default_nettype wire
