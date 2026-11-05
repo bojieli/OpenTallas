@@ -186,20 +186,68 @@ DIE-HBM-64	add69632f55da2a85	DEAD 07:4x session limit, successor 08:2x
 DIE-KV-68	a43c0335acc1c8dda	DEAD 07:4x session limit, successor 08:2x
 DIE-S81-55	a81150d323968edf0	DEAD 07:4x session limit, successor 08:2x
 SS28-RESIGN	a1d3ffcf5e0d943cb	DEAD 07:4x session limit, successor 08:2x
-ROOT-MERGE-31	a9d3e8f2ea4564cbb	LIVE 08:2x I34 + next train
-KW-FIX-8	a9c8f8f444f5c35c0	LIVE 08:2x successor of KW-FIX-7
+ROOT-MERGE-31	a9d3e8f2ea4564cbb	DEAD limit 23:45 11-05 LIVE 08:2x I34 + next train
+KW-FIX-8	a9c8f8f444f5c35c0	DEAD limit 23:45 11-05 LIVE 08:2x successor of KW-FIX-7
 FLOW-31	a152e4df3368f1db8	DONE 09:3x
 PRUNE-1104N	a11c6a433c7295ed5	DONE 12:3x was LIVE 08:2x successor of PRUNE-1104M
-DIE-S81-56	a59b96587f81b1e78	LIVE 08:2x successor of DIE-S81-55
-DIE-HEAD-62	a9c68f19e3afb629a	LIVE 08:2x successor of DIE-HEAD-61
+DIE-S81-56	a59b96587f81b1e78	DEAD limit 23:45 11-05 LIVE 08:2x successor of DIE-S81-55
+DIE-HEAD-62	a9c68f19e3afb629a	DEAD limit 23:45 11-05 LIVE 08:2x successor of DIE-HEAD-61
 DIE-QC-70	a47a0a22f3fe52d6e	DONE parked 16:0x; was LIVE 08:2x successor of DIE-QC-69
 DIE-KV-69	a40e6c5de1074cbac	DONE 13:0x stalled 11:22, was LIVE 08:2x successor of DIE-KV-68
 DIE-HBM-65	a4820504720dca6c7	PARKED 09:15 successor DIE-HBM-66
-SS29-RESIGN	a6d0bcac07ca01171	LIVE 08:2x successor of SS28-RESIGN
-DIE-HBM-66	a0748a50aabeee1e5	LIVE 09:1x successor of DIE-HBM-65
+SS29-RESIGN	a6d0bcac07ca01171	PARKED 17:2x resume by SendMessage on next READY-COUNT
+DIE-HBM-66	a0748a50aabeee1e5	DEAD limit 23:45 11-05 LIVE 09:1x successor of DIE-HBM-65
 FLOW-32	a3682ddce592ac83a	DONE 10:1x
 FLOW-33	a64e70b7acde64907	DONE 12:3x was LIVE 12:2x hbm_sram canary read
 PRUNE-1104P	a8e2071389889ba78	DONE 14:1x epyc2 119 GB; next prune lane about 18:30
-DIE-KV-70	ae2f1ad90fce5e7e1	LIVE 13:0x successor of DIE-KV-69
-PRUNE-1104Q	ab47c72591e2bc1e6	LIVE 15:2x epyc2 scratch prune
-DIE-QC-71	a322983436626e340	LIVE 16:0x successor of DIE-QC-70
+DIE-KV-70	ae2f1ad90fce5e7e1	DEAD limit 23:45 11-05 LIVE 13:0x successor of DIE-KV-69
+PRUNE-1104Q	ab47c72591e2bc1e6	DONE 16:2x; was LIVE 15:2x epyc2 scratch prune
+DIE-QC-71	a322983436626e340	DEAD limit 23:45 11-05 LIVE 16:0x successor of DIE-QC-70
+PRUNE-1104R	a8026b63ab2cbfcb2	ENDED 18:38
+PRUNE-1104S	a6601b54c72e694b6	DEAD limit 23:45 11-05 LIVE 19:21
+CONS-CENSUS	ac9784bb6ccc51cc3	ENDED 19:34
+HBM-REFORM-A	adf82a884c9025ef0	DEAD limit 23:45 11-05 LIVE 22:5x source splits lanes+tkm tile
+HBM-REFORM-B	a1f11014bb5dc918c	DEAD limit 23:45 11-05 LIVE 22:5x source splits pdie,kport,selector,rel_id,q2n2_body,ctl
+SS30-TOK	a116980d4b19d9c9b	DEAD limit 23:45 11-05 LIVE 23:0x successor of SS27-TOK scope; ledger + pricing
+FACE-CLK-SWEEP	a518edfb185917081	DEAD limit LIVE 23:2x read-only sweep clock-as-data ports
+HBM-BIND-1	aa6a0a11f5338afd8	DEAD limit 23:45 11-05 LIVE 23:2x owns d44v asbuilt
+ROOT-MERGE-32	aa43ae071c00a2bfa	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+KW-FIX-9	a615a1a41995beb2f	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+PRUNE-1105	a104ee8878e65a182	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+DIE-S81-57	afe8fa1fd5b1b22df	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+DIE-HEAD-63	a348e6e6eb367b923	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+DIE-QC-72	a605869305349906d	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+DIE-KV-71	a7eae0b793e48bf79	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+DIE-HBM-67	a4023239758f35a3a	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+HBM-REFORM-A2	a770bce57a158ff72	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+HBM-REFORM-B2	a14b7d2b88816c57d	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+HBM-BIND-2	aceab18b63df02d78	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+SS31-TOK	ac98985cac6dfa479	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+SS31-RESIGN	afa1a9a0439554ed1	DEAD limit 01:1x 11-05 LIVE 00:5x 11-05 restart
+FACE-CLK-SWEEP-2	a5d0d2b0a170adeb3	DONE 01:1x 00:5x 11-05 restart
+PRUNE-1106	ac4fb332b31d1ab20	PARKED 05:1x classify after 10:00
+KW-FIX-10	a734c53dcbc2f6890	LIVE 04:0x 11-05 restart
+ROOT-MERGE-33	a6a4206d43684fb07	PARKED 05:18 succeeded by 34
+DIE-S81-58	ad96c16d55a8b72b0	PARKED 05:39 succeeded by 59
+DIE-HEAD-64	a41ad18772f9750b2	PARKED 05:3x succeeded by 65
+DIE-QC-73	ac9193aeaca359ced	PARKED 05:31 succeeded by 74
+DIE-KV-72	ac6f43327c1d3612c	PARKED 05:30 succeeded by 73
+DIE-HBM-68	a800adf497dd25f83	PARKED 05:3x succeeded by 69
+HBM-REFORM-A3	aebf626ec9e16a894	LIVE 04:0x 11-05 restart
+HBM-REFORM-B3	a8c7e9aabed38f480	PARKED 05:05 succeeded by B4
+HBM-BIND-3	aef69862227dd0807	PARKED 05:3x succeeded by 4
+SS32-TOK	a90750e8436e2928c	PARKED 04:3x wake 06:05 G0 read
+SS32-RESIGN	a04e26f651a260987	LIVE 04:0x 11-05 restart
+HBM-REFORM-B4	a960a4c80351dfb3b	LIVE 05:0x 11-05 successor of B3
+ROOT-MERGE-34	ade30f73ccbcc31c7	LIVE 05:2x 11-05 merge train
+DIE-KV-73	abb38b004bfc6099c	LIVE 05:3x 11-05 die owner
+DIE-QC-74	ac8de6668f708bcf4	LIVE 05:3x 11-05 die owner
+DIE-HEAD-65	a69c2fbbdb79ba944	LIVE 05:3x 11-05 die owner
+DIE-HBM-69	acbb9243ad218961a	LIVE 05:3x 11-05 die owner
+HBM-BIND-4	a7a8efcb3121691da	LIVE 05:3x 11-05 asbuilt owner
+DIE-S81-59	ad615f36be130e52d	LIVE 05:4x 11-05 die owner
+FORM-COLL	a7d134011f1e6b606	LIVE 05:49 11-05 coll e/w form
+FORM-BKSEL	a978a9579e1ab75c8	LIVE 05:49 11-05 bksel_q form
+FORM-IDX	a84767306eb5135bc	LIVE 05:49 11-05 idx_tx_n32
+FORM-S81REST	ae5e26f4141cfea35	LIVE 05:49 11-05 rom w10 eng_rr_e capc5r vs eng_finish
+CORE-FORMS	ae067367eeab0362f	LIVE 05:49 11-05 census all dies
