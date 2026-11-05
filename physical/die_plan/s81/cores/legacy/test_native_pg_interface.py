@@ -24,6 +24,7 @@ class NativePG(unittest.TestCase):
             self.assertIn('-grid {native_pg_M5} -layers {M5 M6}',out)
             self.assertIn('-grid {native_pg_M4} -layers {M4 M5}',out)
             self.assertIn('-name {native_pg_M4} -cells {{^sram$}} -voltage_domains {CORE} -halo {2.0 2.0}',out)
+            self.assertIn('-name {native_pg_M5} -cells {{^hist$}} -voltage_domains {CORE} -halo {2.0 2.0}',out)
             self.assertEqual(info['added_signal_routing_layers'],[])
             self.assertEqual(info['declared_parent_obs_max'],'M7')
             for cap in (None,'M4','M5'):

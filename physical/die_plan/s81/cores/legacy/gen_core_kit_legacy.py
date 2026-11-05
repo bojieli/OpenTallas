@@ -134,7 +134,10 @@ def macro_pdn(mplace, macro_dir, obs_max=None):
         cells = " ".join("{^" + re.escape(m) + "$}" for m in sorted(masters))
         upper = "M5" if layer == "M4" else "M6"
         grid = "native_pg_" + layer
-        halo = "2.0 2.0" if layer == "M4" else "0"
+        # FORM-BKSEL 11-05: M5-native children keep the same 2 um halo as M4 ones. With halo 0 the tile M5 stripes end
+        # 96 nm off the child edge, straight over its M5 edge pins (pin field wider than the 4.32 pitch), so those pins
+        # have no escape and DRT cannot converge (bksel_q rfh3: 335/335 violations at the banks). Rows stay 4.32 off.
+        halo = "2.0 2.0"
         out += (f"define_pdn_grid -macro -name {{{grid}}} -cells {{{cells}}} "
                 f"-voltage_domains {{CORE}} -halo {{{halo}}} -grid_over_boundary\n"
                 f"add_pdn_connect -grid {{{grid}}} -layers {{{layer} {upper}}}\n")
