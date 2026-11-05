@@ -622,12 +622,12 @@ TX_R = 1
 # compiled slot grid absorbs it: the FIRST slot (checked edge-exact) is unchanged and the parent waits for the RESERVED
 # grid end (TX_SM slots), so the worst-case stream + the shift must fit TX_SM.  TX_LPX = the bound TX's LPX (0 = today's
 # die, dsdv_idx_tx_n32 v; 2 = TOPK TX x/y once bound); the tree bench builds the reference with it (run_idx_tree.sh LPX=).
-TX_LPX = 0
+TX_LPX = 2                # DIE-S81-60 11-05: the parent names RDL + RIL (dsdv_bk_sel_vmtx u_tx)
 TX_LPX_BOOKED = 2
 TX_WORST = 1537 + 15     # HDR + 512 x (REBASE + 2 BEAT) + the first-IDX lead
 TX_LPX_SHIFT = {0: 0, 1: 0, 2: 4}   # measured at the tx pins (LPX 1 invisible, LPX 2 = one 4-cycle beat slot)
 assert TX_WORST + max(TX_LPX_SHIFT[TX_LPX], TX_LPX_SHIFT[TX_LPX_BOOKED]) <= TX_SM * TX_R, 'TX grid cannot absorb LPX'
-TX_OFF = 5               # tx-job CTL at the bk_sel vi_n pin edge c -> first grid slot printed (lo) at c + TX_OFF + DLY
+TX_OFF = 6               # tx-job CTL at the bk_sel vi_n pin edge c -> first grid slot printed (lo) at c + TX_OFF + DLY (5 + FACE 1)
 TX_LINK = 3              # tx lo printed at t -> parent bk_sel vi_s ingress edge t + TX_LINK + leg (vmux 2 + pin 1)
 VMUX_LAT = 2             # dsdv_idx_vmux pin -> pin
 TX_CTL_LEAD = 16         # the tx-job CTL enters vi_n this many edges before the drain CTL

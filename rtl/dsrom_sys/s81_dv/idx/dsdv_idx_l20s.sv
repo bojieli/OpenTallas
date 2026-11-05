@@ -1006,7 +1006,10 @@ module dsdv_bk_sel_vmtx #(
     wire [V-1:0] sel_vo_n; wire sel_f;
     dsdv_bk_sel #(.V(V), .MUT(MUT)) u_sel (.clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek),
         .uid(uid), .eg_n(eg_n), .vi_s(vi_m), .vo_n(sel_vo_n), .vi_n(vi_n), .vo_s(vo_s), .fault(sel_f));
-    dsdv_idx_tx_n32 #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT)) u_tx (
+    // DIE-S81-60 11-05: names the form the one signed dsdv_idx_tx_n32 view is built with, so die RTL and view agree edge for
+    // edge.  FACE 1 = lo / st +1 edge (compiler TX_OFF 6); RDL + RIL = LPX 2 (compiler TX_LPX 2, +4 edges from beat 4, inside TX_SM).
+    dsdv_idx_tx_n32 #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT), .RDL(1), .WDL(1), .WDC(1), .SCS(1),
+                      .RIL(1), .RHP(1), .FACE(1), .LKL(0)) u_tx (
         .ck(clk), .rst(rst_n), .vi(vi_m), .vo(vo_s), .lo(tl_o), .st(tx_st));
     generate if (SELE != 0) begin : g_sel
         wire [V-1:0] eo; wire ef;
