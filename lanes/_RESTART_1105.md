@@ -46,3 +46,6 @@ Disk at 04:00: epyc4 scratch2 0 GB (ot-run refuses the host), intel1 56, intel2 
 
 ## Update 11-05 06:3x PST: owner's checkout
 Agent shells START in /home/ubuntu/OpenTallas on localhost: that is the owner's checkout. Two lanes ran git fetch there today by mistake. First command: cd elsewhere. Never run git or anything else in that directory, not even read-only. Use git -C on your own worktrees on the hub (intel2) or epyc4.
+
+## Limit stop 09:42-10:40 11-05
+Every lane stopped at about 09:42 on a session limit, mid-work, without PARKED. Successor steps: read your predecessor's posts for today in the queue and find its live jobs (docker ps, ot-run units, its run dirs); do not relaunch anything still running. Rulings up to 09:45 stand. Lanes run 60 min, then PARKED, with PARKED posted before the watcher wait if a limit looks near. Disk 10:40 scratch2/root: intel1 233/406, intel2 84/342, epyc2 168/552, epyc4 138/554. Intel2 under 100: no new unit there. Epyc4 under 570 root: no new run on scratch3.
