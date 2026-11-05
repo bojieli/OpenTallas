@@ -5118,19 +5118,19 @@
   "ot_hfd_coll_q3_edge_core": {
    "status": "KNOWN",
    "outline_um": [
-    216.0,
+    276.48,
     1054.08
    ],
-   "basis": "DIE-HBM-53 10-31 static sites (OWNER 07:1x one-block NO_RECIPE plan event, q3 coll cores PLAN_CORE_MACROS): 12 SRAMs 1r1w_64x512 u_link0..2.g_bank[0..3] (yosys flatten of view @9bacba9ba155 kit RTL) = the r15 k3m single centred column (W/E bands ~22.4 for the W/E pin faces; N/S faces have no pins); link0/link1.b0-1 below and link1.b2-3/link2 above the clock island [103.68,522.72,112.32,531.36] (+4.32 halo), stacked in abutted pairs (0.048) with 10.848 channels between pairs",
+   "basis": "DIE-HBM-66 part 13: +60.48 um on W, macros centred, same 12 macros; DIE-HBM-53 10-31 static sites (OWNER 07:1x one-block NO_RECIPE plan event, q3 coll cores PLAN_CORE_MACROS): 12 SRAMs 1r1w_64x512 u_link0..2.g_bank[0..3] (yosys flatten of view @9bacba9ba155 kit RTL) = the r15 k3m single centred column (W/E bands ~22.4 for the W/E pin faces; N/S faces have no pins); link0/link1.b0-1 below and link1.b2-3/link2 above the clock island [103.68,522.72,112.32,531.36] (+4.32 halo), stacked in abutted pairs (0.048) with 10.848 channels between pairs",
    "macros": [
     {
      "name": "u_fcore.u_core.u_link1.g_bank[1].u_store.u_native.u_sram",
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       440.604,
-      193.608,
+      223.848,
       518.388
      ]
     },
@@ -5139,9 +5139,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       362.748,
-      193.608,
+      223.848,
       440.532
      ]
     },
@@ -5150,9 +5150,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       274.092,
-      193.608,
+      223.848,
       351.876
      ]
     },
@@ -5161,9 +5161,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       196.236,
-      193.608,
+      223.848,
       274.02
      ]
     },
@@ -5172,9 +5172,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       107.58,
-      193.608,
+      223.848,
       185.364
      ]
     },
@@ -5183,9 +5183,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       29.724,
-      193.608,
+      223.848,
       107.508
      ]
     },
@@ -5194,9 +5194,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       535.692,
-      193.608,
+      223.848,
       613.476
      ]
     },
@@ -5205,9 +5205,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       613.548,
-      193.608,
+      223.848,
       691.332
      ]
     },
@@ -5216,9 +5216,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       702.204,
-      193.608,
+      223.848,
       779.988
      ]
     },
@@ -5227,9 +5227,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       780.06,
-      193.608,
+      223.848,
       857.844
      ]
     },
@@ -5238,9 +5238,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       868.716,
-      193.608,
+      223.848,
       946.5
      ]
     },
@@ -5249,9 +5249,9 @@
      "master": "ot_sram_1r1w_64x512_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      22.32,
+      52.56,
       946.572,
-      193.608,
+      223.848,
       1024.356
      ]
     }
@@ -5372,10 +5372,10 @@
   "ot_hgi_dma_back_static_vp4_banks_cp": {
    "status": "KNOWN",
    "outline_um": [
-    239.976,
+    300.456,
     275.4
    ],
-   "basis": "PLAN-TRIAL R-SRAM-ENTRY rows promoted (names = flattened RTL instances, DIE-HBM-59 11-02)",
+   "basis": "DIE-HBM-66 part 13: +60.48 um on local E, second column +30.24, same 10 macros; PLAN-TRIAL R-SRAM-ENTRY rows promoted (names = flattened RTL instances, DIE-HBM-59 11-02)",
    "macros": [
     {
      "name": "u_fcore.u_cp.g_tab[1].u_tab",
@@ -5437,9 +5437,9 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      127.71,
+      157.95,
       62.616,
-      222.534,
+      252.774,
       103.68
      ]
     },
@@ -5448,9 +5448,9 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      127.71,
+      157.95,
       21.504,
-      222.534,
+      252.774,
       62.568
      ]
     },
@@ -5459,9 +5459,9 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      127.71,
+      157.95,
       114.528,
-      222.534,
+      252.774,
       155.592
      ]
     },
@@ -5470,9 +5470,9 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      127.71,
+      157.95,
       155.64,
-      222.534,
+      252.774,
       196.704
      ]
     },
@@ -5481,9 +5481,9 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      127.71,
+      157.95,
       207.552,
-      222.534,
+      252.774,
       248.616
      ]
     }

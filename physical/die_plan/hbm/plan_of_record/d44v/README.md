@@ -385,3 +385,10 @@ physical sub-core path is `<inst>.u_fcore.u_core.<u_sub>`.
 - **ot_hgi_qw_dec** `clk` M5 (129.624, 86.4) -> (129.624, 0.24), S face, table `__p12`; the other 1669 pins unmoved. Signed DB kept (re-signed on flow-20261104-k-hbm); the table now equals the signed kit's 1670 pins. Two `q_hub_nw` rows take it.
 - **Parent clock taps**: `u_hb_quant_Q__u_dec__q0` (164.16, 1650.24) -> (164.16, 1564.08), `__q1` (4121.28, 2592.0) -> (4121.28, 2505.84); same x. The two clock entry rows follow (xy 129.6, 0.24; island kept 8.64 um square, clipped to the S edge).
 - **Checks**: G0 compare new 0, gone 0. Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0. 0 cycles, no RTL. The plan has no `asbuilt` key, so bind.py does not apply; pin names are unchanged.
+
+## Part 13 (outlines for measured GRT overflow; DIE-HBM-66, COORD 19:1x and 19:34)
+
+- **ot_hfd_coll_q3_edge_core** +60.48 um on W, 216 -> 276.48 x 1054.08, origin x 95.04 -> 34.56 (on the 8.64 lattice). Reason: M3 126.8%, macros 70% of area. E face, clock pin and tap keep die position; W pins stay on the W face; other pins +60.48 local, 12 macros +30.24.
+- **ot_hgi_dma_back_static_vp4_banks_cp** +60.48 um on local E, 239.976 -> 300.456 x 275.4. Reason: M2 114%, M3 116%, macros 59%. Second macro column +30.24; `__q0` copies keep origin and pins; `__q1` (mirrored) copies keep their die W edge, so pins and tap move +60.48 um in die x.
+- **ot_hcol h0_rb** out: 0.68 stdcell utilization, room only +7.56 x +1.08 um; next form follows h0_ra.
+- **Checks**: G0 compare errors new 0, gone 0; warnings 1950 -> 1940, new 0 (the 10 gone were missing-pins warnings on these rows). Plan-time GEOM advisory FAIL 225 -> 225, new 0, worse 0 at +64.8; not rerun at +60.48, plan_geom reads non-hard types only, so these two outlines are not in it. Slot hits 0. 0 cycles, no RTL.

@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.hbm_plan_event.part13",
+ "rows": {
+  "ot_hfd_coll_q3_edge_core": {
+   "outline_um": [
+    [
+     216.0,
+     1054.08
+    ],
+    [
+     276.48,
+     1054.08
+    ]
+   ],
+   "grow": "W",
+   "pins_file": "cores/ot_hfd_coll_q3_edge_core__276.48x1054.08__r15_relot__codex_g21__centry__p13.json",
+   "std_util": [
+    0.3,
+    0.23
+   ],
+   "cycles": 0
+  },
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "outline_um": [
+    [
+     239.976,
+     275.4
+    ],
+    [
+     300.456,
+     275.4
+    ]
+   ],
+   "grow": "local E",
+   "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__300.456x275.4__c25b__centry__p13.json",
+   "q1_die_shift_um": 60.48,
+   "std_util": [
+    0.32,
+    0.23
+   ],
+   "cycles": 0
+  }
+ },
+ "slot_hits": {
+  "q_hub_nw/u_hb_coll_Q_edge__q0": [],
+  "q_hub_nw/u_hb_dbk_Q__q0": [],
+  "q_hub_nw/u_hb_dbk_Q__q1": [],
+  "q_hub_ne/u_hb_dbk_Q__q0": [],
+  "q_hub_ne/u_hb_dbk_Q__q1": []
+ }
+}
