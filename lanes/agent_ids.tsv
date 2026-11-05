@@ -236,15 +236,15 @@ DIE-HBM-68	a800adf497dd25f83	PARKED 05:3x succeeded by 69
 HBM-REFORM-A3	aebf626ec9e16a894	LIVE 04:0x 11-05 restart
 HBM-REFORM-B3	a8c7e9aabed38f480	PARKED 05:05 succeeded by B4
 HBM-BIND-3	aef69862227dd0807	PARKED 05:3x succeeded by 4
-SS32-TOK	a90750e8436e2928c	PARKED 04:3x wake 06:05 G0 read
+SS32-TOK	a90750e8436e2928c	PARKED 06:41 11-05; KV print vehicle live; read passes to SS33-TOK
 SS32-RESIGN	a04e26f651a260987	LIVE 04:0x 11-05 restart
 HBM-REFORM-B4	a960a4c80351dfb3b	PARKED 06:30 succeeded by B5
-ROOT-MERGE-34	ade30f73ccbcc31c7	LIVE 05:2x 11-05 merge train
-DIE-KV-73	abb38b004bfc6099c	LIVE 05:3x 11-05 die owner
-DIE-QC-74	ac8de6668f708bcf4	LIVE 05:3x 11-05 die owner
+ROOT-MERGE-34	ade30f73ccbcc31c7	PARKED 11-05 main ce264f185ec
+DIE-KV-73	abb38b004bfc6099c	PARKED 06:58 11-05
+DIE-QC-74	ac8de6668f708bcf4	PARKED 06:52 11-05
 DIE-HEAD-65	a69c2fbbdb79ba944	LIVE 05:3x 11-05 die owner
-DIE-HBM-69	acbb9243ad218961a	LIVE 05:3x 11-05 die owner
-HBM-BIND-4	a7a8efcb3121691da	LIVE 05:3x 11-05 asbuilt owner
+DIE-HBM-69	acbb9243ad218961a	PARKED 06:48 11-05
+HBM-BIND-4	a7a8efcb3121691da	PARKED 11-05
 DIE-S81-59	ad615f36be130e52d	LIVE 05:4x 11-05 die owner
 FORM-COLL	a7d134011f1e6b606	LIVE 05:49 11-05 coll e/w form
 FORM-BKSEL	a978a9579e1ab75c8	LIVE 05:49 11-05 bksel_q form
@@ -256,3 +256,9 @@ HBM-FORM-SPLIT	a51385b15c76580e9	LIVE 06:08 11-05 HBM splits
 HBM-FORM-TIMING	a9a239166df65511c	LIVE 06:08 11-05 HBM timing forms
 KW-FIX-11	a36421980e28f3acf	LIVE 06:26 11-05 kit-wave operator
 HBM-REFORM-B5	aff1696e1d18be8da	LIVE 06:31 11-05 rel_id p26 q2n2_body forms
+SS33-TOK	aeaf0be38a8b774f9	LIVE 06:4x 11-05 successor of SS32-TOK; HBM compiler cycles, head_mtp, KV print read
+ROOT-MERGE-35	a1b49b5121adbd455	LIVE 07:0x 11-05 successor of ROOT-MERGE-34; suite read on ce264f185ec, merge train
+DIE-HBM-70	aca0283b5dcd9faf4	LIVE 06:5x 11-05 successor of DIE-HBM-69; part 16, hold pilot, bank128 k2
+DIE-QC-75	a8687c8fe4faf7647	LIVE 06:5x 11-05 successor of DIE-QC-74; coll_core split, coll_s clock, SC count
+HBM-BIND-5	a6f9656e0a7eb942c	LIVE 07:0x 11-05 successor of HBM-BIND-4; tip bind to U 0, A + C on NW, B0
+DIE-KV-74	a71586e1e80c3e226	LIVE 07:0x 11-05 successor of DIE-KV-73; hold pilot move, AHUB count, forms, pv class
