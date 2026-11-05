@@ -79,7 +79,7 @@ proc sta::time_sta_ui {x} {return $x}
     env=dict(os.environ); env.pop('OT_HOLD_PREROUTE_STOP',None)
     if stop: env['OT_HOLD_PREROUTE_STOP']='1'
     r=subprocess.run(['tclsh',str(p)],capture_output=True,text=True,env=env)
-    hard=wns<-150   # COORD 11-01 05:1x: OT_HOLD_STOP_PS -150 stays a stop by default (legacy contract, no tap window)
+    hard=wns<-200   # COORD 11-05 07:36: OT_HOLD_STOP_PS -200 stays a stop by default (legacy contract, no tap window)
     assert (r.returncode!=0)==(failed and (stop or hard)),r.stdout+r.stderr
     assert ('OT_HOLD_GATE PASS' if not failed else 'OT_HOLD_GATE FAIL' if (stop or hard) else 'OT_HOLD_GATE INFO') in r.stdout
 
