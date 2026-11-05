@@ -770,6 +770,9 @@ def instance_path_params(cells, defaults, rules):
 class Binder:
     def sub_core_leaf_of(self, hc):
         """The bound leaf holding plan sub-core hc, or None (not a sub-core, or not in asbuilt.sub_core_leaf)."""
+        # DIE-QC-75 11-05: a hard core nested in a leaf at a path without u_fcore names its parent exactly.
+        if hc.get("sub_core_parent"):
+            return self.sub_core_leaf.get(hc["sub_core_parent"])
         path = hc.get("physical_inst") or ""
         return self.sub_core_leaf.get(path.split(".u_fcore.")[0]) if ".u_fcore." in path else None
 
