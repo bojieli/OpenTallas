@@ -24,16 +24,12 @@ t = rep(t, "// DIE-KV-70/ING 11-04 RE-FORM of qkd_host_native_engine", "// DIE-K
 t = rep(t, "    always @(posedge clk) begin i1_slot <= q1_slot; i1_last <= q1_last; i1_isv <= q1_isv; i1_a <= {q1_slot, q1_t}; end\n",
 """    always @(posedge clk) begin i1_slot <= q1_slot; i1_last <= q1_last; i1_isv <= q1_isv; i1_a <= {q1_slot, q1_t}; end
     // -- I1B: per-quadrant copy of the beat (cut 13) ---------------------------------------------------------------------
-    wire [511:0] ib_code [0:3];
+    // flat kept vectors: a generate-scope reg behind an alias wire lost its keep in the face-port emission (ib_code[n] became the reg name) and folded to one bank
+    (* keep = 1 *) reg [2047:0] ib_all;
     reg  [15:0]  ib_sel0, ib_sel1, ib_sel2, ib_sel3;
     reg          ib_v, ib_slot, ib_last, ib_isv;
     reg  [4:0]   ib_a;
-    genvar gq1;
-    generate for (gq1 = 0; gq1 < 4; gq1 = gq1 + 1) begin : g_ibq
-        (* keep = 1 *) reg [511:0] code;
-        always @(posedge clk) code <= i1_code;
-        assign ib_code[gq1] = code;
-    end endgenerate
+    always @(posedge clk) ib_all <= {4{i1_code}};
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin ib_v <= 1'b0; ib_sel0 <= 16'd0; ib_sel1 <= 16'd0; ib_sel2 <= 16'd0; ib_sel3 <= 16'd0; end
         else begin ib_v <= i1_v; ib_sel0 <= i1_sel0; ib_sel1 <= i1_sel1; ib_sel2 <= i1_sel2; ib_sel3 <= i1_sel3; end
@@ -49,7 +45,7 @@ t = rep(t, """                w_d <= ({128{i1_sel0[gb]}} & i1_code[127:0])   | (
 """, """                w_d <= ({128{ib_sel0[gb]}} & w_code[127:0])   | ({128{ib_sel1[gb]}} & w_code[255:128]) |
                        ({128{ib_sel2[gb]}} & w_code[383:256]) | ({128{ib_sel3[gb]}} & w_code[511:384]);
 """)
-t = rep(t, "            reg          wk_v, wv_v;\n", "            reg          wk_v, wv_v;\n            wire [511:0] w_code = ib_code[{gb[3], gb[1]}];\n")
+t = rep(t, "            reg          wk_v, wv_v;\n", "            reg          wk_v, wv_v;\n            localparam integer QB = (gb / 8) * 2 + ((gb / 2) % 2);\n            wire [511:0] w_code = ib_all[QB*512 +: 512];\n")
 t = rep(t, "fset_r <= i1_v && i1_last; i2_v <= i1_v;", "fset_r <= ib_v && ib_last; i2_v <= ib_v;")
 t = rep(t, "w_a <= i1_a; fslot_r <= i1_slot; r_a", "w_a <= ib_a; fslot_r <= ib_slot; r_a")
 t = rep(t, "wire qp_busy = i0_v || q1_v || i1_v || i2_v", "wire qp_busy = i0_v || q1_v || i1_v || ib_v || i2_v")
@@ -71,7 +67,7 @@ t = rep(t, """    reg  [2:0]   fq_wp, fq_rp;
     wire [2047:0] fd_all = {fq_d[7], fq_d[6], fq_d[5], fq_d[4], fq_d[3], fq_d[2], fq_d[1], fq_d[0]};
     wire [183:0] fa_all = {fq_a[7], fq_a[6], fq_a[5], fq_a[4], fq_a[3], fq_a[2], fq_a[1], fq_a[0]};
     wire [71:0]  ft_all = {fq_t[7], fq_t[6], fq_t[5], fq_t[4], fq_t[3], fq_t[2], fq_t[1], fq_t[0]};
-    wire [34:0]  qk_s;                          // per-slice qk_wv
+    (* keep = 1 *) reg [34:0] qk_s;             // per-slice qk_wv
     wire [255:0] qp_wd;
     wire [22:0]  fa;
     wire [8:0]   ft;
@@ -79,11 +75,9 @@ t = rep(t, """    reg  [2:0]   fq_wp, fq_rp;
     generate for (gs = 0; gs < 35; gs = gs + 1) begin : g_rs
         localparam integer W = (gs < 32) ? 8 : (gs == 32) ? 12 : (gs == 33) ? 11 : 9;
         (* keep = 1 *) reg [7:0] oh;
-        (* keep = 1 *) reg       qk_c;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin oh <= 8'd1; qk_c <= 1'b0; end
-            else begin if (fq_pop) oh <= {oh[6:0], oh[7]}; qk_c <= fq_ne_n; end
-        assign qk_s[gs] = qk_c;
+            if (!rst_n) oh <= 8'd1;
+            else if (fq_pop) oh <= {oh[6:0], oh[7]};
         wire [W-1:0] t_or [0:8];
         assign t_or[0] = {W{1'b0}};
         for (gk = 0; gk < 8; gk = gk + 1) begin : g_k
@@ -101,10 +95,10 @@ t = rep(t, """    reg  [2:0]   fq_wp, fq_rp;
     end endgenerate
     wire [31:0]  qp_wa = {8'd0, fa[22:14], 1'b0, fa[13:0]};
 """)
-t = rep(t, "if (!rst_n) begin fq_wp <= 3'd0; fq_rp <= 3'd0; fq_n <= 4'd0; cred <= 4'd0; end", "if (!rst_n) begin fq_wp <= 3'd0; fq_n <= 4'd0; qk_wv <= 1'b0; cred <= 4'd0; end")
+t = rep(t, "if (!rst_n) begin fq_wp <= 3'd0; fq_rp <= 3'd0; fq_n <= 4'd0; cred <= 4'd0; end", "if (!rst_n) begin fq_wp <= 3'd0; fq_n <= 4'd0; qk_wv <= 1'b0; qk_s <= 35'd0; cred <= 4'd0; end")
 t = rep(t, """            if (fq_pop) fq_rp <= fq_rp + 3'd1;
             fq_n <= fq_n + (e1_v ? 4'd1 : 4'd0) - (fq_pop ? 4'd1 : 4'd0);
-""", """            fq_n <= fq_n_n; qk_wv <= fq_ne_n;
+""", """            fq_n <= fq_n_n; qk_wv <= fq_ne_n; qk_s <= {35{fq_ne_n}};
 """)
 # ---- cut 14 stream read
 t = rep(t, """    wire [2:0]   ra_w0 = ra_rp[7:5];
@@ -198,13 +192,13 @@ r = r.replace("results/kv_ing_rf_1104", "results/kv_ing_rf2_1105").replace("qkd_
 r = rep(r, """ m_nowait) sub $E "st_ok_r <= st_run && !is_raw && ap_go && !st_go && need_ok;" "st_ok_r <= st_run && !is_raw && ap_go && need_ok;";;""",
 """ m_nowait) sub $E "st_ok_r <= ok0 && st_run && !is_raw && ap_go && !st_go && need_ok;" "st_ok_r <= ok0 && st_run && !is_raw && ap_go && need_ok;";;
  m_ok0) sub $E "st_ok_r <= ok0 && st_run" "st_ok_r <= st_run";;
- m_oh) sub $E "else begin if (fq_pop) oh <= {oh[6:0], oh[7]}; qk_c <= fq_ne_n; end" "else begin if (fq_pop) oh <= (gs == 7) ? {oh[3:0], oh[7:4]} : {oh[6:0], oh[7]}; qk_c <= fq_ne_n; end";;
- m_qkc) sub $E "qk_c <= fq_ne_n; end" "qk_c <= qk_wv; end";;
+ m_oh) sub $E "else if (fq_pop) oh <= {oh[6:0], oh[7]};" "else if (fq_pop) oh <= (gs == 7) ? {oh[3:0], oh[7:4]} : {oh[6:0], oh[7]};";;
+ m_qkc) sub $E "qk_s <= {35{fq_ne_n}};" "qk_s <= {35{qk_wv}};";;
  m_rawclr) sub $E "ra_wp <= 3'd0; rawq_v <= 1'b0;" "ra_wp <= 3'd0;";;
  m_rawq) sub $E "rawq_v <= raw_load || (rawq_v && !st_go);" "rawq_v <= raw_load;";;
  m_w1) sub $E "w1 <= ra_rp_n[7:5] + 3'd1;" "w1 <= ra_rp_n[7:5];";;
  m_off) sub $E "always @(posedge clk) off <= ra_rp[4:0];" "always @(posedge clk) off <= (gy == 3) ? ra_rp[4:0] ^ 5'd1 : ra_rp[4:0];";;
- m_ibq) sub $E "wire [511:0] w_code = ib_code[{gb[3], gb[1]}];" "wire [511:0] w_code = (gb == 13) ? i1_code : ib_code[{gb[3], gb[1]}];";;
+ m_ibq) sub $E "wire [511:0] w_code = ib_all[QB*512 +: 512];" "wire [511:0] w_code = (gb == 13) ? i1_code : ib_all[QB*512 +: 512];";;
  m_ibsel) sub $E "ib_sel1 <= i1_sel1;" "ib_sel1 <= i1_sel0;";;""")
 (B / "run_ing.sh").write_text(r)
 print("ok", len(t.splitlines()))

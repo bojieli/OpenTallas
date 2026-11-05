@@ -159,16 +159,12 @@ module qkd_host_native_engine_ing2 (
         end
     always @(posedge clk) begin i1_slot <= q1_slot; i1_last <= q1_last; i1_isv <= q1_isv; i1_a <= {q1_slot, q1_t}; end
     // -- I1B: per-quadrant copy of the beat (cut 13) ---------------------------------------------------------------------
-    wire [511:0] ib_code [0:3];
+    // flat kept vectors: a generate-scope reg behind an alias wire lost its keep in the face-port emission (ib_code[n] became the reg name) and folded to one bank
+    (* keep = 1 *) reg [2047:0] ib_all;
     reg  [15:0]  ib_sel0, ib_sel1, ib_sel2, ib_sel3;
     reg          ib_v, ib_slot, ib_last, ib_isv;
     reg  [4:0]   ib_a;
-    genvar gq1;
-    generate for (gq1 = 0; gq1 < 4; gq1 = gq1 + 1) begin : g_ibq
-        (* keep = 1 *) reg [511:0] code;
-        always @(posedge clk) code <= i1_code;
-        assign ib_code[gq1] = code;
-    end endgenerate
+    always @(posedge clk) ib_all <= {4{i1_code}};
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin ib_v <= 1'b0; ib_sel0 <= 16'd0; ib_sel1 <= 16'd0; ib_sel2 <= 16'd0; ib_sel3 <= 16'd0; end
         else begin ib_v <= i1_v; ib_sel0 <= i1_sel0; ib_sel1 <= i1_sel1; ib_sel2 <= i1_sel2; ib_sel3 <= i1_sel3; end
@@ -211,7 +207,8 @@ module qkd_host_native_engine_ing2 (
     generate if (1) begin : g_qp if (1) begin : g_bm
         for (gb = 0; gb < 16; gb = gb + 1) begin : g_mb
             reg          wk_v, wv_v;
-            wire [511:0] w_code = ib_code[{gb[3], gb[1]}];
+            localparam integer QB = (gb / 8) * 2 + ((gb / 2) % 2);
+            wire [511:0] w_code = ib_all[QB*512 +: 512];
             reg  [127:0] w_d;
             wire [127:0] mko, mvo;
             reg  [127:0] ck_q, cv_q;
@@ -280,7 +277,7 @@ module qkd_host_native_engine_ing2 (
     wire [2047:0] fd_all = {fq_d[7], fq_d[6], fq_d[5], fq_d[4], fq_d[3], fq_d[2], fq_d[1], fq_d[0]};
     wire [183:0] fa_all = {fq_a[7], fq_a[6], fq_a[5], fq_a[4], fq_a[3], fq_a[2], fq_a[1], fq_a[0]};
     wire [71:0]  ft_all = {fq_t[7], fq_t[6], fq_t[5], fq_t[4], fq_t[3], fq_t[2], fq_t[1], fq_t[0]};
-    wire [34:0]  qk_s;                          // per-slice qk_wv
+    (* keep = 1 *) reg [34:0] qk_s;             // per-slice qk_wv
     wire [255:0] qp_wd;
     wire [22:0]  fa;
     wire [8:0]   ft;
@@ -288,11 +285,9 @@ module qkd_host_native_engine_ing2 (
     generate for (gs = 0; gs < 35; gs = gs + 1) begin : g_rs
         localparam integer W = (gs < 32) ? 8 : (gs == 32) ? 12 : (gs == 33) ? 11 : 9;
         (* keep = 1 *) reg [7:0] oh;
-        (* keep = 1 *) reg       qk_c;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin oh <= 8'd1; qk_c <= 1'b0; end
-            else begin if (fq_pop) oh <= {oh[6:0], oh[7]}; qk_c <= fq_ne_n; end
-        assign qk_s[gs] = qk_c;
+            if (!rst_n) oh <= 8'd1;
+            else if (fq_pop) oh <= {oh[6:0], oh[7]};
         wire [W-1:0] t_or [0:8];
         assign t_or[0] = {W{1'b0}};
         for (gk = 0; gk < 8; gk = gk + 1) begin : g_k
@@ -312,10 +307,10 @@ module qkd_host_native_engine_ing2 (
     wire         qp_dv = fq_pop && ft[8];
     always @(posedge clk) if (e1_v) begin fq_d[fq_wp] <= sec; fq_a[fq_wp] <= e1_a; fq_t[fq_wp] <= {e1_last, e1_tag}; end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fq_wp <= 3'd0; fq_n <= 4'd0; qk_wv <= 1'b0; cred <= 4'd0; end
+        if (!rst_n) begin fq_wp <= 3'd0; fq_n <= 4'd0; qk_wv <= 1'b0; qk_s <= 35'd0; cred <= 4'd0; end
         else begin
             if (e1_v) fq_wp <= fq_wp + 3'd1;
-            fq_n <= fq_n_n; qk_wv <= fq_ne_n;
+            fq_n <= fq_n_n; qk_wv <= fq_ne_n; qk_s <= {35{fq_ne_n}};
             cred <= cred + ((q_iss && in_lane) ? 4'd1 : 4'd0) - (fq_pop ? 4'd1 : 4'd0);
         end
     wire qp_busy = i0_v || q1_v || i1_v || ib_v || i2_v || fset_r || cred != 4'd0 || s_fill != 2'b00;

@@ -21,13 +21,13 @@ case $CASE in
  m_shstale) sub $E "always @(posedge clk) sh_r <= ra_sh[255:0];" "always @(posedge clk) if (st_go || !st_ok_r && !ap_go) sh_r <= ra_sh[255:0];";;
  m_nowait) sub $E "st_ok_r <= ok0 && st_run && !is_raw && ap_go && !st_go && need_ok;" "st_ok_r <= ok0 && st_run && !is_raw && ap_go && need_ok;";;
  m_ok0) sub $E "st_ok_r <= ok0 && st_run" "st_ok_r <= st_run";;
- m_oh) sub $E "else begin if (fq_pop) oh <= {oh[6:0], oh[7]}; qk_c <= fq_ne_n; end" "else begin if (fq_pop) oh <= (gs == 7) ? {oh[3:0], oh[7:4]} : {oh[6:0], oh[7]}; qk_c <= fq_ne_n; end";;
- m_qkc) sub $E "qk_c <= fq_ne_n; end" "qk_c <= qk_wv; end";;
+ m_oh) sub $E "else if (fq_pop) oh <= {oh[6:0], oh[7]};" "else if (fq_pop) oh <= (gs == 7) ? {oh[3:0], oh[7:4]} : {oh[6:0], oh[7]};";;
+ m_qkc) sub $E "qk_s <= {35{fq_ne_n}};" "qk_s <= {35{qk_wv}};";;
  m_rawclr) sub $E "ra_wp <= 3'd0; rawq_v <= 1'b0;" "ra_wp <= 3'd0;";;
  m_rawq) sub $E "rawq_v <= raw_load || (rawq_v && !st_go);" "rawq_v <= raw_load;";;
  m_w1) sub $E "w1 <= ra_rp_n[7:5] + 3'd1;" "w1 <= ra_rp_n[7:5];";;
  m_off) sub $E "always @(posedge clk) off <= ra_rp[4:0];" "always @(posedge clk) off <= (gy == 3) ? ra_rp[4:0] ^ 5'd1 : ra_rp[4:0];";;
- m_ibq) sub $E "wire [511:0] w_code = ib_code[{gb[3], gb[1]}];" "wire [511:0] w_code = (gb == 13) ? i1_code : ib_code[{gb[3], gb[1]}];";;
+ m_ibq) sub $E "wire [511:0] w_code = ib_all[QB*512 +: 512];" "wire [511:0] w_code = (gb == 13) ? i1_code : ib_all[QB*512 +: 512];";;
  m_ibsel) sub $E "ib_sel1 <= i1_sel1;" "ib_sel1 <= i1_sel0;";;
  m_pushq) sub $E "(ra_room && beats_nz && !push_q)" "(ra_room && beats_nz)"; sub $E "ra_room && beats_nz && !push_q;" "ra_room && beats_nz;";;
  m_apskip) sub $E "ap_ok1m <= !ap_inval && st_act && ap_ok1;" "ap_ok1m <= !ap_inval && st_act;";;
