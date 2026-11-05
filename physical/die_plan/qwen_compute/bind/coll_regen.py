@@ -95,10 +95,19 @@ def regen(ctx):
         head_profile['record_timing'] = head_timing
     for j in range(3):
         params[face(j)] = dict(PHY=cal["PS"] + LX[j], L=LS, R=RS[j], PEER_R=RS[PEER[j]])
+    # DIE-QC-63/SC 11-02: explicit plan hard-core params (QC SC event: SC leaf u_core HARD_PINREG=1)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import sc_hard_params as SHP
+    hc_params, hc_record = SHP.regen(ctx)
+    for path, values in hc_params.items():
+        assert path not in params, path
+        params[path] = values
     result = dict(params=params,
                 record=dict(rule=__doc__.split("\n\n")[1], D2D_TXDP_C=txdp, D2D_SEAM_C=seam, TX=TX, RX=RX, RS=RS, RU=fp["R"], LX=LX, LS=LS, calendar=cal,
                             bench_args=f"--relays {fp['R']} {RS[0]} {RS[1]} {RS[2]} --lanes {TX[0]} {TX[1]} {TX[2]} "
                                        f"{RX[0]} {RX[1]} {RX[2]} --lx {LX[0]} {LX[1]} {LX[2]}", ucie_face_params=f2))
     if head_profile is not None:
         result['record']['qwen_head_prepare_profile'] = head_profile
+    if hc_record:
+        result['record']['plan_hard_core_params'] = hc_record
     return result
