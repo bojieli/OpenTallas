@@ -256,3 +256,8 @@ Elapsed time: 1:07.39[h:]min:sec. CPU time: user 64.02 sys 2.33 (98%). Peak memo
 make[1]: *** [Makefile:548: do-4_1_cts] Error 1
 make: *** [Makefile:548: /work/run/results/asap7/dp_sle_st_a_v1__cl989804f6__cled3c1d7b/base/4_1_cts.odb] Error 2
  | kit epyc4:/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v1__cl989804f6__cled3c1d7b/attempt_8/gen/sle_st_a_v1__cl989804f6__cled3c1d7b src main@cbb7cfda19b31273a245c3244c0218ce3bd0a269 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-05 11:30:39 PST AUTOPILOT -> KIT-WAVE-12: FAILED 295e655851c5 qwen_compute/sle_st_a_v1__cl989804f6__cl18eece69 (CRASH/flow-error): nd.rst_n has no unambiguous reset terminal
+Elapsed time: 1:09.45[h:]min:sec. CPU time: user 67.16 sys 1.87 (99%). Peak memory: 1218868KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_sle_st_a_v1__cl989804f6__cl18eece69/base/4_1_cts.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v1__cl989804f6__cl18eece69/gen/sle_st_a_v1__cl989804f6__cl18eece69 src main@cbb7cfda19b31273a245c3244c0218ce3bd0a269 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
