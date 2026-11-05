@@ -22,6 +22,46 @@ class MacroParamBB(unittest.TestCase):
                             " m_sram u_s(.a(clk)); endmodule\n")
         self.macros = [("u_p", "m_pair", "", "", 0, 0, "N"), ("u_s", "m_sram", "", "", 0, 0, "N")]
 
+    def _spec_kit(self, inst):
+        d = self.t / "root" / "physical/die_plan/x/cores/legacy/specs/m_tx"
+        d.mkdir(parents=True)
+        (d / "spec.json").write_text('{"top": "m_tx", "params": {"SRAM": 1, "V": 276, "RDL": 1}}')
+        (self.t / "src" / "m_tx.sv").write_text(
+            "module m_tx #(parameter integer V = 276, parameter bit SRAM = 0, parameter integer RDL = 0)(input wire c);\nendmodule\n")
+        top = self.t / "src" / "t2.sv"
+        top.write_text(f"module t2 #(parameter bit TS = 1)(input wire c); m_tx #({inst}) u_tx(.c(c)); endmodule\n")
+        return top
+
+    def test_nonliteral_override_takes_built_spec_value(self):
+        # FORM-IDX 11-05 bk_sel__t2: .SRAM_MACRO(TX_SRAM) said nothing, header stayed 0 against a view built with 1
+        top = self._spec_kit(".V(V), .SRAM(TS)")
+        out = G.macro_param_blackboxes([("u_tx", "m_tx", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+        txt = out[0].read_text()
+        self.assertIn("SRAM = 1", txt)
+        self.assertIn("V = 276", txt)             # equal to the RTL default: untouched text
+        self.assertIn("RDL = 0", txt)             # not overridden by the parent: not this rule's business
+        self.assertIn("kit spec: SRAM=1", txt)
+
+    def test_parent_that_differs_from_spec_still_stops(self):
+        import native_bb
+        top = self._spec_kit(".SRAM(TS)")
+        out = G.macro_param_blackboxes([("u_tx", "m_tx", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+        hp = native_bb.headers_params([out[0]])
+        _, _, ok = native_bb.plan([("m_tx", "t2", "u_tx", "SRAM", "1", "1")], hp)
+        self.assertEqual(ok, [])                  # elaborated 1 = view 1: provable, stripped
+        _, _, bad = native_bb.plan([("m_tx", "t2", "u_tx", "SRAM", "1", "0")], hp)
+        self.assertEqual(len(bad), 1)             # elaborated 0 against a view built with 1: hard stop stays
+
+    def test_no_spec_keeps_rtl_default(self):
+        top = self._spec_kit(".SRAM(TS)")
+        out = G.macro_param_blackboxes([("u_tx", "m_tx", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "none")
+        self.assertIn("SRAM = 0", out[0].read_text())
+
+    def test_literal_in_instance_beats_spec(self):
+        top = self._spec_kit(".SRAM(1'b0)")       # the literal rule of 11-01 is unchanged
+        out = G.macro_param_blackboxes([("u_tx", "m_tx", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+        self.assertIn("SRAM = 1'b0", out[0].read_text())
+
     def test_bare_macro_default_takes_identity(self):
         hdr = "module m #(parameter integer A = `A_DEF, parameter integer B = `B_DEF,\n parameter [14:0] C=`C_DEF)(input wire c);"
         out, done = G._header_with_defaults(hdr, {"A": "2", "C": "15'b000001010011100"})

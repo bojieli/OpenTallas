@@ -1,6 +1,6 @@
 """AUTOBUILD-PIPE-2 10-31 (S81 slice_station wave: every place FAIL was 'no legal ... (collector:rst_rl_N)'): a reset
 collector cell without a site in its relay window (+-2.16 um; several relays on one xy, or the relay inside a ring
-band the FIRM ring fill took) takes the window grown about the same centre x2/x4/x8; with no site even there it fails
+band the FIRM ring fill took) takes the window grown about the same centre x2/x4/x8/x16/x32; with no site even there it fails
 closed with the same error.  Runs the REAL cland_put / cland_occupy / cland_put_collector procs (OpenDB mocked)."""
 import re
 import shutil
@@ -59,9 +59,15 @@ def test_taken_window_grows_about_the_same_centre():
 
 
 @needs_tcl
-def test_no_site_up_to_x8_still_fails_closed():
-    out = _run(0, 40000)
+def test_no_site_up_to_x32_still_fails_closed():
+    out = _run(0, 100000)
     assert "ERR OT_CLAND no legal nonoverlapping row/site in reserved band for u_cland_collect_rst_rl_1/q" in out, out
+
+
+@needs_tcl
+def test_window_grows_to_x16_about_the_same_centre():
+    out = _run(0, 38000)                     # x8 window 2.72..37.28 fully taken; x16 reaches 38..40 (QC slw_hc1 11-05)
+    assert "collector grow u_cland_collect_rst_rl_1/q (collector:rst_rl_1): window x16" in out, out
 
 
 def test_collectors_use_the_grow_path_and_skip_the_tiny_box_band_fit():
@@ -81,7 +87,7 @@ def test_status_window_taken_grows():
     out = subprocess.run(["tclsh"], input=_procs() + STATUS % dict(OL=17000, OU=23000), capture_output=True, text=True)
     assert out.returncode == 0, out.stderr
     assert "OT_CLAND status grow u_cland_collect_rst_rl_1/q (status:landing_ready_ft10_i): window x2" in out.stdout, out.stdout
-    out = subprocess.run(["tclsh"], input=_procs() + STATUS % dict(OL=0, OU=40000), capture_output=True, text=True)
+    out = subprocess.run(["tclsh"], input=_procs() + STATUS % dict(OL=0, OU=100000), capture_output=True, text=True)
     assert "ERR OT_CLAND no legal nonoverlapping row/site in reserved band" in out.stdout, out.stdout
 
 
