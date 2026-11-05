@@ -3,7 +3,7 @@
 // chain-end kit top: scalar-port wrapper of the bounded netlist qfd_dv_s5_sc2_k79_dn0 = qfd_dv_s5_sc2_dn0 #(LA 7, LM 9)
 // (k79 recipe, see tools/qwen_dv/gen_sc2_chain_end.py).  Ports = qfd_dv_s5_sc2_leaf without dn_i.
 // OT_S5_SC2CE_MUT_NETLIST (bench only): the constructed CE_MUT=1 mutant netlist instead.
-module qfd_dv_s5_sc2_leaf_dn0 (
+module qfd_dv_s5_sc2_leaf_dn0 #(parameter integer HARD_PINREG = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire [100:0]    sc_cfg,
@@ -34,7 +34,7 @@ module qfd_dv_s5_sc2_leaf_dn0 (
 `ifdef OT_S5_SC2CE_MUT_NETLIST
     qfd_dv_s5_sc2_k79_dn0_mut u (
 `else
-    qfd_dv_s5_sc2_k79_dn0 u (
+    qfd_dv_s5_sc2_k79_dn0 #(.HARD_PINREG(HARD_PINREG)) u (
 `endif
         .ck(ck), .rst_n(rst_n), .sc_cfg(sc_cfg), .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .red_we(red_we), .red_addr(red_addr), .red_data(red_data), .vm_we(vm_we), .vm_win0(vm_win0), .vm_wdata0(vm_wdata0), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u), .w1_we(w1_we), .w1_addr(w1_addr), .w1_data(w1_data), .tok_v(tok_v), .tok_idx(tok_idx), .tok_own(tok_own), .tok_val(tok_val), .tok_user(tok_user), .busy(busy), .fault(fault));
 endmodule
@@ -42,7 +42,7 @@ endmodule
 // chain-end kit top: scalar-port wrapper of the bounded netlist qfd_dv_s5_sc2_k79_up0 = qfd_dv_s5_sc2_up0 #(LA 7, LM 9)
 // (k79 recipe, see tools/qwen_dv/gen_sc2_chain_end.py).  Ports = qfd_dv_s5_sc2_leaf without up_i.
 // OT_S5_SC2CE_MUT_NETLIST (bench only): the constructed CE_MUT=1 mutant netlist instead.
-module qfd_dv_s5_sc2_leaf_up0 (
+module qfd_dv_s5_sc2_leaf_up0 #(parameter integer HARD_PINREG = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire [100:0]    sc_cfg,
@@ -73,7 +73,7 @@ module qfd_dv_s5_sc2_leaf_up0 (
 `ifdef OT_S5_SC2CE_MUT_NETLIST
     qfd_dv_s5_sc2_k79_up0_mut u (
 `else
-    qfd_dv_s5_sc2_k79_up0 u (
+    qfd_dv_s5_sc2_k79_up0 #(.HARD_PINREG(HARD_PINREG)) u (
 `endif
         .ck(ck), .rst_n(rst_n), .sc_cfg(sc_cfg), .dn_i(dn_i), .dn_o(dn_o), .up_o(up_o), .red_we(red_we), .red_addr(red_addr), .red_data(red_data), .vm_we(vm_we), .vm_win0(vm_win0), .vm_wdata0(vm_wdata0), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u), .w1_we(w1_we), .w1_addr(w1_addr), .w1_data(w1_data), .tok_v(tok_v), .tok_idx(tok_idx), .tok_own(tok_own), .tok_val(tok_val), .tok_user(tok_user), .busy(busy), .fault(fault));
 endmodule

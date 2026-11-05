@@ -17,6 +17,11 @@ Recipe families:
     (the async 2-flop synchronisers qfd_dv_s5_rst2 (lrly) and qfd_dv_s1_rst_land (head) become synchronous 2-stage
     relays of the same release depth; downstream flops keep their async clear from the relay output).
 
+  * sc_leaf (DIE-QC-63/SC 11-02, QC SC event): the SC leaf hard cores u_core of the nine SC types --
+    qfd_dv_s5_sc2_leaf (base, plan params HARD_PINREG=1 -> VERILOG_TOP_PARAMS) and the chain-end variants
+    qfd_dv_s5_sc2_leaf_up0 / _dn0 (same HARD_PINREG=1): sources = the leaf wrapper + its k79 netlist + helpers, clk ck / rst_n,
+    no macros, util 0.45, M5 ceiling (the Codex db9 HARD1 recipe), kit IO frame = the plan early core tap.
+
 gen writes the spec (OUT/_spec/<module>/spec.json) and the one-module recipe file (OUT/_recipes.json) and runs
     gen_core_kit_qc.py --module M --recipes OUT/_recipes.json --plan PLAN --out OUT --seam-hold 25,25 [args]
 (hard-core seam contract sender 25 / seam 25, COORD 10-28 19:05; extra args last).  Kit = OUT/<module>_<suffix>/
@@ -58,6 +63,13 @@ SU_LANE_PATCHES = [
         "    always @(posedge clk) if (!arst_n) s <= 2'b00;"]]}]
 
 
+SC_HELPERS = "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv"
+SC_LEAF = {   # module -> (wrapper, netlist): DIE-QC-63/SC 11-02 sc_leaf family
+    "qfd_dv_s5_sc2_leaf": ("rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv", "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv"),
+    "qfd_dv_s5_sc2_leaf_up0": ("rtl/qwen_dv/s5/qfd_dv_s5_sc2_ce_leaf.sv", "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_up0.sv"),
+    "qfd_dv_s5_sc2_leaf_dn0": ("rtl/qwen_dv/s5/qfd_dv_s5_sc2_ce_leaf.sv", "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_dn0.sv")}
+
+
 def sha12(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()[:12]
 
@@ -68,6 +80,9 @@ def family(module, repo=REPO):
     if m:
         f = f"rtl/physical/{module}.sv"
         return ("su_lane", f) if (repo / f).is_file() else (None, f"cut RTL {f} missing")
+    if module in SC_LEAF:
+        f = SC_LEAF[module][0]
+        return ("sc_leaf", f) if (repo / f).is_file() else (None, f"SC leaf RTL {f} missing")
     return None, "no QC core recipe family (qc_core_wave.py)"
 
 
@@ -154,6 +169,37 @@ def su_lane_recipe(e, out, plan=None):
     return rec
 
 
+def plan_core_params(plan, module):
+    """DIE-QC-63/SC: the explicit plan hard-core params of the module (identical on every instance, else FAIL)."""
+    vals = {json.dumps(c.get("params") or {}, sort_keys=True)
+            for t in (plan.get("partition_types") or {}).values() for c in t.get("hard_cores") or []
+            if c.get("module") == module}
+    if len(vals) > 1:
+        raise SystemExit(f"CORE_VIEW FAIL {module}: hard-core params differ between instances: {sorted(vals)}")
+    return json.loads(vals.pop()) if vals else {}
+
+
+def sc_leaf_recipe(e, out, plan=None):
+    m = e["module"]
+    wrap, net = SC_LEAF[m]
+    params = plan_core_params(plan, m) if plan else {}
+    spec = dict(name=m, top=m, kind="tile", sources=[wrap, net, SC_HELPERS], params=params, clock_port="ck",
+                reset_ports=["rst_n"], macros=[], route=dict(pd=0.45))
+    sd = out / "_spec" / m
+    sd.mkdir(parents=True, exist_ok=True)
+    (sd / "spec.json").write_text(json.dumps(spec, indent=1) + "\n")
+    rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="h" + e["view"].split("@")[1][:6], util=0.45,
+               max_layer="M5", insertion_balance=False,
+               _why=f"qc_core_wave sc_leaf view {e['view']} (DIE-QC-63/SC QC SC event): plan pin table {e['pins_file']}")
+    if params:
+        rec["params"] = params
+    ins = plan_core_tap_insertion(plan, m) if plan else None
+    if ins:
+        rec.update(insertion_ps=ins[0], insertion_ff_ps=ins[1],
+                   insertion_basis=f"plan early core tap {ins[0]:g} TT / {ins[1]:g} FF ({ins[2]})")
+    return rec
+
+
 def gen(a, extra):
     v = json.load(open(a.views))
     e = next((x for x in v.get("view_list") or [] if x["view"] == a.view), None)
@@ -161,7 +207,7 @@ def gen(a, extra):
         sys.exit(f"CORE_VIEW FAIL {a.view}: not in {a.views}")
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    rec = {"su_lane": su_lane_recipe}[e["family"]](e, out, json.load(open(a.plan or v["plan"])))
+    rec = {"su_lane": su_lane_recipe, "sc_leaf": sc_leaf_recipe}[e["family"]](e, out, json.load(open(a.plan or v["plan"])))
     (out / "_recipes.json").write_text(json.dumps({e["module"]: rec}, indent=1) + "\n")
     cmd = [sys.executable, str(GEN), "--module", e["module"], "--recipes", str(out / "_recipes.json"),
            "--plan", a.plan or v["plan"], "--out", str(out), "--seam-hold", "25,25"] + list(extra)
