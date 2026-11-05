@@ -1,6 +1,6 @@
 #!/bin/bash
 # mkbench.sh NAME [TILE_MUT...]: bench tree src_NAME = src_new with the group module replaced by the part 26 composition with face shells, one clock.
-set -e; N=$1; shift; W=/srv/opentallas-scratch3/claude/hbm-reform-b3/wt; A=/srv/opentallas-scratch2/claude/hbm-reform-b5; B=$A/bench
+set -e; N=$1; shift; W=/srv/opentallas-scratch3/claude/hbm-reform-b3/wt; A=/srv/opentallas-scratch3/claude/hbm-reform-b5; B=$A/bench
 rm -rf $B/src_$N; cp -al $B/src_new $B/src_$N
 Q=$W/results/die_hbm_1104/reform_b/split_p26; R=$W/rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv; T=$A/bench/tmp_$N; rm -rf $T; mkdir -p $T
 cp $R $T/split.sv; for s in "$@"; do sed -i -f "$s" $T/split.sv; done

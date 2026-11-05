@@ -1,0 +1,10 @@
+ps2 tree=tree ps2 ok mutparam=1 il=0 SMB_UNIT FAIL ops=20 pass=0 gos=3/29 go_slots_exact=False runs=0 fault=FAULT sm_arith cycle 1913 None
+ow1 tree=tree ow1 ok mutparam=1 il=0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 
+il1 tree=1 mutparam=0 il=1 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 
+ow3 tree=tree ow3 ok mutparam=1 il=0 SMB_UNIT FAIL ops=20 pass=0 gos=0/29 go_slots_exact=False runs=0 fault=None DONE cycles=12764 results=0 gos=0 runs=0 ing
+ps1 tree=tree ps1 ok mutparam=1 il=0 SMB_UNIT FAIL ops=20 pass=0 gos=0/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 379 issuer 0 feed 1 (desc 0 cdc 0
+ow4 tree=tree ow4 ok mutparam=1 il=0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 
+ps3 tree=tree ps3 ok mutparam=1 il=0 SMB_UNIT FAIL ops=20 pass=2 gos=2/29 go_slots_exact=False runs=0 fault=None DONE cycles=12764 results=2 gos=2 runs=0 ing
+ow2 tree=tree ow2 ok mutparam=1 il=0 SMB_UNIT FAIL ops=20 pass=1 gos=1/29 go_slots_exact=False runs=0 fault=None DONE cycles=12764 results=1 gos=1 runs=0 ing
+ALLDONE
+# read: il1 PASS as required; ps1 ps2 ps3 ow2 ow3 FAIL as required; ow1 (credit depth+1) and ow4 (kr capture 1 edge late) SURVIVE. Both act only when ready or credit toggles under back-pressure; this smoke never back-pressures the K read response [inferred, not run].
