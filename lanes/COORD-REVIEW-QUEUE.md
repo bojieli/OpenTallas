@@ -19443,3 +19443,4 @@ FAILED [AUTOPILOT cf35577e0b5e] 2026-11-05 14:41:16 PST AUTOPILOT -> KIT-WAVE-12
   d) Watch hd_spn_eshim_rx a5 (G2 setup_tt now advisory) and the QC tag-f recut. CANCEL-SUPERSEDED is capped at 20 per tick; coll_s is cut once only.
   e) New tags: build a new kw11/src_<x> tree (cp -al + fetch full sha) and point each die's src/src_sha at it within 30 min. Check plan/sidecar/asbuilt bytes with cmp first.
   f) Load balance intel1 -> epyc4 scratch2: still not feasible (epyc4 scratch2 ~127-160 GB).
+- 2026-11-05 15:31 PST RESULT [ROOT-MERGE-39 -> COORD] Suite i147s on main 5238f449c5c (I144-I147), epyc4 rm31/b: 41 failing ids, identical to i143s.f, 0 new, 0 gone [CHECKED sorted diff]; hbm_b2 tests and test_build_split_tops_hcp_params in the set, none in .f. Started suite i150s on main f88f3b50180 (I148-I150), base 5238f449c5c, PID 1102021, about 30 min; diff against i147s.f.
