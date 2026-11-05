@@ -3,6 +3,10 @@
 // only the two combinational selects (lane read row per bank, stage write per bank) are rewritten as one-hot priority
 // selects. Cause: the sequential "last assignment wins" loops synthesised as 64-deep OA211/AO21 chains to the SRAM
 // wd_in (CTS setup -1622 ps on opsa_group0). Requires N >= 8 (8 consecutive stage words on distinct banks); N = 16 here.
+// BREG = 1 (HBM-REFORM-B9 second form, CTS setup still -646 ps face reg -> select -> SRAM r_addr_in across the 760 um tile):
+// every bank input (re/ra/we/wa/wd) is registered before the macro. All bank ops move one edge together, so their order
+// is kept; the response network follows the 2-edge bank (same selects as the LAT = 1 path): rd / sr_d / sr_rv +1 edge.
+// flt is unchanged (its checks read the selects, not the banks).
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hgi_su_lgroup2_lf #(
@@ -11,7 +15,8 @@ module ot_hgi_su_lgroup2_lf #(
     parameter integer MACRO = 1,
     parameter integer MUT_XBAR = 0,        // bench mutant: identity lanes take the neighbouring bank's word
     parameter integer LAT = 0,             // bench mutant: bank read latency 1 = +1 edge, 2 = -1 edge (see ot_hgi_su_lbank)
-    parameter integer NS = 1               // sector lanes: NS independent 8-word stage writes / drain reads an edge
+    parameter integer NS = 1,              // sector lanes: NS independent 8-word stage writes / drain reads an edge
+    parameter integer BREG = 0             // 1 = registered bank inputs (+1 edge on rd / sr_d / sr_rv)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -107,10 +112,11 @@ module ot_hgi_su_lgroup2_lf #(
     always @(posedge clk or negedge rst_n) if (!rst_n) srv1 <= {NS{1'b0}}; else srv1 <= sr_v;
     // the response valid and the network selects follow the banks' latency (LAT mutants move the data, valid and
     // selects together, so a valid-driven reader stays exact and a fixed-latency one does not)
-    assign sr_rv = (LAT == 1) ? srv2 : (LAT == 2) ? sr_v : srv1;
+    localparam integer NLAT = (BREG != 0) ? 1 : LAT;   // network latency mode (BREG = a 2-edge bank)
+    assign sr_rv = (NLAT == 1) ? srv2 : (NLAT == 2) ? sr_v : srv1;
     wire [LN-1:0] lb_s [0:N-1];
     for (genvar gs_ = 0; gs_ < N; gs_ = gs_ + 1) begin : g_ls
-        assign lb_s[gs_] = (LAT == 1) ? lb_q2[gs_] : (LAT == 2) ? ra[gs_*AW +: LN] : lb_q[gs_];
+        assign lb_s[gs_] = (NLAT == 1) ? lb_q2[gs_] : (NLAT == 2) ? ra[gs_*AW +: LN] : lb_q[gs_];
     end
     // the data network: a lane takes its bank among its candidates (lane 0: any bank)
     genvar gl, gj, gk;
@@ -130,7 +136,7 @@ module ot_hgi_su_lgroup2_lf #(
         end
     end
     for (gk = 0; gk < NS; gk = gk + 1) begin : g_srl
-        wire [LN-1:0] sr_s = (LAT == 1) ? sr_lo2[gk] : (LAT == 2) ? sr_addr[gk*LWB +: LN] : sr_lo[gk];
+        wire [LN-1:0] sr_s = (NLAT == 1) ? sr_lo2[gk] : (NLAT == 2) ? sr_addr[gk*LWB +: LN] : sr_lo[gk];
         for (gj = 0; gj < 8; gj = gj + 1) begin : g_sr
             wire [LN-1:0] bj = sr_s + gj;
             assign sr_d[256*gk + 32*gj +: 32] = b_rd[bj];
@@ -212,8 +218,18 @@ module ot_hgi_su_lgroup2_lf #(
     end
     genvar gb;
     for (gb = 0; gb < N; gb = gb + 1) begin : g_bank
-        ot_hgi_su_lbank #(.RB(RB), .MACRO(MACRO), .LAT(LAT)) u_b (.clk(clk), .re(b_re[gb]), .ra(b_ra[gb]), .rd(b_rd[gb]),
-            .we(b_we[gb]), .wa(b_wa[gb]), .wd(b_wd[gb]));
+        wire k_re, k_we; wire [RB-1:0] k_ra, k_wa; wire [31:0] k_wd;
+        if (BREG != 0) begin : g_breg
+            reg q_re, q_we; reg [RB-1:0] q_ra, q_wa; reg [31:0] q_wd;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin q_re <= 1'b0; q_we <= 1'b0; end else begin q_re <= b_re[gb]; q_we <= b_we[gb]; end
+            always @(posedge clk) begin q_ra <= b_ra[gb]; q_wa <= b_wa[gb]; q_wd <= b_wd[gb]; end
+            assign k_re = q_re; assign k_we = q_we; assign k_ra = q_ra; assign k_wa = q_wa; assign k_wd = q_wd;
+        end else begin : g_nobreg
+            assign k_re = b_re[gb]; assign k_we = b_we[gb]; assign k_ra = b_ra[gb]; assign k_wa = b_wa[gb]; assign k_wd = b_wd[gb];
+        end
+        ot_hgi_su_lbank #(.RB(RB), .MACRO(MACRO), .LAT(LAT)) u_b (.clk(clk), .re(k_re), .ra(k_ra), .rd(b_rd[gb]),
+            .we(k_we), .wa(k_wa), .wd(k_wd));
     end
 endmodule
 `default_nettype wire
