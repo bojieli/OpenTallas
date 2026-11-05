@@ -2291,21 +2291,21 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw-fix-8/src_w/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw-fix-8/src_b/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch2/claude/kw-fix-8/src_w",
-   "src_sha": "627772841061681b5d79d22de3acfb21bad0103f",
+   "src": "/srv/opentallas-scratch2/claude/kw-fix-8/src_b",
+   "src_sha": "cb98b2e2324e3bab53770ea62deed799f303b848",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw-fix-8/src_w/results/qc_die66_shrink2_1103/bind/final_asbuilt.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw-fix-8/src_b/results/qc_die66_shrink2_1103/bind/final_asbuilt.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kw-fix-8/bind_tip_i57",
-    "note": "KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation."
+    "note": "KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation."
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw-fix-8/src_w/results/qc_die66_shrink2_1103/bind/sidecar.json"
+    "/srv/opentallas-scratch2/claude/kw-fix-8/src_b/results/qc_die66_shrink2_1103/bind/sidecar.json"
    ],
    "kinds": [
     "type"
@@ -2333,23 +2333,13 @@
     "tt_ctlm": "DIE-QC-61 16:3x: GEOM-107 FAIL PLAN (r2r 955.8 reset relays unpinned, E/S face regs far, 4 taps/38k FF); same plan block on d90 -> doomed. plan_qc52 tt_ctlm delta (density taps + relay sites + face homes) in progress; release on its merge.",
     "sle_su_c": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
     "sle_su_l0__cl086d85ba": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "sle_su_l0__cl7a55c676": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "sle_su_l1__cl5ea486db": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "sle_su_l1__clc6d66f5b": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
     "slw_su_c__cl19bb38ef": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
     "slw_su_l0__cl1a1c1f8f": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
     "slw_su_l0__cl1e5219ea": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
     "slw_su_l0__cl76fb247e": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "slw_su_l1__cla2a78701": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "slw_su_l1__clcc9d0155": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "sle_hc1__cl22c1ff36": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "sle_hc2__cl9c4c4509__cl3edce1b8": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "sle_hc2__cl9c4c4509__clf60c5152": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "slw_hc1__cl3449ea95": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "slw_hc1__cl68f9248e__cl144ee7b3": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "slw_hc2__cl6bcaba89": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "slw_hc2__cla3497502__cldc737267": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "slw_hc3__cld86a7ad4": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-8 17:5x COORD: stale row stopped; other hc wait one proof row past CTS with no big-tap failure",
     "sle_sc_v1__cl7479a5ec": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
@@ -2357,11 +2347,7 @@
     "sle_sc_v3": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
     "slw_sc_v1__cl63e5a7a2": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
     "slw_sc_v2": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "slw_sc_v3": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "slw_su_c__cl92142dac": "KW-FIX-8 21:0x: OT_CLAND reset_rst_n_t21 same error a7-a8, INFRA label masked it; no blind retry, DIE-QC-71 form",
-    "cbx_q10__cl89936551": "KW-FIX-8 22:4x COORD: QC collector class, waits dq71-collector-nodes merge, then the 14 as one batch",
-    "slw_hc3__clccfc3e6b": "KW-FIX-8 22:4x COORD: QC collector class, waits dq71-collector-nodes merge, then the 14 as one batch",
-    "sle_hc1__cl7d360508": "KW-FIX-8 22:4x COORD: QC collector class, waits dq71-collector-nodes merge, then the 14 as one batch"
+    "slw_sc_v3": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries"
    },
    "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1104s2/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -2489,39 +2475,34 @@
     "slw_fe_v2__cle312294d@4",
     "slw_fw_v1__clf51c11d8__cl592e3d37@4",
     "slw_fw_v3@3",
-    "slw_stm_v1__cle34a73c3@3"
+    "slw_stm_v1__cle34a73c3@3",
+    "sle_fw_v3@8",
+    "slw_fw_v3@4",
+    "slw_hc1__cl68f9248e__cle683a076@3",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9@5",
+    "slw_stm_v1__cle34a73c3@4"
    ],
    "queue_src": "",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
-     "sle_fw_v2__cl69f5e854",
-     "--max-wire-um",
-     "100"
+     "sle_fw_v2__cl69f5e854"
     ],
     "slw_fe_v2__cle312294d": [
      "--gpl-plain",
-     "slw_fe_v2__cle312294d",
-     "--max-wire-um",
-     "100"
+     "slw_fe_v2__cle312294d"
     ],
     "slw_fw_v1__cl51d45468": [
      "--gpl-plain",
-     "slw_fw_v1__cl51d45468",
-     "--max-wire-um",
-     "100"
+     "slw_fw_v1__cl51d45468"
     ],
     "slw_fw_v1__clf51c11d8__cl592e3d37": [
      "--gpl-plain",
-     "slw_fw_v1__clf51c11d8__cl592e3d37",
-     "--max-wire-um",
-     "100"
+     "slw_fw_v1__clf51c11d8__cl592e3d37"
     ],
     "sle_fw_v2__cl6740750e": [
      "--gpl-plain",
-     "sle_fw_v2__cl6740750e",
-     "--max-wire-um",
-     "100"
+     "sle_fw_v2__cl6740750e"
     ],
     "sle_hc0__cl05696ed1": [
      "--gpl-plain",
@@ -2699,101 +2680,19 @@
     ],
     "sle_stm_v1__clbe630b9c": [
      "--gpl-plain",
-     "sle_stm_v1__clbe630b9c",
-     "--max-wire-um",
-     "100"
+     "sle_stm_v1__clbe630b9c"
     ],
     "sle_stm_v2__cl7b3062fa": [
      "--gpl-plain",
-     "sle_stm_v2__cl7b3062fa",
-     "--max-wire-um",
-     "100"
+     "sle_stm_v2__cl7b3062fa"
     ],
     "slw_stm_v1__cle34a73c3": [
      "--gpl-plain",
-     "slw_stm_v1__cle34a73c3",
-     "--max-wire-um",
-     "100"
+     "slw_stm_v1__cle34a73c3"
     ],
     "sle_sc_v3": [
      "--dpl-diamond",
      "sle_sc_v3"
-    ],
-    "sle_fe_v2": [
-     "--max-wire-um",
-     "100"
-    ],
-    "sle_fe_v3": [
-     "--max-wire-um",
-     "100"
-    ],
-    "sle_fw_v1__cl9d029624": [
-     "--max-wire-um",
-     "100"
-    ],
-    "sle_fw_v1__clf58b4dfb": [
-     "--max-wire-um",
-     "100"
-    ],
-    "sle_fw_v3": [
-     "--max-wire-um",
-     "100"
-    ],
-    "sle_stm_v1__cl27746664": [
-     "--max-wire-um",
-     "100"
-    ],
-    "sle_stm_v2__cl55be2264": [
-     "--max-wire-um",
-     "100"
-    ],
-    "sle_stm_v3": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_fe_v1__cl95cd1d0c": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_fe_v1__clfe325744__cldb4efe33": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_fe_v2__clf110fab2": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_fw_v1__clf51c11d8__clc7ddab13": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_fw_v2__cl8537f156": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_fw_v3": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_stm_v1__cl05fc43f7__cl2086fa2c": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_stm_v1__cl05fc43f7__cl389df4e9": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_stm_v2__cl1ca9c415": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_stm_v2__cl9beb65e6": [
-     "--max-wire-um",
-     "100"
-    ],
-    "slw_stm_v3": [
-     "--max-wire-um",
-     "100"
     ]
    },
    "retry_fix": {
@@ -2831,7 +2730,7 @@
     "sle_stm_v2__cl7b3062fa@3": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
     "slw_fe_v2__cle312294d@3": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
     "slw_fw_v1__clf51c11d8__cl592e3d37@3": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
-    "slw_fw_v3@4": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
+    "slw_fw_v3@4": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
     "slw_stm_v1__cle34a73c3@3": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
     "sle_hc2__cl9c4c4509__clf60c5152@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
     "slw_hc1__cl68f9248e__cl144ee7b3@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
@@ -2919,11 +2818,14 @@
     "slw_fe_v1__clfe325744__cldb4efe33@1": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
     "slw_fe_v2__cle312294d@4": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
     "slw_fw_v1__clf51c11d8__cl592e3d37@4": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
-    "slw_fw_v3@3": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)"
+    "slw_fw_v3@3": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
+    "sle_fw_v3@8": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
+    "slw_hc1__cl68f9248e__cle683a076@3": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9@5": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
+    "slw_stm_v1__cle34a73c3@4": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged"
    },
    "gen_hosts": [
-    "epyc4",
-    "intel1"
+    "epyc4"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -3026,7 +2928,9 @@
     "slw_fe_v1__cl95cd1d0c",
     "slw_fe_v1__clfe325744__cldb4efe33",
     "slw_fe_v2__cle312294d",
-    "slw_fw_v1__clf51c11d8__cl592e3d37"
+    "slw_fw_v1__clf51c11d8__cl592e3d37",
+    "sle_hc1__cl22c1ff36",
+    "slw_hc2__cla3497502__cl16607c7a"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
