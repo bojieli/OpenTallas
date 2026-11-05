@@ -2479,29 +2479,46 @@
     "slw_fw_v1__clf51c11d8__clc7ddab13@1",
     "slw_st_a_v1__clfc5867a6@2",
     "sle_st_a_v2@5",
-    "sle_fw_v3@2"
+    "sle_fw_v3@2",
+    "sle_stm_v3@2",
+    "slw_fe_v1__cl95cd1d0c@1",
+    "slw_fe_v1__clfe325744__cldb4efe33@1",
+    "slw_fe_v2__cle312294d@4",
+    "slw_fw_v1__clf51c11d8__cl592e3d37@4",
+    "slw_fw_v3@3",
+    "slw_stm_v1__cle34a73c3@3"
    ],
    "queue_src": "",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
-     "sle_fw_v2__cl69f5e854"
+     "sle_fw_v2__cl69f5e854",
+     "--max-wire-um",
+     "100"
     ],
     "slw_fe_v2__cle312294d": [
      "--gpl-plain",
-     "slw_fe_v2__cle312294d"
+     "slw_fe_v2__cle312294d",
+     "--max-wire-um",
+     "100"
     ],
     "slw_fw_v1__cl51d45468": [
      "--gpl-plain",
-     "slw_fw_v1__cl51d45468"
+     "slw_fw_v1__cl51d45468",
+     "--max-wire-um",
+     "100"
     ],
     "slw_fw_v1__clf51c11d8__cl592e3d37": [
      "--gpl-plain",
-     "slw_fw_v1__clf51c11d8__cl592e3d37"
+     "slw_fw_v1__clf51c11d8__cl592e3d37",
+     "--max-wire-um",
+     "100"
     ],
     "sle_fw_v2__cl6740750e": [
      "--gpl-plain",
-     "sle_fw_v2__cl6740750e"
+     "sle_fw_v2__cl6740750e",
+     "--max-wire-um",
+     "100"
     ],
     "sle_hc0__cl05696ed1": [
      "--gpl-plain",
@@ -2679,19 +2696,101 @@
     ],
     "sle_stm_v1__clbe630b9c": [
      "--gpl-plain",
-     "sle_stm_v1__clbe630b9c"
+     "sle_stm_v1__clbe630b9c",
+     "--max-wire-um",
+     "100"
     ],
     "sle_stm_v2__cl7b3062fa": [
      "--gpl-plain",
-     "sle_stm_v2__cl7b3062fa"
+     "sle_stm_v2__cl7b3062fa",
+     "--max-wire-um",
+     "100"
     ],
     "slw_stm_v1__cle34a73c3": [
      "--gpl-plain",
-     "slw_stm_v1__cle34a73c3"
+     "slw_stm_v1__cle34a73c3",
+     "--max-wire-um",
+     "100"
     ],
     "sle_sc_v3": [
      "--dpl-diamond",
      "sle_sc_v3"
+    ],
+    "sle_fe_v2": [
+     "--max-wire-um",
+     "100"
+    ],
+    "sle_fe_v3": [
+     "--max-wire-um",
+     "100"
+    ],
+    "sle_fw_v1__cl9d029624": [
+     "--max-wire-um",
+     "100"
+    ],
+    "sle_fw_v1__clf58b4dfb": [
+     "--max-wire-um",
+     "100"
+    ],
+    "sle_fw_v3": [
+     "--max-wire-um",
+     "100"
+    ],
+    "sle_stm_v1__cl27746664": [
+     "--max-wire-um",
+     "100"
+    ],
+    "sle_stm_v2__cl55be2264": [
+     "--max-wire-um",
+     "100"
+    ],
+    "sle_stm_v3": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_fe_v1__cl95cd1d0c": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_fe_v1__clfe325744__cldb4efe33": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_fe_v2__clf110fab2": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_fw_v1__clf51c11d8__clc7ddab13": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_fw_v2__cl8537f156": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_fw_v3": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_stm_v1__cl05fc43f7__cl389df4e9": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_stm_v2__cl1ca9c415": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_stm_v2__cl9beb65e6": [
+     "--max-wire-um",
+     "100"
+    ],
+    "slw_stm_v3": [
+     "--max-wire-um",
+     "100"
     ]
    },
    "retry_fix": {
@@ -2730,7 +2829,7 @@
     "slw_fe_v2__cle312294d@3": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
     "slw_fw_v1__clf51c11d8__cl592e3d37@3": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
     "slw_fw_v3@4": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
-    "slw_stm_v1__cle34a73c3@3": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
+    "slw_stm_v1__cle34a73c3@3": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
     "sle_hc2__cl9c4c4509__clf60c5152@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
     "slw_hc1__cl68f9248e__cl144ee7b3@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
     "slw_st_a_v2__cl9f076a5c@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
@@ -2811,7 +2910,13 @@
     "slw_su_c__cl92142dac@4": "KW-FIX-8 12:2x: launched 11:49 by the INFRA relaunch path before plan_dies: no _plan_flags, so no provisional child views; kit tried the tile body flat. Relaunch on prov views via select",
     "sle_stm_v1__clbe630b9c@2": "KW-FIX-8 11-04 COORD YES to 12:42 ASK: a1 stopped by KW-FIX-8 before route, a2 refused nochange on it; record CANCELLED, inputs unchanged, the run never happened",
     "sle_stm_v2__cl7b3062fa@2": "KW-FIX-8 11-04 COORD YES to 12:42 ASK: a1 stopped by KW-FIX-8 before route, a2 refused nochange on it; record CANCELLED, inputs unchanged, the run never happened",
-    "slw_stm_v1__cle34a73c3@2": "KW-FIX-8 11-04 COORD YES to 12:42 ASK: a1 stopped by KW-FIX-8 before route, a2 refused nochange on it; record CANCELLED, inputs unchanged, the run never happened"
+    "slw_stm_v1__cle34a73c3@2": "KW-FIX-8 11-04 COORD YES to 12:42 ASK: a1 stopped by KW-FIX-8 before route, a2 refused nochange on it; record CANCELLED, inputs unchanged, the run never happened",
+    "sle_stm_v3@2": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
+    "slw_fe_v1__cl95cd1d0c@1": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
+    "slw_fe_v1__clfe325744__cldb4efe33@1": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
+    "slw_fe_v2__cle312294d@4": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
+    "slw_fw_v1__clf51c11d8__cl592e3d37@4": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
+    "slw_fw_v3@3": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)"
    },
    "gen_hosts": [
     "epyc4",
@@ -2914,7 +3019,11 @@
     "coll_s",
     "native59",
     "sle_fe_v2",
-    "sle_fe_v3"
+    "sle_fe_v3",
+    "slw_fe_v1__cl95cd1d0c",
+    "slw_fe_v1__clfe325744__cldb4efe33",
+    "slw_fe_v2__cle312294d",
+    "slw_fw_v1__clf51c11d8__cl592e3d37"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
