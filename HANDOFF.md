@@ -2943,7 +2943,6 @@ CODEX: S81 PARKED at explicitUSERhandback. Fullpacket handoff/codex_s81_20261101
 - 2026-11-01 18:40 PST COORD: Codex parked all lanes 18:35-18:40 (user handback). Claude owns all coordination again; split rule ended. RECONCILE-1101C is mapping the 13 packets to lanes, live jobs and READY tips.
 - 2026-11-01 18:51 PST COORD: RECONCILE-1101C done (50 READY tips, 48 live jobs, 15 Codex questions). Ruled all 15; sent pickups to 15 lanes; started CODEX-PICKUP-KV. epyc2 scratch 16 GB (blocked) -> PRUNE-1101E urgent; intel1 back to 326 GB.
 - 2026-11-01 18:56 PST COORD: stopped epyc2 die_ci 10-27 run (pid 8535 + g2part-2772774, 5 d 15 h, stale sha) and clkreset-g2-audit (0% CPU 7 d) per the 2-h watchdog. epyc2 18 GB: TOK-DS-2 build_v1c2 wrote 107 GB in 2 h -> cap/move; FLOW-21 cleans die-ci wt + old canaries. intel1 719 GB free after PRUNE-1101F.
-2026-11-01 19:03 PDT DIE-CI LATEST: /srv/opentallas-scratch/claude/die-ci/results/die_ci/2026-10-27_262d07038412/SUMMARY.md (FAIL, main 262d070384, nightly; branch claude/die-ci-results)
 - 2026-11-01 19:11 PST GEOM-106: PARKED reviewer B (15:18-19:1x). Results + collect chain in lanes/GEOM-106.md; open: KV hroot g2/hroot3 count+countb GRT50 (intel1), QC l7 GRT50 probe, HBM TAPS re-cut spot-checks. No jobs of mine running.
 2026-11-01 19:29 PST COORD hourly: count 49 flat; approved kv-pvpair 3479263c; stale-FAIL sweep + LEC class -> KIT-WAVE-16; GEOM-108 live (GEOM-106 successor); PRUNE-1101G localhost root 90%; owner: keep 1.2 GHz.
 2026-11-01 19:47 PST COORD: OWNER asked why relaunch restarts the whole kit pipeline -> KW-RESUME-1 started: stage fingerprints + resume from first changed stage, full rebuild fallback.
@@ -3154,3 +3153,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 2026-11-05 04:35 PST COORD hourly: count 138 (+3: S81 +1t, HEAD +2t); wave back 04:24, 12 launches per tick; intel1 scratch 75 GB admits again; next read 06:05 KV G0.
 2026-11-05 06:05 PST COORD hourly: count 142, 0 unreachable; every-core safe-form lanes started; epyc4 root 527 under prune.
 - 2026-11-05 06:40 PST COORD hourly: count 142 (flat since 06:03; 3 re-signs in LEC, ETA 07:05). Epyc4 root 505, floor 500: scratch3 writers told to move. CORE-FORMS gaps all owned.
+2026-11-05 06:51 PDT DIE-CI LATEST: /srv/opentallas-scratch/claude/die-ci/results/die_ci/2026-11-01_6defc3c23069/SUMMARY.md (FAIL, main 6defc3c230, nightly; branch claude/die-ci-results)
