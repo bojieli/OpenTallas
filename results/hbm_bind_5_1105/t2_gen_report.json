@@ -1,0 +1,4223 @@
+{
+ "kb": [
+  "hb_idx__kb_NW",
+  "hb_idx__kb_NE",
+  "hb_idx__kb_SW",
+  "hb_idx__kb_SE"
+ ],
+ "emit": [
+  {
+   "inst": "cij_SE",
+   "template": "cij_NE",
+   "hub": "NE_hub",
+   "q0": "u_cij_Q__q0",
+   "master": "ot_hgi_coll_inj_idx_join_rg"
+  },
+  {
+   "inst": "cij_SW",
+   "template": "cij_NW",
+   "hub": "NW_hub",
+   "q0": "u_cij_Q__q0",
+   "master": "ot_hgi_coll_inj_idx_join_rg"
+  },
+  {
+   "inst": "cxij_SE_q",
+   "template": "cxij_NE_q",
+   "hub": "NE_hub",
+   "q0": "u_cxij_Q_q__q0",
+   "master": "ot_hbm_su_static_cxport_ij_q"
+  },
+  {
+   "inst": "cxij_SW_q",
+   "template": "cxij_NW_q",
+   "hub": "NW_hub",
+   "q0": "u_cxij_Q_q__q0",
+   "master": "ot_hbm_su_static_cxport_ij_q"
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "template": "hb_dbk_NE",
+   "hub": "NE_hub",
+   "q0": "u_hb_dbk_Q__q0",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "template": "hb_dbk_NW",
+   "hub": "NW_hub",
+   "q0": "u_hb_dbk_Q__q0",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp"
+  },
+  {
+   "inst": "hb_quant_SW__u_dec",
+   "template": "hb_quant_NW__u_dec",
+   "hub": "NW_hub",
+   "q0": "u_hb_quant_Q__u_dec__q0",
+   "master": "ot_hgi_qw_dec"
+  },
+  {
+   "inst": "hcollgi_SE",
+   "template": "hcollgi_NE",
+   "hub": "NE_hub",
+   "q0": "u_hcollgi_Q__q0",
+   "master": "ot_hgi_coll_gq_issue"
+  },
+  {
+   "inst": "hcollgi_SW",
+   "template": "hcollgi_NW",
+   "hub": "NW_hub",
+   "q0": "u_hcollgi_Q__q0",
+   "master": "ot_hgi_coll_gq_issue"
+  },
+  {
+   "inst": "hcollgl_SE",
+   "template": "hcollgl_NE",
+   "hub": "NE_hub",
+   "q0": "u_hcollgl_Q__q0",
+   "master": "ot_hgi_coll_gq_land"
+  },
+  {
+   "inst": "hcollgl_SW",
+   "template": "hcollgl_NW",
+   "hub": "NW_hub",
+   "q0": "u_hcollgl_Q__q0",
+   "master": "ot_hgi_coll_gq_land"
+  },
+  {
+   "inst": "hcollks_SE_p0",
+   "template": "hcollks_NE_p0",
+   "hub": "NE_hub",
+   "q0": "u_hcollks_Q_p0__q0",
+   "master": "ot_hgi_coll_kq_share2_leaf"
+  },
+  {
+   "inst": "hcollks_SE_p1",
+   "template": "hcollks_NE_p1",
+   "hub": "NE_hub",
+   "q0": "u_hcollks_Q_p1__q0",
+   "master": "ot_hgi_coll_kq_share2_leaf"
+  },
+  {
+   "inst": "hcollks_SE_p2",
+   "template": "hcollks_NE_p2",
+   "hub": "NE_hub",
+   "q0": "u_hcollks_Q_p2__q0",
+   "master": "ot_hgi_coll_kq_share2_leaf"
+  },
+  {
+   "inst": "hcollks_SE_p3",
+   "template": "hcollks_NE_p3",
+   "hub": "NE_hub",
+   "q0": "u_hcollks_Q_p3__q0",
+   "master": "ot_hgi_coll_kq_share2_leaf"
+  },
+  {
+   "inst": "hcollks_SW_p0",
+   "template": "hcollks_NW_p0",
+   "hub": "NW_hub",
+   "q0": "u_hcollks_Q_p0__q0",
+   "master": "ot_hgi_coll_kq_share2_leaf"
+  },
+  {
+   "inst": "hcollks_SW_p1",
+   "template": "hcollks_NW_p1",
+   "hub": "NW_hub",
+   "q0": "u_hcollks_Q_p1__q0",
+   "master": "ot_hgi_coll_kq_share2_leaf"
+  },
+  {
+   "inst": "hcollks_SW_p2",
+   "template": "hcollks_NW_p2",
+   "hub": "NW_hub",
+   "q0": "u_hcollks_Q_p2__q0",
+   "master": "ot_hgi_coll_kq_share2_leaf"
+  },
+  {
+   "inst": "hcollks_SW_p3",
+   "template": "hcollks_NW_p3",
+   "hub": "NW_hub",
+   "q0": "u_hcollks_Q_p3__q0",
+   "master": "ot_hgi_coll_kq_share2_leaf"
+  },
+  {
+   "inst": "hcollrs_SE",
+   "template": "hcollrs_NE",
+   "hub": "NE_hub",
+   "q0": "u_hcollrs_Q__q0",
+   "master": "ot_hbm_idx_vm_share2_static_r"
+  },
+  {
+   "inst": "hcollrs_SW",
+   "template": "hcollrs_NW",
+   "hub": "NW_hub",
+   "q0": "u_hcollrs_Q__q0",
+   "master": "ot_hbm_idx_vm_share2_static_r"
+  },
+  {
+   "inst": "sfup_SE",
+   "template": "sfup_NE",
+   "hub": "NE_hub",
+   "q0": "u_sfup_Q__q0",
+   "master": "ot_hgi_sfu_programme_store_r10"
+  },
+  {
+   "inst": "sfup_SW",
+   "template": "sfup_NW",
+   "hub": "NW_hub",
+   "q0": "u_sfup_Q__q0",
+   "master": "ot_hgi_sfu_programme_store_r10"
+  },
+  {
+   "inst": "sfus_SE",
+   "template": "sfus_NE",
+   "hub": "NE_hub",
+   "q0": "u_sfus_Q__q0",
+   "master": "ot_hbm_su_static_sfustore_hw"
+  },
+  {
+   "inst": "sfus_SW",
+   "template": "sfus_NW",
+   "hub": "NW_hub",
+   "q0": "u_sfus_Q__q0",
+   "master": "ot_hbm_su_static_sfustore_hw"
+  },
+  {
+   "inst": "smw_SE",
+   "template": "smw_NE",
+   "hub": "NE_hub",
+   "q0": "u_smw_Q__q0",
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes4"
+  },
+  {
+   "inst": "smw_SW",
+   "template": "smw_NW",
+   "hub": "NW_hub",
+   "q0": "u_smw_Q__q0",
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes4"
+  },
+  {
+   "inst": "wbk_SE",
+   "template": "wbk_NE",
+   "hub": "NE_hub",
+   "q0": "u_wbk_Q__q0",
+   "master": "ot_hbm_svc_wb_kport_q"
+  },
+  {
+   "inst": "wbk_SW",
+   "template": "wbk_NW",
+   "hub": "NW_hub",
+   "q0": "u_wbk_Q__q0",
+   "master": "ot_hbm_svc_wb_kport_q"
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "template": "xl_NE_ctl",
+   "hub": "NE_hub",
+   "q0": "u_xl_Q_ctl__q0",
+   "master": "ot_hgi_sm_xload_cl2_ctlx"
+  },
+  {
+   "inst": "xl_SW_ctl",
+   "template": "xl_NW_ctl",
+   "hub": "NW_hub",
+   "q0": "u_xl_Q_ctl__q0",
+   "master": "ot_hgi_sm_xload_cl2_ctlx"
+  }
+ ],
+ "obligations": [
+  {
+   "inst": "cij_SE",
+   "port": "inj_rd",
+   "bits": 2,
+   "from_": [
+    "cic_NE"
+   ]
+  },
+  {
+   "inst": "cij_SE",
+   "port": "inj_rd_r1",
+   "bits": 2,
+   "from_": [
+    "cic_NE"
+   ]
+  },
+  {
+   "inst": "cij_SE",
+   "port": "inj_idx",
+   "bits": 32,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "cij_SE",
+   "port": "inj_idx_r1",
+   "bits": 32,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "cij_SE",
+   "port": "inj_addr",
+   "bits": 160,
+   "from_": [
+    "cic_NE"
+   ]
+  },
+  {
+   "inst": "cij_SE",
+   "port": "inj_addr_r1",
+   "bits": 160,
+   "from_": [
+    "cic_NE"
+   ]
+  },
+  {
+   "inst": "cij_SE",
+   "port": "su_inj_d_r0",
+   "bits": 512,
+   "from_": [
+    "cxij_NE_s"
+   ]
+  },
+  {
+   "inst": "cij_SE",
+   "port": "su_inj_d_r1",
+   "bits": 512,
+   "from_": [
+    "cxij_NE_s"
+   ]
+  },
+  {
+   "inst": "cij_SW",
+   "port": "inj_rd",
+   "bits": 2,
+   "from_": [
+    "cic_NW"
+   ]
+  },
+  {
+   "inst": "cij_SW",
+   "port": "inj_rd_r1",
+   "bits": 2,
+   "from_": [
+    "cic_NW"
+   ]
+  },
+  {
+   "inst": "cij_SW",
+   "port": "inj_idx",
+   "bits": 32,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "cij_SW",
+   "port": "inj_idx_r1",
+   "bits": 32,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "cij_SW",
+   "port": "inj_addr",
+   "bits": 160,
+   "from_": [
+    "cic_NW"
+   ]
+  },
+  {
+   "inst": "cij_SW",
+   "port": "inj_addr_r1",
+   "bits": 160,
+   "from_": [
+    "cic_NW"
+   ]
+  },
+  {
+   "inst": "cij_SW",
+   "port": "su_inj_d_r0",
+   "bits": 512,
+   "from_": [
+    "cxij_NW_s"
+   ]
+  },
+  {
+   "inst": "cij_SW",
+   "port": "su_inj_d_r1",
+   "bits": 512,
+   "from_": [
+    "cxij_NW_s"
+   ]
+  },
+  {
+   "inst": "cxij_SE_q",
+   "port": "jb0",
+   "bits": 32,
+   "from_": [
+    "cxij_NE_s"
+   ]
+  },
+  {
+   "inst": "cxij_SE_q",
+   "port": "jb1",
+   "bits": 32,
+   "from_": [
+    "cxij_NE_s"
+   ]
+  },
+  {
+   "inst": "cxij_SE_q",
+   "port": "inj_q0",
+   "bits": 1024,
+   "from_": [
+    "su_NE0"
+   ]
+  },
+  {
+   "inst": "cxij_SE_q",
+   "port": "inj_q1",
+   "bits": 1024,
+   "from_": [
+    "su_NE1"
+   ]
+  },
+  {
+   "inst": "cxij_SE_q",
+   "port": "inj_q2",
+   "bits": 1024,
+   "from_": [
+    "su_NE2"
+   ]
+  },
+  {
+   "inst": "cxij_SE_q",
+   "port": "inj_q3",
+   "bits": 1024,
+   "from_": [
+    "su_NE3"
+   ]
+  },
+  {
+   "inst": "cxij_SE_q",
+   "port": "sfault_s",
+   "bits": 1,
+   "from_": [
+    "cxij_NE_s"
+   ]
+  },
+  {
+   "inst": "cxij_SE_q",
+   "port": "ins_coll",
+   "bits": 1,
+   "from_": [
+    "cxij_NE_s"
+   ]
+  },
+  {
+   "inst": "cxij_SW_q",
+   "port": "jb0",
+   "bits": 32,
+   "from_": [
+    "cxij_NW_s"
+   ]
+  },
+  {
+   "inst": "cxij_SW_q",
+   "port": "jb1",
+   "bits": 32,
+   "from_": [
+    "cxij_NW_s"
+   ]
+  },
+  {
+   "inst": "cxij_SW_q",
+   "port": "inj_q0",
+   "bits": 1024,
+   "from_": [
+    "su_NW0"
+   ]
+  },
+  {
+   "inst": "cxij_SW_q",
+   "port": "inj_q1",
+   "bits": 1024,
+   "from_": [
+    "su_NW1"
+   ]
+  },
+  {
+   "inst": "cxij_SW_q",
+   "port": "inj_q2",
+   "bits": 1024,
+   "from_": [
+    "su_NW2"
+   ]
+  },
+  {
+   "inst": "cxij_SW_q",
+   "port": "inj_q3",
+   "bits": 1024,
+   "from_": [
+    "su_NW3"
+   ]
+  },
+  {
+   "inst": "cxij_SW_q",
+   "port": "sfault_s",
+   "bits": 1,
+   "from_": [
+    "cxij_NW_s"
+   ]
+  },
+  {
+   "inst": "cxij_SW_q",
+   "port": "ins_coll",
+   "bits": 1,
+   "from_": [
+    "cxij_NW_s"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "cfg_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "cfg_target",
+   "bits": 8,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "cfg_addr",
+   "bits": 12,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "cfg_data",
+   "bits": 256,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "desc_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "desc_base",
+   "bits": 12,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "desc_limit",
+   "bits": 13,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "desc_loops",
+   "bits": 16,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "launch_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "cfg_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "cfg_target",
+   "bits": 8,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "cfg_addr",
+   "bits": 12,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "cfg_data",
+   "bits": 256,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "desc_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "desc_base",
+   "bits": 12,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "desc_limit",
+   "bits": 13,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "desc_loops",
+   "bits": 16,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "launch_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NW"
+   ]
+  },
+  {
+   "inst": "hb_quant_SW__u_dec",
+   "port": "v",
+   "bits": 1,
+   "from_": [
+    "hb_quant_NW"
+   ]
+  },
+  {
+   "inst": "hb_quant_SW__u_dec",
+   "port": "header",
+   "bits": 128,
+   "from_": [
+    "hb_quant_NW"
+   ]
+  },
+  {
+   "inst": "hb_quant_SW__u_dec",
+   "port": "x",
+   "bits": 1024,
+   "from_": [
+    "hb_quant_NW"
+   ]
+  },
+  {
+   "inst": "hcollgi_SE",
+   "port": "isa_ring",
+   "bits": 58,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollgi_SE",
+   "port": "isa_lp_data",
+   "bits": 256,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollgi_SW",
+   "port": "isa_ring",
+   "bits": 58,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollgi_SW",
+   "port": "isa_lp_data",
+   "bits": 256,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollgl_SE",
+   "port": "pa_v",
+   "bits": 2,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollgl_SE",
+   "port": "pb_v",
+   "bits": 2,
+   "from_": [
+    "hcollb_NE"
+   ]
+  },
+  {
+   "inst": "hcollgl_SE",
+   "port": "pa_src",
+   "bits": 4,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollgl_SE",
+   "port": "pb_src",
+   "bits": 4,
+   "from_": [
+    "hcollb_NE"
+   ]
+  },
+  {
+   "inst": "hcollgl_SE",
+   "port": "pa_tag",
+   "bits": 6,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollgl_SE",
+   "port": "pb_tag",
+   "bits": 6,
+   "from_": [
+    "hcollb_NE"
+   ]
+  },
+  {
+   "inst": "hcollgl_SE",
+   "port": "pa_d",
+   "bits": 512,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollgl_SE",
+   "port": "pb_d",
+   "bits": 512,
+   "from_": [
+    "hcollb_NE"
+   ]
+  },
+  {
+   "inst": "hcollgl_SW",
+   "port": "pa_v",
+   "bits": 2,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollgl_SW",
+   "port": "pb_v",
+   "bits": 2,
+   "from_": [
+    "hcollb_NW"
+   ]
+  },
+  {
+   "inst": "hcollgl_SW",
+   "port": "pa_src",
+   "bits": 4,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollgl_SW",
+   "port": "pb_src",
+   "bits": 4,
+   "from_": [
+    "hcollb_NW"
+   ]
+  },
+  {
+   "inst": "hcollgl_SW",
+   "port": "pa_tag",
+   "bits": 6,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollgl_SW",
+   "port": "pb_tag",
+   "bits": 6,
+   "from_": [
+    "hcollb_NW"
+   ]
+  },
+  {
+   "inst": "hcollgl_SW",
+   "port": "pa_d",
+   "bits": 512,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollgl_SW",
+   "port": "pb_d",
+   "bits": 512,
+   "from_": [
+    "hcollb_NW"
+   ]
+  },
+  {
+   "inst": "hcollks_SE_p0",
+   "port": "a_kq",
+   "bits": 562,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollks_SE_p1",
+   "port": "a_kq",
+   "bits": 562,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollks_SE_p2",
+   "port": "a_kq",
+   "bits": 562,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollks_SE_p3",
+   "port": "a_kq",
+   "bits": 562,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollks_SW_p0",
+   "port": "a_kq",
+   "bits": 562,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollks_SW_p1",
+   "port": "a_kq",
+   "bits": 562,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollks_SW_p2",
+   "port": "a_kq",
+   "bits": 562,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollks_SW_p3",
+   "port": "a_kq",
+   "bits": 562,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "hcollrs_SE",
+   "port": "a_rq",
+   "bits": 136,
+   "from_": [
+    "hb_coll_NE"
+   ]
+  },
+  {
+   "inst": "hcollrs_SW",
+   "port": "a_rq",
+   "bits": 136,
+   "from_": [
+    "hb_coll_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "cfg_we",
+   "bits": 1,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "cfg_stripe",
+   "bits": 3,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "cfg_addr",
+   "bits": 11,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "cfg_data",
+   "bits": 256,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "start_base",
+   "bits": 11,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "start_limit",
+   "bits": 12,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "start_loops",
+   "bits": 16,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "io_cfg_we",
+   "bits": 1,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "io_cfg_stripe",
+   "bits": 2,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "io_cfg_addr",
+   "bits": 11,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "io_cfg_data",
+   "bits": 256,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "io_start_v",
+   "bits": 1,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "io_start_base",
+   "bits": 11,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "io_start_limit",
+   "bits": 12,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SE",
+   "port": "io_start_loops",
+   "bits": 16,
+   "from_": [
+    "col_sfu_NE"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "cfg_we",
+   "bits": 1,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "cfg_stripe",
+   "bits": 3,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "cfg_addr",
+   "bits": 11,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "cfg_data",
+   "bits": 256,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "start_base",
+   "bits": 11,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "start_limit",
+   "bits": 12,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "start_loops",
+   "bits": 16,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "io_cfg_we",
+   "bits": 1,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "io_cfg_stripe",
+   "bits": 2,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "io_cfg_addr",
+   "bits": 11,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "io_cfg_data",
+   "bits": 256,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "io_start_v",
+   "bits": 1,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "io_start_base",
+   "bits": 11,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "io_start_limit",
+   "bits": 12,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfup_SW",
+   "port": "io_start_loops",
+   "bits": 16,
+   "from_": [
+    "col_sfu_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l00_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l01_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l02_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l03_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l04_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l05_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l06_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l07_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l08_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l09_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l10_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l11_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l12_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l13_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l14_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l15_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l00_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l01_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l02_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l03_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l04_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l05_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l06_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l07_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l08_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l09_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l10_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l11_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l12_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l13_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l14_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l15_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l00_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l01_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l02_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l03_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l04_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l05_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l06_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l07_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l08_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l09_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l10_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l11_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l12_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l13_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l14_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l15_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l00_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l01_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l02_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l03_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l04_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l05_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l06_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l07_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l08_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l09_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l10_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l11_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l12_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l13_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l14_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l15_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l00_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l01_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l02_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l03_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l04_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l05_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l06_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l07_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l08_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l09_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l10_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l11_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l12_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l13_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l14_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "l15_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NE"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l00_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l01_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l02_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l03_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l04_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l05_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l06_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l07_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l08_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l09_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l10_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l11_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l12_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l13_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l14_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l15_vi_re",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l00_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l01_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l02_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l03_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l04_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l05_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l06_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l07_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l08_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l09_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l10_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l11_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l12_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l13_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l14_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l15_vi_addr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l00_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l01_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l02_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l03_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l04_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l05_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l06_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l07_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l08_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l09_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l10_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l11_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l12_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l13_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l14_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l15_kv_we",
+   "bits": 1,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l00_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l01_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l02_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l03_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l04_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l05_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l06_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l07_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l08_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l09_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l10_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l11_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l12_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l13_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l14_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l15_kv_waddr",
+   "bits": 24,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l00_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l01_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l02_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l03_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l04_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l05_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l06_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l07_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l08_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l09_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l10_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l11_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l12_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l13_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l14_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "l15_kv_wdata",
+   "bits": 32,
+   "from_": [
+    "sfucore_NW"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rv_s0",
+   "bits": 1,
+   "from_": [
+    "sm_NW4"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "smf_s0",
+   "bits": 1,
+   "from_": [
+    "sm_NW4"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "sms_s0",
+   "bits": 1,
+   "from_": [
+    "sm_NW4"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rrow_s0",
+   "bits": 12,
+   "from_": [
+    "sm_NW4"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rdata_s0",
+   "bits": 256,
+   "from_": [
+    "sm_NW4"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rv_s1",
+   "bits": 1,
+   "from_": [
+    "sm_NW5"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "smf_s1",
+   "bits": 1,
+   "from_": [
+    "sm_NW5"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "sms_s1",
+   "bits": 1,
+   "from_": [
+    "sm_NW5"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rrow_s1",
+   "bits": 12,
+   "from_": [
+    "sm_NW5"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rdata_s1",
+   "bits": 256,
+   "from_": [
+    "sm_NW5"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rv_s2",
+   "bits": 1,
+   "from_": [
+    "sm_NW6"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "smf_s2",
+   "bits": 1,
+   "from_": [
+    "sm_NW6"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "sms_s2",
+   "bits": 1,
+   "from_": [
+    "sm_NW6"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rrow_s2",
+   "bits": 12,
+   "from_": [
+    "sm_NW6"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rdata_s2",
+   "bits": 256,
+   "from_": [
+    "sm_NW6"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rv_s3",
+   "bits": 1,
+   "from_": [
+    "sm_NW7"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "smf_s3",
+   "bits": 1,
+   "from_": [
+    "sm_NW7"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "sms_s3",
+   "bits": 1,
+   "from_": [
+    "sm_NW7"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rrow_s3",
+   "bits": 12,
+   "from_": [
+    "sm_NW7"
+   ]
+  },
+  {
+   "inst": "smw_SE",
+   "port": "rdata_s3",
+   "bits": 256,
+   "from_": [
+    "sm_NW7"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rv_s0",
+   "bits": 1,
+   "from_": [
+    "sm_NW0"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "smf_s0",
+   "bits": 1,
+   "from_": [
+    "sm_NW0"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "sms_s0",
+   "bits": 1,
+   "from_": [
+    "sm_NW0"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rrow_s0",
+   "bits": 12,
+   "from_": [
+    "sm_NW0"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rdata_s0",
+   "bits": 256,
+   "from_": [
+    "sm_NW0"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rv_s1",
+   "bits": 1,
+   "from_": [
+    "sm_NW1"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "smf_s1",
+   "bits": 1,
+   "from_": [
+    "sm_NW1"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "sms_s1",
+   "bits": 1,
+   "from_": [
+    "sm_NW1"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rrow_s1",
+   "bits": 12,
+   "from_": [
+    "sm_NW1"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rdata_s1",
+   "bits": 256,
+   "from_": [
+    "sm_NW1"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rv_s2",
+   "bits": 1,
+   "from_": [
+    "sm_NW2"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "smf_s2",
+   "bits": 1,
+   "from_": [
+    "sm_NW2"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "sms_s2",
+   "bits": 1,
+   "from_": [
+    "sm_NW2"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rrow_s2",
+   "bits": 12,
+   "from_": [
+    "sm_NW2"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rdata_s2",
+   "bits": 256,
+   "from_": [
+    "sm_NW2"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rv_s3",
+   "bits": 1,
+   "from_": [
+    "sm_NW3"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "smf_s3",
+   "bits": 1,
+   "from_": [
+    "sm_NW3"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "sms_s3",
+   "bits": 1,
+   "from_": [
+    "sm_NW3"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rrow_s3",
+   "bits": 12,
+   "from_": [
+    "sm_NW3"
+   ]
+  },
+  {
+   "inst": "smw_SW",
+   "port": "rdata_s3",
+   "bits": 256,
+   "from_": [
+    "sm_NW3"
+   ]
+  },
+  {
+   "inst": "wbk_SE",
+   "port": "w_k_rdy",
+   "bits": 16,
+   "from_": [
+    "vmks_NW4",
+    "vmks_NW5",
+    "vmks_NW6",
+    "vmks_NW7"
+   ]
+  },
+  {
+   "inst": "wbk_SE",
+   "port": "w_k_wr_done",
+   "bits": 16,
+   "from_": [
+    "vmks_NW4",
+    "vmks_NW5",
+    "vmks_NW6",
+    "vmks_NW7"
+   ]
+  },
+  {
+   "inst": "wbk_SW",
+   "port": "w_k_rdy",
+   "bits": 16,
+   "from_": [
+    "vmks_NW0",
+    "vmks_NW1",
+    "vmks_NW2",
+    "vmks_NW3"
+   ]
+  },
+  {
+   "inst": "wbk_SW",
+   "port": "w_k_wr_done",
+   "bits": 16,
+   "from_": [
+    "vmks_NW0",
+    "vmks_NW1",
+    "vmks_NW2",
+    "vmks_NW3"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "cfg_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "cfg_target",
+   "bits": 8,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "cfg_addr",
+   "bits": 12,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "cfg_data",
+   "bits": 256,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "desc_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "desc_base",
+   "bits": 12,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "desc_limit",
+   "bits": 13,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "desc_loops",
+   "bits": 16,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "launch_v",
+   "bits": 1,
+   "from_": [
+    "hleaf_NE"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "qo_lo",
+   "bits": 1,
+   "from_": [
+    "xl_NE_aqlo"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "qo_hi",
+   "bits": 1,
+   "from_": [
+    "xl_NE_aqhi"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "qf_lo",
+   "bits": 1,
+   "from_": [
+    "xl_NE_aqlo"
+   ]
+  },
+  {
+   "inst": "xl_SE_ctl",
+   "port": "qf_hi",
+   "bits": 1,
+   "from_": [
+    "xl_NE_aqhi"
+   ]
+  },
+  {
+   "inst": "xl_SW_ctl",
+   "port": "qo_lo",
+   "bits": 1,
+   "from_": [
+    "xl_NW_aqlo"
+   ]
+  },
+  {
+   "inst": "xl_SW_ctl",
+   "port": "qo_hi",
+   "bits": 1,
+   "from_": [
+    "xl_NW_aqhi"
+   ]
+  },
+  {
+   "inst": "xl_SW_ctl",
+   "port": "qf_lo",
+   "bits": 1,
+   "from_": [
+    "xl_NW_aqlo"
+   ]
+  },
+  {
+   "inst": "xl_SW_ctl",
+   "port": "qf_hi",
+   "bits": 1,
+   "from_": [
+    "xl_NW_aqhi"
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "inst": "cic_NE",
+   "q": "u_cic_Q"
+  },
+  {
+   "inst": "cic_NW",
+   "q": "u_cic_Q"
+  },
+  {
+   "inst": "col_sfu_NE",
+   "q": "u_col_sfu_Q"
+  },
+  {
+   "inst": "col_sfu_NW",
+   "q": "u_col_sfu_Q"
+  },
+  {
+   "inst": "cp_svg_NW0",
+   "q": "u_cp_svg_Q0"
+  },
+  {
+   "inst": "cp_svg_NW1",
+   "q": "u_cp_svg_Q1"
+  },
+  {
+   "inst": "cp_svg_NW2",
+   "q": "u_cp_svg_Q2"
+  },
+  {
+   "inst": "cp_svg_NW3",
+   "q": "u_cp_svg_Q3"
+  },
+  {
+   "inst": "cp_svg_NW4",
+   "q": "u_cp_svg_Q0"
+  },
+  {
+   "inst": "cp_svg_NW5",
+   "q": "u_cp_svg_Q1"
+  },
+  {
+   "inst": "cp_svg_NW6",
+   "q": "u_cp_svg_Q2"
+  },
+  {
+   "inst": "cp_svg_NW7",
+   "q": "u_cp_svg_Q3"
+  },
+  {
+   "inst": "ctl_NW_p00",
+   "q": "u_ctl_Q_p00"
+  },
+  {
+   "inst": "ctl_NW_p01",
+   "q": "u_ctl_Q_p01"
+  },
+  {
+   "inst": "ctl_NW_p02",
+   "q": "u_ctl_Q_p02"
+  },
+  {
+   "inst": "ctl_NW_p03",
+   "q": "u_ctl_Q_p03"
+  },
+  {
+   "inst": "ctl_NW_p04",
+   "q": "u_ctl_Q_p04"
+  },
+  {
+   "inst": "ctl_NW_p05",
+   "q": "u_ctl_Q_p05"
+  },
+  {
+   "inst": "ctl_NW_p06",
+   "q": "u_ctl_Q_p06"
+  },
+  {
+   "inst": "ctl_NW_p07",
+   "q": "u_ctl_Q_p07"
+  },
+  {
+   "inst": "ctl_NW_p08",
+   "q": "u_ctl_Q_p08"
+  },
+  {
+   "inst": "ctl_NW_p09",
+   "q": "u_ctl_Q_p09"
+  },
+  {
+   "inst": "ctl_NW_p10",
+   "q": "u_ctl_Q_p10"
+  },
+  {
+   "inst": "ctl_NW_p11",
+   "q": "u_ctl_Q_p11"
+  },
+  {
+   "inst": "ctl_NW_p12",
+   "q": "u_ctl_Q_p12"
+  },
+  {
+   "inst": "ctl_NW_p13",
+   "q": "u_ctl_Q_p13"
+  },
+  {
+   "inst": "ctl_NW_p14",
+   "q": "u_ctl_Q_p14"
+  },
+  {
+   "inst": "ctl_NW_p15",
+   "q": "u_ctl_Q_p15"
+  },
+  {
+   "inst": "ctl_NW_p16",
+   "q": "u_ctl_Q_p00"
+  },
+  {
+   "inst": "ctl_NW_p17",
+   "q": "u_ctl_Q_p01"
+  },
+  {
+   "inst": "ctl_NW_p18",
+   "q": "u_ctl_Q_p02"
+  },
+  {
+   "inst": "ctl_NW_p19",
+   "q": "u_ctl_Q_p03"
+  },
+  {
+   "inst": "ctl_NW_p20",
+   "q": "u_ctl_Q_p04"
+  },
+  {
+   "inst": "ctl_NW_p21",
+   "q": "u_ctl_Q_p05"
+  },
+  {
+   "inst": "ctl_NW_p22",
+   "q": "u_ctl_Q_p06"
+  },
+  {
+   "inst": "ctl_NW_p23",
+   "q": "u_ctl_Q_p07"
+  },
+  {
+   "inst": "ctl_NW_p24",
+   "q": "u_ctl_Q_p08"
+  },
+  {
+   "inst": "ctl_NW_p25",
+   "q": "u_ctl_Q_p09"
+  },
+  {
+   "inst": "ctl_NW_p26",
+   "q": "u_ctl_Q_p10"
+  },
+  {
+   "inst": "ctl_NW_p27",
+   "q": "u_ctl_Q_p11"
+  },
+  {
+   "inst": "ctl_NW_p28",
+   "q": "u_ctl_Q_p12"
+  },
+  {
+   "inst": "ctl_NW_p29",
+   "q": "u_ctl_Q_p13"
+  },
+  {
+   "inst": "ctl_NW_p30",
+   "q": "u_ctl_Q_p14"
+  },
+  {
+   "inst": "ctl_NW_p31",
+   "q": "u_ctl_Q_p15"
+  },
+  {
+   "inst": "cxdl_NE0_q",
+   "q": "u_cxdl_Q0_q"
+  },
+  {
+   "inst": "cxdl_NE0_s",
+   "q": "u_cxdl_Q0_s"
+  },
+  {
+   "inst": "cxdl_NE1_q",
+   "q": "u_cxdl_Q1_q"
+  },
+  {
+   "inst": "cxdl_NE1_s",
+   "q": "u_cxdl_Q1_s"
+  },
+  {
+   "inst": "cxdl_NE2_q",
+   "q": "u_cxdl_Q2_q"
+  },
+  {
+   "inst": "cxdl_NE2_s",
+   "q": "u_cxdl_Q2_s"
+  },
+  {
+   "inst": "cxdl_NE3_q",
+   "q": "u_cxdl_Q3_q"
+  },
+  {
+   "inst": "cxdl_NE3_s",
+   "q": "u_cxdl_Q3_s"
+  },
+  {
+   "inst": "cxdl_NW0_q",
+   "q": "u_cxdl_Q0_q"
+  },
+  {
+   "inst": "cxdl_NW0_s",
+   "q": "u_cxdl_Q0_s"
+  },
+  {
+   "inst": "cxdl_NW1_q",
+   "q": "u_cxdl_Q1_q"
+  },
+  {
+   "inst": "cxdl_NW1_s",
+   "q": "u_cxdl_Q1_s"
+  },
+  {
+   "inst": "cxdl_NW2_q",
+   "q": "u_cxdl_Q2_q"
+  },
+  {
+   "inst": "cxdl_NW2_s",
+   "q": "u_cxdl_Q2_s"
+  },
+  {
+   "inst": "cxdl_NW3_q",
+   "q": "u_cxdl_Q3_q"
+  },
+  {
+   "inst": "cxdl_NW3_s",
+   "q": "u_cxdl_Q3_s"
+  },
+  {
+   "inst": "cxij_NE_s",
+   "q": "u_cxij_Q_s"
+  },
+  {
+   "inst": "cxij_NW_s",
+   "q": "u_cxij_Q_s"
+  },
+  {
+   "inst": "cxrc_NE_q",
+   "q": "u_cxrc_Q_q"
+  },
+  {
+   "inst": "cxrc_NE_s",
+   "q": "u_cxrc_Q_s"
+  },
+  {
+   "inst": "cxrc_NW_q",
+   "q": "u_cxrc_Q_q"
+  },
+  {
+   "inst": "cxrc_NW_s",
+   "q": "u_cxrc_Q_s"
+  },
+  {
+   "inst": "epcal_NE",
+   "q": "u_epcal_Q"
+  },
+  {
+   "inst": "epcal_NW",
+   "q": "u_epcal_Q"
+  },
+  {
+   "inst": "fcx_NE",
+   "q": "u_fcx_Q"
+  },
+  {
+   "inst": "fcx_NW",
+   "q": "u_fcx_Q"
+  },
+  {
+   "inst": "fl_NE0",
+   "q": "u_fl_Q0"
+  },
+  {
+   "inst": "fl_NE1",
+   "q": "u_fl_Q1"
+  },
+  {
+   "inst": "fl_NE2",
+   "q": "u_fl_Q2"
+  },
+  {
+   "inst": "fl_NE3",
+   "q": "u_fl_Q3"
+  },
+  {
+   "inst": "fl_NW0",
+   "q": "u_fl_Q0"
+  },
+  {
+   "inst": "fl_NW1",
+   "q": "u_fl_Q1"
+  },
+  {
+   "inst": "fl_NW2",
+   "q": "u_fl_Q2"
+  },
+  {
+   "inst": "fl_NW3",
+   "q": "u_fl_Q3"
+  },
+  {
+   "inst": "fr_NE",
+   "q": "u_fr_Q"
+  },
+  {
+   "inst": "fr_NW",
+   "q": "u_fr_Q"
+  },
+  {
+   "inst": "fs_NE",
+   "q": "u_fs_Q"
+  },
+  {
+   "inst": "fs_NW",
+   "q": "u_fs_Q"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "q": "u_hb_coll_Q"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "q": "u_hb_coll_Q"
+  },
+  {
+   "inst": "hb_quant_NW__hbfd_qdq_split_and",
+   "q": "u_hb_quant_Q__hbfd_qdq_split_and"
+  },
+  {
+   "inst": "hb_quant_NW__hbfd_qdq_split_or",
+   "q": "u_hb_quant_Q__hbfd_qdq_split_or"
+  },
+  {
+   "inst": "hb_quant_NW__program_leaf",
+   "q": "u_hb_quant_Q__program_leaf"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW0_lg",
+   "q": "u_hb_quant_Q__quant_Q0_lg"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW1_lg",
+   "q": "u_hb_quant_Q__quant_Q1_lg"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW2_lg",
+   "q": "u_hb_quant_Q__quant_Q2_lg"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW3_lg",
+   "q": "u_hb_quant_Q__quant_Q3_lg"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_ctl",
+   "q": "u_hb_quant_Q__quant_Q_xp_ctl"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_slice_0__rslice",
+   "q": "u_hb_quant_Q__quant_Q_xp_slice_0__rslice"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_slice_0__wslice",
+   "q": "u_hb_quant_Q__quant_Q_xp_slice_0__wslice"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_slice_1__rslice",
+   "q": "u_hb_quant_Q__quant_Q_xp_slice_1__rslice"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_slice_1__wslice",
+   "q": "u_hb_quant_Q__quant_Q_xp_slice_1__wslice"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_slice_2__rslice",
+   "q": "u_hb_quant_Q__quant_Q_xp_slice_2__rslice"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_slice_2__wslice",
+   "q": "u_hb_quant_Q__quant_Q_xp_slice_2__wslice"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_slice_3__rslice",
+   "q": "u_hb_quant_Q__quant_Q_xp_slice_3__rslice"
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW_xp_slice_3__wslice",
+   "q": "u_hb_quant_Q__quant_Q_xp_slice_3__wslice"
+  },
+  {
+   "inst": "hc_NE",
+   "q": "u_hc_Q"
+  },
+  {
+   "inst": "hc_NE0",
+   "q": "u_hc_Q0"
+  },
+  {
+   "inst": "hc_NE1",
+   "q": "u_hc_Q1"
+  },
+  {
+   "inst": "hc_NE2",
+   "q": "u_hc_Q2"
+  },
+  {
+   "inst": "hc_NE3",
+   "q": "u_hc_Q3"
+  },
+  {
+   "inst": "hc_NW",
+   "q": "u_hc_Q"
+  },
+  {
+   "inst": "hc_NW0",
+   "q": "u_hc_Q0"
+  },
+  {
+   "inst": "hc_NW1",
+   "q": "u_hc_Q1"
+  },
+  {
+   "inst": "hc_NW2",
+   "q": "u_hc_Q2"
+  },
+  {
+   "inst": "hc_NW3",
+   "q": "u_hc_Q3"
+  },
+  {
+   "inst": "hcb_NE0",
+   "q": "u_hcb_Q0"
+  },
+  {
+   "inst": "hcb_NE1",
+   "q": "u_hcb_Q1"
+  },
+  {
+   "inst": "hcb_NE2",
+   "q": "u_hcb_Q2"
+  },
+  {
+   "inst": "hcb_NE3",
+   "q": "u_hcb_Q3"
+  },
+  {
+   "inst": "hcb_NE4",
+   "q": "u_hcb_Q4"
+  },
+  {
+   "inst": "hcb_NE5",
+   "q": "u_hcb_Q5"
+  },
+  {
+   "inst": "hcb_NE6",
+   "q": "u_hcb_Q6"
+  },
+  {
+   "inst": "hcb_NE7",
+   "q": "u_hcb_Q7"
+  },
+  {
+   "inst": "hcb_NW0",
+   "q": "u_hcb_Q0"
+  },
+  {
+   "inst": "hcb_NW1",
+   "q": "u_hcb_Q1"
+  },
+  {
+   "inst": "hcb_NW2",
+   "q": "u_hcb_Q2"
+  },
+  {
+   "inst": "hcb_NW3",
+   "q": "u_hcb_Q3"
+  },
+  {
+   "inst": "hcb_NW4",
+   "q": "u_hcb_Q4"
+  },
+  {
+   "inst": "hcb_NW5",
+   "q": "u_hcb_Q5"
+  },
+  {
+   "inst": "hcb_NW6",
+   "q": "u_hcb_Q6"
+  },
+  {
+   "inst": "hcb_NW7",
+   "q": "u_hcb_Q7"
+  },
+  {
+   "inst": "hcollb_NE",
+   "q": "u_hcollb_Q"
+  },
+  {
+   "inst": "hcollb_NW",
+   "q": "u_hcollb_Q"
+  },
+  {
+   "inst": "hcollks_NE",
+   "q": "u_hcollks_Q"
+  },
+  {
+   "inst": "hcollks_NW",
+   "q": "u_hcollks_Q"
+  },
+  {
+   "inst": "obs_NE",
+   "q": "u_obs_Q"
+  },
+  {
+   "inst": "obs_NW",
+   "q": "u_obs_Q"
+  },
+  {
+   "inst": "pgp_NE",
+   "q": "u_pgp_Q__q1"
+  },
+  {
+   "inst": "pgp_NW",
+   "q": "u_pgp_Q__q1"
+  },
+  {
+   "inst": "phy_NW_pc0_9",
+   "q": "u_phy_Q"
+  },
+  {
+   "inst": "phy_NW_pc10_21",
+   "q": "u_phy_Q"
+  },
+  {
+   "inst": "phy_NW_pc22_31",
+   "q": "u_phy_Q"
+  },
+  {
+   "inst": "refcfg_NE",
+   "q": "u_refcfg_Q"
+  },
+  {
+   "inst": "refcfg_NW",
+   "q": "u_refcfg_Q"
+  },
+  {
+   "inst": "sfault_NE",
+   "q": "u_sfault_Q"
+  },
+  {
+   "inst": "sfault_NW",
+   "q": "u_sfault_Q"
+  },
+  {
+   "inst": "sfu_NE0",
+   "q": "u_sfu_Q0"
+  },
+  {
+   "inst": "sfu_NE1",
+   "q": "u_sfu_Q1"
+  },
+  {
+   "inst": "sfu_NE2",
+   "q": "u_sfu_Q2"
+  },
+  {
+   "inst": "sfu_NE3",
+   "q": "u_sfu_Q3"
+  },
+  {
+   "inst": "sfu_NW0",
+   "q": "u_sfu_Q0"
+  },
+  {
+   "inst": "sfu_NW1",
+   "q": "u_sfu_Q1"
+  },
+  {
+   "inst": "sfu_NW2",
+   "q": "u_sfu_Q2"
+  },
+  {
+   "inst": "sfu_NW3",
+   "q": "u_sfu_Q3"
+  },
+  {
+   "inst": "sm_NW0",
+   "q": "u_sm"
+  },
+  {
+   "inst": "sm_NW1",
+   "q": "u_sm"
+  },
+  {
+   "inst": "sm_NW2",
+   "q": "u_sm"
+  },
+  {
+   "inst": "sm_NW3",
+   "q": "u_sm"
+  },
+  {
+   "inst": "sm_NW4",
+   "q": "u_sm"
+  },
+  {
+   "inst": "sm_NW5",
+   "q": "u_sm"
+  },
+  {
+   "inst": "sm_NW6",
+   "q": "u_sm"
+  },
+  {
+   "inst": "sm_NW7",
+   "q": "u_sm"
+  },
+  {
+   "inst": "stl_NE",
+   "q": "u_stl_Q"
+  },
+  {
+   "inst": "stl_NW",
+   "q": "u_stl_Q"
+  },
+  {
+   "inst": "sucore_NE",
+   "q": "u_sucore_Q__q0"
+  },
+  {
+   "inst": "sucore_NW",
+   "q": "u_sucore_Q__q0"
+  },
+  {
+   "inst": "svg_NW0",
+   "q": "u_svg_Q0"
+  },
+  {
+   "inst": "svg_NW1",
+   "q": "u_svg_Q1"
+  },
+  {
+   "inst": "svg_NW2",
+   "q": "u_svg_Q2"
+  },
+  {
+   "inst": "svg_NW3",
+   "q": "u_svg_Q3"
+  },
+  {
+   "inst": "svg_NW4",
+   "q": "u_svg_Q0"
+  },
+  {
+   "inst": "svg_NW5",
+   "q": "u_svg_Q1"
+  },
+  {
+   "inst": "svg_NW6",
+   "q": "u_svg_Q2"
+  },
+  {
+   "inst": "svg_NW7",
+   "q": "u_svg_Q3"
+  },
+  {
+   "inst": "vmdel_NE0",
+   "q": "u_vmdel_Q0"
+  },
+  {
+   "inst": "vmdel_NE1",
+   "q": "u_vmdel_Q1"
+  },
+  {
+   "inst": "vmdel_NE2",
+   "q": "u_vmdel_Q2"
+  },
+  {
+   "inst": "vmdel_NE3",
+   "q": "u_vmdel_Q3"
+  },
+  {
+   "inst": "vmdel_NE4",
+   "q": "u_vmdel_Q4"
+  },
+  {
+   "inst": "vmdel_NE5",
+   "q": "u_vmdel_Q5"
+  },
+  {
+   "inst": "vmdel_NE6",
+   "q": "u_vmdel_Q6"
+  },
+  {
+   "inst": "vmdel_NE7",
+   "q": "u_vmdel_Q7"
+  },
+  {
+   "inst": "vmdel_NW0",
+   "q": "u_vmdel_Q0"
+  },
+  {
+   "inst": "vmdel_NW1",
+   "q": "u_vmdel_Q1"
+  },
+  {
+   "inst": "vmdel_NW2",
+   "q": "u_vmdel_Q2"
+  },
+  {
+   "inst": "vmdel_NW3",
+   "q": "u_vmdel_Q3"
+  },
+  {
+   "inst": "vmdel_NW4",
+   "q": "u_vmdel_Q4"
+  },
+  {
+   "inst": "vmdel_NW5",
+   "q": "u_vmdel_Q5"
+  },
+  {
+   "inst": "vmdel_NW6",
+   "q": "u_vmdel_Q6"
+  },
+  {
+   "inst": "vmdel_NW7",
+   "q": "u_vmdel_Q7"
+  },
+  {
+   "inst": "vmfc_NE",
+   "q": "u_vmfc_Q"
+  },
+  {
+   "inst": "vmfc_NW",
+   "q": "u_vmfc_Q"
+  },
+  {
+   "inst": "vmks_NW0",
+   "q": "u_vmks_Q0"
+  },
+  {
+   "inst": "vmks_NW1",
+   "q": "u_vmks_Q1"
+  },
+  {
+   "inst": "vmks_NW2",
+   "q": "u_vmks_Q2"
+  },
+  {
+   "inst": "vmks_NW3",
+   "q": "u_vmks_Q3"
+  },
+  {
+   "inst": "vmks_NW4",
+   "q": "u_vmks_Q0"
+  },
+  {
+   "inst": "vmks_NW5",
+   "q": "u_vmks_Q1"
+  },
+  {
+   "inst": "vmks_NW6",
+   "q": "u_vmks_Q2"
+  },
+  {
+   "inst": "vmks_NW7",
+   "q": "u_vmks_Q3"
+  },
+  {
+   "inst": "vmm_NW0",
+   "q": "u_vmm_Q0"
+  },
+  {
+   "inst": "vmm_NW1",
+   "q": "u_vmm_Q1"
+  },
+  {
+   "inst": "vmm_NW2",
+   "q": "u_vmm_Q2"
+  },
+  {
+   "inst": "vmm_NW3",
+   "q": "u_vmm_Q3"
+  },
+  {
+   "inst": "vmm_NW4",
+   "q": "u_vmm_Q4"
+  },
+  {
+   "inst": "vmm_NW5",
+   "q": "u_vmm_Q5"
+  },
+  {
+   "inst": "vmm_NW6",
+   "q": "u_vmm_Q6"
+  },
+  {
+   "inst": "vmm_NW7",
+   "q": "u_vmm_Q7"
+  },
+  {
+   "inst": "wbc_NE",
+   "q": "u_wbc_Q"
+  },
+  {
+   "inst": "wbc_NW",
+   "q": "u_wbc_Q"
+  },
+  {
+   "inst": "xc_NW0",
+   "q": "u_xc_Q0"
+  },
+  {
+   "inst": "xc_NW1",
+   "q": "u_xc_Q1"
+  },
+  {
+   "inst": "xc_NW2",
+   "q": "u_xc_Q2"
+  },
+  {
+   "inst": "xc_NW3",
+   "q": "u_xc_Q3"
+  },
+  {
+   "inst": "xc_NW4",
+   "q": "u_xc_Q0"
+  },
+  {
+   "inst": "xc_NW5",
+   "q": "u_xc_Q1"
+  },
+  {
+   "inst": "xc_NW6",
+   "q": "u_xc_Q2"
+  },
+  {
+   "inst": "xc_NW7",
+   "q": "u_xc_Q3"
+  },
+  {
+   "inst": "xl_NE_aqhi",
+   "q": "u_xl_Q_aqhi"
+  },
+  {
+   "inst": "xl_NE_aqlo",
+   "q": "u_xl_Q_aqlo"
+  },
+  {
+   "inst": "xl_NW_aqhi",
+   "q": "u_xl_Q_aqhi"
+  },
+  {
+   "inst": "xl_NW_aqlo",
+   "q": "u_xl_Q_aqlo"
+  },
+  {
+   "inst": "xq_NE_p0_bd",
+   "q": "u_xq_Q_p0_bd"
+  },
+  {
+   "inst": "xq_NE_p0_bfq0",
+   "q": "u_xq_Q_p0_bfq0"
+  },
+  {
+   "inst": "xq_NE_p0_bfq1",
+   "q": "u_xq_Q_p0_bfq1"
+  },
+  {
+   "inst": "xq_NE_p0_bfq2",
+   "q": "u_xq_Q_p0_bfq2"
+  },
+  {
+   "inst": "xq_NE_p0_bfq3",
+   "q": "u_xq_Q_p0_bfq3"
+  },
+  {
+   "inst": "xq_NE_p0_eg",
+   "q": "xq_NE_p0_eg"
+  },
+  {
+   "inst": "xq_NE_p1_bd",
+   "q": "u_xq_Q_p1_bd"
+  },
+  {
+   "inst": "xq_NE_p1_bfq0",
+   "q": "u_xq_Q_p1_bfq0"
+  },
+  {
+   "inst": "xq_NE_p1_bfq1",
+   "q": "u_xq_Q_p1_bfq1"
+  },
+  {
+   "inst": "xq_NE_p1_bfq2",
+   "q": "u_xq_Q_p1_bfq2"
+  },
+  {
+   "inst": "xq_NE_p1_bfq3",
+   "q": "u_xq_Q_p1_bfq3"
+  },
+  {
+   "inst": "xq_NE_p1_eg",
+   "q": "xq_NE_p1_eg"
+  },
+  {
+   "inst": "xq_NW_p0_bd",
+   "q": "u_xq_Q_p0_bd"
+  },
+  {
+   "inst": "xq_NW_p0_bfq0",
+   "q": "u_xq_Q_p0_bfq0"
+  },
+  {
+   "inst": "xq_NW_p0_bfq1",
+   "q": "u_xq_Q_p0_bfq1"
+  },
+  {
+   "inst": "xq_NW_p0_bfq2",
+   "q": "u_xq_Q_p0_bfq2"
+  },
+  {
+   "inst": "xq_NW_p0_bfq3",
+   "q": "u_xq_Q_p0_bfq3"
+  },
+  {
+   "inst": "xq_NW_p0_eg",
+   "q": "xq_NW_p0_eg"
+  },
+  {
+   "inst": "xq_NW_p1_bd",
+   "q": "u_xq_Q_p1_bd"
+  },
+  {
+   "inst": "xq_NW_p1_bfq0",
+   "q": "u_xq_Q_p1_bfq0"
+  },
+  {
+   "inst": "xq_NW_p1_bfq1",
+   "q": "u_xq_Q_p1_bfq1"
+  },
+  {
+   "inst": "xq_NW_p1_bfq2",
+   "q": "u_xq_Q_p1_bfq2"
+  },
+  {
+   "inst": "xq_NW_p1_bfq3",
+   "q": "u_xq_Q_p1_bfq3"
+  },
+  {
+   "inst": "xq_NW_p1_eg",
+   "q": "xq_NW_p1_eg"
+  }
+ ],
+ "candidate_ties": {
+  "su_SE0__lg_rq": 34,
+  "su_SE0__lg_wq": 562,
+  "su_SE1__lg_rq": 34,
+  "su_SE1__lg_wq": 562,
+  "su_SE2__lg_rq": 34,
+  "su_SE2__lg_wq": 562,
+  "su_SE3__lg_rq": 34,
+  "su_SE3__lg_wq": 562,
+  "su_SW0__lg_rq": 34,
+  "su_SW0__lg_wq": 562,
+  "su_SW1__lg_rq": 34,
+  "su_SW1__lg_wq": 562,
+  "su_SW2__lg_rq": 34,
+  "su_SW2__lg_wq": 562,
+  "su_SW3__lg_rq": 34,
+  "su_SW3__lg_wq": 562,
+  "svg_SW0__sm_packet": 1099,
+  "svg_SW1__sm_packet": 1099,
+  "svg_SW2__sm_packet": 1099,
+  "svg_SW3__sm_packet": 1099,
+  "svg_SW4__sm_packet": 1099,
+  "svg_SW5__sm_packet": 1099,
+  "svg_SW6__sm_packet": 1099,
+  "svg_SW7__sm_packet": 1099,
+  "vmdel_SE0__dq": 281,
+  "vmdel_SE1__dq": 281,
+  "vmdel_SE2__dq": 281,
+  "vmdel_SE3__dq": 281,
+  "vmdel_SE4__dq": 281,
+  "vmdel_SE5__dq": 281,
+  "vmdel_SE6__dq": 281,
+  "vmdel_SE7__dq": 281,
+  "vmdel_SW0__dq": 281,
+  "vmdel_SW1__dq": 281,
+  "vmdel_SW2__dq": 281,
+  "vmdel_SW3__dq": 281,
+  "vmdel_SW4__dq": 281,
+  "vmdel_SW5__dq": 281,
+  "vmdel_SW6__dq": 281,
+  "vmdel_SW7__dq": 281
+ },
+ "pad_straps": {
+  "u_mu_fused_n1_q0_0_nw": {
+   "pad_k": 3,
+   "pad_b": 1,
+   "ta": 6,
+   "tb": 3
+  },
+  "u_mu_fused_n1_q0_1_nw": {
+   "pad_k": 3,
+   "pad_b": 1,
+   "ta": 6,
+   "tb": 3
+  },
+  "u_mu_fused_n2L_q0_nw": {
+   "pad_k": 0,
+   "pad_b": 0,
+   "ta": 20,
+   "tb": 20
+  },
+  "u_mu_fused_n1_q0_2_nw": {
+   "pad_k": 2,
+   "pad_b": 1,
+   "ta": 4,
+   "tb": 2
+  },
+  "u_mu_fused_n1_q0_3_nw": {
+   "pad_k": 6,
+   "pad_b": 1,
+   "ta": 8,
+   "tb": 2
+  },
+  "u_mu_fused_n2R_q0_nw": {
+   "pad_k": 4,
+   "pad_b": 0,
+   "ta": 18,
+   "tb": 22
+  },
+  "u_mu_fused_n3_q0_nw": {
+   "pad_k": 2,
+   "pad_b": 0,
+   "ta": 32,
+   "tb": 34
+  },
+  "u_mu_fused_n1_q1_0_nw": {
+   "pad_k": 3,
+   "pad_b": 1,
+   "ta": 6,
+   "tb": 3
+  },
+  "u_mu_fused_n1_q1_1_nw": {
+   "pad_k": 3,
+   "pad_b": 1,
+   "ta": 6,
+   "tb": 3
+  },
+  "u_mu_fused_n2L_q1_nw": {
+   "pad_k": 0,
+   "pad_b": 0,
+   "ta": 20,
+   "tb": 20
+  },
+  "u_mu_fused_n1_q1_2_nw": {
+   "pad_k": 2,
+   "pad_b": 1,
+   "ta": 4,
+   "tb": 2
+  },
+  "u_mu_fused_n1_q1_3_nw": {
+   "pad_k": 6,
+   "pad_b": 1,
+   "ta": 8,
+   "tb": 2
+  },
+  "u_mu_fused_n2R_q1_nw": {
+   "pad_k": 4,
+   "pad_b": 0,
+   "ta": 18,
+   "tb": 22
+  },
+  "u_mu_fused_n3_q1_nw": {
+   "pad_k": 2,
+   "pad_b": 0,
+   "ta": 32,
+   "tb": 34
+  },
+  "u_mu_fused_n4_nw": {
+   "pad_k": 1,
+   "pad_b": 0,
+   "ta": 44,
+   "tb": 45
+  },
+  "u_mu_fused_n1_q0_0_ne": {
+   "pad_k": 3,
+   "pad_b": 1,
+   "ta": 6,
+   "tb": 3
+  },
+  "u_mu_fused_n1_q0_1_ne": {
+   "pad_k": 3,
+   "pad_b": 1,
+   "ta": 6,
+   "tb": 3
+  },
+  "u_mu_fused_n2L_q0_ne": {
+   "pad_k": 0,
+   "pad_b": 0,
+   "ta": 20,
+   "tb": 20
+  },
+  "u_mu_fused_n1_q0_2_ne": {
+   "pad_k": 2,
+   "pad_b": 1,
+   "ta": 4,
+   "tb": 2
+  },
+  "u_mu_fused_n1_q0_3_ne": {
+   "pad_k": 6,
+   "pad_b": 1,
+   "ta": 8,
+   "tb": 2
+  },
+  "u_mu_fused_n2R_q0_ne": {
+   "pad_k": 4,
+   "pad_b": 0,
+   "ta": 18,
+   "tb": 22
+  },
+  "u_mu_fused_n3_q0_ne": {
+   "pad_k": 2,
+   "pad_b": 0,
+   "ta": 32,
+   "tb": 34
+  },
+  "u_mu_fused_n1_q1_0_ne": {
+   "pad_k": 3,
+   "pad_b": 1,
+   "ta": 6,
+   "tb": 3
+  },
+  "u_mu_fused_n1_q1_1_ne": {
+   "pad_k": 3,
+   "pad_b": 1,
+   "ta": 6,
+   "tb": 3
+  },
+  "u_mu_fused_n2L_q1_ne": {
+   "pad_k": 0,
+   "pad_b": 0,
+   "ta": 20,
+   "tb": 20
+  },
+  "u_mu_fused_n1_q1_2_ne": {
+   "pad_k": 2,
+   "pad_b": 1,
+   "ta": 4,
+   "tb": 2
+  },
+  "u_mu_fused_n1_q1_3_ne": {
+   "pad_k": 6,
+   "pad_b": 1,
+   "ta": 8,
+   "tb": 2
+  },
+  "u_mu_fused_n2R_q1_ne": {
+   "pad_k": 4,
+   "pad_b": 0,
+   "ta": 18,
+   "tb": 22
+  },
+  "u_mu_fused_n3_q1_ne": {
+   "pad_k": 2,
+   "pad_b": 0,
+   "ta": 32,
+   "tb": 34
+  },
+  "u_mu_fused_n4_ne": {
+   "pad_k": 1,
+   "pad_b": 1,
+   "ta": 46,
+   "tb": 45
+  }
+ },
+ "pad_missing": [
+  "native_required__u_mu_fused_n1_q0_0_nw__pad_k",
+  "native_required__u_mu_fused_n1_q0_0_nw__pad_b",
+  "native_required__u_mu_fused_n1_q0_1_nw__pad_k",
+  "native_required__u_mu_fused_n1_q0_1_nw__pad_b",
+  "native_required__u_mu_fused_n2L_q0_nw__pad_k",
+  "native_required__u_mu_fused_n2L_q0_nw__pad_b",
+  "native_required__u_mu_fused_n1_q0_2_nw__pad_k",
+  "native_required__u_mu_fused_n1_q0_2_nw__pad_b",
+  "native_required__u_mu_fused_n1_q0_3_nw__pad_k",
+  "native_required__u_mu_fused_n1_q0_3_nw__pad_b",
+  "native_required__u_mu_fused_n2R_q0_nw__pad_k",
+  "native_required__u_mu_fused_n2R_q0_nw__pad_b",
+  "native_required__u_mu_fused_n3_q0_nw__pad_k",
+  "native_required__u_mu_fused_n3_q0_nw__pad_b",
+  "native_required__u_mu_fused_n1_q1_0_nw__pad_k",
+  "native_required__u_mu_fused_n1_q1_0_nw__pad_b",
+  "native_required__u_mu_fused_n1_q1_1_nw__pad_k",
+  "native_required__u_mu_fused_n1_q1_1_nw__pad_b",
+  "native_required__u_mu_fused_n2L_q1_nw__pad_k",
+  "native_required__u_mu_fused_n2L_q1_nw__pad_b",
+  "native_required__u_mu_fused_n1_q1_2_nw__pad_k",
+  "native_required__u_mu_fused_n1_q1_2_nw__pad_b",
+  "native_required__u_mu_fused_n1_q1_3_nw__pad_k",
+  "native_required__u_mu_fused_n1_q1_3_nw__pad_b",
+  "native_required__u_mu_fused_n2R_q1_nw__pad_k",
+  "native_required__u_mu_fused_n2R_q1_nw__pad_b",
+  "native_required__u_mu_fused_n3_q1_nw__pad_k",
+  "native_required__u_mu_fused_n3_q1_nw__pad_b",
+  "native_required__u_mu_fused_n1_q0_0_ne__pad_k",
+  "native_required__u_mu_fused_n1_q0_0_ne__pad_b",
+  "native_required__u_mu_fused_n1_q0_1_ne__pad_k",
+  "native_required__u_mu_fused_n1_q0_1_ne__pad_b",
+  "native_required__u_mu_fused_n2L_q0_ne__pad_k",
+  "native_required__u_mu_fused_n2L_q0_ne__pad_b",
+  "native_required__u_mu_fused_n1_q0_2_ne__pad_k",
+  "native_required__u_mu_fused_n1_q0_2_ne__pad_b",
+  "native_required__u_mu_fused_n1_q0_3_ne__pad_k",
+  "native_required__u_mu_fused_n1_q0_3_ne__pad_b",
+  "native_required__u_mu_fused_n2R_q0_ne__pad_k",
+  "native_required__u_mu_fused_n2R_q0_ne__pad_b",
+  "native_required__u_mu_fused_n3_q0_ne__pad_k",
+  "native_required__u_mu_fused_n3_q0_ne__pad_b",
+  "native_required__u_mu_fused_n1_q1_0_ne__pad_k",
+  "native_required__u_mu_fused_n1_q1_0_ne__pad_b",
+  "native_required__u_mu_fused_n1_q1_1_ne__pad_k",
+  "native_required__u_mu_fused_n1_q1_1_ne__pad_b",
+  "native_required__u_mu_fused_n2L_q1_ne__pad_k",
+  "native_required__u_mu_fused_n2L_q1_ne__pad_b",
+  "native_required__u_mu_fused_n1_q1_2_ne__pad_k",
+  "native_required__u_mu_fused_n1_q1_2_ne__pad_b",
+  "native_required__u_mu_fused_n1_q1_3_ne__pad_k",
+  "native_required__u_mu_fused_n1_q1_3_ne__pad_b",
+  "native_required__u_mu_fused_n2R_q1_ne__pad_k",
+  "native_required__u_mu_fused_n2R_q1_ne__pad_b",
+  "native_required__u_mu_fused_n3_q1_ne__pad_k",
+  "native_required__u_mu_fused_n3_q1_ne__pad_b"
+ ],
+ "closed": [
+  "native_required__hb_idx__s_NW__clear",
+  "native_required__hb_idx__s_NW__live_v",
+  "native_required__hb_idx__s_NW__live_index",
+  "native_required__hb_idx__s_NW__pre_v",
+  "native_required__hb_idx__s_NW__pre_index",
+  "native_required__hb_idx__s_NW__replay_v",
+  "native_required__hb_idx__s_NW__replay_index",
+  "native_required__hb_idx__s_NE__clear",
+  "native_required__hb_idx__s_NE__live_v",
+  "native_required__hb_idx__s_NE__live_index",
+  "native_required__hb_idx__s_NE__pre_v",
+  "native_required__hb_idx__s_NE__pre_index",
+  "native_required__hb_idx__s_NE__replay_v",
+  "native_required__hb_idx__s_NE__replay_index",
+  "native_required__hb_idx__s_SW__clear",
+  "native_required__hb_idx__s_SW__live_v",
+  "native_required__hb_idx__s_SW__live_index",
+  "native_required__hb_idx__s_SW__pre_v",
+  "native_required__hb_idx__s_SW__pre_index",
+  "native_required__hb_idx__s_SW__replay_v",
+  "native_required__hb_idx__s_SW__replay_index",
+  "native_required__hb_idx__s_SE__clear",
+  "native_required__hb_idx__s_SE__live_v",
+  "native_required__hb_idx__s_SE__live_index",
+  "native_required__hb_idx__s_SE__pre_v",
+  "native_required__hb_idx__s_SE__pre_index",
+  "native_required__hb_idx__s_SE__replay_v",
+  "native_required__hb_idx__s_SE__replay_index",
+  "hb_dbk_SE__rq",
+  "hb_dbk_SW__rq",
+  "hcollks_SE_p0__vm_kq",
+  "hcollks_SE_p1__vm_kq",
+  "hcollks_SE_p2__vm_kq",
+  "hcollks_SE_p3__vm_kq",
+  "hcollks_SW_p0__vm_kq",
+  "hcollks_SW_p1__vm_kq",
+  "hcollks_SW_p2__vm_kq",
+  "hcollks_SW_p3__vm_kq",
+  "hcollrs_SE__vm_rq",
+  "hcollrs_SW__vm_rq",
+  "smw_SE__wq_s0",
+  "smw_SE__wq_t0",
+  "smw_SE__wq_s1",
+  "smw_SE__wq_t1",
+  "smw_SE__wq_s2",
+  "smw_SE__wq_t2",
+  "smw_SE__wq_s3",
+  "smw_SE__wq_t3",
+  "smw_SW__wq_s0",
+  "smw_SW__wq_t0",
+  "smw_SW__wq_s1",
+  "smw_SW__wq_t1",
+  "smw_SW__wq_s2",
+  "smw_SW__wq_t2",
+  "smw_SW__wq_s3",
+  "smw_SW__wq_t3",
+  "xl_SE_ctl__rq",
+  "xl_SW_ctl__rq"
+ ],
+ "new_inputs_bits": 26857,
+ "closed_bits": 9920
+}

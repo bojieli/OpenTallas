@@ -1,0 +1,48 @@
+{
+ "unplanned_bits": 38693,
+ "unplanned_pairs": 48,
+ "open_inputs_bits": {
+  "C4q S half boundary: cic": 648,
+  "C4q S half boundary: hb_coll": 6572,
+  "C4q S half boundary: cxij": 2180,
+  "C4q S half boundary: su": 8192,
+  "C4q S half boundary: hleaf": 960,
+  "C4q S half boundary: hb_quant": 1153,
+  "C4q S half boundary: hcollb": 1048,
+  "C4q S half boundary: col_sfu": 1240,
+  "C4q S half boundary: sfucore": 2624,
+  "C4q S half boundary: sm": 2168,
+  "C4q S half boundary: vmks": 64,
+  "C4q S half boundary: xl": 8,
+  "reset/clock (reset tree, not data)": 114,
+  "host session": 8,
+  "C0 die IO": 2725,
+  "C2 FUSED lane VM read (SS33-TOK map)": 8224
+ },
+ "open_inputs_ports": {
+  "C4q S half boundary: cic": 8,
+  "C4q S half boundary: hb_coll": 26,
+  "C4q S half boundary: cxij": 12,
+  "C4q S half boundary: su": 8,
+  "C4q S half boundary: hleaf": 27,
+  "C4q S half boundary: hb_quant": 3,
+  "C4q S half boundary: hcollb": 8,
+  "C4q S half boundary: col_sfu": 30,
+  "C4q S half boundary: sfucore": 160,
+  "C4q S half boundary: sm": 40,
+  "C4q S half boundary: vmks": 4,
+  "C4q S half boundary: xl": 8,
+  "reset/clock (reset tree, not data)": 114,
+  "host session": 1,
+  "C0 die IO": 10,
+  "C2 FUSED lane VM read (SS33-TOK map)": 64
+ },
+ "candidate_ties_unproven_bits": 18056,
+ "errors": {
+  "UNMAPPED": 16,
+  "TIED": 200,
+  "UNPLANNED": 48,
+  "TIED_TOTAL": 1
+ },
+ "u_closed": false
+}

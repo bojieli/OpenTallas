@@ -1,0 +1,17 @@
+{
+ "event": "B0 sfup q1 to b113",
+ "base_plan": "main e891fa51a5 physical/die_plan/hbm d44v",
+ "u_before": 42407,
+ "u_after": 38693,
+ "errors": {
+  "UNPLANNED": 48,
+  "EMIT": 2
+ },
+ "g0c": {
+  "errors": 53,
+  "warnings": 1475,
+  "new_vs_base": 0
+ },
+ "plan_sha": "8e480c13fa0d",
+ "map_sha": "0804257fa91a"
+}
