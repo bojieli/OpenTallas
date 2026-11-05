@@ -92,7 +92,9 @@ def test_stage_only_clock_estimate_keeps_golden_and_core_contract(tmp_path,monke
     kit=gen_phys.write_type_kit(p,'src',tmp_path,[])
     assert (kit/'constraint.sdc').read_text()==original
     assert 'set_clock_latency -clock clk' not in original
-    assert 'PRE_FLOORPLAN_TCL = /work/prects_estimate.tcl' in (kit/'config.mk').read_text()
+    # d2c9700ca90 (native cell cap) wraps the estimate: config -> pre_floorplan_type.tcl -> prects_estimate.tcl
+    assert 'PRE_FLOORPLAN_TCL = /work/pre_floorplan_type.tcl' in (kit/'config.mk').read_text()
+    assert 'source /work/prects_estimate.tcl' in (kit/'pre_floorplan_type.tcl').read_text()
     assert 'PRE_CTS_TCL = /work/pre_cts.tcl' in (kit/'config.mk').read_text()
     clear=(kit/'pre_cts.tcl').read_text()
     assert clear.index('unset_clock_latency -clock clk')<clear.index('source /work/clock_taps.tcl')
