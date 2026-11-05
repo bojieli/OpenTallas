@@ -375,11 +375,13 @@ module hnx_fused_lane_elp (
     wire [1:0] hv, hf, sf, f1, f2;
     genvar e;
     generate for (e = 0; e < 2; e = e + 1) begin : g_el
+        // HBM-FORM-CONG 11-05: square sign is 0 (xl*xl); tied so the unreset y[31] power-up X does not reach e_sq (LEC class)
+        wire [31:0] sq_raw; assign e_sq[32*e +: 32] = {1'0, sq_raw[30:0]};
         ot_hnx_fused_el2 u_e (.clk(clk), .rst_n(rlr[e]), .v(e_v), .x_v(e_xv), .xo_v(e_xov), .wv(e_wv),
             .y(op[0][32*e +: 32]), .a0(op[1][32*e +: 32]), .a1(op[2][32*e +: 32]), .a2(op[3][32*e +: 32]),
             .a3(op[4][32*e +: 32]), .b0(e_b[0 +: 32]), .b1(e_b[32 +: 32]), .b2(e_b[64 +: 32]), .b3(e_b[96 +: 32]),
             .p(e_b[128 +: 32]), .xo(e_xo[32*e +: 32]), .rh(e_rh), .wo(e_wo[32*e +: 32]),
-            .hv(hv[e]), .ho(e_ho[32*e +: 32]), .hf(hf[e]), .xl(e_xl[32*e +: 32]), .sq(e_sq[32*e +: 32]),
+            .hv(hv[e]), .ho(e_ho[32*e +: 32]), .hf(hf[e]), .xl(e_xl[32*e +: 32]), .sq(sq_raw),
             .sf(sf[e]), .qq(e_qq[32*e +: 32]), .f1(f1[e]), .f2(f2[e]));
     end endgenerate
     assign e_hv = hv[0];
