@@ -2862,5 +2862,16 @@
   "top": "ot_hbm_su_pg_sfu_s_core",
   "alias_of": "ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92",
   "synth_memory_max_bits": 16384
+ },
+ "ot_hgi_coll_tkm_tp192_htile_core": {
+  "top": "ot_hgi_coll_tkm_tp192_htile_core",
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/cores_split/reform_1103/tkm_tile/ot_hgi_coll_tkm_tp192_htile_core.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-REFORM-A3 d44v part 19: half tile, the chain element at PT 32 (reform_1103 reduced-chain receipt); plan pins == RTL top ports"
  }
 }
