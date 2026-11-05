@@ -3159,7 +3159,9 @@ def _header_with_defaults(hdr, ident):
     j = _paren_end(hdr, i)
     items, done = [], {}
     for it in _top_items(hdr[i + 1:j]):
-        if "=" in it and "`" not in it:            # a `ifdef-selected declaration stays as written
+        # a `ifdef-selected declaration stays as written; a bare macro default (`X_DEF) takes the identity: the bb reads alone,
+        # so the macro is undefined there and native_bb cannot verify it (DIE-S81-56 11-04, S81 xrt1/xrt3).
+        if "=" in it and ("`" not in it or re.fullmatch(r"\s*`\w+\s*", it.split("=", 1)[1])):
             lhs, rhs = it.split("=", 1)
             names = re.findall(r"[A-Za-z_]\w*", lhs)
             if names and names[-1] in ident and names[-1] not in done:

@@ -22,6 +22,16 @@ class MacroParamBB(unittest.TestCase):
                             " m_sram u_s(.a(clk)); endmodule\n")
         self.macros = [("u_p", "m_pair", "", "", 0, 0, "N"), ("u_s", "m_sram", "", "", 0, 0, "N")]
 
+    def test_bare_macro_default_takes_identity(self):
+        hdr = "module m #(parameter integer A = `A_DEF, parameter integer B = `B_DEF,\n parameter [14:0] C=`C_DEF)(input wire c);"
+        out, done = G._header_with_defaults(hdr, {"A": "2", "C": "15'b000001010011100"})
+        self.assertIn("A = 2", out)
+        self.assertIn("C= 15'b000001010011100", out)
+        self.assertIn("B = `B_DEF", out)          # no identity: stays, an override of it still stops synth
+        self.assertEqual(sorted(done), ["A", "C"])
+        keep, none = G._header_with_defaults("module m #(\n`ifdef X\n parameter integer A = 1\n`else\n parameter integer A = 0\n`endif\n)(input wire c);", {"A": "2"})
+        self.assertEqual(none, {})                # a `ifdef-selected declaration stays as written
+
     def test_param_instance_gets_header_blackbox(self):
         out = G.macro_param_blackboxes(self.macros, [self.top], self.t / "kit")
         self.assertEqual([p.name for p in out], ["m_pair_bb.v"])
