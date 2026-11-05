@@ -82,6 +82,32 @@ def hold_ff_blocks(kit):
             or re.search(r'^export\s+OT_G2_HOLD_GATE\s*=\s*1\s*$', text, re.M) is not None)
 
 
+SETUP_CONTINUE_PS = 50.0
+
+
+def setup_continue_ps(kit):
+    """KW-FIX-16 11-05 (COORD class G2-TT-SETUP, OWNER 11-03 targets not gates): a G2 TT setup miss on GRT RC no worse
+    than this many ps is ADVISORY -- the kit routes on and routed sign-off (with its post-route repair) decides; a
+    deeper miss is structural and still stops before the pair census.  Measured 11-05 wave: small misses -5.7/-7.08/
+    -44.24 ps, structural ones -92 ps and worse.  'export OT_G2_SETUP_GATE = 1' (env or config.mk) restores the old
+    stop at any negative WNS; 'export OT_G2_SETUP_CONTINUE_PS = <ps>' moves the window."""
+    cfg = Path(kit) / 'config.mk'
+    text = cfg.read_text() if cfg.is_file() else ''
+    def get(key):
+        found = re.findall(r'^export\s+' + key + r'\s*=\s*(\S+)\s*$', text, re.M)
+        return os.environ.get(key, found[-1] if found else None)
+    if get('OT_G2_SETUP_GATE') == '1':
+        return 0.0
+    raw = get('OT_G2_SETUP_CONTINUE_PS')
+    try:
+        value = SETUP_CONTINUE_PS if raw is None else float(raw)
+    except ValueError:
+        raise ValueError(f'OT_G2_SETUP_CONTINUE_PS not a number: {raw!r}')
+    if not math.isfinite(value) or value < 0:
+        raise ValueError(f'OT_G2_SETUP_CONTINUE_PS must be finite and >= 0: {raw!r}')
+    return value
+
+
 def policy_session(kit, corner, base, disc, ctx, policy):
     """Append the existing signoff policy to the already loaded GRT session.
 
@@ -107,10 +133,16 @@ def policy_session(kit, corner, base, disc, ctx, policy):
     # A known blocking data failure cannot reach DRT; do not spend a full pair census
     # on a rejected prototype. Positive candidates still require both censuses.
     # FF hold is advisory (hold_ff_blocks): the session runs on to the pair census.
+    # TT setup: only a miss deeper than setup_continue_ps stops (KW-FIX-16); a small miss runs on to the census.
     stop = ''
-    if corner == 'TT' or hold_ff_blocks(kit):
-        stop = ('if {[sta::worst_slack_cmd ' + ('max' if corner == 'TT' else 'min') + '] < 0} {\n'
-                f'  so G2_REQUIRED_FAIL {"setup_tt" if corner == "TT" else "hold_ff"}\n'
+    if corner == 'TT':
+        thr = setup_continue_ps(kit)
+        stop = ('set ot_g2_wns [so_ps [sta::worst_slack_cmd max]]\n'
+                f'if {{$ot_g2_wns ne "nan" && $ot_g2_wns < {-thr:.2f}}} {{\n'
+                '  so G2_REQUIRED_FAIL setup_tt\n  so DONE 1\n  exit\n}\n')
+    elif hold_ff_blocks(kit):
+        stop = ('if {[sta::worst_slack_cmd min] < 0} {\n'
+                '  so G2_REQUIRED_FAIL hold_ff\n'
                 '  so DONE 1\n  exit\n}\n')
     if tail.count('so_timing STD\n') != 1:
         raise ValueError('signoff standard-overlay timing anchor changed')
@@ -125,9 +157,10 @@ def policy_session(kit, corner, base, disc, ctx, policy):
             + definitions + f'so CORNER {corner}\nso PARASITICS global_routing\n' + tail)
 
 
-def policy_record(corners, policy, hold_blocks=False):
+def policy_record(corners, policy, hold_blocks=False, setup_continue=0.0):
     """Apply the existing sign-off setup/standard-hold/pair-skew checks only.  A measured hold_ff FAIL is advisory unless
-    hold_blocks; NOT RUN (standard overlay not applied, no FF reference) still stops: no measurement is not a pass."""
+    hold_blocks; a measured setup_tt FAIL no worse than -setup_continue ps is advisory (KW-FIX-16); NOT RUN (standard
+    overlay not applied, no FF reference) still stops: no measurement is not a pass."""
     import signoff as so
     for c in ('tt', 'ff'):
         x = corners[c]
@@ -167,11 +200,18 @@ def policy_record(corners, policy, hold_blocks=False):
     wanted['clock'] = clock_rec['checks']['clock']
     # This is a G2 prototype receipt, never a SIGNED record: DRC/antenna and
     # routed sign-off are deliberately not claimed or required here.
+    advisory = [] if hold_blocks else ['hold_ff']
+    st = wanted['setup_tt']
+    w = st.get('wns_ps')
+    if (st['verdict'] == 'FAIL' and setup_continue > 0 and w is not None and math.isfinite(float(w))
+            and float(w) >= -setup_continue):
+        advisory.append('setup_tt')
     return dict(schema='opentallas.grt_policy.v1', parasitics='global_routing',
                 policy=dict(period_ps=so.PERIOD_PS, uncertainty_setup_ps=so.UNC_SETUP_PS,
-                            uncertainty_hold_ps=so.UNC_HOLD_PS, pair_skew_max_ps=so.PAIR_SKEW_MAX_PS, **policy),
-                checks=wanted, advisory=[] if hold_blocks else ['hold_ff'],
-                verdict='PASS' if all(x['verdict']=='PASS' or (k=='hold_ff' and x['verdict']=='FAIL' and not hold_blocks)
+                            uncertainty_hold_ps=so.UNC_HOLD_PS, pair_skew_max_ps=so.PAIR_SKEW_MAX_PS,
+                            setup_continue_ps=setup_continue, **policy),
+                checks=wanted, advisory=advisory,
+                verdict='PASS' if all(x['verdict']=='PASS' or (k in advisory and x['verdict']=='FAIL')
                                       for k, x in wanted.items()) else 'FAIL')
 
 
@@ -275,7 +315,7 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
                 kit / f'postcts_gate_{corner.lower()}.libraries.json', disc,
                 parsed.get('clock_endpoint_masters'), parsed.get('clock_endpoint_mapping_errors'))
             corners[corner.lower()] = parsed
-        result = policy_record(corners, policy, hold_ff_blocks(kit))
+        result = policy_record(corners, policy, hold_ff_blocks(kit), setup_continue_ps(kit))
         timing_receipt.write_text(json.dumps(result, indent=1) + '\n')
         for k in result['advisory']:
             if result['checks'][k]['verdict'] == 'FAIL':

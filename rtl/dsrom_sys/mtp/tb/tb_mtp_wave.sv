@@ -33,6 +33,7 @@ module tb_mtp_wave;
     parameter integer NSTEPMAX = 13;     // speculative steps to run after the prefill close
     parameter integer PLEN = 5;
     parameter integer MAXC = 20000000;
+    parameter integer STALL = 3000000;   // stall watchdog: WAVE FAIL when no token is emitted for STALL cycles (0 = off); slowest PASS seen runs 2,558,056 cycles in all
     parameter integer VERB = 0;
     localparam integer FLIT = 512, NW = 21, USER_W = 10, G = 5, V = 129280, MAXP = 512;
     localparam integer SW = USER_W + 3 * NW + 4, DW = USER_W + 3 + NW, AW = 2 * NW + USER_W + 5, PW = USER_W + 2 * NW + 4;
@@ -392,6 +393,7 @@ module tb_mtp_wave;
     wv_p2twin #(.LNK(1)) u_tw1 (.clk(fclk), .rst_n(rst_n), .done(tw_done[1]));
 
     // ------------------------------------------------------------------ the loop's checks (sequencer pins, committed tokens)
+    integer wd_em = 0, wd_cyc = 0;
     integer emitted = 0, last_pos, acc_n = 0, bq_exp = 0, bg_exp = 0, exa, xw, n_g5 = 0;
     integer t_rin [0:MAXP-1]; integer t_win = -1, t_qin = -1, t_qlast = -1;
     integer n_rw = 0, s_rw = 0, n_dh = 0, s_dh = 0, n_sac = 0, s_sac = 0, n_ldf = 0, s_ldf = 0;
@@ -529,6 +531,10 @@ module tb_mtp_wave;
         rst_n = 1;
         while (emitted < ngen && cyc < MAXC && errs == 0) begin
             @(posedge fclk);
+            if (emitted != wd_em) begin wd_em = emitted; wd_cyc = cyc; end
+            else if (STALL > 0 && cyc - wd_cyc >= STALL) begin
+                $display("WAVE FAIL: stall, no emit for %0d cycles at %0d (emitted %0d of %0d)", STALL, cyc, emitted, ngen); errs = errs + 1;
+            end
             if (cyc % 200000 == 0) $display("WAVE_HB cyc=%0d emitted=%0d closes=%0d seeds=%0d p2_tx=%0d s4_jobs=%0d s0_jobs=%0d", cyc,
                                             emitted, acc_n, sd_n, p2_tx, s4.n_job, s0.n_job); $fflush;
         end

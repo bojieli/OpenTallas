@@ -1,0 +1,3 @@
+{"partitions": 90, "types": 81, "crossings": 420, "crossing_bits": 378992, "errors": 0, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 10247, "plan_driven": 0}
+	Command being timed: "prlimit --as=120000000000 python3 -I tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/hbm-bind-9/k13fp/die_plan.json --asbuilt physical/die_plan/hbm/bind/d44v/asbuilt_t11.json --out /srv/opentallas-scratch2/claude/hbm-bind-9/g_t11k13f --strict --all-gaps --mem 48"
+	User time (seconds): 309.54

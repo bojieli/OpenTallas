@@ -161,6 +161,7 @@ done
 [ -z "${OT_PRD_UNFOLD_CHAINS:-}" ] || printf 'OT_PRD_UNFOLD_CHAINS=%q\n' "$OT_PRD_UNFOLD_CHAINS" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGETED:-}" ] || printf 'OT_PRD_TARGETED=%q\n' "$OT_PRD_TARGETED" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGET_SLEW_PS:-}" ] || printf 'OT_PRD_TARGET_SLEW_PS=%q\n' "$OT_PRD_TARGET_SLEW_PS" >> $OUT/variant.env
+[ -z "${OT_PRD_TARGET_FANOUT:-}" ] || [ "${OT_PRD_TARGET_FANOUT}" = 0 ] || printf 'OT_PRD_TARGET_FANOUT=%q\n' "$OT_PRD_TARGET_FANOUT" >> $OUT/variant.env
 [ -z "${OT_PRD_TIE_SPLIT:-}" ] || printf 'OT_PRD_TIE_SPLIT=%q\n' "$OT_PRD_TIE_SPLIT" >> $OUT/variant.env
 # DIE-S81-48 11-02: OT_PRD_REPAIR_RC=placement = repair on placement estimates for ECO nets (FlexPA SIG11 class)
 # FLOW-25 11-03: unset = the hook decides (a seed with routed data wires repairs on placement, RSZ-0074 class); grt = A/B
