@@ -116,16 +116,26 @@ module ot_hbm_svc_sm4pc_cdc_rel_id #(parameter integer OWNER_AW=5, parameter int
    else if(fifo_wr_valid[g])arb_cursor[g]<=arb_selected[g]+1'b1;
   end
  end endgenerate
- integer h_take,p,l,offset;integer h_take_b[0:LBANKS-1];
+ // HBM-REFORM-B3 part 23: h_take / h_take_b leave the serial arbiter loop (32-bit integer adders, depth 211, rx_left -5756 ps).
+ // Same values: each accepted PC response counts once, for its bank.
+ integer p,l,offset;
+ reg [2:0] h_take;reg [2:0] h_take_b[0:LBANKS-1];
+ integer ta,tb;
  always @*begin
-  kr_rdy=0;fifo_wr_valid=0;response_accepted=0;h_take=0;for(rb=0;rb<LBANKS;rb=rb+1)h_take_b[rb]=0;
+  h_take=3'(response_accepted[0])+3'(response_accepted[1])+3'(response_accepted[2])+3'(response_accepted[3]);
+  for(tb=0;tb<LBANKS;tb=tb+1)begin
+   h_take_b[tb]=0;
+   for(ta=0;ta<4;ta=ta+1)if(response_accepted[ta]&&int'(response_bank[ta])==tb)h_take_b[tb]=h_take_b[tb]+3'd1;
+  end
+ end
+ always @*begin
+  kr_rdy=0;fifo_wr_valid=0;response_accepted=0;
   for(l=0;l<8;l=l+1)begin
    fifo_wr_data[l]=0;arb_selected[l]=0;
    for(offset=0;offset<4;offset=offset+1)begin
     p=(arb_cursor[l]+offset)&3;
     if(response_ok[p]&&response_ordinal[p][2:0]==l&&!fifo_wr_valid[l]&&fifo_wr_ready[l])begin
-     kr_rdy[p]=1;fifo_wr_valid[l]=1;arb_selected[l]=p;response_accepted[p]=1;h_take=h_take+1;
-     h_take_b[response_bank[p]]=h_take_b[response_bank[p]]+1;
+     kr_rdy[p]=1;fifo_wr_valid[l]=1;arb_selected[l]=p;response_accepted[p]=1;
      fifo_wr_data[l]={response_ordinal[p],response_bank[p],response_epoch[p],kr_data[256*p+:256]};
     end
    end
@@ -148,7 +158,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_id #(parameter integer OWNER_AW=5, parameter int
    if(OVERLAP==0)begin
     if(h_active)begin
      h_received<=h_received+h_take;
-     if(h_received+h_take==h_total)h_active<=0;
+     if(13'(h_received)+13'(h_take)==13'(h_total))h_active<=0;
     end else if(|kr_v)hbm_fault<=1;
    end else begin
     // issue phase ends when every owner has issued the block; returns are counted per landing bank
