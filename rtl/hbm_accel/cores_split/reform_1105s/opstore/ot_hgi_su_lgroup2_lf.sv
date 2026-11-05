@@ -7,6 +7,9 @@
 // every bank input (re/ra/we/wa/wd) is registered before the macro. All bank ops move one edge together, so their order
 // is kept; the response network follows the 2-edge bank (same selects as the LAT = 1 path): rd / sr_d / sr_rv +1 edge.
 // flt is unchanged (its checks read the selects, not the banks).
+// FREG = 1 (HBM-REFORM-B10, COORD 15:16 pre-approved form after BREG CTS -392/-432/-700): the fault check is split per bank
+// and registered (br_q -> flt crossed the tile on opsa_group0, -392 ps); flt +1 edge. Inputs get one more register stage in
+// the tiles (IREG), so the select logic no longer shares a cycle with the face-to-logic wire: rd +2 edges, flt +2 edges total.
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hgi_su_lgroup2_lf #(
@@ -16,7 +19,8 @@ module ot_hgi_su_lgroup2_lf #(
     parameter integer MUT_XBAR = 0,        // bench mutant: identity lanes take the neighbouring bank's word
     parameter integer LAT = 0,             // bench mutant: bank read latency 1 = +1 edge, 2 = -1 edge (see ot_hgi_su_lbank)
     parameter integer NS = 1,              // sector lanes: NS independent 8-word stage writes / drain reads an edge
-    parameter integer BREG = 0             // 1 = registered bank inputs (+1 edge on rd / sr_d / sr_rv)
+    parameter integer BREG = 0,            // 1 = registered bank inputs (+1 edge on rd / sr_d / sr_rv)
+    parameter integer FREG = 0             // 1 = registered fault terms (per bank row check next to the bank): flt +1 edge
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -200,9 +204,28 @@ module ot_hgi_su_lgroup2_lf #(
         for (l = 0; l < N; l = l + 1) lr_q[l] <= ra[l*AW + LN +: RB];
         for (b = 0; b < N; b = b + 1) br_q[b] <= b_ra[b];
     end
+    // FREG = 1 (HBM-REFORM-B10): the same terms, split per bank (exists l: rq && lb == b && row != bank row b, so the
+    // compare sits next to bank b's row reg) plus the lane-candidate / srv / wcoll terms, registered (no reset, like the
+    // check regs above), then ORed into flt one edge later.
+    wire [N+N+1:0] fterm;
+    for (genvar gfb = 0; gfb < N; gfb = gfb + 1) begin : g_fb
+        reg bad;
+        always @* begin : fbc
+            integer i_;
+            bad = 1'b0;
+            for (i_ = 0; i_ < N; i_ = i_ + 1) if (rq_q[i_] && lb_q[i_] == gfb && lr_q[i_] != br_q[gfb]) bad = 1'b1;
+        end
+        assign fterm[gfb] = bad;
+        assign fterm[N + gfb] = rq_q[gfb] && !lok_q[gfb];
+    end
+    assign fterm[2*N] = srv_q; assign fterm[2*N+1] = wcoll_q;
+    reg [N+N+1:0] fq;
+    always @(posedge clk) fq <= fterm;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) flt <= 1'b0;
-        else begin
+        else if (FREG != 0) begin
+            if (|fq) flt <= 1'b1;
+        end else begin
             if (srv_q || wcoll_q) flt <= 1'b1;
             for (l = 0; l < N; l = l + 1)
                 if (rq_q[l] && (!lok_q[l] || lr_q[l] != br_q[lb_q[l]])) flt <= 1'b1;

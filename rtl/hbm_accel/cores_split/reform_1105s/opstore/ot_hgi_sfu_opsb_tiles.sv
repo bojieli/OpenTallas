@@ -14,10 +14,14 @@ module ot_hgi_sfu_opsb_group (
     input  wire [2047:0] sw_d,
     output wire          flt
 );
-    ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8),.BREG(1)) u_g (  // HBM-REFORM-B9: rd +1 edge
-        .clk(clk), .rst_n(rst_n), .rq(rq), .rr(rq), .ra(ra), .rd(rd),
+    // HBM-REFORM-B10 IREG: every input registered once more (no reset) before the lgroup2 selects; with BREG / FREG
+    // rd is +2 edges and flt +2 edges (COORD 15:16 pre-approved form).
+    reg [15:0] q_rq; reg [383:0] q_ra; reg [7:0] q_sv; reg [119:0] q_sa; reg [63:0] q_sm; reg [2047:0] q_sd;
+    always @(posedge clk) begin q_rq <= rq; q_ra <= ra; q_sv <= sw_v; q_sa <= sw_addr; q_sm <= sw_mask; q_sd <= sw_d; end
+    ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8),.BREG(1),.FREG(1)) u_g (  // B9 rd +1, B10 rd +2
+        .clk(clk), .rst_n(rst_n), .rq(q_rq), .rr(q_rq), .ra(q_ra), .rd(rd),
         .sr_v(8'd0), .sr_addr(120'd0), .sr_d(), .sr_rv(),
-        .sw_v(sw_v), .sw_addr(sw_addr), .sw_mask(sw_mask), .sw_d(sw_d),
+        .sw_v(q_sv), .sw_addr(q_sa), .sw_mask(q_sm), .sw_d(q_sd),
         .lw(1'b0), .lwa(24'd0), .lwd(32'd0), .s1_v(1'b0), .s1_a(15'd0), .s1_d(32'd0), .flt(flt));
 endmodule
 module ot_hgi_sfu_opsb_output (
