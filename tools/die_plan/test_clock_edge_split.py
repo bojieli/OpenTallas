@@ -11,8 +11,8 @@ import gen_phys as G
 HERE = Path(__file__).parent
 
 
-def plan(edges):
-    return SimpleNamespace(types={"t": {"clock": {"tap_um": [100.0, 100.0], "edge_clocks": edges}}})
+def plan(edges, die="qwen_compute"):
+    return SimpleNamespace(die={"name": die}, types={"t": {"clock": {"tap_um": [100.0, 100.0], "edge_clocks": edges}}})
 
 
 def test_ports_filter(monkeypatch):
@@ -21,6 +21,7 @@ def test_ports_filter(monkeypatch):
              dict(port="clk_lat", tap_um=[4, 1], period_mult=1, source_latency_ps=[1, 2])]
     monkeypatch.setattr(G, "edge_clock_pins", lambda P, tn: [(e["port"], 0, 0, e["period_mult"]) for e in edges])
     assert G.edge_split_ports(plan(edges), "t") == ["clk_coll"]
+    assert G.edge_split_ports(plan(edges, die="qwen_kvsys"), "t") == []  # opt-in per die
 
 
 def run_split(tmp_path, n_sinks, env):

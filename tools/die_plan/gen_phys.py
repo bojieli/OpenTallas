@@ -790,7 +790,14 @@ def edge_clock_pins(P, tn):
 # no forwarded ring, unlike fclk_in_*) get one tree per region of the same size as the clk taps, balanced to the same plan
 # insertion: clock_edge_split.tcl (pre-CTS root buffers) + clock_edge_balance.tcl (POST_CTS pad).  The kit decides by sink
 # count, so a small domain is left alone.  Types without such a port generate byte-identical kits.
+# Opt-in per die (COORD 11-05): QC only.  KV kv3_sys_SD (clk_clk_phy) has the same port shape; its owner adds the die after
+# its own estimate.
+EDGE_SPLIT_DIES = {"qwen_compute"}
+
+
 def edge_split_ports(P, tn):
+    if P.die.get("name") not in EDGE_SPLIT_DIES:
+        return []
     return [n for n, _x, _y, m in edge_clock_pins(P, tn) if m == 1 and not n.startswith("fclk_in")
             and not edge_source_latency(P, tn, n)]
 
