@@ -2569,8 +2569,7 @@
     "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-8 17:5x COORD: stale row stopped; other hc wait one proof row past CTS with no big-tap failure",
     "sle_fe_v3": "KW-FIX-11 07:2x COORD 07:21: DIE-QC-75-R stopped it 07:07, autopilot revived 07:17 on pre-fix tick; DIE-QC-75 ring_place=ff pilot on dq75/fe3ff is the path; release on its read",
     "coll_ftn": "KW-FIX-12 08:5x brief: coll_ftn stays held, DIE-QC-75 form; was eligible in the wave with no hold",
-    "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts",
-    "coll_s": "KW-FIX-16 13:0x COORD: no wave recut of coll_s (12 GRT restarts, overflow ~105k); DIE-QC-79 re-forms it; release on that form"
+    "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts"
    },
    "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1105f2/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -3267,7 +3266,7 @@
    "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250.",
    "note_sc_batch_1105": "KW-FIX-10 04:2x COORD: moved list 47 + 9 SC + leaves on src_c/sc_ev/pub. Live moved rows armed by retry; they relaunch when their queue verdict lands and do not count on the old bind.",
    "stage_resume": false,
-   "note_recut_f": "KW-FIX-16 13:1x COORD 13:00 + 13:0x: one recut of QC rows not past GRT on tag f; cancel_superseded true stops live old-block rows (13:1x read: 60 live QC rows, 0 with 5_1_grt.odb); coll_s held (DIE-QC-79)."
+   "note_recut_f": "KW-FIX-16 13:1x COORD 13:00 + 13:0x: one recut of QC rows not past GRT on tag f; cancel_superseded true stops live old-block rows (13:1x read: 60 live QC rows, 0 with 5_1_grt.odb); coll_s held (DIE-QC-79). COORD correction 13:1x: coll_s cut ONCE on tag f (RE-FORM build), hold removed; no further cuts of this form (no retry entry will be added)."
   },
   "hbm": {
    "enabled": true,
