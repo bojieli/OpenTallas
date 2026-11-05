@@ -1,0 +1,420 @@
+{
+ "schema": "opentallas.die_ci.v1",
+ "date": "2026-11-01",
+ "sha": "6defc3c23069b7a8d5be3060ff6437cafe6ad32a",
+ "mode": "nightly",
+ "host": "tolerant-swine",
+ "started": "2026-11-01T20:48:30",
+ "seconds": 210452.9,
+ "prev_sha": "262d07038412ff7193d73264d55b88380b244f25",
+ "g2_mode": "all",
+ "sta_tool": {
+  "path": "/srv/opentallas-scratch2/claude/die-ci/wt/tools/die_plan/die_sta.py",
+  "ref": null,
+  "blob": "e7d333adadb00474"
+ },
+ "margins": {
+  "schema": "opentallas.die_ci.margins.v1",
+  "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at TT setup / FF hold, SS info only, 0 ps setup (OWNER 12.24c, was 60) / 25 ps hold uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
+  "ocv": {
+   "cell_late": 1.05,
+   "cell_early": 0.95,
+   "net_late": 1.03,
+   "net_early": 0.97,
+   "why": "Flat OCV (OpenSTA set_timing_derate) because ASAP7 ships no LVF / POCV sigma tables. +/-5 % cell is the flat derate an AOCV table gives a ~10-stage path (the partition clock trees from the tap to the face flops are 8-14 stages; flat derates of 5-10 % are the usual range without LVF, cf. Bhasker & Chadha, Static Timing Analysis for Nanometer Designs, 2009, ch. 10 on OCV derating). +/-3 % on nets. CRPR only removes the common clock path; seams share only the die clk port (ideal spine), so the whole tree of each partition is derated -- the dominant term on a seam."
+  },
+  "ir": {
+   "mode": "stated",
+   "vdd_v": 0.7,
+   "vdd_drop_frac": 0.05,
+   "vt_v": 0.25,
+   "alpha": 1.3,
+   "why": "No die-level PDN database exists yet (die_plan pg.grid is a plan; no placed die ODB with power for OpenROAD PDNSim / analyze_power_grid), so PDNSim is NOT RUN and a stated budget is used: 5 % of the TT supply of the setup sign-off corner (35 mV at 0.70 V, the total static + dynamic drop a sign-off PDN is designed to). Delay sensitivity from the alpha-power law (Sakurai & Newton, IEEE JSSC 25(2), 1990), t ~ V / (V - Vt)^a: d ln t / d ln V = 1 - a V / (V - Vt) = -1.022 at a = 1.3, V = 0.70, Vt = 0.25 V (conservative ASAP7 RVT), so a 5 % drop is +5.1 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late launch + data; hold: late capture clock). When a PDNSim result exists (pdnsim: {worst_drop_mv}) it replaces vdd_drop_frac.",
+   "pdnsim": null
+  },
+  "data_droop": {
+   "mode": "class",
+   "budget_mv": 35.0,
+   "late_frac": {
+    "logic": {
+     "TT": 0.1,
+     "FF": 0.08
+    },
+    "wire": {
+     "TT": 0.05,
+     "FF": 0.04
+    }
+   },
+   "setup_only": true,
+   "wire_class": {
+    "cells_re": "^(BUF|INV|HB)",
+    "min_wire_cap_ff": 40.0
+   },
+   "why": "METHODOLOGY 12.4a b2 (OWNER 10-27 ~18:1x, LIB-VDROOP-CHECK): at the 35 mV die PG budget die-level STA charges DATA paths a LATE derate per class -- RVT logic cells + flop clk->Q +10 % (FF +8 %), wire/repeater segments (M8/M9 repeated stages) +5 % (FF +4 %) -- replacing the flat +5.1 % (ir) data term. SPICE basis (ngspice + BSIM-CMG, ASAP7 RVT, lanes/LIB-VDROOP.md 10-27 10:34): 10-stage logic chain +9.4/+9.9 %, DFFHQNx1 clk->QN +8.9 %, 405-um M8 BUFx12f stage +5.0/+4.7 %; FF chain +7.7/+8.2 %, M8 stage +3.7/+3.5 %. SETUP ONLY: never credited to hold (early data derate unchanged). The clock keeps the shared-droop rule (ir, 12.4a b1). Classes: tools/die_plan/data_droop.py (repeater master driving >= min_wire_cap_ff of SPEF net cap = wire, else logic). Core sign-off unchanged (60 ps); signoff.py droop-check is INFO."
+  },
+  "xtalk": {
+   "c_per_um_ff": 0.178475,
+   "cc_frac": 0.7,
+   "mcf_setup": 2.0,
+   "mcf_hold": 0.0,
+   "seam_len_um_default": 60.0,
+   "why": "OpenSTA has no SI delay. Per-seam margin = |MCF - 1| x R_eff x Cc, Cc = cc_frac x c_per_um x L_seam: c_per_um = ASAP7 M4 0.178 fF/um (ORFS platforms/asap7/setRC.tcl, the seam pin layers M4-M7 are 0.163-0.187); cc_frac 0.7 = sidewall coupling share of a min-pitch 7 nm line with both neighbours (aspect ratio ~2); Miller coupling factor 2 (opposite switching, setup) / 0 (same direction, hold) is the worst-case switch-factor bound of Kahng, Muddu & Sarto (DAC 2000); L_seam = 2 x budgets.pin_reg_p90_um (R2 face flops at both pins, G3 pin-to-reg p90 budget, 30 um per side default); R_eff = the clk->QN delay slope of DFFHQNx1 at the corner (lib below). This is a bound for an x1 face flop driving the seam unbuffered; a kit that upsizes the seam driver lowers the real push. Clock-net coupling is not added (clock trees are inside the derated OCV term)."
+  },
+  "lib": {
+   "SS": {
+    "cell": "DFFHQNx1_ASAP7_75t_R",
+    "slew_ps": 20.0,
+    "load_ff": 11.31,
+    "clk_q_max_ps": 152.25,
+    "clk_q_min_ps": 144.82,
+    "r_eff_ps_per_ff": 6.596,
+    "setup_ps": 16.21,
+    "hold_ps": 18.28,
+    "d_cap_ff": 0.524726,
+    "liberty": "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib"
+   },
+   "FF": {
+    "cell": "DFFHQNx1_ASAP7_75t_R",
+    "slew_ps": 20.0,
+    "load_ff": 11.31,
+    "clk_q_max_ps": 71.16,
+    "clk_q_min_ps": 68.92,
+    "r_eff_ps_per_ff": 2.77,
+    "setup_ps": 9.92,
+    "hold_ps": 12.28,
+    "d_cap_ff": 0.62135,
+    "liberty": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+   },
+   "TT": {
+    "cell": "DFFHQNx1_ASAP7_75t_R",
+    "slew_ps": 20.0,
+    "load_ff": 11.31,
+    "clk_q_max_ps": 100.77,
+    "clk_q_min_ps": 96.27,
+    "r_eff_ps_per_ff": 4.103,
+    "setup_ps": 9.99,
+    "hold_ps": 12.47,
+    "d_cap_ff": 0.558822,
+    "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+   }
+  },
+  "derived_on": "2026-10-24",
+  "derived": {
+   "derates": {
+    "cell_late": 1.1037,
+    "cell_early": 0.95,
+    "net_late": 1.03,
+    "net_early": 0.97,
+    "ir_factor": 1.0511
+   },
+   "xtalk_default": {
+    "setup_ps": 30.76,
+    "hold_ps": 20.76,
+    "seam_len_um": 60.0,
+    "cc_ff": 7.496
+   },
+   "ir": {
+    "factor": 1.0511,
+    "sensitivity": 1.022,
+    "drop_frac": 0.05
+   }
+  }
+ },
+ "systems": {
+  "s81": {
+   "status": "PASS",
+   "errors": 0,
+   "circuits": 2932,
+   "warnings": 4,
+   "groups": [],
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-11-01_6defc3c23069/work/xdie_s81/xdie_io_s81.json",
+   "seconds": 0.2
+  }
+ },
+ "absent": [],
+ "dies": {
+  "s81": {
+   "schema": "opentallas.die_ci.v1",
+   "die": "s81",
+   "plan": "physical/die_plan/s81/die_plan.json",
+   "sha": "6defc3c23069b7a8d5be3060ff6437cafe6ad32a",
+   "plan_digest": "5a11f57ffa56e76d",
+   "g2_tools_digest": "28e331ac2d14e211",
+   "gates": {
+    "g0": {
+     "status": "FAIL",
+     "errors": 12,
+     "by_check": {
+      "cuts": 12
+     },
+     "warnings": 1834,
+     "seconds": 621.0,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-11-01_6defc3c23069/work/s81/g0c/g0_report.json",
+     "worst_cut": {
+      "ratio": 0.3043,
+      "at": "horizontal@18750"
+     },
+     "worst_segment": {
+      "ratio": 1.023,
+      "at": "horizontal@5000:svc_1"
+     },
+     "types": 171,
+     "partitions": 398
+    },
+    "g0c": {
+     "status": "FAIL",
+     "errors": 12,
+     "by_check": {
+      "cuts": 12
+     },
+     "clean_types": 20,
+     "types": 171,
+     "g3_eligible": 20,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-11-01_6defc3c23069/work/s81/g0c/g0_report.json"
+    },
+    "xdie": {
+     "status": "PASS",
+     "errors": 0,
+     "in_die": {
+      "status": "PASS",
+      "errors": 0,
+      "by_rule": {
+       "die_io_plan": 0,
+       "cut_lines": 0,
+       "reach": 0,
+       "face_tracks": 0,
+       "ft_budget": 0
+      }
+     },
+     "systems": {
+      "s81": {
+       "status": "PASS",
+       "errors": 0,
+       "circuits": 2932,
+       "warnings": 4,
+       "groups": [],
+       "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-11-01_6defc3c23069/work/xdie_s81/xdie_io_s81.json",
+       "seconds": 0.2
+      }
+     }
+    },
+    "census": {
+     "status": "PASS",
+     "errors": 0,
+     "dropped_bits": 0,
+     "unmapped_instances": 0,
+     "inter_bits": 218995,
+     "exempt": 259,
+     "sources": 1
+    },
+    "latency": {
+     "status": "FAIL",
+     "reason": "no latency table carries the current plan digest (stale table)",
+     "plan_digest": "5a11f57ffa56e76d",
+     "lanes": 873,
+     "g0_latency_errors": 0,
+     "record": null,
+     "files": [
+      {
+       "file": "physical/die_plan/s81/lat/s81_latency.json",
+       "plan_digest": "bd2b875cbfbb7e24",
+       "digest_match": false,
+       "lanes": 869,
+       "mismatched_lanes": 395,
+       "extra_lanes": 0,
+       "example": [
+        "fi_W0_p1_r0r1",
+        "fi_W0_p1_r1r0",
+        "fi_W0_p1_r1r2"
+       ]
+      },
+      {
+       "file": "physical/die_plan/s81/r8/s81_latency.json",
+       "plan_digest": "b8e46d3348066b83",
+       "digest_match": false,
+       "lanes": 820,
+       "mismatched_lanes": 632,
+       "extra_lanes": 8,
+       "example": [
+        "fi_W0_p1_r0r1",
+        "fi_W0_p1_r1r0",
+        "fi_W0_p1_r1r2"
+       ]
+      }
+     ],
+     "max_cycles": 82
+    },
+    "g2": {
+     "status": "FAIL",
+     "probes": 6,
+     "overflow": 7062724,
+     "no_access": 0,
+     "mem_gb": {
+      "die": 64,
+      "part_first": 32,
+      "part_max": 64
+     },
+     "oom_retries": [],
+     "oom_at_ceiling": [],
+     "not_done": [],
+     "detail": {
+      "part_svc_hi_dsdv_svc_rs__t1": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 8932773.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_ot_s81sl_leaf__t8": {
+       "done": true,
+       "overflow": 4359149,
+       "wirelength_um": 21791791.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_ot_s81sl_leaf__t47": {
+       "done": true,
+       "overflow": 1622830,
+       "wirelength_um": 12294339.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_ot_s81sl_leaf__t17": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": 4886634.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "part_ot_s81sl_leaf__t2": {
+       "done": true,
+       "overflow": 1080745,
+       "wirelength_um": 9990843.0,
+       "no_access": 0,
+       "errors": [],
+       "reach": {}
+      },
+      "die": {
+       "done": true,
+       "overflow": 0,
+       "wirelength_um": null,
+       "no_access": 0,
+       "errors": [],
+       "reach": {
+        "clk": {
+         "max_um": 27807.2,
+         "p90_um": 22035.7,
+         "taps": 8127
+        },
+        "rst": {
+         "max_um": 26894.7,
+         "p90_um": 21951.0,
+         "taps": 398
+        }
+       }
+      }
+     },
+     "seconds": 209821.69999999998,
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-11-01_6defc3c23069/work/s81/g2/g2_report.json"
+    },
+    "sta": {
+     "seams": 2306,
+     "measured_ports": 0,
+     "standin_ports": 2306,
+     "standin": {
+      "bus": {
+       "cls": "bus",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 636.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 84.8,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 551.6,
+       "hold_ps": -22.6,
+       "ports": 588
+      },
+      "ft": {
+       "cls": "ft",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 0.0,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 84.8,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -84.8,
+       "hold_ps": -22.6,
+       "ports": 1148
+      },
+      "ft_in": {
+       "cls": "ft_in",
+       "basis": "contract (kit I_max + O_max >= T)",
+       "setup_policy_ps": 33.3,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 84.8,
+       "margin_hold_ps": 62.6,
+       "setup_ps": -51.5,
+       "hold_ps": -22.6,
+       "ports": 285
+      },
+      "ft_out": {
+       "cls": "ft_out",
+       "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+       "setup_policy_ps": 636.4,
+       "hold_policy_ps": 40.0,
+       "margin_setup_ps": 84.8,
+       "margin_hold_ps": 62.6,
+       "setup_ps": 551.6,
+       "hold_ps": -22.6,
+       "ports": 285
+      }
+     },
+     "standin_worst_setup_ps": 0.0,
+     "standin_worst_hold_ps": 40.0,
+     "standin_worst_margined_info_setup_ps": -84.8,
+     "standin_worst_margined_info_hold_ps": -22.6,
+     "views": {},
+     "views_unavailable": {},
+     "xtalk": {
+      "setup_ps": 30.76,
+      "hold_ps": 20.76,
+      "seam_len_um": 60.0,
+      "cc_ff": 7.496
+     },
+     "derates": {
+      "cell_late": 1.1037,
+      "cell_early": 0.95,
+      "net_late": 1.03,
+      "net_early": 0.97,
+      "ir_factor": 1.0511,
+      "data_cell_late": 1.155,
+      "data_wire_late": 1.1025
+     },
+     "ir": {
+      "factor": 1.0511,
+      "sensitivity": 1.022,
+      "drop_frac": 0.05,
+      "mode": "stated",
+      "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+     },
+     "status": "NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
+    }
+   },
+   "seconds": 210448.5,
+   "verdict": "FAIL",
+   "delta": {
+    "prev_sha": "262d07038412ff7193d73264d55b88380b244f25",
+    "metrics": {
+     "g0.errors": -1,
+     "g0c.errors": -1,
+     "g0c.clean_types": -151
+    },
+    "status_changes": {},
+    "new": []
+   }
+  }
+ },
+ "verdict": "FAIL"
+}
