@@ -9512,6 +9512,138 @@
    ],
    "channel_rule_um": 10.8,
    "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_hfd_coll_q3_body_ctl": {
+   "status": "KNOWN",
+   "outline_um": [
+    578.88,
+    259.2
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      20.52,
+      230.424,
+      61.584
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      20.52,
+      521.304,
+      61.584
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      83.16,
+      230.424,
+      124.224
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      83.16,
+      521.304,
+      124.224
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      57.6,
+      145.8,
+      230.424,
+      186.864
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      348.48,
+      145.8,
+      521.304,
+      186.864
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[0].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      41.04,
+      208.44,
+      107.352,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[1].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      148.392,
+      208.44,
+      214.704,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[2].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      255.744,
+      208.44,
+      322.056,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[3].u_sram",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      363.096,
+      208.44,
+      429.408,
+      226.272
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_body.g_q3.n_u_fj.u_fj.u.u_program.g_fsram.u_flow",
+     "master": "ot_sram_1rw_256x64_m4_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      470.448,
+      208.44,
+      536.76,
+      226.272
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "HBM-FORM-SPLIT d44v q3 body: 2 x 3 1r1w grid, W/E bands 57.6, 118.1, 57.6 (mid holds 6 macro edges, A3 class), row channels 21.6; 5 x 1rw row y=208.44 with 41 um gaps; clock entry in the mid band"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"
