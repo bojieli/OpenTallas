@@ -3159,3 +3159,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 2026-11-05 09:40 PST [COORD] hourly: count 151 at 09:40 (+1 KV qkd_ahub, +2 HBM sfu_s, htile). Disk: 0.5-1 GB/min, uncited cleanup 2.8 GB; PRUNE-1107 measures file classes; owner asked about intel2/intel1 roots. Merged I112-I117, suite i115s 0 new. Successors KW-FIX-13, HBM-FORM-SPLIT-3, HBM-FORM-CONG-3, DIE-HEAD-67, DIE-QC-76.
 2026-11-05 10:40 PST [COORD] all lanes stopped 09:42 on session limit, reset 10:40. Fresh successors from lanes/_RESTART_1105.md.
 2026-11-05 10:58 PST [COORD] hourly: count 152 (+1 HBM host_cp_rxs); I118 merged; SUBSTEP-1 prune approved; intel2 scratch2 84.
+2026-11-05 11:36 PST [COORD] hourly: count 152 flat; I118-I126 merged; 3 die tags; intel2 scratch2 68->142 by move; HBM-GAPS-1 new.
