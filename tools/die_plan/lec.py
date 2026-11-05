@@ -7485,7 +7485,7 @@ def via_docker(args, image, mem):
     for k in ("OT_LEC_RAWPREFIX_S", "OT_LEC_RAWPREFIX_ANDS"):
         if k in os.environ:
             cmd += ["-e", f"{k}={os.environ[k]}"]
-    for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
+    for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES", "OT_LEC_SEQ_CONSTANT"):      # model switches (the reset contract is KIT/reset_contract.json)
         if os.environ.get(k):
             cmd += ["-e", f"{k}={os.environ[k]}"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
