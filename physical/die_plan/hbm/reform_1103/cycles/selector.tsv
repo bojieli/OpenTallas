@@ -1,0 +1,6 @@
+core	port_or_bus	plus_cycles	note
+ot_hbm_idx_selector_static_sel	op/pass/addr word (sel_in)	+6 against tip sel_in 1	sel_in 7: shell 1 + ctl pin to cw 1 + crossing 2 (shell out + shell in) + q P1/P2 2; bench SKEW 4 = sel_in 7 - sel_in_line 3
+ot_hbm_idx_selector_static_sel	in_line (sel_in_line)	+2 against tip sel_in 1	sel_in_line 3: shell 1 + pin flop + relay
+ot_hbm_idx_selector_static_sel	selected_line, selected_v (sel_out)	+1 against tip sel_out 1, plus sel_core_out 2	sel_out 2: q pin flop 1 + shell 1; pipelined core adds sel_core_out 2 as in table registered
+ot_hbm_idx_selector_static_sel	op4 to first op5 (sel_scan_drain)	+2 idle	quadrant-internal histogram pipe; bench DRAIN 4 passes, DRAIN 3 fails
+ot_hbm_idx_selector_static_sel	op5 run to next op3/op4/op6 (sel_choose_rt)	+6 idle	flat 2 + two crossings of 2 each = 6, against 8 in landed registered_s3; bench RT 6 passes, RT 5 fails
