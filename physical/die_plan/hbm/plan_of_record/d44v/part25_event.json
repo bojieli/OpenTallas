@@ -1310,6 +1310,515 @@
    ]
   },
   {
+   "core": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+   "sha": "8dd205e8bcc",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__p17glue.sv",
+   "slot_um": [
+    760.32,
+    725.76
+   ],
+   "instances": 28,
+   "types": [
+    "q_su20",
+    "q_su20__physical_v1",
+    "q_su21",
+    "q_su21__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1",
+    "q_su31",
+    "q_su31__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_p0": [
+     [
+      0.0,
+      207.36
+     ],
+     [
+      190.08,
+      311.04
+     ]
+    ],
+    "u_fcore.u_core.u_p1": [
+     [
+      190.08,
+      207.36
+     ],
+     [
+      190.08,
+      311.04
+     ]
+    ],
+    "u_fcore.u_core.u_p2": [
+     [
+      380.16,
+      207.36
+     ],
+     [
+      190.08,
+      311.04
+     ]
+    ],
+    "u_fcore.u_core.u_p3": [
+     [
+      570.24,
+      207.36
+     ],
+     [
+      190.08,
+      311.04
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hbm_su_pg_lane1_core": {
+     "pins_file": "cores/ot_hbm_su_pg_lane1_core__190.08x311.04__d44v_split.json",
+     "outline_um": [
+      190.08,
+      311.04
+     ],
+     "pins": 2035,
+     "clock_pins": 19,
+     "clock_entry": [
+      164.16,
+      155.52
+     ],
+     "faces": {
+      "E": 260,
+      "I": 19,
+      "N": 889,
+      "S": 569,
+      "W": 298
+     }
+    }
+   },
+   "added_cycles": "0 on every port",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 86
+   },
+   "designs_removed": [
+    "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77"
+   ],
+   "designs_added": [
+    "ot_hbm_su_pg_lane1_core"
+   ]
+  },
+  {
+   "core": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "sha": "8dd205e8bcc",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__p17glue.sv",
+   "slot_um": [
+    440.64,
+    457.92
+   ],
+   "instances": 16,
+   "types": [
+    "q_su00",
+    "q_su00__physical_v1",
+    "q_su01",
+    "q_su01__physical_v1",
+    "q_su10",
+    "q_su10__physical_v1",
+    "q_su11",
+    "q_su11__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_p0": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      440.64,
+      112.32
+     ]
+    ],
+    "u_fcore.u_core.u_p1": [
+     [
+      0.0,
+      112.32
+     ],
+     [
+      440.64,
+      112.32
+     ]
+    ],
+    "u_fcore.u_core.u_p2": [
+     [
+      0.0,
+      224.64
+     ],
+     [
+      440.64,
+      112.32
+     ]
+    ],
+    "u_fcore.u_core.u_p3": [
+     [
+      0.0,
+      336.96
+     ],
+     [
+      440.64,
+      112.32
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hbm_su_pg_lane1p_core": {
+     "pins_file": "cores/ot_hbm_su_pg_lane1p_core__440.64x112.32__d44v_split.json",
+     "outline_um": [
+      440.64,
+      112.32
+     ],
+     "pins": 2035,
+     "clock_pins": 19,
+     "clock_entry": [
+      220.32,
+      95.04
+     ],
+     "faces": {
+      "E": 1465,
+      "I": 19,
+      "W": 551
+     }
+    }
+   },
+   "added_cycles": "0 on every port",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 266
+   },
+   "designs_removed": [
+    "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526"
+   ],
+   "designs_added": [
+    "ot_hbm_su_pg_lane1p_core"
+   ]
+  },
+  {
+   "core": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+   "sha": "p18",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__p18glue.sv",
+   "slot_um": [
+    440.64,
+    207.36
+   ],
+   "instances": 60,
+   "types": [
+    "q_su00",
+    "q_su00__physical_v1",
+    "q_su01",
+    "q_su01__physical_v1",
+    "q_su10",
+    "q_su10__physical_v1",
+    "q_su11",
+    "q_su11__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_l": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      319.68,
+      207.36
+     ]
+    ],
+    "u_fcore.u_core.u_s": [
+     [
+      319.68,
+      0.0
+     ],
+     [
+      120.96,
+      207.36
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hbm_su_pg_lane_exp_x_core": {
+     "pins_file": "cores/ot_hbm_su_pg_lane_exp_x_core__319.68x207.36__d44v_split.json",
+     "outline_um": [
+      319.68,
+      207.36
+     ],
+     "pins": 2136,
+     "clock_pins": 19,
+     "clock_entry": [
+      159.84,
+      73.44
+     ],
+     "faces": {
+      "I": 19,
+      "N": 696,
+      "S": 896,
+      "W": 525
+     }
+    },
+    "ot_hbm_su_pg_sfu_s_core": {
+     "pins_file": "cores/ot_hbm_su_pg_sfu_s_core__120.96x207.36__d44v_split.json",
+     "outline_um": [
+      120.96,
+      207.36
+     ],
+     "pins": 103,
+     "clock_pins": 1,
+     "clock_entry": [
+      60.48,
+      103.68
+     ],
+     "faces": {
+      "I": 1,
+      "N": 1,
+      "S": 101
+     }
+    }
+   },
+   "added_cycles": "SFU_EXP, SFU_SIGM, SFU_SILU +4 edges, S-chain fault +4; every other op and pin 0",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 1000,
+    "dead-port": 64
+   },
+   "designs_removed": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691"
+   ],
+   "designs_added": [
+    "ot_hbm_su_pg_lane_exp_x_core",
+    "ot_hbm_su_pg_sfu_s_core"
+   ]
+  },
+  {
+   "core": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "sha": "p18",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_su_static_pgslice_lg__lane_exp0_id__p18glue.sv",
+   "slot_um": [
+    440.64,
+    207.36
+   ],
+   "instances": 4,
+   "types": [
+    "q_su00",
+    "q_su00__physical_v1",
+    "q_su10",
+    "q_su10__physical_v1"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_l": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      319.68,
+      207.36
+     ]
+    ],
+    "u_fcore.u_core.u_s": [
+     [
+      319.68,
+      0.0
+     ],
+     [
+      120.96,
+      207.36
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hbm_su_pg_lane_full_x_core": {
+     "pins_file": "cores/ot_hbm_su_pg_lane_full_x_core__319.68x207.36__d44v_split.json",
+     "outline_um": [
+      319.68,
+      207.36
+     ],
+     "pins": 2169,
+     "clock_pins": 19,
+     "clock_entry": [
+      159.84,
+      73.44
+     ],
+     "faces": {
+      "I": 19,
+      "N": 696,
+      "S": 896,
+      "W": 558
+     }
+    },
+    "ot_hbm_su_pg_sfu_s_core": {
+     "pins_file": "cores/ot_hbm_su_pg_sfu_s_core__120.96x207.36__d44v_split.json",
+     "outline_um": [
+      120.96,
+      207.36
+     ],
+     "pins": 103,
+     "clock_pins": 1,
+     "clock_entry": [
+      60.48,
+      103.68
+     ],
+     "faces": {
+      "I": 1,
+      "N": 1,
+      "S": 101
+     }
+    }
+   },
+   "added_cycles": "SFU_EXP, SFU_SIGM, SFU_SILU +4 edges, S-chain fault +4; every other op and pin 0",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 14
+   },
+   "designs_removed": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp0_id"
+   ],
+   "designs_added": [
+    "ot_hbm_su_pg_lane_full_x_core",
+    "ot_hbm_su_pg_sfu_s_core"
+   ]
+  },
+  {
+   "core": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   "sha": "p19",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__p19glue.sv",
+   "slot_um": [
+    319.68,
+    345.6
+   ],
+   "instances": 31,
+   "types": [
+    "root"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_ha": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      319.68,
+      172.8
+     ]
+    ],
+    "u_fcore.u_core.u_hb": [
+     [
+      0.0,
+      172.8
+     ],
+     [
+      319.68,
+      172.8
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hgi_coll_tkm_tp192_htile_core": {
+     "pins_file": "cores/ot_hgi_coll_tkm_tp192_htile_core__319.68x172.8__d44v_split.json",
+     "outline_um": [
+      319.68,
+      172.8
+     ],
+     "pins": 1383,
+     "clock_pins": 1,
+     "clock_entry": [
+      159.84,
+      86.4
+     ],
+     "faces": {
+      "I": 1,
+      "N": 691,
+      "S": 691
+     }
+    }
+   },
+   "added_cycles": "down +5, clr_o +3, conv_o +2, up_out +2 on conv; TKM op +448 edges (latency/ tsv of reform_1103)",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 0
+   },
+   "designs_removed": [
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap"
+   ],
+   "designs_added": [
+    "ot_hgi_coll_tkm_tp192_htile_core"
+   ]
+  },
+  {
+   "core": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+   "sha": "p19",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__p19glue.sv",
+   "slot_um": [
+    319.68,
+    345.6
+   ],
+   "instances": 1,
+   "types": [
+    "root"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_ha": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      319.68,
+      172.8
+     ]
+    ],
+    "u_fcore.u_core.u_hb": [
+     [
+      0.0,
+      172.8
+     ],
+     [
+      319.68,
+      172.8
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hgi_coll_tkm_tp192_htile_core": {
+     "pins_file": "cores/ot_hgi_coll_tkm_tp192_htile_core__319.68x172.8__d44v_split.json",
+     "outline_um": [
+      319.68,
+      172.8
+     ],
+     "pins": 1383,
+     "clock_pins": 1,
+     "clock_entry": [
+      159.84,
+      86.4
+     ],
+     "faces": {
+      "I": 1,
+      "N": 691,
+      "S": 691
+     }
+    }
+   },
+   "added_cycles": "down +5, clr_o +3, conv_o +2, up_out +2 on conv; TKM op +448 edges (latency/ tsv of reform_1103)",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 1
+   },
+   "designs_removed": [
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap"
+   ],
+   "designs_added": [
+    "ot_hgi_coll_tkm_tp192_htile_core"
+   ]
+  },
+  {
    "core": "ot_hbm_svc_wb_kport_q",
    "sha": "p25",
    "status": "SPLIT -> PLAN DESIGNS",

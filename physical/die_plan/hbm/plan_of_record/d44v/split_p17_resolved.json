@@ -1,0 +1,197 @@
+[
+ {
+  "core": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+  "sha": "8dd205e8bcc",
+  "part": "p17",
+  "glue": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__p17glue.sv",
+  "conn": "lanes_canon.conn.json",
+  "subs": [
+   {
+    "module": "ot_hbm_su_pg_lane1_core",
+    "cells": 86270
+   }
+  ],
+  "added_cycles": "0 on every port",
+  "layout": {
+   "u_fcore.u_core.u_p0": {
+    "xy": [
+     0.0,
+     207.36
+    ],
+    "wh": [
+     190.08,
+     311.04
+    ]
+   },
+   "u_fcore.u_core.u_p1": {
+    "xy": [
+     190.08,
+     207.36
+    ],
+    "wh": [
+     190.08,
+     311.04
+    ]
+   },
+   "u_fcore.u_core.u_p2": {
+    "xy": [
+     380.16,
+     207.36
+    ],
+    "wh": [
+     190.08,
+     311.04
+    ]
+   },
+   "u_fcore.u_core.u_p3": {
+    "xy": [
+     570.24,
+     207.36
+    ],
+    "wh": [
+     190.08,
+     311.04
+    ]
+   }
+  },
+  "clock_entry": {
+   "ot_hbm_su_pg_lane1_core": [
+    164.16,
+    155.52
+   ]
+  }
+ },
+ {
+  "core": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+  "sha": "8dd205e8bcc",
+  "part": "p17",
+  "glue": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__p17glue.sv",
+  "conn": "lanes_plain.conn.json",
+  "subs": [
+   {
+    "module": "ot_hbm_su_pg_lane1p_core",
+    "cells": 86270
+   }
+  ],
+  "added_cycles": "0 on every port",
+  "layout": {
+   "u_fcore.u_core.u_p0": {
+    "xy": [
+     0.0,
+     0.0
+    ],
+    "wh": [
+     440.64,
+     112.32
+    ]
+   },
+   "u_fcore.u_core.u_p1": {
+    "xy": [
+     0.0,
+     112.32
+    ],
+    "wh": [
+     440.64,
+     112.32
+    ]
+   },
+   "u_fcore.u_core.u_p2": {
+    "xy": [
+     0.0,
+     224.64
+    ],
+    "wh": [
+     440.64,
+     112.32
+    ]
+   },
+   "u_fcore.u_core.u_p3": {
+    "xy": [
+     0.0,
+     336.96
+    ],
+    "wh": [
+     440.64,
+     112.32
+    ]
+   }
+  },
+  "clock_entry": {
+   "ot_hbm_su_pg_lane1p_core": [
+    220.32,
+    95.04
+   ]
+  },
+  "macros": {
+   "ot_hbm_su_pg_lane1p_core": [
+    {
+     "name": "u_core.u_bank0.u_data.g_read[0].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      28.944,
+      5.4,
+      123.768,
+      46.464
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[1].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      173.016,
+      5.4,
+      267.84,
+      46.464
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[2].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      317.088,
+      5.4,
+      411.912,
+      46.464
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[3].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      28.944,
+      46.488,
+      123.768,
+      87.552
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[4].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      173.016,
+      46.488,
+      267.84,
+      87.552
+     ]
+    },
+    {
+     "name": "u_core.u_bank0.u_data.g_read[5].u_m",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      317.088,
+      46.488,
+      411.912,
+      87.552
+     ]
+    }
+   ]
+  },
+  "macro_basis": "HBM-REFORM-A d44v part 17: 3 x 2 grid in the 440.64 x 112.32 tile, 4 stacked in the slot; W/E bands 24.6, 49.2, 49.2, 24.6, top cell strip 20.4; clock entry in the top strip"
+ }
+]

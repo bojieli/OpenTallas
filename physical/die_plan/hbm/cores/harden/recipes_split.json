@@ -2848,7 +2848,7 @@
   ],
   "params": {},
   "port_map_note": "remainder core (unique): pin COUNT equals the cut; cut pin -> port map by name / unique width where derivable (canonical_ports_split.json)",
-  "source": "rest_extract.sh: ot_hgi_coll_tkm_m_tp192_p (ot_hgi_coll_tkm_static_p #(TP 192, PIPE 1)) minus the 32 tile cells; rest_wrap.py: master del_flit bits the root never reads (64) tied 0 inside",
+  "source": "rest_extract_mem.sh (part 19): ot_hgi_coll_tkm_m_tp192_pfdh32 (ot_hgi_coll_tkm_static_pdh PTILE 32) minus the 64 half-tile cells; rest_wrap.py: master del_flit bits the root never reads (64) tied 0 inside",
   "top": "ot_hgi_coll_tkm_tp192_root_core"
  },
  "ot_hgi_coll_tkm_m_tp192__tile0__319.68x345.6": {
