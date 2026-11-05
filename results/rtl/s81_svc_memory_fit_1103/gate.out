@@ -1,0 +1,7 @@
+pos rc=0 FIT_PASS edges=20000 land=20000(nz 18678, oob 1108, wrap 3222) pmem=20000(nz 14648) pvq=20000(nz 19993) stage=18097(nz 17929)
+m1 rc=1 FIT_FAIL LAND edge=184
+m2 rc=1 FIT_FAIL LAND edge=617
+m3 rc=1 FIT_FAIL PMEM edge=332
+m4 rc=1 FIT_FAIL PVQ edge=5
+m5 rc=1 FIT_FAIL STAGE edge=2
+GATE_OK=1
