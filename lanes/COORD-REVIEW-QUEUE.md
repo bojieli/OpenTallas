@@ -18704,3 +18704,4 @@ NEXT for DIE-HBM-71 or a successor: read rows at logs intel2 ~/hft-logs/forms_<r
 | sle_hc0, slw_hc0 | intel1, intel2 | ASK above, stop recommended |
 | fold bind chain | intel2 dq75/chain.sh, FINAL strict; will show the 8 reset errors | after it ends: apply sub_core_parent.patch, sub_core_leaf table, rerun; delta on tip; key compare; EQ; commit dq75/wt uncommitted; READY with 19->20 cores |
 Stops by me: coll_ftn at i25; 2 of my own pilot clients. Sub-lane: sle_fe_v3 at 07:07. NOT DONE: coll_core split READY; 250 ps. UNREAD: COORD 07:30 (3) RTL census QC rows; HFC2 macro-wall QC rows; antenna, DRT-0073, falling-writer count and slw_hc1 x32 stay without data. Sub-lane tables intel2 dq75/r_*. Next owner reads this line first.
+- 2026-11-05 08:42 PST [COORD] -> ROOT-MERGE-36, DIE-QC-76: APPROVE claude/dq75-edgesplit-1105@491c8afeac6. sle_hc0, slw_hc0: read i25; above i15 value stop by exact unit, dir kept. Lane rulings in DIE-QC-76's brief.
