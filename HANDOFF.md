@@ -3147,3 +3147,4 @@ CODEX READY defccf175: inactive PVQ bound transformer allowlists only exact orig
 - 2026-11-04 18:35 PST COORD hourly: count 120, flat in the hour. QC batch of 14 launched 18:32; l48ub on main, hd_mesh next; writer-stage class fix in replay; GRT loop read 19:15.
 - 2026-11-04 19:36 PST COORD hourly: count 121, first S81 type (slice_station t7). Census 87 unsigned cores: 37 on target forms, 54 running, 24 failed, 9 signed off not counted. I57 merged, QC batch launching. Hold class read ordered.
 - 2026-11-04 20:41 COORD hourly: count 124 (+3 S81 xrt1, xrt3, bk_sel_c). Parts 13 + 8 approved, I60/I61 in test. fused_host_program unmatched on clk pin, DIE-HBM-66 owns.
+- 2026-11-04 22:01 COORD hourly: count 126 (+2 HBM fhp, bk). 21:24 scan timed out on epyc4 at the 600 s limit, rerun clean; watch: a timeout under-reads. I62 merged, I63 half in test. HBM hold class form stopped.
