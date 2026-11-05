@@ -1,11 +1,9 @@
 {
  "enabled": true,
  "max_inflight": 300,
- "max_launch_per_tick": 40,
+ "max_launch_per_tick": 12,
  "geom_sample": 5,
  "hosts": [
-  "intel1",
-  "epyc2",
   "intel2",
   "epyc4"
  ],
@@ -463,14 +461,13 @@
     "kv3_hub_Ei": "KW-FIX-8 15:4x COORD 14:16/14:53: I48 ftwreg, I49 hubsys; was: KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft li"
    },
    "hosts": [
-    "epyc4",
-    "epyc2"
+    "epyc4"
    ],
    "gen_hosts": [
     "epyc4"
    ],
    "place_prefer": [
-    "epyc2"
+    "epyc4"
    ],
    "item_env": {
     "kv3_phy": {
@@ -481,7 +478,8 @@
     }
    },
    "prov_first_re": "^kv3_pc",
-   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
+   "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250."
   },
   "s81": {
    "enabled": true,
@@ -1255,7 +1253,30 @@
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@6",
     "ot_s81sl_leaf__t44__clf4ea6d4b@13",
     "ot_s81sl_leaf__t25__cl55642d17@21",
-    "gunit__t1@2"
+    "gunit__t1@2",
+    "col_h10_r0_p1__t1__cl574cc59d@3",
+    "col_h10_r0_p1__t1__cl911743eb@4",
+    "col_h10_r1__t1__cl95b37463@4",
+    "col_h10_r1__t1__cld01bb4ae@4",
+    "col_h10_r2__t1__cl1f5d6c2a@6",
+    "col_h10_r2__t1__cl8b686b3e@6",
+    "col_h10_r2__t1__cl99efd374@5",
+    "col_h10_r2__t1__clac068e56@5",
+    "col_h9_r0_p1__t1@5",
+    "col_h9_r0_p2__t1__cl0045af7b@6",
+    "col_h9_r0_p2__t1__cl9f71e63d@4",
+    "col_h9_r0_p3__t1__cl0cd90c0e@5",
+    "col_h9_r0_p3__t1__cl31d0dc4b@4",
+    "col_h9_r0_p3__t1__cl8ce97bcb@4",
+    "col_h9_r0_p4__t1__cl8ef405e8@6",
+    "col_h9_r0_p4__t1__clcb2fbfe8@4",
+    "col_h9_r0_p5__t1@6",
+    "col_h9_r0_p6__t1@5",
+    "col_h9_r1__t1__cl49d7a23e@4",
+    "col_h9_r1__t1__clf32cde8d@5",
+    "col_h9_r2__t1__clce45cab5@5",
+    "col_h9_r2__t1__cl87f3ff59@1",
+    "ot_s81sl_leaf__t11@10"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1346,7 +1367,8 @@
     "dsdv_bk_g": "KW-FIX-8 23:2x I64: signed dsdv_bk_g, ruled not a stop, no rebuild (RM-31 22:03)",
     "ot_v41_bf16_half": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
     "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
-    "serdes__t4": "KW-FIX-8 23:3x sweep: detail place DPL-1101 diamond search silent 2 h 37 at one core; stopped under flat >2 h; no relaunch on same recipe, with DIE-S81-56 for the form"
+    "serdes__t4": "KW-FIX-10 04:3x COORD: DIE-S81-58 04:19 read, diamond legalizer will not return on the whole-outline window; its form event lifts",
+    "serdes__t13": "KW-FIX-10 04:3x COORD: DIE-S81-58 04:19 read, diamond legalizer will not return on the whole-outline window; its form event lifts"
    },
    "queue_src": "",
    "work_root": "/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave",
@@ -1888,8 +1910,7 @@
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
    "hosts": [
-    "epyc4",
-    "epyc2"
+    "epyc4"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
@@ -1928,7 +1949,7 @@
     ]
    },
    "place_prefer": [
-    "epyc2"
+    "epyc4"
    ],
    "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4.",
    "item_env": {
@@ -1951,7 +1972,9 @@
      "OT_GRT_ALLOW_CONGESTION": "1"
     }
    },
-   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
+   "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250.",
+   "note_infra_batch_1105": "KW-FIX-10 04:2x COORD: INFRA batch, no strikes, S81 first then QC; max_launch_per_tick 40 -> 12 so epyc4 root carries it (floor 550)."
   },
   "s81_head": {
    "enabled": true,
@@ -2244,12 +2267,11 @@
    ],
    "hosts": [
     "epyc4",
-    "intel2",
-    "epyc2"
+    "intel2"
    ],
    "live_claim_h": 0,
    "place_prefer": [
-    "epyc2"
+    "intel2"
    ],
    "only_items_l48rc": [
     "hd_ctl_e",
@@ -2285,7 +2307,8 @@
     "clock.tap_model",
     "reset.obstacle_model"
    ],
-   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
+   "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250."
   },
   "qwen_compute": {
    "enabled": true,
@@ -2297,21 +2320,21 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw-fix-8/src_b/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw-fix-8/src_c/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch2/claude/kw-fix-8/src_b",
-   "src_sha": "cb98b2e2324e3bab53770ea62deed799f303b848",
+   "src": "/srv/opentallas-scratch2/claude/kw-fix-8/src_c",
+   "src_sha": "cbb7cfda19b31273a245c3244c0218ce3bd0a269",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw-fix-8/src_b/results/qc_die66_shrink2_1103/bind/final_asbuilt.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw-fix-8/bind_tip_i57",
-    "note": "KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation."
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw-fix-8/src_c/results/qc_sc_hard1_1104/bind/final_asbuilt.json",
+    "bind_out": "/srv/opentallas-scratch3/claude/dq71/sc_ev/pub",
+    "note": "KW-FIX-10 04:2x COORD: SC event I67+I68 src_c main cbb7cfda19b tag s-qc, bind_out sc_ev/pub. | KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation."
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw-fix-8/src_b/results/qc_die66_shrink2_1103/bind/sidecar.json"
+    "/srv/opentallas-scratch2/claude/kw-fix-8/src_c/results/qc_sc_hard1_1104/bind/sidecar.json"
    ],
    "kinds": [
     "type"
@@ -2333,9 +2356,6 @@
    "note": "KW-FIX-8 19:1x I57 writer guard class relaunch, src_w on epyc4+intel1. KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 16:4x COORD stale bind: hold hc1-3, stm, coll_ftm, su until DIE-QC-71 tip bind passes; then bind_out in one change | KW-FIX-8 14:1x I46 tag w-qc: src_s, W1 + R8 straps + coll_ucie event efdb36e864; W1 list from q70/ws_report.json added to only_items | KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
    "pilot_mode": "queue",
    "hold_items": {
-    "sle_sc_v2": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "slw_sc_v1__cl64543eaf__cl5e017c6f": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "slw_sc_v1__cl64543eaf__cl4590432d": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
     "tt_ctlm": "DIE-QC-61 16:3x: GEOM-107 FAIL PLAN (r2r 955.8 reset relays unpinned, E/S face regs far, 4 taps/38k FF); same plan block on d90 -> doomed. plan_qc52 tt_ctlm delta (density taps + relay sites + face homes) in progress; release on its merge.",
     "sle_su_c": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
     "sle_su_l0__cl086d85ba": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
@@ -2347,13 +2367,7 @@
     "slw_hc1__cl68f9248e__cl144ee7b3": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "slw_hc2__cl6bcaba89": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "slw_hc3__cld86a7ad4": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-8 17:5x COORD: stale row stopped; other hc wait one proof row past CTS with no big-tap failure",
-    "sle_sc_v1__cl7479a5ec": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "sle_sc_v1__cl115da35f": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "sle_sc_v3": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "slw_sc_v1__cl63e5a7a2": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "slw_sc_v2": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
-    "slw_sc_v3": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries"
+    "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-8 17:5x COORD: stale row stopped; other hc wait one proof row past CTS with no big-tap failure"
    },
    "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -2488,7 +2502,64 @@
     "slw_stm_v1__cl05fc43f7__cl389df4e9@5",
     "slw_stm_v1__cle34a73c3@4",
     "sle_st_a_v2@10",
-    "slw_fe_v1__clfe325744__cldb4efe33@2"
+    "slw_fe_v1__clfe325744__cldb4efe33@2",
+    "cbf_q00__cl1b5a6458@5",
+    "cbf_q00__cl870de686@5",
+    "cbn_q00__cl622f65d2@5",
+    "cbn_q00__cld7bf7197@5",
+    "cbn_q00__cldbcda913@1",
+    "cbn_q01__clab6e67f2@5",
+    "cbn_q01__cld9ff4c40@1",
+    "cbn_q01__cldd6ea846@5",
+    "cbn_q11__cl49ae4555@1",
+    "cbn_q11__cl5cc92dfe@1",
+    "cbx_q10__cl89936551@6",
+    "cbx_q10__cl94a12200@8",
+    "cbf_q00_s2@4",
+    "cbf_q01@4",
+    "cbf_q01_s2@4",
+    "cbf_q11@1",
+    "sle_fe_v3@1",
+    "sle_stm_v3@3",
+    "slw_stm_v3@3",
+    "sle_st_a_v1__cl67389ecd@6",
+    "sle_st_a_v1__cl989804f6__cl18eece69@8",
+    "sle_st_a_v1__cl989804f6__cled3c1d7b@7",
+    "sle_stm_v1__cl27746664@1",
+    "sle_stm_v1__clbe630b9c@5",
+    "sle_stm_v2__cl55be2264@3",
+    "sle_stm_v2__cl7b3062fa@3",
+    "slw_st_a_v1__clb036e152@3",
+    "slw_st_a_v1__clfc5867a6@3",
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c@1",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9@6",
+    "slw_stm_v1__cle34a73c3@7",
+    "slw_stm_v2__cl1ca9c415@1",
+    "slw_stm_v2__cl9beb65e6@3",
+    "slw_su_c__cl92142dac@10",
+    "sle_fe_v2@1",
+    "slw_fe_v1__cl95cd1d0c@4",
+    "slw_fe_v1__clfe325744__cldb4efe33@3",
+    "slw_fe_v2__cle312294d@2",
+    "slw_fe_v2__clf110fab2@1",
+    "sle_sc_v2@1",
+    "sle_sc_v3@3",
+    "slw_sc_v2@2",
+    "slw_sc_v3@3",
+    "sle_sc_v1__cl115da35f@1",
+    "sle_sc_v1__cl7479a5ec@2",
+    "slw_sc_v1__cl63e5a7a2@1",
+    "slw_sc_v1__cl64543eaf__cl4590432d@1",
+    "slw_sc_v1__cl64543eaf__cl5e017c6f@1",
+    "sle_hc1__cl22c1ff36@4",
+    "sle_hc2__cl9c4c4509__cl3edce1b8@3",
+    "sle_st_a_v2@13",
+    "sle_su_l0__cl7a55c676@5",
+    "slw_hc2__cla3497502__cl16607c7a@6",
+    "slw_hc2__cla3497502__cldc737267@4",
+    "sle_hc2__clcc5e3e61@1",
+    "slw_fw_v1__clf51c11d8__cl592e3d37@2",
+    "slw_fw_v3@5"
    ],
    "queue_src": "",
    "type_args": {
@@ -2840,12 +2911,11 @@
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
     "epyc4",
-    "intel1",
-    "epyc2"
+    "intel2"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
-    "intel1"
+    "epyc4"
    ],
    "cancel_superseded": false,
    "only_items": [
@@ -2940,7 +3010,18 @@
     "slw_fe_v2__cle312294d",
     "slw_fw_v1__clf51c11d8__cl592e3d37",
     "sle_hc1__cl22c1ff36",
-    "slw_hc2__cla3497502__cl16607c7a"
+    "slw_hc2__cla3497502__cl16607c7a",
+    "sle_ctl__cl372cea1c",
+    "sle_ctl__cl67434795",
+    "sle_ctl__cla4f6f12f",
+    "sle_st_a_v1__cl989804f6__cl18eece69",
+    "slw_st_a_v1__clb036e152",
+    "sle_fe_v1__cl1cbb7497",
+    "sle_fe_v1__cl8210183c",
+    "slw_fe_v1__clfe325744__cl08d14f0d",
+    "sle_sc_v1__cl115da35f",
+    "slw_sc_v1__cl63e5a7a2",
+    "slw_sc_v1__cl64543eaf__cl5e017c6f"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
@@ -2948,7 +3029,9 @@
      "OT_HOLD_STOP_PS": "-200"
     }
    },
-   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
+   "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250.",
+   "note_sc_batch_1105": "KW-FIX-10 04:2x COORD: moved list 47 + 9 SC + leaves on src_c/sc_ev/pub. Live moved rows armed by retry; they relaunch when their queue verdict lands and do not count on the old bind."
   },
   "hbm": {
    "enabled": true,
