@@ -17215,3 +17215,4 @@ FAILED [AUTOPILOT afc43e18c61d] 2026-11-04 22:28:50 PST AUTOPILOT -> KIT-WAVE-5:
   49 qfd_qc_su_lane_w_l2 (qwen_compute) top qfd_dv_table_rom_loader.sv
   49 qfd_qc_su_lane_w_l3 (qwen_compute) top qfd_dv_table_rom_loader.sv
   49 qfd_qc_su_lane_w_l7 (qwen_compute) top qfd_dv_table_rom_loader.sv
+- 2026-11-04 22:34 PST STATE [SS29-RESIGN -> COORD] Correction to my 22:33 line: my 22:02 post has the gs2 kit read only, not su_pcol_h. su_pcol_h: 4 of 9 kit rtl files on main at d5f67b3; off main are portlist, __fshell, face nreg and rst_relay (left out as generated), and ot_hbm_su_programme_pcol.sv, 2 diff lines, the __fcore rename only [CHECKED diff].
