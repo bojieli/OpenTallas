@@ -97,7 +97,7 @@ module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_ST
  wire[15:0]read_seq[0:3];
  for(genvar l=0;l<4;l=l+1)begin:tx_format
   assign read_seq[l]=16'((int'(read_rank)-int'(read_gbase))*64+int'(read_group)*4+l);
-  assign tx[l*545+:545]={9'h1ff,tx_rank[l],tx_seq[l],(2'(l)^(MUT==2?2'd1:2'd0)),tx_data[l]};
+  assign tx[l*545+:545]={9'h1ff,tx_rank[l],tx_seq[l],(l[1:0]^(MUT==2?2'd1:2'd0)),tx_data[l]};
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin fill<=0;flits<=0;total<=0;fault<=0;read_v<=0;tx_v<=0;read_group<=0;read_rank<=0;read_gbase<=0;end
