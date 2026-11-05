@@ -30,11 +30,15 @@ def test_auto_applies_to_plain_native_multiport():
     (VMS, "reviewed.json", None, None, "off", "auto"),          # reviewed contract wins
     (VMS, None, {"x": 1}, None, "off", "auto"),                 # source-profile cuts keep the explicit hold
     (VMS, None, None, [[1, 2]], "off", "auto"),                 # planned clock sites keep their form
-    (VMS, None, None, None, "density", "auto"),                 # explicit density request unchanged
     (VMS, None, None, None, "off", "off"),                      # opt-out
 ])
 def test_auto_not_applied(clocks, contract, profile, sites, taps, mode):
     assert not coregen.multiport_density_auto(clocks, contract, profile, sites, taps, mode)
+
+
+def test_auto_applies_on_density_request():
+    # 11-05 B5: --clock-taps density on a multi-port core takes the auto form, not the CTS hold
+    assert coregen.multiport_density_auto(VMS, None, None, None, "density", "auto")
 
 
 def test_auto_contract_is_exact_and_valid(tmp_path):
