@@ -86,6 +86,7 @@ def main():
         assert org[0] + OUTLINE[0] <= t["outline_um"][0] and org[1] + OUTLINE[1] <= t["outline_um"][1], inst
         t["hard_cores"].append(dict(inst=inst, module=MOD, origin_um=list(org), outline_um=list(OUTLINE), orient="R0",
                                     track_offset_um=list(TOFF), pins_file=PINS, physical_inst=phys, physical_master=MOD,
+                                    sub_core_parent=T, sub_core_leaf_pin=f"rst_{'x' if inst[2] == 'x' else 'p'}fold{inst[-1]}",
                                     cells=CELLS, cells_basis=f"coll_core a3 1_2_yosys.v module count, {FFS} FF",
                                     note=f"{ID}: fold slice hard core, 0 added cycles; UNSIGNED until its kit signs off"))
         t["contents"].append(dict(inst=inst, module=MOD, status="reuse", physical_inst=phys, physical_master=MOD,

@@ -685,7 +685,7 @@ SCHEMA = {
                                        # core by its bound-netlist path (e.g. u_bound.u_head0_e0); inst keeps binding
                                        "physical_inst": _name, "physical_master": _name,
                                        "straps": _core_id_straps,
-                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"}, "sub_core_parent": {"type": "string", "minLength": 1}, "sub_core_leaf_pin": {"type": "string", "minLength": 1},
                                        "physical_id_alias": _physical_id_alias,
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
@@ -764,7 +764,7 @@ SCHEMA = {
                                        # edge (shore PHY): kit_contract.macro_channels accepts a 0-um gap on these sides
                                        "abut_core_edge": {"type": "array", "uniqueItems": True, "minItems": 1,
                                                           "items": {"enum": ["W", "E"]}},
-                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"}, "sub_core_parent": {"type": "string", "minLength": 1}, "sub_core_leaf_pin": {"type": "string", "minLength": 1},
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},

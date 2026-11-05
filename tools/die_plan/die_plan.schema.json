@@ -3131,6 +3131,14 @@
           }
          }
         },
+        "sub_core_parent": {
+         "minLength": 1,
+         "type": "string"
+        },
+        "sub_core_leaf_pin": {
+         "minLength": 1,
+         "type": "string"
+        },
         "parent_id_leaf": {
          "type": "string"
         },
@@ -3896,6 +3904,14 @@
            }
           }
          }
+        },
+        "sub_core_parent": {
+         "minLength": 1,
+         "type": "string"
+        },
+        "sub_core_leaf_pin": {
+         "minLength": 1,
+         "type": "string"
         },
         "parent_id_leaf": {
          "type": "string"

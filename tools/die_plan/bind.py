@@ -3375,7 +3375,10 @@ class Binder:
                 sub_leaf = self.sub_core_leaf_of(sub_hc) if sub_hc and getattr(self, "sub_core_leaf", None) else None
                 if sub_leaf:
                     # One leaf reset port feeds all subs of the parent through its glue: one tap, same release edge.
-                    found = [ci for ci in self.members[p] if pin in F.cells[ci].ports and self.rel_of(ci) == sub_leaf]
+                    # DIE-QC-76 11-05: hard core field sub_core_leaf_pin = the leaf's own port for this sub (absent: the sub's
+                    # pin name), so each sub keeps its tap; sub_leaf may be the leaf's full as-built path.
+                    lpin = sub_hc.get("sub_core_leaf_pin", pin)
+                    found = [ci for ci in self.members[p] if lpin in F.cells[ci].ports and sub_leaf in (self.rel_of(ci), F.cells[ci].path)]
                     depth = {r["q"]: r["depth"] for r in rtree["relays"]}
                     roles = rtree.get("tap_roles", {})
                     if len(found) != 1:
@@ -3383,7 +3386,7 @@ class Binder:
                                   f"expected one bound leaf, found {len(found)}")
                         continue
                     tap = target["tap"]
-                    old = core_reset.setdefault((found[0], pin), f"rst_n_t{tap}")
+                    old = core_reset.setdefault((found[0], lpin), f"rst_n_t{tap}")
                     first = int(old[len("rst_n_t"):])
                     if depth.get(old) != depth.get(f"rst_n_t{tap}") or \
                             roles.get(first, "mission") != roles.get(tap, "mission"):
