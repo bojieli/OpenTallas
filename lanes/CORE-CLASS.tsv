@@ -1,99 +1,88 @@
-# die	core(prefix ok)	class	note   (COORD-maintained override for lane-built cores; refresh hourly)
-hbm	ot_hbm_idx_score_hcol_h0	form running	superseded by hcol_h0_ra/rb, hand flows
-hbm	ot_hnx_idxn_keybuf_slice	re-sign/count	SIGNED, re-sign running
-hbm	ot_hbm_su_static_sfustore_hw	re-sign/count	SIGNED, re-sign running
-hbm	ot_hbm_sm_vm_wr_q_t_lanes4	re-sign/count	SIGNED, re-sign owed
-hbm	hbc_ot_hbm_sm_vm_wr_q_t_lanes4	re-sign/count	SIGNED, re-sign owed
-hbm	hnx_rp3h_tl	re-sign/count	SIGNED, counts after BIG
-hbm	ot_hbm_idx_vm_query_static_n12	running	live epyc2
-hbm	hfd_ep_static	rebind form running	FORMS 03:47
-hbm	ot_hbm_su_static_qcore_r13	ECO after route	live epyc2
-hbm	ot_hbm_su_static_cxport_ij_q	ECO after route	cx4 live
-hbm	ot_hgi_coll_inj_idx_join_rg	ECO after route	live
-hbm	ot_hbm_xp_aq_tree13_fmt	ECO after route	xp_aq QL fix branch
-hbm	ot_hgi_sm_xload_cl2_ctlx	ECO after route	ctlx2 live
-hbm	ot_hgi_coll_tkm_tp192_tile_core	running	live intel2/epyc4
-hbm	hnx_vms_bank_q0_faces	rebind form running	v796f routed, ECO
-hbm	hc_bank128_pair	rebind form running	v7d live, v9bf routed
-hbm	ot_hbm_hc_bank128_pair	rebind form running	v7d live, v9bf routed
-hbm	hgi_coll_gq_issue	form running	v42a live, v9a8 resumed
-hbm	ot_hgi_coll_gq_issue	form running	v42a live, v9a8 resumed
-hbm	ot_hgi_coll_gq_land	ECO after route	gql5 + gql25778 live
-hbm	hgi_coll_gq_land	ECO after route	gql5 + gql25778 live
-hbm	ot_hgi_sfu_split3_lane_core	form running	part 6 hand flows 04:14
-hbm	hgi_sfu_split3_lane_core	form running	part 6 hand flows 04:14
-s81	ot_s81sl_eg	form being written	dissolve into egn+egg, plan delta
-s81	ot_s81sl_capc5r	parent kit running	cap_rt signed, CTS relaunch 04:32
-s81	ot_s81sl_ve_s	re-sign/count	t-s81 re-sign
-s81	dsdv_gunit_l1c	re-sign/count	NEEDS_PARENT counts
-s81	dsdv_gunit_l0r	re-sign/count	NEEDS_PARENT counts
-s81	ot_s81_cfg7_seq_bfp	re-sign/count	NEEDS_PARENT counts
-s81	dsdv_eng_rr_h0	re-sign/count	ccA_g2typed SIGNED, routed LEC
-s81	ot_s81sl_eg	near (1 fix)	egn hold ECO FF -2.9
-s81	dsdv_bk_g	conservative build	form 8 per-slice hv
-s81	ot_s81sl_capc5r	conservative build	rfdc
-s81	dsdv_gunit_l4	conservative build	rfd-gl4
-s81	dsdv_gunit_l5	conservative build	RF-D
-s81	ot_v41_bf_col	conservative build	split <=150k
-s81	dsdv_bksel_q	conservative build	RF-H + cts-dt-1
-s81	ot_s81dv_xfin	conservative build	99.5k cells fill .43
-s81	dsdv_eng_rr_e	conservative build	RF-G
-s81	dsdv_idx_tx_n32	conservative build	rf1t + cts-dt-1
-s81	dsdv_bksel_c	LEC	LEC-EGN-1 class
-s81	dsfd_coll_lane_w_safe8_ntf	not built	no current build
-s81	dsfd_coll_lane_e_safe8_ntf	not built	no current build
-qwen_compute	qfd_qc_su_lane_w_l0	re-sign/count	verified
-qwen_compute	qfd_qc_su_lane_w_l1	near (1 fix)	one-repeater ECO
-qwen_compute	qfd_tile_nk_a0c	conservative build	NK (28 types wait)
-qwen_compute	qfd_tile_nl_a0c	conservative build	NL clock split
-qwen_compute	qfd_dv_s5_red2_leaf	running	new after RED
-qwen_kvsys	kv3_head_eighth_e6	re-sign/count	e6 s-kv re-sign
-qwen_kvsys	qkd_kvs_pc	conservative build	RF-B
-qwen_kvsys	qkd_kvs_ctl	conservative build	RF-B
-qwen_kvsys	qkd_kvs_pc_h_head_p	conservative build	RF-B
-qwen_kvsys	kv3_astk	conservative build	RF-E, EX join reschedule
-qwen_kvsys	qkd_ahub	conservative build	RF-E
-qwen_kvsys	qkd_hr_	conservative build	RF-C/RF-D HR
-hbm	hfd_hgi_vm_calendar_f20	re-sign/count	SIGNED, needs flow tag
-hbm	ot_hbm_idx_tail_native	re-sign/count	signed views, new pin keys
-hbm	ot_hnx_idxn_keybuf_slice	near (1 fix)	hold ECO FF -5.3
-hbm	ot_hbm_idx_score_hcol_h0	clock window -> resume	insertion advisory fix
-hbm	ot_hbm_idx_vm_query_static_n12	clock window -> resume	insertion advisory fix
-hbm	hfd_ep_static	clock window -> resume	insertion advisory fix
-hbm	ot_hbm_su_static_qcore_r13	clock window -> resume	insertion advisory fix
-hbm	ot_hgi_coll_tkm_tp192_tile_core	clock window -> resume	insertion advisory fix
-hbm	ot_hbm_su_static_cxport_ij_q	clock window -> resume	insertion advisory fix
-hbm	ot_hgi_sm_xload_cl2_ctlx	clock window -> resume	insertion advisory fix
-hbm	ot_hgi_coll_inj_idx_join_rg	clock window -> resume	insertion advisory fix
-hbm	ot_hbm_xp_aq_tree13_fmt	clock window -> resume	insertion advisory fix
-hbm	ot_hbm_su_static_pgslice_lg__lanes	conservative build	hold -184/-286, clock split
-hbm	ot_hbm_svc_vmdel_lane_n	near (1 fix)	late ECO TT -0.46 FF +0.06 drv 8
-hbm	ot_hbm_hc_subtree32_core	conservative build	63 unreg pins
-hbm	ot_hbm_hc_root_static__tailx_rest	conservative build	pipeline cycles ~21:06
-hbm	ot_hfd_coll_q3_	conservative build	memory shape
-hbm	ot_hbm_host_cp_rxs	conservative build	memory shape
-hbm	ot_hgi_sm_xload_cl2_bfqg	conservative build	memory shape
-hbm	ot_hbm_su_programme_pslice_c5	conservative build	memory shape
-hbm	ot_hgi_sfu_programme_store_r10	conservative build	memory shape
-hbm	ot_hbm_su_static_pgslice_lg__lanes8_11	conservative build	memory shape
-hbm	hnx_rp3lp3h_	conservative build	memory shape
-hbm	hnx_fused_lane	conservative build	shape
-hbm	ot_hbm_su_static_sfustore_hw	no form yet (ordered 22:5x)	old form resumed, FF -33.83
-hbm	hfd_hgi_vms_glue_nw_t	conservative build	relays
-hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	LEC	no owner yet
-hbm	ot_hbm_argmax_static_sw_vm_r2	LEC	no owner yet
-hbm	ot_hgi_dma_back_static_vp4_banks_cp	LEC	no owner yet
-hbm	hnx_vms_bank_q0_faces	not tried (census fix merged)	pin-table views
-hbm	ot_hbm_hc_bank128_pair_core	not tried (census fix merged)	pin-table views
-hbm	ot_hgi_coll_gq_	not tried (census fix merged)	pin-table views
-s81	ot_s81sl_rom_q	conservative build	RF-J (FF -239 structural)
-hbm	ot_hbm_sm_vm_wr_q_t_lanes4	no form yet (ordered 22:5x)	TT -122
-hbm	ot_hbm_svc_sm_xcal_rel_t	no form yet (ordered 22:5x)	congestion
-hbm	ot_hnx_fused_host_program	no form yet (ordered 22:5x)	congestion
-hbm	ot_hgi_coll_gq_land	no form yet (ordered 22:5x)	congestion, slew 899
-hbm	ot_hbm_svc_wb_kport_q	no form yet (ordered 22:5x)	474k cells
-hbm	ot_hgi_sm_xload_cl2_bdring	no form yet (ordered 22:5x)	drv 1222
-s81	ot_v41_rom_elem_q	form in bench, not launched	FF -239
-s81	ot_s81sl_xrt	signed off, plan event for outline	xrt1 + xrt3 09:18
-s81	dsfd_bf_front_roots	signed off, re-sign running	TT 0.0 FF +2.82 LEC EQ 11-04
-s81	ot_s81sl_vs	form being written	TT -69.76
+# die	core(prefix ok)	class	note   (COORD override, from lanes/CONS-CENSUS.tsv 19:34; refresh hourly)
+s81	ot_v41_rom_elem_q_qxpq_w10_gb	running, no result	outside target
+s81	ot_v41_bf_col	structural hold	outside target
+s81	dsfd_coll_lane_w_safe8_ntf	running, no result	meets stdcell target
+s81	ot_s81sl_vs	signed off, not counted	outside target
+s81	ot_s81sl_capc5r	other	meets stdcell target
+s81	ot_s81sl_xrt1	signed off, not counted	meets stdcell target
+s81	ot_s81dv_xfin	signed off, not counted	meets stdcell target
+s81	ot_s81sl_xrt3	signed off, not counted	meets stdcell target
+s81	dsfd_coll_lane_e_safe8_ntf	running, no result	meets stdcell target
+s81	dsdv_gunit_l5	signed off, not counted	meets stdcell target
+s81	dsdv_bksel_q	running, no result	meets stdcell target
+s81	dsdv_idx_tx_n32	flow/tool error	meets stdcell target
+s81	dsdv_bksel_c	signed off, not counted	meets stdcell target
+s81	dsdv_eng_rr_e	LEC	meets stdcell target
+qwen_compute	qfd_tile_nk_a0c	running, no result	meets stdcell target
+qwen_compute	qfd_tile_nl_a0c	running, no result	meets stdcell target
+qwen_kvsys	qkd_ahub	running, no result	meets stdcell target
+qwen_kvsys	qkd_kvs_ctl	structural hold	meets stdcell target
+qwen_kvsys	qkd_hr_ingest_eng	running, no result	meets stdcell target
+qwen_kvsys	qkd_hr_core_order	LEC	meets stdcell target
+qwen_kvsys	qkd_hr_core_peer	setup miss	meets stdcell target
+qwen_kvsys	qkd_hr_core_prompt	LEC	meets stdcell target
+qwen_kvsys	qkd_kvs_pcc	LEC	meets stdcell target
+qwen_kvsys	qkd_kvs_pcc_h_head_p	setup miss	meets stdcell target
+hbm	ot_hbm_hc_bank128_pair_first_core	running, no result	meets stdcell target
+hbm	ot_hbm_idx_score_hcol_h0_ra	running, no result	outside target
+hbm	ot_hbm_idx_score_hcol_h0_rb	flow/tool error	outside target
+hbm	ot_hbm_hc_bank128_pair_core#250.56x267.84/7eaeff6b21f398a7	running, no result	meets stdcell target
+hbm	ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50	running, no result	meets stdcell target
+hbm	ot_hgi_sfu_split3_lane_core_bk	signed off, not counted	meets stdcell target
+hbm	ot_hgi_sfu_core_split3__opstore_a	running, no result	outside target
+hbm	ot_hgi_sfu_core_split3__opstore_b	running, no result	outside target
+hbm	ot_hgi_sfu_core_split3__ctl	structural hold	meets stdcell target
+hbm	ot_pdie_serdes	running, no result	outside target
+hbm	hnx_rp3h_gs	running, no result	meets stdcell target
+hbm	hnx_rp3h_xs	running, no result	meets stdcell target
+hbm	hnx_rp3h_gn	running, no result	meets stdcell target
+hbm	ot_hbm_svc_sm_xcal_rel_t	running, no result	meets stdcell target
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp0_id	structural hold	outside target
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691	structural hold	outside target
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526	shape: over cells/util/congestion	outside target
+hbm	ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77	structural hold	outside target
+hbm	ot_hbm_su_pg_lane1_core	running, no result	meets stdcell target
+hbm	ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	running, no result	outside target
+hbm	ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap	running, no result	outside target
+hbm	ot_hgi_coll_tkm_m_tp192__root	running, no result	meets stdcell target
+hbm	ot_hbm_hc_root_static__tailx_sk_step0	running, no result	outside target
+hbm	ot_hbm_hc_root_static__tailx_sk_steady	running, no result	outside target
+hbm	ot_hbm_hc_root_static__hcp_sys1	structural hold	meets stdcell target
+hbm	ot_hbm_idx_topk_link_static	running, no result	outside target
+hbm	ot_hbm_idx_selector_static_sel	running, no result	outside target
+hbm	ot_hbm_host_cp_rxs	small miss few endpoints	meets stdcell target
+hbm	ot_hbm_idx_rootctl_static_am	LEC	meets stdcell target
+hbm	ot_hbm_argmax_static_sw_vm_r2	structural hold	meets stdcell target
+hbm	ot_hnx_fused_hub_n4ext	running, no result	outside target
+hbm	ot_hnx_fused_host_program	running, no result	meets stdcell target
+hbm	ot_hbm_svc_sm_group_rel_id	running, no result	outside target
+hbm	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/d4e89c75b4a66b6e	running, no result	meets stdcell target
+hbm	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b95ff4f969a6c0ba	running, no result	meets stdcell target
+hbm	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/8c39bea619f03526	running, no result	meets stdcell target
+hbm	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b7314a95f9eb7d23	running, no result	meets stdcell target
+hbm	ot_hgi_sm_xload_cl2_bdring	running, no result	outside target
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	structural hold	meets stdcell target
+hbm	ot_hbm_svc_vm_kshare_splitstrap__v700685	running, no result	meets stdcell target
+hbm	ot_hbm_svc_vm_kshare_splitstrap__v8e478a	running, no result	meets stdcell target
+hbm	ot_hbm_xp_aq_tree13_fmt	running, no result	outside target
+hbm	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/6d132375c20a740b	running, no result	meets stdcell target
+hbm	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/430f68dee83dc012	running, no result	meets stdcell target
+hbm	hnx_fused_lane_c	running, no result	meets stdcell target
+hbm	hnx_fused_lane_elp	LEC	outside target
+hbm	hfd_hgi_vms_glue_nw_t	running, no result	outside target
+hbm	ot_hbm_idx_vm_query_static_n12	running, no result	meets stdcell target
+hbm	ot_hbm_su_programme_pslice_c5	running, no result	meets stdcell target
+hbm	ot_hbm_su_static_qcore_r13	running, no result	outside target
+hbm	ot_hbm_svc_wb_kport_q	running, no result	outside target
+hbm	ot_hfd_coll_q3_body_core	running, no result	outside target
+hbm	ot_hfd_coll_q3_edge_core	shape: over cells/util/congestion	meets stdcell target
+hbm	ot_hfd_coll_q3_vm_core	running, no result	meets stdcell target
+hbm	ot_hgi_coll_gq_issue#237.6x237.6/b7ff680570bd0756	running, no result	outside target
+hbm	ot_hgi_coll_gq_issue#237.6x237.6/3d6958222560dee8	running, no result	outside target
+hbm	ot_hgi_coll_gq_land#142.56x207.36/c9722de941ca0eb4	signed off, not counted	meets stdcell target
+hbm	ot_hgi_coll_inj_idx_join_rg	running, no result	meets stdcell target
+hbm	ot_hgi_dma_back_static_vp4_banks_cp	shape: over cells/util/congestion	meets stdcell target
+hbm	ot_hgi_sfu_programme_store_r10	running, no result	meets stdcell target
+hbm	ot_hfd_coll_q2n2_body_core	running, no result	outside target
+hbm	ot_hfd_coll_q2n2_vm_core	running, no result	meets stdcell target
+hbm	ot_hgi_coll_gq_land#142.56x207.36/8c2c0cba1a712d83	signed off, not counted	meets stdcell target
