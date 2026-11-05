@@ -1291,6 +1291,9 @@
    "reason": "DIE-S81-19 plan_s12: plan binds every qxpq_w10 ROM hard core as the adopted _gb master (S81-QX-GB 10-26, LEC EQ CGR0/CGR8 vs the legacy master with go/tag delayed 1 edge); col_h9 frames x 12 elements; _gb ports = master minus input xs_sv (variant_removed, not tied)"
   }
  ],
+ "param_regen": {
+  "file": "physical/die_plan/s81/regen_xrt_signed_1104.py"
+ },
  "instance_path_params": [
   {
    "module": "ot_rom_4096x72_m8",
