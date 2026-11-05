@@ -11,6 +11,8 @@ cp -al $RR/base $RR/new; for f in die_plan.json core_macros.json; do cp --remove
 python3 -I $F/mk_ev74.py $RR/new physical/die_plan/hbm/plan_of_record $KP | tee $RR/mk.log
 # station cells the moved hard cores now cover: minimal re-site (ft_nudge: only hit bits move; counts/windows/pins unchanged)
 PYTHONPATH=tools/die_plan:tools python3 tools/die_plan/ft_nudge.py $RR/new/die_plan.json $RR/new/die_plan.nudged.json $RR/new/ft_nudge_ledger.json && mv $RR/new/die_plan.nudged.json $RR/new/die_plan.json
+# DIE-HBM-75: reach-aware re-site of the S1 bits ft_nudge pushed past 405 um (rc 1 = some bits left, listed in the ledger)
+PYTHONPATH=tools/die_plan:tools python3 tools/die_plan/ft_reach_fix.py $RR/new/die_plan.json $RR/new/die_plan.reach.json $RR/new/ft_reach_ledger.json || true; mv $RR/new/die_plan.reach.json $RR/new/die_plan.json
 [ "${MKONLY:-0}" = 1 ] && exit 0
 export PYTHONPATH=tools/die_plan:tools/autopilot
 for N in base new; do
