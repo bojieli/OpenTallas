@@ -207,3 +207,13 @@ Elapsed time: 0:14.39[h:]min:sec. CPU time: user 13.31 sys 0.82 (98%). Peak memo
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_sle_stm_v2__cl7b3062fa/base/5_1_grt.odb] Error 2
  | kit localhost:/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave/qwen_compute/5bcec8dc59/items/sle_stm_v2__cl7b3062fa/attempt_3/gen/sle_stm_v2__cl7b3062fa src claude/kw8-srcp-1104@322f8cea192c53776def709b03717107c1725d3e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-05 00:08:02 PST AUTOPILOT -> KIT-WAVE-12: FAILED 8bc145055da7 qwen_compute/slw_st_a_v1__clfc5867a6 (CRASH/flow-error):  alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 1:05.62[h:]min:sec. CPU time: user 63.90 sys 1.65 (99%). Peak memory: 1219400KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_a_v1__clfc5867a6/base/4_1_cts.odb] Error 2
+ | kit epyc4:/srv/opentallas-scratch2/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v1__clfc5867a6/attempt_3/gen/slw_st_a_v1__clfc5867a6 src main@627772841061681b5d79d22de3acfb21bad0103f | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-05 00:08:12 PST AUTOPILOT -> KIT-WAVE-12: FAILED ad620efea7f2 qwen_compute/slw_st_a_v2__cl9f076a5c (CRASH/flow-error):  alias u_bound.rst_n has no unambiguous reset terminal
+Elapsed time: 1:10.00[h:]min:sec. CPU time: user 68.31 sys 1.62 (99%). Peak memory: 1192468KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_slw_st_a_v2__cl9f076a5c/base/4_1_cts.odb] Error 2
+ | kit epyc4:/srv/opentallas-scratch2/claude/qc-wave-1104s3/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__cl9f076a5c/attempt_3/gen/slw_st_a_v2__cl9f076a5c src main@627772841061681b5d79d22de3acfb21bad0103f | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
