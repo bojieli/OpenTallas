@@ -206,7 +206,7 @@
     "kv3_pc_v1__cl7f648944": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
     "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1104/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1105e4/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
     "kv3_io_cor_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
@@ -480,7 +480,8 @@
      "OT_HOLD_STOP_PS": "-300"
     }
    },
-   "prov_first_re": "^kv3_pc"
+   "prov_first_re": "^kv3_pc",
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
   },
   "s81": {
    "enabled": true,
@@ -1348,7 +1349,7 @@
     "serdes__t4": "KW-FIX-8 23:3x sweep: detail place DPL-1101 diamond search silent 2 h 37 at one core; stopped under flat >2 h; no relaunch on same recipe, with DIE-S81-56 for the form"
    },
    "queue_src": "",
-   "work_root": "/srv/opentallas-scratch2/claude/s81-wave-1104s2/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
     "__batch_kwfix3_0450": "101 rows appended 04:5x = KW-FIX-3 S81 KIT_PREFLIGHT class fix, merged main 3fe3f58473f (b15ddb969a4 bound macro paths, 19e83948214, b213d81bfd7 clock_entry_clear/macro_channels), in wave src 84291033b77; tools gen_phys/kit_contract change every macro-bearing kit; the CANCELLED-VOLUME leaf rows are the same leaf class with the same macro inputs; the KW-RESUME nochange guard refuses any kit whose inputs did not change",
@@ -1949,7 +1950,8 @@
     "ot_s81sl_leaf__t25__cl55642d17": {
      "OT_GRT_ALLOW_CONGESTION": "1"
     }
-   }
+   },
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
   },
   "s81_head": {
    "enabled": true,
@@ -2089,7 +2091,7 @@
      "ref": "COORD 11-01 09:2x: aspect = plan slot shape, granted by exception (12.28b), no reshape; DIE-HEAD-53"
     }
    ],
-   "work_root": "/srv/opentallas-scratch2/claude/head-wave-1104/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/head-wave-1105e4/kit-wave",
    "hold_items": {
     "hd_mesh_e": "DIE-HEAD-58 20:1x: COUNTED (SS24 20:16); running builds may finish, no relaunch"
    },
@@ -2282,7 +2284,8 @@
    "block_ignore": [
     "clock.tap_model",
     "reset.obstacle_model"
-   ]
+   ],
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
   },
   "qwen_compute": {
    "enabled": true,
@@ -2352,7 +2355,7 @@
     "slw_sc_v2": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries",
     "slw_sc_v3": "DIE-QC-71 20:54: over-400k sc class, waits SC HARD1 carve event; no flat retries"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1104s2/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
    "retry": [
     "sle_st_a_v1__cl67389ecd@1",
@@ -2944,7 +2947,8 @@
     "coll_ftm": {
      "OT_HOLD_STOP_PS": "-200"
     }
-   }
+   },
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
   },
   "hbm": {
    "enabled": true,
@@ -3687,7 +3691,9 @@
    "cancel_superseded": false,
    "plan_core_items": [
     "hnx_rp3h_xs"
-   ]
+   ],
+   "work_root": "/srv/opentallas-scratch2/claude/hbm-wave-1105e4/kit-wave",
+   "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540."
   }
  },
  "place_prefer": [
