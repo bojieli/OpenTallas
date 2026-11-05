@@ -5478,11 +5478,12 @@
   "ot_hgi_sfu_core_split3__ctl": {
    "status": "NONE",
    "outline_um": [
-    669.6,
-    626.4
+    427.68,
+    453.6
    ],
    "basis": "recipe macros []",
-   "macros": []
+   "macros": [],
+   "note": " | DIE-HBM-61 d44v RE-FORM 669.6x626.4 -> 427.68x453.6 (centre kept, rects shifted)"
   },
   "ot_hgi_sfu_core_split3__opstore_a": {
    "status": "KNOWN",
@@ -7974,6 +7975,50 @@
       105.0,
       237.768,
       186.0
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+  },
+  "ot_hidx_s3_q": {
+   "status": "KNOWN",
+   "outline_um": [
+    259.2,
+    216.0
+   ],
+   "macros": [
+    {
+     "name": "u_fcore.gm[0].mem",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      64.8,
+      8.64,
+      237.624,
+      49.704
+     ]
+    },
+    {
+     "name": "u_fcore.gm[1].mem",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      64.8,
+      49.728,
+      237.624,
+      90.792
+     ]
+    },
+    {
+     "name": "u_fcore.gm[2].mem",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      64.8,
+      90.816,
+      237.624,
+      131.88
      ]
     }
    ],

@@ -40,6 +40,7 @@ Part 7 spec options (cores with too many subs for the permutation search, master
   * a module used by several cores gets ONE pin table: wants of all its instances, in the sub frame.  Outlines must match.
   * boundary_sub: the sub holding the core's outer interface; bus-level station refs and partner conns go to it.
   * the core_faces pass does not move pins of layout cores: the layout already sets the faces.
+  * sub_face {sub module: {port base: face}}: the pin face in the SUB frame (replicas mirrored differently want different core faces).
 The registered faces are the sub kit face shells: +1 in and +1 out per sub pin.  The cycles they add are the SPLIT EQ
 shift maps (SPEC added_cycles; latency tables on claude/die-hbm-61-split-1103).
     python3 mk_split.py PLAN_DIR SPEC.json SPEC_DIR [--only core,...]       (in place; writes split_event.json)"""
@@ -269,7 +270,8 @@ for sp in SPEC:
             else:
                 wm[nm] = ("F", None)
     cores[core] = dict(sp=sp, insts=insts, W=W, H=H, subs=subs, tb=tb, tag=tag, rep=rep, entry=entry, want=want,
-                       cost=best[0], force={}, sub_or=sub_or, lay=bool(lay))
+                       cost=best[0], force={(m_, b_): f_ for m_, v_ in (sp.get("sub_face") or {}).items() for b_, f_ in v_.items()},
+                       sub_or=sub_or, lay=bool(lay))
 
 
 def build_tables(core):
