@@ -154,7 +154,7 @@ module ot_s81hd_mesh_a_core #(
     wire copy = (MUT == 1) ? 1'b0 : selb[0];
     wire wf;
     wire [11:0] fv_word = (MUT == 4) ? 12'd0 : fv;
-    ot_s81hd_beat_tx #(.W(WW), .N(2), .P(62)) u_wtx (.ck(ck), .rn(r_rx), .v(iss_q), .d({fv_word, copy, body}),
+    ot_s81hd_beat_tx #(.W(WW), .N(2), .P(62), .IDLE_ZERO(1)) u_wtx (.ck(ck), .rn(r_rx), .v(iss_q), .d({fv_word, copy, body}),
         .o(m_rx_o), .fault(wf));
     always @(posedge ck or negedge r_rx)
         if (!r_rx) fv <= 12'd0;
