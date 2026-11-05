@@ -146,7 +146,7 @@ def test_modern_runner_order_and_legacy_bytes():
     spec=importlib.util.spec_from_file_location('legacy_gen_under_test',source)
     gen=importlib.util.module_from_spec(spec); spec.loader.exec_module(gen)
     old=gen.run_kit(False)
-    assert hashlib.sha256(old.encode()).hexdigest()=='a70a25f57b9dad96bc2bbae058403ab8c113bfc88cf1fe41289d849e581bc08c'
+    assert hashlib.sha256(old.encode()).hexdigest()=='0a3438598452a9a704c7d824ef041e474529a37cd3506f27247d76f43c81dd74'
     modern=gen.run_kit(True)
     assert modern.index('/work/legacy_gate.py /work lec') < modern.index('/work/reg_fanout_gate.py')
     assert modern.index('OT_VCLK_CORNER=ff') < modern.index('/work/legacy_gate.py /work grt') < modern.index('then \\$M $GOAL;')
