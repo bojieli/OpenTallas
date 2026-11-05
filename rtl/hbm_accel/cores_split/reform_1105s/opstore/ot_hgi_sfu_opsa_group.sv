@@ -35,7 +35,7 @@ module ot_hgi_sfu_opsa_gblock #(parameter [1:0] G = 2'd0) (
     for (genvar b = 0; b < 8; b = b + 1) begin : g_stage
         assign sw[b] = stage_v[b] && stage_group[2*b +: 2] == G;
     end
-    ot_hgi_su_lgroup2 #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8)) u_g (
+    ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8)) u_g (
         .clk(clk), .rst_n(rst_n), .rq(req), .rr(req), .ra(rd_addr), .rd(data),
         .sr_v(8'd0), .sr_addr(120'd0), .sr_d(), .sr_rv(),
         .sw_v(sw), .sw_addr(stage_addr), .sw_mask(64'hffffffffffffffff), .sw_d(stage_data),
