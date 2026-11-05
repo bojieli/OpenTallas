@@ -3366,7 +3366,6 @@
     "hfd_hgi_vm_calendar_f20@1",
     "hnx_rp3lp3h_s@1",
     "ot_hbm_sm_vm_wr_q_t_lanes4@1",
-    "ot_hbm_su_programme_pslice_c5@1",
     "ot_hbm_su_static_sfustore_hw@1",
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@1",
     "ot_hbm_svc_vmdel_lane_n@1",
@@ -3406,7 +3405,6 @@
     "ot_hfd_coll_q3_edge_core@1",
     "ot_hnx_fused_hub_n4ext@2",
     "ot_hnx_fused_tnode@1",
-    "ot_hbm_su_programme_pslice_c5@2",
     "ot_hgi_sm_xload_cl2_bfqg@2",
     "hfd_ep_static@5",
     "hfd_hgi_vm_calendar_f20@2",
@@ -3488,7 +3486,6 @@
     "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9@2",
     "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f@2",
     "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780@1",
-    "ot_hbm_su_programme_pslice_c5@3",
     "ot_hbm_su_static_cxport_ij_q@3",
     "ot_hbm_su_static_qcore_r13@2",
     "ot_hbm_xp_aq_tree13_fmt@3",
@@ -3546,7 +3543,9 @@
     "ot_hbm_idx_query_static": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
     "ot_hbm_idx_score_hcol_h1": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
     "hfd_ep_static": "KW-FIX-6 06:1x: DIE-HBM-63 06:04 ECO on routed ep is live; hand flow, not relaunched by the wave",
-    "ot_hnx_fused_host_program": "COORD 11-04: signed off (ss29/resign/fhp_i); I62 part 14 only makes the plan match that build; no wave relaunch"
+    "ot_hnx_fused_host_program": "COORD 11-04: signed off (ss29/resign/fhp_i); I62 part 14 only makes the plan match that build; no wave relaunch",
+    "ot_hbm_su_programme_pslice_c5": "I61 part 8 removes this core; stopped per DIE-HBM-66, RM-31 21:03",
+    "ot_hbm_su_pcol_h": "I61: signed kit exists, plan matches its 769 pins; no rebuild, re-sign by SS29"
    },
    "gen_hosts": [
     "epyc4"
