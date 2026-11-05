@@ -202,3 +202,8 @@ Elapsed time: 0:06.86[h:]min:sec. CPU time: user 6.15 sys 0.71 (99%). Peak memor
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_slw_stm_v1__cl05fc43f7__cl2086fa2c/base/5_1_grt.odb] Error 2
  | kit epyc4:/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave/qwen_compute/5bcec8dc59/items/slw_stm_v1__cl05fc43f7__cl2086fa2c/gen/slw_stm_v1__cl05fc43f7__cl2086fa2c src claude/kw8-srcp-1104@322f8cea192c53776def709b03717107c1725d3e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-04 23:34:27 PST AUTOPILOT -> KIT-WAVE-12: FAILED 5739def02edc qwen_compute/sle_stm_v2__cl7b3062fa (CRASH/flow-error):  file "/work/grt_maxwire.tcl": no such file or directory
+Elapsed time: 0:14.39[h:]min:sec. CPU time: user 13.31 sys 0.82 (98%). Peak memory: 682452KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/dp_sle_stm_v2__cl7b3062fa/base/5_1_grt.odb] Error 2
+ | kit localhost:/srv/opentallas-scratch2/claude/qc-wave-1104/kit-wave/qwen_compute/5bcec8dc59/items/sle_stm_v2__cl7b3062fa/attempt_3/gen/sle_stm_v2__cl7b3062fa src claude/kw8-srcp-1104@322f8cea192c53776def709b03717107c1725d3e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
