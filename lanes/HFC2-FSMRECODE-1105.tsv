@@ -1,0 +1,27 @@
+# FSM recode sweep over open LEC not-EQUIVALENT rows, all five dies, HBM-FORM-CONG-2 11-05 ~08:10 PST. Estimate-only, advisory, moves nothing, claims no row. Yosys proc/flatten/opt/fsm_detect on 1_1_yosys_canonicalize.rtlil of the newest kit with one, against the newest non-EQ lec.json of that top; kit and LEC may differ. fsm_detect reads the attributes in that RTLIL, so a kit already on fsm_keep shows 0 (rf_kv1 kits). Positive controls: eng_rr_e st and h9b last, both found. ORFS 1_2_yosys.log is quiet, grep of it reads nothing.
+die	top	fsm_regs	lec_verdict	differs	read	lec_path
+hbm	ot_hbm_hc_root_static__hcp_sys1	u_fcore.u_core.u_core.nout_r	NOT EQUIVALENT	383	NOT cause on this read: nout_r in 0 of 356 listed cones; u_div.r_mb/d_mb dominate	epyc4:die-hbm-66/forms/hcpom/ot_hbm_hc_root_static__hcp_sys1_0690d
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	u_fcore.controller.on.last	NOT EQUIVALENT	156	ROOT per gate cone 06:41 [CHECKED]; last not in cone keys, differs by value; hint LEC running	epyc4:die-hbm-66/lecclass/pcc6/out/lec.json
+hbm	ot_hfd_coll_q2n2_body_core	u_fcore.u_x._198378_	NOT EQUIVALENT	2016	LIKELY CAUSE, NEW: auto-named reg in 500 of 500 listed cones, 2016 differs, same pattern as q3_body [CHECKED cones, cause inferred]	epyc4:dh62-lec/q2n2/lec/lec.json
+hbm	ot_hfd_coll_q3_body_core	u_fcore.u_core.u_x._237836_	NOT EQUIVALENT	2016	LIKELY CAUSE, NEW: auto-named reg in 500 of 500 listed cones, 2016 differs [CHECKED cones, cause inferred]	epyc4:die-hbm-66/lecclass/q3body/out/lec.json
+hbm	hnx_fused_lane_elp	0	NOT EQUIVALENT	2	no FSM register detected: not this cause	epyc4:die-hbm-66/lecclass/lane_elp/out/lec.json
+hbm	ot_hbm_hc_root_static__tailx_sk_step0	0	NOT EQUIVALENT	464	no FSM register detected: not this cause	epyc4:die-hbm-66/forms/step0/ot_hbm_hc_root_static__tailx_sk_step0
+hbm	ot_hbm_idx_rootctl_static_am	0	NOT EQUIVALENT	17	no FSM register detected: not this cause	epyc4:dh62-lec/rootfsm/kit/lec/lec.json
+hbm	ot_hbm_idx_selector_static_sel	0	UNPROVEN	-	no FSM register detected: not this cause	intel2:hbm59-oneface/gen_ot_hbm_idx_selector_static_sel_b/ot_hbm_id
+hbm	ot_hbm_idx_topk_link_static	0	NOT EQUIVALENT	125	no FSM register detected: not this cause	epyc4:die-hbm-65/raise/topk/ot_hbm_idx_topk_link_static_55ea061bcf
+hbm	ot_hfd_coll_q3_edge_core	0	UNPROVEN	0	no FSM register detected: not this cause	epyc4:die-hbm-66/forms/q3e13/ot_hfd_coll_q3_edge_core_03b8865ab905
+hbm	ot_hgi_coll_tkm_m_tp192__root	0	NOT EQUIVALENT	6355	no FSM register detected: not this cause	epyc4:hbm-reform-a/forms19/ot_hgi_coll_tkm_m_tp192__root_a05590c9a
+hbm	ot_hgi_sfu_core_split3__opstore_a	0	UNPROVEN	-	no FSM register detected: not this cause	intel2:hbm-cores-kits-38/opstore/ot_hgi_sfu_core_split3__opstore_a_
+hbm	ot_hnx_fused_hub_n4ext	0	KEEP FAIL	3	no FSM register detected: not this cause	epyc4:die-hbm-66/forms/n4ext/ot_hnx_fused_hub_n4ext_d54df49f3760/l
+head	ot_s81hd_host_e_ep	u_core.u_lane1.u_ln.u.u_gb.hunt	KEEP FAIL	82	present, known: u_gb.hunt, DIE-HEAD-60 11-04 06:17 fix did not close, 0 hits in this list	epyc2:dh55-hsplit/genP/hd_host_e/lec/lec.json
+head	ot_s81hd_host_w_ep	u_core.u_lane0.u_ln.u.u_gb.hunt	KEEP FAIL	930	present, known: u_gb.hunt, 0 hits in 200 listed keys	epyc2:dh55-hsplit/genP/hd_host_w/lec/lec.json
+head	ot_s81hd_ctl	0	NOT EQUIVALENT	1278	no FSM register detected: not this cause	intel2:codex-head-event-1030/ctl_current_gen/hd_ctl/lec/lec.json
+head	ot_s81hd_lep0N	0	UNPROVEN	-	no FSM register detected: not this cause	epyc2:dh54-pdn/attempt_2/gen/hd_lep0N/lec/lec.json
+head	ot_s81hd_mesh_estrip	0	KEEP FAIL	42	no FSM register detected: not this cause	intel2:ss29/lecmain/hd_mesh_e/out/lec/lec.json
+kv	qkd_hr_core_order	0	NOT EQUIVALENT	8	no FSM register detected: not this cause	epyc4:dkv70ahub/ord/k1/qkd_hr_core_order__328.32x328.32/lec/lec.js
+kv	qkd_hr_core_peer	0	NOT EQUIVALENT	933	no FSM register detected: not this cause	epyc4:dkv70ahub/peer/k1/gen/qkd_hr_core_peer__216x216/lec/lec.json
+kv	qkd_hr_core_prompt	0	NOT EQUIVALENT	130	no FSM register detected: not this cause	intel1:dkv67/hr/kits/prompt/qkd_hr_core_prompt__233.28x233.28/lec/l
+s81	dsdv_eng_rr_e	u_lkp.u_e.st	NOT EQUIVALENT	360	CAUSE [CHECKED 8 of 8 listed cones hold gold-only st; FORM-S81REST rfg2 has OT_FSM_NONE_WIRES=st running]	epyc4:die-s81-51/rfg/kits/dsdv_eng_rr_e_rfg/lec/lec.json
+s81	dsfd_coll_lane_w_safe8_ntf	0	KEEP FAIL	78	no FSM register detected: not this cause	epyc4:dh59/lec_lane/lf1/lec.json
+head	ot_s81hd_lep_pair	-	see row	-	UNREAD: no RTLIL in the kit I found	-
+head	ot_s81hd_mesh_ep	-	see row	-	UNREAD: no RTLIL in the kit I found	-
