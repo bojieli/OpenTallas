@@ -2971,5 +2971,125 @@
    "b3b8cc8e09a33fde8726158f062ac704e9b689b48ee25df193c7963fcdd6214f": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane_full_x_core.sv"
   },
   "rename_top": "ot_hbm_su_pg_lane_full_x_core__mc"
+ },
+ "ot_hgi_sfu_opsb_group": {
+  "defines": [],
+  "params": {},
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsb_group",
+  "util": 0.45
+ },
+ "ot_hgi_sfu_opsb_output": {
+  "defines": [],
+  "params": {},
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+  ],
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsb_output",
+  "util": 0.45
+ },
+ "ot_hgi_sfu_opsa_group0": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_group0",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
+  ]
+ },
+ "ot_hgi_sfu_opsa_group1": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_group1",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
+  ]
+ },
+ "ot_hgi_sfu_opsa_rest": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "top": "ot_hgi_sfu_opsa_rest",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_rest.sv"
+  ]
+ },
+ "ot_hgi_coll_gqi_issue": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 29: tile of ot_hgi_coll_gq_issue; bench results/die_hbm_1105/form_split/p29",
+  "top": "ot_hgi_coll_gqi_issue",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/gq/ot_hgi_coll_gqi_issue.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ]
+ },
+ "ot_hgi_gq_aq_tile": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "macros": [],
+  "source": "HBM-FORM-SPLIT d44v part 29: tile of ot_hgi_coll_gq_issue; bench results/die_hbm_1105/form_split/p29",
+  "top": "ot_hgi_gq_aq_tile",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/gq/ot_hgi_gq_aq_tile.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ]
+ },
+ "ot_hbm_idx_topk_ingest": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 30: tile of ot_hbm_idx_topk_link_static; bench results/die_hbm_1105/form_split/p30",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "top": "ot_hbm_idx_topk_ingest",
+  "macros": []
+ },
+ "ot_hbm_idx_topk_store": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-FORM-SPLIT d44v part 30: tile of ot_hbm_idx_topk_link_static; bench results/die_hbm_1105/form_split/p30",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "top": "ot_hbm_idx_topk_store",
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ]
  }
 }
