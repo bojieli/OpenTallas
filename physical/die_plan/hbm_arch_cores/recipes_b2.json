@@ -3005,5 +3005,83 @@
   "source_commit": "c3199719170d92b299edd36599d6b8f35df82902",
   "read_at_commit": true,
   "util": 0.45
+ },
+ "ot_svgr_top": {
+  "top": "ot_svgr_top",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {
+   "LBANKS": 4,
+   "NID": 6,
+   "IDW": 9,
+   "PAW": 11,
+   "PREL": 1,
+   "DD": 256,
+   "ID_COHORT": 1,
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_own": {
+  "top": "ot_svgr_own",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {},
+  "macros": [],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_bk": {
+  "top": "ot_svgr_bk",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "defines": [],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
+  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "read_at_commit": true,
+  "util": 0.45
  }
 }
