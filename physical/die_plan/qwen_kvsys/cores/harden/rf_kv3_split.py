@@ -37,6 +37,51 @@ def inst_block(s, mod, inst):
     return m
 
 
+def sub_once(s, old, new, what):
+    assert s.count(old) == 1, what
+    return s.replace(old, new)
+
+
+def lec_twin_ties(src):
+    """DIE-KV-67/LEC 11-04: the registers synthesis folds or merges, read through the surviving flop in the RTL (PCC only).
+    Same class as the pcf_x ties: the gate has one flop, or a tie, where the RTL has separate state.  All are bit-exact after
+    reset and the first load; PCF sources stay byte-identical."""
+    out = dict(src)
+    cal = "qkd_controller_hbm_calendar.sv"
+    s = out[cal]
+    s = sub_once(s, "output reg static_cmd_owner,", "output wire static_cmd_owner,", "cal port")
+    s = sub_once(s, " reg sealed;reg [15:0] active_epoch;reg [18:0] active_row;\n",
+                 " reg sealed;reg [15:0] active_epoch;reg [18:0] active_row;\n"
+                 " // DIE-KV-67/LEC 11-04: owner = active_row[6]: same reset, same load, ROW0+layer has bit 6 set for layer<64.\n"
+                 " initial if(ROW0!=64)$fatal(1,\"static_cmd_owner reads active_row[6]: ROW0 must be 64\");\n"
+                 " assign static_cmd_owner=active_row[6];\n", "cal decl")
+    s = sub_once(s, " static_cmd_owner<=0;static_cmd<=0;", " static_cmd<=0;", "cal reset")
+    s = sub_once(s, "static_cmd_owner<=1;idle<=0;", "idle<=0;", "cal set")
+    out[cal] = s
+    tim = "ot_qkd_static_kv_timing.sv"
+    s = out[tim]
+    s = sub_once(s, "reg streaming; reg [2:0] last; reg [10:0] nm1;",
+                 "reg streaming; reg [2:0] last_q; reg [10:0] nm1;  // DIE-KV-67/LEC 11-04: last = nm1[9:7] without context descriptors\n"
+                 "    wire [2:0] last = CONTEXT_DESC != 0 ? last_q : nm1[9:7];\n   ", "tim decl")
+    s = sub_once(s, "context_count<=0; last <= 0; nm1 <= 0;", "context_count<=0; last_q <= 0; nm1 <= 0;", "tim reset")
+    s = sub_once(s, "nm1 <= desc_n - 11'd1; last <= context_accept", "nm1 <= desc_n - 11'd1; last_q <= context_accept", "tim load")
+    out[tim] = s
+    hd = "qkd_embedding_static_return_head.sv"
+    if hd in out:
+        s = out[hd]
+        s = sub_once(s, "#(parameter integer MUT = 0) (", "#(parameter integer MUT = 0, parameter [297:0] TIE0 = 298'd0) (", "head param")
+        s = sub_once(s, "wire [297:0] upo_d = ts_q ? retained : 298'd0;",
+                     "// DIE-KV-67/LEC 11-04: TIE0 = record bits the PC strap holds 0 (unreset retained, X until the first capture;\n"
+                     "    // synthesis ties these pin flops)\n"
+                     "    wire [297:0] upo_d = ts_q ? (retained & ~TIE0) : 298'd0;", "head upo")
+        out[hd] = s
+        lf = "qkd_kvs_pc_h_head_p__leaf.sv"
+        # word_index[3:0] and half load only spc[4:0] or 0, so a 0 strap bit holds its record bit 0
+        out[lf] = sub_once(out[lf], "qkd_embedding_static_return_head #(.MUT(0)) u_embr",
+                           "qkd_embedding_static_return_head #(.MUT(0), .TIE0({17'd0, ~PC[0], 2'b00, ~PC[4:1], 274'd0})) u_embr", "head inst")
+    return out
+
+
 def main(kit, pcc_out, pcf_out, top):
     kit, pcc_out, pcf_out = Path(kit), Path(pcc_out), Path(pcf_out)
     pcc_top = {"qkd_kvs_pc": "qkd_kvs_pcc", "qkd_kvs_pc_h_head_p": "qkd_kvs_pcc_h_head_p"}[top]
@@ -62,7 +107,9 @@ def main(kit, pcc_out, pcf_out, top):
     head += ("\n    // RF-B split (DIE-KV-64/RF-B 11-03): u_front + u_return live in the PCF core; their outputs leave from PCF pins\n"
              # DIE-KV-66/LEC 11-04: bit 8 = controller l_sec[7], the literal 1'b0 of qkd_ctrl_pc_sched reached through unreset
              # s1/o_sec (X until the first ECC beat); synthesis ties it, so tie it here as KV-KITS-10 does at the landing.
-             "    assign pcf_x = {corrected_epoch, controller_co[281:9], 1'b0, controller_co[7:0]};\n"
+             # DIE-KV-67/LEC 11-04: bits [17:12] = l_sec[16:11] = (row - ROW0)[5:0] = row[5:0] at ROW0=64, an unreset twin of
+             # l_row[5:0] (co[23:18]); synthesis merges the two, so read the row flops here.
+             "    assign pcf_x = {corrected_epoch, controller_co[281:18], controller_co[23:18], controller_co[11:9], 1'b0, controller_co[7:0]};\n"
              "    assign {front_blk_freed, front_hold, front_stall_edges, front_occupancy, front_idle_hbm, front_fault_overflow_hbm,"
              " front_fault_go_hbm} = 26'd0;\n"
              "    assign {actual_valid, actual_sector, actual_epoch, actual_layer, actual_data, return_fault_hbm, return_fault_core,"
@@ -138,7 +185,7 @@ def main(kit, pcc_out, pcf_out, top):
     regs = "".join(f"    (* keep *) ot_kvpc_pin_dff u_pcfx_{k} (.ck(ck[0]), .d(pcf_x_d[{k}]), .q(pcf_x[{k}]));\n" for k in range(298))
     s = s.replace("\nendmodule", "\n    // RF-B split: PCC -> PCF face launch flops (+1 edge)\n" + regs + "endmodule", 1)
     src[tf] = s
-    for n, t in src.items():
+    for n, t in lec_twin_ties(src).items():   # the PCF copies below read src, unpatched
         (pcc_out / (pcc_top + ".sv" if n == tf else n)).write_text(t)
 
     # ---- PCF top

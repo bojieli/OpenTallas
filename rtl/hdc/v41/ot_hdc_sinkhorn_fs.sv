@@ -475,7 +475,12 @@ module ot_hdc_sinkhorn_fs #(
     parameter integer MUT_Q4 = 0,
     parameter integer MUT = 0,                  // bench only: 1 = a steady step lands one stage early
     parameter integer NVIN = 8,                 // in_valid copies (vin)
-    parameter integer OH = `OT_SKF_OH           // S81-GUVE 10-20: 1 = one-hot sliced shifters (native-32), bit-identical
+    parameter integer OH = `OT_SKF_OH,          // S81-GUVE 10-20: 1 = one-hot sliced shifters (native-32), bit-identical
+    // DIE-S81-51/RF-D 11-03 (conservative form, one-cycle LOOP fix): 1 = the fault-zeroing copies load from the REGISTERED
+    // master fault (not the 16-wide range / bad cone of fault_n), and out_valid / fault leave one edge later so y and the
+    // pulse stay aligned: LAT + 1 (the caller's calendar adds FQ).  y holds until the next accept, so the extra edge reads
+    // the same state.  0 = the reviewed schedule.
+    parameter integer FQ = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,               // master + st-select replicas (11 asynchronous pins)
@@ -484,9 +489,9 @@ module ot_hdc_sinkhorn_fs #(
     input  wire [NVIN-1:0] vin,                 // kept same-edge copies of in_valid
     output wire            in_ready,
     input  wire [511:0]    in_e,                // element (r, c) at [32 (4r + c) +: 32]
-    output reg             out_valid,
+    output wire            out_valid,
     output wire [511:0]    y,
-    output reg             fault,
+    output wire            fault,
     output wire            busy
 );
     localparam integer STEPS = 2 * ITERS - 1;
@@ -691,10 +696,10 @@ module ot_hdc_sinkhorn_fs #(
     wire sbad = sub_any | (|bad4) | (|q_rng);
 
     // ---- master control (fixed schedule): flt / fault / out_valid from replica 0's state ----------------------------
-    reg flt;
+    reg flt, ov_r, fault_r;
     reg flt_n, fault_n, ov_n;
     always @* begin
-        flt_n = flt; fault_n = fault; ov_n = 1'b0;
+        flt_n = flt; fault_n = fault_r; ov_n = 1'b0;
         case (ph)
             P_IDLE: if (in_valid) flt_n = 1'b0;
             P_Z: if (zcap) begin
@@ -708,13 +713,29 @@ module ot_hdc_sinkhorn_fs #(
         endcase
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin flt <= 1'b0; out_valid <= 1'b0; fault <= 1'b0; end
-        else begin flt <= flt_n; out_valid <= ov_n; fault <= fault_n; end
+        if (!rst_n) begin flt <= 1'b0; ov_r <= 1'b0; fault_r <= 1'b0; end
+        else begin flt <= flt_n; ov_r <= ov_n; fault_r <= fault_n; end
+    wire fz;                                    // the fault-zeroing source: fault_n (FQ 0) or the master fault (FQ 1)
+    generate if (FQ) begin : g_fq
+        reg ov_q, fault_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ov_q <= 1'b0; fault_q <= 1'b0; end
+            else begin ov_q <= ov_r; fault_q <= fault_r; end
+`ifdef OT_RFD_MUT_FQ        // RF-D bench mutant: the pulse is not delayed with the zeroing copies (the caller captures one edge early)
+        assign out_valid = ov_r;
+`else
+        assign out_valid = ov_q;
+`endif
+        assign fault = fault_q;
+        assign fz = fault_r;
+    end else begin : g_fq0
+        assign out_valid = ov_r; assign fault = fault_r; assign fz = fault_n;
+    end endgenerate
     // fault copies (zero the output, 16 bits each); fault_n == fault during reset
     wire [63:0] fc;                             // 2 kept fault copies per 16 output bits (8 bits each), D from 4 kept fault_n gates
     wire [3:0] fn;
     generate for (g = 0; g < 4; g = g + 1) begin : g_fn
-        (* keep = 1 *) ot_skf_and2 u_n (.a(fault_n), .b(1'b1), .y(fn[g]));
+        (* keep = 1 *) ot_skf_and2 u_n (.a(fz), .b(1'b1), .y(fn[g]));
     end
     for (g = 0; g < 64; g = g + 1) begin : g_fc
         (* keep = 1 *) ot_skf_kr #(.W(1)) u_f (.clk(clk), .d(fn[g / 16]), .q(fc[g]));
@@ -723,5 +744,584 @@ module ot_hdc_sinkhorn_fs #(
 `ifndef SYNTHESIS
     initial if (D0 > 31 || DS > 31) $error("ot_hdc_sinkhorn_fs: stage counter is 5 bits");
 `endif
+endmodule
+// ---------------------------------------------------------------------------------------------------------------------
+// DIE-S81-51/RF-D 11-03 (OWNER 18:57 conservative form, <= 150k cells): ot_hdc_sinkhorn_fsr -- ot_hdc_sinkhorn_fs bit
+// for bit, ROW-PIPELINED: one row datapath (S1..S3 adds, T, predecode, seed, 4 quotients, 4 step-0 + eps adds) instead
+// of four.  Rows 0..3 of a step issue on four consecutive edges into the same stages.  fs reads several operands
+// directly from the (step-stable) state or holds a register across stages ("held from Q1"); here every such read is
+// realigned to its row: the state-word muxes use row selects delayed by the read stage (S1 0, S2 2, S3 4, X 10), the
+// fault chain b1..b4 / zr carries one register per stage, the T copies run 3 edges to Q1, and ot_hdc_skf_quotp carries
+// tm / xm3 / xz / E / s / ms with their row (every quotient stage is a true pipeline stage).  Row r lands at
+// c = D - 1 + r (fs capture + r); rows 0..2 go to a result buffer, the state commits at row 3 (fs select form).
+// Faults OR over the four row captures (== the fs one-capture OR).  D0 21, DS 19: LAT = 21 + (2 ITERS - 1) 19 (762).
+// ---------------------------------------------------------------------------------------------------------------------
+(* keep_hierarchy = 1 *) module ot_hdc_skf_ctlr #(
+    parameter integer D0 = 18, parameter integer DS = 16, parameter integer STEPS = 39, parameter integer MUT = 0,
+    parameter integer NZ = 1, parameter integer NG = 1, parameter integer NR = 1, parameter integer RD = 0
+) (
+    input  wire          clk, rst_n, in_valid,
+    output wire [NZ-1:0] zm,                    // == (ph == P_Z)
+    output wire [NG-1:0] idle, zc, sc,          // == (ph == P_IDLE), commit zcap / scap (row 3)
+    output wire [NR*4-1:0] rs,                  // row of the state-word read RD edges after issue (copy j at [4 j +: 4])
+    output wire [NR*8-1:0] qc,                  // row land strobes {scap row 3..0, zcap row 3..0} (copy j at [8 j +: 8])
+    output wire [1:0]    ph_o, output wire [4:0] c_o, output wire [7:0] cnt_o
+);
+    localparam [1:0] P_IDLE = 2'd0, P_Z = 2'd1, P_RUN = 2'd2;
+    localparam integer ZL = D0 - 1, SL = DS - 1 - MUT;     // row 0 lands; row 3 (commit) at + 3
+    reg [1:0] ph; reg [4:0] c; reg [7:0] cnt;
+    assign ph_o = ph; assign c_o = c; assign cnt_o = cnt;
+    wire zcap = (ph == P_Z) && (c == 5'(ZL + 3));
+    wire scap = (ph == P_RUN) && (c == 5'(SL + 3));
+    reg [1:0] ph_n; reg [4:0] c_n; reg [7:0] cnt_n;
+    always @* begin
+        ph_n = ph; c_n = c; cnt_n = cnt;
+        case (ph)
+            P_IDLE: if (in_valid) begin ph_n = P_Z; c_n = 5'd0; end
+            P_Z: begin
+                c_n = c + 5'd1;
+                if (zcap) begin c_n = 5'd0; cnt_n = STEPS[7:0]; ph_n = (STEPS == 0) ? P_IDLE : P_RUN; end
+            end
+            default: begin
+                c_n = c + 5'd1;
+                if (scap) begin c_n = 5'd0; cnt_n = cnt - 8'd1; if (cnt == 8'd1) ph_n = P_IDLE; end
+            end
+        endcase
+    end
+    always @(posedge clk or negedge rst_n) if (!rst_n) ph <= P_IDLE; else ph <= ph_n;
+    always @(posedge clk) begin c <= c_n; cnt <= cnt_n; end
+    wire zn = (ph_n == P_Z), in_ = (ph_n == P_IDLE);
+    wire zcn = (ph_n == P_Z) && (c_n == 5'(ZL + 3)), scn = (ph_n == P_RUN) && (c_n == 5'(SL + 3));
+    wire [3:0] rh = {c_n >= 5'(RD + 3), c_n == 5'(RD + 2), c_n == 5'(RD + 1), c_n <= 5'(RD)};
+    wire [3:0] zl, sl;
+    genvar gk;
+    generate for (gk = 0; gk < 4; gk = gk + 1) begin : g_l
+        assign zl[gk] = (ph_n == P_Z) && (c_n == 5'(ZL + gk));
+        assign sl[gk] = (ph_n == P_RUN) && (c_n == 5'(SL + gk));
+    end endgenerate
+    generate
+        for (gk = 0; gk < NZ; gk = gk + 1) begin : g_zm
+            (* keep = 1 *) ot_skf_kr #(.W(1)) u_q (.clk(clk), .d(zn), .q(zm[gk]));
+        end
+        for (gk = 0; gk < NG; gk = gk + 1) begin : g_g
+            (* keep = 1 *) ot_skf_kr #(.W(3)) u_q (.clk(clk), .d({in_, zcn, scn}), .q({idle[gk], zc[gk], sc[gk]}));
+        end
+        for (gk = 0; gk < NR; gk = gk + 1) begin : g_r
+            (* keep = 1 *) ot_skf_kr #(.W(12)) u_q (.clk(clk), .d({rh, sl, zl}), .q({rs[4*gk +: 4], qc[8*gk +: 8]}));
+        end
+    endgenerate
+endmodule
+
+// ---- ot_hdc_skf_quot with every operand carried to its stage (tm, te, xm, xe, r at Q1; xz to Q4) -------------------
+module ot_hdc_skf_quotp #(parameter integer MUT_Q4 = 0, parameter integer OH = 0) (
+    input  wire              clk,
+    input  wire [6:0]        subn,
+    input  wire [4*24-1:0]   xm,
+    input  wire signed [9:0] xe,
+    input  wire              xz,
+    input  wire [3*24-1:0]   tm,
+    input  wire signed [9:0] te,
+    input  wire [2*29-1:0]   r,
+    output wire [30:0]       y,
+    output wire              range
+);
+    localparam integer WP = 53, DROP = 20;
+    genvar j, p, s;
+    // ---- Q1
+    wire [29*WP-1:0] prow;
+    generate
+        for (j = 0; j < 29; j = j + 1) begin : g_pp
+            for (p = 0; p < WP; p = p + 1) begin : g_p
+                if (p >= DROP && p - j >= 0 && p - j < 24) begin : g_on
+                    assign prow[j*WP + p] = r[29*((p - j < 12) ? 0 : 1) + j] & xm[24*((j < 10) ? 0 : (j < 20) ? 1 : 2) + (p - j)];
+                end else begin : g_off
+                    assign prow[j*WP + p] = 1'b0;
+                end
+            end
+        end
+    endgenerate
+    wire [WP-1:0] ps, pc;
+    ot_hdc_sk_csa #(.N(29), .W(WP)) u_xr (.rows(prow), .s(ps), .c(pc));
+    wire [23:0] xm3 = xm[72 +: 24], tm2 = tm[48 +: 24];
+    wire [24:0] cmp_s0, cmp_s1;
+    ot_hdc_sk_cadd #(.W(24)) u_cmp (.a(xm3), .b(~tm2), .s0(cmp_s0), .s1(cmp_s1));
+    wire lt = !cmp_s1[24];
+    wire signed [10:0] e0 = $signed({xe[9], xe}) - $signed({te[9], te});
+    wire signed [10:0] E  = lt ? (e0 - 11'sd1) : e0;
+    reg [WP-1:0] ps_q, pc_q;
+    always @(posedge clk) begin ps_q <= ps; pc_q <= pc; end
+    wire signed [10:0] sfull = -11'sd126 - E;
+    wire [4:0] shd = (!subn[0] || sfull <= 11'sd0 || sfull > 11'sd24) ? 5'd0 : sfull[4:0];
+    wire zsd = subn[0] && (sfull > 11'sd24);
+    wire [7:0] lt_q; wire [10:0] E_q [0:1]; wire [4:0] sh_q [0:16];
+    generate
+        for (j = 0; j < 8; j = j + 1) begin : g_lt
+            (* keep = 1 *) ot_skf_kr #(.W(1)) u_lt (.clk(clk), .d(lt), .q(lt_q[j]));
+        end
+        for (j = 0; j < 2; j = j + 1) begin : g_e
+            (* keep = 1 *) ot_skf_kr #(.W(11)) u_e (.clk(clk), .d(E), .q(E_q[j]));
+        end
+        for (j = 0; j < 17; j = j + 1) begin : g_shc
+            (* keep = 1 *) ot_skf_kr #(.W(5)) u_s (.clk(clk), .d(shd), .q(sh_q[j]));
+        end
+    endgenerate
+    reg zs_q1;
+    always @(posedge clk) zs_q1 <= zsd;
+    // Q1 -> Q2 carries (the row's xm3 for X', T for Q3 / Q4, xz for Q4)
+    wire [23:0] xm3_2; wire [71:0] tm_2; wire xz_2;
+    (* keep = 1 *) ot_skf_kr #(.W(24)) u_x32 (.clk(clk), .d(xm3), .q(xm3_2));
+    (* keep = 1 *) ot_skf_kr #(.W(73)) u_t2 (.clk(clk), .d({xz, tm}), .q({xz_2, tm_2}));
+    // ---- Q2
+    wire [WP:0] pr0, pr1;
+    ot_hdc_sk_cadd #(.W(WP)) u_xrc (.a(ps_q), .b(pc_q), .s0(pr0), .s1(pr1));
+    wire [23:0] mp = {lt_q[0] ? pr0[50:45] : pr0[51:46], lt_q[4] ? pr0[44:39] : pr0[45:40],
+                      lt_q[1] ? pr0[38:33] : pr0[39:34], lt_q[5] ? pr0[32:27] : pr0[33:28]};
+    wire [24:0] xpl = {xm3_2, 1'b0}, xpr = {1'b0, xm3_2};
+    wire [24:0] xp = {lt_q[2] ? xpl[24:18] : xpr[24:18], lt_q[6] ? xpl[17:12] : xpr[17:12],
+                      lt_q[3] ? xpl[11:6] : xpr[11:6], lt_q[7] ? xpl[5:0] : xpr[5:0]};
+    wire [23:0] msd; wire [26:0] xsd;
+    generate
+        for (s = 0; s < 15; s = s + 1) begin : g_sh
+            wire [4:0] sh = sh_q[s];
+            if (OH != 0 && s < 6) begin : g_mo
+                ot_skf_rsh #(.W(24), .LO(4*s), .N(4)) u_r (.x(mp), .d({3'd0, sh}), .y(msd[4*s +: 4]));
+            end else if (OH != 0) begin : g_xo
+                ot_skf_rsh #(.W(51), .LO(3*(s-6)), .N(3)) u_r (.x({2'b00, xp, 24'd0}), .d({3'd0, sh}), .y(xsd[3*(s-6) +: 3]));
+            end else if (s < 6) begin : g_m
+                wire [23:0] v = mp >> sh;
+                assign msd[4*s +: 4] = v[4*s +: 4];
+            end else begin : g_x
+                wire [26:0] v = {2'b00, xp} << (5'd24 - sh);
+                assign xsd[3*(s-6) +: 3] = v[3*(s-6) +: 3];
+            end
+        end
+    endgenerate
+    wire [23:0] ms_q [0:6];
+    reg [26:0] xs_q; reg zs_q;
+    always @(posedge clk) begin xs_q <= xsd; zs_q <= zs_q1; end
+    generate
+        for (j = 0; j < 7; j = j + 1) begin : g_ms     // 0..2 Q3 row groups, 3..6 final slices (carried below)
+            (* keep = 1 *) ot_skf_kr #(.W(24)) u_m (.clk(clk), .d(msd), .q(ms_q[j]));
+        end
+    endgenerate
+    // Q2 -> Q3 carries: T, xz, E / s (for Q4 and final)
+    wire [71:0] tm_3; wire xz_3; wire [10:0] E_3 [0:1]; wire [4:0] s_3 [0:1];
+    (* keep = 1 *) ot_skf_kr #(.W(73)) u_t3 (.clk(clk), .d({xz_2, tm_2}), .q({xz_3, tm_3}));
+    (* keep = 1 *) ot_skf_kr #(.W(32)) u_es3 (.clk(clk), .d({E_q[0], E_q[1], sh_q[15], sh_q[16]}), .q({E_3[0], E_3[1], s_3[0], s_3[1]}));
+    // ---- Q3: r1 = xs - T - sum_j T_j (ms << (j+1))  (mod 2^27) carry-save
+    localparam integer W = 27;
+    localparam integer NR = 24 + 3;
+    wire [23:0] tm2_3 = tm_3[48 +: 24];
+    wire [NR*W-1:0] rows;
+    generate
+        for (j = 0; j < 24; j = j + 1) begin : g_rr
+            wire [23:0] gm;
+            for (p = 0; p < 24; p = p + 1) begin : g_b
+                assign gm[p] = tm_3[24*((p < 12) ? 0 : 1) + j] & ms_q[j / 8][p];
+            end
+            wire [W-1:0] v = {3'b000, gm} << (j + 1);
+            assign rows[j*W +: W] = ~v;
+        end
+    endgenerate
+    assign rows[24*W +: W] = xs_q;
+    assign rows[25*W +: W] = ~{3'b000, tm2_3};
+    assign rows[26*W +: W] = 27'd25;
+    wire [W-1:0] ts, tc;
+    ot_hdc_sk_csa #(.N(NR), .W(W)) u_tree (.rows(rows), .s(ts), .c(tc));
+    reg [W-1:0] ts_q, tc_q;
+    always @(posedge clk) begin ts_q <= ts; tc_q <= tc; end
+    // Q3 -> Q4 carries: tm2, xz, zs, E / s, ms (final slices)
+    wire [23:0] tm2_4; wire xz_4, zs_4; wire [10:0] E_4 [0:1]; wire [4:0] s_4 [0:1]; wire [23:0] ms_4 [3:6];
+    (* keep = 1 *) ot_skf_kr #(.W(26)) u_t4 (.clk(clk), .d({xz_3, zs_q, tm2_3}), .q({xz_4, zs_4, tm2_4}));
+    (* keep = 1 *) ot_skf_kr #(.W(32)) u_es4 (.clk(clk), .d({E_3[0], E_3[1], s_3[0], s_3[1]}), .q({E_4[0], E_4[1], s_4[0], s_4[1]}));
+    generate for (j = 3; j < 7; j = j + 1) begin : g_m4
+        (* keep = 1 *) ot_skf_kr #(.W(24)) u_m (.clk(clk), .d(ms_q[j]), .q(ms_4[j]));
+    end endgenerate
+    // ---- Q4: remainder signs -> correction / range predicates, registered per final slice
+    wire [W-1:0] t2 = ~{2'b00, tm2_4, 1'b0};
+    wire [W-1:0] u_s = ts_q ^ tc_q ^ t2;
+    wire [W-1:0] u_maj = (ts_q & tc_q) | (ts_q & t2) | (tc_q & t2);
+    wire [W-1:0] u_cs = {u_maj[W-2:0], 1'b0};
+    wire [W:0] a1, a1p, a2, a2p;
+    ot_hdc_sk_cadd #(.W(W)) u_r1 (.a(ts_q), .b(tc_q), .s0(a1), .s1(a1p));
+    ot_hdc_sk_cadd #(.W(W)) u_r2 (.a(u_s), .b(u_cs), .s0(a2), .s1(a2p));
+    wire neg1 = a1[W-1];
+    wire neg2 = a2p[W-1];
+    wire z1 = ((ts_q ^ tc_q) == {(ts_q[W-2:0] | tc_q[W-2:0]), 1'b0});
+    wire z2 = ((u_s ^ u_cs) == {(u_s[W-2:0] | u_cs[W-2:0]), 1'b1});
+    wire [23:0] m30 = ms_4[3];
+    wire inc1 = (!neg1 & !z1) | (z1 & m30[0]);
+    wire inc2 = (!neg2 & !z2) | (z2 & !m30[0]);
+    wire signed [10:0] eq4 = E_4[0];
+    wire signed [10:0] eb4 = eq4 + 11'sd127, eb41 = eq4 + 11'sd128;
+    wire sub4 = s_4[0] != 5'd0;
+    wire hi0 = !sub4 && (eb4 > 11'sd254);
+    wire hi1 = !sub4 && (eb41 > 11'sd254);
+    wire low = !subn[6] && (eb4 < 11'sd1);
+    wire zero = xz_4 | zs_4;
+    wire [2:0] pack_q [0:3]; wire [5:0] range_q;
+    generate
+        for (j = 0; j < 4; j = j + 1) begin : g_pk
+            (* keep = 1 *) ot_skf_kr #(.W(3)) u_p (.clk(clk), .d({inc1, inc2, zero}), .q(pack_q[j]));
+        end
+    endgenerate
+    (* keep = 1 *) ot_skf_kr #(.W(6)) u_rng (.clk(clk), .d({inc1, inc2, hi0, hi1, low ^ (MUT_Q4 != 0), zero}), .q(range_q));
+    // Q4 -> final carries: E / s, ms
+    wire [10:0] E_f; wire [4:0] s_f; wire [23:0] ms_f [3:6];
+    (* keep = 1 *) ot_skf_kr #(.W(16)) u_esf (.clk(clk), .d({E_4[1], s_4[1]}), .q({E_f, s_f}));
+    generate for (j = 3; j < 7; j = j + 1) begin : g_mf
+        (* keep = 1 *) ot_skf_kr #(.W(24)) u_m (.clk(clk), .d(ms_4[j]), .q(ms_f[j]));
+    end endgenerate
+    // ---- final, sliced
+    wire signed [10:0] ef = E_f;
+    wire signed [10:0] ebf = ef + 11'sd127, ebf1 = ef + 11'sd128;
+    wire subf = s_f != 5'd0;
+    wire [30:0] yv [0:3];
+    generate
+        for (j = 0; j < 4; j = j + 1) begin : g_fin
+            wire [23:0] m3 = ms_f[3 + j];
+            wire [2:0] pk = pack_q[j];
+            wire [24:0] m1_s0, m1_s1;
+            ot_hdc_sk_cadd #(.W(24)) u_inc (.a(m3), .b(24'd0), .s0(m1_s0), .s1(m1_s1));
+            wire [23:0] m2_s0, m2_s1;
+            ot_hdc_sk_cadd #(.W(23)) u_inc2 (.a(m3[23:1]), .b(23'd0), .s0(m2_s0), .s1(m2_s1));
+            wire [24:0] mf = pk[1] ? {m2_s1, m3[0]} : (pk[2] ? m1_s1 : {1'b0, m3});
+            wire ovm = mf[24];
+            if (j == 0) begin : g_field
+                wire [7:0] field = subf ? {7'd0, mf[23]} : (ovm ? ebf1[7:0] : ebf[7:0]);
+                assign yv[j] = pk[0] ? 31'd0 : {field, 23'd0};
+            end else begin : g_mant
+                wire [22:0] mv = ovm ? 23'd0 : mf[22:0];
+                assign yv[j] = pk[0] ? 31'd0 : {8'd0, mv};
+            end
+        end
+    endgenerate
+    assign y = {yv[0][30:23], yv[1][22:15], yv[2][14:7], yv[3][6:0]};
+    wire [23:0] m31 = ms_f[4];
+    wire range_ovm = range_q[4] ? (&m31[23:1]) : (range_q[5] && (&m31[23:0]));
+    assign range = !range_q[0] && ((range_ovm ? range_q[2] : range_q[3]) || range_q[1]);
+endmodule
+
+module ot_hdc_sinkhorn_fsr #(
+    parameter integer ITERS = 20,
+    parameter [31:0]  EPS = 32'h358637BD,
+    parameter integer MUT_Q4 = 0,
+    parameter integer MUT = 0,                  // bench only: 1 = a steady step lands one stage early
+    parameter integer NVIN = 8,
+    parameter integer OH = `OT_SKF_OH,
+    parameter integer FQ = 0                    // as ot_hdc_sinkhorn_fs FQ
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire            rst_n2,
+    input  wire            in_valid,
+    input  wire [NVIN-1:0] vin,
+    output wire            in_ready,
+    input  wire [511:0]    in_e,                // element (r, c) at [32 (4r + c) +: 32]
+    output wire            out_valid,
+    output wire [511:0]    y,
+    output wire            fault,
+    output wire            busy
+);
+    localparam integer STEPS = 2 * ITERS - 1;
+    localparam integer D0 = 18, DS = 16;         // fs row-0 depths; rows 1..3 follow one edge each (commit at + 3)
+    localparam integer LAT = (D0 + 3) + STEPS * (DS + 3);
+    localparam [1:0] P_IDLE = 2'd0, P_Z = 2'd1, P_RUN = 2'd2;
+    localparam [7:0]  EPS_E = (EPS[30:23] == 8'd0) ? 8'd1 : EPS[30:23];
+    localparam [23:0] EPS_M = {EPS[30:23] != 8'd0, EPS[22:0]};
+    localparam integer NS = 4, NA = NS + 1;
+    localparam integer NG = 64;
+    localparam integer NCS = 8;
+    localparam integer NZR = 3;                  // mode copies: 4 quotients x 8 + T 4 = 36 of 48
+    genvar r, k, g, n;
+
+    // ---- controller replicas ---------------------------------------------------------------------------------------
+    // st selects (NCS x 8 groups), mode copies (NZR x 16), row selects: S1 a/b (RD 0, 10 copies), S2 (RD 2, 5),
+    // S3 (RD 4, 5), X (RD 10, 12), result buffer land strobes (24 copies)
+    wire [NG-1:0] g_idle, g_zc, g_sc;
+    wire [NZR*16-1:0] zmv;
+    wire [10*4-1:0] rs0; wire [5*4-1:0] rs2, rs4; wire [12*4-1:0] rsx; wire [24*8-1:0] qcb;
+    wire [1:0] ph; wire [4:0] c; wire [7:0] cnt;
+    wire [3:0] lz, ls;                           // master row land strobes (zcap / scap rows 0..3)
+    generate
+        for (n = 0; n < NCS; n = n + 1) begin : g_cs
+            wire [0:0] zm_u; wire [1:0] ph_u; wire [4:0] c_u; wire [7:0] cnt_u; wire [3:0] rs_u; wire [7:0] qc_u;
+            (* keep = 1 *) ot_hdc_skf_ctlr #(.D0(D0), .DS(DS), .STEPS(STEPS), .MUT(MUT), .NZ(1), .NG(8), .NR(1)) u_c (.clk(clk), .rst_n(rst_n),
+                .in_valid(vin[n % NVIN]), .zm(zm_u), .idle(g_idle[8*n +: 8]), .zc(g_zc[8*n +: 8]), .sc(g_sc[8*n +: 8]),
+                .rs(rs_u), .qc(qc_u), .ph_o(ph_u), .c_o(c_u), .cnt_o(cnt_u));
+            if (n == 0) begin : g_master
+                assign ph = ph_u; assign c = c_u; assign cnt = cnt_u; assign lz = qc_u[3:0]; assign ls = qc_u[7:4];
+            end
+        end
+        for (n = 0; n < NZR; n = n + 1) begin : g_zr
+            wire [0:0] id_u, zc_u, sc_u; wire [1:0] ph_u; wire [4:0] c_u; wire [7:0] cnt_u; wire [3:0] rs_u; wire [7:0] qc_u;
+            (* keep = 1 *) ot_hdc_skf_ctlr #(.D0(D0), .DS(DS), .STEPS(STEPS), .MUT(MUT), .NZ(16), .NG(1), .NR(1)) u_c (.clk(clk), .rst_n(rst_n2),
+                .in_valid(vin[(NCS + n) % NVIN]), .zm(zmv[16*n +: 16]), .idle(id_u), .zc(zc_u), .sc(sc_u),
+                .rs(rs_u), .qc(qc_u), .ph_o(ph_u), .c_o(c_u), .cnt_o(cnt_u));
+        end
+    endgenerate
+    wire [10*8-1:0] qc_x0; wire [5*8-1:0] qc_x2, qc_x4; wire [12*8-1:0] qc_xx; wire [24*4-1:0] rs_xb;
+    wire [0:0] u_rr0_zm, u_rr0_id, u_rr0_zc, u_rr0_sc; wire [1:0] u_rr0_ph; wire [4:0] u_rr0_c; wire [7:0] u_rr0_cnt;
+    (* keep = 1 *) ot_hdc_skf_ctlr #(.D0(D0), .DS(DS), .STEPS(STEPS), .MUT(MUT), .NZ(1), .NG(1), .NR(10), .RD(0)) u_rr0 (.clk(clk),
+        .rst_n(rst_n2), .in_valid(vin[(NCS + NZR) % NVIN]), .zm(u_rr0_zm), .idle(u_rr0_id), .zc(u_rr0_zc), .sc(u_rr0_sc),
+        .rs(rs0), .qc(qc_x0), .ph_o(u_rr0_ph), .c_o(u_rr0_c), .cnt_o(u_rr0_cnt));
+    wire [0:0] u_rr2_zm, u_rr2_id, u_rr2_zc, u_rr2_sc; wire [1:0] u_rr2_ph; wire [4:0] u_rr2_c; wire [7:0] u_rr2_cnt;
+    (* keep = 1 *) ot_hdc_skf_ctlr #(.D0(D0), .DS(DS), .STEPS(STEPS), .MUT(MUT), .NZ(1), .NG(1), .NR(5), .RD(2)) u_rr2 (.clk(clk),
+        .rst_n(rst_n2), .in_valid(vin[(NCS + NZR + 1) % NVIN]), .zm(u_rr2_zm), .idle(u_rr2_id), .zc(u_rr2_zc), .sc(u_rr2_sc),
+        .rs(rs2), .qc(qc_x2), .ph_o(u_rr2_ph), .c_o(u_rr2_c), .cnt_o(u_rr2_cnt));
+    wire [0:0] u_rr4_zm, u_rr4_id, u_rr4_zc, u_rr4_sc; wire [1:0] u_rr4_ph; wire [4:0] u_rr4_c; wire [7:0] u_rr4_cnt;
+    (* keep = 1 *) ot_hdc_skf_ctlr #(.D0(D0), .DS(DS), .STEPS(STEPS), .MUT(MUT), .NZ(1), .NG(1), .NR(5), .RD(4)) u_rr4 (.clk(clk),
+        .rst_n(rst_n2), .in_valid(vin[(NCS + NZR + 2) % NVIN]), .zm(u_rr4_zm), .idle(u_rr4_id), .zc(u_rr4_zc), .sc(u_rr4_sc),
+        .rs(rs4), .qc(qc_x4), .ph_o(u_rr4_ph), .c_o(u_rr4_c), .cnt_o(u_rr4_cnt));
+    wire [0:0] u_rrx_zm, u_rrx_id, u_rrx_zc, u_rrx_sc; wire [1:0] u_rrx_ph; wire [4:0] u_rrx_c; wire [7:0] u_rrx_cnt;
+    (* keep = 1 *) ot_hdc_skf_ctlr #(.D0(D0), .DS(DS), .STEPS(STEPS), .MUT(MUT), .NZ(1), .NG(1), .NR(12), .RD(10)) u_rrx (.clk(clk),
+        .rst_n(rst_n2), .in_valid(vin[(NCS + NZR + 3) % NVIN]), .zm(u_rrx_zm), .idle(u_rrx_id), .zc(u_rrx_zc), .sc(u_rrx_sc),
+        .rs(rsx), .qc(qc_xx), .ph_o(u_rrx_ph), .c_o(u_rrx_c), .cnt_o(u_rrx_cnt));
+    wire [0:0] u_rrb_zm, u_rrb_id, u_rrb_zc, u_rrb_sc; wire [1:0] u_rrb_ph; wire [4:0] u_rrb_c; wire [7:0] u_rrb_cnt;
+    (* keep = 1 *) ot_hdc_skf_ctlr #(.D0(D0), .DS(DS), .STEPS(STEPS), .MUT(MUT), .NZ(1), .NG(1), .NR(24), .RD(0)) u_rrb (.clk(clk),
+        .rst_n(rst_n2), .in_valid(vin[(NCS + NZR + 4) % NVIN]), .zm(u_rrb_zm), .idle(u_rrb_id), .zc(u_rrb_zc), .sc(u_rrb_sc),
+        .rs(rs_xb), .qc(qcb), .ph_o(u_rrb_ph), .c_o(u_rrb_c), .cnt_o(u_rrb_cnt));
+    assign in_ready = (ph == P_IDLE);
+    assign busy = (ph != P_IDLE);
+    wire zcap = (ph == P_Z) && (c == 5'(D0 + 2));
+    wire scap = (ph == P_RUN) && (c == 5'(DS + 2 - MUT));
+    function automatic integer ZE(input integer e, input integer i); ZE = 8 * e + i; endfunction
+    function automatic integer ZR(input integer i); ZR = 32 + i; endfunction
+    // the row-r copy of state word (r, k) from a 512-bit state copy, one-hot row select
+    function automatic [31:0] rw4(input [511:0] st, input [3:0] sr, input integer kk);
+        rw4 = ({32{sr[0]}} & st[32*(kk) +: 32]) | ({32{sr[1]}} & st[32*(4 + kk) +: 32]) |
+              ({32{sr[2]}} & st[32*(8 + kk) +: 32]) | ({32{sr[3]}} & st[32*(12 + kk) +: 32]);
+    endfunction
+
+    // ---- the state: one D, kept copies (as fs) ---------------------------------------------------------------------
+    localparam integer NSTC = 1 + NA + 3;
+    wire [511:0] stc [0:NSTC-1];
+    wire [30:0] q [0:3];                        // landing row's quotients (element (row, k) -> word 4k + row)
+    wire [3:0] q_rng;
+    wire [31:0] z_out [0:3];
+    wire [31:0] rb [0:15];                      // result buffer (word 4k + row, rows 0..2)
+    wire [511:0] std_d;
+    generate
+        for (g = 0; g < NG; g = g + 1) begin : g_std
+            wire acc_g;
+            (* keep = 1 *) ot_skf_and2 u_acc (.a(g_idle[g]), .b(vin[g % NVIN]), .y(acc_g));
+            wire [7:0] zo, qo;
+            for (k = 0; k < 8; k = k + 1) begin : g_b
+                localparam integer B = 8 * g + k;
+                localparam integer WD = B / 32, WR = WD % 4, WK = WD / 4;
+                if (WR == 3) begin : g_dir     // row 3 lands at the commit edge itself (fs form)
+                    assign zo[k] = z_out[WK][B % 32];
+                    assign qo[k] = (B % 32 == 31) ? 1'b0 : q[WK][B % 32];
+                end else begin : g_buf
+                    assign zo[k] = rb[WD][B % 32];
+                    assign qo[k] = rb[WD][B % 32];
+                end
+            end
+            assign std_d[8*g +: 8] = acc_g ? in_e[8*g +: 8] : g_zc[g] ? zo : g_sc[g] ? qo : stc[0][8*g +: 8];
+        end
+        for (n = 0; n < NSTC; n = n + 1) begin : g_stc
+            (* keep = 1 *) ot_skf_kr #(.W(512)) u_st (.clk(clk), .d(std_d), .q(stc[n]));
+        end
+        for (k = 0; k < 16; k = k + 1) begin : g_rb
+            if (k % 4 == 3) begin : g_none
+                assign rb[k] = 32'd0;
+            end else begin : g_w
+                localparam integer RR = k % 4, KK = k / 4, WI = 3 * KK + RR;   // 0..11
+                for (n = 0; n < 2; n = n + 1) begin : g_h
+                    wire [7:0] s = qcb[8 * (2 * WI + n) +: 8];
+                    // LEC-2 11-03: bit 31 of a landing word is 0 in both sources (z_out sign 0, qw = {0, q}), so there is no flop
+                    // for it: synthesis folded it anyway and the X-until-first-land gold flop was a false LEC difference.
+                    localparam integer HW = (n == 1) ? 15 : 16;
+                    reg [HW-1:0] h;
+                    wire [31:0] qw = {1'b0, q[KK]};
+`ifdef OT_RFD_MUT_RB    // RF-D bench mutant: word 6 (row 2, k 1) misses its step-0 landing
+                    always @(posedge clk) if (s[RR] && k != 6) h <= z_out[KK][16*n +: HW]; else if (s[4 + RR]) h <= qw[16*n +: HW];
+`else
+                    always @(posedge clk) if (s[RR]) h <= z_out[KK][16*n +: HW]; else if (s[4 + RR]) h <= qw[16*n +: HW];
+`endif
+                    assign rb[k][16*n +: 16] = 16'(h);
+                end
+            end
+        end
+    endgenerate
+
+    // ---- input checks on all words (copy 0); X operand of the row at Q1 - 1 (3 slice copies) -----------------------
+    wire [23:0] x_m [0:3][0:3]; wire signed [9:0] x_e [0:3]; wire x_z [0:3];
+    reg sub_any, bin_any;
+    wire [15:0] w_sub, w_bad;
+    generate for (k = 0; k < 16; k = k + 1) begin : g_chk
+        wire [31:0] w0 = stc[0][32*k +: 32];
+        assign w_sub[k] = (w0[30:23] == 8'd0);
+        assign w_bad[k] = (w0[31] && (w0[30:0] != 31'd0)) || (w0[30:23] == 8'hFF);
+    end endgenerate
+    generate for (k = 0; k < 4; k = k + 1) begin : g_x            // quotient k: element (row, k)
+        wire [23:0] nm; wire signed [9:0] ne [0:2]; wire nz [0:2];
+        for (n = 0; n < 3; n = n + 1) begin : g_ns
+            wire [31:0] xw = rw4(stc[NA + 1 + n], rsx[4 * (3 * k + n) +: 4], k);
+            ot_hdc_skf_norm_slice #(.S(n)) u_n (.x(xw[30:0]), .m(nm[8*n +: 8]), .e(ne[n]), .z(nz[n]));
+        end
+        reg signed [9:0] xe_q; reg xz_q;
+        always @(posedge clk) begin xe_q <= ne[0]; xz_q <= nz[0]; end
+        assign x_e[k] = xe_q; assign x_z[k] = xz_q;
+        for (n = 0; n < 4; n = n + 1) begin : g_xm
+            (* keep = 1 *) ot_skf_kr #(.W(24)) u_xm (.clk(clk), .d(nm), .q(x_m[k][n]));
+        end
+    end endgenerate
+    always @(posedge clk) begin sub_any <= |w_sub; bin_any <= |w_bad; end
+
+    // ---- the row: S1..S3 adds, S4 T, seed, 4 quotients (fs g_row, operands realigned to the row) -------------------
+    wire b4_q;
+    generate for (r = 0; r < 1; r = r + 1) begin : g_row
+        wire [NA*8-1:0] ee [0:3]; wire [NA*24-1:0] mm [0:3];
+        for (k = 0; k < 4; k = k + 1) begin : g_dec
+            for (n = 0; n < NA; n = n + 1) begin : g_c
+                wire [3:0] sr = (k < 2) ? rs0[4 * (2 * n + k) +: 4] : (k == 2) ? rs2[4 * n +: 4] : rs4[4 * n +: 4];
+                wire [31:0] w = rw4(stc[1 + n], sr, k);
+                assign ee[k][8*n +: 8] = (w[30:23] == 8'd0) ? 8'd1 : w[30:23];
+                assign mm[k][24*n +: 24] = {w[30:23] != 8'd0, w[22:0]};
+            end
+        end
+        wire [7:0] e1; wire o1; wire [23:0] m1;
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_s1 (.clk(clk), .ea(ee[0]), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]), .e(e1), .m(m1), .ovf(o1));
+        wire [NA*8-1:0] e1_q; wire [NA*24-1:0] m1_q; reg b1_q, b1_d;
+        for (n = 0; n < NA; n = n + 1) begin : g_r1
+            (* keep = 1 *) ot_skf_kr #(.W(32)) u_r (.clk(clk), .d({e1, m1}), .q({e1_q[8*n +: 8], m1_q[24*n +: 24]}));
+        end
+        always @(posedge clk) begin b1_q <= o1; b1_d <= b1_q; end
+        wire [7:0] e2; wire o2; wire [23:0] m2;
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_s2 (.clk(clk), .ea(e1_q), .ma(m1_q), .eb(ee[2]), .mb(mm[2]), .e(e2), .m(m2), .ovf(o2));
+        wire [NA*8-1:0] e2_q; wire [NA*24-1:0] m2_q; reg b2_q, b2_d;
+        for (n = 0; n < NA; n = n + 1) begin : g_r2
+            (* keep = 1 *) ot_skf_kr #(.W(32)) u_r (.clk(clk), .d({e2, m2}), .q({e2_q[8*n +: 8], m2_q[24*n +: 24]}));
+        end
+        always @(posedge clk) begin b2_q <= b1_d | o2; b2_d <= b2_q; end
+        wire [7:0] e3; wire o3; wire [23:0] m3;
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_s3 (.clk(clk), .ea(e2_q), .ma(m2_q), .eb(ee[3]), .mb(mm[3]), .e(e3), .m(m3), .ovf(o3));
+        wire [(NA+3)*8-1:0] e3_q; wire [(NA+3)*24-1:0] m3_q; reg b3_q, b3_d;
+        for (n = 0; n < NA + 3; n = n + 1) begin : g_r3
+            (* keep = 1 *) ot_skf_kr #(.W(32)) u_r (.clk(clk), .d({e3, m3}), .q({e3_q[8*n +: 8], m3_q[24*n +: 24]}));
+        end
+        always @(posedge clk) begin b3_q <= b2_d | o3; b3_d <= b3_q; end
+        wire [7:0] et; wire ot_; wire [23:0] mt;
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_ae (.clk(clk), .ea(e3_q[0 +: NA*8]), .ma(m3_q[0 +: NA*24]), .eb({NA{EPS_E}}), .mb({NA{EPS_M}}),
+                                         .e(et), .m(mt), .ovf(ot_));
+        wire signed [9:0] te_s = $signed({2'b00, et}) - 10'sd127;
+        wire [23:0] nt_m; wire signed [9:0] nt_e [0:2]; wire tz [0:2];
+        for (n = 0; n < 3; n = n + 1) begin : g_nt
+            wire [7:0] e3n = e3_q[8*(NA + n) +: 8]; wire [23:0] m3n = m3_q[24*(NA + n) +: 24];
+            ot_hdc_skf_norm_slice #(.S(n)) u_n (.x({m3n[23] ? e3n : 8'd0, m3n[22:0]}), .m(nt_m[8*n +: 8]), .e(nt_e[n]), .z(tz[n]));
+        end
+        reg [23:0] nt_m_q; reg signed [9:0] nt_e_q; reg tz_q;
+        always @(posedge clk) begin nt_m_q <= nt_m; nt_e_q <= nt_e[0]; tz_q <= tz[0]; end
+        reg b4_r;
+        always @(posedge clk) b4_r <= b3_d | (zmv[ZR(3)] ? tz_q : (ot_ | !mt[23]));
+        assign b4_q = b4_r;
+        wire [23:0] tm_d = {zmv[ZR(0)] ? nt_m_q[23:12] : mt[23:12], zmv[ZR(1)] ? nt_m_q[11:0] : mt[11:0]};
+        wire [9:0]  te_d = zmv[ZR(2)] ? nt_e_q : te_s;
+        wire [82:0] decoded;
+        wire [8:0] ix = tm_d[22:14];
+        wire [8:0] sx = tm_d[13] ? tm_d[12:4] : ~tm_d[12:4];
+        wire [23:0] pd, sd;
+        for (genvar pg = 0; pg < 3; pg = pg + 1) begin : g_group
+            for (genvar pv = 0; pv < 8; pv = pv + 1) begin : g_value
+                assign pd[pg*8+pv] = ix[pg*3 +: 3] == pv;
+                assign sd[pg*8+pv] = sx[pg*3 +: 3] == pv;
+            end
+        end
+        (* keep = 1 *) ot_hdc_skf_decode_c0lo u_c0l (.clk(clk), .d(pd), .q(decoded[16:0]));
+        (* keep = 1 *) ot_hdc_skf_decode_c0hi u_c0h (.clk(clk), .d(pd), .q(decoded[32:17]));
+        (* keep = 1 *) ot_hdc_skf_decode_c1 u_c1 (.clk(clk), .d(pd), .q(decoded[55:33]));
+        (* keep = 1 *) ot_hdc_skf_decode_c2 u_c2 (.clk(clk), .d(pd), .q(decoded[68:56]));
+        (* keep = 1 *) ot_hdc_skf_decode_sq u_sq (.clk(clk), .d(sd), .q(decoded[82:69]));
+        wire [13:0] th;
+        (* keep = 1 *) ot_skf_kr #(.W(14)) u_th (.clk(clk), .d(tm_d[13:0]), .q(th));
+        wire [8*29-1:0] rs;
+        ot_hdc_skf_seed u_seed (.clk(clk), .h(th), .decoded(decoded), .r(rs));
+        for (k = 0; k < 4; k = k + 1) begin : g_q
+            // T copies: 4 kept stages from the T mux (fs: 1, then held) so tm / te reach Q1 with the row's seed
+            wire [3*24+10-1:0] tq [0:4];
+            assign tq[0] = {te_d, tm_d, tm_d, tm_d};
+            for (n = 0; n < 4; n = n + 1) begin : g_td
+                (* keep = 1 *) ot_skf_kr #(.W(82)) u_t (.clk(clk), .d(tq[n]), .q(tq[n + 1]));
+            end
+            wire [3*24-1:0] tmc = tq[4][71:0]; wire [9:0] tec = tq[4][81:72];
+            wire [6:0] sn;
+            for (n = 0; n < 7; n = n + 1) begin : g_sn
+                assign sn[n] = zmv[ZE(k, n)];
+            end
+            ot_hdc_skf_quotp #(.MUT_Q4(MUT_Q4), .OH(OH)) u_q (.clk(clk), .subn(sn),
+                .xm({x_m[k][3], x_m[k][2], x_m[k][1], x_m[k][0]}), .xe(x_e[k]),
+                .xz(x_z[k] & zmv[ZE(k, 7)]), .tm(tmc), .te(tec), .r(rs[2*29*k +: 2*29]),
+                .y(q[k]), .range(q_rng[k]));
+        end
+    end endgenerate
+
+    // ---- step 0 final per row: register the quotient (adder operand copies), + eps -----------------------------------
+    reg [3:0] zr, zr_d;
+    wire [3:0] z_ov;
+    generate for (k = 0; k < 4; k = k + 1) begin : g_z
+        always @(posedge clk) begin zr[k] <= q_rng[k]; zr_d[k] <= zr[k]; end
+        wire [NA*8-1:0] qe; wire [NA*24-1:0] qm;
+        for (n = 0; n < NA; n = n + 1) begin : g_zc
+            wire [30:0] zq;
+            (* keep = 1 *) ot_skf_kr #(.W(31)) u_zq (.clk(clk), .d(q[k]), .q(zq));
+            assign qe[8*n +: 8] = (zq[30:23] == 8'd0) ? 8'd1 : zq[30:23];
+            assign qm[24*n +: 24] = {zq[30:23] != 8'd0, zq[22:0]};
+        end
+        wire [7:0] oe; wire [23:0] om;
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_eps (.clk(clk), .ea(qe), .ma(qm), .eb({NA{EPS_E}}), .mb({NA{EPS_M}}),
+                                          .e(oe), .m(om), .ovf(z_ov[k]));
+        assign z_out[k] = {1'b0, om[23] ? oe : 8'd0, om[22:0]};
+    end endgenerate
+    // the row's T fault (b4, T edge + 1) carried to its steady landing (+ 7) and its step-0 landing (+ 9)
+    reg [8:0] b4c;
+    always @(posedge clk) b4c <= {b4c[7:0], b4_q};
+    wire zbad = bin_any | b4c[8] | (|zr_d) | (|z_ov);
+    wire sbad = sub_any | b4c[6] | (|q_rng);
+
+    // ---- master control: faults OR over the four row landings; out_valid / fault at the last commit ----------------
+    reg flt, ov_r, fault_r;
+    reg flt_n, fault_n, ov_n;
+    always @* begin
+        flt_n = flt; fault_n = fault_r; ov_n = 1'b0;
+        case (ph)
+            P_IDLE: if (in_valid) flt_n = 1'b0;
+            P_Z: if (|lz) begin
+                flt_n = flt | zbad;
+                if (STEPS == 0 && zcap) begin ov_n = 1'b1; fault_n = flt | zbad; end
+            end
+            default: if (|ls) begin
+                flt_n = flt | sbad;
+                if (cnt == 8'd1 && scap) begin ov_n = 1'b1; fault_n = flt | sbad; end
+            end
+        endcase
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin flt <= 1'b0; ov_r <= 1'b0; fault_r <= 1'b0; end
+        else begin flt <= flt_n; ov_r <= ov_n; fault_r <= fault_n; end
+    wire fz;
+    generate if (FQ) begin : g_fq
+        reg ov_q, fault_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ov_q <= 1'b0; fault_q <= 1'b0; end
+            else begin ov_q <= ov_r; fault_q <= fault_r; end
+`ifdef OT_RFD_MUT_FQ
+        assign out_valid = ov_r;
+`else
+        assign out_valid = ov_q;
+`endif
+        assign fault = fault_q; assign fz = fault_r;
+    end else begin : g_fq0
+        assign out_valid = ov_r; assign fault = fault_r; assign fz = fault_n;
+    end endgenerate
+    wire [63:0] fc;
+    wire [3:0] fn;
+    generate for (g = 0; g < 4; g = g + 1) begin : g_fn
+        (* keep = 1 *) ot_skf_and2 u_n (.a(fz), .b(1'b1), .y(fn[g]));
+    end
+    for (g = 0; g < 64; g = g + 1) begin : g_fc
+        (* keep = 1 *) ot_skf_kr #(.W(1)) u_f (.clk(clk), .d(fn[g / 16]), .q(fc[g]));
+        assign y[8*g +: 8] = fc[g] ? 8'd0 : stc[0][8*g +: 8];
+    end endgenerate
 endmodule
 `default_nettype wire
