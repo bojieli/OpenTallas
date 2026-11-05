@@ -20,7 +20,7 @@ Pre-build table relay_bay_table.tsv (per hop: length, pitch, delay, slew, setup,
 'ADVISORY relay_bay', form not applied, exit 0 (OWNER 11-03 06:40: pre-build checks report, never block).
 FAIL_PREBUILD (exit 2) only for tool failures (bound RTL / station / config.mk not found).  Idempotent: a kit that already carries
 declared_cycles.json of this form is re-checked only.  --check writes nothing but the table (dry run)."""
-import argparse, json, math, os, re, sys
+import argparse, json, math, os, re, shutil, sys
 
 FORM = "relay_bay_300"
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -234,6 +234,11 @@ def main(argv=None):
         elif nn > 1:
             print(f"FAIL_PREBUILD relay_bay: {T}: config.mk has {nn} OT_MAXWIRE_UM lines"); return 2
         open(cm, "w").write(t2)
+        # grt_pre.tcl sources the kit's grt_maxwire.tcl whenever OT_MAXWIRE_UM is set; only gen --max-wire-um copied it
+        tcl = os.path.join(os.path.dirname(os.path.abspath(__file__)), "grt_maxwire.tcl")
+        if not os.path.isfile(tcl):
+            print(f"FAIL_PREBUILD relay_bay: {T}: no grt_maxwire.tcl beside the tool to go with pitch {pitch}"); return 2
+        shutil.copyfile(tcl, f"{K}/grt_maxwire.tcl")
     json.dump(dict(schema="opentallas.declared_cycles.v1", form=FORM, owner_rule="TWO-STRIKES 11-03", kit=T,
                    max_hop_um=a.max_hop, repeater_pitch_um=pitch, lanes=decl), open(f"{K}/declared_cycles.json", "w"), indent=1)
     print(f"RELAY_BAY PASS {T}: {nh} hops >= +10%, pitch {pitch}, stations {st}")
