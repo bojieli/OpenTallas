@@ -1,2 +1,3 @@
 # FLOW-29 2026-11-04: hand-form dirs the autopilot re-signs on the newest tag once a record counts; a lane adds a row and walks away.
 # die <TAB> name (plan module or type) <TAB> host <TAB> dir holding signoff/signoff.json (glob OK: .../run/i*) <TAB> build commit or - (read from the kit) <TAB> lane <TAB> note
+s81	slice_station__t7__cl503f4913	epyc4	/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t7__cl503f4913/attempt_9/gen/slice_station__t7__cl503f4913/eco_20261104_214447_4021784/i2	-	KW-FIX-10	ECO i2 local pass; job row read the pre-ECO top signoff; i2 restored from epyc2 11-05
