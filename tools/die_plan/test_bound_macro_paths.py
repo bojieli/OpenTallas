@@ -137,3 +137,38 @@ def test_macros_under_content_bound_whole():
                     "u_bk_sel.u_tx": "u_bound.u_core.u_tx"}
     t["contents"][0]["module"] = "other"
     assert BMP.resolve(t, bound) == []
+
+
+SCOPED = """    // as-built u_s_3S.u_sl.g_c3.u_xr
+    ot_s81sl_xrt3 #(.FOREG(1)) u_u_s_3S_u_sl_g_c3_u_xr (
+        .clk(clk)
+    );
+    // as-built u_s_3S.u_sl.u_cap
+    %s u_u_s_3S_u_sl_u_cap (
+        .clk(clk)
+    );
+    // as-built u_s_3S.u_sl.u_eg.u_nh
+    ot_s81sl_egn #(.LA(4)) u_u_s_3S_u_sl_u_eg_u_nh (
+        .clk(clk)
+    );
+"""
+SCOPED_T = dict(hard_cores=[dict(inst="u_c.u_cap", module="ot_s81sl_capc5r", lef="a.lef"),
+                            dict(inst="u_c.u_xr", module="ot_s81sl_xrt3", lef="b.lef"),
+                            dict(inst="u_c.u_eg.u_nh", module="ot_s81sl_egn", lef="c.lef")])
+
+
+def test_generate_scope_below_root():
+    rows = {r["inst"]: r for r in BMP.resolve(SCOPED_T, SCOPED % "ot_s81sl_capc5r")}
+    assert rows["u_c.u_xr"]["physical_inst"] == "u_bound.u_u_s_3S_u_sl_g_c3_u_xr"
+    assert rows["u_c.u_cap"]["physical_inst"] == "u_bound.u_u_s_3S_u_sl_u_cap"
+    assert rows["u_c.u_eg.u_nh"]["physical_inst"] == "u_bound.u_u_s_3S_u_sl_u_eg_u_nh"
+
+
+def test_generate_scope_wrong_module_stays_unmapped():
+    rows = {r["inst"] for r in BMP.resolve(SCOPED_T, SCOPED % "ot_s81sl_capc2_w3")}
+    assert rows == {"u_c.u_xr", "u_c.u_eg.u_nh"}
+
+
+def test_generate_scope_two_roots_no_rows():
+    two = (SCOPED % "ot_s81sl_capc5r").replace("u_s_3S.u_sl.u_eg.u_nh", "u_s_4S.u_sl.u_eg.u_nh")
+    assert BMP.resolve(SCOPED_T, two) == []
