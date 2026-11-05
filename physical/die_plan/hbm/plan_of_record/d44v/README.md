@@ -453,3 +453,5 @@ Parts 27, 29 (HBM-FORM-SPLIT, 11-05): ot_hgi_sfu_core_split3__opstore_b -> 2 x o
 Part 26 (HBM-REFORM-B5): ot_hbm_svc_sm_group_rel_id -> ot_svgr_top + ot_svgr_own + 2 x ot_svgr_bk inside the old slot, registered faces. SM command, packet and GO slots unchanged (bench: 29/29 exact, results bit-equal). Seam edges in results/die_hbm_1104/reform_b/split_p26/cycles/rel_id_split.tsv. 298 station ends moved to the tile pins, register counts unchanged. ot_wbq_root macros moved 15.12 um off the W seam (DPL-0033 on the k3 build).
 
 Part 33 (HBM-REFORM-B5): ot_hfd_coll_q2n2_body_core -> ot_q2nf_rest + ot_q2nf_qout, 0 added data cycles, select/unavailable faults +2. results/die_hbm_1104/reform_b/split_p33/.
+
+Part 28 (HBM-FORM-SPLIT-2, 11-05): ot_hfd_coll_q3_body_core -> ot_hfd_coll_q3_body_ctl + 4 x ot_hfd_coll_q3_qcol4, same slot, util 0.45, registered faces, 0 added cycles. Replay results/die_hbm_1105/form_split/replay_p28.sh.
