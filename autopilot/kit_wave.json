@@ -1341,7 +1341,8 @@
     "dsdv_slice_iq_C__t1": "DIE-S81-56 20:49: macro_instances class, goes with xfin event C batch",
     "dsdv_slice_kv512_C__t1": "DIE-S81-56 20:49: macro_instances class, goes with xfin event C batch",
     "ot_s81sl_leaf__t25__cl431c660f": "KW-FIX-8 21:3x sweep: repair_design after GRT silent >3 h at 100%% core, flat; stopped under hung-job rule; no relaunch on same recipe",
-    "ot_s81sl_leaf__t30": "KW-FIX-8 21:3x sweep: repair_design after GRT silent >3 h at 100%% core, flat; stopped under hung-job rule; no relaunch on same recipe"
+    "ot_s81sl_leaf__t30": "KW-FIX-8 21:3x sweep: repair_design after GRT silent >3 h at 100%% core, flat; stopped under hung-job rule; no relaunch on same recipe",
+    "ot_s81sl_kv_leaf__t2": "KW-FIX-8 21:4x COORD: yosys SHARE stall, 13 h CPU; stopped; DIE-S81-56 names the form (share pass off in synth, or bank macro carve)"
    },
    "queue_src": "",
    "work_root": "/srv/opentallas-scratch2/claude/s81-wave-1104s2/kit-wave",
