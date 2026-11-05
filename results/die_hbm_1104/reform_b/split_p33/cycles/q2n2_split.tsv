@@ -1,0 +1,4 @@
+path	added_edges	evidence
+source -> qslots -> dst_d -> pin	0	kit face flops are the flat registers; whole-core lockstep 0 data mismatches [CHECKED core.log]
+link wr_flit_pin	0	same
+select_fault, unavailable_fault to u_fj	+2	sticky fault only; lockstep shows fault_cause 2 cycles later, nothing else
