@@ -81,7 +81,7 @@ module qkd_host_lifecycle_r3 #(parameter [15:0] INITIAL_EPOCH = 16'd0, parameter
  reg recovery_active; reg [7:0] reset_witness, train_witness;
  reg [7:0] cv_q, same_q;
  reg [7:0] cand_q, c_mis_q; reg r_mis_q, p_mis_q, present_q;
- reg w_v, w_done, w_fault; reg [2:0] w_n; reg [1:0] w_u, w_gen; reg [58:0] w_tag;
+ reg w_v, w_done, w_fault; reg [7:0] w_oh; reg [1:0] w_u, w_gen; reg [58:0] w_tag;
  wire allocator_fault, cohort_fault, cohort_active, cohort_terminal_accepted, cohort_begin_ready, unused_allocator_busy, g_id_ok;
  wire alloc_request_ready, alloc_terminal_accepted;
  wire all_drained = (&kv_drained) && (&vm_drained) && (&collective_drained) && (&host_drained);
@@ -123,13 +123,21 @@ module qkd_host_lifecycle_r3 #(parameter [15:0] INITIAL_EPOCH = 16'd0, parameter
  end
  // event capture: one new terminal per edge (the result first, else the lowest cancelling rank)
  wire r_go = result_valid && !sel4(tp, ru) && !sel4(pp, ru);
- reg [2:0] c_pick;
- always @* begin c_pick = 0; for (integer n = 7; n >= 0; n = n - 1) if (cand_q[n]) c_pick = 3'(n); end
- always @(posedge clk) begin
-  w_n <= c_pick; w_u <= cancel_tag[59*c_pick+43 +: 2]; w_tag <= cancel_tag[59*c_pick +: 59]; w_gen <= cancel_generation[2*c_pick +: 2];
-  w_done <= cancel_done[c_pick]; w_fault <= cancel_fault[c_pick];
+ // lowest candidate as a one-hot AND-OR: no variable bit read, so RTL and gate name cancel_* the same (LEC)
+ wire [7:0] c_oh = cand_q & (~cand_q + 8'd1);
+ reg [58:0] c_tag_m; reg [1:0] c_gen_m;
+ always @* begin
+  c_tag_m = 0; c_gen_m = 0;
+  for (integer n = 0; n < 8; n = n + 1) begin
+   c_tag_m = c_tag_m | ({59{c_oh[n]}} & cancel_tag[59*n +: 59]);
+   c_gen_m = c_gen_m | ({2{c_oh[n]}} & cancel_generation[2*n +: 2]);
+  end
  end
- wire w_go = w_v && cancel_valid[w_n] && !sel4(tp, w_u) && !sel4(pp, w_u) && !(result_valid && ru == w_u);
+ always @(posedge clk) begin
+  w_oh <= c_oh; w_u <= c_tag_m[44:43]; w_tag <= c_tag_m; w_gen <= c_gen_m;
+  w_done <= |(c_oh & cancel_done); w_fault <= |(c_oh & cancel_fault);
+ end
+ wire w_go = w_v && (|(w_oh & cancel_valid)) && !sel4(tp, w_u) && !sel4(pp, w_u) && !(result_valid && ru == w_u);
  wire sel = r_go || w_go;
  wire [1:0] su = r_go ? ru : w_u;
  wire [58:0] stag = r_go ? result_tag : w_tag;

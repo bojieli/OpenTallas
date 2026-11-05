@@ -60,7 +60,7 @@ case $CASE in
  m_hold) sub $AL 'grant_pending && !grant_hold &&' 'grant_pending &&';;
  # round 2 / 3 cuts
  # cancel capture ignores a pending POST of that user (abort case)
- m_wgo) PA=+ABORT; sub $LC 'wire w_go = w_v && cancel_valid[w_n] && !sel4(tp, w_u) && !sel4(pp, w_u) &&' 'wire w_go = w_v && cancel_valid[w_n] && !sel4(tp, w_u) &&';;
+ m_wgo) PA=+ABORT; sub $LC 'wire w_go = w_v && (|(w_oh & cancel_valid)) && !sel4(tp, w_u) && !sel4(pp, w_u) &&' 'wire w_go = w_v && (|(w_oh & cancel_valid)) && !sel4(tp, w_u) &&';;
  # cancel candidates never reach capture (abort case): cancels must hang or fail
  m_cand) PA=+ABORT; sub $LC 'w_v <= |cand_q;' 'w_v <= 0;';;
  # frame choice is not cleared after a transfer: duplicate frames
