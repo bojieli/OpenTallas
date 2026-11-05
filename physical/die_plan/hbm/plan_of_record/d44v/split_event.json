@@ -1069,6 +1069,128 @@
     "ot_hbm_su_pcol_l",
     "ot_hbm_su_pcol_s"
    ]
+  },
+  {
+   "core": "ot_pdie_serdes",
+   "sha": "p20",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_pdie_serdes__p20glue.sv",
+   "slot_um": [
+    596.16,
+    596.16
+   ],
+   "instances": 5,
+   "types": [
+    "NE_io",
+    "NW_io",
+    "q_spb0",
+    "q_spb0__physical_v1",
+    "vsN0"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_chn": [
+     [
+      17.28,
+      103.68
+     ],
+     [
+      276.48,
+      138.24
+     ]
+    ],
+    "u_fcore.u_core.u_rx": [
+     [
+      0.0,
+      250.56
+     ],
+     [
+      302.4,
+      345.6
+     ]
+    ],
+    "u_fcore.u_core.u_tx": [
+     [
+      311.04,
+      440.64
+     ],
+     [
+      285.12,
+      155.52
+     ]
+    ]
+   },
+   "tables": {
+    "ot_s81_kp4_dchn": {
+     "pins_file": "cores/ot_s81_kp4_dchn__276.48x138.24__d44v_split.json",
+     "outline_um": [
+      276.48,
+      138.24
+     ],
+     "pins": 945,
+     "clock_pins": 1,
+     "clock_entry": [
+      138.24,
+      69.12
+     ],
+     "faces": {
+      "E": 16,
+      "I": 1,
+      "N": 879,
+      "S": 33,
+      "W": 16
+     }
+    },
+    "ot_pdie_serdes_rx": {
+     "pins_file": "cores/ot_pdie_serdes_rx__302.4x345.6__d44v_split.json",
+     "outline_um": [
+      302.4,
+      345.6
+     ],
+     "pins": 1941,
+     "clock_pins": 2,
+     "clock_entry": [
+      146.88,
+      263.52
+     ],
+     "faces": {
+      "I": 2,
+      "N": 515,
+      "S": 879,
+      "W": 545
+     }
+    },
+    "ot_pdie_serdes_tx": {
+     "pins_file": "cores/ot_pdie_serdes_tx__285.12x155.52__d44v_split.json",
+     "outline_um": [
+      285.12,
+      155.52
+     ],
+     "pins": 1060,
+     "clock_pins": 1,
+     "clock_entry": [
+      142.56,
+      77.76
+     ],
+     "faces": {
+      "I": 1,
+      "N": 1058,
+      "S": 1
+     }
+    }
+   },
+   "added_cycles": "pma_rx to rx +2 (ddly DD 57); uncorrectable to st[0] +2; e_flt to st[0] +2; tx, pma_tx, st[1] 0; reform_1103/cycles/pdie.tsv",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 30
+   },
+   "designs_removed": [
+    "ot_pdie_serdes"
+   ],
+   "designs_added": [
+    "ot_pdie_serdes_rx",
+    "ot_pdie_serdes_tx",
+    "ot_s81_kp4_dchn"
+   ]
   }
  ],
  "core_faces_moves": [

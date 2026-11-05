@@ -1,0 +1,5 @@
+core	port_or_bus	plus_cycles	note
+ot_pdie_serdes	pma_rx -> rx	2	SEAM = 2: k_* out + 1 and cw_q / apply / o_unc / o_ne / fs in + 1, ddly DD 55 -> 57; END TO END against ot_pdie_serdes in its kit shell, lockstep split_p20/run_eq.sh
+ot_pdie_serdes	uncorrectable -> st[0]	2	same seam
+ot_pdie_serdes	e_flt (tx) -> st[0]	2	tx out + 1, rx in + 1
+ot_pdie_serdes	tx -> pma_tx, lock -> st[1]	0	unchanged
