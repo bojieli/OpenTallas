@@ -2266,6 +2266,21 @@ def finish(st, j, c, client):
             return
     set_status(st, j, cls, f"{kind}: {reasons[:200]}")
     after_class(st, j)
+    released_cleanup()
+
+
+def released_cleanup():
+    """Terminal notification only: owners explicitly queue exact file releases."""
+    queue = Path(os.environ.get("OT_REAPER_RELEASE_QUEUE", "~/.local/state/ot-reaper/releases")).expanduser()
+    runner = Path(os.environ.get("OT_REAPER_RELEASE_RUNNER", "~/.local/lib/fleet/released-reaper-1106/ot-reaper.py")).expanduser()
+    if not runner.is_file() or not queue.is_dir() or not any(queue.glob("*.json")):
+        return
+    try:
+        with (queue.parent / "routine.log").open("a") as stream:
+            subprocess.Popen([sys.executable, str(runner), "--released-manifest", str(queue)],
+                             stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
+    except OSError as error:
+        log(f"released cleanup deferred to periodic pass: {error}")
 
 
 def after_class(st, j):

@@ -1,0 +1,17 @@
+[
+ {
+  "mutant": "default_uid",
+  "verdict": "REFUSED",
+  "reason": "component proof identity changed: source"
+ },
+ {
+  "mutant": "port_width",
+  "verdict": "REFUSED",
+  "reason": "selected component check failed: selected native bus mismatch: L49_i"
+ },
+ {
+  "mutant": "reset_shortcut",
+  "verdict": "REFUSED",
+  "reason": "selected component check failed: rst_n_t21: source reset depth 1, expected 9; reset consumer rst_n_t21 bypasses recorded release 9"
+ }
+]

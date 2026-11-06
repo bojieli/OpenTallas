@@ -162,3 +162,36 @@ class T(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_existing_timed_members_repair_narrow_eps_and_fd_ranges(tmp_path):
+    m = load(tmp_path)
+    # STA1294 class: the timed member text already exists, so missing-pin fitting
+    # formerly did nothing even though the bus declaration hid those members.
+    pins = {**{f'eps[{i}]': 'output' for i in range(32)},
+            **{f'f_d[{i}]': 'output' for i in range(512)}}
+    members = {name: f'pin("{name}") {{ direction : output; timing() {{ related_pin : "ck"; cell_rise (t) {{ values ("0.173"); }} }} }}' for name in pins}
+    lib = 'library(l) {\n' + m.type_text('eps_t', 23, 0) + m.type_text('fd_t', 447, 0)
+    lib += 'cell(m) { pin("ck") { direction : input; clock : true; }\n'
+    for bus, typ in [('eps', 'eps_t'), ('f_d', 'fd_t')]:
+        lib += f'bus({bus}) {{ bus_type : {typ}; direction : output;\n'
+        lib += '\n'.join(text for name, text in members.items() if name.startswith(bus + '[')) + '\n}\n'
+    lib += '}\n}\n'
+    fixed, added = m.fit_text(lib, pins)
+    assert added == [] and fixed != lib
+    for bus, upper in [('eps', 31), ('f_d', 511)]:
+        group = m.group(fixed, 'bus', bus)
+        assert m.bus_range(fixed, group.end(), m.close_of(fixed, group.end() - 1))[1:] == (upper, 0)
+    assert fixed.count('timing()') == lib.count('timing()')
+    assert all(text in fixed for text in members.values())
+    assert m.fit_text(fixed, pins) == (fixed, [])
+    kit = tmp_path / 'kit'
+    (kit / 'macros').mkdir(parents=True)
+    (kit / 'macros/m.lef').write_text('MACRO m\n' + ''.join(f'PIN {n}\n DIRECTION OUTPUT ;\nEND {n}\n' for n in pins) + 'END m\n')
+    (kit / 'macros/m_tt.lib').write_text(lib)
+    report = m.fit(kit)
+    assert report['m_tt.lib']['added'] == []
+    assert (kit / '.busfit/m_tt.lib').is_file()
+    # A valid library is byte-identical and produces no shadow lib.
+    (kit / 'macros/m_tt.lib').write_text(fixed)
+    assert m.fit(kit) == {} and not (kit / '.busfit').exists()

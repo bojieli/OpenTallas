@@ -1,0 +1,57 @@
+PROGRESS cyc=0 mismatches=0 done=0 writes=0 entries=0
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=986
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=1958
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=2930
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=4025
+PROGRESS cyc=5000 mismatches=0 done=4 writes=8 entries=151
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=5926
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=6954
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=7949
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=8921
+PROGRESS cyc=10000 mismatches=0 done=8 writes=13 entries=353
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=10188
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=11156
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=12143
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=13143
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=14550
+PROGRESS cyc=15000 mismatches=0 done=13 writes=20 entries=494
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=15521
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=17941
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=18913
+PROGRESS cyc=20000 mismatches=0 done=16 writes=26 entries=727
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=20740
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=21716
+PROGRESS cyc=25000 mismatches=0 done=18 writes=29 entries=913
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=25552
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=26564
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=27597
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=28565
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=29537
+PROGRESS cyc=30000 mismatches=0 done=23 writes=37 entries=1098
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=30513
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=31477
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=32458
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=33437
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=34397
+PROGRESS cyc=35000 mismatches=0 done=28 writes=44 entries=1194
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=35381
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=36350
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=37702
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=38674
+PROGRESS cyc=40000 mismatches=0 done=32 writes=50 entries=1441
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=40359
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=41322
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=43803
+PROGRESS cyc=45000 mismatches=0 done=35 writes=55 entries=1673
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=45419
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=46380
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=47356
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=48343
+INTENTIONAL_TRAILING_DEL oldidle/newbusy oldfault0 cyc=49336
+PROGRESS cyc=50000 mismatches=0 done=40 writes=64 entries=1809
+SUMMARY mode=2 trailing=40 clean_completions=40 cycles=50000 mismatches=0 done=40 writes=64 entries=1809 starts=61 resets=20 early=0 rejected=0 missing=0
+PASS
+- tb_native_modes.sv:2231: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100us; walltime 1.112 s; speed 89.966 us/s
+- Verilator: cpu 1.111 s on 1 threads; allocated 8 MB
