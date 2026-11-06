@@ -293,8 +293,13 @@ module ot_hgi_su_lgroup2_lf #(
         end else begin : g_nobreg
             assign k_re = b_re[gb]; assign k_we = b_we[gb]; assign k_ra = b_ra[gb]; assign k_wa = b_wa[gb]; assign k_wd = b_wd[gb];
         end
+`ifdef OT_OPSB_N32   // HBM-FORM-SPLIT-13-OPSB opt-in: 2048x32 narrow-macro bank (ot_hgi_su_lbank_n32.sv)
+        ot_hgi_su_lbank_n32 #(.RB(RB), .MACRO(MACRO), .LAT(LAT)) u_b (.clk(clk), .re(k_re), .ra(k_ra), .rd(b_rd[gb]),
+            .we(k_we), .wa(k_wa), .wd(k_wd));
+`else
         ot_hgi_su_lbank #(.RB(RB), .MACRO(MACRO), .LAT(LAT)) u_b (.clk(clk), .re(k_re), .ra(k_ra), .rd(b_rd[gb]),
             .we(k_we), .wa(k_wa), .wd(k_wd));
+`endif
     end
 endmodule
 `default_nettype wire
