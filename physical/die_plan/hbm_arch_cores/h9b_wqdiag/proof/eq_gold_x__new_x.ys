@@ -1,0 +1,10 @@
+read_json /w/gold_x.json
+read_json /w/new_x.json
+equiv_make gold_x new_x eq
+hierarchy -top eq
+async2sync
+equiv_struct
+equiv_simple
+equiv_induct -seq 2
+equiv_status
+equiv_status -assert
