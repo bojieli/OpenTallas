@@ -4275,14 +4275,18 @@ if [ -f "$K/resume.json" ]; then  # KWRS
 RS=$1; shift; prog=$1; shift; vars=(); tg=(); out=()
 for a in "$@"; do case "$a" in *=*) vars+=("$a");; *) tg+=("$a");; esac; done
 D=${KWRS_DONE:-/work/.kwrs_done.$PPID}; touch "$D"
+# KW-FIX-22 11-06 (S81-RCK-2): a stage target runs every not-reused step up to it, as plain make would through its
+# dependencies (start floorplan + goal route called only '$M cts' -> do-cts without do-floorplan/do-place, 3_place.odb
+# missing).  Steps already run in this runner are skipped through the done list.
+up() { local n=$1 s; local st=(x do-floorplan do-place do-cts do-grt); for s in 1 2 3 4; do [ "$s" -le "$n" ] && [ "$s" -ge "$RS" ] && echo "${st[$s]}"; done; true; }
 for t in "${tg[@]}"; do
   case "$t" in
     synth) m=;;
-    floorplan) m=$([ "$RS" -le 1 ] && echo do-floorplan);;
-    place) m=$([ "$RS" -le 1 ] && echo do-floorplan do-place || { [ "$RS" -le 2 ] && echo do-place; });;
-    cts) m=$([ "$RS" -le 3 ] && echo do-cts);;
-    grt) m=$([ "$RS" -le 4 ] && echo do-grt);;
-    route) m="do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc";;
+    floorplan) m=$(up 1);;
+    place) m=$(up 2);;
+    cts) m=$(up 3);;
+    grt) m=$(up 4);;
+    route) m="$(up 3) do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc";;
     run) m=run; [ "$RS" -ge 4 ] && printf '%s\n' "${vars[@]}" | grep -q '^RUN_SCRIPT=.*tapbal_grt.tcl$' && m=;;
     do-*|print-*) m=$t;;
     *) echo "STAGE_RESUME make target $t unsupported on a resumed kit" >&2; exit 10;;
