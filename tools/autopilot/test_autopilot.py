@@ -329,6 +329,15 @@ class TestClassify(Base):
         self.assertEqual(self.ap.classify({"congestion": "GRT-0116"}, {"exit": 2})[1], "grt-overflow")
         self.assertEqual(self.ap.classify({"cells": 517001}, {"exit": 2})[1], "cell-cap")
 
+    def test_cell_cap_after_infra_and_on_native_count(self):
+        C = self.ap.classify
+        # NOT RUN (disk floor) with an old placed kit of 522k placed cells is infra, not a cell-cap verdict
+        self.assertEqual(C({"cells": 522340, "native_cells": 315910}, {"not_run": True, "msg": "NOT RUN"})[1], "infra-notrun")
+        self.assertEqual(C({"cells": 522340}, {"not_run": True, "msg": "NOT RUN"})[1], "infra-notrun")
+        # placed count incl. TAPCELL/endcaps above the cap, native count below: no cell-cap
+        self.assertNotEqual(C({"cells": 522340, "native_cells": 315910}, {"exit": 2})[1], "cell-cap")
+        self.assertEqual(C({"cells": 100, "native_cells": 517001}, {"exit": 2})[1], "cell-cap")
+
     def test_crash_kinds(self):
         C = self.ap.classify
         self.assertEqual(C({"segfault": "Segmentation fault"}, {"exit": 139})[1], "tool-segfault")

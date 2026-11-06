@@ -602,6 +602,9 @@ for js in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.json
         if k.endswith("__design__instance__count__stdcell") and isinstance(v, (int, float)):
             cells = max(cells, int(v))
 out["cells"] = cells
+nc = jl(os.path.join(K, "native_cell_count.json")) or {}
+if nc.get("schema") == "opentallas.native_cell_count.v1" and type(nc.get("stdcells")) is int:
+    out["native_cells"] = nc["stdcells"]
 g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "5_1_grt.log"))), ""))
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
@@ -937,8 +940,6 @@ def classify(c, client):
         return "STRUCTURAL", "hold-structural", c["hold_structural"]
     if c.get("congestion"):
         return "STRUCTURAL", "grt-overflow", c["congestion"]
-    if c.get("cells", 0) > CELL_CAP:
-        return "STRUCTURAL", "cell-cap", f"{c['cells']} std cells > {CELL_CAP}"
     if c.get("gate_fail"):
         # CRASH-TRIAGE 10-25: 8 rows (CORE_PREFLIGHT shared, RP1_GATE FF hold, SDC_LINT) were design verdicts
         # filed as CRASH because the runner printed the gate line without a FAIL_* marker file
@@ -955,6 +956,12 @@ def classify(c, client):
         # COORD 11-05 07:01: exit 137/143 with no memory line in the logs is a signal from outside, usually a lane's
         # docker stop, not an OOM (opstore_b stopped by ruling 06:51 came back 06:58). Not in INFRA_KINDS: no retry.
         return "CRASH", "infra-stopped", f"exit {client['exit']}, no OOM line in the run logs: stopped from outside"
+    # KW-RELAUNCH-2 11-05: the cap is judged after the infra outcomes (sle_ctl a7630b8a28e2 was NOT RUN on a disk floor
+    # and filed as cell-cap), on the kit's own pre-floorplan native count when it has one (the post-place stdcell
+    # count adds TAPCELL/endcaps: 522k placed = 316k native), the basis kit_wave.after_place and native_cell_cap.tcl use.
+    cells = c.get("native_cells", c.get("cells", 0)) or 0
+    if cells > CELL_CAP:
+        return "STRUCTURAL", "cell-cap", f"{cells} std cells > {CELL_CAP}"
     if client.get("exit") == 0 and c.get("goal") == "grt" and c.get("grt_odb"):
         if c.get("grt_overflow") not in (None, 0):
             return "STRUCTURAL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"
