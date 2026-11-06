@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.hbm_plan_event.part37",
+ "by": "DIE-HBM-81 11-06 (COORD 11:00 (2): adopt the BM3 split as a plan event)",
+ "core": "ot_pdie_serdes_rx",
+ "instances": [
+  "NW_io u_lk_N0__rx",
+  "q_spb0 u_lk_S0__rx",
+  "q_spb0__physical_v1 u_lk_S0__rx",
+  "vsN0 u_lk_S1__rx",
+  "NE_io u_lk_N2__rx"
+ ],
+ "slot_um": [
+  302.4,
+  345.6
+ ],
+ "slot_kept": true,
+ "tiles_rx_frame": {
+  "u_rest": [
+   [
+    104.544,
+    0.0
+   ],
+   [
+    197.856,
+    345.6
+   ]
+  ],
+  "u_bm0": [
+   [
+    0.0,
+    4.32
+   ],
+   [
+    95.904,
+    106.56
+   ]
+  ],
+  "u_bm1": [
+   [
+    0.0,
+    119.52
+   ],
+   [
+    95.904,
+    106.56
+   ]
+  ],
+  "u_bm2": [
+   [
+    0.0,
+    234.72
+   ],
+   [
+    95.904,
+    106.56
+   ]
+  ]
+ },
+ "tables": {
+  "ot_pdie_serdes_rx_bm3_rest": {
+   "pins_file": "cores/ot_pdie_serdes_rx_bm3_rest__197.856x345.6__hg7_modelA.json",
+   "sha256": "7826e3baf53d36369f3b1f5c9f476606377013c26f80bbaa7cbe58f80993c28a",
+   "view": "ot_pdie_serdes_rx_bm3_rest@7826e3baf53d"
+  },
+  "ot_pdie_serdes_rx_bm_native": {
+   "pins_file": "cores/ot_pdie_serdes_rx_bm_native__95.904x106.56__hg7_modelA.json",
+   "sha256": "cefde5fe417dae2faa2f13112d97582bed4692266178232dc3f1f69d6026d13c",
+   "view": "ot_pdie_serdes_rx_bm_native@cefde5fe417d",
+   "signed_kit": "epyc5 /srv/opentallas-scratch3/claude/hbm-gaps-7/rxgen/kits/ot_pdie_serdes_rx_bm_native_cefde5fe417d-vB/eco_hg7/i2 (re-signed cs-hbm, kind:resign, routed LEC EQ)"
+  }
+ },
+ "glue": "results/die_hbm_1106/rx_bm3_p37/ot_pdie_serdes__p37comp.sv (u_rx = ot_pdie_serdes_rx__p37: u_rest + u_bm0..2)",
+ "proof": "lock-step bench of the face-shelled kit form vs gold: physical/die_plan/hbm/over_cap_split/reform_1106/rx_bm3/gen_hg7/bench (runD BMIN 2 SEAM 7 PASS 9000 edges; SEAM 6/8, BMIN 3 FAIL)",
+ "pin_cycles": "corelat/cycles_rxbm3_1106.tsv: rx +5, st[0] uncorrectable +5, st[1] 0 (vs part 20)",
+ "sidecars": "core_conns / clock_entries / taps / internal_stations: u_lk_X__rx -> u_lk_X__rx__rest (all outer ports live on the residual); BMs: own entries + seam conns",
+ "designs_removed": [
+  "ot_pdie_serdes_rx"
+ ],
+ "designs_added": [
+  "ot_pdie_serdes_rx_bm3_rest",
+  "ot_pdie_serdes_rx_bm_native"
+ ],
+ "replay": "results/die_hbm_1106/rx_bm3_p37/replay_p37.sh"
+}
