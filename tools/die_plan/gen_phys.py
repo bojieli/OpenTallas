@@ -3027,6 +3027,7 @@ def plain_ring_land_slots(rtl_dir, buses):
     -- face_guard then proves per bit the D enable-mux slot flops (own-Q hold, exclusive write conditions) exactly as
     for count-aligned rings.  A ring with any other .d expression, or a kit without the ot_dp_clk_landing module /
     a literal ring DEPTH, declares nothing (its bits stay undeclared, so a 1-to-D fan still FAILs).  {} if none."""
+    import gen_rtl
     text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
     body = _LANDING_BODY.search(text)
     dm = _RING_DEPTH.search(body.group(1)) if body else None
@@ -3034,6 +3035,16 @@ def plain_ring_land_slots(rtl_dir, buses):
         return {}
     depth, out = int(dm.group(1)), {}
     for m in _PLAIN_RING.finditer(text):
+        # An explicit FREG captures the bus in one ordinary face register;
+        # the four-slot ring is internal and grants no pin-guard exemption.
+        params = m.group(0).split(m.group(1), 1)[0]
+        fm = re.search(r"\.FREG\s*\(\s*([^()]+)\s*\)", params)
+        if fm:
+            value = fm.group(1).strip()
+            if value not in ("0", "1", "1'b0", "1'b1", "1'd0", "1'd1"):
+                raise gen_rtl.GenError(f"{m.group(1)}: plain landing FREG needs literal 0/1")
+            if value in ("1", "1'b1", "1'd1"):
+                continue
         d = _RING_D.search(m.group(2))
         if not d:
             continue
