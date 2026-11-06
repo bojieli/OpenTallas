@@ -103,5 +103,25 @@
     "label": "invalid_d6b0",
     "rc": 1,
     "correct": true
+  },
+  {
+    "label": "d4_bias5",
+    "depth": 4,
+    "skew": 5,
+    "bias": 5,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=5 bias=5 arbitrary_data=60"
+  },
+  {
+    "label": "d4_reverse5",
+    "depth": 4,
+    "skew": -5,
+    "bias": 3,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=-5 bias=3 arbitrary_data=60"
   }
 ]

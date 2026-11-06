@@ -10,7 +10,7 @@ def graph(p):
  for dest,src in re.findall(r'wire\s+(\w+)\s*=\s*(\w+)\s*;',s):g[dest]=(src,0,'alias')
  def age(n):
   if n=='arst_n':return 0
-  src,d,_=g[n];return int(age(src))+d
+  src,d,_=g[n];return (int(age(src))+d) if d else age(src)
  return s,g,age
 c,cg,ca=graph(C);l,lg,la=graph(L)
 assert 'assign w_u_s_7S_5_Y = rst_n;' in c

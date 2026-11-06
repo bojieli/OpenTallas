@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[2]
 TB=ROOT/'tools/s81_dv/tb_pl_land_epoch.sv'
 RTL=ROOT/'rtl/common/landed_parent'
 
-cases=[('d4_equal',4,0,0,True),('d4_skew_fail',4,6,0,False),('d4_bias',4,6,6,True),('d4_mutant',4,6,5,False),('d4_reverse',4,-6,2,True),('d8_equal',8,0,0,True),('d8_bias',8,6,6,True),('d8_reverse',8,-6,10,True),('d8_mutant',8,6,5,False)]
+cases=[('d4_equal',4,0,0,True),('d4_skew_fail',4,6,0,False),('d4_bias',4,6,6,True),('d4_mutant',4,6,5,False),('d4_reverse',4,-6,2,True),('d4_bias5',4,5,5,True),('d4_reverse5',4,-5,3,True),('d8_equal',8,0,0,True),('d8_bias',8,6,6,True),('d8_reverse',8,-6,10,True),('d8_mutant',8,6,5,False)]
 for d,b in sorted(set((x[1],x[3]) for x in cases)):
  pref='v2_d'+str(d)+'b'+str(b);cmd=[V,'--binary','--timing','--assert','-Wno-fatal','--top-module','tb','-GDEPTH='+str(d),'-GBIAS='+str(b),'-Mdir',str(W/pref),'-j','1',str(TB),str(RTL/'ot_pl_land.sv'),str(RTL/'ot_pl_land_kept_enable.sv')]
  with (W/(pref+'.build.log')).open('w') as f:q=subprocess.run(cmd,cwd=W,stdout=f,stderr=subprocess.STDOUT)

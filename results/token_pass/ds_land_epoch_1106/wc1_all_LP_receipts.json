@@ -1,0 +1,224 @@
+{
+  "scope": "Active die-s81-59 ev/bind/wc1 source, per-station static derivation; no current runtime or adoption",
+  "D": 4,
+  "K": 2,
+  "forests_each": 3,
+  "rq_each": 1,
+  "pin_cycles_added": 0,
+  "rows": [
+    {
+      "station": "s_0N",
+      "origin": "s_0N_C.arst_n=0",
+      "C_local": 9,
+      "LP_arst": 9,
+      "C_lpc_payload": 9,
+      "LP_lpc_after_tx_rx": 11,
+      "LP_local": 16,
+      "lanes": [
+        {
+          "instance": "u_u_lnl0",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_13_Y",
+          "writer_reset_edge": 11,
+          "reader_reset_edge": 16,
+          "writer_rq_edge": 15,
+          "reader_rq_edge": 20,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl1",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_14_Y",
+          "writer_reset_edge": 11,
+          "reader_reset_edge": 16,
+          "writer_rq_edge": 15,
+          "reader_rq_edge": 20,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl2",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_15_Y",
+          "writer_reset_edge": 11,
+          "reader_reset_edge": 16,
+          "writer_rq_edge": 15,
+          "reader_rq_edge": 20,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl3",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_16_Y",
+          "writer_reset_edge": 11,
+          "reader_reset_edge": 16,
+          "writer_rq_edge": 15,
+          "reader_rq_edge": 20,
+          "KN_bias": 5,
+          "NK_bias": 3
+        }
+      ],
+      "source_sha256": {
+        "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv": "45fd9176127202280f20bdb7380fc6177cfcc3523f8af183cd4b276b595730e3",
+        "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepw_mu_LP__t2.sv": "13224e87e1b6c8fcbf8cf76b4660516268fb35369fb8bc2c7dd610b989a85df4"
+      }
+    },
+    {
+      "station": "s_0S",
+      "origin": "s_0S_C.arst_n=0",
+      "C_local": 7,
+      "LP_arst": 7,
+      "C_lpc_payload": 7,
+      "LP_lpc_after_tx_rx": 9,
+      "LP_local": 14,
+      "lanes": [
+        {
+          "instance": "u_u_lnl0",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_13_Y",
+          "writer_reset_edge": 9,
+          "reader_reset_edge": 14,
+          "writer_rq_edge": 13,
+          "reader_rq_edge": 18,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl1",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_14_Y",
+          "writer_reset_edge": 9,
+          "reader_reset_edge": 14,
+          "writer_rq_edge": 13,
+          "reader_rq_edge": 18,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl2",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_15_Y",
+          "writer_reset_edge": 9,
+          "reader_reset_edge": 14,
+          "writer_rq_edge": 13,
+          "reader_rq_edge": 18,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl3",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_16_Y",
+          "writer_reset_edge": 9,
+          "reader_reset_edge": 14,
+          "writer_rq_edge": 13,
+          "reader_rq_edge": 18,
+          "KN_bias": 5,
+          "NK_bias": 3
+        }
+      ],
+      "source_sha256": {
+        "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv": "7e56b9a85d9946f9c6008928b3b53895fca37823721a6860e8846fe2d344f57e",
+        "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepw_mus_LP__t2.sv": "53528c192b26a4bdd2a252a530ee44bb29d95f7575154655c978ff3514118359"
+      }
+    },
+    {
+      "station": "s_7N",
+      "origin": "s_7N_C.arst_n=0",
+      "C_local": 8,
+      "LP_arst": 8,
+      "C_lpc_payload": 8,
+      "LP_lpc_after_tx_rx": 10,
+      "LP_local": 15,
+      "lanes": [
+        {
+          "instance": "u_u_lnl0",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_13_Y",
+          "writer_reset_edge": 10,
+          "reader_reset_edge": 15,
+          "writer_rq_edge": 14,
+          "reader_rq_edge": 19,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl1",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_14_Y",
+          "writer_reset_edge": 10,
+          "reader_reset_edge": 15,
+          "writer_rq_edge": 14,
+          "reader_rq_edge": 19,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl2",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_15_Y",
+          "writer_reset_edge": 10,
+          "reader_reset_edge": 15,
+          "writer_rq_edge": 14,
+          "reader_rq_edge": 19,
+          "KN_bias": 5,
+          "NK_bias": 3
+        },
+        {
+          "instance": "u_u_lnl3",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_16_Y",
+          "writer_reset_edge": 10,
+          "reader_reset_edge": 15,
+          "writer_rq_edge": 14,
+          "reader_rq_edge": 19,
+          "KN_bias": 5,
+          "NK_bias": 3
+        }
+      ],
+      "source_sha256": {
+        "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv": "ce28187609421c2d048106abbb52648ad7ce2541584908f5e9f22d3a75568dab",
+        "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepe_mu_LP__t2.sv": "0377fc21f150e93b606385d754e7613a2353147337425f31f97f9e306202a4b3"
+      }
+    },
+    {
+      "station": "s_7S",
+      "origin": "s_7S_C.arst_n=0",
+      "C_local": 7,
+      "LP_arst": 7,
+      "C_lpc_payload": 7,
+      "LP_lpc_after_tx_rx": 9,
+      "LP_local": 15,
+      "lanes": [
+        {
+          "instance": "u_u_lnl0",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_9_Y",
+          "writer_reset_edge": 9,
+          "reader_reset_edge": 15,
+          "writer_rq_edge": 13,
+          "reader_rq_edge": 19,
+          "KN_bias": 6,
+          "NK_bias": 2
+        },
+        {
+          "instance": "u_u_lnl1",
+          "rs_k": "lpc_i0_q",
+          "rs_n": "w_10_Y",
+          "writer_reset_edge": 9,
+          "reader_reset_edge": 15,
+          "writer_rq_edge": 13,
+          "reader_rq_edge": 19,
+          "KN_bias": 6,
+          "NK_bias": 2
+        }
+      ],
+      "source_sha256": {
+        "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv": "6dee182f824516777e1159fb4ed4e74ac09925586d414c52ba5f8f203ae93d67",
+        "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepe_nh_mus_LP__t1.sv": "eabe348963c801a31e51ec27d5d3bb2c681f04dd07441c67b26a1b50610ef127"
+      }
+    }
+  ]
+}
