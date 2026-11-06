@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:8ae5ac74e30c",
+ "die": "qwen_compute",
+ "type": "sle_cland_w517_s_301",
+ "src": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/kits/sle_cland_w517_s_301_hcbn1106",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/qual/sle_cland_w517_s_301/result_commit/signoff/signoff.json",
+ "tt_wns_ps": 157.81,
+ "ff_wns_ps": 16.04,
+ "gates": {},
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": true,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/qual/sle_cland_w517_s_301/result_commit/lec/lec.json",
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": []
+}

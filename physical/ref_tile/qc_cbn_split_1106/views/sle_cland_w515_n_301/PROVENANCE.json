@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "27cdbd816b0c86654f2e94ed1ab9dde2d9a162dc",
+ "flow_tag": "flow-20261106-as-qc",
+ "routed_db": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/kits/sle_cland_w515_n_301_hcbn1106/run/results/asap7/kq_sle_cland_w515_n_301_hcbn1106/base/6_final.odb",
+ "build_commit": "b81739870f80fa1117eaa9bc151161740c2e081b",
+ "lec": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/qual/sle_cland_w515_n_301/result_commit/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/qual/sle_cland_w515_n_301/result_commit/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/kits/sle_cland_w515_n_301_hcbn1106",
+ "original_signoff": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/kits/sle_cland_w515_n_301_hcbn1106/signoff/signoff.json",
+ "name": "kq_sle_cland_w515_n_301_hcbn1106",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "tolerant-swine",
+ "created": "2026-11-06 06:41 PST",
+ "routed_db_sha256": "2a8cf1b9ce6c606210cb600f7dc606dd740e5bc52832a093e089487515bc90e8",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/codex-qc-cbn-qualified-1106/tag_as/tools/die_plan",
+  "sha256": {
+   "signoff.py": "4919941b4815382014e257aa21efa5e2f9947e7f8c6b2add08b27ce5bcd21590",
+   "lec.py": "8aff8b09a3f44ba6fdb230ad01c7c98f7d56e0fc58d6b4c455a03f1be369994b"
+  },
+  "checked": "byte-identical to flow-20261106-as-qc"
+ },
+ "lane": "QC-CBN-RF1",
+ "as_run_note": "Exact existing STA/LEC retained; commit identity dereferenced from annotated tag. Earlier tag-object record preserved in result."
+}
