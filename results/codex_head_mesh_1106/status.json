@@ -11,6 +11,8 @@
  "RBL1_BQ8_native": "FAIL retained",
  "arrival_bound_11000_edges_per_side": 10,
  "arrival_model_mismatches": 0,
- "RBL1_BQ10_native": "RUNNING",
- "physical": "NOT RUN"
+ "RBL1_BQ10_native": "PASS 400/401 records each in2copies;0dataerrors/phase1fault; CRC6/6 replays5/6; peak10",
+ "physical": "NOT RUN; reviewed freshsynth/place next",
+ "prepared_plan_sha_prefix": "318f0e83346d",
+ "export_rebind": "PASS 23RTL files"
 }
