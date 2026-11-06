@@ -133,7 +133,8 @@ def main():
     json.dump(res, open(os.environ["OUT"], "w"), indent=1)
     print(f"PIN_AUDIT {res['verdict']} {res['ok']}/{res['pins']} missing {res['missing_n']} wrong_layer "
           f"{res['wrong_layer_n']} wrong_place {res['wrong_place_n']} extra {res['extra_n']}")
+    return 0 if res["verdict"] == "PASS" else 1
 
 
 if os.environ.get("ODB"):   # run under openroad -python with ODB/PINS/OUT; importable for tests
-    main()
+    raise SystemExit(main())

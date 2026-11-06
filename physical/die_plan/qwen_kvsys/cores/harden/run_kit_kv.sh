@@ -70,7 +70,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ] || [ $GOAL = post ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   R=\$(ls -d /work/run/results/asap7/*/base | head -1); \
   O=\$(ls \$R/5_route.odb \$R/6_final.odb 2>/dev/null | tail -1); \
-  if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit_core.py; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit_core.py; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_POSTROUTE pin_audit'; fi; fi; \
   if [ \$rc = 0 ] && [ -f \$R/6_final.odb ]; then \
     mkdir -p /work/views; \
     LIBS_TT=\$(\$M print-LIB_FILES 2>/dev/null | sed -n 's/^LIB_FILES[:=] *//p'); \

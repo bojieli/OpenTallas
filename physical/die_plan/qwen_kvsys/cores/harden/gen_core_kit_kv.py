@@ -1867,6 +1867,7 @@ def main():
         shutil.copyfile(HERE / f, kd / f)
     # KV-CORES-PV2: main pin audit (interior pins = exact xy, scalar ports; the old KV copy had no interior case)
     shutil.copyfile(tool / "pin_audit.py", kd / "pin_audit_core.py")
+    shutil.copyfile(tool / "native_pin_contract.py", kd / "native_pin_contract.py")
     ftl = "# core kit: no ft slots\n"
     if (kd / "hr_ft_regs.json").is_file():   # DIE-KV-63/hr 11-03: registered feed-through = one-station core pair
         import hr_ft_regs

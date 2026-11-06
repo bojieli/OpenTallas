@@ -136,6 +136,7 @@ def face_flops_text(ff, clks, rsts, straps, home_resets=True):
 def stage_pin_audit(kit):
     """Use the current exact-geometry consumer for face, interior and scalar pins."""
     shutil.copyfile(TOOL / "pin_audit.py", Path(kit) / "pin_audit_core.py")
+    shutil.copyfile(TOOL / "native_pin_contract.py", Path(kit) / "native_pin_contract.py")
 
 
 def face_of(x, y, w, h):
