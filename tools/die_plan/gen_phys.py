@@ -2964,6 +2964,13 @@ def declared_rom_bits(rtl_dir):
 # the kit gen lint measures; gen phys raises SYNTH_MEMORY_MAX_BITS to exactly the largest one the kit RTL defines (the
 # same exact-size form as declared_rom_bits), so any other inferred memory above that size still fails.
 DECLARED_FLOP_MEMORIES = {
+    # KV hub_Wi control FIFOs: exact audited production shapes. Inferred mux/
+    # read-pointer-copy heads are part of their cycle contract; no SRAM latency
+    # is introduced. Wider future elaborations still fail the measured limit.
+    "qkd_host_rx_class_admission": 16 * 514,       # iq[16], IR_REPL grouped heads
+    "qkd_host_qm_ingress16_service_debt": 16 * 514, # q[16], RP_REPL paired 8:1 heads
+    "ot_link_afifo": 16 * 514,                    # mem[16], asynchronous/RCOPY head
+    "ot_fdi_join2": 16 * 522,                     # qa 522b / qb 521b, 16 entries
     # KV kv3_hub_Eo / kv3_hub_Wo qkd_seq_xs_s u_q: 40 x 128 Q store FIFO (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv)
     "ot_qkvd_seq_m_sfifo": 40 * 128,
     # S81 T7 svc_lo_dsdv_svc_rs__t7 u_att.sw (TOK-DS-3 11-02): 32 x 512 score-window FIFO, bound native glue of
@@ -4447,6 +4454,24 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
         if not d:
             raise gen_rtl.GenError(f"type {tn}: bound ring u_cland_{m.group(3)} ({m.group(1)}) has no literal DEPTH")
         built[m.group(3)] = int(d.group(1))
+    # Named hard wrappers preserve the ring at u_cland_<bus>, but no longer
+    # instantiate the parameterized base in the parent. The binder checks the
+    # exact base/parameters before this rename (param_wrap.wrap_bound).
+    raw_plan = getattr(lands, "plan", None) or {}
+    for hc in raw_plan.get("partition_types", {}).get(tn, {}).get("hard_cores", []):
+        pw = hc.get("param_wrap") or {}
+        if pw.get("base") not in ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas"):
+            continue
+        inst = hc.get("physical_inst", "").removeprefix("u_bound.")
+        master = hc.get("physical_master") or hc["module"]
+        if not inst.startswith("u_cland_") or "." in inst:
+            raise gen_rtl.GenError(f"type {tn}: hard landing wrapper has invalid path {inst}")
+        if not re.search(r"\b" + re.escape(master) + r"\s+" + re.escape(inst) + r"\s*\(", txt):
+            raise gen_rtl.GenError(f"type {tn}: hard landing wrapper {master} {inst} missing from bound RTL")
+        r = inst.removeprefix("u_cland_")
+        if r in built:
+            raise gen_rtl.GenError(f"type {tn}: ring {r} has both native and hard-wrapper instances")
+        built[r] = int(pw["params"]["DEPTH"])
     buses = (ls or {}).get("buses", {})
     rings = {}
     for b, v in buses.items():

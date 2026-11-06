@@ -18,6 +18,8 @@
 //   * ELA (HBM-GAPS-3 11-05, opt-in, default 1 = unchanged): ELA = 2 builds the encoder as ot_s81_kp4_enc_la #(.LA(2))
 //     (two-step parity lookahead, the rem_q loop gets two cycles; serdes_tx routed TT -180.76 on rem_q -> rem_q in the
 //     ELA = 1 form).  pma_tx is then the ELA = 1 stream delayed by exactly one edge, e_flt is unchanged (tb_kp4_enc_la.sv, tb_pdie_tx_ela.sv).
+//   * BMTHC (opt-in, default 0; recipe ot_pdie_serdes_rx sets 1): RiBM theta_45 reachable form (ot_s81_kp4_bm THC),
+//     so the X power-up of the unloaded theta_45 bits matches the folded netlist under LEC.
 // The face registers are the kit's; this file adds none.  dchn rst_n is the slot reset (no consumer before k_v).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer ELA = 1) (
@@ -40,7 +42,8 @@ module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
 endmodule
 
-module ot_pdie_serdes_rx #(parameter integer PMA_LAT = 4, parameter integer DMUT = 0, parameter integer SEAM = 2) (
+module ot_pdie_serdes_rx #(parameter integer PMA_LAT = 4, parameter integer DMUT = 0, parameter integer SEAM = 2,
+    parameter integer BMTHC = 0) (
     input  wire          clk,
     input  wire          rck_clk,
     input  wire          rst,
@@ -65,7 +68,7 @@ module ot_pdie_serdes_rx #(parameter integer PMA_LAT = 4, parameter integer DMUT
     wire [543:0] r_d, x_q, d_q;
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_prx (.clk(rck_clk), .d_v(1'b1), .d(pma_rx), .q(r_d));
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_rl;
-    ot_s81_kp4_dsyn #(.MUT(DMUT)) u_syn (.clk(rck_clk), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
+    ot_s81_kp4_dsyn #(.MUT(DMUT), .BMTHC(BMTHC)) u_syn (.clk(rck_clk), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
         .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_rl));
     ot_s81_kp4_ddly #(.DD(55 + SEAM)) u_dly (.clk(rck_clk), .rst_n(rn_r), .w_d(x_q), .r_d(d_q));
     ot_s81_kp4_dout u_out (.clk(rck_clk), .rst_n(rn_r), .d_q(d_q), .cw(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),

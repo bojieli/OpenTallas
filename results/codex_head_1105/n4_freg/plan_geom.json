@@ -1,0 +1,102 @@
+{
+ "schema": "opentallas.plan_geom.v1",
+ "plan": "/srv/opentallas-scratch2/claude/codex-head-1105/prep_n4/source_plan.json",
+ "types": [
+  {
+   "type": "hd_st_n4",
+   "verdict": "PASS",
+   "metrics": {
+    "type": "hd_st_n4",
+    "outline": [
+     1123.2,
+     993.6
+    ],
+    "aspect": 1.13,
+    "notes": [],
+    "clock_entries": 35,
+    "clock_reach_max": 185.11,
+    "clock_reach_far": "plan (360.6, 475.2)",
+    "grid_taps": 31,
+    "grid_tap_sinks_max": 540.0,
+    "grid_tap_sinks_worst": "clk_t4",
+    "pin_reg_p90": 2.0,
+    "pin_reg_max": 2.0,
+    "pin_reg_worst": [
+     "2.0 u2_i[9]",
+     "2.0 u2_i[99]"
+    ],
+    "reset_leaf_max": 188.56,
+    "reset_leaf_worst": "reset leaf u_rrl_15->sink (1121.2, 696.3) of clk_t24",
+    "r2r_max": 380.0,
+    "r2r_worst": "reset rst_rl_55->u_rrl_58",
+    "r2r_gt405": 0,
+    "partial_faces": 0,
+    "partial_face_detail": [],
+    "partial_face_worst": [
+     "W",
+     0.88,
+     2.34,
+     2056
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "PASS",
+     "value": 1.13,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": ""
+    },
+    {
+     "rule": "clock_reach",
+     "status": "PASS",
+     "value": 185.11,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far plan (360.6, 475.2)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "PASS",
+     "value": 540.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk_t4"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "PASS",
+     "value": 2.0,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "2.0 u2_i[9], 2.0 u2_i[99]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "PASS",
+     "value": 2.0,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "2.0 u2_i[9]"
+    },
+    {
+     "rule": "r2r",
+     "status": "PASS",
+     "value": 380.0,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "0 plan stages > 405; worst reset rst_rl_55->u_rrl_58"
+    },
+    {
+     "rule": "partial_face",
+     "status": "PASS",
+     "value": 0,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": ""
+    }
+   ]
+  }
+ ]
+}

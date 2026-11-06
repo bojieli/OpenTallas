@@ -157,7 +157,7 @@ def test_reset_leaf_single_terminal_without_launch_flop_fails(tmp_path):
     assert 'has no single reset launch flop' in p.stderr
 
 
-@pytest.mark.parametrize('alias', ['BUF','INV'])
+@pytest.mark.parametrize('alias', ['BUF','INV','CKBUF','CKINVDC'])
 def test_dangling_preserved_terminal_alias_still_counts_functional_sinks(tmp_path, alias):
     p=leaf_hook(tmp_path,alias=alias)
     assert p.returncode==0,p.stderr

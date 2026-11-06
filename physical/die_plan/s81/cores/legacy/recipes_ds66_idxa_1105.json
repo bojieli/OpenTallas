@@ -3,38 +3,6 @@
   "ref_tile": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_tx_n32_vA",
   "suffix": "vA",
   "_why": "DIE-S81-66/IDX vA 11-05: SPLIT=1 parent (column A = hard child dsdv_idx_txm_grp_vA); CF1 clock (no regional taps); dead_inputs/spare_out as rfc_ei_1103.",
-  "dead_inputs": {
-   "bits": [
-    "vi[15]",
-    "vi[14]",
-    "vi[13]",
-    "vi[12]",
-    "vi[11]",
-    "vi[10]",
-    "vi[9]",
-    "vi[8]",
-    "vo[19]",
-    "vo[18]",
-    "vo[17]",
-    "vo[16]",
-    "vo[15]",
-    "vo[14]",
-    "vo[13]",
-    "vo[12]",
-    "vo[11]",
-    "vo[10]",
-    "vo[9]",
-    "vo[8]",
-    "vo[7]",
-    "vo[5]",
-    "vo[4]"
-   ],
-   "proof": {
-    "verdict": "PASS",
-    "method": "Yosys (ORFS asap7lock) synthesis of this exact parameterisation (FACE 0 kit g49 and every FACE 1 kit run) removes the whole cone of these bits: no reader of vi_r[15:8], vo_r[19:7] or vo_r[5:4] survives optimisation; the re-formed RTL reads the same vi_r / vo_r bits as the g49 form",
-    "receipt": "intel1 /srv/opentallas-scratch2/claude/die-s81-50/gen/kits/dsdv_idx_tx_n32_g49/face_guard_raw.json (fails.dropped = exactly these 23 bits: 'no load (register removed)'); re-proved on every kit run by face_guard (a declared dead bit that loads anything FAILs class dead)"
-   }
-  },
   "spare_out": {
    "bits": [
     "lo[19]",

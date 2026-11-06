@@ -1502,6 +1502,9 @@
           "W"
          ]
         },
+        "turnaround": {
+         "type": "boolean"
+        },
         "width": {
          "type": "integer",
          "minimum": 1
@@ -3131,16 +3134,41 @@
           }
          }
         },
-        "sub_core_parent": {
-         "minLength": 1,
-         "type": "string"
-        },
-        "sub_core_leaf_pin": {
-         "minLength": 1,
-         "type": "string"
-        },
         "parent_id_leaf": {
          "type": "string"
+        },
+        "sub_core_parent": {
+         "type": "string",
+         "minLength": 1
+        },
+        "sub_core_leaf_pin": {
+         "type": "string",
+         "minLength": 1
+        },
+        "param_wrap": {
+         "type": "object",
+         "required": [
+          "base",
+          "params"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "base": {
+           "type": "string",
+           "minLength": 1
+          },
+          "params": {
+           "type": "object",
+           "minProperties": 1,
+           "additionalProperties": {
+            "type": "integer"
+           }
+          }
+         }
+        },
+        "reset_net": {
+         "type": "string",
+         "minLength": 1
         },
         "physical_id_alias": {
          "type": "object",
@@ -3905,16 +3933,16 @@
           }
          }
         },
-        "sub_core_parent": {
-         "minLength": 1,
-         "type": "string"
-        },
-        "sub_core_leaf_pin": {
-         "minLength": 1,
-         "type": "string"
-        },
         "parent_id_leaf": {
          "type": "string"
+        },
+        "sub_core_parent": {
+         "type": "string",
+         "minLength": 1
+        },
+        "sub_core_leaf_pin": {
+         "type": "string",
+         "minLength": 1
         },
         "position_id_contract": {
          "type": "object",

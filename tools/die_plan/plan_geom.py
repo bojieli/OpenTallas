@@ -206,6 +206,11 @@ def type_sites(P, tn):
         else:
             c = _rect_pts(rect)[0]
             sinks.append((c[0], c[1], 1.0, f"landing:{inst}"))
+    for name, b in sorted((t.get("clock", {}).get("landing_contract", {}).get("bands") or {}).items()):
+        if b.get("hard_core") and b.get("rect_um") and name not in bands:
+            # QC-SLECTL-B 11-05: a ring hardened as a child core: its flops are the child's sinks (its own kit), the
+            # band rect stays the register site of its pins (pin_reg) and the ring -> station hop (r2r)
+            bands[name] = list(b["rect_um"])
     return dict(w=w, h=h, entries=entries, sinks=sinks, fwd=fwd, hops=hops, bands=bands, pins=pins, reset=T,
                 notes=notes, band_rects=dict(band_rects))
 

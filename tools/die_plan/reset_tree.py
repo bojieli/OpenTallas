@@ -1414,6 +1414,8 @@ def core_reset_targets(P, tn):
     boxes = blockages(t)
     out = []
     for c in t.get("hard_cores", []):
+        if c.get("reset_net"):
+            continue   # QC-SLECTL-B: the core reset pin keeps its bound net (declared), not a wavefront target
         rfm = c.get("reset_from_master")
         if rfm is not None:
             # DIE-HBM-25 (HBM-047/048): a split piece of a reuse content bound WHOLE (one as-built leaf).  The plan

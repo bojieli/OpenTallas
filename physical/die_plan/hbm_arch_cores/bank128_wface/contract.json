@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.core_pin_cycles.v1",
+  "module": "ot_hbm_hc_bank128_pair_core",
+  "define": "OT_HC128_WFACE",
+  "default": "off",
+  "write_cohort": {
+    "write_data": 512,
+    "write_addr": 10,
+    "weight_we0": 1,
+    "weight_we1": 1,
+    "x_write": 1
+  },
+  "write_latency_edges": 1,
+  "arithmetic_latency_edges": 0,
+  "dependent_read_go_guard_edges": 1,
+  "programming_during_reset": false,
+  "producer": "ot_hbm_hc_bank_static -> native HC cut; x vector writes are runtime",
+  "token_row": "HBM-37 PROPOSED",
+  "compiler_status": "nativeHC projection_lowering absent; no gather/root/tail constants changed",
+  "qualification": "boundary_lockstep_only; physical and parent composition pending"
+}

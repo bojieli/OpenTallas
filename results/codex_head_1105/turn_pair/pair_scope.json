@@ -1,0 +1,36 @@
+{
+ "parts": {
+  "turnE0a": {
+   "actual_module": "ot_s81hd_turn_a",
+   "ports": 26,
+   "source_actual_port_match": true
+  },
+  "turnE0b": {
+   "actual_module": "ot_s81hd_turn_b",
+   "ports": 25,
+   "source_actual_port_match": true
+  }
+ },
+ "internal_bits": 570,
+ "clock": "ideal common parent root, actual propagated child clock RC and forwarded seam",
+ "parent_plan": "l48uh",
+ "inputs": "unconnected external interface nets exposed as ports, no invented tie-offs",
+ "full_die_sta": "NOT RUN",
+ "result": "PASS diagnostic only",
+ "corner_policy": {
+  "TT_setup_uncertainty_ps": 0,
+  "FF_hold_uncertainty_ps": 25,
+  "period_ps": 833,
+  "basis": "current die_sta.py OWNER12.24c/12.25 defaults; child signoffs kept their own constraints"
+ },
+ "artifacts": "epyc2:/srv/opentallas-scratch2/claude/codex-head-1105/region/sta3",
+ "external_port_rc_warning_count": 2264,
+ "external_port_unique_warning_count": 1132,
+ "internal_seam_missing_port_warnings": 0,
+ "residual_clock_rc_crossnetwork_node_warnings": 11,
+ "limitation": "ideal common parentclock; external window RC terminals and 11 crossnetwork clocknode refs warned; not a whole die timing/freeze receipt",
+ "source_views": {
+  "turn_a": "intel2:/srv/opentallas-scratch2/claude/dh64/resign/kit_turn_a/run/results/asap7/dp_hd_turn_a/base/6_final.{v,spef,sdc}",
+  "turn_b": "epyc2:/srv/opentallas-scratch2/claude/ss27/resign/kit_turn_b/run/results/asap7/dp_hd_turn_b/base/6_final.{v,spef,sdc}"
+ }
+}

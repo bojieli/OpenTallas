@@ -683,6 +683,66 @@ proc ot_hold_structural_gate {} {
   }
   return -code error -errorcode {OPENTALLAS HOLD_STRUCTURAL} $msg
 }
+# HOLD-REPAIR-SCOPE (CODEX 11-06): opt-in internal-only FF data repair. Port hold stays visible at final timing and
+# belongs to the parent arrival contract; do not spend a buffer budget repairing the standalone IO frame. This is an
+# optimization scope only: TT setup is untouched, FF constraints are replayed at full round-trip precision in finally,
+# and the original current mode is restored even on a repair error. Default remains the original all-path repair.
+proc ot_hold_scope_read {path} {
+  set fh [open $path r]
+  try { return [read $fh] } finally { close $fh }
+}
+proc ot_hold_repair_scope {body} {
+  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ne "reg2reg" ||
+      ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
+    return [uplevel 1 $body]
+  }
+  set entry [sta::cmd_mode_name]
+  set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
+  set stem [file join $dir ot_hold_scope_[pid]_[clock clicks]]
+  set before ${stem}_before.sdc
+  set after ${stem}_after.sdc
+  try {
+    set_mode ff
+    # write_sdc defaults to four digits; that is insufficient for exact restoration of a measured boundary frame.
+    write_sdc -mode ff -digits 17 -no_timestamp $before
+    # A real clock source port is not a parent data-hold endpoint. Keep it out of the repair exception explicitly.
+    set clock_sources [dict create]
+    foreach clock [all_clocks] {
+      foreach source [get_property $clock sources] { dict set clock_sources [get_full_name $source] 1 }
+    }
+    set inputs {}
+    foreach port [all_inputs] {
+      if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
+    }
+    set outputs [all_outputs]
+    puts "OT_HOLD_SCOPE begin full_ff=[ot_hold_stats] input_ports=[llength $inputs] output_ports=[llength $outputs]"
+    try {
+      if {[llength $inputs]} { set_false_path -hold -from $inputs }
+      if {[llength $outputs]} { set_false_path -hold -to $outputs }
+      puts "OT_HOLD_SCOPE repair_ff=[ot_hold_stats] (register-to-register only)"
+      set_mode $entry
+      return [uplevel 1 $body]
+    } finally {
+      set_mode ff
+      if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
+      if {[llength $outputs]} { unset_path_exceptions -hold -to $outputs }
+      # Removing the temporary port exceptions can also split an overlapping original exception. Replaying the
+      # complete original mode restores those, all clock/input/output delays, and every other original SDC command.
+      read_sdc -mode ff $before
+      write_sdc -mode ff -digits 17 -no_timestamp $after
+      if {[ot_hold_scope_read $before] ne [ot_hold_scope_read $after]} {
+        error "OT_HOLD_SCOPE restore differs: retained $before $after"
+      }
+      puts "OT_HOLD_SCOPE restored exact FF SDC; full_ff=[ot_hold_stats] (port hold remains visible)"
+      if {![info exists ::env(OT_HOLD_SCOPE_KEEP_SDC)] || $::env(OT_HOLD_SCOPE_KEEP_SDC) ne "1"} {
+        file delete $before $after
+      }
+    }
+  } finally {
+    set_mode $entry
+  }
+}
+
 proc ot_repair_timing {rt_args} {
   set setup [expr {[lsearch -exact $rt_args -setup] >= 0}]
   set hold [expr {[lsearch -exact $rt_args -hold] >= 0}]
@@ -690,7 +750,7 @@ proc ot_repair_timing {rt_args} {
   if {$hold && !$setup} {
     return [ot_rc_cal_hold {
       ot_hold_structural_gate
-      log_cmd repair_timing {*}[ot_hm_guard $rt_args]
+      ot_hold_repair_scope { log_cmd repair_timing {*}[ot_hm_guard $rt_args] }
     }]
   }
   # Explicit -setup -hold and the no-flag form both request combined repair.
@@ -702,10 +762,10 @@ proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on]} {
     return [ot_rc_cal_hold {
       ot_hold_structural_gate
-      log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold
+      ot_hold_repair_scope { log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold }
     }]
   }
-  return [ot_rc_cal_hold { ot_repair_hold_guarded $rt_args }]
+  return [ot_rc_cal_hold { ot_hold_repair_scope { ot_repair_hold_guarded $rt_args } }]
 }
 proc ot_repair_hold_guarded {rt_args} {
   set hm 0.0

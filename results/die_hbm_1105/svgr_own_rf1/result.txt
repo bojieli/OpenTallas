@@ -1,0 +1,12 @@
+ow5 rf=1 stall=1 mut=MUT=5 SMB_UNIT FAIL ops=20 pass=1 gos=1/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 1036 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None | tree ow5 ok
+ow4 rf=1 stall=1 mut=MUT=4 SMB_UNIT FAIL ops=20 pass=1 gos=1/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 1040 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None | tree ow4 ok
+ow1 rf=1 stall=1 mut=MUT=1 SMB_UNIT FAIL ops=20 pass=0 gos=1/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 830 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None | tree ow1 ok
+ow3 rf=1 stall=1 mut=MUT=3 SMB_UNIT FAIL ops=20 pass=0 gos=0/29 go_slots_exact=False runs=0 fault=None DONE cycles=12764 results=0 gos=0 runs=0 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=532 | tree ow3 ok
+ow6 rf=1 stall=1 mut=MUT=6 SMB_UNIT FAIL ops=20 pass=2 gos=4/29 go_slots_exact=False runs=0 fault=None DONE cycles=12764 results=10 gos=4 runs=0 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=1480 | tree ow6 ok
+old1 rf=0 stall=1 mut=MUT=0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988 | tree old1 ok
+rf0 rf=1 stall=0 mut=MUT=0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988 | tree rf0 ok
+rf1 rf=1 stall=1 mut=MUT=0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988 | tree rf1 ok
+ow2 rf=1 stall=1 mut=MUT=2 SMB_UNIT FAIL ops=20 pass=1 gos=1/29 go_slots_exact=False runs=0 fault=None DONE cycles=12764 results=1 gos=1 runs=0 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=548 | tree ow2 ok
+old0 rf=0 stall=0 mut=MUT=0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988 | tree old0 ok
+ow7 rf=1 stall=1 mut=MUT=7 SMB_UNIT FAIL ops=20 pass=2 gos=4/29 go_slots_exact=False runs=0 fault=None DONE cycles=12764 results=10 gos=4 runs=0 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=888 | tree ow7 ok
+ALLDONE
