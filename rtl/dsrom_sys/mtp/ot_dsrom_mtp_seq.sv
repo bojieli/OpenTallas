@@ -439,7 +439,12 @@ module ot_dsrom_mtp_seq_fan #(
     parameter integer MAXU   = 8,       // users with MTP state (others pass through)
     parameter integer G      = 5,       // gamma (DSpark block 5)
     parameter integer SRC_ID = 0,       // header SRC of the DRAFT flit
-    parameter integer TOK_DEST = 0     // header DEST of the DRAFT flit (S0)
+    parameter integer TOK_DEST = 0,    // header DEST of the DRAFT flit (S0)
+    // DIE-HEAD-71 11-05 (hd_ctl LEC, 0 cycles): opt-in, default 0 = unchanged.  1: the event flit ef, the event position
+    // ep_ and the token queue tq are cleared by the control reset (rst_c) like st / tq_n.  Each is read only after the
+    // event / push that loads it (ef / ep_ from S_SEL of a result event, tq[i] while tq_n counts it), so flits, faults
+    // and timing are identical; bits that only ever load a structural constant hold it from reset instead of X.
+    parameter integer DATA_RST = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -730,6 +735,7 @@ module ot_dsrom_mtp_seq_fan #(
         if (!rst_c) begin
             st <= S_SEL; tq_r <= 0; tq_w <= 0; tq_n <= 0; sq_v <= 1'b0; hq_v <= 1'b0; fault <= 1'b0;
             hdr_ds_v <= 1'b0; hdr_ds <= 16'd0;
+            if (DATA_RST != 0) begin ef <= {FLIT{1'b0}}; ep_ <= {NW{1'b0}}; end
         end else begin
             if (e_pop) tq_r <= tq_r + 1'b1;
             if (e_push) tq_w <= tq_w + 1'b1;
@@ -822,7 +828,7 @@ module ot_dsrom_mtp_seq_fan #(
     // the token queue and the hold queues have no reset, as in the base form
     integer q;
     always @(posedge clk) begin
-        for (q = 0; q < 4; q = q + 1) if (w_tq[q]) tq[q] <= e_flit;
+        for (q = 0; q < 4; q = q + 1) if (DATA_RST != 0 && !rst_c) tq[q] <= {FLIT{1'b0}}; else if (w_tq[q]) tq[q] <= e_flit;
         for (q = 0; q < MAXU * HD; q = q + 1) if (w_hw[q]) u_hq[q] <= e_h;
     end
     // per-user records: same writes in the same order as the base form, enabled by w_app[u]
@@ -875,4 +881,90 @@ module ot_dsrom_mtp_seq_fan #(
         if (!rst_d[du]) u_d[du] <= 0;
         else for (ds = 0; ds < G; ds = ds + 1) if (w_dw[du * G + ds]) u_d[du][ds * NW +: NW] <= et_;
     end
+endmodule
+
+// ---------------------------------------------------------------------------
+// ot_dsrom_mtp_lrx_qr (DIE-HEAD-71 11-05, hd_ctl LEC, 0 cycles): ot_dsrom_mtp_lrx with one opt-in, Q_RST (default 0 = the
+// lrx function).  1: the receive slots q are cleared while the link is held in reset (!live).  A slot is read only after
+// a push wrote it (cnt != 0 selects qh), so flits, order and timing are identical; slot bits whose data is a structural
+// constant of the sender hold it from reset instead of X until the first flit.  A separate module because
+// rtl/dsrom_sys/mtp/closed_snap/manifest.json pins the ot_dsrom_mtp_lrx module text.  Used only by dsfd_mtp_seq_fan.
+// ---------------------------------------------------------------------------
+module ot_dsrom_mtp_lrx_qr #(parameter integer W = 513, parameter integer D = 4, parameter integer SEL = 0,
+                             parameter integer Q_RST = 0) (
+    input  wire         clk, rst_n,
+    input  wire         l_valid,
+    output wire         l_ready,
+    input  wire [W-1:0] l_data,
+    output wire         c_valid,
+    input  wire         c_ready,
+    output wire [W-1:0] c_data
+);
+    localparam integer CB = $clog2(D + 1) + 2;
+    reg live;
+    always @(posedge clk) live <= rst_n;
+    reg pv; reg [W-1:0] pd;
+    always @(posedge clk) begin pv <= l_valid; pd <= l_data; end   // pin flops
+    wire pvl = pv && live;
+    reg [W-1:0] q [0:D-1];
+    reg [D-1:0] wp, rp;                  // one-hot write / read slot
+    reg [CB-1:0] cnt;
+    reg rdy, r1, r2;
+    assign l_ready = rdy;
+    wire ne = cnt != 0;
+    reg [W-1:0] qh;
+    integer i, j;   // one loop variable per always block
+    always @(*) begin
+        qh = {W{1'b0}};
+        for (j = 0; j < D; j = j + 1) if (rp[j]) qh = qh | q[j];
+    end
+    assign c_valid = ne || pvl;
+    assign c_data = ne ? qh : pd;
+    wire pop  = c_valid && c_ready;
+    wire popq = pop && ne;
+    wire push = pvl && (ne || !c_ready);  // the pin flit, unless taken straight from the pin flop
+    wire [CB-1:0] cnt_n = cnt + {{(CB-1){1'b0}}, push} - {{(CB-1){1'b0}}, popq};
+    always @(posedge clk)                // the slot write is enabled from registers only
+        for (i = 0; i < D; i = i + 1) if (Q_RST != 0 && !live) q[i] <= {W{1'b0}}; else if (pvl && wp[i]) q[i] <= pd;
+    // SEL: next state for c_ready = 0 (push = pvl, no pop) and c_ready = 1 (push = pvl && ne, pop = ne), from
+    // registers only; c_ready selects.  Identical function to the cnt_n form.
+`ifdef OT_MTP_NEG_LINK
+    wire [CB-1:0] infl = {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1};                                  // negative control
+`else
+    wire [CB-1:0] infl = {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1} + {{(CB-1){1'b0}}, r2};
+`endif
+    wire [CB-1:0] cnt_s0 = cnt + {{(CB-1){1'b0}}, pvl};
+    wire [CB-1:0] cnt_s1 = cnt + {{(CB-1){1'b0}}, pvl && ne} - {{(CB-1){1'b0}}, ne};
+    wire rdy_s0 = (cnt_s0 + infl) <= CB'(D - 1);
+    wire rdy_s1 = (cnt_s1 + infl) <= CB'(D - 1);
+    wire [D-1:0] wp_s0 = pvl ? {wp[D-2:0], wp[D-1]} : wp;
+    wire [D-1:0] wp_s1 = (pvl && ne) ? {wp[D-2:0], wp[D-1]} : wp;
+    wire [D-1:0] rp_s1 = ne ? {rp[D-2:0], rp[D-1]} : rp;
+    always @(posedge clk)
+        if (!live) begin
+            cnt <= 0; rdy <= 1'b0; r1 <= 1'b0; r2 <= 1'b0;
+            wp <= {{(D-1){1'b0}}, 1'b1}; rp <= {{(D-1){1'b0}}, 1'b1};
+        end else if (SEL) begin
+            cnt <= c_ready ? cnt_s1 : cnt_s0;
+            rdy <= c_ready ? rdy_s1 : rdy_s0;
+            wp  <= c_ready ? wp_s1 : wp_s0;
+            rp  <= c_ready ? rp_s1 : rp;
+            r1 <= rdy; r2 <= r1;
+        end else begin
+            cnt <= cnt_n;
+`ifdef OT_MTP_NEG_LINK
+            rdy <= (cnt_n + {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1}) <= CB'(D - 1);   // negative control: forgets a grant in flight
+`else
+            rdy <= (cnt_n + {{(CB-1){1'b0}}, rdy} + {{(CB-1){1'b0}}, r1} + {{(CB-1){1'b0}}, r2}) <= CB'(D - 1);
+`endif
+            r1 <= rdy; r2 <= r1;
+            if (push) wp <= {wp[D-2:0], wp[D-1]};
+            if (popq) rp <= {rp[D-2:0], rp[D-1]};
+        end
+`ifndef SYNTHESIS
+    always @(posedge clk) if (live && push && cnt == CB'(D)) begin
+        $display("LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)");
+        $fatal(1, "LINK_REG overflow");
+    end
+`endif
 endmodule

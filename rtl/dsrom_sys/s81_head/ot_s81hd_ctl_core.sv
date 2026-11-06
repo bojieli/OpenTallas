@@ -2,7 +2,12 @@
 `default_nettype none
 // Current physical-plan provider. All codecs are existing exact transports.
 // h_tx[276] is live job-active; draft traffic uses real stage kind7, no draft PHY.
-module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_EARLY=0,parameter integer ING_STAGE=1,parameter integer SEQ_WB=1,parameter integer SEQ_FAN=1)(
+module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_EARLY=0,parameter integer ING_STAGE=1,parameter integer SEQ_WB=1,parameter integer SEQ_FAN=1,
+ // DIE-HEAD-71 (11-05 ctlrq, hd_ctl LEC, 0 cycles): 1 = the host result / status holds rq / sq are cleared by rst_n and
+ // u_ht's beat_tx hold too (HOLD_RST); 0 = the earlier no-reset form.  rq / sq are read only through send (rp || sp),
+ // which a load sets, so the host lane is identical; their constant frame fields (type, zero fields, bit 552) no
+ // longer power up X.  ctl_core is the hd_ctl configuration (ING_STAGE / SEQ_WB / SEQ_FAN = 1 here too).
+ parameter integer DATA_RST=1)(
  input wire ck,rst_n,start_i,lep_fault_i, input wire[10:0]lw_i,
  input wire[1103:0]lepk_i0, output wire[1103:0]lepk_o0,
  output wire lepf_o0, output wire[44:0]unit_o0,input wire[31:0]ctrl_i0,
@@ -34,11 +39,18 @@ module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_E
   else begin
    if(cooldown!=0)cooldown<=cooldown-1'b1;
    if(send)begin cooldown<=2;if(rp)rp<=0;else sp<=0;end
-   if(htv[0])begin rp<=1;rq<=htd[552:0];end
-   if(htv[1])begin sp<=1;sq<=htd[1105:553];end
+   if(htv[0])rp<=1;
+   if(htv[1])sp<=1;
   end
+ generate if(DATA_RST!=0)begin:g_qr
+  always@(posedge ck or negedge rst_n)
+   if(!rst_n)begin rq<=553'd0;sq<=553'd0;end
+   else begin if(htv[0])rq<=htd[552:0]; if(htv[1])sq<=htd[1105:553]; end
+ end else begin:g_qn
+  always@(posedge ck)begin if(rst_n&&htv[0])rq<=htd[552:0]; if(rst_n&&htv[1])sq<=htd[1105:553]; end
+ end endgenerate
  wire[275:0]hlane;wire job;
- ot_s81hd_host276_tx #(.IDLE_ZERO(1),.HOLD_REAL(1)) u_ht(.ck(ck),.rn(rst_n),.v(send),.frame(send_frame),.lane(hlane),.fault(host_tf));
+ ot_s81hd_host276_tx #(.IDLE_ZERO(1),.HOLD_REAL(1),.HOLD_RST(DATA_RST)) u_ht(.ck(ck),.rn(rst_n),.v(send),.frame(send_frame),.lane(hlane),.fault(host_tf));
  assign h_tx_o={job,hlane};
  wire[1103:0]core_ro;wire[33:0]muc;wire[10:0]murc;wire[564:0]unused_duplicate;
  wire dv;wire[552:0]dd;wire[0:0]unused_dv;wire[552:0]unused_dd;
@@ -46,7 +58,7 @@ module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_E
  // Input kind7 carries HSF0 type in gidx[3:0] and its payload in flit512.
  wire dvalid=lepk_i0[0]&&lepk_i0[3:1]==7;
  wire[552:0]dframe={1'b1,24'd0,lepk_i0[532:21],12'd0,lepk_i0[16:13]};
- ot_s81hd_ctl_hsf0_static #(.SK(SK),.MUT_DRAFT_EARLY(MUT_DRAFT_EARLY),.ING_STAGE(ING_STAGE),.SEQ_WB(SEQ_WB),.SEQ_FAN(SEQ_FAN))u_logic(
+ ot_s81hd_ctl_hsf0_static #(.SK(SK),.MUT_DRAFT_EARLY(MUT_DRAFT_EARLY),.ING_STAGE(ING_STAGE),.SEQ_WB(SEQ_WB),.SEQ_FAN(SEQ_FAN),.SEQ_RST(DATA_RST))u_logic(
   .ck(ck),.rst_n(rst_n),.start_i(start_i),.adapter_fault(adapter_fault),.job_active_o(job),
   .ri(lepk_i0),.mu_rt(ctrl_i0),.lw(lw_i),.lep_f(lep_fault_i),.ro(core_ro),.mu_c(muc),.mu_rc(murc),.ctl_f(lepf_o0),
   .sn_o(x_o),.ss_o(unused_duplicate),.sn_i(b_i),.ss_i(b_i),
