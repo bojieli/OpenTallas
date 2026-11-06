@@ -1,0 +1,231 @@
+host	group	action	path	gb	newest	detail
+intel2	A	DELETE	/srv/opentallas-scratch2/claude/qc-kits-aa/gen	0.50	2026-11-03T18:34	idle>24h, no marker
+intel2	X	KEEP	/srv/opentallas-scratch2/claude/dq67-hc3/formB	7.68	2026-11-04T10:00	BIND-REF:dq67-hc3/formB/cld/rtl
+intel2	X	KEEP	/srv/opentallas-scratch2/claude/dh55-cland/kits	3.14	2026-11-03T04:30	BIND-REF:dh55-cland/kits/hd_ctl_e/rtl/bootstrap
+intel2	B	MOVE	/srv/opentallas-scratch2/claude/flow-canary/retired/s81_79ffd79fd_1030_1445_staletool	3.03	2026-11-03T17:53	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	MOVE	/srv/opentallas-scratch2/claude/die-qc-58b/kits	1.58	2026-11-03T20:03	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-57/g2s	1.57	2026-11-03T22:46	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/die-qc-58b/probe_nl	0.90	2026-11-01T01:05	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/die-qc-58b/probe_nk	0.85	2026-11-01T01:05	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-56/macb	0.68	2026-11-04T15:30	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-57/g2r	0.63	2026-11-03T22:46	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/wt/ds53-bkq-out	0.56	2026-11-04T04:48	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	X	KEEP	/srv/opentallas-scratch2/claude/dq68-qcevent/bind4	0.43	2026-11-04T06:50	BIND-REF:dq68-qcevent/bind4/rtl
+intel2	X	KEEP	/srv/opentallas-scratch2/claude/dq68-qcevent/bind5	0.43	2026-11-04T07:42	BIND-REF:dq68-qcevent/bind5
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/dq68-qcevent/bind	0.40	2026-11-04T05:04	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/s81ck12/xrt1_P3M70_h-s81	0.38	2026-11-01T12:23	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-57/genprobe	0.19	2026-10-31T18:05	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/s81ck12/gate_xrt1_T	0.15	2026-10-31T18:33	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/s81ck12/xrt1_P3M110_h-s81/lec	0.08	2026-11-01T12:46	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/s81ck12/bfr_A_h-s81	0.05	2026-10-31T18:51	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/dh55-cland/head_src_v2	0.05	2026-11-03T00:12	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/dh55-cland/head_src_v3	0.05	2026-11-03T04:30	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-66/fhp12m_lec	0.03	2026-11-04T19:57	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	X	KEEP	/srv/opentallas-scratch2/claude/dh55-cland/prep_v2	0.03	2026-11-03T00:06	BIND-REF:dh55-cland/prep_v2
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/s81/entry_fc31	0.03	2026-10-28T20:35	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	B	DELETE	/srv/opentallas-scratch2/claude/die-head-5/r2/sta	0.02	2026-10-28T02:02	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/wt/dh62-mesh	4.5		refs=0; wt-save (format-patch+diff+bundle) first
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/hbm60-lec/wt	48.9		refs=82; wt-save (format-patch+diff+bundle) first
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/flow-23/wt	48.8		refs=82; wt-save (format-patch+diff+bundle) first
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-qc18-1028/pinilv/wt	1.9		refs=19; wt-save (format-patch+diff+bundle) first
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-ci/wt	48.5		refs=79; wt-save (format-patch+diff+bundle) first
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-51/plan/wt	2.9		unpushed=5;refs=48; wt-save (format-patch+diff+bundle) first
+intel2	X	KEEP	/srv/opentallas-scratch2/claude/dq68-qcevent/q70/wu	1.5		BIND-REF:dq68-qcevent/q70/wu/rtl/lib;unpushed=2;refs=0
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/dq68-qcevent/q70/wp	1.5		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/rf2_1103/kits/opstore_b/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950/lec	0.15	2026-11-04T09:26	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_idx_topk_link_static/attempt_6	0.14	2026-11-03T20:59	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8	0.13	2026-11-03T19:14	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/rf2_1103/kits/lanes4	0.13	2026-11-04T07:18	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v10/cores	0.09	2026-11-04T13:46	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8f/cores	0.09	2026-11-03T18:35	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8g/cores	0.09	2026-11-03T18:35	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/cores	0.09	2026-11-03T18:35	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch2/claude/kit-wave/hbm/rf2_1103/kits/gql_bfcd/ot_hgi_coll_gq_land_bfcd846691ef/lec	0.03	2026-11-04T08:17	idle>24h, no marker
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/die-s81-54/eg/bind_a	6.00	2026-11-04T15:35	BIND-REF:die-s81-54/eg/bind_a/rtl
+epyc4	A	DELETE	/srv/opentallas-scratch3/claude/dkv67/t17r	3.69	2026-11-04T14:31	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch3/claude/dkv67/ioftr	3.02	2026-11-04T14:36	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch3/claude/dq71/replay	0.83	2026-11-05T02:38	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch3/claude/dq71/bind_tip_py310	0.42	2026-11-05T00:49	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch3/claude/die-s81-54/eg/recentre	0.11	2026-11-04T15:16	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch3/claude/dkv67/pc4/kv3_pc_v3	0.05	2026-11-04T14:28	idle>24h, no marker
+epyc4	A	DELETE	/srv/opentallas-scratch3/claude/die-s81-54/eg/nudge	0.05	2026-11-04T14:05	idle>24h, no marker
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/die-s81-54/eg/kits	0.04	2026-11-04T17:32	BIND-REF:die-s81-54/eg/kits/dsdv_slice_c1x_C__t1.2022639/rtl_bindov
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/dkv66/pil/t17_A	3.69	2026-11-04T13:54	BIND-REF:dkv66/pil/t17_A/rtl_bindov
+epyc4	B	MOVE	/srv/opentallas-scratch3/claude/die-s81-56/coll	1.79	2026-11-04T19:56	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch3/claude/kw-fix-6/lec	1.26	2026-11-04T18:13	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-s81-56/iqkv/lag	0.73	2026-11-05T04:57	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-hbm-66/forms/tkmroot	0.68	2026-11-05T03:36	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/kw-fix-5/hbm-stage-dry	0.51	2026-11-04T09:05	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-s81-56/wiqb	0.36	2026-11-05T04:53	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-hbm-66/eco/ctl2	0.32	2026-11-05T02:53	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-hbm-66/plan13	0.32	2026-11-05T04:26	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/dkv66/snd_t17	0.30	2026-11-04T13:16	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/hbm-reform-b5/bench/bundle	0.28	2026-10-23T08:07	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-hbm-66/forms/argmax3	0.26	2026-11-05T02:56	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/dkv66/snd_a2	0.24	2026-11-04T12:53	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-hbm-66/ksb	0.23	2026-11-05T00:50	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/kw-fix-5/provchk	0.13	2026-11-04T09:12	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-hbm-66/plan8	0.12	2026-11-05T04:31	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-hbm-66/plan14/p14	0.12	2026-11-05T04:44	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/die-s81-56/eg	0.08	2026-11-04T17:45	BIND-REF:die-s81-56/eg/kits/dsdv_slice_c3x_C__t1/rtl_bindov
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/hbm-reform-b5/bench/smw	0.07	2026-10-19T09:16	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-hbm-66/plan14/base	0.06	2026-11-05T04:44	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/kw-fix-7/capgen	0.06	2026-11-04T14:27	BIND-REF:kw-fix-7/capgen/rtl
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/die-s81-56/plan/kr	0.06	2026-11-04T18:06	BIND-REF:die-s81-56/plan/kr/svc_hi_dsdv_svc_pvso_entry__t1/rtl_bindov
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-s81-56/grta/gen	0.03	2026-11-05T01:46	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-s81-56/xfev/nf_b0	0.03	2026-11-05T04:17	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-s81-56/xfev/nf_m1	0.03	2026-11-05T04:27	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-s81-56/xfev/nf_m2	0.03	2026-11-05T04:38	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/die-s81-56/grtc/gen	0.02	2026-11-05T03:08	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch3/claude/dq71/sct	0.02	2026-11-05T05:00	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/lec2/gl5-bench	5.48	2026-11-04T06:49	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-51/rfa/kits3	4.51	2026-11-04T06:30	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfh/bksel_q	3.12	2026-11-04T11:48	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-51/lecxfin-kit/xfin_r64_form2	3.07	2026-11-04T08:56	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/tx3	3.05	2026-11-04T13:45	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/tx4f	2.73	2026-11-04T16:44	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-51/rfg/bench	2.67	2026-11-03T18:52	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfh/bf_col3	2.63	2026-11-04T08:40	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/e_qwdec	2.61	2026-11-04T17:17	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/lec2/coll-bench	2.29	2026-11-04T06:45	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	X	KEEP	/srv/opentallas-scratch2/claude/dq67-hc3/formA/tile	2.21	2026-11-04T16:40	BIND-REF:dq67-hc3/formA/tile/cld/rtl
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-64/stops/topk	2.01	2026-11-04T16:56	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/bfb	1.78	2026-11-04T07:21	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfj/bench	1.77	2026-11-04T08:02	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/vsb	1.75	2026-11-04T06:55	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/gqa6	1.70	2026-11-04T23:57	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-51/pgobs	1.66	2026-11-04T00:58	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/lec2/coll	1.59	2026-11-04T08:14	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/e_p6_s3_ex	1.58	2026-11-04T16:29	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-51/rfc-bk/kits_seloh2	1.51	2026-11-03T21:57	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-51/cland_probe	1.33	2026-11-04T05:07	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-51/rfg/bsrc	1.16	2026-11-03T18:51	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-53/parent/kits	1.15	2026-11-04T18:20	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-62/eco/xpaq2	1.12	2026-11-05T04:33	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-63/kits/ot_hbm_idx_score_hcol_h0_rb	1.11	2026-11-05T02:21	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/dh63-cuts/kits	0.96	2026-11-05T02:12	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-51/rfg/kits	0.94	2026-11-03T20:58	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	X	KEEP	/srv/opentallas-scratch2/claude/die-s81-51/spare/items	0.83	2026-11-03T18:21	BIND-REF:die-s81-51/spare/items/ot_s81sl_kv_leaf__t1/rtl_bindov
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/canaryeco	0.81	2026-11-04T13:30	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/fhp6	0.68	2026-11-04T14:19	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/vm4	0.58	2026-11-04T12:51	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-52/rfh/tmp	0.53	2026-11-04T08:36	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/cprxs5	0.32	2026-11-04T13:24	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/b128v9	0.32	2026-11-04T12:56	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/dh59/lec_lane	0.24	2026-11-04T08:14	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-51/lecegn-eq	0.23	2026-11-04T00:35	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-51/rfh/bf_col3	0.20	2026-11-04T06:14	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-52/rfj/in	0.17	2026-11-04T06:49	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-51/lecxfin-bench	0.16	2026-11-04T05:06	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-52/xf3b	0.12	2026-11-04T09:17	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-56/eco/main	0.07	2026-11-04T19:13	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/dh59/lec_mini	0.07	2026-11-04T07:02	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/dkv65/hgs/p0	0.06	2026-11-04T09:26	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-62/tmain/testdata	0.06	2026-11-04T06:34	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/dkv64-rfb/eco2_pcf_r27s	0.05	2026-11-04T07:09	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/dkv65/hgs/pb	0.05	2026-11-04T07:36	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-51/leccoll-bench	0.04	2026-11-04T04:59	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/dkv65/lec/r1	0.03	2026-11-04T09:20	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-62/eco/keybuf	0.03	2026-11-04T07:27	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-62/tmain/tests	0.03	2026-11-04T06:34	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/dh61-cuts/wt	48.9		dirty_tracked=59;refs=82; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/ss25/resign/repo	13.3		dirty_tracked=314239;refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/hbm-reform-b/repo	6.8		refs=49; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/dkv65/hgs/wt	3.0		dirty_tracked=6;refs=49; wt-save (format-patch+diff+bundle) first
+epyc4	X	KEEP	/srv/opentallas-scratch2/claude/dkv65/hgs/base54	1.2		BIND-REF:dkv65/hgs/base54/kv37;unpushed=1;refs=14
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfj/wt	1.8		refs=33; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-52/vsf	49.1		refs=84; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-52/xf3	49.2		refs=84; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfh/wt_bksel_q	1.9		refs=33; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfh/wt_bf_col3	1.9		refs=33; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-51/rfj/main	49.1		refs=84; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/dh59/tile_wt	7.8		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch2/claude/dh59/lep_wt	2.9		refs=49; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/kw4band-base	2.9		refs=49; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-s81-56/wkm	1.1		dirty_tracked=1;refs=1; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/kw-fix-4-flowu	48.9		refs=82; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/wt/die-hbm-64-plan	30.4		unpushed=1;refs=1; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/kw-fix-5/wt	8.5		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/kw-fix-5/hbmsrc	1.5		refs=3; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/kw4band-tip	2.9		unpushed=2;refs=49; wt-save (format-patch+diff+bundle) first
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/dkv69/wmain	1.6		BIND-REF:dkv69/wmain/rtl/lib;refs=16
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/dkv69/wkw	1.6		refs=16; wt-save (format-patch+diff+bundle) first
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/dkv69/whs	1.6		BIND-REF:dkv69/whs/kv37;refs=16
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/dkv69/wft	1.6		BIND-REF:dkv69/wft/kv37;refs=16
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/dkv69/wbench	1.0		refs=5; wt-save (format-patch+diff+bundle) first
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/dkv70ahub/wpc	1.6		BIND-REF:dkv70ahub/wpc/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2;refs=16
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/dkv67/cl	8.0		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/dkv67/wtp	1.6		refs=16; wt-save (format-patch+diff+bundle) first
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/dkv67/wtc	1.6		BIND-REF:dkv67/wtc/physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192;refs=16
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/dkv67/hr/wt	9.3		BIND-REF:dkv67/hr/wt/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192;refs=16
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/dq68-stm/wt	1.5		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/wt/die-hbm-62-flow	1.6		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/wt/die-hbm-62-cuts-pslice	1.1		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/wt/die-hbm-62-cuts-xprx	1.3		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/wt/die-hbm-62-cuts-q3vm	1.3		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/wt/die-hbm-62-cuts-rdbf	1.3		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/wt-die-qc-67-pindup	1.4		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/dq68-sc/wt	1.6		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/dq67-stm/wt	1.5		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/wt-die-qc-67-types	1.2		unpushed=1;refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/dh61-hold/wt	1.5		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/moved-1105/wt-die-qc-67-base	1.4		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/flow-29/repo	7.9		refs=0; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-s81-54/wtA	33.1		unpushed=2;refs=50; wt-save (format-patch+diff+bundle) first
+epyc4	X	KEEP	/srv/opentallas-scratch3/claude/die-s81-54/eg/wt	33.1		BIND-REF:die-s81-54/eg/wt/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8;refs=52
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/kw-fix-4-flowv	49.1		refs=84; wt-save (format-patch+diff+bundle) first
+epyc4	G	WT-REMOVE	/srv/opentallas-scratch3/claude/spill-proof-1/wt	8.1		refs=0; wt-save (format-patch+diff+bundle) first
+intel1	C	HOLD	/srv/opentallas-scratch2/claude/home	6.73	2026-11-03T17:53	COORD 19:03 C hold
+intel1	A	DELETE	/srv/opentallas-scratch2/claude/moved-from-intel2-1105/die-qc-67-types/gen	1.29	2026-11-03T23:44	idle>24h, no marker
+intel1	A	DELETE	/srv/opentallas-scratch2/claude/moved-from-intel2-1105/dh58-tbfg/wt	0.32	2026-11-03T21:08	idle>24h, no marker
+intel1	C	HOLD	/srv/opentallas-scratch2/claude/moved-from-intel2-1105/epyc1-retire/pinned-211fb91d6e	0.30	2026-10-26T23:41	COORD 19:03 C hold
+intel1	A	DELETE	/srv/opentallas-scratch2/claude/die-qc-65-a0/nl_resign_s/lec	0.07	2026-11-03T05:28	idle>24h, no marker
+intel1	A	DELETE	/srv/opentallas-scratch2/claude/nc3	0.03	2026-10-26T12:52	idle>24h, no marker
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfj/kits	9.17	2026-11-04T07:24	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/kits	8.47	2026-11-04T03:50	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfh/bf_col3	5.54	2026-11-04T03:40	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/kw-fix-5/kvpilot/ioft_a1	3.04	2026-11-04T03:56	BIND-REF:kw-fix-5/kvpilot/ioft_a1/rtl
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/tx4f	3.00	2026-11-04T08:44	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/rfh/bf_col_io	2.09	2026-11-04T02:34	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-63/eco/b128f1	2.03	2026-11-04T09:37	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/die-s81-52/lec2/coll	1.80	2026-11-04T07:32	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/die-hbm-57/g2s	1.66	2026-11-03T16:04	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	MOVE	/srv/opentallas-scratch2/claude/moved/home__ubuntu__.cache/dv_rtl_kit	1.49	2026-10-27T06:29	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/die-hbm-57/g2r	0.66	2026-11-04T03:32	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv65/bind_c	0.62	2026-11-04T00:30	BIND-REF:dkv65/bind_c/native_internal_stations/kv3_hg_v1
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/bind_q3	0.61	2026-11-04T05:45	BIND-REF:dkv66/bind_q3/native_internal_stations/kv3_hg_v1
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/bind_q4	0.61	2026-11-04T05:58	BIND-REF:dkv66/bind_q4/native_internal_stations/kv3_hg_v1
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/bind_q5	0.61	2026-11-04T06:20	BIND-REF:dkv66/bind_q5
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv65/bind_wtm	0.61	2026-11-03T23:27	BIND-REF:dkv65/bind_wtm/native_internal_stations/kv3_hg_v1
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv65/bind_wtsn	0.61	2026-11-03T23:27	BIND-REF:dkv65/bind_wtsn/native_internal_stations/kv3_hg_v1
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/bind_q6	0.60	2026-11-04T07:25	BIND-REF:dkv66/bind_q6
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/adp_e40	0.53	2026-11-04T05:13	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/moved/home__ubuntu__.cache/pip	0.53	2026-11-03T08:28	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/pc6	0.40	2026-11-04T07:38	BIND-REF:dkv66/pc6/kv3_pc__cl254f2e73/prov/views/qkd_kvs_pcc
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/bind_q2	0.34	2026-11-04T05:15	BIND-REF:dkv66/bind_q2/native_internal_stations/kv3_hg_v1
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/bind_b	0.34	2026-11-04T04:23	BIND-REF:dkv66/bind_b
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/bind_e	0.34	2026-11-04T04:34	BIND-REF:dkv66/bind_e
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv65/bind_wf	0.34	2026-11-04T00:49	BIND-REF:dkv65/bind_wf/native_internal_stations/kv3_hg_v1
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/kw-fix-5/kvpilot/bind_ioft_a1	0.34	2026-11-04T00:49	BIND-REF:kw-fix-5/kvpilot/bind_ioft_a1
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv65/bind_wtt	0.34	2026-11-04T00:17	BIND-REF:dkv65/bind_wtt/native_internal_stations/kv3_hg_v1
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/kw-fix-5/kvpilot/bind	0.34	2026-11-04T00:17	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/kw-fix-5/kvpilot/bind_sd_a2	0.34	2026-11-04T00:17	BIND-REF:kw-fix-5/kvpilot/bind_sd_a2
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/qc/a0v8c_i1/run_nl_l3rsvm	0.33	2026-11-03T07:34	BIND-REF:qc
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/qc/a0v8c_i1/run_nl_l3rsp	0.33	2026-11-03T07:34	BIND-REF:qc
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/bind_q	0.29	2026-11-04T04:57	BIND-REF:dkv66/bind_q/native_internal_stations/kv3_hg_v1
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/adp_w80_p2	0.23	2026-11-04T04:48	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/adp_w60_p2	0.23	2026-11-04T04:32	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/adp_w80	0.16	2026-11-04T04:47	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/adp_w60	0.16	2026-11-04T04:30	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/pc4	0.09	2026-11-04T06:54	BIND-REF:dkv66/pc4/kv3_pc__cl254f2e73/prov/views/qkd_kvs_pcc
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/fpjobs	0.08	2026-11-04T05:48	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-52/rfj/flow	0.07	2026-11-03T22:58	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/probe	0.07	2026-11-04T05:38	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/die-kv-64/bind_51d6	0.05	2026-11-04T10:20	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/die-kv-64/bind_0832	0.05	2026-11-04T09:06	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/dkv66/pil	0.04	2026-11-04T05:17	BIND-REF:dkv66/pil/hg_e6/rtl
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/die-s81-56/xfev/dsdv_idx_tx_n32_rf1v	0.04	2026-11-04T21:01	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/ingest_in	0.04	2026-11-04T03:58	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/dkv66/hr/gen	0.03	2026-11-04T04:12	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/die-kv-64/bind/native_internal_stations	0.03	2026-11-03T10:12	BIND-REF:die-kv-64/bind/native_internal_stations/kv3_hg_v1
+intel1	B	DELETE	/srv/opentallas-scratch2/claude/die-kv-64/bind/rtl	0.03	2026-11-03T10:12	idle>24h; only lane-level live/docker/job/KW-LOG ref on parent lane dir
