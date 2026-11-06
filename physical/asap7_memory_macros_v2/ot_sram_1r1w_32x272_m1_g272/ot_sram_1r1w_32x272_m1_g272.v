@@ -182,7 +182,7 @@ module ot_sram_1r1w_32x272_m1_g272 (
     wire [BITS-1:0] w_mask_bits;
     genvar mg;
     generate for (mg = 0; mg < BITS; mg = mg + 1) begin : g_mask
-        assign w_mask_bits[mg] = w_mask_in[mg / 272];
+        assign w_mask_bits[mg] = w_mask_in;
     end endgenerate
     // read-before-write: a same-address read in the write cycle returns the old word
     always @(posedge clk) begin
