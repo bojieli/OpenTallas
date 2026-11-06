@@ -1,0 +1,12 @@
+{
+ "host": "epyc4",
+ "kit": "/srv/opentallas-scratch2/claude/qc-wave-1105f2/kit-wave/qwen_compute/efdb36e864/items/slw_fw_v1__cl51d45468/attempt_6/gen/slw_fw_v1__cl51d45468",
+ "sha256": {
+  "ot_dp_clk_landing.sv": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+  "slw_fw_v1__cl51d45468_bound.sv": "94ee2d0479c0625a6b63ec2704c1b32c856144e03d99406b2a19e187a7ee9c24",
+  "ot_dp_clk_landing_ca.sv": "4fe2e882bab479f5f8b7aa9c40ca7777d97b2ecdd6885efb77ea366c24f56689",
+  "ot_meso_fifo.sv": "72750a546e10260ec6fa1e8ec69f34ae29302c5362eb3baa4df72bf28bd29396"
+ },
+ "source_transform": "Old helper module identifiers suffixed _FW_OLD only; new actual632 wrapper compared data/ready/fault for500cycles, one-bit output mutant rejected",
+ "scope": "Child source candidate only. No parent reset graph/plan/clock/physical adoption."
+}
