@@ -497,9 +497,25 @@ def prep(nl, rx, top=None, wide=False):
         if len(bits) >= 2 and all(isinstance(b, int) for b in bits) and (
                 rxc.search(wn) or "ot_rst_split" in (nn.get("attributes") or {})):
             fam |= set(bits)
+    # OT_RST_COPIES_PREP_KEEP is an opt-in regex on Q net names. A multi-bit register whose
+    # Q net matches stays ONE coarse load (not mapped per bit here), so the flow names its flops after the register
+    # (rename -wire on the coarse Q) and the LEC matches them by name.  Grouping granularity only; function unchanged.
+    import os
+    keep_rx = os.environ.get("OT_RST_COPIES_PREP_KEEP", "")
+    keep_c = re.compile(keep_rx) if keep_rx else None
+    qname = {}
+    if keep_c:
+        for wn, nn in (m.get("netnames") or {}).items():
+            if keep_c.search(wn):
+                for b in nn.get("bits") or []:
+                    qname[b] = wn
+    n_kept = 0
     pats = []
     for cn, c in sorted(cells.items(), key=lambda x: natural(x[0])):
         if not FLOP_RE.match(c["type"]) or c["type"].startswith("$_") or flop_width(c) < 2:
+            continue
+        if keep_c and any(b in qname for b in (c.get("connections") or {}).get("Q", [])):
+            n_kept += 1
             continue
         if any(len(pb) == 1 and pb[0] in fam for pn, pb in (c.get("connections") or {}).items()
                if (c.get("port_directions") or {}).get(pn) == "input"):
@@ -520,6 +536,8 @@ def prep(nl, rx, top=None, wide=False):
             if any(dirs.get(pn) == "input" and any(isinstance(b, int) and b in fam for b in pb)
                    for pn, pb in (c.get("connections") or {}).items()):
                 mems.add(str((c.get("parameters") or {}).get("MEMID", cn)))
+    if keep_c:
+        print(f"OT_RST_COPIES prep: {n_kept} multi-bit registers kept coarse (OT_RST_COPIES_PREP_KEEP {keep_rx})")
     lines = [f"cd {yname(tname)}"]
     if pats:
         lines.append("select -set ot_rc_tm " + " ".join(pats))

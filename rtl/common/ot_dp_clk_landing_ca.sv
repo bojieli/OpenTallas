@@ -393,7 +393,25 @@ module ot_meso_ring_ca #(
 `ifdef OT_MESO_CA_MUTANT_NO_TAG
         assign r_lap_c = r_lap1_c;                                       // MUTANT: extended tag ignored
 `else
+`ifdef OT_MESO_CA_SLOT_LAP
+        // Opt-in short crossing control: compare each slot tag locally, before
+        // selecting it. rp/oh reset and rotate together, hence oh is one-hot
+        // on every active read edge. No new registers or interface cycles.
+        wire [NS-1:0] slot_lap_ok;
+        for (genvar li = 0; li < DEPTH; li++) begin : g_slot_lap
+            wire tag_ok = s_tag[li] == rp[TW-1:PW];
+`ifdef OT_MESO_CA_MUTANT_SLOT_LAP
+            wire unwritten = 1'b0; // mutant: absent slot must have no lap verdict
+`else
+            wire unwritten = !ctl_w[li];
+`endif
+            assign slot_lap_ok[li] = unwritten || (!ctl_lap[li] && tag_ok);
+            assign slot_lap_ok[li+DEPTH] = unwritten || (ctl_lap[li] && tag_ok);
+        end
+        assign r_lap_c = |(oh & slot_lap_ok);
+`else
         assign r_lap_c = r_lap1_c && (!w_c || tag_c == rp[TW-1:PW]);
+`endif
 `endif
     end else begin : g_notag
         assign r_lap_c = r_lap1_c;

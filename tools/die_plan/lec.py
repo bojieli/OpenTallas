@@ -1042,6 +1042,8 @@ def latch_to_wire(src, dst, side):
     memo = {}
 
     def tags(b0):
+        if not isinstance(b0, int):     # Yosys literal bits have no changing phase source
+            return frozenset()
         stack = [(b0, False)]
         while stack:
             b, done = stack.pop()

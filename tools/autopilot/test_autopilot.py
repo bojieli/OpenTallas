@@ -1551,6 +1551,26 @@ class TestCrashTriage1025(unittest.TestCase):
                                capture_output=True, text=True, env={"PATH": ""}, timeout=60).stdout
             return json.loads(o.split("AP_JSON ", 1)[1])
 
+    def test_clock_source_exception_after_pass_is_infra_without_blind_retry(self):
+        files = {
+            "FAIL_POSTCTS": "legacy grt gate: TT global-routing insertion gate failed: PASS exit 1\n"
+                              "FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)\n",
+            "postcts_gate_tt.json": json.dumps({"verdict": "PASS", "setup_wns_est_ps": 23.49}),
+            "postcts_gate_TT.log": "Error: grt_policy_tt.tcl, 849 clock clk has no unique rise source insertion arrival\n",
+        }
+        c = self.classify_probe("", files)
+        self.assertEqual(self.ap.classify(c, {"exit": 1})[:2], ("CRASH", "infra-clock-source"))
+        self.assertNotIn("infra-clock-source", self.ap.INFRA_KINDS)
+        # Missing/failed receipts and real data failures remain structural.
+        for changes in (
+                {"postcts_gate_tt.json": "{}"},
+                {"postcts_gate_tt.json": json.dumps({"verdict": "FAIL"})},
+                {"postcts_gate_TT.log": "Error: grt_policy_tt.tcl, 849 something else\n"},
+                {"FAIL_POSTCTS": "G2 setup_tt failed before pair census: -203.45"},
+                {"FAIL_POSTCTS": "FF structural hold gate: -315.56 ps"}):
+            c = self.classify_probe("", dict(files, **changes))
+            self.assertEqual(self.ap.classify(c, {"exit": 1})[:2], ("STRUCTURAL", "post-cts-hold"))
+
     def test_caught_hold_chunk_error_does_not_hide_terminal_route_error(self):
         c = self.classify_probe("[ERROR RSZ-0060] maximum buffer chunk reached\n"
                                 "OT_HOLD_GATE PASS FF 4.39\n"

@@ -1,0 +1,19 @@
+ldcs: LOCKSTEP PASS checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=62 f_m2=72 f_q=132 f_ad=5 f_e1m=52 f_e1a=3 f_e2=153 f_d1=0 f_sfu=0
+ldcs_b: LOCKSTEP PASS checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=38 f_m2=45 f_q=87 f_ad=3 f_e1m=35 f_e1a=3 f_e2=96 f_d1=0 f_sfu=0
+ldcs_m1: LOCKSTEP FAIL errs=2444913 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=62 f_m2=72 f_q=132 f_ad=5 f_e1m=52 f_e1a=3 f_e2=153 f_d1=0 f_sfu=0
+ldcs_m2: LOCKSTEP FAIL errs=1439380 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=62 f_m2=72 f_q=132 f_ad=5 f_e1m=52 f_e1a=3 f_e2=153 f_d1=0 f_sfu=0
+ldcs_m3: LOCKSTEP FAIL errs=1231930 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=62 f_m2=72 f_q=132 f_ad=5 f_e1m=52 f_e1a=3 f_e2=153 f_d1=0 f_sfu=0
+same: LOCKSTEP PASS checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=62 f_m2=72 f_q=132 f_ad=5 f_e1m=52 f_e1a=3 f_e2=153 f_d1=0 f_sfu=0
+vA: LOCKSTEP PASS checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+vA_b: LOCKSTEP PASS checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=54 f_m2=48 f_q=95 f_ad=2 f_e1m=28 f_e1a=3 f_e2=104 f_d1=0 f_sfu=0
+vA_m3: LOCKSTEP FAIL errs=980016 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+vA_m4: LOCKSTEP FAIL errs=193356 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=79 f_q=132 f_ad=3 f_e1m=43 f_e1a=2 f_e2=146 f_d1=0 f_sfu=0
+vA_m6: LOCKSTEP FAIL errs=292 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+vA_mc: LOCKSTEP FAIL errs=1437218 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+vB: LOCKSTEP PASS checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+vB_b: LOCKSTEP PASS checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=54 f_m2=48 f_q=95 f_ad=2 f_e1m=28 f_e1a=3 f_e2=104 f_d1=0 f_sfu=0
+vB_m3: LOCKSTEP FAIL errs=980010 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+vB_m4: LOCKSTEP FAIL errs=193356 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=79 f_q=132 f_ad=3 f_e1m=43 f_e1a=2 f_e2=146 f_d1=0 f_sfu=0
+vB_m5: LOCKSTEP FAIL errs=899476 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+vB_m6: LOCKSTEP FAIL errs=292 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+vB_mc: LOCKSTEP FAIL errs=1238619 checks=435600 toggled_out_bits=387 FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
