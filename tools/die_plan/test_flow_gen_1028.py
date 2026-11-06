@@ -119,6 +119,7 @@ proc mk {o props} {
 mk m_dff {getName DFFHQNx1_ASAP7_75t_R getWidth 1080 getHeight 270 isBlock 0}
 mk m_inv {getName INVx1_ASAP7_75t_R getWidth 216 getHeight 270 isBlock 0}
 mk m_nand {getName NAND2x1_ASAP7_75t_R getWidth 324 getHeight 270 isBlock 0}
+mk m_ring {getName sle_cland_w515_n getWidth 88560 getHeight 51840 isBlock 1}
 mk t_out {getIoType OUTPUT}
 mk t_in {getIoType INPUT}
 mk bb {xMin 0 yMin 0 xMax 0 yMax 0}
@@ -131,7 +132,7 @@ mk it_inv_y {getMTerm t_out getNet st_o getInst inv}
 mk qn {getName qn getITerms {it_dff_q it_inv_a}}
 mk st_o {getName @STNAME@ getITerms {@STDRV@}}
 mk it_st_d {getMTerm t_out getNet st_o getInst dff}
-mk blk {getInsts {dff inv} getNets {qn st_o @XNET@} getBlockages {}}
+mk blk {getInsts {dff inv} getNets {qn st_o @XNET@} getBlockages {} getRows {}}
 mk st_x {getName v/st_o getITerms {}}
 proc blk_findNet {n} { if {$n eq "@STNAME@"} { return st_o }; return NULL }
 rename blk blk_core
@@ -180,6 +181,22 @@ def test_direct_dff_status_window_inside_core_unchanged(tmp_path):
 
 def test_inverter_from_non_flop_still_fails_closed(tmp_path):
     r = _run_lp(tmp_path, 50.0, qmaster="m_nand")
+    assert r.returncode != 0 and "requires one actual dedicated output FF" in r.stderr
+
+
+def test_status_driven_by_hard_child_ring_is_skipped(tmp_path):
+    """DIE-QC-83 11-06 (QC HC0 AP parent): a landing ring hardened as a hard child drives landing_ready_* from inside
+    the macro; the status point is skipped (the plan places the macro), not an error, and the child is not moved."""
+    r = _run_lp(tmp_path, 50.0, qmaster="m_ring", inv=False)
+    assert "requires one actual dedicated output FF" not in r.stderr, r.stderr
+    assert "is hard child sle_cland_w515_n" in r.stdout, r.stdout + r.stderr
+    assert "cland:status:st_o" not in ((tmp_path / "ot_face_flops.txt").read_text()
+                                       if (tmp_path / "ot_face_flops.txt").exists() else "")
+
+
+def test_hard_child_behind_inverter_still_fails_closed(tmp_path):
+    # an INV fed by a block output is not the single-block case: still an error
+    r = _run_lp(tmp_path, 50.0, qmaster="m_ring", inv=True)
     assert r.returncode != 0 and "requires one actual dedicated output FF" in r.stderr
 
 
