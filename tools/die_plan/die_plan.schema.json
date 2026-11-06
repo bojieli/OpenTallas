@@ -3145,6 +3145,31 @@
          "type": "string",
          "minLength": 1
         },
+        "param_wrap": {
+         "type": "object",
+         "required": [
+          "base",
+          "params"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "base": {
+           "type": "string",
+           "minLength": 1
+          },
+          "params": {
+           "type": "object",
+           "minProperties": 1,
+           "additionalProperties": {
+            "type": "integer"
+           }
+          }
+         }
+        },
+        "reset_net": {
+         "type": "string",
+         "minLength": 1
+        },
         "physical_id_alias": {
          "type": "object",
          "minProperties": 1,

@@ -1,0 +1,35 @@
+{
+ "event": "QC-SLECTL-B/SPLIT-1105",
+ "types": {
+  "sle_ctl__cl372cea1c": {
+   "reset_tree_moved": true,
+   "hard_cores": 11
+  },
+  "sle_ctl__cl503337ff": {
+   "reset_tree_moved": true,
+   "hard_cores": 11
+  },
+  "sle_ctl__cl67434795": {
+   "reset_tree_moved": true,
+   "hard_cores": 11
+  },
+  "sle_ctl__cla4f6f12f": {
+   "reset_tree_moved": true,
+   "hard_cores": 11
+  }
+ },
+ "added_cycles": 0,
+ "masters": [
+  "sle_cland_w2104_s",
+  "sle_cland_w457_e",
+  "sle_cland_w457_s",
+  "sle_cland_w517_n",
+  "sle_cland_w517_n_1",
+  "sle_cland_w537_e",
+  "sle_cland_w537_s",
+  "sle_cland_w537_w",
+  "sle_cland_w653_w"
+ ],
+ "src_sha256": "b398e285557293311294917c275d0db0890e79d33008588f95e9c4e4ce24125f",
+ "dst_sha256": "5934539e1fa863b1e004abe38f9204461057d206594e1e3f89935bac375922bf"
+}

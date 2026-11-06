@@ -4454,6 +4454,24 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
         if not d:
             raise gen_rtl.GenError(f"type {tn}: bound ring u_cland_{m.group(3)} ({m.group(1)}) has no literal DEPTH")
         built[m.group(3)] = int(d.group(1))
+    # Named hard wrappers preserve the ring at u_cland_<bus>, but no longer
+    # instantiate the parameterized base in the parent. The binder checks the
+    # exact base/parameters before this rename (param_wrap.wrap_bound).
+    raw_plan = getattr(lands, "plan", None) or {}
+    for hc in raw_plan.get("partition_types", {}).get(tn, {}).get("hard_cores", []):
+        pw = hc.get("param_wrap") or {}
+        if pw.get("base") not in ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas"):
+            continue
+        inst = hc.get("physical_inst", "").removeprefix("u_bound.")
+        master = hc.get("physical_master") or hc["module"]
+        if not inst.startswith("u_cland_") or "." in inst:
+            raise gen_rtl.GenError(f"type {tn}: hard landing wrapper has invalid path {inst}")
+        if not re.search(r"\b" + re.escape(master) + r"\s+" + re.escape(inst) + r"\s*\(", txt):
+            raise gen_rtl.GenError(f"type {tn}: hard landing wrapper {master} {inst} missing from bound RTL")
+        r = inst.removeprefix("u_cland_")
+        if r in built:
+            raise gen_rtl.GenError(f"type {tn}: ring {r} has both native and hard-wrapper instances")
+        built[r] = int(pw["params"]["DEPTH"])
     buses = (ls or {}).get("buses", {})
     rings = {}
     for b, v in buses.items():
