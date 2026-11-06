@@ -28,8 +28,29 @@ proc closest_in {tracks lo hi target} {
   return $best
 }
 # Preserve actual M6 PG and its spacing. This is not a substitute for final DRC.
-set obstacles {}
-foreach net [$b getNets] {foreach sw [$net getSWires] {foreach box [$sw getWires] {if {[$box getTechLayer] eq $m6} {lappend obstacles [list [$box xMin] [$box yMin] [$box xMax] [$box yMax]]}}}}
+set m5boxes {}; set obstacles {}; set via_layers {}
+foreach net [$b getNets] {foreach sw [$net getSWires] {foreach box [$sw getWires] {
+  if {[$box isVia]} {
+    set pgvia [$box getTechVia]; if {$pgvia eq "NULL"} {set pgvia [$box getBlockVia]}
+    if {$pgvia eq "NULL"} {error "OT_CLAND cannot qualify existing special via"}
+    if {![dict exists $via_layers $pgvia]} {
+      set covered {}
+      foreach vbox [$pgvia getBoxes] {dict set covered [$vbox getTechLayer] 1}
+      dict set via_layers $pgvia [dict keys $covered]
+    }
+    # Actual whole-via bounds conservatively cover each touched layer's metal.
+    set layers [dict get $via_layers $pgvia]
+  } else {set layers [list [$box getTechLayer]]}
+  if {$m5 ni $layers && $m6 ni $layers} continue
+  set bounds [list [$box xMin] [$box yMin] [$box xMax] [$box yMax]]
+  if {$m5 in $layers} {lappend m5boxes $bounds}
+  if {$m6 in $layers} {lappend obstacles $bounds}
+}}}
+proc pg_hit {boxes x0 y0 x1 y1} {
+ foreach box $boxes {lassign $box a c d e; if {$a<$x1 && $d>$x0 && $c<$y1 && $e>$y0} {return 1}}
+ return 0
+}
+set spacing5 [$m5 getSpacing]
 set spacing [$m6 getSpacing]
 set half [expr {max(abs($ub),abs($ut),[$m6 getWidth]/2)}]
 puts "OT_CLAND TECH M5via=[list $vl $vb $vr $vt] M6via=[list $ul $ub $ur $ut] M6spacing=$spacing M6width=[$m6 getWidth]"
@@ -63,11 +84,18 @@ foreach inst [$b getInsts] {
     if {$y<$ylo || $y>$yhi} continue
     set x0 [expr {min($xe,$px)+min($ul,-[$m6 getWidth]/2)-$spacing}]
     set x1 [expr {max($xe,$px)+max($ur,[$m6 getWidth]/2)+$spacing}]
-    set blocked 0
-    foreach box $obstacles {lassign $box a c d e; if {$a<$x1 && $d>$x0 && $c<$y+$half+$spacing && $e>$y-$half-$spacing} {set blocked 1; break}}
-    if {!$blocked} {set ypick $y; break}
+    if {[pg_hit $obstacles $x0 [expr {$y-$half-$spacing}] $x1 [expr {$y+$half+$spacing}]]} continue
+    set down [expr {[$pb yMin]-[$mb yMin] < [$mb yMax]-[$pb yMax]}]
+    set stub [expr {$y+($down ? -1:1)*round(.6*$u)}]
+    set x0 [expr {$xe+min($vl,-[$m5 getWidth]/2)-$spacing5}]
+    set x1 [expr {$xe+max($vr,[$m5 getWidth]/2)+$spacing5}]
+    set y0 [expr {min($y+$vb,$stub-[$m5 getWidth]/2)-$spacing5}]
+    set y1 [expr {max($y+$vt,$stub+[$m5 getWidth]/2)+$spacing5}]
+    if {[pg_hit $m5boxes $x0 $y0 $x1 $y1]} continue
+    if {[pg_hit $m5boxes [expr {$px+$vl-$spacing5}] [expr {$y+$vb-$spacing5}] [expr {$px+$vr+$spacing5}] [expr {$y+$vt+$spacing5}]]} continue
+    set ypick $y; break
   }
-  if {$ypick eq ""} {error "OT_CLAND no PG-clear M6 track inside real PORT"}
+  if {$ypick eq ""} {error "OT_CLAND no PG-clear native M5/VIA56/M6 escape inside real PORT"}
   set down [expr {[$pb yMin]-[$mb yMin] < [$mb yMax]-[$pb yMax]}]
   set stub [expr {$ypick+($down ? -1:1)*round(.6*$u)}]
   lappend plans [list $net $inst $driver $px $ypick $xe $stub]
