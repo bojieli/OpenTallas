@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """HBM-REFORM-A d44v part 17 inputs: lanes canon -> 4 x ot_hbm_su_pg_lane1_core, lanes_plain -> 4 x ot_hbm_su_pg_lane1p_core.
 Both rows are ot_hbm_su_pg_lanes4_core, the RTL already cut by part 6 on lanes8_11 (4 independent lane + bank pairs, 0 crossings).
-lane1p = lane1 text with the module renamed (+ LDCS 1, HBM-GAPS-4-L1P 11-05): the plain slot 440.64x457.92 cannot hold 2x2 lane1 (380.16x622.08), so one more outline: 440.64x112.32, 4 stacked (A3; the first 216x224.64 2x2 outline stopped at GRT-0116).
+lane1p = lane1 text with the module renamed (+ LDCS 1 and ALAT 4, HBM-GAPS-4-L1P 11-05 vB): the plain slot 440.64x457.92 cannot hold 2x2 lane1 (380.16x622.08), so one more outline: 440.64x112.32, 4 stacked (A3; the first 216x224.64 2x2 outline stopped at GRT-0116).
     gen_p17.py REPO KIT_CANON_RTL KIT_PLAIN_RTL OUT     writes RTL into REPO, glue + conn + split_p17.json into OUT"""
 import json, re, subprocess, sys
 from pathlib import Path
@@ -18,6 +18,7 @@ LP_LDCS = LP_PARAM + "    parameter integer LDCS = 1,   // HBM-GAPS-4-L1P: carry
 LP_INST = ".MLAT(MLAT),.ALAT(ALAT),.LEAF(1)"
 lp = (A / f"{L1}.sv").read_text().replace(L1, LP)
 assert lp.count(LP_PARAM) == 1 and lp.count(LP_INST) == 1, "lane1 text changed: re-check the LP LDCS edit"
+LP_LDCS = LP_LDCS.replace("ALAT = 3,", "ALAT = 4,   // HBM-GAPS-4-L1P vB: input-cut FP add (ot_hdc_qadd_lat LAT 4), +1 cycle per add", 1)
 lp = lp.replace(LP_PARAM, LP_LDCS).replace(LP_INST, ".MLAT(MLAT),.ALAT(ALAT),.LDCS(LDCS),.LEAF(1)")
 (B / f"{LP}.sv").write_text(HDR + lp)
 (B / f"{CP}.sv").write_text(HDR + (A / f"{C4}.sv").read_text().replace(L1, LP).replace(C4, CP))

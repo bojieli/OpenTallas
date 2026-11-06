@@ -5,7 +5,7 @@
 `default_nettype none
 module ot_hbm_su_pg_lane1p_core #(
     parameter integer MLAT = 5,
-    parameter integer ALAT = 3,
+    parameter integer ALAT = 4,   // HBM-GAPS-4-L1P vB: input-cut FP add (ot_hdc_qadd_lat LAT 4), +1 cycle per add
     parameter integer LDCS = 1,   // HBM-GAPS-4-L1P: carry-save LEAF offset load (ot_hbm_su_static_lane g_ld3c)
     parameter integer WCOPY = 0
 ) (
