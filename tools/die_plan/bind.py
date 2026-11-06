@@ -3728,7 +3728,7 @@ class Binder:
             import bind_core_split
             core_gate_ports = bind_core_split.gate_ports(self.ab["core_splits"])
 
-        import bind_leaf_reset
+        import bind_core_split, bind_leaf_reset
         try:
             leaf_reset_rules = bind_leaf_reset.selected(self.ab.get("reset_gate_bindings"), tn, t.get("hard_cores", []))
         except ValueError as exc:
@@ -3736,13 +3736,18 @@ class Binder:
         for rule in leaf_reset_rules:
             core_gate_ports[rule["module"]] = tuple(set(core_gate_ports.get(rule["module"], ())) | set(rule["ports"]))
 
+        leaf_gates = {}
+
         def core_reset_gate(x, c, r, pn):
+            try:
+                anchor = bind_leaf_reset.resolve(leaf_reset_rules, c.module, r, pn)
+            except ValueError as exc:
+                raise BindError(f"LEAF_RESET {tn}: {exc}") from exc
+            # Separate namespace keeps all existing hard-core gate identities stable.
+            gates = leaf_gates if anchor is not None else core_gates
+            prefix = "lrg" if anchor is not None else "prg"
             key = (r, x)
-            if key not in core_gates:
-                try:
-                    anchor = bind_leaf_reset.resolve(leaf_reset_rules, c.module, r, pn)
-                except ValueError as exc:
-                    raise BindError(f"LEAF_RESET {tn}: {exc}") from exc
+            if key not in gates:
                 names = (anchor,) if anchor is not None else (r, r.removeprefix("u_"))
                 hc = next((h for h in t.get("hard_cores", []) if h["inst"] in names), None)
                 if rtree is None or hc is None:
@@ -3753,12 +3758,12 @@ class Binder:
                     tap_net = bind_core_split.gate_tap(rtree["relays"], (o[0] + w / 2, o[1] + h / 2), RT.consumer_count(rtree))
                 except ValueError as exc:
                     raise BindError(f"CORE_SPLIT {tn}/{r}: {exc}") from exc
-                nm = short_id(f"prg_{sv_id(r)}_{len(core_gates)}", 100)
-                core_gates[key] = nm
+                nm = short_id(f"{prefix}_{sv_id(r)}_{len(gates)}", 100)
+                gates[key] = nm
                 decl.append(f"    wire {nm};")
                 body.append(f"    ot_dp_rgate u_{nm} (.clk(clk), .d({x}), .run({tap_net}), .q({nm}));  "
                             f"// PC reset safe form: lane & wavefront tap")
-            return core_gates[key]
+            return gates[key]
 
         insts = []
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
