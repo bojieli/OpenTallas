@@ -4,8 +4,9 @@
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hbm_su_pg_lane1p_core #(
-    parameter integer MLAT = 4,
+    parameter integer MLAT = 5,
     parameter integer ALAT = 3,
+    parameter integer LDCS = 1,   // HBM-GAPS-4-L1P: carry-save LEAF offset load (ot_hbm_su_static_lane g_ld3c)
     parameter integer WCOPY = 0
 ) (
     input wire bank0_clk,
@@ -170,7 +171,7 @@ module ot_hbm_su_pg_lane1p_core #(
     wire [31:0] u_lane0__ro_x;
     wire u_lane0__fault;
     wire u_lane0__coll;
-    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(ALAT),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane0 (
+    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(ALAT),.LDCS(LDCS),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane0 (
         .clk_stage(u_lane0__clk_stage),
         .clk_insert(u_lane0__clk_insert),
         .rst_n(u_lane0__rst_n),
