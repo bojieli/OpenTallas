@@ -504,3 +504,25 @@ def test_relative_output_is_absolute_for_abstract_docker_mount(tmp_path, monkeyp
         for index, arg in enumerate(cmd[:-1]):
             if arg == "-v":
                 assert Path(cmd[index + 1].split(":")[0]).is_absolute(), cmd
+
+
+def test_terminal_abstract_failure_keeps_routed_recovery_pass(tmp_path, monkeypatch):
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-4, -2, slew=1))
+    class AbstractFail(Fake):
+        def __call__(self, cmd, **kw):
+            if 'do-generate_abstract' in ' '.join(str(c) for c in cmd):
+                self.calls.append((cmd, kw.get('env') or {}))
+                return 2
+            return super().__call__(cmd, **kw)
+    def stage(_kit, root, tools):
+        (root / 'so').mkdir()
+        return root / 'so'
+    monkeypatch.setattr(E, 'stage_so', stage)
+    r = E.run_loop(k, b, run=AbstractFail([rec(1, 2)]), mem=8, cpus=2)
+    assert r['verdict'] == 'ERROR' and 'best' not in r
+    assert r['recovery']['status'] == 'ERROR'
+    for name in r['recovery']['pass_dirs']:
+        assert (Path(name) / 'run/results').is_dir()
+        assert (Path(name) / 'run/objects').is_dir()
+    assert r['iterations'][-1]['retained_for_recovery']

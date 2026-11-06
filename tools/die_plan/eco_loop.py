@@ -537,9 +537,17 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     else:
         res["best"] = dict(n=best["n"], dir=best["dir"], signoff=best["signoff"], base=best["base"],
                            metrics=best["metrics"])
+    # A completed route can lack metrics because abstract/signoff infrastructure
+    # failed. Keep its entire terminal iteration available for post-only recovery.
+    recovery = res["iterations"][-1] if res["iterations"] and not res["iterations"][-1].get("metrics") else None
+    if recovery is not None:
+        recovery["retained_for_recovery"] = True
+        res["recovery"] = dict(dir=recovery["dir"], pass_dirs=list(recovery["pass_dirs"]),
+                               reason=recovery.get("reason"), status=recovery.get("status"))
     if not keep:
         for it in res["iterations"]:
-            prune(it, intermediate_only=it is best)
+            if it is not recovery:
+                prune(it, intermediate_only=it is best)
     return done(verdict, stop)
 
 
