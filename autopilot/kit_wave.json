@@ -2149,17 +2149,17 @@
   },
   "s81_head": {
    "enabled": true,
-   "event": "l48uf",
+   "event": "l48uh",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
     "evidence": "KW-FIX-16 13:1x l48uf I135 tag flow-20261106-d-head (COORD 13:00 GO): prep_uf = repo l48uf unpacked from src_r 79e52bd98b2 (SHA256SUMS OK, plan 69ce0830f6e4, sidecar = l48ue bytes); only hd_tile u_core params + published tile_p differ from prep_ue. | KW-FIX-14 11:2x l48ue I121 9ac2d25b51e tag flow-20261106-a-head, COORD 11:05 GO: prep_ue = repo l48ue unpacked (SHA256SUMS OK, plan 9a2186d89486, sidecar = l48ud bytes), 9 types; hd_host/hd_mesh l48ud rows keep running (only_items_l48ud kept for restore). | KW-FIX-12 08:3x l48ud I107 COORD 08:12 GO. | KW-FIX-8 08:4x COORD 06:51 (3) + 07:34 (3): event l48ua = DIE-HEAD-61 07:09 READY prepared_l48ua (plan f64ad52c1726, sidecar bbdd2f7b5ad1), GATE_EVENTS l48ua merged I34 fe4a38b9337, pilot rows only. | KW-FIX-6 04:4x COORD 04:00: event l48se = l48sd + hd_tile RE-FORM only [CHECKED raw diff], src main I23. | KW-FIX-6 03:4x: event l48sd = DIE-HEAD-59 00:56 READY prepared_l48sd (plan 830b9a799df1, sidecar bbdd2f7b5ad1 unchanged), src dh59/serdes/wt@b65c0e2d46, GATE_EVENTS l48sd merged I18, COORD 00:4x + 03:2x GO; 5 items | KW-FIX-5 01:0x: event l48tc = DIE-HEAD-59 FREG-1 prepared_l48tc (plan e094ebb2b6e8, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48tc merged I16, COORD GO; 2 items | KW-FIX-4 20:12: event l48rc = DH58-RF2 CONSERVATIVE prepared_l48rc (plan 8327f303db76, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48rc (kw-fix-4-l48rc@3c9994a17c0), OWNER directive via DIE-HEAD-58; 4 items; l48tb turn_a/b keep running (cancel_superseded false) | KW-FIX-4 19:04: event l48tb = DH58-TURNB prepared_l48tb (plan f9623a82a239, sidecar there), GATE_EVENTS l48tb merged (kw-fix-4-itemenv@7585347926, RM-27 I4); turn_a/turn_b only (only_items_l48rf kept for restore); running l48rf kits untouched | KW-FIX-4 11:3x: event l48rf = DH58-RFPLAN PREPARED (intel2+epyc4 dh58/rfplan_work/prepared_l48rf, plan 59c391855c18, sidecar bbdd2f7b5ad1 = l48h1), DIE-HEAD-58 GO 11:24, COORD APPROVED 11:27, GATE_EVENTS l48rf 38b86b7486 merged; G0C advisory (0 new errors, 17 warn). cancel_superseded false: the 6 live l48h0 jobs finish on l48h0 (die owner). hd_mesh_e/hd_ctl_e/hd_ctl_n/hd_host_n holds released (l48rf geometry). | prev event l48h0 plan /srv/opentallas-scratch2/claude/dh55/prepared_l48h0/source_plan.json | KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertion_ff_ps 380 -> 342 on 21 types; G0C 0 new/0 gone, ot_clk kit byte-identical = l46 die clock, strict bind l46a PASS stands) APPROVED; merged main 1a34525e751 (ROOT-MERGE-AH); gate l47 = kit-wave-3 87dda5f5fce (main 8ce125d6a98) | COORD 11-01 09:2x/14:0x approved l48z event; gate b3cb024e493 merged main a0f8f0ad6; prepared plan 0c98a23000ad / sidecar dfe1fd228189; DIE-HEAD-53 export PASS n3_turn,mesh_e,hd_spn | ROOT COORDAPPROVED fe9f369d8 paired mesh SOURCE STAGE ONLY: plan ad1e5a17b355 / sidecar bbdd2f7b5ad1; frozen703 GEN PASS; wrapper+10 generated helpers byte-identical to measured mesh_kit4 (7671b3dde p90 29.81/GRT0/nativeEQ). hd_mesh_e held until actual checkpoint resume/adopt joins; no duplicate PLACE or physical-release credit; parent clock/signoff holds remain."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw11/prep_uf/source_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw11/prep_uh/source_plan.json",
    "gen_host": "epyc4",
-   "src": "/srv/opentallas-scratch2/claude/kw11/src_u",
-   "src_sha": "f88f3b50180f7fb876123a14de99d7676dbddae9",
+   "src": "/srv/opentallas-scratch2/claude/kw11/src_v",
+   "src_sha": "68edf7ac2e4c0a9389813e143ba65988ced04ab1",
    "kit_rtl": {
     "mode": "script",
     "script": "/srv/opentallas-scratch2/claude/kw11/src_t/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
@@ -2167,7 +2167,7 @@
    },
    "gen_args": [
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw11/prep_uf/source_sidecar.json",
+    "/srv/opentallas-scratch2/claude/kw11/prep_uh/source_sidecar.json",
     "--hold-ff-margin",
     "0"
    ],
@@ -2186,7 +2186,7 @@
    "die_max_inflight": 60,
    "owner_lane": "HEAD die owner (DIE-HEAD-70)",
    "lane": "KIT-WAVE-5",
-   "note": "KW-FIX-17 15:5x: src kw11/src_u = tag flow-20261106-g-head f88f3b50180 (I143-I150 incl gitview); kit_rtl.sh, l48uf plan/sidecar bytes equal to src_t (cmp CHECKED); event l48uf unchanged | KW-FIX-16 13:5x tags e-head/g-qc/g-s81 = main a201f608d85 (I139 ecotrim + I140 g2setup, tools only vs src_r): src_t; plan/sidecar/asbuilt bytes unchanged [CHECKED cmp]. | KW-FIX-16 13:1x COORD 13:00: event l48ue -> l48uf (hd_tile pin-cycle hops), src_r main 79e52bd98b2 (tags d-head + f-qc), hd_tile OT_CORE_OUT_LAND=1 kept. | KW-FIX-16 12:5x COORD 12:32/I133 tag c-head: l48ue blocks of the 9 types equal l48ub/ud (per-port window is die-level), so the old records matched and select() skipped them; retry the 9 latest attempts (hd_spn@2, wshim_rx@4, wshim_tx@7 still live in late ECO: they relaunch only on queue FAIL); hd_tile item_env OT_CORE_OUT_LAND=1 (I131). | KW-FIX-12 08:4x hold stop 7f4f20064d5: src_k main 714dd1ea120 (S81/HEAD plan bytes same; QC I102 coll_ft 2 keys). | KW-FIX-12 08:3x COORD 08:15: event l48ud I107 (plan d8d8a0cac25e, sidecar bbdd2f7b5ad1) prep_ud on intel2+epyc4, src_j main b58ba74a5cb; only hd_host, hd_mesh move. | KW-FIX-11 06:4x COORD 06:32: event l48uc I91 (plan 2255e92faccc, sidecar bbdd2f7b5ad1) prep_uc on intel2+epyc4, src_h main 517c80a6704; queue_src cleared, kw8-grtallow 86bdf75 is an ancestor of main; only hd_mesh, hd_host move. | KW-FIX-8 18:2x I55: event l48ub (plan 3e4c1adfbb4e, sidecar bbdd2f7b5ad1), staged epyc4 with real copies; hd_mesh hold lifted. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 14:1x I46: src_s main c512ffc3a94, plan+sidecar same bytes as src_r; selfhold+lecabort+mplclass for new kits | KW-FIX-8 08:4x: l48ua, src main fe4a38b9337 (flow-20261104-l-head), pilot hd_ctl + hd_serdes + hd_turn_a first read; volume waits for the pilot read; l48tc hd_st_k5 + hd_st_turn route rows stopped by exact name; epyc2 place steer COORD 08:34. | KW-FIX-6 04:4x: l48se, src kw-fix-6-headn = main 14fecc5763b, hd_tile added. | KW-FIX-6 03:5x COORD 03:41: DIE-HEAD-60 03:39 batch (b): l48sd 12 items on main-based src kw-fix-6-headm = main 902085405d8; gen refusals -> DIE-HEAD-60 | KW-FIX-6 03:4x: l48sd hd_serdes, hd_ctl, hd_ctl_n + hd_lep0N, hd_st_n4; l48tc records keep routing (cancel_superseded false). | KW-FIX-5 01:0x: l48tc FREG-1 hd_st_k5+hd_st_turn on kw-fix-5-heada; take_states+SIGNED temporary, limited by only_items. Next l48sd (hd_serdes, hd_ctl, hd_ctl_n + hd_lep0N, hd_st_n4 which never launched on l48rc), then restore. | KW-FIX-5 00:2x: COORD dropped hd_serdes + hd_ctl from batch B (no wave recipe, head_wave_kit_rtl refuses both) | KW-FIX-5 23:5x: batch B l48rc src kw-fix-5-headb@7e048c1381c (head4 + 5a9fdf8342 + lep0n overlay), 7 items added, COORD GO; take_states+ROUTING and live_claim 0 only for this batch | KW-FIX-5 23:3x: batch A l48tb = hd_turn_a+hd_turn_b on src kw-fix-5-heada@fb6deb2ec1f (head3 + dh59_turn_overlay), COORD GO; temporary take_states+SIGNED and live_claim 0 limited by only_items, because hd_turn_a is DR",
+   "note": "KW-FIX-17 16:1x COORD 16:0x (d): HEAD tag flow-20261106-h-head 68edf7ac2e4 -> src kw11/src_v; event l48uh (DIE-HEAD-71 relay_sites for hd_tile only), prep_uh = repo l48uh unpacked from src_v (SHA256SUMS OK); vs prep_uf only source_plan/tile_p wrapper/tilehop/wave_prepare differ, sidecar + kit_rtl.sh byte-same; blocks keyed by sha so only hd_tile relaunches | KW-FIX-17 15:5x: src kw11/src_u = tag flow-20261106-g-head f88f3b50180 (I143-I150 incl gitview); kit_rtl.sh, l48uf plan/sidecar bytes equal to src_t (cmp CHECKED); event l48uf unchanged | KW-FIX-16 13:5x tags e-head/g-qc/g-s81 = main a201f608d85 (I139 ecotrim + I140 g2setup, tools only vs src_r): src_t; plan/sidecar/asbuilt bytes unchanged [CHECKED cmp]. | KW-FIX-16 13:1x COORD 13:00: event l48ue -> l48uf (hd_tile pin-cycle hops), src_r main 79e52bd98b2 (tags d-head + f-qc), hd_tile OT_CORE_OUT_LAND=1 kept. | KW-FIX-16 12:5x COORD 12:32/I133 tag c-head: l48ue blocks of the 9 types equal l48ub/ud (per-port window is die-level), so the old records matched and select() skipped them; retry the 9 latest attempts (hd_spn@2, wshim_rx@4, wshim_tx@7 still live in late ECO: they relaunch only on queue FAIL); hd_tile item_env OT_CORE_OUT_LAND=1 (I131). | KW-FIX-12 08:4x hold stop 7f4f20064d5: src_k main 714dd1ea120 (S81/HEAD plan bytes same; QC I102 coll_ft 2 keys). | KW-FIX-12 08:3x COORD 08:15: event l48ud I107 (plan d8d8a0cac25e, sidecar bbdd2f7b5ad1) prep_ud on intel2+epyc4, src_j main b58ba74a5cb; only hd_host, hd_mesh move. | KW-FIX-11 06:4x COORD 06:32: event l48uc I91 (plan 2255e92faccc, sidecar bbdd2f7b5ad1) prep_uc on intel2+epyc4, src_h main 517c80a6704; queue_src cleared, kw8-grtallow 86bdf75 is an ancestor of main; only hd_mesh, hd_host move. | KW-FIX-8 18:2x I55: event l48ub (plan 3e4c1adfbb4e, sidecar bbdd2f7b5ad1), staged epyc4 with real copies; hd_mesh hold lifted. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 14:1x I46: src_s main c512ffc3a94, plan+sidecar same bytes as src_r; selfhold+lecabort+mplclass for new kits | KW-FIX-8 08:4x: l48ua, src main fe4a38b9337 (flow-20261104-l-head), pilot hd_ctl + hd_serdes + hd_turn_a first read; volume waits for the pilot read; l48tc hd_st_k5 + hd_st_turn route rows stopped by exact name; epyc2 place steer COORD 08:34. | KW-FIX-6 04:4x: l48se, src kw-fix-6-headn = main 14fecc5763b, hd_tile added. | KW-FIX-6 03:5x COORD 03:41: DIE-HEAD-60 03:39 batch (b): l48sd 12 items on main-based src kw-fix-6-headm = main 902085405d8; gen refusals -> DIE-HEAD-60 | KW-FIX-6 03:4x: l48sd hd_serdes, hd_ctl, hd_ctl_n + hd_lep0N, hd_st_n4; l48tc records keep routing (cancel_superseded false). | KW-FIX-5 01:0x: l48tc FREG-1 hd_st_k5+hd_st_turn on kw-fix-5-heada; take_states+SIGNED temporary, limited by only_items. Next l48sd (hd_serdes, hd_ctl, hd_ctl_n + hd_lep0N, hd_st_n4 which never launched on l48rc), then restore. | KW-FIX-5 00:2x: COORD dropped hd_serdes + hd_ctl from batch B (no wave recipe, head_wave_kit_rtl refuses both) | KW-FIX-5 23:5x: batch B l48rc src kw-fix-5-headb@7e048c1381c (head4 + 5a9fdf8342 + lep0n overlay), 7 items added, COORD GO; take_states+ROUTING and live_claim 0 only for this batch | KW-FIX-5 23:3x: batch A l48tb = hd_turn_a+hd_turn_b on src kw-fix-5-heada@fb6deb2ec1f (head3 + dh59_turn_overlay), COORD GO; temporary take_states+SIGNED and live_claim 0 limited by only_items, because hd_turn_a is DR",
    "take_states": [
     "FIX",
     "GEOM-REQ",
@@ -2542,7 +2542,18 @@
    "gen_hosts_base": [
     "epyc4"
    ],
-   "gen_host_base": "epyc4"
+   "gen_host_base": "epyc4",
+   "only_items_l48uf": [
+    "hd_ctl",
+    "hd_ctl_n",
+    "hd_spn",
+    "hd_spn_end",
+    "hd_spn_eshim_rx",
+    "hd_spn_wshim_rx",
+    "hd_spn_wshim_tx",
+    "hd_st_n4",
+    "hd_tile"
+   ]
   },
   "qwen_compute": {
    "enabled": true,
