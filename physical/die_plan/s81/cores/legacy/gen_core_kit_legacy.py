@@ -147,6 +147,38 @@ def macro_pdn(mplace, macro_dir, obs_max=None):
     return out, info
 
 
+def pg_top_pdn(pdn, info, pg_top=None, obs_max=None):
+    """Opt in to a real M6 exported supply interface above M6 signal OBS.
+
+    The default preserves legacy PDN bytes. A label alone cannot lift PG:
+    M6 stripes, M5/M6 vias and M6 boundary pins are generated together.
+    The containing parent must reserve a real M7 landing bridge.
+    """
+    if pg_top is None or pg_top == "M5":
+        return pdn, info
+    if pg_top != "M6":
+        raise ValueError(f"unsupported pg_top {pg_top!r}; supported M5/M6")
+    if not isinstance(obs_max, str) or not re.fullmatch(r"M[6-9]", obs_max):
+        raise ValueError(f"M6 PG interface requires declared obs_max>=M6, found {obs_max!r}")
+    old = "define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M5}"
+    if pdn.count(old) != 1:
+        raise ValueError("expected exactly one native M5 top PG grid")
+    pdn = pdn.replace(old, old.replace("-pins {M5}", "-pins {M6}"), 1)
+    if "add_pdn_stripe -grid {top} -layer {M6}" not in pdn:
+        pdn += ("# Export actual M6 PG pins; parent landing requires M7.\n"
+                "add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}\n"
+                "add_pdn_connect -grid {top} -layers {M5 M6}\n")
+    elif "add_pdn_connect -grid {top} -layers {M5 M6}" not in pdn:
+        raise ValueError("existing M6 stripes lack M5/M6 PG connection")
+    info = dict(info or {})
+    info.update(schema="opentallas.core_pg_interface.v1", exported_pg_pin_layer="M6",
+                added_pg_layers=["M6"], declared_parent_obs_max=obs_max,
+                abstract_obstruction_min_layer="M6", parent_landing_layer="M7",
+                parent_adoption="requires actual M6 PG pins and explicit parent M7 landing",
+                m6_stripe_um=dict(width=.288, spacing=.096, pitch=4.32, offset=1.968))
+    return pdn, info
+
+
 FACE_GUARD_CORE = r'''"""kits_repin wrapper of tools/die_plan/face_guard.py (copied beside it, unmodified): guard the Yosys netlist with this
 core's clock / reset skip set; planned bits from pins.json (scalar ports by bare name).
     python3 -I face_guard_core.py NETLIST TOP SKIP_RE pins.json OUT.json      exit 1 = FAIL"""
@@ -1685,6 +1717,7 @@ def main():
     shutil.copyfile(S81 / "cores/svc/pin_audit_core.py", kd / "pin_audit.py")
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
     pdn_text, pg_interface = macro_pdn(mplace, kd / "macros", hc.get("obs_max"))
+    pdn_text, pg_interface = pg_top_pdn(pdn_text, pg_interface, rec.get("pg_top"), hc.get("obs_max"))
     (kd / "pdn.tcl").write_text(pdn_text)
     if pg_interface is not None:
         (kd / "pg_interface.json").write_text(json.dumps(pg_interface, indent=1) + "\n")
