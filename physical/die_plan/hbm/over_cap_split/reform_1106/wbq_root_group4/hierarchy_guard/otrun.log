@@ -1,0 +1,4 @@
+ot-run: localhost      admits    10 GB (avail 247, reserve 0, fresh 95.9, peak 76.5, headroom 0, waiters 2/50 GB) load 181/112 running 56 disk 89 GB 
+ot-run: -> localhost (will queue: admits 10 GB < 4 GB)
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-130758-1793981285 after 1 s
+ot-run: RAN on localhost (unit oth-ubuntu-130758-1793981285): exit 0

@@ -1,0 +1,6 @@
+ROOT_STORE checks=6883 writes=768 mismatch=0
+PASS
+- tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 97us; walltime 0.049 s; speed 1.977 ms/s
+- Verilator: cpu 0.049 s on 1 threads; allocated 6 MB

@@ -1,0 +1,32 @@
+ot-run: localhost      admits   130 GB (avail 254, reserve 0, fresh 30.5, peak 29.1, headroom 0, waiters 5/120 GB) load 185/112 running 52 disk 126 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2927194-1793978099 after 1 s
+- tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 97us; walltime 0.053 s; speed 1.809 ms/s
+- Verilator: cpu 0.044 s on 1 threads; allocated 6 MB
+- tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 97us; walltime 0.054 s; speed 1.800 ms/s
+- Verilator: cpu 0.047 s on 1 threads; allocated 6 MB
+- tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 97us; walltime 0.043 s; speed 2.260 ms/s
+- Verilator: cpu 0.043 s on 1 threads; allocated 6 MB
+- tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 97us; walltime 0.038 s; speed 2.559 ms/s
+- Verilator: cpu 0.038 s on 1 threads; allocated 6 MB
+ROOT_STORE checks=9636 writes=768 mismatch=768
+[96520000000] %Fatal: tb.sv:33: Assertion failed in tb: FAIL
+%Error: tb.sv:33: Verilog $stop
+Aborting...
+ROOT_STORE checks=9636 writes=768 mismatch=768
+[96520000000] %Fatal: tb.sv:33: Assertion failed in tb: FAIL
+%Error: tb.sv:33: Verilog $stop
+Aborting...
+ROOT_STORE checks=9636 writes=768 mismatch=768
+[96520000000] %Fatal: tb.sv:33: Assertion failed in tb: FAIL
+%Error: tb.sv:33: Verilog $stop
+Aborting...
+ot-run: RAN on localhost (unit oth-ubuntu-2927194-1793978099): exit 0

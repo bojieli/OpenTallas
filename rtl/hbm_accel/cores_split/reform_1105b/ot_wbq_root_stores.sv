@@ -40,6 +40,27 @@ module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0)(
  wire [7:0] fifo_empty,fifo_re;
  wire [287:0] fifo_head[0:7];
  genvar g;
+`ifdef OT_WBQ_ROOT_GROUP4
+ generate if(1)begin:g_store_groups
+  for(g=0;g<2;g=g+1)begin:g_group4
+`ifdef OT_WBQ_ROOT_STORE_FACES
+   localparam integer FACES=1;
+`else
+   localparam integer FACES=0;
+`endif
+   wire [1151:0] heads;
+   ot_wbq_root_store_group4 #(.LANE_BASE(4*g),.FACES(FACES)) u_store_group(
+    .fifo_clk(fifo_clk),.hbm_clk(hbm_clk),.srst(srst),.hrst(hrst),
+    .root_id(root_id),.base(base[copy_bank]),.total(total[fill_bank]),.committed(committed[copy_bank]),
+    .filling(filling),.fill_bank(fill_bank),.ordinal(ordinal),.copy_q(copy_q),.copy_bank(copy_bank),
+    .copy_start(copy_on&&!copy_q),.s_stop(s_stop),.wd({wd[4*g+3],wd[4*g+2],wd[4*g+1],wd[4*g]}),
+    .wd_v(wd_v[4*g+:4]),.fifo_re(fifo_re[4*g+:4]),.fifo_head(heads),.fifo_empty(fifo_empty[4*g+:4]));
+   for(genvar j=0;j<4;j=j+1)begin:g_head
+    assign fifo_head[4*g+j]=heads[288*j+:288];
+   end
+  end
+ end endgenerate
+`else
  generate for(g=0;g<8;g=g+1)begin:g_lane
 `ifdef OT_WBQ_ROOT_STORE_FACES
   ot_wbq_root_store_face #(.LANE(g)) u_store(
@@ -52,6 +73,7 @@ module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0)(
    .copy_start(copy_on&&!copy_q),.s_stop(s_stop),.wd(wd[g]),.wd_v(wd_v[g]),
    .fifo_re(fifo_re[g]),.fifo_head(fifo_head[g]),.fifo_empty(fifo_empty[g]));
  end endgenerate
+`endif
  integer s;
  always @(posedge fifo_clk or negedge srst)begin
   if(!srst)begin
