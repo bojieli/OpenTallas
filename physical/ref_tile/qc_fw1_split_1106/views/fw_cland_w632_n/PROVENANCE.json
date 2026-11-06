@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "3d3db402090b31b9f6e4cd7fd59d57c957227477",
+ "flow_tag": "flow-20261106-bh-qc",
+ "routed_db": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106/run/results/asap7/kq_fw_cland_w632_n_hfw1106/base/6_final.odb",
+ "build_commit": "caae713529608c9d488e07483a035359f54fdc70",
+ "lec": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/qualified/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/qualified/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106",
+ "original_signoff": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106/signoff/signoff.json",
+ "name": "kq_fw_cland_w632_n_hfw1106",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "devoted-wren",
+ "created": "2026-11-06 16:46 UTC",
+ "routed_db_sha256": "4037e1123373a74796e5b78b4e11b553e6dc2dc481f8cda373ea8b6edebaf508",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106",
+  "sha256": {
+   "signoff.py": "4919941b4815382014e257aa21efa5e2f9947e7f8c6b2add08b27ce5bcd21590",
+   "lec.py": "8aff8b09a3f44ba6fdb230ad01c7c98f7d56e0fc58d6b4c455a03f1be369994b"
+  },
+  "checked": "byte-identical to flow-20261106-bh-qc"
+ },
+ "lane": "QC-FW1",
+ "as_run_note": "Actual singlebuild SIGNED; matched existing helper mounted for repaired pin audit1276/1276; actual routed all-shown LEC. No physical rerun."
+}

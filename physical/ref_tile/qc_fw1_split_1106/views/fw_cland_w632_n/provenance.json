@@ -1,0 +1,97 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "fw_cland_w632_n_hfw1106",
+  "module": "fw_cland_w632_n",
+  "plan_type": "slw_fw_v1__cl51d45468",
+  "outline_um": [
+   109.2,
+   51.84
+  ],
+  "ref_tile": "/srv/opentallas-scratch3/claude/codex-qc-fw1-1106/prototype_prepared/_spec/fw_cland_w632_n",
+  "spec": "/srv/opentallas-scratch3/claude/codex-qc-fw1-1106/prototype_prepared/_spec/fw_cland_w632_n/spec.json",
+  "spec_sha256": "e04768f33a722d61544e86caebe0e2bb16ab1dd0e882b431507b486f92a3134c",
+  "pins_file": "pins.json",
+  "pins_sha256": "69f80db6bf5d381dd8d32636fb609d31b6bd5311fc4022fc7c60a56811758773",
+  "pins": 1276,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n",
+   "t_rst_n"
+  ],
+  "recipe_sha256": "907ca1a83e8bed4c8241bea5055695d371ee6bed29efff52b5292c2c4bafcfd9",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "caae713529",
+  "sdc_lint_sha256": "6e07786df46279a6215bb2f28a8049e29b76059a9e3c99df8f34c9e720fb3350",
+  "face_guard_sha256": "2971ddbf3e66329db100b5c3a6c1206f13e9d174677e35b99e9ce4cd7897f704",
+  "signoff_sha256": "4919941b4815382014e257aa21efa5e2f9947e7f8c6b2add08b27ce5bcd21590",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "1245181df4a3cebb",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "ae55029650949b04fbae97cb0dfb4ffae546551a22654fc80b7f7b2336f6d6f8",
+  "pins_placed_canon_sha256": "1b1cdce7dcf85b0dbf7a63222885b66a8b87902ca4ce2183c8b449b0481b14c6",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106",
+ "src_commit": "3d3db402090b31b9f6e4cd7fd59d57c957227477",
+ "flow_tag": "flow-20261106-bh-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-06T16:46:21+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106",
+  "base": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106/run/results/asap7/kq_fw_cland_w632_n_hfw1106/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106/signoff/signoff.json",
+  "signoff_sha256": "a430792da5a8aa064a209ef117ecc0309ffaf433a921707b6dec76c4184bd31b",
+  "signoff_generated": "2026-11-06T16:29:58+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/fw_cland_w632_n_hfw1106/run/results/asap7/kq_fw_cland_w632_n_hfw1106/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-qc-fw1-pilot-1106/lec_routed/lec.json",
+  "note": null,
+  "lib_basis": null,
+  "files_sha256": {
+   "fw_cland_w632_n.lef": "429fd1096dd416814ef6a19fe5b4432d7a972eff3672dab6be75f8a5b0ba2ddb",
+   "fw_cland_w632_n_ff.lib": "2944d04c8d9626e6097e8d8d60a724e84fb37fb33c96d4c7e4a29175d45d1027",
+   "fw_cland_w632_n_tt.lib": "8d39301ccbf5c93a5278cb108df341326724c310db2d82a623ebd7d9d8ccc690",
+   "pins.json": "539bcc6e1fc69fd2eab793631037dbc016142845395e43e67fa246c3d7225545"
+  }
+ }
+}

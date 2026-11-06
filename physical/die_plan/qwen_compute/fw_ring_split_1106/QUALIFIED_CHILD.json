@@ -1,0 +1,15 @@
+{
+ "module": "fw_cland_w632_n",
+ "private_provider": true,
+ "canonical_credit": 0,
+ "cycles_added": 0,
+ "tt_setup_ps": 166.53,
+ "ff_hold_ps": 17.69,
+ "pinflop_mean_ps": {
+  "tt": 92.1,
+  "ff": 73.36
+ },
+ "view": "physical/ref_tile/qc_fw1_split_1106/views/fw_cland_w632_n",
+ "actual_pin_audit": "1276/1276 PASS after matched helper mounted beside unmodified checker; no DB/RTL/physical rerun",
+ "native_parent_event": "NOT ADOPTED: reset/collector reattachment proof and matching native body required"
+}
