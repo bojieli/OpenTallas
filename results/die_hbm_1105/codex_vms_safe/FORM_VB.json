@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm.vms_safe_form.v1",
+  "source": "epyc4:/srv/opentallas-scratch2/claude/die-hbm-75/eco/kits/f512rp",
+  "base_result": "ECO_EXHAUSTED TT54.41 FF-10.43 DRV68 DRC0",
+  "diagnosis": "c_c[219]->d_dat[219] has354.12vs487.66ps FF clock arrivals on distinct regional dtaps700020/700012; macro bank.b/c had0.072um channel",
+  "form": "same native8clock pins, ordinary CTS per native root, no density-dtap or alignment chains;3macro column with46.152um corridors; existing registered faces and3stage reset retained",
+  "pin_cycles": 0,
+  "rtl_byte_changes": 0,
+  "rtl_sha256": {
+    "ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+    "hfd_vms_bank_native_q0_faces.sv": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4",
+    "ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+    "portlist.txt": "d15e8d6a0adb7a176996941c81134dcc903b0425e89fcf31dfda61a829a2239c",
+    "ot_vms_bank_q0_faces_core.sv": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621",
+    "ot_vms_bank_q0_faces_body.sv": "a60a2419fdf85e3f684effb0f0a850afe895dd2f8dfddaf9b2cc393ee11c8870",
+    "hnx_vms_bank_q0_faces__vecd4ae__fshell.sv": "546a067543098e3697f04f84b1c7b3851b24daa315a45f0076064966a1b42991",
+    "hnx_vms_bank_q0_faces__vecd4ae__wrap.sv": "aba97383f865a8fd1b1149dcb3302881bb994cae4347d81f0afaf4ddf115a079"
+  },
+  "macro_rects": [
+    [
+      47.616,
+      50.112,
+      222.36,
+      120.6
+    ],
+    [
+      47.616,
+      166.752,
+      222.36,
+      237.24
+    ],
+    [
+      47.616,
+      283.392,
+      222.36,
+      353.88
+    ]
+  ],
+  "stdcell_area_um2_estimate": 4936.773504000004,
+  "cell_count_estimate": "~45k from base mapped design; below150k",
+  "stdcell_util_estimate": 0.06,
+  "density": 0.35
+}
