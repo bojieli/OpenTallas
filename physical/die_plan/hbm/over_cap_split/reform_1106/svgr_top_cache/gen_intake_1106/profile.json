@@ -1,0 +1,123 @@
+{
+  "canonical_commit": "d3c2675c51f720f54820b091e9e10bde2398ddfd",
+  "proposal_commit": "54c77e02f8fce9575dfd2644be2ec6437a06f94f",
+  "execution_branch_merge_commit": "edb2c9b3256d1eb8c484448ee57bfea325e52f1c",
+  "plan": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v37/die_plan.json",
+  "plan_sha256": "80ed6e571900f1f5dc0eab590445c10c90d80d2cec43306e252edf57870eab35",
+  "view": {
+    "view": "ot_svgr_top@c26588462899",
+    "module": "ot_svgr_top",
+    "outline_um": [
+      302.4,
+      639.36
+    ],
+    "pins_file": "cores/ot_svgr_top__302.4x639.36__d44v_split.json",
+    "pins_sha256": "c26588462899db8eb3c0062061af066b503e0c8235525b66e683774ec3b1e4c4",
+    "pins": 7430,
+    "family": "SMSVC",
+    "instances": [
+      "q_hub_nw.u_svg_Q0__t",
+      "q_hub_nw.u_svg_Q1__t",
+      "q_hub_nw.u_svg_Q2__t",
+      "q_hub_nw.u_svg_Q3__t",
+      "q_hub_ne.u_svg_Q0__t",
+      "q_hub_ne.u_svg_Q1__t",
+      "q_hub_ne.u_svg_Q2__t",
+      "q_hub_ne.u_svg_Q3__t"
+    ],
+    "placed": 8,
+    "tables_for_module": 1,
+    "canonical_type": null,
+    "recipe_keys": [
+      "ot_svgr_top"
+    ],
+    "blockers": []
+  },
+  "external_abi": {
+    "total_bits": 7430,
+    "ports": 43,
+    "input_bits": 2727,
+    "output_bits": 4703,
+    "clock": "stream_clk",
+    "clock_pin": {
+      "x": 151.176,
+      "y": 319.68,
+      "layer": "M5"
+    },
+    "retained_failed_TOP_B_view": "ot_svgr_top@c26588462899",
+    "identical_pin_table": true
+  },
+  "macro_proposal": [
+    {
+      "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "x": 17.28,
+      "y": 30.0,
+      "orient": "MY"
+    },
+    {
+      "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "x": 17.28,
+      "y": 99.984,
+      "orient": "MY"
+    },
+    {
+      "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "x": 17.28,
+      "y": 169.968,
+      "orient": "MY"
+    },
+    {
+      "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "x": 17.28,
+      "y": 344.976,
+      "orient": "MY"
+    },
+    {
+      "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "x": 17.28,
+      "y": 415.008,
+      "orient": "MY"
+    },
+    {
+      "instance": "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "x": 63.83,
+      "y": 249.996,
+      "orient": "R0"
+    },
+    {
+      "instance": "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "x": 63.83,
+      "y": 489.996,
+      "orient": "R0"
+    },
+    {
+      "instance": "u_fcore.u_core.issuer.g_t2.u_desc_lo",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "x": 172.8,
+      "y": 49.98,
+      "orient": "R0"
+    },
+    {
+      "instance": "u_fcore.u_core.issuer.g_t2.u_desc_hi",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "x": 172.8,
+      "y": 139.98,
+      "orient": "R0"
+    }
+  ],
+  "added_cycles": 0,
+  "face_shell": {
+    "in_cycles": 1,
+    "out_cycles": 1,
+    "face_flops": 7427
+  },
+  "physical_run_authorized": false,
+  "next_gate": "Generate private kit only, inspect actual staged macros/pins/render, HBM/root source+geometry+PG adoption before P&R"
+}

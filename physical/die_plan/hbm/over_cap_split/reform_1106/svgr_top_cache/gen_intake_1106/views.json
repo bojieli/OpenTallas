@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm_arch.core_views.v1",
+  "plan": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v37/die_plan.json",
+  "plan_sha256": "80ed6e571900f1f5dc0eab590445c10c90d80d2cec43306e252edf57870eab35",
+  "views": 1,
+  "placed": 8,
+  "modules": 1,
+  "by_family": {
+    "SMSVC": 1
+  },
+  "view_list": [
+    {
+      "view": "ot_svgr_top@c26588462899",
+      "module": "ot_svgr_top",
+      "outline_um": [
+        302.4,
+        639.36
+      ],
+      "pins_file": "cores/ot_svgr_top__302.4x639.36__d44v_split.json",
+      "pins_sha256": "c26588462899db8eb3c0062061af066b503e0c8235525b66e683774ec3b1e4c4",
+      "pins": 7430,
+      "family": "SMSVC",
+      "instances": [
+        "q_hub_nw.u_svg_Q0__t",
+        "q_hub_nw.u_svg_Q1__t",
+        "q_hub_nw.u_svg_Q2__t",
+        "q_hub_nw.u_svg_Q3__t",
+        "q_hub_ne.u_svg_Q0__t",
+        "q_hub_ne.u_svg_Q1__t",
+        "q_hub_ne.u_svg_Q2__t",
+        "q_hub_ne.u_svg_Q3__t"
+      ],
+      "placed": 8,
+      "tables_for_module": 1,
+      "canonical_type": null,
+      "recipe_keys": [
+        "ot_svgr_top"
+      ],
+      "blockers": []
+    }
+  ],
+  "scope": "private GEN selected exact canonical TOP view only; does not adopt unrelated plan candidates"
+}
