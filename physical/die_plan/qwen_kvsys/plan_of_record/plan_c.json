@@ -1708050,48 +1708050,15 @@
    ],
    "ft_slots": [],
    "clock": {
-    "tap_mode": "grid+explicit",
-    "added_taps": [
-     {
-      "name": "clk_t5",
-      "xy": [
-       1879.2,
-       326.16
-      ]
-     },
-     {
-      "name": "clk_t6",
-      "xy": [
-       1874.88,
-       749.52
-      ]
-     },
-     {
-      "name": "clk_t7",
-      "xy": [
-       8.64,
-       332.64
-      ]
-     },
-     {
-      "name": "clk_t8",
-      "xy": [
-       8.64,
-       734.4
-      ]
-     }
-    ],
+    "tap_mode": "density",
     "landing_export_form": "fwd_buffer",
     "tap_um": [
-     950.4000000000001,
-     518.4000000000001
+     1760.0,
+     27.0
     ],
     "layer": "M9",
     "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0,
-    "tap_edge_y_um": [
-     21.6
-    ],
     "edge_clocks": [
      {
       "port": "fclk_in_i_host_fdi",
@@ -1708178,8 +1708145,8 @@
         646.496
        ],
        "epoch": false,
-       "source_clock_port": "clk_t4",
-       "source_clock_tap": "clk_t4"
+       "source_clock_port": "clk_t9",
+       "source_clock_tap": "clk_t9"
       },
       {
        "name": "cland_fstart_out_o_serdes_W_rx_flit",
@@ -1708202,8 +1708169,8 @@
         860.32
        ],
        "epoch": false,
-       "source_clock_port": "clk_t4",
-       "source_clock_tap": "clk_t4"
+       "source_clock_port": "clk_t10",
+       "source_clock_tap": "clk_t10"
       },
       {
        "name": "cland_fstart_out_o_serdes_W_tx_up",
@@ -1708222,7 +1708189,7 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        1113.056,
+        1861.888,
         2.656
        ],
        "epoch": false
@@ -1708233,7 +1708200,7 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        1115.232,
+        1864.064,
         2.656
        ],
        "epoch": false
@@ -1708244,12 +1708211,12 @@
        "kind": "clock",
        "layer": "M7",
        "xy_um": [
-        1110.88,
+        1859.712,
         2.656
        ],
        "epoch": false,
-       "source_clock_port": "clk_t2",
-       "source_clock_tap": "clk_t2"
+       "source_clock_port": "clk_t3",
+       "source_clock_tap": "clk_t3"
       },
       {
        "name": "cland_tstart_in",
@@ -1708257,15 +1708224,15 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        190.56,
-        19.98
+        1898.656,
+        548.0
        ],
        "epoch": false,
        "native_entry_reference_um": [
-        190.56,
-        21.6
+        1898.656,
+        548.0
        ],
-       "note": "DIE-KV-28 event27: Codex native START pin site (point_native_pins)"
+       "note": "KV-SYSSD-1 11-06: START pin on the E face mid strip (origin within ~320 um of all four fstart pins); was [190.56, 19.98] beside the old clk grid tap"
       }
      ],
      "bands": {
@@ -1708344,889 +1708311,257 @@
      "physical_qualified": false,
      "collector_tree": {
       "root": [
-       1108.768,
+       1857.12,
        8.608
       ],
-      "depth": 5,
-      "own_depth": 5,
+      "depth": 2,
+      "own_depth": 2,
       "relays": [
        {
         "name": "u_rrl_0",
         "xy": [
-         950.4,
-         21.6
+         1765.792,
+         26.976
         ],
         "d": "rst_root_n",
         "q": "rst_rl_0",
         "depth": 1,
-        "tap": 2,
+        "tap": 0,
         "kind": "pad"
        },
        {
         "name": "u_rrl_1",
         "xy": [
-         950.4,
-         21.6
+         1765.792,
+         26.976
         ],
         "d": "rst_rl_0",
-        "q": "rst_rl_1",
+        "q": "rst_n_t0",
         "depth": 2,
-        "tap": 2,
-        "kind": "pad"
+        "tap": 0,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_2",
         "xy": [
-         950.4,
-         21.6
+         1701.024,
+         26.976
         ],
-        "d": "rst_rl_1",
+        "d": "rst_root_n",
         "q": "rst_rl_2",
-        "depth": 3,
-        "tap": 2,
+        "depth": 1,
+        "tap": 1,
         "kind": "pad"
        },
        {
         "name": "u_rrl_3",
         "xy": [
-         950.4,
-         21.6
+         1701.024,
+         26.976
         ],
         "d": "rst_rl_2",
-        "q": "rst_rl_3",
-        "depth": 4,
-        "tap": 2,
-        "kind": "pad"
+        "q": "rst_n_t1",
+        "depth": 2,
+        "tap": 1,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_4",
         "xy": [
-         950.4,
-         21.6
+         1819.808,
+         26.976
         ],
-        "d": "rst_rl_3",
-        "q": "rst_n_t2",
-        "depth": 5,
+        "d": "rst_root_n",
+        "q": "rst_rl_4",
+        "depth": 1,
         "tap": 2,
-        "kind": "tap"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_5",
         "xy": [
-         1330.56,
-         21.6
+         1819.808,
+         26.976
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_5",
-        "depth": 1,
-        "tap": 3,
-        "kind": "pad"
+        "d": "rst_rl_4",
+        "q": "rst_n_t2",
+        "depth": 2,
+        "tap": 2,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_6",
         "xy": [
-         1330.56,
-         21.6
+         1863.008,
+         26.976
         ],
-        "d": "rst_rl_5",
+        "d": "rst_root_n",
         "q": "rst_rl_6",
-        "depth": 2,
+        "depth": 1,
         "tap": 3,
         "kind": "pad"
        },
        {
         "name": "u_rrl_7",
         "xy": [
-         1330.56,
-         21.6
+         1863.008,
+         26.976
         ],
         "d": "rst_rl_6",
-        "q": "rst_rl_7",
-        "depth": 3,
+        "q": "rst_n_t3",
+        "depth": 2,
         "tap": 3,
-        "kind": "pad"
+        "kind": "tap"
        },
        {
         "name": "u_rrl_8",
         "xy": [
-         1330.56,
-         21.6
+         1875.36,
+         80.992
         ],
-        "d": "rst_rl_7",
+        "d": "rst_root_n",
         "q": "rst_rl_8",
-        "depth": 4,
-        "tap": 3,
+        "depth": 1,
+        "tap": 4,
         "kind": "tap"
        },
        {
         "name": "u_rrl_9",
         "xy": [
-         1330.56,
-         21.6
+         1875.36,
+         80.992
         ],
         "d": "rst_rl_8",
-        "q": "rst_n_t3",
-        "depth": 5,
-        "tap": 3,
+        "q": "rst_n_t4",
+        "depth": 2,
+        "tap": 4,
         "kind": "pad"
        },
        {
         "name": "u_rrl_10",
         "xy": [
-         1602.72,
-         17.28
+         1884.0,
+         405.024
         ],
         "d": "rst_rl_8",
-        "q": "rst_n_t15",
-        "depth": 5,
-        "tap": 15,
+        "q": "rst_n_t7",
+        "depth": 2,
+        "tap": 7,
         "kind": "tap"
        },
        {
         "name": "u_rrl_11",
         "xy": [
-         1611.36,
-         17.28
+         1884.0,
+         167.392
         ],
-        "d": "rst_rl_8",
-        "q": "rst_n_t18",
-        "depth": 5,
-        "tap": 18,
-        "kind": "tap"
+        "d": "rst_root_n",
+        "q": "rst_rl_11",
+        "depth": 1,
+        "tap": 5,
+        "kind": "pad"
        },
        {
         "name": "u_rrl_12",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         167.392
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_12",
-        "depth": 1,
-        "tap": 13,
-        "kind": "pad"
+        "d": "rst_rl_11",
+        "q": "rst_n_t5",
+        "depth": 2,
+        "tap": 5,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_13",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         286.176
         ],
-        "d": "rst_rl_12",
+        "d": "rst_root_n",
         "q": "rst_rl_13",
-        "depth": 2,
-        "tap": 13,
-        "kind": "pad"
+        "depth": 1,
+        "tap": 6,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_14",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         286.176
         ],
         "d": "rst_rl_13",
-        "q": "rst_rl_14",
-        "depth": 3,
-        "tap": 13,
+        "q": "rst_n_t6",
+        "depth": 2,
+        "tap": 6,
         "kind": "pad"
        },
        {
         "name": "u_rrl_15",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         621.024
         ],
-        "d": "rst_rl_14",
-        "q": "rst_rl_15",
-        "depth": 4,
-        "tap": 13,
-        "kind": "pad"
+        "d": "rst_rl_13",
+        "q": "rst_n_t8",
+        "depth": 2,
+        "tap": 8,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_16",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         664.224
         ],
-        "d": "rst_rl_15",
-        "q": "rst_n_t13",
-        "depth": 5,
-        "tap": 13,
+        "d": "rst_rl_13",
+        "q": "rst_n_t9",
+        "depth": 2,
+        "tap": 9,
         "kind": "tap"
        },
        {
         "name": "u_rrl_17",
         "xy": [
-         1045.44,
-         34.56
+         1883.04,
+         361.536
         ],
         "d": "rst_root_n",
         "q": "rst_rl_17",
         "depth": 1,
-        "tap": 17,
-        "kind": "pad"
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_18",
         "xy": [
-         1045.44,
-         34.56
+         1883.04,
+         740.384
         ],
         "d": "rst_rl_17",
-        "q": "rst_rl_18",
-        "depth": 2,
-        "tap": 17,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_19",
-        "xy": [
-         1045.44,
-         34.56
-        ],
-        "d": "rst_rl_18",
-        "q": "rst_rl_19",
-        "depth": 3,
-        "tap": 17,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_20",
-        "xy": [
-         1045.44,
-         34.56
-        ],
-        "d": "rst_rl_19",
-        "q": "rst_rl_20",
-        "depth": 4,
-        "tap": 17,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_21",
-        "xy": [
-         1045.44,
-         34.56
-        ],
-        "d": "rst_rl_20",
-        "q": "rst_n_t17",
-        "depth": 5,
-        "tap": 17,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_22",
-        "xy": [
-         833.008,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_22",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_23",
-        "xy": [
-         833.008,
-         8.608
-        ],
-        "d": "rst_rl_22",
-        "q": "rst_rl_23",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_24",
-        "xy": [
-         833.008,
-         8.608
-        ],
-        "d": "rst_rl_23",
-        "q": "rst_rl_24",
-        "depth": 3,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_25",
-        "xy": [
-         833.008,
-         8.608
-        ],
-        "d": "rst_rl_24",
-        "q": "rst_rl_25",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_26",
-        "xy": [
-         570.24,
-         21.6
-        ],
-        "d": "rst_rl_25",
-        "q": "rst_n_t1",
-        "depth": 5,
-        "tap": 1,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_27",
-        "xy": [
-         1416.24,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_27",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_28",
-        "xy": [
-         1416.24,
-         8.608
-        ],
-        "d": "rst_rl_27",
-        "q": "rst_rl_28",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_29",
-        "xy": [
-         1416.24,
-         8.608
-        ],
-        "d": "rst_rl_28",
-        "q": "rst_rl_29",
-        "depth": 3,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_30",
-        "xy": [
-         1416.24,
-         8.608
-        ],
-        "d": "rst_rl_29",
-        "q": "rst_rl_30",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_31",
-        "xy": [
-         1710.72,
-         21.6
-        ],
-        "d": "rst_rl_30",
-        "q": "rst_n_t4",
-        "depth": 5,
-        "tap": 4,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_32",
-        "xy": [
-         789.808,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_32",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_33",
-        "xy": [
-         789.808,
-         8.608
-        ],
-        "d": "rst_rl_32",
-        "q": "rst_rl_33",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_34",
-        "xy": [
-         789.808,
-         8.608
-        ],
-        "d": "rst_rl_33",
-        "q": "rst_rl_34",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_35",
-        "xy": [
-         479.52,
-         17.28
-        ],
-        "d": "rst_rl_34",
-        "q": "rst_rl_35",
-        "depth": 4,
-        "tap": 14,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_36",
-        "xy": [
-         479.52,
-         17.28
-        ],
-        "d": "rst_rl_35",
-        "q": "rst_n_t14",
-        "depth": 5,
-        "tap": 14,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_37",
-        "xy": [
-         190.08,
-         21.6
-        ],
-        "d": "rst_rl_35",
-        "q": "rst_n_t0",
-        "depth": 5,
-        "tap": 0,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_38",
-        "xy": [
-         1470.7093333333335,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_38",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_39",
-        "xy": [
-         1470.7093333333335,
-         8.608
-        ],
-        "d": "rst_rl_38",
-        "q": "rst_rl_39",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_40",
-        "xy": [
-         1470.7093333333335,
-         8.608
-        ],
-        "d": "rst_rl_39",
-        "q": "rst_rl_40",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_41",
-        "xy": [
-         1832.650666666667,
-         8.608
-        ],
-        "d": "rst_rl_40",
-        "q": "rst_rl_41",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_42",
-        "xy": [
-         1879.2,
-         324.0
-        ],
-        "d": "rst_rl_41",
-        "q": "rst_n_t9",
-        "depth": 5,
-        "tap": 9,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_43",
-        "xy": [
-         1471.4293333333333,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_43",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_44",
-        "xy": [
-         1471.4293333333333,
-         8.608
-        ],
-        "d": "rst_rl_43",
-        "q": "rst_rl_44",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_45",
-        "xy": [
-         1471.4293333333333,
-         8.608
-        ],
-        "d": "rst_rl_44",
-        "q": "rst_rl_45",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_46",
-        "xy": [
-         1834.0906666666665,
-         8.608
-        ],
-        "d": "rst_rl_45",
-        "q": "rst_rl_46",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_47",
-        "xy": [
-         1879.2,
-         326.16
-        ],
-        "d": "rst_rl_46",
-        "q": "rst_n_t5",
-        "depth": 5,
-        "tap": 5,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_48",
-        "xy": [
-         739.1893333333333,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_48",
-        "depth": 1,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_49",
-        "xy": [
-         369.6106666666666,
-         8.608
-        ],
-        "d": "rst_rl_48",
-        "q": "rst_rl_49",
-        "depth": 2,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_50",
-        "xy": [
-         4.32,
-         4.32
-        ],
-        "d": "rst_rl_49",
-        "q": "rst_rl_50",
-        "depth": 3,
-        "tap": 16,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_51",
-        "xy": [
-         4.32,
-         4.32
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_51",
-        "depth": 4,
-        "tap": 16,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_52",
-        "xy": [
-         4.32,
-         4.32
-        ],
-        "d": "rst_rl_51",
-        "q": "rst_n_t16",
-        "depth": 5,
-        "tap": 16,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_53",
-        "xy": [
-         8.64,
-         332.64
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_53",
-        "depth": 4,
-        "tap": 7,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_54",
-        "xy": [
-         8.64,
-         332.64
-        ],
-        "d": "rst_rl_53",
-        "q": "rst_n_t7",
-        "depth": 5,
-        "tap": 7,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_55",
-        "xy": [
-         4.32,
-         332.64
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_55",
-        "depth": 4,
-        "tap": 11,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_56",
-        "xy": [
-         4.32,
-         332.64
-        ],
-        "d": "rst_rl_55",
-        "q": "rst_n_t11",
-        "depth": 5,
-        "tap": 11,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_57",
-        "xy": [
-         4.32,
-         369.35999999999996
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_57",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_58",
-        "xy": [
-         4.32,
-         734.4
-        ],
-        "d": "rst_rl_57",
-        "q": "rst_n_t12",
-        "depth": 5,
-        "tap": 12,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_59",
-        "xy": [
-         8.64,
-         367.2
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_59",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_60",
-        "xy": [
-         8.64,
-         734.4
-        ],
-        "d": "rst_rl_59",
-        "q": "rst_n_t8",
-        "depth": 5,
-        "tap": 8,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_61",
-        "xy": [
-         1484.984,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_61",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_62",
-        "xy": [
-         1484.984,
-         8.608
-        ],
-        "d": "rst_rl_61",
-        "q": "rst_rl_62",
-        "depth": 2,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_63",
-        "xy": [
-         1861.2,
-         8.608
-        ],
-        "d": "rst_rl_62",
-        "q": "rst_rl_63",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_64",
-        "xy": [
-         1874.88,
-         371.14400000000006
-        ],
-        "d": "rst_rl_63",
-        "q": "rst_rl_64",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_65",
-        "xy": [
-         1874.88,
-         747.36
-        ],
-        "d": "rst_rl_64",
         "q": "rst_n_t10",
-        "depth": 5,
-        "tap": 10,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_66",
-        "xy": [
-         1485.5240000000001,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_66",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_67",
-        "xy": [
-         1485.5240000000001,
-         8.608
-        ],
-        "d": "rst_rl_66",
-        "q": "rst_rl_67",
         "depth": 2,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_68",
-        "xy": [
-         1862.2800000000002,
-         8.608
-        ],
-        "d": "rst_rl_67",
-        "q": "rst_rl_68",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_69",
-        "xy": [
-         1874.88,
-         372.76399999999995
-        ],
-        "d": "rst_rl_68",
-        "q": "rst_rl_69",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_70",
-        "xy": [
-         1874.88,
-         749.52
-        ],
-        "d": "rst_rl_69",
-        "q": "rst_n_t6",
-        "depth": 5,
-        "tap": 6,
+        "tap": 10,
         "kind": "tap"
        }
       ],
-      "max_hop_um": 376.8,
+      "max_hop_um": 378.8,
       "tap_depth": {
-       "0": 3,
-       "1": 2,
+       "0": 1,
+       "1": 1,
        "2": 1,
        "3": 1,
-       "4": 2,
-       "5": 3,
-       "6": 4,
-       "7": 4,
-       "8": 5,
-       "9": 3,
-       "10": 4,
-       "11": 4,
-       "12": 5,
-       "13": 1,
-       "14": 2,
-       "15": 2,
-       "16": 3,
-       "17": 1,
-       "18": 2
+       "4": 1,
+       "5": 1,
+       "6": 1,
+       "7": 2,
+       "8": 2,
+       "9": 2,
+       "10": 2
       },
-      "n_tree": 36,
-      "n_pad": 35,
+      "n_tree": 12,
+      "n_pad": 7,
       "reach_um": 405.0,
       "plan_reach_um": 380.0,
       "topology": "taps",
@@ -1709240,21 +1708575,13 @@
        "clk_t6",
        "clk_t7",
        "clk_t8",
-       "reset_local_0",
-       "reset_local_1",
-       "reset_local_2",
-       "reset_local_3",
-       "reset_local_4",
-       "reset_local_5",
-       "reset_local_6",
-       "reset_local_7",
-       "reset_local_8",
-       "reset_local_9"
+       "clk_t9",
+       "clk_t10"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 9,
-      "n_reset_consumers": 19,
-      "local_reset_taps": true,
+      "n_clock_taps": 11,
+      "n_reset_consumers": 11,
+      "local_reset_taps": false,
       "outs": [],
       "core_resets": [],
       "entry": "relayed",
@@ -1709263,7 +1708590,7 @@
       "start": true,
       "relay_driver": false,
       "start_in": [
-       1110.944,
+       1859.296,
        8.608
       ],
       "start_role": "bootstrap",
@@ -1709278,17 +1708605,9 @@
        "7": "bootstrap",
        "8": "bootstrap",
        "9": "bootstrap",
-       "10": "bootstrap",
-       "11": "bootstrap",
-       "12": "bootstrap",
-       "13": "bootstrap",
-       "14": "bootstrap",
-       "15": "bootstrap",
-       "16": "bootstrap",
-       "17": "bootstrap",
-       "18": "bootstrap"
+       "10": "bootstrap"
       },
-      "start_tap": 2
+      "start_tap": 8
      },
      "collector_root_node": "rst_root_n",
      "collector_local_sources": [
@@ -1709351,7 +1708670,7 @@
        "name": "i_host_link_rst_n",
        "ready": "landing_ready_i_host_link_rst_n",
        "fault": "landing_fault_i_host_link_rst_n",
-       "tap": 5,
+       "tap": 7,
        "xy_um": [
         1900.8,
         433.0604
@@ -1709391,7 +1708710,19 @@
      ],
      "collector_children": [],
      "forwarded_clock_only_inputs": true
-    }
+    },
+    "tap_max_sinks": 1200,
+    "tap_target_sinks": 960,
+    "tap_radius_um": 200.0,
+    "sink_bins_file": "physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_sys_SD.json",
+    "keepouts_um": [
+     [
+      1866.24,
+      750.0,
+      1900.8,
+      1036.8
+     ]
+    ]
    },
    "reset": {
     "tap_um": [
@@ -1709400,48 +1708731,6 @@
     ],
     "sync_stages": 2,
     "start_role": "bootstrap",
-    "local_taps_um": [
-     [
-      1879.2,
-      324.0
-     ],
-     [
-      1874.88,
-      747.36
-     ],
-     [
-      4.32,
-      332.64
-     ],
-     [
-      4.32,
-      734.4
-     ],
-     [
-      1036.8,
-      34.56
-     ],
-     [
-      479.52,
-      17.28
-     ],
-     [
-      1602.72,
-      17.28
-     ],
-     [
-      4.32,
-      4.32
-     ],
-     [
-      1045.44,
-      34.56
-     ],
-     [
-      1611.36,
-      17.28
-     ]
-    ],
     "obstacle_model": "lef_origin"
    },
    "contents": [
@@ -1709490,32 +1708779,32 @@
    "cells": 56864,
    "relay_sites": {
     "u_cland_origin/sf": [
-     180.954,
-     20.25
+     1876.5,
+     550.43
     ],
     "u_cland_origin/s0": [
-     559.764,
-     19.98
+     1876.5,
+     545.57
     ],
     "u_cland_origin/s1": [
-     928.962,
-     19.98
+     1876.5,
+     535.85
     ],
     "u_cland_origin/s2": [
-     1298.214,
-     19.98
+     1876.5,
+     526.13
     ],
     "u_cland_origin/pd[0]": [
-     1667.412,
-     19.98
+     1876.5,
+     516.41
     ],
     "u_cland_origin/pd[1]": [
      1876.5,
-     180.09
+     506.69
     ],
     "u_cland_origin/pd[2]": [
      1876.5,
-     182.52
+     496.97
     ]
    }
   },
@@ -1709555,48 +1708844,15 @@
    ],
    "ft_slots": [],
    "clock": {
-    "tap_mode": "grid+explicit",
-    "added_taps": [
-     {
-      "name": "clk_t5",
-      "xy": [
-       1879.2,
-       326.16
-      ]
-     },
-     {
-      "name": "clk_t6",
-      "xy": [
-       1874.88,
-       749.52
-      ]
-     },
-     {
-      "name": "clk_t7",
-      "xy": [
-       8.64,
-       332.64
-      ]
-     },
-     {
-      "name": "clk_t8",
-      "xy": [
-       8.64,
-       734.4
-      ]
-     }
-    ],
+    "tap_mode": "density",
     "landing_export_form": "fwd_buffer",
     "tap_um": [
-     950.4000000000001,
-     518.4000000000001
+     1760.0,
+     27.0
     ],
     "layer": "M9",
     "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0,
-    "tap_edge_y_um": [
-     21.6
-    ],
     "edge_clocks": [
      {
       "port": "fclk_in_i_host_fdi",
@@ -1709683,8 +1708939,8 @@
         646.944
        ],
        "epoch": false,
-       "source_clock_port": "clk_t4",
-       "source_clock_tap": "clk_t4"
+       "source_clock_port": "clk_t9",
+       "source_clock_tap": "clk_t9"
       },
       {
        "name": "cland_fstart_out_o_serdes_E_rx_flit",
@@ -1709707,8 +1708963,8 @@
         860.32
        ],
        "epoch": false,
-       "source_clock_port": "clk_t4",
-       "source_clock_tap": "clk_t4"
+       "source_clock_port": "clk_t10",
+       "source_clock_tap": "clk_t10"
       },
       {
        "name": "cland_fstart_out_o_serdes_E_tx_up",
@@ -1709727,7 +1708983,7 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        1113.056,
+        1861.888,
         2.656
        ],
        "epoch": false
@@ -1709738,7 +1708994,7 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        1115.232,
+        1864.064,
         2.656
        ],
        "epoch": false
@@ -1709749,12 +1709005,12 @@
        "kind": "clock",
        "layer": "M7",
        "xy_um": [
-        1110.88,
+        1859.712,
         2.656
        ],
        "epoch": false,
-       "source_clock_port": "clk_t2",
-       "source_clock_tap": "clk_t2"
+       "source_clock_port": "clk_t3",
+       "source_clock_tap": "clk_t3"
       },
       {
        "name": "cland_tstart_in",
@@ -1709762,15 +1709018,15 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        190.56,
-        19.98
+        1898.656,
+        548.0
        ],
        "epoch": false,
        "native_entry_reference_um": [
-        190.56,
-        21.6
+        1898.656,
+        548.0
        ],
-       "note": "DIE-KV-28 event27: Codex native START pin site (point_native_pins)"
+       "note": "KV-SYSSD-1 11-06: START pin on the E face mid strip (origin within ~320 um of all four fstart pins); was [190.56, 19.98] beside the old clk grid tap"
       }
      ],
      "bands": {
@@ -1709849,889 +1709105,257 @@
      "physical_qualified": false,
      "collector_tree": {
       "root": [
-       1108.768,
+       1857.12,
        8.608
       ],
-      "depth": 5,
-      "own_depth": 5,
+      "depth": 2,
+      "own_depth": 2,
       "relays": [
        {
         "name": "u_rrl_0",
         "xy": [
-         950.4,
-         21.6
+         1765.792,
+         26.976
         ],
         "d": "rst_root_n",
         "q": "rst_rl_0",
         "depth": 1,
-        "tap": 2,
+        "tap": 0,
         "kind": "pad"
        },
        {
         "name": "u_rrl_1",
         "xy": [
-         950.4,
-         21.6
+         1765.792,
+         26.976
         ],
         "d": "rst_rl_0",
-        "q": "rst_rl_1",
+        "q": "rst_n_t0",
         "depth": 2,
-        "tap": 2,
-        "kind": "pad"
+        "tap": 0,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_2",
         "xy": [
-         950.4,
-         21.6
+         1701.024,
+         26.976
         ],
-        "d": "rst_rl_1",
+        "d": "rst_root_n",
         "q": "rst_rl_2",
-        "depth": 3,
-        "tap": 2,
+        "depth": 1,
+        "tap": 1,
         "kind": "pad"
        },
        {
         "name": "u_rrl_3",
         "xy": [
-         950.4,
-         21.6
+         1701.024,
+         26.976
         ],
         "d": "rst_rl_2",
-        "q": "rst_rl_3",
-        "depth": 4,
-        "tap": 2,
-        "kind": "pad"
+        "q": "rst_n_t1",
+        "depth": 2,
+        "tap": 1,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_4",
         "xy": [
-         950.4,
-         21.6
+         1819.808,
+         26.976
         ],
-        "d": "rst_rl_3",
-        "q": "rst_n_t2",
-        "depth": 5,
+        "d": "rst_root_n",
+        "q": "rst_rl_4",
+        "depth": 1,
         "tap": 2,
-        "kind": "tap"
+        "kind": "pad"
        },
        {
         "name": "u_rrl_5",
         "xy": [
-         1330.56,
-         21.6
+         1819.808,
+         26.976
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_5",
-        "depth": 1,
-        "tap": 3,
-        "kind": "pad"
+        "d": "rst_rl_4",
+        "q": "rst_n_t2",
+        "depth": 2,
+        "tap": 2,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_6",
         "xy": [
-         1330.56,
-         21.6
+         1863.008,
+         26.976
         ],
-        "d": "rst_rl_5",
+        "d": "rst_root_n",
         "q": "rst_rl_6",
-        "depth": 2,
+        "depth": 1,
         "tap": 3,
         "kind": "pad"
        },
        {
         "name": "u_rrl_7",
         "xy": [
-         1330.56,
-         21.6
+         1863.008,
+         26.976
         ],
         "d": "rst_rl_6",
-        "q": "rst_rl_7",
-        "depth": 3,
+        "q": "rst_n_t3",
+        "depth": 2,
         "tap": 3,
-        "kind": "pad"
+        "kind": "tap"
        },
        {
         "name": "u_rrl_8",
         "xy": [
-         1330.56,
-         21.6
+         1875.36,
+         80.992
         ],
-        "d": "rst_rl_7",
+        "d": "rst_root_n",
         "q": "rst_rl_8",
-        "depth": 4,
-        "tap": 3,
+        "depth": 1,
+        "tap": 4,
         "kind": "tap"
        },
        {
         "name": "u_rrl_9",
         "xy": [
-         1330.56,
-         21.6
+         1875.36,
+         80.992
         ],
         "d": "rst_rl_8",
-        "q": "rst_n_t3",
-        "depth": 5,
-        "tap": 3,
+        "q": "rst_n_t4",
+        "depth": 2,
+        "tap": 4,
         "kind": "pad"
        },
        {
         "name": "u_rrl_10",
         "xy": [
-         1602.72,
-         17.28
+         1884.0,
+         405.024
         ],
         "d": "rst_rl_8",
-        "q": "rst_n_t15",
-        "depth": 5,
-        "tap": 15,
+        "q": "rst_n_t7",
+        "depth": 2,
+        "tap": 7,
         "kind": "tap"
        },
        {
         "name": "u_rrl_11",
         "xy": [
-         1611.36,
-         17.28
+         1884.0,
+         167.392
         ],
-        "d": "rst_rl_8",
-        "q": "rst_n_t18",
-        "depth": 5,
-        "tap": 18,
-        "kind": "tap"
+        "d": "rst_root_n",
+        "q": "rst_rl_11",
+        "depth": 1,
+        "tap": 5,
+        "kind": "pad"
        },
        {
         "name": "u_rrl_12",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         167.392
         ],
-        "d": "rst_root_n",
-        "q": "rst_rl_12",
-        "depth": 1,
-        "tap": 13,
-        "kind": "pad"
+        "d": "rst_rl_11",
+        "q": "rst_n_t5",
+        "depth": 2,
+        "tap": 5,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_13",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         286.176
         ],
-        "d": "rst_rl_12",
+        "d": "rst_root_n",
         "q": "rst_rl_13",
-        "depth": 2,
-        "tap": 13,
-        "kind": "pad"
+        "depth": 1,
+        "tap": 6,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_14",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         286.176
         ],
         "d": "rst_rl_13",
-        "q": "rst_rl_14",
-        "depth": 3,
-        "tap": 13,
+        "q": "rst_n_t6",
+        "depth": 2,
+        "tap": 6,
         "kind": "pad"
        },
        {
         "name": "u_rrl_15",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         621.024
         ],
-        "d": "rst_rl_14",
-        "q": "rst_rl_15",
-        "depth": 4,
-        "tap": 13,
-        "kind": "pad"
+        "d": "rst_rl_13",
+        "q": "rst_n_t8",
+        "depth": 2,
+        "tap": 8,
+        "kind": "tap"
        },
        {
         "name": "u_rrl_16",
         "xy": [
-         1036.8,
-         34.56
+         1884.0,
+         664.224
         ],
-        "d": "rst_rl_15",
-        "q": "rst_n_t13",
-        "depth": 5,
-        "tap": 13,
+        "d": "rst_rl_13",
+        "q": "rst_n_t9",
+        "depth": 2,
+        "tap": 9,
         "kind": "tap"
        },
        {
         "name": "u_rrl_17",
         "xy": [
-         1045.44,
-         34.56
+         1883.04,
+         361.536
         ],
         "d": "rst_root_n",
         "q": "rst_rl_17",
         "depth": 1,
-        "tap": 17,
-        "kind": "pad"
+        "tap": null,
+        "kind": "wire"
        },
        {
         "name": "u_rrl_18",
         "xy": [
-         1045.44,
-         34.56
+         1883.04,
+         740.384
         ],
         "d": "rst_rl_17",
-        "q": "rst_rl_18",
-        "depth": 2,
-        "tap": 17,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_19",
-        "xy": [
-         1045.44,
-         34.56
-        ],
-        "d": "rst_rl_18",
-        "q": "rst_rl_19",
-        "depth": 3,
-        "tap": 17,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_20",
-        "xy": [
-         1045.44,
-         34.56
-        ],
-        "d": "rst_rl_19",
-        "q": "rst_rl_20",
-        "depth": 4,
-        "tap": 17,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_21",
-        "xy": [
-         1045.44,
-         34.56
-        ],
-        "d": "rst_rl_20",
-        "q": "rst_n_t17",
-        "depth": 5,
-        "tap": 17,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_22",
-        "xy": [
-         833.008,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_22",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_23",
-        "xy": [
-         833.008,
-         8.608
-        ],
-        "d": "rst_rl_22",
-        "q": "rst_rl_23",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_24",
-        "xy": [
-         833.008,
-         8.608
-        ],
-        "d": "rst_rl_23",
-        "q": "rst_rl_24",
-        "depth": 3,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_25",
-        "xy": [
-         833.008,
-         8.608
-        ],
-        "d": "rst_rl_24",
-        "q": "rst_rl_25",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_26",
-        "xy": [
-         570.24,
-         21.6
-        ],
-        "d": "rst_rl_25",
-        "q": "rst_n_t1",
-        "depth": 5,
-        "tap": 1,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_27",
-        "xy": [
-         1416.24,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_27",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_28",
-        "xy": [
-         1416.24,
-         8.608
-        ],
-        "d": "rst_rl_27",
-        "q": "rst_rl_28",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_29",
-        "xy": [
-         1416.24,
-         8.608
-        ],
-        "d": "rst_rl_28",
-        "q": "rst_rl_29",
-        "depth": 3,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_30",
-        "xy": [
-         1416.24,
-         8.608
-        ],
-        "d": "rst_rl_29",
-        "q": "rst_rl_30",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_31",
-        "xy": [
-         1710.72,
-         21.6
-        ],
-        "d": "rst_rl_30",
-        "q": "rst_n_t4",
-        "depth": 5,
-        "tap": 4,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_32",
-        "xy": [
-         789.808,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_32",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_33",
-        "xy": [
-         789.808,
-         8.608
-        ],
-        "d": "rst_rl_32",
-        "q": "rst_rl_33",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_34",
-        "xy": [
-         789.808,
-         8.608
-        ],
-        "d": "rst_rl_33",
-        "q": "rst_rl_34",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_35",
-        "xy": [
-         479.52,
-         17.28
-        ],
-        "d": "rst_rl_34",
-        "q": "rst_rl_35",
-        "depth": 4,
-        "tap": 14,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_36",
-        "xy": [
-         479.52,
-         17.28
-        ],
-        "d": "rst_rl_35",
-        "q": "rst_n_t14",
-        "depth": 5,
-        "tap": 14,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_37",
-        "xy": [
-         190.08,
-         21.6
-        ],
-        "d": "rst_rl_35",
-        "q": "rst_n_t0",
-        "depth": 5,
-        "tap": 0,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_38",
-        "xy": [
-         1470.7093333333335,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_38",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_39",
-        "xy": [
-         1470.7093333333335,
-         8.608
-        ],
-        "d": "rst_rl_38",
-        "q": "rst_rl_39",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_40",
-        "xy": [
-         1470.7093333333335,
-         8.608
-        ],
-        "d": "rst_rl_39",
-        "q": "rst_rl_40",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_41",
-        "xy": [
-         1832.650666666667,
-         8.608
-        ],
-        "d": "rst_rl_40",
-        "q": "rst_rl_41",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_42",
-        "xy": [
-         1879.2,
-         324.0
-        ],
-        "d": "rst_rl_41",
-        "q": "rst_n_t9",
-        "depth": 5,
-        "tap": 9,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_43",
-        "xy": [
-         1471.4293333333333,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_43",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_44",
-        "xy": [
-         1471.4293333333333,
-         8.608
-        ],
-        "d": "rst_rl_43",
-        "q": "rst_rl_44",
-        "depth": 2,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_45",
-        "xy": [
-         1471.4293333333333,
-         8.608
-        ],
-        "d": "rst_rl_44",
-        "q": "rst_rl_45",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_46",
-        "xy": [
-         1834.0906666666665,
-         8.608
-        ],
-        "d": "rst_rl_45",
-        "q": "rst_rl_46",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_47",
-        "xy": [
-         1879.2,
-         326.16
-        ],
-        "d": "rst_rl_46",
-        "q": "rst_n_t5",
-        "depth": 5,
-        "tap": 5,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_48",
-        "xy": [
-         739.1893333333333,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_48",
-        "depth": 1,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_49",
-        "xy": [
-         369.6106666666666,
-         8.608
-        ],
-        "d": "rst_rl_48",
-        "q": "rst_rl_49",
-        "depth": 2,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_50",
-        "xy": [
-         4.32,
-         4.32
-        ],
-        "d": "rst_rl_49",
-        "q": "rst_rl_50",
-        "depth": 3,
-        "tap": 16,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_51",
-        "xy": [
-         4.32,
-         4.32
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_51",
-        "depth": 4,
-        "tap": 16,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_52",
-        "xy": [
-         4.32,
-         4.32
-        ],
-        "d": "rst_rl_51",
-        "q": "rst_n_t16",
-        "depth": 5,
-        "tap": 16,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_53",
-        "xy": [
-         8.64,
-         332.64
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_53",
-        "depth": 4,
-        "tap": 7,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_54",
-        "xy": [
-         8.64,
-         332.64
-        ],
-        "d": "rst_rl_53",
-        "q": "rst_n_t7",
-        "depth": 5,
-        "tap": 7,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_55",
-        "xy": [
-         4.32,
-         332.64
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_55",
-        "depth": 4,
-        "tap": 11,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_56",
-        "xy": [
-         4.32,
-         332.64
-        ],
-        "d": "rst_rl_55",
-        "q": "rst_n_t11",
-        "depth": 5,
-        "tap": 11,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_57",
-        "xy": [
-         4.32,
-         369.35999999999996
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_57",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_58",
-        "xy": [
-         4.32,
-         734.4
-        ],
-        "d": "rst_rl_57",
-        "q": "rst_n_t12",
-        "depth": 5,
-        "tap": 12,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_59",
-        "xy": [
-         8.64,
-         367.2
-        ],
-        "d": "rst_rl_50",
-        "q": "rst_rl_59",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_60",
-        "xy": [
-         8.64,
-         734.4
-        ],
-        "d": "rst_rl_59",
-        "q": "rst_n_t8",
-        "depth": 5,
-        "tap": 8,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_61",
-        "xy": [
-         1484.984,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_61",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_62",
-        "xy": [
-         1484.984,
-         8.608
-        ],
-        "d": "rst_rl_61",
-        "q": "rst_rl_62",
-        "depth": 2,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_63",
-        "xy": [
-         1861.2,
-         8.608
-        ],
-        "d": "rst_rl_62",
-        "q": "rst_rl_63",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_64",
-        "xy": [
-         1874.88,
-         371.14400000000006
-        ],
-        "d": "rst_rl_63",
-        "q": "rst_rl_64",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_65",
-        "xy": [
-         1874.88,
-         747.36
-        ],
-        "d": "rst_rl_64",
         "q": "rst_n_t10",
-        "depth": 5,
-        "tap": 10,
-        "kind": "tap"
-       },
-       {
-        "name": "u_rrl_66",
-        "xy": [
-         1485.5240000000001,
-         8.608
-        ],
-        "d": "rst_root_n",
-        "q": "rst_rl_66",
-        "depth": 1,
-        "tap": null,
-        "kind": "pad"
-       },
-       {
-        "name": "u_rrl_67",
-        "xy": [
-         1485.5240000000001,
-         8.608
-        ],
-        "d": "rst_rl_66",
-        "q": "rst_rl_67",
         "depth": 2,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_68",
-        "xy": [
-         1862.2800000000002,
-         8.608
-        ],
-        "d": "rst_rl_67",
-        "q": "rst_rl_68",
-        "depth": 3,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_69",
-        "xy": [
-         1874.88,
-         372.76399999999995
-        ],
-        "d": "rst_rl_68",
-        "q": "rst_rl_69",
-        "depth": 4,
-        "tap": null,
-        "kind": "wire"
-       },
-       {
-        "name": "u_rrl_70",
-        "xy": [
-         1874.88,
-         749.52
-        ],
-        "d": "rst_rl_69",
-        "q": "rst_n_t6",
-        "depth": 5,
-        "tap": 6,
+        "tap": 10,
         "kind": "tap"
        }
       ],
-      "max_hop_um": 376.8,
+      "max_hop_um": 378.8,
       "tap_depth": {
-       "0": 3,
-       "1": 2,
+       "0": 1,
+       "1": 1,
        "2": 1,
        "3": 1,
-       "4": 2,
-       "5": 3,
-       "6": 4,
-       "7": 4,
-       "8": 5,
-       "9": 3,
-       "10": 4,
-       "11": 4,
-       "12": 5,
-       "13": 1,
-       "14": 2,
-       "15": 2,
-       "16": 3,
-       "17": 1,
-       "18": 2
+       "4": 1,
+       "5": 1,
+       "6": 1,
+       "7": 2,
+       "8": 2,
+       "9": 2,
+       "10": 2
       },
-      "n_tree": 36,
-      "n_pad": 35,
+      "n_tree": 12,
+      "n_pad": 7,
       "reach_um": 405.0,
       "plan_reach_um": 380.0,
       "topology": "taps",
@@ -1710745,21 +1709369,13 @@
        "clk_t6",
        "clk_t7",
        "clk_t8",
-       "reset_local_0",
-       "reset_local_1",
-       "reset_local_2",
-       "reset_local_3",
-       "reset_local_4",
-       "reset_local_5",
-       "reset_local_6",
-       "reset_local_7",
-       "reset_local_8",
-       "reset_local_9"
+       "clk_t9",
+       "clk_t10"
       ],
       "tap_offset_um": 0.0,
-      "n_clock_taps": 9,
-      "n_reset_consumers": 19,
-      "local_reset_taps": true,
+      "n_clock_taps": 11,
+      "n_reset_consumers": 11,
+      "local_reset_taps": false,
       "outs": [],
       "core_resets": [],
       "entry": "relayed",
@@ -1710768,7 +1709384,7 @@
       "start": true,
       "relay_driver": false,
       "start_in": [
-       1110.944,
+       1859.296,
        8.608
       ],
       "start_role": "bootstrap",
@@ -1710783,17 +1709399,9 @@
        "7": "bootstrap",
        "8": "bootstrap",
        "9": "bootstrap",
-       "10": "bootstrap",
-       "11": "bootstrap",
-       "12": "bootstrap",
-       "13": "bootstrap",
-       "14": "bootstrap",
-       "15": "bootstrap",
-       "16": "bootstrap",
-       "17": "bootstrap",
-       "18": "bootstrap"
+       "10": "bootstrap"
       },
-      "start_tap": 2
+      "start_tap": 8
      },
      "collector_root_node": "rst_root_n",
      "collector_local_sources": [
@@ -1710856,7 +1709464,7 @@
        "name": "i_host_link_rst_n",
        "ready": "landing_ready_i_host_link_rst_n",
        "fault": "landing_fault_i_host_link_rst_n",
-       "tap": 5,
+       "tap": 7,
        "xy_um": [
         1900.8,
         433.1186
@@ -1710896,7 +1709504,19 @@
      ],
      "collector_children": [],
      "forwarded_clock_only_inputs": true
-    }
+    },
+    "tap_max_sinks": 1200,
+    "tap_target_sinks": 960,
+    "tap_radius_um": 200.0,
+    "sink_bins_file": "physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_sys_SD_v1.json",
+    "keepouts_um": [
+     [
+      1866.24,
+      750.0,
+      1900.8,
+      1036.8
+     ]
+    ]
    },
    "reset": {
     "tap_um": [
@@ -1710905,48 +1709525,6 @@
     ],
     "sync_stages": 2,
     "start_role": "bootstrap",
-    "local_taps_um": [
-     [
-      1879.2,
-      324.0
-     ],
-     [
-      1874.88,
-      747.36
-     ],
-     [
-      4.32,
-      332.64
-     ],
-     [
-      4.32,
-      734.4
-     ],
-     [
-      1036.8,
-      34.56
-     ],
-     [
-      479.52,
-      17.28
-     ],
-     [
-      1602.72,
-      17.28
-     ],
-     [
-      4.32,
-      4.32
-     ],
-     [
-      1045.44,
-      34.56
-     ],
-     [
-      1611.36,
-      17.28
-     ]
-    ],
     "obstacle_model": "lef_origin"
    },
    "contents": [
@@ -1710995,32 +1709573,32 @@
    "cells": 57219,
    "relay_sites": {
     "u_cland_origin/sf": [
-     180.954,
-     20.25
+     1876.5,
+     550.43
     ],
     "u_cland_origin/s0": [
-     559.764,
-     19.98
+     1876.5,
+     545.57
     ],
     "u_cland_origin/s1": [
-     928.962,
-     19.98
+     1876.5,
+     535.85
     ],
     "u_cland_origin/s2": [
-     1298.214,
-     19.98
+     1876.5,
+     526.13
     ],
     "u_cland_origin/pd[0]": [
-     1667.412,
-     19.98
+     1876.5,
+     516.41
     ],
     "u_cland_origin/pd[1]": [
      1876.5,
-     180.09
+     506.69
     ],
     "u_cland_origin/pd[2]": [
      1876.5,
-     182.52
+     496.97
     ]
    }
   },
@@ -2613272,11 +2611850,11 @@
     1511.968
    ],
    "kv3_sys_SD": [
-    1108.768,
+    1857.6,
     8.608
    ],
    "kv3_sys_SD_v1": [
-    1108.768,
+    1857.6,
     8.608
    ],
    "kv3_sys_c": [
