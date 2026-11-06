@@ -58,6 +58,35 @@ def ring_write_reg(plan, tn, bus):
     return dict(depth=1 + int(freg), dsrep=dsrep, freg=freg)
 
 
+
+def legacy_input_freg(plan, tn, bus):
+    """Explicit rising-fclk payload capture of the legacy ring, +1 data cycle.
+
+    This does not change its free-running pointer or receiver training. It is
+    separate from the count-aligned WREG/FREG start/count-frame mechanism.
+    """
+    types = plan.get("partition_types", {})
+    typ = types.get(tn) or types.get(tn.split("__")[0]) or {}
+    cfg = typ.get("clock", {}).get("landing_input_freg")
+    if cfg is None:
+        return False
+    if (not isinstance(cfg, list) or any(not isinstance(b, str) for b in cfg)
+            or len(cfg) != len(set(cfg))
+            or any(not re.fullmatch(r"[A-Za-z_]\w*", b) for b in cfg)):
+        raise LandingError(f"{tn}: landing_input_freg must list unique legacy input buses")
+    return bus in cfg
+
+
+def crossing_cycles(plan, ca, pid):
+    """The plan selects hardware; its explicit capture is counted exactly once."""
+    p = next(p for p in plan["ports"] if p["id"] == pid)
+    tn = next(r["type"] for r in plan["partitions"] if r["name"] == p["dst"]["part"])
+    capture = legacy_input_freg(plan, tn, p["dst"]["bus"])
+    if ca and capture:
+        raise LandingError(f"{pid}: legacy input FREG and count-aligned form are exclusive")
+    return ca_cycles(ca, pid) + int(capture)
+
+
 def ring_taps(plan, tn):
     """[(x, y)] of the taps whose wavefront relays drive rst_n_t<i> in type tn (type frame): the index space a ring
     reset node rst_n_t<i> refers to.  A plan clock.taps list of kind 'core' entries (S81 12.8a plan-defined core
@@ -104,7 +133,11 @@ def network_lane_cycles(plan):
             raise LandingError("clock landing physical endpoints changed "+pid)
         if len(owners[pid])!=1:raise LandingError("clock landing must identify exactly one logical lane "+pid)
         if ca and pid not in net["count_aligned_cycles"]:raise LandingError("count-aligned crossing has no planned latency "+pid)
-        out[owners[pid][0]]+=int(net["count_aligned_cycles"][pid]) if ca else 3
+        tn = next(q["type"] for q in plan["partitions"] if q["name"] == p["dst"]["part"])
+        capture = legacy_input_freg(plan, tn, p["dst"]["bus"])
+        if ca and capture:
+            raise LandingError(f"{pid}: legacy input FREG and count-aligned form are exclusive")
+        out[owners[pid][0]] += int(net["count_aligned_cycles"][pid]) if ca else 3 + int(capture)
     return dict(out)
 
 
@@ -192,7 +225,7 @@ def requirements(plan, table):
             raise LandingError(f"stale clock landing endpoints/width on {r['port']}")
         masks[sp]["outputs"].add(sb)
         masks[dp]["inputs"].add(db)
-        cyc = ca_cycles(ca, r["port"])
+        cyc = crossing_cycles(plan, ca, r["port"])
         lanes[r["lane"]] += cyc
         pin_refs.append(dict(port=r["port"], lane=r["lane"], src=sp, dst=dp,
                              src_bus=sb, dst_bus=db, width=p["width"],
@@ -201,6 +234,9 @@ def requirements(plan, table):
                              + ([f"cland_fstart_in_{db}"] if ca else []),
                              **({"required_src_start_pin": f"cland_fstart_out_{sb}"} if ca else {}),
                              extra_cycles=cyc))
+        if not ca and legacy_input_freg(plan, parts[dp]["type"], db):
+            status = 2 if (table.get("collector") or {}).get("monitor") in ("dataflow", "region") else 0
+            pin_refs[-1].update(input_capture_cycles=1, input_capture_flops=int(p["width"]) + 1 + status)
     cohorts = defaultdict(dict)
     for pn, p in parts.items():
         mask = {k: sorted(v) for k, v in masks[pn].items()}
@@ -214,9 +250,9 @@ def requirements(plan, table):
                       for k, ps in sorted(cs.items())]
         for g in groups[tn]:
             rows = [row_by_sink[(g["instances"][0], b)] for b in g["mask"]["inputs"]]
-            g["added_live_data_storage_flops"] = sum(5 * (int(r["width"]) + 1) for r in rows)
+            g["added_live_data_storage_flops"] = sum(5 * (int(r["width"]) + 1) + int(r.get("input_capture_flops", 0)) for r in rows)
             g["control_flops_upper_estimate"] = sum(73 + 4 * ((int(r["width"]) + 64) // 64) for r in rows)
-            g["padded_data_storage_flops_upper_estimate"] = sum(5 * 64 * ((int(r["width"]) + 64) // 64) for r in rows)
+            g["padded_data_storage_flops_upper_estimate"] = sum(5 * 64 * ((int(r["width"]) + 64) // 64) + int(r.get("input_capture_flops", 0)) for r in rows)
             g["clock_sink_addition_upper_estimate"] = g["added_live_data_storage_flops"] + g["control_flops_upper_estimate"]
             g["placement_required"] = [dict(bus=r["dst_bus"], ring_instance=f"u_cland_{r['dst_bus']}.u_ring",
                                             data_storage_flops=5 * (int(r["width"]) + 1),
@@ -226,11 +262,12 @@ def requirements(plan, table):
                 source_table_sha256=hashlib.sha256(json.dumps(table, sort_keys=True).encode()).hexdigest(),
                 crossings=len(pin_refs),
                 required_new_scalar_pins=len({(r["src"], r["src_bus"]) for r in pin_refs}) + 3 * len(pin_refs),
-                added_live_data_storage_flops=sum(5 * (int(r["width"]) + 1) for r in pin_refs),
+                added_live_data_storage_flops=sum(5 * (int(r["width"]) + 1) + int(r.get("input_capture_flops", 0)) for r in pin_refs),
                 type_count_before=len(types), type_count_after=sum(map(len, groups.values())),
                 split_types={tn: g for tn, g in groups.items() if len(g) > 1},
                 cohorts=groups, ports=pin_refs, lane_added_cycles=dict(sorted(lanes.items())),
-                nominal_added_cycles_per_crossing="count_aligned (per crossing)" if ca else 3,
+                nominal_added_cycles_per_crossing=("count_aligned (per crossing)" if ca else
+                    "legacy per crossing: base3 + explicit input capture" if any(r.get("input_capture_cycles") for r in pin_refs) else 3),
                 pending=["reserve forwarded-clock and observed status pin tracks", "split nonuniform landing masks",
                          "update lane/R8/calendar price", "emit actual landing RTL", "ring window STA and token pass"])
 
@@ -404,7 +441,17 @@ class Landings:
                     raise LandingError(f"clock landing {pid}: bad ring_params/ring_ports entry {k}={v}")
             if {"W", "fclk", "clk", "rst_n", "d", "q", "ready", "fault"} & (set(rpar) | set(rports)):
                 raise LandingError(f"clock landing {pid}: ring_params/ring_ports may not override the bound ring pins or W")
-            row = dict(r, src_bus=sb, dst_bus=db, added_cycles=3,
+            capture = legacy_input_freg(plan, self.parts[dp]["type"], db)
+            if capture and (self.ca or rmod != "ot_dp_clk_landing"):
+                raise LandingError(f"{pid}: input FREG requires the legacy ring, not a count-aligned variant")
+            if rmod == "ot_dp_clk_landing" and "FREG" in rpar and int(rpar["FREG"]) != int(capture):
+                raise LandingError(f"{pid}: legacy FREG parameter must match its explicit plan selection")
+            if capture:
+                rpar["FREG"] = 1
+            cycles = 3 + int(capture)
+            if capture and int(r.get("added_cycles", cycles)) != cycles:
+                raise LandingError(f"{pid}: legacy landing added_cycles must be {cycles}")
+            row = dict(r, src_bus=sb, dst_bus=db, added_cycles=cycles,
                        module=rmod, ring_params=rpar, ring_ports=rports,
                        ring_depth=int(rpar.get("DEPTH", 4)), ring_offset=int(rpar.get("K", 2)),
                        ring_read_registered=True)
@@ -430,6 +477,8 @@ class Landings:
                 if writer_depth:
                     row.update(writer_start_depth=writer_depth, logical_ring_k=int(c["K"]),
                                boot_extra_cycles=reader_depth + writer_depth, steady_data_cycles_added=0)
+            if capture:
+                row["input_capture_cycles"] = 1
             self.rows.append(row)
             self.ins[dp][db] = row
             self.outs[sp].add(sb)
@@ -1945,7 +1994,8 @@ class Landings:
         result = dict(schema="opentallas.clock_landing_rtl.v1",
                     implemented=self.emitted_top and self.emitted_types == set(self.types),
                     physical_qualified=False,
-                    added_cycles_per_crossing="count_aligned (per crossing)" if self.ca else 3,
+                    added_cycles_per_crossing=("count_aligned (per crossing)" if self.ca else
+                        "legacy per crossing: base3 + explicit input capture" if any(r.get("input_capture_cycles") for r in self.rows) else 3),
                     count_aligned=bool(self.ca),
                     count_straps=self.strap,
                     crossings=len(self.rows), ports=self.rows,

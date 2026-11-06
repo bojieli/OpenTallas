@@ -54,3 +54,19 @@ def test_declared_ring_passes_and_undeclared_fan_still_fails():
     land = {"d": {"D": 4, "form": "hold_mux"}}             # what the emitter writes for a ring on face bus d
     assert face_guard.guard(net, "top", clocks=["fclk"], land=land)["verdict"] == "PASS"
     assert "shared" in face_guard.guard(net, "top", clocks=["fclk"], land=None)["fail_counts"]
+
+def test_freg_uses_ordinary_face_guard_not_ring_exemption(tmp_path):
+    k = _kit(tmp_path)
+    f = k / 'top_bound.sv'
+    f.write_text(BOUND.replace('.W(1105)', '.W(1105), .FREG(1)'))
+    got = gen_phys.plain_ring_land_slots(k, BUSES)
+    assert got == {b: {'D': 4, 'form': 'hold_mux'} for b in ('r_ok', 'r_bad')}
+
+
+def test_nonliteral_freg_is_not_guessed(tmp_path):
+    import pytest
+    import gen_rtl
+    k = _kit(tmp_path)
+    (k / 'top_bound.sv').write_text(BOUND.replace('.W(1105)', '.W(1105), .FREG(ENABLE)'))
+    with pytest.raises(gen_rtl.GenError, match='FREG needs literal'):
+        gen_phys.plain_ring_land_slots(k, BUSES)

@@ -1,0 +1,127 @@
+[
+  {
+    "label": "d4_equal",
+    "depth": 4,
+    "skew": 0,
+    "bias": 0,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=0 bias=0 arbitrary_data=55"
+  },
+  {
+    "label": "d4_skew_fail",
+    "depth": 4,
+    "skew": 6,
+    "bias": 0,
+    "rc": 1,
+    "expected_pass": false,
+    "correct": true,
+    "diagnosis": "[21000000] %Error: reader_ref.sv:43: Assertion failed in tb.g_ref.ref_r.unnamedblk2: LAND_FAULT tb.g_ref.ref_r.unnamedblk2: slot0 epoch4 expected0"
+  },
+  {
+    "label": "d4_bias",
+    "depth": 4,
+    "skew": 6,
+    "bias": 6,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=6 bias=6 arbitrary_data=61"
+  },
+  {
+    "label": "d4_mutant",
+    "depth": 4,
+    "skew": 6,
+    "bias": 5,
+    "rc": 1,
+    "expected_pass": false,
+    "correct": true,
+    "diagnosis": "[34000000] %Fatal: tb_v2.sv:28: Assertion failed in tb: LAND_DATA edge41 gotdbde9ea0 expectedb7bd3d41"
+  },
+  {
+    "label": "d4_reverse",
+    "depth": 4,
+    "skew": -6,
+    "bias": 2,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=-6 bias=2 arbitrary_data=61"
+  },
+  {
+    "label": "d8_equal",
+    "depth": 8,
+    "skew": 0,
+    "bias": 0,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=0 bias=0 arbitrary_data=55"
+  },
+  {
+    "label": "d8_bias",
+    "depth": 8,
+    "skew": 6,
+    "bias": 6,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=6 bias=6 arbitrary_data=61"
+  },
+  {
+    "label": "d8_reverse",
+    "depth": 8,
+    "skew": -6,
+    "bias": 10,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=-6 bias=10 arbitrary_data=61"
+  },
+  {
+    "label": "d8_mutant",
+    "depth": 8,
+    "skew": 6,
+    "bias": 5,
+    "rc": 1,
+    "expected_pass": false,
+    "correct": true,
+    "diagnosis": "[34000000] %Fatal: tb_v2.sv:28: Assertion failed in tb: LAND_DATA edge41 gotdbde9ea0 expectedb7bd3d41"
+  },
+  {
+    "label": "invalid_d4b8",
+    "rc": 1,
+    "correct": true
+  },
+  {
+    "label": "invalid_d4b-1",
+    "rc": 1,
+    "correct": true
+  },
+  {
+    "label": "invalid_d6b0",
+    "rc": 1,
+    "correct": true
+  },
+  {
+    "label": "d4_bias5",
+    "depth": 4,
+    "skew": 5,
+    "bias": 5,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=5 bias=5 arbitrary_data=60"
+  },
+  {
+    "label": "d4_reverse5",
+    "depth": 4,
+    "skew": -5,
+    "bias": 3,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LAND_ORIGIN_PASS skew=-5 bias=3 arbitrary_data=60"
+  }
+]

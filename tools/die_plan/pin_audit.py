@@ -41,6 +41,18 @@ def box_ok(p, box, W, H):
     return along and edge
 
 
+def declared_clock_ports(pins_path):
+    """Only explicit core clock roles exempt otherwise unplanned interior ports."""
+    try:
+        with open(os.path.join(os.path.dirname(pins_path), "core.json")) as stream:
+            roles = json.load(stream).get("boundary_role", {})
+    except (OSError, ValueError, AttributeError):
+        return set()
+    if not isinstance(roles, dict):
+        return set()
+    return {name for name, role in roles.items() if role == "clk"}
+
+
 def main():
     import odb  # noqa: E402  (OpenROAD python)
     db = odb.dbDatabase.create()
@@ -50,6 +62,7 @@ def main():
     die = block.getDieArea()
     W, H = die.xMax() / dbu, die.yMax() / dbu
     want = {pin_key(p): p for p in json.load(open(os.environ["PINS"]))}
+    clock_ports = declared_clock_ports(os.environ["PINS"])
     res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[])
     seen = set()
     for bt in block.getBTerms():
@@ -58,7 +71,7 @@ def main():
             # clock taps (R4: clk, clk_t<i>), the reset tap and reset wavefront outs are interior die pins, not face pins;
             # so are the 12.2a1 pushdown island feed-through ports (ft_ck_i/o, ft_rst_i/o, mp_isl*: die-owned, checked by
             # the ft_ports / pushdown gates, not by the face-pin table)
-            if not INTERIOR.match(n) and not bt.getSigType() in ("POWER", "GROUND"):
+            if n not in clock_ports and not INTERIOR.match(n) and not bt.getSigType() in ("POWER", "GROUND"):
                 res["extra"].append(n)
             continue
         seen.add(n)

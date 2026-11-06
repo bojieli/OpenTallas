@@ -1,27 +1,27 @@
 {
  "schema": "opentallas.signoff.v1",
  "name": "kl_dsdv_idx_txm_grp_vA",
- "generated": "2026-11-06T07:57:53+00:00",
- "host": "eager-sunfish",
+ "generated": "2026-11-06T02:34:29-08:00",
+ "host": "key-cardinal",
  "inputs": {
-  "base": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base",
-  "orfs": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run",
+  "base": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base",
+  "orfs": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run",
   "design": "kl_dsdv_idx_txm_grp_vA",
-  "kit": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1",
-  "odb": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.odb",
-  "spef": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.spef",
-  "sdc": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/constraint.sdc",
+  "kit": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1",
+  "odb": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/constraint.sdc",
   "sdc_source": "kit",
-  "synth": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/1_synth.v",
-  "final_v": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.v",
+  "synth": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/1_synth.v",
+  "final_v": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.v",
   "metrics": {
-   "5_2_route.json": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/logs/asap7/kl_dsdv_idx_txm_grp_vA/base/5_2_route.json",
-   "5_1_grt.json": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/logs/asap7/kl_dsdv_idx_txm_grp_vA/base/5_1_grt.json",
-   "6_report.json": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/logs/asap7/kl_dsdv_idx_txm_grp_vA/base/6_report.json"
+   "5_2_route.json": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/logs/asap7/kl_dsdv_idx_txm_grp_vA/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/logs/asap7/kl_dsdv_idx_txm_grp_vA/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/logs/asap7/kl_dsdv_idx_txm_grp_vA/base/6_report.json"
   },
-  "drc_rpt": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/reports/asap7/kl_dsdv_idx_txm_grp_vA/base/5_route_drc.rpt",
-  "pins": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/pins.json",
-  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/sdc_lint.json",
+  "drc_rpt": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/reports/asap7/kl_dsdv_idx_txm_grp_vA/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/sdc_lint.json",
   "record": null,
   "library_config": null,
   "ff_bound_ps": 202.5
@@ -56,7 +56,7 @@
   "insertion_tol_ps": 40.0,
   "fanout_max": 64,
   "ff_vclk": "bound-ff",
-  "ff_vclk_contract": "declared core FF insertion /srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/sdc_lint.json",
+  "ff_vclk_contract": "declared core FF insertion /srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/sdc_lint.json",
   "insertion_bound": null,
   "ff_vclk_bound_ps": 202.5,
   "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
@@ -179,7 +179,7 @@
      "inter_clock": 0.0
     },
     "method": "tag",
-    "seconds": 3.0,
+    "seconds": 7.0,
     "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
     "tsv": "pair_skew.tsv"
    },
@@ -200,7 +200,7 @@
    "corner": "tt",
    "rc": 0,
    "macro_libs": [
-    "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/macros/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib"
+    "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/macros/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib"
    ],
    "macro_missing": [],
    "errors": [],
@@ -216,7 +216,7 @@
     "status": "NO_UNEXPANDED_CHILD_ETM",
     "verdict": "PASS",
     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
-    "library_receipt": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_resign_v/signoff/tt/libraries.json"
+    "library_receipt": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/resign_ad/signoff/tt/libraries.json"
    }
   },
   "ff": {
@@ -331,7 +331,7 @@
      "inter_clock": 0.0
     },
     "method": "tag",
-    "seconds": 3.0,
+    "seconds": 7.0,
     "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
     "tsv": "pair_skew.tsv"
    },
@@ -352,7 +352,7 @@
    "corner": "ff",
    "rc": 0,
    "macro_libs": [
-    "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/macros/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib"
+    "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/macros/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib"
    ],
    "macro_missing": [],
    "errors": [],
@@ -368,7 +368,7 @@
     "status": "NO_UNEXPANDED_CHILD_ETM",
     "verdict": "PASS",
     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
-    "library_receipt": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_resign_v/signoff/ff/libraries.json"
+    "library_receipt": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/resign_ad/signoff/ff/libraries.json"
    }
   }
  },
@@ -377,7 +377,7 @@
   "mode": "kit sdc_lint.json",
   "errors": [],
   "n_errors": 0,
-  "sdc": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/constraint.sdc",
+  "sdc": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/constraint.sdc",
   "sdc_source": "kit"
  },
  "face_guard": {
@@ -388,11 +388,11 @@
   "fail_counts": {},
   "fails": {},
   "dead_declared": [],
-  "netlist": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/1_synth.v",
-  "pins": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/pins.json",
+  "netlist": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/1_synth.v",
+  "pins": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/pins.json",
   "boundary_context": {
-   "manifest": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/boundary_guard_context.json",
-   "source_core_json": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/core.json",
+   "manifest": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/boundary_guard_context.json",
+   "source_core_json": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/core.json",
    "controls": [
     "ck"
    ]
@@ -471,7 +471,7 @@
      "status": "NO_UNEXPANDED_CHILD_ETM",
      "verdict": "PASS",
      "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
-     "library_receipt": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_resign_v/signoff/tt/libraries.json"
+     "library_receipt": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/resign_ad/signoff/tt/libraries.json"
     },
     "ff": {
      "schema": "opentallas.clock_endpoint_coverage.v1",
@@ -485,7 +485,7 @@
      "status": "NO_UNEXPANDED_CHILD_ETM",
      "verdict": "PASS",
      "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
-     "library_receipt": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_resign_v/signoff/ff/libraries.json"
+     "library_receipt": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/resign_ad/signoff/ff/libraries.json"
     }
    },
    "raw_clock_verdict": "PASS",
@@ -554,7 +554,7 @@
        "inter_clock": 0.0
       },
       "method": "tag",
-      "seconds": 3.0,
+      "seconds": 7.0,
       "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
       "tsv": "pair_skew.tsv"
      }
@@ -613,7 +613,7 @@
        "inter_clock": 0.0
       },
       "method": "tag",
-      "seconds": 3.0,
+      "seconds": 7.0,
       "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
       "tsv": "pair_skew.tsv"
      }
@@ -630,7 +630,7 @@
    "mode": "kit sdc_lint.json",
    "errors": [],
    "n_errors": 0,
-   "sdc": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/constraint.sdc",
+   "sdc": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/constraint.sdc",
    "sdc_source": "kit"
   },
   "face_guard": {
@@ -641,11 +641,11 @@
    "fail_counts": {},
    "fails": {},
    "dead_declared": [],
-   "netlist": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/1_synth.v",
-   "pins": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/pins.json",
+   "netlist": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/1_synth.v",
+   "pins": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/pins.json",
    "boundary_context": {
-    "manifest": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/boundary_guard_context.json",
-    "source_core_json": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/core.json",
+    "manifest": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/boundary_guard_context.json",
+    "source_core_json": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/core.json",
     "controls": [
      "ck"
     ]

@@ -1,0 +1,97 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "sle_cland_w537_s_h5bfe42",
+  "module": "sle_cland_w537_s",
+  "plan_type": "sle_ctl__cl67434795",
+  "outline_um": [
+   92.016,
+   49.68
+  ],
+  "ref_tile": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds2/kits/_spec/sle_cland_w537_s",
+  "spec": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds2/kits/_spec/sle_cland_w537_s/spec.json",
+  "spec_sha256": "e60709e30738a54ff7c1ca7f6348b9ccabd630cd5c91c58b85692a5d3ed6bdc1",
+  "pins_file": "cores/sle_ctl/sle_cland_w537_s_pins.json",
+  "pins_sha256": "5bfe423bac71e67f47dd8bbb49c0c6e5a3376f8afbe4fc62eac14907165929d3",
+  "pins": 1086,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n",
+   "t_rst_n"
+  ],
+  "recipe_sha256": "4da1f89b6db7b3b334cda9719533fe2d37c4547f7acb579fb78ed643c9fc9ab9",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan early core tap 250 TT / 202.5 FF (QC-SLECTL-B/SPLIT-1105: target 250/202.5 ESTIMATE, re-measure from the child's own kit)",
+   "ff": "plan early core tap 250 TT / 202.5 FF (QC-SLECTL-B/SPLIT-1105: target 250/202.5 ESTIMATE, re-measure from the child's own kit)"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "abd257a000",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "3e97ef41823cac5d5dbff8d672eeb6839ef32278c58ca44cbd22865476eebfc5",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "2dcb8cd17ef063fd",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "7300fbe1169c328521dc2e0c020e812f18c5ee4d418cb0c96c46c34d31f238ae",
+  "pins_placed_canon_sha256": "bd18200eb3aeddef206faf3cf0e7b6b3851b23ac4a2e9b85ad646f031de73b42",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w537_s_h5bfe42_fwdtag",
+ "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+ "flow_tag": "flow-20261106-z-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-06T09:08:02+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w537_s_h5bfe42_fwdtag",
+  "base": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w537_s_h5bfe42_fwdtag/run/results/asap7/kq_sle_cland_w537_s_h5bfe42/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w537_s_h5bfe42_fwdtag/signoff/signoff.json",
+  "signoff_sha256": "a7ef0d8f9af5d0bae4e9e0a25c4e10087514a59856dafa73914487b531edeeb8",
+  "signoff_generated": "2026-11-06T09:04:04+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w537_s_h5bfe42_fwdtag/run/results/asap7/kq_sle_cland_w537_s_h5bfe42/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w537_s_h5bfe42_fwdtag/lec/lec.json",
+  "note": null,
+  "lib_basis": null,
+  "files_sha256": {
+   "pins.json": "f58344a0be9c88fccc97f971a4c861c0552aaca820a45b6e2269517b5ef30c37",
+   "sle_cland_w537_s.lef": "4125be813b628cd2bf15cc339d84b91790f046d6efcabcad1785d1b5fd439dfc",
+   "sle_cland_w537_s_ff.lib": "1e97dda9b39d46a526df06e7a9f68047f040db87d19a6b13a7ed043dd8f0710c",
+   "sle_cland_w537_s_tt.lib": "18b3bbb33ffe399e0afd3a4185f3fb39fb5137b1e165e493173273d1d3ed4158"
+  }
+ }
+}

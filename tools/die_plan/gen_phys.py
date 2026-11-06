@@ -3027,6 +3027,7 @@ def plain_ring_land_slots(rtl_dir, buses):
     -- face_guard then proves per bit the D enable-mux slot flops (own-Q hold, exclusive write conditions) exactly as
     for count-aligned rings.  A ring with any other .d expression, or a kit without the ot_dp_clk_landing module /
     a literal ring DEPTH, declares nothing (its bits stay undeclared, so a 1-to-D fan still FAILs).  {} if none."""
+    import gen_rtl
     text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
     body = _LANDING_BODY.search(text)
     dm = _RING_DEPTH.search(body.group(1)) if body else None
@@ -3034,6 +3035,16 @@ def plain_ring_land_slots(rtl_dir, buses):
         return {}
     depth, out = int(dm.group(1)), {}
     for m in _PLAIN_RING.finditer(text):
+        # An explicit FREG captures the bus in one ordinary face register;
+        # the four-slot ring is internal and grants no pin-guard exemption.
+        params = m.group(0).split(m.group(1), 1)[0]
+        fm = re.search(r"\.FREG\s*\(\s*([^()]+)\s*\)", params)
+        if fm:
+            value = fm.group(1).strip()
+            if value not in ("0", "1", "1'b0", "1'b1", "1'd0", "1'd1"):
+                raise gen_rtl.GenError(f"{m.group(1)}: plain landing FREG needs literal 0/1")
+            if value in ("1", "1'b1", "1'd1"):
+                continue
         d = _RING_D.search(m.group(2))
         if not d:
             continue
@@ -3953,6 +3964,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
+    shutil.copyfile(Path(__file__).with_name("hard_landing.py"), kd / "hard_landing.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
     shutil.copyfile(Path(__file__).with_name("native_bb.py"), kd / "native_bb.py")
     shutil.copyfile(Path(__file__).resolve().parents[1] / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
@@ -3964,6 +3976,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
+    shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
@@ -3994,6 +4007,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise gen_rtl.GenError(f"type {tn}: buses declared by both the landing sidecar and a plain ring: {clash[:5]}")
         land_slots["buses"] = {**land_slots.get("buses", {}), **plain}
     land_slots = export_land_slots(P.types[tn], land_slots)
+    if land_slots is not None:
+        import hard_landing
+        land_slots = hard_landing.emit(t, land_slots, kd,
+                                      Path(root) if root else Path(__file__).resolve().parents[2])
     if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)

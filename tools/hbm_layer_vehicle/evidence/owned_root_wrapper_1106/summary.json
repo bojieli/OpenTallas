@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hc_owned_root_wrapper.v1",
+  "baseline_ref": "37be9b42299",
+  "baseline_sha256": "65e9b79dcb1d829dc4574ad4c8dde553ce132db9281dd8cbf0558f272f18170f",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static.sv": "b5f0daf1b092f3d84817f69a006069b13fec5beb210e8b263fd88476fa678b6e",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "tools/hbm_layer_vehicle/owned_root_stubs.sv": "02cd18aacbcddcd5a7ae6b42cdb13d5c96284927ebb361a63135575d20958386",
+    "tools/hbm_layer_vehicle/tb_owned_root_wrapper.sv": "3bb362ae20120e2cf611ab12f6c0115ba2921b18bae7628fe1fd91d7233ff82c"
+  },
+  "results": [
+    {
+      "mutant": 0,
+      "bad_row": false,
+      "rc": 0,
+      "result": "PASS"
+    },
+    {
+      "mutant": 8,
+      "bad_row": false,
+      "rc": 1,
+      "result": "CAUGHT"
+    },
+    {
+      "mutant": 9,
+      "bad_row": false,
+      "rc": 1,
+      "result": "CAUGHT"
+    },
+    {
+      "mutant": 0,
+      "bad_row": true,
+      "rc": 0,
+      "result": "PASS"
+    }
+  ],
+  "cycles": 1200,
+  "clock_period_fs": 833000,
+  "scope": "default wrapper comparison plus owned command/base/global-row/store checks",
+  "arithmetic_abstracted": true,
+  "f20_protocol_abstracted": true,
+  "qualifies_owned_arithmetic": false,
+  "qualifies_current_die": false,
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false
+}

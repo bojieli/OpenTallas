@@ -1,0 +1,1475 @@
+{
+  "module": "kv3_sys_SD_part",
+  "outline_um": [
+    1900.8,
+    1036.8
+  ],
+  "hard": false,
+  "note": "KV plan v3.1 sys_SD; representative sys_SW (R0); L1 est. 1.81 M std cells flattened (0.00 M in replicated datapath leaves)",
+  "buses": [
+    {
+      "name": "i_host_fdi",
+      "dir": "in",
+      "width": 523,
+      "kind": "data"
+    },
+    {
+      "name": "i_host_link_rst_n",
+      "dir": "in",
+      "width": 1,
+      "kind": "data"
+    },
+    {
+      "name": "o_serdes_W_rx_flit",
+      "dir": "out",
+      "width": 523,
+      "kind": "data"
+    },
+    {
+      "name": "o_serdes_W_tx_up",
+      "dir": "out",
+      "width": 1,
+      "kind": "data"
+    }
+  ],
+  "ft_slots": [],
+  "clock": {
+    "tap_mode": "grid+explicit",
+    "added_taps": [
+      {
+        "name": "clk_t5",
+        "xy": [
+          1879.2,
+          326.16
+        ]
+      },
+      {
+        "name": "clk_t6",
+        "xy": [
+          1874.88,
+          749.52
+        ]
+      },
+      {
+        "name": "clk_t7",
+        "xy": [
+          8.64,
+          332.64
+        ]
+      },
+      {
+        "name": "clk_t8",
+        "xy": [
+          8.64,
+          734.4
+        ]
+      }
+    ],
+    "landing_export_form": "fwd_buffer",
+    "tap_um": [
+      950.4000000000001,
+      518.4000000000001
+    ],
+    "layer": "M9",
+    "insertion_ps": 250.0,
+    "insertion_tol_ps": 40.0,
+    "tap_edge_y_um": [
+      21.6
+    ],
+    "edge_clocks": [
+      {
+        "port": "fclk_in_i_host_fdi",
+        "tap_um": [
+          1898.656,
+          219.232
+        ],
+        "period_mult": 1,
+        "note": "source-forwarded ring write clock; actual source-export/window STA required"
+      },
+      {
+        "port": "fclk_in_i_host_link_rst_n",
+        "tap_um": [
+          1898.656,
+          433.056
+        ],
+        "period_mult": 1,
+        "note": "source-forwarded ring write clock; actual source-export/window STA required"
+      },
+      {
+        "port": "clk_clk_phy",
+        "tap_um": [
+          1898.656,
+          354.0
+        ],
+        "period_mult": 1,
+        "source": "hub_C pll.pll_phy (asbuilt sources: pll_phy -> domain clk_phy; bound-top spine clk_clk_phy)",
+        "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)"
+      }
+    ],
+    "landing_contract": {
+      "pins": [
+        {
+          "name": "fclk_in_i_host_fdi",
+          "dir": "in",
+          "kind": "clock",
+          "layer": "M7",
+          "xy_um": [
+            1898.656,
+            219.232
+          ],
+          "epoch": false
+        },
+        {
+          "name": "cland_fstart_in_i_host_fdi",
+          "dir": "in",
+          "kind": "ctl",
+          "layer": "M7",
+          "xy_um": [
+            1898.656,
+            227.872
+          ],
+          "epoch": false
+        },
+        {
+          "name": "fclk_in_i_host_link_rst_n",
+          "dir": "in",
+          "kind": "clock",
+          "layer": "M7",
+          "xy_um": [
+            1898.656,
+            433.056
+          ],
+          "epoch": false
+        },
+        {
+          "name": "cland_fstart_in_i_host_link_rst_n",
+          "dir": "in",
+          "kind": "ctl",
+          "layer": "M7",
+          "xy_um": [
+            1898.656,
+            441.696
+          ],
+          "epoch": false
+        },
+        {
+          "name": "fclk_out_o_serdes_W_rx_flit",
+          "dir": "out",
+          "kind": "clock",
+          "layer": "M7",
+          "xy_um": [
+            1898.656,
+            646.496
+          ],
+          "epoch": false,
+          "source_clock_port": "clk_t4",
+          "source_clock_tap": "clk_t4"
+        },
+        {
+          "name": "cland_fstart_out_o_serdes_W_rx_flit",
+          "dir": "out",
+          "kind": "ctl",
+          "layer": "M7",
+          "xy_um": [
+            1898.656,
+            655.136
+          ],
+          "epoch": false
+        },
+        {
+          "name": "fclk_out_o_serdes_W_tx_up",
+          "dir": "out",
+          "kind": "clock",
+          "layer": "M7",
+          "xy_um": [
+            1898.656,
+            860.32
+          ],
+          "epoch": false,
+          "source_clock_port": "clk_t4",
+          "source_clock_tap": "clk_t4"
+        },
+        {
+          "name": "cland_fstart_out_o_serdes_W_tx_up",
+          "dir": "out",
+          "kind": "ctl",
+          "layer": "M7",
+          "xy_um": [
+            1898.656,
+            868.96
+          ],
+          "epoch": false
+        },
+        {
+          "name": "cland_up_ready",
+          "dir": "out",
+          "kind": "ctl",
+          "layer": "M7",
+          "xy_um": [
+            1113.056,
+            2.656
+          ],
+          "epoch": false
+        },
+        {
+          "name": "cland_up_fault",
+          "dir": "out",
+          "kind": "ctl",
+          "layer": "M7",
+          "xy_um": [
+            1115.232,
+            2.656
+          ],
+          "epoch": false
+        },
+        {
+          "name": "fclk_out_cland_up",
+          "dir": "out",
+          "kind": "clock",
+          "layer": "M7",
+          "xy_um": [
+            1110.88,
+            2.656
+          ],
+          "epoch": false,
+          "source_clock_port": "clk_t2",
+          "source_clock_tap": "clk_t2"
+        },
+        {
+          "name": "cland_tstart_in",
+          "dir": "in",
+          "kind": "ctl",
+          "layer": "M7",
+          "xy_um": [
+            190.56,
+            19.98
+          ],
+          "epoch": false,
+          "native_entry_reference_um": [
+            190.56,
+            21.6
+          ],
+          "note": "DIE-KV-28 event27: Codex native START pin site (point_native_pins)"
+        }
+      ],
+      "bands": {
+        "i_host_fdi": {
+          "rect_um": [
+            1883.7,
+            54.0,
+            1895.4,
+            560.0
+          ],
+          "width": 523,
+          "ring_width": 576,
+          "live_data_storage_flops": 2620,
+          "padded_data_storage_flops": 2880,
+          "clock_roles": {
+            "forwarded_write_flops": 2304,
+            "local_read_flops": 576
+          },
+          "max_pin_to_band_hop_um": 357.662,
+          "area_reserve_um2": 4521.621,
+          "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+          "reset_sites_avoided_um": [
+            [
+              1872.72,
+              368.984,
+              1877.04,
+              373.304
+            ],
+            [
+              1877.04,
+              179.28,
+              1881.36,
+              183.6
+            ]
+          ],
+          "instance": "u_cland_i_host_fdi",
+          "resized_from_um": [
+            1721.52,
+            17.28,
+            1883.52,
+            45.36
+          ],
+          "resize": "DIE-KV-80/REFORM 11-05 (COORD 19:37 (3)(c)(d) RE-FORM, util <= 0.45): band back to the E channel beside its pins (x 1883.70-1895.40, y 54-560, 5920 um2 >= reserve 4521.6, clear of i_host_link_rst_n band and the avoided reset sites at x <= 1881.36), ring_place ff (flops FIRM bit-major, ring logic to GPL) and pinslot off (band fill). Why: attempt 5 GRT-0116, congestion 137k of 138k markers on u_cland_i_host_fdi nets around the PHY corner x 1500-1900 y 0-250: the ring sat in the bottom strip 381 um from its pins and placed FIRM with its logic, so all 523 bits went round the macro corner (M1-M5 OBS over the PHY). Outline, pins, macro site unchanged.",
+          "ring_place": "ff"
+        },
+        "i_host_link_rst_n": {
+          "rect_um": [
+            1874.88,
+            390.9404,
+            1883.52,
+            475.1804
+          ],
+          "width": 1,
+          "ring_width": 64,
+          "live_data_storage_flops": 10,
+          "padded_data_storage_flops": 320,
+          "clock_roles": {
+            "forwarded_write_flops": 256,
+            "local_read_flops": 64
+          },
+          "max_pin_to_band_hop_um": 68.04,
+          "area_reserve_um2": 713.94,
+          "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+          "instance": "u_cland_i_host_link_rst_n",
+          "resized_from_um": [
+            1874.88,
+            438.48,
+            1883.52,
+            522.72
+          ],
+          "resize": "DIE-KV-47-SD one-block re-site: band off the declared x6 PHY macro / VDDPHY region (ring_ff reserve)"
+        }
+      },
+      "base_type": "kv3_sys_SD",
+      "registered_monitor": true,
+      "physical_qualified": false,
+      "collector_tree": {
+        "root": [
+          1108.768,
+          8.608
+        ],
+        "depth": 5,
+        "own_depth": 5,
+        "relays": [
+          {
+            "name": "u_rrl_0",
+            "xy": [
+              950.4,
+              21.6
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_0",
+            "depth": 1,
+            "tap": 2,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_1",
+            "xy": [
+              950.4,
+              21.6
+            ],
+            "d": "rst_rl_0",
+            "q": "rst_rl_1",
+            "depth": 2,
+            "tap": 2,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_2",
+            "xy": [
+              950.4,
+              21.6
+            ],
+            "d": "rst_rl_1",
+            "q": "rst_rl_2",
+            "depth": 3,
+            "tap": 2,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_3",
+            "xy": [
+              950.4,
+              21.6
+            ],
+            "d": "rst_rl_2",
+            "q": "rst_rl_3",
+            "depth": 4,
+            "tap": 2,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_4",
+            "xy": [
+              950.4,
+              21.6
+            ],
+            "d": "rst_rl_3",
+            "q": "rst_n_t2",
+            "depth": 5,
+            "tap": 2,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_5",
+            "xy": [
+              1330.56,
+              21.6
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_5",
+            "depth": 1,
+            "tap": 3,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_6",
+            "xy": [
+              1330.56,
+              21.6
+            ],
+            "d": "rst_rl_5",
+            "q": "rst_rl_6",
+            "depth": 2,
+            "tap": 3,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_7",
+            "xy": [
+              1330.56,
+              21.6
+            ],
+            "d": "rst_rl_6",
+            "q": "rst_rl_7",
+            "depth": 3,
+            "tap": 3,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_8",
+            "xy": [
+              1330.56,
+              21.6
+            ],
+            "d": "rst_rl_7",
+            "q": "rst_rl_8",
+            "depth": 4,
+            "tap": 3,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_9",
+            "xy": [
+              1330.56,
+              21.6
+            ],
+            "d": "rst_rl_8",
+            "q": "rst_n_t3",
+            "depth": 5,
+            "tap": 3,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_10",
+            "xy": [
+              1602.72,
+              17.28
+            ],
+            "d": "rst_rl_8",
+            "q": "rst_n_t15",
+            "depth": 5,
+            "tap": 15,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_11",
+            "xy": [
+              1611.36,
+              17.28
+            ],
+            "d": "rst_rl_8",
+            "q": "rst_n_t18",
+            "depth": 5,
+            "tap": 18,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_12",
+            "xy": [
+              1036.8,
+              34.56
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_12",
+            "depth": 1,
+            "tap": 13,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_13",
+            "xy": [
+              1036.8,
+              34.56
+            ],
+            "d": "rst_rl_12",
+            "q": "rst_rl_13",
+            "depth": 2,
+            "tap": 13,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_14",
+            "xy": [
+              1036.8,
+              34.56
+            ],
+            "d": "rst_rl_13",
+            "q": "rst_rl_14",
+            "depth": 3,
+            "tap": 13,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_15",
+            "xy": [
+              1036.8,
+              34.56
+            ],
+            "d": "rst_rl_14",
+            "q": "rst_rl_15",
+            "depth": 4,
+            "tap": 13,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_16",
+            "xy": [
+              1036.8,
+              34.56
+            ],
+            "d": "rst_rl_15",
+            "q": "rst_n_t13",
+            "depth": 5,
+            "tap": 13,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_17",
+            "xy": [
+              1045.44,
+              34.56
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_17",
+            "depth": 1,
+            "tap": 17,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_18",
+            "xy": [
+              1045.44,
+              34.56
+            ],
+            "d": "rst_rl_17",
+            "q": "rst_rl_18",
+            "depth": 2,
+            "tap": 17,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_19",
+            "xy": [
+              1045.44,
+              34.56
+            ],
+            "d": "rst_rl_18",
+            "q": "rst_rl_19",
+            "depth": 3,
+            "tap": 17,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_20",
+            "xy": [
+              1045.44,
+              34.56
+            ],
+            "d": "rst_rl_19",
+            "q": "rst_rl_20",
+            "depth": 4,
+            "tap": 17,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_21",
+            "xy": [
+              1045.44,
+              34.56
+            ],
+            "d": "rst_rl_20",
+            "q": "rst_n_t17",
+            "depth": 5,
+            "tap": 17,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_22",
+            "xy": [
+              833.008,
+              8.608
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_22",
+            "depth": 1,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_23",
+            "xy": [
+              833.008,
+              8.608
+            ],
+            "d": "rst_rl_22",
+            "q": "rst_rl_23",
+            "depth": 2,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_24",
+            "xy": [
+              833.008,
+              8.608
+            ],
+            "d": "rst_rl_23",
+            "q": "rst_rl_24",
+            "depth": 3,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_25",
+            "xy": [
+              833.008,
+              8.608
+            ],
+            "d": "rst_rl_24",
+            "q": "rst_rl_25",
+            "depth": 4,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_26",
+            "xy": [
+              570.24,
+              21.6
+            ],
+            "d": "rst_rl_25",
+            "q": "rst_n_t1",
+            "depth": 5,
+            "tap": 1,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_27",
+            "xy": [
+              1416.24,
+              8.608
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_27",
+            "depth": 1,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_28",
+            "xy": [
+              1416.24,
+              8.608
+            ],
+            "d": "rst_rl_27",
+            "q": "rst_rl_28",
+            "depth": 2,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_29",
+            "xy": [
+              1416.24,
+              8.608
+            ],
+            "d": "rst_rl_28",
+            "q": "rst_rl_29",
+            "depth": 3,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_30",
+            "xy": [
+              1416.24,
+              8.608
+            ],
+            "d": "rst_rl_29",
+            "q": "rst_rl_30",
+            "depth": 4,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_31",
+            "xy": [
+              1710.72,
+              21.6
+            ],
+            "d": "rst_rl_30",
+            "q": "rst_n_t4",
+            "depth": 5,
+            "tap": 4,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_32",
+            "xy": [
+              789.808,
+              8.608
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_32",
+            "depth": 1,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_33",
+            "xy": [
+              789.808,
+              8.608
+            ],
+            "d": "rst_rl_32",
+            "q": "rst_rl_33",
+            "depth": 2,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_34",
+            "xy": [
+              789.808,
+              8.608
+            ],
+            "d": "rst_rl_33",
+            "q": "rst_rl_34",
+            "depth": 3,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_35",
+            "xy": [
+              479.52,
+              17.28
+            ],
+            "d": "rst_rl_34",
+            "q": "rst_rl_35",
+            "depth": 4,
+            "tap": 14,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_36",
+            "xy": [
+              479.52,
+              17.28
+            ],
+            "d": "rst_rl_35",
+            "q": "rst_n_t14",
+            "depth": 5,
+            "tap": 14,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_37",
+            "xy": [
+              190.08,
+              21.6
+            ],
+            "d": "rst_rl_35",
+            "q": "rst_n_t0",
+            "depth": 5,
+            "tap": 0,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_38",
+            "xy": [
+              1470.7093333333335,
+              8.608
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_38",
+            "depth": 1,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_39",
+            "xy": [
+              1470.7093333333335,
+              8.608
+            ],
+            "d": "rst_rl_38",
+            "q": "rst_rl_39",
+            "depth": 2,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_40",
+            "xy": [
+              1470.7093333333335,
+              8.608
+            ],
+            "d": "rst_rl_39",
+            "q": "rst_rl_40",
+            "depth": 3,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_41",
+            "xy": [
+              1832.650666666667,
+              8.608
+            ],
+            "d": "rst_rl_40",
+            "q": "rst_rl_41",
+            "depth": 4,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_42",
+            "xy": [
+              1879.2,
+              324.0
+            ],
+            "d": "rst_rl_41",
+            "q": "rst_n_t9",
+            "depth": 5,
+            "tap": 9,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_43",
+            "xy": [
+              1471.4293333333333,
+              8.608
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_43",
+            "depth": 1,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_44",
+            "xy": [
+              1471.4293333333333,
+              8.608
+            ],
+            "d": "rst_rl_43",
+            "q": "rst_rl_44",
+            "depth": 2,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_45",
+            "xy": [
+              1471.4293333333333,
+              8.608
+            ],
+            "d": "rst_rl_44",
+            "q": "rst_rl_45",
+            "depth": 3,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_46",
+            "xy": [
+              1834.0906666666665,
+              8.608
+            ],
+            "d": "rst_rl_45",
+            "q": "rst_rl_46",
+            "depth": 4,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_47",
+            "xy": [
+              1879.2,
+              326.16
+            ],
+            "d": "rst_rl_46",
+            "q": "rst_n_t5",
+            "depth": 5,
+            "tap": 5,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_48",
+            "xy": [
+              739.1893333333333,
+              8.608
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_48",
+            "depth": 1,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_49",
+            "xy": [
+              369.6106666666666,
+              8.608
+            ],
+            "d": "rst_rl_48",
+            "q": "rst_rl_49",
+            "depth": 2,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_50",
+            "xy": [
+              4.32,
+              4.32
+            ],
+            "d": "rst_rl_49",
+            "q": "rst_rl_50",
+            "depth": 3,
+            "tap": 16,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_51",
+            "xy": [
+              4.32,
+              4.32
+            ],
+            "d": "rst_rl_50",
+            "q": "rst_rl_51",
+            "depth": 4,
+            "tap": 16,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_52",
+            "xy": [
+              4.32,
+              4.32
+            ],
+            "d": "rst_rl_51",
+            "q": "rst_n_t16",
+            "depth": 5,
+            "tap": 16,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_53",
+            "xy": [
+              8.64,
+              332.64
+            ],
+            "d": "rst_rl_50",
+            "q": "rst_rl_53",
+            "depth": 4,
+            "tap": 7,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_54",
+            "xy": [
+              8.64,
+              332.64
+            ],
+            "d": "rst_rl_53",
+            "q": "rst_n_t7",
+            "depth": 5,
+            "tap": 7,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_55",
+            "xy": [
+              4.32,
+              332.64
+            ],
+            "d": "rst_rl_50",
+            "q": "rst_rl_55",
+            "depth": 4,
+            "tap": 11,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_56",
+            "xy": [
+              4.32,
+              332.64
+            ],
+            "d": "rst_rl_55",
+            "q": "rst_n_t11",
+            "depth": 5,
+            "tap": 11,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_57",
+            "xy": [
+              4.32,
+              369.35999999999996
+            ],
+            "d": "rst_rl_50",
+            "q": "rst_rl_57",
+            "depth": 4,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_58",
+            "xy": [
+              4.32,
+              734.4
+            ],
+            "d": "rst_rl_57",
+            "q": "rst_n_t12",
+            "depth": 5,
+            "tap": 12,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_59",
+            "xy": [
+              8.64,
+              367.2
+            ],
+            "d": "rst_rl_50",
+            "q": "rst_rl_59",
+            "depth": 4,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_60",
+            "xy": [
+              8.64,
+              734.4
+            ],
+            "d": "rst_rl_59",
+            "q": "rst_n_t8",
+            "depth": 5,
+            "tap": 8,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_61",
+            "xy": [
+              1484.984,
+              8.608
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_61",
+            "depth": 1,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_62",
+            "xy": [
+              1484.984,
+              8.608
+            ],
+            "d": "rst_rl_61",
+            "q": "rst_rl_62",
+            "depth": 2,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_63",
+            "xy": [
+              1861.2,
+              8.608
+            ],
+            "d": "rst_rl_62",
+            "q": "rst_rl_63",
+            "depth": 3,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_64",
+            "xy": [
+              1874.88,
+              371.14400000000006
+            ],
+            "d": "rst_rl_63",
+            "q": "rst_rl_64",
+            "depth": 4,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_65",
+            "xy": [
+              1874.88,
+              747.36
+            ],
+            "d": "rst_rl_64",
+            "q": "rst_n_t10",
+            "depth": 5,
+            "tap": 10,
+            "kind": "tap"
+          },
+          {
+            "name": "u_rrl_66",
+            "xy": [
+              1485.5240000000001,
+              8.608
+            ],
+            "d": "rst_root_n",
+            "q": "rst_rl_66",
+            "depth": 1,
+            "tap": null,
+            "kind": "pad"
+          },
+          {
+            "name": "u_rrl_67",
+            "xy": [
+              1485.5240000000001,
+              8.608
+            ],
+            "d": "rst_rl_66",
+            "q": "rst_rl_67",
+            "depth": 2,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_68",
+            "xy": [
+              1862.2800000000002,
+              8.608
+            ],
+            "d": "rst_rl_67",
+            "q": "rst_rl_68",
+            "depth": 3,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_69",
+            "xy": [
+              1874.88,
+              372.76399999999995
+            ],
+            "d": "rst_rl_68",
+            "q": "rst_rl_69",
+            "depth": 4,
+            "tap": null,
+            "kind": "wire"
+          },
+          {
+            "name": "u_rrl_70",
+            "xy": [
+              1874.88,
+              749.52
+            ],
+            "d": "rst_rl_69",
+            "q": "rst_n_t6",
+            "depth": 5,
+            "tap": 6,
+            "kind": "tap"
+          }
+        ],
+        "max_hop_um": 376.8,
+        "tap_depth": {
+          "0": 3,
+          "1": 2,
+          "2": 1,
+          "3": 1,
+          "4": 2,
+          "5": 3,
+          "6": 4,
+          "7": 4,
+          "8": 5,
+          "9": 3,
+          "10": 4,
+          "11": 4,
+          "12": 5,
+          "13": 1,
+          "14": 2,
+          "15": 2,
+          "16": 3,
+          "17": 1,
+          "18": 2
+        },
+        "n_tree": 36,
+        "n_pad": 35,
+        "reach_um": 405.0,
+        "plan_reach_um": 380.0,
+        "topology": "taps",
+        "taps": [
+          "clk",
+          "clk_t1",
+          "clk_t2",
+          "clk_t3",
+          "clk_t4",
+          "clk_t5",
+          "clk_t6",
+          "clk_t7",
+          "clk_t8",
+          "reset_local_0",
+          "reset_local_1",
+          "reset_local_2",
+          "reset_local_3",
+          "reset_local_4",
+          "reset_local_5",
+          "reset_local_6",
+          "reset_local_7",
+          "reset_local_8",
+          "reset_local_9"
+        ],
+        "tap_offset_um": 0.0,
+        "n_clock_taps": 9,
+        "n_reset_consumers": 19,
+        "local_reset_taps": true,
+        "outs": [],
+        "core_resets": [],
+        "entry": "relayed",
+        "sync_stages": 2,
+        "type": "kv3_sys_SD",
+        "start": true,
+        "relay_driver": false,
+        "start_in": [
+          1110.944,
+          8.608
+        ],
+        "start_role": "bootstrap",
+        "tap_roles": {
+          "0": "bootstrap",
+          "1": "bootstrap",
+          "2": "bootstrap",
+          "3": "bootstrap",
+          "4": "bootstrap",
+          "5": "bootstrap",
+          "6": "bootstrap",
+          "7": "bootstrap",
+          "8": "bootstrap",
+          "9": "bootstrap",
+          "10": "bootstrap",
+          "11": "bootstrap",
+          "12": "bootstrap",
+          "13": "bootstrap",
+          "14": "bootstrap",
+          "15": "bootstrap",
+          "16": "bootstrap",
+          "17": "bootstrap",
+          "18": "bootstrap"
+        },
+        "start_tap": 2
+      },
+      "collector_root_node": "rst_root_n",
+      "collector_local_sources": [
+        {
+          "name": "i_host_fdi",
+          "ready": "landing_ready_i_host_fdi",
+          "fault": "landing_fault_i_host_fdi",
+          "tap": 5,
+          "xy_um": [
+            1900.8,
+            219.4382
+          ],
+          "pin_xy_um": [
+            1900.8,
+            219.4382
+          ],
+          "band": {
+            "rect_um": [
+              1721.52,
+              17.28,
+              1883.52,
+              45.36
+            ],
+            "width": 523,
+            "ring_width": 576,
+            "live_data_storage_flops": 2620,
+            "padded_data_storage_flops": 2880,
+            "clock_roles": {
+              "forwarded_write_flops": 2304,
+              "local_read_flops": 576
+            },
+            "max_pin_to_band_hop_um": 381.438,
+            "area_reserve_um2": 4521.621,
+            "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+            "reset_sites_avoided_um": [
+              [
+                1872.72,
+                368.984,
+                1877.04,
+                373.304
+              ],
+              [
+                1877.04,
+                179.28,
+                1881.36,
+                183.6
+              ]
+            ],
+            "instance": "u_cland_i_host_fdi",
+            "resized_from_um": [
+              1872.72,
+              17.28,
+              1883.52,
+              436.32
+            ],
+            "resize": "DIE-KV-47-SD one-block re-site: band off the declared x6 PHY macro / VDDPHY region (ring_ff reserve)"
+          }
+        },
+        {
+          "name": "i_host_link_rst_n",
+          "ready": "landing_ready_i_host_link_rst_n",
+          "fault": "landing_fault_i_host_link_rst_n",
+          "tap": 5,
+          "xy_um": [
+            1900.8,
+            433.0604
+          ],
+          "pin_xy_um": [
+            1900.8,
+            433.0604
+          ],
+          "band": {
+            "rect_um": [
+              1874.88,
+              390.9404,
+              1883.52,
+              475.1804
+            ],
+            "width": 1,
+            "ring_width": 64,
+            "live_data_storage_flops": 10,
+            "padded_data_storage_flops": 320,
+            "clock_roles": {
+              "forwarded_write_flops": 256,
+              "local_read_flops": 64
+            },
+            "max_pin_to_band_hop_um": 68.04,
+            "area_reserve_um2": 713.94,
+            "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+            "instance": "u_cland_i_host_link_rst_n",
+            "resized_from_um": [
+              1874.88,
+              438.48,
+              1883.52,
+              522.72
+            ],
+            "resize": "DIE-KV-47-SD one-block re-site: band off the declared x6 PHY macro / VDDPHY region (ring_ff reserve)"
+          }
+        }
+      ],
+      "collector_children": [],
+      "forwarded_clock_only_inputs": true
+    }
+  },
+  "reset": {
+    "tap_um": [
+      950.4000000000001,
+      518.4000000000001
+    ],
+    "sync_stages": 2,
+    "start_role": "bootstrap",
+    "local_taps_um": [
+      [
+        1879.2,
+        324.0
+      ],
+      [
+        1874.88,
+        747.36
+      ],
+      [
+        4.32,
+        332.64
+      ],
+      [
+        4.32,
+        734.4
+      ],
+      [
+        1036.8,
+        34.56
+      ],
+      [
+        479.52,
+        17.28
+      ],
+      [
+        1602.72,
+        17.28
+      ],
+      [
+        4.32,
+        4.32
+      ],
+      [
+        1045.44,
+        34.56
+      ],
+      [
+        1611.36,
+        17.28
+      ]
+    ],
+    "obstacle_model": "lef_origin"
+  },
+  "contents": [
+    {
+      "inst": "serdes",
+      "module": "ot_qfd_serdes_112g_x6_phy",
+      "status": "reuse",
+      "note": "leaf",
+      "physical_inst": "u_bound.u_core.u_phy.g_native.u_macro",
+      "physical_master": "ot_qfd_serdes_112g_x6_phy_w522",
+      "origin_um": [
+        17.28,
+        54.0
+      ],
+      "outline_um": [
+        1848.96,
+        972.0
+      ],
+      "orient": "R0",
+      "lef": "results/kv_serdes_pg_event33/ot_qfd_serdes_112g_x6_phy_w522/ot_qfd_serdes_112g_x6_phy_w522.lef",
+      "lib": "results/kv_serdes_pg_event33/ot_qfd_serdes_112g_x6_phy_w522/ot_qfd_serdes_112g_x6_phy_w522_tt.lib"
+    }
+  ],
+  "count_straps": [
+    {
+      "name": "strap_ca_efall",
+      "width": 1,
+      "note": "OWNER 12.15a count strap (tied at the parent)"
+    },
+    {
+      "name": "strap_ca_k_i_host_fdi",
+      "width": 6,
+      "note": "OWNER 12.15a count strap (tied at the parent)"
+    },
+    {
+      "name": "strap_ca_k_i_host_link_rst_n",
+      "width": 6,
+      "note": "OWNER 12.15a count strap (tied at the parent)"
+    },
+    {
+      "name": "strap_ca_pad",
+      "width": 1,
+      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+  ],
+  "cells": 56864
+}

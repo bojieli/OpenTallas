@@ -213,11 +213,12 @@ class PerRootReservation(unittest.TestCase):
         s2, s3 = '/srv/opentallas-scratch2/claude/l/r', '/srv/opentallas-scratch3/claude/l/r'
         row = m.scratch_disk({'disk_gb': 700}, s2, self.probe_out('OT_DIR_DEV 66', 'OT_DIR_ONROOT 0'))
         self.assertEqual((row['disk_gb'], row['disk_dev']), (700, '66'))
-        # a scratch3 --dir still reads scratch2's free figure, so it is charged scratch2's units
+        # A root bind remains on its actual device and is refused without an exception.
         row = m.scratch_disk({'disk_gb': 2200}, s3, self.probe_out('OT_DIR_DEV 77', 'OT_DIR_ONROOT 1'))
-        self.assertEqual((row['disk_gb'], row['disk_dev']), (700, '66'))
+        self.assertEqual((row['disk_gb'], row['disk_dev']), (2200, '77'))
+        self.assertIn('ROOT filesystem', m.host_refusal(row))
         row = m.scratch_disk({'disk_gb': 100}, s2, self.probe_out('OT_DIR_DEV 88', 'OT_DIR_ONROOT 0'))
-        self.assertEqual((row['disk_gb'], row['disk_dev']), (700, '66'))
+        self.assertEqual((row['disk_gb'], row['disk_dev']), (100, '88'))
         row = m.scratch_disk({'disk_gb': 90}, '/home/x', self.probe_out('OT_DIR_DEV 99', 'OT_DIR_ONROOT 1'))
         self.assertEqual((row['disk_gb'], row['disk_dev']), (90, '99'))
 

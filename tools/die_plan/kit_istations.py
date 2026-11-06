@@ -38,6 +38,28 @@ sys.path.insert(0, str(HERE))
 import gen_rtl  # noqa: E402
 
 
+def bound_bus_width(tn, bus, txt, manifest):
+    """Size stations to the real face register; narrow inputs need the bind proof."""
+    name, planned = bus['name'], bus['width']
+    widths = re.findall(rf'\bot_dp_ste?\s+#\(\.W\((\d+)\)\)\s+'
+                        rf'u_b(?:in|out)_{re.escape(gen_rtl.sv_id(name))}\s*\(', txt)
+    if len(widths) != 1:
+        raise SystemExit(f'kit_istations: {tn} {name}: expected one actual face register, got {len(widths)}')
+    actual = int(widths[0])
+    if actual == planned:
+        return actual
+    narrow = dict(port=name, plan=planned, bound=actual)
+    dead = manifest.get('dead_inputs', {})
+    omitted = {f'{name}[{bit}]' for bit in range(actual, planned)}
+    if (bus['dir'] != 'in' or not 0 < actual < planned
+            or narrow not in manifest.get('narrow_buses', [])
+            or dead.get('proof', {}).get('verdict') != 'PASS'
+            or not omitted.issubset(set(dead.get('bits', [])))):
+        raise SystemExit(f'kit_istations: {tn} {name}: plan width {planned} != face width {actual}; '
+                         'matching narrow-input mapping and complete dead-input proof required')
+    return actual
+
+
 def exact_banks(entry, width):
     """Validate explicit geometry without changing the existing station RTL/depth."""
     from ft_bit_sites import validate_slot
@@ -493,6 +515,30 @@ def relay_sites_only_tcl(tn, t):
     return "\n".join([TCL_HEAD] + rs + ["close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\""]) + "\n"
 
 
+def soft_plan_cells(tn, t):
+    """Sited logical cells that remain soft after authoritative hard-view resolution.
+
+    A contents entry need not repeat a LEF carried by hard_cores. Use the same
+    physical identity/view resolver as gen_phys before emitting DFF guides.
+    Partial physical_parts retain their existing soft-container treatment.
+    """
+    hard = set()
+    if any(c.get('lef') for c in t.get('hard_cores', [])):
+        import gen_phys
+        from types import SimpleNamespace
+        placed = {(row[0], row[1]) for row in gen_phys.type_macros(SimpleNamespace(types={tn: t}), tn)}
+        for c in t.get('hard_cores', []):
+            if not c.get('lef'):
+                continue
+            identity = (gen_phys.content_physical_identity(c)
+                        if 'physical_inst' in c or 'physical_master' in c
+                        else (c['inst'], c.get('module', c['inst'])))
+            if identity in placed:
+                hard.add(c['inst'])
+    return [c for c in t.get('contents', [])
+            if 'origin_um' in c and not c.get('lef') and c['inst'] not in hard]
+
+
 def main(argv):
     apply = "--apply" in argv
     argv = [a for a in argv if a != "--apply"]
@@ -523,7 +569,7 @@ def main(argv):
         b = next((x for x in t["buses"] if x["name"] == bus), None)
         if b is None:
             raise SystemExit(f"kit_istations: {tn}: internal station on unknown bus {bus}")
-        W = b["width"]
+        W = bound_bus_width(tn, b, txt, man)
         exact = exact_banks(e, W)
         if exact is not None and EXACT_BANK_TCL not in tcl:
             tcl.append(EXACT_BANK_TCL)
@@ -610,17 +656,17 @@ def main(argv):
             for (x, y), nm in zip(regs, names):
                 tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
         rep.append(dict(conn=conn, planned=len(regs), bound_pads=have, inserted=need, stations=names,
+                        plan_width=b["width"], bound_width=W,
                         **({"exact_bank_sites": True} if exact is not None else {})))
     txt = core_stations(t, txt, apply, htree, tcl, rep)
     # plan cells with a FIRM site (no hard view): their flops at the site
-    for c in t.get("contents", []):
-        if "origin_um" in c and not c.get("lef"):
-            ox, oy = c["origin_um"]
-            w, h = c.get("outline_um", [0.0, 0.0])
-            inst = gen_rtl.sv_id(c["inst"])
-            inst = inst if inst.startswith("u_") else "u_" + inst
-            tcl.append(f"is_place {{*{inst}[./]*}} {ox + w / 2:g} {oy + h / 2:g} cell:{c['inst']}")
-            rep.append(dict(cell=c["inst"], site=[ox, oy]))
+    for c in soft_plan_cells(tn, t):
+        ox, oy = c["origin_um"]
+        w, h = c.get("outline_um", [0.0, 0.0])
+        inst = gen_rtl.sv_id(c["inst"])
+        inst = inst if inst.startswith("u_") else "u_" + inst
+        tcl.append(f"is_place {{*{inst}[./]*}} {ox + w / 2:g} {oy + h / 2:g} cell:{c['inst']}")
+        rep.append(dict(cell=c["inst"], site=[ox, oy]))
     # existing RTL stage flops at plan relay sites (0 cycles; DIE-KV-59 10-31)
     rs = relay_sites_lines(tn, t)
     if rs:

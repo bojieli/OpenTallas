@@ -1,0 +1,61 @@
+{
+ "source": "kw11/bind_kv_o/rtl/{bind_cells.sv,kv3_phy_v1_part.sv}; hierarchy/proc/flatten/opt/memory/techmap/rename-wire",
+ "cells": {
+  "u_rs_ri_core_rst_n.b[0].r[0]$_DFF_PN0_": {
+   "hide_name": 0,
+   "type": "$_DFF_PN0_",
+   "parameters": {},
+   "attributes": {
+    "src": "/srv/opentallas-scratch2/claude/codex-geometry-phyv1-1106/bind_cells.sv:32.9-33.67"
+   },
+   "port_directions": {
+    "C": "input",
+    "D": "input",
+    "Q": "output",
+    "R": "input"
+   },
+   "connections": {
+    "C": [
+     2
+    ],
+    "D": [
+     "1"
+    ],
+    "Q": [
+     5060
+    ],
+    "R": [
+     1320
+    ]
+   }
+  },
+  "u_rs_ri_core_rst_n.b[0].r[1]$_DFF_PN0_": {
+   "hide_name": 0,
+   "type": "$_DFF_PN0_",
+   "parameters": {},
+   "attributes": {
+    "src": "/srv/opentallas-scratch2/claude/codex-geometry-phyv1-1106/bind_cells.sv:32.9-33.67"
+   },
+   "port_directions": {
+    "C": "input",
+    "D": "input",
+    "Q": "output",
+    "R": "input"
+   },
+   "connections": {
+    "C": [
+     2
+    ],
+    "D": [
+     5060
+    ],
+    "Q": [
+     5053
+    ],
+    "R": [
+     1320
+    ]
+   }
+  }
+ }
+}

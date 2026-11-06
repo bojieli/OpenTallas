@@ -290,9 +290,15 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         if not vs[0].startswith(kit + os.sep):
             raise ResignError('6_final.v %s is outside the kit %s (LEC mounts the kit)' % (vs[0], kit))
         mounts, net_in = [], '/work/' + os.path.relpath(vs[0], kit)
+    # Existing optional XOR backend; keep the wheel and bundled libraries together.
+    solver = os.environ.get('OT_LEC_SOLVER', '')
+    solver_mount = []
+    if solver and os.path.isdir(solver):
+        solver_mount = ['-v', os.path.abspath(solver) + ':/lecsolver:ro',
+                        '-e', 'LEC_SOLVER_PATH=/lecsolver']
     lec = ['docker', 'run', '--rm', '--name', 'resign-%s-lec' % name, '--memory=%s' % mem, '--cpus=%d' % cpus] + (
            ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + [
-           '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + [
+           '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + solver_mount + [
            image, 'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; '
            'python3 -I /m/lec.py /work --netlist %s --out /eco/lec' % net_in]
     return so, lec

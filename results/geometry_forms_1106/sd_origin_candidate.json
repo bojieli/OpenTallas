@@ -1,0 +1,144 @@
+{
+  "fits": true,
+  "reason": "prepared",
+  "stages": 4,
+  "minimum_stages": 4,
+  "points_um": [
+    [
+      559.764,
+      19.98
+    ],
+    [
+      928.962,
+      19.98
+    ],
+    [
+      1298.214,
+      19.98
+    ],
+    [
+      1667.412,
+      19.98
+    ]
+  ],
+  "hop_paths_um": [
+    [
+      [
+        190.56,
+        19.98
+      ],
+      [
+        559.764,
+        19.98
+      ]
+    ],
+    [
+      [
+        559.764,
+        19.98
+      ],
+      [
+        928.962,
+        19.98
+      ]
+    ],
+    [
+      [
+        928.962,
+        19.98
+      ],
+      [
+        1298.214,
+        19.98
+      ]
+    ],
+    [
+      [
+        1298.214,
+        19.98
+      ],
+      [
+        1667.412,
+        19.98
+      ]
+    ],
+    [
+      [
+        1667.412,
+        19.98
+      ],
+      [
+        1876.5,
+        19.98
+      ],
+      [
+        1876.5,
+        180.09
+      ]
+    ]
+  ],
+  "hop_lengths_um": [
+    369.204,
+    369.198,
+    369.25199999999995,
+    369.1980000000001,
+    369.198
+  ],
+  "max_hop_um": 369.25199999999995,
+  "path_um": [
+    [
+      190.56,
+      19.98
+    ],
+    [
+      1876.5,
+      19.98
+    ],
+    [
+      1876.5,
+      180.09
+    ]
+  ],
+  "length_um": 1846.0500000000002,
+  "added_cycles": 2,
+  "note": "Two added complete START epoch/control stages explicitly priced; original downstream sampling stages retained",
+  "stage_roles": [
+    "new START epoch/control relay0",
+    "new START epoch/control relay1",
+    "existing origin s0",
+    "existing origin s1"
+  ],
+  "endpoint_role": "existing origin s2; existing pd should remain local with same stage/phase",
+  "input": "original sf/strap selected s_in -> complete START epoch/control bundle before existing s0; retain original negedge sf selection/reset phase",
+  "added_boot_cycles": 2,
+  "route_macro_clearance_um": 5.0,
+  "source_clock_semantics": "preserve existing named receiving domains including clk_t5 source_latency -80ps; no clock relaxation",
+  "reservation_count": 89,
+  "actual_old_sites_um": {
+    "s0": [
+      107.136,
+      29.43
+    ],
+    "s1": [
+      1868.4,
+      125.01
+    ],
+    "s2": [
+      1868.4,
+      179.82
+    ],
+    "pd": [
+      1868.454,
+      181.44
+    ]
+  },
+  "proposed_s2_um": [
+    1876.5,
+    180.09
+  ],
+  "proposed_pd_um": [
+    1876.5,
+    182.52
+  ],
+  "scope": "candidate only: KV owner implements RTL bundle/phase/ledger proof before adoption; no current plan mutation"
+}

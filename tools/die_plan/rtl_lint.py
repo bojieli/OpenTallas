@@ -418,7 +418,7 @@ def run(kit, yosys='yosys'):
                 children = [dict(inst=b['instance'], master=b['master']) for b in binding['bindings']]
                 elaborated = json.loads((kit / 'kit_assembly_elaborated.json').read_text())
                 assembly_inventory = helper.hierarchy_inventory(elaborated, config(kit)['DESIGN_NAME'][0], children,
-                                                                binding.get('parent_profile'))
+                                                                binding.get('parent_profile'),binding.get('required_instances'))
                 declared = binding.get('parent_profile', {}).get('parameters', {})
                 actual = config(kit).get('VERILOG_TOP_PARAMS', [])
                 actual = dict(zip(actual[::2], actual[1::2]))

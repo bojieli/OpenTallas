@@ -384,6 +384,11 @@ if not checkout_ready.exists():
 else:
  actual=run(["git","-C",str(src),"rev-parse","HEAD"]).strip()
  if actual != tip: raise RuntimeError("immutable source snapshot sha mismatch")
+if s.get("history_pack"):
+ with open(s["history_pack"],"rb") as stream:
+  history_import=subprocess.run(["git","-C",str(src),"index-pack","--stdin"],stdin=stream,
+                                text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+ print("SOURCE_FOLLOW historical input import rc",history_import.returncode,history_import.stdout,flush=True)
 oldsrc=d["src"]; mode=(d.get("kit_rtl") or {}).get("mode")
 if mode == "script" and s["die"] == "s81":
  script=pathlib.Path(d["kit_rtl"]["script"]).read_text()
@@ -509,15 +514,47 @@ print("AP_JSON "+json.dumps({"verdict":"PASS","override":override}),flush=True)
 '''
 
 
+def stage_history_inputs(repo, tip, output, host, remote_dir):
+    """Carry declared historical inputs with a source snapshot; availability stays advisory.
+
+    Build on the hub, whose object store holds historical non-main source pins.
+    Sparse/main-only fleet clones need not fetch entire unrelated histories.
+    """
+    import importlib.util
+    helper = Path(__file__).with_name("source_history.py")
+    loader = importlib.util.spec_from_file_location("source_history", helper)
+    module = importlib.util.module_from_spec(loader)
+    loader.loader.exec_module(module)
+    report = module.pack_history(repo, repo, output, revision=tip)
+    if report["pack"]:
+        target = str(Path(remote_dir) / Path(report["pack"]).name)
+        temporary = target + ".%d.tmp" % os.getpid()
+        # Never overwrite a pack another preparation may already be importing.
+        command = "cat > {t} && (ln {t} {d} 2>/dev/null || test -f {d}) && rm {t}".format(
+            t=shlex.quote(temporary), d=shlex.quote(target))
+        with Path(report["pack"]).open("rb") as stream:
+            subprocess.run(["ssh", "-o", "ControlPath=none", host, command], stdin=stream, check=True)
+        report["remote_pack"] = target
+    return report
+
+
 def worker(spec_path):
     spec = json.loads(Path(spec_path).read_text())
     result = Path(spec["result"])
     host = spec["die_config"]["gen_host"]
     # ot-run owns the entire snapshot/bind operation and its RAM request.
     q = shlex.quote
-    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(materialize_clock_mesh) + "\n" + inspect.getsource(copy_untracked_inputs) + "\n" + inspect.getsource(link_previous_snapshot) + "\n" + inspect.getsource(finish_linked_checkout) + "\n" + inspect.getsource(prune_snapshots) + "\n" + inspect.getsource(same_library_interface) + "\n" + inspect.getsource(used_hdl_paths) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
     remote_dir = str(Path(spec["die_config"].get("src_follow",{}).get("root","/srv/opentallas-scratch2/claude/source-follow"))/spec["die"]/spec["tip"][:12])
     subprocess.run(["ssh", "-o", "ControlPath=none", host, "mkdir", "-p", remote_dir], check=True)
+    try:
+        history = stage_history_inputs(Path(__file__).resolve().parents[2], spec["tip"],
+                                       result.parent / "source_history", host, remote_dir)
+        spec["history_pack"] = history.get("remote_pack")
+        print("SOURCE-FOLLOW historical inputs " + json.dumps(history), flush=True)
+    except Exception as error:
+        # No new release gate: the existing strict bind and the requested kit's real inputs still decide.
+        print("SOURCE-FOLLOW historical input preparation unavailable: " + str(error), flush=True)
+    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(materialize_clock_mesh) + "\n" + inspect.getsource(copy_untracked_inputs) + "\n" + inspect.getsource(link_previous_snapshot) + "\n" + inspect.getsource(finish_linked_checkout) + "\n" + inspect.getsource(prune_snapshots) + "\n" + inspect.getsource(same_library_interface) + "\n" + inspect.getsource(used_hdl_paths) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
     cmd = [str(Path.home()/".local/bin/ot-run"), "--hosts", host, "--mem", str(spec["die_config"].get("bind_mem_gb", 24)),
            "--threads", "2", "--dir", str(Path(spec["die_config"].get("src_follow",{}).get("root","/srv/opentallas-scratch2/claude/source-follow"))/spec["die"]/spec["tip"][:12]),
            "--", "bash", "-lc", payload]
