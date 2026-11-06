@@ -17,3 +17,5 @@ CODEX took over ROOT-MERGE-41 on codex/root-merge-1105. Own sparse tree intel2:/
 2026-11-05 23:58: main7eff5fd60d2==origin. KVPHYresetc63e950d550 scoped t-kv; model-onlyXFINlatest7eff5fd60d2 no new physicaltag. No tracked dirty files or half-merges. Existing TKMnegativecontrol remains helper-owned. TOKEN preparing separate measurednormpartial117vs115 metadata follow-up, root approval pending.
 
 2026-11-06 00:02: main86036fe580e==origin.90c34487ca5 metadata117,86036fe580e dormant signedchild+IDX SPLIT2/FL1 support.13files0deletions; tagsy-head/w-qc/u-kv/y-s81/af-hbm. No parent activation/qualification, no activejobs modified. All approved READYs handled; TKMnegativecontrol remains helper-owned.
+
+2026-11-06 00:06: main e5ea07ec76c==origin. HEAD diagnostic022b0f7748a results-only; TKM optional source e5ea07ec76c with completed actual-root control, flow-20261106-ag-hbm. No remaining old TKM proof blocker. Journals may be pending push while concurrent local KIT-WAVE-5.md is dirty; no others files staged.
