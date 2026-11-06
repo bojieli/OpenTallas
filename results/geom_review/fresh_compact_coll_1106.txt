@@ -1,0 +1,5 @@
+CODEX human planned-geometry review, compact COLL E/W, 2026-11-06.
+Pictures personally viewed: /srv/opentallas-scratch3/claude/codex-fresh-kit-1106/coll_e_v4/review/kit_plan.png and coll_w_v4/review/kit_plan.png.
+Both fresh kits use selected released tool cohort faecd095101, explicit proved RTL336bbc9add43 profile,295.92x444.96 outline,2143 pins,55 macros, real PG6 recipe.
+Findings: regular six-column SRAM banks with visible vertical/horizontal channels; no overlaps or uninterrupted macro wall; open central control/clock corridor; north/south data faces remain coherent with original reviewed form. Source-only picture does not claim placed clocks or routed PDN. Actual PG6 native canary (geometry_forms) separately measured zero-overflow50-iteration GRT, retained by its owner.
+Verdict PASS-COND for full physical trials. Native CTS/data-route/FF hold and parent M7 PG landing remain to be measured; no physical signoff or gate credit claimed here. Existing Docker RTL lint PASS on both candidates.
