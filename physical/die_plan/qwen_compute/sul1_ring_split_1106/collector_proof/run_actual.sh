@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-cd /srv/opentallas-scratch2/claude/codex-qc-sul1-proof-1106
+cd "$(dirname "$0")"
 docker run --rm --memory=4g --cpus=1 -v $PWD:/proof -w /proof openroad/orfs:asap7lock bash -lc "yosys -l good.log good.ys >good.stdout 2>&1"
 set +e
 docker run --rm --memory=4g --cpus=1 -v $PWD:/proof -w /proof openroad/orfs:asap7lock bash -lc "yosys -l mutant.log mutant.ys >mutant.stdout 2>&1"
