@@ -1,0 +1,4 @@
+290c290
+<     assign ofs_set[5]=(read_reserved>32||pending_count>32||response_count>32)||kq_fault||krq_fault;
+---
+>     assign ofs_set[5]=(read_reserved>32||pending_count>32||response_count>32)||krq_fault;

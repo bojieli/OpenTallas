@@ -1,0 +1,4 @@
+299c299
+<             else enq_q<=(g_ereg.state_n==RUN)&&(g_ereg.unposted_n!=0)&&(push_nx[63]||(g_ereg.read_reserved_n<32))&&!sticky_n;
+---
+>             else enq_q<=(g_ereg.state_n==RUN)&&(g_ereg.unposted_n!=0)&&(push_nx[63]||(g_ereg.read_reserved_n<32))&&!sticky;
