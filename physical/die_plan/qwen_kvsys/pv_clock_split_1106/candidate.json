@@ -1,0 +1,371 @@
+{
+ "schema": "opentallas.kv_pv_clock_split_candidate.v1",
+ "type": "kv3_pv_v3n",
+ "base_type_sha256": "4d340fcc7f179cfd55fb9571af1ee9a8d919fc7dedf60ea4becea1d274e1f6f0",
+ "source_plan_sha256": "fc13beeffa9074eb0b74acede37f944c7697170ba611e1430defd9ac9662f062",
+ "core_taps_from": "internal",
+ "core_taps_to": "early",
+ "core_entries": [
+  {
+   "port": "clk_c0",
+   "tap": "pvg0_p0.s1__clk[0]",
+   "macro": "u_bound.u_pvg0_p0",
+   "old_xy": [
+    198.696,
+    138.24
+   ],
+   "entry_xy": [
+    198.696,
+    34.56
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.68,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c1",
+   "tap": "pvg0_p1.s1__clk[0]",
+   "macro": "u_bound.u_pvg0_p1",
+   "old_xy": [
+    198.696,
+    432.0
+   ],
+   "entry_xy": [
+    198.696,
+    535.68
+   ],
+   "face": "N",
+   "branch_manhattan_um": 103.67999999999995,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c2",
+   "tap": "pvg0_p2.s1__clk[0]",
+   "macro": "u_bound.u_pvg0_p2",
+   "old_xy": [
+    198.696,
+    898.56
+   ],
+   "entry_xy": [
+    198.696,
+    794.88
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.67999999999995,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c3",
+   "tap": "pvg0_p3.s1__clk[0]",
+   "macro": "u_bound.u_pvg0_p3",
+   "old_xy": [
+    198.696,
+    1192.32
+   ],
+   "entry_xy": [
+    198.696,
+    1088.6399999999999
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.68000000000006,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c4",
+   "tap": "pv__u_g0_j.clk",
+   "macro": "u_bound.u_pv_u_g0_j",
+   "old_xy": [
+    188.808,
+    691.2
+   ],
+   "entry_xy": [
+    283.824,
+    691.2
+   ],
+   "face": "E",
+   "branch_manhattan_um": 95.01600000000002,
+   "mean_tt_ps": 209.89,
+   "mean_ff_ps": 169.61
+  },
+  {
+   "port": "clk_c5",
+   "tap": "pvg1_p0.s1__clk[0]",
+   "macro": "u_bound.u_pvg1_p0",
+   "old_xy": [
+    838.056,
+    138.24
+   ],
+   "entry_xy": [
+    838.056,
+    34.56
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.68,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c6",
+   "tap": "pvg1_p1.s1__clk[0]",
+   "macro": "u_bound.u_pvg1_p1",
+   "old_xy": [
+    838.056,
+    432.0
+   ],
+   "entry_xy": [
+    838.056,
+    535.68
+   ],
+   "face": "N",
+   "branch_manhattan_um": 103.67999999999995,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c7",
+   "tap": "pvg1_p2.s1__clk[0]",
+   "macro": "u_bound.u_pvg1_p2",
+   "old_xy": [
+    838.056,
+    898.56
+   ],
+   "entry_xy": [
+    838.056,
+    794.88
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.67999999999995,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c8",
+   "tap": "pvg1_p3.s1__clk[0]",
+   "macro": "u_bound.u_pvg1_p3",
+   "old_xy": [
+    838.056,
+    1192.32
+   ],
+   "entry_xy": [
+    838.056,
+    1088.6399999999999
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.68000000000006,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c9",
+   "tap": "pv__u_g1_j.clk",
+   "macro": "u_bound.u_pv_u_g1_j",
+   "old_xy": [
+    794.904,
+    691.2
+   ],
+   "entry_xy": [
+    889.92,
+    691.2
+   ],
+   "face": "E",
+   "branch_manhattan_um": 95.01599999999996,
+   "mean_tt_ps": 209.89,
+   "mean_ff_ps": 169.61
+  },
+  {
+   "port": "clk_c10",
+   "tap": "pvg2_p0.s1__clk[0]",
+   "macro": "u_bound.u_pvg2_p0",
+   "old_xy": [
+    1321.944,
+    138.24
+   ],
+   "entry_xy": [
+    1321.944,
+    34.56
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.68,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c11",
+   "tap": "pvg2_p1.s1__clk[0]",
+   "macro": "u_bound.u_pvg2_p1",
+   "old_xy": [
+    1321.944,
+    432.0
+   ],
+   "entry_xy": [
+    1321.944,
+    535.68
+   ],
+   "face": "N",
+   "branch_manhattan_um": 103.67999999999995,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c12",
+   "tap": "pvg2_p2.s1__clk[0]",
+   "macro": "u_bound.u_pvg2_p2",
+   "old_xy": [
+    1321.944,
+    898.56
+   ],
+   "entry_xy": [
+    1321.944,
+    794.88
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.67999999999995,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c13",
+   "tap": "pvg2_p3.s1__clk[0]",
+   "macro": "u_bound.u_pvg2_p3",
+   "old_xy": [
+    1321.944,
+    1192.32
+   ],
+   "entry_xy": [
+    1321.944,
+    1088.6399999999999
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.68000000000006,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c14",
+   "tap": "pv__u_g2_j.clk",
+   "macro": "u_bound.u_pv_u_g2_j",
+   "old_xy": [
+    1331.88,
+    691.2
+   ],
+   "entry_xy": [
+    1426.8960000000002,
+    691.2
+   ],
+   "face": "E",
+   "branch_manhattan_um": 95.01600000000008,
+   "mean_tt_ps": 209.89,
+   "mean_ff_ps": 169.61
+  },
+  {
+   "port": "clk_c15",
+   "tap": "pvg3_p0.s1__clk[0]",
+   "macro": "u_bound.u_pvg3_p0",
+   "old_xy": [
+    1961.304,
+    138.24
+   ],
+   "entry_xy": [
+    1961.304,
+    241.92000000000002
+   ],
+   "face": "N",
+   "branch_manhattan_um": 103.68,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c16",
+   "tap": "pvg3_p1.s1__clk[0]",
+   "macro": "u_bound.u_pvg3_p1",
+   "old_xy": [
+    1961.304,
+    432.0
+   ],
+   "entry_xy": [
+    1961.304,
+    535.68
+   ],
+   "face": "N",
+   "branch_manhattan_um": 103.67999999999995,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c17",
+   "tap": "pvg3_p2.s1__clk[0]",
+   "macro": "u_bound.u_pvg3_p2",
+   "old_xy": [
+    1961.304,
+    898.56
+   ],
+   "entry_xy": [
+    1961.304,
+    794.88
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.67999999999995,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c18",
+   "tap": "pvg3_p3.s1__clk[0]",
+   "macro": "u_bound.u_pvg3_p3",
+   "old_xy": [
+    1961.304,
+    1192.32
+   ],
+   "entry_xy": [
+    1961.304,
+    1088.6399999999999
+   ],
+   "face": "S",
+   "branch_manhattan_um": 103.68000000000006,
+   "mean_tt_ps": 227.62,
+   "mean_ff_ps": 183.66
+  },
+  {
+   "port": "clk_c19",
+   "tap": "pv__u_g3_j.clk",
+   "macro": "u_bound.u_pv_u_g3_j",
+   "old_xy": [
+    1971.24,
+    691.2
+   ],
+   "entry_xy": [
+    2066.256,
+    691.2
+   ],
+   "face": "E",
+   "branch_manhattan_um": 95.01599999999985,
+   "mean_tt_ps": 209.89,
+   "mean_ff_ps": 169.61
+  }
+ ],
+ "affinity": {
+  "radius_um": 200,
+  "max_group": 128
+ },
+ "variants": {
+  "A": "separate20 core branches only",
+  "B": "A plus bounded scalar/per-bit stage affinity"
+ },
+ "unchanged": [
+  "all data RTL/ports/state",
+  "833ps period",
+  "140ps declared type window",
+  "TT/FF signed core means",
+  "reset/start graph",
+  "all hard-core placements/orientations/outlines"
+ ],
+ "added_data_cycles": 0,
+ "added_clock_ports": 20,
+ "local_core_clock_wire_estimate_um": 2038.9439999999997,
+ "qualified": false,
+ "production_activation": false
+}
