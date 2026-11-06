@@ -1,0 +1,502 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-06T16:17:00+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "qwen_compute",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 64,
+  "debug_overrides": {}
+ },
+ "top": "qfd_dv_s5_su8_rst3",
+ "netlist": "/work/run/results/asap7/kq_qfd_dv_s5_su8_rst3_c/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 489,
+  "outputs": 1058
+ },
+ "t_aig_s": 24.3,
+ "async_reset_regs": {
+  "gold": 290,
+  "gate": 288
+ },
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "auto_loaded": {
+  "proposed": 0
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 64,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 64,
+  "raw_prefix_wall_s": 900.0,
+  "raw_prefix_ands_cap": 500000,
+  "n_raw_prefix_sim_refuted": 146,
+  "n_raw_prefix_bounded": 0,
+  "raw_prefix_bounded": [],
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_self_hold": 0,
+  "self_hold": [],
+  "n_kept": 4,
+  "n_reloaded": 4,
+  "n_dropped": 38,
+  "reloaded": [
+   {
+    "register": "ff:u_dut.u_output_pins.q[15]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_output_pins.q[31]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.c_su_prog[15]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.c_su_rows[15]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   }
+  ],
+  "dropped": [
+   {
+    "register": "ff:u_dut.g_fa_payload[312].g_live.payload",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.g_fa_payload[313].g_live.payload",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.g_fa_payload[331].g_live.payload",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.g_vl[0].u.q",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[10]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[11]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[13]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[14]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[15]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[16]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[17]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[8]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.o[9]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_ol.q",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[10]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[11]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[13]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[14]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[15]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[16]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[17]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[8]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.v[9]",
+    "side": "both",
+    "value": 0
+   }
+  ],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants, or (self_hold, COORD 11-04) the register has no load path and one net forces the constant, listed per register with that net, which must be asserted before use; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/work/lec/noreset_constants.tsv",
+   "sha256": "af09dda4ab2db96b2b5bfc8a20f8f260eabab671e858a2bfe33312c318144fd2",
+   "n_kept": 4,
+   "n_dropped": 38
+  }
+ },
+ "constraint_bases": {
+  "checks": [],
+  "refused": []
+ },
+ "t_corr_s": 186.9,
+ "keypoints": {
+  "gold": {
+   "inputs": 562,
+   "flops": 5716,
+   "outputs": 0,
+   "ands": 39657
+  },
+  "gate": {
+   "inputs": 1354,
+   "flops": 10368,
+   "outputs": 0,
+   "ands": 36430
+  },
+  "matched": 5143,
+  "gold_constant_flops": {
+   "n": 4,
+   "first": [
+    "ff:u_dut.c_su_prog[15]",
+    "ff:u_dut.c_su_rows[15]",
+    "ff:u_dut.u_output_pins.q[15]",
+    "ff:u_dut.u_output_pins.q[31]"
+   ]
+  },
+  "paired_flops": {
+   "n": 1054,
+   "first": [
+    "both:ff:u_dut.g_acc[10].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[11].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[12].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[13].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[14].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[15].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[16].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[17].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[18].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[19].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[1].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[20].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[21].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[22].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[23].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[24].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[25].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[26].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[27].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[28].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[29].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[2].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[30].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[31].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[32].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[33].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[34].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[35].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[36].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[37].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[38].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[39].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[3].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[40].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[41].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[42].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[43].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[44].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[45].u.q=ff:u_dut.g_acc[0].u.q",
+    "both:ff:u_dut.g_acc[46].u.q=ff:u_dut.g_acc[0].u.q"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 1,
+   "first": [
+    "ff:u_dut.u_input_pins.q#t[29]"
+   ]
+  },
+  "gold_x_sources": 73,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 865,
+  "gold_only_compare": {
+   "n": 4,
+   "first": [
+    "ff:u_dut.c_su_prog[15]",
+    "ff:u_dut.c_su_rows[15]",
+    "ff:u_dut.g_fa_payload[314].g_live.payload",
+    "ff:u_dut.g_fa_payload[315].g_live.payload"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 1,
+   "first": [
+    "ff:u_dut.u_input_pins.q#t[29]"
+   ]
+  }
+ },
+ "t_prove_s": 1.4,
+ "x_dont_care_points": {
+  "n": 36,
+  "first": [
+   "ff:u_dut.o[0]",
+   "ff:u_dut.o[10]",
+   "ff:u_dut.o[11]",
+   "ff:u_dut.o[12]",
+   "ff:u_dut.o[13]",
+   "ff:u_dut.o[14]",
+   "ff:u_dut.o[15]",
+   "ff:u_dut.o[16]",
+   "ff:u_dut.o[17]",
+   "ff:u_dut.o[1]",
+   "ff:u_dut.o[2]",
+   "ff:u_dut.o[3]",
+   "ff:u_dut.o[4]",
+   "ff:u_dut.o[5]",
+   "ff:u_dut.o[6]",
+   "ff:u_dut.o[7]",
+   "ff:u_dut.o[8]",
+   "ff:u_dut.o[9]",
+   "ff:u_dut.v[0]",
+   "ff:u_dut.v[10]",
+   "ff:u_dut.v[11]",
+   "ff:u_dut.v[12]",
+   "ff:u_dut.v[13]",
+   "ff:u_dut.v[14]",
+   "ff:u_dut.v[15]",
+   "ff:u_dut.v[16]",
+   "ff:u_dut.v[17]",
+   "ff:u_dut.v[1]",
+   "ff:u_dut.v[2]",
+   "ff:u_dut.v[3]",
+   "ff:u_dut.v[4]",
+   "ff:u_dut.v[5]",
+   "ff:u_dut.v[6]",
+   "ff:u_dut.v[7]",
+   "ff:u_dut.v[8]",
+   "ff:u_dut.v[9]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 3126,
+  "in_netlist": 3126,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null,
+  "functionally_unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "functionally_unobservable_reason": null,
+  "dead_twin_classes_removed": {
+   "n": 0,
+   "first": []
+  },
+  "dead_twin_classes_reason": null,
+  "merged_twins_proved": {
+   "n": 0,
+   "first": []
+  },
+  "merged_twins_reason": null
+ },
+ "counts": {
+  "compare_points": 7824,
+  "proved": 7824,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "7824 compare points proved; 5143 key points matched by name, 1054 register pairs / merges and 4 constant registers proved inductively; 0 RTL and 1 gate registers unmatched and unobservable (proved as free inputs); 36 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 224.1,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'",
+  "tool_update": null
+ }
+}

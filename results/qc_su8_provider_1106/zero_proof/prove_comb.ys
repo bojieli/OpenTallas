@@ -1,0 +1,9 @@
+read_verilog -sv -formal support.sv xlane_old.sv xlane_new.sv miter_comb.sv
+prep -top miter -flatten
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+flatten
+select -module miter
+chformal -lower
+opt_clean
+sat -verify -prove-asserts -tempinduct -seq 2 -set-def-inputs

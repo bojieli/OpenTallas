@@ -1,0 +1,42 @@
+{
+ "kind": "actual_qualified_consumer_source_read",
+ "providers": {
+  "l0": {
+   "host": "epyc2",
+   "kit": "/srv/opentallas-scratch2/claude/dq68-sul-l0/e2",
+   "wrapper_sha256": "b2ad3e8c97625fe8676163c17b0dc6364d25b74b645ea75c2e97c3e8fbafd55a",
+   "pd1": "main[602:507]"
+  },
+  "l1": {
+   "host": "epyc4",
+   "kit": "/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1",
+   "wrapper_sha256": "575746cd047d8749b5f1e9ae30e27e286de4ad2520c4a32af790a585dc5a0198",
+   "pd1": "main[698:603]"
+  },
+  "l2": {
+   "host": "intel1",
+   "kit": "/srv/opentallas-scratch2/claude/die-qc-65-sul/l2/eco/i1",
+   "wrapper_sha256": "4e36a604401b5d2cd47419f24129bf463af4566a0ed1545c0bf18ebf513008cb",
+   "pd1": "{p1[28:0],main[765:699]}"
+  },
+  "l3": {
+   "host": "intel1",
+   "kit": "/srv/opentallas-scratch2/claude/die-qc-65-sul/l3/eco/i1",
+   "wrapper_sha256": "e51e42437456516f437ae86b3acfbd7540d02010c2e317e18d389b7a20d13907",
+   "pd1": "p1[124:29]"
+  }
+ },
+ "common_definitions_identical_on_all_four": {
+  "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "qfd_dv_s5_leaves.sv": "ab08e87b08475389d273e3a48671e7d1387f3e376c3c7596602d0a8622238969",
+  "qfd_dv_head_safe1.sv": "3e8a1be2c62cf13ec93ed0619fd4d9e64cf756483672d42dfb4064fa3c0df821"
+ },
+ "scope": "read actual qualified rawkit RTL, not library stubs or currentmain inference; exact3files copied froml0, hashes independentlyobserved same onl1,l2,l3",
+ "joins": {
+  "gv": "all lrly.gv localmain[502:500]",
+  "lrly": "bvD1RESET1,pdD1; pv={bv2,lv,bv0,bv1}; ivrresetknown0; c_emit0=ivr3",
+  "head": "emit=emit0&&live; e_v and all memoryreadenables emitqualified; accept only class-clear independent of changed18bits",
+  "selected_bound_age": "allfour Easttypedconsumerheaders declare main+p1both4cycles; actual splitjoin still reviewed by qc_taps"
+ },
+ "route": "HELD pending root selectedconsumer join review"
+}
