@@ -242,6 +242,7 @@ def main():
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(TOOL / "face_flops_release.tcl", kd / "face_flops_release.tcl")
     shutil.copyfile(Path(__file__).with_name("pin_audit_core.py"), kd / "pin_audit.py")
+    shutil.copyfile(TOOL / "native_pin_contract.py", kd / "native_pin_contract.py")
     shutil.copyfile(Path(__file__).with_name("run_kit.sh"), kd / "run_kit.sh")
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     m = CORE_MARGIN_UM

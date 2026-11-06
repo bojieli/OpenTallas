@@ -257,7 +257,7 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-finish && \$M do-generate_abstract; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = place ]; then P=\$(ls /work/run/results/asap7/*/base/3_place.odb | tail -1); ODB=\$P OUT=/work/placed.csv openroad -python -exit /work/dump_placed.py > /work/dump_placed.log 2>&1; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
-  if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_POSTROUTE pin_audit'; fi; fi; \
   F=\$(ls /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$F\" ]; then for c in TT FF; do OT_CORNER=\$c DESIGN_NAME=$TOP ODB=\$F SPEF=\${F%.odb}.spef openroad -exit /work/corners.tcl > /work/sta_\$c.log 2>&1; done; fi; \
   if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
@@ -1343,6 +1343,7 @@ def main():
                    + '} $nm]} continue', "face_flops.tcl ft-out")
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(S81 / "cores/svc/pin_audit_core.py", kd / "pin_audit.py")
+    shutil.copyfile(TOOL / "native_pin_contract.py", kd / "native_pin_contract.py")
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
     (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if hcb else PDN_MACRO if mplace else ""))
     (kd / "make_tracks.tcl").write_text(TRACKS)
