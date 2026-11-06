@@ -3197,3 +3197,7 @@ CODEX: 2026-11-05 23:43 PST TOK DS LINK-2GB fixed b22128a81d0 (395sharedPIC libs
 CODEX: 2026-11-05 23:44 PST HBM q3_link rightwidth SRAM event merged9218b7b2243, TX sourcefix202980878d1; TX taller build and N4H staggered-macro M5 safeform queued, rootctl/N4rsq/expx fixes continue; allcorefailures have owners.
 
 CODEX: 2026-11-05 23:48 PST MERGE: reset-family, two reviewed S81 tap moves, token receipts and ECO cohort/recursive-copy fixes landed f99434ca9b9; shared tags w/u/r/w/ac verified. Owners notified for fresh-copy recovery only.
+
+CODEX: 2026-11-05 23:49 PST HBM-VMS: filled missing f512rp vB with structural native CTS +46.152um SRAM corridors, unchanged RTL0cycles;9b9965eac3f form/review pushed, build epyc2 client2498969.
+
+CODEX: 2026-11-05 23:52 PST MERGE: SVGR RF1 source landed1db3eb88fa7(HBM-38 conditional); HEAD l48ui snapshot +dormant bank128 WFACE +bounded KV FIFO declarations landed a9afc0fdd8b, tags x/v/s/x/ae; PHY successor not included. No physical closure claims.
