@@ -3630,6 +3630,9 @@
          "mission"
         ]
        },
+       "source_live_bootstrap_placement": {
+        "type": "boolean"
+       },
        "bootstrap_buses": {
         "type": "array",
         "uniqueItems": true,

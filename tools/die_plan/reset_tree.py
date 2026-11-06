@@ -2035,7 +2035,44 @@ proc rtr_reset_equiv {net parity seen} {
 """
 
 
-def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None):
+def unused_bootstrap_placements(relays, text, module):
+    """Physical inventory of final-wrapper BOOT leaves with no RTL consumer.
+
+    Only declaration plus this exact relay's own Q connection is admitted.
+    Aliases, output exports, another consumer or an ambiguous cell retain it.
+    The RTL/tree/release table is unchanged; synthesis has no physical cell for
+    a source-dead leaf, so it must not be a required placement point.
+    """
+    import hashlib
+    clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", text, flags=re.S)
+    bodies = re.findall(r"\bmodule\s+" + re.escape(module) + r"\b.*?\bendmodule\b", clean, re.S)
+    if len(bodies) != 1:
+        raise ResetError('unused BOOT inventory requires one exact final wrapper module')
+    body = bodies[0]
+    rows = []
+    for relay in relays:
+        if relay.get('role') != 'bootstrap_transport' or not relay['name'].endswith('_b'):
+            continue
+        name, q = relay['name'], relay['q']
+        if not re.fullmatch(r'rst_boot_t[0-9]+', q):
+            continue
+        cells = re.findall(r'\bot_dp_rrelay\s+' + re.escape(name) + r'\s*\(([^;]+)\);', body)
+        pins = dict(re.findall(r'\.(\w+)\(\s*([^()]+?)\s*\)', cells[0])) if len(cells) == 1 else {}
+        count = len(re.findall(r'\b' + re.escape(q) + r'\b', body))
+        declaration = len(re.findall(r'\bwire\s+' + re.escape(q) + r'\s*;', body)) == 1
+        dead = (len(cells) == 1 and pins == dict(clk='clk', d=relay['d'], q=q)
+                and declaration and count == 2)
+        rows.append(dict(instance=name, q=q, d=relay['d'], occurrences=count,
+                         exact_declaration=declaration, source_dead=dead))
+    return dict(schema='opentallas.reset_source_live_inventory.v1', module=module,
+                wrapper_sha256=hashlib.sha256(text.encode()).hexdigest(), leaves=rows,
+                omitted=[x['instance'] for x in rows if x['source_dead']],
+                method='exact source declaration + own Q only; every consumer/alias/export retains placement')
+
+
+def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_bootstrap=()):
+    if unused_bootstrap and (native_paths is not None or native_nodes is not None or native_sites is not None):
+        raise ResetError("source-live omission cannot change a captured native reset contract")
     if native_paths is not None and (T.get("outs") or T.get("core_resets")) and native_nodes is None:
         raise ResetError("native reset exports require verified physical nodes; no implicit output/core rewiring")
     if native_nodes is not None and native_paths is None:
@@ -2045,6 +2082,13 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None):
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
          f"rtr_place rst_root_n {{*{ent}[./]*}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry"]
     rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
+    omitted = set(unused_bootstrap)
+    eligible = {r['name'] for r in rel if r.get('role') == 'bootstrap_transport' and r['name'].endswith('_b')}
+    if omitted - eligible:
+        raise ResetError('unused physical inventory can omit only audited BOOT leaves')
+    if omitted:
+        rel = [r for r in rel if r['name'] not in omitted]
+        t.append('puts {OT_RESET_SOURCE_DEAD_BOOTSTRAP ' + str(len(omitted)) + ' leaves: ' + ' '.join(sorted(omitted)) + '}')
     if T.get("relay_driver"):
         specs = []
         if T["entry"] != "sync":

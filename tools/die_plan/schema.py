@@ -748,6 +748,7 @@ SCHEMA = {
                         # cal before START) + ONE local registered START tap (leaf bind "start") for the contents'
                         # mission admission.  core_start_roles: per hard-core reset target override {inst: role}
                         "start_role": {"enum": ["bootstrap", "mission"]},
+                        "source_live_bootstrap_placement": {"type": "boolean"},
                         "bootstrap_buses": {"type": "array", "uniqueItems": True, "items": _name},
                         "bootstrap_contents": {"type": "array", "uniqueItems": True, "items": _name},
                         "core_start_roles": {"type": "object",
