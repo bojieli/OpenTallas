@@ -1,0 +1,6 @@
+WBQ sectors 40563 writes ref 40563 new 40563 dup 0 0 badpc 0 0 mism 0 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 48 48 lag max 1215 mean 391 fault 0 0
+WBQ PASS
+- results/die_hbm_1104/reform_b/split_p25/tb_wbq.sv:90: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 643us; walltime 3.125 s; speed 205.868 us/s
+- Verilator: cpu 3.123 s on 1 threads; allocated 14 MB

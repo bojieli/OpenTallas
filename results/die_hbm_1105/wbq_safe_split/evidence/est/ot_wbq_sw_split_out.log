@@ -1,0 +1,937 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+
+-- Running command `read_verilog -sv -DSYNTHESIS rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv rtl/lib/ot_reset_sync.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv;  synth -top ot_wbq_sw_split_out -flatten; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv' to AST representation.
+Generating RTLIL representation for module `\ot_wbq_root'.
+Warning: Replacing memory \credit with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:94
+Warning: Replacing memory \pending_row with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:64
+Warning: Replacing memory \copy_row with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:64
+Warning: Replacing memory \committed with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:63
+Warning: Replacing memory \total with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:63
+Warning: Replacing memory \base with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:63
+Generating RTLIL representation for module `\ot_wbq_sw_split_main'.
+Warning: Replacing memory \qn with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:251
+Warning: Replacing memory \qr with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:251
+Warning: Replacing memory \qw with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:251, rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:249
+Warning: Replacing memory \wspan with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:463
+Warning: Replacing memory \wbase with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:463
+Warning: Replacing memory \atotal with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:463
+Warning: Replacing memory \aepoch with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:463
+Warning: Replacing memory \outstanding with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:377
+Warning: Replacing memory \req_g with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:377
+Warning: Replacing memory \selected_g with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:345, rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:343
+Warning: Replacing memory \pick_g with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:343, rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:341
+Warning: Replacing memory \committed with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:195
+Warning: Replacing memory \total with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:195
+Warning: Replacing memory \base with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:195
+Warning: Replacing memory \epoch with list of registers. See rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv:195
+Generating RTLIL representation for module `\ot_wbq_sw_split_out'.
+Generating RTLIL representation for module `\ot_wbq_sw'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_accel_cdc_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:32
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_svc_pc_ctrl_leaf'.
+Generating RTLIL representation for module `\ot_hbm_svc_pin_skid2'.
+Successfully finished Verilog frontend.
+
+5. Executing SYNTH pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \ot_wbq_sw_split_out
+Used module:     \ot_hbm_svc_pin_skid2
+Used module:     \ot_reset_sync
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+
+5.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+Parameter \WIDTH = 286
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2'.
+
+5.1.3. Analyzing design hierarchy..
+Top module:  \ot_wbq_sw_split_out
+Used module:     $paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2
+Used module:     \ot_reset_sync
+
+5.1.4. Analyzing design hierarchy..
+Top module:  \ot_wbq_sw_split_out
+Used module:     $paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2
+Used module:     \ot_reset_sync
+Removing unused module `\ot_hbm_svc_pin_skid2'.
+Removing unused module `\ot_hbm_svc_pc_ctrl_leaf'.
+Removing unused module `\ot_hbm_accel_cdc_fifo'.
+Removing unused module `\ot_wbq_sw'.
+Removing unused module `\ot_wbq_sw_split_main'.
+Removing unused module `\ot_wbq_root'.
+Removed 6 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/lib/ot_reset_sync.sv:18$2907 in module ot_reset_sync.
+Marked 2 switch rules as full_case in process $proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971 in module $paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 0 assignments to connections.
+
+5.2.4. Executing PROC_INIT pass (extract init attributes).
+
+5.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \async_rst_n in `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:18$2907'.
+Found async reset \rst_n in `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971'.
+
+5.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~4 debug messages>
+
+5.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:18$2907'.
+     1/1: $0\reset_pipe[1:0]
+Creating decoders for process `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971'.
+     1/4: $0\tail_data[285:0]
+     2/4: $0\head_data[285:0]
+     3/4: $0\tail_valid[0:0]
+     4/4: $0\head_valid[0:0]
+
+5.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_reset_sync.\reset_pipe' using process `\ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:18$2907'.
+  created $adff cell `$procdff$3014' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.\head_valid' using process `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971'.
+  created $adff cell `$procdff$3019' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.\tail_valid' using process `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971'.
+  created $adff cell `$procdff$3024' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.\head_data' using process `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971'.
+  created $dff cell `$procdff$3031' with positive edge clock.
+Creating register for signal `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.\tail_data' using process `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971'.
+  created $dff cell `$procdff$3038' with positive edge clock.
+
+5.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_reset_sync.$proc$rtl/lib/ot_reset_sync.sv:18$2907'.
+Found and cleaned up 4 empty switches in `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971'.
+Removing empty process `$paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.$proc$rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv:96$2971'.
+Cleaned up 4 empty switches.
+
+5.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+Optimizing module ot_reset_sync.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.
+<suppressed ~16 debug messages>
+
+5.3. Executing CHECK pass (checking for obvious problems).
+Checking module ot_wbq_sw_split_out...
+Checking module ot_reset_sync...
+Checking module $paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2...
+Found and reported 0 problems.
+
+5.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_reset_sync.
+Deleting now unused module $paramod$49855cf2d655265e00b86ff0608274d67f5d8a11\ot_hbm_svc_pin_skid2.
+<suppressed ~32 debug messages>
+
+5.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+Removed 144 unused cells and 512 unused wires.
+<suppressed ~145 debug messages>
+
+5.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_wbq_sw_split_out...
+Found and reported 0 problems.
+
+5.8. Executing OPT pass (performing simple optimizations).
+
+5.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 496 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Computing hashes of 384 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+<suppressed ~336 debug messages>
+Removed a total of 112 cells.
+
+5.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_sw_split_out..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port B of cell $flatten\pc_pin[8].u_k.$procmux$3007: \pc_pin[8].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[11].u_k.$procmux$3007: \pc_pin[11].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[7].u_k.$procmux$3007: \pc_pin[7].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[14].u_k.$procmux$3007: \pc_pin[14].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[13].u_k.$procmux$3007: \pc_pin[13].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[6].u_k.$procmux$3007: \pc_pin[6].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[5].u_k.$procmux$3007: \pc_pin[5].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[4].u_k.$procmux$3007: \pc_pin[4].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[10].u_k.$procmux$3007: \pc_pin[10].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[3].u_k.$procmux$3007: \pc_pin[3].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[12].u_k.$procmux$3007: \pc_pin[12].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[15].u_k.$procmux$3007: \pc_pin[15].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[2].u_k.$procmux$3007: \pc_pin[2].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[1].u_k.$procmux$3007: \pc_pin[1].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[0].u_k.$procmux$3007: \pc_pin[0].u_k.head_valid -> 1'1
+      Replacing known input bits on port B of cell $flatten\pc_pin[9].u_k.$procmux$3007: \pc_pin[9].u_k.head_valid -> 1'1
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~240 debug messages>
+
+5.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_sw_split_out.
+    New ctrl vector for $pmux cell $flatten\pc_pin[8].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3072 $flatten\pc_pin[8].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[11].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3074 $flatten\pc_pin[11].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[7].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3076 $flatten\pc_pin[7].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[14].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3078 $flatten\pc_pin[14].u_k.$procmux$2998_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[13].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3080 $flatten\pc_pin[13].u_k.$procmux$3005_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[6].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3082 $flatten\pc_pin[6].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[14].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3084 $flatten\pc_pin[14].u_k.$procmux$3009_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[13].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3086 $flatten\pc_pin[13].u_k.$procmux$3009_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[5].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3088 $flatten\pc_pin[5].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[12].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3090 $flatten\pc_pin[12].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[4].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3092 $flatten\pc_pin[4].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[10].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3094 $flatten\pc_pin[10].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[3].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3096 $flatten\pc_pin[3].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[15].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3098 $flatten\pc_pin[15].u_k.$procmux$3005_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[2].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3100 $flatten\pc_pin[2].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[15].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3102 $flatten\pc_pin[15].u_k.$procmux$3002_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[1].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3104 $flatten\pc_pin[1].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[0].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3106 $flatten\pc_pin[0].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[9].u_k.$procmux$2996: { $auto$opt_reduce.cc:137:opt_pmux$3108 $flatten\pc_pin[9].u_k.$procmux$2984_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[8].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3110 $flatten\pc_pin[8].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[11].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3112 $flatten\pc_pin[11].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[7].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3114 $flatten\pc_pin[7].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[6].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3116 $flatten\pc_pin[6].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[5].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3118 $flatten\pc_pin[5].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[4].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3120 $flatten\pc_pin[4].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[10].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3122 $flatten\pc_pin[10].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[3].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3124 $flatten\pc_pin[3].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[12].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3126 $flatten\pc_pin[12].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[2].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3128 $flatten\pc_pin[2].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[1].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3130 $flatten\pc_pin[1].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[0].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3132 $flatten\pc_pin[0].u_k.$procmux$2989_CMP }
+    New ctrl vector for $pmux cell $flatten\pc_pin[9].u_k.$procmux$3003: { $auto$opt_reduce.cc:137:opt_pmux$3134 $flatten\pc_pin[9].u_k.$procmux$2989_CMP }
+  Optimizing cells in module \ot_wbq_sw_split_out.
+Performed a total of 48 changes.
+
+5.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 400 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+Removed 0 unused cells and 128 unused wires.
+<suppressed ~1 debug messages>
+
+5.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_sw_split_out..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~224 debug messages>
+
+5.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_sw_split_out.
+Performed a total of 0 changes.
+
+5.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 400 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5.9. Executing FSM pass (extract and optimize FSM).
+
+5.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+5.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+5.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+5.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+5.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+5.10. Executing OPT pass (performing simple optimizations).
+
+5.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 400 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_sw_split_out..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~224 debug messages>
+
+5.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_sw_split_out.
+Performed a total of 0 changes.
+
+5.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 400 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\pc_pin[14].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[14].u_k.$0\head_data[285:0], Q = \pc_pin[14].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[0].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[0].u_k.$0\tail_valid[0:0], Q = \pc_pin[0].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[0].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[0].u_k.$0\head_valid[0:0], Q = \pc_pin[0].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[0].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[0].u_k.$0\head_data[285:0], Q = \pc_pin[0].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[15].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [479:450] \in_data [4095:3840] }, Q = \pc_pin[15].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[0].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [29:0] \in_data [255:0] }, Q = \pc_pin[0].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[15].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[15].u_k.$0\head_data[285:0], Q = \pc_pin[15].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[1].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[1].u_k.$0\tail_valid[0:0], Q = \pc_pin[1].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[1].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[1].u_k.$0\head_valid[0:0], Q = \pc_pin[1].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[9].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[9].u_k.$0\head_data[285:0], Q = \pc_pin[9].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[9].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [299:270] \in_data [2559:2304] }, Q = \pc_pin[9].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[1].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[1].u_k.$0\head_data[285:0], Q = \pc_pin[1].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[1].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [59:30] \in_data [511:256] }, Q = \pc_pin[1].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[2].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[2].u_k.$0\tail_valid[0:0], Q = \pc_pin[2].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[2].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[2].u_k.$0\head_valid[0:0], Q = \pc_pin[2].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[10].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[10].u_k.$0\tail_valid[0:0], Q = \pc_pin[10].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[2].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[2].u_k.$0\head_data[285:0], Q = \pc_pin[2].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[2].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [89:60] \in_data [767:512] }, Q = \pc_pin[2].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[3].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[3].u_k.$0\tail_valid[0:0], Q = \pc_pin[3].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[3].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[3].u_k.$0\head_valid[0:0], Q = \pc_pin[3].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[10].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[10].u_k.$0\head_valid[0:0], Q = \pc_pin[10].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[15].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[15].u_k.$0\head_valid[0:0], Q = \pc_pin[15].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[11].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[11].u_k.$0\head_data[285:0], Q = \pc_pin[11].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[11].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [359:330] \in_data [3071:2816] }, Q = \pc_pin[11].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[3].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[3].u_k.$0\head_data[285:0], Q = \pc_pin[3].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[3].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [119:90] \in_data [1023:768] }, Q = \pc_pin[3].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[15].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[15].u_k.$0\tail_valid[0:0], Q = \pc_pin[15].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[4].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[4].u_k.$0\tail_valid[0:0], Q = \pc_pin[4].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[4].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[4].u_k.$0\head_valid[0:0], Q = \pc_pin[4].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[13].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[13].u_k.$0\head_valid[0:0], Q = \pc_pin[13].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[4].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[4].u_k.$0\head_data[285:0], Q = \pc_pin[4].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[4].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [149:120] \in_data [1279:1024] }, Q = \pc_pin[4].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[14].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [449:420] \in_data [3839:3584] }, Q = \pc_pin[14].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[5].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[5].u_k.$0\tail_valid[0:0], Q = \pc_pin[5].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[5].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[5].u_k.$0\head_valid[0:0], Q = \pc_pin[5].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[10].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[10].u_k.$0\head_data[285:0], Q = \pc_pin[10].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[10].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [329:300] \in_data [2815:2560] }, Q = \pc_pin[10].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[5].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[5].u_k.$0\head_data[285:0], Q = \pc_pin[5].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[5].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [179:150] \in_data [1535:1280] }, Q = \pc_pin[5].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[6].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[6].u_k.$0\tail_valid[0:0], Q = \pc_pin[6].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[6].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[6].u_k.$0\head_valid[0:0], Q = \pc_pin[6].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[11].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[11].u_k.$0\tail_valid[0:0], Q = \pc_pin[11].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[6].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[6].u_k.$0\head_data[285:0], Q = \pc_pin[6].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[6].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [209:180] \in_data [1791:1536] }, Q = \pc_pin[6].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[7].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[7].u_k.$0\tail_valid[0:0], Q = \pc_pin[7].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[7].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[7].u_k.$0\head_valid[0:0], Q = \pc_pin[7].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[11].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[11].u_k.$0\head_valid[0:0], Q = \pc_pin[11].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[12].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [389:360] \in_data [3327:3072] }, Q = \pc_pin[12].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[7].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[7].u_k.$0\head_data[285:0], Q = \pc_pin[7].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[14].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[14].u_k.$0\head_valid[0:0], Q = \pc_pin[14].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[7].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [239:210] \in_data [2047:1792] }, Q = \pc_pin[7].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[14].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[14].u_k.$0\tail_valid[0:0], Q = \pc_pin[14].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[8].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[8].u_k.$0\tail_valid[0:0], Q = \pc_pin[8].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[8].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[8].u_k.$0\head_valid[0:0], Q = \pc_pin[8].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[12].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[12].u_k.$0\tail_valid[0:0], Q = \pc_pin[12].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[13].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[13].u_k.$0\tail_valid[0:0], Q = \pc_pin[13].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[12].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[12].u_k.$0\head_valid[0:0], Q = \pc_pin[12].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[8].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[8].u_k.$0\head_data[285:0], Q = \pc_pin[8].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[8].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [269:240] \in_data [2303:2048] }, Q = \pc_pin[8].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[13].u_k.$procdff$3038 ($dff) from module ot_wbq_sw_split_out (D = { \in_addr [419:390] \in_data [3583:3328] }, Q = \pc_pin[13].u_k.tail_data).
+Adding EN signal on $flatten\pc_pin[9].u_k.$procdff$3024 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[9].u_k.$0\tail_valid[0:0], Q = \pc_pin[9].u_k.tail_valid).
+Adding EN signal on $flatten\pc_pin[12].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[12].u_k.$0\head_data[285:0], Q = \pc_pin[12].u_k.head_data).
+Adding EN signal on $flatten\pc_pin[9].u_k.$procdff$3019 ($adff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[9].u_k.$0\head_valid[0:0], Q = \pc_pin[9].u_k.head_valid).
+Adding EN signal on $flatten\pc_pin[13].u_k.$procdff$3031 ($dff) from module ot_wbq_sw_split_out (D = $flatten\pc_pin[13].u_k.$0\head_data[285:0], Q = \pc_pin[13].u_k.head_data).
+
+5.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+Removed 64 unused cells and 64 unused wires.
+<suppressed ~65 debug messages>
+
+5.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+<suppressed ~48 debug messages>
+
+5.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_sw_split_out..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~144 debug messages>
+
+5.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_sw_split_out.
+Performed a total of 0 changes.
+
+5.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 480 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3482 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3470 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3463 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3448 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3438 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3431 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3421 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3414 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3399 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3383 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3371 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3364 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3354 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3342 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3330 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3320 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3305 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3292 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3285 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3273 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3261 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3245 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3233 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3226 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3216 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3204 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3192 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3182 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3173 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3158 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3148 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$auto$opt_dff.cc:320:make_patterns_logic$3139 ($ne).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[0].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[1].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[2].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[3].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[4].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[5].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[6].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[7].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[8].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[9].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[10].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[11].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[12].u_k.$procmux$2989_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[13].u_k.$procmux$3005_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[14].u_k.$procmux$2998_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_sw_split_out.$flatten\pc_pin[15].u_k.$procmux$3005_CMP0 ($eq).
+
+5.12. Executing PEEPOPT pass (run peephole optimizers).
+
+5.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_wbq_sw_split_out:
+  created 0 $alu and 0 $macc cells.
+
+5.15. Executing SHARE pass (SAT-based resource sharing).
+
+5.16. Executing OPT pass (performing simple optimizations).
+
+5.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 480 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_sw_split_out..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~144 debug messages>
+
+5.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_sw_split_out.
+Performed a total of 0 changes.
+
+5.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 480 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+5.17. Executing MEMORY pass.
+
+5.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+5.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+5.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+5.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+5.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+5.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+5.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.19. Executing OPT pass (performing simple optimizations).
+
+5.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+<suppressed ~128 debug messages>
+
+5.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 416 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+Removed 0 unused cells and 64 unused wires.
+<suppressed ~1 debug messages>
+
+5.19.5. Finished fast OPT passes.
+
+5.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+5.21. Executing OPT pass (performing simple optimizations).
+
+5.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 416 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_sw_split_out..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~64 debug messages>
+
+5.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_sw_split_out.
+    New ctrl vector for $pmux cell $flatten\pc_pin[8].u_k.$procmux$2985: $flatten\pc_pin[8].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[7].u_k.$procmux$2985: $flatten\pc_pin[7].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[6].u_k.$procmux$2985: $flatten\pc_pin[6].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[14].u_k.$procmux$2985: $flatten\pc_pin[14].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[5].u_k.$procmux$2985: $flatten\pc_pin[5].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[10].u_k.$procmux$2985: $flatten\pc_pin[10].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[4].u_k.$procmux$2985: $flatten\pc_pin[4].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[3].u_k.$procmux$2985: $flatten\pc_pin[3].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[2].u_k.$procmux$2985: $flatten\pc_pin[2].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[13].u_k.$procmux$2985: $flatten\pc_pin[13].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[1].u_k.$procmux$2985: $flatten\pc_pin[1].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[15].u_k.$procmux$2985: $flatten\pc_pin[15].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[0].u_k.$procmux$2985: $flatten\pc_pin[0].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[9].u_k.$procmux$2985: $flatten\pc_pin[9].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[12].u_k.$procmux$2985: $flatten\pc_pin[12].u_k.$procmux$2989_CMP
+    New ctrl vector for $pmux cell $flatten\pc_pin[11].u_k.$procmux$2985: $flatten\pc_pin[11].u_k.$procmux$2989_CMP
+  Optimizing cells in module \ot_wbq_sw_split_out.
+Performed a total of 16 changes.
+
+5.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 416 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.21.6. Executing OPT_SHARE pass.
+
+5.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.21.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.21.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_sw_split_out..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~64 debug messages>
+
+5.21.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_sw_split_out.
+Performed a total of 0 changes.
+
+5.21.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 416 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.21.14. Executing OPT_SHARE pass.
+
+5.21.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+
+5.21.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.21.18. Finished fast OPT passes. (There is nothing left to do.)
+
+5.22. Executing TECHMAP pass (map to technology primitives).
+
+5.22.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+5.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_and.
+No more expansions possible.
+<suppressed ~461 debug messages>
+
+5.23. Executing OPT pass (performing simple optimizations).
+
+5.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+<suppressed ~4832 debug messages>
+
+5.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 14304 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Computing hashes of 14241 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Computing hashes of 14210 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+<suppressed ~282 debug messages>
+Removed a total of 94 cells.
+
+5.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+Removed 0 unused cells and 432 unused wires.
+<suppressed ~1 debug messages>
+
+5.23.5. Finished fast OPT passes.
+
+5.24. Executing ABC pass (technology mapping using ABC).
+
+5.24.1. Extracting gate netlist of module `\ot_wbq_sw_split_out' to `<abc-temp-dir>/input.blif'..
+
+5.24.1.1. Executed ABC.
+Extracted 4992 gates and 14210 wires to a netlist network with 9217 inputs and 4688 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Oct 24 2026 13:29:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+5.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:       50
+ABC RESULTS:            ANDNOT cells:       32
+ABC RESULTS:               MUX cells:     4576
+ABC RESULTS:              NAND cells:       62
+ABC RESULTS:               NOT cells:       16
+ABC RESULTS:                OR cells:       16
+ABC RESULTS:             ORNOT cells:       32
+ABC RESULTS:        internal signals:      305
+ABC RESULTS:           input signals:     9217
+ABC RESULTS:          output signals:     4688
+Removing temp directory.
+Removing global temp directory.
+
+5.25. Executing OPT pass (performing simple optimizations).
+
+5.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_sw_split_out.
+
+5.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_sw_split_out'.
+Computing hashes of 14002 cells of `\ot_wbq_sw_split_out'.
+Finding duplicate cells in `\ot_wbq_sw_split_out'.
+Removed a total of 0 cells.
+
+5.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_sw_split_out..
+Removed 0 unused cells and 9633 unused wires.
+<suppressed ~33 debug messages>
+
+5.25.5. Finished fast OPT passes.
+
+5.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_wbq_sw_split_out'. Setting top module to ot_wbq_sw_split_out.
+
+5.26.1. Analyzing design hierarchy..
+Top module:  \ot_wbq_sw_split_out
+
+5.26.2. Analyzing design hierarchy..
+Top module:  \ot_wbq_sw_split_out
+Removed 0 unused modules.
+
+5.27. Printing statistics.
+
+=== ot_wbq_sw_split_out ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     5050 wires
+    32514 wire bits
+      282 public wires
+    27746 public wire bits
+       10 ports
+     9218 port bits
+    14002 cells
+       32   $_ANDNOT_
+       50   $_AND_
+       32   $_DFFE_PN0P_
+     9152   $_DFFE_PP_
+        2   $_DFF_PN0_
+     4576   $_MUX_
+       62   $_NAND_
+       16   $_NOT_
+       32   $_ORNOT_
+       16   $_OR_
+       32   $scopeinfo
+
+5.28. Executing CHECK pass (checking for obvious problems).
+Checking module ot_wbq_sw_split_out...
+Found and reported 0 problems.
+
+6. Printing statistics.
+
+=== ot_wbq_sw_split_out ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     5050 wires
+    32514 wire bits
+      282 public wires
+    27746 public wire bits
+       10 ports
+     9218 port bits
+    14002 cells
+       32   $_ANDNOT_
+       50   $_AND_
+       32   $_DFFE_PN0P_
+     9152   $_DFFE_PP_
+        2   $_DFF_PN0_
+     4576   $_MUX_
+       62   $_NAND_
+       16   $_NOT_
+       32   $_ORNOT_
+       16   $_OR_
+       32   $scopeinfo
+
+Warnings: 22 unique messages, 22 total
+End of script. Logfile hash: c5cdc3095e, time: 6.04s, user: 5.08s, system: 0.23s, MEM: 80.52 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 22% 10x opt_dff (1 sec), 21% 16x opt_clean (1 sec), ...

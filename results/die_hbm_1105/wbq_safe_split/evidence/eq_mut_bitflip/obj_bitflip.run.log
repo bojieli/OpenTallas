@@ -1,0 +1,5 @@
+WBQ sectors 40234 writes ref 40234 new 40234 dup 0 0 badpc 0 0 mism 40234 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 48 48 lag max 157 mean 56 fault 0 0
+WBQ FAIL
+[146320000000] %Fatal: tb_wbq.sv:91: Assertion failed in tb_wbq.unnamedblk1: FAIL
+%Error: results/die_hbm_1104/reform_b/split_p25/tb_wbq.sv:91: Verilog $stop
+Aborting...
