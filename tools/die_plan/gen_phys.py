@@ -3936,7 +3936,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             native_nodes=native_reset["physical_nodes"],
             native_sites=native_reset["placement_sites"]))
     elif rtt and not live_boot_placement:
-        shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
+        (kd / "reset_tree.tcl").write_text(RT.project_core_paths(rtt[0].read_text(),
+            t.get("hard_cores", []) + t.get("contents", [])))
     elif RT.delivered(P) and not t.get("hard"):
         reset_model = RT.for_type(P, tn)
         unused_bootstrap = []
