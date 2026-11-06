@@ -1221,6 +1221,7 @@ def main():
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=None, help="explicit density overrides recipe (fallback 0.6)")
     ap.add_argument("--sigmax", default=None, help="explicit signal ceiling overrides recipe (fallback M5)")
+    ap.add_argument("--prompt-rx-spread", action="store_true", help="opt-in prompt C: reserve density headroom in the north RX pin band")
     # FLOW-FIX 2026-10-25 (flow canary F1/F2 + COORD per-corner insertion): main's kit-flow defaults via
     # tools/die_plan/core_flow.py -- RTL lint before synth, RCX-calibrated RC for place/CTS/GRT, per-corner IO vclk
     # binding (TT in constraint.sdc, FF in the FF-only GRT hold repair step of run_kit_kv.sh)
@@ -2010,6 +2011,12 @@ def main():
         import ahub_clock7
         cfg = ahub_clock7.stage_anchors(kd, cfg)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    if a.prompt_rx_spread:
+        if mod != "qkd_hr_core_prompt" or not rec.get("face_flops", True):
+            raise SystemExit("--prompt-rx-spread requires the prompt registered-face form")
+        shutil.copyfile(Path(__file__).with_name("prompt_rx_spread.tcl"), kd / "prompt_rx_spread.tcl")
+        f = kd / "face_flops.tcl"
+        f.write_text(f.read_text() + "\nsource /work/prompt_rx_spread.tcl\n")
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     tm = timing_modes_stage(kd) if a.two_mode_grt else None   # after config.mk, before kit_hash
