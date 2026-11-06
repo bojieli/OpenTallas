@@ -286,7 +286,7 @@ def sle_ctl_recipe(e, out, plan=None):
     sd.mkdir(parents=True, exist_ok=True)
     (sd / "spec.json").write_text(json.dumps(spec, indent=1) + "\n")
     rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="h" + e["view"].split("@")[1][:6], util=0.45,
-               max_layer="M5", insertion_balance=False, rtl_patch=[sle_ctl_input_share_patch()],
+               max_layer="M5", insertion_balance=False, rtl_patches=[sle_ctl_input_share_patch()],
                _why=f"qc_core_wave sle_ctl view {e['view']} (QC-SLECTL-B): plan pin table {e['pins_file']}")
     ins = plan_core_tap_insertion(plan, m) if plan else None
     if ins:
