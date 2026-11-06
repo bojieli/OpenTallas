@@ -1,0 +1,150 @@
+{
+ "schema": "hbm-form-split-13-opsb.macro_placement.v1",
+ "note": "opsb_output OT_OPSB_N32: 16 x ot_sram_1r1w_2048x32_m8_r0c0_g32 (92.664x43.752) as 4 columns x 4 rows, bank k = 4*col + row; even channels: x gaps 76.20 um (5), y gaps 19.43 um (5) in core area 4.32..756 x 4.32..276.48; gen snaps to tracks",
+ "macro_placement": [
+  {
+   "k": 0,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    80.514,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 1,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    80.514,
+    86.928
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 2,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    80.514,
+    150.096
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 3,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    80.514,
+    213.312
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 4,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    249.372,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 5,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    249.372,
+    86.928
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 6,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    249.372,
+    150.096
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 7,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    249.372,
+    213.312
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 8,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    418.284,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 9,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    418.284,
+    86.928
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 10,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    418.284,
+    150.096
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 11,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    418.284,
+    213.312
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 12,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    587.142,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 13,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    587.142,
+    86.928
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 14,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    587.142,
+    150.096
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 15,
+   "macro": "ot_sram_1r1w_2048x32_m8_r0c0_g32",
+   "origin_um": [
+    587.142,
+    213.312
+   ],
+   "orient": "R0"
+  }
+ ]
+}
