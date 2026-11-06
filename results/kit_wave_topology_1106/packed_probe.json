@@ -1,0 +1,30 @@
+{
+  "actual_packed_depth": 3,
+  "actual_payload_plus_epoch_width": 2,
+  "no_new_stations_or_RTL_change": true,
+  "existing_consumer_preserved": true,
+  "second_apply_byte_identical": true,
+  "actual_mapped_ff_hits_per_site": [
+    2,
+    2,
+    2
+  ],
+  "actual_inventory": {
+    "schema": "opentallas.kit_hierarchy.v1",
+    "top": "top",
+    "expected": 0,
+    "matched": 0,
+    "problems": [],
+    "hard_instances": [],
+    "required_expected": 1,
+    "required_matched": 1,
+    "required_instances": [
+      {
+        "instance": "u_bound.u_lpad_i_host_hbm_rst_n",
+        "master": "$paramod$a709f4a89bac702b5822c0831fbe814922d58b2e\\ot_dp_dly"
+      }
+    ]
+  },
+  "wrong_depth_refused": true,
+  "wrong_register_bit_count_refused": true
+}
