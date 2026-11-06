@@ -1728,9 +1728,15 @@
     "dsdv_slice_lepe_mu_C__t1@8",
     "dsdv_slice_lepw_mu_C__t1@6",
     "ot_s81sl_leaf__t24__cl2456157b@14",
-    "ot_s81sl_leaf__t41@6",
     "ot_s81sl_leaf__t53__clb66fa5cb@13",
-    "slice_station__t47@17"
+    "slice_station__t47@17",
+    "ot_s81sl_leaf__t41@1",
+    "ot_s81sl_leaf__t11@12",
+    "ot_s81sl_leaf__t26@14",
+    "ot_s81sl_leaf__t35@1",
+    "ot_s81sl_leaf__t4@1",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@1",
+    "ot_s81sl_leaf__t44__clf4ea6d4b@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2682,7 +2688,8 @@
    "note_hosts_kw23": "KW-FIX-23 12:5x COORD 12:4x (epyc6 admits 167 GB load 40/128, epyc2 476 GB 68/128; epyc4+epyc5 REFUSED): S81 gen stays epyc5 (plan/kit_rtl inputs + 62 GB Codex bind only there); PLACE prefers epyc6 then epyc2 (spill via the intel2 relay, KW-FIX-22). Revert: place_prefer [epyc5, epyc6].",
    "note_gen_epyc2_kw24": "KW-FIX-24 14:5x COORD 14:0x(2)/14:2x (epyc6 24-33 pinned gen-stage waiters, admits -2; epyc2 admits 415 GB): gen-host stages (plan/gen/kit_rtl/bind/geom) are pinned to the attempt's gen host because they read the 47-GB src + plan + bind at the same paths (too big to --stage). Class fix: those inputs now exist on epyc2 at the same paths (hardlink rsync off the local src_28fc7 base, +7 GB: kw21/src_c926f, kw23/src_e9eda, kw22/src_3761, kw22/bind_qc_g, kw23/prep_l48ui, kw11/prep_uh, die-s81-70/wave_cg, codex-wave-bind-1106 s81_ready_v3/s81_emitted_v2) and epyc2 joins gen_hosts + hosts, so pick_gen_host/restage_waiters move unstarted waiters off epyc6. work_root -> fresh lane kw24-wave-1106 (epyc2's kw21-wave-1106 lane root carries the ot-run SPILL marker from PLACE spills, so gen_hosts() dropped epyc2). Revert: work_root kw21-wave-1106, drop epyc2.",
    "note_kw24_src": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
-   "note_kw24_planfrz": "KW-FIX-24 15:2x COORD 14:4x class KIT_TOPOLOGY_BIND_STALE (11 S81 rows, the +13 in other flow error): the wave plan was DIE-S81-70 live worktree wave_cg (uncommitted edits at 12:45 PST: t24__cl2456157b/kv512_C__t1/gunit__t1 clock + kv_leaf t1/t3/t4/t5 internal_stations + leaf t24/t41/t58/t68 ft_slots) while kit_rtl binds were made before it -> die-wide reset digest moved, every type fails kit_topology. Fix: plan -> frozen snapshot kw24/wave_cg_frz (hardlink of wave_cg, plan = 28fc7 plan + the kv_leaf internal_stations + ft_slots edits; the 3 clock edits NOT taken: their strict bind still fails, kvb2 t24 tap radius 216>200). bind_matches CHECKED 205/205 types vs kvov bind. Snapshot on epyc5+epyc2 (S81 gen hosts). Revert: plan /srv/opentallas-scratch3/claude/die-s81-70/wave_cg/physical/die_plan/s81/plan_h2_2249.json. Rule: plan edits reach the wave only with a matching bind + config repoint."
+   "note_kw24_planfrz": "KW-FIX-24 15:2x COORD 14:4x class KIT_TOPOLOGY_BIND_STALE (11 S81 rows, the +13 in other flow error): the wave plan was DIE-S81-70 live worktree wave_cg (uncommitted edits at 12:45 PST: t24__cl2456157b/kv512_C__t1/gunit__t1 clock + kv_leaf t1/t3/t4/t5 internal_stations + leaf t24/t41/t58/t68 ft_slots) while kit_rtl binds were made before it -> die-wide reset digest moved, every type fails kit_topology. Fix: plan -> frozen snapshot kw24/wave_cg_frz (hardlink of wave_cg, plan = 28fc7 plan + the kv_leaf internal_stations + ft_slots edits; the 3 clock edits NOT taken: their strict bind still fails, kvb2 t24 tap radius 216>200). bind_matches CHECKED 205/205 types vs kvov bind. Snapshot on epyc5+epyc2 (S81 gen hosts). Revert: plan /srv/opentallas-scratch3/claude/die-s81-70/wave_cg/physical/die_plan/s81/plan_h2_2249.json. Rule: plan edits reach the wave only with a matching bind + config repoint.",
+   "note_kw24_infra": "KW-FIX-24 COORD 14:4x same batch: t41 retry fixed to @1 (current-key attempt; @6 was an old-key number). 6 leaf rows sat 20-30 h as \"wave kit enqueued (queue FAIL)\" after route FAIL INFRA infra-stopped exit 143 (11-05 epyc4 stops, not design results; they count in failure_breakdown other flow error): t11@12 t26@14 t35@1 t4@1 t40cl86sid5S@1 t44clf4@1 released once."
   },
   "s81_head": {
    "enabled": true,
