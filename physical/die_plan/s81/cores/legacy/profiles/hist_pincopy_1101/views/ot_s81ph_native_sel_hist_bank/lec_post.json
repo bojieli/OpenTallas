@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.lec.v1",
  "kit": "/work",
- "generated": "2026-11-01T20:43:31+0000",
+ "generated": "2026-11-06T20:46:31+0000",
  "verdict": "EQUIVALENT",
  "reset_contract": {
   "default": 4,
@@ -20,7 +20,7 @@
   "inputs": 228,
   "outputs": 207
  },
- "t_aig_s": 8.1,
+ "t_aig_s": 12.6,
  "kit_reset_ports": [
   "rst_n"
  ],
@@ -58,13 +58,13 @@
   "dropped": [],
   "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
   "listing": {
-   "file": "/lecout/noreset_constants.tsv",
+   "file": "/work/lec_post_n24/noreset_constants.tsv",
    "sha256": "9281382eae0f24f9f712bdb4a59941a62eb981266c9b391c19101559de2e8b23",
    "n_kept": 0,
    "n_dropped": 0
   }
  },
- "t_corr_s": 34.0,
+ "t_corr_s": 54.0,
  "keypoints": {
   "gold": {
    "inputs": 581,
@@ -134,7 +134,7 @@
    "first": []
   }
  },
- "t_prove_s": 29.6,
+ "t_prove_s": 45.4,
  "x_dont_care_points": {
   "n": 352,
   "first": [
@@ -210,17 +210,10 @@
  "failing": [],
  "unproven_points": [],
  "note": "1866 compare points proved; 1852 key points matched by name, 19 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 352 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
- "superset_vec": {
-  "enabled": true,
-  "n_extra": 0,
-  "all_shown": true,
-  "extra_bits": [],
-  "basis": "free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"
- },
- "t_total_s": 73.4,
+ "t_total_s": 115.2,
  "provenance": {
   "commit": null,
   "dirty": null,
-  "source": "error: ModuleNotFoundError"
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'"
  }
 }
