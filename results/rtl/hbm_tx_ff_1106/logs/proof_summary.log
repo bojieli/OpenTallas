@@ -1,0 +1,13 @@
+TB_KP4_ENC_LA PASS LA=1 MUT=0 mismatches 0 compared_words 3981
+rtl/tb_kp4_enc_la.sv:43: $finish called at 8001000 (1ps)
+TB_KP4_ENC_LA PASS LA=2 MUT=0 mismatches 0 compared_words 3980
+TB_KP4_ENC_FF PASS MUT=0 mismatches=0 compared_words=4979 parity_words=497 epochs=1 extra_edges=1 fault_extra_edges=0
+TB_KP4_ENC_FF PASS MUT=0 mismatches=0 compared_words=4952 parity_words=494 epochs=2 extra_edges=1 fault_extra_edges=0
+TB_KP4_ENC_FF FAIL MUT=1 mismatches=117 compared_words=1179 parity_words=117 epochs=1 extra_edges=1 fault_extra_edges=0
+MUTANT 1 CAUGHT
+TB_KP4_ENC_FF FAIL MUT=2 mismatches=117 compared_words=1179 parity_words=117 epochs=1 extra_edges=1 fault_extra_edges=0
+MUTANT 2 CAUGHT
+TB_KP4_ENC_FF FAIL MUT=3 mismatches=117 compared_words=1179 parity_words=117 epochs=1 extra_edges=1 fault_extra_edges=0
+MUTANT 3 CAUGHT
+TB_PDIE_TX_FF PASS MUT=0 mismatches=0 compared_words=3914 extra_edges=1 fault_extra_edges=0
+ALL_NATIVE_FF_PROOFS_PASS

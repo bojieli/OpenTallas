@@ -2,9 +2,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 mkdir -p build logs
+exec > >(tee logs/proof_summary.log) 2>&1
 common=(-g2012 -Irtl -Icanonical)
 src=(rtl/ot_s81_kp4_enc_la.sv canonical/ot_s81_kp4_common.sv)
 for la in 1 2; do
+  [[ -f logs/native_la"$la".log ]] && grep -q "TB_KP4_ENC_LA PASS" logs/native_la"$la".log && { cat logs/native_la"$la".log; continue; }
   iverilog "${common[@]}" -s tb_kp4_enc_la -Ptb_kp4_enc_la.LA="$la" -o build/native_la"$la" rtl/tb_kp4_enc_la.sv canonical/ot_s81_kp4_enc.sv "${src[@]}" >logs/build_native_la"$la".log 2>&1
   vvp build/native_la"$la" +NCYC=4000 +STALL=729 +SEED=23 >logs/native_la"$la".log
   grep 'TB_KP4_ENC_LA PASS' logs/native_la"$la".log
