@@ -254,8 +254,6 @@
     "kv3_hub_C": "CODEX typed AHUB+CTL closure proved and merged99bfe/faecd; actual single parent trial Intel1 scratch3 codex-kv-hubC-parent stopped before floorplan: reachable as-built qkd_pll_analog_model u_pll emits5 behavioral oscillator combinational loops (rtl_lint5errors). Both actualSIGNEDhardmacros retained; obsolete flat16GBOOM class resolved. KV peer+TOK own physicalPLL/nativeboot boundary fix; no sameform retry or invented PLL tieoff.",
     "kv3_sys_c": "CODEX freshfaecd a5 caught prephysical realized96rawflops/23branches vs currentplan101:5old6stage/base59 branches persist instead7/base58. KV owner owns fresh raw-branch emitter/boundwrapper23/101 closure. No route on stale96; preservea5evidence, source-realizationINFRA not designstrike. Reviewed geometry/phase event remains approved.",
     "kv3_phy": "CODEX faecd fresha6 source-realization mismatch beforeP&R: plan3internal reset stations for i_host_hbm_rst_n, actualbound0/directface-to-macro. KV owner freshcanonicalbind must realize3 beforetrial. Newa6prephysicalworker stopped; retainolder/privatejobs and failureevidence, no designstrike.",
-    "kv3_pv_v7": "CODEX06:00 topology preparation recovery hold: actuallatestkitRTLpassed, explicitasbuilt relativebase resolved againstwrongplanpath (S81/QC) or canonicalnativeBIND_STALE(KV). Sharedkit_assembly ownsfix; releaseoneclassbatch onlyaftercorrectactualcontext, no designstrike. Existinghealthyjobscontinue.",
-    "kv3_pv_v12": "CODEX canonical topology infrastructure recovery: original captured source/manifest path or legacy native receipt stale; proper new canonical bind/context required. Preserve failed evidence and live older jobs; no blind repeat.",
     "kv3_hg_v1": "CODEX parked old unstarted KW10 disk waiter; reviewed current-context recovery owned KV/wave; preserve all outputs/proofs. No design strike/no blind retry.",
     "kv3_sys_SD": "CODEX parked old unstarted KW10 disk waiter; reviewed current-context recovery owned KV/wave; preserve all outputs/proofs. No design strike/no blind retry."
    },
@@ -548,7 +546,9 @@
     "kv3_pc__cl5a95b461": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
     "kv3_pc_v1": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
     "kv3_pc_v3": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
-    "kv3_hub_Ei": "KW-FIX-8 15:4x COORD 14:16/14:53: I48 ftwreg, I49 hubsys; was: KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft li"
+    "kv3_hub_Ei": "KW-FIX-8 15:4x COORD 14:16/14:53: I48 ftwreg, I49 hubsys; was: KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft li",
+    "kv3_pv_v12": "CODEX canonical topology infrastructure recovery: original captured source/manifest path or legacy native receipt stale; proper new canonical bind/context required. Preserve failed evidence and live older jobs; no blind repeat. | RELEASED KW-FIX-24: canonical context now = bind_out kw23/bind_kv_q + asbuilt_kv_7da (DIE-KV-84: bind errors 0, 160 partitions; cfg e3a4e50aeb3); one batch with kv3_hgi_v8@11 / kv3_hub_Eo@10",
+    "kv3_pv_v7": "CODEX06:00 topology preparation recovery hold: actuallatestkitRTLpassed, explicitasbuilt relativebase resolved againstwrongplanpath (S81/QC) or canonicalnativeBIND_STALE(KV). Sharedkit_assembly ownsfix; releaseoneclassbatch onlyaftercorrectactualcontext, no designstrike. Existinghealthyjobscontinue. | RELEASED KW-FIX-24: canonical context now = bind_out kw23/bind_kv_q + asbuilt_kv_7da (DIE-KV-84: bind errors 0, 160 partitions; cfg e3a4e50aeb3); one batch with kv3_hgi_v8@11 / kv3_hub_Eo@10"
    },
    "hosts": [
     "epyc5",
