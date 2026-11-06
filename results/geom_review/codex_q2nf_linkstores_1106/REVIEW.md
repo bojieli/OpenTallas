@@ -1,0 +1,9 @@
+# Q2NF three-child parent planning review
+
+Image: `q2nf_parent_review.png`, rendered and directly inspected. Exact macro rectangles come from retained A's `macro_placement.tcl` and the three actual SRAM LEF sizes. Parent outline786.24x622.08; link0 at34.56,172.8 and link1 at527.04,172.8, both224.64x414.72; controller at280.8,8.64,224.64x606.96. No parent/child or SRAM outline overlap. All19 SRAM positions are retained. Inter-child channels21.6um. Mapped logic areas3443/3446/13491um² fit nominal row reserves at.45; clock/PG/routing are separate costs.
+
+Data flow: controller between the two complete link stores avoids placing either link's write/read controls in the opposite link. Link SRAM signal pins are on their W edge. The west link therefore needs explicit use of its available upper routing layer for its E-facing controller interface, or a separately reviewed mirror/phase-correct placement; the existing R0 placement is not assumed to provide aligned E-facing SRAM pins. The right link W-side interface naturally faces the controller. Original paired SRAM gaps can be narrow because their signal pins are on W faces, but wide buses still need explicit access bands and pin grouping in fresh child GEN.
+
+Clock ownership comes from actual register and SRAM clock connections, including each vector index; no first-clock assignment. Trimming removes unused halves of input buses, including clock bits, without changing any original driver. No new stage or latency. Parent has room for its existing native R2 shell and clock/PG access; its actual binding is still required, and must preserve existing domain/reset behavior.
+
+Verdict: **PASS-COND for source/form preparation; no route release.** Concrete remaining physical work is native R2 hard-child parent binding, actual pin-face grouping/track access, layer/PG ownership, and fresh GEN clock/fixed-anchor review. No B trial was launched and A remains untouched.
