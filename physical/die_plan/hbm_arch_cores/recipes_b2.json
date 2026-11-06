@@ -3291,8 +3291,7 @@
   },
   "ot_hfd_coll_q3_body_ctl": {
     "defines": [
-      "OT_Q3CTL_TGTQ1",
-      "OT_Q3CTL_RCP1"
+      "OT_Q3CTL_TGTQ1"
     ],
     "params": {},
     "util": 0.45,
@@ -3532,12 +3531,29 @@
   "ot_hfd_coll_q3_body_ctl__mul4rt": {
     "defines": [
       "OT_Q3CTL_TGTQ1",
-      "OT_Q3CTL_RCP1",
       "OT_Q3CTL_MUL4_RT"
     ],
     "params": {},
     "util": 0.45,
     "source": "Optional same-output-edge MUL4 input-capture retiming for ten truncated 8x8 partials; added protocol cycles 0; exact leaf plus source-capture rewind proof. Physical closure pending.",
+    "top": "ot_hfd_coll_q3_body_ctl",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105s/q3/ot_hfd_coll_q3_body_ctl.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2",
+      "ot_sram_1rw_256x64_m4_r2c2"
+    ]
+  },
+  "ot_hfd_coll_q3_body_ctl__mul4rt_rcp1": {
+    "defines": [
+      "OT_Q3CTL_TGTQ1",
+      "OT_Q3CTL_RCP1",
+      "OT_Q3CTL_MUL4_RT"
+    ],
+    "params": {},
+    "util": 0.45,
+    "source": "Optional candidate only: same-edge MUL4 retiming plus RCP1 scalar refanout normalization; actual old-vC mapped-net LEC EQUIVALENT40091/40091;0addedcycles. Existing recipe entries remain unchanged. Physical closure pending.",
     "top": "ot_hfd_coll_q3_body_ctl",
     "files": [
       "rtl/hbm_accel/cores_split/reform_1105s/q3/ot_hfd_coll_q3_body_ctl.sv"
