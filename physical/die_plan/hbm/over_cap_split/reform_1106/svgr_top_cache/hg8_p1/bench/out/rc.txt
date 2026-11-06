@@ -1,0 +1,9 @@
+k0il smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+m_odly smoke rc 1 SMB_UNIT FAIL ops=20 pass=0 gos=0/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 385 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0) None
+m_wa smoke rc 1 SMB_UNIT FAIL ops=20 pass=0 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+k0 smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+m_match smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+k1il smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+k1 smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+m_mid smoke rc 1 SMB_UNIT FAIL ops=20 pass=8 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+ALLDONE
