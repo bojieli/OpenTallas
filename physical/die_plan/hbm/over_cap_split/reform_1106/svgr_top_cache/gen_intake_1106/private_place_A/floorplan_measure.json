@@ -1,0 +1,443 @@
+{
+  "odb": "/work/run/results/asap7/hbc_ot_svgr_top/base/2_floorplan.odb",
+  "core_box": [
+    4.32,
+    4.32,
+    298.08,
+    635.04
+  ],
+  "core_area_um2": 185280.3072,
+  "counts": {
+    "functional": 124066,
+    "tap": 16788,
+    "macro": 9
+  },
+  "areas_um2": {
+    "functional": 15526.139940006427,
+    "tap": 489.5380799998872,
+    "macro": 45079.799616
+  },
+  "nonmacro_core_util": 0.11074239464292998,
+  "actual_row_site_area_um2": 134310.7558799992,
+  "post_4p32_halo_row_site_area_um2": 127516.44671999506,
+  "post_halo_row_util": 0.12175794055883044,
+  "row_count": 3815,
+  "unsupported_rows": [],
+  "macros": [
+    {
+      "name": "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "box": [
+        63.83,
+        489.996,
+        238.574,
+        560.484
+      ]
+    },
+    {
+      "name": "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "box": [
+        63.83,
+        249.996,
+        238.574,
+        320.484
+      ]
+    },
+    {
+      "name": "u_fcore.u_core.feed.rows.g_on.g_cache\\[0\\].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "box": [
+        17.28,
+        30.012,
+        109.08,
+        57.588
+      ]
+    },
+    {
+      "name": "u_fcore.u_core.feed.rows.g_on.g_cache\\[1\\].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "box": [
+        17.28,
+        99.996,
+        109.08,
+        127.572
+      ]
+    },
+    {
+      "name": "u_fcore.u_core.feed.rows.g_on.g_cache\\[2\\].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "box": [
+        17.28,
+        169.98,
+        109.08,
+        197.556
+      ]
+    },
+    {
+      "name": "u_fcore.u_core.feed.rows.g_on.g_cache\\[3\\].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "box": [
+        17.28,
+        344.988,
+        109.08,
+        372.564
+      ]
+    },
+    {
+      "name": "u_fcore.u_core.feed.rows.g_on.g_cache\\[4\\].g_rw.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "box": [
+        17.28,
+        415.02,
+        109.08,
+        442.596
+      ]
+    },
+    {
+      "name": "u_fcore.u_core.issuer.g_t2.u_desc_hi",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "box": [
+        172.8,
+        139.98,
+        267.624,
+        181.044
+      ]
+    },
+    {
+      "name": "u_fcore.u_core.issuer.g_t2.u_desc_lo",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "box": [
+        172.8,
+        49.98,
+        267.624,
+        91.044
+      ]
+    }
+  ],
+  "pg_logical_missing_or_wrong_net": [],
+  "clock_pins": [
+    {
+      "layer": "M5",
+      "box": [
+        151.152,
+        319.44,
+        151.2,
+        319.92
+      ]
+    }
+  ],
+  "clock_M5_PG_intersections": [],
+  "clock_PG_shapes_inspected": {
+    "via_envelope": 141915,
+    "wire": 136
+  },
+  "master_inventory": [
+    {
+      "master": "AND2x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 4806
+    },
+    {
+      "master": "AND3x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 815
+    },
+    {
+      "master": "AND4x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 1322
+    },
+    {
+      "master": "AND5x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 1001
+    },
+    {
+      "master": "AO211x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 12
+    },
+    {
+      "master": "AO21x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 5866
+    },
+    {
+      "master": "AO221x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 1247
+    },
+    {
+      "master": "AO222x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 9
+    },
+    {
+      "master": "AO22x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 31
+    },
+    {
+      "master": "AO31x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 7
+    },
+    {
+      "master": "AO32x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 363
+    },
+    {
+      "master": "AO33x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 3
+    },
+    {
+      "master": "AOI211x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 273
+    },
+    {
+      "master": "AOI21x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 3683
+    },
+    {
+      "master": "AOI221x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 4
+    },
+    {
+      "master": "AOI22x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 1054
+    },
+    {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 106
+    },
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 11724
+    },
+    {
+      "master": "BUFx3_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 403
+    },
+    {
+      "master": "BUFx4_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 17
+    },
+    {
+      "master": "BUFx4f_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 100
+    },
+    {
+      "master": "BUFx5_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 21
+    },
+    {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 108
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 2457
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 16912
+    },
+    {
+      "master": "FAx1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 235
+    },
+    {
+      "master": "HAxp5_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 597
+    },
+    {
+      "master": "INVx1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 13898
+    },
+    {
+      "master": "INVx2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 2
+    },
+    {
+      "master": "INVx3_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 976
+    },
+    {
+      "master": "MAJx2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 2
+    },
+    {
+      "master": "NAND2x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 7116
+    },
+    {
+      "master": "NAND2x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 7
+    },
+    {
+      "master": "NAND3x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 32
+    },
+    {
+      "master": "NAND3x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 6
+    },
+    {
+      "master": "NOR2x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 7159
+    },
+    {
+      "master": "NOR3x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 13
+    },
+    {
+      "master": "NOR3x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 2
+    },
+    {
+      "master": "OA211x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 9464
+    },
+    {
+      "master": "OA21x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 7302
+    },
+    {
+      "master": "OA222x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 1515
+    },
+    {
+      "master": "OA22x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 5468
+    },
+    {
+      "master": "OA31x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 16
+    },
+    {
+      "master": "OA33x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 2209
+    },
+    {
+      "master": "OAI21x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 628
+    },
+    {
+      "master": "OAI22x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 426
+    },
+    {
+      "master": "OR2x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 2117
+    },
+    {
+      "master": "OR3x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 7938
+    },
+    {
+      "master": "OR3x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 1
+    },
+    {
+      "master": "OR4x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 205
+    },
+    {
+      "master": "OR4x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 1
+    },
+    {
+      "master": "OR5x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 85
+    },
+    {
+      "master": "TAPCELL_ASAP7_75t_R",
+      "type": "CORE_WELLTAP",
+      "count": 16788
+    },
+    {
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "type": "CORE_TIEHIGH",
+      "count": 3491
+    },
+    {
+      "master": "TIELOx1_ASAP7_75t_R",
+      "type": "CORE_TIELOW",
+      "count": 344
+    },
+    {
+      "master": "XNOR2x1_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 3
+    },
+    {
+      "master": "XNOR2x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 249
+    },
+    {
+      "master": "XOR2x2_ASAP7_75t_R",
+      "type": "CORE",
+      "count": 215
+    },
+    {
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "type": "BLOCK",
+      "count": 2
+    },
+    {
+      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+      "type": "BLOCK",
+      "count": 5
+    },
+    {
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "type": "BLOCK",
+      "count": 2
+    }
+  ],
+  "unplaced_functional": 124066
+}
