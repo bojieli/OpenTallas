@@ -131,13 +131,19 @@ def capture(lef, lib, master, depth, width, dest):
     """
     lef, lib, dest = Path(lef), Path(lib), Path(dest)
     pv = lef.parent / 'provenance.json'
-    src = Path(read(pv)['src'])
+    provenance = read(pv)
+    src = Path(provenance['src'])
+    signoff = lef.parent / 'signoff.json'
+    if not signoff.is_file():
+        signoff = Path(provenance['export']['signoff'])
+    if digest(signoff) != provenance['export']['signoff_sha256']:
+        raise ValueError('hard landing captured signoff differs from the exported receipt')
     old = read(src / 'face_guard.json')
     net = Path(old['netlist'])
     if str(net).startswith('/work/'):
         net = src / str(net)[6:]
     dest.mkdir(parents=True, exist_ok=True)
-    paths = {'provenance.json': pv, 'signoff.json': lef.parent / 'signoff.json',
+    paths = {'provenance.json': pv, 'signoff.json': signoff,
              'face_guard.json': src / 'face_guard.json',
              'face_guard_source.py': src / 'face_guard.py',
              'land_slots.json': src / 'land_slots.json', 'netlist.v': net,
