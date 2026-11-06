@@ -1,0 +1,5 @@
+START_EXACT_PASS checks300 PADmutant3 RESETmutant4 period833000fs cold+2warmreset
+- /srv/opentallas-scratch2/claude/codex-qc-functional-1106/start_proof/tb.sv:12: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 250ns; walltime 0.002 s; speed 140.645 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

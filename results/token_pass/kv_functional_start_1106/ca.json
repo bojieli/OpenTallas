@@ -1,0 +1,44 @@
+{
+ "start_tree": "clock",
+ "start_reset_wave": true,
+ "root": "R",
+ "root_settle_cycles": 8,
+ "regions": {
+  "R": {
+   "parent": null,
+   "virtual": false
+  },
+  "st:h0": {
+   "parent": "R",
+   "virtual": true,
+   "pad": 1,
+   "edge_fall": false
+  },
+  "st:h00": {
+   "parent": "st:h0",
+   "virtual": true,
+   "pad": 0,
+   "edge_fall": true
+  },
+  "D": {
+   "parent": "st:h00",
+   "virtual": false
+  }
+ },
+ "start_ports": {
+  "a": {
+   "src": "R",
+   "dst": "st:h0",
+   "launch_part": "R"
+  },
+  "b": {
+   "src": "st:h0",
+   "dst": "st:h00"
+  },
+  "c": {
+   "src": "st:h00",
+   "dst": "D",
+   "capture_part": "D"
+  }
+ }
+}
