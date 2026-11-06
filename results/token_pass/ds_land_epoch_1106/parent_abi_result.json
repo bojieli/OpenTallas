@@ -1,0 +1,52 @@
+[
+  {
+    "label": "default0",
+    "skew": 0,
+    "KN_bias": 0,
+    "NK_bias": 0,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LNLAND_EPOCH_PASS skew=0 KN=0 NK=0 words_each=55 widths556/560/558"
+  },
+  {
+    "label": "actual5",
+    "skew": 5,
+    "KN_bias": 5,
+    "NK_bias": 3,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LNLAND_EPOCH_PASS skew=5 KN=5 NK=3 words_each=60 widths556/560/558"
+  },
+  {
+    "label": "actual6",
+    "skew": 6,
+    "KN_bias": 6,
+    "NK_bias": 2,
+    "rc": 0,
+    "expected_pass": true,
+    "correct": true,
+    "diagnosis": "LNLAND_EPOCH_PASS skew=6 KN=6 NK=2 words_each=61 widths556/560/558"
+  },
+  {
+    "label": "wrong_bias",
+    "skew": 5,
+    "KN_bias": 6,
+    "NK_bias": 4,
+    "rc": 1,
+    "expected_pass": false,
+    "correct": true,
+    "diagnosis": "[34000000] %Fatal: tb.sv:35: Assertion failed in tb: LNLAND_KN_DATA edge41"
+  },
+  {
+    "label": "wrong_latency",
+    "skew": 6,
+    "KN_bias": 5,
+    "NK_bias": 3,
+    "rc": 1,
+    "expected_pass": false,
+    "correct": true,
+    "diagnosis": "[34000000] %Fatal: tb.sv:35: Assertion failed in tb: LNLAND_KN_DATA edge41"
+  }
+]

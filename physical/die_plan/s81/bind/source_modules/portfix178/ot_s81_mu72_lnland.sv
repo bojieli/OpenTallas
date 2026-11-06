@@ -15,7 +15,7 @@
 // plane f_lf only, s_7N) with the same +3.
 // MUT (bench only): 1 = K -> N bundle wired straight across (missing landing edge), 2 = N -> K bundle straight,
 // 3 = credit li_r skips the landing (credit pulse 3 edges early vs its contract).
-module ot_s81_mu72_lnland #(parameter integer MUT = 0) (
+module ot_s81_mu72_lnland #(parameter integer MUT = 0, KN_EPOCH_BIAS = 0, NK_EPOCH_BIAS = 0) (
     input  wire         ck_k, ck_n, rs_k, rs_n,
     // K side (u_lep)
     input  wire         k_lo_v,  input  wire [552:0] k_lo_d, output wire k_lo_r,
@@ -28,8 +28,8 @@ module ot_s81_mu72_lnland #(parameter integer MUT = 0) (
 );
     wire [555:0] kn_i = {k_li_r, k_rxv, k_lo_v, k_lo_d}, kn_o;
     wire [559:0] nk_i = {n_st, n_flt, n_lo_r, n_li_v, n_li_d}, nk_o;
-    ot_s81_mu72_land #(.W(556)) u_kn (.ck_w(ck_k), .ck_r(ck_n), .rs_w(rs_k), .rs_r(rs_n), .i(kn_i), .o(kn_o));
-    ot_s81_mu72_land #(.W(560)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
+    ot_s81_mu72_land #(.W(556),.EPOCH_BIAS(KN_EPOCH_BIAS)) u_kn (.ck_w(ck_k), .ck_r(ck_n), .rs_w(rs_k), .rs_r(rs_n), .i(kn_i), .o(kn_o));
+    ot_s81_mu72_land #(.W(560),.EPOCH_BIAS(NK_EPOCH_BIAS)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
     wire [555:0] kn = (MUT == 1) ? kn_i : (MUT == 3) ? {kn_i[555], kn_o[554:0]} : kn_o;
     wire [559:0] nk = (MUT == 2) ? nk_i : nk_o;
     assign {n_li_r, n_rxv, n_lo_v, n_lo_d} = kn;
@@ -42,7 +42,7 @@ endmodule
 // pure status for the fault network: its fault bit rx[512] already enters the lane (lane rx[514] -> flt[2], sticky in the
 // lep's fault collector via l<i>_f -> the slice's 1-bit `fault`), and live is status.  Same landing, same +3 each way;
 // s_7N keeps ot_s81_mu72_lnland (its k_st feeds the host plane f_lf).  MUT as ot_s81_mu72_lnland.
-module ot_s81_mu72_lnland_nst #(parameter integer MUT = 0) (
+module ot_s81_mu72_lnland_nst #(parameter integer MUT = 0, KN_EPOCH_BIAS = 0, NK_EPOCH_BIAS = 0) (
     input  wire         ck_k, ck_n, rs_k, rs_n,
     // K side (u_lep)
     input  wire         k_lo_v,  input  wire [552:0] k_lo_d, output wire k_lo_r,
@@ -55,8 +55,8 @@ module ot_s81_mu72_lnland_nst #(parameter integer MUT = 0) (
 );
     wire [555:0] kn_i = {k_li_r, k_rxv, k_lo_v, k_lo_d}, kn_o;
     wire [557:0] nk_i = {n_flt, n_lo_r, n_li_v, n_li_d}, nk_o;
-    ot_s81_mu72_land #(.W(556)) u_kn (.ck_w(ck_k), .ck_r(ck_n), .rs_w(rs_k), .rs_r(rs_n), .i(kn_i), .o(kn_o));
-    ot_s81_mu72_land #(.W(558)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
+    ot_s81_mu72_land #(.W(556),.EPOCH_BIAS(KN_EPOCH_BIAS)) u_kn (.ck_w(ck_k), .ck_r(ck_n), .rs_w(rs_k), .rs_r(rs_n), .i(kn_i), .o(kn_o));
+    ot_s81_mu72_land #(.W(558),.EPOCH_BIAS(NK_EPOCH_BIAS)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
     wire [555:0] kn = (MUT == 1) ? kn_i : (MUT == 3) ? {kn_i[555], kn_o[554:0]} : kn_o;
     wire [557:0] nk = (MUT == 2) ? nk_i : nk_o;
     assign {n_li_r, n_rxv, n_lo_v, n_lo_d} = kn;

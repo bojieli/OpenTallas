@@ -59,7 +59,8 @@ endmodule
 module ot_pl_land_vector_reset_r #(
     parameter integer W=1073,D=4,K=2,CHUNK_BITS=24,
     parameter integer AW=(D<=2)?1:$clog2(D),
-    parameter integer CHUNKS=(W+CHUNK_BITS-1)/CHUNK_BITS
+    parameter integer CHUNKS=(W+CHUNK_BITS-1)/CHUNK_BITS,
+    parameter integer EPOCH_BIAS=0
 )(
     input wire ck,input wire [CHUNKS-1:0] rsi,
     input wire [D*W-1:0] bank,input wire [D*(AW+1)-1:0] epo,
@@ -74,7 +75,7 @@ module ot_pl_land_vector_reset_r #(
         for(genvar s=0;s<D;s=s+1) begin:g_slot
             assign cb[s*CW+:CW]=bank[s*W+c*CHUNK_BITS+:CW];
         end
-        (* keep_hierarchy="yes" *) ot_pl_land_local_r #(.W(CW),.D(D),.K(K)) u_local(
+        (* keep_hierarchy="yes" *) ot_pl_land_local_r #(.W(CW),.D(D),.K(K),.EPOCH_BIAS(EPOCH_BIAS)) u_local(
             .ck(ck),.rsi(rsi[c]),.bank(cb),.epo(epo),.vld(vld[c*D+:D]),.o(o[c*CHUNK_BITS+:CW]));
     end endgenerate
 `ifndef SYNTHESIS
