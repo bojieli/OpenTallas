@@ -19,7 +19,7 @@ from pathlib import Path
 INST = re.compile(r'^\s*(\w+)\s*(#\(.*\))?\s+(\w+)\s*\($')
 CONN = re.compile(r'^\s*\.(\w+)\(([\w\[\]:\']*)\),?$')
 WIRE = re.compile(r'^\s*wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;\s*(//\s*lane\s+(\S+))?')
-TPORT = re.compile(r'^\s*input\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;')
+TPORT = re.compile(r'^\s*(?:input|output)\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;')
 PORT = re.compile(r'^\s*(input|output)\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)')
 
 
@@ -42,6 +42,16 @@ def parse_top(p: Path):
                 cur = None
                 continue
             raise SystemExit(f'unparsed instance line: {ln}')
+        # Current bind tops co-declare independent landing ready/fault nets.
+        # Split declarations in the carve, preserving each net width/name.
+        many = re.match(r'^\s*wire\s*(\[[0-9]+:[0-9]+\])?\s*([A-Za-z_][A-Za-z0-9_$]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_$]*)+)\s*;\s*(?://.*)?$', ln)
+        if many:
+            span = many.group(1) or ''
+            limits = re.findall(r'[0-9]+', span)
+            width = int(limits[0])-int(limits[1])+1 if limits else 1
+            for name in re.split(r'\s*,\s*', many.group(2)):
+                wires[name] = dict(width=width, lane=None, decl=f'    wire {span} {name};')
+            continue
         m = WIRE.match(ln)
         if m:
             w = int(m.group(2)) - int(m.group(3)) + 1 if m.group(1) else 1
