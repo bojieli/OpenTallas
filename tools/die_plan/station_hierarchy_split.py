@@ -37,14 +37,17 @@ def state_bits(modules, name, active=(), sequential=()):
     return count
 
 
-def prepare(source, groups, module, cut, prefix, mapped=False, sequential=()):
+def prepare(source, groups, module, cut, prefix, mapped=False, sequential=(), include_controls=False):
     m = source['modules'][module]
     chosen = {'w': [], 'e': []}
     crossing = []
     whole_groups = {'w': set(), 'e': set()}
     for n in sorted(m['cells']):
         if mapped:
-            match = re.match(r'u_bound\.(u_ft_ft\d+_o_\d+|u_cland_ft\d+_i)(?:[/.]|$)', n)
+            pattern = r'u_ft_ft\d+_o_\d+|u_cland_ft\d+_i'
+            if include_controls:
+                pattern += r'|u_rrl_\d+(?:_t)?|u_rst_in|u_cland_collect_[A-Za-z0-9_]+|u_cland_monitor_\d+'
+            match = re.match(r'u_bound\.(' + pattern + r')(?:[/.]|$)', n)
             if not match:
                 continue
             group = match[1]
@@ -242,6 +245,8 @@ def main():
     p.add_argument('--out', required=True)
     p.add_argument('--mapped', action='store_true')
     p.add_argument('--clock-receipt')
+    p.add_argument('--include-native-controls', action='store_true',
+                   help='move complete captured reset/collector/monitor groups; requires actual FF footprints')
     p = sub.add_parser('check')
     p.add_argument('source'); p.add_argument('transformed'); p.add_argument('event')
     p.add_argument('--out', required=True)
@@ -251,7 +256,8 @@ def main():
     if args.command == 'prepare':
         source = read(args.source)
         event, ys = prepare(source, read(args.groups), args.module, args.cut, args.prefix, args.mapped,
-                            read(args.clock_receipt)['sequential_masters'] if args.clock_receipt else ())
+                            read(args.clock_receipt)['sequential_masters'] if args.clock_receipt else (),
+                            args.include_native_controls)
         if args.mapped:
             (out / 'annotated.json').write_text(json.dumps(source) + '\n')
         event['captured_sha256'] = digest(args.source)

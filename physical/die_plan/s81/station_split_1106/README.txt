@@ -1,60 +1,40 @@
-WIP: S81 station exact two-child source form
-=========================================
-No plan, recipe, view, hold release or physical activation is included.
+S81 station native split — implementation WIP, 2026-11-06
 
-The exact B51 logical source was elaborated and cut into whole FT/landing
-instances. Independent lockstep compares every output:106060884 known bit
-comparisons, two reset/phase cases; boundary bit mutant caught. The miter
-couples unreset writer-counter initial state explicitly; it is not boot proof.
-See lockstep.json. Six graph mutants are in mutants.json.
+Current retained source: intel1 dedicated scratch2
+/srv/opentallas-scratch2/claude/codex-s81-split-1106/mapped_controls/
+child_w.v, child_e.v, parent.v, split_clean.json, abi_map.json,
+source_sync_inputs.json, pin_anchors.json, captured.json and clock_capture.json.
+Original B51 3_place/4_cts ODBs and exact source constraints are retained one level up.
 
-The physical successor uses the retained placed mapped source plus the actual
-CTS source-root census. All53074 sequential cells have exactly one traced
-input root, all inversion parities0.39153 local-clock bindings change from the
-pre-CTS logical clk to their actual CTS root; data/reset pins do not change.
-There are86 actual roots. Whole-stage ownership remains intact even when a
-stage's physical bits span roots. Raw logical children must not be hardened:
-doing so would collapse those physical root assignments.
+Exact native graph conservation PASS:188969 original functional cells; west98134,
+east75637,parent15198. All53074 original FFs are inside401 complete native
+FT/landing/reset/collector/monitor groups; parent has0FF;0added cycles.
+The copied outrelay remains distinct. Source clocks bind to exact actual CTS roots;
+no source clock/root/reset/age rewrite or cell pruning. Source immutable kept JSON SHA
+082685115cbcaff28ec49ebf3e0caab50671374a06fe5181b7adb1d1115517e5.
 
-At cut630.72um, native graph conservation proves:
- west97491 functional cells/28053FF; east75011/24595FF;
- parent16467 functional cells/426FF; total188969cells/53074FF unchanged.
-Every original cell/connection/master/parameter and initial value is checked.
-Keep metadata preserves unused native reset/clock cells against submod's
-opt_clean. The first pruning attempt was rejected, not adopted.
-Clean child ABI has44/40 clock ports and11017/11079 scalar signal pins.
-Scalar naming is an interface representation: each whole register stage still
-belongs to exactly one physical child, with all data/epoch bits together.
+controls_pose.json + station_controls_pose.png: plan-owner PASS-COND for root/pin
+preparation, not route. All child FFs packed on native grid, no overlaps. Independent
+all-combinational mapped audit:103986 FF endpoint pairs,0over402.84um; original
+baseline19over(max414.018). Clock/primary-port reach is separate.
 
-Source tools:
- tools/die_plan/station_native_clock_capture.py validates placed/CTS instance,
- master family, pin and root identity and captures actual root bindings.
- tools/die_plan/station_hierarchy_split.py prepares the cut and proves exact
- graph conservation. It never approves routing or manufactures timing frames.
- native_groups.py --work-dir WORK uses native FF footprints.
- keep_source.py --work-dir WORK/mapped retains exact source state inventory.
- clean_abi.py --work-dir WORK/mapped names scalar signals for the core SDK.
+Source timing SDK opt-ins: canonical tap_window_port_ps, landed_clock_inputs,
+source_sync_inputs and exact native_clock_pins. Default kits unchanged. Actual
+3040 source-sync inputs retain forwarded clock and166.6max/80min, including runtime
+IO-hold replay. Wrong-clock/removed-bound/missing-root mutants rejected.47existing
+SDC/ring tests pass after sparse dependencies were materialized. Literal get_ports
+selectors now use an exact index instead of quadratic regex scans.
 
-Retained actual inputs/results (dedicated filesystem):
- intel1:/srv/opentallas-scratch2/claude/codex-s81-split-1106
- Files native_B51_{place,cts}.odb, native_parent.v, native_captured.json,
- native_{ff_clocks,cts_roots}.tsv, mapped/{native_bound,kept_source,split,
- split_clean}.json, mapped/{clock_capture,keep_receipt,conservation,
- conservation_clean,abi_map}.json. Generated HDL and full sources stay there.
- Source kit was own retired B51, source closure and conditional FREG proof
- preserved; no live kit was edited.
+ROOT ruling: retain86 parent M7 source sites/frames;89child entries are46W/43E,
+with clk_t19/clk_t2/clk_t62 shared. In-lot source sites remain exact. Explicit secondary
+branches move child entries at most44.928umW/94.528umE. Root-to-FF corners max334.23W/
+240.43E. Native M7 pin dimensions retained. Publish honest actual M7 clock/PG OBS;
+no M8 child pin and no OBS6 concealment. Parent clocks use existing M8/M9 authority.
+Actual branch arrival/load, common-source frame and expanded child clock models
+remain parent composition obligations before activation.
 
-NEXT PHYSICAL WORK (still owed):
- 1. Fit complete register/landing footprints inside two abutting child lots
-    with a parent seam and outer access strips; render and inspect the result.
- 2. Native multi_root core SDK specs must retain all actual clock roots,
-    related1:1 phase0 nominal relation, exact measured per-root early/late tap
-    windows, masks and parent-related pair obligations. Current SDK has no
-    direct tap_window import. Never assume common250/202.5 input budgets are
-    equivalent or add an ignored field. No source-clock collapse.
- 3. Generate/harden children through existing core recipe/spec frontend only
-    after that interface and image review; actual final functional cell counts
-    must remain<=150000, excluding physical-only taps/filler. Source counts
-    are not post-route qualification. Utilization<=0.45.
- 4. Compose and qualify real parent FF hold/related pairs, then batch family
-    release. No existing hold has been removed by this work.
+Current next work: registered data pin packing/seam capacity, exact89 M7 entry
+construction and child GEN/PG. All child signal pins have native register anchors;
+3454 direct cross-child bits can share seam Y. Native child private P&R awaits
+full pin/root/access review and ordinary gates. No parent route before signed children.
+No hold release or SIGNED claim.

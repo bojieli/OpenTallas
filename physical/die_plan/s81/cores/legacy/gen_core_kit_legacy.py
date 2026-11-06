@@ -54,7 +54,7 @@ import core_flow  # noqa: E402  (FLOW-FIX 10-25 core-kit flow defaults: RC cal, 
 TIME_UNIT_PS = 1.0   # constraint.sdc time unit (ASAP7 liberty: ps)
 
 CORE_MARGIN_UM = 4.32
-RECT = {"M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084),   # repin.py: (w, h) of a pin shape
+RECT = {"M7": (0.032, 0.768), "M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084),   # repin.py: (w, h) of a pin shape
         "M6": (0.084, 0.032)}   # M6 pin-only grant (E/W faces; ASAP7 M6 width 0.032, area 0.002688 >= 0.0021875)
 M6_LATTICE = (0.064, 0.032)    # die/parent M6 tracks (pitch, offset): tools/die_plan/pin_template.LATTICE, delta_kitsspare2_1025.TRACK
 IO_BUDGET = 0.2
@@ -575,6 +575,49 @@ def native_pin_rects(path):
             out.setdefault(name, []).append([layer, *map(float, t[1:5])])
         elif name and t[:2] == ["END", name]:
             name, layer = None, None
+    return out
+
+
+
+def native_root_pin_contract(spec, mr, pins, shapes, outline, obs_max):
+    """Exact captured M7 root rectangles, independently of M5 master-slice entries.
+
+    This does not grant M7 signal routing or trim M7 obstruction metal. The
+    source-root frame and every root entry must be explicit; default pins retain
+    the existing face gate. Actual M7 clock wiring must be published honestly.
+    """
+    raw = spec.get("native_clock_pins")
+    if raw is None:
+        return {}
+    if not mr or root_window_contract(spec, mr) is None or obs_max != "M7":
+        raise SystemExit("native_clock_pins requires explicit multi-root windows and honest M7 OBS publication")
+    if not isinstance(raw, dict) or raw.get("schema") != "opentallas.native_clock_pins.v1" \
+            or set(raw) != {"schema", "ports"}:
+        raise SystemExit("native_clock_pins: unknown schema/profile fields")
+    declared = {p for r in mr["roots"] for p in r["pins"]}
+    rows = raw["ports"]
+    if not isinstance(rows, dict) or set(rows) != declared:
+        raise SystemExit("native_clock_pins must cover exactly every physical root")
+    table = {p["name"]: p for p in pins};out = {};w,h=outline
+    for name, row in rows.items():
+        if not isinstance(row, dict) or set(row) != {"layer", "rect_um", "source_root", "source_rect_um"}:
+            raise SystemExit(f"native_clock_pins: incomplete/unknown fields at {name}")
+        if row["layer"] != "M7" or not isinstance(row["source_root"], str) or not row["source_root"]:
+            raise SystemExit(f"native_clock_pins: {name} requires its captured M7 source root")
+        rect, original = row["rect_um"], row["source_rect_um"]
+        if any(not isinstance(v, list) or len(v) != 4 or any(isinstance(x,bool) or not isinstance(x,(int,float))
+               or not math.isfinite(x) for x in v) for v in (rect,original)):
+            raise SystemExit(f"native_clock_pins: invalid rectangle at {name}")
+        x0,y0,x1,y1=rect;sx0,sy0,sx1,sy1=original
+        if not (0<=x0<x1<=w and 0<=y0<y1<=h) or min(sx1-sx0,sy1-sy0)<=0 \
+                or abs((x1-x0)-(sx1-sx0))>1e-4 or abs((y1-y0)-(sy1-sy0))>1e-4:
+            raise SystemExit(f"native_clock_pins: {name} changes source metal size or leaves the outline")
+        q=table.get(name);shape=shapes.get(name)
+        if q is None or q["layer"]!="M7" or abs(q["x"]-(x0+x1)/2)>1e-4 or abs(q["y"]-(y0+y1)/2)>1e-4 \
+                or shape is None or len(shape)!=7 or shape[0]!="M7" \
+                or any(abs(a-b)>1e-4 for a,b in zip(shape[3:],rect)):
+            raise SystemExit(f"native_clock_pins: {name} differs from exact plan/LEF metal")
+        out[name]=["M7",*rect]
     return out
 
 
@@ -1153,6 +1196,42 @@ def root_landed_sdc(text, landed, mr, per):
     return text
 
 
+
+def source_sync_contract(spec, mr, inputs, per):
+    """Import captured forwarded-data frames, without adding an exception."""
+    rows = spec.get("source_sync_inputs", {})
+    if not isinstance(rows, dict):
+        raise SystemExit("source_sync_inputs must be a per-input dictionary")
+    landed = set(root_landed_contract(spec, mr))
+    for port, row in rows.items():
+        if port not in inputs or not isinstance(row, dict) or set(row) - {"clock_port", "max_ps", "min_ps", "source_port"}:
+            raise SystemExit(f"source_sync_inputs: unknown input or profile fields at {port}")
+        if row.get("clock_port") not in landed:
+            raise SystemExit(f"source_sync_inputs: {port} clock is not a declared landed receive root")
+        for key in ("max_ps", "min_ps"):
+            v = row.get(key)
+            if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v):
+                raise SystemExit(f"source_sync_inputs: {port} requires finite explicit {key}")
+        if row["max_ps"] < IO_BUDGET * per - 1e-6 or row["min_ps"] > row["max_ps"]:
+            raise SystemExit(f"source_sync_inputs: {port} bounds weaken the IO max floor or have no eye")
+    return rows
+
+
+def source_sync_sdc(rows, mr, indent=""):
+    if not rows:
+        return ""
+    clocks = {r["base"]: r["clock"] for r in mr["roots"]}
+    groups = {}
+    for port, row in rows.items():
+        groups.setdefault((row["clock_port"], row["max_ps"], row["min_ps"]), []).append(port)
+    text = indent + "# Captured source-synchronous input data: replace vclk on these exact ports.\n"
+    for (root, mx, mn), ports in sorted(groups.items()):
+        sel = " ".join(sorted(ports))
+        for kind, value in (("max", mx), ("min", mn)):
+            text += f"{indent}set_input_delay -{kind} {value:.4f} -clock {clocks[root]} [get_ports {{{sel}}}]\n"
+    return text
+
+
 def root_window_sdc(text, windows):
     """Keep the measured early/late frames; existing child IO budgets stay exact."""
     if windows is None:
@@ -1511,6 +1590,7 @@ def main():
     m6_off = m6_pin_grant(pins, hc, plan)
     # DIE-S81-52/RF-H 11-03: recipe route_m6 = signal routing up to M6 inside a plan grant obs_max >= M6, no M6 pin (ROM walls block M1-M4)
     route_m6 = bool(rec.get("route_m6"))
+    native_roots = native_root_pin_contract(spec, mr, pins, shapes, [w,h], hc.get("obs_max"))
     if route_m6 and hc.get("obs_max") not in ("M6", "M7"):
         raise SystemExit(f"{hc['module']}: recipe route_m6 but the plan grants obs_max {hc.get('obs_max')!r}")
     bad = []
@@ -1519,6 +1599,8 @@ def main():
         lay = {"M3": (x, 0.009, 0.036), "M5": (x, 0.012, 0.048), "M4": (y, 0.012, 0.048)}
         if m6_off is not None:
             lay["M6"] = (y, m6_off, 0.064)
+        if q["name"] in native_roots:
+            lay["M7"] = (x, 0.032, 0.064)
         if L not in lay:
             raise SystemExit(f"{mod}: pin {q['name']} on {L}: no kit track table entry (plan grant M3-M5, M6 via obs_max)")
         c, o, p = lay[L]
@@ -1555,12 +1637,16 @@ def main():
         if L_ != q["layer"] and not rec.get("rtl_dirs"):
             raise SystemExit(f"{mod}: pin {q['name']} layer {q['layer']} != plan LEF {L_}")
         native = native_multiport(q, native_shapes.get(q["name"], []), w, h) if modern and q["name"] not in interior_clocks else None
+        if q["name"] in native_roots:
+            if not modern:
+                raise SystemExit("native_clock_pins requires modern exact native pin placement")
+            native = [native_roots[q["name"]]]
         if native:
             pw, ph_, projected = RECT[q["layer"]][0], RECT[q["layer"]][1], 0
         else:
             q, pw, ph_, projected = planned_pin_geometry(dict(q), shapes, w, h, modern=modern,
                                                         interior_clock=interior_clocks.get(q["name"]))
-        if q["name"] in interior_clocks:
+        if q["name"] in interior_clocks or q["name"] in native_roots:
             f = "C"
         snapped += projected
         if native:
@@ -1616,15 +1702,21 @@ def main():
     _sdc = sdc(per, ins, tol, [ckb], rsts, mod, in_min_ports, half_max)
     root_windows = root_window_contract(spec, mr)
     landed_roots = root_landed_contract(spec, mr)
+    sync_inputs = source_sync_contract(spec, mr,
+        {base(n) for n in names if dirs[n] == "INPUT" and base(n) not in rootb}, per)
+    if set(sync_inputs) & (set(in_min_ports) | set(half_max)):
+        raise SystemExit("source_sync_inputs conflicts with an existing per-input delay profile")
     (kd / "constraint.sdc").write_text(root_landed_sdc(
-        root_window_sdc(multi_root_sdc(_sdc, mr, per) if mr else _sdc, root_windows), landed_roots, mr, per))
-    if in_min_ports:
+        root_window_sdc(multi_root_sdc(_sdc, mr, per) if mr else _sdc, root_windows), landed_roots, mr, per)
+        + source_sync_sdc(sync_inputs, mr))
+    if in_min_ports or sync_inputs:
         # hold_gate.tcl / sign-off overlays re-apply the flat fallback on every input, then source this (gen_phys form)
         (kd / "io_hold.tcl").write_text(
             f"# GENERATED by gen_core_kit_legacy.py: IO-HOLD option A per-port min input delays of {mod}; fallback "
             f"{-tol:g} ps on every other input\nproc ot_io_hold_apply {{vclk}} {{\n"
             + "".join(f"  set_input_delay -min {v:.4f} -clock $vclk [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
                       for v, ps in _group_in_min(in_min_ports))
+            + source_sync_sdc(sync_inputs, mr, indent="  ")
             + f"  puts \"OT_IO_HOLD sender_min ports {len(in_min_ports)} fallback {-tol:g}\"\n}}\n")
     buses_in = sorted({base(n) for n in names if dirs[n] == "INPUT" and base(n) not in rootb})
     buses_out = sorted({base(n) for n in names if dirs[n] == "OUTPUT"})
@@ -1643,6 +1735,9 @@ def main():
                     tap_window_in_ps=max(root_windows.values()))
     if landed_roots:
         lctx["landed_clock_inputs"] = landed_roots
+    if sync_inputs:
+        lctx["source_sync_inputs"] = sync_inputs
+        lctx.setdefault("hold_in_min_ports_ps", {}).update({p: r["min_ps"] for p, r in sync_inputs.items()})
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:

@@ -259,6 +259,9 @@ class Ctx:
         # declared forwarded-clock outputs (landing exports) are real output ports: all_outputs selects them too
         self.clock_out = list(clock_out)
         self.allp = self.inputs + self.outputs + self.clock_ports + self.ft_in + self.ft_out + self.clock_out
+        self.port_exact = {}
+        for port in self.allp:
+            self.port_exact.setdefault(port, []).append(port)
         self.vars = {}
         self.clocks = {}
         self.gclocks = {}             # generated clock -> [target port]
@@ -271,12 +274,16 @@ def _glob_ports(ctx, pats):
     r = []
     for p in pats:
         m = BITSEL.match(p)
-        if m and m.group(1) in ctx.allp:
+        if m and m.group(1) in ctx.port_exact:
             # CLOCK-KV-R21 (hold_demand die_sta): one bit of a declared bus port -> the bus port
             r.append(m.group(1))
             continue
         base = re.sub(r"\[\*\]$", "", p)
-        hit = [q for q in ctx.allp if q == base or re.fullmatch(re.escape(base).replace(r"\*", ".*"), q)]
+        # A scalarized native child has thousands of literal pin names. Preserve
+        # wildcard ordering/duplicate semantics, without scanning every port for
+        # each literal selector (quadratic in the pin count).
+        hit = (ctx.port_exact.get(base, []) if "*" not in base else
+               [q for q in ctx.allp if q == base or re.fullmatch(re.escape(base).replace(r"\*", ".*"), q)])
         if not hit:
             raise SdcLintError(f"get_ports {p}: matches no port")
         r += hit
@@ -364,7 +371,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None):
+         pad_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, source_sync_inputs=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -916,6 +923,23 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         tab = idly if p in ctx.inputs else odly
         if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - (tw_in if p in ctx.inputs else 0.0) - EPS:
             err.append(f"relaxation: {p} max delay {tab[p]['max'][1]:g} ps below its IO budget {fl:g} ps")
+    for port, row in (source_sync_inputs or {}).items():
+        if port not in ctx.inputs or not isinstance(row, dict):
+            err.append(f'source_sync: {port} needs an existing input and explicit profile')
+            continue
+        root = row.get('clock_port')
+        clock = clk_src.get(root)
+        if root not in land_l or clock is None:
+            err.append(f'source_sync: {port} needs a declared landed receive root, found {root}')
+            continue
+        for kind in ('max', 'min'):
+            value = row.get(kind + '_ps')
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                err.append(f'source_sync: {port} needs finite explicit {kind}_ps')
+                continue
+            got = idly[port].get(kind)
+            if got is None or got[0] != clock or abs(got[1] - value) > EPS:
+                err.append(f'source_sync: {port} {kind} must use actual {root}/{clock} and captured {value:g} ps, found {got}')
     for port, row in (pad_clock_data_inputs or {}).items():
         clock = row['clock']
         if port not in ctx.inputs or clock not in pad_in:
