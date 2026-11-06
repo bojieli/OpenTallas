@@ -1,0 +1,392 @@
+{
+  "schema": "opentallas.hbm.wbq_root_group4.native_cuts.v1",
+  "extra_edges": 0,
+  "common_inputs_fifo_clk": [
+    "root_id[1:0]",
+    "base[31:0]",
+    "total[11:0]",
+    "committed[11:0]",
+    "ordinal[11:0]",
+    "filling",
+    "fill_bank",
+    "copy_q",
+    "copy_bank",
+    "copy_start",
+    "s_stop"
+  ],
+  "resets": {
+    "srst": "fifo_clk release, unchanged asynchronous assertion",
+    "hrst": "hbm_clk release, unchanged asynchronous assertion"
+  },
+  "lanes": [
+    {
+      "group": 0,
+      "local_lane": 0,
+      "LANE": 0,
+      "wd": {
+        "group_bits": [
+          0,
+          255
+        ],
+        "capture": "g_lane[0].g_face.u_store.wd_q[255:0]",
+        "clock": "fifo_clk",
+        "existing_face_edges": 1
+      },
+      "fifo_re": {
+        "group_bit": 0,
+        "source": "root.fifo_re[0] = group send onehot",
+        "clock": "hbm_clk",
+        "consumer": "g_lane[0].g_face.u_store.u_native.u_fifo.re"
+      },
+      "fifo_head": {
+        "group_bits": [
+          0,
+          287
+        ],
+        "payload_bits": [
+          0,
+          255
+        ],
+        "sector_bits": [
+          256,
+          287
+        ],
+        "launch_storage": "g_lane[0].g_face.u_store.u_native.u_fifo.mem[0:3][287:0]",
+        "storage_clock": "fifo_clk",
+        "read_select": "g_lane[0].g_face.u_store.u_native.u_fifo.rbin[1:0]",
+        "read_select_clock": "hbm_clk",
+        "classification": "MIXED fifo_clk storage launch plus hbm_clk pointer-selected combinational read; do not assign single launch clock",
+        "consumer": "unchanged root hbm_clk group arb; accepted send on hbm_clk"
+      },
+      "fifo_empty": {
+        "group_bit": 0,
+        "clock": "hbm_clk",
+        "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
+      },
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+    },
+    {
+      "group": 0,
+      "local_lane": 1,
+      "LANE": 1,
+      "wd": {
+        "group_bits": [
+          256,
+          511
+        ],
+        "capture": "g_lane[1].g_face.u_store.wd_q[255:0]",
+        "clock": "fifo_clk",
+        "existing_face_edges": 1
+      },
+      "fifo_re": {
+        "group_bit": 1,
+        "source": "root.fifo_re[1] = group send onehot",
+        "clock": "hbm_clk",
+        "consumer": "g_lane[1].g_face.u_store.u_native.u_fifo.re"
+      },
+      "fifo_head": {
+        "group_bits": [
+          288,
+          575
+        ],
+        "payload_bits": [
+          288,
+          543
+        ],
+        "sector_bits": [
+          544,
+          575
+        ],
+        "launch_storage": "g_lane[1].g_face.u_store.u_native.u_fifo.mem[0:3][287:0]",
+        "storage_clock": "fifo_clk",
+        "read_select": "g_lane[1].g_face.u_store.u_native.u_fifo.rbin[1:0]",
+        "read_select_clock": "hbm_clk",
+        "classification": "MIXED fifo_clk storage launch plus hbm_clk pointer-selected combinational read; do not assign single launch clock",
+        "consumer": "unchanged root hbm_clk group arb; accepted send on hbm_clk"
+      },
+      "fifo_empty": {
+        "group_bit": 1,
+        "clock": "hbm_clk",
+        "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
+      },
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+    },
+    {
+      "group": 0,
+      "local_lane": 2,
+      "LANE": 2,
+      "wd": {
+        "group_bits": [
+          512,
+          767
+        ],
+        "capture": "g_lane[2].g_face.u_store.wd_q[255:0]",
+        "clock": "fifo_clk",
+        "existing_face_edges": 1
+      },
+      "fifo_re": {
+        "group_bit": 2,
+        "source": "root.fifo_re[2] = group send onehot",
+        "clock": "hbm_clk",
+        "consumer": "g_lane[2].g_face.u_store.u_native.u_fifo.re"
+      },
+      "fifo_head": {
+        "group_bits": [
+          576,
+          863
+        ],
+        "payload_bits": [
+          576,
+          831
+        ],
+        "sector_bits": [
+          832,
+          863
+        ],
+        "launch_storage": "g_lane[2].g_face.u_store.u_native.u_fifo.mem[0:3][287:0]",
+        "storage_clock": "fifo_clk",
+        "read_select": "g_lane[2].g_face.u_store.u_native.u_fifo.rbin[1:0]",
+        "read_select_clock": "hbm_clk",
+        "classification": "MIXED fifo_clk storage launch plus hbm_clk pointer-selected combinational read; do not assign single launch clock",
+        "consumer": "unchanged root hbm_clk group arb; accepted send on hbm_clk"
+      },
+      "fifo_empty": {
+        "group_bit": 2,
+        "clock": "hbm_clk",
+        "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
+      },
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+    },
+    {
+      "group": 0,
+      "local_lane": 3,
+      "LANE": 3,
+      "wd": {
+        "group_bits": [
+          768,
+          1023
+        ],
+        "capture": "g_lane[3].g_face.u_store.wd_q[255:0]",
+        "clock": "fifo_clk",
+        "existing_face_edges": 1
+      },
+      "fifo_re": {
+        "group_bit": 3,
+        "source": "root.fifo_re[3] = group send onehot",
+        "clock": "hbm_clk",
+        "consumer": "g_lane[3].g_face.u_store.u_native.u_fifo.re"
+      },
+      "fifo_head": {
+        "group_bits": [
+          864,
+          1151
+        ],
+        "payload_bits": [
+          864,
+          1119
+        ],
+        "sector_bits": [
+          1120,
+          1151
+        ],
+        "launch_storage": "g_lane[3].g_face.u_store.u_native.u_fifo.mem[0:3][287:0]",
+        "storage_clock": "fifo_clk",
+        "read_select": "g_lane[3].g_face.u_store.u_native.u_fifo.rbin[1:0]",
+        "read_select_clock": "hbm_clk",
+        "classification": "MIXED fifo_clk storage launch plus hbm_clk pointer-selected combinational read; do not assign single launch clock",
+        "consumer": "unchanged root hbm_clk group arb; accepted send on hbm_clk"
+      },
+      "fifo_empty": {
+        "group_bit": 3,
+        "clock": "hbm_clk",
+        "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
+      },
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+    },
+    {
+      "group": 1,
+      "local_lane": 0,
+      "LANE": 4,
+      "wd": {
+        "group_bits": [
+          0,
+          255
+        ],
+        "capture": "g_lane[0].g_face.u_store.wd_q[255:0]",
+        "clock": "fifo_clk",
+        "existing_face_edges": 1
+      },
+      "fifo_re": {
+        "group_bit": 0,
+        "source": "root.fifo_re[4] = group send onehot",
+        "clock": "hbm_clk",
+        "consumer": "g_lane[0].g_face.u_store.u_native.u_fifo.re"
+      },
+      "fifo_head": {
+        "group_bits": [
+          0,
+          287
+        ],
+        "payload_bits": [
+          0,
+          255
+        ],
+        "sector_bits": [
+          256,
+          287
+        ],
+        "launch_storage": "g_lane[0].g_face.u_store.u_native.u_fifo.mem[0:3][287:0]",
+        "storage_clock": "fifo_clk",
+        "read_select": "g_lane[0].g_face.u_store.u_native.u_fifo.rbin[1:0]",
+        "read_select_clock": "hbm_clk",
+        "classification": "MIXED fifo_clk storage launch plus hbm_clk pointer-selected combinational read; do not assign single launch clock",
+        "consumer": "unchanged root hbm_clk group arb; accepted send on hbm_clk"
+      },
+      "fifo_empty": {
+        "group_bit": 0,
+        "clock": "hbm_clk",
+        "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
+      },
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+    },
+    {
+      "group": 1,
+      "local_lane": 1,
+      "LANE": 5,
+      "wd": {
+        "group_bits": [
+          256,
+          511
+        ],
+        "capture": "g_lane[1].g_face.u_store.wd_q[255:0]",
+        "clock": "fifo_clk",
+        "existing_face_edges": 1
+      },
+      "fifo_re": {
+        "group_bit": 1,
+        "source": "root.fifo_re[5] = group send onehot",
+        "clock": "hbm_clk",
+        "consumer": "g_lane[1].g_face.u_store.u_native.u_fifo.re"
+      },
+      "fifo_head": {
+        "group_bits": [
+          288,
+          575
+        ],
+        "payload_bits": [
+          288,
+          543
+        ],
+        "sector_bits": [
+          544,
+          575
+        ],
+        "launch_storage": "g_lane[1].g_face.u_store.u_native.u_fifo.mem[0:3][287:0]",
+        "storage_clock": "fifo_clk",
+        "read_select": "g_lane[1].g_face.u_store.u_native.u_fifo.rbin[1:0]",
+        "read_select_clock": "hbm_clk",
+        "classification": "MIXED fifo_clk storage launch plus hbm_clk pointer-selected combinational read; do not assign single launch clock",
+        "consumer": "unchanged root hbm_clk group arb; accepted send on hbm_clk"
+      },
+      "fifo_empty": {
+        "group_bit": 1,
+        "clock": "hbm_clk",
+        "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
+      },
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+    },
+    {
+      "group": 1,
+      "local_lane": 2,
+      "LANE": 6,
+      "wd": {
+        "group_bits": [
+          512,
+          767
+        ],
+        "capture": "g_lane[2].g_face.u_store.wd_q[255:0]",
+        "clock": "fifo_clk",
+        "existing_face_edges": 1
+      },
+      "fifo_re": {
+        "group_bit": 2,
+        "source": "root.fifo_re[6] = group send onehot",
+        "clock": "hbm_clk",
+        "consumer": "g_lane[2].g_face.u_store.u_native.u_fifo.re"
+      },
+      "fifo_head": {
+        "group_bits": [
+          576,
+          863
+        ],
+        "payload_bits": [
+          576,
+          831
+        ],
+        "sector_bits": [
+          832,
+          863
+        ],
+        "launch_storage": "g_lane[2].g_face.u_store.u_native.u_fifo.mem[0:3][287:0]",
+        "storage_clock": "fifo_clk",
+        "read_select": "g_lane[2].g_face.u_store.u_native.u_fifo.rbin[1:0]",
+        "read_select_clock": "hbm_clk",
+        "classification": "MIXED fifo_clk storage launch plus hbm_clk pointer-selected combinational read; do not assign single launch clock",
+        "consumer": "unchanged root hbm_clk group arb; accepted send on hbm_clk"
+      },
+      "fifo_empty": {
+        "group_bit": 2,
+        "clock": "hbm_clk",
+        "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
+      },
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+    },
+    {
+      "group": 1,
+      "local_lane": 3,
+      "LANE": 7,
+      "wd": {
+        "group_bits": [
+          768,
+          1023
+        ],
+        "capture": "g_lane[3].g_face.u_store.wd_q[255:0]",
+        "clock": "fifo_clk",
+        "existing_face_edges": 1
+      },
+      "fifo_re": {
+        "group_bit": 3,
+        "source": "root.fifo_re[7] = group send onehot",
+        "clock": "hbm_clk",
+        "consumer": "g_lane[3].g_face.u_store.u_native.u_fifo.re"
+      },
+      "fifo_head": {
+        "group_bits": [
+          864,
+          1151
+        ],
+        "payload_bits": [
+          864,
+          1119
+        ],
+        "sector_bits": [
+          1120,
+          1151
+        ],
+        "launch_storage": "g_lane[3].g_face.u_store.u_native.u_fifo.mem[0:3][287:0]",
+        "storage_clock": "fifo_clk",
+        "read_select": "g_lane[3].g_face.u_store.u_native.u_fifo.rbin[1:0]",
+        "read_select_clock": "hbm_clk",
+        "classification": "MIXED fifo_clk storage launch plus hbm_clk pointer-selected combinational read; do not assign single launch clock",
+        "consumer": "unchanged root hbm_clk group arb; accepted send on hbm_clk"
+      },
+      "fifo_empty": {
+        "group_bit": 3,
+        "clock": "hbm_clk",
+        "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
+      },
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+    }
+  ],
+  "parent": "Group FIFO heads feed unchanged hbm_clk arbitration; historical fullfamily g_v/g_d outer faces remain fifo_clk and are qualified only by exact common-clock parent binding."
+}

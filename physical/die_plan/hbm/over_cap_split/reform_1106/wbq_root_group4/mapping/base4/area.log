@@ -1,0 +1,1337 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `area.ys' --
+
+1. Executing Verilog-2005 frontend: sram_bb.sv
+Parsing SystemVerilog input from `sram_bb.sv' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: new.sv
+Parsing SystemVerilog input from `new.sv' to AST representation.
+Generating RTLIL representation for module `\ot_wbq_root'.
+Warning: Replacing memory \credit with list of registers. See new.sv:101
+Warning: Replacing memory \committed with list of registers. See new.sv:79
+Warning: Replacing memory \total with list of registers. See new.sv:79
+Warning: Replacing memory \base with list of registers. See new.sv:79
+Generating RTLIL representation for module `\ot_wbq_root_store_face'.
+Generating RTLIL representation for module `\ot_wbq_sw'.
+Warning: Replacing memory \qn with list of registers. See new.sv:278
+Warning: Replacing memory \qr with list of registers. See new.sv:278
+Warning: Replacing memory \qw with list of registers. See new.sv:278, new.sv:276
+Warning: Replacing memory \wspan with list of registers. See new.sv:490
+Warning: Replacing memory \wbase with list of registers. See new.sv:490
+Warning: Replacing memory \atotal with list of registers. See new.sv:490
+Warning: Replacing memory \aepoch with list of registers. See new.sv:490
+Warning: Replacing memory \outstanding with list of registers. See new.sv:404
+Warning: Replacing memory \req_g with list of registers. See new.sv:404
+Warning: Replacing memory \selected_g with list of registers. See new.sv:372, new.sv:370
+Warning: Replacing memory \pick_g with list of registers. See new.sv:370, new.sv:368
+Warning: Replacing memory \committed with list of registers. See new.sv:222
+Warning: Replacing memory \total with list of registers. See new.sv:222
+Warning: Replacing memory \base with list of registers. See new.sv:222
+Warning: Replacing memory \epoch with list of registers. See new.sv:222
+Generating RTLIL representation for module `\ot_wbq_root_store'.
+Generating RTLIL representation for module `\ot_wbq_root_store_group4'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: ot_hbm_accel_cdc_fifo.sv
+Parsing SystemVerilog input from `ot_hbm_accel_cdc_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_accel_cdc_fifo'.
+Warning: Replacing memory \mem with list of registers. See ot_hbm_accel_cdc_fifo.sv:32
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: ot_reset_sync.sv
+Parsing SystemVerilog input from `ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \LANE_BASE = 4
+Parameter \FACES = 1
+
+6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store_group4'.
+Parameter \LANE_BASE = 4
+Parameter \FACES = 1
+Generating RTLIL representation for module `$paramod$06381fed3446e31c6fa7aa8913b571cad74a456c\ot_wbq_root_store_group4'.
+
+6.1. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+Used module:     \ot_wbq_root_store_face
+Used module:         \ot_wbq_root_store
+Used module:             \ot_hbm_accel_cdc_fifo
+Parameter \W = 288
+Parameter \AW = 2
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_accel_cdc_fifo'.
+Parameter \W = 288
+Parameter \AW = 2
+Generating RTLIL representation for module `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo'.
+Warning: Replacing memory \mem with list of registers. See ot_hbm_accel_cdc_fifo.sv:32
+Parameter \LANE = 0
+
+6.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store'.
+Parameter \LANE = 0
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000000'.
+Parameter \LANE = 4
+
+6.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store_face'.
+Parameter \LANE = 4
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100'.
+Parameter \LANE = 5
+
+6.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store_face'.
+Parameter \LANE = 5
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101'.
+Parameter \LANE = 6
+
+6.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store_face'.
+Parameter \LANE = 6
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110'.
+Parameter \LANE = 7
+
+6.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store_face'.
+Parameter \LANE = 7
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111'.
+
+6.8. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100
+Used module:         \ot_wbq_root_store
+Used module:             $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111
+Parameter \LANE = 4
+
+6.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store'.
+Parameter \LANE = 4
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100'.
+Parameter \LANE = 5
+
+6.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store'.
+Parameter \LANE = 5
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101'.
+Parameter \LANE = 6
+
+6.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store'.
+Parameter \LANE = 6
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110'.
+Parameter \LANE = 7
+
+6.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_wbq_root_store'.
+Parameter \LANE = 7
+Generating RTLIL representation for module `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111'.
+
+6.13. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100
+Used module:             \ot_hbm_accel_cdc_fifo
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111
+Parameter \W = 288
+Parameter \AW = 2
+Found cached RTLIL representation for module `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo'.
+Parameter \W = 288
+Parameter \AW = 2
+Found cached RTLIL representation for module `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo'.
+Parameter \W = 288
+Parameter \AW = 2
+Found cached RTLIL representation for module `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo'.
+Parameter \W = 288
+Parameter \AW = 2
+Found cached RTLIL representation for module `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo'.
+
+6.14. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100
+Used module:             $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111
+
+6.15. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100
+Used module:             $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111
+Removing unused module `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000000'.
+Removing unused module `\ot_reset_sync'.
+Removing unused module `\ot_hbm_accel_cdc_fifo'.
+Removing unused module `$paramod$06381fed3446e31c6fa7aa8913b571cad74a456c\ot_wbq_root_store_group4'.
+Removing unused module `\ot_wbq_root_store'.
+Removing unused module `\ot_wbq_sw'.
+Removing unused module `\ot_wbq_root_store_face'.
+Removing unused module `\ot_wbq_root'.
+Removed 8 unused modules.
+
+7. Executing SYNTH pass.
+
+7.1. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1.1. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100
+Used module:             $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111
+
+7.1.2. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100
+Used module:             $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110
+Used module:     $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111
+Used module:         $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111
+Removed 0 unused modules.
+
+7.2. Executing PROC pass (convert processes to netlists).
+
+7.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$new.sv:554$2878 in module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.
+Removed 1 dead cases from process $proc$ot_hbm_accel_cdc_fifo.sv:25$2739 in module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Marked 1 switch rules as full_case in process $proc$ot_hbm_accel_cdc_fifo.sv:25$2739 in module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Marked 1 switch rules as full_case in process $proc$ot_hbm_accel_cdc_fifo.sv:36$2728 in module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Marked 3 switch rules as full_case in process $proc$ot_hbm_accel_cdc_fifo.sv:29$2716 in module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Marked 2 switch rules as full_case in process $proc$new.sv:554$2851 in module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.
+Marked 2 switch rules as full_case in process $proc$new.sv:554$2824 in module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.
+Marked 2 switch rules as full_case in process $proc$new.sv:554$2797 in module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.
+Removed a total of 1 dead cases.
+
+7.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 9 redundant assignments.
+Promoted 13 assignments to connections.
+
+7.2.4. Executing PROC_INIT pass (extract init attributes).
+
+7.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \srst in `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.$proc$new.sv:554$2878'.
+Found async reset \rrst_n in `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$2728'.
+Found async reset \wrst_n in `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+Found async reset \srst in `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.$proc$new.sv:554$2851'.
+Found async reset \srst in `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.$proc$new.sv:554$2824'.
+Found async reset \srst in `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.$proc$new.sv:554$2797'.
+
+7.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~15 debug messages>
+
+7.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.$proc$new.sv:554$2878'.
+     1/3: $0\read_pending[0:0]
+     2/3: $0\pending_row[5:0]
+     3/3: $0\copy_row[6:0]
+Creating decoders for process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:25$2739'.
+     1/1: $1$mem2reg_rd$\mem$ot_hbm_accel_cdc_fifo.sv:25$2702_DATA[287:0]$2741
+Creating decoders for process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:27$2732'.
+Creating decoders for process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$2728'.
+     1/4: $0\wg_r2[2:0]
+     2/4: $0\wg_r1[2:0]
+     3/4: $0\rgray[2:0]
+     4/4: $0\rbin[2:0]
+Creating decoders for process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+     1/13: $2$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$2703_ADDR[1:0]$2724
+     2/13: $2$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$2703_DATA[287:0]$2725
+     3/13: $0\rsync_bin_q[2:0]
+     4/13: $0\rg_w2[2:0]
+     5/13: $0\rg_w1[2:0]
+     6/13: $0\wgray[2:0]
+     7/13: $0\wbin[2:0]
+     8/13: $1$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$2703_DATA[287:0]$2721
+     9/13: $1$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$2703_ADDR[1:0]$2720
+    10/13: $0\mem[3][287:0]
+    11/13: $0\mem[2][287:0]
+    12/13: $0\mem[1][287:0]
+    13/13: $0\mem[0][287:0]
+Creating decoders for process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.$proc$new.sv:554$2851'.
+     1/3: $0\read_pending[0:0]
+     2/3: $0\pending_row[5:0]
+     3/3: $0\copy_row[6:0]
+Creating decoders for process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.$proc$new.sv:554$2824'.
+     1/3: $0\read_pending[0:0]
+     2/3: $0\pending_row[5:0]
+     3/3: $0\copy_row[6:0]
+Creating decoders for process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.$proc$new.sv:554$2797'.
+     1/3: $0\read_pending[0:0]
+     2/3: $0\pending_row[5:0]
+     3/3: $0\copy_row[6:0]
+Creating decoders for process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111.$proc$new.sv:134$2772'.
+Creating decoders for process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110.$proc$new.sv:134$2771'.
+Creating decoders for process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101.$proc$new.sv:134$2770'.
+Creating decoders for process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100.$proc$new.sv:134$2769'.
+
+7.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$mem2reg_rd$\mem$ot_hbm_accel_cdc_fifo.sv:25$2702_DATA' from process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:25$2739'.
+No latch inferred for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\g2b$func$ot_hbm_accel_cdc_fifo.sv:27$2700.$result' from process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:27$2732'.
+No latch inferred for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\g2b$func$ot_hbm_accel_cdc_fifo.sv:27$2701.$fordecl_block$2651.i' from process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:27$2732'.
+
+7.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.\copy_row' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.$proc$new.sv:554$2878'.
+  created $adff cell `$procdff$2990' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.\pending_row' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.$proc$new.sv:554$2878'.
+  created $adff cell `$procdff$2995' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.\read_pending' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.$proc$new.sv:554$2878'.
+  created $adff cell `$procdff$3000' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rbin' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$2728'.
+  created $adff cell `$procdff$3005' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rgray' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$2728'.
+  created $adff cell `$procdff$3010' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\wg_r1' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$2728'.
+  created $adff cell `$procdff$3015' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\wg_r2' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$2728'.
+  created $adff cell `$procdff$3020' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\wbin' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $adff cell `$procdff$3025' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\wgray' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $adff cell `$procdff$3030' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rg_w1' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $adff cell `$procdff$3035' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rg_w2' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $adff cell `$procdff$3040' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rsync_bin_q' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $adff cell `$procdff$3045' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\mem[0]' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $dff cell `$procdff$3052' with positive edge clock.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\mem[1]' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $dff cell `$procdff$3059' with positive edge clock.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\mem[2]' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $dff cell `$procdff$3066' with positive edge clock.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\mem[3]' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $dff cell `$procdff$3073' with positive edge clock.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$2703_ADDR' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $adff cell `$procdff$3078' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$2703_DATA' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+  created $adff cell `$procdff$3083' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.\copy_row' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.$proc$new.sv:554$2851'.
+  created $adff cell `$procdff$3088' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.\pending_row' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.$proc$new.sv:554$2851'.
+  created $adff cell `$procdff$3093' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.\read_pending' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.$proc$new.sv:554$2851'.
+  created $adff cell `$procdff$3098' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.\copy_row' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.$proc$new.sv:554$2824'.
+  created $adff cell `$procdff$3103' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.\pending_row' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.$proc$new.sv:554$2824'.
+  created $adff cell `$procdff$3108' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.\read_pending' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.$proc$new.sv:554$2824'.
+  created $adff cell `$procdff$3113' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.\copy_row' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.$proc$new.sv:554$2797'.
+  created $adff cell `$procdff$3118' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.\pending_row' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.$proc$new.sv:554$2797'.
+  created $adff cell `$procdff$3123' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.\read_pending' using process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.$proc$new.sv:554$2797'.
+  created $adff cell `$procdff$3128' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111.\wd_q' using process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111.$proc$new.sv:134$2772'.
+  created $dff cell `$procdff$3129' with positive edge clock.
+Creating register for signal `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110.\wd_q' using process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110.$proc$new.sv:134$2771'.
+  created $dff cell `$procdff$3130' with positive edge clock.
+Creating register for signal `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101.\wd_q' using process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101.$proc$new.sv:134$2770'.
+  created $dff cell `$procdff$3131' with positive edge clock.
+Creating register for signal `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100.\wd_q' using process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100.$proc$new.sv:134$2769'.
+  created $dff cell `$procdff$3132' with positive edge clock.
+
+7.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.$proc$new.sv:554$2878'.
+Removing empty process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.$proc$new.sv:554$2878'.
+Found and cleaned up 1 empty switch in `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:25$2739'.
+Removing empty process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:25$2739'.
+Removing empty process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:27$2732'.
+Removing empty process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$2728'.
+Found and cleaned up 2 empty switches in `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+Removing empty process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$2716'.
+Found and cleaned up 3 empty switches in `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.$proc$new.sv:554$2851'.
+Removing empty process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.$proc$new.sv:554$2851'.
+Found and cleaned up 3 empty switches in `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.$proc$new.sv:554$2824'.
+Removing empty process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.$proc$new.sv:554$2824'.
+Found and cleaned up 3 empty switches in `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.$proc$new.sv:554$2797'.
+Removing empty process `$paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.$proc$new.sv:554$2797'.
+Removing empty process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111.$proc$new.sv:134$2772'.
+Removing empty process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110.$proc$new.sv:134$2771'.
+Removing empty process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101.$proc$new.sv:134$2770'.
+Removing empty process `$paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100.$proc$new.sv:134$2769'.
+Cleaned up 15 empty switches.
+
+7.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.
+<suppressed ~6 debug messages>
+Optimizing module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+<suppressed ~34 debug messages>
+Optimizing module ot_wbq_root_store_group4.
+Optimizing module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.
+<suppressed ~6 debug messages>
+Optimizing module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.
+<suppressed ~6 debug messages>
+Optimizing module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.
+<suppressed ~6 debug messages>
+Optimizing module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111.
+Optimizing module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110.
+Optimizing module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101.
+Optimizing module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100.
+
+7.3. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111...
+Checking module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo...
+Checking module ot_wbq_root_store_group4...
+Checking module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110...
+Checking module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101...
+Checking module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100...
+Checking module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111...
+Checking module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110...
+Checking module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101...
+Checking module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100...
+Found and reported 0 problems.
+
+7.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000111.
+Deleting now unused module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Deleting now unused module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000110.
+Deleting now unused module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000101.
+Deleting now unused module $paramod\ot_wbq_root_store\LANE=s32'00000000000000000000000000000100.
+Deleting now unused module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000111.
+Deleting now unused module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000110.
+Deleting now unused module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000101.
+Deleting now unused module $paramod\ot_wbq_root_store_face\LANE=s32'00000000000000000000000000000100.
+<suppressed ~12 debug messages>
+
+7.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+<suppressed ~8 debug messages>
+
+7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+Removed 116 unused cells and 424 unused wires.
+<suppressed ~125 debug messages>
+
+7.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_wbq_root_store_group4...
+Found and reported 0 problems.
+
+7.8. Executing OPT pass (performing simple optimizations).
+
+7.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 348 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Computing hashes of 326 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Computing hashes of 319 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+<suppressed ~87 debug messages>
+Removed a total of 29 cells.
+
+7.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_root_store_group4..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~128 debug messages>
+
+7.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_root_store_group4.
+Performed a total of 0 changes.
+
+7.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 319 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+Removed 0 unused cells and 29 unused wires.
+<suppressed ~1 debug messages>
+
+7.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_root_store_group4..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~128 debug messages>
+
+7.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_root_store_group4.
+Performed a total of 0 changes.
+
+7.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 319 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+
+7.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7.9. Executing FSM pass (extract and optimize FSM).
+
+7.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+7.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+7.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+7.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+
+7.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+7.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+7.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+7.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+7.10. Executing OPT pass (performing simple optimizations).
+
+7.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 319 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_root_store_group4..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~128 debug messages>
+
+7.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_root_store_group4.
+Performed a total of 0 changes.
+
+7.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 319 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\g_lane[3].g_face.u_store.\u_native.$procdff$2990 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[3].g_face.u_store.\u_native.$0\copy_row[6:0], Q = \g_lane[3].g_face.u_store.u_native.copy_row).
+Adding EN signal on $flatten\g_lane[3].g_face.u_store.\u_native.$procdff$3000 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[3].g_face.u_store.\u_native.$0\read_pending[0:0], Q = \g_lane[3].g_face.u_store.u_native.read_pending).
+Adding EN signal on $flatten\g_lane[3].g_face.u_store.\u_native.$procdff$2995 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[3].g_face.u_store.\u_native.$0\pending_row[5:0], Q = \g_lane[3].g_face.u_store.u_native.pending_row).
+Adding EN signal on $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$procdff$3052 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[3].g_face.u_store.u_native.sector \g_lane[3].g_face.u_store.u_native.mem_data }, Q = \g_lane[3].g_face.u_store.u_native.u_fifo.mem[0]).
+Adding EN signal on $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$procdff$3073 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[3].g_face.u_store.u_native.sector \g_lane[3].g_face.u_store.u_native.mem_data }, Q = \g_lane[3].g_face.u_store.u_native.u_fifo.mem[3]).
+Adding EN signal on $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$procdff$3066 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[3].g_face.u_store.u_native.sector \g_lane[3].g_face.u_store.u_native.mem_data }, Q = \g_lane[3].g_face.u_store.u_native.u_fifo.mem[2]).
+Adding EN signal on $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$procdff$3059 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[3].g_face.u_store.u_native.sector \g_lane[3].g_face.u_store.u_native.mem_data }, Q = \g_lane[3].g_face.u_store.u_native.u_fifo.mem[1]).
+Adding EN signal on $flatten\g_lane[2].g_face.u_store.\u_native.$procdff$3088 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[2].g_face.u_store.\u_native.$0\copy_row[6:0], Q = \g_lane[2].g_face.u_store.u_native.copy_row).
+Adding EN signal on $flatten\g_lane[2].g_face.u_store.\u_native.$procdff$3098 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[2].g_face.u_store.\u_native.$0\read_pending[0:0], Q = \g_lane[2].g_face.u_store.u_native.read_pending).
+Adding EN signal on $flatten\g_lane[2].g_face.u_store.\u_native.$procdff$3093 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[2].g_face.u_store.\u_native.$0\pending_row[5:0], Q = \g_lane[2].g_face.u_store.u_native.pending_row).
+Adding EN signal on $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$procdff$3052 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[2].g_face.u_store.u_native.sector \g_lane[2].g_face.u_store.u_native.mem_data }, Q = \g_lane[2].g_face.u_store.u_native.u_fifo.mem[0]).
+Adding EN signal on $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$procdff$3073 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[2].g_face.u_store.u_native.sector \g_lane[2].g_face.u_store.u_native.mem_data }, Q = \g_lane[2].g_face.u_store.u_native.u_fifo.mem[3]).
+Adding EN signal on $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$procdff$3059 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[0].g_face.u_store.u_native.sector \g_lane[0].g_face.u_store.u_native.mem_data }, Q = \g_lane[0].g_face.u_store.u_native.u_fifo.mem[1]).
+Adding EN signal on $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$procdff$3066 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[2].g_face.u_store.u_native.sector \g_lane[2].g_face.u_store.u_native.mem_data }, Q = \g_lane[2].g_face.u_store.u_native.u_fifo.mem[2]).
+Adding EN signal on $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$procdff$3059 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[2].g_face.u_store.u_native.sector \g_lane[2].g_face.u_store.u_native.mem_data }, Q = \g_lane[2].g_face.u_store.u_native.u_fifo.mem[1]).
+Adding EN signal on $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$procdff$3066 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[0].g_face.u_store.u_native.sector \g_lane[0].g_face.u_store.u_native.mem_data }, Q = \g_lane[0].g_face.u_store.u_native.u_fifo.mem[2]).
+Adding EN signal on $flatten\g_lane[1].g_face.u_store.\u_native.$procdff$3103 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[1].g_face.u_store.\u_native.$0\copy_row[6:0], Q = \g_lane[1].g_face.u_store.u_native.copy_row).
+Adding EN signal on $flatten\g_lane[1].g_face.u_store.\u_native.$procdff$3113 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[1].g_face.u_store.\u_native.$0\read_pending[0:0], Q = \g_lane[1].g_face.u_store.u_native.read_pending).
+Adding EN signal on $flatten\g_lane[1].g_face.u_store.\u_native.$procdff$3108 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[1].g_face.u_store.\u_native.$0\pending_row[5:0], Q = \g_lane[1].g_face.u_store.u_native.pending_row).
+Adding EN signal on $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$procdff$3052 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[1].g_face.u_store.u_native.sector \g_lane[1].g_face.u_store.u_native.mem_data }, Q = \g_lane[1].g_face.u_store.u_native.u_fifo.mem[0]).
+Adding EN signal on $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$procdff$3073 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[0].g_face.u_store.u_native.sector \g_lane[0].g_face.u_store.u_native.mem_data }, Q = \g_lane[0].g_face.u_store.u_native.u_fifo.mem[3]).
+Adding EN signal on $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$procdff$3073 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[1].g_face.u_store.u_native.sector \g_lane[1].g_face.u_store.u_native.mem_data }, Q = \g_lane[1].g_face.u_store.u_native.u_fifo.mem[3]).
+Adding EN signal on $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$procdff$3052 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[0].g_face.u_store.u_native.sector \g_lane[0].g_face.u_store.u_native.mem_data }, Q = \g_lane[0].g_face.u_store.u_native.u_fifo.mem[0]).
+Adding EN signal on $flatten\g_lane[0].g_face.u_store.\u_native.$procdff$3123 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[0].g_face.u_store.\u_native.$0\pending_row[5:0], Q = \g_lane[0].g_face.u_store.u_native.pending_row).
+Adding EN signal on $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$procdff$3066 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[1].g_face.u_store.u_native.sector \g_lane[1].g_face.u_store.u_native.mem_data }, Q = \g_lane[1].g_face.u_store.u_native.u_fifo.mem[2]).
+Adding EN signal on $flatten\g_lane[0].g_face.u_store.\u_native.$procdff$3128 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[0].g_face.u_store.\u_native.$0\read_pending[0:0], Q = \g_lane[0].g_face.u_store.u_native.read_pending).
+Adding EN signal on $flatten\g_lane[0].g_face.u_store.\u_native.$procdff$3118 ($adff) from module ot_wbq_root_store_group4 (D = $flatten\g_lane[0].g_face.u_store.\u_native.$0\copy_row[6:0], Q = \g_lane[0].g_face.u_store.u_native.copy_row).
+Adding EN signal on $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$procdff$3059 ($dff) from module ot_wbq_root_store_group4 (D = { \g_lane[1].g_face.u_store.u_native.sector \g_lane[1].g_face.u_store.u_native.mem_data }, Q = \g_lane[1].g_face.u_store.u_native.u_fifo.mem[1]).
+
+7.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+Removed 48 unused cells and 48 unused wires.
+<suppressed ~49 debug messages>
+
+7.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+<suppressed ~12 debug messages>
+
+7.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_root_store_group4..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~64 debug messages>
+
+7.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_root_store_group4.
+Performed a total of 0 changes.
+
+7.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 299 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Computing hashes of 295 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+7.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+7.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_root_store_group4..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~64 debug messages>
+
+7.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_root_store_group4.
+Performed a total of 0 changes.
+
+7.10.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 295 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+
+7.10.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.10.23. Finished fast OPT passes. (There is nothing left to do.)
+
+7.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 20 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:544$2865 ($add).
+Removed top 27 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:544$2865 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:544$2865 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$lt$new.sv:544$2866 ($lt).
+Removed top 29 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:551$2872 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:551$2872 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$lt$new.sv:551$2873 ($lt).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$procmux$2924_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$procmux$2901_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:39$2731 ($xor).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:33$2727 ($xor).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711 ($add).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707 ($add).
+Removed top 21 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:541$2854 ($add).
+Removed top 20 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:544$2838 ($add).
+Removed top 27 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:544$2838 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:544$2838 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$lt$new.sv:544$2839 ($lt).
+Removed top 29 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:551$2845 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:551$2845 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$lt$new.sv:551$2846 ($lt).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$procmux$2924_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$procmux$2901_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:39$2731 ($xor).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:33$2727 ($xor).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711 ($add).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707 ($add).
+Removed top 21 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:541$2827 ($add).
+Removed top 20 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:544$2811 ($add).
+Removed top 27 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:544$2811 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:544$2811 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$lt$new.sv:544$2812 ($lt).
+Removed top 29 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:551$2818 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:551$2818 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$lt$new.sv:551$2819 ($lt).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$procmux$2924_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$procmux$2901_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:39$2731 ($xor).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:33$2727 ($xor).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711 ($add).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707 ($add).
+Removed top 21 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:541$2800 ($add).
+Removed top 20 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:544$2784 ($add).
+Removed top 27 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:544$2784 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:544$2784 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$lt$new.sv:544$2785 ($lt).
+Removed top 29 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:551$2791 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:551$2791 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$lt$new.sv:551$2792 ($lt).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$procmux$2924_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$procmux$2901_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:39$2731 ($xor).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:33$2727 ($xor).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711 ($add).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707 ($add).
+Removed top 21 bits (of 32) from port B of cell ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:541$2773 ($add).
+Removed top 19 bits (of 32) from wire ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:544$2784_Y.
+Removed top 19 bits (of 32) from wire ot_wbq_root_store_group4.$flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:551$2791_Y.
+Removed top 19 bits (of 32) from wire ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:544$2811_Y.
+Removed top 19 bits (of 32) from wire ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:551$2845_Y.
+Removed top 19 bits (of 32) from wire ot_wbq_root_store_group4.$flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:544$2838_Y.
+Removed top 19 bits (of 32) from wire ot_wbq_root_store_group4.$flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:551$2818_Y.
+Removed top 19 bits (of 32) from wire ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:551$2872_Y.
+Removed top 19 bits (of 32) from wire ot_wbq_root_store_group4.$flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:544$2865_Y.
+
+7.12. Executing PEEPOPT pass (run peephole optimizers).
+
+7.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+Removed 0 unused cells and 8 unused wires.
+<suppressed ~1 debug messages>
+
+7.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_wbq_root_store_group4:
+  creating $macc model for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:551$2791 ($add).
+  creating $macc model for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:559$2826 ($add).
+  creating $macc model for $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707 ($add).
+  creating $macc model for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:551$2818 ($add).
+  creating $macc model for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:544$2811 ($add).
+  creating $macc model for $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711 ($add).
+  creating $macc model for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:541$2801 ($add).
+  creating $macc model for $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707 ($add).
+  creating $macc model for $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711 ($add).
+  creating $macc model for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:544$2784 ($add).
+  creating $macc model for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:559$2853 ($add).
+  creating $macc model for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:551$2845 ($add).
+  creating $macc model for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:544$2838 ($add).
+  creating $macc model for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:541$2828 ($add).
+  creating $macc model for $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707 ($add).
+  creating $macc model for $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711 ($add).
+  creating $macc model for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:541$2774 ($add).
+  creating $macc model for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:559$2799 ($add).
+  creating $macc model for $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711 ($add).
+  creating $macc model for $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707 ($add).
+  creating $macc model for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:559$2880 ($add).
+  creating $macc model for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:551$2872 ($add).
+  creating $macc model for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:544$2865 ($add).
+  creating $macc model for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:541$2855 ($add).
+  creating $macc model for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:541$2773 ($add).
+  creating $macc model for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:541$2800 ($add).
+  creating $macc model for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:541$2827 ($add).
+  creating $macc model for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:541$2854 ($add).
+  merging $macc model for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:541$2854 into $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:541$2855.
+  merging $macc model for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:541$2773 into $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:541$2774.
+  merging $macc model for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:541$2827 into $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:541$2828.
+  merging $macc model for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:541$2800 into $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:541$2801.
+  creating $alu model for $macc $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:544$2865.
+  creating $alu model for $macc $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:551$2872.
+  creating $alu model for $macc $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:559$2880.
+  creating $alu model for $macc $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707.
+  creating $alu model for $macc $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711.
+  creating $alu model for $macc $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:559$2799.
+  creating $alu model for $macc $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711.
+  creating $alu model for $macc $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707.
+  creating $alu model for $macc $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:544$2838.
+  creating $alu model for $macc $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:551$2845.
+  creating $alu model for $macc $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:559$2853.
+  creating $alu model for $macc $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:544$2784.
+  creating $alu model for $macc $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711.
+  creating $alu model for $macc $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707.
+  creating $alu model for $macc $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711.
+  creating $alu model for $macc $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:544$2811.
+  creating $alu model for $macc $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:551$2818.
+  creating $alu model for $macc $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707.
+  creating $alu model for $macc $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:559$2826.
+  creating $alu model for $macc $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:551$2791.
+  creating $macc cell for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:541$2801: $auto$alumacc.cc:399:replace_macc$3237
+  creating $macc cell for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:541$2774: $auto$alumacc.cc:399:replace_macc$3238
+  creating $macc cell for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:541$2828: $auto$alumacc.cc:399:replace_macc$3239
+  creating $macc cell for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:541$2855: $auto$alumacc.cc:399:replace_macc$3240
+  creating $alu model for $flatten\g_lane[1].g_face.u_store.\u_native.$lt$new.sv:551$2819 ($lt): new $alu
+  creating $alu model for $flatten\g_lane[1].g_face.u_store.\u_native.$lt$new.sv:544$2812 ($lt): new $alu
+  creating $alu model for $flatten\g_lane[0].g_face.u_store.\u_native.$lt$new.sv:544$2785 ($lt): new $alu
+  creating $alu model for $flatten\g_lane[2].g_face.u_store.\u_native.$lt$new.sv:551$2846 ($lt): new $alu
+  creating $alu model for $flatten\g_lane[2].g_face.u_store.\u_native.$lt$new.sv:544$2839 ($lt): new $alu
+  creating $alu model for $flatten\g_lane[0].g_face.u_store.\u_native.$lt$new.sv:551$2792 ($lt): new $alu
+  creating $alu model for $flatten\g_lane[3].g_face.u_store.\u_native.$lt$new.sv:551$2873 ($lt): new $alu
+  creating $alu model for $flatten\g_lane[3].g_face.u_store.\u_native.$lt$new.sv:544$2866 ($lt): new $alu
+  creating $alu cell for $flatten\g_lane[3].g_face.u_store.\u_native.$lt$new.sv:544$2866: $auto$alumacc.cc:548:replace_alu$3249
+  creating $alu cell for $flatten\g_lane[3].g_face.u_store.\u_native.$lt$new.sv:551$2873: $auto$alumacc.cc:548:replace_alu$3254
+  creating $alu cell for $flatten\g_lane[0].g_face.u_store.\u_native.$lt$new.sv:551$2792: $auto$alumacc.cc:548:replace_alu$3259
+  creating $alu cell for $flatten\g_lane[2].g_face.u_store.\u_native.$lt$new.sv:544$2839: $auto$alumacc.cc:548:replace_alu$3264
+  creating $alu cell for $flatten\g_lane[2].g_face.u_store.\u_native.$lt$new.sv:551$2846: $auto$alumacc.cc:548:replace_alu$3269
+  creating $alu cell for $flatten\g_lane[0].g_face.u_store.\u_native.$lt$new.sv:544$2785: $auto$alumacc.cc:548:replace_alu$3274
+  creating $alu cell for $flatten\g_lane[1].g_face.u_store.\u_native.$lt$new.sv:544$2812: $auto$alumacc.cc:548:replace_alu$3279
+  creating $alu cell for $flatten\g_lane[1].g_face.u_store.\u_native.$lt$new.sv:551$2819: $auto$alumacc.cc:548:replace_alu$3284
+  creating $alu cell for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:551$2791: $auto$alumacc.cc:548:replace_alu$3289
+  creating $alu cell for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:559$2826: $auto$alumacc.cc:548:replace_alu$3292
+  creating $alu cell for $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707: $auto$alumacc.cc:548:replace_alu$3295
+  creating $alu cell for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:551$2818: $auto$alumacc.cc:548:replace_alu$3298
+  creating $alu cell for $flatten\g_lane[1].g_face.u_store.\u_native.$add$new.sv:544$2811: $auto$alumacc.cc:548:replace_alu$3301
+  creating $alu cell for $flatten\g_lane[1].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711: $auto$alumacc.cc:548:replace_alu$3304
+  creating $alu cell for $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707: $auto$alumacc.cc:548:replace_alu$3307
+  creating $alu cell for $flatten\g_lane[2].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711: $auto$alumacc.cc:548:replace_alu$3310
+  creating $alu cell for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:544$2784: $auto$alumacc.cc:548:replace_alu$3313
+  creating $alu cell for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:559$2853: $auto$alumacc.cc:548:replace_alu$3316
+  creating $alu cell for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:551$2845: $auto$alumacc.cc:548:replace_alu$3319
+  creating $alu cell for $flatten\g_lane[2].g_face.u_store.\u_native.$add$new.sv:544$2838: $auto$alumacc.cc:548:replace_alu$3322
+  creating $alu cell for $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707: $auto$alumacc.cc:548:replace_alu$3325
+  creating $alu cell for $flatten\g_lane[3].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711: $auto$alumacc.cc:548:replace_alu$3328
+  creating $alu cell for $flatten\g_lane[0].g_face.u_store.\u_native.$add$new.sv:559$2799: $auto$alumacc.cc:548:replace_alu$3331
+  creating $alu cell for $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$2711: $auto$alumacc.cc:548:replace_alu$3334
+  creating $alu cell for $flatten\g_lane[0].g_face.u_store.\u_native.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$2707: $auto$alumacc.cc:548:replace_alu$3337
+  creating $alu cell for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:559$2880: $auto$alumacc.cc:548:replace_alu$3340
+  creating $alu cell for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:551$2872: $auto$alumacc.cc:548:replace_alu$3343
+  creating $alu cell for $flatten\g_lane[3].g_face.u_store.\u_native.$add$new.sv:544$2865: $auto$alumacc.cc:548:replace_alu$3346
+  created 28 $alu and 4 $macc cells.
+
+7.15. Executing SHARE pass (SAT-based resource sharing).
+
+7.16. Executing OPT pass (performing simple optimizations).
+
+7.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 303 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_root_store_group4..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~64 debug messages>
+
+7.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_root_store_group4.
+Performed a total of 0 changes.
+
+7.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 303 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+Removed 4 unused cells and 12 unused wires.
+<suppressed ~5 debug messages>
+
+7.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_root_store_group4..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~64 debug messages>
+
+7.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_root_store_group4.
+Performed a total of 0 changes.
+
+7.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 299 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+
+7.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7.17. Executing MEMORY pass.
+
+7.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+7.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+7.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+7.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+7.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+7.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+
+7.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+7.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+7.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+
+7.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+7.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+
+7.19. Executing OPT pass (performing simple optimizations).
+
+7.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+<suppressed ~116 debug messages>
+
+7.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 279 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Computing hashes of 278 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+7.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+Removed 7 unused cells and 68 unused wires.
+<suppressed ~12 debug messages>
+
+7.19.5. Finished fast OPT passes.
+
+7.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+7.21. Executing OPT pass (performing simple optimizations).
+
+7.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 267 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_wbq_root_store_group4..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~32 debug messages>
+
+7.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_wbq_root_store_group4.
+Performed a total of 0 changes.
+
+7.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 267 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Removed a total of 0 cells.
+
+7.21.6. Executing OPT_SHARE pass.
+
+7.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+
+7.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+
+7.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+7.22. Executing TECHMAP pass (map to technology primitives).
+
+7.22.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+7.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$8971b47ff1c9be17e07f148f8851db94e6435300\_90_alu for cells of type $alu.
+Using template $paramod$103b4016182df467cceab67bcf3e18e6361ec0fd\_90_alu for cells of type $alu.
+Using template $paramod$3ef7d3dd227da7627a99c5e5a6a4deb817573e39\_90_alu for cells of type $alu.
+Using template $paramod$3dcd8d84e8993340895bb75a38ad58995da4846c\_90_alu for cells of type $alu.
+Using template $paramod$1bb7aebaa32f16dab78ad6c76561e8e43e165fdb\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$8441c334d863ed42b55f25e60c0d690241b4051f\_90_alu for cells of type $alu.
+Using template $paramod$c28ee2be3bc0e7d385fb566edd796bc91d15f849\_90_alu for cells of type $alu.
+Using template $paramod$84080732754e0a1b49900de9a1f112a13f8436c0\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \base (32 bits, unsigned)
+  add { \root_id 3'111 } (5 bits, unsigned)
+  add { \g_lane[3].g_face.u_store.u_native.pending_row 5'00000 } (11 bits, unsigned)
+  add \base (32 bits, unsigned)
+  add { \root_id 3'110 } (5 bits, unsigned)
+  add { \g_lane[2].g_face.u_store.u_native.pending_row 5'00000 } (11 bits, unsigned)
+  add \base (32 bits, unsigned)
+  add { \root_id 3'100 } (5 bits, unsigned)
+  add { \g_lane[0].g_face.u_store.u_native.pending_row 5'00000 } (11 bits, unsigned)
+  add \base (32 bits, unsigned)
+  add { \root_id 3'101 } (5 bits, unsigned)
+  add { \g_lane[1].g_face.u_store.u_native.pending_row 5'00000 } (11 bits, unsigned)
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $pmux.
+Using extmapper simplemap for cells of type $dff.
+Using template $paramod$fbc7873bff55778c0b3173955b7e4bce1d9d6834\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001100 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001011 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000111 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000111 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $or.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~2987 debug messages>
+
+7.23. Executing OPT pass (performing simple optimizations).
+
+7.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_wbq_root_store_group4.
+<suppressed ~2410 debug messages>
+
+7.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_wbq_root_store_group4'.
+Computing hashes of 14630 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Computing hashes of 14403 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Computing hashes of 14362 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Computing hashes of 14346 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+Computing hashes of 14342 cells of `\ot_wbq_root_store_group4'.
+Finding duplicate cells in `\ot_wbq_root_store_group4'.
+<suppressed ~864 debug messages>
+Removed a total of 288 cells.
+
+7.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_wbq_root_store_group4..
+Removed 289 unused cells and 1813 unused wires.
+<suppressed ~298 debug messages>
+
+7.23.5. Finished fast OPT passes.
+
+7.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_wbq_root_store_group4'. Setting top module to ot_wbq_root_store_group4.
+
+7.24.1. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+
+7.24.2. Analyzing design hierarchy..
+Top module:  \ot_wbq_root_store_group4
+Removed 0 unused modules.
+
+7.25. Printing statistics.
+
+=== ot_wbq_root_store_group4 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     6722 wires
+    24002 wire bits
+      316 public wires
+    16628 public wire bits
+       20 ports
+     2268 port bits
+    14053 cells
+     4059   $_AND_
+       56   $_DFFE_PN0P_
+     4608   $_DFFE_PP_
+       88   $_DFF_PN0_
+     1024   $_DFF_P_
+     1208   $_MUX_
+      108   $_NOT_
+     2532   $_OR_
+      354   $_XOR_
+       12   $scopeinfo
+        4   ot_sram_1r1w_128x256_m1_r2c2
+
+7.26. Executing CHECK pass (checking for obvious problems).
+Checking module ot_wbq_root_store_group4...
+Found and reported 0 problems.
+
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\ot_wbq_root_store_group4':
+  mapped 144 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 5632 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+9. Executing ABC pass (technology mapping using ABC).
+
+9.1. Extracting gate netlist of module `\ot_wbq_root_store_group4' to `<abc-temp-dir>/input.blif'..
+
+9.1.1. Executed ABC.
+Extracted 18701 gates and 25585 wires to a netlist network with 6883 inputs and 6964 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =  20489 ( 22.4 %)   Cap =  1.1 ff (  1.8 %)   Area =     1782.90 ( 94.8 %)   Delay =   372.24 ps  (  0.3 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.1.2. Re-integrating ABC results.
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:     2164
+ABC RESULTS:   AND2x4_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:      102
+ABC RESULTS:   AND3x4_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       15
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND5x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   AO211x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:     6463
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:       17
+ABC RESULTS:   AO222x2_ASAP7_75t_R cells:        4
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:       13
+ABC RESULTS:   AO31x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:        9
+ABC RESULTS:   AOI211x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AOI21x1_ASAP7_75t_R cells:       17
+ABC RESULTS:   AOI221x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   BUFx2_ASAP7_75t_R cells:     1179
+ABC RESULTS:   BUFx3_ASAP7_75t_R cells:        2
+ABC RESULTS:   BUFx6f_ASAP7_75t_R cells:        2
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     3397
+ABC RESULTS:   INVx2_ASAP7_75t_R cells:        2
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:       36
+ABC RESULTS:   NAND2x1_ASAP7_75t_R cells:     1626
+ABC RESULTS:   NAND3x1_ASAP7_75t_R cells:        5
+ABC RESULTS:   NOR2x1_ASAP7_75t_R cells:     3194
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:     1201
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:      464
+ABC RESULTS:   OA221x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   OA222x2_ASAP7_75t_R cells:        4
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:        8
+ABC RESULTS:   OA31x2_ASAP7_75t_R cells:        6
+ABC RESULTS:   OAI21x1_ASAP7_75t_R cells:       93
+ABC RESULTS:   OAI22x1_ASAP7_75t_R cells:        3
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:      155
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:       50
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:       14
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   XNOR2x2_ASAP7_75t_R cells:      150
+ABC RESULTS:   XOR2x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   XOR2x2_ASAP7_75t_R cells:       75
+ABC RESULTS:        internal signals:    11738
+ABC RESULTS:           input signals:     6883
+ABC RESULTS:          output signals:     6964
+Removing temp directory.
+Removing global temp directory.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+10. Printing statistics.
+
+=== ot_wbq_root_store_group4 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    44534        - wires
+    61814        - wire bits
+      316        - public wires
+    16628        - public wire bits
+       20        - ports
+     2268        - port bits
+    26281 3.39E+03 cells
+       12        -   $scopeinfo
+     2164  189.307   AND2x2_ASAP7_75t_R
+        1    0.146   AND2x4_ASAP7_75t_R
+      102    8.923   AND3x1_ASAP7_75t_R
+        1    0.204   AND3x4_ASAP7_75t_R
+       15    1.531   AND4x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+        1    0.292   AND5x2_ASAP7_75t_R
+        2    0.467   AO211x2_ASAP7_75t_R
+     6463  565.383   AO21x1_ASAP7_75t_R
+       17    2.479   AO221x1_ASAP7_75t_R
+        4      0.7   AO222x2_ASAP7_75t_R
+       13    1.706   AO22x1_ASAP7_75t_R
+        2    0.467   AO31x2_ASAP7_75t_R
+        9     1.05   AO32x1_ASAP7_75t_R
+        2     0.35   AOI211x1_ASAP7_75t_R
+       17    1.983   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+     1179   85.949   BUFx2_ASAP7_75t_R
+        2    0.175   BUFx3_ASAP7_75t_R
+        2    0.292   BUFx6f_ASAP7_75t_R
+      144   54.588   DFFASRHQNx1_ASAP7_75t_R
+     5632 1.64E+03   DFFHQNx1_ASAP7_75t_R
+     3397  148.585   INVx1_ASAP7_75t_R
+        2    0.117   INVx2_ASAP7_75t_R
+       36    4.724   MAJx2_ASAP7_75t_R
+     1626  142.242   NAND2x1_ASAP7_75t_R
+        5    0.802   NAND3x1_ASAP7_75t_R
+     3194  279.411   NOR2x1_ASAP7_75t_R
+     1201  140.085   OA211x2_ASAP7_75t_R
+      464   47.356   OA21x2_ASAP7_75t_R
+        2    0.467   OA221x2_ASAP7_75t_R
+        4      0.7   OA222x2_ASAP7_75t_R
+        8    1.166   OA22x2_ASAP7_75t_R
+        6    1.312   OA31x2_ASAP7_75t_R
+       93   10.848   OAI21x1_ASAP7_75t_R
+        3    0.437   OAI22x1_ASAP7_75t_R
+      155   13.559   OR2x2_ASAP7_75t_R
+       50    4.374   OR3x1_ASAP7_75t_R
+       14    1.429   OR4x1_ASAP7_75t_R
+        2    0.233   OR5x1_ASAP7_75t_R
+      150   24.057   XNOR2x2_ASAP7_75t_R
+        4      0.7   XOR2x1_ASAP7_75t_R
+       75   12.028   XOR2x2_ASAP7_75t_R
+        4        -   ot_sram_1r1w_128x256_m1_r2c2
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_sram_1r1w_128x256_m1_r2c2 is unknown!
+
+   Chip area for module '\ot_wbq_root_store_group4': 3393.232560
+     of which used for sequential elements: 1696.878720 (50.01%)
+
+11. Executing JSON backend.
+
+Warnings: 20 unique messages, 21 total
+End of script. Logfile hash: d35519ad5f, time: 44.81s, user: 6.72s, system: 0.26s, MEM: 122.70 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 85% 1x abc (37 sec), 3% 2x stat (1 sec), ...

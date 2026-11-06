@@ -33,3 +33,37 @@ module ot_wbq_root_store #(parameter integer LANE=0)(
   end
  end
 endmodule
+
+// Optional four-lane hierarchy cut. No new state, reset, clock or edge.
+// FACES=1 preserves each existing 256-bit fifo_clk WD capture exactly once.
+// Packed lane j occupies [256*j+:256] and [288*j+:288]; LANE_BASE is 0 or 4.
+// Every FIFO retains its own fifo_clk write side and hbm_clk read side.
+module ot_wbq_root_store_group4 #(
+ parameter integer LANE_BASE=0, parameter integer FACES=1
+)(
+ input wire fifo_clk,hbm_clk,srst,hrst,
+ input wire [1:0]root_id,input wire [31:0]base,
+ input wire [11:0]total,committed,ordinal,
+ input wire filling,fill_bank,copy_q,copy_bank,copy_start,s_stop,
+ input wire [1023:0]wd,input wire [3:0]wd_v,fifo_re,
+ output wire [1151:0]fifo_head,output wire [3:0]fifo_empty
+);
+ genvar lane;
+ generate for(lane=0;lane<4;lane=lane+1)begin:g_lane
+  if(FACES!=0)begin:g_face
+   ot_wbq_root_store_face #(.LANE(LANE_BASE+lane)) u_store(
+    .fifo_clk(fifo_clk),.hbm_clk(hbm_clk),.srst(srst),.hrst(hrst),
+    .root_id(root_id),.base(base),.total(total),.committed(committed),.ordinal(ordinal),
+    .filling(filling),.fill_bank(fill_bank),.copy_q(copy_q),.copy_bank(copy_bank),
+    .copy_start(copy_start),.s_stop(s_stop),.wd(wd[256*lane+:256]),.wd_v(wd_v[lane]),
+    .fifo_re(fifo_re[lane]),.fifo_head(fifo_head[288*lane+:288]),.fifo_empty(fifo_empty[lane]));
+  end else begin:g_raw
+   ot_wbq_root_store #(.LANE(LANE_BASE+lane)) u_store(
+    .fifo_clk(fifo_clk),.hbm_clk(hbm_clk),.srst(srst),.hrst(hrst),
+    .root_id(root_id),.base(base),.total(total),.committed(committed),.ordinal(ordinal),
+    .filling(filling),.fill_bank(fill_bank),.copy_q(copy_q),.copy_bank(copy_bank),
+    .copy_start(copy_start),.s_stop(s_stop),.wd(wd[256*lane+:256]),.wd_v(wd_v[lane]),
+    .fifo_re(fifo_re[lane]),.fifo_head(fifo_head[288*lane+:288]),.fifo_empty(fifo_empty[lane]));
+  end
+ end endgenerate
+endmodule
