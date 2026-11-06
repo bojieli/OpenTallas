@@ -1411,7 +1411,9 @@
     "dsdv_slice_lepe_nh_mus_C__t1@2",
     "dsdv_slice_lepe_mu_C__t1@2",
     "dsdv_slice_iq_C__t1@4",
-    "dsdv_slice_kv512_C__t1@3"
+    "dsdv_slice_kv512_C__t1@3",
+    "dsdv_slice_iq_C__t1@5",
+    "dsdv_slice_kv512_C__t1@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2024,7 +2026,9 @@
     "slice_station__t38@4": "KW-FIX-8 11-04 I44 rstleaf 84f5a49e989: OT_RESET_LEAF over target is advisory, main f8170b8b778; COORD 13:02",
     "col_h9_r1__t1__cl49d7a23e@6": "COORD 06:38 I89: raw key does not hash reset; relaunch by name on tip",
     "dsdv_slice_iq_C__t1@4": "DIE-S81-63 12:5x I129 rawreset (tag flow-20261106-e-s81): wrapper gains raw reset relay copies; kit RTL from die-s81-62/bind_r via kit_rtl_s81p.sh (iq_C kit-rtl PASS 61 sources, CHECKED)",
-    "dsdv_slice_kv512_C__t1@3": "DIE-S81-63 12:5x I129 rawreset (tag flow-20261106-e-s81): wrapper gains raw reset relay copies; kit RTL from die-s81-62/bind_r via kit_rtl_s81p.sh (iq_C kit-rtl PASS 61 sources, CHECKED)"
+    "dsdv_slice_kv512_C__t1@3": "DIE-S81-63 12:5x I129 rawreset (tag flow-20261106-e-s81): wrapper gains raw reset relay copies; kit RTL from die-s81-62/bind_r via kit_rtl_s81p.sh (iq_C kit-rtl PASS 61 sources, CHECKED)",
+    "dsdv_slice_iq_C__t1@5": "KW-FIX-17 16:1x COORD 16:0x (c): PLACE waiter sat on the intel1 load cap since 14:47 (non-crit); client + host waiter stopped by exact pid (never admitted, no run), row in lanes/NEAR-COUNT.tsv -> relaunch with --priority die --crit; kit inputs unchanged",
+    "dsdv_slice_kv512_C__t1@4": "KW-FIX-17 16:1x COORD 16:0x (c): PLACE waiter sat on the intel1 load cap since 14:47 (non-crit); client + host waiter stopped by exact pid (never admitted, no run), row in lanes/NEAR-COUNT.tsv -> relaunch with --priority die --crit; kit inputs unchanged"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
