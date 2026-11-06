@@ -13,7 +13,7 @@ Owner setup0/FFhold25 applies;60ps margin is INFO per latest owner12.24b/c.
   DRC0/ANT0/PGopens0, TT40.69/FF-16.03 (SDC-50.41), DRV579/27 TT,
   235/30 FF. Actual compact295.92x444.96,55SRAM,2143pins,realPG6.
   Current pinned **ad** canonical late-ECO loops `e_eco_ad`,`w_eco_ad`,
-  intel2 clients1580635/1760689; E admitted unit3484765, W unit in clientlog.
+  intel2 clients1580635/1760689; E admitted unit3484765, W unit3606931.
   Both reached i2 at handback, healthy, max3 already authorized.
   **i1 both**: TT35.66, FF-8.12/49endpoints (SDC-52.75), DRV81/1 TT,
   74/1 FF, DRC0/ANT0/PG0; exact frozen-clock PASS. Loop continues normally.
