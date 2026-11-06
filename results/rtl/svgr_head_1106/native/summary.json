@@ -1,0 +1,65 @@
+{
+  "verdict": "PASS",
+  "extra_edges": 0,
+  "cases": [
+    {
+      "case": "ordinary",
+      "epoch": 0,
+      "run_rc": 0,
+      "verdict": "PASS",
+      "ops": 20,
+      "ops_pass": 20,
+      "gos": 29,
+      "go_slots_exact": true,
+      "fault": null,
+      "done": "DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988",
+      "elapsed_s": 92.9
+    },
+    {
+      "case": "stalled",
+      "epoch": 0,
+      "run_rc": 0,
+      "verdict": "PASS",
+      "ops": 20,
+      "ops_pass": 20,
+      "gos": 29,
+      "go_slots_exact": true,
+      "fault": null,
+      "done": "DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988",
+      "elapsed_s": 100.73
+    },
+    {
+      "case": "stalled_reset",
+      "epoch": 0,
+      "run_rc": 0,
+      "verdict": "PASS",
+      "ops": 20,
+      "ops_pass": 20,
+      "gos": 29,
+      "go_slots_exact": true,
+      "fault": null,
+      "done": "DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988",
+      "elapsed_s": 180.8
+    },
+    {
+      "case": "stalled_reset",
+      "epoch": 1,
+      "run_rc": 0,
+      "verdict": "PASS",
+      "ops": 20,
+      "ops_pass": 20,
+      "gos": 29,
+      "go_slots_exact": true,
+      "fault": null,
+      "done": "DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=11976",
+      "elapsed_s": 180.81
+    }
+  ],
+  "mutants_caught": [
+    8,
+    9,
+    10
+  ],
+  "exe_sha256": "efafaa9500caab6c63c9de150af29ccd6f30fade5187dbaa21a5a1af2fed7132",
+  "binary": "/srv/opentallas-scratch2/claude/codex-svgr-head-native/work/obj_OT_SVGR_OWN_RF1_60684b484/Vtb_hbm_svg_rel_sm"
+}

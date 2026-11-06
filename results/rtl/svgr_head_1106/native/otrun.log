@@ -1,0 +1,33 @@
+ot-run: epyc5          admits     1 GB (avail 257, reserve 0, fresh 109.2, peak 82.7, headroom 0, waiters 6/432 GB) load 67/128 running 46 disk 219 GB 
+ot-run: -> epyc5 (will queue: admits 1 GB < 24 GB)
+ot-heavy: request 24G is charged 20G (class 'run_native.sh' measured peak 11.7G, n=3+0 proved); the cap stays 24G
+ot-heavy: waiting for memory on devoted-wren: need 0.7 x 20 = 14 GB, admissible 1 GB: available 257 GB, growth charged 110 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 110 GB at x1), young 58 GB, floor 38 GB; invariant: committed 690 GB (in use 498, other 3, units max(now, peak) 578, + reserve 0 + fresh 109) vs physical - 64 = 691 GB -> headroom 1 GB; class 'run_native.sh' measured peak 11.7G, n=3+0 proved
+ot-heavy: admitted on devoted-wren as oth-ubuntu-655016-1793966471 after 123 s
+ordinary PASS {'case': 'ordinary', 'epoch': 0, 'run_rc': 0, 'verdict': 'PASS', 'ops': 20, 'ops_pass': 20, 'gos': 29, 'go_slots_exact': True, 'fault': None, 'done': 'DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988', 'elapsed_s': 92.9}
+stalled PASS {'case': 'stalled', 'epoch': 0, 'run_rc': 0, 'verdict': 'PASS', 'ops': 20, 'ops_pass': 20, 'gos': 29, 'go_slots_exact': True, 'fault': None, 'done': 'DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988', 'elapsed_s': 100.73}
+stalled_reset PASS {'case': 'stalled_reset', 'epoch': 1, 'run_rc': 0, 'verdict': 'PASS', 'ops': 20, 'ops_pass': 20, 'gos': 29, 'go_slots_exact': True, 'fault': None, 'done': 'DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=11976', 'elapsed_s': 180.81}
+NATIVE_SMB_HEAD PASS mutants_caught [8, 9, 10]
+	Command being timed: "python3 ./run_native.py"
+	User time (seconds): 3170.78
+	System time (seconds): 64.59
+	Percent of CPU this job got: 160%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 33:40.42
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 24039816
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 13
+	Minor (reclaiming a frame) page faults: 19158877
+	Voluntary context switches: 655
+	Involuntary context switches: 6627
+	Swaps: 0
+	File system inputs: 35344
+	File system outputs: 3912112
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on epyc5 (unit oth-ubuntu-655016-1793966471): exit 0

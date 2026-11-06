@@ -1,0 +1,259 @@
+{
+  "verdict": "PASS",
+  "audit": "Recomputed directly from retained logs; no simulation rerun",
+  "cases": [
+    {
+      "name": "ordinary",
+      "edge_checks": 12762,
+      "accepted_words": 5988,
+      "warm_resets": 0,
+      "extra_edges": 0,
+      "epochs": 1,
+      "mutants": [
+        {
+          "pc": 0,
+          "mut": 8,
+          "caught": false,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 0,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 0,
+          "mut": 10,
+          "caught": false,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 1,
+          "mut": 8,
+          "caught": false,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 1,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 1,
+          "mut": 10,
+          "caught": false,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 2,
+          "mut": 8,
+          "caught": false,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 2,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 2,
+          "mut": 10,
+          "caught": false,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 3,
+          "mut": 8,
+          "caught": false,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 3,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 3,
+          "mut": 10,
+          "caught": false,
+          "accepted_checks": 1497
+        }
+      ],
+      "log_sha256": "566297702f981136565438a48639fb7e5677d84466cb056da6e84a0b2b196aa8"
+    },
+    {
+      "name": "stalled",
+      "edge_checks": 12762,
+      "accepted_words": 5988,
+      "warm_resets": 0,
+      "extra_edges": 0,
+      "epochs": 1,
+      "mutants": [
+        {
+          "pc": 0,
+          "mut": 8,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 0,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 0,
+          "mut": 10,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 1,
+          "mut": 8,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 1,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 1,
+          "mut": 10,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 2,
+          "mut": 8,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 2,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 2,
+          "mut": 10,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 3,
+          "mut": 8,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 3,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 1497
+        },
+        {
+          "pc": 3,
+          "mut": 10,
+          "caught": true,
+          "accepted_checks": 1497
+        }
+      ],
+      "log_sha256": "18ab87b2d9d0084d09c1679a9d8c09a4946a9f465b686a499b7d05cbe0d4d8ae"
+    },
+    {
+      "name": "stalled_reset",
+      "edge_checks": 25524,
+      "accepted_words": 11976,
+      "warm_resets": 1,
+      "extra_edges": 0,
+      "epochs": 2,
+      "mutants": [
+        {
+          "pc": 0,
+          "mut": 8,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 0,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 0,
+          "mut": 10,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 1,
+          "mut": 8,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 1,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 1,
+          "mut": 10,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 2,
+          "mut": 8,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 2,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 2,
+          "mut": 10,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 3,
+          "mut": 8,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 3,
+          "mut": 9,
+          "caught": true,
+          "accepted_checks": 2994
+        },
+        {
+          "pc": 3,
+          "mut": 10,
+          "caught": true,
+          "accepted_checks": 2994
+        }
+      ],
+      "log_sha256": "4feec0d15e91171c02522d546efda93bb45dfe7705b6c1903098a237afe43b35"
+    }
+  ],
+  "total_edge_checks": 51048,
+  "total_accepted_words": 23952,
+  "total_epochs": 4,
+  "extra_edges": 0
+}
