@@ -1,0 +1,32 @@
+{
+ "pins": 2143,
+ "ok": 2142,
+ "missing": [],
+ "wrong_layer": [],
+ "wrong_place": [
+  [
+   "ck[0]",
+   {
+    "bus": "ck",
+    "bit": 0,
+    "layer": "M5",
+    "x": 147.948,
+    "y": 236.52,
+    "face": "C"
+   },
+   [
+    "M5",
+    147.924,
+    236.232,
+    147.972,
+    236.76
+   ]
+  ]
+ ],
+ "extra": [],
+ "missing_n": 0,
+ "wrong_layer_n": 0,
+ "wrong_place_n": 1,
+ "extra_n": 0,
+ "verdict": "FAIL"
+}

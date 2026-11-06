@@ -1,0 +1,5 @@
+ot-run: epyc5          admits    32 GB (avail 238, reserve 0, fresh 102.2, peak 39.4, headroom 0, waiters 2/288 GB) load 60/128 running 39 disk 128 GB 
+ot-run: -> epyc5
+ot-heavy: request 24G is charged 8G (class 'iverilog' measured peak 0.0G, n=1+0 proved); the cap stays 24G
+ot-heavy: admitted on devoted-wren as oth-ubuntu-1004850-1793982158 after 0 s
+ot-run: RAN on epyc5 (unit oth-ubuntu-1004850-1793982158): exit 0

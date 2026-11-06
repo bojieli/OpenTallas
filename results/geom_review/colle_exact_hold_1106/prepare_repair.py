@@ -63,7 +63,7 @@ global_route -end_incremental
 ot_clk_freeze_assert exact_four_post_grt
 ot_prd_route_keep_restore
 write_db /out/5_1_grt.odb
-write_sdc /out/5_1_grt.sdc
+file copy -force /base/6_final.sdc /out/5_1_grt.sdc
 write_guides /out/route.guide
 puts "COLLE_EXACT_FOUR_GRT_COMPLETE"
 exit

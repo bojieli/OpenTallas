@@ -3476,6 +3476,35 @@
           "qkd_ahub_ck7_r27"
          ]
         },
+        "physical_ft": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "proof",
+          "proof_sha256",
+          "unconsumed_outputs"
+         ],
+         "properties": {
+          "proof": {
+           "type": "string",
+           "minLength": 1
+          },
+          "proof_sha256": {
+           "type": "string",
+           "pattern": "^[0-9a-f]{64}$"
+          },
+          "unconsumed_outputs": {
+           "type": "array",
+           "uniqueItems": true,
+           "minItems": 2,
+           "maxItems": 2,
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
+          }
+         }
+        },
         "native_port_adapter": {
          "additionalProperties": false,
          "properties": {

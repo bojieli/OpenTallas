@@ -1,0 +1,17 @@
+module ot_pdie_serdes_rx
+input [0:0] clk
+input [0:0] rck_clk
+input [0:0] rst
+output [511:0] rx
+output [1:0] st
+input [543:0] pma_rx
+input [0:0] e_flt_i
+output [3:0] k_v
+output [309:0] k_lo
+output [4:0] k_L
+output [0:0] k_any
+input [543:0] cw_q
+input [7:0] apply
+input [0:0] o_unc
+input [4:0] o_ne
+input [0:0] fs

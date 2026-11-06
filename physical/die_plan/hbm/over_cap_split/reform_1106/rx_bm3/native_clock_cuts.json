@@ -1,0 +1,278 @@
+{
+  "schema": "opentallas.rx_bm3.native_clock_cuts.v1",
+  "edges_added": 0,
+  "outer_face_bits": 1933,
+  "outer_face_clock": "clk unchanged",
+  "clock_ports": [
+    "clk",
+    "rck_clk"
+  ],
+  "native_helpers": [
+    {
+      "index": 0,
+      "instance": "g_native.g_bm[0].u_bm",
+      "parameters": {
+        "BMTHC": 1,
+        "inner_NG": 4,
+        "inner_NCD": 4,
+        "inner_THC": 1
+      },
+      "clk": "rck_clk",
+      "regional_sync_reset": {
+        "producer": "g_native.u_rest.u_fcore.u_syn.rs_n[2]",
+        "consumer": "g_native.g_bm[0].u_bm.rs_n",
+        "source_regional_reset_instance": "g_native.u_rest.u_fcore.u_syn.u_rst",
+        "stages_added": 0
+      },
+      "S": {
+        "bits": [
+          0,
+          299
+        ],
+        "producer_registered_bits": "g_native.u_rest.u_fcore.u_syn.S_q[299:0]",
+        "consumer": "g_native.g_bm[0].u_bm.S[299:0]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "ld": {
+        "flat_bits": [
+          0,
+          3
+        ],
+        "producer_registered_bits": "g_native.u_rest.u_fcore.u_syn.ldr[0][3:0]",
+        "consumer": "g_native.g_bm[0].u_bm.ld[3:0]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "lam": {
+        "flat_bits": [
+          0,
+          159
+        ],
+        "producer_registered_bits": "g_native.g_bm[0].u_bm.u_native.d[15..30][9:0]",
+        "bit_map": "lam[10*j+:10]=d[15+j],j0..15",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_lam[0]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "om": {
+        "flat_bits": [
+          0,
+          149
+        ],
+        "producer_registered_bits": "g_native.g_bm[0].u_bm.u_native.d[0..14][9:0]",
+        "bit_map": "om[10*j+:10]=d[j],j0..14",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_om[0]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "L": {
+        "flat_bits": [
+          0,
+          4
+        ],
+        "producer": "g_native.g_bm[0].u_bm.u_native.L[4:0]",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_L[0]",
+        "clock": "rck_clk"
+      },
+      "any": {
+        "flat_bit": 0,
+        "producer": "g_native.g_bm[0].u_bm.u_native.any",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_any[0]",
+        "clock": "rck_clk"
+      },
+      "done": {
+        "flat_bits": [
+          0,
+          3
+        ],
+        "producer": "g_native.g_bm[0].u_bm.u_native.done[3:0]",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_dn[0]",
+        "clock": "rck_clk",
+        "copy_select": "same existing bit/78 cohort for310bit lsel andcopy0 forL/any"
+      },
+      "qualification": "data compared only in existing done-qualified cohort; original unreset datapath and synchronousregional controlreset unchanged"
+    },
+    {
+      "index": 1,
+      "instance": "g_native.g_bm[1].u_bm",
+      "parameters": {
+        "BMTHC": 1,
+        "inner_NG": 4,
+        "inner_NCD": 4,
+        "inner_THC": 1
+      },
+      "clk": "rck_clk",
+      "regional_sync_reset": {
+        "producer": "g_native.u_rest.u_fcore.u_syn.rs_n[2]",
+        "consumer": "g_native.g_bm[1].u_bm.rs_n",
+        "source_regional_reset_instance": "g_native.u_rest.u_fcore.u_syn.u_rst",
+        "stages_added": 0
+      },
+      "S": {
+        "bits": [
+          0,
+          299
+        ],
+        "producer_registered_bits": "g_native.u_rest.u_fcore.u_syn.S_q[299:0]",
+        "consumer": "g_native.g_bm[1].u_bm.S[299:0]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "ld": {
+        "flat_bits": [
+          4,
+          7
+        ],
+        "producer_registered_bits": "g_native.u_rest.u_fcore.u_syn.ldr[1][3:0]",
+        "consumer": "g_native.g_bm[1].u_bm.ld[3:0]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "lam": {
+        "flat_bits": [
+          160,
+          319
+        ],
+        "producer_registered_bits": "g_native.g_bm[1].u_bm.u_native.d[15..30][9:0]",
+        "bit_map": "lam[10*j+:10]=d[15+j],j0..15",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_lam[1]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "om": {
+        "flat_bits": [
+          150,
+          299
+        ],
+        "producer_registered_bits": "g_native.g_bm[1].u_bm.u_native.d[0..14][9:0]",
+        "bit_map": "om[10*j+:10]=d[j],j0..14",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_om[1]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "L": {
+        "flat_bits": [
+          5,
+          9
+        ],
+        "producer": "g_native.g_bm[1].u_bm.u_native.L[4:0]",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_L[1]",
+        "clock": "rck_clk"
+      },
+      "any": {
+        "flat_bit": 1,
+        "producer": "g_native.g_bm[1].u_bm.u_native.any",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_any[1]",
+        "clock": "rck_clk"
+      },
+      "done": {
+        "flat_bits": [
+          4,
+          7
+        ],
+        "producer": "g_native.g_bm[1].u_bm.u_native.done[3:0]",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_dn[1]",
+        "clock": "rck_clk",
+        "copy_select": "same existing bit/78 cohort for310bit lsel andcopy0 forL/any"
+      },
+      "qualification": "data compared only in existing done-qualified cohort; original unreset datapath and synchronousregional controlreset unchanged"
+    },
+    {
+      "index": 2,
+      "instance": "g_native.g_bm[2].u_bm",
+      "parameters": {
+        "BMTHC": 1,
+        "inner_NG": 4,
+        "inner_NCD": 4,
+        "inner_THC": 1
+      },
+      "clk": "rck_clk",
+      "regional_sync_reset": {
+        "producer": "g_native.u_rest.u_fcore.u_syn.rs_n[2]",
+        "consumer": "g_native.g_bm[2].u_bm.rs_n",
+        "source_regional_reset_instance": "g_native.u_rest.u_fcore.u_syn.u_rst",
+        "stages_added": 0
+      },
+      "S": {
+        "bits": [
+          0,
+          299
+        ],
+        "producer_registered_bits": "g_native.u_rest.u_fcore.u_syn.S_q[299:0]",
+        "consumer": "g_native.g_bm[2].u_bm.S[299:0]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "ld": {
+        "flat_bits": [
+          8,
+          11
+        ],
+        "producer_registered_bits": "g_native.u_rest.u_fcore.u_syn.ldr[2][3:0]",
+        "consumer": "g_native.g_bm[2].u_bm.ld[3:0]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "lam": {
+        "flat_bits": [
+          320,
+          479
+        ],
+        "producer_registered_bits": "g_native.g_bm[2].u_bm.u_native.d[15..30][9:0]",
+        "bit_map": "lam[10*j+:10]=d[15+j],j0..15",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_lam[2]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "om": {
+        "flat_bits": [
+          300,
+          449
+        ],
+        "producer_registered_bits": "g_native.g_bm[2].u_bm.u_native.d[0..14][9:0]",
+        "bit_map": "om[10*j+:10]=d[j],j0..14",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_om[2]",
+        "clock": "rck_clk",
+        "edges_added": 0
+      },
+      "L": {
+        "flat_bits": [
+          10,
+          14
+        ],
+        "producer": "g_native.g_bm[2].u_bm.u_native.L[4:0]",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_L[2]",
+        "clock": "rck_clk"
+      },
+      "any": {
+        "flat_bit": 2,
+        "producer": "g_native.g_bm[2].u_bm.u_native.any",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_any[2]",
+        "clock": "rck_clk"
+      },
+      "done": {
+        "flat_bits": [
+          8,
+          11
+        ],
+        "producer": "g_native.g_bm[2].u_bm.u_native.done[3:0]",
+        "consumer": "g_native.u_rest.u_fcore.u_syn.u_dn[2]",
+        "clock": "rck_clk",
+        "copy_select": "same existing bit/78 cohort for310bit lsel andcopy0 forL/any"
+      },
+      "qualification": "data compared only in existing done-qualified cohort; original unreset datapath and synchronousregional controlreset unchanged"
+    }
+  ],
+  "residual_instance": "g_native.u_rest",
+  "residual_core": "g_native.u_rest.u_fcore",
+  "syndrome_instance": "g_native.u_rest.u_fcore.u_syn",
+  "helper_phys_pin_bits": 626,
+  "rest_phys_pin_bits": 3209,
+  "macro_instances": [
+    "g_native.u_rest.u_fcore.u_dly.u_dmem",
+    "g_native.u_rest.u_fcore.u_out.u_cmem"
+  ],
+  "rest_F1": "all original input/output F1 cells stay in residual; o_ne remains frozen5d0; no extra native faces",
+  "status": "native/R2 source contract only; actual GEN clock/pin/grid/reset/parent views not adopted"
+}

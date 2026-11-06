@@ -1,0 +1,23 @@
+[
+  "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "--binary",
+  "--timing",
+  "--assert",
+  "-Wno-fatal",
+  "--top-module",
+  "tb",
+  "--output-groups",
+  "8",
+  "--output-split",
+  "10000",
+  "--output-split-cfuncs",
+  "1000",
+  "-CFLAGS",
+  "-O1 -fno-var-tracking",
+  "-Mdir",
+  "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/obj",
+  "-j",
+  "4",
+  "-f",
+  "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/sources.f"
+]

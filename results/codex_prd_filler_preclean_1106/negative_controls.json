@@ -1,0 +1,15 @@
+{
+  "status": "NEGATIVE_CONTROLS_PASS",
+  "nonpg_filler_rc": 1,
+  "output_manifest_alias_rc": 1,
+  "unsafe_outputs_absent": true,
+  "mutation": {
+    "negative_control": true,
+    "filler": "FILLER_2_10430",
+    "master": "DECAPx10_ASAP7_75t_R",
+    "pin": "VDD",
+    "new_net": "__NEGATIVE_FILLER_SIGNAL",
+    "new_sig_type": "SIGNAL"
+  },
+  "reconstructible_mutant_bytes": 1294579913
+}

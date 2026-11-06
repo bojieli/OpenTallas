@@ -1,6 +1,6 @@
-import odb,json,sys
+import odb,json,sys,os
 from pathlib import Path
-odbpath,outpath=sys.argv[1:]
+odbpath,outpath=sys.argv[1:] if len(sys.argv)==3 else (os.environ["ODB"],os.environ["COUNT_OUT"])
 db=odb.dbDatabase.create();odb.read_db(db,odbpath);b=db.getChip().getBlock();u=b.getDbUnitsPerMicron();c=b.getCoreArea();core=c.dx()*c.dy()/u**2
 counts={'functional':0,'macro':0,'pg_only':0};areas={k:0. for k in counts};new=[]
 for i in b.getInsts():

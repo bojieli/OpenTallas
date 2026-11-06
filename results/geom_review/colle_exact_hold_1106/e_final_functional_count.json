@@ -1,0 +1,54 @@
+{
+  "source": "/base/6_final.odb",
+  "counts": {
+    "functional": 87006,
+    "macro": 55,
+    "pg_only": 200554
+  },
+  "areas_um2": {
+    "functional": 13105.087199997008,
+    "macro": 62002.43424000009,
+    "pg_only": 28763.788499902043
+  },
+  "core_area_um2": 125346.0096,
+  "macro_free_area_um2": 63343.575359999915,
+  "functional_utilization": 0.20688897217305774,
+  "new_buffers": [
+    {
+      "instance": "codex_exact_hold_3",
+      "master": "HB4xp67_ASAP7_75t_R",
+      "location": [
+        245862,
+        172260
+      ],
+      "orient": "R0"
+    },
+    {
+      "instance": "codex_exact_hold_2",
+      "master": "HB4xp67_ASAP7_75t_R",
+      "location": [
+        230148,
+        170100
+      ],
+      "orient": "R0"
+    },
+    {
+      "instance": "codex_exact_hold_1",
+      "master": "HB4xp67_ASAP7_75t_R",
+      "location": [
+        242244,
+        168750
+      ],
+      "orient": "MX"
+    },
+    {
+      "instance": "codex_exact_hold_0",
+      "master": "HB4xp67_ASAP7_75t_R",
+      "location": [
+        247212,
+        169290
+      ],
+      "orient": "MX"
+    }
+  ]
+}

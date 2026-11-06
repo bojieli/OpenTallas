@@ -1,0 +1,69 @@
+{
+  "status": "SOURCE_PROPOSAL_ONLY_NOT_EXECUTABLE_GEN_RECIPE",
+  "source": "rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv",
+  "family_top": "ot_pdie_serdes_rx_bm3_family",
+  "default_params": {
+    "CUT_BM": 0
+  },
+  "opt_in_params": {
+    "CUT_BM": 1
+  },
+  "BM_params": {
+    "BMTHC": 1,
+    "NG": 4,
+    "NCD": 4,
+    "THC": 1
+  },
+  "children": [
+    {
+      "instance": "g_native.g_bm[0].u_bm",
+      "top": "ot_pdie_serdes_rx_bm_native",
+      "params": {
+        "BMTHC": 1
+      },
+      "native_clk_source": "rck_clk"
+    },
+    {
+      "instance": "g_native.g_bm[1].u_bm",
+      "top": "ot_pdie_serdes_rx_bm_native",
+      "params": {
+        "BMTHC": 1
+      },
+      "native_clk_source": "rck_clk"
+    },
+    {
+      "instance": "g_native.g_bm[2].u_bm",
+      "top": "ot_pdie_serdes_rx_bm_native",
+      "params": {
+        "BMTHC": 1
+      },
+      "native_clk_source": "rck_clk"
+    },
+    {
+      "instance": "g_native.u_rest",
+      "top": "ot_pdie_serdes_rx_bm3_residual",
+      "clock_ports": [
+        "clk",
+        "rck_clk"
+      ],
+      "outer_F1_included": true,
+      "macro_count": 2
+    }
+  ],
+  "closure_snapshot": "inputs/rtl",
+  "flags": [
+    "SYNTHESIS"
+  ],
+  "actual_SRAMPOR_scope": "preserved original source reset synchronizers and regional reset; no component-reset exception selected or new physical/reset qualification claimed",
+  "boundary": "native/R2 registered seams,0addededges; no additional global or native face shell",
+  "required_before_GEN": [
+    "parent geometry/native binding adoption",
+    "fresh reset/clock/pin metadata review",
+    "ordinary recipe closure and source adoption"
+  ],
+  "required_before_physical": [
+    "actual generated image+grid+clockcentres review",
+    "fresh mapped sizing and compilerLEC",
+    "parent physical authorization"
+  ]
+}

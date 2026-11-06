@@ -1,0 +1,271 @@
+{
+  "scope": "parent-approved test-only component booking; no production schedule/retirement claim",
+  "emission": {
+    "schema": "opentallas.s81.seqhost_native_boot_emission.v1",
+    "status": "ENCODED",
+    "words": 35,
+    "slots": 2,
+    "kit_issue": 797,
+    "return_latency": 804,
+    "launch": {
+      "reset_release_pin_edge": 20,
+      "ks_pin_edges": [
+        3351,
+        7447
+      ]
+    },
+    "launch_booked": true,
+    "pin_event_convention": "Primary edges: input pin valid after posedge -> output pin valid after posedge. Input sampling occurs next edge. Explicit sampling metrics are separate.",
+    "required_relative_KS_phase": 3,
+    "source_sha256": {
+      "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_hostb_seqhost_mux.sv": "a7c2353f0e23a595bc79b4179fe0089cbe9033c4c42be6c0b25dcf7669e62479",
+      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv": "fe83722aed98be5c319ebc7c2b63514b75016add0dfa7522e878c907f6bfee49",
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv": "758c0d32743231c626a0d8c774ca21d533757cbaf65cef84c003bf1c0001ef5c",
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv": "9fa7ee0971842e66d799cd1b0582ac35fa8fde1b1610ea28716779a58506999e",
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv": "6bdcd4970e2b7c2ee8e28ea4e10edc6a74d096ed80f6aa0a663751a6f96b23c4",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+      "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv": "5ef19b8bf58472be345bce5e2a6edda0f3bb2514acf1c39defbc9cd0d5524e11",
+      "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f",
+      "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "7a1ec9b22780ab7df4ad6144c2604ae9cf933f8ecdce75d1c7ac6d3ee7876a1e",
+      "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+      "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+      "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+      "rtl/hdc/ingest/ot_rom_host_ingest.sv": "62690ce62ff6db01c9fd353b3dca4945c4460ce542602c47c43ffffd47ec7549",
+      "rtl/link/ot_link_afifo.sv": "4f9c395577c94e477ef77a4cda39a752daa2e644f4a670b0b535bfbc1c51ea89",
+      "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "cc507efd4ca7ab486f9b9e34307551aee3d8b938a6819cfcf9950f0ff8b1bafa",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+      "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+      "rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv": "2cd64e07158be2fec85a0743a1c2ccbf76ed3ae5979bb5135ad3b3269daf4e8c",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e",
+      "rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv": "30c0f16a6c90807cc99b6e0e3eb11b5b722844ddbccc89bd6dea659cb7e95f11",
+      "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+      "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_source.sv": "792f588ad90d481cd70edbc91a0a18b486194d5e4e63e4d08f6d2840bc50d200",
+      "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv": "ab2345cfab6981548fc6fdd6b70ff21bd7d6c91005beb04f90fe2e024e1c1140",
+      "physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192.v": "009010fd17e05ffdd2ae7881ab02848d88e7519742ec6cfe575b0020846feaf5",
+      "physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192.v": "97fbea5a98db13faafd67a29d7f4d3feda57564a40108314ec3e1ccf51d6039a"
+    },
+    "params": {
+      "HOSTB_ENABLE": 0,
+      "STATIC_KS6": 0
+    },
+    "defines": [
+      "DSFD_PQ_STATIC_X2",
+      "S81CTRL_SRAM_FIFO",
+      "S81CTRL_SRAM_P192",
+      "S81CTRL_NATIVE32",
+      "OT_COLL_NATIVE32",
+      "OT_COLL_NATIVE32_OFF",
+      "OT_S81ENG_TAP_N32R2",
+      "OT_S81SL_KV_TRANSPORT",
+      "OT_SVC_ALLQ",
+      "SU_SMU_T",
+      "OT_ATTN_HCORE",
+      "OT_S81ENG_RR_N32",
+      "OT_S81C_HCORE_CTLA",
+      "OT_S81C_HCORE_RST_TIMED",
+      "S81_HOSTB_LAND_OBS",
+      "OT_S81_SH_SRAM",
+      "OT_S81_SH_RSZ",
+      "OT_S81_SH_P192",
+      "OT_S81_SH_APIPE9",
+      "OT_S81_SH_APIPE10"
+    ],
+    "obligations": [
+      "boot all words while actual tracker unarmed and no outstanding starts",
+      "caller books actual host-word transport and reset release pin event",
+      "caller supplies actual8window events and matching incoming descriptors"
+    ],
+    "full_token": false
+  },
+  "changes": [
+    {
+      "compiled_job": 1,
+      "V_payloads_and_issues_unchanged": 126,
+      "KIT_old": 118,
+      "KIT_new": 797,
+      "END_old": 138,
+      "END_new": 817,
+      "host_words": 548,
+      "MC_prefix_words": 35
+    },
+    {
+      "compiled_job": 2,
+      "V_payloads_and_issues_unchanged": 126,
+      "KIT_old": 797,
+      "KIT_new": 797,
+      "END_old": 817,
+      "END_new": 817,
+      "host_words": 513,
+      "MC_prefix_words": 0
+    }
+  ],
+  "QS_to_LEP_KS_measured_edges": "selected fixed source date; see fixed_source_booking; no phase-independent law",
+  "KS_labels_are_receiver_capture_edges": true,
+  "old_missing_MC_MW_failure": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-1106/result.json",
+  "global_adoption": false,
+  "layer_retirement_qualified": false,
+  "hardware_cycles_added": 0,
+  "prior_failed_booking": {
+    "schema": "opentallas.s81.seqhost_native_boot.v1",
+    "slot_gaps": [
+      4096,
+      4096
+    ],
+    "return_latency": 804,
+    "kit_issue": 797,
+    "events": [
+      {
+        "kind": 1,
+        "endpoint": 0,
+        "delay": 4,
+        "attributes": [
+          {
+            "ab": 0,
+            "land": 0
+          },
+          {
+            "ab": 0,
+            "land": 0
+          }
+        ]
+      },
+      {
+        "kind": 1,
+        "endpoint": 0,
+        "delay": 5,
+        "attributes": [
+          {
+            "ab": 0,
+            "land": 0
+          },
+          {
+            "ab": 0,
+            "land": 0
+          }
+        ]
+      },
+      {
+        "kind": 1,
+        "endpoint": 0,
+        "delay": 6,
+        "attributes": [
+          {
+            "ab": 0,
+            "land": 0
+          },
+          {
+            "ab": 0,
+            "land": 0
+          }
+        ]
+      },
+      {
+        "kind": 1,
+        "endpoint": 0,
+        "delay": 7,
+        "attributes": [
+          {
+            "ab": 0,
+            "land": 0
+          },
+          {
+            "ab": 0,
+            "land": 0
+          }
+        ]
+      },
+      {
+        "kind": 1,
+        "endpoint": 0,
+        "delay": 8,
+        "attributes": [
+          {
+            "ab": 0,
+            "land": 0
+          },
+          {
+            "ab": 0,
+            "land": 0
+          }
+        ]
+      },
+      {
+        "kind": 1,
+        "endpoint": 0,
+        "delay": 9,
+        "attributes": [
+          {
+            "ab": 0,
+            "land": 0
+          },
+          {
+            "ab": 0,
+            "land": 0
+          }
+        ]
+      },
+      {
+        "kind": 1,
+        "endpoint": 0,
+        "delay": 10,
+        "attributes": [
+          {
+            "ab": 0,
+            "land": 0
+          },
+          {
+            "ab": 0,
+            "land": 0
+          }
+        ]
+      },
+      {
+        "kind": 1,
+        "endpoint": 0,
+        "delay": 11,
+        "attributes": [
+          {
+            "ab": 0,
+            "land": 0
+          },
+          {
+            "ab": 0,
+            "land": 0
+          }
+        ]
+      }
+    ],
+    "launch": {
+      "reset_release_pin_edge": 20,
+      "ks_pin_edges": [
+        3351,
+        7447
+      ]
+    }
+  },
+  "fixed_source_booking": {
+    "diagnostic_only_source_probe_verdict": "NOT_A_PASS",
+    "first_capture_label": 7272,
+    "first_input_pin_event": 7271,
+    "source_queue_edge": 7152,
+    "source_launch_shift": 3920,
+    "source_lead_from_sealed": 3949,
+    "second_capture_label": 11368,
+    "second_source_queue_edge": 11248,
+    "second_start_gap": 4096,
+    "selected_age": 120,
+    "receiving_start_phase": 0,
+    "legal_input_pin_offset_from_reset20_mod4": 3,
+    "independent_prediction": "Parent message predicted queue7152\u2192capture7272/phase0 before unit527793 ran",
+    "observation": "epyc6 codex-ds-native-repeatprobe-1106/repeat_shift3920.log",
+    "observation_unit": "oth-ubuntu-527793-1793982961",
+    "source_policy": "original35 setup, source firstKS only waits for the measured four-IDLE group-phase window; no DUT/reset/clock/ready/calendar writes",
+    "whole_layer_retirement": false
+  },
+  "bootstrap_words": 35,
+  "extra_MC_replay_adopted": false,
+  "external_return": "actual t_kd through LEP and paired PMA type4/full54; reload waits remote return"
+}

@@ -1,0 +1,12 @@
+module qfd_dv_s8_crh_rp1 #(parameter integer MIF = 0) (
+    input  wire            ck,
+    input  wire            rst_n,
+    input  wire [7:0]      cr_re,
+    input  wire [8*24-1:0] cr_addr,
+    output reg  [8*32-1:0] q,
+    input  wire            tw_we,
+    input  wire [1:0]      tw_kind,
+    input  wire [23:0]     tw_addr,
+    input  wire [511:0]    tw_d,          
+    output reg             fault
+);
