@@ -4,7 +4,7 @@ The recovered pinned 11-01 S81 native diagnostic measured 833000 fs, then aborte
 
 The station writer takes `rs_k=lpc_i0_q[0]`, while its reader takes `rs_n=rst_n`. Writer `rq` rises at cycle37, reader `rq` at43. Thus the writer counter is six edges ahead when the reader starts. D4/K2 with independently zeroed counters selects the wrong slot as well as checking the wrong epoch. Changing K or suppressing the check does not repair the transport.
 
-`ot_pl_land_local_r.EPOCH_BIAS` describes this static counter-origin difference modulo2D. It defaults to0; the old reader is kept as a frozen lockstep reference in the bench. The bias rotates the initial onehot pointer and translates the expected epoch. Local `rc` and `warm` still measure reader age. There are zero added data/pin cycles; K2 still captures a word two edges after its writer capture, visible to the downstream consumer on its third edge.
+`ot_pl_land_local_r.EPOCH_BIAS` is the writer counter age at the reader origin: `(reader_reset_release_edge - writer_reset_release_edge) mod (2*D)`. Thus a writer released six edges earlier has bias+6, not-6. Both release edges must refer to the matching ring-counter reset stages. It defaults to0; the old reader is kept as a frozen lockstep reference in the bench. The bias rotates the initial onehot pointer and translates the expected epoch. Local `rc` and `warm` still measure reader age. There are zero added data/pin cycles; K2 still captures a word two edges after its writer capture, visible to the downstream consumer on its third edge.
 
 Allowed contracts: D is a power of two >=2, AW matches D, 1<=K<D, 0<=EPOCH_BIAS<2D. D4 therefore permits0..7, D8 permits0..15. Bias is a bind-time constant, not dynamically inferred from data.
 

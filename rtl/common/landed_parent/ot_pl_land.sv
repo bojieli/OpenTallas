@@ -198,8 +198,9 @@ endmodule
 module ot_pl_land_local_r #(
     parameter integer W = 24, D = 4, K = 2,
     parameter integer AW = (D <= 2) ? 1 : $clog2(D),
-    // Writer epoch origin minus reader origin, modulo 2*D. The bind must
-    // derive this from both reset release ages. It changes no data latency.
+    // Writer counter age at reader origin, modulo 2*D:
+    // (reader_reset_release_edge - writer_reset_release_edge) mod (2*D).
+    // The bind derives both release ages; this changes no data latency.
     parameter integer EPOCH_BIAS = 0
 ) (
     input wire ck, rsi,
