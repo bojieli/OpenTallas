@@ -1,0 +1,236 @@
+{
+ "event": "part42",
+ "module": "ot_hbm_su_pg_lane_full_x_core",
+ "partner": "ot_hbm_su_pg_sfu_s_core",
+ "outline": [
+  [
+   319.68,
+   207.36
+  ],
+  [
+   354.24,
+   207.36
+  ]
+ ],
+ "shift_um": 34.56,
+ "instances": [
+  {
+   "type": "q_su00",
+   "l": "u_su_Q0_lane_exp0__l",
+   "s": "u_su_Q0_lane_exp0__s",
+   "orient": "R0",
+   "l_origin": [
+    8.64,
+    915.84
+   ],
+   "s_origin": [
+    [
+     328.32,
+     915.84
+    ],
+    [
+     362.88,
+     915.84
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "l": "u_su_Q1_lane_exp0__l",
+   "s": "u_su_Q1_lane_exp0__s",
+   "orient": "MX",
+   "l_origin": [
+    518.4,
+    527.04
+   ],
+   "s_origin": [
+    [
+     838.08,
+     527.04
+    ],
+    [
+     872.64,
+     527.04
+    ]
+   ]
+  },
+  {
+   "type": "q_su00__physical_v1",
+   "l": "u_su_Q0_lane_exp0__l",
+   "s": "u_su_Q0_lane_exp0__s",
+   "orient": "R0",
+   "l_origin": [
+    8.64,
+    915.84
+   ],
+   "s_origin": [
+    [
+     328.32,
+     915.84
+    ],
+    [
+     362.88,
+     915.84
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "l": "u_su_Q1_lane_exp0__l",
+   "s": "u_su_Q1_lane_exp0__s",
+   "orient": "MX",
+   "l_origin": [
+    518.4,
+    527.04
+   ],
+   "s_origin": [
+    [
+     838.08,
+     527.04
+    ],
+    [
+     872.64,
+     527.04
+    ]
+   ]
+  }
+ ],
+ "taps": [
+  {
+   "type": "q_su00",
+   "tap": "u_su_Q0_lane_exp0__s",
+   "x": [
+    388.8,
+    423.36
+   ]
+  },
+  {
+   "type": "q_su10",
+   "tap": "u_su_Q1_lane_exp0__s",
+   "x": [
+    898.56,
+    933.12
+   ]
+  },
+  {
+   "type": "q_su00__physical_v1",
+   "tap": "u_su_Q0_lane_exp0__s",
+   "x": [
+    388.8,
+    423.36
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "tap": "u_su_Q1_lane_exp0__s",
+   "x": [
+    898.56,
+    933.12
+   ]
+  }
+ ],
+ "istations": [
+  {
+   "type": "q_su00",
+   "k": 44,
+   "conn": "bus:L102_i",
+   "moved": 1,
+   "max_hop_um": 369.3,
+   "max_slide_um": 40.0
+  },
+  {
+   "type": "q_su00__physical_v1",
+   "k": 44,
+   "conn": "bus:L102_i",
+   "moved": 1,
+   "max_hop_um": 369.3,
+   "max_slide_um": 40.0
+  },
+  {
+   "type": "q_su10",
+   "k": 3,
+   "conn": "bus:L111_i",
+   "moved": 1,
+   "max_hop_um": 209.8,
+   "max_slide_um": 144.0
+  },
+  {
+   "type": "q_su10",
+   "k": 4,
+   "conn": "bus:L1_i",
+   "moved": 1,
+   "max_hop_um": 357.7,
+   "max_slide_um": 16.0
+  },
+  {
+   "type": "q_su10",
+   "k": 5,
+   "conn": "bus:L25_o",
+   "moved": 1,
+   "max_hop_um": 357.7,
+   "max_slide_um": 16.0
+  },
+  {
+   "type": "q_su10",
+   "k": 10,
+   "conn": "bus:L1_i",
+   "moved": 1,
+   "max_hop_um": 333.7,
+   "max_slide_um": 76.0
+  },
+  {
+   "type": "q_su10",
+   "k": 11,
+   "conn": "bus:L25_o",
+   "moved": 1,
+   "max_hop_um": 333.7,
+   "max_slide_um": 76.0
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "k": 3,
+   "conn": "bus:L111_i",
+   "moved": 1,
+   "max_hop_um": 209.8,
+   "max_slide_um": 144.0
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "k": 4,
+   "conn": "bus:L1_i",
+   "moved": 1,
+   "max_hop_um": 357.7,
+   "max_slide_um": 16.0
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "k": 5,
+   "conn": "bus:L25_o",
+   "moved": 1,
+   "max_hop_um": 357.7,
+   "max_slide_um": 16.0
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "k": 10,
+   "conn": "bus:L1_i",
+   "moved": 1,
+   "max_hop_um": 333.7,
+   "max_slide_um": 76.0
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "k": 11,
+   "conn": "bus:L25_o",
+   "moved": 1,
+   "max_hop_um": 333.7,
+   "max_slide_um": 76.0
+  }
+ ],
+ "pins": {
+  "from_": "cores/ot_hbm_su_pg_lane_full_x_core__319.68x207.36__d44v_split__oneclk.json",
+  "to": "cores/ot_hbm_su_pg_lane_full_x_core__354.24x207.36__d44v_p42.json",
+  "n": 2151,
+  "moved": 0
+ }
+}
