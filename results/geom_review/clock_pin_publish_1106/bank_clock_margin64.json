@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.clock_pin_publish.v1",
+  "input_db": "/out/bank_source.odb",
+  "output_db": "/out/bank_clock_margin64.odb",
+  "pin": "clk",
+  "net": "clk",
+  "layer": "M6",
+  "original_pin_shapes": [
+    [
+      "M5",
+      [
+        125280,
+        133680,
+        125328,
+        134160
+      ]
+    ]
+  ],
+  "access_margin_um": 0.064,
+  "preserves_port_grouping": true,
+  "added_pin_rectangles": [
+    [
+      125216,
+      133712,
+      125320,
+      133744
+    ],
+    [
+      125288,
+      133712,
+      125392,
+      133744
+    ]
+  ],
+  "connected_loads": 2,
+  "actual_clock_geometry_sha256": "ca61d0fb9c7bd6a9b967923ee23b3c73e1cc53d6ee67961c21607fbd642ce247",
+  "existing_wires_unchanged": true,
+  "added_signal_cycles": 0,
+  "parent_access_qualified": false,
+  "qualification": "requires actual abstract export, parent PA/DRC and clock timing"
+}

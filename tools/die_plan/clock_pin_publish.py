@@ -4,12 +4,13 @@
 OpenROAD Python only. No wires, vias, cells or original pin shapes are changed.
 The requested layer must already contain routed clock metal connected through
 native via enclosures to the original input pin AND every actual clock load.
-Publication stays within the original pin's XY footprint. Parent pin access,
+Publication defaults to the original pin's XY footprint; an explicit access\nmargin can expose more EXISTING metal around that fixed anchor. Parent pin access,
 abstract export, clock timing and normal qualification remain required.
 """
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 
 
@@ -87,8 +88,8 @@ def wire_geometry(net):
     return nodes, bonds, records, segments
 
 
-def candidates(nodes, bonds, segments, original, loads, layer, min_width):
-    """Only real wire inside the original pin footprint, not a bounding-box guess."""
+def candidates(nodes, bonds, segments, original, loads, layer, min_width, margin=0, anchors=None):
+    """Only real wire inside the explicit access window, not a bounding-box guess."""
     nodes = list(nodes)
     source_ids = []
     for shape in original:
@@ -111,8 +112,9 @@ def candidates(nodes, bonds, segments, original, loads, layer, min_width):
         lay, box = nodes[i]
         if lay != layer or roots[i] not in connected:
             continue
-        for _, port in original:
-            cut = intersection(box, port)
+        for _, port in (original if anchors is None else anchors):
+            window = (port[0]-margin, port[1]-margin, port[2]+margin, port[3]+margin)
+            cut = intersection(box, window)
             if cut and min(cut[2]-cut[0], cut[3]-cut[1]) >= min_width:
                 output.add(cut)
     if not output:
@@ -124,8 +126,10 @@ def digest(value):
     return hashlib.sha256(json.dumps(value, separators=(",", ":")).encode()).hexdigest()
 
 
-def publish(input_db, output_db, pin_name, layer_name, report=None):
+def publish(input_db, output_db, pin_name, layer_name, report=None, access_margin_um=0.0):
     import odb
+    if isinstance(access_margin_um, bool) or not math.isfinite(access_margin_um) or access_margin_um < 0:
+        raise ValueError("access margin must be a finite nonnegative distance")
     source, output = Path(input_db), Path(output_db)
     if source.resolve() == output.resolve() or output.exists():
         raise ValueError("output must be a fresh private database")
@@ -147,21 +151,31 @@ def publish(input_db, output_db, pin_name, layer_name, report=None):
         terms = list(net.getITerms())
         if not terms or any(str(term.getIoType()) != "INPUT" for term in terms):
             raise ValueError("root clock must have real input loads and no internal driver")
+        source_ports = list(pin.getBPins())
         original = [(box.getTechLayer().getName(), rect(box))
-                    for p in pin.getBPins() for box in p.getBoxes()]
+                    for p in source_ports for box in p.getBoxes()]
         if not original:
             raise ValueError("clock input has no original pin metal")
         nodes, bonds, records, segments = wire_geometry(net)
         loads = [[(l.getName(), rect(box)) for l, box in t.getGeometries()] for t in terms]
-        chosen = candidates(nodes, bonds, segments, original, loads, layer_name, layer.getWidth())
+        anchors = [(name, box) for name, box in original
+                   if db.getTech().findLayer(name).getRoutingLevel() < layer.getRoutingLevel()]
+        if access_margin_um and not anchors:
+            raise ValueError("margin publication needs an unchanged lower-layer pin anchor")
+        # Never expand a previous target-layer publication on reimport.
+        anchors = anchors or original
+        margin = round(access_margin_um * block.getDbUnitsPerMicron())
+        chosen = candidates(nodes, bonds, segments, original, loads, layer_name,
+                            layer.getWidth(), margin, anchors)
         existing = {box for lay, box in original if lay == layer_name}
         missing = [box for box in chosen if not any(
             old[0] <= box[0] and old[1] <= box[1] and old[2] >= box[2] and old[3] >= box[3]
             for old in existing)]
         counts = (len(list(block.getInsts())), len(list(block.getNets())))
         if missing:
-            published = odb.dbBPin_create(pin)
-            published.setPlacementStatus("FIRM")
+            if len(source_ports) != 1:
+                raise ValueError("requires one existing physical PORT to preserve port grouping")
+            published = source_ports[0]
             for box in missing:
                 odb.dbBox_create(published, layer, *box)
         after = wire_geometry(net)[2]
@@ -174,6 +188,7 @@ def publish(input_db, output_db, pin_name, layer_name, report=None):
         result = dict(schema="opentallas.clock_pin_publish.v1", input_db=str(source),
                       output_db=str(output), pin=pin_name, net=net.getName(),
                       layer=layer_name, original_pin_shapes=original,
+                      access_margin_um=access_margin_um, preserves_port_grouping=True,
                       added_pin_rectangles=missing, connected_loads=len(terms),
                       actual_clock_geometry_sha256=digest(records), existing_wires_unchanged=True,
                       added_signal_cycles=0, parent_access_qualified=False,
@@ -193,8 +208,10 @@ def main():
     parser.add_argument("--pin", required=True)
     parser.add_argument("--layer", required=True)
     parser.add_argument("--report")
+    parser.add_argument("--access-margin-um", type=float, default=0.0,
+                        help="explicit window around unchanged lower-layer pin; actual wire only")
     args = parser.parse_args()
-    print(json.dumps(publish(args.input_db, args.output_db, args.pin, args.layer, args.report)))
+    print(json.dumps(publish(args.input_db, args.output_db, args.pin, args.layer, args.report, args.access_margin_um)))
 
 
 if __name__ == "__main__":
