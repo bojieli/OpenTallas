@@ -1,0 +1,16 @@
+export DESIGN_NICKNAME = hbc_ot_pdie_serdes_tx_ff_size
+export DESIGN_NAME = ot_pdie_serdes_tx
+export PLATFORM = asap7
+export VERILOG_FILES = /work/rtl/ot_hbm_face_reg.sv /work/rtl/ot_s81_kp4_enc_la.sv /work/rtl/ot_pdie_serdes_tx__fshell.sv /work/rtl/ot_s81_kp4_bm.sv /work/rtl/ot_s81_kp4_ddly.sv /work/rtl/ot_s81_kp4_dec.sv /work/rtl/ot_s81_kp4_dsyn.sv /work/rtl/ot_s81_kp4_common.sv /work/rtl/ot_pdie_serdes.sv /work/rtl/ot_s81_kp4_dchn.sv /work/rtl/ot_s81_kp4_enc.sv /work/rtl/ot_pdie_serdes_split.sv /work/rtl/ot_s81_kp4_dout.sv
+export VERILOG_INCLUDE_DIRS = /work/rtl
+export VERILOG_DEFINES = -DSYNTHESIS
+export SDC_FILE = /work/constraint.sdc
+export DIE_AREA = 0 0 285.12 207.36
+export CORE_AREA = 4.32 4.32 280.8 203.04
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_REPEATABLE_BUILD = 1
+export LEC_CHECK = 0
+export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl
+export CORNERS = tc
+export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)
+override export LIB_FILES = $(TC_LIB_FILES)
