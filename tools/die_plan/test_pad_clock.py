@@ -231,7 +231,10 @@ def test_native_pad_data_keeps_budget_and_uses_recovered_clock():
     text = GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
     ctx = SL.kit_context(p, 'mid')
     assert not SL.lint(text, **ctx)
-    assert 'remove_from_collection $non_clk_in $pad_native_inputs' in text
+    assert 'lsearch -exact $pad_native_inputs $pad_input' in text
+    assert 'remove_from_collection' not in text
+    broken_filter = text.replace('lsearch -exact $pad_native_inputs $pad_input', 'lsearch -exact $non_clk_in $pad_input')
+    assert SL.lint(broken_filter, **ctx)
     assert 'set_input_delay -max 166.6000 -clock pma_rck [get_ports {pma_rx[*]}]' in text
     wrong = text.replace('-clock pma_rck [get_ports {pma_rx[*]}]', '-clock vclk [get_ports {pma_rx[*]}]')
     assert any('actual pma_rck' in e for e in SL.lint(wrong, **ctx))

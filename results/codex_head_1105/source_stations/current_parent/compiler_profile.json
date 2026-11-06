@@ -1,0 +1,34 @@
+{
+ "defines": [
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF"
+ ],
+ "by_type": {
+  "hd_mesh": [
+   "OT_COLL_NATIVE32",
+   "OT_COLL_NATIVE32_OFF"
+  ],
+  "hd_lep0N": [
+   "OT_COLL_NATIVE32",
+   "OT_COLL_NATIVE32_OFF"
+  ],
+  "hd_ctl": [
+   "OT_COLL_NATIVE32",
+   "OT_COLL_NATIVE32_OFF"
+  ],
+  "hd_host": [
+   "OT_COLL_NATIVE32",
+   "OT_COLL_NATIVE32_OFF"
+  ]
+ },
+ "note": "Source.f carries filenames only; actual native and physical compiles require this exact selected plan preprocessor profile.",
+ "include_files": {
+  "ot_s81_gf1024.svh": "/srv/opentallas-scratch2/claude/codex-head-1105/wt/rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+  "ot_s81_kp4_enc_mat.svh": "/srv/opentallas-scratch2/claude/codex-head-1105/wt/rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+  "ot_s81_kp4_syn_mat.svh": "/srv/opentallas-scratch2/claude/codex-head-1105/wt/rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
+ },
+ "include_dirs": [
+  "/srv/opentallas-scratch2/claude/codex-head-1105/wt/rtl/dsrom_sys/s81_link"
+ ],
+ "source_cohort": "codex_stations_boot_1106"
+}

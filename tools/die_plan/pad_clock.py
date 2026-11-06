@@ -136,7 +136,10 @@ def sdc(P, tn, text):
             raise ValueError(f'{tn}: native pad data needs the explicit generic input collection')
         text = text.replace(marker, marker +
             f'set pad_native_inputs [get_ports {{{selectors}}}]\n' +
-            'set pad_seam_inputs [remove_from_collection $non_clk_in $pad_native_inputs]\n')
+            'set pad_seam_inputs {}\n' +
+            'foreach pad_input $non_clk_in {\n' +
+            '  if {[lsearch -exact $pad_native_inputs $pad_input] < 0} {lappend pad_seam_inputs $pad_input}\n' +
+            '}\n')
         text = '\n'.join(line.replace('$non_clk_in', '$pad_seam_inputs')
                          if line.startswith('set_input_delay ') else line
                          for line in text.splitlines()) + '\n'
