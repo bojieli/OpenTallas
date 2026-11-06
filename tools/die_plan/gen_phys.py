@@ -3869,9 +3869,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if forest:
         shutil.copyfile(Path(__file__).with_name("forest_recluster.tcl"), kd / "forest_recluster.tcl")
     # KV-G3 10-24: FIRM plan internal stations / plan-cell sites of a bound kit (kit_istations.py next to its RTL)
-    ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
+    ist = []
+    if t.get('realize_internal_stations'):
+        ist = [Path(f).parent / (t['module'] + '.istations.tcl') for f in rtl_files[:1]
+               if (Path(f).parent / (t['module'] + '.istations.tcl')).is_file()]
+        if not ist:
+            raise ValueError(f'{tn}: realized source lacks its exact station placement sidecar')
+    if not ist:
+        ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
+        if t.get('realize_internal_stations'):
+            # The exported exact kit RTL is later rebound from rtl/. Preserve
+            # its per-module placement sidecar across that export boundary.
+            shutil.copyfile(ist[0], kd / 'rtl' / (t['module'] + '.istations.tcl'))
     elif t.get("relay_sites"):
         # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
         import kit_istations

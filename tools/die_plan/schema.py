@@ -1137,6 +1137,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "cdc": {"enum": ["synchronized"]}, "cdc_evidence": _name,
                 "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                     "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
+# Opt-in: realize the already priced internal stations in logical and physical source alike.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # Explicit source-synchronous data pads retain declared budgets on their actual PHY clock.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_inputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
