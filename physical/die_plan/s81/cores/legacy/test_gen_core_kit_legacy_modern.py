@@ -59,7 +59,9 @@ def test_modern_vs_legacy_kit(tmp_path):
     rtt = (mod / "regional_taps.tcl").read_text()
     assert "rename clock_tree_synthesis ot_rt_cts_firm_orig" in rtt and "setPlacementStatus FIRM; lappend held" in rtt
     assert rtt.index("ot_rt_cts_firm_orig") > rtt.index("OT_RT_PROTECT: planned spine protected")
-    assert "post_grt_drv.tcl" in (mod / "grt_post_core.tcl").read_text()
+    # KW-FIX-17 11-05: post_grt_drv.tcl written but not chained by default (DIE-QC-80 stall class)
+    assert "post_grt_drv.tcl" not in (mod / "grt_post_core.tcl").read_text() and (mod / "post_grt_drv.tcl").is_file()
+    assert "source /work/grt_post.tcl" in (mod / "grt_post_core.tcl").read_text()
     subprocess.run(["bash", "-n", str(mod / "run_kit.sh")], check=True)
     # modern without regional taps: tap balance stays, CTS repair is setup-only (hold only in the FF frame)
     m2 = _gen(tmp_path / "m2")
