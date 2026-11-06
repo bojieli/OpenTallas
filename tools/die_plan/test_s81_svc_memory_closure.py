@@ -72,6 +72,33 @@ def test_idx_fit_renames_svc_lo_reader_and_sizes_masters():
         idx.fit_source(src.read_text().replace("lw_h1[u] <= !sc && bt[0];", "lw_h1[u] <= !sc;"))
 
 
+def test_idx_fit_chain_end_nq_reader():
+    """DIE-S81-66 11-05: svc_lo t7 binds the chain-end reader dsdv_idx_rg3_nq (wrapper, u_rg3 = nq_native)."""
+    import s81_svc_idx_fit as idx
+    pf = c.ROOT / "physical/die_plan/s81/bind/source_modules/portfix178"
+    files = ["/x/rtl/dsdv_idx_rg2.sv", str(pf / "dsdv_idx_rg3_nq.sv"), str(pf / "dsdv_idx_rg3_nq_native.sv")]
+    line = ("    dsdv_idx_rg3_nq #(.DQR(24), .EL(124), .IH(0), .IQD(512), .KR(0), .LFD(256), .MUT(0), .SQD(256), "
+            ".SRAM_MACRO(1'b1)) u_u_irg_07 (\n")
+    s2, kids, macros, rep = c.idx_fit("module b;\n" + line + "    );\nendmodule\n", files)
+    assert s2.count("dsdv_idx_rg3_nq_fit #(") == 1 and "dsdv_idx_rg3_nq #(" not in s2
+    assert rep["renamed"] == 1 and rep["kind"] == "nq" and sorted(rep["dropped"]) == sorted(files[1:])
+    assert set(kids) == {"dsdv_idx_fit_mem.sv", "dsdv_idx_rg3_nq_fit.sv", "dsdv_idx_rg3_nq_native_fit.sv"}
+    assert c.idx_fit(s2, files)[0] == s2                      # idempotent
+    w, fit = kids["dsdv_idx_rg3_nq_fit.sv"], kids["dsdv_idx_rg3_nq_native_fit.sv"]
+    assert "module dsdv_idx_rg3_nq_fit #(" in w and "dsdv_idx_rg3_nq_native_fit #(" in w and ") u_rg3 (" in w
+    assert "module dsdv_idx_rg3_nq_native_fit #(" in fit and "infk2_left" in fit and "dsdv_idx_rg2_m1k #(" not in fit
+    ref = idx.fit_source((pf / "dsdv_idx_rg3.sv").read_text())
+    mems = lambda t: sorted(ln.strip() for ln in t.splitlines() if "dsdv_idx_fit_mem #(" in ln)
+    assert len(mems(fit)) == 6 and mems(fit) == mems(ref)     # the same 13 memory swaps as the proven rg3 fit
+    assert sum(macros.values()) == 13
+    with pytest.raises(ValueError, match="not a proven source"):
+        idx.fit_source((pf / "dsdv_idx_rg3_nq_native.sv").read_text() + "\n", nq=True)
+    with pytest.raises(ValueError, match="not a proven source"):
+        idx.fit_source((pf / "dsdv_idx_rg3.sv").read_text(), nq=True)
+    with pytest.raises(ValueError, match="instances"):
+        c.idx_fit("module b;\n" + line + line.replace("u_u_irg_07", "u_u_irg_08") + "endmodule\n", files)
+
+
 def test_rebase_source_renames_tokens_and_refuses_unknown():
     rm = dict(hash={'a' * 20: 'b' * 20}, att={'719': '720', '558': '559'}, eng={'111': '112'}, procmux={'69496': '69497'})
     src = "P+'719_Y[0]' E+'111_Y' 'src_%s_Y' procmux_69496 ['558'] 0_Y" % ('a' * 20)
