@@ -4,7 +4,7 @@
 // Issue authority is compiled START dates; physical codecs are in ot_s81hd_ctl_core.
 // The current spine root already merges north/south; feeding both comparison inputs the same
 // root record preserves that record exactly and retains the established two-edge pick latency.
-module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0) (
+module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0) (
     input wire start_i, input wire adapter_fault,
     output wire job_active_o,
     input  wire              ck,
@@ -75,6 +75,25 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
             mod3 = (s3 >= 3'd3) ? 2'(s3 - 3'd3) : s3[1:0];
         end
     endfunction
+    // the same residue as mod3, as a digit tree (DIE-HEAD-63, ING_STAGE): 4 levels, no carry chain
+    function [1:0] m3d(input [1:0] a, input [1:0] b);      // a, b in 0..2 -> (a + b) mod 3
+        m3d = (a == 2'd0) ? b : (b == 2'd0) ? a : (a == b) ? ((a == 2'd1) ? 2'd2 : 2'd1) : 2'd0;
+    endfunction
+    function [1:0] m3n(input [1:0] d);                     // digit 0..3 -> residue
+        m3n = (d == 2'd3) ? 2'd0 : d;
+    endfunction
+    function [1:0] mod3t(input [20:0] x);
+        reg [1:0] a, b, c, d, e, f, g, h;
+        begin
+            a = m3d(m3n(x[1:0]), m3n(x[3:2]));
+            b = m3d(m3n(x[5:4]), m3n(x[7:6]));
+            c = m3d(m3n(x[9:8]), m3n(x[11:10]));
+            d = m3d(m3n(x[13:12]), m3n(x[15:14]));
+            e = m3d(m3n(x[17:16]), m3n(x[19:18]));
+            f = m3d(a, b); g = m3d(c, d); h = m3d(e, {1'b0, x[20]});
+            mod3t = m3d(m3d(f, g), h);
+        end
+    endfunction
     function automatic isnan(input [31:0] x);
         isnan = (x[30:23] == 8'hFF) && (x[22:0] != 23'd0);
     endfunction
@@ -90,21 +109,39 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     // effective tag {v, user, pos}: an untagged beat (single-user mode) takes {user 0, pos upos}
     reg [31:0] p1_tag;
     always @(*) begin
-        p1_tag[31] = rt_q[31];
-        for (i = 0; i < 21; i = i + 1) p1_tag[i] = rtv_c[i / 11] ? rt_q[i] : upos[i];
-        p1_tag[30:21] = rt_q[30:21] & {10{rtv_c[2]}};
+        p1_tag[31] = rt_p1[31];
+        for (i = 0; i < 21; i = i + 1) p1_tag[i] = rtv_p1[i / 11] ? rt_p1[i] : upos[i];
+        p1_tag[30:21] = rt_p1[30:21] & {10{rtv_p1[2]}};
     end
     always @(posedge ck or negedge rr[0]) if (!rr[0]) ri_v <= 1'b0; else ri_v <= ri[0];
-    wire       p1_xb  = ri_v && ri_q[3:1] == K_XB;
+    // ING_STAGE = 1 (DIE-HEAD-63): the pin flops above stay at the face; one more stage carries the beat and its tag, and
+    // the group ownership is computed into that stage from the pin-flop tag (P1 is one cycle later at the ri / mu_rt pins).
+    wire [1103:1] ri_p1; wire ri_v_p1; wire [31:0] rt_p1; wire [2:0] rtv_p1; wire own_p1;
+    generate if (ING_STAGE != 0) begin : g_ing
+        reg [1103:1] ri_q1; reg ri_v1; reg [31:0] rt_q1; reg own_q1;
+        always @(posedge ck) begin
+            ri_q1 <= ri_q; rt_q1 <= rt_q;
+            own_q1 <= !rt_q[31] || c_ngrp <= 2'd1 || (c_ngrp == 2'd2 ? (rt_q[0] == c_grp[0]) : (mod3t(rt_q[20:0]) == c_grp));
+        end
+        always @(posedge ck or negedge rr[0]) if (!rr[0]) ri_v1 <= 1'b0; else ri_v1 <= ri_v;
+        ot_s81hd_kf u_rtv1_0 (.ck(ck), .d(rt_q[31]), .q(rtv_p1[0]));
+        ot_s81hd_kf u_rtv1_1 (.ck(ck), .d(rt_q[31]), .q(rtv_p1[1]));
+        ot_s81hd_kf u_rtv1_2 (.ck(ck), .d(rt_q[31]), .q(rtv_p1[2]));
+        assign ri_p1 = ri_q1; assign ri_v_p1 = ri_v1; assign rt_p1 = rt_q1; assign own_p1 = own_q1;
+    end else begin : g_noing
+        assign ri_p1 = ri_q; assign ri_v_p1 = ri_v; assign rt_p1 = rt_q; assign rtv_p1 = rtv_c;
+        assign own_p1 = !rt_q[31] || c_ngrp <= 2'd1 || (c_ngrp == 2'd2 ? (rt_q[0] == c_grp[0]) : (mod3(rt_q[20:0]) == c_grp));
+    end endgenerate
+    wire       p1_xb  = ri_v_p1 && ri_p1[3:1] == K_XB;
     // Existing rstop_xo HEAD producer uses bit20 as egress flag;
     // its seven-bit global index remains0..79 in bits19:13.
-    wire [7:0] p1_gx  = {1'b0,ri_q[19:13]};
-    wire       p1_tv  = rt_q[31];
-    wire       p1_own = !p1_tv || c_ngrp <= 2'd1 || (c_ngrp == 2'd2 ? (rt_q[0] == c_grp[0]) : (mod3(rt_q[20:0]) == c_grp));
+    wire [7:0] p1_gx  = {1'b0,ri_p1[19:13]};
+    wire       p1_tv  = rt_p1[31];
+    wire       p1_own = own_p1;
     reg [6:0]  fcnt;                                                   // forwarded XB beats of the open message
     wire       p1_xw  = p1_xb && p1_own;                               // x store write
-    wire p1_dft=ri_v && ri_q[3:1]==3'd7 && (ri_q[16:13]==4'd4 || ri_q[16:13]==4'd5);
-    wire       p1_fw  = ri_v && !p1_xw && !p1_dft;                                // forward
+    wire p1_dft=ri_v_p1 && ri_p1[3:1]==3'd7 && (ri_p1[16:13]==4'd4 || ri_p1[16:13]==4'd5);
+    wire       p1_fw  = ri_v_p1 && !p1_xw && !p1_dft;                                // forward
     wire       p1_op  = p1_xb && !p1_own && p1_tv && fcnt == 7'd0;     // first forwarded beat of a tagged message
     // P2..P5 forward pipeline (unconditional data), P2 write port
     reg wv2, f2v, f3v, f4v, f5v, x2, x3, x4, x5, o2, o3;
@@ -112,8 +149,8 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     reg [1103:0] f2d, f3d, f4d, f5d;
     reg [33:1] muc_d; reg muc_v;
     always @(posedge ck) begin
-        wa2 <= p1_gx[6:0]; wd2 <= ri_q[1044:21]; t2 <= p1_tag;
-        f2d <= {ri_q, ri_v}; f3d <= f2d; f4d <= f3d; f5d <= f4d;
+        wa2 <= p1_gx[6:0]; wd2 <= ri_p1[1044:21]; t2 <= p1_tag;
+        f2d <= {ri_p1, ri_v_p1}; f3d <= f2d; f4d <= f3d; f5d <= f4d;
     end
     always @(posedge ck or negedge rr[0])
         if (!rr[0]) begin wv2 <= 1'b0; f2v <= 1'b0; f3v <= 1'b0; f4v <= 1'b0; f5v <= 1'b0;
@@ -407,10 +444,17 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     // CSR 8 run = 1 after writing plen / glen (run = 0 resets it again for the next request)
     reg seq_rn;
     always @(posedge ck or negedge rr[9]) if (!rr[9]) seq_rn <= 1'b0; else seq_rn <= c_run;
-    dsfd_mtp_seq u_seq (.ck(ck), .rst(seq_rn), .f_cfg({c_glen, c_plen}),
+    generate if (SEQ_FAN != 0) begin : g_seqf
+    dsfd_mtp_seq_fan u_seq (.ck(ck), .rst(seq_rn), .f_cfg({c_glen, c_plen}),
         .f_rv(f_rv), .f_rd(f_rd), .t_rg(t_rg), .t_tv(t_tv), .t_td(t_td), .f_tg(f_tg),
         .t_sv(t_sv), .t_sd(t_sd), .f_sg(f_sg), .f_wv(f_wv), .f_wd(f_wd), .t_wg(t_wg),
         .t_hv(t_hv), .t_hd(t_hd), .f_hg(f_hg), .f_qv(f_qv), .f_qd(f_qd), .t_qg(t_qg), .t_acc(t_acc));
+    end else begin : g_seqb
+    dsfd_mtp_seq #(.WB_STAGE(SEQ_WB)) u_seq (.ck(ck), .rst(seq_rn), .f_cfg({c_glen, c_plen}),
+        .f_rv(f_rv), .f_rd(f_rd), .t_rg(t_rg), .t_tv(t_tv), .t_td(t_td), .f_tg(f_tg),
+        .t_sv(t_sv), .t_sd(t_sd), .f_sg(f_sg), .f_wv(f_wv), .f_wd(f_wd), .t_wg(t_wg),
+        .t_hv(t_hv), .t_hd(t_hd), .f_hg(f_hg), .f_qv(f_qv), .f_qd(f_qd), .t_qg(t_qg), .t_acc(t_acc));
+    end endgenerate
     // grant receivers (one grant in flight, one holding register; grant only while the holding register is empty)
     wire tk_hv, sd_hv, hs_hv; wire tk_pop, sd_pop, hs_pop;
     wire [511:0] tk_q; wire [SW-1:0] sd_q; wire [DW-1:0] hs_q;
