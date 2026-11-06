@@ -46,6 +46,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import subprocess
 import re
 import sys
 from collections import defaultdict
