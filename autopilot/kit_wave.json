@@ -190,7 +190,9 @@
     "kv3_pc__cl5a95b461@2",
     "kv3_pc_v3@2",
     "kv3_pc_v1__cl23f6a148@5",
-    "kv3_pc_v1__cl7f648944@5"
+    "kv3_pc_v1__cl7f648944@5",
+    "kv3_hub_C@3",
+    "kv3_hroot@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -236,9 +238,7 @@
     "critical": true
    },
    "hold_items": {
-    "kv3_hub_C": "Known actual GEN_LINT OOM at8GB and measured16GB (rc137,16,726,636KiB); typed AHUB/CTL hard-child closure required, no blind memory escalation or same-flat-source retry.",
     "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post",
-    "kv3_hroot": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
     "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
     "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry"
@@ -415,7 +415,9 @@
     "kv3_pc__cl5a95b461@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
     "kv3_pc_v3@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
     "kv3_pc_v1__cl23f6a148@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
-    "kv3_pc_v1__cl7f648944@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11."
+    "kv3_pc_v1__cl7f648944@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_hub_C@3": "CODEX KV ownership recovery: hubC actual2SIGNEDviewoverlay+routedchildlibs PASS, kitRTL36files unbound0, noflatten; old16GBflatOOMobsolete. hrootcurrentplanpictureVIEWEDPASSCOND nativebusmaxhop358.01 nohardmacros (codex_hroot_1106review). Onecurrenttyped/boundedvehicle; parenttimingstillowed.",
+    "kv3_hroot@4": "CODEX KV ownership recovery: hubC actual2SIGNEDviewoverlay+routedchildlibs PASS, kitRTL36files unbound0, noflatten; old16GBflatOOMobsolete. hrootcurrentplanpictureVIEWEDPASSCOND nativebusmaxhop358.01 nohardmacros (codex_hroot_1106review). Onecurrenttyped/boundedvehicle; parenttimingstillowed."
    },
    "only_items": [
     "kv3_astk",
@@ -689,7 +691,7 @@
      "OT_HOLD_STOP_PS": "-200"
     }
    },
-   "prov_first_re": "^kv3_pc",
+   "prov_first_re": "^(kv3_pc|kv3_hub_C)",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
    "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250.",
    "hosts_base": [
@@ -718,7 +720,23 @@
     "qkd_kvs_ctl"
    ],
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
-   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained."
+   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
+   "prov_view_sources": {
+    "qkd_ahub": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
+      "job": "SIGNED dkv73/ahub_l"
+     }
+    ],
+    "qkd_kvs_ctl": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/ss32/resign/kit_kvctl/views",
+      "job": "SIGNED kvctl_u"
+     }
+    ]
+   }
   },
   "s81": {
    "enabled": true,
