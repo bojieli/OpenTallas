@@ -3179,3 +3179,5 @@ CODEX: 2026-11-05 23:23 PST MERGE: HEAD ctlrq + shared literal capture LEC class
 CODEX: 2026-11-05 23:27 PST MERGE: exact HBM lane1p/WBQ source + shared GRT-error classification/reset-copy naming landed main c6252e2eaf8, all-die tags t/r/o/t/y; physical closure remains open. Concise handoff published coord fbe4dfc5e9e.
 
 CODEX: 2026-11-05 23:27 PST HBM p35 READY codex/hbm-1105@203db392bba:12 clock-pin access fixes + TX taller safe form, reviewed; wave main part34 fully extracted for source refresh.
+
+CODEX: 2026-11-05 23:28 PST MERGE: HBMp35 pairedclockpins/tallerTX plan merged2c7054fd3cd, HBMtagz verified; HBMowner launchingTXvB.
