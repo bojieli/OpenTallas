@@ -8,6 +8,7 @@ r3 cuts on r2 (OWNER 19:3x version B: registered faces, short reach):
  16 V/R safe  input faces registered: in_v/in_data and d_v/d_data land in 2-entry FIFOs at the pins; in_rdy, d_rdy are flops
               (not full, next state).  +1 edge port -> engine for beats and descriptors; full rate kept (2 entries).
  17 V/R safe  busy is a flop: engine busy, either FIFO non-empty now or next, or a push this edge.  Falls 1 edge later.
+ 18 Exact     n_sectors in two 16-bit halves, high half steps on a registered low-all-ones flag (counter unit bench tb_nsec.sv).
 PIN CYCLES on top of r2: QKV beat -> bank write +1 (cut 15), port -> engine +1 for in and d (cut 16), busy fall +1 (cut 17)."""
 import json, re
 from pathlib import Path
@@ -21,6 +22,7 @@ t = rep(t, "module qkd_host_native_engine_ing2 (", """// KV-ING-1 11-05 r3 (vers
 // 15 V/R safe  I1H: i1_code -> 2 kept half copies ih_all -> 4 quadrant copies ib_all; a bit drives 2 flops per stage.  +1 edge beat to bank write.
 // 16 V/R safe  input faces registered: in_* and d_* land in 2-entry FIFOs at the pins; in_rdy / d_rdy are flops.  +1 edge port -> engine.
 // 17 V/R safe  busy is a flop (engine busy | FIFO non-empty now or next | push this edge); falls 1 edge later.
+// 18 Exact     n_sectors in two 16-bit halves; the high half steps on a registered low-all-ones flag (vA routed path wf_q -> n_sectors[31] was a 32-bit carry chain, -61 ps).
 // TOK-VERIFY on top of r2: QKV beat -> bank write +1 (15), port -> engine +1 for beats and descriptors (16), busy fall +1 (17); rates kept.
 module qkd_host_native_engine_ing3 (""")
 # ---- cut 16/17: rename the faces, the old names become engine-side wires
@@ -100,6 +102,14 @@ t = rep(t, "else begin ib_v <= i1_v; ib_sel0 <= i1_sel0; ib_sel1 <= i1_sel1; ib_
 t = rep(t, "    always @(posedge clk) begin ib_slot <= i1_slot; ib_last <= i1_last; ib_isv <= i1_isv; ib_a <= i1_a; end\n",
            "    always @(posedge clk) begin ib_slot <= ih_slot; ib_last <= ih_last; ib_isv <= ih_isv; ib_a <= ih_a; end\n")
 t = rep(t, "wire qp_busy = i0_v || q1_v || i1_v || ib_v || i2_v", "wire qp_busy = i0_v || q1_v || i1_v || ih_v || ib_v || i2_v")
+# ---- cut 18: n_sectors as two 16-bit halves, the high half steps on a registered "low half all ones" flag (exact)
+t = rep(t, "    reg  [31:0]  nsec_r;\n", """    reg  [15:0]  nsec_lo, nsec_hi;
+    reg          nsec_lf;                       // nsec_lo == 16'hffff (cut 18)
+    wire [31:0]  nsec_r = {nsec_hi, nsec_lo};
+""")
+t = rep(t, "done_r <= 1'b0; dtag_r <= 8'd0; nsec_r <= 32'd0;", "done_r <= 1'b0; dtag_r <= 8'd0; nsec_lo <= 16'd0; nsec_hi <= 16'd0; nsec_lf <= 1'b0;")
+t = rep(t, "            if (wf_q) nsec_r <= nsec_r + 32'd1;\n",
+           "            if (wf_q) begin nsec_lo <= nsec_lo + 16'd1; nsec_lf <= nsec_lo == 16'hfffe; if (nsec_lf) nsec_hi <= nsec_hi + 16'd1; end\n")
 (OR / "qkd_host_native_engine_ing3.sv").write_text(t)
 (OR / "ot_hdc_ingest_fp8q_s.sv").write_text((SR / "ot_hdc_ingest_fp8q_s.sv").read_text())
 w = (SR / "qkd_hr_ingest_eng.sv").read_text()

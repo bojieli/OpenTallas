@@ -43,6 +43,7 @@
 // 15 V/R safe  I1H: i1_code -> 2 kept half copies ih_all -> 4 quadrant copies ib_all; a bit drives 2 flops per stage.  +1 edge beat to bank write.
 // 16 V/R safe  input faces registered: in_* and d_* land in 2-entry FIFOs at the pins; in_rdy / d_rdy are flops.  +1 edge port -> engine.
 // 17 V/R safe  busy is a flop (engine busy | FIFO non-empty now or next | push this edge); falls 1 edge later.
+// 18 Exact     n_sectors in two 16-bit halves; the high half steps on a registered low-all-ones flag (vA routed path wf_q -> n_sectors[31] was a 32-bit carry chain, -61 ps).
 // TOK-VERIFY on top of r2: QKV beat -> bank write +1 (15), port -> engine +1 for beats and descriptors (16), busy fall +1 (17); rates kept.
 module qkd_host_native_engine_ing3 (
     input  wire         clk,
@@ -492,7 +493,9 @@ module qkd_host_native_engine_ing3 (
     wire   w_fire = w_v && w_rdy;
     reg          done_r, done_q, wf_q;
     reg  [7:0]   dtag_r, dtag_q;
-    reg  [31:0]  nsec_r;
+    reg  [15:0]  nsec_lo, nsec_hi;
+    reg          nsec_lf;                       // nsec_lo == 16'hffff (cut 18)
+    wire [31:0]  nsec_r = {nsec_hi, nsec_lo};
     assign done_v = done_q; assign done_tag = dtag_q;
     assign n_sectors = nsec_r;
     wire   ra_room = ra_n <= 9'd192;
@@ -516,14 +519,14 @@ module qkd_host_native_engine_ing3 (
             dq_n <= 3'd0; dq_rd <= 2'd0; dq_wr <= 2'd0;
             s_full <= 2'b00; s_fill <= 2'b00; qi_act <= 1'b0; qi_slot <= 1'b0; qo_act <= 1'b0; qo_slot <= 1'b0;
             st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 9'd0; ra_rp <= 8'd0; ra_wp <= 3'd0; push_q <= 1'b0; rawq_v <= 1'b0; ok0 <= 1'b0;
-            done_r <= 1'b0; dtag_r <= 8'd0; nsec_r <= 32'd0;
+            done_r <= 1'b0; dtag_r <= 8'd0; nsec_lo <= 16'd0; nsec_hi <= 16'd0; nsec_lf <= 1'b0;
             qi_t <= 5'd0; qi_g <= 1'b0; qi_dg <= 3'd0; qi_v <= 1'b0; qo_v <= 1'b0; qo_g <= 1'b0; qo_s <= 6'd0;
             st_ph <= 3'd0; st_beats <= 16'd0; st_row <= 32'd0; st_left <= 32'd0; st_rem <= 16'd0; st_sec <= 5'd0;
             st_ok_r <= 1'b0;
         end else begin
             done_r <= 1'b0;
             if (qp_dv) begin done_r <= 1'b1; dtag_r <= ft[7:0]; end
-            if (wf_q) nsec_r <= nsec_r + 32'd1;
+            if (wf_q) begin nsec_lo <= nsec_lo + 16'd1; nsec_lf <= nsec_lo == 16'hfffe; if (nsec_lf) nsec_hi <= nsec_hi + 16'd1; end
             if (d_v && d_rdy) dq_wr <= dq_wr + 2'd1;
             if (d_pop) dq_rd <= dq_rd + 2'd1;
             dq_n <= dq_n + ((d_v && d_rdy) ? 3'd1 : 3'd0) - (d_pop ? 3'd1 : 3'd0);
