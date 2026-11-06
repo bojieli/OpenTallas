@@ -383,6 +383,14 @@ SCHEMA = {
                     # DIE-HEAD-5 10-28 (gen_phys.phy_pg_domains opt-in): the type PHY body is off-model (behind its pads),
                     # so its die.pg.domains region may hold no macro; the note states why
                     "phy_pg_offmodel": {"type": "string", "minLength": 1},
+                    # S81-RCK-3 11-06 (gen_phys.phy_pg_west_notch): PHY PG region starts at its westmost macro edge minus
+                    # this halo (um) instead of the partition edge, so the PMA clock-pin drivers can sit next to the pins
+                    "phy_pg_west_notch_um": {"type": "number", "minimum": 0},
+                    # S81-RCK-3 11-06 (rck_band.tcl): first-stage capture flops of this receiver macro FIRM on the rows
+                    # right under its PHY PG region, at the x of the macro output pin
+                    "rck_band": {"type": "object", "additionalProperties": False, "required": ["inst"],
+                                 "properties": {"inst": {"type": "string", "minLength": 1},
+                                                "rows": {"type": "integer", "minimum": 1, "maximum": 8}}},
                     "infra_ports": {"type": "array", "items": _infra_port},
                     "infra_arcs": {"type": "array", "items": _infra_arc},
                     # HEAD native views: physical (synthesis black-box) source -> simulation model source
