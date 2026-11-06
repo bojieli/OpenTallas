@@ -207,11 +207,32 @@ NATIVE_PDK_LIB = re.compile(
     r'(AO|INVBUF|OA|SEQ|SIMPLE)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_[^/]+\.lib(?:\.gz)?')
 
 
+def kit_config(kit):
+    """KW-FIX-17 11-05 (COORD 17:0x, AUTO-RESIGN ECO-dir class): -> (library config file or None, kit root its /work paths
+    name).  A normal kit: (KIT/config.mk, KIT).  A post-route ECO iteration dir (eco_*/iN: config_eco.mk = the parent
+    kit's config.mk + the ECO overrides, NO config.mk, no macros/views of its own): (DIR/config_eco.mk, the nearest
+    parent kit holding config.mk) -- else (the parent kit's config.mk, that kit).  AUTO-RESIGN re-signs such dirs:
+    s81 slice_station__t48 failed 'exact corner libraries require --kit/config.mk' on eco_20261105_015748_1651180/i3."""
+    if not kit:
+        return None, None
+    k = Path(kit)
+    if (k / "config.mk").is_file():
+        return k / "config.mk", k
+    parent = next((q for q in list(k.parents)[:3] if (q / "config.mk").is_file()), None)
+    if (k / "config_eco.mk").is_file():
+        return k / "config_eco.mk", parent or k
+    if parent is not None and any(x.name.startswith("eco_") for x in [k] + list(k.parents)[:2]):
+        return parent / "config.mk", parent
+    return None, k
+
+
 def macro_libs(kit, corner):
     """(host paths of the corner's macro liberty files, missing corner list) from shared or corner-scoped KIT/config.mk libraries."""
-    if not kit or not (Path(kit) / "config.mk").is_file():
+    cfg, root = kit_config(kit)
+    if cfg is None:
         return [], []
-    txt = (Path(kit) / "config.mk").read_text(errors="replace").replace("\\\n", " ")
+    kit = root
+    txt = cfg.read_text(errors="replace").replace("\\\n", " ")
     libs, missing = [], []
     field = {"tt": "TC_LIB_FILES", "ff": "BC_LIB_FILES", "ss": "WC_LIB_FILES"}[corner]
     for m in re.finditer(r"^[ \t]*(?:export[ \t]+)?(ADDITIONAL_LIBS|TC_LIB_FILES|BC_LIB_FILES|WC_LIB_FILES)[ \t]*[:+?]?=[ \t]*(.*)$", txt, re.M):
@@ -1390,8 +1411,9 @@ def pair_target_file(disc, corner):
     name = PAIR_TARGET_FILES.get(corner)
     if not kit or not name:
         return None
-    cfg, f = Path(kit) / "config.mk", Path(kit) / name
-    if not cfg.is_file() or not re.search(r"^export OT_CORE_LAT\s*=", cfg.read_text(), re.M) or not f.is_file():
+    cfg, root = kit_config(kit)
+    f = Path(kit) / name if (Path(kit) / name).is_file() or root is None else Path(root) / name
+    if cfg is None or not cfg.is_file() or not re.search(r"^export OT_CORE_LAT\s*=", cfg.read_text(), re.M) or not f.is_file():
         return None
     lines = f.read_text().splitlines()
     if not lines or not lines[0].startswith(PAIR_TARGET_HEADER):
@@ -1444,10 +1466,15 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     mounts = [("base", disc["base"]), ("sdc", str(od / "sdcdir")), ("out", str(od))]
     (od / "sdcdir").mkdir(exist_ok=True)
     (od / "sdcdir" / "golden.sdc").write_text(Path(disc["sdc"]).read_text())
-    libconfig = Path(disc["library_config"]) if disc.get("library_config") else (Path(disc["kit"]) / "config.mk" if disc.get("kit") else None)
+    work = disc.get("kit")
+    if disc.get("library_config"):
+        libconfig = Path(disc["library_config"])
+    else:
+        libconfig, root = kit_config(disc.get("kit"))      # KW-FIX-17: ECO dir -> config_eco.mk on the parent kit's /work
+        work = str(root) if root is not None else work
     if libconfig is None or not libconfig.is_file():
-        raise ValueError("signoff: exact corner libraries require --kit/config.mk or explicit --library-config")
-    mounts.append(("work", disc.get("kit") or str(libconfig.parent)))
+        raise ValueError("signoff: exact corner libraries require --kit/config.mk (or an ECO dir's config_eco.mk) or explicit --library-config")
+    mounts.append(("work", work or str(libconfig.parent)))
     mounts.append(("work/config.mk", str(libconfig)))
     core_overlay = copy_core_tap_overlay(Path(disc["sdc"]), od / "sdcdir")
     ptf = pair_target_file(disc, corner)
@@ -1824,8 +1851,10 @@ def ff_reference_problem(rec, cff, requested):
 def timing_modes_check(kit, ff_bound_ps=None):
     """SIGNOFF-MODES-2: kit_modes.signoff_record on the kit; None when there is no kit config.mk (die-level record /
     re-evaluation away from the kit) or the kit predates the per-corner binding.  Missing helper -> FAIL (re-bundle)."""
-    if not kit or not (Path(kit) / "config.mk").is_file():
+    cfg, root = kit_config(kit)       # KW-FIX-17: an ECO iteration dir is checked on its parent kit
+    if cfg is None or not (Path(root) / "config.mk").is_file():
         return None
+    kit = str(root)
     try:
         if str(HERE) not in sys.path:
             sys.path.insert(0, str(HERE))
