@@ -746,7 +746,9 @@ def poll_eco_row(AP, cid, it, notices):
         AP.log("AUTO-ECO %s: result probe failed, next tick: %s" % (it["name"], r["error"][:200]))
         return
     v = r.get("verdict")
-    if (v == "ECO_OOM" or v is None) and it.get("eco_infra", 0) < MAX_INFRA and (v == "ECO_OOM" or client.get("not_run") or client.get("not_completed")):
+    # KW-FIX-24 11-06: ABORTED = an ECO step stopped from outside (docker stop / kill, no OOM line): infra, relaunched
+    # once at the same --mem like a never-run loop, never a design verdict
+    if (v in ("ECO_OOM", "ABORTED") or v is None) and it.get("eco_infra", 0) < MAX_INFRA and (v in ("ECO_OOM", "ABORTED") or client.get("not_run") or client.get("not_completed")):
         it["eco_infra"] = it.get("eco_infra", 0) + 1
         if v == "ECO_OOM":
             it["eco_mem"] = int(it.get("eco_mem", ECO_MEM_GB) * 1.5 + 0.999)

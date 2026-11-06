@@ -32,7 +32,9 @@ DB, iterations [commands, metrics, wall], best, flow sha}.
     eco_loop.py check SIGNOFF.json        eligibility of a sign-off record (prints the class decision)
 Heavy: run through ot-run (--mem = honest peak, the ECO session + DRT + sign-off STA), never on localhost.
     The ECO docker cap is max(--mem, ceil(1.5 x the kit's measured OpenROAD peak)) (ECO-OOM-1); a step killed for memory
-    (rc 137 / -9 / kill text) ends the loop as verdict ECO_OOM ("late-ECO OOM ... at <cap> GB"), re-run at a larger --mem.
+    (OOM / kill text in its log) ends the loop as verdict ECO_OOM ("late-ECO OOM ... at <cap> GB"), re-run at a larger --mem.
+    A step stopped from outside (rc 137/143/130/129 or -9/-15/-2/-1 with no OOM line: docker stop, lane kill) ends it as
+    verdict ABORTED: not a design result, retry as is (KW-FIX-24).
 """
 import argparse
 import hashlib
@@ -71,8 +73,12 @@ POST_RUNNERS = ("run_kit_hbm.sh", "run_kit_kv.sh", "run_kit.sh")
 # "route / clock-freeze check / finish failed".  Now: (1) the ECO docker cap is floored at ECO_MEM_FACTOR x the kit's
 # measured OpenROAD peak, (2) rc 137 / -9 or kill evidence in the step log = status ECO_OOM naming the cap.
 ECO_MEM_FACTOR = 1.5
-OOM_RCS = {137, -9}
-OOM_TEXT = re.compile(r"\bKilled\b|out of memory|OOMKilled|Cannot allocate memory|std::bad_alloc", re.I)
+# KW-FIX-24 11-06 (S81-ENGRR-B5): rc 137 alone is not OOM evidence -- docker stop / a lane's kill ends a step 137 or 143
+# too.  Same convention as autopilot classify ("infra-stopped": exit 137/143 with no OOM line in the run logs): OOM only
+# with a memory line in the step log; an external-stop rc without one is ABORTED (infra, retryable, never a design
+# verdict).  SIGSEGV (139 / -11) and every other rc stay tool / design errors as before.
+STOP_RCS = {129, 130, 137, 143, -1, -2, -9, -15}
+OOM_TEXT = re.compile(r"\bKilled\b|out of memory|OOMKilled|Cannot allocate memory|std::bad_alloc|\bError 137\b", re.I)
 PEAK_RES = (re.compile(r"peak = ([0-9.]+) \(MB\)"), 1.0 / 1024,
             re.compile(r"Peak memory: ([0-9.]+)KB"), 1.0 / (1024 * 1024),
             re.compile(r"MEM: ([0-9.]+) MB peak"), 1.0 / 1024)
@@ -105,9 +111,8 @@ def eco_mem(kit, mem):
 
 
 def oom_evidence(rc, *logs):
-    """True when a step was killed for memory: rc 137 / -9, or kill / OOM text in its log tail"""
-    if rc in OOM_RCS:
-        return True
+    """True when a step was killed for memory: kill / OOM text in its log tail.  rc 137 / -9 alone is not evidence
+    (docker stop ends a step the same way, KW-FIX-24)"""
     for p in logs:
         try:
             t = Path(p).read_text(errors="replace")[-20000:]
@@ -355,6 +360,8 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     def oom(rc, what, *logs):
         if rc and oom_evidence(rc, *logs):
             return end("ECO_OOM", f"{what} OOM-killed at {mem} GB docker cap (rc {rc})")
+        if rc in STOP_RCS:
+            return end("ABORTED", f"{what} stopped from outside (rc {rc}, no OOM line in its log): not a design result")
         return None
 
     s = src
@@ -519,8 +526,8 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         m = it.get("metrics")
         if not m:
             stop = f"iteration {n}: {it.get('reason')}"
-            if it.get("status") == "ECO_OOM":
-                verdict = "ECO_OOM"
+            if it.get("status") in ("ECO_OOM", "ABORTED"):
+                verdict = it["status"]
             break
         if best is None or better(m, best["metrics"]):
             best = it
@@ -532,7 +539,7 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
             break
         src, prev = Path(it["dir"]), m
     if best is None:
-        if verdict != "ECO_OOM":
+        if verdict not in ("ECO_OOM", "ABORTED"):
             verdict = "ERROR"
     else:
         res["best"] = dict(n=best["n"], dir=best["dir"], signoff=best["signoff"], base=best["base"],
@@ -560,7 +567,7 @@ def summary(res):
     its = len(res.get("iterations") or [])
     if res.get("verdict") == "NOT_ELIGIBLE":
         return f"late-ECO not eligible: {res.get('reason')}"
-    tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM"}.get(res.get("verdict"), "late-ECO exhausted")
+    tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM", "ABORTED": "late-ECO ABORTED"}.get(res.get("verdict"), "late-ECO exhausted")
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
             f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
 

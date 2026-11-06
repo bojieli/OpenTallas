@@ -8,6 +8,9 @@
 #          to floorplan/place/CTS/route at once.  The watcher runs that command in the admitted flow container with docker exec
 #          (same /work, combined flow + LEC memory bounded by the existing MEM cap).  A stopping result writes K/lec_async.stop + the FAIL_PREFLOOR
 #          "LEC NOT EQUIVALENT" marker and stops the flow container NAME: the route ends there, the kit is FAIL LEC.
+#          KW-FIX-24 11-06: a LEC killed by a signal (exit >= 128: docker stop / lane kill / OOM) is no verdict: it
+#          writes K/lec_async.aborted ("ABORTED rc=N oom=yes|no ..."), never FAIL_PREFLOOR / lec_async.stop / rc, and
+#          drops ready/identity so no later scope reuses it as a proof; the flow goes on and needs a fresh LEC.
 #   wait   K                                inside the flow container: keep it alive until its LEC finishes.
 #   finish K RC [STOP_RC=5]                    host, after the flow container: waits for the LEC (aborts it if the
 #          flow never reached its LEC step), prints the kit rc (STOP_RC = the runner's LEC exit code when the LEC
@@ -239,7 +242,7 @@ start)
     echo 'LEC_ASYNC proof inputs differ or existing proof has no identity; retain its scope and use a fresh kit' >&2
     exit 11
   fi
-  rm -f "$K"/lec_async.{on,ready,rc,stop,abort,done,pid}
+  rm -f "$K"/lec_async.{on,ready,rc,stop,abort,aborted,done,pid}
   identity "$K" source > "$K/lec_async.source_identity"
   echo "$NAME" > "$K/lec_async.owner"
   touch "$K/lec_async.on"; run_start "$K" "$NAME" "$GOAL"
@@ -263,6 +266,7 @@ watch)
   POL=$(sed -n 1p "$K/lec_async.ready"); RUN=$(sed -n '2,$p' "$K/lec_async.ready")
   identity "$K" > "$K/lec_async.identity"
   echo "LEC_ASYNC $(date '+%F %T') start ($POL): $RUN"
+  LOG0=$(stat -c %s "$K/lec_async.log" 2>/dev/null || echo 0)
   $DK exec \
     -e OT_LEC_HINTS_PRESEED -e OT_LEC_EARLY_COMPARE -e OT_LEC_SUPERSET_VEC -e OT_LEC_RESET_CYCLES \
     -w /OpenROAD-flow-scripts/flow "$NAME" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $RUN; r=\$?; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log 2>/dev/null; exit \$r" \
@@ -272,6 +276,18 @@ watch)
     # Not a verdict: no rc, no LEC marker, and no ready/identity for a later scope to take as a finished proof.
     rm -f "$K/lec_async.ready" "$K/lec_async.identity"
     echo "LEC_ASYNC $(date '+%F %T') aborted with its flow (exit $lr)"
+    exit 0
+  fi
+  if [ "$lr" -ge 128 ]; then
+    # KW-FIX-24: killed by a signal (docker stop / kill 137, SIGTERM 143, or the memory cap) -- not a LEC verdict, in
+    # either stop policy.  OOM evidence (docker OOMKilled, or a memory line in this run's logs) is recorded beside it.
+    OOM=no
+    [ "$($DK inspect -f '{{.State.OOMKilled}}' "$NAME" 2>/dev/null)" = true ] && OOM=yes
+    { tail -c 20000 "$K/lec_run.log" 2>/dev/null; tail -c +$((LOG0 + 1)) "$K/lec_async.log" 2>/dev/null; } \
+      | grep -Eqi 'Killed|out of memory|OOMKilled|Cannot allocate memory|std::bad_alloc|Error 137' && OOM=yes
+    rm -f "$K/lec_async.ready" "$K/lec_async.identity"
+    echo "ABORTED rc=$lr oom=$OOM $(date '+%F %T')" > "$K/lec_async.aborted"
+    echo "LEC_ASYNC $(date '+%F %T') aborted by signal (exit $lr, OOM evidence $OOM): no LEC verdict, the kit needs a fresh LEC"
     exit 0
   fi
   echo $lr > "$K/lec_async.rc"

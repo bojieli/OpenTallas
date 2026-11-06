@@ -309,7 +309,7 @@ class OomFake(Fake):
 def test_prd_run_rc137_is_eco_oom(tmp_path):
     k = kit(tmp_path)
     b = base_rec(k, rec(41.71, -9.29))
-    r = E.run_loop(k, b, run=OomFake(137), mem=24, cpus=2)
+    r = E.run_loop(k, b, run=OomFake(137, log="make: *** [do-route] Error 137\n"), mem=24, cpus=2)
     it = r["iterations"][0]
     assert r["verdict"] == "ECO_OOM" and it["status"] == "ECO_OOM"
     assert "OOM-killed at 24 GB docker cap (rc 137)" in it["reason"]
@@ -340,7 +340,7 @@ def test_measured_peak_floors_eco_mem(tmp_path):
     assert E.eco_mem(k, 64)[0] == 64                                          # never below the request
     assert E.eco_mem(kit(tmp_path / "e"), 24) == (24, 0.0)                    # no logs: request unchanged
     b = base_rec(k, rec(41.71, -9.29))
-    f = OomFake(137)
+    f = OomFake(137, log="Killed\n")
     r = E.run_loop(k, b, run=f, mem=24, cpus=2)
     prd = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")][0]
     assert prd[4] == "33" and r["mem_gb"] == 33 and r["mem_requested_gb"] == 24 and r["kit_peak_gb"] > 21
@@ -526,3 +526,39 @@ def test_terminal_abstract_failure_keeps_routed_recovery_pass(tmp_path, monkeypa
         assert (Path(name) / 'run/results').is_dir()
         assert (Path(name) / 'run/objects').is_dir()
     assert r['iterations'][-1]['retained_for_recovery']
+
+
+# KW-FIX-24 11-06 (S81-ENGRR-B5): rc 137 is OOM only with OOM evidence; a docker stop / external signal is ABORTED
+@pytest.mark.parametrize("rc,log,verdict", [
+    (137, None, "ABORTED"),                                          # docker stop SIGKILL, no log line
+    (137, "[INFO GRT-0001] reading\n", "ABORTED"),
+    (-9, None, "ABORTED"),
+    (143, None, "ABORTED"),                                          # docker stop SIGTERM
+    (-15, "", "ABORTED"),
+    (137, "[INFO] read_spef\nKilled\n", "ECO_OOM"),                 # memory evidence in the step log
+    (137, "OOMKilled true\n", "ECO_OOM"),
+    (143, "terminate called after std::bad_alloc\n", "ECO_OOM"),
+    (1, None, "ERROR"),                                              # a real tool failure: unchanged
+    (139, None, "ERROR"),                                            # SIGSEGV is the tool's own crash, not a stop
+])
+def test_eco_rc_mapping(tmp_path, rc, log, verdict):
+    k = kit(tmp_path)
+    b = base_rec(k, rec(5, -3))
+    r = E.run_loop(k, b, run=OomFake(rc, log=log), mem=24, cpus=2)
+    it = r["iterations"][0]
+    assert r["verdict"] == verdict and it["status"] == verdict, (r["verdict"], it.get("reason"))
+    assert json.loads((Path(r["root"]) / "eco_loop.json").read_text())["verdict"] == verdict
+    if verdict == "ABORTED":
+        assert f"stopped from outside (rc {rc}" in it["reason"]
+        assert E.summary(r).startswith("late-ECO ABORTED")
+    if verdict == "ERROR":
+        assert "route / clock-freeze check / finish failed" in it["reason"]
+
+
+def test_oom_evidence_needs_a_memory_line(tmp_path):
+    p = tmp_path / "run.log"
+    assert not E.oom_evidence(137) and not E.oom_evidence(-9)
+    p.write_text("all fine\n")
+    assert not E.oom_evidence(137, p)
+    p.write_text("make: *** [do-route] Error 137\n")
+    assert E.oom_evidence(2, p)
