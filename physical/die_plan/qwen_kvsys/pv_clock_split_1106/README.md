@@ -40,3 +40,40 @@ stations and different/gated clocks are not merged. Terminal q is included as
 the last delay stage when its exact source/identity and physical bounds pass.
 A private assignment-only canary compares953 helper off/on at unchanged
 internal mode before any CTS. This is separate from A/B whole-plan variants.
+
+## Measured successor: repaired local density plus monotone affinity
+
+The old-grid affinity is retained as a failure control:33,144 safe clock moves
+left four over-cap roots and the actual worst pd23 seam unjoined. The corrected
+actual-bin density model returned159 taps but still violated its declared cap
+(max1535,1114 excess sinks). The opt-in tap_capacity_repair.py adds seven legal
+local sites; its sizing result166 taps/max1197/radius299.088 preserves original
+cap1200/radius340/window140. A tighter200 physical target failed at a reserved
+corner and was not adopted; affinity subgroup radius remains200.
+
+An actual native166-port assignment canary now passes cap<=1200. B2 affinity
+(f87028ff0c) reduces adjacent-stage crossings14532->3009 with ZERO new,
+moves45687 eligible clock pins in3712 groups, max89FF/max200um. All866486 cell
+master/poses and3478838 noneligible data/reset/hard/gated-clock pin records
+are unchanged. Density alone puts worst pd23 r20,r21 and terminalq on clk_t128;
+B2 preserves that and removes other crossings. No entire long scalar chain
+is collapsed. Full audit is profile166_native_audit.json.
+
+Actual scoped producer:
+
+    python3 apply_density.py PLAN --core-mode internal --out PRIVATE.json
+
+The internal variant adds6 main clock inputs (160->166). The optional early
+variant also adds20 separate core-clock inputs at the reviewed channel sites.
+Both emit an explicit clock ABI/map beside the private plan. All source means,
+140ps window,833ps period and data/reset/START fields remain unchanged.
+The type already carries a serialized collector_tree; it is preserved.
+Use the released captured bound-reset export/reimport path; never silently
+derive a replacement control graph from the new clock-port count.
+
+Before fresh GEN, root/die owner must adopt the explicit parent clock table,
+native header and matching canonical source/asbuilt context. Native6-port
+interface changes are not covered by reusing a stale bind receipt. This is
+source preparation only: the prototype ODB is an assignment component,
+not a production kit, and there is no CTS/STA/route/signoff claim for it.
+Keep old failed subjects immutable. Actual source/context owner is KV/wave.
