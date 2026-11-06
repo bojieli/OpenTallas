@@ -151,8 +151,25 @@ def load(path):
         return json.load(f)
 
 
-def kit_build_commit(kit):
-    """the original build commit from the kit's own records (lec kit_provenance, autopilot, freeze)."""
+ABBREV_RE = re.compile(r'^[0-9a-f]{7,39}$')
+
+
+def full_commit(repo, v):
+    """an abbreviated commit (freeze.json repo_rev is written short, e.g. faecd095101) -> the full 40-hex commit in repo;
+    None when repo is not a git checkout (a tag manifest) or does not hold exactly that commit."""
+    if not repo or not ABBREV_RE.match(v) or not os.path.isdir(repo):
+        return None
+    try:
+        out = git(repo, 'rev-parse', '--verify', '--quiet', '%s^{commit}' % v).decode().strip()
+    except ResignError:
+        return None
+    return out if SHA_RE.match(out) and out.startswith(v) else None
+
+
+def kit_build_commit(kit, repo=None):
+    """the original build commit from the kit's own records (lec kit_provenance, autopilot, freeze).  freeze.json carries it
+    as repo_rev (gen_phys, often abbreviated): read too, resolved to the full commit through repo (S81-COLLE-4 11-06: a
+    resign.py run --auto finished sign-off + LEC but wrote no record because only repo_rev named the commit)."""
     for n in ('PROVENANCE.json', 'AUTOPILOT.json', 'freeze.json', 'kit_provenance.json'):
         p = os.path.join(kit, n)
         try:
@@ -162,9 +179,11 @@ def kit_build_commit(kit):
         if not isinstance(x, dict) or x.get('kind') == 'resign':
             continue
         for v in (x.get('build_commit'), x.get('src_commit'), (x.get('provenance') or {}).get('commit')
-                  if isinstance(x.get('provenance'), dict) else None, x.get('source_commit')):
+                  if isinstance(x.get('provenance'), dict) else None, x.get('source_commit'), x.get('repo_rev')):
             if isinstance(v, str) and SHA_RE.match(v):
                 return v
+            if isinstance(v, str) and full_commit(repo, v):
+                return full_commit(repo, v)
     return None
 
 
@@ -234,7 +253,7 @@ def build_record(d, kit, tag, repo=REPO, tools=None, build_commit=None, routed_d
     if not os.path.isfile(read_db):
         raise ResignError('routed DB %s missing' % read_db)
     tool_sha = check_tools(repo, tag, tools) if tools else None
-    bc = build_commit or kit_build_commit(kit)
+    bc = build_commit or kit_build_commit(kit, repo if manifest(repo) is None else None)
     if not bc:
         raise ResignError('build_commit unknown: pass --build-commit (no commit in %s records)' % kit)
     rec = dict(schema='opentallas.resign_qualification.v1', kind='resign', verdict='SIGNED',
