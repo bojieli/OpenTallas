@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.hbm.rx_bm3.source_model.v1",
+  "status": "SOURCE_PROPOSAL_NO_GEN_OR_PHYSICAL_ADOPTION",
+  "source_basis": "immutable EP5 codex-hbm-gaps-rootrehome/rx_eco/i2 frozen BMTHC1 kit cc8092d4c9b026ea, recipe source2a1bd4/generatorb2c34c",
+  "added_cycles": 0,
+  "native_helper_count": 3,
+  "native_helper_input_bits": 306,
+  "native_helper_output_bits": 320,
+  "native_helper_registered_inputs": {
+    "S": "existing S_q[299:0]",
+    "ld": "existing ldr[i][3:0]",
+    "rs_n": "existing u_syn.rs_n[2] regional synchronous reset"
+  },
+  "native_helper_registered_outputs": {
+    "lam": "existing d[15..30]160FFbits",
+    "om": "existing d[0..14]150FFbits",
+    "L": 5,
+    "any": 1,
+    "done": 4
+  },
+  "clock": "every BM seam rck_clk, no merge/drop/change; outer retains clk andrck_clk",
+  "rate": {
+    "PMA_bits_per_edge": 544,
+    "native_RX_bits_per_edge": 512,
+    "frame_interval_edges": 10,
+    "BM_reuse_interval_edges": 30,
+    "additional_boundary_bits_per_edge": "physicalnative300syndrome broadcast+4ld to eachengine,320back/helper; onlyexistingregisteredcohorts"
+  },
+  "compute": "same3*46*2 GF(2^10) variable multipliers, no arithmetic/state replication",
+  "memory_ports": "same64x546 worddelay and32x546 correction SRAMs in residual; unchanged546b read/write ports and clocks",
+  "census_path": "hierarchy_census.json",
+  "partition_cell_targets": {
+    "each_BM": "<100000 mapped, conservative final-Dcones24236/24350/24192",
+    "residual": "<100000 mapped/conservative; actual to be checked against blackboxed cohort inputs"
+  },
+  "candidate_footprints_um": {
+    "BM_each": [
+      100.224,
+      106.56
+    ],
+    "BM_core_each": [
+      91.584,
+      97.92
+    ],
+    "residual": [
+      202.176,
+      345.6
+    ],
+    "residual_core": [
+      193.536,
+      336.96
+    ],
+    "existing_outer": [
+      302.4,
+      345.6
+    ],
+    "illustrative_family_with8_64_column_street": [
+      311.04,
+      345.6
+    ],
+    "BM_origins_in_illustrative_family": [
+      [
+        0,
+        4.32
+      ],
+      [
+        0,
+        119.52
+      ],
+      [
+        0,
+        234.72
+      ]
+    ],
+    "residual_origin_in_illustrative_family": [
+      108.864,
+      0
+    ],
+    "status": "analytical candidates only; with8.64columnstreet exceeds oldslot widthby8.64, so no fullparentfit/adoption claim"
+  },
+  "outer_F1": "exact same frozen1933face FFs,clk clocked; unreado_ne dropped as frozen andtied5d0; no new internal face",
+  "physical_hold": [
+    "no GEN/P&R",
+    "native/R2 exact perclock/reset/pin/context review",
+    "parentfullfitincluding8.64columnstreet/macrochannels/PG unresolved",
+    "whole-source0/1elaboration and actual2SRAMTTBB flags pass",
+    "all4children mapped<100k; no placed/compilerLEC/signoffclaim"
+  ],
+  "proof_plan": "actual BM/THC1 3cohort lockstep and data/index/done-edge mutants; wholefamily elaboration with actual SRAMBBs; exact residual/F1 extraction identity",
+  "mapping": "mapping/mapped_counts.json",
+  "proof": "proof/summary.json",
+  "structural_identity": "structural_identity.json",
+  "footprint_budget": {
+    "BM_core_area_um2": 8967.90528,
+    "BM_stdutil": 0.3256911808060488,
+    "BM_growth_area_to45_um2": 1114.7897160000007,
+    "residual_core_area_um2": 65213.89056,
+    "SRAM_halo_area_um2": 33496.6752,
+    "residual_posthalo_free_um2": 31717.215360000002,
+    "residual_stdutil_posthalo": 0.36745193509951307,
+    "residual_growth_area_to45_um2": 2618.1947520000012,
+    "macro_sizes_um": [
+      [
+        178.632,
+        81
+      ],
+      [
+        177.768,
+        81
+      ]
+    ],
+    "macro_candidate_local_origins_um": [
+      [
+        11.772,
+        75.6
+      ],
+      [
+        12.204,
+        189
+      ]
+    ],
+    "macro_halo_um": 4.32,
+    "macro_halo_row_gap_um": 23.76,
+    "caveat": "all growth budgets shared by CTS/place/route/hold, not guarantees; actual generated pins/grid/nativeclockroots/PG/parentfit pending"
+  }
+}

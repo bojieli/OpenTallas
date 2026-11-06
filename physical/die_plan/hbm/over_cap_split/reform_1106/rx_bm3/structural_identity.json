@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.rx_bm3.structural_identity.v1",
+  "checks": {
+    "legacy_native_body_byte_exact": true,
+    "residual_native_body_byte_exact_except_seam_ports": true,
+    "syndrome_residual_byte_exact_except_existing_BM_instances_to_ports": true,
+    "legacy_outer_F1_byte_exact": true,
+    "residual_outer_F1_byte_exact_except_native_seam_ports": true,
+    "binding:.clk(rck_clk), .rs_n(bm_rs_n), .ld(bm_ld[4*engine+:4]), .S(bm_S)": true,
+    "binding:.lam(bm_lam[160*engine+:160]), .om(bm_om[150*engine+:150])": true,
+    "binding:.L(bm_L[5*engine+:5]), .any(bm_any[engine]), .done(bm_done[4*engine+:4])": true,
+    "binding:ot_pdie_serdes_rx_bm_native #(.BMTHC(1))": true,
+    "binding:assign bm_rs_n = rs_n[2];": true,
+    "binding:assign bm_S = S_q;": true,
+    "binding:assign bm_ld[4*gu+:4] = ldr[gu];": true,
+    "all_syndrome_export_and_return_cohort_assignments_byte_exact": true,
+    "helper_all_ports_direct_NG4_NCD4_THC_family1": true,
+    "new_family_outer_port_ABI_byte_exact": true
+  },
+  "all_pass": true,
+  "extra_edges": 0,
+  "whole_elaboration": "separate actual production SYNTHESIS flags and both SRAM TT Liberty blackboxes",
+  "frozen_files_sha256": {
+    "portlist.txt": "707e3d9caf11022e45c8aa1d20fc40f14e5cae55e441b4daf5e2af41f3b0ecc4",
+    "ot_s81_kp4_syn_mat.svh": "5f8c6c1718cb04488bb34a074571736bca6299d2fec487bf9534696a9d10068e",
+    "ot_s81_kp4_dsyn.sv": "29a9396e129a6486c58cda9ce4979da96e3084b344db7031213caba92f1e872d",
+    "ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+    "ot_s81_kp4_enc.sv": "0caaa3a8048bce76f6dbe902824e570e563e9c39a006ca34d07d4f648419c1fd",
+    "ot_s81_kp4_bm.sv": "b040035c591b77a4ba5d17f2a5232a0fd1da040711018a4835fd5690a1cc5a10",
+    "ot_pdie_serdes_split.sv": "dd7ccb1d6aa433e86243f44a277a9fb154798f54ae3011b0b963aca628c81bae",
+    "ot_pdie_serdes_rx__fshell.sv": "920fe829c67790cfa950cd554564232318bcf8db42346862a85649730c54a3b7",
+    "ot_s81_kp4_dec.sv": "69d23bb69dc1b2f4921afa17ceeab38f9cfbc897b8c15dfc841b7a6c94fc82bf",
+    "ot_s81_kp4_dchn.sv": "f3fc520eec927e2fb57418417a41ee12f87d66658e31df0dfe700c9ec4bec91c",
+    "ot_s81_kp4_ddly.sv": "fb1160f86a33901a1ba0328dc296329fa53812145930817b633695fcb2e63b93",
+    "ot_s81_kp4_dout.sv": "198059532724f05fc47dafbfc122e5c6aaf42e14bec1866bc59c36251c4fc1bf",
+    "ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+    "ot_s81_kp4_enc_mat.svh": "f35e2b018bbc00ac7da81ecbd7b2b9a114a3aa4edcc43a7f1effb23aaedc2f70",
+    "ot_s81_kp4_common.sv": "261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb"
+  },
+  "new_source_sha256": "b77c8566fa1f5531d1abf55332872b59489642faaba29e783db0bcdc499181bc",
+  "boundary_fields": {
+    "S": 300,
+    "ld_per_engine": 4,
+    "results_per_engine": 320,
+    "regional_rs_n": 1,
+    "BMTHC": 1,
+    "NG": 4,
+    "NCD": 4,
+    "SEAM": 2,
+    "PMA_LAT": 4
+  },
+  "canonical_files_edited": false,
+  "tool_old_BM_hierarchy_refs_scan": {
+    "patterns": [
+      "u_syn.g_bm",
+      "g_bm.*u_bm"
+    ],
+    "scope": [
+      "current tools",
+      "current hbm backend",
+      "physical/ref_tile/s81lk_kp4_dsyn",
+      "physical/ref_tile/s81lk_kp4_dec",
+      "frozen EP5/i2 lec.py and *.tcl"
+    ],
+    "matches": 0,
+    "note": "No prior hardcoded tool paths found; new native helper/parent guides still require actual freshcontext review."
+  }
+}

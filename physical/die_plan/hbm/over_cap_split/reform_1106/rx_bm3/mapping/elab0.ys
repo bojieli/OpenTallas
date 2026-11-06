@@ -1,0 +1,6 @@
+read_liberty -lib /work/macros/ot_sram_1r1w2c_64x546_m1_tt.lib
+read_liberty -lib /work/macros/ot_sram_1r1w_32x546_m1_tt.lib
+read_verilog -D SYNTHESIS -I/work/rtl -sv /work/rtl/ot_hbm_face_reg.sv /work/rtl/ot_pdie_serdes.sv /work/rtl/ot_pdie_serdes_rx__fshell.sv /work/rtl/ot_pdie_serdes_rx_bm3.sv /work/rtl/ot_pdie_serdes_split.sv /work/rtl/ot_s81_kp4_bm.sv /work/rtl/ot_s81_kp4_common.sv /work/rtl/ot_s81_kp4_dchn.sv /work/rtl/ot_s81_kp4_ddly.sv /work/rtl/ot_s81_kp4_dec.sv /work/rtl/ot_s81_kp4_dout.sv /work/rtl/ot_s81_kp4_dsyn.sv /work/rtl/ot_s81_kp4_enc.sv
+hierarchy -check -top ot_pdie_serdes_rx_bm3_family -chparam CUT_BM 0
+stat
+write_rtlil /work/map/elab0.il

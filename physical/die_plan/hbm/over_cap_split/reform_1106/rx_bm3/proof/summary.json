@@ -1,0 +1,13 @@
+{
+  "unit": "oth-ubuntu-3961583-1793980428",
+  "exit": 0,
+  "scope": "actual frozen BM/THC1 versus native wrapper,3scheduledcohorts,833ps; no broadfullRXdecoderreproof",
+  "cycles_added": 0,
+  "models": "same frozen actualBM/GF RTL; no arithmetic changes",
+  "modes": {
+    "0": "BM3_COHORT mode=0 checks=9000 valid=288 loads=299 reset_edges=16 mismatches=0 cycles_added=0",
+    "1": "BM3_COHORT mode=1 checks=9000 valid=288 loads=299 reset_edges=16 mismatches=288 cycles_added=0",
+    "2": "BM3_COHORT mode=2 checks=9000 valid=288 loads=299 reset_edges=16 mismatches=864 cycles_added=0",
+    "3": "BM3_COHORT mode=3 checks=9000 valid=288 loads=299 reset_edges=16 mismatches=575 cycles_added=0"
+  }
+}

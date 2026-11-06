@@ -1,0 +1,803 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `map/elab1.ys' --
+
+1. Executing Liberty frontend: /work/macros/ot_sram_1r1w2c_64x546_m1_tt.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Liberty frontend: /work/macros/ot_sram_1r1w_32x546_m1_tt.lib
+Imported 1 cell types from liberty file.
+
+3. Executing Verilog-2005 frontend: /work/rtl/ot_hbm_face_reg.sv
+Parsing SystemVerilog input from `/work/rtl/ot_hbm_face_reg.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_face_reg'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /work/rtl/ot_pdie_serdes.sv
+Parsing SystemVerilog input from `/work/rtl/ot_pdie_serdes.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pdie_serdes'.
+Generating RTLIL representation for module `\ot_pdie_ucie'.
+Generating RTLIL representation for module `\ot_s81_pma_bm'.
+Warning: Replacing memory \l with list of registers. See /work/rtl/ot_pdie_serdes.sv:113
+Generating RTLIL representation for module `\ot_s81_rate_match'.
+Warning: Replacing memory \mem with list of registers. See /work/rtl/ot_pdie_serdes.sv:147
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /work/rtl/ot_pdie_serdes_rx__fshell.sv
+Parsing SystemVerilog input from `/work/rtl/ot_pdie_serdes_rx__fshell.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pdie_serdes_rx'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /work/rtl/ot_pdie_serdes_rx_bm3.sv
+Parsing SystemVerilog input from `/work/rtl/ot_pdie_serdes_rx_bm3.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pdie_serdes_rx_bm_native'.
+Generating RTLIL representation for module `\ot_s81_kp4_dsyn_bm3_rest'.
+Warning: Replacing memory \ldr with list of registers. See /work/rtl/ot_pdie_serdes_rx_bm3.sv:102
+Warning: Replacing memory \xs with list of registers. See /work/rtl/ot_pdie_serdes_rx_bm3.sv:71
+Generating RTLIL representation for module `\ot_pdie_serdes_rx_bm3_legacy'.
+Generating RTLIL representation for module `\ot_pdie_serdes_rx_bm3_rest'.
+Generating RTLIL representation for module `\ot_pdie_serdes_rx_bm3_legacy_family'.
+Generating RTLIL representation for module `\ot_pdie_serdes_rx_bm3_residual'.
+Generating RTLIL representation for module `\ot_pdie_serdes_rx_bm3_family'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /work/rtl/ot_pdie_serdes_split.sv
+Parsing SystemVerilog input from `/work/rtl/ot_pdie_serdes_split.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pdie_serdes_tx'.
+Generating RTLIL representation for module `\ot_pdie_serdes_rx__fcore'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_bm.sv
+Parsing SystemVerilog input from `/work/rtl/ot_s81_kp4_bm.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_kp4_bm'.
+Warning: Replacing memory \th with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:72
+Warning: Replacing memory \d with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:71
+Warning: Replacing memory \dz with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:60
+Warning: Replacing memory \kc with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:59
+Warning: Replacing memory \gm with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:58
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_common.sv
+Parsing SystemVerilog input from `/work/rtl/ot_s81_kp4_common.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_kp4_rst'.
+Generating RTLIL representation for module `\ot_s81_kp4_cmul'.
+Generating RTLIL representation for module `\ot_s81_kp4_vmul'.
+Generating RTLIL representation for module `\ot_s81_kp4_inv'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_dchn.sv
+Parsing SystemVerilog input from `/work/rtl/ot_s81_kp4_dchn.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_kp4_dchn'.
+Warning: Replacing memory \g_count_original.pt with list of registers. See /work/rtl/ot_s81_kp4_dchn.sv:120, /work/rtl/ot_s81_kp4_dchn.sv:119
+Warning: Replacing memory \e1_dv with list of registers. See /work/rtl/ot_s81_kp4_dchn.sv:101
+Warning: Replacing memory \e1_ov with list of registers. See /work/rtl/ot_s81_kp4_dchn.sv:101
+Warning: Replacing memory \Ro with list of registers. See /work/rtl/ot_s81_kp4_dchn.sv:52
+Warning: Replacing memory \Rl with list of registers. See /work/rtl/ot_s81_kp4_dchn.sv:44
+Warning: Replacing memory \cw_s with list of registers. See /work/rtl/ot_s81_kp4_dchn.sv:70
+Generating RTLIL representation for module `\ot_s81_kp4_count28'.
+Generating RTLIL representation for module `\ot_s81_kp4_count14'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_ddly.sv
+Parsing SystemVerilog input from `/work/rtl/ot_s81_kp4_ddly.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_kp4_ddly'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_dec.sv
+Parsing SystemVerilog input from `/work/rtl/ot_s81_kp4_dec.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_kp4_dec'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_dout.sv
+Parsing SystemVerilog input from `/work/rtl/ot_s81_kp4_dout.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_kp4_dout'.
+Warning: Replacing memory \os with list of registers. See /work/rtl/ot_s81_kp4_dout.sv:41
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_dsyn.sv
+Parsing SystemVerilog input from `/work/rtl/ot_s81_kp4_dsyn.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_kp4_dsyn'.
+Warning: Replacing memory \ldr with list of registers. See /work/rtl/ot_s81_kp4_dsyn.sv:97
+Warning: Replacing memory \xs with list of registers. See /work/rtl/ot_s81_kp4_dsyn.sv:66
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_enc.sv
+Parsing SystemVerilog input from `/work/rtl/ot_s81_kp4_enc.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_kp4_enc'.
+Warning: Replacing memory \sw with list of registers. See /work/rtl/ot_s81_kp4_enc.sv:124
+Warning: Replacing memory \so with list of registers. See /work/rtl/ot_s81_kp4_enc.sv:123
+Warning: Replacing memory \sk with list of registers. See /work/rtl/ot_s81_kp4_enc.sv:56
+Successfully finished Verilog frontend.
+
+16. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \CUT_BM = 1
+
+17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pdie_serdes_rx_bm3_family'.
+Parameter \CUT_BM = 1
+Generating RTLIL representation for module `$paramod\ot_pdie_serdes_rx_bm3_family\CUT_BM=s32'00000000000000000000000000000001'.
+
+17.1. Analyzing design hierarchy..
+Top module:  \ot_pdie_serdes_rx_bm3_family
+Used module:     \ot_pdie_serdes_rx_bm3_residual
+Used module:         \ot_pdie_serdes_rx_bm3_rest
+Used module:             \ot_s81_rate_match
+Used module:             \ot_s81_kp4_dout
+Used module:                 \ot_s81_kp4_rst
+Used module:             \ot_s81_kp4_ddly
+Used module:             \ot_s81_kp4_dsyn_bm3_rest
+Used module:             \ot_s81_pma_bm
+Used module:         \ot_hbm_face_reg
+Used module:     \ot_pdie_serdes_rx_bm_native
+Used module:         \ot_s81_kp4_bm
+Used module:             \ot_s81_kp4_vmul
+Parameter \NG = 4
+Parameter \NCD = 4
+Parameter \THC = 1
+
+17.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_kp4_bm'.
+Parameter \NG = 4
+Parameter \NCD = 4
+Parameter \THC = 1
+Generating RTLIL representation for module `$paramod$ff6e39d873c5db390ae460817effd8d8ed30639b\ot_s81_kp4_bm'.
+Warning: Replacing memory \th with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:72
+Warning: Replacing memory \d with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:71
+Warning: Replacing memory \dz with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:60
+Warning: Replacing memory \kc with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:59
+Warning: Replacing memory \gm with list of registers. See /work/rtl/ot_s81_kp4_bm.sv:58
+Parameter \NL = 3
+
+17.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_kp4_rst'.
+Parameter \NL = 3
+Generating RTLIL representation for module `$paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000011'.
+Parameter \NL = 1
+
+17.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_kp4_rst'.
+Parameter \NL = 1
+Generating RTLIL representation for module `$paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001'.
+Parameter \NL = 1
+Found cached RTLIL representation for module `$paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001'.
+Parameter \DD = 57
+
+17.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_kp4_ddly'.
+Parameter \DD = 57
+Generating RTLIL representation for module `$paramod\ot_s81_kp4_ddly\DD=s32'00000000000000000000000000111001'.
+Parameter \MUT = 0
+Parameter \BMTHC = 0
+
+17.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_kp4_dsyn_bm3_rest'.
+Parameter \MUT = 0
+Parameter \BMTHC = 0
+Generating RTLIL representation for module `$paramod$aa226e5aa5687ad944072c6960f6093137ddd1c0\ot_s81_kp4_dsyn_bm3_rest'.
+Warning: Replacing memory \ldr with list of registers. See /work/rtl/ot_pdie_serdes_rx_bm3.sv:102
+Warning: Replacing memory \xs with list of registers. See /work/rtl/ot_pdie_serdes_rx_bm3.sv:71
+Parameter \W = 544
+Parameter \LAT = 4
+
+17.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_pma_bm'.
+Parameter \W = 544
+Parameter \LAT = 4
+Generating RTLIL representation for module `$paramod$4de3137dc1f42e76df5d1501997d557986e52b8d\ot_s81_pma_bm'.
+Warning: Replacing memory \l with list of registers. See /work/rtl/ot_pdie_serdes.sv:113
+Parameter \BMTHC = 1
+
+17.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pdie_serdes_rx_bm3_rest'.
+Parameter \BMTHC = 1
+Generating RTLIL representation for module `$paramod\ot_pdie_serdes_rx_bm3_rest\BMTHC=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+
+17.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 1
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 8
+
+17.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Parameter \W = 544
+
+17.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 544
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 5
+
+17.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 5
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000101'.
+Parameter \W = 310
+
+17.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 310
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000100110110'.
+Parameter \W = 4
+
+17.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 4
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000100'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 544
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000'.
+Parameter \W = 2
+
+17.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 2
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Parameter \W = 512
+
+17.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 512
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000000000'.
+Parameter \BMTHC = 1
+
+17.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pdie_serdes_rx_bm_native'.
+Parameter \BMTHC = 1
+Generating RTLIL representation for module `$paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001'.
+Parameter \BMTHC = 1
+Found cached RTLIL representation for module `$paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001'.
+Parameter \BMTHC = 1
+Found cached RTLIL representation for module `$paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001'.
+
+17.18. Analyzing design hierarchy..
+Top module:  \ot_pdie_serdes_rx_bm3_family
+Used module:     \ot_pdie_serdes_rx_bm3_residual
+Used module:         $paramod\ot_pdie_serdes_rx_bm3_rest\BMTHC=s32'00000000000000000000000000000001
+Used module:             \ot_s81_rate_match
+Used module:             \ot_s81_kp4_dout
+Used module:                 $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001
+Used module:             \ot_s81_kp4_ddly
+Used module:             \ot_s81_kp4_dsyn_bm3_rest
+Used module:                 $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000011
+Used module:             \ot_s81_pma_bm
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000100110110
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000000000
+Used module:     $paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001
+Used module:         \ot_s81_kp4_bm
+Used module:             \ot_s81_kp4_vmul
+Parameter \DD = 57
+Found cached RTLIL representation for module `$paramod\ot_s81_kp4_ddly\DD=s32'00000000000000000000000000111001'.
+Parameter \MUT = 0
+Parameter \BMTHC = 1
+
+17.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_kp4_dsyn_bm3_rest'.
+Parameter \MUT = 0
+Parameter \BMTHC = 1
+Generating RTLIL representation for module `$paramod$c90dac3de6f16a32903cf081ead79695be9812f1\ot_s81_kp4_dsyn_bm3_rest'.
+Warning: Replacing memory \ldr with list of registers. See /work/rtl/ot_pdie_serdes_rx_bm3.sv:102
+Warning: Replacing memory \xs with list of registers. See /work/rtl/ot_pdie_serdes_rx_bm3.sv:71
+Parameter \W = 544
+Parameter \LAT = 4
+Found cached RTLIL representation for module `$paramod$4de3137dc1f42e76df5d1501997d557986e52b8d\ot_s81_pma_bm'.
+Parameter \NG = 4
+Parameter \NCD = 4
+Parameter \THC = 1
+Found cached RTLIL representation for module `$paramod$ff6e39d873c5db390ae460817effd8d8ed30639b\ot_s81_kp4_bm'.
+
+17.20. Analyzing design hierarchy..
+Top module:  \ot_pdie_serdes_rx_bm3_family
+Used module:     \ot_pdie_serdes_rx_bm3_residual
+Used module:         $paramod\ot_pdie_serdes_rx_bm3_rest\BMTHC=s32'00000000000000000000000000000001
+Used module:             \ot_s81_rate_match
+Used module:             \ot_s81_kp4_dout
+Used module:                 $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001
+Used module:             $paramod\ot_s81_kp4_ddly\DD=s32'00000000000000000000000000111001
+Used module:                 \ot_s81_kp4_rst
+Used module:             $paramod$c90dac3de6f16a32903cf081ead79695be9812f1\ot_s81_kp4_dsyn_bm3_rest
+Used module:             $paramod$4de3137dc1f42e76df5d1501997d557986e52b8d\ot_s81_pma_bm
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000100110110
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000000000
+Used module:     $paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001
+Used module:         $paramod$ff6e39d873c5db390ae460817effd8d8ed30639b\ot_s81_kp4_bm
+Used module:             \ot_s81_kp4_vmul
+Parameter \NL = 1
+Found cached RTLIL representation for module `$paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001'.
+Parameter \NL = 3
+Found cached RTLIL representation for module `$paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000011'.
+
+17.21. Analyzing design hierarchy..
+Top module:  \ot_pdie_serdes_rx_bm3_family
+Used module:     \ot_pdie_serdes_rx_bm3_residual
+Used module:         $paramod\ot_pdie_serdes_rx_bm3_rest\BMTHC=s32'00000000000000000000000000000001
+Used module:             \ot_s81_rate_match
+Used module:             \ot_s81_kp4_dout
+Used module:                 $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001
+Used module:             $paramod\ot_s81_kp4_ddly\DD=s32'00000000000000000000000000111001
+Used module:             $paramod$c90dac3de6f16a32903cf081ead79695be9812f1\ot_s81_kp4_dsyn_bm3_rest
+Used module:                 $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000011
+Used module:             $paramod$4de3137dc1f42e76df5d1501997d557986e52b8d\ot_s81_pma_bm
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000100110110
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000000000
+Used module:     $paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001
+Used module:         $paramod$ff6e39d873c5db390ae460817effd8d8ed30639b\ot_s81_kp4_bm
+Used module:             \ot_s81_kp4_vmul
+
+17.22. Analyzing design hierarchy..
+Top module:  \ot_pdie_serdes_rx_bm3_family
+Used module:     \ot_pdie_serdes_rx_bm3_residual
+Used module:         $paramod\ot_pdie_serdes_rx_bm3_rest\BMTHC=s32'00000000000000000000000000000001
+Used module:             \ot_s81_rate_match
+Used module:             \ot_s81_kp4_dout
+Used module:                 $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001
+Used module:             $paramod\ot_s81_kp4_ddly\DD=s32'00000000000000000000000000111001
+Used module:             $paramod$c90dac3de6f16a32903cf081ead79695be9812f1\ot_s81_kp4_dsyn_bm3_rest
+Used module:                 $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000011
+Used module:             $paramod$4de3137dc1f42e76df5d1501997d557986e52b8d\ot_s81_pma_bm
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000101
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000100110110
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000100
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:         $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000000000
+Used module:     $paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001
+Used module:         $paramod$ff6e39d873c5db390ae460817effd8d8ed30639b\ot_s81_kp4_bm
+Used module:             \ot_s81_kp4_vmul
+Removing unused module `$paramod$aa226e5aa5687ad944072c6960f6093137ddd1c0\ot_s81_kp4_dsyn_bm3_rest'.
+Removing unused module `\ot_s81_kp4_enc'.
+Removing unused module `\ot_s81_kp4_dsyn'.
+Removing unused module `\ot_s81_kp4_dec'.
+Removing unused module `\ot_s81_kp4_ddly'.
+Removing unused module `\ot_s81_kp4_count14'.
+Removing unused module `\ot_s81_kp4_count28'.
+Removing unused module `\ot_s81_kp4_dchn'.
+Removing unused module `\ot_s81_kp4_inv'.
+Removing unused module `\ot_s81_kp4_cmul'.
+Removing unused module `\ot_s81_kp4_rst'.
+Removing unused module `\ot_s81_kp4_bm'.
+Removing unused module `\ot_pdie_serdes_rx__fcore'.
+Removing unused module `\ot_pdie_serdes_tx'.
+Removing unused module `$paramod\ot_pdie_serdes_rx_bm3_family\CUT_BM=s32'00000000000000000000000000000001'.
+Removing unused module `\ot_pdie_serdes_rx_bm3_legacy_family'.
+Removing unused module `\ot_pdie_serdes_rx_bm3_rest'.
+Removing unused module `\ot_pdie_serdes_rx_bm3_legacy'.
+Removing unused module `\ot_s81_kp4_dsyn_bm3_rest'.
+Removing unused module `\ot_pdie_serdes_rx_bm_native'.
+Removing unused module `\ot_pdie_serdes_rx'.
+Removing unused module `\ot_s81_pma_bm'.
+Removing unused module `\ot_pdie_ucie'.
+Removing unused module `\ot_pdie_serdes'.
+Removing unused module `\ot_hbm_face_reg'.
+Removed 25 unused modules.
+
+18. Printing statistics.
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+     1633 wire bits
+        3 public wires
+     1089 public wire bits
+        3 ports
+     1089 port bits
+        1 processes
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       25 wire bits
+        3 public wires
+       17 public wire bits
+        3 ports
+       17 port bits
+        1 processes
+
+=== ot_s81_kp4_vmul ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       57 wires
+      614 wire bits
+       10 public wires
+      122 public wire bits
+        3 ports
+       30 port bits
+        1 processes
+       30 cells
+       10   $mux
+       20   $xor
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 processes
+
+=== $paramod\ot_pdie_serdes_rx_bm3_rest\BMTHC=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       60 wires
+     5442 wire bits
+       44 public wires
+     5421 public wire bits
+       24 ports
+     3214 port bits
+        5 processes
+       10 cells
+        2   $logic_and
+        5   $logic_not
+        3   $or
+        5 submodules
+        1   $paramod$4de3137dc1f42e76df5d1501997d557986e52b8d\ot_s81_pma_bm
+        1   $paramod$c90dac3de6f16a32903cf081ead79695be9812f1\ot_s81_kp4_dsyn_bm3_rest
+        1   $paramod\ot_s81_kp4_ddly\DD=s32'00000000000000000000000000111001
+        1   ot_s81_kp4_dout
+        1   ot_s81_rate_match
+
+=== $paramod$4de3137dc1f42e76df5d1501997d557986e52b8d\ot_s81_pma_bm ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       15 wires
+     6050 wire bits
+        9 public wires
+     3298 public wire bits
+        4 ports
+     1090 port bits
+        1 processes
+        1 cells
+        1   $mux
+
+=== $paramod$c90dac3de6f16a32903cf081ead79695be9812f1\ot_s81_kp4_dsyn_bm3_rest ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     8193 wires
+   583976 wire bits
+     1877 public wires
+   309516 public wire bits
+       19 ports
+     2717 port bits
+      882 processes
+     5402 cells
+       16   $add
+     2380   $and
+        7   $eq
+        1   $le
+      315   $logic_and
+        8   $logic_not
+      303   $mux
+        6   $or
+      864   $reduce_or
+      900   $reduce_xor
+        1   $shl
+      601   $xor
+        1 submodules
+        1   $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000011
+
+=== $paramod\ot_s81_kp4_ddly\DD=s32'00000000000000000000000000111001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       12 wires
+     1668 wire bits
+        8 public wires
+     1649 public wire bits
+        4 ports
+     1090 port bits
+        1 processes
+        4 cells
+        1   $add
+        1   $logic_not
+        1   $sub
+        1   ot_sram_1r1w2c_64x546_m1
+        1 submodules
+        1   $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001
+
+=== $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+        9 wire bits
+        6 public wires
+        6 public wire bits
+        3 ports
+        3 port bits
+        1 processes
+
+=== ot_pdie_serdes_rx_bm3_residual ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       35 wires
+     5142 wire bits
+       35 public wires
+     5142 public wire bits
+       23 ports
+     3209 port bits
+       13 submodules
+        4   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000100
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000101
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000100110110
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000000000
+        2   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000
+        1   $paramod\ot_pdie_serdes_rx_bm3_rest\BMTHC=s32'00000000000000000000000000000001
+
+=== $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       15 wire bits
+        6 public wires
+       10 public wire bits
+        3 ports
+        5 port bits
+        1 processes
+
+=== $paramod$ff6e39d873c5db390ae460817effd8d8ed30639b\ot_s81_kp4_bm ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1043 wires
+    10601 wire bits
+      524 public wires
+     5745 public wire bits
+        9 ports
+      626 port bits
+      157 processes
+      245 cells
+        6   $add
+        4   $eq
+        8   $logic_and
+        9   $logic_not
+      161   $mux
+        5   $ne
+        4   $not
+        1   $reduce_or
+        1   $sub
+       46   $xor
+       92 submodules
+       92   ot_s81_kp4_vmul
+
+=== ot_pdie_serdes_rx_bm3_family ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       23 wires
+     3209 wire bits
+       23 public wires
+     3209 public wire bits
+       15 ports
+     1936 port bits
+        4 submodules
+        3   $paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001
+        1   ot_pdie_serdes_rx_bm3_residual
+
+=== $paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      626 wire bits
+        9 public wires
+      626 public wire bits
+        9 ports
+      626 port bits
+        1 submodules
+        1   $paramod$ff6e39d873c5db390ae460817effd8d8ed30639b\ot_s81_kp4_bm
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+     1537 wire bits
+        3 public wires
+     1025 public wire bits
+        3 ports
+     1025 port bits
+        1 processes
+
+=== ot_s81_kp4_dout ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     3769 wires
+    28497 wire bits
+      560 public wires
+    14798 public wire bits
+       14 ports
+     1633 port bits
+     1070 processes
+     2119 cells
+        1   $add
+     1056   $and
+        3   $logic_not
+      513   $reduce_or
+        1   $sub
+      544   $xor
+        1   ot_sram_1r1w_32x546_m1
+        1 submodules
+        1   $paramod\ot_s81_kp4_rst\NL=s32'00000000000000000000000000000001
+
+=== ot_s81_rate_match ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      123 wires
+    14567 wire bits
+       38 public wires
+     5193 public wire bits
+        8 ports
+     1030 port bits
+        7 processes
+       42 cells
+        6   $add
+        2   $eq
+        1   $ge
+        6   $logic_and
+       10   $logic_not
+        2   $shr
+        1   $sub
+       14   $xor
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        7 wire bits
+        3 public wires
+        5 public wire bits
+        3 ports
+        5 port bits
+        1 processes
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       13 wire bits
+        3 public wires
+        9 public wire bits
+        3 ports
+        9 port bits
+        1 processes
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000100110110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      931 wire bits
+        3 public wires
+      621 public wire bits
+        3 ports
+      621 port bits
+        1 processes
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       16 wire bits
+        3 public wires
+       11 public wire bits
+        3 ports
+       11 port bits
+        1 processes
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+    16593 ot_pdie_serdes_rx_bm3_family
+      245   $paramod$ff6e39d873c5db390ae460817effd8d8ed30639b\ot_s81_kp4_bm
+       30     ot_s81_kp4_vmul
+       10   $paramod\ot_pdie_serdes_rx_bm3_rest\BMTHC=s32'00000000000000000000000000000001
+        1     $paramod$4de3137dc1f42e76df5d1501997d557986e52b8d\ot_s81_pma_bm
+     5402     $paramod$c90dac3de6f16a32903cf081ead79695be9812f1\ot_s81_kp4_dsyn_bm3_rest
+        4     $paramod\ot_s81_kp4_ddly\DD=s32'00000000000000000000000000111001
+     2119     ot_s81_kp4_dout
+       42     ot_s81_rate_match
+
+        +----------Count including submodules.
+        | 
+    31193 wires
+   857540 wire bits
+     7007 public wires
+   404911 public wire bits
+     1038 ports
+    31844 port bits
+        - memories
+        - memory bits
+     2728 processes
+    16593 cells
+       42   $add
+     3436   $and
+       21   $eq
+        1   $ge
+        1   $le
+      347   $logic_and
+       54   $logic_not
+     3547   $mux
+       15   $ne
+       12   $not
+        9   $or
+     1380   $reduce_or
+      900   $reduce_xor
+        1   $shl
+        2   $shr
+        6   $sub
+     6817   $xor
+        1   ot_sram_1r1w2c_64x546_m1
+        1   ot_sram_1r1w_32x546_m1
+        4 submodules
+        3   $paramod\ot_pdie_serdes_rx_bm_native\BMTHC=s32'00000000000000000000000000000001
+        1   ot_pdie_serdes_rx_bm3_residual
+
+19. Executing RTLIL backend.
+Output filename: /work/map/elab1.il
+
+Warnings: 21 unique messages, 31 total
+End of script. Logfile hash: 2ca848a746, time: 52.22s, user: 51.74s, system: 0.26s, MEM: 209.88 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 77% 14x read_verilog (40 sec), 22% 1x hierarchy (11 sec), ...
+	Command being timed: "yosys -s map/elab1.ys"
+	User time (seconds): 51.89
+	System time (seconds): 0.29
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:52.44
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 214912
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 60592
+	Voluntary context switches: 132
+	Involuntary context switches: 652
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 11992
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

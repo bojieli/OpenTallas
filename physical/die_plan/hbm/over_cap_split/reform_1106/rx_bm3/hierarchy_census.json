@@ -1,0 +1,103 @@
+{
+  "scope": "immutable EP5 rx_eco/i2 6_final.v and placed.csv; name census exact; backward D-cone ownership conservative/nonexclusive and stops at registered Q",
+  "netlist_sha256": "1609f50777078fcfdaecddfceb9aed0b02e14c0f5f207a36cb797c66e81f64d5",
+  "ASAP_functional": 156838,
+  "literal_name_census": {
+    "anonymous": 135005,
+    "outer_faces": 6129,
+    "other_rx_state": 24,
+    "ddly": 558,
+    "dout": 2042,
+    "pma_rx": 2176,
+    "rate_match": 5186,
+    "syn_front": 2667,
+    "bm0": 1017,
+    "bm1": 1017,
+    "bm2": 1017
+  },
+  "literal_ff_census": {
+    "outer_faces": 1933,
+    "other_rx_state": 11,
+    "ddly": 8,
+    "dout": 1492,
+    "pma_rx": 2176,
+    "rate_match": 4641,
+    "syn_front": 2667,
+    "bm0": 1017,
+    "bm1": 1017,
+    "bm2": 1017
+  },
+  "placed_functional": 149277,
+  "placed_kinds": {
+    "buf": 18093,
+    "std": 115205,
+    "ff": 15979
+  },
+  "placed_literal_name_census": {
+    "anonymous": 129151,
+    "ddly": 558,
+    "outer_faces": 4422,
+    "other_rx_state": 24,
+    "dout": 2042,
+    "pma_rx": 2176,
+    "rate_match": 5186,
+    "syn_front": 2667,
+    "bm0": 1017,
+    "bm1": 1017,
+    "bm2": 1017
+  },
+  "placed_ff_census": {
+    "outer_faces": 1933,
+    "other_rx_state": 11,
+    "ddly": 8,
+    "dout": 1492,
+    "pma_rx": 2176,
+    "rate_match": 4641,
+    "syn_front": 2667,
+    "bm0": 1017,
+    "bm1": 1017,
+    "bm2": 1017
+  },
+  "backward_Dcone_including_owned_FF_nonexclusive": {
+    "dout": 7301,
+    "syn_front": 42685,
+    "ddly": 42,
+    "rate_match": 17346,
+    "bm0": 24236,
+    "bm1": 24350,
+    "bm2": 24192,
+    "other_rx_state": 30,
+    "pma_rx": 4877,
+    "outer_faces": 6796
+  },
+  "backward_Dcone_exclusive": {
+    "dout": 7300,
+    "rate_match": 17342,
+    "syn_front": 42445,
+    "bm0": 23186,
+    "bm1": 23285,
+    "bm2": 23170,
+    "ddly": 32,
+    "other_rx_state": 28,
+    "pma_rx": 4877,
+    "outer_faces": 6463
+  },
+  "shared_combinational_signatures": {
+    "ddly,dout,syn_front": 1,
+    "other_rx_state,syn_front": 2,
+    "bm0,bm1": 54,
+    "bm0,bm1,bm2": 656,
+    "bm0,bm1,bm2,syn_front": 223,
+    "bm0,bm2": 11,
+    "bm1,bm2": 14,
+    "bm0,syn_front": 1,
+    "ddly,syn_front": 5,
+    "bm2,outer_faces": 114,
+    "bm0,outer_faces": 105,
+    "bm1,outer_faces": 114,
+    "bm1,bm2,syn_front": 4,
+    "ddly,rate_match,syn_front": 4
+  },
+  "unreached_comb_cells": 7402,
+  "caveat": "135005 anonymous final cells prevent exact module totals by name; Dcone assignment is conservative overlap, not original RTL attribution; clocks/resets/macros/output-only cones may remain outside Dcone."
+}

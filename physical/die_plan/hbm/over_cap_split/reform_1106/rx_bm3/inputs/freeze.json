@@ -1,0 +1,110 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "ot_pdie_serdes_rx@4757e2572c4d",
+ "module": "ot_pdie_serdes_rx",
+ "design": "ot_pdie_serdes_rx",
+ "rtl_top": "ot_pdie_serdes_rx",
+ "recipe_key": "ot_pdie_serdes_rx",
+ "recipe_sha256": "c4f51221536380f1de822a23424e30cccc866615c93d36d61a34d9dfdfc85676",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  302.4,
+  345.6
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/hbm-gaps-3/rxfix/plan/die_plan.json",
+ "plan_sha256": "5ca25c1d55a1aa686b62c83389cf6cecb8611e57184d0b4512d4da786b5b0b8e",
+ "pins_file": "plan_pins.json",
+ "pins_sha256": "e7ea61ff8a2b08053c07656936e753aad53f9a5b263645c4a982fba556038fe6",
+ "pins_canon_sha256": "c5b368945c2289a125b4ce4d663d29cdccb6e84d643d1a3730718e190c67bb44",
+ "pins": 1936,
+ "clocks": [
+  "clk",
+  "rck_clk"
+ ],
+ "resets": [
+  "rst"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 433.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [
+  "GLOBAL_ROUTE_ARGS=-congestion_report_iter_step 5 -verbose -allow_congestion"
+ ],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w2c_64x546_m1",
+  "ot_sram_1r1w_32x546_m1"
+ ],
+ "face_shell": {
+  "core": "ot_pdie_serdes_rx__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 1933,
+  "dropped": 5,
+  "unread_kept": 0,
+  "const_out_bits": 0,
+  "dup_out_bits": 0,
+  "plan_pins": 1941
+ },
+ "kit_hash": "cc8092d4c9b026ea",
+ "plan_pins_source": "cores/ot_pdie_serdes_rx__302.4x345.6__d44v_split.json",
+ "plan_pins_source_sha256": "4757e2572c4de18054f855bc9260d0d850c986c244e11a896765e4e58b46791a",
+ "plan_pins_source_canon_sha256": "0f5a44dbf9958c7a865592db36028b96c9ecf29958ae1dbbc313400a4e6eb5a9",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 433.0,
+   "io_ff_ps": 345.0,
+   "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+   "basis": "measured"
+  },
+  "f4": true,
+  "cts_setup_tt": {
+   "previous_post_cts": "/work/f4_chain_leaf.tcl",
+   "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+   "hold": "GRT step only"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 433.0,
+   "ff": 345.0,
+   "measured_hold_dropped": true
+  },
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "clock_density_contract": {
+  "schema": "opentallas.hbm_multi_density.v1",
+  "module": "ot_pdie_serdes_rx",
+  "clock_ports": [
+   "clk",
+   "rck_clk"
+  ],
+  "layout": "density",
+  "common_alignment": true,
+  "merge_roots": false,
+  "review": {
+   "verdict": "AUTO",
+   "by": "gen_core_kit_hbm --multiport-density auto",
+   "note": "DIE-HBM-61/HOLD 11-03 class MULTIPORT-HOLD (OWNER 11-03 safe forms; targets, not gates): a native multi-port core (face clocks clk_n/e/s/w + clk_macro* + clk) without a reviewed density contract got one independent TritonCTS tree per port; tap_balance pads short trees to the fixed 250-ps target only, so face trees stayed 50-95 ps early vs the macro-fan core tree (130-167 um leaf fans) -> face->body zero-logic reg2reg FF hold -158..-212 ps.  Auto form = the reviewed vec6293 form: per-port density trees (no pin merged or dropped) + common tap alignment.  Probe vms vb64bbf321780 CTS: FF reg2reg -212.47 -> -34.32 (screen PASS), tap spread 20.6 ps, TT setup -82.9 -> -9.3; insertion ~482 ps TT -> hard_core_latency contract (band INFO)"
+  },
+  "delay_cell": "BUFx12_ASAP7_75t_R",
+  "file": "clock_density_contract.json"
+ },
+ "clock_taps": {
+  "mode": "density",
+  "sinks": 1250,
+  "dmax_um": 80.0
+ },
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_pdie_serdes_rx",
+  "die": "hbm",
+  "contract": "/srv/opentallas-scratch2/claude/hbm-gaps-3/rxfix/wt/physical/die_plan/hbm/reset_contract.json",
+  "contract_sha256": "8cd652536fab9cb89b5f4d0a0329b2374391cf2774944c3e41fe18463873b7c4",
+  "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+ },
+ "source_commit": "b2c34c68c0222fb1d456b046804c293a9b8d1c77"
+}
