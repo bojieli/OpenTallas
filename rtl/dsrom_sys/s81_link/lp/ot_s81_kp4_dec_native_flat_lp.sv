@@ -38,6 +38,19 @@ wire [543:0] face_p_d;
 wire [8:0] face_am_parts;
 ot_s81_kp4_am_face3 u_face_am3 (.clk(ck_syn), .p_d(p_d), .parts(face_am_parts));
 `endif
+`ifdef OT_S81_RCK_RELAY4
+`ifndef OT_S81_KP4_AM_FACE3
+initial $error("RCK relay4 requires the joint AM face3 source option");
+`endif
+// A whole cohort, one word/edge. The reset root takes the SAME four edges.
+wire [543:0] rck_p_d;
+wire rck_p_v;
+wire [8:0] rck_am_parts;
+wire rck_reset_calendar;
+ot_pl_pad #(.W(554), .N(4)) u_rck_transport4 (.ck(ck_syn),
+    .d({face_am_parts, face_p_v, face_p_d}), .q({rck_am_parts, rck_p_v, rck_p_d}));
+ot_pl_pad #(.W(1), .N(4)) u_rck_reset4 (.ck(ck_syn), .d(rst_n), .q(rck_reset_calendar));
+`endif
 wire  face_q_v;
 wire [511:0] face_q_d;
 wire  face_q_first;
@@ -49,7 +62,13 @@ wire [31:0] face_n_corr;
 wire [31:0] face_n_unc;
 wire [31:0] face_n_relock;
     // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region syn holds the root)
-    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_syn), .d(rst_n), .q(lpr_root));
+    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_syn), .d(
+`ifdef OT_S81_RCK_RELAY4
+rck_reset_calendar
+`else
+rst_n
+`endif
+), .q(lpr_root));
     wire lpr_syn;  ot_pl_pad #(.W(1), .N(2)) u_lpr_syn (.ck(ck_syn), .d(lpr_root), .q(lpr_syn));   // 0 hop(s) from syn
     wire lpr_dly;  ot_pl_pad #(.W(1), .N(2)) u_lpr_dly (.ck(ck_dly), .d(lpr_root), .q(lpr_dly));   // 1 hop(s) from syn
     wire lpr_chn;  ot_pl_pad #(.W(1), .N(2)) u_lpr_chn (.ck(ck_chn), .d(lpr_root), .q(lpr_chn));   // 1 hop(s) from syn
@@ -114,9 +133,27 @@ wire [31:0] face_n_relock;
     wire lpr_c_u_chn;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_chn (.ck(ck_chn), .d(lpr_chn), .q(lpr_c_u_chn));   // t(u_chn) = 3
     wire lpr_c_u_out;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_out (.ck(ck_out), .d(lpr_out), .q(lpr_c_u_out));   // t(u_out) = 6
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    ot_s81_kp4_dsyn u_syn (.clk(ck_syn), .rst_n(lpr_c_u_syn), .p_v(face_p_v), .p_d(face_p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .lock(face_lock), .n_relock(face_n_relock)
+    ot_s81_kp4_dsyn u_syn (.clk(ck_syn), .rst_n(lpr_c_u_syn), .p_v(
+`ifdef OT_S81_RCK_RELAY4
+rck_p_v
+`else
+face_p_v
+`endif
+), .p_d(
+`ifdef OT_S81_RCK_RELAY4
+rck_p_d
+`else
+face_p_d
+`endif
+), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .lock(face_lock), .n_relock(face_n_relock)
 `ifdef OT_S81_KP4_AM_FACE3
-        , .am_face3(face_am_parts)
+        , .am_face3(
+`ifdef OT_S81_RCK_RELAY4
+rck_am_parts
+`else
+face_am_parts
+`endif
+)
 `endif
     );   // region syn, t = 0
     ot_s81_kp4_ddly u_dly (.clk(ck_dly), .rst_n(lpr_c_u_dly), .w_d(x_q__l_dly), .r_d(d_q));   // region dly, t = 3

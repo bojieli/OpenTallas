@@ -29,7 +29,13 @@ module ot_pl_land_w #(
     reg [W-1:0]    b [0:D-1];
     reg [AW:0]     e [0:D-1];
     reg [D-1:0]    v;
+`ifdef OT_S81_RCK_RELAY4
+    (* keep = "true" *)
+`endif
     always @(posedge ck) rq <= rsi;
+`ifdef OT_S81_RCK_RELAY4
+    (* keep = "true" *)
+`endif
     always @(posedge ck)
         if (!rq) wc <= {(AW + 1){1'b0}};
         else     wc <= wc + 1'b1;
@@ -67,7 +73,13 @@ module ot_pl_land_r #(
     wire [AW:0]    kk = K;
     wire [AW:0]    exp_ = rc - kk;
     wire [AW-1:0]  sel = exp_[AW-1:0];
+`ifdef OT_S81_RCK_RELAY4
+    (* keep = "true" *)
+`endif
     always @(posedge ck) rq <= rsi;
+`ifdef OT_S81_RCK_RELAY4
+    (* keep = "true" *)
+`endif
     always @(posedge ck)
         if (!rq) begin rc <= {(AW + 1){1'b0}}; warm <= 1'b0; end
         else begin
