@@ -8,7 +8,7 @@ The default is `NOUT=24, WROW0=0, OROW0=0`. The owned option is `NOUT=1, WROW0=0
 
 The wrapper gate compared the original/new default and checked owned command/base/global-row/store behavior:13492 exact checks over1200 cycles, including all24 runtime row IDs. Bypassed row mapping and incorrect weight-base mutants were caught; invalid row24 was caught. Arithmetic and F20 protocol are deliberately abstracted in that gate. Header-only ABI repair leaves the proved root body byte-identical; `evidence/owned_root_wrapper_1106/abi.json` records the current source hash and original12 name/default prefix. The old proof's37be baseline root bytes match main51f4c117ca5 exactly.
 
-The standalone encoder has three passing checks against the existing encoders, runtime row mapping and bounds. A separate legacy positional elaboration check is supplied; its current run is queued on epyc5 and has no result yet.
+The standalone encoder has three passing checks against the existing encoders, runtime row mapping and bounds. The separate legacy positional elaboration check passed on epyc5 with all12 old arguments retaining their meanings and new options retaining defaults; its receipt is runpositional.log.
 
 Reproduce through fleet admission:
 
