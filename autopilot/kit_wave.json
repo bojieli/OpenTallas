@@ -1508,7 +1508,9 @@
     "slice_station__t8@1",
     "ot_s81sl_leaf__t27@1",
     "ot_s81sl_leaf__t42@1",
-    "ot_s81sl_leaf__t53__cl958451dd@1"
+    "ot_s81sl_leaf__t53__cl958451dd@1",
+    "ot_s81sl_leaf__t53__clb66fa5cb@1",
+    "ot_s81sl_leaf__t56@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2249,6 +2251,12 @@
      "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "ot_s81sl_leaf__t53__cl958451dd": {
+     "OT_GRT_ALLOW_CONGESTION": "1"
+    },
+    "ot_s81sl_leaf__t53__clb66fa5cb": {
+     "OT_GRT_ALLOW_CONGESTION": "1"
+    },
+    "ot_s81sl_leaf__t56": {
      "OT_GRT_ALLOW_CONGESTION": "1"
     }
    },
