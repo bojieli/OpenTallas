@@ -360,6 +360,258 @@ endmodule
 
 // Hbm half: descriptor FIFO, 4 PC owners, response arbiter with one credit counter per landing bank, K pins.
 // MUT (bench): 1 = credit counter starts one over the FIFO depth, 2 = a freed credit is dropped on bank 6 at count 20.
+`ifdef OT_SVGR_OWN_RF1
+// HBM-GAPS-5-LEC 2026-11-05 RE-FORM RF1 of ot_svgr_own (the skid form failed twice: setup -277 ps and synth LEC). Opt-in
+// define OT_SVGR_OWN_RF1 (recipe ot_svgr_own only); with the define off this file is unchanged. Port faces unchanged.
+// LEC: the owner keeps one register for "permuted" (length_q[e][2], the only length with bit 2 is 4 = full group) and the
+// K request handshake state is not FSM-recoded, so gold and gate keep the same flops.
+// Timing cuts (each cut adds latency only, never a dropped or reordered word):
+//  D  descriptor: one register stage after the async FIFO; the owners issue from the registered block (h_*), never from
+//     the descriptor word of the same edge (+1 hbm_clk before the first K request of a block).
+//  K  K read response: kr_in hands its word from a head register (+1 hbm_pc_clk per K read word, same queue depth and
+//     same p_rdy credit); the skid write no longer waits on the owner lookup: every word enters the skid with its
+//     lookup verdict, a refused word blocks the skid head and the owner fault stops the die as before.
+//  R  rx_left counts the response takes one hbm_clk late (a bank frees 1 edge later for its next descriptor).
+//  A  arbiter: per-lane one-hot grant nets (kept) drive the AND-OR data select.
+// MUT (bench) in addition to ot_svgr_own: 6 = kr head overwritten while held, 7 = bank 0 never counts a take.
+module ot_svgr_owner_rf #(parameter integer OWNER_AW=5,parameter integer LB=1)(
+ input wire [4:0] pc_id,input wire clk,rst_n,descriptor_v,
+ input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
+ input wire [14:0] block_row_base,input wire [11:0] block_total,input wire [LB-1:0] block_bank,
+ input wire [15:0] block_epoch,input wire stop,k_ready,kr_v,input wire [16:0] kr_tag,
+ input wire [3:0] kr_beat,input wire response_take,
+ output wire k_v,output wire [29:0] k_addr,output wire [3:0] k_len,output wire [16:0] k_tag,
+ output wire response_ok,output wire [10:0] response_ordinal,
+ output wire [15:0] response_epoch,output wire [LB-1:0] response_bank,output wire fault,
+ output wire issue_done
+);
+ // ot_hbm_svc_prefetch_overlap_owner_rel_id issuing from the registered block only (block_active is 0 on a descriptor
+ // edge: the hbm half takes a descriptor only while no block is active).
+ localparam integer ENTRIES=1<<OWNER_AW,GW=17-OWNER_AW;
+ reg [4:0] pc_q;always @(posedge clk)pc_q<=pc_id;
+ reg [16:0] ticket;reg [9:0] cursor;reg sticky;reg issuing_q;
+ reg [ENTRIES-1:0] valid_q;
+ reg [GW-1:0] generation_q[0:ENTRIES-1];reg [15:0] epoch_q[0:ENTRIES-1];
+ reg [LB-1:0] bank_q[0:ENTRIES-1];reg [1:0] row_low_q[0:ENTRIES-1];
+ reg [10:0] ordinal_q[0:ENTRIES-1];reg [2:0] length_q[0:ENTRIES-1];reg [3:0] seen_q[0:ENTRIES-1];
+ wire [19:0] pcs=block_pcs;wire [14:0] row_base=block_row_base;wire [11:0] total=block_total;
+ wire [15:0] epoch=block_epoch;wire [LB-1:0] bank=block_bank;
+ reg selected;reg [1:0] lane;integer j;
+ always @*begin
+  selected=0;lane=0;
+  for(j=0;j<4;j=j+1)if(pcs[j*5+:5]==pc_q)begin selected=1;lane=j;end
+ end
+ wire [9:0] t=cursor;
+ wire [10:0] words=total>lane?(total+3-lane)/4:0;
+ wire full_group=words>={1'b0,t}+4;
+ wire [2:0] length=full_group?3'd4:3'd1;
+ wire [14:0] row=row_base;
+ wire [2:0] slot=block_base[9:7];
+ wire [9:0] t_s={t[9:7]|slot,t[6:0]};
+ wire [9:0] mapped_t=full_group?{t_s[9:2],row[1:0]}:t_s;
+ wire [4:0] dram_bank={mapped_t[9:7],mapped_t[1:0]};
+ wire [4:0] col=mapped_t[6:2];
+ wire [2:0] bhi=dram_bank[4:2]^row[4:2];
+ wire [1:0] blo=dram_bank[1:0]^row[1:0];
+ wire [4:0] hi5={row[1:0],bhi};
+ assign k_addr={row,bhi,col,pc_q^col^hi5,blo};
+ assign k_len={1'b0,length};assign k_tag=ticket;
+ wire [OWNER_AW-1:0] alloc=ticket[OWNER_AW-1:0],ret=kr_tag[OWNER_AW-1:0];
+ assign k_v=block_active&&selected&&t<words&&!valid_q[alloc]&&!sticky&&!stop;
+ assign response_ok=kr_v&&valid_q[ret]&&generation_q[ret]==kr_tag[16:OWNER_AW]&&kr_beat<length_q[ret]&&!seen_q[ret][kr_beat]&&!sticky&&!stop;
+ wire [1:0] word_offset=length_q[ret][2]?(kr_beat[1:0]^row_low_q[ret]):2'd0;
+ assign response_ordinal=ordinal_q[ret]+{7'd0,word_offset,2'b0};
+ assign response_epoch=epoch_q[ret];assign response_bank=bank_q[ret];assign fault=sticky;
+ wire issuing=block_active&&selected&&t<words;
+ assign issue_done=!issuing;
+ function automatic [3:0] mask_for(input [2:0] n);
+  case(n)1:mask_for=1;4:mask_for=15;default:mask_for=0;endcase
+ endfunction
+ integer e;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin
+   ticket<=0;cursor<=0;valid_q<=0;sticky<=0;issuing_q<=0;
+   for(e=0;e<ENTRIES;e=e+1)begin generation_q[e]<=0;epoch_q[e]<=0;bank_q[e]<=0;row_low_q[e]<=0;ordinal_q[e]<=0;length_q[e]<=0;seen_q[e]<=0;end
+  end else begin
+   issuing_q<=issuing;
+   if(descriptor_v)begin if(issuing_q)sticky<=1;cursor<=0;end
+   if(k_v&&k_ready)begin
+    valid_q[alloc]<=1;generation_q[alloc]<=ticket[16:OWNER_AW];epoch_q[alloc]<=epoch;bank_q[alloc]<=bank;
+    ordinal_q[alloc]<={t[8:0],2'b0}+lane;length_q[alloc]<=length;seen_q[alloc]<=0;
+    row_low_q[alloc]<=row[1:0];ticket<=ticket+1'b1;cursor<=t+length;
+   end
+   if(kr_v&&!response_ok)sticky<=1;
+   if(response_take)begin
+    seen_q[ret]<=seen_q[ret]|(4'b1<<kr_beat);
+    if((seen_q[ret]|(4'b1<<kr_beat))==mask_for(length_q[ret]))valid_q[ret]<=0;
+   end
+  end
+ end
+endmodule
+
+// ot_svgr_k_out with the handshake state kept as written (not FSM-recoded), so the synth LEC matches it flop for flop.
+module ot_svgr_k_out_rf #(parameter integer W=51,parameter integer MUT=0)(input wire clk,rst_n,input wire i_v,output wire i_rdy,input wire [W-1:0] i_d,output reg p_v,input wire p_rdy,output reg [W-1:0] p_d);
+ (* fsm_encoding = "none" *) reg [1:0] st;
+ assign i_rdy=st==0;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin st<=0;p_v<=0;p_d<=0;end
+  else begin
+   p_v<=0;
+   case(st)
+    0:if(i_v)begin p_d<=i_d;p_v<=1;st<=1;end
+    1:begin st<=2;if(MUT==1&&p_rdy)st<=0;end
+    2:st<=3;
+    3:if(p_rdy)st<=0;else begin p_v<=1;st<=1;end
+   endcase
+  end
+ end
+endmodule
+
+// ot_svgr_kr_in with a head register on the inside: same queue depth D and same p_rdy credit (the head is extra room).
+// MUT (bench): 1 = capture 1 edge late, 2 = the head is overwritten while still held.
+module ot_svgr_kr_in_h #(parameter integer W=277,parameter integer D=4,parameter integer MUT=0)(input wire clk,rst_n,input wire p_v,output wire p_rdy,input wire [W-1:0] p_d,output wire i_v,input wire i_rdy,output wire [W-1:0] i_d);
+ reg [W-1:0] m[0:D-1];reg [1:0] wp,rp;reg [2:0] n;reg r1,r2,r3;reg hv;reg [W-1:0] hd;
+ wire cap=(MUT==1?r3:r2)&&p_v;
+ wire hpop=hv&&i_rdy;
+ wire load=n!=0&&(!hv||hpop||MUT==2);
+ assign p_rdy=rst_n&&(3'(n)+3'(r1)+3'(r2)<3'(D));
+ assign i_v=hv;assign i_d=hd;
+ always @(posedge clk)if(cap)m[wp]<=p_d;
+ always @(posedge clk)if(load)hd<=m[rp];
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin wp<=0;rp<=0;n<=0;r1<=0;r2<=0;r3<=0;hv<=0;end
+  else begin r1<=p_rdy;r2<=r1;r3<=r2;if(cap)wp<=wp+1'b1;if(load)rp<=rp+1'b1;n<=n+3'(cap)-3'(load);hv<=load||(hv&&!hpop);end
+ end
+endmodule
+
+module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEPTH=8,parameter integer LBANKS=4,parameter integer LB=2,parameter integer MUT=0)(
+ input wire [1:0] id_stack,input wire [2:0] id_sm,input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,input wire [3:0] hbm_pc_clk,
+ input wire seam_res_v,input wire[96:0]seam_res_word,input wire seam_s_fault,output wire seam_h_fault,
+ output reg [7:0] bk_in_v,output wire [2279:0] bk_in_data,input wire [7:0] bk_cr,
+ output wire [3:0] k_v,input wire [3:0] k_rdy,output wire [119:0] k_addr,output wire [15:0] k_len,output wire [67:0] k_tag,output wire [3:0] k_we,
+ output wire [1023:0] k_wdata,output wire [127:0] k_wstrb,input wire [3:0] k_wr_done,
+ input wire [3:0] kr_v,output wire [3:0] kr_rdy,input wire [67:0] kr_tag,input wire [15:0] kr_beat,input wire [1023:0] kr_data
+);
+ wire [3:0] i_k_v,i_k_rdy,i_kr_v;wire [119:0] i_k_addr;wire [15:0] i_k_len;wire [67:0] i_k_tag;wire [3:0] i_kr_rdy;wire [67:0] i_kr_tag;wire [15:0] i_kr_beat;wire [1023:0] i_kr_data;
+ reg [1:0] stack_h;always @(posedge hbm_clk)stack_h<=id_stack;
+ localparam integer T0=16+LB,A0=28+LB,S0=58+LB,R0=60+LB,P0=75+LB,DW=95+LB,IW=283+LB;
+ wire reset_both=stream_rst_n&&hbm_rst_n;wire srst,hrst;
+ ot_reset_sync u_stream_reset(.clk(stream_clk),.async_rst_n(reset_both),.sync_rst_n(srst));
+ ot_reset_sync u_hbm_reset(.clk(hbm_clk),.async_rst_n(reset_both),.sync_rst_n(hrst));
+ reg hbm_fault;wire hbf2,stf2,desc_ov,desc_un,desc_wr_ready;
+ ot_hbm_svc_fault_cdc u_hbm_fault_cdc(.wr_clk(hbm_clk),.wr_rst_n(hrst),.rd_clk(stream_clk),.rd_rst_n(srst),.src_fault(hbm_fault),.dst_fault(hbf2),.wr_overflow(),.rd_underflow());
+ ot_hbm_svc_fault_cdc u_stream_fault_cdc(.wr_clk(stream_clk),.wr_rst_n(srst),.rd_clk(hbm_clk),.rd_rst_n(hrst),.src_fault(seam_s_fault),.dst_fault(stf2),.wr_overflow(),.rd_underflow());
+ assign seam_h_fault=hbf2||desc_ov||(seam_res_v&&!desc_wr_ready);
+ // D: the FIFO word moves into dq (one descriptor register); the hbm half reads dq only.
+ wire f_rd_valid,f_rd_ready;wire [DW-1:0] f_rd_data;
+ ot_hbm_svc_async_fifo #(.WIDTH(DW),.DEPTH(4)) u_descriptor(.wr_clk(stream_clk),.wr_rst_n(srst),.wr_valid(seam_res_v),.wr_ready(desc_wr_ready),.wr_data(seam_res_word),.wr_overflow(desc_ov),
+  .rd_clk(hbm_clk),.rd_rst_n(hrst),.rd_valid(f_rd_valid),.rd_ready(f_rd_ready),.rd_data(f_rd_data),.rd_underflow(desc_un));
+ reg dq_v;reg [DW-1:0] dq_d;
+ wire desc_rd_valid=dq_v,desc_rd_ready;wire [DW-1:0] desc_data=dq_d;
+ assign f_rd_ready=f_rd_valid&&!dq_v;
+ always @(posedge hbm_clk)if(f_rd_ready)dq_d<=f_rd_data;
+ reg h_active;reg [LB-1:0] h_bank;reg [15:0] h_epoch;reg [29:0] h_base;reg [11:0] h_total;reg [19:0] h_pcs;reg [14:0] h_row_base;
+ reg [11:0] rx_left[0:LBANKS-1];reg h_fresh;wire [3:0] issue_done;integer rb;
+ wire [3:0] pc_fault,response_ok;wire [LB-1:0] response_bank[0:3];wire [10:0] response_ordinal[0:3];wire [15:0] response_epoch[0:3];
+ reg [3:0] response_accepted;wire [3:0] dec_ok,dec_fire;wire [LB-1:0] dec_bank[0:3];wire [10:0] dec_ordinal[0:3];wire [15:0] dec_epoch[0:3];wire [1023:0] sk_data;
+ wire descriptor_fire=desc_rd_valid&&desc_rd_ready;
+ reg rx_any;always @*begin rx_any=0;for(rb=0;rb<LBANKS;rb=rb+1)if(rx_left[rb]!=0)rx_any=1;end
+ assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid&&rx_left[desc_data[T0-1:16]]==0;
+ always @(posedge hbm_clk or negedge hrst)begin
+  if(!hrst)dq_v<=0;else if(f_rd_ready)dq_v<=1;else if(descriptor_fire)dq_v<=0;
+ end
+ assign k_we=0;assign k_wdata=0;assign k_wstrb=0;
+ reg [3:0] credit[0:7];reg cr_ov;integer cc=0;
+ wire [7:0] fifo_wr_ready;
+ genvar pc,g;
+ generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
+  ot_svgr_owner_rf #(.OWNER_AW(OWNER_AW),.LB(LB)) u_owner(
+   .pc_id({id_sm,2'(pc)}),.clk(hbm_pc_clk[pc]),.rst_n(hrst),.descriptor_v(descriptor_fire),
+   .block_active(h_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
+   .block_bank(h_bank),.block_epoch(h_epoch),.stop(hbm_fault),
+   .k_ready(i_k_rdy[pc]),.kr_v(i_kr_v[pc]),.kr_tag(i_kr_tag[17*pc+:17]),
+   .kr_beat(i_kr_beat[4*pc+:4]),.response_take(dec_fire[pc]&&dec_ok[pc]),
+   .k_v(i_k_v[pc]),.k_addr(i_k_addr[30*pc+:30]),.k_len(i_k_len[4*pc+:4]),.k_tag(i_k_tag[17*pc+:17]),
+   .response_ok(dec_ok[pc]),.response_ordinal(dec_ordinal[pc]),
+   .response_epoch(dec_epoch[pc]),.response_bank(dec_bank[pc]),.fault(pc_fault[pc]),.issue_done(issue_done[pc]));
+  ot_svgr_k_out_rf #(.W(51),.MUT(MUT==3?1:0)) u_k_out(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.i_v(i_k_v[pc]),.i_rdy(i_k_rdy[pc]),.i_d({i_k_addr[30*pc+:30],i_k_len[4*pc+:4],i_k_tag[17*pc+:17]}),
+   .p_v(k_v[pc]),.p_rdy(k_rdy[pc]),.p_d({k_addr[30*pc+:30],k_len[4*pc+:4],k_tag[17*pc+:17]}));
+  ot_svgr_kr_in_h #(.W(277),.MUT(MUT==4?1:MUT==6?2:0)) u_kr_in(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.p_v(kr_v[pc]),.p_rdy(kr_rdy[pc]),.p_d({kr_tag[17*pc+:17],kr_beat[4*pc+:4],kr_data[256*pc+:256]}),
+   .i_v(i_kr_v[pc]),.i_rdy(i_kr_rdy[pc]),.i_d({i_kr_tag[17*pc+:17],i_kr_beat[4*pc+:4],i_kr_data[256*pc+:256]}));
+  // K: every head word enters the skid with the owner verdict; a refused word (owner fault) blocks the skid head.
+  reg [256+11+16+LB-1:0] sk_m[0:1];reg [1:0] sk_ok;reg sk_wp,sk_rp;reg [1:0] sk_n;
+  assign dec_fire[pc]=i_kr_v[pc]&&sk_n!=(MUT==5?2'd3:2'd2);assign i_kr_rdy[pc]=dec_fire[pc];
+  assign response_ok[pc]=sk_n!=0&&!hbm_fault&&sk_ok[sk_rp];
+  assign {sk_data[256*pc+:256],response_ordinal[pc],response_epoch[pc],response_bank[pc]}=sk_m[sk_rp];
+  always @(posedge hbm_pc_clk[pc])if(dec_fire[pc])sk_m[sk_wp]<={i_kr_data[256*pc+:256],dec_ordinal[pc],dec_epoch[pc],dec_bank[pc]};
+  always @(posedge hbm_pc_clk[pc] or negedge hrst)begin
+   if(!hrst)begin sk_wp<=0;sk_rp<=0;sk_n<=0;sk_ok<=0;end
+   else begin if(dec_fire[pc])begin sk_ok[sk_wp]<=dec_ok[pc];sk_wp<=~sk_wp;end if(response_accepted[pc])sk_rp<=~sk_rp;sk_n<=sk_n+2'(dec_fire[pc])-2'(response_accepted[pc]);end
+  end
+ end endgenerate
+ // A: per lane, a one-hot grant over the 4 PC skid heads from the rotating cursor; the grant nets drive the data select.
+ reg [1:0] arb_cursor[0:7];wire [31:0] lane_accept;wire [7:0] lane_v;
+ always @*bk_in_v=lane_v;
+ generate for(g=0;g<8;g=g+1)begin:response_fairness
+  wire [3:0] req;
+  for(pc=0;pc<4;pc=pc+1)begin:rq assign req[pc]=response_ok[pc]&&response_ordinal[pc][2:0]==3'(g)&&fifo_wr_ready[g];end
+  wire [7:0] rr={req,req}>>arb_cursor[g];
+  wire [1:0] off=rr[0]?2'd0:rr[1]?2'd1:rr[2]?2'd2:2'd3;
+  wire [1:0] sel=arb_cursor[g]+off;
+  (* keep *) wire [3:0] gnt=(|req)?(4'b1<<sel):4'b0;
+  assign lane_accept[4*g+:4]=gnt;assign lane_v[g]=|req;
+  assign bk_in_data[IW*g+:IW]=({IW{gnt[0]}}&{response_ordinal[0],response_bank[0],response_epoch[0],sk_data[0+:256]})
+                        |({IW{gnt[1]}}&{response_ordinal[1],response_bank[1],response_epoch[1],sk_data[256+:256]})
+                        |({IW{gnt[2]}}&{response_ordinal[2],response_bank[2],response_epoch[2],sk_data[512+:256]})
+                        |({IW{gnt[3]}}&{response_ordinal[3],response_bank[3],response_epoch[3],sk_data[768+:256]});
+  always @(posedge hbm_clk or negedge hrst)begin
+   if(!hrst)arb_cursor[g]<=0;else if(bk_in_v[g])arb_cursor[g]<=sel+1'b1;
+  end
+  assign fifo_wr_ready[g]=credit[g]!=0;
+  always @(posedge hbm_clk or negedge hrst)begin
+   if(!hrst)credit[g]<=(MUT==1)?4'(RESPONSE_DEPTH+1):4'(RESPONSE_DEPTH);
+   else credit[g]<=credit[g]-4'(bk_in_v[g])+4'(bk_cr[g]&&!(MUT==2&&g==6&&cc>=20));
+  end
+ end endgenerate
+ integer ra;
+ always @*begin response_accepted=0;for(ra=0;ra<8;ra=ra+1)response_accepted=response_accepted|lane_accept[4*ra+:4];end
+ always @(posedge hbm_clk)if(bk_in_v[6])cc<=cc+1;
+ integer ta,tb;
+ reg [2:0] h_take_b[0:LBANKS-1];reg [2:0] take_q[0:LBANKS-1];
+ always @*begin
+  for(tb=0;tb<LBANKS;tb=tb+1)begin
+   h_take_b[tb]=0;
+   for(ta=0;ta<4;ta=ta+1)if(response_accepted[ta]&&int'(response_bank[ta])==tb)h_take_b[tb]=h_take_b[tb]+3'd1;
+  end
+ end
+ // R: the takes of an edge reach rx_left one hbm_clk later.
+ always @(posedge hbm_clk or negedge hrst)begin
+  if(!hrst)begin for(tb=0;tb<LBANKS;tb=tb+1)take_q[tb]<=0;end
+  else for(tb=0;tb<LBANKS;tb=tb+1)take_q[tb]<=(MUT==7&&tb==0)?3'd0:h_take_b[tb];
+ end
+ always @(posedge hbm_clk or negedge hrst)begin
+  if(!hrst)begin
+   h_active<=0;h_bank<=0;h_epoch<=0;h_base<=0;h_total<=0;h_pcs<=0;h_row_base<=0;
+   for(rb=0;rb<LBANKS;rb=rb+1)rx_left[rb]<=0;h_fresh<=0;hbm_fault<=0;
+  end else begin
+   if(stf2||desc_un||(|k_wr_done)||(|pc_fault))hbm_fault<=1;
+   if(descriptor_fire)begin
+    if(desc_data[S0+1:S0]!=stack_h||desc_data[T0+11:T0]==0||desc_data[T0+11:T0]>512||{3'b0,desc_data[A0+29:A0]}+desc_data[T0+11:T0]>33'h040000000)hbm_fault<=1;
+    else begin h_active<=1;h_base<=desc_data[A0+29:A0];h_pcs<=desc_data[P0+19:P0];h_row_base<=desc_data[R0+14:R0];h_total<=desc_data[T0+11:T0];
+     h_bank<=desc_data[T0-1:16];h_epoch<=desc_data[15:0];end
+   end
+   h_fresh<=descriptor_fire;
+   if(h_active&&!descriptor_fire&&!h_fresh&&(&issue_done))h_active<=0;
+   if(descriptor_fire&&rx_left[desc_data[T0-1:16]]!=0)hbm_fault<=1;
+   for(rb=0;rb<LBANKS;rb=rb+1)begin
+    rx_left[rb]<=((descriptor_fire&&desc_data[T0-1:16]==rb)?desc_data[T0+11:T0]:rx_left[rb])-12'(take_q[rb]);
+    if(take_q[rb]!=0&&rx_left[rb]==0)hbm_fault<=1;
+   end
+   if(|i_kr_v&&!descriptor_fire&&!rx_any)hbm_fault<=1;
+  end
+ end
+endmodule
+`else
 module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEPTH=8,parameter integer LBANKS=4,parameter integer LB=2,parameter integer MUT=0)(
  input wire [1:0] id_stack,input wire [2:0] id_sm,input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,input wire [3:0] hbm_pc_clk,
  input wire seam_res_v,input wire[96:0]seam_res_word,input wire seam_s_fault,output wire seam_h_fault,
@@ -475,6 +727,7 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
   end
  end
 endmodule
+`endif
 
 // Four landing banks of one fifo clock group: the response FIFO returns one credit per freed entry, in the write domain.
 module ot_svgr_landing #(parameter integer LBANKS=4,parameter integer LB=2,parameter integer IW=283+LB)(
