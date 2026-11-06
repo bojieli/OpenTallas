@@ -228,13 +228,18 @@ def plan_clock_entries(entries_path, module, clks, w, h, m5):
     for blk in json.load(open(p)).values():
         for e in (blk.values() if isinstance(blk, dict) else []):
             if isinstance(e, dict) and e.get("module") == module and e.get("xy_um"):
+                sites = e.get("clock_pin_sites_um")
+                if sites is not None:
+                    if not isinstance(sites, dict) or any(not isinstance(v, list) or len(v) != 2 for v in sites.values()):
+                        raise SystemExit(f"CLOCK_ENTRY_SITES {module}: expected named [x, y] clock pin sites")
+                    sites = tuple(sorted((n, float(v[0]), float(v[1])) for n, v in sites.items()))
                 ents.add((round(float(e["xy_um"][0]), 4), round(float(e["xy_um"][1]), 4), e.get("port"),
-                          tuple(sorted(e.get("merged_clock_ports") or []))))
+                          tuple(sorted(e.get("merged_clock_ports") or [])), sites))
     if not ents:
         return {}, None
     if len(ents) > 1:
-        raise SystemExit(f"CLOCK_ENTRY_CONFLICT {module}: {len(ents)} different plan clock entries {sorted(ents)[:3]}")
-    ex, ey, port, merged = next(iter(ents))
+        raise SystemExit(f"CLOCK_ENTRY_CONFLICT {module}: {len(ents)} different plan clock entries {sorted(ents, key=repr)[:3]}")
+    ex, ey, port, merged, sites = next(iter(ents))
     if not (0 < ex < w and 0 < ey < h):
         raise SystemExit(f"CLOCK_ENTRY_OUTSIDE {module}: plan entry ({ex}, {ey}) outside the {w} x {h} outline")
     named = set(merged) | ({port} if port else set())
@@ -247,11 +252,25 @@ def plan_clock_entries(entries_path, module, clks, w, h, m5):
     step = 2 * pitch
     k0 = -((len(sel) - 1) // 2)
     out = {n: (round(cx + (k0 + i) * step, 4), ey) for i, n in enumerate(sorted(sel, key=lambda n: (base(n), n)))}
+    # Explicit sites keep reviewed per-port access geometry while retaining the
+    # common source/merged-port contract. Absent sites preserve legacy spreading.
+    if sites is not None:
+        if {n for n, _, _ in sites} != set(sel):
+            raise SystemExit(f"CLOCK_ENTRY_SITES {module}: sites must name exactly {sorted(sel)}")
+        out = {n: (x, y) for n, x, y in sites}
+        for n, (x, y) in out.items():
+            if (not math.isfinite(x) or not math.isfinite(y) or not 0 < x < w or not 0 < y < h or
+                    abs((x - off) / pitch - round((x - off) / pitch)) > 1e-5):
+                raise SystemExit(f"CLOCK_ENTRY_SITES {module}: invalid/off-track M5 site for {n}: {(x, y)}")
+        if len(set(out.values())) != len(out):
+            raise SystemExit(f"CLOCK_ENTRY_SITES {module}: coincident explicit clock pins")
     xs = [x for x, _ in out.values()]
     if min(xs) <= PIN_LEN_UM or max(xs) >= w - PIN_LEN_UM:
         raise SystemExit(f"CLOCK_ENTRY_SPREAD {module}: {len(sel)} clock pins around x {cx} leave the core")
     rec = dict(file=str(p), sha256=sha(p), module=module, xy_um=[ex, ey], ports=sorted(named), pins=len(sel),
                rule="METHODOLOGY 12.8a plan clock entry (DIE-HBM-48)")
+    if sites is not None:
+        rec["clock_pin_sites_um"] = {n: list(xy) for n, xy in out.items()}
     return out, rec
 
 
@@ -2357,7 +2376,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             scope="SOURCE_PROOF_ONLY", release_eligible=False,
             physical_reset_qualification=False, die_contract_staged=False), indent=1) + "\n")
     else:
-        reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"])
+        reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"], required_source=True)
     # Optional source-pinned placement/model assets are assembled before the
     # normal kit hash and generation provenance; never retrofit a built kit.
     from kit_runtime_assets import stage as stage_runtime_assets

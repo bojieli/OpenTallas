@@ -1,0 +1,615 @@
+{
+ "top": "sle_cland_w2104_s",
+ "checked": 4210,
+ "ok": 4210,
+ "fails": {},
+ "flops": {
+  "fault": "u_w/u_fault_port/q$_SDFF_PN0_",
+  "ready": "u_w/ready$_SDFF_PN0_",
+  "d[2103]": "u_w/u_ring.s_d[2][2103]$_DFFE_NP_",
+  "d[2102]": "u_w/u_ring.s_d[2][2102]$_DFFE_NP_",
+  "d[2101]": "u_w/u_ring.s_d[2][2101]$_DFFE_NP_",
+  "d[2100]": "u_w/u_ring.s_d[2][2100]$_DFFE_NP_",
+  "d[2099]": "u_w/u_ring.s_d[2][2099]$_DFFE_NP_",
+  "d[2098]": "u_w/u_ring.s_d[2][2098]$_DFFE_NP_",
+  "d[2097]": "u_w/u_ring.s_d[2][2097]$_DFFE_NP_",
+  "d[2096]": "u_w/u_ring.s_d[2][2096]$_DFFE_NP_",
+  "d[2095]": "u_w/u_ring.s_d[2][2095]$_DFFE_NP_",
+  "d[2094]": "u_w/u_ring.s_d[2][2094]$_DFFE_NP_",
+  "d[2093]": "u_w/u_ring.s_d[2][2093]$_DFFE_NP_",
+  "d[2092]": "u_w/u_ring.s_d[2][2092]$_DFFE_NP_",
+  "d[2091]": "u_w/u_ring.s_d[2][2091]$_DFFE_NP_",
+  "d[2090]": "u_w/u_ring.s_d[2][2090]$_DFFE_NP_",
+  "d[2089]": "u_w/u_ring.s_d[2][2089]$_DFFE_NP_",
+  "d[2088]": "u_w/u_ring.s_d[2][2088]$_DFFE_NP_",
+  "d[2087]": "u_w/u_ring.s_d[2][2087]$_DFFE_NP_",
+  "d[2086]": "u_w/u_ring.s_d[2][2086]$_DFFE_NP_"
+ },
+ "straps_exempt": [
+  "strap_k"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {},
+ "registered_atmost_one": {
+  "u_w/u_ring.g_wreg.sl[0].ch[32].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[32].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[32].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[32].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[32].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[31].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[31].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[31].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[31].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[31].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[30].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[30].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[30].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[30].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[30].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[29].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[29].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[29].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[29].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[29].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[28].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[28].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[28].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[28].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[28].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[27].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[27].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[27].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[27].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[27].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[26].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[26].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[26].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[26].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[26].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[25].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[25].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[25].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[25].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[25].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[24].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[24].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[24].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[24].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[24].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[23].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[23].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[23].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[23].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[23].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[22].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[22].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[22].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[22].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[22].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[21].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[21].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[21].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[21].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[21].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[20].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[20].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[20].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[20].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[20].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[19].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[19].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[19].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[19].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[19].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[18].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[18].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[18].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[18].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[18].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[17].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[17].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[17].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[17].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[17].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[16].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[16].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[16].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[16].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[16].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[15].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[15].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[15].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[15].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[15].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[14].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[14].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[14].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[14].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[14].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[13].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[13].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[13].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[13].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[13].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[12].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[12].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[12].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[12].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[12].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[11].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[11].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[11].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[11].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[11].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[10].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[10].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[10].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[10].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[10].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[9].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[9].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[9].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[9].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[9].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[8].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[8].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[8].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[8].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[8].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[7].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[7].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[7].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[7].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[7].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[6].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[6].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[6].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[6].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[6].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[5].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[5].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[5].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[5].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[5].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[4].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[4].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[4].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[4].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[4].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[3].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[3].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[3].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[3].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[3].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[2].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[2].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[2].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[2].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[2].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[1].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[1].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[1].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[1].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[1].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[0].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[0].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_08467_",
+    "u_w/_08493_",
+    "u_w/_08495_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  }
+ },
+ "land_mux_depth": {
+  "1": 8415,
+  "3": 1
+ },
+ "land_slot_bits": 2104,
+ "land_mux_bits": 2104,
+ "pairs_declared": [],
+ "fail_counts": {},
+ "verdict": "PASS",
+ "planned_bits": 4216,
+ "missing_ports": [],
+ "extra_ports": [],
+ "missing_n": 0,
+ "extra_n": 0,
+ "self_loop_only": false,
+ "self_loops": [],
+ "non_self_loop_fails": [],
+ "netlist": "/work/run/results/asap7/kq_sle_cland_w2104_s_hed6d0c/base/1_synth.v"
+}

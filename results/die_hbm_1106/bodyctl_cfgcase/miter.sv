@@ -1,0 +1,1 @@
+module miter(input[5:0]step,input[7:0]row,input[1535:0]assembly,input[63:0]metadata,input draining,output correct,output mutant_correct);wire[36:0]a,b;actual_cfg ua(step,row,assembly,metadata,draining,a);candidate_cfg ub(step,row,assembly,metadata,draining,b);assign correct=a==b;assign mutant_correct=a==(b^37'h1);endmodule

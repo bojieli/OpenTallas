@@ -1,0 +1,11 @@
+# Native QC programming component
+
+`carve_pair.py --programming-only` retains the actual native59/glue/ucie_kv/tt_ctlm programming endpoints and each transit on a lane joining those endpoints. The existing full T1 and whole-QC modes remain unchanged. The four-part cut exposes omitted arithmetic paths as component ports; it introduces no idle drivers, substitute modules or tile-ROM identities. The actual 583-bit QC/KV PHY pair remains joined at its declared line-side ports.
+
+Actual five-type b154 QC source + frozen faecd KV source construction is staged at epyc5:/srv/opentallas-scratch2/claude/codex-qc-functional-1106/pair_programming2. There are4 retained QC partitions and0 arithmetic tile-ROM images. All retained instances are copied by the existing literal carver. The nominal KV START adapter retains331 actual callback/output connections; measured clock calibration remains separate.
+
+The QC endpoint compiled against the actual299-module-file provider graph, explicit current QC FP32 package, native shared SRAM model and selected compiler flags: Intel2 programming_qc_elab2/elaboration.rc0,138.377s,6964.922MB allocated. This is actual functional HDL elaboration of the four real endpoints, not merely filename presence. No simulation, programme install, arithmetic, boot or token verdict follows. A first compact transfer omitted the relative D2D image SVH; its parser failure is retained in programming_qc_elab1 and the exact header was restored for elab2.
+
+The broader35-QC+160-KV and4-QC+160-KV parent elaborations both reached their own32GiB scope MemoryMax; no missing-module error preceded termination. Those are construction resource failures, not RTL arithmetic strikes. No larger full-parent retry is authorized by this record. The next mechanism is the actual near HOST/record producer plus the real QC programme receiver and witness, using existing native HOST provider closure; the128-PC/HBM array and numerical projection remain separate obligations.
+
+Provider namespace construction additionally isolates145 shared QC/KV module/package types with exact inverse token identity. The missing QC FP32 package was supplied from its actual source cohort so the older KV package cannot satisfy QC references accidentally. Native ROM/FDI/HBM/HOST PHY models were selected explicitly; their existence is not an execution claim.

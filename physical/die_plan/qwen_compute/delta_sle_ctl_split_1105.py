@@ -151,10 +151,8 @@ def main():
         f.write_text(json.dumps(m["table"], indent=1) + "\n")
     if not (odir / CTL_PINS).is_file():
         (odir / CTL_PINS).write_text(json.dumps(ctl_tbl, indent=1) + "\n")
-    out = json.dumps(P, separators=seps) + "\n"
-    open(pout, "w").write(out)
     rep.update(masters=sorted(m["name"] for m in masters.values()),
-               src_sha256=hashlib.sha256(text.encode()).hexdigest(), dst_sha256=hashlib.sha256(out.encode()).hexdigest())
+               src_sha256=hashlib.sha256(text.encode()).hexdigest())
     if len(sys.argv) > 5:
         stext = open(sys.argv[4]).read()
         side = json.loads(stext)
@@ -181,9 +179,16 @@ def main():
                 for source in info["local_sources"]:
                     if source["name"] in points:
                         source["band"] = copy.deepcopy(bands[source["name"]])
+                lc = typ["clock"]["landing_contract"]
+                lc["collector_local_sources"] = copy.deepcopy(info["local_sources"])
+                lc["collector_children"] = copy.deepcopy(info["children"])
                 ch = True
         open(sys.argv[5], "w").write(json.dumps(side, indent=sst) + "\n")
         rep["sidecar_changed"] = ch
+    # Reattachment updates both the actual sidecar and the placement metadata.
+    out = json.dumps(P, separators=seps) + "\n"
+    open(pout, "w").write(out)
+    rep["dst_sha256"] = hashlib.sha256(out.encode()).hexdigest()
     if rep_p:
         open(rep_p, "w").write(json.dumps(rep, indent=1) + "\n")
     print(json.dumps(dict(masters=rep["masters"], types=rep["types"])))

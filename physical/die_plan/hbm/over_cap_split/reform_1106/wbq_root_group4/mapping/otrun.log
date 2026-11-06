@@ -1,0 +1,52 @@
+ot-run: localhost      admits   149 GB (avail 282, reserve 0, fresh 47.7, peak 20.2, headroom 0, waiters 5/106 GB) load 196/112 running 55 disk 124 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2991616-1793978222 after 1 s
+       66   14.434   OA31x2_ASAP7_75t_R
+      361   42.107   OAI21x1_ASAP7_75t_R
+        7    1.021   OAI22x1_ASAP7_75t_R
+      479   41.903   OR2x2_ASAP7_75t_R
+       70    6.124   OR3x1_ASAP7_75t_R
+       13    1.327   OR4x1_ASAP7_75t_R
+        4    0.467   OR5x1_ASAP7_75t_R
+        1    0.175   XNOR2x1_ASAP7_75t_R
+      149   23.897   XNOR2x2_ASAP7_75t_R
+       50    8.019   XOR2x2_ASAP7_75t_R
+        4        -   ot_sram_1r1w_128x256_m1_r2c2
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_sram_1r1w_128x256_m1_r2c2 is unknown!
+
+   Chip area for module '\ot_wbq_root_store_group4': 3407.943780
+     of which used for sequential elements: 1696.878720 (49.79%)
+
+11. Executing JSON backend.
+
+Warnings: 20 unique messages, 21 total
+End of script. Logfile hash: 5cb2e5a1fc, time: 42.41s, user: 6.76s, system: 0.25s, MEM: 122.36 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 84% 1x abc (34 sec), 3% 2x stat (1 sec), ...
+        6    1.312   OA31x2_ASAP7_75t_R
+       93   10.848   OAI21x1_ASAP7_75t_R
+        3    0.437   OAI22x1_ASAP7_75t_R
+      155   13.559   OR2x2_ASAP7_75t_R
+       50    4.374   OR3x1_ASAP7_75t_R
+       14    1.429   OR4x1_ASAP7_75t_R
+        2    0.233   OR5x1_ASAP7_75t_R
+      150   24.057   XNOR2x2_ASAP7_75t_R
+        4      0.7   XOR2x1_ASAP7_75t_R
+       75   12.028   XOR2x2_ASAP7_75t_R
+        4        -   ot_sram_1r1w_128x256_m1_r2c2
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_sram_1r1w_128x256_m1_r2c2 is unknown!
+
+   Chip area for module '\ot_wbq_root_store_group4': 3393.232560
+     of which used for sequential elements: 1696.878720 (50.01%)
+
+11. Executing JSON backend.
+
+Warnings: 20 unique messages, 21 total
+End of script. Logfile hash: d35519ad5f, time: 44.81s, user: 6.72s, system: 0.26s, MEM: 122.70 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 85% 1x abc (37 sec), 3% 2x stat (1 sec), ...
+ot-run: RAN on localhost (unit oth-ubuntu-2991616-1793978222): exit 0

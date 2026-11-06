@@ -1,0 +1,66 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+Startpoint: entry[164] (input port clocked by vclk)
+Endpoint: out[176] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 v input external delay
+   0.00    0.00 v entry[164] (in)
+  14.99   14.99 v _2691_/Y (XNOR2x1_ASAP7_75t_R)
+  36.93   51.93 v _2692_/Y (OA211x2_ASAP7_75t_R)
+  36.97   88.90 v _2694_/Y (OA211x2_ASAP7_75t_R)
+  36.76  125.65 v _2752_/Y (AO221x1_ASAP7_75t_R)
+  26.79  152.44 v _2870_/Y (AO211x2_ASAP7_75t_R)
+  29.43  181.87 v _2871_/Y (AO221x1_ASAP7_75t_R)
+  48.98  230.85 v _2913_/Y (OR5x1_ASAP7_75t_R)
+  24.58  255.44 v _2914_/Y (BUFx6f_ASAP7_75t_R)
+  18.96  274.40 ^ _2915_/Y (NAND2x2_ASAP7_75t_R)
+  31.59  305.98 ^ _3230_/Y (BUFx3_ASAP7_75t_R)
+  30.29  336.28 ^ _3486_/Y (AO21x1_ASAP7_75t_R)
+  37.80  374.08 v _3489_/Y (XNOR2x2_ASAP7_75t_R)
+  58.45  432.53 v _3490_/Y (OR5x1_ASAP7_75t_R)
+  33.01  465.54 v _3516_/Y (OR3x1_ASAP7_75t_R)
+  37.27  502.81 v _3561_/Y (OR3x1_ASAP7_75t_R)
+  14.83  517.64 ^ _3562_/Y (AOI21x1_ASAP7_75t_R)
+  32.74  550.38 ^ _3892_/Y (AO221x1_ASAP7_75t_R)
+  23.49  573.87 ^ _3904_/Y (AO21x1_ASAP7_75t_R)
+  23.41  597.28 ^ _3905_/Y (BUFx6f_ASAP7_75t_R)
+  25.14  622.42 ^ _3909_/Y (AND2x4_ASAP7_75t_R)
+  26.72  649.14 ^ _4046_/Y (BUFx12f_ASAP7_75t_R)
+  23.87  673.01 ^ _4290_/Y (BUFx12f_ASAP7_75t_R)
+  11.76  684.78 v _4307_/Y (AOI22x1_ASAP7_75t_R)
+   0.00  684.78 v out[176] (out)
+         684.78   data arrival time
+
+ 833.00  833.00   clock vclk (rise edge)
+   0.00  833.00   clock network delay (ideal)
+   0.00  833.00   clock reconvergence pessimism
+   0.00  833.00   output external delay
+         833.00   data required time
+---------------------------------------------------------
+         833.00   data required time
+        -684.78   data arrival time
+---------------------------------------------------------
+         148.22   slack (MET)
+
+
+worst slack max 148.22

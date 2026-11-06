@@ -1,0 +1,6 @@
+FIRST_EDGE mismatch c6
+FIRST_EDGE mismatch c7
+FIRST_EDGE mismatch c8
+RXCAP_RESULT phase_ps=-90.0 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0
+FATAL: /srv/opentallas-scratch2/claude/codex-head-rx-fall-1106/tb_rx_first_fall.sv:40: RXCAP_FAIL
+       Time: 258647500  Scope: tb

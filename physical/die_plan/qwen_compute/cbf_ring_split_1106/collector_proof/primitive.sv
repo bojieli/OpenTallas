@@ -1,0 +1,1 @@
+module ot_dp_landing_collect #(parameter N=1)(input clk,rst_n,input [N-1:0] ready_i,fault_i,output reg ready_o,fault_o);always @(posedge clk)if(!rst_n)begin ready_o<=0;fault_o<=0;end else begin ready_o<=&ready_i;fault_o<=|fault_i;end endmodule

@@ -1,0 +1,9 @@
+NATIVE_RELOAD_PERIOD_FS 833000
+NATIVE_HOST_PEER_RX frame=1 kind=3 parity=0 header=0006
+NATIVE_RELOAD_ALIVE edge=331
+NATIVE_RELOAD_SEALED job=0 edge=3027 queue=3056
+NATIVE_RELOAD_KS_QUEUE job=0 edge=3056
+NATIVE_RELOAD_KS_RX job=0 edge=3176 phase=0 word=1094007d001388
+[2646000000] %Fatal: tb_native_reload.sv:94: Assertion failed in tb: NATIVE_RELOAD_FAULT edge=3177 job=0 peer=00 lane=0/0 LEP=0 host=10000000000000000000 mf=8 issuer=0 code=0
+%Error: /srv/opentallas-scratch2/claude/codex-ds-native-reload-1106/tb_native_reload.sv:94: Verilog $stop
+Aborting...

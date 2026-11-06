@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS_GENERATION_AND_SOURCE_BINDING",
+  "input_tb_sha256": "e7d6a2d35977a70d8bfb11228115efbd003acb60b010935796fc3154460d925a",
+  "generated_tb_sha256": "3db115276a32b0898f12efb3c588112e6636abb69a90f15eacda8ad1b96b820e",
+  "actual_native_child_type": "dsdv_seq_host_mux",
+  "native_child_path": "dut.seqhost.u_u_seqhost",
+  "direct_fault_port": "t_mf[3:0]",
+  "mode_guard": "NATIVE_HOST_LINK only",
+  "counterexample": "real two-page physical peer/LEP to selected mux, unconfigured firstKS sets mf8 before folded t_host fault",
+  "whole_array_rebuilt_or_rerun": false,
+  "added_DUT_cycles": 0,
+  "historical_firstVO_existence_result_changed": false,
+  "actual_smoke_fixture": {
+    "path": "epyc2:/srv/opentallas-scratch2/claude/tok-ds-2/v1stim/job0_s5.memh",
+    "sha256": "bb29e3769150ba8b4497e74a2c28514510925d21d60ec558efe713486ca3dc8e",
+    "entries": 2875,
+    "valid_HOST_words": 575,
+    "MC_words": 0,
+    "MW_words": 0,
+    "active_words_match_raw_job0": true
+  }
+}

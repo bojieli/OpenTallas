@@ -8,6 +8,7 @@ import argparse
 import copy
 import hashlib
 import json
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from head_boot_recipe import provider
@@ -36,12 +37,28 @@ def compile_candidate(plan, inventory, job, timing, clock_profile, *, plan_sha25
     for key in ('LOCAL_STAGE', 'LOCAL_RANK', 'PHASE_BOUND', 'CLOCK_RESET_ID'):
         if claimed.get(key) != setup['host_params'][key]:
             raise ValueError('selected HBC binding differs from measured profile ' + key)
-    if timing['reset_deassert_edge'] != profile['root_reset_deassert_global_edge'] or \
-            timing['host_counter_zero_edge'] != profile['host_boot_counter_zero_global_edge']:
-        raise ValueError('HBC counter/reset origin differs from measured profile')
-    if [r['edge'] for r in setup['frames']] != profile['qualified_host0_launch_edges'] or \
+    if timing['reset_deassert_edge'] != profile['root_reset_deassert_global_edge']:
+        raise ValueError('HBC reset origin differs from measured profile')
+    if [r['edge'] for r in setup['frames']] != profile['qualified_host0_launch_edges']:
+        raise ValueError('HBC records leave the measured three-record launch chain')
+    if 'hbc_arrival_boot_edges' in timing:
+        if timing['hbc_arrival_boot_edges'] != profile['qualified_host0_input_boot_edges']:
+            raise ValueError('HBC native arrival boot ages differ from measured profile')
+        if not profile.get('host_boot_counter_zero_time_ps') or not profile.get('qualified_host0_input_time_ps'):
+            raise ValueError('native boot-age profile requires measured counter-zero and arrival timestamps')
+        try:
+            period = Decimal(str(profile['period_ps']))
+            zero = Decimal(str(profile['host_boot_counter_zero_time_ps']))
+            arrivals = [Decimal(str(v)) for v in profile['qualified_host0_input_time_ps']]
+        except (KeyError, InvalidOperation, TypeError):
+            raise ValueError('native boot-age profile has invalid measured timestamps')
+        if not period.is_finite() or period <= 0 or not zero.is_finite() or len(arrivals) != 3 or any(
+                not v.is_finite() or v != zero + age * period
+                for v, age in zip(arrivals, timing['hbc_arrival_boot_edges'])):
+            raise ValueError('native arrival timestamps do not prove the supplied boot ages')
+    elif timing['host_counter_zero_edge'] != profile['host_boot_counter_zero_global_edge'] or \
             [r['edge'] + timing['peer_to_hbc_input'] for r in setup['frames']] != profile['qualified_host0_input_edges']:
-        raise ValueError('HBC records leave the measured three-record launch/arrival chain')
+        raise ValueError('HBC counter/arrival chain differs from measured profile')
     candidate = copy.deepcopy(plan)
     part, typ, content = provider(candidate, 'ot_s81hd_host_ep_core')
     content.setdefault('params', {}).update(setup['host_params'])

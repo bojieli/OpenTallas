@@ -591,6 +591,10 @@ SCHEMA = {
                                                "additionalProperties": False, "properties": {
                                                    "tt": _early_late, "ff": _early_late,
                                                    "basis": {"type": "string", "minLength": 1}}}}}},
+                        # Default-off: bounded same-bit delay-chain clock affinity before CTS.
+                        "tap_chain_affinity": {"type": "object", "additionalProperties": False,
+                            "properties": {"radius_um": _pos,
+                                           "max_group": {"type": "integer", "minimum": 2, "maximum": 1200}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
@@ -741,6 +745,8 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # Optional physical padding floor for a published wavefront release cohort.
+                        "wavefront_min_depth": {"type": "integer", "minimum": 0},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
                         "depth": {"type": "integer", "minimum": 1},
                         # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state
@@ -748,6 +754,7 @@ SCHEMA = {
                         # cal before START) + ONE local registered START tap (leaf bind "start") for the contents'
                         # mission admission.  core_start_roles: per hard-core reset target override {inst: role}
                         "start_role": {"enum": ["bootstrap", "mission"]},
+                        "source_live_bootstrap_placement": {"type": "boolean"},
                         "bootstrap_buses": {"type": "array", "uniqueItems": True, "items": _name},
                         "bootstrap_contents": {"type": "array", "uniqueItems": True, "items": _name},
                         "core_start_roles": {"type": "object",
@@ -1319,6 +1326,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                 'tie': {'additionalProperties': {'minLength': 1, 'type': 'string'}, 'type': 'object'},
                 'cycles': {'const': 0}, 'note': {'type': 'string'}},
  'required': ['merge', 'cycles'], 'type': 'object'}
+# Explicit same-edge consumer slices (HBM brmw/injector pin-view join); default adapters unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_port_adapter"]["properties"]["slice"] = {
+    "type": "object", "minProperties": 1, "additionalProperties": {
+        "type": "object", "additionalProperties": False,
+        "properties": {"msb": {"type": "integer", "minimum": 0}, "lsb": {"type": "integer", "minimum": 0},
+                       "source_width": {"type": "integer", "minimum": 1}, "evidence": {"type": "string", "minLength": 1}},
+        "required": ["msb", "lsb", "source_width", "evidence"]}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["reset_from_master"] = {'additionalProperties': False,
  'properties': {'kind': {'enum': ['port', 'internal']}, 'content': {'minLength': 1, 'type': 'string'},
                 'pin': {'const': 'rst_n'}, 'source': {'minLength': 1, 'type': 'string'}},

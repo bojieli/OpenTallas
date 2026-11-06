@@ -115,3 +115,48 @@ def test_candidate_refuses_unmeasured_or_mismatched_authority(fault):
     if fault == 'binding': profile['host_params_candidate']['LOCAL_RANK'] = 1
     with pytest.raises(ValueError):
         compile_candidate(p, i, j, t, profile, plan_sha256=plan_sha, sidecar_sha256=side_sha)
+
+
+def native_fixture():
+    p, i, j, t, record = candidate_fixture()
+    t.pop('host_counter_zero_edge'); t.pop('peer_to_hbc_input')
+    t.update(reset_deassert_edge=64, hbc_arrival_boot_edges=[635,639,643])
+    profile=record['profile']
+    profile.pop('host_boot_counter_zero_global_edge'); profile.pop('qualified_host0_input_edges')
+    profile.update(root_reset_deassert_global_edge=64,period_ps=833,
+        host_boot_counter_zero_time_ps='69421.624',
+        qualified_host0_input_time_ps=['598376.624','601708.624','605040.624'],
+        qualified_host0_input_boot_edges=[635,639,643])
+    digest=hashlib.sha256(json.dumps(profile,sort_keys=True,separators=(',',':')).encode()).digest()
+    identity=int.from_bytes(digest[:8],'little') or 1
+    record.update(profile_sha256=digest.hex(),clock_reset_id=identity)
+    record['host_params_candidate']['CLOCK_RESET_ID']=identity
+    return p,i,j,t,record
+
+
+def test_native_counter_ages_do_not_invent_integer_global_counter_origin():
+    p,i,j,t,profile=native_fixture()
+    candidate,r=compile_candidate(p,i,j,t,profile,plan_sha256='plan',sidecar_sha256='side')
+    assert r['host_params']['BOOT_HEADER_EDGE']==635
+    assert r['host_params']['BOOT_COMMIT_EDGE']==643
+    assert [f['edge'] for f in r['frames']]==[600,604,608]
+    assert 'host_counter_zero_edge' not in r['timing']
+    assert 'peer_to_hbc_input' not in r['timing']
+    assert r['authority']==dict(CSR=False,GO=False,START=False)
+
+
+@pytest.mark.parametrize('fault',('nonaffine','mixed','missing_timestamp','timestamp_age','profile_age','full_entry'))
+def test_native_boot_age_refusals(fault):
+    p,i,j,t,profile=native_fixture()
+    if fault=='nonaffine':t['hbc_arrival_boot_edges'][1]+=1
+    if fault=='mixed':t['host_counter_zero_edge']=83
+    if fault=='missing_timestamp':profile['profile'].pop('host_boot_counter_zero_time_ps')
+    if fault=='timestamp_age':
+        profile['profile']['qualified_host0_input_time_ps'][0]='598377.624'
+        digest=hashlib.sha256(json.dumps(profile['profile'],sort_keys=True,separators=(',',':')).encode()).digest()
+        profile.update(profile_sha256=digest.hex(),clock_reset_id=int.from_bytes(digest[:8],'little') or 1)
+        profile['host_params_candidate']['CLOCK_RESET_ID']=profile['clock_reset_id']
+    if fault=='profile_age':t['hbc_arrival_boot_edges']=[636,640,644]
+    with pytest.raises(ValueError):
+        if fault=='full_entry':compile_entry(i,j,t)
+        else:compile_candidate(p,i,j,t,profile,plan_sha256='plan',sidecar_sha256='side')

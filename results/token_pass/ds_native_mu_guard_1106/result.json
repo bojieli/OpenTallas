@@ -1,0 +1,19 @@
+{
+  "scope": "minimum physical peer/LEP to real SEQHOST cut; actual compiled jobs1+2; no whole-layer retirement",
+  "rows": [
+    {
+      "case": "base",
+      "rc": 1,
+      "expected_outcome": false,
+      "summary": [
+        "[2646000000] %Fatal: tb_native_reload.sv:94: Assertion failed in tb: NATIVE_RELOAD_FAULT edge=3177 job=0 peer=00 lane=0/0 LEP=0 host=10000000000000000000 mf=8 issuer=0 code=0",
+        "%Error: /srv/opentallas-scratch2/claude/codex-ds-native-reload-1106/tb_native_reload.sv:94: Verilog $stop"
+      ]
+    }
+  ],
+  "verdict": "FAIL",
+  "pin_cycles_added": 0,
+  "whole_array_simulated": false,
+  "current_wc1_adopted": false,
+  "layer_retirement_qualified": false
+}

@@ -1,0 +1,473 @@
+{
+  "schema": "opentallas.hbm.wbq_root_group4.source_model.v1",
+  "status": "SOURCE_MODEL_ONLY_NO_GEN_OR_PHYSICAL_ADOPTION",
+  "added_cycles": 0,
+  "source_base": "497af71eb69",
+  "canonical_default": "unchanged",
+  "opt_in": {
+    "family": "ot_wbq_root_store_family (unchanged parameters)",
+    "root": "ot_wbq_root (unchanged parameters)",
+    "defines": [
+      "OT_WBQ_ROOT_GROUP4",
+      "OT_WBQ_ROOT_STORE_FACES"
+    ],
+    "group_parameters": [
+      {
+        "LANE_BASE": 0,
+        "FACES": 1
+      },
+      {
+        "LANE_BASE": 4,
+        "FACES": 1
+      }
+    ]
+  },
+  "root_candidate_outline_um": [
+    501.12,
+    138.24
+  ],
+  "group_outline_um": [
+    250.56,
+    138.24
+  ],
+  "group_core_um": [
+    4.32,
+    4.32,
+    246.24,
+    133.92
+  ],
+  "macro_master": "ot_sram_1r1w_128x256_m1_r2c2",
+  "macro_size_um": [
+    94.824,
+    41.064
+  ],
+  "macro_halo_each_side_um": 4.32,
+  "halo_rectangle_size_um": [
+    103.464,
+    49.704
+  ],
+  "macro_channel_um": {
+    "horizontal_between_halos": 34.992,
+    "vertical_between_halos": 30.192
+  },
+  "budget": {
+    "basis": "four actual prior isolated mapped stores, not fresh group mapping or placed size",
+    "per_store_std_um2": 850.29102,
+    "per_store_cells": 6565,
+    "per_store_ff": 1444,
+    "group_std_um2": 3401.16408,
+    "group_cells_estimate": 26260,
+    "group_ff_estimate": 5776,
+    "core_um2": 31352.832,
+    "macro_halo_excluded_um2": 20570.298624,
+    "post_halo_free_um2": 10782.533376,
+    "post_halo_stdutil": 0.31543274306670693,
+    "parent_soft_controller_um2": 571.41936,
+    "parent_soft_controller_ff": 770,
+    "controller_location": "UNRESOLVED parent west/south/full-controller bands and PG fit",
+    "invalid_old_tiny_helper": {
+      "outline_um": [
+        103.68,
+        60.48
+      ],
+      "actual_core_um": [
+        95.04,
+        51.84
+      ],
+      "post_halo_stdutil": null,
+      "prior_35_78_percent_claim": "INVALID outline-based denominator; retained historical source evidence only",
+      "stdutil_after_macro_area_only": 0.823111177742872,
+      "halo_fit": "103.464 x49.704 halo cannot fit95.04 x51.84 core in width; no valid posthalo denominator"
+    },
+    "fresh_mapping": "mapping/mapped_counts.json; additive prior-store estimate retained separately"
+  },
+  "ports": {
+    "input_bits": 1112,
+    "output_bits": 1156,
+    "wd": 1024,
+    "fifo_head": 1152,
+    "additional_face_edges": 0
+  },
+  "groups": [
+    {
+      "index": 0,
+      "LANE_BASE": 0,
+      "root_rect_um": [
+        0.0,
+        0,
+        250.56,
+        138.24
+      ],
+      "instance": "u_fcore.g_store_groups.g_group4[0].u_store_group",
+      "lanes": [
+        {
+          "local_index": 0,
+          "LANE": 0,
+          "wd_bits": [
+            0,
+            255
+          ],
+          "fifo_head_bits": [
+            0,
+            287
+          ],
+          "native_root_wd": "wd[0]",
+          "native_root_head": "fifo_head[0]",
+          "leaf_instance": "g_lane[0].g_face.u_store.u_native",
+          "macro_instance": "g_lane[0].g_face.u_store.u_native.u_payload",
+          "macro_local_origin_um": [
+            8.64,
+            8.64
+          ],
+          "halo_rect_um": [
+            4.32,
+            4.32,
+            107.78399999999999,
+            54.024
+          ]
+        },
+        {
+          "local_index": 1,
+          "LANE": 1,
+          "wd_bits": [
+            256,
+            511
+          ],
+          "fifo_head_bits": [
+            288,
+            575
+          ],
+          "native_root_wd": "wd[1]",
+          "native_root_head": "fifo_head[1]",
+          "leaf_instance": "g_lane[1].g_face.u_store.u_native",
+          "macro_instance": "g_lane[1].g_face.u_store.u_native.u_payload",
+          "macro_local_origin_um": [
+            147.096,
+            8.64
+          ],
+          "halo_rect_um": [
+            142.776,
+            4.32,
+            246.24,
+            54.024
+          ]
+        },
+        {
+          "local_index": 2,
+          "LANE": 2,
+          "wd_bits": [
+            512,
+            767
+          ],
+          "fifo_head_bits": [
+            576,
+            863
+          ],
+          "native_root_wd": "wd[2]",
+          "native_root_head": "fifo_head[2]",
+          "leaf_instance": "g_lane[2].g_face.u_store.u_native",
+          "macro_instance": "g_lane[2].g_face.u_store.u_native.u_payload",
+          "macro_local_origin_um": [
+            8.64,
+            88.536
+          ],
+          "halo_rect_um": [
+            4.32,
+            84.216,
+            107.78399999999999,
+            133.92
+          ]
+        },
+        {
+          "local_index": 3,
+          "LANE": 3,
+          "wd_bits": [
+            768,
+            1023
+          ],
+          "fifo_head_bits": [
+            864,
+            1151
+          ],
+          "native_root_wd": "wd[3]",
+          "native_root_head": "fifo_head[3]",
+          "leaf_instance": "g_lane[3].g_face.u_store.u_native",
+          "macro_instance": "g_lane[3].g_face.u_store.u_native.u_payload",
+          "macro_local_origin_um": [
+            147.096,
+            88.536
+          ],
+          "halo_rect_um": [
+            142.776,
+            84.216,
+            246.24,
+            133.92
+          ]
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "LANE_BASE": 4,
+      "root_rect_um": [
+        250.56,
+        0,
+        501.12,
+        138.24
+      ],
+      "instance": "u_fcore.g_store_groups.g_group4[1].u_store_group",
+      "lanes": [
+        {
+          "local_index": 0,
+          "LANE": 4,
+          "wd_bits": [
+            0,
+            255
+          ],
+          "fifo_head_bits": [
+            0,
+            287
+          ],
+          "native_root_wd": "wd[4]",
+          "native_root_head": "fifo_head[4]",
+          "leaf_instance": "g_lane[0].g_face.u_store.u_native",
+          "macro_instance": "g_lane[0].g_face.u_store.u_native.u_payload",
+          "macro_local_origin_um": [
+            8.64,
+            8.64
+          ],
+          "halo_rect_um": [
+            4.32,
+            4.32,
+            107.78399999999999,
+            54.024
+          ]
+        },
+        {
+          "local_index": 1,
+          "LANE": 5,
+          "wd_bits": [
+            256,
+            511
+          ],
+          "fifo_head_bits": [
+            288,
+            575
+          ],
+          "native_root_wd": "wd[5]",
+          "native_root_head": "fifo_head[5]",
+          "leaf_instance": "g_lane[1].g_face.u_store.u_native",
+          "macro_instance": "g_lane[1].g_face.u_store.u_native.u_payload",
+          "macro_local_origin_um": [
+            147.096,
+            8.64
+          ],
+          "halo_rect_um": [
+            142.776,
+            4.32,
+            246.24,
+            54.024
+          ]
+        },
+        {
+          "local_index": 2,
+          "LANE": 6,
+          "wd_bits": [
+            512,
+            767
+          ],
+          "fifo_head_bits": [
+            576,
+            863
+          ],
+          "native_root_wd": "wd[6]",
+          "native_root_head": "fifo_head[6]",
+          "leaf_instance": "g_lane[2].g_face.u_store.u_native",
+          "macro_instance": "g_lane[2].g_face.u_store.u_native.u_payload",
+          "macro_local_origin_um": [
+            8.64,
+            88.536
+          ],
+          "halo_rect_um": [
+            4.32,
+            84.216,
+            107.78399999999999,
+            133.92
+          ]
+        },
+        {
+          "local_index": 3,
+          "LANE": 7,
+          "wd_bits": [
+            768,
+            1023
+          ],
+          "fifo_head_bits": [
+            864,
+            1151
+          ],
+          "native_root_wd": "wd[7]",
+          "native_root_head": "fifo_head[7]",
+          "leaf_instance": "g_lane[3].g_face.u_store.u_native",
+          "macro_instance": "g_lane[3].g_face.u_store.u_native.u_payload",
+          "macro_local_origin_um": [
+            147.096,
+            88.536
+          ],
+          "halo_rect_um": [
+            142.776,
+            84.216,
+            246.24,
+            133.92
+          ]
+        }
+      ]
+    }
+  ],
+  "clock_basis": {
+    "raw_proof": "PASS6883checks/768writes zero mismatches,10ns fifo_clk /14ns hbm_clk",
+    "full_family": "PASS9636checks/768writes zero mismatches, existing released t11 common-clock binding only",
+    "parent_binding": "t11_top.wbk_NW stream_clk,hbm_clk,stream_fifo_clk[0..3] bind hb_ckgen__pll_stream[0]; reset PLLpor_stream",
+    "distinct_async_full_family": "NOT QUALIFIED"
+  },
+  "physical_hold": [
+    "no GEN or route",
+    "parent controller/root rectangle and PG fit unresolved",
+    "native indexed seam bindings and actual per-clock CTS roots required",
+    "no blanket added helper face stages"
+  ],
+  "proof": "proof/summary.json",
+  "actual_mapping": {
+    "unit": "oth-ubuntu-2991616-1793978222",
+    "exit": 0,
+    "scope": "isolated optional group actual ASAP7 TT abc_speed/dont_use/dfflibmap, no place/CTS/route",
+    "groups": {
+      "0": {
+        "stdcells": 26130,
+        "FF": 5776,
+        "stdarea_um2": 3407.94378,
+        "stdutil_posthalo": 0.31606150995882626,
+        "macro_count": 4,
+        "excluded_metadata": {
+          "$scopeinfo": 12
+        },
+        "raw_json_cell_records": 26146,
+        "mapped_json_sha256": "b2a7230c0464dc85bb4579b9f8c651b63cf633135d8ae02ae4d633cb57d765ff",
+        "preserved_bulk_path": "/srv/opentallas-scratch2/claude/codex-wbq-group4-map-1106/base0/area.json",
+        "cell_types": {
+          "$scopeinfo": 12,
+          "AND2x2_ASAP7_75t_R": 1937,
+          "AND2x4_ASAP7_75t_R": 1,
+          "AND3x1_ASAP7_75t_R": 81,
+          "AND3x2_ASAP7_75t_R": 1,
+          "AND4x1_ASAP7_75t_R": 36,
+          "AND4x2_ASAP7_75t_R": 1,
+          "AND5x1_ASAP7_75t_R": 6,
+          "AND5x2_ASAP7_75t_R": 3,
+          "AO211x2_ASAP7_75t_R": 8,
+          "AO21x1_ASAP7_75t_R": 6209,
+          "AO21x2_ASAP7_75t_R": 1,
+          "AO221x1_ASAP7_75t_R": 14,
+          "AO222x2_ASAP7_75t_R": 1,
+          "AO22x1_ASAP7_75t_R": 11,
+          "AO22x2_ASAP7_75t_R": 1,
+          "AO31x2_ASAP7_75t_R": 9,
+          "AO32x1_ASAP7_75t_R": 6,
+          "AO33x2_ASAP7_75t_R": 1,
+          "AOI211x1_ASAP7_75t_R": 7,
+          "AOI21x1_ASAP7_75t_R": 24,
+          "AOI221x1_ASAP7_75t_R": 11,
+          "AOI22x1_ASAP7_75t_R": 6,
+          "BUFx2_ASAP7_75t_R": 1201,
+          "BUFx3_ASAP7_75t_R": 9,
+          "BUFx6f_ASAP7_75t_R": 1,
+          "DFFASRHQNx1_ASAP7_75t_R": 144,
+          "DFFHQNx1_ASAP7_75t_R": 5632,
+          "INVx1_ASAP7_75t_R": 3174,
+          "INVx2_ASAP7_75t_R": 2,
+          "MAJx2_ASAP7_75t_R": 31,
+          "NAND2x1_ASAP7_75t_R": 1538,
+          "NAND3x1_ASAP7_75t_R": 6,
+          "NOR2x1_ASAP7_75t_R": 3204,
+          "NOR3x1_ASAP7_75t_R": 4,
+          "OA211x2_ASAP7_75t_R": 1214,
+          "OA21x2_ASAP7_75t_R": 386,
+          "OA221x2_ASAP7_75t_R": 2,
+          "OA22x2_ASAP7_75t_R": 7,
+          "OA31x2_ASAP7_75t_R": 66,
+          "OAI21x1_ASAP7_75t_R": 361,
+          "OAI22x1_ASAP7_75t_R": 7,
+          "OR2x2_ASAP7_75t_R": 479,
+          "OR3x1_ASAP7_75t_R": 70,
+          "OR4x1_ASAP7_75t_R": 13,
+          "OR5x1_ASAP7_75t_R": 4,
+          "XNOR2x1_ASAP7_75t_R": 1,
+          "XNOR2x2_ASAP7_75t_R": 149,
+          "XOR2x2_ASAP7_75t_R": 50,
+          "ot_sram_1r1w_128x256_m1_r2c2": 4
+        }
+      },
+      "4": {
+        "stdcells": 26265,
+        "FF": 5776,
+        "stdarea_um2": 3393.23256,
+        "stdutil_posthalo": 0.3146971534122706,
+        "macro_count": 4,
+        "excluded_metadata": {
+          "$scopeinfo": 12
+        },
+        "raw_json_cell_records": 26281,
+        "mapped_json_sha256": "9b4ebf9384c21307b6a74c91a16e59e0f5a37ad0a7a27c5e5ab317c471af62d4",
+        "preserved_bulk_path": "/srv/opentallas-scratch2/claude/codex-wbq-group4-map-1106/base4/area.json",
+        "cell_types": {
+          "$scopeinfo": 12,
+          "AND2x2_ASAP7_75t_R": 2164,
+          "AND2x4_ASAP7_75t_R": 1,
+          "AND3x1_ASAP7_75t_R": 102,
+          "AND3x4_ASAP7_75t_R": 1,
+          "AND4x1_ASAP7_75t_R": 15,
+          "AND5x1_ASAP7_75t_R": 1,
+          "AND5x2_ASAP7_75t_R": 1,
+          "AO211x2_ASAP7_75t_R": 2,
+          "AO21x1_ASAP7_75t_R": 6463,
+          "AO221x1_ASAP7_75t_R": 17,
+          "AO222x2_ASAP7_75t_R": 4,
+          "AO22x1_ASAP7_75t_R": 13,
+          "AO31x2_ASAP7_75t_R": 2,
+          "AO32x1_ASAP7_75t_R": 9,
+          "AOI211x1_ASAP7_75t_R": 2,
+          "AOI21x1_ASAP7_75t_R": 17,
+          "AOI221x1_ASAP7_75t_R": 1,
+          "BUFx2_ASAP7_75t_R": 1179,
+          "BUFx3_ASAP7_75t_R": 2,
+          "BUFx6f_ASAP7_75t_R": 2,
+          "DFFASRHQNx1_ASAP7_75t_R": 144,
+          "DFFHQNx1_ASAP7_75t_R": 5632,
+          "INVx1_ASAP7_75t_R": 3397,
+          "INVx2_ASAP7_75t_R": 2,
+          "MAJx2_ASAP7_75t_R": 36,
+          "NAND2x1_ASAP7_75t_R": 1626,
+          "NAND3x1_ASAP7_75t_R": 5,
+          "NOR2x1_ASAP7_75t_R": 3194,
+          "OA211x2_ASAP7_75t_R": 1201,
+          "OA21x2_ASAP7_75t_R": 464,
+          "OA221x2_ASAP7_75t_R": 2,
+          "OA222x2_ASAP7_75t_R": 4,
+          "OA22x2_ASAP7_75t_R": 8,
+          "OA31x2_ASAP7_75t_R": 6,
+          "OAI21x1_ASAP7_75t_R": 93,
+          "OAI22x1_ASAP7_75t_R": 3,
+          "OR2x2_ASAP7_75t_R": 155,
+          "OR3x1_ASAP7_75t_R": 50,
+          "OR4x1_ASAP7_75t_R": 14,
+          "OR5x1_ASAP7_75t_R": 2,
+          "XNOR2x2_ASAP7_75t_R": 150,
+          "XOR2x1_ASAP7_75t_R": 4,
+          "XOR2x2_ASAP7_75t_R": 75,
+          "ot_sram_1r1w_128x256_m1_r2c2": 4
+        }
+      }
+    }
+  },
+  "hierarchy_guard_proof": "hierarchy_guard/summary.json"
+}

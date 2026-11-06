@@ -46,6 +46,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import subprocess
 import re
 import sys
 from collections import defaultdict
@@ -3094,6 +3095,11 @@ class Binder:
                 files.extend(hbm_spb_native.materialize(self, tn, f))
             except (ValueError, KeyError, OSError) as exc:
                 raise BindError(f"HBM SPB native {tn}: {exc}") from exc
+            if tn in getattr(self, "_emitted_reset_trees", {}):
+                import bound_reset_contract as BRC
+                prov_file = out.parent / "provenance_bind.json"
+                prov = json.loads(prov_file.read_text()) if prov_file.is_file() else None
+                BRC.emitted(f, tn, self._emitted_reset_trees[tn], provenance=prov)
             files.append(f)
         if getattr(self, "_reset_consumer_changes", None):
             (out.parent / "bind_reset_consumers.json").write_text(
@@ -3330,6 +3336,8 @@ class Binder:
                 body.append("    wire rst_n = arst_n;  // delivered reset to the native hard partition")
             else:
                 rtree = RT.for_type(P, ptn)
+                import copy
+                self.__dict__.setdefault("_emitted_reset_trees", {})[tn] = copy.deepcopy(rtree)
                 ports += [f"    output wire {n}   // registered reset to neighbour" for n, _x, _y in RT.out_pins(P, ptn)]
                 if RT.start_broadcast(P):              # OWNER DECISION 13c: START broadcast beside the reset
                     ports.append("    input  wire start_i   // START in (wavefront broadcast)")
@@ -3728,10 +3736,28 @@ class Binder:
             import bind_core_split
             core_gate_ports = bind_core_split.gate_ports(self.ab["core_splits"])
 
-        def core_reset_gate(x, c, r):
+        import bind_core_split, bind_leaf_reset
+        try:
+            leaf_reset_rules = bind_leaf_reset.selected(self.ab.get("reset_gate_bindings"), tn, t.get("hard_cores", []))
+        except ValueError as exc:
+            raise BindError(f"LEAF_RESET {tn}: {exc}") from exc
+        for rule in leaf_reset_rules:
+            core_gate_ports[rule["module"]] = tuple(set(core_gate_ports.get(rule["module"], ())) | set(rule["ports"]))
+
+        leaf_gates = {}
+
+        def core_reset_gate(x, c, r, pn):
+            try:
+                anchor = bind_leaf_reset.resolve(leaf_reset_rules, c.module, r, pn)
+            except ValueError as exc:
+                raise BindError(f"LEAF_RESET {tn}: {exc}") from exc
+            # Separate namespace keeps all existing hard-core gate identities stable.
+            gates = leaf_gates if anchor is not None else core_gates
+            prefix = "lrg" if anchor is not None else "prg"
             key = (r, x)
-            if key not in core_gates:
-                hc = next((h for h in t.get("hard_cores", []) if h["inst"] in (r, r.removeprefix("u_"))), None)
+            if key not in gates:
+                names = (anchor,) if anchor is not None else (r, r.removeprefix("u_"))
+                hc = next((h for h in t.get("hard_cores", []) if h["inst"] in names), None)
                 if rtree is None or hc is None:
                     raise BindError(f"CORE_SPLIT reset_gate {tn}/{r}: needs a wavefront tree and a plan hard core row")
                 w, h = hc["outline_um"]
@@ -3740,12 +3766,12 @@ class Binder:
                     tap_net = bind_core_split.gate_tap(rtree["relays"], (o[0] + w / 2, o[1] + h / 2), RT.consumer_count(rtree))
                 except ValueError as exc:
                     raise BindError(f"CORE_SPLIT {tn}/{r}: {exc}") from exc
-                nm = short_id(f"prg_{sv_id(r)}_{len(core_gates)}", 100)
-                core_gates[key] = nm
+                nm = short_id(f"{prefix}_{sv_id(r)}_{len(gates)}", 100)
+                gates[key] = nm
                 decl.append(f"    wire {nm};")
                 body.append(f"    ot_dp_rgate u_{nm} (.clk(clk), .d({x}), .run({tap_net}), .q({nm}));  "
                             f"// PC reset safe form: lane & wavefront tap")
-            return core_gates[key]
+            return gates[key]
 
         insts = []
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
@@ -3761,7 +3787,7 @@ class Binder:
                 elif dd == "input":
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
                     if pn in core_gate_ports.get(c.module, ()):
-                        e = [core_reset_gate(x, c, r) for x in e]
+                        e = [core_reset_gate(x, c, r, pn) for x in e]
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
@@ -4974,6 +5000,11 @@ def cmd_kit_rtl(a):
     bmod = rep["types"][key]["module"]
     bfile = out / "rtl" / f"{bmod}.sv"
     btxt = bfile.read_text()
+    import bound_reset_contract as BRC
+    try:
+        bound_reset_source = BRC.source(bfile, key, out, E.REPO)
+    except (ValueError, OSError, subprocess.CalledProcessError) as exc:
+        raise BindError(f"kit-rtl {tn}: captured reset identity: {exc}") from exc
     # The generic plan wrapper has early-core clocks as well as grid clocks.
     # Connect them to real native leaf clock pins in a private kit source copy.
     import gen_phys
@@ -5219,6 +5250,18 @@ def cmd_kit_rtl(a):
     sims = [str(f) for f in fl if SIM_FILE.search(f.name)]
     if sims:
         raise BindError(f"kit-rtl {tn}: simulation models in the kit filelist {sims[:5]} (no *_sim in a kit)")
+    bound_reset = None
+    if bound_reset_source:
+        import copy
+        from types import SimpleNamespace
+        native_type = copy.deepcopy(t)
+        native_type.setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = bound_reset_source["tree"]
+        native_plan = SimpleNamespace(types={tn: native_type}, path=Path(a.plan))
+        try:
+            bound_reset = gen_phys.install_bound_native_reset(native_plan, tn, fl, source_contract=bound_reset_source)
+            BRC.stage(kd, bound_reset_source, bound_reset)
+        except (ValueError, gen_rtl.GenError) as exc:
+            raise BindError(f"kit-rtl {tn}: native reset export: {exc}") from exc
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
     # simulation view of the same kit: the hard macros' behavioural models instead of their black boxes
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
@@ -5231,6 +5274,8 @@ def cmd_kit_rtl(a):
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,
                hbm_spb_native_geometry=spb_geometry,
+               **({"bound_reset": dict(file="bound_reset.json", tree_sha256=bound_reset_source["tree_sha256"],
+                                        source=bound_reset_source["authority"])} if bound_reset else {}),
                **({"native_glue": native_glue} if native_glue else {}),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "

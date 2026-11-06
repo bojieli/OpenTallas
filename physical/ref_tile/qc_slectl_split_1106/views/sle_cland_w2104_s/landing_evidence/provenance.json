@@ -1,0 +1,100 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "sle_cland_w2104_s_hed6d0c",
+  "module": "sle_cland_w2104_s",
+  "plan_type": "sle_ctl__cl67434795",
+  "outline_um": [
+   362.016,
+   45.36
+  ],
+  "ref_tile": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds2/kits/_spec/sle_cland_w2104_s",
+  "spec": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds2/kits/_spec/sle_cland_w2104_s/spec.json",
+  "spec_sha256": "a3811585c77ff4b5aff4ef9321b28555a5b7cbe937d8b7e67cb21711163cf851",
+  "pins_file": "cores/sle_ctl/sle_cland_w2104_s_pins.json",
+  "pins_sha256": "ed6d0c286e7a15c741cb18260b03d701cfe71b4e57a8f183c76aa877d84ee1da",
+  "pins": 4220,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n",
+   "t_rst_n"
+  ],
+  "recipe_sha256": "f741d2d93d15b9bb4203cae980ff564be06175f25ca6cf9facf191d46bb5c858",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan early core tap 250 TT / 202.5 FF (QC-SLECTL-B/SPLIT-1105: target 250/202.5 ESTIMATE, re-measure from the child's own kit)",
+   "ff": "plan early core tap 250 TT / 202.5 FF (QC-SLECTL-B/SPLIT-1105: target 250/202.5 ESTIMATE, re-measure from the child's own kit)"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "abd257a000",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "3e97ef41823cac5d5dbff8d672eeb6839ef32278c58ca44cbd22865476eebfc5",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "952750fc5a6bf6d1",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "5bdb2b30e235f034fbe7e6d3163ce308d8ce1b266596cd54ef0bd609e581275c",
+  "pins_placed_canon_sha256": "6ec225cdb9fc2a24fe564231f38e08e2a6cbf74cfd4965becc4118c6855739c6",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1",
+ "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+ "flow_tag": "flow-20261106-z-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-06T10:30:37+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1",
+  "base": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/run/results/asap7/kq_sle_cland_w2104_s_hed6d0c/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/signoff/signoff.json",
+  "signoff_sha256": "ab4e2422950b52d31beba8c680f09d0f6e3c6a162ec0c6c50dac94f7aa162231",
+  "signoff_generated": "2026-11-06T01:55:20-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/run/results/asap7/kq_sle_cland_w2104_s_hed6d0c/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/lec_postroute_3h58ugwo/lec.json",
+  "note": "Largest ring: routed DRV ECO PASS; actual regenerated ETM and released-tag signoff/routed LEC",
+  "lib_basis": {
+   "sle_cland_w2104_s_tt.lib": "base sle_cland_w2104_s_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "sle_cland_w2104_s_ff.lib": "base sle_cland_w2104_s_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "7d34e036e903f864b7fb9f8ee81f3fd3780c90dd31617c5700cc225e67c5e268",
+   "sle_cland_w2104_s.lef": "f3fb6cee51b2f9335964675d4f074e079665d0cec0017797e2ffe4b9e2cb64ec",
+   "sle_cland_w2104_s_ff.lib": "76fa7a1d6fa5f7112b181fd6d570b5600bcd719e4f8a1044b7c674c2a38f5b5d",
+   "sle_cland_w2104_s_tt.lib": "c7857e0bdb427beb04b5cfa8d0bf1d1b8644f05d3f7b31d75ceac75fa155bc83"
+  }
+ }
+}

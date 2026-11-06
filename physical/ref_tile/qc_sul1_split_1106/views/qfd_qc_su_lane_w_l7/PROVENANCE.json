@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "19af2d0dd06d772391425bca73f56408cc81066d",
+ "flow_tag": "flow-20261103-s-qc",
+ "routed_db": "/srv/opentallas-scratch2/claude/die-qc-65-sul/l7/eco/i1/run/results/asap7/kq_qfd_qc_su_lane_w_l7_we89441/base/6_final.odb",
+ "build_commit": "2969e602396e74523bd0c46837db2ffbcfdbc225",
+ "lec": "/srv/opentallas-scratch2/claude/ss24/l7_lec_rb0/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/ss24/l7_s_qc/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/die-qc-65-sul/l7/eco/i1",
+ "original_signoff": "/srv/opentallas-scratch2/claude/die-qc-65-sul/l7/eco/i1/signoff/signoff.json",
+ "name": "kq_qfd_qc_su_lane_w_l7_we89441",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "key-cardinal",
+ "created": "2026-11-03 18:15 PST",
+ "routed_db_sha256": "17b530740b78acbd0b21bb686e3b166a82a4184914f013cf0cedac820bccf68f",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/ss24/tools_s_qc/tools/die_plan",
+  "sha256": {
+   "signoff.py": "24088eb66d177578ba14313b350a4ea067ea41ee170bbecc7c0b389353e637ae",
+   "lec.py": "6ea68ddbf6c888652cf59dd1cf1abc218d3f3bb494d6ccd55046702bffc703b8"
+  },
+  "checked": "byte-identical to flow-20261103-s-qc"
+ },
+ "lane": "SIGNOFF-SPRINT-24",
+ "as_run_note": "su_lane l7 eco it3 i1; sign-off re-run at s-qc; routed LEC s-qc lec.py OT_LEC_RAW_BASE_STEPS=0; build_commit 2969e602 + QC kit patch (OWNER DECISION 13), same as l6"
+}

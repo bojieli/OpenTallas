@@ -1,0 +1,43 @@
+{
+  "scope": "actual retained oldrefs/SRAM/CDC/resetmodels; raw10/14ns and fullfamilycommon10ns only",
+  "extra_cycles": 0,
+  "unit": "oth-ubuntu-2927194-1793978099",
+  "exit": 0,
+  "vehicles": {
+    "raw_default": {
+      "result": "PASS",
+      "counts": "ROOT_STORE checks=6883 writes=768 mismatch=0",
+      "exit": 0
+    },
+    "raw_group": {
+      "result": "PASS",
+      "counts": "ROOT_STORE checks=6883 writes=768 mismatch=0",
+      "exit": 0
+    },
+    "family_default": {
+      "result": "PASS",
+      "counts": "ROOT_STORE checks=9636 writes=768 mismatch=0",
+      "exit": 0
+    },
+    "family_group": {
+      "result": "PASS",
+      "counts": "ROOT_STORE checks=9636 writes=768 mismatch=0",
+      "exit": 0
+    },
+    "mut_groupwire": {
+      "result": "CAUGHT",
+      "counts": "ROOT_STORE checks=9636 writes=768 mismatch=768",
+      "exit": 1
+    },
+    "mut_lane": {
+      "result": "CAUGHT",
+      "counts": "ROOT_STORE checks=9636 writes=768 mismatch=768",
+      "exit": 1
+    },
+    "mut_dropwd": {
+      "result": "CAUGHT",
+      "counts": "ROOT_STORE checks=9636 writes=768 mismatch=768",
+      "exit": 1
+    }
+  }
+}

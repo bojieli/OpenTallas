@@ -1,0 +1,6 @@
+AGE mismatch c6 phase0.0
+AGE mismatch c7 phase0.0
+AGE mismatch c8 phase0.0
+RXCAP_RESULT phase_ps=0.0 checks=305 fall_checks=304 reset_checks=6 errors=305 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1
+FATAL: /srv/opentallas-scratch2/claude/codex-head-rx-fall-1106/tb_rx_first_fall.sv:40: RXCAP_FAIL
+       Time: 258647500  Scope: tb

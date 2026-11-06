@@ -1273,8 +1273,11 @@ def in_pin(P, tn):
 
 def out_pins(P, tn):
     """[(port, x, y)] the registered reset outputs of a soft type (uniform per type: every site any instance uses)."""
-    if bound_native_contract(P, tn):
-        return []
+    native = bound_native_contract(P, tn)
+    if native:
+        # These are the actual emitted native wrapper's registered outputs.
+        # Their captured tree sites must survive in io.tcl and the exact pin ABI.
+        return [(f"rst_o_{k}",) + tuple(xy) for k, xy in enumerate(native["tree"].get("outs", []))]
     if not wavefront(P) or P.types[tn].get("hard"):
         return []
     sites = face_sites(P, tn)
@@ -1390,8 +1393,16 @@ def start_in_pin(P, tn):
 
 def start_out_pins(P, tn):
     """[(port, x, y)] registered START outs start_o_<k> (beside rst_o_<k>, same neighbour)."""
-    if bound_native_contract(P, tn):
-        return []
+    native = bound_native_contract(P, tn)
+    if native:
+        # Use the same deterministic local pin siting as the emitted ABI, with
+        # captured reset output sites; never invoke the global wavefront solver.
+        if not native["tree"].get("start"):
+            return []
+        entry, outs = _start_sites(P, tn)
+        if tuple(entry) != tuple(native["tree"].get("start_in", ())):
+            raise ResetError(f"type {tn}: native START output siting disagrees with captured entry site")
+        return outs
     if not start_broadcast(P) or P.types[tn].get("hard"):
         return []
     return list(_start_sites(P, tn)[1])
@@ -1487,6 +1498,18 @@ def core_reset_targets(P, tn):
     return out
 
 
+def wavefront_min_depth(t):
+    """Optional per-type physical reset padding; never shortens the built tree.
+
+    Preserve a published release cohort when moving macros makes the legal
+    reset topology shallower. Data and K pipelines are unaffected.
+    """
+    depth = t.get("reset", {}).get("wavefront_min_depth")
+    if depth is not None and (type(depth) is not int or depth < 0):
+        raise ResetError("reset.wavefront_min_depth must be a nonnegative integer")
+    return depth
+
+
 def _wf_type_tree(P, tn):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     key = ("wf_tree", tn)
@@ -1503,7 +1526,7 @@ def _wf_type_tree(P, tn):
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")))
-        T = assign(topo, None, pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
+        T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
                    box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
         T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(taps),
                  local_reset_taps=bool(t.get("reset", {}).get("local_taps_um")), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
@@ -1773,6 +1796,11 @@ def start_relays(T):
         return "run_root" if n == "rst_root_n" else "rn_" + raw(n)
     used = {raw(r["d"]) for r in T["relays"]} | {f"rr_t{i}" for i in outs}
     roles = T.get("tap_roles", {})
+    def role(i):
+        # Actual emission trees use integer indices; JSON receipts carry string keys.
+        if i in roles and str(i) in roles and roles[i] != roles[str(i)]:
+            raise ResetError(f"conflicting integer/string reset tap role at {i}")
+        return roles.get(i, roles.get(str(i), "mission"))
     out = []
     for r in T["relays"]:
         m = _TAPQ.match(r["q"])
@@ -1780,7 +1808,7 @@ def start_relays(T):
         srl = r["name"].replace("u_rrl", "u_srl", 1)
         if m and int(m.group(1)) not in outs:
             i = int(m.group(1))
-            if roles.get(i, "mission") == "bootstrap":
+            if role(i) == "bootstrap":
                 # BOOTSTRAP consumer: the registered raw delivered reset (same flop count => same release offset)
                 out.append(dict(base, name=r["name"], d=raw(r["d"]), q=r["q"], role="boot"))
             else:
@@ -1932,7 +1960,7 @@ def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
             f": consumer taps = registered RAW wavefront reset (boot before START); start_t{T['start_tap']} = the "
             "local registered START tap (reset AND run) for the declared mission-admission input"
             if T["start_role"] == "bootstrap" else ": consumer taps = registered (reset AND run)") +
-            ("; core overrides " + ", ".join(f"t{k}:{v}" for k, v in sorted(T["tap_roles"].items())
+            ("; core overrides " + ", ".join(f"t{k}:{v}" for k, v in sorted(T["tap_roles"].items(), key=lambda item: int(item[0]))
                                              if v != T["start_role"]) if any(v != T["start_role"] for v in
                                                                               T["tap_roles"].values()) else ""))
     declared = {f"rst_n_t{i}" for i in taps} | {"rst_root_n", "run_root"}
@@ -2035,11 +2063,93 @@ proc rtr_reset_equiv {net parity seen} {
 """
 
 
-def tcl_text(T, native_paths=None):
+def _core_instance_match(names):
+    return " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}"
+                       f" || [string range $n end-[string length {{{x}}}] end] eq {{.{x}}}" for x in names)
+
+
+def project_core_paths(text, contents):
+    """Project only generated core-target predicates onto authoritative physical identities.
+
+    The full reset-context sidecar retains its root, relays, coordinates, depth
+    and connections. A logical target can also match its selected bound path.
+    """
+    paths = {c['inst']: c['physical_inst'] for c in contents
+             if c.get('physical_inst') and c['physical_inst'] != c['inst']}
+    if not paths:
+        return text
+    lines = text.splitlines(keepends=True)
+    target = None
+    for index, line in enumerate(lines):
+        if line.startswith('# Equal-depth reset target for hard core '):
+            name = line.strip().split('hard core ', 1)[1]
+            target = name.rsplit('.', 1)[0]
+        if target not in paths or not line.startswith('foreach i [$ff_blk getInsts]'):
+            continue
+        old = _core_instance_match([target])
+        new = _core_instance_match([target, paths[target]])
+        if 'if {' + new + '}' in line:
+            continue
+        if 'if {' + old + '}' not in line or 'lappend rtr_ci $i' not in line:
+            raise ResetError(f'unknown/conflicting reset sidecar target predicate: {target}')
+        lines[index] = line.replace('if {' + old + '}', 'if {' + new + '}', 1)
+    return ''.join(lines)
+
+
+def unused_bootstrap_placements(relays, text, module):
+    """Physical inventory of final-wrapper BOOT leaves with no RTL consumer.
+
+    Only declaration plus this exact relay's own Q connection is admitted.
+    Aliases, output exports, another consumer or an ambiguous cell retain it.
+    The RTL/tree/release table is unchanged; synthesis has no physical cell for
+    a source-dead leaf, so it must not be a required placement point.
+    """
+    import hashlib
+    clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", text, flags=re.S)
+    bodies = re.findall(r"\bmodule\s+" + re.escape(module) + r"\b.*?\bendmodule\b", clean, re.S)
+    if len(bodies) != 1:
+        raise ResetError('unused BOOT inventory requires one exact final wrapper module')
+    body = bodies[0]
+    rows = []
+    for relay in relays:
+        if relay.get('role') != 'bootstrap_transport' or not relay['name'].endswith('_b'):
+            continue
+        name, q = relay['name'], relay['q']
+        if not re.fullmatch(r'rst_boot_t[0-9]+', q):
+            continue
+        cells = re.findall(r'\bot_dp_rrelay\s+' + re.escape(name) + r'\s*\(([^;]+)\);', body)
+        pins = dict(re.findall(r'\.(\w+)\(\s*([^()]+?)\s*\)', cells[0])) if len(cells) == 1 else {}
+        count = len(re.findall(r'\b' + re.escape(q) + r'\b', body))
+        declaration = len(re.findall(r'\bwire\s+' + re.escape(q) + r'\s*;', body)) == 1
+        dead = (len(cells) == 1 and pins == dict(clk='clk', d=relay['d'], q=q)
+                and declaration and count == 2)
+        rows.append(dict(instance=name, q=q, d=relay['d'], occurrences=count,
+                         exact_declaration=declaration, source_dead=dead))
+    return dict(schema='opentallas.reset_source_live_inventory.v1', module=module,
+                wrapper_sha256=hashlib.sha256(text.encode()).hexdigest(), leaves=rows,
+                omitted=[x['instance'] for x in rows if x['source_dead']],
+                method='exact source declaration + own Q only; every consumer/alias/export retains placement')
+
+
+def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_bootstrap=()):
+    if unused_bootstrap and (native_paths is not None or native_nodes is not None or native_sites is not None):
+        raise ResetError("source-live omission cannot change a captured native reset contract")
+    if native_paths is not None and (T.get("outs") or T.get("core_resets")) and native_nodes is None:
+        raise ResetError("native reset exports require verified physical nodes; no implicit output/core rewiring")
+    if native_nodes is not None and native_paths is None:
+        raise ResetError("native reset placement nodes require exact verified hierarchy paths")
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
+    root_xy = (native_sites or {}).get(ent, T['root'])
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
-         f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
+         f"rtr_place rst_root_n {{*{ent}[./]*}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry"]
     rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
+    omitted = set(unused_bootstrap)
+    eligible = {r['name'] for r in rel if r.get('role') == 'bootstrap_transport' and r['name'].endswith('_b')}
+    if omitted - eligible:
+        raise ResetError('unused physical inventory can omit only audited BOOT leaves')
+    if omitted:
+        rel = [r for r in rel if r['name'] not in omitted]
+        t.append('puts {OT_RESET_SOURCE_DEAD_BOOTSTRAP ' + str(len(omitted)) + ' leaves: ' + ' '.join(sorted(omitted)) + '}')
     if T.get("relay_driver"):
         specs = []
         if T["entry"] != "sync":
@@ -2065,28 +2175,29 @@ def tcl_text(T, native_paths=None):
               "}"]
     if T.get("start"):
         rent = "u_run_root" if T["entry"] == "sync" else "u_run_in"
-        t.append(f"rtr_place run_root {{*{rent}[./]*}} {T['start_in'][0]:.3f} {T['start_in'][1]:.3f} sentry")
+        run_xy = (native_sites or {}).get(rent, T['start_in'])
+        t.append(f"rtr_place run_root {{*{rent}[./]*}} {run_xy[0]:.3f} {run_xy[1]:.3f} sentry")
     oq = out_relays(T)
-    for r in rel:
-        t.append(f"rtr_place {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
-        if r["q"] in oq:
+    for r in (native_nodes if native_nodes is not None else rel):
+        place = "rtr_place_opt" if r.get("optional") else "rtr_place"
+        t.append(f"{place} {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
+        if native_nodes is None and r["q"] in oq:
             # the out relay's tap-net copy (rtl_lines): placed beside it when synthesis kept it (it has loads)
             t.append(f"rtr_place_opt {r['q']}:copy {{*{r['name']}_t[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} "
                      f"rrl:{r['kind']}{r['depth']}c")
-    if T.get("core_resets"):
+    if T.get("core_resets") and native_nodes is None:
         terminals = " ".join(r["q"] for r in T["relays"] if r["depth"] == T["depth"])
         t += ["set rtr_terminal_qnets {}", f"foreach key {{{terminals}}} {{",
               "  if {[dict exists $rtr_qnets $key]} { dict set rtr_terminal_qnets [[dict get $rtr_qnets $key] getName] [dict get $rtr_qpol $key] }",
               "}", CORE_RESET_EQ_TCL]
-    for c in T.get("core_resets", []):
+    for c in (T.get("core_resets", []) if native_nodes is None else []):
         q = f"rst_n_t{c['tap']}"
         inst, pin = c["inst"], c["pin"]
         # ODB getName escapes brackets (u_core.u.g_pp\\[0\\].u_pair); match on the plain Verilog form (hd_lep0N).
         # A flat plan core with no physical_inst stays u_bound.<inst> in ODB (QC u_t32, MY tile with no lef in the plan):
         # "." is a hierarchy separator too, and the exactly-one check below still rejects an ambiguous name.
         names = [inst] + ([c["physical_inst"]] if c.get("physical_inst") else [])
-        match = " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}"
-                           f" || [string range $n end-[string length {{{x}}}] end] eq {{.{x}}}" for x in names)
+        match = _core_instance_match(names)
         t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
               "set rtr_cn {}; set rtr_ci {}",
               f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",
@@ -2105,8 +2216,12 @@ def tcl_text(T, native_paths=None):
               f"  dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
               f"  puts {{OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}}}",
               "}"]
-    edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
-    edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
+    edges = " ".join(f"{r['q']} {r['d']}" for r in (native_nodes if native_nodes is not None else rel))
+    if native_nodes is None:
+        edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
+    else:
+        edges += " " + " ".join(f"{r['q']} {r['run']}" for r in native_nodes if r.get('run'))
+        t.append("# NATIVE RESET: core connections remain exactly as bound; no core rewiring or claimed core-hop check.")
     t += ["close $rtr_fh",
           "# placed hop check (driver relay -> relay, Manhattan between placed sites)",
           f"set rtr_hmax 0; set rtr_hbad 0; set rtr_lim [expr {{{T['reach_um']:g} * $ff_dbu}}]",
@@ -2127,7 +2242,7 @@ def tcl_text(T, native_paths=None):
         for name, path in native_paths.items():
             exact = "[./]".join(path.split(".")) + "[./]*"
             text = text.replace("*" + name + "[./]*", exact)
-        if re.search(r"^rtr_place\s+\S+\s+\{\*", text, re.M):
+        if re.search(r"^rtr_place(?:_opt)?\s+\S+\s+\{\*", text, re.M):
             raise ResetError("native reset placement contains an unverified wildcard instance")
     return text
 
