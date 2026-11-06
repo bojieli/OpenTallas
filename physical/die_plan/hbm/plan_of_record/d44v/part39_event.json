@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.hbm_plan_event.part39",
+ "by": "DIE-HBM-81 11-06 (G0C class C: hub svg pins off the M4 track, 96 errors)",
+ "types": [
+  "q_hub_nw",
+  "q_hub_ne"
+ ],
+ "cores": "u_svg_Q0/Q1 __b0 __b1 __o __t (MX)",
+ "change": "track_offset_um y -0.024 -> 0.0 (core 24 nm up); the core's clock tap point y +0.024; pin tables, outlines, origins, Q2/Q3 unchanged",
+ "why": "MX keeps pins at 0.024 mod 0.048 (outline heights are multiples of 0.048); with the -0.024 offset every pin was half an M4 pitch off the type track (offset 0.024, pitch 0.048)",
+ "pin_cycles": "none",
+ "replay": "results/die_hbm_1106/svg_track_p39/mk_p39.py + fin_p39.py"
+}
