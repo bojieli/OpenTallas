@@ -1397,8 +1397,8 @@ def main():
                 raise SystemExit(f"{master}: site {x},{y} ({mw}x{mh}) outside the core area of {w}x{h}")
             mplace[master].append((x, y, o))
     if hcb:
-        from signed_children import strip_native_children
-        strip_native_children(kd / "rtl", hard_masters)
+        from signed_children import specialize_native_children
+        specialize_native_children(kd / "rtl", hcb)
 
     # pins: exact plan centres + plan shapes, on the kit tracks
     m6_off = m6_pin_grant(pins, hc, plan)

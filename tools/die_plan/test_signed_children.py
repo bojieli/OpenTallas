@@ -44,21 +44,36 @@ class SignedChildren(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'outside'):
                 C.prepare_hard_children(s, r, p, [100, 100])
 
-    def test_blackbox_replaces_only_child_implementation(self):
+    def test_only_selected_parameterization_is_hardened(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d)
-            parent = 'module top(input a,output y); leaf #(.P(3)) u(a,y);\nendmodule\n'
-            (p / 'native.sv').write_text('module leaf(input a,output y);\nassign y=a;\nendmodule\n' + parent)
+            native = 'module leaf #(parameter P=0)(input a,output y);\nassign y=a^P;\nendmodule\n'
+            parent = 'module top(input a,output yh,ys);\nleaf #(.P(0)) u_hard(a,yh);\nleaf #(.P(4)) u_soft(a,ys);\nendmodule\n'
+            (p / 'native.sv').write_text(native + parent)
             bb = '(* blackbox *) module leaf(input a,output y);endmodule\n'
             (p / 'leaf_bb.v').write_text(bb)
-            C.strip_native_children(p, {'leaf'})
-            self.assertEqual((p / 'native.sv').read_text(), parent)
+            C.specialize_native_children(p, [dict(master='leaf', inst='top.u_hard')])
+            result = (p / 'native.sv').read_text()
+            self.assertIn('module leaf__soft #', result)
+            self.assertIn('assign y=a^P;', result)
+            self.assertIn('leaf #(.P(0)) u_hard(a,yh);', result)
+            self.assertIn('leaf__soft #(.P(4)) u_soft(a,ys);', result)
             self.assertEqual((p / 'leaf_bb.v').read_text(), bb)
+
+    def test_nested_parameters_and_comments(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            source = '// leaf should stay in this comment\nmodule leaf(input a,output y);\nassign y=a;\nendmodule\nmodule top(input a,output y);\nleaf #(.P((2 == 2) ? 1 : 0)) u_hard(a,y);\nendmodule\n'
+            (p/'a.sv').write_text(source)
+            C.specialize_native_children(p, [dict(master='leaf',inst='u_hard')])
+            result = (p/'a.sv').read_text()
+            self.assertTrue(result.startswith('// leaf should stay in this comment'))
+            self.assertIn('leaf #(.P((2 == 2) ? 1 : 0)) u_hard', result)
 
     def test_missing_native_child_refused(self):
         with tempfile.TemporaryDirectory() as d:
             with self.assertRaisesRegex(ValueError, 'exactly one native'):
-                C.strip_native_children(d, {'leaf'})
+                C.specialize_native_children(d, [dict(master='leaf',inst='u_hard')])
 
 
 if __name__ == '__main__':
