@@ -3,14 +3,16 @@ LEP RX locality physical-source candidate, 2026-11-06
 Changes: preserve 1762.56x1226.88 outline and all49 native master instances;
 move upper pair1/3 +43.2um and move20 RX SRAMs from N row to middle street,
 aligned to actual native K bit groups. Retain primary CLK/count-strap island.
-Three reset tap sites move; counts/indices remain. Reset depth comparison and
+Three reset tap sites move; counts/indices remain. Optional per-type floor7
+adds real reset padding, preserving K7/release8. Actual tree comparison PASS;
 fresh wrapper GEN must complete before adopting a coherent prepared cohort.
 No leaf RTL, bus, parameter, strap, clock budget, data cycle or K cycle changes.
 
 Apply head_lep_rx_locality_apply.py BASE_EXACT6 layout_delta.json OUT.json.
+Requires codex/head-reset-depth-1106 capability tip2bd68c68300 (schema+generator).
 The applicator requires the exact reviewed base SHA and verifies its output SHA.
 Full immutable source and explicit4106 existing-register placement intent:
-epyc5:/srv/opentallas-scratch2/claude/codex-head-lep-clock-1106/rx_data_v5/rf
+epyc5:/srv/opentallas-scratch2/claude/codex-head-lep-clock-1106/rx_data_v6/rf
 Full clearance audit reports0 fit errors, preserving4.32um macro halos.
 The diagram is source placement intent, not a placed/CTS timing result.
 Capture placements are NOT automatically activated by this plan delta.

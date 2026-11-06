@@ -28,6 +28,10 @@ def apply(base, delta, output):
         if taps[move['index']] != move['before']:
             raise ValueError('reset tap mismatch')
         taps[move['index']] = move['after']
+    if 'wavefront_min_depth' in spec:
+        if 'wavefront_min_depth' in typ['reset']:
+            raise ValueError('base already has a reset depth floor')
+        typ['reset']['wavefront_min_depth'] = spec['wavefront_min_depth']
     result = (json.dumps(plan, indent=2) + '\n').encode()
     if hashlib.sha256(result).hexdigest() != spec['candidate_sha256']:
         raise ValueError('candidate differs from reviewed geometry')

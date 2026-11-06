@@ -1,7 +1,7 @@
 {
   "schema": "head_lep_rx_locality_delta.v1",
   "base_sha256": "268f5579145c2bdd8c872398751aecb75a004971c6422ac7db8a04f260812388",
-  "candidate_sha256": "e610592583f4cc10611c975850f1ca8369db401eef0513fb05ae9374ef8afdb2",
+  "candidate_sha256": "71b5cb4c576424cabb1c92cb451707dcc238c9d341b548db80ed1c539955e8fe",
   "partition_type": "hd_lep0N",
   "macro_origin_changes": [
     {
@@ -286,5 +286,7 @@
   "added_K_cycles": 0,
   "clock_provider": "UNBOUND",
   "physical_approval": "GEN_ONLY",
-  "fit_errors": []
+  "fit_errors": [],
+  "wavefront_min_depth": 7,
+  "dependency": "tools/die_plan/reset_tree.py optional per-type wavefront_min_depth"
 }
