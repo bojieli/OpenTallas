@@ -10070,3 +10070,6 @@ OWNER? 2026-11-05 23:30 PST — intel2 scratch2 is approaching its floor; 131 su
 
 2026-11-05 23:37 PST HBM: p35 merged2c7054fd3cd/z-hbm; current expanded waveplan d44v35 ready. Own rootctl ECO live epyc2, N4rsq refresh/ECO queued epyc6, EXPX shallowclock comparison queued epyc5. All job paths in DIE-HBM-78.md.
 - 2026-11-05 23:46 PST CODEX ECO staging: READY b5a55aa626c, selected tool cohort prevents old sdc_lint API overwrite; actual nested output rsync exclusion prevents recursion.26 focused module tests PASS, legacy failure reproduced; ROOT merge batch notified.
+
+## OWNER?
+2026-11-06 00:18 PST HEAD production boot contract: which released stage/rank, clock/reset identity and static HEADER/COMMIT dates bind the HOST authority? Current l48ui source leaves LOCAL_STAGE=255, LOCAL_RANK=4, PHASE_BOUND=0, CLOCK_RESET_ID=0 and dates all-ones (deliberately unadmitted defaults). Recommendation: derive the values from the released package/rack and current reset/clock model, then carry explicit bindings in one HEAD plan event; never substitute the TEST stage1/rank0 dates501/511. Default: retain fail-closed defaults while the HEAD owner locates the existing contract; continue physical closure and other token work.
