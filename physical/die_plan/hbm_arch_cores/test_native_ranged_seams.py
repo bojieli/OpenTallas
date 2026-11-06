@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """One wide producer and four identical-master peers; actual bit nets are authority."""
-import copy,hashlib,json,tempfile
+import copy,hashlib,json,tempfile,sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[3]/'tools/die_plan'))
 import native_seams as N
 
 def digest(obj):return hashlib.sha256(json.dumps(obj).encode()).hexdigest()
@@ -47,6 +48,19 @@ def run():
             try:I.check_ranged_context(bad,bad['parent_contexts'][0])
             except ValueError:print('receipt_'+field,'REJECTED')
             else:raise AssertionError('damaged receipt accepted')
+        # Exercise the real mixed endpoint guard with this v2 receipt, not just schema shape.
+        net='module out(clk,rst_n,clk_bad,d,v,r); input clk,rst_n,clk_bad; output [31:0] d; output [3:0] v; input [3:0] r;\n'
+        for bus,width in [('d',32),('v',4)]:
+            for bit in range(width):net+=f'DFFHQN f_{bus}_{bit}(.CLK(clk),.D(r[{bit%4}]),.Q({bus}[{bit}]));\n'
+        net+='endmodule'
+        contract=dict(kind='INTERNAL_CORE',partition_rule='R2_INTERNAL_TIMED_IN_PARTITION',scope_buses=['d','v','r'],
+                      port_roles=dict(d='output',v='output',r='input'),hard_child_context=good)
+        fz=dict(module='out',clocks=['clk'],macros=[],plan_sha256=digest(plan),pins_sha256=view['pins_sha256'],
+                face_shell=dict(native_registered_passthrough=['d','v','r'],face_cycle_overrides=dict(d=0,v=0,r=0),native_endpoint_contract=contract))
+        assert I.mixed_guard(net,'out',root,fz,'^(clk|rst_n|clk_bad)$')['verdict']=='PASS'
+        wrongclock=net.replace('f_d_0(.CLK(clk)','f_d_0(.CLK(clk_bad)')
+        assert I.mixed_guard(wrongclock,'out',root,fz,'^(clk|rst_n|clk_bad)$')['verdict']=='FAIL'
+        print('v2 mixed endpoint census PASS; wrong endpoint clock REJECTED')
         # Select the identical-master receiver view: all four replicas must match.
         kr=copy.deepcopy(req);kr['module']='ks';kv=dict(module='ks',pins_sha256=req['contexts'][0]['endpoints'][1]['pins_sha256'],outline_um=[20,20])
         assert len(N.validate(plan,root,kv,['d','v','r'],kr,digest(plan))['parent_contexts'])==4
