@@ -1,0 +1,11 @@
+%Error-BLKANDNBLK: rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv:113:20: Unsupported: Blocking and non-blocking assignments to potentially overlapping bits of same packed variable: 'tb_su8.u_good.fa'
+  113 |     reg  [FAW-1:0] fa;
+      |                    ^~
+                   rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv:116:35: ... Location of blocking assignment (bits [333:332])
+  116 |     always_comb begin fa[333:332] = 2'b00; end
+      |                                   ^
+                   rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv:118:92: ... Location of nonblocking assignment (bits [369:0])
+  118 |         for (fi = 0; fi < FAW; fi = fi + 1) if (fi != 332 && fi != 333 && acc_k[fi / FCW]) fa[fi] <= fa_in[fi];
+      |                                                                                            ^~
+                   ... For error description see https://verilator.org/warn/BLKANDNBLK?v=5.050
+%Error: Exiting due to 1 error(s)

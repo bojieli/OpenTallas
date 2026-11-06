@@ -1,0 +1,16 @@
+{
+ "verdict": "FAIL",
+ "rc": 1,
+ "mapped_cell_types": 0,
+ "top_params": [],
+ "errors": [
+  "ERROR: Found 1 problems in 'check -assert'."
+ ],
+ "yosys_cast": 0,
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}

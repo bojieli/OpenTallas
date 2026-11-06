@@ -1,0 +1,14 @@
+{
+ "verdict": "PASS",
+ "source_recipe_commit": "0316843cf3d",
+ "kit": "9907e158f4ed47b9",
+ "formal": "actual original vs changed xlane modules K0..7, arbitrary sel and xin; every 6bit chunk equal once its corresponding selection was asserted; temporal induction length1 SUCCESS; all18bit nvec highzeros combinational assertion included",
+ "mutant": "all structuralzero bits changed to1; same formal miter rejects",
+ "limit": "preload unknowns refined to0; does not assert arbitrary state equivalence or parent firstvalid safety; native xinit fulloutputs compared only afterfirststart+40 by existing bench",
+ "native": {
+  "good": "11787full/11787control, bad0",
+  "xinit": "11723full/11787control,bad0",
+  "stride_mutant": "CAUGHT"
+ },
+ "physical": "NOT RUN for this modified source; synthesis-only current standard LEC pending"
+}
