@@ -3667,6 +3667,10 @@
          "maxItems": 2
         }
        },
+       "wavefront_min_depth": {
+        "type": "integer",
+        "minimum": 0
+       },
        "depth": {
         "type": "integer",
         "minimum": 1
