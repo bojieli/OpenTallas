@@ -1708008,7 +1708008,7 @@
     1036.8
    ],
    "hard": false,
-   "note": "KV plan v3.1 sys_SD; representative sys_SW (R0); L1 est. 1.81 M std cells flattened (0.00 M in replicated datapath leaves)",
+   "note": "KV plan v3.1 sys_SD; representative sys_SW (R0); L1 est. 1.81 M std cells flattened (0.00 M in replicated datapath leaves) | CODEX SD-PAD2 11-06: existing origin PAD0->2, two boot counts only, all incident K rebased to preserve absolute data lag and schedule. Source clock/EDGE_FALL/raw reset semantics unchanged. Seven explicit slash-key origin sites after landing placement, max routed hop379.08um including sf. Actual MCMM GRT/signoff still required.",
    "buses": [
     {
      "name": "i_host_fdi",
@@ -1709470,11 +1709470,41 @@
     },
     {
      "name": "strap_ca_pad",
-     "width": 1,
+     "width": 2,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 56864
+   "cells": 56864,
+   "relay_sites": {
+    "u_cland_origin/sf": [
+     180.954,
+     20.25
+    ],
+    "u_cland_origin/s0": [
+     559.764,
+     19.98
+    ],
+    "u_cland_origin/s1": [
+     928.962,
+     19.98
+    ],
+    "u_cland_origin/s2": [
+     1298.214,
+     19.98
+    ],
+    "u_cland_origin/pd[0]": [
+     1667.412,
+     19.98
+    ],
+    "u_cland_origin/pd[1]": [
+     1876.5,
+     180.09
+    ],
+    "u_cland_origin/pd[2]": [
+     1876.5,
+     182.52
+    ]
+   }
   },
   "kv3_sys_SD_v1": {
    "module": "kv3_sys_SD_v1_part",
@@ -1709483,7 +1709513,7 @@
     1036.8
    ],
    "hard": false,
-   "note": "KV plan v3.1 sys_SD; representative sys_SE (MY); L1 est. 1.81 M std cells flattened (0.00 M in replicated datapath leaves)",
+   "note": "KV plan v3.1 sys_SD; representative sys_SE (MY); L1 est. 1.81 M std cells flattened (0.00 M in replicated datapath leaves) | CODEX SD-PAD2 11-06: existing origin PAD0->2, two boot counts only, all incident K rebased to preserve absolute data lag and schedule. Source clock/EDGE_FALL/raw reset semantics unchanged. Seven explicit slash-key origin sites after landing placement, max routed hop379.08um including sf. Actual MCMM GRT/signoff still required.",
    "buses": [
     {
      "name": "i_host_fdi",
@@ -1710945,11 +1710975,41 @@
     },
     {
      "name": "strap_ca_pad",
-     "width": 1,
+     "width": 2,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 57219
+   "cells": 57219,
+   "relay_sites": {
+    "u_cland_origin/sf": [
+     180.954,
+     20.25
+    ],
+    "u_cland_origin/s0": [
+     559.764,
+     19.98
+    ],
+    "u_cland_origin/s1": [
+     928.962,
+     19.98
+    ],
+    "u_cland_origin/s2": [
+     1298.214,
+     19.98
+    ],
+    "u_cland_origin/pd[0]": [
+     1667.412,
+     19.98
+    ],
+    "u_cland_origin/pd[1]": [
+     1876.5,
+     180.09
+    ],
+    "u_cland_origin/pd[2]": [
+     1876.5,
+     182.52
+    ]
+   }
   },
   "kv3_sys_c": {
    "module": "kv3_sys_c_part",
