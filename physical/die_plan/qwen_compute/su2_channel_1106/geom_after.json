@@ -1,0 +1,204 @@
+{
+ "schema": "opentallas.plan_geom.v1",
+ "plan": "../su2/su2_qc53.json",
+ "types": [
+  {
+   "type": "slw_su_l1__cla2a78701",
+   "verdict": "FAIL",
+   "metrics": {
+    "type": "slw_su_l1__cla2a78701",
+    "outline": [
+     622.08,
+     1339.2
+    ],
+    "aspect": 2.153,
+    "notes": [
+     "reset tree n/a (ResetError: type slw_su_l1__cla2a78701: cannot uniquely resolve hard-core pin table cores/su)"
+    ],
+    "clock_entries": 36,
+    "clock_reach_max": 351.38,
+    "clock_reach_far": "plan_land_out (95.0, 1337.2)",
+    "grid_taps": 18,
+    "grid_tap_sinks_max": 1042.0,
+    "grid_tap_sinks_worst": "clk",
+    "pin_reg_p90": 32.5,
+    "pin_reg_max": 82.06,
+    "pin_reg_worst": [
+     "82.1 x_su_c_i[1]",
+     "81.7 x_su_c_i[3]"
+    ],
+    "r2r_max": 522.72,
+    "r2r_worst": "ft rsn ring->s1",
+    "r2r_gt405": 1,
+    "partial_faces": 2,
+    "partial_face_detail": [
+     "N:1547 pins on 46% of face at 5.3/um",
+     "S:1547 pins on 46% of face at 5.3/um"
+    ],
+    "partial_face_worst": [
+     "N",
+     0.46,
+     5.33,
+     1547
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "EXCEPTION",
+     "value": 2.153,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": "COORD RULING 2026-10-30 18:54: QC slice lattice-wide aspect exception (0.945 mm2 slots in the 2471x5357 column)"
+    },
+    {
+     "rule": "clock_reach",
+     "status": "FAIL",
+     "value": 351.38,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far plan_land_out (95.0, 1337.2)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "PASS",
+     "value": 1042.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "FAIL",
+     "value": 32.5,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "82.1 x_su_c_i[1], 81.7 x_su_c_i[3]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "PASS",
+     "value": 82.06,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "82.1 x_su_c_i[1]"
+    },
+    {
+     "rule": "r2r",
+     "status": "FAIL",
+     "value": 522.72,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "1 plan stages > 405; worst ft rsn ring->s1"
+    },
+    {
+     "rule": "partial_face",
+     "status": "FAIL",
+     "value": 2,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": "N:1547 pins on 46% of face at 5.3/um; S:1547 pins on 46% of face at 5.3/um"
+    }
+   ]
+  },
+  {
+   "type": "slw_su_l1__clcc9d0155",
+   "verdict": "FAIL",
+   "metrics": {
+    "type": "slw_su_l1__clcc9d0155",
+    "outline": [
+     622.08,
+     1339.2
+    ],
+    "aspect": 2.153,
+    "notes": [
+     "reset tree n/a (ResetError: type slw_su_l1__clcc9d0155: cannot uniquely resolve hard-core pin table cores/su)"
+    ],
+    "clock_entries": 36,
+    "clock_reach_max": 351.38,
+    "clock_reach_far": "plan_land_out (95.0, 1337.2)",
+    "grid_taps": 18,
+    "grid_tap_sinks_max": 1040.0,
+    "grid_tap_sinks_worst": "clk",
+    "pin_reg_p90": 32.5,
+    "pin_reg_max": 82.06,
+    "pin_reg_worst": [
+     "82.1 x_su_c_i[1]",
+     "81.7 x_su_c_i[3]"
+    ],
+    "r2r_max": 522.72,
+    "r2r_worst": "ft rsn ring->s1",
+    "r2r_gt405": 1,
+    "partial_faces": 2,
+    "partial_face_detail": [
+     "N:1547 pins on 46% of face at 5.3/um",
+     "S:1547 pins on 46% of face at 5.3/um"
+    ],
+    "partial_face_worst": [
+     "N",
+     0.46,
+     5.33,
+     1547
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "EXCEPTION",
+     "value": 2.153,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": "COORD RULING 2026-10-30 18:54: QC slice lattice-wide aspect exception (0.945 mm2 slots in the 2471x5357 column)"
+    },
+    {
+     "rule": "clock_reach",
+     "status": "FAIL",
+     "value": 351.38,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far plan_land_out (95.0, 1337.2)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "PASS",
+     "value": 1040.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "FAIL",
+     "value": 32.5,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "82.1 x_su_c_i[1], 81.7 x_su_c_i[3]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "PASS",
+     "value": 82.06,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "82.1 x_su_c_i[1]"
+    },
+    {
+     "rule": "r2r",
+     "status": "FAIL",
+     "value": 522.72,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "1 plan stages > 405; worst ft rsn ring->s1"
+    },
+    {
+     "rule": "partial_face",
+     "status": "FAIL",
+     "value": 2,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": "N:1547 pins on 46% of face at 5.3/um; S:1547 pins on 46% of face at 5.3/um"
+    }
+   ]
+  }
+ ]
+}
