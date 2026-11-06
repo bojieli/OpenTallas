@@ -284,6 +284,108 @@ proc ot_prd_unfold_input_chains {} {
   puts "OT_PRD unfold: $moved input chains moved"
 }
 if {[info exists ::env(OT_PRD_UNFOLD_CHAINS)] && $::env(OT_PRD_UNFOLD_CHAINS) eq "1"} { ot_prd_unfold_input_chains }
+# QC-A0C-B4 11-06 (class fix, extends OT_PRD_UNFOLD_CHAINS): OT_PRD_UNFOLD_CHAINS=2 also unfolds the single-sink buffer
+# chains that start at a hard-macro OUTPUT pin (A0 NL: romleaf r_q[78] went 163 um up to a buffer and back down to its
+# OR3 20 um from the pin, r_q -> OR3 330 ps; 70 of 6036 NL macro output chains qualify, 0 on NK).
+# Same rule as the input-port form (unfixed, not dont_touch BUF* only, single sink) but chain > 1.5 x direct + 50 um
+# (input form: 3 x); buffers go back on the pin-to-sink line and detailed_placement legalizes them; route-keep rips
+# the nets of every moved instance.  Logic, polarity and cycles unchanged.  ::ot_unfold_dry = report only (probes).
+# Kit-local ot_prd_median_cells.txt = instance names of misplaced logic gates on failing setup paths (A0 NL: OR3 _28751_ of the
+# gs[529] path sat at x 17.6 um, 220 um from its three ROM pins and its capture flop): each moves to the median of the
+# pins on its nets before the unfold, and chains leaving it are unfolded too.  Logic unchanged.
+proc ot_prd_median_cells {names} {
+  set blk [ord::get_db_block]; set out {}
+  foreach nm $names {
+    set inst [$blk findInst $nm]
+    if {$inst eq "NULL" || [$inst isFixed]} { puts "OT_PRD median: $nm not found or fixed"; continue }
+    set xs {}; set ys {}
+    foreach it [$inst getITerms] {
+      if {![$it isInputSignal] && ![$it isOutputSignal]} continue
+      set net [$it getNet]; if {$net eq "NULL" || $net eq ""} continue
+      foreach o [$net getITerms] {
+        if {[$o getInst] eq $inst} continue
+        # look through buffer chains: an input traces back to its real driver, an output forward to its real sink
+        set p $o
+        for {set g 0} {$g < 12} {incr g} {
+          set pi [$p getInst]
+          if {![string match BUF* [[$pi getMaster] getName]]} break
+          set nx ""
+          foreach z [$pi getITerms] {
+            if {[$it isInputSignal] && [$z isInputSignal]} { set nx [$z getNet] }
+            if {[$it isOutputSignal] && [$z isOutputSignal]} { set nx [$z getNet] }
+          }
+          if {$nx eq "" || $nx eq "NULL"} break
+          set cand {}
+          foreach z [$nx getITerms] {
+            if {[$z getInst] eq $pi} continue
+            if {[$it isInputSignal] && [$z isOutputSignal]} { lappend cand $z }
+            if {[$it isOutputSignal] && [$z isInputSignal]} { lappend cand $z }
+          }
+          if {[llength $cand] != 1} break
+          set p [lindex $cand 0]
+        }
+        lassign [$p getAvgXY] ok x y; if {$ok} { lappend xs $x; lappend ys $y }
+      }
+    }
+    if {[llength $xs] < 2} continue
+    set xs [lsort -integer $xs]; set ys [lsort -integer $ys]; set m [expr {[llength $xs]/2}]
+    lassign [$inst getLocation] ox oy
+    $inst setLocation [lindex $xs $m] [lindex $ys $m]
+    puts "OT_PRD median: $nm ([expr {$ox/1000.0}],[expr {$oy/1000.0}]) -> ([expr {[lindex $xs $m]/1000.0}],[expr {[lindex $ys $m]/1000.0}]) over [llength $xs] pins"
+    lappend out $inst
+  }
+  return $out
+}
+proc ot_prd_unfold_macro_chains {{ratio 1.5} {extra {}}} {
+  set blk [ord::get_db_block]; set um [$blk getDbUnitsPerMicron]
+  set moved 0; set nbuf 0; set seen 0
+  set starts {}
+  foreach inst [$blk getInsts] { if {[[$inst getMaster] isBlock]} { lappend starts $inst } }
+  foreach inst [concat $starts $extra] {
+    foreach it [$inst getITerms] {
+      if {![$it isOutputSignal]} continue
+      set net [$it getNet]
+      if {$net eq "NULL" || $net eq "" || [$net getSigType] ne "SIGNAL"} continue
+      lassign [$it getAvgXY] ok px py
+      if {!$ok} continue
+      incr seen
+      set lx $px; set ly $py; set sum 0; set bufs {}; set sink ""
+      while {1} {
+        set inputs {}
+        foreach x [$net getITerms] { if {[$x isInputSignal]} { lappend inputs $x } }
+        if {[llength $inputs] != 1} { set sink ""; break }
+        set si [lindex $inputs 0]; set sinst [$si getInst]
+        lassign [$si getAvgXY] ok2 ix iy
+        if {!$ok2} { lassign [$sinst getLocation] ix iy }
+        incr sum [expr {abs($ix-$lx)+abs($iy-$ly)}]
+        set lx $ix; set ly $iy
+        if {![string match BUF* [[$sinst getMaster] getName]]} { set sink $sinst; break }
+        if {[$sinst isFixed] || [$sinst isDoNotTouch]} { set sink ""; break }
+        lappend bufs $sinst
+        set net ""
+        foreach z [$sinst getITerms] { if {[$z isOutputSignal]} { set net [$z getNet] } }
+        if {$net eq "" || $net eq "NULL" || [$net isDoNotTouch]} { set sink ""; break }
+      }
+      if {$sink eq "" || ![llength $bufs]} continue
+      set direct [expr {abs($lx-$px)+abs($ly-$py)}]
+      if {$sum <= $ratio*$direct + 50*$um} continue
+      set n [expr {[llength $bufs]+1}]; set k 0
+      foreach b $bufs {
+        incr k
+        if {![info exists ::ot_unfold_dry]} { $b setLocation [expr {int($px+($lx-$px)*$k/$n)}] [expr {int($py+($ly-$py)*$k/$n)}] }
+      }
+      incr moved; incr nbuf [llength $bufs]
+      if {$moved <= 400} { puts "OT_PRD unfold_macro [$inst getName]/[[$it getMTerm] getName]: [llength $bufs] buffers, chain [expr {$sum/$um}] um, direct [expr {$direct/$um}] um, sink [$sink getName]" }
+    }
+  }
+  puts "OT_PRD unfold_macro: $moved macro-output chains moved ($nbuf buffers) of $seen macro output pins, ratio $ratio"
+}
+if {[info exists ::env(OT_PRD_UNFOLD_CHAINS)] && $::env(OT_PRD_UNFOLD_CHAINS) eq "2"} {
+  # kit-local list (prd_mk.sh rsyncs the kit into the pass dir): /work/ot_prd_median_cells.txt, one instance per line
+  set _med {}; set _mf /work/ot_prd_median_cells.txt
+  if {[file exists $_mf]} { set fh [open $_mf]; set _names [regexp -all -inline {\S+} [read $fh]]; close $fh; set _med [ot_prd_median_cells $_names] }
+  ot_prd_unfold_macro_chains 1.5 $_med
+}
 if {[info exists ::env(OT_PRD_LOCAL_BRANCHES)] && $::env(OT_PRD_LOCAL_BRANCHES) ne ""} { source [file join $_here prd_local_branches.tcl] }
 set _pass [expr {[info exists ::env(OT_PRD_PASS)] ? $::env(OT_PRD_PASS) : 1}]
 
