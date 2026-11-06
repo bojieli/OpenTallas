@@ -46,6 +46,11 @@
     "st[4]"
    ],
    "why": "constant output bits of this parameterisation (lo[2:1] = s_p & IK[1:0] with IK 4, lo[19] constant tree-link field bit, st[7:4] = 4'b0 by the status format); g49 face_guard_raw found them on one tie net.  Plan delta posted: remove them from the port list (OWNER no-constant-pin) in S81-RF1."
+  },
+  "hard_children": {
+   "views": {
+    "dsdv_idx_txm_grp": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/views/dsdv_idx_txm_grp"
+   }
   }
  },
  "dsdv_idx_txm_grp": {
