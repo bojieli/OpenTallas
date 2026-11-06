@@ -10069,3 +10069,4 @@ OWNER? 2026-11-05 23:30 PST — intel2 scratch2 is approaching its floor; 131 su
 - 2026-11-05 23:35 PST CODEX fleet: collected PRUNE1115 apply2 (639.88GB nominal removed/moved across intel2/epyc4/intel1), applied67 remaining approved dirs16.35GB nominal, recovered45.079GB actual from exact creator-released pristine aborted token checkout after root duplicate-source exception. Intel2 scratch2 73GB. Details lanes/CODEX-FLEET.md; existing signed/live/bind artifacts retained.
 
 2026-11-05 23:37 PST HBM: p35 merged2c7054fd3cd/z-hbm; current expanded waveplan d44v35 ready. Own rootctl ECO live epyc2, N4rsq refresh/ECO queued epyc6, EXPX shallowclock comparison queued epyc5. All job paths in DIE-HBM-78.md.
+- 2026-11-05 23:46 PST CODEX ECO staging: READY b5a55aa626c, selected tool cohort prevents old sdc_lint API overwrite; actual nested output rsync exclusion prevents recursion.26 focused module tests PASS, legacy failure reproduced; ROOT merge batch notified.
