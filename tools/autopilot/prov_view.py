@@ -129,7 +129,18 @@ def plan_pins(entry, plan_dir):
     p = f if os.path.isabs(f) else os.path.join(plan_dir, f)
     j = json.load(open(p))
     pins = j.get("pins") if isinstance(j, dict) else j
-    return [x for x in pins if isinstance(x, dict) and x.get("name")]
+    # PROV-PINS-BUS (DIE-QC-81 11-05): plan pin tables come in two forms, {name,...} rows and {bus, bit,...} rows
+    # (clock_entry_pins.pname). Bus/bit rows were dropped, so the QC su_c contract views (red2_leaf, su8_rst3, crh_rp1,
+    # s8x_prog, s8x_vmr) carried only VDD/VSS and the parent kits placed against pinless children.
+    out = []
+    for x in pins:
+        if not isinstance(x, dict):
+            continue
+        if not x.get("name") and x.get("bus"):
+            x = dict(x, name=x["bus"] if x.get("bit") is None else f"{x['bus']}[{x['bit']}]")
+        if x.get("name"):
+            out.append(x)
+    return out
 
 
 def core_insertion(t, inst, pins):
@@ -548,6 +559,10 @@ def make(a):
             ow = [float(x) for x in entry.get("outline_um") or []]
             if len(ow) != 2 or (ppins is None and not plan_lef):
                 errors.append(f"{m}: no routed abstract ({'; '.join(tried) or 'none'}) and no plan outline/pins for a contract")
+                continue
+            if ppins is not None and not ppins and not plan_lef:
+                # a pins_file with no readable signal pin would give a PG-only blackbox: fail closed (PROV-PINS-BUS)
+                errors.append(f"{m}: plan pins_file {entry.get('pins_file')} has no signal pin rows for a contract")
                 continue
             dirs, dsrc = {}, []
             if plan_lef:
