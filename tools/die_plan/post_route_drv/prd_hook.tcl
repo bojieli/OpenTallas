@@ -327,6 +327,13 @@ set _wire_limit [expr {[info exists ::env(OT_PRD_MAX_WIRE_LENGTH)] ? $::env(OT_P
 if {![string is double -strict $_wire_limit] || $_wire_limit < 0} {error "OT_PRD invalid max wire length $_wire_limit"}
 if {$_wire_limit > 0} {lappend _drv_args -max_wire_length $_wire_limit}
 puts "OT_PRD pass $_pass repair_design $_drv_args"
+# KW-FIX-17 11-05: targeted fanout cap on violator nets above OT_PRD_AUTO_FANOUT loads (default 32; prd_autofo.tcl)
+set _afo [expr {[info exists ::env(OT_PRD_AUTO_FANOUT)] && $::env(OT_PRD_AUTO_FANOUT) ne "" ? $::env(OT_PRD_AUTO_FANOUT) : 32}]
+set _tfo [expr {[info exists ::env(OT_PRD_TARGET_FANOUT)] && $::env(OT_PRD_TARGET_FANOUT) ne "" ? $::env(OT_PRD_TARGET_FANOUT) : 0}]
+if {$::env(OT_MAX_FANOUT) == 0 && $_tfo == 0 && $_afo ne "0" && [file exists [file join $_here prd_autofo.tcl]]} {
+  source [file join $_here prd_autofo.tcl]
+  ot_prd_auto_fanout $_drv_args $_afo
+}
 if {[info exists ::env(OT_PRD_TARGETED)] && $::env(OT_PRD_TARGETED) eq "1"} {
   source [file join $_here prd_targeted.tcl]
   ot_prd_repair_targeted $_drv_args
