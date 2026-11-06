@@ -3175,3 +3175,5 @@ CODEX: 2026-11-05 23:21 PST takeover active across all die/core/TOK/wave/fleet/i
 CODEX: 2026-11-05 23:22 PST S81 takeover: ROMQ hw_vB private DRT/finish launched epyc2 unit1553856 after viewed placement; vA ECO exhausted; svc_lo proof OOM diagnosed,192GB predecessor waiter retained; COLLE probes1041/2210 overflow, full variants live.
 
 CODEX: 2026-11-05 23:23 PST MERGE: HEAD ctlrq + shared literal capture LEC class landed main eedc0185670; focused12 tests pass, i195s 0 new failures, all-die tags s/q/n/s/x, TOK ingress+1 booked.
+
+CODEX: 2026-11-05 23:27 PST MERGE: exact HBM lane1p/WBQ source + shared GRT-error classification/reset-copy naming landed main c6252e2eaf8, all-die tags t/r/o/t/y; physical closure remains open. Concise handoff published coord fbe4dfc5e9e.
