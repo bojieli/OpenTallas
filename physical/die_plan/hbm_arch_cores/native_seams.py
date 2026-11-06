@@ -72,6 +72,7 @@ def validate(plan,pdir,view,scope,request,plan_sha256):
                 back=conns.get(parent,{}).get(peer,{}).get(peer_port,[])
                 if back!=['core:'+child]:raise ValueError('native seam peer is not exclusively reciprocal')
                 links[bus]=dict(peer_inst=peer,peer_module=peer_core['module'],peer_port=peer_port,
+                                peer_parent_partition_type=parent,
                                 width=own_widths[bus],child_targets=targets,peer_targets=back)
             selected={bus:own_widths[bus] for bus in scope}
             if bus_widths is not None and bus_widths!=selected:raise ValueError('native seam replica widths differ')

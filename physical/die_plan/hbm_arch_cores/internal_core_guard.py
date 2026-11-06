@@ -72,6 +72,7 @@ def guard(text,top,kd,fz,skip,scope=None):
             for bus,peer in parent['peers'].items():
                 other=peer.get('peer_inst')
                 if (not other or other==child or not peer.get('peer_module') or not peer.get('peer_port')
+                    or peer.get('peer_parent_partition_type')!=parent['parent_partition_type']
                     or peer.get('width')!=ctx.get('bus_widths',{}).get(bus)
                     or peer.get('child_targets')!=['core:'+other] or peer.get('peer_targets')!=['core:'+child]):
                     raise ValueError('native seam is not an exclusive reciprocal peer hard child')
