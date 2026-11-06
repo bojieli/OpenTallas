@@ -91,3 +91,4 @@ Successor steps (in addition to the 20:40 steps above; core_lane_rules.md still 
 | HBM-GAPS-6 | HBM-GAPS-5 | codex_hbm_gaps_to_claude_20261106_0432.md, lanes/HBM-GAPS-5.md, CODEX-LOG TX/SVGR handoff, codex_wbq_body_to_claude_20261106.md | TKM, RX/QCOL, lane1p, GQI, SVGR, TX, BODY, WBQ live jobs |
 | HBM-FORM-SPLIT-11 | HBM-FORM-SPLIT-10 | lanes/CODEX-HBM-FORMS.md | split forms |
 | HBM-FORM-TIMING-9 | HBM-FORM-TIMING-8 | lanes/CODEX-HBM-FORMS.md | timing forms, f512rp vB |
+Also read: CODEX-LOG.md section '## Handoff to Claude 2026-11-06 04:36 PST' (main Codex handoff, per-die parts) and the [COORD] 'RULINGS on Codex 04:36' line in the queue.
