@@ -2035,10 +2035,15 @@ proc rtr_reset_equiv {net parity seen} {
 """
 
 
-def tcl_text(T, native_paths=None):
+def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None):
+    if native_paths is not None and (T.get("outs") or T.get("core_resets")) and native_nodes is None:
+        raise ResetError("native reset exports require verified physical nodes; no implicit output/core rewiring")
+    if native_nodes is not None and native_paths is None:
+        raise ResetError("native reset placement nodes require exact verified hierarchy paths")
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
+    root_xy = (native_sites or {}).get(ent, T['root'])
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
-         f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
+         f"rtr_place rst_root_n {{*{ent}[./]*}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry"]
     rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
     if T.get("relay_driver"):
         specs = []
@@ -2065,20 +2070,22 @@ def tcl_text(T, native_paths=None):
               "}"]
     if T.get("start"):
         rent = "u_run_root" if T["entry"] == "sync" else "u_run_in"
-        t.append(f"rtr_place run_root {{*{rent}[./]*}} {T['start_in'][0]:.3f} {T['start_in'][1]:.3f} sentry")
+        run_xy = (native_sites or {}).get(rent, T['start_in'])
+        t.append(f"rtr_place run_root {{*{rent}[./]*}} {run_xy[0]:.3f} {run_xy[1]:.3f} sentry")
     oq = out_relays(T)
-    for r in rel:
-        t.append(f"rtr_place {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
-        if r["q"] in oq:
+    for r in (native_nodes if native_nodes is not None else rel):
+        place = "rtr_place_opt" if r.get("optional") else "rtr_place"
+        t.append(f"{place} {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
+        if native_nodes is None and r["q"] in oq:
             # the out relay's tap-net copy (rtl_lines): placed beside it when synthesis kept it (it has loads)
             t.append(f"rtr_place_opt {r['q']}:copy {{*{r['name']}_t[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} "
                      f"rrl:{r['kind']}{r['depth']}c")
-    if T.get("core_resets"):
+    if T.get("core_resets") and native_nodes is None:
         terminals = " ".join(r["q"] for r in T["relays"] if r["depth"] == T["depth"])
         t += ["set rtr_terminal_qnets {}", f"foreach key {{{terminals}}} {{",
               "  if {[dict exists $rtr_qnets $key]} { dict set rtr_terminal_qnets [[dict get $rtr_qnets $key] getName] [dict get $rtr_qpol $key] }",
               "}", CORE_RESET_EQ_TCL]
-    for c in T.get("core_resets", []):
+    for c in (T.get("core_resets", []) if native_nodes is None else []):
         q = f"rst_n_t{c['tap']}"
         inst, pin = c["inst"], c["pin"]
         # ODB getName escapes brackets (u_core.u.g_pp\\[0\\].u_pair); match on the plain Verilog form (hd_lep0N).
@@ -2105,8 +2112,12 @@ def tcl_text(T, native_paths=None):
               f"  dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
               f"  puts {{OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}}}",
               "}"]
-    edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
-    edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
+    edges = " ".join(f"{r['q']} {r['d']}" for r in (native_nodes if native_nodes is not None else rel))
+    if native_nodes is None:
+        edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
+    else:
+        edges += " " + " ".join(f"{r['q']} {r['run']}" for r in native_nodes if r.get('run'))
+        t.append("# NATIVE RESET: core connections remain exactly as bound; no core rewiring or claimed core-hop check.")
     t += ["close $rtr_fh",
           "# placed hop check (driver relay -> relay, Manhattan between placed sites)",
           f"set rtr_hmax 0; set rtr_hbad 0; set rtr_lim [expr {{{T['reach_um']:g} * $ff_dbu}}]",
@@ -2127,7 +2138,7 @@ def tcl_text(T, native_paths=None):
         for name, path in native_paths.items():
             exact = "[./]".join(path.split(".")) + "[./]*"
             text = text.replace("*" + name + "[./]*", exact)
-        if re.search(r"^rtr_place\s+\S+\s+\{\*", text, re.M):
+        if re.search(r"^rtr_place(?:_opt)?\s+\S+\s+\{\*", text, re.M):
             raise ResetError("native reset placement contains an unverified wildcard instance")
     return text
 

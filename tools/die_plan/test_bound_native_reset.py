@@ -140,3 +140,79 @@ def test_declared_depth_mismatch_fails_closed(tmp_path):
     p,f=fixture(tmp_path);p.types['t']['clock']['landing_contract']['collector_tree']['relays'][0]['depth']=2
     with pytest.raises(gen_rtl.GenError,match='declared depth differs'):
         G.install_bound_native_reset(p,'t',[f])
+
+
+def test_captured_source_and_staged_identity_fail_closed(tmp_path):
+    import bound_reset_contract as B
+    p,f=fixture(tmp_path)
+    record=B.emitted(f,'t',tree())
+    assert B.source(f,'t',tmp_path,tmp_path)['tree_sha256']==B.digest(tree())
+    c=G.install_bound_native_reset(p,'t',[f],source_contract=record)
+    B.stage(tmp_path,record,c)
+    assert B.kit([f],'t')['native_paths']==c['native_paths']
+    (tmp_path/'reset_tree.tcl').write_text('wrong placement')
+    with pytest.raises(ValueError,match='placement sidecar differs'):B.kit([f],'t')
+    f.write_text(f.read_text()+'\n// changed source\n')
+    with pytest.raises(ValueError,match='source RTL identity differs'):B.source(f,'t',tmp_path,tmp_path)
+    record['tree']['relays'][0]['d']='different'
+    with pytest.raises(ValueError,match='tree content differs'):B.validate(record,'t')
+
+
+def test_wrapper_tied_reset_and_recomputed_tree_rejected(tmp_path):
+    import bound_reset_contract as B
+    p,f=fixture(tmp_path)
+    rec=B.emitted(f,'t',tree())
+    p.types['t']['clock']['landing_contract']['collector_tree']['relays'][0]['xy']=[30,30]
+    with pytest.raises(gen_rtl.GenError,match='differs from captured'):G.install_bound_native_reset(p,'t',[f],source_contract=rec)
+    p,f=fixture(tmp_path,mutate=lambda s:s.replace('.arst_n(arst_n)',".arst_n(1'b1)"))
+    with pytest.raises(gen_rtl.GenError,match='exact passthrough'):G.install_bound_native_reset(p,'t',[f])
+
+
+def test_out_copy_negedge_and_native_core_reset_preserved(tmp_path):
+    import bound_reset_contract as B
+    t=tree();t.update(relay_lockup='negedge',outs=[[25,25]],n_clock_taps=1,
+                     core_resets=[dict(inst='native_core',port='rst_n',tap=0)])
+    t['relays'].append(dict(name='u_rrl_1',d='rst_root_n',q='rst_n_t1',xy=[25,25],depth=1,tap=1,kind='tap'))
+    t['taps'].append('rst_o_0')
+    t.update(depth=2,own_depth=2)
+    for relay in t['relays']:relay.update(d='rst_rl_2',depth=2)
+    t['relays'].insert(0,dict(name='u_rrl_2',d='rst_root_n',q='rst_rl_2',xy=[12,12],depth=1,tap=None,kind='tree'))
+    text=('module top(input clk, arst_n, output rst_o_0);\n'
+          'bound u_bound(.clk(clk),.arst_n(arst_n),.rst_o_0(rst_o_0));\nendmodule\n'
+          'module bound(input clk, arst_n, output rst_o_0);\n'+'\n'.join(R.rtl_lines(t))+
+          '\nendmodule\n'+gen_rtl.CELLS+gen_rtl.LOCKUP_CELLS)
+    f=tmp_path/'bound.sv';f.write_text(text)
+    p=SimpleNamespace(types={'t':dict(outline_um=[100,100],clock=dict(landing_contract=dict(collector_tree=t)))})
+    c=G.install_bound_native_reset(p,'t',[f])
+    nodes={n['name']:n for n in c['physical_nodes']}
+    assert nodes['u_rrl_1']['q']=='rst_o_0' and nodes['u_rrl_1_t']['q']=='rst_n_t1'
+    assert 'ot_dp_rrelay_nl' in c['verified_cell_classes']
+    result=R.tcl_text(t,native_paths=c['native_paths'],native_nodes=c['physical_nodes'])
+    assert 'disconnect' not in result and 'native_core' not in result
+    f.write_text(text.replace('ot_dp_rrelay_nl u_rrl_2','ot_dp_rrelay u_rrl_2'))
+    with pytest.raises(gen_rtl.GenError,match='wrong-module'):G.install_bound_native_reset(p,'t',[f])
+
+
+def test_reviewed_sites_keep_ids_and_bound_hops(tmp_path):
+    import bound_reset_contract as B
+    p,f=fixture(tmp_path);t=tree()
+    image=tmp_path/'review.png';image.write_bytes(b'actual test image')
+    overlay=dict(schema='opentallas.bound_reset_placement.v1',source_tree_sha256=B.digest(t),
+                 sites={'u_rrl_0':[20,20]},review=dict(verdict='PASS',image=str(image),findings='sites reviewed'))
+    landing=p.types['t']['clock']['landing_contract'];landing['bound_reset_placement']=overlay
+    c=G.install_bound_native_reset(p,'t',[f]);assert c['physical_nodes'][0]['xy']==[20,20]
+    assert c['tree']==t
+    rec=B.emitted(f,'t',t);B.stage(tmp_path,rec,c)
+    del landing['bound_reset_placement']
+    inherited=G.install_bound_native_reset(p,'t',[f])
+    assert inherited['physical_nodes'][0]['xy']==[20,20]
+    landing['bound_reset_placement']=overlay
+    for key,value,match in [('source_tree_sha256','wrong','exact captured tree'),('sites',{'u_rrl_999':[20,20]},'unknown native')]:
+        before=overlay[key];overlay[key]=value
+        with pytest.raises(gen_rtl.GenError,match=match):G.install_bound_native_reset(p,'t',[f])
+        overlay[key]=before
+    overlay['review']['verdict']='FAIL'
+    with pytest.raises(gen_rtl.GenError,match='PASS image review'):G.install_bound_native_reset(p,'t',[f])
+    overlay['review']['verdict']='PASS'
+    p.types['t']['outline_um']=[1000,1000];overlay['sites']={'u_rrl_0':[500,500]}
+    with pytest.raises(gen_rtl.GenError,match='beyond captured reach'):G.install_bound_native_reset(p,'t',[f])

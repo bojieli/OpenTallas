@@ -188,6 +188,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                     '--util', overrides.get('util', .4)]
             if selected_raw['partition_types'][type_name].get('hard'):
                 args += ['--hard-wrappers',type_name]
+            if (rtl / 'bound_reset.json').is_file():
+                args += ['--bound-native-reset', type_name]
             if overrides.get('skip_kit_ir', True):
                 args += ['--skip-kit-ir']
             step('generate', dp / 'gen.py', *args)
