@@ -128,14 +128,14 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["epyc2", "intel1", "localhost", "epyc4"]   # HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["epyc2", "intel1", "localhost", "epyc4", "epyc5", "epyc6"]   # ONBOARD-2 11-05: epyc5 + epyc6 (EPYC 9554P, OWNER-rented). HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
 # "smalldisk" (FLEET-NEW2 2026-10-19: ot-epyc8 has only 2x 1 TB NVMe in RAID1, ~820 GB): die-level jobs (huge die-chain
 # scratch) skip it while another host qualifies; other work places normally.  ot-epyc9 (2x EPYC 7543, Zen 3) joins as
 # "throughput" when it is provisioned.
-HOST_ROLE = {"epyc2": "normal", "epyc4": "normal", "intel1": "normal", "intel2": "normal", "localhost": "normal", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
+HOST_ROLE = {"epyc2": "normal", "epyc4": "normal", "epyc5": "normal", "epyc6": "normal", "intel1": "normal", "intel2": "normal", "localhost": "normal", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
 # 2026-10-24 COORD (owner order): old-fleet nvme0n1 wiped -> /srv/opentallas-scratch2 (intel1/intel2 3.4 TB, epyc2 879 GB); intel1/intel2 no longer smalldisk.
 # FLEET-NEW3 2026-10-24: epyc2 (2x EPYC 7543) / epyc3 (2x EPYC 7443; RETIRED by the owner 2026-10-25 ~20:15, removed from every table) are the die-level hosts (normal); intel1/intel2
 # (2x Xeon Gold 6330, ~400 GB root disk) are smalldisk; localhost (EPYC 9754, shared with ~10 agent sessions) is "coord":
@@ -218,7 +218,7 @@ def probe(host, d, spill_ok=False):
 ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "/srv/opentallas-scratch3").split(",") if x)
 ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "500"))
 ROOT_SCRATCH_FLOOR_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
-    "OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS", "intel1=150,intel2=150,localhost=150").split(",")) if k.strip() and v.strip()}
+    "OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS", "intel1=150,intel2=150,localhost=150,epyc5=100,epyc6=100").split(",")) if k.strip() and v.strip()}
 
 
 def root_floor(host=None):
@@ -1058,7 +1058,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
     env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + env
-    env = f"OT_HEAVY_SHORT_SLOTS={16 if host in ('epyc2', 'epyc4') else 12} OT_HEAVY_THREADS={int(os.environ.get('OT_RUN_THREADS', THREADS))} OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
+    env = f"OT_HEAVY_SHORT_SLOTS={16 if host in ('epyc2', 'epyc4', 'epyc5', 'epyc6') else 12} OT_HEAVY_THREADS={int(os.environ.get('OT_RUN_THREADS', THREADS))} OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
