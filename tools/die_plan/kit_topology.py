@@ -59,9 +59,13 @@ def native_contract(raw,asbuilt=None,plan_path=None):
         native_conns={e['conn'] for e in entries}
         ownership[name]=[dict(conn=e.get('conn'),stages=len(e.get('regs_um',[])),phase='NATIVE' if e.get('conn') in native_conns else 'KIT') for e in typ.get('internal_stations',[])]
         clock={k:v for k,v in typ.get('clock',{}).items() if k.startswith('landing_')} if table_sha else {}
-        types[name]=digest(dict(native_out_stations=entries,clock=clock,clock_table_sha256=table_sha,
+        type_contract=dict(native_out_stations=entries,clock=clock,clock_table_sha256=table_sha,
             buses=[{k:b.get(k) for k in ['name','dir','width','kind']} for b in typ.get('buses',[])],
-            count_straps=typ.get('count_straps'),id_straps=typ.get('id_straps')))
+            count_straps=typ.get('count_straps'),id_straps=typ.get('id_straps'))
+        import bind_leaf_reset
+        leaf_rules=bind_leaf_reset.selected(ab.get('reset_gate_bindings'),name,typ.get('hard_cores',[]))
+        if leaf_rules:type_contract['reset_gate_bindings']=leaf_rules
+        types[name]=digest(type_contract)
         reset_context[name]=dict(reset=typ.get('reset'),hard=typ.get('hard'),
             clock={k:v for k,v in typ.get('clock',{}).items() if not k.startswith('landing_')})
     transport=dict(lanes=[{k:l.get(k) for k in ['id','ports','fixed_cycles','stations','cycles']} for l in raw.get('lanes',[])],
