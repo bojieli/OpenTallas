@@ -47,6 +47,18 @@ class ParentAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'selected form'):
             A.adapt(source, [contract])
 
+    def test_conservative_complete_input_pair_profile(self):
+        source, contract = fixture()
+        contract.update(input_stages=4, output_stages=2, input_pair=1)
+        contract['selected_params'].update(INPUT_STAGES='4', OUTPUT_STAGES='2', INPUT_PAIR='1')
+        output, receipt = A.adapt(source, [contract])
+        self.assertIn('.INPUT_PAIR(1)', output)
+        self.assertEqual((receipt['added_interface_cycles'], receipt['added_child_reset_edges']), (6, 4))
+        self.assertEqual(receipt['physical_FF_per_ROMQ'], 3287)
+        contract['input_pair'] = 2
+        with self.assertRaisesRegex(ValueError, 'capture-stage profile'):
+            A.adapt(source, [contract])
+
     def test_foreign_half_configuration_rejected(self):
         for nb, mtp in [('3', '1'), ('NB_VALUE', '1'), ('2', '0')]:
             with self.subTest(nb=nb, mtp=mtp):
