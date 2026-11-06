@@ -284,6 +284,7 @@ proc ot_prd_unfold_input_chains {} {
   puts "OT_PRD unfold: $moved input chains moved"
 }
 if {[info exists ::env(OT_PRD_UNFOLD_CHAINS)] && $::env(OT_PRD_UNFOLD_CHAINS) eq "1"} { ot_prd_unfold_input_chains }
+if {[info exists ::env(OT_PRD_LOCAL_BRANCHES)] && $::env(OT_PRD_LOCAL_BRANCHES) ne ""} { source [file join $_here prd_local_branches.tcl] }
 set _pass [expr {[info exists ::env(OT_PRD_PASS)] ? $::env(OT_PRD_PASS) : 1}]
 
 # instances on clock nets (as ot_clk_freeze): drivers = clock-tree cells (dont_touch there), the rest = sinks
@@ -411,6 +412,7 @@ if {[catch {check_placement} msg]} {
   detailed_placement -use_diamond_legalizer
   if {[catch {check_placement} msg]} { error "OT_PRD FAIL: check_placement after the ECO legalization: $msg" }
 }
+if {[info exists ::ot_prd_local_sequential]} {ot_prd_local_sequential_audit}
 # FLOW-12 opt-in OT_PRD_FROM=route (prd_mk.sh): the ECO started from the ROUTED DB -> rip only the nets it touched,
 # keep every other net's routed wires for an incremental detailed route (prd_route_keep.tcl).  FLOW-13: selection + rip
 # run BEFORE the incremental GRT end and the kept wires are parked (detached) across it, since updateDirtyNets destroys
