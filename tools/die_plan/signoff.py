@@ -166,14 +166,31 @@ def discover(base, kit=None, sdc=None, record=None):
     d = dict(base=str(base), orfs=str(root) if root else None, design=design, kit=str(kit) if kit else None,
              odb=str(base / (routed_db(base) or "6_final.odb")), spef=None, sdc=None, sdc_source=None, synth=None, final_v=None,
              metrics={}, drc_rpt=None, pins=None, sdc_lint_ctx=None, record=str(record) if record else None)
-    if kit and (kit / "ft_ports.json").is_file():             # 12.2a1 die-timed ft declaration (key only when present)
-        d["ft_ports"] = str(kit / "ft_ports.json")
+
+    def ctx(n):
+        """DS66-STA 11-05 (AUTO-RESIGN ECO-dir class, second half of KW-FIX-17): a post-route ECO pass dir (eco_*/iN) whose
+        kit context files were removed after its sign-off (s81 slice_station__t48 i3: no constraint.sdc / sdc_lint.json /
+        pins.json -> re-sign timed 6_final.sdc without the per-corner FF binding, ff_ref_missing FF -72.32 vs signed +0.06)
+        reads them from its parent kit (kit_config root).  prd_mk.sh rsyncs them unchanged from that kit, so they are the
+        same bytes the pass dir was signed with.  A file in the dir itself always wins; a normal kit is unchanged."""
+        if not kit:
+            return None
+        if (kit / n).is_file():
+            return kit / n
+        _cfg, parent = kit_config(kit)
+        if parent is not None and Path(parent).resolve() != kit and (Path(parent) / n).is_file():
+            d.setdefault("kit_ctx_parent", str(Path(parent).resolve()))
+            return Path(parent).resolve() / n
+        return None
+
+    if ctx("ft_ports.json"):                                   # 12.2a1 die-timed ft declaration (key only when present)
+        d["ft_ports"] = str(ctx("ft_ports.json"))
     if (base / "6_final.spef").is_file() and Path(d["odb"]).name == "6_final.odb":
         d["spef"] = str(base / "6_final.spef")
     if sdc:
         d["sdc"], d["sdc_source"] = str(Path(sdc).resolve()), "arg"
-    elif kit and (kit / "constraint.sdc").is_file():
-        d["sdc"], d["sdc_source"] = str(kit / "constraint.sdc"), "kit"
+    elif ctx("constraint.sdc"):
+        d["sdc"], d["sdc_source"] = str(ctx("constraint.sdc")), "kit"
     elif (base / "6_final.sdc").is_file():
         d["sdc"], d["sdc_source"] = str(base / "6_final.sdc"), "6_final.sdc"
     for n in ("1_synth.v", "1_2_yosys.v"):
@@ -195,10 +212,10 @@ def discover(base, kit=None, sdc=None, record=None):
             d["drc_rpt"] = str(r)
     if kit:
         for n in ("pins.json",):
-            if (kit / n).is_file():
-                d["pins"] = str(kit / n)
-        if (kit / "sdc_lint.json").is_file():
-            d["sdc_lint_ctx"] = str(kit / "sdc_lint.json")
+            if ctx(n):
+                d["pins"] = str(ctx(n))
+        if ctx("sdc_lint.json"):
+            d["sdc_lint_ctx"] = str(ctx("sdc_lint.json"))
     return d
 
 

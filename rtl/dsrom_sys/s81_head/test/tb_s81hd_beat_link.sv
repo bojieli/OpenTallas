@@ -8,7 +8,7 @@
 // A mutant run (MUT 1/2/3) must print FAIL (caught): phase A (MUT 1/2) or phase B (MUT 3) sees a mismatch, a missing
 // word or an RX fault.
 module tb_s81hd_beat_link;
-    parameter integer W = 553, N = 2, S = 2, MUT = 0, NREC = 1200, IDLE_ZERO = 0, HOLD_REAL = 0, PFIX = 0;
+    parameter integer W = 553, N = 2, S = 2, MUT = 0, NREC = 1200, IDLE_ZERO = 0, HOLD_REAL = 0, PFIX = 0, HOLD_RST = 0;
     localparam integer P = (PFIX > 0) ? PFIX : (W + N - 1) / N, BW = (N > 1) ? $clog2(N) : 1, PW = P + BW + 1;
     localparam integer LAT = N + 1 + S;
     reg ck = 0, rn = 0;
@@ -19,7 +19,7 @@ module tb_s81hd_beat_link;
     reg  inj; reg [PW-1:0] inj_w;
     wire [PW-1:0] ri = inj ? inj_w : st[S];
     wire rv; wire [W-1:0] rd; wire rf;
-    ot_s81hd_beat_tx #(.W(W), .N(N), .P(P), .MUT(MUT), .IDLE_ZERO(IDLE_ZERO), .HOLD_REAL(HOLD_REAL)) u_tx (.ck(ck), .rn(rn), .v(tv), .d(td), .o(to), .fault(tf));
+    ot_s81hd_beat_tx #(.W(W), .N(N), .P(P), .MUT(MUT), .IDLE_ZERO(IDLE_ZERO), .HOLD_REAL(HOLD_REAL), .HOLD_RST(HOLD_RST)) u_tx (.ck(ck), .rn(rn), .v(tv), .d(td), .o(to), .fault(tf));
     assign st[0] = to;
     genvar g;
     generate for (g = 1; g <= S; g = g + 1) begin : g_st   // plan relay stations (plain registers, no reset)

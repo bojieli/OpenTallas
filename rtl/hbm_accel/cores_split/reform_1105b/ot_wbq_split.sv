@@ -105,7 +105,9 @@ endmodule
 //    k_v, the pin skid only captures on push);
 //  - the ack popcount is a balanced tree, and the ack bound is checked against a remaining-count flop (meta_q - ack_count) instead of an
 //    add-then-compare. Same pins, same edge for every K write, ack and fault.
-module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0)(
+// HREG=2 = HREG=1 plus (still cycle-exact): the fault / meta_active gates are registered copies (replicated per PC), loaded with
+// their next state; the ack count comes as two registered half popcounts and is checked with one 7-bit difference (g_f2).
+module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stk,input wire quad,
  input wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
@@ -163,6 +165,10 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  reg [15:0] req_valid;reg [6:0] outstanding[0:15];reg [2:0] req_g[0:15];
  reg [15:0] pick_v;reg [2:0] pick_g[0:15];reg [7:0] pop;reg [2:0] selected_g[0:15];
  integer pc,l,acks;wire hbm_fault=hbm_sticky||sf2||!hrst;
+ // HREG>=2 (g_f2): registered, replicated copies of the fault / meta gates, exact on every edge while hrst is high. While hrst is low
+ // every flop they gate is held in reset, so the !hrst term of hbm_fault is not needed there (h_stop keeps hbm_fault).
+ wire fg_w;wire [15:0] mah_w,kg_w;wire ma0_w;wire [3:0] as0_w,as1_w;
+ wire fault_g=(HREG>=2)?(fg_w||!hrst):hbm_fault;   // meta_re pops the FIFO, so it keeps the !hrst term
  wire blk_fault=stream_sticky||hf2;wire [1:0] owned=allocated;
  assign s_stop=blk_fault;assign h_stop=hbm_fault;assign copy_on=copy_active;assign copy_sel=copy_bank;
  wire [31:0] reserve_base={2'b00,rbase_q[29:0]};
@@ -174,8 +180,8 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  assign meta_we=start_copy;
  ot_hbm_accel_cdc_fifo #(.W(29),.AW(2)) u_meta(.wclk(stream_clk),.wrst_n(srst),.we(meta_we),.wdata({choose_bank,epoch[choose_bank],total[choose_bank]}),.full(meta_full),.rd_freed(),
   .rclk(hbm_clk),.rrst_n(hrst),.re(meta_re),.rdata(meta_data),.empty(meta_empty));
- assign meta_re=!meta_active&&!meta_empty&&!hbm_fault;
- assign ack_we=ack_pending&&!ack_full&&!hbm_fault;
+ assign meta_re=!meta_active&&!meta_empty&&!fault_g;
+ assign ack_we=ack_pending&&!ack_full&&!fault_g;
  assign ack_re=srst&&!ack_empty&&!blk_fault;
  ot_hbm_accel_cdc_fifo #(.W(29),.AW(2)) u_ack(.wclk(hbm_clk),.wrst_n(hrst),.we(ack_we),.wdata(meta_q),.full(ack_full),.rd_freed(),
   .rclk(stream_clk),.rrst_n(srst),.re(ack_re),.rdata(ack_data),.empty(ack_empty));
@@ -223,34 +229,66 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
   pc_oh=16'd1<<sector_pc(sector);
  endfunction
  assign g_credit=pop_u;
+ // GIN=1 (HBM-GAPS-5-WBQ 11-05, opt-in; default 0 = unchanged): one register stage on the seam data inputs g_v / g_d before the
+ // group queues (PIN CYCLES +1 hbm_clk edge on g_v/g_d). Credit flow is unchanged: the root sends only on a held credit and the
+ // credit (g_credit = pop) returns on pop, so at most CRED words are in the stage + queue together, as before.
+ wire [7:0] g_vq;wire [2287:0] g_dq;
+ generate if(GIN!=0)begin:g_gin
+  reg [7:0] gv_r;reg [2287:0] gd_r;
+  always @(posedge hbm_clk or negedge hrst)if(!hrst)gv_r<=8'b0;else gv_r<=g_v;
+  always @(posedge hbm_clk)gd_r<=g_d;
+  assign g_vq=gv_r;assign g_dq=gd_r;
+ end else begin:g_gin0
+  assign g_vq=g_v;assign g_dq=g_d;
+ end endgenerate
  genvar g;
  generate for(g=0;g<8;g=g+1)begin:g_q
   reg [285:0] qm[0:CRED-1];
   assign head_v[g]=qn[g]!=0;assign head[g]=qm[qr[g]];assign head_pc[g]=sector_pc(head[g][285:256]);
-  always @(posedge hbm_clk)if(g_v[g])qm[qw[g]]<=g_d[286*g+:286];
+  always @(posedge hbm_clk)if(g_vq[g])qm[qw[g]]<=g_dq[286*g+:286];
   always @(posedge hbm_clk or negedge hrst)begin
    if(!hrst)begin qw[g]<=0;qr[g]<=0;qn[g]<=0;end
    else begin
-    if(g_v[g])qw[g]<=qw[g]+1'b1;
+    if(g_vq[g])qw[g]<=qw[g]+1'b1;
     if(pop_u[g])qr[g]<=qr[g]+1'b1;
-    qn[g]<=qn[g]+3'(g_v[g])-3'(pop_u[g]);
+    qn[g]<=qn[g]+3'(g_vq[g])-3'(pop_u[g]);
    end
   end
   if(HREG!=0)begin:g_hr
    // head_r = qm[qr] whenever qn!=0: next state is qm'[qr'] (pop -> entry qr+1, or the incoming word if it lands there; no pop -> the
    // incoming word if it lands on qr, i.e. write into empty; else hold)
    reg [285:0] head_r;reg [15:0] hpc_r;
-   wire [285:0] gd=g_d[286*g+:286];
+   wire [285:0] gd=g_dq[286*g+:286];
    wire [1:0] qr1=qr[g]+2'd1;
-   wire wr0=g_v[g]&&qw[g]==qr[g];
-   wire wr1=g_v[g]&&qw[g]==qr1;
-   wire [285:0] nx=qm[qr1];
-   wire [15:0] hpc_n=pop_u[g]?(wr1?pc_oh(gd[285:256]):pc_oh(nx[285:256])):(wr0?pc_oh(gd[285:256]):hpc_r);
-   wire [2:0] qn_n=qn[g]+3'(g_v[g])-3'(pop_u[g]);
-   always @(posedge hbm_clk)begin
-    if(pop_u[g])head_r<=wr1?gd:nx;else if(wr0)head_r<=gd;
-    hpc_r<=hpc_n;
+   wire [285:0] nx;wire [3:0] wr0,wr1;   // per 72-bit slice (HREG>=2: own pointer copies; else one decode)
+   if(HREG>=2)begin:g_p2
+    // kept per-slice copies of onehot(qr+1), qw==qr, qw==qr+1, loaded with their next state (all reset with qr/qw = 0)
+    wire [1:0] qr_n=qr[g]+2'(pop_u[g]);wire [1:0] qw_n=qw[g]+2'(g_vq[g]);wire [1:0] qr1_n=qr_n+2'd1;
+    genvar sl;
+    for(sl=0;sl<4;sl=sl+1)begin:g_s
+     localparam integer LO=72*sl,W=(sl==3)?286-216:72;
+     (* keep = "true" *) reg [3:0] rp_c;(* keep = "true" *) reg e0_c;(* keep = "true" *) reg e1_c;
+     always @(posedge hbm_clk or negedge hrst)begin
+      if(!hrst)begin rp_c<=4'b0010;e0_c<=1'b1;e1_c<=1'b0;end
+      else begin rp_c<=4'd1<<qr1_n;e0_c<=qw_n==qr_n;e1_c<=qw_n==qr1_n;end
+     end
+     assign nx[LO+:W]=({W{rp_c[0]}}&qm[0][LO+:W])|({W{rp_c[1]}}&qm[1][LO+:W])|({W{rp_c[2]}}&qm[2][LO+:W])|({W{rp_c[3]}}&qm[3][LO+:W]);
+     assign wr0[sl]=g_vq[g]&&e0_c;assign wr1[sl]=g_vq[g]&&e1_c;
+`ifndef SYNTHESIS
+     always @(posedge hbm_clk)if(hrst&&(rp_c!==4'd1<<qr1||e0_c!==(qw[g]==qr[g])||e1_c!==(qw[g]==qr1)))$display("HREG2_COPY_MISMATCH ptr t=%0t",$time);
+`endif
+    end
+   end else begin:g_p1
+    assign nx=qm[qr1];assign wr0={4{g_vq[g]&&qw[g]==qr[g]}};assign wr1={4{g_vq[g]&&qw[g]==qr1}};
    end
+   wire [15:0] hpc_n=pop_u[g]?(wr1[3]?pc_oh(gd[285:256]):pc_oh(nx[285:256])):(wr0[3]?pc_oh(gd[285:256]):hpc_r);
+   wire [2:0] qn_n=qn[g]+3'(g_vq[g])-3'(pop_u[g]);
+   genvar hs;
+   for(hs=0;hs<4;hs=hs+1)begin:g_hs
+    localparam integer LO=72*hs,W=(hs==3)?286-216:72;
+    always @(posedge hbm_clk)if(pop_u[g])head_r[LO+:W]<=wr1[hs]?gd[LO+:W]:nx[LO+:W];else if(wr0[hs])head_r[LO+:W]<=gd[LO+:W];
+   end
+   always @(posedge hbm_clk)hpc_r<=hpc_n;
    assign hd_all[286*g+:286]=head_r;assign hpc_all[16*g+:16]=hpc_r;assign hpcn_all[16*g+:16]=hpc_n;assign hvn[g]=qn_n!=0;
   end else begin:g_hr0
    assign hd_all[286*g+:286]=286'b0;assign hpc_all[16*g+:16]=16'b0;assign hpcn_all[16*g+:16]=16'b0;assign hvn[g]=1'b0;
@@ -275,7 +313,7 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
    pop1=0;kv1=0;an1=0;ka1=0;kd1=0;
    for(i=0;i<16;i=i+1)begin
     sel[i]=req_valid[i]?req_oh[i]:pick_r[i];
-    kv1[i]=meta_active&&(req_valid[i]||(|pick_r[i]))&&!ack_pending&&(outstanding[i]<64||k_wr_done_q[i])&&!hbm_fault;
+    kv1[i]=((HREG>=2)?kg_w[i]:(meta_active&&!ack_pending&&!hbm_fault))&&(req_valid[i]||(|pick_r[i]))&&(outstanding[i]<64||k_wr_done_q[i]);
     for(j=0;j<8;j=j+1)begin
      ka1[30*i+:30]=ka1[30*i+:30]|({30{sel[i][j]}}&hd_all[286*j+256+:30]);
      kd1[256*i+:256]=kd1[256*i+:256]|({256{sel[i][j]}}&hd_all[286*j+:256]);
@@ -289,7 +327,7 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
    if(!hrst)begin for(r=0;r<16;r=r+1)begin req_oh[r]<=0;pick_r[r]<=0;end end
    else begin
     for(r=0;r<16;r=r+1)pick_r[r]<=pick_n[r];
-    if(meta_active&&!hbm_fault)begin for(r=0;r<16;r=r+1)if(kv1[r]&&!k_rdy[r])req_oh[r]<=sel[r];end
+    for(r=0;r<16;r=r+1)if(((HREG>=2)?mah_w[r]:(meta_active&&!hbm_fault))&&kv1[r]&&!k_rdy[r])req_oh[r]<=sel[r];
    end
   end
   assign pop_u=pop1;assign kv_u=kv1;assign an_u=an1;assign ka_u=ka1;assign kd_u=kd1;
@@ -320,8 +358,17 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  wire [4:0] acks_t=ar0+ar1;
  reg [11:0] ack_rem;
  wire ack_any=|ack_q;
- wire ack_gt=(HREG!=0)?(ack_rem[11:5]==7'd0&&acks_t>ack_rem[4:0]):(13'(ack_count)+13'(acks)>13'(meta_q[11:0]));
- wire ack_eq=(HREG!=0)?(ack_rem[11:5]==7'd0&&acks_t==ack_rem[4:0]):(13'(ack_count)+13'(acks)==13'(meta_q[11:0]));
+ // HREG>=2: the ack count arrives as two registered half popcounts (as0/as1 = popcount of ack_q[7:0] / [15:8], g_f2); one 7-bit
+ // difference lo - as0 - as1 gives the bound checks and the low bits, the high bits take a parallel decrement on borrow
+ wire [6:0] ack_dif={2'b0,ack_rem[4:0]}-{3'b0,as0_w}-{3'b0,as1_w};
+ wire [6:0] ack_hi_m1=ack_rem[11:5]-7'd1;
+ wire ack_hi0=ack_rem[11:5]==7'd0;
+ wire ack_any_g=(HREG>=2)?(|{as0_w,as1_w}):(HREG!=0)?ack_any:(acks!=0);
+ wire ack_gt=(HREG>=2)?(ack_hi0&&ack_dif[6]):(HREG!=0)?(ack_rem[11:5]==7'd0&&acks_t>ack_rem[4:0]):(13'(ack_count)+13'(acks)>13'(meta_q[11:0]));
+ wire ack_eq=(HREG>=2)?(ack_hi0&&ack_dif==7'd0):(HREG!=0)?(ack_rem[11:5]==7'd0&&acks_t==ack_rem[4:0]):(13'(ack_count)+13'(acks)==13'(meta_q[11:0]));
+ wire [11:0] ack_rem_n=(HREG>=2)?{ack_dif[6]?ack_hi_m1:ack_rem[11:5],ack_dif[4:0]}:(ack_rem-12'(acks_t));
+ wire [15:0] mah_g=(HREG>=2)?mah_w:{16{meta_active&&!hbm_fault}};
+ wire ma0_g=(HREG>=2)?ma0_w:(meta_active&&!hbm_fault);
  integer h;
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)begin
@@ -330,8 +377,7 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
   end else begin
    sf1<=stream_sticky;sf2<=sf1;
    if(meta_re)begin meta_active<=1;meta_q<=meta_data;ack_count<=0;ack_rem<=meta_data[11:0];ack_pending<=0;end
-   if(meta_active&&!hbm_fault)begin
-    for(h=0;h<16;h=h+1)begin
+   for(h=0;h<16;h=h+1)if(mah_g[h])begin
      if(kv_u[h]&&!k_rdy[h])begin req_valid[h]<=1;req_g[h]<=selected_g[h];end
      if(kv_u[h]&&k_rdy[h])req_valid[h]<=0;
      case({kv_u[h]&&k_rdy[h],k_wr_done_q[h]})
@@ -341,8 +387,9 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
      endcase
      if(k_wr_done_q[h]&&!(outstanding[h]!=0||(kv_u[h]&&k_rdy[h])))hbm_sticky<=1;
     end
-    if((HREG!=0)?ack_any:(acks!=0))begin
-     ack_count<=ack_count+12'(acks);ack_rem<=ack_rem-12'(acks_t);
+   if(ma0_g)begin
+    if(ack_any_g)begin
+     ack_count<=ack_count+12'(acks);ack_rem<=ack_rem_n;
      if(ack_gt)hbm_sticky<=1;
      if(ack_eq)ack_pending<=1;
     end
@@ -350,6 +397,51 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
    if(ack_we)begin ack_pending<=0;meta_active<=0;end
   end
  end
+ // ---- HREG>=2: registered gates. Identities (all while hrst; all 0 in reset, as the values they copy):
+ //   hbm_sticky||sf2 = fo_c||sa_c, fo_c <= hbm_sticky||setO||sf1 (setO: the non-ack sticky sets), sa_c <= setA (ack overshoot set);
+ //   meta_active&&!(hbm_sticky||sf2) = ma_c&&!sa_c, ma_c <= meta_active_next&&!(hbm_sticky||setO||sf1);
+ //   ... &&!ack_pending = kg_c&&!sa_c, kg_c <= ma_c next&&!ack_pending_next;
+ //   as0+as1 = popcount(ack_q): as <= MA ? popcount(an half) : 0, as ack_q <= MA ? an : 0.
+ // Kept copies: one central set (fo0/sa0/ma0: FIFO strobes, sticky, ack count) and one set per PC (ma/kg/sa: the K port of that PC),
+ // so no single flop drives the strip.
+ function automatic [3:0] pc8(input [7:0] v);
+  reg [1:0] a0,a1,a2,a3;reg [2:0] b0,b1;
+  begin a0=v[0]+v[1];a1=v[2]+v[3];a2=v[4]+v[5];a3=v[6]+v[7];b0=a0+a1;b1=a2+a3;pc8=b0+b1;end
+ endfunction
+ generate if(HREG>=2)begin:g_f2
+  reg setH;integer z;
+  always @*begin setH=0;for(z=0;z<16;z=z+1)if(k_wr_done_q[z]&&!(outstanding[z]!=0||(kv_u[z]&&k_rdy[z])))setH=1;end
+  wire setO=ma0_w?setH:(|k_wr_done_q);
+  wire setA=ma0_w&&ack_any_g&&ack_gt;
+  wire fo_n=hbm_sticky||setO||sf1;
+  wire ma_n=(meta_active||meta_re)&&!ack_we&&!fo_n;
+  wire ap_n=!ack_we&&!meta_re&&(ack_pending||(ma0_w&&ack_any_g&&ack_eq));
+  wire kg_n=ma_n&&!ap_n;
+  genvar c;
+  for(c=0;c<16;c=c+1)begin:g_c
+   (* keep = "true" *) reg ma_c;(* keep = "true" *) reg kg_c;(* keep = "true" *) reg sa_c;
+   always @(posedge hbm_clk or negedge hrst)if(!hrst)begin ma_c<=0;kg_c<=0;sa_c<=0;end else begin ma_c<=ma_n;kg_c<=kg_n;sa_c<=setA;end
+   assign mah_w[c]=ma_c&&!sa_c;assign kg_w[c]=kg_c&&!sa_c;
+  end
+  (* keep = "true" *) reg fo0_c;(* keep = "true" *) reg sa0_c;(* keep = "true" *) reg ma0_c;
+  reg [3:0] as0_r,as1_r;
+  always @(posedge hbm_clk or negedge hrst)begin
+   if(!hrst)begin fo0_c<=0;sa0_c<=0;ma0_c<=0;as0_r<=0;as1_r<=0;end
+   else begin fo0_c<=fo_n;sa0_c<=setA;ma0_c<=ma_n;as0_r<=ma0_w?pc8(an_u[7:0]):4'd0;as1_r<=ma0_w?pc8(an_u[15:8]):4'd0;end
+  end
+  assign ma0_w=ma0_c&&!sa0_c;assign fg_w=fo0_c||sa0_c;assign as0_w=as0_r;assign as1_w=as1_r;
+`ifndef SYNTHESIS
+  // bench check: every copy equals the value it stands for, on every edge with hrst high
+  integer cmis=0;
+  always @(posedge hbm_clk)if(hrst)begin
+   if(fg_w!==(hbm_sticky||sf2)||ma0_w!==(meta_active&&!hbm_fault)||mah_w!=={16{meta_active&&!hbm_fault}}||
+      kg_w!=={16{meta_active&&!hbm_fault&&!ack_pending}}||(5'(as0_r)+5'(as1_r))!==5'(acks))begin
+    if(cmis==0)$display("HREG2_COPY_MISMATCH t=%0t",$time);cmis=cmis+1;end
+  end
+`endif
+ end else begin:g_f0
+  assign fg_w=1'b0;assign mah_w=16'b0;assign kg_w=16'b0;assign ma0_w=1'b0;assign as0_w=4'b0;assign as1_w=4'b0;
+ end endgenerate
  // ---- real window of a reservation, receipts, wb_ready, wa, window command: as ot_hbm_svc_wb_kport_q
  reg rv1,rb1,rv2,rb2;reg [28:0] ob1,oe1;reg [29:0] sb2,se2;reg rq1;
  always @(posedge stream_clk or negedge stream_rst_n)
@@ -393,7 +485,12 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  genvar p;
  wire [15:0] k_rdy_w;assign k_rdy=k_rdy_w;
  generate for(p=0;p<16;p=p+1)begin:pc_pin
-  ot_hbm_svc_pin_skid2 #(.WIDTH(286)) u_k(.clk(hbm_clk),.rst_n(hbm_rst_n),.in_v(kv_u[p]),.in_r(k_rdy_w[p]),
+  // HREG>=2: the skid takes its own synchronised copy of hbm_rst_n (async assert, release 2 edges later). Same pins: in those
+  // edges the skid is empty either way and in_v=0 (the core is still in reset: hrst releases no earlier than krst)
+  wire krst;
+  if(HREG>=2)begin:g_kr ot_reset_sync u_krst(.clk(hbm_clk),.async_rst_n(hbm_rst_n),.sync_rst_n(krst));end
+  else begin:g_kr0 assign krst=hbm_rst_n;end
+  ot_hbm_svc_pin_skid2 #(.WIDTH(286)) u_k(.clk(hbm_clk),.rst_n(krst),.in_v(kv_u[p]),.in_r(k_rdy_w[p]),
    .in_data({fold(ka_u[30*p+:29],q_h),kd_u[256*p+:256]}),.out_v(w_k_v[p]),.out_r(w_k_rdy[p]),
    .out_data({w_k_addr[30*p+:30],w_k_wdata[256*p+:256]}));
  end endgenerate

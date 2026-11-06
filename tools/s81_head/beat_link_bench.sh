@@ -7,10 +7,10 @@ set -u
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 O=$1; D=rtl/dsrom_sys/s81_head
 mkdir -p "$O"; rc=0
-run() {  # name W N S MUT expect [IDLE_ZERO HOLD_REAL PFIX]
-  local n=$1 W=$2 N=$3 S=$4 M=$5 E=$6 IZ=${7:-0} HR=${8:-0} PF=${9:-0}; mkdir -p "$O/$n"
+run() {  # name W N S MUT expect [IDLE_ZERO HOLD_REAL PFIX HOLD_RST]
+  local n=$1 W=$2 N=$3 S=$4 M=$5 E=$6 IZ=${7:-0} HR=${8:-0} PF=${9:-0} RS=${10:-0}; mkdir -p "$O/$n"
   "$VL" --binary --top-module tb_s81hd_beat_link -Mdir "$O/$n/obj" -j 4 -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-UNUSEDPARAM \
-    -GW=$W -GN=$N -GS=$S -GMUT=$M -GNREC=1200 -GIDLE_ZERO=$IZ -GHOLD_REAL=$HR -GPFIX=$PF \
+    -GW=$W -GN=$N -GS=$S -GMUT=$M -GNREC=1200 -GIDLE_ZERO=$IZ -GHOLD_REAL=$HR -GPFIX=$PF -GHOLD_RST=$RS \
     $D/ot_s81hd_beat_link.sv $D/test/tb_s81hd_beat_link.sv > "$O/$n/build.log" 2>&1 \
     || { echo "$n BUILD FAIL"; tail -5 "$O/$n/build.log"; rc=1; return; }
   for s in 1 2 3; do
@@ -28,5 +28,8 @@ for c in "b97 97 2 2 62" "h553 553 3 2 273"; do set -- $c
   run ${1}_hr0 $2 $3 $4 0 PASS 1 0 $5; run ${1}_hr1 $2 $3 $4 0 PASS 1 1 $5
   for m in 2 3; do run ${1}_hr1_mut$m $2 $3 $4 $m FAIL 1 1 $5; done
 done
+# DIE-HEAD-71 11-05 ctlrq: the hd_ctl host lane with the reset hold (HOLD_RST 1, as ctl_core u_ht); mutants 2 / 3 caught
+run h553_hrs 553 3 2 0 PASS 1 1 273 1
+for m in 2 3; do run h553_hrs_mut$m 553 3 2 $m FAIL 1 1 273 1; done
 grep -h "Warning-" "$O"/r553/build.log "$O"/h1104/build.log | sort | uniq -c | head -20
 echo "BEAT_LINK_BENCH rc=$rc"; exit $rc

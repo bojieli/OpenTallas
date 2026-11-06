@@ -18,7 +18,7 @@ HDR = """// HBM-FORM-SPLIT-8+REFORM-B11 (glue_d15r RE-FORM): PORT-CUT copies of 
 // Only crossing ports change; die-facing ports keep their registers.  The cut regs only reset to the values their sources
 // already hold in reset (valid state resets), so the unreset face flops flush within 2 reset edges (reset contract 64).
 // DMUT (bench mutants): 1 rstop keeps the ri input reg (+1); 2 status takes the ring fault at the flags stage (+2);
-// 3 hub keeps the cco input regs (+1); 4 rcl inverts the ri return port.
+// 3 hub keeps the cco input regs (+1); 4 rcl inverts the ri return port; 5 hub popcount drops source 9 (B13).
 """
 out = [HDR]
 # ---------------------------------------------------------------- ring stop
@@ -68,6 +68,28 @@ t = ed(t, [
  ("    reg rvalid0,rvalid1;\n", "    reg rv0_r,rv1_r;\n    wire rvalid0=(DMUT==3)?rv0_r:cco0[263], rvalid1=(DMUT==3)?rv1_r:cco1[263];\n"),
  ("qvalid<='0; bvalid<='0; rvalid0<=0; rvalid1<=0;", "qvalid<='0; bvalid<='0; rv0_r<=0; rv1_r<=0;"),
  ("rvalid0<=cco0[263]; rvalid1<=cco1[263];", "rv0_r<=cco0[263]; rv1_r<=cco1[263];"),
+ # HBM-FORM-SPLIT-10+REFORM-B13 (gnw_hub CTS setup -1189.86: arrivals summed by 10 serial conditional +1 -> fault -> status):
+ # one hit bit per response source and (c,k); arrivals = balanced popcount mod 8 (same function, same registers, 0 cycles).
+ # DMUT 5 (bench mutant): source 9 is not counted.
+ ("    reg [2:0] arrivals[0:N-1][0:3];\n", """    reg [2:0] arrivals[0:N-1][0:3];
+    reg [9:0] hit[0:N-1][0:3];   // B13: one bit per response source (8 banks + 2 ring stops)
+    function automatic [2:0] pc10(input [9:0] h);   // balanced popcount mod 8 (was a serial +1 chain)
+        reg [1:0] s0,s1,s2,s3,s4;
+        reg [2:0] t0,t1;
+        reg [3:0] u;
+        begin
+            s0={1'b0,h[0]}+{1'b0,h[1]}; s1={1'b0,h[2]}+{1'b0,h[3]}; s2={1'b0,h[4]}+{1'b0,h[5]};
+            s3={1'b0,h[6]}+{1'b0,h[7]}; s4={1'b0,h[8]}+{1'b0,h[9]};
+            t0={1'b0,s0}+{1'b0,s1}; t1={1'b0,s2}+{1'b0,s3};
+            u={1'b0,t0}+{1'b0,t1}+{2'b0,s4};
+            pc10=u[2:0];
+        end
+    endfunction
+"""),
+ ("begin arrivals[c][k]=0; returned_data[c][k]=0; end", "begin arrivals[c][k]=0; hit[c][k]=0; returned_data[c][k]=0; end"),
+ ("                    arrivals[rc][rs]=arrivals[rc][rs]+3'd1;\n", "                    hit[rc][rs][b]=!(DMUT==5 && b==9);\n"),
+ ("        for(c=0;c<N;c=c+1) begin\n            for(k=0;k<4;k=k+1) if(arrivals[c][k]!=0)\n",
+  "        for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1) arrivals[c][k]=pc10(hit[c][k]);\n        for(c=0;c<N;c=c+1) begin\n            for(k=0;k<4;k=k+1) if(arrivals[c][k]!=0)\n"),
 ])
 out.append(t.replace("`timescale 1ns/1ps\n", "").replace("`default_nettype wire\n", "").replace("`default_nettype none\n", ""))
 # ---------------------------------------------------------------- replay
