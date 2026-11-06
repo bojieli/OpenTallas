@@ -3837,5 +3837,43 @@
       "read_row"
     ],
     "io_hold_note": "DIE-HBM-82-SVGR 11-06: IO-HOLD A parent obligation (lanes/IO-HOLD-HBM.md svgr_bk row): every data input bus takes the registered sender min (+12.5 ps after vclk; senders = ot_svgr_own / ot_svgr_top face-shell output flops); clocks, resets and bk_hi keep the flat -insertion_tol. Root cause (B12 vB eco i1 on epyc5): 1468 io hold endpoints -> 3948 HB4xp67 pads piled at the in_data face -> slew 436/320 (87 pins) + 7 DRT shorts at x248-250 y49-61."
+  },
+  "ot_svgr_own__rf2": {
+    "top": "ot_svgr_own",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+    ],
+    "params": {},
+    "macros": [],
+    "defines": [
+      "OT_SVGR_OWN_RF1",
+      "OT_SVGR_OWN_RF2"
+    ],
+    "source": "DIE-HBM-82-SVGR 11-06 RF2 (on RF1): registered per-pc heads + registered grant/lane valid (bk_in AND-OR of registers), registered owner selected/lane/words, one-hot response lookup, registered accept before take; PIN CYCLES bk_in +1 hbm_clk, bank free +1 hbm_clk, first K request per block +1 hbm_pc_clk; smb_unit stall bench PASS 20 ops 29/29 go 81 results (mutants: see READY). Prior: HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/; HBM-GAPS-5 RF1 registered owner, +1 descriptor/Kresponse/bank-free edges; four smoke controls PASS,7mutants caught",
+    "source_commit": "df883a6b41f09ed6a5f48ddcfc51544eaad8dcb3",
+    "read_at_commit": true,
+    "util": 0.45,
+    "io_hold": "sender_min",
+    "io_hold_ports": [
+      "seam_res_v",
+      "seam_res_word",
+      "seam_s_fault",
+      "bk_cr",
+      "k_rdy",
+      "k_wr_done",
+      "kr_v",
+      "kr_tag",
+      "kr_beat",
+      "kr_data"
+    ],
+    "io_hold_note": "DIE-HBM-82-SVGR 11-06: IO-HOLD A parent obligation (lanes/IO-HOLD-HBM.md svgr_own row): data input buses take the registered sender min (+12.5 ps after vclk; senders = face-shell output flops of ot_svgr_bk / svgr_top / the K-path cores); clocks, resets, id_stack/id_sm keep the flat -insertion_tol. Root cause (Codex RF1 vA routed, epyc5): 3830 HB4xp67 input hold pads (kr_data 1024 b) -> slew 690/cap 26 and the pad pile."
   }
 }
