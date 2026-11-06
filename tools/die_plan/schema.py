@@ -745,6 +745,8 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # Optional physical padding floor for a published wavefront release cohort.
+                        "wavefront_min_depth": {"type": "integer", "minimum": 0},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
                         "depth": {"type": "integer", "minimum": 1},
                         # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state
