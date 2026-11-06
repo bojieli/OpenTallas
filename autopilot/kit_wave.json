@@ -34,7 +34,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch2/claude/codex-wave-1105/src_7da_ad/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -243,7 +243,9 @@
    "hold_items": {
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
     "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
-    "kv3_hub_C": "CODEX typed AHUB+CTL closure proved and merged99bfe/faecd; actual single parent trial Intel1 scratch3 codex-kv-hubC-parent stopped before floorplan: reachable as-built qkd_pll_analog_model u_pll emits5 behavioral oscillator combinational loops (rtl_lint5errors). Both actualSIGNEDhardmacros retained; obsolete flat16GBOOM class resolved. KV peer+TOK own physicalPLL/nativeboot boundary fix; no sameform retry or invented PLL tieoff."
+    "kv3_hub_C": "CODEX typed AHUB+CTL closure proved and merged99bfe/faecd; actual single parent trial Intel1 scratch3 codex-kv-hubC-parent stopped before floorplan: reachable as-built qkd_pll_analog_model u_pll emits5 behavioral oscillator combinational loops (rtl_lint5errors). Both actualSIGNEDhardmacros retained; obsolete flat16GBOOM class resolved. KV peer+TOK own physicalPLL/nativeboot boundary fix; no sameform retry or invented PLL tieoff.",
+    "kv3_sys_c": "CODEX freshfaecd a5 caught prephysical realized96rawflops/23branches vs currentplan101:5old6stage/base59 branches persist instead7/base58. KV owner owns fresh raw-branch emitter/boundwrapper23/101 closure. No route on stale96; preservea5evidence, source-realizationINFRA not designstrike. Reviewed geometry/phase event remains approved.",
+    "kv3_phy": "CODEX faecd fresha6 source-realization mismatch beforeP&R: plan3internal reset stations for i_host_hbm_rst_n, actualbound0/directface-to-macro. KV owner freshcanonicalbind must realize3 beforetrial. Newa6prephysicalworker stopped; retainolder/privatejobs and failureevidence, no designstrike."
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-wave-1105/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
