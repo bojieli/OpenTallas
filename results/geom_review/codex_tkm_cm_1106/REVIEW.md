@@ -1,0 +1,3 @@
+# TKM generation-home correction
+
+PASS-COND: reviewed existing actual reset A/B image and exact recorda582251b44b50bf046966c45ae34c9f5aa193f8b91d21a4baf0475c38f4e4108. Canonical CM incorrectly described319.68x345.6/y68.31,206.82 while the retained plan outline is319.68x389.664 and reviewed kits usey89.916,228.396. This changes only that one CM record. Both174.744x70.488 SRAMs fit; clocks159.96/160.344 at172.8 remain in their clear corridor. Production core_macros_placement() now returns the exact reviewed homes without a private override. Every byte outside this CM value is preserved. Source, recipes, die plan, pin files and other CM records are unchanged. No new heavy build, physical closure, or DELPIPE1 activation is claimed.
