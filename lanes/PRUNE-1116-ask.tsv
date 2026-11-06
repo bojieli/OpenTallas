@@ -1,0 +1,12 @@
+host	group	action	path	gb	newest	detail
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/dh72/wt	67	2026-11-05T20:56	clone claude/dh72-psroot-check@baa5a925cc6, dirty 0, unpushed 1 (bundle), procs/docker 0, only release-cache citations (145, tracked files)
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/queue-bal-1/repo	60	2026-11-05T19:43	clone claude/queue-bal-1105@5d37ea715bd (merged I185), lane DONE 21:38, dirty 0 unpushed 0, procs/docker 0, only release-cache citations
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/hbm-reform-b11/wt	46	2026-11-05T17:03	worktree claude/hbm-reform-b11-1105@43ced21571a (B13 successor), dirty 0 unpushed 0, 2 untracked (saved), procs/docker 0, only release-cache citations
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/hbm-glue-b11/wt	46	2026-11-05T17:03	worktree claude/hbm-glue-split-b11-1105@40e41170c5b, dirty 0 unpushed 0, procs/docker 0, only release-cache citations
+intel2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-60/wv	25	2026-11-05T08:45	worktree claude/die-s81-60-cem-1105@2f3844928fb, dirty 0 unpushed 0, procs/docker 0, only release-cache citations
+intel1	G	WT-REMOVE	/srv/opentallas-scratch2/claude/s81-colle-1/wt	47	2026-11-05T19:36	clone claude/s81-colle-1-1105@47881224609, dirty 0 unpushed 0, procs/docker 0, only release-cache citations
+intel1	G	WT-REMOVE	/srv/opentallas-scratch2/claude/fs81r/wt	26	2026-11-05T06:06	worktree HEAD@2b99abb3bd5 detached, dirty 0 unpushed 0, 1 untracked (saved), procs/docker 0, only release-cache citations
+intel1	R	RELOCATE-SYMLINK	/srv/opentallas-scratch2/claude/wt/kw-fix-4-kv88	32	2026-11-03	same-host move to intel1 scratch3 relocated-1106 + symlink at old path (path/data kept); clean, not locked, procs/docker 0; root stays >=150 GB
+intel1	R	RELOCATE-SYMLINK	/srv/opentallas-scratch2/claude/wt/kw-fix-4-s81rf1	31	2026-11-03	as above
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/kw-fix-8/src_b	53	2026-11-04T23:18	kit_wave_state refs 2 + KW-LOG 60 + unpushed 54
+intel1	X	KEEP	/srv/opentallas-scratch2/claude/kw-fix-8/src_w	53	2026-11-04T23:04	kit_wave_state refs 2 + KW-LOG 61 + unpushed 12
