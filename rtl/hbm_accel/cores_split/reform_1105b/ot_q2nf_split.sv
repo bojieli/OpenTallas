@@ -11,7 +11,14 @@ endmodule
 module ot_q2nf_sl #(parameter integer CW=32,parameter integer K=0,parameter integer MUT=0,parameter integer NS=9,parameter integer ND=15,parameter integer SELW=4)(
  input wire clk,rst_n,input wire [NS*CW-1:0] captured,input wire [NS-1:0] cap_slot,input wire [ND-1:0] sink_slot,input wire [ND*SELW-1:0] sink_select,
  output reg [ND-1:0] dst_v,output reg [ND*CW-1:0] sel_d,output reg [ND*CW-1:0] dst_d,output reg select_fault,unavailable_fault);
- reg [NS-1:0] cs_p,cs_q;reg [ND-1:0] ss_p;reg [ND*SELW-1:0] sl_p;
+ reg [NS-1:0] cs_p,cs_q;reg [ND-1:0] ss_p;
+`ifdef OT_Q2NF_SLKEEP
+ // HBM-FORM-TIMING-11-QOUT 11-06 (opt-in): keep one sink_select copy per slice; synthesis otherwise folds the 18 identical
+ // sl_p copies into one flop row that broadcasts the mux selects across the 786 um strip (TT -157, 557 endpoints). Same function.
+ (* keep *) reg [ND*SELW-1:0] sl_p;
+`else
+ reg [ND*SELW-1:0] sl_p;
+`endif
  wire [NS-1:0] cs=(MUT==3)?cs_q:cs_p;
  wire [ND*SELW-1:0] sl=(MUT==1&&K==3)?sink_select:sl_p;
  always @(posedge clk)sl_p<=sink_select;
