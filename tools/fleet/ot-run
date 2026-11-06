@@ -1320,6 +1320,33 @@ def main():
                     say("ot-run: NOT RUN (OT_RUN_SPILL_ONLY and no spill)")
                     sys.exit(75)
                 spill = spill and not permanent
+        if not best and REFUSED_SRC and spill and d:    # QUEUE-BAL-2 REFUSED-SOURCE SPILL
+            src = max(REFUSED_SRC, key=lambda h: REFUSED_SRC[h].get("disk_gb", 0))
+            if REFUSED_SRC[src].get("disk_gb", 0) < REFUSED_SRC_MIN_GB:
+                plan, why, permanent = None, f"{src} has {REFUSED_SRC[src].get('disk_gb', 0)} GB free < {REFUSED_SRC_MIN_GB} GB for the back-copy", False
+            else:
+                plan, why, permanent = spill_plan(src, d, cmd, mem, threads, die, disk, held, say)
+            if plan and pick:
+                say(f"ot-run: REFUSED-SOURCE SPILL: {src} has --dir but admits no new job ({PLACE_NOTES.get(src)}); would run on {plan[0]}")
+                print(plan[0])
+                return
+            if plan:
+                say(f"ot-run: REFUSED-SOURCE SPILL: {src} has --dir but admits no new job ({PLACE_NOTES.get(src)}); copying to {plan[0]}")
+                left = None if max_wait is None else max(1, int(max_wait - (time.time() - t0)))
+                rc = spill_run(src, *plan, mem, cmd, d, left, say, disk=disk)
+                if rc is not None:
+                    sys.exit(rc)
+                spill = not SPILL_REFUSED_REAL
+            elif first or permanent:
+                say(f"ot-run: REFUSED-SOURCE SPILL not possible now: {why}")
+            if not pick and not permanent and (max_wait is None or time.time() - t0 < max_wait):
+                # the data exists and only disk / a spill host is short: wait and re-place (disk gets freed, a spill
+                # host frees memory), never a NOT RUN that a caller would count as a failed attempt
+                if first:
+                    say(f"ot-run: {src} holds --dir but is refused ({PLACE_NOTES.get(src)}); re-placing every {REQUEUE_S} s")
+                time.sleep(REQUEUE_S if max_wait is None else max(1, min(REQUEUE_S, max_wait - (time.time() - t0))))
+                first = False
+                continue
         if not best:
             retry_hosts = retryable_queued_probe_failures(first, previously_qualified & set(hosts), PLACE_NOTES)
             elapsed = time.time() - t0
@@ -2238,6 +2265,12 @@ def trigger_sweep():
 
 
 PLACE_NOTES = {}      # host -> why place() dropped it ('' = qualified); for the NOT RUN message
+# QUEUE-BAL-2 11-05 (REFUSED-SOURCE SPILL): host -> probe row for every host that HAS --dir but was refused only for its
+# disk (host_refusal: scratch floor / DISK GUARD, or --disk).  At 20:4x epyc4 (scratch2 100%, 11-26 GB) held the only copy
+# of most kit-wave kits: place() dropped it, main() said 'NOT RUN: no host qualifies' and never tried SPILL, while
+# epyc5/epyc6 (1.4 TB admit) sat idle.  Such a host is still a valid spill SOURCE (the copy only reads it).
+REFUSED_SRC = {}
+REFUSED_SRC_MIN_GB = int(os.environ.get("OT_RUN_REFUSED_SRC_MIN_GB", "5"))   # room left there for the back-copy
 
 
 def place(hosts, d, disk, mem, quiet=False):
@@ -2245,6 +2278,7 @@ def place(hosts, d, disk, mem, quiet=False):
     with cf.ThreadPoolExecutor(len(hosts)) as ex:
         res = dict(ex.map(lambda h: probe(h, d), hosts))
     ok = {}
+    REFUSED_SRC.clear()
     for h, r in res.items():
         note = "no " + str(d) if r is None else r.get("error") or ("disk %d GB < %d" % (r["disk_gb"], disk) if r["disk_gb"] < disk else "")
         if r and not r.get("error") and not note and not r.get("ncpu"):
@@ -2266,6 +2300,9 @@ def place(hosts, d, disk, mem, quiet=False):
                       f"running {r['running']} disk {r['disk_gb']} GB {note}", file=sys.stderr)
             if not note:
                 ok[h] = r
+            elif d and r.get("ncpu") and (host_refusal(r) or r["disk_gb"] < disk) and note.startswith(
+                    (host_refusal(r) or "\0", "disk ")):
+                REFUSED_SRC[h] = r                      # QUEUE-BAL-2: has the data, refused for disk only
         elif not quiet:
             print(f"ot-run: {h:14s} skipped: {note}", file=sys.stderr)
     return ok
