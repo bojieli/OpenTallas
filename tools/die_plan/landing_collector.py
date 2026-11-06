@@ -191,6 +191,8 @@ def reattach_sources(info, tree, *, status_points=None, reach_um=405):
                        **{r["q"]: r for r in t["relays"]}}
     before, after = nodes(old), nodes(tree)
     root = info.get("collector_root_node", "rst_root_n")
+    if root != "rst_root_n":
+        raise ValueError("rerooted collector reattachment requires an explicit parent seam event")
     if root not in after or before[root]["xy"] != after[root]["xy"]:
         raise ValueError("collector root moved; requires an explicit parent seam event")
     added = tree["depth"] - old["depth"]
