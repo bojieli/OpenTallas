@@ -1,0 +1,10 @@
+{
+ "clock_profile": "/srv/opentallas-scratch2/claude/codex-head-1105/entry_profile_exact6/clock_reset_identity.json",
+ "activation_scope": "/srv/opentallas-scratch2/claude/codex-head-token-1106/activation80/scope.json",
+ "activation_scope_sha256": "67ba2c69add153369336390cf36cb2dc276611d2fbfec1daf7599dcc7288db21",
+ "programme": 8935010221791620382,
+ "programme_hex": "7bff8874fe5fad1e",
+ "programme_basis": "SHA256 of exact supplied clock-profile record and actual released-activation scope; runtime context IDs are independently booked, not token expected output",
+ "first_launch_basis": "600 is the measured safe launch bound, not an assertion of earliest hardware link readiness",
+ "authority": "HBC setup only; no CSR/GO/START"
+}
