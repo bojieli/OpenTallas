@@ -10,6 +10,23 @@ SOURCE_FILES = {
     'ot_s81ph_link_gbx_safe3.sv':'d2097a89255af417d83044a37c8eff889b1bbfe4ec1defae0e6b1c73c5695b0a'}
 CLOCK_PIN_SHA256 = 'e7b51a243359373541376444eb9555de51822bdf3387bf024b8e7f3156f9bc72'
 
+def declare_clock_pin(kit):
+    kit=Path(kit)
+    # DIE-S81-62: the reviewed hook changes native metal, never the plan anchor.
+    for filename in ('pins.json','audit_pins.json'):
+        path=kit/filename
+        if not path.exists(): continue
+        rows=json.loads(path.read_text())
+        selected=[p for p in rows if p['bus']=='ck' and p.get('bit')==0]
+        assert len(selected)==1, 'exact ck[0] metadata required'
+        pin=selected[0]
+        assert pin['layer']=='M5' and [pin['x'],pin['y']]==[147.948,236.520]
+        assert pin.get('native_rects') in (None, [['M5',147.924,236.280,147.972,236.760]], [['M5',147.924,236.232,147.972,236.760]]), 'unexpected prior native pin geometry'
+        pin['native_rects']=[['M5',147.924,236.232,147.972,236.760]]
+        pin['native_rects_review']='DIE-S81-62; ck0_pin.tcl sha256 '+CLOCK_PIN_SHA256
+        path.write_text(json.dumps(rows,indent=1)+'\n')
+
+
 def replay(repo, kit, ckpin):
     repo,kit,ckpin=map(Path,(repo,kit,ckpin))
     f=json.loads((kit/'freeze.json').read_text())
@@ -45,6 +62,7 @@ def replay(repo, kit, ckpin):
     (kit/'config.mk').write_text(cfg)
     shutil.copyfile(repo/'physical/common_flow/clock_split_km.tcl',kit/'clock_split_km.tcl')
     shutil.copyfile(ckpin,kit/'ck0_pin.tcl')
+    declare_clock_pin(kit)
     (kit/'form_pre_cts.tcl').write_text('source /work/hold_budget.tcl\nsource /work/clock_split_km.tcl\n')
     p=kit/'grt_pre_core.tcl';s=p.read_text()
     assert 'set_routing_layers -signal M2-M6 -clock M4-M5' not in s

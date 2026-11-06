@@ -578,14 +578,14 @@ def native_pin_rects(path):
 
 
 def native_multiport(q, rects, w, h):
-    """Accept only the original connected same-layer metal from logical centre to edge."""
+    """Accept only original connected same-layer metal containing the logical anchor."""
     if len(rects) < 2 or any(a[0] != q["layer"] for a in rects):
         return None
     f = face_of(q["x"], q["y"], w, h)
     for a in rects:
         if not (0 <= a[1] < a[3] <= w and 0 <= a[2] < a[4] <= h):
             return None
-    center = [i for i,a in enumerate(rects) if abs((a[1]+a[3])/2-q["x"]) < 1e-4 and abs((a[2]+a[4])/2-q["y"]) < 1e-4]
+    center = [i for i,a in enumerate(rects) if a[1] <= q["x"] <= a[3] and a[2] <= q["y"] <= a[4]]
     if not center:
         return None
     reached = set(center)
@@ -1722,6 +1722,7 @@ def main():
                         '    if {!$placed} { incr ff_miss; continue }', 1)
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(S81 / "cores/svc/pin_audit_core.py", kd / "pin_audit.py")
+    shutil.copyfile(TOOL / "native_pin_contract.py", kd / "native_pin_contract.py")
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
     pdn_text, pg_interface = macro_pdn(mplace, kd / "macros", hc.get("obs_max"))
     pdn_text, pg_interface = pg_top_pdn(pdn_text, pg_interface, rec.get("pg_top"), hc.get("obs_max"))
