@@ -1,0 +1,123 @@
+{
+  "kind": "exact raw-fcore mapped input liveness; explicit dead-input slice justification only",
+  "scope": "fixed16bank OPS forms. Existing maps include full384bit read-address ports before any face shell. G0/G1 share read logic; G constant only qualifies stage writes. New DREG packing affects writes only; RREG only captures existing read data/selected low bank bits. No physical or parent-program qualification.",
+  "cases": [
+    {
+      "module": "ot_hgi_sfu_opsb_group_rreg_1106__fcore",
+      "bus": "ra",
+      "input_width": 384,
+      "dead_indices": [
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383
+      ],
+      "dead_load_counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "no_output_alias": true,
+      "live_control_index": 374,
+      "live_control_loads": [
+        "$auto$ff.cc:337:slice$391437.D"
+      ],
+      "mutant_drop_374": "REJECTED_LIVE_INPUT",
+      "artifact": "/srv/opentallas-scratch2/claude/codex-hbm-ops-local-1106/map/opsb.json",
+      "artifact_sha256": "b2d4f87f6ee91ccc1af6566af1ed5222836cb4f34fd02509e40fff3be90748f3"
+    },
+    {
+      "module": "ot_hgi_sfu_opsa_group0_dist_1106__fcore",
+      "bus": "rd_addr",
+      "input_width": 384,
+      "dead_indices": [
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383
+      ],
+      "dead_load_counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "no_output_alias": true,
+      "live_control_index": 374,
+      "live_control_loads": [
+        "$flatten\\u_t.$auto$ff.cc:337:slice$399707.D"
+      ],
+      "mutant_drop_374": "REJECTED_LIVE_INPUT",
+      "artifact": "/srv/opentallas-scratch2/claude/codex-hbm-ops-local-1106/map/opsa.json",
+      "artifact_sha256": "d60e2bcc8e5a4963c3b1cda2b29bd77000b880a6e569a3618a19faf678609f5b"
+    }
+  ],
+  "captured_shells": {
+    "opsa0": {
+      "dropped": [
+        "rd_addr[375]",
+        "rd_addr[376]",
+        "rd_addr[377]",
+        "rd_addr[378]",
+        "rd_addr[379]",
+        "rd_addr[380]",
+        "rd_addr[381]",
+        "rd_addr[382]",
+        "rd_addr[383]"
+      ],
+      "actual_pins": 3164,
+      "shell_metadata_sha256": "22ad1d5cc27aa2503592463615bc3d6e8aaf86ce7b693de0a9687f9f084051f1"
+    },
+    "opsa1": {
+      "dropped": [
+        "rd_addr[375]",
+        "rd_addr[376]",
+        "rd_addr[377]",
+        "rd_addr[378]",
+        "rd_addr[379]",
+        "rd_addr[380]",
+        "rd_addr[381]",
+        "rd_addr[382]",
+        "rd_addr[383]"
+      ],
+      "actual_pins": 3164,
+      "shell_metadata_sha256": "8907a96ab041839e4b583b6dbad5ed884abf08a630b721c2e529a56744d4ce51"
+    },
+    "opsb": {
+      "dropped": [
+        "ra[375]",
+        "ra[376]",
+        "ra[377]",
+        "ra[378]",
+        "ra[379]",
+        "ra[380]",
+        "ra[381]",
+        "ra[382]",
+        "ra[383]"
+      ],
+      "actual_pins": 3146,
+      "shell_metadata_sha256": "99a9001c91182e488cf567171ee5cd6b7fb399496a757b5c3006fa321d090b8d"
+    }
+  }
+}
