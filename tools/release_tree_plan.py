@@ -1403,7 +1403,11 @@ def g0c_split(rep, type_names):
             continue
         tgt = gate.setdefault(tn, {}) if tn in names else die
         tgt[key] = tgt.get(key, 0) + 1
-    return dict(types=len(names), clean=len(names) - len(gate), die_level=die, by_type=gate,
+    # COORD 11-06: check.py can stop at die-level schema errors before any per-type check (HBM d44v showed 81/81
+    # "clean" until bff6b336f6 fixed the schema, then 22/81). Errors but no per-type finding = per-type checks NOT RUN.
+    errs = rep.get('errors') or 0
+    clean = None if (errs and not gate and not geo and die) else len(names) - len(gate)
+    return dict(types=len(names), clean=clean, die_level=die, by_type=gate,
                 geom_report=dict(types=len(geo), by_check=gcnt, by_type=geo))
 
 
