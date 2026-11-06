@@ -1393,6 +1393,9 @@ def main():
             if not (md / f"{master}{ext}").is_file():
                 raise SystemExit(f"{master}: no {ext} in {m['view']} (native TT/FF models required)")
             shutil.copyfile(md / f"{master}{ext}", kd / "macros" / f"{master}{ext}")
+        if master in hard_masters:
+            from signed_child_evidence import stage_signed_child_evidence
+            stage_signed_child_evidence(md, master, kd / "macros")
         if f"/work/macros/{master}.lef" not in lefs:
             lefs.append(f"/work/macros/{master}.lef")
             libs.append(f"/work/macros/{master}_tt.lib")
