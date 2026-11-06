@@ -1757,7 +1757,11 @@
     "ot_s81sl_leaf__t30": "KW-FIX-8 21:3x sweep: repair_design after GRT silent >3 h at 100%% core, flat; stopped under hung-job rule; no relaunch on same recipe",
     "dsdv_bk_g": "KW-FIX-8 23:2x I64: signed dsdv_bk_g, ruled not a stop, no rebuild (RM-31 22:03)",
     "ot_v41_bf16_half": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
-    "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)"
+    "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
+    "ot_s81sl_kv_leaf__t1": "KW-FIX-22 09:4x: PLAN loop stop. On the S81 src_9f316/src_28fc7 recovery the wave relaunched this row every tick (09:18 @2, 09:28 @3, 09:37 @4) into the same kit_topology fail-closed 'kit_istations: class hi/ho planned on a subset of the lanes' (vnzero block). Plan/native-station owner DIE-S81-69 + Codex recovery: fix the station class coverage (or say it is a tool bug), then remove this hold; no design strike.",
+    "ot_s81sl_kv_leaf__t3": "KW-FIX-22 09:4x: PLAN loop stop. On the S81 src_9f316/src_28fc7 recovery the wave relaunched this row every tick (09:18 @2, 09:28 @3, 09:37 @4) into the same kit_topology fail-closed 'kit_istations: class hi/ho planned on a subset of the lanes' (vnzero block). Plan/native-station owner DIE-S81-69 + Codex recovery: fix the station class coverage (or say it is a tool bug), then remove this hold; no design strike.",
+    "ot_s81sl_kv_leaf__t4": "KW-FIX-22 09:4x: PLAN loop stop. On the S81 src_9f316/src_28fc7 recovery the wave relaunched this row every tick (09:18 @2, 09:28 @3, 09:37 @4) into the same kit_topology fail-closed 'kit_istations: class hi/ho planned on a subset of the lanes' (vnzero block). Plan/native-station owner DIE-S81-69 + Codex recovery: fix the station class coverage (or say it is a tool bug), then remove this hold; no design strike.",
+    "ot_s81sl_kv_leaf__t5": "KW-FIX-22 09:4x: PLAN loop stop. On the S81 src_9f316/src_28fc7 recovery the wave relaunched this row every tick (09:18 @2, 09:28 @3, 09:37 @4) into the same kit_topology fail-closed 'kit_istations: class hi/ho planned on a subset of the lanes' (vnzero block). Plan/native-station owner DIE-S81-69 + Codex recovery: fix the station class coverage (or say it is a tool bug), then remove this hold; no design strike."
    },
    "queue_src": "main@c92647a21554177b48cb5c147348a9c220b1538f",
    "work_root": "/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/s81/kit-wave",
