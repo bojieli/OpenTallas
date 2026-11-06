@@ -160,8 +160,10 @@ def _instance_type_spans(text, master, instance):
                 i += 1
             if depth:
                 raise ValueError('unbalanced hard-child parameter list')
-        if re.match(r'\s*'+re.escape(instance)+r'\s*\(', code[i:]):
-            spans.append((hit.start(), hit.end()))
+        while i < len(code) and code[i].isspace():
+            i += 1
+        if re.match(re.escape(instance)+r'\s*\(', code[i:]):
+            spans.append((hit.start(), hit.end(), i))
     return spans
 
 
@@ -171,7 +173,9 @@ def specialize_native_children(rtl_dir, children):
     A source module may serve both a hardened bank and soft banks with different
     parameters. Rename its native definition/references, then restore the type of
     each selected instance to the separately staged fixed-port blackbox master.
-    Port/parameter expressions and native logic remain unchanged.
+    The selected hard instance has fixed sealed parameters, so its native
+    override block is removed. Soft-instance parameters/ports and native logic
+    remain unchanged.
     """
     paths = [p for p in sorted(Path(rtl_dir).iterdir())
              if p.suffix in ('.sv', '.v') and not p.name.endswith('_bb.v')]
@@ -189,11 +193,11 @@ def specialize_native_children(rtl_dir, children):
         texts = {p:_code_rename(t, master, alias) for p,t in texts.items()}
         leaves = {c['inst'].split('.')[-1] for c in children if c['master'] == master}
         for leaf in sorted(leaves):
-            hits = [(p, a, b) for p,t in texts.items() for a,b in _instance_type_spans(t, alias, leaf)]
+            hits = [(p, a, b, end) for p,t in texts.items() for a,b,end in _instance_type_spans(t, alias, leaf)]
             if len(hits) != 1:
                 raise ValueError(f'hard child {master}/{leaf}: expected one source instance, found {len(hits)}')
-            p,a,b = hits[0]
-            texts[p] = texts[p][:a]+master+texts[p][b:]
+            p,a,b,end = hits[0]
+            texts[p] = texts[p][:a]+master+' '+texts[p][end:]
         counts[master] = len(leaves)
     for path,text in texts.items():
         if text != path.read_text():

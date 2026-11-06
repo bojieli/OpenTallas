@@ -56,7 +56,7 @@ class SignedChildren(unittest.TestCase):
             result = (p / 'native.sv').read_text()
             self.assertIn('module leaf__soft #', result)
             self.assertIn('assign y=a^P;', result)
-            self.assertIn('leaf #(.P(0)) u_hard(a,yh);', result)
+            self.assertIn('leaf u_hard(a,yh);', result)
             self.assertIn('leaf__soft #(.P(4)) u_soft(a,ys);', result)
             self.assertEqual((p / 'leaf_bb.v').read_text(), bb)
 
@@ -68,7 +68,8 @@ class SignedChildren(unittest.TestCase):
             C.specialize_native_children(p, [dict(master='leaf',inst='u_hard')])
             result = (p/'a.sv').read_text()
             self.assertTrue(result.startswith('// leaf should stay in this comment'))
-            self.assertIn('leaf #(.P((2 == 2) ? 1 : 0)) u_hard', result)
+            self.assertIn('leaf u_hard', result)
+            self.assertNotIn('.P((2 == 2)', result)
 
     def test_missing_native_child_refused(self):
         with tempfile.TemporaryDirectory() as d:
