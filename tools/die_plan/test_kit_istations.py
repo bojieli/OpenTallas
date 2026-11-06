@@ -40,6 +40,38 @@ endmodule
 """
 
 
+def test_narrow_input_stations_preserve_payload_and_require_proof(tmp_path):
+    plan = dict(partition_types=dict(t=dict(
+        buses=[dict(name="i_a", dir="in", width=3, kind="data")],
+        internal_stations=[dict(conn="bus:i_a", regs_um=[[3, 0]])])))
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    for case in ("proved", "no_proof", "missing_bit"):
+        kd = tmp_path / case
+        kd.mkdir()
+        bound = kd / "t_part_bound.sv"
+        bound.write_text(BOUND)
+        proof = dict(verdict="PASS") if case != "no_proof" else {}
+        bits = ["i_a[1]", "i_a[2]"] if case != "missing_bit" else ["i_a[1]"]
+        (kd / "kit_rtl.json").write_text(json.dumps(dict(
+            bound_module="t_part_bound", files=[str(bound)],
+            narrow_buses=[dict(port="i_a", plan=3, bound=1)],
+            dead_inputs=dict(bits=bits, proof=proof))))
+        r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],
+                           capture_output=True, text=True)
+        if case == "proved":
+            assert r.returncode == 0, r.stderr
+            assert "ot_dp_st #(.W(1)) u_ist_i_a_0" in bound.read_text()
+            assert "ot_dp_st #(.W(3))" not in bound.read_text()
+            report = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"][0]
+            assert (report["plan_width"], report["bound_width"]) == (3, 1)
+            assert json.loads(pf.read_text()) == plan
+        else:
+            assert r.returncode != 0
+            assert "complete dead-input proof required" in r.stderr
+            assert bound.read_text() == BOUND
+
+
 def test_inserts_and_sites(tmp_path):
     kd = tmp_path / "kit"
     kd.mkdir()
