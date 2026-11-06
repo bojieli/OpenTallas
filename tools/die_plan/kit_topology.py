@@ -35,8 +35,11 @@ def native_contract(raw,asbuilt=None,plan_path=None):
     if ab.get('clock_landing_table'):
         base=Path(ab.get('base',Path(__file__).resolve().parents[2]))
         if not base.is_absolute():
-            if plan_path is None:raise ValueError('native clock table requires explicit full plan context')
-            base=Path(plan_path).resolve().parent/base
+            # Match bind.plan_base: an explicit manifest owns its relative base.
+            # Inline asbuilt metadata remains relative to the containing plan.
+            context = asbuilt or plan_path
+            if context is None:raise ValueError('native clock table requires explicit full plan context')
+            base=Path(context).parent/base
         path=Path(ab['clock_landing_table'])
         if not path.is_absolute():path=base/path
         base,path=base.resolve(),path.resolve()
