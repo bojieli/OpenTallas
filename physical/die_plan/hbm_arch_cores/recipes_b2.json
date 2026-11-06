@@ -3412,5 +3412,41 @@
   "source_commit": "12ad6ca444",
   "read_at_commit": true,
   "util": 0.45
+ },
+ "ot_svgr_bk__vA": {
+  "top": "ot_svgr_bk",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_bk_b12.sv",
+   "rtl/lib/ot_reset_sync.sv"
+  ],
+  "params": {
+   "VARIANT": 0
+  },
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "defines": [],
+  "source": "HBM-B12-SVGRBK vA targeted: head data enable without identity_ok, one-hot replicated FIFO read select, mem write without reset; 0 pin cycles, outputs cycle-identical to B8; bench results/die_hbm_1105/reform_b12/svgr_bk/; replaces the B8 head-register form (ot_svgr_bk, TT -72.95)",
+  "source_commit": "fd2b93da03843e296bd505b48606576f3a189b94",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_svgr_bk__vB": {
+  "top": "ot_svgr_bk",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_bk_b12.sv",
+   "rtl/lib/ot_reset_sync.sv"
+  ],
+  "params": {
+   "VARIANT": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "defines": [],
+  "source": "HBM-B12-SVGRBK vB safe by construction: registered identity check (one packet per 2 stream cycles per landing bank), one-hot FIFO read select, reset sync per landing bank; PIN CYCLES +1 stream_clk on landing write/complete/fault vs B8; bench results/die_hbm_1105/reform_b12/svgr_bk/; replaces the B8 head-register form (ot_svgr_bk, TT -72.95)",
+  "source_commit": "fd2b93da03843e296bd505b48606576f3a189b94",
+  "read_at_commit": true,
+  "util": 0.45
  }
 }
