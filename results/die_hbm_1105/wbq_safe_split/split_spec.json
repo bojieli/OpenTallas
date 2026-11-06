@@ -109,5 +109,10 @@
  "reg_guide_boxes": {
   "u_main": "main_reg_boxes.json",
   "u_out": "out_reg_boxes.json"
- }
+ },
+ "face_pass_contracts": {
+  "u_main": "main_face_pass_contract.json",
+  "u_out": "out_face_pass_contract.json"
+ },
+ "native_contract_rule": "Every selected view replica must have exclusive reciprocal hard-child peers in the SAME parent partition; external or mixed bus targets are rejected."
 }
