@@ -1,0 +1,19 @@
+{
+  "diagnostic_only_source_probe_verdict": "NOT_A_PASS",
+  "first_capture_label": 7272,
+  "first_input_pin_event": 7271,
+  "source_queue_edge": 7152,
+  "source_launch_shift": 3920,
+  "source_lead_from_sealed": 3949,
+  "second_capture_label": 11368,
+  "second_source_queue_edge": 11248,
+  "second_start_gap": 4096,
+  "selected_age": 120,
+  "receiving_start_phase": 0,
+  "legal_input_pin_offset_from_reset20_mod4": 3,
+  "independent_prediction": "Parent message predicted queue7152\u2192capture7272/phase0 before unit527793 ran",
+  "observation": "epyc6 codex-ds-native-repeatprobe-1106/repeat_shift3920.log",
+  "observation_unit": "oth-ubuntu-527793-1793982961",
+  "source_policy": "original35 setup, source firstKS only waits for the measured four-IDLE group-phase window; no DUT/reset/clock/ready/calendar writes",
+  "whole_layer_retirement": false
+}

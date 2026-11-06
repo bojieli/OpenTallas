@@ -1,0 +1,88 @@
+{
+  "verdict": "PASS",
+  "rows": [
+    {
+      "case": "positive",
+      "rc": 0,
+      "expected_outcome": true,
+      "seconds": 4.389561653137207,
+      "command": [
+        "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/obj/Vtb",
+        "+first_book=7272"
+      ],
+      "summary": [
+        "NATIVE_RELOAD_CONFIG_IMAGE_OK slots2 RL804 gaps4096 events8 prefix35 original_native_boot_encoder",
+        "NATIVE_RELOAD_KS_RX job=0 edge=7272 phase=0 word=1094007d001388",
+        "NATIVE_RELOAD_KIT job=0 edge=8076",
+        "NATIVE_RELOAD_SEQ_END job=0 edge=8093",
+        "NATIVE_RELOAD_RETURN_KIT job=0 local=8076 remote=8197 age=121 word=2003e809402710",
+        "NATIVE_RELOAD_KS_RX job=1 edge=11368 phase=0 word=1098007d201389",
+        "NATIVE_RELOAD_KIT job=1 edge=12172",
+        "NATIVE_RELOAD_SEQ_END job=1 edge=12189",
+        "NATIVE_RELOAD_RETURN_KIT job=1 local=12172 remote=12293 age=121 word=2003e909802712",
+        "NATIVE_RELOAD_PASS jobs=2 host=1061 V=252 resets=1 faults=0 external_KIT2 no_layer_retirement_claim=1"
+      ]
+    },
+    {
+      "case": "bad_payload",
+      "rc": 1,
+      "expected_outcome": true,
+      "seconds": 3.3820905685424805,
+      "command": [
+        "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/obj/Vtb",
+        "+first_book=7272",
+        "+bad_payload"
+      ],
+      "summary": [
+        "NATIVE_RELOAD_CONFIG_IMAGE_OK slots2 RL804 gaps4096 events8 prefix35 original_native_boot_encoder",
+        "NATIVE_RELOAD_KS_RX job=0 edge=7272 phase=0 word=1094007d001388",
+        "[6068000000] %Fatal: tb_native_reload.sv:65: Assertion failed in tb.command: NATIVE_RELOAD_COMMAND_PAYLOAD job=0 south=1 index=0 edge=7284 got=000000000000000000000000000000000000000000000000002000a43000000200801 expected=000000000000000000000000000000000000000000000000002000a43400000200801"
+      ]
+    },
+    {
+      "case": "bad_returned_user",
+      "rc": 1,
+      "expected_outcome": true,
+      "seconds": 2.922978162765503,
+      "command": [
+        "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/obj/Vtb",
+        "+first_book=7272",
+        "+bad_kit"
+      ],
+      "summary": [
+        "NATIVE_RELOAD_CONFIG_IMAGE_OK slots2 RL804 gaps4096 events8 prefix35 original_native_boot_encoder",
+        "NATIVE_RELOAD_KS_RX job=0 edge=7272 phase=0 word=1094007d001388",
+        "NATIVE_RELOAD_KIT job=0 edge=8076",
+        "NATIVE_RELOAD_SEQ_END job=0 edge=8093",
+        "[6828000000] %Fatal: tb_native_reload.sv:126: Assertion failed in tb: NATIVE_RELOAD_RETURN_KIT job=0 edge=8197 got=2003e809002710"
+      ]
+    }
+  ],
+  "scope": "actual compiled jobs1+2 through real PMA/LEP\u2192SEQHOST, full54 real KIT return before no-reset reload",
+  "source_book": {
+    "diagnostic_only_source_probe_verdict": "NOT_A_PASS",
+    "first_capture_label": 7272,
+    "first_input_pin_event": 7271,
+    "source_queue_edge": 7152,
+    "source_launch_shift": 3920,
+    "source_lead_from_sealed": 3949,
+    "second_capture_label": 11368,
+    "second_source_queue_edge": 11248,
+    "second_start_gap": 4096,
+    "selected_age": 120,
+    "receiving_start_phase": 0,
+    "legal_input_pin_offset_from_reset20_mod4": 3,
+    "independent_prediction": "Parent message predicted queue7152\u2192capture7272/phase0 before unit527793 ran",
+    "observation": "epyc6 codex-ds-native-repeatprobe-1106/repeat_shift3920.log",
+    "observation_unit": "oth-ubuntu-527793-1793982961",
+    "source_policy": "original35 setup, source firstKS only waits for the measured four-IDLE group-phase window; no DUT/reset/clock/ready/calendar writes",
+    "whole_layer_retirement": false
+  },
+  "bootstrap_words": 35,
+  "extra_MC_replay_adopted": false,
+  "whole_array_simulated": false,
+  "layer_retirement_qualified": false,
+  "current_wc1_adopted": false,
+  "physical_activation": false,
+  "RTL_pin_cycle_delta": 0
+}
