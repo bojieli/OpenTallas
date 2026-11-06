@@ -424,8 +424,19 @@ module ot_hbm_su_static_lane #(
                 assign cs1[2*jj*AW +: AW] = s1 ^ c1;
                 assign cs1[(2*jj+1)*AW +: AW] = (s1 & c1) << 1;
 `else
-                assign cs1[2*jj*AW +: AW] = s1 ^ c1 ^ t3;
-                assign cs1[(2*jj+1)*AW +: AW] = ((s1 & c1) | (s1 & t3) | (c1 & t3)) << 1;
+                if (LDCS >= 2 && HI-LO <= 3) begin : g_three_terms
+                    // The fourth term is zero: retain the first carry-save rows.
+                    // s1+c1 equals the four-term sum modulo 2^AW; no edge changes.
+                    assign cs1[2*jj*AW +: AW] = s1;
+`ifdef LDCS_MUT_PRUNE_CARRY
+                    assign cs1[(2*jj+1)*AW +: AW] = c1 >> 1;
+`else
+                    assign cs1[(2*jj+1)*AW +: AW] = c1;
+`endif
+                end else begin : g_four_terms
+                    assign cs1[2*jj*AW +: AW] = s1 ^ c1 ^ t3;
+                    assign cs1[(2*jj+1)*AW +: AW] = ((s1 & c1) | (s1 & t3) | (c1 & t3)) << 1;
+                end
 `endif
             end
             reg  [6*AW-1:0] p;
