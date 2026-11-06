@@ -12,5 +12,7 @@
   "tile_response": "independent per-DUT actual-command identity, native154edge contract",
   "child_arithmetic_requalification": false,
   "routed_signoff": false,
-  "physical_run_launched": false
+  "physical_run_launched": false,
+  "actual_new_source_gbpf_invariant": "unbounded one-step induction PASS",
+  "actual_new_source_product_xor1_rtl_mutant": "CAUGHT"
 }
