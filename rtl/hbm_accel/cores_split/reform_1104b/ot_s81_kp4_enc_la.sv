@@ -48,13 +48,16 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2) 
     reg        run, flt;
     reg  [3:0] ph;                       // index of the beat arriving at the port
     reg  [7:0] seq;
-    reg  [19:0] h0;                      // header of the frame whose beats are in flight (loaded with beat 0)
+    // h0 = {12'hA5C, seq of the frame in flight}: only the seq part is a register (HBM-GAPS-3 11-05: the constant
+    // part as no-reset flops read X before the first frame; synthesis folded them, kit LEC could not prove them).
+    reg  [7:0]  h0s;                     // seq of the frame whose beats are in flight (loaded with beat 0)
+    wire [19:0] h0 = {12'hA5C, h0s};
     reg  [511:0] d0, d1, d2, d3, d4, d5, d6;     // d6: LA = 2 only (no load at LA = 1)
     wire       st = tx_v || run;         // a beat enters d0 this cycle
     (* keep *) reg [9:0] sk [0:NRC-1];   // one-hot beat index of d0 (zero = no beat), NRC copies
     always @(posedge clk) begin
         d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5;
-        if (st && ph == 4'd0) h0 <= {12'hA5C, seq};
+        if (st && ph == 4'd0) h0s <= seq;
     end
     integer i;
     always @(posedge clk)

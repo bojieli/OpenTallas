@@ -18,8 +18,13 @@
 // t, iterations 1..29 at t + 1 .. t + 29, the result in delta during t + 30 (done = 1) -- the cycle the round robin
 // reloads the unit with the frame 30 cycles later.  The datapath iterates every cycle (no enable); results are read only
 // in the done cycle.  Control copies are kept per PE group (NG groups of <= 12 PEs: <= ~130 loads per copy).
+// THC (opt-in, default 0 = the signed form): theta_45 in its reachable form.  theta_45 is 1 at the load and takes
+// delta_46 = 0 on an update, so after a load it is 0 or 1: with THC = 1 its bits [9:1] are read as constant 0.  Same
+// values from the first load on; before it the unloaded unit's X bits read 0 (no reset there; results are read only
+// in the done cycle after a load).  Synthesis folds those bits anyway; THC = 1 states it in the RTL so the X power-up
+// and the folded netlist agree under equivalence checking (HBM ot_pdie_serdes_rx LEC, th[45][9:1]).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4) (
+module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, parameter integer THC = 0) (
     input  wire            clk,
     input  wire            rs_n,       // regional synchronous reset leaf
     input  wire [NG-1:0]   ld,         // load this cycle (NG identical copies, one per PE group)
@@ -56,7 +61,8 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4) (
         end
         for (gi = gg * GS; gi < ((gg == NG - 1) ? NPE : (gg + 1) * GS); gi = gi + 1) begin : g_pe
             wire [9:0] Dn = ld[gg] ? dinit(gi + 1) : ((gi + 1 < NPE) ? d[(gi + 1 < NPE) ? gi + 1 : 0] : 10'd0);
-            wire [9:0] Th = ld[gg] ? dinit(gi) : th[gi];
+            wire [9:0] thq = (THC != 0 && gi == NPE - 1) ? {9'd0, th[gi][0]} : th[gi];   // THC: theta_45 in {0, 1}
+            wire [9:0] Th = ld[gg] ? dinit(gi) : thq;
             wire [9:0] pa, pb;
             ot_s81_kp4_vmul u_a (.a(G),  .b(Dn), .y(pa));
             ot_s81_kp4_vmul u_b (.a(D0), .b(Th), .y(pb));

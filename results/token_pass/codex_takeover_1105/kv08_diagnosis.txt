@@ -1,0 +1,11 @@
+KV-08 old c47 source diagnosis: pads7/9 alone are NOT a proved bug.
+Two exact clock-landing controls distinguish the origin assumption.
+Forwarded original source origins: unequal pads silently lose witness install; equal9 repairs.
+Actual hgi_WN7 laststage re-origin: both ft17/ft18 cland_fstart use same local cland_start_d (kv3_hgi_v7_part.sv262,264).
+Common-origin plus highroute2 extra cycles (bound_stages79 vs low77): old7/9 installs witness, equal9 fails.
+Therefore retain old pad scheme unless actual fullpath replay contradicts bound ages.
+Exact ring + qkd_program_witness_rx, EP0b0b, digest514bb0b28004c8e8, footer5850463100001046.
+Common-origin result: old_fault0 old_installed1 equal_fault0 equal_installed0 offby1_fault0 offby1_installed0 ringfault00.
+This rules out simplistic CA/R8 double-count diagnosis, not the remaining near witness failure.
+Ready-wait CONTROL epyc6 dkv80dbg/rw: no HOST token, DCal auto-start40051, abort40215, context source unavailable.
+The live kvdbg3 source probe must collect auth program_ready bit80 and token_epoch_valid81 after witness.

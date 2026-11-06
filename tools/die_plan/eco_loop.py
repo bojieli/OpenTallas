@@ -251,9 +251,13 @@ def hold_mm(kit):
 
 
 def stage_so(kit, root, tools=HERE):
-    """SO dir for prd_mk.sh: SO/tools/die_plan = the kit's OWN top-level tool files (its sign-off bundle stays
-    byte-identical in the pass dir) over the current tools, with the current ECO machinery (clock freeze, kit_modes_eco,
-    pg_connect) on top"""
+    """Stage one selected tool cohort, retaining kit-local hooks and inputs.
+
+    Shared Python tools must come from `tools`: old kits can contain a partially
+    refreshed signoff.py whose sdc_lint.py no longer implements its API.  Preserve
+    unique kit scripts and geometry/runner overrides, then bundle the selected
+    sign-off family together (including its Tcl helpers).
+    """
     so = Path(root) / "so"
     dp = so / "tools" / "die_plan"
     dp.mkdir(parents=True, exist_ok=True)
@@ -262,7 +266,11 @@ def stage_so(kit, root, tools=HERE):
             shutil.copy2(p, dp / p.name)
     for p in Path(kit).iterdir():
         if p.is_file() and p.suffix in (".py", ".tcl", ".sh") and p.stat().st_size < (8 << 20):
+            if p.suffix == ".py" and (Path(tools) / p.name).is_file():
+                continue
             shutil.copy2(p, dp / p.name)
+    subprocess.run([sys.executable, "-I", str(Path(tools) / "signoff.py"), "bundle", str(dp)],
+                   check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     for n in ECO_TOOL_FILES:
         shutil.copy2(Path(tools) / n, dp / n)
     for n in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):
