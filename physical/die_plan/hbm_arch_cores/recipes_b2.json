@@ -3412,5 +3412,51 @@
   "source_commit": "12ad6ca444",
   "read_at_commit": true,
   "util": 0.45
+ },
+ "ot_hfd_coll_q3_edge_link": {
+  "top": "ot_hfd_coll_q3_edge_link",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_edge_core/ot_hfd_coll_q3_edge_link.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+   "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+  ],
+  "defines": [
+   "OT_COLL_ISSUER256_NATIVE32",
+   "OT_COLL_LINK_RXPRE"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "util": 0.45,
+  "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe"
+ },
+ "ot_hfd_coll_q3_edge_arg": {
+  "top": "ot_hfd_coll_q3_edge_arg",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_edge_core/ot_hfd_coll_q3_edge_arg.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+   "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+  ],
+  "defines": [
+   "OT_COLL_ISSUER256_NATIVE32",
+   "OT_COLL_LINK_RXPRE"
+  ],
+  "params": {},
+  "macros": [],
+  "util": 0.45,
+  "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe"
  }
 }
