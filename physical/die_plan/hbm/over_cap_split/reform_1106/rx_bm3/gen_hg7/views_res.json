@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.hbm_arch.core_views.v1",
+ "plan": "/srv/opentallas-scratch3/claude/hbm-gaps-7/rxgen/plan/die_plan.json",
+ "plan_sha256": "80ed6e571900f1f5dc0eab590445c10c90d80d2cec43306e252edf57870eab35",
+ "views": 1,
+ "placed": 1,
+ "modules": 1,
+ "no_pins_table": [],
+ "view_list": [
+  {
+   "view": "ot_pdie_serdes_rx_bm3_rest@7826e3baf53d",
+   "module": "ot_pdie_serdes_rx_bm3_rest",
+   "outline_um": [
+    197.856,
+    345.6
+   ],
+   "pins_file": "cores/ot_pdie_serdes_rx_bm3_rest__197.856x345.6__hg7_modelA.json",
+   "pins_sha256": "7826e3baf53d36369f3b1f5c9f476606377013c26f80bbaa7cbe58f80993c28a",
+   "pins": 3214,
+   "family": "LINK",
+   "instances": [
+    "u_lk_rx.g_native.u_rest"
+   ],
+   "placed": 1,
+   "tables_for_module": 1,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_pdie_serdes_rx_bm3_rest"
+   ],
+   "blockers": []
+  }
+ ]
+}
