@@ -25,3 +25,5 @@ CODEX took over ROOT-MERGE-41 on codex/root-merge-1105. Own sparse tree intel2:/
 2026-11-06 00:23: main396c545e5d8==origin. KVsysC68024d70cc5,FREGoption396c545e5d8;tagsaa-head/y-qc/w-kv/aa-s81/ai-hbm. a735activationunmerged pending hard-instance parameter-sealing fix; no wrong route. Collidingcoordnotescleared, retrying journalpush.
 
 2026-11-06 00:33: mainf6e16e0def2==origin; S81-onlytagab-s81. CorrectedIDXad041 includes signedchildpack+selectedfixedparametersealing+M6PG/OBS event;10tests/GEN8/strictlintpass,parentK8physicalpending. Olda735nevermergedalone/K6failurepreserved. HistoricalRXb2c34c68c0 stillunmerged: exactprivate source/proofs nowconfirmed, geometryadoption/rootapprovalpending.
+
+2026-11-06 00:38: main721d9fc1a9b==origin. RecoveredRX READYb2c34c68c0 integrated, scoped aj-hbm. Combined macro manifest conflict resolved on ownbranch8ddb5608b85 preserving currentmain and recomputing payload SHA;9RX-only JSON leaf changes. All13 earlier READY refs now integrated/handled. No remaining approved source merge known.
