@@ -38,3 +38,9 @@ intel1:/srv/opentallas-scratch3/claude/codex-hbm-vms-1105/kits/vms_clockC
 Admitted wrapper: intel2 client3752553,48GB/8threads/disk20, prioritydie.
 Log: intel2:/srv/opentallas-scratch2/claude/codex-hbm-vms-1105/log/clockC.otrun.log
 Status: candidate only; no main merge or adoption until physicalPASS+routedLEC.
+
+Rehome phase correction: original global route reached zero overflow then RSZ-0074
+because repair_design saw only 3677 new routes against a 50010-net fixed seed.
+Use existing SKIP_INCREMENTAL_REPAIR=1 only for this clock-construction baseline.
+No clock-freeze check is relaxed. Ordinary final signoff remains mandatory; any
+subsequent data ECO freezes the new clock topology and retains all normal gates.
