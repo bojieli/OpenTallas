@@ -75,7 +75,9 @@ def script(kit, mount='/work', flatten=None):
                                            # Check the elaborated live design. Dead parameter-disabled cones can
                                            # retain unassigned legacy wires after proc (safe4 PIPE=2); live
                                            # undriven nets still survive opt_clean and fail check -assert.
-                                           'opt_clean'] + ([f'write_json {mount}/rtl_lint_elaborated.json'] if cfg.get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1'] else []) + ['check -assert']) + '\n'
+                                           'opt_clean'] +
+                     ([f'write_json {mount}/kit_assembly_elaborated.json'] if (kit / 'kit_assembly.json').is_file() else []) +
+                     ([f'write_json {mount}/rtl_lint_elaborated.json'] if cfg.get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1'] else []) + ['check -assert']) + '\n'
 
 
 # ---- YOSYS-CONCAT 10-26: reject source forms that the flow's yosys read_verilog -sv (0.68+post, orfs:asap7lock)
@@ -364,6 +366,8 @@ def dead_undriven_only(log):
 def run(kit, yosys='yosys'):
     out = kit / 'rtl_lint.json'
     try:
+        if (kit / 'kit_assembly.json').is_file():
+            (kit / 'kit_assembly_elaborated.json').unlink(missing_ok=True)
         private_mesh = config(kit).get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1']
         if private_mesh:
             import hhp_clock_mesh_role
@@ -400,6 +404,30 @@ def run(kit, yosys='yosys'):
             if native_rc:
                 clock_mesh = hhp_clock_mesh_role.classify_native_clock_conflict(kit, log, native_rc,
                     json.loads((kit / "rtl_lint_elaborated.json").read_text()))
+        assembly_inventory = None
+        manifest = kit / 'kit_assembly.json'
+        if manifest.is_file():
+            # Reuse this frontend's actual elaboration. This is an assembly
+            # diagnostic only; ordinary lint and signoff verdicts stay intact.
+            try:
+                import importlib.util
+                module = importlib.util.spec_from_file_location('_kit_assembly', kit / 'kit_assembly.py')
+                helper = importlib.util.module_from_spec(module)
+                module.loader.exec_module(helper)
+                binding = json.loads(manifest.read_text())
+                children = [dict(inst=b['instance'], master=b['master']) for b in binding['bindings']]
+                elaborated = json.loads((kit / 'kit_assembly_elaborated.json').read_text())
+                assembly_inventory = helper.hierarchy_inventory(elaborated, config(kit)['DESIGN_NAME'][0], children,
+                                                                binding.get('parent_profile'))
+                declared = binding.get('parent_profile', {}).get('parameters', {})
+                actual = config(kit).get('VERILOG_TOP_PARAMS', [])
+                actual = dict(zip(actual[::2], actual[1::2]))
+                for parameter, value in declared.items():
+                    if actual.get(parameter) != str(value):
+                        assembly_inventory['problems'].append(f'parent parameter {parameter} differs from selected profile')
+            except (OSError, ValueError, KeyError, TypeError, ImportError) as error:
+                assembly_inventory = dict(status='NOT RUN', reason=str(error))
+            (kit / 'kit_hierarchy.json').write_text(json.dumps(assembly_inventory, indent=1) + '\n')
         effective_rc = 0 if clock_mesh is not None else native_rc
         cast = yosys_cast_scan(_kit_sources(kit))
         cast_errors = [f'{p}:{ln}: ERROR: {rule} yosys read_verilog -sv mis-elaborates this cast form '
@@ -409,6 +437,7 @@ def run(kit, yosys='yosys'):
         record = dict(verdict='PASS' if effective_rc == 0 and not cast_errors else 'FAIL', rc=effective_rc,
                       mapped_cell_types=len(mapped_cells(_kit_sources(kit))),
                       top_params=config(kit).get('VERILOG_TOP_PARAMS', []),
+                      **({'kit_assembly': assembly_inventory} if assembly_inventory is not None else {}),
                       errors=([] if clock_mesh is not None else re.findall(r'^.*\bERROR:.*$', log, re.M)) + cast_errors, yosys_cast=len(cast_errors),
                       **({'private_clock_mesh': clock_mesh, 'native_check_rc': native_rc,
                           'native_errors': re.findall(r'^.*\bERROR:.*$', log, re.M)} if clock_mesh is not None else {}),

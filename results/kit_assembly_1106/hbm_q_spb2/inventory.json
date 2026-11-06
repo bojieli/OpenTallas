@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.kit_hierarchy.v1",
+  "top": "hbm_arch_q_spb2",
+  "expected": 2,
+  "matched": 2,
+  "problems": [],
+  "hard_instances": [
+    {
+      "instance": "u_bound.u_u_xc_Q2",
+      "master": "ot_hbm_svc_sm_xcal_rel_t"
+    },
+    {
+      "instance": "u_bound.u_u_xc_Q3",
+      "master": "ot_hbm_svc_sm_xcal_rel_t"
+    }
+  ]
+}

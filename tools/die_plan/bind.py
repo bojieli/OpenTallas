@@ -4830,17 +4830,13 @@ def bindf_prefer(out, base):
 
 
 def kit_dedupe(tn, fl):
-    """one file per basename (gen_phys flattens rtl/): identical copies are dropped, different contents are an error."""
-    out, by = [], {}
-    for f in fl:
-        f = Path(f)
-        if f.name in by:
-            if by[f.name].read_bytes() != f.read_bytes():
-                raise BindError(f"kit-rtl {tn}: two different files named {f.name}: {by[f.name]} vs {f}")
-            continue
-        by[f.name] = f
-        out.append(f)
-    return out
+    """Flatten kit sources; identical copies collapse, disjoint module-only collisions get byte-exact aliases."""
+    from kit_assembly import dedupe_sources
+    try:
+        return dedupe_sources(fl, Path(fl[0]).parent / "source_alias") if fl else []
+    except ValueError as exc:
+        raise BindError(f"kit-rtl {tn}: {exc}") from exc
+
 
 
 def kit_native_station_geometry(out, bound_type, bound_text, kit):
