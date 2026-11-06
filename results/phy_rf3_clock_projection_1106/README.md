@@ -1,0 +1,13 @@
+# RF3-only unread PHY clock transport candidate
+
+Status: source/model candidate only. No physical library, plan of record, binder policy, timing exception, or live job was changed.
+
+The actual pre-split source map contains 1,024 FH/RH consumers: 512 front clock inputs and 512 return clock inputs, with no other consumers. The declared RF3 split drops those named clock inputs. All four fixed PCC/PCF regular/head provider interfaces lack them; exact source hashes are sealed in manifest.json. The actual PCF bodies use their declared local ck for these internal clocks. This establishes zero clock-port uses at the declared RF3 provider boundary, not equivalence to the original multi-clock native design.
+
+prepare_model.py checks the actual frozen context and creates an explicit bit projection from the actual base-PHY output station concatenations. It identifies 32 unread clock payload bits across six output buses. All remaining live payload indices and epoch indices retain their order and logical edge; added cycles are zero. Two buses have clock-only payloads and therefore require an epoch-only transport implementation. This file is a candidate interface specification, not a completed canonical packet-emission adapter.
+
+The executable model uses the real frozen qkd_kvs_pcf body and its actual dependency files. Its live interface connections are identical on both sides. The reference also contains the actual canonical unused clock-transport register and epoch behavior; the candidate removes only the unconsumed clock payload registers and preserves that epoch behavior exactly. No clock is tied or reinterpreted as ordinary data, and no PHY internal clock is altered. The external discarded clock waveforms vary independently.
+
+The 260-cycle cold/warm model compared 64,233 known live-output bits, observed all 297 provider output bits and 12,493 transitions, and matched the epoch. Inverting actual output bit 296 was caught at cycle 3 (0 versus 1). This is RF3-interface noninterference/model evidence, not a whole-PHY or whole-die functional proof and not physical signoff.
+
+Remaining before a physical candidate: integrate the explicit RF3 projection with the canonical producer, including epoch-only lanes; verify the exact actual post-split connection graph and transport monitor semantics; prove the resulting actual joined parent live outputs; generate and view the new physical geometry; then one fresh strict trial. Preserve original real forwarded-clock contracts for any raw-native profile that still consumes them. Never register a clock as payload to repair timing or mask its path.
