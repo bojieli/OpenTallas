@@ -1,0 +1,6 @@
+LOCKSTEP PASS checks=435600 toggled_out_bits=387
+- /srv/opentallas-scratch2/claude/hbm-gaps-5-l1p/eq/runs/ldcs_b/tb.sv:226: Verilog $finish
+FAULT_SRC_PULSES f_m1=38 f_m2=45 f_q=87 f_ad=3 f_e1m=35 f_e1a=3 f_e2=96 f_d1=0 f_sfu=0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.248 s; speed 160.992 us/s
+- Verilator: cpu 0.248 s on 1 threads; allocated 7 MB
