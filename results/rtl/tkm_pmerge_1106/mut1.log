@@ -1,0 +1,603 @@
+
+-- Running command `read_verilog -sv gold_helper.sv candidate_helper.sv miter.sv; prep -top miter; flatten; opt; sat -falsify -prove bad_mut1 0 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: gold_helper.sv
+Parsing SystemVerilog input from `gold_helper.sv' to AST representation.
+Generating RTLIL representation for module `\ot_tkm_merge_gold'.
+Warning: Replacing memory \eso with list of registers. See gold_helper.sv:10
+Warning: Replacing memory \et with list of registers. See gold_helper.sv:9, gold_helper.sv:8
+Warning: Replacing memory \es with list of registers. See gold_helper.sv:9, gold_helper.sv:8
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: candidate_helper.sv
+Parsing SystemVerilog input from `candidate_helper.sv' to AST representation.
+Generating RTLIL representation for module `\ot_tkm_merge_parallel'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: miter.sv
+Parsing SystemVerilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\miter'.
+Successfully finished Verilog frontend.
+
+4. Executing PREP pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \ot_tkm_merge_parallel
+Used module:     \ot_tkm_merge_gold
+Parameter \MUT = 2
+
+4.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_tkm_merge_parallel'.
+Parameter \MUT = 2
+Generating RTLIL representation for module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Parameter \MUT = 1
+
+4.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_tkm_merge_parallel'.
+Parameter \MUT = 1
+Generating RTLIL representation for module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+
+4.1.4. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001
+Used module:     \ot_tkm_merge_parallel
+Used module:     \ot_tkm_merge_gold
+
+4.1.5. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001
+Used module:     \ot_tkm_merge_parallel
+Used module:     \ot_tkm_merge_gold
+Removed 0 unused modules.
+Mapping positional arguments of cell miter.mutant2 ($paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010).
+Mapping positional arguments of cell miter.mutant1 ($paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001).
+Mapping positional arguments of cell miter.candidate (ot_tkm_merge_parallel).
+Mapping positional arguments of cell miter.gold (ot_tkm_merge_gold).
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$gold_helper.sv:6$9 in module ot_tkm_merge_gold.
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 35 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~3 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+     1/8: $1\eso[2][85:0]
+     2/8: $1\eso[1][85:0]
+     3/8: $1\merge_sort.t1[1:0]
+     4/8: $1\merge_sort.m1[85:0]
+     5/8: $1\eso[3][85:0]
+     6/8: $1\merge_sort.t0[1:0]
+     7/8: $1\merge_sort.m0[85:0]
+     8/8: $1\eso[0][85:0]
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_tkm_merge_gold.\merge_sort.m0' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\merge_sort.m1' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\merge_sort.t0' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\merge_sort.t1' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\merge_sort.$fordecl_block$1.s' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\es[0]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\es[1]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\es[2]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\es[3]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\et[0]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\et[1]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\et[2]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\et[3]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\eso[0]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\eso[1]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\eso[2]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+No latch inferred for signal `\ot_tkm_merge_gold.\eso[3]' from process `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `\ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+Removing empty process `ot_tkm_merge_gold.$proc$gold_helper.sv:6$9'.
+Cleaned up 3 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+<suppressed ~2 debug messages>
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+Optimizing module miter.
+Optimizing module ot_tkm_merge_parallel.
+Optimizing module ot_tkm_merge_gold.
+
+4.3. Executing FUTURE pass.
+
+4.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+Optimizing module miter.
+Optimizing module ot_tkm_merge_parallel.
+Optimizing module ot_tkm_merge_gold.
+
+4.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module \miter..
+Finding unused cells or wires in module \ot_tkm_merge_parallel..
+Finding unused cells or wires in module \ot_tkm_merge_gold..
+Removed 1 unused cells and 122 unused wires.
+<suppressed ~7 debug messages>
+
+4.6. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001...
+Checking module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010...
+Checking module miter...
+Checking module ot_tkm_merge_parallel...
+Checking module ot_tkm_merge_gold...
+Found and reported 0 problems.
+
+4.7. Executing OPT pass (performing simple optimizations).
+
+4.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+Optimizing module miter.
+Optimizing module ot_tkm_merge_parallel.
+Optimizing module ot_tkm_merge_gold.
+
+4.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Computing hashes of 19 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Computing hashes of 19 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Finding identical cells in module `\miter'.
+Computing hashes of 10 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Finding identical cells in module `\ot_tkm_merge_parallel'.
+Computing hashes of 19 cells of `\ot_tkm_merge_parallel'.
+Finding duplicate cells in `\ot_tkm_merge_parallel'.
+Finding identical cells in module `\ot_tkm_merge_gold'.
+Computing hashes of 17 cells of `\ot_tkm_merge_gold'.
+Finding duplicate cells in `\ot_tkm_merge_gold'.
+Removed a total of 0 cells.
+
+4.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_tkm_merge_parallel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_tkm_merge_gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~76 debug messages>
+
+4.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+  Optimizing cells in module \miter.
+  Optimizing cells in module \ot_tkm_merge_parallel.
+  Optimizing cells in module \ot_tkm_merge_gold.
+Performed a total of 0 changes.
+
+4.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Computing hashes of 19 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Computing hashes of 19 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Computing hashes of 18 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+<suppressed ~3 debug messages>
+Finding identical cells in module `\miter'.
+Computing hashes of 10 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Finding identical cells in module `\ot_tkm_merge_parallel'.
+Computing hashes of 19 cells of `\ot_tkm_merge_parallel'.
+Finding duplicate cells in `\ot_tkm_merge_parallel'.
+Finding identical cells in module `\ot_tkm_merge_gold'.
+Computing hashes of 17 cells of `\ot_tkm_merge_gold'.
+Finding duplicate cells in `\ot_tkm_merge_gold'.
+Removed a total of 1 cells.
+
+4.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module \miter..
+Finding unused cells or wires in module \ot_tkm_merge_parallel..
+Finding unused cells or wires in module \ot_tkm_merge_gold..
+
+4.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+Optimizing module miter.
+Optimizing module ot_tkm_merge_parallel.
+Optimizing module ot_tkm_merge_gold.
+
+4.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_tkm_merge_parallel..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_tkm_merge_gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~68 debug messages>
+
+4.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+  Optimizing cells in module \miter.
+  Optimizing cells in module \ot_tkm_merge_parallel.
+  Optimizing cells in module \ot_tkm_merge_gold.
+Performed a total of 0 changes.
+
+4.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Computing hashes of 19 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Computing hashes of 18 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Finding identical cells in module `\miter'.
+Computing hashes of 10 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Finding identical cells in module `\ot_tkm_merge_parallel'.
+Computing hashes of 19 cells of `\ot_tkm_merge_parallel'.
+Finding duplicate cells in `\ot_tkm_merge_parallel'.
+Finding identical cells in module `\ot_tkm_merge_gold'.
+Computing hashes of 17 cells of `\ot_tkm_merge_gold'.
+Finding duplicate cells in `\ot_tkm_merge_gold'.
+Removed a total of 0 cells.
+
+4.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module \miter..
+Finding unused cells or wires in module \ot_tkm_merge_parallel..
+Finding unused cells or wires in module \ot_tkm_merge_gold..
+
+4.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+Optimizing module miter.
+Optimizing module ot_tkm_merge_parallel.
+Optimizing module ot_tkm_merge_gold.
+
+4.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+4.8. Executing WREDUCE pass (reducing word size of cells).
+
+4.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module \miter..
+Finding unused cells or wires in module \ot_tkm_merge_parallel..
+Finding unused cells or wires in module \ot_tkm_merge_gold..
+
+4.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.11. Executing OPT pass (performing simple optimizations).
+
+4.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+Optimizing module miter.
+Optimizing module ot_tkm_merge_parallel.
+Optimizing module ot_tkm_merge_gold.
+
+4.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Computing hashes of 19 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Computing hashes of 18 cells of `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010'.
+Finding identical cells in module `\miter'.
+Computing hashes of 10 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Finding identical cells in module `\ot_tkm_merge_parallel'.
+Computing hashes of 19 cells of `\ot_tkm_merge_parallel'.
+Finding duplicate cells in `\ot_tkm_merge_parallel'.
+Finding identical cells in module `\ot_tkm_merge_gold'.
+Computing hashes of 17 cells of `\ot_tkm_merge_gold'.
+Finding duplicate cells in `\ot_tkm_merge_gold'.
+Removed a total of 0 cells.
+
+4.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module \miter..
+Finding unused cells or wires in module \ot_tkm_merge_parallel..
+Finding unused cells or wires in module \ot_tkm_merge_gold..
+
+4.11.4. Finished fast OPT passes.
+
+4.12. Executing SORT pass.
+
+4.13. Printing statistics.
+
+=== $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       22 wires
+     1569 wire bits
+       20 public wires
+     1567 public wire bits
+        3 ports
+      696 port bits
+       19 cells
+        6   $ge
+        9   $mux
+        4   $not
+
+=== $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       23 wires
+     1570 wire bits
+       21 public wires
+     1568 public wire bits
+        3 ports
+      696 port bits
+       18 cells
+        6   $ge
+        8   $mux
+        4   $not
+
+=== miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       12 wires
+     2763 wire bits
+        9 public wires
+     1731 public wire bits
+        5 ports
+      355 port bits
+        6 cells
+        3   $reduce_or
+        3   $xor
+        4 submodules
+        1   $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001
+        1   $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010
+        1   ot_tkm_merge_gold
+        1   ot_tkm_merge_parallel
+
+=== ot_tkm_merge_gold ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       40 wires
+     2621 wire bits
+       31 public wires
+     2096 public wire bits
+        3 ports
+      696 port bits
+       17 cells
+        3   $ge
+        8   $mux
+        6   $not
+
+=== ot_tkm_merge_parallel ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       23 wires
+     1570 wire bits
+       21 public wires
+     1568 public wire bits
+        3 ports
+      696 port bits
+       19 cells
+        6   $ge
+        9   $mux
+        4   $not
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+       79 miter
+       19 $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001
+       18 $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010
+       17 ot_tkm_merge_gold
+       19 ot_tkm_merge_parallel
+
+        +----------Count including submodules.
+        | 
+      120 wires
+    10093 wire bits
+      102 public wires
+     8530 public wire bits
+       17 ports
+     3139 port bits
+        - memories
+        - memory bits
+        - processes
+       79 cells
+       21   $ge
+       34   $mux
+       18   $not
+        3   $reduce_or
+        3   $xor
+        4 submodules
+        1   $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001
+        1   $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010
+        1   ot_tkm_merge_gold
+        1   ot_tkm_merge_parallel
+
+4.14. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001...
+Checking module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010...
+Checking module miter...
+Checking module ot_tkm_merge_gold...
+Checking module ot_tkm_merge_parallel...
+Found and reported 0 problems.
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000001.
+Deleting now unused module $paramod\ot_tkm_merge_parallel\MUT=s32'00000000000000000000000000000010.
+Deleting now unused module ot_tkm_merge_gold.
+Deleting now unused module ot_tkm_merge_parallel.
+<suppressed ~4 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 83 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 71 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 57 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~78 debug messages>
+Removed a total of 26 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~68 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 57 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 41 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 39 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 36 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~63 debug messages>
+Removed a total of 21 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 10 unused wires.
+<suppressed ~1 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 36 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 36 cells to SAT database.
+Import proof-constraint: \bad_mut1 = 1'0
+Final proof equation: \bad_mut1 = 1'0
+Import show expression: \entry
+Import show expression: \entry_tag
+
+Solving problem with 13603 variables and 37279 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Signal Name             Dec       Hex                                                                                                                                                                                                                                                                                                                                                         Bin
+  --------------- ----------- ---------                                                   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  \entry                   --        --    00011111011001000110111011011010100000000100000110001011110111110010011011111101001000111101000110010110000000101001110001111010110000111011001111001011111110001110111111000011101101011101100000110001001010000000010000101001010000001111001101110110100100000010111011011001000110111010011101111000010100000100010011000000010000000001000100000000
+  \entry_tag               11         b                                                                                                                                                                                                                                                                                                                                                    00001011
+
+Warnings: 3 unique messages, 3 total
+End of script. Logfile hash: 207391b86b, time: 0.40s, user: 0.38s, system: 0.02s, MEM: 35.59 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 35% 1x sat (0 sec), 22% 7x opt_clean (0 sec), ...
