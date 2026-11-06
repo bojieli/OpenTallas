@@ -177,7 +177,13 @@
     "kv3_pv_v8@1",
     "kv3_pv_v8@7",
     "kv3_pv@1",
-    "kv3_pc_v1__cl4ea58a5c@5"
+    "kv3_pc_v1__cl4ea58a5c@5",
+    "kv3_hgi_v7@6",
+    "kv3_pc_v1__cl4ea58a5c@7",
+    "kv3_pv_v2n@7",
+    "kv3_pv_v3@8",
+    "kv3_pv_v4n@7",
+    "kv3_pv_v8@9"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -392,7 +398,13 @@
     "kv3_hgi@5": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "kv3_hub_Ei@3": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "kv3_io_cor_v1@5": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
-    "kv3_pv_v8@7": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch"
+    "kv3_pv_v8@7": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
+    "kv3_hgi_v7@6": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "kv3_pc_v1__cl4ea58a5c@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "kv3_pv_v2n@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "kv3_pv_v3@8": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "kv3_pv_v4n@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "kv3_pv_v8@9": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730"
    },
    "only_items": [
     "kv3_astk",
@@ -2546,7 +2558,11 @@
     "hd_tile@2",
     "hd_lep0N@6",
     "hd_ctl_n@4",
-    "hd_serdes@2"
+    "hd_serdes@2",
+    "hd_host@2",
+    "hd_lep0N@7",
+    "hd_serdes@3",
+    "hd_st_n4@5"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -2635,7 +2651,12 @@
     "hd_serdes@1": "KW-FIX-8 11-04 I44 rstleaf 84f5a49e989: OT_RESET_LEAF over target is advisory, main f8170b8b778; resume at cts per DIE-HEAD-62",
     "hd_lep0N@6": "KW-FIX-17 16:4x: HEAD tag i-head 8123521c46b carries lepwt d7684eb8b57 (hd_lep0N w_t[0] constant, generator form, equiv PASS); COORD 16:02 (2) fresh hd_lep0N kit on i (a6 queue REJECT FAIL_PREFLOOR stale kit)",
     "hd_ctl_n@4": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
-    "hd_serdes@2": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch"
+    "hd_serdes@2": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
+    "hd_host@2": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "hd_lep0N@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "hd_serdes@3": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "hd_st_n4@5": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "hd_tile@2": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730"
    },
    "gen_hosts": [
     "epyc4"
@@ -4395,7 +4416,8 @@
     "ot_hgi_coll_tkm_m_tp192__root@2",
     "ot_hgi_coll_tkm_m_tp192__root@3",
     "ot_hgi_dma_back_static_vp4_banks_cp@3",
-    "ot_hfd_coll_q2n2_body_core@6"
+    "ot_hfd_coll_q2n2_body_core@6",
+    "ot_hgi_sfu_programme_store_r10@5"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -4484,7 +4506,8 @@
     "ot_hgi_coll_tkm_m_tp192__root@2": "tkm_root cut map 403c855c44e (I20): leaves hold, regenerates",
     "ot_hgi_coll_tkm_m_tp192__root@3": "d44v10 core_macros has root rects (DIE-HBM-63 06:04, COORD 06:00 (7))",
     "ot_hgi_dma_back_static_vp4_banks_cp@3": "KW-FIX-7 11-04: main lec.py on @3 kit copy EQUIVALENT (epyc4 scratch3 kw-fix-6/lec, rc 0); src has the lec fix",
-    "hfd_ep_static@7": "KW-FIX-17 16:5x: holdrr d3132f0ac3f (structural hold stop counts reg2reg only; this kit reg2reg -37 after CTS, port paths past -150) merged in m-hbm; COORD 16:4x hold-stop class kits resume"
+    "hfd_ep_static@7": "KW-FIX-17 16:5x: holdrr d3132f0ac3f (structural hold stop counts reg2reg only; this kit reg2reg -37 after CTS, port paths past -150) merged in m-hbm; COORD 16:4x hold-stop class kits resume",
+    "ot_hgi_sfu_programme_store_r10@5": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
