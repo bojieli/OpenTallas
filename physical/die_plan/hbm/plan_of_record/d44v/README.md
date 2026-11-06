@@ -472,3 +472,5 @@ Event part 37 (DIE-HBM-81, COORD 11-06 11:00 (2)): ot_pdie_serdes_rx (5 instance
 
 Event part 39 (DIE-HBM-81 11-06, G0C class C): q_hub_nw/q_hub_ne u_svg_Q0/Q1 split cores (MX) track_offset y -0.024 -> 0.0 so their M4 pins sit on the type M4 track; clock tap points follow (+0.024); part39_event.json.
 - part 41 (HBM-FORM-SPLIT-13-OPSB 11-06): ot_hgi_sfu_opsb_output banks -> 16 x ot_sram_1r1w_2048x32_m8_r0c0_g32 4x4 (core_macros + recipe OT_OPSB_N32; old form recipe __row256); die_plan/pins/conns/clock/reset unchanged; G0 new 0 gone 0, GEOM 234 -> 234 NEW 0 WORSE 0; results/die_hbm_1106/opsb_n32 (replay_p41.sh, BENCH.txt, p41_opsb_output.png).
+
+Event part 43 (DIE-HBM-82-G0C 11-06, G0C class F street_die_leg): lane stations off the hard cores with the least move: bit-site slots get a real bit site of the stage (smallest worst hop) as regs_um (no cell moves), q_b102 N-edge keep-out stations nudged (ft_nudge.nudge_explicit); station counts unchanged, 0 pin cycles; normal-slot S0 under an abutting core left for a window re-pin; part43_event.json.
