@@ -10,7 +10,8 @@
 module ot_dp_clk_landing #(
     parameter integer W = 1,
     parameter integer SETTLE = 16,
-    parameter bit     WNEG = 0     // S81-RINGHOLD-3 variant (a), opt-in: ring write on the falling fclk edge
+    parameter bit     WNEG = 0,    // S81-RINGHOLD-3: falling forwarded-clock write
+    parameter bit     FREG = 0     // optional rising-fclk input capture: +1 data cycle
 ) (
     input wire fclk,
     input wire clk,
@@ -29,7 +30,19 @@ module ot_dp_clk_landing #(
     reg on;
     wire align = rst_n && !on && (count == CW'(SETTLE));
     wire rv, lap_ok, glo_ok, ghi_ok;
+    wire [W-1:0] d_write;
+    generate if (FREG) begin : g_freg
+        // A sender's rising-edge word is captured at the physical input face.
+        // The free-running write pointer and receiver training are unchanged.
+        ot_dp_landing_input_face #(.W(W)) u_face (.clk(fclk), .d(d), .q(d_write));
+    end else begin : g_nofreg
+        assign d_write = d;
+    end endgenerate
+`ifdef OT_LEGACY_FREG_MUTANT_BYPASS
     wire [RW-1:0] ring_d = {{(RW-W){1'b0}}, d};
+`else
+    wire [RW-1:0] ring_d = {{(RW-W){1'b0}}, d_write};
+`endif
     wire [RW-1:0] ring_q;
     assign q = ring_q[W-1:0];
     reg [2:0] arm;
@@ -71,6 +84,22 @@ module ot_dp_clk_landing #(
         if (W < 1) $fatal(1, "clock landing requires a nonempty bundle");
         if (SETTLE < 8) $fatal(1, "clock landing SETTLE must cover synchronizer fill");
     end
+`endif
+endmodule
+
+// Separate hierarchy gives the capture an independently declared face bank.
+(* keep_hierarchy, keep *)
+module ot_dp_landing_input_face #(parameter integer W = 1) (
+    input wire clk,
+    input wire [W-1:0] d,
+    output reg [W-1:0] q
+);
+`ifdef OT_LEGACY_FREG_MUTANT_FALL
+    always @(negedge clk) q <= d;
+`elsif OT_LEGACY_FREG_MUTANT_BIT
+    always @(posedge clk) q <= d ^ {{(W-1){1'b0}}, 1'b1};
+`else
+    always @(posedge clk) q <= d;
 `endif
 endmodule
 
