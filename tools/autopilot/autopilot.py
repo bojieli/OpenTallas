@@ -43,6 +43,7 @@ import datetime
 import fcntl
 import fnmatch
 import hashlib
+from functools import lru_cache
 import json
 import math
 import os
@@ -1072,17 +1073,16 @@ def launch_unit(unit, logfile, argv):
 
 
 # ------------------------------------------------------------------------------------------------ actions
-def process_uses_kit(argv, path):
-    """A parent staging directory owns its nested kits even when ot-run spills to another host."""
-    path = path.rstrip("/")
-    if re.search(re.escape(path) + r"(?=[/\s]|$)", argv):
-        return True
+@lru_cache(maxsize=4096)
+def process_staging_roots(argv):
+    """Parse each immutable live argv once across the tick's many ownership queries."""
     try:
         words = shlex.split(argv)
     except ValueError:
-        return True  # malformed live client: retain data until it can be identified
+        return None  # malformed live client: retain data until it can be identified
     if not any(w.rsplit("/", 1)[-1] == "ot-run" for w in words):
-        return False
+        return ()
+    roots = []
     for i, word in enumerate(words):
         candidate = None
         if word in ("--dir", "--stage") and i + 1 < len(words):
@@ -1090,22 +1090,29 @@ def process_uses_kit(argv, path):
         elif word.startswith(("--dir=", "--stage=")):
             candidate = word.split("=", 1)[1]
         if candidate and candidate.startswith("/srv/opentallas-scratch") and "/claude/" in candidate:
-            if path.startswith(candidate.rstrip("/") + "/"):
-                return True
-    return False
+            roots.append(candidate.rstrip("/"))
+    return tuple(roots)
+
+
+def process_uses_kit(argv, path):
+    """A parent staging directory owns its nested kits even when ot-run spills to another host."""
+    path = path.rstrip("/")
+    if path in argv and re.search(re.escape(path) + r"(?=[/\s]|$)", argv):
+        return True
+    roots = process_staging_roots(argv)
+    return roots is None or any(path.startswith(root + "/") for root in roots)
 
 
 def hub_procs(path):
     """processes on the hub (ot-run clients, local docker run / run_kit.sh) whose command line names the kit dir
     -> [(pid, elapsed_s)]; ot-run clients always run here, also when the job itself spilled to another host"""
     rc, out, _ = sh(["ps", "-eo", "pid=,etimes=,args="], timeout=60)
-    pat = re.compile(re.escape(path.rstrip("/")) + r"(?=[/\s]|$)")
     me = os.getpid()
     res = []
     for line in out.splitlines():
         f = line.split(None, 2)
-        if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and process_uses_kit(f[2], path) and "autopilot" not in f[2] \
-                and not f[2].startswith(("ssh ", "python3 -I -")):
+        if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and "autopilot" not in f[2] \
+                and not f[2].startswith(("ssh ", "python3 -I -")) and process_uses_kit(f[2], path):
             res.append((int(f[0]), int(f[1])))
     return res
 
@@ -2834,6 +2841,10 @@ def classify_cmd(args):
 
 
 def main(argv=None):
+    operator_args = sys.argv[1:] if argv is None else argv
+    if operator_args[:1] == ["reconcile-wave"]:
+        import wave_reconcile
+        return wave_reconcile.main(operator_args[1:])
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
     t = sp.add_parser("tick")
@@ -2844,6 +2855,7 @@ def main(argv=None):
     c.add_argument("--since", type=float, default=0)
     c.add_argument("--goal", default="route")
     c.add_argument("--exit", type=int, default=None)
+    sp.add_parser("reconcile-wave", help="read-only current-row/terminal-job report and approved recovery suggestions")
     a = ap.parse_args(argv)
     return {"tick": tick, "status": status, "classify": classify_cmd}[a.cmd](a)
 
