@@ -3923,7 +3923,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     rtt = [Path(f).parent / "reset_tree.tcl" for f in rtl_files[:1] if (Path(f).parent / "reset_tree.tcl").is_file()]
     import reset_tree as RT
     if rtt and not native_reset:
-        shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
+        (kd / "reset_tree.tcl").write_text(RT.project_core_paths(rtt[0].read_text(),
+            t.get("hard_cores", []) + t.get("contents", [])))
     elif RT.delivered(P) and not t.get("hard"):
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn),
             native_paths=native_reset["native_paths"] if native_reset else None))

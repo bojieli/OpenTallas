@@ -2035,6 +2035,39 @@ proc rtr_reset_equiv {net parity seen} {
 """
 
 
+def _core_instance_match(names):
+    return " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}"
+                       f" || [string range $n end-[string length {{{x}}}] end] eq {{.{x}}}" for x in names)
+
+
+def project_core_paths(text, contents):
+    """Project only generated core-target predicates onto authoritative physical identities.
+
+    The full reset-context sidecar retains its root, relays, coordinates, depth
+    and connections. A logical target can also match its selected bound path.
+    """
+    paths = {c['inst']: c['physical_inst'] for c in contents
+             if c.get('physical_inst') and c['physical_inst'] != c['inst']}
+    if not paths:
+        return text
+    lines = text.splitlines(keepends=True)
+    target = None
+    for index, line in enumerate(lines):
+        if line.startswith('# Equal-depth reset target for hard core '):
+            name = line.strip().split('hard core ', 1)[1]
+            target = name.rsplit('.', 1)[0]
+        if target not in paths or not line.startswith('foreach i [$ff_blk getInsts]'):
+            continue
+        old = _core_instance_match([target])
+        new = _core_instance_match([target, paths[target]])
+        if 'if {' + new + '}' in line:
+            continue
+        if 'if {' + old + '}' not in line or 'lappend rtr_ci $i' not in line:
+            raise ResetError(f'unknown/conflicting reset sidecar target predicate: {target}')
+        lines[index] = line.replace('if {' + old + '}', 'if {' + new + '}', 1)
+    return ''.join(lines)
+
+
 def tcl_text(T, native_paths=None):
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
@@ -2085,8 +2118,7 @@ def tcl_text(T, native_paths=None):
         # A flat plan core with no physical_inst stays u_bound.<inst> in ODB (QC u_t32, MY tile with no lef in the plan):
         # "." is a hierarchy separator too, and the exactly-one check below still rejects an ambiguous name.
         names = [inst] + ([c["physical_inst"]] if c.get("physical_inst") else [])
-        match = " || ".join(f"$n eq {{{x}}} || [string range $n end-[string length {{{x}}}] end] eq {{/{x}}}"
-                           f" || [string range $n end-[string length {{{x}}}] end] eq {{.{x}}}" for x in names)
+        match = _core_instance_match(names)
         t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
               "set rtr_cn {}; set rtr_ci {}",
               f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",
