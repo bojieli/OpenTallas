@@ -1,0 +1,18 @@
+base ot_hbm_svc_vm_kshare_splitstrap__v8e478a: clock pins hbm_clk io 177.096, stream_clk io 177.192; table hbm_clk 177.576, stream_clk 177.192; MISMATCH 1
+new  ot_hbm_svc_vm_kshare_splitstrap__v8e478a: clock pins hbm_clk io 177.576, stream_clk io 177.192; table hbm_clk 177.576, stream_clk 177.192; MATCH
+     io.tcl pins changed base->new: ['hbm_clk'] (of 7343)
+base ot_hbm_svc_vm_kshare_splitstrap__v700685: clock pins hbm_clk io 177.096, stream_clk io 177.192; table hbm_clk 177.096, stream_clk 177.480; MISMATCH 1
+new  ot_hbm_svc_vm_kshare_splitstrap__v700685: clock pins hbm_clk io 177.096, stream_clk io 177.480; table hbm_clk 177.096, stream_clk 177.480; MATCH
+     io.tcl pins changed base->new: ['stream_clk'] (of 7343)
+base ot_hgi_sm_xload_cl2_ctlx: clock pins clk io 194.424, clk_cal io 194.520; table clk 194.424, clk_cal 194.808; MISMATCH 1
+new  ot_hgi_sm_xload_cl2_ctlx: clock pins clk io 194.424, clk_cal io 194.808; table clk 194.424, clk_cal 194.808; MATCH
+     io.tcl pins changed base->new: ['clk_cal'] (of 5782)
+base ot_svgr_bk: clock pins hbm_clk io 21.624, stream_clk io 21.720; table hbm_clk 21.624, stream_clk 22.008; MISMATCH 1
+new  ot_svgr_bk: clock pins hbm_clk io 21.624, stream_clk io 22.008; table hbm_clk 21.624, stream_clk 22.008; MATCH
+     io.tcl pins changed base->new: ['stream_clk'] (of 2255)
+base ot_wbq_root: clock pins fifo_clk io 216.024, hbm_clk io 216.120; table fifo_clk 216.024, hbm_clk 216.216; MISMATCH 1
+new  ot_wbq_root: clock pins fifo_clk io 216.024, hbm_clk io 216.216; table fifo_clk 216.024, hbm_clk 216.216; MATCH
+     io.tcl pins changed base->new: ['hbm_clk'] (of 2689)
+base ot_wbq_sw: clock pins hbm_clk io 43.224, stream_clk io 43.320; table hbm_clk 43.224, stream_clk 43.608; MISMATCH 1
+new  ot_wbq_sw: clock pins hbm_clk io 43.224, stream_clk io 43.608; table hbm_clk 43.224, stream_clk 43.608; MATCH
+     io.tcl pins changed base->new: ['stream_clk'] (of 7352)
