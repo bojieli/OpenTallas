@@ -24,14 +24,16 @@ O=W/'top_obj';hm=O/'Vtb_s81_die_hier.mk'
 if hm.exists():(W/'top_hier_generated.mk').write_bytes(hm.read_bytes())
 hm.write_text('# Frozen392 child libraries and three owned replacements are linked as DSOs.\nVM_HIER_LIBS :=\n')
 assert (O/'Vtb_s81_die__main.cpp').is_file()
-q=run(['make','-C',str(O),'-f','Vtb_s81_die.mk','-j2','VM_HIER_LIBS=','Vtb_s81_die__ALL.a','Vtb_s81_die__main.o','verilated.o','verilated_dpi.o','verilated_timing.o','verilated_threads.o'],'top_make')
+q=run(['make','-C',str(O),'-f','Vtb_s81_die.mk','-j2','VM_HIER_LIBS=','Vtb_s81_die__ALL.a','verilated.o','verilated_dpi.o','verilated_timing.o','verilated_threads.o'],'top_make')
 if q:raise SystemExit(q)
 old=Path('/srv/opentallas-scratch2/claude/codex-ds-link-1105/so');new={Path(x['shared']).name:Path(x['shared']) for x in rows};libs=[new.get(p.name,p) for p in sorted(old.glob('*.so'))];assert len(libs)==395 and sum(p.parent==old for p in libs)==392
 (W/'selected_shared.json').write_text(json.dumps(list(map(str,libs)),indent=2)+'\n')
-q=run(['g++','-rdynamic','-Wl,--no-as-needed','-Wl,-rpath,'+str(W/'so')+':'+str(old),'-o',str(W/'Vtb_s81_die')]+list(map(str,sorted(O.glob('*.o'))))+list(map(str,libs))+['-pthread','-lpthread','-latomic'],'top_link')
+q=run(['g++','-rdynamic','-Wl,--no-as-needed','-Wl,-rpath,'+str(W/'so')+':'+str(old),'-o',str(W/'Vtb_s81_die')]+list(map(str,[x for x in sorted(O.glob('*.o')) if x.name!='Vtb_s81_die__main.o']))+list(map(str,libs))+['-pthread','-lpthread','-latomic'],'top_link')
 if q:raise SystemExit(q)
 q=run(['ldd','-r',str(W/'Vtb_s81_die')],'top_loader')
 if q:raise SystemExit(q)
 s=Path('/srv/opentallas-scratch2/claude/codex-ds-native-ks833-1106/run_native_diag.py').read_text().replace('/srv/opentallas-scratch2/claude/codex-ds-native-ks833-1106',str(W)).replace("W/'a3_link.rc'","W/'top_link.rc'").replace('11-01 pinned source, bounded native KS pad-to-first-dispatch diagnostic','11-01 pinned source with receipt-selected LP origin candidate, bounded native KS pad-to-first-dispatch diagnostic').replace('rtl_changed=False','rtl_changed=True')
+s=s.replace("cmd=['/usr/bin/time'", "cmd=['/usr/bin/stdbuf','-oL','-eL','/usr/bin/time'").replace('cycles=11000','cycles_budget=11000')
+s+='\nout["first_dispatch_stop"]=re.findall(r"^NATIVE_FIRST_DISPATCH_STOP first=(\\d+) finish=(\\d+)",s,re.M)\nout["fault_details"]=re.findall(r"^.*(?:FAULT|%Error|THOST.*fault 1).*$",s,re.M)\n(R/"result.json").write_text(json.dumps(out,indent=2)+"\\n")\nraise SystemExit(0 if ok else 1)\n'
 (W/'run_native_diag.py').write_text(s)
 q=run(['python3','-I',str(W/'run_native_diag.py')],'diagnostic_driver');raise SystemExit(q)
