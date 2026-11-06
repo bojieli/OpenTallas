@@ -1,0 +1,49 @@
+{
+  "source_commit": "dc98564b80a",
+  "default_LA1": {
+    "words": 3981,
+    "mismatches": 0
+  },
+  "default_LA2": {
+    "words": 3980,
+    "mismatches": 0
+  },
+  "FF_continuous": {
+    "words": 4979,
+    "parity_words": 497,
+    "mismatches": 0
+  },
+  "FF_stall_reset": {
+    "words": 4952,
+    "parity_words": 494,
+    "epochs": 2,
+    "mismatches": 0
+  },
+  "native_PMA_wrapper": {
+    "words": 3914,
+    "mismatches": 0
+  },
+  "mutants": {
+    "1": {
+      "caught": true,
+      "words": 1179,
+      "mismatches": 117
+    },
+    "2": {
+      "caught": true,
+      "words": 1179,
+      "mismatches": 117
+    },
+    "3": {
+      "caught": true,
+      "words": 1179,
+      "mismatches": 117
+    }
+  },
+  "data_extra_edges_vs_LA2": 1,
+  "valid_extra_edges_vs_LA2": 1,
+  "fault_extra_edges": 0,
+  "PMA_throughput_words_per_edge": 1,
+  "candidate_netlist_LEC": "NOT RUN: standalone admission awaits old-LEC measurement",
+  "candidate_placement_route": "NOT RUN: parent source/geometry adoption and generated-image review required"
+}

@@ -1,0 +1,61 @@
+{
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_ff_ps": 202.5,
+ "insertion_tol_ps": 40.0,
+ "clock_ports": [
+  "clk",
+  "clk_t1",
+  "clk_t2",
+  "clk_t3",
+  "clk_t4",
+  "clk_t5",
+  "clk_t6",
+  "clk_t7",
+  "clk_t8",
+  "pma_rck"
+ ],
+ "inputs": [
+  "arst_n",
+  "cfg_i",
+  "fx_i",
+  "fr_i"
+ ],
+ "outputs": [
+  "cfg_o",
+  "fx_o",
+  "fr_o",
+  "pma_tx"
+ ],
+ "unc_setup_ps": 0.0,
+ "unc_hold_ps": 25.0,
+ "time_unit_ps": 1.0,
+ "io_floor_ps": {
+  "cfg_i": 166.60000000000002,
+  "cfg_o": 166.60000000000002,
+  "fx_i": 766.36,
+  "fx_o": 66.64,
+  "fr_i": 766.36,
+  "fr_o": 66.64,
+  "arst_n": 166.60000000000002,
+  "pma_tx": 166.60000000000002
+ },
+ "port_latency_ps": {},
+ "port_period_mult": {},
+ "pad_clock_inputs": {
+  "pma_rck": 1250
+ },
+ "pad_clock_outputs": {
+  "pma_tck": {
+   "source_clock_port": "clk",
+   "period_ps": 833
+  }
+ },
+ "pad_clock_data_outputs": {
+  "pma_tx": {
+   "clock": "pma_tck",
+   "max_ps": 166.6,
+   "min_ps": 0
+  }
+ }
+}

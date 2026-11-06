@@ -1,0 +1,42 @@
+PHASE op=0 first_output=48
+SU_LANE ERROR op=0 cycle=48 word=0 got=00000000 want=bf40346e
+SU_LANE ERROR op=0 cycle=49 word=1 got=00000000 want=bf38346e
+SU_LANE ERROR op=0 cycle=175 SRAM commit readback
+SU_LANE ERROR op=0 cycle=175 SRAM commit readback
+PHASE op=1 first_output=48
+SU_LANE ERROR op=1 cycle=48 word=0 got=3fe4f97f want=3ec0346e
+SU_LANE ERROR op=1 cycle=49 word=1 got=3fe4f97f want=3eacb127
+SU_LANE ERROR op=1 cycle=175 SRAM commit readback
+SU_LANE ERROR op=1 cycle=175 SRAM commit readback
+PHASE op=2 first_output=48
+PHASE op=3 first_output=48
+PHASE op=4 first_output=48
+PHASE op=5 first_output=48
+PHASE op=6 first_output=48
+PHASE op=7 first_output=48
+PHASE op=8 first_output=48
+PHASE op=9 first_output=48
+PHASE op=10 first_output=48
+PHASE op=11 first_output=48
+PHASE op=12 first_output=48
+PHASE op=13 first_output=48
+PHASE op=14 first_output=48
+PHASE op=15 first_output=48
+PHASE op=16 first_output=48
+PHASE op=17 first_output=48
+PHASE op=18 first_output=48
+PHASE op=19 first_output=48
+PHASE op=20 first_output=48
+PHASE op=21 first_output=48
+PHASE op=22 first_output=48
+PHASE op=23 first_output=48
+PHASE op=24 first_output=48
+PHASE op=25 first_output=48
+PHASE op=26 first_output=48
+PHASE op=27 first_output=48
+PHASE op=28 first_output=48
+PHASE op=29 first_output=48
+PHASE op=30 first_output=48
+[81200000] %Fatal: tb_local_enable.sv:146: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=120 outputs=1984
+%Error: /srv/opentallas-scratch2/claude/codex-hbm-su-opf4-1106/tb_local_enable.sv:146: Verilog $stop
+Aborting...

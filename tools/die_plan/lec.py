@@ -5550,6 +5550,47 @@ def _same_reading_self(a, b, k, c):
     return (a ^ b) <= two and bool(a & two) == bool(b & two)
 
 
+def anchored_word_proposals(L, log, cap=32):
+    """Propose merged siblings after a narrowed word acquires a late cross-side anchor.
+
+    Called only at a proved correspondence fixpoint. The normal reset filter and
+    next induction round check every proposal; grouping by a word is only search.
+    """
+    anchors = anchored(L) - set(L.matched)
+    groups = collections.defaultdict(list)
+    for key in L.gp:
+        indexed = IDX.match(key)
+        if key.startswith("ff:") and indexed:
+            indices = tuple(int(v) for v in re.findall(r"\d+", indexed[2]))
+            groups[(indexed[1], indices[:-1])].append(key)
+    proposed = {}
+    for keys in groups.values():
+        if len(keys) > cap:
+            continue
+        representatives = [key for key in keys if key in anchors and ("gold", key) not in L.hyp]
+        if len(representatives) != 1:
+            continue
+        representative = representatives[0]
+        for key in keys:
+            if key != representative and key in L.gonly and ("gold", key) not in L.hyp:
+                L.hyp[("gold", key)] = ("eq", "gold", representative, 0)
+                proposed[key] = representative
+    if not proposed:
+        return {}
+    # Simulation filters proposals cheaply; only joint induction proves them.
+    model, _ = L.build(with_compare=False, with_hyp=True)
+    values, mask = model.simulate(4, seed=2891)
+    kept = {}
+    for key, representative in proposed.items():
+        if lit_val(values, mask, L.dlit[("gold", key)]) == \
+                lit_val(values, mask, L.dlit[("gold", representative)]):
+            kept[key] = representative
+        else:
+            L.hyp.pop(("gold", key), None)
+    log.append(f"anchored word siblings: {len(kept)} candidates after simulation; joint proof required")
+    return kept
+
+
 def merged_proposals(L, log, cap=4096):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
@@ -6142,6 +6183,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 continue     # prove the new surviving relations before returning
             if structural_twin_closure(L, log) and surviving_change():
                 continue     # rejected constants must not starve the twin closure
+            if anchored_word_proposals(L, log) and surviving_change():
+                continue     # late proved cross-side anchors can expose merged word siblings
             if traces is None:
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":

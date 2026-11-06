@@ -1144,6 +1144,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
         "required": ["port", "max_ps", "min_ps", "evidence"], "properties": {
             "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name}}}
+# Output pad data uses the real exported PHY clock, retaining explicit budgets.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_outputs"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+        "required": ["port", "max_ps", "min_ps", "evidence"], "properties": {
+            "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name}}}
 # FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15): a forwarded clock output leaves through ONE dedicated buffer at its source tap
 # (landing_contract.export_tcl "fwd_buffer", the DEFAULT since AUTOBUILD-PIPE-3 10-31), not tied onto the clk root net;
 # explicit "tie" = legacy text (TritonCTS CTS-0114 on any kit with the generated export clock).

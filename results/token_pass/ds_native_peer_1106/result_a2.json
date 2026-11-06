@@ -1,0 +1,16 @@
+[
+  {
+    "label": "wire_correct",
+    "BAD": 0,
+    "rc": 0,
+    "correct": true,
+    "diagnosis": "PMA_HOST_PASS words514=12 valid_andKS53_exact=1 edge=625"
+  },
+  {
+    "label": "wire_oldprofile",
+    "BAD": 1,
+    "rc": 1,
+    "correct": true,
+    "diagnosis": "[2145000000] %Fatal: tb_legal_status_a2.sv:41: Assertion failed in tb.setup: PMA_HOST_TIMEOUT BAD=1 tx=0 rx=0 ks=0 remote=00000000000000000000 peer_fault=00 lanes=0/0 lep=0"
+  }
+]
