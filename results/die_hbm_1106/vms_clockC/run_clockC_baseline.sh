@@ -20,6 +20,10 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$NUM_CORES" do-finish > /work/clockC_finish.log 2>&1
   rc=$?
  fi
+ if [ "$rc" = 0 ]; then
+  make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$NUM_CORES" do-generate_abstract > /work/clockC_abstract.log 2>&1
+  rc=$?
+ fi
  chown -R 1000:1000 /work
  exit "$rc"
  '
