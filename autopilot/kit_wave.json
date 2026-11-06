@@ -185,7 +185,12 @@
     "kv3_pv_v4n@7",
     "kv3_pv_v8@9",
     "kv3_pc_v1__cl4ea58a5c@9",
-    "kv3_pv_v5n@6"
+    "kv3_pv_v5n@6",
+    "kv3_pc__cl254f2e73@2",
+    "kv3_pc__cl5a95b461@2",
+    "kv3_pc_v3@2",
+    "kv3_pc_v1__cl23f6a148@5",
+    "kv3_pc_v1__cl7f648944@5"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -236,8 +241,6 @@
     "kv3_hroot": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
     "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
-    "kv3_pc_v1__cl23f6a148": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
-    "kv3_pc_v1__cl7f648944": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
     "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-wave-1105/runs/qwen_kvsys/kit-wave",
@@ -407,7 +410,12 @@
     "kv3_pv_v4n@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "kv3_pv_v8@9": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "kv3_pc_v1__cl4ea58a5c@9": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
-    "kv3_pv_v5n@6": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6"
+    "kv3_pv_v5n@6": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
+    "kv3_pc__cl254f2e73@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc__cl5a95b461@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc_v3@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc_v1__cl23f6a148@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc_v1__cl7f648944@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11."
    },
    "only_items": [
     "kv3_astk",
