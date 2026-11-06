@@ -1291,8 +1291,14 @@ def main():
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]
     assert mod == hc["module"], (mod, hc["module"])
+    hcb = []
     if spec.get("children"):
-        raise SystemExit(hard_children_refusal(mod, spec, REPO))
+        if not rec.get("hard_children"):
+            raise SystemExit(hard_children_refusal(mod, spec, REPO))
+        from signed_children import prepare_hard_children
+        spec, hcb = prepare_hard_children(spec, rec["hard_children"], REPO,
+                                         hc["outline_um"], rec.get("core_margin", CORE_MARGIN_UM))
+    hard_masters = {c["master"] for c in hcb}
     mr = multi_root_contract(mod, spec, rec)   # None (single root) or the declared multi-root contract; refuses else
     # S81-CORE-LAT-R21 (COORD R20 ruling (e)): a multi-root core takes a master slice only in the multi-root form
     # (clock_entries[], one entry per root pin, master_slice.py); kit_apply refuses the single-entry form and any
@@ -1374,19 +1380,26 @@ def main():
         ph = (float(mm.group(1)) + float(mm.group(2))) / 2 if mm else 0.012
         for _ in range(int(m.get("count") or 1)):
             idx = len(mplace.setdefault(master, []))
-            if master in sites:
+            if master in hard_masters:
+                x, y = m["at"]
+                o = m.get("orient", "R0")
+            elif master in sites:
                 x, y, o = sites[master][idx]
             else:
                 x, y = m["at"]
                 o = m.get("orient", "R0")
                 y = round(round((y + ph - 0.012) / 0.048) * 0.048 + 0.012 - ph, 4)
             k = (y + ph - 0.012) / 0.048
-            if abs(k - round(k)) > 1e-3:
+            if master not in hard_masters and abs(k - round(k)) > 1e-3:
                 raise SystemExit(f"{master}: site y {y} off the M4 track phase")
             m_ = rec.get("core_margin", CORE_MARGIN_UM)
             if not (x >= m_ and y >= m_ and x + mw <= w - m_ and y + mh <= h - m_):
                 raise SystemExit(f"{master}: site {x},{y} ({mw}x{mh}) outside the core area of {w}x{h}")
             mplace[master].append((x, y, o))
+    if hcb:
+        from signed_children import strip_native_children
+        strip_native_children(kd / "rtl", hard_masters)
+
     # pins: exact plan centres + plan shapes, on the kit tracks
     m6_off = m6_pin_grant(pins, hc, plan)
     # DIE-S81-52/RF-H 11-03: recipe route_m6 = signal routing up to M6 inside a plan grant obs_max >= M6, no M6 pin (ROM walls block M1-M4)
@@ -1809,6 +1822,10 @@ def main():
                       **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
     planned_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    if hcb:
+        from signed_children import hard_children_tcl
+        with (kd / "macro_place.tcl").open("a") as f:
+            f.write(hard_children_tcl(hcb))
     tm = (timing_modes_stage(kd, rec.get("two_mode"))
           if rec.get("two_mode") or (rec.get("two_mode") is None and modern) else None)   # FLOW-20: default-on (modern kits)
     reset_contract = stage_reset_contract(kd, mod)
@@ -1834,6 +1851,7 @@ def main():
               + (["LEC EQUIVALENT (post-synth)", "reg_fanout (post-synth)", "TT/FF insertion (GRT, before route)"] if modern else []) + ["pin_audit", "signoff.py tt,ff"], repo_rev=rev,
               sdc_lint_sha256=sha(TOOL / "sdc_lint.py"), face_guard_sha256=sha(TOOL / "face_guard.py"),
               signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace,
+              **({"hard_children": hcb} if hcb else {}),
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
                            for f, pt in patches.items()], kit_hash=kit_hash(kd))
     if ms is not None:
