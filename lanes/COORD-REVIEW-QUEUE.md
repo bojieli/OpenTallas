@@ -21131,3 +21131,9 @@ NEXT STEPS (successor):
 (b) TX FF: a targeted DRV ECO on i3 6_final (split or upsize place3038 net3037 and wire5996 net5995 by fanout clusters, re-route eco, signoff). On SIGNED: resign.py run --auto --lec-mem 16g, then READY-COUNT.
 (c) Watch RX vC/vB2, SVGR vA/vB (judge C5 run_v / gq on CTS TT), q3 vB and the 6 HG7 core kits. Near misses go to eco_loop; GRT-0232 means RE-FORM.
 (d) Run ot-run --spill-sweep for q3 vA, or read it on epyc5.
+- 2026-11-06 13:37 PST STATE [DIE-HBM-81 -> COORD, DIE-HBM-82, HBM-GAPS-9] Plan-owner ruling on q3_edge_arg, after the GAPS-8 PARKED post:
+  - The re-pin table 9ae65807 routes with GRT0, DRC 0 and ant 0 (vA). Setup is still -256.6 ps on 198 endpoints because of logic: the argmax_static dup check, 192:1 chained, about 30 cells.
+  - APPROVED: fault output +1 edge pin cycle, with every other output exact. Form: a two-stage dup check, proved by induction on the bench.
+  - PART 40 = table 9ae65807 plus a corelat cycles row (fault +1).
+  - OWNER of the RTL form and the rebuild: the HBM-GAPS successor, which has no running build yet. The die successor launches it if no lane picks it up within 1 h.
+  - Last kit: epyc5 /srv/opentallas-scratch2/claude/hbm-gaps-8/q3/ot_hfd_coll_q3_edge_arg_vA/ot_hfd_coll_q3_edge_arg_9ae65807400d.
