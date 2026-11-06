@@ -1,0 +1,125 @@
+{
+  "schema": "q2nf.linkstore_family.v1",
+  "enabled_by_default": false,
+  "original_source": "rtl/hbm_accel/cores_split/reform_1105b/ot_q2nf_rest.sv",
+  "source_commit": "c009441731c50f29d09a0916a9aecd15804493ea",
+  "source_sha256": "3aef68cfb13cd57983e7d1b2c554fd7eeee88382a1b0cf286e59cdca210a3b08",
+  "source_defines": [
+    "OT_Q2NF_TGTQ1"
+  ],
+  "generated_source": "rtl/hbm_accel/cores_split/reform_1106/ot_q2nf_linkstores.sv",
+  "parent_module": "ot_q2nf_linkstore_parent",
+  "parent_outline_um": [
+    786.24,
+    622.08
+  ],
+  "extra_cycles": 0,
+  "members": {
+    "link0": {
+      "origin_um": [
+        34.56,
+        172.8
+      ],
+      "outline_um": [
+        224.64,
+        414.72
+      ],
+      "macro_count": 4,
+      "macro_area_um2": 53293.86316800001,
+      "nominal_free_area_um2": 39868.837631999995,
+      "nominal_cell_area_capacity_45": 17940.976934399998,
+      "module": "ot_q2nf_linkstore0",
+      "parent_instance": "ot_q2nf_rest_g_linkstore0",
+      "mapped_standard_cells": 21211,
+      "mapped_standard_cell_area_um2": 3443.12532,
+      "actual_placed_standard_cells": null,
+      "original_parent_clock_items": {
+        "clk_link[1]": 587,
+        "clk_link[2]": 587,
+        "clk_link[3]": 587,
+        "clk_link[4]": 587,
+        "clk_link[0]": 3303
+      }
+    },
+    "rest_control": {
+      "origin_um": [
+        280.8,
+        8.64
+      ],
+      "outline_um": [
+        224.64,
+        606.96
+      ],
+      "macro_count": 11,
+      "macro_area_um2": 48493.44633600003,
+      "nominal_free_area_um2": 87854.04806399997,
+      "nominal_cell_area_capacity_45": 39534.32162879999,
+      "module": "ot_q2nf_control",
+      "parent_instance": "ot_q2nf_rest_rest_control",
+      "mapped_standard_cells": 85672,
+      "mapped_standard_cell_area_um2": 13490.71362,
+      "actual_placed_standard_cells": null,
+      "original_parent_clock_items": {
+        "clk_reduce": 32,
+        "clk_issue": 7309,
+        "clk_qslots[9]": 30,
+        "clk_link[0]": 612,
+        "clk_link[5]": 612,
+        "clk_control": 18933,
+        "clk_program": 2681,
+        "clk_upipe[0]": 192,
+        "clk_upipe[10]": 96,
+        "clk_upipe[11]": 96,
+        "clk_upipe[12]": 96,
+        "clk_upipe[13]": 96,
+        "clk_upipe[14]": 96,
+        "clk_upipe[15]": 192,
+        "clk_upipe[1]": 96,
+        "clk_upipe[2]": 96,
+        "clk_upipe[3]": 192,
+        "clk_upipe[4]": 192,
+        "clk_upipe[5]": 96,
+        "clk_upipe[6]": 192,
+        "clk_upipe[7]": 192,
+        "clk_upipe[8]": 96,
+        "clk_upipe[9]": 96,
+        "clk_qslots[0]": 3,
+        "clk_qslots[1]": 3,
+        "clk_qslots[2]": 3,
+        "clk_qslots[3]": 3,
+        "clk_qslots[4]": 3,
+        "clk_qslots[5]": 3,
+        "clk_qslots[6]": 3,
+        "clk_qslots[7]": 3,
+        "clk_qslots[8]": 3
+      }
+    },
+    "link1": {
+      "origin_um": [
+        527.04,
+        172.8
+      ],
+      "outline_um": [
+        224.64,
+        414.72
+      ],
+      "macro_count": 4,
+      "macro_area_um2": 53293.86316800001,
+      "nominal_free_area_um2": 39868.837631999995,
+      "nominal_cell_area_capacity_45": 17940.976934399998,
+      "module": "ot_q2nf_linkstore1",
+      "parent_instance": "ot_q2nf_rest_g_linkstore1",
+      "mapped_standard_cells": 21216,
+      "mapped_standard_cell_area_um2": 3445.89552,
+      "actual_placed_standard_cells": null,
+      "original_parent_clock_items": {
+        "clk_link[6]": 587,
+        "clk_link[7]": 587,
+        "clk_link[8]": 587,
+        "clk_link[9]": 587,
+        "clk_link[5]": 3303
+      }
+    }
+  },
+  "activation": "not activated; actual native R2 hard-child binding/PG/pin ownership before P&R"
+}

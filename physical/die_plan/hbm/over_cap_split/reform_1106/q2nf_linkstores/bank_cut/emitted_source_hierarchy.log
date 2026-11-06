@@ -1,0 +1,178 @@
+
+-- Running command `read_json actual_sram_bbs.json; read_verilog -sv ot_q2nf_linkstores.sv; hierarchy -check -top ot_q2nf_linkstore_parent; stat' --
+
+1. Executing JSON frontend.
+Importing module ot_sram_1rw_256x64_m4_r2c2 from JSON tree.
+Importing module ot_sram_1r1w_64x512_m1_r2c2 from JSON tree.
+Importing module ot_sram_1r1w_256x256_m2_r2c2 from JSON tree.
+
+2. Executing Verilog-2005 frontend: ot_q2nf_linkstores.sv
+Parsing SystemVerilog input from `ot_q2nf_linkstores.sv' to AST representation.
+Generating RTLIL representation for module `\ot_q2nf_control'.
+Generating RTLIL representation for module `\ot_q2nf_linkstore0'.
+Generating RTLIL representation for module `\ot_q2nf_linkstore1'.
+Generating RTLIL representation for module `\ot_q2nf_linkstore_parent'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_q2nf_linkstore_parent
+Used module:     \ot_q2nf_control
+Used module:     \ot_q2nf_linkstore1
+Used module:     \ot_q2nf_linkstore0
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_q2nf_linkstore_parent
+Used module:     \ot_q2nf_control
+Used module:     \ot_q2nf_linkstore1
+Used module:     \ot_q2nf_linkstore0
+Removed 0 unused modules.
+
+4. Printing statistics.
+
+=== ot_q2nf_linkstore_parent ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    18609 wires
+    24763 wire bits
+    18609 public wires
+    24763 public wire bits
+       68 ports
+     6222 port bits
+        3 submodules
+        1   ot_q2nf_control
+        1   ot_q2nf_linkstore0
+        1   ot_q2nf_linkstore1
+
+=== ot_q2nf_linkstore1 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     6210 wires
+    11933 wire bits
+     6142 public wires
+     8445 public wire bits
+     1139 ports
+     1142 port bits
+       44 processes
+       28 cells
+        8   $eq
+        8   $logic_and
+        8   $mux
+        4   ot_sram_1r1w_64x512_m1_r2c2
+
+=== ot_q2nf_linkstore0 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     6210 wires
+    11933 wire bits
+     6142 public wires
+     8445 public wire bits
+     1139 ports
+     1142 port bits
+       44 processes
+       28 cells
+        8   $eq
+        8   $logic_and
+        8   $mux
+        4   ot_sram_1r1w_64x512_m1_r2c2
+
+=== ot_q2nf_control ===
+
+        +----------Local Count, excluding submodules.
+        | 
+   108437 wires
+   246559 wire bits
+    98269 public wires
+   146892 public wire bits
+     2344 ports
+     8490 port bits
+     1074 processes
+     9105 cells
+      179   $add
+     3999   $and
+        2   $div
+      111   $eq
+       12   $ge
+        3   $gt
+        2   $le
+      284   $logic_and
+      488   $logic_not
+      142   $logic_or
+       19   $lt
+        2   $mod
+       35   $mul
+     1184   $mux
+       49   $ne
+       28   $neg
+       24   $nex
+       69   $not
+     2175   $or
+       38   $reduce_or
+      128   $reduce_xor
+       42   $shiftx
+       25   $shl
+       14   $shr
+        2   $sub
+       38   $xor
+        6   ot_sram_1r1w_256x256_m2_r2c2
+        5   ot_sram_1rw_256x64_m4_r2c2
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+     9161 ot_q2nf_linkstore_parent
+     9105 ot_q2nf_control
+       28 ot_q2nf_linkstore0
+       28 ot_q2nf_linkstore1
+
+        +----------Count including submodules.
+        | 
+   139466 wires
+   295188 wire bits
+   129162 public wires
+   188545 public wire bits
+     4690 ports
+    16996 port bits
+        - memories
+        - memory bits
+     1162 processes
+     9161 cells
+      179   $add
+     3999   $and
+        2   $div
+      127   $eq
+       12   $ge
+        3   $gt
+        2   $le
+      300   $logic_and
+      488   $logic_not
+      142   $logic_or
+       19   $lt
+        2   $mod
+       35   $mul
+     1200   $mux
+       49   $ne
+       28   $neg
+       24   $nex
+       69   $not
+     2175   $or
+       38   $reduce_or
+      128   $reduce_xor
+       42   $shiftx
+       25   $shl
+       14   $shr
+        2   $sub
+       38   $xor
+        6   ot_sram_1r1w_256x256_m2_r2c2
+        8   ot_sram_1r1w_64x512_m1_r2c2
+        5   ot_sram_1rw_256x64_m4_r2c2
+        3 submodules
+        1   ot_q2nf_control
+        1   ot_q2nf_linkstore0
+        1   ot_q2nf_linkstore1
+
