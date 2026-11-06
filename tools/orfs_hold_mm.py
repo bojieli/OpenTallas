@@ -2,7 +2,7 @@
 """FLOW-HOLD (2026-10-07): patch a DISPOSABLE ORFS flow container's load.tcl / util.tcl so that, when the ORFS config
 exports OT_HOLD_MM=1, every stage loads a multi-mode session (scene WC = SS setup, scene BC = FF hold, each under its own
 constraints) and repair_timing_helper repairs SS setup and FF hold together (tools/orfs_hold_mm.tcl).  Without
-OT_HOLD_MM=1 the multi-mode changes are inert. Detailed placement always receives ordinary final legalization after
+OT_HOLD_MM=1 the multi-mode changes are inert. Detailed placement preserves explicitly selected RC and receives ordinary final legalization after
 DPO/mirroring and before its unchanged placement check. Applied like tools/orfs_allcorner_spef.py: inside a new
 --rm container only; images, work dirs and evidence are never modified.
    orfs_hold_mm.py <ORFS scripts dir> [<helper tcl, default /src/tools/orfs_hold_mm.tcl>]"""
@@ -315,6 +315,31 @@ def patch_grt_budget(scripts: Path) -> str:
     return "patched"
 
 
+DPL_RC_ANCHOR = "source $::env(PLATFORM_DIR)/setRC.tcl"
+DPL_RC_BLOCK = '''# OT_DPL_SELECTED_RC: preserve the same declared RC used by load_design.
+if {[info exists ::env(SET_RC_TCL)] && $::env(SET_RC_TCL) ne ""} {
+  source $::env(SET_RC_TCL)
+} elseif {[info exists ::env(LAYER_PARASITICS_FILE)] && $::env(LAYER_PARASITICS_FILE) ne ""} {
+  source $::env(LAYER_PARASITICS_FILE)
+} else {
+  source $::env(PLATFORM_DIR)/setRC.tcl
+}'''
+
+
+def patch_dpl_selected_rc(scripts: Path) -> str:
+    """Keep declared RC through DPL optimization and its metrics in a disposable flow."""
+    target = Path(scripts) / "detail_place.tcl"
+    if not target.is_file():
+        return "detail_place.tcl absent"
+    text = target.read_text()
+    if DPL_RC_BLOCK in text:
+        return "already patched"
+    if text.count(DPL_RC_ANCHOR) != 1:
+        return "unrecognized detailed-place RC anchor; unchanged"
+    target.write_text(text.replace(DPL_RC_ANCHOR, DPL_RC_BLOCK, 1))
+    return "patched"
+
+
 FINAL_GUIDE_ANCHOR = "  source_step_tcl POST GLOBAL_ROUTE\n  orfs_write_db $::env(RESULTS_DIR)/5_1_grt.odb"
 FINAL_GUIDE_REPLACEMENT = "  source_step_tcl POST GLOBAL_ROUTE\n  # OT_FINAL_ROUTE_GUIDES: serialize the final post-hook DB guides.\n  write_guides $::env(RESULTS_DIR)/route.guide\n  orfs_write_db $::env(RESULTS_DIR)/5_1_grt.odb"
 
@@ -331,6 +356,7 @@ def patch_final_guides(scripts):
 
 
 if __name__ == "__main__":
+    print("orfs_hold_mm: DPL selected RC", patch_dpl_selected_rc(Path(sys.argv[1])))
     print("orfs_hold_mm: final guides", patch_final_guides(Path(sys.argv[1])))
     print("orfs_hold_mm: GRT budget", patch_grt_budget(Path(sys.argv[1])))
     if len(sys.argv) > 2 and sys.argv[2] == "--metrics-only":

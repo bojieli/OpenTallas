@@ -1273,8 +1273,11 @@ def in_pin(P, tn):
 
 def out_pins(P, tn):
     """[(port, x, y)] the registered reset outputs of a soft type (uniform per type: every site any instance uses)."""
-    if bound_native_contract(P, tn):
-        return []
+    native = bound_native_contract(P, tn)
+    if native:
+        # These are the actual emitted native wrapper's registered outputs.
+        # Their captured tree sites must survive in io.tcl and the exact pin ABI.
+        return [(f"rst_o_{k}",) + tuple(xy) for k, xy in enumerate(native["tree"].get("outs", []))]
     if not wavefront(P) or P.types[tn].get("hard"):
         return []
     sites = face_sites(P, tn)
@@ -1390,8 +1393,16 @@ def start_in_pin(P, tn):
 
 def start_out_pins(P, tn):
     """[(port, x, y)] registered START outs start_o_<k> (beside rst_o_<k>, same neighbour)."""
-    if bound_native_contract(P, tn):
-        return []
+    native = bound_native_contract(P, tn)
+    if native:
+        # Use the same deterministic local pin siting as the emitted ABI, with
+        # captured reset output sites; never invoke the global wavefront solver.
+        if not native["tree"].get("start"):
+            return []
+        entry, outs = _start_sites(P, tn)
+        if tuple(entry) != tuple(native["tree"].get("start_in", ())):
+            raise ResetError(f"type {tn}: native START output siting disagrees with captured entry site")
+        return outs
     if not start_broadcast(P) or P.types[tn].get("hard"):
         return []
     return list(_start_sites(P, tn)[1])
