@@ -4,11 +4,13 @@ Updated 2026-11-06 06:09 PST. Owner hbm_parent; canonical plan owner hbm. Two re
 
 ## Current live attempt
 
-Intel2 dedicated scratch2 PLACE unit **oth-ubuntu-1164857-1793974144**,24GB8CPU20GB, ROOT/prep1_continuation/gen5/q_spb2. Log local coord/tmp/codex-hbm-parent-1106/prep1_place.log. No route. Reused actual Claude q_spb2_prep1 (E2 scratch3/die-hbm-79) passed RTL/reset/assembly/stations, never repeated full bind. Original FAILED receipt preserved.
+Intel2 dedicated scratch2 PLACE unit **oth-ubuntu-1669213-1793975244**,24GB8CPU20GB, ROOT/prep2_epoch_reset/gen/q_spb2. Log local coord/tmp/codex-hbm-parent-1106/prep2_place.log. No route. Prior1164857 stopped at exact-bank epoch count; all passed native source/reset/2child assembly reused, no fullbind.
 
-5736 schema now merged. Continuation GEN PASS1072557, RTL_LINT PASS1081473/errors0; actual frontend2/2signed children+20/20stations/problems[]. Exact plan and detailed4275site bank image rendered/viewed PASS-COND PLACE-only, review ROOT/prep1_continuation/REVIEW.md.
+Successor GEN1565300 PASS. Strict Slang elaboration now PASS; actual full LEC against prior mapped netlist running1586479 at ROOT/prep2_epoch_reset/gen/q_spb2/lec_against_prior_synth. Previous frontend actual2/2signed children+20/20stations; same selected source/type and no cycle/geometry change. Exact partition freeze/pin hashes match previous viewed plan/detailed bank image; REVIEW.md in successor root.
 
-Shared fixes READY913a4d7ed68 (canonical reset conversion changes wrapper, so structurally re-prove narrow dead-input bits; omitted-bit/whole-vector mutants refuse) and56367a08e38 (explicit selected plan module into inventory; partition freeze has no module). Branch codex/hbm-parent-resume-1106, narrow focused tests PASS, merge owns release. Relocated identical prepared SVs to dedicated hub scratch; filelists/census paths localized after byte checks. Original globalFAIL1 retained.
+Diagnosed actual failures and narrow fixes: schema native_width missing5736 now merged; stale wrapper dead-input receipt913 + explicit partition module inventory563 released28fc/bj. Actual first PLACE then failed because unused input epoch FF was pruned. Plan owner explicitly permits missing epoch ONLY after proving whole cone unobserved, while every payload FF remains required and W+1 site stays reserved.6045dad66a4 implements source-sealed proof, observed-epoch and missing-payload negative controls PASS. Actual L49/L83 epochs unobserved, output epochs observed. No KEEP clock/reset load or invented dependence.
+
+LEC UNPROVEN was actual duplicate bound-only rst_o_0 vector last declaration/connection from canonical kit_rsync.1beec76e2dc fixes idempotent scalar/[0:0]/last-pin normalization; actual Slang now clean. Both1beec/6045 READY on codex/hbm-parent-resume-1106; merge owns release. Original failure receipts preserved; LOCAL/globalFAIL1 remains explicit.
 
 ## Previous actual result and remaining failure
 
