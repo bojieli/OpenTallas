@@ -275,8 +275,19 @@ proc ot_ps_add_clock {pin rf} {
       if {$late ne "" && $early ne ""} {lappend roots [list $late $early]}
     }
     set roots [lsort -unique $roots]
-    if {[llength $roots]!=1} {error "clock $cn has no unique $rf source insertion arrival"}
-    dict set ::ot_ps_insertion $ik [lindex $roots 0]
+    if {[llength $roots]==1} {
+      dict set ::ot_ps_insertion $ik [lindex $roots 0]
+    } elseif {[llength $roots] > 1 && [info exists ::ot_ps_method] && $::ot_ps_method eq "tag" &&
+              !([info exists ::env(OT_PS_SOURCE_AUTO)] && $::env(OT_PS_SOURCE_AUTO) eq "0")} {
+      # DIE-HEAD-71 11-05: one clock on several source ports with different -source latency (per-port tap windows,
+      # HEAD l48ue) has no single insertion; switch to the exact per-path source mode (ot_ps_source_from_tag, as
+      # parent_core_hold.py uses) for the rest of this measurement.  OT_PS_SOURCE_AUTO=0 = the old error.
+      set ::ot_ps_source_by_path 1
+      set ::ot_ps_source_auto $cn
+      puts "OT_PS_SOURCE_AUTO clock $cn $rf roots [llength $roots]: per-path source insertion"
+    } else {
+      error "clock $cn has no unique $rf source insertion arrival"
+    }
   }
   set inst [ot_ps_inst $full];set ref $inst
   if {[dict exists $::ot_ps_R $ref]} {set ref "$inst@[lindex [split $full /] end]:$rf"}
@@ -292,6 +303,7 @@ proc ot_ps_add_clock {pin rf} {
 proc ot_ps_regs {} {
   set ::ot_ps_R {};set ::ot_ps_by_clock {};set ::ot_ps_nonlaunch_cache {};set ::ot_ps_insertion {};set ::ot_ps_toff {};set ::ot_ps_tmatched {};set ::ot_ps_noarr 0
   set ::ot_ps_source_witnesses {}
+  if {[info exists ::ot_ps_source_auto]} {unset ::ot_ps_source_auto; set ::ot_ps_source_by_path 0}
   foreach p [all_registers -clock_pins] {ot_ps_add_clock $p [ot_ps_edge $p]}
   return $::ot_ps_R
 }
