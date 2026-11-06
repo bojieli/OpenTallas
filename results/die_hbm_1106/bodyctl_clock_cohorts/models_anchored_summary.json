@@ -1,0 +1,42 @@
+[
+  {
+    "radius_um": 30,
+    "group_limit": 24,
+    "leaf_sink_cap": 36,
+    "candidate_scope": "member_leaves_only",
+    "skip_counts": {
+      "no_legal_radius_or_capacity": 25,
+      "coherent_run_over_limit": 2
+    },
+    "moved_members": 7917,
+    "new_leaf_load_max": 36,
+    "chain_cross_leaf_before": 5079,
+    "chain_cross_leaf_after": 1075,
+    "new_A_relative_chain_crossings": 0,
+    "negative_RR_pairs_coleaf_after": 1479,
+    "worst_original_pair_now_coleaf": false,
+    "source": "existingCTS geometry only; not STA or new placement; no new cells or data/clock/reset edits",
+    "group_count": 1010,
+    "artifact": "model_anchored_member_30.json"
+  },
+  {
+    "radius_um": 50,
+    "group_limit": 24,
+    "leaf_sink_cap": 36,
+    "candidate_scope": "member_leaves_only",
+    "skip_counts": {
+      "no_legal_radius_or_capacity": 5,
+      "coherent_run_over_limit": 2
+    },
+    "moved_members": 8745,
+    "new_leaf_load_max": 36,
+    "chain_cross_leaf_before": 5079,
+    "chain_cross_leaf_after": 782,
+    "new_A_relative_chain_crossings": 0,
+    "negative_RR_pairs_coleaf_after": 1536,
+    "worst_original_pair_now_coleaf": true,
+    "source": "existingCTS geometry only; not STA or new placement; no new cells or data/clock/reset edits",
+    "group_count": 787,
+    "artifact": "model_anchored_member_50.json"
+  }
+]
