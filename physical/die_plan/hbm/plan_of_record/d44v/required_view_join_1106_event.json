@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.hbm.required_view_join.v1",
+  "bdring": {
+    "consumers": [
+      [
+        "q_hub_nw",
+        "u_xq_Q_p0_bd"
+      ],
+      [
+        "q_hub_nw",
+        "u_xq_Q_p1_bd"
+      ],
+      [
+        "q_hub_ne",
+        "u_xq_Q_p0_bd"
+      ],
+      [
+        "q_hub_ne",
+        "u_xq_Q_p1_bd"
+      ]
+    ],
+    "crop": "bsel[24:0] from source_width26",
+    "cycles": 0,
+    "producer_unchanged": true,
+    "pins_already_trimmed_on_main": true,
+    "proof": "results/brmw_pin_1106/event.json +native_witness.json"
+  },
+  "injector": {
+    "clock_entries": [
+      [
+        "q_hub_nw",
+        "u_cij_Q"
+      ],
+      [
+        "q_hub_ne",
+        "u_cij_Q"
+      ]
+    ],
+    "exact_p35_sites_um": {
+      "clk_r0": [
+        103.704,
+        103.68
+      ],
+      "clk_r1": [
+        104.088,
+        103.68
+      ]
+    },
+    "reason": "coarse sidecar had overridden clk_r1=104.088 back to103.800 in actual GEN",
+    "cycles": 0,
+    "actual_clock_pinfix_view_still_required": true
+  },
+  "all_other_die_plan_fields_identical": true,
+  "all_other_clock_entries_fields_identical": true,
+  "source_pin_tables_and_all_physical_core_geometry_unchanged": true,
+  "schema_new_errors": 0,
+  "schema_baseline_errors": 27676,
+  "required_design_count_not_asserted": true,
+  "sha256": {
+    "die_plan.json": "54b3d95285f9b9735a517e172e7144c6d119ea56739684a239e6d0810330fc0b",
+    "clock_entries.json": "e6d0a179f5875fab0357490d86f10a314275fa6eb16eff036c32ea133abb4625"
+  }
+}

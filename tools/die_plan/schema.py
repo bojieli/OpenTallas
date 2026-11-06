@@ -1324,6 +1324,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                 'tie': {'additionalProperties': {'minLength': 1, 'type': 'string'}, 'type': 'object'},
                 'cycles': {'const': 0}, 'note': {'type': 'string'}},
  'required': ['merge', 'cycles'], 'type': 'object'}
+# Explicit same-edge consumer slices (HBM brmw/injector pin-view join); default adapters unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_port_adapter"]["properties"]["slice"] = {
+    "type": "object", "minProperties": 1, "additionalProperties": {
+        "type": "object", "additionalProperties": False,
+        "properties": {"msb": {"type": "integer", "minimum": 0}, "lsb": {"type": "integer", "minimum": 0},
+                       "source_width": {"type": "integer", "minimum": 1}, "evidence": {"type": "string", "minLength": 1}},
+        "required": ["msb", "lsb", "source_width", "evidence"]}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["reset_from_master"] = {'additionalProperties': False,
  'properties': {'kind': {'enum': ['port', 'internal']}, 'content': {'minLength': 1, 'type': 'string'},
                 'pin': {'const': 'rst_n'}, 'source': {'minLength': 1, 'type': 'string'}},
