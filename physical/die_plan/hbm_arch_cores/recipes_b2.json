@@ -3291,7 +3291,8 @@
   },
   "ot_hfd_coll_q3_body_ctl": {
     "defines": [
-      "OT_Q3CTL_TGTQ1"
+      "OT_Q3CTL_TGTQ1",
+      "OT_Q3CTL_RCP1"
     ],
     "params": {},
     "util": 0.45,
@@ -3531,6 +3532,7 @@
   "ot_hfd_coll_q3_body_ctl__mul4rt": {
     "defines": [
       "OT_Q3CTL_TGTQ1",
+      "OT_Q3CTL_RCP1",
       "OT_Q3CTL_MUL4_RT"
     ],
     "params": {},
