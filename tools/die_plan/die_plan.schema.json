@@ -4275,6 +4275,10 @@
           "maxItems": 2
          }
         },
+        "native_width": {
+         "type": "integer",
+         "minimum": 1
+        },
         "core_glob": {
          "type": "string"
         }
