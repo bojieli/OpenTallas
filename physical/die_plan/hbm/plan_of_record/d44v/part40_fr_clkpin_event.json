@@ -1,0 +1,9 @@
+{
+ "schema": "opentallas.hbm_part40_fr_clkpin.v1",
+ "by": "DIE-HBM-82-B128 2026-11-06",
+ "change": "ot_hgi_sfu_split3_lane_core_fr pin tables (__d44v_split.json, __d44v_split__vi24.json) restored byte-for-byte to their pre-p35 state (510f347b9f^): sfu_clk M5 (60.888, 172.8) -> (60.6, 172.8); map_clk unchanged at 60.504",
+ "why": "p35 moved the pin in the tables only; clock_entries.json keeps the fr entry xy 60.48 with merged_clock_ports [map_clk, sfu_clk] and no clock_pin_sites_um, so gen_core_kit_hbm --clock-pin-entry on places map_clk 60.504 / sfu_clk 60.6 (legacy 2-track spread). A kit built from the p35 table therefore cannot match it. The 60.6 geometry is proven routable: signed fr DB, DRC 0, ant 0, routed LEC EQUIVALENT, re-signed flow-20261104-k-hbm (epyc4 /srv/opentallas-scratch3/claude/ss29/resign/fr_k).",
+ "pin_cycles": 0,
+ "rtl_change": false,
+ "instances": 32
+}
