@@ -525,3 +525,6 @@ epyc2	/srv/opentallas-scratch2/claude/die-hbm-63/eco/p7tl/run/i1	hbm/hnx_rp3h_tl
 epyc2	/srv/opentallas-scratch2/claude/die-hbm-63/eco/lanes5/run/i1	hbm/ot_hbm_sm_vm_wr_q_t_lanes4 lost-design source for re-sign (COUNT-AUDIT-2 11-06)
 epyc6	/srv/opentallas-scratch3/claude/dkv82/resign_ft_bs2	qwen_kvsys/kv3_io_ft re-sign bs-kv COUNTED (COORD 11-06 12:2x)
 epyc6	/srv/opentallas-scratch3/claude/dkv82/eco_ft_i3	qwen_kvsys/kv3_io_ft source ECO DB (COORD 11-06 12:2x)
+intel2	/srv/opentallas-scratch2/claude/kv-peer-2/resign_eco5_bs	qwen_kvsys/qkd_hr_core_peer re-sign bs-kv COUNTED (COORD 11-06 13:1x)
+intel2	/srv/opentallas-scratch2/claude/kv-peer-2/eco5	qwen_kvsys/qkd_hr_core_peer source routed DB (COORD 11-06 13:1x)
+epyc5	/srv/opentallas-scratch3/claude/kv-peer-2/lec_h2	qwen_kvsys/qkd_hr_core_peer kit LEC with hints (COORD 11-06 13:1x)
