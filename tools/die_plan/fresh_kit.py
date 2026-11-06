@@ -172,6 +172,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
             args = ['phys', plan, '--out', output / 'gen', '--rtl-root', source, '--types', type_name,
                     '--kit-rtl', f'{type_name}={rtl / "kit_rtl.f"}', '--trial',
                     '--util', overrides.get('util', .4)]
+            if (rtl / 'bound_reset.json').is_file():
+                args += ['--bound-native-reset', type_name]
             if overrides.get('skip_kit_ir', True):
                 args += ['--skip-kit-ir']
             step('generate', dp / 'gen.py', *args)
