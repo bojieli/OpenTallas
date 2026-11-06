@@ -3,7 +3,7 @@
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hbm_su_pg_lane1_core #(
-    parameter integer MLAT = 4,
+    parameter integer MLAT = 5,
     parameter integer ALAT = 3,
     parameter integer WCOPY = 0
 ) (

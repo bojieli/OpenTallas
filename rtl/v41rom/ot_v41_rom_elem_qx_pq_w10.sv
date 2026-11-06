@@ -236,6 +236,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                                         //     launch latency 742 ps under the outputs; flop-only clones closed > +80)
     parameter integer CGR = 0,          // 0 = one clock gate g_cg.u_cg (unchanged circuit); 8 = one clock-gate copy per in-core
                                         //    region (S81-CORE-LAT 2026-10-26, see "CGR" at the gate); NB = 2, QZ, QM <= 5, QS 5
+    parameter integer MSEL = 0,         // NB = 1, PQ = 1 only: 1 = the second macro of an NB = 2 pair split in two NB = 1
+                                        // halves (output rows from configuration words 2NSEG+1+s; see ot_v41_elem_pq_tags)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -532,6 +534,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         assign qy_cdec = (QPIPE != 0) ? rp_cdec : '0;
         assign pq_walking = walk_busy | rp_run | rp_v | (rp_tail != 4'd0);
         end
+        if (MSEL != 0 && NB != 1) begin : g_msel_bad
+            initial begin $display("ot_v41_rom_elem_qx_pq_w10: MSEL requires NB = 1"); $finish; end
+        end
         if (QPIPE == 0 || FAST == 0 || MTP == 0) begin : g_pq_bad
             initial begin $display("ot_v41_rom_elem_qx_pq_w10: PQ requires QPIPE = FAST = MTP = 1"); $finish; end
         end
@@ -539,7 +544,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         assign cfg_v = cfg_v_x; assign cfg_a = cfg_a_x; assign cfg_d = cfg_d_x; assign qy_cdec = qy_cdec_x;
         assign pq_walking = walk_busy;
     end
-    ot_v41_elem_pq_tags #(.NSEG(NSEG), .NB(NB), .MTP(MTP), .PQ(PQ), .DRAIN(DRAIN), .WP(QM >= 4 ? 1 : 0)) u_pq (.clk(clk), .rst_n(rst_n),
+    ot_v41_elem_pq_tags #(.NSEG(NSEG), .NB(NB), .MTP(MTP), .PQ(PQ), .DRAIN(DRAIN), .WP(QM >= 4 ? 1 : 0), .MSEL(MSEL)) u_pq (.clk(clk), .rst_n(rst_n),
         .cfg_v(cfg_v_x), .cfg_a(cfg_a_x), .cfg_d(cfg_d_x[25:0]), .go_e(go_e), .go_tag(go_tag_e), .walk_busy(walk_busy),
         .walking(pq_walking), .tp(pq_tp), .bank_free(pq_bank_free), .sh_free(pq_sh_free), .swap(pq_swap), .fault(pq_fault),
         .t_tree(pq_tree), .t_pos(pq_pos), .q_idle(pq_idle), .q_row(pq_row), .q_idx(pq_idx), .q_n(pq_n));

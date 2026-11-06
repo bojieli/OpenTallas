@@ -318,8 +318,10 @@ foreach f [lsort [dict keys $_fams]] {
 }
 puts "OT_PRD pass $_pass sink guard: [dict size $::ot_prd_masters] clock-net instances, [dict size $_fams] sink master families -> set_dont_use $_du lib cells for the ECO session: [lsort [dict keys $_fams]]"
 
-if {$::env(OT_MAX_FANOUT) > 0} { set_max_fanout $::env(OT_MAX_FANOUT) [current_design] }
-puts "OT_PRD pass $_pass repair_design slew_margin $::env(OT_SLEW_MARGIN) cap_margin $::env(OT_SLEW_MARGIN) max_fanout $::env(OT_MAX_FANOUT) (routed RCX SPEF)"
+# KW-FIX-18 11-05: OT_MAX_FANOUT is optional (absent/empty = 0, no cap); prd_run.sh always passes it
+set _mfo [expr {[info exists ::env(OT_MAX_FANOUT)] && $::env(OT_MAX_FANOUT) ne "" ? $::env(OT_MAX_FANOUT) : 0}]
+if {$_mfo > 0} { set_max_fanout $_mfo [current_design] }
+puts "OT_PRD pass $_pass repair_design slew_margin $::env(OT_SLEW_MARGIN) cap_margin $::env(OT_SLEW_MARGIN) max_fanout $_mfo (routed RCX SPEF)"
 set _drv_args [list -slew_margin $::env(OT_SLEW_MARGIN) -cap_margin $::env(OT_SLEW_MARGIN)]
 # Optional geometric data-net segmentation, independent of the Liberty slew
 # repair decision. Frozen clock nets/drivers remain protected by ot_clk_freeze.
@@ -327,6 +329,13 @@ set _wire_limit [expr {[info exists ::env(OT_PRD_MAX_WIRE_LENGTH)] ? $::env(OT_P
 if {![string is double -strict $_wire_limit] || $_wire_limit < 0} {error "OT_PRD invalid max wire length $_wire_limit"}
 if {$_wire_limit > 0} {lappend _drv_args -max_wire_length $_wire_limit}
 puts "OT_PRD pass $_pass repair_design $_drv_args"
+# KW-FIX-17 11-05: targeted fanout cap on violator nets above OT_PRD_AUTO_FANOUT loads (default 32; prd_autofo.tcl)
+set _afo [expr {[info exists ::env(OT_PRD_AUTO_FANOUT)] && $::env(OT_PRD_AUTO_FANOUT) ne "" ? $::env(OT_PRD_AUTO_FANOUT) : 32}]
+set _tfo [expr {[info exists ::env(OT_PRD_TARGET_FANOUT)] && $::env(OT_PRD_TARGET_FANOUT) ne "" ? $::env(OT_PRD_TARGET_FANOUT) : 0}]
+if {[info exists _here] && ([info exists ::env(OT_MAX_FANOUT)] && $::env(OT_MAX_FANOUT) ne "" ? $::env(OT_MAX_FANOUT) : 0) == 0 && $_tfo == 0 && $_afo ne "0" && [file exists [file join $_here prd_autofo.tcl]]} {
+  source [file join $_here prd_autofo.tcl]
+  ot_prd_auto_fanout $_drv_args $_afo
+}
 if {[info exists ::env(OT_PRD_TARGETED)] && $::env(OT_PRD_TARGETED) eq "1"} {
   source [file join $_here prd_targeted.tcl]
   ot_prd_repair_targeted $_drv_args
@@ -391,7 +400,17 @@ if {[info exists ::env(OT_PAD_MASTERS)] && $::env(OT_PAD_MASTERS) ne ""} {
   }
 }
 detailed_placement
-if {[catch {check_placement} msg]} { error "OT_PRD FAIL: check_placement after the ECO legalization: $msg" }
+# KW-FIX-17 11-05 (DPL-0033 class, COORD 14:52 / HBM-FORM-TIMING-6 14:55, default-on): when the ECO legalization leaves
+# overlaps (pcol_s3 ECO i1: DPL-0033, 33 overlaps), run the diamond legalizer once and re-check before failing.  The
+# same block let pcol_s3b pass legalization (lane copy, prd_hook.tcl sha 05a165647b00).  OT_PRD_DIAMOND_FALLBACK=0 = off.
+if {[catch {check_placement} msg]} {
+  if {[info exists ::env(OT_PRD_DIAMOND_FALLBACK)] && $::env(OT_PRD_DIAMOND_FALLBACK) eq "0"} {
+    error "OT_PRD FAIL: check_placement after the ECO legalization: $msg"
+  }
+  puts "OT_PRD legalizer fallback: diamond after: $msg"
+  detailed_placement -use_diamond_legalizer
+  if {[catch {check_placement} msg]} { error "OT_PRD FAIL: check_placement after the ECO legalization: $msg" }
+}
 # FLOW-12 opt-in OT_PRD_FROM=route (prd_mk.sh): the ECO started from the ROUTED DB -> rip only the nets it touched,
 # keep every other net's routed wires for an incremental detailed route (prd_route_keep.tcl).  FLOW-13: selection + rip
 # run BEFORE the incremental GRT end and the kept wires are parked (detached) across it, since updateDirtyNets destroys

@@ -1,0 +1,21 @@
+HBM-FORM-SPLIT-8+REFORM-B11 glue lock-step 2026-11-05 17:02 PST (intel2, verilator 5.050)
+REF hfd_hgi_vms_glue_nw_t__fcore = uncut kit rtl glue_d15r/hfd_hgi_vms_glue_nw_t_bb7727c8971e/rtl (= recipe sources d34578d6f + rcl c2223a91d3, top renamed by the face shell)
+DUT hfd_hgi_vms_glue_nw_t__p11comp XREG=2 (3 pieces + 2 face flops on every crossing); declared shift 0 on all 93 ports
+bash results/die_hbm_1105/form_split/glue_b11/run_glue_ls.sh KIT_RTL OUT 200 600
+MUT 0: GLUE_LOCKSTEP DMUT 0 episodes 200 err 0 live 6011 faultcycles 113726 - Verilator: cpu 0.758 s on 1 threads; allocated 7 MB
+MUT 2: GLUE_LOCKSTEP DMUT 2 episodes 200 err 184 live 6943 faultcycles 116588 - Verilator: cpu 0.916 s on 1 threads; allocated 7 MB
+MUT 3: GLUE_LOCKSTEP DMUT 3 episodes 200 err 92 live 6585 faultcycles 113660 - Verilator: cpu 0.870 s on 1 threads; allocated 7 MB
+MUT 4: GLUE_LOCKSTEP DMUT 4 episodes 200 err 18598 live 5730 faultcycles 115258 - Verilator: cpu 0.886 s on 1 threads; allocated 7 MB
+MUT 1: GLUE_LOCKSTEP DMUT 1 episodes 200 err 738 live 6295 faultcycles 116121 - Verilator: cpu 0.882 s on 1 threads; allocated 7 MB
+regen: mk_pc.py on the pinned sources == rtl/hbm_accel/cores_split/reform_1105s/glue/ot_vms_glue_pc.sv; mk_pieces.py == committed pieces/comp
+
+28547b7063bf9e70df8bbcb0b390c6e4ba53c8579d6bb7a042d3c3397fd479cb  hbm-form-cong/glue_d15r/hfd_hgi_vms_glue_nw_t_bb7727c8971e/rtl/hfd_hgi_vms_glue_tiles.sv
+33090faa944a5827c7a04031b6aff5f46830e13e2c35643f589abf543f0591f6  hbm-form-cong/glue_d15r/hfd_hgi_vms_glue_nw_t_bb7727c8971e/rtl/hfd_hgi_vms_static_glue.sv
+6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102  hbm-form-cong/glue_d15r/hfd_hgi_vms_glue_nw_t_bb7727c8971e/rtl/ot_vms_rstop_static.sv
+364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9  hbm-form-cong/glue_d15r/hfd_hgi_vms_glue_nw_t_bb7727c8971e/rtl/ot_vms_hub_static.sv
+9b7144810df51880b3aa176044defe31d40f485257418fea26e5fc10bc381625  hbm-form-cong/glue_d15r/hfd_hgi_vms_glue_nw_t_bb7727c8971e/rtl/ot_vms_rcl_static.sv
+56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4  hbm-form-cong/glue_d15r/hfd_hgi_vms_glue_nw_t_bb7727c8971e/rtl/ot_vms_status_static.sv
+05e376ed999c7c9b579ee75d614ae82693fc89b74ea8d0e6801a7d73d2b9d03e  hbm-glue-b11/wt/results/die_hbm_1105/form_split/glue_b11/../../../../rtl/hbm_accel/cores_split/reform_1105s/glue/ot_vms_glue_pc.sv
+7144435253c6f26a1b11cf4de264b8d9da9bfb8098544d877e1765c23dd336c1  hbm-glue-b11/wt/results/die_hbm_1105/form_split/glue_b11/../../../../rtl/hbm_accel/cores_split/reform_1105s/glue/hfd_hgi_vms_glue_nw_pieces.sv
+3eed6ae927c6889bdf9a5cb59315c286687c300dd232371454873c934158390e  hbm-glue-b11/wt/results/die_hbm_1105/form_split/glue_b11/hfd_hgi_vms_glue_nw_t__p11comp.sv
+a8c046b7374536d742072430644dae20e613041b56d66ca94254581848e394f8  hbm-glue-b11/wt/results/die_hbm_1105/form_split/glue_b11/tb_glue.sv

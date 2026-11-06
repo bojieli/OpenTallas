@@ -1,0 +1,5279 @@
+[
+{
+"port": "hb_ckgen__por_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_ckgen"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"r"
+]
+},
+{
+"port": "hb_ckgen__refclk",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_ckgen"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"r"
+]
+},
+{
+"port": "hb_dbk_SE__rq",
+"bits": 136,
+"live": 136,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE0",
+"vmb_SE1",
+"vmb_SE2",
+"vmb_SE3"
+],
+"nsinks": 8,
+"fold": "MAPPED",
+"serving": "NE_hub.u_hb_dbk_Q__q0",
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "hb_dbk_SW__rq",
+"bits": 136,
+"live": 136,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW0",
+"vmb_SW1",
+"vmb_SW2",
+"vmb_SW3"
+],
+"nsinks": 8,
+"fold": "MAPPED",
+"serving": "NW_hub.u_hb_dbk_Q__q0",
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "hcollks_SE_p0__vm_kq",
+"bits": 562,
+"live": 562,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE0",
+"vmb_SE1"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "hcollks_SE_p1__vm_kq",
+"bits": 562,
+"live": 562,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE2",
+"vmb_SE3"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "hcollks_SE_p2__vm_kq",
+"bits": 562,
+"live": 562,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE4",
+"vmb_SE5"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "hcollks_SE_p3__vm_kq",
+"bits": 562,
+"live": 562,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE6",
+"vmb_SE7"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "hcollks_SW_p0__vm_kq",
+"bits": 562,
+"live": 562,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW0",
+"vmb_SW1"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "hcollks_SW_p1__vm_kq",
+"bits": 562,
+"live": 562,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW2",
+"vmb_SW3"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "hcollks_SW_p2__vm_kq",
+"bits": 562,
+"live": 562,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW4",
+"vmb_SW5"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "hcollks_SW_p3__vm_kq",
+"bits": 562,
+"live": 562,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW6",
+"vmb_SW7"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "hcollrs_SE__vm_rq",
+"bits": 136,
+"live": 136,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE0",
+"vmb_SE1",
+"vmb_SE2",
+"vmb_SE3"
+],
+"nsinks": 8,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "hcollrs_SW__vm_rq",
+"bits": 136,
+"live": 136,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW0",
+"vmb_SW1",
+"vmb_SW2",
+"vmb_SW3"
+],
+"nsinks": 8,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "host_cp_rxs__session",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"host_cp_rxs"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"root"
+]
+},
+{
+"port": "lk_N0__pma_rck",
+"bits": 1,
+"live": 1,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_N0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_io"
+]
+},
+{
+"port": "lk_N0__pma_rx",
+"bits": 544,
+"live": 544,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_N0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_io"
+]
+},
+{
+"port": "lk_N2__pma_rck",
+"bits": 1,
+"live": 1,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_N2"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_io"
+]
+},
+{
+"port": "lk_N2__pma_rx",
+"bits": 544,
+"live": 544,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_N2"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_io"
+]
+},
+{
+"port": "lk_S0__pma_rck",
+"bits": 1,
+"live": 1,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_S0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_spb0"
+]
+},
+{
+"port": "lk_S0__pma_rx",
+"bits": 544,
+"live": 544,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_S0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_spb0"
+]
+},
+{
+"port": "lk_S1__pma_rck",
+"bits": 1,
+"live": 1,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_S1"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"vsN0"
+]
+},
+{
+"port": "lk_S1__pma_rx",
+"bits": 544,
+"live": 544,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_S1"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"vsN0"
+]
+},
+{
+"port": "lk_S3__pma_rck",
+"bits": 1,
+"live": 1,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_S3"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_spb0"
+]
+},
+{
+"port": "lk_S3__pma_rx",
+"bits": 544,
+"live": 544,
+"cls": "C0_clock_reset",
+"sinks": [
+"lk_S3"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_spb0"
+]
+},
+{
+"port": "native_required__calendar_NE__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"calendar_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__calendar_NW__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"calendar_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__calendar_SE__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"calendar_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__calendar_SW__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"calendar_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__hb_idx__s_NE__clear",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NE__live_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NE__live_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NE__pre_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NE__pre_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NE__replay_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NE__replay_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NE__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NW__clear",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NW__live_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NW__live_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NW__pre_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NW__pre_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NW__replay_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NW__replay_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_NW__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_NW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SE__clear",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SE__live_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SE__live_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SE__pre_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SE__pre_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SE__replay_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SE__replay_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SE__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SW__clear",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SW__live_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SW__live_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SW__pre_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SW__pre_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SW__replay_index",
+"bits": 8,
+"live": 8,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SW__replay_v",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__hb_idx__s_SW__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "native_required__u_mu_fused_n4_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n4_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n4_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n4_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n4_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n4_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n4_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n4_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n4_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n4_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n4_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n4_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_programme__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_programme"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"root"
+]
+},
+{
+"port": "native_required__u_mu_fused_root__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_root"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"root"
+]
+},
+{
+"port": "native_required__vmb_NE0__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NE0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_NE1__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NE1"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_NE2__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NE2"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_NE3__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NE3"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_NE4__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NE4"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_NE5__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NE5"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_NE6__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NE6"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_NE7__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NE7"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_NW0__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NW0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_NW1__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NW1"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_NW2__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NW2"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_NW3__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NW3"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_NW4__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NW4"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_NW5__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NW5"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_NW6__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NW6"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_NW7__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_NW7"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_SE0__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SE0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_SE1__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SE1"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_SE2__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SE2"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_SE3__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SE3"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_SE4__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SE4"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_SE5__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SE5"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_SE6__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SE6"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_SE7__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SE7"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__vmb_SW0__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SW0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_SW1__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SW1"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_SW2__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SW2"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_SW3__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SW3"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_SW4__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SW4"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_SW5__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SW5"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_SW6__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SW6"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmb_SW7__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmb_SW7"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmm_NW0__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmm_NW0"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmm_NW1__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmm_NW1"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmm_NW2__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmm_NW2"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmm_NW3__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmm_NW3"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmm_NW4__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmm_NW4"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmm_NW5__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmm_NW5"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmm_NW6__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmm_NW6"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__vmm_NW7__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"vmm_NW7"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "smw_SE__wq_s0",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE4"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NE_hub.u_smw_Q__q0",
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "smw_SE__wq_s1",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE5"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NE_hub.u_smw_Q__q0",
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "smw_SE__wq_s2",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE6"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NE_hub.u_smw_Q__q0",
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "smw_SE__wq_s3",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE7"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NE_hub.u_smw_Q__q0",
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "smw_SE__wq_t0",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE0"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NE_hub.u_smw_Q__q0",
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "smw_SE__wq_t1",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE1"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NE_hub.u_smw_Q__q0",
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "smw_SE__wq_t2",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE2"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NE_hub.u_smw_Q__q0",
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "smw_SE__wq_t3",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE3"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NE_hub.u_smw_Q__q0",
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "smw_SW__wq_s0",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW0"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NW_hub.u_smw_Q__q0",
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "smw_SW__wq_s1",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW1"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NW_hub.u_smw_Q__q0",
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "smw_SW__wq_s2",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW2"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NW_hub.u_smw_Q__q0",
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "smw_SW__wq_s3",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW3"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NW_hub.u_smw_Q__q0",
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "smw_SW__wq_t0",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW4"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NW_hub.u_smw_Q__q0",
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "smw_SW__wq_t1",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW5"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NW_hub.u_smw_Q__q0",
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "smw_SW__wq_t2",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW6"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NW_hub.u_smw_Q__q0",
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "smw_SW__wq_t3",
+"bits": 281,
+"live": 281,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW7"
+],
+"nsinks": 1,
+"fold": "MAPPED",
+"serving": "NW_hub.u_smw_Q__q0",
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "su_SE0__lg_rq",
+"bits": 34,
+"live": 34,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SE0",
+"vmb_SE1"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "su_SE0__lg_wq",
+"bits": 562,
+"live": 562,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SE0",
+"vmb_SE1"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "su_SE1__lg_rq",
+"bits": 34,
+"live": 34,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SE2",
+"vmb_SE3"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "su_SE1__lg_wq",
+"bits": 562,
+"live": 562,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SE2",
+"vmb_SE3"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "su_SE2__lg_rq",
+"bits": 34,
+"live": 34,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SE4",
+"vmb_SE5"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "su_SE2__lg_wq",
+"bits": 562,
+"live": 562,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SE4",
+"vmb_SE5"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "su_SE3__lg_rq",
+"bits": 34,
+"live": 34,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SE6",
+"vmb_SE7"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "su_SE3__lg_wq",
+"bits": 562,
+"live": 562,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SE6",
+"vmb_SE7"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "su_SW0__lg_rq",
+"bits": 34,
+"live": 34,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SW0",
+"vmb_SW1"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "su_SW0__lg_wq",
+"bits": 562,
+"live": 562,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SW0",
+"vmb_SW1"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "su_SW1__lg_rq",
+"bits": 34,
+"live": 34,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SW2",
+"vmb_SW3"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "su_SW1__lg_wq",
+"bits": 562,
+"live": 562,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SW2",
+"vmb_SW3"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "su_SW2__lg_rq",
+"bits": 34,
+"live": 34,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SW4",
+"vmb_SW5"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "su_SW2__lg_wq",
+"bits": 562,
+"live": 562,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SW4",
+"vmb_SW5"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "su_SW3__lg_rq",
+"bits": 34,
+"live": 34,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SW6",
+"vmb_SW7"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "su_SW3__lg_wq",
+"bits": 562,
+"live": 562,
+"cls": "C4b_su_lg",
+"sinks": [
+"vmb_SW6",
+"vmb_SW7"
+],
+"nsinks": 2,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "svg_SW0__sm_packet",
+"bits": 1099,
+"live": 1099,
+"cls": "C5_svg_key",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": "NO_PROVIDER",
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "svg_SW1__sm_packet",
+"bits": 1099,
+"live": 1099,
+"cls": "C5_svg_key",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": "NO_PROVIDER",
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "svg_SW2__sm_packet",
+"bits": 1099,
+"live": 1099,
+"cls": "C5_svg_key",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": "NO_PROVIDER",
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "svg_SW3__sm_packet",
+"bits": 1099,
+"live": 1099,
+"cls": "C5_svg_key",
+"sinks": [
+"hb_idx__s_SW"
+],
+"nsinks": 1,
+"fold": "NO_PROVIDER",
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "svg_SW4__sm_packet",
+"bits": 1099,
+"live": 1099,
+"cls": "C5_svg_key",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": "NO_PROVIDER",
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "svg_SW5__sm_packet",
+"bits": 1099,
+"live": 1099,
+"cls": "C5_svg_key",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": "NO_PROVIDER",
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "svg_SW6__sm_packet",
+"bits": 1099,
+"live": 1099,
+"cls": "C5_svg_key",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": "NO_PROVIDER",
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "svg_SW7__sm_packet",
+"bits": 1099,
+"live": 1099,
+"cls": "C5_svg_key",
+"sinks": [
+"hb_idx__s_SE"
+],
+"nsinks": 1,
+"fold": "NO_PROVIDER",
+"serving": null,
+"home": [
+null
+]
+},
+{
+"port": "vmdel_SE0__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SE0"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "vmdel_SE1__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SE1"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "vmdel_SE2__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SE2"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "vmdel_SE3__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SE3"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "vmdel_SE4__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SE4"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "vmdel_SE5__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SE5"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "vmdel_SE6__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SE6"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "vmdel_SE7__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SE7"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "vmdel_SW0__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SW0"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "vmdel_SW1__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SW1"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "vmdel_SW2__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SW2"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "vmdel_SW3__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SW3"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "vmdel_SW4__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SW4"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "vmdel_SW5__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SW5"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "vmdel_SW6__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SW6"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "vmdel_SW7__dq",
+"bits": 281,
+"live": 281,
+"cls": "C4c_vmdel_dq",
+"sinks": [
+"vmb_SW7"
+],
+"nsinks": 1,
+"fold": "UNMAPPED",
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "xl_SE_ctl__rq",
+"bits": 136,
+"live": 136,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SE0",
+"vmb_SE1",
+"vmb_SE2",
+"vmb_SE3"
+],
+"nsinks": 8,
+"fold": "MAPPED",
+"serving": "NE_hub.u_xl_Q_ctl__q0",
+"home": [
+"NE_hub",
+"NE_hub"
+]
+},
+{
+"port": "xl_SW_ctl__rq",
+"bits": 136,
+"live": 136,
+"cls": "C4a_s_role_q0",
+"sinks": [
+"vmb_SW0",
+"vmb_SW1",
+"vmb_SW2",
+"vmb_SW3"
+],
+"nsinks": 8,
+"fold": "MAPPED",
+"serving": "NW_hub.u_xl_Q_ctl__q0",
+"home": [
+"NW_hub",
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q0_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n3_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q0_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n3_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q0_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n3_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q0_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n2L_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q0_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2L_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q0_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2L_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q0_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n2R_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q0_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2R_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q0_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2R_q0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_0_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q0_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_0_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_0_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_1_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q0_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_1_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_1_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_2_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q0_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_2_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_2_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_3_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q0_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_3_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_3_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q1_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n3_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q1_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n3_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q1_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n3_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q1_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n2L_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q1_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2L_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q1_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2L_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q1_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n2R_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q1_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2R_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q1_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2R_q1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_0_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q1_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_0_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_0_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_1_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q1_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_1_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_1_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_2_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q1_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_2_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_2_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_3_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q1_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_3_nw__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_3_nw__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_0_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_0_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_0_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_0_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_1_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_1_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_1_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_1_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_2_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_2_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_2_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_2_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_3_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_3_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_3_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_3_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_4_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_4_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_4_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_4_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_4_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_4_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_5_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_5_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_5_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_5_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_5_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_5_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_6_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_6_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_6_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_6_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_6_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_6_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_7_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_7_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_7_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_7_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_7_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_7_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_8_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_8_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_8_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_8_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_8_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_8_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_9_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_9_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_9_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_9_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_9_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_9_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_10_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_10_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_10_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_10_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_10_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_10_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_11_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_11_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_11_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_11_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_11_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_11_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_12_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_12_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_12_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_12_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_12_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_12_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_13_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_13_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_13_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_13_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_13_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_13_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_14_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_14_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_14_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_14_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_14_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_14_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_15_nw__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_15_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_15_nw__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_15_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_15_nw__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_15_nw"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NW_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q0_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n3_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q0_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n3_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q0_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n3_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q0_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n2L_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q0_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2L_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q0_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2L_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q0_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n2R_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q0_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2R_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q0_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2R_q0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_0_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q0_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_0_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_0_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_1_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q0_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_1_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_1_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_2_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q0_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_2_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_2_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_3_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q0_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_3_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q0_3_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q0_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q1_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n3_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q1_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n3_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n3_q1_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n3_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q1_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n2L_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q1_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2L_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2L_q1_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2L_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q1_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n2R_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q1_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2R_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n2R_q1_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n2R_q1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_0_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q1_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_0_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_0_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_1_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q1_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_1_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_1_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_2_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q1_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_2_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_2_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_3_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_n1_q1_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_3_ne__pad_k",
+"bits": 6,
+"live": 6,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_n1_q1_3_ne__pad_b",
+"bits": 1,
+"live": 1,
+"cls": "C3_fused_pad",
+"sinks": [
+"u_mu_fused_n1_q1_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_0_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_0_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_0_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_0_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_1_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_1_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_1_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_1_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_2_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_2_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_2_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_2_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_3_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_3_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_3_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_3_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_4_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_4_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_4_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_4_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_4_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_4_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_5_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_5_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_5_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_5_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_5_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_5_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_6_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_6_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_6_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_6_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_6_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_6_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_7_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_7_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_7_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_7_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_7_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_7_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_8_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_8_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_8_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_8_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_8_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_8_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_9_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_9_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_9_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_9_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_9_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_9_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_10_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_10_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_10_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_10_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_10_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_10_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_11_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_11_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_11_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_11_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_11_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_11_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_12_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_12_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_12_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_12_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_12_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_12_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_13_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_13_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_13_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_13_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_13_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_13_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_14_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_14_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_14_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_14_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_14_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_14_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_15_ne__rst_n",
+"bits": 1,
+"live": 1,
+"cls": "OTHER",
+"sinks": [
+"u_mu_fused_15_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_15_ne__rr_v",
+"bits": 1,
+"live": 1,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_15_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+},
+{
+"port": "native_required__u_mu_fused_15_ne__rr_d",
+"bits": 256,
+"live": 256,
+"cls": "C2_fused_rr",
+"sinks": [
+"u_mu_fused_15_ne"
+],
+"nsinks": 1,
+"fold": null,
+"serving": null,
+"home": [
+"NE_hub"
+]
+}
+]

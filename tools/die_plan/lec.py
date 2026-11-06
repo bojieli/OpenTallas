@@ -7513,6 +7513,27 @@ def nowiden_retry(r, out, run):
     return keep
 
 
+def commonshape_retry(r, out, run):
+    """A failed run that took a common-shape array map (a gate array the frontend narrowed by different constant bits)
+    runs once more without that map: the map assumes a shared index, but a gate that dropped low bits has shifted
+    them (S81 cap_tr 11-05: gate mem#t[r][k] is gold mem[r][k+3], scored 1060 -> 1059, 521 false differences; without
+    the map 12270 of 12270 proved).  Each run is a complete proof of its own; the second verdict replaces the first
+    only when it is EQUIVALENT."""
+    log = out / "lec.log"
+    if r.get("verdict") != "NOT EQUIVALENT" or os.environ.get("OT_LEC_COMMON_SHAPE", "1") == "0" \
+            or not log.is_file() or "; common shape " not in log.read_text(errors="replace"):
+        return r
+    os.environ["OT_LEC_COMMON_SHAPE"] = "0"
+    try:
+        r2 = run()
+    finally:
+        del os.environ["OT_LEC_COMMON_SHAPE"]
+    keep, other = (r2, r) if r2.get("verdict") == "EQUIVALENT" else (r, r2)
+    keep["commonshape_retry"] = dict(verdict=other.get("verdict"), counts=other.get("counts"), common_shape=keep is r)
+    (out / "lec.json").write_text(json.dumps(keep, indent=1) + "\n")
+    return keep
+
+
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
@@ -7555,7 +7576,8 @@ def main(argv=None):
         return rc
     pm = json.loads(Path(a.port_map).read_text()) if a.port_map else None
     run = lambda: check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
-    r = nowiden_retry(run(), Path(a.out or Path(a.kit) / "lec"), run)
+    out = Path(a.out or Path(a.kit) / "lec")
+    r = commonshape_retry(nowiden_retry(run(), out, run), out, run)
     c = r.get("counts", {})
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "

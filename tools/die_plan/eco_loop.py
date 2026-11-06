@@ -61,7 +61,7 @@ IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 ECO_TOOL_FILES = ("clk_freeze.tcl", "clk_dump_db.tcl", "clk_geom_diff.py", "clk_freeze_check.sh",
                   "kit_modes_eco.tcl", "pg_connect.tcl")
 FLOW_FILES = ("post_route_drv/prd_mk.sh", "post_route_drv/prd_run.sh", "post_route_drv/prd_hook.tcl",
-              "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl",
+              "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl", "post_route_drv/prd_autofo.tcl",
               "post_route_drv/prd_count.tcl", "post_route_drv/post_grt_chain.py", "post_route_drv/prd_seed.py",
               "post_route_drv/prd_spef_insts.py", "eco_loop.py") + ECO_TOOL_FILES
 POST_RUNNERS = ("run_kit_hbm.sh", "run_kit_kv.sh", "run_kit.sh")
@@ -323,7 +323,8 @@ def stage_mismatch(pd):
     return "OT_PRD STAGE_MISMATCH" in t
 
 
-def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc=""):
+def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc="",
+            trim=True):
     """one ECO iteration from routed dir src into root/i<n><tag> (a single-mode kit's t<N> pass first into
     root/i<n><tag>t); repair_rc 'placement' = OT_PRD_REPAIR_RC (FlexPA SIG11 class); -> iteration record (metrics None
     when no sign-off)"""
@@ -361,6 +362,10 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         stag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
             return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
+        if trim:
+            gone = trim_superseded(root, pd)
+            if gone:
+                it.setdefault("trimmed", []).extend(gone)
         it.setdefault("eco_vclk_ps", {})[v] = eco_vclk_frame(pd, v, prev)
         rc = step("prd_run" + stag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
         if rc:
@@ -405,6 +410,36 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     it["base"] = (rec.get("inputs") or {}).get("base")
     it["metrics"] = metrics(rec)
     return end("SIGNED" if it["metrics"]["signed"] else "NOT_SIGNED")
+
+
+TRIM_ODBS = ("5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb")
+
+
+def trim_superseded(root, current):
+    """KW-FIX-16 11-05 (COORD URGENT: intel2 scratch2 fell ~1 GB/min, ECO loops wrote ~8 GB of odbs per iteration):
+    once pass dir `current` is staged (prd_mk.sh has copied its seed: 5_1_grt / 5_2_route / 6_final, never the three
+    below), every earlier finished pass dir under root drops 5_route / 5_3_fillcell / 6_1_fill odbs.  Kept: 6_final.odb
+    (the sign-off routed DB; a base without it is not touched), 5_2_route / 5_1_grt (seeds), logs, reports, sign-off,
+    and any pass whose sign-off is SIGNED.  OT_ECO_KEEP_ROUTED=1 (or run_loop keep) turns it off.  -> [removed paths]"""
+    if os.environ.get("OT_ECO_KEEP_ROUTED") == "1":
+        return []
+    root, cur = Path(root), Path(current).resolve()
+    gone = []
+    for d in sorted(root.glob("i*")):
+        if not d.is_dir() or not re.fullmatch(r"i\d+[a-z]*", d.name) or d.resolve() == cur:
+            continue
+        so_rec = load(d / "signoff" / "signoff.json") if (d / "signoff" / "signoff.json").is_file() else {}
+        if so_rec and metrics(so_rec)["signed"]:
+            continue
+        for base in d.glob("run/results/asap7/*/base"):
+            if not (base / "6_final.odb").is_file():
+                continue
+            for name in TRIM_ODBS:
+                f = base / name
+                if f.is_file() and not f.is_symlink():
+                    f.unlink()
+                    gone.append(str(f))
+    return gone
 
 
 def prune(it, intermediate_only=False):
@@ -457,20 +492,20 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         # --from wins over OT_ECO_FROM=route|grt: owner-chosen seed (DIE-HEAD-59: a DRC tied to one pin + a GRT-session RSZ-0074, route-keep)
         mode = from_mode or os.environ.get("OT_ECO_FROM") or ("route" if prev["drc"] == 0 else "grt")
         it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
-                     repair_rc=repair_rc)
+                     repair_rc=repair_rc, trim=not keep)
         res["iterations"].append(it)
         if it.get("flexpa_sig11") and not repair_rc:
             # class retry (once per loop): the same iteration with placement-estimated ECO nets in a new dir
             repair_rc = "placement"
             res["repair_rc_retry"] = f"iteration {n}: FlexPA SIG11 -> OT_PRD_REPAIR_RC=placement"
             it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
-                         tag="r", repair_rc=repair_rc)
+                         tag="r", repair_rc=repair_rc, trim=not keep)
             res["iterations"].append(it)
         if it.get("stage_mismatch") and n == 1 and mode == "route":
             # class retry: the kit's routed seed predates its signed 6_final (post-route ECO kit) -> seed with 6_final
             res["stage_retry"] = "iteration 1: OT_PRD STAGE_MISMATCH -> OT_PRD_FROM=final"
             it = iterate(n, src, root, kit, runner, so, "final", hold_margin, mem, cpus, run, image, prev=prev,
-                         tag="f", repair_rc=repair_rc)
+                         tag="f", repair_rc=repair_rc, trim=not keep)
             res["iterations"].append(it)
         m = it.get("metrics")
         if not m:

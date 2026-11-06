@@ -1,0 +1,9 @@
+by check: {'clock': (15, 15), 'cuts': (0, 1), 'hops': (2, 4), 'reset': (1, 1), 'stations': (3, 5)}
+gone 1 new 6
+NEW hops lane L15: normal FT NW_b011.L15x1 real input bit 1699 S0->S1 is 473 um > reach 405; regs_um[0] is not a native placement
+NEW hops lane L15m: normal FT NE_b011.L15x1 real input bit 1699 S0->S1 is 473 um > reach 405; regs_um[0] is not a native placement
+NEW stations type q_b011__physical_v1 slot L15x1: real normal input S0->S1 = 473 um > ft_station_max_um 405
+NEW stations type q_b011 slot L15x1: real normal input S0->S1 = 473 um > ft_station_max_um 405
+NEW cuts horizontal cut at 5750: NW_b101 segment carries 2808 bits on 3334 tracks = 0.84 > 0.6
+NEW reset type q_b000: cannot uniquely resolve hard-core pin table cores/ot_hbm_hc_bank128_pair_first_core_pins.json from /srv/opentallas-scratch2/claude/die-hbm-75/wt
+GONE reset type q_b000: cannot uniquely resolve hard-core pin table cores/ot_hbm_hc_bank128_pair_first_core_pins.json from /srv/opentallas-scratch2/claude/die-hbm-74/wt

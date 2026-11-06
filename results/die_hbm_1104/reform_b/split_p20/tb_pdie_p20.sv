@@ -39,7 +39,7 @@ module tb_pdie_p20;
     always @(negedge c) begin
         cyc = cyc + 1;
         txa <= (cyc > 40 && cyc % 256 != 0) ? beat(cyc, 11) : 512'd2;
-        if (FT == 2 && cyc == FE) begin force u_g.u_fcore.u_enc.flt = 1'b1; force u_s.u_tx.u_fcore.u_enc.flt = 1'b1; end
+        if (FT == 2 && cyc == FE) begin force u_g.u_fcore.u_enc.flt = 1'b1; force u_s.u_tx.u_fcore.g_e1.u_enc.flt = 1'b1; end
         if (rst && cyc > 40) begin
             if (s_tx !== g_tx) begin mm_tx = mm_tx + 1; if (first < 0) first = cyc; end
             if (s_st[1] !== g_st[1]) begin mm_lk = mm_lk + 1; if (first < 0) first = cyc; end

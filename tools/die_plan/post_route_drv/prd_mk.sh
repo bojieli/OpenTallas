@@ -75,7 +75,7 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_tiesplit.tcl prd_spef_insts.py; do cp $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
@@ -161,6 +161,9 @@ done
 [ -z "${OT_PRD_UNFOLD_CHAINS:-}" ] || printf 'OT_PRD_UNFOLD_CHAINS=%q\n' "$OT_PRD_UNFOLD_CHAINS" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGETED:-}" ] || printf 'OT_PRD_TARGETED=%q\n' "$OT_PRD_TARGETED" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGET_SLEW_PS:-}" ] || printf 'OT_PRD_TARGET_SLEW_PS=%q\n' "$OT_PRD_TARGET_SLEW_PS" >> $OUT/variant.env
+[ -z "${OT_PRD_TARGET_FANOUT:-}" ] || [ "${OT_PRD_TARGET_FANOUT}" = 0 ] || printf 'OT_PRD_TARGET_FANOUT=%q\n' "$OT_PRD_TARGET_FANOUT" >> $OUT/variant.env
+[ -z "${OT_PRD_AUTO_FANOUT:-}" ] || { [[ "$OT_PRD_AUTO_FANOUT" =~ ^[0-9]+$ ]] || { echo "prd_mk: OT_PRD_AUTO_FANOUT=$OT_PRD_AUTO_FANOUT: want an integer"; exit 2; }
+  echo "OT_PRD_AUTO_FANOUT=$OT_PRD_AUTO_FANOUT" >> $OUT/variant.env; }
 [ -z "${OT_PRD_TIE_SPLIT:-}" ] || printf 'OT_PRD_TIE_SPLIT=%q\n' "$OT_PRD_TIE_SPLIT" >> $OUT/variant.env
 # DIE-S81-48 11-02: OT_PRD_REPAIR_RC=placement = repair on placement estimates for ECO nets (FlexPA SIG11 class)
 # FLOW-25 11-03: unset = the hook decides (a seed with routed data wires repairs on placement, RSZ-0074 class); grt = A/B

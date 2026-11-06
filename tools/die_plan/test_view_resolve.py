@@ -51,7 +51,7 @@ def test_repo_relative_view_from_git_store(sparse):
 def test_existing_cache_tree_dir_without_view_dir(sparse, tmp_path):
     tree = subprocess.run(["git", "-C", str(sparse), "rev-parse", "HEAD:results/ev33/m"], capture_output=True,
                           text=True, check=True).stdout.strip()
-    (tmp_path / "cache" / tree).mkdir(parents=True)          # e.g. an older cache layout / a concurrent writer
+    (tmp_path / "cache" / f"{tree}.l1").mkdir(parents=True)  # e.g. an older cache layout / a concurrent writer
     f = cores.resolve("results/ev33/m/m.lef", sparse)
     assert f.is_file() and f.parent.name == "m"
 
@@ -109,3 +109,54 @@ def test_serdes_specializer_finds_repo_relative_view_in_sparse_source(tmp_path, 
     rec = S.specialize_plan(kit, plan, src)
     assert rec["physical_master"] == master and (kit / "physical_specialization").is_dir()
     assert Path(json.loads((kit / "kit_rtl.json").read_text())["hard_macros"][master]["lef"]).is_file()
+
+
+@pytest.fixture
+def sparse_links(tmp_path, monkeypatch):
+    """KW-FIX-16 11-05 (DIE-HEAD-70 hd_tile gen phys 'VDD has no PG pin geometry'): view dirs whose LEF/Liberty are
+    git symlinks into a shared master dir; the sparse checkout carries neither."""
+    monkeypatch.setenv("OT_VIEW_CACHE", str(tmp_path / "cache"))
+    src = tmp_path / "src"
+    m, v = src / "results/ev33/master", src / "results/ev33/m"
+    m.mkdir(parents=True)
+    v.mkdir(parents=True)
+    (m / "m.lef").write_text(LEF)
+    (m / "m_tt.lib").write_text("library(m_tt) {}\n")
+    (v / "m.lef").symlink_to("../master/m.lef")
+    (v / "hop.lib").symlink_to("../master/m_tt.lib")
+    (v / "m_tt.lib").symlink_to("hop.lib")                # chain: link -> link -> file
+    (v / "gone.lib").symlink_to("../master/none.lib")     # dangling
+    (v / "out.lef").symlink_to("../../../../outside.lef") # leaves the repository
+    (src / "tools").mkdir()
+    (src / "tools/x.txt").write_text("x\n")
+    _git(src, "init", "-q")
+    _git(src, "-c", "user.email=t@t", "-c", "user.name=t", "add", "results", "tools")
+    _git(src, "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "v")
+    _git(src, "sparse-checkout", "set", "--no-cone", "/tools/")
+    assert not (src / "results").exists()
+    return src
+
+
+def test_symlink_blob_view_materialises_target_bytes(sparse_links):
+    f = cores.resolve("results/ev33/m/m.lef", sparse_links)
+    assert f.is_file() and not f.is_symlink() and f.read_text() == LEF   # was the 15-byte link text '../master/m.lef'
+    assert (f.parent / "m_tt.lib").read_text() == "library(m_tt) {}\n"  # chain followed
+    assert not (f.parent / "gone.lib").exists() and not (f.parent / "out.lef").exists()   # no stubs
+    assert G._macro_pg_layers(f) == "M6 M7"                               # the hd_tile PG read works
+
+
+def test_symlink_blob_cache_stub_from_old_layout_not_reused(sparse_links, tmp_path):
+    tree = subprocess.run(["git", "-C", str(sparse_links), "rev-parse", "HEAD:results/ev33/m"], capture_output=True,
+                          text=True, check=True).stdout.strip()
+    old = tmp_path / "cache" / tree / "m"
+    old.mkdir(parents=True)
+    (old / "m.lef").write_text("../master/m.lef")         # what the pre-fix resolver cached
+    f = cores.resolve("results/ev33/m/m.lef", sparse_links)
+    assert f.read_text() == LEF and f.parent != old
+
+
+def test_symlink_target_present_on_disk_is_read(sparse_links):
+    _git(sparse_links, "sparse-checkout", "set", "--no-cone", "/tools/", "/results/ev33/master/")
+    assert (sparse_links / "results/ev33/master/m.lef").is_file() and not (sparse_links / "results/ev33/m").exists()
+    f = cores.resolve("results/ev33/m/m.lef", sparse_links)
+    assert f.read_text() == LEF

@@ -76,6 +76,7 @@ GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "LEC_TOOL.json", "
               "grt_policy.json", "pin_audit.py", "audit_pins.json", "lec.py", "lec_async.sh", "lec_options.json",
               "lec_async.on", "lec_async.identity", "signoff.py", "lec_options.json", "straps.json",
               "grt183_make.sh", "grt183_resume.tcl"}      # FLOW-28: inert unless a run stops on GRT-0183; a kit with no such stop rebuilds nothing
+GATE_ROOTS |= {"grt_stall_resume.tcl"}   # KW-FIX-17 11-05 GRT-STALL: inert unless a 5_1_grt stage stalls in -end_incremental
 # run_kit.sh reads these config variables itself (outside the ORFS make steps)
 RUNNER_VARS = {"OT_HOLD_FF_MARGIN": "grt", "OT_TAP_GRT_PRE": "cts", "OT_PINREG_PAD": "cts"}
 # ORFS variables first read after synthesis (anything else: synth, i.e. a full rebuild)
@@ -515,6 +516,28 @@ def decide(new, old, allow_nochange=False):
     return d
 
 
+KWRS_MARKER = ".kwrs_done."           # run_kit.sh stage-resume step markers (/work/.kwrs_done.$PPID)
+
+
+def drop_markers(K):
+    """COORD 11-05 11:1x class fix (DIE-HEAD-68 ctln2 skipped GRT; DIE-QC-75 sle_fe_v3 skipped place): a kit copied
+    with cp -al carries the old run's .kwrs_done.<ppid> markers, and the container's PPID repeats, so kwrs_make.sh
+    reads the old run's steps as done and skips them.  Remove every marker in K and K/run before a launch.
+    -> [removed paths]"""
+    out = []
+    for d in (K, os.path.join(K, "run")):
+        try:
+            names = os.listdir(d)
+        except OSError:
+            continue
+        for n in names:
+            p = os.path.join(d, n)
+            if n.startswith(KWRS_MARKER) and (os.path.isfile(p) or os.path.islink(p)):
+                os.unlink(p)            # unlink only: a hardlinked marker in the source kit stays as it was
+                out.append(p)
+    return sorted(out)
+
+
 def link_plan(old_ck, start, run_files):
     """files of the old K/run to reuse for steps before start: [(rel, mode)] (mode link | copy).
     run_files: {rel under K: [size, mtime]} of the old K/run tree."""
@@ -532,6 +555,8 @@ def link_plan(old_ck, start, run_files):
         return {1: "synth", 2: "floorplan", 3: "place", 4: "cts"}.get(n, "route")
     out = []
     for rel, (size, mtime) in sorted(run_files.items()):
+        if os.path.basename(rel).startswith(KWRS_MARKER):
+            continue                    # a step marker of the old run never carries over
         s = step_of(os.path.basename(rel))
         if s is not None and IDX[s] >= IDX[start]:
             continue
@@ -564,6 +589,7 @@ def apply(newK, src, dec, source_meta):
     newK/resume.json.  newK/run must not exist.  -> resume record"""
     if os.path.exists(os.path.join(newK, "run")):
         raise RuntimeError(f"{newK}/run exists: a resumed attempt must start from a fresh kit")
+    dropped = drop_markers(newK)
     old_ck = checkpoint(src)
     for s in dec["reuse"]:
         st = (old_ck["steps"] or {}).get(s) or {}
@@ -599,7 +625,7 @@ def apply(newK, src, dec, source_meta):
            "source": {k: source_meta.get(k) for k in ("host", "kit", "attempt", "attempt_dir", "relay")},
            "source_checkpoint": {s: old_ck["steps"][s] for s in dec["reuse"]},
            "changed": dec["changed"], "fingerprints": dec.get("fingerprints"),
-           "links": links, "keep_created": keep_created, "keep_path": keep if keep_created else None,
+           "links": links, "markers_dropped": dropped, "keep_created": keep_created, "keep_path": keep if keep_created else None,
            "applied": time.time(), "applied_on": os.uname().nodename,
            "n_link": sum(1 for x in links if x["mode"] == "link"), "n_copy": sum(1 for x in links if x["mode"] == "copy"),
            "bytes_link": sum(x["size"] for x in links if x["mode"] == "link"),
@@ -667,6 +693,8 @@ def main(argv):
     a.add_argument("kit")
     a = sub.add_parser("release")
     a.add_argument("kit")
+    a = sub.add_parser("clean", help="drop stale .kwrs_done.* step markers (run after cp -al of a kit, before launch)")
+    a.add_argument("kit")
     a = ap.parse_args(argv)
     if a.cmd == "inputs":
         r = write_inputs(a.kit)
@@ -686,6 +714,8 @@ def main(argv):
         bad = verify(a.kit)
         print("KW_RESUME_VERIFY " + json.dumps({"ok": not bad, "bad": bad[:20]}))
         return 4 if bad else 0
+    elif a.cmd == "clean":
+        print("KW_RESUME_CLEAN " + json.dumps({"removed": drop_markers(a.kit)}))
     elif a.cmd == "release":
         print("KW_RESUME_RELEASE " + json.dumps({"removed": release(a.kit)}))
     return 0

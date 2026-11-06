@@ -3,7 +3,7 @@
 # shell turn into wires in the DUT, each tile carries its own. run_p27.sh KITRTL OUT [CYCLES]; MUT 0 must PASS, MUT 1/2/3 must FAIL.
 set -u
 KR=$1; O=$2; CYC=${3:-3000}; H=$(cd "$(dirname "$0")" && pwd); W=$H/../../../..
-RT=$W/rtl/hbm_accel/cores_split/reform_1105s/opstore; BB=$W/physical/die_plan/hbm/over_cap_split/reform_1103; SM=$H/sram_256x256_bench.sv
+RT=$W/rtl/hbm_accel/cores_split/reform_1105s/opstore; BB=$W/physical/die_plan/hbm/over_cap_split/reform_1103; SM=${SRAM_MODEL:-$H/sram_256x256_bench.sv}
 V=${VERILATOR:-$HOME/.local/opentallas-tools/bin/verilator}; mkdir -p "$O"
 T=ot_hgi_sfu_core_split3__opstore_b; LEAF=$KR/ot_hgi_su_unit.sv
 for M in group output; do python3 -I $BB/facewrap.py --top ot_hgi_sfu_opsb_$M --clk-re '^clk$' --rst-re '^rst_n$' --out $O/${M}__fs.sv $RT/ot_hgi_sfu_opsb_tiles.sv $LEAF $SM > $O/$M.json || exit 1; done

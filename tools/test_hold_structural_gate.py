@@ -8,7 +8,7 @@ HELPER = pathlib.Path(__file__).with_name("orfs_hold_mm.tcl")
 
 
 class HoldStructuralGate(unittest.TestCase):
-    def run_case(self, worst, failures, args, guard=1, synced=True, inputs=0, nports=0, planned=None, stop=1, period=None):
+    def run_case(self, worst, failures, args, guard=1, synced=True, inputs=0, nports=0, planned=None, stop=1, period=None, rr=None, scope=None):
         script = r'''
 source @HELPER@
 set ::ot_mm_synced @SYNCED@
@@ -20,12 +20,21 @@ set ::worst @WORST@
 set ::failures @FAILURES@
 set ::inputs @INPUTS@
 set ::nports @NPORTS@
+set ::rr @RR@
+@SCOPE@
+set ::rr_calls 0
+proc all_registers {args} { return [list reg_$args] }
 @PLANNED@
 @STOP@
 @PERIOD@
 set ::repairs {}
 proc find_timing_paths {args} {
   if {[lsearch -exact $args -scenes] < 0 || [lindex $args [expr {[lsearch -exact $args -scenes]+1}]] ne "BC"} { error "must measure FF scene BC" }
+  if {[lsearch -exact $args -from] >= 0} {
+    incr ::rr_calls
+    if {$::rr eq "none"} { return {} }
+    return [lrepeat 7 rr_path]
+  }
   if {[lsearch -exact $args -slack_max] >= 0} {
     if {[lindex $args [expr {[lsearch -exact $args -slack_max]+1}]] != 0} { error "must count true failures, not margin" }
     return [concat [lrepeat $::inputs in_path] [lrepeat [expr {$::failures - $::inputs}] failing_path]]
@@ -39,7 +48,8 @@ proc get_property {p prop} {
   if {$prop eq "period"} { return $::period }
   if {$prop eq "direction"} { return [expr {[string match port_* $p] ? "input" : "output"}] }
   if {$prop eq "startpoint"} { return [expr {$p eq "in_path" ? "port_0" : "u_reg/CLK"}] }
-  if {$p eq "worst_path"} { return $::worst }; return -1
+  if {$p eq "worst_path"} { return $::worst }
+  if {$p eq "rr_path"} { return [expr {$::rr eq "" ? $::worst : $::rr}] }; return -1
 }
 proc log_cmd {args} { lappend ::repairs $args }
 # In passing cases finish after proving that repair is reached, avoiding the
@@ -49,6 +59,7 @@ proc ot_hm_guard {args} { return -code error REPAIR_REACHED }
 set code [catch {ot_repair_timing {@ARGS@}} msg options]
 puts "RESULT $code $msg"
 puts "REPAIRS $::repairs"
+puts "RRCALLS $::rr_calls"
 '''
         with tempfile.TemporaryDirectory() as directory:
             script = (script.replace('@HELPER@', '{'+str(HELPER)+'}')
@@ -60,6 +71,8 @@ puts "REPAIRS $::repairs"
                       .replace('@ARGS@', args)
                       .replace('@INPUTS@', str(inputs))
                       .replace('@NPORTS@', str(nports))
+                      .replace('@RR@', '{}' if rr is None else str(rr))
+                      .replace('@SCOPE@', '' if scope is None else 'set ::env(OT_HOLD_STOP_SCOPE) %s' % scope)
                       .replace('@PLANNED@', '' if planned is None else 'set ::env(OT_HOLD_PLANNED_INPUT) %s' % planned)
                       .replace('@STOP@', '' if stop is None else 'set ::env(OT_HOLD_PREROUTE_STOP) %s' % stop)
                       .replace('@PERIOD@', '' if period is None else
@@ -162,16 +175,49 @@ puts "REPAIRS $::repairs"
         self.assertNotIn('OT_HOLD_STRUCTURAL', out)
         self.assertIn('REPAIR_REACHED', out)
 
-    # COORD 11-01 05:1x / OWNER 12.28b: the one default stop is FF hold WNS below OT_HOLD_STOP_PS = -150 ps
+    # COORD 11-01 05:1x / OWNER 12.28b: the one default stop is FF hold WNS below OT_HOLD_STOP_PS = -200 ps
     def test_below_minus_150_still_stops(self):
-        out, _ = self.run_case(-150.01, 10, '-hold -hold_margin 10', stop=None, period=833)
+        out, _ = self.run_case(-200.01, 10, '-hold -hold_margin 10', stop=None, period=833)
         self.assertIn('OT_HOLD_STRUCTURAL', out)
-        self.assertIn('beyond the structural stop OT_HOLD_STOP_PS -150 ps', out)
+        self.assertIn('beyond the structural stop OT_HOLD_STOP_PS -200 ps', out)
         self.assertNotIn('REPAIR_REACHED', out)
 
     def test_at_minus_150_is_info(self):
-        out, _ = self.run_case(-150, 10, '-hold -hold_margin 10', stop=None, period=833)
+        out, _ = self.run_case(-200, 10, '-hold -hold_margin 10', stop=None, period=833)
         self.assertIn('OT_HOLD_PREREPAIR INFO', out)
+        self.assertIn('REPAIR_REACHED', out)
+
+    # KW-FIX-17 11-05 (COORD 16:2x): the structural stop counts register-to-register FF hold only; port paths advisory
+    def test_port_paths_beyond_stop_do_not_stop_when_reg2reg_ok(self):
+        # HBM kshare: all-path FF -150.89 (old -150 stop), reg2reg -53.29; here past the -200 default stop
+        out, _ = self.run_case(-443.35, 4243, '-hold -hold_margin 10', stop=None, period=833, rr=-53.29)
+        self.assertIn('OT_HOLD_PORT ADVISORY stage=cts: FF hold ws -443.35 ps over 4243 endpoints', out)
+        self.assertIn('register-to-register ws -53.29 over 7 endpoints', out)
+        self.assertIn('OT_HOLD_PREREPAIR INFO', out)
+        self.assertNotIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('REPAIR_REACHED', out)
+
+    def test_reg2reg_beyond_stop_still_stops(self):
+        out, _ = self.run_case(-443.35, 4243, '-hold -hold_margin 10', stop=None, period=833, rr=-210.5)
+        self.assertIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('register-to-register ws -210.50, 7 endpoints', out)
+        self.assertIn('beyond the structural stop OT_HOLD_STOP_PS -200 ps', out)
+        self.assertNotIn('REPAIR_REACHED', out)
+
+    def test_no_failing_reg2reg_paths_proceeds(self):
+        out, _ = self.run_case(-300, 900, '-hold -hold_margin 10', stop=None, period=833, rr='none')
+        self.assertIn('register-to-register ws - over 0 endpoints', out)
+        self.assertIn('REPAIR_REACHED', out)
+
+    def test_scope_all_restores_all_path_stop(self):
+        out, _ = self.run_case(-443.35, 4243, '-hold -hold_margin 10', stop=None, period=833, rr=-53.29, scope='all')
+        self.assertIn('OT_HOLD_STRUCTURAL', out)
+        self.assertNotIn('OT_HOLD_PORT', out)
+        self.assertIn('RRCALLS 0', out)
+
+    def test_reg2reg_split_not_run_above_stop(self):
+        out, _ = self.run_case(-137.03, 5012, '-hold -hold_margin 10', stop=None, rr=-500)
+        self.assertIn('RRCALLS 0', out)
         self.assertIn('REPAIR_REACHED', out)
 
     def test_stop_constant_is_one_value_in_every_gate(self):
@@ -181,7 +227,7 @@ puts "REPAIRS $::repairs"
         for rel in ('tools/orfs_hold_mm.tcl', 'tools/die_plan/hold_gate.tcl', 'physical/die_plan/hbm_arch_cores/hold_gate.tcl'):
             m = re.findall(r'^set (?:::)?OT_HOLD_STOP_PS (\S+)$', (root / rel).read_text(), re.M)
             vals[rel] = m
-        self.assertEqual(vals, {k: ['-150.0'] for k in vals})
+        self.assertEqual(vals, {k: ['-200.0'] for k in vals})
 
     def test_unsynchronized_ff_still_fails_closed_by_default(self):
         out, _ = self.run_case(20, 0, '-hold', synced=False, stop=None)

@@ -1,0 +1,53 @@
+{
+"left": {
+"NW_hub->NW_b113": 0,
+"NW_b113->NW_hub": 0,
+"NE_hub->NE_b113": 0,
+"NE_b113->NE_hub": 0
+},
+"flops": 112864,
+"lanes": [
+{
+"lane": "L844",
+"pair": "NW_hub->NW_b113",
+"bits": 415,
+"cycles": 49,
+"stations": 47
+},
+{
+"lane": "L845",
+"pair": "NW_b113->NW_hub",
+"bits": 291,
+"cycles": 24,
+"stations": 22
+},
+{
+"lane": "L846",
+"pair": "NW_b113->NW_hub",
+"bits": 407,
+"cycles": 77,
+"stations": 75
+},
+{
+"lane": "L844m",
+"pair": "NE_hub->NE_b113",
+"bits": 415,
+"cycles": 49,
+"stations": 47
+},
+{
+"lane": "L845m",
+"pair": "NE_b113->NE_hub",
+"bits": 291,
+"cycles": 24,
+"stations": 22
+},
+{
+"lane": "L846m",
+"pair": "NE_b113->NE_hub",
+"bits": 407,
+"cycles": 77,
+"stations": 75
+}
+]
+}

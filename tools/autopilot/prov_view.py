@@ -14,7 +14,7 @@ such child, so type-level place / route failures surface early.  Still a hard vi
                       with the same port base names.  A plan entry that already names a lef (noview) keeps that plan
                       LEF; only the routed lib is taken (port names checked against the plan LEF).
             contract  blackbox LEF from the plan outline + pins_file (pin directions: pins_file dir, plan LEF, child
-                      RTL header) with OBS M1..obs_max (default M7, a superset of any plan-obeying child) less pin windows, VDD/VSS
+                      RTL header) with OBS M1..obs_max (default M5 = 12.1a ceiling; M7 gave PDN-0006 on M5 PG) less pin windows, VDD/VSS
                       stripes; budget lib (TT/FF) from the plan arrival contracts: both faces registered, IO_BUDGET x T
                       each side (gen_phys.sdc), clock pins carry the plan core-tap insertion as max/min_clock_tree_path.
           writes D/views/M/{M.lef, M_tt.lib, M_ff.lib}, the overlay plan dir D/plan (links to every entry of the plan
@@ -129,7 +129,18 @@ def plan_pins(entry, plan_dir):
     p = f if os.path.isabs(f) else os.path.join(plan_dir, f)
     j = json.load(open(p))
     pins = j.get("pins") if isinstance(j, dict) else j
-    return [x for x in pins if isinstance(x, dict) and x.get("name")]
+    # PROV-PINS-BUS (DIE-QC-81 11-05): plan pin tables come in two forms, {name,...} rows and {bus, bit,...} rows
+    # (clock_entry_pins.pname). Bus/bit rows were dropped, so the QC su_c contract views (red2_leaf, su8_rst3, crh_rp1,
+    # s8x_prog, s8x_vmr) carried only VDD/VSS and the parent kits placed against pinless children.
+    out = []
+    for x in pins:
+        if not isinstance(x, dict):
+            continue
+        if not x.get("name") and x.get("bus"):
+            x = dict(x, name=x["bus"] if x.get("bit") is None else f"{x['bus']}[{x['bit']}]")
+        if x.get("name"):
+            out.append(x)
+    return out
 
 
 def core_insertion(t, inst, pins):
@@ -318,6 +329,14 @@ def name_dir(n):
 
 
 # ------------------------------------------------------------------------------------------------------ writers
+CONTRACT_OBS_DEFAULT = "M5"
+
+
+def contract_obs_top(entry):
+    """OBS top layer index of a contract abstract: the plan entry obs_max, else CONTRACT_OBS_DEFAULT (M5)"""
+    return int(str(entry.get("obs_max") or CONTRACT_OBS_DEFAULT).lstrip("Mm") or 5)
+
+
 def contract_obs(w, h, pins, obs_top):
     """OBS lines: blanket M1..obs_top, except an edge window PIN_ACCESS_BAND deep and +- that wide around each pin
     on its own layer and the layer above. A blanket on the pin layer leaves no access point at all (DRT-0073 on
@@ -541,6 +560,10 @@ def make(a):
             if len(ow) != 2 or (ppins is None and not plan_lef):
                 errors.append(f"{m}: no routed abstract ({'; '.join(tried) or 'none'}) and no plan outline/pins for a contract")
                 continue
+            if ppins is not None and not ppins and not plan_lef:
+                # a pins_file with no readable signal pin would give a PG-only blackbox: fail closed (PROV-PINS-BUS)
+                errors.append(f"{m}: plan pins_file {entry.get('pins_file')} has no signal pin rows for a contract")
+                continue
             dirs, dsrc = {}, []
             if plan_lef:
                 _, _, lp, _ = lef_info(plan_lef)
@@ -577,7 +600,11 @@ def make(a):
                 errors.append(f"{m}: no routed abstract ({'; '.join(tried) or 'none'}) and contract abstract has "
                               f"{len(missing)} pins without a direction (pins_file dir / plan lef / RTL): {missing[:3]}")
                 continue
-            obs = int(str(entry.get("obs_max") or "M7").lstrip("Mm") or 7)
+            # PROV-OBS-M5 (DIE-QC-81 11-05): default OBS top = M5, the 12.1a core ceiling and the default of g2.py /
+            # placement_obstacles.py. The contract PG pins are M5 stripes; a blanket M6/M7 OBS over them gave PDN-0006
+            # (core_pg_connect M5->M6 has no landing) on every parent that connects child PG (QC coll_core 11-05,
+            # = the S81 pgobs class of 11-03). A plan obs_max still overrides; a child signed above it re-routes (resign exit 4).
+            obs = contract_obs_top(entry)
             if not plan_lef:
                 open(os.path.join(vd, m + ".lef"), "w").write(contract_lef(m, ow[0], ow[1], ppins, dirs, obs))
             clocks = core_insertion(t, entry.get("inst", ""), {p["name"] for p in ppins})

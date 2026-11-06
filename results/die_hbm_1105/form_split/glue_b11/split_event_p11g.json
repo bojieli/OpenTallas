@@ -1,0 +1,432 @@
+{
+ "schema": "opentallas.hbm_split_event.v1",
+ "cores": [
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "sha": "p11g",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "hfd_hgi_vms_glue_nw_t__p11glue.sv",
+   "slot_um": [
+    777.6,
+    1635.552
+   ],
+   "instances": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_a": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      777.6,
+      501.12
+     ]
+    ],
+    "u_fcore.u_core.u_b": [
+     [
+      0.0,
+      509.76
+     ],
+     [
+      777.6,
+      501.12
+     ]
+    ],
+    "u_fcore.u_core.u_h": [
+     [
+      0.0,
+      1019.52
+     ],
+     [
+      777.6,
+      616.032
+     ]
+    ]
+   },
+   "tables": {
+    "hfd_hgi_vms_gnw_cw": {
+     "pins_file": "cores/hfd_hgi_vms_gnw_cw__777.6x501.12__d44v_split.json",
+     "outline_um": [
+      777.6,
+      501.12
+     ],
+     "pins": 9996,
+     "clock_pins": 1,
+     "clock_entry": [
+      388.8,
+      250.56
+     ],
+     "faces": {
+      "E": 5555,
+      "I": 1,
+      "N": 1116,
+      "S": 1663,
+      "W": 1661
+     }
+    },
+    "hfd_hgi_vms_gnw_ccw": {
+     "pins_file": "cores/hfd_hgi_vms_gnw_ccw__777.6x501.12__d44v_split.json",
+     "outline_um": [
+      777.6,
+      501.12
+     ],
+     "pins": 9996,
+     "clock_pins": 1,
+     "clock_entry": [
+      388.8,
+      250.56
+     ],
+     "faces": {
+      "E": 6389,
+      "I": 1,
+      "N": 1108,
+      "S": 8,
+      "W": 2490
+     }
+    },
+    "hfd_hgi_vms_gnw_hub": {
+     "pins_file": "cores/hfd_hgi_vms_gnw_hub__777.6x616.032__d44v_split.json",
+     "outline_um": [
+      777.6,
+      616.032
+     ],
+     "pins": 6830,
+     "clock_pins": 1,
+     "clock_entry": [
+      388.8,
+      306.72
+     ],
+     "faces": {
+      "E": 2181,
+      "I": 1,
+      "S": 2216,
+      "W": 2432
+     }
+    }
+   },
+   "added_cycles": "0 on every die pin and every crossing: the 2 kit face flops of a crossing replace the producer out reg + consumer in reg (port-cut RTL ot_vms_glue_pc.sv); ring-stop faults enter vmstat at flags1. Lock-step results/die_hbm_1105/form_split/glue_b11/",
+   "pin_displacement_um": 14487192.6,
+   "stations_repointed": {
+    "stations": 0
+   },
+   "designs_removed": [
+    "hfd_hgi_vms_glue_nw_t"
+   ],
+   "designs_added": [
+    "hfd_hgi_vms_gnw_ccw",
+    "hfd_hgi_vms_gnw_cw",
+    "hfd_hgi_vms_gnw_hub"
+   ]
+  }
+ ],
+ "core_faces_moves": [
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_cw",
+   "port": "b3_xq",
+   "to": "W",
+   "mean_before": -0.582,
+   "score_after": 0.191
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_cw",
+   "port": "b3_xq_done",
+   "to": "W",
+   "mean_before": -0.582,
+   "score_after": 0.191
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_cw",
+   "port": "b5_xq",
+   "to": "E",
+   "mean_before": -0.972,
+   "score_after": 0.226
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_cw",
+   "port": "b5_xq_done",
+   "to": "E",
+   "mean_before": -0.52,
+   "score_after": 0.226
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_cw",
+   "port": "fault",
+   "to": "E",
+   "mean_before": -1.0,
+   "score_after": 0.0
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b2_xq2",
+   "to": "W",
+   "mean_before": -0.97,
+   "score_after": 0.228
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b2_xq2_done",
+   "to": "W",
+   "mean_before": -0.516,
+   "score_after": 0.228
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b3_xq2",
+   "to": "W",
+   "mean_before": -0.99,
+   "score_after": 0.065
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b3_xq2_done",
+   "to": "W",
+   "mean_before": -0.864,
+   "score_after": 0.065
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b4_xq2",
+   "to": "E",
+   "mean_before": -0.885,
+   "score_after": 0.201
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b4_xq2_done",
+   "to": "E",
+   "mean_before": -0.56,
+   "score_after": 0.201
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b5_xq2",
+   "to": "E",
+   "mean_before": -0.995,
+   "score_after": 0.11
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b5_xq2_done",
+   "to": "E",
+   "mean_before": -0.774,
+   "score_after": 0.11
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_ccw",
+   "port": "b7_xq2_done",
+   "to": "E",
+   "mean_before": -0.997,
+   "score_after": 0.888
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b0_flt",
+   "to": "E",
+   "mean_before": -0.447,
+   "score_after": 0.215
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b1_flt",
+   "to": "E",
+   "mean_before": -0.645,
+   "score_after": 0.119
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b2_flt",
+   "to": "E",
+   "mean_before": -0.276,
+   "score_after": 0.318
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b2_pq",
+   "to": "W",
+   "mean_before": -0.926,
+   "score_after": 0.282
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b2_pr",
+   "to": "W",
+   "mean_before": -0.363,
+   "score_after": 0.282
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b2_status",
+   "to": "W",
+   "mean_before": -0.363,
+   "score_after": 0.282
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b3_flt",
+   "to": "E",
+   "mean_before": -0.477,
+   "score_after": 0.199
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b3_pq",
+   "to": "W",
+   "mean_before": -0.305,
+   "score_after": 0.023
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b3_pr",
+   "to": "W",
+   "mean_before": -0.305,
+   "score_after": 0.023
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b3_status",
+   "to": "W",
+   "mean_before": -0.305,
+   "score_after": 0.023
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b4_flt",
+   "to": "E",
+   "mean_before": -0.245,
+   "score_after": 0.3
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b4_pq",
+   "to": "E",
+   "mean_before": -0.385,
+   "score_after": 0.265
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b4_pr",
+   "to": "E",
+   "mean_before": -0.914,
+   "score_after": 0.265
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b4_status",
+   "to": "E",
+   "mean_before": -0.385,
+   "score_after": 0.265
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b5_flt",
+   "to": "W",
+   "mean_before": -0.353,
+   "score_after": 0.274
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b5_pq",
+   "to": "E",
+   "mean_before": -0.101,
+   "score_after": 0.002
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b5_pr",
+   "to": "E",
+   "mean_before": -0.101,
+   "score_after": 0.002
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b5_status",
+   "to": "E",
+   "mean_before": -0.101,
+   "score_after": 0.002
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b6_flt",
+   "to": "E",
+   "mean_before": -0.287,
+   "score_after": 0.315
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b6_pq",
+   "to": "E",
+   "mean_before": -0.183,
+   "score_after": 0.67
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b7_flt",
+   "to": "W",
+   "mean_before": -0.271,
+   "score_after": 0.329
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b7_pq",
+   "to": "E",
+   "mean_before": -0.1,
+   "score_after": 0.997
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b7_pr",
+   "to": "E",
+   "mean_before": -0.1,
+   "score_after": 0.997
+  },
+  {
+   "core": "hfd_hgi_vms_glue_nw_t",
+   "module": "hfd_hgi_vms_gnw_hub",
+   "port": "b7_status",
+   "to": "E",
+   "mean_before": -0.1,
+   "score_after": 0.997
+  }
+ ]
+}

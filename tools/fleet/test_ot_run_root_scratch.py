@@ -18,7 +18,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from test_ot_run_scratch_disk import fake_bin, load  # noqa: E402
 
 S3 = '/srv/opentallas-scratch3'
-with mock.patch.dict(os.environ, {'OT_RUN_ROOT_SCRATCH_ROOTS': S3}):   # off by default, on here
+_env = {k: v for k, v in os.environ.items() if not k.startswith('OT_RUN_ROOT_SCRATCH')}
+with mock.patch.dict(os.environ, _env, clear=True):   # ROOTSCR-INTEL 11-05: on by default, per-host root floors
     m = load()
 
 
@@ -27,9 +28,13 @@ def probe_out(s2, root_free, pct=2):
             'OT_SCRATCH_FREE %s %d 1\nOT_ROOTFS %d %d\nOT_DIR_ONROOT 0\n' % (root_free, s2, S3, root_free, pct, root_free))
 
 
-class OffByDefault(unittest.TestCase):
-    def test_default_has_only_the_two_scratch_roots(self):
-        env = {k: v for k, v in os.environ.items() if k != 'OT_RUN_ROOT_SCRATCH_ROOTS'}
+class OnByDefault(unittest.TestCase):
+    def test_default_has_scratch3(self):
+        self.assertEqual(m.ROOT_SCRATCH_ROOTS, (S3,))
+        self.assertIn(S3, m.SCRATCH_ENV)
+
+    def test_empty_env_turns_it_off(self):
+        env = dict(_env, OT_RUN_ROOT_SCRATCH_ROOTS='')
         with mock.patch.dict(os.environ, env, clear=True):
             off = load()
         self.assertEqual(off.ROOT_SCRATCH_ROOTS, ())
@@ -70,6 +75,45 @@ class ProbeRows(unittest.TestCase):
         self.assertIn('floor', m.host_refusal(row))
 
 
+class PerHostFloor(unittest.TestCase):
+    """ROOTSCR-INTEL 11-05 (OWNER 18:5x): intel1/intel2 (= localhost) roots keep 150 GB; epyc2/epyc4 keep 500."""
+    D = '/srv/opentallas-scratch2/claude/lane/run'
+
+    def test_default_table(self):
+        self.assertEqual([m.root_floor(h) for h in ('intel1', 'localhost', 'intel2', 'epyc2', 'epyc4', None)],
+                         [150, 150, 150, 500, 500, 500])
+
+    def test_env_overrides_table(self):
+        env = dict(_env, OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS='intel1=200, epyc2=600', OT_RUN_ROOT_SCRATCH_FLOOR_GB='700')
+        with mock.patch.dict(os.environ, env, clear=True):
+            o = load()
+        self.assertEqual([o.root_floor(h) for h in ('intel1', 'epyc2', 'localhost')], [200, 600, 700])
+
+    def test_intel_uses_second_root_minus_150(self):
+        row = m.scratch_disk({'disk_gb': 35}, self.D, probe_out(35, 342, 24), 'localhost')
+        self.assertEqual((row['scratch_disk'], row['scratch_disk_gb'], row['disk_gb']), (S3, 192, 192))
+        self.assertEqual(m.host_refusal(row), '')
+
+    def test_same_probe_on_epyc_keeps_500_and_refuses(self):
+        row = m.scratch_disk({'disk_gb': 35}, self.D, probe_out(35, 342, 24), 'epyc2')
+        self.assertEqual(row['scratch_disk'], '/srv/opentallas-scratch2')
+        self.assertIn('floor', m.host_refusal(row))
+
+    def test_intel_refusal_names_150(self):
+        row = m.scratch_disk({'disk_gb': 35}, self.D, probe_out(35, 199, 60), 'intel1')
+        self.assertIn('floor', m.host_refusal(row))
+        row = dict(row, scratch_disk=S3, scratch_disk_gb=10, scratch_second=True, root_floor_gb=150)
+        self.assertIn('keeping 150 GB', m.host_refusal(row))
+
+    def test_intel_scratch_disk_above_floor_unchanged(self):
+        row = m.scratch_disk({'disk_gb': 92}, self.D, probe_out(92, 406, 9), 'intel1')
+        self.assertEqual((row['scratch_disk'], row['disk_gb']), ('/srv/opentallas-scratch2', 92))
+
+    def test_place_snippet_floor_per_host(self):
+        self.assertIn('OT_RUN_PLACE_RFLOOR=150', m.scratch_place_sh('/x', ['true'], host='intel1'))
+        self.assertIn('OT_RUN_PLACE_RFLOOR=500', m.scratch_place_sh('/x', ['true'], host='epyc4'))
+
+
 class RemoteShell(unittest.TestCase):
     def setUp(self):
         t = tempfile.TemporaryDirectory(prefix='otrootscr-')
@@ -91,6 +135,17 @@ class RemoteShell(unittest.TestCase):
         self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(835, 3276)).stdout.strip(), str(self.s[1]))
         self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(40, 3276)).stdout.strip(), str(self.s[2]))
         self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(40, 520)).stdout.strip(), str(self.s[1]))
+
+    def test_intel_shell_uses_150_floor(self):
+        env = self.env(40, 230)
+        self.assertEqual(self.sh(m.scratch_env('intel1') + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s[2]))
+        self.assertEqual(self.sh(m.scratch_env('epyc2') + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s[1]))
+        pre = 'OT_SCRATCH=/srv/opentallas-scratch3; '
+        r = self.sh(pre + m.disk_guard_sh('T1', 'localhost') + 'echo ADMITTED', env)
+        self.assertEqual((r.returncode, r.stdout.strip()), (0, 'ADMITTED'), r.stderr)
+        r = self.sh(pre + m.disk_guard_sh('T2', 'localhost') + 'echo ADMITTED', self.env(40, 180))
+        self.assertEqual(r.returncode, 98)
+        self.assertIn('keeps 150 GB', r.stderr)
 
     def test_disk_guard_keeps_root_floor_for_second_root(self):
         pre = 'OT_SCRATCH=/srv/opentallas-scratch3; '

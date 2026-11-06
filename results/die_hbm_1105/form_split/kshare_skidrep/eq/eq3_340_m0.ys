@@ -1,0 +1,42 @@
+read_verilog -sv skid_old.sv
+chparam -set WIDTH 340 skid_old
+read_verilog -sv skid_new.sv
+chparam -set WIDTH 340 -set MUT 0 ot_hbm_svc_pin_skid2
+proc; opt_clean; async2sync; flatten
+equiv_make skid_old ot_hbm_svc_pin_skid2 eq
+hierarchy -top eq
+cd eq
+equiv_add \cnt_gold \g_sl[0].cnt_k_gate
+equiv_add \wp_gold \g_sl[0].wp_k_gate
+equiv_add \rp_gold \g_sl[0].rp_k_gate
+equiv_add \e0_gold[63:0] \g_sl[0].e0_gate
+equiv_add \e1_gold[63:0] \g_sl[0].e1_gate
+equiv_add \cnt_gold \g_sl[1].cnt_k_gate
+equiv_add \wp_gold \g_sl[1].wp_k_gate
+equiv_add \rp_gold \g_sl[1].rp_k_gate
+equiv_add \e0_gold[127:64] \g_sl[1].e0_gate
+equiv_add \e1_gold[127:64] \g_sl[1].e1_gate
+equiv_add \cnt_gold \g_sl[2].cnt_k_gate
+equiv_add \wp_gold \g_sl[2].wp_k_gate
+equiv_add \rp_gold \g_sl[2].rp_k_gate
+equiv_add \e0_gold[191:128] \g_sl[2].e0_gate
+equiv_add \e1_gold[191:128] \g_sl[2].e1_gate
+equiv_add \cnt_gold \g_sl[3].cnt_k_gate
+equiv_add \wp_gold \g_sl[3].wp_k_gate
+equiv_add \rp_gold \g_sl[3].rp_k_gate
+equiv_add \e0_gold[255:192] \g_sl[3].e0_gate
+equiv_add \e1_gold[255:192] \g_sl[3].e1_gate
+equiv_add \cnt_gold \g_sl[4].cnt_k_gate
+equiv_add \wp_gold \g_sl[4].wp_k_gate
+equiv_add \rp_gold \g_sl[4].rp_k_gate
+equiv_add \e0_gold[319:256] \g_sl[4].e0_gate
+equiv_add \e1_gold[319:256] \g_sl[4].e1_gate
+equiv_add \cnt_gold \g_sl[5].cnt_k_gate
+equiv_add \wp_gold \g_sl[5].wp_k_gate
+equiv_add \rp_gold \g_sl[5].rp_k_gate
+equiv_add \e0_gold[339:320] \g_sl[5].e0_gate
+equiv_add \e1_gold[339:320] \g_sl[5].e1_gate
+cd ..
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

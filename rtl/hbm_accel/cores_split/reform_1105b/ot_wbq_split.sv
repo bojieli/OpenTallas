@@ -97,7 +97,15 @@ module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0)(
  always @(posedge hbm_clk or negedge hrst)if(!hrst)mc<=0;else if(g_v[1])mc<=mc+1;
 endmodule
 
-module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000)(
+// HREG (sw only, default 0 = the form above unchanged). HREG=1 is a cycle-exact restructure of the K-port cone (HBM-GAPS-3, 11-05):
+//  - each group keeps its queue head and the head's PC (one-hot) in flops, loaded with the exact next state qm'[qr'] (write-into-empty,
+//    pop, write behind a pop), so the pick starts from flops, not from qr -> qm read -> sector_pc;
+//  - pick, held request and select are one-hot per PC; the pick is registered (computed from the next-state heads, so it is the pick of
+//    the current heads on every edge); the 16 x 8:1 x 286 K switch is an AND-OR of head flops selected by flops (k data is not gated by
+//    k_v, the pin skid only captures on push);
+//  - the ack popcount is a balanced tree, and the ack bound is checked against a remaining-count flop (meta_q - ack_count) instead of an
+//    add-then-compare. Same pins, same edge for every K write, ack and fault.
+module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stk,input wire quad,
  input wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
@@ -207,7 +215,14 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  // ---- group queues (root sends only with a credit, so never full)
  reg [1:0] qw[0:7],qr[0:7];reg [2:0] qn[0:7];
  wire [7:0] head_v;wire [285:0] head[0:7];wire [4:0] head_pc[0:7];
- assign g_credit=pop;
+ // *_u: the K-port signals in use (HREG=0: the always @* below; HREG=1: g_k1)
+ wire [7:0] pop_u;wire [15:0] kv_u,an_u;wire [479:0] ka_u;wire [4095:0] kd_u;
+ wire [8*286-1:0] hd_all;wire [8*16-1:0] hpc_all;   // HREG=1: head flops and head PC one-hot per group
+ wire [8*16-1:0] hpcn_all;wire [7:0] hvn;           // HREG=1: their next state (head PC one-hot, head valid), for the registered pick
+ function automatic [15:0] pc_oh(input [29:0] sector);
+  pc_oh=16'd1<<sector_pc(sector);
+ endfunction
+ assign g_credit=pop_u;
  genvar g;
  generate for(g=0;g<8;g=g+1)begin:g_q
   reg [285:0] qm[0:CRED-1];
@@ -217,14 +232,70 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
    if(!hrst)begin qw[g]<=0;qr[g]<=0;qn[g]<=0;end
    else begin
     if(g_v[g])qw[g]<=qw[g]+1'b1;
-    if(pop[g])qr[g]<=qr[g]+1'b1;
-    qn[g]<=qn[g]+3'(g_v[g])-3'(pop[g]);
+    if(pop_u[g])qr[g]<=qr[g]+1'b1;
+    qn[g]<=qn[g]+3'(g_v[g])-3'(pop_u[g]);
    end
+  end
+  if(HREG!=0)begin:g_hr
+   // head_r = qm[qr] whenever qn!=0: next state is qm'[qr'] (pop -> entry qr+1, or the incoming word if it lands there; no pop -> the
+   // incoming word if it lands on qr, i.e. write into empty; else hold)
+   reg [285:0] head_r;reg [15:0] hpc_r;
+   wire [285:0] gd=g_d[286*g+:286];
+   wire [1:0] qr1=qr[g]+2'd1;
+   wire wr0=g_v[g]&&qw[g]==qr[g];
+   wire wr1=g_v[g]&&qw[g]==qr1;
+   wire [285:0] nx=qm[qr1];
+   wire [15:0] hpc_n=pop_u[g]?(wr1?pc_oh(gd[285:256]):pc_oh(nx[285:256])):(wr0?pc_oh(gd[285:256]):hpc_r);
+   wire [2:0] qn_n=qn[g]+3'(g_v[g])-3'(pop_u[g]);
+   always @(posedge hbm_clk)begin
+    if(pop_u[g])head_r<=wr1?gd:nx;else if(wr0)head_r<=gd;
+    hpc_r<=hpc_n;
+   end
+   assign hd_all[286*g+:286]=head_r;assign hpc_all[16*g+:16]=hpc_r;assign hpcn_all[16*g+:16]=hpc_n;assign hvn[g]=qn_n!=0;
+  end else begin:g_hr0
+   assign hd_all[286*g+:286]=286'b0;assign hpc_all[16*g+:16]=16'b0;assign hpcn_all[16*g+:16]=16'b0;assign hvn[g]=1'b0;
   end
  end endgenerate
  // ---- K ports, as the flat block with groups in place of lanes
  reg [15:0] k_v;reg [479:0] k_addr;reg [4095:0] k_wdata;wire [15:0] k_rdy;reg [15:0] ack_now,ack_q;integer ack_i;
  wire [15:0] k_wr_done_q;
+ generate if(HREG!=0)begin:g_k1
+  // one-hot pick (lowest group whose head is on this PC), held request one-hot, AND-OR switch from the head flops.
+  // pick_r is the pick of this edge, registered: loaded with the pick of the next-state heads (hvn, hpcn_all), so
+  // pick_r == pick(head_v, hpc_r) on every edge (both 0 out of reset, qn=0). The wide switch and pop start from flops.
+  reg [7:0] req_oh[0:15];reg [7:0] sel[0:15];reg [7:0] pick_r[0:15];reg [7:0] pick_n[0:15];reg [7:0] m;reg seen;
+  reg [15:0] kv1,an1;reg [7:0] pop1;reg [479:0] ka1;reg [4095:0] kd1;integer i,j;
+  always @*begin
+   for(i=0;i<16;i=i+1)begin
+    seen=0;
+    for(j=0;j<8;j=j+1)begin m[j]=hvn[j]&&hpcn_all[16*j+i];pick_n[i][j]=m[j]&&!seen;seen=seen||m[j];end
+   end
+  end
+  always @*begin
+   pop1=0;kv1=0;an1=0;ka1=0;kd1=0;
+   for(i=0;i<16;i=i+1)begin
+    sel[i]=req_valid[i]?req_oh[i]:pick_r[i];
+    kv1[i]=meta_active&&(req_valid[i]||(|pick_r[i]))&&!ack_pending&&(outstanding[i]<64||k_wr_done_q[i])&&!hbm_fault;
+    for(j=0;j<8;j=j+1)begin
+     ka1[30*i+:30]=ka1[30*i+:30]|({30{sel[i][j]}}&hd_all[286*j+256+:30]);
+     kd1[256*i+:256]=kd1[256*i+:256]|({256{sel[i][j]}}&hd_all[286*j+:256]);
+     if(kv1[i]&&k_rdy[i]&&sel[i][j])pop1[j]=1;
+    end
+    an1[i]=k_wr_done_q[i]&&(outstanding[i]!=0||(kv1[i]&&k_rdy[i]));
+   end
+  end
+  integer r;
+  always @(posedge hbm_clk or negedge hrst)begin
+   if(!hrst)begin for(r=0;r<16;r=r+1)begin req_oh[r]<=0;pick_r[r]<=0;end end
+   else begin
+    for(r=0;r<16;r=r+1)pick_r[r]<=pick_n[r];
+    if(meta_active&&!hbm_fault)begin for(r=0;r<16;r=r+1)if(kv1[r]&&!k_rdy[r])req_oh[r]<=sel[r];end
+   end
+  end
+  assign pop_u=pop1;assign kv_u=kv1;assign an_u=an1;assign ka_u=ka1;assign kd_u=kd1;
+ end else begin:g_k0
+  assign pop_u=pop;assign kv_u=k_v;assign an_u=ack_now;assign ka_u=k_addr;assign kd_u=k_wdata;
+ end endgenerate
  always @*begin
   pick_v=0;pop=0;k_v=0;k_addr=0;k_wdata=0;ack_now=0;
   for(pc=0;pc<16;pc=pc+1)begin
@@ -238,31 +309,42 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
    if(k_wr_done_q[pc]&&(outstanding[pc]!=0||(k_v[pc]&&k_rdy[pc])))ack_now[pc]=1;
   end
  end
- always @(posedge hbm_clk or negedge hrst)if(!hrst)ack_q<=0;else ack_q<=(meta_active&&!hbm_fault)?ack_now:16'b0;
+ always @(posedge hbm_clk or negedge hrst)if(!hrst)ack_q<=0;else ack_q<=(meta_active&&!hbm_fault)?an_u:16'b0;
  always @*begin acks=0;for(ack_i=0;ack_i<16;ack_i=ack_i+1)if(ack_q[ack_i])acks=acks+1;end
+ // HREG=1: balanced popcount tree; ack bound against ack_rem = meta_q[11:0]-ack_count (exact while ack_count<=meta_q[11:0], which holds
+ // whenever it is read: the first overshoot sets hbm_sticky, and hbm_fault then blocks this branch and meta_re until reset)
+ wire [1:0] ap0=ack_q[0]+ack_q[1],ap1=ack_q[2]+ack_q[3],ap2=ack_q[4]+ack_q[5],ap3=ack_q[6]+ack_q[7],
+  ap4=ack_q[8]+ack_q[9],ap5=ack_q[10]+ack_q[11],ap6=ack_q[12]+ack_q[13],ap7=ack_q[14]+ack_q[15];
+ wire [2:0] aq0=ap0+ap1,aq1=ap2+ap3,aq2=ap4+ap5,aq3=ap6+ap7;
+ wire [3:0] ar0=aq0+aq1,ar1=aq2+aq3;
+ wire [4:0] acks_t=ar0+ar1;
+ reg [11:0] ack_rem;
+ wire ack_any=|ack_q;
+ wire ack_gt=(HREG!=0)?(ack_rem[11:5]==7'd0&&acks_t>ack_rem[4:0]):(13'(ack_count)+13'(acks)>13'(meta_q[11:0]));
+ wire ack_eq=(HREG!=0)?(ack_rem[11:5]==7'd0&&acks_t==ack_rem[4:0]):(13'(ack_count)+13'(acks)==13'(meta_q[11:0]));
  integer h;
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)begin
-   sf1<=0;sf2<=0;hbm_sticky<=0;meta_active<=0;meta_q<=0;ack_pending<=0;ack_count<=0;req_valid<=0;
+   sf1<=0;sf2<=0;hbm_sticky<=0;meta_active<=0;meta_q<=0;ack_pending<=0;ack_count<=0;ack_rem<=0;req_valid<=0;
    for(h=0;h<16;h=h+1)begin req_g[h]<=0;outstanding[h]<=0;end
   end else begin
    sf1<=stream_sticky;sf2<=sf1;
-   if(meta_re)begin meta_active<=1;meta_q<=meta_data;ack_count<=0;ack_pending<=0;end
+   if(meta_re)begin meta_active<=1;meta_q<=meta_data;ack_count<=0;ack_rem<=meta_data[11:0];ack_pending<=0;end
    if(meta_active&&!hbm_fault)begin
     for(h=0;h<16;h=h+1)begin
-     if(k_v[h]&&!k_rdy[h])begin req_valid[h]<=1;req_g[h]<=selected_g[h];end
-     if(k_v[h]&&k_rdy[h])req_valid[h]<=0;
-     case({k_v[h]&&k_rdy[h],k_wr_done_q[h]})
+     if(kv_u[h]&&!k_rdy[h])begin req_valid[h]<=1;req_g[h]<=selected_g[h];end
+     if(kv_u[h]&&k_rdy[h])req_valid[h]<=0;
+     case({kv_u[h]&&k_rdy[h],k_wr_done_q[h]})
       2'b10:outstanding[h]<=outstanding[h]+1'b1;
       2'b01:if(outstanding[h]!=0)outstanding[h]<=outstanding[h]-1'b1;
       default:begin end
      endcase
-     if(k_wr_done_q[h]&&!(outstanding[h]!=0||(k_v[h]&&k_rdy[h])))hbm_sticky<=1;
+     if(k_wr_done_q[h]&&!(outstanding[h]!=0||(kv_u[h]&&k_rdy[h])))hbm_sticky<=1;
     end
-    if(acks!=0)begin
-     ack_count<=ack_count+12'(acks);
-     if(13'(ack_count)+13'(acks)>13'(meta_q[11:0]))hbm_sticky<=1;
-     if(13'(ack_count)+13'(acks)==13'(meta_q[11:0]))ack_pending<=1;
+    if((HREG!=0)?ack_any:(acks!=0))begin
+     ack_count<=ack_count+12'(acks);ack_rem<=ack_rem-12'(acks_t);
+     if(ack_gt)hbm_sticky<=1;
+     if(ack_eq)ack_pending<=1;
     end
    end else if(|k_wr_done_q)hbm_sticky<=1;
    if(ack_we)begin ack_pending<=0;meta_active<=0;end
@@ -311,8 +393,8 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  genvar p;
  wire [15:0] k_rdy_w;assign k_rdy=k_rdy_w;
  generate for(p=0;p<16;p=p+1)begin:pc_pin
-  ot_hbm_svc_pin_skid2 #(.WIDTH(286)) u_k(.clk(hbm_clk),.rst_n(hbm_rst_n),.in_v(k_v[p]),.in_r(k_rdy_w[p]),
-   .in_data({fold(k_addr[30*p+:29],q_h),k_wdata[256*p+:256]}),.out_v(w_k_v[p]),.out_r(w_k_rdy[p]),
+  ot_hbm_svc_pin_skid2 #(.WIDTH(286)) u_k(.clk(hbm_clk),.rst_n(hbm_rst_n),.in_v(kv_u[p]),.in_r(k_rdy_w[p]),
+   .in_data({fold(ka_u[30*p+:29],q_h),kd_u[256*p+:256]}),.out_v(w_k_v[p]),.out_r(w_k_rdy[p]),
    .out_data({w_k_addr[30*p+:30],w_k_wdata[256*p+:256]}));
  end endgenerate
 endmodule

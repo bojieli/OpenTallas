@@ -1,0 +1,225 @@
+{
+ "schema": "opentallas.hbm_split_event.v1",
+ "cores": [
+  {
+   "core": "ot_hbm_svc_sm_group_rel_id",
+   "sha": "p26",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hbm_svc_sm_group_rel_id__p26glue.sv",
+   "slot_um": [
+    768.96,
+    639.36
+   ],
+   "instances": 8,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_b0": [
+     [
+      345.6,
+      95.04
+     ],
+     [
+      259.2,
+      207.36
+     ]
+    ],
+    "u_fcore.u_core.u_b1": [
+     [
+      345.6,
+      328.32
+     ],
+     [
+      259.2,
+      207.36
+     ]
+    ],
+    "u_fcore.u_core.u_o": [
+     [
+      639.36,
+      103.68
+     ],
+     [
+      129.6,
+      432.0
+     ]
+    ],
+    "u_fcore.u_core.u_t": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      302.4,
+      639.36
+     ]
+    ]
+   },
+   "tables": {
+    "ot_svgr_bk": {
+     "pins_file": "cores/ot_svgr_bk__259.2x207.36__d44v_split.json",
+     "outline_um": [
+      259.2,
+      207.36
+     ],
+     "pins": 2255,
+     "clock_pins": 2,
+     "clock_entry": [
+      21.6,
+      103.68
+     ],
+     "faces": {
+      "E": 1148,
+      "I": 2,
+      "N": 1,
+      "S": 1,
+      "W": 1103
+     }
+    },
+    "ot_svgr_own": {
+     "pins_file": "cores/ot_svgr_own__129.6x432__d44v_split.json",
+     "outline_um": [
+      129.6,
+      432.0
+     ],
+     "pins": 4897,
+     "clock_pins": 6,
+     "clock_entry": [
+      64.8,
+      216.0
+     ],
+     "faces": {
+      "E": 2488,
+      "I": 6,
+      "S": 1,
+      "W": 2402
+     }
+    },
+    "ot_svgr_top": {
+     "pins_file": "cores/ot_svgr_top__302.4x639.36__d44v_split.json",
+     "outline_um": [
+      302.4,
+      639.36
+     ],
+     "pins": 7430,
+     "clock_pins": 1,
+     "clock_entry": [
+      151.2,
+      319.68
+     ],
+     "faces": {
+      "E": 2239,
+      "I": 1,
+      "N": 1162,
+      "S": 1186,
+      "W": 2842
+     }
+    }
+   },
+   "added_cycles": "see cycles/rel_id_split.tsv",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 354
+   },
+   "designs_removed": [
+    "ot_hbm_svc_sm_group_rel_id"
+   ],
+   "designs_added": [
+    "ot_svgr_bk",
+    "ot_svgr_own",
+    "ot_svgr_top"
+   ]
+  },
+  {
+   "core": "ot_hfd_coll_q2n2_body_core",
+   "sha": "p33",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hfd_coll_q2n2_body_core__p33glue.sv",
+   "slot_um": [
+    786.24,
+    743.04
+   ],
+   "instances": 1,
+   "types": [
+    "q_hub_ne"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_q": [
+     [
+      0.0,
+      630.72
+     ],
+     [
+      786.24,
+      112.32
+     ]
+    ],
+    "u_fcore.u_core.u_r": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      786.24,
+      622.08
+     ]
+    ]
+   },
+   "tables": {
+    "ot_q2nf_qout": {
+     "pins_file": "cores/ot_q2nf_qout__786.24x112.32__d44v_split.json",
+     "outline_um": [
+      786.24,
+      112.32
+     ],
+     "pins": 10890,
+     "clock_pins": 1,
+     "clock_entry": [
+      393.12,
+      56.16
+     ],
+     "faces": {
+      "I": 1,
+      "N": 4773,
+      "S": 6116
+     }
+    },
+    "ot_q2nf_rest": {
+     "pins_file": "cores/ot_q2nf_rest__786.24x622.08__d44v_split.json",
+     "outline_um": [
+      786.24,
+      622.08
+     ],
+     "pins": 6222,
+     "clock_pins": 40,
+     "clock_entry": [
+      747.36,
+      311.04
+     ],
+     "faces": {
+      "E": 339,
+      "I": 40,
+      "N": 3388,
+      "S": 1,
+      "W": 2454
+     }
+    }
+   },
+   "added_cycles": "0 data cycles: the kit face flops are the flat qslots registers; select_fault / unavailable_fault +2 edges (sticky fault only). cycles/q2n2_split.tsv",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 0
+   },
+   "designs_removed": [
+    "ot_hfd_coll_q2n2_body_core"
+   ],
+   "designs_added": [
+    "ot_q2nf_qout",
+    "ot_q2nf_rest"
+   ]
+  }
+ ],
+ "core_faces_moves": []
+}

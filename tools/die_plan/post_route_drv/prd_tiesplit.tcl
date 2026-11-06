@@ -78,4 +78,7 @@ proc ot_prd_tie_mark_dirty {} {
   }
   puts "OT_PRD_TARGETED tie nets marked dirty [llength $::ot_prd_tie_drivers], recreated $again"
 }
+# Off (OT_PRD_TIE_SPLIT=0) still defines the list: prd_hook calls ot_prd_tie_mark_dirty whenever this file was sourced
+# (nf1 h1 11-05: global_route.tcl 191 cannot read ::ot_prd_tie_drivers).
+set ::ot_prd_tie_drivers {}
 if {![info exists ::env(OT_PRD_TIE_SPLIT)] || $::env(OT_PRD_TIE_SPLIT) ne "0"} { ot_prd_tie_split }

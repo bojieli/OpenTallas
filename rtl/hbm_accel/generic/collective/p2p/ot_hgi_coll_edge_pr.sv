@@ -17,7 +17,19 @@
 //     COMPILER: the ARG publication lands 1 edge later -> the qslots ARG-source capture slot moves +1 edge in the
 //     compiled programme (constant, same mechanism as the q2_s reduce_pr +1).
 // Equivalence vs the originals: bench/coll_q3_split/edge_pr_eq (link_e exact, argmax out +1 edge / fault exact).
-module ot_hgi_coll_static_capture_ctl_pr(
+// HBM-GAPS-3/Q3E 11-05 (opt-in, default off): RXPRE.  With `define OT_COLL_LINK_RXPRE (recipe define, q3_edge only) every
+// ot_hgi_coll_link_e_pr builds its codec with ot_hgi_coll_static_seq_ctl RXPRE=1 (the DIE-HBM-61/RTL-C3 form already used by
+// ot_hbm_host_link_capture): the RX CRC is computed from p_rx_flit (= rx_pin_flit_pin, the pin flop) one edge before rf and
+// only its mismatch bit ne_q is registered.  rf <= p_rx_flit on every edge, so ne_q == (crc(rf) != rf.crc) on every edge:
+// 0 added cycles, bit-exact.  Removes the measured worst stage rf -> 32b CRC over 580 b -> crc_bad -> full_fault ->
+// p_tx_v / rx_v / epoch_abort (q3em6 4_cts: -380 ps, 9 endpoints).
+// Bench: physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge_rxpre/run.sh (lock-step vs RXPRE=0 + mutants).
+`ifdef OT_COLL_LINK_RXPRE
+`define OT_COLL_LINK_RXPRE_V 1
+`else
+`define OT_COLL_LINK_RXPRE_V 0
+`endif
+module ot_hgi_coll_static_capture_ctl_pr #(parameter integer RXPRE=0)(
  input wire clk,
  input wire rst_n,epoch_begin,
  input wire [7:0] epoch_new,held_epoch,
@@ -69,7 +81,7 @@ module ot_hgi_coll_static_capture_ctl_pr(
   else begin epoch_begin_pin<=epoch_begin;wr_v_pin<=wr_v;wr_observed_v_pin<=wr_observed_v;rd_v_pin<=rd_v;rx_expect_v_pin<=rx_expect_v;rx_pin_v_pin<=rx_pin_v;end
  end
  wire [7:0] epoch_sel=epoch_begin_pin?epoch_new_pin:held_epoch_pin;  // select after the pin flops
- ot_hgi_coll_static_pinreg_ctl u_core(
+ ot_hgi_coll_static_pinreg_ctl #(.RXPRE(RXPRE)) u_core(
  .clk(clk),.rst_n(rst_n),
  .epoch_begin(epoch_begin_pin),
  .epoch(epoch_sel),
@@ -99,7 +111,7 @@ module ot_hgi_coll_static_capture_ctl_pr(
 endmodule
 
 // ot_hgi_coll_link_e with the capture-control leaf replaced by its _pr twin (ports identical to ot_hgi_coll_link_e).
-module ot_hgi_coll_link_e_pr(
+module ot_hgi_coll_link_e_pr #(parameter integer RXPRE=`OT_COLL_LINK_RXPRE_V)(
  input wire [4:0] ck,input wire rst_n,epoch_begin,input wire [7:0] epoch_new,held_epoch,
  input wire wr_v,wr_observed_v,input wire [15:0] wr_seq,input wire [544:0] wr_flit,
  input wire rd_v,input wire [15:0] rd_seq,input wire rx_expect_v,input wire [15:0] rx_expect_seq,
@@ -112,7 +124,7 @@ module ot_hgi_coll_link_e_pr(
   ot_hgi_coll_static_pinreg_store u_store(.clk(ck[b+1]),.we(bank_we),.wa(bank_wa),.ra(bank_ra),
    .din(bank_data[b*141+:141]),.dout(stored[b*141+:141]));
  end
- ot_hgi_coll_static_capture_ctl_pr u_ctl(.clk(ck[0]),.rst_n(rst_n),.epoch_begin(epoch_begin),
+ ot_hgi_coll_static_capture_ctl_pr #(.RXPRE(RXPRE)) u_ctl(.clk(ck[0]),.rst_n(rst_n),.epoch_begin(epoch_begin),
   .epoch_new(epoch_new),.held_epoch(held_epoch),
   .wr_v(wr_v),.wr_observed_v(wr_observed_v),.wr_seq(wr_seq),.wr_flit(wr_flit),
   .rd_v(rd_v),.rd_seq(rd_seq),.rx_expect_v(rx_expect_v),.rx_expect_seq(rx_expect_seq),

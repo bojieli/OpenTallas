@@ -107,6 +107,7 @@ module qfd_collective_static_io #(
  .clk_rring0(clk_rring0),
  .clk_rring1(clk_rring1),
  .rst_n(rst_n),
+ .rst_pfold0(rst_n), .rst_pfold1(rst_n), .rst_pfold2(rst_n), .rst_pfold3(rst_n), .rst_xfold0(rst_n), .rst_xfold1(rst_n), .rst_xfold2(rst_n), .rst_xfold3(rst_n),
  .pkg_s(pkg_s),
  .die_ps(die_ps),
  .cmd_v(cmd_v),
