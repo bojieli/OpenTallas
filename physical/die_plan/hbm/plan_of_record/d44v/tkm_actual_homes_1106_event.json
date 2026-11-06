@@ -1,0 +1,114 @@
+{
+  "schema": "opentallas.tkm.core_macro_repro_event.v1",
+  "scope": "Metadata-only TKM generation homes; die plan, pins, source, recipes and all other CM records unchanged. No source or P&R activation.",
+  "base": "922b67f63e2914db56959ca81810dfd34f58d179",
+  "module": "ot_hgi_coll_tkm_m_tp192__root",
+  "validated_record_sha256": "a582251b44b50bf046966c45ae34c9f5aa193f8b91d21a4baf0475c38f4e4108",
+  "before": {
+    "status": "KNOWN",
+    "outline_um": [
+      319.68,
+      345.6
+    ],
+    "basis": "plan_part19",
+    "macros": [
+      {
+        "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[0].u_b",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "rect_um": [
+          72.576,
+          68.31,
+          247.32,
+          138.798
+        ]
+      },
+      {
+        "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[1].u_b",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "rect_um": [
+          72.576,
+          206.82,
+          247.32,
+          277.308
+        ]
+      }
+    ],
+    "sources": [],
+    "recipe_macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2"
+    ]
+  },
+  "after": {
+    "status": "KNOWN",
+    "outline_um": [
+      319.68,
+      389.664
+    ],
+    "basis": "CODEX TKM p35 reset A/B 2026-11-06; both macro_placement.tcl files byte-identical; snapped signal-pin lattice",
+    "macros": [
+      {
+        "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[0].u_b",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "rect_um": [
+          72.576,
+          89.916,
+          247.32,
+          160.404
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[1].u_b",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "rect_um": [
+          72.576,
+          228.396,
+          247.32,
+          298.884
+        ],
+        "orient": "R0"
+      }
+    ],
+    "sources": [
+      "intel2:/srv/opentallas-scratch2/claude/codex-hbm-tkm-build/kits_vA3/ot_hgi_coll_tkm_m_tp192__root_b07a1cb60b9b-vA/macro_placement.tcl",
+      "intel2:/srv/opentallas-scratch2/claude/codex-hbm-tkm-build/kits_vB3/ot_hgi_coll_tkm_m_tp192__root_b07a1cb60b9b-vB/macro_placement.tcl"
+    ],
+    "recipe_macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2"
+    ]
+  },
+  "all_other_core_macros_bytes_unchanged": true,
+  "other_bytes_sha256": "7d627135ae11ed84cbf1d93208cb55b7a26645964ffd7d427c5dba83f3ccd056",
+  "production_auto_placement_rows": [
+    {
+      "inst": "u_core.u_x.u.u_buffer.g_bm[0].u_b",
+      "xy_um": [
+        72.576,
+        89.916
+      ],
+      "orient": "R0",
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+    },
+    {
+      "inst": "u_core.u_x.u.u_buffer.g_bm[1].u_b",
+      "xy_um": [
+        72.576,
+        228.396
+      ],
+      "orient": "R0",
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+    }
+  ],
+  "clock_points_clear": [
+    [
+      159.96,
+      172.8
+    ],
+    [
+      160.344,
+      172.8
+    ]
+  ],
+  "review_image": "results/geom_review/codex_tkm_cm_1106/tkm_review.png",
+  "geometry_review": "PASS-COND existing actual reset A/B homes reproduced; no new heavy build. No physical pass or DELPIPE1 activation implied."
+}
