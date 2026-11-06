@@ -1,0 +1,67 @@
+{
+  "verdict": "PASS_REUSE_MAPPED_SIZE",
+  "old_kit_hash": "33cc6d8d234820ef",
+  "new_kit_hash": "f3b51fdee8898467",
+  "all_rtl_files_identical": true,
+  "rtl_hashes": {
+    "portlist.txt": "4299ab3fbb980a0780f499497a10bc664e4001744c7517c222072976e67127dd",
+    "ot_svgr_own__fshell.sv": "06de2cdfea278ec50386dc8e7387f9d472e7737789cb607e1447edb07b1212c1",
+    "ot_smh_static_feed.sv": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84",
+    "ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+    "ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "ot_smh_calendar_static_x.sv": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40",
+    "ot_hbm_svc_static_sm_packed136.sv": "f06fc1118b435ef275bf52bcd152c33fa8dab4bf56bf8659afab372c8dd20fc5",
+    "ot_hbm_svc_prefetch_overlap_owner_rel_id.sv": "af431efd6145da137f530535966c3d01080bbb985ef10488d573decb7d7fcce9",
+    "ot_svgr_split.sv": "f0389f7e19db62540bc3e63ddc73c70fecb039c549d5e4042cb514e80a468f75",
+    "ot_svgr_rf1_skid_head.sv": "b0cbde34513e655db58e73c56b1446640ce05be3ff8bd1edc9a483ae3556018d",
+    "ot_hbm_svc_async_fifo.sv": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+    "ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "ot_hbm_svc_sm_issuer_rel.sv": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9"
+  },
+  "config_and_sdc": {
+    "config.mk": {
+      "old_sha256": "34cfca772c0d03b39d3a28f08aa527201ace194f38d372a6e8011719d44c80f6",
+      "new_sha256": "34cfca772c0d03b39d3a28f08aa527201ace194f38d372a6e8011719d44c80f6",
+      "equal": true
+    },
+    "constraint.sdc": {
+      "old_sha256": "3b088f4c544db254fc31b50f62a3ff60fb0f46869df68435a889795a0d8c05eb",
+      "new_sha256": "3b088f4c544db254fc31b50f62a3ff60fb0f46869df68435a889795a0d8c05eb",
+      "equal": true
+    }
+  },
+  "changed_pin_centres": [
+    "hbm_clk",
+    "hbm_pc_clk[0]",
+    "hbm_pc_clk[1]",
+    "hbm_pc_clk[2]",
+    "hbm_pc_clk[3]",
+    "stream_clk"
+  ],
+  "nonclock_pin_centres_unchanged": true,
+  "mapped_measurement": {
+    "verdict": "PASS",
+    "kit_hash": "33cc6d8d234820ef",
+    "view": "ot_svgr_own@2054dcac0c09",
+    "outline_um": [
+      129.6,
+      432.0
+    ],
+    "standard_cells": 91866,
+    "standard_area_um2": 12991.1,
+    "nonmacro_core_area_um2": 51209.6256,
+    "standard_utilization": 0.25368472914592055,
+    "limits": {
+      "cells": 150000,
+      "standard_utilization": 0.45
+    },
+    "mapped_only": true,
+    "placement_run": false,
+    "route_run": false,
+    "source_recipe": "ot_svgr_own__headtail",
+    "source_commit": "40139073ec3ce4fa4fca4f81d16ee5192d4f245c",
+    "backend_commit": "27cdbd816b0c86654f2e94ed1ab9dde2d9a162dc"
+  },
+  "new_synthesis_run": false,
+  "scope": "Identical full generated RTL, config.mk and constraint.sdc; only six physical clock pin locations changed. Reuse mapped cell count/area; no timing or placement claim."
+}

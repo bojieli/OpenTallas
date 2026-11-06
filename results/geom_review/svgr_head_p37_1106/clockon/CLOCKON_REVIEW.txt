@@ -1,0 +1,41 @@
+Fresh explicit clock-entry kit review, 2026-11-06
+
+Kit f3b51fdee8898467 was generated into a new directory with the same
+arguments as retained kit33cc6d8d234820ef, plus --clock-pin-entry on.
+The old kit and its failed clock-site audit remain unchanged. The prior
+failure came from the default-off invocation projecting interior clocks
+onto faces; it was not evidence of a coarse-entry override defect.
+
+Actual image actual_clockon.png was viewed, including the core outline
+and a magnified clock grid. All six scalar M5 clock pins are distinct,
+0.096 um apart, on M5 tracks (offset .024, pitch .048). Their generated
+plan_pins.json coordinates and literal io.tcl placement coordinates equal
+the canonical raw p37 pin table exactly:
+  hbm_clk        (64.632,216)
+  hbm_pc_clk[0]  (64.728,216)
+  hbm_pc_clk[1]  (64.824,216)
+  hbm_pc_clk[2]  (64.920,216)
+  hbm_pc_clk[3]  (65.016,216)
+  stream_clk     (65.112,216)
+
+All eight coarse OWN clock-entry rows have port=null, merged_clock_ports
+[hbm_clk,hbm_pc_clk,stream_clk] and common xy=(64.8,216). The backend snaps
+the common x to64.824 then spreads the six sorted scalar ports every second
+M5 track. clock_site_audit.json retains all eight rows and48 expanded
+scalar comparisons, all with zero delta. Generated pins are .048x.48 um.
+Only these six clock centres changed; the other4,891 pin centres match the
+retained kit. Outline129.6x432, pin table2054dcac0c09 and source401390 remain.
+
+mapped_input_identity.json proves every generated RTL file, full config.mk,
+and constraint.sdc byte-identical between the two kits. The previous actual
+mapped result (91,866 cells,12,991.1um²,25.3685% standard utilization) is
+therefore reused for this kit, with no new synthesis, proof or timing claim.
+GEN ran under normal4GB/2thread admission, exit0 in9.67s, peakRSS556,680KB.
+
+Disposition: clock-coordinate audit PASS for the fresh kit. The existing
+parent density and connection findings remain in the prior review; this
+is not routed sign-off or blanket parent-geometry clearance. Parent lane
+retains physical disposition. No placement, CTS, GRT or route was run.
+
+Fresh kit:
+intel2:/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon/ot_svgr_own_2054dcac0c09-headtail_p37_clockon

@@ -1,0 +1,1893 @@
+{
+  "verdict": "PASS",
+  "kit_hash": "f3b51fdee8898467",
+  "view": "ot_svgr_own@2054dcac0c09",
+  "raw_pin_table_sha256": "2054dcac0c09a03028aaf396af0a04c08bbfb274dd2170b72f1383b2f16b0dac",
+  "coarse_clock_entries_sha256": "653ca8e8cfbb6911c64122052d538683bf86905b08e20096d01050dc58cf3ac7",
+  "io_sha256": "333fed02bc5af34444228753eebbb5de84ababf675b45f3bca84fcf62d506ae8",
+  "raw_pin_table": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v37/cores/ot_svgr_own__129.6x432__d44v_split.json",
+  "coarse_clock_entries": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v37/clock_entries.json",
+  "clock_ports": [
+    "hbm_clk",
+    "hbm_pc_clk[0]",
+    "hbm_pc_clk[1]",
+    "hbm_pc_clk[2]",
+    "hbm_pc_clk[3]",
+    "stream_clk"
+  ],
+  "actual_distinct_centres": [
+    [
+      64.632,
+      216.0
+    ],
+    [
+      64.728,
+      216.0
+    ],
+    [
+      64.824,
+      216.0
+    ],
+    [
+      64.92,
+      216.0
+    ],
+    [
+      65.016,
+      216.0
+    ],
+    [
+      65.112,
+      216.0
+    ]
+  ],
+  "raw_distinct_centres": [
+    [
+      64.632,
+      216.0
+    ],
+    [
+      64.728,
+      216.0
+    ],
+    [
+      64.824,
+      216.0
+    ],
+    [
+      64.92,
+      216.0
+    ],
+    [
+      65.016,
+      216.0
+    ],
+    [
+      65.112,
+      216.0
+    ]
+  ],
+  "coarse_own_rows": [
+    {
+      "partition": "q_hub_nw",
+      "instance": "u_svg_Q3__o",
+      "row": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q3 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          64.8,
+          216.0
+        ],
+        "island_um": [
+          60.48,
+          211.68,
+          69.12,
+          220.32
+        ],
+        "port": null,
+        "merged_clock_ports": [
+          "hbm_clk",
+          "hbm_pc_clk",
+          "stream_clk"
+        ],
+        "tap": "u_svg_Q3__o",
+        "module": "ot_svgr_own",
+        "native_module": "ot_svgr_own"
+      },
+      "port_mapping": {
+        "hbm_clk": [
+          "hbm_clk"
+        ],
+        "hbm_pc_clk": [
+          "hbm_pc_clk[0]",
+          "hbm_pc_clk[1]",
+          "hbm_pc_clk[2]",
+          "hbm_pc_clk[3]"
+        ],
+        "stream_clk": [
+          "stream_clk"
+        ]
+      },
+      "expanded_clock_ports": [
+        "hbm_clk",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]",
+        "stream_clk"
+      ]
+    },
+    {
+      "partition": "q_hub_nw",
+      "instance": "u_svg_Q2__o",
+      "row": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q2 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          64.8,
+          216.0
+        ],
+        "island_um": [
+          60.48,
+          211.68,
+          69.12,
+          220.32
+        ],
+        "port": null,
+        "merged_clock_ports": [
+          "hbm_clk",
+          "hbm_pc_clk",
+          "stream_clk"
+        ],
+        "tap": "u_svg_Q2__o",
+        "module": "ot_svgr_own",
+        "native_module": "ot_svgr_own"
+      },
+      "port_mapping": {
+        "hbm_clk": [
+          "hbm_clk"
+        ],
+        "hbm_pc_clk": [
+          "hbm_pc_clk[0]",
+          "hbm_pc_clk[1]",
+          "hbm_pc_clk[2]",
+          "hbm_pc_clk[3]"
+        ],
+        "stream_clk": [
+          "stream_clk"
+        ]
+      },
+      "expanded_clock_ports": [
+        "hbm_clk",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]",
+        "stream_clk"
+      ]
+    },
+    {
+      "partition": "q_hub_nw",
+      "instance": "u_svg_Q1__o",
+      "row": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q1 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          64.8,
+          216.0
+        ],
+        "island_um": [
+          60.48,
+          211.68,
+          69.12,
+          220.32
+        ],
+        "port": null,
+        "merged_clock_ports": [
+          "hbm_clk",
+          "hbm_pc_clk",
+          "stream_clk"
+        ],
+        "tap": "u_svg_Q1__o",
+        "module": "ot_svgr_own",
+        "native_module": "ot_svgr_own"
+      },
+      "port_mapping": {
+        "hbm_clk": [
+          "hbm_clk"
+        ],
+        "hbm_pc_clk": [
+          "hbm_pc_clk[0]",
+          "hbm_pc_clk[1]",
+          "hbm_pc_clk[2]",
+          "hbm_pc_clk[3]"
+        ],
+        "stream_clk": [
+          "stream_clk"
+        ]
+      },
+      "expanded_clock_ports": [
+        "hbm_clk",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]",
+        "stream_clk"
+      ]
+    },
+    {
+      "partition": "q_hub_nw",
+      "instance": "u_svg_Q0__o",
+      "row": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q0 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          64.8,
+          216.0
+        ],
+        "island_um": [
+          60.48,
+          211.68,
+          69.12,
+          220.32
+        ],
+        "port": null,
+        "merged_clock_ports": [
+          "hbm_clk",
+          "hbm_pc_clk",
+          "stream_clk"
+        ],
+        "tap": "u_svg_Q0__o",
+        "module": "ot_svgr_own",
+        "native_module": "ot_svgr_own"
+      },
+      "port_mapping": {
+        "hbm_clk": [
+          "hbm_clk"
+        ],
+        "hbm_pc_clk": [
+          "hbm_pc_clk[0]",
+          "hbm_pc_clk[1]",
+          "hbm_pc_clk[2]",
+          "hbm_pc_clk[3]"
+        ],
+        "stream_clk": [
+          "stream_clk"
+        ]
+      },
+      "expanded_clock_ports": [
+        "hbm_clk",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]",
+        "stream_clk"
+      ]
+    },
+    {
+      "partition": "q_hub_ne",
+      "instance": "u_svg_Q3__o",
+      "row": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q3 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          64.8,
+          216.0
+        ],
+        "island_um": [
+          60.48,
+          211.68,
+          69.12,
+          220.32
+        ],
+        "port": null,
+        "merged_clock_ports": [
+          "hbm_clk",
+          "hbm_pc_clk",
+          "stream_clk"
+        ],
+        "tap": "u_svg_Q3__o",
+        "module": "ot_svgr_own",
+        "native_module": "ot_svgr_own"
+      },
+      "port_mapping": {
+        "hbm_clk": [
+          "hbm_clk"
+        ],
+        "hbm_pc_clk": [
+          "hbm_pc_clk[0]",
+          "hbm_pc_clk[1]",
+          "hbm_pc_clk[2]",
+          "hbm_pc_clk[3]"
+        ],
+        "stream_clk": [
+          "stream_clk"
+        ]
+      },
+      "expanded_clock_ports": [
+        "hbm_clk",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]",
+        "stream_clk"
+      ]
+    },
+    {
+      "partition": "q_hub_ne",
+      "instance": "u_svg_Q2__o",
+      "row": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q2 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          64.8,
+          216.0
+        ],
+        "island_um": [
+          60.48,
+          211.68,
+          69.12,
+          220.32
+        ],
+        "port": null,
+        "merged_clock_ports": [
+          "hbm_clk",
+          "hbm_pc_clk",
+          "stream_clk"
+        ],
+        "tap": "u_svg_Q2__o",
+        "module": "ot_svgr_own",
+        "native_module": "ot_svgr_own"
+      },
+      "port_mapping": {
+        "hbm_clk": [
+          "hbm_clk"
+        ],
+        "hbm_pc_clk": [
+          "hbm_pc_clk[0]",
+          "hbm_pc_clk[1]",
+          "hbm_pc_clk[2]",
+          "hbm_pc_clk[3]"
+        ],
+        "stream_clk": [
+          "stream_clk"
+        ]
+      },
+      "expanded_clock_ports": [
+        "hbm_clk",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]",
+        "stream_clk"
+      ]
+    },
+    {
+      "partition": "q_hub_ne",
+      "instance": "u_svg_Q1__o",
+      "row": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q1 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          64.8,
+          216.0
+        ],
+        "island_um": [
+          60.48,
+          211.68,
+          69.12,
+          220.32
+        ],
+        "port": null,
+        "merged_clock_ports": [
+          "hbm_clk",
+          "hbm_pc_clk",
+          "stream_clk"
+        ],
+        "tap": "u_svg_Q1__o",
+        "module": "ot_svgr_own",
+        "native_module": "ot_svgr_own"
+      },
+      "port_mapping": {
+        "hbm_clk": [
+          "hbm_clk"
+        ],
+        "hbm_pc_clk": [
+          "hbm_pc_clk[0]",
+          "hbm_pc_clk[1]",
+          "hbm_pc_clk[2]",
+          "hbm_pc_clk[3]"
+        ],
+        "stream_clk": [
+          "stream_clk"
+        ]
+      },
+      "expanded_clock_ports": [
+        "hbm_clk",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]",
+        "stream_clk"
+      ]
+    },
+    {
+      "partition": "q_hub_ne",
+      "instance": "u_svg_Q0__o",
+      "row": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q0 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          64.8,
+          216.0
+        ],
+        "island_um": [
+          60.48,
+          211.68,
+          69.12,
+          220.32
+        ],
+        "port": null,
+        "merged_clock_ports": [
+          "hbm_clk",
+          "hbm_pc_clk",
+          "stream_clk"
+        ],
+        "tap": "u_svg_Q0__o",
+        "module": "ot_svgr_own",
+        "native_module": "ot_svgr_own"
+      },
+      "port_mapping": {
+        "hbm_clk": [
+          "hbm_clk"
+        ],
+        "hbm_pc_clk": [
+          "hbm_pc_clk[0]",
+          "hbm_pc_clk[1]",
+          "hbm_pc_clk[2]",
+          "hbm_pc_clk[3]"
+        ],
+        "stream_clk": [
+          "stream_clk"
+        ]
+      },
+      "expanded_clock_ports": [
+        "hbm_clk",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]",
+        "stream_clk"
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "port": "hbm_clk",
+      "raw_plan_pin": {
+        "name": "hbm_clk",
+        "layer": "M5",
+        "x": 64.632,
+        "y": 216.0,
+        "w": 0.048,
+        "h": 0.48
+      },
+      "generated_plan_pin": {
+        "name": "hbm_clk",
+        "layer": "M5",
+        "x": 64.632,
+        "y": 216.0
+      },
+      "io_literal_xy_um": [
+        64.632,
+        216.0
+      ],
+      "io_literal_layer": "M5",
+      "io_literal_size_um": [
+        0.048,
+        0.48
+      ],
+      "io_matches_generated": true,
+      "generated_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "io_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "generated_matches_raw": true,
+      "coarse_comparisons": [
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.632,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.168,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.168,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.632,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.168,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.168,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.632,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.168,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.168,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.632,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.168,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.168,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.632,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.168,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.168,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.632,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.168,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.168,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.632,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.168,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.168,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.632,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.168,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.168,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "port": "hbm_pc_clk[0]",
+      "raw_plan_pin": {
+        "name": "hbm_pc_clk[0]",
+        "layer": "M5",
+        "x": 64.728,
+        "y": 216.0,
+        "w": 0.048,
+        "h": 0.48
+      },
+      "generated_plan_pin": {
+        "name": "hbm_pc_clk[0]",
+        "layer": "M5",
+        "x": 64.728,
+        "y": 216.0
+      },
+      "io_literal_xy_um": [
+        64.728,
+        216.0
+      ],
+      "io_literal_layer": "M5",
+      "io_literal_size_um": [
+        0.048,
+        0.48
+      ],
+      "io_matches_generated": true,
+      "generated_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "io_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "generated_matches_raw": true,
+      "coarse_comparisons": [
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.728,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.072,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.072,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.728,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.072,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.072,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.728,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.072,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.072,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.728,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.072,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.072,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.728,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.072,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.072,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.728,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.072,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.072,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.728,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.072,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.072,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.728,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            -0.072,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            -0.072,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "port": "hbm_pc_clk[1]",
+      "raw_plan_pin": {
+        "name": "hbm_pc_clk[1]",
+        "layer": "M5",
+        "x": 64.824,
+        "y": 216.0,
+        "w": 0.048,
+        "h": 0.48
+      },
+      "generated_plan_pin": {
+        "name": "hbm_pc_clk[1]",
+        "layer": "M5",
+        "x": 64.824,
+        "y": 216.0
+      },
+      "io_literal_xy_um": [
+        64.824,
+        216.0
+      ],
+      "io_literal_layer": "M5",
+      "io_literal_size_um": [
+        0.048,
+        0.48
+      ],
+      "io_matches_generated": true,
+      "generated_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "io_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "generated_matches_raw": true,
+      "coarse_comparisons": [
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.824,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.024,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.024,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.824,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.024,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.024,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.824,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.024,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.024,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.824,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.024,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.024,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.824,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.024,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.024,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.824,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.024,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.024,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.824,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.024,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.024,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.824,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.024,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.024,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "port": "hbm_pc_clk[2]",
+      "raw_plan_pin": {
+        "name": "hbm_pc_clk[2]",
+        "layer": "M5",
+        "x": 64.92,
+        "y": 216.0,
+        "w": 0.048,
+        "h": 0.48
+      },
+      "generated_plan_pin": {
+        "name": "hbm_pc_clk[2]",
+        "layer": "M5",
+        "x": 64.92,
+        "y": 216.0
+      },
+      "io_literal_xy_um": [
+        64.92,
+        216.0
+      ],
+      "io_literal_layer": "M5",
+      "io_literal_size_um": [
+        0.048,
+        0.48
+      ],
+      "io_matches_generated": true,
+      "generated_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "io_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "generated_matches_raw": true,
+      "coarse_comparisons": [
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.92,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.12,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.12,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.92,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.12,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.12,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.92,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.12,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.12,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.92,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.12,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.12,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.92,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.12,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.12,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.92,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.12,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.12,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.92,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.12,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.12,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            64.92,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.12,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.12,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "port": "hbm_pc_clk[3]",
+      "raw_plan_pin": {
+        "name": "hbm_pc_clk[3]",
+        "layer": "M5",
+        "x": 65.016,
+        "y": 216.0,
+        "w": 0.048,
+        "h": 0.48
+      },
+      "generated_plan_pin": {
+        "name": "hbm_pc_clk[3]",
+        "layer": "M5",
+        "x": 65.016,
+        "y": 216.0
+      },
+      "io_literal_xy_um": [
+        65.016,
+        216.0
+      ],
+      "io_literal_layer": "M5",
+      "io_literal_size_um": [
+        0.048,
+        0.48
+      ],
+      "io_matches_generated": true,
+      "generated_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "io_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "generated_matches_raw": true,
+      "coarse_comparisons": [
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.016,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.216,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.216,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.016,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.216,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.216,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.016,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.216,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.216,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.016,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.216,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.216,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.016,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.216,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.216,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.016,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.216,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.216,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.016,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.216,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.216,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.016,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.216,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.216,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "port": "stream_clk",
+      "raw_plan_pin": {
+        "name": "stream_clk",
+        "layer": "M5",
+        "x": 65.112,
+        "y": 216.0,
+        "w": 0.048,
+        "h": 0.48
+      },
+      "generated_plan_pin": {
+        "name": "stream_clk",
+        "layer": "M5",
+        "x": 65.112,
+        "y": 216.0
+      },
+      "io_literal_xy_um": [
+        65.112,
+        216.0
+      ],
+      "io_literal_layer": "M5",
+      "io_literal_size_um": [
+        0.048,
+        0.48
+      ],
+      "io_matches_generated": true,
+      "generated_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "io_minus_raw_um": [
+        0.0,
+        0.0
+      ],
+      "generated_matches_raw": true,
+      "coarse_comparisons": [
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.112,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.312,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.312,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.112,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.312,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.312,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.112,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.312,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.312,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_nw",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.112,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.312,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.312,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q3__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.112,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.312,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.312,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q2__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.112,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.312,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.312,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q1__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.112,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.312,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.312,
+            0.0
+          ]
+        },
+        {
+          "partition": "q_hub_ne",
+          "instance": "u_svg_Q0__o",
+          "coarse_xy_um": [
+            64.8,
+            216.0
+          ],
+          "coarse_expanded_expected_xy_um": [
+            65.112,
+            216.0
+          ],
+          "generated_minus_expanded_coarse_um": [
+            0.0,
+            0.0
+          ],
+          "generated_minus_coarse_um": [
+            0.312,
+            0.0
+          ],
+          "raw_minus_coarse_um": [
+            0.312,
+            0.0
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "All six generated scalar clock centres and literal io.tcl placements equal canonical raw p37 pins.",
+    "All eight OWN coarse rows expand their merged base-port names onto the same six M5 grid points; all48 scalar comparisons have zero delta.",
+    "Explicit --clock-pin-entry on; old default-off kit and failed audit retained unchanged.",
+    "Only the six clock pin centres changed; no P&R was run."
+  ],
+  "physical_route_run": false
+}

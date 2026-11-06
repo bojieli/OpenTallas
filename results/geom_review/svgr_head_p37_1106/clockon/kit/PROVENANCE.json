@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.kit_provenance.v1",
+ "provenance": {
+  "commit": "7d6531ebab6a636a5b351a12bd4fa2ff5ea5e9ef",
+  "dirty": false,
+  "source": "git"
+ },
+ "kit_hash": "f3b51fdee8898467",
+ "files": {
+  "config.mk": "34cfca772c0d03b39d3a28f08aa527201ace194f38d372a6e8011719d44c80f6",
+  "freeze.json": "17b2c644edf2b92df5acb72f87316aeade10612ab664040d33e0fa80665fa61d",
+  "lec.py": "8aff8b09a3f44ba6fdb230ad01c7c98f7d56e0fc58d6b4c455a03f1be369994b",
+  "core.json": "ba8848e326a7b79ceb916ee6caad1cd89f2538b95887c66fe77dbf2850a7d20b",
+  "pins.json": "d486e242be44a28d44cfc269886b730016ae67fcae2d74c61ff07dbf165149f8",
+  "rtl/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+  "rtl/ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+  "rtl/ot_hbm_svc_async_fifo.sv": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+  "rtl/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv": "af431efd6145da137f530535966c3d01080bbb985ef10488d573decb7d7fcce9",
+  "rtl/ot_hbm_svc_sm_issuer_rel.sv": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9",
+  "rtl/ot_hbm_svc_static_sm_packed136.sv": "f06fc1118b435ef275bf52bcd152c33fa8dab4bf56bf8659afab372c8dd20fc5",
+  "rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+  "rtl/ot_smh_calendar_static_x.sv": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40",
+  "rtl/ot_smh_static_feed.sv": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84",
+  "rtl/ot_svgr_own__fshell.sv": "06de2cdfea278ec50386dc8e7387f9d472e7737789cb607e1447edb07b1212c1",
+  "rtl/ot_svgr_rf1_skid_head.sv": "b0cbde34513e655db58e73c56b1446640ce05be3ff8bd1edc9a483ae3556018d",
+  "rtl/ot_svgr_split.sv": "f0389f7e19db62540bc3e63ddc73c70fecb039c549d5e4042cb514e80a468f75",
+  "rtl/portlist.txt": "4299ab3fbb980a0780f499497a10bc664e4001744c7517c222072976e67127dd"
+ }
+}

@@ -1,0 +1,74 @@
+{
+  "scope": "Read-only analytical call of current plan_clock_entries; NOT a new GEN or a repaired kit",
+  "m5_offset": 0.024,
+  "m5_pitch": 0.048,
+  "predicted_on_coordinates": {
+    "hbm_clk": [
+      64.632,
+      216.0
+    ],
+    "hbm_pc_clk[0]": [
+      64.728,
+      216.0
+    ],
+    "hbm_pc_clk[1]": [
+      64.824,
+      216.0
+    ],
+    "hbm_pc_clk[2]": [
+      64.92,
+      216.0
+    ],
+    "hbm_pc_clk[3]": [
+      65.016,
+      216.0
+    ],
+    "stream_clk": [
+      65.112,
+      216.0
+    ]
+  },
+  "raw_coordinates": {
+    "hbm_clk": [
+      64.632,
+      216.0
+    ],
+    "hbm_pc_clk[0]": [
+      64.728,
+      216.0
+    ],
+    "hbm_pc_clk[1]": [
+      64.824,
+      216.0
+    ],
+    "hbm_pc_clk[2]": [
+      64.92,
+      216.0
+    ],
+    "hbm_pc_clk[3]": [
+      65.016,
+      216.0
+    ],
+    "stream_clk": [
+      65.112,
+      216.0
+    ]
+  },
+  "predicted_on_matches_raw": true,
+  "record": {
+    "file": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v37/clock_entries.json",
+    "sha256": "653ca8e8cfbb6911c64122052d538683bf86905b08e20096d01050dc58cf3ac7",
+    "module": "ot_svgr_own",
+    "xy_um": [
+      64.8,
+      216.0
+    ],
+    "ports": [
+      "hbm_clk",
+      "hbm_pc_clk",
+      "stream_clk"
+    ],
+    "pins": 6,
+    "rule": "METHODOLOGY 12.8a plan clock entry (DIE-HBM-48)"
+  }
+}
