@@ -1,0 +1,87 @@
+{
+  "parent": "ot_svgr_top_cachecut",
+  "helper_instance": "feed.rows",
+  "physical_original_instance": "u_fcore.feed.rows",
+  "clock": "stream_clk",
+  "edges": [
+    {
+      "port_group": "open_*",
+      "source": "feed.od_v[3]/od_bank[3]/od_epoch[3]/od_count[3]/od_tag[3]",
+      "first_capture": "rows.g_on owned/epoch/count/running/load_bank/load_epoch/load_rows/tag_base/present/head/slot_phase/elapsed/record_phase",
+      "cycles": 0
+    },
+    {
+      "port_group": "sector_*",
+      "source": "feed.producer out_v/out_mask/out_data/out_ordinal/out_epoch; indices/epochs combinational expansion",
+      "first_capture": "rows.g_on.words/present/received/sticky",
+      "cycles": 0
+    },
+    {
+      "port_group": "read_*",
+      "source": "feed.rd_r[33:0], feed.programme_v_q; programme combinational alias",
+      "first_capture": "rows.g_on.out_valid/out_tag; five SRAM registered read ports",
+      "cycles": 0
+    },
+    {
+      "port_group": "retire_*",
+      "source": "feed.ret_c/retf_c (PREL1)",
+      "first_capture": "rows.g_on.owned/sticky",
+      "cycles": 0
+    },
+    {
+      "port_group": "block_ready",
+      "destination": "issuer.cache_ready",
+      "first_capture": "issuer.fault via gq_n/rc/gh_at/go_busy missed-slot predicate",
+      "boundary": "combinational"
+    },
+    {
+      "port_group": "bank_owned",
+      "destination": "feed.cache_owned_c OR open/od pipeline to issuer.cache_owned",
+      "first_capture": "issuer start queue bookkeeping via start_v (sq_n/gq_n) and feed.open_q",
+      "boundary": "combinational"
+    },
+    {
+      "port_group": "busy",
+      "destination": "feed.block_ready gating producer_ready",
+      "first_capture": "issuer start queue bookkeeping via start_v",
+      "boundary": "combinational"
+    },
+    {
+      "port_group": "fault",
+      "destination": "feed.fault -> top.fault",
+      "first_capture": "parent fault delivery/observer; no helper-added register",
+      "boundary": "combinational; parent-owned terminal"
+    },
+    {
+      "port_group": "out_packet[1087:0]",
+      "destination": "feed.consumer.packet and sm_packet observation",
+      "first_capture": "feed.consumer.s1_w[1087:0]",
+      "boundary": "five SRAM registered output data; no face register"
+    },
+    {
+      "port_group": "out_packet[1098:1088]",
+      "destination": "feed i8_* status/tag logic and feed.consumer.packet",
+      "first_capture": "feed.consumer.fault; feed.i8_p1/i8_t1/i8_f",
+      "boundary": "registered out_valid/out_tag plus combinational sticky masking"
+    }
+  ],
+  "remaining_parent_macros": [
+    {
+      "instance": "issuer.g_t2.u_desc_lo",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    {
+      "instance": "issuer.g_t2.u_desc_hi",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    {
+      "instance": "feed.programme_leaf.g_m2.u_program_lo",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+    },
+    {
+      "instance": "feed.programme_leaf.g_m2.u_program_hi",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2"
+    }
+  ],
+  "native_timing_status": "UNADOPTED: exact boundary graph supplied; parent timing/PG contract still required"
+}

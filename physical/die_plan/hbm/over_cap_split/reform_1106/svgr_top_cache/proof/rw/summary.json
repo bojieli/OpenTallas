@@ -1,0 +1,22 @@
+{
+  "positive": {
+    "verdict": "PASS",
+    "returncode": 0,
+    "log": "positive.log"
+  },
+  "payload_flip": {
+    "verdict": "CAUGHT",
+    "returncode": 1,
+    "log": "payload_flip.log"
+  },
+  "read_address": {
+    "verdict": "CAUGHT",
+    "returncode": 1,
+    "log": "read_address.log"
+  },
+  "read_edge_removed": {
+    "verdict": "CAUGHT",
+    "returncode": 1,
+    "log": "read_edge_removed.log"
+  }
+}

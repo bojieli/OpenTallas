@@ -1,0 +1,23 @@
+{
+  "source_row_bits": 1088,
+  "source_row_bytes": 136,
+  "macro_payloads": [
+    256,
+    256,
+    256,
+    256,
+    64
+  ],
+  "unused_bits_per_row": 192,
+  "catalog_128x64_single_clock": false,
+  "catalog_128x64_two_clock": "ot_sram_1r1w2c_128x64_m1; different clock contract, not selected",
+  "approved_optional_master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+  "approved_optional_dimensions_um": [
+    91.8,
+    27.576
+  ],
+  "baseline_area_um2": 19469.26368,
+  "optional_area_um2": 12657.384,
+  "decision": "retain capacity and latency; source-preserving native 2-column/3-row cut, optional exact existing r0c0_g256 swap only after proof",
+  "added_cycles": 0
+}

@@ -1,0 +1,245 @@
+{
+  "module": "ot_svgr_cache136_native",
+  "parameters": {
+    "PACKED136": 1,
+    "RW_SRAM": 0
+  },
+  "qualification": "SOURCE_GEOMETRY_PROPOSAL_NOT_ROUTED",
+  "release_eligible": false,
+  "added_face_cycles": 0,
+  "endpoint_contract": {
+    "kind": "INTERNAL_CORE",
+    "partition_rule": "R2_INTERNAL_TIMED_IN_PARTITION",
+    "parent_partition": "ot_svgr_top remaining parent; die parent must adopt exact instance mapping"
+  },
+  "clock_ports": [
+    "clk"
+  ],
+  "reset_ports": [
+    "rst_n"
+  ],
+  "native_clock_binding": {
+    "clk": "u_fcore.feed.stream_clk",
+    "rst_n": "u_fcore.feed.stream_rst_n",
+    "hbm_clock_selected": false
+  },
+  "port_inventory": [
+    {
+      "name": "clk",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "open_v",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "open_bank",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "open_epoch",
+      "direction": "input",
+      "width": 16
+    },
+    {
+      "name": "open_count",
+      "direction": "input",
+      "width": 7
+    },
+    {
+      "name": "open_tag_base",
+      "direction": "input",
+      "width": 10
+    },
+    {
+      "name": "sector_v",
+      "direction": "input",
+      "width": 4
+    },
+    {
+      "name": "sector_index",
+      "direction": "input",
+      "width": 96
+    },
+    {
+      "name": "sector_epoch",
+      "direction": "input",
+      "width": 64
+    },
+    {
+      "name": "sector_data",
+      "direction": "input",
+      "width": 1024
+    },
+    {
+      "name": "read_v",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "read_bank",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "read_epoch",
+      "direction": "input",
+      "width": 16
+    },
+    {
+      "name": "read_row",
+      "direction": "input",
+      "width": 6
+    },
+    {
+      "name": "read_tag",
+      "direction": "input",
+      "width": 10
+    },
+    {
+      "name": "retire_v",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "retire_bank",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "retire_epoch",
+      "direction": "input",
+      "width": 16
+    },
+    {
+      "name": "block_ready",
+      "direction": "output",
+      "width": 2
+    },
+    {
+      "name": "bank_owned",
+      "direction": "output",
+      "width": 2
+    },
+    {
+      "name": "busy",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "fault",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "out_packet",
+      "direction": "output",
+      "width": 1099
+    }
+  ],
+  "outline_um": [
+    224.64,
+    250.56
+  ],
+  "core_margin_um": 4.32,
+  "macro_halo_um": 4.32,
+  "macros": [
+    {
+      "instance": "g_on.g_cache[0].g_original.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        10.8,
+        10.8
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "orientation": "R0",
+      "useful_bits": 256
+    },
+    {
+      "instance": "g_on.g_cache[1].g_original.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        116.42399999999999,
+        10.8
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "orientation": "R0",
+      "useful_bits": 256
+    },
+    {
+      "instance": "g_on.g_cache[2].g_original.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        10.8,
+        65.664
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "orientation": "R0",
+      "useful_bits": 256
+    },
+    {
+      "instance": "g_on.g_cache[3].g_original.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        116.42399999999999,
+        65.664
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "orientation": "R0",
+      "useful_bits": 256
+    },
+    {
+      "instance": "g_on.g_cache[4].g_original.u_payload",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        10.8,
+        120.52799999999999
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "orientation": "R0",
+      "useful_bits": 64
+    }
+  ],
+  "pg_ownership": {
+    "helper": "owns SRAM PG and standard-cell rail/mesh within helper outline",
+    "parent": "owns seam-continuous VDD/VSS straps and clock delivery to helper clk",
+    "status": "PENDING_PARENT_PG_ADOPTION"
+  },
+  "first_capture_policy": "Per signal graph.json; combinational outputs remain combinational; timing owned in partition, no all-pass external classification",
+  "capacity": {
+    "rows": 128,
+    "rows_per_bank": 64,
+    "banks": 2,
+    "useful_bits_per_row": 1088,
+    "allocated_bits_per_row": 1280,
+    "useful_bytes_per_row": 136
+  },
+  "source_manifest": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "f06fc1118b435ef275bf52bcd152c33fa8dab4bf56bf8659afab372c8dd20fc5",
+    "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv": "13773f60dfd7873c2b0670a2dcd16bc344b9f9f308a61f428119a9e1a89744e7"
+  },
+  "mapping_counts": "NOT_RUN"
+}
