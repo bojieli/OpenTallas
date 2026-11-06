@@ -1,0 +1,80 @@
+{
+ "view": "ot_pdie_serdes_tx@c77a41179db8",
+ "outline_um": [
+  285.12,
+  207.36
+ ],
+ "pins": 1059,
+ "faces": {
+  "N": {
+   "pins": 1058,
+   "span_um": 285.12,
+   "avg_per_um": 3.711,
+   "max_per_um_10": 10.5,
+   "max_per_track": {
+    "M5": 0.504
+   },
+   "layers": {
+    "M5": 1058
+   }
+  },
+  "S": {
+   "pins": 1,
+   "span_um": 285.12,
+   "avg_per_um": 0.004,
+   "max_per_um_10": 0.1,
+   "max_per_track": {
+    "M5": 0.005
+   },
+   "layers": {
+    "M5": 1
+   }
+  }
+ },
+ "face_budget_violations": [
+  "N"
+ ],
+ "partition": "NW_io",
+ "inst": "u_lk_N0__tx",
+ "connected_buses": 4,
+ "buses": 5,
+ "connected_bits": 515,
+ "bits_facing_away": 1,
+ "bits_beyond_local_reach": 513,
+ "partner_checks": [
+  {
+   "bus": "rst",
+   "partner": "core:u_lk_N0__rx",
+   "endpoints": 2,
+   "bits": 1,
+   "face": "N",
+   "cos": -0.725,
+   "dist_um": 437.7
+  },
+  {
+   "bus": "e_flt_o",
+   "partner": "core:u_lk_N0__rx",
+   "endpoints": 1,
+   "bits": 1,
+   "face": "S",
+   "cos": 0.107,
+   "dist_um": 178.2
+  },
+  {
+   "bus": "tx",
+   "partner": "core:u_ep_N0",
+   "endpoints": 1,
+   "bits": 512,
+   "face": "N",
+   "cos": 0.954,
+   "dist_um": 695.3
+  },
+  {
+   "bus": "clk",
+   "partner": "tap:u_lk_N0__tx",
+   "bits": 1,
+   "cos": null,
+   "dist_um": null
+  }
+ ]
+}

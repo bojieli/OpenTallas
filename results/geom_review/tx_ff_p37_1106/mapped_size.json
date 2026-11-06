@@ -1,0 +1,42 @@
+{
+  "kit_hash": "6a2b7eafa28ceea2",
+  "source_pin": "dc98564b80a03d9e73d824af80053810042efd19",
+  "backend_gen_commit": "efbdb61c3b53e172dad36c9d95840c3678aa4cde",
+  "outline_um": [
+    285.12,
+    207.36
+  ],
+  "core_area_um2": 54942.1056,
+  "stdcell_count": 110078,
+  "stdcell_area_um2": 18173.9,
+  "macros": 0,
+  "actual_top_params": {
+    "ELA": 2,
+    "EFF": 1
+  },
+  "extra_logical_PMA_edges": 1,
+  "fault_extra_edges": 0,
+  "placement": "NOT RUN",
+  "STA_signoff": "NOT RUN",
+  "netlist_LEC": "RUNNING: isolated 48GB unit oth-ubuntu-2265993-1793976564",
+  "stdutil": 0.33078273578215395,
+  "size_admission_pass": true,
+  "cq_named_mapped_DFF_count": {
+    "0": 520,
+    "1": 520,
+    "2": 520,
+    "3": 520
+  },
+  "yosys_conservative_stdcell_count": 111698,
+  "yosys_conservative_stdcell_area_um2": 18245.73276,
+  "yosys_conservative_stdutil": 0.33209016219429344,
+  "yosys_DFF_total": 16882,
+  "face_guard": "PASS1057/1057",
+  "port_bind": {
+    "missing": 0,
+    "extra": 0
+  },
+  "SYNTH_unit": "oth-ubuntu-1319160-1793974474",
+  "SYNTH_exit": 0,
+  "SYNTH_peak_RSS_KB": 661332
+}

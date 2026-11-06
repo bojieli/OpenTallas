@@ -1,0 +1,38 @@
+{
+  "kit": "/srv/opentallas-scratch2/claude/codex-tx-ff-p37-1106/generated/ot_pdie_serdes_tx_c77a41179db8-FF",
+  "kit_hash": "6a2b7eafa28ceea2",
+  "actual_plan_pins_sha256": "1019275eb621d350d700ac2d439a4076f44e1d5966de7b0d00b3b14b0ec9c23c",
+  "outline_um": [
+    285.12,
+    207.36
+  ],
+  "pins": 1059,
+  "clocks": [
+    {
+      "name": "clk",
+      "layer": "M5",
+      "x": 142.584,
+      "y": 103.68
+    }
+  ],
+  "buses": {
+    "pma_tx": 544,
+    "rst": 1,
+    "tx": 512,
+    "e_flt_o": 1,
+    "clk": 1
+  },
+  "faces": {
+    "N": {
+      "pins": 1057,
+      "max_pins_per_um_in_10um_window": 10.5
+    },
+    "S": {
+      "pins": 1,
+      "max_pins_per_um_in_10um_window": 0.1
+    }
+  },
+  "signal_route_max": "M6",
+  "PDN_top": "M5",
+  "placement": "NOT RUN"
+}

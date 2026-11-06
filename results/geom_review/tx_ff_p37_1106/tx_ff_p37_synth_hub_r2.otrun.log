@@ -1,0 +1,364 @@
+ot-run: localhost      admits   216 GB (avail 322, reserve 0, fresh 3.4, peak 37.3, headroom 0, waiters 0/0 GB) load 147/112 running 49 disk 192 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1319160-1793974474 after 1 s
+{"view": "ot_pdie_serdes_tx@c77a41179db8", "pins": 1059, "face_budget_violations": ["N"], "connected_buses": 4, "buses": 5, "connected_bits": 515, "bits_facing_away": 1, "bits_beyond_local_reach": 513}
+mkdir -p /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/
+echo 833.0000 > /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/run/logs/asap7/hbc_ot_pdie_serdes_tx/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/clock_period.txt
+Setting clock period to 833.0000
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /work/rtl/ot_pdie_serdes_split.sv
+12. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_common.sv
+13. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_enc.sv
+14. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_dec.sv
+15. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_bm.sv
+16. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_ddly.sv
+17. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_dout.sv
+18. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_dsyn.sv
+19. Executing Verilog-2005 frontend: /work/rtl/ot_pdie_serdes.sv
+20. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_dchn.sv
+21. Executing Verilog-2005 frontend: /work/rtl/ot_s81_kp4_enc_la.sv
+22. Executing Verilog-2005 frontend: /work/rtl/ot_pdie_serdes_tx__fshell.sv
+23. Executing Verilog-2005 frontend: /work/rtl/ot_hbm_face_reg.sv
+24. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+25. Executing HIERARCHY pass (managing design hierarchy).
+26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pdie_serdes_tx'.
+26.1. Analyzing design hierarchy..
+26.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pdie_serdes_tx__fcore'.
+26.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+26.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+26.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+26.6. Analyzing design hierarchy..
+26.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_kp4_enc_la'.
+Warning: Replacing memory \g_ff.fq with list of registers. See /work/rtl/ot_s81_kp4_enc_la.sv:125
+Warning: Replacing memory \g_ff.cq with list of registers. See /work/rtl/ot_s81_kp4_enc_la.sv:121
+Warning: Replacing memory \sw with list of registers. See /work/rtl/ot_s81_kp4_enc_la.sv:182
+Warning: Replacing memory \so with list of registers. See /work/rtl/ot_s81_kp4_enc_la.sv:181
+Warning: Replacing memory \sk with list of registers. See /work/rtl/ot_s81_kp4_enc_la.sv:69
+26.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_pma_bm'.
+Warning: Replacing memory \l with list of registers. See /work/rtl/ot_pdie_serdes.sv:113
+26.9. Analyzing design hierarchy..
+26.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_kp4_rst'.
+26.11. Analyzing design hierarchy..
+26.12. Analyzing design hierarchy..
+source /work/ot_keep_regs.tcl
+27. Executing PROC pass (convert processes to netlists).
+27.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+27.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+27.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+27.4. Executing PROC_INIT pass (extract init attributes).
+27.5. Executing PROC_ARST pass (detect async resets in processes).
+27.6. Executing PROC_ROM pass (convert switches to ROMs).
+27.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+27.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+27.9. Executing PROC_DFF pass (convert process syncs to FFs).
+27.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+27.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+27.12. Executing OPT_EXPR pass (perform const folding).
+28. Executing TECHMAP pass (map to technology primitives).
+28.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+28.2. Continuing TECHMAP pass.
+OT_KEEP_REGS: keep set on 2306 register cells driving keep wires
+29. Executing OPT_CLEAN pass (remove unused cells and wires).
+30. Executing RTLIL backend.
+Warnings: 6 unique messages, 6 total
+End of script. Logfile hash: 81c1914ea9, time: 23.31s, user: 22.49s, system: 0.70s, MEM: 407.20 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 66% 1x hierarchy (15 sec), 9% 12x read_liberty (2 sec), ...
+Elapsed time: 0:23.44[h:]min:sec. CPU time: user 22.60 sys 0.75 (99%). Peak memory: 416976KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil         23            407 e1ae6aee074f6c2aa3a2
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/run/logs/asap7/hbc_ot_pdie_serdes_tx/base/1_2_yosys.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/clock_period.txt
+Setting clock period to 833.0000
+1. Executing RTLIL frontend.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+4. Executing SYNTH pass.
+4.1. Executing OPT pass (performing simple optimizations).
+4.1.1. Executing OPT_EXPR pass (perform const folding).
+4.1.2. Executing OPT_MERGE pass (detect identical cells).
+4.1.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.5. Finished fast OPT passes.
+4.2. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+4.3. Executing OPT pass (performing simple optimizations).
+4.3.1. Executing OPT_EXPR pass (perform const folding).
+4.3.2. Executing OPT_MERGE pass (detect identical cells).
+4.3.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.5. Executing OPT_MERGE pass (detect identical cells).
+4.3.6. Executing OPT_SHARE pass.
+4.3.7. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.9. Executing OPT_EXPR pass (perform const folding).
+4.3.10. Finished fast OPT passes. (There is nothing left to do.)
+4.4. Executing TECHMAP pass (map to technology primitives).
+4.4.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+4.4.2. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/common/lcu_kogge_stone.v
+4.4.3. Continuing TECHMAP pass.
+4.5. Executing OPT pass (performing simple optimizations).
+4.5.1. Executing OPT_EXPR pass (perform const folding).
+4.5.2. Executing OPT_MERGE pass (detect identical cells).
+4.5.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.5. Finished fast OPT passes.
+4.6. Executing HIERARCHY pass (managing design hierarchy).
+4.6.1. Analyzing design hierarchy..
+4.6.2. Analyzing design hierarchy..
+4.7. Printing statistics.
+4.8. Executing CHECK pass (checking for obvious problems).
+5. Executing OPT pass (performing simple optimizations).
+5.1. Executing OPT_EXPR pass (perform const folding).
+5.2. Executing OPT_MERGE pass (detect identical cells).
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.5. Executing OPT_MERGE pass (detect identical cells).
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.8. Executing OPT_EXPR pass (perform const folding).
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.12. Executing OPT_MERGE pass (detect identical cells).
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.15. Executing OPT_EXPR pass (perform const folding).
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+6. Executing EXTRACT_FA pass (find and extract full/half adders).
+7. Executing TECHMAP pass (map to technology primitives).
+7.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_adders_R.v
+7.2. Continuing TECHMAP pass.
+8. Executing TECHMAP pass (map to technology primitives).
+8.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+8.2. Continuing TECHMAP pass.
+9. Executing OPT pass (performing simple optimizations).
+9.1. Executing OPT_EXPR pass (perform const folding).
+9.2. Executing OPT_MERGE pass (detect identical cells).
+9.3. Executing OPT_DFF pass (perform DFF optimizations).
+9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.5. Finished fast OPT passes.
+10. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+11. Executing TECHMAP pass (map to technology primitives).
+11.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v
+11.2. Continuing TECHMAP pass.
+12. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+12.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+13. Executing OPT pass (performing simple optimizations).
+13.1. Executing OPT_EXPR pass (perform const folding).
+13.2. Executing OPT_MERGE pass (detect identical cells).
+13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+13.5. Executing OPT_MERGE pass (detect identical cells).
+13.6. Executing OPT_DFF pass (perform DFF optimizations).
+13.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+13.8. Executing OPT_EXPR pass (perform const folding).
+13.9. Rerunning OPT passes. (Maybe there is more to do..)
+13.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+13.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+13.12. Executing OPT_MERGE pass (detect identical cells).
+13.13. Executing OPT_DFF pass (perform DFF optimizations).
+13.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+13.15. Executing OPT_EXPR pass (perform const folding).
+13.16. Finished fast OPT passes. (There is nothing left to do.)
+14. Executing SETUNDEF pass (replace undef values with defined constants).
+abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/run/objects/asap7/hbc_ot_pdie_serdes_tx/base/abc.constr -D 833.0
+15. Executing ABC pass (technology mapping using ABC).
+15.1. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001' to `<abc-temp-dir>/input.blif'..
+15.1.1. Executed ABC.
+15.1.2. Re-integrating ABC results.
+15.2. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000000000' to `<abc-temp-dir>/input.blif'..
+15.2.1. Executed ABC.
+15.2.2. Re-integrating ABC results.
+15.3. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000100000' to `<abc-temp-dir>/input.blif'..
+15.3.1. Executed ABC.
+15.3.2. Re-integrating ABC results.
+15.4. Extracting gate netlist of module `\ot_pdie_serdes_tx' to `<abc-temp-dir>/input.blif'..
+15.4.1. Executed ABC.
+15.4.2. Re-integrating ABC results.
+Took 708 seconds: abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/run/objects/asap7/hbc_ot_pdie_serdes_tx/base/abc.constr -D 833.0
+16. Executing SPLITNETS pass (splitting up multi-bit signals).
+17. Executing OPT_CLEAN pass (remove unused cells and wires).
+18. Executing HILOMAP pass (mapping to constant drivers).
+19. Executing INSBUF pass (insert buffer cells for connected wires).
+20. Executing CHECK pass (checking for obvious problems).
+21. Printing statistics.
+22. Executing CHECK pass (checking for obvious problems).
+23. Executing Verilog backend.
+23.1. Executing BMUXMAP pass.
+23.2. Executing DEMUXMAP pass.
+End of script. Logfile hash: 34fdf58977, time: 807.18s, user: 107.72s, system: 2.23s, MEM: 645.83 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 86% 1x abc (706 sec), 3% 1x extract_fa (32 sec), ...
+Elapsed time: 13:27.65[h:]min:sec. CPU time: user 810.55 sys 3.64 (100%). Peak memory: 661332KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v            807            645 117ec913cb8f4b275f38
+cp /work/constraint.sdc /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/1_2_yosys.sdc
+touch -r /work/constraint.sdc /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+mkdir -p /work/run/objects/asap7/hbc_ot_pdie_serdes_tx/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+link_design ot_pdie_serdes_tx
+read_sdc /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/1_2_yosys.sdc
+source /work/setRC_rcx.tcl
+source /work/face_keep.tcl
+OT_FACE_KEEP dont_touch 2114 boundary cells before eliminate_dead_logic
+eliminate_dead_logic
+Removed 1620 unused instances and 1620 unused nets.
+Design area 18174 um^2 100% utilization.
+source /work/post_synth_actual.tcl
+OT_FACE_KEEP released 2114 boundary cells
+write_db /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/1_synth.odb
+write_sdc -no_timestamp /work/run/results/asap7/hbc_ot_pdie_serdes_tx/base/1_synth.sdc
+Elapsed time: 0:16.08[h:]min:sec. CPU time: user 15.38 sys 0.64 (99%). Peak memory: 575388KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .v             16            561 ee1435118ab779e3f831
+1_synth                   .odb                             f2f74fad1df2291934bb
+1_synth                   .sdc                             e33bcdc7cf81d2295c79
+	Command being timed: "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=2 synth"
+	User time (seconds): 851.15
+	System time (seconds): 6.09
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 14:11.29
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 661332
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1187412
+	Voluntary context switches: 24274
+	Involuntary context switches: 29630
+	Swaps: 0
+	File system inputs: 16
+	File system outputs: 227744
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on localhost (unit oth-ubuntu-1319160-1793974474): exit 0

@@ -1,0 +1,155 @@
+{
+  "verdict": "PASS",
+  "canonical_raw_clock": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 142.584,
+    "y": 103.68,
+    "w": 0.048,
+    "h": 0.48
+  },
+  "actual_generated_clock": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 142.584,
+    "y": 103.68
+  },
+  "actual_io_tcl": "place_pin -pin_name {clk} -layer M5 -location {142.5840 103.6800} -pin_size {0.0480 0.4800}",
+  "coarse_entries": [
+    {
+      "type": "NW_io",
+      "inst": "u_lk_N0__tx",
+      "source": "IP_DECLARED native clock pin (IP cannot be rebuilt; 12.8a centre not applicable) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_lk_N0 (4.32 PG lattice, sub frame)",
+      "stack": [
+        "M9",
+        "M5"
+      ],
+      "latency_target_tt_ps": 250.0,
+      "latency_target_ff_ps": 202.5,
+      "xy_um": [
+        142.584,
+        103.68
+      ],
+      "island_um": [
+        138.24,
+        99.36,
+        146.88,
+        108.0
+      ],
+      "port": "clk",
+      "merged_clock_ports": [],
+      "tap": "u_lk_N0__tx",
+      "module": "ot_pdie_serdes_tx",
+      "native_module": "ot_pdie_serdes_tx"
+    },
+    {
+      "type": "q_spb0",
+      "inst": "u_lk_S0__tx",
+      "source": "IP_DECLARED native clock pin (IP cannot be rebuilt; 12.8a centre not applicable) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_lk_S0 (4.32 PG lattice, sub frame)",
+      "stack": [
+        "M9",
+        "M5"
+      ],
+      "latency_target_tt_ps": 250.0,
+      "latency_target_ff_ps": 202.5,
+      "xy_um": [
+        142.584,
+        103.68
+      ],
+      "island_um": [
+        138.24,
+        99.36,
+        146.88,
+        108.0
+      ],
+      "port": "clk",
+      "merged_clock_ports": [],
+      "tap": "u_lk_S0__tx",
+      "module": "ot_pdie_serdes_tx",
+      "native_module": "ot_pdie_serdes_tx"
+    },
+    {
+      "type": "vsN0",
+      "inst": "u_lk_S1__tx",
+      "source": "IP_DECLARED native clock pin (IP cannot be rebuilt; 12.8a centre not applicable) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_lk_S1 (4.32 PG lattice, sub frame)",
+      "stack": [
+        "M9",
+        "M5"
+      ],
+      "latency_target_tt_ps": 250.0,
+      "latency_target_ff_ps": 202.5,
+      "xy_um": [
+        142.584,
+        103.68
+      ],
+      "island_um": [
+        138.24,
+        99.36,
+        146.88,
+        108.0
+      ],
+      "port": "clk",
+      "merged_clock_ports": [],
+      "tap": "u_lk_S1__tx",
+      "module": "ot_pdie_serdes_tx",
+      "native_module": "ot_pdie_serdes_tx"
+    },
+    {
+      "type": "NE_io",
+      "inst": "u_lk_N2__tx",
+      "source": "IP_DECLARED native clock pin (IP cannot be rebuilt; 12.8a centre not applicable) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_lk_N2 (4.32 PG lattice, sub frame)",
+      "stack": [
+        "M9",
+        "M5"
+      ],
+      "latency_target_tt_ps": 250.0,
+      "latency_target_ff_ps": 202.5,
+      "xy_um": [
+        142.584,
+        103.68
+      ],
+      "island_um": [
+        138.24,
+        99.36,
+        146.88,
+        108.0
+      ],
+      "port": "clk",
+      "merged_clock_ports": [],
+      "tap": "u_lk_N2__tx",
+      "module": "ot_pdie_serdes_tx",
+      "native_module": "ot_pdie_serdes_tx"
+    },
+    {
+      "type": "q_spb0__physical_v1",
+      "inst": "u_lk_S0__tx",
+      "source": "IP_DECLARED native clock pin (IP cannot be rebuilt; 12.8a centre not applicable) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_lk_S0 (4.32 PG lattice, sub frame)",
+      "stack": [
+        "M9",
+        "M5"
+      ],
+      "latency_target_tt_ps": 250.0,
+      "latency_target_ff_ps": 202.5,
+      "xy_um": [
+        142.584,
+        103.68
+      ],
+      "island_um": [
+        138.24,
+        99.36,
+        146.88,
+        108.0
+      ],
+      "port": "clk",
+      "merged_clock_ports": [],
+      "tap": "u_lk_S0__tx",
+      "module": "ot_pdie_serdes_tx",
+      "native_module": "ot_pdie_serdes_tx"
+    }
+  ],
+  "all_five_replicas_match": true,
+  "delta_um": [
+    0,
+    0
+  ]
+}

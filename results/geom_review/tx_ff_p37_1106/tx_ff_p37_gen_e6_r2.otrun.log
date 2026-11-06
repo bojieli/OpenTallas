@@ -1,0 +1,8 @@
+ot-run: epyc6          admits   -10 GB (avail 160, reserve 0, fresh 47, peak 58.5, headroom 0, waiters 6/324 GB) load 73/128 running 36 disk 93 GB 
+ot-run: -> epyc6 (will queue: admits -10 GB < 4 GB)
+ot-heavy: waiting for memory on eager-sunfish: need 0.7 x 4 = 3 GB, admissible -9 GB: available 160 GB, growth charged 48 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 48 GB at x1), young 35 GB, floor 38 GB; invariant: committed 700 GB (in use 595, other 29, units max(now, peak) 624, + reserve 0 + fresh 47) vs physical - 64 = 691 GB -> headroom -9 GB
+ot-heavy: admitted on eager-sunfish as oth-ubuntu-2897818-1793973751 after 264 s
+{"views": 102, "placed": 4392, "modules": 94, "by_family": {"HC": 8, "IDX": 10, "MISC": 44, "SFU": 1, "SU": 12, "LINK": 2, "SMSVC": 5, "PGS": 1, "COLL": 13, "TKM": 1, "VM": 5}}
+SIGNOFF_BUNDLE signoff.py sdc_lint.py face_guard.py io_hold_qualification.py pair_skew.tcl clock_family.tcl kit_modes.py data_droop.py core_io_reference.py child_clock_witness.py parent_boundary.py hard_landing.py
+{"kit": "/srv/opentallas-scratch2/claude/codex-tx-ff-gen-1106/kits_r2/ot_pdie_serdes_tx_c77a41179db8-FF", "pins": 1059, "clocks": ["clk"], "resets": 1, "design": "ot_pdie_serdes_tx", "top": "ot_pdie_serdes_tx", "wrapper": false, "face_shell": {"core": "ot_pdie_serdes_tx__fcore", "in_cycles": 1, "out_cycles": 1, "face_flops": 1057, "dropped": 0, "unread_kept": 0, "const_out_bits": 0, "dup_out_bits": 0, "plan_pins": 1059}, "kit_hash": "6a2b7eafa28ceea2"}
+ot-run: RAN on epyc6 (unit oth-ubuntu-2897818-1793973751): exit 0

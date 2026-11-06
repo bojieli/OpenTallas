@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.hbm_arch.core_views.v1",
+  "plan": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v37/die_plan.json",
+  "plan_sha256": "80ed6e571900f1f5dc0eab590445c10c90d80d2cec43306e252edf57870eab35",
+  "views": 1,
+  "placed": 5,
+  "modules": 1,
+  "no_pins_table": [],
+  "by_family": {
+    "HC": 8,
+    "IDX": 10,
+    "MISC": 44,
+    "SFU": 1,
+    "SU": 12,
+    "LINK": 2,
+    "SMSVC": 5,
+    "PGS": 1,
+    "COLL": 13,
+    "TKM": 1,
+    "VM": 5
+  },
+  "view_list": [
+    {
+      "view": "ot_pdie_serdes_tx@c77a41179db8",
+      "module": "ot_pdie_serdes_tx",
+      "outline_um": [
+        285.12,
+        207.36
+      ],
+      "pins_file": "cores/ot_pdie_serdes_tx__285.12x207.36__d44v_split.json",
+      "pins_sha256": "c77a41179db8d42df9aff5ccbe509375cdd8ff847abb46ece500cbdd92e42408",
+      "pins": 1059,
+      "family": "LINK",
+      "instances": [
+        "NW_io.u_lk_N0__tx",
+        "q_spb0.u_lk_S0__tx",
+        "vsN0.u_lk_S1__tx",
+        "NE_io.u_lk_N2__tx",
+        "q_spb0__physical_v1.u_lk_S0__tx"
+      ],
+      "placed": 5,
+      "tables_for_module": 1,
+      "canonical_type": null,
+      "recipe_keys": [],
+      "blockers": [
+        "NO_RECIPE"
+      ]
+    }
+  ]
+}
