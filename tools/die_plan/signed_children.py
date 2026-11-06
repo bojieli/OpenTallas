@@ -93,6 +93,7 @@ def hard_children_tcl(children):
                f"[regexp {{{child_inst_regex(c['inst'])}}} [$i getName]]}} {{ lappend hit $i }} }}",
                f"if {{[llength $hit] != 1}} {{ error \"hard child {c['inst']}: [llength $hit] matches\" }}",
                "set i [lindex $hit 0]",
+               "$i setPlacementStatus PLACED",
                f"$i setOrient {c['orient']}",
                "$i setLocation 0 0",
                "set bb [$i getBBox]",
